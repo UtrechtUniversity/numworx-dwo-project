@@ -12,10 +12,14 @@ import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
+import nl.uu.fi.dwo.rest.entities.RestScoContextId;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.PathId;
 
@@ -26,7 +30,7 @@ public class PublicScoContextManager implements ScoContextManager {
   private PublicScoContextManager() {};
 
   static final Async async = new Async();
-  static ScoContextManager mediate = async.mediate(instance, ScoContextManager.class);
+  static final ScoContextManager mediate = async.mediate(instance, ScoContextManager.class);
 
   public static Promise<DomScoContext> getAsync(DomScoContext domScoId, DomDwoProfile profile,
       DomSchoolClassId schoolClass) {
@@ -92,6 +96,19 @@ public class PublicScoContextManager implements ScoContextManager {
     rest.setSchoolClassID(schoolClass);
     List<DomScoContext> result = StoredRestManager.getInstance()
         .getPutList(pfx() + "/scoContext/getScos", RestListClassTypes.DomScoContext, rest);
+    return result;
+  }
+
+  @Override
+  public DomScoData getData(DomScoContextId domScoId, DomDwoProfileId profile,
+      DomSchoolClassId schoolClass) throws Dwo2Exception {
+    RestScoContextId rest = new RestScoContextId();
+    rest.setRestContext(getContext());
+    rest.setDomDwoProfile(profile);
+    rest.setDomScoContext(domScoId);
+    rest.setSchoolClassID(schoolClass);
+    DomScoData result =
+        StoredRestManager.getInstance().put(pfx() + "/scoContext/getData", DomScoData.class, rest);
     return result;
   }
 
