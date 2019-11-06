@@ -90,24 +90,29 @@ public class InstallPanel extends JPanel {
 			
 			if (main.cursus.file != null) {
 				is = new InputSource(new FileInputStream(main.cursus.file));
+				is.setEncoding(main.cursus.charset);
 				osiris.setGroepenSource(is);
 				close(is);
 			}
 			if (main.toets.file != null) {
 				is = new InputSource(new FileInputStream(main.toets.file));
+				is.setEncoding(main.toets.charset);
 				osiris.setGroepenSource(is);
 				close(is);
 			}
 			if (main.student.file != null) {
 				is = new InputSource(new FileInputStream(main.student.file));
+				is.setEncoding(main.student.charset);
 				osiris.setGroepenSource(is);
 				close(is);
 				is = new InputSource(new FileInputStream(main.student.file));
+				is.setEncoding(main.student.charset);
 				osiris.setLeerlingenSource(is);				
 				close(is);
 			}
 			if (main.docent.file != null) {
 				is = new InputSource(new FileInputStream(main.docent.file));
+				is.setEncoding(main.docent.charset);
 				osiris.setLeerkrachtenSource(is);
 				close(is);
 			}

@@ -64,13 +64,13 @@ public class LocalMain extends Main {
   private LocalMain() throws HeadlessException, IOException {
 		super("TEST import");
 
-		base = url("http://localhost:8080/dwo/");
 		profileName = "77";
 		
 		InputStream in = getClass().getResourceAsStream("/test.properties");
 		config = new Properties();
 		config.load(in);
 		in.close();
+		base = url(config.getProperty("url", "http://localhost:8080/dwo/"));
 
 		chooser = new JFileChooser();
 		FileFilter filter = new FileNameExtensionFilter("CSV files (excel)", "csv");

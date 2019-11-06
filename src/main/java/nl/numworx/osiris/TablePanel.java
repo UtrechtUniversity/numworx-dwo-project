@@ -42,6 +42,7 @@ public class TablePanel extends JPanel implements Iterable<CSVRecord> {
 	private static final DefaultTableModel EMPTY_MODEL = new DefaultTableModel();
 
   private static final String EMPTY = "<empty>";
+  String charset = "UTF-8";
 
   public class Model extends AbstractTableModel {
 
@@ -152,12 +153,16 @@ public class TablePanel extends JPanel implements Iterable<CSVRecord> {
 			try {
 				File file = main.chooser.getSelectedFile();
 				InputStream in = new FileInputStream(file);
-				Reader reader = new InputStreamReader(in, "UTF-8");
+				Reader reader = new InputStreamReader(in, charset = "UTF-8");
 				BufferedReader buffered = new BufferedReader(reader);
 				buffered.mark(1);
 				reader = buffered;
 				if (buffered.read() != BOM) {
 					buffered.reset();
+					buffered.close();
+					in = new FileInputStream(file);
+					reader = new InputStreamReader(in, charset = "Cp1252"); // Windows OS Default
+					reader  = new BufferedReader(reader);
 				}
 				CSVParser parser = CSVParser.parse(reader, EXCEL);
 				Model m = new Model(parser);
