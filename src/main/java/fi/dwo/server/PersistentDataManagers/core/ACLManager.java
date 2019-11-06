@@ -8,6 +8,7 @@ import fi.dwo.server.persistence.DwoEmfFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -204,7 +205,14 @@ public class ACLManager {
         for (PersistentACL item: list) {
           boolean present = acls.stream().anyMatch(a -> item.getAclID().equals(a.getAclID()) );
           if (!present) {
-            em.remove(item);
+            Optional<PersistentACL> find = acls.stream().filter(a -> item.getEntity().equals(a.getEntity())).findAny();
+            if (find.isPresent())
+            {
+              find.get().setAclID(item.getAclID());
+              find.get().setOptlock(item.getOptlock());
+            }
+            else
+                em.remove(item);
           }
         }
         list = new ArrayList<>(); 
