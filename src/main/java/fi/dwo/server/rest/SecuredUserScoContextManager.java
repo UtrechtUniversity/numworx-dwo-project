@@ -21,20 +21,26 @@ import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentImage;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentScoData;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.ImageManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
+import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
+import nl.uu.fi.dwo.rest.entities.RestScoContextId;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
@@ -186,4 +192,35 @@ public class SecuredUserScoContextManager {
 		return builder(scoContext, parent, info, hasRoleId);    	
     }
     
+    
+    @PUT
+    @Path("/getData")
+    @Produces({"application/json"})
+    public DomScoData getData(@Context SecurityContext sc, RestScoContextId rest) throws Dwo2Exception {
+      UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRole(rest.getRestContext().getDomHasRole());
+      Long id = MySQLPersistenceId.getNativeId(rest.getDomScoContext());
+      PersistentScoContext sco = ScoContextManager.findEntity(id);
+      Long pid = MySQLPersistenceId.getNativeId(rest.getDomDwoProfile());
+      if (!sco.getDwoProfileID().equals(pid)) 
+        throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "wrong profile " + sc.getUserPrincipal().getName());
+      switch(state.getRoleType()) {
+        case ADMIN:
+          break;
+        default:
+        case STUDENT:
+          // FIXME SECURITY verify course in class or public, student in class, etc.
+        case TEACHER:
+        case SCHOOLADMIN:
+          if (sco.getSchoolID() != null) {
+            Long sid = state.getSchool().getSchoolID();
+            if (! sid.equals(sco.getSchoolID()))
+              throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "wrong school " + sc.getUserPrincipal().getName());
+          } else { 
+            // FIXME limited profile, support here?
+          }
+      }
+      PersistentScoData data = ScoDataManager.findEntity(id);
+      DomScoData dom = data.buildDomScoData();
+      return dom;
+    }
 }
