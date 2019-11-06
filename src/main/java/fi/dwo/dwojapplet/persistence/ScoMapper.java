@@ -6,7 +6,6 @@ import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.dwojapplet.domain.Course;
-import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.Sco;
 
 import java.io.ByteArrayInputStream;
@@ -137,7 +136,7 @@ class ScoMapper extends XmlRpcMapper<Sco> {
 	 * @throws PersistenceException 
      *
      */
-     Sco getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException {
+     Sco getObjectFromReturn(Hashtable data) throws PersistenceException {
         Sco s = null;
         if (data.get("scoID") == null) { //We don't know enough to make a
             // scoobject
@@ -252,7 +251,7 @@ class ScoMapper extends XmlRpcMapper<Sco> {
      * @see fi.dwo.client.persistence.XmlRpcMapper#update(java.lang.Object,
      *      java.util.Hashtable)
      */
-    protected Sco update(Sco obj, Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException {
+    protected Sco update(Sco obj, Hashtable data) throws PersistenceException {
         Sco s = (Sco) obj;
         s.setScoID(((Integer) data.get("scoID")).intValue());
         s.setName((String) data.get("sconame"));
@@ -330,8 +329,8 @@ class ScoMapper extends XmlRpcMapper<Sco> {
         return result;
     }
 
-    @Override
-    public Sco[] get(Hashtable wheredef) throws IOException,
+    
+    Sco[] get(Hashtable wheredef) throws IOException,
             XmlRpcException, SQLException, PersistenceException {
 
         DbAccessIF dbAccess = DbAccessCreator.instance();
@@ -353,7 +352,7 @@ class ScoMapper extends XmlRpcMapper<Sco> {
      * @see fi.dwo.client.persistence.XmlRpcMapper#removeAllObjects()
      */
     @Override
-    public void removeAllObjects() {
+    void removeAllObjects() {
         cachemap.clear();
         super.removeAllObjects();
     }
@@ -362,7 +361,7 @@ class ScoMapper extends XmlRpcMapper<Sco> {
      * @see fi.dwo.client.persistence.XmlRpcMapper#removeObject(int)
      */
     @Override
-    public void removeObject(int key) {
+    void removeObject(int key) {
         cachemap.clear();
         //super.removeObject(key);
     }

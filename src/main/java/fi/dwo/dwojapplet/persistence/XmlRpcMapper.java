@@ -30,21 +30,6 @@ abstract class XmlRpcMapper<T>  {
     }
 
     /**
-     * Returns all the objects with the wheredef as restriction.
-     *
-     * @param wheredef The restriction-values mapped on their columnnames.
-     * @return All the objects who satisfies the wheredef.
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     * @throws PersistenceException 
-     */
-    T[] get(Hashtable wheredef) throws IOException, XmlRpcException, SQLException, PersistenceException {
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        return getObjectFromReturn(dbAccess.getTable(getTableName(), wheredef, getOrderbyCol()));
-    }
-
-    /**
      * Returns the object with the specified ID.
      *
      * @param oid The ID of the object to return.
@@ -66,13 +51,12 @@ abstract class XmlRpcMapper<T>  {
         }
     }
 
-    abstract T getObjectFromReturn(Hashtable record) throws IOException, SQLException, XmlRpcException, PersistenceException;
+    abstract T getObjectFromReturn(Hashtable record) throws PersistenceException;
 
     /**
      *
      */
     XmlRpcMapper() {
-
     }
 
      abstract T[] createArray(int size);
@@ -105,14 +89,12 @@ abstract class XmlRpcMapper<T>  {
      * @see fi.dwo.client.persistence.MapperIF#getObjectFromReturn(java.util.Vector)
      */
 
-     T[] getObjectFromReturn(Vector data) throws IOException,
-            SQLException, XmlRpcException, PersistenceException {
+     T[] getObjectFromReturn(Vector data) throws PersistenceException {
         int i;
         T[] oa = createArray(data.size());
         for (i = 0; i < data.size(); i++) {
             oa[i] = getObjectFromReturn((Hashtable) data.elementAt(i));
         }
-
         return oa;
     }
 }

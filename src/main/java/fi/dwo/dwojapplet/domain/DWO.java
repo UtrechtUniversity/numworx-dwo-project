@@ -7,8 +7,6 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FocusTraversalPolicy;
 import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
 import java.awt.Window;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,7 +30,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -45,7 +42,6 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
-import javax.swing.border.BevelBorder;
 import javax.swing.plaf.ColorUIResource;
 
 import org.apache.xmlrpc.applet.MySimpleXmlRpcClient;
@@ -104,7 +100,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
@@ -145,8 +140,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     private ResultsModule resultsModule;
 
     private Container panel;
-
-    private String waitText;
 
     private int nestedWait;
 
@@ -2008,7 +2001,6 @@ LOG.info("time results = " + (-t) + " ms");
         nestedWait++;
         if (nestedWait == 1) {
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            this.waitText = waitText;
             waitLabel.setText(" " + waitText + " ");
             getGlassPane().setVisible(true);
             validate();
@@ -2107,7 +2099,7 @@ LOG.info("time results = " + (-t) + " ms");
     		DomCourseFull edit = pc.buildDomCourseFull();
 			edit = manager.add(edit);
 // legacy
-			Course c = PersistenceFacade.instance().toCourse(Collections.singleton(edit))[0];
+			Course c = PersistenceFacade.instance().toCourse(Collections.singletonList(edit))[0];
 			return c;
     	} catch (Dwo2Exception e) {
           LOG.log(Level.SEVERE, "add course", e);

@@ -28,6 +28,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -44,7 +45,7 @@ import java.util.logging.Logger;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course> {
+class CourseMapper  implements Comparator<Course> {
     private static final Logger LOG = Logger.getLogger(CourseMapper.class.getName());
     private static final Course[] NO_ACCESS = new Course[0];
     private static final String TABLENAME = "tblCourse";
@@ -53,14 +54,14 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course> {
 
     private static final String ORDERCOL = "sequencenr";
 
-    private static Map cachemap = new HashMap(); // not weak
+    private Map<Integer, Course> objects = new HashMap<>();
 
     private Object key;
 
     /**
      *
      */
-    public CourseMapper() {
+    CourseMapper() {
 
     }
 
@@ -74,9 +75,8 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course> {
      * @throws java.sql.SQLException
      *
      */
-    public void put(int oid, Course obj)  {
+    void put(int oid, Course obj)  {
         objects.put(new Integer(oid), obj);
-        cachemap.clear();
     }
 
     class LazyCourse extends Course {
@@ -94,7 +94,7 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course> {
         public CourseMap[] getChildren() {
             if (!loaded) {
                 try {
-                    setChildren(get(this));
+                    setChildren(getFromCourse(this));
                 } catch (Exception e) {
     
                     LOG.log(Level.SEVERE,null,e);
@@ -105,99 +105,6 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course> {
 
     }
 
-    /**
-     * @param data
-     * @return Object
-     *
-     */
-    @Override
-    public Course getObjectFromReturn(Hashtable data) {
-        Course c = null;
-        if (data.get("courseID") == null) { //We don't know enough to make a
-            // courseobject
-            return null;
-        } else if (objects.containsKey(data.get("courseID"))) { // Did we know
-            // the course?
-            c = (Course) objects.get(data.get("courseID"));
-        } else {
-            c = new LazyCourse();
-        }
-        c = (Course) update(c, data);
-        if (!objects.containsKey(new Integer(c.getID()))) {
-            objects.put(new Integer(c.getID()), c);
-        }
-        return c;
-    }
-
-//    /**
-//     * @param obj
-//     * @return Object[]
-//
-//     */
-//    public Object[] get(Object obj) throws IOException, SQLException,
-//            XmlRpcException {
-//        return get();
-//    }
-    ////peter
-    /**
-     * Returns all the Courses with the object as restriction.
-     *
-     * @param obj The object who specifies the restriction. possible objects
-     * are:
-     * <ul>
-     * <li><code>SchoolClass</code>: the courses of the class are returned;
-     * <li><code>School</code>: the courses of the school are returned;
-     * </ul>
-     * @return The Courses who satisfy to the restriction.
-     * @throws java.io.IOException
-     * @throws org.apache.xmlrpc.applet.XmlRpcException
-     * @throws java.sql.SQLException
-     * @throws PersistenceException 
-     */
-    public Course[] get(Object obj) throws IOException, SQLException,
-            XmlRpcException, PersistenceException {
-        Hashtable ht = new Hashtable();
-        if (obj instanceof Course) {
-            Course course = (Course) obj;
-            if(course.getSchoolID() == 0 && DwoHelper.getCurrentUser()==null) {
-              DomCourse domcourse = new DomCourse();
-              domcourse.setId(PersistentCourse.buildPersistenceId(Long.valueOf(course.getID())));
-              try {
-                return getObjectFromReturn(new Vector<DomCourseStudent>(PublicCourseManager.getCourses(domcourse, DWO.getDwoProfile())));
-              } catch (Dwo2Exception e) {
-                LOG.log(Level.SEVERE, "getCourses of course", e);
-              }
-            } else if (DwoHelper.getCurrentUser() != null) {
-              DomCourse domcourse = new DomCourse();
-              domcourse.setId(PersistentCourse.buildPersistenceId(Long.valueOf(course.getID())));
-              try {
-                  if (effectiveAccess(course) != ACL.NONE)
-                      return getObjectFromReturn(new Vector<DomCourseStudent>(SecureUserCourseManager.getCourses(domcourse, DWO.getDwoProfile())));
-                  return NO_ACCESS;
-           } catch (Dwo2Exception e) {
-                LOG.log(Level.SEVERE, "getCourses of course", e);
-              }
-            }
-            
-            ht.put("parentID", new Integer(course.getID()));
-        } else if (obj instanceof SchoolClass) {
-            SchoolClass sc = (SchoolClass) obj;
-            ht.put("classID", new Integer(sc.getID()));
-        } else if (obj instanceof School) {
-            School s = (School) obj;
-            // must be your own school....
-            try {
-              return getObjectFromReturn(new Vector<>(SecureUserCourseManager.getCoursesSchool(DWO.getDwoProfile())));
-            } catch (Dwo2Exception e) {
-              LOG.log(Level.SEVERE, "getCourses of course", e);
-            }
-            ht.put("schoolID", new Integer(s.getSchoolID()));
-            ht.put("parentID", new Integer(0));
-            int profileID = DWO.getDwoProfileID();
-            ht.put("dwoProfileID", new Integer(profileID));
-        }
-        return cached(ht); // was super.get(ht);
-    }
 
     private ACL effectiveAccess(Course course) {
       if (course.getSchoolID() == 0) return ACL.READ; // write if profileadmin/dwoadmin
@@ -263,292 +170,86 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course> {
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#get(int)
      */
-    @Override
-    public Course get(int oid) throws IOException, XmlRpcException,
-            SQLException, PersistenceException {
+    Course get(int oid) throws PersistenceException {
         Integer Oid = new Integer(oid);
         Course result = objects.get(Oid);
         if (result != null) {
             return result;
         }
-        // TODO find course in cache.....
-        System.out.println("request Course " + oid);
-        Iterator v = cachemap.values().iterator();
-        while (v.hasNext()) {
-            Vector vv = (Vector) v.next();
-            Iterator vvv = vv.iterator();
-            while (vvv.hasNext()) {
-                Hashtable map = (Hashtable) vvv.next();
-                if (Oid.equals(map.get(IDCOL))) {
-                    return getObjectFromReturn(map);
-                }
-            }
-
+        DomCourseStudent s = new DomCourseStudent();
+        s.setId(PersistentCourse.buildPersistenceId(Long.valueOf(oid)));
+        try {
+          if (DwoHelper.getCurrentUser() != null)
+            s = SecureUserCourseManager.getCourse(s, DWO.getDwoProfile());
+          else
+            s = PublicCourseManager.getCourse(s, DWO.getDwoProfile());
+        } catch (Dwo2Exception e) {
+          throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         }
-        Course object = super.get(oid);
+        Course object = getObjectFromReturn(s);
         if (object != null) 
         	put(oid, object);
 		return object;
     }
 
-    /**
-     * @param ht
-     * @return
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     * @throws PersistenceException 
-     */
-    @SuppressWarnings("rawtypes")
-	private Course[] cached(Hashtable ht) throws IOException, XmlRpcException,
-            SQLException, PersistenceException {
-        Vector v;
-        v = (Vector) cachemap.get(ht);
-// easy found in cache, return objects
-        if (v != null) {
-            //System.out.println("Found in cache " + ht);
-            return super.getObjectFromReturn(v);
-        }
-        //System.out.println("cache miss for " + ht);
-// not found in cache, perhaps school+parentid=0
-        Object parent = ht.remove("parentID");
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        if (parent != null) {
-// ht contains a parent + school or single parent.
-            if (!ht.isEmpty()) {
-// get all courses from a school
-                v = (Vector) cachemap.get(ht);
-                if (v == null) {
-                    try {
-						v = dbAccess.getTable(getTableName(), ht, getOrderbyCol());
-						cachemap.put(ht, v);
-					} catch (IOException e) {
-						LOG.log(Level.SEVERE, "getTableJS, no parent, wait 30 seconds", e);
-						try {
-							Thread.sleep(30000L); // wait 10 seconds
-						} catch (InterruptedException e1) {
-						}
-		                ht.put("parentID", parent);
-		                v = dbAccess.getTable(getTableName(), ht, getOrderbyCol());
-		                cachemap.put(ht, v);
-		                return super.getObjectFromReturn(v);
-					}
-                }
-// v is all courses from school, filter parent = 0, fill cachemap with parent != 0
-                v = filterParent(v, (Integer) parent);
-// put parent back, v is filtered
-                ht.put("parentID", parent);
-            } else {
-// not from cache, get with parent from database.
-                ht.put("parentID", parent);
-                v = dbAccess.getTable(getTableName(), ht, getOrderbyCol());
-            }
-        } else // not in cache, no parent, use database
-        {
-            v = dbAccess.getTable(getTableName(), ht, getOrderbyCol());
-        }
-
-//System.out.println("put " + v.size() + " for  " + ht);
-        cachemap.put(ht, v);
-        return super.getObjectFromReturn(v);
-    }
-
-    private Vector filterParent(Vector result, Integer parent) {
-        Vector v = new Vector();
-        Enumeration en = result.elements();
-        while (en.hasMoreElements()) {
-            Hashtable ht = (Hashtable) en.nextElement();
-            //System.out.println("HT: " + ht);
-            Object hp = ht.get("parentID");
-            if (parent.equals(hp)) {
-                v.add(ht);
-            } else {
-// this is the tricky part!!!!!
-// prepare cache with other parents.
-                Hashtable htt = new Hashtable();
-                htt.put("parentID", hp);
-                Vector v2 = (Vector) cachemap.get(htt);
-                if (v2 == null) {
-                    //System.out.println("priming for p-" + hp);
-                    v2 = new Vector();
-                    cachemap.put(htt, v2);
-                }
-                v2.remove(ht); // v2 is a sorted set? FIXME a real SET?
-                v2.add(ht);
-            }
-            Object wc = ht.get("withChildren");
-            if (Boolean.TRUE.equals(wc)) {
-                Object id = ht.get("courseID");
-                //System.out.println("priming for i-" + id);
-                Hashtable htt = new Hashtable();
-                htt.put("parentID", id);
-                if (!cachemap.containsKey(htt)) {
-                    cachemap.put(htt, new Vector());
-                }
-            }
-        }
-
-        return v;
-    }
+    
 
     ////peter
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see fi.dwo.client.persistence.XmlRpcMapper#getIDCol()
-     */
-    @Override
-    protected String getIDCol() {
-        return IDCOL;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see fi.dwo.client.persistence.XmlRpcMapper#getTableName()
-     */
-    @Override
-    protected String getTableName() {
-        return TABLENAME;
-    }
-    static final Integer EEN = new Integer(1);
-    /*
-     * (non-Javadoc)
-     * 
-     * @see fi.dwo.client.persistence.XmlRpcMapper#update(java.lang.Object,
-     *      java.util.Hashtable)
-     */
 
     
-    protected Course update(Course obj, Hashtable data) {
-        Course c = (Course) obj;
-        c.setCourseID(((Integer) data.get("courseID")).intValue());
-        c.setName((String) data.get("name"));
-        c.setDescription((String) data.get("description"));
-        c.setImageUrl((String) data.get("image"));
-        c.setDwoProfile(((Integer) data.get("dwoProfileID")).intValue());
-        c.setNotVisible(EEN.equals(data.get("notVisible")));
-//        c.setNotVisible(c.isNotVisible() && !(DwoHelper.getCurrentFacadeUser() instanceof Teacher));
-// fill sequencenr
-        Object sequencenr = data.get("sequencenr");
-        if(sequencenr instanceof Integer)
-        	c.sequencenr = (Integer) sequencenr;
-        else
-        	c.sequencenr = null;
- // end fill       
-        try {
-            c.setSchoolID(((Integer) data.get("schoolID")).intValue());
-        } catch (Exception e) {
-        }
-        try {
-            c.setParentID(((Integer) data.get("parentID")).intValue());
-        } catch (Exception e) {
-        }
-        c.resetParent();
-
-        try {
-            c.setImageData((byte[]) data.get("imageData"));
-        } catch (Exception e) {
-        };
-
-        c.setExport(Boolean.TRUE.equals(data.get("export")));
-        Object w = data.get("withChildren");
-        if (Boolean.TRUE.equals(w) || EEN.equals(w)) {
-            if (c instanceof LazyCourse) {
-                c.setChildren(Course.NO_CHILDREN);
-            } else {
-                try {
-                    c.setChildren(((Course[]) get(c))); // Not Lazy, .... jammer dan.
-                } catch (Exception e) {
-                    c.setChildren(Course.NO_CHILDREN);
-                }
-            }
-        } else {
-            c.setChildren(null);
-        }
-        if (data.containsKey("ClassCourseID")) {
-            try {
-                c.link =  CLASSCOURSE_MAPPER.getObjectFromReturn(data);
-            } catch (Exception e) {
-
-                LOG.log(Level.SEVERE,null,e);
-            }
-        } else {
-            if (c.link != null) {
-                //System.err.println("erase link for " + c);
-            }
-            //c.link = null; // FIXME is dit correct?
-        }
-        return c;
-    }
-
-    final ClassCourseMapper CLASSCOURSE_MAPPER = new ClassCourseMapper();
- 
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
      */
-    @Override
-    protected Course[] createArray(int size) {
+    Course[] createArray(int size) {
         return new Course[size];
     }
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#getOrderbyCol()
      */
 
-    @Override
-    protected String getOrderbyCol() {
-        return ORDERCOL;
-    }
 
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#removeAllObjects()
      */
-    @Override
-    public void removeAllObjects() {
-//System.out.println("cachemap clear all");
-        cachemap.clear();
-        super.removeAllObjects();
+    void removeAllObjects() {
+        objects.clear();
     }
 
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#removeObject(int)
      */
-    @Override
-    public void removeObject(int key) {
-//System.out.println("cachemap clear key");
-        cachemap.clear();
-        super.removeObject(key);
+    void removeObject(int key) {
+        objects.remove(key);
     }
 
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#getObjectFromReturn(java.util.Vector)
      */
-    @Override
-    public Course[] getObjectFromReturn(Vector data) throws IOException,
-            SQLException, XmlRpcException, PersistenceException {
-      if(!data.isEmpty() && data.get(0) instanceof DomCourseStudent)
+    Course[] getObjectFromReturn(List<? extends DomCourse> org) throws PersistenceException {
+      if(!org.isEmpty() && org.get(0) instanceof DomCourseStudent)
       {
-        Course[] result = createArray(data.size());
+        return getObjectFromDCS((List<DomCourseStudent>) org);
+      }
+      if(!org.isEmpty() && org.get(0) instanceof DomCourse)
+      {
+        Course[] result = createArray(org.size());
         for (int i = 0; i < result.length; i++) {
-          result[i] = getObjectFromReturn( (DomCourseStudent) data.get(i));
+          result[i] = getObjectFromReturn( (DomCourse) org.get(i));
         }
         Arrays.sort(result,this);
         return result;
       }
-      if(!data.isEmpty() && data.get(0) instanceof DomCourse)
-      {
-        Course[] result = createArray(data.size());
-        for (int i = 0; i < result.length; i++) {
-          result[i] = getObjectFromReturn( (DomCourse) data.get(i));
-        }
-        Arrays.sort(result,this);
-        return result;
-      }
-       cachemap.put(key, data);        
-        return super.getObjectFromReturn(data);
+      return NO_ACCESS;
     }
 
+    Course[] getObjectFromDCS(Collection<DomCourseStudent> data) {
+      Course[] result = createArray(data.size());
+      int i = 0;
+      for(DomCourseStudent item: data) result[i++] = getObjectFromReturn(item);
+      Arrays.sort(result,this);
+      return result;
+    }
     
     private Course getObjectFromReturn(DomCourseStudent data) {
       int id = PersistenceFacade.idOf(data.getId());
@@ -560,7 +261,7 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course> {
       if(c.isWithChildren() && ! (c instanceof LazyCourse)) {
         // prefetch children
         try {
-          c.setChildren(get(c)); // Not Lazy, .... jammer dan.
+          c.setChildren(getFromCourse(c)); // Not Lazy, .... jammer dan.
       } catch (Exception e) {
           c.setChildren(Course.NO_CHILDREN);
       }
@@ -579,7 +280,7 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course> {
       if(c.isWithChildren() && ! (c instanceof LazyCourse)) {
         // prefetch children
         try {
-          c.setChildren(get(c)); // Not Lazy, .... jammer dan.
+          c.setChildren(getFromCourse(c)); // Not Lazy, .... jammer dan.
       } catch (Exception e) {
           c.setChildren(Course.NO_CHILDREN);
       }
@@ -618,5 +319,38 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course> {
 
       
       
+    }
+
+    Course[] getFromSchool(School parent) throws PersistenceException {
+      // must be your own school....
+      try {
+        return getObjectFromDCS((SecureUserCourseManager.getCoursesSchool(DWO.getDwoProfile())));
+      } catch (Dwo2Exception e) {
+        LOG.log(Level.SEVERE, "getCourses of course", e);
+      }
+      return NO_ACCESS;
+    }
+
+    Course[] getFromCourse(Course course) throws PersistenceException {
+      if(course.getSchoolID() == 0 && DwoHelper.getCurrentUser()==null) {
+        DomCourse domcourse = new DomCourse();
+        domcourse.setId(PersistentCourse.buildPersistenceId(Long.valueOf(course.getID())));
+        try {
+          return getObjectFromDCS((PublicCourseManager.getCourses(domcourse, DWO.getDwoProfile())));
+        } catch (Dwo2Exception e) {
+          LOG.log(Level.SEVERE, "getCourses of course", e);
+        }
+      } else if (DwoHelper.getCurrentUser() != null) {
+        DomCourse domcourse = new DomCourse();
+        domcourse.setId(PersistentCourse.buildPersistenceId(Long.valueOf(course.getID())));
+        try {
+            if (effectiveAccess(course) != ACL.NONE)
+                return getObjectFromDCS((SecureUserCourseManager.getCourses(domcourse, DWO.getDwoProfile())));
+            return NO_ACCESS;
+     } catch (Dwo2Exception e) {
+          LOG.log(Level.SEVERE, "getCourses of course", e);
+        }
+      }
+      return NO_ACCESS;
     }
 }

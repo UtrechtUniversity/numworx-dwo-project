@@ -432,16 +432,8 @@ public class PersistenceFacade {
 
     }
 
-    public Course[] toCourse(Collection<DomCourse> org) throws PersistenceException {
-      try {
-        return courseMapper.getObjectFromReturn(new Vector(org));
-      } catch (IOException e) {
-        throw new PersistenceException(PersistenceException.EX_IO, e);
-      } catch (SQLException e) {
-        throw new PersistenceException(PersistenceException.EX_DB, e);
-      } catch (XmlRpcException e) {
-        throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-      } 
+    public Course[] toCourse(List<DomCourse> org) throws PersistenceException {
+      return courseMapper.getObjectFromReturn((org)); 
     }
     
     public User[] toUser(Collection<? extends DomUser> org) throws PersistenceException {
@@ -465,16 +457,16 @@ public class PersistenceFacade {
      */
     public Course[] getCoursesJS(User user) throws PersistenceException {
         try {
-            Vector v;
+            List v;
             int profileId = getDwoProfileID();
             //int guestID = PROFILEOFFSET - profileId;
             if (user == null || user instanceof Guest) {
                // v = DbAccessCreator.instance().getCoursesJS(guestID);
-              v = new Vector<>(PublicCourseManager.getCourses(DWO.getDwoProfile()));
+              v = (PublicCourseManager.getCourses(DWO.getDwoProfile()));
             } else {
                 if (user instanceof Teacher) {
                     //              v = DbAccessCreator.instance().getCourses(user.getUserID());
-                    Object[] schoolCourses = courseMapper.get(user.getSchool());
+                    Object[] schoolCourses = courseMapper.getFromSchool(user.getSchool());
                     Object[] dwoCourses = courseMapper.getObjectFromReturn(new Vector<>(SecureUserCourseManager.getCourses(DWO.getDwoProfile())));
                     // caching side effect. UNDO, we doen nu lazy....
                     return (Course[]) combine_(dwoCourses, schoolCourses);
@@ -482,7 +474,7 @@ public class PersistenceFacade {
                     SchoolClass schoolClass = user.getInClass();
                     if (schoolClass == null) {
                         //v = DbAccessCreator.instance().getCoursesJS(guestID);
-                        v = new Vector<>(SecureUserCourseManager.getCourses(DWO.getDwoProfile()));
+                        v = (SecureUserCourseManager.getCourses(DWO.getDwoProfile()));
 
                     } else {
 //                        v = DbAccessCreator.instance().getCoursesForClass(
@@ -501,7 +493,7 @@ public class PersistenceFacade {
                            .map(DomMapEntry::getValue);
                         if(!schoolClass.hasIconizer())
                             stream = stream.filter(item -> !item.getWithChildren().booleanValue());
-                        v = new Vector(stream.collect(Collectors.toList()));
+                        v = (stream.collect(Collectors.toList()));
                         
                         
                         
@@ -530,48 +522,24 @@ public class PersistenceFacade {
             }
             return courseMapper.getObjectFromReturn(v);
         }
-        catch (IOException e) {
-            LOG.log(Level.SEVERE, null, e);
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (XmlRpcException e) {
-            LOG.log(Level.SEVERE, null, e);
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-        catch (SQLException e) {
-            LOG.log(Level.SEVERE, null, e);
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        } catch (Dwo2Exception e) {
+        catch (Dwo2Exception e) {
           LOG.log(Level.SEVERE, null, e);
           throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
        }
-
-   	
     }
     
     public Course[] getImportCourses(School s, School school, int profileID) throws PersistenceException {
         try {
-            Vector v;
+            List<DomCourse> v;
             DomSchoolAndProfile dom = new DomSchoolAndProfile();
             dom.setDomDwoProfile(DWO.getDwoProfile());
             dom.setDomSchool(new DomSchoolId(PersistentSchool.buildPersistenceId(Long.valueOf(s.getSchoolID()))));
-            //v = DbAccessCreator.instance().getImportCourses(s.getSchoolID(), school.getSchoolID(), profileID);
-            v = new Vector<>(SecureTeacherFromToManager.getCourses(dom));
+            v = (SecureTeacherFromToManager.getCourses(dom));
             return courseMapper.getObjectFromReturn(v);
         }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-        catch (SQLException e) {
-            LOG.log(Level.SEVERE, null, e);
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        } catch (Dwo2Exception e) {
+        catch (Dwo2Exception e) {
           throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         }
-
     }
 
     /**
@@ -596,12 +564,6 @@ public class PersistenceFacade {
     }
 
     public final static Date DATE_NULL = new Date(0);
-
-    //private static final long DATE_OFFSET = 1000L * 3600L * 24L;
-
-    private Course[] getCourseFromMapper(Object o) throws IOException, SQLException, XmlRpcException, PersistenceException {
-        return courseMapper.get(o);
-    }
 
 
     /**
@@ -867,19 +829,7 @@ public class PersistenceFacade {
 
 
     public Course getCourse(int courseID) throws PersistenceException {
-      try {
-          return courseMapper.get(courseID);
-      }
-      catch (IOException e) {
-          LOG.log(Level.SEVERE, null, e);
-          throw new PersistenceException(PersistenceException.EX_IO, e);
-      }
-      catch (XmlRpcException e) {
-          throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-      }
-      catch (SQLException e) {
-          throw new PersistenceException(PersistenceException.EX_DB, e);
-      }
+      return courseMapper.get(courseID);
     }
 
     public Sco getSco(int scoid) throws PersistenceException {
@@ -1014,12 +964,12 @@ public class PersistenceFacade {
       }
     }
 
-    public Course[] getCourses(Course parent) throws PersistenceException, IOException, SQLException, XmlRpcException {
-      return getCourseFromMapper(parent);
+    public Course[] getCourses(Course parent) throws PersistenceException {
+      return courseMapper.getFromCourse(parent);
     }
 
-    public Course[] getCourses(School parent) throws PersistenceException, IOException, SQLException, XmlRpcException {
-      return getCourseFromMapper(parent);
+    public Course[] getCourses(School parent) throws PersistenceException {
+      return courseMapper.getFromSchool(parent);
     }
 
     public School[] toSchool(Collection<? extends DomSchool> data) {
