@@ -27,6 +27,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import nl.uu.fi.dwo.rest.util.RestyDateTimeFormat;
@@ -513,6 +514,9 @@ class RestManager extends RestyDateTimeFormat {
         case DomAppletConfig:
             return (List<T>) genson.deserialize(json.toString(),
                 new GenericType<List<DomAppletConfig>>() {});
+        case DomScoContext:
+          return (List<T>) genson.deserialize(json.toString(),
+            new GenericType<List<DomScoContext>>() {});
         default:
           String msg = "Programming error, trying to get an unsupported dataType.";
           LOG.log(Level.SEVERE, msg);

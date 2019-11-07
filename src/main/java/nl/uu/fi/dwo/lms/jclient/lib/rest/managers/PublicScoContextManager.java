@@ -112,4 +112,12 @@ public class PublicScoContextManager implements ScoContextManager {
     return result;
   }
 
+  public static Promise<DomScoData> getDataAsync(DomScoContextId domScoId, DomDwoProfileId profile,
+  DomSchoolClassId schoolClass) {
+    try {
+      return async.call(mediate.getData(domScoId,profile,schoolClass));
+    } catch(Dwo2Exception e) {
+      return Promises.failed(e);
+    }
+  }
 }
