@@ -14,11 +14,11 @@ public class StoreCreator {
 // implement read only profile			
             if (DwoHelper.hasProfileRight(DwoHelper.READONLY)) {
                 //JOptionPane.showMessageDialog(DwoHelper.getApplet(), "Pas op: werk wordt niet opgeslagen", "DWO is READ ONLY", JOptionPane.WARNING_MESSAGE);
-                return _instance = new ReadOnly(DbAccessCreator.instance());
+                return _instance = new ReadOnly();
             }
 
             //_instance = new NoCache(DbAccessCreator.instance());
-            _instance = new CachingStore(DbAccessCreator.instance());
+            _instance = new CachingStore();
         }
         return _instance;
     }

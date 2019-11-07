@@ -189,7 +189,7 @@ public class ImportModuleAction extends GuiAction {
  */
 	static void importModule(CourseMap parent, InputStream input, DWOFile zipper)
 			throws ParserConfigurationException, SAXException, IOException,
-			DwoXmlRpcException, SQLException, XmlRpcException, PersistenceException, CourseException, Dwo2Exception {
+			PersistenceException, CourseException, Dwo2Exception {
 		Hashtable result = zipper.inputIMSManifest(input);
 		Set names = parent.getChildNames();
 		String title = (String)result.get("name");

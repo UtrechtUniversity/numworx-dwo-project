@@ -33,7 +33,6 @@ class ClassMapper {
      * @param obj
      * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
-     * @throws java.sql.SQLException
      *
      */
     void put(int oid, SchoolClass obj) {

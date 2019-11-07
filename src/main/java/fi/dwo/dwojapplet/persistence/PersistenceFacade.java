@@ -56,9 +56,6 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import java.applet.Applet;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,8 +75,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import org.apache.xmlrpc.applet.XmlRpcException;
 
 /**
  * This class is the Facade between the Domain layer and the Persistence layer.
@@ -437,15 +432,7 @@ public class PersistenceFacade {
     }
     
     public User[] toUser(Collection<? extends DomUser> org) throws PersistenceException {
-      try {
-        return userMapper.getObjectFromReturn(new Vector(org));
-      } catch (IOException e) {
-        throw new PersistenceException(PersistenceException.EX_IO, e);
-      } catch (SQLException e) {
-        throw new PersistenceException(PersistenceException.EX_DB, e);
-      } catch (XmlRpcException e) {
-        throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-      } 
+      return userMapper.getObjectFromReturn(new Vector(org)); 
    }
     
     
@@ -833,19 +820,7 @@ public class PersistenceFacade {
     }
 
     public Sco getSco(int scoid) throws PersistenceException {
-      try {
           return scoMapper.get(scoid);
-      }
-      catch (IOException e) {
-          LOG.log(Level.SEVERE, null, e);
-          throw new PersistenceException(PersistenceException.EX_IO, e);
-      }
-      catch (XmlRpcException e) {
-          throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-      }
-      catch (SQLException e) {
-          throw new PersistenceException(PersistenceException.EX_DB, e);
-      }
     }
 
     public void clearCurrentScoDataCache() {
@@ -900,18 +875,7 @@ public class PersistenceFacade {
     }
 
     public User[] getUser(SchoolClass schoolClass) throws PersistenceException {
-      try {
-          return userMapper.get(schoolClass);
-      }
-      catch (IOException e) {
-          throw new PersistenceException(PersistenceException.EX_IO, e);
-      }
-      catch (XmlRpcException e) {
-          throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-      }
-      catch (SQLException e) {
-          throw new PersistenceException(PersistenceException.EX_DB, e);
-      }
+      return userMapper.get(schoolClass);
     }
 
     public SchoolClass[] getSchoolClass(School school) throws PersistenceException {
@@ -919,18 +883,7 @@ public class PersistenceFacade {
     }
 
     public Sco[] getSco(Course course) throws PersistenceException {
-      try {
-          return scoMapper.get(course);
-      }
-      catch (IOException e) {
-          throw new PersistenceException(PersistenceException.EX_IO, e);
-      }
-      catch (XmlRpcException e) {
-          throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-      }
-      catch (SQLException e) {
-          throw new PersistenceException(PersistenceException.EX_DB, e);
-      }
+      return scoMapper.get(course);
     }
 
     public AppletConfig[] getAppletConfig(Locale locale) throws PersistenceException {

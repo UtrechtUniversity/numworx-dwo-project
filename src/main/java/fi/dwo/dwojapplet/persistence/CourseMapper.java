@@ -3,7 +3,6 @@
 package fi.dwo.dwojapplet.persistence;
 
 import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.dwojapplet.domain.Course;
@@ -25,34 +24,21 @@ import nl.uu.fi.dwo.rest.dom.entities.util.ACL;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.apache.xmlrpc.applet.XmlRpcException;
 
 class CourseMapper  implements Comparator<Course> {
     private static final Logger LOG = Logger.getLogger(CourseMapper.class.getName());
     private static final Course[] NO_ACCESS = new Course[0];
-    private static final String TABLENAME = "tblCourse";
-
-    private static final String IDCOL = "courseID";
-
-    private static final String ORDERCOL = "sequencenr";
 
     private Map<Integer, Course> objects = new HashMap<>();
 
@@ -72,7 +58,6 @@ class CourseMapper  implements Comparator<Course> {
      * @param obj
      * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
-     * @throws java.sql.SQLException
      *
      */
     void put(int oid, Course obj)  {

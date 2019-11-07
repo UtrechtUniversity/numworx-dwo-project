@@ -77,7 +77,7 @@ public class ImportMapAction extends GuiAction {
 
 	}
 
-	private void importMap(CourseMap selection) throws IOException, ParserConfigurationException, SAXException, DwoXmlRpcException, SQLException, XmlRpcException, PersistenceException, CourseException, Dwo2Exception {
+	private void importMap(CourseMap selection) throws IOException, ParserConfigurationException, SAXException, PersistenceException, CourseException, Dwo2Exception {
 		int result = chooser.showOpenDialog(instance().getMainPanel());
 		if(result == JFileChooser.APPROVE_OPTION)
 		try {
@@ -162,7 +162,7 @@ public class ImportMapAction extends GuiAction {
 		return _builder = new DWOFile();
 	}
 
-	private void importModule(InputStream in, CourseMap map) throws DwoXmlRpcException, ParserConfigurationException, SAXException, IOException, SQLException, XmlRpcException, PersistenceException, CourseException, Dwo2Exception {
+	private void importModule(InputStream in, CourseMap map) throws ParserConfigurationException, SAXException, PersistenceException, CourseException, Dwo2Exception, IOException {
 		DWOFile builder = getDWOFile();
 		ImportModuleAction.importModule(map, in, builder);
 	}

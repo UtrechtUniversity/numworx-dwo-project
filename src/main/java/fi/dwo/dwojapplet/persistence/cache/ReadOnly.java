@@ -1,14 +1,13 @@
 package fi.dwo.dwojapplet.persistence.cache;
 
 import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.commons.persistence.DbAccessIF;
 
 public class ReadOnly extends NoCache {
 	
 	public static boolean hasSuspendData;
 
-    public ReadOnly(DbAccessIF dbAccess) {
-        super(dbAccess);
+    public ReadOnly() {
+        super();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package fi.dwo.dwojapplet.persistence.cache;
 
-import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
@@ -12,7 +11,6 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredStudentScoDataManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherResultsManager;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.StudentScoDataManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -23,22 +21,15 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Collections;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.xmlrpc.applet.XmlRpcException;
 
-public class NoCache implements IStore {
+class NoCache implements IStore {
     private static final Logger LOG = Logger.getLogger(NoCache.class.getName());
 
     
-    NoCache(DbAccessIF dbAccess) {
-        this.dbAccess = dbAccess;
+    NoCache() {
     }
-
-    private DbAccessIF dbAccess;
 
     @Override
     public String getValue(int uid, int scoid, int sgid, int clsid, String key) throws PersistenceException {

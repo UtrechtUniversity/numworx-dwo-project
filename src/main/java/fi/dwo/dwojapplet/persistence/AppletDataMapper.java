@@ -5,19 +5,13 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentApplet;
 import fi.dwo.dwojapplet.domain.AppletData;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicAppletManager;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminAppletManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletId;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
-
-import org.apache.xmlrpc.applet.XmlRpcException;
 
 class AppletDataMapper  {
 

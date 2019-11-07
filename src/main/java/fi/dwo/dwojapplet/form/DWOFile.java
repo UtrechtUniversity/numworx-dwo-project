@@ -31,7 +31,7 @@ public class DWOFile {
         m = new ManifestFile();
     }
 
-    public void createIMSManifest(Course course, OutputStream out) throws ParserConfigurationException, TransformerException, SQLException, IOException, XmlRpcException, PersistenceException {
+    public void createIMSManifest(Course course, OutputStream out) throws ParserConfigurationException, TransformerException, PersistenceException, IOException {
       out.write(prefix);
       GZIPOutputStream gout;
       out = gout = new GZIPOutputStream(out);
@@ -55,8 +55,7 @@ public class DWOFile {
 	 * @see fi.dwo.server.form.ManifestFile#addCourse(java.util.Hashtable, int, int)
 	 */
 	public int addCourse(Hashtable course, int dwoProfile, int schoolID, int parent, int offset)
-			throws DwoXmlRpcException, SQLException, IOException,
-			XmlRpcException, PersistenceException, CourseException, Dwo2Exception {
+			throws PersistenceException, CourseException, Dwo2Exception {
 		return m.addCourse(course, dwoProfile, schoolID, parent, offset);
 	}
 
@@ -81,7 +80,7 @@ public class DWOFile {
         return m.inputIMSManifest(input);
     }
 
-	public void appendCourse(int courseID, int offset, Hashtable course, DomDwoProfile profile) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException, PersistenceException, Dwo2Exception
+	public void appendCourse(int courseID, int offset, Hashtable course, DomDwoProfile profile) throws PersistenceException, Dwo2Exception
 	{
 		m.appendCourse(courseID, offset, course, profile);
 	}

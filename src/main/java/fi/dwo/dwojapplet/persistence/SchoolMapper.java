@@ -3,7 +3,6 @@
 package fi.dwo.dwojapplet.persistence;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -11,14 +10,11 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.xmlrpc.applet.XmlRpcException;
-
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
-import fi.dwo.dwojapplet.domain.SchoolGroup;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherFromToManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
@@ -186,8 +182,7 @@ class SchoolMapper  {
      *
      */
     //@Override
-    School[] get(Object obj) throws IOException, SQLException,
-            XmlRpcException {
+    School[] get(Object obj) throws IOException {
         if (Boolean.TRUE.equals(obj)) {
 //            Hashtable h = new Hashtable();
 //            h.put("export", obj);

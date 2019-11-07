@@ -18,14 +18,11 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Logger;
-
-import org.apache.xmlrpc.applet.XmlRpcException;
 
 class UserMapper {
 
@@ -71,7 +68,7 @@ class UserMapper {
      * @throws PersistenceException 
      *
      */
-     User getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException {
+     User getObjectFromReturn(Hashtable data) throws  PersistenceException {
         User u = null;
         LOG.severe("Illegal access");
         return u;
@@ -92,8 +89,7 @@ class UserMapper {
      * @throws java.sql.SQLException
      * @throws PersistenceException 
      */
-    public User[] get(Object obj) throws IOException, SQLException,
-            XmlRpcException, PersistenceException {
+    public User[] get(Object obj) throws PersistenceException {
         if (obj instanceof SchoolClass) {
             SchoolClass sc = (SchoolClass) obj;
             Vector<?> vList;
@@ -117,7 +113,7 @@ class UserMapper {
     }
 
     Vector<DomStudent> studentsOfClass(SchoolClass sc)
-        throws IOException, XmlRpcException, SQLException, Dwo2Exception {
+        throws Dwo2Exception {
       DomSchoolClass dsc = new DomSchoolClass();
       dsc.setId(PersistentSchoolClass.buildPersistenceId( (long) sc.getID()));
       List<DomStudent> v;
@@ -137,7 +133,7 @@ class UserMapper {
 
         @SuppressWarnings("rawtypes")
         User[] getObjectFromReturn(Vector data)
-            throws IOException, SQLException, XmlRpcException, PersistenceException {
+            throws PersistenceException {
           int i;
           User[] oa = createArray(data.size());
           for (i = 0; i < data.size(); i++) {

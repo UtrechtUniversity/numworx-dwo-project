@@ -356,7 +356,7 @@ class ManifestFile {
 		return result;
 	}
 	
-	int addCourse(Hashtable course, int dwoProfile, int schoolID, int parent, int n) throws DwoXmlRpcException, SQLException, IOException, XmlRpcException, PersistenceException, CourseException, Dwo2Exception
+	int addCourse(Hashtable course, int dwoProfile, int schoolID, int parent, int n) throws PersistenceException, CourseException, Dwo2Exception
 	{
 		String name;
 		String description;
@@ -397,7 +397,7 @@ class ManifestFile {
 	
 	
 	
-	void appendCourse(int courseID, int offset, Hashtable course, DomDwoProfile profile) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException, PersistenceException, Dwo2Exception
+	void appendCourse(int courseID, int offset, Hashtable course, DomDwoProfile profile) throws PersistenceException, Dwo2Exception
 	{
 		Vector items = (Vector) course.get(SCO_ITEMS);
 		Iterator i = items.iterator();

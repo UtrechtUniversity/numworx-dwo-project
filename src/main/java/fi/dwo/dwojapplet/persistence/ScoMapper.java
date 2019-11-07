@@ -5,19 +5,30 @@ package fi.dwo.dwojapplet.persistence;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.DbAccessIF;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.Sco;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicScoContextManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -28,73 +39,58 @@ import java.util.zip.GZIPInputStream;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 import org.json.simple.JSONValue;
+import org.osgi.util.promise.Promise;
 
-class ScoMapper extends XmlRpcMapper<Sco> {
+class ScoMapper  {
     private static final Logger LOG = Logger.getLogger(ScoMapper.class.getName());
-
-    private static final Vector LAZY_SCO_KEYS = new Vector();
-
-    private static final String TABLENAME = "tblScoView";
-
-    private static final String IDCOL = "scoID";
-
-    private static final String ORDERCOL = "sequencenr";
-
-    private static Map<Hashtable, Sco[]> cachemap = new HashMap<>(); // was weakhashmap
+    private Map<Integer, Sco> objects = new HashMap<>();
 
     class LazySco extends Sco {
+
+        Promise<DomScoData> pdata;
+        DomScoContextId domScoId;
+    
+        public LazySco(DomScoContext item) {
+          domScoId = item;
+          //pdata = PublicScoContextManager.getDataAsync(domScoId, DWO.getDwoProfile(), null);
+        }
 
         @Override
         public Hashtable getLaunchdata() {
             if (this.launchdata != null) {
                 return launchdata;
             }
-            Hashtable ht = new Hashtable();
-            ht.put(getIDCol(), getID());
-
-            Vector v = new Vector();
-            v.add("launchdata");
-            if (hasFeature(JSON_IN)) {
-                v.add("launchdatabytes");
+            if (pdata == null) {
+              pdata = PublicScoContextManager.getDataAsync(domScoId, DWO.getDwoProfile(), null);
             }
-            DbAccessIF dbAccess = DbAccessCreator.instance();
+            String l = "";
             try {
-                v = dbAccess.getTable(getTableName(), v, ht, getOrderbyCol());
-                if (v.size() != 0) {
-                    ht = (Hashtable) v.firstElement();
+              l = pdata.getValue().getLaunchdata();
+            } catch (InvocationTargetException e) {
+              LOG.log(Level.SEVERE, "getLaunchdata", e);
+            } catch (InterruptedException e) {
+             }
 
-                    Object o = ht.get("launchdatabytes");
-                    if (o instanceof byte[]) {
-                        InputStream in = new GZIPInputStream(new ByteArrayInputStream((byte[]) o));
-                        Map map = (Map) JSONValue.parse(new InputStreamReader(in, "UTF-8"));
-                        Hashtable h = new Hashtable();
-                        Set entrySet = map.entrySet();
-                        for (Iterator iterator = entrySet.iterator(); iterator
-                                .hasNext();) {
-                            Map.Entry entry = (Map.Entry) iterator.next();
-                            Object key = entry.getKey();
-                            Object value = entry.getValue().toString();
-                            h.put(key, value);
-                        }
-                        setLaunchdata(h);
-                        setDataChanged(false);
-                    }
-
-                    String ld = (String) ht.get("launchdata");
-                    if (ld != null && ld.length() > 0) {
-                        setLaunchdata((Hashtable) StringCodeObject.decodeStringToObject(ld, null));
-                        setDataChanged(false);
-                    }
-                }
-            } catch (IOException e) {
-                LOG.log(Level.SEVERE,null,e);
-            } catch (XmlRpcException e) {
-                LOG.log(Level.SEVERE,null,e);
-            } catch (SQLException e) {
-                LOG.log(Level.SEVERE,null,e);
-            }
-
+            if (l != null && !l.isEmpty())
+              launchdata = (Hashtable) new StringCodeObject(l).toObject();
+                
             return super.getLaunchdata();
+        }
+
+        @Override
+        public String getDescription() {
+          if (super.getDescription() == null) {
+            if (pdata == null) {
+              pdata = PublicScoContextManager.getDataAsync(domScoId, DWO.getDwoProfile(), null);
+            }
+            try {
+              setDescription(pdata.getValue().getDescription());
+            } catch (InvocationTargetException e) {
+              LOG.log(Level.SEVERE, "getDescription", e);
+            } catch (InterruptedException e) {
+            }
+          }          
+          return super.getDescription();
         }
 
     }
@@ -115,143 +111,20 @@ class ScoMapper extends XmlRpcMapper<Sco> {
      *
      */
     void put(int oid, Sco obj)  {
-        objects.put(new Integer(oid), obj);
-        cachemap.clear();
+        objects.put(Integer.valueOf(oid), obj);
     }
 
-    
-    @Override
-	Sco get(int oid) throws IOException, XmlRpcException, SQLException, PersistenceException {
-		if (!objects.containsKey(Integer.valueOf(oid)))
-				cachemap.clear();
-		return super.get(oid);
+   	Sco get(int oid) throws PersistenceException {
+		return objects.get(oid);
 	}
-
-	/**
-     * @param data
-     * @return Object
-     * @throws java.io.IOException
-     * @throws org.apache.xmlrpc.applet.XmlRpcException
-     * @throws java.sql.SQLException
-	 * @throws PersistenceException 
-     *
-     */
-     Sco getObjectFromReturn(Hashtable data) throws PersistenceException {
-        Sco s = null;
-        if (data.get("scoID") == null) { //We don't know enough to make a
-            // scoobject
-            return null;
-        } else if (objects.containsKey(data.get("scoID"))) { // Did we know the
-            // sco?
-            s = (Sco) objects.get(data.get("scoID"));
-            if (!data.containsKey("launchdata")) {
-                data.put("launchdata", "");
-            }
-            //System.out.println("reuse " + s + " for " + data.get("scoID"));
-        } else {
-            if (!data.containsKey("launchdata")) {
-                s = new LazySco();
-                data.put("launchdata", "");
-            } else {
-                s = new Sco();
-            }
-            //System.out.println("use " + s + " for " + data.get("scoID"));
-        }
-        s = (Sco) update(s, data);
-        if (!objects.containsKey(new Integer(s.getID()))) {
-            objects.put(new Integer(s.getID()), s);
-        }
-        return s;
-    }
-
-    /**
-     * Returns all the SCO's with the object as restriction.
-     *
-     * @param obj The object who specifies the restriction. possible objects
-     * are:
-     * <ul>
-     * <li><code>Course</code>: The sco's of the specified course are returned;
-     * </ul>
-     * @return The SCO's who satisfies to the restriction.
-     * @throws java.io.IOException
-     * @throws org.apache.xmlrpc.applet.XmlRpcException
-     * @throws java.sql.SQLException
-     * @throws PersistenceException 
-     */
-    Sco[] get(Object obj) throws IOException, SQLException,
-            XmlRpcException, PersistenceException {
-        Hashtable ht = new Hashtable();
-        if (obj instanceof Course) {
-            Course c = (Course) obj;
-            ht.put("courseID", new Integer(c.getID()));
-        }
-        return cached(ht);
-    }
-
-    private Object[] fillcache(Sco[] data) {
-        HashMap<Integer,Vector<Sco>> ht = new HashMap<>();
-        Sco[] sco = (Sco[]) data;
-        for (int i = 0; i < sco.length; i++) {
-            Integer course = new Integer(sco[i].getCourse().getID());
-            Vector<Sco> v = ht.get(course);
-            if (v == null) {
-                v = new Vector<>();
-                ht.put(course, v);
-            }
-            v.add(sco[i]);
-        }
-        Set<Entry<Integer, Vector<Sco>>> set = ht.entrySet();
-        Iterator<Entry<Integer, Vector<Sco>>> iter = set.iterator();
-        while (iter.hasNext()) {
-            Entry<Integer, Vector<Sco>> entry = iter.next();
-            Vector<Sco> v = entry.getValue();
-            Object key = entry.getKey();
-            Collections.sort(v, new Comparator<Sco>() {
-
-                @Override
-                public int compare(Sco o1, Sco o2) {
-                    Sco s1 = (Sco) o1;
-                    Sco s2 = (Sco) o2;
-                    int i1 = s1.getSequencenr();
-                    int i2 = s2.getSequencenr();
-                    return i1 < i2 ? -1 : i1 == i2 ? 0 : 1;
-                }
-            });
-            Hashtable<Object,Object> h = new Hashtable<>();
-            h.put("courseID", key);
-            cachemap.put(h, v.toArray(createArray(v.size())));
-        }
-
-        return data;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see fi.dwo.client.persistence.XmlRpcMapper#getIDCol()
-     */
-    @Override
-    protected String getIDCol() {
-        return IDCOL;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see fi.dwo.client.persistence.XmlRpcMapper#getTableName()
-     */
-    @Override
-    protected String getTableName() {
-        return TABLENAME;
-    }
-
+   	
     /*
      * (non-Javadoc)
      * 
      * @see fi.dwo.client.persistence.XmlRpcMapper#update(java.lang.Object,
      *      java.util.Hashtable)
      */
-    protected Sco update(Sco obj, Hashtable data) throws PersistenceException {
+     private Sco update(Sco obj, Hashtable data) throws PersistenceException {
         Sco s = (Sco) obj;
         s.setScoID(((Integer) data.get("scoID")).intValue());
         s.setName((String) data.get("sconame"));
@@ -291,79 +164,63 @@ class ScoMapper extends XmlRpcMapper<Sco> {
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
      */
-    @Override
     protected Sco[] createArray(int size) {
         return new Sco[size];
     }
 
-    /* (non-Javadoc)
-     * @see fi.dwo.client.persistence.XmlRpcMapper#getOrderbyCol()
-     */
-    @Override
-    protected String getOrderbyCol() {
-        return ORDERCOL;
-    }
 
-    static {
-        LAZY_SCO_KEYS.add("tblScoView.courseID");
-        LAZY_SCO_KEYS.add("appletID");
-        LAZY_SCO_KEYS.add("tblScoView.description");
-        LAZY_SCO_KEYS.add("scoID");
-        LAZY_SCO_KEYS.add("sconame");
-        LAZY_SCO_KEYS.add("sequencenr");
-        LAZY_SCO_KEYS.add("showscore");
-    }
-    public static boolean hasShowScore = true;
-
-    private Sco[] cached(Hashtable ht) throws IOException, XmlRpcException,
-            SQLException, PersistenceException {
-        Sco[] result;
-        result = cachemap.get(ht);
-        if (result != null) {
-            //System.out.println("Found in cache " + ht);
-            return result;
-        }
-        result = get(ht);
-        //System.out.println("cache miss for " + ht + " size " + result.length);
-        cachemap.put(ht, result);
-        return result;
-    }
 
     
-    Sco[] get(Hashtable wheredef) throws IOException,
-            XmlRpcException, SQLException, PersistenceException {
-
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            return getObjectFromReturn(dbAccess.getTable(getTableName(), LAZY_SCO_KEYS, wheredef, getOrderbyCol()));
-        } catch (XmlRpcException e) {
-            if (hasShowScore) {
-                hasShowScore = false;
-                LAZY_SCO_KEYS.remove("showscore");
-                return get(wheredef);
-            }
-            throw e;
-        }
-
-        //return super.get(wheredef);
-    }
-
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#removeAllObjects()
      */
-    @Override
     void removeAllObjects() {
-        cachemap.clear();
-        super.removeAllObjects();
+        objects.clear();
     }
 
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#removeObject(int)
      */
-    @Override
     void removeObject(int key) {
-        cachemap.clear();
-        //super.removeObject(key);
+    }
+
+    public Sco[] get(Course course) throws PersistenceException {
+      DomCourse parent = new DomCourse(PersistentCourse.buildPersistenceId(Long.valueOf(course.getID())));
+      Promise<List<DomScoContext>> p = PublicScoContextManager.getScosAsync(parent, DWO.getDwoProfile(), null);
+      
+      try {
+        return toSco(course, p.getValue());
+      } catch (InvocationTargetException e) {
+        throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+      } catch (InterruptedException e) {
+        return null;
+      }
+    }
+
+    private Sco[] toSco(Course parent, List<DomScoContext> value) throws PersistenceException {
+      Sco[] result = createArray(value.size());
+      int i = 0;
+      for(DomScoContext item: value) {
+        int id;
+        try {
+          id = MySQLPersistenceId.getNativeId(item).intValue();
+        } catch (Dwo2Exception e) {
+          throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+        }
+        Sco s = objects.get(id);
+        if (s == null) {
+          s = new LazySco(item);
+        }
+        s.setScoID(id);
+        s.setName(item.getScoName());
+        s.setSequencenr(item.getSequencenr().intValue());
+        s.setAppletID(PersistenceFacade.idOf(item.getAppletId()));
+        s.setCourse(parent);
+        s.setShowScore(item.getShowScore());
+        s.setCourseChanged(false);
+        result[i++] = s;
+      }
+      return result;
     }
 
 }

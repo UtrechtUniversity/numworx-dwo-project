@@ -1,14 +1,10 @@
 package fi.dwo.dwojapplet.persistence.cache;
 
 import fi.beans.numworxlf.JOptionPane;
-import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -16,8 +12,6 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.apache.xmlrpc.applet.XmlRpcException;
 
 public class CachingStore implements IStore, Runnable {
     private static final Logger LOG = Logger.getLogger(CachingStore.class.getName());
@@ -196,8 +190,8 @@ public class CachingStore implements IStore, Runnable {
         }
     }
 
-    public CachingStore(DbAccessIF dba) {
-        delegate = new NoCache(dba);
+    public CachingStore() {
+        delegate = new NoCache();
         work = new LinkedHashMap();
         cache = new WeakHashMap();
         worker = new Thread(this);

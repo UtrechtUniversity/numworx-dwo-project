@@ -1,16 +1,10 @@
 package fi.dwo.dwojapplet.persistence;
 
-import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.dwojapplet.domain.ClassCourse;
-import fi.dwo.dwojapplet.domain.SchoolClass;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
-
-import org.apache.xmlrpc.applet.XmlRpcException;
 
 class ClassCourseMapper  {
 
@@ -21,7 +15,7 @@ class ClassCourseMapper  {
       objects = new HashMap<>();
     }
 
-    public ClassCourse getObjectFromReturn(Hashtable data) {
+    ClassCourse getObjectFromReturn(Hashtable data) {
         ClassCourse c = null;
         if (data == null || data.get("ClassCourseID") == null) { //We don't know enough to make a
             // classobject
@@ -42,7 +36,7 @@ class ClassCourseMapper  {
     }
 
 
-    protected ClassCourse update(ClassCourse obj, Hashtable data)  {
+    ClassCourse update(ClassCourse obj, Hashtable data)  {
         ClassCourse cc = (ClassCourse) obj;
         cc.setClassCourseID(((Integer) data.get("ClassCourseID")).intValue());
         cc.setClassID(((Integer) data.get("ClassID")).intValue());
