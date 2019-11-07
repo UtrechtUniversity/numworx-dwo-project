@@ -171,6 +171,7 @@ public class PersistentScoData implements Serializable {
       dom.setId(buildPersistenceId());
       dom.setLaunchdata(getLaunchdata());
       dom.setLaunchdatabytes(getLaunchdatabytes());
+      dom.setDescription(getDescription());    
       dom.setOptLock(Long.valueOf(optlock));
     }
     
