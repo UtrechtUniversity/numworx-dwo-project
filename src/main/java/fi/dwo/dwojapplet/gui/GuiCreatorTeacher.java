@@ -475,7 +475,7 @@ public class GuiCreatorTeacher extends GuiCreator {
     }
 
     public CenterSubPanel getHTML5ScoPanel(Sco sco) {
-      if (DwoHelper.isTest() && sco.hasFeature(Sco.JSON_OUT) && DwoHelper.hasProfileRight(DwoHelper.PREVIEW)) {
+      if (sco.hasFeature(Sco.JSON_OUT) && DwoHelper.hasProfileRight(DwoHelper.PREVIEW)) {
         dwo.setWait();
         try {
           final WrapSco wrap = new WrapSco(sco);
