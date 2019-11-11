@@ -63,6 +63,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
 import javax.annotation.security.PermitAll;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
@@ -179,7 +181,10 @@ public class SecuredDwoAdminSchoolManager {
             try {
                 s = SchoolManager.findEntity((Long) MySQLPersistenceId.getNativeId(school.getDomSchool4DwoAdmin()));
                 LOG.log(Level.FINER, "Fetched school with id {0}. ", new Object[]{s.getSchoolID()});
-                return s.buildDomSchoolFull();
+                DomSchoolFull full = s.buildDomSchoolFull();
+                List<PersistentSchoolGroup> list = SchoolGroupManager.findEntities(s);
+                full.setPasswords(list.stream().map(item -> new DomMapEntry<>(RoleType.valueOf(item.getRole().getGroupname()), item.getPasswd())).collect(Collectors.toList()));
+				return full;
             } catch (Exception e) {
                 LOG.log(Level.WARNING, "School " + school.getDomSchool4DwoAdmin().getId() + "Could not be found.", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the school.");
