@@ -1,14 +1,9 @@
 package fi.dwo.dwojapplet.form;
 
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Hashtable;
@@ -16,20 +11,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.logging.Level;
-
-import javax.swing.SwingUtilities;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.xmlrpc.applet.XmlRpcException;
 import org.osgi.util.promise.Promise;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
@@ -40,7 +30,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import fi.dwo.commons.exceptions.CourseException;
-import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentApplet;
@@ -48,10 +37,8 @@ import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.dwojapplet.domain.Course;
-import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.GuiCreator;
-import fi.dwo.dwojapplet.gui.ReducedImageIcon;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import hplb.misc.ByteArray;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
@@ -439,8 +426,8 @@ class ManifestFile {
     	        scoContext = manager.add(scoContext, scoData, profile);
     	            
 // legacy?
-    			int scoid = MySQLPersistenceId.getNativeId(scoContext).intValue();
-    			Sco newsco = PersistenceFacade.instance().getSco(scoid);
+    			//Sco newsco =  PersistenceFacade.instance().toSco(scoContext); 
+
    
 			
 			

@@ -178,8 +178,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
       if (pid.getType() == PersistenceClassType.PersistentScoContext)
       {
         DomScoContext sco = mappedresults.getScoContexts().get(pid);
-        int sid = MySQLPersistenceId.getNativeId(sco).intValue();
-        return PersistenceFacade.instance().getSco(sid);
+        return PersistenceFacade.instance().toSco(sco);
       }
       return null;
     }

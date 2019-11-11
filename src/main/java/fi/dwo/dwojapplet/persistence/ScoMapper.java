@@ -197,7 +197,7 @@ class ScoMapper  {
       }
     }
 
-    private Sco[] toSco(Course parent, List<DomScoContext> value) throws PersistenceException {
+    public Sco[] toSco(Course parent, List<DomScoContext> value) throws PersistenceException {
       Sco[] result = createArray(value.size());
       int i = 0;
       for(DomScoContext item: value) {

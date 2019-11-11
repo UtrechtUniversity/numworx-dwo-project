@@ -625,7 +625,7 @@ public class PersistenceFacade {
               long total_time = toTimeInMillis(s.getTotalTime());
               r.setTotal_time(total_time);
               PersistenceId pid = s.getScoID();
-              Sco sco = getSco( idOf(pid));
+              Sco sco = getSco( idOf(pid)); // From cache
               r.setLessonGroup(sco);
               scores[sco.getSequencenr()-1] = r;
             }
@@ -935,5 +935,15 @@ public class PersistenceFacade {
       } catch (Dwo2Exception e) {
         throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
       }
+    }
+
+//    public Sco[] toSco(List<DomScoContext> org) throws PersistenceException {
+//      Course parent = courseMapper.get(idOf(org.get(0).getCourseId()));
+//      return scoMapper.toSco(parent, org);
+//    }
+    
+    public Sco toSco(DomScoContext org) throws PersistenceException {
+      Course parent = courseMapper.get(idOf(org.getCourseId()));
+      return scoMapper.toSco(parent, Collections.singletonList(org))[0];
     }
 }

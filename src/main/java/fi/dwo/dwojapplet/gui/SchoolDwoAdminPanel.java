@@ -104,7 +104,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
             }
             if (value == editImage) {
                 try {
-                    DomSchool4DwoAdmin school =  tableModel.getSchool(lclRow);
+                    DomSchool4DwoAdmin school = tableModel.getSchool(lclRow);
                     DomSchoolFull full = SecureDwoAdminSchoolManager.getSchool(school);
                     School s = AddSchoolDialog.editSchool(SchoolDwoAdminPanel.this.center, oldSchool,full);
                     if (s != null) {

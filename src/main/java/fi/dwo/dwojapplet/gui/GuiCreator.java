@@ -550,7 +550,7 @@ public class GuiCreator {
         if (dwo.getScoViewNr() > 0) {
             Sco viewSco = null;
             try {
-                viewSco = PersistenceFacade.instance().getSco(dwo.getScoViewNr());
+                viewSco = PersistenceFacade.instance().getSco(dwo.getScoViewNr()); // FIXME NOT FROM CACHE, DOES NOT WORK
             }
             catch (Exception e) {
                 LOG.log(Level.SEVERE, null, e);

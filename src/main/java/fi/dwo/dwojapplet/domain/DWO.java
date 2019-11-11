@@ -2210,8 +2210,7 @@ LOG.info("time results = " + (-t) + " ms");
 			scoData.setLaunchdatabytes(sco.getLaunchdataBytes());
 		scoContext = manager.add(scoContext, scoData, getDwoProfile());
 // legacy
-		int scoid = MySQLPersistenceId.getNativeId(scoContext).intValue();
-		sco = PersistenceFacade.instance().getSco(scoid);
+		sco = PersistenceFacade.instance().toSco(scoContext); 
 		return sco;
 	}
 
