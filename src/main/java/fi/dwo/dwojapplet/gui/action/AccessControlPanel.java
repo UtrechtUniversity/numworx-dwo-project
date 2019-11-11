@@ -303,7 +303,7 @@ public class AccessControlPanel extends JPanel implements ActionListener {
 
   private String toString(PersistenceId entity) {
     switch(entity.getType()) {
-      case PersistentUser: return teachers.getOrDefault(entity, NO_TEACHER).getDisplayName();
+      case PersistentUser: return teachers.getOrDefault(entity, NO_TEACHER).getUniqueDisplayName();
       case PersistentSchool: return school.getOrDefault(entity, NO_SCHOOL).getSchoolName();
       case PersistentSchoolClass: return classes.getOrDefault(entity,NO_CLASS).getSchoolClassName();
       default:
