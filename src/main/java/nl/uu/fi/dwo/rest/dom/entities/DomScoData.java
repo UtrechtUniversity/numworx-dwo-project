@@ -4,6 +4,7 @@ public class DomScoData extends DomId {
 
 	private String launchdata;
 	private byte[] launchdatabytes;
+	private String description;
 
 	public String getLaunchdata() {
 		return launchdata;
@@ -18,6 +19,12 @@ public class DomScoData extends DomId {
 	public void setLaunchdatabytes(byte[] launchdatabytes) {
 		this.launchdatabytes = launchdatabytes;
 	}
+  public String getDescription() {
+    return description;
+  }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 	
 	
 }
