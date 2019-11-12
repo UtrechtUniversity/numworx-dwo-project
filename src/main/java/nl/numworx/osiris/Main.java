@@ -26,11 +26,10 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 @SuppressWarnings("serial")
 public class Main extends JFrame {
 
-	URL base = url("https://numworx.acc.uu.nl/dwo/");
+	URL base;
 	String login_URL =  base + "saml/login.jsp";
 	String profileName = "100";
-	
-	
+		
 	JFileChooser chooser;
 	TablePanel cursus, toets, student, docent;
 	LoginPanel login;
@@ -64,19 +63,25 @@ public class Main extends JFrame {
 	}
 	
 	String c(String key) {
-		return config.getProperty(key);
+		return config.getProperty(key, "");
+	}
+
+	String c(String key, String def) {
+		return config.getProperty(key, def);
 	}
 
 	private Main() throws HeadlessException, IOException {
-		this("Numworx import (acceptatie)");
+		super();
 		
 		InputStream in = getClass().getResourceAsStream("/config.properties");
 		config = new Properties();
 		config.load(in);
 		in.close();
-
+		base  = url(c("base","https://numworx.acc.uu.nl/dwo/"));
+		login_URL =  base + c("login", "saml/login.jsp");
+		setTitle("Numworx import (acceptatie) " + c("version") + " " + c("qualifier"));
 		chooser = new JFileChooser();
-		FileFilter filter = new FileNameExtensionFilter("CSV files (excel)", "csv");
+		FileFilter filter = new FileNameExtensionFilter("CSV UTF-8 (excel)", "csv");
 		chooser.setFileFilter(filter );		
 		JTabbedPane tabs = new JTabbedPane();
 		cursus = new TablePanel(this, Col.COLLEGEJAAR, Col.CURSUS, Col.AANVANGSBLOK, Col.KORTE_NAAM_NL);

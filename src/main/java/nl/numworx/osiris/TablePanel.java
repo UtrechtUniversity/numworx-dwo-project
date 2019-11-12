@@ -99,7 +99,7 @@ public class TablePanel extends JPanel implements Iterable<CSVRecord> {
 	}
 	
 	boolean verify(Model model) {
-	  boolean verify = model.getColumnCount() >= headers.length;
+	  boolean verify = model.getColumnCount() == headers.length;
 	  if (verify) {
 	    Set<String> names = new TreeSet<>(model.headers);
 	    for (Col key:headers) {

@@ -8,10 +8,12 @@
 	</parent>
   <groupId>nl.numworx.osiris</groupId>
   <artifactId>osiris-import</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.2</version>
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+		<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>
 		<app.name>Numworx-import-acceptatie</app.name>
 	</properties>
 	<dependencies>
@@ -53,6 +55,12 @@
 		</dependency>
 	</dependencies>
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -78,6 +86,7 @@
 				<configuration>
 					<archive>
 						<manifest>
+						    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 							<addClasspath>true</addClasspath>							
 							<useUniqueVersions>false</useUniqueVersions>
 							<mainClass>nl.numworx.osiris.Main</mainClass>
