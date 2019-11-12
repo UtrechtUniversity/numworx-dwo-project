@@ -200,14 +200,14 @@
     	</dependency>
     	<dependency>
     		<groupId>nl.numworx.swingbrowser</groupId>
-    		<artifactId>swingbrowser-jxb</artifactId>
-    		<version>0.0.1</version>
+    		<artifactId>swingbrowser-jfx</artifactId>
+    		<version>0.0.2-SNAPSHOT</version>
     		<scope>provided</scope>
     	</dependency>
     	<dependency>
     		<groupId>nl.numworx.swingbrowser</groupId>
     		<artifactId>swingbrowser-api</artifactId>
-    		<version>0.0.1</version>
+    		<version>0.0.2-SNAPSHOT</version>
     		<scope>provided</scope>
     	</dependency>
     	<dependency>
