@@ -55,7 +55,7 @@ public class LoginManager {
       // clears any auth data and cookies remaining from a previous session in Java browser-like
       // framework
       Authenticator.setDefault(null);
-      CookieManager.setDefault(null);
+      //CookieManager.setDefault(null);
       StoredRestManager restManager = StoredRestManager.getInstance();
       URL url = new URL(restManager.getServerUrlPath(), "rest/secure/user/account/login"); // TODO
                                                                                            // make

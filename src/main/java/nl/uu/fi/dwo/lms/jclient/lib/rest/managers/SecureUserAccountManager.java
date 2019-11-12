@@ -137,7 +137,7 @@ public class SecureUserAccountManager {
     result = restManager.put("rest/secure/user/account/logout", Boolean.class, submit);
     // ensures basic auth data and cookies are wiped from Java Browser-like framework
     Authenticator.setDefault(null);
-    CookieManager.setDefault(null);
+    //CookieManager.setDefault(null);
     restManager.setBasicAuthString(null, null, null);
     return result;
   }
