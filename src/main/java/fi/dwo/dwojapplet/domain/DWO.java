@@ -309,15 +309,19 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         MySimpleXmlRpcClient.setDebug("true".equals(xmlrpc_debug));
 
         dwo_env = properties.getProperty(DWO_ENV, super.getParameter(DWO_ENV));
+        if (dwo_env == null) dwo_env = "";
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{DWO_ENV, dwo_env});
 
         extensionOverride = properties.getProperty(PROFILE_EXTENSION, extensionOverride);
 
-        if("test".equals(dwo_env))
+        if(dwo_env.contains("test"))
             DwoHelper.setTest(true);
         Compressor.setSkip(false);
-        if("saml".equals(dwo_env))
+        if(dwo_env.contains("saml"))
             DwoHelper.setSamlLogin(true);
+        if (DwoHelper.isTest()) {
+          dwo_env = "test"; // legacy bij geodefiner/wiskopdr geen combinatie nog.
+        }
     }
 
     /**
