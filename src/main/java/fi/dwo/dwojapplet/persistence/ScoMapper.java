@@ -43,14 +43,14 @@ import org.osgi.util.promise.Promise;
 
 class ScoMapper  {
     private static final Logger LOG = Logger.getLogger(ScoMapper.class.getName());
-    private Map<Integer, Sco> objects = new HashMap<>();
+    private Map<Integer, Sco> objects = new Hashtable<>();
 
     class LazySco extends Sco {
 
         Promise<DomScoData> pdata;
         DomScoContextId domScoId;
     
-        public LazySco(DomScoContext item) {
+        LazySco(DomScoContext item) {
           domScoId = item;
           //pdata = PublicScoContextManager.getDataAsync(domScoId, DWO.getDwoProfile(), null);
         }
@@ -71,9 +71,15 @@ class ScoMapper  {
             } catch (InterruptedException e) {
              }
 
-            if (l != null && !l.isEmpty())
-              launchdata = (Hashtable) new StringCodeObject(l).toObject();
-                
+            if (l != null && !l.isEmpty()) {
+              ClassLoader cl = null;
+              try {
+                Class<?> clazz = PersistenceFacade.instance().getAppletClass(getAppletID());
+                cl = clazz.getClassLoader();
+              } catch (PersistenceException e) {
+              }
+              launchdata = (Hashtable) StringCodeObject.decodeStringToObject(l, cl);
+            }    
             return super.getLaunchdata();
         }
 
@@ -218,6 +224,7 @@ class ScoMapper  {
         s.setCourse(parent);
         s.setShowScore(item.getShowScore());
         s.setCourseChanged(false);
+        objects.putIfAbsent(id, s);
         result[i++] = s;
       }
       return result;
