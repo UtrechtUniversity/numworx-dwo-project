@@ -6,8 +6,17 @@
 @import url("//fonts.googleapis.com/css?family=Ubuntu+Condensed");
 @import url("//fonts.googleapis.com/css?family=Roboto");
 
-html,body{margin:0px; padding:0px;}
-body#main {margin:0px; background:white; color:#000;}
+html,body{
+	margin:0px; 
+	padding:0px;
+	touch-action: none;
+	-ms-touch-action: none;
+}
+
+body#main {
+	background:white;
+	color:#000;
+}
 
 /** Example rules used by the template application (remove for your app) */
 
