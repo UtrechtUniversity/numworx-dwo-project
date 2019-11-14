@@ -1,0 +1,113 @@
+package nl.uu.fi.dwo.mobile.client.ui;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import com.google.gwt.core.shared.GWT;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
+import com.google.gwt.user.client.Timer;
+import com.google.web.bindery.event.shared.Event;
+import com.google.web.bindery.event.shared.EventBus;
+
+@Singleton 
+public class IdleDetect extends Timer implements NativePreviewHandler {
+	
+	public final static int FAST = 2;      // 10-20 secs
+	public final static int SLOW = 6 * 15; // 15 minutes
+	
+	public interface IdleHandler {
+		void onIdle(IdleEvent ev);
+	}
+	
+	public static class IdleEvent extends Event<IdleHandler> {
+
+		private static final Type<IdleHandler> TYPE = new Type<>();
+
+		
+		public  final boolean slow; 
+		public  final int cnt;
+
+		@Override
+		public Type<IdleHandler> getAssociatedType() {
+			return TYPE;
+		}
+
+		@Override
+		protected void dispatch(IdleHandler handler) {
+			handler.onIdle(this);
+		}
+		
+		private IdleEvent(int c ) {
+			cnt = c; slow = c > FAST;
+		}
+
+		/**
+		 * @return the slow
+		 */
+		public boolean isSlow() {
+			return slow;
+		}
+
+		/**
+		 * @return the cnt
+		 */
+		public int getCnt() {
+			return cnt;
+		}
+		
+		public String toString() {
+			return "IdleEvent[" + cnt + "]";
+		}
+		
+	}
+	private int cnt;
+	
+	
+	private final EventBus bus;
+	private HandlerRegistration reg;
+	
+	@Inject IdleDetect(EventBus bus) {
+		this.bus = bus;
+	}
+	
+	public void reset() {
+		cnt = 0;
+	}
+	
+	public void start() {
+		if (reg == null)
+			reg = com.google.gwt.user.client.Event.addNativePreviewHandler(this);
+		this.scheduleRepeating(10000); // 10 sec
+	}
+	
+	public void stop() {
+		cancel();
+		if (reg != null) {
+			reg.removeHandler(); reg = null;
+		}
+	}
+	
+	public void fire() {
+		IdleEvent event = new IdleEvent(cnt);
+		GWT.log("fire " + event);
+		bus.fireEvent(event);
+	}
+
+	@Override
+	public void onPreviewNativeEvent(NativePreviewEvent event) {
+		reset();
+	}
+
+	@Override
+	public void run() {
+		cnt ++;
+		if (cnt == FAST) fire();
+		if (cnt >= SLOW) {
+			reset();
+			fire();
+		}		
+	}
+	
+}

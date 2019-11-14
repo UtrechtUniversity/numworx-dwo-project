@@ -38,7 +38,6 @@ import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF.MisconceptionsHandler;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF.NextPrevHandler;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF.ObjectivesHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
-import nl.uu.fi.dwo.formule.client.formuleobjects.TouchButton;
 import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.InteractionViewWithMisconceptions;
@@ -46,7 +45,6 @@ import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 
 import com.google.gwt.canvas.client.Canvas;
@@ -58,16 +56,12 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.CanvasElement;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.TouchEvent;
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -80,31 +74,24 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.google.gwt.user.client.ui.ProvidesResize;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RequiresResize;
-import com.google.gwt.user.client.ui.ResizeLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
-import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchEndHandler;
-import com.googlecode.mgwt.dom.client.recognizer.swipe.SwipeEndEvent;
-import com.googlecode.mgwt.dom.client.recognizer.swipe.SwipeEndHandler;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
 
 
 
@@ -188,7 +175,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 //		}
 	};
 	private Panel tekst = null;
-	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
+	//private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
 	private double zoom = 1;
 	
 	public boolean zelftoetsNagekeken = false;
@@ -288,8 +275,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		int widthKeerNagekeken = 0;
 		int widthVerzegeld = 0;
 		
-		for (int i = 0; i < buttons.size(); i++)
-			contentPanel.remove(buttons.get(i));
+//		for (int i = 0; i < buttons.size(); i++)
+//			contentPanel.remove(buttons.get(i));
 		
 		// initialize mode
 		int mode = OpdrNav.OEFENEN;
@@ -1903,35 +1890,35 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		setWebkitScrolling(true);
 // Hier moeten we een gesture recognizer maken:
 
-		if(TouchEvent.isSupported())
-		{
-			TouchDelegate touchDelegate = new TouchDelegate(contentScrollPanel);
-			//touchDelegate.addPinchHandler(new PinchContent());
-			
-			touchDelegate.addSwipeEndHandler(new SwipeEndHandler() {
-				
-				@Override
-				public void onSwipeEnd(SwipeEndEvent event) {
-					switch( event.getDirection()) {
-					case LEFT_TO_RIGHT:  gotoPrev(scoreNav); break;
-					case RIGHT_TO_LEFT: gotoNext(scoreNav); break;
-					// TODO case BOTTOM_TO_TOP: showScore(scoreNav);
-					default:
-					}
-					
-				}
-			});
-			
-			touchDelegate.addTouchEndHandler(new TouchEndHandler() {
-
-				@Override
-				public void onTouchEnd(TouchEndEvent event)
-				{
-					logger.info("ViewModuleViewImpl.touchDelegate.onTouchEnd()");
-				}
-				
-			});
-		}
+//		if(TouchEvent.isSupported())
+//		{
+//			TouchDelegate touchDelegate = new TouchDelegate(contentScrollPanel);
+//			//touchDelegate.addPinchHandler(new PinchContent());
+//			
+//			touchDelegate.addSwipeEndHandler(new SwipeEndHandler() {
+//				
+//				@Override
+//				public void onSwipeEnd(SwipeEndEvent event) {
+//					switch( event.getDirection()) {
+//					case LEFT_TO_RIGHT:  gotoPrev(scoreNav); break;
+//					case RIGHT_TO_LEFT: gotoNext(scoreNav); break;
+//					// TODO case BOTTOM_TO_TOP: showScore(scoreNav);
+//					default:
+//					}
+//					
+//				}
+//			});
+//			
+//			touchDelegate.addTouchEndHandler(new TouchEndHandler() {
+//
+//				@Override
+//				public void onTouchEnd(TouchEndEvent event)
+//				{
+//					logger.info("ViewModuleViewImpl.touchDelegate.onTouchEnd()");
+//				}
+//				
+//			});
+//		}
 		//ipv addContentPanelTouchListener(contentPanel);
 
 //		contentScrollPanel.add(contentPanel);
