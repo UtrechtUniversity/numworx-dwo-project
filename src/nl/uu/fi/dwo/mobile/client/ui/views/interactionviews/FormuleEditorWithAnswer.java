@@ -1363,7 +1363,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			if (this.fews != null)
 				fews.maakNakijkenAf(backStep, show, setState);
 			
-			if (syntaxFout)
+			if (syntaxFout && fews == null)
 			{	//checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
 				//checkimg.setVisible(true);
 				zetFeedback();
