@@ -11,7 +11,7 @@ import org.fusesource.restygwt.client.RestService;
 
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import java.util.List;
-import javax.ws.rs.GET;
+//import javax.ws.rs.GET;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
@@ -40,20 +40,20 @@ import nl.uu.fi.dwo.rest.entities.RestTeacher;
 
 public interface SecuredTeacherSchoolClassRestCaller extends RestService {
 
-    @GET
-    @Path("/sec:{id}/teacher/schoolclass/getList")
-    @Deprecated
-    public void getTeachersSchoolClasses(@PathParam("id") String id, MethodCallback<List<DomSchoolClass>> callback);
+//    @GET
+//    @Path("/sec:{id}/teacher/schoolclass/getList")
+//    @Deprecated
+//    public void getTeachersSchoolClasses(@PathParam("id") String id, MethodCallback<List<DomSchoolClass>> callback);
 
-    @GET
-    @Path("/sec:{id}/teacher/schoolclass/getTeachersInSchoolList")
-    @Deprecated
-    public void getTeachersInSchool(@PathParam("id") String id, MethodCallback<List<DomTeacher>> callback);
+//    @GET
+//    @Path("/sec:{id}/teacher/schoolclass/getTeachersInSchoolList")
+//    @Deprecated
+//    public void getTeachersInSchool(@PathParam("id") String id, MethodCallback<List<DomTeacher>> callback);
 
-    @GET
-    @Path("/sec:{id}/teacher/schoolclass/getStudentsInSchoolList")
-    @Deprecated
-    public void getStudentsInSchool(@PathParam("id") String id, MethodCallback<List<DomStudent>> callback);
+//    @GET
+//    @Path("/sec:{id}/teacher/schoolclass/getStudentsInSchoolList")
+//    @Deprecated
+//    public void getStudentsInSchool(@PathParam("id") String id, MethodCallback<List<DomStudent>> callback);
 
     
     @PUT
@@ -85,10 +85,10 @@ public interface SecuredTeacherSchoolClassRestCaller extends RestService {
     @Path("/sec:{id}/teacher/schoolclass/remove")
     public void removeSchoolClass(@PathParam("id") String id, RestSchoolClass restSchoolClass, MethodCallback<Boolean> callback);
 
-    @GET
-    @Path("/sec:{id}/teacher/schoolclass/getSchoolsList")
-    @Deprecated
-    public void getSchoolsClasses(@PathParam("id") String id, MethodCallback<List<DomSchoolClass>> callback);
+//    @GET
+//    @Path("/sec:{id}/teacher/schoolclass/getSchoolsList")
+//    @Deprecated
+//    public void getSchoolsClasses(@PathParam("id") String id, MethodCallback<List<DomSchoolClass>> callback);
 
     @PUT
     @Path("/sec:{id}/teacher/schoolclass/getSchoolsList")
@@ -122,10 +122,10 @@ public interface SecuredTeacherSchoolClassRestCaller extends RestService {
     @Path("/sec:{id}/teacher/schoolclass/getFull")
     public void getFullSchoolClass(@PathParam("id") String id, RestSchoolClass schoolClass, MethodCallback<DomSchoolClassFull> callBack);
 
-    @GET
-    @Path("/sec:{id}/teacher/schoolclass/getSingleSchoolStudentsInSchoolList")
-    @Deprecated
-    public void getSingleSchoolStudentsInSchool(@PathParam("id") String id, MethodCallback<List<DomStudent>> callback);
+//    @GET
+//    @Path("/sec:{id}/teacher/schoolclass/getSingleSchoolStudentsInSchoolList")
+//    @Deprecated
+//    public void getSingleSchoolStudentsInSchool(@PathParam("id") String id, MethodCallback<List<DomStudent>> callback);
 
     @PUT
     @Path("/sec:{id}/teacher/schoolclass/getSingleSchoolStudentsInSchoolList")
@@ -176,10 +176,10 @@ public interface SecuredTeacherSchoolClassRestCaller extends RestService {
 	public void setAccessKeyClassCourse(@PathParam("id") String id, RestSchoolClassCourseProfilewAccessKey rest,
 			MethodCallback<Boolean> promiseCallback);
 
-    @GET
-    @Path("/sec:{id}/teacher/schoolclass/getTeachersStudents")
-    @Deprecated
-    public void getTeachersStudents(@PathParam("id") String id, MethodCallback<List<DomStudent>> callback);
+//    @GET
+//    @Path("/sec:{id}/teacher/schoolclass/getTeachersStudents")
+//    @Deprecated
+//    public void getTeachersStudents(@PathParam("id") String id, MethodCallback<List<DomStudent>> callback);
  
     @PUT
     @Path("/sec:{id}/teacher/schoolclass/getTeachersStudents")

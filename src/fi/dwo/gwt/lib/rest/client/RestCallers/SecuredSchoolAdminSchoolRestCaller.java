@@ -13,11 +13,12 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
 
 import java.util.List;
-import javax.ws.rs.GET;
+//import javax.ws.rs.GET;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSchoolAdmin;
@@ -28,30 +29,30 @@ import nl.uu.fi.dwo.rest.entities.RestUserFull;
 
 public interface SecuredSchoolAdminSchoolRestCaller extends RestService {
 
-    @GET
+    @PUT
     @Path("/sec:{id}/schooladmin/school/getSchoolAdminList")
-    public void getSchoolAdminsInSchool(@PathParam("id") String id, MethodCallback<List<DomSchoolAdmin>> callback);
+    public void getSchoolAdminsInSchool(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomSchoolAdmin>> callback);
 
-    @GET
+    @PUT
     @Path("/sec:{id}/schooladmin/school/getTeachersInSchoolList")
-    public void getTeachersInSchool(@PathParam("id") String id, MethodCallback<List<DomTeacher>> callback);
+    public void getTeachersInSchool(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomTeacher>> callback);
 
-    @GET
+    @PUT
     @Path("/sec:{id}/schooladmin/school/getStudentsInSchoolList")
-    public void getStudentsInSchool(@PathParam("id") String id, MethodCallback<List<DomStudent>> callback);
+    public void getStudentsInSchool(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomStudent>> callback);
 
     @PUT
     @Path("/sec:{id}/schooladmin/school/getTeacherList")
     public void getTeachersInSchoolClass(@PathParam("id") String id, RestSchoolClass restData, MethodCallback<List<DomTeacher>> callback);
 
-    @GET
+    @PUT
     @Path("/sec:{id}/schooladmin/school/getSchoolClasssList")
-    public void getSchoolsClasses(@PathParam("id") String id, MethodCallback<List<DomSchoolClass>> callback);
+    public void getSchoolsClasses(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomSchoolClass>> callback);
 
-    @GET
+    @PUT
     @Path("/sec:{id}/schooladmin/schoolclass/getSingleSchoolStudentsInSchoolList")
-    public void getSingleSchoolStudentsInSchool(@PathParam("id") String id, MethodCallback<List<DomStudent>> callback);
-    
+    public void getSingleSchoolStudentsInSchool(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomStudent>> callback);
+   
     @PUT
     @Path("/sec:{id}/schooladmin/school/submitSingleSchoolStudent")
     public void submitSingleSchoolStudent(@PathParam("id") String id, RestNewSingleSchoolStudent schoolClass, MethodCallback<Boolean> callBack);

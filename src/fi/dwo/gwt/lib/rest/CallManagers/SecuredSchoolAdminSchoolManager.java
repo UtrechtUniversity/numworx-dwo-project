@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSchoolAdmin;
@@ -37,19 +38,25 @@ public class SecuredSchoolAdminSchoolManager {
 
   public Promise<List<DomSchoolAdmin>> getSchoolAdminsInSchool(DomContext context) {
     PromiseCallback<List<DomSchoolAdmin>> callback = new PromiseCallback<>();
-    service.getSchoolAdminsInSchool(PathId.getId(context), callback);
+    RestContext rest = new RestContext();
+    rest.setRestContext(context);
+    service.getSchoolAdminsInSchool(PathId.getId(context), rest, callback);
     return callback.getPromise();
   }
 
   public Promise<List<DomTeacher>> getTeachersInSchool(DomContext context) {
     PromiseCallback<List<DomTeacher>> callback = new PromiseCallback<>();
-    service.getTeachersInSchool(PathId.getId(context), callback);
+    RestContext rest = new RestContext();
+    rest.setRestContext(context);
+    service.getTeachersInSchool(PathId.getId(context), rest, callback);
     return callback.getPromise();
   }
 
   public Promise<List<DomStudent>> getStudentsInSchool(DomContext context) {
     PromiseCallback<List<DomStudent>> callback = new PromiseCallback<>();
-    service.getStudentsInSchool(PathId.getId(context), callback);
+    RestContext rest = new RestContext();
+    rest.setRestContext(context);
+    service.getStudentsInSchool(PathId.getId(context), rest, callback);
     return callback.getPromise();
   }
 
@@ -65,13 +72,17 @@ public class SecuredSchoolAdminSchoolManager {
 
   public Promise<List<DomSchoolClass>> getSchoolsClasses(DomContext context) {
     PromiseCallback<List<DomSchoolClass>> callback = new PromiseCallback<>();
-    service.getSchoolsClasses(PathId.getId(context), callback);
+    RestContext rest = new RestContext();
+    rest.setRestContext(context);
+    service.getSchoolsClasses(PathId.getId(context), rest, callback);
     return callback.getPromise();
   }
 
   public Promise<List<DomStudent>> getSingleSchoolStudentsInSchool(DomContext context) {
     PromiseCallback<List<DomStudent>> callback = new PromiseCallback<>();
-    service.getSingleSchoolStudentsInSchool(PathId.getId(context), callback);
+    RestContext rest = new RestContext();
+    rest.setRestContext(context);
+    service.getSingleSchoolStudentsInSchool(PathId.getId(context), rest, callback);
     return callback.getPromise();
   }
 
