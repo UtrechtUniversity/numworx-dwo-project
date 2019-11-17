@@ -16,8 +16,6 @@ import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
-import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
-import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
@@ -28,7 +26,6 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import com.google.gwt.activity.shared.AbstractActivity;
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.History;
@@ -37,9 +34,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
-import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
-import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
-import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 
 /**
  * Display module activity
@@ -221,7 +215,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 			int sconr = -1;
 			try {
 				sconr = Integer.parseInt(href)-1;
-			} catch(Exception _) {}
+			} catch(Exception e) {}
 			if(sconr <= -1 || sconr >= list.size())
 			{
 				for(sconr = 0; sconr < list.size(); sconr ++) {
