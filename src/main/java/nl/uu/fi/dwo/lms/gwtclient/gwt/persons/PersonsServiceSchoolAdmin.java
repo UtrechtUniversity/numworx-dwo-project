@@ -39,7 +39,7 @@ public class PersonsServiceSchoolAdmin extends PersonsService {
 
   @Override
   public Promise<Boolean> submitSchoolClass(DomSchoolClassFull schoolClass) {
-    return manager.submitSchoolClass(schoolClass);
+    return manager.submitSchoolClass(context, schoolClass);
   }
 
   @Override
@@ -49,7 +49,7 @@ public class PersonsServiceSchoolAdmin extends PersonsService {
 
   @Override
   public Promise<Boolean> submitSingleSchoolStudent(DomNewSingleSchoolStudent newStudent) {
-    return manager.submitSingleSchoolStudent(newStudent);
+    return manager.submitSingleSchoolStudent(context, newStudent);
   }
 
   final SecuredSchoolAdminSchoolClassManager manager;
@@ -76,31 +76,31 @@ public class PersonsServiceSchoolAdmin extends PersonsService {
   
   @Override
   public Promise<DomSchoolClassFull> getFullSchoolClass(DomSchoolClass aSchoolClass) {
-    return manager.getFullSchoolClass(aSchoolClass);
+    return manager.getFullSchoolClass(context, aSchoolClass);
   }
 
   @Override
   public Promise<Boolean> updateSchoolClass(DomSchoolClassFull fullSchoolClass) {
-    return manager.updateSchoolClass(fullSchoolClass);
+    return manager.updateSchoolClass(context, fullSchoolClass);
   }
 
   @Override
   public Promise<Boolean> removeSchoolClass(DomSchoolClass schoolClass) {
-    return manager.removeSchoolClass(schoolClass);
+    return manager.removeSchoolClass(context, schoolClass);
   }
 
   @Override
   public Promise<List<DomTeacher>> getTeachersInSchoolClass(DomSchoolClass schoolClass) {
-    return manager.getTeachersInSchoolClass(schoolClass);
+    return manager.getTeachersInSchoolClass(context, schoolClass);
   }
 
   @Override
   public Promise<List<DomStudent>> getStudentsInSchoolClass(DomSchoolClass schoolClass) {
-    return manager.getStudentsInSchoolClass(schoolClass);
+    return manager.getStudentsInSchoolClass(context, schoolClass);
   }
   @Override
   public Promise<Boolean> submitTeacherToSchoolClass(DomSubmitTeacherToSchoolClass submit) {
-    return manager.submitTeacherToSchoolClass(submit);
+    return manager.submitTeacherToSchoolClass(context, submit);
   }
 
   public Promise<List<DomSchoolClassId>> getSharedTeacherClasses(DomTeacher rest) {
@@ -115,7 +115,7 @@ public class PersonsServiceSchoolAdmin extends PersonsService {
 
   @Override
   public Promise<Boolean> removeTeacherFromSchoolClass(DomRemoveTeacherFromSchoolClass data) {
-    return manager.removeTeacherFromSchoolClass(data);
+    return manager.removeTeacherFromSchoolClass(context, data);
   }
 
   @SuppressWarnings({"unchecked", "rawtypes"})
@@ -136,12 +136,12 @@ public class PersonsServiceSchoolAdmin extends PersonsService {
   
   @Override
   public Promise<Boolean> removeStudentFromSchoolClass(DomRemoveStudentFromSchoolClass data) {
-    return manager.removeStudentFromSchoolClass(data);
+    return manager.removeStudentFromSchoolClass(context, data);
   }
 
   @Override
   public Promise<Boolean> submitStudentToSchoolClass(DomSubmitStudentToSchoolClass data) {
-    return manager.submitStudentToSchoolClass(data);
+    return manager.submitStudentToSchoolClass(context, data);
   }
 
   @Override @Deprecated
@@ -155,7 +155,7 @@ public class PersonsServiceSchoolAdmin extends PersonsService {
 
   @Override
   public Promise<Boolean> moveStudentToSchoolClass(DomMoveStudentToSchoolClass submit) {
-    return manager.moveStudentToSchoolClass(submit);
+    return manager.moveStudentToSchoolClass(context, submit);
   }
 
   @Override
