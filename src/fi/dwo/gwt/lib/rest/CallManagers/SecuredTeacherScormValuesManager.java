@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacherScormValues;
 import nl.uu.fi.dwo.rest.entities.RestTeacherScormValues;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
@@ -42,7 +43,7 @@ public class SecuredTeacherScormValuesManager {
 		}
 		values.setValues(list);
 		restScormValues.setDomTeacherScormValues(values);
-		service.get(restScormValues, defer);
+		service.get(PathId.getId(restScormValues.getRestContext()),restScormValues, defer);
 		return defer.getPromise().map(new Function<DomTeacherScormValues, Map<String,String>>() {
 
 			@Override
@@ -72,7 +73,7 @@ public class SecuredTeacherScormValuesManager {
 		}
 		values.setValues(list);
  		PromiseCallback<DomStudentScoContext> defer = new PromiseCallback<DomStudentScoContext>();
-		service.set(rest, defer);
+		service.set(PathId.getId(rest.getRestContext()),rest, defer);
 		return defer.getPromise();
 	}
 

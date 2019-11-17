@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
@@ -16,11 +17,11 @@ import nl.uu.fi.dwo.rest.entities.RestScoContext;
 interface SecuredUserScoContextRestCaller extends RestService, ScoContextRestCaller {
 
 	@PUT
-    @Path("/secure/user/scoContext/get")
-    public void get(RestScoContext restScoContext, MethodCallback<DomScoContext> callback);
+    @Path("/sec:{id}/user/scoContext/get")
+    public void get(@PathParam("id") String id, RestScoContext restScoContext, MethodCallback<DomScoContext> callback);
 
 	@PUT
-	@Path("/secure/user/scoContext/getScos")
-	public void getScos(RestCourse restCourse, MethodCallback<List<DomScoContext>> callback);
+	@Path("/sec:{id}/user/scoContext/getScos")
+	public void getScos(@PathParam("id") String id, RestCourse restCourse, MethodCallback<List<DomScoContext>> callback);
 
 }

@@ -38,59 +38,55 @@ public interface SecuredSchoolAdminSchoolClassRestCaller extends RestService {
     public void getStudentsInSchool(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomStudent>> callback);
  
     @PUT
-    @Path("/secure/schooladmin/schoolclass/getTeacherList")
-    public void getTeachersInSchoolClass(RestSchoolClass restData, MethodCallback<List<DomTeacher>> callback);
+    @Path("/sec:{id}/schooladmin/schoolclass/getTeacherList")
+    public void getTeachersInSchoolClass(@PathParam("id") String id, RestSchoolClass restData, MethodCallback<List<DomTeacher>> callback);
 
     @PUT
-    @Path("/secure/schooladmin/schoolclass/getStudentList")
-    public void getStudentsInSchoolClass(RestSchoolClass restData, MethodCallback<List<DomStudent>> callback);
+    @Path("/sec:{id}/schooladmin/schoolclass/getStudentList")
+    public void getStudentsInSchoolClass(@PathParam("id") String id, RestSchoolClass restData, MethodCallback<List<DomStudent>> callback);
 
     @PUT
-    @Path("/secure/schooladmin/schoolclass/submit")
-    public void submitSchoolClass(RestSchoolClassFull restData, MethodCallback<Boolean> callback);
+    @Path("/sec:{id}/schooladmin/schoolclass/submit")
+    public void submitSchoolClass(@PathParam("id") String id, RestSchoolClassFull restData, MethodCallback<Boolean> callback);
 
     @PUT
-    @Path("/secure/schooladmin/schoolclass/remove")
-    public void removeSchoolClass(RestSchoolClass restSchoolClass, MethodCallback<Boolean> callback);
-
-//    @GET
-//    @Path("/secure/schooladmin/schoolclass/getSchoolsList")
-//    public void getSchoolsClasses(MethodCallback<List<DomSchoolClass>> callback);
+    @Path("/sec:{id}/schooladmin/schoolclass/remove")
+    public void removeSchoolClass(@PathParam("id") String id, RestSchoolClass restSchoolClass, MethodCallback<Boolean> callback);
 
     @PUT
-    @Path("/secure/schooladmin/schoolclass/submitTeacher")
-    public void submitTeacherToSchoolClass(RestSubmitTeacherToSchoolClass restData, MethodCallback<Boolean> callback);
+    @Path("/sec:{id}/schooladmin/schoolclass/submitTeacher")
+    public void submitTeacherToSchoolClass(@PathParam("id") String id, RestSubmitTeacherToSchoolClass restData, MethodCallback<Boolean> callback);
 
     @PUT
-    @Path("/secure/schooladmin/schoolclass/removeTeacher")
-    public void removeTeacherFromSchoolClass(RestRemoveTeacherFromSchoolClass restData, MethodCallback<Boolean> callback);
+    @Path("/sec:{id}/schooladmin/schoolclass/removeTeacher")
+    public void removeTeacherFromSchoolClass(@PathParam("id") String id, RestRemoveTeacherFromSchoolClass restData, MethodCallback<Boolean> callback);
 
     @PUT
-    @Path("/secure/schooladmin/schoolclass/submitStudent")
-    public void submitStudentToSchoolClass(RestSubmitStudentToSchoolClass restData, MethodCallback<Boolean> callback);
+    @Path("/sec:{id}/schooladmin/schoolclass/submitStudent")
+    public void submitStudentToSchoolClass(@PathParam("id") String id, RestSubmitStudentToSchoolClass restData, MethodCallback<Boolean> callback);
 
     @PUT
-    @Path("/secure/schooladmin/schoolclass/moveStudent")
-    public void moveStudentToSchoolClass(RestMoveStudentToSchoolClass restData, MethodCallback<Boolean> callback);    
+    @Path("/sec:{id}/schooladmin/schoolclass/moveStudent")
+    public void moveStudentToSchoolClass(@PathParam("id") String id, RestMoveStudentToSchoolClass restData, MethodCallback<Boolean> callback);    
     
     @PUT
-    @Path("/secure/schooladmin/schoolclass/removeStudent")
-    public void removeStudentFromSchoolClass(RestRemoveStudentFromSchoolClass restData, MethodCallback<Boolean> callback);
+    @Path("/sec:{id}/schooladmin/schoolclass/removeStudent")
+    public void removeStudentFromSchoolClass(@PathParam("id") String id, RestRemoveStudentFromSchoolClass restData, MethodCallback<Boolean> callback);
 
     @PUT
-    @Path("/secure/schooladmin/schoolclass/update")
-    public void updateSchoolClass(RestSchoolClassFull schoolClass, MethodCallback<Boolean> callBack);
+    @Path("/sec:{id}/schooladmin/schoolclass/update")
+    public void updateSchoolClass(@PathParam("id") String id, RestSchoolClassFull schoolClass, MethodCallback<Boolean> callBack);
 
     @PUT
-    @Path("/secure/schooladmin/schoolclass/getFull")
-    public void getFullSchoolClass(RestSchoolClass schoolClass, MethodCallback<DomSchoolClassFull> callBack);
+    @Path("/sec:{id}/schooladmin/schoolclass/getFull")
+    public void getFullSchoolClass(@PathParam("id") String id, RestSchoolClass schoolClass, MethodCallback<DomSchoolClassFull> callBack);
 
     @PUT
     @Path("/sec:{id}/schooladmin/schoolclass/getSingleSchoolStudentsInSchoolList")
     public void getSingleSchoolStudentsInSchool(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomStudent>> callback);
     
     @PUT
-    @Path("/secure/schooladmin/schoolclass/submitSingleSchoolStudent")
-    public void submitSingleSchoolStudent(RestNewSingleSchoolStudent schoolClass, MethodCallback<Boolean> callBack);
+    @Path("/sec:{id}/schooladmin/schoolclass/submitSingleSchoolStudent")
+    public void submitSingleSchoolStudent(@PathParam("id") String id, RestNewSingleSchoolStudent schoolClass, MethodCallback<Boolean> callBack);
 
 }

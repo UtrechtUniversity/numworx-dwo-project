@@ -39,7 +39,7 @@ public class SecuredStudentScoDataRestCaller implements ScoDataRestCaller {
 				MethodCallback<Boolean> callback);
 		
 		@PUT
-		@Path("sec:{id}/user/scoData/getJSONLaunchDataBytes")
+		@Path("/sec:{id}/user/scoData/getJSONLaunchDataBytes")
 		public void getJSONLaunchDataBytes(@PathParam("id") String id, RestScoContext rest, MethodCallback<JSONValue> callback);
 	
 	}
