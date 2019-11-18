@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
