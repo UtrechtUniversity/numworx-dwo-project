@@ -833,7 +833,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			checkPanel.getElement().getStyle().setCursor(Cursor.POINTER);
 		else
 			checkPanel.getElement().getStyle().setCursor(Cursor.DEFAULT);
-
+// bij noordhof nooit.
+		if (!DWOplayer.PARAMETERS.keyboardStyle().equals("noordhoff")) {
 		// popup met feedback alleen tonen als niet correct 
 		if (feedbackLabel.isVisible() && (isCorrect() == null || !isCorrect())) // correct is null is half/doorgaan, correct is true is goed, correct is false is fout
 		{
@@ -852,8 +853,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 					feedbackPanel.setPopupPosition(xPos, yPos);
 					feedbackPanel.show();
 				}
-			});
-		}
+			});												
+		}}
 	}
 	
 //	public void setimg(String answer)
