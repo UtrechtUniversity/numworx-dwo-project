@@ -316,7 +316,7 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 	        }
 	      }
 	      if (id == null) return p;
-	      ViewModulePlace place = (new ViewModulePlace(id, location));
+	      Place place = new nl.uu.fi.dwo.mobile.client.ui.places.s(id, location);
 	      started = false;
 	      placeController.goTo(place);
 	      return p;

@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.xapi.Activity;
 import nl.uu.fi.dwo.rest.dom.xapi.ActivityDefinition;
 import nl.uu.fi.dwo.rest.dom.xapi.Context;
@@ -40,8 +41,9 @@ public class SMLogger implements Logging {
       Memento instance = Memento.instance();
       boolean experiment = instance != null 
     		  && instance.pmodel != null 
-    		  && instance.getLessonMode() == LessonMode.normal;
-      experiment &= DWOplayer.withUser();
+    		  && instance.getLessonMode() == LessonMode.normal
+              && DWOplayer.withUser() 
+              && DWOplayer.clientfactory.getRoleType() == RoleType.STUDENT;
       if (experiment) {
         Promise<XapiManager> xapi = DWOplayer.clientfactory.getRPCHandler().getLRS();
         return new SMLogger(instance, xapi, delegate.get());

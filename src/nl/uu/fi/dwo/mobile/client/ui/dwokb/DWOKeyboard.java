@@ -4,6 +4,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -36,7 +37,7 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 	public DWOKeyboard() {
 		setStylePrimaryName("dwo");
 		OsDetection detection = MGWT.getOsDetection();
-		if(detection.isDesktop()
+		if(detection.isDesktop() && !TouchStartEvent.isSupported()
 				//&& false // voor tablet keyboard deze uitcommentarieren
 				) {
 			factory = new DWODesktopKeyboardFactory();

@@ -8,6 +8,13 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 public class s extends Place implements Hash {
 
 	private String token;
+	public s(Object token, String location ) {
+	  this(token == null ? null : token.toString());
+      if(location != null) {
+        this.token += "." + location;
+    }
+	  
+	}
 	
 	s(String token) {
 		this.token = token;

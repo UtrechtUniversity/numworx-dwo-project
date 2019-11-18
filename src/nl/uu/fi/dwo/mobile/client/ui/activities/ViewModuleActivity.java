@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -13,6 +14,9 @@ import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
+import nl.uu.fi.dwo.mobile.client.ui.IdleDetect;
+import nl.uu.fi.dwo.mobile.client.ui.IdleDetect.IdleEvent;
+import nl.uu.fi.dwo.mobile.client.ui.IdleDetect.IdleHandler;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
@@ -42,7 +46,7 @@ import com.google.gwt.user.client.ui.Label;
  * 
  */
 public class ViewModuleActivity extends AbstractActivity implements AnchorContext, ViewModuleView.Presenter, 
-  CBookEventListener, MessageEventHandler, GotoController
+  CBookEventListener, MessageEventHandler, GotoController, IdleHandler
 {
 	private ClientFactory clientFactory;
 	private ViewModuleView view;
@@ -101,6 +105,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 
 		started = true;
 		eventBus.addHandler(CBookEvent.TYPE, this);
+		eventBus.addHandler(IdleDetect.TYPE, this);
 		clientFactory.getHeaderView().hide();
 		panel.setWidget(view); // terug naar af. problemen met gekke scrolls
 		{
@@ -268,6 +273,16 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
         view.showIcon(false);
     if(Actions.hideMainNav.getCommand().equals(message))
       view.showIcon(true);
+  }
+
+  @Override
+  public void onIdle(IdleEvent ev) {   
+    OpdrNavIF opdrNav = view.getOpdrNav();
+    if (opdrNav.getMode() == OpdrNavIF.ZELFTOETS || opdrNav.getMode() == OpdrNavIF.EINDTOETS)
+      opdrNav.setChanged(false); 
+    if (ev.isSlow()) {
+      goTo(new TreeModulePlace(sco.getParentID()));
+    }
   }
 	
 }

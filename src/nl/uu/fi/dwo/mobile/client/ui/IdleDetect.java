@@ -21,9 +21,10 @@ public class IdleDetect extends Timer implements NativePreviewHandler {
 		void onIdle(IdleEvent ev);
 	}
 	
+    public static final Event.Type<IdleHandler> TYPE = new Event.Type<>();
+	
 	public static class IdleEvent extends Event<IdleHandler> {
 
-		private static final Type<IdleHandler> TYPE = new Type<>();
 
 		
 		public  final boolean slow; 
@@ -103,11 +104,13 @@ public class IdleDetect extends Timer implements NativePreviewHandler {
 	@Override
 	public void run() {
 		cnt ++;
-		if (cnt == FAST) fire();
-		if (cnt >= SLOW) {
-			reset();
+		if (cnt <= FAST) fire();
+		else if (cnt >= SLOW) {
 			fire();
-		}		
+            reset();
+		} else {
+		  GWT.log("not idle " + cnt);
+		}
 	}
 	
 }

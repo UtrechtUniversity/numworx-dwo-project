@@ -33,6 +33,7 @@ import nl.uu.fi.dwo.mobile.client.dagger.DWO2PlayerComponent;
 import nl.uu.fi.dwo.mobile.client.dagger.DaggerDWO2PlayerComponent;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
+import nl.uu.fi.dwo.mobile.client.ui.IdleDetect;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
@@ -99,14 +100,23 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 	/* (non-Javadoc)
    * @see nl.uu.fi.dwo.mobile.DWOplayer#inject()
    */
-
-
+	public static IdleDetect idleDetect;
+	
+	@Inject void setIdleDetect(IdleDetect id) {
+	  idleDetect = id;
+	}
 	
   protected ClientFactory createClientFactory() {
         DWO2PlayerComponent create = DaggerDWO2PlayerComponent.create();
         create.inject(this);
 		factory.setRPCHandler(new DWO2RPCHandler(PROFILE_ID));
- 
+
+		
+// TESTING
+		factory.getEventBus().addHandler(IdleDetect.TYPE, ev -> { GWT.log(ev.toString()); });
+		if (idleDetect != null)
+		  idleDetect.start();
+		
 // 		
 		MsgDialogPresenter mdp = new MsgDialogPresenter(factory.getEventBus());
         DwoStyle style = GWT.<AccountBundle>create(AccountBundle.class).style();
