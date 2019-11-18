@@ -3,7 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import com.google.gwt.core.shared.GWT;
+//import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
@@ -92,7 +92,7 @@ public class IdleDetect extends Timer implements NativePreviewHandler {
 	
 	public void fire() {
 		IdleEvent event = new IdleEvent(cnt);
-		GWT.log("fire " + event);
+		//GWT.log("fire " + event);
 		bus.fireEvent(event);
 	}
 
@@ -108,9 +108,8 @@ public class IdleDetect extends Timer implements NativePreviewHandler {
 		else if (cnt >= SLOW) {
 			fire();
             reset();
-		} else {
-		  GWT.log("not idle " + cnt);
-		}
+		} 
+		//else {GWT.log("not idle " + cnt);}
 	}
 	
 }
