@@ -5,7 +5,6 @@ import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 
@@ -44,7 +43,7 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 		math.setKeyboard(nr);
 		math.setDelegate(this);
 		disableKey(math.pad.t3_16);
-		disableKey(math.pad.t4_16);
+		//disableKey(math.pad.t4_16);
 		main.add(math);
 		
 		
