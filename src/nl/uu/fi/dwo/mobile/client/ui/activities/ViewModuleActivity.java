@@ -277,8 +277,8 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 
   @Override
   public void onIdle(IdleEvent ev) {   
-    OpdrNavIF opdrNav = view.getOpdrNav();
-    if (opdrNav.getMode() == OpdrNavIF.ZELFTOETS || opdrNav.getMode() == OpdrNavIF.EINDTOETS)
+    OpdrNavIF opdrNav = view.getOpdrNav(); // komt soms te vroeg, en dan heb je nog geen opdrnav
+    if (opdrNav != null && (opdrNav.getMode() == OpdrNavIF.ZELFTOETS || opdrNav.getMode() == OpdrNavIF.EINDTOETS))
       opdrNav.setChanged(false); 
     if (ev.isSlow()) {
       goTo(new TreeModulePlace(sco.getParentID()));
