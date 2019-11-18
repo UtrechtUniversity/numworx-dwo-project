@@ -113,10 +113,9 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 
 		
 // TESTING
-		factory.getEventBus().addHandler(IdleDetect.TYPE, ev -> { GWT.log(ev.toString()); });
-		if (idleDetect != null)
-		  idleDetect.start();
-		
+//		factory.getEventBus().addHandler(IdleDetect.TYPE, ev -> { GWT.log(ev.toString()); });
+//		if (idleDetect != null)
+//		  idleDetect.start();	
 // 		
 		MsgDialogPresenter mdp = new MsgDialogPresenter(factory.getEventBus());
         DwoStyle style = GWT.<AccountBundle>create(AccountBundle.class).style();
