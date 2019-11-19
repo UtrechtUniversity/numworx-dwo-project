@@ -16,6 +16,7 @@ import fi.dwo.gwt.lib.rest.DwoConstants;
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import nl.uu.fi.dwo.rest.DwoLocale;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -464,6 +465,9 @@ public class DwoGlobalVars {
     }
     
     public Promise<Dwo2Exception> logout() {
-      return accountManager.logout(getCurrentLoginContext());
+      DomContext context = new DomContext();
+      context.setDomHasRole(getActiveSchoolRoleAndClass().getHasRole());
+      context.setRealm(getRealm());
+      return accountManager.logout(context, getCurrentLoginContext());
     }
 }

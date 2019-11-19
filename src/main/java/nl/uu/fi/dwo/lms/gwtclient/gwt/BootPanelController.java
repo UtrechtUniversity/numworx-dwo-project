@@ -272,7 +272,7 @@ public class BootPanelController {
           user_id = Cookies.getCookie(DWO_SAML_USER_ID);
           org_id = Cookies.getCookie(DWO_SAML_ORGANIZATION_ID);
           authToken = Cookies.getCookie(DWO_SAML_AUTH_TOKEN);
-          LOG.severe("SAML User " + user_id + " " + org_id + " " + authToken);
+          LOG.fine("SAML User " + user_id + " " + org_id + " " + authToken);
         } else {
           user_id = org_id = null; // modern authtoken.
         }
