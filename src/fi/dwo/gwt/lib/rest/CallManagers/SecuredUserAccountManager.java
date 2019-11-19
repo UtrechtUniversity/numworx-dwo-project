@@ -231,47 +231,46 @@ public class SecuredUserAccountManager {
      * @param password
      * @return
      */
-    @Deprecated
-    public Promise<DomUserFull> updateAccountData(DomUserFull updateUser) {
-        PromiseCallback<DomUserFull> defer = new PromiseCallback<DomUserFull>();
-        this.updateAccountData(updateUser, defer);
-        return defer.getPromise();
-    }
+//    @Deprecated
+//    public Promise<DomUserFull> updateAccountData(DomUserFull updateUser) {
+//        PromiseCallback<DomUserFull> defer = new PromiseCallback<DomUserFull>();
+//        this.updateAccountData(updateUser, defer);
+//        return defer.getPromise();
+//    }
     public Promise<DomUserFull> updateAccountData(DomContext context, DomUserFull updateUser) {
         PromiseCallback<DomUserFull> defer = new PromiseCallback<DomUserFull>();
         this.updateAccountData(context, updateUser, defer);
         return defer.getPromise();
     }
 
-    /**
-     *
-     * @param updateUser
-     * @param callBack
-     * @deprecated use with context
-     */
-    public void updateAccountData(DomUserFull updateUser, AsyncCallback<DomUserFull> callBack) {
-    	updateAccountData(new DomContext(), updateUser, new Callback<DomUserFull>(callBack));
-    }
-    
-    public void updateAccountData(DomContext context, DomUserFull updateUser, MethodCallback<DomUserFull> callBack) {   
+//    /**
+//     *
+//     * @param updateUser
+//     * @param callBack
+//     * @deprecated use with context
+//     */
+//    public void updateAccountData(DomUserFull updateUser, AsyncCallback<DomUserFull> callBack) {
+//    	updateAccountData(new DomContext(), updateUser, new Callback<DomUserFull>(callBack));
+//    }
+    private void updateAccountData(DomContext context, DomUserFull updateUser, MethodCallback<DomUserFull> callBack) {   
     	RestUserFull user = new RestUserFull();
         user.setRestContext(context);
         user.setDomUserFull(updateUser);
         service.updateAccountData(PathId.getId(context), user, (callBack));
     }
 
-    /**
-     *
-     * @param name
-     * @param password
-     * @return
-     */
-    @Deprecated
-    public Promise<DomUserFull> getAccountData() {
-        PromiseCallback<DomUserFull> defer = new PromiseCallback<DomUserFull>();
-        this.service.getAccountData((defer));
-        return defer.getPromise();
-    }
+//    /**
+//     *
+//     * @param name
+//     * @param password
+//     * @return
+//     */
+//    @Deprecated
+//    public Promise<DomUserFull> getAccountData() {
+//        PromiseCallback<DomUserFull> defer = new PromiseCallback<DomUserFull>();
+//        this.service.getAccountData((defer));
+//        return defer.getPromise();
+//    }
 
     public Promise<DomUserFull> getAccountData(DomContext context) {
     	PromiseCallback<DomUserFull> defer = new PromiseCallback<>();
@@ -280,14 +279,14 @@ public class SecuredUserAccountManager {
     	service.getAccount(PathId.getId(context), rest, defer);
     	return defer.getPromise();
     }
-    /**
-     *
-     * @param callBack
-     */
-    @Deprecated
-    public void getAccountData(AsyncCallback<DomUserFull> callBack) {
-        service.getAccountData(new Callback<DomUserFull>(callBack));
-    }
+//    /**
+//     *
+//     * @param callBack
+//     */
+//    @Deprecated
+//    public void getAccountData(AsyncCallback<DomUserFull> callBack) {
+//        service.getAccountData(new Callback<DomUserFull>(callBack));
+//    }
 
     /**
      *
@@ -352,11 +351,11 @@ public class SecuredUserAccountManager {
 
     }
 
-    public Promise<Dwo2Exception> logout(DomLoginContext loginContext) {
-        PromiseCallback<Dwo2Exception> defer = new PromiseCallback<Dwo2Exception>();
-        this.logout(loginContext, defer);
-        return defer.getPromise();
-    }
+//    public Promise<Dwo2Exception> logout(DomLoginContext loginContext) {
+//        PromiseCallback<Dwo2Exception> defer = new PromiseCallback<Dwo2Exception>();
+//        this.logout(loginContext, defer);
+//        return defer.getPromise();
+//    }
  
     public Promise<Dwo2Exception> logout(DomContext context, DomLoginContext loginContext) {
         PromiseCallback<Dwo2Exception> defer = new PromiseCallback<Dwo2Exception>();
@@ -364,12 +363,12 @@ public class SecuredUserAccountManager {
         return defer.getPromise();
     }
 
-    @Deprecated
-    public void logout(DomLoginContext loginContext, AsyncCallback<Dwo2Exception> callback) {
-    	logout(new DomContext(), loginContext,  new Callback<Dwo2Exception>(callback));
-    }
+//    @Deprecated
+//    public void logout(DomLoginContext loginContext, AsyncCallback<Dwo2Exception> callback) {
+//    	logout(new DomContext(), loginContext,  new Callback<Dwo2Exception>(callback));
+//    }
  
-    public void logout(DomContext context, DomLoginContext loginContext, MethodCallback<Dwo2Exception> callback) {
+    private void logout(DomContext context, DomLoginContext loginContext, MethodCallback<Dwo2Exception> callback) {
         RestLoginContext restcontext = new RestLoginContext();
         restcontext.setDomLoginContext(loginContext);
         restcontext.setRestContext(context);
@@ -382,7 +381,7 @@ public class SecuredUserAccountManager {
         return defer.getPromise();
     }
 
-    public void getLoginContext(AsyncCallback<DomLoginContext> callback) {
+    private void getLoginContext(AsyncCallback<DomLoginContext> callback) {
         service.getLoginContext(new Callback<DomLoginContext>(callback));
     }
 
