@@ -50,6 +50,7 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 		pen = new DWOTabletKeyboardPen();
 		pen.setDelegate(this);
 		pen.setVisible(false);
+		disableKey(pen.pad.t3_16);
 		main.add(pen);
 		
 		setPixelSize(-1, getKeyboardHeight());
