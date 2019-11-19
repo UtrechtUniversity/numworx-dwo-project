@@ -9,9 +9,11 @@ import nl.uu.fi.dwo.rest.entities.RestUserFull;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestLoginContext;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -46,7 +48,10 @@ public class SecureUserAccountManager {
    */
   public static DomUserFull getAccountData() throws Dwo2Exception {
     DomUserFull user;
-    user = StoredRestManager.getInstance().get("rest/secure/user/account/get", DomUserFull.class);
+    DomContext context = StoredRestManager.getInstance().getAuthenticator().getContext();
+    RestContext rest = new RestContext();
+    rest.setRestContext(context);
+    user = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(context) + "/user/account/get", DomUserFull.class, rest);
     return user;
   }
 
@@ -54,7 +59,6 @@ public class SecureUserAccountManager {
       throws Dwo2Exception {
     DomLoginContext loginContext;
     Authenticator.setDefault(null);
-    CookieManager.setDefault(null);
     try {
       URL url = new URL(StoredRestManager.getInstance().getServerUrlPath().toString()
           + "rest/secure/user/account/getLoginContext"); // TODO make basicLogin
@@ -130,14 +134,14 @@ public class SecureUserAccountManager {
    */
   public static Boolean logoutUser(DomLoginContext domLoginContext) throws Dwo2Exception {
     Boolean result;
-    RestLoginContext submit = new RestLoginContext();
-    submit.setRestContext(new DomContext());
-    submit.setDomLoginContext(domLoginContext);
     StoredRestManager restManager = StoredRestManager.getInstance();
-    result = restManager.put("rest/secure/user/account/logout", Boolean.class, submit);
+    RestLoginContext submit = new RestLoginContext();
+    DomContext context = restManager.getAuthenticator().getContext();
+    submit.setRestContext(context);
+    submit.setDomLoginContext(domLoginContext);
+    result = restManager.put("rest/sec:" + PathId.getId(context) + "/user/account/logout", Boolean.class, submit);
     // ensures basic auth data and cookies are wiped from Java Browser-like framework
     Authenticator.setDefault(null);
-    //CookieManager.setDefault(null);
     restManager.setBasicAuthString(null, null, null);
     return result;
   }
@@ -151,14 +155,14 @@ public class SecureUserAccountManager {
    */
   public static Boolean basicAuthLogout(DomLoginContext domLoginContext) throws Dwo2Exception {
     Boolean result;
-    RestLoginContext submit = new RestLoginContext();
-    submit.setRestContext(new DomContext());
-    submit.setDomLoginContext(domLoginContext);
     StoredRestManager restManager = StoredRestManager.getInstance();
-    result = restManager.put("rest/secure/user/account/basicAuthLogout", Boolean.class, submit);
+    RestLoginContext submit = new RestLoginContext();
+    DomContext context = restManager.getAuthenticator().getContext();
+    submit.setRestContext(context);
+    submit.setDomLoginContext(domLoginContext);
+    result = restManager.put("rest/sec:" + PathId.getId(context) + "/user/account/basicAuthLogout", Boolean.class, submit);
     // ensures basic auth data and cookies are wiped from Java Browser-like framework
     Authenticator.setDefault(null);
-    CookieManager.setDefault(null);
     restManager.setBasicAuthString(null,null,null);
     return result;
   }
@@ -176,9 +180,10 @@ public class SecureUserAccountManager {
   public static DomUserFull updateAccountData(DomUserFull user) throws Dwo2Exception {
     RestUserFull restUser = new RestUserFull();
     StoredRestManager restManager = StoredRestManager.getInstance();
-    restUser.setRestContext(restManager.getAuthenticator().getContext());
+    DomContext context = restManager.getAuthenticator().getContext();
+	restUser.setRestContext(context);
     restUser.setDomUserFull(user);
-    user = restManager.put("rest/secure/user/account/update", DomUserFull.class, restUser);
+    user = restManager.put("rest/sec:" + PathId.getId(context) + "/user/account/update", DomUserFull.class, restUser);
     restManager.setBasicAuthString(null,null,null);
     LOG.log(Level.FINE, "Updated user profile of username {0}.",
         new Object[] {restUser.getDomUserFull().getUserName()});
@@ -195,13 +200,15 @@ public class SecureUserAccountManager {
    */
   public static Boolean removeAccountData() throws Dwo2Exception {
     Boolean b;
-    b = StoredRestManager.getInstance().get("rest/secure/user/account/remove", Boolean.class);
+    StoredRestManager restManager = StoredRestManager.getInstance();
+    DomContext context = restManager.getAuthenticator().getContext();
+    b = StoredRestManager.getInstance().get("rest/sec:" + PathId.getId(context) + "/user/account/remove", Boolean.class);
     return b;
   }
 
   public static Boolean link_saml(String userid, String orgid, String token) throws Dwo2Exception {
     Boolean b;
-    DomContext context = new DomContext();
+    DomContext context = StoredRestManager.getInstance().getAuthenticator().getContext();
     DomSamlUser saml = new DomSamlUser();
     saml.setSamlOrgId(orgid);
     saml.setSamlUserId(userid);
@@ -209,7 +216,7 @@ public class SecureUserAccountManager {
     RestSamlUser rest = new RestSamlUser();
     rest.setDomSamlUser(saml);
     rest.setRestContext(context);
-    b = StoredRestManager.getInstance().put("rest/secure/user/account/linkSaml", Boolean.class,
+    b = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(context) + "/user/account/linkSaml", Boolean.class,
         rest);
     return b;
   }

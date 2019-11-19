@@ -1,8 +1,10 @@
 package nl.uu.fi.dwo.lms.jclient.lib.rest.managers;
 
 import nl.uu.fi.dwo.rest.entities.RestNewSchoolLogin;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolLogin;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.util.PathId;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
@@ -45,10 +47,11 @@ public class SecureUserAccountLoginsManager {
   public static DomSchoolRoleAndClassV2 switchToSchoolLogin(DomSchoolRoleAndClassV2 src)
       throws Dwo2Exception {
     RestSchoolRoleAndClassV2 rest = new RestSchoolRoleAndClassV2();
-    rest.setRestContext(RestAuthenticator.getInstance().getContext());
+    DomContext context = RestAuthenticator.getInstance().getContext();
+	rest.setRestContext(context);
     rest.setDomSchoolRoleAndClass(src);
     DomSchoolRoleAndClassV2 result = StoredRestManager.getInstance()
-        .put("rest/secure/user/account/loginsV2/select", DomSchoolRoleAndClassV2.class, rest);
+        .put("rest/sec:" + PathId.getId(context) + "/user/account/loginsV2/select", DomSchoolRoleAndClassV2.class, rest);
     return result;
   }
 
@@ -61,9 +64,10 @@ public class SecureUserAccountLoginsManager {
   public static boolean addASchoolLogin(DomNewSchoolLogin newSchoolLogin) throws Dwo2Exception {
     boolean r;
     RestNewSchoolLogin rest = new RestNewSchoolLogin();
-    rest.setRestContext(RestAuthenticator.getInstance().getContext());
+    DomContext context = RestAuthenticator.getInstance().getContext();
+	rest.setRestContext(context);
     rest.setDomNewSchoolLogin(newSchoolLogin);
-    r = StoredRestManager.getInstance().put("rest/secure/user/account/loginsV2/submit",
+    r = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(context) + "/user/account/loginsV2/submit",
         Boolean.class, rest);
     return r;
   }
@@ -77,10 +81,11 @@ public class SecureUserAccountLoginsManager {
   public static boolean removeASchoolLogin(DomSchoolRoleAndClassV2 toRemoveSchoolLogin)
       throws Dwo2Exception {
     RestSchoolRoleAndClassV2 rest = new RestSchoolRoleAndClassV2();
-    rest.setRestContext(RestAuthenticator.getInstance().getContext());
+    DomContext context = RestAuthenticator.getInstance().getContext();
+	rest.setRestContext(context);
     rest.setDomSchoolRoleAndClass(toRemoveSchoolLogin);
     boolean r;
-    r = StoredRestManager.getInstance().put("rest/secure/user/account/loginsV2/remove",
+    r = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(context) + "/user/account/loginsV2/remove",
         Boolean.class, rest);
 
     return r;
