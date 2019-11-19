@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.util.ACL;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -52,6 +53,38 @@ public class CourseManager {
 	
 	Collection<String> names(Collection<? extends DomCourse> list) {
 		return list.stream().map(DomCourse::getName).collect(Collectors.toSet());
+	}
+	
+	static final String HOME = "Personal Folders";
+	
+	boolean createTeacher(DomUser user) throws Dwo2Exception {
+		List<DomCourseStudent> courses;
+		String solis = user.getUserName();
+		courses = children.get(null);
+		if (courses == null) {
+			courses = SecureUserCourseManager.getCoursesSchool(profile);
+			children.put(null, courses);
+		}
+		DomCourse root = optionalCreateMap(HOME, courses, null, "");
+		courses = getChildren(root);
+		String sname = trunk40(solis);
+		Collection<String> set = names(courses);
+		if (! set.contains(sname)) {
+			DomCourseFull s = createMap(root, sname, Boolean.TRUE, "");
+			courses.add(s);
+			DomACL acl = new DomACL();
+			acl.setAccess(ACL.FULL);
+			acl.setEntity(user.getId());
+			s.setAcls(Collections.singletonList(acl));
+			s = updater.update(s);
+			return true;
+		} else {
+			root = courses.stream().filter(i -> sname.equals(i.getName())).findAny().get();
+			return false;
+		}
+		
+		
+		
 	}
 	
 	boolean createToets(CSVRecord record) throws Dwo2Exception {

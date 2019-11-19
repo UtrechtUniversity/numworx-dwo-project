@@ -71,8 +71,7 @@ public class Main extends JFrame {
 	}
 
 	private Main() throws HeadlessException, IOException {
-		super();
-		
+		this("");	
 		InputStream in = getClass().getResourceAsStream("/config.properties");
 		config = new Properties();
 		config.load(in);

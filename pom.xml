@@ -8,7 +8,7 @@
 	</parent>
   <groupId>nl.numworx.osiris</groupId>
   <artifactId>osiris-import</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.3</version>
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>

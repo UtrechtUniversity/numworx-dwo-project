@@ -138,7 +138,17 @@ public class InstallPanel extends JPanel {
 			    if (man.createToets(record))
 			      toets ++;
 			  }
-			      message += toets + " exams\n";
+			  
+			  int folders = 0; 
+			  for (DomUserFull u: leerkrachten.values()) {
+				  if (man.createTeacher(u))
+					  folders++;
+			  }
+			  if (folders > 0) {
+				  message += folders + " folders\n";
+			  }
+			  
+			  message += toets + " exams\n";
 			
 			message += "Installation done";
 		} catch (Exception e1) {
