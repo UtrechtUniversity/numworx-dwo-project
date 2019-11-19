@@ -5,8 +5,10 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.FocusTraversalPolicy;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.Window;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,7 +41,9 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JApplet;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
@@ -52,6 +56,7 @@ import fi.beans.jvmchecker.JVMChecker;
 import fi.beans.loader.Loader;
 import fi.beans.mainframe.MainFrame;
 import fi.beans.numworxlf.Constants;
+import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.beans.scorm.SCORM12APIInterface;
@@ -74,6 +79,9 @@ import fi.dwo.dwojapplet.domain.utils.CheckEmail;
 import fi.dwo.dwojapplet.gui.CenterSubPanel;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.GuiCreator;
+import fi.dwo.dwojapplet.gui.IdleDetect;
+import fi.dwo.dwojapplet.gui.IdleDetect.IdleEvent;
+import fi.dwo.dwojapplet.gui.IdleDetect.IdleListener;
 import fi.dwo.dwojapplet.gui.MainPanel;
 import fi.dwo.dwojapplet.gui.ModuleTreePanel;
 import fi.dwo.dwojapplet.gui.ScoPanel;
@@ -118,7 +126,7 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
  * stand alone application.
  *
  */
-public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInterface {
+public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInterface, IdleListener {
 
     private static final String DWO_ENV = "dwo_env";
 
@@ -501,6 +509,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      *
      */
     public boolean login(String username, String password) throws LoginException {
+        idleOn();
     	setUserName(username);
     	setPassWord(password);
     	MySimpleXmlRpcClient.AUTHORIZATION = StoredRestManager.getInstance().getBasicAuthString();
@@ -531,26 +540,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      *
      */
     public boolean loginWithMd5(String username, String password) throws LoginException {
+        idleOn();
         PersistenceFacade.instance().clearCurrentScoDataCache();
         PersistenceFacade.instance().clearCurrentCourseDataCache();
-        String plainPassword = DwoHelper.getPlainPassword();
-        // DomFullUser user=null;
-        // try {
-        // user = LoginManager.login(username, password);
-        // }
-        // catch (Dwo2Exception ex) {
-        // Logger.getLogger(DWO.class.getName()).log(Level.SEVERE, "", ex);
-        // }
-        // if (user == null) {
-        // throw new LoginException(LoginException.LE_UNKNOWN_USER);
-        // }
-// is al ingelogd
-//        if (plainPassword == null) {
-//            DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username));
-//        } else {
-//            DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username, plainPassword));
-//        }
-
         return setExtraRights(DwoHelper.getCurrentFacadeUser());
     }
 
@@ -977,6 +969,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      *
      */
     public void logoff() {
+        idleOff();
         try {
             if(DwoHelper.getCurrentUser()!=null) SecureUserAccountManager.logoutUser(DwoHelper.getCurrentLoginContext());
         } catch (Dwo2Exception ex) {
@@ -1843,6 +1836,7 @@ LOG.info("time results = " + (-t) + " ms");
     @Override
     public void start() {
         this.getRootPane().setDoubleBuffered(true);
+        IdleDetect.instance.start();
     }
 
     /**
@@ -1862,7 +1856,7 @@ LOG.info("time results = " + (-t) + " ms");
         if (DwoHelper.getApplet() != this) {
             return;
         }
-
+        IdleDetect.instance.stop();
         this.setWait();
         super.stop();
         if (currentCourse != null) {
@@ -2032,11 +2026,10 @@ LOG.info("time results = " + (-t) + " ms");
 
     /**
      * Clears all the information of the current user out of the memory, so no
-     * cashing problems can appear.
+     * caching problems can appear.
      *
      */
     public void clearCurrentUserData(int uid) {
-        // MapperCreator.instance(User.class).removeObject(DwoHelper.getCurrentFacadeUser().getUserID());
         PersistenceFacade.instance().clearCurrentUserDataCache(uid);
         // DwoHelper.setCurrentFacadeUser(null);
         currentCourse = null;
@@ -2044,43 +2037,11 @@ LOG.info("time results = " + (-t) + " ms");
         resultsModule = null;
     }
 
-//    /*
-//     * (non-Javadoc)
-//     * 
-//     */
-//    public Course[] getEditableCourses() {
-//        try {
-//            courseList = PersistenceFacade.instance().getEditableCourses(DwoHelper.getCurrentFacadeUser());
-//            return (selectDwoProfileCourses(courseList));
-//        } catch (PersistenceException e) {
-//            JOptionPane.showMessageDialog(this, e.getMessage());
-//            return null;
-//        }
-//    }
-
-//    /**
-//     * Alle aangepaste sco's van een school binnen dit profiel. TODO als de
-//     * docent profiel-rechten heeft, wat dan?
-//     *
-//     * @return
-//     */
-//    @Override
-//    public Sco[] getEditableScos() {
-//        return PersistenceFacade.instance().getEditableScos(getUser().getSchool(), getDwoProfileDeprecated());
-//    }
-
     /*
      * (non-Javadoc)
      * 
      */
     public Course addCourse(String name, String description, Course parent, boolean isMap, CourseManager manager) {
-//        try {
-//            return PersistenceFacade.instance().addCourse(DwoHelper.getCurrentFacadeUser().getSchool(), name,
-//                    description, getDwoProfileID(), parent, isMap);
-//        } catch (CourseException e) {
-//            JOptionPane.showMessageDialog(this, e.getMessage());
-//            return null;
-//        }
     	PersistentCourse pc = new PersistentCourse();
     	try {
 // if Course extends persistentCourse
@@ -2120,15 +2081,6 @@ LOG.info("time results = " + (-t) + " ms");
      * (non-Javadoc)
      * 
      */
-//    public boolean updateCourse(Course course) {
-//        try {
-//            return PersistenceFacade.instance().updateCourse(course);
-//        } catch (CourseException e) {
-//            JOptionPane.showMessageDialog(this, e.getMessage());
-//            return false;
-//        }
-//    }
-
     public boolean updateCourse(Course course, CourseManager manager) {
     	PersistentCourse pc = new PersistentCourse();
     	try {
@@ -2284,12 +2236,6 @@ LOG.info("time results = " + (-t) + " ms");
             return false;
 		}
 			return true;
-//        try {
-//            return PersistenceFacade.instance().updateSco(sco);
-//        } catch (ScoException e) {
-//            JOptionPane.showMessageDialog(this, e.getMessage());
-//            return false;
-//        }
      }
 
     /*
@@ -2346,7 +2292,6 @@ LOG.info("time results = " + (-t) + " ms");
       }
       return returnValue;
     } catch (Dwo2Exception e) {
-      // TODO Auto-generated catch block
       JOptionPane.showMessageDialog(this, e.getMessage());
       return false;
     }
@@ -2359,30 +2304,12 @@ LOG.info("time results = " + (-t) + " ms");
     public AppletConfig[] getAppletConfig() {
         try {
             AppletConfig[] ac = PersistenceFacade.instance().getAppletConfig(getLocale());
-            // for(int i = 0; i < ac.length; i++) {
-            // System.out.println("AppletConfig: " + ac[i].getAppletID() + "; "
-            // + ac[i].getName() + "; " + ac[i].getLaunchdata());
-            // }
             return ac;
         } catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
     }
-
-//    /*
-//     * (non-Javadoc)
-//     * 
-//     */
-//    public School[] getSchool() {
-//        try {
-//            School[] sc = PersistenceFacade.instance().getSchool();
-//            return sc;
-//        } catch (PersistenceException e) {
-//            JOptionPane.showMessageDialog(this, e.getMessage());
-//            return null;
-//        }
-//    }
 
     /*
      * (non-Javadoc)
@@ -2404,7 +2331,6 @@ LOG.info("time results = " + (-t) + " ms");
     public ScoPanel previewSco(Sco sco) {
         sco.setLessonMode(Sco.BROWSE);
         return sco.getScoPanel(this, null,null);
-        // return sco.getNewScoPanel(this, null);
     }
 
     @Override
@@ -2575,7 +2501,7 @@ LOG.info("time results = " + (-t) + " ms");
        String name = user.getDomUserFull().getUserName();
        String pw = user.getDomUserFull().getPassword();
        String realm = user.getDomLoginContext().getRealm();
-  // FIXME NIET GOED, moet REALM meenemen
+  // moet REALM meenemen
        GuiCreator.instance().loginWithMd5(name, pw, realm);
     }
     
@@ -2591,14 +2517,6 @@ LOG.info("time results = " + (-t) + " ms");
         String samlOrgID = getDecodedCookie(DWO_SAML_ORGANIZATION_ID);
         String samlOrg = getDecodedCookie("dwoSAMLOrganization");
         String authToken = getDecodedCookie("dwoSAMLAuthToken");
-        LOG.log(Level.INFO,"Cookies: dwoSAMLUserID {0} dwoSAMLOrganizationID {1} dwoSAMLAuthToken {2}", new Object[]{samlUserID, samlOrgID, authToken});
-//      Test code for Jane Public
-//        if (true) {
-//            samlUserID = "Velth101";
-//            samlOrgID = "\"saml:385\"";
-//            samlOrg = "bla";
-//            authToken = "-8539";
-//        }
 
         if (samlUserID != null && samlOrgID != null) {
             try {
@@ -2920,6 +2838,66 @@ LOG.info("time results = " + (-t) + " ms");
     public void clearResultsModule() {
       resultsModule = null;
       PersistenceFacade.instance().setResultsModule(null);
+      
+    }
+
+    void idleOn() {
+      noAttn();
+      IdleDetect.instance.addIdleListener(this);
+    }
+    void idleOff() {
+      noAttn();
+      IdleDetect.instance.removeIdleListener(this);
+    }
+     
+    private void noAttn() {
+      if (attnDialog != null) {
+        attnDialog.dispose(); attnDialog = null;
+      }
+    }
+
+    private JDialog attnDialog;    
+    @Override
+    public void onIdle(IdleEvent ev) {
+      if (ev.isSlow()) {
+        attnDialog = new JDialog(DwoHelper.getFrameForComponent(this), false);
+        attnDialog.setAlwaysOnTop(true);
+        attnDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        Box pane = Box.createVerticalBox();
+        attnDialog.setBackground(Constants.COLOR21);
+        
+        JLabel comp = new JLabel(TextMapper.dwo2Message().NUM_LBL_LOGGEDIN());
+        comp.setOpaque(true);
+        comp.setAlignmentX(CENTER_ALIGNMENT);
+        comp.setFont(new Font("Ubuntu", Font.PLAIN, 24));
+        comp.setHorizontalAlignment(JLabel.CENTER);
+        comp.setBackground(GuiConstants.HEADER_COLOR);
+        comp.setForeground(Constants.COLOR21);
+        comp.setBorder(BorderFactory.createEmptyBorder(7,7,7,7));
+        pane.add(comp);
+        JPanel footer = new JPanel(new FlowLayout(FlowLayout.CENTER,20,10));
+        footer.setOpaque(true);
+        footer.setBackground(Constants.COLOR21);
+        JButton yes = new JButton(TextMapper.getText(TextMapper.BTN_OK));
+        yes.setAlignmentX(CENTER_ALIGNMENT);
+        yes.addActionListener(e -> noAttn());
+        footer.add(yes);
+        pane.add(footer);
+        attnDialog.setContentPane(pane);
+        attnDialog.pack();
+        Dimension r = attnDialog.getPreferredSize();
+        
+        //attnDialog.setSize(300,200);
+        Dimension d  = Toolkit.getDefaultToolkit().getScreenSize();
+        attnDialog.setLocation(d.width/2-attnDialog.getWidth()/2, d.height/2-attnDialog.getHeight()/2);
+        attnDialog.setVisible(true);
+        return;
+      } else {
+        if (ev.getCnt() >= 2 && attnDialog != null) {
+          noAttn();
+          GuiCreator.instance().logoff();         
+        }
+      }
       
     }
 
