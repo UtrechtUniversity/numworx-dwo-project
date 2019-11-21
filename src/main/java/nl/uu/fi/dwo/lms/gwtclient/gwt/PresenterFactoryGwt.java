@@ -69,7 +69,6 @@ public class PresenterFactoryGwt implements PresenterFactory {
     @Inject MessageDialogWithOKPresenter messageDialogWithOKPresenter;
     @Inject AlertDialogWithOKPresenter alertDialogWithOKPresenter;
     @Inject AlertDialogWithConfirmCancelPresenter alertDialogWithConfirmCancelPresenter;
-//    private final PromisedDialogWithOKPresenter promisedDialogWithOKPresenter;
     @Inject ProgressDialogWithAbortPresenter progressDialogWithAbortPresenter;
 
     @Inject public PresenterFactoryGwt(/*EventBus anEventBus, DwoGlobalVars aDwoGlobalVars*/) {
@@ -128,7 +127,6 @@ public class PresenterFactoryGwt implements PresenterFactory {
         messageDialogWithOKPresenter.setView(viewFactory.getMessageDialogWithOKView());
         alertDialogWithOKPresenter.setView(viewFactory.getAlertDialogWithOKView());
         alertDialogWithConfirmCancelPresenter.setView(viewFactory.getAlertDialogWithConfirmCancelView());
-//        promisedDialogWithOKPresenter.setView(viewFactory.getPromisedDialogWithOKView());
         progressDialogWithAbortPresenter.setView(viewFactory.getProgressDialogWithAbortView());
         //last!
         mainPresenter.setView(viewFactory.getMainView());
@@ -353,13 +351,11 @@ public class PresenterFactoryGwt implements PresenterFactory {
 
     @Override
     public OrganisationPresenter getOrganisationPresenter() {
-      // TODO Auto-generated method stub
       return null;
     }
 
     @Override
     public StudentSchoolclassPresenter getStudentSchoolclassPresenter() {
-      // TODO Auto-generated method stub
       return null;
     }
 

@@ -28,9 +28,11 @@ import org.osgi.util.promise.Promises;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.BootPanelController;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEventHandler;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactory;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State;
@@ -68,6 +70,8 @@ public class ModulesPresenter implements SwitchViewEventHandler {
 
     private DwoGlobalVars dwoGlobalVars;
 
+    private MainPresenter.Display mainView;
+
     private static final boolean tablet;
     static {
 //     OsDetection osDetection = MGWT.getOsDetection();
@@ -98,11 +102,12 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         public void sendMessage(String message);
     }
 
-    @Inject ModulesPresenter(SimpleEventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    @Inject ModulesPresenter(SimpleEventBus anEventBus, DwoGlobalVars aDwoGlobalVars,  ViewFactory viewFactory) {
         eventBus = anEventBus;
         FAILURE = new LoggingFailure(LOG, anEventBus);
         injectEventListener(this);
         this.dwoGlobalVars = aDwoGlobalVars;
+        this.mainView = viewFactory.getMainView();
     }
 
 //    @JsMethod not required unless testing stuff.
@@ -118,6 +123,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
 
           LOG.info("switch to modules view " + p.getValue());
           eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.MODULESVIEW));
+          mainView.unsetIdleTimeout();
           if(tablet) {
             view.setMainNavVisible(false);
             view.sendMessage(HIDEMAINNAV);
@@ -245,7 +251,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
           view.sendMessage( view.isMainNavVisible() ? SHOWMAINNAV : HIDEMAINNAV);
         } else 
         if (select(SelectedView.RESULTS, message) || select(SelectedView.PERSONS,message) || select(SelectedView.SCHOOLCLASSES,message) || select(SelectedView.ORGANISATION, message)) {
-          
+          mainView.setIdleTimeout(MainPresenter.IDLE);
         } else if (TRAIL.equals(message)) {
           SwitchViewEvent event = new SwitchViewEvent(SelectedView.TRAIL);
           eventBus.fireEvent(event);
@@ -274,6 +280,9 @@ public class ModulesPresenter implements SwitchViewEventHandler {
     public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
       SelectedView select = switchViewEvent.getEventValue();
       switch(select) {
+        case ACCOUNT:
+          mainView.setIdleTimeout(MainPresenter.IDLE);
+          break;
         case GOTO:
           String cmd = switchViewEvent.getSearch().get("message");
           LOG.info("goto "+cmd);

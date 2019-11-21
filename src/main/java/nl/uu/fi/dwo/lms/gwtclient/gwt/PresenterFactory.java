@@ -5,19 +5,16 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentSchoolclassPresenter;
 
-import com.google.web.bindery.event.shared.EventBus;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.organisation.OrganisationPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddPersonPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditTeacherPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.ImportPersonsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.AbstractResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.LogResultsPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectStudentResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectedResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter;
@@ -67,7 +64,6 @@ public interface PresenterFactory {
     public AlertDialogWithConfirmCancelPresenter getAlertDialogWithConfirmCancelPresenter();
     public AlertDialogWithOKPresenter getAlertDialogWithOKPresenter();
     public MessageDialogWithOKPresenter getMessageDialogWithOKPresenter();
-//    public PromisedDialogWithOKPresenter getPromisedDialogWithOKPresenter();
     public ProgressDialogWithAbortPresenter getProgressDialogWithAbortPresenter();
     public void bindViewFactory(ViewFactory viewFactory);
     public void setStage(int stage);

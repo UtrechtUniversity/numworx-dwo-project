@@ -242,25 +242,27 @@ public class MainPresenter {
 		display.showModulesView(stage > 1);
 	}
 
-	
+	private PromisedDialogWithConfirmDeferred defer;
 	private Promise<?> ask;
-	public final static int IDLE = 10000;
+	public final static int IDLE = 900000;
 
 	@JsMethod
 	public void onIdle() {
 		if (ask != null && !ask.isDone()) {
-			ask = null;
+		    defer.fail(new Error());
+			ask = null; defer = null;
 			logout(Promises.resolved(Boolean.TRUE));
 			return;
 		}
-		PromisedDialogWithConfirmDeferred defer = new PromisedDialogWithConfirmDeferred(DwoLocalesForGWT.instance.NUM_LBL_LOGGEDIN());
+        defer = new PromisedDialogWithConfirmDeferred(DwoLocalesForGWT.instance.NUM_LBL_LOGGEDIN());
 		PromisedMessageDialogWithConfirmEvent event = new PromisedMessageDialogWithConfirmEvent(EventType.ConfirmDialog, defer);		
 		ask = defer.getPromise();
 		eventBus.fireEvent(event);
 		setIdleTimeout(15000);
-		ask.onResolve(() -> { 
+		ask.then((q) -> { 
 			ask = null;
 			setIdleTimeout(IDLE);
+			return null;
 		});
 		LOG.severe("TODO onIdle");
 	}

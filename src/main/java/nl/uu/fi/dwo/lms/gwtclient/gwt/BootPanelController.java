@@ -29,8 +29,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.TeacherComponent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State;
 
-import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.FAIL;
-import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.LOGOUT;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomHeartBeat;
@@ -420,7 +418,7 @@ public class BootPanelController {
         this.session = session;
         
         if (session) {
-        	viewFactory.getMainView().setIdleTimeout(10000); // 10 sec, word 900,000ms
+        	viewFactory.getMainView().setIdleTimeout(MainPresenter.IDLE); // 10 sec, word 900,000ms
         } else {
         	viewFactory.getMainView().unsetIdleTimeout();
         }

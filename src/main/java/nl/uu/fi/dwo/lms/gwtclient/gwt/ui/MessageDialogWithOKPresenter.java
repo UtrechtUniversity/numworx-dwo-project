@@ -7,8 +7,11 @@ import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
+import org.osgi.util.promise.Deferred;
+
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedMessageDialogWithConfirmEvent.EventType;
 
 /**
  * Subclassing for project.
@@ -16,11 +19,12 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
  * @author plas0006
  */
 @RoleScope
-public class MessageDialogWithOKPresenter  implements MessageDialogWithOKEventHandler {
+public class MessageDialogWithOKPresenter  implements MessageDialogWithOKEventHandler, PromisedDialogWithConfirmEventHandler {
 
     private static final Logger LOG = Logger.getLogger(MsgDialogPresenter.class.getName());
     private EventBus eventBus;
     private Display view;
+    private Deferred<Boolean> promise;
 
     public interface Display {
         void clear();
@@ -34,6 +38,7 @@ public class MessageDialogWithOKPresenter  implements MessageDialogWithOKEventHa
     @Inject MessageDialogWithOKPresenter(EventBus anEventBus) {
         eventBus = anEventBus;
         eventBus.addHandler(MessageDialogWithOKEvent.TYPE, this);
+        eventBus.addHandler(PromisedMessageDialogWithConfirmEvent.TYPE, this);
 
     }
 
@@ -41,8 +46,10 @@ public class MessageDialogWithOKPresenter  implements MessageDialogWithOKEventHa
     public void onDialogEvent(MessageDialogWithOKEvent aDialogEvent) {
         LOG.log(Level.INFO,"MessageDialogWithOKPresenter does: "+aDialogEvent.getEventValue());
         if (aDialogEvent.getEventValue()==MessageDialogWithOKEvent.Dialogs.Message) {
-            view.showDialog(aDialogEvent.getMessage());
+           promise = new Deferred<>();
+           view.showDialog(aDialogEvent.getMessage());
         }else if (aDialogEvent.getEventValue()==MessageDialogWithOKEvent.Dialogs.Dwo2ExceptionDialog){
+          promise = new Deferred<>();
             view.showDialog(aDialogEvent.getException().getLocalizedCodeExplanation(null));
         }
     }
@@ -67,11 +74,31 @@ public class MessageDialogWithOKPresenter  implements MessageDialogWithOKEventHa
 
     @JsMethod
     public void confirm() {
-        hide();
+      view.hideDialog();
+      promise.resolve(Boolean.TRUE);
     }
     
     @JsMethod
     public void hide() {
         view.hideDialog();
+        promise.resolve(Boolean.FALSE);       
     }
+    
+    @JsMethod
+    public void cancel(){
+        view.hideDialog();
+        promise.resolve(Boolean.FALSE);       
+    }
+
+    @Override
+    public void onDialogEvent(PromisedMessageDialogWithConfirmEvent event) {
+      if (event.getEventValue() == EventType.ConfirmDialog) {
+        promise = event.getPromise();
+        view.showDialog(event.getPromise().getMsg());
+      } else {
+        event.getPromise().fail(new IllegalArgumentException());
+      }
+      
+    }    
+
 }
