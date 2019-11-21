@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.lms.jclient.lib.rest.managers;
 
-import java.util.Collections;
 import java.util.List;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 
@@ -13,6 +12,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 public class SecureUserCourseManager {
 
@@ -31,7 +31,7 @@ public class SecureUserCourseManager {
     rest.setDomDwoProfile(profile);
     rest.setRestContext(getContext());
     List<DomCourseStudent> result = StoredRestManager.getInstance()
-        .getPutList("rest/secure/user/course/getRoot", RestListClassTypes.DomCourseStudent, rest);
+        .getPutList("rest/sec:" + PathId.getId(getContext()) + "/user/course/getRoot", RestListClassTypes.DomCourseStudent, rest);
 
     return result;
 
@@ -50,7 +50,7 @@ public class SecureUserCourseManager {
     rest.setDomDwoProfile(profile);
     rest.setRestContext(getContext());
     List<DomCourseStudent> result = StoredRestManager.getInstance()
-        .getPutList("rest/secure/user/course/getSchool", RestListClassTypes.DomCourseStudent, rest);
+        .getPutList("rest/sec:" + PathId.getId(getContext()) + "/user/course/getSchool", RestListClassTypes.DomCourseStudent, rest);
 
     return result;
 
@@ -78,7 +78,7 @@ public class SecureUserCourseManager {
     rest.setDomCourse(course);
     // select * from tblCourse where id = $%id, profile = %profile and school = NULL
     DomCourseStudent result =
-        StoredRestManager.getInstance().put("rest/secure/user/course/get", DomCourseStudent.class, rest);
+        StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/user/course/get", DomCourseStudent.class, rest);
     return result;
   }
 
@@ -98,7 +98,7 @@ public class SecureUserCourseManager {
     rest.setDomCourse(course);
     rest.setRestContext(getContext());
     List<DomCourseStudent> result = StoredRestManager.getInstance()
-        .getPutList("rest/secure/user/course/getChildren", RestListClassTypes.DomCourseStudent, rest);
+        .getPutList("rest/sec:" + PathId.getId(getContext()) + "/user/course/getChildren", RestListClassTypes.DomCourseStudent, rest);
 
     return result;
   }
