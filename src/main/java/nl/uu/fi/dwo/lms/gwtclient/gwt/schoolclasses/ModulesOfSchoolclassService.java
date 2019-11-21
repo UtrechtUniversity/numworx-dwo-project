@@ -30,6 +30,8 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewAccessKey;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewFrom;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewTo;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
@@ -219,8 +221,11 @@ public class ModulesOfSchoolclassService {
     	return Promises.resolved(Boolean.TRUE);
     }
     
-    public Promise<DomClassCourseFull> setClassCourse(DomSchoolClass sc, DomCourse course, CourseType type, String accessKey, Date from, Date to) {
+    public Promise<DomClassCourseFull> setClassCourse(
+    		PersistenceId id,
+    		DomSchoolClass sc, DomCourse course, CourseType type, String accessKey, Date from, Date to) {
     	DomClassCourseFull dom = new DomClassCourseFull();
+    	dom.setId(id);
     	dom.setAccessKey(accessKey);
     	dom.setClassId(sc.getId());
     	dom.setCourseId(course.getId());

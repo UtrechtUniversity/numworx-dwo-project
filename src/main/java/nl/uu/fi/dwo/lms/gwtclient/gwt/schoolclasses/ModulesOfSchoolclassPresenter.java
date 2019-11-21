@@ -21,6 +21,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.DomTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
@@ -28,6 +29,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -48,7 +51,7 @@ public class ModulesOfSchoolclassPresenter {
     private Failure FAILURE;
 
     private DomSchoolClass schoolClass;
-    private DomCoursesOfSchoolclassTree tree;
+    private Promise<DomCoursesOfSchoolclassTree> tree;
     private Display view;
     public interface Display extends BasicDisplay {
 
@@ -69,7 +72,8 @@ public class ModulesOfSchoolclassPresenter {
     @JsMethod
     void detachItemFromSchoolClass(String id) {
         Promise<Boolean> promise;
-        promise = service.detachCourseFromClass(schoolClass, tree.getNode(id).getObject().getCourse());
+        promise = tree.then(p ->         		
+        				service.detachCourseFromClass(schoolClass, p.getValue().getNode(id).getObject().getCourse()));
         // onSuccess update view
         promise.then(new Success<Boolean, Void>() {
             @Override
@@ -80,13 +84,14 @@ public class ModulesOfSchoolclassPresenter {
                return null;
             }
 
-        },FAILURE);
+        },FAILURE).onResolve(() -> tree = reloadTree());
     }
 
     @JsMethod
     void attachItemToSchoolClass(String id) {
         Promise<Boolean> promise;
-        promise = service.attachCourseToClass(schoolClass, tree.getNode(id).getObject().getCourse());
+        promise = tree.then( p -> 
+        		service.attachCourseToClass(schoolClass, p.getValue().getNode(id).getObject().getCourse()));
         // onSuccess update view
         promise.then(new Success<Boolean, Void>() {
             @Override
@@ -97,7 +102,7 @@ public class ModulesOfSchoolclassPresenter {
                 return null;
             }
 
-        }, FAILURE);
+        }, FAILURE).onResolve(() -> tree = reloadTree());
     }
 
 //    public CourseItem getRoot(){
@@ -132,29 +137,36 @@ public class ModulesOfSchoolclassPresenter {
 
     private GwtClientMessages rb = GWT.create(GwtClientMessages.class);
     
-    private void updateViewData() {
-        //MsgDialogPromise
-        view.setLoadingTableMessageModules();
+    
+    private Promise<DomCoursesOfSchoolclassTree> reloadTree() {
         Promise<DomCoursesOfSchoolClass4Teacher> promise = service.getModules(schoolClass);
-//        Promise<DomCoursesOfSchoolClass4Teacher> p = service.getModules(schoolClass);
-//        MsgDialogPromise<DomCoursesOfSchoolClass4Teacher> deferred = new MsgDialogPromise<DomCoursesOfSchoolClass4Teacher>(promise, "test");
-//        Promise promise = deferred.getPromise();
+        return promise.map(
+        		value -> 
+        		{	
+                    DomCoursesOfSchoolclassTree result = new DomCoursesOfSchoolclassTree(dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool(), value);
+// patch "public"
+                    DomCourse course = result.getNode(DomCoursesOfSchoolclassTree.PUBLIC_ROOT).getObject().getCourse();
+// welke smaak: profile of "standaard"
+// in deze "then" weten we dat profile.getValue() geresolved en valid is.
+                    course.setName(dwoGlobalVars.getProfile().getValue().getDwoProfileDescription());      		
+        			return result;
+        		}
+        		
+        		);
+    }
+    
+    
+    private Promise<Object> updateViewData() {
+        view.setLoadingTableMessageModules();
+        tree = reloadTree();
+        Promise<DomCoursesOfSchoolclassTree> promise = tree;
         // onSuccess update view
-        promise.then(new Success<DomCoursesOfSchoolClass4Teacher, Void>() {
+        return promise.then(new Success<DomCoursesOfSchoolclassTree, Void>() {
             @Override
-            public Promise<Void> call(Promise<DomCoursesOfSchoolClass4Teacher> resolved) throws Exception {
+            public Promise<Void> call(Promise<DomCoursesOfSchoolclassTree> resolved) throws Exception {
                 //flip back to schoolclasses screen 
-                DomCoursesOfSchoolClass4Teacher value = resolved.getValue();
-                tree = new DomCoursesOfSchoolclassTree(dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool(), value);
- // patch "public"
-                DomCourse course = tree.getNode(DomCoursesOfSchoolclassTree.PUBLIC_ROOT).getObject().getCourse();
- // welke smaak: profile of "standaard"
- // in deze "then" weten we dat profile.getValue() geresolved en valid is.
-                course.setName(dwoGlobalVars.getProfile().getValue().getDwoProfileDescription()); 
-                // course.setName(rb.standaardModules());
-                
-                //ClassCourseItem item = new ClassCourseItem(null, "root");
-                //parse results into a tree.
+            	DomCoursesOfSchoolclassTree
+                tree = resolved.getValue();
                 view.setTree(tree.getCourseTree());
                 return null;
             }
@@ -182,15 +194,18 @@ public class ModulesOfSchoolclassPresenter {
 
         //convert and test parameters.
         //type
-        CourseType type = CourseType.normal;
+        CourseType type ;
         if (typeString != null) {
             try {
                 type = CourseType.valueOf(typeString);
             } catch (Exception e) {
+            	type = CourseType.normal;
                 eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "Unknown course type submitted.")));
             }
+        } else {
+        	type = CourseType.normal;
         }
-
+        final CourseType ftype = type;
         //from
         Date from;
         if (fromDate.isEmpty()) {
@@ -225,17 +240,42 @@ public class ModulesOfSchoolclassPresenter {
             ;
         }
 
-        p = service.addCourseToClass(schoolClass, tree.getNode(key).getObject().getCourse(), type, from, to, accessKey);
+        p = tree.then(pp -> 
+        		service.addCourseToClass(schoolClass, pp.getValue().getNode(key).getObject().getCourse(), ftype, from, to, accessKey));
 
-        p.then(new Success<Boolean, Void>() {
+        p.then(new Success<Boolean, Object>() {
             @Override
-            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-                updateViewData();
-                return null;
+            public Promise<Object> call(Promise<Boolean> resolved) throws Exception {
+                return updateViewData();
             }
         }, FAILURE);
     }
 
+    @JsMethod
+    void setModuleSettings(String key, String typeString, String fromData, String toData, String accessKey) {
+    	Promise<DomClassCourseFull> f = 
+    	tree.then( (Promise<DomCoursesOfSchoolclassTree>p) -> 
+    	{
+    		DomCoursesOfSchoolclassTree t = p.getValue();
+    		DomCourseOfClass object = t.getNode(key).getObject();
+			PersistenceId id = object.getClassCourse().getId();
+    		DomCourse course = object.getCourse();			
+			CourseType type = CourseType.valueOf(typeString);
+			Date from = fromData.isEmpty() ? null : DateTimeFormat.getFormat("yyyy-MM-dd HH:mm").parse(fromData);
+			Date to = toData.isEmpty() ? null : DateTimeFormat.getFormat("yyyy-MM-dd HH:mm").parse(toData);
+			return service.setClassCourse(id, schoolClass, course, type, accessKey, from, to)
+					.then(x -> {object.setClassCourse(x.getValue());return x; });
+    	});
+
+    	f.then((resolved) -> {
+            return updateViewData();
+        }, FAILURE);
+    	
+    }
+    
+    
+    
+    
     /**
      * Course parameters that are not null are updated with their values. A
      * valid key is required.
@@ -246,40 +286,40 @@ public class ModulesOfSchoolclassPresenter {
      * @param toData
      */
     @JsMethod
-    void setModuleSettings(String key, String typeString, String fromData, String toData, String accessKey) {
+    void setModuleSettings1(String key, String typeString, String fromData, String toData, String accessKey) {
         if (key == null) {
             eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Client_InternalError, "Internal error, key not given.")));
             return;
         }
-        Promise<Boolean> p = Promises.resolved(null);
+        Promise<DomCoursesOfSchoolclassTree> p = tree;
         if (typeString != null) {
             p = p.then((resolved) -> {
-                return setCourseType(key, typeString);
+                Promise<Boolean> setCourseType = setCourseType(resolved.getValue(), key, typeString);
+				return setCourseType.then(pp -> resolved);
             });
         }
         if (fromData != null) {
             p = p.then((resolved) -> {
-                return setFromDate(key, fromData);
+                return setFromDate(resolved.getValue(), key, fromData).then(pp-> resolved);
             });
         }
         if (toData != null) {
             p = p.then((resolved) -> {
-                return setToDate(key, toData);
+                return setToDate(resolved.getValue(), key, toData).then(pp-> resolved);
             });
         }
         if (accessKey != null) {
             p = p.then((resolved) -> {
-                return setAccessKey(key, accessKey);
+                return setAccessKey(resolved.getValue(), key, accessKey).then(pp-> resolved);
             });
         }
-        p = p.then((resolved) -> {
-            updateViewData();
-            return resolved;
-        });
-        p = p.then(null, FAILURE);
+
+        p.then((resolved) -> {
+            return updateViewData();
+        }, FAILURE);
     }
 
-    private Promise<Boolean> setCourseType(String key, String typeString) {
+    private Promise<Boolean> setCourseType(DomCoursesOfSchoolclassTree tree, String key, String typeString) {
         CourseType type = CourseType.normal;
         if (typeString != null) {
             try {
@@ -293,7 +333,7 @@ public class ModulesOfSchoolclassPresenter {
         return null;
     }
 
-    private Promise<Boolean> setFromDate(String key, String dateString) {
+    private Promise<Boolean> setFromDate(DomCoursesOfSchoolclassTree tree,String key, String dateString) {
         Date date;
         if (dateString.isEmpty()) {
             date = null;
@@ -318,7 +358,7 @@ public class ModulesOfSchoolclassPresenter {
         }
     }
 
-    private Promise<Boolean> setToDate(String key, String dateString) {
+    private Promise<Boolean> setToDate(DomCoursesOfSchoolclassTree tree, String key, String dateString) {
         Date date;
         if (dateString.isEmpty()) {
             date = null;
@@ -342,7 +382,7 @@ public class ModulesOfSchoolclassPresenter {
         }
     }
 
-    private Promise<Boolean> setAccessKey(String key, String accessKey) {
+    private Promise<Boolean> setAccessKey(DomCoursesOfSchoolclassTree tree, String key, String accessKey) {
         DomTree<DomCourseOfClass> c = tree.getNode(key);
         DomClassCourse4Teacher cc = c.getObject().getClassCourse();
         if (accessKey == null) {
