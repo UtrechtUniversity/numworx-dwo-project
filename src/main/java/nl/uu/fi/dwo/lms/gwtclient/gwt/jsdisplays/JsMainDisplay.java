@@ -104,4 +104,7 @@ public class JsMainDisplay {
     
     static native void selectView(String view);
     static native void setPremium(boolean set);
+    
+    static native void setIdleTimeout(int millis);
+    static native void unsetIdleTimeout();
 }

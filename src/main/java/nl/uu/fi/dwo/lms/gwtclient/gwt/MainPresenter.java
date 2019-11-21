@@ -20,6 +20,9 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedDialogWithConfirmDeferred;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedMessageDialogWithConfirmEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedMessageDialogWithConfirmEvent.EventType;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
@@ -120,6 +123,9 @@ public class MainPresenter {
 		void setPremium(boolean set);
 
 		void setSearchBox(boolean on);
+
+		void setIdleTimeout(int millis);
+		void unsetIdleTimeout();
     }
 
     private MainPresenter.Display display;
@@ -174,7 +180,7 @@ public class MainPresenter {
     public void logout() {
         LOG.log(Level.INFO, "Logging out");
         Promise<Boolean> p = Promises.resolved(true); //empty promise
-        p.then(new Success<Boolean, Boolean>() {
+        p = p.then(new Success<Boolean, Boolean>() {
             @Override
             //Are you sure?
             public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {//do dialog check
@@ -183,8 +189,12 @@ public class MainPresenter {
                 eventBus.fireEvent(event);
                 return dialogPromise.getPromise();
             }
-        })
-        .then(modules::logout)
+        });       
+        logout(p);
+    }
+
+	void logout(Promise<Boolean> p) {
+		p.then(modules::logout)
         .then(resolved -> { 
             if (resolved.getValue()) {
               return dwoGlobalVars.logout()
@@ -219,7 +229,7 @@ public class MainPresenter {
                 }
             }
         });
-    }
+	}
     
     public void setTrails(JavaScriptObject object) {
     	display.setTrails(object);
@@ -231,4 +241,45 @@ public class MainPresenter {
 	public void showModulesView() {
 		display.showModulesView(stage > 1);
 	}
+
+	
+	private Promise<?> ask;
+	public final static int IDLE = 10000;
+
+	@JsMethod
+	public void onIdle() {
+		if (ask != null && !ask.isDone()) {
+			ask = null;
+			logout(Promises.resolved(Boolean.TRUE));
+			return;
+		}
+		PromisedDialogWithConfirmDeferred defer = new PromisedDialogWithConfirmDeferred(DwoLocalesForGWT.instance.NUM_LBL_LOGGEDIN());
+		PromisedMessageDialogWithConfirmEvent event = new PromisedMessageDialogWithConfirmEvent(EventType.ConfirmDialog, defer);		
+		ask = defer.getPromise();
+		eventBus.fireEvent(event);
+		setIdleTimeout(15000);
+		ask.onResolve(() -> { 
+			ask = null;
+			setIdleTimeout(IDLE);
+		});
+		LOG.severe("TODO onIdle");
+	}
+
+	/**
+	 * @param millis
+	 * @see nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter.Display#setIdleTimeout(int)
+	 */
+	public void setIdleTimeout(int millis) {
+		display.setIdleTimeout(millis);
+	}
+
+	/**
+	 * 
+	 * @see nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter.Display#unsetIdleTimeout()
+	 */
+	public void unsetIdleTimeout() {
+		display.unsetIdleTimeout();
+	}
+	
+	
 }

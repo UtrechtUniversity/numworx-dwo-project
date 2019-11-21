@@ -186,4 +186,14 @@ public class JsMainView implements MainPresenter.Display{
 	public void setSearchBox(boolean on) {
 		JsMainDisplay.setSearchBox(on);
 	}
+	
+	@Override
+	public void setIdleTimeout(int millis) {
+		JsMainDisplay.setIdleTimeout(millis);
+	}
+	
+	@Override
+	public void unsetIdleTimeout() {
+		JsMainDisplay.unsetIdleTimeout();
+	}
 }
