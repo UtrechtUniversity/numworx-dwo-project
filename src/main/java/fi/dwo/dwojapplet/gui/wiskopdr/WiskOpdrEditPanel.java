@@ -18,9 +18,6 @@ import javax.swing.Scrollable;
 
 import com.owlike.genson.GenericType;
 import com.owlike.genson.Genson;
-import com.owlike.genson.GensonBuilder;
-
-import fi.beans.loader.Loader;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.GuiCreator;
@@ -33,10 +30,10 @@ public class WiskOpdrEditPanel extends JPanel implements Scrollable, AppletStub 
 	private static final long serialVersionUID = 1L;
 	private final Logger LOG = Logger.getLogger(getClass().getName());
 
-	private static int defaultEditorWidth = 800;
-    private static int defaultEditorHeight = 350;
-    private static int defaultDocumentWidth = 800;
-    private static int defaultDocumentHeight = 300;
+//	private static int defaultEditorWidth = 800;
+//    private static int defaultEditorHeight = 350;
+//    private static int defaultDocumentWidth = 800;
+//    private static int defaultDocumentHeight = 300;
 	
 	String text;
 	private Component component;

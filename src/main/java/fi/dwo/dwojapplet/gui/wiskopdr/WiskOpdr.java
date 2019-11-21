@@ -12,7 +12,6 @@ public class WiskOpdr {
   private static int defaultDocumentHeight = 300;
 
 	public static WiskOpdrEditPanel getWiskOpdrEditPanel(String description) {
-      //return new WiskOpdrEditPanel(description);
 	  return getWiskOpdrEditPanel(description, DwoHelper.getAu().getLocale(), defaultEditorWidth, defaultEditorHeight, defaultDocumentWidth, defaultDocumentHeight);
 	}
 

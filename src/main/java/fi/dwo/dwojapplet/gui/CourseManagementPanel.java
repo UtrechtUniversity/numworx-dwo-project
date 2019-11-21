@@ -5,20 +5,16 @@ package fi.dwo.dwojapplet.gui;
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JCheckBox;
-import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.School;
-import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.ScoManagementPanel.IconDialog;
 import fi.dwo.dwojapplet.gui.action.AccessControlAction;
 import fi.dwo.dwojapplet.gui.action.DeleteAction;
 import fi.dwo.dwojapplet.gui.action.ImportModuleAction;
 import fi.dwo.dwojapplet.gui.action.ShareCourseAction;
-import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
 
@@ -120,8 +116,8 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 	class CourseModelForTree extends AbstractTableModel {
 
-                @Override
-		public Class getColumnClass(int col) {
+        @Override
+		public Class<?> getColumnClass(int col) {
 			if(col == 0)
 				return Boolean.class;
 			if(col >= 2)
@@ -129,17 +125,17 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 			return super.getColumnClass(col);
 		}
 
-                @Override
+        @Override
 		public int getColumnCount() {
 			return 6; // icon, naam, info, up, down, X
 		}
 
-                @Override
+        @Override
 		public int getRowCount() {
 			return courses.length;
 		}
 
-                @Override
+        @Override
 		public boolean isCellEditable(int row, int col) {
 			if(col == 3) // up
 				return row != 0;
@@ -150,7 +146,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 			return super.isCellEditable(row, col);
 		}
 
-                @Override
+        @Override
 		public Object getValueAt(int row, int col) {
 			Course course = (Course) courses[row];
 			switch(col) {
@@ -173,14 +169,14 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	
 	class CourseModel extends AbstractTableModel {
 
-                @Override
-		public Class getColumnClass(int col) {
+        @Override
+		public Class<?> getColumnClass(int col) {
 			if(col >= 1)
 				return Image.class;
 			return super.getColumnClass(col);
 		}
 
-                @Override
+        @Override
 		public boolean isCellEditable(int row, int col) {
 			if(col == 3) // up
 				return row != 0 || !DWO.SEQUENCE;
@@ -191,17 +187,17 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 			return super.isCellEditable(row, col);
 		}
 
-                @Override
+        @Override
 		public int getColumnCount() {
 			return DWO.SEQUENCE?6:4;
 		}
 
-                @Override
+        @Override
 		public int getRowCount() {
 			return courses.length;
 		}
 
-                @Override
+        @Override
 		public Object getValueAt(int row, int col) {
 			switch(col) {
 			case 0:

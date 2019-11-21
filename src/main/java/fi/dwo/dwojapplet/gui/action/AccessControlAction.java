@@ -15,6 +15,7 @@ import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.CourseManagementPanel;
+import fi.dwo.dwojapplet.gui.ScoManagementPanel;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureSchoolAdminSchoolClassManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomACL;
@@ -39,6 +40,11 @@ public class AccessControlAction extends GuiAction {
   public AccessControlAction(CourseManagementPanel courseManagementPanel) {
     this();
     setMap(courseManagementPanel.getUserObject());
+  }
+
+  public AccessControlAction(ScoManagementPanel scoManagementPanel) {
+    this();
+    setMap(scoManagementPanel.getUserObject());
   }
 
   @Override

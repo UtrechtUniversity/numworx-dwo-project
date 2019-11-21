@@ -13,6 +13,7 @@ import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.gui.action.AccessControlAction;
 import fi.dwo.dwojapplet.gui.action.BackupModuleAction;
 import fi.dwo.dwojapplet.gui.action.DeleteAction;
 import fi.dwo.dwojapplet.gui.action.ImportModuleAction;
@@ -141,6 +142,8 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     
     private Box editorBox = Box.createVerticalBox();
 
+    private AccessControlAction accessAction;
+
     //private JButton publishButton;
     /**
      * @param course
@@ -200,6 +203,13 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             importScosButton.setVisible(false);
             top.add(importScosButton);
             //top.add(Box.createHorizontalStrut(10));
+            if ( (DwoHelper.isTest()||DwoHelper.isSamlLogin()) && DwoHelper.isPremium()) {
+              accessAction = new AccessControlAction(this);
+              if (accessAction.isEnabled()) {
+                top.add(Box.createHorizontalStrut(10));
+                top.add(new JButton(accessAction));
+              }
+            }
 
         }
         courseLogoButton = new JButton(new ReducedImageIcon(logo));
