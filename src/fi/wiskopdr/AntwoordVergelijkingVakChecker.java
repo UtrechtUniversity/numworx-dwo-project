@@ -697,6 +697,13 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			s = "$f" + s.substring(index + 1);
 		}
 		gewensteEindOplossing = p.parseVergelijking(s, functieMVDefSet);
+		
+		//indien geen juist eindantwoord gegeven is, dan gewoon kijken of de vergelijking een equivalentie is
+		//Je doet daarvoor een substitutie met een variabele waarvan je zeker weet dat hij niet gebruikt wordt in de vergelijking
+		if(gewensteEindOplossing==null && s.equals("$f@") )	{
+			s = "$fQ?(Q)=0.97531@";
+			gewensteEindOplossing = p.parseVergelijking(s, functieMVDefSet);
+		}
 	}
 	
 	public void zetJuisteVorm(String s)
@@ -1179,6 +1186,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	
 	public void check(String antwoordVergString) throws RestartException {
 		if (gewensteEindOplossing == null)
+			
 			return;
 
 		
@@ -1368,7 +1376,10 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 //					isDeelOplossing = false;
 //				}
 //			}
-		} else {
+			
+		} 
+		else {
+			
 			syntaxFout = true;
 			isGelijkwaardig = false;
 			isEindOplossing = false;
