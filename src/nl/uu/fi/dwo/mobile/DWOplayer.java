@@ -48,7 +48,7 @@ import fi.wiskopdr.text.Text_nl;
  * @author Evertson Croes, Danny Hendrix
  * 
  */
-public class DWOplayer implements EntryPoint
+public abstract class DWOplayer
 {
 	public static final boolean JSON = true;
 	public static int PROFILE_ID = 77;
@@ -71,7 +71,7 @@ public class DWOplayer implements EntryPoint
 	}
 	
 	
-	public DWOplayer() {
+	DWOplayer() {
 		super();
 		instance = this;
 		setDwoProfileID();
@@ -159,15 +159,12 @@ public class DWOplayer implements EntryPoint
 		clientfactory = createClientFactory();
 		final PlaceHistoryHandler historyHandler = clientfactory.getPlaceHistoryHandler();
 
-		createTabletDisplay(clientfactory);
 		historyHandler.handleCurrentHistory();
 	}
 
-	protected ClientFactory createClientFactory() {
-		return null; //new ClientFactoryImpl();
-	}
+	protected abstract ClientFactory createClientFactory();
 
-	private void createTabletDisplay(ClientFactory clientfactory)
+	void createTabletDisplay(ClientFactory clientfactory, TabletActivityMapper appActivityMapper)
 	{
 //		AnimatableDisplay display = GWT.create(AnimatableDisplay.class);
 //		TabletActivityMapper appActivityMapper = new TabletActivityMapper(clientfactory);
@@ -178,7 +175,6 @@ public class DWOplayer implements EntryPoint
 //		display.asWidget().addStyleName("RootPanel");
 		
 		SimplePanel display = new SimpleLayoutPanel();
-		TabletActivityMapper appActivityMapper = new TabletActivityMapper(clientfactory);
 		ActivityManager activityMapper = new ActivityManager(appActivityMapper, clientfactory.getEventBus());
 		activityMapper.setDisplay(display);
 		display.asWidget().addStyleName("RootPanel");
@@ -190,7 +186,6 @@ public class DWOplayer implements EntryPoint
 		clientfactory.getHeaderView().hide();
 	}
 
-	@Override
 	public void onModuleLoad()
 	{
 		Timer t = new Timer()

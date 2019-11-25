@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -11,6 +12,7 @@ import nl.uu.fi.dwo.mobile.client.ui.activities.FlatModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.GuestActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LoginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LogoutActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.MaybeLogoutActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ReloginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.SMActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ScoActivity;
@@ -23,6 +25,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.Exam;
 import nl.uu.fi.dwo.mobile.client.ui.places.FlatModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.LogoutPlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.MaybeLogout;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SMPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SearchPlace;
@@ -47,15 +50,22 @@ import com.google.gwt.place.shared.Place;
 public class TabletActivityMapper implements ActivityMapper
 {
 	private ClientFactory clientFactory;
-	public TabletActivityMapper(ClientFactory cf)
+	@Inject TabletActivityMapper(ClientFactory cf)
 	{
 		this.clientFactory = cf;
 	}
 
+	@Inject Provider<MaybeLogoutActivity> maybeLogout;
+	
+	
 	@Override
 	public Activity getActivity(Place place)
 	{
-	    if (place instanceof Exam) {
+	  if (place instanceof MaybeLogout) {
+	    return maybeLogout.get().place(place);
+	  }
+	  
+	  if (place instanceof Exam) {
 	      return new ExamActivity();
 	    }
 	  

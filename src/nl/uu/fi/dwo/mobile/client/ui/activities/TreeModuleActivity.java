@@ -13,11 +13,16 @@ import org.osgi.util.promise.Success;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
+import nl.uu.fi.dwo.mobile.client.ui.IdleDetect;
+import nl.uu.fi.dwo.mobile.client.ui.IdleDetect.IdleEvent;
+import nl.uu.fi.dwo.mobile.client.ui.IdleDetect.IdleHandler;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
+import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.MaybeLogout;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
 import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
@@ -33,7 +38,7 @@ import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 
-public class TreeModuleActivity extends MGWTAbstractActivity implements GotoController, MessageEventHandler
+public class TreeModuleActivity extends MGWTAbstractActivity implements GotoController, MessageEventHandler, IdleHandler
 {
 
 	ClientFactory clientFactory;
@@ -62,6 +67,7 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements GotoCont
         if(beheerder) {
           eventBus.addHandler(MessageEvent.TYPE, this);
           onMessage(MessageEvent.getLastEvent());          
+          eventBus.addHandler(IdleDetect.TYPE, this);
         }
 		
 		if(item.getType() == Type.MODULE && DWOplayer.withUser()) {
@@ -136,6 +142,16 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements GotoCont
       if(Actions.hideMainNav.getCommand().equals(message))
         view.showIcon(true);
     
+  }
+
+  @Override
+  public void onIdle(IdleEvent ev) {
+    if (ev.isSlow()) {
+      if (Actions.isAvailable())
+        Actions.MAYBELOGOUT.execute();    
+      else
+        goTo(new MaybeLogout());
+    }
   }
 
 }

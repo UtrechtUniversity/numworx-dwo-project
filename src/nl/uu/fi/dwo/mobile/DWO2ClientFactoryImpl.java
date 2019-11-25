@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO4;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
+import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewNone;
@@ -43,9 +44,10 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
             Provider<HeaderViewNone> none,
             @Named("header") Provider<HeaderView> numworx,
             Provider<NavigationViewNumworx> navigation,
-		    Provider<ViewModuleViewBuilder> entry
+		    Provider<ViewModuleViewBuilder> entry, RPCHandler rpcHandler
 		    ) {
               super(bus, controller, mapper, navigation, entry);
+              setRPCHandler(rpcHandler);
               setup(none,numworx);
         }
 

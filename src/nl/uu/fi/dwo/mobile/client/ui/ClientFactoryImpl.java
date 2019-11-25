@@ -179,7 +179,7 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 		return this.handler;
 	}
 
-	public void setRPCHandler(RPCHandler handler) {
+	protected void setRPCHandler(RPCHandler handler) {
 		this.handler = handler;
 	}
 	

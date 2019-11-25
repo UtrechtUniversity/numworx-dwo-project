@@ -19,7 +19,6 @@ import org.osgi.util.promise.Success;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
 import fi.dwo.gwt.lib.rest.css.DwoStyle;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
@@ -38,6 +37,7 @@ import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
@@ -93,38 +93,32 @@ public class DWO2player extends DWOplayer implements EntryPoint {
         //Initialize an Exception translator.
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
 	}
-	
-	@Inject DWO2ClientFactoryImpl factory;
-	
-	
-	/* (non-Javadoc)
-   * @see nl.uu.fi.dwo.mobile.DWOplayer#inject()
-   */
-	public static IdleDetect idleDetect;
-	
-	@Inject void setIdleDetect(IdleDetect id) {
-	  idleDetect = id;
-	}
-	
-  protected ClientFactory createClientFactory() {
-        DWO2PlayerComponent create = DaggerDWO2PlayerComponent.create();
-        create.inject(this);
-		factory.setRPCHandler(new DWO2RPCHandler(PROFILE_ID));
+			
+  @Inject
+  void createTabletDisplay(ClientFactory factory, TabletActivityMapper appActivityMapper, IdleDetect idleDetect) {
+    super.createTabletDisplay(factory, appActivityMapper);
+ 
+ // TESTING
+ //   factory.getEventBus().addHandler(IdleDetect.TYPE, ev -> { GWT.log(ev.toString()); });
+    if (idleDetect != null)
+      idleDetect.start();   
+  
+    MsgDialogPresenter mdp = new MsgDialogPresenter(factory.getEventBus());
+    DwoStyle style = GWT.<AccountBundle>create(AccountBundle.class).style();
+    style.ensureInjected();
+    new MsgDialogView(mdp, style);
+    
+    MessageEvent.initialize(factory.getEventBus());
+    Actions.isMainNavVisible.execute();
+  }
 
-		
-// TESTING
-//		factory.getEventBus().addHandler(IdleDetect.TYPE, ev -> { GWT.log(ev.toString()); });
-//		if (idleDetect != null)
-//		  idleDetect.start();	
-// 		
-		MsgDialogPresenter mdp = new MsgDialogPresenter(factory.getEventBus());
-        DwoStyle style = GWT.<AccountBundle>create(AccountBundle.class).style();
-        style.ensureInjected();
-        MsgDialogView mdv = new MsgDialogView(mdp, style);
-        
-		MessageEvent.initialize(factory.getEventBus());
-		Actions.isMainNavVisible.execute();
-		return factory;
+  protected ClientFactory createClientFactory() {
+        DWO2RPCHandler rpc = new DWO2RPCHandler(PROFILE_ID);
+        DWO2PlayerComponent create = DaggerDWO2PlayerComponent.builder()
+            .rpcHandler(rpc)
+            .build();
+        create.inject(this);
+		return create.clientFactory();
 	}
 
 	
