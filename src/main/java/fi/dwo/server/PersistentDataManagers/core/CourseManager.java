@@ -13,6 +13,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
@@ -216,6 +217,18 @@ public class CourseManager {
           em.close();
       }
       
+    }
+        
+    public static List<Long> findEntityIDs(PersistentSchool s) {
+    	EntityManager em = getEntityManager();
+    	try {
+    		TypedQuery<Long> q = em.createQuery("select p.courseID from PersistentCourse p where p.schoolID = :schoolID", Long.class);
+    		q.setParameter("schoolID",  s.getSchoolID());
+    		List<Long> list = q.getResultList();
+    		return list;
+    	} finally {
+    		em.close();
+    	}
     }
         
     public static List<PersistentCourse> findEntities(PersistentSchool s, int limit) {

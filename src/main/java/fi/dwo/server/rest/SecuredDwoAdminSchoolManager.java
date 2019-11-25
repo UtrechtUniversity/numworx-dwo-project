@@ -668,11 +668,11 @@ public class SecuredDwoAdminSchoolManager {
         }
         {
         	long count = 0L, scocount = 0L;
-        	List<PersistentCourse> courses;
+        	List<Long> courses;
         	do { 
-        		courses = CourseManager.findEntities(school, 0); // Generates out of memory..
+        		courses = CourseManager.findEntityIDs(school); // Fixed Generates out of memory..
         		count += courses.size();
-        		scocount += courses.stream().map(item -> ScoContextManager.findEntities(item)).collect(Collectors.summingInt(List::size));
+        		scocount += courses.stream().map(item -> ScoContextManager.findEntities(new PersistentCourse(item))).collect(Collectors.summingInt(List::size));
         	} while(courses.size()>0);
         	
         	entry = new DomMapEntry<>("courses", Long.toString(count));
