@@ -443,9 +443,10 @@ public class SecuredDwoAdminSchoolManager {
                     //Remove FromTo
                     SchoolClassManager.destroy(cl.getClassID());
                 }
-
+                List<PersistentCourse> cList;
                 //Loop Courses in School
-                List<PersistentCourse> cList = CourseManager.findEntities(school);
+                do { 
+                cList = CourseManager.findEntities(school, 100);
                 for (PersistentCourse c : cList) {
                     //Loop ScoContext in Course
                     List<PersistentScoContext> pscList = ScoContextManager.findEntities(c);
@@ -458,6 +459,7 @@ public class SecuredDwoAdminSchoolManager {
                     ///Remove Course
                     CourseManager.destroy(c.getCourseID());
                 }
+                } while ( ! cList.isEmpty() );
                 SchoolManager.destroy(school.getSchoolID());
             } catch (Exception e) {
                 LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
@@ -665,20 +667,17 @@ public class SecuredDwoAdminSchoolManager {
         	stats.add(entry);       
         }
         {
-        	final long[] scocount = new long[1];
-        	List<PersistentDwoProfile> profiles = DwoProfileManager.findEntities();
-        	long count = profiles.stream()
-        			.flatMap(p ->  
-        			{
-        				List<PersistentCourse> course = CourseManager.findEntities(p.getDwoProfileID(), school.getSchoolID());
-        				scocount[0] += course.stream().flatMap(c -> ScoContextManager.findEntities(c).stream()).count();
-						return course.stream(); 
-        			}
-        					) 
-        			.count();
+        	long count = 0L, scocount = 0L;
+        	List<PersistentCourse> courses;
+        	do { 
+        		courses = CourseManager.findEntities(school, 0); // Generates out of memory..
+        		count += courses.size();
+        		scocount += courses.stream().map(item -> ScoContextManager.findEntities(item)).collect(Collectors.summingInt(List::size));
+        	} while(courses.size()>0);
+        	
         	entry = new DomMapEntry<>("courses", Long.toString(count));
         	stats.add(entry);
-        	entry = new DomMapEntry<>("scos", Long.toString(scocount[0]));
+        	entry = new DomMapEntry<>("scos", Long.toString(scocount));
         	stats.add(entry);
         }
         {
