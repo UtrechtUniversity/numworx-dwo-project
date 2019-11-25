@@ -74,12 +74,12 @@ public class PlotDataStructureIT {
             System.out.print(tabs.substring(0, 1) + u.buildPersistenceId() + " " + u.getUsername() + "\n");
         }
         System.out.print(tabs.substring(0, 0) + "null public\n");
-        for (PersistentCourse nc : CourseManager.findEntities(new PersistentSchool())) {
+        for (PersistentCourse nc : CourseManager.findEntities(new PersistentSchool(),0)) {
             System.out.print(tabs.substring(0, 1) + nc.buildPersistenceId() + " " + nc.getName() + "\n");
         }
         for (PersistentSchool s : SchoolManager.findEntities()) {
             System.out.print(tabs.substring(0, 0) + s.buildPersistenceId() + " " + s.getSchoolName() + "\n");
-            for (PersistentCourse c : CourseManager.findEntities(s)) {
+            for (PersistentCourse c : CourseManager.findEntities(s,0)) {
                 System.out.print(tabs.substring(0, 1) + c.buildPersistenceId() + " " + c.getName() + "\n");
                 for (PersistentScoContext sco : ScoContextManager.findEntities(c)) {
                     System.out.print(tabs.substring(0, 2) + sco.buildPersistenceId() + " " + sco.getSconame() + "\n");

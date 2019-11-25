@@ -218,11 +218,12 @@ public class CourseManager {
       
     }
         
-    public static List<PersistentCourse> findEntities(PersistentSchool s) {
+    public static List<PersistentCourse> findEntities(PersistentSchool s, int limit) {
         EntityManager em = getEntityManager();
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentCourse.findBySchoolID");
             q.setParameter("schoolID", s.getSchoolID());
+            if(limit > 0 ) q.setMaxResults(limit);
             List<PersistentCourse> list = q.getResultList();
             LOG.log(Level.FINE, "Course-manager retrieved {0} PersistentCourse with schoolid {1}", new Object[]{list.size(), s.getSchoolID()});
             return list;
