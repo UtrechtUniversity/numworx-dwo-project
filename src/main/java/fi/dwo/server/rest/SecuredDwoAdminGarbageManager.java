@@ -280,4 +280,11 @@ public class SecuredDwoAdminGarbageManager {
 	  return Collections.emptyList();
   }
   
+  // TODO select * from tblcourse where schoolid not in select (schoolid from tblschool) // part of delete school.
+  // TODO entries in studentof, teacherof
+  // TODO entries in schoolclass (no school) // part of delete school
+  // TODO entries in ACL
+  // TODO entries in fromTo (export schools)
+  
+  
 }
