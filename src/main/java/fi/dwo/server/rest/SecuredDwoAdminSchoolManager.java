@@ -651,8 +651,6 @@ public class SecuredDwoAdminSchoolManager {
         		stats.add(entry);
         	}
         	
-        	
-        	
         	studentsco += users.stream().flatMap(u -> {
         		PersistentHasRolePK key = u.getPersistentHasRolePK();
 				return StudentScoContextManager.findEntities(key).stream();
