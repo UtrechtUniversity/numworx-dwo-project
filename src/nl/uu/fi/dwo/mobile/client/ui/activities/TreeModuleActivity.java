@@ -10,7 +10,6 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.IdleDetect;
@@ -21,7 +20,6 @@ import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
-import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.MaybeLogout;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
 import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
@@ -70,8 +68,8 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements GotoCont
           eventBus.addHandler(IdleDetect.TYPE, this);
         }
 		
-		if(item.getType() == Type.MODULE && DWOplayer.withUser()) {
-			Object userID = DWOplayer.clientfactory.getUserID();
+		if(item.getType() == Type.MODULE && clientFactory.withUser()) {
+			Object userID = clientFactory.getUserID();
 		if(userID != null && item.getPromisedScoreMap() == null) {
 			Promise<DomResultsPerStudentCourse> p = clientFactory.getRPCHandler().getUserResults(item.getID(), userID);
 			item.setPromisedScoreMap(

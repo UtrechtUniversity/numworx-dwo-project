@@ -151,7 +151,7 @@ public class TabletActivityMapper implements ActivityMapper
 			return new LoginActivity(clientFactory, ((LoginPlace) place).getPlace());
 		if (place instanceof ReloginPlace)
 		{
-			if(DWOplayer.withUser())
+			if(clientFactory.withUser())
 				return new ReloginActivity(clientFactory, ((ReloginPlace) place).getPlace());
 			else
 				return new LoginActivity(clientFactory, ((ReloginPlace) place).getPlace());

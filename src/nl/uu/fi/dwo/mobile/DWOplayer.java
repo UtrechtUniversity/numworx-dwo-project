@@ -78,17 +78,17 @@ public abstract class DWOplayer
 
 	public static final String PREFIX = PARAMETERS.getLaunchData();
 	
-	public static int count;
+//	public static int count;
 	
-	static void goTree() {
-		if(--count <= 0)
-			clientfactory.getPlaceController().goTo(new TreeModulePlace("0"));		
-	}
-
-	static void goFlat() {
-		if(--count <= 0)
-			clientfactory.getPlaceController().goTo(new FlatModulePlace());		
-	}
+//	static void goTree() {
+//		if(--count <= 0)
+//			clientfactory.getPlaceController().goTo(new TreeModulePlace("0"));		
+//	}
+//
+//	static void goFlat() {
+//		if(--count <= 0)
+//			clientfactory.getPlaceController().goTo(new FlatModulePlace());		
+//	}
 	
 	private static HashMap<String, String> resources = new HashMap<String, String>();
 

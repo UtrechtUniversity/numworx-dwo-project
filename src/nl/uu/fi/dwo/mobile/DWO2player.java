@@ -27,6 +27,7 @@ import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import nl.uu.fi.dwo.account.client.AccountBundle;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.mobile.client.DWO2playerDefaults;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.dagger.DWO2PlayerComponent;
 import nl.uu.fi.dwo.mobile.client.dagger.DaggerDWO2PlayerComponent;
@@ -100,8 +101,8 @@ public class DWO2player extends DWOplayer implements EntryPoint {
  
  // TESTING
  //   factory.getEventBus().addHandler(IdleDetect.TYPE, ev -> { GWT.log(ev.toString()); });
-    if (idleDetect != null)
-      idleDetect.start();   
+    idleDetect.start();
+    DWO2playerDefaults.idle = idleDetect;
   
     MsgDialogPresenter mdp = new MsgDialogPresenter(factory.getEventBus());
     DwoStyle style = GWT.<AccountBundle>create(AccountBundle.class).style();

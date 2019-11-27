@@ -72,4 +72,5 @@ public interface DWOplayerParameters {
 	String getCDN();
 	SecureMode getSecureMode();
 	String getDwoEnv();
+	default void tickle() {}
 }

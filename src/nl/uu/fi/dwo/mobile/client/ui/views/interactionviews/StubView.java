@@ -405,10 +405,17 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		wnd.getContext = function(viewer) {
 			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::getContext0()()
 		}
-		
+		wnd.tickle = function() {
+			view.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::tickle()()
+		}
 		return wnd.inner;
 	}-*/;
 
+	private void tickle() {
+		DWOplayer.PARAMETERS.tickle();
+	}
+	
+	
 	private void setFocus(boolean b, boolean soft) {
 		final FormuleKeyboardIF kb = comRoot.getKeyboard();
 		kb.setEditor( b ? this : null);
