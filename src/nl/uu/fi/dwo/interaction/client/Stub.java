@@ -16,9 +16,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
-public class Stub implements OpdrNavIF, FormuleKeyboardIF {
+public class Stub implements OpdrNavIF, FormuleKeyboardIF, NativePreviewHandler {
 	
 	private InteractionStub view;
 	private static FormuleEditorIF editor;
@@ -26,7 +28,7 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	private static Logger logger = Logger.getLogger("Stub");
 	private Stub(InteractionStub view) {
 		this.view = view;
-	}
+		com.google.gwt.user.client.Event.addNativePreviewHandler(this);	}
 	
 	private String getState() {
 		Map<String,Object> map = view.getState();
@@ -170,6 +172,10 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	
 	private static native void setChanged0(boolean fout) /*-{
 		$wnd.setChanged(fout, $wnd.outer);
+	}-*/;
+	
+	private static native void tickle() /*-{
+		$wnd.tickle()
 	}-*/;
 	
 	@Override
@@ -471,5 +477,10 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
   public ObjectMap getContext() {
     return JSONUtilities.wrapMap(getContext1());
   }
+
+@Override
+public void onPreviewNativeEvent(NativePreviewEvent event) {
+	tickle();
+}
 
 }
