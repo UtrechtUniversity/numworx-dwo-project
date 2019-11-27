@@ -50,7 +50,6 @@ import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.cell.client.TextCell;
-import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
@@ -62,7 +61,6 @@ import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
@@ -87,9 +85,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.ui.client.MGWT;
-import com.googlecode.mgwt.ui.client.MGWTSettings;
-import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
-import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 
@@ -100,7 +95,7 @@ import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
  * @author Danny Hendrix, Evertson Croes, Sietske Tacoma, Wim van Velthoven
  * 
  */
-public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder, EntryPoint, NextPrevHandler, ObjectivesHandler, MisconceptionsHandler, HasHeight
+public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder, NextPrevHandler, ObjectivesHandler, MisconceptionsHandler, HasHeight
 {
 	public class ResizeFocusPanel extends FocusPanel implements RequiresResize, ProvidesResize {
 
@@ -2046,85 +2041,85 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 
 	}
 	
-	@Override
-	public void onModuleLoad()
-	{
-		standalone = true;
-		initialize();
-		String url = "index.xml";
-		String link = "index.xmr"; // reference.
-		String path = Window.Location.getPath();
-		// strip basename
-		int slash = path.lastIndexOf('/');
-		//if (slash >= 0)
-		//	path = path.substring(slash + 1);
-		// strip extension
-		int dot = path.lastIndexOf('.');
-		if (dot > 0)
-		{
-			path = path.substring(0, dot);
-		}
-		if (!path.isEmpty())
-		{
-			url = path + ".xml";
-			link = path + ".xmr";
-		}
-		ViewPort viewport = new MGWTSettings.ViewPort();
-		viewport.setTargetDensity(DENSITY.MEDIUM);
-		viewport.setUserScaleAble(true);
-		//viewport.setMinimumScale(0.2).setInitialScale(1.0).setMaximumScale(5);
-
-		viewport.setMinimumScale(0.15);
-		viewport.setMaximumScale(3.0);
-		//viewport.setWidthToDeviceWidth();
-		//viewport.setHeightToDeviceHeight();
-		MGWTSettings settings = new MGWTSettings();
-		settings.setViewPort(viewport);
-		settings.setAddGlosToIcon(true);
-		settings.setFullscreen(true);
-		//settings.setPreventScrolling(true);
-		MGWT.applySettings(settings);
-
-		//RootPanel.get("viewholder").add(new Label("titel"));
-		RootPanel.get("main").add(this);
-
-		RequestBuilder.Method method = RequestBuilder.GET;
-		preSetupModule(link, url);
-
-		//contentPanel.add(kbp);
-
-		/*RequestBuilder rb = new RequestBuilder(method, url);
-		try
-		{
-			rb.sendRequest(null, new RequestCallback()
-			{
-
-				@Override
-				public void onResponseReceived(Request request, Response response)
-				{
-					String responseText = response.getText();
-					setupModule("",responseText);
-					
-				}
-
-				@Override
-				public void onError(Request request, Throwable exception)
-				{
-					Window.alert("error loading activity.xmx");
-				}
-			});
-
-		}
-		catch (RequestException e)
-		{
-			Window.alert("error loading activity.xmx");
-		}*/
-
-		//
-
-		FocusOnTouch.focus();
-
-	}
+//	@Override
+//	public void onModuleLoad()
+//	{
+//		standalone = true;
+//		initialize();
+//		String url = "index.xml";
+//		String link = "index.xmr"; // reference.
+//		String path = Window.Location.getPath();
+//		// strip basename
+//		int slash = path.lastIndexOf('/');
+//		//if (slash >= 0)
+//		//	path = path.substring(slash + 1);
+//		// strip extension
+//		int dot = path.lastIndexOf('.');
+//		if (dot > 0)
+//		{
+//			path = path.substring(0, dot);
+//		}
+//		if (!path.isEmpty())
+//		{
+//			url = path + ".xml";
+//			link = path + ".xmr";
+//		}
+//		ViewPort viewport = new MGWTSettings.ViewPort();
+//		viewport.setTargetDensity(DENSITY.MEDIUM);
+//		viewport.setUserScaleAble(true);
+//		//viewport.setMinimumScale(0.2).setInitialScale(1.0).setMaximumScale(5);
+//
+//		viewport.setMinimumScale(0.15);
+//		viewport.setMaximumScale(3.0);
+//		//viewport.setWidthToDeviceWidth();
+//		//viewport.setHeightToDeviceHeight();
+//		MGWTSettings settings = new MGWTSettings();
+//		settings.setViewPort(viewport);
+//		settings.setAddGlosToIcon(true);
+//		settings.setFullscreen(true);
+//		//settings.setPreventScrolling(true);
+//		MGWT.applySettings(settings);
+//
+//		//RootPanel.get("viewholder").add(new Label("titel"));
+//		RootPanel.get("main").add(this);
+//
+//		RequestBuilder.Method method = RequestBuilder.GET;
+//		preSetupModule(link, url);
+//
+//		//contentPanel.add(kbp);
+//
+//		/*RequestBuilder rb = new RequestBuilder(method, url);
+//		try
+//		{
+//			rb.sendRequest(null, new RequestCallback()
+//			{
+//
+//				@Override
+//				public void onResponseReceived(Request request, Response response)
+//				{
+//					String responseText = response.getText();
+//					setupModule("",responseText);
+//					
+//				}
+//
+//				@Override
+//				public void onError(Request request, Throwable exception)
+//				{
+//					Window.alert("error loading activity.xmx");
+//				}
+//			});
+//
+//		}
+//		catch (RequestException e)
+//		{
+//			Window.alert("error loading activity.xmx");
+//		}*/
+//
+//		//
+//
+//		FocusOnTouch.focus();
+//
+//	}
 
 	@Override
 	public Widget asWidget()
@@ -2560,4 +2555,5 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
     // TODO Auto-generated method stub
     
   }
+
 }

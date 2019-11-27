@@ -12,7 +12,7 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
-import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
+//import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleTeken;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
@@ -52,8 +52,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
-import com.googlecode.mgwt.ui.client.MGWT;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
+//import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.Expressie;
@@ -75,7 +74,7 @@ public abstract class XMLView {
 	protected FormuleKeyboardIF kb = null;
 	protected StatusBarIF sb = null;
 	protected FormuleClipboardIF cb = null;
-	private static Logger logger = Logger.getLogger("XMLView");
+	private Logger logger = Logger.getLogger("XMLView");
 	private static int defaultFontSize = 12;
 	private static String defaultFontName = "Arial";
 	
@@ -302,6 +301,7 @@ public abstract class XMLView {
 				@Override
 				public void onResponseReceived(Request request, Response response)
 				{
+				    if(logger == null) return;
 					String responseText = response.getText();
 					logger.info("Status: " + response.getStatusCode() + " " + response.getStatusText());
 					logger.info(response.getHeadersAsString());
@@ -419,21 +419,21 @@ public abstract class XMLView {
 		}
 	}
 
-	public Panel getPanelElement(final FormuleHolder editor) {
-		FlowPanel fp = new FlowPanel();
-		editor.paint();
-	
-		final Panel p = editor.getAsPanel();
-	
-		if (p instanceof TouchPanel)
-		{
-			TouchPanel tp = (TouchPanel) p;
-			this.addFormulePanelListeners(tp, editor);
-		}
-	
-		fp.add(p);
-		return p;
-	}
+//	public Panel getPanelElement(final FormuleHolder editor) {
+//		FlowPanel fp = new FlowPanel();
+//		editor.paint();
+//	
+//		final Panel p = editor.getAsPanel();
+//	
+//		if (p instanceof TouchPanel)
+//		{
+//			TouchPanel tp = (TouchPanel) p;
+//			this.addFormulePanelListeners(tp, editor);
+//		}
+//	
+//		fp.add(p);
+//		return p;
+//	}
 	
 	public static int getDefaultFontSize()
 	{
@@ -450,14 +450,18 @@ public abstract class XMLView {
 		return defaultFontSize + "px " + defaultFontName;
 	}
 
-	private void addFormulePanelListeners(final TouchPanel tp, final FormuleHolder editor) {
-		tp.addTouchHandler(new FormuleEditorTouchHandler(editor));
-	}
+//	private void addFormulePanelListeners(final TouchPanel tp, final FormuleHolder editor) {
+//		tp.addTouchHandler(new FormuleEditorTouchHandler(editor));
+//	}
 	
 	public boolean bolletjesZichtbaar()
 	{
 		return bolletjesZichtbaar;
 	}
+
+	  public void abort() {
+	    logger = null; // no more output to user.
+	  }
 
 	Promise<Boolean> loadJSON(String file) {
 		int is = file.lastIndexOf('=');
@@ -484,6 +488,7 @@ public abstract class XMLView {
 			
 			@Override
 			public void fail(Promise<?> resolved) throws Exception {
+			    if (logger == null) return;
 				Throwable exception = resolved.getFailure();
 				Window.alert(Text.constants.noJSONreceived() + 
 						"\nerror " + exception);
@@ -527,10 +532,12 @@ public abstract class XMLView {
 					@Override
 					public void onError(Request request, Throwable exception)
 					{
-						Window.alert(Text.constants.noJSONreceived() + 
-								"\nerror " + exception);
-						logger.log(Level.SEVERE, exception.toString(), exception);
-						defer.fail(exception);
+					    if (logger != null) {
+    						Window.alert(Text.constants.noJSONreceived() + 
+    								"\nerror " + exception);
+    						logger.log(Level.SEVERE, exception.toString(), exception);
+					    }
+					    defer.fail(exception);
 					}
 				});
 		

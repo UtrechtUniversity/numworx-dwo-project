@@ -9,15 +9,12 @@ import org.osgi.util.promise.Promise;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.Window.ClosingEvent;
+import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
@@ -37,7 +34,7 @@ import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 
-public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, CBookEventListener {
+public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, CBookEventListener, ClosingHandler {
 
 	static class InitialValueChangeEvent extends ValueChangeEvent<String> {
 
@@ -284,6 +281,12 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
           DWOplayer.clientfactory.getEventBus().fireEvent(new CBookEvent(ACTION_NEXT_ASSET));
     }
     
+  }
+
+
+  @Override
+  public void onWindowClosing(ClosingEvent event) {
+    view.abort();    
   }
 	
 	
