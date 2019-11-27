@@ -23,7 +23,6 @@ import nl.uu.fi.dwo.mobile.client.ui.places.FlatModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import com.google.gwt.activity.shared.ActivityManager;
-import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -67,7 +66,7 @@ public abstract class DWOplayer
 			log("Profile = " + n);
 			if(n > 0) 
 				PROFILE_ID = n;
-		} catch( Throwable _) {}
+		} catch( Throwable _oops_) {}
 	}
 	
 	
@@ -105,7 +104,6 @@ public abstract class DWOplayer
 	private static Deferred<DomDwoProfileFull> deferredProfile;
 	public static Promise<DomDwoProfileFull> dwoProfile; // NEVER NULL
 	public static ClientFactory clientfactory;
-	//public static SCORM_guest api;
 
 	/**
 	 * This is the entry point method.
