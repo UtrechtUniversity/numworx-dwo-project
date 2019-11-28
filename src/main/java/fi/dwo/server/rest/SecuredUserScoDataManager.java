@@ -34,9 +34,11 @@ import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.beans.scorm2xml.Scorm2Xml;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
@@ -44,6 +46,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoData;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.UEscape;
+import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
@@ -60,6 +63,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScormValues;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.entities.RestScormValues;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -343,8 +348,6 @@ public class SecuredUserScoDataManager {
     		throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "This will be logged.");			
  		}
 		PersistentScoContext scoContext = null;
-		DomSchoolClassId domClassID = rest.getDomScormValues().getSchoolClassID();
-		Long classID = MySQLPersistenceId.getNativeId(domClassID);
 		try {
 			scoContext = ScoContextManager.findEntity(MySQLPersistenceId.getNativeId(rest.getDomScormValues().getScoContext()));
             if(scoContext == null)
@@ -352,7 +355,32 @@ public class SecuredUserScoDataManager {
               LOG.warning("Scocontext missing " + rest.getDomScormValues().getScoContext().getId());
               return Response.ok(Boolean.FALSE, MediaType.APPLICATION_JSON_TYPE).build();
             }
-     	LOG.log(Level.INFO, "setValues starts " + sc.getUserPrincipal().getName() + " " + scoContext.getScoID());
+            PersistentCourse course = CourseManager.findEntity(scoContext.getCourseID());
+            Long schoolID = course.getSchoolID();
+            if (schoolID != null) {
+            	// schoolID must match
+            	if (! schoolID.equals(phr.getSchoolGroup().getSchool().getSchoolID())) {
+            		LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": School mismatch");
+            		throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "This will be logged.");			
+            	}
+            	if (phr.getSchoolGroup().getGroupID() == RoleType.STUDENT.ordinal()) {
+            		DomSchoolClassId domClassID = rest.getDomScormValues().getSchoolClassID();
+            		Long classID = MySQLPersistenceId.getNativeId(domClassID);
+            		PersistentSchoolClass schoolClass = new PersistentSchoolClass(classID);
+					List<PersistentClassCourse> pccList = ClassCourseManager.findEntities(schoolClass, course);
+					PersistentClassCourse pcc = pccList.get(0);
+					boolean ok = pcc.getViewState() == ViewState.studentsAndTeachers;
+					if (pcc.getNotAfter() != null) ok &= pcc.getNotAfter().after(new java.util.Date());
+					if (pcc.getNotBefore() != null) ok &= pcc.getNotBefore().before(new java.util.Date());
+					if (!ok) {
+			              LOG.warning("ClassCourse not open " + rest.getDomScormValues().getScoContext().getId());
+			              return Response.ok(Boolean.FALSE, MediaType.APPLICATION_JSON_TYPE).build();						
+					}
+            	}
+             }
+            
+            
+        LOG.log(Level.INFO, "setValues starts " + sc.getUserPrincipal().getName() + " " + scoContext.getScoID());
 		List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(scoContext, hasRoleKey);
 		Scorm2Xml xml = null;
 		if (list.isEmpty()) {
@@ -512,8 +540,37 @@ public class SecuredUserScoDataManager {
 		}
 		DomHasRole domHasRole = rest.getRestContext().getDomHasRole();
         PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(domHasRole);
+        PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
         PersistentScoContext scoContext = ScoContextManager.findEntity(MySQLPersistenceId.getNativeId(rest.getDomScormValues().getScoContext()));
-		List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(scoContext, hasRoleKey);
+        PersistentCourse course = CourseManager.findEntity(scoContext.getCourseID());
+        Long schoolID = course.getSchoolID();
+        if (schoolID != null) {
+        	// schoolID must match
+        	if (! schoolID.equals(phr.getSchoolGroup().getSchool().getSchoolID())) {
+        		LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": School mismatch");
+        		throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "This will be logged.");			
+        	}
+        	if (phr.getSchoolGroup().getGroupID() == RoleType.STUDENT.ordinal()) {
+        		DomSchoolClassId domClassID = rest.getDomScormValues().getSchoolClassID();
+        		Long classID = MySQLPersistenceId.getNativeId(domClassID);
+        		PersistentSchoolClass schoolClass = new PersistentSchoolClass(classID);
+				List<PersistentClassCourse> pccList = ClassCourseManager.findEntities(schoolClass, course);
+				PersistentClassCourse pcc = pccList.get(0);
+				boolean ok = pcc.getViewState() == ViewState.studentsAndTeachers;
+				if (pcc.getNotAfter() != null) ok &= pcc.getNotAfter().after(new java.util.Date());
+				if (pcc.getNotBefore() != null) ok &= pcc.getNotBefore().before(new java.util.Date());
+				if (!ok) {
+		              LOG.warning("ClassCourse not open " + rest.getDomScormValues().getScoContext().getId());
+		              return Response.ok(Boolean.FALSE, MediaType.APPLICATION_JSON_TYPE).build();						
+				}
+        	}
+         }
+
+        
+        
+        
+        
+        List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(scoContext, hasRoleKey);
 		if(!list.isEmpty()) {
 			ssContext = list.get(0);
 			if(COMPLETE.equals(ssContext.getCompletionStatus()))

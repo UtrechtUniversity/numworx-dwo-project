@@ -33,7 +33,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacherScormValues;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
-import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestTeacherScormValues;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
