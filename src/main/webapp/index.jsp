@@ -22,12 +22,6 @@
     <ul>
 	<li><a href="/dwo/rest/public/user/requestNewPassword?language=nl&back=/">Wachtwoord vergeten</a></li>
 	<li><a href="/dwo/rest/public/user/requestNewPassword?language=en&back=/">Forgotten password</a></li>
-	<li>Auteursomgeving 
-		<a href="/docent/">VO</a>,
-		<a href="/ho/docent/java.html">HO</a>,
-            authoring environment
-		<a href="/en/teacher/">SE</a>,
-		<a href="/ho/en/teacher/">HE</a> (java applet)</li>
 	<li>De auteursomgeving als <a href='https://www.numworx.nl/help/downloads/'>applicatie</a> downloaden</li>
     </ul>
 </body>
