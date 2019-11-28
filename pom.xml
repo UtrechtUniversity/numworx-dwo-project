@@ -360,22 +360,46 @@
 							<groupId>fi.dwo</groupId>
 							<artifactId>DWO-apps</artifactId>
 							<targetPath>/dwo/apps</targetPath>
+							<excludes>
+								<exclude>WEB-INF/**</exclude>
+								<exclude>META-INF/**</exclude>
+							</excludes>
 						</overlay>
 						<overlay>
 							<groupId>nl.uu.fi.dwo.mobile</groupId>
 							<artifactId>DWOplayer</artifactId>
 							<classifier>dwo2</classifier>
 							<targetPath>/dwo/tablet</targetPath>		
+							<excludes>
+								<exclude>WEB-INF/**</exclude>
+								<exclude>META-INF/**</exclude>
+							</excludes>
 						</overlay>
 						<overlay>
 							<groupId>nl.uu.fi.dwo.lms</groupId>
 							<artifactId>DWOGwtClient</artifactId>
+							<excludes>
+								<exclude>WEB-INF/**</exclude>
+								<exclude>META-INF/**</exclude>
+								<exclude>**/*.scss</exclude>
+								<exclude>login.html</exclude>
+								<exclude>gwtclient.html</exclude>
+								<exclude>html5plain.html</exclude>
+								<exclude>library.html</exclude>
+								<exclude>**/*.md</exclude>
+								<exclude>ng-js/**</exclude>
+								<exclude>js-plainui/**</exclude>
+							</excludes>
 							<targetPath>/gwtclient</targetPath>
 						</overlay>
 						<overlay>
 							<groupId>nl.uu.fi.dwo.register</groupId>
 							<artifactId>Register</artifactId>
 							<targetPath>/dwo/register</targetPath>
+							<excludes>
+								<exclude>WEB-INF/**</exclude>
+								<exclude>META-INF/**</exclude>
+							</excludes>
 						</overlay>
 						<overlay>
 							<groupId>fi.servlet</groupId>
