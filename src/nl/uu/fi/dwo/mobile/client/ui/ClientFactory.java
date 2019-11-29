@@ -31,6 +31,7 @@ public interface ClientFactory
 {
 	EventBus getEventBus();
 
+	@Deprecated
 	PlaceController getPlaceController();
 
 	ViewModuleView getEntryView();
@@ -83,6 +84,7 @@ public interface ClientFactory
 
 	boolean isPremium();
 
+	@Deprecated
   PlaceHistoryHandler getPlaceHistoryHandler();
 
 // High level functions

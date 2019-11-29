@@ -93,15 +93,16 @@ public abstract class DWOplayer
 	private static HashMap<String, String> resources = new HashMap<String, String>();
 
 
-	
-	//public static Locale language = new Locale ("nl", "");
 	public static Text_nl rb = new Text_nl();
 	
+	@Deprecated
 	public static boolean withUser() {
 		return clientfactory.withUser();
 	}	
 	
+	@Deprecated
 	private static Deferred<DomDwoProfileFull> deferredProfile;
+	@Deprecated
 	public static Promise<DomDwoProfileFull> dwoProfile; // NEVER NULL
 	public static ClientFactory clientfactory;
 
@@ -118,7 +119,7 @@ public abstract class DWOplayer
 		initProfile();
 	}
 
-	protected void initProfile() {
+	void initProfile() {
 		Success<DomDwoProfileFull, DomDwoProfileFull> getProfileCallback = new Success<DomDwoProfileFull, DomDwoProfileFull>() {
 
 			@Override

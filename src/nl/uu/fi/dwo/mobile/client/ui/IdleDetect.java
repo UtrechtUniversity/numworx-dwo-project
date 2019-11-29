@@ -25,10 +25,7 @@ public class IdleDetect extends Timer implements NativePreviewHandler {
 	
 	public static class IdleEvent extends Event<IdleHandler> {
 
-
-		
-		public  final boolean slow; 
-		public  final int cnt;
+	  public  final int cnt;
 
 		@Override
 		public Type<IdleHandler> getAssociatedType() {
@@ -41,14 +38,14 @@ public class IdleDetect extends Timer implements NativePreviewHandler {
 		}
 		
 		private IdleEvent(int c ) {
-			cnt = c; slow = c > FAST;
+			cnt = c;
 		}
 
 		/**
 		 * @return the slow
 		 */
 		public boolean isSlow() {
-			return slow;
+			return cnt > FAST;
 		}
 
 		/**
