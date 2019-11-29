@@ -161,7 +161,11 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
               case TRAIL:
             	  presenterFactory.getMainPresenter().setTrails(switchViewEvent.getResultState());
                 break;
-             default:
+              case MAYBELOGOUT:
+                  presenterFactory.getMainPresenter().maybeLogout();
+                  break;
+              
+              default:
                   eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
                   LOG.log(Level.SEVERE, "Switch panel failed in app controller.");
           }

@@ -246,6 +246,13 @@ public class MainPresenter {
 	private Promise<?> ask;
 	public final static int IDLE = 900000;
 
+	public void maybeLogout() {
+	  if (ask == null) {
+	    doIdle();
+	  }
+	}
+	
+	
 	@JsMethod
 	public void onIdle() {
 		if (ask != null && !ask.isDone()) {
@@ -254,18 +261,22 @@ public class MainPresenter {
 			logout(Promises.resolved(Boolean.TRUE));
 			return;
 		}
-        defer = new PromisedDialogWithConfirmDeferred(DwoLocalesForGWT.instance.NUM_LBL_LOGGEDIN());
-		PromisedMessageDialogWithConfirmEvent event = new PromisedMessageDialogWithConfirmEvent(EventType.ConfirmDialog, defer);		
-		ask = defer.getPromise();
-		eventBus.fireEvent(event);
-		setIdleTimeout(15000);
-		ask.then((q) -> { 
-			ask = null;
-			setIdleTimeout(IDLE);
-			return null;
-		});
-		LOG.severe("TODO onIdle");
+        doIdle();
 	}
+
+  private void doIdle() {
+    defer = new PromisedDialogWithConfirmDeferred(DwoLocalesForGWT.instance.NUM_LBL_LOGGEDIN());
+    PromisedMessageDialogWithConfirmEvent event = new PromisedMessageDialogWithConfirmEvent(EventType.ConfirmDialog, defer);		
+    ask = defer.getPromise();
+    eventBus.fireEvent(event);
+    setIdleTimeout(15000);
+    ask.then((q) -> { 
+      ask = null;
+      setIdleTimeout(IDLE);
+      return null;
+    });
+    LOG.fine("doIdle");
+  }
 
 	/**
 	 * @param millis

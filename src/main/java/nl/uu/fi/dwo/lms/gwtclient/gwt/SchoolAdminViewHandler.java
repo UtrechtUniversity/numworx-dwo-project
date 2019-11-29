@@ -125,6 +125,9 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
         case TRAIL:
           presenterFactory.getMainPresenter().setTrails(switchViewEvent.getResultState());
           break;
+        case MAYBELOGOUT:
+          presenterFactory.getMainPresenter().maybeLogout();
+          break;
      }
   }
 

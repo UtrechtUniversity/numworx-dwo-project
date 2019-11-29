@@ -55,7 +55,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
     private static final String SHOWMAINNAV = "showMainNav";
     private static final String HIDEMAINNAV = "hideMainNav";
     private static final String ISMAINNAVVISIBLE = "isMainNavVisible";
-    private static final String TRAIL = "TRAIL";
+    private static final String TRAIL = SelectedView.TRAIL.name();
 
     private final Failure FAILURE;
     private final EventBus eventBus;
@@ -252,9 +252,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         } else 
         if (select(SelectedView.RESULTS, message) || select(SelectedView.PERSONS,message) || select(SelectedView.SCHOOLCLASSES,message) || select(SelectedView.ORGANISATION, message)) {
           mainView.setIdleTimeout(MainPresenter.IDLE);
-        } else if (TRAIL.equals(message)) {
-          SwitchViewEvent event = new SwitchViewEvent(SelectedView.TRAIL);
-          eventBus.fireEvent(event);
+        } else if (select(SelectedView.TRAIL,message)) {
         } 
         else if (message.startsWith(TRAIL +":")) {
           message = message.substring(TRAIL.length()+1);
@@ -265,6 +263,8 @@ public class ModulesPresenter implements SwitchViewEventHandler {
           eventBus.fireEvent(new LoginEvent(State.LOGOUT));
         } else if ("EXAM".equals(message)) {
           controller.get().setSession(false);
+        } else if (select(SelectedView.MAYBELOGOUT, message)) {
+          
         }
     }
 
@@ -298,7 +298,11 @@ public class ModulesPresenter implements SwitchViewEventHandler {
           LOG.info("sending search message " + search);
           String message = select.name() + ":" + toString(search);
           view.sendMessage(message);
+        case MODULES:
+        case MODULESVIEW:
+        case MAYBELOGOUT:
           return;
+        default:
       }
       if(select == SelectedView.WELCOME) {
         LOG.fine( "old role "  + roleId);
@@ -319,11 +323,6 @@ public class ModulesPresenter implements SwitchViewEventHandler {
           view.sendMessage("GOTO:");
         }
       }
-      
-      
-      
-      if(select == SelectedView.MODULES||select == SelectedView.MODULESVIEW)
-        return;
 // switch to other view.     
       LOG.info("switch " + select);
       view.setMainNavVisible(true);
