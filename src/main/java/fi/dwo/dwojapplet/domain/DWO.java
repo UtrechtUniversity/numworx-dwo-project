@@ -76,6 +76,7 @@ import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.BUILD;
 import fi.dwo.dwojapplet.domain.utils.CheckEmail;
+import fi.dwo.dwojapplet.domain.utils.JXBChecker;
 import fi.dwo.dwojapplet.gui.CenterSubPanel;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.GuiCreator;
@@ -1547,9 +1548,13 @@ LOG.info("time results = " + (-t) + " ms");
                 }
             }
         }
-        JVMChecker jvmChecker = new JVMChecker(this);
-        jvmChecker.check();
+//        JVMChecker jvmChecker = new JVMChecker(this);
+//        jvmChecker.check();
 
+        JXBChecker jxbChecker = new JXBChecker(this);
+        jxbChecker.check();
+        
+        
         try {
             if (dwoProfile==null)
             	dwoProfile = PublicProfileManager.get(dwoProfileID);
