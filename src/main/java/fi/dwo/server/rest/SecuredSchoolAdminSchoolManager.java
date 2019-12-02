@@ -216,6 +216,24 @@ public class SecuredSchoolAdminSchoolManager {
         return domSchoolAdminList;
     }
 
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getSchoolAdminList")
+    public List<DomSchoolAdmin> getSchoolAdminsInSchool(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
+	    UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+	    	      .setRealm(rest.getRestContext().getRealm())
+	    	      .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.SCHOOLADMIN);
+	      state.buildSchoolAdminTeacher();
+	      PersistentSchool school = state.getSchool();
+	      List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.SCHOOLADMIN);
+	      ArrayList<DomSchoolAdmin> domSchoolAdminList = new ArrayList<>(userList.size());
+	      String realm = state.getRealm();
+	      for (PersistentUser u : userList) {
+	          domSchoolAdminList.add(u.buildDomSchoolAdmin(realm));
+	      }
+	      return domSchoolAdminList;
+    }
+
     /**
      * Removes a student from a school and returns true.
      *
