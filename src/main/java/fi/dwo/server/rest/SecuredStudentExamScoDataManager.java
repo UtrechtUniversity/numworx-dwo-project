@@ -19,21 +19,23 @@ public class SecuredStudentExamScoDataManager extends SecuredCommonScoDataManage
   @PUT 
   @Produces("application/json")
   @Path("/patchValues")
-  public Response patchValues(@Context SecurityContext sc, RestScormValues rest, @HeaderParam("if-match") String match) throws Dwo2Exception {
+  public Response patchValues(@Context SecurityContext sc, RestScormValues rest, @HeaderParam("if-match") String match,
+                              @HeaderParam("X-ClassCourseID") String ccid, @HeaderParam("X-TOTP") String totp) throws Dwo2Exception {
     return super.patchValues(sc, rest, match);
   }
 
   @PUT
   @Produces({"application/json"})    
   @Path("/getJSONLaunchDataBytes")
-  public String getJSONLaunchDataBytes(@Context SecurityContext sc, RestScoContext rest) throws Dwo2Exception {
+  public String getJSONLaunchDataBytes(@Context SecurityContext sc, RestScoContext rest,
+                                       @HeaderParam("X-ClassCourseID") String ccid, @HeaderParam("X-TOTP") String totp) throws Dwo2Exception {
     return super.getJSONLaunchDataBytes(sc, rest);
   }
 
   @PUT
   @Produces({"application/json"})
   @Path("/getValues")
-  public Response getValues(@Context SecurityContext sc, RestScormValues rest) throws Dwo2Exception {
+  public Response getValues(@Context SecurityContext sc, RestScormValues rest,@HeaderParam("X-ClassCourseID") String ccid, @HeaderParam("X-TOTP") String totp) throws Dwo2Exception {
     return super.getValues(sc, rest);
   }
 

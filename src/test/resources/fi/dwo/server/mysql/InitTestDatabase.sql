@@ -881,7 +881,6 @@ CREATE TABLE `tbluser` (
   `passwd` varchar(128) NOT NULL DEFAULT '',
   `email` varchar(128) NOT NULL DEFAULT '',
   `registerDate` date NOT NULL DEFAULT '0000-00-00',
-  `rights` varchar(100) DEFAULT '_',
   `lastLogin` date DEFAULT NULL,
   `lastLoginTime` time DEFAULT NULL,
   `singleschool` tinyint(1) DEFAULT '1',
