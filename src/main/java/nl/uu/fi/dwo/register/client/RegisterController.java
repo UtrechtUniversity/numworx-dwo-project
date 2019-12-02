@@ -14,6 +14,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.PublicUserManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.util.Base64;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
@@ -80,8 +81,9 @@ public class RegisterController {
 				
 			};
 			Function<Promise<?>, Promise<? extends Boolean>> recovery = (promise) -> {
-				GwtRestVars.instance().setCredentials(domNewUser.getUsername(), domNewUser.getPassword(), null);			
-				return manager.getAccountData().map(v -> Boolean.TRUE);
+				GwtRestVars.instance().setCredentials(domNewUser.getUsername(), domNewUser.getPassword(), null);
+				DomContext context = new DomContext();
+				return manager.getAccountData(context).map(v -> Boolean.TRUE);
 			};
 			p = p.recoverWith(recovery).then(link);
 		}
