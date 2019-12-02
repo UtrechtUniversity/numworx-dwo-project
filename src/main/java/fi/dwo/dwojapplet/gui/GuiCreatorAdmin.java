@@ -29,6 +29,7 @@ import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.SchoolPasswdMap;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.GuiCreatorTeacher.LazyAppletConfig;
 import fi.dwo.dwojapplet.gui.action.CourseManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoParameterAction;
@@ -426,4 +427,20 @@ public class GuiCreatorAdmin extends GuiCreator {
     public ConfigManager getConfigManager() {
       return new SecureDwoAdminConfigManager();
     }
+    
+    @Override
+    public AppletConfig getAppletConfigFromSco(Sco sco) {
+        LazyAppletConfig config;
+        config = new LazyAppletConfig();
+        String name = sco.getScoName();
+        int aid = sco.getAppletID();
+        int sid = sco.getScoID();
+        config.setSco(sco);
+        config.setAppletID(aid);
+        config.setAppletConfigID(-sid); // HACK HACK negatief = scoid
+        config.setName(name);
+        config.setImageSource(PersistentScoContext.buildPersistenceId((long)sco.getID()));
+        return config;
+    }
+
 }

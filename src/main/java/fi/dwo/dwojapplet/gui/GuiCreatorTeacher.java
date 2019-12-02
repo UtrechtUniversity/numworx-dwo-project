@@ -303,13 +303,13 @@ public class GuiCreatorTeacher extends GuiCreator {
         return panel;
     }
 
-    /**
-     * Gebruik de andere.
-     *
-     * @deprecated
-     *
-     * @return LazyAppletConfig[]
-     */
+//    /**
+//     * Gebruik de andere.
+//     *
+//     * @deprecated
+//     *
+//     * @return LazyAppletConfig[]
+//     */
 //    public AppletConfig[] getAppletConfigFromTeacher_oud() {
 //        Vector ac = new Vector();
 //        LazyAppletConfig config;
