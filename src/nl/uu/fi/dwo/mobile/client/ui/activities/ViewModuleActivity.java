@@ -280,7 +280,8 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
     OpdrNavIF opdrNav = view.getOpdrNav(); // komt soms te vroeg, en dan heb je nog geen opdrnav
     if (opdrNav != null && (opdrNav.getMode() == OpdrNavIF.ZELFTOETS || opdrNav.getMode() == OpdrNavIF.EINDTOETS))
       opdrNav.setChanged(false); 
-    if (ev.isSlow()) {
+    if (ev.isSlow() && !sco.isExam()) // no timeout bij exams
+    {
       goTo(new TreeModulePlace(sco.getParentID()));
     }
   }
