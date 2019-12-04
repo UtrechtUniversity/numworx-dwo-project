@@ -12,6 +12,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import java.awt.Color;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -33,6 +35,7 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
         this.school = school;
         setBackground(getSubHeaderColor());
         BoxLayout layout = new BoxLayout(this, BoxLayout.PAGE_AXIS);
+        setBorder(BorderFactory.createEmptyBorder(2, 20, 0, 0));
         setLayout(layout);
         JLabel title = new JLabel(TextMapper.format(TextMapper.GUIC_SETTINGS, new Object[]{school.toString()}));
         title.setForeground(GuiConstants.HEADER_COLOR);

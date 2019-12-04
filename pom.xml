@@ -325,6 +325,7 @@
                             <Export-Package>fi.beans.numworxlf,fi.beans.copyright,fi.beans.loader,fi.beans.scorm,fi.beans.xmlrpc,fi.beans.mainframe</Export-Package>
   							<Import-Package>nl.numworx.swingbrowser.api;version="[1.0,2)",
   								netscape.javascript;resolution:=optional,
+ 								com.teamdev.jxbrowser.engine;resolution:=optional,
   								javax.swing.*,
   								javax.*;resolution:=optional,
   								org.osgi.util.promise;version="[1.0,2)",org.osgi.util.function;version="[1.0,2)",
