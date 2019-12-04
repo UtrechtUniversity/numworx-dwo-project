@@ -323,7 +323,7 @@ public class LoginPresenter {
         if ("default".equals(locale) ) locale =  "nl";
     	if ("FORGOT".equals(tag)) {
     		Location.assign(
-    				"/dwo/rest/public/user/requestNewPassword?locale="+ locale + "&back=" + base
+    				"/dwo/rest/public/user/requestNewPassword?language="+ locale + "&back=" + base
     		);
     		return;
     	}
