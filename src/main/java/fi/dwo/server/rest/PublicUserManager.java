@@ -46,6 +46,10 @@ import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.rest.jaxrsfilters.AuthenticationRequestFilter;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
 
@@ -714,11 +718,12 @@ public class PublicUserManager {
      * @param language
      * @param back
      * @return
+     * @throws IOException 
      */
     @GET
     @Produces({MediaType.TEXT_HTML})
     @Path("/requestNewPassword")
-    public String reqPasswordChangeForm(@QueryParam("language") String language, @QueryParam("back") String back) {
+    public String reqPasswordChangeForm(@QueryParam("language") String language, @QueryParam("back") String back) throws IOException {
         if (language == null) {
             language = TextMapper.getLanguage();
         }
@@ -727,19 +732,38 @@ public class PublicUserManager {
         }
         String old = TextMapper.getLanguage();
         TextMapper.setLanguage(language);
-        String r = "<HTML><BODY><p> " + TextMapper.getText(TextMapper.LBL_REQUEST_NEW_PASSWORD)
-                + "<form action=\"requestPasswordChange\" method=\"post\" >\n"
-                + "<input type='hidden' name='language' value=\"" + htmlEncode(language) + "\">\n"
-                + "<input type='hidden' name='back' value=\"" + htmlEncode(back) + "\">\n"
-                + "<table>"
-                + "<tr><td align=\"right\">" + TextMapper.getText(TextMapper.LBL_USERNAME) + ": </td> <td><input type=\"text\" size=\"50\" name=\"usercode\" value=\""
-                + "\"></td></tr>"
-                + "<tr><td align=\"right\">" + TextMapper.getText(TextMapper.LBL_EMAIL) + ":</td> <td><input type=\"text\" size=\"50\" name=\"email\" value=\""
-                + "\"> </td></tr>"
-                + "<tr><td/><td align=\"right\"><input type=\"submit\" value=\"" + TextMapper.getText(TextMapper.BTN_OK) + "\" ></td></tr>"
-                + "<table>"
-                + "</form>";
-        r += "</p></BODY> </HTML>";
+        InputStream in = getClass().getResourceAsStream("requestPasswordChange.html");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        String r;
+//        r = "<HTML><BODY><p> " + TextMapper.getText(TextMapper.LBL_REQUEST_NEW_PASSWORD)
+//                + "<form action=\"requestPasswordChange\" method=\"post\" >\n"
+//                + "<input type='hidden' name='language' value=\"" + htmlEncode(language) + "\">\n"
+//                + "<input type='hidden' name='back' value=\"" + htmlEncode(back) + "\">\n"
+//                + "<table>"
+//                + "<tr><td align=\"right\">" + TextMapper.getText(TextMapper.LBL_USERNAME) + ": </td> <td><input type=\"text\" size=\"50\" name=\"usercode\" value=\""
+//                + "\"></td></tr>"
+//                + "<tr><td align=\"right\">" + TextMapper.getText(TextMapper.LBL_EMAIL) + ":</td> <td><input type=\"text\" size=\"50\" name=\"email\" value=\""
+//                + "\"> </td></tr>"
+//                + "<tr><td/><td align=\"right\"><input type=\"submit\" value=\"" + TextMapper.getText(TextMapper.BTN_OK) + "\" ></td></tr>"
+//                + "<table>"
+//                + "</form>";
+//        r += "</p></BODY> </HTML>";
+        
+        r = "";
+        String line;
+        while( (line = reader.readLine()) != null) {
+        	r += line;
+        }
+        reader.close();
+        r = MessageFormat.format(r, 
+        		TextMapper.getText(TextMapper.LBL_REQUEST_NEW_PASSWORD), // (0)
+        		TextMapper.getText(TextMapper.LBL_USERNAME),
+        		TextMapper.getText(TextMapper.LBL_EMAIL),
+        		TextMapper.getText(TextMapper.BTN_OK),
+        		htmlEncode(language),
+        		htmlEncode(back), 
+        		TextMapper.getText(TextMapper.GUIP_PASSWORD));
+        
         TextMapper.setLanguage(old);
         return r;
     }
