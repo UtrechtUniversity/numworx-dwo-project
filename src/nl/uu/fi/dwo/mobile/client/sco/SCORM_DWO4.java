@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.mobile.client.sco;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,16 +14,13 @@ import org.osgi.util.function.Function;
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import nl.numworx.gwtpatch.client.GWTPatch;
 import nl.numworx.gwtpatch.client.JSONBuilder;
-import nl.uu.fi.dwo.account.client.DwoGlobalVars;
-import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.SecureMode;
-import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
+import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -36,6 +32,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.web.bindery.event.shared.EventBus;
 
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentScoDataManager;
 import fi.dwo.gwt.lib.rest.CallManagers.StudentScoDataManager;
@@ -44,8 +41,17 @@ import fi.wiskopdr.text.Text;
 
 public class SCORM_DWO4 extends SCORM_guest {
 
-	public SCORM_DWO4() {
+// DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole();
+// DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB
+
+	public SCORM_DWO4(DomSchoolClassId dsci, DomHasRole hr, TrafficAgent barrier, boolean secure, EventBus bus) {
 		pending = false;
+		schoolClassID = dsci;
+		context = new DomContext();
+		context.setDomHasRole(hr);
+		scoDataManager = new SecuredStudentScoDataManager(secure); 
+		this.barrier = barrier;
+		this.bus = bus;
 	}
 
 	enum Status { NORMAL, DIRTY, BUSY, RETRY };
@@ -69,9 +75,11 @@ public class SCORM_DWO4 extends SCORM_guest {
 	
 
 	static final Logger logger = Logger.getLogger("SCORM_DWO4");
-	StudentScoDataManager scoDataManager = new SecuredStudentScoDataManager(DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB && false); // not supported!
-	private DomSchoolClassId schoolClassID = DWOplayer.clientfactory.getSchoolClass();
-	private DomContext context = new DomContext();
+	private final StudentScoDataManager scoDataManager; // not supported!
+	private final DomSchoolClassId schoolClassID;
+	private final DomContext context;
+	private final TrafficAgent barrier;
+	private final EventBus bus;
 
 	@Deprecated private int scoID;
 	private DomScoContext sco;
@@ -82,7 +90,7 @@ public class SCORM_DWO4 extends SCORM_guest {
 	private Map<String,String> dirty = new HashMap<String, String>();
 		
 	private <T> Promise<T> ag(Promise<T> p) {
-		DWOplayer.clientfactory.addBarrier(p);
+		barrier.addBarrier(p);
 		return p;
 	}
 		
@@ -183,7 +191,7 @@ log("setScoID " + scoID);
 					if("readonly".equals(message) && code == Dwo2ExceptionCode.User_IllegalAction) 
 					{
 						setStatus(Status.NORMAL);
-						DWOplayer.clientfactory.getEventBus().fireEvent(new DialogEvent(de));
+						bus.fireEvent(new DialogEvent(de));
 						deferred.fail(caught);
 						return;
 					}
@@ -345,7 +353,6 @@ log("SetValue " + name);
 log("Initialize "+ pending);
 		if(!pending) {
 			pending = true;
-			context.setDomHasRole(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole());
 			final Failure failure = new Failure() {
 				@Override
 				public void fail(Promise<?> resolved) throws Exception {
@@ -370,7 +377,7 @@ log("initialized " +result.keySet());
 					return null;
 				}
 			};
-			DWOplayer.clientfactory.barrier().then(new Success<Void,Void>(){
+			barrier.barrier().then(new Success<Void,Void>(){
 
 				@Override
 				public Promise<Void> call(Promise<Void> resolved) throws Exception {

@@ -15,6 +15,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO4;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
@@ -105,7 +106,11 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 			if(!withUser()) {
 				api = new SCORM_guest();
 			} else {					
-				api = new SCORM_DWO4();
+				api = new SCORM_DWO4(getSchoolClass(),
+						DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole(),
+						agent,
+						DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB,
+						getEventBus());
 			}
 			return api;
 		}
