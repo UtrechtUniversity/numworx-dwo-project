@@ -44,7 +44,7 @@ public class SecuredStudentExamScoDataRestCaller implements ScoDataRestCaller {
 
   @Override
   public void getValues(RestScormValues restScormValues, MethodCallback<DomScormValues> callback) {
-    // TODO Auto-generated method stub
+    helper.getValues(PathId.getId(restScormValues.getRestContext()), restScormValues, callback);
     
   }
 
@@ -69,7 +69,6 @@ public class SecuredStudentExamScoDataRestCaller implements ScoDataRestCaller {
   @Override
   public void getJSONLaunchDataBytes(RestScoContext rest, MethodCallback<JSONValue> callback) {
     helper.getJSONLaunchDataBytes(PathId.getId(rest.getRestContext()), rest, callback);
-    
   }
   
 }
