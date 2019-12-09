@@ -26,6 +26,8 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.mgwt.ui.client.MGWT;
+import com.googlecode.mgwt.ui.client.OsDetection;
 import com.googlecode.mgwt.ui.client.widget.RoundPanel;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
@@ -573,6 +575,12 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 	public void setEnterType(EnterType type) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public boolean isDesktopKeyboard() {
+		OsDetection detection = MGWT.getOsDetection();
+		return detection.isDesktop();
 	}
 
 }

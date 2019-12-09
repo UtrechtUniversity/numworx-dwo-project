@@ -117,4 +117,10 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, Formu
 		
 	}
 
+	@Override
+	public boolean isDesktopKeyboard() {
+		OsDetection detection = MGWT.getOsDetection();
+		return detection.isDesktop();
+	}
+
 }

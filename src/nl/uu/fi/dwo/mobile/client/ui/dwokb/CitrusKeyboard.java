@@ -122,4 +122,10 @@ public class CitrusKeyboard extends FlowPanel implements StatusBarIF, FormuleCli
 		
 	}
 
+	@Override
+	public boolean isDesktopKeyboard() {
+		OsDetection detection = MGWT.getOsDetection();
+		return detection.isDesktop();
+	}
+
 }

@@ -10,8 +10,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.MGWT;
-import com.googlecode.mgwt.ui.client.OsDetection;
-
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
@@ -25,8 +23,9 @@ import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 
 public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipboardIF {
+	static final int KEYB_STATIC_HEIGHT = 44;
 
-	private int STATUS_BAR_HEIGHT = KeyBoardTabPanel.KEYB_STATIC_HEIGHT;
+	private int STATUS_BAR_HEIGHT = KEYB_STATIC_HEIGHT;
     KeyboardFactory factory;
 	AbstractKeyboard kb;
 	FlowPanel staticPanel;
@@ -35,10 +34,7 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 	
 	public DWOKeyboard() {
 		setStylePrimaryName("dwo");
-		OsDetection detection = MGWT.getOsDetection();
-		if(detection.isDesktop() && !TouchStartEvent.isSupported()
-				//&& false // voor tablet keyboard deze uitcommentarieren
-				) {
+		if(isDesktopKeyboard()) {
 			factory = new DWODesktopKeyboardFactory();
 		} else {
 			factory = new DWOTabletKeyboardFactory();
@@ -73,6 +69,12 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 //				showScore(null);
 //				
 //			}} , MouseUpEvent.getType());
+	}
+
+	public boolean isDesktopKeyboard() {
+		return MGWT.getOsDetection().isDesktop() && !TouchStartEvent.isSupported()
+				//&& false // voor tablet keyboard deze uitcommentarieren
+				;
 	}
 
 	@Override

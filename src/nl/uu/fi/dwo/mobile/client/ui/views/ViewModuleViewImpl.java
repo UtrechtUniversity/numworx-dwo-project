@@ -1248,8 +1248,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		return verlopen;
 	}
 
-	private static boolean isDesktop() {
-		return MGWT.getOsDetection().isDesktop();
+	private  boolean isDesktop() {
+		return sb.isDesktopKeyboard();
 	}
 
 	/**

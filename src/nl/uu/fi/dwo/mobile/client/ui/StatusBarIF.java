@@ -28,4 +28,6 @@ public interface StatusBarIF extends IsWidget {
 	void addLabel(Label label);
 	
 	default void hide() {}
+	
+	boolean isDesktopKeyboard();
 }
