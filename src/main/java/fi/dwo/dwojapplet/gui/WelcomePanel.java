@@ -3,6 +3,7 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.beans.copyright.FIButton;
+import fi.beans.copyright.NumworxInfo;
 import fi.beans.loader.Loader;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JCheckBox;
@@ -74,7 +75,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
 
     //private JButton registerNewUserButton;
 
-    FIButton fiButton;
+    NumworxInfo fiButton;
     JPanel dialog;
 
     private JCheckBox linkcheck;
@@ -167,19 +168,19 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         String revisie = BUILD.buildNumber;
         String buildTimeStamp = BUILD.timeStamp;
 
-        fiButton = new FIButton("DWO", new String[]{"versie-info: " + version,
+        fiButton = new NumworxInfo("Info", new String[]{"versie-info: " + version,
             "revisie: " + revisie,
             "timestamp: "+buildTimeStamp,
             "auteur: Peter Boon",
             "programmeur: M.J.B. Kupers,",
-            "Peter Boon",
-            "Sylvia van Borkulo",
-            "Gert van der Plas",
-            "Sietske Tacoma",
+            "Peter Boon,",
+            "Sylvia van Borkulo,",
+            "Gert van der Plas,",
+            "Sietske Tacoma,",
             "Wim van Velthoven",
             "Freudenthal Instituut",
             "www.numworx.nl",
-            ""
+            "\u00A0"
         });
         fiButton.setBounds(GuiConstants.DWO_WIDTH - 30, 0, 20, 30);
         add(fiButton);
@@ -220,7 +221,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
             dialog.remove(l);
         }
 
-        p = profileselect = DwoProfileStrategy.instance();
+        p = profileselect = DwoProfileStrategy.instance(fiButton);
         p.setBounds(dialog.getWidth() / 2 - 175, 110+100, 340, 100);
         dialog.add(p);
         /* Add Login-panel */

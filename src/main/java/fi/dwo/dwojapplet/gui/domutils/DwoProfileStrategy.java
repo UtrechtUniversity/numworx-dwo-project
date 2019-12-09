@@ -2,15 +2,18 @@ package fi.dwo.dwojapplet.gui.domutils;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 
+import fi.beans.copyright.NumworxInfo;
 import fi.beans.numworxlf.JRadioButton;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 
-public class DwoProfileStrategy extends JPanel {
+public class DwoProfileStrategy extends JPanel implements ActionListener {
   static final int HE_ID = 100;
 
   static final int SE_ID = 92;
@@ -26,9 +29,16 @@ public class DwoProfileStrategy extends JPanel {
   JRadioButton se;
 
   JRadioButton he;
+  
+  NumworxInfo info;
 
-  public DwoProfileStrategy() {
+  protected ButtonGroup grp;
+
+  public DwoProfileStrategy(NumworxInfo info) {
     super(null);
+    this.info = info;
+    info.addActionListener(this);
+    info.setDwoProfile(Integer.toString(DWO.getDwoProfileID()));
     initialize();
   }
    
@@ -56,7 +66,7 @@ public class DwoProfileStrategy extends JPanel {
     he.setBackground(PANEL_BACKGROUND);he.setFont(PLAIN);
     if(DWO.getDwoProfileID() == HE_ID) he.setSelected(true);
     he.setSize(he.getPreferredSize());he.setLocation(160, 60);
-    ButtonGroup grp  = new ButtonGroup();
+    grp = new ButtonGroup();
     grp.add(he);grp.add(se);grp.add(ho);grp.add(vo);
     ho.setForeground(Color.WHITE);
     vo.setForeground(Color.WHITE);
@@ -70,6 +80,7 @@ public class DwoProfileStrategy extends JPanel {
   
   public void switchProfile() {
     DWO dwo = GuiCreator.instance().getDWO();
+    info.removeActionListener(this);
     if(vo.isSelected() && DWO.getDwoProfileID() != VO_ID)
       dwo.switchProfile(VO_ID,"nl");
     else if (ho.isSelected() && DWO.getDwoProfileID() != HO_ID)
@@ -80,12 +91,24 @@ public class DwoProfileStrategy extends JPanel {
       dwo.switchProfile(HE_ID, "en");
    }
 
-  public static DwoProfileStrategy instance() {
+  public static DwoProfileStrategy instance(NumworxInfo info) {
     DWO dwo = GuiCreator.instance().getDWO();
     String ext = dwo.getParameter(DWO.PROFILE_EXTENSION);
     if ("nlen".equals(ext))
-      return new UUProfileStrategy();
-    return new DwoProfileStrategy();
+      return new UUProfileStrategy(info);
+    return new DwoProfileStrategy(info);
+  }
+
+  @Override
+  public void actionPerformed(ActionEvent e) {
+    if(e.getSource() == info) {
+      String lang = info.getLanguage();
+      int pr = Integer.parseInt(info.getDwoProfile());
+      DWO dwo = GuiCreator.instance().getDWO();
+      grp.clearSelection();
+      dwo.switchProfile(pr, lang);
+    }
+    
   }
 
   

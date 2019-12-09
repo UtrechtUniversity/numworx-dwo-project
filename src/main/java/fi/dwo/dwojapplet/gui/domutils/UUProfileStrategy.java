@@ -7,6 +7,7 @@ import java.util.Locale;
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 
+import fi.beans.copyright.NumworxInfo;
 import fi.beans.numworxlf.JRadioButton;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.gui.GuiCreator;
@@ -16,7 +17,8 @@ public class UUProfileStrategy extends DwoProfileStrategy {
   static final Locale EN = Locale.forLanguageTag("en");
   static final Locale NL = Locale.forLanguageTag("nl");
   
-  public UUProfileStrategy() {
+  public UUProfileStrategy(NumworxInfo info) {
+    super(info);
   }
 
   @Override
@@ -34,7 +36,7 @@ public class UUProfileStrategy extends DwoProfileStrategy {
     he.setBackground(PANEL_BACKGROUND);he.setFont(PLAIN);
     if(getLocale().equals(EN)) he.setSelected(true);
     he.setSize(he.getPreferredSize());he.setLocation(160, 60);
-    ButtonGroup grp  = new ButtonGroup();
+    grp  = new ButtonGroup();
     grp.add(he);grp.add(ho);
     ho.setForeground(Color.WHITE);
     he.setForeground(Color.WHITE);    
@@ -44,7 +46,8 @@ public class UUProfileStrategy extends DwoProfileStrategy {
   @Override
   public void switchProfile() {
     DWO dwo = GuiCreator.instance().getDWO();
-    int profile = DWO.getDwoProfileID();
+   info.removeActionListener(this);
+   int profile = DWO.getDwoProfileID();
     Locale locale = getLocale();
     if (ho.isSelected() && !NL.equals(locale))
       dwo.switchProfile(profile, "nl");
