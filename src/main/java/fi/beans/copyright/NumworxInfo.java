@@ -147,8 +147,13 @@ public class NumworxInfo extends JLabel implements ActionListener {
     return label;
   }
 
-  private String fromProfile(String dwoProfile) {
-    return dwoProfile;
+  private String fromProfile(String item) {
+    try {
+      DomDwoProfileFull dwo = PublicProfileManager.get(item);
+      return dwo.getDwoProfileName();
+    } catch (Dwo2Exception e) {
+    }
+    return item;
   }
 
   private String toProfile(String item) {
