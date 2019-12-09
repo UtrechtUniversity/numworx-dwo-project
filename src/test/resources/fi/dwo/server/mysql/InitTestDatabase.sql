@@ -218,6 +218,26 @@ INSERT INTO `tblcourse` VALUES (13333,3,'school course01','Course01 Description'
 /*!40000 ALTER TABLE `tblcourse` ENABLE KEYS */;
 UNLOCK TABLES;
 
+DROP TABLE IF EXISTS `tblcoursedata`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tblcoursedata` (
+  `courseD` int(11) NOT NULL,
+  `description` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `descriptionbytes` longblob,
+  `imageData` longblob,
+  `optlock` int(11) DEFAULT '0',
+  `lastChangeTimeStamp` bigint(20) DEFAULT '0',
+  `del` tinyint(4) NOT NULL DEFAULT '0',
+  `jsonDescription` json DEFAULT NULL,
+  PRIMARY KEY (`courseID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+
+
+
 --
 -- Table structure for table `tbldwoprofile`
 --
@@ -415,6 +435,7 @@ CREATE TABLE `tbllogincontext` (
   `schoolGroupID` int(11) DEFAULT NULL,
   `courseID` int(11) DEFAULT NULL,
   `secretKey` binary(8) DEFAULT NULL,
+  `nonce` binary(8) DEFAULT NULL,
   PRIMARY KEY (`loginid`),
   UNIQUE KEY `AK_ID_LOGIN_USER` (`userID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
@@ -426,7 +447,7 @@ CREATE TABLE `tbllogincontext` (
 
 LOCK TABLES `tbllogincontext` WRITE;
 /*!40000 ALTER TABLE `tbllogincontext` DISABLE KEYS */;
-INSERT INTO `tbllogincontext` VALUES (1,1,1444687200000,NULL,0,0,0,NULL,NULL,NULL),(2,10,1444687200000,NULL,0,0,0,NULL,NULL,NULL),(3,14,1444687200000,1491822820082,0,0,0,NULL,NULL,NULL);
+INSERT INTO `tbllogincontext` VALUES (1,1,1444687200000,NULL,0,0,0,NULL,NULL,NULL, NULL),(2,10,1444687200000,NULL,0,0,0,NULL,NULL,NULL, NULL),(3,14,1444687200000,1491822820082,0,0,0,NULL,NULL,NULL, NULL);
 /*!40000 ALTER TABLE `tbllogincontext` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -522,6 +543,21 @@ LOCK TABLES `tblschool` WRITE;
 INSERT INTO `tblschool` VALUES (0,'DwoSchool','dwo','',1,'_',NULL,NULL,0,0,0,0),(1,'NULL','null','',0,'_',NULL,NULL,0,0,0,0),(3,'School01','school01','',0,'_',NULL,NULL,0,0,0,0),(4,'School02','school02','',0,'_c',NULL,NULL,0,0,0,0);
 /*!40000 ALTER TABLE `tblschool` ENABLE KEYS */;
 UNLOCK TABLES;
+
+DROP TABLE IF EXISTS `tblschooldata`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tblscodata` (
+  `schoolID` int(11) NOT NULL,
+  `optlock` int(11) DEFAULT '0',
+  `lastChangeTimeStamp` bigint(20) DEFAULT '0',
+  `del` tinyint(4) NOT NULL DEFAULT '0',
+  `jsonLaunchData` json DEFAULT NULL,
+  PRIMARY KEY (`schoolID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
 
 --
 -- Table structure for table `tblschoolgroup`
