@@ -187,15 +187,13 @@ public abstract class GuiConstants {
 // TODO deze code opnemen in profile.properties:
         dwoProfile = profile;
 
-        if (profile == 77||profile==100) {
-          HEADER_COLOR = fi.beans.numworxlf.Constants.COLOR15;
-          HEADER_TEXT = new Font("Ubuntu", Font.BOLD, 24);
-          MAIN_FOREGROUND = fi.beans.numworxlf.Constants.COLOR15;
-          CELL_BACKGROUND = Color.WHITE;
-
-        } else
-        
-        
+//        if (profile == 77||profile==100) {
+//          HEADER_COLOR = fi.beans.numworxlf.Constants.COLOR15;
+//          HEADER_TEXT = new Font("Ubuntu", Font.BOLD, 24);
+//          MAIN_FOREGROUND = fi.beans.numworxlf.Constants.COLOR15;
+//          CELL_BACKGROUND = Color.WHITE;
+//
+//        } else
         
         if (profile == 5 || profile == 56) {
             MAIN_BACKGROUND = new Color(255, 255, 255);
