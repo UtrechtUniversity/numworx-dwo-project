@@ -7,20 +7,15 @@ import javax.inject.Provider;
 import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewNone;
-import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
-import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
-import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewBuilder;
-import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
-import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewNumworx;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -32,11 +27,9 @@ import org.osgi.util.promise.Success;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
-import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
 //import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.event.shared.SimpleEventBus;
 
 /**
  * @see GWT
@@ -97,7 +90,6 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	
 	private final PlaceController placeController;
 	private Provider<ViewModuleView> entryView;
-	private SelectModuleView selectModuleView;
 	protected LoginView loginView;
 	protected TreeModuleView treeModuleView;
 	private RPCHandler handler;
@@ -136,14 +128,6 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	{
 		ViewModuleView view = entryView.get();
 		return view;
-	}
-
-	@Override
-	public SelectModuleView getHomeView()
-	{
-		if (selectModuleView == null)
-			selectModuleView = /*new SelectModuleTest(); // */new SelectModuleViewImpl();
-		return selectModuleView;
 	}
 
 	@Override 

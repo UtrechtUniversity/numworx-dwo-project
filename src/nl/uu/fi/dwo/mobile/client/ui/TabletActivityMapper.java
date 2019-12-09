@@ -3,12 +3,9 @@ package nl.uu.fi.dwo.mobile.client.ui;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.ui.activities.CourseActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.CourseActivity2;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ExamActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ExamModuleActivity;
-import nl.uu.fi.dwo.mobile.client.ui.activities.FlatModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.GuestActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LoginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LogoutActivity;
@@ -17,19 +14,16 @@ import nl.uu.fi.dwo.mobile.client.ui.activities.ReloginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.SMActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ScoActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.SearchActivity;
-import nl.uu.fi.dwo.mobile.client.ui.activities.SelectModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.TreeModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ViewCourseActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ViewModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.places.Exam;
-import nl.uu.fi.dwo.mobile.client.ui.places.FlatModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.LogoutPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.MaybeLogout;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SMPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SearchPlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewCoursePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
@@ -111,20 +105,6 @@ public class TabletActivityMapper implements ActivityMapper
 		}
 		
 		
-		if (place instanceof SelectModulePlace)
-		{
-			SelectModulePlace tmp = (SelectModulePlace) place;
-			String id = (tmp.getToken());
-			SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);			
-			return new SelectModuleActivity(clientFactory, item);
-		}
-		if (place instanceof FlatModulePlace)
-		{
-			FlatModulePlace tmp = (FlatModulePlace) place;
-			String id = tmp.getToken();
-			SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);			
-			return new FlatModuleActivity(clientFactory, item);
-		}
 		if (place instanceof ViewModulePlace)
 		{	ViewModulePlace where = (ViewModulePlace) place;
 			PersistenceId id = where.getID();

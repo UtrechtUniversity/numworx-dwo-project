@@ -19,8 +19,6 @@ import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
-import nl.uu.fi.dwo.mobile.client.ui.places.FlatModulePlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.core.client.GWT;

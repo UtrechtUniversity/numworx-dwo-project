@@ -9,7 +9,6 @@ import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
-import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
@@ -36,7 +35,6 @@ public interface ClientFactory
 
 	ViewModuleView getEntryView();
 
-	SelectModuleView getHomeView();
 
 	LoginView getLoginView();
 

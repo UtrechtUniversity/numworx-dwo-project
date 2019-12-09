@@ -1,15 +1,12 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
-import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
-import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.googlecode.mgwt.ui.client.widget.celllist.Cell;
+
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
 
 /**
  * Module selection display item

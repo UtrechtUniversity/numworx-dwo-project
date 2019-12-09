@@ -5,7 +5,6 @@ import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
-import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
@@ -19,15 +18,10 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
-
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.event.shared.SimpleEventBus;
-
 import dagger.Lazy;
 
 @Singleton
@@ -37,7 +31,6 @@ public class DummyClientFactory implements ClientFactory {
 	final private RPCHandler handler;
 	final private boolean premium;
 	private Lazy<ViewModuleView> entryView;
-	private IsWidget logoutWidget;
 	private TrafficAgent agent;
 	
 //	public DummyClientFactory() {
@@ -67,10 +60,6 @@ public class DummyClientFactory implements ClientFactory {
 		return entryView.get();
 	}
 
-	@Override
-	public SelectModuleView getHomeView() {
-		return null;
-	}
 
 	@Override
 	public LoginView getLoginView() {
