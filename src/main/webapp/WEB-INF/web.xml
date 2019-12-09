@@ -355,14 +355,14 @@
    		<url-pattern>/dwo/snoop</url-pattern>
    		<url-pattern>/dwo/snoop/*</url-pattern>
    </servlet-mapping>
-   <servlet-mapping>
-      <servlet-name>dwoparam</servlet-name>
-      <url-pattern>/DWOmAccess/lti/dwo.jsp/*</url-pattern>
-   </servlet-mapping>
-   <servlet-mapping>
-      <servlet-name>dwoparam</servlet-name>
-      <url-pattern>/DWOmAccess/lti/dwo.jsp</url-pattern>
-   </servlet-mapping>
+<!--    <servlet-mapping> -->
+<!--       <servlet-name>dwoparam</servlet-name> -->
+<!--       <url-pattern>/DWOmAccess/lti/dwo.jsp/*</url-pattern> -->
+<!--    </servlet-mapping> -->
+<!--    <servlet-mapping> -->
+<!--       <servlet-name>dwoparam</servlet-name> -->
+<!--       <url-pattern>/DWOmAccess/lti/dwo.jsp</url-pattern> -->
+<!--    </servlet-mapping> -->
    <servlet-mapping>
       <servlet-name>appparam</servlet-name>
       <url-pattern>/DWOmAccess/lti/app.jsp/*</url-pattern>
@@ -396,22 +396,22 @@
 <!-- 	<servlet-name>image.png</servlet-name> -->
 <!-- 	<url-pattern>/DWOmAccess/getCourseDescription</url-pattern> -->
 <!--   </servlet-mapping> -->
-      <servlet-mapping>
-      <servlet-name>ProviderServlet</servlet-name>
-      <url-pattern>/DWOmAccess/lti/provider/*</url-pattern>
-    </servlet-mapping>
+<!--       <servlet-mapping> -->
+<!--       <servlet-name>ProviderServlet</servlet-name> -->
+<!--       <url-pattern>/DWOmAccess/lti/provider/*</url-pattern> -->
+<!--     </servlet-mapping> -->
 
     <servlet-mapping>
       <servlet-name>ServiceServlet</servlet-name>
       <url-pattern>/DWOmAccess/lti/service/*</url-pattern>
     </servlet-mapping>
 
-    <servlet-mapping>
-        <!-- note that xmlrpc is a hardcoded path relative to the applet containing html page -->
-        <!-- note that jars is also a hardcoded path relative to the applet containing html page -->
-        <servlet-name>xmlrpc</servlet-name>
-        <url-pattern>/dwo/xmlrpc</url-pattern>
-    </servlet-mapping>
+<!--     <servlet-mapping> -->
+<!--         note that xmlrpc is a hardcoded path relative to the applet containing html page -->
+<!--         note that jars is also a hardcoded path relative to the applet containing html page -->
+<!--         <servlet-name>xmlrpc</servlet-name> -->
+<!--         <url-pattern>/dwo/xmlrpc</url-pattern> -->
+<!--     </servlet-mapping> -->
     <servlet-mapping>
         <servlet-name>DwoWebPage</servlet-name>
         <url-pattern>/dwo/dwowebpage</url-pattern>
