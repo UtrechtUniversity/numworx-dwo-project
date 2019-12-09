@@ -10,6 +10,7 @@ public class PublicProfileManager {
 
   public static DomDwoProfileFull get(String name) throws Dwo2Exception {
     name = URLEncoder.encode(name);
+    name = name.replace("+", "%20");
     return StoredRestManager.getInstance().get("rest/public/profile/" + name,
         DomDwoProfileFull.class);
   }
