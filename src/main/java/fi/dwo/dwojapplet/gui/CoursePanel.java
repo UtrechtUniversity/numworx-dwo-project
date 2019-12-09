@@ -299,7 +299,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
                 button.setSize(fm.stringWidth("100 %") + 30, l.getSize().height);
                 button.setLocation(ipx - button.getSize().width, nextY - 5);
                 ((ResultScoreButton) button).setBarMode();
-                button.setVisible(sco.isShowScore());
+                button.setVisible(false && sco.isShowScore());
                 button.setBackground(getSubHeaderColor());
                 this.add(button);
                 nextY += l.getSize().height + 3;
