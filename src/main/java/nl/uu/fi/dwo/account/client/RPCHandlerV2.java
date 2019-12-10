@@ -57,9 +57,7 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
      * @return
      */
     public Promise<DomUserFullwLoginContext> login(String name, String password) {
-		PromiseCallback<DomUserFullwLoginContext> defer = new PromiseCallback<>();
-		accountManager.loginUser(name,  password, defer, null);
-		return defer.getPromise();
+		return accountManager.login(name,  password, null);
 	}
 
     /**
@@ -69,9 +67,7 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
      * @return
      */
     public Promise<DomUserFullwLoginContext> loginMD5(String name, String password) {
-		PromiseCallback<DomUserFullwLoginContext> defer = new PromiseCallback<>();
-		accountManager.loginUserMD5(name,  password, defer, null);
-		return defer.getPromise();
+		return accountManager.loginMD5(name,  password);
 	}
 	
     /**
@@ -139,7 +135,7 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
     protected void samlLoginHelper(String name, String org,
 			AsyncCallback<DomUserFullwLoginContext> callback) {
 		String authToken = Cookies.getCookie(DWO_SAML_AUTH_TOKEN);
-		accountManager.samlLogin(name, org, authToken, callback);
+		accountManager.updateAccountData(name, org, authToken).then(p -> { callback.onSuccess(p.getValue());return p;}, p-> callback.onFailure(p.getFailure()));
 	}
 
 	/* (non-Javadoc)
@@ -152,10 +148,6 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
      * @param callback
      */
 
-	private void getUserFromAuthTokenHelper(String authToken,
-			AsyncCallback<DomUserFullwLoginContext> callback) {
-		accountManager.getUserFromAuthToken(authToken, callback);
-	}
 	
     /**
      *
@@ -163,9 +155,7 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
      * @return
      */
     public Promise<DomUserFullwLoginContext> getUserFromAuthToken(String authToken) {
-		PromiseCallback<DomUserFullwLoginContext> defer = new PromiseCallback<>();
-		accountManager.getUserFromAuthToken(authToken, defer);
-		return defer.getPromise();
+		return accountManager.getUserFromAuthToken(authToken);
 	}
 		
     /**
