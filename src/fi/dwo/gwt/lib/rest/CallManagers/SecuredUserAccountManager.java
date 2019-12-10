@@ -68,19 +68,19 @@ public class SecuredUserAccountManager {
      *
      *******************************************************************************
      */
-    /**
-     * Checks if a username/password combination is valid. This function is a
-     * security risk.
-     *
-     * @param username
-     * @param password
-     * @return
-     */
-    public Promise<Boolean> loginCheck(String username, String password) {
-        PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
-        this.loginCheck(username, password, defer);
-        return defer.getPromise();
-    }
+//    /**
+//     * Checks if a username/password combination is valid. This function is a
+//     * security risk.
+//     *
+//     * @param username
+//     * @param password
+//     * @return
+//     */
+//    private Promise<Boolean> loginCheck(String username, String password) {
+//        PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
+//        this.loginCheck(username, password, defer);
+//        return defer.getPromise();
+//    }
 
     /**
      * Checks if a username/password combination is valid. This function is a
@@ -91,38 +91,28 @@ public class SecuredUserAccountManager {
      * @param callback
      */
     @Deprecated
-    public void loginCheck(final String username, final String password, final AsyncCallback<Boolean> callback) {
+    private void loginCheck(final String username, final String password, final MethodCallback<Boolean> callback) {
         DomLoginCheck domLoginCheck = new DomLoginCheck();
         domLoginCheck.setUsername(username);
         domLoginCheck.setPassword(DomLoginCheck.crypt(password));
         RestLoginCheck restLoginCheck = new RestLoginCheck();
         restLoginCheck.setDomLoginCheck(domLoginCheck);
         GwtRestVars.instance().setCurrentUser(null,null);
-        service.loginCheck(restLoginCheck, new MethodCallback<Boolean>() {
-
-            @Override
-            public void onSuccess(Method method, Boolean response) {
-                if (Boolean.TRUE.equals(response)) {
-                    GwtRestVars.instance().setCredentials(username, password,null);
-                }
-                callback.onSuccess(response);
-            }
-
-            @Override
-            public void onFailure(Method method, Throwable exception) {
-                callback.onFailure(exception);
-            }
-        });
+        service.loginCheck(restLoginCheck, callback);
 
     }
 
     public Promise<DomUserFullwLoginContext> login(String name, String password) {
+    	return login(name, password, null);
+    }
+
+    public Promise<DomUserFullwLoginContext> login(String name, String password, LoginPresenter presenter) {
         PromiseCallback<DomUserFullwLoginContext> defer = new PromiseCallback<DomUserFullwLoginContext>();
-        this.loginUser(name, password, defer, null);
+        this.loginUser(name, password, defer, presenter);
         return defer.getPromise();
     }
 
-    public void loginUser(final String name, String password, final AsyncCallback<DomUserFullwLoginContext> callback,
+    private void loginUser(final String name, String password, final PromiseCallback<DomUserFullwLoginContext> callback,
             LoginPresenter presenter) {
         final String pwmd5 = MD5.md5(password);
         loginUserMD5(name, pwmd5, callback, presenter);
@@ -141,24 +131,25 @@ public class SecuredUserAccountManager {
         return defer.getPromise();
     }
 
-    public void loginUserMD5(final String name, final String pwmd5,
-            final AsyncCallback<DomUserFullwLoginContext> callback, final LoginPresenter presenter) {
-        loginCheck(name, pwmd5, new AsyncCallback<Boolean>() {
+    private void loginUserMD5(final String name, final String pwmd5,
+            final PromiseCallback<DomUserFullwLoginContext> callback, final LoginPresenter presenter) {
+        loginCheck(name, pwmd5, new MethodCallback<Boolean>() {
 
             @Override
-            public void onSuccess(Boolean result) {
+            public void onSuccess(Method m, Boolean result) {
                 if (Boolean.TRUE.equals(result)) {
-                    if (presenter != null) {
-                        getLoginContext(new AsyncCallback<DomLoginContext>() {
+                   GwtRestVars.instance().setCredentials(name, pwmd5,null);
+                   if (presenter != null) {
+                        getLoginContext(new MethodCallback<DomLoginContext>() {
 
                             @Override
-                            public void onFailure(Throwable caught) {
+                            public void onFailure(Method m, Throwable caught) {
                                 callback.onFailure(caught);
                             }
 
                             @Override
-                            public void onSuccess(DomLoginContext loginContext) {
-                                if (loginContext.getLastLoginTimeStamp() != null
+                            public void onSuccess(Method m,DomLoginContext loginContext) {
+                                if (loginContext.getSecretKey() != null
                                         && presenter != null) {
                                     presenter.otherlogin(new AsyncCallback<Boolean>() {
 
@@ -192,7 +183,7 @@ public class SecuredUserAccountManager {
             }
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Method m, Throwable caught) {
                 callback.onFailure(caught);
             }
         });
@@ -221,8 +212,8 @@ public class SecuredUserAccountManager {
      * @param username
      * @param callBack
      */
-    public void loginUser(String username, AsyncCallback<DomUserFullwLoginContext> callBack) {
-        service.loginUserWithPOST(username, new Callback<DomUserFullwLoginContext>(callBack));
+    private void loginUser(String username, MethodCallback<DomUserFullwLoginContext> callBack) {
+        service.loginUserWithPOST(username, callBack);
     }
 
     /**
@@ -300,7 +291,7 @@ public class SecuredUserAccountManager {
         return defer.getPromise();
     }
 
-    public void samlLogin(String userid, String org, String token, final AsyncCallback<DomUserFullwLoginContext> userCallback) {
+    private void samlLogin(String userid, String org, String token, final AsyncCallback<DomUserFullwLoginContext> userCallback) {
         DomSamlUser domSamlUser = new DomSamlUser();
         domSamlUser.setSamlUserId(userid);
         domSamlUser.setSamlOrgId(org);
@@ -330,7 +321,7 @@ public class SecuredUserAccountManager {
         return defer.getPromise();
     }
 
-    public void getUserFromAuthToken(String authToken, final AsyncCallback<DomUserFullwLoginContext> userCallback) {
+    private void getUserFromAuthToken(String authToken, final PromiseCallback<DomUserFullwLoginContext> userCallback) {
         RestAuthToken restToken = new RestAuthToken();
         restToken.setAuthToken(authToken);
         restToken.setRestContext(new DomContext());
@@ -381,8 +372,8 @@ public class SecuredUserAccountManager {
         return defer.getPromise();
     }
 
-    private void getLoginContext(AsyncCallback<DomLoginContext> callback) {
-        service.getLoginContext(new Callback<DomLoginContext>(callback));
+    private void getLoginContext(MethodCallback<DomLoginContext> callback) {
+        service.getLoginContext((callback));
     }
 
    public Promise<DomUserFullwLoginContext> getDomUserFullwLoginContext(String name) {
@@ -392,16 +383,16 @@ public class SecuredUserAccountManager {
     }
     
     private void getDomUserFullwLoginContext(final String name,
-            final AsyncCallback<DomUserFullwLoginContext> callback) {
-        loginUser(name, new AsyncCallback<DomUserFullwLoginContext>() {
+            final PromiseCallback<DomUserFullwLoginContext> callback) {
+        loginUser(name, new MethodCallback<DomUserFullwLoginContext>() {
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Method m, Throwable caught) {
                 callback.onFailure(caught);
             }
 
             @Override
-            public void onSuccess(DomUserFullwLoginContext result) {
+            public void onSuccess(Method m, DomUserFullwLoginContext result) {
             	String realm = result.getDomLoginContext().getRealm();
             	if (realm == null) realm = "";
                 if (result.getDomUserFull() != null && name.equalsIgnoreCase(result.getDomUserFull().getUserName()+realm)) {
