@@ -195,7 +195,7 @@ public class LoginPresenter {
         PromisedDialogWithConfirmDeferred d;
         Promise<DwoGlobalVars.DwoGlobalVarsState> loginUser;
         try {
-            loginUser = dwoGlobalVars.initUser(user, password);
+            loginUser = dwoGlobalVars.initUser(user, password, () -> Promises.resolved(Window.confirm("Already logged in.\nContinue?")));
             loginUser.then(new LoginSucces(switchRole),
                     new Failure() {
                 @Override

@@ -1,6 +1,8 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import com.google.gwt.i18n.client.LocaleInfo;
+
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -10,6 +12,7 @@ import javax.inject.Singleton;
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 
+import fi.dwo.gwt.lib.rest.CallManagers.LoginPresenter;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
 import fi.dwo.gwt.lib.rest.DwoConstants;
@@ -272,14 +275,22 @@ public class DwoGlobalVars {
      *
      * @param usercode
      * @param password
+     * @param presenter 
      * @return
      * @throws Dwo2Exception
      */
-    public Promise<DwoGlobalVarsState> initUser(String usercode, String password) throws Dwo2Exception {
+    public Promise<DwoGlobalVarsState> initUser(String usercode, String password, Supplier<Promise<Boolean>> supplier) throws Dwo2Exception {
         login_step0();
         LOG.log(Level.INFO, "state=LoggingIn. Calling accountManager.login.");
-        //logging in
-        return accountManager.login(usercode, password).then(this::login_step1).then(this::login_step2, this::login_fail);
+        LoginPresenter presenter = (callback) -> {
+			Promise<Boolean> promise = supplier.get();
+			promise.onResolve(() -> {
+				if (promise.getFailure()!= null) callback.onFailure(promise.getFailure());
+				else callback.onSuccess(promise.getValue());
+			});
+		};
+		//logging in
+        return accountManager.login(usercode, password, presenter).then(this::login_step1).then(this::login_step2, this::login_fail);
         }
 
     public Promise<DwoGlobalVarsState> initUserWithToken(String token) throws Dwo2Exception {
@@ -297,48 +308,6 @@ public class DwoGlobalVars {
       return p3;
     }
 
-    //
-//    private Promise<DwoGlobalVarsState> initUser(DomUserFull user) throws Dwo2Exception {
-//        if (state != DwoGlobalVarsState.Initializing) {
-//            //throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Trying to initialize a user while in the wrong state");
-//            //better yet logout.
-//        };
-//        setCurrentUser(user);
-//        SecuredUserSchoolLoginManagerV2 loginManager = new SecuredUserSchoolLoginManagerV2();
-//        Promise<DomSchoolsRolesAndClassesV2> logins = loginManager.getSchoolLogins();
-//        logins.then(new Success<DomSchoolsRolesAndClassesV2, DwoGlobalVarsState>() {
-//            @Override
-//            public Promise<DwoGlobalVarsState> call(Promise<DomSchoolsRolesAndClassesV2> resolved) throws Exception {
-//                schoolLogins = (resolved.getValue());
-//                setActiveSchoolRoleAndClass(schoolLogins.getActiveSchoolRoleAndClass());
-//                //state = DwoGlobalVarsState.LoggedIn;
-//                if (stateDeferred.getValue().equals(DwoGlobalVarsState.LoggedIn)) {
-//                    stateDeferred.resolve(state);
-//                } else {
-//                    clearCurrentUser();
-//                    state = DwoGlobalVarsState.NotLoggedIn;
-//                    stateDeferred.fail(new Dwo2Exception());
-//                }
-//                return stateDeferred.getPromise();
-//            }
-//        },
-//                new Failure() {
-//            @Override
-//            public void fail(Promise<?> fail) throws Exception {
-//                clearCurrentUser();
-//                state = DwoGlobalVarsState.NotLoggedIn;
-//                stateDeferred.fail((Dwo2Exception) fail);
-//            }
-//        }
-//        );
-//        return stateDeferred.getPromise();
-//    }
-//
-//    public void initUser() throws Dwo2Exception {
-//        SecuredUserAccountManager userManager = new SecuredUserAccountManager();
-//        Promise<DomUserFull> user = userManager.getAccountData();
-//        initUser(user);
-//    }
 
  
     /**
