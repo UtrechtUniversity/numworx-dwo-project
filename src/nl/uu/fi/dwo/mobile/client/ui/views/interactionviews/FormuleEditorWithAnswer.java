@@ -295,7 +295,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	TekstVak feedbackTekst;
 	Canvas feedbackSluitKnop;
 	Context2d gIm;
-	TouchPanel checkPanel;
+	FEWACheckPanel checkPanel;
 	private ObjectMap launchState;
 	/**
 	 * Als fews niet null is, dan staat de FormuleEditorWithAnswer
@@ -475,13 +475,18 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				
 			}
 		
-			checkimg = new Image(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
+			checkPanel =  new FEWACheckPanel();
+			checkimg = checkPanel.checkimg;
+			feedbackLabel = checkPanel.feedbackLabel;
+			
+			
+//			checkimg = new Image(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
 			checkimg.setVisible(false);
 			lastanswer = null;
-			checkimg.getElement().getStyle().setProperty("marginLeft", "0px");
-			checkimg.getElement().getStyle().setProperty("marginRight", "0px");
-			checkimg.getElement().getStyle().setProperty("marginTop", "-2px"); 
-			checkimg.getElement().getStyle().setProperty("marginBottom", "-7px");
+//			checkimg.getElement().getStyle().setProperty("marginLeft", "0px");
+//			checkimg.getElement().getStyle().setProperty("marginRight", "0px");
+//			checkimg.getElement().getStyle().setProperty("marginTop", "-2px"); 
+//			checkimg.getElement().getStyle().setProperty("marginBottom", "-7px");
 			
 			feedbackPanel = new AutoHidePopupPanel(true);
 			PopupFacade.addPopup(feedbackPanel);
@@ -535,45 +540,49 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				}
 			}, ClickEvent.getType());
 						
-			feedbackLabel = new Label("?");
-			feedbackLabel.getElement().getStyle().setFontSize(11, Style.Unit.PX);
-			feedbackLabel.getElement().getStyle().setFontWeight(FontWeight.BOLD);
-			feedbackLabel.getElement().getStyle().setPadding(0, Style.Unit.PX);
-			feedbackLabel.getElement().getStyle().setMarginTop(-1, Style.Unit.PX);
-			feedbackLabel.getElement().getStyle().setMarginLeft(1, Style.Unit.PX);
-			feedbackLabel.getElement().getStyle().setPaddingLeft(2, Style.Unit.PX);
-			//feedbackLabel.getElement().getStyle().setBackgroundColor("white");
-			feedbackLabel.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-			feedbackLabel.getElement().getStyle().setVerticalAlign(VerticalAlign.TOP);
-			feedbackLabel.setWidth(10 + "px");
+//			feedbackLabel = new Label("?");
+//			feedbackLabel.getElement().getStyle().setFontSize(11, Style.Unit.PX);
+//			feedbackLabel.getElement().getStyle().setFontWeight(FontWeight.BOLD);
+//			feedbackLabel.getElement().getStyle().setPadding(0, Style.Unit.PX);
+//			feedbackLabel.getElement().getStyle().setMarginTop(-1, Style.Unit.PX);
+//			feedbackLabel.getElement().getStyle().setMarginLeft(1, Style.Unit.PX);
+//			feedbackLabel.getElement().getStyle().setPaddingLeft(2, Style.Unit.PX);
+//			//feedbackLabel.getElement().getStyle().setBackgroundColor("white");
+//			feedbackLabel.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+//			feedbackLabel.getElement().getStyle().setVerticalAlign(VerticalAlign.TOP);
+//			feedbackLabel.setWidth(10 + "px");
 			feedbackLabel.setVisible(false);
+//			
+//			checkPanel = new TouchPanel();
+//			checkPanel.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+//			checkPanel.getElement().getStyle().setPaddingLeft(5, Style.Unit.PX);
+//			checkPanel.getElement().getStyle().setProperty("verticalAlign", "top");
+//			checkPanel.getElement().getStyle().setMarginTop(-3, Style.Unit.PX);
+//
+//			checkPanel.add(checkimg);
+//			checkPanel.add(feedbackLabel);
+//			checkPanel.setPixelSize(15, hoogte);
+//			checkPanel.addTapHandler(new TapHandler(){
+//
+//				@Override
+//				public void onTap(TapEvent event) {
+//				}
+//				
+//			});
 			
-			checkPanel = new TouchPanel();
-			checkPanel.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-			checkPanel.getElement().getStyle().setPaddingLeft(5, Style.Unit.PX);
-			checkPanel.getElement().getStyle().setProperty("verticalAlign", "top");
-			checkPanel.getElement().getStyle().setMarginTop(-3, Style.Unit.PX);
-
-			checkPanel.add(checkimg);
-			checkPanel.add(feedbackLabel);
-			checkPanel.setPixelSize(15, hoogte);
-			checkPanel.addTapHandler(new TapHandler(){
-
-				@Override
-				public void onTap(TapEvent event) {
-					if(feedbackLabel.isVisible())
-					{
-						int yPos = asWidget().getAbsoluteTop() + asWidget().getOffsetHeight() + 10;
-						if (yPos + feedbackTekst.hoogte + 10 > Window.getClientHeight())
-							yPos = Window.getClientHeight() - feedbackTekst.hoogte - 10;
-						
-						int xPos = asWidget().getAbsoluteLeft() + 10;
-						feedbackPanel.setPopupPosition(xPos, yPos);
-						feedbackPanel.show();
-					}
-				}
-				
+			checkPanel.setHandler(() -> {
+				if(feedbackLabel.isVisible())
+				{
+					int yPos = asWidget().getAbsoluteTop() + asWidget().getOffsetHeight() + 10;
+					if (yPos + feedbackTekst.hoogte + 10 > Window.getClientHeight())
+						yPos = Window.getClientHeight() - feedbackTekst.hoogte - 10;
+					
+					int xPos = asWidget().getAbsoluteLeft() + 10;
+					feedbackPanel.setPopupPosition(xPos, yPos);
+					feedbackPanel.show();
+				}			
 			});
+			
 //			checkPanel.addDomHandler(new MouseDownHandler() {
 //				
 //				@Override
