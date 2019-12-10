@@ -64,9 +64,9 @@
 	name="DWO"
 	codebase="/dwo/"
 	>
-	Helaas, Java is niet geinstalleerd op uw computer.
-	Klik <a target="_blank" href="http://java.com/nl">
-	hier</a> om java te installeren.
+	Helaas, applets worden niet ondersteund in deze browser.
+	Ga naar <a href="https://www.numworx.nl/help/downloads">
+	numworx</a> om de NumworxAuthor applicatie te downloaden.
 	<param name="language" value="<%=language %>" />
 	<param name="profile" value="<%=profile %>" />
 	<param name="CAS" value="local" />
