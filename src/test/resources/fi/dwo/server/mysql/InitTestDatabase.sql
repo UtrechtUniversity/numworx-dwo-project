@@ -222,7 +222,7 @@ DROP TABLE IF EXISTS `tblcoursedata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tblcoursedata` (
-  `courseD` int(11) NOT NULL,
+  `courseID` int(11) NOT NULL,
   `description` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   `descriptionbytes` longblob,
   `imageData` longblob,
