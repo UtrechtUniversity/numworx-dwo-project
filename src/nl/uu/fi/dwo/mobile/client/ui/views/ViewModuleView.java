@@ -12,7 +12,6 @@ import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 
 /**
  * 
@@ -29,8 +28,6 @@ public interface ViewModuleView extends IsWidget
 	void setScoType(ScoType type);
 	void setTitle(String title);
 	Promise<Boolean> setupModule(String name, String file);
-
-	public HeaderButton getBackButton();
 
 	void close();
 	

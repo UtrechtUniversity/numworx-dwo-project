@@ -8,7 +8,6 @@ import java.util.ListIterator;
 import org.osgi.util.promise.Promise;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.place.shared.Place;
@@ -54,6 +53,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 
 	private DockLayoutPanel root;
 	private MenuBar items = new MenuBar(true);
+    final boolean seb = DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB;
 	
 	
 	public ViewModuleViewNumworx() {}
@@ -75,16 +75,16 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
       delegate.setWindowTop(90); // 90 pixels header
       delegate.zetMaat();
       center.setWidget(delegate);
-      if(DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB) {
+      if(seb) {
           removeBtns();
       }
       up2Btn.setVisible(false && Actions.isAvailable());
       root.forceLayout();	  
 	}
 	
-	public ViewModuleViewNumworx(Scorm2004IF api) {
-	  initialize(api);
-	}
+//	public ViewModuleViewNumworx(Scorm2004IF api) {
+//	  initialize(api);
+//	}
 
 	public void removeBtns() {
 		homeBtn.removeFromParent();
@@ -137,14 +137,10 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	}
 
 	public Promise<Boolean> setupModule(String name, String file) {
-		String login = DWOplayer.withUser()? DwoGlobalVars.instance().getCurrentUser().getDisplayName() : rb.guest();
+		String login = DWOplayer.clientfactory.withUser()? DwoGlobalVars.instance().getCurrentUser().getDisplayName() : rb.guest();
 		loginLabel.setText(login);
 		setupMenu(items);
 		return delegate.setupModule(name, file);
-	}
-
-	public HeaderButton getBackButton() {
-		return delegate.getBackButton();
 	}
 
 	public void close() {
@@ -184,45 +180,32 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		return this;
 	}
 	
-	void goTo(Place place) {
-		if(presenter == null)
-			DWOplayer.clientfactory.getPlaceController().goTo(place);
-		else
-			presenter.goTo(place);
+	private void goTo(Place place) {
+		presenter.goTo(place);
 	}
-	
-	
+		
 	// FIXME SHARED CODE
 	void setupMenu(MenuBar items) {
 		items.clearItems();
 		MenuItem m;
-		String back = delegate.getBackButton().getText();
-		if(DWOplayer.withUser()) {
-			m=items.addItem(Text.constants.logout(), new ScheduledCommand() {
-				
-				@Override
-				public void execute() {
-					
-					goTo(new LoginPlace());					
-				}
-			});
+		String logout;
+        if (seb)
+		  logout = Text.constants.inleveren();
+		else if(DWOplayer.clientfactory.withUser()) {
+		  logout = Text.constants.logout();
 		} else {
-			m=items.addItem(Text.constants.aanmelden(), new ScheduledCommand() {
-				
-				@Override
-				public void execute() {
-					goTo(new LoginPlace());
-				}
-			});
+		  logout = Text.constants.aanmelden();
 		}
+		m=items.addItem(logout, () -> goTo(new LoginPlace()));
 		m.addStyleName(t.menuItem());
+		m.setStyleName(t.inleveren(), seb);
 	}
 
 	List<HandlerRegistration> register = new LinkedList<>();
 	
 	@Override
 	public void setTrail(List<SelectModuleItem> trail) {
-		if(DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB)
+		if(seb)
 			trail.clear();
 
 		ListIterator<SelectModuleItem> iter = trail.listIterator(Math.min(trail.size(),3));

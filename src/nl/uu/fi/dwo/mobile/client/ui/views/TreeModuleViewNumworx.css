@@ -172,7 +172,11 @@
 			color: color13 !important;
 			font-size: 13px;
 			font-family: "Ubuntu" !important;
-		}	
+		}
+		.menuItem.inleveren {
+			background-color: red;
+			color: white;
+		}
 		.search-input {
 			font-family: "Ubuntu" !important;
 			background-color: black;

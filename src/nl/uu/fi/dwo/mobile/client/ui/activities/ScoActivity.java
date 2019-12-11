@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
@@ -25,7 +24,6 @@ import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.s;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
@@ -46,19 +44,16 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
+import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
-import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
-import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
-
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 
-public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, ViewModuleView.Presenter, GotoController {
+public class ScoActivity extends AbstractActivity implements AnchorContext, ViewModuleView.Presenter, GotoController {
 
 	@Inject SelectModuleItem item;
 	@Inject ViewModuleView view;
@@ -110,20 +105,10 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 		defaultContext = view.getAnchorContext();
 		view.setPresenter(this);
 		view.removeBtns(); // up en home
-		view.getBackButton().setText(nl.uu.fi.dwo.mobile.client.text.Text.constants.login());
 		
 		String scoID = item.getID().toString();
 		DWOplayer.insertCSS(scoID);
 		view.setUnitId(scoID);
-
-		addHandlerRegistration(
-		view.getBackButton().addTapHandler(new TapHandler() {
-
-			@Override
-			public void onTap(TapEvent event) {
-				gotoNext();
-			}}));
-		
 		name = item.getName();
 		Promise<String> namePromise;
 		if(name == null) {

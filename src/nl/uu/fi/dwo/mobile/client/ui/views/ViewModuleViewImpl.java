@@ -175,7 +175,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	
 	public boolean zelftoetsNagekeken = false;
 	
-	//private Panel kbp = null;
 	private HeaderButton hb;
 	private HeaderPanel hp;
 	private WaitScreen waitscreen = WaitScreen.instance();
@@ -1834,21 +1833,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		mainPanel.setStylePrimaryName("mainPanel");
 		mainPanel.addStyleDependentName(DWOplayer.PARAMETERS.keyboardStyle());
 		mainPanel.setStyleDependentName("standalone", standalone);
-
-//		Style contentStyle = contentScrollPanel.getElement().getStyle();
-//		contentStyle.setOverflowX(Overflow.HIDDEN);
-//		contentStyle.setOverflowY(Overflow.AUTO);
 		
 		focusPanel = new ResizeFocusPanel(mainPanel); // wrap focuspanel
-//		focusPanel = new FocusPanel();focusPanel.add(mainPanel);
 
 		FocusOnTouch.wrap(focusPanel);
 		mainPanel = focusPanel;
 		mainPanel.setStylePrimaryName("mainPanel");
-// nu in stylesheet DWOplayer.css		
-//		mainPanel.setHeight("100%");
-//		mainPanel.setWidth("100%");
-
 		
 		sb = DWOplayer.PARAMETERS.getStatusBar(); // new nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard();
 		kb = sb.getFormuleKeyboard();
@@ -1980,33 +1970,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 
 	public void zetMaatNoordhoff()
 	{
-		//FlowPanel fp = new FlowPanel();
-		//mainPanel = FocusOnTouch.wrap(fp);
-		//mainPanel.setHeight("426px");
-		//mainPanel.setWidth("886px");
 		extraHeight = 40;
 		fp.setWidgetSize(headerView, extraHeight);
-		//fp.setHeight("428px");
-		//fp.setWidth("886px");
-		//if(!standalone) fp.add(hp);
-		//final int contentHeight = 426 - 40; // 40 = hoogte headerpanel.
-//		int contentHeight = Window.getClientHeight() - extraHeight;
-		//Window.addResizeHandler(new Resizer());
-		//contentScrollPanel.setPixelSize(886, contentHeight ); 
-		//contentScrollPanel.setHeight("100%");
-		//fp.add(contentScrollPanel);
-//		contentPanel.getElement().getStyle().clearMarginBottom();
-// probeersel!
-//
-//		contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
-//		Panel kbp = kb.getAsPanel();
-//		kbp.setWidth("886px");
 		sb.zetMaat();
 		int size = sb.getStatusBarHeight();
 		sb.setScrollPanel(this, -size);
-		
-		//fp.add(kbp);
-
 	}
 	
 	protected int extraHeight = (MGWT.getOsDetection().isAndroid() ? 52:41); // header height in android 50+2 			

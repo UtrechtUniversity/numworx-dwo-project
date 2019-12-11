@@ -68,7 +68,6 @@ public interface DWOplayerParameters {
 // More to come....
 	Prepare getPrepareInstance();
 	String getCourseDescription();
-	Text   getTextBundle();
 	String getCDN();
 	SecureMode getSecureMode();
 	String getDwoEnv();
