@@ -128,6 +128,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	@UiField FlowPanel headerBottom;
 	@UiField HasText scoType;
 	@UiField nl.uu.fi.dwo.mobile.client.text.Text rb;
+	@UiField MenuBar bar;
 	
 	ViewModuleViewImpl delegate;
 
@@ -198,7 +199,10 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		}
 		m=items.addItem(logout, () -> goTo(new LoginPlace()));
 		m.addStyleName(t.menuItem());
-		m.setStyleName(t.inleveren(), seb);
+		if (seb) {
+			items.addStyleDependentName("seb");
+			bar.setStylePrimaryName("seb-MenuBar");
+		}
 	}
 
 	List<HandlerRegistration> register = new LinkedList<>();
