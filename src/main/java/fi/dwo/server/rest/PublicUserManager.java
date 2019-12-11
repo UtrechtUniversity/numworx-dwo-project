@@ -905,16 +905,17 @@ public class PublicUserManager {
      * @param authCode
      * @param language
      * @return
+     * @throws IOException 
      */
     @GET
     @Produces({MediaType.TEXT_HTML})
     @Path("/submitNewPassword")
-    public String passwordChangeForm(@QueryParam("authCode") String authCode, @QueryParam("language") String language) {
+    public String passwordChangeForm(@QueryParam("authCode") String authCode, @QueryParam("language") String language) throws IOException {
         return passwordChangeForm(authCode, language, null);
     }
 
     private String passwordChangeForm(String authCode, String language,
-            String message) {
+            String message) throws IOException {
         if (authCode == null) {
             authCode = "";
         }
@@ -927,18 +928,23 @@ public class PublicUserManager {
             message = TextMapper.getText(TextMapper.LBL_ENTER_AUTHCODE_FOR_NEW_PASSWORD);
         }
 
-        String r = "<HTML><BODY><p>" + message
-                + "<form action=\"submitPasswordChange\" method=\"post\" >"
-                + "<input type='hidden' name='language' value=\"" + language + "\" >"
-                + "<table>"
-                + "<tr><td align = \"right\">authCode:</td><td><input type=\"text\" size=\"80\" name=\"authCode\" value=\""
-                + authCode + "\" ></td></tr>"
-                + "<tr><td align = \"right\">new password:</td><td><input type=\"password\" size=\"80\" name=\"newPassword\" value=\"\" ></td></tr>"
-                + "<tr><td/><td align =\"right\"><input type=submit value=\"" + TextMapper.getText(TextMapper.BTN_OK) + "\"></td></tr>"
-                + "</table>"
-                + "</form>";
-        r += "</BODY></HTML>";
-        TextMapper.setLanguage(old);
+        InputStream in = getClass().getResourceAsStream("passwordChangeForm.html");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        String r;
+        r = "";
+        String line;
+        while( (line = reader.readLine()) != null) {
+        	r += line;
+        }
+        reader.close();
+        r = MessageFormat.format(r, 
+        		htmlEncode(message),
+        		htmlEncode(language),
+        		htmlEncode(authCode),
+        		TextMapper.getText(TextMapper.BTN_OK),
+        		TextMapper.getText(TextMapper.GUIP_PASSWORD), 
+        		TextMapper.getText(TextMapper.GUIP_PASSWORD));
+         TextMapper.setLanguage(old);
         return r;
     }
 
