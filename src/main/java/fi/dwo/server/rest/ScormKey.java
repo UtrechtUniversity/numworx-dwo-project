@@ -14,6 +14,7 @@ enum ScormKey {
 	SESSION_TIME2004,
 	STUDENT_MODEL,
 	SUSPEND_DATA,
+	SUSPEND_DIGEST,
 	XML;
 	
     static Map<String,ScormKey> keys = new TreeMap<String,ScormKey>();
@@ -32,6 +33,7 @@ enum ScormKey {
     	keys.put("cmi.session_time", SESSION_TIME2004);
     	keys.put("suspendData", SUSPEND_DATA);
     	keys.put("cmi.suspend_data", SUSPEND_DATA);
+    	keys.put("cmi.suspend_digest", SUSPEND_DIGEST);
     	keys.put("cocd", XML);
     keys.put("dme.student_model", STUDENT_MODEL);
 // MORE to go    	

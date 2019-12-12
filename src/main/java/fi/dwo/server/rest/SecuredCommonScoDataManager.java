@@ -53,6 +53,7 @@ import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.persistence.CmiConvert;
+import fi.dwo.server.rest.util.Digest;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
@@ -262,11 +263,15 @@ abstract class SecuredCommonScoDataManager {
     if (!etag.equals(match))
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Wrong if-match", Response.Status.PRECONDITION_FAILED);
 // PATCH
+    String digest = null;
     for(DomMapEntry<String,String> entry: rest.getDomScormValues().getValues()) {
         logEntry("patch", entry, ssContext.getPersistentHasRolePK().getUserID(), ssContext.getScoID());
         ScormKey key = ScormKey.getKey(entry.getKey());
         String value = entry.getValue();
         switch(key) {
+        case SUSPEND_DIGEST:
+            digest = value;
+            break;
         case SUSPEND_DATA:
             String oldValue = ssData.getSuspendData();
             JsonParser parser = Json.createParser(new StringReader(oldValue));
@@ -276,6 +281,13 @@ abstract class SecuredCommonScoDataManager {
             parser.next();
             JsonArray  patch     = parser.getArray();
             JsonObject newObject = Json.createPatch(patch).apply(oldObject);
+            if (digest != null) {
+              String patched = new Digest().digest(newObject);
+              if( !digest.equals(patched)) {
+                LOG.severe("patch digest error");
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Wrong digest", Response.Status.PRECONDITION_FAILED);
+              }
+            }
             StringWriter newValue = new StringWriter();
             Json.createWriter(newValue).write(newObject);
             ssData.setSuspendData(UEscape.convertUEsc(newValue.toString()));
