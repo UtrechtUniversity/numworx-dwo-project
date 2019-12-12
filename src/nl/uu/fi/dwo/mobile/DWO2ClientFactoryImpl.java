@@ -17,6 +17,7 @@ import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO4;
+import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO5;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
@@ -106,7 +107,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 			if(!withUser()) {
 				api = new SCORM_guest();
 			} else {					
-				api = new SCORM_DWO4(getSchoolClass(),
+				api = new SCORM_DWO5(getSchoolClass(),
 						DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole(),
 						agent,
 						DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB,
