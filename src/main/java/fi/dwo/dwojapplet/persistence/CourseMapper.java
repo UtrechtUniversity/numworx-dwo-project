@@ -105,6 +105,7 @@ class CourseMapper  implements Comparator<Course> {
           while ( (acls == null||acls.isEmpty()) && c != null) {
             parent = true;
             CourseMap m = c.getParentMap();
+            if (m==null) { m = objects.get(c.getParentID()); }
             if (m instanceof Course) {
               c = (Course)m; acls = c.getAcls();
             } else {
@@ -132,7 +133,7 @@ class CourseMapper  implements Comparator<Course> {
     }
     
     private Set<PersistenceId> getIds() {
-      Set<PersistenceId> set = new HashSet();
+      Set<PersistenceId> set = new HashSet<>();
       set.add(DwoHelper.getCurrentUser().getId());
       set.add(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getId());
       Teacher t = (Teacher) DwoHelper.getCurrentFacadeUser();
@@ -231,7 +232,16 @@ class CourseMapper  implements Comparator<Course> {
     Course[] getObjectFromDCS(Collection<DomCourseStudent> data) {
       Course[] result = createArray(data.size());
       int i = 0;
-      for(DomCourseStudent item: data) result[i++] = getObjectFromReturn(item);
+      for(DomCourseStudent item: data) {
+        Course cource = getObjectFromReturn(item);
+        if( effectiveAccess(cource) != ACL.NONE)
+          result[i++] = cource;
+      }
+      if (i != data.size()) {
+        Course[] r = createArray(i);
+        System.arraycopy(result, 0, r, 0, i);
+        result = r;
+      }
       Arrays.sort(result,this);
       return result;
     }
