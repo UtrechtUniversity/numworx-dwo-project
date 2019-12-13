@@ -1,8 +1,10 @@
 package nl.uu.fi.dwo.account.client;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -127,6 +129,29 @@ public class TeacherAccessManager extends AccessManager {
   public List<DomCourseStudent> apply(List<DomCourseStudent> t) {
     getParent.cache(t);
     return super.apply(t);
+  }
+
+  @Override
+  public Promise<List<DomCourseStudent>> call(Promise<List<DomCourseStudent>> resolved)
+      throws Exception {
+    List<DomCourseStudent> t = apply(resolved.getValue());
+    if (t.isEmpty()) return resolved;
+    if (t.get(0).getSchoolId() == null) return resolved; // public courses
+    List<Promise<Boolean>> access;
+    access = t.stream().map(this::access).collect(Collectors.toList());
+    return Promises.all(access).then(p -> {
+      List<DomCourseStudent> list = new ArrayList<>(t);
+      Iterator<DomCourseStudent> iters = list.iterator(); 
+      Iterator<Promise<Boolean>> itersb = access.iterator();
+      while (iters.hasNext()) {
+        iters.next();
+        Promise<java.lang.Boolean> promise = itersb.next();
+        if (! promise.getValue().booleanValue()) iters.remove();       
+      }     
+      return Promises.resolved(list);
+    });
+    
+    //return resolved;
   }
   
   
