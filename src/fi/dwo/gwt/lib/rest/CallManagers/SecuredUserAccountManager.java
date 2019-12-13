@@ -149,8 +149,7 @@ public class SecuredUserAccountManager {
 
                             @Override
                             public void onSuccess(Method m,DomLoginContext loginContext) {
-                                if (loginContext.getSecretKey() != null
-                                        && presenter != null) {
+                                if (loginContext.getSecretKey() != null) {
                                     presenter.otherlogin(new AsyncCallback<Boolean>() {
 
                                         @Override
@@ -163,7 +162,7 @@ public class SecuredUserAccountManager {
                                             if (result.booleanValue()) {
                                                 getDomUserFullwLoginContext(name, callback);
                                             } else {
-                                                callback.onFailure(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError,"Cancelled"));
+                                                callback.onFailure(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationCancelled,"Cancelled"));
                                             }
                                         }
                                     });
