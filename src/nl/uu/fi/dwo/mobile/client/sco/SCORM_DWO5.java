@@ -255,14 +255,16 @@ log("setScoID " + scoID);
 			return null;
 		}
 		
-
+		private boolean notempty(String s) {
+		  return s != null && s.length()>=2;
+		}
 		public void commit() {
 			copy.putAll(dirty);
 			dirty.clear();
 			pending = true;
 			logger.info("committing " + copy.keySet());
 			String suspendData = copy.get(Memento.SUSPEND_DATA);
-			if(suspendData != null && lastSuspendData != null && lastETag != null) {
+			if(notempty(suspendData) && notempty(lastSuspendData) && lastETag != null) {
 				try {
 					String patch = new GWTPatch(new JSONBuilder()).createPatch(lastSuspendData, suspendData);
 					logger.warning("compression: "  + suspendData.length() + " to " + patch.length());
@@ -285,16 +287,10 @@ log("setScoID " + scoID);
 							.recoverWith(p->scoDataManager.setValuesETag(sco, schoolClassID, context, copy))
 							.then(this,this);
 					return;
-					
-					
-					
-					
 				} catch (Throwable e) {
 					logger.log(Level.SEVERE,"gwtpatch failes", e);
 				}
 			}
-			
-			
 			started = System.currentTimeMillis();
 			scoDataManager.setValuesETag(sco, schoolClassID, context, copy).then(this, this);
 		}
