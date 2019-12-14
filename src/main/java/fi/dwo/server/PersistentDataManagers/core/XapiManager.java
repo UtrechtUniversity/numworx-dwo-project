@@ -26,7 +26,7 @@ public class XapiManager {
     lrs.setEndpoint(endpoint);
     if (school.getAboType() != AboType.premium) return null;
     // school afhankelijk?
-    String auth = System.getProperty("XAPI_AUTH", "MzdjZTEwMzE2NzQxN2NhODlmNDNkODA1ZDJhNGY3YjU1MzM3MzE3YjpjY2QzODMwYjc1NWJkY2E3ZDJlYzQ5NmQ0ZTkyZWQwYzJlNDljYjRh");
+    String auth = System.getProperty("XAPI_AUTH", "ODg5MTZhOWRiNTI1YTM0NDRkZmE0MzliZjMxMDc5NTAzZDcyZDUyODpjYzY3YzA2Zjc3MDFhMDgzY2I2MzBhZGYyMDhjMjQ3YmYyMzhhODQz");
     lrs.setAuth("Basic " + auth);
 
     return lrs;

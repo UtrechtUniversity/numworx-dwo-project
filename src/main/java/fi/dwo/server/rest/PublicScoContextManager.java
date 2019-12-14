@@ -40,8 +40,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 @Path("/public/scoContext")
 public class PublicScoContextManager {
 
-	private static final boolean SECURITY=false;
-    private static final Logger LOG = Logger.getLogger(PublicScoContextManager.class.getName());
+	private static final Logger LOG = Logger.getLogger(PublicScoContextManager.class.getName());
 
 	private String LIMITED = "l";
 	

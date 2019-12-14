@@ -5,7 +5,11 @@ import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.private_base64code.StringCodeObject;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
+import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
+import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
 
 import java.io.ByteArrayInputStream;
@@ -42,7 +46,11 @@ import org.json.simple.parser.ParseException;
 public class PublicScoDataManager {
 
   private static final Logger LOG = Logger.getLogger(PublicScoDataManager.class.getName());
-  private static final boolean SECURITY = false;
+  private static final boolean SECURITY = true;
+  private String LIMITED = "l";
+  private void throwLoginNeeded() {
+    throw new Dwo2RestException(Dwo2ExceptionCode.Rest_LoginNeeded, "Login needed");
+}
 
   /**
    * Returns the JSON launch data bytes of scoData. This method uses MySQL-based indices and should
@@ -58,11 +66,16 @@ public class PublicScoDataManager {
   public String getJSONLaunchDataBytes(@DefaultValue("0") @QueryParam("scoId") Long scoId) {
 
     PersistentScoData scoData = ScoDataManager.findEntity(scoId);
-    if (SECURITY) {
-      // none yet
-    }
     if (scoData == null) {
       return "{}"; // Not found, not fatal
+    }
+    if (SECURITY) {
+      PersistentScoContext scoContext = ScoContextManager.findEntity(scoId);
+      if (scoContext.getSchoolID() != null)
+        throwLoginNeeded();
+      PersistentDwoProfile profile = DwoProfileManager.findEntity(scoContext.getDwoProfileID());
+      if ( profile.getDwoProfileRights().contains(LIMITED))
+        throwLoginNeeded();      
     }
     byte[] launchData = scoData.getLaunchdatabytes();
     if (launchData != null) {
