@@ -51,6 +51,7 @@ import org.osgi.util.promise.Success;
 public class LoginPresenter {
 
     private static final Logger LOG = Logger.getLogger(LoginPresenter.class.getName());
+    private static final String NEWSESSION = DwoLocalesForGWT.instance.GUI_Dialog_User_ConfirmNewLoginSession();
     private final String locale;
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
@@ -195,7 +196,7 @@ public class LoginPresenter {
         PromisedDialogWithConfirmDeferred d;
         Promise<DwoGlobalVars.DwoGlobalVarsState> loginUser;
         try {
-            loginUser = dwoGlobalVars.initUser(user, password, () -> Promises.resolved(Window.confirm("Already logged in.\nContinue?")));
+            loginUser = dwoGlobalVars.initUser(user, password, () -> Promises.resolved(Window.confirm(NEWSESSION)));
             loginUser.then(new LoginSucces(switchRole),
                     new Failure() {
                 @Override
@@ -205,7 +206,7 @@ public class LoginPresenter {
                         //Login failed
                         LOG.log(Level.INFO, "dwo2exception thrown: " + fail.getMessage());
                         dwoGlobalVars.clearCurrentUser();
-                        view.showWarning(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_User_AuthenticationError());
+                        view.showWarning(fail.getLocalizedMessage());
                     } else {
                         dwoGlobalVars.clearCurrentUser();
                         LOG.log(Level.INFO, "none dwo2exception thrown: " + fail.getMessage());
