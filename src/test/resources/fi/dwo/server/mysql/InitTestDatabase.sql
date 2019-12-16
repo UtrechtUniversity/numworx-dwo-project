@@ -547,7 +547,7 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `tblschooldata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tblscodata` (
+CREATE TABLE `tblschooldata` (
   `schoolID` int(11) NOT NULL,
   `optlock` int(11) DEFAULT '0',
   `lastChangeTimeStamp` bigint(20) DEFAULT '0',
