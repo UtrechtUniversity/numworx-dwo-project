@@ -406,12 +406,12 @@
       <url-pattern>/DWOmAccess/lti/service/*</url-pattern>
     </servlet-mapping>
 
-<!--     <servlet-mapping> -->
+    <servlet-mapping>
 <!--         note that xmlrpc is a hardcoded path relative to the applet containing html page -->
 <!--         note that jars is also a hardcoded path relative to the applet containing html page -->
-<!--         <servlet-name>xmlrpc</servlet-name> -->
-<!--         <url-pattern>/dwo/xmlrpc</url-pattern> -->
-<!--     </servlet-mapping> -->
+        <servlet-name>xmlrpc</servlet-name>
+        <url-pattern>/dwo/xmlrpc</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DwoWebPage</servlet-name>
         <url-pattern>/dwo/dwowebpage</url-pattern>
