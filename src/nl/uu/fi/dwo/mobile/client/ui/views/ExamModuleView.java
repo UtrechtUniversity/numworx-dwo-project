@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -119,7 +120,13 @@ public class ExamModuleView extends Composite {
 	}
 
 	public void showFailure(Throwable failure) {
-		message.setText(String.valueOf(failure));
+		String error;
+		if (failure instanceof Dwo2Exception) {
+			error = failure.getLocalizedMessage();
+		} else {
+			error = String.valueOf(failure);
+		}		
+		message.setText(error);
 	}
 
 }

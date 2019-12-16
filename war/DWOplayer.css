@@ -179,3 +179,25 @@ div.listItem-dwo-separator {
 .gwt-DialogBox .Caption {
    cursor: auto !important;
 }
+
+.seb-MenuBarPopup {
+	border-radius: 3px;
+	border: solid #7297c7 2px;
+}
+
+.seb-MenuBarPopup .menuPopupTopLeft, 
+.seb-MenuBarPopup .menuPopupBottomLeft, 
+.seb-MenuBarPopup .menuPopupMiddleLeft, 
+.seb-MenuBarPopup .menuPopupTopRight, 
+.seb-MenuBarPopup .menuPopupBottomRight, 
+.seb-MenuBarPopup .menuPopupMiddleRight, 
+.seb-MenuBarPopup .menuPopupTopCenter, 
+.seb-MenuBarPopup .menuPopupBottomCenter, 
+.seb-MenuBarPopup .menuPopupContent .gwt-MenuBar-seb.gwt-MenuBar .gwt-MenuItem
+{
+	background-color: red !important;
+	color: white !important;
+	font-size: 1.2em !important;
+	background-image: none !important;
+}
+

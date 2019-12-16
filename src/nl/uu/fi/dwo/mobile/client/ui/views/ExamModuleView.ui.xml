@@ -40,14 +40,14 @@
 				</g:HorizontalPanel>
 					<g:HTMLPanel styleName='{style.description}'>
 	  <div>
-		<p>Toets toegangssleutel:
+		<p><ui:text from='{rb.toetssleutel}' />
 			<g:TextBox ui:field='textView' />
 		</p>
 		<p> 
-			<g:Button ui:field='ok'>Ga naar toets</g:Button>
-			<g:Button ui:field='cancel'>Annuleer</g:Button>
+			<g:Button ui:field='ok'><ui:text from='{rb.gotoexam}'/></g:Button>
+			<g:Button ui:field='cancel'><ui:text from='{rb.cancel}' /></g:Button>
 		</p>
-		<g:Label ui:field='message' />
+		<g:Label ui:field='message' styleName='{style.message}'/>
 	  </div>	
 	</g:HTMLPanel>
 				

@@ -134,4 +134,10 @@ public interface Text extends Constants {
 	
 	@DefaultStringValue("Afronden")
 	String inleveren();
+	
+	
+	@DefaultStringValue("Toets toegangssleutel:")
+	String toetssleutel();
+	@DefaultStringValue("Ga naar toets")
+	String gotoexam();
  }
