@@ -367,7 +367,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 				JSONBoolean ok = resolved.getValue().isBoolean();
 				if(ok != null && ok.booleanValue())
 					return null;
-				throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "verification failed: " + resolved.getValue());
+				throw new Dwo2Exception(Dwo2ExceptionCode.Exam_AuthenticationError, "verification failed: " + resolved.getValue());
 			}
 		})
 //		.recoverWith(new Function<Promise<?>, Promise<? extends Void>>() {
