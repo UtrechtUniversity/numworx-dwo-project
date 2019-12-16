@@ -272,7 +272,8 @@ public class DataSourceAccessServlet extends Servlet {
 					dbaccess = new DataSourceAccess(ds);
 			}
 			
-			setHandler(dbaccess);
+			if (false)
+				setHandler(dbaccess);
 
 //		} catch (NamingException e) {
 //			throw new ServletException("Datasource in error",e);
