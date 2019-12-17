@@ -30,6 +30,9 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ACL;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -46,12 +49,15 @@ import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.rest.util.CourseBuilder;
@@ -86,14 +92,48 @@ public class SecuredUserCourseManager {
     		PersistentUser user = getUserFromContext(sc);		
 
 // TODO verify profile/limited
-// TODO hasRole correct	
-    		
+// hasRole correct	
+			PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(hasRole);
+            PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
+// userid must match hasrole
+     		if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
+     			return "{}";
     		Long courseId = MySQLPersistenceId.getNativeId(id.getDomCourse());
             PersistentCourse course = CourseManager.findEntity(courseId);
             if(course == null) 
             	return "{}"; // Not fatal
             if(! course.getDwoProfileID().equals(MySQLPersistenceId.getNativeId(domDwoProfile)))
             	return "{}";
+            if (course.getSchoolID() != null) {
+            	RoleType role = RoleType.values()[phr.getSchoolGroup().getGroupID()];
+            	DomSchoolClassId schoolClassId;
+				switch (role) {
+            	case STUDENT: // schoolclass test
+            		schoolClassId = id.getSchoolClassID();
+        			Long cid = MySQLPersistenceId.getNativeId(schoolClassId);
+        			PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(cid);
+        			List<PersistentClassCourse> pcc = ClassCourseManager.findEntities(schoolClass, course);
+        			PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(user.getId(), cid, phr.getSchoolGroup().getSchoolGroupID());
+    				PersistentStudentOfClass soc = StudentOfClassManager.findEntity(socId);
+        			if(pcc.isEmpty() || soc == null) 
+        				return "{}";
+        			PersistentClassCourse pcc1 = pcc.get(0);
+        			if(pcc1.getType().intValue() == 1 || pcc1.getViewState() != ViewState.studentsAndTeachers) {
+        				return "{}";
+        			}
+        			java.util.Date now = new java.util.Date();
+        			if (pcc1.getNotAfter() != null && now.after(pcc1.getNotAfter()))
+        				return "{}";
+        			if (pcc1.getNotBefore() != null && now.before(pcc1.getNotBefore()))
+        				return "{}";
+            		break;
+            	case TEACHER: // ACL test
+            		ACL acl = SecuredCommonScoDataManager.getACL(phr, course);
+            		if (acl == ACL.NONE) return "{}";          	
+            	default:
+            	}
+            }
+            
             Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(course.getDescription(), null); // FIXM load wiskopdr.jar
             StringWriter writer = new StringWriter();
 			JSONEncoder.encode(map, writer, null); // FIXME, load wiskopdr.jar
@@ -248,23 +288,47 @@ public class SecuredUserCourseManager {
     		DomSchoolClassId schoolClassId = rest.getSchoolClassID();
     		DomHasRole    hasRole = rest.getRestContext().getDomHasRole();
     		PersistentUser user = getUserFromContext(sc);		
-// TODO hasRole is correct    		
-    		DomCourse course = rest.getDomCourse();
+// hasRole is correct    		
+			PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(hasRole);
+            PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
+         // userid must match hasrole
+     		if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
+     			throwLoginNeeded();
+     		DomCourse course = rest.getDomCourse();
     		Long id = MySQLPersistenceId.getNativeId(course);
     		PersistentCourse parent = CourseManager.findEntity(id);
     		if(schoolClassId != null) {
     			id = MySQLPersistenceId.getNativeId(schoolClassId);
     			PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(id);
     			List<PersistentClassCourse> pcc = ClassCourseManager.findEntities(schoolClass, parent);
-    			if(pcc.isEmpty()) 
+    			PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(user.getId(), id, phr.getSchoolGroup().getSchoolGroupID());
+				PersistentStudentOfClass soc = StudentOfClassManager.findEntity(socId);
+    			if(pcc.isEmpty() || soc == null) 
     				throwLoginNeeded();
     			PersistentClassCourse pcc1 = pcc.get(0);
-    			if(pcc1.getType().intValue() == 1) {
+    			if(pcc1.getType().intValue() == 1 || pcc1.getViewState() != ViewState.studentsAndTeachers) {
     				throwLoginNeeded();
     			}
+    			java.util.Date now = new java.util.Date();
+    			if (pcc1.getNotAfter() != null && now.after(pcc1.getNotAfter()))
+    					throwLoginNeeded();
+    			if (pcc1.getNotBefore() != null && now.before(pcc1.getNotBefore()))
+    					throwLoginNeeded();
     			
     		} else {
-    			// FIXME SECURITY 
+    			if (parent.getSchoolID() != null) {
+    				RoleType role = RoleType.values()[phr.getSchoolGroup().getGroupID()];
+    				if (parent.getSchoolID().intValue() != phr.getSchoolGroup().getSchoolID())
+    					throwLoginNeeded();
+    				switch(role) {
+    				case TEACHER:
+    					ACL acl = SecuredCommonScoDataManager.getACL(phr, parent);
+    					if (acl != ACL.NONE && acl != ACL.ACCESS) break;
+    				case STUDENT:
+    					throwLoginNeeded();
+    				default:
+    				}    				
+    			}
     		}
 // TODO Verify parent is public and profile is not limited OR user.school matches course.school
     		PersistentDwoProfile profile = DwoProfileManager.findEntity(parent.getDwoProfileID());
