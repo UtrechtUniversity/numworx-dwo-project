@@ -101,4 +101,11 @@ public class SecuredUserScoDataManager extends SecuredCommonScoDataManager {
 	  return super.patchValues(sc, rest, match);
 	}
 
+	final static Integer NORMAL = Integer.valueOf(0);
+
+	@Override
+	boolean checkType(PersistentClassCourse pcc) {
+		return NORMAL.equals(pcc.getType());
+	}
+
 }

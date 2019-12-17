@@ -9,8 +9,10 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
 import javax.json.Json;
@@ -29,10 +31,12 @@ import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.beans.scorm2xml.Scorm2Xml;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentACL;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
@@ -40,8 +44,10 @@ import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoData;
+import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.UEscape;
+import fi.dwo.server.PersistentDataManagers.core.ACLManager;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
@@ -51,6 +57,7 @@ import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
+import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.persistence.CmiConvert;
 import fi.dwo.server.rest.util.Digest;
@@ -60,12 +67,14 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScormValues;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ACL;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.entities.RestScormValues;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 abstract class SecuredCommonScoDataManager {
   private static final Logger LOG = Logger.getLogger(SecuredCommonScoDataManager.class.getName());
@@ -238,7 +247,7 @@ abstract class SecuredCommonScoDataManager {
             if (pcc.getNotAfter() != null) ok &= pcc.getNotAfter().after(new java.util.Date());
             if (pcc.getNotBefore() != null) ok &= pcc.getNotBefore().before(new java.util.Date());
             if (!ok || !checkType(pcc)) {
-                  LOG.warning("ClassCourse not open " + rest.getDomScormValues().getScoContext().getId());
+                  LOG.severe("ClassCourse not open " + rest.getDomScormValues().getScoContext().getId());
                   return Response.ok(Boolean.FALSE, MediaType.APPLICATION_JSON_TYPE).build();                       
             }
         }
@@ -370,9 +379,17 @@ abstract class SecuredCommonScoDataManager {
             if (pcc.getNotAfter() != null) ok &= pcc.getNotAfter().after(new java.util.Date());
             if (pcc.getNotBefore() != null) ok &= pcc.getNotBefore().before(new java.util.Date());
             if (!ok || !checkType(pcc)) {
-                  LOG.warning("ClassCourse not open " + rest.getDomScoContext().getId());
+                  LOG.severe("ClassCourse not open " + rest.getDomScoContext().getId());
                   return "{}";                       
             }
+          } else if (phr.getSchoolGroup().getGroupID() == RoleType.TEACHER.ordinal()) {
+        	  PersistentSchool school = phr.getSchoolGroup().getSchool();
+        	  if (school.accessControl()) {
+        		  ACL acl = getACL(phr, course);
+        		  if (acl == ACL.NONE||acl == ACL.ACCESS) {
+        			  return "{}";
+        		  }
+        	  }
           }
       }
       
@@ -411,7 +428,43 @@ abstract class SecuredCommonScoDataManager {
       throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Error with launchdata with scoid " + scoId + ".");
   }
 
-  public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2Exception {
+  static ACL getACL(PersistentHasRole phr, PersistentCourse course) {
+	  List<PersistentTeacherOfClass> l = TeacherOfClassManager.findEntities(phr.getPersistentHasRolePK());
+	  List<PersistenceId> classes = l.stream().map(i -> i.getPersistentTeacherOfClassPK().getClassID()).map(PersistentSchoolClass::buildPersistenceId).collect(Collectors.toList());
+
+	  return getACL(phr.getUser(), phr.getSchoolGroup().getSchool(), classes, course);
+  }
+
+  static ACL getACL(PersistentUser user, PersistentSchool school, List<PersistenceId> classes, PersistentCourse course) {
+	  List<PersistentACL> acls;
+	  do {
+		  acls = ACLManager.findByCourse(course);
+		  if (acls != null && ! acls.isEmpty()) break;
+		  course = CourseManager.findEntity(course.getParentID());
+	  } while (course != null);
+	  if (!acls.isEmpty()) {
+		  Set<String> rights = classes.stream().map(PersistenceId::getIdString).collect(Collectors.toSet());
+		  rights.add(user.buildPersistenceId().getIdString());
+		  rights.add(school.buildPersistenceId().getIdString());
+		  ACL acl = acls.stream()
+                  .filter(item -> rights.contains(item.getEntity()))
+                  .map(PersistentACL::getAccess)
+                  .sorted( (ACL aa, ACL bb) -> - aa.compareTo(bb))
+                  .findFirst()
+                  .orElse(ACL.NONE);
+		  return acl;
+	  }
+	  
+	  if (school.teachersCanWrite())
+		  return ACL.FULL;
+	  else
+		  return ACL.NONE; // parent is altijd "true" (voor sco's)
+  }
+
+  
+  
+  
+public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2Exception {
     DomHasRole domHasRole = rest.getRestContext().getDomHasRole();
     
     // Context
@@ -456,7 +509,7 @@ abstract class SecuredCommonScoDataManager {
             if (pcc.getNotAfter() != null) ok &= pcc.getNotAfter().after(new java.util.Date());
             if (pcc.getNotBefore() != null) ok &= pcc.getNotBefore().before(new java.util.Date());
             if (!ok || !checkType(pcc)) {
-                  LOG.warning("ClassCourse not open " + rest.getDomScormValues().getScoContext().getId());
+                  LOG.severe("ClassCourse not open " + rest.getDomScormValues().getScoContext().getId());
                   return Response.ok(rest.getDomScormValues(), MediaType.APPLICATION_JSON_TYPE).build();                       
             }
         }
@@ -527,7 +580,7 @@ try {
                 if (pcc.getNotAfter() != null) ok &= pcc.getNotAfter().after(new java.util.Date());
                 if (pcc.getNotBefore() != null) ok &= pcc.getNotBefore().before(new java.util.Date());
                 if (!ok || !checkType(pcc)) {
-                      LOG.warning("ClassCourse not open " + rest.getDomScormValues().getScoContext().getId());
+                      LOG.severe("ClassCourse not open " + rest.getDomScormValues().getScoContext().getId());
                       return Response.ok(Boolean.FALSE, MediaType.APPLICATION_JSON_TYPE).build();                       
                 }
             }

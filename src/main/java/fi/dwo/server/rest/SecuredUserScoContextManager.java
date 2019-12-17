@@ -38,6 +38,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ACL;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.entities.RestScoContextId;
@@ -177,6 +179,21 @@ public class SecuredUserScoContextManager {
 	            LOG.log(Level.SEVERE, "school mismatch " + sc.getUserPrincipal().getName() );		
 				throw new Dwo2Exception(Dwo2ExceptionCode.Rest_LoginNeeded, "wrong credentials");
 			}
+			RoleType role = RoleType.values()[phr.getSchoolGroup().getGroupID()];
+			switch (role) {
+			case STUDENT: 
+				LOG.severe("Check schoolclass/course?" ); // Not used!
+				throw new Dwo2RestException(Dwo2ExceptionCode.Rest_LoginNeeded, "login needed");
+				//break;
+			case TEACHER:
+				if (school.accessControl()) {
+					ACL acl = SecuredCommonScoDataManager.getACL(phr, parent);
+					if (acl == ACL.NONE || acl == ACL.ACCESS) {
+						throw new Dwo2RestException(Dwo2ExceptionCode.Rest_LoginNeeded, "login needed");
+					}
+				}
+			default:
+			}
 		} else {
 			if (profile.getDwoProfileRights().contains(LIMITED)) {
 				// assert school in profile database....
@@ -209,7 +226,17 @@ public class SecuredUserScoContextManager {
         default:
         case STUDENT:
           // FIXME SECURITY verify course in class or public, student in class, etc.
+            throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "wrong role " + sc.getUserPrincipal().getName());
         case TEACHER:
+        	PersistentSchool school = state.getSchool();
+        	if (school.accessControl()) {
+        		ACL acl = SecuredCommonScoDataManager.getACL(state.getHasRole(), CourseManager.findEntity(sco.getCourseID()));
+        		if (acl == ACL.ACCESS|| acl == ACL.NONE) {
+                    throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "wrong access " + sc.getUserPrincipal().getName());
+        		}
+        	}
+        
+        
         case SCHOOLADMIN:
           if (sco.getSchoolID() != null) {
             Long sid = state.getSchool().getSchoolID();

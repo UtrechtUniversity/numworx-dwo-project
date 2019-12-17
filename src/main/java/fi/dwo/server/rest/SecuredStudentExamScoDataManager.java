@@ -9,6 +9,7 @@ import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.entities.RestScormValues;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -45,5 +46,12 @@ public class SecuredStudentExamScoDataManager extends SecuredCommonScoDataManage
   public Response setValues(@Context SecurityContext sc, RestScormValues rest, @HeaderParam("if-match") EntityTag match) throws Dwo2Exception {
     return super.setValues(sc, rest, match);
   }
+
+  	final static Integer EXAM = Integer.valueOf(1);
+
+	@Override
+	boolean checkType(PersistentClassCourse pcc) {
+		return EXAM.equals(pcc.getType());
+	}
 
 }
