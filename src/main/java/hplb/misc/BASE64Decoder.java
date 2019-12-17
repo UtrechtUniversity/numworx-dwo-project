@@ -176,19 +176,19 @@ public class BASE64Decoder extends CharacterDecoder {
         }
     }
 
-    /**
-     * For testing. Base64 decodes first argument or stdin if no argument is
-     * given. Writes result on stdout.
-     *
-     * @throws java.io.IOException
-     */
-    public static void main(String[] args) throws IOException {
-        BASE64Decoder dec = new BASE64Decoder();
-        if (args.length > 0) {
-            System.out.println(new String(dec.decodeBuffer(args[0]), 0));
-        } else {
-            dec.decodeBuffer(System.in, System.out);
-        }
-        System.out.flush();
-    }
+//    /**
+//     * For testing. Base64 decodes first argument or stdin if no argument is
+//     * given. Writes result on stdout.
+//     *
+//     * @throws java.io.IOException
+//     */
+//    public static void main(String[] args) throws IOException {
+//        BASE64Decoder dec = new BASE64Decoder();
+//        if (args.length > 0) {
+//            System.out.println(new String(dec.decodeBuffer(args[0]), 0));
+//        } else {
+//            dec.decodeBuffer(System.in, System.out);
+//        }
+//        System.out.flush();
+//    }
 }

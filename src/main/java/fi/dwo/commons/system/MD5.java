@@ -41,28 +41,28 @@ public class MD5 {
         reset();
     }
 
-    /**
-     * Command line program that will take files as arguments and output the MD5
-     * sum for each file.
-     *
-     * @param args command line arguments
-     *
-     * @since ostermillerutils 1.00.00
-     */
-    public static void main(String[] args) {
-        if (args.length == 0) {
-            System.err.println("Please specify a file.");
-        } else {
-            for (int i = 0; i < args.length; i++) {
-                try {
-                    System.out.println(MD5.getHashString(new File(args[i])) + " " + args[i]);
-                }
-                catch (IOException x) {
-                    System.err.println(x.getMessage());
-                }
-            }
-        }
-    }
+//    /**
+//     * Command line program that will take files as arguments and output the MD5
+//     * sum for each file.
+//     *
+//     * @param args command line arguments
+//     *
+//     * @since ostermillerutils 1.00.00
+//     */
+//    public static void main(String[] args) {
+//        if (args.length == 0) {
+//            System.err.println("Please specify a file.");
+//        } else {
+//            for (int i = 0; i < args.length; i++) {
+//                try {
+//                    System.out.println(MD5.getHashString(new File(args[i])) + " " + args[i]);
+//                }
+//                catch (IOException x) {
+//                    System.err.println(x.getMessage());
+//                }
+//            }
+//        }
+//    }
 
     /**
      * Gets this hash sum as an array of 16 bytes.

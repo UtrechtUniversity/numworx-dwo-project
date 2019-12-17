@@ -97,21 +97,21 @@ public class BASE64Encoder extends CharacterEncoder {
         return buf;
     }
 
-    /**
-     * For testing. Base64 encodes the first argument or stdin if no argument is
-     * given. The result is written stdout.
-     *
-     * @throws java.io.IOException
-     */
-    public static void main(String[] args) throws IOException {
-        BASE64Encoder enc = new BASE64Encoder();
-        if (args.length > 0) {
-            System.out.println(enc.encodeBuffer(getBytes(args[0])));
-        } else {
-            enc.encodeBuffer(System.in, System.out);
-        }
-        System.out.flush();
-    }
+//    /**
+//     * For testing. Base64 encodes the first argument or stdin if no argument is
+//     * given. The result is written stdout.
+//     *
+//     * @throws java.io.IOException
+//     */
+//    public static void main(String[] args) throws IOException {
+//        BASE64Encoder enc = new BASE64Encoder();
+//        if (args.length > 0) {
+//            System.out.println(enc.encodeBuffer(getBytes(args[0])));
+//        } else {
+//            enc.encodeBuffer(System.in, System.out);
+//        }
+//        System.out.flush();
+//    }
 }
 
 
