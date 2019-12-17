@@ -108,34 +108,34 @@ public class JMathToolTip extends JToolTip {
         setUI(new MathToolTipUI());
     }
 
-    public static void main(String[] args) {
-        JMathPane panel = new JMathPane() {
-
-            @Override
-            public JToolTip createToolTip() {
-                return new JMathToolTip();
-            }
-
-        };
-        JFrame frame = new JFrame("test frame");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setContentPane(panel);
-        panel.setText("<html><p>base<math><mfenced open='{' close='' ><mtable><mtr><mtd>ja</mtd><mtd> if a>2</mtd></mtr><mtr><mtd>nee </mtd><mtd> </mtd></mtr></mtable></mfenced></math>"
-                + "<p>base<math><mover><mi>AB</mi><mo>\u2192</mo></mover></math>line <math><munder><mi>y</mi><mi>x</mi></munder></math> en <math><munderover><mi>base</mi><mi>under</mi><mi>over</mi></munderover></math>"
-                + "<p>lang wrap en meer en <math><mfrac><mrow>aap</mrow><mrow>noot</mrow></mfrac>||<mtable><mrow>aap</mrow><mrow>noot</mrow></mtable></math>meer en meer en meer en zo door..."
-                + "<p>base<math><mo>-</mo><mfrac><mn>1</mn><mn>2</mn></mfrac></math>"
-                + "<p><math><msub><mi>e</mi><mrow><mi>\u03c0</mi>"
-                + "<mo>-</mo><mfrac><mn>1</mn><mn>2</mn></mfrac></mrow></msub></html>");
-
-//		panel.setText("<html><p>--<math><mfrac><mtext>aap</mtext><mtext>no-ot</mtext></mfrac></math>-<math><mfrac><mrow>aap</mrow><mrow>no-ot</mrow></mfrac></math>-</html>");
-        panel.setToolTipText(panel.getText());
-        frame.setSize(100, 100);
-        frame.setVisible(true);
-        LineMetrics lm = frame.getFontMetrics(frame.getFont()).getLineMetrics("x", frame.getGraphics());
-        System.out.println(lm.getStrikethroughOffset());
-        System.out.println(lm.getAscent());
-        Rectangle2D r = frame.getFontMetrics(frame.getFont()).getStringBounds("-", frame.getGraphics());
-        System.out.println(r);
-    }
+//    public static void main(String[] args) {
+//        JMathPane panel = new JMathPane() {
+//
+//            @Override
+//            public JToolTip createToolTip() {
+//                return new JMathToolTip();
+//            }
+//
+//        };
+//        JFrame frame = new JFrame("test frame");
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        frame.setContentPane(panel);
+//        panel.setText("<html><p>base<math><mfenced open='{' close='' ><mtable><mtr><mtd>ja</mtd><mtd> if a>2</mtd></mtr><mtr><mtd>nee </mtd><mtd> </mtd></mtr></mtable></mfenced></math>"
+//                + "<p>base<math><mover><mi>AB</mi><mo>\u2192</mo></mover></math>line <math><munder><mi>y</mi><mi>x</mi></munder></math> en <math><munderover><mi>base</mi><mi>under</mi><mi>over</mi></munderover></math>"
+//                + "<p>lang wrap en meer en <math><mfrac><mrow>aap</mrow><mrow>noot</mrow></mfrac>||<mtable><mrow>aap</mrow><mrow>noot</mrow></mtable></math>meer en meer en meer en zo door..."
+//                + "<p>base<math><mo>-</mo><mfrac><mn>1</mn><mn>2</mn></mfrac></math>"
+//                + "<p><math><msub><mi>e</mi><mrow><mi>\u03c0</mi>"
+//                + "<mo>-</mo><mfrac><mn>1</mn><mn>2</mn></mfrac></mrow></msub></html>");
+//
+////		panel.setText("<html><p>--<math><mfrac><mtext>aap</mtext><mtext>no-ot</mtext></mfrac></math>-<math><mfrac><mrow>aap</mrow><mrow>no-ot</mrow></mfrac></math>-</html>");
+//        panel.setToolTipText(panel.getText());
+//        frame.setSize(100, 100);
+//        frame.setVisible(true);
+//        LineMetrics lm = frame.getFontMetrics(frame.getFont()).getLineMetrics("x", frame.getGraphics());
+//        System.out.println(lm.getStrikethroughOffset());
+//        System.out.println(lm.getAscent());
+//        Rectangle2D r = frame.getFontMetrics(frame.getFont()).getStringBounds("-", frame.getGraphics());
+//        System.out.println(r);
+//    }
 
 }

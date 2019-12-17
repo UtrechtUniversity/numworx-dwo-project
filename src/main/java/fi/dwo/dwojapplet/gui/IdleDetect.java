@@ -109,19 +109,19 @@ public class IdleDetect implements AWTEventListener, Runnable  {
   
   // TESTING 
   
-  public static void main(String...args) {
-    JFrame f = new JFrame("test");
-    f.setContentPane(new JPanel());
-    JButton exit = new JButton("exit"); f.getContentPane().add(exit);
-    JTextField field = new JTextField("test"); f.getContentPane().add(field);
-    exit.addActionListener(ev -> instance.stop());
-    field.addActionListener(ev -> System.out.println(ev.getActionCommand()));
-    instance.addIdleListener(ev -> System.out.println(ev));
-    f.pack();
-    f.show();
-    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    instance.start();
-  }
+//  public static void main(String...args) {
+//    JFrame f = new JFrame("test");
+//    f.setContentPane(new JPanel());
+//    JButton exit = new JButton("exit"); f.getContentPane().add(exit);
+//    JTextField field = new JTextField("test"); f.getContentPane().add(field);
+//    exit.addActionListener(ev -> instance.stop());
+//    field.addActionListener(ev -> System.out.println(ev.getActionCommand()));
+//    instance.addIdleListener(ev -> System.out.println(ev));
+//    f.pack();
+//    f.show();
+//    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//    instance.start();
+//  }
  
   
 }
