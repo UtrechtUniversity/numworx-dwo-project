@@ -630,7 +630,9 @@ public class PublicUserManager {
             pUser.setGivenName(givenName);
             pUser.setInsertion(insertion);
             pUser.setLastname(familyName);
-            pUser.setPassword(Long.toHexString(secureRandom.nextLong()));
+// 128 bit random
+            byte[] random = new byte[16] ;secureRandom.nextBytes(random);
+            pUser.setPassword(MD5.getHashString(random));
             pUser.setRegisterDate(DwoDateUtilities.getCurrentDwoDate());
             pUser.setUsername(userIdent + '@' + school.getSchoolLogin());
             pUser.setSchoolGroupId(SchoolGroupManager.findBySchoolAndRole(school, roleType).getSchoolGroupID());
