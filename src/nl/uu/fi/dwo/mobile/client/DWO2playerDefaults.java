@@ -25,9 +25,9 @@ public class DWO2playerDefaults extends DWOplayerDefaults implements DwoConstant
 		launchData = http +"//"
 				+ host
 				+ "/dwo/rest/public/scoData/getJSONLaunchDataBytes?scoId=";
-		courseDescription = http + "//"
-				+ host
-				+ "/dwo/rest/public/course/getCourseDescription?courseId=";		
+//		courseDescription = http + "//"
+//				+ host
+//				+ "/dwo/rest/public/course/getCourseDescription?courseId=";		
 	}
 
 	@Override

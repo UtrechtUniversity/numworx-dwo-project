@@ -216,4 +216,9 @@ public class DummyRPCHandler implements RPCHandler {
     return null;
   }
 
+  @Override
+  public Promise<JSONValue> getCourseDescription(Object file) {
+    return null;
+  }
+
 }

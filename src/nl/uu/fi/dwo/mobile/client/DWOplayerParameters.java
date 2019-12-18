@@ -67,7 +67,7 @@ public interface DWOplayerParameters {
 	EventBus getEventBus();
 // More to come....
 	Prepare getPrepareInstance();
-	String getCourseDescription();
+//	String getCourseDescription();
 	String getCDN();
 	SecureMode getSecureMode();
 	String getDwoEnv();

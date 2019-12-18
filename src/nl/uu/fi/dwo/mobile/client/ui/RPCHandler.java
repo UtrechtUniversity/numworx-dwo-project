@@ -77,4 +77,6 @@ public interface RPCHandler {
 
 // V5 stuff
 	Promise<XapiManager> getLRS();
+
+    Promise<JSONValue> getCourseDescription(Object file);
 }

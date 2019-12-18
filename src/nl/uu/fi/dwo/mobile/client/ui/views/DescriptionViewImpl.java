@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import org.osgi.util.promise.Promise;
+
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
@@ -20,23 +22,22 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSte
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 import com.google.gwt.canvas.dom.client.CssColor;
-import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
-public class DescriptionViewImpl extends XMLView implements DescriptionView, EntryPoint, OpdrNavIF {
+public class DescriptionViewImpl extends XMLView implements DescriptionView, OpdrNavIF {
 
-	private static final String GET_COURSE_DESCRIPTION = 
-			DWOplayer.PARAMETERS.getCourseDescription();
+//	private static final String GET_COURSE_DESCRIPTION = 
+//			DWOplayer.PARAMETERS.getCourseDescription();
 	
 	
 	private SimplePanel main;
@@ -58,12 +59,12 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Ent
 		return main;
 	}
 
-	@Override
-	public void onModuleLoad() {
-		int courseID = 13033; // lessenseries/onderbouw/kwadratische vergelijkingen
-		setupModule(courseID);		
-		RootPanel.get().add(asWidget());
-	}
+//	@Override
+//	public void onModuleLoad() {
+//		int courseID = 13033; // lessenseries/onderbouw/kwadratische vergelijkingen
+//		setupModule(courseID);		
+//		RootPanel.get().add(asWidget());
+//	}
 
 	public DescriptionViewImpl() {
 		super();
@@ -84,11 +85,16 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Ent
 	
 
 	@Override
+  protected Promise<JSONValue> getJSONLaunchDataBytes(String file) {
+    return DWOplayer.clientfactory.getRPCHandler().getCourseDescription(file);
+  }
+
+  @Override
 	public void setupModule(Object id) {
-		loading.setText("loading course description " + id);
+		loading.setText(DwoLocalesForGWT.instance.NUM_TBL_FETCHINGDATA());
 		main.setWidget(loading);
-		String xml = GET_COURSE_DESCRIPTION + id;
-		loadJSON_org(xml);
+		String xml = "=" + id;
+		loadJSON(xml);
 	}
 
 	@SuppressWarnings("unchecked")

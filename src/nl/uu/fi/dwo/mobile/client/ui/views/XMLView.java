@@ -495,8 +495,12 @@ public abstract class XMLView {
 				logger.log(Level.SEVERE, exception.toString(), exception);
 			}
 		};
-		return DWOplayer.clientfactory.getRPCHandler().getJSONLaunchDataBytes(file).then(success, failure);
+		return getJSONLaunchDataBytes(file).then(success, failure);
 	}
+
+  protected Promise<JSONValue> getJSONLaunchDataBytes(String file) {
+    return DWOplayer.clientfactory.getRPCHandler().getJSONLaunchDataBytes(file);
+  }
 	
 	Promise<Boolean> loadJSON_org(String file) {
 		 
