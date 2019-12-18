@@ -886,7 +886,8 @@ public class PublicUserManager {
             transport.close();
             result = TextMapper.getText(TextMapper.LBL_EMAIL_WITH_AUTHCODE_SENT);
         } else {
-            result = TextMapper.getText(TextMapper.LBL_UNKNOWN_COMBINATION);
+            LOG.log(Level.SEVERE, request.getRemoteAddr() + " password reset failure " + usercode + " " + email);
+            result = TextMapper.getText(TextMapper.LBL_EMAIL_WITH_AUTHCODE_SENT);
         }
         //Always wait 30 seconds before response.        
         sleep(3000); //shorter for debugging
