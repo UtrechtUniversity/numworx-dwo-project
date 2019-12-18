@@ -47,7 +47,6 @@ public class PublicScoDataManager {
 
   private static final Logger LOG = Logger.getLogger(PublicScoDataManager.class.getName());
   private static final boolean SECURITY = true;
-  private String LIMITED = "l";
   private void throwLoginNeeded() {
     throw new Dwo2RestException(Dwo2ExceptionCode.Rest_LoginNeeded, "Login needed");
 }
@@ -74,7 +73,7 @@ public class PublicScoDataManager {
       if (scoContext.getSchoolID() != null)
         throwLoginNeeded();
       PersistentDwoProfile profile = DwoProfileManager.findEntity(scoContext.getDwoProfileID());
-      if ( profile.getDwoProfileRights().contains(LIMITED))
+      if ( profile.isLimited())
         throwLoginNeeded();      
     }
     byte[] launchData = scoData.getLaunchdatabytes();

@@ -45,7 +45,6 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 public class SecuredUserResultsManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredUserResultsManager.class.getName());
-    private static final CharSequence LIMITED = "l";
 
     @PUT
     @Produces({"application/json"})
@@ -88,7 +87,7 @@ public class SecuredUserResultsManager {
             if (parent.getSchoolID().longValue() != school.getSchoolID().longValue()) {
             return Response.ok(result, "application/json").cacheControl(cc).build();//List<DomStudentScoContext>
             }
-        } else if (profile.getDwoProfileRights().contains(LIMITED)) {
+        } else if (profile.isLimited()) {
             // assert school in profile database....
         }
 // userid must match

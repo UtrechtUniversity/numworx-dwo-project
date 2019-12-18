@@ -41,8 +41,6 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 public class PublicScoContextManager {
 
 	private static final Logger LOG = Logger.getLogger(PublicScoContextManager.class.getName());
-
-	private String LIMITED = "l";
 	
 	/** get scos of a course.
 		If profile is Limited, no sco's
@@ -61,7 +59,7 @@ public class PublicScoContextManager {
 // Security, only non limited profiles are public 		
 		Long pid = parent.getDwoProfileID();
 		PersistentDwoProfile profile = DwoProfileManager.findEntity(pid);
-		if ( profile.getDwoProfileRights().contains(LIMITED))
+		if ( profile.isLimited())
 			throwLoginNeeded();
 // only public courses
 		if ( parent.getSchoolID() != null)
@@ -99,7 +97,7 @@ public class PublicScoContextManager {
 		{
 // Security, only non limited profiles are public 		
 		PersistentDwoProfile profile = DwoProfileManager.findEntity(pid);
-		if ( profile.getDwoProfileRights().contains(LIMITED))
+		if ( profile.isLimited())
 			throwLoginNeeded();
 		}
 		Long id = MySQLPersistenceId.getNativeId(rest.getDomScoContext());
@@ -130,7 +128,7 @@ public class PublicScoContextManager {
         		PersistentDwoProfile profile = DwoProfileManager.findEntity(course.getDwoProfileID());
         		if(
         				course.getSchoolID() != null ||
-        				profile.getDwoProfileRights().contains(LIMITED))
+        				profile.isLimited())
         		{
         			LOG.log(Level.WARNING, "Illegal access to " + scoId);
         			return Response.status(Status.NOT_FOUND).build();

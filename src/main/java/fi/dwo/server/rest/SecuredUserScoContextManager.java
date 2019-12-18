@@ -1,6 +1,5 @@
 package fi.dwo.server.rest;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,8 +49,6 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 @Path("/secure/user/scoContext")
 public class SecuredUserScoContextManager {
     private static final Logger LOG = Logger.getLogger(SecuredUserScoContextManager.class.getName());
-	
-	private String LIMITED = "l";
     private static final String PUBLIC_SCO_GET_IMAGE = "../../../public/scoContext/getImage";
 
 	/** get scos of a course.
@@ -101,7 +98,7 @@ public class SecuredUserScoContextManager {
 				//return Collections.emptyList();
 			}
 		} else {
-			if (profile.getDwoProfileRights().contains(LIMITED)) {
+			if (profile.isLimited()) {
 				// assert school in profile database....
 			}
 		}
@@ -195,7 +192,7 @@ public class SecuredUserScoContextManager {
 			default:
 			}
 		} else {
-			if (profile.getDwoProfileRights().contains(LIMITED)) {
+			if (profile.isLimited()) {
 				// assert school in profile database....
 			}
 		}

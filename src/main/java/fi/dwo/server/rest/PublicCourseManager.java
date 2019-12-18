@@ -67,6 +67,16 @@ public class PublicCourseManager {
         try {
             PersistentCourse course = CourseManager.findEntity(courseId);
             if(course == null) return "{}"; // Not fatal
+            if (SECURITY) {
+              if (course.getSchoolID() != null) {
+                  return "{}";
+              } else {
+                PersistentDwoProfile profile = DwoProfileManager.findEntity(course.getCourseID());
+                if (profile.isLimited()) {
+                  return "{}";               
+                }
+              }
+            }
             Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(course.getDescription(), null); // FIXM load wiskopdr.jar
             StringWriter writer = new StringWriter();
 			JSONEncoder.encode(map, writer, null); // FIXME, load wiskopdr.jar
@@ -76,9 +86,7 @@ public class PublicCourseManager {
 			return "{}";
 		}
     }
-    
-    private static String LIMITED =  "l"; // Fixme ergens in PersistentDwoProfile?
-    
+        
     @PUT
     @Path("/getRoot")
     @Produces({"application/json"})
@@ -92,7 +100,7 @@ public class PublicCourseManager {
     		Long id = MySQLPersistenceId.getNativeId(domDwoProfile);
     		PersistentDwoProfile profile = DwoProfileManager.findEntity(id);
 if(SECURITY)
-    		if ( profile.getDwoProfileRights().contains(LIMITED))
+    		if ( profile.isLimited())
     		{
     			throwLoginNeeded();
     		}
@@ -130,7 +138,7 @@ if(SECURITY)
 if(SECURITY)
     		if ( parent.getSchoolID() != null || 
 //   			 ! parent.isWithChildren()	||
-    			 profile.getDwoProfileRights().contains(LIMITED)
+    			 profile.isLimited()
 // Verify context: profile matches...
 //    			|| !rest.getDomDwoProfile().getId().equals(profile.buildPersistenceId())
     		)
@@ -160,7 +168,7 @@ if(SECURITY)
     		PersistentDwoProfile profile = DwoProfileManager.findEntity(parent.getDwoProfileID());
 if(SECURITY) 
     		if ( parent.getSchoolID() != null || 
-    			 profile.getDwoProfileRights().contains(LIMITED))
+    			 profile.isLimited())
     			throwLoginNeeded();
 // TODO Verify context: profile matches...
     		if (!SECURITY || rest.getDomDwoProfile().getId().equals(profile.buildPersistenceId()))    		
@@ -184,7 +192,7 @@ if(SECURITY)
         		PersistentDwoProfile profile = DwoProfileManager.findEntity(course.getDwoProfileID());
         		if(
         				course.getSchoolID() != null ||
-        				profile.getDwoProfileRights().contains(LIMITED))
+        				profile.isLimited())
         		{
         			LOG.log(Level.WARNING, "Illegal access to " + courseId);
         			return Response.status(Status.NOT_FOUND).build();

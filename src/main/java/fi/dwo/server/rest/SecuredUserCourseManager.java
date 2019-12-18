@@ -143,9 +143,7 @@ public class SecuredUserCourseManager {
 			return "{}";
 		}
     }
-    
-    private static String LIMITED =  "l"; // Fixme ergens in PersistentDwoProfile?
- 
+     
     @PUT
     @Path("/getSchool")
     @Produces({"application/json"})
@@ -190,7 +188,7 @@ public class SecuredUserCourseManager {
 // Security, only non limited profiles are public 		
     		long id = MySQLPersistenceId.getNativeId(domDwoProfile);
     		PersistentDwoProfile profile = DwoProfileManager.findEntity(id);
-    		if ( profile.getDwoProfileRights().contains(LIMITED))
+    		if ( profile.isLimited())
     		{
     			PersistentHasRole hr = phr;
     			PersistentSchool limited = HasRoleUtilManager.getSchoolforHasRole(hr);
@@ -240,7 +238,7 @@ public class SecuredUserCourseManager {
     		PersistentDwoProfile profile = DwoProfileManager.findEntity(parent.getDwoProfileID());
     		if ( parent.getSchoolID() != null || 
     			 ! parent.isWithChildren()	||
-    			 profile.getDwoProfileRights().contains(LIMITED)
+    			 profile.isLimited()
 // Verify context: profile matches...
     			|| !profile.getDwoProfileID().equals(MySQLPersistenceId.getNativeId(domDwoProfile))
     		)
@@ -333,7 +331,7 @@ public class SecuredUserCourseManager {
 // TODO Verify parent is public and profile is not limited OR user.school matches course.school
     		PersistentDwoProfile profile = DwoProfileManager.findEntity(parent.getDwoProfileID());
 //    		if ( parent.getSchoolID() != null || 
-//    			 profile.getDwoProfileRights().contains(LIMITED))
+//    			 profile.isLimited())
 //    			return null;
 
 // Verify context: profile matches...  		
