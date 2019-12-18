@@ -22,11 +22,11 @@
 	}
 	else if ( needSEB ) {
 %>
-<a href='sebs://<%=server %>/ho/en/exam/leerling.seb'>Start de beveiligde <strong>exam</strong> omgeving</a>
+<a href='sebs://<%=server %>/ho/en/exam/leerling.seb'>Start de beveiligde <strong>toets</strong> omgeving</a>
 <%
 	} else {
 %>
-	  <a href='/ho/en/exam/toets_nl.jsp'>Start de beveiligde <strong>exam</strong> omgeving</a>
+	  <a href='/ho/en/exam/toets_nl.jsp'>Start de beveiligde <strong>toets</strong> omgeving</a>
 <%	  
 	}
 

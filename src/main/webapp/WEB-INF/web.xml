@@ -52,6 +52,20 @@
         <url-pattern>/gwtclient/gwtclient/*</url-pattern>
     </filter-mapping>
     <filter>
+    	<filter-name>exam</filter-name>
+    	<filter-class>fi.servlet.dwomaccess.SubnetFilter</filter-class>
+    	<init-param>
+    		<param-name>subPathFilter</param-name>
+    		<param-value>^/dwo/rest/sec[^/]+/student/exam/.*$</param-value>
+    	
+    	</init-param>
+    </filter>
+    <filter-mapping>
+    	<filter-name>exam</filter-name>
+    	<url-pattern>/dwo/rest/*</url-pattern>
+    </filter-mapping>
+    
+    <filter>
         <filter-name>UrlRewriteFilter</filter-name>
         <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
 
