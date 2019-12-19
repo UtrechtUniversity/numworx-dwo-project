@@ -4,19 +4,10 @@
 <!DOCTYPE html>
 <% 
 	int profile = 100;
-	String query = request.getQueryString();
-	if(query == null)
-	 	query = "?base=/en/he/&locale=nl&profile=" + profile;
-	else 
-	  	query = "?base=/en/he/&locale=nl&profile=" + profile + "&" + query;
-	String hash = request.getParameter("hash");
-	String player = "/gwtclient/index.html";
-
-	if ( hash != null) // Deeplink
-		player = "/dwo/tablet/DWOplayer.jsp";
-	else
-		hash = "";
+    String locale = "nl";
+	String base = "/en/he/";
 %>
+<%@ include file="/dwo/index_util.jsp" %>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
 		<meta name="apple-mobile-web-app-capable" content="yes">
@@ -36,7 +27,7 @@
 		<script type="text/javascript">
 	 		function load() {
 				var search = "<%=query%>"
-				var hash = location.hash || "<%=hash%>";
+				var hash = location.hash || "<%=hash%>"; // FIXME check hash op #s:1234 of #c:1234 #guest:
 				var id = search + hash;
 				var element = document.getElementsByTagName("iframe")[0];
 				element.setAttribute("src", "<%=player%>"+id);

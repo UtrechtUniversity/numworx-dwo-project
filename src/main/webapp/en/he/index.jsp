@@ -1,22 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/dwo/saml_util.jsp" %>
+<%@ page import='java.util.regex.*' %>
 <!DOCTYPE html>
 <% 
 	int profile = 100;
-	String query = request.getQueryString();
-	if(query == null)
-	 	query = "?base=/en/he/&locale=en&profile=" + profile;
-	else 
-	  	query = "?base=/en/he/&locale=en&profile=" + profile + "&" + query;
-	String hash = request.getParameter("hash");
-	String player = "/gwtclient/index.html";
-
-	if ( hash != null) // Deeplink
-		player = "/dwo/tablet/DWOplayer.jsp";
-	else
-		hash = "";
+	String locale = "en";
+	String base = "/en/he/";
 %>
+<%@ include file="/dwo/index_util.jsp" %>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
 		<meta name="apple-mobile-web-app-capable" content="yes">
