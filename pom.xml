@@ -316,7 +316,7 @@
 					</deployables>
 					<configfiles>
 						<configfile>
-							<file>${project.directory}/src/test/tomcat/context-dwo_devel.xml</file>
+							<file>${project.directory}/src/test/tomcat/${context.xml}</file>
 							<todir>conf/Catalina/localhost/</todir>
 							<tofile>context.xml.default</tofile>
 						</configfile>
@@ -331,10 +331,13 @@
 				<!--<artifactId>tomcat8-maven-plugin</artifactId> -->
 				<!--<version>3.0-r1756463</version> -->
 				<configuration>
+                        <systemProperties>
+                            <ENV_NOSEB>true</ENV_NOSEB>
+                        </systemProperties>
 					<server>TomcatServer</server>
 					<path>/</path>
 					<warSourceDirectory>${project.build.directory}/${project.build.finalName}</warSourceDirectory>
-					<contextFile>src/test/tomcat/context-dwo_devel.xml</contextFile>
+					<contextFile>src/test/tomcat/${context.xml}</contextFile>
 				</configuration>
 	<dependencies>
 		<dependency>
@@ -576,6 +579,7 @@
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testeb2server</aws.environmentName>
         <tomcat7.version>7.0.76</tomcat7.version>
+        <context.xml>context.xml</context.xml>
 	</properties>
 	<scm>
 		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/trunk</developerConnection>
