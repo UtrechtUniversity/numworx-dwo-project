@@ -23,7 +23,7 @@ public class SubnetFilter implements Filter {
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
     IPRANGE = System.getProperty("ENV_IPRANGE", "");
-    boolean needSEB = !Boolean.getBoolean("ENV_NOSEB");
+    needSEB = !Boolean.getBoolean("ENV_NOSEB");
     String subPathFilter = filterConfig.getInitParameter("subPathFilter");
     if (subPathFilter != null) {
       this.subPathFilter = subPathFilter;
@@ -56,7 +56,7 @@ public class SubnetFilter implements Filter {
         if (requestHash == null || requestHash.isEmpty()) {
           forbidden(response);
         }
-        // Calculate hashes.
+        // TODO Calculate hashes, see DWOServer
       }
       
     }
