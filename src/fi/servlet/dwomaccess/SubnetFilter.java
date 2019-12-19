@@ -1,6 +1,7 @@
 package fi.servlet.dwomaccess;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 
 public class SubnetFilter implements Filter {
 
+  private static Logger LOG = Logger.getLogger(SubnetFilter.class.getName());
+  
   String IPRANGE = System.getProperty("ENV_IPRANGE", "");
   boolean needSEB = !Boolean.getBoolean("ENV_NOSEB");
   private String subPathFilter = ".*";
@@ -29,6 +32,10 @@ public class SubnetFilter implements Filter {
       this.subPathFilter = subPathFilter;
     }
     pattern = Pattern.compile(this.subPathFilter);
+    
+    LOG.info("IPRANGE = " + IPRANGE);
+    LOG.info("needSEB = " + needSEB);
+    LOG.info("pattern = " + subPathFilter);
     
   }
 
@@ -47,6 +54,7 @@ public class SubnetFilter implements Filter {
         
       String host = request.getRemoteAddr();
       if ( ! Subnet.netMatchRange(IPRANGE, host) ) {
+    	LOG.warning("host not in range " + host);
         forbidden(response);
         return;
       }
@@ -54,7 +62,8 @@ public class SubnetFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         String requestHash = req.getHeader("X-SafeExamBrowser-RequestHash"); 
         if (requestHash == null || requestHash.isEmpty()) {
-          forbidden(response);
+        	LOG.warning("requestHash missing");
+        	forbidden(response);
         }
         // TODO Calculate hashes, see DWOServer
       }
