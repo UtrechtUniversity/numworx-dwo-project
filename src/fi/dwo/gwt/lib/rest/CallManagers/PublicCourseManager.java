@@ -121,4 +121,10 @@ public class PublicCourseManager implements CourseManager {
 		return defer.getPromise();
 	}
 
+	@Override
+	public Promise<JSONValue> getCourseDescription(DomCourse course, DomDwoProfile profile, DomContext context,
+			DomSchoolClassId clsid) {
+		return getCourseDescription(course, profile, context);
+	}
+
 }

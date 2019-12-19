@@ -77,4 +77,17 @@ public class SecuredUserCourseManager implements CourseManager {
 		return result.getPromise();
 	}
 
+	@Override
+	public Promise<JSONValue> getCourseDescription(DomCourse course,
+			DomDwoProfile profile, DomContext context, DomSchoolClassId clsid) {
+		PromiseCallback<JSONValue> result = new PromiseCallback<JSONValue>();
+		RestCourse rest = new RestCourse();
+		rest.setDomDwoProfile(profile);
+		rest.setRestContext(context);
+		rest.setDomCourse(course);
+		rest.setSchoolClassID(clsid);
+		service.getCourseDescription(PathId.getId(context),rest, result);
+		return result.getPromise();
+	}
+
 }

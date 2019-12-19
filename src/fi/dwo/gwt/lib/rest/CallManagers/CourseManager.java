@@ -27,4 +27,7 @@ public interface CourseManager {
 	public Promise<JSONValue> getCourseDescription(DomCourse id,
 			DomDwoProfile profile, DomContext context);
 
+	Promise<JSONValue> getCourseDescription(DomCourse course, DomDwoProfile profile, DomContext context,
+			DomSchoolClassId clsid);
+
 }
