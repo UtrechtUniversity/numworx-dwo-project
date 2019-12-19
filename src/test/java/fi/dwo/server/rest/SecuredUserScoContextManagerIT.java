@@ -36,6 +36,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.entities.RestScoContextId;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 public class SecuredUserScoContextManagerIT {
@@ -77,7 +78,7 @@ public class SecuredUserScoContextManagerIT {
   }
 
   @Test
-  public void testGetData() throws Dwo2Exception {
+  public void testGetDataStudent() throws Dwo2Exception {
     SecurityContext sc = new TestSecurityContext("user02", RoleType.STUDENT);//school01
     RestScoContextId rest = new RestScoContextId();
     DomContext restContext = new DomContext();
@@ -87,6 +88,39 @@ public class SecuredUserScoContextManagerIT {
 
     try {
         PersistentHasRole pHasRole = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, pSchool, RoleType.STUDENT);
+        domHasRole = pHasRole.buildDomHasRole();
+    } catch (Dwo2Exception ex) {
+        Logger.getLogger(SecuredTeacherResultsManagerIT.class.getName()).log(Level.SEVERE, null, ex);
+        fail("Could not find student hasRole");
+    }
+    restContext.setDomHasRole(domHasRole);
+    rest.setRestContext(restContext);
+    rest.setDomScoContext(new DomScoContextId());
+    rest.getDomScoContext().setId(PersistentScoContext.buildPersistenceId(1L));
+    rest.setDomDwoProfile(new DomDwoProfileId(PersistentDwoProfile.buildPersistenceId(1L)));
+    rest.setSchoolClassID(new DomSchoolClassId(PersistentSchoolClass.buildPersistenceId(1L)));
+    
+    DomScoData data;
+	try {
+		data = manager.getData(sc, rest);
+		fail("should fail");
+	} catch (Dwo2Exception e) {
+		assertEquals("illegal action", Dwo2ExceptionCode.User_IllegalAction, e.getDwo2Code());
+	}
+
+  }
+
+  @Test 
+  public void testGetDataTeacher() throws Dwo2Exception {
+    SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
+    RestScoContextId rest = new RestScoContextId();
+    DomContext restContext = new DomContext();
+    DomHasRole domHasRole = null;
+    PersistentUser pUser = UserManager.findByUserName("user07");
+    PersistentSchool pSchool = SchoolManager.findBySchoolLogin("school01");//id =3
+
+    try {
+        PersistentHasRole pHasRole = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, pSchool, RoleType.TEACHER);
         domHasRole = pHasRole.buildDomHasRole();
     } catch (Dwo2Exception ex) {
         Logger.getLogger(SecuredTeacherResultsManagerIT.class.getName()).log(Level.SEVERE, null, ex);
