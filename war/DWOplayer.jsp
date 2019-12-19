@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.util.regex.*" %>
 <!doctype html>
 <!-- The DOCTYPE declaration above will set the     -->
 <!-- browser's rendering engine into                -->
@@ -7,11 +8,16 @@
 <!-- with a "Quirks Mode" doctype is not supported. -->
 <%
 	String profile = request.getParameter("profile");
-	if(profile == null) profile="77";
+	if(profile == null||profile.isEmpty()) profile="77";
+	else if (!Pattern.matches("\\d+", profile)) {
+	  response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+	  return;
+	}
 	String dwo_env = System.getProperty("DWO_ENV", "app");
 	String base = request.getParameter("base");
-// FIXME too much urls allowed
-	if(base == null || base.contains("'")) 
+	Pattern legal = Pattern.compile("/[a-z]+(/[a-z]+)*/");
+// not too much urls allowed
+	if(base == null || base.contains("'") || !legal.matcher(base).matches() ) 
 	  base = "";
 	else {
 	  base = "<base href='" + base + "'>"; 
@@ -43,7 +49,7 @@
     <!-- be added before this line.                -->
     <!--                                           -->
     <script type="text/javascript" src="/dwo/apps/deploy.jsp" ></script>
-    <script type="text/javascript" language="javascript" src="/dwo/tablet/DWOplayer/DWOplayer.nocache.js"></script>
+    <script type="text/javascript" src="/dwo/tablet/DWOplayer/DWOplayer.nocache.js"></script>
   </head>
   <body id="main">
 	<img src='/dwo/tablet/images/numworx/fontloader.svg' >
