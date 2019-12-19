@@ -115,10 +115,10 @@ public class SecuredUserCourseManager {
         			List<PersistentClassCourse> pcc = ClassCourseManager.findEntities(schoolClass, course);
         			PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(user.getId(), cid, phr.getSchoolGroup().getSchoolGroupID());
     				PersistentStudentOfClass soc = StudentOfClassManager.findEntity(socId);
-        			if(pcc.isEmpty() || soc == null) 
+        			if(pcc.isEmpty() || soc == null) // FIXME ook bij toets hier!
         				return "{}";
         			PersistentClassCourse pcc1 = pcc.get(0);
-        			if(pcc1.getType().intValue() == 1 || pcc1.getViewState() != ViewState.studentsAndTeachers) {
+        			if( pcc1.getViewState() != ViewState.studentsAndTeachers) {
         				return "{}";
         			}
         			java.util.Date now = new java.util.Date();
