@@ -343,7 +343,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			@Override
 			public Promise<JSONValue> apply(DomDwoProfile resolved)
 		    {
-				return courseManager.getCourseDescription(id, resolved,context);
+				return courseManager.getCourseDescription(id, resolved,context, DwoGlobalVars.instance().getCurrentSchoolClass());
 			}
 			
 		};
@@ -366,7 +366,11 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 				LOG.info("verifyTOTP:" + resolved.getValue());
 				JSONBoolean ok = resolved.getValue().isBoolean();
 				if(ok != null && ok.booleanValue())
-					return null;
+				{ // switch to secure/student/exam stuff
+				  scoManager = new SecuredUserScoContextManager(false); // not yet			  
+	              scormApi = new SecuredStudentScoDataManager(true);
+				  return null;
+				}
 				throw new Dwo2Exception(Dwo2ExceptionCode.Exam_AuthenticationError, "verification failed: " + resolved.getValue());
 			}
 		})
