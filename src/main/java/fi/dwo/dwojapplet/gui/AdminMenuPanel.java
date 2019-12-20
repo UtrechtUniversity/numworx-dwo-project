@@ -35,19 +35,21 @@ public class AdminMenuPanel extends UserMenuPanel {
         schoolManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_SCHOOL_MANAGEMENT));
         schoolManagementButton.addActionListener(this);
         this.add(schoolManagementButton);
+        createGap();
         userManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_USER_MANAGEMENT));
         userManagementButton.addActionListener(this);
         this.add(userManagementButton);
         createGap();
         profileManagementButton = new MenuPanelButton(new DwoProfileAction());
         this.add(profileManagementButton);
+        createGap();
         this.add(new MenuPanelButton(new AppletConfigAction()));
         createGap();
 
-        /* Add CourseManagement Button */
-        if (CenterPanel.isIconizer()) {
-            return;
-        }
+//        /* Add CourseManagement Button */
+//        if (CenterPanel.isIconizer()) {
+//            return;
+//        }
 //        courseManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_COURSE_MANAGEMENT));
 ////        fm = courseManagementButton.getFontMetrics(courseManagementButton.getFont());
 ////        courseManagementButton.setSize(this.getSize().width - 20, fm.getHeight() + 10);

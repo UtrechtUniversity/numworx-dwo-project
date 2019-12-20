@@ -24,6 +24,7 @@ import fi.dwo.dwojapplet.domain.AppletConfig;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DWO;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.SchoolPasswdMap;
@@ -33,6 +34,7 @@ import fi.dwo.dwojapplet.gui.GuiCreatorTeacher.LazyAppletConfig;
 import fi.dwo.dwojapplet.gui.action.CourseManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoParameterAction;
+import fi.dwo.dwojapplet.gui.action.WrapSco;
 import fi.dwo.dwojapplet.persistence.StoreCreator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.ConfigManager;
@@ -217,6 +219,22 @@ public class GuiCreatorAdmin extends GuiCreator {
     @Override
     public CenterSubPanel getScoManagementPanel(Course course) {
         return new ScoManagementPanel(course);
+    }
+ 
+    public CenterSubPanel getHTML5ScoPanel(Sco sco) {
+      if (sco.hasFeature(Sco.JSON_OUT) && DwoHelper.hasProfileRight(DwoHelper.PREVIEW)) {
+        dwo.setWait();
+        try {
+          final WrapSco wrap = new WrapSco(sco);
+          CenterSubPanel csp = getScoPanel(wrap);
+          dwo.setCurrentSco(wrap);
+          return csp;
+        } finally {
+          dwo.setReady();
+        }
+      } else {
+        return getScoPanel(sco);
+      }
     }
 
     /**
@@ -441,6 +459,14 @@ public class GuiCreatorAdmin extends GuiCreator {
         config.setName(name);
         config.setImageSource(PersistentScoContext.buildPersistenceId((long)sco.getID()));
         return config;
+    }
+    /**
+     * check access rights of object
+     * @param o
+     * @return can write
+     */
+    public boolean readOnly(Object o) {
+      return false;
     }
 
 }
