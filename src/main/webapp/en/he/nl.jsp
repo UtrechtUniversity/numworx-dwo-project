@@ -27,7 +27,9 @@
 		<script type="text/javascript">
 	 		function load() {
 				var search = "<%=query%>"
-				var hash = location.hash || "<%=hash%>"; // FIXME check hash op #s:1234 of #c:1234 #guest:
+				var re = /^#[a-z]+:\d*$/;
+				var hash = location.hash || "<%=hash%>"; // check hash op #s:1234 of #c:1234 #guest:
+				if (!re.test(hash)) hash = "";
 				var id = search + hash;
 				var element = document.getElementsByTagName("iframe")[0];
 				element.setAttribute("src", "<%=player%>"+id);

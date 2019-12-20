@@ -29,6 +29,8 @@
 	 		function load() {
 				var search = "<%=query%>"
 				var hash = location.hash || "<%=hash%>";
+				var re = /^#[a-z]+:\d*$/;
+				if (!re.test(hash)) hash = "";
 				var id = search + hash;
 				var element = document.getElementsByTagName("iframe")[0];
 				element.setAttribute("src", "<%=player%>"+id);
