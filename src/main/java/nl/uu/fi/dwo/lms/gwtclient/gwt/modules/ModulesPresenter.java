@@ -6,6 +6,7 @@ import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Window.Location;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -154,18 +155,18 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         if (IFRAME)
           u.setParameter("header", "none");
         String base = Location.getParameter("base");
-        if(base != null) {
+        if(base != null && !base.isEmpty()) {
           u.setParameter("base",base);
         }
         String profile = Location.getParameter("profile");
-        if(profile == null || profile.isEmpty()) profile = "77";
+        if(profile == null || profile.isEmpty() || !RegExp.compile("^\\d+$").test(profile)) profile = "77";
         u.setParameter("profile",profile);
         String locale = LocaleInfo.getCurrentLocale().getLocaleName();
         if ("default".equals(locale) ) locale =  "nl";
         u.setParameter("locale",locale);
         String responsive = Location.getParameter("responsive");
         if (responsive != null) {
-        	u.setParameter("responsive", responsive);
+        	u.setParameter("responsive", "true");
         }
         String string = u.buildString();
         LOG.info("open URL " + string);
@@ -196,11 +197,11 @@ public class ModulesPresenter implements SwitchViewEventHandler {
        u.setParameter( "header","none");
      //u.setParameter("dwo_env","test");
      String base = Location.getParameter("base");
-     if(base != null) {
+     if(base != null && !base.isEmpty()) {
        u.setParameter("base",base);
      }
      String profile = Location.getParameter("profile");
-     if(profile == null || profile.isEmpty()) profile = "77";
+     if(profile == null || profile.isEmpty()|| !RegExp.compile("^\\d+$").test(profile)) profile = "77";
      u.setParameter("profile",profile);
      String locale = LocaleInfo.getCurrentLocale().getLocaleName();
      if ("default".equals(locale) ) locale =  "nl";
