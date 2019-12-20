@@ -7,6 +7,9 @@
 <!-- "Standards Mode". Replacing this declaration   -->
 <!-- with a "Quirks Mode" doctype is not supported. -->
 <%
+// 	String responsive = request.getParameter("responsive");
+// 	String header = request.getParameter("header");
+
 	String profile = request.getParameter("profile");
 	if(profile == null||profile.isEmpty()) profile="77";
 	else if (!Pattern.matches("\\d+", profile)) {

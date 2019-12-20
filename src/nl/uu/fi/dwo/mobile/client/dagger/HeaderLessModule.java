@@ -4,7 +4,6 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.Window;
 
 import dagger.Binds;

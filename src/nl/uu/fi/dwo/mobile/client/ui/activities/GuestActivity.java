@@ -30,8 +30,7 @@ public class GuestActivity extends MGWTAbstractActivity implements Activity {
 	public void start(AcceptsOneWidget panel, EventBus eventBus) {
 		clientFactory.logout();
 		panel.setWidget(new Label());
-		
-		DWOplayer.dwoProfile
+		clientFactory.getRPCHandler().getDwoProfile()
 			.filter(new Predicate<DomDwoProfileFull>() {
 
 				@Override
