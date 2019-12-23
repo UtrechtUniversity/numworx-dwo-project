@@ -58,6 +58,31 @@ public class Stroke {
 		
 	} 
 	
+	public Stroke(double[] x, double[] y) {
+		ArrayList<DoublePoint> doublePoints = new ArrayList<DoublePoint>();
+		for(int i = 0 ; i < x.length ; i++) {
+			doublePoints.add(new DoublePoint(x[i], y[i]));
+		}
+		while (doublePoints.size() < standardizeLengthNumber+5)	{	
+			doublePoints = insertPoints(doublePoints);
+		}
+		length = getLength(doublePoints);
+//		if(length>250) {
+//			doublePoints = averageSmooth(doublePoints);
+//			parsePoints = standardizeToLength((int)(10*length/40),doublePoints);
+//			parsePointsBox = makeParsingBox(parsePoints);
+//			parseable = false;
+//			return;
+//		}
+		doublePoints = averageSmooth(doublePoints);
+		parsePoints = standardizeToLength(40,doublePoints);
+		parsePointsBox = makeParsingBox(parsePoints);
+		angles = new double[parsePoints.size()-1];
+		makeAngles();
+		makeDAngles();
+		timeStamp = System.currentTimeMillis();
+	}
+	
 	public Stroke(ArrayList<Point> points) {
 		ArrayList<DoublePoint> doublePoints = new ArrayList<DoublePoint>();
 		for(int i = 0 ; i < points.size() ; i++) {
