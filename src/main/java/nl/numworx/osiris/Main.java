@@ -78,7 +78,7 @@ public class Main extends JFrame {
 		in.close();
 		base  = url(c("base","https://numworx.acc.uu.nl/dwo/"));
 		login_URL =  base + c("login", "saml/login.jsp");
-		setTitle("Numworx import (acceptatie) " + c("version") + " " + c("qualifier"));
+		setTitle(c("title", "Numworx import (acceptatie) ") + c("version") + " " + c("qualifier"));
 		chooser = new JFileChooser();
 		FileFilter filter = new FileNameExtensionFilter("CSV UTF-8 (excel)", "csv");
 		chooser.setFileFilter(filter );		

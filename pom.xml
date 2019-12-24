@@ -15,6 +15,8 @@
 		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
 		<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>
 		<app.name>Numworx-import-acceptatie</app.name>
+		<app.base>https://numworx.acc.uu.nl/dwo/</app.base>
+		<app.title>Numworx import (acceptatie) </app.title>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -189,7 +191,14 @@
 			</build>
 		
 		</profile>
-	
+	<profile>
+	<id>prod</id>
+	<properties>
+		<app.name>Numworx-import</app.name>
+		<app.base>https://numworx.uu.nl/dwo/</app.base>
+		<app.title>Numworx import </app.title>
+	</properties>
+	</profile>
 	
 	</profiles>
 </project>
