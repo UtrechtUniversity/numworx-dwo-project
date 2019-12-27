@@ -27,6 +27,15 @@ import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.PushButton;
+import com.vaadin.pointerevents.client.PointerCancelEvent;
+import com.vaadin.pointerevents.client.PointerCancelHandler;
+import com.vaadin.pointerevents.client.PointerDownEvent;
+import com.vaadin.pointerevents.client.PointerDownHandler;
+import com.vaadin.pointerevents.client.PointerEvent;
+import com.vaadin.pointerevents.client.PointerMoveEvent;
+import com.vaadin.pointerevents.client.PointerMoveHandler;
+import com.vaadin.pointerevents.client.PointerUpEvent;
+import com.vaadin.pointerevents.client.PointerUpHandler;
 
 import fi.writemathgwt.client.engine.DoublePoint;
 import fi.writemathgwt.client.engine.Point;
@@ -116,6 +125,11 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			writePanelCanvas.addTouchMoveHandler(touchHandler);
 			writePanelCanvas.addTouchEndHandler(touchHandler);
 		}
+		
+		WritePanelPointerHandler pointerHandler = new WritePanelPointerHandler();
+		(writePanelCanvas.asWidget()).addDomHandler((PointerMoveHandler)pointerHandler, PointerMoveEvent.getType()); 
+		(writePanelCanvas.asWidget()).addDomHandler((PointerUpHandler)pointerHandler, PointerUpEvent.getType()); 
+		(writePanelCanvas.asWidget()).addDomHandler((PointerDownHandler)pointerHandler, PointerDownEvent.getType());
 		paint();
 	}
 	
@@ -220,15 +234,49 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			}
 		}
 	}
-		//ArrayList<DoublePoint> smoothPoints = averageSmoothInt(points);
-//		ArrayList<Point> smoothPoints = points;
-//		if (smoothPoints.size() > 0) {
+		//doublePoints = averageSmooth(doublePoints);
+		
+		
+//		if (doublePoints.size() > 0) {
 //			g.beginPath();
-//			g.moveTo(smoothPoints.get(0).x+panelShiftX, smoothPoints.get(0).y+panelShiftY);
-//			for(int j = 1 ; j <smoothPoints.size() ; j++) {
-//				g.lineTo(smoothPoints.get(j).x+panelShiftX, smoothPoints.get(j).y+panelShiftY);
+//			g.moveTo(8*doublePoints.get(0).x+panelShiftX, 8*doublePoints.get(0).y+panelShiftY-100);
+//			for(int j = 1 ; j <doublePoints.size() ; j++) {
+//				g.lineTo(8*doublePoints.get(j).x+panelShiftX, 8*doublePoints.get(j).y+panelShiftY-100);
 //			}
-//			g.moveTo(smoothPoints.get(0).x+panelShiftX, smoothPoints.get(0).y+panelShiftY);
+//			g.moveTo(8*doublePoints.get(0).x+panelShiftX, 8*doublePoints.get(0).y+panelShiftY-100);
+//			g.closePath();
+//			g.stroke();
+//		}
+//		doublePoints = averageSmooth(doublePoints);
+//		if (doublePoints.size() > 0) {
+//			g.beginPath();
+//			g.moveTo(8*doublePoints.get(0).x+panelShiftX+120, 8*doublePoints.get(0).y+panelShiftY-100);
+//			for(int j = 1 ; j <doublePoints.size() ; j++) {
+//				g.lineTo(8*doublePoints.get(j).x+panelShiftX+120, 8*doublePoints.get(j).y+panelShiftY-100);
+//			}
+//			g.moveTo(8*doublePoints.get(0).x+panelShiftX+120, 8*doublePoints.get(0).y+panelShiftY-100);
+//			g.closePath();
+//			g.stroke();
+//		}
+//		
+//		if (points.size() > 0) {
+//			g.beginPath();
+//			g.moveTo(8*points.get(0).x+panelShiftX+240, 8*points.get(0).y+panelShiftY-100);
+//			for(int j = 1 ; j <points.size() ; j++) {
+//				g.lineTo(8*points.get(j).x+panelShiftX+240, 8*points.get(j).y+panelShiftY-100);
+//			}
+//			g.moveTo(8*points.get(0).x+panelShiftX+240, 8*points.get(0).y+panelShiftY-100);
+//			g.closePath();
+//			g.stroke();
+//		}
+//		doublePoints = averageSmoothInt(points);
+//		if (points.size() > 0) {
+//			g.beginPath();
+//			g.moveTo(8*doublePoints.get(0).x+panelShiftX+360, 8*doublePoints.get(0).y+panelShiftY-100);
+//			for(int j = 1 ; j <doublePoints.size() ; j++) {
+//				g.lineTo(8*doublePoints.get(j).x+panelShiftX+360, 8*doublePoints.get(j).y+panelShiftY-100);
+//			}
+//			g.moveTo(8*doublePoints.get(0).x+panelShiftX+360, 8*doublePoints.get(0).y+panelShiftY-100);
 //			g.closePath();
 //			g.stroke();
 //		}
@@ -356,6 +404,8 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		Point shiftReference;
 		
 		public void onMouseDown(MouseDownEvent e) {
+			if(hasPointerEventSupport)
+				return;
 			e.preventDefault();
 			e.stopPropagation();
 			if (e.getNativeButton() == NativeEvent.BUTTON_RIGHT) {
@@ -372,16 +422,21 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		}
 		
 		public void onMouseMove(MouseMoveEvent e) {
+			if(hasPointerEventSupport)
+				return;
 			e.preventDefault();
 			e.stopPropagation();
 			if(mouseOnLeft) {
 				Point p = toWorldCoordinates(new Point(e.getX(), e.getY()));
 				points.add(p);
 				DoublePoint lastPoint = toScreenCoordinates(doublePoints.get(doublePoints.size()-1));
-				double xD = 0.5*(lastPoint.x + e.getX());
-				double yD = 0.5*(lastPoint.y + e.getY());
+				double xD = 1.0/3*(lastPoint.x + 2*e.getX());
+				double yD = 1.0/3*(lastPoint.y + 2*e.getY());
 				DoublePoint dp = toWorldCoordinates(new DoublePoint(xD, yD));
-				doublePoints.add(dp);
+				double dx = xD-lastPoint.x;
+				double dy = yD-lastPoint.y;
+				//if(dx*dx+dy*dy>1)
+					doublePoints.add(dp);
 				paintLastSegment();
 			}
 			if (mouseOnRight) {
@@ -393,6 +448,8 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		} 
 		
 		public void onMouseUp(MouseUpEvent e) {	
+			if(hasPointerEventSupport)
+				return;
 			e.preventDefault();
 			e.stopPropagation();
 			if (mouseOnLeft) {
@@ -419,6 +476,9 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		boolean writing = false;
 		
 		public void onTouchStart(TouchStartEvent e) {
+			if(hasPointerEventSupport)
+				return;
+			
 			e.preventDefault();
 			e.stopPropagation();
 
@@ -454,6 +514,9 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		
 		public void onTouchMove(TouchMoveEvent e) 
 		{
+			if(hasPointerEventSupport)
+				return;
+			
 			e.preventDefault();
 			e.stopPropagation();
 			
@@ -481,6 +544,9 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		}
 		
 		public void onTouchEnd(TouchEndEvent e) {
+			if(hasPointerEventSupport)
+				return;
+			
 			e.stopPropagation();
 			e.preventDefault();
 
@@ -496,6 +562,121 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			paint();
 		}
 		
+	}
+	
+	private boolean hasPointerEventSupport = false;
+	
+	class WritePanelPointerHandler implements PointerUpHandler, PointerDownHandler, PointerMoveHandler, PointerCancelHandler
+	{
+		Point shiftReference;
+		boolean moving = false;
+		boolean writing = false;
+		
+		int lastTouchX = 0;
+		int lastTouchY = 0;
+		
+		int touchCount = 0;
+		
+		
+		@Override
+		public void onPointerCancel(PointerCancelEvent event) {
+			touchCount--;
+			
+			
+		}
+
+		@Override
+		public void onPointerMove(PointerMoveEvent e) {
+			e.stopPropagation();
+			e.preventDefault();
+			
+			int eventX = e.getRelativeX(writePanelCanvas.getElement());
+			int eventY = e.getRelativeY(writePanelCanvas.getElement());
+			
+			if(touchCount==1 && writing) {	
+				
+					Point p = toWorldCoordinates(new Point(eventX, eventY));
+					points.add(p);
+					DoublePoint lastPoint = toScreenCoordinates(doublePoints.get(doublePoints.size()-1));
+					double xD = 0.5*(lastPoint.x + eventX);
+					double yD = 0.5*(lastPoint.y + eventY);
+					DoublePoint dp = toWorldCoordinates(new DoublePoint(xD, yD));
+					doublePoints.add(dp);
+					paintLastSegment();
+			}
+			if(touchCount==2 && moving) {	
+					int d=(lastTouchX-eventX)*(lastTouchX-eventX)+(lastTouchY-eventY)*(lastTouchY-eventY);
+					if(d<2000) {
+						panelShiftX += eventX-shiftReference.getX();
+						panelShiftY += eventY-shiftReference.getY();
+						shiftReference = new Point(eventX, eventY);
+						paint();
+						lastTouchX = eventX;
+						lastTouchY = eventY;
+					}
+			}
+			
+			e.preventDefault();
+			e.stopPropagation();
+			
+		}
+
+		@Override
+		public void onPointerDown(PointerDownEvent e) {
+			e.stopPropagation();
+			e.preventDefault();
+			
+			touchCount++;
+			
+			hasPointerEventSupport = true;
+			
+			int eventX = e.getRelativeX(writePanelCanvas.getElement());
+			int eventY = e.getRelativeY(writePanelCanvas.getElement());
+			lastTouchX = eventX;
+			lastTouchY = eventY;
+				
+			if(touchCount==1 &&!moving ) {
+				writing = true;
+				Point p = toWorldCoordinates(new Point(eventX, eventY));
+				points.add(p);
+				DoublePoint dp = toWorldCoordinates(new DoublePoint(eventX, eventY));
+				doublePoints.add(dp);
+				paint();
+			}
+			else if(touchCount==2) {
+				moving = true;
+				writing = false;
+				points.clear();
+				doublePoints.clear();
+				shiftReference = new Point(eventX, eventY);
+				paint();
+			}
+				
+			
+			e.preventDefault();
+			e.stopPropagation();
+		}
+
+		@Override
+		public void onPointerUp(PointerUpEvent e) {
+			e.stopPropagation();
+			e.preventDefault();
+			
+			touchCount--;
+			
+			if (!points.isEmpty() && writing) {
+				addStroke();
+			}
+			
+			if (touchCount < 1 ) {
+				writing = false;
+				moving = false;
+			}
+			
+			e.preventDefault();
+			e.stopPropagation();
+			
+		}
 	}
 	
     class CBL implements ClickHandler {
