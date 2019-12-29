@@ -600,13 +600,13 @@
                         <version>1.4</version>
                         <executions>
                             <execution>
-                                <phase>package</phase>
+                                <phase>none</phase>
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
                             </execution>
                             <execution>
-                                <id>verify</id>
+                                <id>none</id>
                                 <goals>
                                     <goal>verify</goal>
                                 </goals>
