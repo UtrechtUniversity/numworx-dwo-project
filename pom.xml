@@ -39,6 +39,11 @@
 			<scope>test</scope>
 			<version>${gwtVersion}</version>
 		</dependency>
+		<dependency>
+		    <groupId>com.vaadin.addon</groupId>
+		    <artifactId>pointer-events</artifactId>
+		    <version>1.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>writemath</finalName>
@@ -64,4 +69,10 @@
   <scm>
   	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/WriteMathGWT/trunk</developerConnection>
   </scm>
+	<repositories>
+		<repository>
+			<id>vaadin-addons</id>
+			<url>http://vaadin.com/nexus/content/repositories/vaadin-addons/</url>
+		</repository>
+	</repositories>
 </project>
