@@ -47,7 +47,7 @@ public class StrokeMatcher {
 				}
 			}
 		}
-		
+		//StrokeContainer.logger.info("3a. "+System.currentTimeMillis());
 		if(filter) {
 			String bestUnfiltered = gevondenTekens.get(0);
 			for(int i = 0 ; i<gevondenTekens.size()  ; i++) {

@@ -12,6 +12,7 @@ import com.google.gwt.canvas.dom.client.Context2d;
 
 import fi.writemathgwt.client.engine.filters.FourStrokeProcessor;
 import fi.writemathgwt.client.engine.filters.ThreeStrokeProcessor;
+import fi.writemathgwt.client.engine.filters.TwoStrokeDirFilter;
 import fi.writemathgwt.client.engine.filters.TwoStrokeProcessor;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
@@ -19,7 +20,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 public class StrokeContainer {
 	
-	private static Logger logger = Logger.getLogger("StrokeContainer");
+	protected static Logger logger = Logger.getLogger("StrokeContainer");
 	
 	private ArrayList<Stroke> strokes;
 	private ArrayList<WMObject> wmObjects;
@@ -141,15 +142,19 @@ public class StrokeContainer {
 	}
 	
 	private void parseStrokes() {
-		String s = null;
+		//logger.info("0. "+System.currentTimeMillis());
+		String s1 = null;
+		String s2 = null;
+		String s3 = null;
+		String s4 = null;
 		if(strokes.size()>3) {
 			Stroke stroke1 = strokes.get(strokes.size()-4);
 			Stroke stroke2 = strokes.get(strokes.size()-3);
 			Stroke stroke3 = strokes.get(strokes.size()-2);
 			Stroke stroke4 = strokes.get(strokes.size()-1);
-			s = FourStrokeProcessor.findFourStrokeTeken(stroke1, stroke2, stroke3, stroke4);
-			if(s!=null) {
-				WMObject wo = new WMObject(stroke1, stroke2, stroke3, stroke4, s);
+			s4 = FourStrokeProcessor.findFourStrokeTeken(stroke1, stroke2, stroke3, stroke4);
+			if(s4!=null) {
+				WMObject wo = new WMObject(stroke1, stroke2, stroke3, stroke4, s4);
 				int teller = 3;
 				while(teller>0) {
 					teller -= wmObjects.get(wmObjects.size()-1).getStrokes().size();
@@ -157,51 +162,65 @@ public class StrokeContainer {
 				}
 				wmObjects.add(wo);
 			}
+			//logger.info("1. "+System.currentTimeMillis());
 		}
-		if(strokes.size()>2) {// && wmObjects.size()>1 && wmObjects.get(wmObjects.size()-1).isOneStroke() && wmObjects.get(wmObjects.size()-2).isOneStroke()) {
+		if(s4==null &&strokes.size()>2) {// && wmObjects.size()>1 && wmObjects.get(wmObjects.size()-1).isOneStroke() && wmObjects.get(wmObjects.size()-2).isOneStroke()) {
 			Stroke stroke1 = strokes.get(strokes.size()-3);
 			Stroke stroke2 = strokes.get(strokes.size()-2);
 			Stroke stroke3 = strokes.get(strokes.size()-1);
-			s = ThreeStrokeProcessor.findThreeStrokeTeken(stroke1, stroke2, stroke3);
-			if(s!=null) {
-				WMObject wo = new WMObject(stroke1, stroke2, stroke3, s);
+			s3 = ThreeStrokeProcessor.findThreeStrokeTeken(stroke1, stroke2, stroke3);
+			if(s3!=null) {
+				WMObject wo = new WMObject(stroke1, stroke2, stroke3, s3);
 				int teller = 2;
 				while(teller>0) {
 					teller -= wmObjects.get(wmObjects.size()-1).getStrokes().size();
 					wmObjects.remove(wmObjects.size()-1); 
 				}
-				//wmObjects.remove(wmObjects.size()-1);
-				//wmObjects.remove(wmObjects.size()-1);
 				wmObjects.add(wo);
 			}
+			//logger.info("2. "+System.currentTimeMillis());
 		}
-		if(s==null && strokes.size()>1 &&wmObjects.size()>0 && wmObjects.get(wmObjects.size()-1).isOneStroke()) {
+		if(s4==null && s3==null && strokes.size()>1 &&wmObjects.size()>0 && wmObjects.get(wmObjects.size()-1).isOneStroke()) {
 			Stroke stroke1 = strokes.get(strokes.size()-2);
 			Stroke stroke2 = strokes.get(strokes.size()-1);
-			s = TwoStrokeProcessor.findTwoStrokeTeken(this, stroke1, stroke2);
-			if(s!=null) {
-				WMObject wo = new WMObject(stroke1, stroke2, s);
+			s2 = TwoStrokeProcessor.findTwoStrokeTeken(this, stroke1, stroke2);
+			if(s2!=null) {
+				WMObject wo = new WMObject(stroke1, stroke2, s2);
 				wmObjects.remove(wmObjects.size()-1);
 				wmObjects.add(wo);
 			}
+			//logger.info("3. "+System.currentTimeMillis());
 		}
-		if(s==null && strokes.size()>0) {
-			if(tryAsStrokeExtension(strokes.get(strokes.size()-1))) 
+		if(s4==null && s3==null && s2==null && strokes.size()>0) {
+			boolean b = tryAsStrokeExtension(strokes.get(strokes.size()-1));
+			//logger.info("3b. "+System.currentTimeMillis());
+			if(b) {
 				strokes.remove(strokes.get(strokes.size()-1));
-			else if(tryDelayedTwoStroke(strokes.get(strokes.size()-1))){
 			}
 			else {
-				s = StrokeMatcher.findTekenRaw(this,strokes.get(strokes.size()-1));
-				WMObject wo = new WMObject(strokes.get(strokes.size()-1), s);
-				if("back".equals(s)) 
-					doBack(wo);
-				else {
-					wmObjects.add(wo);
-					//updateAverageHeight();
+				boolean bb = tryDelayedTwoStroke(strokes.get(strokes.size()-1));
+				//logger.info("3c. "+System.currentTimeMillis());
+				if(bb){
+				
 				}
+				else 
+				{
+					s1 = StrokeMatcher.findTekenRaw(this,strokes.get(strokes.size()-1));
+					//logger.info("3d. "+System.currentTimeMillis());
+					WMObject wo = new WMObject(strokes.get(strokes.size()-1), s1);
+					//logger.info("3e. "+System.currentTimeMillis());
+					if("back".equals(s1)) 
+						doBack(wo);
+					else {
+						wmObjects.add(wo);
+						//updateAverageHeight();
+					}
+				}
+				//logger.info("4. "+System.currentTimeMillis());
 			}
 		}
 		formulaString = FormulaProcessor.parseFormuleNew(this, parseArea);
+		//logger.info("5. "+System.currentTimeMillis());
 		updateAverageHeight();
 		//updateAverageBaseLine();
 		
@@ -427,19 +446,30 @@ public class StrokeContainer {
 	}
 
 	private boolean tryDelayedTwoStroke(Stroke stroke2) {
+		boolean b1 = TwoStrokeDirFilter.checkDir(stroke2, "+H1");
+		boolean b2 = TwoStrokeDirFilter.checkDir(stroke2, "+H2");
+		boolean b3 = TwoStrokeDirFilter.checkDir(stroke2, "+H2+");
+		boolean b4 = ".".equals(StrokeMatcher.findTekenRaw(this,stroke2));
+		if(!b1 && !b2 && !b3 && !b4) {
+			//logger.info("geen juistestroke");
+			return false;
+		}
 		for(int i=0 ; i<wmObjects.size() ; i++) {
 			Stroke stroke1 = null;
 			if(wmObjects.get(i).isOneStroke()) {
 				stroke1 = wmObjects.get(i).getStrokes().get(0);
-				
-				String s = TwoStrokeProcessor.findTwoStrokeTeken(this, stroke1, stroke2);
-				if(s!=null) {
-					wmObjects.remove(wmObjects.get(i));
-					WMObject wo = new WMObject(stroke1, stroke2, s);
-					wmObjects.add(wo);
-					updateAverageHeight();
-					//updateAverageBaseLine();
-					return true;
+				double midx1 = stroke1.getParsePointsbox().x+stroke1.getParsePointsbox().width/2;
+				double midx2 = stroke2.getParsePointsbox().x+stroke2.getParsePointsbox().width/2;
+				if(Math.abs(midx1-midx2)<stroke1.getParsePointsbox().getDiagonal()) {
+					String s = TwoStrokeProcessor.findTwoStrokeTeken(this, stroke1, stroke2);
+					if(s!=null) {
+						wmObjects.remove(wmObjects.get(i));
+						WMObject wo = new WMObject(stroke1, stroke2, s);
+						wmObjects.add(wo);
+						updateAverageHeight();
+						//updateAverageBaseLine();
+						return true;
+					}
 				}
 			}
 		}

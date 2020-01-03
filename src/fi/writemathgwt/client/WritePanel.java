@@ -10,6 +10,8 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.canvas.dom.client.Context2d.LineCap;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Touch;
@@ -90,6 +92,9 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		this.height = height;
 		
 		tekenSet = tekenS;
+		
+		Element body = Document.get().getBody();
+		body.setAttribute("oncontextmenu", "return false;");
 		
 		setSize("100%", height + "px");
 		
@@ -404,10 +409,10 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		Point shiftReference;
 		
 		public void onMouseDown(MouseDownEvent e) {
-			if(hasPointerEventSupport)
-				return;
 			e.preventDefault();
 			e.stopPropagation();
+			if(hasPointerEventSupport)
+				return;
 			if (e.getNativeButton() == NativeEvent.BUTTON_RIGHT) {
 				mouseOnRight = true;
 				shiftReference = new Point(e.getX(), e.getY());
@@ -422,10 +427,10 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		}
 		
 		public void onMouseMove(MouseMoveEvent e) {
-			if(hasPointerEventSupport)
-				return;
 			e.preventDefault();
 			e.stopPropagation();
+			if(hasPointerEventSupport)
+				return;
 			if(mouseOnLeft) {
 				Point p = toWorldCoordinates(new Point(e.getX(), e.getY()));
 				points.add(p);
@@ -448,10 +453,10 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		} 
 		
 		public void onMouseUp(MouseUpEvent e) {	
-			if(hasPointerEventSupport)
-				return;
 			e.preventDefault();
 			e.stopPropagation();
+			if(hasPointerEventSupport)
+				return;
 			if (mouseOnLeft) {
 				mouseOnLeft = false;
 //				Point p = toWorldCoordinates(new Point(e.getX(), e.getY()));
@@ -476,12 +481,12 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		boolean writing = false;
 		
 		public void onTouchStart(TouchStartEvent e) {
-			if(hasPointerEventSupport)
-				return;
-			
 			e.preventDefault();
 			e.stopPropagation();
 
+			if(hasPointerEventSupport)
+				return;
+			
 			Touch touch = e.getTouches().get(0);
 			int eventX = touch.getPageX() - writePanelCanvas.getAbsoluteLeft();
 			int eventY = touch.getPageY() - writePanelCanvas.getAbsoluteTop();		
@@ -514,11 +519,11 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		
 		public void onTouchMove(TouchMoveEvent e) 
 		{
-			if(hasPointerEventSupport)
-				return;
-			
 			e.preventDefault();
 			e.stopPropagation();
+			
+			if(hasPointerEventSupport)
+				return;
 			
 			Touch touch = e.getTouches().get(0);
 			int eventX = touch.getPageX() - writePanelCanvas.getAbsoluteLeft();
@@ -544,12 +549,12 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		}
 		
 		public void onTouchEnd(TouchEndEvent e) {
-			if(hasPointerEventSupport)
-				return;
-			
 			e.stopPropagation();
 			e.preventDefault();
 
+			if(hasPointerEventSupport)
+				return;
+			
 			if (!points.isEmpty() && writing) {
 				addStroke();
 			}
@@ -558,7 +563,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 				writing = false;
 				moving = false;
 			}	
-
+			//logger.info("touchEnd");
 			paint();
 		}
 		
@@ -579,7 +584,10 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		
 		
 		@Override
-		public void onPointerCancel(PointerCancelEvent event) {
+		public void onPointerCancel(PointerCancelEvent e) {
+			e.stopPropagation();
+			e.preventDefault();
+			
 			touchCount--;
 			
 			
@@ -641,7 +649,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 				points.add(p);
 				DoublePoint dp = toWorldCoordinates(new DoublePoint(eventX, eventY));
 				doublePoints.add(dp);
-				paint();
+				//paint();
 			}
 			else if(touchCount==2) {
 				moving = true;
