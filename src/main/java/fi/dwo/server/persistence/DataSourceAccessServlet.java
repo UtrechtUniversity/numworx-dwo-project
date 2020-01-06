@@ -445,7 +445,8 @@ public class DataSourceAccessServlet extends Servlet {
     @Override
     public void destroy() {
         LOG.log(Level.FINE, "Closing xmlrpc handler.");
-        ((DbConnectIF) getHandler()).close();
+        if (getHandler() instanceof DbConnectIF)
+          ((DbConnectIF) getHandler()).close();
         super.destroy();
         ds = null;
     }
