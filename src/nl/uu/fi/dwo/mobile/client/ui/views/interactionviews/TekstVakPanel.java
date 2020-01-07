@@ -81,6 +81,15 @@ import com.google.gwt.event.dom.client.TouchMoveEvent;
 import com.google.gwt.event.dom.client.TouchMoveHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
+import com.vaadin.pointerevents.client.PointerCancelEvent;
+import com.vaadin.pointerevents.client.PointerCancelHandler;
+import com.vaadin.pointerevents.client.PointerDownEvent;
+import com.vaadin.pointerevents.client.PointerDownHandler;
+import com.vaadin.pointerevents.client.PointerEvent;
+import com.vaadin.pointerevents.client.PointerMoveEvent;
+import com.vaadin.pointerevents.client.PointerMoveHandler;
+import com.vaadin.pointerevents.client.PointerUpEvent;
+import com.vaadin.pointerevents.client.PointerUpHandler;
 import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -320,6 +329,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	
 	private MouseHandler mouseHandler;
 	private TouchHandler touchHandler;
+	private PointerHandler pointerHandler;
 	
 	private static boolean fontOvererving;
 	private boolean anderFont = false;
@@ -393,6 +403,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		mainPanel = new Grid(1, 1);
 		mainPanel.getElement().getStyle().setProperty("borderSpacing", cellSpaceColumn + "px " + cellSpaceRow + "px");
 		mainPanel.getElement().getStyle().setProperty("margin", (-cellSpaceRow) + "px " + (-cellSpaceColumn) + "px");
+		mainPanel.getElement().getStyle().setProperty("touchAction", "none");
 		
 		tekstVakken = new TekstVak[1][1];	
 		tekstVakken[0][0] = new TekstVak(this, 0, 0);
@@ -811,6 +822,12 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		mainPanel2.addDomHandler(touchHandler, TouchStartEvent.getType());
 		mainPanel2.addDomHandler(touchHandler, TouchMoveEvent.getType());
 		mainPanel2.addDomHandler(touchHandler, TouchEndEvent.getType());
+		
+		pointerHandler = new PointerHandler();
+		mainPanel2.addDomHandler((PointerMoveHandler)pointerHandler, PointerMoveEvent.getType()); 
+		mainPanel2.addDomHandler((PointerUpHandler)pointerHandler, PointerUpEvent.getType()); 
+		mainPanel2.addDomHandler((PointerDownHandler)pointerHandler, PointerDownEvent.getType()); 
+		
 		
 		
 //		randPanel = new LayoutPanel();
@@ -2999,12 +3016,17 @@ private Object CamelCase(String name) {
 	
 	public boolean isMouseDown()
 	{
+		if(this.hasPointerEventSupport)
+			return pointerHandler.isMouseDown();
 		return mouseHandler.isMouseDown();
 	}
 	
 	public void setMouseDown(boolean b)
 	{
-		mouseHandler.setMouseDown(b);
+		if(this.hasPointerEventSupport)
+			pointerHandler.setMouseDown(b);
+		else
+			mouseHandler.setMouseDown(b);
 	}
 	
 	public Point geefLocatie()
@@ -4234,6 +4256,12 @@ private Object CamelCase(String name) {
 		
 		public void onMouseDown(MouseDownEvent e)
 		{
+			e.preventDefault();
+			e.stopPropagation();
+			
+			if(hasPointerEventSupport)
+				return;
+			
 			if(!editable) return;
 			if(sleepbaar && sleepHandle && (e.getX() > 20 || e.getY() > 20) )
 				return;
@@ -4246,7 +4274,13 @@ private Object CamelCase(String name) {
 		}
 		
 		public void onMouseMove(MouseMoveEvent e)	
-		{	// prevent scrolling
+		{	
+			e.preventDefault();
+			e.stopPropagation();
+			
+			if(hasPointerEventSupport)
+				return;
+			// prevent scrolling
 //			if(sleepbaar && sleepHandle && (e.getX() > 20 || e.getY() > 20) )
 //			{	mouseDown = false;
 //				return;
@@ -4296,7 +4330,13 @@ private Object CamelCase(String name) {
 		} // onMouseMove
 		
 		public void onMouseUp(MouseUpEvent e)	
-		{	// prevent scrolling
+		{	
+			e.preventDefault();
+			e.stopPropagation();
+			
+			if(hasPointerEventSupport)
+				return;
+			// prevent scrolling
 			if(sleepbaar && sleepHandle && (e.getX() > 20 || e.getY() > 20) )
 			{	mouseDown = false;
 				return;
@@ -4340,8 +4380,12 @@ private Object CamelCase(String name) {
 
 		@Override
 		public void onMouseOut(MouseOutEvent e) {
-			
+			e.preventDefault();
 			e.stopPropagation();
+			
+			if(hasPointerEventSupport)
+				return;
+			
 			if(!editable) return;
 			int eventX = e.getClientX();
 			int eventY = e.getClientY();
@@ -4374,12 +4418,143 @@ private Object CamelCase(String name) {
 
 	} //MouseHandler
 	
+	boolean hasPointerEventSupport = false;
+	
+	class PointerHandler implements PointerDownHandler, PointerMoveHandler, PointerUpHandler, PointerCancelHandler {
+
+		private boolean mouseDown = false;
+		
+		@Override
+		public void onPointerUp(PointerUpEvent event) {
+			event.preventDefault();
+			event.stopPropagation();
+			LOG.info("pointerUp");
+			if(!editable) return;
+			if(sleepbaar || selectable)
+				event.preventDefault();
+			
+			int eventX = locationX + startX;
+			int eventY = locationY + startY;
+			
+			if (!mouseDown)
+			{	
+				TekstVakPanel object = findMouseDownObject();
+				if(object != null)
+				{	object.setMouseDown(false);
+					object.mouseUpTouchEndAction(eventX, eventY);
+				}
+				else if(parent != null && zwevend)
+				{
+					object = parent.getTekstVakParent().findMouseDownObject();
+					if(object != null)
+					{	object.setMouseDown(false);
+						object.mouseUpTouchEndAction(eventX, eventY);
+					}
+				}
+			}
+			mouseDown = false;
+			
+			mouseUpTouchEndAction(eventX, eventY);	
+			
+		}
+
+		@Override
+		public void onPointerMove(PointerMoveEvent event) {
+			event.preventDefault();
+			event.stopPropagation();
+			
+			if(!editable) return;
+			
+			int eventX = event.getClientX();
+			int eventY = event.getClientY();
+			
+			if(sleepbaar && mouseDown)
+			{	event.preventDefault();
+				mouseMoveTouchMoveAction(eventX, eventY);
+			}
+			
+			if (!mouseDown)
+			{	//Kijken of zich binnen huidige tekstvakpanel een object bevindt dat momenteel wordt gesleept
+				for(int i = 0; i < interactionViewObjects.size(); i++)
+				{
+					Object object = interactionViewObjects.get(i);
+					if(object instanceof TekstVakPanel && ((TekstVakPanel) object).isSleepbaar() && ((TekstVakPanel) object).isMouseDown())
+					{	((TekstVakPanel) object).mouseMoveTouchMoveAction(eventX, eventY);
+						return;
+					}
+				}
+				TekstVak localParent = parent;
+				while(localParent != null)
+				{
+					TekstVakPanel tekstVakParent = localParent.getTekstVakParent();
+					if(tekstVakParent.isSleepbaar() && tekstVakParent.isMouseDown())
+					{	tekstVakParent.mouseMoveTouchMoveAction(eventX, eventY);
+						return;
+					}
+					for(int i = 0; i < tekstVakParent.interactionViewObjects.size(); i++)
+					{
+						Object object = tekstVakParent.interactionViewObjects.get(i);
+						if(object instanceof TekstVakPanel && ((TekstVakPanel) object).isSleepbaar() && ((TekstVakPanel) object).isMouseDown())
+						{	((TekstVakPanel) object).mouseMoveTouchMoveAction(eventX, eventY);
+							return;
+						}
+					}
+					localParent = tekstVakParent.parent;
+				}
+				return;
+			}
+			
+		}
+
+		@Override
+		public void onPointerDown(PointerDownEvent event) {
+			event.preventDefault();
+			event.stopPropagation();
+			hasPointerEventSupport = true;
+		LOG.info("pointerDown");
+			int ex = event.getRelativeX(getAsPanel().getElement());
+			int ey = event.getRelativeY(getAsPanel().getElement());
+			
+			if(sleepbaar && sleepHandle && (ex > 20 || ey > 20))
+			{	event.preventDefault();
+				return;
+			}
+			mouseDown = true;
+			
+			int eventX = event.getClientX();
+			int eventY = event.getClientY();
+			mouseDownTouchStartAction(eventX, eventY);	
+			
+		}
+
+		@Override
+		public void onPointerCancel(PointerCancelEvent event) {
+			event.preventDefault();
+			event.stopPropagation();
+			LOG.info("pointerCancel");
+		}
+	
+		public boolean isMouseDown()
+		{
+			return mouseDown;
+		}
+		
+		public void setMouseDown(boolean b)
+		{
+			mouseDown = b;
+		}
+		
+	}
 	class TouchHandler implements TouchStartHandler, TouchMoveHandler, TouchEndHandler
 	{
 		
 		public void onTouchStart(TouchStartEvent e)
 		{
+			e.preventDefault();
 			e.stopPropagation();
+			if(hasPointerEventSupport)
+				return;
+			
 			if(!editable) return;
 			
 			if(e.getTouches().length() == 0)
@@ -4403,7 +4578,11 @@ private Object CamelCase(String name) {
 		}
 		public void onTouchMove(TouchMoveEvent e)
 		{
+			e.preventDefault();
 			e.stopPropagation();
+			if(hasPointerEventSupport)
+				return;
+			
 			if(!editable) return;
 			
 			if(e.getTouches().length() == 0)
@@ -4429,10 +4608,14 @@ private Object CamelCase(String name) {
 		public void onTouchEnd(TouchEndEvent e)
 		{
 			LOG.info("TekstVakPanel.TouchHandler.onTouchEnd()");
+			e.preventDefault();
+			e.stopPropagation();
+			if(hasPointerEventSupport)
+				return;
 			
 			Touch touch = e.getTouches().get(0);
 			
-			e.stopPropagation();
+			
 			if(!editable) return;
 			if(sleepbaar || selectable)
 				e.preventDefault();
@@ -5329,4 +5512,6 @@ private Object CamelCase(String name) {
 	{
 		parentStappen = panel;
 	}
+
+	
 }
