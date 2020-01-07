@@ -396,6 +396,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		facade.setPopupListener(this);
 		mainPanel2 = new LayoutPanel(); 
 		mainPanel2.setStylePrimaryName("tekstvakpanel");
+		mainPanel2.getElement().getStyle().setProperty("touchAction", "none");
 		
 		setCurrentSize(breedte, hoogte);
 		pasAanH = true;
@@ -403,7 +404,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		mainPanel = new Grid(1, 1);
 		mainPanel.getElement().getStyle().setProperty("borderSpacing", cellSpaceColumn + "px " + cellSpaceRow + "px");
 		mainPanel.getElement().getStyle().setProperty("margin", (-cellSpaceRow) + "px " + (-cellSpaceColumn) + "px");
-		mainPanel.getElement().getStyle().setProperty("touchAction", "none");
+		
 		
 		tekstVakken = new TekstVak[1][1];	
 		tekstVakken[0][0] = new TekstVak(this, 0, 0);
