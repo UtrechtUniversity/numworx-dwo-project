@@ -108,8 +108,8 @@ public class SecuredTeacherSchoolClassManager {
         return defer.getPromise();
     }
 
-    private void getTeachersInSchoolClass(RestSchoolClass restData, AsyncCallback<List<DomTeacher>> callBack) {
-        service.getTeachersInSchoolClass(PathId.getId(restData.getRestContext()),restData, new Callback<List<DomTeacher>>(callBack));
+    private void getTeachersInSchoolClass(RestSchoolClass restData, MethodCallback<List<DomTeacher>> callBack) {
+        service.getTeachersInSchoolClass(PathId.getId(restData.getRestContext()),restData, callBack);
         LOG.log(Level.FINE, "Rest Callback performed.");
     }
 
@@ -282,8 +282,8 @@ public class SecuredTeacherSchoolClassManager {
         return defer.getPromise();
     }
 
-    private void getSingleSchoolStudent(RestGetSingleSchoolStudent restData, AsyncCallback<DomSingleSchoolStudent> callBack) {
-        service.getSingleSchoolStudent(PathId.getId(restData.getRestContext()),restData, new Callback<DomSingleSchoolStudent>(callBack));
+    private void getSingleSchoolStudent(RestGetSingleSchoolStudent restData, MethodCallback<DomSingleSchoolStudent> callBack) {
+        service.getSingleSchoolStudent(PathId.getId(restData.getRestContext()),restData, callBack);
     }
 
     public Promise<Boolean> updateSingleSchoolStudent(RestSingleSchoolStudent restData) {        

@@ -15,16 +15,15 @@ public class RestAuthenticator implements DispatcherFilter {
 	private String username;
 	private String password;
 	private String realm = "";
+	private String authorization;
+	private boolean haspassword;
+	
 	@Override
 	public boolean filter(Method method, RequestBuilder builder) {
-		boolean haspassword = username != null && password != null;
-//		if(haspassword)builder.setPassword(password);
-//		if(haspassword)builder.setUser(username);
 		if(haspassword)
 		{
-			builder.setHeader("Authorization", "Basic " + Base64.btoa(username + realm + ":" + password));
+			builder.setHeader("Authorization", authorization);
 		}
-//		builder.setIncludeCredentials(haspassword);
 		return true;
 	}
     /**
@@ -39,13 +38,27 @@ public class RestAuthenticator implements DispatcherFilter {
   public void setRealm(String realm) {
     if(realm == null) realm = "";
     this.realm = realm;
+    if (haspassword)
+    	authorization = "Basic " + Base64.btoa(username + realm + ":" + password);
   }
-    public void setCredentials(String aUsername, String aPassword, String realm){
+
+  public void setCredentials(String aUsername, String aPassword, String realm){
         username = aUsername;
         password = aPassword;
+    	haspassword = username != null && password != null;
         setRealm(realm);
     }
     
+  public void setBearer(String bearer) {
+	  if (bearer != null)
+	  {
+		  authorization = "Bearer " + bearer;
+		  haspassword = true;
+	  }
+	  else // reset to basic/none
+		  setCredentials(username, password, realm);
+  }
+  
     private RestAuthenticator() {
     	// install in restygwt
     	DefaultFilterawareDispatcher.singleton().addFilter(this);

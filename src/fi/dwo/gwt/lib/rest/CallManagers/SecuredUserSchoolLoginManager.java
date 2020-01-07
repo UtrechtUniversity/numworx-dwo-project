@@ -15,6 +15,7 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolRoleAndClassV2;
 
 import java.util.logging.Logger;
 
+import org.fusesource.restygwt.client.MethodCallback;
 import org.osgi.util.promise.Promise;
 
 /**
@@ -39,8 +40,8 @@ public class SecuredUserSchoolLoginManager {
         return defer.getPromise();
     }
     
-    public void getSchoolLogins(AsyncCallback<DomSchoolsRolesAndClassesV2> callBack)  {
-        service.getSchoolLogins(new Callback<DomSchoolsRolesAndClassesV2> (callBack));
+    private void getSchoolLogins(MethodCallback<DomSchoolsRolesAndClassesV2> callBack)  {
+        service.getSchoolLogins(callBack);
     }
 
     public Promise<DomSchoolRoleAndClassV2> switchToSchoolLogin(DomSchoolRoleAndClassV2 reqSrac) {
@@ -49,11 +50,11 @@ public class SecuredUserSchoolLoginManager {
         return defer.getPromise();
     }
     
-    public void switchToSchoolLogin(DomSchoolRoleAndClassV2 reqSrac, AsyncCallback<DomSchoolRoleAndClassV2> callBack){
+    private void switchToSchoolLogin(DomSchoolRoleAndClassV2 reqSrac, MethodCallback<DomSchoolRoleAndClassV2> callBack){
         RestSchoolRoleAndClassV2 rsrc = new RestSchoolRoleAndClassV2();
         rsrc.setRestContext(new DomContext());
         rsrc.setDomSchoolRoleAndClass(reqSrac);
-        service.switchToSchoolLogin(rsrc,new Callback<DomSchoolRoleAndClassV2> (callBack));
+        service.switchToSchoolLogin(rsrc,callBack);
     }
 
     public Promise<Boolean> removeASchoolLogin(DomSchoolRoleAndClassV2 reqSrac) {
@@ -63,11 +64,11 @@ public class SecuredUserSchoolLoginManager {
     }
         
     
-    public void removeASchoolLogin(DomSchoolRoleAndClassV2 reqSrac, AsyncCallback<Boolean> callBack){
+    private void removeASchoolLogin(DomSchoolRoleAndClassV2 reqSrac, MethodCallback<Boolean> callBack){
         RestSchoolRoleAndClassV2 rsrc = new RestSchoolRoleAndClassV2();
         rsrc.setRestContext(new DomContext());
         rsrc.setDomSchoolRoleAndClass(reqSrac);
-        service.removeASchoolLogin(rsrc,new Callback<Boolean> (callBack));
+        service.removeASchoolLogin(rsrc,callBack);
     }
 
     public Promise<Boolean> addASchoolLogin(DomNewSchoolLogin newSchoolLogin) {
@@ -76,10 +77,10 @@ public class SecuredUserSchoolLoginManager {
         return defer.getPromise();
     }
             
-    public void addASchoolLogin(DomNewSchoolLogin newSchoolLogin, AsyncCallback<Boolean> callBack){
+    private void addASchoolLogin(DomNewSchoolLogin newSchoolLogin, MethodCallback<Boolean> callBack){
         RestNewSchoolLogin rnl = new RestNewSchoolLogin();
         rnl.setRestContext(new DomContext());
         rnl.setDomNewSchoolLogin(newSchoolLogin);
-        service.addASchoolLogin(rnl,new Callback<Boolean> (callBack));
+        service.addASchoolLogin(rnl,callBack);
     }
 }

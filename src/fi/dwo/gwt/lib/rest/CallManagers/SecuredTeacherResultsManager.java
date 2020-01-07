@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.rest.entities.RestResultsPerTeacher;
 import nl.uu.fi.dwo.rest.util.PathId;
 
 import org.fusesource.restygwt.client.Defaults;
+import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 import org.osgi.util.promise.Promise;
 
@@ -50,11 +51,11 @@ public class SecuredTeacherResultsManager {
      * @param aProfile The profile for which this is valid.
      * @param callBack
      */
-    public void getTeachersResults(DomContext domContext, DomDwoProfile aProfile, AsyncCallback<DomResultsPerTeacher> callBack) {
+    private void getTeachersResults(DomContext domContext, DomDwoProfile aProfile, MethodCallback<DomResultsPerTeacher> callBack) {
         RestDwoProfile restPut = new RestDwoProfile();
         restPut.setRestContext(domContext);
         restPut.setDomDwoProfile(aProfile);
-        service.getTeachersResults(PathId.getId(domContext), restPut, new Callback<DomResultsPerTeacher>(callBack));
+        service.getTeachersResults(PathId.getId(domContext), restPut, callBack);
     }
 
     public Promise<DomResultsPerTeacher> selectedTeachersResults(DomContext context, DomDwoProfile profile, DomResultsPerTeacher dom) {
@@ -75,9 +76,9 @@ public class SecuredTeacherResultsManager {
      * @param rest
      * @param callBack
      */
-    public void clearStudentResults(RestClearStudentDataForScoAndClass rest, AsyncCallback<Boolean> callBack) {
+    private void clearStudentResults(RestClearStudentDataForScoAndClass rest, MethodCallback<Boolean> callBack) {
       DomContext context = rest.getRestContext();
-      service.clearStudentResults(PathId.getId(context),rest, new Callback<Boolean>(callBack));
+      service.clearStudentResults(PathId.getId(context),rest, callBack);
     }
 
     public Promise<DomResultsPerTeacher> createStudentResults(RestClearStudentDataForScoAndClass rest) {
