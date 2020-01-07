@@ -396,7 +396,6 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		facade.setPopupListener(this);
 		mainPanel2 = new LayoutPanel(); 
 		mainPanel2.setStylePrimaryName("tekstvakpanel");
-		mainPanel2.getElement().getStyle().setProperty("touchAction", "none");
 		
 		setCurrentSize(breedte, hoogte);
 		pasAanH = true;
@@ -824,10 +823,6 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		mainPanel2.addDomHandler(touchHandler, TouchMoveEvent.getType());
 		mainPanel2.addDomHandler(touchHandler, TouchEndEvent.getType());
 		
-		pointerHandler = new PointerHandler();
-		mainPanel2.addDomHandler((PointerMoveHandler)pointerHandler, PointerMoveEvent.getType()); 
-		mainPanel2.addDomHandler((PointerUpHandler)pointerHandler, PointerUpEvent.getType()); 
-		mainPanel2.addDomHandler((PointerDownHandler)pointerHandler, PointerDownEvent.getType()); 
 		
 		
 		
@@ -958,7 +953,20 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			
 			
 		}
-		
+		if(sleepbaar || draaibaar) {
+			mainPanel2.getElement().getStyle().setProperty("touchAction", "none");
+			pointerHandler = new PointerHandler();
+//			if(parent!=null) {
+//				TekstVakPanel tekstVakParent = parent.getTekstVakParent();
+//				tekstVakParent.getAsPanel().addDomHandler((PointerMoveHandler)pointerHandler, PointerMoveEvent.getType()); 
+//				tekstVakParent.getAsPanel().addDomHandler((PointerUpHandler)pointerHandler, PointerUpEvent.getType()); 
+//				tekstVakParent.getAsPanel().addDomHandler((PointerDownHandler)pointerHandler, PointerDownEvent.getType()); 
+//				
+//			}
+			mainPanel2.addDomHandler((PointerMoveHandler)pointerHandler, PointerMoveEvent.getType()); 
+			mainPanel2.addDomHandler((PointerUpHandler)pointerHandler, PointerUpEvent.getType()); 
+			mainPanel2.addDomHandler((PointerDownHandler)pointerHandler, PointerDownEvent.getType()); 
+		}
 		if(hoek != 0)
 		{	//voor Chrome, Firefox
 			mainPanel2.getElement().getStyle().setProperty("transform", "rotate(" + hoek + "deg)");
@@ -2144,6 +2152,12 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	public void setParent(TekstVak panel)
 	{
 		parent = panel;
+		if(sleepbaar) {
+			TekstVakPanel tekstVakParent = parent.getTekstVakParent();
+			tekstVakParent.getAsPanel().addDomHandler((PointerMoveHandler)pointerHandler, PointerMoveEvent.getType()); 
+			//tekstVakParent.getAsPanel().addDomHandler((PointerUpHandler)pointerHandler, PointerUpEvent.getType()); 
+			//tekstVakParent.getAsPanel().addDomHandler((PointerDownHandler)pointerHandler, PointerDownEvent.getType()); 
+		}
 		if(fontOvererving && !anderFont && parent != null && parent.getTekstVakParent() != null)
 		{	
 			CssColor fgColorOvererving = parent.getTekstVakParent().fgColor;
@@ -2166,6 +2180,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 				}
 			}
 		}
+		
 	}
 	
 	public Panel getPanelElement(final FormuleHolder editor)
