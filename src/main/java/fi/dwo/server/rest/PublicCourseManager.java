@@ -71,7 +71,7 @@ public class PublicCourseManager {
               if (course.getSchoolID() != null) {
                   return "{}";
               } else {
-                PersistentDwoProfile profile = DwoProfileManager.findEntity(course.getCourseID());
+                PersistentDwoProfile profile = DwoProfileManager.findEntity(course.getDwoProfileID());
                 if (profile.isLimited()) {
                   return "{}";               
                 }
@@ -82,7 +82,7 @@ public class PublicCourseManager {
 			JSONEncoder.encode(map, writer, null); // FIXME, load wiskopdr.jar
 	        return writer.toString();
 		} catch (Exception e) {
-			LOG.fine("getCourseDescription "  + courseId + " " + e.toString());
+			LOG.log(Level.WARNING, "getCourseDescription "  + courseId , e);
 			return "{}";
 		}
     }
