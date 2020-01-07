@@ -217,6 +217,11 @@
 			<artifactId>dagger-gwt</artifactId>
 			<version>${daggerVersion}</version>
 		</dependency>
+		<dependency>
+		    <groupId>com.vaadin.addon</groupId>
+		    <artifactId>pointer-events</artifactId>
+		    <version>1.0</version>
+		</dependency>
 <!-- 		<dependency> -->
 <!-- 			<groupId>fi.graphtoolgwt</groupId> -->
 <!-- 			<artifactId>GraphToolGWT</artifactId> -->
