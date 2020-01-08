@@ -46,7 +46,7 @@ public class CourseException extends Exception {
         if (getCause() == null) {
             return super.getMessage();
         }
-        return super.getMessage() + "\n" + getCause().getMessage();
+        return super.getMessage() + "\n" + getCause().getLocalizedMessage();
     }
 
 }

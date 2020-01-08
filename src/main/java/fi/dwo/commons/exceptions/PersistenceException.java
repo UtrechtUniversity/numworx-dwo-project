@@ -10,6 +10,7 @@ import fi.dwo.commons.system.TextMapper;
  * @author thijsk
  *
  */
+@SuppressWarnings("serial")
 public class PersistenceException extends Exception {
 
     public final static int EX_SQL = -4;
@@ -54,7 +55,7 @@ public class PersistenceException extends Exception {
         if (getCause() == null) {
             return super.getMessage();
         }
-        return super.getMessage() + "\n" + getCause().getMessage();
+        return super.getMessage() + "\n" + getCause().getLocalizedMessage();
     }
 
 }

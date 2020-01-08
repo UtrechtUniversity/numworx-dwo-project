@@ -2,14 +2,10 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\DbAccessIF.java
 package fi.dwo.commons.persistence;
 
-import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.Hashtable;
 import java.util.Vector;
-import java.util.logging.Level;
-
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 /**

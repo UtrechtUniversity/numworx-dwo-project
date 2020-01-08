@@ -33,7 +33,7 @@ public class LoginException extends Exception {
         if (getCause() == null) {
             return super.getMessage();
         }
-        return super.getMessage() + "\n" + getCause().getMessage();
+        return super.getMessage() + "\n" + getCause().getLocalizedMessage();
     }
 
     private static String getMesgFromInt(int exception) {
