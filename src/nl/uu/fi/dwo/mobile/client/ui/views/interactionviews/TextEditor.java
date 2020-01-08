@@ -237,6 +237,10 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		FocusOnTouch.focus();
 		shown = true; // mag dat hier al? nee dus. -- Syl: Waarom niet? Waar dan wel? deze wordt tevroeg aangeroepen, als de teksteditor nog niet in de div-tree zit
 		setCursorWidget(cursorWidget);
+		hideEmpty();
+	}
+
+	private void hideEmpty() {
 		hbox.removeStyleName(css.textEditor_empty());
 	}
 
@@ -1199,7 +1203,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		    down=move=cursor;
 		    deSelection();
 		    setCursorWidget(downWidget);
-            hbox.removeStyleName(css.textEditor_empty());
+            hideEmpty();
 		    
 		    if (downWidget != null) {
 		      if (downWidget instanceof FormulaVak) {
@@ -1265,7 +1269,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
               FormuleKeyboardIF kb = comRoot.getKeyboard();
 		      kb.blur();
 		      kb.setEditor(deze);
-		      kb.softFocus();
+		      kb.softFocus(); hideEmpty(); // undo blur, (blur zet ...)
 		      clearDownMove();
 		      int r = Math.abs(downX-lastX) + Math.abs(downY-lastY);
 		      Widget moveWidget = findWidget(lastX, lastY);
@@ -1314,7 +1318,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				keyboard.setEditor(deze);
 				keyboard.setEnterType(EnterType.ENTER);
 				keyboard.softFocus();
-				hbox.removeStyleName(css.textEditor_empty());
+				hideEmpty();
 				int flowTop = flow.getAbsoluteTop();
 				int y = event.getClientY() - flowTop;
 				int w;
@@ -1376,7 +1380,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			shown = true; childfocus = false;
 			deSelection();
 			setCursorWidget(cursorWidget);
-			hbox.removeStyleName(css.textEditor_empty());
+			hideEmpty();
 			keyboard.softFocus();
 			event.stopPropagation();
 			event.preventDefault();
@@ -1392,7 +1396,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			setCursorWidget(cursorWidget);
 			keyboard.setEnterType(EnterType.ENTER);
 			keyboard.softFocus();
-			hbox.removeStyleName(css.textEditor_empty());
+			hideEmpty();
 			event.stopPropagation();
 			event.preventDefault();
 		}
@@ -1661,7 +1665,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				shown = true;
 				deSelection();
 				setCursorWidget(cursorWidget);
-				hbox.removeStyleName(css.textEditor_empty());
+				hideEmpty();
 				event.stopPropagation();
 				event.preventDefault();
 			}
