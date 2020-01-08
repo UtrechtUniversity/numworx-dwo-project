@@ -10,7 +10,7 @@ import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
-import static nl.uu.fi.dwo.register.client.RegisterPanel.getCookie;
+import static nl.uu.fi.dwo.register.client.RegisterPanel.getCookieOnce;
 
 public class Register implements EntryPoint, Command {
 
@@ -34,13 +34,11 @@ public class Register implements EntryPoint, Command {
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
         String next = Window.Location.getParameter("next");
         if (next == null) {
-        	next = getCookie("next");
-        	Cookies.removeCookie("next");
+        	next = getCookieOnce("next");
         }
         String cancel = Window.Location.getParameter("cancel");
         if (cancel == null) {
-        	cancel = getCookie("cancel");
-        	Cookies.removeCookie("cancel");
+        	cancel = getCookieOnce("cancel");
         }
         if(next != null)
         	newURL = next;

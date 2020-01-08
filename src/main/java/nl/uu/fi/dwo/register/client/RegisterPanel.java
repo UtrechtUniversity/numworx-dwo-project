@@ -71,30 +71,36 @@ public class RegisterPanel extends ResizeComposite {
 		schoolCode.getElement().setAttribute("autocomplete", "new-password");		
 	}
 
+	static String getCookieOnce(String key) {
+	  String r = getCookie(key);
+	  Cookies.removeCookie(key);
+	  return r;
+	}
+		
 	private void absorbCookies() {
-		String email = getCookie("email");
+		String email = getCookieOnce("email");
 		if (email != null) setAndFix(this.email, email);
-		String givenName = getCookie("givenName");
+		String givenName = getCookieOnce("givenName");
 		if (givenName != null) setAndFix(this.givenName, givenName);
-		String insertion = getCookie("insertion");
+		String insertion = getCookieOnce("insertion");
 		if (insertion != null) setAndFix(this.insertion, insertion);
-		String familyName = getCookie("familyName");
+		String familyName = getCookieOnce("familyName");
 		if (familyName != null) setAndFix(this.familyName, familyName);
 		
-		String suggestion = getCookie("suggestion");
+		String suggestion = getCookieOnce("suggestion");
 		if (suggestion != null) {
 			username.setText(suggestion); // Free to choose
 		} else {
-			String username = getCookie("username");
+			String username = getCookieOnce("username");
 			if (username != null) {
 				setAndFix(this.username, username);
 			}
 		}
 		
-		String schoolLogin = getCookie("schoolLogin");
+		String schoolLogin = getCookieOnce("schoolLogin");
 		if (schoolLogin != null) this.schoolLogin.setText(schoolLogin);
 		
-		String schoolGroup = getCookie("schoolGroup");
+		String schoolGroup = getCookieOnce("schoolGroup");
 		if ("TEACHER".equals(schoolGroup))
 		{
 			this.schoolGroup.setSelectedIndex(1);
