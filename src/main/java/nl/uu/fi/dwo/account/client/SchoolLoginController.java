@@ -4,22 +4,16 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
-
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManager;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolLogin;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -28,11 +22,8 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionInterface;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
-import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
-
 import java.util.logging.Logger;
 
-import org.osgi.util.function.Function;
 import org.osgi.util.function.Predicate;
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Failure;
@@ -84,29 +75,32 @@ public class SchoolLoginController {
      * @throws Dwo2Exception
      */
     public void init(DomUserFull user) throws Dwo2Exception {
-        manager.getSchoolLogins(new AsyncCallback<DomSchoolsRolesAndClassesV2>() {
-            @Override
-            public void onFailure(Throwable t) {
-                view.init(DwoGlobalVars.instance().getCurrentUser());
-            }
-
-            @Override
-            public void onSuccess(DomSchoolsRolesAndClassesV2 result) {
-                //success and set all the data in the view
-                srcs = result;
-                view.update(srcs);
-            }
-        }
-        );
+        manager.getSchoolLogins().then(
+            p -> { srcs = p.getValue(); view.update(srcs); return null; },
+            p -> { view.init(DwoGlobalVars.instance().getCurrentUser());}
+            );
+//            @Override
+//            public void onFailure(Throwable t) {
+//                view.init(DwoGlobalVars.instance().getCurrentUser());
+//            }
+//
+//            @Override
+//            public void onSuccess(DomSchoolsRolesAndClassesV2 result) {
+//                //success and set all the data in the view
+//                srcs = result;
+//                view.update(srcs);
+//            }
+ //       }
+        
     }
     
-    /**
-     *
-     * @param callBack
-     */
-    public void getSchoolLogins(AsyncCallback<DomSchoolsRolesAndClassesV2> callBack) {
-        manager.getSchoolLogins(callBack);
-    }
+//    /**
+//     *
+//     * @param callBack
+//     */
+//    public void getSchoolLogins(MethodCallback<DomSchoolsRolesAndClassesV2> callBack) {
+//        manager.getSchoolLogins(callBack);
+//    }
     
     /**
      *
@@ -211,14 +205,6 @@ public class SchoolLoginController {
 		return resolved;
 	}
 
-    /**
-     *
-     * @param reqSrac
-     * @param callBack
-     */
-    public void addASchoolLogin(DomNewSchoolLogin reqSrac, AsyncCallback<Boolean> callBack){
-        manager.addASchoolLogin(reqSrac, callBack);
-    }
 
 	public void setAddSchoolLoginPanel(AddSchoolLoginPanel addSchoolLoginPanel) {
 		addSchoolPanel = addSchoolLoginPanel;
@@ -239,8 +225,7 @@ public class SchoolLoginController {
 	
 	public void addASchoolLogin(DomNewSchoolLogin request) {
 		PromiseCallback<Boolean> df = new PromiseCallback<>();
-		addASchoolLogin(request, df);
-		df.getPromise()
+		manager.addASchoolLogin(request)
 		.filter(p -> p.booleanValue()) // must be true
 		.then(p -> {
 			addSchoolPanel.hide();
