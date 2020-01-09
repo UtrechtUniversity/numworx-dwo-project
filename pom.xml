@@ -85,12 +85,6 @@
             <!-- "provided" so that we don't deploy -->
             <scope>provided</scope>
         </dependency>
-		<dependency>
-			<groupId>com.googlecode.mgwt</groupId>
-			<artifactId>MGWT</artifactId>
-			<scope>provided</scope>
-			<version>1.1.2</version>
-		</dependency>
 
         <!-- Unit tests -->
         <dependency>
@@ -144,12 +138,7 @@
             <version>1.7</version>
             <scope>runtime</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.vectomatic/lib-gwt-svg -->
-        <dependency>
-            <groupId>org.vectomatic</groupId>
-            <artifactId>lib-gwt-svg</artifactId>
-            <version>0.5.13</version>
-        </dependency>        
+        <!-- https://mvnrepository.com/artifact/org.vectomatic/lib-gwt-svg -->        
         <!--        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
