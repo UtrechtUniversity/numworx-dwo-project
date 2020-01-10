@@ -63,6 +63,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -72,6 +73,7 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
@@ -1971,7 +1973,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	public void zetMaatNoordhoff()
 	{
 		extraHeight = 40;
-		fp.setWidgetSize(headerView, extraHeight);
+		//FIXME fp.setWidgetSize(headerView, extraHeight);
 		sb.zetMaat();
 		int size = sb.getStatusBarHeight();
 		sb.setScrollPanel(this, -size);
@@ -1989,7 +1991,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	public void setWindowTop(int top) {
 		if(!standalone) top = 0; // force 0
 		extraHeight = top;
-		fp.setWidgetSize(headerView, top);
+		//FIXME fp.setWidgetSize(headerView, top);
+		fp.setWidgetTopHeight(headerView, 0, Unit.PX, extraHeight, Unit.PX);
+		fp.setWidgetTopBottom(contentScrollPanel, extraHeight, Unit.PX, lastSize, Unit.PX);
 	}
 	
 	
@@ -2248,10 +2252,16 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	// WaitScreen management: p(); .....; v();
 	private int sema;
 	private Deferred<Void> sema2;
-	@UiField DockLayoutPanel fp;
+	@UiField LayoutPanel fp;
 	@UiField SimplePanel headerView;
 	@UiField SimplePanel statusView;
 	@UiField FlowPanel content;
+	@UiField Widget kbd;
+	
+	@UiHandler("kbd") void onKBD(ClickEvent e) {
+	  sb.getFormuleKeyboard().focus();
+	}
+
 	private FocusPanel focusPanel;
 	
 	public void p() {
@@ -2281,9 +2291,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		//contentScrollPanel.setPixelSize(-1, px);
 		double size = Math.abs(px); // FIXME berekening.....
 		if(size != lastSize) {
-			fp.setWidgetSize(statusView, size);
+			// FIXME fp.setWidgetSize(statusView, size);
+		    fp.setWidgetBottomHeight(statusView, 0, Unit.PX, size, Unit.PX);
+		    fp.setWidgetTopBottom(contentScrollPanel, extraHeight, Unit.PX, size, Unit.PX);
 			lastSize = size;
 			//fp.animate(300);
+			fp.setWidgetVisible(kbd, size == sb.getStatusBarHeight());
 		}
 		setWebkitScrolling(true);
 	}
