@@ -500,6 +500,7 @@ public static String u(String value) {
 			  throw new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid, user.getUniqueDisplayName());
 			String tlid = body.get("id", String.class);
 			register(user.getUserName(), user.getEmail(), tlid);
+		    resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
 		} catch (Dwo2Exception e) {
 		      resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 			return;
