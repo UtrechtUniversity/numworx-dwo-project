@@ -203,6 +203,7 @@ public class SystemManager {
   public List<DomTeacher> getTeachersInSchoolList(RestSchool rest) throws Dwo2Exception {
 	  Long id = MySQLPersistenceId.getNativeId(rest.getDomSchool());
 	  PersistentSchool school = SchoolManager.findEntity(id);
+	  if (school == null) return null;
 	  DomContext context = rest.getRestContext();
 	  final String realm = context != null ? context.getRealm(): null;
       List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.TEACHER);
