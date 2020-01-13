@@ -4,49 +4,58 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.googlecode.mgwt.ui.client.MGWT;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
-import nl.uu.fi.dwo.keyboard.client.DWODesktopKeyboardFactory;
-import nl.uu.fi.dwo.keyboard.client.DWOTabletKeyboardFactory;
+import nl.uu.fi.dwo.keyboard.client.Combined;
+import nl.uu.fi.dwo.keyboard.client.CombinedState;
+import nl.uu.fi.dwo.keyboard.client.DWOCombinedKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.KeyboardFactory;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 
-public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipboardIF {
+public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipboardIF, CombinedState {
+	private static final ChangeEvent CHANGE_EVENT = new ChangeEvent() {};
+
 	static final int KEYB_STATIC_HEIGHT = 44;
 
 	private int STATUS_BAR_HEIGHT = KEYB_STATIC_HEIGHT;
-    KeyboardFactory factory;
+    final KeyboardFactory factory;
 	AbstractKeyboard kb;
 	FlowPanel staticPanel;
 	private HasHeight scrollPanel;
 	private static DWOplayerCss dwoplayercss = DWOplayer.DWO_BUNDLE.dwoplayercss();
-	
+		
 	public DWOKeyboard() {
 		setStylePrimaryName("dwo");
-		if(isDesktopKeyboard()) {
-			factory = new DWODesktopKeyboardFactory();
-		} else {
-			factory = new DWOTabletKeyboardFactory();
-		}
-		java.util.logging.Logger.getLogger("DWOKeyboard").info("Keyboard " + DWOplayer.isPremium());
+		
+		factory = new DWOCombinedKeyboardFactory();
+		factory.setCombinedState(this);
+		
+//		if(isDesktopKeyboard()) {
+//			factory = new DWODesktopKeyboardFactory();
+//		} else {
+//			factory = new DWOTabletKeyboardFactory();
+//		}
+		staticPanel = new FlowPanel();
+		
+		if (!isDesktopKeyboard()) state = Combined.TABLET_ACTIVE;
+		
+		java.util.logging.Logger.getLogger("DWOKeyboard").info("Keyboard " + DWOplayer.isPremium() + " " + state);
 		
 		factory.setPremium(DWOplayer.isPremium()); // inject premium feature
-		kb = factory.getKeyboard();
-		add(kb);
-		staticPanel = new FlowPanel();
-		add(staticPanel);
-		kb.blur(); // we start hidden!
 
 // css style! FIXME naar dwoplayercss
 		Style style;
@@ -57,10 +66,6 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 		style.setWidth(100, Unit.PCT);
 		style.setBackgroundColor("rgb(255,255,255)");
 
-		style = kb.getElement().getStyle();
-		style.setProperty("margin", "0 auto");
-		style.setWidth(1024, Unit.PX); // MAXIMUM BREEDTE TOETSENBORDEN
-		style.setPosition(Position.RELATIVE);
 		
 //		staticPanel.addDomHandler(new MouseUpHandler() {
 //
@@ -113,6 +118,16 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 
 	@Override
 	public FormuleKeyboardIF getFormuleKeyboard() {
+		if (kb == null) {
+			kb = factory.getKeyboard();
+			Style style = kb.getElement().getStyle();
+			style.setProperty("margin", "0 auto");
+			style.setWidth(1024, Unit.PX); // MAXIMUM BREEDTE TOETSENBORDEN
+			style.setPosition(Position.RELATIVE);
+			add(kb);
+			add(staticPanel);
+			kb.blur(); // we start hidden!		
+		}
 		return kb;
 	}
 
@@ -122,6 +137,9 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 	}
 
 	private String clipboard = "";
+
+	private Combined state = Combined.NONE;
+
 	@Override
 	public String getClipboard() {
 		return clipboard;
@@ -174,5 +192,31 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
     kb.setScrollPanel(scrollPanel, 0);
     
   }
+
+  	ChangeHandler h;
+	@Override
+	public HandlerRegistration addChangeHandler(ChangeHandler handler) {
+		h = handler;
+		return () -> {h = null;};
+	}
+	
+	@Override
+	public void setCombined(Combined state) {
+		this.state = state;
+		if (h != null) h.onChange(CHANGE_EVENT);
+	}
+	
+	@Override
+	public Combined getCombined() {
+		return state;
+	}
+
+	/* (non-Javadoc)
+	 * @see nl.uu.fi.dwo.mobile.client.ui.StatusBarIF#setCombinedState(nl.uu.fi.dwo.keyboard.client.CombinedState)
+	 */
+	@Override
+	public void setCombinedState(CombinedState state) {
+		factory.setCombinedState(state);
+	}
 
 }

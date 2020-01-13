@@ -24,6 +24,8 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
+import nl.uu.fi.dwo.keyboard.client.Combined;
+import nl.uu.fi.dwo.keyboard.client.CombinedState;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
@@ -59,6 +61,7 @@ import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -84,6 +87,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.ui.client.MGWT;
@@ -97,7 +101,7 @@ import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
  * @author Danny Hendrix, Evertson Croes, Sietske Tacoma, Wim van Velthoven
  * 
  */
-public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder, NextPrevHandler, ObjectivesHandler, MisconceptionsHandler, HasHeight
+public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder, NextPrevHandler, ObjectivesHandler, MisconceptionsHandler, HasHeight, CombinedState
 {
 	public class ResizeFocusPanel extends FocusPanel implements RequiresResize, ProvidesResize {
 
@@ -1843,6 +1847,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		mainPanel.setStylePrimaryName("mainPanel");
 		
 		sb = DWOplayer.PARAMETERS.getStatusBar(); // new nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard();
+		sb.setCombinedState(this);
 		kb = sb.getFormuleKeyboard();
 		cb = sb.getFormuleClipboard();
 		scoreNav = DWOplayer.PARAMETERS.getScoreNav();
@@ -2259,7 +2264,20 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	@UiField Widget kbd;
 	
 	@UiHandler("kbd") void onKBD(ClickEvent e) {
-	  sb.getFormuleKeyboard().focus();
+	  switch(state) {
+	case TABLET:
+	case DESKTOP_ACTIVE:
+		setCombined(Combined.TABLET_ACTIVE);
+		break;
+	case NONE:
+		break;		
+	case TABLET_ACTIVE:
+		setCombined(Combined.DESKTOP_ACTIVE);
+		break;
+	default:
+		break;
+	  
+	  }
 	}
 
 	private FocusPanel focusPanel;
@@ -2296,7 +2314,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		    fp.setWidgetTopBottom(contentScrollPanel, extraHeight, Unit.PX, size, Unit.PX);
 			lastSize = size;
 			//fp.animate(300);
-			fp.setWidgetVisible(kbd, size == sb.getStatusBarHeight());
+			//fp.setWidgetVisible(kbd, size == sb.getStatusBarHeight());
 		}
 		setWebkitScrolling(true);
 	}
@@ -2536,5 +2554,29 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
     // TODO Auto-generated method stub
     
   }
+
+@Override
+public HandlerRegistration addChangeHandler(ChangeHandler handler) {
+	this.handler = handler;
+	return () -> { this.handler = null; };
+}
+
+Combined state = Combined.TABLET, lastState = Combined.TABLET_ACTIVE;
+ChangeHandler handler;
+@Override
+public void setCombined(Combined state) {
+	Combined old = this.state;
+	this.state = state;
+	fp.setWidgetVisible(kbd, state != Combined.NONE);
+	if (state != Combined.NONE) lastState = state;
+	if (state != old && handler != null) {
+		handler.onChange(null);
+	}
+}
+
+@Override
+public Combined getCombined() {
+	return state;
+}
 
 }
