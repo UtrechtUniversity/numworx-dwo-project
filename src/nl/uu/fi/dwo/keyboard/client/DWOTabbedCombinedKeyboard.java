@@ -77,7 +77,7 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 		main.add(math);
 		main.add(pen);
 
-		if (combined == Combined.TABLET_ACTIVE) {
+		if (combined == Combined.TABLET_ACTIVE || combined == Combined.TABLET_ACTIVE_SOFT) {
 			desktop.setVisible(false);
 			tablet.setVisible(true);
 			current = tablet;
@@ -180,6 +180,7 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 	@Override
 	public void blur() {		
 		super.blur();
+		resizeScrollPanel(getKeyboardHeight());
 		setCombined(Combined.NONE);
 	}
 	
