@@ -431,3 +431,25 @@ span.textEditor_select {
   	height: auto;
   	width: auto;
 }
+
+@sprite .tablet {
+	gwt-image: 'tablet';
+	background-repeat: no-repeat !important;
+	background-position: left top !important;
+	outline: none;
+}
+
+@sprite .tablet_active {
+	gwt-image: 'tablet_active';
+	background-repeat: no-repeat !important;
+	background-position: left top !important;
+	outline: none;
+}
+
+@sprite .desktop_active {
+	gwt-image: 'desktop_active';
+	background-repeat: no-repeat !important;
+	background-position: left top !important;
+	outline: none;
+}
+

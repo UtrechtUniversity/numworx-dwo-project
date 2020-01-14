@@ -64,6 +64,7 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -1254,7 +1255,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	}
 
 	private  boolean isDesktop() {
-		return sb.isDesktopKeyboard();
+		boolean isTablet = lastState == Combined.TABLET_ACTIVE || lastState == Combined.TABLET_ACTIVE_SOFT;
+		return !isTablet;
 	}
 
 	/**
@@ -1846,6 +1848,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		mainPanel = focusPanel;
 		mainPanel.setStylePrimaryName("mainPanel");
 		
+		state = lastState;
 		sb = DWOplayer.PARAMETERS.getStatusBar(); // new nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard();
 		sb.setCombinedState(this);
 		kb = sb.getFormuleKeyboard();
@@ -2265,18 +2268,20 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	
 	@UiHandler("kbd") void onKBD(ClickEvent e) {
 	  switch(state) {
-	case TABLET:
-	case DESKTOP_ACTIVE:
-		setCombined(Combined.TABLET_ACTIVE);
-		break;
-	case NONE:
-		break;		
-	case TABLET_ACTIVE:
-		setCombined(Combined.DESKTOP_ACTIVE);
-		break;
-	default:
-		break;
-	  
+		case TABLET:
+			setCombined(Combined.TABLET_ACTIVE_SOFT);
+			break;
+		case DESKTOP_ACTIVE:
+			setCombined(Combined.TABLET_ACTIVE);
+			break;
+		case NONE:
+			break;		
+		case TABLET_ACTIVE:
+			setCombined(Combined.DESKTOP_ACTIVE);
+			break;
+		case TABLET_ACTIVE_SOFT:
+			setCombined(Combined.TABLET);
+			break;
 	  }
 	}
 
@@ -2314,7 +2319,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		    fp.setWidgetTopBottom(contentScrollPanel, extraHeight, Unit.PX, size, Unit.PX);
 			lastSize = size;
 			//fp.animate(300);
-			//fp.setWidgetVisible(kbd, size == sb.getStatusBarHeight());
+			//fp.setWidgetVisible(kbd, size == sb.getStatusBarHeight()); // XXX move kbd?
 		}
 		setWebkitScrolling(true);
 	}
@@ -2561,7 +2566,18 @@ public HandlerRegistration addChangeHandler(ChangeHandler handler) {
 	return () -> { this.handler = null; };
 }
 
-Combined state = Combined.TABLET, lastState = Combined.TABLET_ACTIVE;
+Combined state = Combined.TABLET;
+static Combined lastState = Combined.NONE;
+
+static {
+	if (MGWT.getOsDetection().isDesktop() && !TouchStartEvent.isSupported()) // INITIAL form of DESKTOP/MOBILE
+		lastState = Combined.TABLET;
+	else
+		lastState = Combined.TABLET_ACTIVE_SOFT;
+}
+
+
+
 ChangeHandler handler;
 @Override
 public void setCombined(Combined state) {
@@ -2571,6 +2587,35 @@ public void setCombined(Combined state) {
 	if (state != Combined.NONE) lastState = state;
 	if (state != old && handler != null) {
 		handler.onChange(null);
+		setKbdCss(state); // keyboard height is valid
+	}
+}
+
+private void setKbdCss(Combined state) {
+	switch(state) {
+	case DESKTOP_ACTIVE:
+		kbd.removeStyleName(dwoplayercss.tablet());
+		kbd.removeStyleName(dwoplayercss.tablet_active());
+		kbd.addStyleName(dwoplayercss.desktop_active());
+		fp.setWidgetBottomHeight(kbd, sb.getStatusBarHeight()+8, Unit.PX, 62, Unit.PX);
+		fp.setWidgetLeftWidth(kbd, 10, Unit.PX, 52, Unit.PX);
+		break;
+	case TABLET:
+		kbd.removeStyleName(dwoplayercss.desktop_active());
+		kbd.removeStyleName(dwoplayercss.tablet_active());
+		kbd.addStyleName(dwoplayercss.tablet());
+		fp.setWidgetBottomHeight(kbd, sb.getStatusBarHeight()+1, Unit.PX, 17, Unit.PX);
+		fp.setWidgetLeftWidth(kbd, 10, Unit.PX, 46, Unit.PX);
+		break;
+	case TABLET_ACTIVE:
+	case TABLET_ACTIVE_SOFT:
+		kbd.removeStyleName(dwoplayercss.tablet());
+		kbd.removeStyleName(dwoplayercss.desktop_active());
+		kbd.addStyleName(dwoplayercss.tablet_active());
+		fp.setWidgetBottomHeight(kbd, sb.getStatusBarHeight()+58, Unit.PX, 59, Unit.PX);
+		fp.setWidgetLeftWidth(kbd, 10, Unit.PX, 54, Unit.PX);
+		break;
+	default:
 	}
 }
 

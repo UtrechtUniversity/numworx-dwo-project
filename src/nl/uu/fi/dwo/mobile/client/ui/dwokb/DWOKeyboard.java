@@ -44,15 +44,8 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 		factory = new DWOCombinedKeyboardFactory();
 		factory.setCombinedState(this);
 		
-//		if(isDesktopKeyboard()) {
-//			factory = new DWODesktopKeyboardFactory();
-//		} else {
-//			factory = new DWOTabletKeyboardFactory();
-//		}
 		staticPanel = new FlowPanel();
-		
-		if (!isDesktopKeyboard()) state = Combined.TABLET_ACTIVE;
-		
+				
 		java.util.logging.Logger.getLogger("DWOKeyboard").info("Keyboard " + DWOplayer.isPremium() + " " + state);
 		
 		factory.setPremium(DWOplayer.isPremium()); // inject premium feature
@@ -77,9 +70,8 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 	}
 
 	public boolean isDesktopKeyboard() {
-		return MGWT.getOsDetection().isDesktop() && !TouchStartEvent.isSupported()
-				//&& false // voor tablet keyboard deze uitcommentarieren
-				;
+		boolean isTablet = state == Combined.TABLET_ACTIVE || state == Combined.TABLET_ACTIVE_SOFT;
+		return !isTablet;
 	}
 
 	@Override
@@ -216,6 +208,7 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 	 */
 	@Override
 	public void setCombinedState(CombinedState state) {
+		setCombined(state.getCombined());
 		factory.setCombinedState(state);
 	}
 

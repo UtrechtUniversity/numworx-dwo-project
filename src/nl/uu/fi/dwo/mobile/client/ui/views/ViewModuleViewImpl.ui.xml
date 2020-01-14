@@ -24,7 +24,7 @@
 			</g:SimplePanel>
 		</g:layer>
 		<g:layer bottom='3.5em' height='2em' left='1em' width='4em' >
-			<g:Button ui:field="kbd">KBD</g:Button>
+			<g:Label ui:field="kbd" />
 		</g:layer>
 	</g:LayoutPanel>
 </ui:UiBinder> 

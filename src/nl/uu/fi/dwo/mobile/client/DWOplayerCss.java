@@ -79,4 +79,8 @@ public interface DWOplayerCss extends CssResource {
 	String corrected();
 	@ClassName("correctie-tail")
 	String correctieTail();
+	
+	String tablet();
+	String tablet_active();
+	String desktop_active();
 }

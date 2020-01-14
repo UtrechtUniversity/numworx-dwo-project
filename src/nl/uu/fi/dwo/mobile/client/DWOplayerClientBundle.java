@@ -95,4 +95,14 @@ public interface DWOplayerClientBundle extends ClientBundle {
 	@Source("nl/uu/fi/dwo/mobile/client/resources/goed-numworx.svg")
 	@MimeType("image/svg+xml")
 	DataResource goednumworx();
+	
+	@Source("nl/uu/fi/dwo/mobile/client/resources/kb/tablet.png")
+	ImageResource tablet();
+	@Source("nl/uu/fi/dwo/mobile/client/resources/kb/tablet_active.png")
+	ImageResource tablet_active();
+	@Source("nl/uu/fi/dwo/mobile/client/resources/kb/desktop_active.png")
+	ImageResource desktop_active();
+
+	
+	
 }
