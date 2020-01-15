@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
+import nl.uu.fi.dwo.keyboard.client.CombinedState;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
@@ -30,4 +31,5 @@ public interface StatusBarIF extends IsWidget {
 	default void hide() {}
 	
 	boolean isDesktopKeyboard();
+	default void setCombinedState(CombinedState state) { };
 }

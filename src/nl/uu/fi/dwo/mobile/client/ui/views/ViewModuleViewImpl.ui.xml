@@ -8,20 +8,23 @@
 		outline-style: none;
 	}
 	</ui:style>
-	<g:DockLayoutPanel ui:field='fp' unit='PX' >
-		<g:north size="40">
+	<g:LayoutPanel ui:field='fp' >
+		<g:layer height="40px" top='0'>
 			<g:SimplePanel ui:field='headerView'/>
-		</g:north>
-		<g:south size="100">
+		</g:layer>
+		<g:layer height="100px" bottom='0' >
 			<g:SimplePanel ui:field='statusView' />
-		</g:south>
-		<g:center>
+		</g:layer>
+		<g:layer top='40px' bottom='100px' >
 			<g:SimplePanel stylePrimaryName="contentScrollPanel" ui:field='contentScrollPanel'>		 
 				<g:FlowPanel
 					stylePrimaryName="contentPanel"
 					ui:field="content"
 				 />
 			</g:SimplePanel>
-		</g:center>
-	</g:DockLayoutPanel>
+		</g:layer>
+		<g:layer bottom='3.5em' height='2em' left='1em' width='4em' >
+			<g:Label ui:field="kbd" />
+		</g:layer>
+	</g:LayoutPanel>
 </ui:UiBinder> 

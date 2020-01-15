@@ -24,6 +24,8 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
+import nl.uu.fi.dwo.keyboard.client.Combined;
+import nl.uu.fi.dwo.keyboard.client.CombinedState;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
@@ -59,10 +61,13 @@ import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -72,6 +77,7 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
@@ -82,6 +88,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.ui.client.MGWT;
@@ -95,7 +102,7 @@ import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
  * @author Danny Hendrix, Evertson Croes, Sietske Tacoma, Wim van Velthoven
  * 
  */
-public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder, NextPrevHandler, ObjectivesHandler, MisconceptionsHandler, HasHeight
+public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder, NextPrevHandler, ObjectivesHandler, MisconceptionsHandler, HasHeight, CombinedState
 {
 	public class ResizeFocusPanel extends FocusPanel implements RequiresResize, ProvidesResize {
 
@@ -1248,7 +1255,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	}
 
 	private  boolean isDesktop() {
-		return sb.isDesktopKeyboard();
+		boolean isTablet = lastState == Combined.TABLET_ACTIVE || lastState == Combined.TABLET_ACTIVE_SOFT;
+		return !isTablet;
 	}
 
 	/**
@@ -1840,7 +1848,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		mainPanel = focusPanel;
 		mainPanel.setStylePrimaryName("mainPanel");
 		
+		state = lastState;
 		sb = DWOplayer.PARAMETERS.getStatusBar(); // new nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard();
+		sb.setCombinedState(this);
 		kb = sb.getFormuleKeyboard();
 		cb = sb.getFormuleClipboard();
 		scoreNav = DWOplayer.PARAMETERS.getScoreNav();
@@ -1971,7 +1981,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	public void zetMaatNoordhoff()
 	{
 		extraHeight = 40;
-		fp.setWidgetSize(headerView, extraHeight);
+		//FIXME fp.setWidgetSize(headerView, extraHeight);
 		sb.zetMaat();
 		int size = sb.getStatusBarHeight();
 		sb.setScrollPanel(this, -size);
@@ -1989,7 +1999,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	public void setWindowTop(int top) {
 		if(!standalone) top = 0; // force 0
 		extraHeight = top;
-		fp.setWidgetSize(headerView, top);
+		//FIXME fp.setWidgetSize(headerView, top);
+		fp.setWidgetTopHeight(headerView, 0, Unit.PX, extraHeight, Unit.PX);
+		fp.setWidgetTopBottom(contentScrollPanel, extraHeight, Unit.PX, lastSize, Unit.PX);
 	}
 	
 	
@@ -2248,10 +2260,31 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	// WaitScreen management: p(); .....; v();
 	private int sema;
 	private Deferred<Void> sema2;
-	@UiField DockLayoutPanel fp;
+	@UiField LayoutPanel fp;
 	@UiField SimplePanel headerView;
 	@UiField SimplePanel statusView;
 	@UiField FlowPanel content;
+	@UiField Widget kbd;
+	
+	@UiHandler("kbd") void onKBD(ClickEvent e) {
+	  switch(state) {
+		case TABLET:
+			setCombined(Combined.TABLET_ACTIVE_SOFT);
+			break;
+		case DESKTOP_ACTIVE:
+			setCombined(Combined.TABLET_ACTIVE);
+			break;
+		case NONE:
+			break;		
+		case TABLET_ACTIVE:
+			setCombined(Combined.DESKTOP_ACTIVE);
+			break;
+		case TABLET_ACTIVE_SOFT:
+			setCombined(Combined.TABLET);
+			break;
+	  }
+	}
+
 	private FocusPanel focusPanel;
 	
 	public void p() {
@@ -2281,9 +2314,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		//contentScrollPanel.setPixelSize(-1, px);
 		double size = Math.abs(px); // FIXME berekening.....
 		if(size != lastSize) {
-			fp.setWidgetSize(statusView, size);
+			// FIXME fp.setWidgetSize(statusView, size);
+		    fp.setWidgetBottomHeight(statusView, 0, Unit.PX, size, Unit.PX);
+		    fp.setWidgetTopBottom(contentScrollPanel, extraHeight, Unit.PX, size, Unit.PX);
 			lastSize = size;
 			//fp.animate(300);
+			//fp.setWidgetVisible(kbd, size == sb.getStatusBarHeight()); // XXX move kbd?
 		}
 		setWebkitScrolling(true);
 	}
@@ -2523,5 +2559,69 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
     // TODO Auto-generated method stub
     
   }
+
+@Override
+public HandlerRegistration addChangeHandler(ChangeHandler handler) {
+	this.handler = handler;
+	return () -> { this.handler = null; };
+}
+
+Combined state = Combined.TABLET;
+static Combined lastState = Combined.NONE;
+
+static {
+	if (MGWT.getOsDetection().isDesktop() && !TouchStartEvent.isSupported()) // INITIAL form of DESKTOP/MOBILE
+		lastState = Combined.TABLET;
+	else
+		lastState = Combined.TABLET_ACTIVE_SOFT;
+}
+
+
+
+ChangeHandler handler;
+@Override
+public void setCombined(Combined state) {
+	Combined old = this.state;
+	this.state = state;
+	fp.setWidgetVisible(kbd, state != Combined.NONE);
+	if (state != Combined.NONE) lastState = state;
+	if (state != old && handler != null) {
+		handler.onChange(null);
+		setKbdCss(state); // keyboard height is valid
+	}
+}
+
+private void setKbdCss(Combined state) {
+	switch(state) {
+	case DESKTOP_ACTIVE:
+		kbd.removeStyleName(dwoplayercss.tablet());
+		kbd.removeStyleName(dwoplayercss.tablet_active());
+		kbd.addStyleName(dwoplayercss.desktop_active());
+		fp.setWidgetBottomHeight(kbd, sb.getStatusBarHeight()+8, Unit.PX, 62, Unit.PX);
+		fp.setWidgetLeftWidth(kbd, 10, Unit.PX, 52, Unit.PX);
+		break;
+	case TABLET:
+		kbd.removeStyleName(dwoplayercss.desktop_active());
+		kbd.removeStyleName(dwoplayercss.tablet_active());
+		kbd.addStyleName(dwoplayercss.tablet());
+		fp.setWidgetBottomHeight(kbd, sb.getStatusBarHeight()+1, Unit.PX, 17, Unit.PX);
+		fp.setWidgetLeftWidth(kbd, 10, Unit.PX, 46, Unit.PX);
+		break;
+	case TABLET_ACTIVE:
+	case TABLET_ACTIVE_SOFT:
+		kbd.removeStyleName(dwoplayercss.tablet());
+		kbd.removeStyleName(dwoplayercss.desktop_active());
+		kbd.addStyleName(dwoplayercss.tablet_active());
+		fp.setWidgetBottomHeight(kbd, sb.getStatusBarHeight()+58, Unit.PX, 59, Unit.PX);
+		fp.setWidgetLeftWidth(kbd, 10, Unit.PX, 54, Unit.PX);
+		break;
+	default:
+	}
+}
+
+@Override
+public Combined getCombined() {
+	return state;
+}
 
 }
