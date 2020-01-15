@@ -4567,7 +4567,7 @@ private Object CamelCase(String name) {
 		{
 			//e.preventDefault();
 			e.stopPropagation();
-			if(sleepbaar && hasPointerEventSupport)
+			if(hasPointerEventSupport)
 				return;
 			
 			if(!editable) return;
