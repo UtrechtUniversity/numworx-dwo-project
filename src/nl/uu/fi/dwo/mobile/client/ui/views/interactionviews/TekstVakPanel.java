@@ -823,8 +823,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		mainPanel2.addDomHandler(touchHandler, TouchStartEvent.getType());
 		mainPanel2.addDomHandler(touchHandler, TouchMoveEvent.getType());
 		mainPanel2.addDomHandler(touchHandler, TouchEndEvent.getType());
+		
 		pointerHandler = new PointerHandler();
-
 		mainPanel2.addDomHandler((PointerMoveHandler)pointerHandler, PointerMoveEvent.getType()); 
 		mainPanel2.addDomHandler((PointerUpHandler)pointerHandler, PointerUpEvent.getType()); 
 		mainPanel2.addDomHandler((PointerDownHandler)pointerHandler, PointerDownEvent.getType()); 
@@ -4271,9 +4271,9 @@ private Object CamelCase(String name) {
 		{
 			//e.preventDefault();
 			//e.stopPropagation();
-			
-			if(sleepbaar && hasPointerEventSupport)
+			if(hasPointerEventSupport)
 				return;
+			
 			
 			if(!editable) return;
 			if(sleepbaar && sleepHandle && (e.getX() > 20 || e.getY() > 20) )
@@ -4441,7 +4441,7 @@ private Object CamelCase(String name) {
 		public void onPointerUp(PointerUpEvent event) {
 			//event.preventDefault();
 			event.stopPropagation();
-			LOG.info("pointerUp");
+			//LOG.info("pointerUp");
 			if(!editable) return;
 			if(sleepbaar || selectable) {
 				event.preventDefault();
@@ -4526,7 +4526,7 @@ private Object CamelCase(String name) {
 			//event.preventDefault();
 			event.stopPropagation();
 			hasPointerEventSupport = true;
-		LOG.info("pointerDown");
+		//LOG.info("pointerDown");
 			int ex = event.getRelativeX(getAsPanel().getElement());
 			int ey = event.getRelativeY(getAsPanel().getElement());
 			
