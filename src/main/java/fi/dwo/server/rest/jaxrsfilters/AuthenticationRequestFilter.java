@@ -7,8 +7,22 @@ import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwsHeader;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SigningKeyResolver;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.security.Key;
 import java.security.Principal;
 import java.util.Base64;
 import java.util.List;
@@ -29,6 +43,8 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
 import javax.xml.bind.DatatypeConverter;
 
+import org.tuckey.web.filters.urlrewrite.utils.Log;
+
 import nl.uu.fi.dwo.rest.security.TOTP;
 
 /**
@@ -40,8 +56,9 @@ import nl.uu.fi.dwo.rest.security.TOTP;
 @Provider
 @PreMatching
 @Priority(Priorities.AUTHENTICATION)
-public class AuthenticationRequestFilter implements ContainerRequestFilter {
+public class AuthenticationRequestFilter implements ContainerRequestFilter, SigningKeyResolver {
 
+    static final Logger LOG = Logger.getLogger(AuthenticationRequestFilter.class.getName());
 	
 	@Context HttpServletRequest request;
 	
@@ -49,10 +66,16 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter {
 
         DwoUserPrincipal u;
         boolean secure;
-        String scheme;
+        String scheme, role;
 
         public DwoUserSecurityContext(DwoUserPrincipal user, boolean secure, String scheme) {
             u = user;
+        }
+
+        public DwoUserSecurityContext(DwoUserPrincipal principal, boolean secure,
+            String scheme, String role) {
+          this(principal, secure, scheme);
+          this.role = role;
         }
 
         @Override
@@ -62,7 +85,7 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter {
 
         @Override
         public boolean isUserInRole(String role) {
-            return false;
+            return role.equals(this.role);
         }
 
         @Override
@@ -99,8 +122,8 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter {
                 }
                 requestContext.setSecurityContext(context);
             } else if (authHeader.startsWith("Bearer ")) {
-                //We use our TOTP with username as the bearer token.
-                SecurityContext context = validateTOTPToken(authHeader.substring("Bearer ".length()), securityContext);
+                //We use our JWT with username as the bearer token.
+                SecurityContext context = validateJWTToken(authHeader.substring("Bearer ".length()), securityContext);
                 if(context==null){
                     throw new WebApplicationException(Response.Status.UNAUTHORIZED);
   //                  requestContext.abortWith(Response.status(Status.UNAUTHORIZED).build());
@@ -147,7 +170,30 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter {
 
 	}
 
-	private SecurityContext validateTOTPToken(String authHeader, SecurityContext secCtx) {
+	public SecurityContext validateJWTToken(String token, SecurityContext ctx) {	  
+	  try {
+        JwtParser parser = Jwts.parser().setSigningKeyResolver(this);
+        Jws<Claims> claims = parser.parseClaimsJws(token);
+        String username = claims.getBody().getSubject();
+        String role = claims.getBody().getAudience();
+        PersistentUser u = findByUsername(username);
+        if (u == null) return null;
+        SecurityContext sc = new DwoUserSecurityContext(new DwoUserPrincipal(u), ctx.isSecure(), "BEARER", role);
+        setUsername(sc);
+        return sc;
+    } catch (Exception e) {
+      LOG.log(Level.WARNING, "error in token", e);
+      return null;
+    } 
+	  
+	}
+
+  protected PersistentUser findByUsername(String username) {
+    return UserManager.findByUserName(username);
+  }
+	
+// Not used!	
+	SecurityContext validateTOTPToken(String authHeader, SecurityContext secCtx) {
 
         byte[] header = Base64.getDecoder().decode(authHeader);
         String headerString = ":";
@@ -180,5 +226,31 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter {
 //        }
 //        return new String(hexChars);
 //    }
+
+  @Override
+  public Key resolveSigningKey(JwsHeader header, Claims claims) {
+    String kid = header.getKeyId();
+    PersistentLoginContext context = findLoginContext(kid);
+    if (context == null || context.getNonce() == null) return null;
+    PersistentUser u = findByUsername(claims.getSubject());    
+    if (u == null || u.getId().longValue() != context.getUserId().longValue()) return null; // No key
+    return Keys.hmacShaKeyFor(context.getNonce());
+  }
+
+  protected PersistentLoginContext findLoginContext(String kid) {
+    Long id = Long.decode(kid);
+    PersistentLoginContext context = LoginContextManager.findEntity(id);
+    return context;
+  }
+
+  @Override
+  public Key resolveSigningKey(JwsHeader header, String plaintext) {
+    String kid = header.getKeyId();
+    PersistentLoginContext context = findLoginContext(kid);
+    if (context.getNonce() == null) {
+      return null;
+    }
+   return Keys.hmacShaKeyFor(context.getNonce());
+  }
 
 }
