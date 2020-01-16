@@ -99,6 +99,10 @@ class RestManager extends RestyDateTimeFormat {
     // note that reference changes in Java are atomic.
     basicAuthString = data;
   }
+ 
+  public void setBearerAuthString(String bearer) {
+    setBasicAuthString("Bearer " + bearer);    
+  }
 
   /**
    * @param username

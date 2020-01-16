@@ -226,4 +226,14 @@ public class SecureUserAccountManager {
     context = StoredRestManager.getInstance().get("rest/secure/user/account/getLoginContext", DomLoginContext.class);
     return context;
   }
+  
+  public static String getBearerToken() throws Dwo2Exception {
+    String b;
+    StoredRestManager restManager = StoredRestManager.getInstance();
+    DomContext context = restManager.getAuthenticator().getContext();
+    b = StoredRestManager.getInstance().get("rest/sec:" + PathId.getId(context) + "/user/account/getBearerToken", String.class);
+    b = java.util.Base64.getEncoder().encodeToString(("2\f"+b).getBytes());
+    return b;
+  }
+
 }
