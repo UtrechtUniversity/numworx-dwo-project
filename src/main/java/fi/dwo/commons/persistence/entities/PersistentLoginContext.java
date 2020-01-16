@@ -63,7 +63,9 @@ public class PersistentLoginContext implements Serializable {
     @Basic(optional = false)
     @Column(name = "lastLoginTimeStamp", nullable = true)
     private Long lastLoginTimeStamp;
-    
+    // since 1.5.4
+    @Column(name = "nonce", nullable = true)
+    protected byte[] nonce;
 
     /**
      * @return the id
@@ -206,4 +208,13 @@ public class PersistentLoginContext implements Serializable {
     public void setSecretKey(byte[] secretKey) {
         this.secretKey = secretKey;
     }
+
+    public byte[] getNonce() {
+      return nonce;
+    }
+
+    public void setNonce(byte[] nonce) {
+      this.nonce = nonce;
+    }
+    
 }
