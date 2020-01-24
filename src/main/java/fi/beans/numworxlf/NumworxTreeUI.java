@@ -2,6 +2,8 @@ package fi.beans.numworxlf;
 
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 import javax.swing.Icon;
 import javax.swing.JComponent;
@@ -26,7 +28,10 @@ public class NumworxTreeUI extends BasicTreeUI implements Constants {
 		}
 
 		@Override
-		public void paintIcon(Component c, Graphics g, int x, int y) {
+		public void paintIcon(Component c, Graphics gr, int x, int y) {
+			Graphics2D g = (Graphics2D)gr;
+		    ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		    ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
 			int width = 8;
 			int height = 8;
 			x += 5;

@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 import javax.swing.AbstractButton;
 import javax.swing.Icon;
@@ -18,7 +20,10 @@ public class NumworxCheckBoxUI extends BasicCheckBoxUI implements Constants {
     static final int GAP2 = GAP*2;
     private static Font vfont = new Font("SansSerif", Font.BOLD, 13);
     @Override
-    public void paintIcon(Component c, Graphics g, int x, int y) {
+    public void paintIcon(Component c, Graphics gr, int x, int y) {
+    		Graphics2D g = (Graphics2D)gr;
+        ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
       g.setColor(Color.white);
       g.fillRect(x, y, getIconWidth(), getIconHeight());
       g.setColor(colorBlue3);

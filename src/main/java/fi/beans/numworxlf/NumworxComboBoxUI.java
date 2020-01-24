@@ -3,7 +3,9 @@ package fi.beans.numworxlf;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -23,7 +25,10 @@ public class NumworxComboBoxUI extends BasicComboBoxUI implements Constants {
   class Arrow implements Icon {
 
     @Override
-    public void paintIcon(Component c, Graphics g, int x, int y) {
+    public void paintIcon(Component c, Graphics gr, int x, int y) {
+    		Graphics2D g = (Graphics2D)gr;
+        ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
       Font f = g.getFont();
       g.setFont(ARROW_FONT);
       g.setColor(WHITE);
