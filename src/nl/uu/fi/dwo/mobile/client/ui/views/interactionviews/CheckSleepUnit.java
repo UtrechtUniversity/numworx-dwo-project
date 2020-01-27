@@ -35,6 +35,11 @@ import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
+
+import com.vaadin.pointerevents.client.PointerDownEvent;
+import com.vaadin.pointerevents.client.PointerDownHandler;
+import com.vaadin.pointerevents.client.PointerEvent;
+
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -886,17 +891,19 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	            	ipListSleep[i].setStartSleep();
 	            ipListSleep[i].getAsPanel().addDomHandler(new MouseDownHandler(){
 		    		public void onMouseDown(MouseDownEvent e){
-		    			
 		    			clickAction();
-		    			
 		    		}
 		    	}, MouseDownEvent.getType());
 	            ipListSleep[i].getAsPanel().addDomHandler(new TouchStartHandler(){
 		    		public void onTouchStart(TouchStartEvent e){
 		    			clickAction();
-		    			
 		    		}
 		    	}, TouchStartEvent.getType());
+	            ipListSleep[i].getAsPanel().addDomHandler(new PointerDownHandler(){
+		    		public void onPointerDown(PointerDownEvent e){
+		    			clickAction();
+		    		}
+		    	}, PointerDownEvent.getType());
             }
         }
         
