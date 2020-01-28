@@ -17,8 +17,8 @@ import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.rest.jaxrsfilters.AuthenticationRequestFilter;
 import fi.dwo.server.testutil.TestSecurityContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomToken;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
-import nl.uu.fi.dwo.rest.dom.oauth.TokenResponse;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 public class OAuth2ManagerIT {
@@ -65,20 +65,20 @@ public class OAuth2ManagerIT {
     
     Response response = manager.token(params);
     assertEquals(200, response.getStatus());
-    TokenResponse token = (TokenResponse) response.getEntity();
+    DomToken token = (DomToken) response.getEntity();
     assertNotNull(token);
-    assertNotNull(token.access_token);
+    assertNotNull(token.getAccess_token());
     AuthenticationRequestFilter filter = new AuthenticationRequestFilter();
-    SecurityContext ctx = filter.validateJWTToken(token.access_token, sc);
+    SecurityContext ctx = filter.validateJWTToken(token.getAccess_token(), sc);
     assertNotNull(ctx);
     assertEquals("user01", ctx.getUserPrincipal().getName());
 
-    params.putSingle("refresh_token", token.refresh_token);
+    params.putSingle("refresh_token", token.getRefresh_token());
     params.putSingle(manager.GRANT_TYPE, "refresh_token");
     response = manager.token(params);
     assertNotNull(token);
-    assertNotNull(token.access_token);
-    ctx = filter.validateJWTToken(token.access_token, sc);
+    assertNotNull(token.getAccess_token());
+    ctx = filter.validateJWTToken(token.getAccess_token(), sc);
     assertNotNull(ctx);
     assertEquals("user01", ctx.getUserPrincipal().getName());
  

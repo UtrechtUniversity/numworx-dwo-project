@@ -36,9 +36,9 @@ import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import nl.uu.fi.dwo.rest.dom.entities.DomToken;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.oauth.ErrorResponse;
-import nl.uu.fi.dwo.rest.dom.oauth.TokenResponse;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import nl.uu.fi.dwo.rest.security.TOTP;
@@ -50,7 +50,7 @@ public class OAuth2Manager {
   static final String GRANT_TYPE = "grant_type";
   static final String CODE = "code";
   private static final Logger LOG = Logger.getLogger(OAuth2Manager.class.getName());
-  private static long expires = 3600*3;
+  private static int expires = 3600*3;
   private static final AuthenticationRequestFilter AUTH = new AuthenticationRequestFilter();
   
   private String access_token(PersistentUser u, PersistentLoginContext c, String scope) {
@@ -96,7 +96,6 @@ public class OAuth2Manager {
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/token")
   public Response token(MultivaluedMap<String, String> params) {
-    TokenResponse response = new TokenResponse();
     String grant = params.getFirst(GRANT_TYPE);
     if (AUTHORIZATION_CODE.equals(grant)) {
         String code  = params.getFirst(CODE);
@@ -114,7 +113,7 @@ public class OAuth2Manager {
             List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
             for (PersistentLoginContext l : loginContextList) {
                 if (TOTP.verifyTOTP(authFields[1], DatatypeConverter.printHexBinary(l.getSecretKey()), "8")) {
-                    return buildTokenResponse(response, u, l);
+                    return buildTokenResponse(u, l);
              }
             }
           }}    
@@ -131,7 +130,7 @@ public class OAuth2Manager {
           && body.getId().equals(DatatypeConverter.printHexBinary(l.getSecretKey()))
           && body.getNotBefore().equals(new Date(l.getLastLogin()/1000L * 1000L))
           )       
-      return buildTokenResponse(response, u, l);
+      return buildTokenResponse(u, l);
     
    }
     ErrorResponse error = new ErrorResponse("invalid_request");
@@ -139,16 +138,18 @@ public class OAuth2Manager {
 
   }
 
-  protected Response buildTokenResponse(TokenResponse response, PersistentUser u,
+  protected Response buildTokenResponse(PersistentUser u,
       PersistentLoginContext l) {
-    response.expires_in = expires;
+    DomToken response = new DomToken();
+
+    response.setExpires_in(expires);
     String scope; // extract from "code"
     Long courseID = l.getCourseID();
     scope = courseID == null ? null : PersistentCourse.buildPersistenceId(courseID).getIdString();
-    response.access_token = access_token(u, l, scope);
-    response.refresh_token = refresh_token(u,l);
-    response.token_type = "bearer";
-    response.scope = scope;
+    response.setAccess_token(access_token(u, l, scope));
+    response.setRefresh_token(refresh_token(u,l));
+    response.setToken_type(DomToken.BEARER);
+    response.setScope(scope);
     return Response.ok(response).build();
   }
 }
