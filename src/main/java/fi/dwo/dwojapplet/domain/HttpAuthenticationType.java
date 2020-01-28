@@ -9,5 +9,6 @@ package fi.dwo.dwojapplet.domain;
  */
 public enum HttpAuthenticationType {
     BASIC,
-    DIGEST    
+    DIGEST,
+    BEARER
 }
