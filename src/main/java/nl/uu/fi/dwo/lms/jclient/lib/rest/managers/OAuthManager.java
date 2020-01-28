@@ -5,21 +5,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.StandardConstants;
-
 import com.owlike.genson.Genson;
 
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
-import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
-import nl.uu.fi.dwo.rest.dom.oauth.TokenResponse;
+import nl.uu.fi.dwo.rest.dom.entities.DomToken;
 
 public class OAuthManager {
 
@@ -54,15 +49,13 @@ public class OAuthManager {
       StringBuilder json = new StringBuilder();
       while ((output = br.readLine()) != null) {
         json.append(output);
-        System.out.println(output);
       }
       conn.disconnect();
       // decode JSON
-      // genson = new Genson();
       Genson genson = manager.getGenson();
-      TokenResponse response = genson.deserialize(json.toString(), TokenResponse.class);
-      manager.setBearerAuthString(response.access_token);
-      return response.refresh_token;
+      DomToken response = genson.deserialize(json.toString(), DomToken.class);
+      manager.setBearerAuthString(response.getAccess_token());
+      return response.getRefresh_token();
       }
     } catch (IOException e) {
       LOG.log(Level.SEVERE, "rest error", e);
