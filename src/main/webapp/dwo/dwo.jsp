@@ -1,86 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="saml_util.jsp" %>
 <% Object SERVLET = request.getAttribute("SERVLET");
 	if(SERVLET == null)
 	{
 		response.sendError(response.SC_NOT_FOUND);
 		return;
 	}
-	Object contextPath = request.getContextPath();
 %>
 <HTML>
 <HEAD>
-<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
-<META HTTP-EQUIV="Expires" CONTENT="-1">
-<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
-<SCRIPT type="text/javascript" src="/dwo/script/frameResize.js"></SCRIPT>
-<script type="text/javascript" src="/dwo/script/cookie_box.js" ></script>
-
-<%
-	Object IDEAS   = request.getAttribute("IDEAS");
-	Object guestUser = request.getAttribute("guestUser");
-	Object extras   = request.getAttribute("extras");
-	if(extras == null) extras = "";
-	String language = request.getParameter("language");
-	if(language == null) language = (String) request.getAttribute("language");
-	Object profile = request.getAttribute("profile");
-	String scoViewNr = request.getParameter("scoViewNr");
-	if(scoViewNr == null) scoViewNr = "";
-	String courseViewNr = request.getParameter("courseViewNr");
-	if(courseViewNr == null) courseViewNr = "";
-	Object cookies = request.getAttribute("cookies");
-	if(cookies == null) cookies = Boolean.FALSE;
-// extras: Limited School Access (profiel eigenschap)
-/* 	boolean limited = false;
-	if("87".equals(profile.toString())) {
-		limited = true;
-	}
-	if("91".equals(profile.toString())) {
-		limited = true;
-	}
-	if (limited) {
-		extras = extras.toString() + "<param name='limitedSchoolAccess' value='true' />\n     <param name='schoolAccessProperties' value='schools.properties' />";
-	}
- */
- 	String dwo_env = System.getProperty("DWO_ENV","app");
-%>
 </HEAD>
 <BODY	bgcolor="#E6E7E9"
 	leftmargin="0"
 	topmargin="0"
-	onload="javascript:parent.API=API;parent.API_1484_11=API;"
-
-	onBeforeUnload="javascript:API.stop();"
 	>
 <center>
-<APPLET
-	code	= "fi.dwo.dwojapplet.domain.DWO"
-	width	= "100%"
-	height= "100%"
-	archive = "DWOJApplet.jar,dwo1compat.jar"
-	mayscript
-	id="API"
-	name="DWO"
-	codebase="/dwo/"
-	>
 	Helaas, applets worden niet ondersteund in deze browser.
 	Ga naar <a href="https://www.numworx.nl/help/downloads">
 	numworx</a> om de NumworxAuthor applicatie te downloaden.
-	<param name="language" value="<%=language %>" />
-	<param name="profile" value="<%=profile %>" />
-	<param name="CAS" value="local" />
-	<param name="cookies" value="<%=cookies %>" />
-	<param name="java_arguments" value="-Djava.net.preferIPv4Stack=true -Xmx1024m -Dhttps.protocols=TLSv1"/>
-	<param name="codebase_lookup" value="false">
-	<param name="classloader_cache" value="false">
-	<param name="IDEAS" value="<%=IDEAS %>" />
-	<param name="guestUser" value="<%=guestUser %>" />
-	<param name="courseViewNr" value="<%=courseViewNr%>"/>
-	<param name="scoViewNr" value="<%=scoViewNr%>" />
-	<param name="dwo_env" value="<%=dwo_env%>" />
-	<%=extras %>
-</APPLET>
 </center>
 </BODY>
 </HTML>
