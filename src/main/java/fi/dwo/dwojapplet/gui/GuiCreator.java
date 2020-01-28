@@ -42,8 +42,10 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.ConfigManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.LoginManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.OAuthManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminConfigManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -179,6 +181,9 @@ public class GuiCreator {
             DwoHelper.setContact(false);
             DomUserFullwLoginContext user = LoginManager.basicLogin(username, MD5.getHashString(String.valueOf(password)));
             DwoHelper.setCurrentUser(user.getDomUserFull(),user.getDomLoginContext());
+ //           OAuthManager m = new OAuthManager();
+ //           m.authorization_token(SecureUserAccountManager.getBearerToken());
+            
 //            Code underdevelopment to do digest.
 //            PublicUserManager.digestLogin(username, password);
 
