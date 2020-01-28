@@ -2864,7 +2864,7 @@ LOG.info("time results = " + (-t) + " ms");
     private JDialog attnDialog;    
     @Override
     public void onIdle(IdleEvent ev) {
-      if (ev.isSlow()) {
+      if (DwoHelper.isTest() && ev.isSlow()) {
         attnDialog = new JDialog(DwoHelper.getFrameForComponent(this), false);
         attnDialog.setAlwaysOnTop(true);
         attnDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
@@ -2900,7 +2900,7 @@ LOG.info("time results = " + (-t) + " ms");
       } else {
         if (ev.getCnt() >= 2 && attnDialog != null) {
           noAttn();
-          GuiCreator.instance().logoff();         
+          //GuiCreator.instance().logoff();         
         }
       }
       
