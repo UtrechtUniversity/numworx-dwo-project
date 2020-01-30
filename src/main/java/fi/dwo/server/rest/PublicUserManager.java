@@ -352,13 +352,7 @@ public class PublicUserManager {
                 List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
                 for (PersistentLoginContext l : loginContextList) {
                     if (TOTP.verifyTOTP(authFields[1], DatatypeConverter.printHexBinary(l.getSecretKey()), "8")) {
-                        //return u.buildDomUserFullwLoginContext(l);
-                        try {
-                          return u.buildDomUserFullwLoginContext(LoginContextUtilManager.forceNewLoginContextSession(u));
-                        } catch (Dwo2Exception e) {
-                          LOG.log(Level.SEVERE, "Unexpected error", e);
-                          throw new Dwo2RestException(e);
-                        }
+                        return u.buildDomUserFullwLoginContext(l);
                    }
                 }
                 break;
