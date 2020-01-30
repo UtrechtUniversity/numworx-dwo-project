@@ -261,7 +261,13 @@ public class ModulesPresenter implements SwitchViewEventHandler {
           SwitchViewEvent event = new SwitchViewEvent(SelectedView.TRAIL, o);
           eventBus.fireEvent(event);
         } else if ("LOGOUT".equals(message)) {
-          eventBus.fireEvent(new LoginEvent(State.LOGOUT));
+        	if (logout != null)
+        	{
+        		logout.resolve(Boolean.TRUE);
+        		logout = null;
+        	}
+        	else
+        		eventBus.fireEvent(new LoginEvent(State.LOGOUT));
         } else if ("EXAM".equals(message)) {
           controller.get().setSession(false);
         } else if (select(SelectedView.MAYBELOGOUT, message)) {
