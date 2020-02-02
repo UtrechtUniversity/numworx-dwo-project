@@ -23,6 +23,7 @@ import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -131,23 +132,49 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	private boolean teltMee = true;
 	private DWOLogger dwologger;
 	
-	
+	private int[] randomSequence;
 	
 
 	public void randomizePositions()
 	{
+		boolean zwevend = true;
 		Vector v = new Vector();
 		randomizedPositions = new Point[juisteSelecties.length];
 		for(int i=0 ; i<ipList.length ; i++)
-		{	if(!(ipList[i] instanceof TekstVakPanel) || !ipList[i].isZwevend())return;
+		{	if(!(ipList[i] instanceof TekstVakPanel))
+				return;
+			if(!ipList[i].isZwevend()) {
+				zwevend = false;
+				break;
+			}
 			v.addElement(ipList[i].geefLocatie());
 		}
-		for(int i=0 ; i<ipList.length ; i++)
+		for(int i=0 ; i<ipList.length && zwevend; i++)
 		{	int r = (int)((ipList.length-i)*Math.random());
 			Point p = (Point)(v.elementAt(r));
 			if(!positionsRandomized) randomizedPositions[i] = p;
 			ipList[i].zetLocatie(p.getX(), p.getY());
 			v.removeElementAt(r);
+		}
+		if(!zwevend && !positionsRandomized) {
+			Vector parents = new Vector();
+			randomSequence = new int[ipList.length];
+			Widget [] randomizedWidgets = new Widget[ipList.length];
+			for(int i=0 ; i<ipList.length ; i++)
+			{	Panel p = (Panel)ipList[i].asWidget().getParent();
+				parents.addElement(ipList[i].asWidget().getParent());
+				p.remove(ipList[i].asWidget());
+			}
+			for(int i=0 ; i<ipList.length ; i++)
+			{	int r = (int)((ipList.length-i)*Math.random());
+				randomSequence[i] = r;
+				Panel p = (Panel)(parents.elementAt(r));
+				randomizedWidgets[i] = p;
+				p.add(ipList[i].asWidget());
+				parents.removeElementAt(r);
+			}
+			
+			
 		}
 		positionsRandomized = true;
 	}	
@@ -334,7 +361,8 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         	h.put("randomizedPositionsX", randomizedPositionsX);
         if(randomizedPositionsY != null) 
         	h.put("randomizedPositionsY", randomizedPositionsY);
-        
+        if(randomSequence!=null)
+        h.put("randomSequence", randomSequence);
         h.put("ingevuld", new Boolean(ingevuld));
         h.put("nagekeken", new Boolean(nagekeken));
         h.put("editable", Boolean.valueOf(editable));
@@ -349,7 +377,11 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 
 	@Override
 	public void setState(HashMap<String, Object> h) {
-		if(h == null) return; // setStateNull();
+		
+		if(h == null) {
+			if(randomizePositions && !positionsRandomized) randomizePositions();
+			return; // setStateNull();
+		}
 		Point[] randomizedPositions = null;
 	    boolean ingevuld = false;
 	    boolean nagekeken = false;
@@ -374,8 +406,10 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	    		randomizedPositions[i] = new Point(listX[i], 
 	    				listY[i]);
 	    }
+		if(map.containsKey("randomSequence"))
+			randomSequence = map.getIntArray("randomSequence");
 	    if(map.containsKey("ingevuld")) 
-	    	ingevuld = map.getBoolean("ingevuld");
+	    		ingevuld = map.getBoolean("ingevuld");
 	    if(map.containsKey("nagekeken")) 
 	    	nagekeken = map.getBoolean("nagekeken");
 	    editable = map.getBoolean("editable", true);
@@ -405,6 +439,25 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	            ipList[i].zetLocatie(p.getX(), p.getY()); //niet meer nodig.
 	        }
 	        //(((TekstInteractiePanelVak)((Component)ipList[0]).getParent()).getTekstVak()).layoutTekst();
+        	
+        		if(randomSequence!=null && !positionsRandomized) {
+        			Vector parents = new Vector();
+        			Widget [] randomizedWidgets = new Widget[ipList.length];
+        			for(int i=0 ; i<ipList.length ; i++)
+        			{	Panel p = (Panel)ipList[i].asWidget().getParent();
+        				parents.addElement(p);
+        				p.remove(ipList[i].asWidget());
+        			}
+        			for(int i=0 ; i<ipList.length ; i++)
+        			{	int r = randomSequence[i];
+        				Panel p = (Panel)(parents.elementAt(r));
+        				randomizedWidgets[i] = p;
+        				p.add(ipList[i].asWidget());
+        				parents.removeElementAt(r);
+        			}
+        			
+        		}
+        			
         }
         
         if(ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)||Review.isReview(comRoot)))
@@ -870,7 +923,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
             }
         }
         
-        if(randomizePositions && !positionsRandomized) randomizePositions();
+        
 	}
 	
 	public int getAantalSelectieObjecten()

@@ -4347,7 +4347,7 @@ private Object CamelCase(String name) {
 			//e.preventDefault();
 			//e.stopPropagation();
 			
-			if(sleepbaar && hasPointerEventSupport)
+			if(hasPointerEventSupport)
 				return;
 			// prevent scrolling
 			if(sleepbaar && sleepHandle && (e.getX() > 20 || e.getY() > 20) )
@@ -4625,7 +4625,7 @@ private Object CamelCase(String name) {
 			LOG.info("TekstVakPanel.TouchHandler.onTouchEnd()");
 			//e.preventDefault();
 			e.stopPropagation();
-			if(sleepbaar && hasPointerEventSupport)
+			if(hasPointerEventSupport)
 				return;
 			
 			Touch touch = e.getTouches().get(0);

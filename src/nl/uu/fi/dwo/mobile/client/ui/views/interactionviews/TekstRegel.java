@@ -259,6 +259,7 @@ public class TekstRegel //extends LayoutPanel
 			{
 				objectVerschuiving = ashoogte - tekstAshoogte;
 			}
+			
 			if(currentObject instanceof String)
 			{
 				
