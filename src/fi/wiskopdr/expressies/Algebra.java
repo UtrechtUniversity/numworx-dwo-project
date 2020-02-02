@@ -976,6 +976,14 @@ public class Algebra
 		{
 			return false;
 		}
+		else if(e1 instanceof Primitieve && e2 instanceof Primitieve)
+		{	
+			return zijnGelijk(e1.kind1,e2.kind1,vorm) && zijnGelijk(e1.kind2,e2.kind2,vorm);
+		}
+		else if(e1 instanceof Primitieve || e2 instanceof Primitieve)
+		{	
+			return false;
+		}
 		else if (e1 instanceof GCD && e2 instanceof GCD)
 		{
 			return zijnGelijk(e1.kind1, e2.kind1, vorm) && zijnGelijk(e1.kind2, e2.kind2, vorm);
