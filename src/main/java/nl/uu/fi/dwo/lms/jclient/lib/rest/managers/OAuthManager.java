@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -20,25 +21,37 @@ public class OAuthManager {
 
   StoredRestManager manager;
   private static final Logger LOG = Logger.getLogger(OAuthManager.class.getName());
+  private URL url;
 
   
   public OAuthManager(StoredRestManager manager) {
     this.manager = manager;
+    try {
+      url = new URL(manager.getServerUrlPath(), "rest/oauth2/token");
+    } catch (MalformedURLException e) {
+    }
   }
   
   public OAuthManager() {
     this(StoredRestManager.getInstance());
   }
   
-  @SuppressWarnings("deprecation")
   public String authorization_token(String token) {
+    return requestToken(token, "grant_type=authorization_code&code=");
+  }
+
+  public String refresh_token(String token) {
+    return requestToken(token, "grant_type=refresh_token&refresh_token=");
+  }
+
+  @SuppressWarnings("deprecation")
+  private String requestToken(String token, String format) {
     try {
-      URL url = new URL(manager.getServerUrlPath(), "rest/oauth2/token");
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setAllowUserInteraction(false);
       conn.setDoOutput(true);
       OutputStream out = conn.getOutputStream();
-      String form = "grant_type=authorization_code&code="+URLEncoder.encode(token);
+      String form = format+URLEncoder.encode(token);
       out.write(form.getBytes(StandardCharsets.US_ASCII));
       out.close();
       if (conn.getResponseCode() == 200) {
@@ -63,5 +76,8 @@ public class OAuthManager {
     return null;
 
   }
+  
+  
+  
   
 }

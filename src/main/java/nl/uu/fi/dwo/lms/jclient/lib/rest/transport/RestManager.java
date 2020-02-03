@@ -153,6 +153,8 @@ class RestManager extends RestyDateTimeFormat {
           conn.disconnect();
           e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json.toString()),
               Dwo2ExceptionTranslator.decodeMessageInJSON(json.toString()));
+        } else if (conn.getResponseCode() == 401) { 
+          e = new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, conn.getResponseMessage());
         } else {
           // non-servlet generated exception has been sent. Convert to Dwo2RestException.
           e = new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, conn.getResponseMessage());
@@ -229,7 +231,9 @@ class RestManager extends RestyDateTimeFormat {
           conn.disconnect();
           e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json.toString()),
               Dwo2ExceptionTranslator.decodeMessageInJSON(json.toString()));
-        } else {
+        } else if (conn.getResponseCode() == 401) { 
+          e = new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, conn.getResponseMessage());
+       } else {
           // non-servlet generated exception has been sent. Convert to Dwo2RestException.
           e = new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, conn.getResponseMessage());
         }
@@ -451,6 +455,8 @@ class RestManager extends RestyDateTimeFormat {
           conn.disconnect();
           e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json.toString()),
               Dwo2ExceptionTranslator.decodeMessageInJSON(json.toString()));
+        } else if (conn.getResponseCode() == 401) { 
+          e = new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, conn.getResponseMessage());
         } else {
           // non-servlet generated exception has been sent. Convert to Dwo2RestException.
           e = new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, conn.getResponseMessage());
