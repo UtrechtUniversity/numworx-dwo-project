@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -158,23 +159,29 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		}
 		if(!zwevend && !positionsRandomized) {
 			Vector parents = new Vector();
+			Vector parentsTemp = new Vector();
 			randomSequence = new int[ipList.length];
-			Widget [] randomizedWidgets = new Widget[ipList.length];
 			for(int i=0 ; i<ipList.length ; i++)
-			{	Panel p = (Panel)ipList[i].asWidget().getParent();
-				parents.addElement(ipList[i].asWidget().getParent());
-				p.remove(ipList[i].asWidget());
+			{	TekstVak tv = (TekstVak)ipList[i].asWidget().getParent().getParent();
+				parents.addElement(tv);
+				parentsTemp.addElement(tv);
+				ArrayList<Object> objects = tv.getOpdrachtObjects();
+				objects.remove(ipList[i]);
+				Panel p = (Panel)ipList[i].asWidget().getParent();
+				tv.clear();
 			}
 			for(int i=0 ; i<ipList.length ; i++)
 			{	int r = (int)((ipList.length-i)*Math.random());
 				randomSequence[i] = r;
-				Panel p = (Panel)(parents.elementAt(r));
-				randomizedWidgets[i] = p;
-				p.add(ipList[i].asWidget());
-				parents.removeElementAt(r);
+				TekstVak tv = (TekstVak)(parentsTemp.elementAt(r));
+				ArrayList<Object> objects = tv.getOpdrachtObjects();
+				objects.add(0,ipList[i]);
+				parentsTemp.removeElementAt(r);
 			}
-			
-			
+			for(int i=0 ; i<parents.size() ; i++)
+			{	TekstVak tv = (TekstVak)parents.elementAt(i);
+				tv.reLayout();
+			}
 		}
 		positionsRandomized = true;
 	}	
@@ -441,20 +448,46 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	        //(((TekstInteractiePanelVak)((Component)ipList[0]).getParent()).getTekstVak()).layoutTekst();
         	
         		if(randomSequence!=null && !positionsRandomized) {
-        			Vector parents = new Vector();
-        			Widget [] randomizedWidgets = new Widget[ipList.length];
-        			for(int i=0 ; i<ipList.length ; i++)
-        			{	Panel p = (Panel)ipList[i].asWidget().getParent();
-        				parents.addElement(p);
-        				p.remove(ipList[i].asWidget());
-        			}
-        			for(int i=0 ; i<ipList.length ; i++)
-        			{	int r = randomSequence[i];
-        				Panel p = (Panel)(parents.elementAt(r));
-        				randomizedWidgets[i] = p;
-        				p.add(ipList[i].asWidget());
-        				parents.removeElementAt(r);
-        			}
+//        			Vector parents = new Vector();
+//        			Widget [] randomizedWidgets = new Widget[ipList.length];
+//        			for(int i=0 ; i<ipList.length ; i++)
+//        			{	TekstVak tv = (TekstVak)ipList[i].asWidget().getParent().getParent();
+//        				ArrayList<Object> objects = tv.getOpdrachtObjects();
+//        				parents.addElement(objects);
+//        				objects.remove(ipList[i].asWidget());
+//        			}
+//        			for(int i=0 ; i<ipList.length ; i++)
+//        			{	int r = randomSequence[i];
+//        				Panel p = (Panel)(parents.elementAt(r));
+//        				randomizedWidgets[i] = p;
+//        				p.add(ipList[i].asWidget());
+//        				parents.removeElementAt(r);
+//        				//ipList[i].resize(); zou moeten, maar werkt niet ivm boekhouding
+//        			}
+        			
+        				Vector parents = new Vector();
+        				Vector parentsTemp = new Vector();
+        				for(int i=0 ; i<ipList.length ; i++)
+        				{	TekstVak tv = (TekstVak)ipList[i].asWidget().getParent().getParent();
+        					parents.addElement(tv);
+        					parentsTemp.addElement(tv);
+        					ArrayList<Object> objects = tv.getOpdrachtObjects();
+        					objects.remove(ipList[i]);
+        					Panel p = (Panel)ipList[i].asWidget().getParent();
+        					tv.clear();
+        				}
+        				for(int i=0 ; i<ipList.length ; i++)
+        				{	int r = randomSequence[i];
+        					TekstVak tv = (TekstVak)(parentsTemp.elementAt(r));
+        					ArrayList<Object> objects = tv.getOpdrachtObjects();
+        					objects.add(0,ipList[i]);
+        					parentsTemp.removeElementAt(r);
+        				}
+        				for(int i=0 ; i<parents.size() ; i++)
+        				{	TekstVak tv = (TekstVak)parents.elementAt(i);
+        					tv.reLayout();
+        				}
+        			
         			
         		}
         			
