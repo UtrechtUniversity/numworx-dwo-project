@@ -876,7 +876,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				TekstVakPanel tvp = (TekstVakPanel) object;
 				if(!tvp.isPopup())
 				{
-					focusVerlegd = tvp.tabFocus(this, false);
+					//focusVerlegd = tvp.tabFocus(this, false);
 					if(focusVerlegd)
 						return true;
 				}
