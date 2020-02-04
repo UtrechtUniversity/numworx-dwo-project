@@ -8,6 +8,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.beans.numworxlf.Constants;
@@ -17,6 +18,7 @@ import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.LoginManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import fi.dwo.dwojapplet.gui.domutils.DomSchoolClassListCellRenderer;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
@@ -207,7 +209,8 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                         };
                     }
                     SecureUserAccountManager.logoutUser(DwoHelper.getCurrentLoginContext());
-                    GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword(), realm);
+//                    GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword(), realm);
+                    DomUserFullwLoginContext usercontext = LoginManager.basicLogin(user.getUserName(), user.getPassword(), realm); // Create login context
 
 // HTML5
                     String student_player = GuiConstants.STUDENT_PLAYER;
@@ -225,18 +228,19 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
 								System.exit(0);
 							} else {
 								DwoHelper.getApplet().getAppletContext().showDocument(url, "_parent");
+								return;
 							}
 						} catch (Exception e) {
 							LOG.log(Level.SEVERE, "Login as Student", e);
 						}
                     }
-                  
+                    System.exit(1);
                     
                     
-                } catch (LoginException ex) {
-                    Dwo2Exception err = new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, ex.getMessage());
-                    LOG.log(Level.SEVERE, "", ex);
-                    GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), err);
+//                } catch (LoginException ex) {
+//                    Dwo2Exception err = new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, ex.getMessage());
+//                    LOG.log(Level.SEVERE, "", ex);
+//                    GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), err);
                 } catch (Dwo2Exception e) {
                     LOG.log(Level.SEVERE, "", e);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), e);
