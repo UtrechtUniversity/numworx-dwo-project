@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.util.Date;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,9 +47,11 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.OAuthManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminConfigManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 /**
  * This Class is responsible for creating some GUI elements and to communicate
@@ -57,7 +60,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  * @author M.J.B. Kupers
  *
  */
-public class GuiCreator {
+public class GuiCreator implements Predicate<Dwo2Exception> {
 
     private static final Logger LOG = Logger.getLogger(GuiCreator.class.getName());
 
@@ -70,6 +73,8 @@ public class GuiCreator {
     protected WelcomePanel welcomePanel;
     
     private Promise<SwingBrowserFactory> sbf;
+
+    private String token;
     
     public Promise<SwingBrowserFactory> getSBF() {
       if (sbf == null) {
@@ -181,8 +186,14 @@ public class GuiCreator {
             DwoHelper.setContact(false);
             DomUserFullwLoginContext user = LoginManager.basicLogin(username, MD5.getHashString(String.valueOf(password)));
             DwoHelper.setCurrentUser(user.getDomUserFull(),user.getDomLoginContext());
- //           OAuthManager m = new OAuthManager();
- //           m.authorization_token(SecureUserAccountManager.getBearerToken());
+            OAuthManager m = new OAuthManager();
+            token = m.authorization_token(SecureUserAccountManager.getBearerToken());
+            if (token != null) {
+              StoredRestManager.getInstance().setRecover(this);
+            }
+            
+            
+            
             
 //            Code underdevelopment to do digest.
 //            PublicUserManager.digestLogin(username, password);
@@ -291,20 +302,26 @@ public class GuiCreator {
             }
             gc.mainPanel = mainPanel;
             gc.welcomePanel = welcomePanel;
+            gc.token = token;
+            if (token != null) StoredRestManager.getInstance().setRecover(gc);
             gc.mainPanel = new MainPanel(DWO.getDwoProfile());
             dwo.setPanel(gc.mainPanel);
         } else if (u instanceof Admin) {
             GuiCreator gc = new GuiCreatorAdmin(dwo);
+            gc.token = token;
+            if (token != null) StoredRestManager.getInstance().setRecover(gc);
             gc.mainPanel = mainPanel;
             gc.welcomePanel = welcomePanel;
             gc.mainPanel = new MainPanel(DWO.getDwoProfile());
             dwo.setPanel(gc.mainPanel);
         } else if (this instanceof GuiCreatorTeacher || this instanceof GuiCreatorAdmin) {
             GuiCreator gc = new GuiCreator(dwo);
+            gc.token = token;
+            if (token != null) StoredRestManager.getInstance().setRecover(gc);
             gc.mainPanel = mainPanel;
             gc.welcomePanel = welcomePanel;
             gc.mainPanel = new MainPanel(DWO.getDwoProfile());
-            dwo.setPanel(gc.mainPanel);
+          dwo.setPanel(gc.mainPanel);
         } else {
             mainPanel = new MainPanel(DWO.getDwoProfile());
             dwo.setPanel(mainPanel);
@@ -1129,5 +1146,15 @@ public class GuiCreator {
 
   public ConfigManager getConfigManager() {
     return null;
+  }
+
+  @Override
+  public boolean test(Dwo2Exception t) {
+    if (this != instance()) return false;
+    if (t.getDwo2Code() != Dwo2ExceptionCode.User_AuthenticationError) return false;
+    if (token == null) return false;
+    OAuthManager m = new OAuthManager(StoredRestManager.getInstance());
+    token = m.refresh_token(token);
+    return true;
   }
 }
