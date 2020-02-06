@@ -143,6 +143,7 @@ public class SecureUserAccountManager {
     // ensures basic auth data and cookies are wiped from Java Browser-like framework
     Authenticator.setDefault(null);
     restManager.setBasicAuthString(null, null, null);
+    restManager.setRecover(null);
     return result;
   }
 
