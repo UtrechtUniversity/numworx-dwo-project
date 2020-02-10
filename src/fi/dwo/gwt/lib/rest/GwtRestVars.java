@@ -178,4 +178,9 @@ public class GwtRestVars {
         this.authenticator = authenticator;
     }
 
+	public void setBearerToken(String bearer) {
+		authenticator.setBearer(bearer);
+		
+	}
+
 }
