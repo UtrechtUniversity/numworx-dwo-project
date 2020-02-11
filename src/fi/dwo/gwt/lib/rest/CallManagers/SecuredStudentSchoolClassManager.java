@@ -1,6 +1,7 @@
 package fi.dwo.gwt.lib.rest.CallManagers;
 
 import com.google.gwt.core.client.GWT;
+import static fi.dwo.gwt.lib.rest.GwtRestVars.F;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredStudentSchoolClassRestCaller;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
@@ -40,7 +41,7 @@ public class SecuredStudentSchoolClassManager {
         restSchoolClass.setRestContext(context);
         restSchoolClass.setDomSchoolClass(schoolClass);
 		String id = PathId.getId(context);
-		service.setActiveSchoolClass(id, restSchoolClass, (callBack));
+		F(service::setActiveSchoolClass,id, restSchoolClass, (callBack));
         LOG.log(Level.FINE, "Rest Callback performed.");
     }
 
@@ -56,7 +57,7 @@ public class SecuredStudentSchoolClassManager {
         restSchoolClass.setRestContext(context);
         restSchoolClass.setDomSchoolClass(schoolClass);
 		String id = PathId.getId(context);
-		service.removeSchoolClass(id, restSchoolClass, (callBack));
+		F(service::removeSchoolClass,id, restSchoolClass, (callBack));
         LOG.log(Level.FINE, "Rest Callback performed.");
     }
 
@@ -71,7 +72,7 @@ public class SecuredStudentSchoolClassManager {
 		String id = PathId.getId(context);
 	      RestContext rest = new RestContext();
 	      rest.setRestContext(context);
-		service.getStudentsSchoolClasses(id, rest, (callBack));
+		F(service::getStudentsSchoolClasses,id, rest, (callBack));
         LOG.log(Level.FINE, "Rest Callback performed.");
     }
 
@@ -86,7 +87,7 @@ public class SecuredStudentSchoolClassManager {
         restData.setRestContext(context);
         restData.setDomNewSchoolClass4Student(submit);
         String id = PathId.getId(context);
-        service.registerStudentForSchoolClass(id, restData, (callBack));
+        F(service::registerStudentForSchoolClass,id, restData, (callBack));
         LOG.log(Level.FINE, "Rest Callback performed.");
     }
 
@@ -100,9 +101,8 @@ public class SecuredStudentSchoolClassManager {
     private void getSchoolsClasses(DomContext context, PromiseCallback<List<DomSchoolClass>> callBack) {
       RestContext rest = new RestContext();
       rest.setRestContext(context);
-   	
-        service.getSchoolsClasses(PathId.getId(context), rest, (callBack));
-        LOG.log(Level.FINE, "Rest Callback performed.");
+      F(service::getSchoolsClasses,PathId.getId(context), rest, (callBack));
+      LOG.log(Level.FINE, "Rest Callback performed.");
     }
 
 
@@ -115,7 +115,7 @@ public class SecuredStudentSchoolClassManager {
     private void getActiveSchoolClass(DomContext context, PromiseCallback<DomSchoolClass> callBack) {
       RestContext rest = new RestContext();
       rest.setRestContext(context);
-        service.getActiveSchoolClass(PathId.getId(context), rest, (callBack));
+        F(service::getActiveSchoolClass,PathId.getId(context), rest, (callBack));
         LOG.log(Level.FINE, "Rest Callback performed.");
     }
 

@@ -1,9 +1,8 @@
 package fi.dwo.gwt.lib.rest.CallManagers;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
 import fi.dwo.gwt.lib.rest.GwtRestVars;
+import static fi.dwo.gwt.lib.rest.GwtRestVars.F;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredTeacherResultsRestCaller;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import java.util.logging.Level;
@@ -55,14 +54,12 @@ public class SecuredTeacherResultsManager {
         RestDwoProfile restPut = new RestDwoProfile();
         restPut.setRestContext(domContext);
         restPut.setDomDwoProfile(aProfile);
-        service.getTeachersResults(PathId.getId(domContext), restPut, callBack);
+        F(service::getTeachersResults,PathId.getId(domContext), restPut, callBack);
     }
 
     public Promise<DomResultsPerTeacher> selectedTeachersResults(DomContext context, DomDwoProfile profile, DomResultsPerTeacher dom) {
         RestResultsPerTeacher rest = new RestResultsPerTeacher(context, profile, dom);
-        PromiseCallback<DomResultsPerTeacher> callback = new PromiseCallback<>();
-        service.selectedTeachersResult(PathId.getId(context), rest, callback);
-        return callback.getPromise();
+        return F(service::selectedTeachersResult,PathId.getId(context), rest);
     }
     
     public Promise<Boolean> clearStudentResults(RestClearStudentDataForScoAndClass rest) {
@@ -78,12 +75,10 @@ public class SecuredTeacherResultsManager {
      */
     private void clearStudentResults(RestClearStudentDataForScoAndClass rest, MethodCallback<Boolean> callBack) {
       DomContext context = rest.getRestContext();
-      service.clearStudentResults(PathId.getId(context),rest, callBack);
+      F(service::clearStudentResults,PathId.getId(context),rest, callBack);
     }
 
     public Promise<DomResultsPerTeacher> createStudentResults(RestClearStudentDataForScoAndClass rest) {
-    	PromiseCallback<DomResultsPerTeacher> defer = new PromiseCallback<>();
-    	service.createStudentResults(PathId.getId(rest.getRestContext()), rest, defer);
-    	return defer.getPromise();
+    	return F(service::createStudentResults,PathId.getId(rest.getRestContext()), rest);
     }
 }

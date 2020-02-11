@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.entities.RestScormValues;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.osgi.util.promise.Failure;
@@ -25,6 +26,9 @@ import org.osgi.util.promise.Promises;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.json.client.JSONValue;
 
+import static fi.dwo.gwt.lib.rest.GwtRestVars.F;
+
+import fi.dwo.gwt.lib.rest.GwtRestVars.TriConsumer;
 import fi.dwo.gwt.lib.rest.client.RestCallers.ScoDataRestCaller;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredStudentExamScoDataRestCaller;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredStudentScoDataRestCaller;
@@ -69,7 +73,7 @@ public class SecuredStudentScoDataManager implements StudentScoDataManager {
 		}
 		values.setValues(list);
 		restScormValues.setDomScormValues(values);
-		service.getValues(restScormValues, defer);
+		F(service::getValues,PathId.getId(context), restScormValues, defer);
 		return defer.getPromise().
 				map(response -> {
 					final HashMap<String,String> result = new HashMap<String,String>();
@@ -122,7 +126,7 @@ public class SecuredStudentScoDataManager implements StudentScoDataManager {
 		rest.setRestContext(context);
 		values.setScoContext(sco);
 		values.setSchoolClassID(schoolClassID);
-		String etag = map.get("ETag");
+		final String etag = map.get("ETag");
 		ArrayList<DomMapEntry<String,String>> list = new ArrayList<DomMapEntry<String,String>>(map.size());
 		for(Map.Entry<String, String> entry: map.entrySet()) {
 			if(! "ETag".equals(entry.getKey()))
@@ -130,9 +134,9 @@ public class SecuredStudentScoDataManager implements StudentScoDataManager {
 		}
 		values.setValues(list);
 		if(etag == null)
-			service.setValues(rest, callback);
+			F(service::setValues,PathId.getId(context), rest, callback);
 		else
-			service.setValuesETag(etag, rest, callback);
+			F((id, arg, back) -> service.setValuesETag(id, etag, arg, back),PathId.getId(context), rest, callback);
 	}
 
 	@Override
@@ -143,7 +147,7 @@ public class SecuredStudentScoDataManager implements StudentScoDataManager {
 		rest.setRestContext(context);
 		values.setScoContext(sco);
 		values.setSchoolClassID(schoolClassID);
-		String etag = map.get("ETag");
+		final String etag = map.get("ETag");
 		ArrayList<DomMapEntry<String,String>> list = new ArrayList<DomMapEntry<String,String>>(map.size());
 		for(Map.Entry<String, String> entry: map.entrySet()) {
 			if(! "ETag".equals(entry.getKey()))
@@ -151,7 +155,8 @@ public class SecuredStudentScoDataManager implements StudentScoDataManager {
 		}
 		values.setValues(list);
  		RestyDeferred<Boolean> defer = new RestyDeferred<Boolean>();
-		service.patchValues(etag, rest, defer);
+		TriConsumer<RestScormValues, MethodCallback<Boolean>> triConsumer = (String id, RestScormValues arg, MethodCallback<Boolean> callback) -> service.patchValues(id, etag, arg, callback);
+		F( triConsumer,PathId.getId(context), rest, defer);
 		return defer.getPromise().then(
 				p-> {
 					if(p.getValue().value.booleanValue()) 
@@ -175,13 +180,11 @@ public class SecuredStudentScoDataManager implements StudentScoDataManager {
 	@Override
 	public Promise<JSONValue> getJSONLaunchDataBytes(DomScoContext id,
 			DomDwoProfile value, DomSchoolClassId schoolClassID, DomContext context) {
-		PromiseCallback<JSONValue> defer = new PromiseCallback<JSONValue>();
 		RestScoContext rest = new RestScoContext();
 		rest.setDomDwoProfile(value);
 		rest.setDomScoContext(id);
 		rest.setSchoolClassID(schoolClassID);
 		rest.setRestContext(context);
-		service.getJSONLaunchDataBytes(rest, defer);
-		return defer.getPromise();
+		return F(service::getJSONLaunchDataBytes,PathId.getId(context), rest);
 	}
 }

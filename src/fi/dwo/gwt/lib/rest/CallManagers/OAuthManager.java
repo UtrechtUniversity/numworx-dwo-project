@@ -17,7 +17,7 @@ public class OAuthManager implements Success<DomToken, DomToken> {
 		
 	public Promise<DomToken> authorization_token(String token) {
 		PromiseCallback<DomToken> defer = new PromiseCallback<>();
-		service.token("authorization_token", token, null, defer);
+		service.token("authorization_code", token, null, defer);
 		return defer.getPromise().then(this);
 	}
 	

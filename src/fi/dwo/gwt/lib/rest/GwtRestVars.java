@@ -4,17 +4,22 @@ import com.google.gwt.user.client.Window;
 
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionMapper;
 import fi.dwo.gwt.lib.rest.util.HeadersFilter;
+import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.Defaults;
+import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
+import org.osgi.util.promise.Promise;
 
 /**
  * Stores global variables The class is state is initialized by calls in
@@ -183,4 +188,35 @@ public class GwtRestVars {
 		
 	}
 
+	@FunctionalInterface
+	public interface TriConsumer<P, Q> {
+		void accept(String id, P arg, Q callback);
+	}
+	
+	/**
+	 * intercept resty calls.
+	 * @param f
+	 * @param arg
+	 * @param callback
+	 */
+
+	public static <P,R> void  F(TriConsumer<P, MethodCallback<R>> f, String id, P arg, MethodCallback<R> callback) {
+		f.accept(id, arg, callback);
+	}
+	
+	public static <R> void F(BiConsumer<String, MethodCallback<R>> f, String id, MethodCallback<R> callback) {
+		f.accept(id, callback);
+	}
+	
+	public static <P, R> Promise<R> F(TriConsumer<P, MethodCallback<R>> f, String id, P arg) {
+		PromiseCallback<R> defer = new PromiseCallback<R>();
+		F(f, id, arg, defer);
+		return defer.getPromise();
+	}
+
+	public void setRefreshToken(String refresh_token) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

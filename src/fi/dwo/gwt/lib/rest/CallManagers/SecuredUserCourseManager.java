@@ -7,8 +7,8 @@ import org.osgi.util.promise.Promise;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.json.client.JSONValue;
 
+import static fi.dwo.gwt.lib.rest.GwtRestVars.F;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredUserCourseRestCaller;
-import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
@@ -24,70 +24,58 @@ public class SecuredUserCourseManager implements CourseManager {
 	
 	@Override
 	public Promise<List<DomCourseStudent>> getCourses(DomDwoProfile profile, DomContext context) {
-		PromiseCallback<List<DomCourseStudent>> result = new PromiseCallback<List<DomCourseStudent>>();
 		RestDwoProfile rest = new RestDwoProfile();
 		rest.setDomDwoProfile(profile);
 		rest.setRestContext(context);
-		service.getCourses(PathId.getId(context),rest, result);
-		return result.getPromise();
+		return F(service::getCourses,PathId.getId(context),rest);
 	}
 
 	@Override
 	public Promise<List<DomCourseStudent>> getCourses(DomCourse course, DomDwoProfile profile, DomContext context) {
-		PromiseCallback<List<DomCourseStudent>> result = new PromiseCallback<List<DomCourseStudent>>();
 		RestCourse rest = new RestCourse();
 		rest.setDomDwoProfile(profile);
 		rest.setRestContext(context);
 		rest.setDomCourse(course);
-		service.getCourses(PathId.getId(context),rest, result);
-		return result.getPromise();
+		return F(service::getCourses,PathId.getId(context),rest);
 	}
 
 	@Override
 	public Promise<DomCourseStudent> getCourse(DomCourse course, DomDwoProfile profile, DomSchoolClassId schoolClassId, DomContext context) {
-		PromiseCallback<DomCourseStudent> result = new PromiseCallback<DomCourseStudent>();
 		RestCourse rest = new RestCourse();
 		rest.setDomDwoProfile(profile);
 		rest.setRestContext(context);
 		rest.setSchoolClassID(schoolClassId);
 		rest.setDomCourse(course);
-		service.getCourse(PathId.getId(context),rest, result);
-		return result.getPromise();
+		return F(service::getCourse,PathId.getId(context),rest);
 	}
 
 	@Override
 	public Promise<List<DomCourseStudent>> getCoursesSchool(DomDwoProfile profile, DomContext context) {
-		PromiseCallback<List<DomCourseStudent>> result = new PromiseCallback<List<DomCourseStudent>>();
 		RestDwoProfile rest = new RestDwoProfile();
 		rest.setDomDwoProfile(profile);
 		rest.setRestContext(context);
-		service.getCoursesSchool(PathId.getId(context),rest, result);
-		return result.getPromise();
+		return F(service::getCoursesSchool,PathId.getId(context),rest);
 	}
 
 	@Override
 	public Promise<JSONValue> getCourseDescription(DomCourse course,
 			DomDwoProfile profile, DomContext context) {
-		PromiseCallback<JSONValue> result = new PromiseCallback<JSONValue>();
 		RestCourse rest = new RestCourse();
 		rest.setDomDwoProfile(profile);
 		rest.setRestContext(context);
 		rest.setDomCourse(course);
-		service.getCourseDescription(PathId.getId(context),rest, result);
-		return result.getPromise();
+		return F(service::getCourseDescription,PathId.getId(context),rest);
 	}
 
 	@Override
 	public Promise<JSONValue> getCourseDescription(DomCourse course,
 			DomDwoProfile profile, DomContext context, DomSchoolClassId clsid) {
-		PromiseCallback<JSONValue> result = new PromiseCallback<JSONValue>();
 		RestCourse rest = new RestCourse();
 		rest.setDomDwoProfile(profile);
 		rest.setRestContext(context);
 		rest.setDomCourse(course);
 		rest.setSchoolClassID(clsid);
-		service.getCourseDescription(PathId.getId(context),rest, result);
-		return result.getPromise();
+		return F(service::getCourseDescription,PathId.getId(context),rest);
 	}
 
 }

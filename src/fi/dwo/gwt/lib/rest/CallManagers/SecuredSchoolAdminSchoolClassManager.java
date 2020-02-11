@@ -1,6 +1,7 @@
 package fi.dwo.gwt.lib.rest.CallManagers;
 
 import java.util.List;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -9,6 +10,7 @@ import org.osgi.util.promise.Promise;
 
 import com.google.gwt.core.client.GWT;
 
+import static fi.dwo.gwt.lib.rest.GwtRestVars.F;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredSchoolAdminSchoolClassRestCaller;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
@@ -43,33 +45,24 @@ public class SecuredSchoolAdminSchoolClassManager {
     private SecuredSchoolAdminSchoolClassRestCaller service;
 
     public SecuredSchoolAdminSchoolClassManager() {
-        service =  GWT.create(SecuredSchoolAdminSchoolClassRestCaller.class);
+        service = GWT.create(SecuredSchoolAdminSchoolClassRestCaller.class);
     }
 
     public Promise<List<DomSchoolClass>> getSchoolClasses(DomContext context) {
-        PromiseCallback<List<DomSchoolClass>> defer = new PromiseCallback<List<DomSchoolClass>>();
         RestContext rest = new RestContext(); rest.setRestContext(context);
-        service.getSchoolClasses(PathId.getId(context), rest, defer);
-        return defer.getPromise();
+        return F(service::getSchoolClasses, PathId.getId(context), rest);
     }
-
-    
+ 
     public Promise<List<DomTeacher>> getTeachersInSchool(DomContext context) {
-    	PromiseCallback<List<DomTeacher>> defer = new PromiseCallback<>();
     	RestContext rest = new RestContext(); rest.setRestContext(context);
-    	service.getTeachersInSchool(PathId.getId(context), rest, defer);
-    	return defer.getPromise();
+    	return F(service::getTeachersInSchool,PathId.getId(context), rest);
     }
-
    
     public Promise<List<DomStudent>> getStudentsInSchool(DomContext context) {
-    	PromiseCallback<List<DomStudent>> defer = new PromiseCallback<>();
     	RestContext rest = new RestContext();
     	rest.setRestContext(context);
-    	service.getStudentsInSchool(PathId.getId(context), rest, defer);
-    	return defer.getPromise();
+    	return F(service::getStudentsInSchool,PathId.getId(context), rest);
     }
-
 
     public Promise<List<DomTeacher>> getTeachersInSchoolClass(DomContext context, DomSchoolClass schoolClass) {
         PromiseCallback<List<DomTeacher>> defer = new PromiseCallback<List<DomTeacher>>();
@@ -81,7 +74,7 @@ public class SecuredSchoolAdminSchoolClassManager {
     }
 
     private void getTeachersInSchoolClass(RestSchoolClass restData, MethodCallback<List<DomTeacher>> callBack) {
-        service.getTeachersInSchoolClass(PathId.getId(restData.getRestContext()), restData, callBack);
+        F(service::getTeachersInSchoolClass,PathId.getId(restData.getRestContext()), restData, callBack);
         LOG.log(Level.FINE, "Rest Callback performed.");
     }
 
@@ -95,7 +88,7 @@ public class SecuredSchoolAdminSchoolClassManager {
     }
 
     private void getStudentsInSchoolClass(RestSchoolClass restData, MethodCallback<List<DomStudent>> callBack) {
-        service.getStudentsInSchoolClass(PathId.getId(restData.getRestContext()), restData, callBack);
+        F(service::getStudentsInSchoolClass,PathId.getId(restData.getRestContext()), restData, callBack);
     }
 
     public Promise<Boolean> submitSchoolClass(DomContext context, DomSchoolClassFull schoolClass) {
@@ -108,7 +101,7 @@ public class SecuredSchoolAdminSchoolClassManager {
     }
 
     private void submitSchoolClass(RestSchoolClassFull schoolClass, MethodCallback<Boolean> callBack) {
-        service.submitSchoolClass(PathId.getId(schoolClass.getRestContext()), schoolClass, callBack);
+        F(service::submitSchoolClass,PathId.getId(schoolClass.getRestContext()), schoolClass, callBack);
     }
 
     public Promise<Boolean> removeSchoolClass(DomContext context, DomSchoolClass schoolClass) {
@@ -121,7 +114,7 @@ public class SecuredSchoolAdminSchoolClassManager {
     }
 
     private void removeSchoolClass(RestSchoolClass restData, MethodCallback<Boolean> callBack) {
-        service.removeSchoolClass(PathId.getId(restData.getRestContext()), restData, callBack);
+        F(service::removeSchoolClass,PathId.getId(restData.getRestContext()), restData, callBack);
     }
 
     public Promise<Boolean> submitTeacherToSchoolClass(DomContext context, DomSubmitTeacherToSchoolClass teacherToClass) {
@@ -134,7 +127,7 @@ public class SecuredSchoolAdminSchoolClassManager {
     }
 
     private void submitTeacherToSchoolClass(RestSubmitTeacherToSchoolClass restData, MethodCallback<Boolean> callBack) {
-        service.submitTeacherToSchoolClass(PathId.getId(restData.getRestContext()), restData, callBack);
+        F(service::submitTeacherToSchoolClass,PathId.getId(restData.getRestContext()), restData, callBack);
     }
 
     public Promise<Boolean> removeTeacherFromSchoolClass(DomContext context, DomRemoveTeacherFromSchoolClass data) {
@@ -147,7 +140,7 @@ public class SecuredSchoolAdminSchoolClassManager {
     }
 
     private void removeTeacherFromSchoolClass(RestRemoveTeacherFromSchoolClass restData, MethodCallback<Boolean> callBack) {
-        service.removeTeacherFromSchoolClass(PathId.getId(restData.getRestContext()), restData, callBack);
+        F(service::removeTeacherFromSchoolClass,PathId.getId(restData.getRestContext()), restData, callBack);
     }
 
     public Promise<Boolean> moveStudentToSchoolClass(DomContext context, DomMoveStudentToSchoolClass studentToClass) {
@@ -160,7 +153,7 @@ public class SecuredSchoolAdminSchoolClassManager {
     }
 
     private void moveStudentToSchoolClass(RestMoveStudentToSchoolClass restData, MethodCallback<Boolean> callBack) {
-        service.moveStudentToSchoolClass(PathId.getId(restData.getRestContext()), restData, callBack);
+        F(service::moveStudentToSchoolClass,PathId.getId(restData.getRestContext()), restData, callBack);
     }    
     
     public Promise<Boolean> submitStudentToSchoolClass(DomContext context, DomSubmitStudentToSchoolClass studentToClass) {
@@ -173,7 +166,7 @@ public class SecuredSchoolAdminSchoolClassManager {
     }
 
     private void submitStudentToSchoolClass(RestSubmitStudentToSchoolClass restData, MethodCallback<Boolean> callBack) {
-        service.submitStudentToSchoolClass(PathId.getId(restData.getRestContext()), restData, callBack);
+        F(service::submitStudentToSchoolClass,PathId.getId(restData.getRestContext()), restData, callBack);
     }
 
     public Promise<Boolean> removeStudentFromSchoolClass(DomContext context, DomRemoveStudentFromSchoolClass data) {
@@ -186,7 +179,7 @@ public class SecuredSchoolAdminSchoolClassManager {
     }
 
     private void removeStudentFromSchoolClass(RestRemoveStudentFromSchoolClass restData, MethodCallback<Boolean> callBack) {
-        service.removeStudentFromSchoolClass(PathId.getId(restData.getRestContext()), restData, callBack);
+        F(service::removeStudentFromSchoolClass,PathId.getId(restData.getRestContext()), restData, callBack);
     }
 
     public Promise<Boolean> updateSchoolClass(DomContext context, DomSchoolClassFull schoolClassFull) {
@@ -199,7 +192,7 @@ public class SecuredSchoolAdminSchoolClassManager {
     }
 
     private void updateSchoolClass(RestSchoolClassFull restData, MethodCallback<Boolean> callBack) {
-        service.updateSchoolClass(PathId.getId(restData.getRestContext()), restData, (callBack));
+        F(service::updateSchoolClass,PathId.getId(restData.getRestContext()), restData, (callBack));
     }
 
     public Promise<DomSchoolClassFull> getFullSchoolClass(DomContext context, DomSchoolClass schoolClass) {
@@ -212,13 +205,13 @@ public class SecuredSchoolAdminSchoolClassManager {
     }
 
     private void getFullSchoolClass(RestSchoolClass restData, MethodCallback<DomSchoolClassFull> callBack) {
-        service.getFullSchoolClass(PathId.getId(restData.getRestContext()), restData, (callBack));
+        F(service::getFullSchoolClass,PathId.getId(restData.getRestContext()), restData, (callBack));
     }
 
     public Promise<List<DomStudent>> getSingleSchoolStudentsInSchool(DomContext context) {
         PromiseCallback<List<DomStudent>> defer = new PromiseCallback<List<DomStudent>>();
         RestContext rest = new RestContext(); rest.setRestContext(context);
-        service.getSingleSchoolStudentsInSchool(PathId.getId(context), rest, defer);
+        F(service::getSingleSchoolStudentsInSchool,PathId.getId(context), rest, defer);
         return defer.getPromise();
     }
 
@@ -232,7 +225,7 @@ public class SecuredSchoolAdminSchoolClassManager {
     }
 
     private void submitSingleSchoolStudent(RestNewSingleSchoolStudent restData, MethodCallback<Boolean> callBack) {
-        service.submitSingleSchoolStudent(PathId.getId(restData.getRestContext()), restData, (callBack));
+        F(service::submitSingleSchoolStudent,PathId.getId(restData.getRestContext()), restData, (callBack));
     }
     
 }

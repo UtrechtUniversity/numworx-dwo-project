@@ -10,19 +10,19 @@ import com.google.gwt.json.client.JSONValue;
 
 public interface ScoDataRestCaller {
 
-	public void getValues(RestScormValues restScormValues,
+	public void getValues(String id, RestScormValues restScormValues,
 			MethodCallback<DomScormValues> callback);
 
-	public void setValues(RestScormValues restScormValues,
+	public void setValues(String id, RestScormValues restScormValues,
 			MethodCallback<Boolean> callback);
 
-	public void setValuesETag(String eTag, RestScormValues restScormValues,
+	public void setValuesETag(String id, String eTag, RestScormValues restScormValues,
 			MethodCallback<Boolean> callback);
 
-	public void patchValues(String eTag, RestScormValues restScormValues,
+	public void patchValues(String id, String eTag, RestScormValues restScormValues,
 			MethodCallback<Boolean> callback);
 
-	public void getJSONLaunchDataBytes(RestScoContext rest,
+	public void getJSONLaunchDataBytes(String id, RestScoContext rest,
 			MethodCallback<JSONValue> callback);
 
 }

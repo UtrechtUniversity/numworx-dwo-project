@@ -9,9 +9,9 @@ import org.fusesource.restygwt.client.MethodCallback;
 
 public interface CoursesOfSchoolRestCaller {
 
-	public void getCoursesClass(RestSchoolClassAndProfile rest,
+	public void getCoursesClass(String id, RestSchoolClassAndProfile rest,
 			MethodCallback<DomCoursesOfSchoolClass> callback);
 
-    void getCoursesClass(RestCourse rest, MethodCallback<DomCoursesOfSchoolClass> callback);
-    void getCoursesClass(RestScoContext rest, MethodCallback<DomCoursesOfSchoolClass> callback);
+    void getCoursesClass(String id, RestCourse rest, MethodCallback<DomCoursesOfSchoolClass> callback);
+    void getCoursesClass(String id, RestScoContext rest, MethodCallback<DomCoursesOfSchoolClass> callback);
 }

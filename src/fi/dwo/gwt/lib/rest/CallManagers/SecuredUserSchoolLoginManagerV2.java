@@ -2,7 +2,6 @@ package fi.dwo.gwt.lib.rest.CallManagers;
 
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredUserSchoolLoginRestCallerV2;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 

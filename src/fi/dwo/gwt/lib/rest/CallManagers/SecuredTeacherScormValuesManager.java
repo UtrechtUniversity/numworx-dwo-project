@@ -18,6 +18,7 @@ import org.osgi.util.promise.Promise;
 
 import com.google.gwt.core.shared.GWT;
 
+import static fi.dwo.gwt.lib.rest.GwtRestVars.F;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredTeacherScormValuesRestCaller;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 
@@ -29,7 +30,6 @@ public class SecuredTeacherScormValuesManager {
 	 * @see fi.dwo.gwt.lib.rest.CallManagers.ScoDataManager#getValues(nl.uu.fi.dwo.rest.dom.entities.DomScoContext, nl.uu.fi.dwo.rest.dom.entities.DomHasRole, java.util.Collection)
 	 */
 	public Promise<Map<String,String>> getValues(DomStudentScoContext sco, DomContext context, Collection<String> keys) {
-		PromiseCallback<DomTeacherScormValues> defer = new PromiseCallback<DomTeacherScormValues>();
 		RestTeacherScormValues restScormValues = new RestTeacherScormValues();
 		restScormValues.setRestContext(context);
 		DomTeacherScormValues values = new DomTeacherScormValues();
@@ -43,8 +43,7 @@ public class SecuredTeacherScormValuesManager {
 		}
 		values.setValues(list);
 		restScormValues.setDomTeacherScormValues(values);
-		service.get(PathId.getId(restScormValues.getRestContext()),restScormValues, defer);
-		return defer.getPromise().map(new Function<DomTeacherScormValues, Map<String,String>>() {
+		return F(service::get,PathId.getId(restScormValues.getRestContext()),restScormValues).map(new Function<DomTeacherScormValues, Map<String,String>>() {
 
 			@Override
 			public Map<String, String> apply(
@@ -72,9 +71,7 @@ public class SecuredTeacherScormValuesManager {
 			list.add(new DomMapEntry<String,String>(entry));
 		}
 		values.setValues(list);
- 		PromiseCallback<DomStudentScoContext> defer = new PromiseCallback<DomStudentScoContext>();
-		service.set(PathId.getId(rest.getRestContext()),rest, defer);
-		return defer.getPromise();
+ 		return F(service::set,PathId.getId(rest.getRestContext()),rest);
 	}
 
 }
