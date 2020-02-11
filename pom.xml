@@ -607,6 +607,7 @@
                             </execution>
                             <execution>
                                 <id>none</id>
+                                <phase>none</phase>
                                 <goals>
                                     <goal>verify</goal>
                                 </goals>
