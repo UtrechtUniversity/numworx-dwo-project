@@ -122,9 +122,17 @@ public class OAuth2Manager {
           && body.getId().equals(DatatypeConverter.printHexBinary(l.getSecretKey()))
           && body.getNotBefore().equals(new Date(l.getLastLogin()/1000L * 1000L))
           )       
-      return buildTokenResponse(u, l);
-    
-   }
+    	  return buildTokenResponse(u, l);
+      else {
+    	  ErrorResponse error = new ErrorResponse("invalid_grant");
+    	  return Response.status(Status.BAD_REQUEST).entity(error).build();
+    	  
+      }
+    } else {
+        ErrorResponse error = new ErrorResponse("unsupported_grant_type");
+        return Response.status(Status.BAD_REQUEST).entity(error).build();
+
+    }
     ErrorResponse error = new ErrorResponse("invalid_request");
     return Response.status(Status.BAD_REQUEST).entity(error).build();
 
