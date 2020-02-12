@@ -1,6 +1,8 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
+import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.user.client.Window.Location;
 
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -13,10 +15,12 @@ import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 
 import fi.dwo.gwt.lib.rest.CallManagers.LoginPresenter;
+import fi.dwo.gwt.lib.rest.CallManagers.OAuthManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
 import fi.dwo.gwt.lib.rest.DwoConstants;
 import fi.dwo.gwt.lib.rest.GwtRestVars;
+import fi.dwo.gwt.lib.rest.util.Base64;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
@@ -243,7 +247,20 @@ public class DwoGlobalVars {
       currentLoginContext = resolved.getValue().getDomLoginContext();
       LOG.log(Level.INFO, "Getting current and available school logins.");
       SecuredUserSchoolLoginManagerV2 loginManager = this.loginManager;
-      Promise<DomSchoolsRolesAndClassesV2> logins = loginManager.getSchoolLogins();
+      OAuthManager oauth = new OAuthManager();
+      Promise<DomSchoolsRolesAndClassesV2> logins = accountManager.getBearerToken().then(
+    		  p -> { 
+    			  String token = Base64.btoa("2\f" + p.getValue()); // Format 2 
+    			  return oauth.authorization_token(token);
+    		  }   		  
+      ).then(p -> { 
+    	  GwtRestVars.getInstance().setBearerToken(p.getValue().getAccess_token());
+    	  GwtRestVars.getInstance().setRefreshToken(p.getValue().getRefresh_token());
+    	  return loginManager.getSchoolLogins();
+    	  
+      } );
+      
+      
       return logins;
   }
     /**
