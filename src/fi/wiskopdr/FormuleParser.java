@@ -671,7 +671,7 @@ public class FormuleParser
 			index = s.indexOf("/-");
 
 			int tel = index + 2;
-			while (tel < s.length() && Character.isDigit(s.charAt(tel)))
+			while (tel < s.length() && (Character.isDigit(s.charAt(tel)) || s.charAt(tel)=='.'))
 			{
 				tel++;
 			}
