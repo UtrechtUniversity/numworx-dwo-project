@@ -10,6 +10,7 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import fi.dwo.gwt.lib.rest.GwtRestVars;
+import static fi.dwo.gwt.lib.rest.GwtRestVars.F;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredUserAccountRestCaller;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
@@ -38,7 +39,6 @@ public class SecuredUserAccountManager {
     private static final Logger LOG = Logger.getLogger(SecuredUserAccountManager.class.getName());
 
     private SecuredUserAccountRestCaller service;
-    private GwtRestVars dgv;
 
     public SecuredUserAccountManager() {
         String url = GwtRestVars.instance().getServer();
@@ -246,37 +246,15 @@ public class SecuredUserAccountManager {
     	RestUserFull user = new RestUserFull();
         user.setRestContext(context);
         user.setDomUserFull(updateUser);
-        service.updateAccountData(PathId.getId(context), user, (callBack));
+        F( service::updateAccountData, PathId.getId(context), user, (callBack));
     }
 
-//    /**
-//     *
-//     * @param name
-//     * @param password
-//     * @return
-//     */
-//    @Deprecated
-//    public Promise<DomUserFull> getAccountData() {
-//        PromiseCallback<DomUserFull> defer = new PromiseCallback<DomUserFull>();
-//        this.service.getAccountData((defer));
-//        return defer.getPromise();
-//    }
 
     public Promise<DomUserFull> getAccountData(DomContext context) {
-    	PromiseCallback<DomUserFull> defer = new PromiseCallback<>();
     	RestContext rest = new RestContext(); 
     	rest.setRestContext(context);
-    	service.getAccount(PathId.getId(context), rest, defer);
-    	return defer.getPromise();
+    	return F( service::getAccount, rest);
     }
-//    /**
-//     *
-//     * @param callBack
-//     */
-//    @Deprecated
-//    public void getAccountData(AsyncCallback<DomUserFull> callBack) {
-//        service.getAccountData(new Callback<DomUserFull>(callBack));
-//    }
 
     /**
      *
@@ -340,29 +318,18 @@ public class SecuredUserAccountManager {
         service.getUserFromAuthToken(restToken, restcallback);
 
     }
-
-//    public Promise<Dwo2Exception> logout(DomLoginContext loginContext) {
-//        PromiseCallback<Dwo2Exception> defer = new PromiseCallback<Dwo2Exception>();
-//        this.logout(loginContext, defer);
-//        return defer.getPromise();
-//    }
  
     public Promise<Dwo2Exception> logout(DomContext context, DomLoginContext loginContext) {
         PromiseCallback<Dwo2Exception> defer = new PromiseCallback<Dwo2Exception>();
         this.logout(context, loginContext, defer);
         return defer.getPromise();
     }
-
-//    @Deprecated
-//    public void logout(DomLoginContext loginContext, AsyncCallback<Dwo2Exception> callback) {
-//    	logout(new DomContext(), loginContext,  new Callback<Dwo2Exception>(callback));
-//    }
  
     private void logout(DomContext context, DomLoginContext loginContext, MethodCallback<Dwo2Exception> callback) {
         RestLoginContext restcontext = new RestLoginContext();
         restcontext.setDomLoginContext(loginContext);
         restcontext.setRestContext(context);
-        service.logout(PathId.getId(context), restcontext, callback);
+        F(service::logout,PathId.getId(context), restcontext, callback);
     }
 
     public Promise<DomLoginContext> getLoginContext() {
@@ -372,7 +339,7 @@ public class SecuredUserAccountManager {
     }
 
     private void getLoginContext(MethodCallback<DomLoginContext> callback) {
-        service.getLoginContext((callback));
+        F( (id, arg, c ) -> service.getLoginContext(c), null, null, callback);
     }
 
    public Promise<DomUserFullwLoginContext> getDomUserFullwLoginContext(String name) {
@@ -404,34 +371,25 @@ public class SecuredUserAccountManager {
     }
     
     public Promise<JSONValue> verifyTOTP() {
-    	PromiseCallback<JSONValue> callback = new PromiseCallback<JSONValue>();
-    	service.verifyTOTP(callback);
-    	return callback.getPromise();
+    	return F( (id, arg, c) -> service.verifyTOTP(c), null, null);
     }
   
     public Promise<String> getBearerToken() {
-        PromiseCallback<String> callback = new PromiseCallback<String>();
-        service.getBearerToken(callback);
-        return callback.getPromise();
+        return F( (id, arg, c) -> service.getBearerToken(c), null, null);
     }
     
     public Promise<Boolean> linkSaml(DomContext context, DomSamlUser samluser) {
-    	PromiseCallback<Boolean> callback = new PromiseCallback<>();
     	RestSamlUser rest = new RestSamlUser();
     	rest.setDomSamlUser(samluser);
     	rest.setRestContext(context);
-		service.linkSaml(rest, callback);
-    	return callback.getPromise();
+		return F( (id, arg, c) -> service.linkSaml(arg, c), null, rest);
     }
     
     public Promise<Boolean> linkSaml(DomSamlUser samluser) {
     	return linkSaml(new DomContext(), samluser);
     }
-    
-    
+        
     public Promise<Boolean> removeCurrentUser() {
-      PromiseCallback<Boolean> callback = new PromiseCallback<>();
-      service.removeCurrentUser(callback);
-      return callback.getPromise();
+      return F( (id, arg, c ) -> service.removeCurrentUser(c), null, null);
     }
 }

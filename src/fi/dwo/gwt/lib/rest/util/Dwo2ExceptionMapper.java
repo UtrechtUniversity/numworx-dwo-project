@@ -23,6 +23,9 @@ public class Dwo2ExceptionMapper extends ExceptionMapper {
 	public Throwable createFailedStatusException(Method method,
 			Response response) {
 		int statuscode = response.getStatusCode();
+		if (statuscode == 401) {
+			return new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "relogin");
+		}
 		String status = response.getStatusText();
 		String json = response.getText();
 		String type = response.getHeader("Content-Type");
@@ -37,7 +40,7 @@ public class Dwo2ExceptionMapper extends ExceptionMapper {
 			} catch (Exception e) {
 			}		
 		}else{
-                    return new Dwo2Exception(Dwo2ExceptionCode.Rest_CanNotReachServer, response.getStatusText());
+                    return new Dwo2Exception(Dwo2ExceptionCode.Rest_CanNotReachServer, status);
                 }
 		return super.createFailedStatusException(method, response);
 	}

@@ -2,12 +2,17 @@ package fi.dwo.gwt.lib.rest;
 
 import com.google.gwt.user.client.Window;
 
+import fi.dwo.gwt.lib.rest.CallManagers.OAuthManager;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionMapper;
 import fi.dwo.gwt.lib.rest.util.HeadersFilter;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
+import nl.uu.fi.dwo.rest.dom.entities.DomToken;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 import java.util.Collections;
 import java.util.Map;
@@ -17,9 +22,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.Defaults;
+import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 /**
  * Stores global variables The class is state is initialized by calls in
@@ -193,6 +200,10 @@ public class GwtRestVars {
 		void accept(String id, P arg, Q callback);
 	}
 	
+
+	Promise<DomToken> tokenRequest;
+	OAuthManager oauth = new OAuthManager();
+	String refresh_token;
 	/**
 	 * intercept resty calls.
 	 * @param f
@@ -200,23 +211,72 @@ public class GwtRestVars {
 	 * @param callback
 	 */
 
+	class RetryCallback<T> implements MethodCallback<T> {
+
+		MethodCallback<T> delegate;
+		Consumer<MethodCallback<T>> f;
+		
+		@Override
+		public void onFailure(Method method, Throwable t) {
+			if (t instanceof Dwo2Exception) {
+				Dwo2ExceptionCode code = ((Dwo2Exception) t).getDwo2Code();
+				if (code == Dwo2ExceptionCode.User_AuthenticationError) {
+					if (tokenRequest == null) {
+						if(refresh_token != null)
+							tokenRequest = oauth.refresh_token(refresh_token);
+						else
+							tokenRequest = Promises.failed(t);
+					}
+					tokenRequest.then(
+						(Promise<DomToken>	p) -> {
+							DomToken dt = p.getValue();							
+							setBearerToken(dt.getAccess_token());
+							setRefreshToken(dt.getRefresh_token());
+							f.accept(delegate);
+						 return null;
+						},
+						p -> delegate.onFailure(method, p.getFailure())
+					);
+					return;
+				}
+				delegate.onFailure(method, t);
+			}			
+		}
+
+		@Override
+		public void onSuccess(Method method, T response) {
+			delegate.onSuccess(method, response);		
+		}
+
+		RetryCallback(MethodCallback<T> delegate, Consumer<MethodCallback<T>> f) {
+			this.delegate = delegate;
+			this.f = f;
+		}
+		
+	}
+
 	public static <P,R> void  F(TriConsumer<P, MethodCallback<R>> f, String id, P arg, MethodCallback<R> callback) {
-		f.accept(id, arg, callback);
+		GwtRestVars v = instance();		
+		f.accept(id, arg, v.new RetryCallback<>(callback, c -> f.accept(id, arg, c)));
 	}
 	
-	public static <R> void F(BiConsumer<String, MethodCallback<R>> f, String id, MethodCallback<R> callback) {
-		f.accept(id, callback);
-	}
+//	public static <R> void F(BiConsumer<String, MethodCallback<R>> f, String id, MethodCallback<R> callback) {
+//		f.accept(id, callback);
+//	}
 	
 	public static <P, R> Promise<R> F(TriConsumer<P, MethodCallback<R>> f, String id, P arg) {
 		PromiseCallback<R> defer = new PromiseCallback<R>();
 		F(f, id, arg, defer);
 		return defer.getPromise();
 	}
+	
+	public static <P extends RestContext, R> Promise<R> F(TriConsumer<P, MethodCallback<R>> f, P arg) {
+		return F(f, PathId.getId(arg.getRestContext()), arg);
+	}
 
 	public void setRefreshToken(String refresh_token) {
-		// TODO Auto-generated method stub
-		
+		this.refresh_token = refresh_token;
+		tokenRequest = null;
 	}
 	
 }

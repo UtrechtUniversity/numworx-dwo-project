@@ -2,6 +2,7 @@ package fi.dwo.gwt.lib.rest.CallManagers;
 
 
 import com.google.gwt.core.client.GWT;
+import static fi.dwo.gwt.lib.rest.GwtRestVars.F;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredUserSchoolLoginRestCallerV2;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 
@@ -13,6 +14,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.entities.RestSchoolRoleAndClassV2;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.osgi.util.promise.Promise;
@@ -44,15 +46,9 @@ public class SecuredUserSchoolLoginManagerV2 {
     }
         
     private void getSchoolLoginsV2(MethodCallback<DomSchoolsRolesAndClassesV2> callBack)  {
-        service.getSchoolLogins(callBack);
+        F( (id, arg, c) -> service.getSchoolLogins(c), null, null, callBack);
     }
 
-//    public Promise<DomSchoolsRolesAndClassesV2> getSchoolLoginsV2()  {
-//        PromiseCallback<DomSchoolsRolesAndClassesV2> callback = new PromiseCallback<DomSchoolsRolesAndClassesV2>();
-//        service.getSchoolLogins(new Callback<DomSchoolsRolesAndClassesV2> (callback));
-//        return callback.getPromise();
-//    }
-//        
     public Promise<DomSchoolRoleAndClassV2> switchToSchoolLogin(DomSchoolRoleAndClassV2 reqSrac) {
         PromiseCallback<DomSchoolRoleAndClassV2> defer = new PromiseCallback<DomSchoolRoleAndClassV2>();
         this.switchToSchoolLogin(reqSrac,defer);
@@ -61,9 +57,12 @@ public class SecuredUserSchoolLoginManagerV2 {
         
     private void switchToSchoolLogin(DomSchoolRoleAndClassV2 reqSrac, MethodCallback<DomSchoolRoleAndClassV2> callBack){
         RestSchoolRoleAndClassV2 rsrc = new RestSchoolRoleAndClassV2();
-        rsrc.setRestContext(new DomContext());
+        DomContext context = new DomContext();
+        context.setDomHasRole(reqSrac.getHasRole());
+		rsrc.setRestContext(context);
         rsrc.setDomSchoolRoleAndClass(reqSrac);
-        service.switchToSchoolLogin(rsrc,callBack);
+        F( (id, arg, c) -> service.switchToSchoolLogin(arg, c), PathId.getId(context), rsrc, callBack);
+        
     }
 
     public Promise<Boolean> removeASchoolLogin(DomSchoolRoleAndClassV2 reqSrac) {
@@ -77,7 +76,7 @@ public class SecuredUserSchoolLoginManagerV2 {
         RestSchoolRoleAndClassV2 rsrc = new RestSchoolRoleAndClassV2();
         rsrc.setRestContext(new DomContext());
         rsrc.setDomSchoolRoleAndClass(reqSrac);
-        service.removeASchoolLogin(rsrc,callBack);
+        F( (id, arg, c) -> service.removeASchoolLogin(arg,c), null, rsrc, callBack);
     }
     
     public Promise<Boolean> addASchoolLogin(DomNewSchoolLogin newSchoolLogin) {
@@ -90,6 +89,6 @@ public class SecuredUserSchoolLoginManagerV2 {
         RestNewSchoolLogin rnl = new RestNewSchoolLogin();
         rnl.setRestContext(new DomContext());
         rnl.setDomNewSchoolLogin(newSchoolLogin);
-        service.addASchoolLogin(rnl,callBack);
+        F( (id, arg,c ) -> service.addASchoolLogin(arg,c), null, rnl, callBack);
     }
 }
