@@ -39,9 +39,17 @@ public class Dwo2ExceptionMapper extends ExceptionMapper {
 				return new Dwo2Exception(code, message);
 			} catch (Exception e) {
 			}		
+		} else if ( json != null && json.contains("error") && statuscode == 400) {
+			try { 
+				JSONObject obj = JSONParser.parseStrict(json).isObject();
+				String message = obj.get("error").isString().stringValue();
+				if ("invalid_grant".equals(message)) {
+					return new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationCancelled, message);
+				}
+			} catch( Exception e) {}	
 		}else{
-                    return new Dwo2Exception(Dwo2ExceptionCode.Rest_CanNotReachServer, status);
-                }
+           return new Dwo2Exception(Dwo2ExceptionCode.Rest_CanNotReachServer, status);
+        }
 		return super.createFailedStatusException(method, response);
 	}
 
