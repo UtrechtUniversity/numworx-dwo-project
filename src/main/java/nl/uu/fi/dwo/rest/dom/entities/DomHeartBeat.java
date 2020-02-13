@@ -18,6 +18,7 @@ public class DomHeartBeat {
     private String serverVersion;
     private String javaClientVersion;
     private String htmlClientVersion;
+    private String env;
 
     /**
      * @return the serverTimeStamp
@@ -74,4 +75,12 @@ public class DomHeartBeat {
     public void setHtmlClientVersion(String htmlClientVersion) {
         this.htmlClientVersion = htmlClientVersion;
     }
+
+	public String getEnv() {
+		return env;
+	}
+
+	public void setEnv(String env) {
+		this.env = env;
+	}
 }
