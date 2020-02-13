@@ -147,8 +147,8 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
         }
         String authFields[] = headerString.trim().split(":");
 
-        PersistentUser u = UserManager.findByUserName(authFields[0]);
-        if (u != null && u.getPassword().equals(authFields[1])) {
+        PersistentUser u = UserManager.login(authFields[0], authFields[1]);
+        if (u != null) {
             SecurityContext sc = new DwoUserSecurityContext(new DwoUserPrincipal(u), secCtx.isSecure(), SecurityContext.BASIC_AUTH);
             setUsername(sc);
             return sc;

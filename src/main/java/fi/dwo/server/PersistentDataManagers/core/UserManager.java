@@ -273,7 +273,7 @@ public class UserManager {
             javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
             q.setParameter("username", userName);
             user = (PersistentUser) q.getSingleResult();
-            if (user.getPassword().compareTo(passwd) != 0) {
+            if (user.getPassword() == null || user.getPassword().isEmpty() || !user.getPassword().equals(passwd)) {
                 return null;
             }
             LOG.log(Level.INFO, "Login accepted for user with username {0}", new Object[]{userName});

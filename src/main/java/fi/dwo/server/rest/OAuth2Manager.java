@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.crypto.SecretKey;
@@ -19,9 +20,12 @@ import javax.xml.bind.DatatypeConverter;
 
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentLoginContext;
+import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
+import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import fi.dwo.server.PersistentDataManagers.util.LoginContextUtilManager;
 import fi.dwo.server.rest.jaxrsfilters.AuthenticationRequestFilter;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -33,12 +37,14 @@ import io.jsonwebtoken.security.Keys;
 import nl.uu.fi.dwo.rest.dom.entities.DomToken;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.oauth.ErrorResponse;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.security.TOTP;
 
 @Path("/oauth2")
 public class OAuth2Manager {
   static final String AUTHORIZATION_CODE = "authorization_code";
   static final String REFRESH_TOKEN = "refresh_token";
+  static final String CLIENT_CREDENTIALS = "client_credentials";
   static final String GRANT_TYPE = "grant_type";
   static final String CODE = "code";
   private static final Logger LOG = Logger.getLogger(OAuth2Manager.class.getName());
@@ -77,6 +83,7 @@ public class OAuth2Manager {
   String refresh_token(PersistentUser u, PersistentLoginContext c) {
     JwtBuilder builder = Jwts.builder();
     builder = builder.setSubject(u.getUsername()).setIssuedAt(new Date()).setNotBefore(new Date(c.getLastLogin()));
+    builder = builder.setExpiration(new Date(c.getLastLogin()+1000L*3600L*23L));
     builder = builder.setHeaderParam("kid", c.getId()).
         setId(DatatypeConverter.printHexBinary(c.getSecretKey()));
     return builder.signWith(getKey(c)).compact();
@@ -94,7 +101,8 @@ public class OAuth2Manager {
         String authToken = new String(Base64.getUrlDecoder().decode(code), StandardCharsets.UTF_8);
           char version = authToken.charAt(0);
           String[] split = authToken.split("\f");
-          if (version == '2') {
+          switch (version)  {
+            case '2':
             String authHeader = split[1].substring(7);
             byte[] header = Base64.getDecoder().decode(authHeader);
             String headerString = ":";
@@ -108,7 +116,35 @@ public class OAuth2Manager {
                     return buildTokenResponse(u, l);
              }
             }
-          }}    
+          }
+            break;
+            case '3':
+              // SAML parameters
+              String samlUserId = split[1];
+              String samlOrgId = split[2];
+              String samlAuthToken = split[3];
+              PersistentSamlUser samlUser = SamlUserManager.findEntity(samlUserId, samlOrgId);
+              if (samlUser == null && !samlOrgId.startsWith("\"")) {
+                  samlOrgId = "\"" + samlOrgId + "\"";
+                  samlUser = SamlUserManager.findEntity(samlUserId, samlOrgId);
+              }
+              if (samlUser != null
+                      && samlUser.getAuthToken().equals(samlAuthToken) && samlUser.tokenIsValid(20000) //TODO TESTING, productie aan.
+                      ) {//milisseconden
+                {
+                  LOG.log(Level.SEVERE, "equal {0}, tokenValid {1} {2} time={3}", new Object[]{samlUser.getAuthToken().equals(samlAuthToken), samlUser.tokenIsValid(20000), samlUser, System.currentTimeMillis()});
+                  try {
+                    PersistentUser user = UserManager.findEntity(samlUser.getUserID());
+                    PersistentLoginContext l;
+                    l = LoginContextUtilManager.forceNewLoginContextSession(user);
+                    return buildTokenResponse(user, l);
+                 } catch (Exception e) {
+                    LOG.log(Level.SEVERE, "logincontext", e);
+                  }
+               }
+               break;
+            }
+        }    
     } else if (REFRESH_TOKEN.equals(grant)) {
       String code = params.getFirst(REFRESH_TOKEN);
       JwtParser parser = Jwts.parser().setSigningKeyResolver(AUTH);
@@ -128,6 +164,21 @@ public class OAuth2Manager {
     	  return Response.status(Status.BAD_REQUEST).entity(error).build();
     	  
       }
+    } else if (CLIENT_CREDENTIALS.equals(grant)) {
+        String client_id = params.getFirst("client_id");
+        String client_secret = params.getFirst("client_secret");
+        try {
+          PersistentUser u = UserManager.login(client_id, client_secret);
+          if (u != null) {
+              PersistentLoginContext l;
+              l = LoginContextUtilManager.forceNewLoginContextSession(u);
+              return buildTokenResponse(u, l);
+            }
+         } catch (Exception e) {
+            LOG.log(Level.SEVERE, "logincontext", e);
+        }
+        ErrorResponse error = new ErrorResponse("unsupported_grant_type");
+        return Response.status(Status.BAD_REQUEST).entity(error).build();
     } else {
         ErrorResponse error = new ErrorResponse("unsupported_grant_type");
         return Response.status(Status.BAD_REQUEST).entity(error).build();
