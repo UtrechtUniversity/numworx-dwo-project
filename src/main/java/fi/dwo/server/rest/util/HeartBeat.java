@@ -88,6 +88,7 @@ public class HeartBeat {
         heartBeat.setJavaClientVersion(javaClientVersion);
         heartBeat.setServerVersion(serverVersion);
         heartBeat.setServerTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+        heartBeat.setEnv(System.getProperty("DWO_ENV", "app"));
         return heartBeat;
         }else{
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "HeartBeat is called before being initialized.");
