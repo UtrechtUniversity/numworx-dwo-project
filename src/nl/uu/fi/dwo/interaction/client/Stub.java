@@ -112,6 +112,12 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF, NativePreviewHandler 
 			cursorToLeft: function() {
 				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::cursorToLeft()();
 			},
+			cursorUp: function() {
+				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::cursorUp()();
+			},
+			cursorDown: function() {
+				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::cursorDown()();
+			},
 			getSelectionString: function() {
 				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::getSelectionString()();
 			},
@@ -259,6 +265,15 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF, NativePreviewHandler 
 		editor.cursorToRight();
 	}
 
+	void cursorUp() {
+		if (editor != null)
+			editor.cursorUp();
+	}
+	void cursorDown() {
+		if (editor != null)
+			editor.cursorDown();
+	}
+	
 	public String getSelectionString() {
 		if (editor != null) 
 			return editor.getSelectionString();
