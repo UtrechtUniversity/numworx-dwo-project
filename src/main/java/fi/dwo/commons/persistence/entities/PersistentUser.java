@@ -331,6 +331,13 @@ public class PersistentUser implements Serializable {
       }     
     }
 
+    public String getRealm() {
+      int split = username.indexOf('@');
+      if (split > 0)
+        return username.substring(split);
+      return null;
+    }
+    
     private DomStudent buildDomStudent() {
         DomStudent user = new DomStudent();
         fillDomUser(user);
