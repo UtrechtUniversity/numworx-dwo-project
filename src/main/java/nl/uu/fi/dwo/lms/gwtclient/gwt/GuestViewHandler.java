@@ -42,13 +42,14 @@ public class GuestViewHandler implements SwitchViewEventHandler {
             break;
           }
         case LOGIN:
-          mainView.showLoginView();
+          //mainView.showLoginView();
           presenterFactory.getLoginPresenter().init();
           if (controller.authToken != null) {
               String token = controller.authToken;
               controller.authToken = null;
               presenterFactory.getLoginPresenter().tokenLogin(token, controller.user_id, controller.org_id);
           }
+          else mainView.showLoginView();
           break;
         case MODULES: case WELCOME:
           presenterFactory.getModulesPresenter().show();
