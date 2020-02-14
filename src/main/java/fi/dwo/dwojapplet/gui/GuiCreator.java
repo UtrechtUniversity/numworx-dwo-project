@@ -52,6 +52,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 
 /**
  * This Class is responsible for creating some GUI elements and to communicate
@@ -186,14 +187,14 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
             DwoHelper.setContact(false);
             DomUserFullwLoginContext user = LoginManager.basicLogin(username, MD5.getHashString(String.valueOf(password)));
             DwoHelper.setCurrentUser(user.getDomUserFull(),user.getDomLoginContext());
-            OAuthManager m = new OAuthManager();
-            token = m.authorization_token(SecureUserAccountManager.getBearerToken());
-            if (token != null) {
-              StoredRestManager.getInstance().setRecover(this);
+
+            if (DwoHelper.isTest()) {           
+                OAuthManager m = new OAuthManager();
+                token = m.authorization_token(SecureUserAccountManager.getBearerToken());
+                if (token != null) {
+                    StoredRestManager.getInstance().setRecover(this);
+                }
             }
-            
-            
-            
             
 //            Code underdevelopment to do digest.
 //            PublicUserManager.digestLogin(username, password);
@@ -1149,12 +1150,16 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
   }
 
   @Override
-  public boolean test(Dwo2Exception t) {
+  public boolean test(Dwo2Exception t) throws RuntimeException {
     if (this != instance()) return false;
     if (t.getDwo2Code() != Dwo2ExceptionCode.User_AuthenticationError) return false;
     if (token == null) return false;
     OAuthManager m = new OAuthManager(StoredRestManager.getInstance());
     token = m.refresh_token(token);
+    if (token == null) {
+      t = new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationCancelled, "invalid_grant");
+      throw new RuntimeException(t);
+    }
     return true;
   }
 }
