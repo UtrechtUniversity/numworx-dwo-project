@@ -100,7 +100,7 @@ public class BootPanelController {
                   case LOGOUT:
                     dwoGlobalVars.clearCurrentUser();
                     setSession(false);
-                    if (!test) 
+                    if (true) 
                     {
                       if (org_id != null) // running under SAML protection
                         logout();
@@ -198,7 +198,6 @@ public class BootPanelController {
     private int profile;
     private int stage;
     private boolean hideGwtGui;
-    private final boolean test = false;
     String authToken, user_id, org_id;
     private boolean session = false;
 
@@ -218,13 +217,9 @@ public class BootPanelController {
     BootPanelController(ResettableEventBus eventBus, GuestComponent.Builder initialBuilder) {
         this.eventBus = eventBus;
         this.guestBuilder = initialBuilder;
-        //test = false;
         hideGwtGui = false;
         profile = 77;
         stage = 1;
-        
-        
-
     }
 
     public static native String getHideGwtGuiString()/*-{
@@ -248,10 +243,6 @@ public class BootPanelController {
         } catch (Exception e) {
             profile = 77;
         }
-//        value = Window.Location.getParameter("test");
-//        if (value != null && value.matches("on")) {
-//            test = true;
-//        }
         value = Window.Location.getParameter("stage");
         if (value != null) {
             stage = Integer.parseInt(value);
@@ -276,17 +267,6 @@ public class BootPanelController {
         }
     }
 
-//    public void testRestyMapConverter() {
-//        RestyMapCodec codec = GWT.create(RestyMapCodec.class);
-//        
-//        Map map = new HashMap<String, String>();
-//        map.put("key", "value");
-//        JSONValue json = codec.encode(map);
-//        System.out.println(json);
-//        // decoding an object to from JSON
-//        Map other = codec.decode(json);
-//        System.out.println(other);
-//    }
     public static native void forceReload() /*-{
       $wnd.location.reload(true);
     }-*/;
@@ -333,6 +313,8 @@ public class BootPanelController {
             @Override
             public Promise<Void> call(Promise<DomHeartBeat> resolved) throws Exception {
                 DomHeartBeat beat = resolved.getValue();
+                String dwo_env = beat.getEnv();
+                if (dwo_env != null && dwo_env.contains("test")) dwoGlobalVars.setTest(true);
                 if (flag == 0) {
                     LOG.log(Level.FINE, "unmatching version flag=0");
                     if (Window.confirm("outdated version, reloading"))

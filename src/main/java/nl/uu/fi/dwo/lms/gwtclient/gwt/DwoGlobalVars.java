@@ -62,6 +62,8 @@ public class DwoGlobalVars {
     private DomSchoolsRolesAndClassesV2 schoolLogins;
     private DomSchoolRoleAndClassV2 activeSchoolRoleAndClass;
     private Promise<DomDwoProfileFull> profile;
+
+    private boolean test;
     private static String helpUrlPrefix ;
 
     /**
@@ -247,19 +249,23 @@ public class DwoGlobalVars {
       currentLoginContext = resolved.getValue().getDomLoginContext();
       LOG.log(Level.INFO, "Getting current and available school logins.");
       SecuredUserSchoolLoginManagerV2 loginManager = this.loginManager;
-      OAuthManager oauth = new OAuthManager();
-      Promise<DomSchoolsRolesAndClassesV2> logins = accountManager.getBearerToken().then(
+      Promise<DomSchoolsRolesAndClassesV2> logins;
+      if (isTest()) {     
+          OAuthManager oauth = new OAuthManager();
+          logins = accountManager.getBearerToken().then(
     		  p -> { 
     			  String token = Base64.btoa("2\f" + p.getValue()); // Format 2 
     			  return oauth.authorization_token(token);
     		  }   		  
-      ).then(p -> { 
-    	  GwtRestVars.getInstance().setBearerToken(p.getValue().getAccess_token());
-    	  GwtRestVars.getInstance().setRefreshToken(p.getValue().getRefresh_token());
-    	  return loginManager.getSchoolLogins();
-    	  
-      } );
-      
+        ).then(p -> { 
+      	  GwtRestVars.getInstance().setBearerToken(p.getValue().getAccess_token());
+      	  GwtRestVars.getInstance().setRefreshToken(p.getValue().getRefresh_token());
+      	  return loginManager.getSchoolLogins();
+      	  
+        } );
+      } else {
+        logins = loginManager.getSchoolLogins();
+      }
       
       return logins;
   }
@@ -455,5 +461,12 @@ public class DwoGlobalVars {
       context.setDomHasRole(getActiveSchoolRoleAndClass().getHasRole());
       context.setRealm(getRealm());
       return accountManager.logout(context, getCurrentLoginContext());
+    }
+
+    public void setTest(boolean b) {
+      this.test = b;  
+    }
+    public boolean isTest() {
+      return test;
     }
 }
