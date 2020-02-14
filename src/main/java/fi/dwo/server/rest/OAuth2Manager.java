@@ -155,6 +155,7 @@ public class OAuth2Manager {
       PersistentLoginContext l = LoginContextManager.findEntity(id);
       PersistentUser u = UserManager.findEntity(l.getUserId());
       if ( u.getUsername().equals(body.getSubject())
+          && l.getSecretKey() != null
           && body.getId().equals(DatatypeConverter.printHexBinary(l.getSecretKey()))
           && body.getNotBefore().equals(new Date(l.getLastLogin()/1000L * 1000L))
           )       
