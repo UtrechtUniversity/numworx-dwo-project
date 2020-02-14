@@ -59,7 +59,14 @@ public class StoredRestManager extends RestManager {
       try {
         return result.accept();
       } catch (Dwo2Exception e) {
-        if (!recover.test(e)) throw e;
+        boolean test = false;
+        try {
+          test = recover.test(e);
+        } catch (RuntimeException e1) {
+          if (e1.getCause() instanceof Dwo2Exception)
+            e = (Dwo2Exception) e1.getCause();
+        }
+        if (!test) throw e;
       }
     } while (true);
   }

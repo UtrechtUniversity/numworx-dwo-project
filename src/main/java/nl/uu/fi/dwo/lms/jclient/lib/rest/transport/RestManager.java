@@ -125,7 +125,7 @@ class RestManager extends RestyDateTimeFormat {
    * @return A list of class c objects.
    * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
    */
-  public <T> T get(String path, Class<T> c) throws Dwo2Exception {
+  protected <T> T get(String path, Class<T> c) throws Dwo2Exception {
     try {
       URL url = new URL(authenticator.getServerUrlPath(), path); // TODO make login
 
@@ -201,7 +201,7 @@ class RestManager extends RestyDateTimeFormat {
    * @return A list of Class c.
    * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
    */
-  public <T> List<T> getList(String path, RestListClassTypes type) throws Dwo2Exception {
+  protected <T> List<T> getList(String path, RestListClassTypes type) throws Dwo2Exception {
     try {
       URL url = new URL(authenticator.getServerUrlPath(), path); // TODO make login
 
@@ -325,7 +325,7 @@ class RestManager extends RestyDateTimeFormat {
    * @return A list of class c objects.
    * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
    */
-  public <T> T put(String path, Class<T> c, Object o) throws Dwo2Exception { // due to genson now c
+  protected <T> T put(String path, Class<T> c, Object o) throws Dwo2Exception { // due to genson now c
                                                                              // is superflous
     try {
       URL url = new URL(authenticator.getServerUrlPath(), path); // TODO make login
@@ -418,7 +418,7 @@ class RestManager extends RestyDateTimeFormat {
    * @return A list of Class c.
    * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
    */
-  public <T> List<T> getPutList(String path, RestListClassTypes type, Object o)
+  protected <T> List<T> getPutList(String path, RestListClassTypes type, Object o)
       throws Dwo2Exception {
     try {
       URL url = new URL(authenticator.getServerUrlPath(), path); // TODO make login

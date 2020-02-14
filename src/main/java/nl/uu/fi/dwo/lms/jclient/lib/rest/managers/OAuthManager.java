@@ -69,7 +69,7 @@ public class OAuthManager {
       DomToken response = genson.deserialize(json.toString(), DomToken.class);
       manager.setBearerAuthString(response.getAccess_token());
       return response.getRefresh_token();
-      }
+      } 
     } catch (IOException e) {
       LOG.log(Level.SEVERE, "rest error", e);
     } 
