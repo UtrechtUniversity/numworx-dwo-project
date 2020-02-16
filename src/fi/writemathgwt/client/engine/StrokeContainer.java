@@ -476,6 +476,30 @@ public class StrokeContainer {
 		return false;
 	}
 	
+	private boolean isDelayedPointStroke(Stroke stroke2) {
+		
+		boolean b4 = ".".equals(StrokeMatcher.findTekenRaw(this,stroke2));
+		if(!b4) {
+			//logger.info("geen juistestroke");
+			return false;
+		}
+		for(int i=0 ; i<wmObjects.size() ; i++) {
+			Stroke stroke1 = null;
+			if(wmObjects.get(i).isOneStroke()) {
+				stroke1 = wmObjects.get(i).getStrokes().get(0);
+				double midx1 = stroke1.getParsePointsbox().x+stroke1.getParsePointsbox().width/2;
+				double midx2 = stroke2.getParsePointsbox().x+stroke2.getParsePointsbox().width/2;
+				if(Math.abs(midx1-midx2)<stroke1.getParsePointsbox().getDiagonal()) {
+					String s = TwoStrokeProcessor.findTwoStrokeTeken(this, stroke1, stroke2);
+					if(s!=null) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
 	public void translate(int dx, int dy) {
 		for (int i = 0; i < strokes.size(); i++) {
 			strokes.get(i).translate(dx, dy);
@@ -525,6 +549,17 @@ public class StrokeContainer {
 			return false;
 		if(stroke.getParsePointsbox().x - (parseArea.x+parseArea.width) > 2.5*averageHeight
 				|| parseArea.x - (stroke.getParsePointsbox().x+stroke.getParsePointsbox().width)  > 5*averageHeight) 
+			return true;
+		if(stroke.getParsePointsbox().getDiagonal()<5 && 
+				(stroke.getParsePointsbox().x - (parseArea.x+parseArea.width) >1.0*averageHeight
+				|| parseArea.x - (stroke.getParsePointsbox().x+stroke.getParsePointsbox().width)  > 0.5*averageHeight)) 
+			return true;
+		if(stroke.getParsePointsbox().getDiagonal()<5 && 
+				(stroke.getParsePointsbox().y - (parseArea.y+parseArea.height) > 0.25*averageHeight
+				|| parseArea.y - (stroke.getParsePointsbox().y+stroke.getParsePointsbox().height)  > averageHeight)) 
+			return true;
+		if(stroke.getParsePointsbox().getDiagonal()<5 && !isDelayedPointStroke(stroke) && 
+				(parseArea.y - (stroke.getParsePointsbox().y+stroke.getParsePointsbox().height)  > 0)) 
 			return true;
 		return false;
 	}
