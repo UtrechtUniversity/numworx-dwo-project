@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.Hash;
 import nl.uu.fi.dwo.mobile.client.ui.places.Hash.Type;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 
@@ -43,6 +44,30 @@ import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 public class LoginActivity extends MGWTAbstractActivity
 {
 	
+	static final class Login_Stap1 implements Success<DomUserFullwLoginContext, DomSchoolsRolesAndClassesV2> {
+
+		private ClientFactory clientFactory;
+
+		public Login_Stap1(ClientFactory clientFactory) {
+			this.clientFactory = clientFactory;
+		}
+
+		@Override
+		public Promise<DomSchoolsRolesAndClassesV2> call(Promise<DomUserFullwLoginContext> promise) throws Exception {
+			DwoGlobalVars instance = DwoGlobalVars.instance();
+			DomUserFullwLoginContext value = promise.getValue();
+			if(value == null) {
+				instance.setCurrentLoginContext(null);
+				instance.setCurrentUser(null);
+				return null;
+			} else {
+				instance.setCurrentLoginContext(value.getDomLoginContext());
+				instance.setCurrentUser(value.getDomUserFull());
+				return clientFactory.getRPCHandler().getSchoolLogins();
+			}
+		}
+	}
+
 	static final Logger LOG = Logger.getLogger(LoginActivity.class.getName()); 
 
 	public final Failure FAILURE1 = new Failure() {
@@ -80,33 +105,17 @@ public class LoginActivity extends MGWTAbstractActivity
 		}		
 	};
 
-	public static final Success<DomUserFullwLoginContext, DomSchoolsRolesAndClassesV2> LOGIN_STAP1 =
-			
-			new Success<DomUserFullwLoginContext, DomSchoolsRolesAndClassesV2>() {
-				
-				@Override
-				public Promise<DomSchoolsRolesAndClassesV2> call(Promise<DomUserFullwLoginContext> promise) throws Exception {
-					DwoGlobalVars instance = DwoGlobalVars.instance();
-					DomUserFullwLoginContext value = promise.getValue();
-					if(value == null) {
-						instance.setCurrentLoginContext(null);
-						instance.setCurrentUser(null);
-						return null;
-					} else {
-						instance.setCurrentLoginContext(value.getDomLoginContext());
-						instance.setCurrentUser(value.getDomUserFull());
-						return DWOplayer.clientfactory.getRPCHandler().getSchoolLogins();
-					}
-				}
-			};
+	private Promise<DomDwoProfileFull> dwoProfile;
 
-	public static final Predicate<DomSchoolsRolesAndClassesV2> LOGIN_LIMITED = new Predicate<DomSchoolsRolesAndClassesV2>() {
+	private final Success<DomUserFullwLoginContext, DomSchoolsRolesAndClassesV2> LOGIN_STAP1;
+
+	public final Predicate<DomSchoolsRolesAndClassesV2> LOGIN_LIMITED = new Predicate<DomSchoolsRolesAndClassesV2>() {
 
 		@Override
 		public boolean test(DomSchoolsRolesAndClassesV2 t) {
-			if(DWOplayer.dwoProfile.isDone() && t == null && DWOplayer.dwoProfile.getFailure() == null)
+			if(dwoProfile.isDone() && t == null && dwoProfile.getFailure() == null)
 			{
-				String r = DWOplayer.dwoProfile.getValue().getDwoProfileRights();
+				String r = dwoProfile.getValue().getDwoProfileRights();
 				return (r.indexOf('l') < 0);
 			}
 			// else test if current school in limited-schools
@@ -148,19 +157,21 @@ public class LoginActivity extends MGWTAbstractActivity
 
 	public LoginActivity(ClientFactory clientFactory, Place next)
 	{
-		this.clientFactory = clientFactory;
+		this(clientFactory);
 		this.next = next;
 	}
 
 	public LoginActivity(ClientFactory clientFactory) {
 		this.clientFactory = clientFactory;
+		this.dwoProfile = clientFactory.getRPCHandler().getDwoProfile();
+		this.LOGIN_STAP1 = new Login_Stap1(clientFactory);
 	}
 
 	@Override
 	public void start(final AcceptsOneWidget panel, EventBus eventBus)
 	{
 		this.panel = panel;
-		final boolean logout = DWOplayer.withUser();
+		final boolean logout = clientFactory.withUser();
 		WaitScreen.instance().w();
 		clientFactory.getHeaderView().hide();
 		clientFactory.logout().onResolve (
@@ -191,7 +202,7 @@ public class LoginActivity extends MGWTAbstractActivity
 					view.allowGuest(false);
 				} else {
 					//view.allowGuest(true);
-				DWOplayer.dwoProfile.then(new Success<DomDwoProfile, Void>() {
+				dwoProfile.then(new Success<DomDwoProfile, Void>() {
 
 					@Override
 					public Promise<Void> call(Promise<DomDwoProfile> promise) throws Exception {
@@ -221,7 +232,12 @@ public class LoginActivity extends MGWTAbstractActivity
 						return;
 					}
 					panel.setWidget(new Label());
-					promise = clientFactory.getRPCHandler().samlLogin(user_id, org_id);
+// ?a= en bovendien saml cookies.
+					String authToken = Window.Location.getParameter("a");
+					if (authToken != null && !authToken.isEmpty())
+						promise = clientFactory.getRPCHandler().getUserFromAuthToken(authToken);
+					else
+						promise = clientFactory.getRPCHandler().samlLogin(user_id, org_id);
 				} else {
 
 					String authToken = Window.Location.getParameter("a");
@@ -257,7 +273,7 @@ public class LoginActivity extends MGWTAbstractActivity
 							if (clientFactory.withUser())
 								clientFactory.logout(); // fail safe?
 							if (defer != null)
-								DWOplayer.dwoProfile.onResolve(new Runnable() {
+								dwoProfile.onResolve(new Runnable() {
 									public void run() {
 										defer.resolve(null);
 									}
@@ -303,7 +319,7 @@ public class LoginActivity extends MGWTAbstractActivity
 		if (defer == null) return;
 		final Promise<DomUserFullwLoginContext> login = clientFactory.getRPCHandler().login(view.getUsername(),
 				view.getPassword());
-		DWOplayer.dwoProfile.onResolve(
+		dwoProfile.onResolve(
 		new Runnable() {
 			public void run() {
 				defer.resolveWith(login);

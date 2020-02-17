@@ -1,8 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
 import java.util.NoSuchElementException;
-import java.util.logging.Level;
-
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -14,7 +12,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
@@ -70,7 +67,7 @@ public class ReloginActivity extends MGWTAbstractActivity {
 				return clientFactory.getRPCHandler().loginMD5(getUsername(), getPassword());
 			}
 		})
-		.then(LoginActivity.LOGIN_STAP1)
+		.then(new LoginActivity.Login_Stap1(clientFactory))
 		.then(LoginActivity.LOGIN_STAP2, FAILURE1)
 		.then(new Login_Stap3(clientFactory, next));
 	}

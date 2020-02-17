@@ -53,7 +53,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 
-public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorContext, Command, Comparator<SelectModuleItem> {
+public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorContext,  Comparator<SelectModuleItem> {
 
 	
 	final class ProvideCells implements Success<List<SelectModuleItem>, Void> {
@@ -617,7 +617,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		);
 	}
 
-	@Override
+	//@Override
 	public void execute() {
 		presenter.goTo(new ReloginPlace());
 	}
