@@ -65,4 +65,12 @@ public class RestAuthenticator implements DispatcherFilter {
     }
     
     public final static RestAuthenticator instance = new RestAuthenticator();
+    
+
+    public String getAuthorization() {
+    	if (haspassword) return authorization;
+    	else return "None";
+    }
+    
+    
 }
