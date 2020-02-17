@@ -10,6 +10,7 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import dagger.Reusable;
+import fi.dwo.gwt.lib.rest.CallManagers.OAuthManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentStudentModelManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
@@ -40,6 +41,9 @@ abstract class BootModule {
 	
 	@Reusable @Provides static SecuredUserAccountManager accountManager() {
 	  return new SecuredUserAccountManager();
+	}
+	@Reusable @Provides static OAuthManager oauthManager() {
+		return new OAuthManager();
 	}
 	
 	@Reusable @Provides static SecuredTeacherSchoolClassManager schoolClassManager() {

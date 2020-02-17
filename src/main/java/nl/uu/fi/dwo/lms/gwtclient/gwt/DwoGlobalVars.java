@@ -53,6 +53,7 @@ public class DwoGlobalVars {
     private static final Logger LOG = Logger.getLogger(DwoGlobalVars.class.getName());
 
     private final SecuredUserAccountManager accountManager;
+    private final OAuthManager oauthManager;
     private SecuredUserSchoolLoginManagerV2 loginManager = new SecuredUserSchoolLoginManagerV2();
 
     private DwoGlobalVarsState state = DwoGlobalVarsState.Unintialized;
@@ -178,8 +179,9 @@ public class DwoGlobalVars {
      * @throws Dwo2Exception
      */
     @Inject
-    public DwoGlobalVars(SecuredUserAccountManager aman) {
+    public DwoGlobalVars(SecuredUserAccountManager aman, OAuthManager oman) {
         accountManager = aman;
+        oauthManager = oman;
         //TODO define initialization stages: Unintialized, Initializing, NotLoggedIn, LoggedIn. Closing.
         setState(DwoGlobalVarsState.Initializing);
         initProperties();
@@ -236,6 +238,14 @@ public class DwoGlobalVars {
       RestAuthenticator.instance.setCredentials(null, null, null);
     }
 
+    private Promise<DomSchoolsRolesAndClassesV2> login_step1a(Promise<DomUserFullwLoginContext> resolved) throws Exception {
+
+    	currentLoginContext = resolved.getValue().getDomLoginContext();
+        currentUser = resolved.getValue().getDomUserFull();  	
+    	return loginManager.getSchoolLogins();
+    }
+    
+    
     /**
      * perform first step: setCurrent user, fetch schoollogins
      * @param resolved
@@ -325,8 +335,32 @@ public class DwoGlobalVars {
     public Promise<DwoGlobalVarsState> initUserWithSaml(String user_id, String org_id,
                                                         String token) throws Dwo2Exception {
       login_step0();
-      Promise<DomUserFullwLoginContext> p1 = accountManager.updateAccountData(user_id, org_id, token);
-      Promise<DomSchoolsRolesAndClassesV2> p2 = p1.then(this::login_step1);
+      Promise<DomUserFullwLoginContext> p1;
+      //p1 = accountManager.updateAccountData(user_id, org_id, token);
+      
+	  token = Base64.btoa("3\f" + user_id + "\f" + org_id + "\f" + token); // Format 3 
+
+	  p1 = oauthManager.authorization_token(token)
+	  	.then( 
+	  			p -> {
+	  	    	  GwtRestVars.getInstance().setBearerToken(p.getValue().getAccess_token());
+	  	    	  GwtRestVars.getInstance().setRefreshToken(p.getValue().getRefresh_token());
+	  			  return accountManager.getLoginContext();
+	  			}
+	  	).then(
+	  			q -> { 
+	  				DomContext context = new DomContext();
+	  				context.setRealm(q.getValue().getRealm());
+	  			return accountManager.getAccountData(context).map( 
+	  					data -> { 
+	  				DomUserFullwLoginContext all = new DomUserFullwLoginContext();
+	  				all.setDomLoginContext(q.getValue());
+	  				all.setDomUserFull(data);
+	  				return all;
+	  			});
+	  		}
+	  	);
+      Promise<DomSchoolsRolesAndClassesV2> p2 = p1.then(this::login_step1a);
       Promise<DwoGlobalVarsState> p3 = p2.then(this::login_step2, this::login_fail);
       return p3;
     }
@@ -358,10 +392,9 @@ public class DwoGlobalVars {
      * @param aCurUser the currentUser to set
      */
     public void setCurrentUser(DomUserFull aCurUser, String realm) {
-        currentUser = aCurUser;
         this.currentUser = aCurUser;
-        //notify the gwt-rest interface configuration
-        GwtRestVars.getInstance().setCurrentUser(aCurUser, realm);
+        if (!RestAuthenticator.instance.getAuthorization().startsWith("Bearer")) 
+        	GwtRestVars.getInstance().setCurrentUser(aCurUser, realm);
 
     }
 
@@ -453,7 +486,7 @@ public class DwoGlobalVars {
     }
 
     public void setCurrentUser(DomUserFull user) {
-      setCurrentUser(user, getRealm());
+      currentUser = user;
     }
     
     public Promise<Dwo2Exception> logout() {
