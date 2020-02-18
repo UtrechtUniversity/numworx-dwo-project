@@ -14,4 +14,8 @@ public interface OAuthRestCaller extends RestService {
 	@POST
 	@Path("/oauth2/token")
 	void token(@FormParam("grant_type") String grantType, @FormParam("code") String code, @FormParam("refresh_token") String refreshToken, MethodCallback<DomToken> callback);
+
+	@POST
+    @Path("/oauth2/token")
+    void client(@FormParam("grant_type") String grantType, @FormParam("client_id") String code, @FormParam("client_secret") String refreshToken, MethodCallback<DomToken> callback);
 }

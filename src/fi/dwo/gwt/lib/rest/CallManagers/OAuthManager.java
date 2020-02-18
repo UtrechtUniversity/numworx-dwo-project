@@ -23,4 +23,10 @@ public class OAuthManager {
 		return defer.getPromise();
 	}
 	
+	public Promise<DomToken> client_credentials(String client, String secret) {
+      PromiseCallback<DomToken> defer = new PromiseCallback<>();
+      service.client("client_credentials", client, secret, defer);
+      return defer.getPromise();
+	  
+	}
 }

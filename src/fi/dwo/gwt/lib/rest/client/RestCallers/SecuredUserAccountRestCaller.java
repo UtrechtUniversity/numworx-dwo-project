@@ -72,7 +72,7 @@ public interface SecuredUserAccountRestCaller extends RestService {
     public void loginUserWithPOST( @FormParam("user") String user, MethodCallback<DomUserFullwLoginContext> restcallback);
 
     @GET
-    @Path("/secure/user/account/verifyTOTP")
+    @Path("/secure/user/account/verifyTOTPv2")
     public void verifyTOTP(MethodCallback<JSONValue> callback);
     
     @GET
