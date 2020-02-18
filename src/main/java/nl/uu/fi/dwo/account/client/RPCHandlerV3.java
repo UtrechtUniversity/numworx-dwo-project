@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -39,6 +40,7 @@ import com.google.gwt.json.client.JSONValue;
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.CallManagers.CourseManager;
 import fi.dwo.gwt.lib.rest.CallManagers.CoursesOfSchoolClassManager;
+import fi.dwo.gwt.lib.rest.CallManagers.OAuthManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicCourseManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicCoursesOfSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicProfileManager;
@@ -68,6 +70,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	StudentScoDataManager scormApi;
 	SecuredStudentStudentModelManager studentModelManager;
 	AccessManager accessManager;
+	OAuthManager oauthManager;
 	
 	protected Promise<DomDwoProfileFull> profile;
 	
@@ -82,7 +85,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		resultManager = new PublicUserResultsManager();
 		scormApi = new PublicStudentScoDataManager();
 		accessManager = new AccessManager();
-		
+		oauthManager = new OAuthManager();
 		this.profile = getDwoProfile(profile);
 	}
 
@@ -420,4 +423,32 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	    return xapi;
 	  });
 	}
+
+  public Promise<DomUserFullwLoginContext> getUserFromOAuthToken(String authToken) {
+    return oauthManager.authorization_token(authToken)
+        .then( 
+                p -> {
+                  GwtRestVars.getInstance().setBearerToken(p.getValue().getAccess_token());
+                  GwtRestVars.getInstance().setRefreshToken(p.getValue().getRefresh_token());
+                  return accountManager.getLoginContext();
+                }
+        ).then(
+                q -> { 
+                    DomContext context = new DomContext();
+                    context.setRealm(q.getValue().getRealm());
+                return accountManager.getAccountData(context).map( 
+                        data -> { 
+                    DomUserFullwLoginContext all = new DomUserFullwLoginContext();
+                    all.setDomLoginContext(q.getValue());
+                    all.setDomUserFull(data);
+                    return all;
+                });
+            }
+        );
+      
+  }
+	
+	
+	
+	
 }

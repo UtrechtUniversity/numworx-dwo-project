@@ -312,11 +312,12 @@ public class DwoGlobalVars {
 
     /**
      * @param aCurUser the currentUser to set
+     * FIXME set password if Basic authentication
      */
     public void setCurrentUser(DomUserFull aCurUser) {
         currentUser = aCurUser;
-        //notify the gwt-rest interface configuration
-        GwtRestVars.getInstance().setCurrentUser(aCurUser, getRealm());
+        if (aCurUser == null || !RestAuthenticator.instance.getAuthorization().startsWith("Bearer"))
+          GwtRestVars.getInstance().setCurrentUser(aCurUser, getRealm());
 
     }
 
