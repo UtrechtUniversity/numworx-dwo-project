@@ -235,7 +235,10 @@ public class LoginActivity extends MGWTAbstractActivity
 // ?a= en bovendien saml cookies.
 					String authToken = Window.Location.getParameter("a");
 					if (authToken != null && !authToken.isEmpty())
-						promise = clientFactory.getRPCHandler().getUserFromAuthToken(authToken);
+						promise = clientFactory.getRPCHandler().getUserFromAuthToken(authToken)
+// XXX wel of niet ook met saml?
+						.recoverWith(p -> clientFactory.getRPCHandler().samlLogin(user_id, org_id))
+						;
 					else
 						promise = clientFactory.getRPCHandler().samlLogin(user_id, org_id);
 				} else {
