@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -43,15 +44,30 @@ public class OAuthManager {
   public String refresh_token(String token) {
     return requestToken(token, "grant_type=refresh_token&refresh_token=");
   }
+  
+  public String client_credentials(String client, String secret) {
+    try {
+      String form = "grant_type=client_credentials&client_id=" + URLEncoder.encode(client, "UTF-8") +
+          "&client_secret=" + URLEncoder.encode(secret, "UTF-8");
+      return requestForm(form);
+    } catch (UnsupportedEncodingException e) {
+      return null;
+    }
+  }
+  
 
   @SuppressWarnings("deprecation")
   private String requestToken(String token, String format) {
+    String form = format+URLEncoder.encode(token);
+    return requestForm(form);
+  }
+
+  private String requestForm(String form) {
     try {
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setAllowUserInteraction(false);
       conn.setDoOutput(true);
       OutputStream out = conn.getOutputStream();
-      String form = format+URLEncoder.encode(token);
       out.write(form.getBytes(StandardCharsets.US_ASCII));
       out.close();
       if (conn.getResponseCode() == 200) {
@@ -74,7 +90,6 @@ public class OAuthManager {
       LOG.log(Level.SEVERE, "rest error", e);
     } 
     return null;
-
   }
   
   
