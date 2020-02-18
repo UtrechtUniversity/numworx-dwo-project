@@ -9,7 +9,15 @@ import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
+import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.server.PersistentDataManagers.core.CourseManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
+import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.entities.RestScormValues;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -30,7 +38,27 @@ public class SecuredStudentExamScoDataManager extends SecuredCommonScoDataManage
   @Path("/getJSONLaunchDataBytes")
   public String getJSONLaunchDataBytes(@Context SecurityContext sc, RestScoContext rest,
                                        @HeaderParam("X-ClassCourseID") String ccid, @HeaderParam("X-TOTP") String totp) throws Dwo2Exception {
+
+    
+    verifyTOTP(sc, ccid, totp, courseOf(rest), classOf(rest));
     return super.getJSONLaunchDataBytes(sc, rest);
+  }
+
+  private PersistentSchoolClass classOf(RestScoContext rest) throws Dwo2Exception {
+    Long id = MySQLPersistenceId.getNativeId(rest.getSchoolClassID());
+    return SchoolClassManager.findEntity(id);
+  }
+
+  private void verifyTOTP(SecurityContext sc, String ccid, String totp, PersistentCourse courseOf, PersistentSchoolClass classOf) throws Dwo2Exception {
+    SecuredUserAccountManager.verifyTOTP(sc, ccid, totp, courseOf, classOf);
+    
+  }
+
+  private PersistentCourse courseOf(RestScoContext rest) throws Dwo2Exception {
+    DomScoContext sco = rest.getDomScoContext();
+    Long id = MySQLPersistenceId.getNativeId(sco);
+    PersistentScoContext ctx = ScoContextManager.findEntity(id);   
+    return CourseManager.findEntity(ctx.getCourseID());
   }
 
   @PUT

@@ -5,10 +5,12 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
+import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
@@ -42,14 +44,21 @@ import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.LoginContextUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
 import fi.dwo.server.rest.jaxrsfilters.DwoUserPrincipal;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
 
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.security.PermitAll;
+import javax.crypto.SecretKey;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
@@ -494,7 +503,8 @@ public class SecuredUserAccountManager {
     }
 
     enum TotpType {
-        PLAIN
+        PLAIN,
+        JWT
     }
 
     @GET
@@ -556,6 +566,57 @@ public class SecuredUserAccountManager {
             return "false";
         }
     }
+
+    public static String getToken(PersistentClassCourse pcc, SecurityContext sc) {
+      String userName = sc.getUserPrincipal().getName();
+      PersistentUser u = UserManager.findByUserName(userName);
+      List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
+      PersistentLoginContext context = loginContextList.get(0);
+      SecretKey key = OAuth2Manager.getKey(context);
+      JwtBuilder builder = Jwts.builder()
+            .setSubject(u.getUsername())
+            .setIssuedAt(new Date())
+            .setId(String.valueOf(pcc.getClassCourseID()))
+            .setNotBefore(pcc.getNotBefore())
+            .setExpiration(pcc.getNotAfter())
+            .setHeaderParam("kid", context.getId());         
+      return builder.signWith(key).compact();     
+    }
+    
+    @GET
+    @Produces("application/json")
+    @Path("/verifyTOTPv2")
+    public String verifyTOTPv2(@Context SecurityContext sc,
+                               @HeaderParam("X-ClassCourseID") String ccid, @HeaderParam("X-TOTP") String totp) {
+        try {
+            LOG.info("ccid = " + ccid);
+            LOG.info("totp = " + totp);
+            ccid = Base64.decodeAsString(ccid);
+            DomClassCourse id = new DomClassCourse();
+            id.setId(new PersistenceId(ccid));
+            Long nativeId = MySQLPersistenceId.getNativeId(id);
+            PersistentClassCourse pcc = ClassCourseManager.findEntity(nativeId);
+            String accessKey = pcc.getAccessKey();
+
+            StringTokenizer st = new StringTokenizer(totp);
+            switch (TotpType.valueOf(st.nextToken())) {
+                case PLAIN:
+                    totp = Base64.decodeAsString(st.nextToken());
+                    if (accessKey == null || accessKey.isEmpty() || accessKey.equals(totp))
+                      return '"' + TotpType.JWT.name() + " " + getToken(pcc, sc) + '"';
+                    return "false";
+                default:
+                    throw new IllegalArgumentException("not implemented");
+            }
+
+        } catch (RuntimeException e) {
+            LOG.log(Level.SEVERE, "verifyTOTP failed", e);
+            return "false";
+        } catch (Dwo2Exception e) {
+            LOG.log(Level.SEVERE, "verifyTOTP failed", e);
+            return "false";
+        }
+    }
     
     
     @PUT
@@ -576,4 +637,53 @@ public class SecuredUserAccountManager {
       
       return Boolean.TRUE;
     }
+
+    public static void verifyTOTP(SecurityContext sc, String ccid, String totp,
+        PersistentCourse courseOf, PersistentSchoolClass classOf) throws Dwo2Exception {
+      try {
+        LOG.info("ccid = " + ccid);
+        LOG.info("totp = " + totp);
+        ccid = Base64.decodeAsString(ccid);
+        DomClassCourse id = new DomClassCourse();
+        id.setId(new PersistenceId(ccid));
+        Long nativeId = MySQLPersistenceId.getNativeId(id);
+        PersistentClassCourse pcc = ClassCourseManager.findEntity(nativeId);
+        if (pcc.getCourseID().longValue() != courseOf.getCourseID().longValue())
+          throw new Dwo2Exception(Dwo2ExceptionCode.Exam_AuthenticationError, "wrong course");
+        
+        String accessKey = pcc.getAccessKey();
+
+        StringTokenizer st = new StringTokenizer(totp);
+        switch (TotpType.valueOf(st.nextToken())) {
+            case PLAIN:
+                totp = Base64.decodeAsString(st.nextToken());
+                if (pcc.getClassID() == classOf.getClassID().longValue()
+                    && pcc.getCourseID().equals(courseOf.getCourseID())
+                    )
+                if (accessKey == null || accessKey.isEmpty() || accessKey.equals(totp))
+                  return;
+            case JWT:
+                totp = st.nextToken();
+                JwtParser parser = Jwts.parser().setSigningKeyResolver(OAuth2Manager.AUTH);
+                Jws<Claims> claims = parser.parseClaimsJws(totp);
+                String username = claims.getBody().getSubject();
+                String pccid = claims.getBody().getId();
+                if (username.equals(sc.getUserPrincipal().getName()) 
+                    && pcc.getCourseID().equals(courseOf.getCourseID())
+                    && pcc.getClassID() == classOf.getClassID().longValue()
+                    && pccid.equals(String.valueOf(pcc.getClassCourseID())))
+                    return;
+            default:
+              throw new Dwo2Exception(Dwo2ExceptionCode.Exam_AuthenticationError, "not implemented");
+        }
+
+    } catch (RuntimeException e) {
+        LOG.log(Level.SEVERE, "verifyTOTP failed", e);
+        throw new Dwo2Exception(Dwo2ExceptionCode.Exam_AuthenticationError, e.toString());
+    } catch (Dwo2Exception e) {
+        LOG.log(Level.SEVERE, "verifyTOTP failed", e);
+        throw e;
+    }
+
+  }
 }

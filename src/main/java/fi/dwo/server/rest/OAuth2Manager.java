@@ -49,7 +49,7 @@ public class OAuth2Manager {
   static final String CODE = "code";
   private static final Logger LOG = Logger.getLogger(OAuth2Manager.class.getName());
   private static int expires = 3600*3;
-  private static final AuthenticationRequestFilter AUTH = new AuthenticationRequestFilter();
+  public static final AuthenticationRequestFilter AUTH = new AuthenticationRequestFilter();
   
   private String access_token(PersistentUser u, PersistentLoginContext c, String scope) {
     SecretKey key;
@@ -67,7 +67,7 @@ public class OAuth2Manager {
     return token;
   }
 
-  protected SecretKey getKey(PersistentLoginContext c) {
+  static protected SecretKey getKey(PersistentLoginContext c) {
     SecretKey key;
     byte[] bytes = c.getNonce();
     if (bytes == null) {
