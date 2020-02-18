@@ -270,14 +270,15 @@ public class UserManager {
         PersistentUser user = null;
         EntityManager em = getEntityManager();
         try {
-            javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
+            javax.persistence.TypedQuery<PersistentUser> q = em.createNamedQuery("PersistentUser.findByUsername", PersistentUser.class);
             q.setParameter("username", userName);
-            user = (PersistentUser) q.getSingleResult();
+            user = q.getSingleResult();
             if (user.getPassword() == null || user.getPassword().isEmpty() || !user.getPassword().equals(passwd)) {
-                return null;
+              LOG.log(Level.INFO, "Login NOT accepted for user with username {0}", new Object[]{userName});
+              return null;
             }
-            LOG.log(Level.INFO, "Login accepted for user with username {0}", new Object[]{userName});
         } catch (NoResultException noresult) {
+            LOG.log(Level.WARNING, "Login NOT accepted for user with username {0}", new Object[]{userName});
             return null;
         } finally {
             em.close();
