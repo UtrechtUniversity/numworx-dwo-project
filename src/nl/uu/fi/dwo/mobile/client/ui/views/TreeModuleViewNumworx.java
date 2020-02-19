@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
@@ -55,6 +56,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 
 public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorContext,  Comparator<SelectModuleItem> {
 
+	static final Logger LOG = Logger.getLogger(TreeModuleViewNumworx.class.getName());
 	
 	final class ProvideCells implements Success<List<SelectModuleItem>, Void> {
 		@Override
@@ -196,15 +198,22 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		}
 	
 		public TileCell() {
-			super("click");
+			super("click", "pointerdown", "pointerup");
 		}
 
+		boolean pointer;
+		int x, y;
+		final int RADIUS = 20;
 		@Override
 		public void onBrowserEvent(Context context, Element parent, SelectModuleItem value, NativeEvent event,
 				ValueUpdater<SelectModuleItem> valueUpdater) {
 		    String eventType = event.getType();
-		    
-		    if("click".equals(eventType)) {
+			if( "pointerdown".equals(eventType)) {
+				pointer = true;
+				x = event.getScreenX();
+				y = event.getScreenY();
+			}
+		    if(click(eventType) && close(event)) {
 		    	EventTarget eventTarget = event.getEventTarget();
 		    	Element e = null;
 		    	if(Element.is(eventTarget)) {
@@ -233,16 +242,25 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		    }
 		    
 		    
-		    if("click".equals(eventType)) {
+		    if(click(eventType) && close(event)) {
 		    	Place place;
 		    	if(value.getType() == Type.SCO)
 		    		place = new ViewModulePlace(value.getID());
 		    	else
 		    		place = new TreeModulePlace(value.getID());
-			presenter.goTo(place);
+		    	presenter.goTo(place);
 		    	return;
 		    }
 			super.onBrowserEvent(context, parent, value, event, valueUpdater);
+		}
+
+		private boolean close(NativeEvent event) {
+			int r = Math.abs(x - event.getScreenX()) + Math.abs(y - event.getScreenY());
+			return !pointer || r < RADIUS;
+		}
+
+		public boolean click(String eventType) {
+			return "click".equals(eventType) && !pointer || "pointerup".equals(eventType);
 		}
 		
 		

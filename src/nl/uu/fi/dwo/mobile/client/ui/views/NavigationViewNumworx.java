@@ -70,6 +70,11 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	private static final Logger LOG = java.util.logging.Logger.getLogger("NavigationView");
 
   class NavCell extends AbstractCell<SelectModuleItem> {
+		private boolean pointer;
+
+		boolean click(String eventType) {
+			return "click".equals(eventType) && !pointer || "pointerup".equals(eventType);
+		}
 
 		@Override
 		public void render(Context context, SelectModuleItem value,
@@ -83,15 +88,18 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		}
 
 		public NavCell() {
-			super("click");
+			super("click", "pointerdown", "pointerup");
 		}
 
 		@Override
 		public void onBrowserEvent(Context context, Element parent, SelectModuleItem value, NativeEvent event,
 				ValueUpdater<SelectModuleItem> valueUpdater) {
 		    String eventType = event.getType();
+			if(!pointer && "pointerdown".equals(eventType)) {
+				pointer = true;
+			}
 		    Type type = value.getType();
-		    if("click".equals(eventType) && type != Type.SEPARATOR) {
+		    if(click(eventType) && type != Type.SEPARATOR) {
 		    	GWT.log(value.getName());
 		    	presenter.goTo(new TreeModulePlace(value.getID()));
 		    	return;
