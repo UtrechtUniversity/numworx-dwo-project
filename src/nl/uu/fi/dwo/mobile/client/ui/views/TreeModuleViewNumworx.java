@@ -89,7 +89,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 					</g:FlowPanel>
 */			
 		    Type typeof = value.getType();
-			sb.appendHtmlConstant("<div class='"+style.tile()+"'>");
+		    sb.appendHtmlConstant("<button type='button' class='"+style.tile()+"'>");
 			  sb.appendHtmlConstant("<div class='" + style.tileHeader() + "'><span class='" + style.tileSpan() + "'>");
 			  if(typeof == Type.SCO)
 			  {
@@ -189,8 +189,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				  			+ "info"
 				  			+ "-numworx.svg")+"'/>"
 			  		+ "</div>");
-		    sb.appendHtmlConstant("</div>");
-			  
+		    sb.appendHtmlConstant("</button");
 			  
 			
 		}
