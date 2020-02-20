@@ -71,9 +71,15 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 
   class NavCell extends AbstractCell<SelectModuleItem> {
 		private boolean pointer;
+		int x, y;
+		final int RADIUS = 20;
 
 		boolean click(String eventType) {
 			return "click".equals(eventType) && !pointer || "pointerup".equals(eventType);
+		}
+		private boolean close(NativeEvent event) {
+			int r = Math.abs(x - event.getScreenX()) + Math.abs(y - event.getScreenY());
+			return !pointer || r < RADIUS;
 		}
 
 		@Override
@@ -95,11 +101,13 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		public void onBrowserEvent(Context context, Element parent, SelectModuleItem value, NativeEvent event,
 				ValueUpdater<SelectModuleItem> valueUpdater) {
 		    String eventType = event.getType();
-			if(!pointer && "pointerdown".equals(eventType)) {
+			if("pointerdown".equals(eventType)) {
 				pointer = true;
+				x = event.getScreenX();
+				y = event.getScreenY();
 			}
 		    Type type = value.getType();
-		    if(click(eventType) && type != Type.SEPARATOR) {
+		    if(click(eventType) && type != Type.SEPARATOR && close(event)) {
 		    	GWT.log(value.getName());
 		    	presenter.goTo(new TreeModulePlace(value.getID()));
 		    	return;
