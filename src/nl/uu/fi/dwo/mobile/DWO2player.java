@@ -19,10 +19,13 @@ import org.osgi.util.promise.Success;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Cookies;
+
 import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
 import fi.dwo.gwt.lib.rest.css.DwoStyle;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogView;
+import fi.dwo.gwt.lib.rest.util.Base64;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import nl.uu.fi.dwo.account.client.AccountBundle;
@@ -45,6 +48,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
@@ -87,6 +91,21 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		  }
 		  return xapi;
 		}
+    @Override
+    public Promise<DomUserFullwLoginContext> getUserFromAuthToken(String authToken) {
+      if (PARAMETERS.getDwoEnv().contains("test")||PARAMETERS.getDwoEnv().contains("saml"))
+        return super.getUserFromOAuthToken(authToken);
+      else
+        return super.getUserFromAuthToken(authToken);
+    }
+
+    @Override
+    public Promise<DomUserFullwLoginContext> samlLogin(String name, String org) {
+      String authToken = Cookies.getCookie(DWO_SAML_AUTH_TOKEN);
+      authToken = "3\f" + name + '\f' + org + '\f' + authToken;
+      return super.getUserFromOAuthToken(Base64.btoa(authToken));
+    }
+		
 	}
 
 
