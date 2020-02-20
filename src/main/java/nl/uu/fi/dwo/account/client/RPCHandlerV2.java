@@ -39,7 +39,7 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
     protected final SecuredUserSchoolLoginManagerV2 schoolManager = new SecuredUserSchoolLoginManagerV2();
 
 	protected DomContext context = new DomContext();
-	private static final String DWO_SAML_AUTH_TOKEN = "dwoSAMLAuthToken";
+	protected static final String DWO_SAML_AUTH_TOKEN = "dwoSAMLAuthToken";
 
     /**
      *

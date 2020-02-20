@@ -36,6 +36,7 @@ import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import com.google.gwt.json.client.JSONBoolean;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.CallManagers.CourseManager;
@@ -367,7 +368,12 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			@Override
 			public Promise<Void> call(Promise<JSONValue> resolved) throws Exception {
 				LOG.info("verifyTOTP:" + resolved.getValue());
-				JSONBoolean ok = resolved.getValue().isBoolean();
+                JSONBoolean ok = resolved.getValue().isBoolean();
+                JSONString str = resolved.getValue().isString();
+				if (str != null) {
+			       headers.put("X-TOTP", str.stringValue());
+			       ok = JSONBoolean.getInstance(true);
+				}
 				if(ok != null && ok.booleanValue())
 				{ // switch to secure/student/exam stuff
 				  scoManager = new SecuredUserScoContextManager(false); // not yet			  
