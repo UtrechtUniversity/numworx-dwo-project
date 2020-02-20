@@ -30,7 +30,19 @@ public class SecuredStudentExamScoDataManager extends SecuredCommonScoDataManage
   @Path("/patchValues")
   public Response patchValues(@Context SecurityContext sc, RestScormValues rest, @HeaderParam("if-match") String match,
                               @HeaderParam("X-ClassCourseID") String ccid, @HeaderParam("X-TOTP") String totp) throws Dwo2Exception {
+    verifyTOTP(sc, ccid, totp, courseOf(rest), classOf(rest));
     return super.patchValues(sc, rest, match);
+  }
+
+  private PersistentCourse courseOf(RestScormValues rest) throws Dwo2Exception {
+    Long id = MySQLPersistenceId.getNativeId(rest.getDomScormValues().getScoContext());
+    PersistentScoContext ctx = ScoContextManager.findEntity(id);   
+    return CourseManager.findEntity(ctx.getCourseID());
+  }
+
+  private PersistentSchoolClass classOf(RestScormValues rest) throws Dwo2Exception {
+    Long id = MySQLPersistenceId.getNativeId( rest.getDomScormValues().getSchoolClassID() );
+    return SchoolClassManager.findEntity(id);
   }
 
   @PUT
@@ -38,8 +50,6 @@ public class SecuredStudentExamScoDataManager extends SecuredCommonScoDataManage
   @Path("/getJSONLaunchDataBytes")
   public String getJSONLaunchDataBytes(@Context SecurityContext sc, RestScoContext rest,
                                        @HeaderParam("X-ClassCourseID") String ccid, @HeaderParam("X-TOTP") String totp) throws Dwo2Exception {
-
-    
     verifyTOTP(sc, ccid, totp, courseOf(rest), classOf(rest));
     return super.getJSONLaunchDataBytes(sc, rest);
   }
@@ -65,13 +75,16 @@ public class SecuredStudentExamScoDataManager extends SecuredCommonScoDataManage
   @Produces({"application/json"})
   @Path("/getValues")
   public Response getValues(@Context SecurityContext sc, RestScormValues rest,@HeaderParam("X-ClassCourseID") String ccid, @HeaderParam("X-TOTP") String totp) throws Dwo2Exception {
+    verifyTOTP(sc, ccid, totp, courseOf(rest), classOf(rest));
     return super.getValues(sc, rest);
   }
 
   @PUT
   @Produces({"application/json"})
   @Path("/setValues")
-  public Response setValues(@Context SecurityContext sc, RestScormValues rest, @HeaderParam("if-match") EntityTag match) throws Dwo2Exception {
+  public Response setValues(@Context SecurityContext sc, RestScormValues rest, @HeaderParam("if-match") EntityTag match,
+                            @HeaderParam("X-ClassCourseID") String ccid, @HeaderParam("X-TOTP") String totp) throws Dwo2Exception {
+    verifyTOTP(sc, ccid, totp, courseOf(rest), classOf(rest));
     return super.setValues(sc, rest, match);
   }
 
