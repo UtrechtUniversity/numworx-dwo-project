@@ -22,8 +22,10 @@ import java.net.CookiePolicy;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -2502,12 +2504,18 @@ LOG.info("time results = " + (-t) + " ms");
        String samlOrgID = p.getProperty(DWO_SAML_ORGANIZATION_ID);
        String authToken = p.getProperty("dwoSAMLAuthToken");
        LOG.log(Level.INFO,"Cookies: dwoSAMLUserID {0} dwoSAMLOrganizationID {1} dwoSAMLAuthToken {2}", new Object[]{samlUserID, samlOrgID, authToken});
+if (false) {
        DomUserFullwLoginContext user = PublicUserManager.samlLogin(samlUserID, samlOrgID, authToken);
        String name = user.getDomUserFull().getUserName();
        String pw = user.getDomUserFull().getPassword();
        String realm = user.getDomLoginContext().getRealm();
   // moet REALM meenemen
        GuiCreator.instance().loginWithMd5(name, pw, realm);
+  } else {
+      String token = "3\f" + samlUserID + '\f' + samlOrgID + '\f' + authToken;
+      token = Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
+      GuiCreator.instance().loginWithToken(token);
+  }
     }
     
     

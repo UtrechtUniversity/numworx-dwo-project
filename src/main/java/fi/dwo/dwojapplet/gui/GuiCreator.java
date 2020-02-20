@@ -48,6 +48,9 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminConfigManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -172,6 +175,35 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
         return mainPanel;
     }
 
+    public void loginWithToken(String authToken) throws Dwo2Exception, LoginException {
+      DwoHelper.setContact(false);
+      OAuthManager m = new OAuthManager();
+      token = m.authorization_token(authToken);
+      if (token != null) {
+        StoredRestManager.getInstance().setRecover(this);
+      }
+      DomLoginContext loginContext = SecureUserAccountManager.getLoginContext();
+      DomContext context = StoredRestManager.getInstance().getAuthenticator().getContext();
+      if (context == null) {
+        StoredRestManager.getInstance().getAuthenticator().setContext(context = new DomContext());
+      }
+      context.setRealm(loginContext.getRealm());
+      DomUserFull user = SecureUserAccountManager.getAccountData();
+      DwoHelper.setCurrentUser(user, loginContext);
+      if (DwoHelper.getCurrentUser() != null) {
+        // TODO: remove, currently checks if licence is still valid
+        validLicenceCheck(dwo.getUser());
+        // Check if user has enough rights to continue
+        if (dwo.login(user.getUserName(), "")) {
+        //configure GuiCreator to show correct Panels and options.
+            configurePanelsForUser(dwo.getUser());
+        } else {
+            dwo.logoff(); 
+        }
+      } 
+    }
+    
+    
     /**
      * Logs a user in into the system. The user will be remembered while the
      * user is logged in. Then it shows the MainPanel.

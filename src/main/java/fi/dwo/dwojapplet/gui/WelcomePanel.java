@@ -47,6 +47,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -247,13 +248,22 @@ if(DwoHelper.isSamlLogin()) {
       profileselect.switchProfile();
       GuiCreator.instance().dwo.loginViaSaml(pr.getValue());
       return null;
-    }, 
+    }).then(null, 
         fail -> {
           final Throwable failure = fail.getFailure();
-          if(failure instanceof Dwo2Exception)
-            GuiCreator.instance().ShowErrorDialog(dialog, (Dwo2Exception) failure);
-          else
-            GuiCreator.instance().ShowWarningDialog(dialog, failure.getMessage());
+          SwingUtilities.invokeLater(
+          new Runnable() {
+            public void run() {
+          
+              failure.printStackTrace();
+              if(failure instanceof Dwo2Exception)
+                GuiCreator.instance().ShowErrorDialog(dialog, (Dwo2Exception) failure);
+              else
+                GuiCreator.instance().ShowWarningDialog(dialog, 
+                  new String [] { failure.getClass().getName(),
+                  failure.getLocalizedMessage()});
+            }
+          });
         }
     );
     p.add(browser.asComponent(), BorderLayout.CENTER);

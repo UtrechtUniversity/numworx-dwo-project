@@ -175,7 +175,7 @@ public final class DwoHelper {
               String username = aCurrentUser.getUserName();
               String password = aCurrentUser.getPassword();
               String realm = aLoginContext.getRealm();
-              StoredRestManager.getInstance().setBasicAuthString(username, password, realm);
+              //StoredRestManager.getInstance().setBasicAuthString(username, password, realm);
 
                 DomSchoolsRolesAndClassesV2 srcs = SecureUserAccountLoginsManager.getSchoolLogins();//update DwoHelper
                 DwoHelper.setSchoolLogins(srcs);
