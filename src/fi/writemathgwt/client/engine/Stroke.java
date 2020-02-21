@@ -37,19 +37,36 @@ public class Stroke {
 		List<Double> parsePointsX = null;
 		List<Double> parsePointsY = null;
 		
+		List<Integer> parsePointsIntX = null;
+		List<Integer> parsePointsIntY = null;
+		
 		if(h.containsKey("parsePointsX")) 
 			parsePointsX = h.getDoubleList("parsePointsX");
 		if(h.containsKey("parsePointsY")) 
 			parsePointsY = h.getDoubleList("parsePointsY");
 		
-		if(parsePointsX==null)
+		if(h.containsKey("parsePointsIntX")) 
+			parsePointsIntX = h.getIntegerList("parsePointsIntX");
+		if(h.containsKey("parsePointsIntY")) 
+			parsePointsIntY = h.getIntegerList("parsePointsIntY");
+		
+		if(parsePointsIntX==null && parsePointsX==null)
 			return null;
 		
 		ArrayList<DoublePoint> parsePoints = new ArrayList<DoublePoint>();
-		for (int i = 0; i < parsePointsX.size(); i++) {
-			double x = ((Number) parsePointsX.get(i)).doubleValue();
-			double y = ((Number) parsePointsY.get(i)).doubleValue();
-			parsePoints.add(new DoublePoint(x,y));
+		if(parsePointsX!=null) {
+			for (int i = 0; i < parsePointsX.size(); i++) {
+				double x = ((Number) parsePointsX.get(i)).doubleValue();
+				double y = ((Number) parsePointsY.get(i)).doubleValue();
+				parsePoints.add(new DoublePoint(x,y));
+			}
+		}
+		else if(parsePointsIntX!=null) {
+			for (int i = 0; i < parsePointsIntX.size(); i++) {
+				double x = ((Number)((double)parsePointsIntX.get(i)/100)).doubleValue();
+				double y = ((Number)((double)parsePointsIntY.get(i)/100)).doubleValue();
+				parsePoints.add(new DoublePoint(x,y));
+			}
 		}
 		return new Stroke(parsePoints, true);
 	}
@@ -150,14 +167,27 @@ public class Stroke {
 	
 	public HashMap<String,Object> getState() {
 		HashMap<String, Object> h = new HashMap<String, Object>();
-		ArrayList<Double> parsePointsX = new ArrayList<Double>();
-		ArrayList<Double> parsePointsY = new ArrayList<Double>();
+//		ArrayList<Double> parsePointsX = new ArrayList<Double>();
+//		ArrayList<Double> parsePointsY = new ArrayList<Double>();
+		
+		ArrayList<Integer> parsePointsIntX = new ArrayList<Integer>();
+		ArrayList<Integer> parsePointsIntY = new ArrayList<Integer>();
+		
+//		for(int i = 0 ; i < parsePoints.size() ; i++) {
+//		parsePointsX.add(parsePoints.get(i).x);
+//		parsePointsY.add(parsePoints.get(i).y);
+//		}
+	
 		for(int i = 0 ; i < parsePoints.size() ; i++) {
-			parsePointsX.add(parsePoints.get(i).x);
-			parsePointsY.add(parsePoints.get(i).y);
+			parsePointsIntX.add((int)(parsePoints.get(i).x*100));
+			parsePointsIntY.add((int)(parsePoints.get(i).y*100));
 		}
-		h.put("parsePointsX", parsePointsX);
-		h.put("parsePointsY", parsePointsY);
+//		h.put("parsePointsX", parsePointsX);
+//		h.put("parsePointsY", parsePointsY);
+		
+		h.put("parsePointsIntX", parsePointsIntX);
+		h.put("parsePointsIntY", parsePointsIntY);
+		
 		return h;
 	}
 	
