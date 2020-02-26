@@ -263,6 +263,7 @@ public class FormuleParser
 	public static String formuleString(String s)
 	{
 		String in = s;
+		
 
 		s = "(" + s.substring(2, s.length() - 1) + ")";
 
@@ -604,6 +605,7 @@ public class FormuleParser
 		s = s.replace(',', '.');
 		s = s.replace(':', '/');
 		s = s.replace('\u00b0', ' ');
+		
 
 		int index = 0;
 		while (index > -1)
@@ -1769,6 +1771,8 @@ public class FormuleParser
 						Expressie e2 = parse(s.substring(i + 1));
 						if (e1 == null || e2 == null)
 							return null;
+						if("(0-1)".equals(s.substring(4, i)))
+							return new ArcSinus(e2);
 						return new Macht(new Sinus(e2), e1);
 					}
 
@@ -1795,6 +1799,8 @@ public class FormuleParser
 						Expressie e2 = parse(s.substring(i + 1));
 						if (e1 == null || e2 == null)
 							return null;
+						if("(0-1)".equals(s.substring(4, i)))
+							return new ArcCosinus(e2);
 						return new Macht(new Cosinus(e2), e1);
 					}
 
@@ -1821,6 +1827,8 @@ public class FormuleParser
 						Expressie e2 = parse(s.substring(i + 1));
 						if (e1 == null || e2 == null)
 							return null;
+						if("(0-1)".equals(s.substring(4, i)))
+							return new ArcTangens(e2);
 						return new Macht(new Tangens(e2), e1);
 					}
 
