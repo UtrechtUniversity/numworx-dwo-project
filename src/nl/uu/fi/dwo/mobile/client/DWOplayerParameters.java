@@ -49,11 +49,6 @@ public interface DWOplayerParameters {
 	 */
 	HeaderCss headercss();
 	/**
-	 * Navigational css 
-	 * @deprecated
-	 */
-	NavigationCss navigationcss();
-	/**
 	 * type of title
 	 */
 	boolean isNavTitle();

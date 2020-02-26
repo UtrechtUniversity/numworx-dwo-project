@@ -57,8 +57,7 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 	private NavigationBundle navigationBundle;
 	protected String launchData;//, courseDescription;
 	
-	@Override
-	public NavigationCss navigationcss() {		
+	NavigationCss navigationcss() {		
 		if(navigationBundle == null) {
 		    OsDetection detection = MGWT.getOsDetection();
 

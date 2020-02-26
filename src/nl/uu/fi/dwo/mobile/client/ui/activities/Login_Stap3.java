@@ -7,6 +7,7 @@ import org.osgi.util.promise.Success;
 
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Window;
 
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
@@ -24,7 +25,13 @@ final class Login_Stap3 implements Success<Void, Void> {
 	Place next;
 
 	@Inject SecuredUserAccountManager account = new SecuredUserAccountManager();
-    
+  
+	  boolean legal(String base) {
+	    RegExp r = RegExp.compile("^/[a-z]+(/[a-z]+)*/$");
+	    return r.test(base);
+	  }
+
+	
   private Promise<Void> gotoGwtClient(String page) {
     final String url = "/gwtclient/index.html";
     return account.getBearerToken().then(
@@ -40,7 +47,7 @@ final class Login_Stap3 implements Success<Void, Void> {
         u.append("&locale=").append(locale);
         u.append("&view=").append(page);
         String base = Window.Location.getParameter("base");
-        if(base != null && !base.isEmpty()) 
+        if(base != null && !base.isEmpty() && legal(base)) 
           u.append("&base=").append(base);
         String string = u.toString();
         Window.Location.replace(string);
