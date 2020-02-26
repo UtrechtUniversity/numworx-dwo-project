@@ -1,9 +1,5 @@
 package nl.uu.fi.dwo.account.client;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -132,10 +128,10 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
      * @param org
      * @param callback
      */
-    protected void samlLoginHelper(String name, String org,
-			AsyncCallback<DomUserFullwLoginContext> callback) {
+    private void samlLoginHelper(String name, String org,
+                                   PromiseCallback<DomUserFullwLoginContext> callback) {
 		String authToken = Cookies.getCookie(DWO_SAML_AUTH_TOKEN);
-		accountManager.updateAccountData(name, org, authToken).then(p -> { callback.onSuccess(p.getValue());return p;}, p-> callback.onFailure(p.getFailure()));
+		callback.resolveWith(accountManager.updateAccountData(name, org, authToken));
 	}
 
 	/* (non-Javadoc)
