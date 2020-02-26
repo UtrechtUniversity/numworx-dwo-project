@@ -135,7 +135,12 @@ public class ModulesPresenter implements SwitchViewEventHandler {
           return null;
         });
     }
-
+ 
+    boolean legal(String base) {
+      RegExp r = RegExp.compile("^/[a-z]+(/[a-z]+)*/$");
+      return r.test(base);
+    }
+   
     public void init() {
       view.clear();
       view.init();
@@ -155,7 +160,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         if (IFRAME)
           u.setParameter("header", "none");
         String base = Location.getParameter("base");
-        if(base != null && !base.isEmpty()) {
+        if(base != null && !base.isEmpty() && legal(base)) {
           u.setParameter("base",base);
         }
         String profile = Location.getParameter("profile");
@@ -197,7 +202,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
        u.setParameter( "header","none");
      //u.setParameter("dwo_env","test");
      String base = Location.getParameter("base");
-     if(base != null && !base.isEmpty()) {
+     if(base != null && !base.isEmpty() && legal(base)) {
        u.setParameter("base",base);
      }
      String profile = Location.getParameter("profile");
