@@ -222,7 +222,7 @@ class ScoMapper  {
         s.setSequencenr(item.getSequencenr().intValue());
         s.setAppletID(PersistenceFacade.idOf(item.getAppletId()));
         s.setCourse(parent);
-        s.setShowScore(item.getShowScore());
+        s.setShowScore(!Boolean.TRUE.equals(item.getShowScore())); // Reverse logic, 
         s.setCourseChanged(false);
         objects.putIfAbsent(id, s);
         result[i++] = s;

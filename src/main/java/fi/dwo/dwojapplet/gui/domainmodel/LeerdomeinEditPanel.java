@@ -3,6 +3,7 @@ package fi.dwo.dwojapplet.gui.domainmodel;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -34,9 +35,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.JTree.DynamicUtilTreeNode;
+import javax.swing.border.TitledBorder;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.plaf.BorderUIResource.TitledBorderUIResource;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
@@ -44,6 +47,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import fi.beans.dwomaccess.JSONEncoder;
+import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JCheckBox;
 import fi.beans.numworxlf.JComboBox;
@@ -68,9 +72,9 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
   private static final Logger LOG = Logger.getLogger(LeerdomeinEditPanel.class.getName());
   private String BEWERKEN = TextMapper.getText("edit");
   private String OPSLAAN  = TextMapper.getText(TextMapper.GUIP_BTN_SAVE);
-  private Opslaan OPSLAAN_ACTION = new Opslaan();
+  public final  Opslaan OPSLAAN_ACTION = new Opslaan();
   static final String WISKOPDR_SIG = "H4sIAAAAAA";
-  class Opslaan extends AbstractAction implements TreeSelectionListener {
+  public class Opslaan extends AbstractAction implements TreeSelectionListener {
     
     Opslaan() {
       this(BEWERKEN);
@@ -90,7 +94,7 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
       }
     }
 
-    void opslaan() {
+    public void opslaan() {
       TreePath path = tree.getSelectionPath();
       if (path == null) return;
       DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
@@ -107,7 +111,8 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
           size.width = text.getPreferredSize().width;
           panel.setMaximumSize(size);
           panel.setBackground(Color.white);
-          pane.setViewportView(panel);
+          container.removeAll();
+          container.add(panel);
           n.setDescriptionAsJSON(toJSON(description));
         } else {
           n.setDescriptionAsJSON(null);
@@ -143,7 +148,7 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
       editorCB.setEnabled(false);
     }
 
-    void bewerken() {
+    public void bewerken() {
       TreePath path = tree.getSelectionPath();
       if (path == null) return;
       DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
@@ -168,7 +173,8 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
             Locale locale = Locale.forLanguageTag(getLanguage());
             wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(description, locale, 500 , 325, 425, 300);
             wiskOpdrEditPanel.setBackground(Color.WHITE);
-            pane.setViewportView(wiskOpdrEditPanel);
+            container.removeAll();
+            container.add(wiskOpdrEditPanel);
             wiskOpdrEditPanel.setRequestFocusEnabled(true);
             wiskOpdrEditPanel.setFocusable(true);
             wiskOpdrEditPanel.requestFocusInWindow();
@@ -179,19 +185,22 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
             size.width = text.getPreferredSize().width;
             panel.setMaximumSize(size);
             panel.setBackground(Color.WHITE);
-            pane.setViewportView(panel);
+            container.removeAll();
+            container.add(panel);
           }
           editorCB.setSelected(true);
         } else {
           text.setText(description);
           wiskOpdrEditPanel = null;
-          pane.setViewportView(text);
+          container.removeAll();
+          container.add(pane);
           editorCB.setSelected(false);
         }
       } else {
         text.setText("");
         wiskOpdrEditPanel = null;
-        pane.setViewportView(text);
+        container.removeAll();
+        container.add(pane);
         editorCB.setSelected(false);
       }
     }
@@ -201,7 +210,7 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
       if (path == null) {
         subtitle.setText("");
         setDescription("");
-        bkt.setVisible(false);
+        settings.setVisible(false);
         return;
       }
       DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
@@ -216,9 +225,9 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
         init.setValue(d);
         d = info.getLearn(); if (d == null) d = 0.2; // DEFAULT LEARN;
         learn.setValue(d);
-        bkt.setVisible(true);
+        settings.setVisible(true);
       } else {
-        bkt.setVisible(false);
+        settings.setVisible(false);
       }
     }
 
@@ -507,18 +516,20 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
 
   static final String[] LANGUAGES = { "nl", "de", "en", "fr" };
   
-  JTextField title, subtitle;
+  public JTextField title, subtitle;
   JFormattedTextField slip, init, learn;
   JButton voorkennisBtn;
-  JComboBox<String>  language;
+  public JComboBox<String>  language;
   JTree tree;
   DefaultTreeModel model;
   DynamicUtilTreeNode root;
-  JButton opslaan;
+  public JButton opslaan;
   JTextArea text;
   private WiskOpdrEditPanel wiskOpdrEditPanel;
   private JCheckBox editorCB;
   private Box bkt;
+  public JMenuBar bar;
+  private Box settings;
   
   public LeerdomeinEditPanel() {
     super(null);
@@ -551,7 +562,7 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
     tree = new JTree(model);
     language.setSelectedItem(locale); 
  // Menu
-    JMenuBar bar = new JMenuBar();
+    bar = new JMenuBar();
     JMenu Bestand = new JMenu(TextMapper.getText("file"));
     JMenu Bewerken = new JMenu(TextMapper.getText("edit"));
     bar.add(Bestand);
@@ -578,18 +589,18 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
     max.width = Integer.MAX_VALUE;
     titlebox.setMaximumSize(max);
 // Right
-    subtitle = new JTextField(30);
+    subtitle = new JTextField();
     opslaan = new JButton(OPSLAAN_ACTION);
     text = new JTextArea(10,30);
     text.setLineWrap(true);
     text.setWrapStyleWord(true);
-    editorCB = new JCheckBox("Editor");
-    editorCB.addActionListener(this);
+    editorCB = new JCheckBox("Editor");editorCB.setSelected(true);
+    //editorCB.addActionListener(this);
     wiskOpdrEditPanel = null;
     
     Box leftBox = Box.createVerticalBox(); 
     leftBox.add(titlebox);
-    leftBox.add(Box.createVerticalStrut(10));
+    //leftBox.add(Box.createVerticalStrut(10));
     leftBox.add(bar);
     leftBox.add(new JScrollPane(tree));
     leftBox.add(Box.createVerticalGlue());
@@ -600,44 +611,68 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
     
     Box hbox = Box.createHorizontalBox();
     hbox.add(subtitle);
-    hbox.add(Box.createHorizontalStrut(20));
-    hbox.add(editorCB);
+    //hbox.add(Box.createHorizontalStrut(20));
+    //hbox.add(editorCB);
     hbox.add(opslaan);
     max = hbox.getPreferredSize();
     max.width = Integer.MAX_VALUE;
     hbox.setMaximumSize(max);
     
     rightBox.add(hbox);
-    rightBox.add(Box.createVerticalStrut(10+bar.getPreferredSize().height));
+    //rightBox.add(Box.createVerticalStrut(10+bar.getPreferredSize().height));
     pane = new JScrollPane(text);
     pane.setBackground(Color.white);
     pane.getViewport().setBackground(Color.white);
-    rightBox.add(pane);
+    container = new JPanel(new GridLayout());
+    container.add(pane);
+    rightBox.add(container);
+    JLabel l;
+    settings = Box.createVerticalBox();
+    settings.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Constants.COLOR15), "instellingen", TitledBorder.CENTER, TitledBorder.CENTER, null, Constants.COLOR15));    
     
     bkt = Box.createHorizontalBox();
-    bkt.add(new JLabel("init"));
+    JLabel parametersLabel = new JLabel("Knowledge tracing parameters:");
+      parametersLabel.setForeground(Constants.COLOR15);
+      bkt.add(parametersLabel);
+      bkt.add(Box.createHorizontalGlue());
+    bkt.add(l = new JLabel("Init "));
+      l.setForeground(Constants.COLOR15);
       init = new JFormattedTextField(NumberFormat.getInstance());
       init.setUI(NumworxTextFieldUI.createUI(init));
+      init.setPreferredSize(new Dimension(50,20));
+      init.setMaximumSize(new Dimension(50,30));
       bkt.add(init);
-    bkt.add(new JLabel("learn"));
+    bkt.add(l=new JLabel(" Learn "));
+    l.setForeground(Constants.COLOR15);
       learn = new JFormattedTextField(NumberFormat.getInstance());
       learn.setUI(NumworxTextFieldUI.createUI(learn));
+      learn.setPreferredSize(new Dimension(50,20));
+      learn.setMaximumSize(new Dimension(50,30));
       bkt.add(learn);
-    bkt.add(new JLabel("slip"));
+    bkt.add(l=new JLabel(" Slip "));
+    l.setForeground(Constants.COLOR15);
       slip = new JFormattedTextField(NumberFormat.getInstance());
       slip.setUI(NumworxTextFieldUI.createUI(slip));
-      bkt.add(slip);
-    if (DwoHelper.isTest())
-    {
-      voorkennisBtn = new JButton(new VoorkennisAction()); bkt.add(voorkennisBtn);
-    }
+      slip.setColumns(6);
+      slip.setPreferredSize(new Dimension(50,20));
+      slip.setMaximumSize(new Dimension(50,30));
+     bkt.add(slip);
+
     Dimension pref = bkt.getPreferredSize();
     bkt.setMinimumSize(pref);
     pref.width = Short.MAX_VALUE;
     bkt.setMaximumSize(pref);
     rightBox.add(Box.createVerticalStrut(10));
-    rightBox.add(bkt);
+    if (DwoHelper.isTest())
+    {
+     voorkennisBtn = new JButton(new VoorkennisAction()); settings.add(voorkennisBtn);
+     voorkennisBtn.setAlignmentX(LEFT_ALIGNMENT);
+     settings.add(Box.createVerticalStrut(10));
+     bkt.setAlignmentX(LEFT_ALIGNMENT);
+    }
     
+    settings.add(bkt);
+    rightBox.add(settings);
     add(rightBox);
         
     tree.addTreeSelectionListener(OPSLAAN_ACTION);
@@ -663,6 +698,7 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
 
   DomStudentModelStructure structure;
   private JScrollPane pane;
+  private Container container;
   public void setModel(DomStudentModelStructure model) {
     String locale = getLocale().getLanguage();
     if (model == null) {
@@ -682,7 +718,7 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
     OPSLAAN_ACTION.setDescription("");
     this.model.nodeStructureChanged(root);
     this.structure = model;
-    bkt.setVisible(false);
+    settings.setVisible(false);
     OPSLAAN_ACTION.left();
   }
 
@@ -772,14 +808,16 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
                 wiskOpdrEditPanel.setPreferredSize(new Dimension(400,350));
                 wiskOpdrEditPanel.setBackground(Color.white);
             }
-            pane.setViewportView(wiskOpdrEditPanel);
+            container.removeAll();
+            container.add(wiskOpdrEditPanel);
             wiskOpdrEditPanel.setRequestFocusEnabled(true);
             wiskOpdrEditPanel.setFocusable(true);
             wiskOpdrEditPanel.requestFocusInWindow();
         }
         else if(wiskOpdrEditPanel!=null)
         {   
-            pane.setViewportView(text);
+            container.removeAll();
+        	container.add(pane);
         }
     }  }  
   

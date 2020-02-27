@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.util.Date;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,9 +47,15 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.OAuthManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminConfigManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 
 /**
  * This Class is responsible for creating some GUI elements and to communicate
@@ -57,7 +64,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  * @author M.J.B. Kupers
  *
  */
-public class GuiCreator {
+public class GuiCreator implements Predicate<Dwo2Exception> {
 
     private static final Logger LOG = Logger.getLogger(GuiCreator.class.getName());
 
@@ -70,6 +77,8 @@ public class GuiCreator {
     protected WelcomePanel welcomePanel;
     
     private Promise<SwingBrowserFactory> sbf;
+
+    private String token;
     
     public Promise<SwingBrowserFactory> getSBF() {
       if (sbf == null) {
@@ -166,6 +175,35 @@ public class GuiCreator {
         return mainPanel;
     }
 
+    public void loginWithToken(String authToken) throws Dwo2Exception, LoginException {
+      DwoHelper.setContact(false);
+      OAuthManager m = new OAuthManager();
+      token = m.authorization_token(authToken);
+      if (token != null) {
+        StoredRestManager.getInstance().setRecover(this);
+      }
+      DomLoginContext loginContext = SecureUserAccountManager.getLoginContext();
+      DomContext context = StoredRestManager.getInstance().getAuthenticator().getContext();
+      if (context == null) {
+        StoredRestManager.getInstance().getAuthenticator().setContext(context = new DomContext());
+      }
+      context.setRealm(loginContext.getRealm());
+      DomUserFull user = SecureUserAccountManager.getAccountData();
+      DwoHelper.setCurrentUser(user, loginContext);
+      if (DwoHelper.getCurrentUser() != null) {
+        // TODO: remove, currently checks if licence is still valid
+        validLicenceCheck(dwo.getUser());
+        // Check if user has enough rights to continue
+        if (dwo.login(user.getUserName(), "")) {
+        //configure GuiCreator to show correct Panels and options.
+            configurePanelsForUser(dwo.getUser());
+        } else {
+            dwo.logoff(); 
+        }
+      } 
+    }
+    
+    
     /**
      * Logs a user in into the system. The user will be remembered while the
      * user is logged in. Then it shows the MainPanel.
@@ -181,8 +219,14 @@ public class GuiCreator {
             DwoHelper.setContact(false);
             DomUserFullwLoginContext user = LoginManager.basicLogin(username, MD5.getHashString(String.valueOf(password)));
             DwoHelper.setCurrentUser(user.getDomUserFull(),user.getDomLoginContext());
- //           OAuthManager m = new OAuthManager();
- //           m.authorization_token(SecureUserAccountManager.getBearerToken());
+
+            if (DwoHelper.isTest()) {           
+                OAuthManager m = new OAuthManager();
+                token = m.authorization_token(SecureUserAccountManager.getBearerToken());
+                if (token != null) {
+                    StoredRestManager.getInstance().setRecover(this);
+                }
+            }
             
 //            Code underdevelopment to do digest.
 //            PublicUserManager.digestLogin(username, password);
@@ -291,20 +335,26 @@ public class GuiCreator {
             }
             gc.mainPanel = mainPanel;
             gc.welcomePanel = welcomePanel;
+            gc.token = token;
+            if (token != null) StoredRestManager.getInstance().setRecover(gc);
             gc.mainPanel = new MainPanel(DWO.getDwoProfile());
             dwo.setPanel(gc.mainPanel);
         } else if (u instanceof Admin) {
             GuiCreator gc = new GuiCreatorAdmin(dwo);
+            gc.token = token;
+            if (token != null) StoredRestManager.getInstance().setRecover(gc);
             gc.mainPanel = mainPanel;
             gc.welcomePanel = welcomePanel;
             gc.mainPanel = new MainPanel(DWO.getDwoProfile());
             dwo.setPanel(gc.mainPanel);
         } else if (this instanceof GuiCreatorTeacher || this instanceof GuiCreatorAdmin) {
             GuiCreator gc = new GuiCreator(dwo);
+            gc.token = token;
+            if (token != null) StoredRestManager.getInstance().setRecover(gc);
             gc.mainPanel = mainPanel;
             gc.welcomePanel = welcomePanel;
             gc.mainPanel = new MainPanel(DWO.getDwoProfile());
-            dwo.setPanel(gc.mainPanel);
+          dwo.setPanel(gc.mainPanel);
         } else {
             mainPanel = new MainPanel(DWO.getDwoProfile());
             dwo.setPanel(mainPanel);
@@ -1129,5 +1179,19 @@ public class GuiCreator {
 
   public ConfigManager getConfigManager() {
     return null;
+  }
+
+  @Override
+  public boolean test(Dwo2Exception t) throws RuntimeException {
+    if (this != instance()) return false;
+    if (t.getDwo2Code() != Dwo2ExceptionCode.User_AuthenticationError) return false;
+    if (token == null) return false;
+    OAuthManager m = new OAuthManager(StoredRestManager.getInstance());
+    token = m.refresh_token(token);
+    if (token == null) {
+      t = new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationCancelled, "invalid_grant");
+      throw new RuntimeException(t);
+    }
+    return true;
   }
 }
