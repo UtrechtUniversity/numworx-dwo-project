@@ -49,9 +49,9 @@
     	</plugin>
     </plugins>
   </build>
-  <description></description>
-  <version>0.0.6-SNAPSHOT</version>
+  <description />
+  <version>0.0.6</version>
   <scm>
-  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/GWT/WiskOpdrGWT/trunk</developerConnection>
+  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/GWT/WiskOpdrGWT/tags/WiskOpdrGWT-0.0.6</developerConnection>
   </scm>
 </project>
