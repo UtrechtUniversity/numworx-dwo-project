@@ -50,4 +50,7 @@
   </build>
   <description></description>
   <version>0.0.6-SNAPSHOT</version>
+  <scm>
+  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/GWT/WiskOpdrGWT/trunk</developerConnection>
+  </scm>
 </project>
