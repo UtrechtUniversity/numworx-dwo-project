@@ -354,6 +354,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	
 	private String styleString;
 	private boolean doorzochtDoorTab = false;
+	private boolean randomPositioned = false; //Bij randomized meerkeuzeopdrachten kan de tabsequence anders worden
 	
 	//private boolean isStappenVak = false;
 	private int stapNr = 0;
@@ -3463,7 +3464,7 @@ private Object CamelCase(String name) {
 		}
 		
 		//als omliggende tekstvak bestaat: doorgeven naar omliggende tekstvak
-		if(parent != null)
+		if(parent != null &&!randomPositioned)
 			return parent.tabFocus(this, up);
 		//Anders: helemaal aan het begin van dit tekstvak verder zoeken. 
 		else if(!doorzochtDoorTab)
@@ -5408,6 +5409,10 @@ private Object CamelCase(String name) {
 			callOut = true;
 		else
 			callOut = false;
+	}
+	
+	public void setRandomPositioned(boolean b) {
+		randomPositioned = b;
 	}
 
 	@Override

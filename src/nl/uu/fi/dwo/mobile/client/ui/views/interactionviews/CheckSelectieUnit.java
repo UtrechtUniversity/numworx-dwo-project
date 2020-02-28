@@ -157,7 +157,11 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 			ipList[i].zetLocatie(p.getX(), p.getY());
 			v.removeElementAt(r);
 		}
+		
 		if(!zwevend && !positionsRandomized) {
+			for(int i=0 ; i<ipList.length ; i++)
+			{	((TekstVakPanel)ipList[i]).setRandomPositioned(true);
+			}
 			Vector parents = new Vector();
 			Vector parentsTemp = new Vector();
 			randomSequence = new int[ipList.length];
@@ -467,6 +471,9 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         			
         				Vector parents = new Vector();
         				Vector parentsTemp = new Vector();
+        				for(int i=0 ; i<ipList.length ; i++)
+        				{	((TekstVakPanel)ipList[i]).setRandomPositioned(true);
+        				}
         				for(int i=0 ; i<ipList.length ; i++)
         				{	TekstVak tv = (TekstVak)ipList[i].asWidget().getParent().getParent();
         					parents.addElement(tv);
