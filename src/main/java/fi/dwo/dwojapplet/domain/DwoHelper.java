@@ -39,7 +39,6 @@ import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import netscape.javascript.JSObject;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 
@@ -235,16 +234,10 @@ public final class DwoHelper {
         return applet;
     }
 
+    @Deprecated
     public static Object getJSObject() {
         if (applet == null) {
             return null;
-        }
-        try {
-            return JSObject.getWindow(applet);
-        } catch (Exception e) {
-            // expect JSException of ClassNotFoundException
-        } catch (NoClassDefFoundError e) {
-            // expect NoClassDefFound ERROR
         }
         return null;
     }
@@ -445,19 +438,17 @@ public final class DwoHelper {
         DwoHelper.contact = contact;
     }
 
+    @Deprecated
     public static String getCookie() {
         if (isApplication()) {
             return null;
         }
-        try {
-            String cookie;
-            cookie = (String) JSObject.getWindow(applet).eval("document.cookie");
-            return cookie;
-        } catch (Throwable ex) {
+        {
             return null;
         }
     }
 
+    @Deprecated
     public static String getCookie(String name) {
         String cookie = getCookie();
         if (cookie == null) {
@@ -481,25 +472,19 @@ public final class DwoHelper {
         return null;
     }
 
+    @Deprecated
     public static void setCookie(String name, String value) {
         if (isApplication()) {
             return;
         }
-        try {
-            JSObject.getWindow(applet).eval("document.cookie ='" + name + "=" + value + "';");
-        } catch (Throwable ex) {
-        }
     }
 
+    @Deprecated
     public static void deleteCookie(String name) {
         if (isApplication()) {
             return;
         }
-        try {
-            JSObject.getWindow(applet).eval("document.cookie ='" + name + "=dummy" + "';");
-        } catch (Throwable ex) {
-        }
-    }
+     }
 
     /**
      * Returns the url path of the resource location where the resources are

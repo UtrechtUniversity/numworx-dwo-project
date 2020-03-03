@@ -1475,10 +1475,10 @@ LOG.info("time results = " + (-t) + " ms");
         CookieHandler.setDefault(cookieManager);
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
 
-        boolean cookies = false;
+        final boolean cookies = false;
         String cookiesString = getParameter("cookies");
         if (cookiesString != null && cookiesString.equals("true")) {
-            cookies = true;
+            //cookies = true;
         }
 
         boolean guestUser = false; // Wim: teruggezet
