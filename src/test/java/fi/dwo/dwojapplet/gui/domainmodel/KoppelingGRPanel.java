@@ -96,8 +96,6 @@ public class KoppelingGRPanel extends JPanel{
 				cb[i][j] = new JCheckBox("");
 				cb[i][j].setBounds(120+50*j,60+30*i,50,20);
 				mainPanel.add(cb[i][j]);
-				//cb[i][j].setPreferredSize(new Dimension(80,20));
-				//[i][j].setMinimumSize(new Dimension(80,20));
 			}
 		}
 		
@@ -107,8 +105,6 @@ public class KoppelingGRPanel extends JPanel{
 			hf[i].setBounds(120+50*i,30,50,20);
 			hf[i].setForeground(colorBlue1);
 			mainPanel.add(hf[i]);
-			//hf[i].setPreferredSize(new Dimension(80,20));
-			//hf[i].setMinimumSize(new Dimension(80,20));
 		}
 		
 		jl = new JLabel[aantalJaarlagen];
@@ -117,8 +113,6 @@ public class KoppelingGRPanel extends JPanel{
 			jl[i].setBounds(20,60+30*i,100,20);
 			jl[i].setForeground(colorBlue1);
 			mainPanel.add(jl[i]);
-			//jl[i].setPreferredSize(new Dimension(280,20));
-			//jl[i].setMinimumSize(new Dimension(280,20));
 		}
 		
 		plaatsGUI();	
@@ -133,18 +127,6 @@ public class KoppelingGRPanel extends JPanel{
 		Component[] compBottom = { okButton, hst(20), cancelButton, hst(20), hgl() };
 		bottomPanel.add(hb(compBottom));
 		
-//		Component[] r00 = {ra(280,0),hf[0],hf[1],hf[2],hf[3],hf[4],hf[5],hf[6],hf[7],hf[8],hf[9]};
-//		Component[] r01 = {jl[0],cb[0][0],cb[0][1],cb[0][2],cb[0][3],cb[0][4],cb[0][5],cb[0][6],cb[0][7],cb[0][8],cb[0][9]};
-//		Component[] r02 = {jl[1],cb[1][0],cb[1][1],cb[1][2],cb[1][3],cb[1][4],cb[1][5],cb[1][6],cb[1][7],cb[1][8],cb[1][9]};
-//		Component[] r03 = {jl[2],cb[2][0],cb[2][1],cb[2][2],cb[2][3],cb[2][4],cb[2][5],cb[2][6],cb[2][7],cb[2][8],cb[2][9]};
-//		Component[] r04 = {jl[3],cb[3][0],cb[3][1],cb[3][2],cb[3][3],cb[3][4],cb[3][5],cb[3][6],cb[3][7],cb[3][8],cb[3][9]};
-//		Component[] r05 = {jl[4],cb[4][0],cb[4][1],cb[4][2],cb[4][3],cb[4][4],cb[4][5],cb[4][6],cb[4][7],cb[4][8],cb[4][9]};
-//		Component[] r06 = {jl[5],cb[5][0],cb[5][1],cb[5][2],cb[5][3],cb[5][4],cb[5][5],cb[5][6],cb[5][7],cb[5][8],cb[5][9]};
-//		
-//		int d = 10;
-//		Component[] mainBoxComp = {hb(r00),ra(0,d),hb(r01),ra(0,d),hb(r02),ra(0,d),hb(r03),ra(0,d),hb(r04),ra(0,d),hb(r05),ra(0,d),hb(r06),ra(0,d)};
-//		//Box mainBox = vb(mainBoxComp);
-		//mainPanel.add(vb(mainBoxComp));
 		add(topPanel, BorderLayout.NORTH);
 		add(bottomPanel, BorderLayout.SOUTH);
 		add(mainPanel, BorderLayout.CENTER);

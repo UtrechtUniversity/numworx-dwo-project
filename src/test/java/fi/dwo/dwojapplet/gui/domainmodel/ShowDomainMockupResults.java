@@ -18,13 +18,13 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
-public class ShowDomainResults extends JFrame {
+public class ShowDomainMockupResults extends JFrame {
 
-  private LeerdomeinResultsPanel panel;
+  private LeerdomeinMockupResultPanel panel;
 
-  public ShowDomainResults() {
+  public ShowDomainMockupResults() {
     setDefaultCloseOperation(EXIT_ON_CLOSE);
-    panel = new LeerdomeinResultsPanel();
+    panel = new LeerdomeinMockupResultPanel();
     setContentPane(panel);
     pack();
   }
@@ -50,7 +50,7 @@ public class ShowDomainResults extends JFrame {
     List<DomStudentModelContext> list = SecureTeacherStudentModelManager.getList();
     List<DomSchoolClass> classes = SecureTeacherSchoolClassManager.getTeachersSchoolClasses();
     int i = 0;
-    ShowDomainResults main = new ShowDomainResults();
+    ShowDomainMockupResults main = new ShowDomainMockupResults();
     main.setContext(list.get(i));
     main.setClasses(classes);
     main.show();
