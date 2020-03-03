@@ -1,6 +1,7 @@
 package fi.dwo.dwojapplet.gui.domainmodel;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -58,6 +59,7 @@ import fi.beans.numworxlf.NumworxTextFieldUI;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.gui.domainmodel.ExportAction.ExportPanel;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
@@ -67,7 +69,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 
-public class LeerdomeinEditPanel extends JPanel implements ActionListener {
+public class LeerdomeinEditPanel extends JPanel implements ActionListener, ExportPanel {
 
   private static final Logger LOG = Logger.getLogger(LeerdomeinEditPanel.class.getName());
   private String BEWERKEN = TextMapper.getText("edit");
@@ -819,6 +821,11 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
             container.removeAll();
         	container.add(pane);
         }
-    }  }  
+    }  }
+
+  @Override
+  public Component asComponent() {
+    return this;
+  }  
   
 }

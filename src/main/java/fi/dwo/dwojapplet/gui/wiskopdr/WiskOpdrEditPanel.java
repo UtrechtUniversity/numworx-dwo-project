@@ -35,7 +35,6 @@ public class WiskOpdrEditPanel extends JPanel implements Scrollable, AppletStub 
 
     @Override
     public void componentResized(ComponentEvent e) {
-      System.out.println("resize " + e);
       Component nosize = ((Container) getComponent(0));
       Dimension size = getSize();
       nosize.setSize(size.width, size.height);

@@ -10,11 +10,19 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.StringWriter;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.List;
 import java.util.Locale;
 import java.util.TreeMap;
+import java.util.logging.Level;
 
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -36,23 +44,318 @@ import javax.swing.plaf.basic.BasicMenuUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JScrollPane;
 import fi.beans.numworxlf.JTextField;
 import fi.beans.numworxlf.NumworxTextFieldUI;
+import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.gui.domainmodel.ExportAction.ExportPanel;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
+import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 
-public class LeerdomeinEditPanel2 extends JPanel implements ActionListener, TreeSelectionListener {
+public class LeerdomeinEditPanel2 extends JPanel implements ActionListener, TreeSelectionListener, ExportPanel {
   static final String WISKOPDR_SIG = "H4sIAAAAAA";
 
+  
+  class VoorkennisAction extends AbstractAction {
+
+    boolean readonly;
+    
+    
+    private VoorkennisAction() {
+      super(TextMapper.getText("voorkennis"));
+    }
+
+    public VoorkennisAction(boolean b) {
+      this();
+      readonly = b;
+      
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      TreePath path = tree.getSelectionPath();
+      if (path == null) return;
+      
+      Object node = path.getLastPathComponent();
+      if (node instanceof MutableTreeNode) {
+        DefaultMutableTreeNode mutable = (DefaultMutableTreeNode) node;
+        Object o = mutable.getUserObject();
+        if (o instanceof NodeLeaf) {
+          NodeLeaf leaf = (NodeLeaf) o;
+          List<String> ids = leaf.getInfo().getVoorkennis();
+          if (ids == null) ids = Collections.emptyList();
+          NodeVector v = (NodeVector) root.getUserObject();
+          StudentModelChoicePanel panel = new StudentModelChoicePanel(v, readonly);
+          panel.setObjectives(ids);
+          if (readonly) {
+            JOptionPane.showMessageDialog(LeerdomeinEditPanel2.this, panel, e.getActionCommand(), JOptionPane.PLAIN_MESSAGE);
+          } else {
+          int r = JOptionPane.showConfirmDialog(LeerdomeinEditPanel2.this, panel, e.getActionCommand(), JOptionPane.OK_CANCEL_OPTION);
+          if (r == JOptionPane.OK_OPTION) {
+            panel.makeChoices();
+            List<String> list = panel.getObjectives();
+            leaf.getInfo().setVoorkennis(list);
+          }
+        }}}
+    }
+    
+  }
+
+  class LeerdoelAction extends AbstractAction {
+
+    public LeerdoelAction() {
+      this("nieuw leerdoel");
+    }
+
+    public LeerdoelAction(String name) {
+      super(name);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      TreePath path = tree.getSelectionPath();
+      if (path == null) return;
+      
+      Object node = path.getLastPathComponent();
+      if (root == node) return;
+      
+      if (node instanceof MutableTreeNode) {
+        MutableTreeNode mutable = (MutableTreeNode) node;
+        if (mutable.isLeaf()) return;
+        int index = mutable.getChildCount();
+        Node leaf = new NodeLeaf(getLocale().getLanguage());
+        leaf.setTitle("Leerdoel-" + (index+1));
+        DefaultMutableTreeNode child = new DefaultMutableTreeNode(leaf, false);
+        mutable.insert(child, index);
+        model.nodesWereInserted(mutable, new int[] {index});
+        tree.setSelectionPath(new TreePath(child.getPath()));
+        subtitle.requestFocusInWindow();
+        subtitle.selectAll();
+      }
+    }
+
+  }
+
+  public class SubdomeinAction extends AbstractAction {
+
+    public SubdomeinAction() {
+      this("nieuw subdomein");
+    }
+
+    public SubdomeinAction(String name) {
+      super(name);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      TreePath path = tree.getSelectionPath();
+      if (path == null) return;
+      
+      Object node = path.getLastPathComponent();
+      //if ( node != root) return; // Only root can add subdomains
+      
+      if (node instanceof MutableTreeNode) {
+        MutableTreeNode mutable = (MutableTreeNode) node;
+        if (mutable.isLeaf()) return;
+        int index = mutable.getChildCount();
+        Node vector = new NodeVector(getLocale().getLanguage());
+        vector.setTitle("Untitled-" + (index+1));
+        DefaultMutableTreeNode child = new DynamicUtilTreeNode(vector,vector);
+        mutable.insert(child, index);
+        model.nodesWereInserted(mutable, new int[] {index});
+        tree.setSelectionPath(new TreePath(child.getPath()));
+        subtitle.requestFocusInWindow();
+        subtitle.selectAll();
+     }
+    }
+
+  }
+
+  class Verwijderen extends AbstractAction {
+
+    Verwijderen() {
+      this(TextMapper.getText("delete"));
+    }
+
+    Verwijderen(String name) {
+      super(name);
+    }
+
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      TreePath path = tree.getSelectionPath();
+      if (path == null) return;
+      
+      Object node = path.getLastPathComponent();
+      if (node == root) return;
+      if (node instanceof MutableTreeNode) {
+        DefaultMutableTreeNode mutable = (DefaultMutableTreeNode) node;
+        TreeNode parent = mutable.getParent();
+        mutable.removeFromParent();
+        model.nodeStructureChanged(parent);
+        fillSelection();
+      }
+    }
+
+  }
+  class Omhoog extends AbstractAction {
+    Omhoog() { super("Omhoog");
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      TreePath path = tree.getSelectionPath();
+      if (path == null) return;
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+      DynamicUtilTreeNode parent = (DynamicUtilTreeNode) node.getParent();
+      int i = parent.getIndex(node);
+      if (i > 0) {
+        safeSelection(path);
+        parent.remove(i);
+        parent.insert(node, i-1);
+        model.nodeStructureChanged(parent);
+        tree.setSelectionPath(new TreePath(node.getPath()));
+        tree.repaint();
+      }
+      
+    }
+  
+  }
+  
+  class Omlaag extends AbstractAction {
+    Omlaag() {super("Omlaag"); }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      TreePath path = tree.getSelectionPath();
+      if (path == null) return;
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+      DynamicUtilTreeNode parent = (DynamicUtilTreeNode) node.getParent();
+      int i = parent.getIndex(node);
+      if (i < parent.getChildCount()-1) {
+        safeSelection(path);
+        parent.remove(i);
+        parent.insert(node, i+1);
+        model.nodeStructureChanged(parent);
+        tree.setSelectionPath(new TreePath(node.getPath()));
+        tree.repaint();
+      }
+    }
+  }
+
+  DefaultMutableTreeNode clipboard;
+  
+  class Knippen extends AbstractAction {
+    Knippen() {
+      super(TextMapper.getText("cut"));
+    }
+    
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+      TreePath path = tree.getSelectionPath();
+      if (path == null) return;
+      Object node = path.getLastPathComponent();
+      if (node == root) return;
+      if (node instanceof MutableTreeNode) {
+        safeSelection(path);
+        DefaultMutableTreeNode mutable = (DefaultMutableTreeNode) node;
+        TreeNode parent = mutable.getParent();
+        mutable.removeFromParent();
+        clipboard = mutable;
+        model.nodeStructureChanged(parent);
+        fillSelection();
+      
+      }
+    }
+    
+  }
+  class Kopieren extends AbstractAction {
+    Kopieren() {
+      super(TextMapper.getText("copy"));
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      TreePath path = tree.getSelectionPath();
+      if (path == null) return;
+      
+      Object node = path.getLastPathComponent();
+      if (node == root) return;
+      safeSelection(path);
+      clipboard = copy(node);
+    }
+    
+  }
+  
+  public DefaultMutableTreeNode copy(Object node) {
+    if (node instanceof DefaultMutableTreeNode) {
+      DefaultMutableTreeNode mutable = (DefaultMutableTreeNode) node;
+      if (mutable.isLeaf()) {
+        return new DefaultMutableTreeNode(new NodeLeaf((NodeLeaf)mutable.getUserObject()));
+      } else {
+        NodeVector v = new NodeVector( (NodeVector) mutable.getUserObject());
+        DynamicUtilTreeNode copy = new DynamicUtilTreeNode(v, v);
+        for(int i = 0; i < mutable.getChildCount(); i++) {
+          copy.add(copy(mutable.getChildAt(i)));
+        }
+        return copy;
+      }
+    }
+    return null;
+  }
+
+  class Plakken extends AbstractAction {
+    Plakken() {
+      super(TextMapper.getText("paste"));
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (clipboard == null) return;
+        TreePath path = tree.getSelectionPath();
+        if (path == null) return;
+        
+        Object node = path.getLastPathComponent();
+        if (node == root) {
+          if (clipboard.isLeaf()) return;
+          root.add(clipboard);
+          model.nodeStructureChanged(root);
+          tree.setSelectionPath(new TreePath(clipboard.getPath()));
+          clipboard = copy(clipboard);
+          tree.repaint();
+          return;
+        }
+        if (node instanceof MutableTreeNode) {
+          MutableTreeNode mutable = (MutableTreeNode) node;
+          if (mutable.isLeaf()) {
+            mutable = (MutableTreeNode) mutable.getParent();
+          }
+          ((DynamicUtilTreeNode) mutable).add(clipboard);
+          model.nodeStructureChanged(mutable);
+          tree.setSelectionPath(new TreePath(clipboard.getPath()));
+          tree.repaint();
+          clipboard = copy(clipboard);
+          return;
+        }
+    }
+    
+  }
+
+  
   private JButton okButton;
   private JButton cancelButton;
   private DomStudentModelStructure structure;
@@ -88,6 +391,9 @@ public class LeerdomeinEditPanel2 extends JPanel implements ActionListener, Tree
   okButton.setPreferredSize(new Dimension(100, 24));
   okButton.setBackground(Constants.COLOR15);
   okButton.setForeground(Constants.COLOR20);
+  okButton.addActionListener(e -> 
+      safeSelection(tree.getSelectionPath())
+  );
   cancelButton = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
   cancelButton.setPreferredSize(new Dimension(100, 24));
   cancelButton.setBackground(Constants.COLOR15);
@@ -117,8 +423,8 @@ public class LeerdomeinEditPanel2 extends JPanel implements ActionListener, Tree
         setEditable(true);
         //textArea.OPSLAAN_ACTION.bewerken();
       } else {
+        safeSelection(tree.getSelectionPath());
         setEditable(false);
-        //textArea.OPSLAAN_ACTION.opslaan();
       }
     }
   );
@@ -146,18 +452,18 @@ public class LeerdomeinEditPanel2 extends JPanel implements ActionListener, Tree
   bar.setOpaque(true);
   bar.setUI(new BasicMenuBarUI());
   bar.add(Bestand);
-  //  Bestand.add(new JMenuItem(new SubdomeinAction()));
-  //  Bestand.add(new JMenuItem(new LeerdoelAction()));
-  //  Bestand.addSeparator();
-  //  Bestand.add(new JMenuItem(new ExportAction(this)));
+    Bestand.add(new JMenuItem(new SubdomeinAction()));
+    Bestand.add(new JMenuItem(new LeerdoelAction()));
+    Bestand.addSeparator();
+    Bestand.add(new JMenuItem(new ExportAction(this)));
   bar.add(Bewerken);
-  //  Bewerken.add(new JMenuItem(new Knippen()));
-  //  Bewerken.add(new JMenuItem(new Kopieren()));
-  //  Bewerken.add(new JMenuItem(new Plakken()));
+    Bewerken.add(new JMenuItem(new Knippen()));
+    Bewerken.add(new JMenuItem(new Kopieren()));
+    Bewerken.add(new JMenuItem(new Plakken()));
   //  Bewerken.add(new JMenuItem(new Wijzigen()));
-  //  Bewerken.add(new JMenuItem(new Omhoog()));
-  //  Bewerken.add(new JMenuItem(new Omlaag()));
-  //  Bewerken.add(new JMenuItem(new Verwijderen()));
+    Bewerken.add(new JMenuItem(new Omhoog()));
+    Bewerken.add(new JMenuItem(new Omlaag()));
+    Bewerken.add(new JMenuItem(new Verwijderen()));
   bar.add(Box.createHorizontalGlue());
   
   add(split, BorderLayout.CENTER);
@@ -205,7 +511,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements ActionListener, Tree
   settingsRO = Box.createHorizontalBox();
   settingsRO.setOpaque(true);
   settingsRO.setBackground(Constants.COLOR20);
-  JButton voorkennisRO = new JButton("Voorkennis"); voorkennisRO.setFont(font);
+  JButton voorkennisRO = new JButton(new VoorkennisAction(true)); voorkennisRO.setFont(font);
   settingsRO.add(voorkennisRO);
   settingsRO.add(Box.createHorizontalGlue());
   JButton genrRO = new JButton("Getal&Ruimte"); genrRO.setFont(font);
@@ -218,10 +524,10 @@ public class LeerdomeinEditPanel2 extends JPanel implements ActionListener, Tree
   
   settings = settingsRW = new JPanel(null);
   settings.setLayout(new BoxLayout(settings, BoxLayout.PAGE_AXIS));
-  settings.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(1,0,0,0,Constants.COLOR15), "Instellingen", TitledBorder.CENTER, TitledBorder.CENTER, null, Constants.COLOR15));    
+  settings.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(1,0,0,0,Constants.COLOR13), "Instellingen", TitledBorder.CENTER, TitledBorder.CENTER, null, Constants.COLOR13));    
 
   Box bkt = Box.createHorizontalBox();
-  JButton voorkennis = new JButton("Voorkennis");voorkennis.setFont(font);
+  JButton voorkennis = new JButton(new VoorkennisAction(false));voorkennis.setFont(font);
   bkt.add(voorkennis);
   bkt.add(Box.createHorizontalGlue());
   settings.add(bkt);
@@ -359,8 +665,56 @@ public class LeerdomeinEditPanel2 extends JPanel implements ActionListener, Tree
     //OPSLAAN_ACTION.left();
   }
 
-  public DomStudentModelStructure getModel() {    
-    return structure;
+  @SuppressWarnings("unchecked")
+  public DomStudentModelStructure getModel() {
+    DomStudentModelStructure result = new DomStudentModelStructure();
+    Node u;
+    u = (Node) root.getUserObject();
+    result.setInfo(u.getInfo());
+    List<DomStudentModelCategory> categories = new ArrayList<>(root.getChildCount());
+    result.setCategories(categories);
+    Enumeration<TreeNode> children = root.children();
+    while (children.hasMoreElements()) {
+      DefaultMutableTreeNode object = (DefaultMutableTreeNode) children.nextElement();
+      u = (Node) object.getUserObject();
+      DomStudentModelCategory cat = new DomStudentModelCategory();
+      cat.setInfo(u.getInfo());
+      List<DomStudentModelObj> objectives = new ArrayList<>(object.getChildCount());
+      cat.setObjectives(objectives );
+      Enumeration<TreeNode> kids = object.children();
+      while (kids.hasMoreElements()) {
+        DefaultMutableTreeNode kid = (DefaultMutableTreeNode) kids.nextElement();
+        u = (Node) kid.getUserObject();
+        DomStudentModelObj objective = new DomStudentModelObj();
+        objective.setInfo(u.getInfo());
+        objectives.add(objective);
+        if (!kid.isLeaf()) {
+          setObjectiveChildren(objective, kid.getChildCount(), kid.children());
+        }
+      }
+      categories.add(cat);
+    }
+    result.setCategories(categories);
+    return result;
+  }
+
+  private void setObjectiveChildren(DomStudentModelObj node, int childCount,
+      Enumeration<? extends TreeNode> children) {
+    List<DomStudentModelObj> objectives = new ArrayList<>(childCount);
+    node.setObjectives(objectives);
+    while (children.hasMoreElements()) {
+      DefaultMutableTreeNode kid =
+          (DefaultMutableTreeNode) children.nextElement();
+      Node u = (Node) kid.getUserObject();
+      DomStudentModelObj objective = new DomStudentModelObj();
+      objective.setInfo(u.getInfo());
+      objectives.add(objective);
+      if (!kid.isLeaf()) {
+        setObjectiveChildren(objective, kid.getChildCount(), kid.children());
+      }
+      
+    }
+    
   }
 
   public JButton ok() { return okButton; }
@@ -421,12 +775,63 @@ public class LeerdomeinEditPanel2 extends JPanel implements ActionListener, Tree
     }
   }
 
+  private String toJSON(String string) {
+    StringWriter writer = new StringWriter();
+    try {
+      Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(string, WiskOpdrCache.getInstance().getClassLoader());
+      JSONEncoder.encode(map, writer, null);
+    } catch (Exception e) {
+      //LOG.log(Level.WARNING, "toJSON", e);
+    } 
+    return writer.toString();
+
+  }
+
+  private void commitEdit(JFormattedTextField field) {
+    try {
+      field.commitEdit();
+    } catch (ParseException e) {}
+  }
+
   @Override
   public void valueChanged(TreeSelectionEvent e) {
     if (e.isAddedPath()) {
+      if (editable) {
+        TreePath path = e.getOldLeadSelectionPath();
+        safeSelection(path);
+      }
       fillSelection();
       validate();
     }
+  }
+
+  public void safeSelection(TreePath path) {
+    if (path != null) {
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+      Object u = node.getUserObject();
+      String string = subtitle.getText();
+      if(u instanceof Node) {
+        Node n = (Node) u;
+        n.setTitle(string);
+        model.nodeChanged(node);
+        String description = wiskOpdrEditPanel.getText();
+        n.setDescription(description);
+        n.setDescriptionAsJSON(toJSON(description)); // could be lazy...
+      }
+      if (u instanceof NodeLeaf) {
+        NodeLeaf n = (NodeLeaf) u;
+        DomStudentModelContextInfo info = n.getInfo();
+        commitEdit(init);commitEdit(learn); commitEdit(slip);
+        info.setInit((Double) init.getValue());
+        info.setLearn((Double) learn.getValue());
+        info.setSlip((Double) slip.getValue());
+      }
+    }
+  }
+
+  @Override
+  public Component asComponent() {
+    return this;
   }
   
 }

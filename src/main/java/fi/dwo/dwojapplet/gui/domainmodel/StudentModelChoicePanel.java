@@ -48,10 +48,15 @@ public class StudentModelChoicePanel extends JPanel implements TreeSelectionList
     private  ChangeEvent changeEvent = null;
     private  JTree tree;
     private  NodeLeaf leaf;
+    private boolean readonly;
 
      public LeafNodeEditor(JTree tree) {
          this.tree = tree;
      }
+     public LeafNodeEditor(JTree tree, boolean b) {
+       this.tree = tree;
+       this.readonly = b;
+   }
 
      public Object getCellEditorValue() {
          JCheckBox checkbox = renderer.getLeafRenderer();
@@ -62,7 +67,7 @@ public class StudentModelChoicePanel extends JPanel implements TreeSelectionList
      @Override
      public boolean isCellEditable(EventObject event) {
          boolean returnValue = false;
-         if (event instanceof MouseEvent) {
+         if (!readonly && event instanceof MouseEvent) {
              MouseEvent mouseEvent = (MouseEvent) event;
              TreePath path = tree.getPathForLocation(mouseEvent.getX(),
                      mouseEvent.getY());
@@ -175,6 +180,10 @@ public class StudentModelChoicePanel extends JPanel implements TreeSelectionList
   static final String WISKOPDR_SIG = "H4sIAAAAAA";
 
   public StudentModelChoicePanel(NodeVector studentModel) {
+    this(studentModel, false);
+  }
+  
+  public StudentModelChoicePanel(NodeVector studentModel, boolean readonly) {
     super(null);
     this.studentModel = studentModel;
     setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
@@ -185,8 +194,8 @@ public class StudentModelChoicePanel extends JPanel implements TreeSelectionList
     tree = new JTree(model);
     //tree.setMinimumSize(new Dimension(200,100));
     //tree.setPreferredSize(tree.getMinimumSize());
-    tree.setCellEditor(new LeafNodeEditor(tree));
-    tree.setEditable(true);
+    tree.setCellEditor(new LeafNodeEditor(tree, readonly));
+    tree.setEditable(!readonly);
     tree.setCellRenderer(new ChoiceCellRenderer());
     Box leftBox = Box.createVerticalBox();
     add(leftBox);
