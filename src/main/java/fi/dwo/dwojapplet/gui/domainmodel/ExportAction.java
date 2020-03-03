@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui.domainmodel;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,12 +20,19 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 
 public class ExportAction extends AbstractAction {
 
+  interface ExportPanel {
+    Component asComponent();
+    DomStudentModelStructure getModel();
+  }
+  
+  
+  
   final static Logger LOG = Logger.getLogger(ExportAction.class.getName());
-  private LeerdomeinEditPanel panel;
+  private ExportPanel panel;
   private final JFileChooser chooser;
   private Genson genson;
 
-  public ExportAction(LeerdomeinEditPanel leerdomeinEditPanel) {
+  public ExportAction(ExportPanel leerdomeinEditPanel) {
     super("Export");
     panel = leerdomeinEditPanel;
     chooser = new JFileChooser();
@@ -36,7 +44,7 @@ public class ExportAction extends AbstractAction {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    if (chooser.showSaveDialog(panel) == JFileChooser.APPROVE_OPTION) {
+    if (chooser.showSaveDialog(panel.asComponent()) == JFileChooser.APPROVE_OPTION) {
       File toSave = chooser.getSelectedFile();
       DomStudentModelStructure model = panel.getModel();
       try {

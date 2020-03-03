@@ -7,16 +7,20 @@ import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JScrollPane;
+import fi.beans.numworxlf.JTextField;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.domainmodel.ImportAction;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinEditPanel;
+import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinEditPanel2;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinResultsPanel;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Image;
 import java.awt.MediaTracker;
@@ -73,7 +77,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 
     private JButton addModelButton, importModelButton;
     private JButton cancelButton;
-    private LeerdomeinEditPanel textArea;
+    private LeerdomeinEditPanel2 textArea;
 
     private JPanel jtbl;
     private TableRowSorter rowSorter;
@@ -134,12 +138,12 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
             if (value == searchImage) {
                 DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                 prop.setCurrent(model);
+                textArea.setEditable(false);
                 textArea.setModel(model.getModelStructure());
-                textArea.setEditable(true);
 //                cancelButton.setEnabled(true);
 //                addModelButton.setText(TextMapper.getText(TextMapper.BTN_UPDATE));
                 String title = (String) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), 0);
-                int ok = JOptionPane.showConfirmDialog(TeacherStudentModelPanel.this, scrollPane, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                int ok = showConfirmDialog(TeacherStudentModelPanel.this, scrollPane, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 if ( ok == JOptionPane.OK_OPTION) {
                   DomStudentModelStructure modelStructure = textArea.getModel();
                   model.setModelStructure(modelStructure);
@@ -199,7 +203,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 //          }
 //      }
 
-        private int showConfirmDialog(TeacherStudentModelPanel teacherStudentModelPanel,
+        private int showConfirmDialogxxx(TeacherStudentModelPanel teacherStudentModelPanel,
             JScrollPane scrollPane, String title, int okCancelOption, int plainMessage) {
          return JOptionPane.showConfirmDialog(teacherStudentModelPanel, scrollPane, title, okCancelOption,plainMessage );
 
@@ -347,9 +351,8 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         buildJTable();
         this.add(Box.createVerticalStrut(15));
         //textArea = new DomainModelEditor();
-        textArea = new LeerdomeinEditPanel();
+        textArea = new LeerdomeinEditPanel2();
         textArea.setEditable(false);
-        scrollPane = new JScrollPane(textArea);
 //        this.add(scrollPane);
 
     }
@@ -401,7 +404,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
                 textArea.setModel(null);
                 prop.setCurrent(null);
                 textArea.setEditable(true);
-                int ok = JOptionPane.showConfirmDialog(TeacherStudentModelPanel.this, scrollPane, e.getActionCommand(), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                int ok = showConfirmDialog(TeacherStudentModelPanel.this, textArea, e.getActionCommand(), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 if (ok == JOptionPane.OK_OPTION) {
                   try {
                     DomStudentModelStructure modelStructure = textArea.getModel();
@@ -414,6 +417,106 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
                   } 
                 }
             }
+    }
+
+    class ConfirmDialog extends JDialog {
+
+      int option = JOptionPane.CLOSED_OPTION;
+      ConfirmDialog(Frame owner, String title) {
+        super(owner, title, true);
+      }
+      void ok(ActionEvent e) { option = JOptionPane.OK_OPTION; dispose(); }
+      void cancel(ActionEvent e) { option = JOptionPane.CANCEL_OPTION; dispose(); }
+    }
+    
+    
+    private int showConfirmDialog(TeacherStudentModelPanel teacherStudentModelPanel,
+        JComponent xxx, String title, int okCancelOption, int plainMessage) {
+//      if (false)
+//        return JOptionPane.showConfirmDialog(teacherStudentModelPanel, scrollPane, title, okCancelOption,plainMessage);
+
+      Frame owner = DwoHelper.getFrameForComponent(teacherStudentModelPanel);
+      ConfirmDialog dialog = new ConfirmDialog(owner, "");
+      dialog.setContentPane(textArea);
+//      dialog.getContentPane().setLayout(new BorderLayout());
+      dialog.setDefaultCloseOperation(ConfirmDialog.DISPOSE_ON_CLOSE);
+//      dialog.getContentPane().add(textArea, BorderLayout.CENTER);
+//      JButton override = textArea.opslaan;
+//      override.setVisible(false);
+//      textArea.title.hide();
+//      textArea.language.hide();
+//      textArea.bar.hide();
+//
+//      JTextField leerdoelTitelEditor = textArea.subtitle;
+//      leerdoelTitelEditor.setForeground(Color.WHITE);
+//      leerdoelTitelEditor.setBackground(Constants.COLOR14);
+////      leerdoelTitelEditor.setMaximumSize(new Dimension(800,30));
+//      leerdoelTitelEditor.setBorder(BorderFactory.createEmptyBorder(4, 20, 4, 20));
+//      leerdoelTitelEditor.setFont(leerdoelTitelEditor.getFont().deriveFont(Font.BOLD, 14));
+//      leerdoelTitelEditor.setOpaque(true);
+   
+      
+      
+//      Box south = Box.createHorizontalBox();
+//      south.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+//      south.setOpaque(true);
+//      south.setBackground(Constants.COLOR21);
+//      JButton okButton = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_SAVE));
+//      okButton.setPreferredSize(new Dimension(90, 24));
+//      okButton.setBackground(Constants.COLOR15);
+//      okButton.setForeground(Constants.COLOR20);
+//      JButton cancelButton = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
+//      cancelButton.setPreferredSize(new Dimension(90, 24));
+//      cancelButton.setBackground(Constants.COLOR15);
+//      cancelButton.setForeground(Constants.COLOR20);           
+//      okButton.addActionListener(dialog::ok);
+        ActionListener ok = dialog::ok;
+        textArea.ok().addActionListener(ok);
+//      cancelButton.addActionListener(dialog::cancel);
+        ActionListener cancel = dialog::cancel;
+        textArea.cancel().addActionListener(cancel);
+//      south.add(Box.createHorizontalGlue());
+//      south.add(okButton); 
+//      south.add(Box.createHorizontalStrut(20));
+//      south.add(cancelButton);
+//      south.add(Box.createHorizontalGlue());
+//      dialog.getContentPane().add(south, BorderLayout.SOUTH);
+//
+//      Box north = Box.createHorizontalBox();
+//      north.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 20));
+//      north.setOpaque(true);north.setBackground(Constants.COLOR15);
+//      JButton bewerken = new JButton(TextMapper.getText(TextMapper.GUIH_EDIT));
+//      JLabel label = new JLabel(title);
+//      label.setForeground(Constants.COLOR20);
+//      label.setFont(label.getFont().deriveFont(24f));
+//      north.add(bewerken);
+//      north.add(Box.createHorizontalGlue());
+//      north.add(label);
+//      north.add(Box.createHorizontalGlue());
+//      bewerken.addActionListener(
+//        e -> {
+//          if (TextMapper.getText(TextMapper.GUIH_STOP_EDIT) != bewerken.getText()) {
+//            bewerken.setText(TextMapper.getText(TextMapper.GUIH_STOP_EDIT));
+//            label.setText("Editor " + title);
+//            textArea.bar.show();
+//            south.show();
+//            textArea.OPSLAAN_ACTION.bewerken();
+//          } else {
+//            bewerken.setText(TextMapper.getText(TextMapper.GUIH_EDIT));
+//            label.setText(title);
+//            textArea.bar.hide();
+//            south.hide();
+//            textArea.OPSLAAN_ACTION.opslaan();         }
+//        }
+//      );
+//      dialog.getContentPane().add(north, BorderLayout.NORTH);
+      
+      
+      dialog.pack();
+      dialog.show();
+      textArea.ok().removeActionListener(ok);
+      textArea.cancel().removeActionListener(cancel);   
+      return dialog.option;
     }
 
     public void addModel(DomStudentModelContext model) throws Dwo2Exception {

@@ -4,8 +4,12 @@ import java.applet.AppletContext;
 import java.applet.AppletStub;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Locale;
@@ -27,7 +31,18 @@ import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 
 public class WiskOpdrEditPanel extends JPanel implements Scrollable, AppletStub {
 
-	private static final long serialVersionUID = 1L;
+	public class Listener extends ComponentAdapter implements ComponentListener {
+
+    @Override
+    public void componentResized(ComponentEvent e) {
+      Component nosize = ((Container) getComponent(0));
+      Dimension size = getSize();
+      nosize.setSize(size.width, size.height);
+//      nosize.validate();
+    }
+  }
+
+  private static final long serialVersionUID = 1L;
 	private final Logger LOG = Logger.getLogger(getClass().getName());
 
 //	private static int defaultEditorWidth = 800;
@@ -58,7 +73,8 @@ public class WiskOpdrEditPanel extends JPanel implements Scrollable, AppletStub 
     }
 	
 	public WiskOpdrEditPanel(String text, Locale locale, int editorWidth, int editorHeight, int documentWidth, int documentHeight) {
-	  super(new BorderLayout());
+	  super(null);
+	  addComponentListener(new Listener());
 	  this.text = text;
 	  try {
 	      Class<?> wiskopdr = WiskOpdrCache.getInstance();
