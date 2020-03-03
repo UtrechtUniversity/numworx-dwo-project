@@ -604,6 +604,7 @@ public class FormuleParser
         }
 		s = s.replace(',', '.');
 		s = s.replace(':', '/');
+		s = s.replace('\u00f7', '/');
 		s = s.replace('\u00b0', ' ');
 		
 
