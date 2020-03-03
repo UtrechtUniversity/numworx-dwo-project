@@ -26,14 +26,6 @@ public abstract class Scorm {
             return (SCORM12APIInterface) cc.newInstance(new Object[]{applet});
         }
         //Hier komt de default Scorm.findAPI(applet)....
-        try {
-            return new JSScormAPI(applet);
-        }
-        catch (RuntimeException r) {
             return null;
-        }
-        catch (NoClassDefFoundError e) { // package netstape not found.
-            return null;
-        }
     }
 }
