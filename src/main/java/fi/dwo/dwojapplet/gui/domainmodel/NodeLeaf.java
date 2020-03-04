@@ -1,5 +1,7 @@
 package fi.dwo.dwojapplet.gui.domainmodel;
 
+import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
 
@@ -9,7 +11,7 @@ class NodeLeaf implements Node {
 
   
   private int path;
-  
+  private Map methode = new TreeMap();
   
   public int getPath() {
     return path;
@@ -119,6 +121,10 @@ class NodeLeaf implements Node {
   @Override
   public boolean isValue() {
     return value;
+  }
+
+  public Map<String, Map<String,Set<Integer>>> getMethode() {
+    return methode;
   }
   
   
