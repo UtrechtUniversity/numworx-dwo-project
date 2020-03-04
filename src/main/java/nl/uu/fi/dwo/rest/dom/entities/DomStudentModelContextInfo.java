@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.rest.dom.entities;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -17,6 +19,7 @@ public class DomStudentModelContextInfo {
     private String id;
     private Double slip, learn, init;
     private List<String> voorkennis;
+    private Map<String, Map<String, Set<Integer>>> methods;
 
     public DomStudentModelContextInfo(){        
        
@@ -123,5 +126,13 @@ public class DomStudentModelContextInfo {
   public void setVoorkennis(List<String> voorkennis) {
     this.voorkennis = voorkennis;
   }
+
+	public Map<String, Map<String, Set<Integer>>> getMethods() {
+		return methods;
+	}
+	
+	public void setMethods(Map<String, Map<String, Set<Integer>>> methods) {
+		this.methods = methods;
+	}
     
 }
