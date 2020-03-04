@@ -12,6 +12,8 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.recognizer.longtap.LongTapEvent;
 
+import nl.uu.fi.dwo.keyboard.client.i18n.Key;
+
 /**
  * @author wim
  *
@@ -116,6 +118,9 @@ public class TabletOnderbouwKeyboard extends AbstractKeyboard {
 		duoGR.showDuo(x, y);
 	}
 
+	Key keys = GWT.create(Key.class);
+	char slash = keys.slash().charAt(0);
+
 
 	@UiHandler("t1_1") void onT1_1(ClickEvent e) { getEditor().insert('('); }
 	@UiHandler("t1_2") void onT1_2(ClickEvent e) { getEditor().insert(')'); }
@@ -126,7 +131,7 @@ public class TabletOnderbouwKeyboard extends AbstractKeyboard {
 	@UiHandler("t1_7") void onT1_7(ClickEvent e) { getEditor().insert('8'); }
 	@UiHandler("t1_8") void onT1_8(ClickEvent e) { getEditor().insert('9'); }
 	@UiHandler("t1_9") void onT1_9(ClickEvent e) { getEditor().haakjes(); }
-	@UiHandler("t1_10") void onT1_10(ClickEvent e) { getEditor().insert('/'); }
+	@UiHandler("t1_10") void onT1_10(ClickEvent e) { getEditor().insert(slash); }
 	@UiHandler("t1_11") void onT1_11(ClickEvent e) { getEditor().insert('-'); }
 	@UiHandler("t1_12") void onT1_12(ClickEvent e) { getEditor().removeCurrentElement(); }
 	@UiHandler("t1_13") void onT1_13(ClickEvent e) { switchABC(); }

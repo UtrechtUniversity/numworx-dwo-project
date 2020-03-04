@@ -4,6 +4,7 @@
 package nl.uu.fi.dwo.keyboard.client;
 
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
+import nl.uu.fi.dwo.keyboard.client.i18n.Key;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -59,8 +60,8 @@ public class TabletKeyboard extends AbstractKeyboard {
 		super.setEditor(formuleEditor);
 		pad.setEditor(formuleEditor);
 	}
-
-
+	Key keys = GWT.create(Key.class);
+	char slash = keys.slash().charAt(0);
 
 	@UiField(provided=true)
 	TabletKeyboardPad pad;
@@ -92,7 +93,7 @@ public class TabletKeyboard extends AbstractKeyboard {
 	@UiHandler("t2_1") void onT2_1(ClickEvent e) {getEditor().insert('4');}
 	@UiHandler("t2_2") void onT2_2(ClickEvent e) {getEditor().insert('5');}
 	@UiHandler("t2_3") void onT2_3(ClickEvent e) {getEditor().insert('6');}
-	@UiHandler("t2_4") void onT2_4(ClickEvent e) {getEditor().insert('/');}
+	@UiHandler("t2_4") void onT2_4(ClickEvent e) {getEditor().insert(slash);}
 	@UiHandler("t2_5") void onT2_5(ClickEvent e) {getEditor().insert('y');}
 	@UiHandler("t2_6") void onT2_6(ClickEvent e) {
 		getEditor().macht();
