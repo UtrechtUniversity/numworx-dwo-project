@@ -69,7 +69,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 
-public class LeerdomeinEditPanel extends JPanel implements ActionListener, ExportPanel {
+@Deprecated
+class LeerdomeinEditPanel extends JPanel implements ActionListener, ExportPanel {
 
   private static final Logger LOG = Logger.getLogger(LeerdomeinEditPanel.class.getName());
   private String BEWERKEN = TextMapper.getText("edit");

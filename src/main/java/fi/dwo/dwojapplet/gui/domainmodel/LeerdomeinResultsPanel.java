@@ -195,9 +195,6 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
     
     add(vbox);
     tree.addTreeSelectionListener(this);
-    
-    
-    
   }
 
   public void setContext(DomStudentModelContext context) {
@@ -212,8 +209,8 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
 
     this.title.setText(vector.toString());
     this.title2.setText(vector.toString());
-    this.tekst.setText(vector.getDescription());
-    
+    //this.tekst.setText(vector.getDescription());
+    setDescription(vector);
     this.model.nodeStructureChanged(root);
 
   }
@@ -251,7 +248,7 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
 
   private void setDescription(Node n) {
     String description = n.getDescription();
-    if (description.startsWith(LeerdomeinEditPanel.WISKOPDR_SIG))
+    if (description.startsWith(LeerdomeinEditPanel2.WISKOPDR_SIG))
     {
       WiskOpdrPanel panel = WiskOpdr.getWiskOpdrPanel(description);
       panel.setBackground(Color.white);

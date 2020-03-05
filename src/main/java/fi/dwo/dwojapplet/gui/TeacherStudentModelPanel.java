@@ -1,53 +1,38 @@
 package fi.dwo.dwojapplet.gui;
 
-import com.owlike.genson.Genson;
-import com.owlike.genson.GensonBuilder;
-
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JScrollPane;
-import fi.beans.numworxlf.JTextField;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.domainmodel.ImportAction;
-import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinEditPanel;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinEditPanel2;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinResultsPanel;
+import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinResultsPanel2;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Frame;
 import java.awt.Image;
 import java.awt.MediaTracker;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.AbstractAction;
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -57,7 +42,6 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManage
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
-import nl.uu.fi.dwo.rest.dom.entities.util.GensonMapConverter;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
@@ -177,7 +161,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
             if (value == resultsImage) {
               DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
               String title = (String) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), 0);
-              LeerdomeinResultsPanel panel = new LeerdomeinResultsPanel();
+              LeerdomeinResultsPanel2 panel = new LeerdomeinResultsPanel2();
               panel.setContext(model);
               List<DomSchoolClass> list;
               try {
@@ -188,6 +172,10 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
               }
               panel.setClasses(list);
               JOptionPane.showMessageDialog(TeacherStudentModelPanel.this, panel, title, JOptionPane.PLAIN_MESSAGE);  
+              ConfirmDialog dialog = new ConfirmDialog(TeacherStudentModelPanel.this, "");
+              dialog.setContentPane(panel);
+              dialog.pack();
+              dialog.show();
             }
         }
 //        private void recursiveUnfocusButtons(Component component) {
