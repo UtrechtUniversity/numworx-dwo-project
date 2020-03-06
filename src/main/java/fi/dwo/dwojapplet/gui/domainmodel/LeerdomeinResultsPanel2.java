@@ -5,31 +5,66 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.Icon;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import javax.swing.JTree.DynamicUtilTreeNode;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
-import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JTree;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.ConfirmDialog;
 import fi.dwo.dwojapplet.gui.GuiConstants;
+import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
+import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataStudentScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
-public class LeerdomeinResultsPanel2 extends JPanel implements Constants {
+public class LeerdomeinResultsPanel2 extends JPanel implements Constants, ActionListener, TreeSelectionListener {
+  private static final Logger LOG = Logger.getLogger(LeerdomeinResultsPanel2.class.getName());
 
   
   public static void main(String[] args) {
@@ -58,7 +93,92 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants {
     
   }
 
+  static class IconRenderer extends DefaultTableCellRenderer {
+
+    @Override
+    protected void setValue(Object value) {
+      if (value instanceof Icon) {
+        super.setIcon((Icon) value);
+      } else 
+        super.setValue(value);
+    }
+  }
+  static class ColorRenderer extends DefaultTableCellRenderer {
+    final Color color;
+
+    ColorRenderer(Color color) {
+      this.color = color;
+    }
+
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+        boolean hasFocus, int row, int column) {
+      Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+      component.setForeground(color);
+      return component;
+    }
+    
+  }
   
+  
+  
+  class ScoreIcon implements Icon {
+
+    float green = 0.64f;
+    float red =   0.24f;
+    float score = 0.5f;
+    
+    ScoreIcon( double score, long count, double part, int size) {
+      if (count == 0L || size == 0) {
+        this.score = 0.5f;
+        red = 0.49f;
+        green = 0.51f;
+      } else {
+        this.score = red = green  =  (float) (((float)score/count * part + (size-part)*0.5f)/(float)size);
+        if (green <= 0.49f) {
+          green = 0.5f;
+        } else if (green >= 0.51f){
+          red = 0.5f;
+        } else {
+          green += 0.01f; 
+          red -= 0.01f;        
+        }
+      }
+    }
+    
+    
+    @Override
+    public void paintIcon(Component c, Graphics g, int x, int y) {
+      g.setColor(c.getBackground());
+      g.fillRect(x, y, getIconWidth(), getIconHeight());
+      x+=2;
+      y+=2;
+      int w = getIconWidth()-3;
+      g.setColor(Color.red);
+      g.fillRect( x+ Math.round(red * w), y, Math.round((0.5f-red)*w), getIconHeight()-2-3);
+
+      g.setColor(Color.green);
+      g.fillRect(x + Math.round(w/2.0f), y, Math.round(w*(green-0.5f)), getIconHeight()-2-3);          
+
+      g.setColor(Color.black); g.drawRect(x, y, getIconWidth()-2, getIconHeight()-2-4);
+    }
+
+    @Override
+    public int getIconWidth() {
+      return 150;
+    }
+
+    @Override
+    public int getIconHeight() {
+      return getFontMetrics(getFont()).getHeight()+4+3;
+    }
+
+    public String getPercentage() {
+      return Math.round(score * 200-100)+"%";
+    }
+    
+  }
+
   
   private JLabel titleLabel;
   private JTree  tree;
@@ -71,6 +191,9 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants {
   private JComboBox<SchoolKlas> klassen;
   private JTable results;
   private JScrollPane resultsPane;
+  private DomStudentModelContext context;
+  private DomStudentModelScorePerTeacher scores;
+  private JLabel red, score, green;
   
   public LeerdomeinResultsPanel2() {
     super(new BorderLayout());
@@ -93,6 +216,10 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants {
     model = new DefaultTreeModel(root);
     tree = new JTree(model);
     tree.setBackground(COLOR20);
+    tree.addTreeSelectionListener(this);
+    DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
+    renderer.setBackgroundNonSelectionColor(COLOR20);
+    tree.setCellRenderer(renderer);
 
     JScrollPane pane = new JScrollPane(tree);
     pane.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
@@ -111,7 +238,9 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants {
     
     tekst = new JTextArea(5,20);tekst.setEditable(false);
     scroll = new JScrollPane(tekst);
-    
+    Dimension min = new Dimension(480, 250);
+    scroll.setMinimumSize(min);
+    scroll.setPreferredSize(min);
     leftBox.add(scroll);
     leftBox.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 10));   
     add(leftBox, BorderLayout.CENTER);
@@ -124,6 +253,7 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants {
     kies.setMaximumSize(kies.getPreferredSize());
     klassen = new fi.beans.numworxlf.JComboBox<>(new SchoolKlas[] {new SchoolKlas(null)});
     klassen.setSelectedIndex(0);
+    klassen.addActionListener(this);
     
     b = hb( kies, ra(20,0), klassen, hgl());
     b.setOpaque(true); b.setBackground(COLOR20);
@@ -133,7 +263,9 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants {
     rightBox.add(b);
     
     results = new JTable();
+    results.setTableHeader(null);
     results.setBackground(COLOR20);
+    results.setForeground(COLOR13);
     resultsPane = new JScrollPane(results);
     resultsPane.getViewport().setBackground(COLOR20);
     resultsPane.setBackground(COLOR20);
@@ -143,13 +275,10 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants {
     JLabel l = new JLabel("Klasgemiddelde: ");
     l.setFont(font.deriveFont(Font.BOLD, 16));
     l.setForeground(COLOR15);
-    JPanel gemiddelde = new JPanel();
-    gemiddelde.setBackground(Color.RED);
-    Dimension size = new Dimension(60,20);
-    gemiddelde.setPreferredSize(size);
-    gemiddelde.setMaximumSize(size);
-    gemiddelde.setMinimumSize(size);
-    b = hb(ra(10,0), l, ra(10,0), gemiddelde, hgl());   
+    JComponent gemiddelde = score = new JLabel(new ScoreIcon(0, 0, 0, 0));
+    red = new JLabel("0%"); red.setForeground(Color.RED);
+    green = new JLabel("0%"); green.setForeground(Color.GREEN);
+    b = hb(ra(10,0), l, ra(10,0), red, gemiddelde, green, hgl());   
     rightBox.add(b);    
     rightBox.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 20));
     add(rightBox, BorderLayout.EAST);
@@ -157,14 +286,42 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants {
     setBackground(COLOR20);
   }
 
-  public void setContext(DomStudentModelContext model) {
-    // TODO Auto-generated method stub
+  private void setDescription(Node n) {
+    String description = n.getDescription();
+    if (description.startsWith(LeerdomeinEditPanel2.WISKOPDR_SIG))
+    {
+      WiskOpdrPanel panel = WiskOpdr.getWiskOpdrPanel(description, getLocale());
+      panel.setBackground(Color.white);
+      scroll.setViewportView(panel);
+    } else {
+      tekst.setText(description);
+      scroll.setViewportView(tekst);
+    }
+  }
+
+  public void setContext(DomStudentModelContext context) {
+    this.context = context;
+    DomStudentModelStructure model = context.getModelStructure();
+    String locale = getLocale().getLanguage();
     
+    model = AdviseMeResultManager.restructure(model, locale, context);
+      
+    NodeVector vector = new NodeVector(model.getCategories(), model.getInfo(), locale);
+    this.model.setRoot(root = new DynamicUtilTreeNode(vector, vector));
+
+    this.subtitle.setText(vector.toString());
+    //this.title2.setText(vector.toString());
+    //this.tekst.setText(vector.getDescription());
+    setDescription(vector);
+    this.model.nodeStructureChanged(root);
+
   }
 
   public void setClasses(List<DomSchoolClass> list) {
-    // TODO Auto-generated method stub
-    
+    for(DomSchoolClass i : list) {
+      klassen.addItem(new SchoolKlas(i));
+    }
+    klassen.setMaximumSize(klassen.getPreferredSize());
   }
 
   private static Box hb(Component... c) {
@@ -179,5 +336,223 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants {
   private static Component ra(int w, int h) {
     return Box.createRigidArea(new Dimension(w, h));
 }
+
+  private int[] getPath(TreePath path) {
+    Object[] o = path.getPath();
+    int[] result = new int[o.length];
+    for (int i = 0; i < result.length; i++) {
+      result[i] = ((Node) ((DefaultMutableTreeNode) o[i]).getUserObject()).getPath();
+    }
+    return result;
+  }
+
+  
+  @Override
+  public void valueChanged(TreeSelectionEvent e) {
+    if (e.isAddedPath()) {
+      TreePath path = tree.getSelectionPath();
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+      Node n = (Node)node.getUserObject();
+      subtitle.setText(n.toString());
+      //title2.setText(n.toString());
+      setDescription(n);
+      
+      int[] ipath = getPath(path);
+      if (ipath == null || ipath.length == 1) {
+        calculateROOT(scores, results.getModel());
+      } else if (ipath.length == 2) {
+        calculateCategories(scores, results.getModel(), ipath[1]);
+      } else if (ipath.length >= 3) {
+        calculateObjectives(scores, results.getModel(), ipath);
+      }
+      
+    }
+
+    
+  }
+
+  @Override
+  public void actionPerformed(ActionEvent e) {
+    if (e.getSource()==klassen) {
+      SchoolKlas klas = klassen.getItemAt(klassen.getSelectedIndex());
+      if (klas != null && klas.delegate != null) {
+        DomSchoolClass dom = klas.delegate;
+        scores = new DomStudentModelScorePerTeacher();
+        scores.setSchoolClasses(Collections.singletonList(new DomMapEntry<>(dom.getId(), dom)));
+        scores.setStudentModelContexts(Collections.singletonList(new DomMapEntry<>(context.getId(), context)));
+        try {
+          //scores = SecureTeacherStudentModelManager.getScores(scores);
+
+          List<DomStudent> studentsInSchoolClass = SecureTeacherSchoolClassManager.getStudentsInSchoolClass(dom);
+          List<DomMapEntry<PersistenceId, DomStudent>> aStudents = studentsInSchoolClass.stream().map(s -> new DomMapEntry<>(s.getId(),s)).collect(Collectors.toList());
+          scores.setStudents(aStudents);
+          List<DomStudentModelDataStudentScore> aScores = studentsInSchoolClass.stream().map(s -> {
+            DomStudentModelDataStudentScore domScore = new DomStudentModelDataStudentScore();
+            domScore.setStudentId(s.getId());
+            domScore.setModelId(context);
+            return domScore;
+          }).collect(Collectors.toList());
+          scores.setStudentScores(aScores);
+
+          if (context.getModelStructure().getInfo().getId() != null &&
+              context.getModelStructure().getInfo().getId().startsWith(AdviseMeResultManager.KEY))
+          {
+            try {
+              scores = new AdviseMeResultManager().fromAdviseMe(scores).getValue();
+            } catch (InvocationTargetException e1) {
+              LOG.log(Level.SEVERE, "fromAdviseMe", e1.getCause());
+            } catch (InterruptedException e1) {
+              LOG.log(Level.WARNING, "interrupted", e1);
+            }
+          } else {
+// fetch students of class         
+
+          DomLRS lrs = SecureTeacherStudentModelManager.getLRS();
+          XapiResultsManager xapi = new XapiResultsManager(lrs);
+          try {
+            scores = xapi.fromXAPI(scores).getValue();
+          } catch (InvocationTargetException e1) {
+            LOG.log(Level.SEVERE, "fromXAPI", e1.getCause());
+          } catch (InterruptedException e1) {
+            LOG.log(Level.WARNING, "interrupted", e1);
+          }
+          
+          }
+          
+          TableModel tmodel = new DefaultTableModel(scores.getStudents().size(), 4);
+          for (int i = 0; i < tmodel.getRowCount(); i++ ) {
+            String u = scores.getStudents().get(i).getValue().getDisplayName();
+            tmodel.setValueAt(u, i, 0);
+          }
+          calculateROOT(scores, tmodel);
+          JTable table = results;
+          table.setModel(tmodel);
+          TableColumnModel columnModel = table.getColumnModel();
+          TableColumn c1 = columnModel.getColumn(1);
+          ColorRenderer redRenderer = new ColorRenderer(Color.RED);
+          redRenderer.setHorizontalAlignment(SwingConstants.TRAILING);
+          c1.setCellRenderer(redRenderer);
+          int width = new JLabel("100%").getPreferredSize().width;
+          c1.setPreferredWidth(width);
+          c1.setMaxWidth(width);
+          TableColumn c3 = columnModel.getColumn(3);
+          c3.setCellRenderer(new ColorRenderer(Color.GREEN));
+          c3.setPreferredWidth(width);
+          c3.setMaxWidth(width);
+          TableColumn c2 = columnModel.getColumn(2);
+          c2.setCellRenderer(new IconRenderer());
+          width = score.getIcon().getIconWidth()+3;
+          c2.setPreferredWidth(width);
+          c2.setMaxWidth(width);
+          table.setRowHeight(score.getPreferredSize().height+2);
+          table.clearSelection();
+        } catch (Dwo2Exception e1) {
+          LOG.log(Level.SEVERE, "getScores", e1);
+        }
+      } else {
+        results.setModel(new DefaultTableModel(0,3));
+      }
+    }
+    
+  }
+
+  private void calculateROOT(DomStudentModelScorePerTeacher scores, TableModel tmodel) {
+    if (scores == null) return;
+    double nzl = 0.0;
+    double sumScore = 0.0;
+    long sumCount = 0;
+    List<DomStudentModelDataStudentScore> studentScores = scores.getStudentScores();
+    for (int i = 0; i < tmodel.getRowCount(); i++ ) {
+      DomStudentModelStructureScore v = studentScores.get(i).getDomStudentModelStructureScore();
+      double nz = 0;
+      int count = v.getCategories().size();
+      for( DomStudentModelCategoryScore item: v.getCategories()) {
+        if (item.getCount() != 0) nz += 1;      
+      }
+      ScoreIcon result = new ScoreIcon (v.getScore()  , v.getCount() , nz , count);
+      tmodel.setValueAt(result.getPercentage(), i, 1);
+      tmodel.setValueAt(result, i, 2);
+      tmodel.setValueAt(result.getPercentage(), i, 3);
+      if (v.getCount() != 0) nzl ++;
+      sumScore += v.getScore();
+      sumCount += v.getCount();
+    }
+    ScoreIcon icon = new ScoreIcon (sumScore , sumCount , nzl , tmodel.getRowCount()  );
+    score.setIcon( icon);
+    red.setText(icon.getPercentage());
+    green.setText(icon.getPercentage());
+  }
+
+  private void calculateCategories(DomStudentModelScorePerTeacher scores, TableModel tmodel,
+      int cat) {
+    if (scores == null) return;
+    double nzl = 0.0;
+    double sumScore = 0.0;
+    long sumCount = 0;
+    List<DomStudentModelDataStudentScore> studentScores = scores.getStudentScores();
+    for (int i = 0; i < tmodel.getRowCount(); i++) {
+      DomStudentModelStructureScore c = studentScores.get(i).getDomStudentModelStructureScore();
+      DomStudentModelCategoryScore v = c.getCategories().get(cat);
+
+      double nz = 0;
+      int count = v.getObjectives().size();
+      for (DomStudentModelObjectiveScore item : v.getObjectives()) {
+        if (item.getCount() != 0) nz += 1;
+      }
+      ScoreIcon result = new ScoreIcon(v.getScore(), v.getCount(), nz, count);
+      tmodel.setValueAt(result, i, 2);
+      tmodel.setValueAt(result.getPercentage(), i, 1);
+      tmodel.setValueAt(result.getPercentage(), i, 3);
+     if (v.getCount() != 0) nzl++;
+      sumScore += v.getScore();
+      sumCount += v.getCount();
+    }
+    // score.setText( sumScore + "/" + sumCount + " " + nzl + "/" + tmodel.getRowCount() );
+    ScoreIcon icon = new ScoreIcon(sumScore, sumCount, nzl, tmodel.getRowCount());
+    score.setIcon(icon);
+    red.setText(icon.getPercentage());
+    green.setText(icon.getPercentage());
+
+  }
+
+  private void calculateObjectives(DomStudentModelScorePerTeacher scores, TableModel tmodel, int[] path) {
+    if (scores == null) return;
+    double nzl = 0.0;
+    double sumScore = 0.0;
+    long sumCount = 0;
+    int cat = path[1];
+    int obj = path[2];
+    List<DomStudentModelDataStudentScore> studentScores = scores.getStudentScores();
+    for (int i = 0; i < tmodel.getRowCount(); i++ ) {
+      DomStudentModelStructureScore c = studentScores.get(i).getDomStudentModelStructureScore();
+      DomStudentModelCategoryScore o = c.getCategories().get(cat);
+      DomStudentModelObjectiveScore v = o.getObjectives().get(obj);
+      if (path.length >= 4) {
+        for (int index = 3; index < path.length; index++) {
+          obj = path[index];
+          if (v.getChildren() != null && v.getChildren().size() > obj)
+            v = v.getChildren().get(obj);
+          else
+            v = new DomStudentModelObjectiveScore();
+        }
+      }
+      double nz = 0;
+      int count = 1;      
+      if (v.getCount() != 0) nz += 1;      
+      
+      ScoreIcon result = new ScoreIcon (v.getScore()  , v.getCount() , nz , count);
+      tmodel.setValueAt(result, i, 2);
+      tmodel.setValueAt(result.getPercentage(), i, 1);
+      tmodel.setValueAt(result.getPercentage(), i, 3);
+      if (v.getCount() != 0) nzl ++;
+      sumScore += v.getScore();
+      sumCount += v.getCount();
+    }
+    ScoreIcon icon = new ScoreIcon (sumScore , sumCount , nzl , tmodel.getRowCount()  );
+    score.setIcon( icon);
+    red.setText( icon.getPercentage());
+    green.setText(icon.getPercentage());
+    
+  }
 
 }

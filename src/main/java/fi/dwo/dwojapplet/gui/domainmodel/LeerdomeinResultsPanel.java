@@ -48,6 +48,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
+@Deprecated
 public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListener, ActionListener {
 
   private static final Logger LOG = Logger.getLogger(LeerdomeinResultsPanel.class.getName());
@@ -346,7 +347,7 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
         scores.setSchoolClasses(Collections.singletonList(new DomMapEntry<>(dom.getId(), dom)));
         scores.setStudentModelContexts(Collections.singletonList(new DomMapEntry<>(context.getId(), context)));
         try {
-          scores = SecureTeacherStudentModelManager.getScores(scores);
+          //scores = SecureTeacherStudentModelManager.getScores(scores);
 
           if (context.getModelStructure().getInfo().getId() != null &&
               context.getModelStructure().getInfo().getId().startsWith(AdviseMeResultManager.KEY))

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -44,10 +45,12 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinResultsPanel.IconRenderer;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinResultsPanel.SchoolKlas;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinResultsPanel.ScoreIcon;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataStudentScore;
@@ -55,6 +58,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class LeerdomeinMockupResultPanel extends JPanel implements ActionListener {
 	private Locale locale;
@@ -297,7 +301,17 @@ public class LeerdomeinMockupResultPanel extends JPanel implements ActionListene
 				scores.setSchoolClasses(Collections.singletonList(new DomMapEntry<>(dom.getId(), dom)));
 				scores.setStudentModelContexts(Collections.singletonList(new DomMapEntry<>(context.getId(), context)));
 				try {
-					scores = SecureTeacherStudentModelManager.getScores(scores);
+				// fetch students of class         
+		          List<DomStudent> studentsInSchoolClass = SecureTeacherSchoolClassManager.getStudentsInSchoolClass(dom);
+		          List<DomMapEntry<PersistenceId, DomStudent>> aStudents = studentsInSchoolClass.stream().map(s -> new DomMapEntry<>(s.getId(),s)).collect(Collectors.toList());
+		          scores.setStudents(aStudents);
+		          List<DomStudentModelDataStudentScore> aScores = studentsInSchoolClass.stream().map(s -> {
+		            DomStudentModelDataStudentScore domScore = new DomStudentModelDataStudentScore();
+		            domScore.setStudentId(s.getId());
+		            domScore.setModelId(context);
+		            return domScore;
+		          }).collect(Collectors.toList());
+		          scores.setStudentScores(aScores);
 
 					if (context.getModelStructure().getInfo().getId() != null
 							&& context.getModelStructure().getInfo().getId().startsWith(AdviseMeResultManager.KEY)) {

@@ -171,7 +171,6 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
                 list = Collections.emptyList();
               }
               panel.setClasses(list);
-              JOptionPane.showMessageDialog(TeacherStudentModelPanel.this, panel, title, JOptionPane.PLAIN_MESSAGE);  
               ConfirmDialog dialog = new ConfirmDialog(TeacherStudentModelPanel.this, "");
               dialog.setContentPane(panel);
               dialog.pack();
