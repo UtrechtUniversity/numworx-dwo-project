@@ -80,15 +80,15 @@ public class SecureTeacherStudentModelManager {
 	    return result;
 	  }
   
-	public static DomStudentModelScorePerTeacher getScores(DomStudentModelScorePerTeacher dom) throws Dwo2Exception {
-		RestStudentModelScorePerTeacher rest = new RestStudentModelScorePerTeacher(getContext(), dom);
-		DomStudentModelScorePerTeacher result = StoredRestManager.getInstance().put(
-				"rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/getScores",
-				DomStudentModelScorePerTeacher.class, rest);
-		LOG.log(Level.FINE, "Got studentmodelscore of teacher with username {0} to his school.",
-				new Object[] { RestAuthenticator.getInstance().getUsername() });
-		return result;
-	}
+//	public static DomStudentModelScorePerTeacher getScores(DomStudentModelScorePerTeacher dom) throws Dwo2Exception {
+//		RestStudentModelScorePerTeacher rest = new RestStudentModelScorePerTeacher(getContext(), dom);
+//		DomStudentModelScorePerTeacher result = StoredRestManager.getInstance().put(
+//				"rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/getScores",
+//				DomStudentModelScorePerTeacher.class, rest);
+//		LOG.log(Level.FINE, "Got studentmodelscore of teacher with username {0} to his school.",
+//				new Object[] { RestAuthenticator.getInstance().getUsername() });
+//		return result;
+//	}
 	
 	public static DomLRS getLRS() throws Dwo2Exception {
 	  RestContext rest = new RestContext();
