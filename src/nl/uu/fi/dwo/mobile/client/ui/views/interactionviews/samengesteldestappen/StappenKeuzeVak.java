@@ -34,7 +34,8 @@ import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 public class StappenKeuzeVak {
 	
 	SamengesteldeStappenPanel parent;
-	private ObjectMap[] stepContents;  
+	//private ObjectMap[] stepContents;
+	private ArrayList<Object>[] stepContents;
 	private String[] keuzeMogelijkheden;
 	
 	private Canvas uitklapPijlCanvas;
@@ -83,11 +84,26 @@ public class StappenKeuzeVak {
 				for(int i = 0; i < stepsList.size(); i++)
 					steps[i] = stepsList.getObjectMap(i);
 				keuzeMogelijkheden = new String[steps.length];
-				stepContents = new ObjectMap[steps.length];
+				//stepContents = new ObjectMap[steps.length];
+				stepContents = new ArrayList[steps.length];
 				for(int i = 0; i < steps.length; i++)
 				{
 					keuzeMogelijkheden[i] = steps[i].getString("keuze");
-					stepContents[i] = steps[i].getObjectMap("stepContent");
+					ObjectList contents = steps[i].getObjectList("stepContent");
+					stepContents[i] = new ArrayList<Object>();
+					for(int j = 0; j < contents.size(); j++)
+					{
+						ObjectMap objectMap = contents.getObjectMap(j);
+						if(objectMap != null)
+							stepContents[i].add(objectMap);
+						else
+						{
+							stepContents[i].add(contents.getString(j));
+						}
+					}
+						
+					
+					//stepContents[i] = steps[i].getObjectMap("stepContent");
 				}
 				
 			}
@@ -335,7 +351,9 @@ public class StappenKeuzeVak {
 	    
 	}
 	
-	public ObjectMap[] getStepContents()
+	//public ObjectMap[] getStepContents()
+	//public ArrayList<ObjectMap>[] getStepContents()
+	public ArrayList<Object>[] getStepContents()
 	{
 		return stepContents;
 	}

@@ -342,8 +342,8 @@ public class TekstBuffer
 			result = ShareFacade.wrap(JSONUtilities.wrapMap(currentVakGegevens), (InteractionView)result);
 		return result;
 	}
-
-	private Object getVak0(HashMap<String, Object> currentVakGegevens) {
+	
+	public Object getVak0(HashMap<String, Object> currentVakGegevens) {
 		Object result;
 		ObjectMap map;
 		map = JSONUtilities.wrapMap(currentVakGegevens);

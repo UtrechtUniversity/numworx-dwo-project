@@ -1607,6 +1607,16 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		return tvp.getAnswerModels();
 	}
 	
+	public ArrayList<Tupel> getAnswerModelsNew(ArrayList<Object> list)
+	{
+		maakStapNieuw(list, randomVarNamen, randomVarWaarden);
+		return getAnswerModels();
+		
+	}
+	
+	
+	
+	
 	private int initialiseerObjects(ArrayList<Object> opdrachtObjects, List<Object> opdrachtGegevens, int rij, int kolom, int aantalVakken)
 	{
 		for (int k = 0; k < opdrachtObjects.size(); k++)
@@ -1912,28 +1922,50 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			
 			for(int i = 0; i < stapNr; i++)
 			{	
-				TekstVakPanel tvp = new TekstVakPanel((HashMap<String, Object>) stappen.get(i), null, null);
-				tvp.setParent(tekstVakken[i][breedtes.size() - 1]);
-				tvp.zetInstellingen(instellingen);
-				tvp.setKeyboard(kb);
-				final Object orgObject = tvp;
-				OpdrNavIF comRoot2 = comRoot;
-				Connector connector = find(tvp);
-				comRoot2 = new OpdrNavContext(comRoot,connector, this.bgColorZichtbaar ? bgColor : comRoot.getBackground());
-				((InteractionView) orgObject).setCommunicationRoot(comRoot2);
-				if(! (tvp instanceof StateLess))
-				{	interactionViewObjects.add(orgObject);
+				//old situation, before SamengesteldeStappenPanel
+				try {
+					addTekstVakPanel((HashMap<String, Object>) stappen.get(i), randomVarNamen, randomVarWaarden, i, breedtes.size() -1);
+//				TekstVakPanel tvp = new TekstVakPanel((HashMap<String, Object>) stappen.get(i), null, null);
+//				tvp.setParent(tekstVakken[i][breedtes.size() - 1]);
+//				tvp.zetInstellingen(instellingen);
+//				tvp.setKeyboard(kb);
+//				final Object orgObject = tvp;
+//				OpdrNavIF comRoot2 = comRoot;
+//				Connector connector = find(tvp);
+//				comRoot2 = new OpdrNavContext(comRoot,connector, this.bgColorZichtbaar ? bgColor : comRoot.getBackground());
+//				((InteractionView) orgObject).setCommunicationRoot(comRoot2);
+//				if(! (tvp instanceof StateLess))
+//				{	interactionViewObjects.add(orgObject);
+//				}
+//									
+//				HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) stappen.get(i)).get("interactiePanelLaunchState");
+//				tvp.zetOpdracht(launchState);
+//				tvp.setContainer(new TekstVakContext(i,breedtes.size() - 1));
+//				xWidgetMap.putAll(tvp.xWidgetMap);
+//				Connector.calculateSubscriptions(xWidgetMap.values());
+//				ArrayList<Object> list = new ArrayList<Object>();
+//				list.add(tvp);
+//				tekstVakken[i][breedtes.size() - 1].zetOpdrachtObjects(list);
+//				tekstVakken[i][breedtes.size() - 1].setObjects(list);
 				}
-									
-				HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) stappen.get(i)).get("interactiePanelLaunchState");
-				tvp.zetOpdracht(launchState);
-				tvp.setContainer(new TekstVakContext(i,breedtes.size() - 1));
-				xWidgetMap.putAll(tvp.xWidgetMap);
-				Connector.calculateSubscriptions(xWidgetMap.values());
-				ArrayList<Object> list = new ArrayList<Object>();
-				list.add(tvp);
-				tekstVakken[i][breedtes.size() - 1].zetOpdrachtObjects(list);
-				tekstVakken[i][breedtes.size() - 1].setObjects(list);
+				//new situation, with SamengesteldeStappenPanel
+				catch(Exception e) {
+					
+					Object stepContents = stappen.get(i);
+					if(stepContents.getClass().isArray())
+					{
+						Object[] stepContentsArray = (Object[]) stepContents;
+						ArrayList<Object> stepContentsList = new ArrayList<Object> ();
+						for(int j = 0; j < stepContentsArray.length; j++)
+							stepContentsList.add(stepContentsArray[j]);
+						addStepContents(stepContentsList, randomVarNamen, randomVarWaarden, i, breedtes.size() - 1);
+					}
+					else
+					{
+						addStepContents((ArrayList<Object>) stappen.get(i), randomVarNamen, randomVarWaarden, i, breedtes.size() - 1);	
+					}
+					
+				}
 			}
 			
 		}
@@ -4915,7 +4947,33 @@ private Object CamelCase(String name) {
 		stapNr++;
 		
 		if(contentMap != null) 
-			addTekstVakPanel((HashMap<String, Object>) contentMap, randomVarNamen, randomVarWaarden, stapNr - 1, breedtes.size() -1);
+		{	addTekstVakPanel((HashMap<String, Object>) contentMap, randomVarNamen, randomVarWaarden, stapNr - 1, breedtes.size() -1);
+			setVisibility(layerVisible);
+		}
+	}
+	
+	public void maakStapNieuw(ArrayList<Object> stepContents, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden) //randomwaarden nodig? kennen we die niet al?
+	{
+		//Heeft omliggende (statistiek)TekstVakPanel nog een feedbackPanel? Dan weghalen.
+		TekstVakPanel statPanel = isInIdeasStatistiek();
+		if(statPanel != null && statPanel.feedbackPanel != null)
+		{	statPanel.feedbackPanel.removeFromParent();
+			statPanel.feedbackPanelHeight = 0;
+			statPanel.removeFeedbackImage();
+		}
+		
+		if(stappen.size() > stapNr)
+			stappen.remove(stapNr);
+		if(stapNr >= tekstVakken.length)
+			return;
+		stappen.add(stepContents);
+		stapNr++;
+		
+		if(stepContents != null)
+		{
+			addStepContents(stepContents, randomVarNamen, randomVarWaarden, stapNr - 1, breedtes.size() - 1);
+			setVisibility(layerVisible);
+		}
 	}
 
 	// visible (default) or hidden.
@@ -4970,7 +5028,7 @@ private Object CamelCase(String name) {
 		resize();
 	}
 	
-	public void addTekstVakPanel(HashMap<String, Object> contentMap, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int row, int column)
+	private void addTekstVakPanel(HashMap<String, Object> contentMap, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int row, int column)
 	{
 		TekstVakPanel tvp = new TekstVakPanel(contentMap, randomVarNamen, randomVarWaarden);
 		tvp.setParent(tekstVakken[row][column]);
@@ -4994,8 +5052,40 @@ private Object CamelCase(String name) {
 		list.add(tvp);
 		tekstVakken[row][column].zetOpdrachtObjects(list);
 		tekstVakken[row][column].setObjects(list);
-		setVisibility(layerVisible);
+		
+		//setVisibility should not yet been done in setState, so leave out of this method and add separately in maakStap. 
+		//setVisibility(layerVisible);
 	}
+	
+	private void addStepContents(ArrayList<Object> stepContents, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int row, int column)
+	{
+		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden, null);
+		ArrayList<Object> opdrachtObjects = new ArrayList<Object>();
+		ArrayList<Object> opdrachtGegevens = new ArrayList<Object>();
+		
+		for(int i = 0; i < stepContents.size(); i++)
+		{
+			Object object = stepContents.get(i);
+			if(object instanceof String)
+			{
+				String objectNoBreaks = ((String) object).replaceAll("\n", " \n ");
+				String[] result = objectNoBreaks.split("\n");
+				for(int j = 0; j < result.length; j++)
+					opdrachtObjects.add(result[j]);
+			}
+			else if(object instanceof ObjectMap)
+			{
+				Object vak = tb.getVak0((HashMap<String, Object>) object);
+				opdrachtObjects.add(vak);
+				opdrachtGegevens.add(object);
+			}
+		}
+		
+		tekstVakken[row][column].zetOpdrachtObjects(opdrachtObjects);
+		initialiseerObjects(opdrachtObjects, opdrachtGegevens, row, column, 0);
+		tekstVakken[row][column].setObjects(opdrachtObjects);
+	}
+	
 	
 	
 	private static final int LEFT = 0;

@@ -110,7 +110,7 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 		
 		//Stappenvak initialiseren
 		int nrOfSteps = 20;//later nog wat flexibeler?
-	    makeStepsTVP(nrOfSteps);
+	    stappenVak = makeStepsTVP(nrOfSteps);
 	    
 		mainPanel.add(stappenVak);
 		Canvas[] stepNumbers = new Canvas[nrOfSteps];
@@ -259,7 +259,7 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 				if(selectedSteps.size() > 0)
 			        selectedSteps.remove(selectedSteps.size() - 1);
 				resize();
-				comRoot.setChanged(!isCorrect());
+				comRoot.setChanged(isCorrect() == null || !isCorrect().equals(Boolean.TRUE));
 			}
 		}, ClickEvent.getType());
 		
@@ -274,7 +274,7 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 		
 	}
 	
-	private void makeStepsTVP(int number) 
+	private TekstVakPanel makeStepsTVP(int number) 
     {
       HashMap<String,Object> ipLaunchState = new HashMap<String,Object>();
       
@@ -303,22 +303,29 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
       launchData.put("volledigeBreedte", volledigeBreedte);
       launchData.put("hoogte", new Integer(4));
       
-      stappenVak = new TekstVakPanel(launchData, randomVarNamen, randomVarWaarden);
+      TekstVakPanel stappenVak = new TekstVakPanel(launchData, randomVarNamen, randomVarWaarden);
       stappenVak.setKeyboard(kb);
       //stappenVak.setCommunicationRoot(comRoot); // gebeurt nu in setComRoot. 
       stappenVak.initialiseerStappen();
       //stappenVak.addActionListener(this);
       stappenVak.setParentStappen(this);
+      
+      return stappenVak;
     }
 	
-	private ArrayList<Tupel> getInitialStatistiekState()
+	private ArrayList<Tupel> getInitialStatistiekState(ObjectMap instellingen)
 	{
 		ArrayList<Tupel> initialState = new ArrayList<Tupel>();
-		ObjectMap[] stepContents = keuzeVak.getStepContents();
+		ArrayList<Object>[] stepContents = keuzeVak.getStepContents();
 		for(int i = 0; i < stepContents.length; i++)
 		{
-			ObjectMap contentMap = stepContents[i];
-			initialState.addAll(stappenVak.getAnswerModels(contentMap));
+			ArrayList<Object> contentMap = stepContents[i];
+			TekstVakPanel tempVak = makeStepsTVP(20);
+			tempVak.setCommunicationRoot(comRoot);
+			tempVak.zetInstellingen(instellingen);
+			
+			initialState.addAll(tempVak.getAnswerModelsNew(contentMap));
+			//initialState.addAll(stappenVak.getAnswerModels(contentMap));
 		}
 		return initialState;
 	}
@@ -337,6 +344,14 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 		this.parent = parent;
 	}
 	
+	public void makeStep(ArrayList<Object> stepContents)
+	{
+		stappenVak.maakStapNieuw(stepContents, randomVarNamen, randomVarWaarden);
+		//Alle elementen van de contentMapList één voor één aan het stappenvak toevoegen, in dezelfde stap. Per objectmap uitzoeken wat het is; tekst, een antwoordvak of een tekstvak? 
+		//zit dat in de launchdata makkelijk bereikbaar?
+		//Eerst even wachten hoe dit eruit gaat zien. 
+	}
+	
 	public void makeStep(ObjectMap contentMap)
 	{
 		stappenVak.maakStap(contentMap, randomVarNamen, randomVarWaarden);
@@ -352,8 +367,8 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 	{
 		stappenVak.zetInstellingen(instellingen);
 		if(ideasStatistiek)
-	    {   ArrayList<Tupel> initialState = getInitialStatistiekState();
-	       stappenVak.initialiseIdeasStatistiek(initialState);
+	    {   ArrayList<Tupel> initialState = getInitialStatistiekState(instellingen);
+	        stappenVak.initialiseIdeasStatistiek(initialState);
 	    }
 	}
 	
@@ -373,6 +388,8 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 	@Override
 	public void setState(HashMap<String, Object> h) {
 		ObjectMap map = JSONUtilities.wrapMap(h);
+		if(map == null)
+			return;
 		int[] selectedStepsList = null;
 		if(map.containsKey("selectedSteps"))
 			selectedStepsList = map.getIntArray("selectedSteps");
@@ -385,7 +402,7 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 
 	@Override
 	public int getScore() {
-		if(isCorrect())
+		if(isCorrect() != null && isCorrect().equals(Boolean.TRUE))
 		      return scoreMax;
 		return 0;
 		//return stappenVak.getScore();
@@ -404,6 +421,8 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 			return(stappenVak.isCorrect()); 
 		}
 		
+		if(stappenVak.isCorrect() == null)
+			return null;
 		//Requirement 1: stappenVak is correct
 	    if(stappenVak.isCorrect() && stepRequired != null)
 	    {
