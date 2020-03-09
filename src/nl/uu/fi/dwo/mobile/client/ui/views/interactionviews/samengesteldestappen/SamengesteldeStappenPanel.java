@@ -62,6 +62,8 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 	private boolean[] stepRequired = null;
 	private ArrayList<Integer> selectedSteps = new ArrayList<Integer>();
 	
+	Canvas hintButton = null;
+	
 	String[] randomVarNamen = null;
 	HashMap<String, Number> randomVarWaarden = null;
 	
@@ -180,7 +182,7 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 		
 		if(ideasStatistiek)
 		{
-			Canvas hintButton = Canvas.createIfSupported();
+			hintButton = Canvas.createIfSupported();
 			gIm = hintButton.getContext2d();
 			
 			hintButton.setWidth(buttonWidth + "px");
@@ -447,7 +449,8 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 	@Override
 	public void kijkNa() {
 		stappenVak.kijkNa();
-		
+		if(ideasStatistiek && (comRoot.getMode() == OpdrNavIF.EINDTOETS || comRoot.getMode() == OpdrNavIF.ZELFTOETS))
+			stappenVak.kijkNaIdeasStatistiek();
 	}
 
 	@Override
@@ -459,6 +462,8 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
 		stappenVak.setCommunicationRoot(comRoot);
+		if(ideasStatistiek && (comRoot.getMode() == OpdrNavIF.EINDTOETS || comRoot.getMode() == OpdrNavIF.ZELFTOETS))
+			hintButton.removeFromParent();
 		
 	}
 
