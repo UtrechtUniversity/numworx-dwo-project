@@ -271,7 +271,7 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 		}, MouseOverEvent.getType());
 		
 		mainPanel.add(choiceLine);
-		
+		resize();
 	}
 	
 	private TekstVakPanel makeStepsTVP(int number) 
@@ -309,7 +309,6 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
       stappenVak.initialiseerStappen();
       //stappenVak.addActionListener(this);
       stappenVak.setParentStappen(this);
-      
       return stappenVak;
     }
 	
@@ -342,6 +341,7 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 	public void setParentRegel(TekstRegel parent)
 	{
 		this.parent = parent;
+		stappenVak.setParent(parent.getTekstVak());
 	}
 	
 	public void makeStep(ArrayList<Object> stepContents)
