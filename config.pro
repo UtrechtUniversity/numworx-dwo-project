@@ -150,6 +150,8 @@
 -keep  class fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator { *; } 
 -keep  class fi.dwo.commons.persistence.MySQLPersistenceId { *; } 
 -keep  class  nl.uu.fi.dwo.rest.dom.entities.** { *; } 
+-keep  class  nl.uu.fi.dwo.rest.dom.xapi.** { *; } 
+-keep  class  nl.uu.fi.dwo.rest.dom.oauth.** { *; } 
 -keep  class nl.uu.fi.dwo.rest.entities.** { *; } 
 -keepattributes Signature
 -keepattributes *Annotation*
