@@ -65,6 +65,8 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class LeerdomeinResultsPanel2 extends JPanel implements Constants, ActionListener, TreeSelectionListener {
   private static final Logger LOG = Logger.getLogger(LeerdomeinResultsPanel2.class.getName());
+  private static final Color RED = new Color(200, 0, 0);
+  private static final Color GREEN = new Color(0, 180, 0);
 
   
   public static void main(String[] args) {
@@ -121,20 +123,31 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
   }
   
   
-  
+  private static final float UNSURE = 0.5f;
   class ScoreIcon implements Icon {
 
     float green = 0.64f;
     float red =   0.24f;
     float score = 0.5f;
+    float score1 = 0.5f;
     
+    ScoreIcon( double green, double red) {
+      if (Double.isNaN(green)) green = UNSURE;
+      if (Double.isNaN(red)) red = UNSURE;
+      this.green = this.score = (float)green;
+      this.red   = this.score1 = (float) red;
+    }
+    
+    @Deprecated
     ScoreIcon( double score, long count, double part, int size) {
       if (count == 0L || size == 0) {
-        this.score = 0.5f;
-        red = 0.49f;
-        green = 0.51f;
+        this.score = UNSURE;
+        this.score1 = UNSURE;
+        red = UNSURE;
+        green = UNSURE;
       } else {
-        this.score = red = green  =  (float) (((float)score/count * part + (size-part)*0.5f)/(float)size);
+        this.score = red = green  =  (float) (((float)score/count * part + (size-part)*UNSURE)/(float)size);
+        this.score1 = this.score; 
         if (green <= 0.49f) {
           green = 0.5f;
         } else if (green >= 0.51f){
@@ -154,13 +167,13 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
       x+=2;
       y+=2;
       int w = getIconWidth()-3;
-      g.setColor(Color.red);
+      g.setColor(RED);
       g.fillRect( x+ Math.round(red * w), y, Math.round((0.5f-red)*w), getIconHeight()-2-3);
 
-      g.setColor(Color.green);
+      g.setColor(GREEN);
       g.fillRect(x + Math.round(w/2.0f), y, Math.round(w*(green-0.5f)), getIconHeight()-2-3);          
 
-      g.setColor(Color.black); g.drawRect(x, y, getIconWidth()-2, getIconHeight()-2-4);
+      g.setColor(COLOR14); g.drawRect(x, y, getIconWidth()-2, getIconHeight()-2-4);
     }
 
     @Override
@@ -173,8 +186,11 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
       return getFontMetrics(getFont()).getHeight()+4+3;
     }
 
-    public String getPercentage() {
+    public String getGreenPercentage() {
       return Math.round(score * 200-100)+"%";
+    }
+    public String getRedPercentage() {
+      return -Math.round(score1 * 200-100)+"%";
     }
     
   }
@@ -229,7 +245,9 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
     
     subtitle = new JLabel("Handig haakjes wegwerken bij merkwaardige producten");
     subtitle.setForeground(Color.WHITE);
-    subtitle.setFont(font.deriveFont(14f));
+    subtitle.setFont(font.deriveFont(Font.BOLD, 14f));
+    subtitle.setBorder(BorderFactory.createEmptyBorder(4, 20, 4, 20));
+
     Box b = hb(ra(10,0), subtitle, hgl());
     b.setBackground(COLOR13);
     b.setOpaque(true);
@@ -276,8 +294,8 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
     l.setFont(font.deriveFont(Font.BOLD, 16));
     l.setForeground(COLOR15);
     JComponent gemiddelde = score = new JLabel(new ScoreIcon(0, 0, 0, 0));
-    red = new JLabel("0%"); red.setForeground(Color.RED);
-    green = new JLabel("0%"); green.setForeground(Color.GREEN);
+    red = new JLabel("0%"); red.setForeground(RED);
+    green = new JLabel("0%"); green.setForeground(GREEN);
     b = hb(ra(10,0), l, ra(10,0), red, gemiddelde, green, hgl());   
     rightBox.add(b);    
     rightBox.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 20));
@@ -338,6 +356,7 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
 }
 
   private int[] getPath(TreePath path) {
+    if (path == null) return null;
     Object[] o = path.getPath();
     int[] result = new int[o.length];
     for (int i = 0; i < result.length; i++) {
@@ -355,20 +374,22 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
       Node n = (Node)node.getUserObject();
       subtitle.setText(n.toString());
       //title2.setText(n.toString());
-      setDescription(n);
-      
-      int[] ipath = getPath(path);
-      if (ipath == null || ipath.length == 1) {
-        calculateROOT(scores, results.getModel());
-      } else if (ipath.length == 2) {
-        calculateCategories(scores, results.getModel(), ipath[1]);
-      } else if (ipath.length >= 3) {
-        calculateObjectives(scores, results.getModel(), ipath);
-      }
-      
+      setDescription(n);     
+      calculatePath(path);     
     }
 
     
+  }
+
+  private void calculatePath(TreePath path) {
+    int[] ipath = getPath(path);
+    if (ipath == null || ipath.length == 1) {
+      calculateROOT(scores, results.getModel());
+    } else if (ipath.length == 2) {
+      calculateCategories(scores, results.getModel(), ipath[1]);
+    } else if (ipath.length >= 3) {
+      calculateObjectives(scores, results.getModel(), ipath);
+    }
   }
 
   @Override
@@ -424,19 +445,20 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
             String u = scores.getStudents().get(i).getValue().getDisplayName();
             tmodel.setValueAt(u, i, 0);
           }
-          calculateROOT(scores, tmodel);
+          //calculateROOT(scores, tmodel);
           JTable table = results;
           table.setModel(tmodel);
+          calculatePath(tree.getSelectionPath());
           TableColumnModel columnModel = table.getColumnModel();
           TableColumn c1 = columnModel.getColumn(1);
-          ColorRenderer redRenderer = new ColorRenderer(Color.RED);
+          ColorRenderer redRenderer = new ColorRenderer(RED);
           redRenderer.setHorizontalAlignment(SwingConstants.TRAILING);
           c1.setCellRenderer(redRenderer);
           int width = new JLabel("100%").getPreferredSize().width;
           c1.setPreferredWidth(width);
           c1.setMaxWidth(width);
           TableColumn c3 = columnModel.getColumn(3);
-          c3.setCellRenderer(new ColorRenderer(Color.GREEN));
+          c3.setCellRenderer(new ColorRenderer(GREEN));
           c3.setPreferredWidth(width);
           c3.setMaxWidth(width);
           TableColumn c2 = columnModel.getColumn(2);
@@ -450,7 +472,7 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
           LOG.log(Level.SEVERE, "getScores", e1);
         }
       } else {
-        results.setModel(new DefaultTableModel(0,3));
+        results.setModel(new DefaultTableModel(0,4));
       }
     }
     
@@ -470,17 +492,17 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
         if (item.getCount() != 0) nz += 1;      
       }
       ScoreIcon result = new ScoreIcon (v.getScore()  , v.getCount() , nz , count);
-      tmodel.setValueAt(result.getPercentage(), i, 1);
+      tmodel.setValueAt(result.getRedPercentage(), i, 1);
       tmodel.setValueAt(result, i, 2);
-      tmodel.setValueAt(result.getPercentage(), i, 3);
+      tmodel.setValueAt(result.getGreenPercentage(), i, 3);
       if (v.getCount() != 0) nzl ++;
       sumScore += v.getScore();
       sumCount += v.getCount();
     }
     ScoreIcon icon = new ScoreIcon (sumScore , sumCount , nzl , tmodel.getRowCount()  );
     score.setIcon( icon);
-    red.setText(icon.getPercentage());
-    green.setText(icon.getPercentage());
+    red.setText(icon.getRedPercentage());
+    green.setText(icon.getGreenPercentage());
   }
 
   private void calculateCategories(DomStudentModelScorePerTeacher scores, TableModel tmodel,
@@ -501,8 +523,8 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
       }
       ScoreIcon result = new ScoreIcon(v.getScore(), v.getCount(), nz, count);
       tmodel.setValueAt(result, i, 2);
-      tmodel.setValueAt(result.getPercentage(), i, 1);
-      tmodel.setValueAt(result.getPercentage(), i, 3);
+      tmodel.setValueAt(result.getGreenPercentage(), i, 1);
+      tmodel.setValueAt(result.getGreenPercentage(), i, 3);
      if (v.getCount() != 0) nzl++;
       sumScore += v.getScore();
       sumCount += v.getCount();
@@ -510,16 +532,16 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
     // score.setText( sumScore + "/" + sumCount + " " + nzl + "/" + tmodel.getRowCount() );
     ScoreIcon icon = new ScoreIcon(sumScore, sumCount, nzl, tmodel.getRowCount());
     score.setIcon(icon);
-    red.setText(icon.getPercentage());
-    green.setText(icon.getPercentage());
+    red.setText(icon.getGreenPercentage());
+    green.setText(icon.getGreenPercentage());
 
   }
 
   private void calculateObjectives(DomStudentModelScorePerTeacher scores, TableModel tmodel, int[] path) {
     if (scores == null) return;
     double nzl = 0.0;
-    double sumScore = 0.0;
-    long sumCount = 0;
+    double sumGreenScore = 0.0, sumRedScore = 0.0;
+    long sumGreenCount = 0, sumRedCount = 0;
     int cat = path[1];
     int obj = path[2];
     List<DomStudentModelDataStudentScore> studentScores = scores.getStudentScores();
@@ -538,20 +560,36 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
       }
       double nz = 0;
       int count = 1;      
+
+      if (v.getCount() == 0 ) { v.setCount(1); v.setScore(Math.random()); } // DEBUG 
+      
+      
+      
+      
       if (v.getCount() != 0) nz += 1;      
       
-      ScoreIcon result = new ScoreIcon (v.getScore()  , v.getCount() , nz , count);
+      ScoreIcon result;
+      if (v.getCount() == 0) {
+        result = new ScoreIcon(UNSURE, UNSURE);
+      } else if (v.getScore() > 0.5) {
+        sumGreenScore += v.getScore();
+        sumGreenCount += v.getCount();
+        result = new ScoreIcon(v.getScore(), UNSURE);
+      } else {
+        sumRedScore += v.getScore();
+        sumRedCount += v.getCount();
+        result = new ScoreIcon(UNSURE, v.getScore());
+      }
+      
       tmodel.setValueAt(result, i, 2);
-      tmodel.setValueAt(result.getPercentage(), i, 1);
-      tmodel.setValueAt(result.getPercentage(), i, 3);
+      tmodel.setValueAt(result.getRedPercentage(), i, 1);
+      tmodel.setValueAt(result.getGreenPercentage(), i, 3);
       if (v.getCount() != 0) nzl ++;
-      sumScore += v.getScore();
-      sumCount += v.getCount();
     }
-    ScoreIcon icon = new ScoreIcon (sumScore , sumCount , nzl , tmodel.getRowCount()  );
+    ScoreIcon icon = new ScoreIcon (sumGreenScore/sumGreenCount, sumRedScore/sumRedCount);
     score.setIcon( icon);
-    red.setText( icon.getPercentage());
-    green.setText(icon.getPercentage());
+    red.setText( icon.getRedPercentage());
+    green.setText(icon.getGreenPercentage());
     
   }
 
