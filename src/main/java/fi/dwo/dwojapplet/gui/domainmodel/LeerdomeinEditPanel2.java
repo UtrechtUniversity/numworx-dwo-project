@@ -8,7 +8,10 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.StringWriter;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -71,7 +74,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 
-public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListener, ExportPanel {
+public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListener, ExportPanel, WindowListener {
   static final String WISKOPDR_SIG = "H4sIAAAAAA";
 
   
@@ -481,10 +484,6 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   private Box settingsRO;
   private JPanel settingsRW;
 
-  public void actionPerformed(ActionEvent e) {
-    // TODO Auto-generated method stub
-
-  }
   private static final Font font = new Font("SansSerif", Font.PLAIN, 12);
 
   public LeerdomeinEditPanel2() {
@@ -498,13 +497,12 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   okButton.setPreferredSize(new Dimension(100, 24));
   okButton.setBackground(Constants.COLOR15);
   okButton.setForeground(Constants.COLOR20);
-  okButton.addActionListener(e -> 
-      safeSelection(tree.getSelectionPath())
-  );
+  okButton.addActionListener(this::opslaanAction);
   cancelButton = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
   cancelButton.setPreferredSize(new Dimension(100, 24));
   cancelButton.setBackground(Constants.COLOR15);
-  cancelButton.setForeground(Constants.COLOR20);           
+  cancelButton.setForeground(Constants.COLOR20);
+  cancelButton.addActionListener(this::cancelAction);
   south.add(Box.createHorizontalGlue());
   south.add(okButton); 
   south.add(Box.createHorizontalStrut(20));
@@ -528,10 +526,14 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
     e -> {
       if (TextMapper.getText(TextMapper.GUIH_STOP_EDIT) != bewerken.getText()) {
         setEditable(true);
-        //textArea.OPSLAAN_ACTION.bewerken();
       } else {
-        safeSelection(tree.getSelectionPath());
-        setEditable(false);
+        switch(confirm()) {
+          case JOptionPane.YES_OPTION:
+            safeSelection(tree.getSelectionPath());
+          case JOptionPane.NO_OPTION:
+            setEditable(false);
+          case JOptionPane.CANCEL_OPTION:
+        }
       }
     }
   );
@@ -945,5 +947,66 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   public Component asComponent() {
     return this;
   }
+
+  @Override
+  public void windowOpened(WindowEvent e) {
+  }
+
+  @Override
+  public void windowClosing(WindowEvent e) {
+    closeWindow((ConfirmDialog) e.getWindow());   
+  }
+
+  private void opslaanAction(ActionEvent e) {
+    safeSelection(tree.getSelectionPath());
+    setEditable(false);
+  }
+  
+  private void cancelAction(ActionEvent e) {
+    setEditable(false);
+  }
+  
+  
+  private void closeWindow(ConfirmDialog window) {
+      if (editable) {
+        int option = confirm();
+        switch(option) {
+          case JOptionPane.CANCEL_OPTION:
+              return;
+          case JOptionPane.YES_OPTION:
+              safeSelection(tree.getSelectionPath());
+              window.ok(null); return;
+          case JOptionPane.NO_OPTION:
+              window.cancel(null); return;
+        }
+      }
+      window.cancel(null);
+  }
+
+  private int confirm() {
+    return JOptionPane.showConfirmDialog(this, okButton.getText(),"", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+  }
+
+  @Override
+  public void windowClosed(WindowEvent e) {
+  }
+
+  @Override
+  public void windowIconified(WindowEvent e) {
+  }
+
+  @Override
+  public void windowDeiconified(WindowEvent e) {
+  }
+
+  @Override
+  public void windowActivated(WindowEvent e) {
+  }
+
+  @Override
+  public void windowDeactivated(WindowEvent e) {
+  }
+  
+  
   
 }
