@@ -29,6 +29,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -412,15 +413,10 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 
       ConfirmDialog dialog = new ConfirmDialog(teacherStudentModelPanel, "");
       dialog.setContentPane(textArea);
-        ActionListener ok = dialog::ok;
-        textArea.ok().addActionListener(ok);
-        ActionListener cancel = dialog::cancel;
-        textArea.cancel().addActionListener(cancel);
-      
+      dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+      dialog.addWindowListener(textArea);      
       dialog.pack();
       dialog.show();
-      textArea.ok().removeActionListener(ok);
-      textArea.cancel().removeActionListener(cancel);   
       return dialog.getOption();
     }
 
