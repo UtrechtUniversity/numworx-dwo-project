@@ -9,7 +9,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.StringWriter;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -870,8 +869,13 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
         } else {
           WiskOpdrPanel panel = WiskOpdr.getWiskOpdrPanel(description);
           panel.setBackground(Color.WHITE);
+          JScrollPane pane =  new JScrollPane(panel);
+          pane.setBorder(BorderFactory.createEmptyBorder());
+          pane.setViewportBorder(BorderFactory.createEmptyBorder());
+          pane.setBackground(Color.WHITE);
+          pane.getViewport().setBackground(Color.WHITE);
           container.removeAll();
-          container.add(panel);
+          container.add(pane);
         }
       } else {
         wiskOpdrEditPanel = null;
