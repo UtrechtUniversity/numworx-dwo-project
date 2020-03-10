@@ -119,7 +119,6 @@ public class AdviseMeService implements StudentResults {
 	DomStudentModelDataScore toScore(Usermodel u) {
 		DomStudentModelDataScore result = new DomStudentModelDataScore();
 		DomStudentModelStructureScore model = new DomStudentModelStructureScore();
-		model.setCount(1);
 		model.setScore(u.getCompetence().getValue().doubleValue());
 		model.setCategories(toCategoriesScore(u.getCompetence().getChildren()));
 		result.setDomStudentModelStructureScore(model);
@@ -129,7 +128,6 @@ public class AdviseMeService implements StudentResults {
 	private List<DomStudentModelCategoryScore> toCategoriesScore(List<Competence> children) {
 		return children.stream().map(item -> { 
 			DomStudentModelCategoryScore score = new DomStudentModelCategoryScore();
-			score.setCount(1);
 			score.setScore(item.getValue().doubleValue());
 			score.setObjectives(toObjectivesScore(item.getChildren()));
 			return score;
@@ -141,7 +139,6 @@ public class AdviseMeService implements StudentResults {
 			return null;
 		return children.stream().map(item -> {
 			DomStudentModelObjectiveScore score = new DomStudentModelObjectiveScore();
-			score.setCount(1);
 			score.setScore(item.getValue().doubleValue());
 			score.setChildren(toObjectivesScore(item.getChildren()));
 			return score;
