@@ -561,7 +561,7 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
       double nz = 0;
       int count = 1;      
 
-      if (v.getCount() == 0 ) { v.setCount(1); v.setScore(Math.random()); } // DEBUG 
+      if (v.getCount() == 0 ) { v.setScore(Math.random()); } // DEBUG 
       
       
       
