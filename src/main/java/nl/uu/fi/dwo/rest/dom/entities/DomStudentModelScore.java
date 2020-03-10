@@ -19,10 +19,6 @@ public class DomStudentModelScore<T extends DomStudentModelScore> {
     private double redScore, greenScore;
     private long redCount, greenCount;
 
-
-    
-    
-    
     
     /**
      * @return the score
@@ -91,6 +87,7 @@ public class DomStudentModelScore<T extends DomStudentModelScore> {
           int c = children.size();
           if (c > 0) {
             double redScore = 0, greenScore = 0;
+            long redCount = 0, greenCount = 0;
             for(DomStudentModelScore child: children) {
               child.recalculateAncestors();
               long rc = child.getRedCount();
@@ -101,8 +98,12 @@ public class DomStudentModelScore<T extends DomStudentModelScore> {
               if (gc == 0L) gs = 0.5;
               redScore += rs;
               greenScore += gs;
+              redCount += rc;
+              greenCount += gc;
             }
-            setScore(greenScore, c, redScore, c);
+            if (greenCount == 0) { greenScore = 0.0; } else { greenCount = c; }
+            if (redCount == 0)   { redScore = 0.0; } else { redCount = c; }
+            setScore(greenScore, greenCount, redScore, redCount);
           } else {
             setScore(0.0,0L,0.0,0L);
           }
