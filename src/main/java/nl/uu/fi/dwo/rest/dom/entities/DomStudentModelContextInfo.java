@@ -1,8 +1,11 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -21,7 +24,38 @@ public class DomStudentModelContextInfo {
     private List<String> voorkennis;
     private Map<String, Map<String, Set<Integer>>> methods;
 
-    public DomStudentModelContextInfo(){        
+    public DomStudentModelContextInfo(DomStudentModelContextInfo info) {
+    	title = info.getTitle(); if(title != null) title = new TreeMap<>(title);
+    	description = info.getDescription(); if (description != null) description = new TreeMap<>(description);
+    	id = info.getId();
+    	slip = info.getSlip();
+    	learn = info.getLearn();
+    	init = info.getInit();
+    	voorkennis = info.getVoorkennis(); if (voorkennis != null) voorkennis = new ArrayList<>(voorkennis);
+    	methods = info.getMethods();
+    	if (methods != null) {
+    		methods = new TreeMap<>(methods);
+    		methods.entrySet().forEach((e) -> e.setValue(copyOf(e.getValue())));
+    	}
+    	
+    }
+    
+    private static Map<String, Set<Integer>> copyOf(Map<String, Set<Integer>> map) {
+    	if (map != null) {
+    		map  = new TreeMap<>(map);
+    		map.entrySet().forEach(e -> e.setValue(copyOf(e.getValue())));
+    	}
+		return map;
+	}
+
+	private static Set<Integer> copyOf(Set<Integer> value) {
+		if (value == null)
+			return null;
+		return new TreeSet<>(value);
+	}
+
+
+	public DomStudentModelContextInfo(){        
        
     }
     
