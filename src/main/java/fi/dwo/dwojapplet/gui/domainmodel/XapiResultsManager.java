@@ -113,8 +113,7 @@ public class XapiResultsManager {
             count += 1;
           }
         }
-        data.setCount(count);
-        data.setScore(value);
+        data.setScore(value/count); // FIXME 
     }
 
     private void calculateInterior(DomStudentModelCategoryScore data) {
@@ -130,8 +129,7 @@ public class XapiResultsManager {
           count += 1;
         }
       }
-      data.setCount(count);
-      data.setScore(value);      
+      data.setScore(value/count);      
     }
 
     private void calculateInterior(DomStudentModelObjectiveScore data) {
@@ -145,8 +143,7 @@ public class XapiResultsManager {
             value += 1;
           }
         }
-        data.setCount(count);
-        data.setScore(value);
+        data.setScore(value/count); // FIXME
       }
       
     }
@@ -398,7 +395,6 @@ private void fill(DomStudentModelObjectiveScore score,
     if (info.getSlip() == null) info.setSlip(0.05);
     if (score.getCount() == 0) {
         score.setScore(info.getInit());
-        score.setCount(1);
     }
         infos.put(id, info);
         model.put(id, score);
