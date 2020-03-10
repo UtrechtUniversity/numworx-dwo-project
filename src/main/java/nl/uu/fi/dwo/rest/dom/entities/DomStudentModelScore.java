@@ -10,26 +10,33 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author plas0006
  * @param <T>
  */
+@SuppressWarnings("rawtypes")
 @XmlRootElement
 public class DomStudentModelScore<T extends DomStudentModelScore> {
 
     private List<T> children = new ArrayList<T>();
     
-    private double score=0.0;
-    private long count=0;
+    private double redScore, greenScore;
+    private long redCount, greenCount;
 
+
+    
+    
+    
+    
     /**
      * @return the score
      */
     public double getScore() {
-        return score;
+        return redScore+greenScore;
     }
 
     /**
      * @param score the score to set
      */
     public void setScore(double score) {
-        this.score = score;
+        if (score < 0.5) { redScore = score;greenScore = 0; redCount = 1; greenCount = 0; }
+        else { greenScore = score; redScore = 0; greenCount = 1; redCount = 0; }
     }
 
 
@@ -37,16 +44,17 @@ public class DomStudentModelScore<T extends DomStudentModelScore> {
      * @return the count
      */
     public long getCount() {
-        return count;
+        return redCount + greenCount;
     }
-
-    /**
-     * @param count the count to set
-     */
-    public void setCount(long count) {
-        this.count = count;
+            
+    public void setScore(double greenScore, long greenCount, double redScore, long redCount) {
+      this.greenScore = greenScore;
+      this.greenCount = greenCount;
+      this.redScore = redScore;
+      this.redCount = redCount;     
     }
-        
+    
+    
     /**
      * @return the children
      */
@@ -59,6 +67,47 @@ public class DomStudentModelScore<T extends DomStudentModelScore> {
      */
     protected void setChildren(List<T> children) {
         this.children = children;
+    }
+
+    public double getRedScore() {
+      return redScore;
+    }
+
+    public double getGreenScore() {
+      return greenScore;
+    }
+
+    public long getRedCount() {
+      return redCount;
+    }
+
+    public long getGreenCount() {
+      return greenCount;
+    }
+
+    public void recalculateAncestors() {
+        List<T> children = getChildren();
+        if (children != null) {
+          int c = children.size();
+          if (c > 0) {
+            double redScore = 0, greenScore = 0;
+            for(DomStudentModelScore child: children) {
+              child.recalculateAncestors();
+              long rc = child.getRedCount();
+              long gc = child.getGreenCount();
+              double rs = child.getRedScore();
+              double gs = child.getGreenScore();
+              if (rc == 0L) rs = 0.5;
+              if (gc == 0L) gs = 0.5;
+              redScore += rs;
+              greenScore += gs;
+            }
+            setScore(greenScore, c, redScore, c);
+          } else {
+            setScore(0.0,0L,0.0,0L);
+          }
+        }
+      
     }
 
 }
