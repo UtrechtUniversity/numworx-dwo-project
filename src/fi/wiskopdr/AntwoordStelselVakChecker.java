@@ -50,7 +50,7 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 	
 	private Expressie[][] oplossingen; 
 	private boolean[][] eindOplossingGevonden;
-	private boolean[][] eindOplossingGevondenVoorSplits;
+	//private boolean[][] eindOplossingGevondenVoorSplits; Weggehaald 22-11-2018; leek niet nodig en leverde problemen bij backStep na weggaan en terugkomen op pagina. 
 	//private boolean[][] eindOplossingStelselGevonden;
 	//private boolean[][] eindOplossingExactGevonden;
 	
@@ -60,6 +60,8 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 	boolean isDeelOplossing = false;
 	boolean bevatFouteOplossing = false;
 	//private boolean bevatVoldoetNiet;
+	
+	private Vergelijking[] antwoordSubstituties;
 	
 	public static TextConstants rb = Text.constants;
 	
@@ -76,20 +78,38 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 		List<Map<String,Object>> answerModels = null;
 		boolean hasFeedback = false;
 		int scoreMax = 0;
+		List<String> antwoordSubStrings = null;
 				
 		if(asvCheckerModel.containsKey("answerModels")) answerModels = asvCheckerModel.getMapList("answerModels");
 		if(asvCheckerModel.containsKey("hasFeedback")) hasFeedback = asvCheckerModel.getBoolean("hasFeedback");
 		if(asvCheckerModel.containsKey("scoreMax")) scoreMax = asvCheckerModel.getInt("scoreMax");
+		if(asvCheckerModel.containsKey("antwoordSubStrings"))
+			antwoordSubStrings = asvCheckerModel.getStringList("antwoordSubStrings");
 			
-		
-	    this.answerModels = new ArrayList<Map<String, Object>> ();
+		this.answerModels = new ArrayList<Map<String, Object>> ();
 		for(int i = 0; i < answerModels.size(); i++)
 		{	this.answerModels.add(answerModels.get(i));
 		}
 		initialiseerAnswerModels();
         this.hasFeedback = hasFeedback;
-        
         this.scoreMax = scoreMax;
+        
+        if (antwoordSubStrings != null) {
+			boolean subCorrect = true;
+			antwoordSubstituties = new Vergelijking[antwoordSubStrings.size()];
+			for (int i = 0; i < antwoordSubStrings.size(); i++) {
+				try {
+					String ass = FormuleParser.randomizeString(antwoordSubStrings.get(i), randomVars, randomValues);
+					antwoordSubstituties[i] = (FormuleParser.parseVergelijking(ass)).geefVergelijking(0);
+					if (!antwoordSubstituties[i].geefExpLinks().isVar())
+						subCorrect = false;
+				} catch (Exception e) {
+					subCorrect = false;
+				}
+			}
+			if (!subCorrect)
+				antwoordSubstituties = null;
+		}
     }
 	
 	public AntwoordStelselVakChecker(AntwoordStelselVakChecker avChecker)
@@ -101,6 +121,7 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 		scoreMax = avChecker.scoreMax;
 		varNamen = avChecker.varNamen;
 		oplossingen = avChecker.oplossingen;
+		antwoordSubstituties = avChecker.antwoordSubstituties;
 	}
 	
 	//gebruiken voor antwoorden uit StelselOplossingenVak
@@ -172,6 +193,18 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 					varNamen[i] = e.geefVarNaam();
 			}
 			
+			
+			if (antwoordSubstituties != null && antwoord != null) {
+				for (int i = 0; i < antwoordSubstituties.length; i++)
+				{
+					if(antwoord.isEindOplossing(varNamen))
+						antwoord = antwoord.substitueerEindOplossing(antwoordSubstituties[i].geefExpRechts(), antwoordSubstituties[i].geefExpLinks().geefVarNaam());
+					else	
+						antwoord = antwoord.substitueer(antwoordSubstituties[i].geefExpRechts(), antwoordSubstituties[i].geefExpLinks().geefVarNaam());
+				}
+			}
+			
+			
 			boolean isGelijkwaardigEind = antwoord.isStelselOplossing(oplossingen, varNamen);
 			gelijkwaardig = isGelijkwaardigEind;
 			isEindOplossing = true;
@@ -181,11 +214,11 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 			{
 				for(int j = 0; j < varNamen.length; j++)
 				{
-					eindOplossingGevondenVoorSplits[i][j] = eindOplossingGevonden[i][j];
+//					eindOplossingGevondenVoorSplits[i][j] = eindOplossingGevonden[i][j];
 				}
 			}
 			
-			for(int i = 0; i < oplossingen.length; i++)
+			for(int i = 0; i < Math.min(oplossingen.length, eindOplossingGevonden.length); i++) //TODO: Lengths should be equal, but if not, this prevents problems
 			{
 				for(int j = 0; j < varNamen.length; j++)
 				{	if(!eindOplossingGevonden[i][j])
@@ -237,7 +270,7 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 	{
 		this.oplossingen = oplossingen;
 		eindOplossingGevonden = eindOplossing;
-		eindOplossingGevondenVoorSplits = eindOplossingVoorSplits;
+//		eindOplossingGevondenVoorSplits = eindOplossingVoorSplits;
 		//eindOplossingStelselGevonden = eindOplossingStelsel;
 		//eindOplossingExactGevonden = eindOplossingExact;
 	}
@@ -292,13 +325,31 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 		try{
 			//splitsen in verschillende oplossingen. Eerst $f en @ weghalen.
 			antwoordString = antwoordString.substring(2, antwoordString.length() - 1);
-			antwoordString = antwoordString.replace("),(", "):(");
+			int haakjesCount = 0;
+			for(int i = 0; i < antwoordString.length(); i++)
+			{
+				if(antwoordString.charAt(i) == '(')
+					haakjesCount++;
+				if(antwoordString.charAt(i) == ')')
+					haakjesCount--;
+				if(antwoordString.charAt(i) == ',' && haakjesCount == 0)
+					antwoordString = antwoordString.substring(0, i) + ":" + antwoordString.substring(i + 1, antwoordString.length());
+			}
+			//antwoordString = antwoordString.replace("),(", "):(");
 			String[] oplossingenStrings = antwoordString.split(":");
 			oplossingen = new Expressie[oplossingenStrings.length][varNamen.length];
 			for(int i = 0; i < oplossingenStrings.length; i++)
 			{
-				if(oplossingenStrings[i].length() < 2) return null;
+				if(oplossingenStrings[i].length() < 2) 
+				{
+					syntaxFout = true;
+					return null;
+				}
 				//haakjes verwijderen:
+				if(oplossingenStrings[i].charAt(0) != '(' || oplossingenStrings[i].charAt(oplossingenStrings[i].length() - 1) != ')')
+				{	syntaxFout = true;
+					return null; 
+				}
 				String opl = oplossingenStrings[i].substring(1, oplossingenStrings[i].length() - 1);
 				String[] varWaardes;
 				if(opl.contains(";"))
@@ -307,6 +358,10 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 					varWaardes = opl.split(",");
 				for(int j = 0; j < varNamen.length; j++)
 				{	oplossingen[i][j] = FormuleParser.geefExpressie("$f" + varWaardes[j] + "@");
+					if(oplossingen[i][j] == null)
+					{	syntaxFout = true;
+						return null;
+					}
 				}
 			}
 			return oplossingen;

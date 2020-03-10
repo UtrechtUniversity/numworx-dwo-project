@@ -74,12 +74,12 @@ public class FailingIdeas extends AbstractIdeas implements IdeasIF {
 
 	@Override
 	public void adviseMe(RuleIF[] inputs, String exercise, AsyncCallback<RuleIF> callback) {
-		callback.onFailure(NOT_IMPLEMENTED);		
+		callback.onFailure(NOT_IMPLEMENTED);
 	}
 
   @Override
   public void getOneHint(RuleIF expr, String strategie, AsyncCallback<RuleIF> callback) {
-    callback.onFailure(NOT_IMPLEMENTED);        
+    callback.onFailure(NOT_IMPLEMENTED);    
   }
 
 }

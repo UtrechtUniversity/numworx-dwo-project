@@ -1,5 +1,6 @@
 package fi.wiskopdr.expressies;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 import fi.wiskopdr.RestartException;
@@ -175,6 +176,16 @@ public class VergelijkingMeerv
 		}
 		return isOplossing;
 	}
+	
+	public boolean isOplossing() {
+		if (!geefVarN().isEmpty()) return false; // Geen substitutie, dus x=x is false!
+		boolean isOplossing = false;
+		for(int j = 0; j < vergelijkingen.length && !isOplossing; j++) {
+			isOplossing = vergelijkingen[j].isOplossing();
+		}
+		return isOplossing;
+	}
+	
 
 	public boolean isOplossing(double subst, String vergTeken)
 	{
@@ -543,6 +554,24 @@ public class VergelijkingMeerv
 		return true;
 	}*/
 
+	public boolean isEindOplossing(String[] vars)
+	{
+		for (int i = 0; i < vergelijkingen.length; i++)
+		{
+			boolean isEindOpl = false;
+			for(int j = 0; j < vars.length; j++)
+			{
+				if(vergelijkingen[i].isEindOplossing(vars[j]))
+				{	isEindOpl = true;
+					break;
+				}
+			}
+			if(!isEindOpl)
+				return false;
+		}
+		return true;
+	}
+	
 	public boolean isEindOplossing(String var)
 	{
 		for (int i = 0; i < vergelijkingen.length; i++)
@@ -674,6 +703,128 @@ public class VergelijkingMeerv
 			objects[i] = vergelijkingen[i].visit(instance);
 		}
 		return instance.vergelijkingmeerv(objects);
+	}
+
+	/**
+	 * Als matrixvergelijking en de matrix-kinderen eindoplossingen zijn, dan true.
+	 * 
+	 * @param var
+	 * @return
+	 */
+	public boolean isMatrixEindOplossing(String var)
+	{
+		boolean isEind = false;
+
+		for (int i = 0; i < vergelijkingen.length; i++)
+		{
+			if (Algebra.isMatrix(vergelijkingen[i].kind1) && Algebra.isMatrix(vergelijkingen[i].kind2))
+			{
+				// check voor alle kinderparen of isEindOplossing(var)
+				ArrayList<ArrayList<Expressie>> kinderen1 = vergelijkingen[i].kind1.geefMatrix().geefKinderen();
+				ArrayList<ArrayList<Expressie>> kinderen2 = vergelijkingen[i].kind2.geefMatrix().geefKinderen();
+				
+				if (kinderen1 != null && kinderen2 != null && !kinderen1.isEmpty() && !kinderen2.isEmpty()
+					&& kinderen1.size() == kinderen2.size())
+				{
+					for (int r = 0; r < kinderen1.size(); r++) // rijen
+					{
+						if (isEind) // 1 is genoeg
+							break;
+						
+						for (int j = 0; j < kinderen1.get(0).size(); j++) // kolommen
+						{
+							Vergelijking kindVerg = new Vergelijking(kinderen1.get(r).get(j), kinderen2.get(r).get(j));
+							isEind = kindVerg.isEindOplossing(var);
+							if (isEind) // 1 is genoeg
+								break;
+						}
+					}
+				}
+				else
+				{
+					isEind = false;
+					break;
+				}
+			}
+			else
+			{
+				isEind = false;
+				break;
+			}
+		}
+
+		return isEind;
+	}
+	
+	public boolean isMatrixVergelijking()
+	{
+		boolean isMatrixVgl = false;
+		
+		for (int i = 0; i < vergelijkingen.length; i++)
+		{
+			if (Algebra.isMatrix(vergelijkingen[i].kind1) && Algebra.isMatrix(vergelijkingen[i].kind2))
+				isMatrixVgl = true;
+		}
+		
+		return isMatrixVgl;
+	}
+
+	/**
+	 * Als vectorvergelijking en de vector-kinderen eindoplossingen zijn, dan true.
+	 * 
+	 * @param var
+	 * @return
+	 */
+	public boolean isVectorEindOplossing(String var)
+	{
+		boolean isEind = false;
+
+		for (int i = 0; i < vergelijkingen.length; i++)
+		{
+			if (Algebra.isVector(vergelijkingen[i].kind1) && Algebra.isVector(vergelijkingen[i].kind2))
+			{
+				// check voor alle kinderparen of isEindOplossing(var)
+				ArrayList<Expressie> kinderen1 = vergelijkingen[i].kind1.geefVector().geefKinderen();
+				ArrayList<Expressie> kinderen2 = vergelijkingen[i].kind2.geefVector().geefKinderen();
+				
+				if (kinderen1 != null && kinderen2 != null && !kinderen1.isEmpty() && !kinderen2.isEmpty()
+					&& kinderen1.size() == kinderen2.size())
+				{
+					for (int j = 0; j < kinderen1.size(); j++)
+					{
+						Vergelijking kindVerg = new Vergelijking(kinderen1.get(j), kinderen2.get(j));
+						isEind = kindVerg.isEindOplossing(var);
+						if (isEind) // 1 is genoeg
+							break;
+					}
+				}
+				else
+				{
+					isEind = false;
+					break;
+				}
+			}
+			else
+			{
+				isEind = false;
+				break;
+			}
+		}
+
+		return isEind;
+	}
+
+	public boolean isVectorVergelijking()
+	{
+		boolean isVectorVgl = false;
+		
+		for (int i = 0; i < vergelijkingen.length; i++)
+		{
+			if (Algebra.isVector(vergelijkingen[i].kind1) && Algebra.isVector(vergelijkingen[i].kind2))
+				isVectorVgl = true;
+		}
+		
+		return isVectorVgl;
 	}
 
 }

@@ -149,4 +149,27 @@ public class Macht extends Expressie
     public Object visit(AbstractConverter converter) {
     	return converter.macht( kind1.visit(converter), kind2.visit(converter));
     }
+    
+    /**
+     * Als de macht als uitkomst een matrix heeft, geef deze matrix.
+     * Tot de macht 'T' is de getransponeerde matrix, 
+     * tot de macht '-1' is de inverse matrix.
+     */
+    public Matrix geefMatrix()
+    {
+    	Matrix matrix = null;
+    	
+		if (kind1 instanceof Matrix)
+		{
+			if (kind2.geefWaarde() == -1)
+			{
+				matrix = ((Matrix) kind1).geefInverse();
+			}
+			else if ("T".equals(kind2.toString()))
+			{
+				matrix = ((Matrix) kind1).geefGetransponeerde();
+			}
+		}
+    	return matrix;
+    }
 }

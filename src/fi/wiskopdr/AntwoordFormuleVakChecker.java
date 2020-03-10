@@ -902,10 +902,24 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 			}	
 		}
 		VergelijkingMeerv v = FormuleParser.parseVergelijking("$f" + checkString +"@");
+		if (!casNodig(v) && v.geefVarN().isEmpty()) {
+			casResult = v.isOplossing();
+			return;
+		}
+		
 		Expressie e = Expressie.decideWithCas(v);
 		casResult = e != null && e.geefWaarde() == 1.0;
 	}
 	
+	private boolean casNodig(VergelijkingMeerv v) {
+		int l = v.geefAantal();
+		for (int i = 0; i < l; i++) {
+			Vergelijking vi = v.geefVergelijking(i);
+			if (casNodig(vi.geefExpLinks()) || casNodig(vi.geefExpRechts())) return true;
+		}
+		return false;
+	}
+
 	public String verwijderIsTeken(String inputStr){
 		if(inputStr.charAt(inputStr.length()-2)=='=' || inputStr.charAt(inputStr.length()-2)=='\u2248')
 		{	int isIndex = inputStr.length()-2;
@@ -964,7 +978,9 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		
 		Expressie antwoordEvalCAS = null;
 		boolean casNodig = false;
-		if(antwoord!=null) casNodig = antwoord.toString().indexOf("$i")>-1 || antwoord.toString().indexOf("$d")>-1 || antwoord.toString().indexOf("$T")>-1  || antwoord.toString().indexOf("$S")>-1  || antwoord.toString().indexOf("$P")>-1;
+		if(antwoord!=null) {
+			casNodig = casNodig(antwoord);
+		}
 		//logger.fine(antwoord + " needs " + casNodig);
 		if(casNodig)
 		{	antwoordEvalCAS = Expressie.evalWithCAS(antwoord);
@@ -1003,9 +1019,24 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 						else if(substitutie!=null)pastExact = pastExact || AntwoordChecker.checkExact(antwoordNonSub,juisteAntwoorden[i]);
                         else pastExact = pastExact || AntwoordChecker.checkExact(antwoord,juisteAntwoorden[i]);
 					}
-					for(int i=0 ; juisteVormen!=null && i<juisteVormen.length ; i++)
-					{	pastHerleid = pastHerleid || AntwoordChecker.checkHerleiding(antwoord, juisteVormen[i], soortHerleiding);	
+				
+					for (int i = 0; juisteVormen != null && i < juisteVormen.length; i++)
+					{
+						if (Algebra.isScalarMaalVector(juisteVormen[i])) // als de gewenste vorm een veelvoud van een vector is (t.b.v. normaalvector)
+						{
+							pastHerleid = pastHerleid || Algebra.isJuisteScalarMaalVector(antwoord, juisteVormen[i]);
+							if (pastHerleid) // de gegeven vector is een goede normaalvector
+							{
+								isGelijkwaardig = true;
+								pastGelijkwaardig = true;
+								pastExact = true;
+								pastSignificant = true;
+							}
+						}
+						else 
+							pastHerleid = pastHerleid || AntwoordChecker.checkHerleiding(antwoord, juisteVormen[i], soortHerleiding);	
 					}
+				
 					if(!gelijkwaardigP)pastGelijkwaardig = true;
 					if(!herleidingP)pastHerleid = true;
 					if(!exactP)pastExact = true;
@@ -1013,7 +1044,12 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 				}
 				
 				boolean answerModelFits = pastGelijkwaardig && pastHerleid && pastExact;
-				//if(juisteAntwoorden[0].toString().equals("else"))answerModelFits = true;
+				if(
+						juisteAntwoorden != null &&
+						juisteAntwoorden[0] != null &&
+						juisteAntwoorden[0].toString().equals("else")
+				  )
+					answerModelFits = true;
 				if(answerModelFits) 
 				{	// feedback van dit tabblad wordt gebruikt
 					
@@ -1045,7 +1081,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 			}
 		}
 		else if(casCheck)
-		{	//checkCasStatement(expAntwoordString);
+		{	checkCasStatement(expAntwoordString);
 		}
 		else 
 		{	
@@ -1068,11 +1104,31 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 				
 				if(isExact)break;
 			}
-			for(int i=0 ; soortHerleiding==0 && i<juisteVormen.length ; i++)
-			{	isHerleid = isHerleid || AntwoordChecker.checkHerleiding(antwoord,juisteVormen[i], soortHerleiding);
-				if(isHerleid)break;
+			
+			for (int i = 0; soortHerleiding == 0 && i < juisteVormen.length; i++)
+			{
+				if (Algebra.isScalarMaalVector(juisteVormen[i])) // als de gewenste vorm een veelvoud van een vector is (normaalvector)
+				{
+					isHerleid = isHerleid || Algebra.isJuisteScalarMaalVector(antwoord, juisteVormen[i]);
+					if (isHerleid) // de gegeven vector is een goede normaalvector
+					{
+						isGelijkwaardig = true;
+					}
+				}
+				else 
+					isHerleid = isHerleid || AntwoordChecker.checkHerleiding(antwoord,juisteVormen[i], soortHerleiding);
+				
+				if (isHerleid)
+					break;
 			}
 		}
+	}
+
+	private boolean casNodig(Expressie antwoord) {
+		boolean casNodig;
+		String string = antwoord.toString();
+		casNodig = string.indexOf("$i")>-1 || string.indexOf("$d")>-1 || string.indexOf("$T")>-1  || string.indexOf("$S")>-1  || string.indexOf("$P")>-1;
+		return casNodig;
 	}	
 	
 	public String vertaalIdeasExpressie(String s)

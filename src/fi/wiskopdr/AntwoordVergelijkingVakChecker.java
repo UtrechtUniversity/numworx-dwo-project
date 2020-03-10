@@ -697,6 +697,13 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			s = "$f" + s.substring(index + 1);
 		}
 		gewensteEindOplossing = p.parseVergelijking(s, functieMVDefSet);
+		
+		//indien geen juist eindantwoord gegeven is, dan gewoon kijken of de vergelijking een equivalentie is
+		//Je doet daarvoor een substitutie met een variabele waarvan je zeker weet dat hij niet gebruikt wordt in de vergelijking
+		if(gewensteEindOplossing==null && s.equals("$f@") )	{
+			s = "$fQ?(Q)=0.97531@";
+			gewensteEindOplossing = p.parseVergelijking(s, functieMVDefSet);
+		}
 	}
 	
 	public void zetJuisteVorm(String s)
@@ -1179,6 +1186,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	
 	public void check(String antwoordVergString) throws RestartException {
 		if (gewensteEindOplossing == null)
+			
 			return;
 
 		
@@ -1208,6 +1216,22 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
             vn[0] = v;
             antwoordAlles = new VergelijkingMeerv(vn);
         }
+		
+		
+		//laatste stap oplossen vergelijking soms van de vorm: x = expressie = eindexpressie
+		String[] antwoordVergStringParts = antwoordVergString.split("=");
+		if(antwoordVergStringParts.length==3) {
+			VergelijkingMeerv vergMeerv = FormuleParser.parseVergelijking(antwoordVergString, functieMVDefSet);
+			if(vergMeerv==null) {
+				String newString1 = antwoordVergStringParts[0]+"="+antwoordVergStringParts[2];
+				String newString2 = antwoordVergStringParts[0]+"="+antwoordVergStringParts[1]+"@";
+				VergelijkingMeerv newStringVerg1 = FormuleParser.parseVergelijking(newString1, functieMVDefSet);
+				VergelijkingMeerv newStringVerg2 = FormuleParser.parseVergelijking(newString2, functieMVDefSet);
+				if(newStringVerg1!=null && newStringVerg2!=null)
+					antwoordVergString = newString1;
+			}
+		}
+			
 		VergelijkingMeerv antwoordIngevuld = FormuleParser.parseVergelijking(antwoordVergString, functieMVDefSet);
 		antwoord = antwoordIngevuld;
 		if (antwoord == null) {
@@ -1233,6 +1257,9 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		String var = "x";
 		if (gewensteEindOplossing != null)
 			var = gewensteEindOplossing.geefVergelijkingVar();
+		
+		//nodig om vorm te checken (daar niet substitueren antwoordSubstituties)
+		VergelijkingMeerv antwoordVoorAntwSub = antwoord;
 		
 
 		if (antwoordSubstituties != null && antwoord != null) {
@@ -1272,6 +1299,8 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			if(FormuleParser.isDiffOperatoren())
 			{	antwoord = antwoord.vervangDifferentialen(diffVar);
 				antwoord = antwoord.vervangDiffs(gewensteEindOplossing.geefEindOplossingen(var), var);
+				antwoordVoorAntwSub = antwoordVoorAntwSub.vervangDifferentialen(diffVar);
+				antwoordVoorAntwSub = antwoordVoorAntwSub.vervangDiffs(gewensteEindOplossing.geefEindOplossingen(var), var);
 			}
 			
 			boolean isGelijkwaardigEind = antwoord.isOplossing(gewensteEindOplossing.geefEindOplossingen(var), var, gewensteEindOplossing.geefVergTekens());
@@ -1287,7 +1316,12 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			if (gewensteTussenOplossing != null && !isGelijkwaardig)
 				isGelijkwaardig = antwoord.isOplossing(gewensteTussenOplossing.geefEindOplossingen(var), var, gewensteTussenOplossing.geefVergTekens());
 
-			isEindOplossing = isGelijkwaardigEind && antwoord.isEindOplossing(var);
+			if (antwoord.isVectorVergelijking())
+				isEindOplossing = isGelijkwaardigEind && antwoord.isVectorEindOplossing(var);
+			else if (antwoord.isMatrixVergelijking())
+				isEindOplossing = isGelijkwaardigEind && antwoord.isMatrixEindOplossing(var);
+			else
+				isEindOplossing = isGelijkwaardigEind && antwoord.isEindOplossing(var);
 
 			isEindOplossingSignificant = isGelijkwaardigEind && antwoord.isEindOplossingSignificant(gewensteEindOplossing.geefEindOplossingen(var), var, gewensteEindOplossing.geefVergTekens());
 
@@ -1312,8 +1346,21 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			moetNogOngelijkheid = isGelijkwaardig && !isGelijkwaardigEind && antwoord.isEindOplossing(var) && gewensteEindOplossing.isOngelijkheid();
 
 			isJuisteVorm = false;
-			for (int i = 0; i < juisteVormen.length; i++) {
-				isJuisteVorm = isJuisteVorm || Algebra.gelijkGevormd(antwoord, juisteVormen[i]);
+			for (int i = 0; i < juisteVormen.length; i++)
+			{
+				if (Algebra.isJuistFormaatVectorVoorstelling(juisteVormen[i])) // als de gewenste vorm een vectorvoorstelling is
+				{
+					isJuisteVorm = isJuisteVorm || Algebra.isJuisteVectorvoorstelling(antwoordIngevuld, gewensteEindOplossing, juisteVormen[i]);
+					if (isJuisteVorm) // de juiste vectorvoorstelling is het goede antwoord
+					{
+						isGelijkwaardig = true;
+						bevatFouteOplossing = false;
+						isEindOplossing = true;
+					}
+				}
+				else
+					isJuisteVorm = isJuisteVorm || Algebra.gelijkGevormd(antwoordVoorAntwSub, juisteVormen[i]);
+				
 				if (isJuisteVorm)
 					break;
 			}
@@ -1329,7 +1376,10 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 //					isDeelOplossing = false;
 //				}
 //			}
-		} else {
+			
+		} 
+		else {
+			
 			syntaxFout = true;
 			isGelijkwaardig = false;
 			isEindOplossing = false;
@@ -1446,5 +1496,9 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	public int[][] getPossibleMisconceptions() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public VergelijkingMeerv getDesiredSolution() {
+		return gewensteEindOplossing;
 	}
 }

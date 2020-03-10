@@ -1,6 +1,7 @@
 package fi.wiskopdr.expressies.repr;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.Optelling;
@@ -84,6 +85,7 @@ public abstract class AbstractConverter {
 	public abstract Object limit(Object kind1, Object kind2, Object kind3, Object kind4);
 	public abstract Object ln(Object kind1);
 	public abstract Object log(Object kind1);
+	public abstract Object matrix(ArrayList<ArrayList<Object>> kinderen);
 	public abstract Object max(Object kind1, Object kind2);
 	public abstract Object min(Object kind1, Object kind2);
 	public abstract Object ndelog(Object kind1, Object kind2);
@@ -99,6 +101,7 @@ public abstract class AbstractConverter {
 	public abstract Object sigroundstandard(Object kind1, Object kind2);
 	public abstract Object sinus(Object kind1);
 	public abstract Object tangens(Object kind1);
+	public abstract Object vectorExpr(ArrayList<Object> kinderen);
 	public abstract Object wortel(Object kind1);
 
 	public abstract Object aantalsign(Object visit);

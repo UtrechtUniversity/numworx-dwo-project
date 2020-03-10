@@ -34,7 +34,9 @@ public class E extends BasisExpressie
 	public Expressie substitueer(double subst, String var)
 	{	return new E();
 	}
-	
+
+	public boolean isVar()
+	{	return false;	}
 	
 	
 	public Expressie substitueer(Expressie subst, String var)

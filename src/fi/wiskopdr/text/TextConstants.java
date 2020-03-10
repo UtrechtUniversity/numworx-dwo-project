@@ -17,6 +17,8 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	String klaarKnopLabel();
 	@DefaultStringValue("kijk na")
 	String nakijkKnopLabel();
+	@DefaultStringValue("scoregeschiedenis")
+	String zelftoetsGeschiedenisKnopLabel();
 	@DefaultStringValue("Einde")
 	String eindeKnopLabel();
 	@DefaultStringValue("Volgende")
@@ -25,8 +27,10 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	String vorigeKnopLabel();
 	@DefaultStringValue("Totaal: ")
 	String totaalScoreLabel();
-	@DefaultStringValue(" keer nagekeken")
+	@DefaultStringValue(" keer")
 	String nakijkLabel();
+	@DefaultStringValue("nagekeken")
+	String nakijkLabel2();
 	@DefaultStringValue("opnieuw")
 	String opnieuwKnopLabel();
 	@DefaultStringValue("alles opnieuw")
@@ -66,7 +70,7 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	String feedbackTekst07();
 	@DefaultStringValue("Gebruik geen absoluut strepen ( bv: |x-3| ).")
 	String feedbackTekst08();
-	@DefaultStringValue("De notatie van de vergelijking of oplossingen is niet juist.")
+	@DefaultStringValue("De notatie is niet juist.")
 	String feedbackTekst09();
 	@DefaultStringValue("Oplossing is goed, maar nog niet in de juiste vorm.")
 	String feedbackTekst10();
@@ -126,6 +130,9 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	
 	@DefaultStringValue("Kies")
 	String keuzeVakKiesLabel();
+	
+	@DefaultStringValue("Actie")
+	String actionLabel();
 // Opnieuw dialog
 /*
  * 	{ "opnieuwPanelTekstMW", "Je verliest je huidige score als je opnieuw begint.\n\nWeet je zeker dat je opnieuw wilt beginnen?" },
@@ -156,8 +163,10 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	@DefaultStringValue("Oplossingen")
 	String oplossingenLabel();
 	
-
-	
+	@DefaultStringValue("Je hebt momenteel geen internetverbindig. Je werk kan niet worden opgeslagen")
+	String noInternet();
+	@DefaultStringValue("De server geeft een fout terug. Je werk kan niet worden opgeslagen")
+	String serverError();
 	
 // enzovoort
 }
