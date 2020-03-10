@@ -33,7 +33,7 @@ public class StudentModelDataUtilManager {
                     for (int o = 0; o < dataPoint.getCategories().get(c).getObjectives().size(); o++) {
                         DomStudentModelObjectiveScore obj = dataPoint.getCategories().get(c).getObjectives().get(o);
                         DomStudentModelObjectiveScore sum = score.getCategories().get(c).getObjectives().get(o);
-                        sum.setCount(sum.getCount() + obj.getCount());
+                       // sum.setCount(sum.getCount() + obj.getCount());
                         sum.setScore(sum.getScore() + obj.getScore());
                     }
                 }
