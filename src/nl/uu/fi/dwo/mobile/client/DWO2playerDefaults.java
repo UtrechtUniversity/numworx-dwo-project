@@ -12,7 +12,6 @@ import nl.uu.fi.dwo.mobile.client.ui.IdleDetect;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.dwokb.NoStatusKeyboard;
 import nl.uu.fi.dwo.mobile.utils.Logging;
-import nl.uu.fi.dwo.mobile.utils.LoggingProvider;
 
 public class DWO2playerDefaults extends DWOplayerDefaults implements DwoConstants {
 
