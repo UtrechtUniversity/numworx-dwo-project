@@ -34,7 +34,7 @@ class NodeLeaf implements Node {
 
   NodeLeaf(String title, DomStudentModelContextInfo info, String l) {
     this.title = title;
-    this.info = info;
+    this.info = new DomStudentModelContextInfo(info);
     this.lang = l;
     if (info.getId() == null) {
       info.setId(UUID.randomUUID().toString());

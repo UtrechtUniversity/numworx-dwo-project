@@ -34,7 +34,7 @@ public class NodeVector extends Vector<Object> implements Node {
   public NodeVector(List<DomStudentModelCategory> categories, DomStudentModelContextInfo info, String l) {
     String title = info.getTitle().get(l);
     this.title = title;
-    this.info = info;
+    this.info = new DomStudentModelContextInfo(info);
     this.lang = l;
     int last = -1;
     for (DomStudentModelCategory cat: categories) {    
