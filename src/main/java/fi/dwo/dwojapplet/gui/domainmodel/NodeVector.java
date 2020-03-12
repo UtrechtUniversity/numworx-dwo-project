@@ -38,7 +38,7 @@ public class NodeVector extends Vector<Object> implements Node {
     this.lang = l;
     int last = -1;
     for (DomStudentModelCategory cat: categories) {    
-      String subtitle = cat.getInfo().getTitle().get(l);
+      String subtitle = cat.getInfo().getTitle().getOrDefault(l,"untitled");
       if (!subtitle.isEmpty()) last = size();
       NodeVector nv = new NodeVector(cat.getObjectives(), subtitle, l, cat.getInfo());
       nv.setPath(elementCount);
@@ -52,7 +52,7 @@ public class NodeVector extends Vector<Object> implements Node {
     this.lang = l;
     int last = -1;
     for (DomStudentModelObj obj: objectives) {
-      String subtitle = obj.getInfo().getTitle().get(l);
+      String subtitle = obj.getInfo().getTitle().getOrDefault(l,"untitled");
       if (!subtitle.isEmpty()) last = size();
       if (obj.getObjectives()==null)
       {  NodeLeaf nodeleaf = new NodeLeaf(subtitle, obj.getInfo(), l);

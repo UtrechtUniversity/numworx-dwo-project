@@ -59,6 +59,7 @@ import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JScrollPane;
+import fi.beans.numworxlf.JTabbedPane;
 import fi.beans.numworxlf.JTextField;
 import fi.beans.numworxlf.NumworxTextFieldUI;
 import fi.beans.private_base64code.StringCodeObject;
@@ -102,9 +103,11 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
           actionOnLeaf( (NodeLeaf) o);
         }
       }
-      
-      
-      
+    }
+
+    public Component getTab() {
+      // TODO Auto-generated method stub
+      return new JPanel();
     }
 
     private void actionOnLeaf(NodeLeaf leaf) {
@@ -180,7 +183,37 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
     }
   }
   
-  
+  class FilterAction extends AbstractAction {
+
+    FilterAction() {
+      super("Filter leerdoelen");
+      // TODO Auto-generated constructor stub
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      ConfirmDialog dialog = new ConfirmDialog(LeerdomeinEditPanel2.this, "filter");
+      JTabbedPane tabs = new JTabbedPane();
+      dialog.getContentPane().setLayout(new BorderLayout());
+      MWAction mw = new MWAction();
+      GenRAction genr = new GenRAction();
+      tabs.addTab(genr.getValue(NAME).toString(), genr.getTab());
+      tabs.addTab(mw.getValue(NAME).toString(), mw.getTab());
+      
+      dialog.getContentPane().add(tabs, BorderLayout.CENTER);
+      
+      JButton ok = new JButton(TextMapper.getText(TextMapper.BTN_OK));
+      ok.addActionListener(dialog::ok);
+      dialog.getContentPane().add(ok, BorderLayout.SOUTH);
+      
+      dialog.pack();
+      dialog.show();
+      if (JOptionPane.OK_OPTION == dialog.getOption()) {
+        
+      }
+    }
+    
+  }
   
   class VoorkennisAction extends AbstractAction {
 
@@ -596,7 +629,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   scrollpane.setBorder(BorderFactory.createEmptyBorder());
   leftBox.add(scrollpane, BorderLayout.CENTER);
   leftSouth = Box.createHorizontalBox();
-  JButton filter = new JButton("Filter leerdoelen");
+  JButton filter = new JButton(new FilterAction());
   leftSouth.add(Box.createHorizontalGlue());
   leftSouth.add(filter);
   leftSouth.add(Box.createHorizontalGlue());
