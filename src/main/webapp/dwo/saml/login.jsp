@@ -26,6 +26,18 @@ function later() {
 		doLMSSetValue("dme.cookies", cookies);
 		doLMSSetValue("cmi.exit", "logout");
 		doLMSFinish("");
+	<%
+	  try {
+		  int r = Integer.parseInt(request.getParameter("r"));
+		  if (r > 1024 && r <= 0xFFFF ) {
+		  %>
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", "http://127.0.0.1:<%=r%>/local/Terminate", true);
+			xhr.setRequestHeader('Content-Type', 'application/json');
+			xhr.send(JSON.stringify({'dme.cookies': cookies, 'cmi.exit':'logout'}));
+		  <%
+		}} catch (Exception ignore) { }
+	%>
 	} catch(e) {
 		alert(e);
 	}
@@ -37,6 +49,11 @@ setTimeout("later()",1)
 	out.print("<h1>Welcome ");
 	out.print(BasicLTIUtil.htmlspecialchars(display));
 	out.println("</h1>");
+	
+	if (request.getParameter("r") != null) {
+	  out.println("<p>You can close this window.");
+	}
+	
 %>
 </body>
 </html>
