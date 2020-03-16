@@ -308,7 +308,7 @@ public class DWOPopupPanel extends PopupPanel {
 			moving = true;
 		}
 		else if(dragMode>0) {
-			DOM.setCapture(getElement());
+			DOM.setCapture(getElement()); // werkt helaas niet voor pointerevents
 		}
 	}
 	
