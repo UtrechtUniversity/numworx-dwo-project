@@ -7,6 +7,7 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.ResizableContentIF;
 import nl.uu.fi.dwo.mobile.client.ui.ResizableDialogBox;
@@ -40,22 +41,32 @@ import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.DialogBox.Caption;
 import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
+import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.Style.Unit;
 
 public class PopupButton extends Composite implements ClickHandler, /*TouchStartHandler, MouseDownHandler,*/ HasHide {
 
+	private static DWOplayerCss css = DWOplayer.DWO_BUNDLE.dwoplayercss();
+	
 	public class CaptionImpl extends Composite implements Caption {
 
 		FlowPanel flow = new FlowPanel();
@@ -249,7 +260,7 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 	
 	ButtonBase btn;
 	IsWidget content;
-	DialogBox box;
+	DWOPopupPanel box;
 	InteractionView view;
 
 	HashMap<String,Object> state;
@@ -303,8 +314,8 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 			track = false;
 			if(handle != null) handle.cancel();
 			handle = null;
-			box.onMouseMove(box.getCaption().asWidget(), x, y);
-			box.onMouseUp(box.getCaption().asWidget(), x, y);
+			//box.onMouseMove(box.getCaption().asWidget(), x, y);
+			//box.onMouseUp(box.getCaption().asWidget(), x, y);
 			//logger.info("touch end " + x + "," + y);
 			event.stopPropagation();
 			event.preventDefault();
@@ -327,7 +338,7 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 		@Override
 		public void onTouchStart(TouchStartEvent event) {
 			getXY(event);
-			box.onMouseDown(box.getCaption().asWidget(), x, y);
+			//box.onMouseDown(box.getCaption().asWidget(), x, y);
 			track = true;
 			handle = AnimationScheduler.get().requestAnimationFrame(this,box.getElement());
 			//logger.info("touch start " + x + "," + y);
@@ -336,13 +347,13 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 		@Override
 		public void onTouchCancel(TouchCancelEvent event) {
 			track = false;
-			box.onMouseUp(box.getCaption().asWidget(), x, y);
+			//box.onMouseUp(box.getCaption().asWidget(), x, y);
 		}
 
 		@Override
 		public void execute(double timestamp) {
 			if(track) {
-				box.onMouseMove(box.getCaption().asWidget(), x, y);
+				//box.onMouseMove(box.getCaption().asWidget(), x, y);
 				handle = AnimationScheduler.get().requestAnimationFrame(this,box.getElement());
 			}
 		}
@@ -397,20 +408,23 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 			if (content instanceof ResizableContentIF) // tot nu toe alleen FormuleEditorPopup
 			{
 				// a resizable dialogbox
-				box = new ResizableDialogBox(false, false, false, false, true, caption);
-				((ResizableDialogBox) box).setResizableContent((ResizableContentIF) content);
+				//box = new ResizableDialogBox(false, false, false, false, true, caption);
+				//((ResizableDialogBox) box).setResizableContent((ResizableContentIF) content);
+				box = new DWOPopupPanel("Uitwerking", listener);
+				box.setResizableContent((ResizableContentIF) content);
 			}
 			else
 			{
 				// other content remains non-resizable
-				box = new DialogBox(false, false, caption);
+				//box = new DialogBox(false, false, caption);
+				box = new DWOPopupPanel("Popup", listener);
 			}
-			box.addStyleDependentName(DWOplayer.PARAMETERS.keyboardStyle());
-			DragOnTouch t = new DragOnTouch();
-			box.addDomHandler(t, TouchStartEvent.getType());
-			box.addDomHandler(t, TouchMoveEvent.getType());
-			box.addDomHandler(t, TouchEndEvent.getType());
-			box.addDomHandler(t, TouchCancelEvent.getType());
+	
+//			DragOnTouch t = new DragOnTouch();
+//			box.addDomHandler(t, TouchStartEvent.getType());
+//			box.addDomHandler(t, TouchMoveEvent.getType());
+//			box.addDomHandler(t, TouchEndEvent.getType());
+//			box.addDomHandler(t, TouchCancelEvent.getType());
 			// doe niets als je in het contentvak klikt middels stopPropagation
 			NothingOnTouch nt = new NothingOnTouch();
 			FocusPanel wrap = FocusOnTouch.wrap(content.asWidget(), false);
@@ -418,12 +432,16 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 			wrap.addDomHandler(nt, TouchMoveEvent.getType());
 			wrap.addDomHandler(nt, TouchEndEvent.getType());
 			wrap.addDomHandler(nt, TouchCancelEvent.getType());
+			
+			//box.addContent(wrap.asWidget());
+			box.addContent(content.asWidget());
+			
 
-			box.setWidget(wrap);
 		}
 		// fire popupevent here.
 		if (!box.isShowing())
 		{
+			
 			box.showRelativeTo(this);
 			listener.onShow();
 		}
