@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Enumeration;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -21,10 +20,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 /**
@@ -165,127 +162,6 @@ public class InvisibleNodeTreeExample extends JFrame {
     frame.setSize(300, 180);
     frame.setVisible(true);
   }
-}
-
-class InvisibleTreeModel extends DefaultTreeModel {
-
-  protected boolean filterIsActive;
-
-  public InvisibleTreeModel(TreeNode root) {
-    this(root, false);
-  }
-
-  public InvisibleTreeModel(TreeNode root, boolean asksAllowsChildren) {
-    this(root, false, false);
-  }
-
-  public InvisibleTreeModel(TreeNode root, boolean asksAllowsChildren,
-      boolean filterIsActive) {
-    super(root, asksAllowsChildren);
-    this.filterIsActive = filterIsActive;
-  }
-
-  public void activateFilter(boolean newValue) {
-    filterIsActive = newValue;
-  }
-
-  public boolean isActivatedFilter() {
-    return filterIsActive;
-  }
-
-  public Object getChild(Object parent, int index) {
-    if (filterIsActive) {
-      if (parent instanceof InvisibleNode) {
-        return ((InvisibleNode) parent).getChildAt(index,
-            filterIsActive);
-      }
-    }
-    return ((TreeNode) parent).getChildAt(index);
-  }
-
-  public int getChildCount(Object parent) {
-    if (filterIsActive) {
-      if (parent instanceof InvisibleNode) {
-        return ((InvisibleNode) parent).getChildCount(filterIsActive);
-      }
-    }
-    return ((TreeNode) parent).getChildCount();
-  }
-
-}
-
-class InvisibleNode extends DefaultMutableTreeNode {
-
-  protected boolean isVisible;
-
-  public InvisibleNode() {
-    this(null);
-  }
-
-  public InvisibleNode(Object userObject) {
-    this(userObject, true, true);
-  }
-
-  public InvisibleNode(Object userObject, boolean allowsChildren,
-      boolean isVisible) {
-    super(userObject, allowsChildren);
-    this.isVisible = isVisible;
-  }
-
-  public TreeNode getChildAt(int index, boolean filterIsActive) {
-    if (!filterIsActive) {
-      return super.getChildAt(index);
-    }
-    if (children == null) {
-      throw new ArrayIndexOutOfBoundsException("node has no children");
-    }
-
-    int realIndex = -1;
-    int visibleIndex = -1;
-    Enumeration e = children.elements();
-    while (e.hasMoreElements()) {
-      InvisibleNode node = (InvisibleNode) e.nextElement();
-      if (node.isVisible()) {
-        visibleIndex++;
-      }
-      realIndex++;
-      if (visibleIndex == index) {
-        return (TreeNode) children.elementAt(realIndex);
-      }
-    }
-
-    throw new ArrayIndexOutOfBoundsException("index unmatched");
-    //return (TreeNode)children.elementAt(index);
-  }
-
-  public int getChildCount(boolean filterIsActive) {
-    if (!filterIsActive) {
-      return super.getChildCount();
-    }
-    if (children == null) {
-      return 0;
-    }
-
-    int count = 0;
-    Enumeration e = children.elements();
-    while (e.hasMoreElements()) {
-      InvisibleNode node = (InvisibleNode) e.nextElement();
-      if (node.isVisible()) {
-        count++;
-      }
-    }
-
-    return count;
-  }
-
-  public void setVisible(boolean visible) {
-    this.isVisible = visible;
-  }
-
-  public boolean isVisible() {
-    return isVisible;
-  }
-
 }
 
            

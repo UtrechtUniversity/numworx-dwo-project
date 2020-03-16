@@ -10,6 +10,7 @@ import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -56,11 +57,12 @@ public class KoppelingGRPanel extends JPanel implements Constants {
 
     
 	private JCheckBox[][] cb;
-	private JLabel[] hf ;
-	private JLabel[] jl ;
+	private JComponent[] hf ;
+	private JComponent[] jl ;
 	
-	public KoppelingGRPanel(String koppeling, String[] jaarlagen, int[] aantal) {
+	KoppelingGRPanel(String koppeling, String[] jaarlagen, int[] aantal, boolean filter) {
 		super(new BorderLayout());
+		this.filter = filter;
 		KOPPELING_LEERDOEL = koppeling;
 		aantalJaarlagen = jaarlagen.length;
 		grJaarlagen = jaarlagen;
@@ -78,7 +80,7 @@ public class KoppelingGRPanel extends JPanel implements Constants {
 	  makeGUI();
 	}
 	
-	
+	boolean filter = true;
 	private void makeGUI() {
 		topPanel = new JPanel(new BorderLayout());
 		topPanel.setBackground(colorBlue1);
@@ -118,7 +120,7 @@ public class KoppelingGRPanel extends JPanel implements Constants {
 			}
 		}
 		
-		hf = new JLabel[maxAantalHoofdstukken];
+		hf = new JComponent[maxAantalHoofdstukken];
 		for(int i=0 ; i<maxAantalHoofdstukken ; i++) {
 			hf[i] = new JLabel("hfst "+(i+1));
 			hf[i].setBounds(120+50*i,30,50,20);
@@ -126,9 +128,9 @@ public class KoppelingGRPanel extends JPanel implements Constants {
 			mainPanel.add(hf[i]);
 		}
 		
-		jl = new JLabel[aantalJaarlagen];
+		jl = new JComponent[aantalJaarlagen];
 		for(int i=0 ; i<aantalJaarlagen ; i++) {
-			jl[i] = new JLabel(grJaarlagen[i]);
+			jl[i] = createjl(grJaarlagen[i], i);
 			jl[i].setBounds(20,60+30*i,100,20);
 			jl[i].setForeground(colorBlue1);
 			mainPanel.add(jl[i]);
@@ -137,7 +139,19 @@ public class KoppelingGRPanel extends JPanel implements Constants {
 		plaatsGUI();	
 	}
 	
-	private void plaatsGUI() {
+	private JComponent createjl(String string, final int row) {
+    if (filter) {
+      JCheckBox b = new JCheckBox(string);
+      b.addActionListener(e -> {
+          JCheckBox bci[] = cb[row];
+          for( JCheckBox i: bci) if (i != null) i.setSelected(b.isSelected());      
+      });
+      return b;
+    }
+    return new JLabel(string);
+  }
+
+  private void plaatsGUI() {
 		// topPanel
 		topPanel.add(hb( hgl(), titleLabel, hgl()));
 		
@@ -226,6 +240,18 @@ public class KoppelingGRPanel extends JPanel implements Constants {
       state[i] = statei;
     }
     return state;
+  }
+
+  public JPanel getTopPanel() {
+    return topPanel;
+  }
+
+  public JPanel getMainPanel() {
+    return mainPanel;
+  }
+
+  public JPanel getBottomPanel() {
+    return bottomPanel;
   }
 	
 }

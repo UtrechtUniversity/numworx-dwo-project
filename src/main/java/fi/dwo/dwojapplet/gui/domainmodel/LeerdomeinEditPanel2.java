@@ -89,6 +89,10 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
     MethodeAction(String name) {
       super(name);
     }
+    
+    String getName() {
+      return getValue(NAME).toString();
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -105,17 +109,19 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
       }
     }
 
-    public Component getTab() {
-      // TODO Auto-generated method stub
-      return new JPanel();
+    public KoppelingGRPanel getTab() {
+      KoppelingGRPanel panel = createKoppelingPanel(true);
+      panel.remove(panel.getBottomPanel());
+      panel.remove(panel.getTopPanel());
+      return panel;
     }
 
     private void actionOnLeaf(NodeLeaf leaf) {
-      String name = getValue(NAME).toString();
+      String name = getName();
       Map<String,Set<Integer>> methode = leaf.getMethode().getOrDefault(name, Collections.emptyMap());
       
       ConfirmDialog dialog = new ConfirmDialog(LeerdomeinEditPanel2.this, "");
-      KoppelingGRPanel panel = new KoppelingGRPanel(KOPPELING_LEERDOEL, grJaarlagen, aantalHoofdstukken);
+      KoppelingGRPanel panel = createKoppelingPanel(false);
       boolean[][] state = new boolean[aantalHoofdstukken.length][];
       for(int i = 0; i < aantalHoofdstukken.length; i++) {
         state[i] = new boolean[aantalHoofdstukken[i]];
@@ -139,17 +145,27 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
       dialog.pack();
       dialog.show();
       if (dialog.getOption() == JOptionPane.OK_OPTION) {
-        state = panel.getState();
-        Map<String, Set<Integer>> map = new HashMap<>();
-        for (int i = 0; i < grJaarlagen.length; i++ ) {
-          Set<Integer> set = new TreeSet<>();
-          for( int j = 0; j < aantalHoofdstukken[i]; j++) {
-            if (state[i][j]) set.add(j+1);
-          }
-          if (!set.isEmpty()) map.put(grJaarlagen[i], set);
-        }
+        Map<String, Set<Integer>> map = getMethodMap(panel);
         leaf.getMethode().put(name, map);
       }
+    }
+
+    Map<String, Set<Integer>> getMethodMap(KoppelingGRPanel panel) {
+      boolean[][] state;
+      state = panel.getState();
+      Map<String, Set<Integer>> map = new HashMap<>();
+      for (int i = 0; i < grJaarlagen.length; i++ ) {
+        Set<Integer> set = new TreeSet<>();
+        for( int j = 0; j < aantalHoofdstukken[i]; j++) {
+          if (state[i][j]) set.add(j+1);
+        }
+        if (!set.isEmpty()) map.put(grJaarlagen[i], set);
+      }
+      return map;
+    }
+
+    KoppelingGRPanel createKoppelingPanel(boolean filter) {
+      return new KoppelingGRPanel(KOPPELING_LEERDOEL, grJaarlagen, aantalHoofdstukken, filter);
     }
    
   }
@@ -181,24 +197,30 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
       this();
       readonly = b;
     }
+
   }
   
   class FilterAction extends AbstractAction {
 
     FilterAction() {
       super("Filter leerdoelen");
-      // TODO Auto-generated constructor stub
     }
+
+    MWAction mw = new MWAction();
+    GenRAction genr = new GenRAction();
+
+    KoppelingGRPanel genrtab = genr.getTab();
+    KoppelingGRPanel mwtab = mw.getTab();
+
+    Map<String,Map<String,Set<Integer>>> filter = Collections.emptyMap();
 
     @Override
     public void actionPerformed(ActionEvent e) {
       ConfirmDialog dialog = new ConfirmDialog(LeerdomeinEditPanel2.this, "filter");
       JTabbedPane tabs = new JTabbedPane();
       dialog.getContentPane().setLayout(new BorderLayout());
-      MWAction mw = new MWAction();
-      GenRAction genr = new GenRAction();
-      tabs.addTab(genr.getValue(NAME).toString(), genr.getTab());
-      tabs.addTab(mw.getValue(NAME).toString(), mw.getTab());
+      tabs.addTab(genr.getName(), genrtab);
+      tabs.addTab(mw.getName(), mwtab);
       
       dialog.getContentPane().add(tabs, BorderLayout.CENTER);
       
@@ -209,7 +231,12 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
       dialog.pack();
       dialog.show();
       if (JOptionPane.OK_OPTION == dialog.getOption()) {
-        
+        Map<String, Set<Integer>> mwmap = mw.getMethodMap(mwtab);
+        Map<String, Set<Integer>> genrmap = genr.getMethodMap(genrtab);
+        filter = new HashMap<>();
+        if (!mwmap.isEmpty()) filter.put(mw.getName(), mwmap);
+        if (!genrmap.isEmpty()) filter.put(genr.getName(), genrmap);
+        filter(filter);
       }
     }
     
@@ -463,6 +490,40 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
     return null;
   }
 
+  public void filter(Map<String,Map<String,Set<Integer>>> filter) {
+    if (filter.isEmpty()) {
+      model.activateFilter(false);
+      if (model.getRoot() != root) model.setRoot(root);
+    } else {
+      model.activateFilter(true);
+      model.setRoot(filter(root, filter));      
+    }
+    
+  }
+
+  private DefaultMutableTreeNode filter(DefaultMutableTreeNode parent,
+      Map<String, Map<String, Set<Integer>>> filter) {
+    InvisibleNode node;
+    if (! (parent instanceof InvisibleNode)) {
+      node = new InvisibleNode(parent.getUserObject());
+      Enumeration<?> children = parent.children();
+      while (children.hasMoreElements()) {
+        DefaultMutableTreeNode object = (DefaultMutableTreeNode) children.nextElement();
+        node.add(filter(object, filter));       
+      }
+    } else {
+      node = (InvisibleNode) parent;
+    }
+    if (node.isLeaf()) {
+      node.setVisible(Math.random()>0.2);
+    } else {
+      int cnt = node.getChildCount(true);
+      node.setVisible(cnt != 0);
+    }
+    
+    return node;
+  }
+
   class Plakken extends AbstractAction {
     Plakken() {
       super(TextMapper.getText("paste"));
@@ -509,8 +570,8 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   private JButton bewerken;
   private Box south;
   JTree tree;
-  DefaultTreeModel model;
-  DynamicUtilTreeNode root;
+  InvisibleTreeModel model;
+  DefaultMutableTreeNode root;
   private JComponent settings;
   JFormattedTextField slip, init, learn;
 
@@ -613,7 +674,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   NodeVector v = new NodeVector(locale);
   v.setTitle("Leerdomein");
   root = new DynamicUtilTreeNode(v,v);
-  model = new DefaultTreeModel(root);   
+  model = new InvisibleTreeModel(root);   
   tree = new JTree(model);
   DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
   tree.setCellRenderer(renderer);
@@ -766,6 +827,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
     leftSouth.setVisible(!b);
     fillSelection();
     if (b) {
+      filter(Collections.emptyMap());
       leftBox.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
       bewerken.setText(TextMapper.getText(TextMapper.GUIH_STOP_EDIT));
       title.setText("Editor " + getTitle());
