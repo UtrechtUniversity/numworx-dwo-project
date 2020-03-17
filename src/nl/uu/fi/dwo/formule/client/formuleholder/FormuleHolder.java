@@ -172,15 +172,19 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	
 	public Panel getAsPanel()
 	{
-		TouchPanel tp = new TouchPanel();
+		Panel tp = createPanel();
 		tp.add(this.main);
 		return tp;
 	}
-//
-//	public Panel getPanel()
-//	{
-//		return sp;
-//	}
+
+	/**
+	 * hide creation of panel for touch/mouse/pointer
+	 * @return a panel
+	 * @see FormuleEditorTouchHandler
+	 */
+    public Panel createPanel() {
+      return new TouchPanel();
+    }
 
 	public Widget getCanvas()
 	{

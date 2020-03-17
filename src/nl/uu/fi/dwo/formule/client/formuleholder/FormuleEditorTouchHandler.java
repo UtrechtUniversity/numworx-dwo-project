@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
@@ -16,6 +17,7 @@ import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
 
 
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
+import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 /**
  * 
@@ -39,6 +41,11 @@ public class FormuleEditorTouchHandler implements TouchHandler
 
 	}
 
+	public HandlerRegistration initHandler() {
+	  TouchPanel w = (TouchPanel) editor.getAsPanel();
+	  return w.addTouchHandler(this);
+	}
+	
 	@Override
 	public void onTouchStart(TouchStartEvent event)
 	{

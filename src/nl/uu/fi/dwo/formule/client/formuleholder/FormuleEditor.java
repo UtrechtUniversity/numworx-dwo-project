@@ -177,12 +177,12 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF, IsW
 		current = e;
 	}
 
-	public TouchPanel getAsPanel()
+	public Panel getAsPanel()
 	{
 	    if (widget != null) return widget;
 		//FocusPanel sp = new FocusPanel();
 		//nl.uu.fi.dwo.interaction.client.touch.TouchPanel sp = new nl.uu.fi.dwo.interaction.client.touch.TouchPanel();
-		TouchPanel sp = new TouchPanel();
+		Panel sp = createPanel();
 		sp.getElement().addClassName("insert_formule");
 		sp.add(this.getMainRegel().asWidget());
 		widget = sp;
@@ -526,7 +526,7 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF, IsW
 		registration = r;
 	}
 
-	public TouchPanel widget;
+  public Panel widget;
   @Override
   public Widget asWidget() {
     if (widget == null)

@@ -31,7 +31,7 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 
 	private int showResult = NONE;
 
-	TouchPanel sp = null;
+	Panel sp = null;
 	FormuleRegel current;
 	Image checkimg;
 	
@@ -47,13 +47,13 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 		this.getMainRegel().insert(currentFormule);
 		this.paint();
 
-		sp = new TouchPanel();
+		sp = createPanel();
 		checkimg = new Image(FORMULE_BUNDLE.goedkrul().getSafeUri());
 		checkimg.getElement().getStyle().setMarginRight(10, Unit.PX);
 		checkimg.setVisible(false);
 		sp.add(checkimg);
 		sp.add(this.getCanvas());
-		registration = sp.addTouchHandler(new FormuleEditorTouchHandler(this));
+		registration = (new FormuleEditorTouchHandler(this)).initHandler();
 		setCurrentRegel(getMainRegel());
 		
 	}
@@ -86,12 +86,12 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 		this.getMainRegel().insert(currentFormule);
 		this.paint();
 
-		sp = new TouchPanel();
+		sp = createPanel();
 		checkimg = new Image(FORMULE_BUNDLE.goedkrul().getSafeUri());
 		checkimg.setVisible(false);
 		sp.add(this.getCanvas());
 		sp.add(checkimg); // waarom een ouderwetse onzichtbare krul?
-		registration = sp.addTouchHandler(new FormuleEditorTouchHandler(this));
+		registration = (new FormuleEditorTouchHandler(this)).initHandler();
 		setCurrentRegel(getMainRegel());
 	}
 
