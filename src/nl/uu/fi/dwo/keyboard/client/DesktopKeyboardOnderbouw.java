@@ -1,9 +1,12 @@
 package nl.uu.fi.dwo.keyboard.client;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
+
+import nl.uu.fi.dwo.keyboard.client.i18n.Key;
 
 public class DesktopKeyboardOnderbouw extends DesktopKeyboard {
 
@@ -59,7 +62,9 @@ public class DesktopKeyboardOnderbouw extends DesktopKeyboard {
 	@Override void onC20(ClickEvent e) {}
 	@Override void onC27(ClickEvent e) { getEditor().insert('ℝ'); }
 	@Override void onC28(ClickEvent e) { getEditor().insert('∪'); }
-	@Override void onC29(ClickEvent e) { getEditor().insert('/'); }
+	Key keys = GWT.create(Key.class);
+	char slash = keys.slash().charAt(0);
+	@Override void onC29(ClickEvent e) { getEditor().insert(slash); }
 	@Override void onC30(ClickEvent e) { getEditor().insert('*'); }
 	@Override void onC31(ClickEvent e) { getEditor().insert('-'); }
     @Override void onC5(ClickEvent e) { getEditor().insert('+'); }
