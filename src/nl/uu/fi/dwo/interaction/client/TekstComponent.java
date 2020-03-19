@@ -6,9 +6,7 @@ import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 public class TekstComponent implements IsWidget {
 
