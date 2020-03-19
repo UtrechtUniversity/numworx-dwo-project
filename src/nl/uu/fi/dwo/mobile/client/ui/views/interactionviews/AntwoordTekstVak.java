@@ -138,7 +138,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 	private boolean boxMetRand;
 	
 	private LayoutPanel basisPanel;
-	private TouchPanel achtergrondPanel;
+	private Panel achtergrondPanel;
 	int breedte = 110;
 	int hoogte = 24; 	
 	boolean volledigeBreedte = false;
@@ -509,7 +509,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		
 		if (formuleMode) 
 		{	//basisPanel.setSize(Math.max(minBreedte, formuleVak.getSize().width + 24), formuleVak.getSize().height + 8);
-			achtergrondPanel = new TouchPanel();
+			achtergrondPanel = formuleVak.getAsPanel();
 			if(boxMetRand) {
 				achtergrondPanel.getElement().getStyle().setBackgroundColor("white");
 				achtergrondPanel.getElement().getStyle().setProperty("border", "1px solid gray");
@@ -525,8 +525,9 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 			achtergrondPanel.getElement().addClassName("insert_formule");
 			achtergrondPanel.getElement().getStyle().setPaddingLeft(3, Style.Unit.PX);
 			achtergrondPanel.getElement().getStyle().setPaddingTop(2, Style.Unit.PX);
-			achtergrondPanel.add(formuleVak.getMainRegel());
-			achtergrondPanel.addTouchHandler(new FormuleEditorTouchHandler(formuleVak));
+			//achtergrondPanel.add(formuleVak.getMainRegel());
+			//((TouchPanel) achtergrondPanel).addTouchHandler(new FormuleEditorTouchHandler(formuleVak));
+			new FormuleEditorTouchHandler(formuleVak).initHandler();
 			//basisPanel.add(formuleVak.getMainRegel().getCanvas());
 			//basisPanel.setWidgetLeftRight(formuleVak.getMainRegel().getCanvas(), 4, Style.Unit.PX, 20, Style.Unit.PX);
 			//basisPanel.setWidgetTopBottom(formuleVak.getMainRegel().getCanvas(), 4, Style.Unit.PX, 4, Style.Unit.PX);
@@ -1224,7 +1225,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		return basisPanel;
 	}
 	
-	public TouchPanel getTouchPanel()
+	public Panel getTouchPanel()
 	{
 		return achtergrondPanel;
 	}

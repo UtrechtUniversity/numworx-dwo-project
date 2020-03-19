@@ -62,7 +62,7 @@ public class PijlVak extends LayoutPanel
 	FormuleViewer prefixVak;
 	FormuleEditor editor;
 	FormuleViewer viewer;
-	TouchPanel editorPanel;
+	Panel editorPanel;
 	
 	private FormuleFont fm;
 	private boolean hasPrefix = false;
@@ -186,13 +186,20 @@ public class PijlVak extends LayoutPanel
 	
 	public PijlVakFormuleEditor addNewEditor(LayoutPanel p)
 	{
-		PijlVakFormuleEditor editor = new PijlVakFormuleEditor(this);
+		PijlVakFormuleEditor editor = new PijlVakFormuleEditor(this) {
+
+          @Override
+          public Panel getAsPanel() {
+            return editorPanel;
+          }
+		  
+		};
 		editor.setFormuleToolBijFocus(true);
 		editor.setFont(fm);
-
-		editorPanel = new TouchPanel();
+// FIXED editorPanel === editor.getAsPanel()
+		editorPanel = editor.createPanel();
 		editorPanel.add(editor.getMainRegel().asWidget());
-		editor.register(editorPanel.addTouchHandler(new FormuleEditorTouchHandler(editor)));
+		editor.register((new FormuleEditorTouchHandler(editor)).initHandler());
 
 		if (hasPrefix)
 		{

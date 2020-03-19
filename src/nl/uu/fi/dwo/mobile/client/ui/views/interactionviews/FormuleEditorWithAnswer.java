@@ -287,7 +287,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private static final String ANTWOORD_STRING = "antwoordString";
 	private final static Logger logger = Logger.getLogger("FormuleEditorWithAnswer");
 	OpdrNavIF comRoot;
-	TouchPanel sp = null;
+	Panel sp = null;
 	//FlowPanel prefixPanel = null;
 	private Image checkimg;
 	Label feedbackLabel;
@@ -370,7 +370,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			this.fews = fe;
 		}
 		facade = new PopupFacade(h);
-		sp = new TouchPanel();
+		sp = createPanel();
 		
 		if(h == null)
 			return;
@@ -687,7 +687,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			//checkPanel.getElement().getStyle().setBackgroundColor("red");
 			//prefixPanel.getElement().getStyle().setBackgroundColor("yellow");
 			//this.getMainRegel().getCanvas().getElement().getStyle().setBackgroundColor("blue");
-			register(sp.addTouchHandler(new FormuleEditorTouchHandler(this)));
+			register(new FormuleEditorTouchHandler(this).initHandler());
 			lastanswer = "$f" + toString() + "@"; // initialize lastanswer voor kijkna not sending
 		
 		}
@@ -1605,7 +1605,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	}
 
 	@Override
-	public TouchPanel getAsPanel()
+	public Panel getAsPanel()
 	{
 		return sp;
 	}
@@ -2129,7 +2129,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (b && editable)
 		{
 			sp.removeStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().insert_formule_readonly());
-			register(sp.addTouchHandler(new FormuleEditorTouchHandler(this)));
+			register(new FormuleEditorTouchHandler(this).initHandler());
 			this.requestFocus();
 		}
 		else

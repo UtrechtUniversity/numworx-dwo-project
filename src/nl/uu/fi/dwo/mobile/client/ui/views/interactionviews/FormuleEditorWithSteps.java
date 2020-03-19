@@ -595,7 +595,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			
 			if(bordjesMethode){
 				Logger.getLogger("FormuleEditorWithStep").info("bordjesmethode");
-				addFormulePanelListeners((TouchPanel) f.getAsPanel(), f);
+				addFormulePanelListeners(f);
 			}
 			contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, f.getHeight(), Style.Unit.PX);
 			
@@ -1554,13 +1554,13 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 //		{	editor.getPrefixPanel().add(prefixViewer.getAsPanel());
 //			width += prefixViewer.getWidth();
 //		}
-		TouchPanel tp = (TouchPanel) editor.getAsPanel();
+		Panel tp = editor.getAsPanel();
 		p.add(tp);
 		p.setWidgetLeftWidth(tp, hasPrefix?prefixViewer.getWidth() + 23:23, Style.Unit.PX, editor.getMainRegel().getWidth(), Style.Unit.PX);
 		p.setWidgetTopHeight(tp, hasPrefix?Math.max(prefixViewer.getAsHoogte() - editor.getAsHoogte(), 0):0, Style.Unit.PX, Math.max(hasPrefix?prefixViewer.getHeight():0, editor.getMainRegel().getHeight()), Style.Unit.PX);
 		if(bordjesMethode)
 		{
-			addFormulePanelListeners(tp, editor);
+			addFormulePanelListeners(editor);
 		}
 		return editor;
 	}
@@ -2100,10 +2100,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	}
 	
 	
-	private void addFormulePanelListeners(final TouchPanel tp, final FormuleHolder editor)
+	private void addFormulePanelListeners(final FormuleHolder editor)
 	{
 		editor.removeTouchHandler();
-		tp.addTouchHandler(new BordjesTouchHandler(editor));
+		new BordjesTouchHandler(editor).initHandler();
 	}
 	
 	private void freezeViewer(FormuleViewer f)
@@ -2494,7 +2494,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 					if (viewers.size() > 1)
 						freezeViewer(viewers.get(viewers.size() - 2));
 					if (!nagekeken)
-						addFormulePanelListeners((TouchPanel) fv.getAsPanel(), fv); 
+						addFormulePanelListeners(fv); 
 				}
 			}
 			
@@ -3741,7 +3741,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			if (viewers.size() > 1)
 				freezeViewer(viewers.get(viewers.size() - 2));
 			if (!verg.isEindOplossing(verg.geefVergelijkingVar()))
-				addFormulePanelListeners((TouchPanel) fv.getAsPanel(), fv); 
+				addFormulePanelListeners(fv); 
 		}
 	}
 
@@ -3904,7 +3904,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			p.getElement().getStyle().setProperty("display", "inline");
 			stepPanel.add(p);
 			if (bordjesMethode)
-				addFormulePanelListeners((TouchPanel) p, fv); 
+				addFormulePanelListeners(fv); 
 			
 			contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, fv.getHeightWithImage(), Style.Unit.PX);
 			if (linOefenVersie)

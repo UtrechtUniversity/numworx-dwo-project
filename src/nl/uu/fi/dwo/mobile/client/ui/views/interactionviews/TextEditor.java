@@ -1454,7 +1454,6 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			//editor.insert();
 			panel = editor.getAsPanel();
 			//comRoot.getKeyboard().setEditor(editor);
-			TouchDelegate wrap = new TouchDelegate(panel);
 			panel.addDomHandler(new FormuleTapper(editor, this), ClickEvent.getType());
 			FormuleEditorTouchHandler h = new FormuleEditorTouchHandler(editor) {
 
@@ -1465,7 +1464,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 					setCursorWidget(FormulaVak.this);
 				} 
 			};
-			wrap.addTouchHandler(h);
+			(h).initHandler();
 			editor.resize();
 			initWidget(panel);
 			setStyleName(css.insert_formule());
@@ -1542,7 +1541,6 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			hbox.setStyleName(css.insert_calculator());
 			panel = editor.getAsPanel();
 			panel.setStyleName(css.insert_formule());
-			TouchDelegate wrap = new TouchDelegate(panel);
 			FormuleEditorTouchHandler h = new FormuleEditorTouchHandler(editor)
 			{
 				@Override
@@ -1553,7 +1551,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 					setCursorWidget(CalculatorVak.this);
 				} 
 			};
-			wrap.addTouchHandler(h);
+			h.initHandler();
 			hbox.addDomHandler(new FormuleTapper(editor, this), ClickEvent.getType());
 			hbox.add(panel);
 			btn = new Button("=");

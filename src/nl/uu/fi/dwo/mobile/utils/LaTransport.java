@@ -36,6 +36,11 @@ public class LaTransport implements Logging {
 	;
 	
 
+	public static Logging newTAOinstance() {
+	  return new LaTransport(new LogSender());
+	}
+	
+	
 	public static Logging newInstance() { 
 		return new LaTransport(new PairSender(new LaconSender(), new LogSender()));		
 	}

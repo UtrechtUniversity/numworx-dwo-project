@@ -2236,10 +2236,10 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			return mainPanel2;
 	}
 
-	public void addFormulePanelListeners(final TouchPanel tp, final FormuleHolder editor)
-	{
-		tp.addTouchHandler(new FormuleEditorTouchHandler(editor));
-	}
+//	public void addFormulePanelListeners(final TouchPanel tp, final FormuleHolder editor)
+//	{
+//		tp.addTouchHandler(new FormuleEditorTouchHandler(editor));
+//	}
 
 	private PopupFacade facade;
 	private Widget widget;
