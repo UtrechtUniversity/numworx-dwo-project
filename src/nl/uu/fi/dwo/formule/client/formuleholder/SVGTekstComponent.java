@@ -53,12 +53,12 @@ public class SVGTekstComponent extends TekstComponent {
 	}
 
 
-	@Override
-	public Panel getAsPanel() {
-		TouchPanel sp = new TouchPanel();
-		sp.add(this.svgImage);
-		return sp;
-	}
+//	@Override
+//	public Panel getAsPanel() {
+//		TouchPanel sp = new TouchPanel();
+//		sp.add(this.svgImage);
+//		return sp;
+//	}
 
 	@Override
 	public Widget asWidget() {

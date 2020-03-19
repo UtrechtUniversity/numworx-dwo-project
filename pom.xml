@@ -68,7 +68,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.mobile</groupId>
 			<artifactId>interaction</artifactId>
-			<version>0.1.5-SNAPSHOT</version>
+			<version>0.1.7-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.googlecode.mgwt</groupId>
@@ -102,6 +102,11 @@
 			<artifactId>IdeasGWT</artifactId>
 			<version>0.1.0</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>com.vaadin.addon</groupId>
+		    <artifactId>pointer-events</artifactId>
+		    <version>1.0</version>
 		</dependency>
 	</dependencies>
 	<version>0.1.7-SNAPSHOT</version>
