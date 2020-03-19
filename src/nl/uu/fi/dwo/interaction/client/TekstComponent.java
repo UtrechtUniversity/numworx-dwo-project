@@ -193,14 +193,14 @@ public class TekstComponent implements IsWidget {
 //		font = fm;
 //	}
 	
-	public Panel getAsPanel()
-	{
-		//FocusPanel sp = new FocusPanel();
-		TouchPanel sp = new TouchPanel();
-		sp.add(this.canvas);
-		//sp.add(span);
-		return sp;
-	}
+//	public Panel getAsPanel()
+//	{
+//		//FocusPanel sp = new FocusPanel();
+//		TouchPanel sp = new TouchPanel();
+//		sp.add(this.canvas);
+//		//sp.add(span);
+//		return sp;
+//	}
 
 	@Override
 	public Widget asWidget() {
