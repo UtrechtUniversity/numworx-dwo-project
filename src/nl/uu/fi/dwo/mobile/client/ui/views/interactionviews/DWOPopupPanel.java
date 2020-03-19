@@ -70,9 +70,6 @@ public class DWOPopupPanel extends PopupPanel {
 	private HandlerRegistration touchMoveHandler, touchEndHandler, touchStartHandler;
 	private HandlerRegistration pointerMoveHandler, pointerUpHandler, pointerDownHandler;
 	
-	static final DOMImpl impl = GWT.create(DOMImpl.class);
-	
-	
 	public DWOPopupPanel(String title, PopupListener popupListener) {
 		super(false);
 		this.popupListener = popupListener;
@@ -192,7 +189,7 @@ public class DWOPopupPanel extends PopupPanel {
 			return 2;
 		if(new Rectangle(r.x, r.y+r.h-d, d, d).contains(x, y))
 			return 6;
-		if(new Rectangle(r.x+r.w-d, r.y+r.h-d, 5, 5).contains(x, y))
+		if(new Rectangle(r.x+r.w-d, r.y+r.h-d, d, d).contains(x, y))
 			return 8;
 		if(new Rectangle(r.x, r.y, r.w, d).contains(x, y))
 			return 1;
@@ -359,20 +356,20 @@ public class DWOPopupPanel extends PopupPanel {
 	class PointerPopupHandler implements PointerDownHandler, PointerMoveHandler, PointerUpHandler	{
 		@Override
 		public void onPointerUp(PointerUpEvent event) {
-			event.preventDefault();
+			//event.preventDefault();
 			mouseTouchPointerEnd(event.getClientX(),event.getClientY());
 			event.stopPropagation();
 		}
 		@Override
 		public void onPointerMove(PointerMoveEvent event) {
-			event.preventDefault();
+			//event.preventDefault();
 			mouseTouchPointerMove(event.getClientX(),event.getClientY());
 			event.stopPropagation();
 		}
 		@Override
 		public void onPointerDown(PointerDownEvent event) {
 			hasPointerSupport = true;
-			event.preventDefault();
+			//event.preventDefault();
 			mouseTouchPointerDown(event.getClientX(),event.getClientY());
 			event.stopPropagation();
 		}
