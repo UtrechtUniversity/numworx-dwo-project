@@ -179,7 +179,7 @@
 				[
 			</my:FKey>
 			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t3_12">
-				⟨
+				〈
 			</my:FKey>
 			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t4_12">
 				←
@@ -194,7 +194,7 @@
 				]
 			</my:FKey>
 			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t3_13">
-				⟩
+				〉
 			</my:FKey>
 			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t4_13">
 				→
