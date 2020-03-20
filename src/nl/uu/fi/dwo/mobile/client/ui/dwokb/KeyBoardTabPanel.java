@@ -3,23 +3,20 @@ package nl.uu.fi.dwo.mobile.client.ui.dwokb;
 import java.util.Vector;
 import java.util.logging.Logger;
 
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleButton;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
 import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.formule.client.formuleobjects.TouchButton;
 import nl.uu.fi.dwo.mobile.utils.ImageUtils;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
-import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
-import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 
 /**
  * Tabs between different keyboard layouts
@@ -42,14 +39,14 @@ public class KeyBoardTabPanel
 
 	private Vector<Panel> tabs = new Vector<Panel>();
 	private Vector<Integer> tabHeights = new Vector<Integer>();
-	private Vector<TouchButton> tabbuttons = new Vector<TouchButton>();
+	private Vector<FormuleButton> tabbuttons = new Vector<FormuleButton>();
 	private Vector<String> tabkeys = new Vector<String>();
 
 	private int current = 0;
 
-	private final TouchButton keyboardButton = new TouchButton();
+	private final FormuleButton keyboardButton = new FormuleButton();
 //	private final TouchButton keyboardRemoveButton = new TouchButton();
-	private final TouchButton digitsButton = new TouchButton();
+	private final FormuleButton digitsButton = new FormuleButton();
 
 	private boolean enabled = false;
 	
@@ -89,10 +86,10 @@ public class KeyBoardTabPanel
 		Image buttonImage = ImageUtils.newImage("images/resources/keyboardbutton.png");
 		buttonImage.getElement().getStyle().setMargin(5, Unit.PX);
 		keyboardButton.add(buttonImage);
-		keyboardButton.addTapHandler(new TapHandler() {
+		keyboardButton.addClickHandler(new ClickHandler() {
 
 			@Override
-			public void onTap(TapEvent event) {
+			public void onClick(ClickEvent event) {
 				if(enabled) 
 				{
 					goTo(FormuleKeyboard.KEYBOARD);
@@ -103,10 +100,10 @@ public class KeyBoardTabPanel
 			buttonImage = ImageUtils.newImage("images/resources/digits.png");
 			buttonImage.getElement().getStyle().setMargin(5, Unit.PX);
 			digitsButton.add(buttonImage);
-			digitsButton.addTapHandler(new TapHandler() {
+			digitsButton.addClickHandler(new ClickHandler() {
 
 				@Override
-				public void onTap(TapEvent event) {
+				public void onClick(ClickEvent event) {
 					if(enabled)
 					{
 
@@ -174,7 +171,7 @@ public class KeyBoardTabPanel
 		p.setStylePrimaryName("tabkeyboard");
 		p.addStyleDependentName(FormuleKeyBoardButtons.getDependentName());
 
-		TouchButton button = new TouchButton();
+		FormuleButton button = new FormuleButton();
 		button.setText(buttonText);
 		this.tabs.add(p);
 		this.tabbuttons.add(button);
@@ -189,10 +186,10 @@ public class KeyBoardTabPanel
 
 		final int index = this.tabs.size() - 1;
 
-		button.addTouchStartHandler(new TouchStartHandler()
+		button.addClickHandler(new ClickHandler()
 		{
 			@Override
-			public void onTouchStart(TouchStartEvent event)
+			public void onClick(ClickEvent event)
 			{
 				tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
 				Panel panel = tabs.get(index);

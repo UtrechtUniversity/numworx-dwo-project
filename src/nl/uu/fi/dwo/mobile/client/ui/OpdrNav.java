@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 import org.osgi.util.promise.Promise;
 import nl.uu.fi.dwo.account.client.StudentModelView;
-import nl.uu.fi.dwo.formule.client.formuleobjects.TouchButton;
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleButton;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
@@ -40,6 +40,8 @@ import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
@@ -62,6 +64,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.google.web.bindery.event.shared.ResettableEventBus;
@@ -96,12 +99,12 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private ViewModuleViewImpl entry;
 	private ListBox lb_activiteiten;
 	private Panel fp_opdrachten;
-	private TouchButton shiftButtonLeft;
+	private FormuleButton shiftButtonLeft;
 	private Label spaceStart;
 	/**
 	 * Een opdrachtbol. Globaal t.b.v. bepalen breedte.
 	 */
-	private TouchButton opdrachtButton;
+	private FormuleButton opdrachtButton;
 	/**
 	 * De ruimte na de opdrachtbol. Globaal t.b.v. bepalen breedte.
 	 */
@@ -173,7 +176,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private int scoreMax;
 	private int currentOpdracht = 0;
 	private int currentActiviteit = 0;
-	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
+	private ArrayList<FormuleButton> buttons = new ArrayList<FormuleButton>();
 	Memento memento;
 	private final static ResettableEventBus BUS = new ResettableEventBus(DWOplayer.PARAMETERS.getEventBus());
 
@@ -658,7 +661,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			//if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
 			// altijd maken omdat ze gebruikt worden om de navigatiebalk op maat te maken
 			{	
-				shiftButtonLeft = new TouchButton();
+				shiftButtonLeft = new FormuleButton();
 				shiftButtonLeft.setStylePrimaryName(css.shiftBtn());
 				addScrollButtonHandler(shiftButtonLeft,-1);
 	//			shiftButtonLeft.setText("◀◀"); // lelijk icoon op ipad
@@ -688,7 +691,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				spaceEnd.setStylePrimaryName(css.spaceShiftLabel());
 				spaceEnd.setText("...");
 				fp_opdrachten.add(spaceEnd);
-				TouchButton shiftButtonRight = new TouchButton();
+				FormuleButton shiftButtonRight = new FormuleButton();
 				shiftButtonRight.setStylePrimaryName(css.shiftBtn());
 				addScrollButtonHandler(shiftButtonRight,1);
 	//			shiftButtonRight.setText("▶▶"); // lelijk icoon op ipad
@@ -730,7 +733,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		{
 			if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
 			{	
-				shiftButtonLeft = new TouchButton();
+				shiftButtonLeft = new FormuleButton();
 				shiftButtonLeft.setStylePrimaryName(css.shiftBtn());
 				addScrollButtonHandler(shiftButtonLeft,-1);
 	//			shiftButtonLeft.setText("◀◀"); // lelijk icoon op ipad
@@ -758,7 +761,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				spaceEnd.setStylePrimaryName(css.spaceShiftLabel());
 				spaceEnd.setText("...");
 				fp_opdrachten.add(spaceEnd);
-				TouchButton shiftButtonRight = new TouchButton();
+				FormuleButton shiftButtonRight = new FormuleButton();
 				shiftButtonRight.setStylePrimaryName(css.shiftBtn());
 				addScrollButtonHandler(shiftButtonRight,1);
 	//			shiftButtonRight.setText("▶▶"); // lelijk icoon op ipad
@@ -821,7 +824,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 */
 	private void setButton(int j)
 	{
-		TouchButton button = new TouchButton();
+		FormuleButton button = new FormuleButton();
 		Label space = new Label();
 		// enable scores, geen toets en scoreMax > 0
 		if (!geefNoScore(currentActiviteit, j))
@@ -938,7 +941,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		return enabled;
 	}
 
-	public TouchButton getButton(int j)
+	public FormuleButton getButton(int j)
 	{
 		try
 		{
@@ -951,13 +954,13 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	}
 
-	private void addButtonHandler(TouchButton button, int id)
+	private void addButtonHandler(FormuleButton button, int id)
 	{
 		final int button_id = id;
-		button.addTouchStartHandler(new TouchStartHandler()
+		button.addClickHandler(new ClickHandler()
 		{
 			@Override
-			public void onTouchStart(TouchStartEvent event)
+			public void onClick(ClickEvent event)
 			{
 				if (buttonsEnabled[currentActiviteit][button_id])
 				{
@@ -985,13 +988,13 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 * @param button
 	 * @param s Waarde is + 1 (shift left) of - 1 (shift right)
 	 */
-	private void addScrollButtonHandler(TouchButton button, int s)
+	private void addScrollButtonHandler(FormuleButton button, int s)
 	{
 		final int shift = s;
-		button.addTouchStartHandler(new TouchStartHandler()
+		button.addClickHandler(new ClickHandler()
 		{
 			@Override
-			public void onTouchStart(TouchStartEvent event)
+			public void onClick(ClickEvent event)
 			{
 				currentShift+=shift;
 				if (currentShift < 0)
@@ -1020,7 +1023,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		if (geefNoScore(currentActiviteit, index) || !buttonsEnabled[currentActiviteit][index] || !scoresVisible())
 			return;
 
-		final TouchButton btn = buttons.get(index);
+		final Widget btn = buttons.get(index);
 		final int score;
 		
 		if (mode == ZELFTOETS)
@@ -1085,7 +1088,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 * @param b
 	 * @param opdrNr
 	 */
-	private void setButtonCorrect(TouchButton button, boolean b, int opdrNr)
+	private void setButtonCorrect(Widget button, boolean b, int opdrNr)
 	{
 		if (geefNoScore(currentActiviteit, opdrNr))
 		{
@@ -1121,7 +1124,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 * @param b
 	 * @param opdrNr
 	 */
-	private void setButtonCorrectZelftoets(TouchButton button, boolean b, int opdrNr)
+	private void setButtonCorrectZelftoets(Widget button, boolean b, int opdrNr)
 	{
 		if (geefNoScore(currentActiviteit, opdrNr))
 		{
@@ -1205,12 +1208,12 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		}
 	}
 
-	public void setButtonCursor(TouchButton button)
+	public void setButtonCursor(Widget button)
 	{
 		button.addStyleName(css.scoreBtn_cursor());
 	}
 
-	public void removeButtonCursor(TouchButton button)
+	public void removeButtonCursor(Widget button)
 	{
 		button.removeStyleName(css.scoreBtn_cursor());
 	}

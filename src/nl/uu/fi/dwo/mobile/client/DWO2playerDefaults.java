@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.mobile.client.sco.StudentModelLogger;
 import nl.uu.fi.dwo.mobile.client.ui.IdleDetect;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.dwokb.NoStatusKeyboard;
+import nl.uu.fi.dwo.mobile.utils.LaTransport;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 
 public class DWO2playerDefaults extends DWOplayerDefaults implements DwoConstants {
@@ -19,14 +20,16 @@ public class DWO2playerDefaults extends DWOplayerDefaults implements DwoConstant
 
 	public DWO2playerDefaults() {
 		super(null);
-		String host = getHost();
-		String http = Window.Location.getProtocol();
-		launchData = http +"//"
-				+ host
-				+ "/dwo/rest/public/scoData/getJSONLaunchDataBytes?scoId=";
-//		courseDescription = http + "//"
+//		String host = getHost();
+//		String http = Window.Location.getProtocol();
+		launchData =
+//		    http +"//"
 //				+ host
-//				+ "/dwo/rest/public/course/getCourseDescription?courseId=";		
+//				+ 
+				"/dwo/rest/public/scoData/getJSONLaunchDataBytes?scoId=";
+
+	 //  loggingProvider = () -> LaTransport.newTAOinstance();
+
 	}
 
 	@Override

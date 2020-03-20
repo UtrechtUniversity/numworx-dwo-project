@@ -1458,8 +1458,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			FormuleEditorTouchHandler h = new FormuleEditorTouchHandler(editor) {
 
 				@Override
-				public void onTouchEnd(TouchEndEvent event) {
-					super.onTouchEnd(event);
+				public void onEnd(EndEvent event) {
+					super.onEnd(event);
 					deSelection();
 					setCursorWidget(FormulaVak.this);
 				} 
@@ -1544,9 +1544,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			FormuleEditorTouchHandler h = new FormuleEditorTouchHandler(editor)
 			{
 				@Override
-				public void onTouchEnd(TouchEndEvent event)
+				public void onEnd(EndEvent event)
 				{
-					super.onTouchEnd(event);
+					super.onEnd(event);
 					deSelection();
 					setCursorWidget(CalculatorVak.this);
 				} 

@@ -12,7 +12,6 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleButton;
-import nl.uu.fi.dwo.formule.client.formuleobjects.TouchButton;
 import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
@@ -135,12 +134,12 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	private FormuleEditorWithSteps gebruikersSubstitutiesVak;
 	private boolean substitutieVak = false;
 	
-	private TouchButton terugButton;
-	private TouchButton downButton;
-	private TouchButton copyButton;
-	private TouchButton closeButton;
+	private FormuleButton terugButton;
+	private FormuleButton downButton;
+	private FormuleButton copyButton;
+	private FormuleButton closeButton;
 	private FormuleButton plusKnop, minKnop, maalKnop, deelKnop, haakjesKnop, herleidKnop, abcKnop, subKnop;
-	private TouchButton rmKnop;
+	private FormuleButton rmKnop;
 	private int aantalDecRm = 10;
 	private FormuleButton ontbindKnop, splitsKnop, wortelBewerkKnop;
 	private boolean abcVisible, subVisible, subExtra;
@@ -409,7 +408,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		
 		Image buttonImg = new Image(DWOplayer.DWO_BUNDLE.pijlterug().getSafeUri());
 		buttonImg.getElement().getStyle().setMargin(2, Unit.PX);
-		terugButton = new TouchButton();
+		terugButton = new FormuleButton();
 		terugButton.add(buttonImg);
 		terugButton.getElement().getStyle().setFloat(Style.Float.RIGHT);
 		if(hasStartString)
@@ -418,14 +417,14 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		
 		Image downButtonImg = new Image(DWOplayer.DWO_BUNDLE.pijldown().getSafeUri());
 		downButtonImg.getElement().getStyle().setMargin(2, Unit.PX);
-		downButton = new TouchButton();
+		downButton = new FormuleButton();
 		downButton.add(downButtonImg);
 		downButton.getElement().getStyle().setFloat(Style.Float.RIGHT);
 		addDownButtonHandler(downButton);
 		
 		Image copyButtonImg = new Image(DWOplayer.DWO_BUNDLE.pijlcopy().getSafeUri());
 		copyButtonImg.getElement().getStyle().setMargin(2, Unit.PX);
-		copyButton = new TouchButton();
+		copyButton = new FormuleButton();
 		copyButton.add(copyButtonImg);
 		copyButton.getElement().getStyle().setFloat(Style.Float.RIGHT);
 		addCopyButtonHandler(copyButton);
@@ -433,13 +432,13 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 
 		Image closeButtonImg = new Image(DWOplayer.DWO_BUNDLE.closebutton().getSafeUri());
 		closeButtonImg.getElement().getStyle().setMargin(2, Unit.PX);
-		closeButton = new TouchButton();
+		closeButton = new FormuleButton();
 		closeButton.add(closeButtonImg);
 		closeButton.getElement().getStyle().setFloat(Style.Float.RIGHT);
 		addCloseButtonHandler(closeButton);
 		closeButton.setVisible(substitutieVak);
 		
-		rmKnop = new TouchButton();
+		rmKnop = new FormuleButton();
 		Image rmImage = new Image(DWOplayer.DWO_BUNDLE.rmknop().getSafeUri());
 		rmKnop.add(rmImage);
 		Style style = rmKnop.getElement().getStyle();
@@ -1638,12 +1637,12 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	 * 
 	 * @param tb
 	 */
-	private void addTerugButtonHandler(final TouchButton tb)
+	private void addTerugButtonHandler(final FormuleButton tb)
 	{
-		tb.addTouchStartHandler(new TouchStartHandler()
+		tb.addClickHandler(new ClickHandler()
 		{
 			@Override
-			public void onTouchStart(TouchStartEvent event)
+			public void onClick(ClickEvent event)
 			{
 				if (!editable)
 					return;
@@ -1655,10 +1654,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		});
 	}
 	
-	private void addAbcButtonHandler(final TouchButton tb)
-	{	tb.addTouchStartHandler(new TouchStartHandler()
+	private void addAbcButtonHandler(final FormuleButton tb)
+	{	tb.addClickHandler(new ClickHandler()
 		{	@Override
-			public void onTouchStart(TouchStartEvent event)
+			public void onClick(ClickEvent event)
 			{
 				if(!editable)
 					return;
@@ -1667,10 +1666,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		});
 	}
 	
-	private void addSubButtonHandler(final TouchButton tb)
-	{	tb.addTouchStartHandler(new TouchStartHandler()
+	private void addSubButtonHandler(final FormuleButton tb)
+	{	tb.addClickHandler(new ClickHandler()
 		{	@Override
-			public void onTouchStart(TouchStartEvent event)
+			public void onClick(ClickEvent event)
 			{	
 				if(!editable) return;
 				if(subExtra)
@@ -1687,11 +1686,11 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		});
 	}
 	
-	private void addPlusButtonHandler(final TouchButton tb)
+	private void addPlusButtonHandler(final FormuleButton tb)
 	{
-		tb.addTouchStartHandler(new TouchStartHandler()
+		tb.addClickHandler(new ClickHandler()
 		{	@Override
-			public void onTouchStart(TouchStartEvent event)
+			public void onClick(ClickEvent event)
 			{
 				if(!editable ||(!isStapOk() && !linOefenVersie))
 					return;
@@ -1700,10 +1699,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		});
 	}
 	
-	private void addMinButtonHandler(final TouchButton tb)
-	{	tb.addTouchStartHandler(new TouchStartHandler()
+	private void addMinButtonHandler(final FormuleButton tb)
+	{	tb.addClickHandler(new ClickHandler()
 		{	@Override
-			public void onTouchStart(TouchStartEvent event)
+			public void onClick(ClickEvent event)
 			{
 				if(!editable || (!isStapOk() && !linOefenVersie))
 					return;
@@ -1712,10 +1711,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		});
 	}
 	
-	private void addMaalButtonHandler(final TouchButton tb)
-	{	tb.addTouchStartHandler(new TouchStartHandler()
+	private void addMaalButtonHandler(final FormuleButton tb)
+	{	tb.addClickHandler(new ClickHandler()
 		{	@Override
-			public void onTouchStart(TouchStartEvent event)
+			public void onClick(ClickEvent event)
 			{
 				if(!editable || (!isStapOk() && !linOefenVersie))
 					return;
@@ -1724,10 +1723,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		});
 	}
 	
-	private void addDeelButtonHandler(final TouchButton tb)
-	{	tb.addTouchStartHandler(new TouchStartHandler()
+	private void addDeelButtonHandler(final FormuleButton tb)
+	{	tb.addClickHandler(new ClickHandler()
 		{	@Override
-			public void onTouchStart(TouchStartEvent event)
+			public void onClick(ClickEvent event)
 			{
 				if(!editable || (!isStapOk() && !linOefenVersie))
 					return;
@@ -1736,10 +1735,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		});
 	}
 	
-	private void addHaakjesButtonHandler(final TouchButton tb)
-	{	tb.addTouchStartHandler(new TouchStartHandler()
+	private void addHaakjesButtonHandler(final FormuleButton tb)
+	{	tb.addClickHandler(new ClickHandler()
 		{	@Override
-			public void onTouchStart(TouchStartEvent event)
+			public void onClick(ClickEvent event)
 			{	
 				if(!editable || (!isStapOk() && !linOefenVersie))
 					return;
@@ -1749,10 +1748,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		});
 	}
 	
-	private void addHerleidButtonHandler(final TouchButton tb)
-	{	tb.addTouchStartHandler(new TouchStartHandler()
+	private void addHerleidButtonHandler(final FormuleButton tb)
+	{	tb.addClickHandler(new ClickHandler()
 		{	@Override
-			public void onTouchStart(TouchStartEvent event)
+			public void onClick(ClickEvent event)
 			{
 				if(!editable || (!isStapOk() && !linOefenVersie))
 					return;
@@ -1762,10 +1761,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		});
 	}
 	
-	private void addOntbindButtonHandler(final TouchButton tb)
-	{	tb.addTouchStartHandler(new TouchStartHandler()
+	private void addOntbindButtonHandler(final FormuleButton tb)
+	{	tb.addClickHandler(new ClickHandler()
 		{	@Override
-			public void onTouchStart(TouchStartEvent event)
+			public void onClick(ClickEvent event)
 			{	
 				if(!editable || !isStapOk())
 					return;
@@ -1775,12 +1774,12 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		});
 	}
 	
-	private void addSplitsButtonHandler(final TouchButton tb)
+	private void addSplitsButtonHandler(final FormuleButton tb)
 	{
-		tb.addTouchStartHandler(new TouchStartHandler()
+		tb.addClickHandler(new ClickHandler()
 		{	
 			@Override
-			public void onTouchStart(TouchStartEvent event)
+			public void onClick(ClickEvent event)
 			{
 				if(!editable || !isStapOk())
 					return;
@@ -1790,11 +1789,11 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		});
 	}
 	
-	private void addWortelButtonHandler(final TouchButton tb)
+	private void addWortelButtonHandler(final FormuleButton tb)
 	{
-		tb.addTouchStartHandler(new TouchStartHandler()
+		tb.addClickHandler(new ClickHandler()
 		{	@Override
-			public void onTouchStart(TouchStartEvent event)
+			public void onClick(ClickEvent event)
 			{
 				if(!editable || !isStapOk())
 					return;
@@ -1809,12 +1808,12 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	 * 
 	 * @param tb
 	 */
-	private void addDownButtonHandler(final TouchButton tb)
+	private void addDownButtonHandler(final FormuleButton tb)
 	{
-		tb.addTouchStartHandler(new TouchStartHandler()
+		tb.addClickHandler(new ClickHandler()
 		{
 			@Override
-			public void onTouchStart(TouchStartEvent event)
+			public void onClick(ClickEvent event)
 			{
 				if(!editable || openstaandePijl)
 					return;
@@ -1848,12 +1847,12 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	 * 
 	 * @param tb
 	 */
-	private void addCopyButtonHandler(final TouchButton tb)
+	private void addCopyButtonHandler(final FormuleButton tb)
 	{
-		tb.addTouchStartHandler(new TouchStartHandler()
+		tb.addClickHandler(new ClickHandler()
 		{
 			@Override
-			public void onTouchStart(TouchStartEvent event)
+			public void onClick(ClickEvent event)
 			{
 				if(!editable 
 					|| openstaandePijl
@@ -1869,12 +1868,12 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		});
 	}
 	
-	private void addCloseButtonHandler(final TouchButton tb)
+	private void addCloseButtonHandler(final FormuleButton tb)
 	{
-		tb.addTouchStartHandler(new TouchStartHandler()
+		tb.addClickHandler(new ClickHandler()
 		{
 			@Override
-			public void onTouchStart(TouchStartEvent event)
+			public void onClick(ClickEvent event)
 			{
 				closeEditor();
 			}
@@ -1885,12 +1884,12 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	 * Voeg handler aan rekenmachine-knop toe.
 	 * @param rmKnop
 	 */
-	private void addRmKnopHandler(final TouchButton rmKnop)
+	private void addRmKnopHandler(final FormuleButton rmKnop)
 	{
-		rmKnop.addTouchStartHandler(new TouchStartHandler()
+		rmKnop.addClickHandler(new ClickHandler()
 		{
 			@Override
-			public void onTouchStart(TouchStartEvent event)
+			public void onClick(ClickEvent event)
 			{
 				if (!editable)
 					return;
@@ -2066,9 +2065,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		}
 		
 		@Override
-		public void onTouchStart(TouchStartEvent event)
+		public void onStart(StartEvent event)
 		{
-			super.onTouchStart(event);
+			super.onStart(event);
 			
 			if (!editable) 
 				return;
@@ -2077,11 +2076,11 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		}
 
 		@Override
-		public void onTouchEnd(TouchEndEvent event) 
+		public void onEnd(EndEvent event) 
 		{
 			logger.info("BordjesTouchHandler.onTouchEnd(): selection = " + editor.getSelectionString()
 				+ ", editable = " + editable + ", bordjesMethode = " + bordjesMethode);
-			super.onTouchEnd(event);
+			super.onEnd(event);
 			
 			if (!editable)
 				return;
@@ -2092,11 +2091,6 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			}
 		}
 
-		@Override
-		public void onTouchMove(TouchMoveEvent event)
-		{
-			super.onTouchMove(event);
-		}
 	}
 	
 	
