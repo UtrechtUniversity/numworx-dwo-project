@@ -71,10 +71,6 @@
 			<version>0.1.7-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>com.googlecode.mgwt</groupId>
-			<artifactId>MGWT</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>fi.wiskopdrgwt</groupId>
 			<artifactId>WiskOpdrGWT</artifactId>
 			<version>0.0.5</version>

@@ -8,10 +8,9 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import fi.wiskopdr.FormuleParser;
 

@@ -5,7 +5,7 @@
 	<inherits name="com.google.gwt.logging.Logging"/>
 	<inherits name="nl.uu.fi.dwo.interaction.Interaction" />
 	<inherits name="fi.wiskopdr.WiskOpdr" />
-	<inherits name="com.googlecode.mgwt.MGWTMin" />
 	<inherits name="org.vectomatic.libgwtsvg" />
+	<inherits name="com.vaadin.pointerevents.PointerEvents" />
 	<source path="client"/>
 </module>

@@ -6,97 +6,154 @@ import java.util.logging.Logger;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
-import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.dom.client.TouchCancelEvent;
+import com.google.gwt.event.dom.client.TouchCancelHandler;
+import com.google.gwt.event.dom.client.TouchEndEvent;
+import com.google.gwt.event.dom.client.TouchEndHandler;
+import com.google.gwt.event.dom.client.TouchMoveEvent;
+import com.google.gwt.event.dom.client.TouchMoveHandler;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
+import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.google.web.bindery.event.shared.HandlerRegistrations;
+import com.vaadin.pointerevents.client.PointerCancelEvent;
+import com.vaadin.pointerevents.client.PointerCancelHandler;
+import com.vaadin.pointerevents.client.PointerDownEvent;
+import com.vaadin.pointerevents.client.PointerDownHandler;
+import com.vaadin.pointerevents.client.PointerMoveEvent;
+import com.vaadin.pointerevents.client.PointerMoveHandler;
+import com.vaadin.pointerevents.client.PointerUpEvent;
+import com.vaadin.pointerevents.client.PointerUpHandler;
 import com.google.gwt.user.client.Event;
-import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
-import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
-//import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
-
-
-import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 /**
  * 
  * @author Evertson Croes
  * 
  */
-public class FormuleEditorTouchHandler implements TouchHandler
+public class FormuleEditorTouchHandler 
+  implements MouseDownHandler, MouseUpHandler, MouseMoveHandler, 
+             PointerDownHandler, PointerMoveHandler, PointerCancelHandler, PointerUpHandler, 
+             TouchStartHandler, TouchMoveHandler, TouchCancelHandler, TouchEndHandler
 {
-	protected FormuleHolder editor = null;
+  
+    public class MoveEvent {
+      final int x, y;
+
+      MoveEvent(int x, int y) {
+        this.x = x;
+        this.y = y;
+      }
+  }
+
+    public class StartEvent {
+      final int x, y;
+      final EventTarget target;
+      StartEvent(int x, int y, EventTarget target) {
+        this.x = x;
+        this.y = y;
+        this.target = target;
+      }
+    }
+  
+    public class EndEvent {
+      final int x, y;
+
+      EndEvent(int x, int y) {
+        this.x = x;
+        this.y = y;
+      }
+    }
+
+    private Element getElement(StartEvent event) {
+      return Element.as(event.target);
+    }
+    
+    protected void onStart(StartEvent event) {
+      
+        LOG.info("onStart " + event.x + "," +event.y);
+         
+        EventTarget target = event.target;
+        boolean when = Element.is(target) && (Element.as(target) == editor.getCanvas().getElement());
+        if(when) {
+            capture = getElement(event);
+            Event.setCapture(capture);
+        } 
+        editor.requestFocus();
+
+        int x = event.x;
+        int y = event.y;
+
+        editor.clearSelection();
+        editor.startSelection(x, y);
+        editor.endSelection(x, y);
+        this.x = x;
+        this.y = y;
+    }
+  
+    protected void onEnd(EndEvent event) {
+      LOG.info("onEnd " + event.x + "," +event.y);
+      release();
+      int x = event.x;
+      int y = event.y;
+      editor.endSelection(x, y);
+      this.x = x; this.y = y;    
+    }
+    
+	protected final FormuleHolder editor;
 	final HashMap<String, Double> dif = new HashMap<String, Double>();
 	int x,y;
 	boolean soft;
 	Element capture;
+    private boolean mousedown;
 	private static Logger LOG = Logger.getLogger("FormuleEditorTouchHandler");
 	
 	public FormuleEditorTouchHandler(FormuleHolder editor)
 	{
-		//tp.getElement().getStyle().setBorderWidth(1, Unit.PX);
-		//tp.getElement().getStyle().setBorderColor("#ff0000");
 		this.editor = editor;
-
 	}
 
+	HandlerRegistration oldRegistration;
+	
 	public HandlerRegistration initHandler() {
-	  TouchPanel w = (TouchPanel) editor.getAsPanel();
-	  return w.addTouchHandler(this);
+	  FormulePanel w = (FormulePanel) editor.getAsPanel();
+	  HandlerRegistration mouseRegistration = w.addMouseHandler(this);
+	  HandlerRegistration pointerRegistration = w.addPointerHandler(this);
+	  HandlerRegistration touchRegistration = w.addTouchHandler(this);
+	  oldRegistration = HandlerRegistrations.compose(mouseRegistration, touchRegistration);
+    return HandlerRegistrations.compose(oldRegistration, pointerRegistration);
 	}
 	
-	@Override
 	public void onTouchStart(TouchStartEvent event)
 	{
 		try
 		{
 		LOG.info("onTouchStart " + event.getTouches().length()  + ", " + event.getTouches().get(0).getIdentifier() + ", " + event.getTouches().get(0).getPageX());
-		if(isSupported())
 		{
 			event.preventDefault();
 			event.stopPropagation();
 		} 
-		{
 			EventTarget target = event.getNativeEvent().getEventTarget();
-			boolean when = Element.is(target) && (Element.as(target) == editor.getCanvas().getElement());
-			if(when) {
-				capture = getElement(event);
-				Event.setCapture(capture);
-			}
-		}
 		
-			editor.requestFocus();
 			int x = event.getTouches().get(0).getPageX() - editor.getCanvas().getAbsoluteLeft();
 			int y = event.getTouches().get(0).getPageY() - editor.getCanvas().getAbsoluteTop();
-			//if(!isSupported()) y+=8;// vraag me niet waarom dit nodig is 
-			//21-09-2015: weggehaald, want zorgt dat je voor aanklikken/selecteren te hoog moet klikken.
-
-			editor.clearSelection();
-			editor.startSelection(x, y);
-			editor.endSelection(x, y);
-			this.x = x;
-			this.y = y;
-
+			onStart(new StartEvent(x, y, target));
 		}
 		catch (Exception e)
 		{
-			//Window.alert("Error: " + e.getMessage());
 			LOG.log(Level.SEVERE, "onTouchStart: " + e, e);
 		}
 
 	}
 
-	private static boolean isSupported() {
-		return com.google.gwt.event.dom.client.TouchStartEvent.isSupported();
-	}
-
-	@Override
 	public void onTouchMove(TouchMoveEvent event)
 	{
-		//NOTE: this is important for android otherwise the move method may not be triggered properly
-		//if(TouchStartEvent.isSupported())
-		if(isSupported())
 		{
 			event.preventDefault();
 			event.stopPropagation();
@@ -107,11 +164,8 @@ public class FormuleEditorTouchHandler implements TouchHandler
 			int x = event.getTouches().get(0).getPageX() - editor.getCanvas().getAbsoluteLeft();
 			
 			int y = event.getTouches().get(0).getPageY() - editor.getCanvas().getAbsoluteTop();
-			//01-04-2016: onderstaande was al weggehaald in onTouchStart, dus kan waarschijnlijk hier ook weg. 
-			//(in de hoop dat selecteren dan soepeler gaat)
-			//if(!isSupported()) y+=8; // vraag me niet waarom dit nodig is
-			editor.endSelection(x, y);
-			this.x = x; this.y = y;
+
+			onMove(new MoveEvent(x,y));
 
 		}
 		catch (Exception e)
@@ -122,41 +176,30 @@ public class FormuleEditorTouchHandler implements TouchHandler
 
 	}
 
-	@Override
 	public void onTouchEnd(TouchEndEvent event)
 	{
 		try
 		{
 			LOG.info("onTouchEnd " + event.getChangedTouches().length()  + ", " + event.getChangedTouches().get(0).getIdentifier() + ", " + event.getChangedTouches().get(0).getPageX());
-			if(isSupported())
 			{
 				event.preventDefault();
 				event.stopPropagation();
 			}
-			release();
 			int x = event.getChangedTouches().get(0).getPageX() - editor.getCanvas().getAbsoluteLeft();
 			int y = event.getChangedTouches().get(0).getPageY() - editor.getCanvas().getAbsoluteTop();
-			editor.endSelection(x, y);
-			this.x = x; this.y = y;
+			onEnd(new EndEvent(x,y));
 		}
 		catch (Exception e)
 		{
-			//Window.alert("Error: " + e.getMessage());
 			LOG.log(Level.SEVERE, "onTouchEnd: " + e, e);
 		}
 		
 	}
 
-	private Element getElement(TouchEvent event) {
-		EventTarget target = event.getNativeEvent().getCurrentEventTarget();
-		return Element.as(target);
-	}
-
-	@Override
-	public void onTouchCanceled(TouchCancelEvent event)
+	public void onTouchCancel(TouchCancelEvent event)
 	{
 		try {
-			LOG.info("onTouchCanceled " + event.getChangedTouches().length()  + ", " + event.getChangedTouches().get(0).getIdentifier() + ", " + event.getChangedTouches().get(0).getPageX());
+			LOG.info("onTouchCancel " + event.getChangedTouches().length()  + ", " + event.getChangedTouches().get(0).getIdentifier() + ", " + event.getChangedTouches().get(0).getPageX());
 			release();
 		} catch (Exception e) {
 			LOG.log(Level.SEVERE, "onTouchCancel: " + e, e);
@@ -169,5 +212,95 @@ public class FormuleEditorTouchHandler implements TouchHandler
 			capture = null;
 		}
 	}
+
+  @Override
+  public void onMouseMove(MouseMoveEvent event) {
+    int x = event.getRelativeX(editor.getCanvas().getElement());
+    int y = event.getRelativeY(editor.getCanvas().getElement());
+    int btn = event.getNativeButton();
+    MoveEvent move = new MoveEvent(x,y);
+    if (mousedown)
+      onMove(move);
+  }
+
+  protected void onMove(MoveEvent event) {
+    LOG.info("onMove " + event.x + "," +event.y);
+    int x = event.x;   
+    int y = event.y;
+    editor.endSelection(x, y);
+    this.x = x; this.y = y;
+  }
+
+  @Override
+  public void onMouseUp(MouseUpEvent event) {
+    try {
+      mousedown = false;
+      int x = event.getRelativeX(editor.getCanvas().getElement());
+      int y = event.getRelativeY(editor.getCanvas().getElement());
+      EndEvent end = new EndEvent(x,y);
+      onEnd(end);
+    } catch (Exception e) {
+      LOG.log(Level.SEVERE, "onMouseUp", e);
+    }    
+  }
+
+  @Override
+  public void onMouseDown(MouseDownEvent event) {
+    int x = event.getRelativeX(editor.getCanvas().getElement());
+    int y = event.getRelativeY(editor.getCanvas().getElement());
+    EventTarget target = event.getNativeEvent().getEventTarget();
+    StartEvent start = new StartEvent(x,y,target);
+    mousedown = true;
+    onStart(start);
+  }
+
+  @Override
+  public void onPointerUp(PointerUpEvent event) {
+    try {
+      mousedown = false;
+      int x = event.getRelativeX(editor.getCanvas().getElement());
+      int y = event.getRelativeY(editor.getCanvas().getElement());
+      EndEvent end = new EndEvent(x,y);
+      onEnd(end);
+    } catch (Exception e) {
+      LOG.log(Level.SEVERE, "onPointerUp", e);
+    }    
+  }
+
+  @Override
+  public void onPointerCancel(PointerCancelEvent event) {
+    release();
+  }
+
+  @Override
+  public void onPointerMove(PointerMoveEvent event) {
+    if (oldRegistration != null) {
+      oldRegistration.removeHandler();
+      oldRegistration = null;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    int x = event.getRelativeX(editor.getCanvas().getElement());
+    int y = event.getRelativeY(editor.getCanvas().getElement());
+    MoveEvent move = new MoveEvent(x,y);
+    if (mousedown)
+      onMove(move);
+  }
+
+  @Override
+  public void onPointerDown(PointerDownEvent event) {
+    if (oldRegistration != null) {
+      oldRegistration.removeHandler();
+      oldRegistration = null;
+    }
+    int x = event.getRelativeX(editor.getCanvas().getElement());
+    int y = event.getRelativeY(editor.getCanvas().getElement());
+    EventTarget target = event.getNativeEvent().getEventTarget();
+    StartEvent start = new StartEvent(x,y,target);
+    mousedown = true;
+    event.preventDefault();
+    event.stopPropagation();
+    onStart(start);
+  }
 
 }

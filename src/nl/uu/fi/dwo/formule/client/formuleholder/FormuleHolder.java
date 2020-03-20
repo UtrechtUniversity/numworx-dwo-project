@@ -19,7 +19,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
@@ -182,8 +181,8 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	 * @return a panel
 	 * @see FormuleEditorTouchHandler
 	 */
-    public Panel createPanel() {
-      return new TouchPanel();
+    public static Panel createPanel() {
+      return new FormulePanel();
     }
 
 	public Widget getCanvas()

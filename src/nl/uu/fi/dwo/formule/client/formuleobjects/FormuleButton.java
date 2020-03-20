@@ -6,10 +6,15 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import fi.wiskopdr.text.Text;
 
-public class FormuleButton extends TouchButton{
+public class FormuleButton extends SimplePanel {
 
 	protected String code;
 	protected boolean focus = false;
@@ -214,6 +219,14 @@ public class FormuleButton extends TouchButton{
 	public boolean isToggleAan()
 	{	return toggleAan;
 	}
+
+  public HandlerRegistration addClickHandler(ClickHandler handler) {
+    return addDomHandler(handler, ClickEvent.getType());   
+  }
+
+  public void setText(String text) {
+    getElement().setInnerText(text);
+  }
 	
 	
 }

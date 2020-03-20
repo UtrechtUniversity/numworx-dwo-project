@@ -24,7 +24,6 @@ import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.ui.Panel;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 /**
  * Base element of a formula
@@ -339,7 +338,7 @@ public abstract class FormuleElement implements TekstElement
 	public Panel getAsPanel()
 	{
 		//FocusPanel sp = new FocusPanel();
-		TouchPanel sp = new TouchPanel();
+		Panel sp = FormuleHolder.createPanel();
 		sp.add(this.canvas);
 		return sp;
 	}
