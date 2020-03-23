@@ -10,7 +10,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -200,7 +204,7 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
   private JTree  tree;
   private Font font = GuiConstants.NORMAL_TEXT;
   private DefaultMutableTreeNode root;
-  private DefaultTreeModel model;
+  private InvisibleTreeModel model;
   private JLabel subtitle;
   private JTextArea tekst;
   private JScrollPane scroll;
@@ -224,12 +228,14 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
  
     Box leftBox = Box.createVerticalBox();
     JPanel filterBox = new JPanel();
-    JButton filter = new JButton("Filter leerdoelen");
+    Consumer<Map<String, Map<String, Set<Integer>>>> consumer = this::filter;
+    FilterAction fa = new FilterAction(this, consumer);
+    JButton filter = new JButton(fa);
     filterBox.add(filter);
     leftBox.add(filterBox);
  
     root = new DefaultMutableTreeNode("Handig haakjes wegwerken bij merkwaardige producten");
-    model = new DefaultTreeModel(root);
+    model = new InvisibleTreeModel(root);
     tree = new JTree(model);
     tree.setBackground(COLOR20);
     tree.addTreeSelectionListener(this);
@@ -591,6 +597,39 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
     red.setText( icon.getRedPercentage());
     green.setText(icon.getGreenPercentage());
     
+  }
+  public void filter(Map<String,Map<String,Set<Integer>>> filter) {
+    if (filter.isEmpty()) {
+      model.activateFilter(false);
+      if (model.getRoot() != root) model.setRoot(root);
+    } else {
+      model.activateFilter(true);
+      model.setRoot(filter(root, filter));      
+    }
+    
+  }
+
+  private DefaultMutableTreeNode filter(DefaultMutableTreeNode parent,
+      Map<String, Map<String, Set<Integer>>> filter) {
+    InvisibleNode node;
+    if (! (parent instanceof InvisibleNode)) {
+      node = new InvisibleNode(parent.getUserObject());
+      Enumeration<?> children = parent.children();
+      while (children.hasMoreElements()) {
+        DefaultMutableTreeNode object = (DefaultMutableTreeNode) children.nextElement();
+        node.add(filter(object, filter));       
+      }
+    } else {
+      node = (InvisibleNode) parent;
+    }
+    if (node.isLeaf()) {
+      node.setVisible(Math.random()>0.2);
+    } else {
+      int cnt = node.getChildCount(true);
+      node.setVisible(cnt != 0);
+    }
+    
+    return node;
   }
 
 }
