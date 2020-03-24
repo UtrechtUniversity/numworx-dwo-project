@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -28,6 +29,8 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -36,13 +39,15 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-import javax.swing.JTree;
 import javax.swing.JTree.DynamicUtilTreeNode;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.plaf.SplitPaneUI;
 import javax.swing.plaf.basic.BasicMenuBarUI;
 import javax.swing.plaf.basic.BasicMenuUI;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.MutableTreeNode;
@@ -55,9 +60,13 @@ import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JScrollPane;
 import fi.beans.numworxlf.JTextField;
+import fi.beans.numworxlf.JTree;
 import fi.beans.numworxlf.NumworxTextFieldUI;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.ConfirmDialog;
 import fi.dwo.dwojapplet.gui.domainmodel.ExportAction.ExportPanel;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
@@ -391,9 +400,70 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
     
   }
 
-  
+  class TreeCellRenderer extends DefaultTreeCellRenderer {
+
+    Icon bookIcon, folderIcon;
+    boolean isCourse, isMap;
+
+    TreeCellRenderer() {
+        super();
+        Image book = DwoHelper.getResourceImage("resources/book.png");
+        bookIcon = new ImageIcon(book);
+        folderIcon = new ImageIcon(DwoHelper.getResourceImage("resources/folder.png"));
+        setTextNonSelectionColor(fi.beans.numworxlf.Constants.COLOR15);
+        setTextSelectionColor(java.awt.Color.WHITE);
+        setBackgroundSelectionColor(fi.beans.numworxlf.Constants.COLOR14);
+    }
+
+    @Override
+    public Icon getOpenIcon() {
+        if (isCourse) {
+            return bookIcon;
+        }
+        return folderIcon;
+    }
+
+    @Override
+    public Icon getClosedIcon() {
+        if (isCourse) {
+            return bookIcon;
+        }
+        return folderIcon;
+    }
+
+    @Override
+    public Icon getLeafIcon() {
+        if (isCourse) {
+            return bookIcon;
+        }
+        if (isMap) {
+            return getClosedIcon();
+        }
+        return super.getDefaultLeafIcon();
+    }
+
+    @Override
+    public Component getTreeCellRendererComponent(javax.swing.JTree tree, Object value,
+            boolean sel, boolean expanded, boolean leaf, int row,
+            boolean hasFocus) {
+//bookicon als het een course is
+        isCourse
+                = value instanceof DefaultMutableTreeNode
+                && ((DefaultMutableTreeNode) value).getUserObject() instanceof Course
+                && !((Course) ((DefaultMutableTreeNode) value).getUserObject()).isWithChildren();
+        isCourse = false;
+        isMap = value instanceof DefaultMutableTreeNode
+                && ((DefaultMutableTreeNode) value).getUserObject() instanceof NodeLeaf;
+//geen leaficon als het een lege map is
+        isMap = leaf && !isMap;
+
+        return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf,
+                row, hasFocus);
+    }
+
+}
+
   private JButton okButton;
-  private JButton cancelButton;
   private DomStudentModelStructure structure;
   private JMenuBar bar = new JMenuBar();
   private JLabel title;
@@ -423,15 +493,8 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   okButton.setBackground(Constants.COLOR15);
   okButton.setForeground(Constants.COLOR20);
   okButton.addActionListener(this::opslaanAction);
-  cancelButton = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
-  cancelButton.setPreferredSize(new Dimension(100, 24));
-  cancelButton.setBackground(Constants.COLOR15);
-  cancelButton.setForeground(Constants.COLOR20);
-  cancelButton.addActionListener(this::cancelAction);
   south.add(Box.createHorizontalGlue());
   south.add(okButton); 
-  south.add(Box.createHorizontalStrut(20));
-  south.add(cancelButton);
   south.add(Box.createHorizontalGlue());
 
   add(south, BorderLayout.SOUTH);
@@ -454,9 +517,10 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
       } else {
         switch(confirm()) {
           case JOptionPane.YES_OPTION:
-            safeSelection(tree.getSelectionPath());
+            opslaanAction(null);
           case JOptionPane.NO_OPTION:
             setEditable(false);
+            setModel(structure);
           case JOptionPane.CANCEL_OPTION:
         }
       }
@@ -465,6 +529,10 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   add(north, BorderLayout.NORTH);
   
   JSplitPane split = new JSplitPane();
+  BasicSplitPaneUI sui = (BasicSplitPaneUI) BasicSplitPaneUI.createUI(split);
+  split.setUI(sui);
+  BasicSplitPaneDivider divider = sui.getDivider();
+  divider.setBackground(Color.RED);
   split.setDividerSize(20);
   split.setResizeWeight(0.8);
   split.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -507,8 +575,11 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   root = new DynamicUtilTreeNode(v,v);
   model = new InvisibleTreeModel(root);   
   tree = new JTree(model);
-  DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
+
+  TreeCellRenderer renderer = new TreeCellRenderer();
+  renderer.updateUI();
   tree.setCellRenderer(renderer);
+  tree.updateUI();;
   
   leftBox = new JPanel(new BorderLayout());
   leftBox.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
@@ -697,8 +768,14 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
     //OPSLAAN_ACTION.left();
   }
 
-  @SuppressWarnings("unchecked")
+  DomStudentModelStructure resultModel;
+  
   public DomStudentModelStructure getModel() {
+    return resultModel;
+  }
+  
+  @SuppressWarnings("unchecked")
+  private DomStudentModelStructure getTreeModel() {
     DomStudentModelStructure result = new DomStudentModelStructure();
     Node u;
     u = (Node) root.getUserObject();
@@ -750,7 +827,6 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   }
 
   public JButton ok() { return okButton; }
-  public JButton cancel() { return cancelButton; }
 
   void fillSelection() {
     TreePath path = tree.getSelectionPath();
@@ -851,7 +927,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
         Node n = (Node) u;
         n.setTitle(string);
         model.nodeChanged(node);
-        String description = wiskOpdrEditPanel.getText();
+        String description = wiskOpdrEditPanel == null ? n.getDescription() : wiskOpdrEditPanel.getText();
         n.setDescription(description);
         n.setDescriptionAsJSON(toJSON(description)); // could be lazy...
       }
@@ -882,12 +958,14 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
 
   private void opslaanAction(ActionEvent e) {
     safeSelection(tree.getSelectionPath());
-    setEditable(false);
+    resultModel = getTreeModel();
+    structure = resultModel;   
+//    setEditable(false);
   }
   
-  private void cancelAction(ActionEvent e) {
-    setEditable(false);
-  }
+//  private void cancelAction(ActionEvent e) {
+//    setEditable(false);
+//  }
   
   
   private void closeWindow(ConfirmDialog window) {
@@ -897,13 +975,15 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
           case JOptionPane.CANCEL_OPTION:
               return;
           case JOptionPane.YES_OPTION:
-              safeSelection(tree.getSelectionPath());
+              opslaanAction(null);
               window.ok(null); return;
           case JOptionPane.NO_OPTION:
-              window.cancel(null); return;
         }
       }
-      window.cancel(null);
+      if (resultModel != null) {
+        window.ok(null);
+      } else 
+        window.cancel(null);
   }
 
   private int confirm() {

@@ -11,7 +11,7 @@ class NodeLeaf implements Node {
 
   
   private int path;
-  private Map methode = new TreeMap();
+  private Map<String, Map<String,Set<Integer>>> methode = new TreeMap<>();
   
   public int getPath() {
     return path;
@@ -27,7 +27,7 @@ class NodeLeaf implements Node {
    * @return the info
    */
   public DomStudentModelContextInfo getInfo() {
-    return info;
+    return new DomStudentModelContextInfo(info);
   }
 
   private String lang;
@@ -38,6 +38,12 @@ class NodeLeaf implements Node {
     this.lang = l;
     if (info.getId() == null) {
       info.setId(UUID.randomUUID().toString());
+    }
+    if (info.getMethods() == null) {
+      methode = new TreeMap<>();
+      this.info.setMethods(methode);
+    } else {
+      methode = this.info.getMethods();
     }
   }
 

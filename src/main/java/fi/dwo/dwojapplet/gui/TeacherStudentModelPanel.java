@@ -8,7 +8,6 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.domainmodel.ImportAction;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinEditPanel2;
-import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinResultsPanel;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinResultsPanel2;
 
 import java.awt.Color;
@@ -60,7 +59,6 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
     private CenterPanel center;
 
     private JButton addModelButton, importModelButton;
-    private JButton cancelButton;
     private LeerdomeinEditPanel2 textArea;
 
     private JPanel jtbl;
@@ -416,6 +414,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
       dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
       dialog.addWindowListener(textArea);      
       dialog.pack();
+      dialog.center();
       dialog.show();
       return dialog.getOption();
     }

@@ -108,7 +108,7 @@ public class NodeVector extends Vector<Object> implements Node {
   }
   @Override
   public DomStudentModelContextInfo getInfo() {
-    return info;
+    return new DomStudentModelContextInfo(info);
   }
 
   @Override
