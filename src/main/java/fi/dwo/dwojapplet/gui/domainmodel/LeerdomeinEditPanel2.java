@@ -40,6 +40,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTree.DynamicUtilTreeNode;
+import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -88,7 +89,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
     
     
     private VoorkennisAction() {
-      super(TextMapper.getText("voorkennis"));
+      super(TextMapper.getText("Voorkennis"));
     }
 
     public VoorkennisAction(boolean b) {
@@ -532,7 +533,8 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   BasicSplitPaneUI sui = (BasicSplitPaneUI) BasicSplitPaneUI.createUI(split);
   split.setUI(sui);
   BasicSplitPaneDivider divider = sui.getDivider();
-  divider.setBackground(Color.RED);
+  divider.setBorder(BorderFactory.createEmptyBorder());
+  divider.setBackground(Constants.COLOR20);
   split.setDividerSize(20);
   split.setResizeWeight(0.8);
   split.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -604,32 +606,34 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   container.setPreferredSize(new Dimension(500 , 325));
   rightBox.add(subtitle, BorderLayout.NORTH);
   rightBox.add(container, BorderLayout.CENTER);
-
-  init = new JFormattedTextField(NumberFormat.getInstance());
-  slip = new JFormattedTextField(NumberFormat.getInstance());
-  learn = new JFormattedTextField(NumberFormat.getInstance());
   
   
   settingsRO = Box.createHorizontalBox();
   settingsRO.setOpaque(true);
   settingsRO.setBackground(Constants.COLOR20);
   JButton voorkennisRO = new JButton(new VoorkennisAction(true)); voorkennisRO.setFont(font);
+  voorkennisRO.setPreferredSize(new Dimension(120,24));
   settingsRO.add(voorkennisRO);
   settingsRO.add(Box.createHorizontalGlue());
   JButton genrRO = new JButton(new GenRAction(true, this, tree)); genrRO.setFont(font);
+  genrRO.setPreferredSize(new Dimension(140,24));
   settingsRO.add(genrRO);
   settingsRO.add(Box.createHorizontalStrut(10));
   JButton mwRO = new JButton(new MWAction(true, this, tree)); mwRO.setFont(font);
+  mwRO.setPreferredSize(new Dimension(140,24));
   settingsRO.add(mwRO);
-  settingsRO.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+  settingsRO.setBorder(BorderFactory.createEmptyBorder(10,10,8,10));
   
   
   settings = settingsRW = new JPanel(null);
   settings.setLayout(new BoxLayout(settings, BoxLayout.PAGE_AXIS));
-  settings.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(1,0,0,0,Constants.COLOR13), "Instellingen", TitledBorder.CENTER, TitledBorder.CENTER, null, Constants.COLOR13));    
+  Border inner = BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(1,0,0,0,Constants.COLOR13), "Instellingen", TitledBorder.CENTER, TitledBorder.CENTER, new Font("SansSerif", Font.BOLD,11), Constants.COLOR13);
+  Border outer = BorderFactory.createEmptyBorder(10, 10, 8, 10);
+  settings.setBorder(BorderFactory.createCompoundBorder(outer, inner));    
 
   Box bkt = Box.createHorizontalBox();
   JButton voorkennis = new JButton(new VoorkennisAction(false));voorkennis.setFont(font);
+  voorkennis.setPreferredSize(new Dimension(120, 20));
   bkt.add(voorkennis);
   bkt.add(Box.createHorizontalGlue());
   settings.add(bkt);
@@ -646,22 +650,21 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
     init = new JFormattedTextField(NumberFormat.getInstance());
     init.setUI(NumworxTextFieldUI.createUI(init));
     init.setPreferredSize(new Dimension(50,20));
-    init.setMaximumSize(new Dimension(50,30));
+    init.setMaximumSize(new Dimension(50,24));
     bkt.add(init);
   bkt.add(l=new JLabel(" Learn "));
   l.setForeground(Constants.COLOR15);
     learn = new JFormattedTextField(NumberFormat.getInstance());
     learn.setUI(NumworxTextFieldUI.createUI(learn));
     learn.setPreferredSize(new Dimension(50,20));
-    learn.setMaximumSize(new Dimension(50,30));
+    learn.setMaximumSize(new Dimension(50,24));
     bkt.add(learn);
   bkt.add(l=new JLabel(" Slip "));
   l.setForeground(Constants.COLOR15);
     slip = new JFormattedTextField(NumberFormat.getInstance());
     slip.setUI(NumworxTextFieldUI.createUI(slip));
-    slip.setColumns(6);
     slip.setPreferredSize(new Dimension(50,20));
-    slip.setMaximumSize(new Dimension(50,30));
+    slip.setMaximumSize(new Dimension(50,24));
    bkt.add(slip);
   settings.add(bkt);
   settings.add(Box.createVerticalStrut(10));
@@ -672,9 +675,11 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   bkt.add(parametersLabel);
   bkt.add(Box.createHorizontalGlue());
   JButton genr = new JButton(new GenRAction(this, tree)); genr.setFont(font);
+  genr.setPreferredSize(new Dimension(140, 20));
   bkt.add(genr);
   bkt.add(Box.createHorizontalStrut(10));
   JButton mw = new JButton(new MWAction(this,tree)); mw.setFont(font);
+  mw.setPreferredSize(new Dimension(140, 20));
   bkt.add(mw);
   
   settings.add(bkt);
