@@ -15,8 +15,6 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
-
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.Expressie;
@@ -27,7 +25,6 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
-import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
@@ -238,7 +235,7 @@ public class PijlVak extends LayoutPanel
 		
 		if (editorPanel != null)
 			editorPanel.clear();
-		editorPanel = (TouchPanel) viewer.getAsPanel();
+		editorPanel = viewer.getAsPanel();
 		//editorPanel.getElement().getStyle().setBackgroundColor("blue");
 		//tp.getElement().getStyle().setProperty("display", "inline-block");
 		//editor.setCurrent(0, 0);
