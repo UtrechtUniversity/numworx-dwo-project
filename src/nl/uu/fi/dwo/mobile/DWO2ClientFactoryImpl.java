@@ -106,11 +106,13 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 			SCORM_guest api;
 			if(!withUser()) {
 				api = new SCORM_guest();
-			} else {					
-				api = new SCORM_DWO5(getSchoolClass(),
+			} else {
+// secure alleen voor studenten!
+				boolean secure = DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB && RoleType.STUDENT == getRoleType();
+                api = new SCORM_DWO5(getSchoolClass(),
 						DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole(),
 						agent,
-						DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB,
+						secure,
 						getEventBus());
 			}
 			return api;
