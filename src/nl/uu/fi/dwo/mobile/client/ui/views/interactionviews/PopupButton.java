@@ -51,6 +51,14 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.DialogBox.Caption;
+import com.vaadin.pointerevents.client.PointerCancelEvent;
+import com.vaadin.pointerevents.client.PointerCancelHandler;
+import com.vaadin.pointerevents.client.PointerDownEvent;
+import com.vaadin.pointerevents.client.PointerDownHandler;
+import com.vaadin.pointerevents.client.PointerMoveEvent;
+import com.vaadin.pointerevents.client.PointerMoveHandler;
+import com.vaadin.pointerevents.client.PointerUpEvent;
+import com.vaadin.pointerevents.client.PointerUpHandler;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.animation.client.AnimationScheduler;
@@ -266,7 +274,9 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 	HashMap<String,Object> state;
 	PopupListener listener;
 
-	class NothingOnTouch implements TouchStartHandler, TouchMoveHandler, TouchEndHandler, TouchCancelHandler, MouseDownHandler, MouseUpHandler, MouseMoveHandler  {
+	class NothingOnTouch implements TouchStartHandler, TouchMoveHandler, TouchEndHandler, TouchCancelHandler, 
+	MouseDownHandler, MouseUpHandler, MouseMoveHandler, 
+	PointerDownHandler, PointerMoveHandler, PointerCancelHandler, PointerUpHandler {
 
 		@Override
 		public void onTouchCancel(TouchCancelEvent event) {
@@ -302,6 +312,26 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 		public void onMouseDown(MouseDownEvent event) {
 			event.stopPropagation();
 		}
+
+      @Override
+      public void onPointerUp(PointerUpEvent event) {
+        event.stopPropagation();
+      }
+  
+      @Override
+      public void onPointerCancel(PointerCancelEvent event) {
+        event.stopPropagation();
+      }
+  
+      @Override
+      public void onPointerMove(PointerMoveEvent event) {
+        event.stopPropagation();
+      }
+  
+      @Override
+      public void onPointerDown(PointerDownEvent event) {
+        event.stopPropagation();
+      }
 	
 	}
 
@@ -390,6 +420,10 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 		btn.addTouchCancelHandler(tt);
 		btn.addTouchEndHandler(tt);
 		btn.addTouchMoveHandler(tt);
+		btn.addDomHandler(tt, PointerDownEvent.getType());
+        btn.addDomHandler(tt, PointerCancelEvent.getType());
+        btn.addDomHandler(tt, PointerMoveEvent.getType());
+        btn.addDomHandler(tt, PointerUpEvent.getType());
 		this.content = content;
 		this.view = view;
 		initWidget(btn);
