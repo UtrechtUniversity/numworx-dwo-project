@@ -5,9 +5,11 @@
 <% 
 	String cdn = System.getProperty("CDN_HOST", "cdn.dwo.nl");
 	String env = System.getProperty("DWO_ENV","app");
+	String cas = System.getProperty("DWO_CAS", "/ideas/IdeasServlet");
 %>
 var deploy = "//<%= cdn %>/apps/"
 var dwo_env = "<%= env %>"
+var casServer = "<%= cas %>"
 
 function script(name) {
 	var elem = document.createElement('script');
