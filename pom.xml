@@ -29,6 +29,9 @@
 				<version>2.2</version>
 				<configuration>
 					<path>/dwo/apps</path>
+					<systemProperties>
+						<DWO_CAS><!--https://app.dwo.nl/ideas/IdeasServlet--></DWO_CAS>
+					</systemProperties>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -61,4 +64,8 @@
     <scm>
     	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-apps/trunk</developerConnection>
     </scm>
+    <properties>
+    	<maven.compiler.source>1.8</maven.compiler.source>
+    	<maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
 </project>
