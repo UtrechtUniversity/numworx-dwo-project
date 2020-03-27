@@ -3,6 +3,8 @@ package nl.uu.fi.dwo.mobile.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 
+import fi.wiskopdr.CasServer;
+import nl.uu.fi.dwo.ideas.client.IdeasIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.dwokb.NoStatusKeyboard;
 
@@ -38,6 +40,11 @@ public class WiskOpdrDefaults extends DWOplayerDefaults {
         if ("none".equals(Window.Location.getParameter("footer")))
             return new NoStatusKeyboard();
         return super.getStatusBar();
+    }
+
+    @Override
+    public IdeasIF ideas() {
+      return CasServer.create();
     }
 
 }

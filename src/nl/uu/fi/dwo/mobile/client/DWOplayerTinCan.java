@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client;
 
 import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
 
+import nl.uu.fi.dwo.ideas.client.IdeasIF;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavPanel;
@@ -49,5 +50,10 @@ public class DWOplayerTinCan extends WiskOpdrDefaults {
 	public HeaderCss headercss() {
 		return  DWOplayer.DWO_BUNDLE.headercss();
 	}
+
+  @Override
+  public IdeasIF ideas() {
+    return new DWOIdeasClient();
+  }
 
 }
