@@ -180,7 +180,11 @@ public class GWTPatch {
 	}
 
 	private String combine(String pointer, String key) {
-		// TODO / -> ~0 ~ -> ~1
-		return pointer + "/" + key;
+		// done / -> ~1 ~ -> ~0
+		return pointer + "/" + encode(key);
 	}
+
+  private String encode(String key) {    
+    return key.replace("~", "~0").replace("/", "~1");
+  }
 }

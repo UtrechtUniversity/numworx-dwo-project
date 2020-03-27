@@ -1,5 +1,7 @@
 package nl.numworx.gwtpatch.client;
 
+import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,13 +9,40 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+import javax.json.JsonString;
+import javax.json.stream.JsonParser;
+
 import junit.framework.TestCase;
+import nl.numworx.gwtpatch.client.GWTPatch.Builder;
+import nl.numworx.gwtpatch.client.GWTPatchTest.TestBuilder;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 public class GWTPatchTest extends TestCase {
 
-	GWTPatch diff;
+	public class TestBuilder implements Builder {
+
+	  List<Object> last;
+	  
+    @Override
+    public Map<String, Object> createMap() {
+      return new HashMap();
+    }
+
+    @Override
+    public List<Object> createList(int size) {
+      last = new ArrayList<>(size);
+      return last;
+    }
+
+  }
+
+  GWTPatch diff;
 	protected void setUp() throws Exception {
 		diff = new GWTPatch();
 	}
@@ -124,4 +153,37 @@ public class GWTPatchTest extends TestCase {
 		
 	}
 	
+	public void testdiffslash() {
+	  Map aap = new TreeMap();
+	  aap.put("a/b", "slash");
+	  aap.put("a~b", "snor");
+	  Map noot = new TreeMap();
+	  TestBuilder builder = new TestBuilder();
+      diff = new GWTPatch(builder);
+      ObjectList arr = diff.createDiff(noot, aap);
+      assertEquals(2, arr.size());	  
+
+      ObjectMap arr0 = arr.getObjectMap(1);
+      assertEquals("/a~1b", arr0.getString("path"));
+      assertEquals("add", arr0.getString("op"));
+      assertEquals("slash", arr0.getString("value"));
+
+      ObjectMap arr1 = arr.getObjectMap(0);
+      assertEquals("/a~0b", arr1.getString("path"));
+      assertEquals("add", arr1.getString("op"));
+      assertEquals("snor", arr1.getString("value"));
+      
+      JsonBuilderFactory factory = Json.createBuilderFactory(Collections.emptyMap());    
+      JsonObject oldObject = factory.createObjectBuilder().build();
+      JsonArray  patch     = factory.createArrayBuilder(builder.last).build();
+      JsonObject newObject = Json.createPatch(patch).apply(oldObject);
+      assertEquals("/", newObject.get("a/b").toString(), "\"slash\"");
+      assertEquals("~", ((JsonString) newObject.get("a~b")).getString(), "snor");
+      
+	}
+
+  private String toString(ObjectList arr) {
+    // TODO Auto-generated method stub
+    return arr.toString();
+  }
 }
