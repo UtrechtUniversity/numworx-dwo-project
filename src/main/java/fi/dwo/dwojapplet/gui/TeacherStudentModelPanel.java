@@ -173,6 +173,10 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
               ConfirmDialog dialog = new ConfirmDialog(TeacherStudentModelPanel.this, "");
               dialog.setContentPane(panel);
               dialog.pack();
+              int w = dialog.getWidth(), h = dialog.getHeight();
+              Dimension m = dialog.getMaximumSize();
+              //dialog.setSize(Math.min(w, m.width), Math.min(h, m.height));
+              dialog.center();
               dialog.show();
             }
         }

@@ -8,8 +8,13 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.FocusTraversalPolicy;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.Window;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -44,6 +49,7 @@ import javax.swing.Box;
 import javax.swing.JApplet;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIDefaults;
@@ -54,7 +60,6 @@ import org.apache.xmlrpc.applet.MySimpleXmlRpcClient;
 
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.dwomaccess.Compressor;
-import fi.beans.jvmchecker.JVMChecker;
 import fi.beans.jxbchecker.JXBChecker;
 import fi.beans.loader.Loader;
 import fi.beans.mainframe.MainFrame;
@@ -2873,37 +2878,7 @@ if (false) {
     @Override
     public void onIdle(IdleEvent ev) {
       if (DwoHelper.isTest() && ev.isSlow()) {
-        attnDialog = new JDialog(DwoHelper.getFrameForComponent(this), false);
-        attnDialog.setAlwaysOnTop(true);
-        attnDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-        Box pane = Box.createVerticalBox();
-        attnDialog.setBackground(Constants.COLOR21);
-        
-        JLabel comp = new JLabel(TextMapper.dwo2Message().NUM_LBL_LOGGEDIN());
-        comp.setOpaque(true);
-        comp.setAlignmentX(CENTER_ALIGNMENT);
-        comp.setFont(new Font("Ubuntu", Font.PLAIN, 24));
-        comp.setHorizontalAlignment(JLabel.CENTER);
-        comp.setBackground(GuiConstants.HEADER_COLOR);
-        comp.setForeground(Constants.COLOR21);
-        comp.setBorder(BorderFactory.createEmptyBorder(7,7,7,7));
-        pane.add(comp);
-        JPanel footer = new JPanel(new FlowLayout(FlowLayout.CENTER,20,10));
-        footer.setOpaque(true);
-        footer.setBackground(Constants.COLOR21);
-        JButton yes = new JButton(TextMapper.getText(TextMapper.BTN_OK));
-        yes.setAlignmentX(CENTER_ALIGNMENT);
-        yes.addActionListener(e -> noAttn());
-        footer.add(yes);
-        pane.add(footer);
-        attnDialog.setContentPane(pane);
-        attnDialog.pack();
-        Dimension r = attnDialog.getPreferredSize();
-        
-        //attnDialog.setSize(300,200);
-        Dimension d  = Toolkit.getDefaultToolkit().getScreenSize();
-        attnDialog.setLocation(d.width/2-attnDialog.getWidth()/2, d.height/2-attnDialog.getHeight()/2);
-        attnDialog.setVisible(true);
+        slowIdleEvent();
         return;
       } else {
         if (ev.getCnt() >= 2 && attnDialog != null) {
@@ -2912,6 +2887,55 @@ if (false) {
         }
       }
       
+    }
+
+    private void slowIdleEvent() { 
+      attnDialog = new JDialog((JFrame)null); attnDialog.setModal(true);
+      attnDialog.setAlwaysOnTop(true);
+      attnDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+      attnDialog.addWindowListener(new WindowAdapter() {
+
+        public void windowClosing(WindowEvent e) {
+          noAttn();
+        }
+        
+      });
+      Box pane = Box.createVerticalBox();
+      attnDialog.setBackground(Constants.COLOR21);
+      
+      JLabel comp = new JLabel(TextMapper.dwo2Message().NUM_LBL_LOGGEDIN());
+      comp.setOpaque(true);
+      comp.setAlignmentX(CENTER_ALIGNMENT);
+      comp.setFont(new Font("Ubuntu", Font.PLAIN, 24));
+      comp.setHorizontalAlignment(JLabel.CENTER);
+      comp.setBackground(GuiConstants.HEADER_COLOR);
+      comp.setForeground(Constants.COLOR21);
+      comp.setBorder(BorderFactory.createEmptyBorder(7,7,7,7));
+      pane.add(comp);
+      JPanel footer = new JPanel(new FlowLayout(FlowLayout.CENTER,20,10));
+      footer.setOpaque(true);
+      footer.setBackground(Constants.COLOR21);
+      JButton yes = new JButton(TextMapper.getText(TextMapper.BTN_OK));
+      yes.setAlignmentX(CENTER_ALIGNMENT);
+      yes.addActionListener(e -> {
+        noAttn();
+      });
+      yes.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mousePressed(MouseEvent e) {
+          noAttn();
+        }});
+      footer.add(yes);
+      pane.add(footer);
+      attnDialog.setContentPane(pane);
+      attnDialog.pack();
+      Dimension r = attnDialog.getPreferredSize();
+      
+      //attnDialog.setSize(300,200);
+      Dimension d  = Toolkit.getDefaultToolkit().getScreenSize();
+      attnDialog.setLocation(d.width/2-attnDialog.getWidth()/2, d.height/2-attnDialog.getHeight()/2);
+      attnDialog.requestFocusInWindow();
+      attnDialog.setVisible(true);
     }
 
 }

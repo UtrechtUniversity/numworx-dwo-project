@@ -589,6 +589,10 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   JScrollPane scrollpane = new JScrollPane(tree);
   scrollpane.setViewportBorder(BorderFactory.createEmptyBorder());
   scrollpane.setBorder(BorderFactory.createEmptyBorder());
+  pref = scrollpane.getPreferredSize();
+  pref.width = Math.max(580, pref.width); // 580 wide.
+  scrollpane.setPreferredSize(pref);
+  
   leftBox.add(scrollpane, BorderLayout.CENTER);
   leftSouth = Box.createHorizontalBox();
   JButton filter = new JButton(new FilterAction(this, this::filter));

@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -26,12 +27,15 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.JTree.DynamicUtilTreeNode;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -73,13 +77,13 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
   private static final Color GREEN = new Color(0, 180, 0);
 
   
-  public static void main(String[] args) {
-    LeerdomeinResultsPanel2 p = new LeerdomeinResultsPanel2();
-    ConfirmDialog d = new ConfirmDialog(null, "sample");
-    d.setContentPane(p);
-    d.pack();d.show();
-    System.exit(0);
-  }
+//  public static void main(String[] args) {
+//    LeerdomeinResultsPanel2 p = new LeerdomeinResultsPanel2();
+//    ConfirmDialog d = new ConfirmDialog(null, "sample");
+//    d.setContentPane(p);
+//    d.pack();d.show();
+//    System.exit(0);
+//  }
   
   class SchoolKlas {
     final DomSchoolClass delegate;
@@ -171,6 +175,8 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
       x+=2;
       y+=2;
       int w = getIconWidth()-3;
+      g.setColor(Color.white);
+      g.fillRect(x, y, w-1, getIconHeight()-2-3);
       g.setColor(RED);
       g.fillRect( x+ Math.round(red * w), y, Math.round((0.5f-red)*w), getIconHeight()-2-3);
 
@@ -226,14 +232,24 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
     titleLabel.setHorizontalAlignment(JLabel.CENTER);
     titleLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
  
-    Box leftBox = Box.createVerticalBox();
-    JPanel filterBox = new JPanel();
+    JSplitPane leftBox;
+    Box vb = Box.createVerticalBox();
+    JPanel filterBox = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
     Consumer<Map<String, Map<String, Set<Integer>>>> consumer = this::filter;
     FilterAction fa = new FilterAction(this, consumer);
     JButton filter = new JButton(fa);
     filterBox.add(filter);
-    leftBox.add(filterBox);
- 
+    vb.add(filterBox);
+    JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+    split.setResizeWeight(0.9);
+    BasicSplitPaneUI sui = (BasicSplitPaneUI) BasicSplitPaneUI.createUI(split);
+    split.setUI(sui);
+    BasicSplitPaneDivider divider = sui.getDivider();
+    divider.setBorder(BorderFactory.createEmptyBorder());
+    divider.setBackground(Constants.COLOR20);
+    split.setDividerSize(20);
+    //split.setBorder(BorderFactory.createEmptyBorder());
+    leftBox = (split);
     root = new DefaultMutableTreeNode("Handig haakjes wegwerken bij merkwaardige producten");
     model = new InvisibleTreeModel(root);
     tree = new JTree(model);
@@ -244,30 +260,32 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
     tree.setCellRenderer(renderer);
 
     JScrollPane pane = new JScrollPane(tree);
-    pane.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
+    pane.setBorder(BorderFactory.createEmptyBorder(20,20,0,20));
     pane.setViewportBorder(BorderFactory.createEmptyBorder());
     pane.setBackground(COLOR20);
-    leftBox.add(pane);
-    
+    pane.setPreferredSize(new Dimension(580,300));
+    vb.add(pane);
+    split.setTopComponent(vb);
     subtitle = new JLabel("Handig haakjes wegwerken bij merkwaardige producten");
     subtitle.setForeground(Color.WHITE);
     subtitle.setFont(font.deriveFont(Font.BOLD, 14f));
     subtitle.setBorder(BorderFactory.createEmptyBorder(4, 20, 4, 20));
-
+    vb = Box.createVerticalBox();
     Box b = hb(ra(10,0), subtitle, hgl());
     b.setBackground(COLOR13);
     b.setOpaque(true);
 
-    leftBox.add(b);
+    vb.add(b);
     
     tekst = new JTextArea(5,20);tekst.setEditable(false);
     scroll = new JScrollPane(tekst);
     Dimension min = new Dimension(480, 250);
     scroll.setMinimumSize(min);
     scroll.setPreferredSize(min);
-    leftBox.add(scroll);
+    vb.add(scroll);
+    split.setBottomComponent(vb);
     leftBox.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 10));   
-    add(leftBox, BorderLayout.CENTER);
+    add(leftBox, BorderLayout.WEST);
     
     Box rightBox = Box.createVerticalBox();
     
