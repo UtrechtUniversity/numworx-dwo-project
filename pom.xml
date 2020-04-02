@@ -321,6 +321,7 @@
   								netscape.javascript;resolution:=optional,
  								com.teamdev.jxbrowser.engine;resolution:=optional,
   								javax.swing.*,
+  								!javax.servlet.*,
   								javax.*;resolution:=optional,
   								org.osgi.util.promise;version="[1.0,2)",org.osgi.util.function;version="[1.0,2)",
   								!com.*,!org.apache.*,!org.eclipse.*,!org.glassfish.*,!org.springframework.*,!org.joda.*,
