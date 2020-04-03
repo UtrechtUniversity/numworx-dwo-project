@@ -274,8 +274,8 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         String sn = school.getName();
         String sl = school.getSchoolLogin();
         SchoolPasswdMap spm = new SchoolPasswdMap(dom);
-        Date expire = school.getExpire();
-        AboType aboType = school.getAboType();
+        Date expire = dom.getExpire();
+        AboType aboType = dom.getAboType();
         AddSchoolDialog asd = new AddSchoolDialog(owner, "Schoolgegevens wijzigen", sn, sl, spm, expire, aboType);
 
         String id = String.valueOf(school.getSchoolID());
