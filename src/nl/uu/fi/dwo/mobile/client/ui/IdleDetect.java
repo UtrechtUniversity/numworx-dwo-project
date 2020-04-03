@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.google.gwt.core.shared.GWT;
 //import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
@@ -16,6 +17,8 @@ public class IdleDetect extends Timer implements NativePreviewHandler {
 	
 	public final static int FAST = 2;      // 10-20 secs
 	public final static int SLOW = 6 * 15; // 15 minutes
+	
+	final public boolean hasIdle = false;
 	
 	public interface IdleHandler {
 		void onIdle(IdleEvent ev);
@@ -75,16 +78,22 @@ public class IdleDetect extends Timer implements NativePreviewHandler {
 	}
 	
 	public void start() {
+	  if (hasIdle) {
 		if (reg == null)
 			reg = com.google.gwt.user.client.Event.addNativePreviewHandler(this);
 		this.scheduleRepeating(10000); // 10 sec
+	  } else {
+	    GWT.log("no idleDetect");
+	  }
 	}
 	
 	public void stop() {
+	  if (hasIdle) {
 		cancel();
 		if (reg != null) {
 			reg.removeHandler(); reg = null;
 		}
+	  }
 	}
 	
 	public void fire() {
