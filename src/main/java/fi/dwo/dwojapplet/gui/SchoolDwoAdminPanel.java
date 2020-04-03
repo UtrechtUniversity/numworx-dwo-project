@@ -110,6 +110,8 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
                     if (s != null) {
                         tableModel.setValueAt(s.getSchoolLogin(), lclRow, 1);
                         tableModel.setValueAt(s.getName(), lclRow, 0);
+                        school.setExpire(s.getExpire());
+                        school.setAboType(s.getAboType());
                         model.fireTableRowsUpdated(lclRow, lclRow);
                     }
                 }
