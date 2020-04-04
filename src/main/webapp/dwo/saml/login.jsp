@@ -31,10 +31,10 @@ function later() {
 		  int r = Integer.parseInt(request.getParameter("r"));
 		  if (r > 1024 && r <= 0xFFFF ) {
 		  %>
-			var xhr = new XMLHttpRequest();
-			xhr.open("POST", "http://127.0.0.1:<%=r%>/local/Terminate", true);
-			xhr.setRequestHeader('Content-Type', 'application/json');
-			xhr.send(JSON.stringify({'dme.cookies': cookies, 'cmi.exit':'logout'}));
+			var location = "http://127.0.0.1:<%=r%>/local/Terminate"
+			var arg = JSON.stringify({'dme.cookies': cookies, 'cmi.exit':'logout'});
+			arg = encodeURIComponent(arg);
+			window.location = location + "?q=" + arg
 		  <%
 		}} catch (Exception ignore) { }
 	%>
