@@ -1,9 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONNull;
-
 import nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -14,6 +11,8 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
  */
 public class JsMainView implements MainPresenter.Display{
 
+    final boolean hasIdle = false;
+  
     @Override
     public void setSchoolName(String schoolName) {
         JsMainDisplay.setSchoolName(schoolName);
@@ -189,11 +188,13 @@ public class JsMainView implements MainPresenter.Display{
 	
 	@Override
 	public void setIdleTimeout(int millis) {
+	  if (hasIdle)
 		JsMainDisplay.setIdleTimeout(millis);
 	}
 	
 	@Override
 	public void unsetIdleTimeout() {
+	  if (hasIdle)
 		JsMainDisplay.unsetIdleTimeout();
 	}
 }
