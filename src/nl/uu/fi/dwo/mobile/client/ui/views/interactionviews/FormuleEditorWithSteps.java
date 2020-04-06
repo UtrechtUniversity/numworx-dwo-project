@@ -25,8 +25,11 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
+import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselEditor;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
@@ -45,6 +48,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
@@ -134,14 +138,16 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	private FormuleEditorWithSteps gebruikersSubstitutiesVak;
 	private boolean substitutieVak = false;
 	
-	private FormuleButton terugButton;
-	private FormuleButton downButton;
-	private FormuleButton copyButton;
-	private FormuleButton closeButton;
-	private FormuleButton plusKnop, minKnop, maalKnop, deelKnop, haakjesKnop, herleidKnop, abcKnop, subKnop;
-	private FormuleButton rmKnop;
+	private FEWSButtonListener listener = new FEWSButtonListener();
+	
+	private SVGButton terugButton;
+	private SVGButton downButton;
+	private SVGButton copyButton;
+	private FEWSButton herleidKnop;
+	private SVGButton plusKnop, minKnop, maalKnop, deelKnop, haakjesKnop,  subKnop, abcKnop,ontbindKnop, splitsKnop, wortelBewerkKnop;
+	private FEWSButton closeButton;
+	private SVGButton rmKnop;
 	private int aantalDecRm = 10;
-	private FormuleButton ontbindKnop, splitsKnop, wortelBewerkKnop;
 	private boolean abcVisible, subVisible, subExtra;
 	private boolean bewerkingKnoppen, bewerkingKnoppenExtra;
 	/**
@@ -203,6 +209,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 
 	private boolean isUitgeklapt;
 	private boolean isBoss;
+	
+	private ArrayList<SimplePanel> lijnen;
+	private SimplePanel activeBgPanel;
 	
 	public static void zetFontOverervingForm(boolean b)
 	{	fontOvererving = b;
@@ -375,12 +384,6 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				antwoordString = "$f" + antwoordString.substring(index + 1);
 			}
 
-//			FormuleViewer f = new FormuleViewer(prefix);
-//			f.setFont(defaultfont);
-//			prefixViewer = f.getAsPanel();
-//			prefixViewer.getElement().getStyle().setProperty("display", "inline-block");
-//			prefixViewer.getElement().getStyle().setProperty("clear", "both");
-//			prefixViewer.getElement().getStyle().setMarginLeft(23, Unit.PX);
 			prefixViewer = new FormuleViewer(prefix);
 			prefixViewer.setFont(font);
 			prefixViewer.setDefaultFont(font);
@@ -391,7 +394,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		mainPanel.addStyleName("formuleEditorWithSteps");
 		mainPanel.setPixelSize(breedte-2, hoogte-2);
 		mainPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
-		mainPanel.getElement().getStyle().setBorderColor("gray");
+		mainPanel.getElement().getStyle().setBorderColor(""+CssColor.make(170,170,170));
 		if (boxMetRand)
 			mainPanel.getElement().getStyle().setBackgroundColor("white");
 		else
@@ -406,91 +409,36 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			headerPanel.getElement().getStyle().setBackgroundColor("transparent");
 		headerPanel.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 		
-		Image buttonImg = new Image(DWOplayer.DWO_BUNDLE.pijlterug().getSafeUri());
-		buttonImg.getElement().getStyle().setMargin(2, Unit.PX);
-		terugButton = new FormuleButton();
-		terugButton.add(buttonImg);
-		terugButton.getElement().getStyle().setFloat(Style.Float.RIGHT);
+		//Knoppen
+		downButton = makeFEWSButton("down", true, Text.constants.tooltip_downButton());
+		terugButton = makeFEWSButton("up", true, Text.constants.tooltip_terugButton());
+		terugButton.getElement().getStyle().setMarginLeft(20, Unit.PX);
 		if(hasStartString)
 			terugButton.getElement().getStyle().setVisibility(Visibility.HIDDEN);
-		addTerugButtonHandler(terugButton);
+		copyButton = makeFEWSButton("copy", true, Text.constants.tooltip_copyButton());
+		plusKnop = makeFEWSButton("plus", false, Text.constants.tooltip_plusKnop());
+		minKnop = makeFEWSButton("min", false, Text.constants.tooltip_minKnop());
+		maalKnop = makeFEWSButton("maal", false, Text.constants.tooltip_maalKnop());
+		deelKnop = makeFEWSButton("deel", false, Text.constants.tooltip_deelKnop());
+		deelKnop.getElement().getStyle().setMarginRight(20, Unit.PX);
+		haakjesKnop = makeFEWSButton("haakjes", false, Text.constants.tooltip_haakjesKnop());
+		herleidKnop = makeFEWSButton("herleid", false, Text.constants.tooltip_herleidKnop());
+		herleidKnop.getElement().getStyle().setMarginRight(20, Unit.PX);
+		ontbindKnop = makeFEWSButton("ontbind", false, Text.constants.tooltip_ontbindKnop());
+		splitsKnop = makeFEWSButton("splits", false, Text.constants.tooltip_splitsKnop());
+		wortelBewerkKnop = makeFEWSButton("wortelbewerk", false, Text.constants.tooltip_wortelBewerkKnop());
+		abcKnop = makeFEWSButton("abc", true, Text.constants.tooltip_abcKnop());
+		subKnop = makeFEWSButton("sub", true, Text.constants.tooltip_subKnop());
+		rmKnop = makeFEWSButton("rekenmachine", true, Text.constants.tooltip_rmKnop());
 		
-		Image downButtonImg = new Image(DWOplayer.DWO_BUNDLE.pijldown().getSafeUri());
-		downButtonImg.getElement().getStyle().setMargin(2, Unit.PX);
-		downButton = new FormuleButton();
-		downButton.add(downButtonImg);
-		downButton.getElement().getStyle().setFloat(Style.Float.RIGHT);
-		addDownButtonHandler(downButton);
-		
-		Image copyButtonImg = new Image(DWOplayer.DWO_BUNDLE.pijlcopy().getSafeUri());
-		copyButtonImg.getElement().getStyle().setMargin(2, Unit.PX);
-		copyButton = new FormuleButton();
-		copyButton.add(copyButtonImg);
-		copyButton.getElement().getStyle().setFloat(Style.Float.RIGHT);
-		addCopyButtonHandler(copyButton);
-		copyButton.setVisible(!linStrategieVersie && !bordjesMethode && !substitutieVak);
-
-		Image closeButtonImg = new Image(DWOplayer.DWO_BUNDLE.closebutton().getSafeUri());
-		closeButtonImg.getElement().getStyle().setMargin(2, Unit.PX);
-		closeButton = new FormuleButton();
-		closeButton.add(closeButtonImg);
-		closeButton.getElement().getStyle().setFloat(Style.Float.RIGHT);
-		addCloseButtonHandler(closeButton);
+		closeButton = makeFEWSButton("sluit", true, null);
 		closeButton.setVisible(substitutieVak);
 		
-		rmKnop = new FormuleButton();
-		Image rmImage = new Image(DWOplayer.DWO_BUNDLE.rmknop().getSafeUri());
-		rmKnop.add(rmImage);
-		Style style = rmKnop.getElement().getStyle();
-		style.setFloat(Style.Float.RIGHT);
-		style.setPadding(5, Style.Unit.PX);
-		addRmKnopHandler(rmKnop);
-		rmKnop.setVisible(rmknop);
-		
-		//FIXME: hoe onderscheid maken tussen Noordhoff en gewone DWO?
-		abcKnop = new FormuleButton("abc", 1);
-		abcKnop.getElement().getStyle().setFloat(Style.Float.RIGHT);
-		addAbcButtonHandler(abcKnop);
-		
-		//Image subKnopImg = new Image(DWOplayer.DWO_BUNDLE.subknop().getSafeUri());
-		subKnop = new FormuleButton("sub", FormuleButton.BEWERKINGSKNOP);
-		subKnop.getElement().getStyle().setFloat(Style.Float.RIGHT);
-		addSubButtonHandler(subKnop);
-		
-		plusKnop = new FormuleButton("plus", FormuleButton.BEWERKINGSKNOP);
-		minKnop = new FormuleButton("min", FormuleButton.BEWERKINGSKNOP);
-		maalKnop = new FormuleButton("maal", FormuleButton.BEWERKINGSKNOP);
-		deelKnop = new FormuleButton("deel", FormuleButton.BEWERKINGSKNOP);
-		deelKnop.getElement().getStyle().setMarginRight(10, Style.Unit.PX);
-		haakjesKnop = new FormuleButton("haakjesweg", FormuleButton.BEWERKINGSKNOP);
-		herleidKnop = new FormuleButton("herleid", FormuleButton.BEWERKINGSKNOP);
-		ontbindKnop = new FormuleButton("ontbind", FormuleButton.BEWERKINGSKNOP);
-		ontbindKnop.getElement().getStyle().setMarginRight(10, Style.Unit.PX);
-		splitsKnop = new FormuleButton("splits", FormuleButton.BEWERKINGSKNOP);
-		wortelBewerkKnop = new FormuleButton("wortelbewerk", FormuleButton.BEWERKINGSKNOP);
-		
-		plusKnop.getElement().getStyle().setFloat(Style.Float.LEFT);
-		minKnop.getElement().getStyle().setFloat(Style.Float.LEFT);
-		maalKnop.getElement().getStyle().setFloat(Style.Float.LEFT);
-		deelKnop.getElement().getStyle().setFloat(Style.Float.LEFT);
-		haakjesKnop.getElement().getStyle().setFloat(Style.Float.LEFT);
-		herleidKnop.getElement().getStyle().setFloat(Style.Float.LEFT);
-		ontbindKnop.getElement().getStyle().setFloat(Style.Float.LEFT);
-		splitsKnop.getElement().getStyle().setFloat(Style.Float.LEFT);
-		wortelBewerkKnop.getElement().getStyle().setFloat(Style.Float.LEFT);
-		
-		addPlusButtonHandler(plusKnop);
-		addMinButtonHandler(minKnop);
-		addMaalButtonHandler(maalKnop);
-		addDeelButtonHandler(deelKnop);
-		addHaakjesButtonHandler(haakjesKnop);
-		addHerleidButtonHandler(herleidKnop);
-		addOntbindButtonHandler(ontbindKnop);
-		addSplitsButtonHandler(splitsKnop);
-		addWortelButtonHandler(wortelBewerkKnop);
-		
-		if (substitutieVak)
+		if (substitutieVak) {
 			headerPanel.add(closeButton);
+			headerPanel.getElement().getStyle().setBackgroundColor(""+CssColor.make(239, 241, 243));
+			asWidget().getElement().getStyle().setBackgroundColor(""+CssColor.make(239, 241, 243));
+		}
 		if (!(linStrategieVersie || bordjesMethode))
 		{
 			if (!substitutieVak)
@@ -537,7 +485,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		feedbackPanel.setFontSize(XMLView.getDefaultFontSize());
 		feedbackPanel.setFontName(XMLView.getDefaultFontName());
 		feedbackPanel.setColor(CssColor.make("black"));
-		feedbackPanel.setMarges(5, 0);
+		feedbackPanel.setMarges(8, 10);
 		feedbackPanel.setCentering(false, true);
 		feedbackPanel.setPasHoogteBreedteAan(true, false);
 		feedbackPanel.getElement().getStyle().setBackgroundColor("#FFFFDD");
@@ -548,6 +496,20 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		
 		sp.setWidget(contentPanel);
 		mainPanel.add(sp);
+		
+		lijnen = new ArrayList<SimplePanel>();
+		int aantalLijnen = 15;
+		
+		if(this instanceof StelselEditor)
+			aantalLijnen = 0;
+			
+		for(int i = 0 ; i<aantalLijnen ; i++) {
+			SimplePanel lijnPanel = new SimplePanel();
+			lijnen.add(lijnPanel);
+			lijnPanel.getElement().getStyle().setBackgroundColor(""+CssColor.make(211,229,244));
+			contentPanel.add(lijnPanel);
+			
+		}
 		
 		if(subExtra && !substitutieVak)
 		{
@@ -561,15 +523,15 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			subLaunchState.put("substitutieVak", Boolean.TRUE);
 			hh.put("interactiePanelLaunchState", subLaunchState);
 			gebruikersSubstitutiesVak = new FormuleEditorWithSteps(hh, true, randomVarNamen, randomVarWaarden, null);
+			
 		}
 		
+		if(linStrategieVersie || linOefenVersie || bewerkingKnoppen)
+			stepPanelY = 20;
+		
 		LayoutPanel stepPanel = maakNieuwStapPanel();
-		//stepPanel.setWidth((breedte - 5) + "px");
-		//layoutStepPanel(stepPanel);
-//		highLight(stepPanel, true);
 		if (hasPrefix)
 			addPrefixViewer(stepPanel);
-			//stepPanel.add(prefixViewer);
 
 		if (!startString.equals("$f@") && stapNr == 0) //ik denk niet dat het stapNr hier al iets anders kan zijn dan 0..
 		{
@@ -598,6 +560,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			}
 			contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, f.getHeight(), Style.Unit.PX);
 			
+			
 			stepsForLinKwad = false;
 			try
 			{
@@ -608,10 +571,11 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			catch(Exception e){}
 			
 			
+			
 			if(!(linStrategieVersie || linOefenVersie || bordjesMethode))
 			{
 				pijlVak = new PijlVak("", this, false);
-				int y = stepPanelY + f.getHeight()/2;
+				int y = stepPanelY + f.getHeight() - pijlVak.getHeight()/4;
 				//if(pijl)
 				contentPanel.add(pijlVak);
 				contentPanel.setWidgetRightWidth(pijlVak, 0, Style.Unit.PX, pijlX, Style.Unit.PX);
@@ -625,6 +589,11 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				addPijlVakInhouden("");
 				
 				pijlVak.paintComponent();
+				
+				if(stapNr>-1 && stapNr<lijnen.size()) {
+					contentPanel.setWidgetLeftRight(lijnen.get(stapNr), 5, Style.Unit.PX, pijlX+20, Style.Unit.PX);
+					contentPanel.setWidgetTopHeight(lijnen.get(stapNr), y + pijlVak.getHeight()/2, Style.Unit.PX, 1, Style.Unit.PX);
+				}
 				
 				stapNr++;
 				stepPanelY += f.getHeight() + stapH; // withImage?
@@ -646,7 +615,33 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		//zorgen dat cursor niet direct, maar pas bij focus verschijnt
 		if(editor != null)
 			editor.setCurrentElementRepaint();
+	}
+	
+	private FEWSButton makeFEWSButton(String code, boolean alignRight, String tooltipText) 
+	{
+		FEWSButton button = new FEWSButton(code);
+		button.setSize(28, 28);
+		button.getElement().getStyle().setMarginTop(4, Unit.PX);
+		if(alignRight) {
+			button.getElement().getStyle().setMarginRight(4, Unit.PX);
+			button.getElement().getStyle().setFloat(Style.Float.RIGHT);
+		}
+		else {
+			button.getElement().getStyle().setMarginLeft(4, Unit.PX);
+			button.getElement().getStyle().setFloat(Style.Float.LEFT);
+		}
+		button.addButtonListener(listener);
+		button.setTooltip(tooltipText);
 		
+		if(isNoordhoff()) {
+			button.getElement().getStyle().setMarginTop(0, Unit.PX);
+		}
+		
+		if(this instanceof StelselEditor) {
+			button.getElement().getStyle().setMarginTop(1, Unit.PX);
+			button.setSize(22, 22);
+		}
+		return button;
 	}
 
 	public void zetInstellingen(ObjectMap instellingen2)
@@ -657,7 +652,6 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	
 	public void addPrefixViewer(LayoutPanel p)
 	{
-//		editor.getPrefixPanel().add(prefixViewer.getAsPanel());
 		Widget w = prefixViewer.getAsPanel();
 		p.add(w);
 		p.setWidgetLeftWidth(w, 23, Style.Unit.PX, prefixViewer.getWidth(), Style.Unit.PX);
@@ -737,7 +731,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	
 			contentPanel.add(feedbackPanel);
 			contentPanel.setWidgetLeftRight(feedbackPanel, 5, Style.Unit.PX, 5, Style.Unit.PX);
-			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + fv.getHeightWithImage(), Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX);
+			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + fv.getHeightWithImage()+8, Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX);
 		}
 		nagekeken = true;
 		correct = Boolean.TRUE;
@@ -783,7 +777,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			addPijlVakInhouden("");
 		}
 
-		int y = stepPanelY + fv.getHeightWithImage()/2;
+		int y = stepPanelY + fv.getHeightWithImage() - pijlVak.getHeight()/4;
 		
 		//if (pijl)
 		contentPanel.add(pijlVak);
@@ -800,6 +794,11 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		pijlVakken.add(pijlVak);
 		pijlVak.paintComponent();
 		
+		if(stapNr>-1 && stapNr<lijnen.size()) {
+			contentPanel.setWidgetLeftWidth(lijnen.get(stapNr), 5, Style.Unit.PX, this.breedte-pijlX-30, Style.Unit.PX);
+			contentPanel.setWidgetTopHeight(lijnen.get(stapNr), y + pijlVak.getHeight()/2, Style.Unit.PX, 1, Style.Unit.PX);
+		}
+		
 		LayoutPanel stepPanel = maakNieuwStapPanel();
 		//if(!setState)
 			stapNr++;
@@ -809,7 +808,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			feedbackPanel.removeFromParent();
 			contentPanel.add(feedbackPanel);
 			contentPanel.setWidgetLeftRight(feedbackPanel, 5, Style.Unit.PX, 5, Style.Unit.PX);
-			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY +  fv.getHeightWithImage(), Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX);
+			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY +  fv.getHeightWithImage()+8, Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX);
 		}
 
 		editor = addNewEditor(stepPanel);
@@ -895,7 +894,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			
 			if (feedbackPanel.isAttached())
 			{
-				contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + hoogteStepPanelMetEditor(), Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX);
+				contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + hoogteStepPanelMetEditor()+8, Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX);
 			}
 		}
 		scrollToBottom();
@@ -1237,6 +1236,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				pijlVak = pijlVakken.get(pijlVakken.size() - 1);
 			else
 				pijlVak = null;
+			
+			if(stapNr>0 && stapNr<lijnen.size()) {
+				contentPanel.setWidgetLeftWidth(lijnen.get(stapNr-1), 5, Style.Unit.PX, 0, Style.Unit.PX);
+			}
 		}
 	}
 	
@@ -1300,7 +1303,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				height = hoogteStepPanelMetEditor();
 			else if(latest_answer_viewer != null && latest_answer_viewer.getHeight() > 23)
 				height = latest_answer_viewer.getHeight();
-			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + height, Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX); 
+			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + height+10, Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX); 
 		}
 		if(editor != null)
 		{
@@ -1502,6 +1505,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		}
 		
 		stepPanelY = 0;
+		if(linStrategieVersie || linOefenVersie || bewerkingKnoppen)
+			stepPanelY = 20;
+		
 		for (int i = 0; i < viewers.size(); i++) // wanneer heb ik hier meerdere viewers?
 		{
 			LayoutPanel p = stepPanels.get(i);
@@ -1632,271 +1638,116 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		
 	}
 
-	/**
-	 * Voeg de handler toe aan 'pijl omhoog'-knop.
-	 * 
-	 * @param tb
-	 */
-	private void addTerugButtonHandler(final FormuleButton tb)
-	{
-		tb.addClickHandler(new ClickHandler()
-		{
-			@Override
-			public void onClick(ClickEvent event)
-			{
+	private class FEWSButtonListener implements ButtonListener {
+		public void onClick(Object sender) {
+			if(sender==downButton) {
+				if(!editable || openstaandePijl)
+					return;
+				if (linOefenVersie)	{
+					// administratie bijwerken, hier wordt in de strategieoefenversie een lege pijl toegevoegd
+					addPijlVakOperatoren("");
+					addPijlVakInhouden("");
+				}
+				if (editor != null) 	{
+					editor.enter(); // enter om het antwoord na te kijken
+					if (!isToets()	&& ingevuld 	&& (isCorrect() != null ? isCorrect() : false)) {
+						// geen toets, dan is een correcte eindstap het laatste 
+						return;
+					}
+				}
+				downStep();
+			}
+			if(sender==terugButton) {
 				if (!editable)
 					return;
 				if (nagekeken)
 					zetIsVeranderdNaNakijken(true);
-				
 				backStep(false);
 			}
-		});
-	}
-	
-	private void addAbcButtonHandler(final FormuleButton tb)
-	{	tb.addClickHandler(new ClickHandler()
-		{	@Override
-			public void onClick(ClickEvent event)
-			{
-				if(!editable)
+			if(sender==copyButton) {
+				if(!editable || openstaandePijl ||  (!isToets() && ingevuld && (isCorrect() != null ? isCorrect() : false))) { // geen toets, dan is een correcte eindstap het laatste
 					return;
-				maakStap("abc");
-			}
-		});
-	}
-	
-	private void addSubButtonHandler(final FormuleButton tb)
-	{	tb.addClickHandler(new ClickHandler()
-		{	@Override
-			public void onClick(ClickEvent event)
-			{	
-				if(!editable) return;
-				if(subExtra)
-				{
-					voegGebruikersSubstitutiesVakToe();
 				}
-				else
-				{
-					if(substitutie == null)
-						maakStap("sub");
-					
-				}
+				copyStep();
 			}
-		});
-	}
-	
-	private void addPlusButtonHandler(final FormuleButton tb)
-	{
-		tb.addClickHandler(new ClickHandler()
-		{	@Override
-			public void onClick(ClickEvent event)
-			{
+			if(sender==plusKnop) {
 				if(!editable ||(!isStapOk() && !linOefenVersie))
 					return;
 				maakStap("+");
 			}
-		});
-	}
-	
-	private void addMinButtonHandler(final FormuleButton tb)
-	{	tb.addClickHandler(new ClickHandler()
-		{	@Override
-			public void onClick(ClickEvent event)
-			{
+			if(sender==minKnop) {
 				if(!editable || (!isStapOk() && !linOefenVersie))
 					return;
 				maakStap("-");
 			}
-		});
-	}
-	
-	private void addMaalButtonHandler(final FormuleButton tb)
-	{	tb.addClickHandler(new ClickHandler()
-		{	@Override
-			public void onClick(ClickEvent event)
-			{
+			if(sender==maalKnop) {
 				if(!editable || (!isStapOk() && !linOefenVersie))
 					return;
 				maakStap("*");
 			}
-		});
-	}
-	
-	private void addDeelButtonHandler(final FormuleButton tb)
-	{	tb.addClickHandler(new ClickHandler()
-		{	@Override
-			public void onClick(ClickEvent event)
-			{
+			if(sender==deelKnop) {
 				if(!editable || (!isStapOk() && !linOefenVersie))
 					return;
 				maakStap(":");
 			}
-		});
-	}
-	
-	private void addHaakjesButtonHandler(final FormuleButton tb)
-	{	tb.addClickHandler(new ClickHandler()
-		{	@Override
-			public void onClick(ClickEvent event)
-			{	
+			if(sender==haakjesKnop) {
 				if(!editable || (!isStapOk() && !linOefenVersie))
 					return;
 				maakStap("haakjes");
 				maakBewerkingStap();
 			}
-		});
-	}
-	
-	private void addHerleidButtonHandler(final FormuleButton tb)
-	{	tb.addClickHandler(new ClickHandler()
-		{	@Override
-			public void onClick(ClickEvent event)
-			{
+			if(sender==herleidKnop) {
 				if(!editable || (!isStapOk() && !linOefenVersie))
 					return;
 				maakStap("herleid");
 				maakBewerkingStap();
 			}
-		});
-	}
-	
-	private void addOntbindButtonHandler(final FormuleButton tb)
-	{	tb.addClickHandler(new ClickHandler()
-		{	@Override
-			public void onClick(ClickEvent event)
-			{	
+			if(sender==ontbindKnop) {
 				if(!editable || !isStapOk())
 					return;
 				maakStap("ontbind");
 				maakBewerkingStap();
 			}
-		});
-	}
-	
-	private void addSplitsButtonHandler(final FormuleButton tb)
-	{
-		tb.addClickHandler(new ClickHandler()
-		{	
-			@Override
-			public void onClick(ClickEvent event)
-			{
+			if(sender==splitsKnop) {
 				if(!editable || !isStapOk())
 					return;
 				maakStap("splits");
 				maakBewerkingStap();
 			}
-		});
-	}
-	
-	private void addWortelButtonHandler(final FormuleButton tb)
-	{
-		tb.addClickHandler(new ClickHandler()
-		{	@Override
-			public void onClick(ClickEvent event)
-			{
+			if(sender==wortelBewerkKnop) {
 				if(!editable || !isStapOk())
 					return;
 				maakStap("wortel");
 				maakBewerkingStap();
 			}
-		});
-	}
-	
-	/**
-	 * Voeg handler toe aan 'pijl naar beneden'-knop.
-	 * 
-	 * @param tb
-	 */
-	private void addDownButtonHandler(final FormuleButton tb)
-	{
-		tb.addClickHandler(new ClickHandler()
-		{
-			@Override
-			public void onClick(ClickEvent event)
-			{
-				if(!editable || openstaandePijl)
+			if(sender==abcKnop) {
+				if(!editable)
 					return;
-
-				if (linOefenVersie)
-				{
-					// administratie bijwerken, hier wordt in de strategieoefenversie een lege pijl toegevoegd
-					addPijlVakOperatoren("");
-					addPijlVakInhouden("");
-				}
-				
-				if (editor != null)
-				{
-					editor.enter(); // enter om het antwoord na te kijken
-					if (!isToets()
-						&& ingevuld 
-						&& (isCorrect() != null ? isCorrect() : false))
-					{
-						// geen toets, dan is een correcte eindstap het laatste 
-						return;
-					}
-				}
-				
-				downStep();
+				maakStap("abc");
 			}
-		});
-	}
-	
-	/**
-	 * Voeg handler toe aan dupliceer-knop.
-	 * 
-	 * @param tb
-	 */
-	private void addCopyButtonHandler(final FormuleButton tb)
-	{
-		tb.addClickHandler(new ClickHandler()
-		{
-			@Override
-			public void onClick(ClickEvent event)
-			{
-				if(!editable 
-					|| openstaandePijl
-					||  (!isToets()
-						&& ingevuld 
-						&& (isCorrect() != null ? isCorrect() : false))) // geen toets, dan is een correcte eindstap het laatste
-				{ 
-					return;
+			if(sender==subKnop) {
+				if(!editable) return;
+				if(subExtra) 	{
+					voegGebruikersSubstitutiesVakToe();
 				}
-				
-				copyStep();
+				else 	{
+					if(substitutie == null)
+						maakStap("sub");
+				}
 			}
-		});
-	}
-	
-	private void addCloseButtonHandler(final FormuleButton tb)
-	{
-		tb.addClickHandler(new ClickHandler()
-		{
-			@Override
-			public void onClick(ClickEvent event)
-			{
-				closeEditor();
-			}
-		});
-	}
-
-	/**
-	 * Voeg handler aan rekenmachine-knop toe.
-	 * @param rmKnop
-	 */
-	private void addRmKnopHandler(final FormuleButton rmKnop)
-	{
-		rmKnop.addClickHandler(new ClickHandler()
-		{
-			@Override
-			public void onClick(ClickEvent event)
-			{
+			if(sender==rmKnop) {
 				if (!editable)
 					return;
 				berekenStap();
 			}
-		});
+			if(sender==closeButton) {
+				closeButton.setBorderActive(false);
+				closeEditor();
+			}
+			
+		}
 	}
+
 	
 // Waar hoort dit bij?
 /*
@@ -2353,9 +2204,14 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		if (!substitutieString.equals(""))
 			substitutie = FormuleParser.geefExpressie(substitutieString);
 
-		int oudStepPanelY = stepPanelY;
+		
 		
 		stepPanelY = 0;
+		if(linStrategieVersie || linOefenVersie || bewerkingKnoppen)
+			stepPanelY = 20;
+		
+		int oudStepPanelY = stepPanelY;
+		
 		for (int i = 0; i < stapNr + 1; i++)
 		{
 			
@@ -2366,7 +2222,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 					if (linStrategieVersie || linOefenVersie || bordjesMethode 
 						|| ((pijlVakOperatoren.length - 1 >= i) && !(pijlVakOperatoren[i] == null || pijlVakOperatoren[i].equals(""))))
 					{	
-						zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, viewers.get(i).getHeight()/2, true);
+						zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, stepPanelY + viewers.get(i).getHeight() - 10, true);
 					}
 					i++; // sla de eerste over
 				}
@@ -2375,7 +2231,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 					// Als pijlVakOperatoren leeg is, is er ten onrechte een openstaande pijl geadministreerd, dan niet verder...
 				{
 					// i == stapNr == 0
-					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, viewers.get(i).getHeight()/2, false);
+					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, stepPanelY + viewers.get(i).getHeight() - 10, false);
 					if (pijlVak != null && pijlVak.getEditor()!=null) // er is iets misgegaan...
 						pijlVak.getEditor().requestFocus();
 					scrollToBottom();
@@ -2463,7 +2319,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
 				
 				if (i < stapNr)
-					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, stepPanelY + hoogteStepPanelMetEditor()/2, true);
+					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, stepPanelY + hoogteStepPanelMetEditor() - 10, true);
 			}
 			else
 			{
@@ -2473,11 +2329,11 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, fv.getHeightWithImage(), Style.Unit.PX);
 				
 				if (i < stapNr)
-					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, stepPanelY + fv.getHeightWithImage()/2, true);
+					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, stepPanelY + fv.getHeightWithImage() - 10, true);
 				else if ((linStrategieVersie || linOefenVersie || subVisible || abcVisible) && (i == stapNr) && (pijlVakOperatoren.length == viewers.size())) // er staat nog een laatste in te vullen pijl
 				{
 					openstaandePijl = true;
-					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, stepPanelY + fv.getHeightWithImage()/2, false);
+					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, stepPanelY + fv.getHeightWithImage() - 10, false);
 					if(pijlVak.getEditor()!=null)
 						pijlVak.getEditor().requestFocus();
 					scrollToBottom();
@@ -2937,6 +2793,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		contentPanel.setWidgetTopHeight(pijlVak, h, Style.Unit.PX, pijlVak.getHeight(), Style.Unit.PX);
 		pijlVak.setPijlVisible(pijl);
 		
+		if(stapNr>-1 && stapNr<lijnen.size()) {
+			contentPanel.setWidgetLeftWidth(lijnen.get(i), 5, Style.Unit.PX, this.breedte-pijlX-30, Style.Unit.PX);
+			contentPanel.setWidgetTopHeight(lijnen.get(i), h + pijlVak.getHeight()/2, Style.Unit.PX, 1, Style.Unit.PX);
+		}
 		//if ("GR".equals(WiskOpdr.deployVariant) && pijlVakOperatoren != null && pijlVakOperatoren[i] != null && (pijlVakOperatoren[i].equals("sub") || pijlVakOperatoren[i].equals("abc")))
 		//	pijlVak.setLocation(getSize().width - pijlX - 60, y);
 		
@@ -3578,10 +3438,15 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 
 			pijlVak = new PijlVak(operator, this, false);
 			pijlVak.setFont(font);
-			int y = stepPanelY + latest_answer_viewer.getHeight()/2;
+			int y = stepPanelY + latest_answer_viewer.getHeight() - pijlVak.getHeight()/4;
 			contentPanel.add(pijlVak);
 			contentPanel.setWidgetRightWidth(pijlVak, 0, Style.Unit.PX, pijlX, Style.Unit.PX);
 			contentPanel.setWidgetTopHeight(pijlVak, y, Style.Unit.PX, pijlVak.getHeight(), Style.Unit.PX);
+			
+			if(stapNr>-1 && stapNr<lijnen.size()) {
+				contentPanel.setWidgetLeftWidth(lijnen.get(stapNr), 5, Style.Unit.PX, this.breedte-pijlX-30, Style.Unit.PX);
+				contentPanel.setWidgetTopHeight(lijnen.get(stapNr), y + pijlVak.getHeight()/2, Style.Unit.PX, 1, Style.Unit.PX);
+			}
 			
 			if (operator.equals("abc") || operator.equals("sub"))
 			{

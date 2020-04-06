@@ -15,6 +15,8 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
+import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
+import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.Expressie;
@@ -28,6 +30,20 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
+
+import org.vectomatic.dom.svg.OMSVGDocument;
+import org.vectomatic.dom.svg.OMSVGEllipseElement;
+import org.vectomatic.dom.svg.OMSVGCircleElement;
+import org.vectomatic.dom.svg.OMSVGLineElement;
+import org.vectomatic.dom.svg.OMSVGLength;
+import org.vectomatic.dom.svg.OMSVGPathElement;
+import org.vectomatic.dom.svg.OMSVGPathSegList;
+import org.vectomatic.dom.svg.OMSVGRectElement;
+import org.vectomatic.dom.svg.OMSVGSVGElement;
+import org.vectomatic.dom.svg.OMSVGTextElement;
+import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.utils.OMSVGParser;
+import org.vectomatic.dom.svg.utils.SVGConstants;
 
 
 
@@ -64,11 +80,14 @@ public class PijlVak extends LayoutPanel
 	private FormuleFont fm;
 	private boolean hasPrefix = false;
 	private Context2d ctx;
+	private OMSVGSVGElement svg;
+	private SVGImage svgImage;
+	private OMSVGDocument doc;
 
 	/**
 	 * Het discriminantvak (abc-formule) is te sluiten met een sluitknop met kruis.
 	 */
-	private PushButton sluitKnop;
+	private SVGButton sluitKnop;
 	
 	private FormuleEditorWithSteps fe;
 	
@@ -92,25 +111,29 @@ public class PijlVak extends LayoutPanel
 		ctx = canvas.getContext2d();
 		ctx.setFont(font);
 		
-		this.add(canvas);
-		this.setWidgetLeftRight(canvas, 0, Style.Unit.PX, 0, Style.Unit.PX);
-		this.setWidgetTopBottom(canvas, 0, Style.Unit.PX, 0, Style.Unit.PX);
+		//this.add(canvas);
+		//this.setWidgetLeftRight(canvas, 0, Style.Unit.PX, 0, Style.Unit.PX);
+		//this.setWidgetTopBottom(canvas, 0, Style.Unit.PX, 0, Style.Unit.PX);
+		
+		doc = OMSVGParser.currentDocument();
+        svg =  doc.createSVGSVGElement();
+        svgImage = new SVGImage(svg);
+        this.add(svgImage);
+ 		this.setWidgetLeftRight(svgImage, 0, Style.Unit.PX, 0, Style.Unit.PX);
+ 		this.setWidgetTopBottom(svgImage, 0, Style.Unit.PX, 0, Style.Unit.PX);
 		
 		width = (fm.getAscent() + fm.getDescent())/2 + fm.getAscent()/4 + (int) ctx.measureText(MARGE_VOOR + operator + "   ").getWidth();
-		height = 5*(fm.getAscent() + fm.getDescent())/2;
+		height = 40;//5*(fm.getAscent() + fm.getDescent())/2;
 		
 		if (operator.equals("abc")) 
 		{
 			width = Math.max(MIN_WIDTH_ABC_SUB, (int) ctx.measureText(MARGE_VOOR + "Discriminant" + MARGE_NA).getWidth());
 			
-			sluitKnop = new PushButton("x");
-			sluitKnop.getElement().getStyle().setTextAlign(TextAlign.CENTER);
-			sluitKnop.getElement().getStyle().setVerticalAlign(VerticalAlign.MIDDLE);
-			sluitKnop.getElement().getStyle().setFontSize(11, Unit.PX);
-			sluitKnop.addClickHandler(new ClickHandler( ) {
-
+			sluitKnop = new FEWSButton("sluit");
+			sluitKnop.setSize(18, 18);
+			sluitKnop.addButtonListener(new ButtonListener() {
 				@Override
-				public void onClick(ClickEvent event)
+				public void onClick(Object sender)
 				{
 					fe.backStep(false);
 					
@@ -126,6 +149,24 @@ public class PijlVak extends LayoutPanel
 		else if (operator.equals("sub")) 
 		{
 			width = Math.max(MIN_WIDTH_ABC_SUB, (int) ctx.measureText(MARGE_VOOR + rb.subLabel() + MARGE_NA).getWidth());
+			
+//			sluitKnop = new FEWSButton("sluit");
+//			sluitKnop.setSize(18, 18);
+//			sluitKnop.addButtonListener(new ButtonListener() {
+//				@Override
+//				public void onClick(Object sender)
+//				{
+//					fe.backStep(false);
+//					
+//					// openstaande pijl afsluiten
+//					fe.setOpenstaandePijl(false);
+//				}
+//				
+//			});
+//			this.add(sluitKnop);
+//			this.setWidgetRightWidth(sluitKnop, 0, Style.Unit.PX, 18, Style.Unit.PX);
+//			this.setWidgetTopHeight(sluitKnop, 0, Style.Unit.PX, 18, Style.Unit.PX);
+			
 		}
 
 		
@@ -294,6 +335,99 @@ public class PijlVak extends LayoutPanel
 	
 	public void paintComponent()
 	{
+		 // Create an arrow-shaped path
+        OMSVGPathElement pijl = doc.createSVGPathElement();
+        OMSVGPathSegList segsPijl = pijl.getPathSegList();
+        segsPijl.appendItem(pijl.createSVGPathSegMovetoAbs(1f, 5f));
+        segsPijl.appendItem(pijl.createSVGPathSegCurvetoQuadraticAbs(1f, height-7, 16, height/2));
+        pijl.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, SVGConstants.CSS_BLACK_VALUE);
+        pijl.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "1.5");
+        pijl.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, SVGConstants.CSS_WHITE_VALUE);
+        
+        svg.appendChild(pijl);
+        
+        OMSVGPathElement punt = doc.createSVGPathElement();
+        OMSVGPathSegList segsPunt = punt.getPathSegList();
+        segsPunt.appendItem(punt.createSVGPathSegMovetoAbs(1f, height-7));
+        segsPunt.appendItem(punt.createSVGPathSegLinetoAbs(2f, height-13));
+        segsPunt.appendItem(punt.createSVGPathSegLinetoAbs(6f, height-8));
+        segsPunt.appendItem(punt.createSVGPathSegLinetoAbs(1f, height-7));
+        segsPunt.appendItem(punt.createSVGPathSegClosePath());
+        punt.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, SVGConstants.CSS_BLACK_VALUE);
+        punt.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, SVGConstants.CSS_BLACK_VALUE);
+        
+        svg.appendChild(punt);
+        
+    		
+        if (operator.equals("*"))
+		{
+        		OMSVGPathElement maal = doc.createSVGPathElement();
+            OMSVGPathSegList segsMaal = maal.getPathSegList();
+            segsMaal.appendItem(maal.createSVGPathSegMovetoAbs((fm.getAscent() + fm.getDescent())/2+6,ashoogte-fm.getAscent()/4+3));
+            segsMaal.appendItem(maal.createSVGPathSegLinetoAbs((7*fm.getAscent()/4 + fm.getDescent())/2+6,ashoogte+fm.getAscent()/4+2));
+            segsMaal.appendItem(maal.createSVGPathSegMovetoAbs((fm.getAscent() + fm.getDescent())/2+6,ashoogte+fm.getAscent()/4+2));
+            segsMaal.appendItem(maal.createSVGPathSegLinetoAbs((7*fm.getAscent()/4 + fm.getDescent())/2+6,ashoogte-fm.getAscent()/4+3));
+            maal.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, SVGConstants.CSS_BLACK_VALUE);
+            maal.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "1.0");
+            svg.appendChild(maal);
+		}
+        else if (operator.equals(":"))
+		{
+        		int b = fm.getAscent() + fm.getDescent();
+			double marge = ctx.measureText(MARGE_VOOR).getWidth();
+			OMSVGCircleElement deel1 = doc.createSVGCircleElement((float)b / 2 + 9, (float)ashoogte - b / 4 + 2, 1f);
+			OMSVGCircleElement deel2 = doc.createSVGCircleElement((float)b / 2 + 9, (float)ashoogte + b / 4 + 2, 1f);
+			OMSVGLineElement deel3 = doc.createSVGLineElement((float)b/2+5, (float)ashoogte + 2, (float)(7*fm.getAscent()/4 + fm.getDescent())/2+8, (float)ashoogte + 2);
+			deel3.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, SVGConstants.CSS_BLACK_VALUE);
+			deel3.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "1.3");
+			svg.appendChild(deel1);
+			svg.appendChild(deel2);
+			svg.appendChild(deel3);
+		}
+        else if (operator.equals("-"))
+		{
+        		int b = fm.getAscent() + fm.getDescent();
+			double marge = ctx.measureText(MARGE_VOOR).getWidth();
+			OMSVGLineElement min = doc.createSVGLineElement((float)(fm.getAscent() + fm.getDescent())/2+6, (float)ashoogte + 2, (7*fm.getAscent()/4 + fm.getDescent())/2+6, (float)ashoogte + 2);
+			min.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, SVGConstants.CSS_BLACK_VALUE);
+			min.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "1.3");
+			svg.appendChild(min);
+		}
+        else if (operator.equals("abc"))
+		{
+        		OMSVGRectElement rect = doc.createSVGRectElement(1f, 1f, getWidth()-2, getHeight()-2, 2f, 2f);
+        		rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, ""+CssColor.make(239,241,243).toString());
+        		rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, ""+CssColor.make(211,229,244).toString());
+        		svg.appendChild(rect);
+        		
+        		OMSVGTextElement text = doc.createSVGTextElement(5f, (float)ashoogte - fm.getDescent(), OMSVGLength.SVG_LENGTHTYPE_PX, "Discriminant");
+            text.getStyle().setSVGProperty(SVGConstants.CSS_FONT_SIZE_PROPERTY, "14");
+            text.getStyle().setSVGProperty(SVGConstants.CSS_FONT_WEIGHT_PROPERTY,  SVGConstants.CSS_NORMAL_VALUE);
+            //text.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, ""+CssColor.make(38,115,182).toString());
+            svg.appendChild(text);
+		}
+        else if (operator.equals("sub"))
+		{
+	        	OMSVGRectElement rect = doc.createSVGRectElement(1f, 1f, getWidth()-2, getHeight()-2, 2f, 2f);
+	    		rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, ""+CssColor.make(239,241,243).toString());
+	    		rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, ""+CssColor.make(211,229,244).toString());
+	    		svg.appendChild(rect);
+	    		
+	    		OMSVGTextElement text = doc.createSVGTextElement(5f, (float)ashoogte - fm.getDescent(), OMSVGLength.SVG_LENGTHTYPE_PX, rb.subLabel());
+	        text.getStyle().setSVGProperty(SVGConstants.CSS_FONT_SIZE_PROPERTY, "14");
+	        text.getStyle().setSVGProperty(SVGConstants.CSS_FONT_WEIGHT_PROPERTY,  SVGConstants.CSS_NORMAL_VALUE);
+	        //text.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, ""+CssColor.make(38,115,182).toString());
+	        svg.appendChild(text);
+		}
+        else
+        {
+        	 	OMSVGTextElement text = doc.createSVGTextElement((float)(fm.getAscent() + fm.getDescent())/2+6, (float)ashoogte + fm.getAscent() / 4+3, OMSVGLength.SVG_LENGTHTYPE_PX, MARGE_VOOR + operator + MARGE_NA);
+            text.getStyle().setSVGProperty(SVGConstants.CSS_FONT_SIZE_PROPERTY, "14");
+            text.getStyle().setSVGProperty(SVGConstants.CSS_FONT_WEIGHT_PROPERTY,  SVGConstants.CSS_NORMAL_VALUE);
+            svg.appendChild(text);
+        }
+        
+		
 		ctx.setFont(this.fm.toString());
 		
         ctx.setFillStyle("black");
@@ -754,7 +888,7 @@ public class PijlVak extends LayoutPanel
 		}
 	}
 	
-	PushButton getSluitKnop()
+	SVGButton getSluitKnop()
 	{
 		return sluitKnop;
 	}
