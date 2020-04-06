@@ -5,6 +5,7 @@ package fi.dwo.dwojapplet.gui;
 import fi.beans.copyright.FIButton;
 import fi.beans.copyright.NumworxInfo;
 import fi.beans.loader.Loader;
+import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JCheckBox;
 import fi.beans.numworxlf.JOptionPane;
@@ -231,7 +232,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         //p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
         Font  PLAIN = new Font("SansSerif",Font.PLAIN, 13);
         Font  BOLD  = new Font("SansSerif", Font.BOLD, 13);
-        Color PANEL_BACKGROUND = Color.decode("#314770");
+        Color PANEL_BACKGROUND = Constants.COLOR15;
         Color ITEM_BACKGROUND = Color.decode("#1b75bb");
         p.setBackground(PANEL_BACKGROUND);
         //p.setBorderColor(new Color(52,90,126));
