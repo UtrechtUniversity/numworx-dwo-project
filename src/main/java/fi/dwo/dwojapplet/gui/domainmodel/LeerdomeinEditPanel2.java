@@ -8,7 +8,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -29,8 +28,6 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -44,7 +41,6 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.plaf.SplitPaneUI;
 import javax.swing.plaf.basic.BasicMenuBarUI;
 import javax.swing.plaf.basic.BasicMenuUI;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
@@ -65,8 +61,6 @@ import fi.beans.numworxlf.JTree;
 import fi.beans.numworxlf.NumworxTextFieldUI;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.Course;
-import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.ConfirmDialog;
 import fi.dwo.dwojapplet.gui.domainmodel.ExportAction.ExportPanel;
@@ -401,69 +395,6 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
     
   }
 
-  class TreeCellRenderer extends DefaultTreeCellRenderer {
-
-    Icon bookIcon, folderIcon;
-    boolean isCourse, isMap;
-
-    TreeCellRenderer() {
-        super();
-        Image book = DwoHelper.getResourceImage("resources/book.png");
-        bookIcon = new ImageIcon(book);
-        folderIcon = new ImageIcon(DwoHelper.getResourceImage("resources/folder.png"));
-        setTextNonSelectionColor(fi.beans.numworxlf.Constants.COLOR15);
-        setTextSelectionColor(java.awt.Color.WHITE);
-        setBackgroundSelectionColor(fi.beans.numworxlf.Constants.COLOR14);
-    }
-
-    @Override
-    public Icon getOpenIcon() {
-        if (isCourse) {
-            return bookIcon;
-        }
-        return folderIcon;
-    }
-
-    @Override
-    public Icon getClosedIcon() {
-        if (isCourse) {
-            return bookIcon;
-        }
-        return folderIcon;
-    }
-
-    @Override
-    public Icon getLeafIcon() {
-        if (isCourse) {
-            return bookIcon;
-        }
-        if (isMap) {
-            return getClosedIcon();
-        }
-        return super.getDefaultLeafIcon();
-    }
-
-    @Override
-    public Component getTreeCellRendererComponent(javax.swing.JTree tree, Object value,
-            boolean sel, boolean expanded, boolean leaf, int row,
-            boolean hasFocus) {
-//bookicon als het een course is
-        isCourse
-                = value instanceof DefaultMutableTreeNode
-                && ((DefaultMutableTreeNode) value).getUserObject() instanceof Course
-                && !((Course) ((DefaultMutableTreeNode) value).getUserObject()).isWithChildren();
-        isCourse = false;
-        isMap = value instanceof DefaultMutableTreeNode
-                && ((DefaultMutableTreeNode) value).getUserObject() instanceof NodeLeaf;
-//geen leaficon als het een lege map is
-        isMap = leaf && !isMap;
-
-        return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf,
-                row, hasFocus);
-    }
-
-}
-
   private JButton okButton;
   private DomStudentModelStructure structure;
   private JMenuBar bar = new JMenuBar();
@@ -581,7 +512,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   TreeCellRenderer renderer = new TreeCellRenderer();
   renderer.updateUI();
   tree.setCellRenderer(renderer);
-  tree.updateUI();;
+  tree.updateUI();
   
   leftBox = new JPanel(new BorderLayout());
   leftBox.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));

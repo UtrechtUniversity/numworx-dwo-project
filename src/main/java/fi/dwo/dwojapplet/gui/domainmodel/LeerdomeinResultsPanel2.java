@@ -115,16 +115,22 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
   }
   static class ColorRenderer extends DefaultTableCellRenderer {
     final Color color;
+    final Color selColor;
 
     ColorRenderer(Color color) {
       this.color = color;
+      this.selColor = color;
+    }
+    ColorRenderer(Color color, Color selected) {
+      this.color = color;
+      this.selColor = selected;
     }
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
         boolean hasFocus, int row, int column) {
       Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-      component.setForeground(color);
+      component.setForeground(isSelected? selColor: color);
       return component;
     }
     
@@ -250,17 +256,20 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
     split.setDividerSize(20);
     //split.setBorder(BorderFactory.createEmptyBorder());
     leftBox = (split);
+    leftBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
     root = new DefaultMutableTreeNode("Handig haakjes wegwerken bij merkwaardige producten");
     model = new InvisibleTreeModel(root);
     tree = new JTree(model);
+    TreeCellRenderer renderer = new TreeCellRenderer();
+    renderer.updateUI();
+    tree.setCellRenderer(renderer);
+    tree.updateUI();
     tree.setBackground(COLOR20);
     tree.addTreeSelectionListener(this);
-    DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
     renderer.setBackgroundNonSelectionColor(COLOR20);
-    tree.setCellRenderer(renderer);
 
     JScrollPane pane = new JScrollPane(tree);
-    pane.setBorder(BorderFactory.createEmptyBorder(20,20,0,20));
+    pane.setBorder(BorderFactory.createEmptyBorder(20,20,0,0));
     pane.setViewportBorder(BorderFactory.createEmptyBorder());
     pane.setBackground(COLOR20);
     pane.setPreferredSize(new Dimension(580,300));
@@ -284,8 +293,8 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
     scroll.setPreferredSize(min);
     vb.add(scroll);
     split.setBottomComponent(vb);
-    leftBox.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 10));   
-    add(leftBox, BorderLayout.WEST);
+    leftBox.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 00));   
+    add(leftBox, BorderLayout.CENTER);
     
     Box rightBox = Box.createVerticalBox();
     
@@ -311,7 +320,8 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
     resultsPane = new JScrollPane(results);
     resultsPane.getViewport().setBackground(COLOR20);
     resultsPane.setBackground(COLOR20);
-    resultsPane.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+    resultsPane.setBorder(BorderFactory.createEmptyBorder(10,10,10,0));
+    resultsPane.setPreferredSize(new Dimension(440, 550));
     rightBox.add(resultsPane);
     
     JLabel l = new JLabel("Klasgemiddelde: ");
@@ -472,8 +482,13 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
           //calculateROOT(scores, tmodel);
           JTable table = results;
           table.setModel(tmodel);
+          table.setSelectionBackground(COLOR14);
           calculatePath(tree.getSelectionPath());
           TableColumnModel columnModel = table.getColumnModel();
+          TableColumn c0 = columnModel.getColumn(0);
+          ColorRenderer studentRenderer = new ColorRenderer(COLOR15, table.getSelectionForeground());
+          c0.setCellRenderer(studentRenderer);
+          
           TableColumn c1 = columnModel.getColumn(1);
           ColorRenderer redRenderer = new ColorRenderer(RED);
           redRenderer.setHorizontalAlignment(SwingConstants.TRAILING);

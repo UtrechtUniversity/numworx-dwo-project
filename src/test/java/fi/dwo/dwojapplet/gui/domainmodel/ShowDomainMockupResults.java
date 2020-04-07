@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.LoginManager;
@@ -17,6 +18,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 public class ShowDomainMockupResults extends JFrame {
 
@@ -35,6 +37,7 @@ public class ShowDomainMockupResults extends JFrame {
       System.exit(1);
       return;
     }
+    Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
     
     String username = args[0];
     String password = args[1];
