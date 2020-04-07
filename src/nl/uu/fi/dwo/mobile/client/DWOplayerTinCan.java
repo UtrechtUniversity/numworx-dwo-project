@@ -7,6 +7,8 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavPanel;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
+import nl.uu.fi.dwo.mobile.utils.Logging;
+import nl.uu.fi.dwo.mobile.utils.NoLogging;
 
 public class DWOplayerTinCan extends WiskOpdrDefaults {
 
@@ -55,5 +57,10 @@ public class DWOplayerTinCan extends WiskOpdrDefaults {
   public IdeasIF ideas() {
     return new DWOIdeasClient();
   }
+
+	@Override
+	public Logging getLogging() {
+		return NoLogging.instance;
+	}
 
 }

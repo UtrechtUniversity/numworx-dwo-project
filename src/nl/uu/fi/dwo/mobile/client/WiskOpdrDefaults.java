@@ -7,6 +7,8 @@ import fi.wiskopdr.CasServer;
 import nl.uu.fi.dwo.ideas.client.IdeasIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.dwokb.NoStatusKeyboard;
+import nl.uu.fi.dwo.mobile.utils.LaTransport;
+import nl.uu.fi.dwo.mobile.utils.Logging;
 
 public class WiskOpdrDefaults extends DWOplayerDefaults {
 	@Override
@@ -46,5 +48,10 @@ public class WiskOpdrDefaults extends DWOplayerDefaults {
     public IdeasIF ideas() {
       return CasServer.create();
     }
+
+	@Override
+	public Logging getLogging() {
+		return LaTransport.newTAOinstance();
+	}
 
 }
