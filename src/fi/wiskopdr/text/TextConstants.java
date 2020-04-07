@@ -168,5 +168,37 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	@DefaultStringValue("De server geeft een fout terug. Je werk kan niet worden opgeslagen")
 	String serverError();
 	
+	//FEWS
+	@DefaultStringValue("Nieuwe regel")
+	String tooltip_downButton();
+	@DefaultStringValue("Verwijder regel")
+	String tooltip_terugButton();
+	@DefaultStringValue("Kopieer regel")
+	String tooltip_copyButton();
+	@DefaultStringValue("Aan beide kanten optellen")
+	String tooltip_plusKnop();
+	@DefaultStringValue("Aan beide kanten aftrekken")
+	String tooltip_minKnop();
+	@DefaultStringValue("Vermenivuldig beide kanten")
+	String tooltip_maalKnop();
+	@DefaultStringValue("Deel beide kanten")
+	String tooltip_deelKnop();
+	@DefaultStringValue("Haakjes wegwerken")
+	String tooltip_haakjesKnop();
+	@DefaultStringValue("Termen samennemen")
+	String tooltip_herleidKnop();
+	@DefaultStringValue("Ontbinden")
+	String tooltip_ontbindKnop();
+	@DefaultStringValue("Splits bij ontbinding op 0")
+	String tooltip_splitsKnop();
+	@DefaultStringValue("Trek aan beide kanten de wortel")
+	String tooltip_wortelBewerkKnop();
+	@DefaultStringValue("Gebruik een substitutie")
+	String tooltip_subKnop();
+	@DefaultStringValue("Bereken de discriminant")
+	String tooltip_abcKnop();
+	@DefaultStringValue("Rekenmachine")
+	String tooltip_rmKnop();
+	
 // enzovoort
 }
