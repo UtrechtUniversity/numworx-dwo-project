@@ -56,7 +56,6 @@
         <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOJClient/trunk</developerConnection>
     </scm>
 
-    <!-- dependencies -->
     <dependencies>
     	<dependency>
     	    <groupId>nl.uu.fi.dwo.rest</groupId>
@@ -99,14 +98,6 @@
             <artifactId>jcalendar</artifactId>
             <version>1.4</version>
         </dependency>
-<!--         <dependency> -->
-<!--             <groupId>jre.plugin</groupId> -->
-<!--             <artifactId>plugin</artifactId> -->
-<!--             <version>1.8.0_31</version> -->
-<!--             <type>jar</type> -->
-<!--             <classifier>deprecated</classifier> -->
-<!--             <scope>provided</scope> -->
-<!--         </dependency> -->
         <!-- is required for unmarshalling json stuff       
        <dependency>
             <groupId>org.eclipse.persistence</groupId>
@@ -191,12 +182,6 @@
     		<groupId>fi.beans</groupId>
     		<artifactId>ideas</artifactId>
     		<version>1.2.2</version>
-    	</dependency>
-    	<dependency>
-    		<groupId>nl.numworx.swingbrowser</groupId>
-    		<artifactId>swingbrowser-jfx</artifactId>
-    		<version>0.0.2</version>
-    		<scope>provided</scope>
     	</dependency>
     	<dependency>
     		<groupId>nl.numworx.swingbrowser</groupId>
@@ -812,6 +797,26 @@
                 </plugins>      
             </build>
         </profile>-->
+        <profile>
+        	<id>jxb</id>
+        	<dependencies>
+		    	<dependency>
+		    		<groupId>nl.numworx.swingbrowser</groupId>
+		    		<artifactId>swingbrowser-jxb</artifactId>
+		    		<version>0.0.2</version>
+		    	</dependency>
+        	</dependencies>
+        </profile>
+        <profile>
+        	<id>jfx</id>
+        	<dependencies>
+		    	<dependency>
+		    		<groupId>nl.numworx.swingbrowser</groupId>
+		    		<artifactId>swingbrowser-jfx</artifactId>
+		    		<version>0.0.2</version>
+		    	</dependency>
+        	</dependencies>       
+        </profile>
     </profiles>
     <reporting>
         <plugins>
