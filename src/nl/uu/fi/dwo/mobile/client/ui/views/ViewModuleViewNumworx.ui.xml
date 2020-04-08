@@ -35,7 +35,7 @@
 		background-color: color10;
 	}
 	.kruimels {
-		font-family: Ubuntu;
+		font-family: Ubuntu, sans-serif;
 		color: color13;
 		font-size: 13px;
 		font-weight: medium;
@@ -43,7 +43,7 @@
 		display: inline-block;
 	}
 	.kruimels a, .kruimels span {
-		font-family: Ubuntu;
+		font-family: Ubuntu, sans-serif;
 		font-weight: medium;
 		color: color13 !important;
 	}
@@ -53,7 +53,7 @@
 		}
 		.title {
 			color: color14;
-			font-family: Ubuntu;
+			font-family: Ubuntu, sans-serif;
 			font-weight: medium;
 			font-size: 13px;
 			display: inline-block;
@@ -64,7 +64,7 @@
 		.knop {
 			color: white;
 			background-color: color12;
-			font-family: Ubuntu;
+			font-family: Ubuntu, sans-serif;
 			font-size: 12px;
 			font-weight: bold;
 			display: inline-block;

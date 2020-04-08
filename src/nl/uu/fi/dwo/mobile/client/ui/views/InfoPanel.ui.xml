@@ -28,7 +28,7 @@
 	}
 	.info-header-center {
 		display: inline-block;
-		font: Ubuntu;
+		font: Ubuntu, sans-serif;
 		font-weight: bold;
 		font-size: 16px;
 		padding: 18px;

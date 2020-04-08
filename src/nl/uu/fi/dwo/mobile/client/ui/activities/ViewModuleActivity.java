@@ -88,9 +88,9 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	final private Place EXIT_AFTER = isSEB ? new LoginPlace() : new TreeModulePlace();
 	
 	private boolean setNotAfter(final AcceptsOneWidget panel) {
-		//Date notAfter = sco.getNotAfter();
+		Date notAfter = sco.getNotAfter();
 		final Text rb = Text.constants;
-		final Date notAfter = new Date(System.currentTimeMillis()+10000L+ PREPARE_AFTER);
+		//final Date notAfter = new Date(System.currentTimeMillis()+10000L+ PREPARE_AFTER);
 
 		if(notAfter != null && notAfter.getTime() < System.currentTimeMillis() + DWOplayer.timezone)
 		{

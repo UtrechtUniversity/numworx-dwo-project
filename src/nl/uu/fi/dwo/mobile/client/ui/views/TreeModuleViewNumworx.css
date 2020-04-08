@@ -24,7 +24,7 @@
 			background-color: color15;
 			color: color122;
 			font-size: 13px;
-			font-family: "Ubuntu" !important;
+			font-family: Ubuntu, sans-serif !important;
 		}
 		
 		.navPanel {
@@ -33,7 +33,7 @@
 			padding-left: 0px;
 			font-size: 14px;
 			line-height: 27px;
-			font-family: "Ubuntu" !important;
+			font-family: Ubuntu, sans-serif !important;
 			box-shadow: 2px 2px 2px color15 inset;
 		}
 .centerPanel {
@@ -46,7 +46,7 @@
 /* 			padding-right: 22px; */
 /* 			box-shadow: 8px 0px 14px 0px rgba(0,0,0,0.46) inset;			 */
 			box-shadow: 2px 2px 2px color15 inset;
-			font-family: "Ubuntu" !important;
+			font-family: Ubuntu, sans-serif !important;
 			overflow-y: scroll;
 }
 .centerBackground {	
@@ -67,13 +67,13 @@
 			font-size: 18px;
 			margin-bottom: 20px;
 			margin-left: 18px;
-			font-family: Ubuntu;
+			font-family: Ubuntu, sans-serif;
 			font-weight: regular;
 		}
 		.description {
 			margin-bottom: 36px;
 			margin-left: 18px;
-			font-family: Ubuntu;
+			font-family: Ubuntu, sans-serif;
 			font-size: 14px;
 			line-height: 18px;
 		}
@@ -154,7 +154,7 @@
 			margin-top: 18px;
 			color: color13;
 			font-size: 13px;
-			font-family: "Ubuntu" !important;
+			font-family: Ubuntu, sans-serif !important;
 			font-weight: medium;
 		}
 		.menu {
@@ -171,14 +171,14 @@
 		.menuItem {
 			color: color13 !important;
 			font-size: 13px;
-			font-family: "Ubuntu" !important;
+			font-family: Ubuntu, sans-serif !important;
 		}
 		.menuItem.inleveren {
 			background-color: red;
 			color: white;
 		}
 		.search-input {
-			font-family: "Ubuntu" !important;
+			font-family: Ubuntu, sans-serif !important;
 			background-color: black;
 			color: color10;
 			margin-left: 22px;
@@ -191,7 +191,7 @@
 			border-style: none;
 		}
 		.navItem {
-			font-family: "Ubuntu" !important;
+			font-family: Ubuntu, sans-serif !important;
 			font-weight: regular;
 			line-height: 27px;
 /* 			margin-right: 18px; */
@@ -227,7 +227,7 @@
 			font-size: 14px;
 			line-height: 16px;
 			padding-left: 5px;
-			font-family: Ubuntu;
+			font-family: Ubuntu, sans-serif;
 			display: table;
 		}
 		
@@ -272,7 +272,7 @@
 			margin-left: 10px;
 			padding-left: 10px;
 			padding-right: 10px;
-			font-family: Ubuntu;
+			font-family: Ubuntu, sans-serif;
 			font-size: 14px;
 			font-weight: bold;
 			color: color14;
@@ -332,7 +332,7 @@
 }
 .treeItem {
 	font-size: 13px;
-	font-family: Ubuntu;
+	font-family: Ubuntu, sans-serif;
 }
 
 .kruimelpad {
