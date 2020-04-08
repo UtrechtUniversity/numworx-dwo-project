@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.text;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.i18n.client.Constants.DefaultStringValue;
 
 public interface Text extends Constants {
 	Text constants = GWT.create(Text.class);
@@ -140,4 +141,10 @@ public interface Text extends Constants {
 	String toetssleutel();
 	@DefaultStringValue("Ga naar toets")
 	String gotoexam();
+	
+	// Verlopen activiteit
+	@DefaultStringValue("De activiteit is verlopen en wordt afgesloten")
+	String sco_expired();
+	@DefaultStringValue("Over 5 minuten wordt de activiteit afgesloten")
+	String sco_almost_expired();
  }

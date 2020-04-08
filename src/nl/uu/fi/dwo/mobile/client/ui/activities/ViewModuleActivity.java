@@ -6,10 +6,13 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Promise;
+
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
@@ -20,16 +23,21 @@ import nl.uu.fi.dwo.mobile.client.ui.IdleDetect.IdleHandler;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
+import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
+import nl.uu.fi.dwo.mobile.client.ui.views.EmptyView;
 import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
+import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
+import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import com.google.gwt.activity.shared.AbstractActivity;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.History;
@@ -38,6 +46,9 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
+
+import fi.wiskopdr.text.TextConstants;
 
 /**
  * Display module activity
@@ -71,33 +82,100 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 		this.location = where.getLocation();
 	}
 	
-	@Override
-	public void start(final AcceptsOneWidget panel, EventBus eventBus)
-	{
-// Eindtijd
-// History.back is terug naar waar je vandaan komt
-		Date notAfter = sco.getNotAfter();
+	final static private long BEFORE_AFTER = 30000L;
+	final static private long PREPARE_AFTER = BEFORE_AFTER + 5*60000L; // 5 minuten voor tijd.
+	final private boolean isSEB = DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB;
+	final private Place EXIT_AFTER = isSEB ? new LoginPlace() : new TreeModulePlace();
+	
+	private boolean setNotAfter(final AcceptsOneWidget panel) {
+		//Date notAfter = sco.getNotAfter();
+		final Text rb = Text.constants;
+		final Date notAfter = new Date(System.currentTimeMillis()+10000L+ PREPARE_AFTER);
+
 		if(notAfter != null && notAfter.getTime() < System.currentTimeMillis() + DWOplayer.timezone)
 		{
 			started = false;
-			panel.setWidget(new Label("Activiteit verlopen"));
-			History.back();
+			Widget widget = new EmptyView();
+			panel.setWidget(widget);
+			Promise<Integer> p = MessageDialog.alert(rb.sco_expired());
+			p.then( x -> {
+				goTo(EXIT_AFTER);
+				return x;
+			});
 			view = null;
-			return;
+			return true;
 		} else if (notAfter != null) {
 			long timeToGo = notAfter.getTime()-System.currentTimeMillis() - DWOplayer.timezone;
 			timeToGo = Math.min(timeToGo, Integer.MAX_VALUE);
 			timeToGo = Math.max(timeToGo,1);
 			tm = new Timer() {
 
-				@Override
-				public void run() {
-					tm = null;
-					started = false;
-					History.back();
-				}};
+			@Override
+			public void run() {
+				commitView();
+				tm = null;
+				started = false;
+				Promise<Integer> p = MessageDialog.alert(rb.sco_expired());
+				p.then( x -> {
+					goTo(EXIT_AFTER);
+					return x;
+				});
+			}};
+
+			if (timeToGo > PREPARE_AFTER) {
+				timeToGo -= PREPARE_AFTER;
+				timeToGo = Math.max(1, timeToGo);
+				final Timer oldTimer = tm;
+				tm = new Timer() {
+
+					@Override
+					public void run() {
+						commitView();
+						MessageDialog dialog = new MessageDialog();
+						dialog.addLine(new Label(rb.sco_almost_expired()));
+						dialog.addOk();
+						dialog.showDialog();
+						long timeToGo = notAfter.getTime()-System.currentTimeMillis() - DWOplayer.timezone - BEFORE_AFTER;
+						timeToGo = Math.max(1,  timeToGo);
+						tm = new Timer() {
+
+							@Override
+							public void run() {
+								dialog.close();
+								oldTimer.run();
+							}
+							
+						};
+						tm.schedule((int)timeToGo);
+
+					}					
+					
+				};
+				
+				
+				
+			} else {
+				timeToGo = (Math.max(1, timeToGo - BEFORE_AFTER)); // 30 seconden marge.
+			}
 			tm.schedule((int)timeToGo); 
-		}			
+		}
+		return false;
+
+		
+		
+		
+		
+		
+		
+		
+	}
+	
+	
+	
+	@Override
+	public void start(final AcceptsOneWidget panel, EventBus eventBus)
+	{
+		if (setNotAfter(panel)) return;			
 // All systems go
         view = clientFactory.getEntryView();
 		eventBus.addHandler(MessageEvent.TYPE, this);
@@ -163,6 +241,34 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 		};
 		view.getApi().Initialize(callback);
 		}
+	}
+
+	private boolean setNotAfter_org(final AcceptsOneWidget panel) {
+		// Eindtijd
+		// History.back is terug naar waar je vandaan komt, werkt niet!
+				Date notAfter = sco.getNotAfter();
+				if(notAfter != null && notAfter.getTime() < System.currentTimeMillis() + DWOplayer.timezone)
+				{
+					started = false;
+					panel.setWidget(new Label("Activiteit verlopen"));
+					History.back();
+					view = null;
+					return true;
+				} else if (notAfter != null) {
+					long timeToGo = notAfter.getTime()-System.currentTimeMillis() - DWOplayer.timezone;
+					timeToGo = Math.min(timeToGo, Integer.MAX_VALUE);
+					timeToGo = Math.max(timeToGo,1);
+					tm = new Timer() {
+		
+						@Override
+						public void run() {
+							tm = null;
+							started = false;
+							History.back();
+						}};
+					tm.schedule((int)timeToGo); 
+				}
+				return false;
 	}
 
 	@Override
@@ -285,5 +391,16 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
       goTo(new TreeModulePlace(sco.getParentID()));
     }
   }
+
+private void commitView() {
+	if (view != null)
+	{
+		OpdrNavIF opdrNav = view.getOpdrNav();
+		if (opdrNav != null) opdrNav.setChanged(false);
+		else {
+			GWT.log("opdr nav null");
+		}
+	}
+}
 	
 }

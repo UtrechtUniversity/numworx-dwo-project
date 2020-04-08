@@ -103,9 +103,14 @@ public class MessageDialog {
 	
 	public static Promise<Integer> alert(String message) {
 		MessageDialog dlg = new MessageDialog();
+		dlg.box.setGlassEnabled(true);
 		dlg.addLine(new Label(message)); // ????
 		dlg.addOk();
 		return dlg.showDialog();
+	}
+
+	public void close() {
+		box.hide();
 	}
 	
 }

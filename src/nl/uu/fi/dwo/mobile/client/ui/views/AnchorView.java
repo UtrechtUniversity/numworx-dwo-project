@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
-import nl.uu.fi.dwo.mobile.client.dagger.PlayerModule;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 
