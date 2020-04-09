@@ -86,20 +86,20 @@
 	function writeGGB() {
 		if( window.install ) 
 		{
-			article_pre = "<article class='geogebraweb' style='border:0px solid black; display:inline-block; margin: 0px;' "
+			article_pre = "<article class='geogebraweb' style='border:0px solid black; display:inline-block; margin: 0px;' data-param-useBrowserForJS='true' "
 			article_post = "></article>"	
 			result = window.install(null, window.viewer)
 			document.getElementById('hiero').innerHTML =  ( article_pre + result + article_post );
 			web.succeeded = web()
 		} else {
 			console.log("window.install not defined")
-			window.setTimeout("writeGGB()",50);
+			window.setTimeout("writeGGB()",500);
 		}
 	}
-	window.setTimeout("writeGGB()",50);
+	window.setTimeout("writeGGB()",200);
 </script>
 <div id='hiero'>
-<article class='geogebraweb' style='border: 1px solid black; display:inline-block;' data-param-language='nl' data-param-ggbbase64=''></article>
+<article class='geogebraweb' style='border: 1px solid black; display:inline-block;visibility: hidden' data-param-useBrowserForJS='false' data-param-ggbbase64=''></article>
 </div>
 
  </body>
