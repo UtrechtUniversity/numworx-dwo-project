@@ -67,8 +67,8 @@
 	
 	function ggbOnInit() {
 		//===Js code starts here===//
-		var applet = document.ggbApplet;
-		window.ggbApplet = applet;
+		var applet = document.ggbApplet
+		window.ggbApplet = applet
 		try { 
 			window.install(applet, window.viewer)
 			if ( window.ggbLog ) {
@@ -84,17 +84,21 @@
 	}
 	
 	function writeGGB() {
-		article_pre = "<article class='geogebraweb' style='border:0px solid black; display:inline-block; margin: 0px;' "
-		article_post = "></article>"
-		result = window.install(null, window.viewer)
-		document.getElementById('hiero').innerHTML =  ( article_pre + result + article_post );
-		web.succeeded = web()
+		if( window.install ) 
+		{
+			article_pre = "<article class='geogebraweb' style='border:0px solid black; display:inline-block; margin: 0px;' data-param-useBrowserForJS='true' "
+			article_post = "></article>"	
+			result = window.install(null, window.viewer)
+			document.getElementById('hiero').innerHTML =  ( article_pre + result + article_post );
+			web.succeeded = web()
+		} else {
+			window.setTimeout("writeGGB()",500);
+		}
 	}
-	
-	window.setTimeout("writeGGB()",1000);
+	window.setTimeout("writeGGB()",200);
 </script>
 <div id='hiero'>
-<article class='geogebraweb' style='border: 1px solid black; display:inline-block;visibility: hidden' data-param-ggbbase64=''></article>
+<article class='geogebraweb' style='border: 1px solid black; display:inline-block;visibility: hidden' data-param-useBrowserForJS='false' data-param-ggbbase64=''></article>
 </div>
 
  </body>
