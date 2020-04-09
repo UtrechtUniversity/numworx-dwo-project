@@ -36,6 +36,7 @@
 	<li><a href='https://www.dwo.nl/downloads/SafeExamBrowserInstaller.exe'>Safe Exam Browser Windows (2.1.7)</a></li>
 	<li><a href='https://www.dwo.nl/downloads/SafeExamBrowser-2.1.2.dmg'>Safe Exam Browser MacOs (2.1.2)</a></li>
 </ul>
+Please note, only these versions work correctly.
 <% } %>
 </body>
 </html>
