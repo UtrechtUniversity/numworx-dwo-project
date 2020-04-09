@@ -803,7 +803,7 @@
 		    	<dependency>
 		    		<groupId>nl.numworx.swingbrowser</groupId>
 		    		<artifactId>swingbrowser-jxb</artifactId>
-		    		<version>0.0.2</version>
+		    		<version>0.0.3-SNAPSHOT</version>
 		    	</dependency>
         	</dependencies>
         </profile>
