@@ -136,14 +136,22 @@ public class DWOPopupPanel extends PopupPanel {
 	}
 	
 	private void removeMouseTouchHandlers() {
-		if(hasPointerSupport) {
-			mouseMoveHandler.removeHandler();
-			mouseDownHandler.removeHandler();
-			mouseUpHandler.removeHandler();
-			touchMoveHandler.removeHandler();
-			touchStartHandler.removeHandler();
-			touchEndHandler.removeHandler();
-		}
+//		if(hasPointerSupport) {
+//			mouseMoveHandler.removeHandler();
+//			mouseDownHandler.removeHandler();
+//			mouseUpHandler.removeHandler();
+//			touchMoveHandler.removeHandler();
+//			touchStartHandler.removeHandler();
+//			touchEndHandler.removeHandler();
+//		}
+//		if(hasMouseSupport) {
+//			pointerMoveHandler.removeHandler();
+//			pointerDownHandler.removeHandler();
+//			pointerUpHandler.removeHandler();
+//			touchMoveHandler.removeHandler();
+//			touchStartHandler.removeHandler();
+//			touchEndHandler.removeHandler();
+//		}
 	}
 	
 	public void addContent(Widget contentWidget) {
@@ -303,6 +311,7 @@ public class DWOPopupPanel extends PopupPanel {
 			deferTearDown();
 		else if(new Rectangle(headerPanel).contains(x,y)) {
 			moving = true;
+			DOM.setCapture(getElement()); 
 		}
 		else if(dragMode>0) {
 			DOM.setCapture(getElement()); // werkt helaas niet voor pointerevents
@@ -338,19 +347,24 @@ public class DWOPopupPanel extends PopupPanel {
 	}
 
 	private boolean hasPointerSupport;
+	private boolean hasMouseSupport;
 	
 	class MousePopupHandler implements MouseDownHandler, MouseMoveHandler, MouseUpHandler {
 		@Override
 		public void onMouseUp(MouseUpEvent event) {
 			mouseTouchPointerEnd(event.getClientX(),event.getClientY());
+			event.stopPropagation();
 		}
 		@Override
 		public void onMouseMove(MouseMoveEvent event) {
 			mouseTouchPointerMove(event.getClientX(),event.getClientY());
+			event.stopPropagation();
 		}
 		@Override
 		public void onMouseDown(MouseDownEvent event) {
+			hasMouseSupport = true;
 			mouseTouchPointerDown(event.getClientX(),event.getClientY());
+			event.stopPropagation();
 		}
 	}
 	class PointerPopupHandler implements PointerDownHandler, PointerMoveHandler, PointerUpHandler	{
