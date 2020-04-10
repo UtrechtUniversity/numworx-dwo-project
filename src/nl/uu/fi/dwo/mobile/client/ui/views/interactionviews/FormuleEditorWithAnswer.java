@@ -1136,6 +1136,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 	Map<String, Object> buildLoggingMap() {
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("verb", "http://adlnet.gov/expapi/verbs/answered");
 		map.put("response",
 			"<math xmlns='http://www.w3.org/1998/Math/MathML'>"
 				+ getMainRegel().toMathML() + "</math>");

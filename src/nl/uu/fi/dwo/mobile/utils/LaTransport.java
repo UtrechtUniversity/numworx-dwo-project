@@ -255,6 +255,13 @@ public class LaTransport implements Logging {
 		contextActivities.put( "parent", parent);
 		context.put("contextActivities", contextActivities);
 		msg.put("context", context);
+// insert verb: { id: "verb" }
+		String verb = (String) parameters.get("verb");
+		if (verb != null) {
+			JSONObject id = new JSONObject(); id.put("id", new JSONString(verb));
+			JSONObject v = new JSONObject(); v.put("verb", id);
+			msg.put("verb", v);
+		}
 		return msg;
 		
 	}
