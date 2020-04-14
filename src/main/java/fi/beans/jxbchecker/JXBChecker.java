@@ -28,8 +28,8 @@ public class JXBChecker {
       try {
         Class.forName(CLASS);
         
-        String version = com.teamdev.jxbrowser.VersionInfo.version();
-        if ("7.2".equals(version)) throw new IllegalArgumentException();
+//        String version = com.teamdev.jxbrowser.VersionInfo.version();
+//        if ("7.2".equals(version)) throw new IllegalArgumentException();
         
       } catch(Exception oops) {
         JOptionPane.showMessageDialog(applet, message);
