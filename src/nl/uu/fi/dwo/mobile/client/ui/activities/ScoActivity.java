@@ -271,8 +271,11 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 	protected void gotoHref(String href) {
 	    int dot = href.indexOf('.');
 	    String label = dot < 0 ? href:href.substring(0, dot);
-	    String location = dot <= 0 ? null:href.substring(dot+1);
-	    if (dot>0) Integer.toString(Integer.parseInt(location)-1); // subtract 1
+	    String location;
+	    if (dot>=0) 
+	    	location = Integer.toString(Integer.parseInt(href.substring(dot+1))-1); // subtract 1
+	    else 
+	    	location = null;
 	    scoList.then(p -> {
 	      List<SelectModuleItem> items = new ArrayList<>();
 	      for (DomScoContext i:p.getValue()) {
