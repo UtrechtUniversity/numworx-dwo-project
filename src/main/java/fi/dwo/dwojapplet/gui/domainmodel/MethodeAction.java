@@ -80,14 +80,16 @@ abstract class MethodeAction extends AbstractAction implements TreeSelectionList
     dialog.setContentPane(panel);
     if(readonly) {
       panel.ok().addActionListener(dialog::cancel);
-      panel.ok().setText(TextMapper.getText(TextMapper.BTN_OK));
+      //panel.ok().setText(TextMapper.getText(TextMapper.BTN_OK));
       panel.cancel().setVisible(false);
+      panel.ok().setVisible(false);
       panel.setEnabled(false);
     } else {
       panel.ok().addActionListener(dialog::ok);
       panel.cancel().addActionListener(dialog::cancel);
     }
     dialog.pack();
+    dialog.center();
     dialog.show();
     if (dialog.getOption() == JOptionPane.OK_OPTION) {
       Map<String, Set<Integer>> map = getMethodMap(panel);

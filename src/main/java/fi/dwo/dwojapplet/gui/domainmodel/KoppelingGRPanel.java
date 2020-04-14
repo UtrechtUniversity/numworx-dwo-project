@@ -101,13 +101,13 @@ public class KoppelingGRPanel extends JPanel implements Constants {
 		titleLabel.setFont(font.deriveFont(Font.PLAIN, 24));
 
 		//bottomPanel
-		okButton = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_SAVE));
-		okButton.setPreferredSize(new Dimension(90, 24));
+		okButton = new JButton(TextMapper.getText(TextMapper.BTN_OK));
+		okButton.setPreferredSize(new Dimension(100, 24));
 		okButton.setBackground(colorBlue1);
 		okButton.setForeground(colorGray3);
 
 		cancelButton = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
-		cancelButton.setPreferredSize(new Dimension(90, 24));
+		cancelButton.setPreferredSize(new Dimension(100, 24));
 		cancelButton.setBackground(colorBlue1);
 		cancelButton.setForeground(colorGray3);
 		
@@ -252,6 +252,18 @@ public class KoppelingGRPanel extends JPanel implements Constants {
 
   public JPanel getBottomPanel() {
     return bottomPanel;
+  }
+
+  @Override
+  public void setEnabled(boolean enabled) {
+    super.setEnabled(enabled);
+    for( JCheckBox cbi[]: cb) {
+      if (cbi != null)
+      for(JCheckBox cbij: cbi) {
+        if (cbij != null)
+          cbij.setEnabled(enabled);
+      }
+    }
   }
 	
 }
