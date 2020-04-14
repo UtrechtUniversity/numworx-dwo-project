@@ -27,6 +27,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -331,8 +332,8 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   public DefaultMutableTreeNode copy(Object node) {
     if (node instanceof DefaultMutableTreeNode) {
       DefaultMutableTreeNode mutable = (DefaultMutableTreeNode) node;
-      if (mutable.isLeaf()) {
-        return new DefaultMutableTreeNode(new NodeLeaf((NodeLeaf)mutable.getUserObject()));
+      if (mutable.isLeaf() && !mutable.getAllowsChildren()) {
+        return new DefaultMutableTreeNode(new NodeLeaf((NodeLeaf)mutable.getUserObject()), false);
       } else {
         NodeVector v = new NodeVector( (NodeVector) mutable.getUserObject());
         DynamicUtilTreeNode copy = new DynamicUtilTreeNode(v, v);
@@ -361,6 +362,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
     InvisibleNode node;
     if (! (parent instanceof InvisibleNode)) {
       node = new InvisibleNode(parent.getUserObject());
+      node.setAllowsChildren(parent.getAllowsChildren());
       Enumeration<?> children = parent.children();
       while (children.hasMoreElements()) {
         DefaultMutableTreeNode object = (DefaultMutableTreeNode) children.nextElement();
@@ -369,14 +371,30 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
     } else {
       node = (InvisibleNode) parent;
     }
-    if (node.isLeaf()) {
-      node.setVisible(Math.random()>0.2);
+    if (node.isLeaf() && !node.getAllowsChildren()) {
+      NodeLeaf leaf = (NodeLeaf)node.getUserObject();
+      Map<String, Map<String, Set<Integer>>> methodes = leaf.getMethode();
+      node.setVisible(contains(filter, methodes));
     } else {
       int cnt = node.getChildCount(true);
       node.setVisible(cnt != 0);
     }
     
     return node;
+  }
+
+  private boolean contains(Map<String, Map<String, Set<Integer>>> filter,
+      Map<String, Map<String, Set<Integer>>> methodes) {
+    for( Map.Entry<String, Map<String,Set<Integer>>> entry: filter.entrySet()) {
+      Map<String,Set<Integer>> map = methodes.getOrDefault(entry.getKey(), Collections.emptyMap());
+      if (map.isEmpty()) continue;
+      for(Map.Entry<String, Set<Integer>> m: entry.getValue().entrySet()) {
+        Set<Integer> chapters = new TreeSet<>(map.getOrDefault(m.getKey(), Collections.emptySet()));
+        chapters.retainAll(m.getValue());
+        if ( ! chapters.isEmpty()) return true;
+      }
+    }
+    return false;
   }
 
   class Plakken extends AbstractAction {
