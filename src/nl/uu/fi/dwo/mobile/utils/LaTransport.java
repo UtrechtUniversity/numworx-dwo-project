@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.utils;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -292,9 +293,8 @@ public class LaTransport implements Logging {
 
 	private String getHomePage() {
 		String protocol = Window.Location.getProtocol();
-		String host     = Window.Location.getHost();
-		
-		return protocol + "//" + host + "/dwo/dwo.jsp";
+		String host     = Window.Location.getHost();		
+		return protocol + "//" + host + "/dwo/rest/";
 	}
 
 	private JSONObject toJSONObject(Map<String, ?> parameters) {
@@ -325,7 +325,7 @@ public class LaTransport implements Logging {
 	}
 
 	private JSONString getTimeStamp() {
-		return new JSONString(Long.toString(System.currentTimeMillis()));
+		return new JSONString(FORMAT_8601.format(new Date()));
 	}
 	
 	public void log(Map<String,?> result) {
