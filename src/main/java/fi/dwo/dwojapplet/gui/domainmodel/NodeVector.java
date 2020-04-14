@@ -73,6 +73,12 @@ public class NodeVector extends Vector<Object> implements Node {
     setDescription("");
     setTitle("");
   }
+  
+  public NodeVector(DomStudentModelContextInfo org, String lang) {
+    info = new DomStudentModelContextInfo(org);
+    this.lang = lang;
+  }
+  
   public String toString() {
     return title;
   }

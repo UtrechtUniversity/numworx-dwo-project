@@ -32,12 +32,11 @@ class NodeLeaf implements Node {
 
   private String lang;
 
-  NodeLeaf(String title, DomStudentModelContextInfo info, String l) {
-    this.title = title;
-    this.info = new DomStudentModelContextInfo(info);
+  NodeLeaf(String title, DomStudentModelContextInfo org, String l) {
+    this.info = new DomStudentModelContextInfo(org);
     this.lang = l;
-    if (info.getId() == null) {
-      info.setId(UUID.randomUUID().toString());
+    if (this.info.getId() == null) {
+      this.info.setId(UUID.randomUUID().toString());
     }
 
     if (this.info.getMethods() == null) {
@@ -46,6 +45,7 @@ class NodeLeaf implements Node {
     } else {
       methode = this.info.getMethods();
     }
+    setTitle(title);
   }
 
   public NodeLeaf(String string) {

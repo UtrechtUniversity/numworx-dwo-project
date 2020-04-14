@@ -2,15 +2,22 @@ package fi.dwo.dwojapplet.gui.domainmodel;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilterWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
+
+import org.apache.commons.httpclient.URI.DefaultCharsetChanged;
 
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
@@ -48,7 +55,8 @@ public class ExportAction extends AbstractAction {
       File toSave = chooser.getSelectedFile();
       DomStudentModelStructure model = panel.getModel();
       try {
-        FileOutputStream output = new FileOutputStream(toSave);
+        FileOutputStream out = new FileOutputStream(toSave);
+        BufferedOutputStream output = new BufferedOutputStream(out);
         genson.serialize(model, output);
         output.close();
       } catch (IOException e1) {

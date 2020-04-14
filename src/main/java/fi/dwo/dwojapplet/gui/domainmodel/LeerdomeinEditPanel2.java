@@ -11,7 +11,11 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -51,6 +55,9 @@ import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import com.owlike.genson.Genson;
+import com.owlike.genson.GensonBuilder;
+
 import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
@@ -61,8 +68,10 @@ import fi.beans.numworxlf.JTree;
 import fi.beans.numworxlf.NumworxTextFieldUI;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.ConfirmDialog;
+import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.domainmodel.ExportAction.ExportPanel;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
@@ -144,8 +153,14 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
         MutableTreeNode mutable = (MutableTreeNode) node;
         if (mutable.isLeaf()) return;
         int index = mutable.getChildCount();
-        Node leaf = new NodeLeaf(getLocale().getLanguage());
-        leaf.setTitle("Leerdoel-" + (index+1));
+        Node leaf;
+        String title = "Leerdoel-" + (index+1);
+        if (untitledObjective != null) {
+          leaf = new NodeLeaf(title, untitledObjective.getInfo(), getLocale().getLanguage());
+        } else {
+          leaf = new NodeLeaf(getLocale().getLanguage());
+          leaf.setTitle(title);
+       }
         DefaultMutableTreeNode child = new DefaultMutableTreeNode(leaf, false);
         mutable.insert(child, index);
         model.nodesWereInserted(mutable, new int[] {index});
@@ -179,7 +194,12 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
         MutableTreeNode mutable = (MutableTreeNode) node;
         if (mutable.isLeaf()) return;
         int index = mutable.getChildCount();
-        Node vector = new NodeVector(getLocale().getLanguage());
+        Node vector;
+        if (untitledCategory != null) {
+          vector = new NodeVector(untitledCategory.getInfo(), getLocale().getLanguage());
+        } else {
+          vector = new NodeVector(getLocale().getLanguage());
+        }
         vector.setTitle("Untitled-" + (index+1));
         DefaultMutableTreeNode child = new DynamicUtilTreeNode(vector,vector);
         mutable.insert(child, index);
@@ -490,7 +510,21 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
     Bestand.add(new JMenuItem(new SubdomeinAction()));
     Bestand.add(new JMenuItem(new LeerdoelAction()));
     Bestand.addSeparator();
-    Bestand.add(new JMenuItem(new ExportAction(this)));
+
+    ExportPanel exporter = new ExportPanel() {
+      
+      @Override
+      public DomStudentModelStructure getModel() {       
+        return getTreeModel();
+      }
+      
+      @Override
+      public Component asComponent() {
+        return LeerdomeinEditPanel2.this.asComponent();
+      }
+    };
+
+    Bestand.add(new JMenuItem(new ExportAction(exporter)));
   bar.add(Bewerken);
     Bewerken.add(new JMenuItem(new Knippen()));
     Bewerken.add(new JMenuItem(new Kopieren()));
@@ -709,6 +743,27 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   }
 
   DomStudentModelStructure resultModel;
+  
+  static DomStudentModelStructure untitled;
+  static DomStudentModelCategory  untitledCategory;
+  static DomStudentModelObj untitledObjective;
+  
+  static {
+    Genson genson = new GensonBuilder().create();
+    URL root = DwoHelper.getResourceUrlPath();
+    try {
+      URL content = new URL(root, "resources/untitled-learning-domain.json");
+      InputStream input = content.openStream();    
+      untitled = genson.deserialize(input, DomStudentModelStructure.class);
+      input.close();
+      untitledCategory = untitled.getCategories().get(0);
+      untitledObjective = untitledCategory.getObjectives().get(0);
+      untitledObjective.getInfo().setId(null); // clear id
+    } catch (IOException e) {
+      
+    }
+  }
+  
   
   public DomStudentModelStructure getModel() {
     return resultModel;
