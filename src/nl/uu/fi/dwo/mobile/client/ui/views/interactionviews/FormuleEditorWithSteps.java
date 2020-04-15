@@ -1647,12 +1647,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 					return;
 				if (linOefenVersie)	{
 					// administratie bijwerken, hier wordt in de strategieoefenversie een lege pijl toegevoegd
-					//addPijlVakOperatoren("");
-					//addPijlVakInhouden("");
-					if(editable) {
-						maakStap("gelijkwaardig");
-						maakBewerkingStap();
-					}
+					addPijlVakOperatoren("");
+					addPijlVakInhouden("");
+					
 				}
 				if (editor != null) 	{
 					editor.enter(); // enter om het antwoord na te kijken
