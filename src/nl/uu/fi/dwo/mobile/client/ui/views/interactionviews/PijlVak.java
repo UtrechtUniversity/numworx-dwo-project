@@ -420,8 +420,22 @@ public class PijlVak extends LayoutPanel
 	        svg.appendChild(text);
 		}
         else
-        {
-        	 	OMSVGTextElement text = doc.createSVGTextElement((float)(fm.getAscent() + fm.getDescent())/2+6, (float)ashoogte + fm.getAscent() / 4+3, OMSVGLength.SVG_LENGTHTYPE_PX, MARGE_VOOR + operator + MARGE_NA);
+        {	String txt = "";
+        		if(operator.equals("herleid"))
+        			txt = rb.herleidLabel0();
+        		else if(operator.equals("haakjes"))
+        			txt = rb.haakjesLabel0();
+        		else if(operator.equals("splits"))
+        			txt = rb.splitsLabel0();
+        		else if(operator.equals("ontbind"))
+        			txt = rb.ontbindLabel0();
+        		else if(operator.equals("wortel"))
+        			txt = rb.wortelLabel0();
+        		else if(operator.equals("gelijkwaardig"))
+        			txt = rb.gelijkwaardigLabel0();
+        		else
+        			txt = operator;
+        	 	OMSVGTextElement text = doc.createSVGTextElement((float)(fm.getAscent() + fm.getDescent())/2+6, (float)ashoogte + fm.getAscent() / 4+3, OMSVGLength.SVG_LENGTHTYPE_PX, MARGE_VOOR + txt + MARGE_NA);
             text.getStyle().setSVGProperty(SVGConstants.CSS_FONT_SIZE_PROPERTY, "14");
             text.getStyle().setSVGProperty(SVGConstants.CSS_FONT_WEIGHT_PROPERTY,  SVGConstants.CSS_NORMAL_VALUE);
             svg.appendChild(text);

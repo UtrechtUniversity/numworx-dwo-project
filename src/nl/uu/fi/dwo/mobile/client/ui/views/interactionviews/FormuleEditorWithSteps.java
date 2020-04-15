@@ -591,7 +591,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				pijlVak.paintComponent();
 				
 				if(stapNr>-1 && stapNr<lijnen.size()) {
-					contentPanel.setWidgetLeftRight(lijnen.get(stapNr), 5, Style.Unit.PX, pijlX+20, Style.Unit.PX);
+					int w = pijl ? pijlX + 20 : 5;
+					contentPanel.setWidgetLeftRight(lijnen.get(stapNr), 5, Style.Unit.PX, w, Style.Unit.PX);
 					contentPanel.setWidgetTopHeight(lijnen.get(stapNr), y + pijlVak.getHeight()/2, Style.Unit.PX, 1, Style.Unit.PX);
 				}
 				
@@ -795,7 +796,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		pijlVak.paintComponent();
 		
 		if(stapNr>-1 && stapNr<lijnen.size()) {
-			contentPanel.setWidgetLeftWidth(lijnen.get(stapNr), 5, Style.Unit.PX, this.breedte-pijlX-30, Style.Unit.PX);
+			int w = pijl ? this.breedte-pijlX-30 : this.breedte-10;
+			contentPanel.setWidgetLeftWidth(lijnen.get(stapNr), 5, Style.Unit.PX, w, Style.Unit.PX);
 			contentPanel.setWidgetTopHeight(lijnen.get(stapNr), y + pijlVak.getHeight()/2, Style.Unit.PX, 1, Style.Unit.PX);
 		}
 		
@@ -1645,8 +1647,12 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 					return;
 				if (linOefenVersie)	{
 					// administratie bijwerken, hier wordt in de strategieoefenversie een lege pijl toegevoegd
-					addPijlVakOperatoren("");
-					addPijlVakInhouden("");
+					//addPijlVakOperatoren("");
+					//addPijlVakInhouden("");
+					if(editable) {
+						maakStap("gelijkwaardig");
+						maakBewerkingStap();
+					}
 				}
 				if (editor != null) 	{
 					editor.enter(); // enter om het antwoord na te kijken
@@ -2794,7 +2800,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		pijlVak.setPijlVisible(pijl);
 		
 		if(stapNr>-1 && stapNr<lijnen.size()) {
-			contentPanel.setWidgetLeftWidth(lijnen.get(i), 5, Style.Unit.PX, this.breedte-pijlX-30, Style.Unit.PX);
+			int w = pijl ? this.breedte-pijlX-30 : this.breedte-10;
+			contentPanel.setWidgetLeftWidth(lijnen.get(i), 5, Style.Unit.PX, w, Style.Unit.PX);
 			contentPanel.setWidgetTopHeight(lijnen.get(i), h + pijlVak.getHeight()/2, Style.Unit.PX, 1, Style.Unit.PX);
 		}
 		//if ("GR".equals(WiskOpdr.deployVariant) && pijlVakOperatoren != null && pijlVakOperatoren[i] != null && (pijlVakOperatoren[i].equals("sub") || pijlVakOperatoren[i].equals("abc")))
@@ -3444,7 +3451,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			contentPanel.setWidgetTopHeight(pijlVak, y, Style.Unit.PX, pijlVak.getHeight(), Style.Unit.PX);
 			
 			if(stapNr>-1 && stapNr<lijnen.size()) {
-				contentPanel.setWidgetLeftWidth(lijnen.get(stapNr), 5, Style.Unit.PX, this.breedte-pijlX-30, Style.Unit.PX);
+				int w = pijl ? this.breedte-pijlX-30 : this.breedte-10;
+				contentPanel.setWidgetLeftWidth(lijnen.get(stapNr), 5, Style.Unit.PX, w, Style.Unit.PX);
 				contentPanel.setWidgetTopHeight(lijnen.get(stapNr), y + pijlVak.getHeight()/2, Style.Unit.PX, 1, Style.Unit.PX);
 			}
 			
