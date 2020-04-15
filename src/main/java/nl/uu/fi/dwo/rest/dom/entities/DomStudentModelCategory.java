@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.rest.dom.entities;
 
 import java.beans.Transient;
 import java.util.List;
+import java.util.Objects;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -51,4 +53,24 @@ public class DomStudentModelCategory {
         }
         return result;
     }
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(info, objectives);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof DomStudentModelCategory)) {
+			return false;
+		}
+		DomStudentModelCategory other = (DomStudentModelCategory) obj;
+		return Objects.equals(info, other.info) && Objects.equals(objectives, other.objectives);
+	}
 }

@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.rest.dom.entities;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -167,6 +168,29 @@ public class DomStudentModelContextInfo {
 	
 	public void setMethods(Map<String, Map<String, Set<Integer>>> methods) {
 		this.methods = methods;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(description, id, init, learn, methods, slip, title, voorkennis);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof DomStudentModelContextInfo)) {
+			return false;
+		}
+		DomStudentModelContextInfo other = (DomStudentModelContextInfo) obj;
+		return Objects.equals(description, other.description) && Objects.equals(id, other.id)
+				&& Objects.equals(init, other.init) && Objects.equals(learn, other.learn)
+				&& Objects.equals(methods, other.methods) && Objects.equals(slip, other.slip)
+				&& Objects.equals(title, other.title) && Objects.equals(voorkennis, other.voorkennis);
 	}
     
 }
