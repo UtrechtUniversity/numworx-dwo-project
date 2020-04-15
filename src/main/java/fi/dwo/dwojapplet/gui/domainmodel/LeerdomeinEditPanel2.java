@@ -1000,6 +1000,10 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   }
 
   private int confirm() {
+    safeSelection(tree.getSelectionPath());
+    DomStudentModelStructure toSafe = getTreeModel();
+    if (toSafe.equals(structure)) return JOptionPane.NO_OPTION; // no need to safe.
+
     return JOptionPane.showConfirmDialog(this, okButton.getText(),"", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
   }
 
