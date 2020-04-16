@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>nl.numworx.gwtpatch</groupId>
 	<artifactId>gwtpatch</artifactId>
-	<version>0.0.3</version>
+	<version>0.0.4-SNAPSHOT</version>
 	<parent>
 		<groupId>fi.parentgwt</groupId>
 		<artifactId>ParentGWT</artifactId>
@@ -52,6 +52,6 @@
 		</plugins>
 	</build>
 	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/gwtpatch/tags/gwtpatch-0.0.3</developerConnection>
+		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/gwtpatch/trunk</developerConnection>
 	</scm>
 </project>
