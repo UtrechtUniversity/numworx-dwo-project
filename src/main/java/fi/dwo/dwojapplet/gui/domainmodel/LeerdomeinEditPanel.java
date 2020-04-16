@@ -122,11 +122,11 @@ class LeerdomeinEditPanel extends JPanel implements ActionListener, ExportPanel 
         }
         n.setDescription(description);
         if (n instanceof NodeLeaf) {
-          DomStudentModelContextInfo info = n.getInfo();
+          NodeLeaf nn = (NodeLeaf)n;
           commitEdit(init);commitEdit(learn); commitEdit(slip);
-          info.setInit((Double) init.getValue());
-          info.setLearn((Double) learn.getValue());
-          info.setSlip((Double) slip.getValue());
+          nn.setInit((Double) init.getValue());
+          nn.setLearn((Double) learn.getValue());
+          nn.setSlip((Double) slip.getValue());
         }
       } else 
         node.setUserObject(subtitle.getText());
@@ -309,7 +309,7 @@ class LeerdomeinEditPanel extends JPanel implements ActionListener, ExportPanel 
         Object o = mutable.getUserObject();
         if (o instanceof NodeLeaf) {
           NodeLeaf leaf = (NodeLeaf) o;
-          List<String> ids = leaf.getInfo().getVoorkennis();
+          List<String> ids = leaf.getVoorkennis();
           if (ids == null) ids = Collections.emptyList();
           NodeVector v = (NodeVector) root.getUserObject();
           StudentModelChoicePanel panel = new StudentModelChoicePanel(v);
@@ -318,7 +318,7 @@ class LeerdomeinEditPanel extends JPanel implements ActionListener, ExportPanel 
           if (r == JOptionPane.OK_OPTION) {
             panel.makeChoices();
             List<String> list = panel.getObjectives();
-            leaf.getInfo().setVoorkennis(list);
+            leaf.setVoorkennis(list);
           }
         }}
     }

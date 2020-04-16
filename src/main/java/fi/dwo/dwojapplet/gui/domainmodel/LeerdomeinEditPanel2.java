@@ -113,7 +113,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
         Object o = mutable.getUserObject();
         if (o instanceof NodeLeaf) {
           NodeLeaf leaf = (NodeLeaf) o;
-          List<String> ids = leaf.getInfo().getVoorkennis();
+          List<String> ids = leaf.getVoorkennis();
           if (ids == null) ids = Collections.emptyList();
           NodeVector v = (NodeVector) root.getUserObject();
           StudentModelChoicePanel panel = new StudentModelChoicePanel(v, readonly);
@@ -125,7 +125,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
           if (r == JOptionPane.OK_OPTION) {
             panel.makeChoices();
             List<String> list = panel.getObjectives();
-            leaf.getInfo().setVoorkennis(list);
+            leaf.setVoorkennis(list);
           }
         }}}
     }
@@ -490,7 +490,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
             opslaanAction(null);
           case JOptionPane.NO_OPTION:
             setEditable(false);
-            setModel(structure);
+            setModel0(structure);
           case JOptionPane.CANCEL_OPTION:
         }
       }
@@ -740,6 +740,11 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   }
 
   public void setModel(DomStudentModelStructure model) {
+    setModel0(model);
+    resultModel =  null;    
+  }
+  
+  private void setModel0(DomStudentModelStructure model) {
     String locale = getLocale().getLanguage();
     if (model == null) {
       model = new DomStudentModelStructure();
@@ -946,11 +951,10 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
       }
       if (u instanceof NodeLeaf) {
         NodeLeaf n = (NodeLeaf) u;
-        DomStudentModelContextInfo info = n.getInfo();
         commitEdit(init);commitEdit(learn); commitEdit(slip);
-        info.setInit((Double) init.getValue());
-        info.setLearn((Double) learn.getValue());
-        info.setSlip((Double) slip.getValue());
+        n.setInit((Double) init.getValue());
+        n.setLearn((Double) learn.getValue());
+        n.setSlip((Double) slip.getValue());
       }
     }
   }
