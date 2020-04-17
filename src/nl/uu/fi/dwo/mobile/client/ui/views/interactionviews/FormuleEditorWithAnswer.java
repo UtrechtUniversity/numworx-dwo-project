@@ -2150,7 +2150,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		this.editable = editable;
 		getAsPanel().setStyleDependentName("readonly", !editable);
 		if(!editable) setEnabled(false);
-		if(fews != null) fews.setEditable(editable); 
+		if (fews != null) fews.setEditable(editable);
+		if (formuleEditorPopup != null) formuleEditorPopup.setEditable(editable);
 	}
 	
 	@Override
@@ -2183,7 +2184,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		formuleEditorPopup.setIsBoss(true);
 
 		FormuleEditor editor = formuleEditorPopup.getEditor();
-		if (editor != null)
+		if (editor != null && editable)
 		{	
 			editor.requestFocus();
 			//om te zorgen dat cursor ook getekend wordt:
