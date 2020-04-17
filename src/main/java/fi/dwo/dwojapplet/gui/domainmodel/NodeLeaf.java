@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui.domainmodel;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -140,6 +141,27 @@ class NodeLeaf implements Node {
 
   public Map<String, Map<String,Set<Integer>>> getMethode() {
     return methode;
+  }
+
+  public List<String> getVoorkennis() {
+    return info.getVoorkennis();
+  }
+
+  public void setVoorkennis(List<String> list) {
+    info.setVoorkennis(list);
+    
+  }
+
+  public void setInit(Double value) {
+    info.setInit(value);
+  }
+
+  public void setLearn(Double value) {
+    info.setLearn(value);    
+  }
+
+  public void setSlip(Double value) {
+    info.setSlip(value);
   }
   
   
