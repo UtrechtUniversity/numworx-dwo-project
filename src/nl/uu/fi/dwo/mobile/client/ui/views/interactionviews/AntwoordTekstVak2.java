@@ -24,7 +24,6 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
-import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.Logging;
@@ -37,7 +36,6 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.CanvasGradient;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
-import com.google.gwt.canvas.dom.client.TextMetrics;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Display;
@@ -52,8 +50,6 @@ import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
-
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.repr.ContentMathML;
@@ -1252,7 +1248,10 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	Widget widget;
 	public Widget getAsPanel()
 	{
-	    if (widget == null) widget = CorrectieFacade.wrap(basisPanel);
+	    if (widget == null) {
+	    	widget = CorrectieFacade.wrap(basisPanel);
+	    	widget.setPixelSize(breedte, hoogte);
+	    }
 		return widget;
 	}
 	
@@ -1270,13 +1269,13 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	@Override
 	public int getHeight()
 	{
-		return hoogte; 
+		return facade.wrapHeight(hoogte); 
 	}
 
 	@Override
 	public int getWidth()
 	{
-		return breedte;
+		return facade.wrapWidth(breedte);
 	}
 	
 	public void zetVolledigeBreedte(int breedte)
@@ -1286,6 +1285,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			this.breedte = breedte;
 			basisPanel.setPixelSize(breedte, hoogte - 3);
 			//antwoordTF.setWidth((breedte - 2) + "px");
+			getAsPanel().setPixelSize(breedte, -1);
 		}
 	}
 
