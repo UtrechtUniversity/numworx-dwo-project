@@ -335,6 +335,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	private void initWidget(Widget w) {
 		this.widget = CorrectieFacade.wrap(w);
+		this.widget.setPixelSize(width, height);
 	}
 
 	@Override
@@ -361,6 +362,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				menubar.setPixelSize(width-boxsize, menuheight);
 			content.setPixelSize(width-boxsize-padding, height-menuheight-boxsize-padding);
 			hbox.setPixelSize(width-boxsize, height-boxsize);
+			widget.setPixelSize(breedte, -1);
 		}
 	}
 
