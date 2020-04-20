@@ -1230,6 +1230,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		else
 		{
 			int totaalScore = getTotaalScore();
+			
+// De correctie bij score optellen.			
+			if (mode == EINDTOETS && memento.isReview() && memento.isEindtoetsVerzegeld()) totaalScore += memento.getReviewScore();
+			
 			int totaalMax = getTotaalMax();
 	
 			if (totaalMax == 0)

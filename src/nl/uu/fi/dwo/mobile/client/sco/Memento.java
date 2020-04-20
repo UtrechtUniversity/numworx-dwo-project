@@ -179,7 +179,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		} catch(Exception not_used) {
 			cmi_mode = LessonMode.normal;
 		}
-		
+		//cmi_mode = LessonMode.review;
 		
 		String reviewData = null;
 		if (eindtoetsVerzegeld || cmi_mode == LessonMode.review)
@@ -1333,6 +1333,46 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		JSONValue string = DomStudentModelStructureScoreCodec.CODEC.encode(model);
 		setValue(STUDENT_MODEL, string.toString());
 	}
+
+  private static String REVIEW_CORRECTIE_SCORE = "reviewScoreCorrectie";
+
+  public int getReviewScore() {
+	  if (isReview()) {
+		  String reviewData = api.GetValue(REVIEW_DATA);
+		  if (reviewData.startsWith("{")) {
+			  return (int) getReviewScore(JSONParser.parseStrict(reviewData));			  
+		  }
+	  }
+	  return 0;
+  }
+ 
+  private double getReviewScore(JSONArray a) {
+	  double sum = 0;
+	  for(int i = 0; i < a.size(); i++)
+		  sum += getReviewScore(a.get(i));
+	  return sum;
+  }
+  
+  private double getReviewScore(JSONObject o) {
+	  Set<String> keys = o.keySet();
+	  int sum = 0;
+	  for(String key: keys) {
+		  if (REVIEW_CORRECTIE_SCORE.equals(key)) 
+			  sum += o.get(key).isNumber().doubleValue();
+		  else 
+			  sum += getReviewScore(o.get(key));
+	  }
+	  return sum;
+  }
+  
+  private double getReviewScore(JSONValue v) {
+	if (v == null) return 0;
+	JSONArray a = v.isArray();
+	if (a != null) return getReviewScore(a);
+	JSONObject o = v.isObject();
+	if (o != null) return getReviewScore(o);
+	return 0;
+}
 
   public void mergeIntoReview(int currentActiviteit, int currentOpdracht,
       HashMap<String, Object> state) {
