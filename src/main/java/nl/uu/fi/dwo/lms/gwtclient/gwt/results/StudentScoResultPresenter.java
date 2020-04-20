@@ -38,6 +38,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -276,7 +277,7 @@ public class StudentScoResultPresenter {
     DomStudentScoContext dssc = ssc.getStudentSco();
     Promise<DomStudentScoContext> seal;
     if (value == false && dwoGlobalVars.isPremium()) {
-      String aMsg = rb.unsealText();
+      String aMsg = DwoLocalesForGWT.instance.NUM_LBL_UNSEAL();
       AlertDialogWithConfirmCancelDeferred aPromise = new AlertDialogWithConfirmCancelDeferred(aMsg);
       AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(EventType.ConfirmDialog, aPromise);
       
