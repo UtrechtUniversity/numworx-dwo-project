@@ -313,6 +313,8 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 
 	private PrintPanel printer;
 
+
+
     /**
      * Creates a new instance of a ScoDialog. It shows the sco, made by an user.
      *
@@ -420,7 +422,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         this.addWindowListener(this);
     }
 
-    static void resetSeal(ScoPanel sp, ButtonModel sealmodel) {
+    private static void resetSeal(ScoPanel sp, ButtonModel sealmodel) {
         boolean selected = "completed".equals(sp.LMSGetValue("cmi.completion_status"));
         sealmodel.setSelected(selected);
     }
@@ -470,6 +472,27 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         combo.setModel(model);
         table.setRowSelectionInterval(combo.getSelectedIndex() + 1, combo.getSelectedIndex() + 1);
+        final ScoDialog sd = new ScoDialog(parent, TextMapper.getText(TextMapper.GUIRS_RESULTS), hbox, true, sp);
+        final ItemListener sealListener = new ItemListener() {
+
+          @Override
+          public void itemStateChanged(ItemEvent e) {
+              boolean selected = sealmodel.isSelected();
+              if (!selected && DwoHelper.isPremium()) {
+                int ok = JOptionPane.showConfirmDialog(sd.studentSeal, 
+                  TextMapper.dwo2Message().NUM_LBL_UNSEAL(), 
+                  TextMapper.dwo2Message().NUM_LBL_STUDENTSCO_SEAL(), JOptionPane.OK_CANCEL_OPTION);
+                if (ok != JOptionPane.OK_OPTION) {
+                  sealmodel.setSelected(true);
+                  return;
+                }
+              }
+              sp.getSco().getApplet().stop();
+              sp.LMSSetValue("cmi.completion_status", selected ? "completed" : "incomplete");
+              sp.appletStart(); 
+          }
+        };;
+
         final ItemListener itemListener = new ItemListener() {
 
 			public void itemStateChanged(ItemEvent event) {
@@ -482,34 +505,26 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 				case ItemEvent.SELECTED:
 						sp.getSco().setUser(u,s);
 						userLabel.setText(u.getName());
-						sp.appletStart();
-						sp.repaint();
 						//list.setSelectedValue(u, false);
 						int i = combo.getSelectedIndex()+1;
 						table.setRowSelectionInterval(i, i);
+						sealmodel.removeItemListener(sealListener);
 						resetSeal(sp, sealmodel);
+						sealmodel.addItemListener(sealListener);
+                        sp.appletStart();
+                        sp.repaint();
 						break;
 				}
 			}};
 		combo.addItemListener(itemListener);
 		hbox.add(userLabel);
-        ScoDialog sd = new ScoDialog(parent, TextMapper.getText(TextMapper.GUIRS_RESULTS), hbox, true, sp);
         sd.table = table;
         resetSeal(sp, sealmodel);
         sd.studentSeal.setModel(sealmodel);
         sd.studentSeal.setVisible(true);
         sd.globalSeal.setVisible(true);
         sd.printer.asComponent().setVisible(true);
-        sealmodel.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                boolean selected = sealmodel.isSelected();
-            	sp.getSco().getApplet().stop();
-            	sp.LMSSetValue("cmi.completion_status", selected ? "completed" : "incomplete");
-           		sp.appletStart(); 
-            }
-        });
+        sealmodel.addItemListener(sealListener);
 
         sp.getSco().addPropertyChangeListener(Sco.LESSON_LOCATION, sd);
         
