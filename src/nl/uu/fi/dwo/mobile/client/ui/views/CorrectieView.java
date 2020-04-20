@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.pointerevents.client.PointerUpEvent;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
@@ -71,6 +72,20 @@ public class CorrectieView extends Composite implements HasHide {
             }
           }
         }, MouseUpEvent.getType());
+        widget.addDomHandler(event -> {
+            int x = event.getRelativeX(widget.getElement());
+            int y = event.getRelativeY(widget.getElement());
+            int width = widget.getOffsetWidth() - 16;
+            int height = widget.getOffsetHeight() - 16;
+            if (x > width && y > height) {
+              if(popup != null) {
+                popup.showRelativeTo(widget);
+              } else {
+                //iv.kijkNa();iv.getState(); // wat is nodig voor score?????? FIXME
+                popup = startCorrection(result, widget, iv.getScore(), scoreMax);
+              }
+            }
+          }, PointerUpEvent.getType());
       }
     };
 
