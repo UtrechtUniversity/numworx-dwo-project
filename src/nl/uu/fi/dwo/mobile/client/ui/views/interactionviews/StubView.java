@@ -187,12 +187,12 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			return lastResort;
 		
 		HashMap<String,Object> map = new HashMap<String,Object>();
-		if(correctie != null) correctie.correctie(map);
 		return wrap(map);
 	}
 
 	private HashMap<String, Object> wrap(HashMap<String, Object> map) {
 		if(map == null) map = new HashMap<String, Object>();
+		if(correctie != null) correctie.correctie(map);
 		map.put("STUBVIEW_score", String.valueOf(getScore()));
 		map.put("STUBVIEW_correct", String.valueOf(isCorrect()));
 		return map;
