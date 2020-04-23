@@ -350,7 +350,36 @@ public void setupDWOPlayer() {
 							}
 						}
 					}
-					SelectModuleItemHolder.insert(item);		
+					SelectModuleItemHolder.insert(item);
+				}
+				// prune					
+				if (iconizer && RoleType.STUDENT == clientfactory.getRoleType()) {
+					for(SelectModuleItem folder: resolved.getValue()) {
+						if (folder.getType() == SelectModuleItem.Type.FOLDER) {
+							SelectModuleItem parent = folder;
+							do {
+								SelectModuleItem grant = parent.getParent();
+								if (grant == null) break;
+								if (parent.getChildren().isEmpty()) {
+									grant.getChildren().remove(parent);
+									parent = grant;
+								} else {
+									parent = null;
+									break;
+								}
+							} while(parent != null);
+						}
+						
+					}
+					// prune root children.
+					Iterator<SelectModuleItem> list = SelectModuleItemHolder.getItems().iterator();
+					while (list.hasNext()) {
+						SelectModuleItem item = list.next();
+						if (item.getType() == SelectModuleItem.Type.FOLDER && item.getChildren().isEmpty()) {
+							list.remove();
+						}
+					}
+					
 				}
 				return null;
 			}}).onResolve(new Runnable() {

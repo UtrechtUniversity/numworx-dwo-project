@@ -5,15 +5,18 @@ import javax.inject.Inject;
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.regexp.shared.RegExp;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
+import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 
 public class ExamActivity extends AbstractActivity {
 
-  @Inject public ExamActivity() {  }
+  @Inject ExamActivity() {  }
+  @Inject ClientFactory clientFactory;
   
   boolean legal(String base) {
     RegExp r = RegExp.compile("^/[a-z]+(/[a-z]+)*/$");
@@ -27,7 +30,16 @@ public class ExamActivity extends AbstractActivity {
     Actions.EXAM.execute();
     String base = Location.getParameter("base");
     if (base == null || !legal(base)) base = "";
-    gotoExam(base + "exam/");
+    final String exam = base+ "exam/";
+    clientFactory.logout().onResolve(() -> {
+    Timer t = new Timer() {
+
+		@Override
+		public void run() {
+		    gotoExam(exam);			
+		} };
+	t.schedule(100);
+    });
   }
 
   private static native void gotoExam(String ref) /*-{

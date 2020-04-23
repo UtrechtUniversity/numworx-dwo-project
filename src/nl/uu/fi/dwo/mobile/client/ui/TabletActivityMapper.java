@@ -50,6 +50,7 @@ public class TabletActivityMapper implements ActivityMapper
 	}
 
 	@Inject Provider<MaybeLogoutActivity> maybeLogout;
+	@Inject Provider<ExamActivity> exam;
 	
 	
 	@Override
@@ -60,7 +61,7 @@ public class TabletActivityMapper implements ActivityMapper
 	  }
 	  
 	  if (place instanceof Exam) {
-	      return new ExamActivity();
+	      return exam.get();
 	    }
 	  
 	    if (place instanceof LogoutPlace) {

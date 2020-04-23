@@ -48,6 +48,9 @@ public class ExamModuleView extends Composite {
 	public ExamModuleView(HeaderView headerView) {
 		header = headerView;
 		initWidget(uiBinder.createAndBindUi(this));
+// extra's
+		textView.getElement().setAttribute("autocorrect", "off");
+		textView.getElement().setAttribute("autocapitalize", "none");
 	}
 
 	public void setPresenter(Presenter presenter) {
