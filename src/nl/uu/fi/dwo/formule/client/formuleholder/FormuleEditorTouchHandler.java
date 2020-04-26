@@ -6,10 +6,13 @@ import java.util.logging.Logger;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.TouchCancelEvent;
@@ -40,7 +43,7 @@ import com.google.gwt.user.client.Event;
 public class FormuleEditorTouchHandler 
   implements MouseDownHandler, MouseUpHandler, MouseMoveHandler, 
              PointerDownHandler, PointerMoveHandler, PointerCancelHandler, PointerUpHandler, 
-             TouchStartHandler, TouchMoveHandler, TouchCancelHandler, TouchEndHandler
+             TouchStartHandler, TouchMoveHandler, TouchCancelHandler, TouchEndHandler, MouseOutHandler
 {
   
     public class MoveEvent {
@@ -82,7 +85,8 @@ public class FormuleEditorTouchHandler
         EventTarget target = event.target;
         boolean when = Element.is(target) && (Element.as(target) == editor.getCanvas().getElement());
         if(when) {
-            capture = getElement(event);
+        	LOG.severe("CAPTURE " + event);
+        	capture = editor.getAsPanel().getElement();
             Event.setCapture(capture);
         } 
         editor.requestFocus();
@@ -149,7 +153,6 @@ public class FormuleEditorTouchHandler
 		{
 			LOG.log(Level.SEVERE, "onTouchStart: " + e, e);
 		}
-
 	}
 
 	public void onTouchMove(TouchMoveEvent event)
@@ -170,7 +173,6 @@ public class FormuleEditorTouchHandler
 		}
 		catch (Exception e)
 		{
-			//Window.alert("Error: " + e.getMessage());
 			LOG.log(Level.SEVERE, "onTouchMove: " + e, e);
 		}
 
@@ -180,7 +182,13 @@ public class FormuleEditorTouchHandler
 	{
 		try
 		{
-			LOG.info("onTouchEnd " + event.getChangedTouches().length()  + ", " + event.getChangedTouches().get(0).getIdentifier() + ", " + event.getChangedTouches().get(0).getPageX());
+			LOG.info("onTouchEnd " + event.getChangedTouches().length()  );
+			if (event.getChangedTouches().length() > 0) {
+				LOG.info("touches: " + event.getChangedTouches().get(0).getIdentifier() + ", " + event.getChangedTouches().get(0).getPageX());
+			} else {
+				LOG.severe("No ChangedTouches");
+				return;
+			}
 			{
 				event.preventDefault();
 				event.stopPropagation();
@@ -215,12 +223,16 @@ public class FormuleEditorTouchHandler
 
   @Override
   public void onMouseMove(MouseMoveEvent event) {
-    int x = event.getRelativeX(editor.getCanvas().getElement());
-    int y = event.getRelativeY(editor.getCanvas().getElement());
-    int btn = event.getNativeButton();
-    MoveEvent move = new MoveEvent(x,y);
-    if (mousedown)
-      onMove(move);
+    try {
+		int x = event.getRelativeX(editor.getCanvas().getElement());
+		int y = event.getRelativeY(editor.getCanvas().getElement());
+		int btn = event.getNativeButton();
+		MoveEvent move = new MoveEvent(x,y);
+		if (mousedown)
+		  onMove(move);
+	} catch (Exception e) {
+	    LOG.log(Level.SEVERE, "onMouseMove", e);
+	}
   }
 
   protected void onMove(MoveEvent event) {
@@ -233,6 +245,12 @@ public class FormuleEditorTouchHandler
 
   @Override
   public void onMouseUp(MouseUpEvent event) {
+	if (!mousedown) {
+		LOG.severe("mouse up extra");
+		release();
+		return;
+	}
+	  
     try {
       mousedown = false;
       int x = event.getRelativeX(editor.getCanvas().getElement());
@@ -246,12 +264,20 @@ public class FormuleEditorTouchHandler
 
   @Override
   public void onMouseDown(MouseDownEvent event) {
-    int x = event.getRelativeX(editor.getCanvas().getElement());
-    int y = event.getRelativeY(editor.getCanvas().getElement());
-    EventTarget target = event.getNativeEvent().getEventTarget();
-    StartEvent start = new StartEvent(x,y,target);
-    mousedown = true;
-    onStart(start);
+		if (mousedown) {
+			LOG.severe("MouseDown extra");
+			return;
+		}
+    try {
+		int x = event.getRelativeX(editor.getCanvas().getElement());
+		int y = event.getRelativeY(editor.getCanvas().getElement());
+		EventTarget target = event.getNativeEvent().getEventTarget();
+		StartEvent start = new StartEvent(x,y,target);
+		mousedown = true;
+		onStart(start);
+	} catch (Exception e) {
+	    LOG.log(Level.SEVERE, "onMouseDown", e);
+	}
   }
 
   @Override
@@ -302,5 +328,11 @@ public class FormuleEditorTouchHandler
     event.stopPropagation();
     onStart(start);
   }
+
+@Override
+public void onMouseOut(MouseOutEvent event) {
+	LOG.info("mouseOut");
+	if (capture == null) mousedown = false;
+}
 
 }

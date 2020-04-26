@@ -1,12 +1,11 @@
 package nl.uu.fi.dwo.formule.client.formuleholder;
 
-import com.google.gwt.event.dom.client.HasMouseDownHandlers;
-import com.google.gwt.event.dom.client.HasMouseMoveHandlers;
-import com.google.gwt.event.dom.client.HasMouseUpHandlers;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.TouchCancelEvent;
@@ -49,16 +48,27 @@ class FormulePanel extends FlowPanel {
   HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
     return addDomHandler(handler, MouseDownEvent.getType());
   }
+  
+  HandlerRegistration addMouseOutHandler(MouseOutHandler handler) {
+	  return addDomHandler(handler, MouseOutEvent.getType());
+  }
 
   HandlerRegistration addMouseHandler(FormuleEditorTouchHandler handler) {
     return HandlerRegistrations.compose(
+        addMouseOutHandler(handler),
         addMouseDownHandler(handler),
         addMouseMoveHandler(handler),
         addMouseUpHandler(handler));
   }
 
-  public HandlerRegistration addPointerHandler(
+  private static final boolean NOTOUCH = false;
+  private static final HandlerRegistration dummy = () -> {};
+  
+  HandlerRegistration addPointerHandler(
       FormuleEditorTouchHandler handler) {
+	  
+    if (NOTOUCH) return dummy;
+	  
     return HandlerRegistrations.compose(
       addPointerDownHandler(handler),
       addPointerMoveHandler(handler),
