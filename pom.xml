@@ -112,7 +112,7 @@
 	</build>
 	<description>Keyboard voor desktop en tablet
 DWO en Noordhoff/Plantyn variant</description>
-	<version>2.4.4-SNAPSHOT</version>
+	<version>2.4.5-SNAPSHOT</version>
 	<scm>
 		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/KeyboardGWT/trunk</developerConnection>
 	</scm>
