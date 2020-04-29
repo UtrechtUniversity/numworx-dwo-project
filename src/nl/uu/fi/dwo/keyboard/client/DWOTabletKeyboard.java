@@ -5,6 +5,9 @@ package nl.uu.fi.dwo.keyboard.client;
 
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.LocaleInfo;
@@ -14,7 +17,6 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -24,7 +26,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class DWOTabletKeyboard extends AbstractKeyboard {
 	
 	private static int HEIGHT = 166;
-	int getKeyboardHeight() {
+	public int getKeyboardHeight() {
 		return HEIGHT;
 	}
 	
@@ -96,69 +98,79 @@ public class DWOTabletKeyboard extends AbstractKeyboard {
 
 	private boolean premium;
 
-	@UiHandler("t1_1") void onT1_1(ClickEvent e) {getEditor().insert('7');}
-	@UiHandler("t1_2") void onT1_2(ClickEvent e) {getEditor().insert('8');}
-	@UiHandler("t1_3") void onT1_3(ClickEvent e) {getEditor().insert('9');}
-	@UiHandler("t1_4") void onT1_4(ClickEvent e) {getEditor().insert('*');}
-	@UiHandler("t1_5") void onT1_5(ClickEvent e) {getEditor().insert('x');}
-	@UiHandler("t1_6") void onT1_6(ClickEvent e) {getEditor().insert('y');}
+	static final private Logger LOG = Logger.getLogger("DWOTabletKeyboard");
+	protected void insert(char ch) {
+		try {
+			LOG.info("insert '" + ch + '\'');
+			getEditor().insert(ch);
+		} catch(Exception e) {
+			LOG.log(Level.SEVERE, "insert " + ch, e);
+		}
+	}
+	
+	@UiHandler("t1_1") void onT1_1(ClickEvent e) {insert('7');}
+	@UiHandler("t1_2") void onT1_2(ClickEvent e) {insert('8');}
+	@UiHandler("t1_3") void onT1_3(ClickEvent e) {insert('9');}
+	@UiHandler("t1_4") void onT1_4(ClickEvent e) {insert('*');}
+	@UiHandler("t1_5") void onT1_5(ClickEvent e) {insert('x');}
+	@UiHandler("t1_6") void onT1_6(ClickEvent e) {insert('y');}
 	@UiHandler("t1_7") void onT1_7(ClickEvent e) {getEditor().wortel();}
 	@UiHandler("t1_8") void onT1_8(ClickEvent e) {getEditor().macht();}
 	@UiHandler("t1_9") void onT1_9(ClickEvent e) {getEditor().kwadraat();}
 	@UiHandler("t1_10") void onT1_10(ClickEvent e) {getEditor().breuk();}
 	@UiHandler("t1_11") void onT1_11(ClickEvent e) {getEditor().haakjes();}
-	@UiHandler("t1_12") void onT1_12(ClickEvent e) {getEditor().insert('(');}
-	@UiHandler("t1_13") void onT1_13(ClickEvent e) {getEditor().insert(')');}
-	@UiHandler("t1_14") void onT1_14(ClickEvent e) {getEditor().insert('\u2260');}
-	@UiHandler("t1_15") void onT1_15(ClickEvent e) {getEditor().insert('\u2248');}
+	@UiHandler("t1_12") void onT1_12(ClickEvent e) {insert('(');}
+	@UiHandler("t1_13") void onT1_13(ClickEvent e) {insert(')');}
+	@UiHandler("t1_14") void onT1_14(ClickEvent e) {insert('\u2260');}
+	@UiHandler("t1_15") void onT1_15(ClickEvent e) {insert('\u2248');}
 
-	@UiHandler("t2_1") void onT2_1(ClickEvent e) {getEditor().insert('4');}
-	@UiHandler("t2_2") void onT2_2(ClickEvent e) {getEditor().insert('5');}
-	@UiHandler("t2_3") void onT2_3(ClickEvent e) {getEditor().insert('6');}
-	@UiHandler("t2_4") void onT2_4(ClickEvent e) {getEditor().insert('/');}
-	@UiHandler("t2_5") void onT2_5(ClickEvent e) {getEditor().insert('p');}
-	@UiHandler("t2_6") void onT2_6(ClickEvent e) {getEditor().insert('q');}
+	@UiHandler("t2_1") void onT2_1(ClickEvent e) {insert('4');}
+	@UiHandler("t2_2") void onT2_2(ClickEvent e) {insert('5');}
+	@UiHandler("t2_3") void onT2_3(ClickEvent e) {insert('6');}
+	@UiHandler("t2_4") void onT2_4(ClickEvent e) {insert('/');}
+	@UiHandler("t2_5") void onT2_5(ClickEvent e) {insert('p');}
+	@UiHandler("t2_6") void onT2_6(ClickEvent e) {insert('q');}
 	@UiHandler("t2_7") void onT2_7(ClickEvent e) {getEditor().ndewortel();}
 	@UiHandler("t2_8") void onT2_8(ClickEvent e) {getEditor().ndelog();}
 	@UiHandler("t2_9") void onT2_9(ClickEvent e) {getEditor().abs();}
 	@UiHandler("t2_10") void onT2_10(ClickEvent e) {getEditor().subscript();}
 	@UiHandler("t2_11") void onT2_11(ClickEvent e) {getEditor().bin();}
-	@UiHandler("t2_12") void onT2_12(ClickEvent e) {getEditor().insert('[');}
-	@UiHandler("t2_13") void onT2_13(ClickEvent e) {getEditor().insert(']');}
-	@UiHandler("t2_14") void onT2_14(ClickEvent e) {getEditor().insert('<');}
-	@UiHandler("t2_15") void onT2_15(ClickEvent e) {getEditor().insert('>');}
+	@UiHandler("t2_12") void onT2_12(ClickEvent e) {insert('[');}
+	@UiHandler("t2_13") void onT2_13(ClickEvent e) {insert(']');}
+	@UiHandler("t2_14") void onT2_14(ClickEvent e) {insert('<');}
+	@UiHandler("t2_15") void onT2_15(ClickEvent e) {insert('>');}
 
-	@UiHandler("t3_1") void onT3_1(ClickEvent e) {getEditor().insert('1');}
-	@UiHandler("t3_2") void onT3_2(ClickEvent e) {getEditor().insert('2');}
-	@UiHandler("t3_3") void onT3_3(ClickEvent e) {getEditor().insert('3');}
-	@UiHandler("t3_4") void onT3_4(ClickEvent e) {getEditor().insert('+');}
-	@UiHandler("t3_5") void onT3_5(ClickEvent e) {getEditor().insert('a');}
-	@UiHandler("t3_6") void onT3_6(ClickEvent e) {getEditor().insert('b');}
+	@UiHandler("t3_1") void onT3_1(ClickEvent e) {insert('1');}
+	@UiHandler("t3_2") void onT3_2(ClickEvent e) {insert('2');}
+	@UiHandler("t3_3") void onT3_3(ClickEvent e) {insert('3');}
+	@UiHandler("t3_4") void onT3_4(ClickEvent e) {insert('+');}
+	@UiHandler("t3_5") void onT3_5(ClickEvent e) {insert('a');}
+	@UiHandler("t3_6") void onT3_6(ClickEvent e) {insert('b');}
 	@UiHandler("t3_7") void onT3_7(ClickEvent e) {getEditor().integraal();}
 	@UiHandler("t3_8") void onT3_8(ClickEvent e) {getEditor().prv();}
 	@UiHandler("t3_9") void onT3_9(ClickEvent e) {getEditor().primitieve();}
 	@UiHandler("t3_10") void onT3_10(ClickEvent e) {getEditor().diff();}
 	@UiHandler("t3_11") void onT3_11(ClickEvent e) {getEditor().diff_partial();}
-	@UiHandler("t3_12") void onT3_12(ClickEvent e) {getEditor().insert('〈');}
-	@UiHandler("t3_13") void onT3_13(ClickEvent e) {getEditor().insert('〉');}
-	@UiHandler("t3_14") void onT3_14(ClickEvent e) {getEditor().insert('\u2264');}
-	@UiHandler("t3_15") void onT3_15(ClickEvent e) {getEditor().insert('\u2265');}
+	@UiHandler("t3_12") void onT3_12(ClickEvent e) {insert('〈');}
+	@UiHandler("t3_13") void onT3_13(ClickEvent e) {insert('〉');}
+	@UiHandler("t3_14") void onT3_14(ClickEvent e) {insert('\u2264');}
+	@UiHandler("t3_15") void onT3_15(ClickEvent e) {insert('\u2265');}
 
-	@UiHandler("t4_1") void onT4_1(ClickEvent e) {getEditor().insert('0');}
-	@UiHandler("t4_2") void onT4_2(ClickEvent e) {getEditor().insert(nc.decimalSeparator().charAt(0));}
-	@UiHandler("t4_3") void onT4_3(ClickEvent e) {getEditor().insert('=');}
-	@UiHandler("t4_4") void onT4_4(ClickEvent e) {getEditor().insert('-');}
-	@UiHandler("t4_5") void onT4_5(ClickEvent e) {getEditor().insert('e');}
-	@UiHandler("t4_6") void onT4_6(ClickEvent e) {getEditor().insert('\u03c0');}
+	@UiHandler("t4_1") void onT4_1(ClickEvent e) {insert('0');}
+	@UiHandler("t4_2") void onT4_2(ClickEvent e) {insert(nc.decimalSeparator().charAt(0));}
+	@UiHandler("t4_3") void onT4_3(ClickEvent e) {insert('=');}
+	@UiHandler("t4_4") void onT4_4(ClickEvent e) {insert('-');}
+	@UiHandler("t4_5") void onT4_5(ClickEvent e) {insert('e');}
+	@UiHandler("t4_6") void onT4_6(ClickEvent e) {insert('\u03c0');}
 	@UiHandler("t4_7") void onT4_7(ClickEvent e) {getEditor().limiet0();}
 	@UiHandler("t4_8") void onT4_8(ClickEvent e) {getEditor().limiet1();}
 	@UiHandler("t4_9") void onT4_9(ClickEvent e) {getEditor().limiet2();}
 	@UiHandler("t4_10") void onT4_10(ClickEvent e) {getEditor().sigma();}
 	@UiHandler("t4_11") void onT4_11(ClickEvent e) {getEditor().conjug();}
-	@UiHandler("t4_12") void onT4_12(ClickEvent e) {getEditor().insert('←');}
-	@UiHandler("t4_13") void onT4_13(ClickEvent e) {getEditor().insert('→');}
+	@UiHandler("t4_12") void onT4_12(ClickEvent e) {insert('←');}
+	@UiHandler("t4_13") void onT4_13(ClickEvent e) {insert('→');}
 	@UiHandler("t4_14") void onT4_14(ClickEvent e) {getEditor().insert(" "+rb.ofLabel()+" ");}
-	@UiHandler("t4_15") void onT4_15(ClickEvent e) {getEditor().insert('∞');}
+	@UiHandler("t4_15") void onT4_15(ClickEvent e) {insert('∞');}
 	
 	
 	@UiHandler("t1_16") void onT1_16(ClickEvent e) {

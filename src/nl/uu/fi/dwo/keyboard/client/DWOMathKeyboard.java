@@ -127,7 +127,7 @@ public class DWOMathKeyboard extends AbstractKeyboard {
 	}
 
 	@Override
-	int getKeyboardHeight() {
+	public int getKeyboardHeight() {
 		return HEIGHT;
 	}
 

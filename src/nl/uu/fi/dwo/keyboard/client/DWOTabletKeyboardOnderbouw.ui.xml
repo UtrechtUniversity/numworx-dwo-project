@@ -1,0 +1,374 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:with type="nl.uu.fi.dwo.keyboard.client.DWOkeyboardBundle" field="resources" />
+	<ui:style field='style' type='nl.uu.fi.dwo.keyboard.client.ResponsiveCSS'>
+	.normal {
+	}
+	.small {
+	}
+	.extrasmall {
+	}
+	
+	.root {
+		background-color: #E5E7E9;
+		position: relative;
+		line-height: 33px;
+	
+		font-family: monospace;
+		font-style: initial;
+		font-weight: normal !important;
+		font-size: 14px;
+	}
+	
+	.normal .row1 {
+		top: 0%;
+		width: 15.789%;
+		height: 100%;
+		left: 0%;
+		position: absolute;
+	}
+	.small .row1 {
+		top: 0%;
+		width: 23.077%;
+		height: 100%;
+		left: 0%;
+		position: absolute;
+	}
+	
+	.normal .row2 {
+		top: 0%;
+		width: 5.263%;
+		display: inline-block;
+		height: 100%;
+		left: 15.789%;
+		position: absolute;
+	}
+	.small .row2 {
+		top: 0%;
+		width: 7.692%;
+		height: 100%;
+		left: 23.077%;
+		position: absolute;
+	}
+	
+	.normal .row3 {
+		top: 0%;
+		width: 10.526%;
+		display: inline-block;
+		heigth: 66.667%;
+		left: 21.053%;
+		position: absolute;
+	}
+	.small .row3 {
+		top: 0%;
+		width: 15.384%;
+		height: 66.667%;
+		left: 30.769%;
+		position: absolute;
+	}
+
+	.normal .row4 {
+		top: 66.667%;
+		height: 33.333%;
+		left: 21.053%;
+		width: 10.526%;
+		position: absolute;
+	}
+	.small .row4 {
+		top: 66.667%;
+		height: 33.333%;
+		left: 30.769%;
+		width: 15.384%;
+		position: absolute;
+	}
+	
+	.normal .row5 {
+		top: 0%;
+		height: 33.333%;
+		left: 31.579%;
+		width: 36.842%;
+		position: absolute;
+	}
+	.small .row5 {	
+		top: 0%;
+		height: 33.333%;
+		left: 46.154%;
+		width: 23.077%;
+		position: absolute;
+		overflow: hidden;
+	}
+	
+	.normal .row6 {
+		top: 33.333%;
+		height: 33.333%;
+		left: 31.579%;
+		width: 36.842%;
+		position: absolute;
+	}
+	.small .row6 {
+		top: 33.333%;
+		height: 33.333%;
+		left: 46.154%;
+		width: 7.692%;
+		position: absolute;
+		overflow: hidden;
+	}
+	
+	.normal .row7 {
+		top: 66.667%;
+		heigth: 33.333%;
+		left: 31.579%;
+		width: 26.316%;
+		position: absolute;
+	}
+	.small .row7 {
+		top: 66.667%;
+		height: 33.333%;
+		left: 46.154%;
+		width: 7.692%;
+		position: absolute;
+		overflow: hidden;
+		
+	}
+	.normal .row8 {
+		top: 66.667%;
+		height: 33.333%;
+		width: 10.526%;
+		left: 57.894%;
+		position: absolute;
+	}
+	.small .row8 {
+		top: 33.333%;
+		height: 66.667%;
+		left: 53.846%;
+		width: 7.692%;
+		position: absolute;
+	}
+		
+	.normal .row9 {
+		top: 0%;
+		height: 33.333%;
+		width: 10.526%;
+		left: 68.421%;
+		position: absolute;
+	}
+	.small .row9 {
+		top: 33.333%;
+		height: 33.333%;
+		width: 15.385%;
+		left: 61.538%;
+		position: absolute;
+	}
+	.normal .row10 {
+		top: 33.333%;
+		height: 66.667%;
+		width: 15.789%;
+		left: 68.421%;
+		position: absolute;
+	}
+	.small .row10 {
+		top: 66.667%;
+		height: 33.333%;
+		width: 15.789%;
+		left: 61.538%;
+		position: absolute;
+		overflow: hidden;
+	}
+	.normal .row11 {
+		top: 0%;
+		height: 33.333%;
+		width: 15.789%;
+		left: 78.947%;
+		position: absolute;
+	}
+	.small .row11 {
+		top: 0%;
+		height: 33.333%;
+		position: absolute;
+		left: 69.231%;
+		width: 23.077%;
+	}
+	.normal .row12 {
+		top: 33.333%;
+		height: 66.667%;
+		left: 84.211%;
+		width: 10.526%;
+		position: absolute;
+	}
+	.small .row12 {
+		top: 33.333%;
+		height: 66.667%;
+		left: 76.923%;
+		width: 15.789%;
+		position: absolute;
+	}
+	.normal .row13 {
+		top: 0%;
+		height: 100%;
+		width: 5.263%;
+		left: 94.737%;
+		position: absolute;
+	}
+	.small .row13 {
+		top: 0%;
+		height: 100%;
+		width: 7.692%;
+		left: 	92.308%;
+		position: absolute;
+	}
+	
+	.symbol {
+		vertical-align: top;
+	}
+	.grsymbol.svgimage {
+		background-color: gray;
+		vertical-align: top;
+		color: white;
+	}
+	.dgrsymbol.svgimage {
+		background-color: darkgray;
+		vertical-align: top;
+		color: white;
+	}
+	.lgrsymbol.svgimage {
+		background-color: lightgray;
+		vertical-align: top;
+		color: black;
+	}
+	.blsymbol.svgimage {
+		background-color: blue;
+		vertical-align: top;
+		color: white;
+	}
+
+	.dblsymbol.svgimage {
+		background-color: darkblue;
+		vertical-align: top;
+		color: white;
+	}
+	
+	.row1 .svgimage, .normal .row10 .svgimage, .row11 .svgimage, .small .row5 .svgimage { 
+		width: 33.333%;
+	}
+
+	.row2 .svgimage, .row13 .symbol, .small .row6 .svgimage, .small .row7 .svgimage, .small .row8 .svgimage {
+		width: 100%;
+	}
+	.row3 .svgimage, .normal .row8 .svgimage, .row12 .svgimage, .small .row10 .svgimage {
+		width: 50%;
+	}
+	.row4 .svgimage, .row9 .svgimage {
+		width: 50%;
+	}
+
+	.normal .row5 .svgimage, .normal .row6 .svgimage {
+		width: 14.286%
+	}
+	.normal .row7 .svgimage {
+		width: 20%;
+	}
+	
+	
+	.svgimage {
+		height: 32px !important;
+		display: inline-block;
+		margin-top: 5px;
+		border-radius: 5px;
+		background-color: white;
+	}
+	.svgimagem, .svgimagel {
+		height: 69px;
+		margin-top: 5px;
+		border-radius: 5px;
+		background-color: gray;
+	}
+	
+	</ui:style>
+	<g:FlowPanel addStyleNames="{style.root} {style.normal}">
+		<g:FlowPanel addStyleNames="{style.row1}">
+			<my:FKey addStyleNames="{style.dgrsymbol} {style.svgimage}" ui:field="t7">7</my:FKey>	
+			<my:FKey addStyleNames="{style.dgrsymbol} {style.svgimage}" ui:field="t8">8</my:FKey>	
+			<my:FKey addStyleNames="{style.dgrsymbol} {style.svgimage}" ui:field="t9">9</my:FKey>	
+			<my:FKey addStyleNames="{style.dgrsymbol} {style.svgimage}" ui:field="t4">4</my:FKey>	
+			<my:FKey addStyleNames="{style.dgrsymbol} {style.svgimage}" ui:field="t5">5</my:FKey>	
+			<my:FKey addStyleNames="{style.dgrsymbol} {style.svgimage}" ui:field="t6">6</my:FKey>	
+			<my:FKey addStyleNames="{style.dgrsymbol} {style.svgimage}" ui:field="t1">1</my:FKey>	
+			<my:FKey addStyleNames="{style.dgrsymbol} {style.svgimage}" ui:field="t2">2</my:FKey>	
+			<my:FKey addStyleNames="{style.dgrsymbol} {style.svgimage}" ui:field="t3">3</my:FKey>	
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="{style.row2}" >
+			<my:FKey addStyleNames="{style.dgrsymbol} {style.svgimage}" ui:field="t0">0</my:FKey>	
+			<my:FKey addStyleNames="{style.dgrsymbol} {style.svgimage}" ui:field="t2_2">,</my:FKey>	
+			<my:FKey addStyleNames="{style.dgrsymbol} {style.svgimage}" ui:field="t2_3">=</my:FKey>		
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="{style.row3}">
+			<my:FKey addStyleNames="{style.grsymbol} {style.svgimage}" ui:field="t3_1">×</my:FKey>	
+			<my:FKey addStyleNames="{style.grsymbol} {style.svgimage}" ui:field="t3_2">/</my:FKey>		
+			<my:FKey addStyleNames="{style.grsymbol} {style.svgimage}" ui:field="t3_3">+</my:FKey>	
+			<my:FKey addStyleNames="{style.grsymbol} {style.svgimage}" ui:field="t3_4">-</my:FKey>		
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="{style.row4}">
+			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="t4_1">of</my:FKey>	
+			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="t4_2">%</my:FKey>		
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames='{style.row5}'>
+			<my:DKey addStyleNames="{style.svgimage}" ui:field="t5_1" resource="{resources.wortel_svg}" />
+			<my:DKey addStyleNames="{style.svgimage}" ui:field="t5_2" resource="{resources.macht_svg}" />
+			<my:DKey addStyleNames="{style.svgimage}" ui:field="t5_3" resource="{resources.kwadraat_svg}" />
+			<my:DKey addStyleNames="{style.svgimage}" ui:field="t5_4" resource="{resources.breuk_svg}" />
+			<my:DKey addStyleNames="{style.svgimage}" ui:field="t5_5" resource="{resources.haakjes_svg}" />
+			<my:DKey addStyleNames="{style.svgimage}" ui:field="t5_6" resource="{resources.ndewortel_svg}"/>
+			<my:DKey addStyleNames="{style.svgimage}" ui:field="t5_7" resource="{resources.subscript_svg}"/>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="{style.row6}">
+			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="tx">x</my:FKey>	
+			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="ty">y</my:FKey>	
+			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="tp">p</my:FKey>	
+			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="tq">q</my:FKey>	
+			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="ta">a</my:FKey>	
+			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="tb">b</my:FKey>	
+			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="tpi">π</my:FKey>	
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="{style.row7}">
+			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="t7_1">&lt;</my:FKey>	
+			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="t7_2">&gt;</my:FKey>	
+			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="t7_3">≤</my:FKey>	
+			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="t7_4">≥</my:FKey>	
+			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="t7_5">≈</my:FKey>	
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="{style.row8}">
+			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="t8_1">∠</my:FKey>	
+			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="t8_2">°</my:FKey>	
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="{style.row9}">
+			<my:FKey addStyleNames="{style.grsymbol} {style.svgimage}" ui:field="t9_1">(</my:FKey>	
+			<my:FKey addStyleNames="{style.grsymbol} {style.svgimage}" ui:field="t9_2">)</my:FKey>	
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="{style.row10}">
+			<my:FKey addStyleNames="{style.grsymbol} {style.svgimage}" ui:field="t10_1">[</my:FKey>	
+			<my:FKey addStyleNames="{style.grsymbol} {style.svgimage}" ui:field="t10_2">]</my:FKey>	
+			<my:FKey addStyleNames="{style.grsymbol} {style.svgimage}" ui:field="t10_3">←</my:FKey>	
+			<my:FKey addStyleNames="{style.grsymbol} {style.svgimage}" ui:field="t10_4">〈</my:FKey>	
+			<my:FKey addStyleNames="{style.grsymbol} {style.svgimage}" ui:field="t10_5">〉</my:FKey>	
+			<my:FKey addStyleNames="{style.grsymbol} {style.svgimage}" ui:field="t10_6">→</my:FKey>	
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="{style.row11}">
+			<my:FKey addStyleNames="{style.lgrsymbol} {style.svgimage}" ui:field="t11_1">&#x25c0;</my:FKey>	
+			<my:FKey addStyleNames="{style.lgrsymbol} {style.svgimage}" ui:field="t11_2">&#x25b6;</my:FKey>	
+			<my:DKey addStyleNames="{style.svgimage} {style.grsymbol}" ui:field="t11_3" resource="{resources.backspace_svg}"/>	
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="{style.row12}">
+			<my:FKey addStyleNames="{style.blsymbol} {style.svgimage}" ui:field="t12_1">αβ</my:FKey>	
+			<my:FKey addStyleNames="{style.dblsymbol} {style.svgimage}" ui:field="t12_2">123</my:FKey>	
+			<my:FKey addStyleNames="{style.blsymbol} {style.svgimage}" ui:field="t12_3">abc</my:FKey>	
+			<my:DKey addStyleNames="{style.blsymbol} {style.svgimage}" ui:field="t12_4" resource="{resources.hand_svg}"/>	
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="{style.row13}">
+			<my:DKey addStyleNames="{style.symbol} {style.svgimagel}" ui:field="t13_1" resource="{resources.apply_svg}" />
+			<my:DKey addStyleNames="{style.symbol} {style.svgimagem}" ui:field="t13_2" resource="{resources.VVV_svg}" />
+		</g:FlowPanel>
+		
+	</g:FlowPanel>
+</ui:UiBinder> 

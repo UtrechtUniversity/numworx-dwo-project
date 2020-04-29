@@ -7,4 +7,5 @@ public interface CombinedState {
 	HandlerRegistration addChangeHandler(ChangeHandler handler);
 	void setCombined(Combined state);
 	Combined getCombined();
+	int getWidth();
 }

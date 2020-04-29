@@ -64,7 +64,7 @@ public class TabletOnderbouwKeyboard extends AbstractKeyboard {
 	}
 	
 	@Override
-	int getKeyboardHeight() {
+	public int getKeyboardHeight() {
 		return height ;
 	}
 

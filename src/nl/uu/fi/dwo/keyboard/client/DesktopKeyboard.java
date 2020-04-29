@@ -208,7 +208,7 @@ public class DesktopKeyboard extends AbstractKeyboard {
 		
 	}
 
-	int getKeyboardHeight() {
+	public int getKeyboardHeight() {
 		return height;
 	}
 

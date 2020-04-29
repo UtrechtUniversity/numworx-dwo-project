@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class TabletKeyboardPad extends AbstractKeyboard {
 
 	private static int HEIGHT = 166;
-	int getKeyboardHeight() {
+	public int getKeyboardHeight() {
 		return HEIGHT;
 	}
 

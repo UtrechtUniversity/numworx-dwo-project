@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class DWODesktopKeyboard extends AbstractKeyboard {
 	
 	private static int HEIGHT = 90;
-	int getKeyboardHeight() {
+	public int getKeyboardHeight() {
 		return HEIGHT;
 	}
 

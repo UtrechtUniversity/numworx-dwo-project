@@ -121,7 +121,7 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 		if(scrollPanel != null) scrollPanel.setHeight(origHeight - origDelta);
 	}
 
-	int getKeyboardHeight() {
+	public int getKeyboardHeight() {
 		if(isVisible())
 			return current.getKeyboardHeight();
 		return 0;

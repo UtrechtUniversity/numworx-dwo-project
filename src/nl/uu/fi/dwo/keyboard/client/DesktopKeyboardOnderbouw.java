@@ -80,7 +80,7 @@ public class DesktopKeyboardOnderbouw extends DesktopKeyboard {
 	}
 
   @Override
-  int getKeyboardHeight() {
+  public int getKeyboardHeight() {
     return HEIGHT;
   }
 	

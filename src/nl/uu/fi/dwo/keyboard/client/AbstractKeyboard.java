@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.ResizeComposite;
 
 public abstract class AbstractKeyboard extends Composite implements FormuleKeyboardIF {
 
@@ -158,7 +159,7 @@ public abstract class AbstractKeyboard extends Composite implements FormuleKeybo
 		}
 	}
 
-	abstract int getKeyboardHeight();
+	public abstract int getKeyboardHeight();
 
 	protected void doInsert(ClickEvent e) {
 		Object s = e.getSource(); // HTML mischien getElement en dan DOM methoden?

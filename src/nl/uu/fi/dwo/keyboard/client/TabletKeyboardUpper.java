@@ -17,7 +17,7 @@ public class TabletKeyboardUpper extends AbstractKeyboard {
 	private int height = HEIGHT;
 	@UiField KeyboardCSS style;
 	
-	int getKeyboardHeight() {
+	public int getKeyboardHeight() {
 		return height;
 	}
 

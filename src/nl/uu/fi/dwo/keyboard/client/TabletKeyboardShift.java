@@ -22,7 +22,7 @@ public class TabletKeyboardShift extends AbstractKeyboard {
 	@UiField FKey t4_1;
 	
 	private static int HEIGHT = 166;
-	int getKeyboardHeight() {
+	public int getKeyboardHeight() {
 		return HEIGHT;
 	}
 

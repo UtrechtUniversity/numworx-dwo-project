@@ -86,7 +86,7 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 	}
 
 	@Override
-	int getKeyboardHeight() {
+	public int getKeyboardHeight() {
 		if(isVisible())
 			return current.getKeyboardHeight();
 		return 0;

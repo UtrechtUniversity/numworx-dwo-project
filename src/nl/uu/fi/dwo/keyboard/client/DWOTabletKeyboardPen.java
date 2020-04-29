@@ -21,7 +21,7 @@ public class DWOTabletKeyboardPen extends AbstractKeyboard implements WritePanel
 
 
 	private static int HEIGHT = 166+60;
-	int getKeyboardHeight() {
+	public int getKeyboardHeight() {
 		return HEIGHT;
 	}
 

@@ -16,7 +16,7 @@ public class TabletKeyboardPen extends AbstractKeyboard implements WritePanelHol
 
 	private static int HEIGHT = 166;
 	private int height = HEIGHT;
-	int getKeyboardHeight() {
+	public int getKeyboardHeight() {
 		return height;
 	}
 
