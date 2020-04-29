@@ -212,4 +212,9 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 		factory.setCombinedState(state);
 	}
 
+	@Override
+	public int getWidth() {
+		return 70;
+	}
+
 }

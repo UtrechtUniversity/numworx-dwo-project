@@ -2624,4 +2624,10 @@ public Combined getCombined() {
 	return state;
 }
 
+@Override
+public int getWidth() {
+	// width of the combined button.
+	return 70;
+}
+
 }
