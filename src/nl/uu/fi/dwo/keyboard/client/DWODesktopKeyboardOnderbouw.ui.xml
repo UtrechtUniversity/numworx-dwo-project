@@ -26,13 +26,17 @@
 	
 	.normal .row1 {
 		width: 30%;
+		top: 5px;
+		position: absolute;
+		left: 0%;
 	}		
 	.small .row1 {
 		width: 60%;
+		margin-top: 5px;
 	}		
 
 	.normal .row2 {
-		top: 0px;
+		top: 5px;
 		width: 30%;
 		left: 30%;
 		position: absolute;
@@ -45,19 +49,19 @@
 	}
 
 	.normal .row3 {
-		top: 0%;
+		top: 5px;
 		width: 10%;
 		left: 60%;
 		position: absolute;
 	}
 	.small .row3 {
-		top: 0%;
+		top: 5px;
 		width: 20%;
 		left: 60%;
 		position: absolute;
 	}
 	.normal .row4 {
-		top: 0%;
+		top: 5px;
 		width: 10%;
 		left: 70%;
 		position: absolute;
@@ -69,20 +73,20 @@
 		position: absolute;
 	}	
 	.normal .row5 {
-		top: 0%;
+		top: 5px;
 		width: 10%;
 		left: 80%;
 		position: absolute;
 	}
 	.small .row5 {
-		top: 0%;
+		top: 5px;
 		width: 20%;
 		left: 80%;
 		position: absolute;
 	}
 	
 	.normal .row6 {
-		top: 0%;
+		top: 5px;
 		width: 10%;
 		left: 90%;
 		position: absolute;
@@ -111,7 +115,7 @@
 	}
 	.svgimagem {
 		height: 32px !important;
-		padding-bottom: 10px;
+		padding-bottom: 15px;
 		display: inline-block;
 		margin-top: 5px;
 		border-radius: 5px;
@@ -119,7 +123,7 @@
 	}
 	.svgimagen {
 		height: 32px !important;
-		margin-bottom: 10px;
+		margin-bottom: 15px;
 		display: inline-block;
 		margin-top: 5px;
 		border-radius: 5px;
@@ -147,7 +151,7 @@
 	}
 	
 	</ui:style>
-	<g:FlowPanel addStyleNames="keyboard keyboard-abc is-active {style.root} {style.normal}">
+	<g:FlowPanel addStyleNames="{style.root} {style.normal}">
 		<g:FlowPanel addStyleNames='{style.row1}'>
 			<my:DKey addStyleNames="{style.svgimage}" ui:field="t3_1" resource="{resources.wortel_svg}" />
 			<my:DKey addStyleNames="{style.svgimage}" ui:field="t3_2" resource="{resources.macht_svg}" />
@@ -158,9 +162,9 @@
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="{style.row2}" > 
 			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="t4_8">π</my:FKey>	
-			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="t4_12">≥</my:FKey>
 			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="t4_11">≤</my:FKey>
-			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="t1_15">≈</my:FKey>
+			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="t4_12">≥</my:FKey>
+			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="t4_15">≈</my:FKey>
 			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="t4_14">∠</my:FKey>
 			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="t4_13">°</my:FKey>
 		</g:FlowPanel>

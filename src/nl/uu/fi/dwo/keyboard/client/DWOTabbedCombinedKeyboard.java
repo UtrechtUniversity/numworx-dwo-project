@@ -11,18 +11,19 @@ import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 
-class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandler {
+class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandler, AbstractKeyboard.HasHeight {
 
 	//private final boolean premium;
 	private final CombinedState state;
 	private Combined combined = Combined.NONE;
 	private boolean isDesktop = true;
+	private boolean premium;
 	private AbstractKeyboard current, desktop, tablet, math, pen, kabc, kABC, kGrUpper, kGrLower;
 	private FlowPanel main;
 	
 	
 	public DWOTabbedCombinedKeyboard(boolean premium, CombinedState state) {
-		//this.premium = premium;
+		this.premium = premium;
 		this.state = state;
 		if (state != null) {
 			state.addChangeHandler(this);
@@ -97,6 +98,8 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 		Combined old = combined;
 		combined = state.getCombined();
 		if (old != combined) {
+			int w = combined == Combined.NONE ? 0 : 70;
+			main.getElement().getStyle().setPaddingLeft(w, Unit.PX);
 			if ((combined == Combined.TABLET_ACTIVE || combined == Combined.TABLET_ACTIVE_SOFT) && isDesktop) {
 				isDesktop = false;
 				switchTo(tablet);
@@ -184,16 +187,63 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 		setCombined(Combined.NONE);
 	}
 	
-	int nr = 1;
+	private AbstractKeyboard createDesktop(int nr) {
+		AbstractKeyboard kb;
+		switch(nr) {
+		case 1: // onderbouw
+				kb = new DWODesktopKeyboardOnderbouw(state);
+				kb.setDelegate(this);
+				kb.setScrollPanel(this, 0);
+				return kb;
+		
+		default: kb = new DWODesktopKeyboard().init();
+			kb.setPremium(premium);
+			kb.setKeyboard(nr);
+			kb.setDelegate(this);
+			return kb;
+		}
+	}
+	private AbstractKeyboard createTablet(int nr) {
+		AbstractKeyboard kb;
+		switch(nr) {
+		case 1:
+			kb = new DWOTabletKeyboardOnderbouw(state);
+			kb.setScrollPanel(this, 0);
+			kb.setDelegate(this);
+			return kb;
+		default:
+			kb = new DWOTabletKeyboard().init();
+			kb.setPremium(premium);
+			kb.setKeyboard(nr);
+			kb.setDelegate(this);
+			return kb;
+		}
+	}
+	
+	int nr = DEFAULT;;
 	private boolean upper;
 	@Override
 	public void setKeyboard(int nr) {
 		if(nr < 0 || nr > 4) nr = DEFAULT;
 		if(this.nr != nr) {
+			boolean isCurrent;
 			this.nr = nr;
 			math.setKeyboard(nr);
-			desktop.setKeyboard(nr);
-			tablet.setKeyboard(nr);
+			isCurrent = desktop == current;
+			desktop.removeFromParent();
+			desktop = createDesktop(nr);
+			desktop.setEnterImage(enterImage);
+			if (isCurrent) current = desktop;
+			else desktop.setVisible(false);
+			main.add(desktop);
+			tablet.removeFromParent();
+			isCurrent = tablet == current;
+			tablet = createTablet(nr);
+			tablet.setEnterImage(enterImage);
+			if (isCurrent) current = tablet;
+			else tablet.setVisible(false);
+			main.add(tablet);
+			
 			resizeScrollPanel(getKeyboardHeight());
 		}
 	}
@@ -282,23 +332,8 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 		switchTo(kGrLower);
 	}
 
-	private Object enterImage;
-	
-	@Override
-	void setEnterImage(ImageResource resource) {
-		if(resource != enterImage) {
-			enterImage = resource;
-			desktop.setEnterImage(resource);
-			tablet.setEnterImage(resource);
-			kabc.setEnterImage(resource);
-			kABC.setEnterImage(resource);
-			pen.setEnterImage(resource);
-			kGrUpper.setEnterImage(resource);
-			kGrLower.setEnterImage(resource);
-			math.setEnterImage(resource);
-		}
-	}
- 
+	private DataResource enterImage;
+	 
 	@Override
     void setEnterImage(DataResource resource) {
         if(resource != enterImage) {
@@ -333,6 +368,16 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 			setEnterImage(resource_svg);
 			return;
 		}
+	}
+
+	@Override
+	public void onResize() {
+		current.onResize();
+	}
+
+	@Override
+	public void setHeight(int px) {
+		resizeScrollPanel(getKeyboardHeight());		
 	}
 	
 }

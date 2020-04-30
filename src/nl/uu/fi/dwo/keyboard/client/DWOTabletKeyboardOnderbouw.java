@@ -5,6 +5,9 @@ package nl.uu.fi.dwo.keyboard.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.i18n.client.constants.NumberConstants;
+import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -31,6 +34,10 @@ public class DWOTabletKeyboardOnderbouw extends AbstractKeyboard  implements Req
 
 	private CombinedState state;
 	@UiField ResponsiveCSS style;
+	@UiField(provided=true)
+	fi.wiskopdr.text.TextConstants rb = fi.wiskopdr.text.Text.constants;
+	@UiField(provided=true)
+	NumberConstants nc;
 	private HasHeight scroll;
 	private int extra;
 	
@@ -52,6 +59,8 @@ public class DWOTabletKeyboardOnderbouw extends AbstractKeyboard  implements Req
 	 * implement HasHTML instead of HasText.
 	 */
 	private DWOTabletKeyboardOnderbouw() {
+		LocaleInfo currentLocale = LocaleInfo.getCurrentLocale();
+		nc = currentLocale.getNumberConstants();
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
@@ -81,7 +90,8 @@ public class DWOTabletKeyboardOnderbouw extends AbstractKeyboard  implements Req
 			HEIGHT = 3*37+15;
 		}
 		if (old != HEIGHT) {
-			scroll.setHeight(HEIGHT);
+			setPixelSize(-1, HEIGHT);
+			scroll.setHeight(this.extra-HEIGHT);
 		}
 		Combined combined = state.getCombined();
 		if (extra) {
@@ -98,5 +108,80 @@ public class DWOTabletKeyboardOnderbouw extends AbstractKeyboard  implements Req
 		super.setScrollPanel(w, h);
 		scroll = w;
 		extra = h;
+	}
+	
+	@UiHandler({"t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8", "t9"	} )
+	void insert(ClickEvent e) {
+		doInsert(e);
+	}
+	@UiHandler({"tx", "ty", "tp", "tq", "ta", "tb", "tpi"} )
+	void insertx(ClickEvent e) {
+		doInsert(e);
+	}
+	
+	@UiHandler("t7_1") void inserlt(ClickEvent e) { getEditor().insert('<');}
+	@UiHandler("t7_2") void insergt(ClickEvent e) { getEditor().insert('>');}
+	@UiHandler("t2_2") void insertdec(ClickEvent e) { doInsert(e); } // decimal comma/point
+	
+	@UiHandler({"t2_3","t3_1", "t3_2", "t3_3", "t3_4","t4_2"} )
+	void insert0(ClickEvent e) {
+		doInsert(e);
+	}	
+	@UiHandler({ "t7_3", "t7_4", "t7_5","t8_1", "t8_2","t9_1", "t9_2"} )
+	void inserty(ClickEvent e) {
+		doInsert(e);
+	}
+	@UiHandler({"t10_1", "t10_2", "t10_3", "t10_4", "t10_5", "t10_6"} )
+	void insertz(ClickEvent e) {
+		doInsert(e);
+	}
+	
+	@UiHandler("t11_1") void onT11_1(ClickEvent e) {getEditor().cursorToLeft(); }
+	@UiHandler("t11_2") void onT11_2(ClickEvent e) {getEditor().cursorToRight();}
+
+	@UiHandler("t5_1") void onT3_1(ClickEvent e) {getEditor().wortel();}
+	@UiHandler("t5_2") void onT3_2(ClickEvent e) {getEditor().macht();}
+	@UiHandler("t5_3") void onT3_3(ClickEvent e) {getEditor().kwadraat();}
+	@UiHandler("t5_4") void onT3_4(ClickEvent e) {getEditor().breuk();}
+	@UiHandler("t5_5") void onT3_5(ClickEvent e) {getEditor().haakjes();}
+	@UiHandler("t5_6") void onT3_6(ClickEvent e) {getEditor().ndewortel();}
+	@UiHandler("t5_7") void onT3_11(ClickEvent e) {getEditor().subscript();}
+	@UiHandler("t4_1") void onT4_14(ClickEvent e) {getEditor().insert(" "+rb.ofLabel()+" ");}
+
+	@UiHandler("t12_1") void onT1_16(ClickEvent e) {switchGreek();}
+	@UiHandler("t11_3") void onT1_17(ClickEvent e) {backspace();}
+
+	@UiHandler("t12_2") void onT2_16(ClickEvent e) {switch123();}
+	@UiHandler("t13_1") void onT2_17(ClickEvent e) {enter();}
+
+	@UiHandler("t12_3") void onT3_16(ClickEvent e) {switchABC();}
+
+	@UiHandler("t12_4") void onT4_16(ClickEvent e) {switchHand();}
+	@UiHandler("t13_2") void onT4_17(ClickEvent e) {blur();}
+
+	@Override
+	public void blur() {
+		getDelegate().blur();
+	}
+	@Override
+	void switchABC() {
+		getDelegate().switchABC();
+	}
+	@Override
+	void switch123() {
+//		getDelegate().switch123();
+	}
+	@Override
+	void switchHand() {
+		getDelegate().switchHand();
+	}
+	@Override
+	void switchGreek() {
+		getDelegate().switchGreek();
+	}
+	
+	@UiField DKey t13_1;
+	void setEnterImage(DataResource resource) {
+	    t13_1.image.setUrl(resource.getSafeUri());
 	}
 }

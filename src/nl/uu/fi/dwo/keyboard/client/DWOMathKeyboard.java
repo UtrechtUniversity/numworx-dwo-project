@@ -130,11 +130,6 @@ public class DWOMathKeyboard extends AbstractKeyboard {
 	public int getKeyboardHeight() {
 		return HEIGHT;
 	}
-
-	@Override
-	void setEnterImage(ImageResource resource) {
-		pad.setEnterImage(resource);
-	}
 	
 	@Override
 	void setEnterImage(DataResource resource) {

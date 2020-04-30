@@ -3,6 +3,8 @@
 	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:with type="nl.uu.fi.dwo.keyboard.client.DWOkeyboardBundle" field="resources" />
+	<ui:with type="com.google.gwt.i18n.client.constants.NumberConstants" field="nc" />
+	<ui:with type="fi.wiskopdr.text.TextConstants" field="rb"/>
 	<ui:style field='style' type='nl.uu.fi.dwo.keyboard.client.ResponsiveCSS'>
 	.normal {
 	}
@@ -23,21 +25,21 @@
 	}
 	
 	.normal .row1 {
-		top: 0%;
+		top: 5px;
 		width: 15.789%;
 		height: 100%;
 		left: 0%;
 		position: absolute;
 	}
 	.small .row1 {
-		top: 0%;
+		top: 5px;
 		width: 23.077%;
 		height: 100%;
 		left: 0%;
 		position: absolute;
 	}
 	.extrasmall .row1 {
-		top: 0%;
+		top: 5px;
 		width: 30%;
 		height: 75%;
 		left: 0%;
@@ -45,7 +47,7 @@
 	}
 	
 	.normal .row2 {
-		top: 0%;
+		top: 5px;
 		width: 5.263%;
 		display: inline-block;
 		height: 100%;
@@ -53,7 +55,7 @@
 		position: absolute;
 	}
 	.small .row2 {
-		top: 0%;
+		top: 5px;
 		width: 7.692%;
 		height: 100%;
 		left: 23.077%;
@@ -68,7 +70,7 @@
 	}
 	
 	.normal .row3 {
-		top: 0%;
+		top: 5px;
 		width: 10.526%;
 		display: inline-block;
 		heigth: 66.667%;
@@ -76,14 +78,14 @@
 		position: absolute;
 	}
 	.small .row3 {
-		top: 0%;
+		top: 5px;
 		width: 15.384%;
 		height: 66.667%;
 		left: 30.769%;
 		position: absolute;
 	}
 	.extrasmall .row3 {
-		top: 0%;
+		top: 5px;
 		width: 10%;
 		left: 30%;
 		height: 100%;
@@ -113,14 +115,14 @@
 	}
 	
 	.normal .row5 {
-		top: 0%;
+		top: 5px;
 		height: 33.333%;
 		left: 31.579%;
 		width: 36.842%;
 		position: absolute;
 	}
 	.small .row5 {	
-		top: 0%;
+		top: 5px;
 		height: 33.333%;
 		left: 46.154%;
 		width: 23.077%;
@@ -128,7 +130,7 @@
 		overflow: hidden;
 	}
 	.extrasmall .row5 {
-		top: 0%;
+		top: 5px;
 		width: 10%;
 		left: 50%;
 		height: 50%;
@@ -153,7 +155,7 @@
 		overflow: hidden;
 	}
 	.extrasmall .row6 {
-		top: 0%;
+		top: 5px;
 		left: 40%;
 		width: 10%;
 		height: 50%;
@@ -205,7 +207,7 @@
 	}
 	
 	.normal .row9 {
-		top: 0%;
+		top: 5px;
 		height: 33.333%;
 		width: 10.526%;
 		left: 68.421%;
@@ -248,21 +250,21 @@
 		position: absolute;
 	}
 	.normal .row11 {
-		top: 0%;
+		top: 5px;
 		height: 33.333%;
 		width: 15.789%;
 		left: 78.947%;
 		position: absolute;
 	}
 	.small .row11 {
-		top: 0%;
+		top: 5px;
 		height: 33.333%;
 		position: absolute;
 		left: 69.231%;
 		width: 23.077%;
 	}
 	.extrasmall .row11 {
-		top: 0%;
+		top: 5px;
 		height: 25%;
 		left: 60%;
 		width: 40%;
@@ -283,21 +285,21 @@
 		position: absolute;
 	}
 	.extrasmall .row12 {
-		top: 0%;
+		top: 5px;
 		height: 100%;
 		width: 10%;
 		left: 80%;
 		position: absolute;
 	}
 	.normal .row13 {
-		top: 0%;
+		top: 5px;
 		height: 100%;
 		width: 5.263%;
 		left: 94.737%;
 		position: absolute;
 	}
 	.small .row13 {
-		top: 0%;
+		top: 5px;
 		height: 100%;
 		width: 7.692%;
 		left: 	92.308%;
@@ -402,7 +404,7 @@
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="{style.row2}" >
 			<my:FKey addStyleNames="{style.dgrsymbol} {style.svgimage}" ui:field="t0">0</my:FKey>	
-			<my:FKey addStyleNames="{style.dgrsymbol} {style.svgimage}" ui:field="t2_2">,</my:FKey>	
+			<my:FKey addStyleNames="{style.dgrsymbol} {style.svgimage}" ui:field="t2_2"><ui:text from='{nc.decimalSeparator}'/></my:FKey>	
 			<my:FKey addStyleNames="{style.dgrsymbol} {style.svgimage}" ui:field="t2_3">=</my:FKey>		
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="{style.row3}">
@@ -412,7 +414,7 @@
 			<my:FKey addStyleNames="{style.grsymbol} {style.svgimage}" ui:field="t3_4">-</my:FKey>		
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="{style.row4}">
-			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="t4_1">of</my:FKey>	
+			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="t4_1"><ui:text from="{rb.ofLabel}" /></my:FKey>	
 			<my:FKey addStyleNames="{style.symbol} {style.svgimage}" ui:field="t4_2">%</my:FKey>		
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames='{style.row5}'>

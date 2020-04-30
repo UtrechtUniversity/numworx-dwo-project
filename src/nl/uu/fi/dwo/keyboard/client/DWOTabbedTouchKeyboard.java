@@ -283,22 +283,8 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 		}
 	}
 	
-	private Object enterImage;
+	private DataResource enterImage;
 	
-	@Override
-	void setEnterImage(ImageResource resource) {
-		if(resource != enterImage) {
-			enterImage = resource;
-			current.setEnterImage(resource);
-			k123.setEnterImage(resource);
-			kabc.setEnterImage(resource);
-			kABC.setEnterImage(resource);
-			pen.setEnterImage(resource);
-			kGrUpper.setEnterImage(resource);
-			kGrLower.setEnterImage(resource);
-			math.setEnterImage(resource);
-		}
-	}
  
 	@Override
     void setEnterImage(DataResource resource) {

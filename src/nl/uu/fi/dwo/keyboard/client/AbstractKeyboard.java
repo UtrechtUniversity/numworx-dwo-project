@@ -26,9 +26,10 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.ResizeComposite;
 
-public abstract class AbstractKeyboard extends Composite implements FormuleKeyboardIF {
+public abstract class AbstractKeyboard extends Composite implements FormuleKeyboardIF, RequiresResize {
 
 	public interface HasHeight {
 		void setHeight(int px);
@@ -191,9 +192,6 @@ public abstract class AbstractKeyboard extends Composite implements FormuleKeybo
 	
 	void close() {}
 	
-	void setEnterImage(ImageResource resource) {
-	}
-
 	public void setEnterType(EnterType type) {
 	}
 
@@ -324,11 +322,20 @@ private MenuBar getDimensionOptions(Consumer<Integer> consume)
     });
     
     return options;
-}
+ }
 
 protected void processMatrixDimension(int aantalRijen, int aantalKolommen) {
 	FocusOnTouch.focus();
 	getEditor().matrix(aantalRijen, aantalKolommen);
 	matrixDimensionDialog.hide();
 }
+
+	public void setSoortKeyboard(int soort) {
+		
+	}
+
+	@Override
+	public void onResize() {
+	}
+	
 }
