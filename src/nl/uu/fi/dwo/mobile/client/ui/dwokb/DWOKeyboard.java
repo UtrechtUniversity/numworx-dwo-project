@@ -10,6 +10,7 @@ import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.googlecode.mgwt.ui.client.MGWT;
@@ -26,7 +27,7 @@ import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 
-public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipboardIF, CombinedState {
+public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipboardIF, CombinedState, RequiresResize {
 	private static final ChangeEvent CHANGE_EVENT = new ChangeEvent() {};
 
 	static final int KEYB_STATIC_HEIGHT = 44;
@@ -146,6 +147,10 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 	public void setKeyboard(int nr) {
 		kb.setKeyboard(nr);
 	}
+	@Override
+	public void setSoortKeyboard(int soort) {
+		kb.setSoortKeyboard(soort);
+	}
 
 	@Override
 	public void setWriteMathSet(int nr) {
@@ -215,6 +220,12 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 	@Override
 	public int getWidth() {
 		return 70;
+	}
+
+	@Override
+	public void onResize() {
+		kb.onResize();
+		
 	}
 
 }

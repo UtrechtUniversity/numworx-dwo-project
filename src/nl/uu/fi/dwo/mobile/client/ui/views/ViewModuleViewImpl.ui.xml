@@ -13,7 +13,7 @@
 			<g:SimplePanel ui:field='headerView'/>
 		</g:layer>
 		<g:layer height="100px" bottom='0' >
-			<g:SimplePanel ui:field='statusView' />
+			<g:SimpleLayoutPanel ui:field='statusView' />
 		</g:layer>
 		<g:layer top='40px' bottom='100px' >
 			<g:SimplePanel stylePrimaryName="contentScrollPanel" ui:field='contentScrollPanel'>		 

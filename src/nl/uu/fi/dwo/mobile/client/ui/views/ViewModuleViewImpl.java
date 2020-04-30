@@ -128,6 +128,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	private static final String RANDOM_VAR_WAARDEN = "RandomVarWaarden";
 	private static final String RANDOM_VAR_NAMEN = "RandomVarNamen";
 	private static final String KEYBOARD = "keyboardNr";
+	private static final String SOORT_KEYBOARD = "soortKeyboard";
 	private static final String WRITE_MATH_SET = "writeMathSetNr";
 	private static final CBookEvent ACTION_READONLY = new CBookEvent("action.setNotEditable");
 	
@@ -303,6 +304,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			}
 			else
 				sb.setKeyboard(-1);
+			if (wrap.containsKey(SOORT_KEYBOARD)) {
+				sb.setSoortKeyboard(wrap.getInt(SOORT_KEYBOARD));
+			} else {
+				sb.setSoortKeyboard(-1);
+			}			
 			if (wrap.containsKey(WRITE_MATH_SET))
 			{
 				sb.setWriteMathSet(wrap.getInt(WRITE_MATH_SET));

@@ -31,5 +31,6 @@ public interface StatusBarIF extends IsWidget {
 	default void hide() {}
 	
 	boolean isDesktopKeyboard();
-	default void setCombinedState(CombinedState state) { };
+	default void setCombinedState(CombinedState state) { }
+	default void setSoortKeyboard(int soort) { } 
 }
