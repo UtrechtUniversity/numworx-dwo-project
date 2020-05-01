@@ -5,6 +5,7 @@ package nl.uu.fi.dwo.keyboard.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.i18n.client.constants.NumberConstants;
 import com.google.gwt.resources.client.DataResource;
@@ -18,6 +19,7 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.mgwt.dom.client.recognizer.longtap.LongTapEvent;
 
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
 
@@ -114,16 +116,20 @@ public class DWOTabletKeyboardOnderbouw extends AbstractKeyboard  implements Req
 	void insert(ClickEvent e) {
 		doInsert(e);
 	}
-	@UiHandler({"tx", "ty", "tp", "tq", "ta", "tb", "tpi"} )
+	@UiHandler({"ty", "tp", "tq", "ta", "tb", "tpi"} )
 	void insertx(ClickEvent e) {
 		doInsert(e);
 	}
+	@UiHandler("tx") void onTX(ClickEvent e) {
+		getEditor().insert('x');
+	}
+	
 	
 	@UiHandler("t7_1") void inserlt(ClickEvent e) { getEditor().insert('<');}
 	@UiHandler("t7_2") void insergt(ClickEvent e) { getEditor().insert('>');}
 	@UiHandler("t2_2") void insertdec(ClickEvent e) { doInsert(e); } // decimal comma/point
 	
-	@UiHandler({"t2_3","t3_1", "t3_2", "t3_3", "t3_4","t4_2"} )
+	@UiHandler({"t2_3","t3_1", "t3_2", "t3_3", "t3_4","t4_2", "t5_8", "t5_9"} )
 	void insert0(ClickEvent e) {
 		doInsert(e);
 	}	
@@ -140,7 +146,7 @@ public class DWOTabletKeyboardOnderbouw extends AbstractKeyboard  implements Req
 	@UiHandler("t11_2") void onT11_2(ClickEvent e) {getEditor().cursorToRight();}
 
 	@UiHandler("t5_1") void onT3_1(ClickEvent e) {getEditor().wortel();}
-	@UiHandler("t5_2") void onT3_2(ClickEvent e) {getEditor().macht();}
+	@UiHandler({"t5_2","t5_2a"}) void onT3_2(ClickEvent e) {getEditor().macht();}
 	@UiHandler("t5_3") void onT3_3(ClickEvent e) {getEditor().kwadraat();}
 	@UiHandler("t5_4") void onT3_4(ClickEvent e) {getEditor().breuk();}
 	@UiHandler("t5_5") void onT3_5(ClickEvent e) {getEditor().haakjes();}
@@ -184,4 +190,22 @@ public class DWOTabletKeyboardOnderbouw extends AbstractKeyboard  implements Req
 	void setEnterImage(DataResource resource) {
 	    t13_1.image.setUrl(resource.getSafeUri());
 	}
+	
+// of oncontext?
+	@UiHandler("tx") void longOnTX(LongTapEvent ev) {
+		GWT.log("LONG TAP on 'x'");
+	}
+	@UiHandler("t7_1") void longOnLT(LongTapEvent ev) {
+		GWT.log("long tap on '<'");
+	}
+	@UiHandler("t10_4") void longOnT10_4(LongTapEvent ev) {
+		GWT.log("long tap on '〈'");
+	}
+	@UiHandler("t10_6") void longOnT10_6(LongTapEvent ev) {
+		GWT.log("long tap on '→'");
+	}
+
+//	@UiHandler("t5_4") void longOnT5_4(LongTapEvent ev) {
+//		GWT.log("context ev on breuk");
+//	}
 }
