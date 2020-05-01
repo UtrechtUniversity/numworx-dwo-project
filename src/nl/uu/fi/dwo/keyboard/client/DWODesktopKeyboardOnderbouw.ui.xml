@@ -5,7 +5,7 @@
 	<ui:with type="nl.uu.fi.dwo.keyboard.client.DWOkeyboardBundle" field="resources" />
 	<ui:style field='style' type='nl.uu.fi.dwo.keyboard.client.ResponsiveCSS'>
 	@def grijs rgb(180,180,180);
-	@def blauw #7896CA);
+	@def blauw #7896CA;
 	@def donkerblauw #2673B6;
 	@def achtergrond rgb(229,231,233);
 
