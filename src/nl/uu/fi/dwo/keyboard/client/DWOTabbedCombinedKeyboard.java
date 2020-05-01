@@ -332,7 +332,7 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 		switchTo(kGrLower);
 	}
 
-	private DataResource enterImage;
+	private DataResource enterImage = DWOTabletKeyboardFactory.resources.apply_svg();
 	 
 	@Override
     void setEnterImage(DataResource resource) {
