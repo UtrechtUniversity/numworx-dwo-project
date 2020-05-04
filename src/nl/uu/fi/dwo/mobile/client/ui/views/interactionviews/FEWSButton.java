@@ -7,6 +7,7 @@ import org.vectomatic.dom.svg.OMSVGPathElement;
 import org.vectomatic.dom.svg.OMSVGPathSegList;
 import org.vectomatic.dom.svg.OMSVGRectElement;
 import org.vectomatic.dom.svg.OMSVGTextElement;
+import org.vectomatic.dom.svg.ui.SVGResource;
 import org.vectomatic.dom.svg.utils.SVGConstants;
 
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -24,6 +25,10 @@ public class FEWSButton extends SVGButton{
 		
 		if(isNoordhoff())
 			defaultForegroundColor = CssColor.make("GRAY");
+	}
+	
+	public FEWSButton(SVGResource resource) {
+		super(resource);
 	}
 	
 	protected void setBorderActive(boolean b) {
