@@ -270,6 +270,7 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 	IsWidget content;
 	DWOPopupPanel box;
 	InteractionView view;
+	String title = "Popup";
 
 	HashMap<String,Object> state;
 	PopupListener listener;
@@ -428,6 +429,10 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 		this.view = view;
 		initWidget(btn);
 	}
+	
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
 	//private int clientX,clientY;
 	private static Logger logger = Logger.getLogger("PopupButton");
@@ -451,7 +456,7 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 			{
 				// other content remains non-resizable
 				//box = new DialogBox(false, false, caption);
-				box = new DWOPopupPanel("Popup", listener);
+				box = new DWOPopupPanel(title, listener);
 			}
 	
 //			DragOnTouch t = new DragOnTouch();
