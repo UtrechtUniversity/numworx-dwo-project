@@ -42,6 +42,7 @@ public class DWOTabletKeyboardOnderbouw extends AbstractKeyboard  implements Req
 	NumberConstants nc;
 	private HasHeight scroll;
 	private int extra;
+	private boolean hasLongTap;
 	
 	public DWOTabletKeyboardOnderbouw(CombinedState s) {
 		this();
@@ -84,6 +85,7 @@ public class DWOTabletKeyboardOnderbouw extends AbstractKeyboard  implements Req
 		root.setStyleName(style.small(), width<ResponsiveCSS.SMALL && width >= ResponsiveCSS.EXTRASMALL);
 		root.setStyleName(style.normal(), width>=ResponsiveCSS.SMALL);
 		boolean extra = width < ResponsiveCSS.EXTRASMALL;
+		hasLongTap = width < ResponsiveCSS.SMALL;
 		root.setStyleName(style.extrasmall(), extra);
 		int old = HEIGHT;
 		if (extra) {
@@ -137,10 +139,12 @@ public class DWOTabletKeyboardOnderbouw extends AbstractKeyboard  implements Req
 	void inserty(ClickEvent e) {
 		doInsert(e);
 	}
-	@UiHandler({"t10_1", "t10_2", "t10_3", "t10_4", "t10_5", "t10_6"} )
+	@UiHandler( "t10_4") void insertopen(ClickEvent e) { getEditor().insert('〈');}
+	@UiHandler( {"t10_2", "t10_3", "t10_1", "t10_5"} )
 	void insertz(ClickEvent e) {
 		doInsert(e);
 	}
+	@UiHandler("t10_6") void insertarrow(ClickEvent e) { getEditor().insert('→'); }
 	
 	@UiHandler("t11_1") void onT11_1(ClickEvent e) {getEditor().cursorToLeft(); }
 	@UiHandler("t11_2") void onT11_2(ClickEvent e) {getEditor().cursorToRight();}
@@ -190,19 +194,63 @@ public class DWOTabletKeyboardOnderbouw extends AbstractKeyboard  implements Req
 	void setEnterImage(DataResource resource) {
 	    t13_1.image.setUrl(resource.getSafeUri());
 	}
-	
+	@UiField TKey tx;
+	private Multikey mx;
 // of oncontext?
 	@UiHandler("tx") void longOnTX(LongTapEvent ev) {
-		GWT.log("LONG TAP on 'x'");
+		if (mx == null) {
+			mx = new Multikey();
+			mx.setKeys('x','y','p','q','a','b');
+			mx.setVarStyle();
+		}
+		int px = tx.getAbsoluteLeft();
+		int py = tx.getAbsoluteTop();
+		mx.setEditor(getEditor());
+		if (hasLongTap) mx.show(px, py); else onTX(null);
 	}
+
+	@UiField TKey t7_1;
+	private Multikey m7_1;
 	@UiHandler("t7_1") void longOnLT(LongTapEvent ev) {
 		GWT.log("long tap on '<'");
+		if (m7_1 == null) {
+			m7_1 = new Multikey();
+			m7_1.setKeys('<', '>', '≤', '≥');
+		}
+		int px = t7_1.getAbsoluteLeft();
+		int py = t7_1.getAbsoluteTop();
+		m7_1.setEditor(getEditor());
+		if (hasLongTap) m7_1.show(px, py); else inserlt(null);
 	}
+	
+	@UiField TKey t10_4;
+	private Multikey m10_4;
 	@UiHandler("t10_4") void longOnT10_4(LongTapEvent ev) {
 		GWT.log("long tap on '〈'");
+		if (m10_4 == null) {
+			m10_4 = new Multikey();
+			m10_4.setAltStyle();
+			m10_4.setKeys('〈', '〉', '[', ']');
+		}
+		int px = t10_4.getAbsoluteLeft();
+		int py = t10_4.getAbsoluteTop();
+		m10_4.setEditor(getEditor());
+		if (hasLongTap) m10_4.show(px, py); else insertopen(null);
 	}
+	
+	@UiField TKey t10_6;
+	private Multikey m10_6;
 	@UiHandler("t10_6") void longOnT10_6(LongTapEvent ev) {
 		GWT.log("long tap on '→'");
+		if (m10_6 == null) {
+			m10_6 = new Multikey();
+			m10_6.setAltStyle();
+			m10_6.setKeys('→', '←');
+		}
+		int px = t10_6.getAbsoluteLeft();
+		int py = t10_6.getAbsoluteTop();
+		m10_6.setEditor(getEditor());
+		if (hasLongTap) m10_6.show(px, py); else insertarrow(null);
 	}
 
 //	@UiHandler("t5_4") void longOnT5_4(LongTapEvent ev) {

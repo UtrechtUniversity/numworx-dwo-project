@@ -187,4 +187,7 @@ public interface DWOkeyboardBundle extends ClientBundle, Localizable {
 	@Source("nl/uu/fi/dwo/keyboard/client/resources/stelsel.png")
 	ImageResource stelsel();
 	
+	@Source("nl/uu/fi/dwo/keyboard/client/resources/Multikey.css")
+	MultikeyCss multikeycss();
+	
 }
