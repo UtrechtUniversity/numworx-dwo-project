@@ -12,6 +12,7 @@ import org.vectomatic.dom.svg.OMSVGRectElement;
 import org.vectomatic.dom.svg.OMSVGSVGElement;
 import org.vectomatic.dom.svg.OMSVGTextElement;
 import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.ui.SVGResource;
 import org.vectomatic.dom.svg.utils.OMSVGParser;
 import org.vectomatic.dom.svg.utils.SVGConstants;
 
@@ -75,6 +76,21 @@ public class SVGButton extends SimplePanel {
 	
 
 	protected Tooltip tooltip;
+	
+	public SVGButton(SVGResource resource) {
+		this.setWidth(width + "px");
+		this.setHeight(height + "px");
+		
+		doc = OMSVGParser.currentDocument();
+		
+		svg = resource.getSvg();
+		svgImage = new SVGImage(svg);
+ 		svgImage.setPixelSize(width, height);
+ 		this.add(svgImage);
+ 		
+ 		addHandlers();
+		tooltip = new Tooltip(this, 10, 35, "tooltp text", 5000, "");
+	}
 
 	public SVGButton(String text) {
 		this.text = text;
@@ -87,7 +103,12 @@ public class SVGButton extends SimplePanel {
 		this.add(svgImage);
 		draw();
 		
+		addHandlers();
+		tooltip = new Tooltip(this, 10, 35, "tooltp text", 5000, "");
 
+	}
+	
+	public void addHandlers() {
 		MouseButtonHandler mouseButtonHandler = new MouseButtonHandler();
 		mouseMoveHandler = addDomHandler((MouseMoveHandler) mouseButtonHandler, MouseMoveEvent.getType());
 		mouseDownHandler = addDomHandler((MouseDownHandler) mouseButtonHandler, MouseDownEvent.getType());
@@ -104,9 +125,6 @@ public class SVGButton extends SimplePanel {
 		pointerMoveHandler = addDomHandler((PointerMoveHandler) pointerButtonHandler, PointerMoveEvent.getType());
 		pointerUpHandler = addDomHandler((PointerUpHandler) pointerButtonHandler, PointerUpEvent.getType());
 		pointerDownHandler = addDomHandler((PointerDownHandler) pointerButtonHandler, PointerDownEvent.getType());
-
-		tooltip = new Tooltip(this, 10, 35, "tooltp text", 5000, "");
-
 	}
 	
 	public void setTooltip(String tooltipText) {
@@ -135,16 +153,22 @@ public class SVGButton extends SimplePanel {
 		}
 		else {
 			svg.removeChild(borderActive);
+			
 		}
 	}
 	
 
 	public void setSize(int width, int height) {
+		
 		this.setWidth(width + "px");
 		this.setHeight(height + "px");
 		// svgImage.setPixelSize(width, height);
 		this.width = width;
 		this.height = height;
+		if(text.equals("")) {
+			svgImage.setPixelSize(width, height);
+			return;
+		}
 		this.remove(svgImage);
 		svg = doc.createSVGSVGElement();
 		svgImage = new SVGImage(svg);
