@@ -3,6 +3,8 @@
  */
 package nl.uu.fi.dwo.keyboard.client;
 
+import java.util.function.Consumer;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
@@ -21,6 +23,7 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.recognizer.longtap.LongTapEvent;
 
+import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
 
 /**
@@ -36,6 +39,7 @@ public class DWOTabletKeyboardOnderbouw extends AbstractKeyboard  implements Req
 
 	private CombinedState state;
 	@UiField ResponsiveCSS style;
+	@UiField DWOkeyboardBundle resources;
 	@UiField(provided=true)
 	fi.wiskopdr.text.TextConstants rb = fi.wiskopdr.text.Text.constants;
 	@UiField(provided=true)
@@ -253,7 +257,28 @@ public class DWOTabletKeyboardOnderbouw extends AbstractKeyboard  implements Req
 		if (hasLongTap) m10_6.show(px, py); else insertarrow(null);
 	}
 
-//	@UiHandler("t5_4") void longOnT5_4(LongTapEvent ev) {
-//		GWT.log("context ev on breuk");
-//	}
+	@UiField TKey t5_4;
+	private Multikey m5_4;
+	@SuppressWarnings("unchecked")
+	@UiHandler("t5_4") void longOnT5_4(LongTapEvent ev) {
+		GWT.log("long tap on breuk");
+		if (m5_4 == null) {
+			m5_4 = new Multikey();
+			DataResource[] keys = { resources.breuk_svg(), resources.wortel_svg(), resources.macht_svg(), resources.kwadraat_svg(), resources.haakjes_svg(), resources.ndewortel_svg(), resources.subscript_svg() };
+			Consumer<FormuleEditorIF> actions[] = new Consumer[keys.length];
+			actions[0] = FormuleEditorIF::breuk;
+			actions[1] = FormuleEditorIF::wortel;
+			actions[2] = FormuleEditorIF::macht;
+			actions[3] = FormuleEditorIF::kwadraat;
+			actions[4] = FormuleEditorIF::haakjes;
+			actions[5] = FormuleEditorIF::ndewortel;
+			actions[6] = FormuleEditorIF::subscript;
+			m5_4.setKeys(keys, actions);
+		}
+		int px = t5_4.getAbsoluteLeft();
+		int py = t5_4.getAbsoluteTop();
+		m5_4.setEditor(getEditor());
+		if (hasLongTap) m5_4.show(px, py); else onT3_4(null);
+		
+	}
 }

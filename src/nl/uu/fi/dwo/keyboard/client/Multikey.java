@@ -1,6 +1,9 @@
 package nl.uu.fi.dwo.keyboard.client;
 
+import java.util.function.Consumer;
+
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -73,4 +76,25 @@ public class Multikey extends Composite {
 	public void setEditor(FormuleEditorIF editor) {
 		this.editor = editor;
 	}
+	
+	
+	public void setKeys( DataResource[] keys, Consumer<FormuleEditorIF>[] actions) {
+		root.clear();
+		int len = keys.length;
+		root.setPixelSize(15+37*len, 52);
+		for(int i = 0; i < len; i++ ) {
+			final DataResource ch = keys[i];
+			final Consumer<FormuleEditorIF> action = actions[i];
+			FKey fkey = new FKey(ch);
+			fkey.setStyleName(css.key());
+			fkey.addClickHandler(e -> {
+				action.accept(getEditor());
+				hide();
+			});
+			root.add(fkey);
+			root.setWidgetTopHeight(fkey, 10, Unit.PX, 32, Unit.PX);
+			root.setWidgetLeftWidth(fkey, 10+i*37, Unit.PX, 32, Unit.PX);
+		}
+	}
+	
 }

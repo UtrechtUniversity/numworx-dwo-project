@@ -11,10 +11,12 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
+import com.google.gwt.user.client.ui.Image;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
@@ -133,6 +135,11 @@ public class TKey extends Composite implements HasHTML, HasClickHandlers, HasLon
 		click = new FKey.MyClickEvent(this);
 		setStyleName("kbd-Key");
 		panel.addTouchHandler(nodefault);
+	}
+
+	public TKey(DataResource resource) {
+		this();
+		panel.add(new Image(resource.getSafeUri()));
 	}
 
 	@Override

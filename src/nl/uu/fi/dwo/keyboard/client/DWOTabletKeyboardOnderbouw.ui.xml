@@ -467,7 +467,7 @@
 			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.key}"><my:DKey ui:field="t5_1" resource="{resources.wortel_svg}" /></g:SimplePanel></g:SimplePanel>
 			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.key}"><my:DKey ui:field="t5_2" resource="{resources.macht_svg}" /></g:SimplePanel></g:SimplePanel>
 			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.key}"><my:DKey ui:field="t5_3" resource="{resources.kwadraat_svg}" /></g:SimplePanel></g:SimplePanel>
-			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key} {style.haak}"><my:DKey ui:field="t5_4" resource="{resources.breuk_svg}" /></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key} {style.haak}"><my:TDKey ui:field="t5_4" resource="{resources.breuk_svg}" /></g:SimplePanel></g:SimplePanel>
 			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.key}"><my:DKey ui:field="t5_5" resource="{resources.haakjes_svg}" /></g:SimplePanel></g:SimplePanel>
 			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.key}"><my:DKey ui:field="t5_6" resource="{resources.ndewortel_svg}"/></g:SimplePanel></g:SimplePanel>
 			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.key}"><my:DKey ui:field="t5_7" resource="{resources.subscript_svg}"/></g:SimplePanel></g:SimplePanel>
