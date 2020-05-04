@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.DataResource.MimeType;
@@ -26,6 +28,9 @@ public interface DWOplayerClientBundle extends ClientBundle {
 	
 	@Source("nl/uu/fi/dwo/mobile/client/resources/pijldown.gif")
 	ImageResource pijldown();
+	
+	@Source("nl/uu/fi/dwo/mobile/client/resources/colorpalette-active.svg")
+	SVGResource test();
 	
 	@Source("nl/uu/fi/dwo/mobile/client/resources/abcknop.png")
 	ImageResource abcknop();
