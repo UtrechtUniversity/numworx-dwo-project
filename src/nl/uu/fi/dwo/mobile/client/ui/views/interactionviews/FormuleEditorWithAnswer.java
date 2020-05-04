@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.osgi.util.promise.Promise;
+import org.vectomatic.dom.svg.ui.SVGImage;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
@@ -1982,6 +1983,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if( vakUitwerking )
 		{
 			PopupButton popup = new PopupButton(formuleEditorPopup, ImageUtils.newImage("images/resources/popup_voor_uitw_icoon.png"), this, this);
+			
+//			Image image = new Image(DWOplayer.DWO_BUNDLE.test().getSafeUri());
+//			image.setPixelSize(32, 39);
+//			PopupButton popup = new PopupButton(formuleEditorPopup, image, this, this);
 			PopupFacade.addPopup(popup);
 			popupBtn = popup;
 			Style popupstyle = popup.getElement().getStyle();
