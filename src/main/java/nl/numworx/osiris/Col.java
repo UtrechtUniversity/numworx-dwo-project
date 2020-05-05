@@ -1,6 +1,6 @@
 package nl.numworx.osiris;
 
-enum Col {
+public enum Col {
 	FACULTEIT,
 	COLLEGEJAAR,
 	CURSUS,

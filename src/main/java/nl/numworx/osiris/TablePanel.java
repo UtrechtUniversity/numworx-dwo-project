@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,7 +32,6 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
-import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
@@ -44,7 +44,7 @@ public class TablePanel extends JPanel implements Iterable<CSVRecord> {
   private static final String EMPTY = "<empty>";
   String charset = "UTF-8";
 
-  public class Model extends AbstractTableModel {
+  public static class Model extends AbstractTableModel {
 
 		final CSVParser parser;
 		final List<CSVRecord> records;
@@ -77,10 +77,6 @@ public class TablePanel extends JPanel implements Iterable<CSVRecord> {
 			return headers.get(column);
 		}
 	}
-
-	private static final CSVFormat EXCEL = CSVFormat.EXCEL.withHeader().withDelimiter(';');
-
-	private static final int BOM = '\uFEFF';
 
 	final Main main;
 	
@@ -153,18 +149,9 @@ public class TablePanel extends JPanel implements Iterable<CSVRecord> {
 			try {
 				File file = main.chooser.getSelectedFile();
 				InputStream in = new FileInputStream(file);
-				Reader reader = new InputStreamReader(in, charset = "UTF-8");
-				BufferedReader buffered = new BufferedReader(reader);
-				buffered.mark(1);
-				reader = buffered;
-				if (buffered.read() != BOM) {
-					buffered.reset();
-					buffered.close();
-					in = new FileInputStream(file);
-					reader = new InputStreamReader(in, charset = "Cp1252"); // Windows OS Default
-					reader  = new BufferedReader(reader);
-				}
-				CSVParser parser = CSVParser.parse(reader, EXCEL);
+				Excel excel = new Excel();
+				CSVParser parser = excel.parse(in);
+				charset = excel.charset;
 				Model m = new Model(parser);
                 in.close();
                 if  (verify(m)) {
@@ -180,6 +167,7 @@ public class TablePanel extends JPanel implements Iterable<CSVRecord> {
 		}
 		
 	}
+
 
 
 }
