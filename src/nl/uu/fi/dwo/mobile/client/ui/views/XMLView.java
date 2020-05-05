@@ -346,7 +346,12 @@ public abstract class XMLView {
 			
 		int hoogte = 500;
 		int breedte = 800;
-		
+//		
+//		if(opdracht.containsKey("docWidth"))
+//		{
+//			breedte = ((Number) opdracht.get("docWidth")).intValue();
+//			//breedte = Window.getClientWidth();
+//		}
 		if(opdracht.containsKey("scheidingX"))
 		{
 			breedte = ((Number) opdracht.get("scheidingX")).intValue();
@@ -392,7 +397,7 @@ public abstract class XMLView {
 
 			@Override
 			public void onResize(ResizeEvent event) {
-				final int w  = Window.getClientWidth()-20;
+				final int w  = Window.getClientWidth();//-20;
 				hoofdPanel.zetVolledigeBreedte(w);
 			}
 		};
@@ -414,7 +419,7 @@ public abstract class XMLView {
 		
 		if("true".equals(Window.Location.getParameter("responsive"))) {
 			Window.addResizeHandler(resize);
-			breedte = Window.getClientWidth()-20;
+			breedte = Window.getClientWidth();//-20;
 			hoofdPanel.zetVolledigeBreedte(breedte);
 		}
 	}
