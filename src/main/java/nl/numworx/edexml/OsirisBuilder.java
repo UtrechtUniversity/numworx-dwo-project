@@ -59,13 +59,15 @@ public class OsirisBuilder implements Builder {
 		InputStream in = is.getByteStream();
 		Reader reader = bom(new InputStreamReader(in, is.getEncoding()));
 		CSVParser parser = CSVParser.parse(reader, EXCEL);
+		setLeerlingenSource(parser);
+	}
 
+	public void setLeerlingenSource(Iterable<CSVRecord> parser) {
 		for( CSVRecord record: parser) {
 			String leerlingnummer = record.get(10);
 			String roepnaam = "student";
 			String achternaam = leerlingnummer;
 			String tussenvoegsel = "";
-			
 			
 			String email = leerlingnummer + "@students.uu.nl";
 			
@@ -98,7 +100,10 @@ public class OsirisBuilder implements Builder {
 		Reader reader = new InputStreamReader(in, is.getEncoding());
 		reader = bom(reader);
 		CSVParser parser = CSVParser.parse(reader, EXCEL);
+		setGroepenSource(parser);		
+	}
 
+	public void setGroepenSource(Iterable<CSVRecord> parser) {
 		for( CSVRecord record: parser) {
 			String collegejaar = record.get(COLLEGEJAAR);
 			String cursus = record.get(CURSUS);
@@ -111,7 +116,6 @@ public class OsirisBuilder implements Builder {
 			DomSchoolClassFull schoolklas = createSchoolClass(groepNaam, cursus);			
 			groepen.putIfAbsent(groepNaam, schoolklas);
 		}
-		
 	}
 
 	private DomSchoolClassFull createSchoolClass(String groepNaam, String password) {
@@ -172,7 +176,10 @@ public class OsirisBuilder implements Builder {
 		InputStream in = is.getByteStream();
 		Reader reader = bom(new InputStreamReader(in, is.getEncoding()));
 		CSVParser parser = CSVParser.parse(reader, EXCEL);
+		setLeerkrachtenSource(parser);
+	}
 
+	public void setLeerkrachtenSource(Iterable<CSVRecord> parser) {
 		for( CSVRecord record: parser) {
 			String solisid = record.get(SOLIS_ID);
 			String roepnaam = "docent";
