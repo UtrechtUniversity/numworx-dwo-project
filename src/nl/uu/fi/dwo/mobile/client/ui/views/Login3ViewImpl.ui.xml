@@ -10,7 +10,7 @@
 	@def regular 400;
 	@def medium 500;
 	.screen {
-		width: 1024px;
+		width: 100%;
 		margin: 0 auto;
 		position: relative;
 		background-color: #8ebee6;
@@ -19,7 +19,7 @@
 		position: absolute;
 		width: 272px;
 		height: 500px;
-		left: 192px;
+		left: 18.75%;
 		top: 60px;
 	}
 	.logotekst {
@@ -27,7 +27,7 @@
 		width: 500px;
 		height: 284px;
 		position: absolute;
-		left: 272px;
+		left: 26.5625%;
 		color: white;
 	}
 	.logotext h1 i {
@@ -71,14 +71,14 @@
 		top: 306px;
 		width: 252px;
 		padding: 0px;
-		left: 192px;
+		left: 18.75%;
 		position: absolute;
 	}
 	.login {
 		top: 306px;
 		width: 306px;
 		height: 260px;
-		left: 462px;
+		left: 45.1171875%;
 		background-color: #314770;
 		position: absolute;
 		font-family: Ubuntu, sans-serif;
@@ -167,7 +167,7 @@
 	.links {
 		top: 576px;
 		width: 306px;
-		left: 462px;
+		left: 45.1171875%;
 		position: absolute;
 		font-size: 14px;
 		line-height: 27px;
