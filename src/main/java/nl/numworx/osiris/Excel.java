@@ -16,7 +16,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-public class Excel implements Iterable<CSVRecord>{
+public class Excel implements Iterable<CSVRecord> {
 
 	public static final CSVFormat EXCEL = CSVFormat.EXCEL.withHeader().withDelimiter(';');
 	public static final int BOM = '\uFEFF';

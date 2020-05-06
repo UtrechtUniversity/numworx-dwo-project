@@ -1,6 +1,5 @@
 package nl.numworx.osiris.servlet;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
-import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.xml.sax.InputSource;
 
@@ -29,11 +27,20 @@ public class InstallServlet extends HttpServlet {
 
 	private static final String UTF_8 = "UTF-8";
 
-	Col TOETSEN[] = {
+	final static Col TOETSEN[] = {
 			Col.FACULTEIT, Col.COLLEGEJAAR, Col.CURSUS, Col.AANVANGSBLOK, Col.KORTE_NAAM_NL, Col.TOETS, Col.VOLTIJD_DEELTIJD, Col.BLOK,Col.GELEGENHEID, Col.OMSCHRIJVING
 	};
-	
-	
+
+	final static Col STUDENTEN[] = {
+			Col.STUDENTNUMMER, Col.FACULTEIT, Col.COLLEGEJAAR, Col.CURSUS, Col.AANVANGSBLOK, Col.KORTE_NAAM_NL, Col.TOETS, Col.VOLTIJD_DEELTIJD, Col.BLOK,Col.GELEGENHEID, Col.OMSCHRIJVING
+	};
+
+	final static Col DOCENTEN[] = {
+			Col.COLLEGEJAAR, Col.CURSUS, Col.LDAP_LOGIN
+	};
+	final static Col COURSES[] = {
+			Col.COLLEGEJAAR, Col.CURSUS, Col.AANVANGSBLOK, Col.KORTE_NAAM_NL
+	};
 	
 	public InstallServlet() {
 	}
@@ -60,55 +67,63 @@ public class InstallServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		PrintWriter out = resp.getWriter();
 		out.print("<h1>Import data</h1>");
+		out.println("User: " + req.getRemoteUser() + ", " + req.getAuthType());
 		try {
 			OsirisBuilder osiris = new OsirisBuilder();
 			InputSource is;
 			Iterable<CSVRecord> toetsen = null;
 			Part cursus = req.getPart("cursus");
 			if (cursus != null) {
-				is = new InputSource(cursus.getInputStream());
-				is.setEncoding(UTF_8);
-				osiris.setGroepenSource(is);
-				close(is);
+				Excel excel = new Excel();
+				InputStream in = cursus.getInputStream();
+				excel.parse(in);
+				in.close();
+				excel.verify(COURSES);
+				osiris.setGroepenSource(excel);
 			}
 			Part toets = req.getPart("toets");
-			if (toets != null) {
-				is = new InputSource(toets.getInputStream());
-				is.setEncoding(UTF_8);
-				osiris.setGroepenSource(is);
-				close(is);
-				
+			if (toets != null) {				
 				Excel excel = new Excel();
-				excel.parse(toets.getInputStream());
+				InputStream in = toets.getInputStream();
+				excel.parse(in);
+				in.close();
 				excel.verify(TOETSEN);
 				toetsen = excel;
+				osiris.setGroepenSource(toetsen);
 				
 			}
 			Part student = req.getPart("student");
 			if (student != null) {
-				is = new InputSource(student.getInputStream());
-				is.setEncoding(UTF_8);
-				osiris.setGroepenSource(is);
-				close(is);
-				is = new InputSource(student.getInputStream());
-				is.setEncoding(UTF_8);
-				osiris.setLeerlingenSource(is);				
-				close(is);
+				Excel excel = new Excel();
+				InputStream in = student.getInputStream();
+				excel.parse(in);
+				in.close();
+				excel.verify(STUDENTEN);
+								
+				Iterable<CSVRecord> studenten = excel;
+				osiris.setGroepenSource(studenten);				
+				osiris.setLeerlingenSource(studenten);				
 			}
 
 			Part docent = req.getPart("docent");
 			if (docent != null) {
-				is = new InputSource(docent.getInputStream());
-				is.setEncoding(UTF_8);
-				osiris.setLeerkrachtenSource(is);
-				close(is);
+				Excel excel = new Excel();
+				InputStream in = docent.getInputStream();
+				excel.parse(in);
+				in.close();
+				excel.verify(DOCENTEN);
+				osiris.setLeerkrachtenSource(excel);
 			}
 			
 			out.print("<p>Courses<p>"); 
-			out.print(osiris.parseGroepen().keySet());
-			
+			out.println(osiris.parseGroepen().keySet());
+			out.print("<p>Exams<p>");
+			for(CSVRecord r: toetsen) { out.print(r.get(Col.TOETS));out.print(' '); } 
 			out.print("<p>Students<p>");
 			out.print(osiris.parseLeerlingen().keySet());
+			out.print("<p>Teachers<p>");
+			out.println(osiris.parseLeerkrachten().keySet());
+			
 		} catch (Exception e) {
 			out.print("<pre>");
 			e.printStackTrace(out);
