@@ -14,6 +14,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
@@ -744,6 +745,21 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
     		}
     	}
     }
+
+	@Override
+	public void setPixelSize(int width, int height) {
+		super.setPixelSize(width, height);
+		if (width != -1) {
+			this.width = width;
+			writePanelCanvas.setPixelSize(width, -1);
+			writePanelCanvas.setCoordinateSpaceWidth(width);
+			setWidgetLeftWidth(writePanelCanvas, 0, Unit.PX, width, Unit.PX);
+			initContext2d();
+			paint(); // In animatie frame....
+		}
+	}
+    
+    
 }
 
 
