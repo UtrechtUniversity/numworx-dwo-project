@@ -371,6 +371,10 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	int feedbackPanelHeight = 0;
 	private boolean responsive;
 	private int responsiveToggleWidth = 800;
+	private int responsiveMinWidth = 400;
+	private int responsiveMaxWidth = 980;
+	private int responsiveConstant = 0;
+	private double responsiveFactor = 0;
 	
 	
 	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
@@ -694,8 +698,16 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		
 		if (launchState.containsKey("responsive"))
 			responsive = launchState.getBoolean("responsive");
-		if (launchState.containsKey("responsiveToggleWidth"))
+		if (responsive && launchState.containsKey("responsiveToggleWidth"))
 			responsiveToggleWidth = launchState.getInt("responsiveToggleWidth");
+		if (responsive && launchState.containsKey("responsiveMaxWidth"))
+			responsiveMaxWidth = launchState.getInt("responsiveMaxWidth");
+		if (responsive && launchState.containsKey("responsiveMinWidth"))
+			responsiveMinWidth = launchState.getInt("responsiveMinWidth");
+		if (responsive && launchState.containsKey("responsiveFactor"))
+			responsiveFactor = launchState.getDouble("responsiveFactor");
+		if (responsive && launchState.containsKey("responsiveConstant"))
+			responsiveConstant = launchState.getInt("responsiveConstant");
 		
 		visible = launchState.getBoolean("visible", true);
 		if(!visible)
@@ -5446,8 +5458,17 @@ private Object CamelCase(String name) {
 		}
 		if(responsive) {
 			int w = breedte;
-			if(breedte>responsiveToggleWidth) 
-				w = breedte/2;
+ 			
+			    w = (int)Math.round(responsiveFactor*breedte + responsiveConstant);
+			    if(responsiveFactor*breedte + responsiveConstant< responsiveMinWidth)
+			    		w = breedte;
+			    if(w > responsiveMaxWidth)
+			    		w = responsiveMaxWidth;
+			    w = w-2;
+			
+//			int w = breedte;
+//			if(breedte>responsiveToggleWidth) 
+//				w = breedte/2;
 			tekstVakken[0][0].setSize(w, tekstVakken[0][0].getHeight());
 			
 			this.breedte = w;
