@@ -10,6 +10,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -120,6 +121,12 @@ public class DWOTabletKeyboardPen extends AbstractKeyboard implements WritePanel
 	}
 	void setEnterImage(DataResource resource) {
 		pad.setEnterImage(resource);
+	}
+	@Override
+	public void onResize() {
+		int w = getWidget().getOffsetWidth();
+		int width = w - 27 - pad.getOffsetWidth();
+		panel.setPixelSize(width, -1);
 	}
 
 }

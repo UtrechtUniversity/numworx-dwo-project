@@ -8,18 +8,24 @@
 		float: right;
 		margin-left: 7px;
 		margin-top: 60px;
+		margin-right: 10px;
 	}
 	
 	.pen {
 		height: 210px;
+		margin-left: 10px;
 	}
 	.dkeys {
-		width: auto !important;
+		width: 100%;
 	}
 	
 	</ui:style>
-		<g:HorizontalPanel addStyleNames="keyboard keyboard-hand is-active {style.dkeys}" >
-			<g:SimplePanel ui:field="writePanel" styleName="{style.pen}" />
-			<my:DWOTabletKeyboardPad ui:field="pad" styleName="{style.pad}" />	
-		</g:HorizontalPanel>
+	<g:DockLayoutPanel unit="PX" addStyleNames="keyboard keyboard-hand is-active {style.dkeys}" >
+	  <g:center>
+		<g:SimplePanel ui:field="writePanel" styleName="{style.pen}" />
+	  </g:center>
+	  <g:east size="90">
+		<my:DWOTabletKeyboardPad ui:field="pad" styleName="{style.pad}" />
+	  </g:east>
+	</g:DockLayoutPanel>
 </ui:UiBinder> 
