@@ -32,8 +32,8 @@
 	
 		font-family: sans-serif;
 		font-style: initial;
-		font-weight: bold !important;
 		font-size: 16px;
+		font-weight: normal;
 	}
 
 	.key {
