@@ -45,7 +45,7 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 		tablet.setDelegate(this);
 		tablet.setVisible(false);
 		
-		math = new DWOMathKeyboard().init();
+		math = new DWOMathKeyboardResponsive();
 		math.setVisible(false);
 		math.setKeyboard(1);
 		math.setDelegate(this);
