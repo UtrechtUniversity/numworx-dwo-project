@@ -5,6 +5,7 @@
 	<ui:with type="nl.uu.fi.dwo.keyboard.client.DWOkeyboardBundle" field="resources" />
 	<ui:with type="fi.wiskopdr.text.TextConstants" field="rb"/>
 	<ui:style field='style' type='nl.uu.fi.dwo.keyboard.client.MathResponsiveCSS'>
+	@external .kbd-Key;
 	@def dgrijs rgb(131,131,131);
 	@def grijs rgb(180,180,180);
 	@def lgrijs rgb(240,240,240);
@@ -39,6 +40,10 @@
 		font-family: serif !important;
 		font-style: initial;
 	}
+
+	.root .kbd-Key {
+		font-family: serif;
+	}
 	
 	.row1, .row2, .row3 {
 		display: inline-block;
@@ -46,12 +51,33 @@
 	}
 	
 	.row4 {
-		margin-top: 0px;
+		margin-top: 5px;
 		display: inline-block;
 		position: absolute;
 		bottom: 0px;
 		top: 0px;
 		right: 0px;
+	}
+	.root .row4 .kbd-Key {
+		font-family: sans-serif;
+		margin-top: 5px;
+		margin-left: 5px;
+		background-color: blauw;
+		color: white;
+		border-radius: 5px;		
+	}
+	.root .row4 img {
+		background-color: grijs;
+		border-radius: 5px;
+		margin-top: 5px;
+		margin-left: 5px;
+		vertical-align: top;
+	}
+	.root .row4 > div:first-child img {
+		background-color: blauw;
+	}
+	.root .row4 > div:first-child > .kbd-Key:first-child {
+		background-color: donkerblauw;
 	}
 	
 	.normal .row1a, .normal .row2a, .normal .row3a, 
@@ -171,6 +197,7 @@
 	.row4 > div {
 		display: inline-block;
 		width: 50%;
+		vertical-align: top;
 	}
 	
 	</ui:style>
