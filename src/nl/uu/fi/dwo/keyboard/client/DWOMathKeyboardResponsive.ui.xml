@@ -36,7 +36,7 @@
 		position: relative;
 		font-size: 16px;
 		line-height: 33px;
-		font-family: serif;
+		font-family: serif !important;
 		font-style: initial;
 	}
 	
@@ -264,7 +264,7 @@
 				<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key} {style.gr}"><my:FKey ui:field="t9_1">(</my:FKey></g:SimplePanel></g:SimplePanel>
 				<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key} {style.gr}"><my:FKey ui:field="t9_2">)</my:FKey></g:SimplePanel></g:SimplePanel>
 				<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key}"><my:FKey ui:field="t9_3">∠</my:FKey></g:SimplePanel></g:SimplePanel>
-				<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key}"><my:FKey ui:field="t9_4">‰</my:FKey></g:SimplePanel></g:SimplePanel>
+				<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key}"><my:FKey ui:field="t9_4">%</my:FKey></g:SimplePanel></g:SimplePanel>
 				<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key}"><my:FKey ui:field="t9_5">±</my:FKey></g:SimplePanel></g:SimplePanel>
 				<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key}"><my:FKey ui:field="t9_6">≠</my:FKey></g:SimplePanel></g:SimplePanel>
 				<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key}"><my:FKey ui:field="t9_7">&#x00A0;</my:FKey></g:SimplePanel></g:SimplePanel>
@@ -287,7 +287,7 @@
 
 				<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key} {style.gr}"><my:FKey ui:field="t12_1">←</my:FKey></g:SimplePanel></g:SimplePanel>
 				<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key} {style.gr}"><my:FKey ui:field="t12_2">→</my:FKey></g:SimplePanel></g:SimplePanel>
-				<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key}"><my:FKey ui:field="t12_3">&#xA0;</my:FKey></g:SimplePanel></g:SimplePanel>
+				<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key}"><my:FKey ui:field="t12_3">‰</my:FKey></g:SimplePanel></g:SimplePanel>
 				<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key}"><my:FKey ui:field="t12_4">x&#x304;</my:FKey></g:SimplePanel></g:SimplePanel>
 				<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key}"><my:FKey ui:field="t12_5">p&#x302;</my:FKey></g:SimplePanel></g:SimplePanel>
 				<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key}"><my:FKey ui:field="t12_6">⇔</my:FKey></g:SimplePanel></g:SimplePanel>

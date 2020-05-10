@@ -70,7 +70,7 @@ public class DWOMathKeyboardResponsive extends AbstractKeyboard {
 	@UiHandler({"t9_1","t9_2","t9_3","t9_4","t9_5","t9_6",}) void onT9(ClickEvent e) { doInsert(e); }
 	@UiHandler({"t10_1","t10_2","t10_3","t10_4","t10_5","t10_6",}) void onT10(ClickEvent e) { doInsert(e); }
 	@UiHandler({"t11_1","t11_2","t11_3","t11_4","t11_5","t11_6",}) void onT11(ClickEvent e) { doInsert(e); }
-	@UiHandler({"t12_1","t12_2","t12_6",}) void onT12(ClickEvent e) { doInsert(e); }
+	@UiHandler({"t12_1","t12_2","t12_3", "t12_6",}) void onT12(ClickEvent e) { doInsert(e); }
 	@UiHandler("t12_4") void onT12_4(ClickEvent e) { getEditor().insert("x\u0304"); }
 	@UiHandler("t12_5") void onT12_5(ClickEvent e) { getEditor().insert("p\u0302"); }
 
