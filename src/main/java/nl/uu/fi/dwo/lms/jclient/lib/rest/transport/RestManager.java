@@ -101,6 +101,8 @@ class RestManager extends RestyDateTimeFormat {
   }
  
   public void setBearerAuthString(String bearer) {
+    getAuthenticator().setUsername("");
+    getAuthenticator().setPassword("");
     setBasicAuthString("Bearer " + bearer);    
   }
 
