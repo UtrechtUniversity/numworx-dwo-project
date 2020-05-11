@@ -14,9 +14,9 @@
 	@def donkerblauw #2673B6;
 	@def achtergrond rgb(229,231,233);
 
-/* HACK voor nth-child(2) */
+/* HACK voor nth-child(2), need \\ */
 
-	.root > .rowpad > div:first-child > div.kbd-Key:nth-child(2) {
+	.root > .rowpad > div:first-child > div.kbd-Key:nth-child\(2\) {
 		background-color: donkerblauw !important;
 	}
 
