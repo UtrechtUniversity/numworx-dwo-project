@@ -21,6 +21,8 @@ public class DWOTabletKeyboardResponsive extends AbstractKeyboard {
 	interface DWOTabletKeyboardResponsiveUiBinder extends UiBinder<Widget, DWOTabletKeyboardResponsive> {
 	}
 
+	private CombinedState state;
+	
 	@UiField(provided=true) NumberConstants nc;
 	@UiField ResponsiveCSS style;
 	@UiField DWOTabletKeyboardPad pad;
@@ -36,7 +38,8 @@ public class DWOTabletKeyboardResponsive extends AbstractKeyboard {
 	 * Note that depending on the widget that is used, it may be necessary to
 	 * implement HasHTML instead of HasText.
 	 */
-	public DWOTabletKeyboardResponsive() {
+	public DWOTabletKeyboardResponsive(CombinedState s) {
+		state = s;
 		LocaleInfo currentLocale = LocaleInfo.getCurrentLocale();
 		nc = currentLocale.getNumberConstants();
 		initWidget(uiBinder.createAndBindUi(this));
@@ -48,6 +51,27 @@ public class DWOTabletKeyboardResponsive extends AbstractKeyboard {
 	@Override
 	public int getKeyboardHeight() {
 		return HEIGHT;
+	}
+
+	@Override
+	public void onResize() {
+		int w = getOffsetWidth() + combinedWidth();
+		setStyleName(style.normal(), w >= ResponsiveCSS.SMALL);
+		setStyleName(style.small(), w < ResponsiveCSS.SMALL && w >= ResponsiveCSS.EXTRASMALL);
+		setStyleName(style.extrasmall(), w < ResponsiveCSS.EXTRASMALL);
+		Combined combined = state.getCombined();
+		
+		if (w < ResponsiveCSS.EXTRASMALL && combined != Combined.NONE) {
+			state.setCombined(Combined.NONE);
+		} else if (combined == Combined.NONE && w >= ResponsiveCSS.EXTRASMALL) {
+			state.setCombined(Combined.TABLET_ACTIVE); // of soft
+		}
+
+	}
+
+	private int combinedWidth() {
+		if (state.getCombined() != Combined.NONE) return state.getWidth();
+		return 0;
 	}
 
 }
