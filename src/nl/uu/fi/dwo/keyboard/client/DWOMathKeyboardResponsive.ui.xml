@@ -204,7 +204,7 @@
 	<g:SimplePanel addStyleNames="{style.normal} {style.s0} {style.pad}">
 		<g:FlowPanel addStyleNames="{style.root}">
 			<g:FlowPanel addStyleNames='{style.row1a}'>
-				<g:Label ui:field='a1_1'>&#x25b6;</g:Label>
+				<g:Label ui:field='a1_1'>&#x25b6;&#xFE0E;</g:Label>
 				<g:Label ui:field='a1_2'>α</g:Label>
 			</g:FlowPanel>		
 			<g:FlowPanel addStyleNames="{style.row1}">
@@ -245,7 +245,7 @@
 				<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key} {style.lt} {style.lgr}"><my:FKey ui:field="t4_8">Ω</my:FKey></g:SimplePanel></g:SimplePanel>
 			</g:FlowPanel>
 			<g:FlowPanel addStyleNames='{style.row2a}'>
-				<g:Label ui:field='a5_1'>&#x25b6;</g:Label>
+				<g:Label ui:field='a5_1'>&#x25b6;&#xFE0E;</g:Label>
 				<g:Label ui:field='a5_2'>∀</g:Label>
 			</g:FlowPanel>			
 			<g:FlowPanel addStyleNames="{style.row2}" >
@@ -283,7 +283,7 @@
 			</g:FlowPanel>
 
 			<g:FlowPanel addStyleNames='{style.row3a}'>
-				<g:Label ui:field='a9_1'>&#x25b6;</g:Label>
+				<g:Label ui:field='a9_1'>&#x25b6;&#xFE0E;</g:Label>
 				<g:Label ui:field='a9_2'>∠</g:Label>
 			</g:FlowPanel>			
 
