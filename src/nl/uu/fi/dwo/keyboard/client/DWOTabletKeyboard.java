@@ -234,7 +234,7 @@ public class DWOTabletKeyboard extends AbstractKeyboard {
 	}
 
 	@Override
-	void setPremium(boolean premium) {
+	public void setPremium(boolean premium) {
 		this.premium = premium;
 		if (!premium) {
 			disableKey(t1_16);

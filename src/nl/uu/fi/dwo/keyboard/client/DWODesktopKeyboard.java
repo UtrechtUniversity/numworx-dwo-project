@@ -171,7 +171,7 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 	private boolean premium = true;
 	
 	@Override
-	void setPremium(boolean premium) {
+	public void setPremium(boolean premium) {
 	    this.premium = premium;
 		if(!premium) {
 			disableKey(t3_15);

@@ -210,7 +210,7 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 	}
 
 	@Override
-	void setPremium(boolean premium) {
+	public void setPremium(boolean premium) {
 		k123.setPremium(premium);
 	}
 	

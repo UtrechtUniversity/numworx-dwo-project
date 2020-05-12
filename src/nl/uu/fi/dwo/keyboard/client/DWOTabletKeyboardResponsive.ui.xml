@@ -500,7 +500,7 @@
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="{style.row10}">
 			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.symbol} {style.key}"><my:FKey ui:field="t10_1">≠</my:FKey></g:SimplePanel></g:SimplePanel>
-			<g:SimplePanel addStyleNames="{style.svgimage} "><g:SimplePanel addStyleNames="{style.symbol} {style.key} {style.haak}"><my:FKey ui:field="t10_2">≈</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage} {style.t__}"><g:SimplePanel addStyleNames="{style.symbol} {style.key} {style.haak}"><my:TKey ui:field="t10_2">≈</my:TKey></g:SimplePanel></g:SimplePanel>
 			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.symbol} {style.key} {style.haak}"><my:TKey ui:field="t10_3">&lt;</my:TKey></g:SimplePanel></g:SimplePanel>
 			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.symbol} {style.key}"><my:FKey ui:field="t10_4">&gt;</my:FKey></g:SimplePanel></g:SimplePanel>
 			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.symbol} {style.key}"><my:FKey ui:field="t10_5">≤</my:FKey></g:SimplePanel></g:SimplePanel>

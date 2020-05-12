@@ -45,7 +45,7 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 	
 	
 	@Override
-	void setPremium(boolean premium) {
+	public void setPremium(boolean premium) {
 		this.premium = premium;
 		super.setPremium(premium);
 		current.setPremium(premium);

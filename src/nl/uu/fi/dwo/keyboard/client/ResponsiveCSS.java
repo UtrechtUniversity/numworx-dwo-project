@@ -8,4 +8,6 @@ public interface ResponsiveCSS extends CssResource {
 	String small();
 	String normal();
 	String extrasmall();
+	
+	String haak();
 }

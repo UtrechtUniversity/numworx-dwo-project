@@ -212,7 +212,7 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 			kb.setDelegate(this);
 			return kb;
 		default:
-			kb = new DWOTabletKeyboard().init();
+			kb = new DWOTabletKeyboardResponsive(state);
 			kb.setPremium(premium);
 			kb.setKeyboard(nr);
 			kb.setDelegate(this);

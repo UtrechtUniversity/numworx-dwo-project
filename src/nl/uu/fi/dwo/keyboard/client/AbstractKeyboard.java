@@ -142,7 +142,7 @@ public abstract class AbstractKeyboard extends Composite implements FormuleKeybo
 	public void setWriteMathSet(int nr) {
 	}
 
-	void setPremium(boolean premium) {
+	public void setPremium(boolean premium) {
 		
 	}
 	
