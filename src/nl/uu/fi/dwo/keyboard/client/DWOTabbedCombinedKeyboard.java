@@ -36,11 +36,11 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 		main.getElement().getStyle().setPaddingLeft(70, Unit.PX);
 		initWidget(main);
 		
-		current = desktop = new DWODesktopKeyboard().init();
+		current = desktop = createDesktop(DEFAULT);
 		current.setPremium(premium);
 		current.setDelegate(this);
 
-		tablet = new DWOTabletKeyboard().init();
+		tablet = createTablet(DEFAULT);
 		tablet.setPremium(premium);
 		tablet.setDelegate(this);
 		tablet.setVisible(false);

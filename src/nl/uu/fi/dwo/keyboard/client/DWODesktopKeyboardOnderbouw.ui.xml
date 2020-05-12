@@ -27,7 +27,7 @@
 	
 	.extrasmall {
 	}
-	
+	.haak { } 
 	.normal .row1 {
 		width: 30%;
 		top: 5px;
