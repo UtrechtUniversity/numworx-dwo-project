@@ -35,11 +35,28 @@ public class Multikey extends Composite {
 	public void setVarStyle() {
 		root.addStyleName(css.italic());
 	}
-
+	
+	public void setKeys(String...str) {
+		root.clear();
+		int len = str.length;
+		setPanelWidth(len);
+		for(int i = 0; i < len; i++ ) {
+			String stri = str[i];
+			FKey fkey = new FKey();
+			fkey.setText(stri);
+			fkey.setStyleName(css.key());
+			fkey.addClickHandler(e -> {
+				getEditor().insert(stri);
+				hide();
+			});
+			layoutFKey(i, fkey);
+		}
+	}
+	
 	public void setKeys(char... chs) {
 		root.clear();
 		int len = chs.length;
-		root.setPixelSize(15+37*len, 52);
+		setPanelWidth(len);
 		for(int i = 0; i < len; i++ ) {
 			final char ch = chs[i];
 			FKey fkey = new FKey();
@@ -49,10 +66,28 @@ public class Multikey extends Composite {
 				getEditor().insert(ch);
 				hide();
 			});
-			root.add(fkey);
-			root.setWidgetTopHeight(fkey, 10, Unit.PX, 32, Unit.PX);
-			root.setWidgetLeftWidth(fkey, 10+i*37, Unit.PX, 32, Unit.PX);
+			layoutFKey(i, fkey);
 		}
+	}
+
+	private void setPanelWidth(int len) {
+		root.setPixelSize(15+37*len, 52);
+	}
+
+	private void layoutFKey(int i, FKey fkey) {
+		root.add(fkey);
+		root.setWidgetTopHeight(fkey, 10, Unit.PX, 32, Unit.PX);
+		root.setWidgetLeftWidth(fkey, 10+i*37, Unit.PX, 32, Unit.PX);
+	}
+	public FKey addKey(final char ch) {
+		FKey fkey = new FKey();
+		fkey.setText(String.valueOf(ch));
+		fkey.setStyleName(css.key());
+		fkey.addClickHandler(e -> {getEditor().insert(ch); hide(); });
+		int i = root.getWidgetCount();
+		layoutFKey(i, fkey);
+		setPanelWidth(i+1);
+		return fkey;
 	}
 	
 	public void show(int x, int y) {
@@ -81,20 +116,22 @@ public class Multikey extends Composite {
 	public void setKeys( DataResource[] keys, Consumer<FormuleEditorIF>[] actions) {
 		root.clear();
 		int len = keys.length;
-		root.setPixelSize(15+37*len, 52);
+		setPanelWidth(len);
 		for(int i = 0; i < len; i++ ) {
 			final DataResource ch = keys[i];
 			final Consumer<FormuleEditorIF> action = actions[i];
 			FKey fkey = new FKey(ch);
 			fkey.setStyleName(css.key());
 			fkey.addClickHandler(e -> {
-				action.accept(getEditor());
 				hide();
+				action.accept(getEditor());
 			});
-			root.add(fkey);
-			root.setWidgetTopHeight(fkey, 10, Unit.PX, 32, Unit.PX);
-			root.setWidgetLeftWidth(fkey, 10+i*37, Unit.PX, 32, Unit.PX);
+			layoutFKey(i, fkey);
 		}
 	}
-	
+
+	public void setFunStyle() {
+		root.addStyleName(css.fun());
+		
+	}
 }

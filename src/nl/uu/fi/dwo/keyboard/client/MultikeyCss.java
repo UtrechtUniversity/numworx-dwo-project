@@ -9,4 +9,5 @@ public interface MultikeyCss extends CssResource {
 	String key();
 	String italic();
 	String popup();
+	String fun();
 }

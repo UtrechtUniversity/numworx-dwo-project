@@ -33,3 +33,7 @@
 	height: 32px;
 	text-align: center;
 }
+
+.fun.root .key {
+	font-size: 13px;
+}

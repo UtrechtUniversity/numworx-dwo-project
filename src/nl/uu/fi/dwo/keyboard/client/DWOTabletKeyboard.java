@@ -64,9 +64,9 @@ public class DWOTabletKeyboard extends AbstractKeyboard {
 			processVectorDimension(i);
 			t1_16.removeStyleName("hover");	
 		} );
-		initMatrixMenu(event ->
+		initMatrixMenu((r,k) ->
 		  {
-			processMatrixDimension(Integer.parseInt(rijBox.getSelectedItemText()), Integer.parseInt(kolomBox.getSelectedItemText()));
+			processMatrixDimension(r, k);
 			t2_16.removeStyleName("hover");	
 		  });
         initStelselMenu(i ->  {processStelselDimension(i); t4_16.removeStyleName("hover"); } );
@@ -219,7 +219,7 @@ public class DWOTabletKeyboard extends AbstractKeyboard {
 		getDelegate().switchGreek();
 	}
 
-	DWOTabletKeyboard init() {
+	public DWOTabletKeyboard init() {
 		pad.t2_16.addStyleName("is-active");
 		return this;
 	}

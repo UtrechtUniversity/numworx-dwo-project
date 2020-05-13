@@ -6,6 +6,7 @@ import nl.uu.fi.dwo.interaction.client.keyboard.AbstractEditor;
 import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -198,6 +199,15 @@ public abstract class AbstractKeyboard extends Composite implements FormuleKeybo
   void setEnterImage(DataResource resource) { 
   }
 
+  
+protected void initMatrixMenu(BiConsumer<Integer, Integer> consumer) {
+	initMatrixMenu(event -> {
+		Integer rij = Integer.valueOf((rijBox.getSelectedItemText()));
+		Integer kol = Integer.valueOf(kolomBox.getSelectedItemText());
+		consumer.accept(rij, kol);
+	});
+}
+  
 protected void initMatrixMenu(ClickHandler clickHandler) {
 	FlexTable grid = new FlexTable();
 	grid.getFlexCellFormatter().setColSpan(1, 0, 3);
@@ -206,7 +216,8 @@ protected void initMatrixMenu(ClickHandler clickHandler) {
 	rijBox = new ListBox();
 	initListBox(rijBox);
 	rijBox.getElement().getStyle().setWidth(30, Unit.PX);
-	Label keerLabel = new Label("x");
+	Label keerLabel = new Label("×");
+	keerLabel.getElement().getStyle().setFontSize(1.6, Unit.EM);
 	kolomBox = new ListBox();
 	initListBox(kolomBox);
 	kolomBox.getElement().getStyle().setWidth(30, Unit.PX);
