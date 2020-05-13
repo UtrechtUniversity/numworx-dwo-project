@@ -61,6 +61,19 @@ public class ServerBuilder implements Builder {
 			throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthorizationError, "Wrong role");
 	}
 
+	public void setSource(String realm, StoredRestManager instance) throws Dwo2Exception {
+		schoolClassManager = new SecureSchoolAdminSchoolClassManager(instance);
+		logins = SecureUserAccountLoginsManager.getSchoolLogins();
+		DomContext context = new DomContext();
+		context.setRealm(realm);
+		DomRole role = logins.getActiveSchoolRoleAndClass().getRole();
+		if (role.getRoleName().equals(RoleType.SCHOOLADMIN.name())) {
+			context.setDomHasRole(logins.getActiveSchoolRoleAndClass().getHasRole());
+			instance.getAuthenticator().setContext(context);
+		} else 
+			throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthorizationError, "Wrong role");
+	}
+
 	public void setRealm(String realm) {
 		StoredRestManager.getInstance().getAuthenticator().getContext().setRealm(realm);
 	}
@@ -144,7 +157,7 @@ public class ServerBuilder implements Builder {
 	@Override
 	public Map<String, DomUserFull> parseLeerkrachten() {
 		try {
-			List<DomTeacher> list = SecureSchoolAdminSchoolClassManager.getTeachersInSchool();
+			List<DomTeacher> list = schoolClassManager.getTeachersInSchool();
 			putUsers(list, teachers);
 		} catch (Dwo2Exception e) {
 			LOG.log(Level.WARNING, "parseLeerkrachten", e);
@@ -162,7 +175,7 @@ public class ServerBuilder implements Builder {
 	      // existing class
 	    } else {
 	      try {
-          SecureSchoolAdminSchoolClassManager.submitSchoolClass(schoolClass);
+	    	  schoolClassManager.submitSchoolClass(schoolClass);
         } catch (Dwo2Exception e) {
           LOG.log(Level.WARNING, "addschoolclasses", e);
         }
@@ -216,7 +229,7 @@ public class ServerBuilder implements Builder {
     		  context.setRealm(realm);
     	  }
     	  
-    	  SecureSchoolAdminSchoolClassManager.submitSingleSchoolStudent(submit);
+		  schoolClassManager.submitSingleSchoolStudent(submit);
     	  submit.getDomSingleSchoolStudent().setUserName(userName); // restore.
       }
       catch (Dwo2Exception e) {
@@ -226,7 +239,7 @@ public class ServerBuilder implements Builder {
         //code = Dwo2ExceptionCode.Rest_Registration_UserName_exists;
         if (code == Dwo2ExceptionCode.Rest_Registration_UserName_exists) {
           iterator = collection.iterator();
-          List<DomStudent> allStudents = SecureSchoolAdminSchoolClassManager.getStudentsInSchool();
+          List<DomStudent> allStudents = schoolClassManager.getStudentsInSchool();
           allStudents.forEach(i -> { 
             if (i.getUserName().equals(item.getValue().getUserName()))
                 item.getValue().setId(i.getId());
@@ -238,7 +251,7 @@ public class ServerBuilder implements Builder {
       }
       context.setRealm(realm); // realm of login
       // find persistenceid of student by name.
-      List<DomStudent> list = SecureSchoolAdminSchoolClassManager.getStudentsInSchoolClass(domSchoolClass);
+      List<DomStudent> list = schoolClassManager.getStudentsInSchoolClass(domSchoolClass);
       list.forEach(i -> { 
           if (i.getUserName().equals(item.getValue().getUserName()))
               item.getValue().setId(i.getId());
@@ -249,7 +262,7 @@ public class ServerBuilder implements Builder {
         DomSchoolClass schoolClassTo = classes.get(iterator.next());
         s.setSchoolClassTo(schoolClassTo);
         s.setStudent(new DomStudent(item.getValue()));
-        SecureSchoolAdminSchoolClassManager.submitStudentToSchoolClass(s);
+        schoolClassManager.submitStudentToSchoolClass(s);
       }
       } catch (Dwo2Exception e) {
         LOG.log(Level.WARNING, "submit",e);
@@ -266,7 +279,7 @@ public class ServerBuilder implements Builder {
         value.setUserName(key);
       }
       try {
-        SecureSchoolAdminSchoolManager.submitTeacher(value);
+        SecureSchoolAdminSchoolManager.submitTeacher(value); // FIXME duplicate in schoolclassmanager
       } catch (Dwo2Exception e) {
         LOG.log(Level.WARNING, "submit Teacher", e);
       }      
@@ -289,7 +302,7 @@ public class ServerBuilder implements Builder {
       for(String id: collection) {
         submit.setSchoolClass(classes.get(id));
         try {
-          SecureSchoolAdminSchoolClassManager.submitTeacherToSchoolClass(submit);
+        	schoolClassManager.submitTeacherToSchoolClass(submit);
         } catch (Dwo2Exception e) {
           LOG.log(Level.WARNING, "Teacher to class",e);
         }
