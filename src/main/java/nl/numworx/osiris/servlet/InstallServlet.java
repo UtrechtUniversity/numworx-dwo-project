@@ -3,6 +3,12 @@ package nl.numworx.osiris.servlet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -15,9 +21,23 @@ import javax.servlet.http.Part;
 import org.apache.commons.csv.CSVRecord;
 import org.xml.sax.InputSource;
 
+import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import nl.numworx.edexml.OsirisBuilder;
+import nl.numworx.edexml.ServerBuilder;
 import nl.numworx.osiris.Col;
+import nl.numworx.osiris.CourseManager;
 import nl.numworx.osiris.Excel;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.OAuthManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SystemManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 
 @SuppressWarnings("serial")
@@ -41,8 +61,12 @@ public class InstallServlet extends HttpServlet {
 	final static Col COURSES[] = {
 			Col.COLLEGEJAAR, Col.CURSUS, Col.AANVANGSBLOK, Col.KORTE_NAAM_NL
 	};
+
+	private static final String UU = "\"saml:" + System.getProperty("ENV_ORGID", "385")+"\"";
+	private static final String REALM = "@uu.dwo.nl";
 	
 	public InstallServlet() {
+		Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
 	}
 
 	@Override
@@ -64,14 +88,57 @@ public class InstallServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected synchronized void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+		StoredRestManager instance = StoredRestManager.getInstance();
+		ServerBuilder numworx = new ServerBuilder();
+		DomLoginContext loginContext = null;
+		try {
+			SystemManager system;
+			instance.setBasicAuthString(null, null, null);
+			instance.getAuthenticator().setServerUrlPath(new URL("http://localhost/dwo/"));
+			system = new SystemManager(instance);
+			DomSamlUser user = new DomSamlUser();
+			user.setSamlUserId(req.getRemoteUser()); 
+														//user.setSamlUserId("staff1"); // DEBUG
+			user.setSamlOrgId(UU);
+			user = system.requestSamlToken(user);
+			
+			String samlUserID = user.getSamlUserId();	      
+			String samlOrgID = user.getSamlOrgId();
+			String authToken = user.getAuthToken();
+			String token = "3\f" + samlUserID + '\f' + samlOrgID + '\f' + authToken;
+			token = Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
+			OAuthManager m = new OAuthManager(instance);
+			token = m.authorization_token(token);
+			if (token != null) {
+			  instance.getAuthenticator().setUsername(user.getSamlUserId()); // for debugging.
+			  instance.setRecover(null); // FIXME
+			} else {
+				throw new ServletException("Unauthenticated");
+			}
+			loginContext = SecureUserAccountManager.getLoginContext();
+			numworx.setSource(loginContext.getRealm(), instance);
+		} catch (Dwo2Exception e1) {
+			throw new ServletException(e1.getLocalizedMessage(), e1);
+		}
+
+		
+		
 		PrintWriter out = resp.getWriter();
 		out.print("<h1>Import data</h1>");
-		out.println("User: " + req.getRemoteUser() + ", " + req.getAuthType());
+		//out.println("User: " + req.getRemoteUser() + ", " + req.getAuthType());
+		String message  = "";
 		try {
 			OsirisBuilder osiris = new OsirisBuilder();
+// init osiris from numworx
+			Map<String, DomSchoolClassFull> initial = numworx.parseGroepen();
+			osiris.setGroepenSource(initial.values());
+			int initialSize = initial.size();
+						
 			InputSource is;
-			Iterable<CSVRecord> toetsen = null;
+			Iterable<CSVRecord> toetsen = Collections.emptySet();
+			Iterable<CSVRecord> courses = Collections.emptySet();
 			Part cursus = req.getPart("cursus");
 			if (cursus != null) {
 				Excel excel = new Excel();
@@ -79,6 +146,7 @@ public class InstallServlet extends HttpServlet {
 				excel.parse(in);
 				in.close();
 				excel.verify(COURSES);
+				courses = excel;
 				osiris.setGroepenSource(excel);
 			}
 			Part toets = req.getPart("toets");
@@ -93,6 +161,7 @@ public class InstallServlet extends HttpServlet {
 				
 			}
 			Part student = req.getPart("student");
+			Iterable<CSVRecord> studenten = Collections.emptySet();
 			if (student != null) {
 				Excel excel = new Excel();
 				InputStream in = student.getInputStream();
@@ -100,7 +169,7 @@ public class InstallServlet extends HttpServlet {
 				in.close();
 				excel.verify(STUDENTEN);
 								
-				Iterable<CSVRecord> studenten = excel;
+				studenten = excel;
 				osiris.setGroepenSource(studenten);				
 				osiris.setLeerlingenSource(studenten);				
 			}
@@ -116,16 +185,60 @@ public class InstallServlet extends HttpServlet {
 			}
 			
 			out.print("<p>Courses<p>"); 
-			out.println(osiris.parseGroepen().keySet());
+			for(CSVRecord r: courses) { out.print(r.get(Col.CURSUS));out.print(' '); } 
 			out.print("<p>Exams<p>");
 			for(CSVRecord r: toetsen) { out.print(r.get(Col.TOETS));out.print(' '); } 
 			out.print("<p>Students<p>");
 			out.print(osiris.parseLeerlingen().keySet());
 			out.print("<p>Teachers<p>");
 			out.println(osiris.parseLeerkrachten().keySet());
+// From install panel: 
+			int toetsSize = 0;
+			String profile = "100";
+		
+		      Map<String, DomUserFull> leerlingen = osiris.parseLeerlingen();
+		      message += leerlingen.size() + " students\n";
+		      Map<String, DomSchoolClassFull> groepen = osiris.parseGroepen();
+		      message += (groepen.size()-initialSize) + " courses\n";
+		      Map<String, DomUserFull> leerkrachten = osiris.parseLeerkrachten();
+		      message += leerkrachten.size() + " teachers\n";
+		      Map<String, Collection<String>> members = osiris.memberships();
+		      
+		      numworx.addSchoolClasses(groepen);
+		      numworx.addStudents(leerlingen, members, groepen);
+		      numworx.addTeachers(leerkrachten, members, groepen);
+
+		      CourseManager man = new CourseManager(profile, numworx.getSchool(), groepen);
+			  for (CSVRecord record: toetsen) {
+				if (man.createToets(record))
+				  toetsSize ++;
+			  }
+			  for (CSVRecord record: studenten) {
+			    if (man.createToets(record))
+			      toetsSize ++;
+			  }
+			  
+			  int folders = 0; 
+			  for (DomUserFull u: leerkrachten.values()) {
+				  if (man.createTeacher(u))
+					  folders++;
+			  }
+			  if (folders > 0) {
+				  message += folders + " folders\n";
+			  }
+			  
+			  message += toetsSize + " exams\n";
+			
+			message += "Installation done";
+
+			
+			out.println("<h1>Results</h1><pre>");
+			out.println(message);
+			
 			
 		} catch (Exception e) {
 			out.print("<pre>");
+			out.println(message);
 			e.printStackTrace(out);
 		}
 	}

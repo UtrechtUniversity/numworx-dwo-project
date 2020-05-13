@@ -57,7 +57,7 @@ public class CourseManager {
 	
 	static final String HOME = "Personal Folders";
 	
-	boolean createTeacher(DomUser user) throws Dwo2Exception {
+	public boolean createTeacher(DomUser user) throws Dwo2Exception {
 		List<DomCourseStudent> courses;
 		String solis = user.getUserName();
 		courses = children.get(null);
@@ -87,7 +87,7 @@ public class CourseManager {
 		
 	}
 	
-	boolean createToets(CSVRecord record) throws Dwo2Exception {
+	public boolean createToets(CSVRecord record) throws Dwo2Exception {
 		String faculteit =  record.get(Col.FACULTEIT);		
 		List<DomCourseStudent> courses;
 		

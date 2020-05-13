@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO</artifactId>
-		<version>2.4.2</version>
+		<version>2.4.5-SNAPSHOT</version>
 		<relativePath>../DWO</relativePath>
 	</parent>
   <groupId>nl.numworx.osiris</groupId>
@@ -23,7 +23,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
 			<artifactId>edexml</artifactId>
-			<version>2.3.13-SNAPSHOT</version>
+			<version>2.4.5-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<groupId>junit</groupId>
@@ -109,14 +109,12 @@
                 <version>2.2</version>
                     <configuration>
                         <server>TomcatServer</server>
-<!--                        <username>${tomcat.local.deploy.username}</username>
-                        <password>${tomcat.local.deploy.password}</password>
-                        <url>${tomcat.local.deploy.url}</url>-->
                         <path>/</path>
                         <systemProperties>
                             <java.util.secureRandomSeed>true</java.util.secureRandomSeed>
                     		<DWO_ENV>test</DWO_ENV>                   
                         </systemProperties>
+                        <port>8888</port>
                     </configuration>
                     <dependencies>      
   			<dependency>
