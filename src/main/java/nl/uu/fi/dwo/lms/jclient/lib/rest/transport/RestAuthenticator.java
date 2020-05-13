@@ -76,7 +76,7 @@ public class RestAuthenticator extends Authenticator {
   /**
    * @param username the username to set
    */
-  void setUsername(String username) {
+  public void setUsername(String username) {
     this.username = username;
   }
 

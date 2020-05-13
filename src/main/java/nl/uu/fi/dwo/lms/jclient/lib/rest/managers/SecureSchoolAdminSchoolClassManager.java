@@ -37,8 +37,19 @@ public class SecureSchoolAdminSchoolClassManager {
   private static final Logger LOG =
       Logger.getLogger(SecureSchoolAdminSchoolClassManager.class.getName());
 
+  public SecureSchoolAdminSchoolClassManager(StoredRestManager instance) {
+	// TODO create non-static version of this class.
+  }
+  public SecureSchoolAdminSchoolClassManager() {
+	  this(StoredRestManager.getInstance());
+  }
+  
+  public static StoredRestManager getInstance() {
+	  return StoredRestManager.getInstance();
+  }
+
   static DomContext getContext() {
-    return RestAuthenticator.getInstance().getContext();
+    return getInstance().getAuthenticator().getContext();
   }
 
   /**
