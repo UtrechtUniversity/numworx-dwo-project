@@ -68,11 +68,12 @@ public class FormuleTeken extends FormuleElement
 		case '\u2264':
 		case '\u2265':
 		case '\u2248':
+		case '\u00d7':
+		case '·':
 		case ':':
 			teken = "\u00A0" + tk + "\u00A0";
 			break;
 		case '*':
-		case '\u00d7':
 		case '-':
 		case '\u3008':
 		case '\u3009':
