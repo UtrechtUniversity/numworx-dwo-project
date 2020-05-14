@@ -151,7 +151,7 @@ public class FormuleTeken extends FormuleElement
 			fm2.setFontSize(fm.getFontSize() + INFINITY_BONUS); // other font!!!! for infinity
 			return holder.measureWidth(this, fm2, teken);
 		case '*':
-		case '\u00d7':
+		//case '\u00d7':
 			if(maalteken)
 				return fm.getAscent() / 2 + 7;
 			else
@@ -291,7 +291,7 @@ public class FormuleTeken extends FormuleElement
 		ctx.setStrokeStyle(selected?"white":color);
 		switch(character) {
 		case '*':
-		case '\u00d7':
+		//case '\u00d7':
 			drawKeer(ctx); break;
 		case '-':
 			drawMin(ctx); break;
