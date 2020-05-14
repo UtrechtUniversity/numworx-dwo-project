@@ -643,8 +643,9 @@ public class PijlVak extends LayoutPanel
 	
 	public void zetExpressie(String s)
 	{
-		if (editor != null)
+		if (editor != null) {
 			editor.insert(s);
+		}
 		else
 			addNewViewer(s);
 	//vervangEditorDoorViewer();
@@ -807,6 +808,7 @@ public class PijlVak extends LayoutPanel
 				Expressie exp = FormuleParser.parse(editor.toString());
 		 		if (exp!=null && Algebra.geefTermen(exp, new Vector()).size()>1)
 		 		{
+		 			editor.clearAll();
 		 			editor.insert("$h" + exp.toString() + "@");
 		 		}
 			}
