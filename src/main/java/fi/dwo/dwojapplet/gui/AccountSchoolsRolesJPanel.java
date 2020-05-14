@@ -246,7 +246,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
                     if (!prop.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.SCHOOLADMIN.name())
                             && !prop.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.ADMIN.name())
                             && (currSrac.getRole().getRoleName().equals(RoleType.SCHOOLADMIN.name()) || currSrac.getRole().getRoleName().equals(RoleType.ADMIN.name()))) {
-                        switch (ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_RE_PASSWORD))) {
+                        switch (reauthenticate()) {
                             case FAILED:
                                 // show warning
                                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
@@ -297,6 +297,12 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
                 LOG.log(Level.SEVERE, "", e);
                 GuiCreator.instance().ShowErrorDialog(null, e);
             }
+        }
+
+        private ReauthenticateResult reauthenticate() {
+       // under saml not possible, always success
+          if (DwoHelper.isSamlLogin()) return ReauthenticateResult.SUCCEEDED;
+          return ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_RE_PASSWORD));
         }
     }
 
