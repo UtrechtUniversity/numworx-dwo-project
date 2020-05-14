@@ -135,7 +135,8 @@ public class DWOTabletKeyboardOnderbouw extends AbstractKeyboard  implements Req
 	@UiHandler("t7_2") void insergt(ClickEvent e) { getEditor().insert('>');}
 	@UiHandler("t2_2") void insertdec(ClickEvent e) { doInsert(e); } // decimal comma/point
 	@UiHandler("t3_1") void insertstar(ClickEvent e) { getEditor().insert('*');}
-	@UiHandler({"t2_3", "t3_2", "t3_3", "t3_4","t4_2", "t5_8", "t5_9"} )
+	@UiHandler("t3_4") void insertmin(ClickEvent e) { getEditor().insert('-'); }
+	@UiHandler({"t2_3", "t3_2", "t3_3", "t4_2", "t5_8", "t5_9"} )
 	void insert0(ClickEvent e) {
 		doInsert(e);
 	}	

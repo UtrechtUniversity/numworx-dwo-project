@@ -432,7 +432,7 @@
 				<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.dgrsymbol} {style.key}"><my:FKey ui:field="t0">0</my:FKey></g:SimplePanel></g:SimplePanel>
 				<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.dgrsymbol} {style.key}"><my:FKey ui:field="t1_4"><ui:text from='{nc.decimalSeparator}'/></my:FKey></g:SimplePanel></g:SimplePanel>
 				<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.dgrsymbol} {style.key}"><my:FKey  ui:field="t1_5">=</my:FKey></g:SimplePanel></g:SimplePanel>			
-				<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.grsymbol} {style.key}"><my:FKey ui:field="t1_6">-</my:FKey></g:SimplePanel></g:SimplePanel>
+				<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.grsymbol} {style.key}"><my:FKey ui:field="t1_6">&#x2212;</my:FKey></g:SimplePanel></g:SimplePanel>
 			</g:FlowPanel>
 			<g:FlowPanel addStyleNames="{style.row2}">
 				<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.symbol} {style.key} {style.lt} {style.haak}"><my:TKey ui:field="tx">x</my:TKey></g:SimplePanel></g:SimplePanel>	

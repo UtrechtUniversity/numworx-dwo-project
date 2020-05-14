@@ -104,7 +104,9 @@ public class DWOTabletKeyboardResponsive extends AbstractKeyboard {
 	void onTx(ClickEvent e) {
 		getEditor().insert('*');
 	}
-	@UiHandler({"t1_2","t1_3","t1_4","t1_5","t1_6"})
+	@UiHandler("t1_6") void onTmin(ClickEvent e) { 
+		getEditor().insert('-'); }
+	@UiHandler({"t1_2","t1_3","t1_4","t1_5"})
 	void onT1(ClickEvent e) {
 		doInsert(e);
 	}
@@ -161,8 +163,12 @@ public class DWOTabletKeyboardResponsive extends AbstractKeyboard {
 	}
 	
 	@UiHandler("tsin") void onSin(ClickEvent e) { getEditor().insert("sin"); }
-	@UiHandler({"tasin","tcos","tacos", "ttan", "tatan", "tlog","tln"})
+	@UiHandler({"tcos", "ttan",  "tlog","tln"})
 	void onTmath(ClickEvent e) { doInsert(e); }
+	@UiHandler("tasin") void onTasin(ClickEvent e) { getEditor().insert("arcsin"); }
+	@UiHandler("tacos") void onTacos(ClickEvent e) { getEditor().insert("arccos"); }
+	@UiHandler("tatan") void onTatan(ClickEvent e) { getEditor().insert("arctan"); }
+	
 	
 	@UiHandler({"t8_1", "t8_2", "t8_3", "t8_4", "t8_6", "t8_7"})
 	void onHaakje(ClickEvent e) { doInsert(e); }

@@ -44,9 +44,10 @@ public class Multikey extends Composite {
 			String stri = str[i];
 			FKey fkey = new FKey();
 			fkey.setText(stri);
+			String a = stri.startsWith("a") ? "arc"+stri.substring(1) : stri; // SPECIAL CASE HERE
 			fkey.setStyleName(css.key());
 			fkey.addClickHandler(e -> {
-				getEditor().insert(stri);
+				getEditor().insert(a);
 				hide();
 			});
 			layoutFKey(i, fkey);

@@ -457,7 +457,7 @@
 			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.grsymbol} {style.key}"><my:FKey ui:field="t3_1">×</my:FKey></g:SimplePanel></g:SimplePanel>
 			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.grsymbol} {style.key}"><my:FKey ui:field="t3_2">/</my:FKey></g:SimplePanel></g:SimplePanel>
 			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.grsymbol} {style.key}"><my:FKey ui:field="t3_3">+</my:FKey></g:SimplePanel></g:SimplePanel>	
-			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.grsymbol} {style.key}"><my:FKey ui:field="t3_4">-</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.grsymbol} {style.key}"><my:FKey ui:field="t3_4">&#x2212;</my:FKey></g:SimplePanel></g:SimplePanel>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="{style.row4}">
 			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.symbol} {style.key}"><my:FKey ui:field="t4_1"><ui:text from="{rb.ofLabel}" /></my:FKey></g:SimplePanel></g:SimplePanel>
