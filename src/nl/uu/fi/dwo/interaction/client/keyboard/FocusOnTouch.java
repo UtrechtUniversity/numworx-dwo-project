@@ -1,7 +1,5 @@
 package nl.uu.fi.dwo.interaction.client.keyboard;
 
-import java.awt.event.KeyEvent;
-
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
