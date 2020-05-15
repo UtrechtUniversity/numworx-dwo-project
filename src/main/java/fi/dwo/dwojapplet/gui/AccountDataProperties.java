@@ -5,6 +5,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.HttpAuthenticationType;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import java.util.Base64;
 import java.util.logging.Logger;
@@ -53,8 +54,9 @@ public class AccountDataProperties {
 
             // update local Global storage.
             
- // XXX no information hiding here!
-            StoredRestManager.getInstance().setBasicAuthString(user.getUserName(),user.getPassword(),context.getRealm());
+ // XXX no information hiding here: only digest or basic. (digest is not supported at all)
+            if (HttpAuthenticationType.BEARER != DwoHelper.getHttpAuthentication())
+              StoredRestManager.getInstance().setBasicAuthString(user.getUserName(),user.getPassword(),context.getRealm());
  
             DwoHelper.updateCurrentUser(user);
             DwoHelper.setCurrentUser(user, context);

@@ -210,10 +210,6 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                     DomSingleSchoolStudent user = prop.getSingleSchoolStudent(getStudent);
                     DomLoginContext context = DwoHelper.getCurrentLoginContext();
                     GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword(), context.getRealm());
-                } catch (LoginException ex) {
-                    Dwo2Exception err = new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, ex.getMessage());
-                    LOG.log(Level.SEVERE, "", ex);
-                    GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), err);
                 } catch (Dwo2Exception e) {
                     LOG.log(Level.SEVERE, "", e);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), e);

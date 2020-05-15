@@ -265,7 +265,7 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
      * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      *
      */
-    public void loginWithMd5(String username, String password, String realm) throws LoginException, Dwo2Exception {
+    public void loginWithMd5(String username, String password, String realm) throws Dwo2Exception {
         dwo.setWait();
         try {
             DwoHelper.setContact(false);
@@ -278,7 +278,7 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
                 // TODO: remove, currently checks if licence is still valid
                 validLicenceCheck(dwo.getUser());
                 //configure GuiCreator to show correct Panels and options.
-               if ( dwo.loginWithMd5(username, password) ) 
+               if ( dwo.relogin() ) 
                		configurePanelsForUser(dwo.getUser());
                else 
             	   dwo.logoff(); // TODO Should not happen???
@@ -286,7 +286,6 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
         }
         catch (Dwo2Exception e) {
             LOG.log(Level.WARNING, "Login failed.", e);
-            dwo.setReady();
             throw e;
         }
         finally {
@@ -294,6 +293,28 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
         }
     }
 
+    public void relogin() throws Dwo2Exception {
+      dwo.setWait();
+      try {
+        DwoHelper.setContact(false);
+        DomUserFull currentUser = DwoHelper.getCurrentUser();
+        DwoHelper.setCurrentUser(currentUser, DwoHelper.getCurrentLoginContext());
+        if (DwoHelper.getCurrentUser() != null) {
+          // TODO: remove, currently checks if licence is still valid
+          validLicenceCheck(dwo.getUser());
+          //configure GuiCreator to show correct Panels and options.
+         if ( dwo.relogin() ) 
+              configurePanelsForUser(dwo.getUser());
+         else 
+             dwo.logoff(); // TODO Should not happen???
+      }
+        
+      } finally {
+        dwo.setReady();
+      }
+    }
+    
+    
 //    /**
 //     * Toon <b>G</b>een waarschuwing. Fix voor gebruikersnamen die met het
 //     * fidentity systeem ongeldig worden.

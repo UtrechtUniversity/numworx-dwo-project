@@ -189,20 +189,14 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
          *
          */
         private void switchToActiveSchoolLogin() {
-            DomUserFull user = DwoHelper.getCurrentUser();
-            DomLoginContext context = DwoHelper.getCurrentLoginContext();
             try {
 //                //switch role now
                 LOG.log(Level.INFO, "switching role now");
-                GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword(), context.getRealm());
-            } catch (LoginException ex) {
-                LOG.log(Level.SEVERE, "", ex);
-                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().mainPanel, TextMapper.getText(TextMapper.EXR_WRONG_USERNAME_PASSWORD));
+                GuiCreator.instance().relogin();
             } catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().mainPanel, ex);
             }
-
         }
 
         @Override

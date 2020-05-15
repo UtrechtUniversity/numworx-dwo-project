@@ -547,7 +547,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * @throws fi.dwo.commons.exceptions.LoginException
      *
      */
-    public boolean loginWithMd5(String username, String password) throws LoginException {
+    public boolean relogin() {
         idleOn();
         PersistenceFacade.instance().clearCurrentScoDataCache();
         PersistenceFacade.instance().clearCurrentCourseDataCache();

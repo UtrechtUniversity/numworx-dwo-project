@@ -67,15 +67,9 @@ public class DomSchoolClassLinkedLabel extends LinkedLabel {
 //                tableModel.init(prop, loginImage, removeImage);
 //                tableModel.fireTableDataChanged();
                 //get user data
-                DomUserFull user = DwoHelper.getCurrentUser();
-                DomLoginContext context = DwoHelper.getCurrentLoginContext();
                 //switch role now
                 LOG.log(Level.FINE, "switching class now");
-                GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword(), context.getRealm());
-            }
-            catch (LoginException ex) {
-                LOG.log(Level.SEVERE, "", ex);
-                GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
+                GuiCreator.instance().relogin();
             }
             catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, "", ex);

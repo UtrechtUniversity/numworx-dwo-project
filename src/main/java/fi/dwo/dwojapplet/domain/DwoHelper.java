@@ -171,8 +171,6 @@ public final class DwoHelper {
         //Fetch all the login roles from the server for the current roles
         try {
             if (aCurrentUser != null) {
-              String username = aCurrentUser.getUserName();
-              String password = aCurrentUser.getPassword();
               String realm = aLoginContext.getRealm();
               //StoredRestManager.getInstance().setBasicAuthString(username, password, realm);
 

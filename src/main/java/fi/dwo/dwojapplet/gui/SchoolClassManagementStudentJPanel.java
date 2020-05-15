@@ -201,10 +201,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
                 prop.setActiveSchoolClass(sc);
 //                //switch role now
                 LOG.log(Level.INFO, "switching schoolclass now");
-                GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword(), context.getRealm());
-            } catch (LoginException ex) {
-                LOG.log(Level.SEVERE, "", ex);
-                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
+                GuiCreator.instance().relogin();
             } catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(null, ex);
@@ -276,9 +273,6 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
             } catch (Dwo2Exception e) {
                 LOG.log(Level.SEVERE, "", e);
                 GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), e);
-            } catch (LoginException ex) {
-                LOG.log(Level.SEVERE, "", ex);
-                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
             }
         }
     }
