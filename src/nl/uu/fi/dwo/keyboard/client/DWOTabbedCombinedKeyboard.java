@@ -4,7 +4,6 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.resources.client.DataResource;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.FlowPanel;
 
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
@@ -196,8 +195,9 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 				kb.setScrollPanel(this, 0);
 				return kb;
 		
-		default: kb = new DWODesktopKeyboard().init();
+		default: kb = new DWODesktopKeyboardResponsive(state);
 			kb.setPremium(premium);
+			kb.setScrollPanel(this, 0);
 			kb.setKeyboard(nr);
 			kb.setDelegate(this);
 			return kb;
