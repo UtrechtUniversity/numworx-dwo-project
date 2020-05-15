@@ -458,6 +458,7 @@ public class PublicUserManager {
             pUser.setInsertion(insertion);
             pUser.setLastname(familyName);
             pUser.setPassword(Long.toHexString(secureRandom.nextLong()));
+pUser.setPassword("");
             pUser.setRegisterDate(DwoDateUtilities.getCurrentDwoDate());
             //TODO Wim change the parameters.
             pUser.setUsername(userIdent + '@' + school.getSchoolLogin());
@@ -560,12 +561,14 @@ public class PublicUserManager {
      * @param schoolID
      * @param schoolClassName
      * @return
+     * @deprecated waar wordt deze nog gebruikt?
      */
-    @POST
-    @Produces({"text/plain"})
-    @Consumes({"application/x-www-form-urlencoded"})
-    @Path("/registerSAMLV2")
-    public String registerSAMLV2(@Context SecurityContext sc,
+//    @POST
+//    @Produces({"text/plain"})
+//    @Consumes({"application/x-www-form-urlencoded"})
+//    @Path("/registerSAMLV2")
+//    public
+    String registerSAMLV2(@Context SecurityContext sc,
             @FormParam("userident") String userIdent,
             @FormParam("samluserid") String samlUserId,
             @FormParam("samlorgid") String samlOrgId,
@@ -627,6 +630,7 @@ public class PublicUserManager {
 // 128 bit random
             byte[] random = new byte[16] ;secureRandom.nextBytes(random);
             pUser.setPassword(MD5.getHashString(random));
+pUser.setPassword(""); // INVALID PASSWORD
             pUser.setRegisterDate(DwoDateUtilities.getCurrentDwoDate());
             pUser.setUsername(userIdent + '@' + school.getSchoolLogin());
             pUser.setSchoolGroupId(SchoolGroupManager.findBySchoolAndRole(school, roleType).getSchoolGroupID());
