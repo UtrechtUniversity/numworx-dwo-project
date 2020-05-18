@@ -226,7 +226,8 @@ public class SecuredUserScoContextManager {
             throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "wrong role " + sc.getUserPrincipal().getName());
         case TEACHER:
         	PersistentSchool school = state.getSchool();
-        	if (school.accessControl()) {
+        	
+        	if (sco.getSchoolID() != null && school.accessControl()) {
         		ACL acl = SecuredCommonScoDataManager.getACL(state.getHasRole(), CourseManager.findEntity(sco.getCourseID()));
         		if (acl == ACL.ACCESS|| acl == ACL.NONE) {
                     throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "wrong access " + sc.getUserPrincipal().getName());
