@@ -54,7 +54,7 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 		pen.setVisible(false);
 		main.add(pen);
 
-		kabc = new DWOTabletKeyboardABC();
+		kabc = new DWOTabletKeyboardABCResponsive();
 		kabc.setDelegate(this);
 		kabc.setVisible(false);
 		main.add(kabc);
