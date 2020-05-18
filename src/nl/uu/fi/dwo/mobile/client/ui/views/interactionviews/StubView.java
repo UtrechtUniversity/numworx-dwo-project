@@ -22,6 +22,8 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
+import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -74,6 +76,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	private boolean teltmee = true;
 	private Boolean correct;
 	private CorrectieFacade correctie;
+	private Logging logging;
 	
 	@Override
 	public void onAttachOrDetach(AttachEvent event) {
@@ -148,8 +151,35 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		teltmee = true;
 		if(innerMap.containsKey("teltmee")) 
 			teltmee = innerMap.containsKey("teltmee");
-	}
+		boolean logOption = innerMap.getBoolean("logOption", false);
+		if (logOption) {
+			String logID = innerMap.getString("logID");
+			DWOLogger dwoLogger = new DWOLogger();
+			if(innerMap.containsKey("scoreMax"))
+			{
+				dwoLogger.setMaxScore(scoreMax);
+			}
+			logging = dwoLogger;
+			logging.setLogID( logID);
+			int soortVak = outermap.getInt("soortInteractiePanel");
 
+			logging.setClassName(className(soortVak));
+			dwoLogger.setLogObjectives(logObjectives);
+			String[] smObjectives = null;
+			if (innerMap.containsKey("smObjectives")) {
+				  smObjectives = innerMap.getStringArray("smObjectives");
+				}
+			dwoLogger.setSMObjectives(smObjectives);
+			dwoLogger.setTeltMee(teltmee);
+
+		}
+	}
+	private String className(int s) {
+		switch(s) {
+			default: return "nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView";
+			case 6: return "fi.nabouwenaanzichten.NabouwenAanzichten";
+		}
+	}
 	
 	private void initFrame() {
 		frame.setPixelSize(width , height);
@@ -303,6 +333,8 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
+		if (logging != null) 
+			logging.setCommunicationRoot(comRoot);
 	}
 
 	/**
@@ -867,6 +899,10 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 	@Override
 	public void fireEvent(CBookEvent event) {
+		if (event.getCommand().equals("logOption") && logging != null) {
+			logging.log(event.getParameters());
+			return;
+		}
 		if(comRoot != this)
 			comRoot.fireEvent(event);		
 	}
