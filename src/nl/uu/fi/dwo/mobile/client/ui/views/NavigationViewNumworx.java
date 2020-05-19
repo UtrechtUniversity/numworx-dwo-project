@@ -296,7 +296,12 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	}
 
 	private TreeItem getTreeItem(SelectModuleItem item) {
-		return new TreeItem(toSafeHTML(item.getName(), item.getType()));
+		TreeItem treeItem = new TreeItem(toSafeHTML(item.getName(), item.getType()));
+//		if (Type.SCO == item.getType()) return treeItem;
+//	// try: add / remove item		 XXX werkt voor geen meter!!!
+//		TreeItem t = treeItem.addTextItem("");
+//		treeItem.removeItem(t);
+		return treeItem;
 	}
 	private void initTree(List<SelectModuleItem> model, TreeItem tree, boolean open) {
 //		sort(model);

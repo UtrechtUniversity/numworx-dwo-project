@@ -305,18 +305,19 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			else
 				sb.setKeyboard(-1);
 			if (wrap.containsKey(SOORT_KEYBOARD)) {
-				sb.setSoortKeyboard(wrap.getInt(SOORT_KEYBOARD));
+				sb.setSoortKeyboard(soortKeyboard = wrap.getInt(SOORT_KEYBOARD));
 			} else {
-				sb.setSoortKeyboard(-1);
-			}			
+				sb.setSoortKeyboard(soortKeyboard = 0);
+			}
+			if (soortKeyboard != 0) setCombined(Combined.NONE);
+			
 			if (wrap.containsKey(WRITE_MATH_SET))
 			{
 				sb.setWriteMathSet(wrap.getInt(WRITE_MATH_SET));
 			}
 			else
 				sb.setKeyboard(-1);
-			//
-
+			
 			contentPanel.getElement().getStyle()
 				.setFontSize(font_size, Unit.PX);
 			contentPanel.getElement().getStyle().setPadding(0, Unit.PX); // XXX
@@ -1262,7 +1263,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 
 	private  boolean isDesktop() {
 		boolean isTablet = lastState == Combined.TABLET_ACTIVE || lastState == Combined.TABLET_ACTIVE_SOFT;
-		return !isTablet;
+		return (!isTablet || soortKeyboard == 1) && soortKeyboard != 2 ;
 	}
 
 	/**
@@ -2272,7 +2273,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	@UiField FlowPanel content;
 	@UiField Widget kbd;
 	
+	
+	private int soortKeyboard;
 	@UiHandler("kbd") void onKBD(ClickEvent e) {
+	  if (soortKeyboard != 0) return;
 	  switch(state) {
 		case TABLET:
 			setCombined(Combined.TABLET_ACTIVE_SOFT);
@@ -2589,7 +2593,7 @@ ChangeHandler handler;
 public void setCombined(Combined state) {
 	Combined old = this.state;
 	this.state = state;
-	fp.setWidgetVisible(kbd, state != Combined.NONE);
+	fp.setWidgetVisible(kbd, soortKeyboard == 0 && state != Combined.NONE);
 	if (state != Combined.NONE) lastState = state;
 	if (state != old && handler != null) {
 		handler.onChange(null);
@@ -2598,6 +2602,7 @@ public void setCombined(Combined state) {
 }
 
 private void setKbdCss(Combined state) {
+	if (soortKeyboard != 0) return;
 	switch(state) {
 	case DESKTOP_ACTIVE:
 		kbd.removeStyleName(dwoplayercss.tablet());
@@ -2632,7 +2637,7 @@ public Combined getCombined() {
 
 @Override
 public int getWidth() {
-	// width of the combined button.
+	if(soortKeyboard != 0) return 0;
 	return 70;
 }
 
