@@ -60,10 +60,6 @@
     	
     	</init-param>
     </filter>
-    <filter-mapping>
-    	<filter-name>exam</filter-name>
-    	<url-pattern>/dwo/rest/*</url-pattern>
-    </filter-mapping>
     
     <filter>
         <filter-name>UrlRewriteFilter</filter-name>
@@ -147,6 +143,10 @@
  		<url-pattern>*</url-pattern>
  		<url-pattern>/</url-pattern>
  	</filter-mapping>
+    <filter-mapping>
+    	<filter-name>exam</filter-name>
+    	<url-pattern>/dwo/rest/*</url-pattern>
+    </filter-mapping>
  
     <filter-mapping>
         <filter-name>Remote Address Filter</filter-name>

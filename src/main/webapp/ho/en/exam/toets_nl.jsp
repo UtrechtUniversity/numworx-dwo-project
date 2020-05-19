@@ -56,7 +56,7 @@
     	<% } else { 
     		// Let op, dit is UU only.....
     	%>
-    				window.location = "https://<%=server%>/Shibboleth.sso/Logout?return=https://logout.uu.nl"
+    				window.location = "https://<%=server%>/uu/Shibboleth.sso/Logout?return=https://logout.uu.nl"
     		
     	<% } %>	
     	}
