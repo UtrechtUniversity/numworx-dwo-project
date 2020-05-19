@@ -266,6 +266,7 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 			current.setVisible(false);
 			current = kto;
 			current.setVisible(true);
+			onResize();
 			resizeScrollPanel(getKeyboardHeight());
 		}
 	}
@@ -383,9 +384,18 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 	@Override
 	public void setSoortKeyboard(int soort) {
 		if (soort == 1) 
-			isDesktop = true;
-		if (soort == 2) 
-			isDesktop = false;
+		{
+		  isDesktop = true;
+		  if (tablet == current) switchTo(desktop);
+          main.getElement().getStyle().setPaddingLeft(0, Unit.PX);
+		} else if (soort == 2) 
+		{
+		  isDesktop = false;
+		  if(desktop == current) switchTo(tablet);
+          main.getElement().getStyle().setPaddingLeft(0, Unit.PX);
+		} else {
+          main.getElement().getStyle().setPaddingLeft(state.getWidth(), Unit.PX);
+		}
 	}
 	
 	
