@@ -62,7 +62,8 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
       delegate = new ViewModuleViewImpl(false, api);
       pfx = DWOplayer.PARAMETERS.getResource("");
       final int correctie = 10; // width popup 
-      user = new MenuItem("<i class='fa fa-caret-down fa-2x'></i>", true, items) {
+      user = new MenuItem("<img width='26' height='26' src='" + pfx
+				+ "images/numworx/account.svg' >", true, items) {
           @Override
           public int getAbsoluteLeft() {
               int w1 = items.getOffsetWidth();
@@ -87,7 +88,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 //	}
 
 	public void removeBtns() {
-		homeBtn.removeFromParent();
+//		homeBtn.removeFromParent();
 		upBtn.removeFromParent();
 	}
 
@@ -116,8 +117,8 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	MenuItem user;
 	@UiField(provided=true)
 	String pfx;
-	@UiField
-	FocusPanel homeBtn;
+//	@UiField
+//	FocusPanel homeBtn;
 	@UiField
 	FocusPanel upBtn,up2Btn;
 	@UiField Label loginLabel;
@@ -138,7 +139,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	}
 
 	public Promise<Boolean> setupModule(String name, String file) {
-		String login = DWOplayer.clientfactory.withUser()? DwoGlobalVars.instance().getCurrentUser().getDisplayName() : rb.guest();
+		String login = DWOplayer.clientfactory.withUser()? DwoGlobalVars.instance().getCurrentUser().getDisplayName() : "";
 		loginLabel.setText(login);
 		setupMenu(items);
 		return delegate.setupModule(name, file);
@@ -250,10 +251,10 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		kruimels.clear();
 	}
 
-	@UiHandler("homeBtn")
-	void onHomeBtn(ClickEvent ev) {
-		goTo(new TreeModulePlace());
-	}
+//	@UiHandler("homeBtn")
+//	void onHomeBtn(ClickEvent ev) {
+//		goTo(new TreeModulePlace());
+//	}
 	
 	private TreeModulePlace upId = new TreeModulePlace();
 	private Presenter presenter;

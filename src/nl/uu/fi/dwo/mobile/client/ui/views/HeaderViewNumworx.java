@@ -94,7 +94,8 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 	@Inject HeaderViewNumworx(EventBus bus) {
 		this.bus = bus;
         final int correctie = 10; // width popup 
-		user = new MenuItem("<i class='fa fa-caret-down fa-2x'></i>", true, items) {
+		user = new MenuItem("<img width='26' height='26' src='" + pfx
+				+ "images/numworx/account.svg' >", true, items) {
             @Override
             public int getAbsoluteLeft() {
                 int w1 = items.getOffsetWidth();
@@ -113,14 +114,14 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 
 	@Override
 	public void setText(String text) {
-		if(text == null) text = rb.guest(); // never null
+		if(text == null) text = ""; // never null
 		loginLabel.setText(text);
 	}
 
 	@Inject PlaceController controller;
 	
 	GotoController presenter = controller::goTo;
-	@UiHandler("homeBtn")
+//	@UiHandler("homeBtn")
 	void onHomeBtn(ClickEvent ev) {
 		presenter.goTo(homePlace);
 	}

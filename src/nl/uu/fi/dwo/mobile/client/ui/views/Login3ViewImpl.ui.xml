@@ -11,6 +11,7 @@
 	@def medium 500;
 	.screen {
 		width: 100%;
+		height: 100%;
 		margin: 0 auto;
 		position: relative;
 		background-color: #8ebee6;
@@ -68,17 +69,25 @@
 	}
 	
 	.messages {
-		top: 306px;
+		top: 45%;
 		width: 252px;
 		padding: 0px;
 		left: 18.75%;
 		position: absolute;
 	}
+	.center {
+		position:absolute;
+		left: 45.1171875%;
+		top: 45%;
+		width: 306px;
+		height: 500px;
+	}
+	
 	.login {
-		top: 306px;
+		top: 0px;
 		width: 306px;
 		height: 260px;
-		left: 45.1171875%;
+		left: 0px;
 		background-color: #314770;
 		position: absolute;
 		font-family: Ubuntu, sans-serif;
@@ -165,9 +174,9 @@
 		border-style: none;
 	}
 	.links {
-		top: 576px;
+		top: 270px;
 		width: 306px;
-		left: 45.1171875%;
+		left: 0%;
 		position: absolute;
 		font-size: 14px;
 		line-height: 27px;
@@ -182,7 +191,7 @@
 	
 	
 	.linksError {
-		top: 556px;
+		top: 250px;
 	}
 	
 	.nologin {
@@ -237,6 +246,7 @@
 			<p><ui:text from='{for_students}'/></p>
 		</g:HTML>
 		<g:Frame ui:field='messagePanel' styleName='{style.messages}' />
+		<g:FlowPanel styleName='{style.center}'>
 		<g:FlowPanel ui:field='loginPanel' styleName='{style.login}' addStyleNames='{style.loginError}'>
 			<g:TextBox ui:field='username' styleName='{style.username}' ></g:TextBox>
 			<g:PasswordTextBox ui:field='password' styleName='{style.password}' ></g:PasswordTextBox>
@@ -250,6 +260,7 @@
 			<p><a href="/dwo/register?locale={rb.locale}&amp;next={back}"><ui:text from='{rb.register}'/></a></p>
 			<p><a href='http://www.numworx.nl' target='_top'><ui:text from='{rb.numworx}'/></a></p>
 		</g:HTML>
+		</g:FlowPanel>
 	</g:FlowPanel>
 	</g:FlowPanel>
 </ui:UiBinder> 

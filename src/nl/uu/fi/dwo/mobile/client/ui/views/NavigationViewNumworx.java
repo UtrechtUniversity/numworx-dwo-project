@@ -198,11 +198,11 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		// tree stuff
 		String standaard = SelectModuleItem.ROOT.getName();
 		
-		standardMap = new TreeItem(toSafeHTML(standaard));
+		standardMap = new TreeItem(toSafeHTML(standaard, Type.FOLDER));
 		
 		DWOplayer.dwoProfile.then(p -> 
 			{
-				standardMap.setHTML(toSafeHTML(p.getValue().getDwoProfileDescription()));
+				standardMap.setHTML(toSafeHTML(p.getValue().getDwoProfileDescription(), Type.FOLDER));
 				return p;
 			}
 		);
@@ -270,16 +270,33 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		TreeItem item = inverseMap.get(o);
 		tree.setSelectedItem(item, false);
 	}
-	private SafeHtml toSafeHTML(String string) {
+	private SafeHtml toSafeHTML(String string, Type type) {
+		
+		SafeHtmlBuilder builder = new SafeHtmlBuilder();
+		switch(type) {
+		case FOLDER: builder.appendHtmlConstant(treeItemIcon("images/numworx/folder-numworx.svg"));
+		    break;
+		case MODULE: builder.appendHtmlConstant(treeItemIcon("images/numworx/module-numworx.svg"));
+			break;
+		case SCO: builder.appendHtmlConstant(treeItemIcon("images/numworx/activiteit_numworx.svg"));
+		default:
+			break;
+		}
+		SafeHtml html = builder.toSafeHtml(); 
 		return new SafeHtmlBuilder().
 				appendHtmlConstant("<span class='"+style.treeItem()+"'>").
+				append(html).
 				appendEscaped(string).
 				appendHtmlConstant("</span>").
 				toSafeHtml();
 	}
 
+	private String treeItemIcon(String string) {
+		return "<img width='16' heigth='16' src='" + DWOplayer.PARAMETERS.getResource(string) + "' >";
+	}
+
 	private TreeItem getTreeItem(SelectModuleItem item) {
-		return new TreeItem(toSafeHTML(item.getName()));
+		return new TreeItem(toSafeHTML(item.getName(), item.getType()));
 	}
 	private void initTree(List<SelectModuleItem> model, TreeItem tree, boolean open) {
 //		sort(model);
@@ -306,7 +323,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 			schoolName = DWOplayer.clientfactory.getSchool().getSchoolName();
 		setRole();
 		SCHOOL_MODULES = Text.constants.schoolModules() + schoolName;
-		schoolMap = new TreeItem(toSafeHTML(SCHOOL_MODULES));
+		schoolMap = new TreeItem(toSafeHTML(SCHOOL_MODULES, Type.FOLDER));
 		schoolMap.setUserObject(SelectModuleItem.ROOT);
 		schoolMap.setState(true);
 		standardMap.removeItems();

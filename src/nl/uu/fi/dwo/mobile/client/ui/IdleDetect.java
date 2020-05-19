@@ -18,7 +18,7 @@ public class IdleDetect extends Timer implements NativePreviewHandler {
 	public final static int FAST = 2;      // 10-20 secs
 	public final static int SLOW = 6 * 15; // 15 minutes
 	
-	final public boolean hasIdle = false;
+	final public boolean hasIdle = true;
 	
 	public interface IdleHandler {
 		void onIdle(IdleEvent ev);

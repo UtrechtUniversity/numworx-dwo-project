@@ -21,6 +21,6 @@
 				<g:FocusPanel ui:field='upBtn' styleName='{style.nav}'>
 					<g:InlineHTML><i style='color:#798291' class='fa fa-2x fa-arrow-up' ></i></g:InlineHTML>
 				</g:FocusPanel>
-				<g:FocusPanel ui:field='homeBtn' styleName='{style.nav}'><g:Image url='{pfx}images/numworx/home-numworx.svg'/></g:FocusPanel>
+<!-- 				<g:FocusPanel ui:field='homeBtn' styleName='{style.nav}'><g:Image url='{pfx}images/numworx/home-numworx.svg'/></g:FocusPanel> -->
 			</g:FlowPanel>
 </ui:UiBinder> 
