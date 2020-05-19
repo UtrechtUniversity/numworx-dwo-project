@@ -142,20 +142,22 @@ public class InstallServlet extends HttpServlet {
 			Part cursus = req.getPart("cursus");
 			if (cursus != null) {
 				Excel excel = new Excel();
+				message = "Reading " + "courses" ;// cursus.getSubmittedFileName();
 				InputStream in = cursus.getInputStream();
 				excel.parse(in);
 				in.close();
-				excel.verify(COURSES);
+				notok(excel.verify(COURSES));
 				courses = excel;
 				osiris.setGroepenSource(excel);
 			}
 			Part toets = req.getPart("toets");
 			if (toets != null) {				
 				Excel excel = new Excel();
+				message = "Reading " + "assesments" ;// cursus.getSubmittedFileName();
 				InputStream in = toets.getInputStream();
 				excel.parse(in);
 				in.close();
-				excel.verify(TOETSEN);
+				notok(excel.verify(TOETSEN));
 				toetsen = excel;
 				osiris.setGroepenSource(toetsen);
 				
@@ -164,10 +166,11 @@ public class InstallServlet extends HttpServlet {
 			Iterable<CSVRecord> studenten = Collections.emptySet();
 			if (student != null) {
 				Excel excel = new Excel();
+				message = "Reading " + "students" ;// cursus.getSubmittedFileName();
 				InputStream in = student.getInputStream();
 				excel.parse(in);
 				in.close();
-				excel.verify(STUDENTEN);
+				notok(excel.verify(STUDENTEN));
 								
 				studenten = excel;
 				osiris.setGroepenSource(studenten);				
@@ -177,10 +180,11 @@ public class InstallServlet extends HttpServlet {
 			Part docent = req.getPart("docent");
 			if (docent != null) {
 				Excel excel = new Excel();
+				message = "Reading " + "teachers" ;// cursus.getSubmittedFileName();
 				InputStream in = docent.getInputStream();
 				excel.parse(in);
 				in.close();
-				excel.verify(DOCENTEN);
+				notok(excel.verify(DOCENTEN));
 				osiris.setLeerkrachtenSource(excel);
 			}
 			
@@ -237,10 +241,16 @@ public class InstallServlet extends HttpServlet {
 			
 			
 		} catch (Exception e) {
-			out.print("<pre>");
+			out.print("<p>Something went wrong<p><pre>");
 			out.println(message);
 			e.printStackTrace(out);
 		}
+	}
+
+	private void notok(boolean verify) {
+		if (!verify) 
+			throw new IllegalArgumentException("Verification failed");
+		
 	}
 	
 }

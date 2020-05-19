@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -23,7 +24,7 @@ public class Excel implements Iterable<CSVRecord> {
 
 	public String charset;
 	public CSVParser parser;
-	public List<CSVRecord> records;
+	public List<CSVRecord> records = Collections.emptyList();
 	
 	public Excel() {
 	}
@@ -63,7 +64,7 @@ public class Excel implements Iterable<CSVRecord> {
 		    int rows = records.size();
 		    for(int i = 0; i < cols; i++)
 		      for(int j = 0; j < rows; j++) {
-		        Object v = records.get(i).get(j);
+		        Object v = records.get(j).get(i);
 		        if (v == null || v.toString().trim().isEmpty()) {
 		          return false;
 		        }
