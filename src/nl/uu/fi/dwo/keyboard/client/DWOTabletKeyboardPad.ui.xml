@@ -10,6 +10,14 @@
 		height: 16px !important;
 		padding: 8px !important;
 	}
+	.svgwrap {
+		height: 32px;
+		line-height: 0px;
+	}
+	.svgwrapl {
+		height: 72px;
+	}
+	
 	.svgimage {
 		width: 32px !important;
 		height: 32px !important;
@@ -34,7 +42,6 @@
 	}
 	
 	.symbol {
-		font-size: 80% !important;
 	}
 	.apply {
 		width: 16px !important;
@@ -50,35 +57,39 @@
 		height: 32px !important;
 		padding-left: 0px !important;
 		padding-right:0px !important;
-		padding-top: 19px !important;
-		padding-bottom: 19px !important;
+		padding-top: 14px !important;
+		padding-bottom: 14px !important;
 	}
 
 	.panel { 
 		height: 166px;
-		margin-left: 8px;
-		width: auto !important;
+<!-- 		margin-left: 8px; -->
+<!-- 		width: auto !important; -->
 		/* background-color: #D2D2D2; */
 	}
 	</ui:style>
 	<g:FlowPanel styleName="{style.panel}" >
 		<g:FlowPanel addStyleNames="dclm">
-			<my:FKey addStyleNames="key bg-dkgrey icon {style.symbol}" ui:field="t1_16">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t1_16">
 				αβ
 			</my:FKey>
-			<my:FKey addStyleNames="key bg-dkgrey icon {style.symbol}" ui:field="t2_16">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t2_16">
 				123
 			</my:FKey>
-			<my:FKey addStyleNames="key bg-dkgrey icon {style.symbol}" ui:field="t3_16">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t3_16">
 				abc
 			</my:FKey>
-			<my:DKey addStyleNames="key bg-grey icon {style.svgimage}" ui:field="t4_16" resource="{resources.hand_svg}" />
+			<g:SimplePanel addStyleNames="key kbd-Key {style.svgwrap}">
+			<my:DKey addStyleNames="{style.svgimage}" ui:field="t4_16" resource="{resources.hand_svg}" /></g:SimplePanel>
 		</g:FlowPanel>
 
 		<g:FlowPanel addStyleNames="dclm">
-			<my:DKey addStyleNames="key bg-ltgrey icon {style.svgimage}" ui:field="t1_17" resource="{resources.backspace_svg}" />
-			<my:DKey addStyleNames="key bg-ltgrey icon {style.svgapply}" ui:field="t2_17" resource="{resources.apply_svg}"/>
-			<my:DKey addStyleNames="key bg-ltgrey icon {style.svgimagem}" ui:field="t4_17" resource="{resources.VVV_svg}" />
+			<g:SimplePanel addStyleNames="kbd-Key {style.svgwrap}">
+			<my:DKey addStyleNames="{style.svgimage}" ui:field="t1_17" resource="{resources.backspace_svg}" /></g:SimplePanel>
+			<g:SimplePanel addStyleNames="kbd-Key {style.svgwrapl} ">
+			<my:DKey addStyleNames="{style.svgapply}" ui:field="t2_17" resource="{resources.apply_svg}"/></g:SimplePanel>
+			<g:SimplePanel addStyleNames="kbd-Key">
+			<my:DKey addStyleNames="{style.svgimagem}" ui:field="t4_17" resource="{resources.VVV_svg}" /></g:SimplePanel>
 		</g:FlowPanel>
 
 	</g:FlowPanel>

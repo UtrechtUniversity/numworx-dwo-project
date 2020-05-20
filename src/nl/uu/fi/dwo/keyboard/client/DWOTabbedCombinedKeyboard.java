@@ -49,7 +49,7 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 		math.setKeyboard(1);
 		math.setDelegate(this);
 
-		pen = new DWOTabletKeyboardPen(593+200+108-70); // 70 px minder voor switchvak
+		pen = new DWOTabletKeyboardPen(); // 70 px minder voor switchvak
 		pen.setDelegate(this);
 		pen.setVisible(false);
 		main.add(pen);

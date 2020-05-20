@@ -383,19 +383,12 @@
 		font-family: sans-serif;
 		margin-top: 5px;
 		margin-left: 5px;
-		background-color: blauw;
+		background-color: grijs;
 		color: white;
 		border-radius: 5px;		
 	}
 	
-	.root .rowpad img {
-		background-color: grijs;
-		border-radius: 5px;
-		margin-top: 5px;
-		margin-left: 5px;
-		vertical-align: top;
-	}
-	.root .rowpad > div:first-child img {
+	.root .rowpad > div:first-child .kbd-Key {
 		background-color: blauw;
 	}
 	.rowpad > div {

@@ -4,10 +4,39 @@
 	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
 	>
 	<ui:style>
+	@external .kbd-Key;
+	@def dgrijs rgb(131,131,131);
+	@def grijs rgb(180,180,180);
+	@def lgrijs rgb(240,240,240);
+	@def blauw #7896CA;
+	@def donkerblauw #2673B6;
+	@def achtergrond rgb(229,231,233);
+
+	.root > .pad > div:first-child > div.kbd-Key:nth-child\(2\) {
+		background-color: donkerblauw !important;
+	}
+
+	.root {
+		background-color: achtergrond;
+		position: relative;
+		line-height: 0px;
+	
+		font-family: sans-serif;
+		font-style: initial;
+		font-size: 16px;
+		font-weight: normal;
+	}
+
+	.dock {
+		padding-left: 5px;
+		padding-right: 10px;
+		background-color: achtergrond;
+	}
+
 	.pad {
 		float: right;
 		margin-left: 7px;
-		margin-top: 60px;
+		margin-top: 65px;
 		margin-right: 10px;
 	}
 	
@@ -15,17 +44,44 @@
 		height: 210px;
 		margin-left: 10px;
 	}
-	.dkeys {
-		width: 100%;
+
+	.root .pad .kbd-Key {
+		font-family: sans-serif;
+		margin-top: 5px;
+		margin-left: 5px;
+		background-color: grijs;
+		color: white;
+		border-radius: 5px;		
+	}
+	
+	.root .pad div:first-child .kbd-Key {
+		background-color blauw;
+	}
+	.root .pad div:first-child div:nth-child\(4\) {
+		background-color: donkerblauw;
+	}
+	
+	.root .pad img {
+		vertical-align: top;
+	}
+	.root .pad > div:first-child .kbd-Key {
+		background-color: blauw;
+	}
+	.pad > div {
+		display: inline-block;
+		width: 50%;
+		vertical-align: top;
+		line-height: 33px;
 	}
 	
 	</ui:style>
-	<g:DockLayoutPanel unit="PX" addStyleNames="keyboard keyboard-hand is-active {style.dkeys}" >
+	<g:SimpleLayoutPanel addStyleNames="{style.dock}">
+	<g:DockLayoutPanel unit="PX" addStyleNames="{style.root}" >
 	  <g:center>
 		<g:SimplePanel ui:field="writePanel" styleName="{style.pen}" />
 	  </g:center>
-	  <g:east size="90">
+	  <g:east size="120">
 		<my:DWOTabletKeyboardPad ui:field="pad" styleName="{style.pad}" />
 	  </g:east>
-	</g:DockLayoutPanel>
+	</g:DockLayoutPanel></g:SimpleLayoutPanel>
 </ui:UiBinder> 

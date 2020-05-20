@@ -62,18 +62,11 @@
 		font-family: sans-serif;
 		margin-top: 5px;
 		margin-left: 5px;
-		background-color: blauw;
+		background-color: grijs;
 		color: white;
 		border-radius: 5px;		
 	}
-	.root .row4 img {
-		background-color: grijs;
-		border-radius: 5px;
-		margin-top: 5px;
-		margin-left: 5px;
-		vertical-align: top;
-	}
-	.root .row4 > div:first-child img {
+	.root .row4 > div:first-child .kbd-Key {
 		background-color: blauw;
 	}
 	.root .row4 > div:first-child > .kbd-Key:first-child {
