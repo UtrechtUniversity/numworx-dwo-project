@@ -60,6 +60,8 @@ public class SVGButton extends SimplePanel {
 	protected SVGImage svgImage;
 	protected OMSVGDocument doc;
 	protected OMSVGRectElement borderActive;
+	protected boolean fromResource;
+	protected boolean handlersAdded;
 
 	protected ButtonListener listener = new DefaultButtonListener();
 
@@ -80,7 +82,7 @@ public class SVGButton extends SimplePanel {
 	public SVGButton(SVGResource resource) {
 		this.setWidth(width + "px");
 		this.setHeight(height + "px");
-		
+		fromResource = true;
 		doc = OMSVGParser.currentDocument();
 		
 		svg = resource.getSvg();
@@ -89,9 +91,9 @@ public class SVGButton extends SimplePanel {
  		this.add(svgImage);
  		
  		addHandlers();
-		tooltip = new Tooltip(this, 10, 35, "tooltp text", 5000, "");
+		//tooltip = new Tooltip(this, 10, 35, "", 5000, "");
 	}
-
+	
 	public SVGButton(String text) {
 		this.text = text;
 		this.setWidth(width + "px");
@@ -104,8 +106,7 @@ public class SVGButton extends SimplePanel {
 		draw();
 		
 		addHandlers();
-		tooltip = new Tooltip(this, 10, 35, "tooltp text", 5000, "");
-
+		//tooltip = new Tooltip(this, 10, 35, "", 5000, "");
 	}
 	
 	public void addHandlers() {
@@ -124,7 +125,8 @@ public class SVGButton extends SimplePanel {
 		PointerButtonHandler pointerButtonHandler = new PointerButtonHandler();
 		pointerMoveHandler = addDomHandler((PointerMoveHandler) pointerButtonHandler, PointerMoveEvent.getType());
 		pointerUpHandler = addDomHandler((PointerUpHandler) pointerButtonHandler, PointerUpEvent.getType());
-		pointerDownHandler = addDomHandler((PointerDownHandler) pointerButtonHandler, PointerDownEvent.getType());
+		
+		handlersAdded = true;
 	}
 	
 	public void setTooltip(String tooltipText) {
@@ -165,7 +167,7 @@ public class SVGButton extends SimplePanel {
 		// svgImage.setPixelSize(width, height);
 		this.width = width;
 		this.height = height;
-		if(text.equals("")) {
+		if(fromResource) {
 			svgImage.setPixelSize(width, height);
 			return;
 		}
@@ -175,6 +177,8 @@ public class SVGButton extends SimplePanel {
 		svgImage.setPixelSize(width, height);
 		this.add(svgImage);
 		draw();
+		if(!handlersAdded)
+			addHandlers();
 	}
 
 	public void draw() {

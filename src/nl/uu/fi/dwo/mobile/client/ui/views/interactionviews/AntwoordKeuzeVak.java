@@ -8,6 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.vectomatic.dom.svg.OMSVGPathElement;
+import org.vectomatic.dom.svg.OMSVGPathSegList;
+import org.vectomatic.dom.svg.OMSVGRectElement;
+import org.vectomatic.dom.svg.utils.SVGConstants;
+
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.CanvasGradient;
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -45,6 +50,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.Review;
@@ -79,7 +85,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 	int hoogte = 24; 
 	int ashoogte = hoogte /2;
 	
-	private Canvas uitklapPijlCanvas;
+	//private Canvas uitklapPijlCanvas;
+	private SVGButton uitklapPijlKnop;
 	private Context2d gIm;
 	
 	TekstVak huidigeKeuzeVak;
@@ -247,12 +254,13 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		popupPanel = new LayoutPanel();
 		popupBox.add(popupPanel);
 		popupBox.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
-		popupBox.getElement().getStyle().setBorderColor("black");
+		popupBox.getElement().getStyle().setBorderColor(CssColor.make(150, 150, 150).toString());
 		popupBox.getElement().getStyle().setBorderWidth(1, Style.Unit.PX);
 		popupBox.getElement().getStyle().setPadding(0, Style.Unit.PX);
 		
 		huidigeKeuzeVak = maakKeuzeVak();
-		huidigeKeuzeVak.getElement().getStyle().setBorderColor(CssColor.make(128, 128, 128).toString());
+		huidigeKeuzeVak.getElement().getStyle().setBackgroundColor(CssColor.make(255, 255, 255).toString());
+		huidigeKeuzeVak.getElement().getStyle().setBorderColor(CssColor.make(150, 150, 150).toString());
 		huidigeKeuzeVak.getElement().getStyle().setBorderWidth(1, Style.Unit.PX);
 		huidigeKeuzeVak.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 		huidigeKeuzeVak.setPixelSize(breedte - 22, hoogte - 2);
@@ -520,41 +528,39 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		{
 		}
 		
-		uitklapPijlCanvas = Canvas.createIfSupported();
-		gIm = uitklapPijlCanvas.getContext2d();
+		uitklapPijlKnop = new SVGButton("") {
+			public void draw() {
+				float w = width;
+				float h = height;
+				float e = w / 24;
+				OMSVGRectElement rect = doc.createSVGRectElement(e/2, e/2, width - e, height - e, 0 * e, 0 * e);
+				rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, CssColor.make(221,223,225).toString());
+				rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, SVGConstants.CSS_GRAY_VALUE);
+				rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + e);
+				svg.appendChild(rect);
+				
+				OMSVGPathElement pijlDown = doc.createSVGPathElement();
+				OMSVGPathSegList segsPijlDown = pijlDown.getPathSegList();
+				segsPijlDown.appendItem(pijlDown.createSVGPathSegMovetoAbs(8*e, 11*e));
+				segsPijlDown.appendItem(pijlDown.createSVGPathSegLinetoAbs(16*e, 11*e));
+				segsPijlDown.appendItem(pijlDown.createSVGPathSegLinetoAbs(12*e, 15*e));
+				segsPijlDown.appendItem(pijlDown.createSVGPathSegLinetoAbs(8*e, 11*e));
+				segsPijlDown.appendItem(pijlDown.createSVGPathSegLinetoAbs(16*e, 11*e));
+				pijlDown.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, SVGConstants.CSS_GRAY_VALUE);
+				pijlDown.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, SVGConstants.CSS_GRAY_VALUE);
+				svg.appendChild(pijlDown);
+			}
+			protected void setBorderActive(boolean b) {}
+		};
+		uitklapPijlKnop.setSize(20, hoogte);
 		
-		uitklapPijlCanvas.setWidth(20 + "px");
-		uitklapPijlCanvas.setHeight(hoogte + "px");
-		uitklapPijlCanvas.setCoordinateSpaceWidth(20);
-		uitklapPijlCanvas.setCoordinateSpaceHeight(hoogte);
+		basisPanel.add(uitklapPijlKnop);
+		basisPanel.setWidgetRightWidth(uitklapPijlKnop, 20, Style.Unit.PX, 20, Style.Unit.PX);
+		basisPanel.setWidgetTopBottom(uitklapPijlKnop, 0, Style.Unit.PX, 0, Style.Unit.PX);
+
 		
-		CanvasGradient gradient = gIm.createLinearGradient(0, 0, 20, hoogte);
-		gradient.addColorStop(0, "white");
-		gradient.addColorStop(1, CssColor.make(200, 200, 200).toString());
-		gIm.setFillStyle(gradient);
-		gIm.setStrokeStyle("black");
-		gIm.setLineWidth(1.0d);
-		gIm.rect(0, 0, 20, hoogte);
-		gIm.fill();
-		gIm.stroke();
-		
-		gIm.beginPath();
-		gIm.moveTo(6, hoogte / 2 - 2);
-		gIm.lineTo(14, hoogte / 2 - 2);
-		gIm.lineTo(11, hoogte / 2 + 2);
-		gIm.lineTo(10, hoogte / 2 + 2);
-		gIm.closePath();
-		gIm.setFillStyle("black");
-		gIm.fill();
-		
-		basisPanel.add(uitklapPijlCanvas);
-		basisPanel.setWidgetRightWidth(uitklapPijlCanvas, 20, Style.Unit.PX, 20, Style.Unit.PX);
-		basisPanel.setWidgetTopBottom(uitklapPijlCanvas, 0, Style.Unit.PX, 0, Style.Unit.PX);
-		
-		
-		uitklapPijlCanvas.addDomHandler(new ClickHandler(){
-			public void onClick(ClickEvent e)
-			{
+		uitklapPijlKnop.addButtonListener(uitklapPijlKnop.new DefaultButtonListener() {
+			public void onClick(Object sender) {
 				if (!editable) return;
 				
 				int top = basisPanel.getAbsoluteTop() + basisPanel.getOffsetHeight();
@@ -570,22 +576,79 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 					isShowing = true;
 				}
 			}
-		}, ClickEvent.getType());
+		});
 		
-		uitklapPijlCanvas.addDomHandler(new MouseOverHandler(){
-			public void onMouseOver(MouseOverEvent e)
-			{	if(!isShowing && popupBox.isShowing())
-				{	isShowing = true;
-					
-				}
-			}
-		}, MouseOverEvent.getType());
 		
-		uitklapPijlCanvas.addDomHandler(new MouseOutHandler(){
-			public void onMouseOut(MouseOutEvent e)
-			{	isShowing = false;
-			}
-		}, MouseOutEvent.getType());
+		
+		
+		
+//		uitklapPijlCanvas = Canvas.createIfSupported();
+//		gIm = uitklapPijlCanvas.getContext2d();
+//		
+//		uitklapPijlCanvas.setWidth(20 + "px");
+//		uitklapPijlCanvas.setHeight(hoogte + "px");
+//		uitklapPijlCanvas.setCoordinateSpaceWidth(20);
+//		uitklapPijlCanvas.setCoordinateSpaceHeight(hoogte);
+//		
+////		CanvasGradient gradient = gIm.createLinearGradient(0, 0, 20, hoogte);
+////		gradient.addColorStop(0, "white");
+////		gradient.addColorStop(1, CssColor.make(200, 200, 200).toString());
+////		gIm.setFillStyle(gradient);
+//		gIm.setFillStyle("lightGray");
+//		gIm.setStrokeStyle(CssColor.make(150, 150, 150));
+//		gIm.setLineWidth(1.0d);
+//		gIm.rect(0, 0, 20, hoogte);
+//		gIm.fill();
+//		gIm.stroke();
+//		
+//		gIm.beginPath();
+//		gIm.moveTo(5, hoogte / 2 - 3);
+//		gIm.lineTo(15, hoogte / 2 - 3);
+//		gIm.lineTo(11, hoogte / 2 + 3);
+//		gIm.lineTo(10, hoogte / 2 + 3);
+//		gIm.closePath();
+//		gIm.setFillStyle(""+CssColor.make(80, 80, 80));
+//		gIm.fill();
+//		
+//		basisPanel.add(uitklapPijlCanvas);
+//		basisPanel.setWidgetRightWidth(uitklapPijlCanvas, 20, Style.Unit.PX, 20, Style.Unit.PX);
+//		basisPanel.setWidgetTopBottom(uitklapPijlCanvas, 0, Style.Unit.PX, 0, Style.Unit.PX);
+//		
+//		
+//		uitklapPijlCanvas.addDomHandler(new ClickHandler(){
+//			public void onClick(ClickEvent e)
+//			{
+//				if (!editable) return;
+//				
+//				int top = basisPanel.getAbsoluteTop() + basisPanel.getOffsetHeight();
+//				int topMax = DWOplayer.PARAMETERS.getWindowHeight() - hoogtePopup;
+//				top = Math.min(top, topMax);
+//				popupBox.setPopupPosition(basisPanel.getAbsoluteLeft(), top);
+//				if(isShowing)
+//				{	popupBox.hide();
+//					isShowing = false;
+//				}
+//				else
+//				{	popupBox.show();
+//					isShowing = true;
+//				}
+//			}
+//		}, ClickEvent.getType());
+//		
+//		uitklapPijlCanvas.addDomHandler(new MouseOverHandler(){
+//			public void onMouseOver(MouseOverEvent e)
+//			{	if(!isShowing && popupBox.isShowing())
+//				{	isShowing = true;
+//					
+//				}
+//			}
+//		}, MouseOverEvent.getType());
+//		
+//		uitklapPijlCanvas.addDomHandler(new MouseOutHandler(){
+//			public void onMouseOut(MouseOutEvent e)
+//			{	isShowing = false;
+//			}
+//		}, MouseOutEvent.getType());
 	}
 	
 	public void voegFeedbackSluitKnopToe()
@@ -600,7 +663,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		TekstVak vak = new TekstVak();
 		vak.setSize(breedte - 23, hoogte);
 		vak.setMarges(2, 5);
-		vak.getElement().getStyle().setBackgroundColor(CssColor.make(238, 238, 238).toString());
+		vak.getElement().getStyle().setBackgroundColor(CssColor.make(239, 241, 243).toString());
 		vak.setFontName(XMLView.getDefaultFontName());
 		vak.setFontSize(XMLView.getDefaultFontSize());
 		vak.setColor(CssColor.make("black"));
@@ -641,6 +704,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 			huidigeKeuze = tb.convertTekst(keuzeMogelijkheden[index - 1], null, false);
 		
 		huidigeKeuzeVak.setObjects(huidigeKeuze);
+		huidigeKeuzeVak.getElement().getStyle().setBackgroundColor(CssColor.make(255, 255, 255).toString());
+		
 		
 		popupBox.hide();
 		isShowing = false;
