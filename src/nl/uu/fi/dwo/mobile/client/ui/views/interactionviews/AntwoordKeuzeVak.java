@@ -442,7 +442,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		//popupPanel.setWidgetLeftWidth(keuzeOptieVakken[0], 0, Style.Unit.PX, breedte - 23, Style.Unit.PX);
 		popupPanel.setWidgetLeftRight(keuzeOptieVakken[0], 0, Style.Unit.PX, 0, Style.Unit.PX);
 		popupPanel.setWidgetTopHeight(keuzeOptieVakken[0], hoogtePanels, Style.Unit.PX, keuzeOptieVakken[0].getHeight(), Style.Unit.PX);
-		keuzeOptieVakken[0].getElement().getStyle().setBackgroundColor(CssColor.make(163, 184, 204).toString());
+		//keuzeOptieVakken[0].getElement().getStyle().setBackgroundColor(CssColor.make(163, 184, 204).toString());
+		keuzeOptieVakken[0].getElement().getStyle().setBackgroundColor(CssColor.make(255, 255, 255).toString());
 		keuzeOptieVakken[0].addDomHandler(new MouseOverHandler(){
 			public void onMouseOver(MouseOverEvent event) {
 				zetVakAangewezen(0);
@@ -675,9 +676,10 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 	{
 		for(int i = 0; i < keuzeOptieVakken.length; i++)
 		{
-			keuzeOptieVakken[i].getElement().getStyle().setBackgroundColor(CssColor.make(238, 238, 238).toString());
+			keuzeOptieVakken[i].getElement().getStyle().setBackgroundColor(CssColor.make(239, 241, 243).toString());
 		}
-		keuzeOptieVakken[index].getElement().getStyle().setBackgroundColor(CssColor.make(163, 184, 204).toString());
+		//keuzeOptieVakken[index].getElement().getStyle().setBackgroundColor(CssColor.make(163, 184, 204).toString());
+		keuzeOptieVakken[index].getElement().getStyle().setBackgroundColor(CssColor.make(255, 255, 255).toString());
 	}
 	
 	public void zetSelectie(int index)
