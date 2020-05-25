@@ -90,35 +90,44 @@
 		.modules-icon2 .modules {
 			display: inline-block;
 		}
-
+		.fit {
+			font-size: 13px;
+			font-family: Ubuntu, sans-serif !important;
+			font-weight: medium;
+			white-space: nowrap;
+			width: min-content;
+		}
 
 	</ui:style>
 	<g:DockLayoutPanel unit='PX' styleName='{t.rootPanel}'>
-		<g:north size="90">
-			<g:FlowPanel styleName='{style.headerPanel}'>
-			  <g:FlowPanel styleName='{style.headerTop}' >
+		<g:north size="50">
+			  <g:DockLayoutPanel ui:field='headerTop' styleName='{style.headerTop}' >
+			    <g:west size="170">
 			  	<g:FlowPanel styleName='{t.numworx}'><g:Image url="{pfx}images/numworx/logo-Numworx-grijs2.svg"></g:Image></g:FlowPanel>
+			  	</g:west>
+			  	<g:center>
 			  	<g:FlowPanel ui:field='kruimels' styleName='{style.kruimels}' />
+				</g:center>
+<g:east size="17">
 				<g:InlineHTML addStyleNames='{t.status}' ui:field='status'><i class='fa fa-cloud-upload'/></g:InlineHTML>
+</g:east>
+<g:east size="56">
 				<g:MenuBar ui:field='bar' addStyleNames='{t.menu}'>
 					<g:MenuItem ui:field='user' addStyleNames='{t.menuItem}' />
 				</g:MenuBar>
-				<g:Label ui:field='loginLabel' styleName='{t.loginname}'></g:Label>
-<!-- 				<g:ToggleButton ui:field='fullBtn' styleName='{t.nav}'> -->
-<!-- 					<g:upFace><img src='{pfx}images/numworx/fullscreen-numworx.svg'></img></g:upFace> -->
-<!-- 					<g:downFace><img src='{pfx}images/numworx/borderdscreen-numworx.svg'/></g:downFace> -->
-<!-- 				</g:ToggleButton> -->
-<!-- 				<g:FocusPanel styleName='{t.nav}'><g:Image url='{pfx}images/numworx/ster-grijs-numworx.svg'/></g:FocusPanel> -->
-<!-- 				<g:ToggleButton ui:field='fullBtn' styleName='{t.nav}'> -->
-<!-- 					<g:upFace><img src='{pfx}images/numworx/fullscreen-numworx.svg'></img></g:upFace> -->
-<!-- 					<g:downFace><img src='{pfx}images/numworx/borderdscreen-numworx.svg'/></g:downFace> -->
-<!-- 				</g:ToggleButton> -->
-<!-- 				<g:FocusPanel styleName='{t.nav}'><g:Image url='{pfx}images/numworx/ster-grijs-numworx.svg'/></g:FocusPanel> -->
+</g:east>
+<g:east size="200">
+				<g:FlowPanel ui:field='loginflow' styleName='{t.loginname}'>
+				<g:Label styleName='{style.fit}' ui:field='loginLabel'></g:Label></g:FlowPanel>
+</g:east>
+<g:east size="35">
 				<g:FocusPanel ui:field='upBtn' styleName='{t.nav}'>
 					<g:InlineHTML><i class='fa fa-2x fa-arrow-up' style='color:#798291'></i></g:InlineHTML>
 				</g:FocusPanel>
-<!-- 				<g:FocusPanel ui:field='homeBtn' styleName='{t.nav}'><g:Image url='{pfx}images/numworx/home-numworx.svg'/></g:FocusPanel> -->
-			  </g:FlowPanel>
+</g:east>
+			  </g:DockLayoutPanel>
+		</g:north>		
+		<g:north size="40">
 			  <g:FlowPanel ui:field="headerBottom" styleName='{style.headerBottom}' addStyleNames='{t.lesstof}'>
 			  		<g:FocusPanel ui:field='modules' styleName='{style.modules}' />
 			  		<g:Label styleName='{style.knop}' ui:field='scoType'><ui:text from='{rb.LESSTOF}'/></g:Label>
@@ -129,7 +138,6 @@
 						<g:InlineHTML><i class='fa fa-2x fa-arrow-up' style='color:#798291'></i></g:InlineHTML>
 					</g:FocusPanel>
   			  </g:FlowPanel>
-  			 </g:FlowPanel>
 		</g:north>
 		<g:center>
 			<g:SimpleLayoutPanel ui:field='center' styleName='{style.centerPanel}'>

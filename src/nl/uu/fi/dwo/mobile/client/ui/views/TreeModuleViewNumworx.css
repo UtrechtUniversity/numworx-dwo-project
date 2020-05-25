@@ -156,6 +156,8 @@
 			font-size: 13px;
 			font-family: Ubuntu, sans-serif !important;
 			font-weight: medium;
+			white-space: nowrap;
+			
 		}
 		.menu {
 			float: right;

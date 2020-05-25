@@ -2330,6 +2330,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			lastSize = size;
 			//fp.animate(300);
 			//fp.setWidgetVisible(kbd, size == sb.getStatusBarHeight()); // XXX move kbd?
+			if (state == Combined.DESKTOP_ACTIVE) setKbdCss(state);
 		}
 		setWebkitScrolling(true);
 	}
@@ -2605,11 +2606,20 @@ private void setKbdCss(Combined state) {
 	if (soortKeyboard != 0) return;
 	switch(state) {
 	case DESKTOP_ACTIVE:
-		kbd.removeStyleName(dwoplayercss.tablet());
+		double h = lastSize;
+		if (h >= 100) {
+			kbd.removeStyleName(dwoplayercss.tablet());
+			kbd.removeStyleName(dwoplayercss.tablet_active());
+			kbd.addStyleName(dwoplayercss.desktop_active());
+			fp.setWidgetBottomHeight(kbd, sb.getStatusBarHeight()+8, Unit.PX, 62, Unit.PX);
+			fp.setWidgetLeftWidth(kbd, 10, Unit.PX, 52, Unit.PX);
+			break;
+		}
+		kbd.removeStyleName(dwoplayercss.desktop_active());
 		kbd.removeStyleName(dwoplayercss.tablet_active());
-		kbd.addStyleName(dwoplayercss.desktop_active());
-		fp.setWidgetBottomHeight(kbd, sb.getStatusBarHeight()+8, Unit.PX, 62, Unit.PX);
-		fp.setWidgetLeftWidth(kbd, 10, Unit.PX, 52, Unit.PX);
+		kbd.addStyleName(dwoplayercss.tablet());
+		fp.setWidgetBottomHeight(kbd, sb.getStatusBarHeight()+10, Unit.PX, 17, Unit.PX);
+		fp.setWidgetLeftWidth(kbd, 10, Unit.PX, 46, Unit.PX);
 		break;
 	case TABLET:
 		kbd.removeStyleName(dwoplayercss.desktop_active());

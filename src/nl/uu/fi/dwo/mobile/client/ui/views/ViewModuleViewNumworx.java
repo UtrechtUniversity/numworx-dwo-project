@@ -125,11 +125,12 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 //	@UiField ToggleButton fullBtn;
 	@UiField Label title;
 	@UiField TreeModuleViewNumworxCss t;
-	@UiField FlowPanel kruimels;
+	@UiField FlowPanel kruimels, loginflow;
 	@UiField FlowPanel headerBottom;
 	@UiField HasText scoType;
 	@UiField nl.uu.fi.dwo.mobile.client.text.Text rb;
 	@UiField MenuBar bar;
+	@UiField DockLayoutPanel headerTop;
 	
 	ViewModuleViewImpl delegate;
 
@@ -141,6 +142,9 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	public Promise<Boolean> setupModule(String name, String file) {
 		String login = DWOplayer.clientfactory.withUser()? DwoGlobalVars.instance().getCurrentUser().getDisplayName() : "";
 		loginLabel.setText(login);
+		headerTop.setWidgetHidden(loginflow, !DWOplayer.clientfactory.withUser());
+		headerTop.forceLayout();
+		headerTop.setWidgetSize(loginflow, loginLabel.getOffsetWidth());
 		setupMenu(items);
 		return delegate.setupModule(name, file);
 	}
