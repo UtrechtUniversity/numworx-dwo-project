@@ -393,16 +393,10 @@ public abstract class XMLView {
 		
 		
 		
-		ResizeHandler resize = new ResizeHandler() {
-
-			@Override
-			public void onResize(ResizeEvent event) {
-				final int w  = Window.getClientWidth();//-20;
-				hoofdPanel.zetVolledigeBreedte(w);
-			}
-		};
-		resize.onResize(null);
 		
+		
+		int margeLinks = 0;
+		int margeRechts = 0;
 		
 		destination.add(hoofdPanel);
 		opdrachtObjects.add(hoofdPanel);
@@ -412,14 +406,31 @@ public abstract class XMLView {
 			style.setMarginBottom( instellingen.getInt("margeOnder"), Style.Unit.PX);
 		if(instellingen.containsKey("margeBoven"))
 		style.setMarginTop(instellingen.getInt("margeBoven"), Style.Unit.PX);
-		if(instellingen.containsKey("margeLinks"))
-		style.setMarginLeft(instellingen.getInt("margeLinks"), Style.Unit.PX);
-		if(instellingen.containsKey("margeRechts"))
-		style.setMarginRight(instellingen.getInt("margeRechts"), Style.Unit.PX);
+		if(instellingen.containsKey("margeLinks")) {
+			margeLinks = instellingen.getInt("margeLinks");
+			style.setMarginLeft(margeLinks, Style.Unit.PX);
+		}
+		if(instellingen.containsKey("margeRechts")) {
+			margeRechts = instellingen.getInt("margeRechts");
+			style.setMarginRight(margeRechts, Style.Unit.PX);
+		}
+		
+		final int ml = margeLinks;
+		final int mr = margeLinks;
+		
+		ResizeHandler resize = new ResizeHandler() {
+
+			@Override
+			public void onResize(ResizeEvent event) {
+				final int w  = Window.getClientWidth()-ml-mr;//-20;
+				hoofdPanel.zetVolledigeBreedte(w);
+			}
+		};
+		resize.onResize(null);
 		
 		if("true".equals(Window.Location.getParameter("responsive"))) {
 			Window.addResizeHandler(resize);
-			breedte = Window.getClientWidth();//-20;
+			breedte = Window.getClientWidth()-margeLinks-margeRechts;//-20;
 			hoofdPanel.zetVolledigeBreedte(breedte);
 		}
 	}
