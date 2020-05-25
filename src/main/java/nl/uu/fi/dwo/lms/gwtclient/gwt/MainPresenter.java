@@ -215,20 +215,8 @@ public class MainPresenter {
                 return null;
             }
         },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-                    //throw directly
-                }
-            }
-        });
+                new LoggingFailure(LOG,eventBus) 
+        );
 	}
     
     public void setTrails(JavaScriptObject object) {
