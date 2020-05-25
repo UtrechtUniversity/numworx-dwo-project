@@ -11,7 +11,7 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
  */
 public class JsMainView implements MainPresenter.Display{
 
-    final boolean hasIdle = false;
+    final boolean hasIdle = true;
   
     @Override
     public void setSchoolName(String schoolName) {
