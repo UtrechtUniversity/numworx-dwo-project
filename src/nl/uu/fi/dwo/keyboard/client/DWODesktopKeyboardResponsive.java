@@ -68,7 +68,7 @@ public class DWODesktopKeyboardResponsive extends AbstractKeyboard {
 		}
 		Combined combined = state.getCombined();
 		if (width < ResponsiveCSS.EXTRASMALL) {
-			if (combined != Combined.NONE) 
+			if (combined != Combined.NONE && combined != Combined.TABLET) 
 				state.setCombined(Combined.NONE);
 		} else {
 			if (combined == Combined.NONE)

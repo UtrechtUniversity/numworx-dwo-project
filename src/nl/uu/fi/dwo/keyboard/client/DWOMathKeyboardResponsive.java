@@ -20,6 +20,7 @@ public class DWOMathKeyboardResponsive extends AbstractKeyboard {
 	}
 
 	private int state;
+	private CombinedState cs;
 	
 	@UiField MathResponsiveCSS style;
 	@UiField Label a9_1, a9_2, a1_1, a1_2, a5_1, a5_2;
@@ -38,7 +39,8 @@ public class DWOMathKeyboardResponsive extends AbstractKeyboard {
 		
 	}
 	
-	public DWOMathKeyboardResponsive() {
+	public DWOMathKeyboardResponsive(CombinedState cs) {
+		this.cs = cs;
 		initWidget(uiBinder.createAndBindUi(this));
 		State s2 = new State(style.s2());
 		a9_1.addClickHandler(s2);
@@ -81,6 +83,8 @@ public class DWOMathKeyboardResponsive extends AbstractKeyboard {
 		setStyleName(style.normal(), w >= ResponsiveCSS.SMALL);
 		setStyleName(style.small(), w < ResponsiveCSS.SMALL && w >= ResponsiveCSS.EXTRASMALL);
 		setStyleName(style.extrasmall(), w < ResponsiveCSS.EXTRASMALL);
+		if (cs.getCombined() != Combined.NONE) 
+			cs.setCombined(Combined.NONE);
 	}
 	
 	@Override

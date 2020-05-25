@@ -25,6 +25,8 @@ public class DWOTabletKeyboardUpperResponsive extends AbstractKeyboard {
 	interface DWOTabletKeyboardABCResponsiveUiBinder extends UiBinder<Widget, DWOTabletKeyboardUpperResponsive> {
 	}
 
+	private CombinedState state;
+
 	/**
 	 * Because this class has a default constructor, it can
 	 * be used as a binder template. In other words, it can be used in other
@@ -35,9 +37,11 @@ public class DWOTabletKeyboardUpperResponsive extends AbstractKeyboard {
 	 * </ui:UiBinder>
 	 * Note that depending on the widget that is used, it may be necessary to
 	 * implement HasHTML instead of HasText.
+	 * @param state 
 	 */
-	public DWOTabletKeyboardUpperResponsive() {
+	public DWOTabletKeyboardUpperResponsive(CombinedState state) {
 		initWidget(uiBinder.createAndBindUi(this));
+		this.state = state;
 	}
 
 	@Override
@@ -96,6 +100,11 @@ public class DWOTabletKeyboardUpperResponsive extends AbstractKeyboard {
 		getDelegate().blur();
 	}
 	
+	@Override
+	public void onResize() {
+		if (state.getCombined() != Combined.NONE)
+			state.setCombined(Combined.NONE);
+	}
 	
 	
 }

@@ -30,6 +30,9 @@ public class DWOTabletKeyboardPen extends AbstractKeyboard implements WritePanel
 	@UiField SimplePanel writePanel;
 	
 	WritePanel panel;
+
+
+	private CombinedState state;
 	
 	private static TabletKeyboardPenUiBinder uiBinder = GWT
 			.create(TabletKeyboardPenUiBinder.class);
@@ -52,6 +55,10 @@ public class DWOTabletKeyboardPen extends AbstractKeyboard implements WritePanel
 		writePanel.setPixelSize(width, -1);
 	}
 
+	public DWOTabletKeyboardPen(CombinedState state) {
+		this();
+		this.state = state;
+	}
 	@Override
 	public void setEditor(FormuleEditorIF formuleEditor) {
 		super.setEditor(formuleEditor);
@@ -125,9 +132,12 @@ public class DWOTabletKeyboardPen extends AbstractKeyboard implements WritePanel
 	}
 	@Override
 	public void onResize() {
+		if (state.getCombined() != Combined.NONE)
+			state.setCombined(Combined.NONE);
 		int w = getWidget().getOffsetWidth();
 		int width = w - 27 - pad.getOffsetWidth();
 		panel.setPixelSize(width, -1);
+		
 	}
 
 }

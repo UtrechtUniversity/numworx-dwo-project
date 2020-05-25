@@ -44,21 +44,21 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 		tablet.setDelegate(this);
 		tablet.setVisible(false);
 		
-		math = new DWOMathKeyboardResponsive();
+		math = new DWOMathKeyboardResponsive(state);
 		math.setVisible(false);
 		math.setKeyboard(1);
 		math.setDelegate(this);
 
-		pen = new DWOTabletKeyboardPen(); // 70 px minder voor switchvak
+		pen = new DWOTabletKeyboardPen(state); // 70 px minder voor switchvak
 		pen.setDelegate(this);
 		pen.setVisible(false);
 		main.add(pen);
 
-		kabc = new DWOTabletKeyboardABCResponsive();
+		kabc = new DWOTabletKeyboardABCResponsive(state);
 		kabc.setDelegate(this);
 		kabc.setVisible(false);
 		main.add(kabc);
-		kABC = new DWOTabletKeyboardUpperResponsive();
+		kABC = new DWOTabletKeyboardUpperResponsive(state);
 		kABC.setDelegate(this);
 		kABC.setVisible(false);
 		main.add(kABC);
@@ -117,7 +117,8 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 				setVisible(false);
 				resizeScrollPanel(getKeyboardHeight()); 					
 			} 
-		}
+		} else 
+			onResize();
 		
 	}
 
@@ -158,6 +159,7 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 		} else {
 			setCombined(Combined.TABLET_ACTIVE);
 		}
+		onResize();
 	}
 
 	/* (non-Javadoc)
@@ -172,6 +174,7 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 		} else {
 			setVisible(true);
 			setCombined(Combined.TABLET_ACTIVE_SOFT);
+			onResize();
 		}
 		resizeScrollPanel(getKeyboardHeight());
 	}
@@ -373,7 +376,8 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 
 	@Override
 	public void onResize() {
-		current.onResize();
+		if (isVisible())
+			current.onResize();
 	}
 
 	@Override
