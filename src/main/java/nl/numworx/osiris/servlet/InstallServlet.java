@@ -70,8 +70,48 @@ public class InstallServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		InputStream in = getClass().getResourceAsStream("/upload.html");
+	protected synchronized void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		StoredRestManager instance = StoredRestManager.getInstance();
+		ServerBuilder numworx = new ServerBuilder();
+		DomLoginContext loginContext = null;
+		String upload = "/upload.html";
+		try {
+			SystemManager system;
+			instance.setBasicAuthString(null, null, null);
+			instance.getAuthenticator().setServerUrlPath(new URL("http://localhost/dwo/"));
+			system = new SystemManager(instance);
+			DomSamlUser user = new DomSamlUser();
+			user.setSamlUserId(req.getRemoteUser()); 
+														//user.setSamlUserId("staff1"); // DEBUG
+			user.setSamlOrgId(UU);
+			user = system.requestSamlToken(user);
+			
+			String samlUserID = user.getSamlUserId();	      
+			String samlOrgID = user.getSamlOrgId();
+			String authToken = user.getAuthToken();
+			String token = "3\f" + samlUserID + '\f' + samlOrgID + '\f' + authToken;
+			token = Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
+			OAuthManager m = new OAuthManager(instance);
+			token = m.authorization_token(token);
+			if (token != null) {
+			  instance.getAuthenticator().setUsername(user.getSamlUserId()); // for debugging.
+			  instance.setRecover(null); // FIXME
+			} else {
+				upload = "/noway.html";
+			}
+			loginContext = SecureUserAccountManager.getLoginContext();
+			numworx.setSource(loginContext.getRealm(), instance);
+		} catch (Dwo2Exception e1) {
+				upload = "/noway.html";
+		} finally {
+			try {
+				if (loginContext != null) SecureUserAccountManager.logoutUser(loginContext);
+			} catch (Dwo2Exception e) {
+				throw new ServletException(e.getLocalizedMessage(), e);
+			}
+		}
+		
+		InputStream in = getClass().getResourceAsStream(upload);
 		byte buffer[] = new byte[1024];
 		int len;
 		resp.setContentType("text/html");
