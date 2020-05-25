@@ -165,8 +165,18 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 			Vector parents = new Vector();
 			Vector parentsTemp = new Vector();
 			randomSequence = new int[ipList.length];
-			for(int i=0 ; i<ipList.length ; i++)
-			{	TekstVak tv = (TekstVak)ipList[i].asWidget().getParent().getParent();
+			
+			boolean randomizable = true; //randomiseren gaat niet goed als objecten dezelfde parent hebben (en niet zwevend zijn)
+			if(ipList.length>1) {
+				TekstVak tv0 = (TekstVak)ipList[0].asWidget().getParent().getParent();
+				TekstVak tv1 = (TekstVak)ipList[1].asWidget().getParent().getParent();
+				if(tv0==tv1) {
+					randomizable = false;
+				}
+			}
+			for(int i=0 ; i<ipList.length && randomizable ; i++)
+			{	
+				TekstVak tv = (TekstVak)ipList[i].asWidget().getParent().getParent();
 				parents.addElement(tv);
 				parentsTemp.addElement(tv);
 				ArrayList<Object> objects = tv.getOpdrachtObjects();
@@ -174,7 +184,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 				Panel p = (Panel)ipList[i].asWidget().getParent();
 				tv.clear();
 			}
-			for(int i=0 ; i<ipList.length ; i++)
+			for(int i=0 ; i<ipList.length && randomizable; i++)
 			{	int r = (int)((ipList.length-i)*Math.random());
 				randomSequence[i] = r;
 				TekstVak tv = (TekstVak)(parentsTemp.elementAt(r));
@@ -182,7 +192,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 				objects.add(0,ipList[i]);
 				parentsTemp.removeElementAt(r);
 			}
-			for(int i=0 ; i<parents.size() ; i++)
+			for(int i=0 ; i<parents.size()  && randomizable; i++)
 			{	TekstVak tv = (TekstVak)parents.elementAt(i);
 				tv.reLayout();
 			}
@@ -474,7 +484,15 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         				for(int i=0 ; i<ipList.length ; i++)
         				{	((TekstVakPanel)ipList[i]).setRandomPositioned(true);
         				}
-        				for(int i=0 ; i<ipList.length ; i++)
+        				boolean randomizable = true; //randomiseren gaat niet goed als objecten dezelfde parent hebben (en niet zwevend zijn)
+        				if(ipList.length>1) {
+        					TekstVak tv0 = (TekstVak)ipList[0].asWidget().getParent().getParent();
+        					TekstVak tv1 = (TekstVak)ipList[1].asWidget().getParent().getParent();
+        					if(tv0==tv1) {
+        						randomizable = false;
+        					}
+        				}
+        				for(int i=0 ; i<ipList.length && randomizable; i++)
         				{	TekstVak tv = (TekstVak)ipList[i].asWidget().getParent().getParent();
         					parents.addElement(tv);
         					parentsTemp.addElement(tv);
@@ -483,14 +501,14 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         					Panel p = (Panel)ipList[i].asWidget().getParent();
         					tv.clear();
         				}
-        				for(int i=0 ; i<ipList.length ; i++)
+        				for(int i=0 ; i<ipList.length  && randomizable; i++)
         				{	int r = randomSequence[i];
         					TekstVak tv = (TekstVak)(parentsTemp.elementAt(r));
         					ArrayList<Object> objects = tv.getOpdrachtObjects();
         					objects.add(0,ipList[i]);
         					parentsTemp.removeElementAt(r);
         				}
-        				for(int i=0 ; i<parents.size() ; i++)
+        				for(int i=0 ; i<parents.size()  && randomizable; i++)
         				{	TekstVak tv = (TekstVak)parents.elementAt(i);
         					tv.reLayout();
         				}
