@@ -201,6 +201,7 @@ Promise<DomSingleSchoolStudent> getSingleSchoolStudent(DomGetSingleSchoolStudent
       RestGetSingleSchoolStudent restData = new RestGetSingleSchoolStudent();
       DomContext ctx = new DomContext();
       ctx.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
+      ctx.setRealm(dwoGlobalVars.getCurrentLoginContext().getRealm());
       restData.setRestContext(ctx);
       restData.setDomGetSingleSchoolStudent(student);
       return manager.getSingleSchoolStudent(restData);
