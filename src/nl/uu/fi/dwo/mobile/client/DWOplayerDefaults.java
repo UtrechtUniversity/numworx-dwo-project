@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.mobile.client;
 
-import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.NavigationCss;
 import nl.uu.fi.dwo.mobile.client.ui.NavigationBundle;
 import nl.uu.fi.dwo.mobile.client.ui.NavigationTextAndroid;
@@ -33,11 +32,6 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 //		*/
 		return "";
 	}
-
-//	@Override
-//	public String getLaunchData() {
-//		return "https://ws.fisme.science.uu.nl/DWOmAccess/getJSONLaunchDataBytes?s=";
-//	}
 
 	@Override
 	public String getResource(String resource) {

@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.utils;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -243,8 +244,12 @@ public class LaTransport implements Logging {
 
 		msg.put("version", VERSION);
 		msg.put("timestamp", getTimeStamp());
-
-		msg.put("result", toJSONObject(parameters));
+		Map<String, ?> copy = parameters;
+		if (copy.containsKey("verb")) {
+			copy = new HashMap<>(parameters);
+			copy.remove("verb");
+		}
+		msg.put("result", toJSONObject(copy));
 		
 		JSONObject context = new JSONObject();
 		context.put("registration", registration);
@@ -260,8 +265,7 @@ public class LaTransport implements Logging {
 		String verb = (String) parameters.get("verb");
 		if (verb != null) {
 			JSONObject id = new JSONObject(); id.put("id", new JSONString(verb));
-			JSONObject v = new JSONObject(); v.put("verb", id);
-			msg.put("verb", v);
+			msg.put("verb", id);
 		}
 		return msg;
 		
