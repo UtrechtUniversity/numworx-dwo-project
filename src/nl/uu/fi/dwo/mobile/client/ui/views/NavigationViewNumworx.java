@@ -274,11 +274,11 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		
 		SafeHtmlBuilder builder = new SafeHtmlBuilder();
 		switch(type) {
-		case FOLDER: builder.appendHtmlConstant(treeItemIcon("images/numworx/folder-numworx.svg"));
+		case FOLDER: builder.appendHtmlConstant(treeItemIcon("images/numworx/folder-numworx.svg", "top"));
 		    break;
-		case MODULE: builder.appendHtmlConstant(treeItemIcon("images/numworx/module-numworx.svg"));
+		case MODULE: builder.appendHtmlConstant(treeItemIcon("images/numworx/module-numworx2.svg","-4px"));
 			break;
-		case SCO: builder.appendHtmlConstant(treeItemIcon("images/numworx/activiteit_numworx.svg"));
+		case SCO: builder.appendHtmlConstant(treeItemIcon("images/numworx/activiteit_numworx2.svg", "-2px"));
 		default:
 			break;
 		}
@@ -291,8 +291,9 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 				toSafeHtml();
 	}
 
-	private String treeItemIcon(String string) {
-		return "<img width='16' heigth='16' src='" + DWOplayer.PARAMETERS.getResource(string) + "' >";
+	private String treeItemIcon(String string, String align) {
+		return "<img style='vertical-align:" + align + "'" 
+				+ "width='16' heigth='16' src='" + DWOplayer.PARAMETERS.getResource(string) + "' >";
 	}
 
 	private TreeItem getTreeItem(SelectModuleItem item) {
