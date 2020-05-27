@@ -50,7 +50,7 @@ public class DWOTabletKeyboardPen extends AbstractKeyboard implements WritePanel
 		pad.t4_16.addStyleName("is-active");;
 		pad.setDelegate(this);
 		
-		panel = new WritePanel(width,150+60,this,1);
+		panel = new WritePanel(width,HEIGHT-20,this,1);
 		writePanel.setWidget(panel);
 		writePanel.setPixelSize(width, -1);
 	}

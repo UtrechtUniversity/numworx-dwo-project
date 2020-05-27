@@ -41,8 +41,9 @@
 	}
 	
 	.pen {
-		height: 210px;
+		height: 206px;
 		margin-left: 10px;
+		margin-top: 10px;
 	}
 
 	.root .pad .kbd-Key {
@@ -80,7 +81,7 @@
 	  <g:center>
 		<g:SimplePanel ui:field="writePanel" styleName="{style.pen}" />
 	  </g:center>
-	  <g:east size="120">
+	  <g:east size="90">
 		<my:DWOTabletKeyboardPad ui:field="pad" styleName="{style.pad}" />
 	  </g:east>
 	</g:DockLayoutPanel></g:SimpleLayoutPanel>
