@@ -168,6 +168,7 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 	@Override
 	public void softFocus() {
 		FocusOnTouch.focus();
+        if(current==pen) pen.focus(); // does read formula
 		if (isDesktop) {
 			setVisible(false);
 			setCombined(Combined.TABLET);
