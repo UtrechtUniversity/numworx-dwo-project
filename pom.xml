@@ -58,8 +58,8 @@
     </plugins>
   </build>
   <description />
-  <version>0.0.7-SNAPSHOT</version>
+  <version>0.0.7</version>
   <scm>
-  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/GWT/WiskOpdrGWT/trunk</developerConnection>
+  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/GWT/WiskOpdrGWT/tags/WiskOpdrGWT-0.0.7</developerConnection>
   </scm>
 </project>
