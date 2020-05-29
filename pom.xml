@@ -482,6 +482,8 @@
 								<exclude>WEB-INF/**</exclude>
 								<exclude>META-INF/**</exclude>
 								<exclude>**/*.scss</exclude>
+								<exclude>css/*.rb</exclude>
+								<exclude>css/*.map</exclude>
 								<exclude>login.html</exclude>
 								<exclude>gwtclient.html</exclude>
 								<exclude>html5plain.html</exclude>
