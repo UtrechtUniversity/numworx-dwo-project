@@ -122,10 +122,13 @@
 	.s0.extrasmall .row1 {
 		width: 66.667%;
 	}
-	.s2.extrasmall .row3, .s1.extrasmall .row2 {
+	.s1.extrasmall .row2 {
 		width: 65.657%;
 	}
-		
+	.s2.extrasmall .row3 {
+		width: 63.636%;
+	}
+	
 	.small .row4 {
 		width: 11.111% !important;
 	}
