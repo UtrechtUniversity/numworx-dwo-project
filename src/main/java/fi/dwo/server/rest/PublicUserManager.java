@@ -87,6 +87,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -724,31 +725,23 @@ pUser.setPassword(""); // INVALID PASSWORD
     @Produces({MediaType.TEXT_HTML})
     @Path("/requestNewPassword")
     public String reqPasswordChangeForm(@QueryParam("language") String language, @QueryParam("back") String back) throws IOException {
-        if (language == null) {
+    	String dwo_env = System.getProperty("DWO_ENV", "app");
+    	if (dwo_env.contains("saml"))
+    		throw new WebApplicationException(HttpServletResponse.SC_NOT_FOUND);
+
+    	if (language == null) {
             language = TextMapper.getLanguage();
         }
         if (back == null) {
             back = "";
+        } else { 
+        	LOG.info("back = " + back);
         }
         String old = TextMapper.getLanguage();
         TextMapper.setLanguage(language);
         InputStream in = getClass().getResourceAsStream("requestPasswordChange.html");
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        String r;
-//        r = "<HTML><BODY><p> " + TextMapper.getText(TextMapper.LBL_REQUEST_NEW_PASSWORD)
-//                + "<form action=\"requestPasswordChange\" method=\"post\" >\n"
-//                + "<input type='hidden' name='language' value=\"" + htmlEncode(language) + "\">\n"
-//                + "<input type='hidden' name='back' value=\"" + htmlEncode(back) + "\">\n"
-//                + "<table>"
-//                + "<tr><td align=\"right\">" + TextMapper.getText(TextMapper.LBL_USERNAME) + ": </td> <td><input type=\"text\" size=\"50\" name=\"usercode\" value=\""
-//                + "\"></td></tr>"
-//                + "<tr><td align=\"right\">" + TextMapper.getText(TextMapper.LBL_EMAIL) + ":</td> <td><input type=\"text\" size=\"50\" name=\"email\" value=\""
-//                + "\"> </td></tr>"
-//                + "<tr><td/><td align=\"right\"><input type=\"submit\" value=\"" + TextMapper.getText(TextMapper.BTN_OK) + "\" ></td></tr>"
-//                + "<table>"
-//                + "</form>";
-//        r += "</p></BODY> </HTML>";
-        
+        String r;        
         r = "";
         String line;
         while( (line = reader.readLine()) != null) {
@@ -808,7 +801,12 @@ pUser.setPassword(""); // INVALID PASSWORD
             @FormParam("back") String back,
             @Context HttpServletRequest request
     ) throws Exception {
-        String old = TextMapper.getLanguage();
+    	String dwo_env = System.getProperty("DWO_ENV", "app");
+    	if (dwo_env.contains("saml"))
+    		throw new WebApplicationException(HttpServletResponse.SC_NOT_FOUND);
+    	
+    	
+    	String old = TextMapper.getLanguage();
         if (language == null) {
             language = old;
         } else {
@@ -892,6 +890,9 @@ pUser.setPassword(""); // INVALID PASSWORD
         //return response (ok or logging).
         if (back == null || back.isEmpty()) {
             back = "requestNewPassword?language=" + urlEncode(language);
+        } else {
+        	// FIXME legal back = "/nn/nn/" o.i.d.
+        	LOG.info("back = " + back);
         }
         String terug = TextMapper.getText(TextMapper.BTN_BACK);
         result = "<HTML><BODY>" + result + "<P><A HREF=\""
