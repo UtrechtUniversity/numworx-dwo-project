@@ -17,7 +17,7 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 	private Combined combined = Combined.NONE;
 	private boolean isDesktop = true;
 	private boolean premium;
-	private AbstractKeyboard current, desktop, tablet, math, pen, kabc, kABC, kGrUpper, kGrLower;
+	private AbstractKeyboard current, desktop, tablet, math, pen, kabc, kABC;
 	private FlowPanel main;
 	
 	
@@ -63,14 +63,14 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 		kABC.setVisible(false);
 		main.add(kABC);
 
-		kGrUpper = new DWOTabletKeyboardGrUpper();
-		kGrUpper.setDelegate(this);
-		kGrUpper.setVisible(false);
-		main.add(kGrUpper);
-		kGrLower = new DWOTabletKeyboardGrLower();
-		kGrLower.setDelegate(this);
-		kGrLower.setVisible(false);
-		main.add(kGrLower);
+//		kGrUpper = new DWOTabletKeyboardGrUpper();
+//		kGrUpper.setDelegate(this);
+//		kGrUpper.setVisible(false);
+//		main.add(kGrUpper);
+//		kGrLower = new DWOTabletKeyboardGrLower();
+//		kGrLower.setDelegate(this);
+//		kGrLower.setVisible(false);
+//		main.add(kGrLower);
 		
 		main.add(desktop);
 		main.add(tablet);
@@ -257,8 +257,8 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 		setActiveEditor(formuleEditor);
 		desktop.setEditor(formuleEditor);
 		tablet.setEditor(formuleEditor);
-		kGrUpper.setEditor(formuleEditor);
-		kGrLower.setEditor(formuleEditor);
+//		kGrUpper.setEditor(formuleEditor);
+//		kGrLower.setEditor(formuleEditor);
 		kabc.setEditor(formuleEditor);
 		kABC.setEditor(formuleEditor);
 		math.setEditor(formuleEditor);
@@ -280,11 +280,11 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 		if(current != math)
 		{	
 			switchTo(math);
-		} else {
-			if(upper)
-				switchGrUpper();
-			else
-				switchGrLower();
+//		} else {
+//			if(upper)
+//				switchGrUpper();
+//			else
+//				switchGrLower();
 		}
 	}
 
@@ -303,17 +303,17 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 
 	@Override
 	void switchLower() {
-		if(current == kGrUpper)
-			switchGrLower();
-		else
+//		if(current == kGrUpper)
+//			switchGrLower();
+//		else
 			switchLtLower();
 	}
 
 	@Override
 	void switchUpper() {
-		if(current == kGrLower)
-			switchGrUpper();
-		else
+//		if(current == kGrLower)
+//			switchGrUpper();
+//		else
 			switchLtUpper();
 	}
 
@@ -327,15 +327,15 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 		switchTo(kabc);
 	}
 
-	private void switchGrUpper() {
-		upper = true;
-		switchTo(kGrUpper);
-	}
-
-	private void switchGrLower() {
-		upper = false;
-		switchTo(kGrLower);
-	}
+//	private void switchGrUpper() {
+//		upper = true;
+//		switchTo(kGrUpper);
+//	}
+//
+//	private void switchGrLower() {
+//		upper = false;
+//		switchTo(kGrLower);
+//	}
 
 	private DataResource enterImage = DWOTabletKeyboardFactory.resources.apply_svg();
 	 
@@ -348,8 +348,8 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
             kabc.setEnterImage(resource);
             kABC.setEnterImage(resource);
             pen.setEnterImage(resource);
-            kGrUpper.setEnterImage(resource);
-            kGrLower.setEnterImage(resource);
+//            kGrUpper.setEnterImage(resource);
+//            kGrLower.setEnterImage(resource);
             math.setEnterImage(resource);
         }
     }
