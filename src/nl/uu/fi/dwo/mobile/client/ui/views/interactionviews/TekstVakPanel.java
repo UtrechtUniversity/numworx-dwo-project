@@ -5460,11 +5460,15 @@ private Object CamelCase(String name) {
 			int w = breedte;
  			
 			    w = (int)Math.round(responsiveFactor*breedte + responsiveConstant);
-			    if(responsiveFactor*breedte + responsiveConstant< responsiveMinWidth)
+			    if(responsiveFactor*breedte + responsiveConstant< responsiveMinWidth) {
 			    		w = breedte;
+			    }
+			    else {
+			    		w = w-1; // correctie voor afrondingen naar boven
+			    }
+			    		
 			    if(w > responsiveMaxWidth)
 			    		w = responsiveMaxWidth;
-			    w = w-2;
 			
 //			int w = breedte;
 //			if(breedte>responsiveToggleWidth) 
