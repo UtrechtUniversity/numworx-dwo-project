@@ -4,19 +4,10 @@
 <!DOCTYPE html>
 <% 
 	int profile = 99;
-	String query = request.getQueryString();
-	if(query == null)
-	 	query = "?base=/ho/&profile=" + profile;
-	else 
-	  	query = "?base=/ho/&profile=" + profile + "&" + query;
-	String hash = request.getParameter("hash");
-	String player = "/gwtclient/index.html";
-
-	if ( hash != null) // Deeplink
-		player = "/dwo/tablet/DWOplayer.jsp";
-	else
-		hash = "";
+    String base = "/ho/";
+    String locale = "nl";  
 %>
+<%@ include file="/dwo/index_util.jsp" %>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
 		<meta name="apple-mobile-web-app-capable" content="yes">
