@@ -58,7 +58,12 @@ public class GwtClientWrap implements Filter {
 			return new PrintWriter(writer);
 		}
 	}
-	
+
+
+
+	private static final String SAMLSTART = "<!--SAMLSTART-->";
+	private static final String SAMLEND= "<!--SAMLEND-->";
+	private boolean saml;
 	
 	
 	final Logger LOG = Logger.getLogger(getClass().getName());
@@ -66,6 +71,7 @@ public class GwtClientWrap implements Filter {
 	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
+		saml = System.getProperty("DWO_ENV", "app").contains("saml");
 	}
 
 	@Override
@@ -90,6 +96,16 @@ public class GwtClientWrap implements Filter {
 			content = content.replace("<form ", "<form method='post' ");
 			content = content.replace("</form>", "<input type='hidden' value='" + random.nextLong()
 					+ "' name='antiCSRFtoken' ></form>");
+			if (saml) {			
+				int index = content.indexOf(SAMLSTART);
+				while (index >= 0) {
+					int end = content.indexOf(SAMLEND, index);
+					if (end >=0 ) content = content.substring(0, index) + content.substring(end);
+					index = content.indexOf(SAMLSTART, index+1);
+				}
+				content = content.replace("type=\"password\"", "type=\"text\"");
+			}
+			
 			resp.getWriter().write(content);
 		}
 
