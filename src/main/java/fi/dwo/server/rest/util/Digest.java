@@ -15,8 +15,6 @@ import javax.json.JsonObject;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
-import org.json.simple.parser.ParseException;
-
 /**
  * The server-side implementation of the RPC service.
  */
