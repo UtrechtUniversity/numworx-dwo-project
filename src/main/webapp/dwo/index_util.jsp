@@ -22,7 +22,6 @@ private static final String DWO_SAML_AUTH_TOKEN = "dwoSAMLAuthToken";
 	if (o != null && u != null && t != null) {
 	      t = "3\f" + u + '\f' + o + '\f' + t;
 	      query += "?a=" + Base64.getEncoder().encodeToString(t.getBytes());
-	      response.getWriter().print("<!-- " + query + "-->");
 	}
 	
 	
