@@ -293,7 +293,7 @@ abstract class SecuredCommonScoDataManager {
             if (digest != null) {
               String patched = new Digest().digest(newObject);
               if( !digest.equals(patched)) {
-                LOG.severe("patch digest error");
+                LOG.severe("patch digest error " + patched + " " + digest);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Wrong digest", Response.Status.PRECONDITION_FAILED);
               }
             }
