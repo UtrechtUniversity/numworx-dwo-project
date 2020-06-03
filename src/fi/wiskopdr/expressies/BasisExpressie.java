@@ -70,7 +70,8 @@ public class BasisExpressie extends Expressie
 	{	
 		boolean letterVar = Character.isLetter(basisString.charAt(0));
 		boolean hoekVar = basisString.length()>1 && '\u2220'== basisString.charAt(0) && Character.isLetter(basisString.charAt(1));
-		return letterVar||hoekVar;
+		boolean deltaVar = basisString.length()>1 && '\u2206'== basisString.charAt(0) && Character.isLetter(basisString.charAt(1));
+		return letterVar||hoekVar||deltaVar;
 	}
 
 	public double geefWaarde()
