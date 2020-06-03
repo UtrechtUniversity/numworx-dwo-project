@@ -60,9 +60,17 @@ public class BasisExpressie extends Expressie
 		return waarde;
 	}
 
+//	public boolean isVar()
+//	{
+//		return Letter.isLetter(basisString.charAt(0));
+//		
+//	}
+	
 	public boolean isVar()
-	{
-		return Letter.isLetter(basisString.charAt(0));
+	{	
+		boolean letterVar = Character.isLetter(basisString.charAt(0));
+		boolean hoekVar = basisString.length()>1 && '\u2220'== basisString.charAt(0) && Character.isLetter(basisString.charAt(1));
+		return letterVar||hoekVar;
 	}
 
 	public double geefWaarde()
