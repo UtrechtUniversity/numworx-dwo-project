@@ -37,7 +37,7 @@
 		<a class='logout' href="/Shibboleth.sso/Logout?return=/" target="_parent" >To the main screen, ending your session </a>
 	</li>
 	<li>
-		<a class='nologout' href="/" >To the main screen, keeping your session</a>
+		<a class='nologout' href="/" target="_parent" >To the main screen, keeping your session</a>
 	</li>
 </ul>
 </body>

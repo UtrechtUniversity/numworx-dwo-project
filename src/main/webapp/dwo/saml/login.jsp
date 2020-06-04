@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" session="false" %>
 <%@ page import="javax.servlet.http.Cookie" %>
 <%@ page import="org.imsglobal.basiclti.BasicLTIUtil" %>
 <%@ include file="/dwo/saml_util.jsp" %>
@@ -7,6 +7,15 @@
 <html>
 <%
 	String cookies = "document.cookie";
+	Cookie[] cs = wrap.getCookies();
+	out.write("<!--");
+	for(Cookie c: cs) {
+	  out.write( c.getName() ); 
+	  out.write("=");
+	  out.write( c.getValue());
+	  out.write("; ");
+	}
+	out.write("-->");
 %>
 
 <head>

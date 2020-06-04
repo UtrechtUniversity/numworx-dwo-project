@@ -1,7 +1,8 @@
-<%@page import="java.util.Base64"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@page import="java.util.Base64"%>
 <%@ page import='java.util.regex.*' %>
+<%@ include file="/dwo/saml_util.jsp" %>
 <%!
 private static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
 private static final String DWO_SAML_ORGANIZATION = "dwoSAMLOrganization";    
@@ -12,7 +13,7 @@ private static final String DWO_SAML_AUTH_TOKEN = "dwoSAMLAuthToken";
 	String query ;	
 	query = "?base=" + base + "&locale=" + locale + "&profile=" + profile;
 	
-	Cookie[] cookies = request.getCookies();
+	Cookie[] cookies = wrap.getCookies();
 	String u = null, o = null, t = null;
 	for(Cookie c : cookies) {
 		if (DWO_SAML_ORGANIZATION_ID.equals(c.getName())) o = c.getValue();
