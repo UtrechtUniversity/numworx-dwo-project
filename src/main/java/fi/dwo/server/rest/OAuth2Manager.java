@@ -13,9 +13,11 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.Response.StatusType;
 import javax.xml.bind.DatatypeConverter;
 
 import fi.dwo.commons.persistence.entities.PersistentCourse;
@@ -56,6 +58,7 @@ public class OAuth2Manager {
     key = getKey(c);
     JwtBuilder builder = Jwts.builder();
     if (u.isSingleSchoolAccount()) builder = builder.setAudience(RoleType.STUDENT.name());
+    else builder = builder.setAudience(RoleType.NONE.name());
     if (scope != null) builder = builder.claim("scope", scope);
     String token = 
        builder
@@ -207,5 +210,48 @@ public class OAuth2Manager {
     response.setToken_type(DomToken.BEARER);
     response.setScope(scope);
     return Response.ok(response).build();
+  }
+  
+  @POST
+  @Path("/nekot") // end of token
+  @Consumes(MediaType.TEXT_PLAIN)
+  public Response nekot(String plain) {
+    MultivaluedMap<String, String> params = convert(plain);
+    String accessToken = params.getFirst("access_token");
+    String code = params.getFirst(REFRESH_TOKEN);
+    // doe je ding.
+    JwtParser parser = Jwts.parser().setSigningKeyResolver(AUTH);
+    Jws<Claims> token = parser.parseClaimsJws(code);
+    Jws<Claims> access = parser.parseClaimsJws(accessToken);
+    String kid = token.getHeader().getKeyId();
+    String kid2 = access.getHeader().getKeyId();
+    Claims body = token.getBody();
+    Long id = Long.decode(kid);
+    PersistentLoginContext l = LoginContextManager.findEntity(id);
+    PersistentUser u = UserManager.findEntity(l.getUserId());
+    if ( u.getUsername().equals(body.getSubject())
+        && kid.equals(kid2)
+        && u.getUsername().equals(access.getBody().getSubject())
+        && access.getBody().getAudience() != null
+        && l.getSecretKey() != null
+        && body.getId().equals(DatatypeConverter.printHexBinary(l.getSecretKey()))
+        && body.getNotBefore().equals(new Date(l.getLastLogin()/1000L * 1000L))
+        )     {
+      l.setLastLogin(System.currentTimeMillis());
+      l.setSecretKey(null);
+      LoginContextManager.edit(l);
+    }
+    
+    return Response.status(Status.UNAUTHORIZED).build();
+  }
+
+  private MultivaluedMap<String, String> convert(String plain) {
+    MultivaluedHashMap<String, String> result = new MultivaluedHashMap<>();
+    String split[] = plain.split("&");
+    for(String entry: split) {
+      String kv[] = entry.split("=",2);
+      result.add(kv[0], kv[1]);
+    }
+    return result;
   }
 }

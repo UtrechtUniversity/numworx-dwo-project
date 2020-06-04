@@ -3,6 +3,7 @@ package fi.dwo.server.rest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
@@ -16,7 +17,10 @@ public class ExceptionProvider implements javax.ws.rs.ext.ExceptionMapper<Except
 
 	@Override
 	public Response toResponse(Exception exception) {
-		LOG.log(Level.SEVERE, "Unhandled exception", exception);
+	    if (exception instanceof NotFoundException) {
+	      LOG.log(Level.WARNING, "Not Found Exception " + exception.getLocalizedMessage());
+	    } else
+	      LOG.log(Level.SEVERE, "Unhandled exception", exception);
         if (exception instanceof Dwo2Exception) {
           // wrap
           exception = new Dwo2RestException( (Dwo2Exception) exception );
