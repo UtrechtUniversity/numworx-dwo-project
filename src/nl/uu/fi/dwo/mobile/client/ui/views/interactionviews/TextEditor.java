@@ -1272,7 +1272,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
               FormuleKeyboardIF kb = comRoot.getKeyboard();
 		      kb.blur();
 		      kb.setEditor(deze);
-		      kb.softFocus(); hideEmpty(); // undo blur, (blur zet ...)
+		      kb.setEnterType(EnterType.ENTER);
+		      kb.softFocus(); hideEmpty(); // undo blur, (blur zet ... en APPLY)
 		      clearDownMove();
 		      int r = Math.abs(downX-lastX) + Math.abs(downY-lastY);
 		      Widget moveWidget = findWidget(lastX, lastY);
@@ -1431,6 +1432,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 					TextEditor.this.cursorToRight();
 					keyboard.setEnterType(EnterType.ENTER);
 					TextEditor.this.requestFocus();
+					keyboard.softFocus();
 				}
 
 				/* (non-Javadoc)
