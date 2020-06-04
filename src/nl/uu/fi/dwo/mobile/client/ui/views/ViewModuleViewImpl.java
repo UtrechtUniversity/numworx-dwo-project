@@ -478,6 +478,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 							getKeyboard().setEditor(null);
 							getKeyboard().blur();
 						}
+						on.saveCurrentState();
 						defer.resolve(null);
 					}
 				});
