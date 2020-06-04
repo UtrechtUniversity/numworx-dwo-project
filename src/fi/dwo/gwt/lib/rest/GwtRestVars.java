@@ -279,4 +279,15 @@ public class GwtRestVars {
 		tokenRequest = null;
 	}
 	
+	public String getLogoutQuery() {
+	  if (refresh_token != null) {
+	    String access_token = authenticator.getAuthorization().substring(7);
+	    return "refresh_token=" + refresh_token + "&access_token=" + access_token;
+	  }
+	  return null;
+	}
+
+  public String getLogoutURL() {
+    return server + "oauth2/nekot";
+  }
 }
