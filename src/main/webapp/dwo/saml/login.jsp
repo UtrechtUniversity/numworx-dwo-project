@@ -7,15 +7,18 @@
 <html>
 <%
 	String cookies = "document.cookie";
+// Alternatief
 	Cookie[] cs = wrap.getCookies();
-	out.write("<!--");
+	StringBuilder sb = new StringBuilder("\"");
 	for(Cookie c: cs) {
-	  out.write( c.getName() ); 
-	  out.write("=");
-	  out.write( c.getValue());
-	  out.write("; ");
+	  sb.append( c.getName() ) 
+	  .append("=")
+	  .append( c.getValue())
+	  .append("; ");
 	}
-	out.write("-->");
+	if (sb.length() > 2) sb.setLength(sb.length()-2);
+	sb.append("\"");
+	cookies = sb.toString();
 %>
 
 <head>
