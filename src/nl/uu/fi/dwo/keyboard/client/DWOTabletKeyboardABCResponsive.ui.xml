@@ -16,7 +16,7 @@
 
 		font-family: sans-serif;
 		font-style: initial;
-		font-size: 16px;
+		font-size: 18px;
 	}
 	.pad {
 		padding-left: 5px;
@@ -32,6 +32,7 @@
 	.key img {
 		width: 100%;
 		height: 32px;
+		padding-top: 8px;
 	}
 	.lt.key div { 
 		font-style: italic;
@@ -63,38 +64,38 @@
 
 	.svgimage, .svgimagel, .svgimagem {
 		position: relative;
-		height: 32px !important;
+		height: 47px !important;
 		display: inline-block;
 		margin-top: 5px;
-		line-height: 33px;
+		line-height: 47px;
 	}
 	
 	.normal .row1 {
 		position: absolute;
 		top: 5px;
-		height: 37px;
+		height: 52px;
 		left: 0%;
 		width: 100%;		
 	}
 
 	.normal .row2 {
 		position: absolute;
-		top: 42px;
-		height: 37px;
+		top: 57px;
+		height: 52px;
 		left: 4.545%;
 		width: 100%;
 	}
 	.normal .row3 {
 		position: absolute;
-		top: 79px;
-		height: 37px;
+		top: 109px;
+		height: 52px;
 		left: 0%;
 		width: 100%;
 	}
 	.normal .row4 {
 		position: absolute;
-		top: 116px;
-		height: 37px;
+		top: 161px;
+		height: 52px;
 		left: 0%;
 		width: 100%;
 	}
@@ -117,7 +118,7 @@
 	}
 
 	.normal .row4 .svgimagem .lt {
-		height: 55px;
+		height: 75px;
 	}
 	
 	.grsymbol.key {

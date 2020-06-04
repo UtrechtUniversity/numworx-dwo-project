@@ -17,7 +17,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class DWOTabletKeyboardUpperResponsive extends AbstractKeyboard {
 
-	private static final int HEIGHT = 4*37+15;
+	private static final int HEIGHT = 4*52+15;
 	
 	private static DWOTabletKeyboardABCResponsiveUiBinder uiBinder = GWT
 			.create(DWOTabletKeyboardABCResponsiveUiBinder.class);

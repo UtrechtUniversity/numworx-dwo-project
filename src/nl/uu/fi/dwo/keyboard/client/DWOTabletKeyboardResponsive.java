@@ -321,7 +321,7 @@ public class DWOTabletKeyboardResponsive extends AbstractKeyboard {
 			actions[5] = FormuleEditorIF::bin;
 			m3_4.setKeys(keys, actions);
 		}
-		int px = t3_4.getAbsoluteLeft();
+		int px = t3_4.getAbsoluteLeft()-2*37;
 		int py = t3_4.getAbsoluteTop();
 		m3_4.setEditor(getEditor());
 		if (hasLongTap ) m3_4.show(px, py); else onT3_4(null);		
@@ -342,7 +342,7 @@ public class DWOTabletKeyboardResponsive extends AbstractKeyboard {
 			actions[5] = FormuleEditorIF::conjug;
 			m4_1.setKeys(keys, actions);
 		}
-		int px = t4_1.getAbsoluteLeft();
+		int px = t4_1.getAbsoluteLeft()-2*37;
 		int py = t4_1.getAbsoluteTop();
 		m4_1.setEditor(getEditor());
 		if (hasLongTap ) m4_1.show(px, py); else onT4_1(null);		
@@ -364,7 +364,7 @@ public class DWOTabletKeyboardResponsive extends AbstractKeyboard {
 			actions[5] = FormuleEditorIF::diff_partial;
 			m5_1.setKeys(keys, actions);
 		}
-		int px = t5_1.getAbsoluteLeft();
+		int px = t5_1.getAbsoluteLeft()-2*37;
 		int py = t5_1.getAbsoluteTop();
 		m5_1.setEditor(getEditor());
 		if (hasLongTap ) m5_1.show(px, py); else onT5_1(null);		
@@ -451,7 +451,7 @@ public class DWOTabletKeyboardResponsive extends AbstractKeyboard {
 			}
 			m6_7.setKeys(keys, actions);
 		}
-		int px = t6_7.getAbsoluteLeft();
+		int px = t6_7.getAbsoluteLeft()-1*37;
 		int py = t6_7.getAbsoluteTop();
 		m6_7.setEditor(getEditor());
 		if (hasLongTap) m6_7.show(px, py); else onVector(null);		
