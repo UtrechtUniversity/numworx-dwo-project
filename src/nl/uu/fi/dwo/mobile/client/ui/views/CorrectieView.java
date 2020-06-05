@@ -38,7 +38,7 @@ public class CorrectieView extends Composite implements HasHide {
     ObjectMap h = JSONUtilities.wrapMap(map);
     h = h.getObjectMap(REVIEW_INTERACTIE_DATA);
     if ( h != null && h.containsKey(REVIEW_SCORE_CORRECTIE)) {
-      widget.setStyleName(CORRECTED, h.getInt(REVIEW_SCORE_CORRECTIE)>0);
+      widget.setStyleName(CORRECTED, h.getInt(REVIEW_SCORE_CORRECTIE)!=0);
     }
     return new Provider<Map<String, Object>>() {
 
@@ -148,7 +148,7 @@ public class CorrectieView extends Composite implements HasHide {
     int n = Integer.parseInt(result);
     object.put(REVIEW_SCORE_CORRECTIE, (n));
     if(parent != null) {
-      parent.setStyleName(CORRECTED, n>0);
+      parent.setStyleName(CORRECTED, n!=0);
     }
     hide();
   }

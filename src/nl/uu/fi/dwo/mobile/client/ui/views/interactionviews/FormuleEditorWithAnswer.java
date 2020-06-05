@@ -637,7 +637,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 					this.getMainRegel().zetStippels(true);
 					
 					//this.getMainRegel().paintObject();
-					spStyle.setProperty("background", "none");
+					spStyle.setBackgroundColor("transparent"); // background-image etc. from css
 				}
 				//sp.getElement().getStyle().setPadding(3, Style.Unit.PX);
 				
