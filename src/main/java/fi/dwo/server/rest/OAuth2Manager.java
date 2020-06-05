@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.crypto.SecretKey;
+import javax.persistence.PersistenceException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -30,12 +31,17 @@ import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.LoginContextUtilManager;
 import fi.dwo.server.rest.jaxrsfilters.AuthenticationRequestFilter;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import nl.uu.fi.dwo.rest.dom.entities.DomToken;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.oauth.ErrorResponse;
@@ -153,25 +159,13 @@ public class OAuth2Manager {
             }
         }    
     } else if (REFRESH_TOKEN.equals(grant)) {
-      String code = params.getFirst(REFRESH_TOKEN);
-      JwtParser parser = Jwts.parser().setSigningKeyResolver(AUTH);
-      Jws<Claims> token = parser.parseClaimsJws(code);
-      String kid = token.getHeader().get("kid").toString();
-      Claims body = token.getBody();
-      Long id = Long.decode(kid);
-      PersistentLoginContext l = LoginContextManager.findEntity(id);
-      PersistentUser u = UserManager.findEntity(l.getUserId());
-      if ( u.getUsername().equals(body.getSubject())
-          && l.getSecretKey() != null
-          && body.getId().equals(DatatypeConverter.printHexBinary(l.getSecretKey()))
-          && body.getNotBefore().equals(new Date(l.getLastLogin()/1000L * 1000L))
-          )       
-    	  return buildTokenResponse(u, l);
-      else {
-    	  ErrorResponse error = new ErrorResponse("invalid_grant");
-    	  return Response.status(Status.BAD_REQUEST).entity(error).build();
-    	  
-      }
+      try {
+		return refresh(params);
+	} catch (SignatureException | UnsupportedJwtException | MalformedJwtException | NullPointerException
+			| IllegalArgumentException e) {
+		ErrorResponse error = new ErrorResponse("invalid_grant");
+        return Response.status(Status.BAD_REQUEST).entity(error).build();
+	}
     } else if (CLIENT_CREDENTIALS.equals(grant)) {
         String client_id = params.getFirst("client_id");
         String client_secret = params.getFirst("client_secret");
@@ -197,6 +191,28 @@ public class OAuth2Manager {
 
   }
 
+private Response refresh(MultivaluedMap<String, String> params) throws NullPointerException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException
+{
+	String code = params.getFirst(REFRESH_TOKEN);
+      JwtParser parser = Jwts.parser().setSigningKeyResolver(AUTH);
+      Jws<Claims> token = parser.parseClaimsJws(code);
+      String kid = token.getHeader().get("kid").toString();
+      Claims body = token.getBody();
+      Long id = Long.decode(kid);
+      PersistentLoginContext l = LoginContextManager.findEntity(id);
+      PersistentUser u = UserManager.findEntity(l.getUserId());
+      if ( u.getUsername().equals(body.getSubject())
+          && l.getSecretKey() != null
+          && body.getId().equals(DatatypeConverter.printHexBinary(l.getSecretKey()))
+          && body.getNotBefore().equals(new Date(l.getLastLogin()/1000L * 1000L))
+          )       
+    	  return buildTokenResponse(u, l);
+      else {
+    	  ErrorResponse error = new ErrorResponse("invalid_grant");
+    	  return Response.status(Status.BAD_REQUEST).entity(error).build();   	  
+      }
+}
+
   protected Response buildTokenResponse(PersistentUser u,
       PersistentLoginContext l) {
     DomToken response = new DomToken();
@@ -216,31 +232,35 @@ public class OAuth2Manager {
   @Path("/nekot") // end of token
   @Consumes(MediaType.TEXT_PLAIN)
   public Response nekot(String plain) {
-    MultivaluedMap<String, String> params = convert(plain);
-    String accessToken = params.getFirst("access_token");
-    String code = params.getFirst(REFRESH_TOKEN);
-    // doe je ding.
-    JwtParser parser = Jwts.parser().setSigningKeyResolver(AUTH);
-    Jws<Claims> token = parser.parseClaimsJws(code);
-    Jws<Claims> access = parser.parseClaimsJws(accessToken);
-    String kid = token.getHeader().getKeyId();
-    String kid2 = access.getHeader().getKeyId();
-    Claims body = token.getBody();
-    Long id = Long.decode(kid);
-    PersistentLoginContext l = LoginContextManager.findEntity(id);
-    PersistentUser u = UserManager.findEntity(l.getUserId());
-    if ( u.getUsername().equals(body.getSubject())
-        && kid.equals(kid2)
-        && u.getUsername().equals(access.getBody().getSubject())
-        && access.getBody().getAudience() != null
-        && l.getSecretKey() != null
-        && body.getId().equals(DatatypeConverter.printHexBinary(l.getSecretKey()))
-        && body.getNotBefore().equals(new Date(l.getLastLogin()/1000L * 1000L))
-        )     {
-      l.setLastLogin(System.currentTimeMillis());
-      l.setSecretKey(null);
-      LoginContextManager.edit(l);
-    }
+    try {
+		MultivaluedMap<String, String> params = convert(plain);
+		String accessToken = params.getFirst("access_token");
+		String code = params.getFirst(REFRESH_TOKEN);
+		// doe je ding.
+		JwtParser parser = Jwts.parser().setSigningKeyResolver(AUTH);
+		Jws<Claims> token = parser.parseClaimsJws(code);
+		Jws<Claims> access = parser.parseClaimsJws(accessToken);
+		String kid = token.getHeader().getKeyId();
+		String kid2 = access.getHeader().getKeyId();
+		Claims body = token.getBody();
+		Long id = Long.decode(kid);
+		PersistentLoginContext l = LoginContextManager.findEntity(id);
+		PersistentUser u = UserManager.findEntity(l.getUserId());
+		if ( u.getUsername().equals(body.getSubject())
+		    && kid.equals(kid2)
+		    && u.getUsername().equals(access.getBody().getSubject())
+		    && access.getBody().getAudience() != null
+		    && l.getSecretKey() != null
+		    && body.getId().equals(DatatypeConverter.printHexBinary(l.getSecretKey()))
+		    && body.getNotBefore().equals(new Date(l.getLastLogin()/1000L * 1000L))
+		    )     {
+		  l.setLastLogin(System.currentTimeMillis());
+		  l.setSecretKey(null);
+		  LoginContextManager.edit(l);
+		}
+	} catch (JwtException | IllegalArgumentException | PersistenceException | NullPointerException e) {
+		LOG.log(Level.WARNING, e.toString(), e);
+	}
     
     return Response.status(Status.UNAUTHORIZED).build();
   }
