@@ -3,7 +3,7 @@
 
     <groupId>nl.uu.fi.dwo.account</groupId>
     <artifactId>Account</artifactId>
-    <version>2.4.3-SNAPSHOT</version>
+    <version>2.4.6-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>${project.build.finalName}</name>
@@ -16,7 +16,7 @@
         <maven.test.skip>true</maven.test.skip>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <DwoGWTVersion>2.4.1-SNAPSHOT</DwoGWTVersion>
+        <DwoGWTVersion>2.4.6-SNAPSHOT</DwoGWTVersion>
     </properties>
     <build>
         <outputDirectory>target/${project.build.finalName}/WEB-INF/classes</outputDirectory>
@@ -125,12 +125,12 @@
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-gwt-lib</artifactId>
-            <version>2.4.2</version>
+            <version>${DwoGWTVersion}</version>
         </dependency>
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-gwt-lib</artifactId>
-            <version>2.4.2</version>
+            <version>${DwoGWTVersion}</version>
             <classifier>sources</classifier>
         </dependency>         
 

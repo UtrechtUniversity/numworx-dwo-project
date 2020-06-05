@@ -292,7 +292,9 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 
 	@Override
 	public Promise<Void> logout() {
-		return super.logout().then(new Success<Void,Void>(){
+		Promise<Void> logout;
+		logout = super.logout();
+        return logout.then(new Success<Void,Void>(){
 
 			@Override
 			public Promise<Void> call(Promise<Void> resolved) throws Exception {

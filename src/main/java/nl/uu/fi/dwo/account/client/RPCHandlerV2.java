@@ -7,8 +7,6 @@ import org.osgi.util.promise.Success;
 
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
@@ -74,55 +72,8 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 		return schoolManager.getSchoolLogins();
 	}
 		
-    /**
-     *
-     * @param courseID
-     * @param userID
-     * @param schoolGroupID
-     * @param getUserResultsCallback
-     */
-//    protected abstract  void getUserResultsHelper(Object courseID, Object userID, Object schoolGroupID,
-//			AsyncCallback<List<Map<String,Object>>> getUserResultsCallback);
-	
-    /**
-     *
-     * @param courseID
-     * @param userID
-     * @param getUserResultsCallback
-     */
-//    @Override 
-//	public abstract void getUserResults(Object courseID, Object userID,
-//			AsyncCallback<List<Map<String,Object>>> getUserResultsCallback);
-//	
-    /**
-     *
-     * @param getCoursesCallback
-     */
-//    public abstract void getCourses(
-//			AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
-
-    /**
-     *
-     * @param id
-     * @param getCoursesCallback
-     */
-   // public abstract void getCourses(Object id, AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
-
-    /**
-     *
-     * @param schoolID
-     * @param getCoursesCallback
-     */
-    //public abstract void getCoursesSchool(Object schoolID, AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
-
-    /**
-     *
-     * @param classid
-     * @param getCoursesCallback
-     */
-//    public abstract void getCoursesClass(Object classid, AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
-
-    /**
+ 
+   /**
      *
      * @param name
      * @param org
@@ -133,16 +84,6 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 		String authToken = Cookies.getCookie(DWO_SAML_AUTH_TOKEN);
 		callback.resolveWith(accountManager.updateAccountData(name, org, authToken));
 	}
-
-	/* (non-Javadoc)
-	 * @see nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler#getAuthTokenUser(java.lang.String, com.google.gwt.user.client.rpc.AsyncCallback)
-	 */
-
-    /**
-     *
-     * @param authToken
-     * @param callback
-     */
 
 	
     /**
@@ -158,35 +99,29 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
      *
      */
     @Override
-	public Promise<Void> logout() {
-		return super.logout().then(new Success<Void,Void>() {
+    public Promise<Void> logout() {
+      Promise<Void> resolved = Promises.<Void>resolved(null);
+      if (DwoGlobalVars.instance().getCurrentUser() != null) {
+        resolved = accountManager.logout(context, DwoGlobalVars.instance().getCurrentLoginContext())
+            .then(new Success<Dwo2Exception, Void>() {
+  
+              @Override
+              public Promise<Void> call(Promise<Dwo2Exception> resolved) throws Exception {
+                Window.alert(String.valueOf(resolved.getValue()));
+                return null;
+              }
+            }).recoverWith(new Function<Promise<?>, Promise<? extends Void>>() {
+  
+              @Override
+              public Promise<? extends Void> apply(Promise<?> t) {
+                DwoGlobalVars.instance().clearCurrentUser();
+                return Promises.<Void>resolved(null);
+              }
+            });
+    }
+    return resolved;
 
-			@Override
-			public Promise<Void> call(Promise<Void> resolved) throws Exception {
-				if(DwoGlobalVars.instance().getCurrentUser() != null) {
-					resolved = accountManager.logout(
-							context,
-							DwoGlobalVars.instance().getCurrentLoginContext())
-						.then(new Success<Dwo2Exception, Void>() {
-
-							@Override
-							public Promise<Void> call(Promise<Dwo2Exception> resolved) throws Exception {
-								Window.alert(String.valueOf(resolved.getValue()));
-								return null;
-							}})
-							.recoverWith(new Function<Promise<?>,Promise<? extends Void>>() {
-
-								@Override
-								public Promise<? extends Void> apply(
-										Promise<?> t) {
-									DwoGlobalVars.instance().clearCurrentUser();
-									return Promises.<Void>resolved(null);
-								}});
-				}
-				return resolved;
-			}});
-		
-	}
+  }
 	
     /**
      *
