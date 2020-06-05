@@ -380,6 +380,9 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
         view.showIcon(false);
     if(Actions.hideMainNav.getCommand().equals(message))
       view.showIcon(true);
+    if (Actions.CLOSING.getCommand().equals(message)) {
+    	commitView();
+    }
   }
 
   @Override
