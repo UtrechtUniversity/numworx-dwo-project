@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
@@ -60,11 +61,6 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	static Memento instance() {
 		return _instance;
 	}
-// XXX gebruik Window.addClosingEvent()	
-//	static public native void instalOnBeforeUnload() /*-{
-//		$wnd.onbeforeunload = @nl.uu.fi.dwo.mobile.client.sco.Memento::unload();
-//		$wnd.onunload = @nl.uu.fi.dwo.mobile.client.sco.Memento::unload();
-//	}-*/;	
 	
 	static void unload()
 	{
@@ -830,8 +826,14 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	@Override
 	public void onClose(CloseEvent<Window> event)
 	{
-		almostClose();
+		close();
+	//	logout();
 	}
+
+  protected void logout() {
+    if(!Actions.isAvailable())
+		  DWOplayer.clientfactory.logout();
+  }
 
 	@Override
 	public void onWindowClosing(ClosingEvent event)

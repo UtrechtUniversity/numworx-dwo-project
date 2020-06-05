@@ -20,6 +20,7 @@ import org.osgi.util.promise.Success;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.Window;
 
 import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
 import fi.dwo.gwt.lib.rest.css.DwoStyle;
@@ -130,6 +131,12 @@ public class DWO2player extends DWOplayer implements EntryPoint {
     
     MessageEvent.initialize(factory.getEventBus());
     Actions.isMainNavVisible.execute();
+    
+    if (!Actions.isAvailable()) {
+      Window.addCloseHandler(ev -> 
+      factory.logout()
+      );
+    }
   }
 
   protected ClientFactory createClientFactory() {

@@ -70,6 +70,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	
 	@Override
 	public String mayStop() {
+	    if (view != null) view.getOpdrNav().setChanged(false);
 		if (started && clientFactory.withUser() && clientFactory.getRoleType() == RoleType.STUDENT)
 			return Text.constants.maybe_lost_data();
 		return super.mayStop();
