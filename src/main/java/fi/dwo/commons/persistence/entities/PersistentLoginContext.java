@@ -17,6 +17,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import javax.xml.bind.DatatypeConverter;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -66,6 +67,9 @@ public class PersistentLoginContext implements Serializable {
     // since 1.5.4
     @Column(name = "nonce", nullable = true)
     protected byte[] nonce;
+    @Version
+    @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
+    private Long version;
 
     /**
      * @return the id
