@@ -314,6 +314,9 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         case MODULESVIEW:
         case MAYBELOGOUT:
           return;
+        case CLOSING:
+        	view.sendMessage(select.name());
+        	return;
         default:
       }
       if(select == SelectedView.WELCOME) {

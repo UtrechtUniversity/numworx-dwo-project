@@ -437,7 +437,7 @@
                     <port>8080</port>
                     <path>/</path>
                     <systemProperties>
-                    	<CDN_HOST>localhost:8082</CDN_HOST>
+                    	<CDN_HOST>ebs-dev-dwo-nl.s3.amazonaws.com</CDN_HOST>
                     	<DWO_ENV>test</DWO_ENV>                   
                     </systemProperties>
                     <warFile>target/${project.artifactId}-${project.version}.war</warFile>

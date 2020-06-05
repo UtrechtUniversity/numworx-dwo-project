@@ -11,6 +11,8 @@ import fi.dwo.gwt.lib.rest.GwtRestVars;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.DaggerBootComponent;
 
 /**
@@ -60,6 +62,7 @@ public class BootPanel  implements EntryPoint, Window.ClosingHandler, CloseHandl
     @Override
     public void onWindowClosing(Window.ClosingEvent event) {
         if(controller.isSession()) {
+        	controller.eventBus.fireEvent(new SwitchViewEvent(SelectedView.CLOSING));
             event.setMessage("Translate this");
         }else{
             event.setMessage(null);

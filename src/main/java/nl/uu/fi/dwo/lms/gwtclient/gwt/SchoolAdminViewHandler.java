@@ -121,6 +121,7 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
         case ARROWUP:
         case SEARCH:
         case GOTO:
+        case CLOSING:
           break;
         case TRAIL:
           presenterFactory.getMainPresenter().setTrails(switchViewEvent.getResultState());
