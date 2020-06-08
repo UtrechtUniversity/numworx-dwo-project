@@ -1519,6 +1519,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			contentPanel.setWidgetTopHeight(p, stepPanelY, Style.Unit.PX, v.getHeight(), Style.Unit.PX);
 			if (!linStrategieVersie && !linOefenVersie && !bordjesMethode)
 				stepPanelY += v.getHeight() + stapH;
+			else 
+				stepPanelY += v.getHeight() + stapH; // FIXME @Peter wat moet hier staan????????????
 		}
 		
 		if (editor != null)
@@ -1575,7 +1577,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	public LayoutPanel maakNieuwStapPanel()
 	{
 		final LayoutPanel panel = new LayoutPanel();
-		panel.setWidth((breedte - 5) + "px");
+//		panel.setWidth((breedte - 5) + "px");
 		panel.addDomHandler(new ClickHandler(){
 
 			@Override
@@ -3985,9 +3987,14 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			mainPanel.getElement().getStyle().setWidth(breedte - 2, Unit.PX);
 			headerPanel.getElement().getStyle().setWidth(breedte - 2, Unit.PX);
 			sp.getElement().getStyle().setWidth(breedte - 5, Unit.PX);
-			feedbackPanel.getElement().getStyle().setWidth(breedte - 25, Unit.PX);	
-			for(int i = 0; i < stepPanels.size(); i++)
-				stepPanels.get(i).setWidth((breedte - 5) + "px");
+			//feedbackPanel.getElement().getStyle().setWidth(breedte - 25, Unit.PX);	
+			feedbackPanel.setSize(breedte - 10, feedbackPanelHeight);
+
+//			for(int i = 0; i < stepPanels.size(); i++)
+//			{
+//				//stepPanels.get(i).setWidth((breedte - 5) + "px");
+//				contentPanel.setWidgetLeftRight(stepPanels.get(i), 5, Unit.PX, 5, Unit.PX); // niet afhankelijk van breedte
+//			}
 		}
 	}
 
