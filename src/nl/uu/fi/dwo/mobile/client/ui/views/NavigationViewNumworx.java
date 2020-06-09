@@ -54,6 +54,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
@@ -187,7 +188,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	 * implement HasHTML instead of HasText.
 	 */
 
-	@Inject NavigationViewNumworx(final PlaceController controller) {
+	@Inject NavigationViewNumworx(final PlaceController controller, RPCHandler rpc) {
 		HorizontalCellListResources cellResources;
 		cellResources = GWT.create(HorizontalCellListResources.class);
 		cells = new CellList<SelectModuleItem>(new NavCell(), cellResources);
@@ -200,7 +201,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		
 		standardMap = new TreeItem(toSafeHTML(standaard, Type.FOLDER));
 		
-		DWOplayer.dwoProfile.then(p -> 
+		rpc.getDwoProfile().then(p -> 
 			{
 				standardMap.setHTML(toSafeHTML(p.getValue().getDwoProfileDescription(), Type.FOLDER));
 				return p;
@@ -212,10 +213,14 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		standardMap.setUserObject(SelectModuleItem.ROOT);
 		none = Actions.isAvailable();
 		if(!none) {
-		  none = !"test".equals(DWOplayer.PARAMETERS.getDwoEnv());
+		  none = !isTest();
 		}
 		if(!none) setBeheer(false);
 		presenter = controller::goTo;
+	}
+
+	private boolean isTest() {
+		return "test".equals(DWOplayer.PARAMETERS.getDwoEnv());
 	}
 
 	public void showCells() {
@@ -494,7 +499,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		this.role = role;
 		// if visible?
 		{  	organization.setVisible(role == RoleType.SCHOOLADMIN);
-			results.setVisible(role == RoleType.TEACHER || (role == RoleType.STUDENT && DWOplayer.isPremium())); // or student if premium.
+			results.setVisible(role == RoleType.TEACHER || (role == RoleType.STUDENT && isTest() && DWOplayer.isPremium())); // or student if premium&test.
 			persons.setVisible(role != RoleType.STUDENT);
 		}
 	}
