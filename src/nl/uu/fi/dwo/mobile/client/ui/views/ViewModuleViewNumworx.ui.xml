@@ -104,7 +104,7 @@
 		<g:north size="50">
 			  <g:DockLayoutPanel ui:field='headerTop' styleName='{style.headerTop}' >
 			    <g:west size="170">
-			  	<g:FlowPanel styleName='{t.numworx}'><g:Image url="{pfx}images/numworx/logo-Numworx-grijs2.svg"></g:Image></g:FlowPanel>
+			  	<g:FlowPanel ui:field='logo' styleName='{t.numworx}'><g:Image url="{pfx}images/numworx/logo-Numworx-grijs2.svg"></g:Image></g:FlowPanel>
 			  	</g:west>
 			  	<g:center>
 			  	<g:FlowPanel ui:field='kruimels' styleName='{style.kruimels}' />

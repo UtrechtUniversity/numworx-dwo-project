@@ -125,7 +125,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 //	@UiField ToggleButton fullBtn;
 	@UiField Label title;
 	@UiField TreeModuleViewNumworxCss t;
-	@UiField FlowPanel kruimels, loginflow;
+	@UiField FlowPanel kruimels, loginflow, logo;
 	@UiField FlowPanel headerBottom;
 	@UiField HasText scoType;
 	@UiField nl.uu.fi.dwo.mobile.client.text.Text rb;
@@ -296,4 +296,16 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
   @UiHandler({"scoType","modules"}) void onModules(ClickEvent e) {
     Actions.showMainNav.execute();
   }
+
+@Override
+public void onResize() {
+	boolean hidden = Double.valueOf(10.0).equals(headerTop.getWidgetSize(logo));
+	GWT.log("w=" + kruimels.getOffsetWidth() + " h=" + hidden);
+	if (hidden && kruimels.getOffsetWidth() > 270) 
+		hidden = false;
+	else if (!hidden && kruimels.getOffsetWidth() < 100) 
+		hidden = true;
+	headerTop.setWidgetSize(logo, hidden? 10.0 : 170.0);
+	super.onResize();
+}
 }
