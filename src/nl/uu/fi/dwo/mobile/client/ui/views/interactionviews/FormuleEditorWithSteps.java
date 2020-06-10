@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -3749,6 +3750,26 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				if (mode == OpdrNavIF.OEFENEN_STRAFPUNTEN)
 					score = Math.max(0, scoreMax - errorCount * foutStraf);
 				comRoot.setChanged(false);
+				
+				if (dwologger != null)
+				{
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("verb", "http://adlnet.gov/expapi/verbs/answered");
+					map.put("response",
+						"<math xmlns='http://www.w3.org/1998/Math/MathML'>"
+							+ fv.getMainRegel().toMathML() + "</math>");
+					map.put("score", Collections.singletonMap("raw", getScore()));
+					if (correct != null)
+					{
+						map.put("success", correct);
+					}
+					map.put("formula", fv.getMainRegel().toString());
+					map.put("step", getStep());
+					String feedback = getFeedback();
+					if (feedback != null && !feedback.isEmpty())
+						map.put("feedback", feedback);
+					dwologger.log(map);
+				}
 			}
 			else if (vergNieuw != null && linStrategieVersie)
 			{	
