@@ -1507,9 +1507,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			editor.setDefaultFont(font);
 		}
 		
-		stepPanelY = 0;
+		int stepPanelYTemp = 0;
 		if(linStrategieVersie || linOefenVersie || bewerkingKnoppen)
-			stepPanelY = 20;
+			stepPanelYTemp = 20;
 		
 		for (int i = 0; i < viewers.size(); i++) // wanneer heb ik hier meerdere viewers?
 		{
@@ -1517,16 +1517,16 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			FormuleViewer v = viewers.get(i);
 			p.clear();
 			addFormuleViewer(v, p);
-			contentPanel.setWidgetTopHeight(p, stepPanelY, Style.Unit.PX, v.getHeight(), Style.Unit.PX);
+			contentPanel.setWidgetTopHeight(p, stepPanelYTemp, Style.Unit.PX, v.getHeight(), Style.Unit.PX);
 			if (!linStrategieVersie && !linOefenVersie && !bordjesMethode)
-				stepPanelY += v.getHeight() + stapH;
+				stepPanelYTemp += v.getHeight() + stapH;
 			else 
-				stepPanelY += v.getHeight() + stapH; // FIXME @Peter wat moet hier staan????????????
+				stepPanelYTemp += v.getHeight() + stapH; //  @Peter wat moet hier staan????????????  Gewoon hetzelfde dus
 		}
 		
 		if (editor != null)
 		{
-			contentPanel.setWidgetTopHeight(stepPanels.get(stepPanels.size() - 1), stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
+			contentPanel.setWidgetTopHeight(stepPanels.get(stepPanels.size() - 1), stepPanelYTemp, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
 			editor.setCurrentElementRepaint();
 		}
 		
