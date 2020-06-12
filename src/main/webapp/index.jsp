@@ -8,7 +8,7 @@
 </head>
 <body>
     <div id="header" >
-    <a href="http://www.numworx.nl" ><img src="logo-Numworx-grijs2.svg" alt="Numworx"></a>
+    <a href="https://www.numworx.nl" ><img src="logo-Numworx-grijs2.svg" alt="Numworx"></a>
     </div>
     <p>
     Ga naar/Go to:

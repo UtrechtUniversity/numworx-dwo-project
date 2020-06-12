@@ -75,5 +75,10 @@
     	<from>^/dwo/rest/sec:[^/]+/(.*)$</from>
     	<to>/dwo/rest/secure/$1</to>   
     </rule>
-        
+	<rule>
+		<note>/downloads naar numworx</note>
+		<from>^/downloads/$</from>
+		<to type="temporary-redirect">https://www.numworx.nl/help/downloads/</to>
+	</rule>
+       
 </urlrewrite>   
