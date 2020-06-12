@@ -31,7 +31,6 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.OAuthManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SystemManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
-import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
@@ -63,8 +62,7 @@ public class InstallServlet extends HttpServlet {
 	};
 
 	private static final String UU = "\"saml:" + System.getProperty("ENV_ORGID", "385")+"\"";
-	private static final String REALM = "@uu.dwo.nl";
-	
+
 	public InstallServlet() {
 		Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
 	}
@@ -193,7 +191,7 @@ public class InstallServlet extends HttpServlet {
 			Part toets = req.getPart("toets");
 			if (toets != null) {				
 				Excel excel = new Excel();
-				message = "Reading " + "assesments" ;// cursus.getSubmittedFileName();
+				message = "Reading " + "assessments" ;// cursus.getSubmittedFileName();
 				InputStream in = toets.getInputStream();
 				excel.parse(in);
 				in.close();
@@ -241,7 +239,7 @@ public class InstallServlet extends HttpServlet {
 			String profile = "100";
 		
 		      Map<String, DomUserFull> leerlingen = osiris.parseLeerlingen();
-		      message += leerlingen.size() + " students\n";
+		      message = leerlingen.size() + " students\n";
 		      Map<String, DomSchoolClassFull> groepen = osiris.parseGroepen();
 		      message += (groepen.size()-initialSize) + " courses\n";
 		      Map<String, DomUserFull> leerkrachten = osiris.parseLeerkrachten();

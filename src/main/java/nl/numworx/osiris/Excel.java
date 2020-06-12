@@ -54,26 +54,26 @@ public class Excel implements Iterable<CSVRecord> {
 	}
 
 	public boolean verify(Col[] headers) {
+		// if empty it's okay
+	  if (records.isEmpty()) return true;
 		  boolean verify = parser.getHeaderNames().size() == headers.length;
-		  if (verify) {
-		    Set<String> names = new TreeSet<>(parser.getHeaderNames());
-		    for (Col key:headers) {
-		      if (!names.contains(key.toString())) return false;	      
-		    }
-		    int cols = headers.length;
-		    int rows = records.size();
-		    for(int i = 0; i < cols; i++)
-		      for(int j = 0; j < rows; j++) {
-		        Object v = records.get(j).get(i);
-		        if (v == null || v.toString().trim().isEmpty()) {
-		          return false;
-		        }
-		      }
-		    return true;
-		  }
-		  return false;
-
-		
+	  if (verify) {
+	    Set<String> names = new TreeSet<>(parser.getHeaderNames());
+	    for (Col key:headers) {
+	      if (!names.contains(key.toString())) return false;	      
+	    }
+	    int cols = headers.length;
+	    int rows = records.size();
+	    for(int i = 0; i < cols; i++)
+	      for(int j = 0; j < rows; j++) {
+	        Object v = records.get(j).get(i);
+	        if (v == null || v.toString().trim().isEmpty()) {
+	          return false;
+	        }
+	      }
+	    return true;
+	  }
+	  return false;		
 	}
 
 }
