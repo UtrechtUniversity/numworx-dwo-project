@@ -64,7 +64,7 @@ public class DwoGlobalVars {
     private DomSchoolRoleAndClassV2 activeSchoolRoleAndClass;
     private Promise<DomDwoProfileFull> profile;
 
-    private boolean test;
+    private boolean test,saml;
     private static String helpUrlPrefix ;
 
     /**
@@ -329,40 +329,46 @@ public class DwoGlobalVars {
     public Promise<DwoGlobalVarsState> initUserWithToken(String token) throws Dwo2Exception {
       login_step0();
       LOG.log(Level.INFO, "state=LoggingIn. Calling accountManager.getUserFromAuthToken.");
-      return accountManager.getUserFromAuthToken(token).then(this::login_step1).then(this::login_step2, this::login_fail);
+//      return accountManager.getUserFromAuthToken(token).then(this::login_step1).then(this::login_step2, this::login_fail);
+      return initUserWithToken0(token);
     }
 
     public Promise<DwoGlobalVarsState> initUserWithSaml(String user_id, String org_id,
                                                         String token) throws Dwo2Exception {
       login_step0();
-      Promise<DomUserFullwLoginContext> p1;
+      //Promise<DomUserFullwLoginContext> p1;
       //p1 = accountManager.updateAccountData(user_id, org_id, token);
       
 	  token = Base64.btoa("3\f" + user_id + "\f" + org_id + "\f" + token); // Format 3 
 
-	  p1 = oauthManager.authorization_token(token)
-	  	.then( 
-	  			p -> {
-	  	    	  GwtRestVars.getInstance().setBearerToken(p.getValue().getAccess_token());
-	  	    	  GwtRestVars.getInstance().setRefreshToken(p.getValue().getRefresh_token());
-	  			  return accountManager.getLoginContext();
-	  			}
-	  	).then(
-	  			q -> { 
-	  				DomContext context = new DomContext();
-	  				context.setRealm(q.getValue().getRealm());
-	  			return accountManager.getAccountData(context).map( 
-	  					data -> { 
-	  				DomUserFullwLoginContext all = new DomUserFullwLoginContext();
-	  				all.setDomLoginContext(q.getValue());
-	  				all.setDomUserFull(data);
-	  				return all;
-	  			});
-	  		}
-	  	);
-      Promise<DomSchoolsRolesAndClassesV2> p2 = p1.then(this::login_step1a);
-      Promise<DwoGlobalVarsState> p3 = p2.then(this::login_step2, this::login_fail);
-      return p3;
+	  return initUserWithToken0(token);
+    }
+
+    private Promise<DwoGlobalVarsState> initUserWithToken0(String token) {
+      Promise<DomUserFullwLoginContext> p1;
+      p1 = oauthManager.authorization_token(token)
+      	.then( 
+      			p -> {
+      	    	  GwtRestVars.getInstance().setBearerToken(p.getValue().getAccess_token());
+      	    	  GwtRestVars.getInstance().setRefreshToken(p.getValue().getRefresh_token());
+      			  return accountManager.getLoginContext();
+      			}
+      	).then(
+      			q -> { 
+      				DomContext context = new DomContext();
+      				context.setRealm(q.getValue().getRealm());
+      			return accountManager.getAccountData(context).map( 
+      					data -> { 
+      				DomUserFullwLoginContext all = new DomUserFullwLoginContext();
+      				all.setDomLoginContext(q.getValue());
+      				all.setDomUserFull(data);
+      				return all;
+      			});
+      		}
+      	);
+        Promise<DomSchoolsRolesAndClassesV2> p2 = p1.then(this::login_step1a);
+        Promise<DwoGlobalVarsState> p3 = p2.then(this::login_step2, this::login_fail);
+        return p3;
     }
 
 
@@ -501,5 +507,19 @@ public class DwoGlobalVars {
     }
     public boolean isTest() {
       return test;
+    }
+
+    /**
+     * @return the saml
+     */
+    public boolean isSaml() {
+      return saml;
+    }
+
+    /**
+     * @param saml the saml to set
+     */
+    public void setSaml(boolean saml) {
+      this.saml = saml;
     }
 }
