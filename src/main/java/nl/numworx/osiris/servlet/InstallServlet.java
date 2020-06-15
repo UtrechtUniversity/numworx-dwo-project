@@ -237,18 +237,18 @@ public class InstallServlet extends HttpServlet {
 // From install panel: 
 			int toetsSize = 0;
 			String profile = "100";
-		
+			  message = "";
 		      Map<String, DomUserFull> leerlingen = osiris.parseLeerlingen();
-		      message = leerlingen.size() + " students\n";
 		      Map<String, DomSchoolClassFull> groepen = osiris.parseGroepen();
-		      message += (groepen.size()-initialSize) + " courses\n";
 		      Map<String, DomUserFull> leerkrachten = osiris.parseLeerkrachten();
-		      message += leerkrachten.size() + " teachers\n";
 		      Map<String, Collection<String>> members = osiris.memberships();
 		      
 		      numworx.addSchoolClasses(groepen);
-		      numworx.addStudents(leerlingen, members, groepen);
-		      numworx.addTeachers(leerkrachten, members, groepen);
+		      int students = numworx.addStudents(leerlingen, members, groepen);
+		      message = students + " student(s)\n";
+		      message += (groepen.size()-initialSize) + " course(s)\n";
+		      int teachers = numworx.addTeachers(leerkrachten, members, groepen);
+		      message += teachers + " teacher(s)\n";
 
 		      CourseManager man = new CourseManager(profile, numworx.getSchool(), groepen);
 			  for (CSVRecord record: toetsen) {
@@ -266,10 +266,10 @@ public class InstallServlet extends HttpServlet {
 					  folders++;
 			  }
 			  if (folders > 0) {
-				  message += folders + " folders\n";
+				  message += folders + " folder(s)\n";
 			  }
 			  
-			  message += toetsSize + " exams\n";
+			  message += toetsSize + " exam(s)\n";
 			
 			message += "Installation done";
 
