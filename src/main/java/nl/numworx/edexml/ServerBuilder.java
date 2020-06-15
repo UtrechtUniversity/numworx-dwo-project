@@ -196,7 +196,8 @@ public class ServerBuilder implements Builder {
 
 
   // Single school students
-  public void addStudents (Map<String, DomUserFull> users, Map<String,Collection<String>>members, Map<String, DomSchoolClassFull> classes) {  
+  public int addStudents (Map<String, DomUserFull> users, Map<String,Collection<String>>members, Map<String, DomSchoolClassFull> classes) {  
+	int count = 0;
 	DomContext context = RestAuthenticator.getInstance().getContext();   	  // XXX beter SecureSchoolAdminSchoolClassManager.getContext();
 	String realm = context.getRealm();
 	for (Map.Entry<String, DomUserFull> item: users.entrySet()) {
@@ -231,6 +232,7 @@ public class ServerBuilder implements Builder {
     	  
 		  schoolClassManager.submitSingleSchoolStudent(submit);
     	  submit.getDomSingleSchoolStudent().setUserName(userName); // restore.
+    	  count += 1;
       }
       catch (Dwo2Exception e) {
     	  submit.getDomSingleSchoolStudent().setUserName(userName); // restore.
@@ -269,9 +271,11 @@ public class ServerBuilder implements Builder {
         continue;
       }      
 	}
+	return count;
   }
   
-  public void addTeachers(Map<String, DomUserFull> users, Map<String,Collection<String>>members, Map<String, DomSchoolClassFull> classes) {  
+  public int addTeachers(Map<String, DomUserFull> users, Map<String,Collection<String>>members, Map<String, DomSchoolClassFull> classes) {  
+	  int count = 0;
 	  for (Map.Entry<String, DomUserFull> item: users.entrySet()) {    
       String key = item.getKey();
       DomUserFull value = item.getValue();
@@ -280,6 +284,7 @@ public class ServerBuilder implements Builder {
       }
       try {
         SecureSchoolAdminSchoolManager.submitTeacher(value); // FIXME duplicate in schoolclassmanager
+        count += 1;
       } catch (Dwo2Exception e) {
         LOG.log(Level.WARNING, "submit Teacher", e);
       }      
@@ -308,6 +313,6 @@ public class ServerBuilder implements Builder {
         }
       }
     }
+    return count;
   }
-  
 }
