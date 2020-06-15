@@ -2626,7 +2626,7 @@ private void setKbdCss(Combined state) {
 		kbd.removeStyleName(dwoplayercss.desktop_active());
 		kbd.removeStyleName(dwoplayercss.tablet_active());
 		kbd.addStyleName(dwoplayercss.tablet());
-		fp.setWidgetBottomHeight(kbd, sb.getStatusBarHeight()+1, Unit.PX, 17, Unit.PX);
+		fp.setWidgetBottomHeight(kbd, sb.getStatusBarHeight()+10, Unit.PX, 17, Unit.PX);
 		fp.setWidgetLeftWidth(kbd, 10, Unit.PX, 46, Unit.PX);
 		break;
 	case TABLET_ACTIVE:

@@ -13,6 +13,8 @@ import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
+import nl.uu.fi.dwo.keyboard.client.CombinedKeyboardFactory;
+import nl.uu.fi.dwo.keyboard.client.CombinedState;
 import nl.uu.fi.dwo.keyboard.client.DesktopKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.KeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.TabletKeyboardFactory;
@@ -26,17 +28,18 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, Formu
 	
 	public NoordhoffKeyboard() {
 		setStylePrimaryName("noordhoff");
-		OsDetection detection = MGWT.getOsDetection();
-		if(detection.isDesktop()
-				//&& false
-				) {
-			factory = GWT.create(DesktopKeyboardFactory.class);
-		} else {
-			factory = GWT.create(TabletKeyboardFactory.class);
-		}
-		kb = factory.getKeyboard();
-		setWidget(kb);
-		kb.blur(); // we start hidden!
+//		OsDetection detection = MGWT.getOsDetection();
+//		if(detection.isDesktop()
+//				//&& false
+//				) {
+//			factory = GWT.create(DesktopKeyboardFactory.class);
+//		} else {
+//			factory = GWT.create(TabletKeyboardFactory.class);
+//		}
+//		kb = factory.getKeyboard();
+//		setWidget(kb);
+//		kb.blur(); // we start hidden!
+		factory = new CombinedKeyboardFactory();
 
 // css style!		
 		Style style = getElement().getStyle();
@@ -61,6 +64,7 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, Formu
 
 	@Override
 	public void setScrollPanel(HasHeight w, int h) {
+		getFormuleKeyboard();
 		kb.setScrollPanel(w,h);
 	}
 
@@ -75,6 +79,11 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, Formu
 
 	@Override
 	public FormuleKeyboardIF getFormuleKeyboard() {
+		if (kb == null) {
+			kb = factory.getKeyboard();
+			setWidget(kb);
+			kb.blur();
+		}
 		return kb;
 	}
 
@@ -101,6 +110,7 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, Formu
 
 	@Override
 	public void setWriteMathSet(int nr) {
+		getFormuleKeyboard();
 		kb.setWriteMathSet(nr);
 	}
 
@@ -121,6 +131,11 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, Formu
 	public boolean isDesktopKeyboard() {
 		OsDetection detection = MGWT.getOsDetection();
 		return detection.isDesktop();
+	}
+
+	@Override
+	public void setCombinedState(CombinedState state) {
+		factory.setCombinedState(state);
 	}
 
 }
