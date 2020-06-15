@@ -280,7 +280,7 @@ public class GwtRestVars {
 	}
 	
 	public String getLogoutQuery() {
-	  if (refresh_token != null) {
+	  if (refresh_token != null && !"None".equals(authenticator.getAuthorization())) {
 	    String access_token = authenticator.getAuthorization().substring(7);
 	    return "refresh_token=" + refresh_token + "&access_token=" + access_token;
 	  }
