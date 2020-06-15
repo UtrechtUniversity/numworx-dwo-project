@@ -46,6 +46,7 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, Formu
 		style.setPosition(Style.Position.ABSOLUTE);
 		style.setBottom(0, Style.Unit.PX);
 		style.setWidth(100, Style.Unit.PCT);
+		style.setBackgroundColor("#d2d2d2");
 
 	}
 
