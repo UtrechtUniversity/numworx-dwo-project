@@ -764,7 +764,8 @@ public class FormuleParser
 		{
 			for (int i = 0; i < s.length() - 1; i++)
 			{
-				if ((Letter.isLetter(s.charAt(i)) || Character.isDigit(s.charAt(i)) || s.charAt(i) == ')') && (Letter.isLetter(s.charAt(i + 1)) || s.charAt(i + 1) == '(') || s.charAt(i+1)=='\u2220' || s.charAt(i+1)=='\u2206')
+				//if ((Letter.isLetter(s.charAt(i)) || Character.isDigit(s.charAt(i)) || s.charAt(i) == ')') && (Letter.isLetter(s.charAt(i + 1)) || s.charAt(i + 1) == '(') || s.charAt(i+1)=='\u2220' || s.charAt(i+1)=='\u2206')
+				if((Character.isLetter(s.charAt(i)) || Character.isDigit(s.charAt(i)) || s.charAt(i)==')') && (Character.isLetter(s.charAt(i+1)) || s.charAt(i+1)=='(' || s.charAt(i+1)=='\u2220' || s.charAt(i+1)=='\u2206'))
 				{
 					s = s.substring(0, i + 1) + '*' + s.substring(i + 1);
 				}
