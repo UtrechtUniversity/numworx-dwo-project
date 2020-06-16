@@ -14,6 +14,7 @@
 	token.setMaxAge(0);
 	token.setPath("/");
 	response.addCookie(token);
+	String shib = (String) request.getAttribute("Shib-Handler");
 	
 %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -24,7 +25,7 @@
 <h1>Uitloggen</h1>
 <ul>
 	<li>
-		<a class='logout' href="/Shibboleth.sso/Logout?return=/" target="_parent" >Naar het hoofdmenu, sessie afsluiten</a>
+		<a class='logout' href="<%=shib%>/Logout?return=/" target="_parent" >Naar het hoofdmenu, sessie afsluiten</a>
 	</li>
 	<li>
 		<a class='nologout' href="/" target="_parent" >Naar het hoofdmenu zonder sessie af te sluiten</a>
@@ -34,7 +35,7 @@
 <h1>Logout</h1>
 <ul>
 	<li>
-		<a class='logout' href="/Shibboleth.sso/Logout?return=/" target="_parent" >To the main screen, ending your session </a>
+		<a class='logout' href="<%=shib%>/Logout?return=/" target="_parent" >To the main screen, ending your session </a>
 	</li>
 	<li>
 		<a class='nologout' href="/" target="_parent" >To the main screen, keeping your session</a>
