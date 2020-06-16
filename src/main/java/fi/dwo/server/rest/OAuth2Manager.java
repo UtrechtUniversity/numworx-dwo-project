@@ -150,6 +150,12 @@ public class OAuth2Manager {
                     PersistentUser user = UserManager.findEntity(samlUser.getUserID());
                     PersistentLoginContext l;
                     l = LoginContextUtilManager.forceNewLoginContextSession(user);
+                    samlUser.setAuthTokenTimestamp(samlUser.getAuthTokenTimestamp()-60000L); // oneshot!
+                    try {
+						SamlUserManager.edit(samlUser); // not fatal
+					} catch (Exception e) {
+						LOG.log(Level.WARNING, "samluser edit", e);
+					}
                     return buildTokenResponse(user, l);
                  } catch (Exception e) {
                     LOG.log(Level.SEVERE, "logincontext", e);
