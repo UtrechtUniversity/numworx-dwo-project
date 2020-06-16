@@ -9,6 +9,8 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -45,6 +47,7 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 public class InstallServlet extends HttpServlet {
 
 	private static final String UTF_8 = "UTF-8";
+	private Logger LOG = Logger.getLogger(getClass().getName());
 
 	final static Col TOETSEN[] = {
 			Col.FACULTEIT, Col.COLLEGEJAAR, Col.CURSUS, Col.AANVANGSBLOK, Col.KORTE_NAAM_NL, Col.TOETS, Col.VOLTIJD_DEELTIJD, Col.BLOK,Col.GELEGENHEID, Col.OMSCHRIJVING
@@ -87,6 +90,7 @@ public class InstallServlet extends HttpServlet {
 			String samlUserID = user.getSamlUserId();	      
 			String samlOrgID = user.getSamlOrgId();
 			String authToken = user.getAuthToken();
+			log("getToken " + samlUserID + " " + samlOrgID + " " + authToken);
 			String token = "3\f" + samlUserID + '\f' + samlOrgID + '\f' + authToken;
 			token = Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
 			OAuthManager m = new OAuthManager(instance);
@@ -96,16 +100,19 @@ public class InstallServlet extends HttpServlet {
 			  instance.setRecover(null); // FIXME
 			} else {
 				upload = "/noway.html";
+				log("No token for " + samlUserID + " " + samlOrgID + " " + authToken);
 			}
 			loginContext = SecureUserAccountManager.getLoginContext();
 			numworx.setSource(loginContext.getRealm(), instance);
 		} catch (Dwo2Exception e1) {
+				log("loginUser", e1);
 				upload = "/noway.html";
 		} finally {
 			try {
 				if (loginContext != null) SecureUserAccountManager.logoutUser(loginContext);
 			} catch (Dwo2Exception e) {
-				throw new ServletException(e.getLocalizedMessage(), e);
+				log("logoutUser", e);
+				throw new ServletException(e.getLocalizedMessage(), e);				
 			}
 		}
 		
@@ -281,7 +288,7 @@ public class InstallServlet extends HttpServlet {
 		} catch (Exception e) {
 			out.print("<p>Something went wrong<p><pre>");
 			out.println(message);
-			e.printStackTrace(out);
+			log("wrong install", e);
 		}
 	}
 
@@ -289,6 +296,16 @@ public class InstallServlet extends HttpServlet {
 		if (!verify) 
 			throw new IllegalArgumentException("Verification failed");
 		
+	}
+
+	@Override
+	public void log(String msg) {
+		LOG.warning(msg);
+	}
+
+	@Override
+	public void log(String message, Throwable t) {
+		LOG.log(Level.WARNING, message, t);
 	}
 	
 }
