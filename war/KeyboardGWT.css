@@ -54,6 +54,7 @@
       width: 842px;
       padding: 10px 20px;
       position: absolute;
+      box-sizing: content-box;
       top: 0;
       margin-top: 166px; }
       .keyboard-container.touch .keyboard .clm .key, .keyboard-container.touch .keyboard .key {
