@@ -72,7 +72,7 @@ public class TabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHa
 		Style st = main.getElement().getStyle();
 		st.setProperty("transformOrigin", "left");
 		st.setProperty("transform", "scaleX(0.96)");
-		st.setMarginLeft(70, Unit.PX);
+		st.setMarginLeft(58, Unit.PX);
 
 		main.add(tk);
 		tk.setDelegate(this);
