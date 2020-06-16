@@ -228,12 +228,19 @@ private Response refresh(MultivaluedMap<String, String> params) throws NullPoint
     return Response.ok(response).build();
   }
   
-  @POST
+  @POST  // Chrome
   @Path("/nekot") // end of token
   @Consumes(MediaType.TEXT_PLAIN)
   public Response nekot(String plain) {
-    try {
 		MultivaluedMap<String, String> params = convert(plain);
+    return nekot(params);
+  }
+
+  @POST // Safari
+  @Path("/nekot") // end of token
+  @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+  public Response nekot(MultivaluedMap<String, String> params) {
+	try {
 		String accessToken = params.getFirst("access_token");
 		String code = params.getFirst(REFRESH_TOKEN);
 		// doe je ding.
@@ -263,7 +270,7 @@ private Response refresh(MultivaluedMap<String, String> params) throws NullPoint
 	}
     
     return Response.status(Status.UNAUTHORIZED).build();
-  }
+}
 
   private MultivaluedMap<String, String> convert(String plain) {
     MultivaluedHashMap<String, String> result = new MultivaluedHashMap<>();
