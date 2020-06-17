@@ -8,6 +8,7 @@ import javax.inject.Provider;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -91,12 +92,14 @@ public class CorrectieView extends Composite implements HasHide {
 
   }
   
-  
+  int minCor,maxCor;
   
   private static PopupPanel startCorrection(Map<String, Object> map, Widget w, int score, int scoreMax) {
       CorrectieView view = new CorrectieView(w);
       view.setObject(map);      
       Object correctie = map.getOrDefault(REVIEW_SCORE_CORRECTIE,"0");
+      view.maxCor = scoreMax - score;
+      view.minCor = -score;
       view.correctie.setText(correctie.toString());
       view.max.setText(Integer.toString(scoreMax));
       view.score.setText(Integer.toString(score));
@@ -146,6 +149,7 @@ public class CorrectieView extends Composite implements HasHide {
   void onOk(ClickEvent e) {
     String result = correctie.getText();
     int n = Integer.parseInt(result);
+    n = Math.max(minCor, Math.min(maxCor, n));
     object.put(REVIEW_SCORE_CORRECTIE, (n));
     if(parent != null) {
       parent.setStyleName(CORRECTED, n!=0);
@@ -165,4 +169,16 @@ public class CorrectieView extends Composite implements HasHide {
     popup.hide();
   }
  
+  @UiHandler("correctie")
+  void onChange(ValueChangeEvent<String> e) {
+	  String v = e.getValue();
+	  try {
+		int n = Integer.parseInt(v);
+		  if (n > maxCor) correctie.setValue(Integer.toString(maxCor),false);
+		  if (n < minCor) correctie.setValue(Integer.toString(minCor),false);
+	} catch (NumberFormatException e1) {
+		
+	}
+  }
+  
 }

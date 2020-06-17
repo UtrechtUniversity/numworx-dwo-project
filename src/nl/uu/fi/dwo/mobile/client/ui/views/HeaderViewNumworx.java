@@ -39,6 +39,7 @@ import nl.uu.fi.dwo.account.client.ProfileCommand;
 import nl.uu.fi.dwo.account.client.SchoolClassStudentCommand;
 import nl.uu.fi.dwo.account.client.StudentModelCommand;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
@@ -220,8 +221,11 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 		items.clearItems();
 		MenuItem m;
 		if(withUser) {
-			m=items.addItem(DwoLocalesForGWT.instance.GUI_MyProfile(), new ProfileCommand(bus));
-			m.addStyleName(style.menuItem());
+			if (DWOplayer.PARAMETERS.getSecureMode() == SecureMode.NORMAL)
+			{	
+				m=items.addItem(DwoLocalesForGWT.instance.GUI_MyProfile(), new ProfileCommand(bus));
+				m.addStyleName(style.menuItem());
+			}
 			if(role == RoleType.STUDENT) {
 				ScheduledCommand cmd = new SchoolClassStudentCommand(this, bus);
 				m=items.addItem(DwoLocalesForGWT.instance.GUI_MySchoolClasses(), cmd);
