@@ -177,7 +177,8 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	private String className(int s) {
 		switch(s) {
 			default: return "nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView";
-			case 6: return "fi.nabouwenaanzichten.NabouwenAanzichten";
+			case 6:  return "fi.nabouwenaanzichten.NabouwenAanzichten";
+			case 26: return "fi.tekenveelvlakopdr.TekenVeelvlakOpdr";
 		}
 	}
 	

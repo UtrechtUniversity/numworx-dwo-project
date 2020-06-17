@@ -57,6 +57,9 @@ public class ReloginActivity extends MGWTAbstractActivity {
 	{
 		password = DwoGlobalVars.instance().getCurrentUser().getPassword();
 		username = DwoGlobalVars.instance().getCurrentUser().getUserName();
+		String realm = DwoGlobalVars.instance().getCurrentLoginContext().getRealm();
+		if (realm != null) username += realm;
+		
 		clientFactory.logout()
 		.then(new Success<Void, DomUserFullwLoginContext>() {
 
