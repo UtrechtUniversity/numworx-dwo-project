@@ -1,8 +1,5 @@
 package nl.uu.fi.dwo.account.client;
 
-import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
-
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -60,10 +57,4 @@ public abstract class RPCHandlerV1 {
 		return new Integer(courseID.toString());
 	}
 	
-    /**
-     *
-     */
-    public Promise<Void> logout() {
-		return Promises.resolved(null);
-	}
 }

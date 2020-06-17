@@ -98,7 +98,6 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
     /**
      *
      */
-    @Override
     public Promise<Void> logout() {
       Promise<Void> resolved = Promises.<Void>resolved(null);
       if (DwoGlobalVars.instance().getCurrentUser() != null) {
