@@ -359,6 +359,7 @@ private LoggingFailure FAILURE;
                 //calculate tree and call plotting
                 LOG.log(Level.INFO, "DomUser returned.");
                 DomUserFull u = resolved.getValue();
+                if (u.getInsertion() == null) u.setInsertion(""); // komt voor
                 dwoGlobalVars.setCurrentUser(u, dwoGlobalVars.getRealm());
                 view.clear();
                 view.updateUserView(u);
@@ -397,6 +398,7 @@ private LoggingFailure FAILURE;
                 LOG.log(Level.INFO, "DomFullUser data returned.");
                 DomUserFull uf = resolved.getValue();
                 dwoGlobalVars.setCurrentUser(uf);// updating data
+                if (uf.getInsertion()==null) uf.setInsertion("");
                 view.updateUserView(uf);
                 DomSchoolsRolesAndClassesV2 srac = new DomSchoolsRolesAndClassesV2();
                 srac.setNullSchool(dwoGlobalVars.getSchoolLogins().getNullSchool());
