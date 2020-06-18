@@ -764,10 +764,10 @@ public class FormuleParser
 		{
 			for (int i = 0; i < s.length() - 1; i++)
 			{
-				//if ((Letter.isLetter(s.charAt(i)) || Character.isDigit(s.charAt(i)) || s.charAt(i) == ')') && (Letter.isLetter(s.charAt(i + 1)) || s.charAt(i + 1) == '(') || s.charAt(i+1)=='\u2220' || s.charAt(i+1)=='\u2206')
-				if((Character.isLetter(s.charAt(i)) || Character.isDigit(s.charAt(i)) || s.charAt(i)==')') && (Character.isLetter(s.charAt(i+1)) || s.charAt(i+1)=='(' || s.charAt(i+1)=='\u2220' || s.charAt(i+1)=='\u2206'))
+				if((Letter.isLetter(s.charAt(i)) || Character.isDigit(s.charAt(i)) || s.charAt(i)==')') && (Letter.isLetter(s.charAt(i+1)) || s.charAt(i+1)=='(' || s.charAt(i+1)=='\u2220' || s.charAt(i+1)=='\u2206'))
 				{
 					s = s.substring(0, i + 1) + '*' + s.substring(i + 1);
+					logger.info(s);
 				}
 				else if (s.charAt(i) == ')' && Character.isDigit(s.charAt(i + 1)))
 				{
@@ -1366,7 +1366,23 @@ public class FormuleParser
 				boolean upperCasePair = s.length() == 2 && Character.isUpperCase(s.charAt(0)) && Character.isUpperCase(s.charAt(1));
 				if (upperCasePair)
 					return new BasisExpressie(s);
-				else if (s.length() == 1 && Letter.isLetter(s.charAt(0)))
+				
+				//hoek
+				if (s.length() == 2 && '\u2220'==s.charAt(0) && Character.isLetter(s.charAt(1)) && Character.isUpperCase(s.charAt(1)))
+				{
+					exp = new BasisExpressie(s);
+					return exp;
+				}
+				
+				//delta (increment operator)
+				if (s.length() == 2 && '\u2206'==s.charAt(0) && Character.isLetter(s.charAt(1)))
+				{
+					exp = new BasisExpressie(s);
+					return exp;
+				}
+				
+				//is het een letter?		
+				if (s.length() == 1 && Letter.isLetter(s.charAt(0)))
 				{
 					if (s.charAt(0) == 'e')
 						exp = new E();

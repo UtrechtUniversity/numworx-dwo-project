@@ -68,7 +68,7 @@ public class BasisExpressie extends Expressie
 	
 	public boolean isVar()
 	{	
-		boolean letterVar = Character.isLetter(basisString.charAt(0));
+		boolean letterVar = Letter.isLetter(basisString.charAt(0));
 		boolean hoekVar = basisString.length()>1 && '\u2220'== basisString.charAt(0) && Character.isLetter(basisString.charAt(1));
 		boolean deltaVar = basisString.length()>1 && '\u2206'== basisString.charAt(0) && Character.isLetter(basisString.charAt(1));
 		return letterVar||hoekVar||deltaVar;
