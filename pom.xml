@@ -112,9 +112,11 @@
                 </configuration>
                 <executions>
                     <execution>
+                    	<phase>test</phase>
                         <goals>
 <!--                             <goal>compile</goal> -->
 <!--                             <goal>i18n</goal> -->
+								 <goal>test</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -180,6 +182,18 @@
             <version>${gwtVersion}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-dev</artifactId>
+            <version>${gwtVersion}</version>
+            <scope>test</scope>
+        </dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency> <!-- deze is 2.8.1 compatibel -->
 			<groupId>com.github.nmorel.gwtjackson</groupId>
   			<artifactId>gwt-jackson</artifactId>

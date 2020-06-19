@@ -25,7 +25,7 @@ public class Digest  {
   }
 
   NumberFormat nf = NumberFormat.getFormat("000000000000E0");
-  private void hash(JSONValue value, StringBuilder sb) {
+  void hash(JSONValue value, StringBuilder sb) {
     if (value.isString() != null) {
       sb.append(value.isString().stringValue());
     } else if (value.isBoolean() != null) {
