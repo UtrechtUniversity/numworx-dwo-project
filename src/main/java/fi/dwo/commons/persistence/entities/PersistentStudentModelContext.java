@@ -194,6 +194,8 @@ public class PersistentStudentModelContext implements Serializable {
         context.setId(buildPersistenceId(modelID));
         context.setOptLock(optlock);
         context.setModelStructure(modelStructure);
+        context.setLastChangeTimeStamp(Long.valueOf(lastChangeTimeStamp));
+        context.setPublishState(publishState);
     }
 //    Future design
 //    /**
