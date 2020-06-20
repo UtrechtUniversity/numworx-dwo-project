@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
@@ -97,5 +98,19 @@ public class SecureTeacherStudentModelManager {
 	    "rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/getLRS",
 	    DomLRS.class, rest);
 	  return lrs;
+	}
+
+	public static DomStudentModelContext get(DomStudentModelContextId modelContext) throws Dwo2Exception {
+	 RestStudentModelContext rest = new RestStudentModelContext();
+	 rest.setRestContext(getContext());
+	 DomStudentModelContext context = new DomStudentModelContext();
+	 context.setId(modelContext.getId());
+	 rest.setDomStudentModelContext(context);
+	 DomStudentModelContext src =
+			        StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/get",
+			            DomStudentModelContext.class, rest);
+	 LOG.log(Level.FINE, "Retrieved list of studentmodels of the teacher with username {0}.",
+		new Object[] {RestAuthenticator.getInstance().getUsername()});
+     return src;
 	}
 }
