@@ -6,6 +6,8 @@ import java.util.Objects;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
+
 /**
  * A StudentModelContext node.
  *
@@ -16,7 +18,8 @@ public class DomStudentModelStructure {
 
     private DomStudentModelContextInfo info;
     private List<DomStudentModelCategory> categories;
-
+    private String owner;
+    private Long timestamp;
     /**
      * @return the info
      */
@@ -64,8 +67,7 @@ public class DomStudentModelStructure {
 		return Objects.hash(categories, info);
 	}
 
-	@Override
-	public boolean equals(Object obj) {
+	public boolean same(Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -78,5 +80,21 @@ public class DomStudentModelStructure {
 		DomStudentModelStructure other = (DomStudentModelStructure) obj;
 		return Objects.equals(categories, other.categories) && Objects.equals(info, other.info);
 	}
-    
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	public Long getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Long timestamp) {
+		this.timestamp = timestamp;
+	}
+
 }
