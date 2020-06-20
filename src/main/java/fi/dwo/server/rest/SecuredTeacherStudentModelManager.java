@@ -13,6 +13,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
@@ -62,6 +63,19 @@ public class SecuredTeacherStudentModelManager {
         }
     }
 
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("get")
+    public DomStudentModelContext getStudentModel(@Context SecurityContext sc, RestStudentModelContext rest) throws Dwo2Exception {
+    	TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+    			.setHasRole(rest.getRestContext().getDomHasRole())
+    			.buildSchoolAdminTeacher()
+    			.setTeacher();
+    	return build.getStudentModel(rest.getDomStudentModelContext());
+    }
+    
+    
+    
     /**
      * Returns the school data to be displayed.
      *

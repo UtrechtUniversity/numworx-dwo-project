@@ -3,6 +3,7 @@
  */
 package fi.dwo.server.PersistentDataManagers.actions;
 
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
@@ -39,6 +40,7 @@ import javax.persistence.PersistenceException;
 import javax.ws.rs.core.UriInfo;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
@@ -75,6 +77,22 @@ public class MySQLTeacherActions implements TeacherActions {
         return pModels;
     }
 
+    public PersistentStudentModelContext getStudentModel(TeacherDomainAuthorizer.Context context, DomStudentModelContextId model) throws Dwo2Exception {
+        Long id = MySQLPersistenceId.getNativeId(model);
+        PersistentStudentModelContext pModel = StudentModelContextManager.findEntity(id);
+        if ( pModel == null) {
+          throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Illegal operation");
+        }
+        //verify if course is in school
+        if ( !pModel.getSchoolID().equals(context.getUserCtx().school.getSchoolID())) {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested studentmode {2} is from a different school that is registered for hasRole in school {1} with usercode {0}.", new Object[]{context.getUserCtx().getUser().getUsername(), context.getUserCtx().getSchool().getSchoolID(), (pModel != null) ? pModel.getSchoolID() : "model==null"});
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + context.getUserCtx().getUser().getUsername() + ".");
+        }
+        return pModel;
+    }
+    
+    
+    
     @Override
     public List<PersistentSchoolClass> getSchoolClasses(TeacherDomainAuthorizer.Context context) throws Dwo2Exception {
         List<PersistentSchoolClass> schoolClasses = SchoolClassUtilManager.getSchoolClassesOfTeacher(context.getUserCtx().getHasRole());

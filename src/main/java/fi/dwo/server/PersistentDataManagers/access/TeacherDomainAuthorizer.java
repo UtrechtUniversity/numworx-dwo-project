@@ -27,6 +27,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -312,6 +313,7 @@ public class TeacherDomainAuthorizer {
     public interface TeacherState_HR_R_S_SG_U {
 
         List<DomStudentModelContext> getStudentModels() throws Dwo2Exception;
+        DomStudentModelContext getStudentModel(DomStudentModelContextId id) throws Dwo2Exception;
 
         DomStudentModelContext addStudentModel(DomStudentModelContext model) throws Dwo2Exception;
 

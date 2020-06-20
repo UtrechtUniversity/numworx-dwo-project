@@ -16,7 +16,6 @@ import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
 import fi.dwo.commons.persistence.entities.PersistentStudentInClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
-import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
@@ -30,7 +29,6 @@ import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
-import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
@@ -52,9 +50,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.OptimisticLockException;
+import javax.persistence.RollbackException;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-
-import org.eclipse.persistence.internal.jpa.weaving.RestAdapterClassWriter;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
@@ -65,7 +66,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataStudentScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
@@ -363,6 +364,12 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
         pModels.stream().forEach((m) -> result.add(m.buildDomStudentModelContext()));
         return result;
     }
+    
+    @Override
+    public DomStudentModelContext getStudentModel(DomStudentModelContextId id) throws Dwo2Exception {
+    	PersistentStudentModelContext result = instance.teacherActions.getStudentModel(instance.getContext(), id);
+    	return result.buildDomStudentModelContext();
+    }
 
     @Override
     public DomStudentModelContext addStudentModel(DomStudentModelContext model) throws Dwo2Exception {
@@ -382,8 +389,7 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
 
     @Override
     public DomStudentModelContext updateStudentModel(DomStudentModelContext model) throws Dwo2Exception {
-        try {
-            
+        try {            
             Long id = MySQLPersistenceId.getNativeId(model);
             PersistentStudentModelContext pModel = StudentModelContextManager.findEntity(id);
             if ( pModel == null) {
@@ -396,19 +402,23 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
             }
             if ( model.getOptLock() != null && !pModel.getOptlock() .equals (model.getOptLock())) {
               LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested studentmode {2} is from a different optlock that is registered for hasRole in school {1} with usercode {0}.", new Object[]{this.instance.getContext().getUserCtx().getUser().getUsername(), instance.getContext().getUserCtx().getSchool().getSchoolID(), (pModel != null) ? pModel.getSchoolID() : "model==null"});     
-              // throw HTTPERRORCODE CONFLICT
-            } else if (model.getOptLock() != null) {
+              throw new WebApplicationException(Status.CONFLICT);
+            } else 
+            if (model.getOptLock() != null) {
               pModel.setOptlock(model.getOptLock());
             }
             pModel.setModelStructure(model.getModelStructure());
+            pModel.setPublishState(model.getPublishState());
             //return instance.teacherActions.updateStudentModel(instance.getContext(), pModel).buildDomStudentModelContext();
             
             return StudentModelContextManager.edit(pModel).buildDomStudentModelContext(); // FIXME netjes maken!
-            
+        } catch (RollbackException|OptimisticLockException rb) {
+        	LOG.log(Level.SEVERE, "conflict", rb);
+            throw new WebApplicationException(Status.CONFLICT);
         } catch (Dwo2Exception e) {
             String msg = MessageFormat.format("Username {0}: Internal error: {1}", new Object[]{instance.getContext().getUserCtx().getUser().getUsername(), e.getMessage()});
             LOG.log(Level.WARNING, msg, e);
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
+            throw new Dwo2RestException(e.getDwo2Code(), msg);
         }
     }
    
@@ -420,14 +430,16 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
           if ( pModel == null) {
             return Boolean.FALSE;
           }
+          if (model.getOptLock() != null) pModel.setOptlock(model.getOptLock());
           //verify if course is in school
           if ( !pModel.getSchoolID().equals(instance.getContext().getUserCtx().school.getSchoolID())) {
               LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested studentmode {2} is from a different school that is registered for hasRole in school {1} with usercode {0}.", new Object[]{this.instance.getContext().getUserCtx().getUser().getUsername(), instance.getContext().getUserCtx().getSchool().getSchoolID(), (pModel != null) ? pModel.getSchoolID() : "model==null"});
               throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + this.instance.getContext().getUserCtx().getUser().getUsername() + ".");
           }
-            //return instance.teacherActions.removeStudentModel(instance.getContext(), pModel).buildDomStudentModelContext();
           StudentModelContextManager.destroy(id);
           return Boolean.TRUE;
+        } catch (RollbackException|OptimisticLockException e) {
+        	throw new WebApplicationException(Status.CONFLICT);
         } catch (EntityNotFoundException e) {
           return Boolean.FALSE;
         } catch (Dwo2Exception e) {
