@@ -42,6 +42,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <restyVersion>2.2.0</restyVersion>
+        <gwt.test.phase>none</gwt.test.phase>
     </properties>
     
     <scm>
@@ -112,7 +113,7 @@
                 </configuration>
                 <executions>
                     <execution>
-                    	<phase>test</phase>
+                    	<phase>${gwt.test.phase}</phase>
                         <goals>
 <!--                             <goal>compile</goal> -->
 <!--                             <goal>i18n</goal> -->
