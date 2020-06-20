@@ -4,6 +4,8 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 
@@ -34,6 +36,15 @@ public class TeacherStudentModelPanelProperties {
         return current = SecureTeacherStudentModelManager.updateModel(modelContext);
     }
     
+    public DomStudentModelStructure updateModel(DomStudentModelStructure model) throws Dwo2Exception {
+      current.setModelStructure(model);
+      return updateModel(current).getModelStructure();
+    }
+    
+    public DomStudentModelContext getModel(DomStudentModelContextId modelContext) throws Dwo2Exception {
+      return current = SecureTeacherStudentModelManager.get(modelContext);
+    }
+    
     void removeModel(DomStudentModelContext modelContext) throws Dwo2Exception {
       SecureTeacherStudentModelManager.removeModel(modelContext);
       if(modelContext == getCurrent()) setCurrent(null);
@@ -41,7 +52,7 @@ public class TeacherStudentModelPanelProperties {
         
     private DomStudentModelContext current;
 
-    DomStudentModelContext getCurrent() {
+    public DomStudentModelContext getCurrent() {
       return current;
     }
 

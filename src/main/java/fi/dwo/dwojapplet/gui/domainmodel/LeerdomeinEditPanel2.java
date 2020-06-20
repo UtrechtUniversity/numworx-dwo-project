@@ -20,6 +20,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
@@ -28,6 +29,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -73,6 +76,8 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.ConfirmDialog;
 import fi.dwo.dwojapplet.gui.GuiConstants;
+import fi.dwo.dwojapplet.gui.GuiCreator;
+import fi.dwo.dwojapplet.gui.TeacherStudentModelPanelProperties;
 import fi.dwo.dwojapplet.gui.domainmodel.ExportAction.ExportPanel;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
@@ -82,9 +87,13 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
+import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListener, ExportPanel, WindowListener {
   static final String WISKOPDR_SIG = "H4sIAAAAAA";
+  static final Logger LOG = Logger.getLogger(LeerdomeinEditPanel2.class.getName());
 
   
   class VoorkennisAction extends AbstractAction {
@@ -448,11 +457,13 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
 
   private Box settingsRO;
   private JPanel settingsRW;
-
+  private final TeacherStudentModelPanelProperties prop;
+  
   private static final Font font = new Font("SansSerif", Font.PLAIN, 12);
 
-  public LeerdomeinEditPanel2() {
+  public LeerdomeinEditPanel2(TeacherStudentModelPanelProperties prop) {
     super(new BorderLayout());
+    this.prop = prop;
 
   south = Box.createHorizontalBox();
   south.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
@@ -483,6 +494,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   bewerken.addActionListener(
     e -> {
       if (TextMapper.getText(TextMapper.GUIH_STOP_EDIT) != bewerken.getText()) {
+       if ( aquireLock() )
         setEditable(true);
       } else {
         switch(confirm()) {
@@ -689,6 +701,33 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   
   }
 
+  private boolean aquireLock() {
+    if (!lock) {
+      if (prop.getCurrent().getPublishState() == PublishState.edit) {
+        String msg = "Weet je zeker dat wilt bewerken?"
+            + "\n";
+        if (structure.getOwner()!= null) {
+          msg += structure.getOwner() + " is vanaf " + new Date(structure.getTimestamp().longValue()) + " bezig";
+        }
+        int ok = JOptionPane.showConfirmDialog(this,  msg        
+          , "", JOptionPane.WARNING_MESSAGE);
+        if (ok != JOptionPane.OK_OPTION)
+          return false;
+      }
+      prop.getCurrent().setPublishState(PublishState.edit);
+      structure.setOwner(DwoHelper.getCurrentUser().getUniqueDisplayName());
+      structure.setTimestamp(System.currentTimeMillis());
+      try {
+        prop.updateModel(structure);
+        lock = true;
+      } catch (Dwo2Exception e) {
+        GuiCreator.instance().ShowErrorDialog(this, e);
+        return false;
+      }
+    }
+    return true;    
+  }
+
   private String getTitle() {
     if (structure != null) {
       return structure.getInfo().getTitle().get(getLocale().getLanguage());
@@ -703,6 +742,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   private Box leftSouth;
 
   private JPanel leftBox;
+  private boolean lock;
   public void setEditable(boolean b) {
     editable = b;
     Container parent = settings.getParent();
@@ -740,6 +780,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   }
 
   public void setModel(DomStudentModelStructure model) {
+    lock = false;
     setModel0(model);
     resultModel =  null;    
   }
@@ -976,7 +1017,16 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   private void opslaanAction(ActionEvent e) {
     safeSelection(tree.getSelectionPath());
     resultModel = getTreeModel();
-    structure = resultModel;   
+    resultModel.setOwner(DwoHelper.getCurrentUser().getUniqueDisplayName());
+    resultModel.setTimestamp(System.currentTimeMillis());
+    structure = resultModel;
+    try {
+      prop.updateModel(resultModel);
+    } catch (Dwo2Exception e1) {
+      Dwo2ExceptionCode code = e1.getDwo2Code();
+      LOG.log(Level.SEVERE, "opslaanAction", e1);
+      GuiCreator.instance().ShowErrorDialog(this, e1);
+    }
 //    setEditable(false);
   }
   
@@ -1006,7 +1056,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   private int confirm() {
     safeSelection(tree.getSelectionPath());
     DomStudentModelStructure toSafe = getTreeModel();
-    if (toSafe.equals(structure)) return JOptionPane.NO_OPTION; // no need to safe.
+    if (toSafe.same(structure)) return JOptionPane.NO_OPTION; // no need to safe.
 
     return JOptionPane.showConfirmDialog(this, okButton.getText(),"", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
   }
@@ -1029,6 +1079,15 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
 
   @Override
   public void windowDeactivated(WindowEvent e) {
+  }
+
+  public void importModel(DomStudentModelStructure model) {
+    setModel0(model);
+    resultModel = structure;   
+  }
+
+  public boolean isLock() {
+    return lock;
   }
   
   

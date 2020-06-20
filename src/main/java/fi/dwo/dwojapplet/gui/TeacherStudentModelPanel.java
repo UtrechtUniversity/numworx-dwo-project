@@ -38,10 +38,13 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
+import com.teamdev.jxbrowser.browser.event.TitleChanged;
+
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
+import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
@@ -118,25 +121,41 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         @Override
         public void actionPerformed(ActionEvent event) {
             if (value == searchImage) {
-                DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
-                prop.setCurrent(model);
+              String title = (String) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), 0);
+              try {
+               DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
+               model = prop.getModel(model);
+               if (model.getPublishState() == PublishState.edit) {
+                  JOptionPane.showMessageDialog(TeacherStudentModelPanel.this, "Er werkt al mogelijk iemand mee!",title, JOptionPane.WARNING_MESSAGE);
+               }
                 textArea.setEditable(false);
                 textArea.setModel(model.getModelStructure());
 //                cancelButton.setEnabled(true);
 //                addModelButton.setText(TextMapper.getText(TextMapper.BTN_UPDATE));
-                String title = (String) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), 0);
                 int ok = showConfirmDialog(TeacherStudentModelPanel.this, scrollPane, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                model = prop.getCurrent();
                 if ( ok == JOptionPane.OK_OPTION) {
                   DomStudentModelStructure modelStructure = textArea.getModel();
                   model.setModelStructure(modelStructure);
-                  try {
-                    prop.updateModel(model);
-                    tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage);
-                  } catch (Dwo2Exception e) {
-                    LOG.log(Level.SEVERE, "update model " + title, e);
-                    GuiCreator.instance().ShowErrorDialog(center, e);
+                  model.setPublishState(PublishState.published);
+                  prop.updateModel(model);
+                } else {
+                  if (textArea.isLock()) {
+                    model.setPublishState(PublishState.published);
+                    prop.updateModel(model);                    
                   }
                 }
+              } catch (Dwo2Exception e) {
+                LOG.log(Level.SEVERE, "update model " + title, e);
+                GuiCreator.instance().ShowErrorDialog(center, e);
+              } finally {
+                try {
+                  tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage);
+                } catch (Dwo2Exception e) {
+                  LOG.log(Level.SEVERE, "refresh list " + title, e);
+                  GuiCreator.instance().ShowErrorDialog(center, e);
+               }
+              }
             }
             if (value == removeImage) {
               DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
@@ -340,7 +359,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         buildJTable();
         this.add(Box.createVerticalStrut(15));
         //textArea = new DomainModelEditor();
-        textArea = new LeerdomeinEditPanel2();
+        textArea = new LeerdomeinEditPanel2(prop);
         textArea.setEditable(false);
 //        this.add(scrollPane);
 
