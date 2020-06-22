@@ -371,6 +371,8 @@ class RestManager extends RestyDateTimeFormat {
           conn.disconnect();
           e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json.toString()),
               Dwo2ExceptionTranslator.decodeMessageInJSON(json.toString()));
+        } else if (conn.getResponseCode() == 409) { 
+            e = new Dwo2Exception(Dwo2ExceptionCode.Rest_ObjectModified, conn.getResponseMessage());
         } else if (conn.getResponseCode() == 401) { 
             e = new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, conn.getResponseMessage());
         } else {
