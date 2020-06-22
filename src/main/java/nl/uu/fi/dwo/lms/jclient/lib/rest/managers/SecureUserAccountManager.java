@@ -139,11 +139,14 @@ public class SecureUserAccountManager {
     DomContext context = restManager.getAuthenticator().getContext();
     submit.setRestContext(context);
     submit.setDomLoginContext(domLoginContext);
-    result = restManager.put("rest/sec:" + PathId.getId(context) + "/user/account/logout", Boolean.class, submit);
+    try {
+		result = restManager.put("rest/sec:" + PathId.getId(context) + "/user/account/logout", Boolean.class, submit);
+	} finally {
     // ensures basic auth data and cookies are wiped from Java Browser-like framework
-    Authenticator.setDefault(null);
-    restManager.setBasicAuthString(null, null, null);
-    restManager.setRecover(null);
+	    Authenticator.setDefault(null);
+	    restManager.setBasicAuthString(null, null, null);
+	    restManager.setRecover(null);
+	}
     return result;
   }
 
