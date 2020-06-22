@@ -38,8 +38,6 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
-import com.teamdev.jxbrowser.browser.event.TitleChanged;
-
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
@@ -65,7 +63,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
     private LeerdomeinEditPanel2 textArea;
 
     private JPanel jtbl;
-    private TableRowSorter rowSorter;
+    private TableRowSorter<TeacherStudentModelPanelTableModel> rowSorter;
 
     private Image searchImage, removeImage, resultsImage;
     int row;
@@ -84,7 +82,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
             setIcon(icon);
             setHorizontalAlignment(SwingConstants.CENTER);
             setOpaque(true);
-            Object[] arguments = new Object[]{table.getValueAt(row, 0)};
+            //Object[] arguments = new Object[]{table.getValueAt(row, 0)};
 
             if (selected) {
                 setBackground(table.getSelectionBackground());
@@ -178,7 +176,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
             
             if (value == resultsImage) {
               DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
-              String title = (String) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), 0);
+              //String title = (String) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), 0);
               LeerdomeinResultsPanel2 panel = new LeerdomeinResultsPanel2();
               panel.setContext(model);
               List<DomSchoolClass> list;
@@ -192,11 +190,11 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
               ConfirmDialog dialog = new ConfirmDialog(TeacherStudentModelPanel.this, "");
               dialog.setContentPane(panel);
               dialog.pack();
-              int w = dialog.getWidth(), h = dialog.getHeight();
-              Dimension m = dialog.getMaximumSize();
+//              int w = dialog.getWidth(), h = dialog.getHeight();
+//              Dimension m = dialog.getMaximumSize();
               //dialog.setSize(Math.min(w, m.width), Math.min(h, m.height));
               dialog.center();
-              dialog.show();
+              dialog.setVisible(true);
             }
         }
 //        private void recursiveUnfocusButtons(Component component) {
@@ -211,9 +209,9 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 //          }
 //      }
 
-        private int showConfirmDialogxxx(TeacherStudentModelPanel teacherStudentModelPanel,
-            JScrollPane scrollPane, String title, int okCancelOption, int plainMessage) {
-         return JOptionPane.showConfirmDialog(teacherStudentModelPanel, scrollPane, title, okCancelOption,plainMessage );
+//        private int showConfirmDialogxxx(TeacherStudentModelPanel teacherStudentModelPanel,
+//            JScrollPane scrollPane, String title, int okCancelOption, int plainMessage) {
+//         return JOptionPane.showConfirmDialog(teacherStudentModelPanel, scrollPane, title, okCancelOption,plainMessage );
 
 //          JOptionPane optionPane = new JOptionPane() {
 //            
@@ -248,7 +246,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 //              return ((Integer)selectedValue).intValue();
 //          return optionPane.CLOSED_OPTION;
 //      
-        }
+//        }
     }
 
     private void buildJTable() throws Dwo2Exception {
@@ -271,7 +269,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 
         tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage);
         jtable.setModel(tableModel);
-        rowSorter = new TableRowSorter(tableModel);
+        rowSorter = new TableRowSorter<TeacherStudentModelPanelTableModel>(tableModel);
         rowSorter.toggleSortOrder(0);//
         jtable.setRowSorter(rowSorter);
 
@@ -438,7 +436,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
       dialog.addWindowListener(textArea);      
       dialog.pack();
       dialog.center();
-      dialog.show();
+      dialog.setVisible(true);
       return dialog.getOption();
     }
 

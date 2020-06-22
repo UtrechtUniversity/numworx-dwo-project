@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -84,6 +85,7 @@ import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
@@ -555,6 +557,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
     };
 
     Bestand.add(new JMenuItem(new ExportAction(exporter)));
+    Bestand.add(new JMenuItem(new ImportAction(this)));
   bar.add(Bewerken);
     Bewerken.add(new JMenuItem(new Knippen()));
     Bewerken.add(new JMenuItem(new Kopieren()));
@@ -704,16 +707,31 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   private boolean aquireLock() {
     if (!lock) {
       if (prop.getCurrent().getPublishState() == PublishState.edit) {
+        DomStudentModelContext current = prop.getCurrent();
+        Long version = current.getOptLock();
+        try {
+           current = prop.getModel(prop.getCurrent());
+        } catch (Dwo2Exception e) {
+          LOG.log(Level.SEVERE, "refresh model", e);
+          GuiCreator.instance().ShowErrorDialog(this, e);
+          return false;
+        }
+        if (!current.getOptLock().equals(version)) {
+          setModel(current.getModelStructure());
+        }
+        if (current.getPublishState() == PublishState.edit) {
+        
         String msg = "Weet je zeker dat wilt bewerken?"
             + "\n";
         if (structure.getOwner()!= null) {
-          msg += structure.getOwner() + " is vanaf " + new Date(structure.getTimestamp().longValue()) + " bezig";
+          DateFormat dateFormat = DateFormat.getDateTimeInstance();        
+          msg += structure.getOwner() + " is vanaf " + dateFormat.format(new Date(structure.getTimestamp().longValue())) + " bezig";
         }
         int ok = JOptionPane.showConfirmDialog(this,  msg        
           , "", JOptionPane.WARNING_MESSAGE);
         if (ok != JOptionPane.OK_OPTION)
           return false;
-      }
+      }}
       prop.getCurrent().setPublishState(PublishState.edit);
       structure.setOwner(DwoHelper.getCurrentUser().getUniqueDisplayName());
       structure.setTimestamp(System.currentTimeMillis());
@@ -721,6 +739,8 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
         prop.updateModel(structure);
         lock = true;
       } catch (Dwo2Exception e) {
+        if (e.getDwo2Code() == Dwo2ExceptionCode.Rest_ObjectModified)
+          return aquireLock();
         GuiCreator.instance().ShowErrorDialog(this, e);
         return false;
       }
@@ -1082,8 +1102,9 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   }
 
   public void importModel(DomStudentModelStructure model) {
+    DomStudentModelStructure tmp = structure;
     setModel0(model);
-    resultModel = structure;   
+    structure = tmp;
   }
 
   public boolean isLock() {
