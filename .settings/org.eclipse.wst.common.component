@@ -4,7 +4,10 @@
         <wb-resource deploy-path="/" source-path="/war" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-        <dependent-module archiveName="DWO-gwt-lib-2.4.6-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/DWO-gwt-lib/DWO-gwt-lib">
+        <dependent-module archiveName="DWO-gwt-lib-2.4.7-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/DWO-gwt-lib/DWO-gwt-lib">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="DWO-rest-lib-2.4.7-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/DWO-rest-lib/DWO-rest-lib">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="java-output-path" value="/Account/target/classes"/>
