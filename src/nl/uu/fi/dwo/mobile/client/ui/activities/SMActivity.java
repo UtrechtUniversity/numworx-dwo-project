@@ -236,7 +236,7 @@ public class SMActivity extends AbstractActivity {
 		if (info.getSlip() == null) info.setSlip(0.05);
 		if (score.getCount() == 0) {
 			score.setScore(info.getInit());
-			score.setCount(1);
+//			score.setCount(1);
 		}
 			infos.put(id, info);
 			model.put(id, score);

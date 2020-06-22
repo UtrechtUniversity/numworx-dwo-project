@@ -167,7 +167,7 @@ public class StudentModelLogger implements Logging {
       DomStudentModelObj item = obj.get(i); DomStudentModelObjectiveScore s = objScore.get(i);
       String id = item.getInfo().getId();
       if (ids.contains(id)) {
-        s.setCount(s.getCount()+1);
+//        s.setCount(s.getCount()+1);
         s.setScore(s.getScore()+score/attempts);
       }
       List<DomStudentModelObj> o = item.getObjectives(); List<DomStudentModelObjectiveScore> os = s.getChildren();
@@ -189,7 +189,7 @@ public class StudentModelLogger implements Logging {
     		for( int j = 0; j < objective.length; j++) {
     			if(objective[j]) {
     				DomStudentModelScore<?> s = studentModel.getCategories().get(i).getObjectives().get(j);
-    				s.setCount(s.getCount()+1);
+//    				s.setCount(s.getCount()+1);
     				s.setScore(s.getScore()+score/attempts);
     			}
     		}
