@@ -6,8 +6,6 @@ import java.util.Objects;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
-
 /**
  * A StudentModelContext node.
  *
@@ -64,7 +62,24 @@ public class DomStudentModelStructure {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(categories, info);
+		return Objects.hash(categories, info, owner, timestamp);
+	}
+
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof DomStudentModelStructure)) {
+			return false;
+		}
+		DomStudentModelStructure other = (DomStudentModelStructure) obj;
+		return Objects.equals(owner, other.owner) 
+				&& Objects.equals(timestamp, other.timestamp) 
+				&& Objects.equals(categories, other.categories) 
+				&& Objects.equals(info, other.info);
 	}
 
 	public boolean same(Object obj) {

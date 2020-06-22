@@ -48,6 +48,7 @@ public enum Dwo2ExceptionCode {
     Rest_StudentScoExists,
     Rest_SchoolclassDoesNotExist,
     Rest_ObjectAlreadyExists,
+    Rest_ObjectModified,
     Rest_ScoNameExists, // add sco contraint failed. rollback occurred, possible cause duplicate sconame
     Rest_CourseNameExists,
     Rest_CanNotAddStudentToClass,
