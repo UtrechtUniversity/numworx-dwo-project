@@ -418,5 +418,10 @@ public class SelectModuleItem
 		image = course.getImage();
 		if("".equals(image)) image = null;
 	}
+
+	public void setNotAfter(Date date) {
+		if(classCourse != null) 
+			classCourse.setNotAfter(date);
+	}
 	
 }

@@ -79,4 +79,6 @@ public interface RPCHandler {
 	Promise<XapiManager> getLRS();
 
     Promise<JSONValue> getCourseDescription(Object file);
+
+	Promise<JSONValue> refreshExam();
 }

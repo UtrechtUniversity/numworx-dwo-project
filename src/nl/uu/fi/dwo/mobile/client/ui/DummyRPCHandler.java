@@ -221,4 +221,10 @@ public class DummyRPCHandler implements RPCHandler {
     return null;
   }
 
+@Override
+public Promise<JSONValue> refreshExam() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
 }

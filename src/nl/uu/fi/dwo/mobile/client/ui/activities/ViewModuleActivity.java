@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
@@ -33,12 +34,16 @@ import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
@@ -132,22 +137,64 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 					@Override
 					public void run() {
 						commitView();
-						MessageDialog dialog = new MessageDialog();
-						dialog.addLine(new Label(rb.sco_almost_expired()));
-						dialog.addOk();
-						dialog.showDialog();
-						long timeToGo = notAfter.getTime()-System.currentTimeMillis() - DWOplayer.timezone - BEFORE_AFTER;
-						timeToGo = Math.max(1,  timeToGo);
-						tm = new Timer() {
-
-							@Override
-							public void run() {
-								dialog.close();
-								oldTimer.run();
+						final Timer deze = this;
+						Promise<Date> p;
+						if (isSEB) {
+						  p = 
+						  clientFactory.getRPCHandler().refreshExam().then(pr -> { 
+							JSONString jwt = pr.getValue().isString();
+							if (jwt != null) {
+								String[] split = jwt.stringValue().split(" ");
+								if (split.length >= 3) {
+									long after = Long.parseLong(split[2]);
+									sco.setNotAfter(new Date(after*1000));
+								}
+							}						
+							return Promises.resolved(sco.getNotAfter());
+						});
+						} else {
+							p = Promises.resolved(sco.getNotAfter());
+							if ( clientFactory.getSchoolClass() != null) {
+								final Promise<Date> p0 = p;
+								p = clientFactory.getRPCHandler().getCourseClass(sco.getParentID(), clientFactory.getSchoolClass()).
+								filter(pr-> !pr.getClassCourses().isEmpty()).
+								then(pr -> { 
+									DomClassCourse cc = pr.getValue().getClassCourses().get(0).getValue();
+									sco.setNotAfter(cc.getNotAfter());
+									return Promises.resolved(cc.getNotAfter());
+								}).recoverWith(f -> p0);
+							}
+						}
+						
+						
+						
+						//Promise<Integer> iiiii = 
+						p.then( (Promise<Date>pr) -> {
+							Date notAfter = pr.getValue();
+							long timeToGo = notAfter.getTime()-System.currentTimeMillis() - DWOplayer.timezone - BEFORE_AFTER;
+							timeToGo = Math.max(1,  timeToGo);
+							if (timeToGo > PREPARE_AFTER) {
+								timeToGo -= PREPARE_AFTER;
+								deze.schedule((int) timeToGo);
+								return null;
 							}
 							
-						};
-						tm.schedule((int)timeToGo);
+							MessageDialog dialog = new MessageDialog();
+							dialog.addLine(new Label(rb.sco_almost_expired()));
+							dialog.addOk();
+							tm = new Timer() {
+
+								@Override
+								public void run() {
+									dialog.close();
+									oldTimer.run();
+								}
+								
+							};
+							tm.schedule((int)timeToGo);
+							return dialog.showDialog();
+						});
+						
 
 					}					
 					
@@ -311,7 +358,10 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 		if("goto:0".equals(href)) {
 			started = false;
 			//History.back(); // FIXME Niet meer goed als je goto gebruikt.
-			goTo(new TreeModulePlace(sco.getParentID()));
+			if (isSEB)
+				goTo(new LoginPlace());
+			else
+				goTo(new TreeModulePlace(sco.getParentID()));
 		}
 		else if(href.startsWith("goto:.")) defaultContext.gotoUrl(href);
 		else if(href.startsWith("goto:")){

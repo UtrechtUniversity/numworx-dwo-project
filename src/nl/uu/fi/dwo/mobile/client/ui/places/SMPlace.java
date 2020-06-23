@@ -22,7 +22,6 @@ public class SMPlace extends Place {
 
 		@Override
 		public SMPlace getPlace(String token) {
-			// TODO Auto-generated method stub
 			return new SMPlace(token);
 		}
 

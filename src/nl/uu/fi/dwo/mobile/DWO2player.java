@@ -19,9 +19,12 @@ import org.osgi.util.promise.Success;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONString;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 
+import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
 import fi.dwo.gwt.lib.rest.css.DwoStyle;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
@@ -107,6 +110,18 @@ public class DWO2player extends DWOplayer implements EntryPoint {
       return super.getUserFromOAuthToken(Base64.btoa(authToken));
     }
 		
+    public Promise<JSONValue> refreshExam() {
+    	return accountManager.verifyTOTP().then(p -> { 
+    		JSONString str = p.getValue().isString();
+    		if (str != null) {
+    			GwtRestVars vars = GwtRestVars.getInstance();
+    			Map<String,String> headers = vars.getCustomHeaders();
+			    headers.put("X-TOTP", str.stringValue());
+    		}
+    		return p;
+    	} );
+    }
+    
 	}
 
 

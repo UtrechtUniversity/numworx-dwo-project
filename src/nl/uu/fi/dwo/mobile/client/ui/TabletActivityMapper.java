@@ -1,8 +1,11 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import java.util.Map;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import nl.uu.fi.dwo.mobile.client.ui.activities.ClassesActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.CourseActivity2;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ExamActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ExamModuleActivity;
@@ -17,6 +20,7 @@ import nl.uu.fi.dwo.mobile.client.ui.activities.SearchActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.TreeModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ViewCourseActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ViewModuleActivity;
+import nl.uu.fi.dwo.mobile.client.ui.places.ClassesPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.Exam;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.LogoutPlace;
@@ -51,23 +55,37 @@ public class TabletActivityMapper implements ActivityMapper
 
 	@Inject Provider<MaybeLogoutActivity> maybeLogout;
 	@Inject Provider<ExamActivity> exam;
+//	@Inject Provider<ClassesActivity> classes;
+	
+	@Inject Map<Class<?>, Provider<Activity>> activityMap;
 	
 	
 	@Override
 	public Activity getActivity(Place place)
 	{
-	  if (place instanceof MaybeLogout) {
+// simple case 
+		Provider<Activity> provider = activityMap.get(place.getClass());
+		if (provider != null) return provider.get();
+		
+		if (place instanceof MaybeLogout) {
 	    return maybeLogout.get().place(place);
 	  }
 	  
 	  if (place instanceof Exam) {
 	      return exam.get();
-	    }
+	  }
 	  
-	    if (place instanceof LogoutPlace) {
-			return new LogoutActivity();
-		}
-		if (place instanceof nl.uu.fi.dwo.mobile.client.ui.places.guest)
+	  if (place instanceof LogoutPlace) {
+		return new LogoutActivity();
+	  }
+//	  if (place instanceof ClassesPlace) {
+//		  return classes.get();
+//	  }
+	    
+	    
+	    
+	    
+	    if (place instanceof nl.uu.fi.dwo.mobile.client.ui.places.guest)
 		{
 			return new GuestActivity(clientFactory);
 		}
@@ -116,7 +134,7 @@ public class TabletActivityMapper implements ActivityMapper
 			    place instanceof ViewCoursePlace 
 			    ? new ViewCourseActivity(clientFactory, item, where)
 			    : new ViewModuleActivity(clientFactory, item, where);
-			Provider<Activity> provider = new Provider<Activity>() {
+			    provider = new Provider<Activity>() {
 				
 				@Override
 				public Activity get() {
