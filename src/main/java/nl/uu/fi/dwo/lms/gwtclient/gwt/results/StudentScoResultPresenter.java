@@ -241,7 +241,7 @@ public class StudentScoResultPresenter {
       this.userState.remove(ResultsService.REVIEW_DATA);
     }
     Map<String,String> userState = new HashMap<> (this.userState);
-    userState.keySet().retainAll(Arrays.asList(/*"cmi.score.raw",*/ResultsService.REVIEW_DATA));
+    userState.keySet().retainAll(Arrays.asList("cmi.score.raw",ResultsService.REVIEW_DATA));
     LOG.info( "update Score/Review " + userState);
     if (dwoGlobalVars.isPremium())
       resultService.setValues(ssc.getStudentSco(), userState).map(this::updateResultTree).then(null,FAILURE);
