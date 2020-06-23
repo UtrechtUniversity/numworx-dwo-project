@@ -535,10 +535,11 @@ public class SecuredUserAccountManager {
         
     }    
     
-    @GET
-    @Produces("application/json")
-    @Path("/verifyTOTP")
-    public String verifyTOTP(@HeaderParam("X-ClassCourseID") String ccid, @HeaderParam("X-TOTP") String totp) {
+//    @GET
+//    @Produces("application/json")
+//    @Path("/verifyTOTP")
+//    public
+    private String verifyTOTP(@HeaderParam("X-ClassCourseID") String ccid, @HeaderParam("X-TOTP") String totp) {
         try {
             LOG.info("ccid = " + ccid);
             LOG.info("totp = " + totp);
@@ -582,6 +583,17 @@ public class SecuredUserAccountManager {
             .setHeaderParam("kid", context.getId());         
       return builder.signWith(key).compact();     
     }
+ 
+    // timestamp never null, reasonable value 
+    private static String notAfter(PersistentClassCourse pcc) {
+    	Date notAfter = pcc.getNotAfter();
+    	if (notAfter == null) {
+    		Date notBefore = pcc.getNotBefore(); 
+    		if (notBefore == null) notBefore = new Date();
+    		return String.valueOf(notBefore.getTime()/1000L + 24*3600);
+    	}
+    	return String.valueOf(notAfter.getTime()/1000L); // same as expiry value
+    }
     
     @GET
     @Produces("application/json")
@@ -603,7 +615,21 @@ public class SecuredUserAccountManager {
                 case PLAIN:
                     totp = Base64.decodeAsString(st.nextToken());
                     if (accessKey == null || accessKey.isEmpty() || accessKey.equals(totp))
-                      return '"' + TotpType.JWT.name() + " " + getToken(pcc, sc) + '"';
+                      return '"' + TotpType.JWT.name() + " " + getToken(pcc, sc) + " " + notAfter(pcc) + '"';
+                    return "false";
+                case JWT:
+                    totp = st.nextToken();
+                    JwtParser parser = Jwts.parser().setSigningKeyResolver(OAuth2Manager.AUTH);
+                    Jws<Claims> claims = parser.parseClaimsJws(totp);
+                    String username = claims.getBody().getSubject();
+                    String pccid = claims.getBody().getId();
+                    if (username.equals(sc.getUserPrincipal().getName()) 
+                        && pccid.equals(String.valueOf(pcc.getClassCourseID()))
+                        
+                    )
+                    {
+                        return '"' + TotpType.JWT.name() + " " + getToken(pcc, sc) + " " + notAfter(pcc) + '"';                  	
+                    }
                     return "false";
                 default:
                     throw new IllegalArgumentException("not implemented");
