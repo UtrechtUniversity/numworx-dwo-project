@@ -29,6 +29,7 @@ import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 public class CorrectieView extends Composite implements HasHide {
 
   private static final String REVIEW_SCORE_CORRECTIE = "reviewScoreCorrectie";
+  private static final String REVIEW_SCORE_COMMENT   = "reviewScoreComment";
   public static final String REVIEW_INTERACTIE_DATA = "reviewInteractieData";
   
   public static final String CORRECTIE = DWOplayer.DWO_BUNDLE.dwoplayercss().correctie();
@@ -58,6 +59,8 @@ public class CorrectieView extends Composite implements HasHide {
         if(h != null) {
           if (h.containsKey(REVIEW_SCORE_CORRECTIE))
             result.put(REVIEW_SCORE_CORRECTIE, h.getInt(REVIEW_SCORE_CORRECTIE));
+          if (h.containsKey(REVIEW_SCORE_COMMENT))
+        	result.put(REVIEW_SCORE_COMMENT, h.getString(REVIEW_SCORE_COMMENT));
         }
         widget.addDomHandler(event -> {
           int x = event.getRelativeX(widget.getElement());
@@ -98,11 +101,13 @@ public class CorrectieView extends Composite implements HasHide {
       CorrectieView view = new CorrectieView(w);
       view.setObject(map);      
       Object correctie = map.getOrDefault(REVIEW_SCORE_CORRECTIE,"0");
+      Object comment   = map.getOrDefault(REVIEW_SCORE_COMMENT, "");
       view.maxCor = scoreMax - score;
       view.minCor = -score;
       view.correctie.setText(correctie.toString());
       view.max.setText(Integer.toString(scoreMax));
       view.score.setText(Integer.toString(score));
+      view.area.setText(String.valueOf(comment));
       PopupPanel popup = new PopupPanel();
       popup.setWidget(view);
       view.setPopup(popup);      
@@ -110,19 +115,13 @@ public class CorrectieView extends Composite implements HasHide {
       return popup;
   }
 
-
-
   private Map<String,Object> object;
 
   private void setObject(Map<String, Object> map) {
     this.object = map;
   }
 
-
-
   private PopupPanel popup;
-
-
 
   private void setPopup(PopupPanel popup) {
     this.popup = popup;
@@ -138,6 +137,7 @@ public class CorrectieView extends Composite implements HasHide {
 
   @UiField HasText max, score;
   @UiField TextBox correctie;
+  @UiField MLTextBox area;
   private final Widget parent;
 
   private CorrectieView(Widget w) {
@@ -151,6 +151,8 @@ public class CorrectieView extends Composite implements HasHide {
     int n = Integer.parseInt(result);
     n = Math.max(minCor, Math.min(maxCor, n));
     object.put(REVIEW_SCORE_CORRECTIE, (n));
+    String comment = area.getText();
+    object.put(REVIEW_SCORE_COMMENT, comment);
     if(parent != null) {
       parent.setStyleName(CORRECTED, n!=0);
     }
@@ -161,6 +163,8 @@ public class CorrectieView extends Composite implements HasHide {
   void onCancel(ClickEvent e) {
     Object n = object.getOrDefault(REVIEW_SCORE_CORRECTIE, "0");
     correctie.setText(n.toString());
+    Object comment = object.getOrDefault(REVIEW_SCORE_COMMENT, "");
+    area.setText(comment.toString());
     hide();
   }
 
