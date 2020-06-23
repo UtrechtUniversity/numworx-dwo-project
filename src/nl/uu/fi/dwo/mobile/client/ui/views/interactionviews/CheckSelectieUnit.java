@@ -522,7 +522,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         {
         	kijkNa();
         }
-        correctie = CorrectieFacade.get(h, this, scoreMax);
+        correctie = CorrectieFacade.get(h, this, scoreMax, mode);
 	}
 	
 	public void setAttempt()

@@ -989,6 +989,9 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	public boolean isReview() {
 		return cmi_mode == LessonMode.review;
 	}
+	public boolean isBrowse() {
+		return cmi_mode == LessonMode.browse;
+	}
 	
 	void setShareMap(JSONObject obj) {
 		shareMap = obj;
@@ -1341,7 +1344,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
   private static String REVIEW_CORRECTIE_SCORE = "reviewScoreCorrectie";
 
   public int getReviewScore() {
-	  if (isReview()) {
+	  if (isReview()||isBrowse()) {
 		  String reviewData = api.GetValue(REVIEW_DATA);
 		  if (reviewData.startsWith("{")) {
 			  return (int) getReviewScore(JSONParser.parseStrict(reviewData));			  

@@ -943,7 +943,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 			kijkNa(true, true);
 		
 		basisPanel.setStyleDependentName("readonly", !editable);
-		correctie = CorrectieFacade.get(h, this, getScoreMax());
+		correctie = CorrectieFacade.get(h, this, getScoreMax(), mode);
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })

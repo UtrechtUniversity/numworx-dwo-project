@@ -473,7 +473,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		else {
 			CorrectieFacade.showReview(h, this);
 			setState( JSONUtilities.wrapMap(h));
-			correctie = CorrectieFacade.get(h, this, getScoreMax());
+			correctie = CorrectieFacade.get(h, this, getScoreMax(),comRoot.getMode());
 		}
 	}
 

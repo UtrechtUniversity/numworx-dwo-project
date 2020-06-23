@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
@@ -19,7 +20,7 @@ public class CorrectieFacade {
     private static CorrectieFacade instance = GWT.create(CorrectieFacade.class);
     private static CorrectieFacade NULL = new CorrectieFacade();
     
-    public static CorrectieFacade get(Map<String,Object> h, InteractionView view, int maxScore) {
+    private static CorrectieFacade get(Map<String,Object> h, InteractionView view, int maxScore) {
         return instance.create(h, view, view.asWidget(), maxScore);
     }
     public static Widget wrap(Widget view) {
@@ -47,7 +48,8 @@ public class CorrectieFacade {
     return (view);
   }
 
-    public static CorrectieFacade get(Map<String,Object> h, InteractionView view, Widget widget, int maxScore) {
+    public static CorrectieFacade get(Map<String,Object> h, InteractionView view, Widget widget, int maxScore, int mode) {
+	  if (mode != OpdrNavIF.EINDTOETS) return NULL; // alleen EINDTOETS
       return instance.create(h, view, widget, maxScore);
   }
 
@@ -64,4 +66,9 @@ public class CorrectieFacade {
     		w.asWidget().addStyleName(CorrectieView.CORRECTIE);
     	}
     }
+	public static CorrectieFacade get(Map<String, Object> h, InteractionView view, int scoreMax,
+			int mode) {
+		if (mode != OpdrNavIF.EINDTOETS) return NULL; // alleen EINDTOETS
+		return get(h,view, scoreMax);
+	}
 }

@@ -1232,7 +1232,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			int totaalScore = getTotaalScore();
 			
 // De correctie bij score optellen.			
-			if (mode == EINDTOETS && memento.isReview() && memento.isEindtoetsVerzegeld()) totaalScore += memento.getReviewScore();
+			if (mode == EINDTOETS && memento.isEindtoetsVerzegeld()) totaalScore += memento.getReviewScore();
 			
 			int totaalMax = getTotaalMax();
 	
@@ -1528,6 +1528,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 					goon = old;
 				}
 		     memento.mergeIntoReview(currentActiviteit, currentOpdracht, states[currentActiviteit][currentOpdracht]);
+		     memento.setScore(getScore()); // update review
 		   }
 		}
 

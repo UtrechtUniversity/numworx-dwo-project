@@ -1826,7 +1826,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				kijkNa(true); // FIXME kijkna in setstate
 		}
 		setEditable(editable);
-		correctie = CorrectieFacade.get(h, this, getAsPanel(), scoreMax);
+		correctie = CorrectieFacade.get(h, this, getAsPanel(), scoreMax, mode);
 	}
 
 	public String strip$f(String antwoord) {

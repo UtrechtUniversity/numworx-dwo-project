@@ -293,7 +293,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
         {
         	kijkNa();
         }
-        correctie = CorrectieFacade.get(h, this, getScoreMax());
+        correctie = CorrectieFacade.get(h, this, getScoreMax(),mode);
 	}
 	
 	public void setAttempt()
