@@ -112,7 +112,7 @@ public class DWOTabletKeyboardResponsive extends AbstractKeyboard {
 	}
 	@UiHandler("tx") void onX(ClickEvent e) { getEditor().insert('x'); }
 	@UiHandler("tpi")void onPi(ClickEvent e){ getEditor().insert('\u03C0'); }
-	@UiHandler({"ty","tp","tq","te", "tinf", "t6_8"})
+	@UiHandler({"ty","tp","tq","te", "tinf", "t6_8","ta","tb","tn","tk","tee"})
 	void onT2(ClickEvent e) {
 		doInsert(e);
 	}
@@ -243,7 +243,7 @@ public class DWOTabletKeyboardResponsive extends AbstractKeyboard {
 	@UiHandler("tx") void longOnTX(LongTapEvent ev) {
 		if (mx == null) {
 			mx = new Multikey();
-			mx.setKeys('x','y','p','q');
+			mx.setKeys('x','y','p','q', 'a', 'b', 'n','k');
 			mx.setVarStyle();
 		}
 		int px = tx.getAbsoluteLeft();
