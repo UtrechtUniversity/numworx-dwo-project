@@ -110,7 +110,7 @@ public class IdleDetect extends Timer implements NativePreviewHandler {
 	@Override
 	public void run() {
 		cnt ++;
-		if (cnt <= FAST) fire();
+		if (cnt == FAST) fire();
 		else if (cnt >= SLOW) {
 			fire();
             reset();

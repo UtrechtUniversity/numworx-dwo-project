@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
+import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
@@ -438,7 +439,9 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
   @Override
   public void onIdle(IdleEvent ev) {   
     OpdrNavIF opdrNav = view.getOpdrNav(); // komt soms te vroeg, en dan heb je nog geen opdrnav
-    if (opdrNav != null && (opdrNav.getMode() == OpdrNavIF.ZELFTOETS || opdrNav.getMode() == OpdrNavIF.EINDTOETS))
+    if (opdrNav != null 
+    		&& opdrNav.getLessonMode() == LessonMode.normal
+    		&& (opdrNav.getMode() == OpdrNavIF.ZELFTOETS || opdrNav.getMode() == OpdrNavIF.EINDTOETS))
       opdrNav.setChanged(false); 
     if (ev.isSlow() && !sco.isExam()) // no timeout bij exams
     {

@@ -264,7 +264,7 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 	}
 	
 
-	static final PopupListener NOVIEW_LISTENER =  new PopupListener() {
+	public static final PopupListener NOVIEW_LISTENER =  new PopupListener() {
 		public void onShow() {}
 		public void onHide() {}		
 	};

@@ -28,8 +28,8 @@ import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 public class CorrectieView extends Composite implements HasHide {
 
-  private static final String REVIEW_SCORE_CORRECTIE = "reviewScoreCorrectie";
-  private static final String REVIEW_SCORE_COMMENT   = "reviewScoreComment";
+  public static final String REVIEW_SCORE_CORRECTIE = "reviewScoreCorrectie";
+  public static final String REVIEW_SCORE_COMMENT   = "reviewScoreComment";
   public static final String REVIEW_INTERACTIE_DATA = "reviewInteractieData";
   
   public static final String CORRECTIE = DWOplayer.DWO_BUNDLE.dwoplayercss().correctie();

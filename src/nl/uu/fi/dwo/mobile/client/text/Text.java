@@ -147,4 +147,19 @@ public interface Text extends Constants {
 	String sco_expired();
 	@DefaultStringValue("Over 5 minuten wordt de activiteit afgesloten")
 	String sco_almost_expired();
+	
+// Docent correcties
+	@DefaultStringValue("Correctie door de docent")
+	String docentCorrectieTitle();
+	@DefaultStringValue("Maximale score: ")
+	String maximaleScore();
+	@DefaultStringValue("Score: ")
+	String score();
+	@DefaultStringValue("Toevoeging: ")
+	String toevoeging();
+	@DefaultStringValue("Opmerkingen van de docent:")
+	String opmerkingenDocent();
+	@DefaultStringValue("Opmerkingen:")
+	String opmerkingen();
+	
  }

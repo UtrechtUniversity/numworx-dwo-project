@@ -57,6 +57,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
@@ -1782,7 +1783,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			}
 		}
 		ObjectMap map = JSONUtilities.wrapMap(h);
-		CorrectieFacade.showReview(h, getAsPanel());
+		AcceptsOneWidget parent;
+		parent = p -> {getAsPanel().add(p);};
+		CorrectieFacade.showReview(h, parent, this, scoreMax);
 		boolean ingevuld = true;
 		boolean nagekeken = false;
 		boolean editable = true;
