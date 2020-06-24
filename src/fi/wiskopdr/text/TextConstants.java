@@ -200,5 +200,9 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	@DefaultStringValue("Rekenmachine")
 	String tooltip_rmKnop();
 	
+	//Popup
+	@DefaultStringValue("Uitwerking")
+	String popupUitwerkingTitel();
+	
 // enzovoort
 }

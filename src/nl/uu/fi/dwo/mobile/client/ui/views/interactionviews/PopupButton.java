@@ -59,6 +59,9 @@ import com.vaadin.pointerevents.client.PointerMoveEvent;
 import com.vaadin.pointerevents.client.PointerMoveHandler;
 import com.vaadin.pointerevents.client.PointerUpEvent;
 import com.vaadin.pointerevents.client.PointerUpHandler;
+
+import fi.wiskopdr.text.Text;
+
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.animation.client.AnimationScheduler;
@@ -449,7 +452,7 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 				// a resizable dialogbox
 				//box = new ResizableDialogBox(false, false, false, false, true, caption);
 				//((ResizableDialogBox) box).setResizableContent((ResizableContentIF) content);
-				box = new DWOPopupPanel("Uitwerking", listener);
+				box = new DWOPopupPanel(Text.constants.popupUitwerkingTitel(), listener);
 				box.setResizableContent((ResizableContentIF) content);
 			}
 			else
