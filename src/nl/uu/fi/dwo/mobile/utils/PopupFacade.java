@@ -49,6 +49,7 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 	}
 	
 	private boolean popup;
+	private String  popupTitel = "";
 	private int setNr;
 	private String popupImageString;
 	private Image  popupImage;
@@ -68,6 +69,8 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 			setNr = ((Number) value).intValue();
 		}
 		popupImageString = (String) h.get("popupImageString");
+		if(h.containsKey("popupTitel"))
+			popupTitel = (String) h.get("popupImageString");
 	}
 	
 	@Deprecated
@@ -88,6 +91,8 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 		popup = h.getBoolean("popup", false);
 		if(h.containsKey("setNr"))
 			setNr = h.getInt("setNr");
+		if(h.containsKey("popupTitel"))
+			popupTitel = h.getString("popupTitel");
 		popupImageString = h.getString("popupImageString");
 	}
 
@@ -99,6 +104,7 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 		if(popup) {
 			if(popupBtn==null)
 			{	popupBtn = new PopupButton(container, getImage(), view, popupListener);
+				popupBtn.setTitle(popupTitel);
 				list.add(popupBtn);
 			}
 			return popupBtn;
@@ -110,6 +116,7 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 		if(popup) {
 			PopupButton btn = new PopupButton(container.getWidget(), getImage(), container, popupListener);
 			popupBtn = btn;
+			popupBtn.setTitle(popupTitel);
 			list.add(btn);
 			return btn;
 		}
@@ -118,8 +125,10 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 	
 	public Widget wrap(MC2View container) {
 		if(popup) {
-			if (popupBtn == null)
+			if (popupBtn == null) {
 				popupBtn = new PopupButton(container.getWidget(), getImage(), container, popupListener);
+				popupBtn.setTitle(popupTitel);
+			}
 			list.add(popupBtn);
 			return popupBtn;
 		}
@@ -147,6 +156,7 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 		"images/resources/eslate.gif",		// eslate/malt
 		"images/resources/epsilonwriter.png" // aristod epsilon
 	};
+	
 	final static int heights[] = { 20,20,20,20,20, 20, 20, 20, 20 };
 	final static int widths [] = { 20,20,20,20,20, 20, 20, 20, 20 };
 	
@@ -252,6 +262,7 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 		getImage();
 		return imageWidth; 
 	}
+	
 	
 
 	@Override
