@@ -1,13 +1,8 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
-import java.util.Vector;
-
 import org.vectomatic.dom.svg.OMSVGElement;
 import org.vectomatic.dom.svg.OMSVGGElement;
-import org.vectomatic.dom.svg.OMSVGLineElement;
 import org.vectomatic.dom.svg.OMSVGTransform;
-import org.vectomatic.dom.svg.utils.SVGConstants;
-
 import com.google.gwt.canvas.dom.client.Context2d;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
@@ -19,6 +14,7 @@ public class VectorNotatieVak extends FormuleElementWithChildren
 	{
 		super(holder, 1);
 		this.setChanged(true);
+		getChild().setPosition(0, 2);
 
 //		setSize(5 * fm.getAscent() / 5, 4 * fm.getAscent() / 3 + fm.getDescent());
 //		setAsHoogte(fm.getAscent() / 2);
@@ -48,13 +44,21 @@ public class VectorNotatieVak extends FormuleElementWithChildren
 	public void paintComponent(Context2d ctx)
 	{
 		super.paintComponent(ctx);
-		build(new CanvasBuilder(ctx));		
+		paintSymbol(ctx);		
+	}
+
+	private void paintSymbol(Context2d ctx) {
+		build(new CanvasBuilder(ctx));
 	}
 	
 	
 	protected void paintComponent(OMSVGElement svg)
 	{
 		super.paintComponent(svg);
+		paintSymbol(svg);
+	}
+
+	private void paintSymbol(OMSVGElement svg) {
 		SvgBuilder builder = new SvgBuilder(svg, x, y);
 		build(builder);
 	}
@@ -65,6 +69,7 @@ public class VectorNotatieVak extends FormuleElementWithChildren
 		zetMaat();		
 		paintComponent(ctx);
 		getChild().draw(ctx);
+		paintSymbol(ctx);
 		this.drawCursor();
 	}
 	
@@ -81,12 +86,13 @@ public class VectorNotatieVak extends FormuleElementWithChildren
 			g.getTransform().getBaseVal().appendItem(transform);
 		}
 		getChild().draw(g);
+		paintSymbol(svg);
 		drawCursor(svg);
 	}
 
 	public int getAsHoogte()
 	{
-		return getChild().getAsHoogte() + fm.getAscent()/12;
+		return getChild().getAsHoogte() + 2;
 	}
 	
 	public void zetMaat()

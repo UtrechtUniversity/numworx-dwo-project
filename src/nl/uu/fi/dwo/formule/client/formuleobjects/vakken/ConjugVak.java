@@ -27,6 +27,7 @@ public class ConjugVak extends FormuleElementWithChildren
 		zetMaat();
 		paintComponent(ctx);
 		this.getChild().draw(ctx);
+		paintSymbol(ctx);
 		this.drawCursor();
 	}	
 
@@ -36,12 +37,16 @@ public class ConjugVak extends FormuleElementWithChildren
 	@Override
 	public void paintComponent(Context2d ctx) {
 		super.paintComponent(ctx);
+		paintSymbol(ctx);
+	}
+
+	public void paintSymbol(Context2d ctx) {
 		build(new CanvasBuilder(ctx));
 	}
 
 	protected void build(PathBuilder ctx) {
 		ctx.setStrokeStyle(color);
-		ctx.setLineWidth(0.6 * fm.getStrokeWidth());
+		ctx.setLineWidth(fm.getStrokeWidth());
 
 		ctx.beginPath();
 		ctx.moveTo(2, 1);
@@ -78,14 +83,18 @@ public class ConjugVak extends FormuleElementWithChildren
 	@Override
 	protected void paintComponent(OMSVGElement svg) {
 		super.paintComponent(svg);
+		paintSymbol(svg);
+	}
+
+	public void paintSymbol(OMSVGElement svg) {
 		SvgBuilder builder = new SvgBuilder(svg, x, y);
 		build(builder);
 	}
 
 	@Override
 	public void draw(OMSVGElement svg) {
-		paintComponent(svg);
 		OMSVGGElement g = new OMSVGGElement();
+		paintComponent(svg);
 		svg.appendChild(g);
 		if(x != 0 || y != 0) {
 			OMSVGTransform transform = getSVGSVGElement(svg).createSVGTransform();
@@ -93,6 +102,7 @@ public class ConjugVak extends FormuleElementWithChildren
 			g.getTransform().getBaseVal().appendItem(transform);
 		}
 		getChild().draw(g);
+		paintSymbol(svg);
 		drawCursor(svg);
 	}
 
