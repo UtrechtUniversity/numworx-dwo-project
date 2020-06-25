@@ -295,6 +295,8 @@ public class DomResultTree {
         DomStudentScoContext studentSco = map.remove(pid);
         if(studentSco != null)
         {
+          LOG.info("size is " + rssc.getChildren().size());
+          rssc.getChildren().clear(); // invalidate pages
           rssc.setStudentSco(studentSco);
           return true;
         } else { 
