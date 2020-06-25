@@ -244,7 +244,12 @@ public class StudentScoResultPresenter {
     userState.keySet().retainAll(Arrays.asList("cmi.score.raw",ResultsService.REVIEW_DATA));
     LOG.info( "update Score/Review " + userState);
     if (dwoGlobalVars.isPremium())
-      resultService.setValues(ssc.getStudentSco(), userState).map(this::updateResultTree).then(null,FAILURE);
+    {	String score = userState.get("cmi.score.raw");
+    	if (score != null) ssc.getStudentSco().setScore(Double.parseDouble(score));
+    	ResultEvent ev = new ResultEvent(ssc, userState);
+    	eventBus.fireEvent(ev);
+    	resultService.setValues(ssc.getStudentSco(), userState).map(this::updateResultTree).then(null,FAILURE);
+    }
     return "true";
   }
   

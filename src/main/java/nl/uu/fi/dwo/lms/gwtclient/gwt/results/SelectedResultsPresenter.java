@@ -33,6 +33,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsSelectedResultsDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
@@ -64,7 +65,7 @@ import org.osgi.util.promise.Failure;
  *
  * @author plas0006
  */
-public class SelectedResultsPresenter {
+public class SelectedResultsPresenter implements ResultEventHandler {
 
     private static final long PREPARE_TIMEOUT = 1000L;
 
@@ -100,6 +101,7 @@ public class SelectedResultsPresenter {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
         FAILURE = new LoggingFailure(LOG, eventBus);
+        eventBus.addHandler(ResultEvent.TYPE, this);
     }
 
     public void init(DomResultTree aResultTree, JavaScriptObject aResultState) {
@@ -376,6 +378,7 @@ public class SelectedResultsPresenter {
         resultTree = aResultTree;
         resultState = aResultState;
         view.updateResultTree(resultTree);
+        JsSelectedResultsDisplay.backtoCurrentActivitiesStudents(); // even valsspelen....
     }
 
     @JsMethod
@@ -415,16 +418,8 @@ public class SelectedResultsPresenter {
         }, new Failure() {
             @Override
             public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
                 view.setEmptyTableMessage();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new MessageDialogWithOKEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new MessageDialogWithOKEvent(fail.getMessage()));
-                    //throw directly
-                }
+                FAILURE.fail(resolved);
             }
         }).then(new Success<Boolean,Boolean >() {
             //sure so remove
@@ -484,4 +479,21 @@ public class SelectedResultsPresenter {
     public void setStage(int stage) {
       this.stage = stage;
     }
+
+	@Override
+	public void onResult(ResultEvent event) {
+		DomResultStudentScoContext rssc = event.getRSsc();
+		DomStudentScoContext ssc = rssc.getStudentSco();
+		PersistenceId student = ssc.getUserID();
+		PersistenceId sco = ssc.getScoID();
+		PersistenceId sc = rssc.getAncestralSchoolClass().getSchoolClass().getId();
+		double score = ssc.getScore();
+        LOG.warning("update score of " + student + " to " + score);
+        // Clear children of original ResultStudentScoContext
+        
+        
+        
+        view.updateResultTree(resultTree);
+		
+	}
 }

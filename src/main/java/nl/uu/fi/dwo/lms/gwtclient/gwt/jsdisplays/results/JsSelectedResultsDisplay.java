@@ -32,4 +32,6 @@ public class JsSelectedResultsDisplay{
     public static native void setLoadingTableMessage();
     /** set Help */
     public static native void setHelp(String url);
+    
+    public static native void backtoCurrentActivitiesStudents();
 }

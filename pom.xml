@@ -167,7 +167,7 @@
         <dependency>
         	<groupId>nl.uu.fi.dwo.lms</groupId>
         	<artifactId>DwoGwtClientHtmlUi</artifactId>
-        	<version>2.4.6</version>
+        	<version>2.4.7-SNAPSHOT</version>
         	<scope>runtime</scope>
         	<type>war</type>
         </dependency>
@@ -437,7 +437,7 @@
                     <port>8080</port>
                     <path>/</path>
                     <systemProperties>
-                    	<CDN_HOST>ebs-dev-dwo-nl.s3.amazonaws.com</CDN_HOST>
+                    	<CDN_HOST>localhost:8082</CDN_HOST>
                     	<DWO_ENV>test</DWO_ENV>                   
                     </systemProperties>
                     <warFile>target/${project.artifactId}-${project.version}.war</warFile>

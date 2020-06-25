@@ -174,6 +174,11 @@ public class ResultsService implements SwitchViewEventHandler {
         Promise<Map<String, String>> promise = suspendDataCache.get(studentSco.getId());
         if (promise != null && promise.isDone() && promise.getFailure() == null) {
             promise.getValue().putAll(userState);
+        } else {
+        	if (promise != null) {       		
+        		Map<String,String> copy = new HashMap<>(userState);
+        		suspendDataCache.put(studentSco.getId(), promise.map(v -> {v.putAll(copy); return v;}));
+        	}
         }
         return scormValues.setValues(studentSco, getContext(), userState);
     }
