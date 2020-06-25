@@ -19,7 +19,7 @@
 		margin-top: 0.4em;
 	}
 	.correctie {
-		margin-bottom: 1em;
+		padding-bottom: 1em;
 	}
 	
 	.opmerking {

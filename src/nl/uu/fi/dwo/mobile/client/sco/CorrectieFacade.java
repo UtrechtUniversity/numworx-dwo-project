@@ -90,10 +90,15 @@ public class CorrectieFacade {
     	if(h0 == null || Memento.instance().getLessonMode() != LessonMode.browse) return;
     	ObjectMap h = JSONUtilities.wrapMap(h0);
     	h = h.getObjectMap(CorrectieView.REVIEW_INTERACTIE_DATA);
-    	if (h != null && h.containsKey(CorrectieView.REVIEW_SCORE_CORRECTIE) && h.getInt(CorrectieView.REVIEW_SCORE_CORRECTIE)!= 0) {
+    	if (h == null) return;
+		final int scoreCorrectie = h.containsKey(CorrectieView.REVIEW_SCORE_CORRECTIE) ? h.getInt(CorrectieView.REVIEW_SCORE_CORRECTIE):0;
+		final String scoreComment = h.containsKey(CorrectieView.REVIEW_SCORE_COMMENT) ? h.getString(CorrectieView.REVIEW_SCORE_COMMENT): "";
+ 	
+    	if ( 
+    			scoreCorrectie != 0 ||
+    			(scoreComment != null && !scoreComment.trim().isEmpty())
+    	   ) { 
 
-    		final int scoreCorrectie = h.getInt(CorrectieView.REVIEW_SCORE_CORRECTIE);
-    		final String scoreComment = h.getString(CorrectieView.REVIEW_SCORE_COMMENT);
     		PushButton pb = new PushButton();
     		pb.addStyleName(CorrectieView.CORRECTIE);
 // pushbutton style

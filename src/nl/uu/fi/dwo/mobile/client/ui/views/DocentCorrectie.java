@@ -18,7 +18,7 @@ public class DocentCorrectie extends Composite {
 
 	private static DocentCorrectieUiBinder uiBinder = GWT.create(DocentCorrectieUiBinder.class);
 
-	@UiField(provided= true)
+	@UiField(provided=true)
 	Text rb = Text.constants;
 	
 	@UiField Label maxScore, score, correctie, opmerking;
@@ -37,16 +37,21 @@ public class DocentCorrectie extends Composite {
 		this.maxScore.setText(rb.maximaleScore() + maxScore);
 		this.score.setText(rb.score() + score);
 		this.correctie.setText(rb.toevoeging() + scoreCorrectie);
-		TekstBuffer b = new TekstBuffer();
-		ArrayList<Object> feedbackList = b.convertTekst(scoreComment, null, false);
-		content.setFontSize(14);
-		content.setFontName(XMLView.getDefaultFontName());
-		content.setColor(CssColor.make("rgb(49,71,112)"));
-		content.clear();
-		content.setSize(100, 34);
-		content.setPasHoogteBreedteAan(true, true);
-		content.setObjects(feedbackList);
-		content.resize();
+		if (scoreComment == null || scoreComment.trim().isEmpty()) {
+			content.removeFromParent();
+			opmerking.removeFromParent();
+		} else {
+			TekstBuffer b = new TekstBuffer();
+			ArrayList<Object> feedbackList = b.convertTekst(scoreComment, null, false);
+			content.setFontSize(14);
+			content.setFontName(XMLView.getDefaultFontName());
+			content.setColor(CssColor.make("rgb(49,71,112)"));
+			content.clear();
+			content.setSize(100, 34);
+			content.setPasHoogteBreedteAan(true, true);
+			content.setObjects(feedbackList);
+			content.resize();
+		}
 	}
 
 
