@@ -3,13 +3,72 @@
 	xmlns:v="urn:import:nl.uu.fi.dwo.mobile.client.ui.views"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:with field='rb'  type='nl.uu.fi.dwo.mobile.client.text.Text' />
-	<g:HTMLPanel>
-		maximale score: <g:InlineLabel ui:field='max' text='10' /><br/>
-		score: <g:InlineLabel ui:field='score' text='4'/> <br/>
-		toevoeging: <g:TextBox ui:field='correctie' text='0'/><br/>
-		commentaar:<br/>
-		<v:MLTextBox ui:field='area' /><br/>
-		<g:Button ui:field="ok"  text="ok"/>
-		<g:Button ui:field="cancel" text="cancel" />
+	<ui:style>
+@def color11 #D2E5F5;
+@def color122 #8eBee5;
+@def color13 #7297C7;
+@def color14 #1B75BB;
+@def color15 #314770;
+	.flow {
+		background-color: rgb(237,239,241);
+		color: rgb(49,71,112);
+		font-size: 14px;
+	}
+	.max {
+		margin-left: 10px;
+		padding-top: 1em;
+	}
+	.score, .correctie {
+		margin-left: 10px;
+		margin-top: 0.4em;
+	}
+	.correctie {
+		padding-bottom: 1em;
+	}
+	
+	.opmerking {
+		margin-left: 10px;
+		margin-top: 0.4em;
+		font-weight: bold;
+	}
+	.content {
+		margin-left: 8px;
+		margin-top: 0.4em;
+		padding-bottom: 1em;
+	}
+	.button {
+			background-color: #1b75bb;
+			color: white;
+			font-size: 13px;
+			font-family: Ubuntu, sans-serif !important;
+			min-width: 7em;
+			letter-spacing: .3px;
+			background-image: none;
+			text-transform: uppercase;
+			font-weight: bold;
+	}
+	.center {
+		margin: auto;
+		width: fit-content;
+	}
+	.buttons {
+		padding-top: 1em;
+		padding-bottom: 1em;
+		background-color: #e5e7e9;
+		width: 100%;
+	}
+	</ui:style>
+	<g:HTMLPanel addStyleNames='{style.flow}'>
+		<p class='{style.max}' ><ui:text from="{rb.maximaleScore}"/><g:InlineLabel ui:field='max' text='10' /></p>
+		<p class='{style.score}'><ui:text from='{rb.score}' /><g:InlineLabel ui:field='score' text='4'/></p>
+		<p class='{style.correctie}' ><ui:text from='{rb.toevoeging}' /><g:TextBox ui:field='correctie' text='0'/></p>
+		<p class='{style.opmerking}' ><ui:text from='{rb.opmerkingen}' /></p>
+		<p class='{style.content}'><v:MLTextBox ui:field='area' /></p>
+		<div class='{style.buttons}'>
+		 <div class='{style.center}' >
+			<g:Button addStyleNames='{style.button}' ui:field="ok"  text="{rb.ok}"/>
+			<g:Button addStyleNames='{style.button}' ui:field="cancel" text="{rb.cancel}" />
+		 </div>
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder> 

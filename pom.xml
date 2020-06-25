@@ -251,6 +251,14 @@
 	</properties>
 	<profiles>
 		<profile>
+			<id>WiskOpdrPlayerDebug</id>
+			<properties>
+				<finalName>WiskOpdrPlayerDebug</finalName>
+				<gwtModule>${project.groupId}.WiskOpdrPlayerDebug</gwtModule>
+				<gwt.style>PRETTY</gwt.style>
+			</properties>
+		</profile>
+		<profile>
 			<id>WiskOpdrPlayer</id>
 			<properties>
 				<finalName>WiskOpdrPlayer</finalName>

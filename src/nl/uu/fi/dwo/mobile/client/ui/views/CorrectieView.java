@@ -23,6 +23,9 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.text.Text;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.DWOPopupPanel;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PopupButton;
 import nl.uu.fi.dwo.mobile.utils.HasHide;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
@@ -108,11 +111,20 @@ public class CorrectieView extends Composite implements HasHide {
       view.max.setText(Integer.toString(scoreMax));
       view.score.setText(Integer.toString(score));
       view.area.setText(String.valueOf(comment));
-      PopupPanel popup = new PopupPanel();
-      popup.setWidget(view);
-      view.setPopup(popup);      
-      popup.showRelativeTo(w);
-      return popup;
+//      PopupPanel popup = new PopupPanel();
+//      popup.setWidget(view);
+//      view.setPopup(popup);      
+//      popup.showRelativeTo(w);
+//      return popup;
+
+		DWOPopupPanel panel = new DWOPopupPanel(Text.constants.docentCorrectieTitle(), PopupButton.NOVIEW_LISTENER);
+		panel.addContent(view);
+		view.setPopup(panel);
+		panel.showRelativeTo(w);
+     return panel;
+      
+      
+      
   }
 
   private Map<String,Object> object;
