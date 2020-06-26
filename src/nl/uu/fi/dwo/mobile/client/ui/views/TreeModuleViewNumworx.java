@@ -54,7 +54,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 
-public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorContext,  Comparator<SelectModuleItem> {
+public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorContext /*,  Comparator<SelectModuleItem> */{
 
 	static final Logger LOG = Logger.getLogger(TreeModuleViewNumworx.class.getName());
 	
@@ -355,37 +355,6 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		}
 	}
 	
-	private List<SelectModuleItem> massage(List<SelectModuleItem> list) {
-		if(list == null)
-			list = Collections.emptyList();
-		int len = list.size();
-		if(len > 2) {
-			Collections.sort(list, this);
-			SelectModuleItem first = list.get(0);
-			SelectModuleItem last  = list.get(len-1);
-			if( first.isFromSchool() != last.isFromSchool()) 
-			{
-				list = new ArrayList<SelectModuleItem>(list);
-				while(len > 0 && (first.isFromSchool() != last.isFromSchool())) {
-					len --;
-					last  = list.get(len-1);
-				}
-				SelectModuleItem separator = new SelectModuleItem(null, SelectModuleItem.Type.SEPARATOR);
-
-				Object schoolName = "school";
-				if(DWOplayer.withUser() && DWOplayer.clientfactory.getSchool() != null)
-					schoolName = DWOplayer.clientfactory.getSchool().getSchoolName();
-				String SCHOOL_MODULES = Text.constants.schoolModules() + schoolName;
-
-				separator.setName(SCHOOL_MODULES);
-				list.add(len, separator);
-			}
-			
-		}
-		return list;
-	}
-
-	
 	@Override
 	public void render(List<SelectModuleItem> currentModel) {
 		
@@ -395,8 +364,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		
 		
 		this.list = currentModel;
-		westPanel.cells.setRowData(massage(list));
-		westPanel.cells.redraw();
+		westPanel.setCells(list);
 		
 		//Scheduler.get().scheduleDeferred(cmd);
 		// Slow get all stuff;
@@ -641,21 +609,21 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	}
 
 
-	public int compare(SelectModuleItem o1, SelectModuleItem o2) {
-		boolean b1 = o1.isFromSchool();
-		boolean b2 = o2.isFromSchool();
-		if(b1 != b2) {
-			return Boolean.compare(b1, b2);
-		}
-		
-//		if (o1.getType()== SelectModuleItem.Type.SCO & o2.getType() == SelectModuleItem.Type.SCO)
-		return Integer.signum(o1.getSequencenr()-o2.getSequencenr());
-
-//		if(sortModel != null)
-//			return sortModel.compare(o1, o2);
-//		else
-//			return o1.getName().compareTo(o2.getName()); // FIXME NIET GOED
-	}
+//	public int compare(SelectModuleItem o1, SelectModuleItem o2) {
+//		boolean b1 = o1.isFromSchool();
+//		boolean b2 = o2.isFromSchool();
+//		if(b1 != b2) {
+//			return Boolean.compare(b1, b2);
+//		}
+//		
+////		if (o1.getType()== SelectModuleItem.Type.SCO & o2.getType() == SelectModuleItem.Type.SCO)
+//		return Integer.signum(o1.getSequencenr()-o2.getSequencenr());
+//
+////		if(sortModel != null)
+////			return sortModel.compare(o1, o2);
+////		else
+////			return o1.getName().compareTo(o2.getName()); // FIXME NIET GOED
+//	}
 
   @Override
   public void setBeheer(boolean b) {

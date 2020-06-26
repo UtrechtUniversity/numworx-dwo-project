@@ -227,4 +227,16 @@ public Promise<JSONValue> refreshExam() {
 	return null;
 }
 
+@Override
+public Promise<List<DomSchoolClass>> getStudentsSchoolClasses() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+@Override
+public Promise<Boolean> setActiveSchoolClass(DomSchoolClass schoolClass) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
 }

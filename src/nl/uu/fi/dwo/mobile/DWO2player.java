@@ -1,11 +1,8 @@
 package nl.uu.fi.dwo.mobile;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -25,17 +22,16 @@ import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 
 import fi.dwo.gwt.lib.rest.GwtRestVars;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
 import fi.dwo.gwt.lib.rest.css.DwoStyle;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogView;
 import fi.dwo.gwt.lib.rest.util.Base64;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
-import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import nl.uu.fi.dwo.account.client.AccountBundle;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.DWO2playerDefaults;
-import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.dagger.DWO2PlayerComponent;
 import nl.uu.fi.dwo.mobile.client.dagger.DaggerDWO2PlayerComponent;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
@@ -46,17 +42,14 @@ import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
+import nl.uu.fi.dwo.mobile.client.ui.places.ClassesPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
-import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
-import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
-import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
-import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 public class DWO2player extends DWOplayer implements EntryPoint {
@@ -71,6 +64,80 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 //		
 //	}
 	
+	public static final class InsertSelectItems implements Success<List<SelectModuleItem>, Void> {
+		private final boolean iconizer;
+		private final RoleType roleType;
+
+		public InsertSelectItems(boolean iconizer2, RoleType roleType2) {
+			iconizer = iconizer2;
+			roleType = roleType2;
+		}
+
+		@Override
+		public Promise<Void> call(Promise<List<SelectModuleItem>> resolved) throws Exception {
+			for (SelectModuleItem item : resolved.getValue()) {
+				if(!iconizer && item.getType() == SelectModuleItem.Type.FOLDER) // insert no folders.
+					continue;
+				if(!iconizer) item.setParent(null);
+				
+				if(item.getParent() != null) {
+					SelectModuleItem parent = item.getParent();
+					if (parent != null) { 
+						List<SelectModuleItem> children = parent.getChildren();
+						if (children == null)
+							parent.setChildren(children = new ArrayList<SelectModuleItem>());
+						children.add(item);
+						if(iconizer) {							
+						Collections.sort(children, new Comparator<SelectModuleItem>() {
+
+							@Override
+							public int compare(SelectModuleItem o1,
+									SelectModuleItem o2) {
+								int s1 = o1.getSequencenr();
+								int s2 = o2.getSequencenr();
+								int c = Integer.compare(s1, s2);
+								if(c == 0)
+									c = o1.getName().compareTo(o2.getName());
+								return c;
+							} });
+						}
+					}
+				}
+				SelectModuleItemHolder.insert(item);
+			}
+			if (iconizer && RoleType.STUDENT == roleType) {
+				for(SelectModuleItem folder: resolved.getValue()) {
+					if (folder.getType() == SelectModuleItem.Type.FOLDER) {
+						SelectModuleItem parent = folder;
+						do {
+							SelectModuleItem grant = parent.getParent();
+							if (grant == null) break;
+							if (parent.getChildren().isEmpty()) {
+								grant.getChildren().remove(parent);
+								parent = grant;
+							} else {
+								parent = null;
+								break;
+							}
+						} while(parent != null);
+					}
+					
+				}
+				// prune root children.
+				Iterator<SelectModuleItem> list = SelectModuleItemHolder.getItems().iterator();
+				while (list.hasNext()) {
+					SelectModuleItem item = list.next();
+					if (item.getType() == SelectModuleItem.Type.FOLDER && item.getChildren().isEmpty()) {
+						list.remove();
+					}
+				}
+				
+			}
+			return null;
+		}
+	}
+
+
 	private final static class DWO2RPCHandler extends nl.uu.fi.dwo.account.client.RPCHandlerV3 implements RPCHandler {
 		private DWO2RPCHandler(int profile) {
 			super(null, profile, false);
@@ -122,6 +189,19 @@ public class DWO2player extends DWOplayer implements EntryPoint {
     	} );
     }
     
+    private final SecuredStudentSchoolClassManager classManager = new SecuredStudentSchoolClassManager();
+    	
+    public Promise<List<DomSchoolClass>> getStudentsSchoolClasses() {
+    		return classManager.getStudentsSchoolClasses(context);
+    	}
+
+    public Promise<Boolean> setActiveSchoolClass(DomSchoolClass schoolClass) {
+    	return classManager.setActiveSchoolClass(context, schoolClass).then(p -> { 
+    		if (p.getValue())
+    			DwoGlobalVars.instance().getActiveSchoolRoleAndClass().setSchoolClass(schoolClass);
+    		return p;
+    	});
+    }
 	}
 
 
@@ -189,137 +269,7 @@ public void setupDWOPlayer() {
 		if( withUser() && clientfactory.getSchoolClass() != null) {
 			Promise<DomCoursesOfSchoolClass> promise = clientfactory.getRPCHandler().getCoursesClass(clientfactory.getSchoolClass());
 
-			modules = promise.map(new Function<DomCoursesOfSchoolClass, List<SelectModuleItem>>() {
-
-				private Collection<DomClassCourse> sort(List<DomMapEntry<PersistenceId, DomClassCourse>> list, DomCoursesOfSchoolClass t) {
-					boolean again;
-					List<DomClassCourse> classcourses = null;
-					if(list != null) {
-						classcourses = new ArrayList<DomClassCourse>(list.size());
-						for(DomMapEntry<?,DomClassCourse> e: list) classcourses.add(e.getValue());
-					}
-					if(classcourses == null || classcourses.isEmpty()|| Boolean.FALSE.equals(t.getSchoolClass().getIconizer()))
-						return classcourses;
-					List<DomClassCourse> courses = new ArrayList<>(classcourses);
-					do {
-						again = false;
-						more:
-						for(int i = 0; i < courses.size(); i++ ) {
-							DomClassCourse course = courses.get(i);
-							if( getParentID(course, t) == null) {
-								int j;
-								for(j = i-1; j >= 0; j--) {
-									if(getParentID(courses.get(j), t) == null) {
-										if(j == i-1)
-											break;
-										courses.add(j+1, courses.remove(i));
-										continue more;
-									}
-								}
-								if(j == -1) {
-									courses.add(0, courses.remove(i));
-									continue more;
-								}
-							} else {
-								PersistenceId pid = getParentID(course,t); int j;
-								for(j = i-1; j>=0; j--) {
-									if(pid.equals( getParentID(courses.get(j),t)) || pid.equals(getID(courses.get(j)))) {
-										if(j == i-1) break;
-										courses.add(j+1, courses.remove(i));
-										continue more;
-									}
-								}
-								if(j == -1) {
-									again = true;
-								}
-							}
-						}
-					} while(again);
-					return courses;
-				}
-
-				private PersistenceId getParentID(DomClassCourse course, DomCoursesOfSchoolClass t) {
-					PersistenceId id = getID(course);
-					DomCourse r = find(t, id);
-					if(r != null)
-					{
-						id = r.getParentID();
-//  IF ROOT, return null
-						if(id == null || PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentCourse) .equals(0) || ! containsKey(t, id))
-								return null;
-						return id;
-					}
-					return null;
-				}
-
-				protected boolean containsKey(DomCoursesOfSchoolClass t, PersistenceId id) {
-					List<DomMapEntry<PersistenceId, DomCourseStudent>> courses = t.getCourses();
-					for(DomMapEntry<PersistenceId, DomCourseStudent> entry : courses)
-						if(id .equals( entry.getKey())) return true;
-					return false;
-				}
-
-				protected DomCourse find(DomCoursesOfSchoolClass t, PersistenceId id) {
-					List<DomMapEntry<PersistenceId, DomCourseStudent>> courses = t.getCourses();
-					for(DomMapEntry<PersistenceId, DomCourseStudent>entry: courses)
-						if(id.equals(entry.getKey())) return entry.getValue();
-					return null;
-				}
-
-				private PersistenceId getID(DomClassCourse course) {
-					if(course != null) return course.getCourseId();
-					return null;
-				}
-
-
-
-				@Override
-				public List<SelectModuleItem> apply(DomCoursesOfSchoolClass t) {
-					long now = System.currentTimeMillis() + timezone;
-					Long serverNow = t.getFetchTimeStamp();
-// timezone = diff now/servernow
-					if(serverNow != null) {
-						timezone += serverNow.longValue() - now;
-						now = serverNow.longValue();
-					}
-					boolean inExam = PARAMETERS.getSecureMode() != SecureMode.NORMAL;
-					Map<PersistenceId, DomCourseStudent> courses = map(t.getCourses());
-					Collection<DomClassCourse> classcourses = sort(t.getClassCourses(),t);
-					List<SelectModuleItem> result = new ArrayList<SelectModuleItem>(classcourses.size());
-					for (Iterator<DomClassCourse> iterator = classcourses.iterator(); iterator.hasNext();) {
-						DomClassCourse domClassCourse = iterator.next();
-						Date o = domClassCourse.getNotBefore();
-			            if (o != null) {
-			                if (now < o.getTime()) {
-			                    continue;
-			                }
-			            }
-			            o = domClassCourse.getNotAfter();
-			            if (o != null) {
-			                if (now > o.getTime()) {
-			                    continue;
-			                }
-			            }			            
-						DomCourseStudent course = courses.get(domClassCourse.getCourseId());
-						SelectModuleItem item = new SelectModuleItem(course, domClassCourse);
-						if(item.getType() == SelectModuleItem.Type.FOLDER)
-							item.setChildren(new ArrayList<SelectModuleItem>());
-						else
-							if(inExam && item.getCourseType() == CourseType.normal)
-								continue;
-						result.add(item);
-					}
-					return result;
-				}
-
-				private Map<PersistenceId, DomCourseStudent> map(
-						List<DomMapEntry<PersistenceId, DomCourseStudent>> courses) {
-					Map<PersistenceId, DomCourseStudent> map = new HashMap<>();
-					for(DomMapEntry<PersistenceId, DomCourseStudent> entry: courses)
-						map.put(entry.getKey(), entry.getValue());
-					return map;
-				}
-			});
+			modules = promise.map(new CoursesOfClasToSelectItems());
 		} else if (withUser() && RoleType.STUDENT != clientfactory.getRoleType())
 		{
 			Promise<List<DomCourseStudent>> p1 = clientfactory.getRPCHandler().getCourses();
@@ -339,72 +289,7 @@ public void setupDWOPlayer() {
 			modules = clientfactory.getRPCHandler().getCourses().map(TO_SELECTMODULEITEM);
 		}
 			
-		modules.then(new Success<List<SelectModuleItem>, Void>() {
-
-			@Override
-			public Promise<Void> call(Promise<List<SelectModuleItem>> resolved) throws Exception {
-				boolean iconizer = clientfactory.isIconizer();
-				for (SelectModuleItem item : resolved.getValue()) {
-					if(!iconizer && item.getType() == SelectModuleItem.Type.FOLDER) // insert no folders.
-						continue;
-					if(!iconizer) item.setParent(null);
-					
-					if(item.getParent() != null) {
-						SelectModuleItem parent = item.getParent();
-						if (parent != null) { 
-							List<SelectModuleItem> children = parent.getChildren();
-							if (children == null)
-								parent.setChildren(children = new ArrayList<SelectModuleItem>());
-							children.add(item);
-							if(iconizer) {							
-							Collections.sort(children, new Comparator<SelectModuleItem>() {
-	
-								@Override
-								public int compare(SelectModuleItem o1,
-										SelectModuleItem o2) {
-									int s1 = o1.getSequencenr();
-									int s2 = o2.getSequencenr();
-									int c = Integer.compare(s1, s2);
-									if(c == 0)
-										c = o1.getName().compareTo(o2.getName());
-									return c;
-								} });
-							}
-						}
-					}
-					SelectModuleItemHolder.insert(item);
-				}
-				// prune					
-				if (iconizer && RoleType.STUDENT == clientfactory.getRoleType()) {
-					for(SelectModuleItem folder: resolved.getValue()) {
-						if (folder.getType() == SelectModuleItem.Type.FOLDER) {
-							SelectModuleItem parent = folder;
-							do {
-								SelectModuleItem grant = parent.getParent();
-								if (grant == null) break;
-								if (parent.getChildren().isEmpty()) {
-									grant.getChildren().remove(parent);
-									parent = grant;
-								} else {
-									parent = null;
-									break;
-								}
-							} while(parent != null);
-						}
-						
-					}
-					// prune root children.
-					Iterator<SelectModuleItem> list = SelectModuleItemHolder.getItems().iterator();
-					while (list.hasNext()) {
-						SelectModuleItem item = list.next();
-						if (item.getType() == SelectModuleItem.Type.FOLDER && item.getChildren().isEmpty()) {
-							list.remove();
-						}
-					}
-					
-				}
-				return null;
-			}}).onResolve(new Runnable() {
+		modules.then(new InsertSelectItems(clientfactory.isIconizer(), clientfactory.getRoleType())).onResolve(new Runnable() {
 
 				@Override
 				public void run() {
@@ -412,7 +297,7 @@ public void setupDWOPlayer() {
 						clientfactory.getPlaceController().goTo(new TreeModulePlace("0"));
 					else 
 					{ // was FlatModulePlace();
-						clientfactory.getPlaceController().goTo(new TreeModulePlace("0"));
+						clientfactory.getPlaceController().goTo(new ClassesPlace());
 					}
 				}});
 			return;

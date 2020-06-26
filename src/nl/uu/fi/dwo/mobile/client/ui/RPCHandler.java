@@ -81,4 +81,8 @@ public interface RPCHandler {
     Promise<JSONValue> getCourseDescription(Object file);
 
 	Promise<JSONValue> refreshExam();
+
+// schoolclasses for students	
+	Promise<List<DomSchoolClass>> getStudentsSchoolClasses();
+	Promise<Boolean> setActiveSchoolClass(DomSchoolClass schoolClass);
 }
