@@ -232,7 +232,7 @@ public class PijlVak extends LayoutPanel
           }
 		  
 		};
-		editor.setFormuleToolBijFocus(true);
+		//editor.setFormuleToolBijFocus(true);
 		editor.setFont(fm);
 // FIXED editorPanel === editor.getAsPanel()
 		editorPanel = editor.createPanel();
