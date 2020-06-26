@@ -9,6 +9,7 @@ import java.util.Map;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -343,7 +344,11 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware, TekstEle
 	{
 		if (h == null)
 			return;
-		CorrectieFacade.showReview(h, this);
+		CorrectieFacade.showReview(h, p -> {
+			mainPanel.add(p);
+			if (null != mainPanel.getElement().getStyle().getPosition())
+				mainPanel.getElement().getStyle().setPosition(Position.RELATIVE);
+		}, this, scoreMax);
 		if (rekenVakZichtbaar)
 			rekenVak.setState(h);
 		if (oplossingenRegelZichtbaar)

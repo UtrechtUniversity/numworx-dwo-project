@@ -21,7 +21,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -35,9 +34,9 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 
 @Reusable
-public class ClassesViewImpl extends Composite {
+public class ClassesViewImpl extends Composite  implements AnchorContext {
 
-	public class NavCell extends AbstractCell<DomSchoolClass> implements HasValueChangeHandlers<DomSchoolClass>, AnchorContext {
+	public class NavCell extends AbstractCell<DomSchoolClass> implements HasValueChangeHandlers<DomSchoolClass>{
 		private boolean pointer;
 		int x, y;
 		final int RADIUS = 20;
@@ -87,12 +86,6 @@ public class ClassesViewImpl extends Composite {
 		public HandlerRegistration addValueChangeHandler(ValueChangeHandler<DomSchoolClass> handler) {
 			return new LegacyHandlerWrapper(eventBus.addHandlerToSource(ValueChangeEvent.getType(), ClassesViewImpl.this, handler));
 		}
-		@Override
-		public void gotoUrl(String href) {
-			// TODO Auto-generated method stub
-			
-		}
-
 
 	}
 	class ProvideTileKey implements ProvidesKey<DomSchoolClass> {
@@ -121,7 +114,6 @@ public class ClassesViewImpl extends Composite {
 		cells = new CellList<DomSchoolClass>(new NavCell());
 		cells.setSelectionModel(new SingleSelectionModel<DomSchoolClass>(keyprovider));
 		cells.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
-		//cells.addStyleName(cellResources.cellListStyle().navCellList());
 		initWidget(uiBinder.createAndBindUi(this));
 		SelectModuleItem item = SelectModuleItem.ROOT;
 		title.setText(item.getName());
@@ -160,5 +152,10 @@ public class ClassesViewImpl extends Composite {
 		}
 		return w;
 	}
+
+	@Override
+	public void gotoUrl(String href) {
+	}
+
 
 }

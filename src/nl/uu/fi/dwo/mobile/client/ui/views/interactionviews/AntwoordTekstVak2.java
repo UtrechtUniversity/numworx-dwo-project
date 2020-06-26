@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.swing.text.View;
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
@@ -40,6 +42,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.FontWeight;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -681,7 +684,11 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		int errorCount = 0;
 
 		ObjectMap map = JSONUtilities.wrapMap(h);
-		CorrectieFacade.showReview(h, getAsPanel());
+		CorrectieFacade.showReview(h, p -> {
+			basisPanel.add(p);
+			basisPanel.setWidgetBottomHeight(p, 0, Unit.PX, 16, Unit.PX);
+			basisPanel.setWidgetRightWidth(p, 0, Unit.PX, 16, Unit.PX);
+		}, this, scoreMax);
 
 		if (map.containsKey("ingevuld"))
 			ingevuld = map.getBoolean("ingevuld");

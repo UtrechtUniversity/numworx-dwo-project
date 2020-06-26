@@ -26,6 +26,7 @@ import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -471,7 +472,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		addExecuteBtn(comRoot); // last change, all listeners are there.
 		if(h == null) setStateNull();
 		else {
-			CorrectieFacade.showReview(h, this);
+			AcceptsOneWidget cmd = widget instanceof AcceptsOneWidget ? (AcceptsOneWidget) widget : null;
+			CorrectieFacade.showReview(h, cmd , this, getScoreMax());
 			setState( JSONUtilities.wrapMap(h));
 			correctie = CorrectieFacade.get(h, this, getScoreMax(),comRoot.getMode());
 		}

@@ -31,6 +31,7 @@ import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HTML;
@@ -494,7 +495,8 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		{
 			this.pendingState = null;
 		}
-		CorrectieFacade.showReview(h, getWidget());
+		AcceptsOneWidget cmd = getWidget() instanceof AcceptsOneWidget ? (AcceptsOneWidget) widget : null;
+		CorrectieFacade.showReview(h, cmd, this, scoreMax);
 		ObjectMap wrap = JSONUtilities.wrapMap(h);
 		ingevuld = wrap.getBoolean("ingevuld", false);
 		nagekeken = wrap.getBoolean("nagekeken", false);

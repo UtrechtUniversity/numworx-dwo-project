@@ -77,6 +77,7 @@ public class CorrectieFacade {
     }
     
     public void correctie(Map<String,Object> state) {}
+
     public static void showReview(Map<String,Object> h0, IsWidget w) {
     	if(h0 == null || Memento.instance().getLessonMode() != LessonMode.browse) return;
     	ObjectMap h = JSONUtilities.wrapMap(h0);

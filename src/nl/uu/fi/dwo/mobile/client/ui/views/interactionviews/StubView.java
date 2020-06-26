@@ -41,6 +41,7 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -239,7 +240,8 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			score = Integer.parseInt(h.get("STUBVIEW_score").toString());
 		if(h.containsKey("STUBVIEW_correct"))
 			correct = toBoolean(h.get("STUBVIEW_correct").toString());
-		CorrectieFacade.showReview(h, widget);
+		AcceptsOneWidget cmd = widget instanceof AcceptsOneWidget ? (AcceptsOneWidget) widget : null;
+		CorrectieFacade.showReview(h, cmd, this, scoreMax);
 		JSONValue object = JSONUtilities.toJSONObject(h);
 		if(innerView != null)
 		{

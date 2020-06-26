@@ -29,6 +29,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.TextAlign;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -241,7 +242,12 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	    Vector attempts = new Vector();
 	    int attemptsCount = 0;
 		int errorCount = 0;
-        CorrectieFacade.showReview(h, this);
+		CorrectieFacade.showReview(h, p -> {
+			basisPanel.add(p);
+			basisPanel.setWidgetBottomHeight(p, 0, Unit.PX, 16, Unit.PX);
+			basisPanel.setWidgetRightWidth(p, 0, Unit.PX, 16, Unit.PX);
+		}, this, scoreMax);
+
 		if(h.get("randomizedPositions") != null) 
 	    {	List<Object> randomizedPositionsList = JSONUtilities.toArrayList(h.get("randomizedPositions"));
 			randomizedPositions = new Point[randomizedPositionsList.size()];

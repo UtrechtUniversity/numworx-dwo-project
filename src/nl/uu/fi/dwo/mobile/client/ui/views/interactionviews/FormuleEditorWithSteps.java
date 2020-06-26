@@ -40,6 +40,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -2131,7 +2132,11 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		String antwoordString = "";
 		String[] gebruikersSubStrings = null;
 		ObjectMap hh = JSONUtilities.wrapMap(h);
-		CorrectieFacade.showReview(h, getAsPanel());
+		CorrectieFacade.showReview(h, p -> {
+			mainPanel.add(p);
+			if (null != mainPanel.getElement().getStyle().getPosition())
+				mainPanel.getElement().getStyle().setPosition(Position.RELATIVE);
+		}, this, scoreMax);
 		if (h.get("stapNr") != null)
 			stapNr = ((Number) h.get("stapNr")).intValue();
 		if (h.get("stapOk") != null)

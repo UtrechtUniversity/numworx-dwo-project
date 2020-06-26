@@ -22,6 +22,7 @@ import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.FontWeight;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -29,6 +30,7 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -890,7 +892,12 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		Vector attempts = new Vector();
 		int attemptsCount = 0;
 		int errorCount = 0;
-		CorrectieFacade.showReview(h, this);
+		AcceptsOneWidget cmd = p -> {
+			basisPanel.add(p);
+			basisPanel.setWidgetBottomHeight(p, 0, Unit.PX, 16, Unit.PX);
+			basisPanel.setWidgetRightWidth(p, 0, Unit.PX, 16, Unit.PX);
+		};
+		CorrectieFacade.showReview(h, cmd, this, scoreMax);
 
 		if (h.containsKey("ingevuld"))
 			ingevuld = ((Boolean) h.get("ingevuld")).booleanValue();
