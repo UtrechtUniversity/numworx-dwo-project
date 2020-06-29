@@ -32,6 +32,7 @@ import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import nl.uu.fi.dwo.account.client.AccountBundle;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.DWO2playerDefaults;
+import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.dagger.DWO2PlayerComponent;
 import nl.uu.fi.dwo.mobile.client.dagger.DaggerDWO2PlayerComponent;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
@@ -293,7 +294,7 @@ public void setupDWOPlayer() {
 
 				@Override
 				public void run() {
-					if(clientfactory.isIconizer())
+					if( SecureMode.NORMAL == PARAMETERS.getSecureMode() || clientfactory.getRoleType() != RoleType.STUDENT)
 						clientfactory.getPlaceController().goTo(new TreeModulePlace("0"));
 					else 
 					{ // was FlatModulePlace();
