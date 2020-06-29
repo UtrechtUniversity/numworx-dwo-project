@@ -49,7 +49,9 @@ public class ClassesActivity extends AbstractActivity implements ValueChangeHand
 
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus) {
+		navigation.setBeheer(false);
 		navigation.showCells();
+		navigation.setCells(SelectModuleItemHolder.getItems());
 		view.setSchoolClasses(Collections.singletonList(vars.getActiveSchoolRoleAndClass().getSchoolClass()));
 		rpc.getStudentsSchoolClasses().then(p -> {
 			view.setSchoolClasses(p.getValue());
