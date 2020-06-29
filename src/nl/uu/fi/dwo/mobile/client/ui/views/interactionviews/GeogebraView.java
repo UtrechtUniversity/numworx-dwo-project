@@ -513,7 +513,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		{
 			setVisibleFeedbackImages(false, false, false);
 		}
-		correctie = CorrectieFacade.get(h, this, getWidget(), scoreMax, mode);
+		correctie = CorrectieFacade.get(h, this, getWidget(), scoreMax, comRoot);
 	}
 
 	/**

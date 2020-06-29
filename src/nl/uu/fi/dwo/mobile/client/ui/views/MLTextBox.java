@@ -4,15 +4,16 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.TextArea;
 
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TextEditor;
+
 public class MLTextBox extends Composite implements HasText {
 
-	private TextArea area;
+	private TextEditor area;
 	
 	public MLTextBox() {
-		area = new TextArea();
-		area.setVisibleLines(4);
-		area.setCharacterWidth(20);
-		initWidget(area);
+		area = new TextEditor(300,150, true, true);
+		initWidget(area.asWidget());
 	}
 
 	@Override
@@ -23,6 +24,10 @@ public class MLTextBox extends Composite implements HasText {
 	@Override
 	public void setText(String text) {
 		area.setText(text);
+	}
+	
+	public void setCommunicationRoot(OpdrNavIF comRoot) {
+		area.setCommunicationRoot(comRoot);
 	}
 
 }

@@ -2109,7 +2109,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		boolean enabled = setFocusEnabled(false);
 		try {
 			setState0(h);
-	        correctie = CorrectieFacade.get(h, this, getAsPanel(), scoreMax, comRoot.getMode());
+	        correctie = CorrectieFacade.get(h, this, getAsPanel(), scoreMax, comRoot);
 	} finally {
 			setFocusEnabled(enabled);
 		}

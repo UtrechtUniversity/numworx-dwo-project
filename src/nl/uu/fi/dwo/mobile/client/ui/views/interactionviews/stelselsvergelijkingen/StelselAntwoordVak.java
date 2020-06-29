@@ -359,7 +359,7 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware, TekstEle
 				oplossingenVak.setState(h1);
 			}
 		}
-		correctie = CorrectieFacade.get(h, this, scoreMax,comRoot.getMode());
+		correctie = CorrectieFacade.get(h, this, scoreMax,comRoot);
 	}
 
 	@Override

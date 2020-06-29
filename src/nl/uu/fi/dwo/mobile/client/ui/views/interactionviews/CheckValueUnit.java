@@ -367,7 +367,7 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
         
         if(ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)||Review.isReview(comRoot))) 
         	kijkNa();
-        correctie = CorrectieFacade.get(h, this, getScoreMax(),mode);
+        correctie = CorrectieFacade.get(h, this, getScoreMax(),comRoot);
 	}
 	
 	public HashMap<String, Object> getState()

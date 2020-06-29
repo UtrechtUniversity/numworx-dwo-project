@@ -737,7 +737,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 				antwoordTF.acceptCBookEvent(EVENT_READONLY);
 			}
 		}
-		correctie = CorrectieFacade.get(h, this, getAsPanel(), scoreMax, mode);
+		correctie = CorrectieFacade.get(h, this, getAsPanel(), scoreMax, comRoot);
 	}
 
 	private void setChanged(boolean c)

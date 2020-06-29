@@ -21,6 +21,7 @@ import com.vaadin.pointerevents.client.PointerUpEvent;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
@@ -38,7 +39,7 @@ public class CorrectieView extends Composite implements HasHide {
   public static final String CORRECTIE = DWOplayer.DWO_BUNDLE.dwoplayercss().correctie();
   public static final String CORRECTED = DWOplayer.DWO_BUNDLE.dwoplayercss().corrected();
   
-  public static Provider<Map<String,Object>> addCorrection(Map<String,Object> map, InteractionView iv, final Widget widget, int scoreMax) {
+  public static Provider<Map<String,Object>> addCorrection(Map<String,Object> map, InteractionView iv, final Widget widget, int scoreMax, OpdrNavIF comRoot) {
     widget.addStyleName(CORRECTIE);
     ObjectMap h = JSONUtilities.wrapMap(map);
     h = h.getObjectMap(REVIEW_INTERACTIE_DATA);
@@ -75,7 +76,7 @@ public class CorrectieView extends Composite implements HasHide {
               popup.showRelativeTo(widget);
             } else {
               //iv.kijkNa();iv.getState(); // wat is nodig voor score?????? FIXME
-              popup = startCorrection(result, widget, iv.getScore(), scoreMax);
+              popup = startCorrection(result, widget, iv.getScore(), scoreMax, comRoot);
             }
           }
         }, MouseUpEvent.getType());
@@ -89,7 +90,7 @@ public class CorrectieView extends Composite implements HasHide {
                 popup.showRelativeTo(widget);
               } else {
                 //iv.kijkNa();iv.getState(); // wat is nodig voor score?????? FIXME
-                popup = startCorrection(result, widget, iv.getScore(), scoreMax);
+                popup = startCorrection(result, widget, iv.getScore(), scoreMax, comRoot);
               }
             }
           }, PointerUpEvent.getType());
@@ -100,8 +101,8 @@ public class CorrectieView extends Composite implements HasHide {
   
   int minCor,maxCor;
   
-  private static PopupPanel startCorrection(Map<String, Object> map, Widget w, int score, int scoreMax) {
-      CorrectieView view = new CorrectieView(w);
+  private static PopupPanel startCorrection(Map<String, Object> map, Widget w, int score, int scoreMax, OpdrNavIF comRoot) {
+      CorrectieView view = new CorrectieView(w, comRoot);
       view.setObject(map);      
       Object correctie = map.getOrDefault(REVIEW_SCORE_CORRECTIE,"0");
       Object comment   = map.getOrDefault(REVIEW_SCORE_COMMENT, "");
@@ -152,9 +153,10 @@ public class CorrectieView extends Composite implements HasHide {
   @UiField MLTextBox area;
   private final Widget parent;
 
-  private CorrectieView(Widget w) {
+  private CorrectieView(Widget w, OpdrNavIF comRoot) {
     parent = w;
     initWidget(uiBinder.createAndBindUi(this));
+    area.setCommunicationRoot(comRoot);
   }
 
   @UiHandler("ok")

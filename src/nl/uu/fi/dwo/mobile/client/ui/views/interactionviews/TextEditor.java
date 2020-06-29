@@ -80,7 +80,7 @@ import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 
-public class TextEditor  implements InteractionView, TouchStartHandler, FormuleEditorIF, FacetAware, CBookEventListener, TekstElementWithFont {
+public class TextEditor  implements InteractionView, TouchStartHandler, FormuleEditorIF, FacetAware, CBookEventListener, TekstElementWithFont, HasText {
 	
 	public interface IsEditable {
 
@@ -223,6 +223,44 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		//shown = true;
 	}
 
+	public TextEditor(int w, int h, boolean rand, boolean formule) {
+		width = w;
+		height = h;
+		volledigeBreedte = false;
+		boxMetRand = rand;
+
+		boxsize = boxMetRand?2:0;
+		hbox = new FlowPanel();
+		hbox.setStyleName(css.textEditor());
+		initWidget(hbox);
+		
+		menubar = formule ? getMenuBar(formule, false, false) : null;
+		if (menubar != null)
+		{
+			menuheight = 30;
+			menubar.setPixelSize(width-boxsize, menuheight);
+			hbox.add(menubar);
+		}
+		
+		content = getContent(null);
+		content.setPixelSize(width-boxsize-padding, height-menuheight-boxsize-padding);
+		Style style = content.getElement().getStyle();
+		style.setPadding(padding/2, Unit.PX);
+		//style.setBackgroundColor("white");
+		//style.setOverflow(Overflow.AUTO);
+		hbox.add(content);
+		//hbox.getElement().getStyle().setBackgroundColor("#C0C0C0");
+		hbox.setPixelSize(width-boxsize, height-boxsize);
+		if (boxMetRand)
+			hbox.getElement().getStyle().setProperty("border", "1px solid gray");
+		else
+		{
+			updateEmpty();
+		}
+	}
+	
+	
+	
 	private void updateEmpty() {
 		if (!boxMetRand) {
 			hbox.setStyleName(css.textEditor_empty(), isContentEmpty());
@@ -248,10 +286,10 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	private void setState(ObjectMap h)
 	{
+		String tekst = h == null ? "" : h.getString("tekst");
 		// h kan null zijn!
 		editable = true;
 		shown = false;
-		String tekst = h == null ? "" : h.getString("tekst");
 		if (tekst == null)
 			tekst = "";
 		else if (tekst.endsWith("\n"))
@@ -308,6 +346,10 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		//if(launchdata.containsKey("grafTool")) graftool = launchdata.getBoolean("grafTool");
 		rekentool = launchdata.getBoolean("rekenTool", rekentool);
 		
+		return getMenuBar(formuleKnop, rekentool, graftool);
+	}
+
+	private Widget getMenuBar(boolean formuleKnop, boolean rekentool, boolean graftool) {
 		FlowPanel menubar = new FlowPanel();
 		menubar.setStyleName(css.balk());
 		//Button fx = new Button("f(x)"); 
@@ -475,7 +517,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			AcceptsOneWidget cmd = widget instanceof AcceptsOneWidget ? (AcceptsOneWidget) widget : null;
 			CorrectieFacade.showReview(h, cmd , this, getScoreMax());
 			setState( JSONUtilities.wrapMap(h));
-			correctie = CorrectieFacade.get(h, this, getScoreMax(),comRoot.getMode());
+			correctie = CorrectieFacade.get(h, this, getScoreMax(),comRoot);
 		}
 	}
 
@@ -1110,7 +1152,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		}
 	}
 
-	String getText()
+	public String getText()
 	{
 		return getAllText().toString();
 	}
@@ -1716,6 +1758,21 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	public void setEditable(boolean b)
 	{
 		editable = b;
+	}
+
+	@Override
+	public void setText(String tekst) {
+		editable = true;
+		shown = false;
+		if (tekst == null)
+			tekst = "";
+		else if (tekst.endsWith("\n"))
+			tekst = tekst.substring(0, tekst.length()-1);
+		clearAll();
+		insert(tekst);
+		lastAttempt = tekst;
+		removeCursor();
+		updateEmpty();
 	}
 
 }

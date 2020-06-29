@@ -32,8 +32,8 @@ public class CorrectieFacade {
     private static CorrectieFacade instance = GWT.create(CorrectieFacade.class);
     private static CorrectieFacade NULL = new CorrectieFacade();
     
-    private static CorrectieFacade get(Map<String,Object> h, InteractionView view, int maxScore) {
-        return instance.create(h, view, view.asWidget(), maxScore);
+    public static CorrectieFacade get(Map<String,Object> h, InteractionView view, int maxScore, OpdrNavIF comRoot) {
+        return instance.create(h, view, view.asWidget(), maxScore, comRoot);
     }
     public static Widget wrap(Widget view) {
         return instance.prepareWidget(view);
@@ -67,12 +67,12 @@ public class CorrectieFacade {
     return (view);
   }
 
-    public static CorrectieFacade get(Map<String,Object> h, InteractionView view, Widget widget, int maxScore, int mode) {
-	  if (mode != OpdrNavIF.EINDTOETS) return NULL; // alleen EINDTOETS
-      return instance.create(h, view, widget, maxScore);
+    public static CorrectieFacade get(Map<String,Object> h, InteractionView view, Widget widget, int maxScore, OpdrNavIF comRoot) {
+	  if (comRoot.getMode() != OpdrNavIF.EINDTOETS) return NULL; // alleen EINDTOETS
+      return instance.create(h, view, widget, maxScore, comRoot);
   }
 
-    protected CorrectieFacade create(Map<String, Object> h, InteractionView view, Widget widget, int maxScore) {
+    protected CorrectieFacade create(Map<String, Object> h, InteractionView view, Widget widget, int maxScore, OpdrNavIF comRoot) {
       return NULL;
     }
     
@@ -126,10 +126,4 @@ public class CorrectieFacade {
     
     
     
-    
-	public static CorrectieFacade get(Map<String, Object> h, InteractionView view, int scoreMax,
-			int mode) {
-		if (mode != OpdrNavIF.EINDTOETS) return NULL; // alleen EINDTOETS
-		return get(h,view, scoreMax);
-	}
 }
