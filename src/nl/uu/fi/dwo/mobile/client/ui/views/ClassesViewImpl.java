@@ -109,9 +109,9 @@ public class ClassesViewImpl extends Composite  implements AnchorContext {
 
 	@Inject ClassesViewImpl(EventBus bus) {
 		this.eventBus = bus;
-		HorizontalCellListResources cellResources;
-		cellResources = GWT.create(HorizontalCellListResources.class);
-		cells = new CellList<DomSchoolClass>(new NavCell());
+		CellList.Resources cellResources;
+		cellResources = GWT.create(ClassesCellListResources.class);
+		cells = new CellList<DomSchoolClass>(new NavCell(),cellResources);
 		cells.setSelectionModel(new SingleSelectionModel<DomSchoolClass>(keyprovider));
 		cells.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
 		initWidget(uiBinder.createAndBindUi(this));
