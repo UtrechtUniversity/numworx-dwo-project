@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -38,6 +39,7 @@ import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
+import fi.servlet.dwomaccess.Subnet;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
@@ -62,6 +64,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 @Path("/secure/student/coursesofschoolclass")
 public class SecuredStudentCoursesOfSchoolClassManager {
+  final static Integer EXAM = Integer.valueOf(1);
 
   private static final Logger LOG =
       Logger.getLogger(SecuredStudentCoursesOfSchoolClassManager.class.getName());
@@ -70,7 +73,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
   @PUT
   @Produces({"application/json"})
   @Path("/get")
-  public DomCoursesOfSchoolClass get(@Context SecurityContext sc, RestSchoolClassAndProfile rest)
+  public DomCoursesOfSchoolClass get(@Context SecurityContext sc, RestSchoolClassAndProfile rest, @Context HttpServletRequest request)
       throws Dwo2Exception {
     // verify user is student of class
     PersistentHasRole phr = null;
@@ -120,6 +123,10 @@ public class SecuredStudentCoursesOfSchoolClassManager {
           "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
     }
 
+    String IPRANGE = System.getProperty("ENV_IPRANGE", "");
+    String host = request.getRemoteAddr();
+    boolean inrange = Subnet.netMatchRange(IPRANGE, host);
+
     // end verification
     DomCoursesOfSchoolClass result = new DomCoursesOfSchoolClass();
 
@@ -142,6 +149,8 @@ public class SecuredStudentCoursesOfSchoolClassManager {
       if (scc.getNotBefore() != null) {
         if (NOW.before(scc.getNotBefore())) return;
       }
+      if (EXAM.equals(scc.getType()) && !inrange) return;
+      
       Long courseID = scc.getCourseID();
       PersistentCourse course = CourseManager.findEntity(courseID);
       if (course == null) {
@@ -209,6 +218,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
         if (NOW.before(pcc.getNotBefore())) pcc = null;
       }
       if (pcc != null && (pcc.getViewState() != ViewState.studentsAndTeachers)) pcc = null;
+      if (pcc != null && EXAM.equals(pcc.getType())) pcc = null; // no deeplink for exams
 
       if (pcc == null) {
         result.setClassCourses(Collections.emptyList());
@@ -277,6 +287,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
         if (NOW.before(pcc.getNotBefore())) pcc = null;
       }
       if (pcc != null && (pcc.getViewState() != ViewState.studentsAndTeachers)) pcc = null;
+      if (pcc != null && EXAM.equals(pcc.getType())) pcc = null; // No deeplink for exams
 
       if (pcc == null) {
         result.setClassCourses(Collections.emptyList());
