@@ -159,6 +159,26 @@ public class SVGButton extends SimplePanel {
 		}
 	}
 	
+	public void setText(String text) {
+		this.text = text;
+		this.remove(svgImage);
+		svg = doc.createSVGSVGElement();
+		svgImage = new SVGImage(svg);
+		svgImage.setPixelSize(width, height);
+		this.add(svgImage);
+		draw();
+		if(!handlersAdded)
+			addHandlers();
+	}
+
+
+	
+	public String getText() {
+		return text;
+	}
+	
+	public void setEnabled(boolean b) {
+	}
 
 	public void setSize(int width, int height) {
 		
@@ -347,7 +367,6 @@ public class SVGButton extends SimplePanel {
 
 			int left = sender.getAbsoluteLeft() + offsetX;
 			int top = sender.getAbsoluteTop() + offsetY;
-
 			setPopupPosition(left, top);
 			tShow = new Timer() {
 				public void run() {

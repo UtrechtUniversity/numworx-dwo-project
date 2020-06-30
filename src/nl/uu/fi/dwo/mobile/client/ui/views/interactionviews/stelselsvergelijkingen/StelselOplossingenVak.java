@@ -121,6 +121,8 @@ public class StelselOplossingenVak
 		avChecker.zetVarNamen(varNamen);
 		
 		editor = new FormuleEditorWithAnswer(h, false, null, randomVarNamen, randomVarWaarden, avChecker);
+		editor.getAsPanel().getElement().getStyle().setBorderWidth(1, Unit.PX);
+		editor.getAsPanel().getElement().getStyle().setProperty("borderRadius", "0px");
 		editor.setFormuleToolBijFocus(formuleToolBijFocus);
 		editor.setFont(font);
 		editor.setCurrent(0, 0);

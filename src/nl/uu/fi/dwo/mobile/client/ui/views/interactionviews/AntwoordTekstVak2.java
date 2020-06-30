@@ -79,6 +79,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	
 	private int mode;
 	private boolean boxMetRand;
+	private int borderWidth = (Integer)DWOplayer.templateConstants.answerboxFEWA("border-width");
 	
 	private LayoutPanel basisPanel;
 	private Panel achtergrondPanel;
@@ -261,12 +262,13 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		
 		basisPanel = new LayoutPanel();
 		basisPanel.setStylePrimaryName("antwoordtekstvak");
-		basisPanel.setPixelSize(breedte - 2, hoogte - 3);
+		
+		basisPanel.setPixelSize(breedte - 2*borderWidth, hoogte - 3);
 		//basisPanel.getElement().getStyle().setProperty("border", "1px solid gray");
 		//basisPanel.getElement().getStyle().setBackgroundColor(CssColor.make(0, 0, 255).toString());
 		//basisPanel.getElement().getStyle().setProperty("border", "1px solid gray");
 		
-		antwoordTF = new TextEditor(breedte-2, hoogte-3, boxMetRand)
+		antwoordTF = new TextEditor(breedte-2*borderWidth, hoogte-3, boxMetRand)
 		{
 			@Override
 			public void enter()
@@ -402,15 +404,18 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		{
 			//basisPanel.setSize(Math.max(minBreedte, formuleVak.getSize().width + 24), formuleVak.getSize().height + 8);
 			achtergrondPanel = formuleVak.getAsPanel();
-			if (boxMetRand)
-			{
-				achtergrondPanel.getElement().getStyle().setBackgroundColor("white");
-				achtergrondPanel.getElement().getStyle().setProperty("border", "1px solid gray");
-			}
-			else
+			basisPanel.setStyleName(DWOplayer.templateCss().answerboxFEWS());
+//			if (boxMetRand)
+//			{
+//				achtergrondPanel.getElement().getStyle().setBackgroundColor("white");
+//				achtergrondPanel.getElement().getStyle().setProperty("border", "1px solid gray");
+//			}
+//			else
+			if (!boxMetRand)
 			{
 				achtergrondPanel.getElement().getStyle().setBackgroundColor("transparant");
-				achtergrondPanel.getElement().getStyle().setProperty("border", "none");
+				basisPanel.getElement().getStyle().setBackgroundColor("transparant");
+				basisPanel.getElement().getStyle().setProperty("border", "none");
 			}
 			basisPanel.add(achtergrondPanel);
 			basisPanel.setWidgetLeftRight(achtergrondPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
@@ -431,10 +436,17 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		else
 		{
 			//basisPanel.setSize(Math.max(minBreedte, antwoordTF.getSize().width + 2), antwoordTF.getSize().height + 4);
+			basisPanel.setStyleName(DWOplayer.templateCss().answerboxFEWS());
+			if (!boxMetRand)
+			{
+				basisPanel.getElement().getStyle().clearProperty("backgroundColor");
+				basisPanel.getElement().getStyle().setBackgroundColor("transparant");
+				basisPanel.getElement().getStyle().setProperty("border", "none");
+			}
 			basisPanel.add(antwoordTF);
 			basisPanel.setWidgetLeftRight(antwoordTF, 0, Style.Unit.PX, 0, Style.Unit.PX);
-			basisPanel.setWidgetTopBottom(antwoordTF, 0, Style.Unit.PX, 0, Style.Unit.PX);
-			ashoogte = Math.round(hoogte)/2 + 2;// /*antwoordTF.getOffsetHeight()*/ - 3;
+			basisPanel.setWidgetTopBottom(antwoordTF, borderWidth, Style.Unit.PX, 0, Style.Unit.PX);
+			ashoogte = Math.round(hoogte)/2 + 3 + borderWidth;// /*antwoordTF.getOffsetHeight()*/ - 3;
 		}
 		
 		//TODO: Noordhoff-instelling maken.
@@ -1276,13 +1288,13 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	@Override
 	public int getHeight()
 	{
-		return facade.wrapHeight(hoogte); 
+		return facade.wrapHeight(hoogte+2*borderWidth); 
 	}
 
 	@Override
 	public int getWidth()
 	{
-		return facade.wrapWidth(breedte);
+		return facade.wrapWidth(breedte+2*borderWidth);
 	}
 	
 	public void zetVolledigeBreedte(int breedte)
@@ -1290,9 +1302,9 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		if (volledigeBreedte)
 		{
 			this.breedte = breedte;
-			basisPanel.setPixelSize(breedte, hoogte - 3);
+			basisPanel.setPixelSize(breedte-2*borderWidth, hoogte - 3);
 			//antwoordTF.setWidth((breedte - 2) + "px");
-			getAsPanel().setPixelSize(breedte, -1);
+			getAsPanel().setPixelSize(breedte-2*borderWidth, -1);
 		}
 	}
 

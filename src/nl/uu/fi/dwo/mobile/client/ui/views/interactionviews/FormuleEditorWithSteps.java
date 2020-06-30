@@ -215,6 +215,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	private ArrayList<SimplePanel> lijnen;
 	private SimplePanel activeBgPanel;
 	
+	private int borderWidth = (Integer)DWOplayer.templateConstants.answerboxFEWA("border-width");
+	
 	public static void zetFontOverervingForm(boolean b)
 	{	fontOvererving = b;
 	}
@@ -393,18 +395,25 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		}
 		
 		mainPanel = new FlowPanel();
-		mainPanel.addStyleName("formuleEditorWithSteps");
-		mainPanel.setPixelSize(breedte-2, hoogte-2);
-		mainPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
-		mainPanel.getElement().getStyle().setBorderColor(""+CssColor.make(170,170,170));
-		if (boxMetRand)
-			mainPanel.getElement().getStyle().setBackgroundColor("white");
-		else
-			mainPanel.getElement().getStyle().setBackgroundColor("transparent");
-		mainPanel.getElement().getStyle().setBorderWidth(boxMetRand ? 1 : 0, Unit.PX);
+		mainPanel.setStyleName(DWOplayer.templateCss().answerboxFEWS());
+		//mainPanel.addStyleName("formuleEditorWithSteps");
+		mainPanel.setPixelSize(breedte-2*borderWidth, hoogte-2*borderWidth);
+		//mainPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+		//mainPanel.getElement().getStyle().setBorderColor(""+CssColor.make(170,170,170));
 		
+//		if (boxMetRand)
+//			mainPanel.getElement().getStyle().setBackgroundColor("white");
+//		else
+//			mainPanel.getElement().getStyle().setBackgroundColor("transparent");
+//		mainPanel.getElement().getStyle().setBorderWidth(boxMetRand ? 1 : 0, Unit.PX);
+		
+		if (!boxMetRand) {
+			mainPanel.getElement().getStyle().setBorderStyle(Style.BorderStyle.NONE);
+			mainPanel.getElement().getStyle().setBackgroundColor("transparent");
+		}
+			
 		headerPanel = new FlowPanel();
-		headerPanel.setPixelSize(breedte - 2, 22);//TODO: hoogte nog even checken
+		headerPanel.setPixelSize(breedte - 2*borderWidth, 22);//TODO: hoogte nog even checken
 		if (boxMetRand)
 			headerPanel.getElement().getStyle().setBackgroundColor("white");
 		else
@@ -476,7 +485,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		wortelBewerkKnop.setVisible(bewerkingKnoppenExtra);
 		
 		sp = new ScrollPanel();
-		sp.setPixelSize(breedte-5, hoogte-50 + 20); // waar komt die 50 vandaan, er kan nog 20 pixels bij
+		sp.setPixelSize(breedte-3-2*borderWidth, hoogte-50 + 20); // waar komt die 50 vandaan, er kan nog 20 pixels bij
 		sp.getElement().getStyle().setOverflow(Overflow.AUTO);
 		sp.getElement().getStyle().setFloat(Style.Float.LEFT);
 
@@ -3951,11 +3960,11 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{
 			breedte = w;
 			hoogte = h;
-			mainPanel.setPixelSize(breedte - 2, hoogte - 2);
-			sp.setPixelSize(breedte - 5, hoogte - 50 + 20); // waar komt die 50
+			mainPanel.setPixelSize(breedte - 2*borderWidth, hoogte - 2*borderWidth);
+			sp.setPixelSize(breedte - 3-2*borderWidth, hoogte - 50 + 20); // waar komt die 50
 															// vandaan, er kan nog
 															// 20 pixels bij
-			headerPanel.setPixelSize(breedte - 2, 22); // anders vallen knoppen buiten beeld...
+			headerPanel.setPixelSize(breedte - 4, 22); // anders vallen knoppen buiten beeld...
 		}
 	}
 
@@ -3969,15 +3978,15 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		if (w > 0) // check valid values
 		{
 			breedte = w;
-			mainPanel.setPixelSize(breedte - 2, hoogte - 2);
-			sp.setPixelSize(breedte - 5, hoogte - 50 + 20); // waar komt die 50
+			mainPanel.setPixelSize(breedte - 2*borderWidth, hoogte - 2*borderWidth);
+			sp.setPixelSize(breedte - 3 - 2*borderWidth, hoogte - 50 + 20); // waar komt die 50
 															// vandaan, er kan nog
 															// 20 pixels bij
 			if(stelselScrollPanel != null)
-			{ 	stelselScrollPanel.setPixelSize(breedte - 5,  hoogte);// - 50 + 20);
+			{ 	stelselScrollPanel.setPixelSize(breedte - 3 - 2*borderWidth,  hoogte);// - 50 + 20);
 				resizeStelselContentPanel();
 			}
-			headerPanel.setPixelSize(breedte - 2, 22); // anders vallen knoppen buiten beeld...
+			headerPanel.setPixelSize(breedte - 2*borderWidth, 22); // anders vallen knoppen buiten beeld...
 		}
 	}
 
@@ -3991,11 +4000,11 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		if (h > 0) // check valid values
 		{
 			hoogte = h;
-			mainPanel.setPixelSize(breedte - 2, hoogte - 2);
-			sp.setPixelSize(breedte - 5, hoogte - 50 + 20); // waar komt die 50
+			mainPanel.setPixelSize(breedte - 2*borderWidth, hoogte - 2*borderWidth);
+			sp.setPixelSize(breedte - 3 - 2*borderWidth, hoogte - 50 + 20); // waar komt die 50
 															// vandaan, er kan nog
 															// 20 pixels bij
-			headerPanel.setPixelSize(breedte - 2, 22); // anders vallen knoppen buiten beeld...
+			headerPanel.setPixelSize(breedte - 2*borderWidth, 22); // anders vallen knoppen buiten beeld...
 		}
 	}
 
@@ -4009,9 +4018,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	{
 		if(volledigeBreedte)
 		{	this.breedte = breedte;
-			mainPanel.getElement().getStyle().setWidth(breedte - 2, Unit.PX);
-			headerPanel.getElement().getStyle().setWidth(breedte - 2, Unit.PX);
-			sp.getElement().getStyle().setWidth(breedte - 5, Unit.PX);
+			mainPanel.getElement().getStyle().setWidth(breedte - 2*borderWidth, Unit.PX);
+			headerPanel.getElement().getStyle().setWidth(breedte - 2*borderWidth, Unit.PX);
+			sp.getElement().getStyle().setWidth(breedte - 3 - 2*borderWidth, Unit.PX);
 			//feedbackPanel.getElement().getStyle().setWidth(breedte - 25, Unit.PX);	
 			feedbackPanel.setSize(breedte - 10, feedbackPanelHeight);
 

@@ -15,6 +15,10 @@ import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.mobile.client.DWOplayerClientBundle;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
+import nl.uu.fi.dwo.mobile.client.template.TemplateBasicConstants;
+import nl.uu.fi.dwo.mobile.client.template.TemplateConstants;
+import nl.uu.fi.dwo.mobile.client.template.TemplateCss;
+import nl.uu.fi.dwo.mobile.client.template.TemplateNumworxConstants;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
@@ -53,6 +57,14 @@ public abstract class DWOplayer
 	public static final DWOplayerClientBundle DWO_BUNDLE = GWT.create(DWOplayerClientBundle.class);
 	public static final DWOplayerParameters PARAMETERS = GWT.create(DWOplayerParameters.class);
 	private static DWOplayer instance;
+	
+	private static TemplateCss templateCss;
+	public static TemplateConstants templateConstants;
+	
+	private static final String templateBasisName = "TemplateBasis";
+	private static final String templateNumworxName = "TemplateNumworx";
+	private static String templateName = templateBasisName;
+	
 	
 	private static native int getDwoProfileID() /*-{
 		return $wnd.DWO_PROFILE_ID
@@ -194,13 +206,32 @@ public abstract class DWOplayer
 			}
 		};
 		t.schedule(1);
-
+	}
+	
+	public static TemplateCss templateCss() {
+		if(templateCss!=null)
+			return templateCss;
+		else 
+			return DWO_BUNDLE.templatebasiccss();
+	}
+	
+	public static void setTemplateCss(String name) {
+		if(templateNumworxName.equals(name)) {
+			templateCss = DWO_BUNDLE.templatenumworxcss();
+			templateConstants = new TemplateNumworxConstants();
+		}
+		else {
+			templateCss = DWO_BUNDLE.templatebasiccss();
+			templateConstants = new TemplateBasicConstants();
+		}
 	}
 	
 	private void setupResources()
 	{
 //		resources.put("SelectionColor", "#88f");
 		DWO_BUNDLE.dwoplayercss().ensureInjected();
+		DWO_BUNDLE.templatenumworxcss().ensureInjected();
+		DWO_BUNDLE.templatebasiccss().ensureInjected();
 	}
 
 //	public static String getResource(String resource)

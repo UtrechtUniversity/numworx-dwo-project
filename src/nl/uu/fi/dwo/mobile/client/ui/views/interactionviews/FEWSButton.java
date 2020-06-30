@@ -315,6 +315,30 @@ public class FEWSButton extends SVGButton{
 			svg.appendChild(punt6);
 	        
 		}
+		else if("formule".equals(code))	{	
+			OMSVGPathElement path = doc.createSVGPathElement();
+	        OMSVGPathSegList segsPath = path.getPathSegList();
+	        segsPath.appendItem(path.createSVGPathSegMovetoAbs(8*e, 19*e));
+	        segsPath.appendItem(path.createSVGPathSegLinetoAbs(8*e, 8*e));
+	        segsPath.appendItem(path.createSVGPathSegArcAbs(12*e, 8*e, 2*e, 2*e, (float)Math.PI, true, true));
+//	        segsPath.appendItem(path.createSVGPathSegLinetoAbs(10*e, 6*e));
+//	        segsPath.appendItem(path.createSVGPathSegLinetoAbs(12*e, 8*e));
+	        segsPath.appendItem(path.createSVGPathSegMovetoAbs(6*e, 12*e));
+	        segsPath.appendItem(path.createSVGPathSegLinetoAbs(10*e, 12*e));
+	        segsPath.appendItem(path.createSVGPathSegMovetoAbs(12*e, 19*e));
+	        segsPath.appendItem(path.createSVGPathSegLinetoAbs(19*e, 12*e));
+	        segsPath.appendItem(path.createSVGPathSegMovetoAbs(12*e, 12*e));
+	        segsPath.appendItem(path.createSVGPathSegLinetoAbs(19*e, 19*e));
+	        
+	        
+	        
+	        path.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultForegroundColor.toString());
+	        path.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "2.0");
+	        path.getStyle().setSVGProperty(SVGConstants.CSS_FILL_OPACITY_PROPERTY, "0.0");
+	        svg.appendChild(path);
+		}
+		
+		
 		else if("sluit".equals(code))	{	
 			OMSVGLineElement stroke1 = doc.createSVGLineElement(6*e, 6*e, 18*e, 18*e);
 			stroke1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultForegroundColor.toString());

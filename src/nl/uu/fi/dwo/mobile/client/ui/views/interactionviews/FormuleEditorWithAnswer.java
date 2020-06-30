@@ -29,6 +29,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.client.template.TemplateCss;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.ResizableContentIF;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
@@ -57,7 +58,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
@@ -348,6 +348,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	private static boolean fontOvererving = false;
 	
+	private int borderWidth = (Integer)DWOplayer.templateConstants.answerboxFEWA("border-width");
+	private int paddingTop = (Integer)DWOplayer.templateConstants.answerboxFEWA("padding-top");
+	private int paddingLeft = (Integer)DWOplayer.templateConstants.answerboxFEWA("padding-left");
+	private int paddingRight = (Integer)DWOplayer.templateConstants.answerboxFEWA("padding-right");
+	
 	public static void zetFontOverervingForm(boolean b)
 	{	fontOvererving = b;
 	}
@@ -542,35 +547,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				}
 			}, ClickEvent.getType());
 						
-//			feedbackLabel = new Label("?");
-//			feedbackLabel.getElement().getStyle().setFontSize(11, Style.Unit.PX);
-//			feedbackLabel.getElement().getStyle().setFontWeight(FontWeight.BOLD);
-//			feedbackLabel.getElement().getStyle().setPadding(0, Style.Unit.PX);
-//			feedbackLabel.getElement().getStyle().setMarginTop(-1, Style.Unit.PX);
-//			feedbackLabel.getElement().getStyle().setMarginLeft(1, Style.Unit.PX);
-//			feedbackLabel.getElement().getStyle().setPaddingLeft(2, Style.Unit.PX);
-//			//feedbackLabel.getElement().getStyle().setBackgroundColor("white");
-//			feedbackLabel.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-//			feedbackLabel.getElement().getStyle().setVerticalAlign(VerticalAlign.TOP);
-//			feedbackLabel.setWidth(10 + "px");
 			feedbackLabel.setVisible(false);
-//			
-//			checkPanel = new TouchPanel();
-//			checkPanel.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-//			checkPanel.getElement().getStyle().setPaddingLeft(5, Style.Unit.PX);
-//			checkPanel.getElement().getStyle().setProperty("verticalAlign", "top");
-//			checkPanel.getElement().getStyle().setMarginTop(-3, Style.Unit.PX);
-//
-//			checkPanel.add(checkimg);
-//			checkPanel.add(feedbackLabel);
-//			checkPanel.setPixelSize(15, hoogte);
-//			checkPanel.addTapHandler(new TapHandler(){
-//
-//				@Override
-//				public void onTap(TapEvent event) {
-//				}
-//				
-//			});
 			
 			checkPanel.setHandler(() -> {
 				if(feedbackLabel.isVisible())
@@ -584,111 +561,25 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 					feedbackPanel.show();
 				}			
 			});
-			
-//			checkPanel.addDomHandler(new MouseDownHandler() {
-//				
-//				@Override
-//				public void onMouseDown(MouseDownEvent event) {
-//					;
-//					//event.stopPropagation();
-//					
-//				}
-//			}, MouseDownEvent.getType());
-			
-			
-//			checkPanel.addDomHandler(new ClickHandler(){
-//				public void onClick(ClickEvent e)
-//				{
-//					if(feedbackLabel.isVisible())
-//					{	feedbackPanel.setPopupPosition(asWidget().getAbsoluteLeft() + 10, asWidget().getAbsoluteTop() + asWidget().getOffsetHeight() + 10);
-//						feedbackPanel.show();
-//					}
-//				}
-//			}, ClickEvent.getType());
-//			
-			
+						
 			if (fe == null)
 			{
-				//sp.getElement().getStyle().setProperty("width", (breedte - 9) + "px");
-				//this.getMainRegel().setMinimumWidth(breedte - extraWidth);
-				//hoogte = 27;
 				this.getMainRegel().setMinimumWidth(breedte - 20);
 				this.getMainRegel().setMinimumHeight(hoogte - 6);
 				
-				//Maat zetten:
-				//breedte - 3: 1 pixel marge links, 1 pixel rand links, 1 pixel rand rechts
-				//hoogte - 6: 2 pixels marge boven, 2 pixels marge onder, 1 pixel rand boven, 1 pixel rand onder.
-
-				//sp.setSize((breedte - 3) + "px", (hoogte - 6) + "px"); 
-
-				//sp.setPixelSize((breedte - 3) , (hoogte - 6) ); 
-
-				//sp.getElement().getStyle().setBackgroundColor(CssColor.make(255, 0, 0).toString());
-				Style spStyle = sp.getElement().getStyle();
-				if(boxMetRand)
+				sp.setStyleName(DWOplayer.templateCss().answerboxFEWA());
+				if(!boxMetRand)
 				{
-					spStyle.setBackgroundColor("white");
-					spStyle.setProperty("border", "1px solid gray");
-				}
-				else
-				{
-					spStyle.setBorderStyle(Style.BorderStyle.NONE);
-					//spStyle.setProperty("borderBottom", "thin dotted");
-					//this.getMainRegel().vulVak("...");
+					sp.getElement().getStyle().setBorderStyle(Style.BorderStyle.NONE);
 					this.getMainRegel().zetStippels(true);
-					
-					//this.getMainRegel().paintObject();
-					spStyle.setBackgroundColor("transparent"); // background-image etc. from css
+					sp.getElement().getStyle().setBackgroundColor("transparent");
 				}
-				//sp.getElement().getStyle().setPadding(3, Style.Unit.PX);
-				
-				spStyle.setMarginLeft(1, Style.Unit.PX);
-				//sp.getElement().getStyle().setMarginRight(1, Style.Unit.PX);
-				//sp.getElement().getStyle().setMarginRight(1, Style.Unit.PX);
-
-				
-				//probeersels 9-1
-				spStyle.setMarginTop(0, Style.Unit.PX);
-				spStyle.setMarginBottom(2, Style.Unit.PX);
-				spStyle.setPaddingTop(1, Style.Unit.PX);
-				spStyle.setPaddingBottom(2,Style.Unit.PX);
-				
-				
-				//oorspronkelijke versie 9-1: volgende twee regels.
-			//	sp.getElement().getStyle().setMarginTop(2, Style.Unit.PX);
-			//	sp.getElement().getStyle().setPaddingTop(3, Style.Unit.PX);
-				
-
-				//spStyle.setMarginTop(2, Style.Unit.PX);
-				//spStyle.setPaddingTop(1, Style.Unit.PX);
-
-				//sp.getElement().getStyle().setMarginBottom(0, Style.Unit.PX);
-				
-				//sp.getElement().getStyle().setPaddingLeft(1, Style.Unit.PX);
-				//sp.getElement().getStyle().setPaddingRight(0, Style.Unit.PX);
-				//sp.getElement().getStyle().setPaddingTop(1, Style.Unit.PX);
-				//sp.getElement().getStyle().setPaddingBottom(5, Style.Unit.PX);
-				//(Weggehaald Sietske) sp.getElement().getStyle().setProperty("backgroundColor", "#e9e9e9");
-				
-				//sp.getElement().getStyle().setProperty("backgroundColor", "yellow");
-				//this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginTop", "3px");
-				//this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginBottom", "0px");
 			}
 
-			//sp.getElement().addClassName("insert_formule");
-			//sp.add(this.getMainRegel().getCanvas());
-			//sp.add(checkimg);
-			//sp.add(feedbackLabel);
-			//sp.add(contentPanel);
-			//sp.add(prefixPanel);
-			
 			sp.add(this.getMainRegel().asWidget());
 	         if (fe == null) // DWOPLAY-363 Altijd dubbel kruisje, geen checkImage/feedback als je in FE zit!
 	           sp.add(checkPanel);
 			
-			//checkPanel.getElement().getStyle().setBackgroundColor("red");
-			//prefixPanel.getElement().getStyle().setBackgroundColor("yellow");
-			//this.getMainRegel().getCanvas().getElement().getStyle().setBackgroundColor("blue");
 			register(new FormuleEditorTouchHandler(this).initHandler());
 			lastanswer = "$f" + toString() + "@"; // initialize lastanswer voor kijkna not sending
 		
@@ -1585,10 +1476,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 //	}
 	
 	public void resize()
-	{
-		breedte = this.getMainRegel().getWidth() + extraWidth; //checkPanel.getOffsetWidth() + extraWidth;// + (getImageVisible()?26:0);
+	{	breedte = this.getMainRegel().getWidth() + extraWidth; //checkPanel.getOffsetWidth() + extraWidth;// + (getImageVisible()?26:0);
 		hoogte = this.getMainRegel().getHeight() + 6;
-		sp.setPixelSize((breedte-3) , (hoogte-8) );
+		sp.setPixelSize((breedte-1-2*borderWidth) , (hoogte-8) );
 		if(parentRegel != null)
 		{	parentRegel.resize();
 		}
@@ -1619,8 +1509,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	}
 	
 	public int getWidth()
-	{
-		return facade.wrapWidth(breedte);
+	{	return facade.wrapWidth(breedte  + paddingLeft + paddingRight);
 	}
 	
 	public void zetVolledigeBreedte(int breedte)
@@ -1637,8 +1526,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public int getAsHoogte()
 	{
-		return facade.wrapAsHoogte(this.getMainRegel().getAsHoogte() + (boxMetRand?2:1)); //+ 6 /* margin top + padding top */);
-		
+		int corr = boxMetRand?2*borderWidth:paddingTop;
+		return facade.wrapAsHoogte(this.getMainRegel().getAsHoogte() + corr); //+ 6 /* margin top + padding top */);
 	}
 
 	public void setStrict(boolean strict)
@@ -1783,9 +1672,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			}
 		}
 		ObjectMap map = JSONUtilities.wrapMap(h);
-		AcceptsOneWidget parent;
-		parent = p -> {getAsPanel().add(p);};
-		CorrectieFacade.showReview(h, parent, this, scoreMax);
+		CorrectieFacade.showReview(h, getAsPanel());
 		boolean ingevuld = true;
 		boolean nagekeken = false;
 		boolean editable = true;
@@ -1829,7 +1716,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				kijkNa(true); // FIXME kijkna in setstate
 		}
 		setEditable(editable);
+
 		correctie = CorrectieFacade.get(h, this, getAsPanel(), scoreMax, comRoot);
+
 	}
 
 	public String strip$f(String antwoord) {

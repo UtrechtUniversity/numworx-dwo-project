@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 
 import com.google.gwt.dom.client.Style;
@@ -42,6 +43,9 @@ public class StelselRekenVak extends LayoutPanel  {
 	int scrollWidth = 0;
 	int contentHoogte = 0;
 	
+	boolean boxMetRand;
+	private int borderWidth = (Integer)DWOplayer.templateConstants.answerboxFEWA("border-width");
+	
 	StelselAntwoordVak antwoordVak;
 	
 	private ScrollPanel scrollPane;
@@ -54,12 +58,13 @@ public class StelselRekenVak extends LayoutPanel  {
 	public StelselRekenVak(StelselAntwoordVak antwoordVak, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
 		int hoogte = antwoordVak.hoogte - (antwoordVak.oplossingenRegelZichtbaar?27:0);
-		scrollHoogte = hoogte - headerHoogte - marge - 2;
-		scrollWidth = antwoordVak.breedte - 2;
+		scrollHoogte = hoogte - headerHoogte - marge - 2*borderWidth;
+		scrollWidth = antwoordVak.breedte - 2*borderWidth;
 		contentHoogte = scrollHoogte;
 		this.setPixelSize(antwoordVak.breedte, hoogte);
 		contentPanel = new LayoutPanel();
-		contentPanel.getElement().getStyle().setBackgroundColor("white"); 
+		//contentPanel.getElement().getStyle().setBackgroundColor("white");
+		
 		contentPanel.setPixelSize(scrollWidth - 3, contentHoogte); // wordt aangepast zodra hoogte hoofdEditor wordt aangepast.
 		scrollPane = new ScrollPanel();
 		scrollPane.setPixelSize(scrollWidth, scrollHoogte);
@@ -127,7 +132,7 @@ public class StelselRekenVak extends LayoutPanel  {
 	{
 		int currentScrollHeight = scrollPane.getVerticalScrollPosition();
 		super.setHeight(h + "px");
-		scrollHoogte = h - headerHoogte - marge - 2;
+		scrollHoogte = h - headerHoogte - marge - 2*borderWidth;
 		contentHoogte = Math.max(scrollHoogte, hoofdEditor.geefHoogteEditorEnKinderen());
 		scrollPane.setPixelSize(scrollWidth, scrollHoogte);
 		if(contentHoogte > scrollHoogte)
@@ -141,7 +146,7 @@ public class StelselRekenVak extends LayoutPanel  {
 	{
 		logger.info("zetVolledigeBreedte: " + b);
 		super.setWidth(b + "px");
-		scrollWidth = b - 2;
+		scrollWidth = b - 2*borderWidth;
 		scrollPane.setPixelSize(scrollWidth, scrollHoogte);
 		if(contentHoogte > scrollHoogte)
 			contentPanel.setPixelSize(scrollWidth - 20, contentHoogte);

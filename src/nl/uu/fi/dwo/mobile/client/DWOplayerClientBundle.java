@@ -9,6 +9,9 @@ import com.google.gwt.resources.client.ImageResource;
 import com.googlecode.mgwt.ui.client.theme.base.ButtonCss;
 import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
 
+import nl.uu.fi.dwo.mobile.client.template.TemplateBasicCss;
+import nl.uu.fi.dwo.mobile.client.template.TemplateNumworxCss;
+
 public interface DWOplayerClientBundle extends ClientBundle {
 
 	@Source("nl/uu/fi/dwo/mobile/client/resources/foutkruis.gif")
@@ -82,6 +85,12 @@ public interface DWOplayerClientBundle extends ClientBundle {
 
 	@Source("nl/uu/fi/dwo/mobile/client/resources/DWOplayer.css")
 	DWOplayerCss dwoplayercss();
+
+	@Source("nl/uu/fi/dwo/mobile/client/resources/TemplateNumworx.css")
+	TemplateNumworxCss templatenumworxcss();
+	
+	@Source("nl/uu/fi/dwo/mobile/client/resources/TemplateBasic.css")
+	TemplateBasicCss templatebasiccss();
 
 	@Source("nl/uu/fi/dwo/mobile/client/resources/knop-indicatie-goed.png")
 	ImageResource goed();

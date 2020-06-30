@@ -23,6 +23,7 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
@@ -67,6 +68,9 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware, TekstEle
 
 	private boolean logOption;
 	private String logID;
+	
+	private boolean boxMetRand;
+	private int borderWidth = (Integer)DWOplayer.templateConstants.answerboxFEWA("border-width");
 	
 	private boolean[][] logObjectives;
 
@@ -122,6 +126,8 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware, TekstEle
 				logOption = map.getBoolean("logOption");
 			if (map.containsKey("logID"))
 				logID = map.getString("logID");
+			if (map.containsKey("boxMetRand"))
+				boxMetRand = map.getBoolean("boxMetRand");
 
 			if (map.containsKey("eqTestValueMin"))
 				eqTestValueMin = map.getDouble("eqTestValueMin");
@@ -231,10 +237,15 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware, TekstEle
 		// alle vakken op een panel zetten. 
 		
 		mainPanel = new FlowPanel();
-		mainPanel.getElement().getStyle().setBackgroundColor("white");
-		mainPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
-		mainPanel.getElement().getStyle().setBorderColor("gray");
-		mainPanel.getElement().getStyle().setBorderWidth(1, Style.Unit.PX);
+		mainPanel.setStyleName(DWOplayer.templateCss().answerboxFEWS());
+		if(!boxMetRand) {
+			mainPanel.getElement().getStyle().setBorderStyle(Style.BorderStyle.NONE);
+			mainPanel.getElement().getStyle().setBackgroundColor("transparent");
+		}
+//		mainPanel.getElement().getStyle().setBackgroundColor("white");
+//		mainPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+//		mainPanel.getElement().getStyle().setBorderColor("gray");
+//		mainPanel.getElement().getStyle().setBorderWidth(1, Style.Unit.PX);
 		
 		
 		//rekenVak initialiseren
@@ -251,6 +262,9 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware, TekstEle
 			rekenVakMap.put("volledigeBreedte", volledigeBreedte);
 			rekenVakMap.put("interactiePanelLaunchState", launchState);
 			rekenVak = new StelselRekenVak(this, rekenVakMap, randomVarNamen, randomVarWaarden);
+			if(!boxMetRand) {
+				rekenVak.getElement().getStyle().setBackgroundColor("transparent");
+			}
 			rekenVak.zetVarNamen(varNamen);
 			rekenVak.zetJuisteOplossingen(oplossingen);
 			mainPanel.add(rekenVak);
@@ -284,12 +298,12 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware, TekstEle
 		int hoogteRegel = Math.max(oplossingenLabelVak.getHeight(), oplossingenVak.getHeight());
 		if (hoogteRegel == oplossingenRegel.getOffsetHeight())
 			return;
-		oplossingenRegel.setPixelSize(breedte - 2, hoogteRegel);
+		oplossingenRegel.setPixelSize(breedte - 2*borderWidth, hoogteRegel);
 		oplossingenRegel.clear();
 		for (int i = 0; i < hoogteRegel/2 + 1; i++)
 		{
 			FlowPanel panel = new FlowPanel();
-			panel.getElement().getStyle().setBackgroundColor(CssColor.make(200 + 100*i/hoogteRegel, 200 + 100*i/hoogteRegel, 200 + 100*i/hoogteRegel).toString());
+			panel.getElement().getStyle().setBackgroundColor(CssColor.make(219,221,223).toString());//(CssColor.make(200 + 100*i/hoogteRegel, 200 + 100*i/hoogteRegel, 200 + 100*i/hoogteRegel).toString());
 			oplossingenRegel.add(panel);
 			oplossingenRegel.setWidgetLeftRight(panel, 0, Style.Unit.PX, 0, Style.Unit.PX);
 			oplossingenRegel.setWidgetTopHeight(panel, hoogteRegel - 2*i, Style.Unit.PX, 2, Style.Unit.PX);
@@ -440,7 +454,7 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware, TekstEle
 
 	@Override
 	public int getHeight() {
-		return hoogte;
+		return hoogte + 2*borderWidth;
 	}
 
 	@Override

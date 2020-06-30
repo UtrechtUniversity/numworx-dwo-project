@@ -53,6 +53,7 @@ import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
+import fi.wiskopdr.text.Text;
 import fi.wiskopdr.expressies.DecRound;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
@@ -78,6 +79,7 @@ import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 
 public class TextEditor  implements InteractionView, TouchStartHandler, FormuleEditorIF, FacetAware, CBookEventListener, TekstElementWithFont, HasText {
@@ -124,6 +126,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private boolean shown, childfocus;
 	
 	private boolean boxMetRand;
+	private int borderWidth = (Integer)DWOplayer.templateConstants.answerboxFEWA("border-width");
 	private int boxsize;
 	int menuheight = 0;
 	int padding = 4; // TODO bepaal padding;
@@ -142,7 +145,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		this.boxMetRand = boxMetRand;
 		this.volledigeBreedte = false;
 		this.padding = 0;
-		boxsize = boxMetRand?2:0;
+		boxsize = boxMetRand?2*borderWidth:0;
 		hbox = new FlowPanel();
 		hbox.setStyleName(css.textEditor());
 		hbox.addStyleName(css.textEditor_nowrap());
@@ -159,8 +162,13 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		hbox.add(content);
 		//hbox.getElement().getStyle().setBackgroundColor("#C0C0C0");
 		hbox.setPixelSize(width - boxsize, height - boxsize);
-		if (boxMetRand)
-			hbox.getElement().getStyle().setProperty("border", "1px solid gray");
+		//if (boxMetRand)
+		//	hbox.getElement().getStyle().setProperty("border", "1px solid gray");
+		if (!boxMetRand) {
+				hbox.getElement().getStyle().setProperty("border", "none");
+				hbox.getElement().getStyle().setBackgroundColor("transparant");
+				content.getElement().getStyle().setBackgroundColor("transparant");
+		}
 		logging = null;
 		//shown = true;
 	}
@@ -181,9 +189,10 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 //			teltMee = launchdata.getBoolean("teltMee");
 		
 		
-		boxsize = boxMetRand?2:0;
+		boxsize = boxMetRand?2*borderWidth:0; // eigenlijk afhankelijk van de borderwidth. die is max 2
 		hbox = new FlowPanel();
 		hbox.setStyleName(css.textEditor());
+		hbox.addStyleName(DWOplayer.templateCss().answerboxFEWS());
 		initWidget(hbox);
 		
 		menubar = getMenuBar(launchdata);
@@ -191,6 +200,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		{
 			menuheight = 30;
 			menubar.setPixelSize(width-boxsize, menuheight);
+			menubar.getElement().getStyle().setBackgroundColor("transparent");
 			hbox.add(menubar);
 		}
 		
@@ -204,10 +214,13 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		//hbox.getElement().getStyle().setBackgroundColor("#C0C0C0");
 		hbox.setPixelSize(width-boxsize, height-boxsize);
 		if (boxMetRand)
-			hbox.getElement().getStyle().setProperty("border", "1px solid gray");
+			;//hbox.getElement().getStyle().setProperty("border", "1px solid gray");
 		else
-		{
-			updateEmpty();
+		{	updateEmpty();
+			style.setBackgroundColor("transparent");
+			hbox.getElement().getStyle().setProperty("border", "none");
+			hbox.getElement().getStyle().setBackgroundColor("transparent");
+			
 		}
 		
 		boolean logOption = launchdata.getBoolean("logOption", false);
@@ -262,7 +275,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	
 	
 	private void updateEmpty() {
-		if (!boxMetRand) {
+		if (!boxMetRand || menubar!=null) {
 			hbox.setStyleName(css.textEditor_empty(), isContentEmpty());
 		}
 	}
@@ -353,18 +366,37 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		FlowPanel menubar = new FlowPanel();
 		menubar.setStyleName(css.balk());
 		//Button fx = new Button("f(x)"); 
-		PushButton fx = new PushButton(new Image(DWOplayer.PARAMETERS.getResource("images/resources/formuleknop.gif")));
-		fx.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-		if(formuleKnop) menubar.add(fx);
-		fx.addClickHandler(new FXHandler());
+		
+//		PushButton fx = new PushButton(new Image(DWOplayer.PARAMETERS.getResource("images/resources/formuleknop.gif")));
+//		fx.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+//		if(formuleKnop) menubar.add(fx);
+//		fx.addClickHandler(new FXHandler());
+		
+		FEWSButton formuleButton = new FEWSButton("formule");
+		formuleButton.addButtonListener(new FXHandler());
+		formuleButton.setTooltip(Text.constants.tooltip_formuleButton());
+		formuleButton.setSize(27, 27);
+		formuleButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+		formuleButton.getElement().getStyle().setMargin(2,Unit.PX);
+		if(formuleKnop) menubar.add(formuleButton);
+		
 		//Button calc = new Button("calc"); 
 		Image upImage = new Image(DWOplayer.PARAMETERS.getResource("images/resources/rmknop.gif"));
 		upImage.getElement().setAttribute("width","18");
 		upImage.getElement().setAttribute("height","18");
-		PushButton calc = new PushButton(upImage);
-		calc.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-		if(rekentool) menubar.add(calc);
-		calc.addClickHandler(new CalcHandler());
+//		PushButton calc = new PushButton(upImage);
+//		calc.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+//		if(rekentool) menubar.add(calc);
+//		calc.addClickHandler(new CalcHandler());
+		
+		FEWSButton calcButton = new FEWSButton("rekenmachine");
+		calcButton.addButtonListener(new CalcHandler());
+		calcButton.setTooltip(Text.constants.tooltip_calcButton());
+		calcButton.setSize(27, 27);
+		calcButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+		calcButton.getElement().getStyle().setMargin(2,Unit.PX);
+		if(rekentool) menubar.add(calcButton);
+		
 		//Button graph = new Button("gr");  
 		PushButton graph = new PushButton(new Image(DWOplayer.PARAMETERS.getResource("images/resources/grafiekknop.gif")));
 		if(graftool) menubar.add(graph);
@@ -406,7 +438,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				menubar.setPixelSize(width-boxsize, menuheight);
 			content.setPixelSize(width-boxsize-padding, height-menuheight-boxsize-padding);
 			hbox.setPixelSize(width-boxsize, height-boxsize);
-			widget.setPixelSize(breedte, -1);
+			widget.setPixelSize(breedte-boxsize, -1);
 		}
 	}
 
@@ -1561,7 +1593,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		}
 	}
 	
-	private class CalculatorVak extends Composite implements HasText, ClickHandler, IsEditable
+	private class CalculatorVak extends Composite implements HasText, ButtonListener, IsEditable
 	{
 		public Object waarde = "";
 		static final double E_MAX = 1.0E7;
@@ -1570,7 +1602,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 		private FormuleEditor editor;
 		private FormuleViewer viewer;
-		private Button btn;
+		private FEWSButton btn;
 		private boolean op3;
 		private Panel panel;
 
@@ -1603,8 +1635,10 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			h.initHandler();
 			hbox.addDomHandler(new FormuleTapper(editor, this), ClickEvent.getType());
 			hbox.add(panel);
-			btn = new Button("=");
-			btn.addClickHandler(this);
+			btn = new FEWSButton("=");
+			btn.addButtonListener(this);
+			btn.setSize(20, 20);
+			btn.getElement().getStyle().setMargin(2, Unit.PX);
 			hbox.add(btn);
 			viewer = new FormuleViewer("0");
 			hbox.add(viewer.getAsPanel());
@@ -1625,8 +1659,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			onClick(null);
 		}		
 
-		@Override
-		public void onClick(ClickEvent event)
+		
+		public void onClick(Object sender)
 		{
 			calculate();
 			editor.requestFocus();
@@ -1696,10 +1730,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		}
 	}// class CalculatorVak
 	
-	public class FXHandler implements ClickHandler
+	public class FXHandler implements ButtonListener
 	{
-		@Override
-		public void onClick(ClickEvent event)
+		public void onClick(Object sender)
 		{
 			if (!editable)
 				return;
@@ -1713,8 +1746,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				deSelection();
 				setCursorWidget(cursorWidget);
 				hideEmpty();
-				event.stopPropagation();
-				event.preventDefault();
+				//event.stopPropagation();
+				//event.preventDefault();
 			}
 			FormulaVak panel = new FormulaVak();
 			panel.start();
@@ -1726,10 +1759,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		}
 	}
 	
-	class CalcHandler implements ClickHandler
+	public class CalcHandler implements ButtonListener
 	{
-		@Override
-		public void onClick(ClickEvent event)
+		public void onClick(Object sender)
 		{
 			if (!editable)
 				return;
