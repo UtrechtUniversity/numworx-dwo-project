@@ -129,6 +129,7 @@ public abstract class XMLView {
 	boolean globalParam;
 	
 	private Map styles;
+	private String templateName;
 	
 	
 	TekstVakPanel hoofdPanel;
@@ -283,6 +284,10 @@ public abstract class XMLView {
 				styles = wrap.getMap("TekstVakPanelStyles");
 			if(styles!=null)
 				TekstVakPanel.styles = styles;
+			
+			if(wrap.containsKey("templateName"))
+				templateName = wrap.getString("templateName");
+			DWOplayer.setTemplateCss(templateName);
 			
 		}
 		
