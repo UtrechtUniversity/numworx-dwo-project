@@ -51,7 +51,7 @@ public class ClassesViewImpl extends Composite  implements AnchorContext {
 
 		@Override
 		public void render(Context context, DomSchoolClass value, SafeHtmlBuilder sb) {
-			String clazz = style.navItem();
+			String clazz = style.classItem();
 			sb.appendHtmlConstant("<div class='" + clazz +"'>");
 			sb.appendEscaped(value.getSchoolClassName());		
 			sb.appendHtmlConstant("</div>");

@@ -267,11 +267,12 @@ public void setupDWOPlayer() {
 	protected void gotoCourses_impl() {
 		SelectModuleItemHolder.clear(); // hier leegmaken of elders?
 		Promise<List<SelectModuleItem>> modules;
+		final RoleType roleType = clientfactory.getRoleType();
 		if( withUser() && clientfactory.getSchoolClass() != null) {
 			Promise<DomCoursesOfSchoolClass> promise = clientfactory.getRPCHandler().getCoursesClass(clientfactory.getSchoolClass());
 
 			modules = promise.map(new CoursesOfClasToSelectItems());
-		} else if (withUser() && RoleType.STUDENT != clientfactory.getRoleType())
+		} else if (withUser() && RoleType.STUDENT != roleType)
 		{
 			Promise<List<DomCourseStudent>> p1 = clientfactory.getRPCHandler().getCourses();
 			Promise<List<DomCourseStudent>> p2 = clientfactory.getRPCHandler().getCoursesSchool(clientfactory.getSchool());
@@ -290,11 +291,15 @@ public void setupDWOPlayer() {
 			modules = clientfactory.getRPCHandler().getCourses().map(TO_SELECTMODULEITEM);
 		}
 			
-		modules.then(new InsertSelectItems(clientfactory.isIconizer(), clientfactory.getRoleType())).onResolve(new Runnable() {
+		boolean iconizer = clientfactory.isIconizer();
+		if (roleType == RoleType.STUDENT && PARAMETERS.getSecureMode() !=  SecureMode.NORMAL )
+			iconizer = false;
+
+		modules.then(new InsertSelectItems(iconizer, roleType)).onResolve(new Runnable() {
 
 				@Override
 				public void run() {
-					if( SecureMode.NORMAL == PARAMETERS.getSecureMode() || clientfactory.getRoleType() != RoleType.STUDENT)
+					if( SecureMode.NORMAL == PARAMETERS.getSecureMode() || roleType != RoleType.STUDENT)
 						clientfactory.getPlaceController().goTo(new TreeModulePlace("0"));
 					else 
 					{ // was FlatModulePlace();

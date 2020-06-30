@@ -68,7 +68,7 @@ public class CorrectieFacade {
   }
 
     public static CorrectieFacade get(Map<String,Object> h, InteractionView view, Widget widget, int maxScore, OpdrNavIF comRoot) {
-	  if (comRoot.getMode() != OpdrNavIF.EINDTOETS) return NULL; // alleen EINDTOETS
+	  //if (comRoot.getMode() != OpdrNavIF.EINDTOETS) return NULL; // alleen EINDTOETS, nee
       return instance.create(h, view, widget, maxScore, comRoot);
   }
 

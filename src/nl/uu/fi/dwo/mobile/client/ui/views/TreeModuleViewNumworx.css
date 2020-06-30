@@ -193,19 +193,21 @@
 			border-radius: 3px;
 			border-style: none;
 		}
-		.navItem {
+
+		.navItem, .classItem {
 			font-family: Ubuntu, sans-serif !important;
 			font-weight: regular;
 			line-height: 27px;
-/* 			margin-right: 18px; */
 			border-bottom-style: solid;
 			border-bottom-width: 1px;
 			border-bottom-color: #A8ABB1 !important;
-			width: 152px;
 			padding-left: 22px;
-/* 			transform: scale(0.9,1); */
-/* 			transform-origin: left; */
 		}
+
+		.navItem {
+			width: 152px;
+		}
+		
 		.tiles, .empty {
 
 	

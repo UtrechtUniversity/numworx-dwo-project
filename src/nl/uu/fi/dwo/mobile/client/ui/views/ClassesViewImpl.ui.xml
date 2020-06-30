@@ -20,10 +20,9 @@
 					<g:FlowPanel styleName='{style.titlePanel}'> 
 							<g:HTML styleName='{style.title}' ui:field='title' >TITLE </g:HTML>
 							<g:SimplePanel ui:field='description' ><g:HTML>DESCRIPTION</g:HTML></g:SimplePanel>
-							<g:HTML styleName='{style.title}'><ui:text from='{rb.NUM_TBL_SCHOOLCLASSOPTION}' /></g:HTML>
 					</g:FlowPanel>
-
 				</g:FlowPanel>
+				<g:HTML styleName='{style.title}'><ui:text from='{rb.NUM_TBL_SCHOOLCLASSOPTION}' /></g:HTML>
 				<cl:CellList addStyleNames='{extra.cells}' ui:field='cells' />
 				</g:FlowPanel>
 			</g:ScrollPanel>
