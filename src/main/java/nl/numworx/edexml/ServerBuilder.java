@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -238,14 +239,27 @@ public class ServerBuilder implements Builder {
     	  submit.getDomSingleSchoolStudent().setUserName(userName); // restore.
           context.setRealm(realm); // realm of login
         Dwo2ExceptionCode code = e.getDwo2Code();
-        //code = Dwo2ExceptionCode.Rest_Registration_UserName_exists;
+        code = Dwo2ExceptionCode.Rest_Registration_UserName_exists;
         if (code == Dwo2ExceptionCode.Rest_Registration_UserName_exists) {
           iterator = collection.iterator();
           List<DomStudent> allStudents = schoolClassManager.getStudentsInSchool();
-          allStudents.forEach(i -> { 
-            if (i.getUserName().equals(item.getValue().getUserName()))
-                item.getValue().setId(i.getId());
-          });
+          boolean found = false;
+          final String itemName = item.getValue().getUserName();
+          Optional<DomStudent> maybeStudent = allStudents.stream().filter(i -> i.getUserName().equals(itemName)).findAny();
+          if (maybeStudent.isPresent()) {
+        	  item.getValue().setId(maybeStudent.get().getId());
+          } else {
+        	  // Exists but no student, try teachers.
+        	  List<DomTeacher> teachers = schoolClassManager.getTeachersInSchool();
+        	  Optional<DomTeacher> maybeTeacher = teachers.stream().filter(i -> i.getUserName().equals(itemName)).findAny();
+        	  if (maybeTeacher.isPresent()) {
+        		  item.getValue().setId(maybeTeacher.get().getId());
+        		  // schoolClassManager.inviteStudent(maybeTeacher.get));
+        	  } else { 
+        		  LOG.log(Level.WARNING, "submit foreign user " + item.getValue().getUniqueDisplayName());
+        		  continue;
+        	  }
+          }
          } else {
            LOG.log(Level.WARNING, "submit student", e);
           continue;
