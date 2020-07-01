@@ -11,6 +11,7 @@ import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
 
 import nl.uu.fi.dwo.mobile.client.template.TemplateBasicCss;
 import nl.uu.fi.dwo.mobile.client.template.TemplateNumworxCss;
+import nl.uu.fi.dwo.mobile.client.template.TemplateUUTestCss;
 
 public interface DWOplayerClientBundle extends ClientBundle {
 
@@ -91,6 +92,9 @@ public interface DWOplayerClientBundle extends ClientBundle {
 	
 	@Source("nl/uu/fi/dwo/mobile/client/resources/TemplateBasic.css")
 	TemplateBasicCss templatebasiccss();
+	
+	@Source("nl/uu/fi/dwo/mobile/client/resources/TemplateUUTest.css")
+	TemplateUUTestCss templateuutestcss();
 
 	@Source("nl/uu/fi/dwo/mobile/client/resources/knop-indicatie-goed.png")
 	ImageResource goed();

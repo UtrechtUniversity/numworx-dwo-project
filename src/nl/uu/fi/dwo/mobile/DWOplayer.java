@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.mobile.client.template.TemplateBasicConstants;
 import nl.uu.fi.dwo.mobile.client.template.TemplateConstants;
 import nl.uu.fi.dwo.mobile.client.template.TemplateCss;
 import nl.uu.fi.dwo.mobile.client.template.TemplateNumworxConstants;
+import nl.uu.fi.dwo.mobile.client.template.TemplateUUTestConstants;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
@@ -63,6 +64,7 @@ public abstract class DWOplayer
 	
 	private static final String templateBasisName = "TemplateBasis";
 	private static final String templateNumworxName = "TemplateNumworx";
+	private static final String templateUUTestName = "TemplateUUTest";
 	private static String templateName = templateBasisName;
 	
 	
@@ -220,6 +222,10 @@ public abstract class DWOplayer
 			templateCss = DWO_BUNDLE.templatenumworxcss();
 			templateConstants = new TemplateNumworxConstants();
 		}
+		else if(templateUUTestName.equals(name)) {
+			templateCss = DWO_BUNDLE.templateuutestcss();
+			templateConstants = new TemplateUUTestConstants();
+		}
 		else {
 			templateCss = DWO_BUNDLE.templatebasiccss();
 			templateConstants = new TemplateBasicConstants();
@@ -232,6 +238,7 @@ public abstract class DWOplayer
 		DWO_BUNDLE.dwoplayercss().ensureInjected();
 		DWO_BUNDLE.templatenumworxcss().ensureInjected();
 		DWO_BUNDLE.templatebasiccss().ensureInjected();
+		DWO_BUNDLE.templateuutestcss().ensureInjected();
 	}
 
 //	public static String getResource(String resource)
