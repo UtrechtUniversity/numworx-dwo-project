@@ -269,8 +269,6 @@ public class HasRoleUtilManager {
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Illegal parameters.");
             }
 
-            LOG.log(Level.SEVERE, "hasRole of userId {0} and schoolGroupId {1} could not be found.", new Object[]{user.getId(), sg.getSchoolGroupID()});
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "HasRole could not be found.");
         }
         return hr;
     }

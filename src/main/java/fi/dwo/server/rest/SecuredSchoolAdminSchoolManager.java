@@ -31,6 +31,7 @@ import nl.uu.fi.dwo.rest.entities.RestUserFull;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
@@ -53,6 +54,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
 import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
@@ -804,4 +806,48 @@ public class SecuredSchoolAdminSchoolManager {
       return Boolean.TRUE;
     }
     
+    
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/inviteStudent")
+    public Boolean inviteStudent(@Context SecurityContext sc, RestTeacher rest) throws Dwo2Exception {
+    	UserState_HR_R_S_SG_U role = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+    	.setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.SCHOOLADMIN);
+		SchoolAdminTeacherState_HR_R_S_SG_U state = role.buildSchoolAdminTeacher();
+
+		PersistentSchool school = role.getSchool();
+    	Long userID = MySQLPersistenceId.getNativeId(rest.getDomTeacher());
+    	PersistentUser user;
+    	PersistentHasRole hr = HasRoleUtilManager.getHasRole(userID, RoleType.TEACHER, school);
+    	user = hr.getUser();
+    	HasRoleUtilManager.getOrCreateHasRoleInSchool(user, school, RoleType.STUDENT);
+    	return Boolean.TRUE;
+    }
+    
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/inviteTeacher")
+    public Boolean inviteTeacher(@Context SecurityContext sc, RestStudent rest) throws Dwo2Exception {
+    	UserState_HR_R_S_SG_U role = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+    	.setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.SCHOOLADMIN);
+		SchoolAdminTeacherState_HR_R_S_SG_U state = role.buildSchoolAdminTeacher();
+
+		PersistentSchool school = role.getSchool();
+    	Long userID = MySQLPersistenceId.getNativeId(rest.getDomStudent());
+    	PersistentUser user;
+    	PersistentHasRole hr = HasRoleUtilManager.getHasRole(userID, RoleType.STUDENT, school);
+    	user = hr.getUser();
+    	if (user.isSingleSchoolAccount()) {
+    		if (!Boolean.FALSE.equals(rest.getDomStudent().getSingleSchool()))
+    				return Boolean.FALSE; // FIXME..... upgrade user to non-single-school-account first
+            PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersManager.findByName("NullSchoolLogin").getValue());
+        	HasRoleUtilManager.getOrCreateHasRoleInSchool(user, nullSchool, RoleType.STUDENT);
+        	user.setSingleSchoolAccount(Boolean.FALSE);
+        	UserManager.edit(user);
+    	}
+    	HasRoleUtilManager.getOrCreateHasRoleInSchool(user, school, RoleType.TEACHER);
+    	return Boolean.TRUE;
+    	
+    }
+
 }
