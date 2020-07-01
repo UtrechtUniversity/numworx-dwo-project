@@ -207,6 +207,21 @@ public class SecureSchoolAdminSchoolManager implements SchoolManager {
     return result;
   }
 
+  
+  public static Boolean inviteTeacher(DomStudent student) throws Dwo2Exception {
+	  RestStudent rest = new RestStudent();
+	  rest.setRestContext(getContext());
+	  rest.setDomStudent(student);
+	  Boolean result = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/schooladmin/school/inviteTeacher", Boolean.class, rest);
+	  return result;
+  }
 
+  public static Boolean inviteStudent(DomTeacher teacher) throws Dwo2Exception {
+	  RestTeacher rest = new RestTeacher();
+	  rest.setRestContext(getContext());
+	  rest.setDomTeacher(teacher);
+	  Boolean result = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/schooladmin/school/inviteStudent", Boolean.class, rest);
+	  return result;
+  }
 
 }
