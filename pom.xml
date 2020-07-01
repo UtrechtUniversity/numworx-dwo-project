@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO</artifactId>
-		<version>2.4.5-SNAPSHOT</version>
+		<version>2.4.7-SNAPSHOT</version>
 		<relativePath>../DWO</relativePath>
 	</parent>
 	<artifactId>edexml</artifactId>
@@ -28,6 +28,11 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-csv</artifactId>
 			<version>1.7</version>
+		</dependency>
+		<dependency>
+			<groupId>nl.uu.fi.dwo</groupId>
+			<artifactId>DWO-commons-lib</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<properties>

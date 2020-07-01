@@ -7,8 +7,8 @@ import java.util.Map;
 
 import org.xml.sax.InputSource;
 
+import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import junit.framework.TestCase;
-import nl.numworx.edexml.ServerUUTest.Translator;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
@@ -19,34 +19,9 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 public class ServerUUTest extends TestCase {
 	
-	static class Translator implements DWO2ExceptionTranslatorInterface {
-
-		@Override
-		public String encodeJSON(Dwo2ExceptionCode code, String message) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public String decodeMessageInJSON(String json) {
-			return json;
-		}
-
-		@Override
-		public Dwo2ExceptionCode decodeCodeInJSON(String json) {
-		  System.err.println(json);
-			return Dwo2ExceptionCode.Rest_CanNotReachServer;
-		}
-
-		@Override
-		public String getLocalizedCodeExplanation(DwoLocale locale, Dwo2ExceptionCode code) {
-			return code.toString();
-		}
-
-	}
 
 	static { 
-		Dwo2ExceptionTranslator.setTranslator(new Translator());
+		Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
 	}
 	
 
@@ -101,17 +76,20 @@ public class ServerUUTest extends TestCase {
 				assertNotNull(in);
 				InputSource is = new InputSource();
 				is.setByteStream(in);
+				is.setEncoding("UTF-8");
 				input.setLeerlingenSource(is);
 		  }{
 				InputStream in  = getClass().getResourceAsStream("/NUMWORX_CURS.csv");
 				assertNotNull(in);
 				InputSource is = new InputSource();
 				is.setByteStream(in);
+				is.setEncoding("UTF-8");
 				input.setGroepenSource(is);
 		  }{
 				InputStream in = getClass().getResourceAsStream("/NUMWORX-DOCENT2.csv");
 				assertNotNull(in);
 				InputSource is = new InputSource();
+				is.setEncoding("UTF-8");
 				is.setByteStream(in);
 				input.setLeerkrachtenSource(is);
 		  }

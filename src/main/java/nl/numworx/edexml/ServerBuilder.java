@@ -47,9 +47,11 @@ public class ServerBuilder implements Builder {
 	Map<String, DomSchoolClassFull> classes = new TreeMap<>();
 	Map<String, Collection<String>> memberships = new TreeMap<>();
 	private DomSchoolsRolesAndClassesV2 logins;
+	private SecureSchoolAdminSchoolManager schoolManager;
 	
 	public void setSource(String username, String password, URL base) throws Dwo2Exception {
 		schoolClassManager = new SecureSchoolAdminSchoolClassManager();
+		schoolManager = new SecureSchoolAdminSchoolManager();
 		StoredRestManager.getInstance().setBasicAuthString(username, password, null);
 		StoredRestManager.getInstance().getAuthenticator().setServerUrlPath(base);
 		logins = SecureUserAccountLoginsManager.getSchoolLogins();
@@ -239,11 +241,10 @@ public class ServerBuilder implements Builder {
     	  submit.getDomSingleSchoolStudent().setUserName(userName); // restore.
           context.setRealm(realm); // realm of login
         Dwo2ExceptionCode code = e.getDwo2Code();
-        code = Dwo2ExceptionCode.Rest_Registration_UserName_exists;
+        //code = Dwo2ExceptionCode.Rest_Registration_UserName_exists;
         if (code == Dwo2ExceptionCode.Rest_Registration_UserName_exists) {
           iterator = collection.iterator();
           List<DomStudent> allStudents = schoolClassManager.getStudentsInSchool();
-          boolean found = false;
           final String itemName = item.getValue().getUserName();
           Optional<DomStudent> maybeStudent = allStudents.stream().filter(i -> i.getUserName().equals(itemName)).findAny();
           if (maybeStudent.isPresent()) {
@@ -254,7 +255,7 @@ public class ServerBuilder implements Builder {
         	  Optional<DomTeacher> maybeTeacher = teachers.stream().filter(i -> i.getUserName().equals(itemName)).findAny();
         	  if (maybeTeacher.isPresent()) {
         		  item.getValue().setId(maybeTeacher.get().getId());
-        		  // schoolClassManager.inviteStudent(maybeTeacher.get));
+        		  schoolManager.inviteStudent(maybeTeacher.get());
         	  } else { 
         		  LOG.log(Level.WARNING, "submit foreign user " + item.getValue().getUniqueDisplayName());
         		  continue;
@@ -300,7 +301,37 @@ public class ServerBuilder implements Builder {
         SecureSchoolAdminSchoolManager.submitTeacher(value); // FIXME duplicate in schoolclassmanager
         count += 1;
       } catch (Dwo2Exception e) {
-        LOG.log(Level.WARNING, "submit Teacher", e);
+    	  LOG.log(Level.WARNING, "submit Teacher", e);
+
+    	  try {
+			Dwo2ExceptionCode code = e.getDwo2Code();
+			  //code = Dwo2ExceptionCode.Rest_Registration_UserName_exists;
+			  if (code == Dwo2ExceptionCode.Rest_Registration_UserName_exists) {
+			      List<DomTeacher> allTeachers = schoolClassManager.getTeachersInSchool();
+			      final String itemName = item.getValue().getUserName();
+			      Optional<DomTeacher> maybeTeacher = allTeachers.stream().filter(i -> i.getUserName().equals(itemName)).findAny();
+			      if (maybeTeacher.isPresent()) {
+			    	  item.getValue().setId(maybeTeacher.get().getId());
+			      } else {
+			    	  // Exists but no teacher, try students.
+			    	  List<DomStudent> students = schoolClassManager.getStudentsInSchool();
+			    	  Optional<DomStudent> maybeStudent = students.stream().filter(i -> i.getUserName().equals(itemName)).findAny();
+			    	  if (maybeStudent.isPresent()) {
+			    		  item.getValue().setId(maybeStudent.get().getId());
+			    		  maybeStudent.get().setSingleSchool(Boolean.FALSE); // force not single school
+			    		  schoolManager.inviteTeacher(maybeStudent.get());
+			    	  } else { 
+			    		  LOG.log(Level.WARNING, "submit foreign user " + item.getValue().getUniqueDisplayName());
+			    		  continue;
+			    	  }
+			      }
+			  
+			  }
+		} catch (Dwo2Exception e1) {
+	    	  LOG.log(Level.WARNING, "submit Teacher", e1);
+
+		}
+
       }      
     }
     Collection<DomUserFull> allTeachers = parseLeerkrachten().values();
