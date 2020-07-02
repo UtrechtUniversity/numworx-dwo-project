@@ -230,15 +230,16 @@ public abstract class DWOplayer
 			templateCss = DWO_BUNDLE.templatebasiccss();
 			templateConstants = new TemplateBasicConstants();
 		}
+		templateCss.ensureInjected();
 	}
 	
 	private void setupResources()
 	{
 //		resources.put("SelectionColor", "#88f");
 		DWO_BUNDLE.dwoplayercss().ensureInjected();
-		DWO_BUNDLE.templatenumworxcss().ensureInjected();
-		DWO_BUNDLE.templatebasiccss().ensureInjected();
-		DWO_BUNDLE.templateuutestcss().ensureInjected();
+//		DWO_BUNDLE.templatenumworxcss().ensureInjected();
+//		DWO_BUNDLE.templatebasiccss().ensureInjected();
+//		DWO_BUNDLE.templateuutestcss().ensureInjected();
 	}
 
 //	public static String getResource(String resource)
