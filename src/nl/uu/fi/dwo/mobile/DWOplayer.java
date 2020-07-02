@@ -60,7 +60,7 @@ public abstract class DWOplayer
 	private static DWOplayer instance;
 	
 	private static TemplateCss templateCss;
-	public static TemplateConstants templateConstants;
+	public static TemplateConstants templateConstants = new TemplateBasicConstants(); // Never null
 	
 	private static final String templateBasisName = "TemplateBasis";
 	private static final String templateNumworxName = "TemplateNumworx";
@@ -214,7 +214,9 @@ public abstract class DWOplayer
 		if(templateCss!=null)
 			return templateCss;
 		else 
+		{ 	DWO_BUNDLE.templatebasiccss().ensureInjected();
 			return DWO_BUNDLE.templatebasiccss();
+		}
 	}
 	
 	public static void setTemplateCss(String name) {
