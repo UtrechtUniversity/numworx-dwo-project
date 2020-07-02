@@ -255,7 +255,7 @@
 								<artifactItem>
 									<groupId>nl.numworx.swingbrowser</groupId>
 									<artifactId>swingbrowser-jxb</artifactId>
-									<version>0.0.4</version>
+									<version>0.0.5-SNAPSHOT</version>
 									<destFileName>dwo/swingbrowser-jxb.jar</destFileName>
 								</artifactItem>
 							</artifactItems>
