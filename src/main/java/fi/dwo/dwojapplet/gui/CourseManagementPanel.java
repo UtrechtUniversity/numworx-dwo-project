@@ -415,7 +415,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
             editorCB.addActionListener(this);
             editorBox.add(editorCB);
             Course course = (Course) userObject;
-			if(course.getText().startsWith("H4sIAAAAAA"))
+			if(course.getText().startsWith("H4sIAAAAAA") || course.getText().isEmpty())
             {	editorCB.setSelected(true); editorCB.setVisible(false);
             	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getText());
             	wiskOpdrEditPanel.setPreferredSize(new Dimension(800,350));
