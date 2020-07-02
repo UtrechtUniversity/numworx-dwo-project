@@ -528,6 +528,7 @@ public class Text_en extends ListResourceBundle {
             { TextMapper.GUIAC_NO_CLASS, "<unknown>" },
             { TextMapper.GUIAC_ADD, "Add access"},
 
+            { TextMapper.GUIC_HIDE_ACTIVITIES, "Hide Activities"},
 
 	};
 

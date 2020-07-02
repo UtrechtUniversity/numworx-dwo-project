@@ -500,6 +500,8 @@ public class Text_nl extends ListResourceBundle {
             { TextMapper.GUIAC_FULL, "Volledig"},
             { TextMapper.GUIAC_NO_CLASS, "<onbekend>" },
             { TextMapper.GUIAC_ADD, "Toegang toevoegen"},
+            
+            { TextMapper.GUIC_HIDE_ACTIVITIES, "Activiteitenlijst verbergen"},
 
 	};
 

@@ -588,6 +588,8 @@ public abstract class TextMapper {
     public static final String GUIAC_FULL   = "GUIAC_FULL";
     public static final String GUIAC_NO_CLASS = "GUIAC_NO_CLASS";
     public static final String GUIAC_ADD = "GUIAC_ADD";
+
+    public static final String GUIC_HIDE_ACTIVITIES = "GUIC_HIDE_ACTIVITIES";
 	
 	/**
      *
