@@ -416,7 +416,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
             editorBox.add(editorCB);
             Course course = (Course) userObject;
 			if(course.getText().startsWith("H4sIAAAAAA"))
-            {	editorCB.setSelected(true);
+            {	editorCB.setSelected(true); editorCB.setVisible(false);
             	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getText());
             	wiskOpdrEditPanel.setPreferredSize(new Dimension(800,350));
             	editorBox.add(wiskOpdrEditPanel);
@@ -625,6 +625,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
             		wiskOpdrEditPanel.setPreferredSize(new Dimension(800,350));
             		editorBox.add(wiskOpdrEditPanel);
     			}
+    		    //editorCB.setVisible(false);
     			wiskOpdrEditPanel.setVisible(true);
     			area.setVisible(false);
     		}

@@ -255,7 +255,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         editorCB.addActionListener(this);
         editorBox.add(editorCB);
         if (course.getDescription().startsWith("H4sIAAAAAA")) {
-            editorCB.setSelected(true);
+            editorCB.setSelected(true); editorCB.setVisible(false);
             wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
             wiskOpdrEditPanel.setPreferredSize(new Dimension(800, 350));
             editorBox.add(wiskOpdrEditPanel);
@@ -265,7 +265,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             pane.setBorder(BorderFactory.createLineBorder(Color.black));
             editorBox.add(pane);
         }
-        visibleCB = new JCheckBox("Activiteitenlijst verbergen");
+        visibleCB = new JCheckBox(TextMapper.getText(TextMapper.GUIC_HIDE_ACTIVITIES));
         visibleCB.setSelected(course.isNotVisible());
         editorBox.add(visibleCB);
  

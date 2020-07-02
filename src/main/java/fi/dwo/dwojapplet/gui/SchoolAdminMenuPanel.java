@@ -3,6 +3,8 @@ package fi.dwo.dwojapplet.gui;
 import fi.beans.numworxlf.JButton;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.action.SchoolConfigAction;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+
 import java.awt.event.ActionEvent;
 import javax.swing.Box;
 import javax.swing.JLabel;
@@ -46,7 +48,16 @@ public class SchoolAdminMenuPanel extends UserMenuPanel {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-
+      
+        if (e.getSource() == mainMenuButton) {
+          center.reset();
+          center.end(); // must be idempotent 
+          PersistenceFacade.instance().clearCurrentCourseDataCache();
+          center.tree.createModel(GuiCreator.instance().dwo);
+          center.loadCenter(GuiCreator.instance().getCourseChoisePanel());
+          return;
+        }
+      
         super.actionPerformed(e);
         if (e.getSource() == userManagementButton) {
             GuiCreator.instance().setWait();
