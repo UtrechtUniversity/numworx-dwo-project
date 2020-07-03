@@ -13,6 +13,8 @@ import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.action.TeacherStrategy;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.util.logging.Level;
@@ -166,10 +168,16 @@ public class TeacherMenuPanel extends UserMenuPanel implements SelectStrategy {
 
         Object src = e.getSource();
         GuiCreator instance = GuiCreator.instance();
+
         if (src == mainMenuButton) {
-            instance.getMainPanel().getCenter().select(ModuleTreePanel.ALLE_MODULES);
-            return;
+          center.reset();
+          center.end(); // must be idempotent 
+          PersistenceFacade.instance().clearCurrentCourseDataCache();
+          center.tree.createModel(instance.dwo);
+          center.loadCenter(instance.getCourseChoisePanel());
+          return;
         }
+      
         if (src == classManagementButton) {
             instance.setWait();
             CenterSubPanel cp = instance.getClassPanel();
