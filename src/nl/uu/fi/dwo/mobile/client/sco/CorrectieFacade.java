@@ -11,7 +11,6 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
-import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -25,7 +24,6 @@ import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 import nl.uu.fi.dwo.mobile.client.ui.views.DocentCorrectie;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.DWOPopupPanel;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PopupButton;
 
 public class CorrectieFacade {
@@ -78,6 +76,7 @@ public class CorrectieFacade {
     
     public void correctie(Map<String,Object> state) {}
 
+    @Deprecated
     public static void showReview(Map<String,Object> h0, IsWidget w) {
     	if(h0 == null || Memento.instance().getLessonMode() != LessonMode.browse) return;
     	ObjectMap h = JSONUtilities.wrapMap(h0);
@@ -102,6 +101,7 @@ public class CorrectieFacade {
 
     		PushButton pb = new PushButton();
     		pb.addStyleName(CorrectieView.CORRECTIE);
+    	
 // pushbutton style
     		pb.setPixelSize(16, 16);
     		Style style = pb.getElement().getStyle();
@@ -113,7 +113,8 @@ public class CorrectieFacade {
     		style.setBorderStyle(BorderStyle.NONE);
     		style.setPropertyPx("borderRadius", 0);
     		style.setPropertyPx("outlineWidth", 0);
-    		pb.addClickHandler(ev -> { 
+    		style.setProperty("pointerEvents", "auto");
+   		pb.addClickHandler(ev -> { 
     			DocentCorrectie correctie = new DocentCorrectie(maxScore, view.getScore(), scoreCorrectie, scoreComment);
     			DWOPopupPanel panel = new DWOPopupPanel(Text.constants.docentCorrectieTitle(), PopupButton.NOVIEW_LISTENER);
     			panel.addContent(correctie);

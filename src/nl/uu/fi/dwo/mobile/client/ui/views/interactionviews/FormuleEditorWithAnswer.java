@@ -52,7 +52,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.dom.client.Style.FontWeight;
+import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -62,10 +62,6 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
-import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
-
 import fi.wiskopdr.AntwoordFormuleVakChecker;
 import fi.wiskopdr.AntwoordVakChecker;
 import fi.wiskopdr.AntwoordVergelijkingVakChecker;
@@ -1672,7 +1668,16 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			}
 		}
 		ObjectMap map = JSONUtilities.wrapMap(h);
-		CorrectieFacade.showReview(h, getAsPanel());
+//		CorrectieFacade.showReview(h, getAsPanel());
+		
+		CorrectieFacade.showReview(h, p -> {
+			sp.add(p);
+			if (null != sp.getElement().getStyle().getPosition())
+				sp.getElement().getStyle().setPosition(Position.RELATIVE);
+		}, this, scoreMax);
+
+		
+		
 		boolean ingevuld = true;
 		boolean nagekeken = false;
 		boolean editable = true;

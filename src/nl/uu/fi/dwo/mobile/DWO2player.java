@@ -287,8 +287,10 @@ public void setupDWOPlayer() {
 					return result;
 				}})
 					.map(TO_SELECTMODULEITEM);
-		} else {
+		} else if (SecureMode.NORMAL == PARAMETERS.getSecureMode() ) { // no free lunch in exam
 			modules = clientfactory.getRPCHandler().getCourses().map(TO_SELECTMODULEITEM);
+		} else {
+			modules = Promises.resolved(Collections.emptyList());
 		}
 			
 		boolean iconizer = clientfactory.isIconizer();
