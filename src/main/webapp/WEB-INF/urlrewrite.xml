@@ -57,8 +57,8 @@
 	</rule>
 	<rule>
 		<note>/wisweb naar cdn</note>
-		<from>^/wisweb/(.+)$</from>
-		<to type="temporary-redirect">https://cdn.dwo.nl/wisweb/$1</to>
+		<from>^/wisweb/images/(.+)$</from>
+		<to type="temporary-redirect">https://cdn.dwo.nl/wisweb/images/$1</to>
 	</rule>
 	<rule>
 		<note>/jars naar cdn</note>
