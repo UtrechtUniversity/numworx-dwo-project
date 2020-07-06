@@ -413,7 +413,8 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
         TreeCellRenderer renderer = new TreeCellRenderer();
         renderer.updateUI();
         tree.setCellRenderer(renderer);
-        tree.updateUI();;
+        tree.updateUI();
+        setMinimumSize(hbox.getPreferredSize());
     }
 
 	protected void createMenubar(Box hbox) {

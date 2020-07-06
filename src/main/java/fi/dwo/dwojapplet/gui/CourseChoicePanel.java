@@ -392,7 +392,9 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
 
     @Override
     public boolean getScrollableTracksViewportWidth() {
-        return getParent().getWidth() > getMinimumSize().width;
+        return 
+            (profileTextArea != null && getParent().getWidth() > 100 ) ||
+            getParent().getWidth() > getMinimumSize().width;
     }
 // onder windows xp, een mousewheel click is 3 units.	
 

@@ -805,19 +805,19 @@
 	    	<groupId>com.teamdev.jxbrowser</groupId>
 	    	<artifactId>jxbrowser-cross-platform</artifactId>
 	    	<type>pom</type>
-	    	<version>7.5</version>
+	    	<version>7.8</version>
 	    	<scope>provided</scope>
 		</dependency>
 	  	<dependency>
 	  		<groupId>com.teamdev.jxbrowser</groupId>
 	  		<artifactId>jxbrowser-swing</artifactId>
-	  		<version>7.5</version>
+	  		<version>7.8</version>
 	    	<scope>runtime</scope>
 	  	</dependency>
 		    	<dependency>
 		    		<groupId>nl.numworx.swingbrowser</groupId>
 		    		<artifactId>swingbrowser-jxb</artifactId>
-		    		<version>0.0.3</version>
+		    		<version>0.0.5-SNAPSHOT</version>
 	    			<scope>runtime</scope>
 		    	</dependency>
         	</dependencies>
@@ -846,4 +846,10 @@
             </plugin>
         </plugins>
     </reporting>
+  <repositories>	
+  <repository>
+    <id>com.teamdev</id>
+    <url>http://maven.teamdev.com/repository/products</url>
+	</repository>
+  </repositories>
 </project>

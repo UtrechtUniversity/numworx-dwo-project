@@ -21,10 +21,12 @@ import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
 import java.applet.AppletContext;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Image;
 import java.awt.MediaTracker;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
@@ -34,6 +36,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
@@ -46,7 +49,7 @@ import javax.swing.text.JTextComponent;
  *
  */
 public class CoursePanel extends JPanel implements CenterSubPanel,
-        ActionListener, LinkIF
+        ActionListener, LinkIF //,Scrollable
         {
 
     /* (non-Javadoc)
@@ -475,5 +478,38 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 
     public void setJSObject(Object window) {
         jsObject = window;
+    }
+
+    public Dimension getPreferredScrollableViewportSize() {
+      return getPreferredSize();
+    }
+
+    private Dimension unit = new Dimension(1, 1);
+
+    public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+      if (orientation == SwingConstants.VERTICAL) {
+        return unit.height; // 1 line
+      } else {
+        return unit.width;
+      }
+    }
+
+    public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+      if (orientation == SwingConstants.VERTICAL) {
+        return Math.max(unit.height, visibleRect.height - unit.height); // 1 page
+      } else {
+        return visibleRect.width;
+      }
+    }
+
+    public boolean getScrollableTracksViewportWidth() {
+      if (wiskOpdrPanel != null) {
+          return getParent().getWidth() > getPreferredSize().width;
+      }
+      return true; // platte tekst of HTML
+    }
+
+    public boolean getScrollableTracksViewportHeight() {
+      return getParent().getHeight() > getPreferredSize().height;
     }
 }
