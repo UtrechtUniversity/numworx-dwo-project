@@ -168,7 +168,7 @@ public class EditStudentPresenter {
             return Promises.resolved(true);
         });
         //if singleschool fetch user
-        if (aUser.getSingleSchool()) {
+        if (!dwoGlobalVars.isSaml() && aUser.getSingleSchool()) { // full saml, niet kennisnet.
             p = p.then((resolved) -> {
                 if (resolved.getValue() != null && resolved.getValue().equals(true)) {
                     DomGetSingleSchoolStudent student = new DomGetSingleSchoolStudent(new DomStudent(aUser));
