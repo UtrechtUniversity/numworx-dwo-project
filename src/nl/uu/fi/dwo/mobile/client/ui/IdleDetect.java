@@ -98,7 +98,7 @@ public class IdleDetect extends Timer implements NativePreviewHandler {
 	
 	public void fire() {
 		IdleEvent event = new IdleEvent(cnt);
-		//GWT.log("fire " + event);
+		GWT.log("fire " + event);
 		bus.fireEvent(event);
 	}
 
