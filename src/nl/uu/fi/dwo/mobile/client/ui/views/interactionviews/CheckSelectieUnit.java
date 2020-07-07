@@ -22,6 +22,7 @@ import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.touch.client.Point;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
@@ -50,6 +51,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
+import nl.uu.fi.dwo.mobile.client.sco.CorrectieReview;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
@@ -77,6 +79,8 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	OpdrNavIF comRoot;
 	
 	private LayoutPanel basisPanel;
+	private Widget widget;
+	
 	int breedte = 110;
 	int hoogte = 24; 
 	int ashoogte = hoogte /2;
@@ -333,7 +337,14 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		
 	@Override
 	public Widget asWidget() {
-		return basisPanel;
+		if (widget == null) {
+			widget = CorrectieReview.wrap(basisPanel);
+		}
+		return widget;
+	}
+	
+	private AcceptsOneWidget asOne() {
+		if (widget instanceof AcceptsOneWidget) return (AcceptsOneWidget) widget ; else return null;
 	}
 
 	private CorrectieFacade correctie;
@@ -413,11 +424,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	    int attemptsCount = 0;
 		int errorCount = 0;
         ObjectMap map = JSONUtilities.wrapMap(h);
-		CorrectieFacade.showReview(h, p -> {
-			basisPanel.add(p);
-			basisPanel.setWidgetBottomHeight(p, 0, Unit.PX, 16, Unit.PX);
-			basisPanel.setWidgetRightWidth(p, 0, Unit.PX, 16, Unit.PX);
-		}, this, scoreMax);
+		CorrectieFacade.showReview(h, asOne(), this, scoreMax);
 		if(map.containsKey("randomizedPositions")) 
 	    {	ObjectList list = map.getObjectList("randomizedPositions");
 	    	randomizedPositions = new Point[list.size()];
