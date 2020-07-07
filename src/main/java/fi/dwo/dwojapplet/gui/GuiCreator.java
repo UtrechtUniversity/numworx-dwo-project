@@ -1210,7 +1210,7 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
     OAuthManager m = new OAuthManager(StoredRestManager.getInstance());
     token = m.refresh_token(token);
     if (token == null) {
-      t = new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationCancelled, "invalid_grant");
+      t = new Dwo2Exception(Dwo2ExceptionCode.Rest_LoginNeeded, "invalid_grant");
       throw new RuntimeException(t);
     }
     return true;
