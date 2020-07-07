@@ -258,11 +258,21 @@ public class ModulesOfSchoolclassPresenter {
     	{
     		DomCoursesOfSchoolclassTree t = p.getValue();
     		DomCourseOfClass object = t.getNode(key).getObject();
-			PersistenceId id = object.getClassCourse().getId();
+			DomClassCourse4Teacher classCourse = object.getClassCourse();
+			PersistenceId id = classCourse.getId();
     		DomCourse course = object.getCourse();			
 			CourseType type = CourseType.valueOf(typeString);
 			Date from = fromData.isEmpty() ? null : DateTimeFormat.getFormat("yyyy-MM-dd HH:mm").parse(fromData);
 			Date to = toData.isEmpty() ? null : DateTimeFormat.getFormat("yyyy-MM-dd HH:mm").parse(toData);
+
+			if ( (classCourse.getNotBefore() == null || classCourse.getNotBefore().before(new Date()))
+				&& (to != null && classCourse.getNotAfter() != null && classCourse.getNotAfter().after(to))	
+					
+			   ) {
+				throw new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "Date " + toData + " is too early");
+			}
+			
+			
 			return service.setClassCourse(id, schoolClass, course, type, accessKey, from, to)
 					.then(x -> {object.setClassCourse(x.getValue());return x; });
     	});
@@ -372,10 +382,25 @@ public class ModulesOfSchoolclassPresenter {
             }
         }
         DomTree<DomCourseOfClass> c = tree.getNode(key);
-        if (date == null || c.getObject().getClassCourse().getNotBefore() == null
-                || (c.getObject().getClassCourse().getNotBefore() != null
-                && c.getObject().getClassCourse().getNotBefore().before(date))) {
-            return service.setToDateClassCourse(schoolClass, c.getObject().getCourse(), date);
+        DomClassCourse4Teacher classCourse = c.getObject().getClassCourse();
+		if (date == null || classCourse.getNotBefore() == null
+                || (classCourse.getNotBefore() != null
+                && classCourse.getNotBefore().before(date))) {
+
+			if (date != null && classCourse.getNotAfter() != null && date.before(classCourse.getNotAfter())
+				&& (classCourse.getNotBefore() == null || classCourse.getNotBefore().after(new Date()))	
+					
+					
+			) {
+
+				eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is too early.")));
+	            return null;
+				
+			}
+        	
+        	
+        	
+        	return service.setToDateClassCourse(schoolClass, c.getObject().getCourse(), date);
         } else {
             eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
             return null;
