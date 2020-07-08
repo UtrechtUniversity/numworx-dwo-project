@@ -89,7 +89,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
         //this.setSize(789, 492);
         Dimension dim = DwoHelper.getApplet().getSize();
 
-        this.setSize(1024, dim.height - 108);
+        this.setSize(1024, 768);
         this.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
         setPreferredSize(new Dimension(1, 1)); // Applet volgt de maat der dingen
         applet = sco.getApplet();

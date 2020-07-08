@@ -328,98 +328,109 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         this(owner, windowTitle, createTitleBox(title), modal, sp);
     }
 
+    public ScoDialog(JDialog owner, String windowTitle, String title, boolean modal, ScoPanel sp) {
+      this(owner, windowTitle, createTitleBox(title), modal, sp);
+    }
+
     public ScoDialog(Component owner, String windowTitle, Component hbox, boolean modal, ScoPanel sp) {
-
         super(DwoHelper.getFrameForComponent(owner), windowTitle, modal);
+        initialize(owner, hbox, sp);
+    }
+    
+    public ScoDialog(JDialog owner, String windowTitle, Component hbox, boolean modal, ScoPanel sp) {
+        super(owner, windowTitle, modal);
+        initialize(owner, hbox, sp);
+    }
 
-        JPanel contentPane = new JPanel(new BorderLayout(0, 5));
+    private void initialize(Component owner, Component hbox, ScoPanel sp) {
+      JPanel contentPane = new JPanel(new BorderLayout(0, 5));
 
-        contentPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
-        //setContentPane(contentPane);
-        scoPanel = sp;
-        contentPane.setBackground(GuiConstants.MAIN_BACKGROUND);
-        closeButton = new JButton(TextMapper.getText(TextMapper.BTN_CLOSE));
+      contentPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
+      //setContentPane(contentPane);
+      scoPanel = sp;
+      contentPane.setBackground(GuiConstants.MAIN_BACKGROUND);
+      closeButton = new JButton(TextMapper.getText(TextMapper.BTN_CLOSE));
 
-        closeButton.setSize(closeButton.getPreferredSize());
-        closeButton.addActionListener(this);
+      closeButton.setSize(closeButton.getPreferredSize());
+      closeButton.addActionListener(this);
 
-        globalSeal = new JButton(TextMapper.dwo2Message().NUM_LBL_SELECTEDRESULTS_SEALSINGLEACTIVITY());
-        globalSeal.setVisible(false);
-        globalSeal.addActionListener(this);
-        studentSeal = new JCheckBox(TextMapper.dwo2Message().NUM_LBL_STUDENTSCO_SEAL());
-        studentSeal.setOpaque(false);
-        studentSeal.setVisible(false);
-        // this.pack();
-        Insets insets = contentPane.getInsets();
+      globalSeal = new JButton(TextMapper.dwo2Message().NUM_LBL_SELECTEDRESULTS_SEALSINGLEACTIVITY());
+      globalSeal.setVisible(false);
+      globalSeal.addActionListener(this);
+      studentSeal = new JCheckBox(TextMapper.dwo2Message().NUM_LBL_STUDENTSCO_SEAL());
+      studentSeal.setOpaque(false);
+      studentSeal.setVisible(false);
+      // this.pack();
+      Insets insets = contentPane.getInsets();
 
-        contentPane.setOpaque(false);
-        Box hhbox = Box.createHorizontalBox();
-        hhbox.add(hbox);
-        contentPane.add(hhbox, BorderLayout.NORTH);
+      contentPane.setOpaque(false);
+      Box hhbox = Box.createHorizontalBox();
+      hhbox.add(hbox);
+      contentPane.add(hhbox, BorderLayout.NORTH);
 
-        scoPanel.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
-        scoPanel.setVisible(false);
-        scoPanel.setPreferredSize(scoPanel.getSize());
-        contentPane.add(scoPanel, BorderLayout.CENTER);
-        scoPanel.setVisible(true);
+      scoPanel.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
+      scoPanel.setVisible(false);
+      scoPanel.setPreferredSize(scoPanel.getSize());
+      contentPane.add(scoPanel, BorderLayout.CENTER);
+      scoPanel.setVisible(true);
 
-        closeButton.setLocation(insets.left + 10, scoPanel.getSize().height
-                + scoPanel.getLocation().y + 10);
-        closeButton.setVisible(false);
-        Box hbox1 = Box.createHorizontalBox();
-        //hbox1.setOpaque(false);
-        hbox1.add(Box.createHorizontalStrut(10));
-        hbox1.add(closeButton);
-        hbox1.add(Box.createHorizontalStrut(10));
-        if(true) {
+      closeButton.setLocation(insets.left + 10, scoPanel.getSize().height
+              + scoPanel.getLocation().y + 10);
+      closeButton.setVisible(false);
+      Box hbox1 = Box.createHorizontalBox();
+      //hbox1.setOpaque(false);
+      hbox1.add(Box.createHorizontalStrut(10));
+      hbox1.add(closeButton);
+      hbox1.add(Box.createHorizontalStrut(10));
+      if(true) {
 // insert printer on bottom      
-        hhbox.add(Box.createHorizontalStrut(10));
-        hhbox.add(Box.createGlue());
-        printer = new PrintPanel();
-        PrintComponent component = new PrintComponent(scoPanel.getSco().getApplet(), scoPanel.getSco());
-        printer.setComponent(component);
+      hhbox.add(Box.createHorizontalStrut(10));
+      hhbox.add(Box.createGlue());
+      printer = new PrintPanel();
+      PrintComponent component = new PrintComponent(scoPanel.getSco().getApplet(), scoPanel.getSco());
+      printer.setComponent(component);
 // into hbox1        
-        hhbox.add(printer.asComponent());hbox1.add(Box.createHorizontalStrut(20));
-        printer.asComponent().setVisible(false);
-        } 
-        hbox1.add(globalSeal);
-        hbox1.add(Box.createHorizontalStrut(10));
-        hbox1.add(Box.createHorizontalGlue());
+      hhbox.add(printer.asComponent());hbox1.add(Box.createHorizontalStrut(20));
+      printer.asComponent().setVisible(false);
+      } 
+      hbox1.add(globalSeal);
+      hbox1.add(Box.createHorizontalStrut(10));
+      hbox1.add(Box.createHorizontalGlue());
 
-        hbox1.add(studentSeal);
-        hbox1.add(Box.createHorizontalStrut(50));
+      hbox1.add(studentSeal);
+      hbox1.add(Box.createHorizontalStrut(50));
 
-        contentPane.add(hbox1, BorderLayout.SOUTH);
-        closeButton.setVisible(true);
+      contentPane.add(hbox1, BorderLayout.SOUTH);
+      closeButton.setVisible(true);
 
-        JPanel basisPanel = new JPanel(new BorderLayout(0, 5));
-        basisPanel.setBackground(new Color(200, 227, 255));
-        basisPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
-        setContentPane(basisPanel);
-        basisPanel.add(contentPane, BorderLayout.CENTER);
+      JPanel basisPanel = new JPanel(new BorderLayout(0, 5));
+      basisPanel.setBackground(new Color(200, 227, 255));
+      basisPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+      setContentPane(basisPanel);
+      basisPanel.add(contentPane, BorderLayout.CENTER);
 
-        pack();
+      pack();
 
-        int x = 0;
-        int y = 0;
+      int x = 0;
+      int y = 0;
 
-        Point p = owner != null ? owner.getLocationOnScreen() : new Point(0, 0);
-        Dimension parentSize = owner != null ? owner.getSize()
-                : Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension mySize = getSize();
-        x = p.x + (parentSize.width - mySize.width) / 2;
-        y = p.y + (parentSize.height - mySize.height) / 2;
+      Point p = owner != null ? owner.getLocationOnScreen() : new Point(0, 0);
+      Dimension parentSize = owner != null ? owner.getSize()
+              : Toolkit.getDefaultToolkit().getScreenSize();
+      Dimension mySize = getSize();
+      x = p.x + (parentSize.width - mySize.width) / 2;
+      y = p.y + (parentSize.height - mySize.height) / 2;
 
-        if (x < 0) {
-            x = 0;
-        }
-        if (y < 0) {
-            y = 0;
-        }
+      if (x < 0) {
+          x = 0;
+      }
+      if (y < 0) {
+          y = 0;
+      }
 
-        setLocation(x, y);
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        this.addWindowListener(this);
+      setLocation(x, y);
+      setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+      this.addWindowListener(this);
     }
 
     private static void resetSeal(ScoPanel sp, ButtonModel sealmodel) {
@@ -438,19 +449,19 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         return hbox;
     }
 
-    /**
-     * Shows a dialog to show a result of a sco and user.
-     *
-     * @param parent The parent component of the dialog.
-     * @param sp The ScoPanel witch contains the data of the sco to show.
-     * @param ug The usergroup, witch is used for the title.
-     */
-    private static void showScoDialog(Component parent, ScoPanel sp, User ug) {
-        String[] arguments = {sp.getSco().getScoName(), ug.getName()};
-        String title = TextMapper.format((TextMapper.UG_RESULTS_OF_STUDENT), arguments);
-        ScoDialog sd = new ScoDialog(parent, TextMapper.getText(TextMapper.GUIRS_RESULTS), title, true, sp);
-        sd.show();
-    }
+//    /**
+//     * Shows a dialog to show a result of a sco and user.
+//     *
+//     * @param parent The parent component of the dialog.
+//     * @param sp The ScoPanel witch contains the data of the sco to show.
+//     * @param ug The usergroup, witch is used for the title.
+//     */
+//    private static void showScoDialog(Component parent, ScoPanel sp, User ug) {
+//        String[] arguments = {sp.getSco().getScoName(), ug.getName()};
+//        String title = TextMapper.format((TextMapper.UG_RESULTS_OF_STUDENT), arguments);
+//        ScoDialog sd = new ScoDialog(parent, TextMapper.getText(TextMapper.GUIRS_RESULTS), title, true, sp);
+//        sd.show();
+//    }
 
     private static void refreshApplet(ScoPanel sp) {
     	sp.getSco().getApplet().stop();
@@ -886,9 +897,13 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 
     }
 
-    public static void showScoPreview(Component parent, ScoPanel sp) {
+    static void showScoPreview(Component parent, ScoPanel sp) {
         ScoDialog sd = new ScoDialog(parent, sp.getSco().getScoName(), "", true, sp);
         sd.show();
+    }
+    public static void showScoPreview(JDialog parent, ScoPanel sp) {
+      ScoDialog sd = new ScoDialog(parent, sp.getSco().getScoName(), "", true, sp);
+      sd.show();
     }
 
     /**

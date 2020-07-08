@@ -82,7 +82,6 @@ class AddConfigDwoAdminJPanel extends JPanel implements Comparator<AppletData >{
 				dataField.setText(configuration);
 			}
 		}
-		
 	}
 
 	class PreviewAction extends AbstractAction {

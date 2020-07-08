@@ -2883,7 +2883,9 @@ if (false) {
       } else {
         if (ev.getCnt() >= 2 && attnDialog != null) {
           noAttn();
-          //GuiCreator.instance().logoff();         
+          stop();
+          destroy();
+          System.exit(2);         
         }
       }
       
