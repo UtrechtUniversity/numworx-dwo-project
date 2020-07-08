@@ -90,25 +90,46 @@ public class VectorVak extends FormuleElementWithChildren
 		ctx.setStrokeStyle(color);
 		ctx.setLineWidth(fm.getStrokeWidth());
 		
-		ctx.beginPath();
-
-		// haak ervoor
-		ctx.arc(10, 6, 5, Math.PI, 1.5 * Math.PI, false); // eerste bochtje
-		ctx.moveTo(5, 6);
-		ctx.lineTo(5, height - 6); // 1 lange lijn
-
-		ctx.arc(10, height - 7, 5, Math.PI, Math.PI / 2, true); // laatste bochtje 
+//		ctx.beginPath();
+//
+//		// haak ervoor
+//		ctx.arc(10, 6, 5, Math.PI, 1.5 * Math.PI, false); // eerste bochtje
+//		ctx.moveTo(5, 6);
+//		ctx.lineTo(5, height - 6); // 1 lange lijn
+//
+//		ctx.arc(10, height - 7, 5, Math.PI, Math.PI / 2, true); // laatste bochtje 
+//		
+//		ctx.stroke();
+//		ctx.beginPath();
+//
+//		// haak erna
+//		ctx.arc(width - 7, 6, 5, 0, 1.5 * Math.PI, true); // eerste bochtje
+//		ctx.moveTo(width - 2, 6);
+//		ctx.lineTo(width - 2, height - 6); // 1 lange lijn
+//		ctx.arc(width - 7, height - 7, 5, 0, Math.PI / 2, false); // laatste bochtje 
 		
-		ctx.stroke();
+//		ctx.stroke();
+		
+		int h = 4 * fm.getAscent() / 3;
+		int b = h / 4;
+		int c = fm.getAscent() / 6;
+		int d = fm.getAscent() / 8;
+		
+		float bx = (float)(b*Math.sqrt(2)/(Math.sqrt(2)-1));
+		float by = (float)(b/(Math.sqrt(2)-1));
 		ctx.beginPath();
-
-		// haak erna
-		ctx.arc(width - 7, 6, 5, 0, 1.5 * Math.PI, true); // eerste bochtje
-		ctx.moveTo(width - 2, 6);
-		ctx.lineTo(width - 2, height - 6); // 1 lange lijn
-		ctx.arc(width - 7, height - 7, 5, 0, Math.PI / 2, false); // laatste bochtje 
-
+		ctx.arc(c+bx+3, d+by+2, bx, Math.PI, 5*Math.PI/4, false);
+		ctx.moveTo(c+3, d + by+2);
+		ctx.lineTo(c+3, height-d-by);
+		ctx.arc(c+bx+3, height-d-by, bx, 3*Math.PI/4, Math.PI, false);
+		
+		ctx.arc(width-c-bx, d+by+2, bx, 0, -Math.PI/4, true);
+		ctx.moveTo(width-c, d+2 + by);
+		ctx.lineTo(width-c, height-d-by);
+		ctx.arc(width-c-bx, height-d-by, bx,  0, Math.PI/4,false);
 		ctx.stroke();
+
+		
 	}
 
 	private void maakMaat()

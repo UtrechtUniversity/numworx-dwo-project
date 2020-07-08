@@ -103,20 +103,34 @@ public class DiffVak extends FormuleElementWithChildren
 		int locy = (height-getChild(0).height)/2;
 		
 		if(!diffBreuk)
-		{	ctx.beginPath();
-			ctx.moveTo(locx+c+b, locy+d);
-			ctx.lineTo(locx+c+b-bb, locy+d+bb);
-			ctx.lineTo(locx+c, locy+d+hh-b);
-			ctx.lineTo(locx+c, locy+hoogte-hh+b-d);
-			ctx.lineTo(locx+c+b-bb, locy+hoogte-bb-d);
-			ctx.lineTo(locx+c+b, locy+hoogte-d);
-
-			ctx.moveTo(breedte-b-1-c, locy+d);
-			ctx.lineTo(breedte-b+bb-1-c, locy+d+bb);
-			ctx.lineTo(breedte-1-c, locy+d+hh-b);
-			ctx.lineTo(breedte-1-c, locy+hoogte-hh+b-d);
-			ctx.lineTo(breedte-b+bb-1-c, locy+hoogte-bb-d);
-			ctx.lineTo(breedte-b-1-c, locy+hoogte-d);
+		{	
+//			ctx.beginPath();
+//			ctx.moveTo(locx+c+b, locy+d);
+//			ctx.lineTo(locx+c+b-bb, locy+d+bb);
+//			ctx.lineTo(locx+c, locy+d+hh-b);
+//			ctx.lineTo(locx+c, locy+hoogte-hh+b-d);
+//			ctx.lineTo(locx+c+b-bb, locy+hoogte-bb-d);
+//			ctx.lineTo(locx+c+b, locy+hoogte-d);
+//
+//			ctx.moveTo(breedte-b-1-c, locy+d);
+//			ctx.lineTo(breedte-b+bb-1-c, locy+d+bb);
+//			ctx.lineTo(breedte-1-c, locy+d+hh-b);
+//			ctx.lineTo(breedte-1-c, locy+hoogte-hh+b-d);
+//			ctx.lineTo(breedte-b+bb-1-c, locy+hoogte-bb-d);
+//			ctx.lineTo(breedte-b-1-c, locy+hoogte-d);
+//			ctx.stroke();
+			float bx = (float)(b*Math.sqrt(2)/(Math.sqrt(2)-1));
+			float by = (float)(b/(Math.sqrt(2)-1));
+			ctx.beginPath();
+			ctx.arc(locx+c+bx, locy+d+by+2, bx, Math.PI, 5*Math.PI/4, false);
+			ctx.moveTo(locx+c, locy+d + by+2);
+			ctx.lineTo(locx+c, locy+hoogte-d-by);
+			ctx.arc(locx+c+bx, locy+hoogte-d-by, bx, 3*Math.PI/4, Math.PI, false);
+			
+			ctx.arc(width-c-bx, locy+d+by+2, bx, 0, -Math.PI/4, true);
+			ctx.moveTo(width-c, locy+d + by+2);
+			ctx.lineTo(width-c, locy+hoogte-d-by);
+			ctx.arc(width-c-bx, locy+hoogte-d-by, bx,  0, Math.PI/4,false);
 			ctx.stroke();
 		}
 	}

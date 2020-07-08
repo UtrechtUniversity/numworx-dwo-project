@@ -47,34 +47,62 @@ public class Haakjesvak extends FormuleElementWithChildren
 	}
 
 	protected void build(PathBuilder ctx) {
-		int h = 4 * fm.getAscent() / 3;
-		int hh = h / 2;
-		int b = h / 6;
-		int bb = 2*b / 3;
+		float h = 4 * fm.getAscent() / 3;
+		//int hh = h / 2;
+		float b = h / 4;
+		//int bb = 2*b / 3;
 
 		int c = fm.getAscent() / 6;
 		int d = fm.getAscent() / 8;
 
 		ctx.setStrokeStyle(color);
 		ctx.setLineWidth(fm.getStrokeWidth());
-
-		ctx.beginPath();
-		ctx.moveTo(c+b, d);
-		ctx.lineTo(c+b-bb, d+bb);
-		ctx.lineTo(c, d+hh-b);
-		ctx.lineTo(c, height - hh + b - d);
-		ctx.lineTo(c+b-bb, height-bb-d);
-		ctx.lineTo(c+b, height-d);
-//		ctx.stroke();
-//		
+		
 //		ctx.beginPath();
-		ctx.moveTo(width-b-1-c, d);
-		ctx.lineTo(width-b+bb-1-c, d+bb);
-		ctx.lineTo(width-1-c, d+hh-b);
-		ctx.lineTo(width-1-c, height-hh+b-d);
-		ctx.lineTo(width-b+bb-1-c, height-bb-d);
-		ctx.lineTo(width-b-1-c, height-d);
+//		ctx.arc(c+2*b+1, d+2*b, 2*b, Math.PI, 4*Math.PI/3, false);
+//		ctx.moveTo(c+1, d + b*(float)Math.sqrt(3));
+//		ctx.lineTo(c+1, height-d-b*(float)Math.sqrt(3));
+//		ctx.arc(c+2*b+1, height-d-2*b, 2*b, 2*Math.PI/3, Math.PI, false);
+//		
+//		ctx.arc(width-c-2*b, d+2*b, 2*b, 0, -Math.PI/3, true);
+//		ctx.moveTo(width-c, d + b*(float)Math.sqrt(3));
+//		ctx.lineTo(width-c, height-d-b*(float)Math.sqrt(3));
+//		ctx.arc(width-c-2*b, height-d-2*b, 2*b,  0, Math.PI/3,false);
+//		ctx.stroke();
+		if((float)(2*b/(Math.sqrt(2)-1))+3>height)
+			b = h/6;
+		float bx = (float)(b*Math.sqrt(2)/(Math.sqrt(2)-1));
+		float by = (float)(b/(Math.sqrt(2)-1));
+		ctx.beginPath();
+		ctx.arc(c+bx, d+by+2, bx, Math.PI, 5*Math.PI/4, false);
+		ctx.moveTo(c, d + by+2);
+		ctx.lineTo(c, height-d-by);
+		ctx.arc(c+bx, height-d-by, bx, 3*Math.PI/4, Math.PI, false);
+		
+		ctx.arc(width-c-bx, d+by+2, bx, 0, -Math.PI/4, true);
+		ctx.moveTo(width-c, d + by+2);
+		ctx.lineTo(width-c, height-d-by);
+		ctx.arc(width-c-bx, height-d-by, bx,  0, Math.PI/4,false);
 		ctx.stroke();
+		
+		//oud
+//		ctx.beginPath();
+//		ctx.moveTo(c+b, d);
+//		ctx.lineTo(c+b-bb, d+bb);
+//		ctx.lineTo(c, d+hh-b);
+//		ctx.lineTo(c, height - hh + b - d);
+//		ctx.lineTo(c+b-bb, height-bb-d);
+//		ctx.lineTo(c+b, height-d);
+////		ctx.stroke();
+////		
+////		ctx.beginPath();
+//		ctx.moveTo(width-b-1-c, d);
+//		ctx.lineTo(width-b+bb-1-c, d+bb);
+//		ctx.lineTo(width-1-c, d+hh-b);
+//		ctx.lineTo(width-1-c, height-hh+b-d);
+//		ctx.lineTo(width-b+bb-1-c, height-bb-d);
+//		ctx.lineTo(width-b-1-c, height-d);
+//		ctx.stroke();
 	}
 
 	/* (non-Javadoc)

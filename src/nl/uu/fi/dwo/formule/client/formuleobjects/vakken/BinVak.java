@@ -28,7 +28,7 @@ public class BinVak extends FormuleElementWithChildren
 	protected void build(PathBuilder ctx) {
 		int h =3*fm.getAscent()/2;
 		int hh = h/2;
-		int b = h/6;
+		int b = h/4;
 		int bb = b/2;
 		
 		int c = fm.getAscent()/6;
@@ -37,21 +37,36 @@ public class BinVak extends FormuleElementWithChildren
 		ctx.setStrokeStyle(color);
 //		ctx.setFillStyle(color);
 		
-		ctx.beginPath();
-		ctx.moveTo(c+b, d);
-		ctx.lineTo(c+b-bb, d+bb);
-		ctx.lineTo(c, d+hh-b);
-		ctx.lineTo(c, height - hh + b - d);
-		ctx.lineTo(c+b-bb, height-bb-d);
-		ctx.lineTo(c+b, height-d);
-//		ctx.stroke();
-//		
 //		ctx.beginPath();
-		ctx.moveTo(width-b-1-c, d);
-		ctx.lineTo(width-1-c, d+hh-b);
-		ctx.lineTo(width-1-c, height-hh+b-d);
-		ctx.lineTo(width-b+bb-1-c, height-bb-d);
-		ctx.lineTo(width-b-1-c, height-d);
+//		ctx.moveTo(c+b, d);
+//		ctx.lineTo(c+b-bb, d+bb);
+//		ctx.lineTo(c, d+hh-b);
+//		ctx.lineTo(c, height - hh + b - d);
+//		ctx.lineTo(c+b-bb, height-bb-d);
+//		ctx.lineTo(c+b, height-d);
+////		ctx.stroke();
+////		
+////		ctx.beginPath();
+//		ctx.moveTo(width-b-1-c, d);
+//		ctx.lineTo(width-1-c, d+hh-b);
+//		ctx.lineTo(width-1-c, height-hh+b-d);
+//		ctx.lineTo(width-b+bb-1-c, height-bb-d);
+//		ctx.lineTo(width-b-1-c, height-d);
+//		ctx.stroke();
+		
+		
+		float bx = (float)(b*Math.sqrt(2)/(Math.sqrt(2)-1));
+		float by = (float)(b/(Math.sqrt(2)-1));
+		ctx.beginPath();
+		ctx.arc(c+bx, d+by+2, bx, Math.PI, 5*Math.PI/4, false);
+		ctx.moveTo(c, d + by+2);
+		ctx.lineTo(c, height-d-by);
+		ctx.arc(c+bx, height-d-by, bx, 3*Math.PI/4, Math.PI, false);
+		
+		ctx.arc(width-c-bx, d+by+2, bx, 0, -Math.PI/4, true);
+		ctx.moveTo(width-c, d+2 + by);
+		ctx.lineTo(width-c, height-d-by);
+		ctx.arc(width-c-bx, height-d-by, bx,  0, Math.PI/4,false);
 		ctx.stroke();
 	}
 
