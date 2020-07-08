@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
+import nl.uu.fi.dwo.mobile.client.sco.CorrectieReview;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
@@ -33,6 +34,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
@@ -116,6 +118,7 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
 	private String answer = "";
 	private boolean view = false;
 	private CorrectieFacade correctie;
+	private Widget widget;
 	
 	public CheckValueUnit(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipValueList)
 	{
@@ -335,11 +338,7 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
 	    Vector attempts = new Vector();
 	    int attemptsCount = 0;
 		int errorCount = 0;
-		CorrectieFacade.showReview(h, p -> {
-			basisPanel.add(p);
-			basisPanel.setWidgetBottomHeight(p, 0, Unit.PX, 16, Unit.PX);
-			basisPanel.setWidgetRightWidth(p, 0, Unit.PX, 16, Unit.PX);
-		}, this, scoreMax);
+		CorrectieFacade.showReview(h, asOne(), this, getScoreMax());
       
 	    if(h.get("ingevuld") != null) 
 	    	ingevuld = ((Boolean)h.get("ingevuld")).booleanValue();
@@ -549,7 +548,14 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
 	
 	@Override
 	public Widget asWidget() {
-		return basisPanel;
+		if (widget == null) {
+			widget = CorrectieReview.wrap(basisPanel);
+		}
+		return widget;
+	}
+	
+	private AcceptsOneWidget asOne() {
+		if (widget instanceof AcceptsOneWidget) return (AcceptsOneWidget) widget ; else return null;
 	}
     
     public void kijkNa()

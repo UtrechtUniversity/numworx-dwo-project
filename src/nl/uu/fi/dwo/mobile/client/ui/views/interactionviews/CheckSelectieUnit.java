@@ -424,7 +424,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	    int attemptsCount = 0;
 		int errorCount = 0;
         ObjectMap map = JSONUtilities.wrapMap(h);
-		CorrectieFacade.showReview(h, asOne(), this, scoreMax);
+		CorrectieFacade.showReview(h, asOne(), this, getScoreMax());
 		if(map.containsKey("randomizedPositions")) 
 	    {	ObjectList list = map.getObjectList("randomizedPositions");
 	    	randomizedPositions = new Point[list.size()];
@@ -534,7 +534,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         {
         	kijkNa();
         }
-        correctie = CorrectieFacade.get(h, this, scoreMax, comRoot);
+        correctie = CorrectieFacade.get(h, this, getScoreMax(), comRoot);
 	}
 	
 	public void setAttempt()

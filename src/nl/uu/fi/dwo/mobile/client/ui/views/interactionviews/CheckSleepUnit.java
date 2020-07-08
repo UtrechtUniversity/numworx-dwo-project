@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
+import nl.uu.fi.dwo.mobile.client.sco.CorrectieReview;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
@@ -43,6 +44,7 @@ import com.vaadin.pointerevents.client.PointerEvent;
 
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.touch.client.Point;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
@@ -141,6 +143,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	private boolean verzamelDoel;
 	private DWOLogger dwologger;
 	private CorrectieFacade correctie;
+	private Widget widget;
 	
 	public void randomizePositions()
 	{
@@ -165,7 +168,14 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	
 	@Override
 	public Widget asWidget() {
-		return basisPanel;
+		if (widget == null) {
+			widget = CorrectieReview.wrap(basisPanel);
+		}
+		return widget;
+	}
+	
+	private AcceptsOneWidget asOne() {
+		if (widget instanceof AcceptsOneWidget) return (AcceptsOneWidget) widget ; else return null;
 	}
 	
 	private void setEditable(boolean editable) {
@@ -242,11 +252,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	    Vector attempts = new Vector();
 	    int attemptsCount = 0;
 		int errorCount = 0;
-		CorrectieFacade.showReview(h, p -> {
-			basisPanel.add(p);
-			basisPanel.setWidgetBottomHeight(p, 0, Unit.PX, 16, Unit.PX);
-			basisPanel.setWidgetRightWidth(p, 0, Unit.PX, 16, Unit.PX);
-		}, this, scoreMax);
+		CorrectieFacade.showReview(h, asOne(), this, getScoreMax());
 
 		if(h.get("randomizedPositions") != null) 
 	    {	List<Object> randomizedPositionsList = JSONUtilities.toArrayList(h.get("randomizedPositions"));

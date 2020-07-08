@@ -265,7 +265,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 			@Override
 			public void onFailure(Throwable caught) {
 				Logger.getLogger("ViewModuleActivity").log(Level.SEVERE, "initialize()", caught);
-				Window.alert(caught.getMessage());
+				//Window.alert(caught.getMessage());
 				started = false;
 				History.back();
 				//view.setupModule(sco.getName(), sco.getFile());

@@ -205,7 +205,7 @@ log("setScoID " + scoID);
 					if("readonly".equals(message) && code == Dwo2ExceptionCode.User_IllegalAction) 
 					{
 						setStatus(Status.NORMAL);
-						bus.fireEvent(new DialogEvent(de));
+						bus.fireEvent(new DialogEvent(Dwo2ExceptionCode.Exam_InvalidSession));
 						deferred.fail(caught);
 						return;
 					}
