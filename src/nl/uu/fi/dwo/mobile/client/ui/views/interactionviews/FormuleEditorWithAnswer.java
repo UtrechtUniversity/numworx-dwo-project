@@ -1662,7 +1662,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			boolean enabled = formuleEditorPopup.setFocusEnabled(false); // Geen focus tijdens setState, dus ook niet hier bij wis()
 			try {
 				formuleEditorPopup.wis();
-				formuleEditorPopup.setState(h);
+				formuleEditorPopup.setState0(h);
 			}	finally {
 				formuleEditorPopup.setFocusEnabled(enabled);
 			}
@@ -1722,7 +1722,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		setEditable(editable);
 
-		correctie = CorrectieFacade.get(h, this, getAsPanel(), scoreMax, comRoot);
+		if (correctie == null) // eenmalig
+			correctie = CorrectieFacade.get(h, this, getAsPanel(), scoreMax, comRoot);
 
 	}
 
