@@ -269,7 +269,7 @@ public class ModulesOfSchoolclassPresenter {
 				&& (to != null && classCourse.getNotAfter() != null && classCourse.getNotAfter().after(to))	
 					
 			   ) {
-				throw new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "Date " + toData + " is too early");
+				throw new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateValue, "Date " + toData + " is too early");
 			}
 			
 			
