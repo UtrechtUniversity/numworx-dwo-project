@@ -31,9 +31,11 @@ public enum Dwo2ExceptionCode {
     User_ConfirmSchoolAdminFromSchoolDelete,
     User_ConfirmDeleteMultiUsersFromSchool,
     User_NotAValidDateString,
+    User_NotAValidDateValue,
     User_Q_ForgotPassword,
     Exam_AuthenticationError, //Illegal password exam.
     User_AuthenticationCancelled,
+    Exam_InvalidSession,
 
     //PersistentId errors
     PersistentId_ConversionError,
