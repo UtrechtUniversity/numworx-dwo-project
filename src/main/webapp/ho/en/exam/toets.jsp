@@ -39,7 +39,6 @@
 		}
 	}
 	String dwo_env = System.getProperty("DWO_ENV", "app");
-
 %>
 <html>
   <head>
