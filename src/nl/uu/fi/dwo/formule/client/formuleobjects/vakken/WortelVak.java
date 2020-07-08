@@ -96,10 +96,10 @@ public class WortelVak extends FormuleElementWithChildren
 		x = fm.getAscent()/3; y = height;
 		item = getSVGSVGElement(svg).createSVGPoint(x+this.x, y+this.y);
 		list.appendItem(item);
-		x = 1; y = 2*height/3;
+		x = 0.9f; y = 2*height/3;
 		item = getSVGSVGElement(svg).createSVGPoint(x+this.x, y+this.y);
 		list.appendItem(item);
-		x = fm.getAscent()/3-1; y = height+1;
+		x = fm.getAscent()/3+0.9f; y = height;
 		item = getSVGSVGElement(svg).createSVGPoint(x+this.x, y+this.y);
 		list.appendItem(item);
 		x= 2 * fm.getAscent() / 3 - 1; y =fm.getAscent() / 8 + 1;
