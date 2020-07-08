@@ -3,6 +3,10 @@
 <%@ page import="fi.servlet.lti.DbAccess" %>
 <%@ page import="fi.dwo.server.db.CookieWrap" %>
 <%!
+	private static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
+	private static final String DWO_SAML_ORGANIZATION = "dwoSAMLOrganization";    
+	private static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
+	private static final String DWO_SAML_AUTH_TOKEN = "dwoSAMLAuthToken";
 	private DbAccess instance;
 
 	private DbAccess getDbAccess() {

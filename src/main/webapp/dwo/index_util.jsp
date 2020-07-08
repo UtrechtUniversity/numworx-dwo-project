@@ -3,12 +3,6 @@
 <%@page import="java.util.Base64"%>
 <%@ page import='java.util.regex.*' %>
 <%@ include file="/dwo/saml_util.jsp" %>
-<%!
-private static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
-private static final String DWO_SAML_ORGANIZATION = "dwoSAMLOrganization";    
-private static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
-private static final String DWO_SAML_AUTH_TOKEN = "dwoSAMLAuthToken";
-%>
 <%
 	String query ;	
 	query = "?base=" + base + "&locale=" + locale + "&profile=" + profile;
