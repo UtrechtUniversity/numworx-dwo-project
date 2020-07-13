@@ -4,6 +4,8 @@ package fi.dwo.dwojapplet.gui;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +49,7 @@ class StudentsInSchoolClassTeacherPanelTableModel extends AbstractTableModel {
             data[j][1] = u.getGivenName();
             data[j][2] = u.getInsertion();
             data[j][3] = u.getFamilyName();
-            if (u.getSingleSchool()) {
+            if (u.getSingleSchool() && !DwoHelper.isSamlLogin()) {
                 data[j][4] = loginImage;
                 data[j][5] = editImage;
             } else {
@@ -103,13 +105,18 @@ class StudentsInSchoolClassTeacherPanelTableModel extends AbstractTableModel {
         //no matter where the cell appears onscreen.
         if (col < 4) {
             return false;
-        } else if ((col == 4 || col==5) && ((DomStudent) data[row][7]).getSingleSchool()) {
+        } else if ((col == 4 || col==5) && isSingleSchool(row)) {
             return true;
         } else if (col == 6) {
             return true;
         } else {
             return false;
         }
+    }
+
+    private Boolean isSingleSchool(int row) {
+      if (DwoHelper.isSamlLogin()) return false;
+      return ((DomStudent) data[row][7]).getSingleSchool();
     }
 
 

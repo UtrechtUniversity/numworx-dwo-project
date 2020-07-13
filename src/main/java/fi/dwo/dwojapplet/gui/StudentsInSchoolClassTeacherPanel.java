@@ -198,6 +198,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                     getStudent.setDomStudent(student);
 // Full username in get/update
                     DomSingleSchoolStudent user = prop.getSingleSchoolStudent(getStudent);
+                    if (user.getPassword().isEmpty()) return; // fail safe.
                     String realm = DwoHelper.getCurrentLoginContext().getRealm();
                     DomLoginContext loginContext = SecureUserAccountManager.getLoginContext(user.getUserName(),
                             user.getPassword(), realm);
@@ -406,6 +407,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
 //        addStudentsButton.setEnabled(licenseIsValid(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool()));
         addStudentsButton.setSize(addStudentsButton.getPreferredSize());
         addStudentsButton.addActionListener(this);
+        addStudentsButton.setVisible(!DwoHelper.isSamlLogin());
         Box footer = Box.createHorizontalBox();
         footer.setAlignmentX(Component.RIGHT_ALIGNMENT);
         footer.setMaximumSize(new Dimension(3000, 100));
