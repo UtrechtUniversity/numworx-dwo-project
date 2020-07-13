@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import java.util.logging.Logger;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -17,6 +19,7 @@ public class IdleDetect extends Timer implements NativePreviewHandler {
 	
 	public final static int FAST = 2;      // 10-20 secs
 	public final static int SLOW = 6 * 15; // 15 minutes
+	private static final Logger LOG = Logger.getLogger(IdleDetect.class.getName());
 	
 	final public boolean hasIdle = true;
 	
@@ -83,7 +86,7 @@ public class IdleDetect extends Timer implements NativePreviewHandler {
 			reg = com.google.gwt.user.client.Event.addNativePreviewHandler(this);
 		this.scheduleRepeating(10000); // 10 sec
 	  } else {
-	    GWT.log("no idleDetect");
+	    LOG.info("no idleDetect");
 	  }
 	}
 	
@@ -98,7 +101,7 @@ public class IdleDetect extends Timer implements NativePreviewHandler {
 	
 	public void fire() {
 		IdleEvent event = new IdleEvent(cnt);
-		GWT.log("fire " + event);
+		LOG.info("fire " + event);
 		bus.fireEvent(event);
 	}
 
