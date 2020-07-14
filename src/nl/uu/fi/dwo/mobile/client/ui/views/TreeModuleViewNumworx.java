@@ -53,11 +53,40 @@ import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorContext /*,  Comparator<SelectModuleItem> */{
 
 	static final Logger LOG = Logger.getLogger(TreeModuleViewNumworx.class.getName());
 	
+	private static final class ChildrenFailure implements Failure {
+		private final SelectModuleItem parent;
+
+		private ChildrenFailure(SelectModuleItem parent) {
+			this.parent = parent;
+		}
+
+		@Override
+		public void fail(Promise<?> resolved) throws Exception {
+			Throwable failure = resolved.getFailure();
+			parent.setChildrenAsync(null);
+			if (failure instanceof Dwo2Exception) {
+				Dwo2ExceptionCode code = ((Dwo2Exception) failure).getDwo2Code();
+				switch(code) {
+				case Exam_AuthenticationError:
+				case Exam_InvalidSession: 
+					//parent.setChildren(Collections.emptyList());
+					return; // No message
+				default:
+				}
+			}
+			Window.alert(failure.toString());
+		}
+	}
+
+
+
 	final class ProvideCells implements Success<List<SelectModuleItem>, Void> {
 		@Override
 		public Promise<Void> call(
@@ -411,14 +440,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 						}
 					}	
 					return resolved;
-				}}, new Failure() {
-					
-					@Override
-					public void fail(Promise<?> resolved) throws Exception {
-						Window.alert(resolved.getFailure().toString());
-						parent.setChildrenAsync(null);
-					}
-				});
+				}}, new ChildrenFailure(parent));
 		}
 		return promise;
 	}
@@ -430,14 +452,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 					.map(new SCO_TO_MODULEITEM(parent));
 			parent.setChildrenAsync(promise);
 			promise
-			.then(null, new Failure() {
-					
-					@Override
-					public void fail(Promise<?> resolved) throws Exception {
-						Window.alert(resolved.getFailure().toString());
-						parent.setChildrenAsync(null);
-					}
-				});
+			.then(null, new ChildrenFailure(parent));
 		}
 		return promise;
 	}
@@ -473,7 +488,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				description.setWidget(getLabel(item));
 				if(item.showChildren())
 				{	TreeItem parent = westPanel.inverseMap.get(item);
-					getChildrenPromise(item)
+					getChildrenPromise(item).recover(p -> Collections.emptyList())
 					.then(westPanel.new ProvideTreeItems(parent))
 					.then(new ProvideCells());
 				}	
@@ -494,7 +509,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				centerPanel.setStyleName(style.folderBackground(), !hasImage);
 				if(item.showChildren())
 				{	TreeItem parent = westPanel.inverseMap.get(item);
-					Promise<List<SelectModuleItem>> p = getScosPromise(item);
+					Promise<List<SelectModuleItem>> p = getScosPromise(item).recover(x -> Collections.emptyList());
 					if(!item.isExam())
 						p.then(westPanel.new ProvideTreeItems(parent));
 					p.then(new ProvideCells());

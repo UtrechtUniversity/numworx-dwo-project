@@ -1518,16 +1518,18 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			}
 		} else {
 		   if (memento.isReview())
-		   {
+		   {	HashMap<String,Object> entryState;
 				boolean old = goon;
 				try
 				{
 					goon = false; // breek eindeloze recursie net als boven!
-					states[currentActiviteit][currentOpdracht] = entry.getState();
+					entryState = entry.getState();
+					if(states[currentActiviteit][currentOpdracht] != null) // no switch from null to non-null
+						states[currentActiviteit][currentOpdracht] = entryState;
 				} finally {
 					goon = old;
 				}
-		     memento.mergeIntoReview(currentActiviteit, currentOpdracht, states[currentActiviteit][currentOpdracht]);
+		     memento.mergeIntoReview(currentActiviteit, currentOpdracht, entryState);
 		     memento.setScore(getScore()); // update review
 		   }
 		}
