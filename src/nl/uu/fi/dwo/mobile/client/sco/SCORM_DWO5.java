@@ -202,7 +202,10 @@ log("setScoID " + scoID);
 					Dwo2Exception de = (Dwo2Exception) caught;
 					Dwo2ExceptionCode code = de.getDwo2Code();
 					String message = de.getDwo2Message();
-					if("readonly".equals(message) && code == Dwo2ExceptionCode.User_IllegalAction) 
+					boolean fail = "readonly".equals(message) && code == Dwo2ExceptionCode.User_IllegalAction;
+					fail |= code == Dwo2ExceptionCode.Exam_AuthenticationError;
+					fail |= code == Dwo2ExceptionCode.Exam_InvalidSession;
+					if(fail) 
 					{
 						setStatus(Status.NORMAL);
 						bus.fireEvent(new DialogEvent(Dwo2ExceptionCode.Exam_InvalidSession));
