@@ -140,4 +140,8 @@ public class JsModulesOfSchoolclassView implements ModulesOfSchoolclassPresenter
         JsModulesOfSchoolclassDisplay.setLoadingTableMessageSelected();
     }
 
+    @Override
+    public void setSettings(String id) {
+    	JsModulesOfSchoolclassDisplay.setSettings(id);
+    }
 }

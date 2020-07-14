@@ -67,6 +67,8 @@ public class ModulesOfSchoolclassPresenter {
         void setEmptyTableMessageSelected();
 
         void setLoadingTableMessageSelected();
+
+		void setSettings(String id);
     }
 
     @JsMethod
@@ -262,13 +264,14 @@ public class ModulesOfSchoolclassPresenter {
 			PersistenceId id = classCourse.getId();
     		DomCourse course = object.getCourse();			
 			CourseType type = CourseType.valueOf(typeString);
-			Date from = fromData.isEmpty() ? null : DateTimeFormat.getFormat("yyyy-MM-dd HH:mm").parse(fromData);
-			Date to = toData.isEmpty() ? null : DateTimeFormat.getFormat("yyyy-MM-dd HH:mm").parse(toData);
+			Date from = fromData.isEmpty() ? null : DateTimeFormat.getFormat(Display.LOCAL_TIME).parse(fromData);
+			Date to = toData.isEmpty() ? null : DateTimeFormat.getFormat(Display.LOCAL_TIME).parse(toData);
 
 			if ( (classCourse.getNotBefore() == null || classCourse.getNotBefore().before(new Date()))
 				&& (to != null && classCourse.getNotAfter() != null && classCourse.getNotAfter().after(to))	
 					
 			   ) {
+				view.setSettings(key);
 				throw new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateValue, "Date " + toData + " is too early");
 			}
 			
