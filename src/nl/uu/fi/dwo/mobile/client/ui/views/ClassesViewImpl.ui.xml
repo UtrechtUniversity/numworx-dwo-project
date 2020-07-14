@@ -4,10 +4,14 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:style field='style' src="TreeModuleViewNumworx.css" type='nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworxCss'/>	
 	<ui:with field="rb" type="nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessages" />
+	<ui:with field='trb' type="fi.wiskopdr.text.TextConstants" />
 	<ui:style field='extra'>
 	.cells {
 		margin-left: 20px;
 		width: 30em;
+	}
+	.rechts {
+		margin-right: 290px;
 	}
 	</ui:style>
 	<g:DockLayoutPanel unit='EM' styleName='{style.rootPanel}'>
@@ -19,7 +23,9 @@
 				<g:FlowPanel styleName='{style.itemPanel}'>
 					<g:FlowPanel styleName='{style.titlePanel}'> 
 							<g:HTML styleName='{style.title}' ui:field='title' >TITLE </g:HTML>
-							<g:SimplePanel ui:field='description' ><g:HTML>DESCRIPTION</g:HTML></g:SimplePanel>
+							<g:SimplePanel ui:field='description' ><g:HTML
+								addStyleNames='{style.description} {extra.rechts}'
+							><ui:text from='{trb.classesViewDescription}' /></g:HTML></g:SimplePanel>
 					</g:FlowPanel>
 				</g:FlowPanel>
 				<g:HTML styleName='{style.title}'><ui:text from='{rb.NUM_TBL_SCHOOLCLASSOPTION}' /></g:HTML>

@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 import nl.uu.fi.dwo.mobile.client.ui.views.DocentCorrectie;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.DWOPopupPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PopupButton;
+import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 public class CorrectieFacade {
     private static CorrectieFacade instance = GWT.create(CorrectieFacade.class);
@@ -119,6 +120,7 @@ public class CorrectieFacade {
     			DWOPopupPanel panel = new DWOPopupPanel(Text.constants.docentCorrectieTitle(), PopupButton.NOVIEW_LISTENER);
     			panel.addContent(correctie);
     			panel.showRelativeTo(pb);
+    			PopupFacade.addPopup(panel::hide);
     		});
     		p.setWidget(pb);
     	}

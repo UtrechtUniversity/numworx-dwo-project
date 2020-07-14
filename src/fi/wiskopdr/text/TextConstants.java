@@ -211,5 +211,7 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	@DefaultStringValue("Uitwerking")
 	String popupUitwerkingTitel();
 	
+	String classesViewDescription();
+	
 // enzovoort
 }

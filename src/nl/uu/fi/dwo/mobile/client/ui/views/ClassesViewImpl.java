@@ -117,7 +117,7 @@ public class ClassesViewImpl extends Composite  implements AnchorContext {
 		initWidget(uiBinder.createAndBindUi(this));
 		SelectModuleItem item = SelectModuleItem.ROOT;
 		title.setText(item.getName());
-		description.setWidget(getLabel(item));
+		//description.setWidget(getLabel(item));
 	}
 
 	@UiField(provided=true) CellList<DomSchoolClass> cells; 
