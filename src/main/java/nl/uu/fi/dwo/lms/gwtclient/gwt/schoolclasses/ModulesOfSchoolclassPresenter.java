@@ -267,9 +267,11 @@ public class ModulesOfSchoolclassPresenter {
 			Date from = fromData.isEmpty() ? null : DateTimeFormat.getFormat(Display.LOCAL_TIME).parse(fromData);
 			Date to = toData.isEmpty() ? null : DateTimeFormat.getFormat(Display.LOCAL_TIME).parse(toData);
 
-			if ( (classCourse.getNotBefore() == null || classCourse.getNotBefore().before(new Date()))
+			Date now = new Date();
+			if ( type == CourseType.assesment && classCourse.getCourseType() == CourseType.assesment &&					
+				(classCourse.getNotBefore() == null || classCourse.getNotBefore().before(now))
 				&& (to != null && classCourse.getNotAfter() != null && classCourse.getNotAfter().after(to))	
-					
+				&& classCourse.getNotAfter().after(now)
 			   ) {
 				view.setSettings(key);
 				throw new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateValue, "Date " + toData + " is too early");
