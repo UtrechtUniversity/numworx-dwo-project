@@ -11,4 +11,7 @@ public interface TemplateBasicCss extends TemplateCss {
 	@Override
 	String answerboxFEWS();
 	
+	@Override
+	String answerboxCombo();
+	
 }

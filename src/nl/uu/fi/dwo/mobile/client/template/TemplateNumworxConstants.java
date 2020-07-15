@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.template;
 
+import java.awt.Font;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,6 +9,11 @@ public class TemplateNumworxConstants implements TemplateConstants {
 	HashMap<String,Object> MapAnswerboxFEWA = new HashMap<String,Object>();
 	
 	HashMap<String,Object> MapAnswerboxFEWS = new HashMap<String,Object>();
+	
+	HashMap<String,Object> MapAnswerboxCombo = new HashMap<String,Object>();
+	
+	HashMap<String,Object> MapCheckButton = new HashMap<String,Object>();
+	
 	
 	public TemplateNumworxConstants() {
 		//answerboxFEWA
@@ -45,6 +51,31 @@ public class TemplateNumworxConstants implements TemplateConstants {
 		MapAnswerboxFEWS.put("padding-right", new Integer(0));
 		MapAnswerboxFEWS.put("padding-top", new Integer(0));
 		MapAnswerboxFEWS.put("padding-bottom", new Integer(0));
+		
+		//answerboxCombo
+		MapAnswerboxCombo.put("background-color", "#FFFFFF");
+		
+		MapAnswerboxCombo.put("border-style", "solid");
+		MapAnswerboxCombo.put("border-color", "#2673B6");
+		MapAnswerboxCombo.put("border-width", new Integer(2));
+		MapAnswerboxCombo.put("border-radius", new Integer(3));
+		
+		MapAnswerboxCombo.put("margin-left", new Integer(0));
+		MapAnswerboxCombo.put("margin-right", new Integer(0));
+		MapAnswerboxCombo.put("margin-top", new Integer(0));
+		MapAnswerboxCombo.put("margin-bottom", new Integer(2));
+		
+		MapAnswerboxCombo.put("padding-left", new Integer(3));
+		MapAnswerboxCombo.put("padding-right", new Integer(3));
+		MapAnswerboxCombo.put("padding-top", new Integer(1));
+		MapAnswerboxCombo.put("padding-bottom", new Integer(2));
+		
+		//checkButton
+		MapCheckButton.put("background-color", "#2673B6");
+		MapCheckButton.put("border-color", "#2673B6");
+		MapCheckButton.put("foreground-color", "#FFFFFF");
+		
+				
 	}
 	
 	public Object answerboxFEWA(String constantName) {
@@ -53,6 +84,14 @@ public class TemplateNumworxConstants implements TemplateConstants {
 	
 	public Object answerboxFEWS(String constantName) {
 		return MapAnswerboxFEWS.get(constantName);
+	}
+	
+	public Object answerboxCombo(String constantName) {
+		return MapAnswerboxCombo.get(constantName);
+	}
+	
+	public Object checkButton(String constantName) {
+		return MapCheckButton.get(constantName);
 	}
 
 }

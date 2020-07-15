@@ -11,4 +11,7 @@ public interface TemplateUUTestCss extends TemplateCss {
 	@Override
 	String answerboxFEWS();
 	
+	@Override
+	String answerboxCombo();
+	
 }

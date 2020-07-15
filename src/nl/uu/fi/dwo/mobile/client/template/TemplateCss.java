@@ -9,4 +9,6 @@ public interface TemplateCss extends CssResource {
 	
 	String answerboxFEWS();
 	
+	String answerboxCombo();
+	
 }

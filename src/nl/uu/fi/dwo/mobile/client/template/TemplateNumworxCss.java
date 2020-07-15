@@ -11,4 +11,7 @@ public interface TemplateNumworxCss extends TemplateCss {
 	@Override
 	String answerboxFEWS();
 	
+	@Override
+	String answerboxCombo();
+	
 }
