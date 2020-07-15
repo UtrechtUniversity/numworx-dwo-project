@@ -47,8 +47,8 @@ public class DocentCorrectie extends Composite {
 			content.setFontName(XMLView.getDefaultFontName());
 			content.setColor(CssColor.make("rgb(49,71,112)"));
 			content.clear();
-			content.setSize(100, 34);
-			content.setPasHoogteBreedteAan(true, true);
+			content.setSize(300, 34);
+			content.setPasHoogteBreedteAan(true, false);
 			content.setObjects(feedbackList);
 			content.resize();
 		}

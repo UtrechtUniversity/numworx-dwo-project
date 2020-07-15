@@ -31,6 +31,8 @@
 		margin-left: 8px;
 		margin-top: 0.4em;
 		padding-bottom: 1em;
+		max-width: 300px;
+		max-height: 150px;
 	}
 	
 	</ui:style>
@@ -39,6 +41,7 @@
 		<g:Label addStyleNames="{style.score}" ui:field='score'><ui:text from='{rb.score}' /></g:Label>
 		<g:Label addStyleNames="{style.correctie}" ui:field='correctie'><ui:text from='{rb.toevoeging}' /></g:Label>
 		<g:Label addStyleNames="{style.opmerking}" ui:field='opmerking'><ui:text from='{rb.opmerkingenDocent}' /></g:Label>
-		<u:TekstVak addStyleNames="{style.content}" ui:field='content' />
+		<g:ScrollPanel addStyleNames="{style.content}">
+		<u:TekstVak  ui:field='content' /></g:ScrollPanel>
 	</g:FlowPanel>
 </ui:UiBinder> 
