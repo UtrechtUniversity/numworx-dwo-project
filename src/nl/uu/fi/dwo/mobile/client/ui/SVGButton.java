@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import org.vectomatic.dom.svg.OMSVGCircleElement;
@@ -39,6 +40,7 @@ import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -62,8 +64,9 @@ public class SVGButton extends SimplePanel {
 	protected OMSVGRectElement borderActive;
 	protected boolean fromResource;
 	protected boolean handlersAdded;
+	protected Image image;
 
-	protected ButtonListener listener = new DefaultButtonListener();
+	//protected ButtonListener listener = new DefaultButtonListener();
 
 	private HandlerRegistration mouseMoveHandler, mouseUpHandler, mouseDownHandler, mouseOverHandler, mouseOutHandler;
 	private HandlerRegistration touchMoveHandler, touchEndHandler, touchStartHandler;
@@ -76,7 +79,8 @@ public class SVGButton extends SimplePanel {
 	protected CssColor defaultForegroundColorActive = CssColor.make(38,115,182);
 	protected CssColor defaultTextColor = CssColor.make(49,71,112);
 	
-
+	protected ArrayList<ButtonListener> listeners = new ArrayList<ButtonListener>();
+	
 	protected Tooltip tooltip;
 	
 	public SVGButton(SVGResource resource) {
@@ -94,6 +98,15 @@ public class SVGButton extends SimplePanel {
 		//tooltip = new Tooltip(this, 10, 35, "", 5000, "");
 	}
 	
+	public SVGButton(Image image) {
+		this.setWidth(width + "px");
+		this.setHeight(height + "px");
+		this.add(image);
+ 		this.image = image;
+ 		addHandlers();
+		//tooltip = new Tooltip(this, 10, 35, "", 5000, "");
+	}
+	
 	public SVGButton(String text) {
 		this.text = text;
 		this.setWidth(width + "px");
@@ -104,6 +117,7 @@ public class SVGButton extends SimplePanel {
 		svgImage.setPixelSize(width, height);
 		this.add(svgImage);
 		draw();
+		logger.info("SVG-element: "+svg.getElement().getInnerHTML());
 		
 		addHandlers();
 		//tooltip = new Tooltip(this, 10, 35, "", 5000, "");
@@ -145,6 +159,8 @@ public class SVGButton extends SimplePanel {
 	}
 	
 	protected void setBorderActive(boolean b) {
+		if(image!=null)
+			return;
 		if(b) {
 			float e = (float)width/24;
 			borderActive = doc.createSVGRectElement(e, e, width - 2 * e, height - 2 * e, 2 * e, 2 * e);
@@ -160,6 +176,8 @@ public class SVGButton extends SimplePanel {
 	}
 	
 	public void setText(String text) {
+		if(image!=null)
+			return;
 		this.text = text;
 		this.remove(svgImage);
 		svg = doc.createSVGSVGElement();
@@ -171,7 +189,9 @@ public class SVGButton extends SimplePanel {
 			addHandlers();
 	}
 
-
+	public OMSVGSVGElement getSVG() {
+		return svg;
+	}
 	
 	public String getText() {
 		return text;
@@ -187,6 +207,8 @@ public class SVGButton extends SimplePanel {
 		// svgImage.setPixelSize(width, height);
 		this.width = width;
 		this.height = height;
+		if(image!=null)
+			return;
 		if(fromResource) {
 			svgImage.setPixelSize(width, height);
 			return;
@@ -236,7 +258,8 @@ public class SVGButton extends SimplePanel {
 
 		@Override
 		public void onMouseDown(MouseDownEvent event) {
-			listener.onClick(SVGButton.this);
+			callOnClick();
+			event.stopPropagation();
 		}
 
 		@Override
@@ -285,7 +308,7 @@ public class SVGButton extends SimplePanel {
 			// event.preventDefault();
 			removeMouseTouchHandlers();
 			logger.info("pointerDown");
-			listener.onClick(SVGButton.this);
+			callOnClick();
 			event.stopPropagation();
 		}
 	}
@@ -306,13 +329,25 @@ public class SVGButton extends SimplePanel {
 		@Override
 		public void onTouchStart(TouchStartEvent event) {
 			event.preventDefault();
-			listener.onClick(SVGButton.this);
+			callOnClick();
 			event.stopPropagation();
 		}
 	}
 
-	public void addButtonListener(ButtonListener listener) {
-		this.listener = listener;
+	public ButtonListener addButtonListener(ButtonListener listener) {
+		this.listeners.add(listener);
+		return listener;
+	}
+	
+	public void removeButtonListener(ButtonListener listener) {
+		this.listeners.remove(listener);
+	}
+	
+	private void callOnClick() {
+		for(int i = 0 ; i<listeners.size() ; i++) {
+			listeners.get(i).onClick(SVGButton.this);
+		}
+		
 	}
 
 	public interface ButtonListener {

@@ -33,8 +33,8 @@ public interface DWOplayerClientBundle extends ClientBundle {
 	@Source("nl/uu/fi/dwo/mobile/client/resources/pijldown.gif")
 	ImageResource pijldown();
 	
-	@Source("nl/uu/fi/dwo/mobile/client/resources/colorpalette-active.svg")
-	SVGResource test();
+	@Source("nl/uu/fi/dwo/mobile/client/resources/uitwerkingknop.svg")
+	SVGResource uitwerkingsknop();
 	
 	@Source("nl/uu/fi/dwo/mobile/client/resources/abcknop.png")
 	ImageResource abcknop();

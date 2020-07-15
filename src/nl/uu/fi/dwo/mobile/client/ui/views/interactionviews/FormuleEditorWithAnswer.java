@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.osgi.util.promise.Promise;
-import org.vectomatic.dom.svg.ui.SVGImage;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
@@ -32,6 +31,7 @@ import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.template.TemplateCss;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.ResizableContentIF;
+import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselEditor;
@@ -53,6 +53,7 @@ import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -469,6 +470,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 						hh.put("interactiePanelLaunchState", launchState);
 						
 						formuleEditorPopup = new FormuleEditorPopup(hh,isVergelijkingVak,this.avChecker);
+						formuleEditorPopup.removeBorder();
 					}
 				}
 				if(launchState.containsKey("hasFeedback"))
@@ -1880,13 +1882,15 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 // van constructor naar hier....
 		if( vakUitwerking )
 		{
-			PopupButton popup = new PopupButton(formuleEditorPopup, ImageUtils.newImage("images/resources/popup_voor_uitw_icoon.png"), this, this);
-			
-//			Image image = new Image(DWOplayer.DWO_BUNDLE.test().getSafeUri());
-//			image.setPixelSize(32, 39);
-//			PopupButton popup = new PopupButton(formuleEditorPopup, image, this, this);
+			//PopupButton popup = new PopupButton(formuleEditorPopup, ImageUtils.newImage("images/resources/popup_voor_uitw_icoon.png"), this, this);
+			Image image = new Image(DWOplayer.DWO_BUNDLE.uitwerkingsknop().getSafeUri());
+			image.setPixelSize(18, 18);
+			PopupButton popup = new PopupButton(formuleEditorPopup, image, this, this);
 			PopupFacade.addPopup(popup);
 			popupBtn = popup;
+			popup.setPixelSize(18, 18);
+			popup.getElement().getStyle().setMargin(1, Unit.PX);
+			
 			Style popupstyle = popup.getElement().getStyle();
 			popupstyle.setDisplay(Display.INLINE_BLOCK);
 			popupstyle.setVerticalAlign(VerticalAlign.TOP);
@@ -1897,6 +1901,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			{	parentRegel.resize();
 			}
 			sp.add(popup);
+			
 			//extraWidth += 20; // width of popup button
 		}
 

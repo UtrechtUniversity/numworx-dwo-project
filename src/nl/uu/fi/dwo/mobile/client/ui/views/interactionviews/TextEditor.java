@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import org.osgi.util.promise.Promise;
 
+import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
@@ -200,7 +201,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		{
 			menuheight = 30;
 			menubar.setPixelSize(width-boxsize, menuheight);
-			menubar.getElement().getStyle().setBackgroundColor("transparent");
+			menubar.getElement().getStyle().setBackgroundColor("transparent");//CssColor.make(229,240,249).toString());
 			hbox.add(menubar);
 		}
 		

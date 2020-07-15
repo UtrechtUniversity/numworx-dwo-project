@@ -409,8 +409,9 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 		this.listener = popupListener == null ? 
 				(view == null ? NOVIEW_LISTENER : new DefaultListener()) 
 			  : popupListener;
-		if(img == null)
+		if(img == null) {
 			img = new Image(DWOplayer.PARAMETERS.getResource("images/resources/tekstknop.gif"));
+		}
 		btn = new PushButton(img);
 		btn.getElement().getStyle().setPadding(0, Style.Unit.PX);
 		btn.getElement().getStyle().setBorderStyle(BorderStyle.NONE);

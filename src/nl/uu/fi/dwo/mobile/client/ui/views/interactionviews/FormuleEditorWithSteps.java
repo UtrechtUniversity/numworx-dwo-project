@@ -702,6 +702,11 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		return editor;
 	}
 	
+	public void removeBorder( ) {
+		mainPanel.getElement().getStyle().setBorderWidth(0,Unit.PX);
+		borderWidth = 1;
+	}
+	
 	public void lastStep(String useranswer, boolean show, boolean setState)
 	{
 		LayoutPanel current = stepPanels.get(stepPanels.size() - 1);
