@@ -903,6 +903,9 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     }
     public static void showScoPreview(JDialog parent, ScoPanel sp) {
       ScoDialog sd = new ScoDialog(parent, sp.getSco().getScoName(), "", true, sp);
+      sd.pack();
+      Dimension size = sd.getToolkit().getScreenSize();
+      sd.setLocation((size.width-sd.getWidth())/2, (size.height-sd.getHeight())/2);
       sd.show();
     }
 
