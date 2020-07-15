@@ -18,10 +18,12 @@ import org.osgi.util.function.Function;
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import nl.numworx.gwtpatch.client.GWTPatch;
 import nl.numworx.gwtpatch.client.JSONBuilder;
+import nl.uu.fi.dwo.mobile.client.ui.ConfirmEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
@@ -38,6 +40,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.web.bindery.event.shared.EventBus;
 
+import dagger.Lazy;
 import fi.dwo.gwt.lib.rest.CallManagers.Digest;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentScoDataManager;
 import fi.dwo.gwt.lib.rest.CallManagers.StudentScoDataManager;
@@ -48,6 +51,7 @@ public class SCORM_DWO5 extends SCORM_guest {
 
     public static final String SUSPEND_DIGEST = "cmi.suspend_digest";
     Digest digest;
+	private Lazy<ConfirmEventHandler> confirmHandler;
   
 // DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole();
 // DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB
@@ -57,7 +61,9 @@ public class SCORM_DWO5 extends SCORM_guest {
                     DomHasRole hr, 
                     TrafficAgent barrier, 
                     @Named("secure") boolean secure, 
-                    EventBus bus) {
+                    EventBus bus,
+                    Lazy<ConfirmEventHandler> confirmHandler
+		  	) {
 		pending = false;
 		schoolClassID = dsci;
 		context = new DomContext();
@@ -66,6 +72,7 @@ public class SCORM_DWO5 extends SCORM_guest {
 		this.barrier = barrier;
 		this.bus = bus;
 		digest = new Digest();
+		this.confirmHandler = confirmHandler;
 	}
 
 	enum Status { NORMAL, DIRTY, BUSY, RETRY };
@@ -151,6 +158,10 @@ log("setScoID " + scoID);
 	
 	String lastSuspendData, lastETag;
 	
+	Promise<Boolean> confirm(String message) {
+		return confirmHandler.get().confirm(message);
+	}
+	
 	
 	class Committer implements Failure, Success<String,Void> {
 
@@ -189,14 +200,17 @@ log("setScoID " + scoID);
 				log("Failed response = " + f.getResponse().getHeadersAsString());
 				log("mean time =" + meanTime());
 // FIXME betere foutmelding, message voor cancel?
-				if(cnt > MAX_CNT && !Window.confirm(
+				if(cnt > MAX_CNT) {
+					Promise<Boolean> ok = 
+					confirm(
 						(code == 0 ? Text.constants.noInternet() : Text.constants.serverError() ) +
 						"\nCode " + code + " " + f.getResponse().getStatusText()  + "\n"
-						+ Text.constants.opnieuwKnopLabel() +"?"))
-				{
-					deferred.fail(caught);
-					return;
-				}
+						+ Text.constants.opnieuwKnopLabel() +"?");
+					ok.then(p -> {
+						if (!p.getValue()) deferred.fail(caught);
+						else backoffRetry();
+						return p;});
+				} return;
 			} else {
 				if(caught instanceof Dwo2Exception ) {
 					Dwo2Exception de = (Dwo2Exception) caught;
@@ -214,12 +228,19 @@ log("setScoID " + scoID);
 					}
 				}
 				log("Failed exception: " + caught);
-				if (!Window.confirm(caught.getLocalizedMessage() + "\n" + Text.constants.opnieuwKnopLabel() +"?"))
+				confirm(caught.getLocalizedMessage() + "\n" + Text.constants.opnieuwKnopLabel() +"?")
+				.then(p ->
 				{
-					deferred.fail(caught);
-					return;
-				}
+					if (p.getValue()) backoffRetry();
+					else deferred.fail(caught);
+					return p;
+				}); return;
 			}
+			//backoffRetry();
+			
+		}
+
+		private void backoffRetry() {
 			setStatus(Status.RETRY);
 			retry+=retry/2;//exponential delay
 			Timer backoff = new Timer() {
@@ -231,7 +252,6 @@ log("setScoID " + scoID);
 				}
 			};
 			backoff.schedule(Math.max(1, (int) (retry*Math.random())));
-			
 		}
 
 		@Override

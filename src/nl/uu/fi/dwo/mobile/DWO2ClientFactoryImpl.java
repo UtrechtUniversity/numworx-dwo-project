@@ -13,6 +13,7 @@ import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.web.bindery.event.shared.EventBus;
 
+import dagger.Lazy;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
@@ -20,6 +21,7 @@ import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO4;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO5;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
+import nl.uu.fi.dwo.mobile.client.ui.ConfirmEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
@@ -40,6 +42,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
   
         @Inject TrafficAgent agent;
         @Inject PlaceHistoryHandler placeHistoryHandler;
+		@Inject Lazy<ConfirmEventHandler> confirmHandler;
 
 		@Inject DWO2ClientFactoryImpl(EventBus bus, PlaceController controller,
             Provider<PlaceHistoryMapper> mapper,
@@ -113,9 +116,15 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 						DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole(),
 						agent,
 						secure,
-						getEventBus());
+						getEventBus(),
+						getConfirmHandler());
 			}
 			return api;
+		}
+
+		private Lazy<ConfirmEventHandler> getConfirmHandler() {
+			
+			return confirmHandler;
 		}
 
 		@Override
