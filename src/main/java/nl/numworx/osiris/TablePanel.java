@@ -46,14 +46,12 @@ public class TablePanel extends JPanel implements Iterable<CSVRecord> {
 
   public static class Model extends AbstractTableModel {
 
-		final CSVParser parser;
 		final List<CSVRecord> records;
 		final List<String> headers;
 		
 
-		public Model(CSVParser parser) throws IOException {
-			this.parser = parser;
-			this.records = parser.getRecords();
+		public Model(CSVParser parser, List<CSVRecord> records) throws IOException {
+			this.records = records;
 			this.headers = parser.getHeaderNames();
 		}
 
@@ -152,7 +150,7 @@ public class TablePanel extends JPanel implements Iterable<CSVRecord> {
 				Excel excel = new Excel();
 				CSVParser parser = excel.parse(in);
 				charset = excel.charset;
-				Model m = new Model(parser);
+				Model m = new Model(parser, excel.records);
                 in.close();
                 if  (verify(m)) {
                   table.setModel(model = m);

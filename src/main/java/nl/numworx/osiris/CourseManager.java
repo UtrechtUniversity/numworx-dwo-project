@@ -1,5 +1,8 @@
 package nl.numworx.osiris;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,6 +12,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.csv.CSVRecord;
 
+import fi.dwo.commons.persistence.entities.PersistentCourse;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherCourseManager;
@@ -37,6 +41,7 @@ public class CourseManager {
 	DomSchool school;
 	DomACL schoolright;
 	private Map<String, DomSchoolClassFull> groepen;
+	protected String templateDescription;
 	
 	public CourseManager(String name, DomSchool school, Map<String, DomSchoolClassFull> groepen) throws Dwo2Exception {
 		
@@ -49,8 +54,36 @@ public class CourseManager {
 		schoolright = new DomACL();
 		schoolright.setAccess(ACL.READ);
 		schoolright.setEntity(school.getId());
+		initTemplate0();
+		
 	}
 	
+	public void initTemplate0() {
+		try {
+			templateDescription = "";
+			InputStream in = getClass().getResourceAsStream("/description.templ");
+			ByteArrayOutputStream out = new ByteArrayOutputStream(in.available());
+			byte[] buffer = new byte[4096];
+			int len;
+			while ( (len = in.read(buffer)) >= 0) {
+				out.write(buffer, 0, len);
+			}
+			templateDescription = out.toString("UTF-8"); // Latin-1
+			in.close();
+			out.close();
+		} catch (IOException e) {
+		}
+	}
+	
+	public void initTemplate() throws Dwo2Exception {
+		Long id = Long.getLong("UU_DESCRIPTION_TEMPLATE",168946L);
+		DomCourse course = new DomCourse(PersistentCourse.buildPersistenceId(id));
+		DomCourseStudent full = getter.getCourse(course, profile);
+		templateDescription = full.getDescription();
+	}
+	
+	
+
 	Collection<String> names(Collection<? extends DomCourse> list) {
 		return list.stream().map(DomCourse::getName).collect(Collectors.toSet());
 	}
@@ -116,7 +149,7 @@ public class CourseManager {
 		toets = trunk40(toets);
 		courses = getChildren(root);
 		if ( ! names(courses).contains(toets) ) {
-			DomCourseStudent c = createMap(root, toets, Boolean.FALSE, record.get(Col.OMSCHRIJVING));
+			DomCourseStudent c = createMap(root, toets, Boolean.FALSE, templateDescription);
 			courses.add(c);
 			return true;
 		} else {

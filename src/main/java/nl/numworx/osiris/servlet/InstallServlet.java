@@ -258,6 +258,7 @@ public class InstallServlet extends HttpServlet {
 		      message += teachers + " teacher(s)\n";
 
 		      CourseManager man = new CourseManager(profile, numworx.getSchool(), groepen);
+		      man.initTemplate();
 			  for (CSVRecord record: toetsen) {
 				if (man.createToets(record))
 				  toetsSize ++;

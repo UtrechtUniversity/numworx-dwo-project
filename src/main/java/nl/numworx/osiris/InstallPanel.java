@@ -130,6 +130,7 @@ public class InstallPanel extends JPanel {
 		      numworx.addTeachers(leerkrachten, members, groepen);
 
 		      CourseManager man = new CourseManager(profile, numworx.getSchool(), groepen);
+		      man.initTemplate();
 			  for (CSVRecord record: main.toets) {
 				if (man.createToets(record))
 				  toets ++;
