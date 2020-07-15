@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.osgi.util.promise.Promise;
 
@@ -18,6 +19,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.DWOPopupPanel;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade.PopupListener;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
+@Singleton // maar 1 op de bus.
 public class ConfirmEventHandler implements ConfirmDialogEventHandler {
 
 	private Lazy<ConfirmView> view;
