@@ -82,6 +82,10 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 	HashMap<String,Number> randomVarWaarden = null;
 	OpdrNavIF comRoot;
 	
+	private int borderWidth = (Integer)DWOplayer.templateConstants.answerboxCombo("border-width");
+	private String borderColor = (String)DWOplayer.templateConstants.answerboxCombo("border-color");
+	private int borderRadius = (Integer)DWOplayer.templateConstants.answerboxCombo("border-radius");
+	
 	private LayoutPanel basisPanel;
 	int breedte = 110;
 	int hoogte = 24; 
@@ -248,10 +252,10 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		attempts = new Vector();
 		
 		basisPanel = new LayoutPanel();
-		basisPanel.setStylePrimaryName("antwoordkeuzevak");
+		//basisPanel.setStylePrimaryName("antwoordkeuzevak");
 		
-		ashoogte = hoogte / 2 + 7;
-		basisPanel.setPixelSize(breedte,  hoogte);
+		ashoogte = hoogte / 2 + 5+borderWidth;
+		basisPanel.setPixelSize(breedte,  hoogte+borderWidth);
 		popupBox = new PopupPanel(true);
 		popupPanel = new LayoutPanel();
 		popupBox.add(popupPanel);
@@ -261,11 +265,15 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		popupBox.getElement().getStyle().setPadding(0, Style.Unit.PX);
 		
 		huidigeKeuzeVak = maakKeuzeVak();
+		huidigeKeuzeVak.setStyleName(DWOplayer.templateCss().answerboxCombo());
 		huidigeKeuzeVak.getElement().getStyle().setBackgroundColor(CssColor.make(255, 255, 255).toString());
-		huidigeKeuzeVak.getElement().getStyle().setBorderColor(CssColor.make(150, 150, 150).toString());
-		huidigeKeuzeVak.getElement().getStyle().setBorderWidth(1, Style.Unit.PX);
-		huidigeKeuzeVak.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
-		huidigeKeuzeVak.setPixelSize(breedte - 22, hoogte - 2);
+//		huidigeKeuzeVak.getElement().getStyle().setBorderColor(CssColor.make(150, 150, 150).toString());
+//		huidigeKeuzeVak.getElement().getStyle().setBorderWidth(1, Style.Unit.PX);
+//		huidigeKeuzeVak.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+		huidigeKeuzeVak.setMarges(0,5);
+		//huidigeKeuzeVak.setCentering(false, true);
+		
+		huidigeKeuzeVak.setPixelSize(breedte - 42, hoogte-borderWidth);
 		basisPanel.add(huidigeKeuzeVak);
 		basisPanel.setWidgetLeftRight(huidigeKeuzeVak, 0, Style.Unit.PX, 20, Style.Unit.PX);
 		basisPanel.setWidgetTopBottom(huidigeKeuzeVak, 0, Style.Unit.PX, 0, Style.Unit.PX);
@@ -536,26 +544,26 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 				float w = width;
 				float h = height;
 				float e = w / 24;
-				OMSVGRectElement rect = doc.createSVGRectElement(e/2, e/2, width - e, height - e, 0 * e, 0 * e);
-				rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, CssColor.make(221,223,225).toString());
-				rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, SVGConstants.CSS_GRAY_VALUE);
-				rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + e);
+				OMSVGRectElement rect = doc.createSVGRectElement(e/2, e/2, width - e, height - e, borderRadius*2*e, borderRadius*2*e);
+				rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, borderColor);
+				rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, borderColor);
+				rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + 2*borderWidth*e);
 				svg.appendChild(rect);
 				
 				OMSVGPathElement pijlDown = doc.createSVGPathElement();
 				OMSVGPathSegList segsPijlDown = pijlDown.getPathSegList();
-				segsPijlDown.appendItem(pijlDown.createSVGPathSegMovetoAbs(8*e, 11*e));
-				segsPijlDown.appendItem(pijlDown.createSVGPathSegLinetoAbs(16*e, 11*e));
-				segsPijlDown.appendItem(pijlDown.createSVGPathSegLinetoAbs(12*e, 15*e));
-				segsPijlDown.appendItem(pijlDown.createSVGPathSegLinetoAbs(8*e, 11*e));
-				segsPijlDown.appendItem(pijlDown.createSVGPathSegLinetoAbs(16*e, 11*e));
-				pijlDown.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, SVGConstants.CSS_GRAY_VALUE);
-				pijlDown.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, SVGConstants.CSS_GRAY_VALUE);
+				segsPijlDown.appendItem(pijlDown.createSVGPathSegMovetoAbs(8*e, h/2-1*e));
+				segsPijlDown.appendItem(pijlDown.createSVGPathSegLinetoAbs(16*e, h/2-1*e));
+				segsPijlDown.appendItem(pijlDown.createSVGPathSegLinetoAbs(12*e, h/2+3*e));
+				segsPijlDown.appendItem(pijlDown.createSVGPathSegLinetoAbs(8*e, h/2-1*e));
+				segsPijlDown.appendItem(pijlDown.createSVGPathSegLinetoAbs(16*e, h/2-1*e));
+				pijlDown.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, "white");
+				pijlDown.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "white");
 				svg.appendChild(pijlDown);
 			}
 			protected void setBorderActive(boolean b) {}
 		};
-		uitklapPijlKnop.setSize(20, hoogte);
+		uitklapPijlKnop.setSize(20, hoogte+borderWidth);
 		
 		basisPanel.add(uitklapPijlKnop);
 		basisPanel.setWidgetRightWidth(uitklapPijlKnop, 20, Style.Unit.PX, 20, Style.Unit.PX);
@@ -1326,7 +1334,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 
 	@Override
 	public int getHeight() {
-		return hoogte;
+		return hoogte+borderWidth;
 	}
 
 	@Override
