@@ -128,6 +128,8 @@ public class DbAccess {
       Cookie user = new Cookie(DWO_SAML_USER_ID, s(lti_id));
       user.setPath(path);
       user.setSecure(request.isSecure());
+      user.setHttpOnly(true);
+      user.setMaxAge(30);
       String orgidStr = "saml:" + schoolid;
       Cookie orgid = new Cookie(DWO_SAML_ORGANIZATION_ID, orgidStr);
       orgid.setPath(path);
@@ -136,9 +138,9 @@ public class DbAccess {
       Cookie org = new Cookie(DWO_SAML_ORGANIZATION, u(organization));
       org.setPath(path);
       org.setSecure(request.isSecure());
-      response.addCookie(user);
-      response.addCookie(orgid);
-      response.addCookie(org);
+      response.addCookie(user); request.setAttribute(DWO_SAML_USER_ID, lti_id);
+      response.addCookie(orgid);request.setAttribute(DWO_SAML_ORGANIZATION_ID, orgidStr);
+      response.addCookie(org); request.setAttribute(DWO_SAML_ORGANIZATION, organization);
       String roles = s(request.getAttribute("unscoped-affiliation"));
       String role = "STUDENT";
       if(roles != null && roles.toLowerCase().contains("employee"))
@@ -158,7 +160,9 @@ public class DbAccess {
           Cookie authToken = new Cookie(DWO_SAML_AUTH_TOKEN, authTokenStr);
           authToken.setPath(path);
           authToken.setSecure(request.isSecure());
-          response.addCookie(authToken);
+          authToken.setHttpOnly(true);
+          authToken.setMaxAge(30);
+          response.addCookie(authToken); request.setAttribute(DWO_SAML_AUTH_TOKEN, authTokenStr);
       } catch (IOException e) {
           logger.log(Level.SEVERE, "registerSAML", e);
       }
