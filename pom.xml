@@ -14,9 +14,9 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
 		<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>
-		<app.name>Numworx-import-acceptatie</app.name>
+		<app.name>Numworx-import</app.name>
 		<app.base>https://numworx.acc.uu.nl/dwo/</app.base>
-		<app.title>Numworx import (acceptatie) </app.title>
+		<app.title>Numworx import </app.title>
         <tomcat7.version>7.0.76</tomcat7.version>
 	</properties>
 	<dependencies>
