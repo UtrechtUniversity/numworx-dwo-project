@@ -576,7 +576,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	@Override
 	public Boolean isCorrect() {
-		return Boolean.TRUE;
+		if(scoreMax==0)
+			return Boolean.TRUE;
+		return Boolean.FALSE;
 	}
 
 	@Override
