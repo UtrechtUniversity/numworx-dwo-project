@@ -2,7 +2,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="fi.servlet.dwomaccess.Subnet" %>
-<%@ include file="/dwo/saml_util.jsp" %>
 <%@ include file='/dwo/toets_util.jsp' %>
 <!doctype html>
 <!-- The DOCTYPE declaration above will set the     -->
