@@ -36,10 +36,12 @@ public class XSSFilter implements Filter {
         if (response instanceof HttpServletResponse) {
             HttpServletResponse res = (HttpServletResponse) response;
             HttpServletRequest req = (HttpServletRequest) request;
-            String origin = req.getHeader("Origin");
-            if (origin == null) {
-                origin = "*";
-            }
+            String origin;
+//            origin = req.getHeader("Origin");
+//            if (origin == null) {
+//                origin = "*";
+//            }
+            origin = System.getProperty("ALLOW_ORIGIN", "*");
             res.setHeader("Access-Control-Allow-Origin", origin);
             res.setHeader("Access-Control-Expose-Headers", "content-type");
             res.setHeader("Access-Control-Allow-Credentials", "true");
