@@ -576,6 +576,7 @@ public class SecuredUserAccountManager {
       SecretKey key = OAuth2Manager.getKey(context);
       JwtBuilder builder = Jwts.builder()
             .setSubject(u.getUsername())
+            .setAudience("exam")
             .setIssuedAt(new Date())
             .setId(String.valueOf(pcc.getClassCourseID()))
             .setNotBefore(pcc.getNotBefore())

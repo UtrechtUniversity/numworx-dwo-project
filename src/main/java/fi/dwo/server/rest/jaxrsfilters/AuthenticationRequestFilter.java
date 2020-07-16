@@ -45,6 +45,7 @@ import javax.xml.bind.DatatypeConverter;
 
 import org.tuckey.web.filters.urlrewrite.utils.Log;
 
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.security.TOTP;
 
 /**
@@ -66,14 +67,15 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
 
         DwoUserPrincipal u;
         boolean secure;
-        String scheme, role;
+        String scheme;
+        RoleType role;
 
         public DwoUserSecurityContext(DwoUserPrincipal user, boolean secure, String scheme) {
             u = user;
         }
 
         public DwoUserSecurityContext(DwoUserPrincipal principal, boolean secure,
-            String scheme, String role) {
+            String scheme, RoleType role) {
           this(principal, secure, scheme);
           this.role = role;
         }
@@ -85,7 +87,7 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
 
         @Override
         public boolean isUserInRole(String role) {
-            return role.equals(this.role);
+            return RoleType.NONE == this.role || role.equals(this.role.name());
         }
 
         @Override
@@ -176,9 +178,10 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
         Jws<Claims> claims = parser.parseClaimsJws(token);
         String username = claims.getBody().getSubject();
         String role = claims.getBody().getAudience();
+        RoleType type = RoleType.valueOf(role);
         PersistentUser u = findByUsername(username);
         if (u == null) return null;
-        SecurityContext sc = new DwoUserSecurityContext(new DwoUserPrincipal(u), ctx.isSecure(), "BEARER", role);
+        SecurityContext sc = new DwoUserSecurityContext(new DwoUserPrincipal(u), ctx.isSecure(), "BEARER", type);
         setUsername(sc);
         return sc;
     } catch (Exception e) {

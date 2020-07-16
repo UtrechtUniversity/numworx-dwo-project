@@ -56,7 +56,7 @@ public class OAuth2Manager {
   static final String GRANT_TYPE = "grant_type";
   static final String CODE = "code";
   private static final Logger LOG = Logger.getLogger(OAuth2Manager.class.getName());
-  private static int expires = 3600*3;
+  private static int expires = 1800;
   public static final AuthenticationRequestFilter AUTH = new AuthenticationRequestFilter();
   
   private String access_token(PersistentUser u, PersistentLoginContext c, String scope) {
@@ -93,6 +93,7 @@ public class OAuth2Manager {
     JwtBuilder builder = Jwts.builder();
     builder = builder.setSubject(u.getUsername()).setIssuedAt(new Date()).setNotBefore(new Date(c.getLastLogin()));
     builder = builder.setExpiration(new Date(c.getLastLogin()+1000L*3600L*23L));
+    builder = builder.setAudience("refresh");
     builder = builder.setHeaderParam("kid", c.getId()).
         setId(DatatypeConverter.printHexBinary(c.getSecretKey()));
     return builder.signWith(getKey(c)).compact();
@@ -211,6 +212,7 @@ private Response refresh(MultivaluedMap<String, String> params) throws NullPoint
           && l.getSecretKey() != null
           && body.getId().equals(DatatypeConverter.printHexBinary(l.getSecretKey()))
           && body.getNotBefore().equals(new Date(l.getLastLogin()/1000L * 1000L))
+          && "refresh".equals(body.getAudience())
           )       
     	  return buildTokenResponse(u, l);
       else {
