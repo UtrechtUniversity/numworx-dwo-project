@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -100,7 +101,11 @@ public class DbAccess {
 	   }
 	}
 	
-	
+	static String isoToUtf(Object encoded) {
+		if (encoded == null) return null;
+		byte[] bytes = encoded.toString().getBytes(StandardCharsets.ISO_8859_1);
+		return new String(bytes, StandardCharsets.UTF_8);
+	}
 	
 	
 	public boolean setUUSAMLCookie(HttpServletRequest request, HttpServletResponse response, String schoolid, String organization) {
@@ -111,9 +116,9 @@ public class DbAccess {
 	  if (user_id.isEmpty())
 	    user_id = s(lti_id);
 
-	  Object name_given = request.getAttribute("givenName");
-	  Object name_family = request.getAttribute("sn");
-	  Object name_prefix = request.getAttribute("insertion");
+	  Object name_given = isoToUtf(request.getAttribute("givenName"));
+	  Object name_family = isoToUtf(request.getAttribute("sn"));
+	  Object name_prefix = isoToUtf(request.getAttribute("insertion"));
 	  String email = s(request.getAttribute("mail"));
 // pick first, multiple valued
 	  email = email.split(";")[0];
