@@ -13,12 +13,15 @@ import fi.dwo.gwt.lib.rest.ui.ConfirmDialogEvent;
 import fi.dwo.gwt.lib.rest.ui.ConfirmDialogEvent.EventType;
 import fi.dwo.gwt.lib.rest.ui.ConfirmDialogEventHandler;
 import fi.dwo.gwt.lib.rest.ui.ConfirmDialogPromise;
-import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.views.ConfirmView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.DWOPopupPanel;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade.PopupListener;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
-
+/**
+ * Even het wiel opnieuw uitgevonden. MessageDialog was er al. FIXME samenvoegen.
+ * @author peterboon
+ * @deprecated use MessageDialog
+ */
 @Singleton // maar 1 op de bus.
 public class ConfirmEventHandler implements ConfirmDialogEventHandler {
 
