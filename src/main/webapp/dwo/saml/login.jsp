@@ -31,11 +31,9 @@
 
 
 function later() {
-	var cookies = (<%=cookies %>);
-	console.log(cookies);
+	var cookies = "???";
 	try {
 		doLMSInitialize();
-		doLMSSetValue("dme.cookies", cookies);
 		doLMSSetValue("cmi.exit", "logout");
 		doLMSFinish("");
 	<%
