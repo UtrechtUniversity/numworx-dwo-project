@@ -79,10 +79,12 @@ import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
@@ -1112,7 +1114,11 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     @Path("/submitSingleSchoolStudent")
     public Boolean SubmitSingleSchoolStudent(@Context SecurityContext sc, RestNewSingleSchoolStudent nssStudent
     ) {
-        if (nssStudent == null) {
+    	String dwo_env = System.getProperty("DWO_ENV", "app");
+    	if (dwo_env.contains("saml"))
+    		throw new WebApplicationException(HttpServletResponse.SC_NOT_FOUND);
+
+    	if (nssStudent == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         if (!ValidUserFieldsChecker.isValidEmail(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getEmail())) {
