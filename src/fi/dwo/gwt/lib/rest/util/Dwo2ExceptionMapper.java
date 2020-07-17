@@ -44,7 +44,7 @@ public class Dwo2ExceptionMapper extends ExceptionMapper {
 				JSONObject obj = JSONParser.parseStrict(json).isObject();
 				String message = obj.get("error").isString().stringValue();
 				if ("invalid_grant".equals(message)) {
-					return new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationCancelled, message);
+					return new Dwo2Exception(Dwo2ExceptionCode.Rest_LoginNeeded, message);
 				}
 			} catch( Exception e) {}	
 		}else{
