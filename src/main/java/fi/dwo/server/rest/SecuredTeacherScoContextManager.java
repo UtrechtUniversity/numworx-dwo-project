@@ -300,15 +300,16 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
 			
 			return scoContext;
 		} catch (RollbackException e)  {
-			throw new Dwo2RestException(Dwo2ExceptionCode.Rest_ScoNameExists, e.getMessage());
+			LOG.log(Level.WARNING, rest.getDomScoContext().getScoName(), e);
+			throw new Dwo2RestException(Dwo2ExceptionCode.Rest_ScoNameExists, rest.getDomScoContext().getScoName());
 		} catch (Dwo2Exception e) {
 			throw new Dwo2RestException(e);
 		} catch (PersistenceException e) {
-			LOG.log(Level.SEVERE, "", e);
-			throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
+			LOG.log(Level.SEVERE, rest.getDomScoContext().getScoName(), e);
+			throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, rest.getDomScoContext().getScoName());
 		} catch (Exception e) {
-			LOG.log(Level.SEVERE, "", e);
-			throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
+			LOG.log(Level.SEVERE, rest.getDomScoContext().getScoName(), e);
+			throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, rest.getDomScoContext().getScoName());
 		}
     }
     

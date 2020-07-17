@@ -430,7 +430,7 @@ public class PublicUserManager {
 //        }
         ThreadLocalRandom secureRandom = ThreadLocalRandom.current();
         LOG.log(Level.FINE, "Creating authToken.");
-        Short authToken = (short) secureRandom.nextInt();
+        String authToken = SystemManager.randomAlphanumericString(16);
         RoleType roleType = RoleType.NONE;
         try {
             roleType = RoleType.valueOf(role);
@@ -449,7 +449,8 @@ public class PublicUserManager {
         		pUser.setGivenName(givenName);
         		pUser.setInsertion(insertion);
         		pUser.setLastname(familyName);
-        		pUser = UserManager.edit(pUser);	
+        		pUser = UserManager.edit(pUser);
+        		LOG.info("registerSAML edit " + pUser.getUsername() + " " + givenName + " " + insertion + " " + familyName);
         	} else {
         	
         	//generate new persistentUser

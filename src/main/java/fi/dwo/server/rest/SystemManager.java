@@ -64,6 +64,30 @@ import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 public class SystemManager {
   private static final Logger LOG = Logger.getLogger(SystemManager.class.getName());
 
+  
+  /** for use elsewhere 
+   * 
+   * @param targetStringLength length
+   * @return randomstring
+   */
+  public static String randomAlphanumericString(int targetStringLength) {
+	    int leftLimit = 48; // numeral '0'
+	    int rightLimit = 122; // letter 'z'
+	    ThreadLocalRandom random = ThreadLocalRandom.current();
+	 
+	    String generatedString = random.ints(leftLimit, rightLimit + 1)
+	      .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+	      .limit(targetStringLength)
+	      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+	      .toString();
+	 
+	    return(generatedString);
+	}
+  
+  
+  
+  
+  
   @PUT
   @Produces({"application/json"})
   @Path("/school/get")
@@ -115,11 +139,10 @@ public class SystemManager {
     if(samlUser == null) {
       throw new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "not found");
     }
-    ThreadLocalRandom secureRandom = ThreadLocalRandom.current();
     LOG.log(Level.FINE, "Creating authToken.");
-    short authToken = (short) secureRandom.nextInt();
+    String authToken = randomAlphanumericString(16);
     samlUser.setAuthTokenTimestamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
-    samlUser.setAuthToken(Short.toString(authToken));
+    samlUser.setAuthToken(authToken);
     try {
         SamlUserManager.edit(samlUser);
     } catch (Exception e) {
