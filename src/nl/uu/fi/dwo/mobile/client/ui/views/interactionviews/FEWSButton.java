@@ -42,9 +42,9 @@ public class FEWSButton extends SVGButton{
 		float w = width;
 		float h = height;
 		float e = w / 24;
-		OMSVGRectElement rect = doc.createSVGRectElement(e, e, width - 2 * e, height - 2 * e, 2 * e, 2 * e);
-		rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, defaultBgColor.toString());
-		rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultBorderColor.toString());
+		OMSVGRectElement rect = doc.createSVGRectElement(e, e, width - 2 * e, height - 2 * e, 1 * e, 1 * e);
+		rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, bgColor.toString());
+		rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, borderColor.toString());
 		rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + e);
 		if(!isNoordhoff()) 
 			svg.appendChild(rect);
@@ -81,8 +81,8 @@ public class FEWSButton extends SVGButton{
 				segsPijlDown.appendItem(pijlDown.createSVGPathSegLinetoAbs(h / 2 - d, h / 2 + d));
 				segsPijlDown.appendItem(pijlDown.createSVGPathSegLinetoAbs(h / 2 - d, 2 * d));
 				segsPijlDown.appendItem(pijlDown.createSVGPathSegClosePath());
-				pijlDown.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultForegroundColor.toString());
-				pijlDown.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, defaultForegroundColor.toString());
+				pijlDown.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, foregroundColor.toString());
+				pijlDown.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, foregroundColor.toString());
 				svg.appendChild(pijlDown);
 			}
 		}
@@ -118,8 +118,8 @@ public class FEWSButton extends SVGButton{
 				segsPijlUp.appendItem(pijlUp.createSVGPathSegLinetoAbs(h / 2 - d, h / 2 - d));
 				segsPijlUp.appendItem(pijlUp.createSVGPathSegLinetoAbs(h / 2 - d, h - 2 * d));
 				segsPijlUp.appendItem(pijlUp.createSVGPathSegClosePath());
-				pijlUp.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultForegroundColor.toString());
-				pijlUp.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, defaultForegroundColor.toString());
+				pijlUp.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, foregroundColor.toString());
+				pijlUp.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, foregroundColor.toString());
 				svg.appendChild(pijlUp);
 			}
 		}
@@ -129,68 +129,68 @@ public class FEWSButton extends SVGButton{
 				
 			OMSVGRectElement copyrect2 = doc.createSVGRectElement(4 * e, 4 * e, width - 12 * e, height - 12 * e, e, e);
 			copyrect2.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, SVGConstants.CSS_WHITE_VALUE);
-			copyrect2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultForegroundColor.toString());
+			copyrect2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, foregroundColor.toString());
 			copyrect2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + e);
 			svg.appendChild(copyrect2);
 
 			OMSVGRectElement copyrect1 = doc.createSVGRectElement(8 * e, 8 * e, width - 12 * e, height - 12 * e, e, e);
 			copyrect1.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, SVGConstants.CSS_WHITE_VALUE);
-			copyrect1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultForegroundColor.toString());
+			copyrect1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, foregroundColor.toString());
 			copyrect1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + e);
 			svg.appendChild(copyrect1);
 
 			OMSVGLineElement regel1 = doc.createSVGLineElement(11 * e, 11 * e, 17 * e, 11 * e);
-			regel1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultForegroundColor.toString());
+			regel1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, foregroundColor.toString());
 			regel1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + e);
 			svg.appendChild(regel1);
 
 			OMSVGLineElement regel2 = doc.createSVGLineElement(11 * e, 14 * e, 17 * e, 14 * e);
-			regel2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultForegroundColor.toString());
+			regel2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, foregroundColor.toString());
 			regel2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "1.0");
 			svg.appendChild(regel2);
 
 			OMSVGLineElement regel3 = doc.createSVGLineElement(11 * e, 17 * e, 17 * e, 17 * e);
-			regel3.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultForegroundColor.toString());
+			regel3.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, foregroundColor.toString());
 			regel3.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + e);
 			svg.appendChild(regel3);
 		}
 		else if("plus".equals(code))	{	
 			OMSVGLineElement stroke1 = doc.createSVGLineElement(8*e, h/2, 16*e, h/2);
-			stroke1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultTextColor.toString());
+			stroke1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, textColor.toString());
 			stroke1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + 1.5*e);
 			svg.appendChild(stroke1);
 			
 			OMSVGLineElement stroke2 = doc.createSVGLineElement(w/2, 8*e, w/2, 16*e);
-			stroke2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultTextColor.toString());
+			stroke2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, textColor.toString());
 			stroke2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + 1.5*e);
 			svg.appendChild(stroke2);
 		}
 		else if("min".equals(code))	{	
 			OMSVGLineElement stroke1 = doc.createSVGLineElement(8*e, h/2, 16*e, h/2);
-			stroke1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultTextColor.toString());
+			stroke1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, textColor.toString());
 			stroke1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + 1.5*e);
 			svg.appendChild(stroke1);
 		}
 		else if("maal".equals(code))	{	
 			OMSVGLineElement stroke1 = doc.createSVGLineElement(8*e, 8*e, 16*e, 16*e);
-			stroke1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultTextColor.toString());
+			stroke1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, textColor.toString());
 			stroke1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + 1.5*e);
 			svg.appendChild(stroke1);
 			
 			OMSVGLineElement stroke2 = doc.createSVGLineElement(8*e, h-8*e, w-8*e, 8*e);
-			stroke2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultTextColor.toString());
+			stroke2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, textColor.toString());
 			stroke2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + 1.5*e);
 			svg.appendChild(stroke2);
 		}
 		else if("deel".equals(code))	{	
 			OMSVGCircleElement punt1 = doc.createSVGCircleElement(w/2, h/3, e);
 			OMSVGCircleElement punt2 = doc.createSVGCircleElement(w/2, h-h/3, e);
-			punt1.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, defaultTextColor.toString());
+			punt1.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, textColor.toString());
 			punt2.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, defaultTextColor.toString());
 			svg.appendChild(punt1);
 			svg.appendChild(punt2);
 			OMSVGLineElement stroke = doc.createSVGLineElement(8*e, h/2, 16*e, h/2);
-			stroke.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultTextColor.toString());
+			stroke.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, textColor.toString());
 			stroke.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + 1.5*e);
 			svg.appendChild(stroke);
 		}
@@ -203,7 +203,7 @@ public class FEWSButton extends SVGButton{
 	        segsHaak1.appendItem(haak1.createSVGPathSegCurvetoQuadraticAbs(13*e, h-5*e, 19*e, h/2));
 	        segsHaak1.appendItem(haak1.createSVGPathSegMovetoAbs(5*e, 5*e));
 	        segsHaak1.appendItem(haak1.createSVGPathSegLinetoAbs(w-5*e, h-5*e));
-	        haak1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultTextColor.toString());
+	        haak1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, textColor.toString());
 	        haak1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "1.5");
 	        haak1.getStyle().setSVGProperty(SVGConstants.CSS_FILL_OPACITY_PROPERTY, "0.0");
 	        svg.appendChild(haak1);
@@ -212,13 +212,13 @@ public class FEWSButton extends SVGButton{
 			OMSVGRectElement rect1 = doc.createSVGRectElement(6*e, 5*e, 4*e, 11*e, 0f, 0f);
 			rect1.getStyle().setSVGProperty(SVGConstants.CSS_FILL_OPACITY_PROPERTY, "0.0");
 			rect1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "1.5");
-			rect1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultTextColor.toString());
+			rect1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, textColor.toString());
 	    		svg.appendChild(rect1);
 	    		
 	    		OMSVGRectElement rect2 = doc.createSVGRectElement(14*e, 5*e, 4*e, 11*e, 0f, 0f);
 			rect2.getStyle().setSVGProperty(SVGConstants.CSS_FILL_OPACITY_PROPERTY, "0.0");
 			rect2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "1.5");
-			rect2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultTextColor.toString());
+			rect2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, textColor.toString());
 	    		svg.appendChild(rect2);
 	    		
 	    		OMSVGPathElement haak = doc.createSVGPathElement();
@@ -229,7 +229,7 @@ public class FEWSButton extends SVGButton{
 		    segsHaak.appendItem(haak.createSVGPathSegLinetoAbs(19*e, 18*e));
 		    haak.getStyle().setSVGProperty(SVGConstants.CSS_FILL_OPACITY_PROPERTY, "0.0");
 		    haak.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "1.5");
-		    haak.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultTextColor.toString());
+		    haak.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, textColor.toString());
 			svg.appendChild(haak);    
 	    		
 		}
@@ -241,7 +241,7 @@ public class FEWSButton extends SVGButton{
 	        segsHaak1.appendItem(haak1.createSVGPathSegMovetoAbs(17*e, 5*e));
 	        segsHaak1.appendItem(haak1.createSVGPathSegCurvetoQuadraticAbs(17*e, h-5*e, 11*e, h/2));
 	       
-	        haak1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultTextColor.toString());
+	        haak1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, textColor.toString());
 	        haak1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "1.5");
 	        haak1.getStyle().setSVGProperty(SVGConstants.CSS_FILL_OPACITY_PROPERTY, "0.0");
 	        svg.appendChild(haak1);
@@ -261,7 +261,7 @@ public class FEWSButton extends SVGButton{
 	        segsPijl.appendItem(pijl.createSVGPathSegLinetoAbs(w-6, h-6));
 	        segsPijl.appendItem(pijl.createSVGPathSegLinetoAbs(w-10, h-6));
 	        
-	        pijl.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultTextColor.toString());
+	        pijl.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, textColor.toString());
 	        pijl.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "1.5");
 	        pijl.getStyle().setSVGProperty(SVGConstants.CSS_FILL_OPACITY_PROPERTY, "0.0");
 	        svg.appendChild(pijl);
@@ -274,7 +274,7 @@ public class FEWSButton extends SVGButton{
 	        segsWortel.appendItem(wortel.createSVGPathSegLinetoAbs(12*e, 6*e));
 	        segsWortel.appendItem(wortel.createSVGPathSegLinetoAbs(19*e, 6*e));
 	        
-	        wortel.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultTextColor.toString());
+	        wortel.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, textColor.toString());
 	        wortel.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "1.5");
 	        wortel.getStyle().setSVGProperty(SVGConstants.CSS_FILL_OPACITY_PROPERTY, "0.0");
 	        svg.appendChild(wortel);
@@ -282,8 +282,8 @@ public class FEWSButton extends SVGButton{
 		}
 		else if("rekenmachine".equals(code)) {
 			OMSVGRectElement copyrect2 = doc.createSVGRectElement(5 * e, 4.5f*e, 14 * e, 15 * e, e, e);
-			copyrect2.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, defaultForegroundColor.toString());
-			copyrect2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultForegroundColor.toString());
+			copyrect2.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, foregroundColor.toString());
+			copyrect2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, foregroundColor.toString());
 			copyrect2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + 0.7f*e);
 			svg.appendChild(copyrect2);
 
@@ -332,7 +332,7 @@ public class FEWSButton extends SVGButton{
 	        
 	        
 	        
-	        path.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultForegroundColor.toString());
+	        path.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, foregroundColor.toString());
 	        path.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "2.0");
 	        path.getStyle().setSVGProperty(SVGConstants.CSS_FILL_OPACITY_PROPERTY, "0.0");
 	        svg.appendChild(path);
@@ -341,19 +341,19 @@ public class FEWSButton extends SVGButton{
 		
 		else if("sluit".equals(code))	{	
 			OMSVGLineElement stroke1 = doc.createSVGLineElement(6*e, 6*e, 18*e, 18*e);
-			stroke1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultForegroundColor.toString());
+			stroke1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, foregroundColor.toString());
 			stroke1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + 2*e);
 			svg.appendChild(stroke1);
 			
 			OMSVGLineElement stroke2 = doc.createSVGLineElement(6*e, h-6*e, w-6*e, 6*e);
-			stroke2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultForegroundColor.toString());
+			stroke2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, foregroundColor.toString());
 			stroke2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + 2*e);
 			svg.appendChild(stroke2);
 		}
 		else {
 			OMSVGTextElement label = doc.createSVGTextElement(4*e,h/2+3*e, OMSVGLength.SVG_LENGTHTYPE_PX, text);
 			label.getStyle().setSVGProperty(SVGConstants.CSS_FONT_SIZE_PROPERTY, "12");
-			label.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, defaultForegroundColor.toString());
+			label.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, foregroundColor.toString());
 			label.getStyle().setSVGProperty(SVGConstants.CSS_FONT_WEIGHT_PROPERTY,  SVGConstants.CSS_NORMAL_VALUE);
 			svg.appendChild(label);
 		}

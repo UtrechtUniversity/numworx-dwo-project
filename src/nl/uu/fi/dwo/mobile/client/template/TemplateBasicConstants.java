@@ -71,8 +71,8 @@ public class TemplateBasicConstants implements TemplateConstants {
 		
 		//checkButton
 		MapCheckButton.put("background-color", "#AAAAAA");
-		MapCheckButton.put("border-color", "#AAAAAA");
-		MapCheckButton.put("foreground-color", "#FFFFFF");
+		MapCheckButton.put("border-color", "#EEEEEE");
+		MapCheckButton.put("text-color", "#FFFFFF");
 		
 	}
 	

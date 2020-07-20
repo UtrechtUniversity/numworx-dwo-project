@@ -83,7 +83,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 	OpdrNavIF comRoot;
 	
 	private int borderWidth = (Integer)DWOplayer.templateConstants.answerboxCombo("border-width");
-	private String borderColor = (String)DWOplayer.templateConstants.answerboxCombo("border-color");
+	private String borderColorString = (String)DWOplayer.templateConstants.answerboxCombo("border-color");
 	private int borderRadius = (Integer)DWOplayer.templateConstants.answerboxCombo("border-radius");
 	
 	private LayoutPanel basisPanel;
@@ -263,6 +263,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		popupBox.getElement().getStyle().setBorderColor(CssColor.make(150, 150, 150).toString());
 		popupBox.getElement().getStyle().setBorderWidth(1, Style.Unit.PX);
 		popupBox.getElement().getStyle().setPadding(0, Style.Unit.PX);
+		popupBox.getElement().getStyle().setProperty("boxShadow", "1px 1px 5px 3px #A6A6A6");
 		
 		huidigeKeuzeVak = maakKeuzeVak();
 		huidigeKeuzeVak.setStyleName(DWOplayer.templateCss().answerboxCombo());
@@ -545,8 +546,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 				float h = height;
 				float e = w / 24;
 				OMSVGRectElement rect = doc.createSVGRectElement(e/2, e/2, width - e, height - e, borderRadius*2*e, borderRadius*2*e);
-				rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, borderColor);
-				rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, borderColor);
+				rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, borderColorString);
+				rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, borderColorString);
 				rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + 2*borderWidth*e);
 				svg.appendChild(rect);
 				

@@ -5,10 +5,12 @@ import java.util.logging.Logger;
 
 import org.vectomatic.dom.svg.OMSVGCircleElement;
 import org.vectomatic.dom.svg.OMSVGDocument;
+import org.vectomatic.dom.svg.OMSVGElement;
 import org.vectomatic.dom.svg.OMSVGLength;
 import org.vectomatic.dom.svg.OMSVGLineElement;
 import org.vectomatic.dom.svg.OMSVGPathElement;
 import org.vectomatic.dom.svg.OMSVGPathSegList;
+import org.vectomatic.dom.svg.OMSVGRect;
 import org.vectomatic.dom.svg.OMSVGRectElement;
 import org.vectomatic.dom.svg.OMSVGSVGElement;
 import org.vectomatic.dom.svg.OMSVGTextElement;
@@ -20,7 +22,12 @@ import org.vectomatic.dom.svg.utils.SVGConstants;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.Cursor;
+import com.google.gwt.dom.client.Style.FontStyle;
+import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.Visibility;
+import com.google.gwt.dom.client.Style.WhiteSpace;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
@@ -42,6 +49,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.pointerevents.client.PointerDownEvent;
@@ -50,6 +58,8 @@ import com.vaadin.pointerevents.client.PointerMoveEvent;
 import com.vaadin.pointerevents.client.PointerMoveHandler;
 import com.vaadin.pointerevents.client.PointerUpEvent;
 import com.vaadin.pointerevents.client.PointerUpHandler;
+
+import nl.uu.fi.dwo.mobile.client.ui.SVGButton.FontMetrics;
 
 public class SVGButton extends SimplePanel {
 
@@ -65,6 +75,11 @@ public class SVGButton extends SimplePanel {
 	protected boolean fromResource;
 	protected boolean handlersAdded;
 	protected Image image;
+	
+	protected String fontFamily = "sans-serif";
+	protected FontStyle fontStyle = FontStyle.NORMAL;
+	protected FontWeight fontWeight = FontWeight.BOLD;
+	protected int fontSize = 13;
 
 	//protected ButtonListener listener = new DefaultButtonListener();
 
@@ -72,12 +87,21 @@ public class SVGButton extends SimplePanel {
 	private HandlerRegistration touchMoveHandler, touchEndHandler, touchStartHandler;
 	private HandlerRegistration pointerMoveHandler, pointerUpHandler, pointerDownHandler;
 
-	protected CssColor defaultBorderColor = CssColor.make(211,229,244);
-	protected CssColor defaultBorderColorActive = CssColor.make(38,115,182);
-	protected CssColor defaultBgColor = CssColor.make(229, 240, 249);
-	protected CssColor defaultForegroundColor = CssColor.make(120, 150, 202);
-	protected CssColor defaultForegroundColorActive = CssColor.make(38,115,182);
-	protected CssColor defaultTextColor = CssColor.make(49,71,112);
+	protected static CssColor defaultBorderColor = CssColor.make(211,229,244);
+	protected static CssColor defaultBorderColorActive = CssColor.make(38,115,182);
+	protected static CssColor defaultBgColor = CssColor.make(229, 240, 249);
+	protected static CssColor defaultForegroundColor = CssColor.make(120, 150, 202);
+	protected static CssColor defaultForegroundColorActive = CssColor.make(38,115,182);
+	protected static CssColor defaultTextColor = CssColor.make(49,71,112);
+	
+	protected CssColor borderColor = defaultBorderColor;
+	protected CssColor borderColorActive = defaultBorderColorActive;
+	protected CssColor bgColor = defaultBgColor;
+	protected CssColor foregroundColor = defaultForegroundColor;
+	protected CssColor foregroundColorActive = defaultForegroundColorActive;
+	protected CssColor textColor = defaultTextColor;
+	
+	protected boolean center = true;
 	
 	protected ArrayList<ButtonListener> listeners = new ArrayList<ButtonListener>();
 	
@@ -162,10 +186,10 @@ public class SVGButton extends SimplePanel {
 		if(image!=null)
 			return;
 		if(b) {
-			float e = (float)width/24;
-			borderActive = doc.createSVGRectElement(e, e, width - 2 * e, height - 2 * e, 2 * e, 2 * e);
+			float e = (float)height/24;
+			borderActive = doc.createSVGRectElement(e, e, width - 2 * e, height - 2 * e, 1 * e, 1 * e);
 			borderActive.getStyle().setSVGProperty(SVGConstants.CSS_FILL_OPACITY_PROPERTY, "0.0");
-			borderActive.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultBorderColorActive.toString());
+			borderActive.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, borderColorActive.toString());
 			borderActive.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + 1.2*e);
 			svg.appendChild(borderActive);
 		}
@@ -226,20 +250,56 @@ public class SVGButton extends SimplePanel {
 	public void draw() {
 		float w = width;
 		float h = height;
-		float e = w / 24;
-		OMSVGRectElement rect = doc.createSVGRectElement(e, e, width - 2 * e, height - 2 * e, 2 * e, 2 * e);
-		rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, defaultBgColor.toString());
-		rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultBorderColor.toString());
+		float e = h / 24;
+		OMSVGRectElement rect = doc.createSVGRectElement(e, e, width - 2 * e, height - 2 * e, 1 * e, 1 * e);
+		rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, bgColor.toString());
+		rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, borderColor.toString());
 		rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + e);
 		svg.appendChild(rect);
 		
-		OMSVGTextElement label = doc.createSVGTextElement(4*e,h/2+3*e, OMSVGLength.SVG_LENGTHTYPE_PX, text);
-		label.getStyle().setSVGProperty(SVGConstants.CSS_FONT_SIZE_PROPERTY, "12");
-		label.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, defaultTextColor.toString());
-		label.getStyle().setSVGProperty(SVGConstants.CSS_FONT_WEIGHT_PROPERTY,  SVGConstants.CSS_NORMAL_VALUE);
+		FontMetrics fm = new FontMetrics(text);
+		float textWidth = fm.getWidth();
+		float textHeight = fm.getHeight();
+		OMSVGTextElement label = doc.createSVGTextElement(center ? (w-textWidth)/2 : 12,(h+2*textHeight/3)/2, OMSVGLength.SVG_LENGTHTYPE_PX, text);
+		label.getStyle().setSVGProperty(SVGConstants.CSS_FONT_FAMILY_PROPERTY, ""+fontFamily);
+		label.getStyle().setSVGProperty(SVGConstants.CSS_FONT_SIZE_PROPERTY, ""+fontSize);
+		label.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, textColor.toString());
+		label.getStyle().setSVGProperty(SVGConstants.CSS_FONT_WEIGHT_PROPERTY,  ""+fontWeight);//SVGConstants.CSS_BOLD_VALUE);
 		svg.appendChild(label);
 	}
+	
+	public void setBackgroundColor(CssColor c) {
+		bgColor = c;
+	}
+	
+	public void setForegroundColor(CssColor c) {
+		foregroundColor = c;
+	}
+	
+	public void setForegroundColorActive(CssColor c) {
+		foregroundColorActive = c;
+	}
+	
+	public void setTextColor(CssColor c) {
+		textColor = c;
+	}
+	
+	public void setBorderColor(CssColor c) {
+		borderColor = c;
+	}
+	
+	public void setBorderColorActive(CssColor c) {
+		borderColorActive = c;
+	}
+	
+	public void setFontSize(int fontSize) {
+		this.fontSize = fontSize;
+	}
 
+	public void setCenter(boolean center) {
+		this.center = center;
+	}
+	
 	private boolean hasPointerSupport = false;
 
 	class MouseButtonHandler
@@ -264,9 +324,10 @@ public class SVGButton extends SimplePanel {
 
 		@Override
 		public void onMouseOver(MouseOverEvent event) {
-			if(tooltip!=null)
+			if(tooltip!=null) 
 				tooltip.show();
 			setBorderActive(true);
+			getElement().getStyle().setCursor(Cursor.POINTER);
 		}
 
 		@Override
@@ -275,6 +336,7 @@ public class SVGButton extends SimplePanel {
 				tooltip.cancelShow();
 				tooltip.hide();
 			}
+			getElement().getStyle().setCursor(Cursor.DEFAULT);
 			setBorderActive(false);
 		}
 	}
@@ -288,6 +350,7 @@ public class SVGButton extends SimplePanel {
 				tooltip.hide();
 			}
 			setBorderActive(false);
+			getElement().getStyle().setCursor(Cursor.DEFAULT);
 			event.stopPropagation();
 		}
 
@@ -416,5 +479,46 @@ public class SVGButton extends SimplePanel {
 			};
 			tShow.schedule(1000);
 		}
+	}
+	
+	private static SVGImage invisible; 
+	static {
+		OMSVGDocument document = OMSVGParser.currentDocument();
+		OMSVGSVGElement svg = document.createSVGSVGElement();
+		invisible = new SVGImage(svg);
+		invisible.setPixelSize(1, 1);
+		svg.setHeight(Unit.PX, 1);
+		svg.setWidth(Unit.PX, 1);
+		svg.setViewBox(0, 0, 1, 1);
+		invisible.getStyle().setVisibility(Visibility.HIDDEN);
+		final RootLayoutPanel root = RootLayoutPanel.get();
+		root.add(invisible);
+		root.setWidgetBottomHeight(invisible, 0, Unit.PX, 1, Unit.PX);
+		root.setWidgetRightWidth(invisible, 0, Unit.PX, 1, Unit.PX);
+	}
+	
+	public class FontMetrics {
+		private float width;
+		private float height;
+		
+		
+		
+		public FontMetrics(String text) {
+			OMSVGTextElement t = new OMSVGTextElement(0, 0, OMSVGLength.SVG_LENGTHTYPE_NUMBER, text);
+			t.getStyle().setFontSize(fontSize , Unit.PX);
+			t.getStyle().setFontStyle(fontStyle);
+			t.getStyle().setFontWeight(fontWeight);
+			t.getStyle().setSVGProperty(SVGConstants.CSS_FONT_FAMILY_PROPERTY, fontFamily);
+			t.getStyle().setWhiteSpace(WhiteSpace.PRE);
+			t.setXmlspace(SVGConstants.SVG_PRESERVE_VALUE);
+			
+			OMSVGElement svg = invisible.getSvgElement();
+			svg.appendChild(t);
+			OMSVGRect r = t.getBBox();
+			this.width = r.getWidth();
+			this.height = r.getHeight();
+		}
+		public float getWidth() { return width; }
+		public float getHeight() { return height; }
 	}
 }

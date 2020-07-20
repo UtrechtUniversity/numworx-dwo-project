@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import org.osgi.util.promise.Promise;
 
+import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.TextAlign;
@@ -54,6 +55,8 @@ import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieReview;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
+import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.Review;
@@ -81,8 +84,8 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	private LayoutPanel basisPanel;
 	private Widget widget;
 	
-	int breedte = 110;
-	int hoogte = 24; 
+	int breedte = 126;
+	int hoogte = 26; 
 	int ashoogte = hoogte /2;
 	
 	private int mode;
@@ -117,7 +120,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	static int HALF = 2;
 	static int GEEN = 3;
 	
-	private PushButton checkButton;
+	private SVGButton checkButton;
 	private String knopImageString = "";
 	private TekstVakPanel[] ipList; 
 	private boolean[] juisteSelecties;
@@ -700,10 +703,10 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	public CheckSelectieUnit(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipList)
 	{
 		
-		if (h != null && h.containsKey("breedte"))
-			breedte = ((Number) h.get("breedte")).intValue();
-		if (h != null && h.containsKey("hoogte"))
-			hoogte = ((Number) h.get("hoogte")).intValue();
+//		if (h != null && h.containsKey("breedte"))
+//			breedte = ((Number) h.get("breedte")).intValue();
+//		if (h != null && h.containsKey("hoogte"))
+//			hoogte = ((Number) h.get("hoogte")).intValue();
 		if (h != null && h.containsKey("interactiePanelLaunchState"))
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
 		
@@ -718,7 +721,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	@Override
 	public void init(int width, int height, Map<String, Object> launchData,
 			Map<String, Number> values) {
-		breedte = width - 30;
+		breedte = width;// - 30;
 		hoogte = height;
 		//this.randomVarWaarden = randomValues;
 		ObjectMap map = JSONUtilities.wrapMap(launchData);
@@ -852,7 +855,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		
 		//int imWidth = breedte - 30;
 		int imWidth = breedte;
-		int imHeight = 20;
+		int imHeight = hoogte;
 		Image knopImage = null;
 		if(knopImageString!=null && !"".equals(knopImageString))
        	{  	ImageView imageView = new ImageView(knopImageString);
@@ -867,15 +870,26 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 			if(imHeight <= 0) 
 				imHeight = 20;
 		}
+		
 		if(knopImage != null)
-		{	checkButton = new PushButton(knopImage);
+		{	checkButton = new SVGButton(knopImage);
 			checkButton.getElement().getStyle().setPadding(0, Style.Unit.PX);
 			checkButton.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 		}
 		else
-		{	checkButton = new PushButton(Text.constants.klaarKnopLabel());
-			checkButton.getElement().getStyle().setFontSize(12, Style.Unit.PX);
-			checkButton.getElement().getStyle().setTextAlign(TextAlign.CENTER);
+		{	
+			String backgroundColorString = (String)DWOplayer.templateConstants.checkButton("background-color");
+			String borderColorString = (String)DWOplayer.templateConstants.checkButton("border-color");
+			String textColorString = (String)DWOplayer.templateConstants.checkButton("text-color");
+			
+			checkButton = new SVGButton(Text.constants.klaarKnopLabel()); 
+			checkButton.setFontSize(12);			
+			checkButton.setBackgroundColor(CssColor.make(backgroundColorString));
+			checkButton.setBorderColor(CssColor.make(backgroundColorString));
+			checkButton.setBorderColorActive(CssColor.make(borderColorString));
+			checkButton.setTextColor(CssColor.make(textColorString));
+			checkButton.setCenter(false);
+			checkButton.setSize(breedte, hoogte);
 		}
 		
 		//breedte = imWidth + 30;
@@ -886,26 +900,40 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		basisPanel.add(checkButton);
 		basisPanel.setWidgetLeftWidth(checkButton, 0, Style.Unit.PX, imWidth, Style.Unit.PX);
 		basisPanel.setWidgetTopHeight(checkButton, 5, Style.Unit.PX, imHeight, Style.Unit.PX);
-		checkButton.addClickHandler(new ClickHandler(){
-			public void onClick(ClickEvent e)
+//		checkButton.addClickHandler(new ClickHandler(){
+//			public void onClick(ClickEvent e)
+//			{
+//				e.stopPropagation();
+//				if(!editable) return;
+//				kijkNa();
+//	        	attemptsCount++;
+//				setAttempt();
+//				adviseMe();
+//			}
+//		});
+		checkButton.addButtonListener(new ButtonListener() {
+			@Override
+			public void onClick(Object sender)
 			{
-				e.stopPropagation();
+				//e.stopPropagation();
 				if(!editable) return;
 				kijkNa();
-	        	attemptsCount++;
+				attemptsCount++;
 				setAttempt();
 				adviseMe();
 			}
+		
+			
 		});
 		
 		nakijkAchtergrond = new FlowPanel();
-		if(knopImage != null)
+		//if(knopImage != null)
 			nakijkAchtergrond.getElement().getStyle().setBackgroundColor("white");
 		nakijkAchtergrond.getElement().getStyle().setProperty("borderRadius", (10) + "px");
 		nakijkAchtergrond.setVisible(false);
 		basisPanel.add(nakijkAchtergrond);
-		basisPanel.setWidgetRightWidth(nakijkAchtergrond, 2, Style.Unit.PX, 16, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(nakijkAchtergrond, 7, Style.Unit.PX, 16, Style.Unit.PX);
+		basisPanel.setWidgetRightWidth(nakijkAchtergrond, 3, Style.Unit.PX, 16, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(nakijkAchtergrond, 8, Style.Unit.PX, 16, Style.Unit.PX);
 		
 		
 		//TODO: Noordhoff-onderscheid maken (ook in plaatsing, alleen in Noordhoff in knop?)
@@ -921,10 +949,10 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		//basisPanel.setWidgetTopHeight(goedKrulImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
 		//basisPanel.setWidgetLeftWidth(foutKruisImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
 		//basisPanel.setWidgetTopHeight(foutKruisImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
-		basisPanel.setWidgetRightWidth(goedKrulImage, 1, Style.Unit.PX, 15, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(goedKrulImage, 6, Style.Unit.PX, 20, Style.Unit.PX);
-		basisPanel.setWidgetRightWidth(foutKruisImage, 1, Style.Unit.PX, 15, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(foutKruisImage, 5, Style.Unit.PX, 20, Style.Unit.PX);
+		basisPanel.setWidgetRightWidth(goedKrulImage, 2, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(goedKrulImage, 7, Style.Unit.PX, 20, Style.Unit.PX);
+		basisPanel.setWidgetRightWidth(foutKruisImage, 2, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(foutKruisImage, 6, Style.Unit.PX, 20, Style.Unit.PX);
 		goedKrulImage.setVisible(false);
 		foutKruisImage.setVisible(false);
 		

@@ -71,8 +71,8 @@ public class TemplateUUTestConstants implements TemplateConstants {
 		
 		//checkButton
 		MapCheckButton.put("background-color", "#314770");
-		MapCheckButton.put("border-color", "#314770");
-		MapCheckButton.put("foreground-color", "#FFFFFF");
+		MapCheckButton.put("border-color", "#B4C3E4");
+		MapCheckButton.put("text-color", "#FFFFFF");
 		
 		
 	}

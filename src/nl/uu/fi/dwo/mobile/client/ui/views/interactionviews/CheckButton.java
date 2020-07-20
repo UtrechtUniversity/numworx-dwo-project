@@ -11,10 +11,19 @@ import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
+import org.vectomatic.dom.svg.OMSVGLength;
+import org.vectomatic.dom.svg.OMSVGRectElement;
+import org.vectomatic.dom.svg.OMSVGTextElement;
+import org.vectomatic.dom.svg.utils.SVGConstants;
 
+import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.FontStyle;
+import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.TextAlign;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.WhiteSpace;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
@@ -38,17 +47,19 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
+import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
 
 public class CheckButton implements InteractionStub, CBookEventListener
 {
-  static class ActionNextPage implements ClickHandler {
+  static class ActionNextPage implements ButtonListener {
     private static final CBookEvent NEXT_PAGE_EVENT = new CBookEvent(ACTION_NEXT_PAGE);
 
     @Override
-    public void onClick(ClickEvent event) {
+    public void onClick(Object sender) {
       logger.warning("CheckButton " + ACTION_NEXT_PAGE);
       Promise<Void> defer = 
       DWOplayer.clientfactory.barrier().then( p ->
@@ -60,10 +71,11 @@ public class CheckButton implements InteractionStub, CBookEventListener
 
   boolean editable = true;
 	
-  final class NakijkenVak implements ClickHandler {
-    public void onClick(ClickEvent e) {
+  final class NakijkenVak implements ButtonListener {
+      @Override
+	  public void onClick(Object sender) {
       if (!editable) return;
-      e.stopPropagation();
+      //e.stopPropagation();
       logger.warning("CheckButton nakijkenVak");
       comRoot.pause();
       TekstVakPanel ideasStatistiekPanel =
@@ -104,33 +116,33 @@ public class CheckButton implements InteractionStub, CBookEventListener
 	public static final CBookEvent SEAL_EVENT = new CBookEvent(AFRONDEN);
 	public static final String ACTION_NEXT_PAGE = "actionNextPage";
 	
-	final class NakijkenPagina implements ClickHandler {
+	final class NakijkenPagina implements ButtonListener {
 		@Override
-		public void onClick(ClickEvent event) {
+		public void onClick(Object sender) {
 			if(!editable) return;
-			event.stopPropagation();
+			//event.stopPropagation();
 			logger.warning("CheckButton nakijkenPagina");
 			DWOplayer.clientfactory.getEventBus().fireEvent(CHECK_EVENT); // ASYNCHROON EVENT!!!
 		}
 	}
 
-	final class NakijkenXWidget implements ClickHandler {
+	final class NakijkenXWidget implements ButtonListener {
 		@Override
-		public void onClick(ClickEvent event) {
+		public void onClick(Object sender) {
 			if(!editable) return;
-			event.stopPropagation();
+			//event.stopPropagation();
 			logger.warning("CheckButton nakijkenXWidget");
 // Welke van de twee?
 			comRoot.fireEvent(CHECK_EVENT);
 		}
 	}
 	
-	final class ActieAfronden implements ClickHandler {
+	final class ActieAfronden implements ButtonListener {
 
 		@Override
-		public void onClick(ClickEvent event) {
+		public void onClick(Object sender) {
 			if(!editable) return;
-			event.stopPropagation();
+			//event.stopPropagation();
 			logger.warning("CheckButton actieAfronden");
 			//confirm()
 			Promise<Void> defer = DWOplayer.clientfactory.barrier()
@@ -162,11 +174,11 @@ public class CheckButton implements InteractionStub, CBookEventListener
 		}
 	}
 	
-	final class ActieBewaren implements ClickHandler {
+	final class ActieBewaren implements ButtonListener {
 		@Override
-		public void onClick(ClickEvent event) {
+		public void onClick(Object sender) {
 			if(!editable) return;
-			event.stopPropagation();
+			//event.stopPropagation();
 			logger.warning("CheckButton actieBewaren");
 			Promise<Void> defer = 
 			DWOplayer.clientfactory.barrier().then( p -> {
@@ -184,11 +196,11 @@ public class CheckButton implements InteractionStub, CBookEventListener
 	OpdrNavIF comRoot;
 	
 	private LayoutPanel basisPanel;
-	int breedte = 110;
-	int hoogte = 24; 
-	int ashoogte = 12;//nog kijken naar zinnige invulling hiervoor. (En hoe is dit in wiskOpdr gedaan?)
+	int breedte = 126;
+	int hoogte = 26; 
+	int ashoogte = 13;//nog kijken naar zinnige invulling hiervoor. (En hoe is dit in wiskOpdr gedaan?)
 	
-	private PushButton checkButton;
+	private SVGButton checkButton;
 	private String knopImageString = "";
 	
 	ArrayList<Object> lijst;
@@ -206,10 +218,10 @@ public class CheckButton implements InteractionStub, CBookEventListener
 	public CheckButton(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
 		ObjectMap map = JSONUtilities.wrapMap(h);
-		if (h != null && map.containsKey("breedte") )
-			breedte = map.getInt("breedte");
-		if (h != null && map.containsKey("hoogte"))
-			hoogte = map.getInt("hoogte");
+//		if (h != null && map.containsKey("breedte") )
+//			breedte = map.getInt("breedte");
+//		if (h != null && map.containsKey("hoogte"))
+//			hoogte = map.getInt("hoogte");
 		if (h != null && map.containsKey("interactiePanelLaunchState") )
 			launchState =  map.getMap("interactiePanelLaunchState");
 		
@@ -253,7 +265,8 @@ public class CheckButton implements InteractionStub, CBookEventListener
 	    }
 	}
 	
-	private List<HandlerRegistration> registrations = new ArrayList<>(3);
+	private List<ButtonListener> registrations = new ArrayList<>(3);
+	
 	private void initialize(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
 		basisPanel = new LayoutPanel();
@@ -262,7 +275,7 @@ public class CheckButton implements InteractionStub, CBookEventListener
 		//ashoogte = hoogte / 2;
 		
 		int imWidth = breedte;
-		int imHeight = 20;
+		int imHeight = hoogte;
 		knopImage = null;
 		if(knopImageString!=null && !"".equals(knopImageString))
        	{  	ImageView imageView = new ImageView(knopImageString);
@@ -288,14 +301,23 @@ public class CheckButton implements InteractionStub, CBookEventListener
 			}
 		}
 		if(knopImage != null)
-		{	checkButton = new PushButton(knopImage);
+		{	checkButton = new SVGButton(knopImage);
 			checkButton.getElement().getStyle().setPadding(0, Style.Unit.PX);
 			checkButton.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 		}
 		else
-		{	checkButton = new PushButton(Text.constants.klaarKnopLabel());
-			checkButton.getElement().getStyle().setFontSize(12, Style.Unit.PX);
-			checkButton.getElement().getStyle().setTextAlign(TextAlign.CENTER);
+		{	
+			String backgroundColorString = (String)DWOplayer.templateConstants.checkButton("background-color");
+			String borderColorString = (String)DWOplayer.templateConstants.checkButton("border-color");
+			String textColorString = (String)DWOplayer.templateConstants.checkButton("text-color");
+			
+			checkButton = new SVGButton(Text.constants.klaarKnopLabel()); 
+			checkButton.setFontSize(12);			
+			checkButton.setBackgroundColor(CssColor.make(backgroundColorString));
+			checkButton.setBorderColor(CssColor.make(backgroundColorString));
+			checkButton.setBorderColorActive(CssColor.make(borderColorString));
+			checkButton.setTextColor(CssColor.make(textColorString));
+			checkButton.setSize(breedte, hoogte);
 		}
 		
 		breedte = imWidth;
@@ -311,12 +333,12 @@ public class CheckButton implements InteractionStub, CBookEventListener
 		} else
 			logger.fine("await checkbutton loaded " + imWidth + " x " + imHeight);
 			
-		if(nakijkenVak) registrations.add(checkButton.addClickHandler(new NakijkenVak()));
-		if(nakijkenPagina) registrations.add(checkButton.addClickHandler(new NakijkenPagina()));
-		if(nakijkenXWidget) registrations.add(checkButton.addClickHandler(new NakijkenXWidget()));
-		if(actieBewaren) checkButton.addClickHandler(new ActieBewaren());
-		if(actieAfronden) checkButton.addClickHandler(new ActieAfronden());		
-        if(actionNextPage) checkButton.addClickHandler(new ActionNextPage());
+		if(nakijkenVak) registrations.add(checkButton.addButtonListener(new NakijkenVak()));
+		if(nakijkenPagina) registrations.add(checkButton.addButtonListener(new NakijkenPagina()));
+		if(nakijkenXWidget) registrations.add(checkButton.addButtonListener(new NakijkenXWidget()));
+		if(actieBewaren) checkButton.addButtonListener(new ActieBewaren());
+		if(actieAfronden) checkButton.addButtonListener(new ActieAfronden());		
+        if(actionNextPage) checkButton.addButtonListener(new ActionNextPage());
 	}
 	
 	
@@ -393,7 +415,8 @@ public class CheckButton implements InteractionStub, CBookEventListener
 		if (nakijkenPagina||nakijkenVak||nakijkenXWidget)
 		{  zichtbaar = mode==OpdrNav.OEFENEN || mode==OpdrNav.OEFENEN_STRAFPUNTEN;
 		   if (!zichtbaar) {
-		     registrations.forEach(HandlerRegistration::removeHandler);
+		     for(int i = 0 ; i<registrations.size() ; i++)
+		    	 checkButton.removeButtonListener(registrations.get(i));
 		   }
 		   zichtbaar = zichtbaar || actionNextPage||actieBewaren||actieAfronden;	
 		}

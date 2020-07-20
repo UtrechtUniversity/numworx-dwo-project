@@ -72,8 +72,8 @@ public class TemplateNumworxConstants implements TemplateConstants {
 		
 		//checkButton
 		MapCheckButton.put("background-color", "#2673B6");
-		MapCheckButton.put("border-color", "#2673B6");
-		MapCheckButton.put("foreground-color", "#FFFFFF");
+		MapCheckButton.put("border-color", "#B4C3E4");
+		MapCheckButton.put("text-color", "#FFFFFF");
 		
 				
 	}

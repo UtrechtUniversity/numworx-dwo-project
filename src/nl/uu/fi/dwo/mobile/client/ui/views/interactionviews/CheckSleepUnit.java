@@ -21,6 +21,8 @@ import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieReview;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
+import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.utils.Review;
 import nl.uu.fi.dwo.mobile.utils.StringUtils;
@@ -77,8 +79,8 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	OpdrNavIF comRoot;
 	
 	private LayoutPanel basisPanel;
-	int breedte = 110;
-	int hoogte = 24; 
+	int breedte = 126;
+	int hoogte = 26; 
 	int ashoogte = hoogte / 2;
 	
 	private int mode;
@@ -117,7 +119,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	static int HALF = 2;
 	static int GEEN = 3;
 	
-	private PushButton checkButton;
+	private SVGButton checkButton;
 	private String knopImageString = "";
 	private TekstVakPanel[] ipListSleep; 
 	private TekstVakPanel[] ipListDoel;
@@ -704,10 +706,10 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
     public CheckSleepUnit(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipListSleep, TekstVakPanel[] ipListDoel)
 	{
 		
-		if (h != null && h.get("breedte") != null)
-			breedte = ((Number) h.get("breedte")).intValue();
-		if (h != null && h.get("hoogte") != null)
-			hoogte = ((Number) h.get("hoogte")).intValue();
+//		if (h != null && h.get("breedte") != null)
+//			breedte = ((Number) h.get("breedte")).intValue();
+//		if (h != null && h.get("hoogte") != null)
+//			hoogte = ((Number) h.get("hoogte")).intValue();
 		if (h != null && h.get("interactiePanelLaunchState") != null)
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
 		
@@ -721,7 +723,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
     @Override
 	public void init(int width, int height, Map<String, Object> launchData,
 			Map<String, Number> values) {
-		breedte = width - 30;
+		breedte = width;// - 30;
 		hoogte = height;
 		
 		if (launchData != null)
@@ -797,7 +799,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 		//basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
 		
 		int imWidth = breedte;
-		int imHeight = 20;
+		int imHeight = hoogte;
 		Image knopImage = null;
 		if(knopImageString!=null && !"".equals(knopImageString))
        	{  	ImageView imageView = new ImageView(knopImageString);
@@ -813,14 +815,23 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 			//zetMaat();
 	    }
 		if(knopImage != null)
-		{	checkButton = new PushButton(knopImage);
+		{	checkButton = new SVGButton(knopImage);
 			checkButton.getElement().getStyle().setPadding(0, Style.Unit.PX);
 			checkButton.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 		}
 		else
-		{	checkButton = new PushButton(Text.constants.klaarKnopLabel());
-			checkButton.getElement().getStyle().setFontSize(12, Style.Unit.PX);
-			checkButton.getElement().getStyle().setTextAlign(TextAlign.CENTER);
+		{	String backgroundColorString = (String)DWOplayer.templateConstants.checkButton("background-color");
+			String borderColorString = (String)DWOplayer.templateConstants.checkButton("border-color");
+			String textColorString = (String)DWOplayer.templateConstants.checkButton("text-color");
+			
+			checkButton = new SVGButton(Text.constants.klaarKnopLabel()); 
+			checkButton.setFontSize(12);			
+			checkButton.setBackgroundColor(CssColor.make(backgroundColorString));
+			checkButton.setBorderColor(CssColor.make(backgroundColorString));
+			checkButton.setBorderColorActive(CssColor.make(borderColorString));
+			checkButton.setTextColor(CssColor.make(textColorString));
+			checkButton.setCenter(false);
+			checkButton.setSize(breedte, hoogte);
 		}
 		
 		
@@ -831,9 +842,10 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 		basisPanel.add(checkButton);
 		basisPanel.setWidgetLeftWidth(checkButton, 0, Style.Unit.PX, imWidth, Style.Unit.PX);
 		basisPanel.setWidgetTopHeight(checkButton, 5, Style.Unit.PX, imHeight, Style.Unit.PX);
-		checkButton.addClickHandler(new ClickHandler(){
-			public void onClick(ClickEvent e)
-			{	e.stopPropagation();
+		checkButton.addButtonListener(new ButtonListener(){
+			@Override
+			public void onClick(Object sender)
+			{	//e.stopPropagation();
 				if (!editable) return;
 				kijkNa();
 				attemptsCount++;
@@ -842,13 +854,13 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 		});
 		
 		nakijkAchtergrond = new FlowPanel();
-		if(knopImage != null)
+		//if(knopImage != null)
 			nakijkAchtergrond.getElement().getStyle().setBackgroundColor("white");
 		nakijkAchtergrond.getElement().getStyle().setProperty("borderRadius", (10) + "px");
 		nakijkAchtergrond.setVisible(false);
 		basisPanel.add(nakijkAchtergrond);
-		basisPanel.setWidgetRightWidth(nakijkAchtergrond, 2, Style.Unit.PX, 16, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(nakijkAchtergrond, 7, Style.Unit.PX, 16, Style.Unit.PX);
+		basisPanel.setWidgetRightWidth(nakijkAchtergrond, 3, Style.Unit.PX, 16, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(nakijkAchtergrond, 8, Style.Unit.PX, 16, Style.Unit.PX);
 		
 		//TODO: Noordhoff-onderscheid maken
 				//goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.goedkrul_en().getSafeUri());
@@ -862,10 +874,10 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 //		basisPanel.setWidgetTopHeight(goedKrulImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
 //		basisPanel.setWidgetLeftWidth(foutKruisImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
 //		basisPanel.setWidgetTopHeight(foutKruisImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
-		basisPanel.setWidgetRightWidth(goedKrulImage, 1, Style.Unit.PX, 15, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(goedKrulImage, 6, Style.Unit.PX, 20, Style.Unit.PX);
-		basisPanel.setWidgetRightWidth(foutKruisImage, 1, Style.Unit.PX, 15, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(foutKruisImage, 5, Style.Unit.PX, 20, Style.Unit.PX);
+		basisPanel.setWidgetRightWidth(goedKrulImage, 2, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(goedKrulImage, 7, Style.Unit.PX, 20, Style.Unit.PX);
+		basisPanel.setWidgetRightWidth(foutKruisImage, 2, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(foutKruisImage, 6, Style.Unit.PX, 20, Style.Unit.PX);
 		
 		goedKrulImage.setVisible(false);
 		foutKruisImage.setVisible(false);
