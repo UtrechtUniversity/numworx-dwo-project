@@ -44,4 +44,15 @@
 		<connection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/edexml/trunk</connection>
 		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/edexml/trunk</developerConnection>
 	</scm>
+	<build>
+	 <plugins>
+      <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.5.3</version>
+         <configuration>
+          <tagBase>https://svn.science.uu.nl/repos/sci.velth101.numworx/edexml/tags/</tagBase>
+        </configuration>
+      </plugin>
+	 </plugins>
+	</build>
 </project>
