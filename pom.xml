@@ -112,9 +112,9 @@
 	</build>
 	<description>Keyboard voor desktop en tablet
 DWO en Noordhoff/Plantyn variant</description>
-	<version>2.4.7</version>
+	<version>2.4.8-SNAPSHOT</version>
 	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/KeyboardGWT/tags/KeyboardGWT-2.4.7</developerConnection>
+		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/KeyboardGWT/trunk</developerConnection>
 	</scm>
 	<properties>
 		<maven.javadoc.failOnError>false</maven.javadoc.failOnError>
