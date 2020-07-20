@@ -23,7 +23,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
 			<artifactId>edexml</artifactId>
-			<version>2.4.7-SNAPSHOT</version>
+			<version>2.4.7</version>
 			<exclusions>
 				<exclusion>
 					<groupId>junit</groupId>
