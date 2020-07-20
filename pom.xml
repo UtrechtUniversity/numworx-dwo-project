@@ -573,9 +573,9 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<DWOplayerVersion>2.4.7-SNAPSHOT</DWOplayerVersion>
-		<DWOmAccessVersion>2.4.7-SNAPSHOT</DWOmAccessVersion>
+		<DWOmAccessVersion>2.4.7</DWOmAccessVersion>
 		<RegisterVersion>2.4.2</RegisterVersion>
-		<DWOGwtClientVersion>2.4.7-SNAPSHOT</DWOGwtClientVersion>
+		<DWOGwtClientVersion>2.4.7</DWOGwtClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testeb2server</aws.environmentName>
