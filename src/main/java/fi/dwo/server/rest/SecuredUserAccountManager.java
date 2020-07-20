@@ -226,7 +226,10 @@ public class SecuredUserAccountManager {
         try {
 //                return u.buildDomUserFullwLoginContext(LoginContextUtilManager.reqLoginContextSession(u));
             //loginDataUtilManager should use the returndata to log any statistical stuff needed for OLAP Warehousing.
-            DomUserFullwLoginContext result = u.buildDomUserFullwLoginContext(LoginContextUtilManager.forceNewLoginContextSession(u));
+        	boolean newsecret = true;
+// DEBUG SAML
+        	newsecret = !System.getProperty("DWO_ENV", "app").contains("saml");
+            DomUserFullwLoginContext result = u.buildDomUserFullwLoginContext(LoginContextUtilManager.forceNewLoginContextSession(u,newsecret));
             return result;
         } catch (Dwo2Exception ex) {
             Logger.getLogger(PublicUserManager.class.getName()).log(Level.SEVERE, "Invalid software state, this should not have happened.", ex);
@@ -373,9 +376,12 @@ public class SecuredUserAccountManager {
                         && loginContext.getDomLoginContext().getLastLoginTimeStamp().equals(loginContextList.get(0).getLastLogin())
                         ) {
 //                        loginContextList.get(0).setLastLogin(null); not for housekeeping users. // changed 6 maart 2019, actie voor maart 2021
-                        loginContextList.get(0).setSecretKey(null);
-                        loginContextList.get(0).setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
-                       LoginContextManager.edit(loginContextList.get(0));
+                    	String env = System.getProperty("DWO_ENV", "app");
+                    	if (!env.contains("saml"))
+                    	{	loginContextList.get(0).setSecretKey(null);
+                        	loginContextList.get(0).setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+                    	}
+                        LoginContextManager.edit(loginContextList.get(0));
                     }
                 } else {
                     //logout while no login tried before.

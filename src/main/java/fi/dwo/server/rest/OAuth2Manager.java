@@ -150,7 +150,7 @@ public class OAuth2Manager {
                   try {
                     PersistentUser user = UserManager.findEntity(samlUser.getUserID());
                     PersistentLoginContext l;
-                    l = LoginContextUtilManager.forceNewLoginContextSession(user);
+                    l = LoginContextUtilManager.forceNewLoginContextSession(user, false);
                     samlUser.setAuthTokenTimestamp(samlUser.getAuthTokenTimestamp()-60000L); // oneshot!
                     try {
 						SamlUserManager.edit(samlUser); // not fatal
@@ -180,7 +180,7 @@ public class OAuth2Manager {
           PersistentUser u = UserManager.login(client_id, client_secret);
           if (u != null) {
               PersistentLoginContext l;
-              l = LoginContextUtilManager.forceNewLoginContextSession(u);
+              l = LoginContextUtilManager.forceNewLoginContextSession(u, true);
               return buildTokenResponse(u, l);
             }
          } catch (Exception e) {
@@ -211,7 +211,7 @@ private Response refresh(MultivaluedMap<String, String> params) throws NullPoint
       if ( u.getUsername().equals(body.getSubject())
           && l.getSecretKey() != null
           && body.getId().equals(DatatypeConverter.printHexBinary(l.getSecretKey()))
-          && body.getNotBefore().equals(new Date(l.getLastLogin()/1000L * 1000L))
+          //&& body.getNotBefore().equals(new Date(l.getLastLogin()/1000L * 1000L))
           && "refresh".equals(body.getAudience())
           )       
     	  return buildTokenResponse(u, l);
@@ -269,8 +269,11 @@ private Response refresh(MultivaluedMap<String, String> params) throws NullPoint
 		    && body.getId().equals(DatatypeConverter.printHexBinary(l.getSecretKey()))
 		    && body.getNotBefore().equals(new Date(l.getLastLogin()/1000L * 1000L))
 		    )     {
-		  l.setLastLogin(System.currentTimeMillis());
-		  l.setSecretKey(null);
+		  if (!System.getProperty("DWO_ENV", "app").contains("saml"))
+		  {
+			  l.setSecretKey(null);
+			  l.setLastLogin(System.currentTimeMillis());
+		  }
 		  LoginContextManager.edit(l);
 		}
 	} catch (JwtException | IllegalArgumentException | PersistenceException | NullPointerException e) {

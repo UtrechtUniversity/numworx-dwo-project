@@ -96,7 +96,7 @@ public class LoginContextUtilManager {
      * @return
      * @throws Dwo2Exception
      */
-    public static PersistentLoginContext forceNewLoginContextSession(PersistentUser user) throws Dwo2Exception {
+    public static PersistentLoginContext forceNewLoginContextSession(PersistentUser user, boolean newSecret) throws Dwo2Exception {
         PersistentLoginContext loginContext = null;
         try {
             List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(user.getId());
@@ -118,7 +118,7 @@ public class LoginContextUtilManager {
                     //update if exists
                     loginContext = loginContextList.get(0);
                     ThreadLocalRandom.current().nextBytes(bytes);
-                    loginContext.setSecretKey(bytes);
+                    if (newSecret|| loginContext.getSecretKey()==null) loginContext.setSecretKey(bytes);
                     loginContext.setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
                     LoginContextManager.edit(loginContext);
                     break;
