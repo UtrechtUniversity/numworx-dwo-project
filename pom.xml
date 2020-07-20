@@ -7,6 +7,7 @@
 		<relativePath>../DWO</relativePath>
 	</parent>
 	<artifactId>edexml</artifactId>
+  <version>2.4.8-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>nl.uu.fi.dwo.rest</groupId>
@@ -39,8 +40,8 @@
 		<maven.test.skip>true</maven.test.skip>
 	</properties>
 	<scm>
-		<connection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/edexml/tags/edexml-2.4.7</connection>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/edexml/tags/edexml-2.4.7</developerConnection>
+		<connection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/edexml/trunk</connection>
+		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/edexml/trunk</developerConnection>
 	</scm>
 	<build>
 	 <plugins>
