@@ -220,7 +220,7 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
             DomUserFullwLoginContext user = LoginManager.basicLogin(username, MD5.getHashString(String.valueOf(password)));
             DwoHelper.setCurrentUser(user.getDomUserFull(),user.getDomLoginContext());
 
-            if (DwoHelper.isTest()) {           
+            if (DwoHelper.isTest() && DwoHelper.isSamlLogin()) {           
                 OAuthManager m = new OAuthManager();
                 token = m.authorization_token(SecureUserAccountManager.getBearerToken());
                 if (token != null) {
