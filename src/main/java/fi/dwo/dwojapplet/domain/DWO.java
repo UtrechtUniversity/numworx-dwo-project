@@ -2877,7 +2877,7 @@ if (false) {
     private JDialog attnDialog;    
     @Override
     public void onIdle(IdleEvent ev) {
-      if (DwoHelper.isTest() && ev.isSlow()) {
+      if (DwoHelper.isSamlLogin() && ev.isSlow()) { // HOTFIX
         slowIdleEvent();
         return;
       } else {
