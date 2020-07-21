@@ -255,7 +255,7 @@
 								<artifactItem>
 									<groupId>nl.numworx.swingbrowser</groupId>
 									<artifactId>swingbrowser-jxb</artifactId>
-									<version>0.0.5-SNAPSHOT</version>
+									<version>0.0.5</version>
 									<destFileName>dwo/swingbrowser-jxb.jar</destFileName>
 								</artifactItem>
 							</artifactItems>
@@ -572,7 +572,7 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<DWOplayerVersion>2.4.7-SNAPSHOT</DWOplayerVersion>
+		<DWOplayerVersion>2.4.7</DWOplayerVersion>
 		<DWOmAccessVersion>2.4.7</DWOmAccessVersion>
 		<RegisterVersion>2.4.2</RegisterVersion>
 		<DWOGwtClientVersion>2.4.7</DWOGwtClientVersion>
