@@ -8,7 +8,7 @@
 	</parent>
   <groupId>nl.numworx.osiris</groupId>
   <artifactId>osiris-import</artifactId>
-  <version>0.0.5-SNAPSHOT</version>
+  <version>0.0.5</version>
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -327,7 +327,7 @@
 	</profiles>
 	<packaging>war</packaging>
 	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/osiris-import/trunk</developerConnection>
-		<connection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/osiris-import/trunk</connection>
+		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/osiris-import/tags/osiris-import-0.0.5</developerConnection>
+		<connection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/osiris-import/tags/osiris-import-0.0.5</connection>
 	</scm>
 </project>
