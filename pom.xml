@@ -226,7 +226,7 @@
         <artifactId>maven-release-plugin</artifactId>
         <version>2.5.3</version>
          <configuration>
-          <tagBase>https://svn.science.uu.nl/repos/sci.velth101.numworx/osiris-import/trunk/tags/</tagBase>
+          <tagBase>https://svn.science.uu.nl/repos/sci.velth101.numworx/osiris-import/tags/</tagBase>
         </configuration>
       </plugin>
 		</plugins>
