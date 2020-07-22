@@ -233,7 +233,8 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	@Override
 	public void setState(HashMap<String, Object> h) {
 		facade.setPopupState(h);
-		if(h == null)
+		boolean isNull = h == null;
+		if(isNull)
 			h = new HashMap<String, Object>(); // Never NULL, komt voor!
 		lastResort = h;
 		if(h.containsKey("STUBVIEW_score"))
@@ -251,7 +252,8 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		}
 		else 
 			pendingState = object.toString(); // XXX NPE!
-		correctie = CorrectieFacade.get(h, this, widget, scoreMax, comRoot);
+		if (!isNull)
+			correctie = CorrectieFacade.get(h, this, widget, scoreMax, comRoot);
 	}
 
 	@Override
