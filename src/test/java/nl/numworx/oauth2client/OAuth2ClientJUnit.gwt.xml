@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  When updating your version of GWT, you should also update this DTD reference,
+  so that your app can take advantage of the latest GWT module capabilities.
+-->
+<module rename-to='oauth2client'>
+  <!-- Inherit our applications main module.                      -->
+  <inherits name='nl.numworx.oauth2client.OAuth2Client'/>
+
+  <!-- Specify the path to any remote services.                   -->
+  <servlet path="/oauth2client/greet" class="nl.numworx.oauth2client.server.GreetingServiceImpl" />
+
+</module>
