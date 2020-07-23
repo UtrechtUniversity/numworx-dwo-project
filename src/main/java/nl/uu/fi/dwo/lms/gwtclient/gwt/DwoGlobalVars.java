@@ -260,7 +260,7 @@ public class DwoGlobalVars {
       LOG.log(Level.INFO, "Getting current and available school logins.");
       SecuredUserSchoolLoginManagerV2 loginManager = this.loginManager;
       Promise<DomSchoolsRolesAndClassesV2> logins;
-      if (isTest()) {     
+      if (isTest() && isSaml()) {     
           OAuthManager oauth = new OAuthManager();
           logins = accountManager.getBearerToken().then(
     		  p -> { 
