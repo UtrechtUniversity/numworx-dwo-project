@@ -1093,6 +1093,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private boolean isVergelijkingVak;
 	private String isTeken = "=";
 	private ObjectMap reviewInteractieData;
+	private boolean isNull;
 	
 	public void kijkNa(final boolean backStep, final boolean show, final boolean setState) {
 		try {
@@ -1655,7 +1656,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	@Override
 	public void setState(HashMap<String, Object> h)
 	{
-		if (h == null) return; // setStateNull();
+		if (h == null) {
+			isNull = true;
+			return; // setStateNull();
+		}
 		logger.fine("setState " + h);
 		//antwoord eruit halen en dan uit h halen, zodat de antwoordstring niet wordt meegenomen in setState. 
 		
@@ -1724,7 +1728,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		setEditable(editable);
 
-		if (correctie == null) // eenmalig
+		if (!isNull && correctie == null) // eenmalig
 			correctie = CorrectieFacade.get(h, this, getAsPanel(), scoreMax, comRoot);
 
 	}

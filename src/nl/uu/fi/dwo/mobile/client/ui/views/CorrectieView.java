@@ -89,7 +89,7 @@ public class CorrectieView extends Composite implements HasHide {
             int height = widget.getOffsetHeight() - 16;
             if (x > width && y > height) {
               if(popup != null) {
-                popup.showRelativeTo(widget);
+                popup.center();
               } else {
                 //iv.kijkNa();iv.getState(); // wat is nodig voor score?????? FIXME
                 popup = startCorrection(result, widget, iv.getScore(), scoreMax, comRoot);
