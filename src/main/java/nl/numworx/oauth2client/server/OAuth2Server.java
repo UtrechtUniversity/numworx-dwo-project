@@ -1,30 +1,100 @@
 package nl.numworx.oauth2client.server;
 
 import java.io.IOException;
+import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.List;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+
+import fi.servlet.lti.DbAccess;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SystemManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 @SuppressWarnings("serial")
 public class OAuth2Server extends HttpServlet {
+
+	class CookieWrap extends HttpServletResponseWrapper {
+
+		  List<Cookie> cookies;
+		  
+		  public CookieWrap(HttpServletResponse response) {
+		    super(response);
+		    cookies = new Vector<>(); // Synchronized
+		  }
+
+		  @Override
+		  public void addCookie(Cookie cookie) {
+		    super.addCookie(cookie);
+		    cookies.add(cookie);
+		  }
+		  
+		  public Cookie[] getCookies() {
+		    return cookies.toArray(new Cookie[cookies.size()]);
+		  }
+		}
+
+	private static final String CHALLENGE = "dwoSAMLchallenge";
+	final static private String schoolid = System.getProperty("ENV_ORGID", "385");
+
+	private static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
+	private static final String DWO_SAML_ORGANIZATION = "dwoSAMLOrganization";    
+	private static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
+	private static final String DWO_SAML_AUTH_TOKEN = "dwoSAMLAuthToken";
+	private Logger LOG = Logger.getLogger(getClass().getName());
+	private DbAccess dbaccess;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String type = req.getParameter("response_type");
 		String redirectUrl = req.getParameter("redirect_url");
 		String challenge = req.getParameter("code_challenge");
-		Cookie cookie = new Cookie("challenge", challenge);
+		String state = req.getParameter("state");
+		Cookie cookie = new Cookie(CHALLENGE, challenge);
 		cookie.setHttpOnly(true);
 		cookie.setSecure(req.isSecure());
-		
+// DEBUGING
+		req.setAttribute("uid", "staff1");
+
 		resp.addCookie(cookie);
-		String code = "ditisdecode";
+
+		DomSamlUser user = new DomSamlUser();
+		CookieWrap wrap = new CookieWrap(resp);
+	  	String organization = dbaccess.getOrganization(schoolid);
+	  	if ( dbaccess.setUUSAMLCookie(req, wrap, schoolid, organization))
+	    	return;
+		Cookie[] cookies = wrap.getCookies();
+		for(Cookie c : cookies) {
+			if (DWO_SAML_ORGANIZATION_ID.equals(c.getName())) user.setSamlOrgId( c.getValue() );
+			else if (DWO_SAML_USER_ID.equals(c.getName())) user.setSamlUserId( c.getValue() );
+			else if (DWO_SAML_AUTH_TOKEN.equals(c.getName())) user.setAuthToken( c.getValue() );
+		}		
+		
+		String samlUserID = user.getSamlUserId();	      
+		String samlOrgID = user.getSamlOrgId();
+		String authToken = user.getAuthToken();
+		log("getToken " + samlUserID + " " + samlOrgID + " " + authToken);
+		String token = "3\f" + samlUserID + '\f' + samlOrgID + '\f' + authToken;
+		token = Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
+		
+		String code = token;
 		
 		String location = redirectUrl + "?code=" + URLEncoder.encode(code);
+		if (state != null) {
+			location += "&state=" + URLEncoder.encode(state);
+		}
 		resp.sendRedirect(location);
 //		resp.setContentType("text/html");
 //		resp.getWriter().print("<a href='" + location + "'>KLIK</a>");
@@ -35,18 +105,24 @@ public class OAuth2Server extends HttpServlet {
 		Cookie[] cookies = req.getCookies();
 		Cookie challenge = null;
 		for (Cookie i: cookies) {
-			if (i.getName().equals("challenge")) { challenge = i; }
+			if (i.getName().equals(CHALLENGE)) { challenge = i; }
 		}
 		challenge.setMaxAge(-1);
 		String verifier = req.getParameter("code_verifier");
 		String code = req.getParameter("authorization_code");
-		if (verifier.equals(challenge.getValue()) && "ditisdecode".equals(code)) {
+		if (verifier.equals(challenge.getValue()) 
+				&& "ditisdecode".equals(code)) {
 			resp.addCookie(challenge);
 			resp.setContentType("application/json");
 			resp.getWriter().print("{'access_token':'okay'}");
 		} else {
 			resp.sendError(resp.SC_BAD_REQUEST);
 		}
+	}
+
+	@Override
+	public void init() throws ServletException {
+		this.dbaccess = new DbAccess(getServletContext());
 	}
 
 	

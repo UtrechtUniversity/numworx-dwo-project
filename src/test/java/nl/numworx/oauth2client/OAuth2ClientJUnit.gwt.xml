@@ -8,6 +8,6 @@
   <inherits name='nl.numworx.oauth2client.OAuth2Client'/>
 
   <!-- Specify the path to any remote services.                   -->
-  <servlet path="/oauth2client/greet" class="nl.numworx.oauth2client.server.GreetingServiceImpl" />
+  <servlet path="/dwo/saml/login" class="nl.numworx.oauth2client.server.OAuth2Server" />
 
 </module>

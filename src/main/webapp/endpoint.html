@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<div id='result'></div>
+<script>
+var verifier = window.parent.getItem("code_verifier");
+document.write(verifier);
+document.write(" ")
+code = window.location.search.substring(3);
+document.write(code)
+clientId= "clientid";
+                var xhr = new XMLHttpRequest();
+
+                xhr.onload = function() {
+                    var response = xhr.response;
+                    var message;
+
+                    if (xhr.status == 200) {
+                        message = "Access Token: " + response.access_token;
+                    }
+                    else {
+                        message = "Error: " ;//+ response.error_description + " (" + response.error + ")";
+                    }
+
+                    document.getElementById("result").innerHTML = message;
+                };
+                xhr.responseType = 'json';
+                xhr.open("POST", "/dwo/saml/login", true);
+                xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                xhr.send(new URLSearchParams({
+                    client_id: clientId,
+                    code_verifier: verifier,
+                    grant_type: "authorization_code",
+                    redirect_uri: location.href.replace(location.search, ''),
+                    authorization_code: code
+                }));
+
+
+
+
+</script>
+</body>
+</html>

@@ -5,6 +5,10 @@
          version="2.5"
          xmlns="http://java.sun.com/xml/ns/javaee">
 
+  <context-param>
+  	<param-name>dbrest.url</param-name>
+	<param-value>https://idptestbed/dwo/rest/</param-value>  
+  </context-param>
   <!-- Servlets -->
   <servlet>
     <servlet-name>oauth2</servlet-name>
@@ -13,7 +17,7 @@
   
   <servlet-mapping>
     <servlet-name>oauth2</servlet-name>
-    <url-pattern>/token</url-pattern>
+    <url-pattern>/dwo/saml/login</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->
