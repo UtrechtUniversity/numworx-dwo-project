@@ -25,10 +25,16 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class OAuth2Client implements EntryPoint {
 
 	private static final String TOKEN = "/dwo/saml/login";
-
-	String endpoint = "/endpoint.html";
 	
-	
+	static native private String getEndpoint() /*-{
+		return $wnd.endpoint
+	}-*/;
+	static native private String getSearch() /*-{
+		return $wnd.search
+	}-*/;
+	static native private String getHash() /*-{
+		return $wnd.hash
+	}-*/;
 	
 	/**
 	 * This is the entry point method.
@@ -56,8 +62,10 @@ public class OAuth2Client implements EntryPoint {
 				String verifier = storage.getItem("verifier");
 				storage.clear();
 				install(verifier);
-				
-				Frame frame = new Frame(endpoint + "?a="+URL.encodeQueryString(code));
+				String endpoint = getEndpoint();
+				String search = getSearch();
+				String hash = getHash();
+				Frame frame = new Frame(endpoint + "?a="+URL.encodeQueryString(code) + search + hash);
 				RootPanel.get().add(frame);
 				
 				

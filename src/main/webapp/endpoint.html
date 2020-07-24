@@ -11,6 +11,7 @@ var verifier = window.parent.getItem("code_verifier");
 document.write(verifier);
 document.write(" ")
 code = window.location.search.substring(3);
+code = decodeURIComponent(code);
 document.write(code)
 clientId= "clientid";
                 var xhr = new XMLHttpRequest();
@@ -20,23 +21,23 @@ clientId= "clientid";
                     var message;
 
                     if (xhr.status == 200) {
-                        message = "Access Token: " + response.access_token;
+                        message = "Access Token: " + JSON.stringify(response);
                     }
                     else {
-                        message = "Error: " ;//+ response.error_description + " (" + response.error + ")";
+                        message = "Error: "+ JSON.stringify(response); ;//+ response.error_description + " (" + response.error + ")";
                     }
 
                     document.getElementById("result").innerHTML = message;
                 };
                 xhr.responseType = 'json';
-                xhr.open("POST", "/dwo/saml/login", true);
+                xhr.open("POST", "/dwo/rest/oauth2/token", true);
                 xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
                 xhr.send(new URLSearchParams({
                     client_id: clientId,
                     code_verifier: verifier,
                     grant_type: "authorization_code",
                     redirect_uri: location.href.replace(location.search, ''),
-                    authorization_code: code
+                    code: code
                 }));
 
 
