@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -17,6 +18,7 @@ import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /**
@@ -66,8 +68,12 @@ public class OAuth2Client implements EntryPoint {
 				String search = getSearch();
 				String hash = getHash();
 				Frame frame = new Frame(endpoint + "?a="+URL.encodeQueryString(code) + search + hash);
-				RootPanel.get().add(frame);
-				
+				frame.getElement().setAttribute("allow", "fullscreen");
+				frame.setStylePrimaryName("iframe");
+				RootLayoutPanel root = RootLayoutPanel.get();
+				root.add(frame);
+				root.setWidgetLeftWidth(frame, 0, Unit.PCT, 100, Unit.PCT);
+				root.setWidgetTopHeight(frame, 0, Unit.PCT, 100, Unit.PCT);
 				
 //				Label label = new Label("Code = " + code);
 //				RootPanel.get().add(label);
@@ -114,7 +120,7 @@ public class OAuth2Client implements EntryPoint {
 			String state = "state";
 			storage.setItem("state", state);
 			Map<String, List<String>> map = Window.Location.getParameterMap();
-			for(String key: map.keySet()) builder.removeParameter(key);
+			for(String key: map.keySet()) builder.removeParameter(key); // keyset is a copy
 			builder.setHash(null);
 			String returnUrl = builder.buildString();
 			UrlBuilder token = Window.Location.createUrlBuilder();

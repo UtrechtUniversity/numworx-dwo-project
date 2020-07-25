@@ -66,7 +66,7 @@ public class OAuth2Server extends HttpServlet {
 		cookie.setHttpOnly(true);
 		cookie.setSecure(req.isSecure());
 // DEBUGING
-		req.setAttribute("uid", "staff1");
+//		req.setAttribute("uid", "staff1");
 
 		resp.addCookie(cookie);
 
