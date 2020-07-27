@@ -11,15 +11,37 @@ public class OAuthManager {
 
 	private OAuthRestCaller service = GWT.create(OAuthRestCaller.class);
 		
+	private static native String clientId() /*-{
+			$wnd.clientId = $wnd.parent.clientId
+			return $wnd.parent.clientId;
+	}-*/;
+
+	private static native String redirectUri() /*-{
+		return $wnd.parent.location.href.replace($wnd.parent.location.search, '');
+	}-*/;
+	
+	private static native String codeVerifier0() /*-{
+		$wnd.getItem = $wnd.parent.getItem
+		return $wnd.parent.getItem("code_verifier");
+	}-*/;
+	private static String codeVerifier() {
+		try {
+			return codeVerifier0();
+		} catch(Exception e) {
+			return null;
+		}
+	}
+	
+	
 	public Promise<DomToken> authorization_token(String token) {
 		PromiseCallback<DomToken> defer = new PromiseCallback<>();
-		service.token("authorization_code", token, null, defer);
+		service.authorize("authorization_code", token, clientId(), redirectUri(), codeVerifier(), defer);
 		return defer.getPromise();
 	}
 	
 	public Promise<DomToken> refresh_token(String token) {
 		PromiseCallback<DomToken> defer = new PromiseCallback<>();
-		service.token("refresh_token", null, token, defer);
+		service.refresh("refresh_token", token, defer);
 		return defer.getPromise();
 	}
 	
