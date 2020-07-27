@@ -10,6 +10,7 @@
     	endpoint = "/gwtclient/index.html"
     	search = "&base=/ho/&profile=99&locale=nl"
     	hash= ""
+        clientId = "f9af29c4-cfc5-11ea-87d0-0242ac130003"
     </script>
     <script type="text/javascript" src="/dwo/oauth2client/oauth2client/oauth2client.nocache.js"></script>
 </head>
