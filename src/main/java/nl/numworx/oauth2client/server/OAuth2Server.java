@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.List;
 import java.util.Vector;
@@ -59,9 +61,10 @@ public class OAuth2Server extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String type = req.getParameter("response_type");
-		String redirectUrl = req.getParameter("redirect_url");
+		String redirectUrl = req.getParameter("redirect_uri");
 		String challenge = req.getParameter("code_challenge");
 		String state = req.getParameter("state");
+		String clientId = req.getParameter("client_id");
 		Cookie cookie = new Cookie(CHALLENGE, challenge);
 		cookie.setHttpOnly(true);
 		cookie.setSecure(req.isSecure());
@@ -109,9 +112,22 @@ public class OAuth2Server extends HttpServlet {
 		}
 		challenge.setMaxAge(-1);
 		String verifier = req.getParameter("code_verifier");
+		MessageDigest digest = null;
+		try {
+			digest = MessageDigest.getInstance("SHA-256");
+		} catch (NoSuchAlgorithmException e) {
+			throw new ServletException("should not happen", e);
+		}
+		byte[] encodedhash = digest.digest(
+		  verifier.getBytes(StandardCharsets.UTF_8));
+		verifier = java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(encodedhash);
+				
 		String code = req.getParameter("authorization_code");
+		String uri =req.getParameter("redirect_uri");
+		String id = req.getParameter("client_id");
 		if (verifier.equals(challenge.getValue()) 
-				&& "ditisdecode".equals(code)) {
+//				&& "ditisdecode".equals(code)
+		) {
 			resp.addCookie(challenge);
 			resp.setContentType("application/json");
 			resp.getWriter().print("{'access_token':'okay'}");

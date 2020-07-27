@@ -3,9 +3,11 @@ package nl.numworx.oauth2client.client;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
@@ -15,6 +17,10 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.storage.client.Storage;
+import com.google.gwt.typedarrays.client.Uint16ArrayNative;
+import com.google.gwt.typedarrays.client.Uint8ArrayNative;
+import com.google.gwt.typedarrays.shared.Uint8Array;
+import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Label;
@@ -37,6 +43,22 @@ public class OAuth2Client implements EntryPoint {
 	static native private String getHash() /*-{
 		return $wnd.hash
 	}-*/;
+	
+	
+	static native private String getClientId() /*-{
+		return $wnd.clientId
+	}-*/;
+	
+	private String randomString(int length) {
+		char[] possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
+		char[] result = new char[length];
+		for(int i = 0; i < length; i++) {
+			result[i] = possible[Random.nextInt(possible.length)];
+		}
+		return new String(result);
+	}
+	
+	
 	
 	/**
 	 * This is the entry point method.
@@ -115,27 +137,56 @@ public class OAuth2Client implements EntryPoint {
 			}
 // initial
 			UrlBuilder builder = Window.Location.createUrlBuilder();
-			String verifier = "randomstring";
+			String verifier = randomString(64);
 			storage.setItem("verifier", verifier);
-			String state = "state";
+			String state = randomString(64);
 			storage.setItem("state", state);
 			Map<String, List<String>> map = Window.Location.getParameterMap();
 			for(String key: map.keySet()) builder.removeParameter(key); // keyset is a copy
 			builder.setHash(null);
 			String returnUrl = builder.buildString();
-			UrlBuilder token = Window.Location.createUrlBuilder();
-			token.setPath(TOKEN);
-			token.setParameter("response_type", "code");
-			token.setParameter("redirect_url", returnUrl);
-			token.setParameter("code_challenge", verifier);
-			token.setParameter("code_challence_method", "plain");
-			token.setParameter("state", state);
-			Window.Location.assign(token.buildString());
+
+			
+			Consumer<JavaScriptObject> consumer = new Consumer<JavaScriptObject>() {
+
+				@Override
+				public void accept(JavaScriptObject t) {
+					Uint8Array bytes = Uint8ArrayNative.create(t);
+					String challenge = btoa(OAuth2Client.toString(bytes));
+					UrlBuilder token = Window.Location.createUrlBuilder();
+					token.setPath(TOKEN);
+					token.setParameter("response_type", "code");
+					token.setParameter("redirect_uri", returnUrl);
+					token.setParameter("code_challenge", challenge);
+					token.setParameter("code_challence_method", "S256");
+					token.setParameter("state", state);
+					token.setParameter("client_id", getClientId());
+					Window.Location.assign(token.buildString());
+				} };
+			digest(verifier, consumer);
 			return;
 	}
 
+	
+	private static native String btoa(String digest) /*-{
+		return btoa(digest)
+                .replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_')
+	}-*/;
+	
+	private static String toString(Uint8Array bytes) {
+		int length = bytes.length();
+		StringBuilder sb = new StringBuilder(length);
+		for(int i = 0; i < length; i++) sb.append(  (char) bytes.get(i));
+		return sb.toString();
+	}
 
-
+	private static native JavaScriptObject digest(String codeVerifier, Consumer<JavaScriptObject> consumer) /*-{
+            var digest = crypto.subtle.digest("SHA-256",
+                new TextEncoder().encode(codeVerifier));
+            digest.then( function(t) { consumer.@java.util.function.Consumer::accept(Ljava/lang/Object;)(t); });     
+	}-*/;
+	
+	
 	private native void install(String verifier) /*-{
 		$wnd.getItem = function(key) {
 			return verifier;

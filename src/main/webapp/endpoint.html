@@ -13,7 +13,8 @@ document.write(" ")
 code = window.location.search.substring(3);
 code = decodeURIComponent(code);
 document.write(code)
-clientId= "clientid";
+clientId= window.parent.clientId;
+
                 var xhr = new XMLHttpRequest();
 
                 xhr.onload = function() {
@@ -30,13 +31,13 @@ clientId= "clientid";
                     document.getElementById("result").innerHTML = message;
                 };
                 xhr.responseType = 'json';
-                xhr.open("POST", "/dwo/rest/oauth2/token", true);
+                xhr.open("POST", "/dwo/saml/login", true);
                 xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
                 xhr.send(new URLSearchParams({
                     client_id: clientId,
                     code_verifier: verifier,
                     grant_type: "authorization_code",
-                    redirect_uri: location.href.replace(location.search, ''),
+                    redirect_uri: window.parent.location.href.replace(location.search, ''),
                     code: code
                 }));
 
