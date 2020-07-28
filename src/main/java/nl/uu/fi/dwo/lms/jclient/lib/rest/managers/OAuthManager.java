@@ -37,8 +37,19 @@ public class OAuthManager {
     this(StoredRestManager.getInstance());
   }
   
-  public String authorization_token(String token) {
-    return requestToken(token, "grant_type=authorization_code&code=");
+  public String authorization_token(String token, String clientId, String verifier, String redirectUri) {
+	String pfx = "grant_type=authorization_code&code=" ;
+
+	if (redirectUri != null) {
+		pfx = "redirect_uri=" + encode(redirectUri) + "&" + pfx;
+	}
+	if (verifier != null) {
+		pfx = "code_verifier=" + encode(verifier) + "&" + pfx;
+	}
+	if (clientId != null) {
+		pfx = "client_id=" + encode(clientId) + "&" + pfx;
+	}
+	return requestToken(token, pfx);
   }
 
   public String refresh_token(String token) {
@@ -56,10 +67,14 @@ public class OAuthManager {
   }
   
 
-  @SuppressWarnings("deprecation")
   private String requestToken(String token, String format) {
-    String form = format+URLEncoder.encode(token);
+    String form = format+encode(token);
     return requestForm(form);
+  }
+
+  @SuppressWarnings("deprecation")
+  private String encode(String token) {
+	return URLEncoder.encode(token);
   }
 
   private String requestForm(String form) {
