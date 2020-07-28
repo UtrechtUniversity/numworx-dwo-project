@@ -2533,7 +2533,10 @@ if (false) {
     
       String token = "3\f" + samlUserID + '\f' + samlOrgID + '\f' + authToken;
       token = Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
-      GuiCreator.instance().loginWithToken(token);
+      String clientId = p.getProperty("dme.oauth.client_id");
+      String verifier = p.getProperty("dme.oauth.code_verifier");
+      String redirectUri = p.getProperty("dme.oauth.redirect_uri");
+      GuiCreator.instance().loginWithToken(token, clientId, verifier, redirectUri);
   }
     }
     

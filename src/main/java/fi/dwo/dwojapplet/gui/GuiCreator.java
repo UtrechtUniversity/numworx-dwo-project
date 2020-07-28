@@ -175,10 +175,10 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
         return mainPanel;
     }
 
-    public void loginWithToken(String authToken) throws Dwo2Exception, LoginException {
+    public void loginWithToken(String authToken, String clientId, String verifier, String redirectUri) throws Dwo2Exception, LoginException {
       DwoHelper.setContact(false);
       OAuthManager m = new OAuthManager();
-      token = m.authorization_token(authToken);
+      token = m.authorization_token(authToken, clientId, verifier, redirectUri);
       if (token != null) {
         StoredRestManager.getInstance().setRecover(this);
       }
@@ -222,7 +222,7 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
 
             if (DwoHelper.isTest() && DwoHelper.isSamlLogin()) {           
                 OAuthManager m = new OAuthManager();
-                token = m.authorization_token(SecureUserAccountManager.getBearerToken());
+                token = m.authorization_token(SecureUserAccountManager.getBearerToken(), null, null, null);
                 if (token != null) {
                     StoredRestManager.getInstance().setRecover(this);
                 }
