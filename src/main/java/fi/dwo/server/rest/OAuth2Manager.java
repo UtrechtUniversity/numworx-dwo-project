@@ -1,6 +1,8 @@
 package fi.dwo.server.rest;
 
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -9,13 +11,18 @@ import java.util.logging.Logger;
 
 import javax.crypto.SecretKey;
 import javax.persistence.PersistenceException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.StatusType;
@@ -50,7 +57,8 @@ import nl.uu.fi.dwo.rest.security.TOTP;
 
 @Path("/oauth2")
 public class OAuth2Manager {
-  static final String AUTHORIZATION_CODE = "authorization_code";
+  private static final String DWO_SAML_CHALLENGE = "dwoSAMLchallenge";
+static final String AUTHORIZATION_CODE = "authorization_code";
   static final String REFRESH_TOKEN = "refresh_token";
   static final String CLIENT_CREDENTIALS = "client_credentials";
   static final String GRANT_TYPE = "grant_type";
@@ -104,7 +112,7 @@ public class OAuth2Manager {
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/token")
-  public Response token(MultivaluedMap<String, String> params) {
+  public Response token(MultivaluedMap<String, String> params, @CookieParam(DWO_SAML_CHALLENGE) String challenge, @Context HttpServletRequest request) {
     String grant = params.getFirst(GRANT_TYPE);
     if (AUTHORIZATION_CODE.equals(grant)) {
         String code  = params.getFirst(CODE);
@@ -138,6 +146,28 @@ public class OAuth2Manager {
                   samlOrgId = "\"" + samlOrgId + "\"";
                   samlUser = SamlUserManager.findEntity(samlUserId, samlOrgId);
               }
+// implement code_challenge OPTIONAL!!!!!
+              String verifier = params.getFirst("code_verifier");
+              String remote = request.getRemoteAddr();
+              LOG.info("remote = " + remote);
+              if (verifier != null && challenge != null && !"127.0.0.1".equals(remote)) {
+            	  LOG.info("challenge " + verifier + " " + challenge);
+            	 MessageDigest digest = null;
+        		try {
+        			digest = MessageDigest.getInstance("SHA-256");
+            		byte[] encodedhash = digest.digest(
+                  		  verifier.getBytes(StandardCharsets.UTF_8));
+                  		verifier = java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(encodedhash);
+                   if (!verifier.equals(challenge))
+                   {   LOG.warning("challenge failed");
+                	   samlUser = null;
+                   }
+        		} catch (NoSuchAlgorithmException e) {
+        			LOG.log(Level.SEVERE,"Should not happen: no S256", e);
+        			samlUser = null;
+        		}
+              }
+             
               if (samlUser==null) 
             	  LOG.log(Level.SEVERE, "not found {0} {1}", new Object[] {samlUserId, samlOrgId});
               else
@@ -233,7 +263,8 @@ private Response refresh(MultivaluedMap<String, String> params) throws NullPoint
     response.setRefresh_token(refresh_token(u,l));
     response.setToken_type(DomToken.BEARER);
     response.setScope(scope);
-    return Response.ok(response).build();
+    NewCookie c = new NewCookie(DWO_SAML_CHALLENGE, "","/",null,null, 0, true);   
+    return Response.ok(response).cookie(c).build();
   }
   
   @POST  // Chrome
