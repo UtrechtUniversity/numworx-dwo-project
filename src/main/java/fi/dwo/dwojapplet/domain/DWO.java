@@ -2517,6 +2517,20 @@ if (false) {
   // moet REALM meenemen
        GuiCreator.instance().loginWithMd5(name, pw, realm);
   } else {
+      CookieHandler handler = CookieHandler.getDefault();
+      Map<String, List<String>> responseHeaders = new HashMap<>();
+      List<String> cookies = new ArrayList<>();
+      for(Map.Entry<Object, Object> entry: p.entrySet()) {
+        if (entry.getKey().toString().startsWith("dwo")) {
+          String value = entry.getValue().toString();
+          if (value.contains(":")) // need escape?
+            value = "\"" + value + "\""; // ons kent ons
+          cookies.add( ( entry.getKey() + "=" + value));
+        }
+      }
+      responseHeaders.put("Set-Cookie", cookies); // inject DWO cookies.
+      handler.put(DwoHelper.getServerUrlPath().toURI(), responseHeaders);
+    
       String token = "3\f" + samlUserID + '\f' + samlOrgID + '\f' + authToken;
       token = Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
       GuiCreator.instance().loginWithToken(token);
