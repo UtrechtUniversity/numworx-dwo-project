@@ -63,7 +63,7 @@ public class OAuth2ManagerIT {
     params.putSingle("code", code);
     params.putSingle(manager.GRANT_TYPE, manager.AUTHORIZATION_CODE);
     
-    Response response = manager.token(params);
+    Response response = manager.token(params, null, null);
     assertEquals(200, response.getStatus());
     DomToken token = (DomToken) response.getEntity();
     assertNotNull(token);
@@ -75,7 +75,7 @@ public class OAuth2ManagerIT {
 
     params.putSingle("refresh_token", token.getRefresh_token());
     params.putSingle(manager.GRANT_TYPE, "refresh_token");
-    response = manager.token(params);
+    response = manager.token(params,null,null);
     assertNotNull(token);
     assertNotNull(token.getAccess_token());
     ctx = filter.validateJWTToken(token.getAccess_token(), sc);
