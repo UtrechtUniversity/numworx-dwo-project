@@ -100,7 +100,7 @@
     
 <!-- Logging TRUE/FALSE FINEST/.../SEVERE -->   
     <set-property name="gwt.logging.logLevel" value="INFO"/>
-    <set-property name="gwt.logging.enabled" value="TRUE"/>
+    <set-property name="gwt.logging.enabled" value="FALSE"/>
 
 <inherits name="com.google.gwt.activity.Activity" />
 
