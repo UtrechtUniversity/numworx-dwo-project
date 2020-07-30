@@ -408,7 +408,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         addStudentsButton.setSize(addStudentsButton.getPreferredSize());
         addStudentsButton.addActionListener(this);
         addStudentsButton.setEnabled(licenseIsValid(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool()));
-        addStudentsButton.setVisible(!DwoHelper.isSamlLogin());
+        addStudentsButton.setVisible(true || !DwoHelper.isSamlLogin()); // Mag toch
         deleteFromSchoolButton = new JButton(
                 Dwo2ExceptionTranslator.getLocalizedCodeExplanation(
                         DwoHelper.getLocale(), Dwo2ExceptionCode.GUI_BTN_deleteFromSchool));
