@@ -6,26 +6,17 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.storage.client.Storage;
-import com.google.gwt.typedarrays.client.Uint16ArrayNative;
 import com.google.gwt.typedarrays.client.Uint8ArrayNative;
 import com.google.gwt.typedarrays.shared.Uint8Array;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Frame;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
-import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -33,16 +24,34 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class OAuth2Client implements EntryPoint {
 
 	private static final String TOKEN = "/dwo/saml/login";
+  private Storage storage;
 	
-	static native private String getEndpoint() /*-{
+	static native private String getEndpoint0() /*-{
 		return $wnd.endpoint
 	}-*/;
+	
+	private String getEndpoint() {
+	  String endpoint = storage.getItem("endpoint");
+	  if (endpoint == null) {
+	    endpoint = getEndpoint0();
+	  }
+	  return endpoint;
+	}
+	
 	static native private String getSearch() /*-{
 		return $wnd.search
 	}-*/;
-	static native private String getHash() /*-{
+	static native private String getHash0() /*-{
 		return $wnd.hash
 	}-*/;
+	
+	private String getHash() {
+	  String hash = storage.getItem("hash");
+	  if (hash == null) {
+	    hash = getHash0();
+	  }
+	  return hash;
+	}
 	
 	
 	static native private String getClientId() /*-{
@@ -64,7 +73,7 @@ public class OAuth2Client implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		Storage storage = Storage.getSessionStorageIfSupported();
+		storage = Storage.getSessionStorageIfSupported();
 		
 		String code = Window.Location.getParameter("code");
 		if (code != null) {
@@ -84,11 +93,13 @@ public class OAuth2Client implements EntryPoint {
 			if (code != null)
 			{
 				String verifier = storage.getItem("verifier");
+                String endpoint = getEndpoint();
+                String search = getSearch();
+                String hash = getHash();
+                String redirect_uri = storage.getItem("redirect_uri");
 				storage.clear();
-				install(verifier);
-				String endpoint = getEndpoint();
-				String search = getSearch();
-				String hash = getHash();
+				install(verifier,code, redirect_uri);
+				code = "parent";
 				Frame frame = new Frame(endpoint + "?a="+URL.encodeQueryString(code) + search + hash);
 				frame.getElement().setAttribute("allow", "fullscreen");
 				frame.setStylePrimaryName("iframe");
@@ -96,43 +107,6 @@ public class OAuth2Client implements EntryPoint {
 				root.add(frame);
 				root.setWidgetLeftWidth(frame, 0, Unit.PCT, 100, Unit.PCT);
 				root.setWidgetTopHeight(frame, 0, Unit.PCT, 100, Unit.PCT);
-				
-//				Label label = new Label("Code = " + code);
-//				RootPanel.get().add(label);
-//				String verifier = storage.getItem("verifier");
-//				//storage.clear();
-//				label = new Label("verifier = " + verifier);
-//				RootPanel.get().add(label);
-//				UrlBuilder token = Window.Location.createUrlBuilder();
-//				token.setPath(TOKEN);
-//				String url = token.buildString();
-//				String request = "code_verifier=" + verifier + "&authorization_code=" + code;
-//
-//				RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, url);
-//				rb.setHeader("Content-Type", "application/x-www-form-urlencoded");
-//				try {
-//					rb.sendRequest(request, new RequestCallback() {
-//
-//						@Override
-//						public void onResponseReceived(Request request, Response response) {
-//							String text = response.getText();
-//							Label l = new Label(text);
-//							RootPanel.get().add(l);
-//							
-//						}
-//
-//						@Override
-//						public void onError(Request request, Throwable exception) {
-//							String text = exception.toString();
-//							Label l = new Label(text);
-//							RootPanel.get().add(l);
-//							
-//							
-//						}} );
-//				} catch (RequestException e) {
-//					GWT.log("send request", e);
-//				}
-
 				return;
 			}
 // initial
@@ -141,12 +115,15 @@ public class OAuth2Client implements EntryPoint {
 			storage.setItem("verifier", verifier);
 			String state = randomString(64);
 			storage.setItem("state", state);
+			storage.setItem("hash", getHash0());
+			storage.setItem("endpoint", getEndpoint0());
+			
 			Map<String, List<String>> map = Window.Location.getParameterMap();
 			for(String key: map.keySet()) builder.removeParameter(key); // keyset is a copy
 			builder.setHash(null);
 			String returnUrl = builder.buildString();
-
-			
+	        storage.setItem("redirect_uri", returnUrl);
+	
 			Consumer<JavaScriptObject> consumer = new Consumer<JavaScriptObject>() {
 
 				@Override
@@ -187,9 +164,13 @@ public class OAuth2Client implements EntryPoint {
 	}-*/;
 	
 	
-	private native void install(String verifier) /*-{
+	private native void install(String verifier, String code, String redirect_uri) /*-{
+	    var params = { "code_verifier": verifier, "code": code, "redirect_uri": redirect_uri}
 		$wnd.getItem = function(key) {
-			return verifier;
+			return params[key];
 		}
+        $wnd.logout = function() {
+            $wnd.location = "/dwo/saml/logout.jsp"
+        }
 	}-*/;
 }

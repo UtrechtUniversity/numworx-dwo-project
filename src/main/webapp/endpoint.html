@@ -18,7 +18,10 @@ clientId= window.parent.clientId;
                 var xhr = new XMLHttpRequest();
 
                 xhr.onload = function() {
-                    var response = xhr.response;
+                    var response = null;
+                    if (xhr.readyState == 4) {
+                    	response = xhr.response
+                    }
                     var message;
 
                     if (xhr.status == 200) {

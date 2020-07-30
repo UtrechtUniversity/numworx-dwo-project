@@ -1,6 +1,8 @@
 package nl.numworx.oauth2client.server;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -61,13 +63,38 @@ public class OAuth2Server extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String type = req.getParameter("response_type");
+		if (!"code".equals(type)) {
+          resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+          LOG.log(Level.WARNING, "invalid response_type " + type);
+          return;		  
+		}
 		String redirectUrl = req.getParameter("redirect_uri");
+		URI client, server;
+		try {
+          String requestURL = System.getProperty("ALLOW_ORIGIN", "*");
+          if ("*".equals(requestURL))
+            requestURL = req.getRequestURL().toString();
+          server = new URI(requestURL);
+          client = new URI(redirectUrl);
+          boolean scheme =  server.getScheme().equals(client.getScheme());
+          boolean host   =  server.getHost().equals(client.getHost());
+          boolean port   =  server.getPort() == client.getPort();
+          if (!scheme || !host || !port) 
+            throw new URISyntaxException(redirectUrl, "not a lookalike");        
+        } catch (URISyntaxException e) {
+          resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+          LOG.log(Level.WARNING, "invalid redirect_uri " + redirectUrl,e);
+          return;
+        }				
 		String challenge = req.getParameter("code_challenge");
 		String state = req.getParameter("state");
 		String clientId = req.getParameter("client_id");
+
+		
 		Cookie cookie = new Cookie(CHALLENGE, challenge);
 		cookie.setHttpOnly(true);
-		cookie.setSecure(req.isSecure());
+		cookie.setSecure(true);
+		cookie.setPath("/");
 // DEBUGING
 //		req.setAttribute("uid", "staff1");
 
@@ -88,19 +115,18 @@ public class OAuth2Server extends HttpServlet {
 		String samlUserID = user.getSamlUserId();	      
 		String samlOrgID = user.getSamlOrgId();
 		String authToken = user.getAuthToken();
-		log("getToken " + samlUserID + " " + samlOrgID + " " + authToken);
+		log("getToken " + samlUserID + " " + samlOrgID + " " + authToken + " " + clientId);
 		String token = "3\f" + samlUserID + '\f' + samlOrgID + '\f' + authToken;
 		token = Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
 		
 		String code = token;
 		
-		String location = redirectUrl + "?code=" + URLEncoder.encode(code);
+		String location = client.getRawPath() + "?code=" + URLEncoder.encode(code);
 		if (state != null) {
 			location += "&state=" + URLEncoder.encode(state);
 		}
+		location = server.resolve(location).toASCIIString();
 		resp.sendRedirect(location);
-//		resp.setContentType("text/html");
-//		resp.getWriter().print("<a href='" + location + "'>KLIK</a>");
 	}
 
 	@Override
@@ -110,7 +136,7 @@ public class OAuth2Server extends HttpServlet {
 		for (Cookie i: cookies) {
 			if (i.getName().equals(CHALLENGE)) { challenge = i; }
 		}
-		challenge.setMaxAge(-1);
+		challenge.setMaxAge(0);
 		String verifier = req.getParameter("code_verifier");
 		MessageDigest digest = null;
 		try {
@@ -130,9 +156,9 @@ public class OAuth2Server extends HttpServlet {
 		) {
 			resp.addCookie(challenge);
 			resp.setContentType("application/json");
-			resp.getWriter().print("{'access_token':'okay'}");
+			resp.getWriter().print("{\"access_token\":\"okay\"}");
 		} else {
-			resp.sendError(resp.SC_BAD_REQUEST);
+			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		}
 	}
 
