@@ -16,25 +16,39 @@ public class OAuthManager {
 			return $wnd.parent.clientId;
 	}-*/;
 
-	private static native String redirectUri() /*-{
-		return $wnd.parent.location.href.replace($wnd.parent.location.search, '');
+	private static native String redirectUri0() /*-{
+        return $wnd.parent.getItem("redirect_uri");
 	}-*/;
 	
+	
 	private static native String codeVerifier0() /*-{
-		$wnd.getItem = $wnd.parent.getItem
 		return $wnd.parent.getItem("code_verifier");
 	}-*/;
-	private static String codeVerifier() {
+
+	private static native String code() /*-{
+      $wnd.getItem = $wnd.parent.getItem
+      return $wnd.parent.getItem("code");
+    }-*/;
+
+    private static String codeVerifier() {
 		try {
 			return codeVerifier0();
 		} catch(Exception e) {
 			return null;
 		}
 	}
+    private static String redirectUri() {
+      try {
+          return redirectUri0();
+      } catch(Exception e) {
+          return null;
+      }
+  }
 	
 	
 	public Promise<DomToken> authorization_token(String token) {
 		PromiseCallback<DomToken> defer = new PromiseCallback<>();
+		if("parent".equals(token)) token = code();
 		service.authorize("authorization_code", token, clientId(), redirectUri(), codeVerifier(), defer);
 		return defer.getPromise();
 	}
