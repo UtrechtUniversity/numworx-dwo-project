@@ -73,6 +73,16 @@ public class OAuth2Client implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+		String clientId = getClientId();
+		if(clientId.isEmpty()) {
+            String endpoint = getEndpoint0();
+            String search = getSearch().substring(1);
+            String hash = getHash0();
+			String url = endpoint + "?" + search + hash;
+			insertFrame(url);
+			return;
+		}
+
 		storage = Storage.getSessionStorageIfSupported();
 		
 		String code = Window.Location.getParameter("code");
@@ -100,13 +110,8 @@ public class OAuth2Client implements EntryPoint {
 				storage.clear();
 				install(verifier,code, redirect_uri);
 				code = "parent";
-				Frame frame = new Frame(endpoint + "?a="+URL.encodeQueryString(code) + search + hash);
-				frame.getElement().setAttribute("allow", "fullscreen");
-				frame.setStylePrimaryName("iframe");
-				RootLayoutPanel root = RootLayoutPanel.get();
-				root.add(frame);
-				root.setWidgetLeftWidth(frame, 0, Unit.PCT, 100, Unit.PCT);
-				root.setWidgetTopHeight(frame, 0, Unit.PCT, 100, Unit.PCT);
+				String url = endpoint + "?a="+URL.encodeQueryString(code) + search + hash;
+				insertFrame(url);
 				return;
 			}
 // initial
@@ -142,6 +147,16 @@ public class OAuth2Client implements EntryPoint {
 				} };
 			digest(verifier, consumer);
 			return;
+	}
+
+	private void insertFrame(String url) {
+		Frame frame = new Frame(url);
+		frame.getElement().setAttribute("allow", "fullscreen");
+		frame.setStylePrimaryName("iframe");
+		RootLayoutPanel root = RootLayoutPanel.get();
+		root.add(frame);
+		root.setWidgetLeftWidth(frame, 0, Unit.PCT, 100, Unit.PCT);
+		root.setWidgetTopHeight(frame, 0, Unit.PCT, 100, Unit.PCT);
 	}
 
 	
