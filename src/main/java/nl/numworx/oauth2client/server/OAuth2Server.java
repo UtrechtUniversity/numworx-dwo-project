@@ -80,7 +80,7 @@ public class OAuth2Server extends HttpServlet {
           boolean host   =  server.getHost().equals(client.getHost());
           boolean port   =  server.getPort() == client.getPort();
           if (!scheme || !host || !port) 
-            throw new URISyntaxException(redirectUrl, "not a lookalike");        
+            throw new URISyntaxException(redirectUrl, "not a lookalike " + client + " " + server);        
         } catch (URISyntaxException e) {
           resp.sendError(HttpServletResponse.SC_NOT_FOUND);
           LOG.log(Level.WARNING, "invalid redirect_uri " + redirectUrl,e);
