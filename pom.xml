@@ -833,6 +833,17 @@
 		    	</dependency>
         	</dependencies>       
         </profile>
+	<profile>
+		<id>samllogin</id>
+		<dependencies>
+    	<dependency>
+    	  <groupId>nl.numworx</groupId>
+  		  <artifactId>SAMLlogin</artifactId>
+  		  <version>0.0.2-SNAPSHOT</version>
+    	  <scope>runtime</scope>
+    	</dependency>
+		</dependencies>
+	</profile>
     </profiles>
     <reporting>
         <plugins>

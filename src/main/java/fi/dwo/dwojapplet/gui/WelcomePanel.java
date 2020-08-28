@@ -2,7 +2,6 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\WelcomePanel.java
 package fi.dwo.dwojapplet.gui;
 
-import fi.beans.copyright.FIButton;
 import fi.beans.copyright.NumworxInfo;
 import fi.beans.loader.Loader;
 import fi.beans.numworxlf.Constants;
@@ -244,7 +243,7 @@ if(DwoHelper.isSamlLogin()) {
     loginOnly = true;
     p.setLayout(new BorderLayout());
     SAMLLoginIF browser = getSAMLLogin();
-    String redirectUri = DwoHelper.getServerUrlPath() + "saml/login.jsp";
+    String redirectUri = DwoHelper.getServerUrlPath() + "saml/login2.jsp";
     browser.loadURL(redirectUri);
     browser.getPromise().then(pr -> {
       profileselect.switchProfile();
