@@ -28,6 +28,7 @@ public class OsirisTest extends TestCase {
 		assertNotNull(in);
 		InputSource is = new InputSource();
 		is.setByteStream(in);
+		is.setEncoding("UTF-8");
 		builder.setLeerlingenSource(is);
 		Map<String, DomUserFull> result = builder.parseLeerlingen();
 		assertEquals(17, result.size());
