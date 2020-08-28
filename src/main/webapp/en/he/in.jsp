@@ -13,7 +13,7 @@ if ( hash != null && (hash.isEmpty() || Pattern.matches("#[a-z]+:\\d*", hash))) 
 else
 	hash = "";
 String clientId = "";
-//if ("shibboleth".equals(request.getAuthType())) clientId = "f9af29c4-cfc5-11ea-87d0-0242ac130003";
+if ("shibboleth".equals(request.getAuthType())) clientId = "f9af29c4-cfc5-11ea-87d0-0242ac130003";
 %>
 <meta charset="UTF-8">
 <meta name="apple-mobile-web-app-capable" content="yes">
