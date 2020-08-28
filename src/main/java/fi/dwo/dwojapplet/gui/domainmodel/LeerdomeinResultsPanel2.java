@@ -6,7 +6,9 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
@@ -20,9 +22,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -38,6 +42,7 @@ import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -48,11 +53,15 @@ import javax.swing.tree.TreePath;
 
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JScrollPane;
 import fi.beans.numworxlf.JTree;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.ConfirmDialog;
 import fi.dwo.dwojapplet.gui.GuiConstants;
+import fi.dwo.dwojapplet.gui.GuiCreator;
+import fi.dwo.dwojapplet.gui.TeacherStudentModelPanel;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
@@ -68,13 +77,14 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
+import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class LeerdomeinResultsPanel2 extends JPanel implements Constants, ActionListener, TreeSelectionListener {
   private static final Logger LOG = Logger.getLogger(LeerdomeinResultsPanel2.class.getName());
-  private static final Color RED = new Color(200, 0, 0);
-  private static final Color GREEN = new Color(0, 180, 0);
+  static final Color RED = new Color(200, 0, 0);
+  static final Color GREEN = new Color(0, 180, 0);
 
   
 //  public static void main(String[] args) {
@@ -135,17 +145,57 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
     }
     
   }
-  
+  public class ImageButtonEditor extends AbstractCellEditor implements
+  TableCellEditor, ActionListener {
+
+Object value;
+private int row;
+TableModel model;
+//ClassTeacherPanelTableModel model;
+
+@Override
+public Component getTableCellEditorComponent(JTable table, Object value,
+      boolean arg2, int aRow, int aCol) {
+  this.value = value;
+  JButton button = new JButton((Icon) value);
+  button.addActionListener(this);
+  row = aRow;
+  model = table.getModel();
+  return button;
+}
+
+@Override
+public Object getCellEditorValue() {
+  return value;
+}
+
+@Override
+public void actionPerformed(ActionEvent event) {
+  if (value == lens) {
+    String student = (String) model.getValueAt(row, 0);
+    String title = "";
+    StudentResultsPanel message = new StudentResultsPanel(student);
+    message.setContext(context);
+    List<DomStudentModelDataStudentScore> studentScores = scores.getStudentScores();
+    DomStudentModelStructureScore v = studentScores.get(row).getDomStudentModelStructureScore();
+    message.setScore(v);
+    JOptionPane.showMessageDialog(LeerdomeinResultsPanel2.this, message, title, JOptionPane.PLAIN_MESSAGE);
+  }
+}
+
+}
+
   
   private static final float UNSURE = 0.5f;
-  class ScoreIcon implements Icon {
+  static class ScoreIcon implements Icon {
 
     float green = 0.64f;
     float red =   0.24f;
     float score = 0.5f;
     float score1 = 0.5f;
     
-    ScoreIcon( double green, double red) {
+    ScoreIcon( double green, double red, FontMetrics fm) {
+      this.fm = fm;
       if (Double.isNaN(green)) green = UNSURE;
       if (Double.isNaN(red)) red = UNSURE;
       this.green = this.score = (float)green;
@@ -153,7 +203,8 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
     }
     
     @Deprecated
-    ScoreIcon( double score, long count, double part, int size) {
+    ScoreIcon( double score, long count, double part, int size, FontMetrics fm) {
+      this.fm = fm;
       if (count == 0L || size == 0) {
         this.score = UNSURE;
         this.score1 = UNSURE;
@@ -197,9 +248,11 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
       return 150;
     }
 
+    final FontMetrics fm;
+    
     @Override
     public int getIconHeight() {
-      return getFontMetrics(getFont()).getHeight()+4+3;
+      return fm.getHeight()+4+3;
     }
 
     public String getGreenPercentage() {
@@ -226,6 +279,7 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
   private DomStudentModelContext context;
   private DomStudentModelScorePerTeacher scores;
   private JLabel red, score, green;
+  private Icon lens;
   
   public LeerdomeinResultsPanel2() {
     super(new BorderLayout());
@@ -237,6 +291,8 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
     titleLabel.setOpaque(true);
     titleLabel.setHorizontalAlignment(JLabel.CENTER);
     titleLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+    Image searchImage = DwoHelper.getResourceImage(GuiConstants.SEARCH_IMAGE);
+    lens = new ImageIcon(searchImage);
  
     JSplitPane leftBox;
     Box vb = Box.createVerticalBox();
@@ -327,7 +383,7 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
     JLabel l = new JLabel("Klasgemiddelde: ");
     l.setFont(font.deriveFont(Font.BOLD, 16));
     l.setForeground(COLOR15);
-    JComponent gemiddelde = score = new JLabel(new ScoreIcon(0, 0, 0, 0));
+    JComponent gemiddelde = score = new JLabel(new ScoreIcon(0, 0, 0, 0, l.getFontMetrics(l.getFont())));
     red = new JLabel("0%"); red.setForeground(RED);
     green = new JLabel("0%"); green.setForeground(GREEN);
     b = hb(ra(10,0), l, ra(10,0), red, gemiddelde, green, hgl());   
@@ -376,16 +432,16 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
     klassen.setMaximumSize(klassen.getPreferredSize());
   }
 
-  private static Box hb(Component... c) {
+  static Box hb(Component... c) {
     Box box = Box.createHorizontalBox();
     for (int i = 0; c != null && i < c.length; i++)
         box.add(c[i]);
     return box;
 }
-  private static Component hgl() {
+   static Component hgl() {
     return Box.createHorizontalGlue();
 }
-  private static Component ra(int w, int h) {
+   static Component ra(int w, int h) {
     return Box.createRigidArea(new Dimension(w, h));
 }
 
@@ -474,10 +530,15 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
           
           }
           
-          TableModel tmodel = new DefaultTableModel(scores.getStudents().size(), 4);
+          TableModel tmodel = new DefaultTableModel(scores.getStudents().size(), 5) {
+            public boolean isCellEditable(int row, int column) {
+              return column == 1;
+            } 
+          } ;
           for (int i = 0; i < tmodel.getRowCount(); i++ ) {
             String u = scores.getStudents().get(i).getValue().getDisplayName();
             tmodel.setValueAt(u, i, 0);
+            tmodel.setValueAt(lens, i, 1);
           }
           //calculateROOT(scores, tmodel);
           JTable table = results;
@@ -489,29 +550,35 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
           ColorRenderer studentRenderer = new ColorRenderer(COLOR15, table.getSelectionForeground());
           c0.setCellRenderer(studentRenderer);
           
-          TableColumn c1 = columnModel.getColumn(1);
+          TableColumn c1 = columnModel.getColumn(2);
           ColorRenderer redRenderer = new ColorRenderer(RED);
           redRenderer.setHorizontalAlignment(SwingConstants.TRAILING);
           c1.setCellRenderer(redRenderer);
           int width = new JLabel("100%").getPreferredSize().width;
           c1.setPreferredWidth(width);
           c1.setMaxWidth(width);
-          TableColumn c3 = columnModel.getColumn(3);
+          TableColumn c3 = columnModel.getColumn(4);
           c3.setCellRenderer(new ColorRenderer(GREEN));
           c3.setPreferredWidth(width);
           c3.setMaxWidth(width);
-          TableColumn c2 = columnModel.getColumn(2);
+          TableColumn c2 = columnModel.getColumn(3);
           c2.setCellRenderer(new IconRenderer());
           width = score.getIcon().getIconWidth()+3;
           c2.setPreferredWidth(width);
           c2.setMaxWidth(width);
           table.setRowHeight(score.getPreferredSize().height+2);
           table.clearSelection();
+          
+          c0 = columnModel.getColumn(1);
+          c0.setCellRenderer(new IconRenderer());
+          c0.setCellEditor(new ImageButtonEditor());
+          c0.setMaxWidth(new JLabel(lens).getPreferredSize().width+4);
+          
         } catch (Dwo2Exception e1) {
           LOG.log(Level.SEVERE, "getScores", e1);
         }
       } else {
-        results.setModel(new DefaultTableModel(0,4));
+        results.setModel(new DefaultTableModel(0,5));
       }
     }
     
@@ -530,15 +597,15 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
       for( DomStudentModelCategoryScore item: v.getCategories()) {
         if (item.getCount() != 0) nz += 1;      
       }
-      ScoreIcon result = new ScoreIcon (v.getScore()  , v.getCount() , nz , count);
-      tmodel.setValueAt(result.getRedPercentage(), i, 1);
-      tmodel.setValueAt(result, i, 2);
-      tmodel.setValueAt(result.getGreenPercentage(), i, 3);
+      ScoreIcon result = new ScoreIcon (v.getScore()  , v.getCount() , nz , count, results.getFontMetrics(results.getFont()));
+      tmodel.setValueAt(result.getRedPercentage(), i, 2);
+      tmodel.setValueAt(result, i, 3);
+      tmodel.setValueAt(result.getGreenPercentage(), i, 4);
       if (v.getCount() != 0) nzl ++;
       sumScore += v.getScore();
       sumCount += v.getCount();
     }
-    ScoreIcon icon = new ScoreIcon (sumScore , sumCount , nzl , tmodel.getRowCount()  );
+    ScoreIcon icon = new ScoreIcon (sumScore , sumCount , nzl , tmodel.getRowCount(), results.getFontMetrics(results.getFont()));
     score.setIcon( icon);
     red.setText(icon.getRedPercentage());
     green.setText(icon.getGreenPercentage());
@@ -560,16 +627,16 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
       for (DomStudentModelObjectiveScore item : v.getObjectives()) {
         if (item.getCount() != 0) nz += 1;
       }
-      ScoreIcon result = new ScoreIcon(v.getScore(), v.getCount(), nz, count);
-      tmodel.setValueAt(result, i, 2);
-      tmodel.setValueAt(result.getGreenPercentage(), i, 1);
-      tmodel.setValueAt(result.getGreenPercentage(), i, 3);
+      ScoreIcon result = new ScoreIcon(v.getScore(), v.getCount(), nz, count, results.getFontMetrics(results.getFont()));
+      tmodel.setValueAt(result, i, 3);
+      tmodel.setValueAt(result.getGreenPercentage(), i, 2);
+      tmodel.setValueAt(result.getGreenPercentage(), i, 4);
      if (v.getCount() != 0) nzl++;
       sumScore += v.getScore();
       sumCount += v.getCount();
     }
     // score.setText( sumScore + "/" + sumCount + " " + nzl + "/" + tmodel.getRowCount() );
-    ScoreIcon icon = new ScoreIcon(sumScore, sumCount, nzl, tmodel.getRowCount());
+    ScoreIcon icon = new ScoreIcon(sumScore, sumCount, nzl, tmodel.getRowCount(), results.getFontMetrics(results.getFont()));
     score.setIcon(icon);
     red.setText(icon.getGreenPercentage());
     green.setText(icon.getGreenPercentage());
@@ -609,23 +676,23 @@ public class LeerdomeinResultsPanel2 extends JPanel implements Constants, Action
       
       ScoreIcon result;
       if (v.getCount() == 0) {
-        result = new ScoreIcon(UNSURE, UNSURE);
+        result = new ScoreIcon(UNSURE, UNSURE, results.getFontMetrics(results.getFont()));
       } else if (v.getScore() > 0.5) {
         sumGreenScore += v.getScore();
         sumGreenCount += v.getCount();
-        result = new ScoreIcon(v.getScore(), UNSURE);
+        result = new ScoreIcon(v.getScore(), UNSURE, results.getFontMetrics(results.getFont()));
       } else {
         sumRedScore += v.getScore();
         sumRedCount += v.getCount();
-        result = new ScoreIcon(UNSURE, v.getScore());
+        result = new ScoreIcon(UNSURE, v.getScore(), results.getFontMetrics(results.getFont()));
       }
       
-      tmodel.setValueAt(result, i, 2);
-      tmodel.setValueAt(result.getRedPercentage(), i, 1);
-      tmodel.setValueAt(result.getGreenPercentage(), i, 3);
+      tmodel.setValueAt(result, i, 3);
+      tmodel.setValueAt(result.getRedPercentage(), i, 2);
+      tmodel.setValueAt(result.getGreenPercentage(), i, 4);
       if (v.getCount() != 0) nzl ++;
     }
-    ScoreIcon icon = new ScoreIcon (sumGreenScore/sumGreenCount, sumRedScore/sumRedCount);
+    ScoreIcon icon = new ScoreIcon (sumGreenScore/sumGreenCount, sumRedScore/sumRedCount, score.getFontMetrics(score.getFont()));
     score.setIcon( icon);
     red.setText( icon.getRedPercentage());
     green.setText(icon.getGreenPercentage());
