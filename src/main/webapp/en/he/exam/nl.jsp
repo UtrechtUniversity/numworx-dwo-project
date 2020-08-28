@@ -1,16 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="fi.servlet.dwomaccess.Subnet" %>
-<%@page import="java.util.Base64"%>
 <%@ include file='/dwo/toets_util.jsp' %>
-<%@ include file='/dwo/saml_util.jsp' %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Safe Exam Browser</title>
+    <link type="text/css" rel="stylesheet" href="/dwo/oauth2client/OAuth2Client.css">
 </head>
-<body onload='loading()' >
+<body>
 <h1>Starten</h1>
 
 <p>
@@ -24,42 +23,28 @@
 	}
 	else if ( needSEB ) {
 %>
-<a href='sebs://<%=server %>/ho/en/exam/leerling.seb'>Start de beveiligde <strong>toets</strong> omgeving</a>
-	<script> function loading() { } </script>
+<a href='sebs://<%=server%>/ho/exam/leerling.seb'>Start de beveiligde <strong>exam</strong> omgeving</a>
 <%
 	} else {
-		
-		String query = "";
-		Cookie[] cookies = wrap.getCookies();
-		String u = null, o = null, t = null;
-		for(Cookie c : cookies) {
-			if (DWO_SAML_ORGANIZATION_ID.equals(c.getName())) o = c.getValue();
-			else if (DWO_SAML_USER_ID.equals(c.getName())) u = c.getValue();
-			else if (DWO_SAML_AUTH_TOKEN.equals(c.getName())) t = c.getValue();
-		}
-		if (o != null && u != null && t != null) {
-		      t = "3\f" + u + '\f' + o + '\f' + t;
-		      query += "?a=" + Base64.getEncoder().encodeToString(t.getBytes());
-		}
-
 %>
-	  <a id='toets' href='/ho/en/exam/toets_nl.jsp<%=query%>'>Start de beveiligde <strong>toets</strong> omgeving</a>
-	  <script>
-	  	function loading() {
-	  		document.getElementById('toets').click();
-	  	}
-	  
-	  </script>
+    <script>
+    	endpoint = "/ho/en/exam/toets_nl.jsp"
+    	search = ""
+    	hash= ""
+        clientId = "f9af29c4-cfc5-11ea-87d0-0242ac130003"
+    </script>
+    <script type="text/javascript" src="/dwo/oauth2client/oauth2client/oauth2client.nocache.js"></script>
 <%	  
 	}
 
 	if ( needSEB ) {
 %>
-<h1>Install</h1>
+<h1>Installeren</h1>
 <ul>
 	<li><a href='https://www.dwo.nl/downloads/SafeExamBrowserInstaller.exe'>Safe Exam Browser Windows (2.1.7)</a></li>
 	<li><a href='https://www.dwo.nl/downloads/SafeExamBrowser-2.1.2.dmg'>Safe Exam Browser MacOs (2.1.2)</a></li>
 </ul>
+Let op, alleen deze versies werken correct.
 <% } %>
 </body>
 </html>
