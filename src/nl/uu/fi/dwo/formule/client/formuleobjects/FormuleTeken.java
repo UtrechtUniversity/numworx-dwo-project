@@ -406,7 +406,7 @@ public class FormuleTeken extends FormuleElement
 
 	private void drawMin(PathBuilder ctx)
 	{
-		ctx.setLineWidth(0.6 * fm.getStrokeWidth());
+		ctx.setLineWidth(1.25 * fm.getStrokeWidth());
 		ctx.beginPath();
 		ctx.moveTo(fm.getAscent() / 4, 5 * fm.getAscent()/8 + 1);
 		ctx.lineTo(fm.getAscent()/4 + fm.getAscent()/2, 5 * fm.getAscent()/8 + 1);// + fm.getAscent() / 6);
