@@ -108,7 +108,7 @@ public class WortelVak extends FormuleElementWithChildren
 		x = width; y =  fm.getAscent() / 8  +1;
 		item = getSVGSVGElement(svg).createSVGPoint(x+this.x, y+this.y);
 		list.appendItem(item);
-		line.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, String.valueOf(0.6*fm.getStrokeWidth()));		
+		line.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, String.valueOf(1.0*fm.getStrokeWidth()));		
 		line.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, color);
 		line.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "none");
 	}
