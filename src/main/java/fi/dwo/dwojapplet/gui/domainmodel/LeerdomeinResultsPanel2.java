@@ -6,8 +6,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -184,85 +182,6 @@ public void actionPerformed(ActionEvent event) {
 }
 
 }
-
-  
-  private static final float UNSURE = 0.5f;
-  static class ScoreIcon implements Icon {
-
-    float green = 0.64f;
-    float red =   0.24f;
-    float score = 0.5f;
-    float score1 = 0.5f;
-    
-    ScoreIcon( double green, double red, FontMetrics fm) {
-      this.fm = fm;
-      if (Double.isNaN(green)) green = UNSURE;
-      if (Double.isNaN(red)) red = UNSURE;
-      this.green = this.score = (float)green;
-      this.red   = this.score1 = (float) red;
-    }
-    
-    @Deprecated
-    ScoreIcon( double score, long count, double part, int size, FontMetrics fm) {
-      this.fm = fm;
-      if (count == 0L || size == 0) {
-        this.score = UNSURE;
-        this.score1 = UNSURE;
-        red = UNSURE;
-        green = UNSURE;
-      } else {
-        this.score = red = green  =  (float) (((float)score/count * part + (size-part)*UNSURE)/(float)size);
-        this.score1 = this.score; 
-        if (green <= 0.49f) {
-          green = 0.5f;
-        } else if (green >= 0.51f){
-          red = 0.5f;
-        } else {
-          green += 0.01f; 
-          red -= 0.01f;        
-        }
-      }
-    }
-    
-    
-    @Override
-    public void paintIcon(Component c, Graphics g, int x, int y) {
-      g.setColor(c.getBackground());
-      g.fillRect(x, y, getIconWidth(), getIconHeight());
-      x+=2;
-      y+=2;
-      int w = getIconWidth()-3;
-      g.setColor(Color.white);
-      g.fillRect(x, y, w-1, getIconHeight()-2-3);
-      g.setColor(RED);
-      g.fillRect( x+ Math.round(red * w), y, Math.round((0.5f-red)*w), getIconHeight()-2-3);
-
-      g.setColor(GREEN);
-      g.fillRect(x + Math.round(w/2.0f), y, Math.round(w*(green-0.5f)), getIconHeight()-2-3);          
-
-      g.setColor(COLOR14); g.drawRect(x, y, getIconWidth()-2, getIconHeight()-2-4);
-    }
-
-    @Override
-    public int getIconWidth() {
-      return 150;
-    }
-
-    final FontMetrics fm;
-    
-    @Override
-    public int getIconHeight() {
-      return fm.getHeight()+4+3;
-    }
-
-    public String getGreenPercentage() {
-      return Math.round(score * 200-100)+"%";
-    }
-    public String getRedPercentage() {
-      return -Math.round(score1 * 200-100)+"%";
-    }
-    
-  }
 
   
   private JLabel titleLabel;
@@ -676,15 +595,15 @@ public void actionPerformed(ActionEvent event) {
       
       ScoreIcon result;
       if (v.getCount() == 0) {
-        result = new ScoreIcon(UNSURE, UNSURE, results.getFontMetrics(results.getFont()));
+        result = new ScoreIcon(ScoreIcon.UNSURE, ScoreIcon.UNSURE, results.getFontMetrics(results.getFont()));
       } else if (v.getScore() > 0.5) {
         sumGreenScore += v.getScore();
         sumGreenCount += v.getCount();
-        result = new ScoreIcon(v.getScore(), UNSURE, results.getFontMetrics(results.getFont()));
+        result = new ScoreIcon(v.getScore(), ScoreIcon.UNSURE, results.getFontMetrics(results.getFont()));
       } else {
         sumRedScore += v.getScore();
         sumRedCount += v.getCount();
-        result = new ScoreIcon(UNSURE, v.getScore(), results.getFontMetrics(results.getFont()));
+        result = new ScoreIcon(ScoreIcon.UNSURE, v.getScore(), results.getFontMetrics(results.getFont()));
       }
       
       tmodel.setValueAt(result, i, 3);

@@ -10,7 +10,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 
 class NodeLeaf implements Node {
 
-  
+  final boolean copy;
   private int path;
   private Map<String, Map<String,Set<Integer>>> methode;
   
@@ -28,12 +28,14 @@ class NodeLeaf implements Node {
    * @return the info
    */
   public DomStudentModelContextInfo getInfo() {
-    return new DomStudentModelContextInfo(info);
+    if (copy) return new DomStudentModelContextInfo(info);
+    return info;
   }
 
   private String lang;
 
   NodeLeaf(String title, DomStudentModelContextInfo org, String l) {
+    copy = true;
     this.info = new DomStudentModelContextInfo(org);
     this.lang = l;
     if (this.info.getId() == null) {
@@ -50,6 +52,7 @@ class NodeLeaf implements Node {
   }
 
   public NodeLeaf(String string) {
+    copy = true;
     this.lang = string;
     info = new DomStudentModelContextInfo(new TreeMap<>(), new TreeMap<>());
     info.setId(UUID.randomUUID().toString());
@@ -64,6 +67,7 @@ class NodeLeaf implements Node {
   }
 
   public NodeLeaf(NodeLeaf u) {
+    copy = true;
     lang = u.lang;
     title = u.title;
     info = new DomStudentModelContextInfo(u.info);
@@ -77,6 +81,23 @@ class NodeLeaf implements Node {
     } else {
       methode = info.getMethods();
     }
+  }
+
+  public NodeLeaf(String subtitle1, DomStudentModelContextInfo info2, String locale, boolean b) {
+    copy = b;
+    this.info = (info2);
+    this.lang = locale;
+    if (this.info.getId() == null) {
+      this.info.setId(UUID.randomUUID().toString());
+    }
+    
+    if (this.info.getMethods() == null) {
+      methode = new TreeMap<>();
+      this.info.setMethods(methode);
+    } else {
+      methode = this.info.getMethods();
+    }
+    setTitle(subtitle1);
   }
 
   public String toString() {

@@ -24,6 +24,7 @@ public class NodeVector extends Vector<Object> implements Node {
   }
 
   NodeVector(NodeVector u) {
+    copy = true;
     title = u.title;
     lang = u.lang;
     info = new DomStudentModelContextInfo(new TreeMap<>(u.info.getTitle()), new TreeMap<>(u.info.getDescription()));
@@ -31,7 +32,9 @@ public class NodeVector extends Vector<Object> implements Node {
   
   public String title, lang;
   public DomStudentModelContextInfo info;
+
   public NodeVector(List<DomStudentModelCategory> categories, DomStudentModelContextInfo info, String l) {
+    copy = true;
     String title = info.getTitle().get(l);
     this.title = title;
     this.info = new DomStudentModelContextInfo(info);
@@ -46,7 +49,9 @@ public class NodeVector extends Vector<Object> implements Node {
     }
     setSize(last+1);
   }
+
   public NodeVector(List<DomStudentModelObj> objectives, String title, String l, DomStudentModelContextInfo leaf) {
+    copy = true;
     this.title = title;
     this.info = new DomStudentModelContextInfo(leaf);
     this.lang = l;
@@ -68,6 +73,7 @@ public class NodeVector extends Vector<Object> implements Node {
   }
 
   public NodeVector(String lang) {
+    copy = true;
     info = new DomStudentModelContextInfo(new TreeMap<>(), new TreeMap<>());
     this.lang = lang;
     setDescription("");
@@ -75,10 +81,53 @@ public class NodeVector extends Vector<Object> implements Node {
   }
   
   public NodeVector(DomStudentModelContextInfo org, String lang) {
+    copy = true;
     info = new DomStudentModelContextInfo(org);
     this.lang = lang;
   }
   
+  final boolean copy;
+  public NodeVector(List<DomStudentModelCategory> categories, DomStudentModelContextInfo info,
+      String locale, boolean b) {
+    copy = b;
+    String title = info.getTitle().get(locale);
+    this.title = title;
+    this.info = info;
+    this.lang = locale;
+    int last = -1;
+    for (DomStudentModelCategory cat: categories) {    
+      String subtitle = cat.getInfo().getTitle().getOrDefault(locale,"untitled");
+      if (!subtitle.isEmpty()) last = size();
+      NodeVector nv = new NodeVector(cat.getObjectives(), subtitle, locale, cat.getInfo(), b);
+      nv.setPath(elementCount);
+      add(nv);
+    }
+    setSize(last+1);
+  }
+
+  public NodeVector(List<DomStudentModelObj> objectives, String subtitle, String locale,
+      DomStudentModelContextInfo info2, boolean b) {
+    copy = b;
+    this.title = subtitle;
+    this.info = (info2);
+    this.lang = locale;
+    int last = -1;
+    for (DomStudentModelObj obj: objectives) {
+      String subtitle1 = obj.getInfo().getTitle().getOrDefault(locale,"untitled");
+      if (!subtitle1.isEmpty()) last = size();
+      if (obj.getObjectives()==null)
+      {  NodeLeaf nodeleaf = new NodeLeaf(subtitle1, obj.getInfo(), locale,b);
+         nodeleaf.setPath(elementCount);
+         add(nodeleaf);
+      } else {
+        NodeVector nv = new NodeVector(obj.getObjectives(), subtitle1, locale, obj.getInfo(),b);
+        nv.setPath(elementCount);
+        add(nv);
+      }
+    }
+    setSize(last+1);
+  }
+
   public String toString() {
     return title;
   }
@@ -114,7 +163,8 @@ public class NodeVector extends Vector<Object> implements Node {
   }
   @Override
   public DomStudentModelContextInfo getInfo() {
-    return new DomStudentModelContextInfo(info);
+    if (copy) return new DomStudentModelContextInfo(info);
+    return info;
   }
 
   @Override
