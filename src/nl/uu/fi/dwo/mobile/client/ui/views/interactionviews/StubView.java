@@ -151,7 +151,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		correct = null;
 		teltmee = true;
 		if(innerMap.containsKey("teltmee")) 
-			teltmee = innerMap.containsKey("teltmee");
+			teltmee = innerMap.getBoolean("teltmee");
 		boolean logOption = innerMap.getBoolean("logOption", false);
 		if (logOption) {
 			String logID = innerMap.getString("logID");
@@ -180,6 +180,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			default: return "nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView";
 			case 6:  return "fi.nabouwenaanzichten.NabouwenAanzichten";
 			case 26: return "fi.tekenveelvlakopdr.TekenVeelvlakOpdr";
+			case 57: return "nl.numworx.geodefiner.GeoDefiner";
 		}
 	}
 	
