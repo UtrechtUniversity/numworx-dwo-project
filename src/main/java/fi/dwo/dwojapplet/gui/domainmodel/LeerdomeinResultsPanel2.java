@@ -3,10 +3,14 @@ package fi.dwo.dwojapplet.gui.domainmodel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Frame;
+import java.awt.HeadlessException;
 import java.awt.Image;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
@@ -27,6 +31,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -167,6 +172,29 @@ public Object getCellEditorValue() {
   return value;
 }
 
+
+Window getWindowForComponent(Component parentComponent)
+    throws HeadlessException {
+    if (parentComponent == null)
+        return JOptionPane.getRootFrame();
+    if (parentComponent instanceof Frame || parentComponent instanceof Dialog)
+        return (Window)parentComponent;
+    return getWindowForComponent(parentComponent.getParent());
+}
+private JDialog createDialog(Component parentComponent, String title)
+                             throws HeadlessException {
+
+                         final JDialog dialog;
+
+                         Window window = getWindowForComponent(parentComponent);
+                         if (window instanceof Frame) {
+                             dialog = new JDialog((Frame)window, title, true);
+                         } else {
+                             dialog = new JDialog((Dialog)window, title, true);
+                         }
+                         return dialog;
+                     }
+
 @Override
 public void actionPerformed(ActionEvent event) {
   if (value == lens) {
@@ -177,7 +205,12 @@ public void actionPerformed(ActionEvent event) {
     List<DomStudentModelDataStudentScore> studentScores = scores.getStudentScores();
     DomStudentModelStructureScore v = studentScores.get(row).getDomStudentModelStructureScore();
     message.setScore(v);
-    JOptionPane.showMessageDialog(LeerdomeinResultsPanel2.this, message, title, JOptionPane.PLAIN_MESSAGE);
+    JDialog dialog = createDialog(LeerdomeinResultsPanel2.this, title);
+    dialog.setContentPane(message);
+    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+    dialog.pack();
+    dialog.setLocationRelativeTo(LeerdomeinResultsPanel2.this);
+    dialog.show();    
   }
 }
 
