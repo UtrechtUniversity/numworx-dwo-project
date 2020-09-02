@@ -52,6 +52,8 @@ public class SummaryIcon implements Icon, PIcon {
     int w = 7;
     int i = 0;
     y += 1;
+    y += h/4; // centreer, halve hoogte
+    h = h/2;
     x += 1;
     g.setColor(Color.WHITE);
     while ( i < white) {

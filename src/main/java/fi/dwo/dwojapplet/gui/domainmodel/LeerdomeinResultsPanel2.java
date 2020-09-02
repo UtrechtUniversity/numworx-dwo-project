@@ -567,8 +567,8 @@ public void actionPerformed(ActionEvent event) {
     double nzl = 0.0;
     double sumGreenScore = 0.0, sumRedScore = 0.0;
     long sumGreenCount = 0, sumRedCount = 0;
-    int cat = path[1];
-    int obj = path[2];
+    final int cat = path[1];
+    final int obj = path[2];
     List<DomStudentModelDataStudentScore> studentScores = scores.getStudentScores();
     for (int i = 0; i < tmodel.getRowCount(); i++ ) {
       DomStudentModelStructureScore c = studentScores.get(i).getDomStudentModelStructureScore();
@@ -576,9 +576,9 @@ public void actionPerformed(ActionEvent event) {
       DomStudentModelObjectiveScore v = o.getObjectives().get(obj);
       if (path.length >= 4) {
         for (int index = 3; index < path.length; index++) {
-          obj = path[index];
-          if (v.getChildren() != null && v.getChildren().size() > obj)
-            v = v.getChildren().get(obj);
+          int sub = path[index];
+          if (v.getChildren() != null && v.getChildren().size() > sub)
+            v = v.getChildren().get(sub);
           else
             v = new DomStudentModelObjectiveScore();
         }
@@ -623,32 +623,9 @@ public void actionPerformed(ActionEvent event) {
       if (model.getRoot() != root) model.setRoot(root);
     } else {
       model.activateFilter(true);
-      model.setRoot(filter(root, filter));      
+      model.setRoot(LeerdomeinEditPanel2.filter(root, filter));      
     }
     
-  }
-
-  private DefaultMutableTreeNode filter(DefaultMutableTreeNode parent,
-      Map<String, Map<String, Set<Integer>>> filter) {
-    InvisibleNode node;
-    if (! (parent instanceof InvisibleNode)) {
-      node = new InvisibleNode(parent.getUserObject());
-      Enumeration<?> children = parent.children();
-      while (children.hasMoreElements()) {
-        DefaultMutableTreeNode object = (DefaultMutableTreeNode) children.nextElement();
-        node.add(filter(object, filter));       
-      }
-    } else {
-      node = (InvisibleNode) parent;
-    }
-    if (node.isLeaf()) {
-      node.setVisible(Math.random()>0.2);
-    } else {
-      int cnt = node.getChildCount(true);
-      node.setVisible(cnt != 0);
-    }
-    
-    return node;
   }
 
 }

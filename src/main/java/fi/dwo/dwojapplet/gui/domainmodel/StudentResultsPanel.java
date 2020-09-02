@@ -306,50 +306,11 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
       if (model.getRoot() != root) model.setRoot(root);
     } else {
       model.activateFilter(true);
-      model.setRoot(filter(root, filter));      
+      model.setRoot(LeerdomeinEditPanel2.filter(root, filter));      
     }
     
   }
 
-  private DefaultMutableTreeNode filter(DefaultMutableTreeNode parent,
-      Map<String, Map<String, Set<Integer>>> filter) {
-    InvisibleNode node;
-    if (!(parent instanceof InvisibleNode)) {
-      node = new InvisibleNode(parent.getUserObject());
-      node.setAllowsChildren(parent.getAllowsChildren());
-      Enumeration<?> children = parent.children();
-      while (children.hasMoreElements()) {
-        DefaultMutableTreeNode object = (DefaultMutableTreeNode) children.nextElement();
-        node.add(filter(object, filter));
-      }
-    } else {
-      node = (InvisibleNode) parent;
-    }
-    if (node.isLeaf() && !node.getAllowsChildren()) {
-      NodeLeaf leaf = (NodeLeaf) node.getUserObject();
-      Map<String, Map<String, Set<Integer>>> methodes = leaf.getMethode();
-      node.setVisible(contains(filter, methodes));
-    } else {
-      int cnt = node.getChildCount(true);
-      node.setVisible(cnt != 0);
-    }
-
-    return node;
-  }
-
-  private boolean contains(Map<String, Map<String, Set<Integer>>> filter,
-      Map<String, Map<String, Set<Integer>>> methodes) {
-    for (Map.Entry<String, Map<String, Set<Integer>>> entry : filter.entrySet()) {
-      Map<String, Set<Integer>> map = methodes.getOrDefault(entry.getKey(), Collections.emptyMap());
-      if (map.isEmpty()) continue;
-      for (Map.Entry<String, Set<Integer>> m : entry.getValue().entrySet()) {
-        Set<Integer> chapters = new TreeSet<>(map.getOrDefault(m.getKey(), Collections.emptySet()));
-        chapters.retainAll(m.getValue());
-        if (!chapters.isEmpty()) return true;
-      }
-    }
-    return false;
-  }
 
   private Map<Object, DomStudentModelScore<?>> map = Collections.emptyMap();
   

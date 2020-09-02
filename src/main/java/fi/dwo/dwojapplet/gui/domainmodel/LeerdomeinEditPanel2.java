@@ -372,7 +372,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
     
   }
 
-  private DefaultMutableTreeNode filter(DefaultMutableTreeNode parent,
+  static DefaultMutableTreeNode filter(DefaultMutableTreeNode parent,
       Map<String, Map<String, Set<Integer>>> filter) {
     InvisibleNode node;
     if (! (parent instanceof InvisibleNode)) {
@@ -398,7 +398,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
     return node;
   }
 
-  private boolean contains(Map<String, Map<String, Set<Integer>>> filter,
+  static boolean contains(Map<String, Map<String, Set<Integer>>> filter,
       Map<String, Map<String, Set<Integer>>> methodes) {
     for( Map.Entry<String, Map<String,Set<Integer>>> entry: filter.entrySet()) {
       Map<String,Set<Integer>> map = methodes.getOrDefault(entry.getKey(), Collections.emptyMap());
