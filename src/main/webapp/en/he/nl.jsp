@@ -1,46 +1,32 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import='java.util.regex.*' %>
 <!DOCTYPE html>
-<% 
-	int profile = 100;
-    String locale = "nl";
-	String base = "/en/he/";
-%>
-<%@ include file="/dwo/index_util.jsp" %>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="viewport" content="width=1024">
-        <title>Numworx Higher Education (NL)</title>
-		<style type="text/css">
-            body, html
-            {
-                margin: 0; padding: 0; height: 100%; overflow: hidden;
-            }
+<html>
+<head>
+<%
+String hash = request.getParameter("hash");
+String player = "/gwtclient/index.html";
 
-            #content
-            {
-                position:absolute; left: 0; right: 0; bottom: 0; top: 0px; 
-            }
-        </style>
-		<script type="text/javascript">
-	 		function load() {
-				var search = "<%=query%>"
-				var re = /^#[a-z]+:\d*$/;
-				var hash = location.hash || "<%=hash%>"; // check hash op #s:1234 of #c:1234 #guest:
-				if (!re.test(hash)) hash = "";
-				var id = search + hash;
-				var element = document.getElementsByTagName("iframe")[0];
-				element.setAttribute("src", "<%=player%>"+id);
-		    }
-	 		function logout() {
-	 			window.location = "/dwo/saml/logout.jsp"
-	 		}
-		</script>
-    </head>
-    <body onload ="load()">
-        <div id="content">
-            <iframe width="100%" height="100%" frameborder="0" src="" allowfullscreen></iframe>
-        </div>
-    </body>
+if ( hash != null && (hash.isEmpty() || Pattern.matches("#[a-z]+:\\d*", hash))) // Deeplink
+	player = "/dwo/tablet/DWOplayer.jsp";
+else
+	hash = "";
+%>
+<meta charset="UTF-8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=1024">
+<title>Numworx Higher Education (NL)</title>
+    <link type="text/css" rel="stylesheet" href="/dwo/oauth2client/OAuth2Client.css">
+    <script>
+    	endpoint = "<%=player%>"
+    	search = "&base=/en/he/&profile=100&locale=nl"
+    	hash= "<%=hash%>"
+        clientId = "f9af29c4-cfc5-11ea-87d0-0242ac130003"
+    </script>
+    <script type="text/javascript" src="/dwo/oauth2client/oauth2client/oauth2client.nocache.js"></script>
+</head>
+<body>
+
+</body>
 </html>

@@ -52,11 +52,12 @@
     		<%
     		if (needSEB || !"shibboleth".equals(request.getAuthType()) ) {
     	%>    		
-    	    		window.location = "https://<%=server%>/ho/en/exam/logout.html"
+    	    	top.window.location = "https://<%=server%>/ho/en/exam/logout.html"
     	<% } else { 
     		// Let op, dit is UU only.....
+    		Object handler = request.getAttribute("Shib-Handler");
     	%>
-    				window.location = "https://<%=server%>/uu/Shibboleth.sso/Logout?return=https://logout.uu.nl"
+    			top.window.location = "<%=handler%>/Logout?return=https://logout.uu.nl"
     		
     	<% } %>	
     	}

@@ -4,6 +4,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
+<title>Numworx Hoger Onderwijs</title>
+    <link type="text/css" rel="stylesheet" href="/dwo/oauth2client/OAuth2Client.css">
 <%
 String hash = request.getParameter("hash");
 String player = "/gwtclient/index.html";
@@ -12,19 +15,12 @@ if ( hash != null && (hash.isEmpty() || Pattern.matches("#[a-z]+:\\d*", hash))) 
 	player = "/dwo/tablet/DWOplayer.jsp";
 else
 	hash = "";
-String clientId = "";
-if ("shibboleth".equals(request.getAuthType())) clientId = "f9af29c4-cfc5-11ea-87d0-0242ac130003";
-%>
-<meta charset="UTF-8">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="viewport" content="width=1024">
-<title>Numworx Higher Education (NL)</title>
-    <link type="text/css" rel="stylesheet" href="/dwo/oauth2client/OAuth2Client.css">
-    <script>
-    	endpoint = "<%=player%>"
-    	search = "&base=/en/he/&profile=100&locale=en"
-    	hash= "<%=hash%>"
-        clientId = "<%=clientId%>"
+
+%>    <script>
+    	endpoint = "<%=player%>";
+    	search = "&base=/ho/&profile=99&locale=nl";
+    	hash= "<%=hash%>";
+        clientId = "f9af29c4-cfc5-11ea-87d0-0242ac130003";
     </script>
     <script type="text/javascript" src="/dwo/oauth2client/oauth2client/oauth2client.nocache.js"></script>
 </head>

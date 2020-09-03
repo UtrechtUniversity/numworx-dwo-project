@@ -28,7 +28,7 @@
 	} else {
 %>
     <script>
-    	endpoint = "/ho/en/exam/toets_nl.jsp"
+    	endpoint = "/ho/exam/toets.jsp"
     	search = ""
     	hash= ""
         clientId = "f9af29c4-cfc5-11ea-87d0-0242ac130003"
