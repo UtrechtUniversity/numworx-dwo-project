@@ -5,7 +5,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
-import fi.dwo.commons.persistence.MySQLPersistenceId;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -61,7 +60,7 @@ public class PersistentSchoolClass implements Serializable {
     private Boolean iconizer;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 100)
+    @Size(min = 1, max = 255)
     @Column(name = "class", nullable = false, length = 100)
     private String class1;
     @Size(max = 100)

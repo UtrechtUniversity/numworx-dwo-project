@@ -50,7 +50,7 @@ public class PersistentStudentScoData implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Lob
-    @Size(min = 1, max = 16777215)
+    @Size(min = 0, max = 16777215)
     @Column(name = "suspendData", nullable = false, length = 16777215)
     private String suspendData;
     @Lob

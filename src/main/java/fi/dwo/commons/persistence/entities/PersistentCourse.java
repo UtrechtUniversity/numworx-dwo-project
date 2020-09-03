@@ -69,7 +69,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 public class PersistentCourse implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    public static final int MAX_NAME = 40;
+    public static final int MAX_NAME = 255;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -85,7 +85,7 @@ public class PersistentCourse implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Lob
-    @Size(min = 1, max = 16777215)
+    @Size(min = 0, max = 16777215)
     @Column(name = "description", nullable = false, length = 16777215)
     private String description;
     @Size(max = 128)
@@ -116,7 +116,7 @@ public class PersistentCourse implements Serializable {
     private boolean notVisible; 
 
     @Basic(optional = false)
-    @NotNull
+    //@NotNull // null -> at end.
     //update tblcourse set sequenceNr=0 where sequenceNr is null
     //alter table tblcourse alter column sequenceNr set DEFAULT '0';
     //

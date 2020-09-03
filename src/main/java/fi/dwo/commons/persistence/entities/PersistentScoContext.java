@@ -66,8 +66,8 @@ public class PersistentScoContext implements Serializable {
     private Long appletID;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 40)
-    @Column(name = "sconame", nullable = false, length = 40)
+    @Size(min = 1, max = 255)
+    @Column(name = "sconame", nullable = false, length = 255)
     private String sconame;
     @Column(name = "showscore")
     private Boolean showscore;
