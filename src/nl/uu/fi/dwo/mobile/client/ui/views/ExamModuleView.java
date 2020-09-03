@@ -63,7 +63,7 @@ public class ExamModuleView extends Composite {
 		if(!password.isEmpty())
 			presenter.onOk(password, this);
 		else
-			message.setText("Vul je code in");
+			message.setText(rb.noExamKey());
 	}
 	
 	@UiHandler("textView")

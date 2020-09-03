@@ -162,4 +162,6 @@ public interface Text extends Constants {
 	@DefaultStringValue("Opmerkingen:")
 	String opmerkingen();
 	
+	@DefaultStringValue("Vul je code in!")
+	String noExamKey();
  }
