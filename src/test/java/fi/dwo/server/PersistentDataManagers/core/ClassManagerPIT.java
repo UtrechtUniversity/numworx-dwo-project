@@ -8,6 +8,7 @@ import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
@@ -111,4 +112,29 @@ public class ClassManagerPIT {
         assertNull("Object exists where as it should be destroyed.", cc);
     }
 
+    
+    /**
+     * Test validation of PersistentSchoolClass
+     */
+    @Test
+    public void testValidator() throws Exception {
+    	PersistentSchoolClass sc = new PersistentSchoolClass(null, 1L, "");
+    	try {
+			SchoolClassManager.create(sc);
+			fail("should fail");
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}
+    }
+    @Test
+    public void testUpdateValidation() throws Exception {
+    	PersistentSchoolClass sc = SchoolClassManager.findEntity(1L);
+    	sc.setClass1("");
+    	try {
+    	   	SchoolClassManager.edit(sc);
+			fail("should fail");
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}
+    }
 }
