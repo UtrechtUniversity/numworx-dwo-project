@@ -49,8 +49,8 @@ public class PersistentACL implements Serializable {
   private Long dwoProfileID;
   @Basic(optional = false)
   @NotNull
-  @Size(min = 1, max = 45)
-  @Column(name = "entity", nullable = false, length = 45)
+  @Size(min = 1, max = 50)
+  @Column(name = "entity", nullable = false, length = 50)
   private String entity;
 
   @Basic(optional = false)
