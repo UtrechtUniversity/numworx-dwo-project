@@ -1773,6 +1773,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			// sb.insert(cursor, '@');
 			flow.insert(panel, cursor++);
 			panel.editor.requestFocus();
+			hideEmpty();
 		}
 		
 	}
