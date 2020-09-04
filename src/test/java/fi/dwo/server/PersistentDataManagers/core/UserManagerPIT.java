@@ -60,6 +60,7 @@ public class UserManagerPIT {
         userA.setPassword("bladiebla");
         userA.setUsername("JunitTestUserA");
         userA.setEmail("hamlet@denmark.dk");
+        userA.setSingleSchoolAccount(Boolean.FALSE);
 
         userB.setGivenName("Yorick");
         userB.setInsertion("of");
@@ -70,6 +71,7 @@ public class UserManagerPIT {
         userB.setPassword("bladiebla");
         userB.setUsername("JunitTestUserB");
         userB.setEmail("yorick@denmark.dk");
+        userB.setSingleSchoolAccount(Boolean.FALSE);
         instance.IntializeTestDatabase();
     }
 
