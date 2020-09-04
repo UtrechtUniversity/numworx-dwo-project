@@ -222,7 +222,13 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	   	kijkNa(false);
 		if(dwologger != null) {
 			Map<String, Object> map = buildLogParameters();
-			dwologger.updateLog(map);
+			if (mode == OpdrNavIF.EINDTOETS && (!nagekeken || isVeranderdNaNakijken) ) {
+				this.nagekeken = nagekeken = true;
+				zetIsVeranderdNaNakijken(isVeranderdNaNakijken = false);
+				dwologger.log(map);
+			} else {
+				dwologger.updateLog(map);
+			}
 		}
          
 	    HashMap<String, Object> h = new HashMap<String, Object>();
@@ -302,8 +308,11 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	            ipListSleep[i].setStartSleep((int)p.getX(), (int)p.getY()); //niet meer nodig.
 	        }
 	    }
-        
-        if(ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)||Review.isReview(comRoot)))
+ // When to show feedback       
+        if(ingevuld && (mode == OpdrNavIF.OEFENEN 
+        		|| mode == OpdrNavIF.OEFENEN_STRAFPUNTEN 
+        		|| (nagekeken && !isVeranderdNaNakijken && (mode != OpdrNavIF.EINDTOETS || LessonMode.browse == comRoot.getLessonMode()))
+        		||Review.isReview(comRoot)))
         {
         	kijkNa();
         }
@@ -318,9 +327,9 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 		}
 // Wim: wordt niet gebruikt, en in een andere volgorde als het VergelijkingVak.		
 		String goedFout = "";
-		if(goedKrulImage.isVisible())
+		if(correct)
 			goedFout = "goed";
-		if(foutKruisImage.isVisible())
+		if(fout)
 			goedFout = "fout";
 		
 		String logString = "";
@@ -341,9 +350,9 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("response", answer);
 		map.put("score", Collections.singletonMap("raw", score));
-		if(goedKrulImage.isVisible())
+		if(correct)
 			map.put("success", Boolean.TRUE);
-		if(foutKruisImage.isVisible())
+		if(fout)
 			map.put("success", Boolean.FALSE);
 		return map;
 	}
@@ -776,6 +785,8 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 						logObjectives[i][j] = ((Boolean)(list.get(j))).booleanValue() ;
 				}
 			}
+			String[] smObjectives = JSONUtilities.toStringArray(launchData.get("smObjectives"));
+	
 			if(launchData.get("knopImageString") != null) 
 				knopImageString = (String)launchData.get("knopImageString");
 			
@@ -785,6 +796,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 				dwologger.setClassName("fi.wiskopdr.CheckSleepUnitPanel/" + getAantalSleepObjects() + "," + getAantalDoelObjects());
 				dwologger.setMaxScore(scoreMax);
 				dwologger.setLogObjectives(logObjectives);
+				dwologger.setSMObjectives(smObjectives);
 				dwologger.setTeltMee(teltMee);
 			}
 		}
