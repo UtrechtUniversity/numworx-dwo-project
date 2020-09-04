@@ -31,12 +31,19 @@ import com.vaadin.pointerevents.client.PointerUpHandler;
 class FormulePanel extends FlowPanel {
 
   FormulePanel() {
+	  initStyle();
   }
 
   FormulePanel(String tag) {
     super(tag);
+    initStyle();
   }
 
+  
+  private void initStyle() {
+	  getElement().getStyle().setProperty("touchAction", "none");
+  }
+  
   HandlerRegistration addMouseMoveHandler(MouseMoveHandler handler) {
     return addDomHandler(handler, MouseMoveEvent.getType());
   }
