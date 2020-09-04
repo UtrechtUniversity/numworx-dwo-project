@@ -64,8 +64,14 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
       }
       Box hb = Box.createHorizontalBox();
       hb.add(label);
+      label.setMaximumSize(new Dimension(300,Short.MAX_VALUE));
+      label.setMinimumSize(new Dimension(300,10));
+      Dimension dim = label.getPreferredSize();
+      dim.width = 300;
+      label.setSize(dim);
+      label.setPreferredSize(dim);
+      label.validate();
       hb.add(Box.createHorizontalStrut(20));
-      hb.add(Box.createHorizontalGlue());
       FontMetrics fontMetrics = tree.getFontMetrics(tree.getFont());
       Icon icn;
       if (s != null) {
@@ -74,6 +80,9 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
          icn = new ScoreIcon(ScoreIcon.UNSURE, ScoreIcon.UNSURE, fontMetrics);
       }
       hb.add(new JLabel(icn));
+      hb.add(Box.createHorizontalGlue());
+      hb.setSize(hb.getPreferredSize());
+      hb.doLayout();
       return hb;
     }
     

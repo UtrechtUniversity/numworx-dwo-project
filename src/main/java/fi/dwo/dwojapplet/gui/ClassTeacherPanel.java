@@ -229,6 +229,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                     panel.setSchoolClass(fullSchoolClass);
                     int result = JOptionPane.showConfirmDialog(ClassTeacherPanel.this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
                             JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    if (panel.getClassName().isEmpty()) result = JOptionPane.CANCEL_OPTION; // iets met lege klasnamen.
                     fullSchoolClass.setSchoolClassName(panel.getClassName());
                     fullSchoolClass.setRegistrationKey(panel.getRegistrationKey());
                     fullSchoolClass.setIconizer(panel.isIconizer());
@@ -613,6 +614,9 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
             panel.setSchoolClass(sc);
             int result = JOptionPane.showConfirmDialog(ClassTeacherPanel.this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
                     JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            if (panel.getClassName().isEmpty()) result = JOptionPane.CANCEL_OPTION; // iets met lege klasnamen.
+            
+            
             sc.setSchoolClassName(panel.getClassName());
             sc.setRegistrationKey(panel.getRegistrationKey());
             sc.setIconizer(panel.isIconizer());
