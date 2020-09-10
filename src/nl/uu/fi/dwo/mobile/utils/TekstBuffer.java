@@ -467,7 +467,7 @@ public class TekstBuffer
 		else if (soortVak == 6)
 		{
 			result = x(map, new StubView("NabouwenAanzichtenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
-//			result = x(map, new PopupFacade(currentVakGegevens, new fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)));
+			//result = x(map, new PopupFacade(currentVakGegevens, new fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)));
 		}
 		else if (soortVak == 9)
 		{
@@ -507,6 +507,11 @@ public class TekstBuffer
 		{
 			//result =  x(map, new PopupFacade(currentVakGegevens, new fi.kladjegwt.client.KladjeGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)));
 			result = x(map, new StubView("KladjeGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
+		}
+		else if (soortVak == 61)
+		{
+			//result =  x(map, new PopupFacade(currentVakGegevens, new fi.mathscratchgwt.client.MathScratchGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)));
+			result = x(map, new StubView("MathScratchGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 		else if (soortVak == 59)
 		{
