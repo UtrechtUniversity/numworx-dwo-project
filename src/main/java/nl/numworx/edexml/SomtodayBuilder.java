@@ -142,12 +142,6 @@ public class SomtodayBuilder implements Builder {
 			groepen.put(klas, dom);
 		}
 	}
-
-	
-	
-	
-	
-	
 	
 	@Override
 	public Map<String, DomSchoolClassFull> parseGroepen() {
