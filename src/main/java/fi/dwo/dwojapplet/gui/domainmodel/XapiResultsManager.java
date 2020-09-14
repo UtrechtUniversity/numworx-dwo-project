@@ -66,8 +66,11 @@ public class XapiResultsManager {
   }
 
   private static final SimpleDateFormat FORMAT_8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+  private static final SimpleDateFormat FORMAT_8601a = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
   static {
     FORMAT_8601.setTimeZone(TimeZone.getTimeZone("UTC"));
+    FORMAT_8601a.setTimeZone(TimeZone.getTimeZone("UTC"));
+
   }
 
   class ScoreUpdater {
@@ -175,7 +178,9 @@ public class XapiResultsManager {
       if (last >= 0) lastTimestamp = result.statements.get(last).timestamp;
       Long stamp;
       try {
-        stamp = lastTimestamp == null ? 0L : FORMAT_8601.parse(lastTimestamp).getTime();
+        SimpleDateFormat fmt = FORMAT_8601a;
+        if (lastTimestamp != null && lastTimestamp.endsWith("Z")) fmt = FORMAT_8601;
+        stamp = lastTimestamp == null ? 0L : fmt.parse(lastTimestamp).getTime();
         scores.setFetchTimeStamp(stamp);
       } catch (ParseException e) {
         LOG.log(Level.WARNING, "time conversion", e);

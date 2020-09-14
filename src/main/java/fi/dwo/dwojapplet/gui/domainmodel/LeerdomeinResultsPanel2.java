@@ -348,6 +348,7 @@ public void actionPerformed(ActionEvent event) {
 
   private void setDescription(Node n) {
     String description = n.getDescription();
+    if (description == null) description = "";
     if (description.startsWith(LeerdomeinEditPanel2.WISKOPDR_SIG))
     {
       WiskOpdrPanel panel = WiskOpdr.getWiskOpdrPanel(description, getLocale());
@@ -544,9 +545,14 @@ public void actionPerformed(ActionEvent event) {
     List<DomStudentModelDataStudentScore> studentScores = scores.getStudentScores();
     for (int i = 0; i < tmodel.getRowCount(); i++ ) {
       DomStudentModelStructureScore v = studentScores.get(i).getDomStudentModelStructureScore();
+      if (v == null)
+        v = new DomStudentModelStructureScore();
       double nz = 0;
-      int count = v.getCategories().size();
-      for( DomStudentModelCategoryScore item: v.getCategories()) {
+      List<DomStudentModelCategoryScore> categories = v.getCategories();
+      if (categories == null) 
+        categories = Collections.emptyList();
+      int count = categories.size();
+      for( DomStudentModelCategoryScore item: categories) {
         if (item.getCount() != 0) nz += 1;      
       }
       ScoreIcon result = new ScoreIcon (v.getScore()  , v.getCount() , nz , count, results.getFontMetrics(results.getFont()));
