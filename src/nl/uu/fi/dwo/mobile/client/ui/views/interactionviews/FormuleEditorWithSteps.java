@@ -295,6 +295,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 					logObjectives[i] = logObjectivesList.getBooleanArray(i);
 				}
 			}
+			String[] smObjectives = JSONUtilities.toStringArray(launchState.get("smObjectives"));
 			if (launchStateMap.getBoolean("logOption", false)) {
 				dwologger = new DWOLogger();
 				String type = isVergelijkingVak? "Vergelijking":"Formule";
@@ -304,6 +305,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 					dwologger.setLogIDLabel(launchStateMap.getString("logIDLabel"));
 				dwologger.setMaxScore(scoreMax);
 				dwologger.setLogObjectives(logObjectives);
+				dwologger.setSMObjectives(smObjectives);
 				dwologger.setTeltMee(teltMee);
 			}
 			

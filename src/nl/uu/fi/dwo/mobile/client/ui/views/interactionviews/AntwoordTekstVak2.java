@@ -225,6 +225,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 				logOption = map.getBoolean("logOption");
 			if (map.containsKey("logID"))
 				logID = map.getString("logID");
+			String[] smObjectives = map.getStringArray("smObjectives");
 			if (logOption)
 			{
 				DWOLogger dwologger = new DWOLogger();
@@ -234,6 +235,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 				if (map.containsKey("logIDLabel"))
 					dwologger.setLogIDLabel(map.getString("logIDLabel"));
 				dwologger.setLogObjectives(logObjectives);
+				dwologger.setSMObjectives(smObjectives);
 				dwologger.setTeltMee(teltMee);
 				logging = dwologger;
 			}

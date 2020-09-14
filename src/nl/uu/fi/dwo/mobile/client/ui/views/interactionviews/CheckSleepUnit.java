@@ -222,7 +222,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	   	kijkNa(false);
 		if(dwologger != null) {
 			Map<String, Object> map = buildLogParameters();
-			if (mode == OpdrNavIF.EINDTOETS && (!nagekeken || isVeranderdNaNakijken) ) {
+			if (mode == OpdrNavIF.EINDTOETS && ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {
 				this.nagekeken = nagekeken = true;
 				zetIsVeranderdNaNakijken(isVeranderdNaNakijken = false);
 				dwologger.log(map);

@@ -389,7 +389,13 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	    kijkNa(false);
 		if(dwologger != null) {
 			Map<String, Object> map = buildLogParameters();
-			dwologger.updateLog(map);
+			if (mode == OpdrNavIF.EINDTOETS && ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {
+				this.nagekeken = nagekeken = true;
+				zetIsVeranderdNaNakijken(isVeranderdNaNakijken = false);
+				dwologger.log(map);
+			} else {
+				dwologger.updateLog(map);
+			}
 		}
          
 	    HashMap<String, Object> h = new HashMap<String, Object>();
@@ -533,7 +539,10 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         			
         }
         
-        if(ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)||Review.isReview(comRoot)))
+        if(ingevuld && (mode == OpdrNavIF.OEFENEN 
+        		|| mode == OpdrNavIF.OEFENEN_STRAFPUNTEN 
+        		|| (nagekeken && !isVeranderdNaNakijken && (mode != OpdrNavIF.EINDTOETS || LessonMode.browse == comRoot.getLessonMode()))
+        		||Review.isReview(comRoot)))
         {
         	kijkNa();
         }
@@ -582,9 +591,9 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("response", logString);
 		map.put("score", Collections.singletonMap("raw", score));
-		if(goedKrulImage.isVisible())
+		if(correct)
 			map.put("success", Boolean.TRUE);
-		if(foutKruisImage.isVisible())
+		if(fout)
 			map.put("success", Boolean.FALSE);
 		return map;
 	}
@@ -782,12 +791,15 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 			if(map.containsKey("knopImageString")) 
 				knopImageString = map.getString("knopImageString");
 		}
+
+		String[] smObjectives = JSONUtilities.toStringArray(launchData.get("smObjectives"));
 		if(logOption) {
 			dwologger = new DWOLogger();
 			dwologger.setLogID(logID);
 			dwologger.setClassName("fi.wiskopdr.CheckUnitPanel/" + getAantalSelectieObjecten());
 			dwologger.setMaxScore(scoreMax);
 			dwologger.setLogObjectives(logObjectives);
+			dwologger.setSMObjectives(smObjectives);
 			dwologger.setTeltMee(teltMee);
 		}
 

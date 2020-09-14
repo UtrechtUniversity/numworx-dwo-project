@@ -188,12 +188,14 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
 			}
 			if(launchData.get("knopImageString") != null) 
 				knopImageString = (String)launchData.get("knopImageString");
+			String[] smObjectives = JSONUtilities.toStringArray(launchData.get("smObjectives"));
 			if(logOption) {
 				dwologger = new DWOLogger();
 				dwologger.setLogID(logID);
 				dwologger.setClassName("fi.wiskopdr.CheckValueUnitPanel");
 				dwologger.setMaxScore(scoreMax);
 				dwologger.setLogObjectives(logObjectives);
+				dwologger.setSMObjectives(smObjectives);
 				dwologger.setTeltMee(teltMee);
 			}
 

@@ -440,7 +440,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 						logging = dwoLogger;
 						logging.setLogID( launchState.getString("logID"));
 						String Formule = isVergelijkingVak ? "Vergelijking" : "Formule";
-						logging.setClassName("fi.wiskOpdr.SimpelAntwoord"+Formule+"Vak");
+						logging.setClassName("fi.wiskopdr.SimpelAntwoord"+Formule+"Vak");
 						dwoLogger.setLogObjectives(logObjectives);
 						dwoLogger.setSMObjectives(smObjectives);
 						dwoLogger.setTeltMee(teltMee);
