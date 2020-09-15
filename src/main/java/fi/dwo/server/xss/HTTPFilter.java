@@ -117,6 +117,9 @@ public class HTTPFilter implements Filter {
       StringBuffer sb = new StringBuffer("https://");
       sb.append(req.getServerName());
       sb.append(uri);
+      String query = req.getQueryString();
+      if (query != null)
+    	  sb.append('?').append(query);
       HttpServletResponse res = (HttpServletResponse) response;
       // res.addHeader("xxxx-security", "....");
       res.sendRedirect(sb.toString());
