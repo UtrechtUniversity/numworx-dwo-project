@@ -896,7 +896,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			}
 		}
 
-		logAttempt();
+		if (mode != OpdrNavIF.EINDTOETS) logAttempt();
 	}
 
 	/**
@@ -1647,7 +1647,16 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 		if(logging instanceof DWOLogger) {
 			Map<String, Object> map = buildLoggingMap();
-			((DWOLogger) logging).updateLog(map);
+			DWOLogger dwologger = (DWOLogger) logging;
+			if (mode == OpdrNavIF.EINDTOETS && ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {
+				nagekeken = true;
+				zetIsVeranderdNaNakijken(false);
+				h.put("nagekeken", (nagekeken));
+				h.put("isVeranderdNaNakijken", (isVeranderdNaNakijken));
+				dwologger.log(map);
+			} else {
+				dwologger.updateLog(map);
+			}
 		}
 		if(correctie != null) correctie.correctie(h);
 		return h;
@@ -1723,7 +1732,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			//if(mode != 2 && mode != 3)
 			//	kijkNa();
 			setChanged(false);
-			if (isReview() || mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (isNagekeken() && !isVeranderdNaNakijken()))
+			if (isReview() || mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN
+					|| (nagekeken && !isVeranderdNaNakijken && (mode != OpdrNavIF.EINDTOETS || LessonMode.browse == comRoot.getLessonMode()))
+				)
 				kijkNa(true); // FIXME kijkna in setstate
 		}
 		setEditable(editable);

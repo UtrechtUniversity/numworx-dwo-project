@@ -303,7 +303,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}-*/;
 	
 	private native static void kijkNa(Object inner) /*-{
-		return inner.kijkNa();
+		inner.kijkNa();
 	}-*/;
 	
 	private native static void zetNagekeken(Object inner, boolean b) /*-{

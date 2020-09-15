@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
@@ -668,8 +669,15 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		errorCount = this.errorCount;
 
 		if (logging instanceof DWOLogger)
-		{
-			((DWOLogger) logging).updateLog(buildLogParameters());
+		{	DWOLogger dwologger = (DWOLogger) logging;
+			Map<String, Object> map = buildLogParameters();
+			if (mode == OpdrNavIF.EINDTOETS && ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {
+				this.nagekeken = nagekeken = true;
+				zetIsVeranderdNaNakijken(isVeranderdNaNakijken = false);
+				dwologger.log(map);
+			} else {
+				dwologger.updateLog(map);
+			}
 		}
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		h.put("ingevuld", new Boolean(ingevuld));
@@ -736,7 +744,9 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			formuleVak.setChanged(false);
 
 		if (ingevuld 
-			&& (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)||Review.isReview(comRoot)))
+			&& (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN 
+			|| (nagekeken && !isVeranderdNaNakijken && (mode != OpdrNavIF.EINDTOETS || LessonMode.browse == comRoot.getLessonMode()))
+			|| Review.isReview(comRoot)))
 			kijkNa(true, false);
 		this.editable = map.getBoolean("editable", true);
 		
@@ -836,10 +846,8 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	private Map<String, Object> buildLogParameters()
 	{
 		Map<String, Object> log = new HashMap<String, Object>();
-		if (goedKrulImage.isVisible())
-			log.put("success", Boolean.TRUE);
-		else if (foutKruisImage.isVisible())
-			log.put("success", Boolean.FALSE);
+		if (correct != null)
+			log.put("success", correct);
 		String response = "";
 		if (formuleMode)
 		{

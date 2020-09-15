@@ -44,6 +44,7 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
@@ -734,7 +735,6 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		else if(checkExternal) {
 			zetGoedFout(GEEN);
 		}
-		setAttempt();
 		
 		
 		//tbv antwoordvak hypothesetoetsen
@@ -761,7 +761,6 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 				zetSelectie(0);
 		}
 
-		setAttempt();
 	}
 	
 	
@@ -811,7 +810,15 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 //		}
 
 		if(logging instanceof DWOLogger) {
-			((DWOLogger) logging).updateLog(buildLogParameters());
+			DWOLogger dwologger = (DWOLogger) logging;
+			Map<String, Object> map = buildLogParameters();
+			if (mode == OpdrNavIF.EINDTOETS && ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {
+				this.nagekeken = nagekeken = true;
+				zetIsVeranderdNaNakijken(isVeranderdNaNakijken = false);
+				dwologger.log(map);
+			} else {
+				dwologger.updateLog(map);
+			}
 		}
 		
 		
@@ -877,9 +884,9 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 
 	private Map<String, Object> buildLogParameters() {
 		Map<String, Object> log  = new HashMap<String, Object>();
-		if(goedKrulImage.isVisible())
+		if(correct)
 			log.put("success", Boolean.TRUE);
-		if(foutKruisImage.isVisible())
+		if(fout)
 			log.put("success", Boolean.FALSE);
 		String formule = "";
 		if(selectedIndex > 0) {
@@ -957,7 +964,9 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		//antwoordKV.setSelectedIndex(index);
 		//antwoordKV.setSelectedItem(antwoord);
 
-		if (ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken) || Review.isReview(comRoot)))
+		if (ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN 
+				|| (nagekeken && !isVeranderdNaNakijken && (mode != OpdrNavIF.EINDTOETS || LessonMode.browse == comRoot.getLessonMode()))
+				|| Review.isReview(comRoot)))
 			kijkNa(true, true);
 		
 		basisPanel.setStyleDependentName("readonly", !editable);
@@ -1039,6 +1048,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		zetIsVeranderdNaNakijken(false);
 		
 		kijkNa(true, false);
+		setAttempt();
 	}
 	
 	private void kijkNa(boolean show, boolean setState)
