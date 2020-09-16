@@ -272,7 +272,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     }
   }
 
-  private PIcon createIcon(Node n, DomStudentModelScore<?> s, FontMetrics fontMetrics) {
+  static PIcon createIcon(Node n, DomStudentModelScore<?> s, FontMetrics fontMetrics) {
     PIcon icon;
     if(n instanceof NodeLeaf) {
       if (s.getCount() == 0) {

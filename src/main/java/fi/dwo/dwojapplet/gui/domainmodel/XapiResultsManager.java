@@ -4,6 +4,8 @@ import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,6 +106,7 @@ public class XapiResultsManager {
     }
     
     private void calculateInterior(DomStudentModelStructureScore data) {
+      data.recalculateAncestors(); if(true) return;
         long count = 0;
         double value = 0.0;
         for (DomStudentModelCategoryScore item: data.getCategories()) {
@@ -171,8 +174,17 @@ public class XapiResultsManager {
         scores.setDomStudentModelStructureScore(s);
       }
       if (scores == null) scores = eerstestap(context);
-      // Sorteren???
+      // Sorteren??? JA
+      
       List<Statement> list = result.statements;
+      Collections.sort(list, new Comparator<Statement>() {
+
+        @Override
+        public int compare(Statement o1, Statement o2) {
+          String t1 = o1.timestamp;
+          String t2 = o2.timestamp;
+          return t1.compareTo(t2); // String compare, niet helemaal goed voor meerdere tijdzones.
+        }});
       int last = list.size() - 1;
       String lastTimestamp = state.timestamp;
       if (last >= 0) lastTimestamp = result.statements.get(last).timestamp;
@@ -275,7 +287,7 @@ public class XapiResultsManager {
                 nrOfChoices = Integer.parseInt(nrOfChoicesString);
             }
             catch(Exception e){}
-            guess = 1/nrOfChoices;
+            guess = 1.0/nrOfChoices;
         }
         
         List<String> ids = statement.context.contextActivities.parent.get(0).definition.extensions.objectives;

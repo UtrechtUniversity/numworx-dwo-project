@@ -418,20 +418,20 @@ public void actionPerformed(ActionEvent event) {
       subtitle.setText(n.toString());
       //title2.setText(n.toString());
       setDescription(n);     
-      calculatePath(path);     
+      calculatePath(path,n);     
     }
 
     
   }
 
-  private void calculatePath(TreePath path) {
+  private void calculatePath(TreePath path, Node n) {
     int[] ipath = getPath(path);
     if (ipath == null || ipath.length == 1) {
-      calculateROOT(scores, results.getModel());
+      calculateROOT(scores, results.getModel(),n);
     } else if (ipath.length == 2) {
-      calculateCategories(scores, results.getModel(), ipath[1]);
+      calculateCategories(scores, results.getModel(), ipath[1],n);
     } else if (ipath.length >= 3) {
-      calculateObjectives(scores, results.getModel(), ipath);
+      calculateObjectives(scores, results.getModel(), ipath, n);
     }
   }
 
@@ -497,7 +497,7 @@ public void actionPerformed(ActionEvent event) {
           JTable table = results;
           table.setModel(tmodel);
           table.setSelectionBackground(COLOR14);
-          calculatePath(tree.getSelectionPath());
+          calculatePath(tree.getSelectionPath(), null);
           TableColumnModel columnModel = table.getColumnModel();
           TableColumn c0 = columnModel.getColumn(0);
           ColorRenderer studentRenderer = new ColorRenderer(COLOR15, table.getSelectionForeground());
@@ -537,7 +537,7 @@ public void actionPerformed(ActionEvent event) {
     
   }
 
-  private void calculateROOT(DomStudentModelScorePerTeacher scores, TableModel tmodel) {
+  private void calculateROOT(DomStudentModelScorePerTeacher scores, TableModel tmodel, Node n) {
     if (scores == null) return;
     double nzl = 0.0;
     double sumScore = 0.0;
@@ -555,7 +555,8 @@ public void actionPerformed(ActionEvent event) {
       for( DomStudentModelCategoryScore item: categories) {
         if (item.getCount() != 0) nz += 1;      
       }
-      ScoreIcon result = new ScoreIcon (v.getScore()  , v.getCount() , nz , count, results.getFontMetrics(results.getFont()));
+      PIcon result;// = new ScoreIcon (v.getScore()  , v.getCount() , nz , count, results.getFontMetrics(results.getFont()));
+      result = StudentResultsPanel.createIcon(n, v, results.getFontMetrics(results.getFont()));
       tmodel.setValueAt(result.getRedPercentage(), i, 2);
       tmodel.setValueAt(result, i, 3);
       tmodel.setValueAt(result.getGreenPercentage(), i, 4);
@@ -570,7 +571,7 @@ public void actionPerformed(ActionEvent event) {
   }
 
   private void calculateCategories(DomStudentModelScorePerTeacher scores, TableModel tmodel,
-      int cat) {
+      int cat, Node n) {
     if (scores == null) return;
     double nzl = 0.0;
     double sumScore = 0.0;
@@ -585,7 +586,8 @@ public void actionPerformed(ActionEvent event) {
       for (DomStudentModelObjectiveScore item : v.getObjectives()) {
         if (item.getCount() != 0) nz += 1;
       }
-      ScoreIcon result = new ScoreIcon(v.getScore(), v.getCount(), nz, count, results.getFontMetrics(results.getFont()));
+      PIcon result;// = new ScoreIcon(v.getScore(), v.getCount(), nz, count, results.getFontMetrics(results.getFont()));
+      result = StudentResultsPanel.createIcon(n, v, results.getFontMetrics(results.getFont()));
       tmodel.setValueAt(result, i, 3);
       tmodel.setValueAt(result.getGreenPercentage(), i, 2);
       tmodel.setValueAt(result.getGreenPercentage(), i, 4);
@@ -601,7 +603,7 @@ public void actionPerformed(ActionEvent event) {
 
   }
 
-  private void calculateObjectives(DomStudentModelScorePerTeacher scores, TableModel tmodel, int[] path) {
+  private void calculateObjectives(DomStudentModelScorePerTeacher scores, TableModel tmodel, int[] path, Node n) {
     if (scores == null) return;
     double nzl = 0.0;
     double sumGreenScore = 0.0, sumRedScore = 0.0;
@@ -625,14 +627,14 @@ public void actionPerformed(ActionEvent event) {
       double nz = 0;
       int count = 1;      
 
-      if (v.getCount() == 0 ) { v.setScore(Math.random()); } // DEBUG 
+      //if (v.getCount() == 0 ) { v.setScore(Math.random()); } // DEBUG 
       
       
       
       
       if (v.getCount() != 0) nz += 1;      
       
-      ScoreIcon result;
+      PIcon result;
       if (v.getCount() == 0) {
         result = new ScoreIcon(ScoreIcon.UNSURE, ScoreIcon.UNSURE, results.getFontMetrics(results.getFont()));
       } else if (v.getScore() > 0.5) {
@@ -644,7 +646,7 @@ public void actionPerformed(ActionEvent event) {
         sumRedCount += v.getCount();
         result = new ScoreIcon(ScoreIcon.UNSURE, v.getScore(), results.getFontMetrics(results.getFont()));
       }
-      
+      result = StudentResultsPanel.createIcon(n, v, results.getFontMetrics(results.getFont()));
       tmodel.setValueAt(result, i, 3);
       tmodel.setValueAt(result.getRedPercentage(), i, 2);
       tmodel.setValueAt(result.getGreenPercentage(), i, 4);
