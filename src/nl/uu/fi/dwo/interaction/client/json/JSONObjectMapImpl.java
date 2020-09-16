@@ -275,7 +275,9 @@ public class JSONObjectMapImpl extends HashMap<String, Object> implements Object
 
 	@Override
 	public String[] getStringArray(String key) {
-		JSONArray array = get0(key).isArray();
+		JSONValue get0 = get0(key);
+		if (get0 == null) return null;
+		JSONArray array = get0.isArray();
 		return toStringArray(array);
 	}
 
