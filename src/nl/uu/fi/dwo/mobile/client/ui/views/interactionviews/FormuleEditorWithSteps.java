@@ -2080,7 +2080,20 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		if (dwologger!= null) 
 		{
 			if(editor != null) // NPE if null
-			dwologger.updateLog(editor.buildLoggingMap());
+			{
+				Map<String, Object> map = editor.buildLoggingMap(); // response is soms leeg, ipv laatste gevulde, of allemaal?
+				map.put("score", Collections.singletonMap("raw", score));
+				if (correct!=null) map.put("success", correct); else map.remove("success");
+				if (mode == OpdrNavIF.EINDTOETS && ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {
+					this.nagekeken = nagekeken = true;
+					zetIsVeranderdNaNakijken(isVeranderdNaNakijken = false);
+					h.put("nagekeken", Boolean.TRUE);
+					h.put("isVeranderdNaNakijken", Boolean.FALSE);
+					dwologger.log(map);
+				} else {
+					dwologger.updateLog(map);
+				}
+			}
 			dwologger.getStateHook(h);
 		}
 		
@@ -2503,7 +2516,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		
 		if (isToets())
 		{	
-			if (nagekeken && !isVeranderdNaNakijken || lessonMode == LessonMode.review)
+			if ((nagekeken && !isVeranderdNaNakijken && (mode != OpdrNavIF.EINDTOETS || LessonMode.browse == lessonMode))
+					|| lessonMode == LessonMode.review)
 			{	
 				kijkToetsNa(true, true);
 			}

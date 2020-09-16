@@ -58,6 +58,8 @@ public class DWOLogger implements Logging {
 	@Override
 	public void log(Map<String, ?> parameters) {
 		String formula = (String)parameters.get("response");
+		if (formula == null)
+			formula = "";
 		String attempt = buildAttempt(parameters);
 		JSONNumber score = getScore(parameters);
 		boolean error = Boolean.FALSE.equals(parameters.get("success"));
