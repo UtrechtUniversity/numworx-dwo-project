@@ -198,7 +198,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.mobile</groupId>
 			<artifactId>formule</artifactId>
-			<version>0.1.10-SNAPSHOT</version>
+			<version>0.1.10</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.numworx.gwtpatch</groupId>
@@ -257,11 +257,11 @@
 		<runTarget>${project.artifactId}.html</runTarget>
 		<warClassifier />
 		<gwt.copyWebapp>true</gwt.copyWebapp>
-		<accountVersion>2.4.8-SNAPSHOT</accountVersion>
+		<accountVersion>2.4.8</accountVersion>
 		<gwtVersion>2.8.2</gwtVersion>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <maven.javadoc.skip>true</maven.javadoc.skip>
-        <interactionVersion>0.1.9-SNAPSHOT</interactionVersion>
+        <interactionVersion>0.1.9</interactionVersion>
 	</properties>
 	<profiles>
 		<profile>
