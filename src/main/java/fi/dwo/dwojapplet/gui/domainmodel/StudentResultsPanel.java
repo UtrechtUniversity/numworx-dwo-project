@@ -106,7 +106,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
 
   StudentResultsPanel(String student) {
     super(new BorderLayout());
-    titleLabel = new JLabel("Resultaten " + student);
+    titleLabel = new JLabel("Kennisontwikkeling " + student);
     add(titleLabel, BorderLayout.NORTH);
     titleLabel.setBackground(COLOR15);
     titleLabel.setForeground(COLOR20);
