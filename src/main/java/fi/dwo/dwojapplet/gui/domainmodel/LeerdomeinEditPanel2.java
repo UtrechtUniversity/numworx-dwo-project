@@ -102,25 +102,25 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
 
     boolean readonly;
     JTree tree;
-    DefaultMutableTreeNode root;
     Component parent;
     
     private VoorkennisAction() {
       super(TextMapper.getText("Voorkennis"));
     }
 
-    public VoorkennisAction(boolean b, Component parent, JTree tree, DefaultMutableTreeNode root) {
+    public VoorkennisAction(boolean b, Component parent, JTree tree) {
       this();
       readonly = b;
       this.parent = parent;
       this.tree = tree;
-      this.root = root;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
       TreePath path = tree.getSelectionPath();
       if (path == null) return;
+      DefaultMutableTreeNode root;
+      root = (DefaultMutableTreeNode) tree.getModel().getRoot();
       
       Object node = path.getLastPathComponent();
       if (node instanceof MutableTreeNode) {
@@ -136,7 +136,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
           if (readonly) {
             JOptionPane.showMessageDialog(parent, panel, e.getActionCommand(), JOptionPane.PLAIN_MESSAGE);
           } else {
-          int r = JOptionPane.showConfirmDialog(parent, panel, e.getActionCommand(), JOptionPane.OK_CANCEL_OPTION);
+          int r = JOptionPane.showConfirmDialog(parent, panel, e.getActionCommand(), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
           if (r == JOptionPane.OK_OPTION) {
             panel.makeChoices();
             List<String> list = panel.getObjectives();
@@ -455,7 +455,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   private JTextField subtitle;
   private JButton bewerken;
   private Box south;
-  JTree tree;
+  final JTree tree;
   InvisibleTreeModel model;
   DefaultMutableTreeNode root;
   private JComponent settings;
@@ -617,7 +617,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   settingsRO = Box.createHorizontalBox();
   settingsRO.setOpaque(true);
   settingsRO.setBackground(Constants.COLOR20);
-  JButton voorkennisRO = new JButton(new VoorkennisAction(true,this,tree,root)); voorkennisRO.setFont(font);
+  JButton voorkennisRO = new JButton(new VoorkennisAction(true,this,tree)); voorkennisRO.setFont(font);
   voorkennisRO.setPreferredSize(new Dimension(120,24));
   settingsRO.add(voorkennisRO);
   settingsRO.add(Box.createHorizontalGlue());
@@ -638,7 +638,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   settings.setBorder(BorderFactory.createCompoundBorder(outer, inner));    
 
   Box bkt = Box.createHorizontalBox();
-  JButton voorkennis = new JButton(new VoorkennisAction(false,this, tree, root));voorkennis.setFont(font);
+  JButton voorkennis = new JButton(new VoorkennisAction(false,this, tree));voorkennis.setFont(font);
   voorkennis.setPreferredSize(new Dimension(120, 20));
   bkt.add(voorkennis);
   bkt.add(Box.createHorizontalGlue());
