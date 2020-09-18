@@ -99,60 +99,60 @@ public class XapiResultsManager {
     private DomStudentModelDataStudentScore toDataScore(StatementsResult result, StateDocument state,
                                                  DomStudentModelContext id) {
       DomStudentModelDataScore data = toDataScore0(result, state, id);
-      calculateInterior(data.getDomStudentModelStructureScore());
+      data.getDomStudentModelStructureScore().recalculateAncestors();
       score.setDomStudentModelStructureScore(data.getDomStudentModelStructureScore());
       score.setFetchTimeStamp(data.getFetchTimeStamp());
       return score;
     }
     
-    private void calculateInterior(DomStudentModelStructureScore data) {
-      data.recalculateAncestors(); if(true) return;
-        long count = 0;
-        double value = 0.0;
-        for (DomStudentModelCategoryScore item: data.getCategories()) {
-          calculateInterior(item);
-          if (item.getCount() > 0) {
-            value += item.getScore()/item.getCount();
-            count += 1;
-          } else {
-            value += 0.5;
-            count += 1;
-          }
-        }
-        data.setScore(value/count); // FIXME 
-    }
+//    private void calculateInterior(DomStudentModelStructureScore data) {
+//      data.recalculateAncestors(); if(true) return;
+//        long count = 0;
+//        double value = 0.0;
+//        for (DomStudentModelCategoryScore item: data.getCategories()) {
+//          calculateInterior(item);
+//          if (item.getCount() > 0) {
+//            value += item.getScore()/item.getCount();
+//            count += 1;
+//          } else {
+//            value += 0.5;
+//            count += 1;
+//          }
+//        }
+//        data.setScore(value/count); // FIXME 
+//    }
 
-    private void calculateInterior(DomStudentModelCategoryScore data) {
-      long count = 0L;
-      double value = 0.0;
-      for (DomStudentModelObjectiveScore item: data.getObjectives()) {
-        calculateInterior(item);
-        if (item.getCount() > 0) {
-          value += item.getScore() / item.getCount();
-          count += 1;
-        } else {
-          value += 0.5;
-          count += 1;
-        }
-      }
-      data.setScore(value/count);      
-    }
+//    private void calculateInterior(DomStudentModelCategoryScore data) {
+//      long count = 0L;
+//      double value = 0.0;
+//      for (DomStudentModelObjectiveScore item: data.getObjectives()) {
+//        calculateInterior(item);
+//        if (item.getCount() > 0) {
+//          value += item.getScore() / item.getCount();
+//          count += 1;
+//        } else {
+//          value += 0.5;
+//          count += 1;
+//        }
+//      }
+//      data.setScore(value/count);      
+//    }
 
-    private void calculateInterior(DomStudentModelObjectiveScore data) {
-      if (data.getChildren() != null && !data.getChildren().isEmpty()) {
-        long count = 0L;
-        double value = 0.0;
-        for (DomStudentModelObjectiveScore item: data.getChildren()) {
-          calculateInterior(item);
-          if (item.getCount() > 0) {
-            value += item.getScore() / item.getCount();
-            value += 1;
-          }
-        }
-        data.setScore(value/count); // FIXME
-      }
-      
-    }
+//    private void calculateInterior(DomStudentModelObjectiveScore data) {
+//      if (data.getChildren() != null && !data.getChildren().isEmpty()) {
+//        long count = 0L;
+//        double value = 0.0;
+//        for (DomStudentModelObjectiveScore item: data.getChildren()) {
+//          calculateInterior(item);
+//          if (item.getCount() > 0) {
+//            value += item.getScore() / item.getCount();
+//            value += 1;
+//          }
+//        }
+//        data.setScore(value/count); // FIXME
+//      }
+//      
+//    }
 
     private DomStudentModelDataScore eerstestap(DomStudentModelContext context) {
       DomStudentModelDataScore result = new DomStudentModelDataScore();
@@ -224,7 +224,7 @@ public class XapiResultsManager {
       return xapi.getState("StudentModelData", activity, agent, null)
           .recover(oops -> new StateDocument())
           .then( p0 -> {
-            StateDocument d = p0.getValue();
+            final StateDocument d = p0.getValue();
             query.since = d.timestamp;
             Promise<StatementsResult> queryStatements = xapi.queryStatements(query);
             return queryStatements
