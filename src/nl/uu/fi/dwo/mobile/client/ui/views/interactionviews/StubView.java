@@ -326,9 +326,15 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		return Boolean.valueOf(value);
 	}
 	
+	Boolean nagekekenPending;
+	
 	public void zetNagekeken(boolean b) {
 		if(innerView != null)
+		{	nagekekenPending = null;
 			zetNagekeken(innerView, b);
+		}
+		else
+			nagekekenPending = Boolean.valueOf(b);
 	}
 	
 	public void kijkNa() {
@@ -363,6 +369,9 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 				setState(inner, pendingState);
 				pendingState = null;
 			} 
+			if (nagekekenPending != null) {
+				zetNagekeken(nagekekenPending.booleanValue());
+			}
 		} catch(Exception e) {
 			Logger.getLogger("StubView").log(Level.SEVERE,"init "+ e);
 		}
