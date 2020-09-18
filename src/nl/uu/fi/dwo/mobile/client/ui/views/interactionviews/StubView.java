@@ -645,10 +645,10 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	
 	@Override
 	public void cursorDown() {
-		cursorUp(innerView);
+		cursorDown(innerView);
 	}
 	private static native void cursorDown(Object inner) /*-{
-		inner.cursorUp();
+		inner.cursorDown();
 	}-*/;
 	
 	@Override
