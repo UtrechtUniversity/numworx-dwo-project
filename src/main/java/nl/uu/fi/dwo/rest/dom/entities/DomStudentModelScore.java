@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -23,6 +24,7 @@ public class DomStudentModelScore<T extends DomStudentModelScore> {
     /**
      * @return the score
      */
+    @Transient
     public double getScore() {
         return redScore+greenScore;
     }
@@ -30,7 +32,11 @@ public class DomStudentModelScore<T extends DomStudentModelScore> {
     /**
      * @param score the score to set
      */
+    @Transient
     public void setScore(double score) {
+    	if (score == 0.5) {
+    		redScore = 0; greenScore = 0.5; redCount = greenCount = 0;
+    	} else
         if (score < 0.5) { redScore = score;greenScore = 0; redCount = 1; greenCount = 0; }
         else { greenScore = score; redScore = 0; greenCount = 1; redCount = 0; }
         totalCount = 1;
@@ -40,6 +46,7 @@ public class DomStudentModelScore<T extends DomStudentModelScore> {
     /**
      * @return the count
      */
+    @Transient
     public long getCount() {
         return redCount + greenCount;
     }
@@ -106,8 +113,8 @@ public class DomStudentModelScore<T extends DomStudentModelScore> {
               long rc = child.getRedCount();
               long gc = child.getGreenCount();
               long tc = child.getTotalCount();
-              double rs = child.getRedScore();
-              double gs = child.getGreenScore();
+              double rs = rc == 0 ? 0 : child.getRedScore();
+              double gs = gc == 0 ? 0 : child.getGreenScore();
               redScore += rs;
               greenScore += gs;
               redCount += rc;
@@ -125,5 +132,25 @@ public class DomStudentModelScore<T extends DomStudentModelScore> {
         }
       
     }
+
+	public void setRedScore(double redScore) {
+		this.redScore = redScore;
+	}
+
+	public void setGreenScore(double greenScore) {
+		this.greenScore = greenScore;
+	}
+
+	public void setRedCount(long redCount) {
+		this.redCount = redCount;
+	}
+
+	public void setGreenCount(long greenCount) {
+		this.greenCount = greenCount;
+	}
+
+	public void setTotalCount(long totalCount) {
+		this.totalCount = totalCount;
+	}
 
 }

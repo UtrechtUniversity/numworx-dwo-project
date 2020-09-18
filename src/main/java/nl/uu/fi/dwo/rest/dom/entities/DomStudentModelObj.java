@@ -40,6 +40,7 @@ public class DomStudentModelObj {
           } 
         } else {
           result.setChildren(null);
+          result.setScore(0.5);
         }
         return result;
     }
