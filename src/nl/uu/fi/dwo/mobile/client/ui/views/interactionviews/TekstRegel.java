@@ -10,6 +10,7 @@ import org.vectomatic.dom.svg.ui.SVGImage;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.formule.client.formuleholder.SVGTekstComponent;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SvgBuilder;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
@@ -53,6 +54,7 @@ public class TekstRegel //extends LayoutPanel
 	private int font_style;
 	private String font_name = "Arial";
 	private Context2d ctx;
+	private SvgBuilder ctx2;
 	private String fontString;
 	//private fontType = "sans-serif";
 	
@@ -152,6 +154,7 @@ public class TekstRegel //extends LayoutPanel
 		
 		Canvas canvas = Canvas.createIfSupported();
 		ctx = canvas.getContext2d();
+		ctx2 = new SvgBuilder(null, 0, 0);
 		String fontTypeString = "";
 		if(font_style == 1)
 		{	fontTypeString = "bold";
@@ -178,6 +181,7 @@ public class TekstRegel //extends LayoutPanel
 		else
 			fontString = fontTypeString + " " + font_size + "px " + font_name;
 		ctx.setFont(fontString);
+		ctx2.setFont(fm);
 	}
 	
   @Deprecated Element getElement() {
@@ -250,7 +254,11 @@ public class TekstRegel //extends LayoutPanel
 			else if(currentObject instanceof String)
 			{
 				objectVerschuiving = ashoogte - tekstAshoogte;
-				objectBreedte = (int) ctx.measureText(currentObject.toString()).getWidth();
+				//objectBreedte = (int) ctx.measureText(currentObject.toString()).getWidth();
+				objectBreedte = (int) ctx2.measureText(currentObject.toString()).getWidth();
+				if (fm.isItalic()) {
+					objectBreedte += 0;
+				}
 				if(ctx.getFont().contains("italic"))
 					objectBreedte += 1;
 				objectHoogte = tekstHoogte;
