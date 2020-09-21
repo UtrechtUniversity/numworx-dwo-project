@@ -108,6 +108,35 @@ public class SecuredTeacherStudentModelManagerIT {
     }
 
     /**
+     * Test of getStudentModels method, of class
+     * SecuredTeacherStudentModelManager.
+     */
+    @Test
+    public void testGetReducedStudentModels() {
+
+        System.out.println("getReducedStudentModels");
+        SecurityContext sc = new TestSecurityContext("user03", RoleType.TEACHER);
+        RestContext restContext = new RestContext();
+        DomHasRole hr = new DomHasRole();
+        //MYSQL;PersistentHasRole;00000000000000000010;00000000000000000003 TEACHER School01
+        PersistentHasRolePK key = new PersistentHasRolePK(10L, 3L);
+        PersistenceId id = PersistentHasRole.buildPersistenceId(key);
+        hr.setId(id);
+        hr.setUserId(PersistentUser.buildPersistenceId(10L));
+        hr.setSchoolGroupId(PersistentSchoolGroup.buildPersistenceId(10L));
+        DomContext context = new DomContext();
+        context.setDomHasRole(hr);
+        restContext.setRestContext(context);
+        SecuredTeacherStudentModelManager instance = new SecuredTeacherStudentModelManager();
+        List<DomStudentModelContext> expResult = null;
+        List<DomStudentModelContext> result = instance.getReducedStudentModels(sc, restContext);
+        assertEquals(2, result.size());
+        assertNull(result.get(0).getModelStructure().getInfo().getDescription());
+    }
+  
+    
+    
+    /**
      * Test of addStudentModel method, of class
      * SecuredTeacherStudentModelManager.
      * @throws JSONException 

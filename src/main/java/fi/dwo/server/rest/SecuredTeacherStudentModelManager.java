@@ -19,7 +19,9 @@ import javax.ws.rs.core.UriInfo;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelScorePerTeacher;
@@ -61,6 +63,23 @@ public class SecuredTeacherStudentModelManager {
         } catch (Dwo2Exception e) {
             throw new Dwo2RestException(e);
         }
+    }
+    
+    
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getReducedList")
+    public List<DomStudentModelContext> getReducedStudentModels(@Context SecurityContext sc, RestContext context) {
+    	List<DomStudentModelContext> list = getStudentModels(sc, context);
+    	for(DomStudentModelContext item: list) {
+    		DomStudentModelStructure structure = item.getModelStructure();
+    		structure.setCategories(null);
+    		DomStudentModelContextInfo info = structure.getInfo();
+			info.setDescription(null);
+			info.setVoorkennis(null);
+			info.setMethods(null);
+    	}
+    	return list;
     }
 
     @PUT
