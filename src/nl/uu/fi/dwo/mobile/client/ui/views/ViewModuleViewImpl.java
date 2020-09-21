@@ -243,6 +243,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	public void clearContentPanel()
 	{
 		contentPanel.clear();
+		contentPanel.getElement().setScrollTop(0);
+		contentPanel.getElement().setScrollLeft(0);
 		PopupFacade.hide();	
 		kb.blur();
 	}
