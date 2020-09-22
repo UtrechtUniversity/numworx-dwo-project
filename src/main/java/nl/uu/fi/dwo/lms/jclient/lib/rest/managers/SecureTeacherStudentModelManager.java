@@ -38,6 +38,17 @@ public class SecureTeacherStudentModelManager {
     return src;
   }
 
+  public static List<DomStudentModelContext> getReducedList() throws Dwo2Exception {
+	    RestContext rest = new RestContext();
+	    rest.setRestContext(getContext());
+	    List<DomStudentModelContext> src =
+	        StoredRestManager.getInstance().getPutList("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/getReducedList",
+	            RestListClassTypes.DomStudentModelContext, rest);
+	    LOG.log(Level.FINE, "Retrieved list of studentmodels of the teacher with username {0}.",
+	        new Object[] {RestAuthenticator.getInstance().getUsername()});
+	    return src;
+	  }
+
   static DomContext getContext() {
     return RestAuthenticator.getInstance().getContext();
   }
