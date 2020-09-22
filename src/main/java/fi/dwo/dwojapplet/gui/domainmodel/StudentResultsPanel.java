@@ -340,7 +340,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
 
   private void putObjectiveScore(List<DomStudentModelObj> list, List<DomStudentModelObjectiveScore> scores) {
     if (list == null) return;
-    int sizej = list.size();
+    int sizej = Math.min(list.size(), scores.size());
     for (int j = 0; j < sizej; j++) {
       DomStudentModelObj o = list.get(j);
       DomStudentModelObjectiveScore so = scores.get(j);
