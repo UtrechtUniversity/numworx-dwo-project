@@ -229,6 +229,12 @@ public class StudentModelChoicePanel extends JPanel implements TreeSelectionList
     rightBox.add(scroll);
     
     tree.addTreeSelectionListener(this);
+    
+    Dimension dim = getPreferredSize();
+    dim.height = Math.max(dim.height, 450);
+    setSize(dim);
+    setPreferredSize(dim);
+    setMinimumSize(dim);
   }
 
   private boolean[][] choices;

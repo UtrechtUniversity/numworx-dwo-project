@@ -178,9 +178,10 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
               DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
               //String title = (String) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), 0);
               LeerdomeinResultsPanel2 panel = new LeerdomeinResultsPanel2();
-              panel.setContext(model);
               List<DomSchoolClass> list;
               try {
+                  model = prop.getModel(model);
+                  panel.setContext(model);
                 list = SecureTeacherSchoolClassManager.getTeachersSchoolClasses();
               } catch (Dwo2Exception e) {
                 LOG.log(Level.SEVERE, "get classes for popup", e);

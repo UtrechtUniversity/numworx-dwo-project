@@ -29,7 +29,7 @@ public class TeacherStudentModelPanelProperties {
     }
 
     List<DomStudentModelContext> getModelList() throws Dwo2Exception {
-        return SecureTeacherStudentModelManager.getList();
+        return SecureTeacherStudentModelManager.getReducedList();
     }
 
     DomStudentModelContext updateModel(DomStudentModelContext modelContext) throws Dwo2Exception {
