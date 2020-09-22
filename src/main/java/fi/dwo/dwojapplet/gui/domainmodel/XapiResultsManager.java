@@ -221,8 +221,11 @@ public class XapiResultsManager {
       query.verbID = ATTEMPTED;
       query.activityID = activity.id;
 
-      return xapi.getState("StudentModelData", activity, agent, null)
-          .recover(oops -> new StateDocument())
+      return
+//          xapi.getState("StudentModelData", activity, agent, null)
+//          .recover(oops -> new StateDocument())
+          Promises.resolved(new StateDocument())
+
           .then( p0 -> {
             StateDocument d = p0.getValue();
             query.since = d.timestamp;
