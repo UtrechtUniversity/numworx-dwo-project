@@ -743,7 +743,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 		    	randomizePositions = ((Boolean)launchData.get("randomizePositions")).booleanValue();
 		    if(launchData.get("logOption") != null) 
 		    	logOption = ((Boolean)launchData.get("logOption")).booleanValue();
-			if(launchData.get("logID") != null) 
+			if(logOption && launchData.get("logID") != null) 
 				logID = (String)launchData.get("logID");
 			if(launchData.get("check") != null) 
 				check = ((Boolean)launchData.get("check")).booleanValue();

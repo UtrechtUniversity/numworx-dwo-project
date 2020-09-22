@@ -304,7 +304,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			if(logOption) {
 				dwologger = new DWOLogger();
 				String type = isVergelijkingVak? "Vergelijking":"Formule";
-				dwologger.setLogID(launchStateMap.getString("logID"));
+				if (launchStateMap.getBoolean("logOption", false))
+					dwologger.setLogID(launchStateMap.getString("logID"));
 				dwologger.setClassName("fi.wiskopdr.Antwoord" + type + "Vak");
 				if(launchStateMap.containsKey("logIDLabel"))
 					dwologger.setLogIDLabel(launchStateMap.getString("logIDLabel"));

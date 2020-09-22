@@ -746,7 +746,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		    	multiSelections = map.getBoolean("multiSelections");
 		    if(map.containsKey("logOption")) 
 		    	logOption = map.getBoolean("logOption");
-			if(map.containsKey("logID")) 
+			if(map.containsKey("logID") && logOption) 
 				logID = map.getString("logID");
 			if(map.containsKey("check")) 
 				check = map.getBoolean("check");

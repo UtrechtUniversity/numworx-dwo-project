@@ -224,7 +224,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			}
 			if (map.containsKey("logOption"))
 				logOption = map.getBoolean("logOption");
-			if (map.containsKey("logID"))
+			if (map.containsKey("logID") && logOption)
 				logID = map.getString("logID");
 			String[] smObjectives = map.getStringArray("smObjectives");
 			if (smObjectives != null && smObjectives.length > 0)

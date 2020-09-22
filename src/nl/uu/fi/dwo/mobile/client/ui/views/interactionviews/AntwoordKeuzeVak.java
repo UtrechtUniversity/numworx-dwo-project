@@ -216,8 +216,6 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 				{	logObjectives[i] = logObjectivesList.getBooleanArray(i);
 				}
 			}
-			if(map.containsKey("logID")) 
-				logID = map.getString("logID");
 			String logIDLabel = "";
 			if(map.containsKey("logIDLabel"))
 				logIDLabel = map.getString("logIDLabel");
@@ -229,6 +227,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 				checkExternal = map.getBoolean("checkExternal");
 			if(map.containsKey("logOption")) 
 		    	logOption = map.getBoolean("logOption");
+			if(map.containsKey("logID") && logOption) 
+				logID = map.getString("logID");
 			String[] smObjectives = JSONUtilities.toStringArray(launchData.get("smObjectives"));
 			if (smObjectives != null && smObjectives.length > 0)
 				logOption = true;
