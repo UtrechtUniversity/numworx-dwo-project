@@ -425,7 +425,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				if (launchState.containsKey("smObjectives")) {
 				  smObjectives = launchState.getStringArray("smObjectives");
 				}
-				if(launchState.getBoolean("logOption", false)) {
+				boolean logOption;
+				if (smObjectives != null && smObjectives.length > 0)
+					logOption = true;
+				else 
+					logOption = launchState.getBoolean("logOption", false);
+				if(logOption) {
 					if(fe != null) 
 					{
 						logging = fe.dwologger;

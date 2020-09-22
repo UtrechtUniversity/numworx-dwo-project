@@ -141,7 +141,7 @@ public class SMLogger implements Logging {
 
   @Override
   public void setLogID(String string) {
-    definition.name = Collections.singletonMap("unk", string);
+    definition.name = string != null ? Collections.singletonMap("unk", string) : null;
     delegate.setLogID(string);
   }
 

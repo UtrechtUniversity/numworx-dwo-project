@@ -786,6 +786,8 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 				}
 			}
 			String[] smObjectives = JSONUtilities.toStringArray(launchData.get("smObjectives"));
+			if (smObjectives != null && smObjectives.length > 0)
+				logOption = true;
 	
 			if(launchData.get("knopImageString") != null) 
 				knopImageString = (String)launchData.get("knopImageString");

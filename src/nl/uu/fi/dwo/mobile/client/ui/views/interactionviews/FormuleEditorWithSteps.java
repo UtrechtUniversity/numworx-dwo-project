@@ -296,7 +296,12 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				}
 			}
 			String[] smObjectives = JSONUtilities.toStringArray(launchState.get("smObjectives"));
-			if (launchStateMap.getBoolean("logOption", false)) {
+			boolean logOption;
+			if (smObjectives != null && smObjectives.length > 0)
+				logOption = true;
+			else 
+				logOption = launchStateMap.getBoolean("logOption", false);
+			if(logOption) {
 				dwologger = new DWOLogger();
 				String type = isVergelijkingVak? "Vergelijking":"Formule";
 				dwologger.setLogID(launchStateMap.getString("logID"));

@@ -229,8 +229,10 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 				checkExternal = map.getBoolean("checkExternal");
 			if(map.containsKey("logOption")) 
 		    	logOption = map.getBoolean("logOption");
-			String[] smObjectives = JSONUtilities.toStringArray(launchData.get("smObjectives"));			
-			if (logOption)
+			String[] smObjectives = JSONUtilities.toStringArray(launchData.get("smObjectives"));
+			if (smObjectives != null && smObjectives.length > 0)
+				logOption = true;
+			if (logOption  )
 		    {	
 		    	DWOLogger dwologger = new DWOLogger();
 		    	dwologger.setMaxScore(scoreMax);

@@ -153,7 +153,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		if(innerMap.containsKey("teltmee")) 
 			teltmee = innerMap.getBoolean("teltmee");
 		boolean logOption = innerMap.getBoolean("logOption", false);
-		if (logOption) {
+		if (logOption || innerMap.containsKey("smObjectives")) {
 			String logID = innerMap.getString("logID");
 			DWOLogger dwoLogger = new DWOLogger();
 			if(innerMap.containsKey("scoreMax"))

@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.dwokb.NoStatusKeyboard;
 import nl.uu.fi.dwo.mobile.utils.LaTransport;
 import nl.uu.fi.dwo.mobile.utils.Logging;
+import nl.uu.fi.dwo.mobile.utils.NoLogging;
 
 public class DWO2playerDefaults extends DWOplayerDefaults implements DwoConstants {
 
@@ -94,7 +95,8 @@ public class DWO2playerDefaults extends DWOplayerDefaults implements DwoConstant
 
 	public Provider<Logging> loggingProvider = 
 	    new SMLogger.Provider(	    
-	      new StudentModelLogger.Provider());
+	      () -> NoLogging.instance);
+	      //new StudentModelLogger.Provider());
 			//GWT.create(LoggingProvider.class);
 	
 	@Override

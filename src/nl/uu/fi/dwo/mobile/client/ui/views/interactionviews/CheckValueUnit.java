@@ -189,6 +189,8 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
 			if(launchData.get("knopImageString") != null) 
 				knopImageString = (String)launchData.get("knopImageString");
 			String[] smObjectives = JSONUtilities.toStringArray(launchData.get("smObjectives"));
+			if (smObjectives != null && smObjectives.length > 0)
+				logOption = true;
 			if(logOption) {
 				dwologger = new DWOLogger();
 				dwologger.setLogID(logID);
