@@ -59,6 +59,8 @@ import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
+import nl.uu.fi.dwo.mobile.utils.LogBuilder;
+import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.Review;
 
 public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMisconceptions, CBookEventListener
@@ -139,7 +141,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	
 	private boolean check = true;
 	private boolean teltMee = true;
-	private DWOLogger dwologger;
+	private Logging dwologger;
 	
 	private int[] randomSequence;
 	
@@ -793,23 +795,24 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		}
 
 		String[] smObjectives = JSONUtilities.toStringArray(launchData.get("smObjectives"));
-		if (smObjectives != null && smObjectives.length > 0)
-			logOption = true;
 		if(logOption) {
-			dwologger = new DWOLogger();
-			dwologger.setLogID(logID);
-			dwologger.setClassName("fi.wiskopdr.CheckUnitPanel/" + getAantalSelectieObjecten());
-			dwologger.setMaxScore(scoreMax);
-			dwologger.setLogObjectives(logObjectives);
-			dwologger.setSMObjectives(smObjectives);
-			dwologger.setTeltMee(teltMee);
+			LogBuilder builder = new LogBuilder();
+			builder.setLogOption(logOption);
+			builder.setLogID(logID);
+			builder.setClassName("fi.wiskopdr.CheckUnitPanel/" + getAantalSelectieObjecten());
+			builder.setMaxScore(scoreMax);
+			builder.setLogObjectives(logObjectives);
+			builder.setSmObjectives(smObjectives);
+			builder.setTeltMee(teltMee);
+			
+			dwologger = builder.build();
 		}
 
 		
 	}
 
 	private void adviseMe() {
-		if (logOption && comRoot.getLessonMode() == LessonMode.normal) {
+		if (DWOplayer.clientfactory.withUser() && logOption && comRoot.getLessonMode() == LessonMode.normal) {
 			String id = logID;
 			if(! id.startsWith("adviseMe:")) 
 				return;

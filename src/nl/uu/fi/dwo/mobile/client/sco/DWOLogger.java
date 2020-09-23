@@ -89,6 +89,7 @@ public class DWOLogger implements Logging {
 	 * 
 	 * @param parameters
 	 */
+	@Override
 	public void updateLog(Map<String, ?> parameters) {
 		String formula = (String)parameters.get("response");
 		map.put(LOGKEY_ANSWER, new JSONString(formula));

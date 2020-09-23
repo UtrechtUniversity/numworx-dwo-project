@@ -17,6 +17,7 @@ public class LogBuilder {
 	private String className = "";
 	private boolean teltMee = true;
 	private Integer maxScore;
+	private String logIDLabel;
 
 	public LogBuilder setLaunchData(ObjectMap map) {
 		logOption = map.getBoolean("logOption", false);
@@ -36,6 +37,7 @@ public class LogBuilder {
 			}
 		}
 		logID = map.getString("logID");
+		logIDLabel = map.getString("logIDLabel");
 		return this;
 	}
 	
@@ -51,6 +53,7 @@ public class LogBuilder {
 			String logID = logOption ? this.logID : null;
 			DWOLogger dwoLogger = new DWOLogger();					
 			dwoLogger.setTeltMee(teltMee);
+			dwoLogger.setLogIDLabel(logIDLabel);
 
 			logging = dwoLogger;			
 			if (maxScore != null) {
@@ -125,6 +128,11 @@ public class LogBuilder {
 
 	public LogBuilder setMaxScore(Integer maxScore) {
 		this.maxScore = maxScore;
+		return this;
+	}
+
+	public LogBuilder setLogIDLabel(String string) {
+		logIDLabel = string;
 		return this;
 	}
 }

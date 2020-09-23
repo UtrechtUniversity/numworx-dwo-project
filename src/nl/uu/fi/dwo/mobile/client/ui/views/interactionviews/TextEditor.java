@@ -82,6 +82,8 @@ import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
+import nl.uu.fi.dwo.mobile.utils.LogBuilder;
+import nl.uu.fi.dwo.mobile.utils.Logging;
 
 public class TextEditor  implements InteractionView, TouchStartHandler, FormuleEditorIF, FacetAware, CBookEventListener, TekstElementWithFont, HasText {
 	
@@ -132,11 +134,12 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	int menuheight = 0;
 	int padding = 4; // TODO bepaal padding;
 	
-	DWOLogger logging;
+	Logging logging;
 	private String lastAttempt;
 	private CorrectieFacade correctie;
 	private boolean teltMee;
     private int scoreMax;
+	private String loggingID;
 	
 	TextEditor(int breedte, int hoogte, boolean boxMetRand)
 	{
@@ -224,16 +227,19 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			
 		}
 		
-		boolean logOption = launchdata.getBoolean("logOption", false);
-		if (logOption)
-		{
-			String logID = launchdata.getString("logID");
-			DWOLogger dwologger = new DWOLogger();
-			dwologger.setLogID(logID);
-			dwologger.setClassName("fi.wiskopdr.tekstobjects.TekstEditor");
-			dwologger.setMaxScore(scoreMax);
-			logging = dwologger;
-		}
+		LogBuilder logBuilder = new LogBuilder().setClassName("fi.wiskopdr.tekstobjects.TekstEditor").setLaunchData(launchdata);
+		loggingID = logBuilder.getLogID();
+		logging = logBuilder.build();
+//		boolean logOption = launchdata.getBoolean("logOption", false);
+//		if (logOption)
+//		{
+//			String logID = launchdata.getString("logID");
+//			DWOLogger dwologger = new DWOLogger();
+//			dwologger.setLogID(logID);
+//			dwologger.setClassName("fi.wiskopdr.tekstobjects.TekstEditor");
+//			dwologger.setMaxScore(scoreMax);
+//			logging = dwologger;
+//		}
 		//shown = true;
 	}
 
@@ -450,7 +456,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	private void adviseMe() {
 		if (DWOplayer.clientfactory.withUser() && logging != null && comRoot.getLessonMode() == LessonMode.normal ) {
-			String id = logging.getLogID();
+			String id = loggingID;
 			if(id == null || !id.startsWith("adviseMe:")) 
 				return;
 			String[] split = id.split(":");

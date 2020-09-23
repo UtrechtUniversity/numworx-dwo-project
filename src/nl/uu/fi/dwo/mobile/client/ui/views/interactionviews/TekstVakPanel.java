@@ -31,6 +31,7 @@ import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.StateLess;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
@@ -46,6 +47,8 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.samengesteldestappen.SamengesteldeStappenPanel;
 import nl.uu.fi.dwo.mobile.utils.Connector;
+import nl.uu.fi.dwo.mobile.utils.LogBuilder;
+import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade.PopupListener;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
@@ -375,6 +378,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	private int responsiveMaxWidth = 980;
 	private int responsiveConstant = 0;
 	private double responsiveFactor = 0;
+	private String logID;
 	
 	
 	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
@@ -459,7 +463,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	
 	String getLogID() { 
 		if (dwologger != null)
-			return dwologger.getLogID()  +"/" + comRoot.getUUID();
+			return logID  +"/" + comRoot.getUUID();
 		else
 			return comRoot.getUUID();
 	}
@@ -533,11 +537,14 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			puntenAftrekPopup = launchState.getInt("puntenAftrekPopup");
 		logOption = launchState.getBoolean("logOption", false);
 		if(logOption) {
-			dwologger = new DWOLogger();
-			dwologger.setLogID(launchState.getString("logID"));
-			dwologger.setMaxScore(0);
-			dwologger.setLogIDLabel(launchState.getString("logIDLabel"));
-			dwologger.setClassName("fi.wiskopdr.TekstVakPanel");			
+			LogBuilder builder = new LogBuilder()
+				.setLogOption(true)
+				.setLogID(launchState.getString("logID"))
+				.setMaxScore(0)
+				.setLogIDLabel(launchState.getString("logIDLabel"))
+				.setClassName("fi.wiskopdr.TekstVakPanel");
+			dwologger = builder.build();
+			logID = builder.getLogID();
 		}
 		
 		ObjectMap style = null;
@@ -5501,7 +5508,7 @@ private Object CamelCase(String name) {
 		return "noordhoff".equals(dependentName);
 	}
 	
-	DWOLogger dwologger;
+	Logging dwologger;
 	private boolean editable = true;
 	
 	private void setAttempt() {
@@ -5599,8 +5606,8 @@ private Object CamelCase(String name) {
 	}
 
 	private void adviseMe() {
-		if (logOption) {
-			String id = dwologger.getLogID();
+		if (DWOplayer.clientfactory.withUser() && logOption && comRoot.getLessonMode() == LessonMode.normal) {
+			String id = logID;
 			if(! id.startsWith("adviseMe:")) 
 				return;
 			String[] split = id.split(":");

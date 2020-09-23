@@ -21,4 +21,7 @@ public interface Logging {
     void setMaxScore(int max);
 
 	void setLogOption(boolean logOption);
+
+	default void updateLog(Map<String, ?> map) { }
+
 }
