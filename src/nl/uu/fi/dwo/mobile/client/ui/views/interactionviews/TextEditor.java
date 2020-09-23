@@ -449,9 +449,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	}
 
 	private void adviseMe() {
-		if (logging != null && comRoot.getLessonMode() == LessonMode.normal) {
+		if (DWOplayer.clientfactory.withUser() && logging != null && comRoot.getLessonMode() == LessonMode.normal ) {
 			String id = logging.getLogID();
-			if(! id.startsWith("adviseMe:")) 
+			if(id == null || !id.startsWith("adviseMe:")) 
 				return;
 			String[] split = id.split(":");
 			String math = toMathML();
