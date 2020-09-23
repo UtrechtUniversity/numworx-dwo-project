@@ -569,4 +569,10 @@ public class CenterPanel extends JPanel implements CourseContainer {
         centerSubPanel.stateChanged(new ChangeEvent(school));
     }
 
+    public void reloadHeader() {
+      CenterSubPanel panel = centerSubPanel;
+      mainPanel.setHeaderPanel(panel.getSubHeaderPanel());
+      subHeader.setSubHeaderPanel(panel.getHeaderPanel());
+    }
+
 }

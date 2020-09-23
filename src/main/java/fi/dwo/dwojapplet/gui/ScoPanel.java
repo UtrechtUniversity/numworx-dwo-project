@@ -583,7 +583,9 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
 
     @Override
     public void stateChanged(ChangeEvent e) {
-
+        if (e.getSource() == getSco().getCourse()) {
+          center.reloadHeader();
+        }
 
     }
 }
