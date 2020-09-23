@@ -279,6 +279,7 @@
 				<gwtModule>${project.groupId}.WiskOpdrPlayer</gwtModule>
 				<wagonPhase>none</wagonPhase>
 				<s3>s3://ebs-dev-dwo-nl</s3>
+				<gwt.style>PRETTY</gwt.style>
 			</properties>
 		<build>
 			<plugins>
