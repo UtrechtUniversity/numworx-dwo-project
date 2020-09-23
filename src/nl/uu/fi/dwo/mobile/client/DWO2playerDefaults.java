@@ -7,11 +7,11 @@ import com.google.gwt.user.client.Window;
 
 import fi.dwo.gwt.lib.rest.DwoConstants;
 import nl.uu.fi.dwo.mobile.client.sco.SMLogger;
-import nl.uu.fi.dwo.mobile.client.sco.StudentModelLogger;
+//import nl.uu.fi.dwo.mobile.client.sco.StudentModelLogger;
 import nl.uu.fi.dwo.mobile.client.ui.IdleDetect;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.dwokb.NoStatusKeyboard;
-import nl.uu.fi.dwo.mobile.utils.LaTransport;
+//import nl.uu.fi.dwo.mobile.utils.LaTransport;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.NoLogging;
 

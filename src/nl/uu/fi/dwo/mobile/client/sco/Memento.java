@@ -21,8 +21,8 @@ import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
+//import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
+//import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -39,7 +39,7 @@ import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
-import fi.dwo.gwt.lib.rest.util.DomStudentModelStructureScoreCodec;
+//import fi.dwo.gwt.lib.rest.util.DomStudentModelStructureScoreCodec;
 
 /**
  * Class om suspend_data in en uit te pakken. JSON format, Javascript is hier
@@ -90,7 +90,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private static final String TOTAL_TIME = "cmi.total_time";
 	public static final String COMPLETION_STATUS = "cmi.completion_status";
 	public static final String COMPLETED = "completed";
-	public static final String STUDENT_MODEL = "dme.student_model";
+	//public static final String STUDENT_MODEL = "dme.student_model";
 
 	static final String EXIT_NORMAL = "normal";
 	static final String EXIT_SUSPEND = "suspend";
@@ -229,7 +229,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		//instalOnBeforeUnload();
 		
 		ShareFacade.setSharedState(shareMap);
-		StudentModelLogger.destroy();
+		//StudentModelLogger.destroy();
 	}
 
   void register() {
@@ -668,11 +668,11 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	protected Promise<?> setStudentModelDataScore() {
 		if(DWOplayer.withUser() && pmodel != null) {
 			Promise<?> then = pmodel.then(p -> { 
-				DomStudentModelStructure model = p.getValue().getModelStructure();
-				DomStudentModelStructureScore data = model.generateStudentModelStructureScore();
-				StudentModelLogger.accumulateAllScores(data, Memento.this);
-				setStudentModel(data);
-				StudentModelLogger.destroy();
+				//DomStudentModelStructure model = p.getValue().getModelStructure();
+				//DomStudentModelStructureScore data = model.generateStudentModelStructureScore();
+				//StudentModelLogger.accumulateAllScores(data, Memento.this);
+				//setStudentModel(data);
+				//StudentModelLogger.destroy();
 				return api.Terminate();
 			}).recoverWith( p-> api.Terminate() );
 			return then;
@@ -683,10 +683,10 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	public Promise<DomStudentModelContext> collectStudentModel() {
 		if(pmodel != null && DWOplayer.withUser()) {
 			return pmodel.then(p-> {
-				DomStudentModelStructure model = p.getValue().getModelStructure();
-				DomStudentModelStructureScore data = model.generateStudentModelStructureScore();
-				StudentModelLogger.accumulateAllScores(data, Memento.this);
-				setStudentModel(data);
+				//DomStudentModelStructure model = p.getValue().getModelStructure();
+				//DomStudentModelStructureScore data = model.generateStudentModelStructureScore();
+				//StudentModelLogger.accumulateAllScores(data, Memento.this);
+				//setStudentModel(data);
 				return api.Commit();
 			}).recoverWith(p -> api.Commit()).then(p -> pmodel);
 		}
@@ -696,7 +696,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	
 	public void setStudentModelStructure(Promise<DomStudentModelContext> pmodel) {
 		this.pmodel = pmodel;
-		StudentModelLogger.destroy();
+		//StudentModelLogger.destroy();
 	}
 	
 	public Promise<DomStudentModelContext> getStudentModelStructure() {
@@ -1336,10 +1336,10 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		setValue(TOTAL_TIME, format(startTime + millis));
 	}
 	
-	void setStudentModel(DomStudentModelStructureScore model) {
-		JSONValue string = DomStudentModelStructureScoreCodec.CODEC.encode(model);
-		setValue(STUDENT_MODEL, string.toString());
-	}
+//	void setStudentModel(DomStudentModelStructureScore model) {
+//		JSONValue string = DomStudentModelStructureScoreCodec.CODEC.encode(model);
+//		setValue(STUDENT_MODEL, string.toString());
+//	}
 
   private static String REVIEW_CORRECTIE_SCORE = "reviewScoreCorrectie";
 

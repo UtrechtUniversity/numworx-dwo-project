@@ -19,4 +19,6 @@ public interface Logging {
 	void setSMObjectives(String[] objectives);
 
     void setMaxScore(int max);
+
+	void setLogOption(boolean logOption);
 }

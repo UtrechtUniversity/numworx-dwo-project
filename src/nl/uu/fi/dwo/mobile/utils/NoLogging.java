@@ -36,4 +36,8 @@ public final class NoLogging implements Logging {
     
   }
 
+  @Override
+  public void setLogOption(boolean logOption) {	
+  }
+
 }

@@ -23,6 +23,7 @@ import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
@@ -152,28 +153,30 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		teltmee = true;
 		if(innerMap.containsKey("teltmee")) 
 			teltmee = innerMap.getBoolean("teltmee");
-		boolean logOption = innerMap.getBoolean("logOption", false);
-		if (logOption || innerMap.containsKey("smObjectives")) {
-			String logID = logOption ? innerMap.getString("logID") : null;
-			DWOLogger dwoLogger = new DWOLogger();
-			if(innerMap.containsKey("scoreMax"))
-			{
-				dwoLogger.setMaxScore(scoreMax);
-			}
-			logging = dwoLogger;
-			logging.setLogID( logID);
-			int soortVak = outermap.getInt("soortInteractiePanel");
-
-			logging.setClassName(className(soortVak));
-			dwoLogger.setLogObjectives(logObjectives);
-			String[] smObjectives = null;
-			if (innerMap.containsKey("smObjectives")) {
-				  smObjectives = innerMap.getStringArray("smObjectives");
-				}
-			dwoLogger.setSMObjectives(smObjectives);
-			dwoLogger.setTeltMee(teltmee);
-
-		}
+//		boolean logOption = innerMap.getBoolean("logOption", false);
+//		if (logOption || innerMap.containsKey("smObjectives")) {
+//			String logID = logOption ? innerMap.getString("logID") : null;
+//			DWOLogger dwoLogger = new DWOLogger();
+//			if(innerMap.containsKey("scoreMax"))
+//			{
+//				dwoLogger.setMaxScore(scoreMax);
+//			}
+//			logging = dwoLogger;
+//			logging.setLogID( logID);
+//			int soortVak = outermap.getInt("soortInteractiePanel");
+//
+//			logging.setClassName(className(soortVak));
+//			dwoLogger.setLogObjectives(logObjectives);
+//			String[] smObjectives = null;
+//			if (innerMap.containsKey("smObjectives")) {
+//				  smObjectives = innerMap.getStringArray("smObjectives");
+//				}
+//			dwoLogger.setSMObjectives(smObjectives);
+//			dwoLogger.setTeltMee(teltmee);
+//
+//		}
+		int soortVak = outermap.getInt("soortInteractiePanel");
+		logging = new LogBuilder().setClassName(className(soortVak)).setLaunchData(innerMap).build();
 	}
 	private String className(int s) {
 		switch(s) {

@@ -92,7 +92,8 @@ public class SMLogger implements Logging {
   }
   
   private Double getScore(Map<String, ?> parameters) {
-    Map map = (Map) parameters.get("score");
+    @SuppressWarnings("unchecked")
+	Map<String,?> map = (Map<String,?>) parameters.get("score");
     if(map == null) return null;
     Number n = (Number) map.get("raw");
     if(n == null) return null;
@@ -170,5 +171,8 @@ public class SMLogger implements Logging {
     delegate.setMaxScore(max);
     
   }
+	public void setLogOption(boolean logOption) {
+		delegate.setLogOption(logOption);
+	}
 
 }

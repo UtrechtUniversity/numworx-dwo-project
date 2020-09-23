@@ -333,7 +333,7 @@ public class LaTransport implements Logging {
 	}
 	
 	public void log(Map<String,?> result) {
-		if(comRoot == null) return;
+		if(comRoot == null||!logOption) return;
 		JSONObject msg = buildMessage(result);
 		sender.send0(msg);
 	}
@@ -355,5 +355,11 @@ public class LaTransport implements Logging {
 
   @Override
   public void setMaxScore(int max) {
+  }
+
+  boolean logOption = true;
+  @Override
+  public void setLogOption(boolean logOption) {
+	  this.logOption = logOption;	
   }
 }

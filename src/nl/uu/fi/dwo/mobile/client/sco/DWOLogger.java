@@ -37,12 +37,13 @@ public class DWOLogger implements Logging {
 	private JSONString logIDLabel;
 	private int errorCount, attemptsCount;
 	private JSONBoolean teltMee;
+	private boolean logOption = true;
 
 	public DWOLogger() {
 		this(DWOplayer.PARAMETERS.getLogging());
 	}
 	
-	DWOLogger(Logging delegate) {		
+	public DWOLogger(Logging delegate) {		
 		memento = Memento.instance();
 		this.delegate = delegate;
 	}
@@ -242,4 +243,9 @@ public class DWOLogger implements Logging {
       delegate.setSMObjectives(objectives);
     }
   }
+
+	public void setLogOption(boolean logOption) {
+		this.logOption = logOption;
+		if (delegate != null) delegate.setLogOption(logOption);
+	}
 }
