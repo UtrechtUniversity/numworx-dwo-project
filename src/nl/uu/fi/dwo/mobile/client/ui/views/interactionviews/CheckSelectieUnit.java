@@ -391,7 +391,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	    kijkNa(false);
 		if(dwologger != null) {
 			Map<String, Object> map = buildLogParameters();
-			if (mode == OpdrNavIF.EINDTOETS && ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {
+			if (mode == OpdrNavIF.EINDTOETS && this.ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {
 				this.nagekeken = nagekeken = true;
 				zetIsVeranderdNaNakijken(isVeranderdNaNakijken = false);
 				dwologger.log(map);
@@ -795,15 +795,15 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		}
 
 		String[] smObjectives = JSONUtilities.toStringArray(launchData.get("smObjectives"));
-		if(logOption) {
-			LogBuilder builder = new LogBuilder();
-			builder.setLogOption(logOption);
-			builder.setLogID(logID);
-			builder.setClassName("fi.wiskopdr.CheckUnitPanel/" + getAantalSelectieObjecten());
-			builder.setMaxScore(scoreMax);
-			builder.setLogObjectives(logObjectives);
-			builder.setSmObjectives(smObjectives);
-			builder.setTeltMee(teltMee);
+		if(logOption || smObjectives != null) {
+			LogBuilder builder = new LogBuilder()
+					.setLogOption(logOption)
+					.setLogID(logID)
+					.setClassName("fi.wiskopdr.CheckUnitPanel/" + getAantalSelectieObjecten())
+					.setMaxScore(scoreMax)
+					.setLogObjectives(logObjectives)
+					.setSmObjectives(smObjectives)
+					.setTeltMee(teltMee);
 			
 			dwologger = builder.build();
 		}
