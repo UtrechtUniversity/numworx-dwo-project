@@ -1,6 +1,5 @@
 package nl.numworx.gwtpatch.client;
 
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -13,8 +12,6 @@ import java.util.logging.Logger;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
-
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.JSONObjectListImpl;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
@@ -24,7 +21,7 @@ public class GWTPatch {
 
 	final Logger LOG = Logger.getLogger(getClass().getName());
 	
-	interface Builder {
+	public interface Builder {
 		Map<String,Object> createMap();
 		List<Object> createList(int size);
 
@@ -67,7 +64,7 @@ public class GWTPatch {
 		factory = new DiffFactory(builder);
 	}
 
-	ObjectList createDiff(Object old, Object now ) {
+	protected ObjectList createDiff(Object old, Object now ) {
 		createDiff(old, now, "");
 		ObjectList patches;
 		patches = factory.getPatches();
