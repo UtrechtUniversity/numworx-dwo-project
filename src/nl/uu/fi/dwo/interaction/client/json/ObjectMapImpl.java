@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.interaction.client.json;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.Set;
 
 import static nl.uu.fi.dwo.interaction.client.JSONUtilities.*;
 
+@SuppressWarnings("serial")
 public class ObjectMapImpl extends HashMap<String, Object> implements ObjectMap {
 
 	private final Map<String,? extends Object> map;
@@ -42,7 +44,6 @@ public class ObjectMapImpl extends HashMap<String, Object> implements ObjectMap 
 		if(map == null) return super.get(key);
 		return map.get(key);
 	}
-
 
 	@Override
 	public Object get(Object key) {
@@ -247,5 +248,13 @@ public class ObjectMapImpl extends HashMap<String, Object> implements ObjectMap 
 	
 	public String toString() {
 		return String.valueOf(map);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Set<Entry<String, Object>> entrySet() {
+		if(map != null)
+			return Collections.unmodifiableMap((Map<String,Object>)map).entrySet();
+		return super.entrySet();
 	}
 }
