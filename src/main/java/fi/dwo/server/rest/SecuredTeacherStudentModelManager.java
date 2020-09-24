@@ -14,6 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
@@ -24,8 +25,10 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
+import nl.uu.fi.dwo.rest.entities.RestStudentModelContextPatch;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 
 /**
@@ -132,6 +135,18 @@ public class SecuredTeacherStudentModelManager {
             throw new Dwo2RestException(e);
         }
     }
+
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/patch")
+    public DomStudentModelContext patchStudentModel(@Context SecurityContext sc, RestStudentModelContextPatch patch) throws Dwo2Exception {
+        TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+                .setHasRole(patch.getRestContext().getDomHasRole())
+                .buildSchoolAdminTeacher()
+                .setTeacher();
+        return build.patchStudentModel(patch.getDomPatch());
+    }
+
     @PUT
     @Produces({"application/json"})
     @Path("/remove")

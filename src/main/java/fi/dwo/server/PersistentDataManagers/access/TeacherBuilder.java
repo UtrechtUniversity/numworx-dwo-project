@@ -37,7 +37,10 @@ import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentInClassManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentModelDataUtilManager;
+import fi.dwo.server.rest.util.Digest;
 
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,6 +52,10 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.stream.JsonParser;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.RollbackException;
@@ -56,6 +63,9 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+
+import com.owlike.genson.Genson;
+import com.owlike.genson.GensonBuilder;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
@@ -67,13 +77,16 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextPatch;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataStudentScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
+import nl.uu.fi.dwo.rest.dom.entities.util.GensonMapConverter;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -199,7 +212,7 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
     @Override
     public TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SCO_SG_U addScoContext(DomScoContext s) throws Dwo2Exception {
         if (s == null) {
-            String msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: ScoContext {1} not set.", new Object[]{instance.getContext().getUserCtx().getUser().getUsername(), s.getId()});
+            String msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: ScoContext not set.", new Object[]{instance.getContext().getUserCtx().getUser().getUsername()});
             LOG.log(Level.WARNING, msg);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
         }
@@ -695,4 +708,41 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
   public DomLRS getLRS(UriInfo info) {
     return instance.teacherActions.getLRS(instance.getContext(), info);
   }
+
+@Override
+public DomStudentModelContext patchStudentModel(DomStudentModelContextPatch domPatch) throws Dwo2Exception {
+	PersistentStudentModelContext result = instance.teacherActions.getStudentModel(instance.getContext(), domPatch);
+	if (result.getOptlock().equals(domPatch.getOptLock()) && result.getLastChangeTimeStamp()==domPatch.getLastChangeTimeStamp()) {
+		
+		if (domPatch.getPublishState() != null) result.setPublishState(domPatch.getPublishState());
+		// patch
+		String value = domPatch.getPatch();
+		String digest = domPatch.getDigest();
+		Genson g = new GensonBuilder().withConverters(new GensonMapConverter()).create(); // met de juiste opties
+		String oldValue = g.serialize(result.getModelStructure());
+        JsonParser parser = Json.createParser(new StringReader(oldValue));
+        parser.next();
+        JsonObject oldObject = parser.getObject();
+        parser = Json.createParser(new StringReader(value));
+        parser.next();
+        JsonArray  patch     = parser.getArray();
+        JsonObject newObject = Json.createPatch(patch).apply(oldObject);
+        if (digest != null) {
+          String patched = new Digest().digest(newObject);
+          if( !digest.equals(patched)) {
+            LOG.severe("patch digest error " + patched + " " + digest);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Wrong digest", Response.Status.PRECONDITION_FAILED);
+          }
+        }
+        StringWriter newValue = new StringWriter();
+        Json.createWriter(newValue).write(newObject);
+        DomStudentModelStructure deserialize = g.deserialize(newValue.toString(), DomStudentModelStructure.class);
+		result.setModelStructure(deserialize);
+
+		DomStudentModelContext context = StudentModelContextManager.edit(result).buildDomStudentModelContext();
+		context.setModelStructure(null);
+		return context;
+	}
+	throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Wrong optLock", Response.Status.PRECONDITION_FAILED);
+}
 }
