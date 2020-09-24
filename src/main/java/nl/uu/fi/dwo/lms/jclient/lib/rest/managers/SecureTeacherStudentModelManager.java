@@ -12,9 +12,11 @@ import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextPatch;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
+import nl.uu.fi.dwo.rest.entities.RestStudentModelContextPatch;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelScorePerTeacher;
 
 /**
@@ -75,6 +77,19 @@ public class SecureTeacherStudentModelManager {
 	    DomStudentModelContext result = StoredRestManager.getInstance()
 	        .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/update", DomStudentModelContext.class, rest);
 	    LOG.log(Level.FINE, "Updated studentmodel of teacher with username {0} to his school.",
+	        new Object[] {RestAuthenticator.getInstance().getUsername()});
+	    return result;
+	  }
+
+  public static DomStudentModelContext patchModel(DomStudentModelContextPatch submit)
+	      throws Dwo2Exception {
+	    RestStudentModelContextPatch rest = new RestStudentModelContextPatch();
+	    rest.setRestContext(getContext());
+	    rest.setDomPatch(submit);
+
+	    DomStudentModelContext result = StoredRestManager.getInstance()
+	        .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/patch", DomStudentModelContext.class, rest);
+	    LOG.log(Level.FINE, "Patch studentmodel of teacher with username {0} to his school.",
 	        new Object[] {RestAuthenticator.getInstance().getUsername()});
 	    return result;
 	  }
