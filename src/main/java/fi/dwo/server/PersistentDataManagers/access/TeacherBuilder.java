@@ -58,6 +58,7 @@ import javax.json.JsonObject;
 import javax.json.stream.JsonParser;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.OptimisticLockException;
+import javax.persistence.PersistenceException;
 import javax.persistence.RollbackException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
@@ -731,7 +732,7 @@ public DomStudentModelContext patchStudentModel(DomStudentModelContextPatch domP
           String patched = new Digest().digest(newObject);
           if( !digest.equals(patched)) {
             LOG.severe("patch digest error " + patched + " " + digest);
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Wrong digest", Response.Status.PRECONDITION_FAILED);
+            throw new WebApplicationException(Status.CONFLICT);
           }
         }
         StringWriter newValue = new StringWriter();
@@ -739,10 +740,14 @@ public DomStudentModelContext patchStudentModel(DomStudentModelContextPatch domP
         DomStudentModelStructure deserialize = g.deserialize(newValue.toString(), DomStudentModelStructure.class);
 		result.setModelStructure(deserialize);
 
-		DomStudentModelContext context = StudentModelContextManager.edit(result).buildDomStudentModelContext();
-		context.setModelStructure(null);
-		return context;
+		try {
+			DomStudentModelContext context = StudentModelContextManager.edit(result).buildDomStudentModelContext();
+			context.setModelStructure(null);
+			return context;
+        } catch (RollbackException|OptimisticLockException|EntityNotFoundException e) {
+        	throw new WebApplicationException(Status.CONFLICT);
+        }
 	}
-	throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Wrong optLock", Response.Status.PRECONDITION_FAILED);
+	throw new WebApplicationException(Status.CONFLICT);
 }
 }
