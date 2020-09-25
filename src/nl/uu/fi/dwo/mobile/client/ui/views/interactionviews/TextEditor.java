@@ -285,7 +285,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	
 	
 	
-	private void updateEmpty() {
+	void updateEmpty() {
 		if (!boxMetRand || menubar!=null) {
 			hbox.setStyleName(css.textEditor_empty(), isContentEmpty());
 		}
@@ -728,7 +728,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		updateEmpty();
 	}
 
-	private void removeCursor()
+	void removeCursor()
 	{
 		if (cursorWidget != null)
 			cursorWidget.setStyleName(css.textEditor_cursor(), false);
@@ -1342,6 +1342,12 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		      }
 		      int h = wid.getOffsetHeight(); h = Short.MAX_VALUE;
 		      int w = wid.getOffsetWidth();
+		      if (max < flow.getWidgetCount()-1) {
+		    	  Widget n = flow.getWidget(max+1);
+		    	  int www = n.getAbsoluteLeft() - wid.getAbsoluteLeft();
+		    	  if (www > 0) w = www; else w = Short.MAX_VALUE;
+		      }
+		      
 		      if (wid instanceof Enter) {
 		          w = Short.MAX_VALUE;
 		      }

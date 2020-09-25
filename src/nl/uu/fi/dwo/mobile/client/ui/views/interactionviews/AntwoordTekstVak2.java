@@ -772,7 +772,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	}
 	
 
-	public void setText(String antwoord)
+	private void setText(String antwoord)
 	{
 		if (formuleMode)
 		{
@@ -785,6 +785,8 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		{
 			antwoordTF.clearAll();
 			antwoordTF.insert(antwoord);
+			antwoordTF.updateEmpty();
+			antwoordTF.removeCursor();
 		}
 	}
 	
