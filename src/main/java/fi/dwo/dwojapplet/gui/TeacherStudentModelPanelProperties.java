@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextPatch;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 
 /**
@@ -88,16 +89,20 @@ public class TeacherStudentModelPanelProperties {
     }
     
     public DomStudentModelStructure updateModel(DomStudentModelStructure model) throws Dwo2Exception {
-      GWTPatch patch = new JavaPatch();
-      Genson genson = StoredRestManager.getInstance().getGenson();
-      String old = structure;
-      String now = genson.serialize(model);
-      String diff = patch.createPatch(old, now);
-      LOG.info("diff = " + diff);
+      if (structure != null) {      
+        GWTPatch patch = new JavaPatch();
+        Genson genson = StoredRestManager.getInstance().getGenson();
+        String old = structure;
+        String now = genson.serialize(model);
+        String diff = patch.createPatch(old, now);
+        LOG.info("diff = " + diff);
+        current.setModelStructure(model);
+        structure = now;
+        model = patchModel(diff).getModelStructure();
+        return model;
+      }
       current.setModelStructure(model);
-      structure = now;
-      model = patchModel(diff).getModelStructure();
-      return model;
+      return updateModel(current).getModelStructure();
     }
         
     
@@ -111,8 +116,12 @@ public class TeacherStudentModelPanelProperties {
         context.setLastChangeTimeStamp(result.getLastChangeTimeStamp());
         context.setOptLock(result.getOptLock());
         return context;
+      } catch (Dwo2Exception e) {
+        structure = null;
+        if (e.getDwo2Code() == Dwo2ExceptionCode.Rest_ObjectModified) throw e;
       } catch(Exception oops) {
         LOG.log(Level.WARNING, "should not happen", oops);
+        structure = null;
       }
       return updateModel(context);
     }
