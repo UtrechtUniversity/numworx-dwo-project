@@ -17,6 +17,8 @@ public interface DWOplayerCss extends CssResource {
 	String insert_formule();
 	String insert_formule_readonly();
 	String insert_calculator();
+	String insert_result();
+	String insert_button();
 	
 	String WaitScreen();
 	
@@ -83,4 +85,6 @@ public interface DWOplayerCss extends CssResource {
 	String tablet();
 	String tablet_active();
 	String desktop_active();
+
+
 }

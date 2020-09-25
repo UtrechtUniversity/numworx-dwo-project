@@ -8,7 +8,10 @@ import java.util.logging.Logger;
 
 import org.osgi.util.promise.Promise;
 
+import com.google.gwt.animation.client.AnimationScheduler;
+import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
@@ -140,6 +143,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private boolean teltMee;
     private int scoreMax;
 	private String loggingID;
+	private AnimationHandle handle;
 	
 	TextEditor(int breedte, int hoogte, boolean boxMetRand)
 	{
@@ -1496,16 +1500,24 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		private FormuleEditor editor;
 		final Panel panel;
 
+		
+		
+		native final void nop(int n) /*-{ console.log(n); }-*/;
+		
 		private FormulaVak()
 		{
+		
+			
+			
 			editor = new FormuleEditor() {
-
+				int cnt;
 				@Override
 				public void resize()
-				{
+				{	
 					int h = editor.getHeight();
 					int a = editor.getMainRegel().getAsHoogte();
 					panel.getElement().getStyle().setVerticalAlign(a-h, Unit.PX);
+					forceflow();
 				}
 				
 				@Override
@@ -1614,7 +1626,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		private FEWSButton btn;
 		private boolean op3;
 		private Panel panel;
-
+		private FlowPanel calculator;
 		public CalculatorVak()
 		{
 			editor = new FormuleEditor()
@@ -1624,12 +1636,21 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				{
 					calculate();
 				}
+
+				@Override
+				public void resize() {
+					int h = editor.getHeight();
+					int a = editor.getMainRegel().getAsHoogte();
+					panel.getElement().getStyle().setVerticalAlign(a-h, Unit.PX);
+					forceflow();
+				}
+				
 			};
+			panel = editor.getAsPanel();
 			editor.setFormuleToolBijFocus(true);
 			editor.insert('0');
-			HorizontalPanel hbox = new HorizontalPanel();
-			hbox.setStyleName(css.insert_calculator());
-			panel = editor.getAsPanel();
+			calculator = new FlowPanel();
+			calculator.setStyleName(css.insert_calculator());
 			panel.setStyleName(css.insert_formule());
 			FormuleEditorTouchHandler h = new FormuleEditorTouchHandler(editor)
 			{
@@ -1642,16 +1663,18 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				} 
 			};
 			h.initHandler();
-			hbox.addDomHandler(new FormuleTapper(editor, this), ClickEvent.getType());
-			hbox.add(panel);
+			calculator.addDomHandler(new FormuleTapper(editor, this), ClickEvent.getType());
+			calculator.add(panel);
 			btn = new FEWSButton("=");
 			btn.addButtonListener(this);
 			btn.setSize(20, 20);
 			btn.getElement().getStyle().setMargin(2, Unit.PX);
-			hbox.add(btn);
+			btn.setStyleName(css.insert_button());
+			calculator.add(btn);
 			viewer = new FormuleViewer("0");
-			hbox.add(viewer.getAsPanel());
-			initWidget(hbox);
+			viewer.getAsPanel().setStyleName(css.insert_result());
+			calculator.add(viewer.getAsPanel());
+			initWidget(calculator);
 		}
 
 		@Override
@@ -1721,7 +1744,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			}
 			
 			viewer = new FormuleViewer(x);
-			((Panel) getWidget()).add(viewer.getAsPanel());
+			Panel result = viewer.getAsPanel();
+			result.setStyleName(css.insert_result());
+			((Panel) getWidget()).add(result);
 		}
 
 		@Override
@@ -1815,6 +1840,19 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		lastAttempt = tekst;
 		removeCursor();
 		updateEmpty();
+	}
+
+	
+	private void forceflow() {
+		if (handle == null)
+			handle = AnimationScheduler.get().requestAnimationFrame( (t) -> {
+				String display = flow.getElement().getStyle().getDisplay();
+				if (!Display.INLINE_BLOCK.getCssName().equals( display))
+					flow.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+				else 
+					flow.getElement().getStyle().setDisplay(Display.BLOCK);
+				handle = null;
+			}, flow.getElement());
 	}
 
 }

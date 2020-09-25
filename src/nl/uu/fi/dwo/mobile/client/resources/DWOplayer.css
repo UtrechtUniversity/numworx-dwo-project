@@ -51,14 +51,20 @@ div.insert_formule {padding-right:5px; padding-left:5px;}
 	height: auto;
 }
 
-.textEditor table.insert_calculator {
+.textEditor .insert_calculator {
 	background-color: rgb(248,248,248);
-	display: inline-table;
-	width: auto;
-	height: auto;
-	vertical-align: text-bottom;
+	display: inline-block;
+	white-space: nowrap;
 }
 
+.insert_calculator .insert_button {
+	display: inline-block;
+	vertical-align: sub;
+}
+.insert_calculator .insert_result {
+	display: inline-block;
+	vertical-align: sub;
+}
 
 .textEditor_readonly > div {
 	color: gray;
