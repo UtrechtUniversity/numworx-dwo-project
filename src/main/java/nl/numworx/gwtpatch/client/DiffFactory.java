@@ -3,14 +3,8 @@ package nl.numworx.gwtpatch.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONValue;
-
 import nl.numworx.gwtpatch.client.GWTPatch.Builder;
-import nl.numworx.gwtpatch.client.GWTPatch.DefaultBuilder;
-import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
-import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 class DiffFactory {
 
