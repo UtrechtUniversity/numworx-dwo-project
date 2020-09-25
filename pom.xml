@@ -614,7 +614,7 @@
 			<properties>
 				<aws.serverId>dev</aws.serverId>
 				<aws.applicationName>teuniz</aws.applicationName>
-				<aws.environmentName>teunis3</aws.environmentName>
+				<aws.environmentName>teunis4</aws.environmentName>
 			</properties>
 		</profile>
 	</profiles>
