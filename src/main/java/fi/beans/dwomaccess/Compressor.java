@@ -11,7 +11,8 @@ import java.util.logging.Logger;
 
 public class Compressor implements Predicate<String> {
 	
-	private static final String IMAGES = "$IMAGE$MAP$";
+	private static final char SUFFIX = '\f';
+  private static final String IMAGES = "$IMAGE$MAP$";
 	private Map<String,Object> images;
 	private Set<String> keys;
 	private static boolean skip = true;
@@ -110,6 +111,9 @@ public class Compressor implements Predicate<String> {
 			if(j < 0) j = i;
 			String key = value.substring(i+2,j);
 			keys.add(key);
+			int k = key.indexOf(SUFFIX);
+			if (k > 0) 
+			  keys.add(key.substring(0,k));			
 			i = value.indexOf("$I", j+1);
 		}
 	}
