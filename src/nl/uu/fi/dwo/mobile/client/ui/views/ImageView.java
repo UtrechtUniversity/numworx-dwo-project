@@ -4,12 +4,7 @@ import java.util.Map;
 
 import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.utils.ImageUtils;
-
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -41,21 +36,35 @@ public class ImageView implements IsWidget, TekstElement
 	private String naam;
 	private int ashoogte;
 	private static Map<String, Object> map;
+	private int vollebreedte = -1;
 
 	public ImageView(String naam)
 	{
 		this.naam = naam;
 	}
 
-	public boolean exists() {
-		return map.containsKey(naam);
+	public ImageView(String naam2, int vollebreedte) {
+		this(naam2);
+		this.vollebreedte = vollebreedte;
 	}
+
+	public boolean exists() {
+		return map.containsKey(strip(naam));
+	}
+
+	private static final char SUFFIX = '\f';
+
+	private static String strip(String name) {
+		  int i = name.indexOf(SUFFIX);
+		  if (i >0) return name.substring(0,i);
+		  return name;
+		}
 	
 	public Image getImage()
 	{
 		// TODO "data:image/png;base64,XXXXXXXxXXXX==" (dataurl) image/png of image/gif is noodzakelijk, uitbreiding in iconan nodig.
-
-		Object object = map.get(naam);
+		final String snaam = strip(naam);
+		Object object = map.get(snaam);
 		if(object == null) 
 			return null; 
 		//was: ImageUtils.newImage("images/resources/antwoordknop.gif");
@@ -66,7 +75,7 @@ public class ImageView implements IsWidget, TekstElement
 		String data = (String) object;
 		if (data.isEmpty())
 		{
-			String url = (String) map.get(naam + "/u");
+			String url = (String) map.get(snaam + "/u");
 			if (url.startsWith("/"))
 				url = "//" + DWOplayer.PARAMETERS.getCDN() + url; // IS DIT ALTIJD GOED?
 			Number width = null, height = null;
@@ -75,18 +84,25 @@ public class ImageView implements IsWidget, TekstElement
 			object = map.get(naam + "/h");
 			if(object instanceof Number) height = (Number) object;
 			if(width != null && height != null)
+			{
+				object = map.get(naam + "/v");
+				if (Boolean.TRUE.equals(object) && vollebreedte > 0) {
+					height = height.intValue() * vollebreedte / width.intValue();
+					width  = vollebreedte;
+				}
 				return new ScaledImage(url,width.intValue(), height.intValue());
+			}
 			return new Image(url);
 		}
 		else
 		{
-			object = map.get(naam + "/f");
+			object = map.get(snaam + "/f");
 			if(object instanceof Map) { // URI
 				object = ((Map<String, Object>) object).get("@value");
 			}
 			String url = (String) object; // is het png,gif,jpg
 			if(url == null) url = "x.gif";
-			String type = (String) map.get(naam + "/t");
+			String type = (String) map.get(snaam + "/t");
 			if (type == null)
 				type = "image/" + url.substring(url.length() - 3, url.length());
 			Number width = null, height = null;
@@ -97,7 +113,14 @@ public class ImageView implements IsWidget, TekstElement
 			Image im;
 			data = "data:" + type + ";base64," + data;
 			if(width != null && height != null)
+			{
+				object = map.get(naam + "/v");
+				if (Boolean.TRUE.equals(object) && vollebreedte > 0) {
+					height = height.intValue() * vollebreedte / width.intValue();
+					width  = vollebreedte;
+				}
 				im = new ScaledImage(data,width.intValue(), height.intValue());
+			}
 			else
 				im = new Image(data);
 			return im;
@@ -130,7 +153,14 @@ public class ImageView implements IsWidget, TekstElement
 	public int getHeight() {
 		Object height = map.get(naam + "/h");
 		if(height instanceof Number)
+		{
+			Object object = map.get(naam + "/v");
+			if (Boolean.TRUE.equals(object) && vollebreedte > 0) {
+				Number width = (Number) map.getOrDefault(naam + "/w", Integer.valueOf(16));
+				height = ((Number) height).intValue() * vollebreedte / width.intValue();
+			}
 			return ((Number) height).intValue();
+		}
 		return 16;
 	}
 
@@ -138,6 +168,10 @@ public class ImageView implements IsWidget, TekstElement
 	public int getWidth() {
 		Object width = map.get(naam + "/w");
 		if(width instanceof Number) {
+			Object object = map.get(naam + "/v");
+			if (Boolean.TRUE.equals(object) && vollebreedte > 0) {
+				return vollebreedte;
+			}
 			return ((Number) width).intValue();
 		}
 		return 16;

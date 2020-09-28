@@ -234,7 +234,7 @@ public class TekstBuffer
 	{
 		String naam = tekst.substring(i + 2, i + endIndex);
 
-		return new ImageView(naam);
+		return new ImageView(naam, volleBreedtes[huidigeKolom]);
 	}
 
 	private FormuleViewer getFormuleViewer(String tekst, int i, int endIndex)
