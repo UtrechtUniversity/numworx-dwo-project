@@ -2,6 +2,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="fi.servlet.dwomaccess.Subnet" %>
+<%@ page import="java.util.*" %>
 <%@ include file="/dwo/saml_util.jsp" %>
 <%@ include file='/dwo/toets_util.jsp' %>
 <!doctype html>
@@ -11,6 +12,7 @@
 <!-- with a "Quirks Mode" doctype is not supported. -->
 <%
 	String requestHash = request.getHeader("X-SafeExamBrowser-RequestHash");
+	String configHash  = request.getHeader("X-SafeExamBrowser-ConfigKeyHash");
 	String host = request.getRemoteAddr();
 	String server = request.getHeader("host");
 
@@ -28,11 +30,15 @@
 	
 	};
 	for(String hash : hashes) {
-		if(hash.equals(requestHash)) failed = false;
+		StringTokenizer st = new StringTokenizer(hash, ",");
+		while(st.hasMoreTokens()) {
+			hash = st.nextToken();
+			if(hash.equals(requestHash)|| hash.equals(configHash)) failed = false;
+		}
 	}
 	if(failed && needSEB)
 	{
-		Logger.getLogger("toets.jsp").severe(request.getRequestURL() +" hash = " + requestHash);
+		Logger.getLogger("toets.jsp").severe(request.getRequestURL() +" hash = " + requestHash + " " + configHash);
 		response.sendError(HttpServletResponse.SC_FORBIDDEN);
 		return;
 	}

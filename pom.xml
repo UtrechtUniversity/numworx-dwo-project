@@ -344,7 +344,8 @@
 				<!--<version>3.0-r1756463</version> -->
 				<configuration>
                         <systemProperties>
-                            <ENV_NOSEB>true</ENV_NOSEB>
+                            <ENV_NOSEB>false</ENV_NOSEB>
+                            <SEB_TOETS_MAC>9153c48c6111d2733add6e1d596db4059c302cf736dcb18ca498288e21404507,c5d129e27f57b1970d2ffda2ed745a20f7d8e12ed9bfbfb168e83f75f9f870cf</SEB_TOETS_MAC>
                         </systemProperties>
 					<server>TomcatServer</server>
 					<path>/</path>
