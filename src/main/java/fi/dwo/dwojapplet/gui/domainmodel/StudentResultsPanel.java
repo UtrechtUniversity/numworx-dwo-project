@@ -41,6 +41,7 @@ import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
@@ -318,6 +319,45 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
       model.setRoot(LeerdomeinEditPanel2.filter(root, filter));      
     }
     
+    recalculateAncestors((DefaultMutableTreeNode) model.getRoot());
+    tree.setSelectionRow(0);
+  }
+
+
+  private void recalculateAncestors(DefaultMutableTreeNode node) {
+    Object uo = node.getUserObject();
+    if (uo instanceof NodeVector) {
+      NodeVector nv = (NodeVector) uo;
+      DomStudentModelContextInfo info = nv.info;
+      DomStudentModelScore<?> s = map.get(info);
+      double redScore = 0, greenScore = 0;
+      long redCount = 0, greenCount = 0, totalCount = 0;
+      Enumeration<DefaultMutableTreeNode> children = node.children();
+      while (children.hasMoreElements()) {
+        DefaultMutableTreeNode child = children.nextElement();
+        if (invisible(child)) continue;
+        recalculateAncestors(child);
+        DomStudentModelScore<?> sc = map.get(((Node)child.getUserObject()).getInfo());
+        long rc = sc.getRedCount();
+        long gc = sc.getGreenCount();
+        long tc = sc.getTotalCount();
+        double rs = rc == 0 ? 0 : sc.getRedScore();
+        double gs = gc == 0 ? 0 : sc.getGreenScore();
+        redScore += rs;
+        greenScore += gs;
+        redCount += rc;
+        greenCount += gc;
+        totalCount += tc;
+      }
+      if (greenCount == 0) { greenScore = 0.0; }
+      if (redCount == 0)   { redScore = 0.0; }
+      s.setScore(greenScore, greenCount, redScore, redCount, totalCount);
+    }
+  }
+
+
+  private boolean invisible(DefaultMutableTreeNode child) {
+    return child instanceof InvisibleNode && ! ((InvisibleNode)child).isVisible();
   }
 
 
