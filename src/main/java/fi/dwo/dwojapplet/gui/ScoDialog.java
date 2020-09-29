@@ -4,6 +4,7 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JCheckBox;
 import fi.beans.numworxlf.JComboBox;
@@ -542,6 +543,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         sd.printer.setIterable(new ComboBoxModelIterator<User>(model, sd.printer.getComponent()));
         sd.printer.addPrinterListener(new SaveRestore(model));
         final Container content = sd.getContentPane();
+        content.setBackground(Constants.COLOR20);
         final IconizedPanel panel = new IconizedPanel(TextMapper.getText(TextMapper.GUIS_STUDENTS));
         panel.setBackground(new Color(200, 227, 255));
 
