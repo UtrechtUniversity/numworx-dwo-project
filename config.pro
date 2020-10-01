@@ -168,6 +168,7 @@
 #-keep class org.**
 #-keep class com.**
 #-keep class java.***
+-keep class com.google.gwt.json.client.*
 -keep class nl.uu.fi.dwo.rest.**
 -keepattributes *Annotation*
 -keepclassmembernames class * {
