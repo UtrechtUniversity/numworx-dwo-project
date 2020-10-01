@@ -601,7 +601,7 @@
 		<DWOGwtClientVersion>2.4.8</DWOGwtClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
-		<aws.environmentName>testeb2server</aws.environmentName>
+		<aws.environmentName>testeb3server</aws.environmentName>
         <tomcat7.version>7.0.76</tomcat7.version>
         <context.xml>context.xml</context.xml>
 	</properties>
