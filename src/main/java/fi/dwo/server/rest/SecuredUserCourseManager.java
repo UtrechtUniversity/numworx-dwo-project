@@ -97,13 +97,19 @@ public class SecuredUserCourseManager {
             PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
 // userid must match hasrole
      		if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
+     		{	LOG.warning("getCourseDescription "  + id + " user getid wrong");
      			return "{}";
+     		}
     		Long courseId = MySQLPersistenceId.getNativeId(id.getDomCourse());
             PersistentCourse course = CourseManager.findEntity(courseId);
             if(course == null) 
+            {   LOG.warning("getCourseDescription "  + id + " course null");
             	return "{}"; // Not fatal
+            }
             if(! course.getDwoProfileID().equals(MySQLPersistenceId.getNativeId(domDwoProfile)))
+            {	LOG.warning("getCourseDescription "  + id + " profileid wrong");
             	return "{}";
+            }
             if (course.getSchoolID() != null) {
             	RoleType role = RoleType.values()[phr.getSchoolGroup().getGroupID()];
             	DomSchoolClassId schoolClassId;
@@ -119,27 +125,36 @@ public class SecuredUserCourseManager {
         				return "{}";
         			PersistentClassCourse pcc1 = pcc.get(0);
         			if( pcc1.getViewState() != ViewState.studentsAndTeachers) {
+        				LOG.warning("getCourseDescription "  + id + " viewstate wrong");
         				return "{}";
         			}
         			java.util.Date now = new java.util.Date();
         			if (pcc1.getNotAfter() != null && now.after(pcc1.getNotAfter()))
+        			{	LOG.warning("getCourseDescription "  + id + " not after wrong");
         				return "{}";
+        			}
         			if (pcc1.getNotBefore() != null && now.before(pcc1.getNotBefore()))
+        			{	LOG.warning("getCourseDescription "  + id + " not before wrong");
         				return "{}";
+        			}
             		break;
-            	case TEACHER: // ACL test
-            		ACL acl = SecuredCommonScoDataManager.getACL(phr, course);
-            		if (acl == ACL.NONE) return "{}";          	
+            	case TEACHER: // ACL test only if accesscontrol.
+            		if (phr.getSchoolGroup().getSchool().accessControl()) {
+	            		ACL acl = SecuredCommonScoDataManager.getACL(phr, course);
+	            		if (acl == ACL.NONE) {
+	            			LOG.warning("getCourseDescription "  + id + " ACL NONE");
+	            			return "{}";          	
+	            		}
+            		}
             	default:
             	}
-            }
-            
+            }           
             Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(course.getDescription(), null); // FIXM load wiskopdr.jar
             StringWriter writer = new StringWriter();
 			JSONEncoder.encode(map, writer, null); // FIXME, load wiskopdr.jar
 	        return writer.toString();
 		} catch (Exception e) {
-			LOG.fine("getCourseDescription "  + id + " " + e.toString());
+			LOG.log(Level.SEVERE,"getCourseDescription "  + id , e);
 			return "{}";
 		}
     }
