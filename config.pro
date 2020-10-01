@@ -97,13 +97,13 @@
     <methods>;
 }
 -keep class fi.dwo.dwojapplet.domain.School
--keep class fi.dwo.dwojapplet.persistence.GroupMapper{
-    <methods>;
-}
--keep class fi.dwo.dwojapplet.domain.Group
--keep class fi.dwo.dwojapplet.persistence.SchoolGroupMapper{
-    <methods>;
-}
+#-keep class fi.dwo.dwojapplet.persistence.GroupMapper{
+#    <methods>;
+#}
+#-keep class fi.dwo.dwojapplet.domain.Group
+#-keep class fi.dwo.dwojapplet.persistence.SchoolGroupMapper{
+#    <methods>;
+#}
 -keep class fi.dwo.dwojapplet.domain.SchoolGroup
 -keep class fi.dwo.dwojapplet.persistence.CourseMapper{
     <methods>;
@@ -117,20 +117,20 @@
     <methods>;
 }
 -keep class fi.dwo.dwojapplet.domain.SchoolClass
--keep class fi.dwo.dwojapplet.persistence.UserResultListMapper{
-    <methods>;
-}
+#-keep class fi.dwo.dwojapplet.persistence.UserResultListMapper{
+#    <methods>;
+#}
 -keep class fi.dwo.dwojapplet.domain.UserResultList
 -keep class fi.dwo.dwojapplet.domain.ResultsModuleIF
 
--keep class fi.dwo.dwojapplet.persistence.AppletConfigMapper{
-    <methods>;
-}
+#-keep class fi.dwo.dwojapplet.persistence.AppletConfigMapper{
+#    <methods>;
+#}
 -keep class fi.dwo.dwojapplet.domain.AppletConfig
--keep class fi.dwo.dwojapplet.persistence.DwoProfileMapper{
-    <methods>;
-}
--keep class fi.dwo.dwojapplet.domain.DwoProfile
+#-keep class fi.dwo.dwojapplet.persistence.DwoProfileMapper{
+#    <methods>;
+#}
+#-keep class fi.dwo.dwojapplet.domain.DwoProfile
 -keep class fi.dwo.dwojapplet.persistence.AppletDataMapper{
     <methods>;
 }
@@ -139,10 +139,10 @@
     <methods>;
 }
 -keep class fi.dwo.dwojapplet.domain.ClassCourse
--keep class fi.dwo.dwojapplet.persistence.XmlRpcMapper{
-    <fields>;
-    <methods>;
-}
+#-keep class fi.dwo.dwojapplet.persistence.XmlRpcMapper{
+#    <fields>;
+#    <methods>;
+#}
 
 -keep  class  nl.uu.fi.dwo.rest.exceptions.** { *; } 
 -keep  class  nl.uu.fi.dwo.rest.util.** { *; } 
@@ -168,7 +168,8 @@
 #-keep class org.**
 #-keep class com.**
 #-keep class java.***
--keep class com.google.gwt.json.client.*
+#why ?????
+#-keep class com.google.gwt.json.client.*
 -keep class nl.uu.fi.dwo.rest.**
 -keepattributes *Annotation*
 -keepclassmembernames class * {
