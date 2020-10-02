@@ -10,7 +10,7 @@
     <link type="text/css" rel="stylesheet" href="/dwo/oauth2client/OAuth2Client.css">
 </head>
 <body>
-<h1>Starten</h1>
+<h1>Start</h1>
 
 <p>
 <%
@@ -18,7 +18,7 @@
 	String server = request.getHeader("host");
 	if ( ! Subnet.netMatchRange(IPRANGE, host) ) {
 %>
-	Het apparaat op dit adres <%=host %> is niet toegestaan voor toetsen. Gebruik een beveiligd apparaat.
+	The device at this address <%=host %> is not allowed for assessments. Use a secured device.
 <%	  
 	}
 	else if ( needSEB ) {
@@ -43,10 +43,10 @@ if ("shibboleth".equals(request.getAuthType())) clientId = "f9af29c4-cfc5-11ea-8
 %>
 <h1>Installeren</h1>
 <ul>
-	<li><a href='https://www.dwo.nl/downloads/SafeExamBrowserInstaller.exe'>Safe Exam Browser Windows (2.1.7)</a></li>
+	<li><a href='https://www.dwo.nl/downloads/SEB_3.0.1.163_SetupBundle.exe'>Safe Exam Browser Windows (3.0.1)</a></li>
 	<li><a href='https://www.dwo.nl/downloads/SafeExamBrowser-2.2.1.dmg'>Safe Exam Browser MacOs (2.2.1)</a></li>
 </ul>
-Let op, alleen deze versies werken correct.
+Please note, only these versions work correctly.
 <% } %>
 </body>
 </html>
