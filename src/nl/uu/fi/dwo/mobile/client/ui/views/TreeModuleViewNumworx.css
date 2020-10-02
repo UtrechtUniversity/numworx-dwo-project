@@ -255,11 +255,13 @@
 			width: 252px;
 			height: 160px;
 			background-color: color10;
-			display: table;
+			display: flex;
+			align-items: center;
+    		justify-content: center;
+			
 		}
 		.tileBodySpan {
-			display: table-cell;
-			vertical-align: middle;
+			display: block;
 		}
 		.tileBodyImg {
 			display: inherit;

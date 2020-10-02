@@ -132,7 +132,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			  sb.appendHtmlConstant("<div class='" + style.tileBody() + "'>");
 			    String description = value.getDescription();
 				if(true || description.isEmpty()||description.startsWith(DescriptionView.GZIPPREFIX)) {
-					sb.appendHtmlConstant("<span class='" + style.tileBodySpan() + "'>");
+					sb.appendHtmlConstant("<icon class='" + style.tileBodySpan() + "'>");
 					switch(typeof) {
 			    	case MODULE:
 			    		if(value.getImage() != null) {
@@ -169,7 +169,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			    		break;
 			    	default:
 			    	}
-			    	sb.appendHtmlConstant("</span>");
+			    	sb.appendHtmlConstant("</icon>");
 			    	
 			    } else {
 			    	if(description.startsWith("<html"))
