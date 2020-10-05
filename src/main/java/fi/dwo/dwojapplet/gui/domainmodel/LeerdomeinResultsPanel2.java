@@ -14,6 +14,7 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
@@ -579,7 +580,9 @@ public void actionPerformed(ActionEvent event) {
     List<DomStudentModelDataStudentScore> studentScores = scores.getStudentScores();
     for (int i = 0; i < tmodel.getRowCount(); i++) {
       DomStudentModelStructureScore c = studentScores.get(i).getDomStudentModelStructureScore();
-      DomStudentModelCategoryScore v = c.getCategories().get(cat);
+      if(c == null) c = new DomStudentModelStructureScore();
+      DomStudentModelCategoryScore v = 
+          cat < c.getCategories().size() ? c.getCategories().get(cat) : new DomStudentModelCategoryScore();
 
       PIcon result;// = new ScoreIcon(v.getScore(), v.getCount(), nz, count, results.getFontMetrics(results.getFont()));
       result = StudentResultsPanel.createIcon(n, v, results.getFontMetrics(results.getFont()));
@@ -611,8 +614,9 @@ public void actionPerformed(ActionEvent event) {
     List<DomStudentModelDataStudentScore> studentScores = scores.getStudentScores();
     for (int i = 0; i < tmodel.getRowCount(); i++ ) {
       DomStudentModelStructureScore c = studentScores.get(i).getDomStudentModelStructureScore();
-      DomStudentModelCategoryScore o = c.getCategories().get(cat);
-      DomStudentModelObjectiveScore v = o.getObjectives().get(obj);
+      if (c == null) c = new DomStudentModelStructureScore();
+      DomStudentModelCategoryScore o = c.getCategories().size()> cat ? c.getCategories().get(cat): new DomStudentModelCategoryScore();
+      DomStudentModelObjectiveScore v = o.getObjectives().size() > obj ? o.getObjectives().get(obj): new DomStudentModelObjectiveScore();
       if (path.length >= 4) {
         for (int index = 3; index < path.length; index++) {
           int sub = path[index];
@@ -650,7 +654,45 @@ public void actionPerformed(ActionEvent event) {
       model.activateFilter(true);
       model.setRoot(LeerdomeinEditPanel2.filter(root, filter));      
     }
-    
+    if(scores != null)
+      recalculateAncestors(root, scores.getStudentScores());
   }
 
+  private void recalculateAncestors(DefaultMutableTreeNode node,
+      List<DomStudentModelDataStudentScore> studentScores) {
+    for(DomStudentModelDataStudentScore item:studentScores) {
+      DomStudentModelScore<?> top = item.getDomStudentModelStructureScore();
+      if (top!=null) recalculateAncestors(node, top);
+    }
+  }
+
+
+  private void recalculateAncestors(DefaultMutableTreeNode node, DomStudentModelScore<?> top) {
+    @SuppressWarnings("rawtypes")
+    List<? extends DomStudentModelScore> children = top.getChildren();
+    if(children != null) {
+      // interior node
+      int redCount = 0, greenCount = 0, totalCount = 0;
+      double redScore = 0.0, greenScore = 0.0;
+      Enumeration<?> nodes = node.children();
+      for(DomStudentModelScore<?> child: children) {
+        DefaultMutableTreeNode n = (DefaultMutableTreeNode) nodes.nextElement();
+        if (!invisible(n) && child != null) {
+          recalculateAncestors(n, child);
+          redCount += child.getRedCount();
+          redScore += child.getRedScore();
+          greenCount += child.getGreenCount();
+          greenScore += child.getGreenScore();
+          totalCount += child.getTotalCount();
+        }
+      }
+      top.setScore(greenScore, greenCount, redScore, redCount, totalCount);
+    }
+  }
+
+  private boolean invisible(DefaultMutableTreeNode child) {
+    return child instanceof InvisibleNode && ! ((InvisibleNode)child).isVisible();
+  }
+
+  
 }
