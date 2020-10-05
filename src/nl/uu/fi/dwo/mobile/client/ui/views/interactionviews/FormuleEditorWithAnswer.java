@@ -38,6 +38,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijking
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselOplossingenVak;
 import nl.uu.fi.dwo.mobile.utils.AutoHidePopupPanel;
 import nl.uu.fi.dwo.mobile.utils.ImageUtils;
+import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade.PopupListener;
@@ -435,24 +436,21 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 					{
 						logging = fe.dwologger;
 					} else {
-						DWOLogger dwoLogger = new DWOLogger();
+						LogBuilder dwoLogger = new LogBuilder().setLogOption(launchState.getBoolean("logOption", false));
 						if(launchState.containsKey("scoreMax"))
 						{
 							dwoLogger.setMaxScore(scoreMax);
 						}
 						if(launchState.containsKey("logIDLabel"))
 							dwoLogger.setLogIDLabel(launchState.getString("logIDLabel"));
-						logging = dwoLogger;
 						if (launchState.getBoolean("logOption", false))
 							logging.setLogID( launchState.getString("logID"));
 						String Formule = isVergelijkingVak ? "Vergelijking" : "Formule";
 						logging.setClassName("fi.wiskopdr.SimpelAntwoord"+Formule+"Vak");
 						dwoLogger.setLogObjectives(logObjectives);
-						dwoLogger.setSMObjectives(smObjectives);
+						dwoLogger.setSmObjectives(smObjectives);
 						dwoLogger.setTeltMee(teltMee);
-						
-						
-						
+						logging = dwoLogger.build();
 					}
 				}
 				

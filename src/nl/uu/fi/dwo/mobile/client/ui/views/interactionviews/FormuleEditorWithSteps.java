@@ -31,6 +31,8 @@ import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselEditor;
+import nl.uu.fi.dwo.mobile.utils.LogBuilder;
+import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
@@ -179,7 +181,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	protected Image checkimg;
 	
 	private boolean[][] logObjectives;
-	DWOLogger dwologger;
+	Logging dwologger;
 	
 	private boolean check;
 	private boolean teltMee;
@@ -302,17 +304,19 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			else 
 				logOption = launchStateMap.getBoolean("logOption", false);
 			if(logOption) {
-				dwologger = new DWOLogger();
+				LogBuilder builder = new LogBuilder();
+				builder.setLogOption(launchStateMap.getBoolean("logOption", false));
 				String type = isVergelijkingVak? "Vergelijking":"Formule";
 				if (launchStateMap.getBoolean("logOption", false))
-					dwologger.setLogID(launchStateMap.getString("logID"));
-				dwologger.setClassName("fi.wiskopdr.Antwoord" + type + "Vak");
+					builder.setLogID(launchStateMap.getString("logID"));
+				builder.setClassName("fi.wiskopdr.Antwoord" + type + "Vak");
 				if(launchStateMap.containsKey("logIDLabel"))
-					dwologger.setLogIDLabel(launchStateMap.getString("logIDLabel"));
-				dwologger.setMaxScore(scoreMax);
-				dwologger.setLogObjectives(logObjectives);
-				dwologger.setSMObjectives(smObjectives);
-				dwologger.setTeltMee(teltMee);
+					builder.setLogIDLabel(launchStateMap.getString("logIDLabel"));
+				builder.setMaxScore(scoreMax);
+				builder.setLogObjectives(logObjectives);
+				builder.setSmObjectives(smObjectives);
+				builder.setTeltMee(teltMee);
+				dwologger = builder.build();
 			}
 			
 			rmknop = !isVergelijkingVak && launchStateMap.getBoolean("rmKnop", false);

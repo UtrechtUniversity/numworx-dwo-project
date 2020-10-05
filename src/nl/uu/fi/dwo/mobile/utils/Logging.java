@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.utils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
@@ -23,5 +24,7 @@ public interface Logging {
 	void setLogOption(boolean logOption);
 
 	default void updateLog(Map<String, ?> map) { }
+
+	default void getStateHook(HashMap<String, Object> h) {}
 
 }
