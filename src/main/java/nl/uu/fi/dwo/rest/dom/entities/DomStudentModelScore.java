@@ -74,7 +74,7 @@ public class DomStudentModelScore<T extends DomStudentModelScore> {
     /**
      * @return the children
      */
-    protected List<T> getChildren() {
+    public List<T> getChildren() {
         return children;
     }
 
