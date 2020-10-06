@@ -1,11 +1,18 @@
 package fi.dwo.dwojapplet.gui.action;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+
+import fi.beans.numworxlf.Constants;
+import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.system.TextMapper;
@@ -14,7 +21,9 @@ import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.ConfirmDialog;
 import fi.dwo.dwojapplet.gui.CourseManagementPanel;
+import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.ScoManagementPanel;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureSchoolAdminSchoolClassManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
@@ -69,7 +78,26 @@ public class AccessControlAction extends GuiAction {
         if (acls == null) acls = Collections.emptyList();
         
         AccessControlPanel panel = new AccessControlPanel(acls, teachers, classes, school);
-        int ok = JOptionPane.showConfirmDialog(getCenter(), panel, e.getActionCommand(), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        ConfirmDialog confirm = new ConfirmDialog(getCenter(), "");
+        confirm.getContentPane().setLayout(new BorderLayout());
+        confirm.getContentPane().add(panel);
+        JButton okb = new JButton(TextMapper.getText(TextMapper.BTN_OK));
+        okb.addActionListener(confirm::ok);
+        okb.setBackground(GuiConstants.HEADER_COLOR);
+        JPanel south = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        south.setBackground(Constants.COLOR21);
+        south.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        south.add(okb);
+        JButton cancel = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
+        cancel.addActionListener(confirm::cancel);
+        cancel.setBackground(GuiConstants.HEADER_COLOR);
+        okb.setPreferredSize(cancel.getPreferredSize());
+        south.add(cancel);
+        confirm.getContentPane().add(south, BorderLayout.SOUTH);
+        confirm.pack();
+        confirm.center();
+        confirm.show();
+        int ok = confirm.getOption();
         if (ok == JOptionPane.OK_OPTION) {
           acls = panel.getAcls();
           DomCourseFull edit = new DomCourseFull();

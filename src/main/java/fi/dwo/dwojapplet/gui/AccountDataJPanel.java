@@ -1,19 +1,15 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.beans.numworxlf.JButton;
-import fi.beans.numworxlf.JComboBox;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JTextField;
 import fi.beans.numworxlf.NumworxTextFieldUI;
-import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
@@ -30,6 +26,7 @@ import javax.swing.JPasswordField;
  * It also allows non-single school users to delete their account. It should be 
  * merged at some point with AccountDataFullUser.java.
  */
+@SuppressWarnings("deprecation")
 public class AccountDataJPanel extends JPanel implements
         ActionListener {
 

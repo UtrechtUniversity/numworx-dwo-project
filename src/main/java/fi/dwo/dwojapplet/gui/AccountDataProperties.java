@@ -7,7 +7,6 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.HttpAuthenticationType;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
-import java.util.Base64;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 

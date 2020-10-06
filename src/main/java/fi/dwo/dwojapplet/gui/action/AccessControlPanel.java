@@ -2,9 +2,12 @@ package fi.dwo.dwojapplet.gui.action;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -13,6 +16,8 @@ import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -21,10 +26,12 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
+import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JComboBox;
 import fi.beans.numworxlf.JRadioButton;
@@ -32,6 +39,7 @@ import fi.beans.numworxlf.JScrollPane;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.AddSchoolDialog;
+import fi.dwo.dwojapplet.gui.ConfirmDialog;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.TableUtil;
 import nl.uu.fi.dwo.rest.dom.entities.DomACL;
@@ -56,28 +64,47 @@ public class AccessControlPanel extends JPanel implements ActionListener {
       super(new SpringLayout());
       Vector<String> tv = new Vector<>();
       AccessControlPanel.this.teachers.keySet().forEach(t -> tv.add(AccessControlPanel.this.toString(t)));
+      tv.insertElementAt("Kies docent", 0);
       Vector<String> cv = new Vector<>();
       AccessControlPanel.this.classes.keySet().forEach(t -> cv.add(AccessControlPanel.this.toString(t)));
+      cv.insertElementAt("Kies klas", 0);
       Vector<String> sv = new Vector<>();
       AccessControlPanel.this.school.keySet().forEach(t -> sv.add(AccessControlPanel.this.toString(t)));
       Vector<String> av = new Vector<>();
       for (ACL v: ACL.values()) { av.add(AccessControlPanel.this.toString(v));}
       
-      t = new JRadioButton(AccessControlPanel.this.toString(PersistenceClassType.PersistentUser)); teachers = new JComboBox<>(tv);
-      c = new JRadioButton(AccessControlPanel.this.toString(PersistenceClassType.PersistentSchoolClass)); classes = new JComboBox<>(cv);
-      s = new JRadioButton(AccessControlPanel.this.toString(PersistenceClassType.PersistentSchool)); school = new JComboBox<>(sv);
+      t = new JRadioButton("Voor een docent"); teachers = new JComboBox<>(tv);
+      t.addItemListener(new ItemListener() {
+        
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+          teachers.setVisible(t.isSelected());
+        }
+      });
+      c = new JRadioButton("Voor de docenten uit de klas"); classes = new JComboBox<>(cv);
+      c.addItemListener(new ItemListener() {
+        
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+          classes.setVisible(c.isSelected());
+        }
+      });
+      classes.setVisible(false);
+      s = new JRadioButton("Voor alle docenten"); school = new JComboBox<>(sv);
+      school.setVisible(false);
       access = new JComboBox<>(av);
  // insert     
+      add(new JLabel("Soort toegangsrecht")); add(access);
+      add(new JLabel("Toegangsrecht voor wie?")); add(Box.createGlue());
       add(t); add(teachers);
       add(c); add(classes);
       add(s); add(school);
-      add(new JLabel(TextMapper.getText(TextMapper.GUIAC_ACCESS))); add(access);
       ButtonGroup group = new ButtonGroup();
       t.getModel().setGroup(group);
       c.getModel().setGroup(group);
       s.getModel().setGroup(group);
       t.setSelected(true);
-      teachers.setSelectedItem(DwoHelper.getCurrentUser().getDisplayName());
+      teachers.setSelectedItem(DwoHelper.getCurrentUser().getUniqueDisplayName());
       Object name = DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getSchoolName();
       school.setSelectedItem(name);
       
@@ -92,9 +119,17 @@ public class AccessControlPanel extends JPanel implements ActionListener {
       acl.setAccess(ACL.values()[access.getSelectedIndex()]);
       if (!s.isEnabled()) return acl;
       PersistenceId entity = acl.getEntity();
-      if (s.isSelected()) entity = (PersistenceId) AccessControlPanel.this.school.keySet().toArray()[school.getSelectedIndex()];
-      else if (c.isSelected()) entity = (PersistenceId) AccessControlPanel.this.classes.keySet().toArray()[classes.getSelectedIndex()];
-      else entity = (PersistenceId) AccessControlPanel.this.teachers.keySet().toArray()[teachers.getSelectedIndex()];    
+      if (s.isSelected()) {
+        entity = (PersistenceId) AccessControlPanel.this.school.keySet().toArray()[school.getSelectedIndex()];
+      }
+      else if (c.isSelected()) {
+        if (classes.getSelectedIndex()==0) return null;
+        entity = (PersistenceId) AccessControlPanel.this.classes.keySet().toArray()[classes.getSelectedIndex()-1];
+      }
+      else {
+        if (teachers.getSelectedIndex()==0) return null;
+        entity = (PersistenceId) AccessControlPanel.this.teachers.keySet().toArray()[teachers.getSelectedIndex()-1];    
+      }
       acl.setEntity(entity);
       return acl;
     }
@@ -283,12 +318,44 @@ public class AccessControlPanel extends JPanel implements ActionListener {
   public boolean editACL(DomACL c) {
     AddAccessPanel panel = new AddAccessPanel();
     panel.setAcl(c);
-    int ok = JOptionPane.showConfirmDialog(this, panel, TextMapper.getText(TextMapper.GUIAC_ACCESS), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+    int ok = confirmDialog(panel);
     if (ok == JOptionPane.OK_OPTION) {
       c = panel.getAcl();
       return true;
     }
     return false;
+  }
+
+  private int confirmDialog(AddAccessPanel panel) {
+    ConfirmDialog confirm = new ConfirmDialog(this, "");
+    confirm.getContentPane().setLayout(new BorderLayout());
+    confirm.getContentPane().add(panel);
+    JButton okb = new JButton(TextMapper.getText(TextMapper.BTN_OK));
+    okb.addActionListener(confirm::ok);
+    okb.setBackground(GuiConstants.HEADER_COLOR);
+    JPanel south = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    south.setBackground(Constants.COLOR21);
+    south.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+    south.add(okb);
+    JButton cancel = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
+    cancel.addActionListener(confirm::cancel);
+    cancel.setBackground(GuiConstants.HEADER_COLOR);
+    okb.setPreferredSize(cancel.getPreferredSize());
+    south.add(cancel);
+    confirm.getContentPane().add(south, BorderLayout.SOUTH);
+    JLabel title = new JLabel("Instellingen toegangsrecht");
+    title.setHorizontalAlignment(JLabel.CENTER);
+    title.setFont(GuiConstants.HEADER_TEXT);
+    title.setBackground(GuiConstants.HEADER_COLOR); title.setOpaque(true);
+    title.setForeground(GuiConstants.MAIN_BACKGROUND);
+    Border outer = BorderFactory.createEmptyBorder(10, 0, 10, 0);
+    title.setBorder(outer);
+    confirm.getContentPane().add(title, BorderLayout.NORTH);
+    confirm.pack();
+    confirm.center();
+    confirm.show();
+    int ok = confirm.getOption();
+    return ok;
   }
 
   public String toString(PersistenceClassType type) {
@@ -322,16 +389,23 @@ public class AccessControlPanel extends JPanel implements ActionListener {
 
   public AccessControlPanel(List<DomACL> acls, List<DomTeacher> teachers,
       List<DomSchoolClass> classes, DomSchool school) {
-    super(new BorderLayout(5,5));
+    super(new BorderLayout());
     
     NO_CLASS.setSchoolClassName(TextMapper.getText(TextMapper.GUIAC_NO_CLASS));
     NO_TEACHER.setGivenName(TextMapper.getText(TextMapper.GUIAC_NO_CLASS));
     NO_TEACHER.setFamilyName("");
     deleteImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_COURSE_IMAGE);
     editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_COURSE_IMAGE);
-
+    Collections.sort(classes, (a,b)-> {
+      return a.getSchoolClassName().compareToIgnoreCase(b.getSchoolClassName());
+    });
     this.classes = toMap(classes);
     this.school = Collections.singletonMap(school.getId(),school);
+    Collections.sort(teachers, (a,b) -> {
+      int r = a.getFamilyName().compareToIgnoreCase(b.getFamilyName());
+      if (r != 0) return r;
+      return a.getUniqueDisplayName().compareToIgnoreCase(b.getUniqueDisplayName());
+    });
     this.teachers = toMap(teachers);
     DomACL o = new DomACL();
     o.setEntity(school.getId());
@@ -344,8 +418,25 @@ public class AccessControlPanel extends JPanel implements ActionListener {
     
     this.addButton = new JButton(TextMapper.getText(TextMapper.GUIAC_ADD));
     this.addButton.addActionListener(this);
-    add(new JScrollPane(table), BorderLayout.CENTER);
-    add(addButton, BorderLayout.NORTH);
+    JScrollPane scroll = new JScrollPane(table);
+    scroll.setBackground(Constants.COLOR20);
+    Border outer = BorderFactory.createEmptyBorder(20, 20, 10, 20);
+    scroll.setBorder(BorderFactory.createCompoundBorder(outer, scroll.getBorder()));
+    add(scroll, BorderLayout.CENTER);
+    JPanel flow = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    flow.add(addButton);
+    outer = BorderFactory.createEmptyBorder(0, 0, 20, 0);
+    flow.setBorder(outer);
+    add(flow, BorderLayout.SOUTH);
+    JLabel title = new JLabel("Toegangsrechten voor docenten");
+    title.setBackground(GuiConstants.HEADER_COLOR);
+    title.setFont(GuiConstants.HEADER_TEXT);
+    title.setForeground(GuiConstants.MAIN_BACKGROUND);
+    title.setHorizontalAlignment(JLabel.CENTER);
+    title.setOpaque(true);
+    outer = BorderFactory.createEmptyBorder(10, 0, 10, 0);
+    title.setBorder(outer);
+    add(title, BorderLayout.NORTH);
   }
 
 
@@ -360,10 +451,11 @@ public class AccessControlPanel extends JPanel implements ActionListener {
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == addButton) {
       AddAccessPanel panel = new AddAccessPanel();
-      int ok = JOptionPane.showConfirmDialog(this, panel, e.getActionCommand(), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+      int ok = confirmDialog(panel);
       if (ok == JOptionPane.OK_OPTION) {
         int i = model.getRowCount();
-        model.acls.add(panel.getAcl());
+        DomACL acl = panel.getAcl();
+        if(acl != null) model.acls.add(acl);
         model.fireTableRowsInserted(i, i);
       }
     }

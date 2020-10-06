@@ -2,8 +2,6 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
@@ -11,7 +9,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager.getSchoolLogins;
 
 /**
  *
