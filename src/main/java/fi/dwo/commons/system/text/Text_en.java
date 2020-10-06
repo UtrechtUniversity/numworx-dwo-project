@@ -491,6 +491,8 @@ public class Text_en extends ListResourceBundle {
 					"Teachers choose the class of their students" },
 			{ TextMapper.GUIC_SETTINGS_MODULE,
 					"Teachers are allowed to change modules" },
+            { TextMapper.GUIC_SETTINGS_READONLY,
+                    "Teachers have readonly access to modules" },
 			// google translate...
 			{
 					TextMapper.GUICDLG_LICENCE,
