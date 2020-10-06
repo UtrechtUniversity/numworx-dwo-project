@@ -1,7 +1,5 @@
 package fi.wiskopdr.expressies;
 
-import java.util.Arrays;
-
 import fi.wiskopdr.expressies.repr.AbstractConverter;
 
 public class Abs extends Expressie  

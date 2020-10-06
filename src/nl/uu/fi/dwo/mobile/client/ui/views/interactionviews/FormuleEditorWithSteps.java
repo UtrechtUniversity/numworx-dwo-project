@@ -307,7 +307,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				LogBuilder builder = new LogBuilder();
 				builder.setLogOption(launchStateMap.getBoolean("logOption", false));
 				String type = isVergelijkingVak? "Vergelijking":"Formule";
-				if (launchStateMap.getBoolean("logOption", false))
+				if (launchStateMap.containsKey("logID"))
 					builder.setLogID(launchStateMap.getString("logID"));
 				builder.setClassName("fi.wiskopdr.Antwoord" + type + "Vak");
 				if(launchStateMap.containsKey("logIDLabel"))

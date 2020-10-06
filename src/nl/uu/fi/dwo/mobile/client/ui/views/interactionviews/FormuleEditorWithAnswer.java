@@ -443,10 +443,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 						}
 						if(launchState.containsKey("logIDLabel"))
 							dwoLogger.setLogIDLabel(launchState.getString("logIDLabel"));
-						if (launchState.getBoolean("logOption", false))
-							logging.setLogID( launchState.getString("logID"));
+						if (launchState.containsKey("logID"))
+							dwoLogger.setLogID( launchState.getString("logID"));
 						String Formule = isVergelijkingVak ? "Vergelijking" : "Formule";
-						logging.setClassName("fi.wiskopdr.SimpelAntwoord"+Formule+"Vak");
+						dwoLogger.setClassName("fi.wiskopdr.SimpelAntwoord"+Formule+"Vak");
 						dwoLogger.setLogObjectives(logObjectives);
 						dwoLogger.setSmObjectives(smObjectives);
 						dwoLogger.setTeltMee(teltMee);
