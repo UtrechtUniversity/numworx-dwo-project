@@ -2,6 +2,7 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JCheckBox;
+import fi.beans.numworxlf.JRadioButton;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
@@ -14,7 +15,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -26,9 +29,10 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
 
     private CenterPanel center;
     private School school;
-    JCheckBox modifyModules;
+    JRadioButton modifyModules, readonlyModules;
     JCheckBox changeClassStudent;
-    JCheckBox accessTeacher;
+    JRadioButton accessTeacher;
+    ButtonGroup rights;
 //    JCheckBox changeClassTeacher;
 
     public SchoolConfigPanel(School school) {
@@ -41,6 +45,7 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
         title.setForeground(GuiConstants.HEADER_COLOR);
         title.setFont(GuiConstants.SUB_HEADER_TEXT);
         add(title);
+        add(Box.createVerticalStrut(10));
 
 // insert checkboxes.		
 // Checkboxes superfluous in v1.4.1        
@@ -48,16 +53,24 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
         add(changeClassStudent);
 //        changeClassTeacher = new JCheckBox();
 //        add(changeClassTeacher);
-        modifyModules = new JCheckBox();
+        rights = new ButtonGroup();
+        add(Box.createVerticalStrut(20));
+        modifyModules = new JRadioButton();
         add(modifyModules);
-        accessTeacher = new JCheckBox();
+        readonlyModules = new JRadioButton();
+        add(readonlyModules);
+        accessTeacher = new JRadioButton();
         if( (DwoHelper.isTest()||DwoHelper.isSamlLogin()) && DwoHelper.isPremium())
           add(accessTeacher);
+        rights.add(modifyModules);
+        rights.add(readonlyModules);
+        rights.add(accessTeacher);
         
 // opschriften		
         changeClassStudent.setText(TextMapper.getText(TextMapper.GUIC_SETTINGS_STUDENT));
 //        changeClassTeacher.setText(TextMapper.getText(TextMapper.GUIC_SETTINGS_TEACHER));
         modifyModules.setText(TextMapper.getText(TextMapper.GUIC_SETTINGS_MODULE));
+        readonlyModules.setText(TextMapper.getText(TextMapper.GUIC_SETTINGS_READONLY));
         accessTeacher.setText(TextMapper.dwo2Message().NUM_SEC_ORGANISATION_ACCESSTEACHER());
 //        changeClassTeacher.setBackground(GuiConstants.CELL_BACKGROUND);
 
@@ -69,6 +82,7 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
 //        changeClassTeacher.setSelected(b);
         b = school.hasRight(User.MODIFY_MODULES_RIGHT);
         modifyModules.setSelected(b);
+        readonlyModules.setSelected(!b);
         b = school.hasRight(User.ACCESS_RIGHT);
         accessTeacher.setSelected(b);
     }
