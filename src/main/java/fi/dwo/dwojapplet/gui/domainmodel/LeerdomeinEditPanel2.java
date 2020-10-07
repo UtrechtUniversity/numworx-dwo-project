@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
@@ -134,10 +135,37 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
           StudentModelChoicePanel panel = new StudentModelChoicePanel(v, readonly);
           panel.setObjectives(ids);
           if (readonly) {
-            JOptionPane.showMessageDialog(parent, panel, e.getActionCommand(), JOptionPane.PLAIN_MESSAGE);
+          //  JOptionPane.showMessageDialog(parent, panel, e.getActionCommand(), JOptionPane.PLAIN_MESSAGE);
+            ConfirmDialog d = new ConfirmDialog(parent, e.getActionCommand());
+            d.setContentPane(panel);
+            d.pack();
+            d.center();
+            d.show();
           } else {
-          int r = JOptionPane.showConfirmDialog(parent, panel, e.getActionCommand(), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-          if (r == JOptionPane.OK_OPTION) {
+//          int r = JOptionPane.showConfirmDialog(parent, panel, e.getActionCommand(), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+            ConfirmDialog confirm = new ConfirmDialog(parent, e.getActionCommand());
+            confirm.getContentPane().setLayout(new BorderLayout());
+            confirm.getContentPane().add(panel);
+            JButton okb = new JButton(TextMapper.getText(TextMapper.BTN_OK));
+            okb.addActionListener(confirm::ok);
+            okb.setBackground(GuiConstants.HEADER_COLOR);
+            JPanel south = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            south.setBackground(Constants.COLOR21);
+            south.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+            south.add(okb);
+            JButton cancel = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
+            cancel.addActionListener(confirm::cancel);
+            cancel.setBackground(GuiConstants.HEADER_COLOR);
+            okb.setPreferredSize(cancel.getPreferredSize());
+            south.add(cancel);
+            confirm.getContentPane().add(south, BorderLayout.SOUTH);
+            confirm.pack();
+            confirm.center();
+            confirm.show();
+            int r = confirm.getOption();
+            
+            if (r == JOptionPane.OK_OPTION) {
             panel.makeChoices();
             List<String> list = panel.getObjectives();
             leaf.setVoorkennis(list);

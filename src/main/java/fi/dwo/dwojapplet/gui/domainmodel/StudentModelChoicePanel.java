@@ -19,6 +19,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
 import javax.swing.JTree;
@@ -27,6 +28,8 @@ import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellEditor;
@@ -34,13 +37,14 @@ import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JCheckBox;
 import fi.beans.numworxlf.JRadioButton;
 import fi.beans.numworxlf.JScrollPane;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
 
-public class StudentModelChoicePanel extends JPanel implements TreeSelectionListener {
+public class StudentModelChoicePanel extends JSplitPane implements TreeSelectionListener {
   private class LeafNodeEditor extends AbstractCellEditor implements TreeCellEditor {
 
     private static final int XWIDTH = 20; // positie [x]
@@ -184,9 +188,9 @@ public class StudentModelChoicePanel extends JPanel implements TreeSelectionList
   }
   
   public StudentModelChoicePanel(NodeVector studentModel, boolean readonly) {
-    super(null);
+    super();
     this.studentModel = studentModel;
-    setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+//    setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
     setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     NodeVector v = (studentModel);
     root = new DynamicUtilTreeNode(v, v);
@@ -198,17 +202,17 @@ public class StudentModelChoicePanel extends JPanel implements TreeSelectionList
     tree.setEditable(!readonly);
     tree.setCellRenderer(new ChoiceCellRenderer());
     Box leftBox = Box.createVerticalBox();
-    add(leftBox);
+    setLeftComponent(leftBox);
     leftBox.add(new JLabel(v.toString()));
     leftBox.add(Box.createVerticalStrut(10));
     JScrollPane sp = new JScrollPane(tree);
     leftBox.add(sp);
-    sp.setMinimumSize(new Dimension(200,100));
+    sp.setMinimumSize(new Dimension(300,100));
     sp.setPreferredSize(sp.getMinimumSize());
 
-    add(Box.createHorizontalStrut(10));
+    //add(Box.createHorizontalStrut(10));
     Box rightBox = Box.createVerticalBox();
-    add(rightBox);
+    setRightComponent(rightBox);
     
     title = new JLabel(v.toString());
     String descr = v.getDescription();
@@ -235,6 +239,15 @@ public class StudentModelChoicePanel extends JPanel implements TreeSelectionList
     setSize(dim);
     setPreferredSize(dim);
     setMinimumSize(dim);
+    BasicSplitPaneUI sui = (BasicSplitPaneUI) BasicSplitPaneUI.createUI(this);
+    this.setUI(sui);
+    BasicSplitPaneDivider divider = sui.getDivider();
+    divider.setBorder(BorderFactory.createEmptyBorder());
+    divider.setBackground(Constants.COLOR20);
+    this.setDividerSize(10);
+    this.setResizeWeight(0.5);
+
+  
   }
 
   private boolean[][] choices;
