@@ -41,7 +41,7 @@ public class JsOrganisationDisplay {
   /**
    * init "editModules"
    */
-  public static native void initEditModules(boolean on);
+  public static native void initEditModules(boolean on, boolean access, boolean premium);
 
   /**
    * init "chooseClass"

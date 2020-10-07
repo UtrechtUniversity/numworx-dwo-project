@@ -59,9 +59,14 @@ public class JsOrganisationView implements OrganisationPresenter.Display {
   
   @Override
   public void initEditModules(boolean flag) {
-    JsOrganisationDisplay.initEditModules(flag);
+    JsOrganisationDisplay.initEditModules(flag, false, false);
   }
-  
+
+  @Override
+  public void initEditModules(boolean flag, boolean xs, boolean premium) {
+    JsOrganisationDisplay.initEditModules(flag, xs, premium);
+  }
+ 
   @Override
   public void initChooseClass(boolean flag) {
     JsOrganisationDisplay.initChooseClass(flag);

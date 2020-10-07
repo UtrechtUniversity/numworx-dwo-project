@@ -56,6 +56,8 @@ public class OrganisationPresenter {
   void initChooseClass(boolean flag);
 
   void showSchoolClasses(Map<String, TaggedDomSchoolClass> schoolClasses);
+
+  void initEditModules(boolean flag, boolean xs, boolean premium);
 }
 
   private static final Logger LOG = Logger.getLogger(OrganisationPresenter.class.getName());
@@ -84,11 +86,13 @@ public class OrganisationPresenter {
   public void init() {
     view.init();
     view.clear();
-    view.setLoadingTableMessage();;
+    view.setLoadingTableMessage();
     
     DomSchool school = dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool();
-    view.initEditModules(school.getSchoolRights().contains("m"));
-    view.initChooseClass(school.getSchoolRights().contains("c"));
+    String schoolRights = school.getSchoolRights();
+    boolean premium = dwoGlobalVars.isPremium();
+	view.initEditModules(schoolRights.contains("m"), schoolRights.contains("X") && premium, premium);
+    view.initChooseClass(schoolRights.contains("c"));
     
     Promise<List<DomSchoolClass>> pp = service.getTeachersSchoolClasses().then(
       p -> {
@@ -227,13 +231,15 @@ public class OrganisationPresenter {
       return null;}, FAILURE);
   }
   
-  @JsMethod void setEditModules(boolean choice) { // Verkeerd om
+  @JsMethod void setEditModules(boolean choice, boolean xs) { // Verkeerd om
     DomSchool s = dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool();
     String rights = s.getSchoolRights();
-    rights = rights.replace("m", "");
+    rights = rights.replace("m", "").replace("X", "");
     if (choice) {
       rights = rights + "m";
     }
+    if (xs) rights += "X";
+
     setSchoolRights(s, rights);
   }
   
