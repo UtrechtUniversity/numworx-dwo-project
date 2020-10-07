@@ -4,18 +4,15 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
-import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.commons.persistence.entities.PersistentACL;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
-import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
