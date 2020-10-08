@@ -47,10 +47,10 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  */
 @Entity
 @Table(name = "tblcourse", schema = "", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"name", "schoolID", "dwoProfileID", "parentID"})})
+    @UniqueConstraint(columnNames = {"name", "schoolID", "dwoProfileID", "parentID", "trashID"})})
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "PersistentCourse.findBySchoolAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = 0 AND p.dwoProfileID = :dwoProfileID AND p.schoolID = :schoolID"),
+    @NamedQuery(name = "PersistentCourse.findBySchoolAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = 0 AND p.dwoProfileID = :dwoProfileID AND p.schoolID = :schoolID and p.trashID = 0"),
     @NamedQuery(name = "PersistentCourse.findByNullSchoolAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = 0 AND p.dwoProfileID = :dwoProfileID AND p.schoolID IS NULL"),
     @NamedQuery(name = "PersistentCourse.findAll", query = "SELECT p FROM PersistentCourse p"),
     @NamedQuery(name = "PersistentCourse.findByCourseID", query = "SELECT p FROM PersistentCourse p WHERE p.courseID = :courseID"),
@@ -63,8 +63,9 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @NamedQuery(name = "PersistentCourse.findByExport", query = "SELECT p FROM PersistentCourse p WHERE p.export = :export"),
     @NamedQuery(name = "PersistentCourse.findByExportOfSchoolID", query = "SELECT p FROM PersistentCourse p WHERE p.export = 1 AND p.schoolID = :schoolID AND p.dwoProfileID = :dwoProfileID"),
     @NamedQuery(name = "PersistentCourse.findByWithChildren", query = "SELECT p FROM PersistentCourse p WHERE p.withChildren = :withChildren"),
-    @NamedQuery(name = "PersistentCourse.findByParentIDAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.dwoProfileID = :dwoProfileID AND p.parentID = :parentID"),
-    @NamedQuery(name = "PersistentCourse.findByParentID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = :parentID")})
+    @NamedQuery(name = "PersistentCourse.findByParentIDAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.dwoProfileID = :dwoProfileID AND p.parentID = :parentID and p.trashID = 0"),
+    @NamedQuery(name = "PersistentCourse.findByParentIDTrash", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = :parentID and p.trashID != 0"),
+    @NamedQuery(name = "PersistentCourse.findByParentID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = :parentID and p.trashID = 0")})
 //    @NamedQuery(name = "PersistentCourse.findByNotVisible", query = "SELECT p FROM PersistentCourse p WHERE p.notVisible = :notVisible")})
 public class PersistentCourse implements Serializable {
 
@@ -136,7 +137,9 @@ public class PersistentCourse implements Serializable {
     @Version
     @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
     private Long version;
-
+    
+    private long trashID;
+    
     public PersistentCourse() {
     }
 
@@ -315,6 +318,7 @@ public class PersistentCourse implements Serializable {
 
     private void fillDomCourse(DomCourse course) {
         course.setId(buildPersistenceId());
+        course.setOptLock(version);
         course.setName(name);
         if (this.schoolID != null) {
             course.setSchoolId(PersistentSchool.buildPersistenceId(this.schoolID));
@@ -414,5 +418,19 @@ public class PersistentCourse implements Serializable {
 	  private void now() {
 	    lastChangeTimeStamp = System.currentTimeMillis();
 	  }
+
+  /**
+   * @return the trashID
+   */
+  public long getTrashID() {
+    return trashID;
+  }
+
+  /**
+   * @param trashID the trashID to set
+   */
+  public void setTrashID(long trashID) {
+    this.trashID = trashID;
+  }
   
 }

@@ -1,8 +1,6 @@
 /* Copyrighted 2015.  */
 package fi.dwo.commons.persistence.entities;
 
-import fi.dwo.commons.persistence.MySQLPersistenceId;
-
 import java.io.Serializable;
 
 import javax.persistence.Basic;
@@ -22,10 +20,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
@@ -38,16 +34,18 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  */
 @Entity
 @Table(name = "tblscocontext", schema = "", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"sconame", "courseID"})})
+    @UniqueConstraint(columnNames = {"sconame", "courseID", "trashID"})})
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PersistentScoContext.findAll", query = "SELECT p FROM PersistentScoContext p"),
     @NamedQuery(name = "PersistentScoContext.findByScoID", query = "SELECT p FROM PersistentScoContext p WHERE p.scoID = :scoID"),
-    @NamedQuery(name = "PersistentScoContext.findByCourseID", query = "SELECT p FROM PersistentScoContext p WHERE p.courseID = :courseID"),
-    @NamedQuery(name = "PersistentScoContext.findByAppletID", query = "SELECT p FROM PersistentScoContext p WHERE p.appletID = :appletID"),
-    @NamedQuery(name = "PersistentScoContext.findBySconame", query = "SELECT p FROM PersistentScoContext p WHERE p.sconame = :sconame"),
-    @NamedQuery(name = "PersistentScoContext.findByShowscore", query = "SELECT p FROM PersistentScoContext p WHERE p.showscore = :showscore"),
-    @NamedQuery(name = "PersistentScoContext.findBySequencenr", query = "SELECT p FROM PersistentScoContext p WHERE p.sequencenr = :sequencenr")})
+    @NamedQuery(name = "PersistentScoContext.findByCourseID", query = "SELECT p FROM PersistentScoContext p WHERE p.courseID = :courseID and p.trashID = 0"),
+//    @NamedQuery(name = "PersistentScoContext.findByAppletID", query = "SELECT p FROM PersistentScoContext p WHERE p.appletID = :appletID"),
+//    @NamedQuery(name = "PersistentScoContext.findBySconame", query = "SELECT p FROM PersistentScoContext p WHERE p.sconame = :sconame"),
+//    @NamedQuery(name = "PersistentScoContext.findByShowscore", query = "SELECT p FROM PersistentScoContext p WHERE p.showscore = :showscore"),
+//    @NamedQuery(name = "PersistentScoContext.findBySequencenr", query = "SELECT p FROM PersistentScoContext p WHERE p.sequencenr = :sequencenr"),
+    @NamedQuery(name = "PersistentScoContext.findByCourseIDTrash", query = "SELECT p FROM PersistentScoContext p WHERE p.courseID = :courseID and p.trashID != 0")})
+
 public class PersistentScoContext implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -80,7 +78,7 @@ public class PersistentScoContext implements Serializable {
      * @since 1.5
      */
     @Column(name = "optlock")
-    @Version int optlock;
+    @Version Long optlock;
     @Column(name = "lastChangeTimeStamp")
     long lastChangeTimeStamp;
     @NotNull
@@ -106,6 +104,11 @@ public class PersistentScoContext implements Serializable {
     @Column(name="modelID")
     private Long modelID;
     
+    /**
+     * @since 1.5.3
+     */
+    @Column(name="trashID")
+    private long trashID;
 ////not supported.
 //    /**
 //     * Last author. for ACL and publishState.
@@ -245,6 +248,7 @@ public class PersistentScoContext implements Serializable {
 
     private void fillDomScoContext(DomScoContext scoContext) {
         scoContext.setId(buildPersistenceId());
+        scoContext.setOptLock(optlock);
         scoContext.setAppletId(PersistentApplet.buildPersistenceId(this.appletID));
         scoContext.setCourseId(PersistentCourse.buildPersistenceId(this.courseID));
         if (this.schoolID == null) 
@@ -299,4 +303,12 @@ public class PersistentScoContext implements Serializable {
 	public void setScoType(ScoType scoType) {
 		this.scoType = scoType;
 	}
+
+  public long getTrashID() {
+    return trashID;
+  }
+
+  public void setTrashID(long trashID) {
+    this.trashID = trashID;
+  }
 }
