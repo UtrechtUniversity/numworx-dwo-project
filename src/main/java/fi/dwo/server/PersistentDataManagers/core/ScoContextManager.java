@@ -163,6 +163,26 @@ public class ScoContextManager {
             em.close();
         }
     }
+
+    /**
+     * Finds ScoContexts that belong to a {@Link PersistentCourse}.
+     * 
+     * @param c
+     * @return 
+     */
+    public static List<PersistentScoContext> findTrashedEntities(PersistentCourse c) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.TypedQuery<PersistentScoContext> q = em.createNamedQuery("PersistentScoContext.findByCourseIDTrash", PersistentScoContext.class);
+            q.setParameter("courseID", c.getCourseID());
+            List<PersistentScoContext> list = q.getResultList();
+            LOG.log(Level.FINE, "PersistentScoContext-manager retrieved {0} PersistentScoContext with course id {1}", new Object[]{list.size(), c.getCourseID()});
+            return list;
+        }
+        finally {
+            em.close();
+        }
+    }
         
     public static PersistentScoContext findEntity(Long id) throws PersistenceException{
         EntityManager em = getEntityManager();

@@ -161,6 +161,19 @@ public class CourseManager {
             em.close();
         }
     }
+    public static List<PersistentCourse> findTrashedChildrenOf(PersistentCourse c) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentCourse.findByParentIDTrash");
+            q.setParameter("parentID", c.getCourseID());
+            List<PersistentCourse> list = q.getResultList();
+            LOG.log(Level.FINE, "Course-manager retrieved {0} PersistentCourse children of course with id {1}", new Object[]{list.size(), c.getCourseID()});
+            return list;
+        }
+        finally {
+            em.close();
+        }
+    }
 
     public static List<PersistentCourse> findChildrenOf(PersistentDwoProfile p,PersistentCourse c) {
         EntityManager em = getEntityManager();

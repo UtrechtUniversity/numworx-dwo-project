@@ -287,7 +287,7 @@ public class MySQLScoContextActions {
 
         }
         ScoContextManager.destroy(pc.getScoID());
-        relocateScos(c, seq, -1L);
+        if (pc.getTrashID() == 0) relocateScos(c, seq, -1L);
     }
 
     private static void relocateScos(PersistentCourse c, final long seq, final long incr) {

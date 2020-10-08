@@ -146,36 +146,39 @@ public class MySQLCourseActions {
   
   public static void remove(PersistentCourse pc) {
       List<PersistentCourse> children = CourseManager.findChildrenOf(pc);
+      children.addAll(CourseManager.findTrashedChildrenOf(pc));
       children.stream().forEach(MySQLCourseActions::remove);
       List<PersistentScoContext> scos = ScoContextManager.findEntities(pc);
+      scos.addAll(ScoContextManager.findTrashedEntities(pc));
       scos.stream().forEach(sco -> {MySQLScoContextActions.remove(sco,pc);});
       List<PersistentClassCourse> cc = ClassCourseManager.findEntities(pc);
       cc.forEach(ccc -> ClassCourseManager.destroy(ccc.getClassCourseID()));
       ACLManager.updateByCourse(pc, Collections.emptyList());
       CourseManager.destroy(pc.getCourseID());
- // sequencenr doorschuiven.
-      long parentID = pc.getParentID();
-      Long sequencenr = pc.getSequencenr();
-      if(sequencenr == null) return;
-// update sequencenr of siblings.
-      long pcseq = sequencenr.longValue();
-      if(parentID != 0) {
-        PersistentCourse parent = CourseManager.findEntity(parentID);
-        children = CourseManager.findChildrenOf(parent);
-      } else {
-        PersistentDwoProfile profile = DwoProfileManager.findEntity(pc.getDwoProfileID());
-        PersistentSchool school = 
-            pc.getSchoolID() == null || pc.getSchoolID() == 0L ? null :
-            SchoolManager.findEntity(pc.getSchoolID());
-        children = CourseManager.findChildrenOf(profile, school);
+      if (pc.getTrashID() == 0) {
+	 // sequencenr doorschuiven.
+	      long parentID = pc.getParentID();
+	      Long sequencenr = pc.getSequencenr();
+	      if(sequencenr == null) return;
+	// update sequencenr of siblings.
+	      long pcseq = sequencenr.longValue();
+	      if(parentID != 0) {
+	        PersistentCourse parent = CourseManager.findEntity(parentID);
+	        children = CourseManager.findChildrenOf(parent);
+	      } else {
+	        PersistentDwoProfile profile = DwoProfileManager.findEntity(pc.getDwoProfileID());
+	        PersistentSchool school = 
+	            pc.getSchoolID() == null || pc.getSchoolID() == 0L ? null :
+	            SchoolManager.findEntity(pc.getSchoolID());
+	        children = CourseManager.findChildrenOf(profile, school);
+	      }
+	      for(PersistentCourse c: children) {
+	        Long seq = c.getSequencenr();
+	        if(seq != null && seq.longValue() > pcseq) {
+	          c.setSequencenr(seq-1);
+	          CourseManager.edit(c);
+	        }
+	      }
       }
-      for(PersistentCourse c: children) {
-        Long seq = c.getSequencenr();
-        if(seq != null && seq.longValue() > pcseq) {
-          c.setSequencenr(seq-1);
-          CourseManager.edit(c);
-        }
-      }
-      
    }
 }
