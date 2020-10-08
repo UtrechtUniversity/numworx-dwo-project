@@ -206,6 +206,7 @@ public void actionPerformed(ActionEvent event) {
     message.setContext(context);
     List<DomStudentModelDataStudentScore> studentScores = scores.getStudentScores();
     DomStudentModelStructureScore v = studentScores.get(row).getDomStudentModelStructureScore();
+    if(v==null) v = context.getModelStructure().generateStudentModelStructureScore();
     message.setScore(v);
     JDialog dialog = createDialog(LeerdomeinResultsPanel2.this, title);
     dialog.setContentPane(message);
