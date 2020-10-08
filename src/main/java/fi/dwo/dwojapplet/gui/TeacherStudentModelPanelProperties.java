@@ -1,4 +1,5 @@
 package fi.dwo.dwojapplet.gui;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -9,6 +10,7 @@ import org.json.simple.parser.ParseException;
 
 import com.owlike.genson.Genson;
 
+import fi.dwo.dwojapplet.domain.utils.Digest;
 import nl.numworx.gwtpatch.client.GWTPatch;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManager;
@@ -44,6 +46,9 @@ public class TeacherStudentModelPanelProperties {
     }
   
     static class JavaPatch extends GWTPatch {
+      
+      String digest;
+           
       JavaPatch() {
         super(new JavaBuilder());
       }
@@ -56,6 +61,11 @@ public class TeacherStudentModelPanelProperties {
           JSONParser jsonParser = new JSONParser();
           o1 = jsonParser.parse(old);
           o2 = jsonParser.parse(now);
+          try {
+            digest = Digest.digest(o2);
+          } catch (NoSuchAlgorithmException e) {
+            // should not happen
+          }
           result = createDiff(o1,o2);
           return result.toString();
         } catch (ParseException e) {
@@ -90,7 +100,7 @@ public class TeacherStudentModelPanelProperties {
     
     public DomStudentModelStructure updateModel(DomStudentModelStructure model) throws Dwo2Exception {
       if (structure != null) {      
-        GWTPatch patch = new JavaPatch();
+        JavaPatch patch = new JavaPatch();
         Genson genson = StoredRestManager.getInstance().getGenson();
         String old = structure;
         String now = genson.serialize(model);
@@ -98,7 +108,7 @@ public class TeacherStudentModelPanelProperties {
         LOG.info("diff = " + diff);
         current.setModelStructure(model);
         structure = now;
-        model = patchModel(diff).getModelStructure();
+        model = patchModel(diff, patch.digest).getModelStructure();
         return model;
       }
       current.setModelStructure(model);
@@ -106,11 +116,11 @@ public class TeacherStudentModelPanelProperties {
     }
         
     
-    private DomStudentModelContext patchModel(String patch) throws Dwo2Exception {
+    private DomStudentModelContext patchModel(String patch, String digest) throws Dwo2Exception {
       DomStudentModelContext context = current;
       DomStudentModelContextPatch domPatch = new DomStudentModelContextPatch(context);
       domPatch.setPatch(patch);
-      domPatch.setDigest(null);
+      domPatch.setDigest(digest);
       try {
         DomStudentModelContext result = SecureTeacherStudentModelManager.patchModel(domPatch);
         context.setLastChangeTimeStamp(result.getLastChangeTimeStamp());
