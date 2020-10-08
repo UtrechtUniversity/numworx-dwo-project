@@ -197,12 +197,12 @@
     	<dependency>
     		<groupId>nl.numworx.gwtpatch</groupId>
     		<artifactId>gwtpatch</artifactId>
-    		<version>0.0.4-SNAPSHOT</version>
+    		<version>0.0.4</version>
     	</dependency>
     	<dependency>
     		<groupId>nl.uu.fi.dwo.mobile</groupId>
     		<artifactId>interaction</artifactId>
-    		<version>0.1.10-SNAPSHOT</version>
+    		<version>0.1.10</version>
     	</dependency>
     </dependencies>      
 
@@ -827,7 +827,7 @@
 		    	<dependency>
 		    		<groupId>nl.numworx.swingbrowser</groupId>
 		    		<artifactId>swingbrowser-jxb</artifactId>
-		    		<version>0.0.7-SNAPSHOT</version>
+		    		<version>0.0.7</version>
 	    			<scope>runtime</scope>
 		    	</dependency>
         	</dependencies>
