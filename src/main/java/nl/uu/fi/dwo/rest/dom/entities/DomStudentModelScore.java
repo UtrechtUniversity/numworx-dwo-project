@@ -20,6 +20,7 @@ public class DomStudentModelScore<T extends DomStudentModelScore> {
     private double redScore, greenScore;
     private long redCount, greenCount;
     private long totalCount;
+    private String id; // restructure resistant
     
     /**
      * @return the score
@@ -151,6 +152,20 @@ public class DomStudentModelScore<T extends DomStudentModelScore> {
 
 	public void setTotalCount(long totalCount) {
 		this.totalCount = totalCount;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }

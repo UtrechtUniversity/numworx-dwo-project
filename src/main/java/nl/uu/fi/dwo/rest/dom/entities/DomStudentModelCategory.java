@@ -51,7 +51,8 @@ public class DomStudentModelCategory {
         for(DomStudentModelObj obj : objectives) {
             result.getObjectives().add(obj.buildDomStudentModelObjectiveScore());
         }
-        return result;
+       result.setId(info.getId());
+       return result;
     }
 
 	@Override

@@ -42,6 +42,7 @@ public class DomStudentModelObj {
           result.setChildren(null);
           result.setScore(0.5);
         }
+        result.setId(info.getId());
         return result;
     }
 
