@@ -414,6 +414,9 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			}
 			else if (currentObject instanceof InteractionView)
 				((InteractionView) currentObject).zetVolledigeBreedte((int) tekstVakBreedte);
+			
+			else if (currentObject instanceof ImageView)
+				((ImageView) currentObject).zetVolledigeBreedte((int) tekstVakBreedte);
 
 			if (currentObject instanceof TekstElementWithFont) {
 				TekstElementWithFont tmf = (TekstElementWithFont) currentObject;

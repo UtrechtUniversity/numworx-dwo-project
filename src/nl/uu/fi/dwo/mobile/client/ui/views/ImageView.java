@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.Map;
+import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -12,6 +13,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class ImageView implements IsWidget, TekstElement
 {
+	private Logger logger = Logger.getLogger("ImageView");
 
 	static class ScaledImage extends Image {
 
@@ -32,6 +34,8 @@ public class ImageView implements IsWidget, TekstElement
 			return element;
 		}
 	}
+	
+	private ScaledImage scaledImage;
 
 	private String naam;
 	private int ashoogte;
@@ -90,7 +94,8 @@ public class ImageView implements IsWidget, TekstElement
 					height = height.intValue() * vollebreedte / width.intValue();
 					width  = vollebreedte;
 				}
-				return new ScaledImage(url,width.intValue(), height.intValue());
+				scaledImage = new ScaledImage(url,width.intValue(), height.intValue());
+				return scaledImage;
 			}
 			return new Image(url);
 		}
@@ -119,11 +124,31 @@ public class ImageView implements IsWidget, TekstElement
 					height = height.intValue() * vollebreedte / width.intValue();
 					width  = vollebreedte;
 				}
-				im = new ScaledImage(data,width.intValue(), height.intValue());
+				scaledImage = new ScaledImage(data,width.intValue(), height.intValue());
+				im = scaledImage;
 			}
 			else
 				im = new Image(data);
 			return im;
+		}
+	}
+	
+	public void zetVolledigeBreedte(int volleBreedte) {
+		Object object = map.get(naam + "/v");
+		if (Boolean.TRUE.equals(object) && volleBreedte > 0 && scaledImage!=null ) {
+			Number width = null, height = null;
+			object = map.get(naam + "/w");
+			if(object instanceof Number) width = (Number) object;
+			object = map.get(naam + "/h");
+			if(object instanceof Number) height = (Number) object;
+			if(width != null && height != null)	{
+				height = height.intValue() * volleBreedte / width.intValue();
+				width  = volleBreedte;
+				scaledImage.getElement().setPropertyInt("width", (int)width);
+				scaledImage.getElement().setPropertyInt("height", (int)height);
+				this.vollebreedte = volleBreedte;
+				logger.info("In methode zetVolledigeBreedte("+volleBreedte+")  :"+width.toString());
+			}
 		}
 	}
 
