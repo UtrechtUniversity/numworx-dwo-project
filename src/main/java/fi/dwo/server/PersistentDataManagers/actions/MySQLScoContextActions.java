@@ -119,7 +119,7 @@ public class MySQLScoContextActions {
                 Long courseID = MySQLPersistenceId.getNativeId(dc);
                 pc.setCourseID(courseID);
             }
-
+            pc.setTrashID(0L);
             pc = ScoContextManager.edit(pc);
             // if edit fails skip this.
             if (scoContext.getDescription() != null) {
@@ -288,6 +288,14 @@ public class MySQLScoContextActions {
         }
         ScoContextManager.destroy(pc.getScoID());
         if (pc.getTrashID() == 0) relocateScos(c, seq, -1L);
+    }
+
+    public static void trash(PersistentScoContext pc, PersistentCourse c) {
+        final long seq = pc.getSequencenr().longValue();
+        long trashid = pc.getTrashID();
+    	pc.setTrashID(System.currentTimeMillis());
+        ScoContextManager.edit(pc);
+        if (trashid == 0) relocateScos(c, seq, -1L);
     }
 
     private static void relocateScos(PersistentCourse c, final long seq, final long incr) {

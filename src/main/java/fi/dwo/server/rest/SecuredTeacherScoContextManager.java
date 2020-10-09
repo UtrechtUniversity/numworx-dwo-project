@@ -82,7 +82,25 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
         MySQLScoContextActions.remove(pc, c);
         return Boolean.TRUE;
     }
-    
+
+    @PUT
+    @Path("trash")
+    @Produces({"application/json"})
+    public Boolean trash(@Context SecurityContext sc, RestScoContext rest) throws Dwo2Exception {
+        SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build()
+        .submitUser(sc.getUserPrincipal().getName()).setHasRole(rest.getRestContext().getDomHasRole())
+        .buildSchoolAdminTeacher();
+        // TODO state.addProfile().addScoContext().removeSco();
+        
+        DomScoContext scoContext = rest.getDomScoContext();
+        Long scoID = MySQLPersistenceId.getNativeId(scoContext);
+        PersistentScoContext pc = ScoContextManager.findEntity(scoID);
+        if(pc == null) return Boolean.FALSE;
+        PersistentCourse c = CourseManager.findEntity(pc.getCourseID());
+        MySQLScoContextActions.trash(pc, c);
+        return Boolean.TRUE;
+    }
+
     @PUT
     @Path("update")
     @Produces({"application/json"})

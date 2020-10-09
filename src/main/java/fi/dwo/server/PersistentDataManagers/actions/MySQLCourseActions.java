@@ -157,28 +157,41 @@ public class MySQLCourseActions {
       CourseManager.destroy(pc.getCourseID());
       if (pc.getTrashID() == 0) {
 	 // sequencenr doorschuiven.
-	      long parentID = pc.getParentID();
-	      Long sequencenr = pc.getSequencenr();
-	      if(sequencenr == null) return;
-	// update sequencenr of siblings.
-	      long pcseq = sequencenr.longValue();
-	      if(parentID != 0) {
-	        PersistentCourse parent = CourseManager.findEntity(parentID);
-	        children = CourseManager.findChildrenOf(parent);
-	      } else {
-	        PersistentDwoProfile profile = DwoProfileManager.findEntity(pc.getDwoProfileID());
-	        PersistentSchool school = 
-	            pc.getSchoolID() == null || pc.getSchoolID() == 0L ? null :
-	            SchoolManager.findEntity(pc.getSchoolID());
-	        children = CourseManager.findChildrenOf(profile, school);
-	      }
-	      for(PersistentCourse c: children) {
-	        Long seq = c.getSequencenr();
-	        if(seq != null && seq.longValue() > pcseq) {
-	          c.setSequencenr(seq-1);
-	          CourseManager.edit(c);
-	        }
-	      }
+	      relocateCourses(pc);
       }
    }
+  
+  public static void trash(PersistentCourse pc) {
+	  long trashid = pc.getTrashID();
+	  pc.setTrashID(System.currentTimeMillis());
+	  CourseManager.edit(pc);
+	  if (trashid == 0)
+		  relocateCourses(pc);
+  }
+
+  private static void relocateCourses(PersistentCourse pc) {
+	List<PersistentCourse> children;
+	long parentID = pc.getParentID();
+	  Long sequencenr = pc.getSequencenr();
+	  if(sequencenr == null) return;
+// update sequencenr of siblings.
+	  long pcseq = sequencenr.longValue();
+	  if(parentID != 0) {
+	    PersistentCourse parent = CourseManager.findEntity(parentID);
+	    children = CourseManager.findChildrenOf(parent);
+	  } else {
+	    PersistentDwoProfile profile = DwoProfileManager.findEntity(pc.getDwoProfileID());
+	    PersistentSchool school = 
+	        pc.getSchoolID() == null || pc.getSchoolID() == 0L ? null :
+	        SchoolManager.findEntity(pc.getSchoolID());
+	    children = CourseManager.findChildrenOf(profile, school);
+	  }
+	  for(PersistentCourse c: children) {
+	    Long seq = c.getSequencenr();
+	    if(seq != null && seq.longValue() > pcseq) {
+	      c.setSequencenr(seq-1);
+	      CourseManager.edit(c);
+	    }
+	  }
+}
 }

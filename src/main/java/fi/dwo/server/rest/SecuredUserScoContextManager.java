@@ -1,5 +1,6 @@
 package fi.dwo.server.rest;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +24,7 @@ import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
@@ -114,6 +116,44 @@ public class SecuredUserScoContextManager {
 		return list.stream().map((s)->builder(s,parent,info,hasRoleId)).sorted(new DomScoContextComparator()).collect(Collectors.toList());    	
     }
 
+    
+    @PUT
+    @Path("/getTrashedScos")
+    @Produces({"application/json"})
+    public List<DomScoContext> getTrashedScos(@Context SecurityContext sc, RestCourse rest, @Context UriInfo info) throws Dwo2Exception {
+    	UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRole(rest.getRestContext().getDomHasRole());
+    	state.buildSchoolAdminTeacher();
+		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
+		DomCourse domCourse = rest.getDomCourse();
+		long pid = MySQLPersistenceId.getNativeId(domDwoProfile);
+		long cid = MySQLPersistenceId.getNativeId(domCourse);
+        PersistentDwoProfile profile = DwoProfileManager.findEntity(pid);
+		PersistentCourse parent = CourseManager.findEntity(cid);
+        PersistentHasRole phr = state.getHasRole();
+        PersistentSchool school = state.getSchool();
+     // match profile		
+     		if ( pid != parent.getDwoProfileID().longValue())
+     		{
+                 LOG.log(Level.WARNING, "profile mismatch " + sc.getUserPrincipal().getName() );		
+     			//return Collections.emptyList();
+     		}
+     // match school
+     		if (parent.getSchoolID() != null) {
+     			if (parent.getSchoolID().longValue() != school.getSchoolID().longValue())
+     			{
+     	            LOG.log(Level.SEVERE, "school mismatch " + sc.getUserPrincipal().getName() );		
+     				//return Collections.emptyList();
+     			}
+     		} else {
+     			if (profile.isLimited()) {
+     				// assert school in profile database....
+     			}
+     		}
+    		List<PersistentScoContext> list = ScoContextManager.findTrashedEntities(parent);
+    		String hasRoleId = phr.buildPersistenceId().getIdString();
+    		return list.stream().map((s)->builder(s,parent,info,hasRoleId)).sorted(new DomScoContextComparator()).collect(Collectors.toList());    	
+    }
+    
     private DomScoContext builder(PersistentScoContext s, PersistentCourse parent, UriInfo info, String hasRoleId) {
     	DomScoContext build = s.buildDomScoContext();
     	hasRoleId = "&hasRoleId=" + hasRoleId;

@@ -61,6 +61,19 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
       MySQLCourseActions.remove(pc);
       return Boolean.TRUE;
     }
+
+    @PUT
+    @Path("trash")
+    @Produces({"application/json"})
+    public Boolean trash(@Context SecurityContext sc, RestCourse rest) throws Dwo2Exception {
+      SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+          .setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher();
+ 
+      Long id = MySQLPersistenceId.getNativeId(rest.getDomCourse());
+      PersistentCourse pc = CourseManager.findEntity(id);
+      MySQLCourseActions.trash(pc);
+      return Boolean.TRUE;
+    }
     
     @PUT
     @Path("update")
@@ -149,7 +162,7 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 				pc.setLastChangeTimeStamp(course.getLastChangeTimeStamp()); // Optimistic locking?
 			else 
 				pc.setLastChangeTimeStamp(System.currentTimeMillis()); // FIXME Gert is dit de bedoeling of JPA managed?
-
+			pc.setTrashID(0L);
 			pc=CourseManager.edit(pc);
 			course = pc.buildDomCourseFull();
 			if (school.accessControl()) {
