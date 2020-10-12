@@ -656,7 +656,7 @@ public void actionPerformed(ActionEvent event) {
       model.setRoot(LeerdomeinEditPanel2.filter(root, filter));      
     }
     if(scores != null)
-      recalculateAncestors(root, scores.getStudentScores());
+      recalculateAncestors((DefaultMutableTreeNode) model.getRoot(), scores.getStudentScores());
   }
 
   private void recalculateAncestors(DefaultMutableTreeNode node,
@@ -680,10 +680,16 @@ public void actionPerformed(ActionEvent event) {
         DefaultMutableTreeNode n = (DefaultMutableTreeNode) nodes.nextElement();
         if (!invisible(n) && child != null) {
           recalculateAncestors(n, child);
-          redCount += child.getRedCount();
-          redScore += child.getRedScore();
-          greenCount += child.getGreenCount();
-          greenScore += child.getGreenScore();
+          long rc = child.getRedCount();
+          if (rc != 0) {
+           redCount += rc;
+            redScore += child.getRedScore();
+          }
+          long gc = child.getGreenCount();
+          if (gc != 0) {
+            greenCount += gc;
+            greenScore += child.getGreenScore();
+          }
           totalCount += child.getTotalCount();
         }
       }
