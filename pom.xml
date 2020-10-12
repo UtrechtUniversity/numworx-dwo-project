@@ -233,6 +233,20 @@
             <version>1.4</version>
             <classifier>sources</classifier>
             <scope>provided</scope>
-        </dependency> 
+        </dependency>
+        <dependency>
+        	<groupId>com.googlecode.json-simple</groupId>
+        	<artifactId>json-simple</artifactId>
+        	<version>1.1.1</version>
+        	<scope>test</scope>
+        </dependency>
     </dependencies>
+    <profiles>
+    	<profile>
+    		<id>gwttest</id>
+    		<properties>
+    		        <gwt.test.phase>test</gwt.test.phase>    		
+    		</properties>
+    	</profile>    
+    </profiles>
 </project>
