@@ -209,6 +209,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			menuheight = 30;
 			menubar.setPixelSize(width-boxsize, menuheight);
 			menubar.getElement().getStyle().setBackgroundColor("transparent");//CssColor.make(229,240,249).toString());
+			menubar.getElement().getStyle().setOverflowY(Overflow.HIDDEN);
 			hbox.add(menubar);
 		}
 		
@@ -1298,7 +1299,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
             hideEmpty();
 		    
 		    if (downWidget != null) {
-		      if (downWidget instanceof FormulaVak) {
+		      if (downWidget instanceof FormulaVak || downWidget instanceof CalculatorVak) {
 		        downWidget = null;
 		        removeCursor();
 		      }
