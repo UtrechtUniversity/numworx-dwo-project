@@ -37,6 +37,7 @@ import java.awt.event.ActionListener;
 import java.text.DateFormatSymbols;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
@@ -1219,8 +1220,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     public static Course[] selectCourses(ClassTeacherPanel parent,
             Course[] allCourses, Course[] selectedCourses, final SchoolClass sc, Promise<List> rc) {
         String title = TextMapper.getText(TextMapper.GUISC_TITLE);
-        allCourses
-                = GuiCreator.instance().dwo.sequence(allCourses, sc);
+        Arrays.sort(allCourses);
         int cnt = 3; // 2 voor select course voor resultaat. 3+3 voor selectcourse voor klas.       
         if (CenterPanel.isIconizer()) {
             cnt += 4; // VAN en TOT en AFGESCHERMD, accessKey
@@ -1293,6 +1293,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         Course map = data.course;
         if (map.isWithChildren()) {
             CourseMap[] courses = map.getChildren();
+            Arrays.sort(courses);
             data.children = new CourseData[courses.length];
             DefaultMutableTreeNode child;
             for (int i = 0; i < courses.length; i++) {
