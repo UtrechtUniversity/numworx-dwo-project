@@ -57,7 +57,7 @@ public class DomStudentModelStructure {
         for (DomStudentModelCategory cat : categories) {
             result.getCategories().add(cat.buildDomStudentModelCategoryScore());
         }
-        result.setId(info.getId());
+        if (info != null) result.setId(info.getId());
         return result;
     }
 
