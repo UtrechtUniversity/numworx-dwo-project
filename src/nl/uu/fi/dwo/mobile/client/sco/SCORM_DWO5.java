@@ -23,6 +23,7 @@ import org.osgi.util.promise.Success;
 
 import nl.numworx.gwtpatch.client.GWTPatch;
 import nl.numworx.gwtpatch.client.JSONBuilder;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ConfirmEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
@@ -296,7 +297,8 @@ log("setScoID " + scoID);
 					
 					Map<String,String> patchMap = new LinkedHashMap<String,String>();
 					patchMap.put("ETag", lastETag);
-					patchMap.put(SUSPEND_DIGEST, digest.digest(suspendData));
+					if (DWOplayer.PROFILE_ID != 108)
+						patchMap.put(SUSPEND_DIGEST, digest.digest(suspendData));
 	                patchMap.put(Memento.SUSPEND_DATA, patch);
 	                started = System.currentTimeMillis();
 					scoDataManager.patchValues(sco, schoolClassID, context, patchMap).then(
