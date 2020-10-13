@@ -448,8 +448,9 @@ public class SecuredDwoAdminSchoolManager {
                 do { 
                 cList = CourseManager.findEntities(school, 100);
                 for (PersistentCourse c : cList) {
-                    //Loop ScoContext in Course
+                    //Loop All ScoContext in Course
                     List<PersistentScoContext> pscList = ScoContextManager.findEntities(c);
+                    pscList.addAll(ScoContextManager.findTrashedEntities(c));
                     for (PersistentScoContext psc : pscList) {
                         //Remove ScoData
                         ScoDataManager.destroy(psc.getScoID());
@@ -670,7 +671,12 @@ public class SecuredDwoAdminSchoolManager {
         	do { 
         		courses = CourseManager.findEntityIDs(school); // Fixed Generates out of memory..
         		count += courses.size();
-        		scocount += courses.stream().map(item -> ScoContextManager.findEntities(new PersistentCourse(item))).collect(Collectors.summingInt(List::size));
+        		scocount += courses.stream().map(item -> {
+					PersistentCourse c = new PersistentCourse(item);
+					List<PersistentScoContext> entities = ScoContextManager.findEntities(c);
+					entities.addAll(ScoContextManager.findTrashedEntities(c));
+					return entities;
+				}).collect(Collectors.summingInt(List::size));
         	} while(courses.size()>0);
         	
         	entry = new DomMapEntry<>("courses", Long.toString(count));

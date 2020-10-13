@@ -1227,7 +1227,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         Long profileID = profile.getDwoProfileID();
 
         //fetch all courses in the school and profile
-        Collection<PersistentCourse> listCourse = CourseManager.findEntities(profileID, school.getSchoolID());
+        Collection<PersistentCourse> listCourse = CourseManager.findEntities(profileID, school.getSchoolID()); // XXX children of trashed folders in list
         Map<Long, PersistentCourse> courseMap = new TreeMap<>();
         listCourse.forEach(item -> courseMap.put(item.getCourseID(), item));
  // Filter by schoolAccess       
@@ -1271,7 +1271,20 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
           }
           
         }
-        
+ // filter children of trash
+        boolean trashed;
+        do {
+        	trashed = false;
+        	Iterator<PersistentCourse> iterator = listCourse.iterator();
+        	while(iterator.hasNext()) {
+        		PersistentCourse pc = iterator.next();
+        		long parent = pc.getParentID();
+        		if (parent != 0 && !courseMap.containsKey(Long.valueOf(parent))) {
+        			iterator.remove();
+        			trashed = true;
+        		}
+        	}
+        } while (trashed);
         result.setCourses(listCourse.stream().map((e) -> new DomMapEntry<PersistenceId, DomCourse>(e.buildPersistenceId(), e.buildDomCourse()))
                 .collect(Collectors.toList()));
 

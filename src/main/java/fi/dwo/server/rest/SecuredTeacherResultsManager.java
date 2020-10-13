@@ -571,6 +571,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
               // check for studentscocontexts in sco_of_course X student_of_class
               PersistentCourse pc = build.getCourse();
               List<PersistentScoContext> scos = ScoContextManager.findEntities(pc);
+              scos.addAll(ScoContextManager.findTrashedEntities(pc));
               List<PersistentStudentOfClass> students = StudentOfClassManager.findEntities(build.getSchoolClass());
               if( ! students.isEmpty() && scos.size() > 0 ) { // kan >1 zijn, als de bovenstaande clear goed z'n best doet.
                 long sgId = students.get(0).getPersistentStudentOfClassPK().getSchoolGroupID().longValue();
