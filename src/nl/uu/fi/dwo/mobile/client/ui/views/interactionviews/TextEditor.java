@@ -1298,7 +1298,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
             hideEmpty();
 		    
 		    if (downWidget != null) {
-		      if (downWidget instanceof FormulaVak) {
+		      if (downWidget instanceof FormulaVak || downWidget instanceof CalculatorVak) {
 		        downWidget = null;
 		        removeCursor();
 		      }
