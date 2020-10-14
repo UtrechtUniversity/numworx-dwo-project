@@ -164,4 +164,6 @@ public interface Text extends Constants {
 	
 	@DefaultStringValue("Vul je code in!")
 	String noExamKey();
+	@DefaultStringValue("Beveiligde Toets Omgeving")
+	String kiosk_mode();
  }

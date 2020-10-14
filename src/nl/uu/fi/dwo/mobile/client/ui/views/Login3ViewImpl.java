@@ -83,7 +83,7 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 		for_students = rb.for_students();
 		if(kiosk)
 			for_students = //rb.kiosk_mode
-				"Beveiligde Toets Omgeving";
+				rb.kiosk_mode();
 
 		return uiBinder.createAndBindUi(this);
 	}
