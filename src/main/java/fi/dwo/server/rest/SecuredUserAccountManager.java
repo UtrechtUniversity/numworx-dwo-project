@@ -695,7 +695,8 @@ public class SecuredUserAccountManager {
                     )
                 if (accessKey == null || accessKey.isEmpty() || accessKey.equals(totp))
                   return;
-            case JWT:
+                throw new Dwo2Exception(Dwo2ExceptionCode.Exam_AuthenticationError, "not correct");
+          case JWT:
                 totp = st.nextToken();
                 JwtParser parser = Jwts.parser().setSigningKeyResolver(OAuth2Manager.AUTH);
                 Jws<Claims> claims = parser.parseClaimsJws(totp);
