@@ -16,7 +16,7 @@
 	if ("/toets/toets.jsp".equals(uri)) {
 %> 
  	Deze versie van de SafeExamBrowser wordt niet ondersteund.<br>
- 	Ga naar <b>https://apps.dwo.nl/vo/exam/</b> en download de correctie versie!<br>
+ 	Ga naar <b>https://app.dwo.nl/vo/exam/</b> en download de correctie versie!<br>
 	<br>
 	Browser <a href='https://<%=server %>/toets/logout.html'>afsluiten</a>.
  
