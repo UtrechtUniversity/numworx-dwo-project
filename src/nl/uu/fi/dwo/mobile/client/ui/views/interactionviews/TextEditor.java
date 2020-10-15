@@ -10,16 +10,16 @@ import org.osgi.util.promise.Promise;
 
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
-import com.google.gwt.canvas.dom.client.CssColor;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
@@ -27,7 +27,12 @@ import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.dom.client.TouchEndEvent;
+import com.google.gwt.event.dom.client.TouchEndHandler;
+import com.google.gwt.event.dom.client.TouchMoveEvent;
+import com.google.gwt.event.dom.client.TouchMoveHandler;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -35,21 +40,21 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasText;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.dom.client.event.touch.Touch;
-import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchEndHandler;
-import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchMoveHandler;
-import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
+import com.google.web.bindery.event.shared.Event;
+import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.google.web.bindery.event.shared.HandlerRegistrations;
+import com.vaadin.pointerevents.client.PointerDownEvent;
+import com.vaadin.pointerevents.client.PointerDownHandler;
+import com.vaadin.pointerevents.client.PointerMoveEvent;
+import com.vaadin.pointerevents.client.PointerMoveHandler;
+import com.vaadin.pointerevents.client.PointerUpEvent;
+import com.vaadin.pointerevents.client.PointerUpHandler;
 
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import fi.wiskopdr.FormuleParser;
@@ -81,13 +86,13 @@ import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
-import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 
+@SuppressWarnings("deprecation")
 public class TextEditor  implements InteractionView, TouchStartHandler, FormuleEditorIF, FacetAware, CBookEventListener, TekstElementWithFont, HasText {
 	
 	public interface IsEditable {
@@ -334,11 +339,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private Widget getContent(ObjectMap launchdata)
 	{
 		FlowPanel touch = new FlowPanel();
-		Tapper tapper = new Tapper(this,touch.getElement());
-		TouchDelegate del = new TouchDelegate(touch);
-        del.addTouchStartHandler(tapper);
-        del.addTouchEndHandler(tapper);
-        del.addTouchMoveHandler(tapper);
+		Tapper tapper = new Tapper(this,touch.getElement());		
+        tapper.initHandlers(touch);
 		flow = touch; // XXX voorlopig ok
 		setState(launchdata);
 		return touch;
@@ -353,6 +355,11 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		int c = flow.getWidgetIndex(widget);
 		if(c >= 0)
 			cursor = c;
+		LOGGER.info("set cursor at " + c); if(c==35) {
+			RuntimeException r = new RuntimeException();
+			r.fillInStackTrace();
+			LOGGER.log(Level.SEVERE, "setcursor", r);
+		}
 		showCursor();
 		return widget;
 	}
@@ -732,7 +739,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	void removeCursor()
 	{
 		if (cursorWidget != null)
+		{	GWT.log("remove cursor");
 			cursorWidget.setStyleName(css.textEditor_cursor(), false);
+		}
 	}
 
 	@Override
@@ -798,6 +807,11 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	  }
 
 	  private void deSelection() {
+// niet altijd goed
+		int size = flow.getWidgetCount();  
+		for (int i = 0; i < size; i++) flow.getWidget(i).removeStyleName(css.textEditor_select());
+		  
+		  
 	    if(hasSelection()) {
 	      while(cursor > selectionEnd) 
 	        flow.getWidget(selectionEnd++).removeStyleName(css.textEditor_select());
@@ -881,7 +895,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		html = builder.toSafeHtml();
 //		sb.insert(cursor, charAt);
 		InlineHTML w = new InlineHTML(html);
-		new TapForFocus(w,w);
+		new TapForFocus(w);
 		flow.insert(w,cursor++);
 		showCursor();
 	}
@@ -1246,7 +1260,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	
 	
 	
-	class Tapper implements /*ClickHandler,*/ TouchStartHandler, TouchEndHandler, TouchMoveHandler {
+	class Tapper implements /*ClickHandler,*/ TouchStartHandler, TouchEndHandler, TouchMoveHandler, MouseDownHandler, MouseUpHandler, MouseMoveHandler, PointerDownHandler, PointerUpHandler, PointerMoveHandler {
 		private FormuleEditorIF deze;
 		private Element target;
         private int downX, lastX;
@@ -1254,14 +1268,49 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
         private Widget downWidget;
         private int down;
         private int move;
+        
+        HandlerRegistration mouseRegistration, pointerRegistration;
+		HandlerRegistration touchRegistration;
   
+        
+        HandlerRegistration initHandlers(Widget w) {
+        	touchRegistration = HandlerRegistrations.compose(
+        			w.addDomHandler(this, TouchStartEvent.getType()),
+        	        w.addDomHandler(this, TouchEndEvent.getType()),
+        	        w.addDomHandler(this, TouchMoveEvent.getType())
+        	);
+        	mouseRegistration = HandlerRegistrations.compose(
+        			touchRegistration,
+        			w.addDomHandler(this, MouseDownEvent.getType()),
+        	        w.addDomHandler(this, MouseUpEvent.getType()),
+        	        w.addDomHandler(this, MouseMoveEvent.getType())
+        	);
+        	pointerRegistration = HandlerRegistrations.compose(
+        			w.addDomHandler(this, PointerDownEvent.getType()),
+        	        w.addDomHandler(this, PointerUpEvent.getType()),
+        	        w.addDomHandler(this, PointerMoveEvent.getType())
+        			);
+        	return HandlerRegistrations.compose(mouseRegistration, pointerRegistration, touchRegistration);
+        }
+        
+        
+        
+        
+        
+        
         public void onTouchMove(TouchMoveEvent event) {
           if (downWidget != null) {
-            event.preventDefault();
             Touch t = event.getTouches().get(0);
             lastX = t.getPageX();
             lastY = t.getPageY();
-            Widget moveWidget = findWidget(lastX,lastY);
+            move(event);
+          }
+          
+        }
+
+		private void move(DomEvent<?> event) {
+			event.preventDefault();
+			Widget moveWidget = findWidget(lastX,lastY);
             downWidget.removeStyleName(css.textEditor_cursor());
             if( (moveWidget == downWidget || moveWidget == null) && downWidget != flow.getWidget(flow.getWidgetCount()-1)) {
               downWidget.addStyleName(css.textEditor_select());
@@ -1283,16 +1332,18 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
                 flow.getWidget(m).addStyleName(css.textEditor_select());
                 GWT.log("select " + m);
               }
-          }
-          
-        }
+		}
 		
 		public void onTouchStart(TouchStartEvent event) {
 		    Touch touch = event.getTouches().get(0);
 		    lastX = downX = touch.getPageX();
 		    lastY = downY = touch.getPageY();
+		    start(event);
+		  }
 
-		    downWidget = findWidget(downX, downY);
+		private void start(DomEvent<?> event) {
+		    GWT.log(event.getAssociatedType().getName()+  " " + lastX + " " + lastY);
+			downWidget = findWidget(downX, downY);
 		    down=move=cursor;
 		    deSelection();
 		    setCursorWidget(downWidget);
@@ -1300,13 +1351,14 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		    
 		    if (downWidget != null) {
 		      if (downWidget instanceof FormulaVak || downWidget instanceof CalculatorVak) {
+		    	GWT.log("intern vak");
 		        downWidget = null;
 		        removeCursor();
 		      }
 		      event.preventDefault();
 		      //DOM.setCapture(getElement());
 		    }
-		  }
+		}
 		  private void clearDownMove() {
 		    int min = Math.min(down,move);
 		    int max = Math.max(down,move);
@@ -1361,10 +1413,14 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		  }
 	
 		  public void onTouchEnd(TouchEndEvent event) {
-		    //DOM.releaseCapture(getElement());
+		    end(event);
+		 }
+
+		private void end(DomEvent<?> event) {
+		    GWT.log("text editor End " +event.getAssociatedType().getName());
+			//DOM.releaseCapture(getElement());
 		    if (downWidget != null) {
 		      event.preventDefault();
-		      GWT.log("mouse up");
               FormuleKeyboardIF kb = comRoot.getKeyboard();
 		      kb.blur();
 		      kb.setEditor(deze);
@@ -1377,7 +1433,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		        if(r < 3) {
 		          setCursorWidget(downWidget);
 		          downWidget = null;
-		          GWT.log("mouse up cursor");
+		          GWT.log(event.getAssociatedType().getName() + " cursor");
 		          return;
 		        }
 		      }
@@ -1399,10 +1455,10 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		          flow.getWidget(move-1).addStyleName(css.textEditor_select());
 		          GWT.log("mouse select " + move);
 		      }
-		      GWT.log("mouse up select");
+		      GWT.log(event.getAssociatedType().getName() + " select");
 	          setCursorWidget(flow.getWidget(cursor));
 		    }
-		 }
+		}
 
 		public Tapper(FormuleEditorIF deze, Element target) {
 			this.deze = deze;
@@ -1441,27 +1497,75 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			}
 		}
 
+
+		@Override
+		public void onPointerMove(PointerMoveEvent event) {
+			  mouseRegistration.removeHandler();
+	          if (downWidget != null) {
+	              lastX = event.getClientX();
+	              lastY = event.getClientY();
+	              move(event);
+	            }
+		}
+
+
+		@Override
+		public void onPointerUp(PointerUpEvent event) {
+			mouseRegistration.removeHandler();
+			end(event);
+		}
+		@Override
+		public void onPointerDown(PointerDownEvent event) {
+			mouseRegistration.removeHandler();
+		    lastX = downX = event.getClientX();
+		    lastY = downY = event.getClientY();
+		    start(event);			
+		}
+		@Override
+		public void onMouseMove(MouseMoveEvent event) {
+	          if (downWidget != null) {
+	              lastX = event.getClientX();
+	              lastY = event.getClientY();
+	              move(event);
+	            }
+		}
+
+		@Override
+		public void onMouseUp(MouseUpEvent event) {
+			end(event);			
+		}
+
+		@Override
+		public void onMouseDown(MouseDownEvent event) {
+		    lastX = downX = event.getClientX();
+		    lastY = downY = event.getClientY();
+		    start(event);
+		}
+
 	}
 	
-	class TapForFocus implements TouchStartHandler, ClickHandler
+	private class TapForFocus implements /*TouchStartHandler,*/ ClickHandler
 	{
 		private Widget cursorWidget;
 		private HandlerRegistration registration;
 
-		/**
-		 * @param cursorWidget
-		 */
-		TapForFocus(Widget cursorWidget)
-		{
-			this.cursorWidget = cursorWidget;
-			TouchDelegate wrap = new TouchDelegate(cursorWidget);
-			registration = wrap.addTouchStartHandler(this);
-		}
+//		/**
+//		 * @param cursorWidget
+//		 */
+//		TapForFocus(Widget cursorWidget)
+//		{
+//			this.cursorWidget = cursorWidget;
+//			registration = cursorWidget.addDomHandler(this, TouchStartEvent.getType());
+//		}
 
-		TapForFocus(Widget cursorWidget, HasClickHandlers w)
+		private TapForFocus(Widget cursorWidget, HasClickHandlers w)
 		{
 			this.cursorWidget = cursorWidget;
 			registration = w.addClickHandler(this);
+		}
+
+		private TapForFocus(InlineHTML w) {
+			this(w,w);
 		}
 
 		public void finalize()
@@ -1471,20 +1575,20 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			cursorWidget = null;
 		}
 		
-		@Override
-		public void onTouchStart(TouchStartEvent event)
-		{
-			FormuleKeyboardIF keyboard = comRoot.getKeyboard();
-			keyboard.setEditor(TextEditor.this);
-			keyboard.setEnterType(EnterType.ENTER);
-			shown = true; childfocus = false;
-			deSelection();
-			setCursorWidget(cursorWidget);
-			hideEmpty();
-			keyboard.softFocus();
-			event.stopPropagation();
-			event.preventDefault();
-		}
+//		@Override
+//		public void onTouchStart(TouchStartEvent event)
+//		{
+//			FormuleKeyboardIF keyboard = comRoot.getKeyboard();
+//			keyboard.setEditor(TextEditor.this);
+//			keyboard.setEnterType(EnterType.ENTER);
+//			shown = true; childfocus = false;
+//			deSelection();
+//			setCursorWidget(cursorWidget);
+//			hideEmpty();
+//			keyboard.softFocus();
+//			event.stopPropagation();
+//			event.preventDefault();
+//		}
 
 		@Override
 		public void onClick(ClickEvent event)
@@ -1571,6 +1675,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 					super.onEnd(event);
 					deSelection();
 					setCursorWidget(FormulaVak.this);
+					removeCursor();
 				} 
 			};
 			(h).initHandler();
@@ -1667,6 +1772,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 					super.onEnd(event);
 					deSelection();
 					setCursorWidget(CalculatorVak.this);
+					removeCursor();
 				} 
 			};
 			h.initHandler();
