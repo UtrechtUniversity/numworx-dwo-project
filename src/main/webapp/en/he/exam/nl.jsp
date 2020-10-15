@@ -32,6 +32,7 @@
     	search = ""
     	hash= ""
         clientId = "f9af29c4-cfc5-11ea-87d0-0242ac130003"
+        token="/dwo/saml/uulogin"
     </script>
     <script type="text/javascript" src="/dwo/oauth2client/oauth2client/oauth2client.nocache.js"></script>
 <%	  
