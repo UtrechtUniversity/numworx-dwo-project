@@ -23,6 +23,7 @@ else
     	search = "&base=/en/he/&profile=100&locale=nl"
     	hash= "<%=hash%>"
         clientId = "f9af29c4-cfc5-11ea-87d0-0242ac130003"
+        token="/dwo/saml/login"
     </script>
     <script type="text/javascript" src="/dwo/oauth2client/oauth2client/oauth2client.nocache.js"></script>
 </head>

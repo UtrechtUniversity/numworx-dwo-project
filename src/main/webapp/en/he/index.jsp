@@ -25,6 +25,7 @@ if ("shibboleth".equals(request.getAuthType())) clientId = "f9af29c4-cfc5-11ea-8
     	search = "&base=/en/he/&profile=100&locale=en"
     	hash= "<%=hash%>"
         clientId = "<%=clientId%>"
+        token="/dwo/saml/login"
     </script>
     <script type="text/javascript" src="/dwo/oauth2client/oauth2client/oauth2client.nocache.js"></script>
 </head>

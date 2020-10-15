@@ -492,6 +492,7 @@
   <servlet-mapping>
     <servlet-name>oauth2</servlet-name>
     <url-pattern>/dwo/saml/login</url-pattern>
+    <url-pattern>/dwo/saml/uulogin</url-pattern>
   </servlet-mapping>
 <!--    
     <security-constraint>
