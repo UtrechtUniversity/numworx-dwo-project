@@ -24,8 +24,20 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 public class OAuth2Client implements EntryPoint {
 
 	private static final String TOKEN = "/dwo/saml/login";
-  private Storage storage;
+	private Storage storage;
 	
+  	private static native String getToken0() /*-{
+  		return $wnd.token
+  	}-*/;
+  	
+  	private static String getToken() {
+  		try {
+  			return getToken0();
+  		} catch(Exception e) {}
+  		return TOKEN;
+  	}
+  
+  
 	static native private String getEndpoint0() /*-{
 		return $wnd.endpoint
 	}-*/;
@@ -136,7 +148,7 @@ public class OAuth2Client implements EntryPoint {
 					Uint8Array bytes = Uint8ArrayNative.create(t);
 					String challenge = btoa(OAuth2Client.toString(bytes));
 					UrlBuilder token = Window.Location.createUrlBuilder();
-					token.setPath(TOKEN);
+					token.setPath(getToken());
 					token.setParameter("response_type", "code");
 					token.setParameter("redirect_uri", returnUrl);
 					token.setParameter("code_challenge", challenge);
