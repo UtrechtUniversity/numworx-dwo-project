@@ -8,9 +8,7 @@ import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.keyboard.client.DWOkeyboardBundle;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 
-import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.shared.GWT;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;

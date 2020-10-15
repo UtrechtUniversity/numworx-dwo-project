@@ -38,15 +38,15 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
+import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 
-public class CourseActivity2 extends MGWTAbstractActivity implements Activity, GotoController {
+public class CourseActivity2 extends AbstractActivity implements Activity, GotoController {
 
 	private ClientFactory clientFactory;
 	private SelectModuleItem item;
