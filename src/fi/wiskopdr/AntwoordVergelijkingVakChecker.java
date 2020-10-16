@@ -126,6 +126,8 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	private boolean geenAntwoord = false;
 	private boolean syntaxFout = false;
 	
+	private int currentAnswerModel = 0;
+	
 	
 	public AntwoordVergelijkingVakChecker(HashMap<String,Object> avvCheckerModel, String[] randomVars, HashMap<String,Number> randomValues)
 	{	
@@ -489,9 +491,17 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		checkResults.put("score", new Integer(score));
 		checkResults.put("feedback", feedback);
 		checkResults.put("syntaxFout", new Boolean(syntaxFout));
+		checkResults.put("answerModelNr", new Integer(currentAnswerModel));
 		
 		
 		return checkResults;
+	}
+
+	public int getAnswerModelScore(int answerModelNr) {
+		if(answerModels==null || answerModels.get(answerModelNr)==null)
+			return 0;
+		ObjectMap map = JSONUtilities.wrapMap(answerModels.get(answerModelNr));
+		return (Integer)map.getInt("puntenFeedback");
 	}
 	
 	
@@ -1179,6 +1189,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 
 			boolean answerModelFits = pastGelijkwaardig && pastVorm && pastEindAntwoord && pastExact && pastSignificant;
 			if (answerModelFits) {
+				currentAnswerModel = h;
 				break;
 			}
 		}

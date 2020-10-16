@@ -27,4 +27,6 @@ public interface AntwoordVakChecker {
 	public int[][] getMeasuredMisconceptions();
 	
 	public int[][] getPossibleMisconceptions();
+	
+	public int getAnswerModelScore(int answerModelNr);
 }

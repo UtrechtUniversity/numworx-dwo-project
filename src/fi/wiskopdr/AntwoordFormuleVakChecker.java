@@ -593,6 +593,10 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		
 	}
 	
+	public int getAnswerModelScore(int answerModelNr) {
+		return 0;
+	}
+	
 	public Expressie[] getJuisteAntwoorden()
 	{
 		return juisteAntwoorden;

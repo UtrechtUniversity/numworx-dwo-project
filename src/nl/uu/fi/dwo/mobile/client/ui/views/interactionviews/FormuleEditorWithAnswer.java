@@ -1086,9 +1086,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		kijkNa(false);
 	}
 	
-	public void kijkNa(boolean setState)
+	public HashMap kijkNa(boolean setState)
 	{
-		kijkNa(false, true, setState);
+		return kijkNa(false, true, setState);
 	}
 	
 	
@@ -1099,9 +1099,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private ObjectMap reviewInteractieData;
 	private boolean isNull;
 	
-	public void kijkNa(final boolean backStep, final boolean show, final boolean setState) {
+	public HashMap kijkNa(final boolean backStep, final boolean show, final boolean setState) {
+		HashMap checkResults = null;
+		
 		try {
-			kijkNa0(backStep, show, setState);
+			checkResults = kijkNa0(backStep, show, setState);
 		} catch(RestartException r) {
 			r.restart(new Runnable() {
 				public void run() {
@@ -1112,9 +1114,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 					}					
 				}});
 		}
+		return checkResults;
 	}
 	
-	private void kijkNa0(boolean backStep, boolean show, boolean setState) throws RestartException
+	private HashMap kijkNa0(boolean backStep, boolean show, boolean setState) throws RestartException
 	{
 		if (setState)
 			setChanged(false);
@@ -1191,7 +1194,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				{
 					fews.maakNakijkenAf(backStep, show, setState);
 				}
-				return;
+				return null;
 			}
 			else
 			{
@@ -1241,6 +1244,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (goedHalfFout == AntwoordVakChecker.HALF || goedHalfFout == AntwoordVakChecker.DOOR)
 			correct = null;
 		this.score = (Integer) checkResults.get("score");
+		
+		if(fews!=null && checkResults.containsKey("answerModelNr"))
+			fews.fillScoreContainer((Integer)checkResults.get("answerModelNr"));
+		
 		if ((fews != null) && (fews.isBordjesMethode()))
 		{ 
 			// waarom werkt dit überhaupt? normaal gebeurt dit in 'maakNakijkenAf'
@@ -1255,7 +1262,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		this.feedback = (String) checkResults.get("feedback");
 
 		if (!ingevuld)
-			return;
+			return checkResults;
 		
 		
 
@@ -1280,7 +1287,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			
 			if (setState && teltMee)
 				comRoot.setChanged(goedHalfFout == AntwoordVakChecker.FOUT);
-			return;
+			return checkResults;
 		}
 		
 //		logger.fine("userAnswer: " + useranswer);
@@ -1334,6 +1341,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			else if (goedHalfFout == AntwoordVakChecker.HALF || goedHalfFout == AntwoordVakChecker.DOOR)
 				fireEvent(EVENT_HALF);
 		}
+		return checkResults;
 	}
 	
 	/**

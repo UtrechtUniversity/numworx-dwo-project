@@ -200,6 +200,9 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	@DefaultStringValue("Rekenmachine")
 	String tooltip_rmKnop();
 	
+	@DefaultStringValue("Er ontbreken nog wel tussenstappen")
+	String ontbrekendeStappen();
+	
 	//FE
 	@DefaultStringValue("Formule invoegen")
 	String tooltip_formuleButton();

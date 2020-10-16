@@ -487,6 +487,10 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 
 	}
 	
+	public int getAnswerModelScore(int answerModelNr) {
+		return 0;
+	}
+	
 	
 	public String modifyFeedback(String tekst)
 	{
