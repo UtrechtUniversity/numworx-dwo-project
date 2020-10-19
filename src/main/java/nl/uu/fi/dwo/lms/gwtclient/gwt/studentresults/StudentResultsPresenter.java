@@ -1,8 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -29,7 +27,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsStudentResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.AbstractResultsPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
