@@ -5,14 +5,18 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentACL;
+import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.actions.MySQLCourseActions;
 import fi.dwo.server.PersistentDataManagers.core.ACLManager;
+import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 
 import java.sql.DataTruncation;
 import java.util.List;
@@ -34,6 +38,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestCourseFull;
 
@@ -152,6 +158,10 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 					if ( !parentcourse.isWithChildren()) {
 			            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Wrong parent using usercode " + sc.getUserPrincipal().getName() + ".");
 					}
+					List<PersistentClassCourse> ccs = ClassCourseManager.findEntities(pc);
+					for(PersistentClassCourse pcc: ccs) {
+						setParentClassCourse(parentcourse, pcc);
+					}
 				}
 // verify parent exists OR parentID = 0 has "haschildren"
 				
@@ -187,6 +197,34 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
     	
     	return course;
     }
+
+	private void setParentClassCourse(PersistentCourse parentcourse, PersistentClassCourse pcc) {
+		PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(pcc.getClassID());
+		long pid;
+		do { 
+			pid = parentcourse.getParentID();
+			List<PersistentClassCourse> ccResult = ClassCourseManager.findEntities(schoolClass, parentcourse);
+			if (ccResult.isEmpty()) { //create new 
+			    PersistentClassCourse cc = new PersistentClassCourse();
+			    cc.setClassID(pcc.getClassID());
+			    cc.setCourseID(parentcourse.getCourseID());
+			    cc.setNotAfter(null);
+			    cc.setNotBefore(null);
+			    cc.setType(CourseType.normal.ordinal());
+			    cc.setViewState(ViewState.studentsAndTeachers);
+			    ClassCourseManager.insertOrUpdateViewState(cc);
+	//			                    LOG.log(Level.INFO, "created cc of "+ccResult);
+			} else {
+			    for (PersistentClassCourse cc : ccResult) {
+	//			                    LOG.log(Level.INFO, "setting visibility of "+cc.getClassCourseID());
+			        ClassCourseManager.editViewState(cc.getClassCourseID(),ViewState.studentsAndTeachers);
+			    }
+			}
+			if (pid != 0) {
+				parentcourse = CourseManager.findEntity(pid);
+			}
+		} while(pid != 0);
+	}
  
     @PUT
     @Path("add")
