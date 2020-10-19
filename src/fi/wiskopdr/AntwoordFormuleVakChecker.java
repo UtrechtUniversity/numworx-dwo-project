@@ -88,6 +88,8 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 	private String casString = "";
 	private boolean casResult = false;
 	
+	private int currentAnswerModel = 0;
+	
 	//ideas instellingen
 	
 	private boolean tips; //ideas aan
@@ -357,9 +359,17 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		checkResults.put("score", new Integer(score));
 		checkResults.put("feedback", feedback);
 		checkResults.put("syntaxFout", new Boolean(syntaxFout));
+		checkResults.put("answerModelNr", new Integer(currentAnswerModel));
 		
 		
 		return checkResults;
+	}
+	
+	public int getAnswerModelScore(int answerModelNr) {
+		if(answerModels==null || answerModels.get(answerModelNr)==null)
+			return 0;
+		ObjectMap map = JSONUtilities.wrapMap(answerModels.get(answerModelNr));
+		return (Integer)map.getInt("puntenFeedback");
 	}
 	
 	public void initialiseerAnswerModels()
@@ -591,10 +601,6 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 			}
 		}
 		
-	}
-	
-	public int getAnswerModelScore(int answerModelNr) {
-		return 0;
 	}
 	
 	public Expressie[] getJuisteAntwoorden()
@@ -1061,29 +1067,29 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 					answerModelFits = true;
 				if(answerModelFits) 
 				{	// feedback van dit tabblad wordt gebruikt
-					
+					currentAnswerModel = h;
 					if(answerModels!=null)
 			        {
-			        	boolean[][] logMisconceptions = null;
-			        	if(answerModels.get(h).containsKey("logMisconceptions"))
-			        	{	ObjectMap wrap = JSONUtilities.wrapMap(answerModels.get(h));
-	        				ObjectList misconceptionsList = wrap.getObjectList("logMisconceptions");
-	        				logMisconceptions = new boolean[misconceptionsList.size()][];
-	        				for(int j = 0; j < logMisconceptions.length; j++)
-	        				{	try{
-	        					logMisconceptions[j] = misconceptionsList.getBooleanArray(j);
-								}
-								catch(Exception e)
-								{}
-	        				}	        			
-			        		
-			        		for( int j=0 ; j<logMisconceptions.length && j<measuredMisconceptions.length ; j++)
-			        		{	for( int k=0 ; k<logMisconceptions[j].length && k<measuredMisconceptions[j].length; k++)
-			            		{	if(logMisconceptions[j][k])
-			        				measuredMisconceptions[j][k] = 1;
-			            		}
-			        		}
-			        	}
+				        	boolean[][] logMisconceptions = null;
+				        	if(answerModels.get(h).containsKey("logMisconceptions"))
+				        	{	ObjectMap wrap = JSONUtilities.wrapMap(answerModels.get(h));
+		        				ObjectList misconceptionsList = wrap.getObjectList("logMisconceptions");
+		        				logMisconceptions = new boolean[misconceptionsList.size()][];
+		        				for(int j = 0; j < logMisconceptions.length; j++)
+		        				{	try{
+		        					logMisconceptions[j] = misconceptionsList.getBooleanArray(j);
+									}
+									catch(Exception e)
+									{}
+		        				}	        			
+				        		
+				        		for( int j=0 ; j<logMisconceptions.length && j<measuredMisconceptions.length ; j++)
+				        		{	for( int k=0 ; k<logMisconceptions[j].length && k<measuredMisconceptions[j].length; k++)
+				            		{	if(logMisconceptions[j][k])
+				        				measuredMisconceptions[j][k] = 1;
+				            		}
+				        		}
+				        	}
 			        }
 					break;
 				}
