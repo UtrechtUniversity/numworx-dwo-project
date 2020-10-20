@@ -19,5 +19,7 @@ public interface ScoContextManager {
       DomSchoolClassId schoolClass) throws Dwo2Exception;
 
   public DomScoData getData(DomScoContextId domScoId, DomDwoProfileId profile, DomSchoolClassId schoolClass) throws Dwo2Exception;
+
+  public List<DomScoContext> getTrash(DomCourse parent, DomDwoProfile profile) throws Dwo2Exception;
   
 }

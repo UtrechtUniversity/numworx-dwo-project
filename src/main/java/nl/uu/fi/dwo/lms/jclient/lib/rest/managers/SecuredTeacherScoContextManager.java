@@ -24,7 +24,6 @@ import nl.uu.fi.dwo.rest.util.PathId;
 public class SecuredTeacherScoContextManager extends AbstractScoContextManager {
   public SecuredTeacherScoContextManager(DomContext context) {
     super(context);
-    // TODO Auto-generated constructor stub
   }
 
   private static final Logger LOG =
@@ -85,4 +84,18 @@ public class SecuredTeacherScoContextManager extends AbstractScoContextManager {
         new Object[] {RestAuthenticator.getInstance().getUsername()});
     return result;
   }
+
+  public Boolean trash(DomScoContext sco, DomDwoProfile profile) throws Dwo2Exception {
+	    RestScoContext rest = new RestScoContext();
+	    rest.setDomDwoProfile(profile);
+	    rest.setDomScoContext(sco);
+	    rest.setRestContext(context);
+	    Boolean result = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/scoContext/trash",
+	        Boolean.class, rest);
+	    LOG.log(Level.FINE, "Removed sco for the teacher with username {0}.",
+	        new Object[] {RestAuthenticator.getInstance().getUsername()});
+	    return result;
+	  }
+  
+
 }

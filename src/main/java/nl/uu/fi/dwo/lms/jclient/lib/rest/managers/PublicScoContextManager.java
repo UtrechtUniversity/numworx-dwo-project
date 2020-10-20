@@ -50,6 +50,13 @@ public class PublicScoContextManager implements ScoContextManager {
     }
   }
 
+  public static Promise<List<DomScoContext>> getTrashAsync(DomCourse parent, DomDwoProfile profile) {
+  	try {
+  		return async.call(mediate.getTrash(parent,profile));
+  	} catch (Dwo2Exception e) {
+  		return Promises.failed(e);
+  	}
+  }
   /**
    * Retrieve a deeplink sco. Only public scos from a non-limited profile.
    *
@@ -97,6 +104,17 @@ public class PublicScoContextManager implements ScoContextManager {
     List<DomScoContext> result = StoredRestManager.getInstance()
         .getPutList(pfx() + "/scoContext/getScos", RestListClassTypes.DomScoContext, rest);
     return result;
+  }
+
+  public List<DomScoContext> getTrash(DomCourse course, DomDwoProfile profile) throws Dwo2Exception {
+	    RestCourse rest = new RestCourse();
+	    rest.setDomDwoProfile(profile);
+	    rest.setDomCourse(course);
+	    rest.setRestContext(getContext());
+	    rest.setSchoolClassID(null);
+	    List<DomScoContext> result = StoredRestManager.getInstance()
+	        .getPutList(pfx() + "/scoContext/getTrashedScos", RestListClassTypes.DomScoContext, rest);
+	  return result;
   }
 
   @Override
