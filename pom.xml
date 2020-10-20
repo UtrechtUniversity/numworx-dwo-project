@@ -868,9 +868,13 @@
         </plugins>
     </reporting>
   <repositories>	
-  <repository>
-    <id>com.teamdev</id>
-    <url>http://maven.teamdev.com/repository/products</url>
+	<repository>
+	  <id>com.teamdev</id>
+	  <url>https://europe-maven.pkg.dev/jxbrowser/releases</url>
 	</repository>
+	  <repository>
+	    <id>com.teamdev-old</id>
+	    <url>http://maven.teamdev.com/repository/products</url>
+	  </repository>
   </repositories>
 </project>
