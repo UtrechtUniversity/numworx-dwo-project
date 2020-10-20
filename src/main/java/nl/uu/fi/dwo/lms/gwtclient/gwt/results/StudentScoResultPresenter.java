@@ -61,6 +61,7 @@ public class StudentScoResultPresenter {
   @SuppressWarnings("rawtypes")
   private DomResultSchoolClass parent;
   @Inject GwtClientMessages rb;
+private JavaScriptObject resultState;
 
   public interface Display  extends BasicDisplay{
 
@@ -86,6 +87,7 @@ public class StudentScoResultPresenter {
 
   public void init(DomResultTree aResultTree, DomResultStudentScoContext ssc, JavaScriptObject context, Map<String,String> userState) {
     LOG.fine("entering init");
+    closed = false;
     resultTree = aResultTree;
     this.userState = userState;
     this.ssc = ssc;
@@ -93,6 +95,7 @@ public class StudentScoResultPresenter {
     userState.put("dme.abo_type", dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getAboType().name());
     setAPI(this);
     LOG.info("view.init " + context + "  " + view);
+    resultState = context;
     view.init(context);   
     LOG.info("update Frame for " + ssc.getStudentSco().getScoID());
     parent = ssc.getAncestralSchoolClass();
@@ -109,12 +112,17 @@ public class StudentScoResultPresenter {
     return ssc;
   }
   
+  boolean closed;
+  
   @JsMethod 
   public void close(JavaScriptObject resultState) {
     view.clear();
     view.hide();
-    SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.SELECTEDRESULTSRETURN, resultTree, resultState);   
-    eventBus.fireEvent(event);
+    this.resultState = resultState;
+    closed = true;
+// expect Finish
+//    SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.SELECTEDRESULTSRETURN, resultTree, resultState);   
+//    eventBus.fireEvent(event);
   }
   
   
@@ -248,9 +256,22 @@ public class StudentScoResultPresenter {
     	if (score != null) ssc.getStudentSco().setScore(Double.parseDouble(score));
     	ResultEvent ev = new ResultEvent(ssc, userState);
     	eventBus.fireEvent(ev);
-    	resultService.setValues(ssc.getStudentSco(), userState).map(this::updateResultTree).then(null,FAILURE);
+    	resultService.setValues(ssc.getStudentSco(), userState).map(this::updateResultTree).then(null,FAILURE).onResolve(
+    			() -> {
+    				fireSelectedResultReturn();
+    			});
+    } else {
+		fireSelectedResultReturn();
+    	
     }
     return "true";
+  }
+
+  private void fireSelectedResultReturn() {
+	if (closed) {
+		SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.SELECTEDRESULTSRETURN, resultTree, resultState);   
+		eventBus.fireEvent(event);
+	}
   }
   
   

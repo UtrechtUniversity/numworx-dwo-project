@@ -37,7 +37,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsSelectedResultsDispla
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortEvent.EventType;
@@ -56,9 +55,10 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+
+import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Failure;
 
 /**
@@ -179,7 +179,13 @@ public class SelectedResultsPresenter implements ResultEventHandler {
         resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), students)
                 .map(dom -> dom.getStudentScoContexts().stream().map(DomMapEntry::getValue).collect(Collectors.toList()))
                 .flatMap(resultService::sealList)
-                .then(this::updateResultTree, FAILURE);
+                .then(p -> { 
+                	resultTree.updateResultStudentSco(p.getValue());
+                	progress = new Deferred<Boolean>().getPromise();
+                	Promise<?> s = preparePages0(scoId, classid);
+                	return s;
+                })
+                .then(p -> {view.updateResultTree(resultTree);return p;}, FAILURE);
     }
 
     Promise<Object> updateResultTree(Promise<List<DomStudentScoContext>> p) {
@@ -213,15 +219,22 @@ public class SelectedResultsPresenter implements ResultEventHandler {
     
     @JsMethod
     public void preparePages(String scoid, String classid) {
-        prepareStart = System.currentTimeMillis();
         view.setLoadingTableMessage();
         ProgressDialogWithAbortDeferred defer = new ProgressDialogWithAbortDeferred(WAIT);
         progress = defer.getPromise();
         eventBus.fireEvent(new ProgressDialogWithAbortEvent(EventType.Init, 0, WAIT, defer));
+        Promise<?> result = preparePages0(scoid, classid);
+        result
+        .onResolve( () -> eventBus.fireEvent(new ProgressDialogWithAbortEvent(EventType.Complete, 100, WAIT, null)));
+    }
+
+	private Promise<?> preparePages0(String scoid, String classid) {
+		prepareStart = System.currentTimeMillis();
         LOG.log(Level.FINE, "scoid = " + scoid + " classid = " + classid);
         PersistenceId sco = new PersistenceId(scoid);
         PersistenceId schoolclass = new PersistenceId(classid);
-        preparePages(schoolclass, sco).then(p -> {
+        Promise<?> result = preparePages(schoolclass, sco);
+        result = result.then(p -> {
         	if (prepareStart < Long.MAX_VALUE)
         		view.updateResultTree(resultTree);
             return null;
@@ -232,9 +245,9 @@ public class SelectedResultsPresenter implements ResultEventHandler {
                         view.showPages(resultTree);
                     }
                     return null;
-                }, FAILURE)
-        .onResolve( () -> eventBus.fireEvent(new ProgressDialogWithAbortEvent(EventType.Complete, 100, WAIT, null)));
-    }
+                }, FAILURE);
+		return result;
+	}
 
     @JsMethod
     public void showLogResults(JavaScriptObject context, String scoid, String classid) {
