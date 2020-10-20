@@ -156,6 +156,7 @@ public class SecuredUserScoContextManager {
     
     private DomScoContext builder(PersistentScoContext s, PersistentCourse parent, UriInfo info, String hasRoleId) {
     	DomScoContext build = s.buildDomScoContext();
+    	if(s.getTrashID() != 0) build.setSequencenr(s.getTrashID());
     	hasRoleId = "&hasRoleId=" + hasRoleId;
     	String pfx = info.getRequestUri().resolve(PUBLIC_SCO_GET_IMAGE).toString();
  

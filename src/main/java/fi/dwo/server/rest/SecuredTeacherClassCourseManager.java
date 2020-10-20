@@ -6,6 +6,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 
@@ -47,7 +48,12 @@ public class SecuredTeacherClassCourseManager {
 		DomClassCourseFull cc = rest.getDomCourse();
     	try {
 // Security...
-			Long courseID = MySQLPersistenceId.getNativeId(cc);
+    		AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+    		.setHasRole(rest.getRestContext().getDomHasRole())
+    		.buildSchoolAdminTeacher().setTeacher();
+    		
+    		
+    		Long courseID = MySQLPersistenceId.getNativeId(cc);
 			PersistentClassCourse pc = ClassCourseManager.findEntity(courseID);
 // editable fields?
 			if(cc.getAccessKey() != null) pc.setAccessKey(cc.getAccessKey());

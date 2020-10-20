@@ -567,7 +567,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             //TODO clear all excess classcourses.
             
             PersistentClassCourse cc = build.getClassCourse();
-            if(cc.getViewState() == ViewState.invisible) {
+            if(cc != null && cc.getViewState() == ViewState.invisible) {
               // check for studentscocontexts in sco_of_course X student_of_class
               PersistentCourse pc = build.getCourse();
               List<PersistentScoContext> scos = ScoContextManager.findEntities(pc);
