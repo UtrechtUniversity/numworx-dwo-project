@@ -132,6 +132,14 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
             dom.setId(PersistentSchool.buildPersistenceId((long) school.getSchoolID()));
             GuiCreator.instance().getSchoolManager().updateSchool(dom);
             school.setRights(sb.toString());
+// Update user with access right
+            User u = DwoHelper.getCurrentFacadeUser();
+            if (school.hasRight(User.ACCESS_RIGHT)) u.addRight(User.ACCESS_RIGHT);
+            else {
+              String ur = u.getRights();
+              ur = ur.replace(Character.toString(User.ACCESS_RIGHT), "");
+              u.setRights(ur);
+            }
         }
         catch (Exception e) {
             LOG.log(Level.SEVERE, null, e);
