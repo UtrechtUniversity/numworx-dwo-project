@@ -24,7 +24,7 @@ public class GraphEdge {
 	}
 	
 	public boolean contains(int x, int y) {
-		if(target==null || source==null)
+		if(target==null || source==null || target.getLocation()==null || source.getLocation()==null)
 			return false;
 		float a = arrowSize;
 		float x0 = source.getLocation().x;
@@ -48,7 +48,7 @@ public class GraphEdge {
 	}
 	
 	public void paint(Graphics gr) {
-		if(target==null || source==null)
+		if(target==null || source==null || target.getLocation()==null || source.getLocation()==null)
 			return;
 		Graphics2D g = (Graphics2D)gr;
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

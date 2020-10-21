@@ -22,7 +22,7 @@ public class GraphNode {
 	private String subdomein;
 	private String description;
 	//private String label;
-	private Point location = new Point();
+	private Point location;
 	private int size = 12;
 	private Color nodeColor = defaultNodeColor;
 	private Color textColor = defaultTextColor;
@@ -43,8 +43,7 @@ public class GraphNode {
 		this.ID = ID;
 		this.subdomein = subdomein;
 		this.description = description;
-		location.x = x;
-		location.y = y;
+		location = new Point(x,y);
 		setFont(defaultFont);
 	}
 	
@@ -52,8 +51,7 @@ public class GraphNode {
 		this.ID = "0";
 		this.subdomein = "";
 		this.description = "";
-		location.x = x;
-		location.y = y;
+		location = new Point(x,y);
 		setFont(defaultFont);
 	}
 	
@@ -75,8 +73,7 @@ public class GraphNode {
 	
 
 	public void setLocation(int x, int y) {
-		location.x = x;
-		location.y = y;
+		location = new Point(x,y);
 	}
 	
 	public Font getFont() {
@@ -92,6 +89,8 @@ public class GraphNode {
 	}
 	
 	public void paint(Graphics gr) {
+		if(location==null)
+			return;
 		Graphics2D g = (Graphics2D)gr;
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		if(fm==null)
