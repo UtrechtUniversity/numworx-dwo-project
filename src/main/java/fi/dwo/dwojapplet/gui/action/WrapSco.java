@@ -439,7 +439,8 @@ public class WrapSco extends Sco {
      */
     @Override
     public Hashtable getLaunchdata() {
-        return wrapdata;
+        //return wrapdata;
+      return delegate.getLaunchdata(); 
     }
 
     /**

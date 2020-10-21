@@ -18,6 +18,7 @@ import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.ScoBase;
 import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.action.WrapSco;
 import fi.dwo.dwojapplet.gui.print.ComboBoxModelIterator;
 import fi.dwo.dwojapplet.gui.print.PrintComponent;
 import fi.dwo.dwojapplet.gui.print.PrintPanel;
@@ -388,7 +389,9 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
       hhbox.add(Box.createHorizontalStrut(10));
       hhbox.add(Box.createGlue());
       printer = new PrintPanel();
-      PrintComponent component = new PrintComponent(scoPanel.getSco().getApplet(), scoPanel.getSco());
+      Sco sco = scoPanel.getSco();
+      //sco = sco.unwrap();     // FIXME WrapSco kan niet printen. en wiskOpdr is niet geinititaliseerd.
+      PrintComponent component = new PrintComponent(sco.getApplet(), sco);
       printer.setComponent(component);
 // into hbox1        
       hhbox.add(printer.asComponent());hbox1.add(Box.createHorizontalStrut(20));

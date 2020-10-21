@@ -10,6 +10,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.ScoDialog;
 import fi.dwo.dwojapplet.gui.ScoPanel;
+import fi.dwo.dwojapplet.gui.action.WrapSco;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 //import fi.dwo.dwojapplet.persistence.UserResultListMapper;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherResultsManager;
@@ -241,8 +242,10 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
 	        	dwo.setWait();
 	            Thread thread = new Thread() {	
 	                public void run() {	
-	                	
-			            ScoPanel sp = sco.getScoPanel(dwo, user,(SchoolClass)currentlyZoomedUser);
+	                    boolean html5 = DwoHelper.isTest();
+	                    final Sco wrap = html5 ? new WrapSco(sco) : sco;
+
+			            ScoPanel sp = wrap.getScoPanel(dwo, user,(SchoolClass)currentlyZoomedUser);
 			            dwo.setReady();
 			            if(sp != null) {
 			                ScoDialog.showScoDialog(dwo, sp, user, (SchoolClass)currentlyZoomedUser);
