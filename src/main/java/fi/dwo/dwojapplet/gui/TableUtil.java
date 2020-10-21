@@ -99,7 +99,7 @@ public class TableUtil {
 
     public final static Border tableBorder = BorderFactory.createLineBorder(Color.white, 3);
 
-    static void setBorder(JScrollPane pane) {
+    public static void setBorder(JScrollPane pane) {
         pane.setViewportBorder(null);
         pane.setBorder(tableBorder);
     }

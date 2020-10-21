@@ -202,6 +202,20 @@ class ScoMapper  {
         return null;
       }
     }
+    
+    public Sco[] getTrash(Course course) throws PersistenceException {
+      DomCourse parent = new DomCourse(PersistentCourse.buildPersistenceId(Long.valueOf(course.getID())));
+      Promise<List<DomScoContext>> p = PublicScoContextManager.getTrashAsync(parent, DWO.getDwoProfile());
+      
+      try {
+        return toSco(course, p.getValue());
+      } catch (InvocationTargetException e) {
+        throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+      } catch (InterruptedException e) {
+        return null;
+      }
+     
+    }
 
     public Sco[] toSco(Course parent, List<DomScoContext> value) throws PersistenceException {
       Sco[] result = createArray(value.size());
@@ -219,7 +233,7 @@ class ScoMapper  {
         }
         s.setScoID(id);
         s.setName(item.getScoName());
-        s.setSequencenr(item.getSequencenr().intValue());
+        s.setSequencenr(item.getSequencenr());
         s.setAppletID(PersistenceFacade.idOf(item.getAppletId()));
         s.setCourse(parent);
         s.setShowScore(!Boolean.TRUE.equals(item.getShowScore())); // Reverse logic, 

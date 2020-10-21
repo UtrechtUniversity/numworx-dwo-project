@@ -209,7 +209,7 @@ public class GuiCreatorAdmin extends GuiCreator {
      */
     @Override
     public boolean deleteSco(Sco sco) {
-        return dwo.deleteSco(sco, scoManager);
+        return dwo.deleteSco(sco, scoManager, false);
     }
 
     /**

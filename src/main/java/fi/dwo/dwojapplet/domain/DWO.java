@@ -2275,32 +2275,38 @@ LOG.info("time results = " + (-t) + " ms");
      * (non-Javadoc)
      * 
      */
-  public boolean deleteSco(Sco sco, AbstractScoContextManager manager) {
+  public boolean deleteSco(Sco sco, AbstractScoContextManager manager, boolean trash) {
     try {
       DomScoContext scoContext = new DomScoContext();
       scoContext.setId(PersistentScoContext.buildPersistenceId(Long.valueOf(sco.getScoID())));
-      boolean returnValue = manager.remove(scoContext, getDwoProfile());
+      boolean returnValue = 
+          trash ?
+          manager.trash(scoContext, getDwoProfile()) :
+          manager.remove(scoContext, getDwoProfile());
       if (returnValue) {
         PersistenceFacade.instance().removeObjectSco(sco.getID());
-
+       
         /*
-         * Delete the sco in the course, and reset all the sequencenrs
+         * Delete the sco in the course, and reset all the sequencenrs.
+         * not if sco is in trash!
          */
         Sco[] scos = sco.getCourse().getScoList();
-        Sco[] tmp = new Sco[scos.length - 1];
-        int div = 0;
-        for (int i = 0; i < scos.length; i++) {
-          if (scos[i] != sco) {
-            if (scos[i].getSequencenr() > sco.getSequencenr()) {
-              scos[i].setSequencenr(scos[i].getSequencenr() - 1);
-              scos[i].setCourseChanged(false);
+        if (sco.getSequencenr() <= scos.length)
+        { Sco[] tmp = new Sco[scos.length - 1];
+          int div = 0;
+          for (int i = 0; i < scos.length; i++) {
+            if (scos[i] != sco) {
+              if (scos[i].getSequencenr() > sco.getSequencenr()) {
+                scos[i].setSequencenr(scos[i].getSequencenr() - 1);
+                scos[i].setCourseChanged(false);
+              } 
+              tmp[i + div] = scos[i];
+            } else {
+              div--;
             }
-            tmp[i + div] = scos[i];
-          } else {
-            div--;
           }
+          sco.getCourse().setScoList(tmp);
         }
-        sco.getCourse().setScoList(tmp);
       }
       return returnValue;
     } catch (Dwo2Exception e) {
@@ -2674,8 +2680,8 @@ if (false) {
             if (sco1.getCourse() != sco2.getCourse()) {
                 throw new ScoException(ScoException.EX_DB);
             }
-            int nr1 = sco1.getSequencenr();
-            int nr2 = sco2.getSequencenr();
+            int nr1 = (int) sco1.getSequencenr();
+            int nr2 = (int) sco2.getSequencenr();
             sco1.setSequencenr(nr2);
             updateSco(sco1, manager);
             sco2.setSequencenr(nr1);

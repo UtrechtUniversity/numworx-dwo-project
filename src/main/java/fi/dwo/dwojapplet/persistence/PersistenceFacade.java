@@ -627,7 +627,7 @@ public class PersistenceFacade {
               PersistenceId pid = s.getScoID();
               Sco sco = getSco( idOf(pid)); // From cache
               r.setLessonGroup(sco);
-              scores[sco.getSequencenr()-1] = r;
+              scores[(int)sco.getSequencenr()-1] = r;
             }
             list.setResultScore(scores);
             list.setResultsModule(resultsModule);
@@ -884,6 +884,9 @@ public class PersistenceFacade {
 
     public Sco[] getSco(Course course) throws PersistenceException {
       return scoMapper.get(course);
+    }
+    public Sco[] getTrash(Course course) throws PersistenceException {
+      return scoMapper.getTrash(course);
     }
 
     public AppletConfig[] getAppletConfig(Locale locale) throws PersistenceException {

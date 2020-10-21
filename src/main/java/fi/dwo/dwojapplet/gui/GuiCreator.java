@@ -1215,4 +1215,8 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
     }
     return true;
   }
+
+  public boolean trashSco(Sco s) {
+    return false;
+  }
 }

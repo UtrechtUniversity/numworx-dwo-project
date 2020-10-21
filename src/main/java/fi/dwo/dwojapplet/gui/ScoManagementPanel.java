@@ -18,6 +18,7 @@ import fi.dwo.dwojapplet.gui.action.BackupModuleAction;
 import fi.dwo.dwojapplet.gui.action.DeleteAction;
 import fi.dwo.dwojapplet.gui.action.ImportModuleAction;
 import fi.dwo.dwojapplet.gui.action.NewAction;
+import fi.dwo.dwojapplet.gui.action.ScoUnTrashAction;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
@@ -288,6 +289,11 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             saveDial.setDirectory(System.getProperty("user.dir", "."));
             openDial = new FileDialog(topFrame, importScosButton.getToolTipText(), FileDialog.LOAD);
             openDial.setDirectory(System.getProperty("user.dir", "."));
+        }
+        
+        if (DwoHelper.isPremium() && DwoHelper.isTest()) {
+          JButton trash = new JButton(new ScoUnTrashAction(course));
+          add(trash, BorderLayout.SOUTH);
         }
     }
 

@@ -631,7 +631,7 @@ public class WrapSco extends Sco {
      * @return @see fi.dwo.client.domain.Sco#getSequencenr()
      */
     @Override
-    public int getSequencenr() {
+    public long getSequencenr() {
         return delegate.getSequencenr();
     }
 
@@ -736,7 +736,7 @@ public class WrapSco extends Sco {
      * @see fi.dwo.client.domain.Sco#setSequencenr(int)
      */
     @Override
-    public void setSequencenr(int sequencenr) {
+    public void setSequencenr(long sequencenr) {
         delegate.setSequencenr(sequencenr);
     }
 

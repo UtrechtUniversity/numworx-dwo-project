@@ -88,7 +88,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
     private Applet applet;
     private Boolean showScore;
     private byte[] imageData; // part of DomScoContextFull
-    private int sequencenr;
+    private long sequencenr;
 
     private boolean initialized;
 
@@ -779,7 +779,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
      *
      * @return The sequencenumber of the sco.
      */
-    public int getSequencenr() {
+    public long getSequencenr() {
         return sequencenr;
     }
 
@@ -788,7 +788,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
      *
      * @param sequencenr The sequencenumber to set.
      */
-    public void setSequencenr(int sequencenr) {
+    public void setSequencenr(long sequencenr) {
         if (!isCourseChanged()) {
             setCourseChanged(this.sequencenr != sequencenr);
         }

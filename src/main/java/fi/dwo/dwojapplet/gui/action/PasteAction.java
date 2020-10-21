@@ -272,7 +272,7 @@ public class PasteAction extends GuiAction
 				name = CourseManagementPanel.replaceDuplicate(name, course.getScoNames());
 				sco.setName(name);
 			} else {
-			  int seq = sco.getSequencenr()-1;
+			  int seq = (int) sco.getSequencenr()-1;
 			  if(course.getScoList() == null) course.loadScos(); // should not happen;
 			  List<Sco> scos = new LinkedList<>(Arrays.asList(course.getScoList()));
 			  int os = scos.indexOf(sco);

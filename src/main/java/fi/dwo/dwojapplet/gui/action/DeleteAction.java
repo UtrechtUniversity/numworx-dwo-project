@@ -141,7 +141,10 @@ public class DeleteAction extends GuiAction {
         String message;
         message = TextMapper.getText(TextMapper.GUIS_MSG_SCO_DELETE);
         if (JOptionPane.showConfirmDialog(DwoHelper.getApplet(), message, TextMapper.getText(TextMapper.GUIS_MSG_TTL_SCO_DELETE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            if (instance().deleteSco(s)) {
+          if (DwoHelper.isPremium() && DwoHelper.isTest()) {
+            return instance().trashSco(s);
+          }          
+          if (instance().deleteSco(s)) {
                 return true;
             }
         }

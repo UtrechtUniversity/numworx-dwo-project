@@ -408,9 +408,17 @@ public class GuiCreatorTeacher extends GuiCreator {
     @Override
     public boolean deleteSco(Sco sco) {
         Course c = sco.getCourse();
-        boolean b = dwo.deleteSco(sco,manager);
+        boolean b = dwo.deleteSco(sco,manager, false);
         getMainPanel().getCenter().updateCourse(c);
         return b;
+    }
+    
+    @Override
+    public boolean trashSco(Sco sco) {
+      Course c = sco.getCourse();
+      boolean b = dwo.deleteSco(sco,manager, true);
+      getMainPanel().getCenter().updateCourse(c);
+      return b;
     }
 
     /**
