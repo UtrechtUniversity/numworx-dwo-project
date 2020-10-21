@@ -85,6 +85,7 @@ public class SecuredTeacherScoContextManager extends AbstractScoContextManager {
     return result;
   }
 
+  @Override
   public Boolean trash(DomScoContext sco, DomDwoProfile profile) throws Dwo2Exception {
 	    RestScoContext rest = new RestScoContext();
 	    rest.setDomDwoProfile(profile);
