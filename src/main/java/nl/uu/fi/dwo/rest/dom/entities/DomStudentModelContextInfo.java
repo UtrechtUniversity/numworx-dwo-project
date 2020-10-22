@@ -24,6 +24,7 @@ public class DomStudentModelContextInfo {
     private Double slip, learn, init;
     private List<String> voorkennis;
     private Map<String, Map<String, Set<Integer>>> methods;
+    private Integer x,y;
 
     public DomStudentModelContextInfo(DomStudentModelContextInfo info) {
     	title = info.getTitle(); if(title != null) title = new TreeMap<>(title);
@@ -32,6 +33,9 @@ public class DomStudentModelContextInfo {
     	slip = info.getSlip();
     	learn = info.getLearn();
     	init = info.getInit();
+    	x = info.getX();
+    	y = info.getY();
+    	
     	voorkennis = info.getVoorkennis(); if (voorkennis != null) voorkennis = new ArrayList<>(voorkennis);
     	methods = info.getMethods();
     	if (methods != null) {
@@ -191,6 +195,34 @@ public class DomStudentModelContextInfo {
 				&& Objects.equals(init, other.init) && Objects.equals(learn, other.learn)
 				&& Objects.equals(methods, other.methods) && Objects.equals(slip, other.slip)
 				&& Objects.equals(title, other.title) && Objects.equals(voorkennis, other.voorkennis);
+	}
+
+	/**
+	 * @return the x
+	 */
+	public Integer getX() {
+		return x;
+	}
+
+	/**
+	 * @param x the x to set
+	 */
+	public void setX(Integer x) {
+		this.x = x;
+	}
+
+	/**
+	 * @return the y
+	 */
+	public Integer getY() {
+		return y;
+	}
+
+	/**
+	 * @param y the y to set
+	 */
+	public void setY(Integer y) {
+		this.y = y;
 	}
     
 }
