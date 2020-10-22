@@ -222,10 +222,17 @@ log("setScoID " + scoID);
 					fail |= code == Dwo2ExceptionCode.Exam_AuthenticationError;
 					fail |= code == Dwo2ExceptionCode.Exam_InvalidSession;
 					fail |= code == Dwo2ExceptionCode.Rest_LoginNeeded;
+					fail |= code == Dwo2ExceptionCode.User_AuthenticationError;
 					if(fail) 
 					{
+							switch(code) {
+							case User_AuthenticationError: code = Dwo2ExceptionCode.Rest_LoginNeeded;
+							case Rest_LoginNeeded: break;
+							
+							default: code = Dwo2ExceptionCode.Exam_InvalidSession;
+							}
 						setStatus(Status.NORMAL);
-						bus.fireEvent(new DialogEvent(Dwo2ExceptionCode.Exam_InvalidSession));
+						bus.fireEvent(new DialogEvent(code));
 						deferred.fail(caught);
 						return;
 					}
