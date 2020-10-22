@@ -27,6 +27,7 @@ import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Guest;
+import fi.dwo.dwojapplet.domain.HttpAuthenticationType;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolAdmin;
 import fi.dwo.dwojapplet.domain.SchoolClass;
@@ -220,7 +221,7 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
             DomUserFullwLoginContext user = LoginManager.basicLogin(username, MD5.getHashString(String.valueOf(password)));
             DwoHelper.setCurrentUser(user.getDomUserFull(),user.getDomLoginContext());
 
-            if (DwoHelper.isTest() && DwoHelper.isSamlLogin()) {           
+            if (DwoHelper.isTest() && DwoHelper.isSamlLogin() || HttpAuthenticationType.BEARER == DwoHelper.getHttpAuthentication()) {           
                 OAuthManager m = new OAuthManager();
                 token = m.authorization_token(SecureUserAccountManager.getBearerToken(), null, null, null);
                 if (token != null) {
