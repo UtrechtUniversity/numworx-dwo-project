@@ -7,10 +7,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -18,12 +21,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 
 import fi.dwo.dwojapplet.gui.domainmodel.NodeLeaf;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 
 public class Graph extends JPanel implements MouseListener, MouseMotionListener{
 
-	protected ArrayList<GraphNode> graphNodes = new ArrayList<GraphNode>();
-	protected ArrayList<GraphEdge> graphEdges = new ArrayList<GraphEdge>();
+	final protected ArrayList<GraphNode> graphNodes = new ArrayList<GraphNode>();
+	final protected ArrayList<GraphEdge> graphEdges = new ArrayList<GraphEdge>();
 	
 	public Graph() {
 		setBackground(LeerdomeinGraphPanel.colorGray3);
@@ -60,24 +62,18 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener{
 		}
 	}
 	
-	public ArrayList<GraphNode> transformFromGephi(ArrayList<GraphNode> graphNodes) {
-		ArrayList<GraphNode> graphNodesNew = new ArrayList<GraphNode>();
-		for(int i=0 ; i<graphNodes.size() ; i++) {
-			GraphNode gn = graphNodes.get(i);
-			double factor = 0.5;
-			int x = (int)(factor*(gn.getLocation().x+1200));
-			int y = (int)(factor*(-gn.getLocation().y+900));
-			graphNodesNew.add(new GraphNode(gn.getID(), gn.getSubdomein(), gn.getDescription(), x, y));
-		}
-		return graphNodesNew;
-	}
-	
 	public void setGraphNodes(ArrayList<GraphNode> graphNodes) {
-		this.graphNodes = graphNodes;
+	  if (graphNodes != this.graphNodes) {
+	      this.graphNodes.clear();
+	      this.graphNodes.addAll(graphNodes);
+	  }
 	}
 	
 	public void setGraphEdges(ArrayList<GraphEdge> graphEdges) {
-		this.graphEdges = graphEdges;
+	  if (graphEdges != this.graphEdges) {
+	    this.graphEdges.clear();
+	    this.graphEdges.addAll(graphEdges);
+	  }
 	}
 	
 	public ArrayList<GraphNode> getGraphNodes() {
@@ -216,6 +212,51 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener{
       Object child = model.getChild(node, i);
       searchNodes(model, child, graphMap, parent,leaves);
     }
+  }
+  
+  public void updateModel(TreeModel model) {
+    Map<String, GraphNode> graphMap = new HashMap<>();
+    Map<String, Set<String>> edgeMap = new HashMap<>();
+    for(GraphEdge edge: graphEdges) {
+      String source = edge.getSource().getID();
+      String dest   = edge.getTarget().getID();
+      Set<String> sources = edgeMap.computeIfAbsent(dest, k -> new TreeSet<>());
+      sources.add(source);
+    }
+    for(GraphNode node: graphNodes) {
+      graphMap.put(node.getID(), node);
+    }
+    updateNodes(model, model.getRoot(), graphMap, edgeMap);   
+  }
+
+  private void updateNodes(TreeModel model, Object node, Map<String, GraphNode> graphMap,
+      Map<String, Set<String>> edgeMap) {
+    if (model.isLeaf(node)) {
+      DefaultMutableTreeNode object = (DefaultMutableTreeNode) node;
+      node = object.getUserObject();
+      if (node instanceof NodeLeaf) {
+        NodeLeaf leaf = (NodeLeaf) node;
+        String id = leaf.getId();
+        GraphNode gn = graphMap.get(id);
+        if (gn != null) {
+          leaf.setX(gn.getLocation().x);
+          leaf.setY(gn.getLocation().y);
+        }
+        List<String> voorkennis = leaf.getVoorkennis();
+        if (voorkennis == null) voorkennis = new ArrayList<>();
+        voorkennis.removeAll(graphMap.keySet());
+        voorkennis.addAll(edgeMap.getOrDefault(id, Collections.emptySet()));
+        leaf.setVoorkennis(voorkennis);
+      }
+      return;
+    }
+    int count = model.getChildCount(node);
+    for(int i = 0; i < count; i++) {
+      Object child = model.getChild(node, i);
+      updateNodes(model, child, graphMap, edgeMap);
+    }
     
   }
+  
+  
 }

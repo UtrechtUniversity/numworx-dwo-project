@@ -1,5 +1,7 @@
 package fi.dwo.dwojapplet.gui.domainmodel.graph;
 
+import java.util.ArrayList;
+
 public class DebugGraph extends Graph {
 
   public DebugGraph() {
@@ -37,7 +39,7 @@ public class DebugGraph extends Graph {
   	graphNodes.add(new GraphNode("27", "D2.5.2e", "Tekening piramide afmaken",-220, -257));
   	graphNodes.add(new GraphNode("28", "D2.5.2f", "Tekening prisma afmaken", 87, -337));
   	
-  	graphNodes = transformFromGephi(graphNodes);
+  	setGraphNodes(transformFromGephi(graphNodes));
   	
   	graphEdges.add(new GraphEdge(graphNodes.get(2), graphNodes.get(20)));
   	graphEdges.add(new GraphEdge(graphNodes.get(2), graphNodes.get(21)));
@@ -78,6 +80,18 @@ public class DebugGraph extends Graph {
   	graphEdges.add(new GraphEdge(graphNodes.get(1), graphNodes.get(28)));
   	graphEdges.add(new GraphEdge(graphNodes.get(23), graphNodes.get(25)));
   	graphEdges.add(new GraphEdge(graphNodes.get(15), graphNodes.get(21)));
+  }
+
+  public ArrayList<GraphNode> transformFromGephi(ArrayList<GraphNode> graphNodes) {
+  	ArrayList<GraphNode> graphNodesNew = new ArrayList<GraphNode>();
+  	for(int i=0 ; i<graphNodes.size() ; i++) {
+  		GraphNode gn = graphNodes.get(i);
+  		double factor = 0.5;
+  		int x = (int)(factor*(gn.getLocation().x+1200));
+  		int y = (int)(factor*(-gn.getLocation().y+900));
+  		graphNodesNew.add(new GraphNode(gn.getID(), gn.getSubdomein(), gn.getDescription(), x, y));
+  	}
+  	return graphNodesNew;
   }
 
 }

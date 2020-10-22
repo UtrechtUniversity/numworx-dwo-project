@@ -49,6 +49,8 @@ import javax.swing.JSplitPane;
 import javax.swing.JTree.DynamicUtilTreeNode;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.plaf.basic.BasicMenuBarUI;
@@ -97,7 +99,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
-public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListener, ExportPanel, WindowListener {
+public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListener, ExportPanel, WindowListener, ChangeListener {
   static final String WISKOPDR_SIG = "H4sIAAAAAA";
   static final Logger LOG = Logger.getLogger(LeerdomeinEditPanel2.class.getName());
 
@@ -393,6 +395,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   }
 
   public void filter(Map<String,Map<String,Set<Integer>>> filter) {
+    graph.updateModel(model);
     if (filter.isEmpty()) {
       model.activateFilter(false);
       if (model.getRoot() != root) model.setRoot(root);
@@ -741,8 +744,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   leerdoelTitelEditor.setOpaque(true);
 
   tree.addTreeSelectionListener(this);
-  
-  
+  tabs.addChangeListener(this);  
   }
 
   private boolean aquireLock() {
@@ -1153,6 +1155,17 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
 
   public boolean isLock() {
     return lock;
+  }
+
+  @Override
+  public void stateChanged(ChangeEvent e) {
+    JTabbedPane pane = (JTabbedPane) e.getSource();
+    int index = pane.getSelectedIndex();
+    if (index == 0) {
+      graph.updateModel(model);
+    } else {
+      graph.setModel(model);
+    }
   }
   
   

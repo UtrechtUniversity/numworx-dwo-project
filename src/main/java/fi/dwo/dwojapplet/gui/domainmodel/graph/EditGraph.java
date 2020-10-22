@@ -89,7 +89,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if(e.getModifiers()== e.BUTTON3_MASK || e.isControlDown()) {
+		if(e.getModifiers()== InputEvent.BUTTON3_MASK || e.isControlDown()) {
 			for(int i=0 ; i<graphEdges.size() ; i++) {
 				if(graphEdges.get(i).contains(e.getX(), e.getY())) {
 					graphEdges.remove(graphEdges.get(i));
@@ -103,7 +103,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 			if(graphNodes.get(i).contains(e.getX(), e.getY()))
 				activeNode = graphNodes.get(i);
 		}
-		if(e.isShiftDown()) {
+		if(e.isShiftDown() && activeNode != null) {
 			possibleSourceNode = activeNode;
 			tempEdge = new GraphEdge(possibleSourceNode, new GraphNode(e.getX(),e.getY()));
 			graphEdges.add(tempEdge);
@@ -123,7 +123,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		}
 		if(e.isShiftDown()) {
 			possibleTargetNode = activeNode;
-			if(possibleTargetNode != possibleSourceNode) {
+			if(possibleTargetNode != possibleSourceNode && possibleTargetNode != null) {
 				graphEdges.add(new GraphEdge(possibleSourceNode, possibleTargetNode));
 				repaint();
 			}
