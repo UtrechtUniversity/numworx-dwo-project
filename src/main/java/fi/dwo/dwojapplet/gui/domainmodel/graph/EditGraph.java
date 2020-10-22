@@ -44,7 +44,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		for(int i=0 ; i<graphEdges.size() ; i++)
 			graphEdges.get(i).paint(g);
 		for(int i=0 ; i<graphNodes.size() ; i++) {
-			if(!graphEdges.get(i).getBlur())
+			if(!graphNodes.get(i).getBlur())
 			{				Rectangle r = graphNodes.get(i).getTextBB();
 				if(r.width==0) {
 					graphNodes.get(i).paint(g);

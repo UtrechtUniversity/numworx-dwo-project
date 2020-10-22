@@ -69,6 +69,7 @@ import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JScrollPane;
+import fi.beans.numworxlf.JTabbedPane;
 import fi.beans.numworxlf.JTextField;
 import fi.beans.numworxlf.JTree;
 import fi.beans.numworxlf.NumworxTextFieldUI;
@@ -81,6 +82,8 @@ import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.TeacherStudentModelPanelProperties;
 import fi.dwo.dwojapplet.gui.domainmodel.ExportAction.ExportPanel;
+import fi.dwo.dwojapplet.gui.domainmodel.graph.Graph;
+import fi.dwo.dwojapplet.gui.domainmodel.graph.LeerdomeinGraphPanel;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
@@ -397,7 +400,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
       model.activateFilter(true);
       model.setRoot(filter(root, filter));      
     }
-    
+    graph.setModel(model);
   }
 
   static DefaultMutableTreeNode filter(DefaultMutableTreeNode parent,
@@ -488,6 +491,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   DefaultMutableTreeNode root;
   private JComponent settings;
   JFormattedTextField slip, init, learn;
+  private Graph graph;
 
   private Box settingsRO;
   private JPanel settingsRW;
@@ -721,7 +725,12 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   
   rightBox.add(settings = settingsRO, BorderLayout.SOUTH);
   rightBox.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
-  split.setRightComponent(rightBox);
+  JTabbedPane tabs = new JTabbedPane(JTabbedPane.BOTTOM);
+  tabs.addTab("Node", rightBox);
+  graph = new Graph();
+  LeerdomeinGraphPanel ldg = new LeerdomeinGraphPanel(graph);
+  tabs.addTab("Graph", ldg);
+  split.setRightComponent(tabs);
 
   JTextField leerdoelTitelEditor = subtitle;
   leerdoelTitelEditor.setForeground(Color.WHITE);
@@ -856,6 +865,9 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
     this.structure = model;
     setEditable(editable);
     //OPSLAAN_ACTION.left();
+
+    graph.setModel(this.model);
+  
   }
 
   DomStudentModelStructure resultModel;

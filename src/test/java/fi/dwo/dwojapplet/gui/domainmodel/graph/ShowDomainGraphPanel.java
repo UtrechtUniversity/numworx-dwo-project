@@ -28,14 +28,14 @@ public class ShowDomainGraphPanel extends JFrame {
 
 	public ShowDomainGraphPanel() {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		panel = new LeerdomeinGraphPanel();
+		panel = new LeerdomeinGraphPanel(new DebugGraph());
 		setContentPane(panel);
 		pack();
 	}
 
 	public static void main(String[] args) throws Exception {
 		ShowDomainGraphPanel main = new ShowDomainGraphPanel();
-		Dimension screenSize = (new DWO()).getToolkit().getScreenSize();
+		Dimension screenSize = main.getToolkit().getScreenSize();
 	    int x = (screenSize.width-main.getSize().width)/2;
 	    int y = (screenSize.height-main.getSize().height)/2;
 	    main.setLocation(x , y);

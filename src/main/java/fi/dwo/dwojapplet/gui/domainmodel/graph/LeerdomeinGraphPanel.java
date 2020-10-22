@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class LeerdomeinGraphPanel extends JPanel implements ActionListener{
 	
 	private boolean editMode = false;
 	
-	private Graph graphPanel;
+	private final Graph graphPanel;
 	private EditGraph graphEditPanel;
 	private JPanel topPanel;
 	private JPanel topEditPanel;
@@ -51,20 +52,25 @@ public class LeerdomeinGraphPanel extends JPanel implements ActionListener{
 	
 	private JButton okButton, cancelButton;
 	
+
+	public LeerdomeinGraphPanel(Graph g) {
+      setLayout(new BorderLayout());
+      setPreferredSize(new Dimension(width, height));
+      //setBackground(colorGray3);
+      graphPanel = g;
+      makeGUI();
+	  
+	}
+	
+	
 	public LeerdomeinGraphPanel() {
-		setLayout(new BorderLayout());
-		setPreferredSize(new Dimension(width, height));
-		//setBackground(colorGray3);
-		
-		makeGUI();
+	  this(new Graph());
 	}
 	
 	private void makeGUI() {
 		topPanel = new JPanel(new BorderLayout());
 		topPanel.setBackground(colorBlue1);
 		topPanel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 20));
-
-		graphPanel = new Graph();
 		
 		editButton = new JButton("Bewerk");
 		editButton.addActionListener(this);
@@ -207,7 +213,7 @@ public class LeerdomeinGraphPanel extends JPanel implements ActionListener{
 		}
 		doLayout();
 		repaint();
-		((JFrame)SwingUtilities.getAncestorOfClass(JFrame.class,(Component)this)).pack();
+		((Window)SwingUtilities.getAncestorOfClass(Window.class,this)).pack();
 	}
 
 }

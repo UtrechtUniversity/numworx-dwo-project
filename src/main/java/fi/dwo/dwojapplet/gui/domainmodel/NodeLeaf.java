@@ -8,7 +8,7 @@ import java.util.UUID;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 
-class NodeLeaf implements Node {
+public class NodeLeaf implements Node {
 
   final boolean copy;
   private int path;
@@ -184,6 +184,27 @@ class NodeLeaf implements Node {
   public void setSlip(Double value) {
     info.setSlip(value);
   }
+  
+  public String getId() {
+    return info.getId();
+  }
+  
+  public Integer getX() {
+    return info.getX();
+  }
+  
+  public void setX(Integer x) {
+    info.setX(x);
+  }
+  
+  public Integer getY() {
+    return info.getY();
+  }
+
+  public void setY(Integer y) {
+    info.setY(y);
+  }
+  
   
   
 }
