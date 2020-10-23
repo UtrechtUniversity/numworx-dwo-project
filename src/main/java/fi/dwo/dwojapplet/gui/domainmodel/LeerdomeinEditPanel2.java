@@ -15,7 +15,6 @@ import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -78,14 +77,12 @@ import fi.beans.numworxlf.NumworxTextFieldUI;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.ConfirmDialog;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.TeacherStudentModelPanelProperties;
 import fi.dwo.dwojapplet.gui.domainmodel.ExportAction.ExportPanel;
-import fi.dwo.dwojapplet.gui.domainmodel.graph.Graph;
-import fi.dwo.dwojapplet.gui.domainmodel.graph.LeerdomeinGraphPanel;
+import fi.dwo.dwojapplet.gui.domainmodel.graph.EditableGraph;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
@@ -395,7 +392,8 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   }
 
   public void filter(Map<String,Map<String,Set<Integer>>> filter) {
-    graph.updateModel(model);
+    if (graph.isVisible())
+      graph.updateModel(model);
     if (filter.isEmpty()) {
       model.activateFilter(false);
       if (model.getRoot() != root) model.setRoot(root);
@@ -494,7 +492,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   DefaultMutableTreeNode root;
   private JComponent settings;
   JFormattedTextField slip, init, learn;
-  private Graph graph;
+  private EditableGraph graph;
 
   private Box settingsRO;
   private JPanel settingsRW;
@@ -729,10 +727,9 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   rightBox.add(settings = settingsRO, BorderLayout.SOUTH);
   rightBox.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
   JTabbedPane tabs = new JTabbedPane(JTabbedPane.BOTTOM);
-  tabs.addTab("Node", rightBox);
-  graph = new Graph();
-  LeerdomeinGraphPanel ldg = new LeerdomeinGraphPanel(graph);
-  tabs.addTab("Graph", ldg);
+  tabs.addTab("Item", rightBox);
+  graph = new EditableGraph();
+  tabs.addTab("Voorkennisgraaf", graph);
   split.setRightComponent(tabs);
 
   JTextField leerdoelTitelEditor = subtitle;
@@ -840,6 +837,7 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
       ((DefaultTreeCellRenderer) tree.getCellRenderer()).setBackgroundNonSelectionColor(Constants.COLOR20);
       tree.setBackground(Constants.COLOR20);
     }
+    graph.setEditMode(b);
   }
 
   public void setModel(DomStudentModelStructure model) {
@@ -1082,6 +1080,8 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
 
   private void opslaanAction(ActionEvent e) {
     safeSelection(tree.getSelectionPath());
+    if(editable && graph.isVisible())
+      graph.updateModel(model);// voorkennis en x,y
     resultModel = getTreeModel();
     resultModel.setOwner(DwoHelper.getCurrentUser().getUniqueDisplayName());
     resultModel.setTimestamp(System.currentTimeMillis());

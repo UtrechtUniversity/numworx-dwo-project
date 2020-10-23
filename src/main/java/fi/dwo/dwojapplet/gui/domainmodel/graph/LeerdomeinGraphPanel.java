@@ -178,6 +178,30 @@ public class LeerdomeinGraphPanel extends JPanel implements ActionListener{
 	
 	public void setEditMode(boolean b) {
 		editMode = b;
+		if (b) {
+          remove(graphPanel);
+          remove(topPanel);
+          if(graphEditPanel==null)
+              makeEditGUI();
+          else {
+              add(graphEditPanel, BorderLayout.CENTER);
+              add(bottomPanel, BorderLayout.SOUTH);
+              add(topEditPanel, BorderLayout.NORTH);
+          }
+		  graphPanel.painter = graphEditPanel;
+		  
+		} else {
+          remove(graphEditPanel);
+          remove(bottomPanel);
+          remove(topEditPanel);
+          {
+              graphPanel.setGraphNodes(graphEditPanel.getGraphNodes());
+              graphPanel.setGraphEdges(graphEditPanel.getGraphEdges());
+              add(graphPanel, BorderLayout.CENTER);
+              add(topPanel, BorderLayout.NORTH);
+          }
+          graphPanel.painter = graphPanel;
+		}  
 	}
 	
 	
@@ -186,30 +210,10 @@ public class LeerdomeinGraphPanel extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==editButton) {
 			
-			remove(graphPanel);
-			remove(topPanel);
-			if(graphEditPanel==null)
-				makeEditGUI();
-			else {
-				add(graphEditPanel, BorderLayout.CENTER);
-				add(bottomPanel, BorderLayout.SOUTH);
-				add(topEditPanel, BorderLayout.NORTH);
-			}
-			editMode = true;
+			setEditMode(true);
 		}
 		if(e.getSource()==stopEditButton) {
-			remove(graphEditPanel);
-			remove(bottomPanel);
-			remove(topEditPanel);
-			if(graphPanel==null)
-				makeGUI();
-			else {
-				graphPanel.setGraphNodes(graphEditPanel.getGraphNodes());
-				graphPanel.setGraphEdges(graphEditPanel.getGraphEdges());
-				add(graphPanel, BorderLayout.CENTER);
-				add(topPanel, BorderLayout.NORTH);
-			}
-			editMode = false;
+			setEditMode(false);
 		}
 		doLayout();
 		repaint();

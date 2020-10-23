@@ -1,6 +1,7 @@
 package fi.dwo.dwojapplet.gui.domainmodel.graph;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
@@ -27,23 +28,24 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener{
 	final protected ArrayList<GraphNode> graphNodes = new ArrayList<GraphNode>();
 	final protected ArrayList<GraphEdge> graphEdges = new ArrayList<GraphEdge>();
 	
+	Component painter;
+	
 	public Graph() {
 		setBackground(LeerdomeinGraphPanel.colorGray3);
 		setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		
 		addMouseListener(this);
 		addMouseMotionListener(this);
-		
+		painter = this;
 	}
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		for(int i=0 ; i<graphEdges.size() ; i++)
-			graphEdges.get(i).paint(g);
-		
+			graphEdges.get(i).paint(g);		
 		for(int i=0 ; i<graphNodes.size() ; i++) {
 			if(!graphNodes.get(i).getBlur())
-			{				Rectangle r = graphNodes.get(i).getTextBB();
+			{	Rectangle r = graphNodes.get(i).getTextBB();
 				if(r.width==0) {
 					graphNodes.get(i).paint(g);
 					r = graphNodes.get(i).getTextBB();
@@ -54,8 +56,6 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener{
 					if(j==0)
 						g.fillRect(r.x+k/2-j, r.y+k/2-j, r.width-(k-2*j), r.height-(k-2*j));
 					g.drawRect(r.x+k/2-j, r.y+k/2-j, r.width-(k-2*j), r.height-(k-2*j));
-						
-								
 				}
 			}
 			graphNodes.get(i).paint(g);
@@ -166,6 +166,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener{
     setGraphNodes(new ArrayList<>(graphMap.values()));
     searchEdges(leaves, graphMap, edges);
     setGraphEdges(edges);
+    painter.repaint();
   }
 
   private void searchEdges(List<NodeLeaf> leaves, Map<String, GraphNode> graphMap,
