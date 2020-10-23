@@ -2254,11 +2254,14 @@ LOG.info("time results = " + (-t) + " ms");
      * (non-Javadoc)
      * 
      */
-  public boolean deleteCourse(Course course, CourseManager manager) {
+  public boolean deleteCourse(Course course, CourseManager manager, boolean trash) {
     try {
       DomCourse c = new DomCourse();
       c.setId(PersistentCourse.buildPersistenceId(Long.valueOf(course.getID())));
-      boolean r = manager.remove(c, getDwoProfile()).booleanValue();
+      boolean r = 
+          trash ?
+              manager.trash(c, getDwoProfile()).booleanValue() :
+          manager.remove(c, getDwoProfile()).booleanValue();
       if (r) {
         PersistenceFacade.instance().removeObjectCourse(course.getID());
       }

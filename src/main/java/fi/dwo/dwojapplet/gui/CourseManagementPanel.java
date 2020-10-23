@@ -12,8 +12,10 @@ import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.ScoManagementPanel.IconDialog;
 import fi.dwo.dwojapplet.gui.action.AccessControlAction;
+import fi.dwo.dwojapplet.gui.action.CourseUnTrashAction;
 import fi.dwo.dwojapplet.gui.action.DeleteAction;
 import fi.dwo.dwojapplet.gui.action.ImportModuleAction;
+import fi.dwo.dwojapplet.gui.action.ScoUnTrashAction;
 import fi.dwo.dwojapplet.gui.action.ShareCourseAction;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
@@ -70,7 +72,15 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	CourseManagementPanel(CourseMap map) {
 		this(map.getChildren(), map.getUserObject());
 		setMap(map);
+		addTrash();
 	}
+
+  void addTrash() {
+    if (DwoHelper.isPremium() && DwoHelper.isTest()) {
+          JButton trash = new JButton(new CourseUnTrashAction(this.map));
+          add(trash, BorderLayout.SOUTH);
+        }
+  }
 
      CourseManagementPanel(CourseMap[] courses)
      {
@@ -446,7 +456,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         	
         	
         	
-        	
+
         	
         	
         	

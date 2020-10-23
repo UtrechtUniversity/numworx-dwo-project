@@ -57,7 +57,7 @@ public class Course implements LessonGroup, Comparable<Course>, CourseMap, Descr
     private boolean notVisible;
 
     public ClassCourse link; // optional backlink to classCourse, not unique!
-    public Integer sequencenr; // optional sequencenr
+    public Long sequencenr; // optional sequencenr
     
     
     public boolean parentChanged() {
@@ -614,10 +614,7 @@ public class Course implements LessonGroup, Comparable<Course>, CourseMap, Descr
       setName(sample.getName());
       //setImageData(null);
       //setImageUrl(null);
-      if(sample.getSequenceNr() != null)
-        sequencenr = sample.getSequenceNr().intValue();
-      else
-        sequencenr = null;
+      sequencenr = sample.getSequenceNr();
  
       if(sample.getWithChildren() != null && sample.getWithChildren()) {
         if(children == null)
@@ -662,11 +659,8 @@ public class Course implements LessonGroup, Comparable<Course>, CourseMap, Descr
       setImageData(sample.getImageData());
       setImageUrl(sample.getImage());
       setAcls(sample.getAcls());
-      if(sample.getSequenceNr() != null)
-        sequencenr = sample.getSequenceNr().intValue();
-      else
-        sequencenr = null;
- 
+      sequencenr = sample.getSequenceNr();
+  
       Boolean withChildren = sample.getWithChildren();
       if(withChildren != null && withChildren.booleanValue()) {
         if (children == null)

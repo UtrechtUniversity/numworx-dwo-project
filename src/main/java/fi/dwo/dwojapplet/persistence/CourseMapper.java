@@ -348,4 +348,16 @@ class CourseMapper  implements Comparator<Course> {
       }
       return NO_ACCESS;
     }
+
+    public CourseMap[] getTrash(Course course) {
+      DomCourse dom = new DomCourse();
+      dom.setId(PersistentCourse.buildPersistenceId(Long.valueOf(course.getID())));
+      try {
+        if (effectiveAccess(course).ordinal() >= ACL.WRITE.ordinal()) 
+          return getObjectFromDCS(SecureUserCourseManager.getTrash(dom, DWO.getDwoProfile()));
+      } catch(Dwo2Exception e) {
+        LOG.log(Level.SEVERE, "getTrash of course", e);
+      }
+      return NO_ACCESS;
+    }
 }

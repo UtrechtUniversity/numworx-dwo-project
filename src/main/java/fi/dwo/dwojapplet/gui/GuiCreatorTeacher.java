@@ -299,6 +299,7 @@ public class GuiCreatorTeacher extends GuiCreator {
         // constructor cannot sort, we do!
         CourseManagementPanel panel = new CourseManagementPanel(map.getChildren(), map);
         panel.setMap(map);
+        panel.addTrash();
         return panel;
     }
 
@@ -398,7 +399,7 @@ public class GuiCreatorTeacher extends GuiCreator {
     @Override
     public boolean deleteCourse(Course course) {
         getMainPanel().getCenter().deleteCourse(course);
-        return dwo.deleteCourse(course,courseManager);
+        return dwo.deleteCourse(course,courseManager, false);
     }
 
     /**
@@ -418,6 +419,14 @@ public class GuiCreatorTeacher extends GuiCreator {
       Course c = sco.getCourse();
       boolean b = dwo.deleteSco(sco,manager, true);
       getMainPanel().getCenter().updateCourse(c);
+      return b;
+    }
+
+    @Override
+    public boolean trashCourse(Course course) {
+      CourseMap c = course.getParentMap();
+      boolean b = dwo.deleteCourse(course,courseManager, true);
+      getMainPanel().getCenter().updateMap(c);
       return b;
     }
 

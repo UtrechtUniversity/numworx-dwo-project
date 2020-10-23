@@ -200,7 +200,7 @@ public class GuiCreatorAdmin extends GuiCreator {
      */
     @Override
     public boolean deleteCourse(Course course) {
-        return dwo.deleteCourse(course, courseManager);
+        return dwo.deleteCourse(course, courseManager, false);
     }
 
     /**

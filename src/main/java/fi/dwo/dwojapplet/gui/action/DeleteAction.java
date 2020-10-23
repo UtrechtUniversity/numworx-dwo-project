@@ -115,7 +115,10 @@ public class DeleteAction extends GuiAction {
             message = TextMapper.getText(TextMapper.GUIC_MSG_COURSE_DELETE_NO_SCO);
         }
         if (JOptionPane.showConfirmDialog(DwoHelper.getApplet(), message, TextMapper.getText(TextMapper.GUIC_MSG_TTL_COURSE_DELETE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            if (instance().deleteCourse(c)) {
+          if (DwoHelper.isPremium() && DwoHelper.isTest()) {
+            return instance().trashCourse(c);
+          }          
+           if (instance().deleteCourse(c)) {
                 return true;
             }
         }

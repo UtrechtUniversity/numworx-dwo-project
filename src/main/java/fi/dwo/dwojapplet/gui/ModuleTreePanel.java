@@ -995,6 +995,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
         DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
         DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
         DefaultMutableTreeNode node = find(course, root);
+        if(node == null) return;
         removeChildrenFromCache(node, cachemap.values());
         node.removeAllChildren();
 
@@ -1035,6 +1036,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
         DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
         DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
         DefaultMutableTreeNode node = find(map.getUserObject(), root);
+        if(node == null) return;
         removeChildrenFromCache(node, cachemap.values());
         node.removeAllChildren();
 

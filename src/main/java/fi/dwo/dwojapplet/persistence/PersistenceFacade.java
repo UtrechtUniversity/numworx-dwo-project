@@ -710,7 +710,7 @@ public class PersistenceFacade {
         for (int i = 0; i < courses.length; i++) {
             Course course = (Course) courses[i];
 //			vector.add(new Integer(course.getID()));
-			course.sequencenr = i; // install sequencenr
+			course.sequencenr = (long) i; // install sequencenr
 
 			DomCourseFull edit = new DomCourseFull();
 			edit.setDwoProfileId(DWO.getDwoProfile().getId());
@@ -948,5 +948,11 @@ public class PersistenceFacade {
     public Sco toSco(DomScoContext org) throws PersistenceException {
       Course parent = courseMapper.get(idOf(org.getCourseId()));
       return scoMapper.toSco(parent, Collections.singletonList(org))[0];
+    }
+
+    public CourseMap[] getTrash(CourseMap course) throws PersistenceException {
+      if (course instanceof Course) 
+        return courseMapper.getTrash( (Course) course);
+      return new CourseMap[0];
     }
 }
