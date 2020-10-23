@@ -18,7 +18,8 @@ public class EditableGraph extends JPanel {
     graph.painter = this;
     add(graph);
     add(editGraph);    
-    cards.first(this);    
+    cards.first(this);
+    new DropTargetGraph(editGraph);
   }
 
   public void setEditMode(boolean b) {

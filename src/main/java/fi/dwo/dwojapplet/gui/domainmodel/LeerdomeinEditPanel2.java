@@ -83,6 +83,7 @@ import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.TeacherStudentModelPanelProperties;
 import fi.dwo.dwojapplet.gui.domainmodel.ExportAction.ExportPanel;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.EditableGraph;
+import fi.dwo.dwojapplet.gui.domainmodel.graph.TreeTransferHandler;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
@@ -617,7 +618,8 @@ public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListene
   renderer.updateUI();
   tree.setCellRenderer(renderer);
   tree.updateUI();
-  
+  tree.setDragEnabled(true);
+  tree.setTransferHandler(new TreeTransferHandler());
   leftBox = new JPanel(new BorderLayout());
   leftBox.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
   leftBox.add(bar, BorderLayout.NORTH);
