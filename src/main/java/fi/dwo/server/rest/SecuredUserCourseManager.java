@@ -52,6 +52,8 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
@@ -397,5 +399,22 @@ public class SecuredUserCourseManager {
     	}
     	return Response.status(Status.NOT_FOUND).build();
     }    
-   
+    @PUT
+    @Path("/getTrashedChildren")
+    @Produces({"application/json"})
+    public List<DomCourseStudent> getTrashedCourses(@Context SecurityContext sc, RestCourse rest, @Context UriInfo info) throws Dwo2Exception {
+    	SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher();
+    	Long courseId = MySQLPersistenceId.getNativeId(rest.getDomCourse());
+    	PersistentCourse c = CourseManager.findEntity(courseId);
+// TODO Security: profile match, school match, ACL?
+    	List<PersistentCourse> list = CourseManager.findTrashedChildrenOf(c);
+    	return list.stream()
+    		.map(course -> {
+    			DomCourseStudent st = course.buildDomCourseStudent();
+    			st.setSequenceNr(course.getTrashID());
+    			return st;
+    		})
+			.sorted(DomCourseStudentComparator.INSTANCE)
+			.collect(Collectors.toList());
+    }
 }
