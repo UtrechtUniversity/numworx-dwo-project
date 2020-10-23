@@ -69,4 +69,16 @@ public class SecuredTeacherCourseManager extends AbstractCourseManager {
         new Object[] {manager.getAuthenticator().getUsername()});
     return result;
   }
+
+	@Override
+	public Boolean trash(DomCourse course, DomDwoProfile profile) throws Dwo2Exception {
+	    RestCourse rest = new RestCourse();
+	    rest.setDomCourse(course);
+	    rest.setDomDwoProfile(profile);
+	    rest.setRestContext(getContext());
+	    Boolean result = manager.put("rest/sec:" + PathId.getId(getContext()) + "/teacher/course/trash", Boolean.class, rest);
+	    LOG.log(Level.FINE, "Removed course for the teacher with username {0}.",
+	        new Object[] {manager.getAuthenticator().getUsername()});
+	    return result;
+	}
 }

@@ -58,5 +58,11 @@ public class SecureDwoAdminCourseManager extends AbstractCourseManager {
     return result;
   }
 
+@Override
+public Boolean trash(DomCourse c, DomDwoProfile dwoProfile) throws Dwo2Exception {
+	// TODO Auto-generated method stub
+	return Boolean.FALSE;
+}
+
 
 }

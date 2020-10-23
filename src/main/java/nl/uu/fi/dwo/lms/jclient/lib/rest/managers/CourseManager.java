@@ -14,4 +14,6 @@ public interface CourseManager {
 
   Boolean remove(DomCourse course, DomDwoProfile profile) throws Dwo2Exception;
 
+  Boolean trash(DomCourse c, DomDwoProfile dwoProfile) throws Dwo2Exception;
+
 }

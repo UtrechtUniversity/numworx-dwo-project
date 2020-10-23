@@ -103,4 +103,16 @@ public class SecureUserCourseManager {
     return result;
   }
 
+  public static List<DomCourseStudent> getTrash(DomCourse course, DomDwoProfile profile) throws Dwo2Exception {
+	    RestCourse rest = new RestCourse();
+	    rest.setDomDwoProfile(profile);
+	    rest.setDomCourse(course);
+	    rest.setRestContext(getContext());
+	    List<DomCourseStudent> result = StoredRestManager.getInstance()
+	        .getPutList("rest/sec:" + PathId.getId(getContext()) + "/user/course/getTrashedChildren", RestListClassTypes.DomCourseStudent, rest);
+
+	    return result;
+	  
+  }
+  
 }
