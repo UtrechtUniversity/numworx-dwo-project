@@ -2,8 +2,12 @@ package fi.dwo.dwojapplet.gui.domainmodel.graph;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -21,243 +25,383 @@ import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 
+import fi.beans.numworxlf.JButton;
 import fi.dwo.dwojapplet.gui.domainmodel.NodeLeaf;
 
-public class Graph extends JPanel implements MouseListener, MouseMotionListener{
+public class Graph extends JPanel implements MouseListener, MouseMotionListener, ActionListener {
 
 	final protected ArrayList<GraphNode> graphNodes = new ArrayList<GraphNode>();
 	final protected ArrayList<GraphEdge> graphEdges = new ArrayList<GraphEdge>();
+
+	private JButton zoomFitButton;
+	private JButton zoomInButton;
+	private JButton zoomOutButton;
 	
+	private Font buttonFont = new Font("SansSerif", Font.BOLD, 20);
+
 	Component painter;
 	
+	private Point origin = new Point(0,0);
+	private double factor = 1;
+	
+	private int startX = 0;
+	private int startY = 0;
+
 	public Graph() {
+		setLayout(null);
 		setBackground(LeerdomeinGraphPanel.colorGray3);
 		setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-		
+
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		painter = this;
+
+		zoomFitButton = new JButton("\u25a2");
+		zoomFitButton.setBorder(BorderFactory.createEmptyBorder());
+		zoomFitButton.addActionListener(this);
+		zoomFitButton.setFont(buttonFont);
+		zoomFitButton.setBounds(getWidth() - 35, 5, 30, 30);
+		add(zoomFitButton);
+		
+		zoomInButton = new JButton("+");
+		zoomInButton.setBorder(BorderFactory.createEmptyBorder());
+		zoomInButton.addActionListener(this);
+		zoomInButton.setFont(buttonFont);
+		zoomInButton.setBounds(getWidth() - 35, 40, 30, 30);
+		add(zoomInButton);
+		
+		zoomOutButton = new JButton("-");
+		zoomOutButton.setBorder(BorderFactory.createEmptyBorder());
+		zoomOutButton.addActionListener(this);
+		zoomOutButton.setFont(buttonFont);
+		zoomOutButton.setBounds(getWidth() - 35, 75, 30, 30);
+		add(zoomOutButton);
 	}
-	
+
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		for(int i=0 ; i<graphEdges.size() ; i++)
-			graphEdges.get(i).paint(g);		
-		for(int i=0 ; i<graphNodes.size() ; i++) {
-			if(!graphNodes.get(i).getBlur())
-			{	Rectangle r = graphNodes.get(i).getTextBB();
-				if(r.width==0) {
-					graphNodes.get(i).paint(g);
-					r = graphNodes.get(i).getTextBB();
+		for (int i = 0; i < graphEdges.size(); i++)
+			graphEdges.get(i).paint(g, origin, factor);
+		for (int i = 0; i < graphNodes.size(); i++) {
+			if (!graphNodes.get(i).getBlur()) {
+				Rectangle rn = graphNodes.get(i).getTextBB();
+				if (rn.width == 0) {
+					graphNodes.get(i).paint(g, origin, factor);
+					rn = graphNodes.get(i).getTextBB();
 				}
+				int rx = (int)(origin.x+(rn.x)*factor);
+				int ry = (int)(origin.y+(rn.y)*factor);
+				Rectangle r = new Rectangle(rx, ry, (int)(rn.width*factor), (int)(rn.height*factor));
 				int k = 6;
-				for(int j=0 ; j<k ; j++) {
-					g.setColor(new Color(237, 239, 241, 96+90/k*(k-2*j)));
-					if(j==0)
-						g.fillRect(r.x+k/2-j, r.y+k/2-j, r.width-(k-2*j), r.height-(k-2*j));
-					g.drawRect(r.x+k/2-j, r.y+k/2-j, r.width-(k-2*j), r.height-(k-2*j));
+				for (int j = 0; j < k; j++) {
+					g.setColor(new Color(237, 239, 241, 96 + 90 / k * (k - 2 * j)));
+					if (j == 0)
+						g.fillRect(r.x + k / 2 - j, r.y + k / 2 - j, r.width - (k - 2 * j), r.height - (k - 2 * j));
+					g.drawRect(r.x + k / 2 - j, r.y + k / 2 - j, r.width - (k - 2 * j), r.height - (k - 2 * j));
 				}
 			}
-			graphNodes.get(i).paint(g);
+			graphNodes.get(i).paint(g, origin, factor);
+		}
+		//zoomFitButton.paint(g);
+	}
+
+	public void setGraphNodes(ArrayList<GraphNode> graphNodes) {
+		if (graphNodes != this.graphNodes) {
+			this.graphNodes.clear();
+			this.graphNodes.addAll(graphNodes);
 		}
 	}
-	
-	public void setGraphNodes(ArrayList<GraphNode> graphNodes) {
-	  if (graphNodes != this.graphNodes) {
-	      this.graphNodes.clear();
-	      this.graphNodes.addAll(graphNodes);
-	  }
-	}
-	
+
 	public void setGraphEdges(ArrayList<GraphEdge> graphEdges) {
-	  if (graphEdges != this.graphEdges) {
-	    this.graphEdges.clear();
-	    this.graphEdges.addAll(graphEdges);
-	  }
+		if (graphEdges != this.graphEdges) {
+			this.graphEdges.clear();
+			this.graphEdges.addAll(graphEdges);
+		}
 	}
-	
+
 	public ArrayList<GraphNode> getGraphNodes() {
 		return graphNodes;
 	}
-	
+
 	public ArrayList<GraphEdge> getGraphEdges() {
 		return graphEdges;
 	}
-
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+	
+	public double getFactor() {
+		return factor;
 	}
+	
+	public Point getOrigin() {
+		return origin;
+	}
+	
+	public void setFactor (double factor) {
+		this.factor = factor;
+	}
+	
+	public void setOrigin(Point origin) {
+		this.origin = origin;
+	}
+
+	
+	
+//	@Override
+//	public void setSize(int width, int height) {
+//		super.setSize(width, height);
+//		zoomFitButton.setBounds(getWidth() - 35, 5, 30, 30);
+//		zoomInButton.setBounds(getWidth() - 35, 40, 30, 30);
+//		zoomOutButton.setBounds(getWidth() - 35, 75, 30, 30);
+//		
+//		origin = new Point((int)(getWidth()/2), (int)(getHeight()/2));
+//		repaint();
+//	}
+	
+	@Override
+	public void setBounds(int x, int y, int width, int height) {
+		int oldWidth = getWidth();
+		int oldHeight = getHeight();
+		super.setBounds(x, y, width, height);
+		zoomFitButton.setBounds(getWidth() - 35, 5, 30, 30);
+		zoomInButton.setBounds(getWidth() - 35, 40, 30, 30);
+		zoomOutButton.setBounds(getWidth() - 35, 75, 30, 30);
+		
+		origin.x += (getWidth() - oldWidth)/2;
+		origin.y += (getHeight() - oldHeight)/2;
+		repaint();
+	}
+	
+	
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				int dx = e.getX() - startX;
+				int dy = e.getY() - startY;
+				
+				origin.x += dx;
+				origin.y += dy;
+				
+				repaint();
+				
+				startX = e.getX();
+				startY = e.getY();
+			}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		GraphNode mouseOverNode = null;
-		for(int i=0 ; i<graphNodes.size() ; i++) {
-			if(graphNodes.get(i).contains(e.getX(), e.getY())) {
+		int ex = (int) ((e.getX()-origin.x)/factor);
+		int ey = (int) ((e.getY()-origin.y)/factor);
+		
+		for (int i = 0; i < graphNodes.size(); i++) {
+			if (graphNodes.get(i).contains(ex, ey)) {
 				mouseOverNode = graphNodes.get(i);
 				break;
 			}
 		}
-		if(mouseOverNode!=null) {
-			for(int i=0 ; i<graphNodes.size() ; i++) {
-				if(graphNodes.get(i)!= mouseOverNode) {
+		if (mouseOverNode != null) {
+			for (int i = 0; i < graphNodes.size(); i++) {
+				if (graphNodes.get(i) != mouseOverNode) {
 					graphNodes.get(i).setBlur(true);
-					
+
 				}
 			}
-			for(int i=0 ; i<graphEdges.size() ; i++) {
-				if(graphEdges.get(i).getTarget()!= mouseOverNode) {
+			for (int i = 0; i < graphEdges.size(); i++) {
+				if (graphEdges.get(i).getTarget() != mouseOverNode) {
 					graphEdges.get(i).setBlur(true);
-				}
-				else  {
+				} else {
 					graphEdges.get(i).getSource().setBlur(false);
 				}
 			}
 			repaint();
-		}
-		else {
-			for(int i=0 ; i<graphNodes.size() ; i++) {
+		} else {
+			for (int i = 0; i < graphNodes.size(); i++) {
 				graphNodes.get(i).setBlur(false);
 			}
-			for(int i=0 ; i<graphEdges.size() ; i++) {
+			for (int i = 0; i < graphEdges.size(); i++) {
 				graphEdges.get(i).setBlur(false);
 			}
 			repaint();
 		}
-		
+
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		startX = e.getX();
+		startY = e.getY();
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-  public void setModel(TreeModel model) {
-    Map<String, GraphNode> graphMap = new LinkedHashMap<>();
-    List<NodeLeaf> leaves = new ArrayList<>();
-    ArrayList<GraphEdge> edges = new ArrayList<>();
-    searchNodes(model, model.getRoot(), graphMap, "", leaves);
-    setGraphNodes(new ArrayList<>(graphMap.values()));
-    searchEdges(leaves, graphMap, edges);
-    setGraphEdges(edges);
-    painter.repaint();
-  }
+	public void setModel(TreeModel model) {
+		Map<String, GraphNode> graphMap = new LinkedHashMap<>();
+		List<NodeLeaf> leaves = new ArrayList<>();
+		ArrayList<GraphEdge> edges = new ArrayList<>();
+		searchNodes(model, model.getRoot(), graphMap, "", leaves);
+		setGraphNodes(new ArrayList<>(graphMap.values()));
+		zoomFit();
+		searchEdges(leaves, graphMap, edges);
+		setGraphEdges(edges);
+		painter.repaint();
+	}
 
-  private void searchEdges(List<NodeLeaf> leaves, Map<String, GraphNode> graphMap,
-      ArrayList<GraphEdge> edges) {
-    for(NodeLeaf leaf: leaves) {
-        String dest = leaf.getId();
-        GraphNode gnd = graphMap.get(dest);
-        List<String> sources = leaf.getVoorkennis();
-        if (sources != null)
-        for(String source: sources) {
-          GraphNode gns = graphMap.get(source);
-          if(gns != null) {
-            GraphEdge edge = new GraphEdge(gns, gnd);
-            edges.add(edge);
-          }
-        }
-      }
-  }
+	private void searchEdges(List<NodeLeaf> leaves, Map<String, GraphNode> graphMap, ArrayList<GraphEdge> edges) {
+		for (NodeLeaf leaf : leaves) {
+			String dest = leaf.getId();
+			GraphNode gnd = graphMap.get(dest);
+			List<String> sources = leaf.getVoorkennis();
+			if (sources != null)
+				for (String source : sources) {
+					GraphNode gns = graphMap.get(source);
+					if (gns != null) {
+						GraphEdge edge = new GraphEdge(gns, gnd);
+						edges.add(edge);
+					}
+				}
+		}
+	}
 
-  private void searchNodes(TreeModel model, Object node, Map<String, GraphNode> graphMap, String parent, List<NodeLeaf> leaves) {
-    if (model.isLeaf(node)) {
-      DefaultMutableTreeNode object = (DefaultMutableTreeNode) node;
-      node = object.getUserObject();
-      if (node instanceof NodeLeaf) {
-        NodeLeaf leaf = (NodeLeaf) node;
-        String id = leaf.getId();
-        Integer x = leaf.getX();
-        Integer y = leaf.getY();
-        if (x == null) x = (int)(Math.random()*600);
-        if (y == null) y = (int)(Math.random()*600);
-        GraphNode g = new GraphNode(id, parent, leaf.toString(), x.intValue(), y.intValue());
-        graphMap.put(id, g);
-        leaves.add(leaf);
-      }
-      return;
-    }
-// Non leaf
-    int count = model.getChildCount(node);
-    parent = node.toString(); // Of zo iets
-    int col = parent.indexOf(':');
-    if (col < 0) parent = "";
-    else parent = parent.substring(0,col);
-    for(int i = 0; i < count; i++) {
-      Object child = model.getChild(node, i);
-      searchNodes(model, child, graphMap, parent,leaves);
-    }
-  }
-  
-  public void updateModel(TreeModel model) {
-    Map<String, GraphNode> graphMap = new HashMap<>();
-    Map<String, Set<String>> edgeMap = new HashMap<>();
-    for(GraphEdge edge: graphEdges) {
-      String source = edge.getSource().getID();
-      String dest   = edge.getTarget().getID();
-      Set<String> sources = edgeMap.computeIfAbsent(dest, k -> new TreeSet<>());
-      sources.add(source);
-    }
-    for(GraphNode node: graphNodes) {
-      graphMap.put(node.getID(), node);
-    }
-    updateNodes(model, model.getRoot(), graphMap, edgeMap);   
-  }
+	private void searchNodes(TreeModel model, Object node, Map<String, GraphNode> graphMap, String parent,
+			List<NodeLeaf> leaves) {
+		if (model.isLeaf(node)) {
+			DefaultMutableTreeNode object = (DefaultMutableTreeNode) node;
+			node = object.getUserObject();
+			if (node instanceof NodeLeaf) {
+				NodeLeaf leaf = (NodeLeaf) node;
+				String id = leaf.getId();
+				Integer x = leaf.getX();
+				Integer y = leaf.getY();
+				if (x == null)
+					x = (int) (Math.random() * 600);
+				if (y == null)
+					y = (int) (Math.random() * 600);
+				GraphNode g = new GraphNode(id, parent, leaf.toString(), x.intValue(), y.intValue());
+				graphMap.put(id, g);
+				leaves.add(leaf);
+			}
+			return;
+		}
+		// Non leaf
+		int count = model.getChildCount(node);
+		parent = node.toString(); // Of zo iets
+		int col = parent.indexOf(':');
+		if (col < 0)
+			parent = "";
+		else
+			parent = parent.substring(0, col);
+		for (int i = 0; i < count; i++) {
+			Object child = model.getChild(node, i);
+			searchNodes(model, child, graphMap, parent, leaves);
+		}
+	}
 
-  private void updateNodes(TreeModel model, Object node, Map<String, GraphNode> graphMap,
-      Map<String, Set<String>> edgeMap) {
-    if (model.isLeaf(node)) {
-      DefaultMutableTreeNode object = (DefaultMutableTreeNode) node;
-      node = object.getUserObject();
-      if (node instanceof NodeLeaf) {
-        NodeLeaf leaf = (NodeLeaf) node;
-        String id = leaf.getId();
-        GraphNode gn = graphMap.get(id);
-        if (gn != null) {
-          leaf.setX(gn.getLocation().x);
-          leaf.setY(gn.getLocation().y);
-        }
-        List<String> voorkennis = leaf.getVoorkennis();
-        if (voorkennis == null) voorkennis = new ArrayList<>();
-        voorkennis.removeAll(graphMap.keySet());
-        voorkennis.addAll(edgeMap.getOrDefault(id, Collections.emptySet()));
-        leaf.setVoorkennis(voorkennis);
-      }
-      return;
-    }
-    int count = model.getChildCount(node);
-    for(int i = 0; i < count; i++) {
-      Object child = model.getChild(node, i);
-      updateNodes(model, child, graphMap, edgeMap);
-    }
-    
-  }
-  
-  
+	public void updateModel(TreeModel model) {
+		Map<String, GraphNode> graphMap = new HashMap<>();
+		Map<String, Set<String>> edgeMap = new HashMap<>();
+		for (GraphEdge edge : graphEdges) {
+			String source = edge.getSource().getID();
+			String dest = edge.getTarget().getID();
+			Set<String> sources = edgeMap.computeIfAbsent(dest, k -> new TreeSet<>());
+			sources.add(source);
+		}
+		for (GraphNode node : graphNodes) {
+			graphMap.put(node.getID(), node);
+		}
+		updateNodes(model, model.getRoot(), graphMap, edgeMap);
+	}
+
+	private void updateNodes(TreeModel model, Object node, Map<String, GraphNode> graphMap,
+			Map<String, Set<String>> edgeMap) {
+		if (model.isLeaf(node)) {
+			DefaultMutableTreeNode object = (DefaultMutableTreeNode) node;
+			node = object.getUserObject();
+			if (node instanceof NodeLeaf) {
+				NodeLeaf leaf = (NodeLeaf) node;
+				String id = leaf.getId();
+				GraphNode gn = graphMap.get(id);
+				if (gn != null) {
+					leaf.setX(gn.getLocation().x);
+					leaf.setY(gn.getLocation().y);
+				}
+				List<String> voorkennis = leaf.getVoorkennis();
+				if (voorkennis == null)
+					voorkennis = new ArrayList<>();
+				voorkennis.removeAll(graphMap.keySet());
+				voorkennis.addAll(edgeMap.getOrDefault(id, Collections.emptySet()));
+				leaf.setVoorkennis(voorkennis);
+			}
+			return;
+		}
+		int count = model.getChildCount(node);
+		for (int i = 0; i < count; i++) {
+			Object child = model.getChild(node, i);
+			updateNodes(model, child, graphMap, edgeMap);
+		}
+
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource()==zoomInButton) {
+			factor = 1.2*factor;
+			origin.x = (int)(getWidth()/2 + (origin.x - getWidth()/2)*1.2);
+			origin.y = (int)(getHeight()/2 + (origin.y - getHeight()/2)*1.2);
+			repaint();
+		}
+		if(e.getSource()==zoomOutButton) {
+			factor = factor/1.2;
+			origin.x = (int)(getWidth()/2 + (origin.x - getWidth()/2)/1.2);
+			origin.y = (int)(getHeight()/2 + (origin.y - getHeight()/2)/1.2);
+			repaint();
+		}
+		if(e.getSource()==zoomFitButton) {
+			zoomFit();
+		}
+	}
+	
+	public void zoomFit() {
+		if(graphNodes.size()<1)
+			return;
+		int xMax = graphNodes.get(0).getLocation().x;
+		int yMax = graphNodes.get(0).getLocation().y;
+		int xMin = graphNodes.get(0).getLocation().x;
+		int yMin = graphNodes.get(0).getLocation().y;
+		for (int i = 0; i < graphNodes.size(); i++) {
+			if(xMax < graphNodes.get(i).getLocation().x)
+				xMax = graphNodes.get(i).getLocation().x;
+			if(yMax < graphNodes.get(i).getLocation().y)
+				yMax = graphNodes.get(i).getLocation().y;
+			if(xMin > graphNodes.get(i).getLocation().x)
+				xMin = graphNodes.get(i).getLocation().x;
+			if(yMin > graphNodes.get(i).getLocation().y)
+				yMin = graphNodes.get(i).getLocation().y;
+		}
+		factor = Math.min((float)(getWidth()-200)/(float)(xMax-xMin), (float)(getHeight()-80)/(float)(yMax-yMin));
+		origin.x = 100+(int)(-xMin*factor);
+		origin.y = 40+(int)(-yMin*factor);
+		repaint();
+	}
+
 }
