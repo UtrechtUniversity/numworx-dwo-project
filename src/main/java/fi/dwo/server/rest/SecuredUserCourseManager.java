@@ -20,6 +20,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
@@ -54,6 +55,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
@@ -184,7 +186,20 @@ public class SecuredUserCourseManager {
 		return map.collect(Collectors.toList());
     }
     
-    
+    @PUT
+    @Path("/getTrashedSchool")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<DomCourseStudent> getTrashedCourse(@Context SecurityContext sc, RestDwoProfile rest, @Context UriInfo info) throws Dwo2Exception {
+    	UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRole(rest.getRestContext().getDomHasRole());
+    	PersistentDwoProfile profile = DwoProfileManager.findEntity(MySQLPersistenceId.getNativeId(rest.getDomDwoProfile()));
+    	List<PersistentCourse> list = CourseManager.findTrashedChildrenOf(profile, state.getSchool());
+    	return list.stream().map(course -> {
+    		DomCourseStudent st = course.buildDomCourseStudent();
+    		st.setSequenceNr(course.getTrashID());
+    		return st;
+    	}).sorted(DomCourseStudentComparator.INSTANCE).
+    	collect(Collectors.toList());
+    }
     
     @PUT
     @Path("/getRoot")

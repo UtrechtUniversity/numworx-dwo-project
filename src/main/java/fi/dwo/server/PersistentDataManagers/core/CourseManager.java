@@ -209,9 +209,21 @@ public class CourseManager {
         }
         finally {
             em.close();
-        }
-    	
+        }    	
     }
+    
+    public static List<PersistentCourse> findTrashedChildrenOf(PersistentDwoProfile p, PersistentSchool school) {
+    	EntityManager em = getEntityManager();
+    	try {
+    		TypedQuery<PersistentCourse> q = em.createNamedQuery("PersistentCourse.findBySchoolAndProfileIDTrash", PersistentCourse.class);
+    		q.setParameter("schoolID", school.getSchoolID());
+    		q.setParameter("dwoProfileID", p.getDwoProfileID());
+    		return q.getResultList();
+    	} finally {
+    		em.close();
+    	}
+    }
+    
     
     public static List<PersistentCourse> findExportsOf(PersistentSchool school, PersistentDwoProfile p) {
       EntityManager em = getEntityManager();
