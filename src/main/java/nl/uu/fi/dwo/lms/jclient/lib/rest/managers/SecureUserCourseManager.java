@@ -111,8 +111,17 @@ public class SecureUserCourseManager {
 	    List<DomCourseStudent> result = StoredRestManager.getInstance()
 	        .getPutList("rest/sec:" + PathId.getId(getContext()) + "/user/course/getTrashedChildren", RestListClassTypes.DomCourseStudent, rest);
 
-	    return result;
-	  
+	    return result;	  
   }
   
+  public static List<DomCourseStudent> getTrash(DomDwoProfile profile) throws Dwo2Exception {
+	    RestDwoProfile rest = new RestDwoProfile();
+	    rest.setDomDwoProfile(profile);
+	    rest.setRestContext(getContext());
+	    List<DomCourseStudent> result = StoredRestManager.getInstance()
+	        .getPutList("rest/sec:" + PathId.getId(getContext()) + "/user/course/getTrashedSchool", RestListClassTypes.DomCourseStudent, rest);
+
+	    return result;
+  
+  }
 }
