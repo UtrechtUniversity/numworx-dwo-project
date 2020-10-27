@@ -261,9 +261,9 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		ArrayList<GraphEdge> edges = new ArrayList<>();
 		searchNodes(model, model.getRoot(), graphMap, "", leaves);
 		setGraphNodes(new ArrayList<>(graphMap.values()));
-		//zoomFit();
 		searchEdges(leaves, graphMap, edges);
 		setGraphEdges(edges);
+		//zoomFit();
 		painter.repaint();
 	}
 

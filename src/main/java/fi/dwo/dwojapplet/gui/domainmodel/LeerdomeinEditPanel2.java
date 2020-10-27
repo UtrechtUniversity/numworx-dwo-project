@@ -816,7 +816,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 					Dimension pref = scrollpane.getPreferredSize();
 					pref.width = 380;
 					leftBox.setPreferredSize(pref);
-					graph.setPreferredSize(new Dimension(1000, 750));
+					graph.setPreferredSize(new Dimension(1000, 650));
 					graph.setModel(model);
 					
 					splitLeft.setBottomComponent(rightBox);
