@@ -261,7 +261,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		ArrayList<GraphEdge> edges = new ArrayList<>();
 		searchNodes(model, model.getRoot(), graphMap, "", leaves);
 		setGraphNodes(new ArrayList<>(graphMap.values()));
-		zoomFit();
+		//zoomFit();
 		searchEdges(leaves, graphMap, edges);
 		setGraphEdges(edges);
 		painter.repaint();
@@ -297,9 +297,11 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 					x = (int) (Math.random() * 600);
 				if (y == null)
 					y = (int) (Math.random() * 600);
-				GraphNode g = new GraphNode(id, parent, leaf.toString(), x.intValue(), y.intValue());
-				graphMap.put(id, g);
-				leaves.add(leaf);
+				if(x!=null && y!=null) {
+					GraphNode g = new GraphNode(id, parent, leaf.toString(), x.intValue(), y.intValue());
+					graphMap.put(id, g);
+					leaves.add(leaf);
+				}
 			}
 			return;
 		}

@@ -9,9 +9,12 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -45,6 +48,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
 import javax.swing.JTree.DynamicUtilTreeNode;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
@@ -97,1079 +101,1182 @@ import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
-public class LeerdomeinEditPanel2 extends JPanel implements TreeSelectionListener, ExportPanel, WindowListener, ChangeListener {
-  static final String WISKOPDR_SIG = "H4sIAAAAAA";
-  static final Logger LOG = Logger.getLogger(LeerdomeinEditPanel2.class.getName());
-
-  
-  static class VoorkennisAction extends AbstractAction {
-
-    boolean readonly;
-    JTree tree;
-    Component parent;
-    
-    private VoorkennisAction() {
-      super(TextMapper.getText("Voorkennis"));
-    }
-
-    public VoorkennisAction(boolean b, Component parent, JTree tree) {
-      this();
-      readonly = b;
-      this.parent = parent;
-      this.tree = tree;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      TreePath path = tree.getSelectionPath();
-      if (path == null) return;
-      DefaultMutableTreeNode root;
-      root = (DefaultMutableTreeNode) tree.getModel().getRoot();
-      
-      Object node = path.getLastPathComponent();
-      if (node instanceof MutableTreeNode) {
-        DefaultMutableTreeNode mutable = (DefaultMutableTreeNode) node;
-        Object o = mutable.getUserObject();
-        if (o instanceof NodeLeaf) {
-          NodeLeaf leaf = (NodeLeaf) o;
-          List<String> ids = leaf.getVoorkennis();
-          if (ids == null) ids = Collections.emptyList();
-          NodeVector v = (NodeVector) root.getUserObject();
-          StudentModelChoicePanel panel = new StudentModelChoicePanel(v, readonly);
-          panel.setObjectives(ids);
-          if (readonly) {
-          //  JOptionPane.showMessageDialog(parent, panel, e.getActionCommand(), JOptionPane.PLAIN_MESSAGE);
-            ConfirmDialog d = new ConfirmDialog(parent, e.getActionCommand());
-            d.setContentPane(panel);
-            d.pack();
-            d.center();
-            d.show();
-          } else {
-//          int r = JOptionPane.showConfirmDialog(parent, panel, e.getActionCommand(), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
-            ConfirmDialog confirm = new ConfirmDialog(parent, e.getActionCommand());
-            confirm.getContentPane().setLayout(new BorderLayout());
-            confirm.getContentPane().add(panel);
-            JButton okb = new JButton(TextMapper.getText(TextMapper.BTN_OK));
-            okb.addActionListener(confirm::ok);
-            okb.setBackground(GuiConstants.HEADER_COLOR);
-            JPanel south = new JPanel(new FlowLayout(FlowLayout.CENTER));
-            south.setBackground(Constants.COLOR21);
-            south.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-            south.add(okb);
-            JButton cancel = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
-            cancel.addActionListener(confirm::cancel);
-            cancel.setBackground(GuiConstants.HEADER_COLOR);
-            okb.setPreferredSize(cancel.getPreferredSize());
-            south.add(cancel);
-            confirm.getContentPane().add(south, BorderLayout.SOUTH);
-            confirm.pack();
-            confirm.center();
-            confirm.show();
-            int r = confirm.getOption();
-            
-            if (r == JOptionPane.OK_OPTION) {
-            panel.makeChoices();
-            List<String> list = panel.getObjectives();
-            leaf.setVoorkennis(list);
-          }
-        }}}
-    }
-    
-  }
-
-  class LeerdoelAction extends AbstractAction {
-
-    public LeerdoelAction() {
-      this("nieuw leerdoel");
-    }
-
-    public LeerdoelAction(String name) {
-      super(name);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      TreePath path = tree.getSelectionPath();
-      if (path == null) return;
-      
-      Object node = path.getLastPathComponent();
-      if (root == node) return;
-      
-      if (node instanceof MutableTreeNode) {
-        MutableTreeNode mutable = (MutableTreeNode) node;
-        if (mutable.isLeaf()) return;
-        int index = mutable.getChildCount();
-        Node leaf;
-        String title = "Leerdoel-" + (index+1);
-        if (untitledObjective != null) {
-          leaf = new NodeLeaf(title, untitledObjective.getInfo(), getLocale().getLanguage());
-        } else {
-          leaf = new NodeLeaf(getLocale().getLanguage());
-          leaf.setTitle(title);
-       }
-        DefaultMutableTreeNode child = new DefaultMutableTreeNode(leaf, false);
-        mutable.insert(child, index);
-        model.nodesWereInserted(mutable, new int[] {index});
-        tree.setSelectionPath(new TreePath(child.getPath()));
-        subtitle.requestFocusInWindow();
-        subtitle.selectAll();
-      }
-    }
-
-  }
-
-  public class SubdomeinAction extends AbstractAction {
-
-    public SubdomeinAction() {
-      this("nieuw subdomein");
-    }
-
-    public SubdomeinAction(String name) {
-      super(name);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      TreePath path = tree.getSelectionPath();
-      if (path == null) return;
-      
-      Object node = path.getLastPathComponent();
-      //if ( node != root) return; // Only root can add subdomains
-      
-      if (node instanceof MutableTreeNode) {
-        MutableTreeNode mutable = (MutableTreeNode) node;
-        if (mutable.isLeaf()) return;
-        int index = mutable.getChildCount();
-        Node vector;
-        if (untitledCategory != null) {
-          vector = new NodeVector(untitledCategory.getInfo(), getLocale().getLanguage());
-        } else {
-          vector = new NodeVector(getLocale().getLanguage());
-        }
-        vector.setTitle("Untitled-" + (index+1));
-        DefaultMutableTreeNode child = new DynamicUtilTreeNode(vector,vector);
-        mutable.insert(child, index);
-        model.nodesWereInserted(mutable, new int[] {index});
-        tree.setSelectionPath(new TreePath(child.getPath()));
-        subtitle.requestFocusInWindow();
-        subtitle.selectAll();
-     }
-    }
-
-  }
-
-  class Verwijderen extends AbstractAction {
-
-    Verwijderen() {
-      this(TextMapper.getText("delete"));
-    }
-
-    Verwijderen(String name) {
-      super(name);
-    }
-
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      TreePath path = tree.getSelectionPath();
-      if (path == null) return;
-      
-      Object node = path.getLastPathComponent();
-      if (node == root) return;
-      if (node instanceof MutableTreeNode) {
-        DefaultMutableTreeNode mutable = (DefaultMutableTreeNode) node;
-        TreeNode parent = mutable.getParent();
-        mutable.removeFromParent();
-        model.nodeStructureChanged(parent);
-        fillSelection();
-      }
-    }
-
-  }
-  class Omhoog extends AbstractAction {
-    Omhoog() { super("Omhoog");
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      TreePath path = tree.getSelectionPath();
-      if (path == null) return;
-      DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-      DynamicUtilTreeNode parent = (DynamicUtilTreeNode) node.getParent();
-      int i = parent.getIndex(node);
-      if (i > 0) {
-        safeSelection(path);
-        parent.remove(i);
-        parent.insert(node, i-1);
-        model.nodeStructureChanged(parent);
-        tree.setSelectionPath(new TreePath(node.getPath()));
-        tree.repaint();
-      }
-      
-    }
-  
-  }
-  
-  class Omlaag extends AbstractAction {
-    Omlaag() {super("Omlaag"); }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      TreePath path = tree.getSelectionPath();
-      if (path == null) return;
-      DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-      DynamicUtilTreeNode parent = (DynamicUtilTreeNode) node.getParent();
-      int i = parent.getIndex(node);
-      if (i < parent.getChildCount()-1) {
-        safeSelection(path);
-        parent.remove(i);
-        parent.insert(node, i+1);
-        model.nodeStructureChanged(parent);
-        tree.setSelectionPath(new TreePath(node.getPath()));
-        tree.repaint();
-      }
-    }
-  }
-
-  DefaultMutableTreeNode clipboard;
-  
-  class Knippen extends AbstractAction {
-    Knippen() {
-      super(TextMapper.getText("cut"));
-    }
-    
-    @Override
-    public void actionPerformed(ActionEvent arg0) {
-      TreePath path = tree.getSelectionPath();
-      if (path == null) return;
-      Object node = path.getLastPathComponent();
-      if (node == root) return;
-      if (node instanceof MutableTreeNode) {
-        safeSelection(path);
-        DefaultMutableTreeNode mutable = (DefaultMutableTreeNode) node;
-        TreeNode parent = mutable.getParent();
-        mutable.removeFromParent();
-        clipboard = mutable;
-        model.nodeStructureChanged(parent);
-        fillSelection();
-      
-      }
-    }
-    
-  }
-  class Kopieren extends AbstractAction {
-    Kopieren() {
-      super(TextMapper.getText("copy"));
-    }
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      TreePath path = tree.getSelectionPath();
-      if (path == null) return;
-      
-      Object node = path.getLastPathComponent();
-      if (node == root) return;
-      safeSelection(path);
-      clipboard = copy(node);
-    }
-    
-  }
-  
-  public DefaultMutableTreeNode copy(Object node) {
-    if (node instanceof DefaultMutableTreeNode) {
-      DefaultMutableTreeNode mutable = (DefaultMutableTreeNode) node;
-      if (mutable.isLeaf() && !mutable.getAllowsChildren()) {
-        return new DefaultMutableTreeNode(new NodeLeaf((NodeLeaf)mutable.getUserObject()), false);
-      } else {
-        NodeVector v = new NodeVector( (NodeVector) mutable.getUserObject());
-        DynamicUtilTreeNode copy = new DynamicUtilTreeNode(v, v);
-        for(int i = 0; i < mutable.getChildCount(); i++) {
-          copy.add(copy(mutable.getChildAt(i)));
-        }
-        return copy;
-      }
-    }
-    return null;
-  }
-
-  public void filter(Map<String,Map<String,Set<Integer>>> filter) {
-    if (graph.isVisible())
-      graph.updateModel(model);
-    if (filter.isEmpty()) {
-      model.activateFilter(false);
-      if (model.getRoot() != root) model.setRoot(root);
-    } else {
-      model.activateFilter(true);
-      model.setRoot(filter(root, filter));      
-    }
-    graph.setModel(model);
-  }
-
-  static DefaultMutableTreeNode filter(DefaultMutableTreeNode parent,
-      Map<String, Map<String, Set<Integer>>> filter) {
-    InvisibleNode node;
-    if (! (parent instanceof InvisibleNode)) {
-      node = new InvisibleNode(parent.getUserObject());
-      node.setAllowsChildren(parent.getAllowsChildren());
-      Enumeration<?> children = parent.children();
-      while (children.hasMoreElements()) {
-        DefaultMutableTreeNode object = (DefaultMutableTreeNode) children.nextElement();
-        node.add(filter(object, filter));       
-      }
-    } else {
-      node = (InvisibleNode) parent;
-    }
-    if (node.isLeaf() && !node.getAllowsChildren()) {
-      NodeLeaf leaf = (NodeLeaf)node.getUserObject();
-      Map<String, Map<String, Set<Integer>>> methodes = leaf.getMethode();
-      node.setVisible(contains(filter, methodes));
-    } else {
-      int cnt = node.getChildCount(true);
-      node.setVisible(cnt != 0);
-    }
-    
-    return node;
-  }
-
-  static boolean contains(Map<String, Map<String, Set<Integer>>> filter,
-      Map<String, Map<String, Set<Integer>>> methodes) {
-    for( Map.Entry<String, Map<String,Set<Integer>>> entry: filter.entrySet()) {
-      Map<String,Set<Integer>> map = methodes.getOrDefault(entry.getKey(), Collections.emptyMap());
-      if (map.isEmpty()) continue;
-      for(Map.Entry<String, Set<Integer>> m: entry.getValue().entrySet()) {
-        Set<Integer> chapters = new TreeSet<>(map.getOrDefault(m.getKey(), Collections.emptySet()));
-        chapters.retainAll(m.getValue());
-        if ( ! chapters.isEmpty()) return true;
-      }
-    }
-    return false;
-  }
-
-  class Plakken extends AbstractAction {
-    Plakken() {
-      super(TextMapper.getText("paste"));
-    }
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (clipboard == null) return;
-        TreePath path = tree.getSelectionPath();
-        if (path == null) return;
-        
-        Object node = path.getLastPathComponent();
-        if (node == root) {
-          if (clipboard.isLeaf()) return;
-          root.add(clipboard);
-          model.nodeStructureChanged(root);
-          tree.setSelectionPath(new TreePath(clipboard.getPath()));
-          clipboard = copy(clipboard);
-          tree.repaint();
-          return;
-        }
-        if (node instanceof MutableTreeNode) {
-          MutableTreeNode mutable = (MutableTreeNode) node;
-          if (mutable.isLeaf()) {
-            mutable = (MutableTreeNode) mutable.getParent();
-          }
-          ((DynamicUtilTreeNode) mutable).add(clipboard);
-          model.nodeStructureChanged(mutable);
-          tree.setSelectionPath(new TreePath(clipboard.getPath()));
-          tree.repaint();
-          clipboard = copy(clipboard);
-          return;
-        }
-    }
-    
-  }
-
-  private JButton okButton;
-  private DomStudentModelStructure structure;
-  private JMenuBar bar = new JMenuBar();
-  private JLabel title;
-  private JTextField subtitle;
-  private JButton bewerken;
-  private Box south;
-  final JTree tree;
-  InvisibleTreeModel model;
-  DefaultMutableTreeNode root;
-  private JComponent settings;
-  JFormattedTextField slip, init, learn;
-  private EditableGraph graph;
-
-  private Box settingsRO;
-  private JPanel settingsRW;
-  private final TeacherStudentModelPanelProperties prop;
-  
-  private static final Font font = new Font("SansSerif", Font.PLAIN, 12);
-
-  public LeerdomeinEditPanel2(TeacherStudentModelPanelProperties prop) {
-    super(new BorderLayout());
-    this.prop = prop;
-
-  south = Box.createHorizontalBox();
-  south.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-  south.setOpaque(true);
-  south.setBackground(Constants.COLOR21);
-  okButton = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_SAVE));
-  okButton.setPreferredSize(new Dimension(100, 24));
-  okButton.setBackground(Constants.COLOR15);
-  okButton.setForeground(Constants.COLOR20);
-  okButton.addActionListener(this::opslaanAction);
-  south.add(Box.createHorizontalGlue());
-  south.add(okButton); 
-  south.add(Box.createHorizontalGlue());
-
-  add(south, BorderLayout.SOUTH);
-
-  Box north = Box.createHorizontalBox();
-  north.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 20));
-  north.setOpaque(true);north.setBackground(Constants.COLOR15);
-  bewerken = new JButton(TextMapper.getText(TextMapper.GUIH_EDIT));
-  title = new JLabel(getTitle());
-  title.setForeground(Constants.COLOR20);
-  title.setFont(font.deriveFont(24f));
-  north.add(bewerken);
-  north.add(Box.createHorizontalGlue());
-  north.add(title);
-  north.add(Box.createHorizontalGlue());
-  bewerken.addActionListener(
-    e -> {
-      if (TextMapper.getText(TextMapper.GUIH_STOP_EDIT) != bewerken.getText()) {
-       if ( aquireLock() )
-        setEditable(true);
-      } else {
-        switch(confirm()) {
-          case JOptionPane.YES_OPTION:
-            opslaanAction(null);
-          case JOptionPane.NO_OPTION:
-            setEditable(false);
-            setModel0(structure);
-          case JOptionPane.CANCEL_OPTION:
-        }
-      }
-    }
-  );
-  add(north, BorderLayout.NORTH);
-  
-  JSplitPane split = new JSplitPane();
-  BasicSplitPaneUI sui = (BasicSplitPaneUI) BasicSplitPaneUI.createUI(split);
-  split.setUI(sui);
-  BasicSplitPaneDivider divider = sui.getDivider();
-  divider.setBorder(BorderFactory.createEmptyBorder());
-  divider.setBackground(Constants.COLOR20);
-  split.setDividerSize(20);
-  split.setResizeWeight(0.8);
-  split.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-  split.setBackground(Constants.COLOR20);
-  setBackground(Constants.COLOR20);
-  JMenu Bestand = new JMenu(TextMapper.getText("file"));
-  JMenu Bewerken = new JMenu(TextMapper.getText("edit"));
-  bar.setBackground(Constants.COLOR21);
-  bar.setBorder(BorderFactory.createEmptyBorder());
-  Dimension pref = bar.getPreferredSize();
-  pref.height = 26; // same as textfield subtitle.
-  bar.setPreferredSize(pref);
-  Bestand.setBackground(Constants.COLOR21);
-  Bestand.setForeground(Constants.COLOR15);
-  Bestand.setUI(new BasicMenuUI() {public void paint(Graphics g) {}});
-  Bewerken.setBackground(Constants.COLOR21);
-  Bewerken.setForeground(Constants.COLOR15);
-  Bewerken.setUI(new BasicMenuUI() {public void paint(Graphics g) {}});
-  bar.setOpaque(true);
-  bar.setUI(new BasicMenuBarUI());
-  bar.add(Bestand);
-    Bestand.add(new JMenuItem(new SubdomeinAction()));
-    Bestand.add(new JMenuItem(new LeerdoelAction()));
-    Bestand.addSeparator();
-
-    ExportPanel exporter = new ExportPanel() {
-      
-      @Override
-      public DomStudentModelStructure getModel() {       
-        return getTreeModel();
-      }
-      
-      @Override
-      public Component asComponent() {
-        return LeerdomeinEditPanel2.this.asComponent();
-      }
-    };
-
-    Bestand.add(new JMenuItem(new ExportAction(exporter)));
-    Bestand.add(new JMenuItem(new ImportAction(this)));
-  bar.add(Bewerken);
-    Bewerken.add(new JMenuItem(new Knippen()));
-    Bewerken.add(new JMenuItem(new Kopieren()));
-    Bewerken.add(new JMenuItem(new Plakken()));
-  //  Bewerken.add(new JMenuItem(new Wijzigen()));
-    Bewerken.add(new JMenuItem(new Omhoog()));
-    Bewerken.add(new JMenuItem(new Omlaag()));
-    Bewerken.add(new JMenuItem(new Verwijderen()));
-  bar.add(Box.createHorizontalGlue());
-  
-  add(split, BorderLayout.CENTER);
-  String locale = JComponent.getDefaultLocale().getLanguage();
-  NodeVector v = new NodeVector(locale);
-  v.setTitle("Leerdomein");
-  root = new DynamicUtilTreeNode(v,v);
-  model = new InvisibleTreeModel(root);   
-  tree = new JTree(model);
-
-  TreeCellRenderer renderer = new TreeCellRenderer();
-  renderer.updateUI();
-  tree.setCellRenderer(renderer);
-  tree.updateUI();
-  tree.setDragEnabled(true);
-  tree.setTransferHandler(new TreeTransferHandler());
-  leftBox = new JPanel(new BorderLayout());
-  leftBox.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
-  leftBox.add(bar, BorderLayout.NORTH);
-  JScrollPane scrollpane = new JScrollPane(tree);
-  scrollpane.setViewportBorder(BorderFactory.createEmptyBorder());
-  scrollpane.setBorder(BorderFactory.createEmptyBorder());
-  pref = scrollpane.getPreferredSize();
-  pref.width = Math.max(580, pref.width); // 580 wide.
-  scrollpane.setPreferredSize(pref);
-  
-  leftBox.add(scrollpane, BorderLayout.CENTER);
-  leftSouth = Box.createHorizontalBox();
-  JButton filter = new JButton(new FilterAction(this, this::filter));
-  leftSouth.add(Box.createHorizontalGlue());
-  leftSouth.add(filter);
-  leftSouth.add(Box.createHorizontalGlue());
-  leftSouth.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-  leftBox.add(leftSouth, BorderLayout.SOUTH);
-  split.setLeftComponent(leftBox);
-  
-  JPanel rightBox = new JPanel(new BorderLayout());
-  subtitle = new JTextField();
-  subtitle.setFont(font.deriveFont(14f));
-  container = new JPanel(new GridLayout(1,1));
-  container.setPreferredSize(new Dimension(500 , 325));
-  rightBox.add(subtitle, BorderLayout.NORTH);
-  rightBox.add(container, BorderLayout.CENTER);
-  
-  
-  settingsRO = Box.createHorizontalBox();
-  settingsRO.setOpaque(true);
-  settingsRO.setBackground(Constants.COLOR20);
-  JButton voorkennisRO = new JButton(new VoorkennisAction(true,this,tree)); voorkennisRO.setFont(font);
-  voorkennisRO.setPreferredSize(new Dimension(120,24));
-  settingsRO.add(voorkennisRO);
-  settingsRO.add(Box.createHorizontalGlue());
-  JButton genrRO = new JButton(new GenRAction(true, this, tree)); genrRO.setFont(font);
-  genrRO.setPreferredSize(new Dimension(140,24));
-  settingsRO.add(genrRO);
-  settingsRO.add(Box.createHorizontalStrut(10));
-  JButton mwRO = new JButton(new MWAction(true, this, tree)); mwRO.setFont(font);
-  mwRO.setPreferredSize(new Dimension(140,24));
-  settingsRO.add(mwRO);
-  settingsRO.setBorder(BorderFactory.createEmptyBorder(10,10,8,10));
-  
-  
-  settings = settingsRW = new JPanel(null);
-  settings.setLayout(new BoxLayout(settings, BoxLayout.PAGE_AXIS));
-  Border inner = BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(1,0,0,0,Constants.COLOR13), "Instellingen", TitledBorder.CENTER, TitledBorder.CENTER, new Font("SansSerif", Font.BOLD,11), Constants.COLOR13);
-  Border outer = BorderFactory.createEmptyBorder(10, 10, 8, 10);
-  settings.setBorder(BorderFactory.createCompoundBorder(outer, inner));    
-
-  Box bkt = Box.createHorizontalBox();
-  JButton voorkennis = new JButton(new VoorkennisAction(false,this, tree));voorkennis.setFont(font);
-  voorkennis.setPreferredSize(new Dimension(120, 20));
-  bkt.add(voorkennis);
-  bkt.add(Box.createHorizontalGlue());
-  settings.add(bkt);
-  settings.add(Box.createVerticalStrut(10));
-  
-  bkt = Box.createHorizontalBox();
-  JLabel l;
-  JLabel parametersLabel = new JLabel("Knowledge tracing parameters:");
-    parametersLabel.setForeground(Constants.COLOR15);
-    bkt.add(parametersLabel);
-    bkt.add(Box.createHorizontalGlue());
-  bkt.add(l = new JLabel("Init "));
-    l.setForeground(Constants.COLOR15);
-    init = new JFormattedTextField(NumberFormat.getInstance());
-    init.setUI(NumworxTextFieldUI.createUI(init));
-    init.setPreferredSize(new Dimension(50,20));
-    init.setMaximumSize(new Dimension(50,24));
-    bkt.add(init);
-  bkt.add(l=new JLabel(" Learn "));
-  l.setForeground(Constants.COLOR15);
-    learn = new JFormattedTextField(NumberFormat.getInstance());
-    learn.setUI(NumworxTextFieldUI.createUI(learn));
-    learn.setPreferredSize(new Dimension(50,20));
-    learn.setMaximumSize(new Dimension(50,24));
-    bkt.add(learn);
-  bkt.add(l=new JLabel(" Slip "));
-  l.setForeground(Constants.COLOR15);
-    slip = new JFormattedTextField(NumberFormat.getInstance());
-    slip.setUI(NumworxTextFieldUI.createUI(slip));
-    slip.setPreferredSize(new Dimension(50,20));
-    slip.setMaximumSize(new Dimension(50,24));
-   bkt.add(slip);
-  settings.add(bkt);
-  settings.add(Box.createVerticalStrut(10));
-  
-  bkt = Box.createHorizontalBox();
-  parametersLabel = new JLabel("Koppeling lesmateriaal:");
-  parametersLabel.setForeground(Constants.COLOR15);
-  bkt.add(parametersLabel);
-  bkt.add(Box.createHorizontalGlue());
-  JButton genr = new JButton(new GenRAction(this, tree)); genr.setFont(font);
-  genr.setPreferredSize(new Dimension(140, 20));
-  bkt.add(genr);
-  bkt.add(Box.createHorizontalStrut(10));
-  JButton mw = new JButton(new MWAction(this,tree)); mw.setFont(font);
-  mw.setPreferredSize(new Dimension(140, 20));
-  bkt.add(mw);
-  
-  settings.add(bkt);
-  
-  
-  rightBox.add(settings = settingsRO, BorderLayout.SOUTH);
-  rightBox.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
-  JTabbedPane tabs = new JTabbedPane(JTabbedPane.BOTTOM);
-  tabs.addTab("Item", rightBox);
-  graph = new EditableGraph();
-  tabs.addTab("Voorkennisgraaf", graph);
-  split.setRightComponent(tabs);
-
-  JTextField leerdoelTitelEditor = subtitle;
-  leerdoelTitelEditor.setForeground(Color.WHITE);
-  leerdoelTitelEditor.setBackground(Constants.COLOR13);
-  //leerdoelTitelEditor.setMaximumSize(new Dimension(800,30));
-  leerdoelTitelEditor.setBorder(BorderFactory.createEmptyBorder(4, 20, 4, 20));
-  leerdoelTitelEditor.setFont(leerdoelTitelEditor.getFont().deriveFont(Font.BOLD, 14));
-  leerdoelTitelEditor.setOpaque(true);
-
-  tree.addTreeSelectionListener(this);
-  tabs.addChangeListener(this);  
-  }
-
-  private boolean aquireLock() {
-    if (!lock) {
-      if (prop.getCurrent().getPublishState() == PublishState.edit) {
-        DomStudentModelContext current = prop.getCurrent();
-        Long version = current.getOptLock();
-        try {
-           current = prop.getModel(prop.getCurrent());
-        } catch (Dwo2Exception e) {
-          LOG.log(Level.SEVERE, "refresh model", e);
-          GuiCreator.instance().ShowErrorDialog(this, e);
-          return false;
-        }
-        if (!current.getOptLock().equals(version)) {
-          setModel(current.getModelStructure());
-        }
-        if (current.getPublishState() == PublishState.edit) {
-        
-        String msg = "Weet je zeker dat wilt bewerken?"
-            + "\n";
-        if (structure.getOwner()!= null) {
-          DateFormat dateFormat = DateFormat.getDateTimeInstance();        
-          msg += structure.getOwner() + " is vanaf " + dateFormat.format(new Date(structure.getTimestamp().longValue())) + " bezig";
-        }
-        int ok = JOptionPane.showConfirmDialog(this,  msg        
-          , "", JOptionPane.WARNING_MESSAGE);
-        if (ok != JOptionPane.OK_OPTION)
-          return false;
-      }}
-      prop.getCurrent().setPublishState(PublishState.edit);
-      structure.setOwner(DwoHelper.getCurrentUser().getUniqueDisplayName());
-      structure.setTimestamp(System.currentTimeMillis());
-      try {
-        prop.updateModel(structure);
-        lock = true;
-      } catch (Dwo2Exception e) {
-        if (e.getDwo2Code() == Dwo2ExceptionCode.Rest_ObjectModified)
-          return aquireLock();
-        GuiCreator.instance().ShowErrorDialog(this, e);
-        return false;
-      }
-    }
-    return true;    
-  }
-
-  private String getTitle() {
-    if (structure != null) {
-      return structure.getInfo().getTitle().get(getLocale().getLanguage());
-    }
-    return "Leerdomein";
-  }
-
-  private boolean editable;
-  private WiskOpdrEditPanel wiskOpdrEditPanel;
-  private JPanel container;
-
-  private Box leftSouth;
-
-  private JPanel leftBox;
-  private boolean lock;
-  public void setEditable(boolean b) {
-    editable = b;
-    Container parent = settings.getParent();
-    parent.remove(settings);
-    boolean visible = settings.isVisible();
-    if (b) {
-      settings = settingsRW;
-    } else {
-      settings = settingsRO;
-    }
-    parent.add(settings, BorderLayout.SOUTH);
-    settings.setVisible(visible);
-    leftSouth.setVisible(!b);
-    fillSelection();
-    if (b) {
-      filter(Collections.emptyMap());
-      leftBox.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
-      bewerken.setText(TextMapper.getText(TextMapper.GUIH_STOP_EDIT));
-      title.setText("Editor " + getTitle());
-      bar.show();
-      south.show();
-      subtitle.setEditable(true);
-      ((DefaultTreeCellRenderer) tree.getCellRenderer()).setBackgroundNonSelectionColor(Color.WHITE);
-      tree.setBackground(Color.WHITE);
-    } else {
-      leftBox.setBorder(BorderFactory.createLineBorder(Constants.COLOR20));
-      bewerken.setText(TextMapper.getText(TextMapper.GUIH_EDIT));
-      title.setText(getTitle());
-      bar.hide();
-      south.hide();
-      subtitle.setEditable(false);
-      ((DefaultTreeCellRenderer) tree.getCellRenderer()).setBackgroundNonSelectionColor(Constants.COLOR20);
-      tree.setBackground(Constants.COLOR20);
-    }
-    graph.setEditMode(b);
-  }
-
-  public void setModel(DomStudentModelStructure model) {
-    lock = false;
-    setModel0(model);
-    resultModel =  null;    
-  }
-  
-  private void setModel0(DomStudentModelStructure model) {
-    String locale = getLocale().getLanguage();
-    if (model == null) {
-      model = new DomStudentModelStructure();
-      model.setInfo(new DomStudentModelContextInfo(new TreeMap<>(), new TreeMap<>()));
-      model.getInfo().getTitle().put(locale, "Model");
-      model.getInfo().getDescription().put(locale, "");      
-      model.setCategories(new ArrayList<>());
-    }
-    this.structure = model; 
-    NodeVector vector = new NodeVector(model.getCategories(), model.getInfo(), locale);
-    this.model.setRoot(root = new DynamicUtilTreeNode(vector, vector));
-    this.subtitle.setText("");
-    //text.setEditable(false);
-    //OPSLAAN_ACTION.setDescription("");
-    this.model.nodeStructureChanged(root);
-    this.structure = model;
-    setEditable(editable);
-    //OPSLAAN_ACTION.left();
-
-    graph.setModel(this.model);
-  
-  }
-
-  DomStudentModelStructure resultModel;
-  
-  static DomStudentModelStructure untitled;
-  static DomStudentModelCategory  untitledCategory;
-  static DomStudentModelObj untitledObjective;
-  
-  static {
-    Genson genson = new GensonBuilder().create();
-    URL root = DwoHelper.getResourceUrlPath();
-    try {
-      URL content = new URL(root, "resources/untitled-learning-domain.json");
-      InputStream input = content.openStream();    
-      untitled = genson.deserialize(input, DomStudentModelStructure.class);
-      input.close();
-      untitledCategory = untitled.getCategories().get(0);
-      untitledObjective = untitledCategory.getObjectives().get(0);
-      untitledObjective.getInfo().setId(null); // clear id
-    } catch (IOException e) {
-      
-    }
-  }
-  
-  
-  public DomStudentModelStructure getModel() {
-    return resultModel;
-  }
-  
-  @SuppressWarnings("unchecked")
-  private DomStudentModelStructure getTreeModel() {
-    DomStudentModelStructure result = new DomStudentModelStructure();
-    Node u;
-    u = (Node) root.getUserObject();
-    result.setInfo(u.getInfo());
-    List<DomStudentModelCategory> categories = new ArrayList<>(root.getChildCount());
-    result.setCategories(categories);
-    Enumeration<TreeNode> children = root.children();
-    while (children.hasMoreElements()) {
-      DefaultMutableTreeNode object = (DefaultMutableTreeNode) children.nextElement();
-      u = (Node) object.getUserObject();
-      DomStudentModelCategory cat = new DomStudentModelCategory();
-      cat.setInfo(u.getInfo());
-      List<DomStudentModelObj> objectives = new ArrayList<>(object.getChildCount());
-      cat.setObjectives(objectives );
-      Enumeration<TreeNode> kids = object.children();
-      while (kids.hasMoreElements()) {
-        DefaultMutableTreeNode kid = (DefaultMutableTreeNode) kids.nextElement();
-        u = (Node) kid.getUserObject();
-        DomStudentModelObj objective = new DomStudentModelObj();
-        objective.setInfo(u.getInfo());
-        objectives.add(objective);
-        if (!kid.isLeaf()) {
-          setObjectiveChildren(objective, kid.getChildCount(), kid.children());
-        }
-      }
-      categories.add(cat);
-    }
-    result.setCategories(categories);
-    return result;
-  }
-
-  private void setObjectiveChildren(DomStudentModelObj node, int childCount,
-      Enumeration<? extends TreeNode> children) {
-    List<DomStudentModelObj> objectives = new ArrayList<>(childCount);
-    node.setObjectives(objectives);
-    while (children.hasMoreElements()) {
-      DefaultMutableTreeNode kid =
-          (DefaultMutableTreeNode) children.nextElement();
-      Node u = (Node) kid.getUserObject();
-      DomStudentModelObj objective = new DomStudentModelObj();
-      objective.setInfo(u.getInfo());
-      objectives.add(objective);
-      if (!kid.isLeaf()) {
-        setObjectiveChildren(objective, kid.getChildCount(), kid.children());
-      }
-      
-    }
-    
-  }
-
-  public JButton ok() { return okButton; }
-
-  void fillSelection() {
-    TreePath path = tree.getSelectionPath();
-    if (path == null) {
-      subtitle.setText("");
-      setDescription("");
-      settings.setVisible(false);
-      return;
-    }
-    DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-    Object u = node.getUserObject();
-    subtitle.setText(u.toString()); 
-    setDescription(u);
-    if (u instanceof NodeLeaf) {
-      DomStudentModelContextInfo info = ((NodeLeaf) u).getInfo();
-      Double d = info.getSlip(); if (d == null) d = 0.05; // DEFAULT SLIP
-      slip.setValue(d);
-      d = info.getInit(); if (d == null) d = 0.5; // DEFAULT INIT;
-      init.setValue(d);
-      d = info.getLearn(); if (d == null) d = 0.2; // DEFAULT LEARN;
-      learn.setValue(d);
-      settings.setVisible(true);
-    } else {
-      settings.setVisible(false);
-    }
-  }
-
-  void setDescription(Object u) {
-    if (u instanceof Node) {
-      String description = ((Node) u).getDescription();
-      if (description == null || description.startsWith(WISKOPDR_SIG)||description.isEmpty()) {
-        if (editable) {
-          Locale locale = getLocale();
-          wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(description, locale, container.getWidth(), container.getHeight(), 425, 300);
-          wiskOpdrEditPanel.setBackground(Color.WHITE);
-          container.removeAll();
-          container.add(wiskOpdrEditPanel);
-          wiskOpdrEditPanel.setRequestFocusEnabled(true);
-          wiskOpdrEditPanel.setFocusable(true);
-          wiskOpdrEditPanel.requestFocusInWindow();
-        } else {
-          WiskOpdrPanel panel = WiskOpdr.getWiskOpdrPanel(description);
-          panel.setBackground(Color.WHITE);
-          JScrollPane pane =  new JScrollPane(panel);
-          pane.setBorder(BorderFactory.createEmptyBorder());
-          pane.setViewportBorder(BorderFactory.createEmptyBorder());
-          pane.setBackground(Color.WHITE);
-          pane.getViewport().setBackground(Color.WHITE);
-          container.removeAll();
-          container.add(pane);
-        }
-      } else {
-        wiskOpdrEditPanel = null;
-        container.removeAll();
-      }
-    } else {
-      wiskOpdrEditPanel = null;
-      container.removeAll();
-    }
-  }
-
-  private String toJSON(String string) {
-    StringWriter writer = new StringWriter();
-    try {
-      Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(string, WiskOpdrCache.getInstance().getClassLoader());
-      JSONEncoder.encode(map, writer, null);
-    } catch (Exception e) {
-      //LOG.log(Level.WARNING, "toJSON", e);
-    } 
-    return writer.toString();
-
-  }
-
-  private void commitEdit(JFormattedTextField field) {
-    try {
-      field.commitEdit();
-    } catch (ParseException e) {}
-  }
-
-  @Override
-  public void valueChanged(TreeSelectionEvent e) {
-    if (e.isAddedPath()) {
-      if (editable) {
-        TreePath path = e.getOldLeadSelectionPath();
-        safeSelection(path);
-      }
-      fillSelection();
-      validate();
-    }
-  }
-
-  public void safeSelection(TreePath path) {
-    if (path != null) {
-      DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-      Object u = node.getUserObject();
-      String string = subtitle.getText();
-      if(u instanceof Node) {
-        Node n = (Node) u;
-        n.setTitle(string);
-        model.nodeChanged(node);
-        String description = wiskOpdrEditPanel == null ? n.getDescription() : wiskOpdrEditPanel.getText();
-        n.setDescription(description);
-        n.setDescriptionAsJSON(toJSON(description)); // could be lazy...
-      }
-      if (u instanceof NodeLeaf) {
-        NodeLeaf n = (NodeLeaf) u;
-        commitEdit(init);commitEdit(learn); commitEdit(slip);
-        n.setInit((Double) init.getValue());
-        n.setLearn((Double) learn.getValue());
-        n.setSlip((Double) slip.getValue());
-      }
-    }
-  }
-
-  @Override
-  public Component asComponent() {
-    return this;
-  }
-
-  @Override
-  public void windowOpened(WindowEvent e) {
-  }
-
-  @Override
-  public void windowClosing(WindowEvent e) {
-    closeWindow((ConfirmDialog) e.getWindow());   
-  }
-
-  private void opslaanAction(ActionEvent e) {
-    safeSelection(tree.getSelectionPath());
-    if(editable && graph.isVisible())
-      graph.updateModel(model);// voorkennis en x,y
-    resultModel = getTreeModel();
-    resultModel.setOwner(DwoHelper.getCurrentUser().getUniqueDisplayName());
-    resultModel.setTimestamp(System.currentTimeMillis());
-    structure = resultModel;
-    try {
-      prop.updateModel(resultModel);
-    } catch (Dwo2Exception e1) {
-      Dwo2ExceptionCode code = e1.getDwo2Code();
-      LOG.log(Level.SEVERE, "opslaanAction", e1);
-      GuiCreator.instance().ShowErrorDialog(this, e1);
-    }
-//    setEditable(false);
-  }
-  
-//  private void cancelAction(ActionEvent e) {
-//    setEditable(false);
-//  }
-  
-  
-  private void closeWindow(ConfirmDialog window) {
-      if (editable) {
-        int option = confirm();
-        switch(option) {
-          case JOptionPane.CANCEL_OPTION:
-              return;
-          case JOptionPane.YES_OPTION:
-              opslaanAction(null);
-              window.ok(null); return;
-          case JOptionPane.NO_OPTION:
-        }
-      }
-      if (resultModel != null) {
-        window.ok(null);
-      } else 
-        window.cancel(null);
-  }
-
-  private int confirm() {
-    safeSelection(tree.getSelectionPath());
-    DomStudentModelStructure toSafe = getTreeModel();
-    if (toSafe.same(structure)) return JOptionPane.NO_OPTION; // no need to safe.
-
-    return JOptionPane.showConfirmDialog(this, okButton.getText(),"", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-  }
-
-  @Override
-  public void windowClosed(WindowEvent e) {
-  }
-
-  @Override
-  public void windowIconified(WindowEvent e) {
-  }
-
-  @Override
-  public void windowDeiconified(WindowEvent e) {
-  }
-
-  @Override
-  public void windowActivated(WindowEvent e) {
-  }
-
-  @Override
-  public void windowDeactivated(WindowEvent e) {
-  }
-
-  public void importModel(DomStudentModelStructure model) {
-    DomStudentModelStructure tmp = structure;
-    setModel0(model);
-    structure = tmp;
-  }
-
-  public boolean isLock() {
-    return lock;
-  }
-
-  @Override
-  public void stateChanged(ChangeEvent e) {
-    JTabbedPane pane = (JTabbedPane) e.getSource();
-    int index = pane.getSelectedIndex();
-    if (index == 0) {
-      graph.updateModel(model);
-    } else {
-      graph.setModel(model);
-    }
-  }
-  
-  
-  
+public class LeerdomeinEditPanel2 extends JPanel
+		implements TreeSelectionListener, ExportPanel, WindowListener, ChangeListener {
+	static final String WISKOPDR_SIG = "H4sIAAAAAA";
+	static final Logger LOG = Logger.getLogger(LeerdomeinEditPanel2.class.getName());
+
+	static class VoorkennisAction extends AbstractAction {
+
+		boolean readonly;
+		JTree tree;
+		Component parent;
+
+		private VoorkennisAction() {
+			super(TextMapper.getText("Voorkennis"));
+		}
+
+		public VoorkennisAction(boolean b, Component parent, JTree tree) {
+			this();
+			readonly = b;
+			this.parent = parent;
+			this.tree = tree;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			TreePath path = tree.getSelectionPath();
+			if (path == null)
+				return;
+			DefaultMutableTreeNode root;
+			root = (DefaultMutableTreeNode) tree.getModel().getRoot();
+
+			Object node = path.getLastPathComponent();
+			if (node instanceof MutableTreeNode) {
+				DefaultMutableTreeNode mutable = (DefaultMutableTreeNode) node;
+				Object o = mutable.getUserObject();
+				if (o instanceof NodeLeaf) {
+					NodeLeaf leaf = (NodeLeaf) o;
+					List<String> ids = leaf.getVoorkennis();
+					if (ids == null)
+						ids = Collections.emptyList();
+					NodeVector v = (NodeVector) root.getUserObject();
+					StudentModelChoicePanel panel = new StudentModelChoicePanel(v, readonly);
+					panel.setObjectives(ids);
+					if (readonly) {
+						// JOptionPane.showMessageDialog(parent, panel, e.getActionCommand(),
+						// JOptionPane.PLAIN_MESSAGE);
+						ConfirmDialog d = new ConfirmDialog(parent, e.getActionCommand());
+						d.setContentPane(panel);
+						d.pack();
+						d.center();
+						d.show();
+					} else {
+						// int r = JOptionPane.showConfirmDialog(parent, panel, e.getActionCommand(),
+						// JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+						ConfirmDialog confirm = new ConfirmDialog(parent, e.getActionCommand());
+						confirm.getContentPane().setLayout(new BorderLayout());
+						confirm.getContentPane().add(panel);
+						JButton okb = new JButton(TextMapper.getText(TextMapper.BTN_OK));
+						okb.addActionListener(confirm::ok);
+						okb.setBackground(GuiConstants.HEADER_COLOR);
+						JPanel south = new JPanel(new FlowLayout(FlowLayout.CENTER));
+						south.setBackground(Constants.COLOR21);
+						south.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+						south.add(okb);
+						JButton cancel = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
+						cancel.addActionListener(confirm::cancel);
+						cancel.setBackground(GuiConstants.HEADER_COLOR);
+						okb.setPreferredSize(cancel.getPreferredSize());
+						south.add(cancel);
+						confirm.getContentPane().add(south, BorderLayout.SOUTH);
+						confirm.pack();
+						confirm.center();
+						confirm.show();
+						int r = confirm.getOption();
+
+						if (r == JOptionPane.OK_OPTION) {
+							panel.makeChoices();
+							List<String> list = panel.getObjectives();
+							leaf.setVoorkennis(list);
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+	class LeerdoelAction extends AbstractAction {
+
+		public LeerdoelAction() {
+			this("nieuw leerdoel");
+		}
+
+		public LeerdoelAction(String name) {
+			super(name);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			TreePath path = tree.getSelectionPath();
+			if (path == null)
+				return;
+
+			Object node = path.getLastPathComponent();
+			if (root == node)
+				return;
+
+			if (node instanceof MutableTreeNode) {
+				MutableTreeNode mutable = (MutableTreeNode) node;
+				if (mutable.isLeaf())
+					return;
+				int index = mutable.getChildCount();
+				Node leaf;
+				String title = "Leerdoel-" + (index + 1);
+				if (untitledObjective != null) {
+					leaf = new NodeLeaf(title, untitledObjective.getInfo(), getLocale().getLanguage());
+				} else {
+					leaf = new NodeLeaf(getLocale().getLanguage());
+					leaf.setTitle(title);
+				}
+				DefaultMutableTreeNode child = new DefaultMutableTreeNode(leaf, false);
+				mutable.insert(child, index);
+				model.nodesWereInserted(mutable, new int[] { index });
+				tree.setSelectionPath(new TreePath(child.getPath()));
+				subtitle.requestFocusInWindow();
+				subtitle.selectAll();
+			}
+		}
+
+	}
+
+	public class SubdomeinAction extends AbstractAction {
+
+		public SubdomeinAction() {
+			this("nieuw subdomein");
+		}
+
+		public SubdomeinAction(String name) {
+			super(name);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			TreePath path = tree.getSelectionPath();
+			if (path == null)
+				return;
+
+			Object node = path.getLastPathComponent();
+			// if ( node != root) return; // Only root can add subdomains
+
+			if (node instanceof MutableTreeNode) {
+				MutableTreeNode mutable = (MutableTreeNode) node;
+				if (mutable.isLeaf())
+					return;
+				int index = mutable.getChildCount();
+				Node vector;
+				if (untitledCategory != null) {
+					vector = new NodeVector(untitledCategory.getInfo(), getLocale().getLanguage());
+				} else {
+					vector = new NodeVector(getLocale().getLanguage());
+				}
+				vector.setTitle("Untitled-" + (index + 1));
+				DefaultMutableTreeNode child = new DynamicUtilTreeNode(vector, vector);
+				mutable.insert(child, index);
+				model.nodesWereInserted(mutable, new int[] { index });
+				tree.setSelectionPath(new TreePath(child.getPath()));
+				subtitle.requestFocusInWindow();
+				subtitle.selectAll();
+			}
+		}
+
+	}
+
+	class Verwijderen extends AbstractAction {
+
+		Verwijderen() {
+			this(TextMapper.getText("delete"));
+		}
+
+		Verwijderen(String name) {
+			super(name);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			TreePath path = tree.getSelectionPath();
+			if (path == null)
+				return;
+
+			Object node = path.getLastPathComponent();
+			if (node == root)
+				return;
+			if (node instanceof MutableTreeNode) {
+				DefaultMutableTreeNode mutable = (DefaultMutableTreeNode) node;
+				TreeNode parent = mutable.getParent();
+				mutable.removeFromParent();
+				model.nodeStructureChanged(parent);
+				fillSelection();
+			}
+		}
+
+	}
+
+	class Omhoog extends AbstractAction {
+		Omhoog() {
+			super("Omhoog");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			TreePath path = tree.getSelectionPath();
+			if (path == null)
+				return;
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+			DynamicUtilTreeNode parent = (DynamicUtilTreeNode) node.getParent();
+			int i = parent.getIndex(node);
+			if (i > 0) {
+				safeSelection(path);
+				parent.remove(i);
+				parent.insert(node, i - 1);
+				model.nodeStructureChanged(parent);
+				tree.setSelectionPath(new TreePath(node.getPath()));
+				tree.repaint();
+			}
+
+		}
+
+	}
+
+	class Omlaag extends AbstractAction {
+		Omlaag() {
+			super("Omlaag");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			TreePath path = tree.getSelectionPath();
+			if (path == null)
+				return;
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+			DynamicUtilTreeNode parent = (DynamicUtilTreeNode) node.getParent();
+			int i = parent.getIndex(node);
+			if (i < parent.getChildCount() - 1) {
+				safeSelection(path);
+				parent.remove(i);
+				parent.insert(node, i + 1);
+				model.nodeStructureChanged(parent);
+				tree.setSelectionPath(new TreePath(node.getPath()));
+				tree.repaint();
+			}
+		}
+	}
+
+	DefaultMutableTreeNode clipboard;
+
+	class Knippen extends AbstractAction {
+		Knippen() {
+			super(TextMapper.getText("cut"));
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			TreePath path = tree.getSelectionPath();
+			if (path == null)
+				return;
+			Object node = path.getLastPathComponent();
+			if (node == root)
+				return;
+			if (node instanceof MutableTreeNode) {
+				safeSelection(path);
+				DefaultMutableTreeNode mutable = (DefaultMutableTreeNode) node;
+				TreeNode parent = mutable.getParent();
+				mutable.removeFromParent();
+				clipboard = mutable;
+				model.nodeStructureChanged(parent);
+				fillSelection();
+
+			}
+		}
+
+	}
+
+	class Kopieren extends AbstractAction {
+		Kopieren() {
+			super(TextMapper.getText("copy"));
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			TreePath path = tree.getSelectionPath();
+			if (path == null)
+				return;
+
+			Object node = path.getLastPathComponent();
+			if (node == root)
+				return;
+			safeSelection(path);
+			clipboard = copy(node);
+		}
+
+	}
+
+	public DefaultMutableTreeNode copy(Object node) {
+		if (node instanceof DefaultMutableTreeNode) {
+			DefaultMutableTreeNode mutable = (DefaultMutableTreeNode) node;
+			if (mutable.isLeaf() && !mutable.getAllowsChildren()) {
+				return new DefaultMutableTreeNode(new NodeLeaf((NodeLeaf) mutable.getUserObject()), false);
+			} else {
+				NodeVector v = new NodeVector((NodeVector) mutable.getUserObject());
+				DynamicUtilTreeNode copy = new DynamicUtilTreeNode(v, v);
+				for (int i = 0; i < mutable.getChildCount(); i++) {
+					copy.add(copy(mutable.getChildAt(i)));
+				}
+				return copy;
+			}
+		}
+		return null;
+	}
+
+	public void filter(Map<String, Map<String, Set<Integer>>> filter) {
+		if (graph.isVisible())
+			graph.updateModel(model);
+		if (filter.isEmpty()) {
+			model.activateFilter(false);
+			if (model.getRoot() != root)
+				model.setRoot(root);
+		} else {
+			model.activateFilter(true);
+			model.setRoot(filter(root, filter));
+		}
+		graph.setModel(model);
+	}
+
+	static DefaultMutableTreeNode filter(DefaultMutableTreeNode parent, Map<String, Map<String, Set<Integer>>> filter) {
+		InvisibleNode node;
+		if (!(parent instanceof InvisibleNode)) {
+			node = new InvisibleNode(parent.getUserObject());
+			node.setAllowsChildren(parent.getAllowsChildren());
+			Enumeration<?> children = parent.children();
+			while (children.hasMoreElements()) {
+				DefaultMutableTreeNode object = (DefaultMutableTreeNode) children.nextElement();
+				node.add(filter(object, filter));
+			}
+		} else {
+			node = (InvisibleNode) parent;
+		}
+		if (node.isLeaf() && !node.getAllowsChildren()) {
+			NodeLeaf leaf = (NodeLeaf) node.getUserObject();
+			Map<String, Map<String, Set<Integer>>> methodes = leaf.getMethode();
+			node.setVisible(contains(filter, methodes));
+		} else {
+			int cnt = node.getChildCount(true);
+			node.setVisible(cnt != 0);
+		}
+
+		return node;
+	}
+
+	static boolean contains(Map<String, Map<String, Set<Integer>>> filter,
+			Map<String, Map<String, Set<Integer>>> methodes) {
+		for (Map.Entry<String, Map<String, Set<Integer>>> entry : filter.entrySet()) {
+			Map<String, Set<Integer>> map = methodes.getOrDefault(entry.getKey(), Collections.emptyMap());
+			if (map.isEmpty())
+				continue;
+			for (Map.Entry<String, Set<Integer>> m : entry.getValue().entrySet()) {
+				Set<Integer> chapters = new TreeSet<>(map.getOrDefault(m.getKey(), Collections.emptySet()));
+				chapters.retainAll(m.getValue());
+				if (!chapters.isEmpty())
+					return true;
+			}
+		}
+		return false;
+	}
+
+	class Plakken extends AbstractAction {
+		Plakken() {
+			super(TextMapper.getText("paste"));
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (clipboard == null)
+				return;
+			TreePath path = tree.getSelectionPath();
+			if (path == null)
+				return;
+
+			Object node = path.getLastPathComponent();
+			if (node == root) {
+				if (clipboard.isLeaf())
+					return;
+				root.add(clipboard);
+				model.nodeStructureChanged(root);
+				tree.setSelectionPath(new TreePath(clipboard.getPath()));
+				clipboard = copy(clipboard);
+				tree.repaint();
+				return;
+			}
+			if (node instanceof MutableTreeNode) {
+				MutableTreeNode mutable = (MutableTreeNode) node;
+				if (mutable.isLeaf()) {
+					mutable = (MutableTreeNode) mutable.getParent();
+				}
+				((DynamicUtilTreeNode) mutable).add(clipboard);
+				model.nodeStructureChanged(mutable);
+				tree.setSelectionPath(new TreePath(clipboard.getPath()));
+				tree.repaint();
+				clipboard = copy(clipboard);
+				return;
+			}
+		}
+
+	}
+
+	private JButton okButton;
+	private DomStudentModelStructure structure;
+	private JMenuBar bar = new JMenuBar();
+	private JLabel title;
+	private JTextField subtitle;
+	private JButton bewerken;
+	private JButton graphButton;
+	private Box south;
+	final JTree tree;
+	InvisibleTreeModel model;
+	DefaultMutableTreeNode root;
+	private JComponent settings;
+	JFormattedTextField slip, init, learn;
+	private EditableGraph graph;
+
+	private Box settingsRO;
+	private JPanel settingsRW;
+	private final TeacherStudentModelPanelProperties prop;
+
+	private static final Font font = new Font("SansSerif", Font.PLAIN, 12);
+
+	public LeerdomeinEditPanel2(TeacherStudentModelPanelProperties prop) {
+		super(new BorderLayout());
+		this.prop = prop;
+
+		south = Box.createHorizontalBox();
+		south.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+		south.setOpaque(true);
+		south.setBackground(Constants.COLOR21);
+		okButton = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_SAVE));
+		okButton.setPreferredSize(new Dimension(100, 24));
+		okButton.setBackground(Constants.COLOR15);
+		okButton.setForeground(Constants.COLOR20);
+		okButton.addActionListener(this::opslaanAction);
+		south.add(Box.createHorizontalGlue());
+		south.add(okButton);
+		south.add(Box.createHorizontalGlue());
+
+		add(south, BorderLayout.SOUTH);
+
+		Box north = Box.createHorizontalBox();
+		north.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 20));
+		north.setOpaque(true);
+		north.setBackground(Constants.COLOR15);
+		bewerken = new JButton(TextMapper.getText(TextMapper.GUIH_EDIT));
+		graphButton = new JButton("Graph");
+		title = new JLabel(getTitle());
+		title.setForeground(Constants.COLOR20);
+		title.setFont(font.deriveFont(24f));
+		north.add(bewerken);
+		north.add(Box.createHorizontalGlue());
+		north.add(title);
+		north.add(Box.createHorizontalGlue());
+		north.add(graphButton);
+		bewerken.addActionListener(e -> {
+			if (TextMapper.getText(TextMapper.GUIH_STOP_EDIT) != bewerken.getText()) {
+				if (aquireLock())
+					setEditable(true);
+			} else {
+				switch (confirm()) {
+				case JOptionPane.YES_OPTION:
+					opslaanAction(null);
+				case JOptionPane.NO_OPTION:
+					setEditable(false);
+					setModel0(structure);
+				case JOptionPane.CANCEL_OPTION:
+				}
+			}
+		});
+
+		add(north, BorderLayout.NORTH);
+
+		JSplitPane split = new JSplitPane();
+		BasicSplitPaneUI sui = (BasicSplitPaneUI) BasicSplitPaneUI.createUI(split);
+		split.setUI(sui);
+		BasicSplitPaneDivider divider = sui.getDivider();
+		divider.setBorder(BorderFactory.createEmptyBorder());
+		divider.setBackground(Constants.COLOR20);
+		split.setDividerSize(20);
+		split.setResizeWeight(0.8);
+		split.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+		split.setBackground(Constants.COLOR20);
+		setBackground(Constants.COLOR20);
+		JMenu Bestand = new JMenu(TextMapper.getText("file"));
+		JMenu Bewerken = new JMenu(TextMapper.getText("edit"));
+		bar.setBackground(Constants.COLOR21);
+		bar.setBorder(BorderFactory.createEmptyBorder());
+		Dimension pref = bar.getPreferredSize();
+		pref.height = 26; // same as textfield subtitle.
+		bar.setPreferredSize(pref);
+		Bestand.setBackground(Constants.COLOR21);
+		Bestand.setForeground(Constants.COLOR15);
+		Bestand.setUI(new BasicMenuUI() {
+			public void paint(Graphics g) {
+			}
+		});
+		Bewerken.setBackground(Constants.COLOR21);
+		Bewerken.setForeground(Constants.COLOR15);
+		Bewerken.setUI(new BasicMenuUI() {
+			public void paint(Graphics g) {
+			}
+		});
+		bar.setOpaque(true);
+		bar.setUI(new BasicMenuBarUI());
+		bar.add(Bestand);
+		Bestand.add(new JMenuItem(new SubdomeinAction()));
+		Bestand.add(new JMenuItem(new LeerdoelAction()));
+		Bestand.addSeparator();
+
+		ExportPanel exporter = new ExportPanel() {
+
+			@Override
+			public DomStudentModelStructure getModel() {
+				return getTreeModel();
+			}
+
+			@Override
+			public Component asComponent() {
+				return LeerdomeinEditPanel2.this.asComponent();
+			}
+		};
+
+		Bestand.add(new JMenuItem(new ExportAction(exporter)));
+		Bestand.add(new JMenuItem(new ImportAction(this)));
+		bar.add(Bewerken);
+		Bewerken.add(new JMenuItem(new Knippen()));
+		Bewerken.add(new JMenuItem(new Kopieren()));
+		Bewerken.add(new JMenuItem(new Plakken()));
+		// Bewerken.add(new JMenuItem(new Wijzigen()));
+		Bewerken.add(new JMenuItem(new Omhoog()));
+		Bewerken.add(new JMenuItem(new Omlaag()));
+		Bewerken.add(new JMenuItem(new Verwijderen()));
+		bar.add(Box.createHorizontalGlue());
+
+		add(split, BorderLayout.CENTER);
+		String locale = JComponent.getDefaultLocale().getLanguage();
+		NodeVector v = new NodeVector(locale);
+		v.setTitle("Leerdomein");
+		root = new DynamicUtilTreeNode(v, v);
+		model = new InvisibleTreeModel(root);
+		tree = new JTree(model);
+
+		TreeCellRenderer renderer = new TreeCellRenderer();
+		renderer.updateUI();
+		tree.setCellRenderer(renderer);
+		tree.updateUI();
+		tree.setDragEnabled(true);
+		tree.setTransferHandler(new TreeTransferHandler());
+		leftBox = new JPanel(new BorderLayout());
+		leftBox.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
+		leftBox.add(bar, BorderLayout.NORTH);
+		JScrollPane scrollpane = new JScrollPane(tree);
+		scrollpane.setViewportBorder(BorderFactory.createEmptyBorder());
+		scrollpane.setBorder(BorderFactory.createEmptyBorder());
+		pref = scrollpane.getPreferredSize();
+		pref.width = Math.max(580, pref.width); // 580 wide.
+		scrollpane.setPreferredSize(pref);
+
+		leftBox.add(scrollpane, BorderLayout.CENTER);
+		leftSouth = Box.createHorizontalBox();
+		JButton filter = new JButton(new FilterAction(this, this::filter));
+		leftSouth.add(Box.createHorizontalGlue());
+		leftSouth.add(filter);
+		leftSouth.add(Box.createHorizontalGlue());
+		leftSouth.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		leftBox.add(leftSouth, BorderLayout.SOUTH);
+		
+	    JSplitPane splitLeft = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+	    splitLeft.setBorder(BorderFactory.createEmptyBorder());
+	    splitLeft.setResizeWeight(0.9);
+	    BasicSplitPaneUI suiLeft = (BasicSplitPaneUI) BasicSplitPaneUI.createUI(splitLeft);
+	    splitLeft.setUI(suiLeft);
+	    BasicSplitPaneDivider dividerLeft = sui.getDivider();
+	    dividerLeft.setBorder(BorderFactory.createEmptyBorder());
+	    dividerLeft.setBackground(Constants.COLOR20);
+	    splitLeft.setDividerSize(20);
+		
+	    splitLeft.setTopComponent(leftBox);
+		
+		split.setLeftComponent(splitLeft);
+
+		JPanel rightBox = new JPanel(new BorderLayout());
+		subtitle = new JTextField();
+		subtitle.setFont(font.deriveFont(14f));
+		container = new JPanel(new GridLayout(1, 1));
+		container.setPreferredSize(new Dimension(500, 325));
+		rightBox.add(subtitle, BorderLayout.NORTH);
+		rightBox.add(container, BorderLayout.CENTER);
+
+		settingsRO = Box.createHorizontalBox();
+		settingsRO.setOpaque(true);
+		settingsRO.setBackground(Constants.COLOR20);
+		JButton voorkennisRO = new JButton(new VoorkennisAction(true, this, tree));
+		voorkennisRO.setFont(font);
+		voorkennisRO.setPreferredSize(new Dimension(120, 24));
+		settingsRO.add(voorkennisRO);
+		settingsRO.add(Box.createHorizontalGlue());
+		JButton genrRO = new JButton(new GenRAction(true, this, tree));
+		genrRO.setFont(font);
+		genrRO.setPreferredSize(new Dimension(140, 24));
+		settingsRO.add(genrRO);
+		settingsRO.add(Box.createHorizontalStrut(10));
+		JButton mwRO = new JButton(new MWAction(true, this, tree));
+		mwRO.setFont(font);
+		mwRO.setPreferredSize(new Dimension(140, 24));
+		settingsRO.add(mwRO);
+		settingsRO.setBorder(BorderFactory.createEmptyBorder(10, 10, 8, 10));
+
+		settings = settingsRW = new JPanel(null);
+		settings.setLayout(new BoxLayout(settings, BoxLayout.PAGE_AXIS));
+		Border inner = BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Constants.COLOR13),
+				"Instellingen", TitledBorder.CENTER, TitledBorder.CENTER, new Font("SansSerif", Font.BOLD, 11),
+				Constants.COLOR13);
+		Border outer = BorderFactory.createEmptyBorder(10, 10, 8, 10);
+		settings.setBorder(BorderFactory.createCompoundBorder(outer, inner));
+
+		Box bkt = Box.createHorizontalBox();
+		JButton voorkennis = new JButton(new VoorkennisAction(false, this, tree));
+		voorkennis.setFont(font);
+		voorkennis.setPreferredSize(new Dimension(120, 20));
+		bkt.add(voorkennis);
+		bkt.add(Box.createHorizontalGlue());
+		settings.add(bkt);
+		settings.add(Box.createVerticalStrut(10));
+
+		bkt = Box.createHorizontalBox();
+		JLabel l;
+		JLabel parametersLabel = new JLabel("Knowledge tracing parameters:");
+		parametersLabel.setForeground(Constants.COLOR15);
+		bkt.add(parametersLabel);
+		bkt.add(Box.createHorizontalGlue());
+		bkt.add(l = new JLabel("Init "));
+		l.setForeground(Constants.COLOR15);
+		init = new JFormattedTextField(NumberFormat.getInstance());
+		init.setUI(NumworxTextFieldUI.createUI(init));
+		init.setPreferredSize(new Dimension(50, 20));
+		init.setMaximumSize(new Dimension(50, 24));
+		bkt.add(init);
+		bkt.add(l = new JLabel(" Learn "));
+		l.setForeground(Constants.COLOR15);
+		learn = new JFormattedTextField(NumberFormat.getInstance());
+		learn.setUI(NumworxTextFieldUI.createUI(learn));
+		learn.setPreferredSize(new Dimension(50, 20));
+		learn.setMaximumSize(new Dimension(50, 24));
+		bkt.add(learn);
+		bkt.add(l = new JLabel(" Slip "));
+		l.setForeground(Constants.COLOR15);
+		slip = new JFormattedTextField(NumberFormat.getInstance());
+		slip.setUI(NumworxTextFieldUI.createUI(slip));
+		slip.setPreferredSize(new Dimension(50, 20));
+		slip.setMaximumSize(new Dimension(50, 24));
+		bkt.add(slip);
+		settings.add(bkt);
+		settings.add(Box.createVerticalStrut(10));
+
+		bkt = Box.createHorizontalBox();
+		parametersLabel = new JLabel("Koppeling lesmateriaal:");
+		parametersLabel.setForeground(Constants.COLOR15);
+		bkt.add(parametersLabel);
+		bkt.add(Box.createHorizontalGlue());
+		JButton genr = new JButton(new GenRAction(this, tree));
+		genr.setFont(font);
+		genr.setPreferredSize(new Dimension(140, 20));
+		bkt.add(genr);
+		bkt.add(Box.createHorizontalStrut(10));
+		JButton mw = new JButton(new MWAction(this, tree));
+		mw.setFont(font);
+		mw.setPreferredSize(new Dimension(140, 20));
+		bkt.add(mw);
+
+		settings.add(bkt);
+
+		rightBox.add(settings = settingsRO, BorderLayout.SOUTH);
+		rightBox.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
+		// JTabbedPane tabs = new JTabbedPane(JTabbedPane.BOTTOM);
+		// tabs.addTab("Item", rightBox);
+		graph = new EditableGraph();
+
+		// tabs.addTab("Voorkennisgraaf", graph);
+		split.setRightComponent(rightBox);
+
+		JTextField leerdoelTitelEditor = subtitle;
+		leerdoelTitelEditor.setForeground(Color.WHITE);
+		leerdoelTitelEditor.setBackground(Constants.COLOR13);
+		// leerdoelTitelEditor.setMaximumSize(new Dimension(800,30));
+		leerdoelTitelEditor.setBorder(BorderFactory.createEmptyBorder(4, 20, 4, 20));
+		leerdoelTitelEditor.setFont(leerdoelTitelEditor.getFont().deriveFont(Font.BOLD, 14));
+		leerdoelTitelEditor.setOpaque(true);
+
+		tree.addTreeSelectionListener(this);
+		// tabs.addChangeListener(this);
+
+		graphButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if ("Graph".equals(graphButton.getText())) {
+					graphButton.setText("Hide Graph");
+					split.setResizeWeight(0);
+					split.setRightComponent(graph);
+					Dimension pref = scrollpane.getPreferredSize();
+					pref.width = 380;
+					leftBox.setPreferredSize(pref);
+					graph.setPreferredSize(new Dimension(1000, 750));
+					graph.setModel(model);
+					
+					splitLeft.setBottomComponent(rightBox);
+					
+					packWindow();
+				} else {
+					graphButton.setText("Graph");
+					split.setResizeWeight(0.5);
+					Dimension pref = scrollpane.getPreferredSize();
+					pref.width = 580;
+					leftBox.setPreferredSize(pref);
+					split.setRightComponent(rightBox);
+					graph.setModel(model);
+					packWindow();
+				}
+
+			}
+		});
+	}
+	
+	private void packWindow() {
+		((Window) SwingUtilities.getAncestorOfClass(Window.class, this)).pack();
+	}
+
+	private boolean aquireLock() {
+		if (!lock) {
+			if (prop.getCurrent().getPublishState() == PublishState.edit) {
+				DomStudentModelContext current = prop.getCurrent();
+				Long version = current.getOptLock();
+				try {
+					current = prop.getModel(prop.getCurrent());
+				} catch (Dwo2Exception e) {
+					LOG.log(Level.SEVERE, "refresh model", e);
+					GuiCreator.instance().ShowErrorDialog(this, e);
+					return false;
+				}
+				if (!current.getOptLock().equals(version)) {
+					setModel(current.getModelStructure());
+				}
+				if (current.getPublishState() == PublishState.edit) {
+
+					String msg = "Weet je zeker dat wilt bewerken?" + "\n";
+					if (structure.getOwner() != null) {
+						DateFormat dateFormat = DateFormat.getDateTimeInstance();
+						msg += structure.getOwner() + " is vanaf "
+								+ dateFormat.format(new Date(structure.getTimestamp().longValue())) + " bezig";
+					}
+					int ok = JOptionPane.showConfirmDialog(this, msg, "", JOptionPane.WARNING_MESSAGE);
+					if (ok != JOptionPane.OK_OPTION)
+						return false;
+				}
+			}
+			prop.getCurrent().setPublishState(PublishState.edit);
+			structure.setOwner(DwoHelper.getCurrentUser().getUniqueDisplayName());
+			structure.setTimestamp(System.currentTimeMillis());
+			try {
+				prop.updateModel(structure);
+				lock = true;
+			} catch (Dwo2Exception e) {
+				if (e.getDwo2Code() == Dwo2ExceptionCode.Rest_ObjectModified)
+					return aquireLock();
+				GuiCreator.instance().ShowErrorDialog(this, e);
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private String getTitle() {
+		if (structure != null) {
+			return structure.getInfo().getTitle().get(getLocale().getLanguage());
+		}
+		return "Leerdomein";
+	}
+
+	private boolean editable;
+	private WiskOpdrEditPanel wiskOpdrEditPanel;
+	private JPanel container;
+
+	private Box leftSouth;
+
+	private JPanel leftBox;
+	private boolean lock;
+
+	public void setEditable(boolean b) {
+		editable = b;
+		Container parent = settings.getParent();
+		parent.remove(settings);
+		boolean visible = settings.isVisible();
+		if (b) {
+			settings = settingsRW;
+		} else {
+			settings = settingsRO;
+		}
+		parent.add(settings, BorderLayout.SOUTH);
+		settings.setVisible(visible);
+		leftSouth.setVisible(!b);
+		fillSelection();
+		if (b) {
+			filter(Collections.emptyMap());
+			leftBox.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
+			bewerken.setText(TextMapper.getText(TextMapper.GUIH_STOP_EDIT));
+			title.setText("Editor " + getTitle());
+			bar.show();
+			south.show();
+			subtitle.setEditable(true);
+			((DefaultTreeCellRenderer) tree.getCellRenderer()).setBackgroundNonSelectionColor(Color.WHITE);
+			tree.setBackground(Color.WHITE);
+		} else {
+			leftBox.setBorder(BorderFactory.createLineBorder(Constants.COLOR20));
+			bewerken.setText(TextMapper.getText(TextMapper.GUIH_EDIT));
+			title.setText(getTitle());
+			bar.hide();
+			south.hide();
+			subtitle.setEditable(false);
+			((DefaultTreeCellRenderer) tree.getCellRenderer()).setBackgroundNonSelectionColor(Constants.COLOR20);
+			tree.setBackground(Constants.COLOR20);
+		}
+		graph.setEditMode(b);
+	}
+
+	public void setModel(DomStudentModelStructure model) {
+		lock = false;
+		setModel0(model);
+		resultModel = null;
+	}
+
+	private void setModel0(DomStudentModelStructure model) {
+		String locale = getLocale().getLanguage();
+		if (model == null) {
+			model = new DomStudentModelStructure();
+			model.setInfo(new DomStudentModelContextInfo(new TreeMap<>(), new TreeMap<>()));
+			model.getInfo().getTitle().put(locale, "Model");
+			model.getInfo().getDescription().put(locale, "");
+			model.setCategories(new ArrayList<>());
+		}
+		this.structure = model;
+		NodeVector vector = new NodeVector(model.getCategories(), model.getInfo(), locale);
+		this.model.setRoot(root = new DynamicUtilTreeNode(vector, vector));
+		this.subtitle.setText("");
+		// text.setEditable(false);
+		// OPSLAAN_ACTION.setDescription("");
+		this.model.nodeStructureChanged(root);
+		this.structure = model;
+		setEditable(editable);
+		// OPSLAAN_ACTION.left();
+
+		graph.setModel(this.model);
+
+	}
+
+	DomStudentModelStructure resultModel;
+
+	static DomStudentModelStructure untitled;
+	static DomStudentModelCategory untitledCategory;
+	static DomStudentModelObj untitledObjective;
+
+	static {
+		Genson genson = new GensonBuilder().create();
+		URL root = DwoHelper.getResourceUrlPath();
+		try {
+			URL content = new URL(root, "resources/untitled-learning-domain.json");
+			InputStream input = content.openStream();
+			untitled = genson.deserialize(input, DomStudentModelStructure.class);
+			input.close();
+			untitledCategory = untitled.getCategories().get(0);
+			untitledObjective = untitledCategory.getObjectives().get(0);
+			untitledObjective.getInfo().setId(null); // clear id
+		} catch (IOException e) {
+
+		}
+	}
+
+	public DomStudentModelStructure getModel() {
+		return resultModel;
+	}
+
+	@SuppressWarnings("unchecked")
+	private DomStudentModelStructure getTreeModel() {
+		DomStudentModelStructure result = new DomStudentModelStructure();
+		Node u;
+		u = (Node) root.getUserObject();
+		result.setInfo(u.getInfo());
+		List<DomStudentModelCategory> categories = new ArrayList<>(root.getChildCount());
+		result.setCategories(categories);
+		Enumeration<TreeNode> children = root.children();
+		while (children.hasMoreElements()) {
+			DefaultMutableTreeNode object = (DefaultMutableTreeNode) children.nextElement();
+			u = (Node) object.getUserObject();
+			DomStudentModelCategory cat = new DomStudentModelCategory();
+			cat.setInfo(u.getInfo());
+			List<DomStudentModelObj> objectives = new ArrayList<>(object.getChildCount());
+			cat.setObjectives(objectives);
+			Enumeration<TreeNode> kids = object.children();
+			while (kids.hasMoreElements()) {
+				DefaultMutableTreeNode kid = (DefaultMutableTreeNode) kids.nextElement();
+				u = (Node) kid.getUserObject();
+				DomStudentModelObj objective = new DomStudentModelObj();
+				objective.setInfo(u.getInfo());
+				objectives.add(objective);
+				if (!kid.isLeaf()) {
+					setObjectiveChildren(objective, kid.getChildCount(), kid.children());
+				}
+			}
+			categories.add(cat);
+		}
+		result.setCategories(categories);
+		return result;
+	}
+
+	private void setObjectiveChildren(DomStudentModelObj node, int childCount,
+			Enumeration<? extends TreeNode> children) {
+		List<DomStudentModelObj> objectives = new ArrayList<>(childCount);
+		node.setObjectives(objectives);
+		while (children.hasMoreElements()) {
+			DefaultMutableTreeNode kid = (DefaultMutableTreeNode) children.nextElement();
+			Node u = (Node) kid.getUserObject();
+			DomStudentModelObj objective = new DomStudentModelObj();
+			objective.setInfo(u.getInfo());
+			objectives.add(objective);
+			if (!kid.isLeaf()) {
+				setObjectiveChildren(objective, kid.getChildCount(), kid.children());
+			}
+
+		}
+
+	}
+
+	public JButton ok() {
+		return okButton;
+	}
+
+	void fillSelection() {
+		TreePath path = tree.getSelectionPath();
+		if (path == null) {
+			subtitle.setText("");
+			setDescription("");
+			settings.setVisible(false);
+			return;
+		}
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+		Object u = node.getUserObject();
+		subtitle.setText(u.toString());
+		setDescription(u);
+		if (u instanceof NodeLeaf) {
+			DomStudentModelContextInfo info = ((NodeLeaf) u).getInfo();
+			Double d = info.getSlip();
+			if (d == null)
+				d = 0.05; // DEFAULT SLIP
+			slip.setValue(d);
+			d = info.getInit();
+			if (d == null)
+				d = 0.5; // DEFAULT INIT;
+			init.setValue(d);
+			d = info.getLearn();
+			if (d == null)
+				d = 0.2; // DEFAULT LEARN;
+			learn.setValue(d);
+			settings.setVisible(true);
+		} else {
+			settings.setVisible(false);
+		}
+	}
+
+	void setDescription(Object u) {
+		if (u instanceof Node) {
+			String description = ((Node) u).getDescription();
+			if (description == null || description.startsWith(WISKOPDR_SIG) || description.isEmpty()) {
+				if (editable) {
+					Locale locale = getLocale();
+					wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(description, locale, container.getWidth(),
+							container.getHeight(), 425, 300);
+					wiskOpdrEditPanel.setBackground(Color.WHITE);
+					container.removeAll();
+					container.add(wiskOpdrEditPanel);
+					wiskOpdrEditPanel.setRequestFocusEnabled(true);
+					wiskOpdrEditPanel.setFocusable(true);
+					wiskOpdrEditPanel.requestFocusInWindow();
+				} else {
+					WiskOpdrPanel panel = WiskOpdr.getWiskOpdrPanel(description);
+					panel.setBackground(Color.WHITE);
+					JScrollPane pane = new JScrollPane(panel);
+					pane.setBorder(BorderFactory.createEmptyBorder());
+					pane.setViewportBorder(BorderFactory.createEmptyBorder());
+					pane.setBackground(Color.WHITE);
+					pane.getViewport().setBackground(Color.WHITE);
+					container.removeAll();
+					container.add(pane);
+				}
+			} else {
+				wiskOpdrEditPanel = null;
+				container.removeAll();
+			}
+		} else {
+			wiskOpdrEditPanel = null;
+			container.removeAll();
+		}
+	}
+
+	private String toJSON(String string) {
+		StringWriter writer = new StringWriter();
+		try {
+			Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(string,
+					WiskOpdrCache.getInstance().getClassLoader());
+			JSONEncoder.encode(map, writer, null);
+		} catch (Exception e) {
+			// LOG.log(Level.WARNING, "toJSON", e);
+		}
+		return writer.toString();
+
+	}
+
+	private void commitEdit(JFormattedTextField field) {
+		try {
+			field.commitEdit();
+		} catch (ParseException e) {
+		}
+	}
+
+	@Override
+	public void valueChanged(TreeSelectionEvent e) {
+		if (e.isAddedPath()) {
+			if (editable) {
+				TreePath path = e.getOldLeadSelectionPath();
+				safeSelection(path);
+			}
+			fillSelection();
+			validate();
+		}
+	}
+
+	public void safeSelection(TreePath path) {
+		if (path != null) {
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+			Object u = node.getUserObject();
+			String string = subtitle.getText();
+			if (u instanceof Node) {
+				Node n = (Node) u;
+				n.setTitle(string);
+				model.nodeChanged(node);
+				String description = wiskOpdrEditPanel == null ? n.getDescription() : wiskOpdrEditPanel.getText();
+				n.setDescription(description);
+				n.setDescriptionAsJSON(toJSON(description)); // could be lazy...
+			}
+			if (u instanceof NodeLeaf) {
+				NodeLeaf n = (NodeLeaf) u;
+				commitEdit(init);
+				commitEdit(learn);
+				commitEdit(slip);
+				n.setInit((Double) init.getValue());
+				n.setLearn((Double) learn.getValue());
+				n.setSlip((Double) slip.getValue());
+			}
+		}
+	}
+
+	@Override
+	public Component asComponent() {
+		return this;
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		closeWindow((ConfirmDialog) e.getWindow());
+	}
+
+	private void opslaanAction(ActionEvent e) {
+		safeSelection(tree.getSelectionPath());
+		if (editable && graph.isVisible())
+			graph.updateModel(model);// voorkennis en x,y
+		resultModel = getTreeModel();
+		resultModel.setOwner(DwoHelper.getCurrentUser().getUniqueDisplayName());
+		resultModel.setTimestamp(System.currentTimeMillis());
+		structure = resultModel;
+		try {
+			prop.updateModel(resultModel);
+		} catch (Dwo2Exception e1) {
+			Dwo2ExceptionCode code = e1.getDwo2Code();
+			LOG.log(Level.SEVERE, "opslaanAction", e1);
+			GuiCreator.instance().ShowErrorDialog(this, e1);
+		}
+		// setEditable(false);
+	}
+
+	// private void cancelAction(ActionEvent e) {
+	// setEditable(false);
+	// }
+
+	private void closeWindow(ConfirmDialog window) {
+		if (editable) {
+			int option = confirm();
+			switch (option) {
+			case JOptionPane.CANCEL_OPTION:
+				return;
+			case JOptionPane.YES_OPTION:
+				opslaanAction(null);
+				window.ok(null);
+				return;
+			case JOptionPane.NO_OPTION:
+			}
+		}
+		if (resultModel != null) {
+			window.ok(null);
+		} else
+			window.cancel(null);
+	}
+
+	private int confirm() {
+		safeSelection(tree.getSelectionPath());
+		DomStudentModelStructure toSafe = getTreeModel();
+		if (toSafe.same(structure))
+			return JOptionPane.NO_OPTION; // no need to safe.
+
+		return JOptionPane.showConfirmDialog(this, okButton.getText(), "", JOptionPane.YES_NO_CANCEL_OPTION,
+				JOptionPane.PLAIN_MESSAGE);
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+	}
+
+	public void importModel(DomStudentModelStructure model) {
+		DomStudentModelStructure tmp = structure;
+		setModel0(model);
+		structure = tmp;
+	}
+
+	public boolean isLock() {
+		return lock;
+	}
+
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		JTabbedPane pane = (JTabbedPane) e.getSource();
+		int index = pane.getSelectedIndex();
+		if (index == 0) {
+			graph.updateModel(model);
+		} else {
+			graph.setModel(model);
+		}
+	}
+
 }

@@ -48,7 +48,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 	public EditGraph() {
 		setLayout(null);
 		setBackground(Color.white);
-		setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+		setBorder(BorderFactory.createLineBorder(LeerdomeinGraphPanel.colorBlue3));
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		makeButtons();
@@ -57,7 +57,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 	public EditGraph(Graph graph) {
 		setLayout(null);
 		setBackground(Color.white);
-		setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+		setBorder(BorderFactory.createLineBorder(LeerdomeinGraphPanel.colorBlue3));
 		graphNodes = graph.getGraphNodes();
 		graphEdges = graph.getGraphEdges();
 		addMouseListener(this);
