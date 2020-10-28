@@ -159,7 +159,7 @@ public class CourseUnTrashAction extends GuiAction {
               Set set = parent.getChildNames();
               String name = course.getName();
               name = CourseManagementPanel.replaceDuplicate(name, set);
-              course.sequencenr = (long) (parent.getChildren().length+1);
+              course.sequencenr = (long) (parent.getChildren().length);
               course.setName(name);
               instance().updateCourse(course);
               CourseMap[] as = parent.getChildren();
