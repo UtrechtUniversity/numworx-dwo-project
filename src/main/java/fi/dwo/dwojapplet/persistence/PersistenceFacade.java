@@ -24,6 +24,7 @@ import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.domain.UserResultList;
 import fi.dwo.dwojapplet.gui.GuiCreator;
+import fi.dwo.dwojapplet.gui.ModuleTreePanel;
 import fi.dwo.dwojapplet.persistence.cache.ReadOnly;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicCourseManager;
@@ -953,6 +954,8 @@ public class PersistenceFacade {
     public CourseMap[] getTrash(CourseMap course) throws PersistenceException {
       if (course instanceof Course) 
         return courseMapper.getTrash( (Course) course);
-      return new CourseMap[0];
+      if (course.getUserObject() == ModuleTreePanel.SCHOOL_MODULES)
+        return courseMapper.getTrashSchool();
+      return null;
     }
 }

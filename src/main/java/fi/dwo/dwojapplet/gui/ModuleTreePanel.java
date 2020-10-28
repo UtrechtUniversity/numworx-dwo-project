@@ -839,7 +839,12 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
             if (parentMap == null) {
                 int id = c.getParentID();
                 try {
-                    parentMap = PersistenceFacade.instance().getCourse(id);
+                    if(id == 0 && c.getSchoolID() == 0) {
+                      parentMap = STANDAARD_DWO_MAP;
+                    } else if (id == 0) {
+                      parentMap = SCHOOL_MAP;
+                    } else
+                      parentMap = PersistenceFacade.instance().getCourse(id);
                     c.setParentMap(parentMap);
                 } catch (PersistenceException e) {
                 }
