@@ -28,7 +28,7 @@ public class ShowDomainGraphPanel extends JFrame {
 
 	public ShowDomainGraphPanel() {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		panel = new LeerdomeinGraphPanel(new DebugGraph());
+		panel = new LeerdomeinGraphPanel(new Graph());
 		setContentPane(panel);
 		pack();
 	}
