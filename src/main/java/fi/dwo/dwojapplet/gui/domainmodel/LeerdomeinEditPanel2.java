@@ -675,9 +675,10 @@ public class LeerdomeinEditPanel2 extends JPanel
 
 		leftBox.add(scrollpane, BorderLayout.CENTER);
 		leftSouth = Box.createHorizontalBox();
-		JButton filter = new JButton(new FilterAction(this, this::filter));
+		filterAction = new FilterAction(this, this::filter);
+        JButton filterBtn = new JButton(filterAction);
 		leftSouth.add(Box.createHorizontalGlue());
-		leftSouth.add(filter);
+		leftSouth.add(filterBtn);
 		leftSouth.add(Box.createHorizontalGlue());
 		leftSouth.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		leftBox.add(leftSouth, BorderLayout.SOUTH);
@@ -963,8 +964,8 @@ public class LeerdomeinEditPanel2 extends JPanel
 		this.structure = model;
 		setEditable(editable);
 		// OPSLAAN_ACTION.left();
-
 		graph.setModel(this.model);
+		filterAction.doFilter();
 
 	}
 
@@ -973,6 +974,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 	static DomStudentModelStructure untitled;
 	static DomStudentModelCategory untitledCategory;
 	static DomStudentModelObj untitledObjective;
+  private FilterAction filterAction;
 
 	static {
 		Genson genson = new GensonBuilder().create();

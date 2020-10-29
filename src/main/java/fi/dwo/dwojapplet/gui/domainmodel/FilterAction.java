@@ -73,4 +73,7 @@ class FilterAction extends AbstractAction {
       }
     }
     
+    public void doFilter() {
+      consumer.accept(filter);
+    }
   }
