@@ -48,6 +48,10 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 		window.console = $wnd.console;
 	}-*/;
 	
+	private native void debug(String message) /*-{
+		$wnd.console.debug(message)
+	}-*/;
+	
 	private static final String LAUNCH_DATA = "cmi.launch_data";
 	private static Logger logger = Logger.getLogger("WiskOpdrPlayer");
 
@@ -211,7 +215,9 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 		{
 			view.setUnitId(value);
 			DWOplayer.insertCSS(value);
-			view.setupModule(value, target);
+			view.setupModule(value, target).onResolve(() -> 
+			debug("FinishedSetupModule")
+			);
 		}
 	}
 
