@@ -896,10 +896,27 @@ pUser.setPassword(""); // INVALID PASSWORD
         	LOG.info("back = " + back);
         }
         String terug = TextMapper.getText(TextMapper.BTN_BACK);
-        result = "<HTML><BODY>" + result + "<P><A HREF=\""
-                + htmlEncode(back) + "\">" + terug + "</A></BODY></HTML>";
+//        result = "<HTML><BODY>" + result + "<P><A HREF=\""
+//                + htmlEncode(back) + "\">" + terug + "</A></BODY></HTML>";
+        String nw = TextMapper.getText(TextMapper.GUIP_PASSWORD);
         TextMapper.setLanguage(old);
-        return result;
+
+        InputStream in = getClass().getResourceAsStream("responsePasswordChange.html");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        String r;
+        r = "";
+        String line;
+        while( (line = reader.readLine()) != null) {
+        	r += line;
+        }
+        reader.close();
+        r = MessageFormat.format(r, 
+        		result,
+        		htmlEncode(back),
+        		terug,
+        		nw);
+        
+        return r;
     }
 
     /**
