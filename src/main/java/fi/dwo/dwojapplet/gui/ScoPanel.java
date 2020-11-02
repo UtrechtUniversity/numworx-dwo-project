@@ -7,6 +7,7 @@ import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.scorm.SCORM12APIInterface;
 import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
 import java.applet.Applet;
@@ -583,9 +584,18 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        if (e.getSource() == getSco().getCourse()) {
+        Object source = e.getSource();
+        if (source == getSco().getCourse()) {
           center.reloadHeader();
         }
-
+        if (source instanceof CourseMap) {
+          CourseMap cm = (CourseMap) source;
+          if (cm.getUserObject() == getSco().unwrap()) {
+            // restart sco
+            this.getSco().endWithoutSaving();
+            CenterSubPanel csp = GuiCreator.instance().getHTML5ScoPanel(getSco().unwrap());
+            center.loadTotal(csp);          
+          }
+        }
     }
 }
