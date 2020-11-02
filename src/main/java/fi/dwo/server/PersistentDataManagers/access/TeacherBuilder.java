@@ -732,7 +732,7 @@ public DomStudentModelContext patchStudentModel(DomStudentModelContextPatch domP
           String patched = new Digest().digest(newObject);
           if( !digest.equals(patched)) {
             LOG.severe("patch digest error " + patched + " " + digest);
-            throw new WebApplicationException(Status.CONFLICT);
+            throw new WebApplicationException(Status.PRECONDITION_FAILED);
           }
         }
         StringWriter newValue = new StringWriter();
