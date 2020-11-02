@@ -111,16 +111,18 @@ public class LeerdomeinEditPanel2 extends JPanel
 		boolean readonly;
 		JTree tree;
 		Component parent;
+    private EditableGraph graph;
 
 		private VoorkennisAction() {
 			super(TextMapper.getText("Voorkennis"));
 		}
 
-		public VoorkennisAction(boolean b, Component parent, JTree tree) {
+		public VoorkennisAction(boolean b, Component parent, JTree tree, EditableGraph graph) {
 			this();
 			readonly = b;
 			this.parent = parent;
 			this.tree = tree;
+			this.graph = graph;
 		}
 
 		@Override
@@ -128,6 +130,8 @@ public class LeerdomeinEditPanel2 extends JPanel
 			TreePath path = tree.getSelectionPath();
 			if (path == null)
 				return;
+			if(!readonly) graph.updateModel(tree.getModel());
+			
 			DefaultMutableTreeNode root;
 			root = (DefaultMutableTreeNode) tree.getModel().getRoot();
 
@@ -180,6 +184,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 							panel.makeChoices();
 							List<String> list = panel.getObjectives();
 							leaf.setVoorkennis(list);
+							graph.setModel(tree.getModel());
 						}
 					}
 				}
@@ -528,7 +533,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 	DefaultMutableTreeNode root;
 	private JComponent settings;
 	JFormattedTextField slip, init, learn;
-	private EditableGraph graph;
+	final private EditableGraph graph;
 
 	private Box settingsRO;
 	private JPanel settingsRW;
@@ -656,6 +661,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		root = new DynamicUtilTreeNode(v, v);
 		model = new InvisibleTreeModel(root);
 		tree = new JTree(model);
+        graph = new EditableGraph();
 
 		TreeCellRenderer renderer = new TreeCellRenderer();
 		renderer.updateUI();
@@ -708,7 +714,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		settingsRO = Box.createHorizontalBox();
 		settingsRO.setOpaque(true);
 		settingsRO.setBackground(Constants.COLOR20);
-		JButton voorkennisRO = new JButton(new VoorkennisAction(true, this, tree));
+		JButton voorkennisRO = new JButton(new VoorkennisAction(true, this, tree, graph));
 		voorkennisRO.setFont(font);
 		voorkennisRO.setPreferredSize(new Dimension(120, 24));
 		settingsRO.add(voorkennisRO);
@@ -733,7 +739,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		settings.setBorder(BorderFactory.createCompoundBorder(outer, inner));
 
 		Box bkt = Box.createHorizontalBox();
-		JButton voorkennis = new JButton(new VoorkennisAction(false, this, tree));
+		JButton voorkennis = new JButton(new VoorkennisAction(false, this, tree, graph));
 		voorkennis.setFont(font);
 		voorkennis.setPreferredSize(new Dimension(120, 20));
 		bkt.add(voorkennis);
@@ -792,7 +798,6 @@ public class LeerdomeinEditPanel2 extends JPanel
 		rightBox.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
 		// JTabbedPane tabs = new JTabbedPane(JTabbedPane.BOTTOM);
 		// tabs.addTab("Item", rightBox);
-		graph = new EditableGraph();
 
 		// tabs.addTab("Voorkennisgraaf", graph);
 		split.setRightComponent(rightBox);
@@ -917,7 +922,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		leftSouth.setVisible(!b);
 		fillSelection();
 		if (b) {
-			filter(Collections.emptyMap());
+			//filter(Collections.emptyMap());
 			leftBox.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
 			bewerken.setText(TextMapper.getText(TextMapper.GUIH_STOP_EDIT));
 			title.setText("Editor " + getTitle());

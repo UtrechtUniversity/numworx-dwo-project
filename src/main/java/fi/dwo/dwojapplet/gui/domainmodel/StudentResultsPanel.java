@@ -177,7 +177,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     settingsRO = Box.createHorizontalBox();
     settingsRO.setOpaque(true);
     settingsRO.setBackground(Constants.COLOR20);
-    JButton voorkennisRO = new JButton(new VoorkennisAction(true,this,tree)); voorkennisRO.setFont(font);
+    JButton voorkennisRO = new JButton(new VoorkennisAction(true,this,tree,null)); voorkennisRO.setFont(font);
     voorkennisRO.setPreferredSize(new Dimension(120,24));
     settingsRO.add(voorkennisRO);
     settingsRO.add(Box.createHorizontalGlue());

@@ -48,4 +48,18 @@ class InvisibleTreeModel extends DefaultTreeModel {
     return ((TreeNode) parent).getChildCount();
   }
 
+  /* (non-Javadoc)
+   * @see javax.swing.tree.DefaultTreeModel#nodeChanged(javax.swing.tree.TreeNode)
+   */
+  @Override
+  public void nodeChanged(TreeNode node) {
+    final boolean old = filterIsActive;
+    try {
+      filterIsActive = false;
+      super.nodeChanged(node);
+    } finally {
+      filterIsActive = old;
+    }
+  }
+
 }
