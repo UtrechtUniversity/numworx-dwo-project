@@ -76,7 +76,7 @@ public class ScoUnTrashAction extends GuiAction {
       public String getColumnName(int column) {
         switch(column) {
           case 0: return "Activiteit";
-          case 1: return "van";
+          case 1: return "sinds";
           case 2: return "terugzetten";
           case 3: return "weggooien";
         }
@@ -190,7 +190,7 @@ public class ScoUnTrashAction extends GuiAction {
   private Image removeImage, wasteImage, resetImage;
   
   public ScoUnTrashAction(Course course) {
-    this("trash");
+    this("");
     setCourse(course);
   }
 

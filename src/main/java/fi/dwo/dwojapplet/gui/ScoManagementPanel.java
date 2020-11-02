@@ -293,6 +293,8 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         
         if (DwoHelper.isPremium() && DwoHelper.isTest()) {
           JButton trash = new JButton(new ScoUnTrashAction(course));
+          trash.setContentAreaFilled(false);
+          trash.setHorizontalAlignment(SwingConstants.RIGHT);
           add(trash, BorderLayout.SOUTH);
         }
     }

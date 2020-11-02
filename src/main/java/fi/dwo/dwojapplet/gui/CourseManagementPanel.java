@@ -78,6 +78,8 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
   void addTrash() {
     if (DwoHelper.isPremium() && DwoHelper.isTest()) {
           JButton trash = new JButton(new CourseUnTrashAction(this.map));
+          trash.setContentAreaFilled(false);
+          trash.setHorizontalAlignment(SwingConstants.RIGHT);
           add(trash, BorderLayout.SOUTH);
         }
   }

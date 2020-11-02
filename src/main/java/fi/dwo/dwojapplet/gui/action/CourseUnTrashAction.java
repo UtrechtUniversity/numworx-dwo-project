@@ -190,7 +190,7 @@ public class CourseUnTrashAction extends GuiAction {
   private Image removeImage, wasteImage, resetImage;
   
   public CourseUnTrashAction(CourseMap map) {
-    this("trash");
+    this("");
     setCourse(map);
   }
 
