@@ -42,9 +42,6 @@ import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JComboBox;
 import fi.beans.numworxlf.JScrollPane;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinResultsPanel.IconRenderer;
-import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinResultsPanel.SchoolKlas;
-import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinResultsPanel.ScoreIcon;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
@@ -389,7 +386,7 @@ public class LeerdomeinMockupResultPanel extends JPanel implements ActionListene
 		score.setText(icon.getPercentage());
 	}
 
-	private static final Logger LOG = Logger.getLogger(LeerdomeinResultsPanel.class.getName());
+	private static final Logger LOG = Logger.getLogger(LeerdomeinResultsPanel2.class.getName());
 
 	private JComboBox<SchoolKlas> klasKeuze;
 	private DomStudentModelContext context;

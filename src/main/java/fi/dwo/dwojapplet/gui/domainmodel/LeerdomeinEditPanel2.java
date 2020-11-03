@@ -320,7 +320,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 			if (path == null)
 				return;
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-			DynamicUtilTreeNode parent = (DynamicUtilTreeNode) node.getParent();
+			DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
 			int i = parent.getIndex(node);
 			if (i > 0) {
 				safeSelection(path);
@@ -346,7 +346,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 			if (path == null)
 				return;
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-			DynamicUtilTreeNode parent = (DynamicUtilTreeNode) node.getParent();
+			DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
 			int i = parent.getIndex(node);
 			if (i < parent.getChildCount() - 1) {
 				safeSelection(path);
@@ -509,7 +509,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 				if (mutable.isLeaf()) {
 					mutable = (MutableTreeNode) mutable.getParent();
 				}
-				((DynamicUtilTreeNode) mutable).add(clipboard);
+				((DefaultMutableTreeNode) mutable).add(clipboard);
 				model.nodeStructureChanged(mutable);
 				tree.setSelectionPath(new TreePath(clipboard.getPath()));
 				tree.repaint();
@@ -919,7 +919,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		}
 		parent.add(settings, BorderLayout.SOUTH);
 		settings.setVisible(visible);
-		leftSouth.setVisible(!b);
+		//leftSouth.setVisible(!b);
 		fillSelection();
 		if (b) {
 			//filter(Collections.emptyMap());

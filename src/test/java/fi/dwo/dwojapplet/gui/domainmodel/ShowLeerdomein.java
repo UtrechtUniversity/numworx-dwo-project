@@ -10,7 +10,8 @@ public class ShowLeerdomein extends JFrame {
   public ShowLeerdomein() throws HeadlessException {
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     
-    LeerdomeinEditPanel panel = new LeerdomeinEditPanel();
+    LeerdomeinEditPanel2 panel = new LeerdomeinEditPanel2(null
+      );
     setContentPane(panel);
     pack();
   }

@@ -20,11 +20,11 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 public class ShowDomainResults extends JFrame {
 
-  private LeerdomeinResultsPanel panel;
+  private LeerdomeinResultsPanel2 panel;
 
   public ShowDomainResults() {
     setDefaultCloseOperation(EXIT_ON_CLOSE);
-    panel = new LeerdomeinResultsPanel();
+    panel = new LeerdomeinResultsPanel2();
     setContentPane(panel);
     pack();
   }
