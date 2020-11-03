@@ -260,24 +260,91 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	  setWindowTop(extraHeight);
 	}
 	
-	
+	class StatusBarWidth implements RequiresResize {
+
+		int widthScore, widthOnp, widthOpnieuw, widthAllesOpnieuw, widthKijkNaKnop, widthZelftoetsGeschiedenis, 
+			widthVolgende, widthVorige, widthKeerNagekeken, widthVerzegeld;
+		int width;
+
+		int widthOpdrachtBol;
+		int widthOpdrachtSpace;
+		int widthShiftButton;
+		int widthSpaceStartButton;
+		
+		
+		@Override
+		public void onResize() {onResize1(); }
+		
+		void onResize0() {
+			widthOpdrachtBol = on.getOpdrachtButtonWidth();
+			widthOpdrachtSpace = on.getOpdrachtSpaceWidth();
+			widthShiftButton = on.getShiftButtonWidth();
+			widthSpaceStartButton = on.getSpaceStartWidth();
+			onResize1(); }
+		
+		private void onResize1() {
+			// resize opdrachtbolletjes if necessary
+			int availableWidth = sb.asWidget().getOffsetWidth();
+			width = widthScore + widthOnp + widthOpnieuw + widthAllesOpnieuw + widthKijkNaKnop + widthZelftoetsGeschiedenis + widthVolgende + widthVorige 
+				 + widthKeerNagekeken + widthVerzegeld;
+			logger.info("ViewModuleViewImpl.setupView(): availableWidth = " + availableWidth + ", width = " + width 
+				+ ", widthScore = " + widthScore 
+				+ ", widthOnp = " + widthOnp 
+				+ ", widthOpnieuw = " + widthOpnieuw 
+				+ ", widthAllesOpnieuw = " + widthAllesOpnieuw 
+				+ ", widthKijkNaKnop = " + widthKijkNaKnop 
+				+ ", widthZelftoetsGeschiedenis = " + widthZelftoetsGeschiedenis 
+				+ ", widthVolgende = " + widthVolgende 
+				+ ", widthVorige = " + widthVorige 
+				+ ", widthKeerNagekeken = " + widthKeerNagekeken
+				+ ", widthVerzegeld = " + widthVerzegeld);
+			if (width > availableWidth)
+			{
+				int newMaxOnBar = 0;
+				int availableForOpdrachtenRij = availableWidth - width + widthOnp; 
+				if (widthOpdrachtBol + widthOpdrachtSpace > 0)
+				{
+					newMaxOnBar = Math.max(
+						(availableForOpdrachtenRij - 2 * widthShiftButton - 2 * widthSpaceStartButton) / (widthOpdrachtBol + widthOpdrachtSpace),
+						2);
+					logger.info("ViewModuleViewImpl.setupView(): newMaxOnBar = " + newMaxOnBar);
+					setMaxOnBar(newMaxOnBar+1);
+				}
+			}
+			else
+			{
+				// als de breedte niet hoeft worden aangepast, dan hier definitief de opdrachtbollen zetten al dan niet met shiftbuttons
+				setMaxOnBar(25);
+			}
+		}
+
+		int lastmax = -1;
+		private void setMaxOnBar(int newMaxOnBar) {
+			if(newMaxOnBar != lastmax) {
+				lastmax = newMaxOnBar;		
+				on.setMaxOnBar(newMaxOnBar);
+			}
+		}
+	}
+		
 	public void setupView(HashMap<String, Object> launchData)
 	{
+		StatusBarWidth sbw = new StatusBarWidth();
 		// breedte bijhouden van de componenten op de navigatiebalk
-		int width = 0;
+		sbw.width = 0;
 		// margin left and right is 10, set in css
 		int margin = 20;
-		int widthOnp = 0;
+		sbw.widthOnp = 0;
 		Label score = null;
-		int widthScore = 0;
-		int widthOpnieuw = 0;
-		int widthAllesOpnieuw = 0;
-		int widthKijkNaKnop = 0;
-		int widthZelftoetsGeschiedenis = 0;
-		int widthVorige = 0;
-		int widthVolgende = 0;
-		int widthKeerNagekeken = 0;
-		int widthVerzegeld = 0;
+		sbw.widthScore = 0;
+		sbw.widthOpnieuw = 0;
+		sbw.widthAllesOpnieuw = 0;
+		sbw.widthKijkNaKnop = 0;
+		sbw.widthZelftoetsGeschiedenis = 0;
+		sbw.widthVorige = 0;
+		sbw.widthVolgende = 0;
+		sbw.widthKeerNagekeken = 0;
+		sbw.widthVerzegeld = 0;
 		
 //		for (int i = 0; i < buttons.size(); i++)
 //			contentPanel.remove(buttons.get(i));
@@ -361,7 +428,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			if (bolletjesZichtbaar)
 			{
 				sb.addNavPanel(onp);
-				widthOnp = onp.getOffsetWidth();
+				sbw.widthOnp = onp.getOffsetWidth();
 			}
 			
 			if (mode != OpdrNav.OEFENEN) // alleen voor oefenen mag de optie 'score zichtbaar' uit staan
@@ -390,11 +457,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			
 			if ( (opnieuw || opnieuwMogelijk) && scoreNav.getAllesOpnieuwButton() != null) // alles opnieuw; let op: Noordhoff heeft geen 'alles opnieuw'-knop
 			{
-				widthAllesOpnieuw = scoreNav.getAllesOpnieuwButton().getOffsetWidth() + margin;
+				sbw.widthAllesOpnieuw = scoreNav.getAllesOpnieuwButton().getOffsetWidth() + margin;
 			}
 			if (itemOpnieuw && scoreNav.getOpnieuwButton() != null) // item opnieuw; let op: Noordhoff heeft geen 'opnieuw'-knop
 			{
-				widthOpnieuw = scoreNav.getOpnieuwButton().getOffsetWidth() + margin;
+				sbw.widthOpnieuw = scoreNav.getOpnieuwButton().getOffsetWidth() + margin;
 			}
 
 			// pas vanaf hier toevoegen mogelijk.
@@ -440,14 +507,14 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			scoreNav.setKijkNaEnabled(isKijkNaEnabled());
 			
 			sb.addKnop(scoreNav.getKijkNaButton(), false);
-			widthKijkNaKnop = scoreNav.getKijkNaButton().getOffsetWidth() + margin;
+			sbw.widthKijkNaKnop = scoreNav.getKijkNaButton().getOffsetWidth() + margin;
 			
 			if (zelftoetsGeschiedenis)
 			{
 				// voeg geschiedenis-knop toe
 				PushButton zelftoetsGeschiedenisButton = getZelftoetsGeschiedenisButton();
 				sb.addKnop(zelftoetsGeschiedenisButton, false);
-				widthZelftoetsGeschiedenis = zelftoetsGeschiedenisButton.getOffsetWidth() + margin;
+				sbw.widthZelftoetsGeschiedenis = zelftoetsGeschiedenisButton.getOffsetWidth() + margin;
 			}
 		}
 		scoreNav.setKijkNa(new ScoreNavIF.Checker()
@@ -491,10 +558,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		// vorige/volgende knop toevoegen
 		scoreNav.setVorigeVisible(vorigeKnopZichtbaar);
 		if (vorigeKnopZichtbaar && scoreNav.getPrevButton() != null)
-			widthVorige = scoreNav.getPrevButton().getOffsetWidth() + margin;
+			sbw.widthVorige = scoreNav.getPrevButton().getOffsetWidth() + margin;
 		scoreNav.setVolgendeVisible(volgendeKnopZichtbaar);
 		if (volgendeKnopZichtbaar && scoreNav.getNextButton() != null)
-			widthVolgende = scoreNav.getNextButton().getOffsetWidth() + margin;
+			sbw.widthVolgende = scoreNav.getNextButton().getOffsetWidth() + margin;
 		
 		scoreNav.setNextPrevHandler(this);
 		scoreNav.setScoresObjectivesKnop(on.zijnObjectivesAanwezig()
@@ -509,7 +576,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		{
 			scoreNav.setTotaalScoreLabel((int) on.getScore()); // toon percentagescore
 			// nu de score gezet is kunnen we de breedte bepalen
-			if (score != null) widthScore = score.getOffsetWidth() + margin;
+			if (score != null) sbw.widthScore = score.getOffsetWidth() + margin;
 		}
 		
 		if (mode == OpdrNav.ZELFTOETS)
@@ -521,9 +588,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
             sb.addLabel(scoreNav.getKeerNagekekenLabel());
             // Laatste label wordt bij te weinig ruimte heel smal gemaakt, pas als hij verdwijnt, is
             // offsetwidth weer de gewenste breedte.
-            widthKeerNagekeken = Math.max(50, scoreNav.getKeerNagekekenLabel().getOffsetWidth());
+            sbw.widthKeerNagekeken = Math.max(50, scoreNav.getKeerNagekekenLabel().getOffsetWidth());
             // Kan ook buitensporig groot worden
-            if (widthKeerNagekeken > 500) widthKeerNagekeken = 100;
+            if (sbw.widthKeerNagekeken > 500) sbw.widthKeerNagekeken = 100;
           }
 		}
 		
@@ -531,10 +598,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		{
 			Label verzegeld = new Label(Text.constants.lockToetsLabel());
 			sb.addLabel(verzegeld);
-			widthVerzegeld = Math.max(50, verzegeld.getOffsetWidth());
+			sbw.widthVerzegeld = Math.max(50, verzegeld.getOffsetWidth());
 			// Kan ook buitensporig groot worden
-			if (widthVerzegeld > 500)
-				widthVerzegeld = 100;
+			if (sbw.widthVerzegeld > 500)
+				sbw.widthVerzegeld = 100;
 		}
 
 		if (on.isReview())
@@ -542,44 +609,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			sb.addLabel(new Label(Text.constants.attemps() + on.getAantalSessies()));
 		}
 
-		// resize opdrachtbolletjes if necessary
-		int availableWidth = sb.asWidget().getOffsetWidth();
-		width = widthScore + widthOnp + widthOpnieuw + widthAllesOpnieuw + widthKijkNaKnop + widthZelftoetsGeschiedenis + widthVolgende + widthVorige 
-			 + widthKeerNagekeken + widthVerzegeld;
-		logger.info("ViewModuleViewImpl.setupView(): availableWidth = " + availableWidth + ", width = " + width 
-			+ ", widthScore = " + widthScore 
-			+ ", widthOnp = " + widthOnp 
-			+ ", widthOpnieuw = " + widthOpnieuw 
-			+ ", widthAllesOpnieuw = " + widthAllesOpnieuw 
-			+ ", widthKijkNaKnop = " + widthKijkNaKnop 
-			+ ", widthZelftoetsGeschiedenis = " + widthZelftoetsGeschiedenis 
-			+ ", widthVolgende = " + widthVolgende 
-			+ ", widthVorige = " + widthVorige 
-			+ ", widthKeerNagekeken = " + widthKeerNagekeken
-			+ ", widthVerzegeld = " + widthVerzegeld);
-		if (width > availableWidth)
-		{
-			int newMaxOnBar = 0;
-			int widthOpdrachtBol = on.getOpdrachtButtonWidth();
-			int widthOpdrachtSpace = on.getOpdrachtSpaceWidth();
-			int widthShiftButton = on.getShiftButtonWidth();
-			int widthSpaceStartButton = on.getSpaceStartWidth();
-			int availableForOpdrachtenRij = availableWidth - width + widthOnp; 
-			if (widthOpdrachtBol + widthOpdrachtSpace > 0)
-			{
-				newMaxOnBar = Math.max(
-					(availableForOpdrachtenRij - 2 * widthShiftButton - widthSpaceStartButton) / (widthOpdrachtBol + widthOpdrachtSpace),
-					2);
-				logger.info("ViewModuleViewImpl.setupView(): newMaxOnBar = " + newMaxOnBar);
-				on.setMaxOnBar(newMaxOnBar + 2);
-			}
-		}
-		else
-		{
-			// als de breedte niet hoeft worden aangepast, dan hier definitief de opdrachtbollen zetten al dan niet met shiftbuttons
-			on.setOpdrachten(on.getCurrentActiviteit());
-		}
-		
+		sbw.onResize0();
+		sb.setOnResize(sbw);
 		scoreNav.started();
 	
 		if (isTempotoets())

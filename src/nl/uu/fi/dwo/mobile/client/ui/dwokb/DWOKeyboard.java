@@ -189,6 +189,14 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
   }
 
   	ChangeHandler h;
+
+	private RequiresResize rr = () -> {};
+	
+	@Override
+	public void setOnResize(RequiresResize rr) {
+		this.rr = rr;
+	}
+	
 	@Override
 	public HandlerRegistration addChangeHandler(ChangeHandler handler) {
 		h = handler;
@@ -223,7 +231,7 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 	@Override
 	public void onResize() {
 		kb.onResize();
-		
+		rr.onResize();
 	}
 
 }

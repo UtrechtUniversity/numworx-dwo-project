@@ -8,6 +8,7 @@ import nl.uu.fi.dwo.keyboard.client.CombinedState;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
 
 public interface StatusBarIF extends IsWidget {
@@ -32,5 +33,6 @@ public interface StatusBarIF extends IsWidget {
 	
 	boolean isDesktopKeyboard();
 	default void setCombinedState(CombinedState state) { }
-	default void setSoortKeyboard(int soort) { } 
+	default void setSoortKeyboard(int soort) { }
+	default void setOnResize(RequiresResize rr) { } 
 }

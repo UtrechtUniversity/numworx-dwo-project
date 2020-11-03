@@ -731,6 +731,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
 			{	
 				shiftButtonLeft = new FormuleButton();
+				shiftButtonLeft.getElement().getStyle().setMarginTop(6, Unit.PX);
 				shiftButtonLeft.setStylePrimaryName(css.shiftBtn());
 				addScrollButtonHandler(shiftButtonLeft,-1);
 	//			shiftButtonLeft.setText("◀◀"); // lelijk icoon op ipad
@@ -741,6 +742,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				spaceStart.setStylePrimaryName(css.spaceShiftLabel());
 				spaceStart.setText("...");
 				fp_opdrachten.add(spaceStart);
+			} else {
+				currentShift = 0;
 			}
 			
 			for (int j = 0; j < aantalOpdrachten[index]; j++)
@@ -764,6 +767,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	//			shiftButtonRight.setText("▶▶"); // lelijk icoon op ipad
 //				shiftButtonRight.setText("\u27EB"); // >>, dun, hoog; niet zichtbaar op android tablet
 				shiftButtonRight.setText(">>");
+				shiftButtonRight.getElement().getStyle().setMarginTop(6, Unit.PX);
 				fp_opdrachten.add(shiftButtonRight);
 			}
 
