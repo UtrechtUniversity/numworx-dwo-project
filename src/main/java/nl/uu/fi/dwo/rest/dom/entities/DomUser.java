@@ -3,7 +3,8 @@
  */
 package nl.uu.fi.dwo.rest.dom.entities;
 
-import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import java.beans.Transient;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -122,6 +123,7 @@ public class DomUser extends DomId {
      * @return the user's unique display name ' &lt;username &gt; - &lt; display 
      * name &gt;'.
      */
+    @Transient
     public String getUniqueDisplayName() {
         StringBuilder result = new StringBuilder();
         result.append(this.userName)
@@ -142,6 +144,7 @@ public class DomUser extends DomId {
      * @return the user's display name.
      * @return 
      */
+    @Transient
     public String getDisplayName() {
         StringBuilder result = new StringBuilder();
         result.append(this.givenName)
@@ -161,6 +164,7 @@ public class DomUser extends DomId {
 
     protected void fill(DomUser user) {
         user.setId(this.getId() == null ? null : this.getId().duplicate());
+        user.setOptLock(getOptLock());
         user.userName = this.userName;
         user.singleSchool = this.singleSchool;
         user.givenName = this.givenName;
