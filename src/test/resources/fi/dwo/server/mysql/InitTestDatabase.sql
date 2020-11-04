@@ -971,3 +971,18 @@ CREATE TABLE `tblacl` (
   KEY `COURSE` (`courseID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
+DROP TABLE IF EXISTS `tblstudentmodelitem`;
+CREATE TABLE `tblstudentmodelitem` (
+  `itemID` int(11) NOT NULL AUTO_INCREMENT,
+  `modelID` int(11) NOT NULL,
+  `schoolID` int(11) NOT NULL,
+  `id` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `item` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `optlock` int(11) DEFAULT '0',
+  `lastChangeTimeStamp` bigint(20) DEFAULT '0',
+  `del` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`itemID`),
+  UNIQUE KEY `itemID_UNIQUE` (`itemID`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+

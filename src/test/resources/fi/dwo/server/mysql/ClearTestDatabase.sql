@@ -32,6 +32,7 @@ DROP TABLE IF EXISTS `tblschoolgroup`;
 DROP TABLE IF EXISTS `tblurnresource`;
 DROP TABLE IF EXISTS `tomcat_roles_view`;
 DROP TABLE IF EXISTS `tomcat_user_view`;
+DROP TABLE IF EXISTS `tblstudentmodelitem`;
 
 SET FOREIGN_KEY_CHECKS = 0;
 SET GROUP_CONCAT_MAX_LEN=32768;

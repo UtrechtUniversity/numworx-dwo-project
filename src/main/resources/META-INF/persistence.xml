@@ -30,6 +30,7 @@
     <class>fi.dwo.commons.persistence.entities.PersistentStudentModelContext</class>
     <class>fi.dwo.commons.persistence.entities.PersistentStudentModelData</class>
     <class>fi.dwo.commons.persistence.entities.PersistentACL</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentStudentModelItem</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <shared-cache-mode>NONE</shared-cache-mode>
     <properties>

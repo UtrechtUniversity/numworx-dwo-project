@@ -30,6 +30,7 @@
     <class>fi.dwo.commons.persistence.entities.PersistentUrnResource</class>
     <class>fi.dwo.commons.persistence.entities.PersistentUser</class>
     <class>fi.dwo.commons.persistence.entities.PersistentStudentModelContext</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentStudentModelItem</class>
     <class>fi.dwo.commons.persistence.entities.PersistentStudentModelData</class>
     <class>fi.dwo.commons.persistence.entities.PersistentACL</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
