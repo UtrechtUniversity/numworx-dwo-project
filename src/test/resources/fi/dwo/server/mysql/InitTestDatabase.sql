@@ -986,3 +986,15 @@ CREATE TABLE `tblstudentmodelitem` (
   UNIQUE KEY `itemID_UNIQUE` (`itemID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+
+DROP TABLE IF EXISTS `tblcoursedata`;
+CREATE TABLE `tblcoursedata` (
+  `courseID` int(11) NOT NULL,
+  `description` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `descriptionbytes` longblob,
+  `imageData` longblob,
+  `optlock` int(11) DEFAULT '0',
+  `lastChangeTimeStamp` bigint(20) DEFAULT '0',
+  `del` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`courseID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
