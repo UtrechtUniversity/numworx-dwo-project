@@ -46,6 +46,8 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	
 	private int startX = 0;
 	private int startY = 0;
+	
+	private boolean isScoreGraph = false;
 
 	public Graph() {
 		setLayout(null);
@@ -80,8 +82,17 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		for (int i = 0; i < graphEdges.size(); i++)
+		for (int i = 0; i < graphEdges.size(); i++) {
+			GraphEdge edge = graphEdges.get(i);
+			GraphNode source = edge.getSource();
+			GraphNode target = edge.getTarget();
+			Point p = makeTempLocation(source, target);
+			if(source.getTempLocation()==null)
+				source.setTempLocation(makeTempLocation(source, target));
+			if(edge.getLength() < 600)
+				source.setTempLocation(null);
 			graphEdges.get(i).paint(g, origin, factor);
+		}
 		for (int i = 0; i < graphNodes.size(); i++) {
 			if (!graphNodes.get(i).getBlur()) {
 				Rectangle rn = graphNodes.get(i).getTextBB();
@@ -101,8 +112,42 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 				}
 			}
 			graphNodes.get(i).paint(g, origin, factor);
+			graphNodes.get(i).setTempLocation(null);
 		}
 		//zoomFitButton.paint(g);
+	}
+	
+	private boolean onPanel(GraphNode node) {
+		Point p = node.getLocationOnPanel(origin, factor);
+		if(p.x > 0 && p.x < getWidth() && p.y > 0 && p.y < getHeight())
+			return true;
+		return false;
+	}
+	
+	private Point makeTempLocation (GraphNode source, GraphNode target) {
+		Point pTemp = null;
+		if(source==null)
+			return null;
+		if(!onPanel(source) && onPanel(target)) {
+			int x = 0;
+			int y = 0;
+			int w = getWidth();
+			int h = getHeight();
+			int a = source.getLocationOnPanel(origin, factor).x;
+			int b = source.getLocationOnPanel(origin, factor).y;
+			int c = target.getLocationOnPanel(origin, factor).x;
+			int d = target.getLocationOnPanel(origin, factor).y;
+			Point py0 = new Point((int)(a+(double)(0-b)/(double)(d-b)*(c-a)), 0);
+			if(py0.x > 0 && py0.x < w)
+				return py0;
+			Point px0 = new Point(0, (int)(b+(double)(0-a)/(double)(c-a)*(d-b)));
+			if(px0.y > 0 && px0.y < h)
+				return px0;
+			return pTemp;
+		}
+		
+		
+		return pTemp;
 	}
 
 	public void setGraphNodes(ArrayList<GraphNode> graphNodes) {
@@ -141,6 +186,10 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	
 	public void setOrigin(Point origin) {
 		this.origin = origin;
+	}
+	
+	public void setAsScoreGraph (Boolean isScoreGraph) {
+		this.isScoreGraph = isScoreGraph;
 	}
 
 	

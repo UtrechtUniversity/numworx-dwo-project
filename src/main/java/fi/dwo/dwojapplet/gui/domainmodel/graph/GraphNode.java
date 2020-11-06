@@ -24,6 +24,7 @@ public class GraphNode {
 	private String description;
 	//private String label;
 	private Point location;
+	private Point tempLocation;
 	private int size = 16;
 	private Color nodeColor = defaultNodeColor;
 	private Color nodeBorderColor = LeerdomeinGraphPanel.colorBlue2;
@@ -34,6 +35,14 @@ public class GraphNode {
 	
 	private boolean blur;
 	private boolean selected;
+	
+	private Double succesFailScore = null;
+	
+	private Color succesColor = new Color(0,200,0);
+	private Color halfSuccesColor = new Color(180,240,180);
+	private Color failColor = new Color(200,0,0);
+	private Color halfFailColor = new Color(255,150,150);
+	
 	
 	public GraphNode(String ID, String subdomein, String description) {
 		this.ID = ID;
@@ -58,6 +67,14 @@ public class GraphNode {
 		//setFont(defaultFont);
 	}
 	
+	public void setSuccesFailScore (double succesFailScore) {
+		this.succesFailScore = succesFailScore;
+	}
+	
+	public Double getSuccesFailScore() {
+		return succesFailScore;
+	}
+	
 	public String getID() {
 		return ID;
 	}
@@ -66,10 +83,46 @@ public class GraphNode {
 		return location;
 	}
 	
+	public Point getTempLocation() {
+		return tempLocation;
+	}
+	
 	public Point getLocationOnPanel(Point origin, double factor) {
 		int x = origin.x + (int)((location.x)*factor);
 		int y = origin.y + (int)((location.y )*factor);
 		return new Point(x,y);
+	}
+	
+	public Color getSuccesFailColor() {
+		if(succesFailScore == null)
+			return new Color(255,255,255,0);
+		if(succesFailScore < 25) 
+			return failColor;
+		if(succesFailScore <= 45) 
+			return halfFailColor;
+		if(succesFailScore > 45 && succesFailScore < 55)
+			return new Color(255,255,255,0);
+		if(succesFailScore < 75 && succesFailScore >= 55) 
+			return halfSuccesColor;
+		else 
+			return succesColor;
+		
+	}
+	
+	public Color getEdgeSuccesFailColor() {
+		if(succesFailScore == null)
+			return null;
+		if(succesFailScore < 25) 
+			return null;
+		if(succesFailScore <= 45) 
+			return null;
+		if(succesFailScore > 45 && succesFailScore < 55)
+			return null;
+		if(succesFailScore < 75 && succesFailScore >= 55) 
+			return halfSuccesColor;
+		else 
+			return succesColor;
+		
 	}
 	
 	public String getSubdomein() {
@@ -83,6 +136,10 @@ public class GraphNode {
 
 	public void setLocation(int x, int y) {
 		location = new Point(x,y);
+	}
+	
+	public void setTempLocation(Point p) {
+		tempLocation = p;
 	}
 	
 	public Font getFont() {
@@ -115,18 +172,25 @@ public class GraphNode {
 		String label = this.subdomein + space + this.description;
 		int x = origin.x + (int)((location.x)*factor);
 		int y = origin.y + (int)((location.y )*factor);
+		if(tempLocation!=null) {
+			x = tempLocation.x;
+			y = tempLocation.y;
+		}
+		
 		textLength = fm.stringWidth(label);
 		textHeight = fm.getAscent();
 		
 		int size = (int)(this.size*factor);
 		
 		g.setColor(nodeColor);
+		if(succesFailScore!=null)
+			g.setColor(getSuccesFailColor());
 		if(blur)
-			g.setColor(new Color(nodeColor.getRed(), nodeColor.getGreen(), nodeColor.getBlue(), 30));
+			g.setColor(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 30));
 		g.fillOval(x-size/2, y-size/2+textHeight/6, size, size);
 		g.setColor(nodeBorderColor);
 		if(blur)
-			g.setColor(new Color(nodeBorderColor.getRed(), nodeBorderColor.getGreen(), nodeBorderColor.getBlue(), 30));
+			g.setColor(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 30));
 		if(selected) {
 			g.setColor(textColor);
 			g.drawOval(x-size/2-1, y-size/2+textHeight/6-1, size+2, size+2);

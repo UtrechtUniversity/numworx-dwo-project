@@ -27,6 +27,7 @@ public class GraphEdge {
 	public boolean contains(int x, int y) {
 		if(target==null || source==null || target.getLocation()==null || source.getLocation()==null)
 			return false;
+		
 		float a = arrowSize;
 		float x0 = source.getLocation().x;
 		float x1 = target.getLocation().x;
@@ -58,6 +59,10 @@ public class GraphEdge {
 		float x1 = origin.x + (float)((target.getLocation().x)*factor);
 		float y0 = origin.y + (float)((source.getLocation().y)*factor);
 		float y1 = origin.y + (float)((target.getLocation().y)*factor);
+		if(source.getTempLocation()!=null) {
+			x0 = source.getTempLocation().x;
+			y0 = source.getTempLocation().y;
+		}
 		float mx = (x0 + x1)/2;
 		float my = (y0 + y1)/2;
 		float dm1 = (float)Math.sqrt((x1-mx)*(x1-mx)+(y1-my)*(y1-my));
@@ -69,10 +74,20 @@ public class GraphEdge {
 		float ry = my-a*(x1-mx)/dm1;
 		
 		g.setPaint(edgeColor);
+		if(target.getSuccesFailScore()!=null)
+			g.setPaint(target.getEdgeSuccesFailColor());
 		if(blur)
-			g.setPaint(new Color(edgeColor.getRed(), edgeColor.getGreen(), edgeColor.getBlue(), 30));
+			g.setPaint(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 30));
 		
         g.setStroke(new BasicStroke(1.3f*(float)factor));
+        if(target.getSuccesFailScore()!=null && target.getEdgeSuccesFailColor()!=null)
+       		g.setStroke(new BasicStroke(5f*(float)factor));
+        if(getLength()>600 || source.getTempLocation()!=null) {
+        		g.setStroke(new BasicStroke(1.3f*(float)factor, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{5,5}, 5));
+        		if(target.getSuccesFailScore()!=null && target.getEdgeSuccesFailColor()!=null)
+        			g.setStroke(new BasicStroke(5f*(float)factor, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{5,5}, 5));
+        		
+        }
 		GeneralPath path = new GeneralPath();
 		path.moveTo(x0,y0);
 		path.lineTo(x1,y1);
@@ -86,6 +101,14 @@ public class GraphEdge {
 		arrow.lineTo(px,py);
 		arrow.closePath();
 		g.fill(arrow);
+	}
+	
+	public int getLength() {
+		float x0 = source.getLocation().x;
+		float y0 = source.getLocation().y;
+		float x1 = target.getLocation().x;
+		float y1 = target.getLocation().y;
+		return (int)Math.sqrt((x1-x0)*(x1-x0)+(y1-y0)*(y1-y0));
 	}
 	
 	public GraphNode getSource() {
