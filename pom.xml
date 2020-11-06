@@ -168,13 +168,13 @@
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>OAuth2Client</artifactId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.0.1</version>
 		<classifier>classes</classifier>
 	</dependency>
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>OAuth2Client</artifactId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.0.1</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
@@ -268,7 +268,7 @@
 								<artifactItem>
 									<groupId>nl.numworx.swingbrowser</groupId>
 									<artifactId>swingbrowser-jxb</artifactId>
-									<version>0.0.8-SNAPSHOT</version>
+									<version>0.0.8</version>
 									<destFileName>dwo/swingbrowser-jxb.jar</destFileName>
 								</artifactItem>
 							</artifactItems>
@@ -595,10 +595,10 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<DWOplayerVersion>2.4.10-SNAPSHOT</DWOplayerVersion>
+		<DWOplayerVersion>2.4.10</DWOplayerVersion>
 		<DWOmAccessVersion>2.4.7</DWOmAccessVersion>
 		<RegisterVersion>2.4.2</RegisterVersion>
-		<DWOGwtClientVersion>2.4.10-SNAPSHOT</DWOGwtClientVersion>
+		<DWOGwtClientVersion>2.4.10</DWOGwtClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testeb3server</aws.environmentName>
