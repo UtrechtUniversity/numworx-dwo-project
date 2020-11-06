@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <!-- POM file generated with GWT webAppCreator -->
   <modelVersion>4.0.0</modelVersion>
   <groupId>nl.numworx.oauth2</groupId>
   <artifactId>OAuth2Client</artifactId>
   <packaging>war</packaging>
-  <version>1.0</version>
+  <version>1.0.1</version>
   <name>nl.numworx.oauth2client.OAuth2Client</name>
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
@@ -151,6 +150,11 @@
                 <configuration>
                     <attachClasses>true</attachClasses>
                 </configuration>
+	  </plugin>
+	  <plugin>
+		<groupId>external.atlassian.jgitflow</groupId>
+		<artifactId>jgitflow-maven-plugin</artifactId>
+		<version>1.0-m5.1</version>
 	  </plugin>
     </plugins>
   </build>
