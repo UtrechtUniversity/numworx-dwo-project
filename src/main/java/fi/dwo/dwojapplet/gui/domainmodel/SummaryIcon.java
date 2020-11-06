@@ -37,9 +37,9 @@ public class SummaryIcon implements Icon, PIcon {
 
 
   private void calculate(double green, double red) {
-    this.green = Math.round((float) green * 20);
+    this.green = Math.round((float) green * 40);
     if (this.green == 0 && green > 0) this.green = 1;
-    this.red = Math.round((float)red * 20);
+    this.red = Math.round((float)red * 40);
     if(this.red == 0 && red > 0) this.red = 1;    
     white = 20 - this.red - this.green;
     redText = Math.round(red*200)+"%";
