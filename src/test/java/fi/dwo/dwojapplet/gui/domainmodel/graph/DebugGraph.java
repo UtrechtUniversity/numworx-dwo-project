@@ -6,6 +6,19 @@ public class DebugGraph extends Graph {
 
   public DebugGraph() {
     makeExample();
+    
+    setAsScoreGraph(true);
+    graphNodes.get(12).setSuccesFailScore(100);
+    graphNodes.get(7).setSuccesFailScore(100);
+    graphNodes.get(6).setSuccesFailScore(100);
+    graphNodes.get(9).setSuccesFailScore(100);
+    graphNodes.get(5).setSuccesFailScore(100);
+    graphNodes.get(19).setSuccesFailScore(100);
+    graphNodes.get(15).setSuccesFailScore(100);
+    graphNodes.get(14).setSuccesFailScore(100);
+    graphNodes.get(28).setSuccesFailScore(0);
+    graphNodes.get(23).setSuccesFailScore(0);
+    graphNodes.get(25).setSuccesFailScore(0);
   }
 
   public void makeExample() {
