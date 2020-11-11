@@ -32,12 +32,10 @@ import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.EmptyView;
 import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
 import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
-import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
-import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
-import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -53,8 +51,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-
-import fi.wiskopdr.text.TextConstants;
 
 /**
  * Display module activity
@@ -256,7 +252,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 			PersistenceId modelid = sco.getStudentModelId();
 
 			if(modelid != null) {
-				view.setModel(clientFactory.getRPCHandler().getStudentModel(modelid));
+				view.setModel(Promises.resolved(new DomStudentModelContextId(modelid)));
 			} else
 				view.setModel(null);
 			

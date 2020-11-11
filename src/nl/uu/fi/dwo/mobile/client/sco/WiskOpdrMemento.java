@@ -7,11 +7,11 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 
 public class WiskOpdrMemento extends Memento {
 
-	public WiskOpdrMemento(Scorm2004IF api, ViewModuleView view, Promise<DomStudentModelContext> studentModel) {
+	public WiskOpdrMemento(Scorm2004IF api, ViewModuleView view, Promise<DomStudentModelContextId> studentModel) {
 		super(api, view, studentModel);
 	}
 

@@ -46,7 +46,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.InteractionViewWithM
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 
 import com.google.gwt.canvas.client.Canvas;
@@ -2378,7 +2378,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 
 	
 	private boolean readonly;
-	protected Promise<DomStudentModelContext> studentModel;
+	protected Promise<DomStudentModelContextId> studentModel;
 
 	/**
 	 * @return the readonly
@@ -2593,7 +2593,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	}
 
 	@Override
-	public void setModel(Promise<DomStudentModelContext> studentModel) {
+	public void setModel(Promise<DomStudentModelContextId> studentModel) {
 		this.studentModel = studentModel;
 		if(on != null)
 			on.setStudentModel(studentModel);

@@ -7,7 +7,7 @@ import org.osgi.util.promise.Promise;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 
 import com.google.gwt.place.shared.Place;
@@ -49,7 +49,7 @@ public interface ViewModuleView extends IsWidget
 	Scorm2004IF getApi();
 	
 	void setPresenter(Presenter p);
-	void setModel(Promise<DomStudentModelContext> studentModel);
+	void setModel(Promise<DomStudentModelContextId> studentModel);
 	
 	boolean nextPageAction();
     void showIcon(boolean b);

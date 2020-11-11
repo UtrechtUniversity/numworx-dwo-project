@@ -37,7 +37,7 @@ import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 
 public class ViewModuleViewNumworx extends ResizeComposite implements ViewModuleViewBuilder {
@@ -281,7 +281,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	}
 
 	@Override
-	public void setModel(Promise<DomStudentModelContext> studentModel) {
+	public void setModel(Promise<DomStudentModelContextId> studentModel) {
 		if(delegate != null)
 			delegate.setModel(studentModel);
 		

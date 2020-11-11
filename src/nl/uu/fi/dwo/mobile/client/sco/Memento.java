@@ -20,10 +20,7 @@ import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
-//import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
-//import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
-
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
@@ -155,7 +152,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private JSONArray aantalNakijken;
 	private LessonMode cmi_mode;
 
-	public Memento(Scorm2004IF api, ViewModuleView view, Promise<DomStudentModelContext> studentModel)
+	public Memento(Scorm2004IF api, ViewModuleView view, Promise<DomStudentModelContextId> studentModel)
 	{
 		this.api = api;
 		this.view = view;
@@ -664,7 +661,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 			
 	}
 	
-	Promise<DomStudentModelContext> pmodel;
+	Promise<DomStudentModelContextId> pmodel;
 	protected Promise<?> setStudentModelDataScore() {
 		if(DWOplayer.withUser() && pmodel != null) {
 			Promise<?> then = pmodel.then(p -> { 
@@ -680,7 +677,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 			return api.Terminate();
 	}
 	
-	public Promise<DomStudentModelContext> collectStudentModel() {
+	public Promise<DomStudentModelContextId> collectStudentModel() {
 		if(pmodel != null && DWOplayer.withUser()) {
 			return pmodel.then(p-> {
 				//DomStudentModelStructure model = p.getValue().getModelStructure();
@@ -694,12 +691,12 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	}
 	
 	
-	public void setStudentModelStructure(Promise<DomStudentModelContext> pmodel) {
+	public void setStudentModelStructure(Promise<DomStudentModelContextId> pmodel) {
 		this.pmodel = pmodel;
 		//StudentModelLogger.destroy();
 	}
 	
-	public Promise<DomStudentModelContext> getStudentModelStructure() {
+	public Promise<DomStudentModelContextId> getStudentModelStructure() {
 		return pmodel;
 	}
 	

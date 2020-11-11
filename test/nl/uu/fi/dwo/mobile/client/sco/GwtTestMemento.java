@@ -23,7 +23,7 @@ import nl.numworx.gwtpatch.client.JSONBuilder;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.promise.client.PromiseImpl;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 
 public class GwtTestMemento extends GWTTestCase {
   @Override
@@ -35,7 +35,7 @@ public class GwtTestMemento extends GWTTestCase {
   Memento m;
   SCORM_guest api;
   ViewModuleView view;
-  PromiseImpl<DomStudentModelContext> defer;
+  PromiseImpl<DomStudentModelContextId> defer;
   Map<String,String> map;
   GWTPatch patch;
   Scheduler scheduler;
