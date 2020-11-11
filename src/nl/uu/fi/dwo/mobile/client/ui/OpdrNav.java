@@ -2819,6 +2819,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 */
 	public int getOpdrachtButtonWidth()
 	{
+		if(opdrachtButton == null) return 0;
 		return opdrachtButton.getOffsetWidth();
 	}
 
@@ -2830,6 +2831,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 */
 	public int getOpdrachtSpaceWidth()
 	{
+		if(opdrachtSpace == null) return 0;
 		return opdrachtSpace.getOffsetWidth();
 	}
 
