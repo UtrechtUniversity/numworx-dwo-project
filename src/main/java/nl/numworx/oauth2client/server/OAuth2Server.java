@@ -18,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
@@ -49,7 +50,29 @@ public class OAuth2Server extends HttpServlet {
 		    return cookies.toArray(new Cookie[cookies.size()]);
 		  }
 		}
+	class RequestWrap extends HttpServletRequestWrapper {
 
+		private StringBuffer url;
+		public RequestWrap(HttpServletRequest request) {
+			super(request);
+			url = request.getRequestURL();
+		}
+
+		/* (non-Javadoc)
+		 * @see javax.servlet.http.HttpServletRequestWrapper#getRequestURL()
+		 */
+		@Override
+		public StringBuffer getRequestURL() {
+			return url;
+		}
+
+		public void setRequestURI(URI client) {
+			url.setLength(0);
+			url.append(client.toASCIIString());
+		}
+		
+	}
+	
 	private static final String CHALLENGE = "dwoSAMLchallenge";
 	final static private String schoolid = System.getProperty("ENV_ORGID", "385");
 
@@ -102,9 +125,17 @@ public class OAuth2Server extends HttpServlet {
 
 		DomSamlUser user = new DomSamlUser();
 		CookieWrap wrap = new CookieWrap(resp);
-	  	String organization = dbaccess.getOrganization(schoolid);
-	  	if ( dbaccess.setUUSAMLCookie(req, wrap, schoolid, organization))
-	    	return;
+		
+		if ("entree".equals(schoolid))
+		{	RequestWrap rwrap = new RequestWrap(req);
+			rwrap.setRequestURI(client);
+			if ( dbaccess.setEntreeCookie(rwrap, wrap))
+				return;
+		} else {
+		  	String organization = dbaccess.getOrganization(schoolid);
+		  	if ( dbaccess.setUUSAMLCookie(req, wrap, schoolid, organization))
+		    	return;
+		}
 		Cookie[] cookies = wrap.getCookies();
 		for(Cookie c : cookies) {
 			if (DWO_SAML_ORGANIZATION_ID.equals(c.getName())) user.setSamlOrgId( c.getValue() );
