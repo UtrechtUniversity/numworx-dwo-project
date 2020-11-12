@@ -1779,6 +1779,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			calculator.addDomHandler(new FormuleTapper(editor, this), ClickEvent.getType());
 			calculator.add(panel);
 			btn = new FEWSButton("=");
+			btn.addPointerDownHandler(); // Alleen voor deze [=]
 			btn.addButtonListener(this);
 			btn.setSize(20, 20);
 			btn.getElement().getStyle().setMargin(2, Unit.PX);

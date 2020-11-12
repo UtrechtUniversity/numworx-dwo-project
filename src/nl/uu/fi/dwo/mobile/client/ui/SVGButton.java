@@ -166,6 +166,10 @@ public class SVGButton extends SimplePanel {
 		
 		handlersAdded = true;
 	}
+
+	public void addPointerDownHandler() {
+		pointerDownHandler = addDomHandler(new PointerButtonHandler(), PointerDownEvent.getType());
+	}
 	
 	public void setTooltip(String tooltipText) {
 		tooltip = new Tooltip(this, 10, 35, tooltipText, 5000, "");
@@ -372,7 +376,7 @@ public class SVGButton extends SimplePanel {
 			removeMouseTouchHandlers();
 			logger.info("pointerDown");
 			callOnClick();
-			event.stopPropagation();
+			//event.stopPropagation();
 		}
 	}
 
