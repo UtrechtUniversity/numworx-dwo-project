@@ -339,8 +339,8 @@ public void actionPerformed(ActionEvent event) {
     l.setFont(font.deriveFont(Font.BOLD, 16));
     l.setForeground(COLOR15);
     JComponent gemiddelde = score = new JLabel(new ScoreIcon(0, 0, 0, 0, l.getFontMetrics(l.getFont())));
-    red = new JLabel("0%"); red.setForeground(RED);
-    green = new JLabel("0%"); green.setForeground(GREEN);
+    red = new JLabel("  "); red.setForeground(RED);
+    green = new JLabel("  "); green.setForeground(GREEN);
     b = hb(ra(10,0), l, ra(10,0), red, gemiddelde, green, hgl());   
     rightBox.add(b);    
     rightBox.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 20));

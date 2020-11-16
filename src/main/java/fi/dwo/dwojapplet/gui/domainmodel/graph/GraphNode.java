@@ -67,7 +67,7 @@ public class GraphNode {
 		//setFont(defaultFont);
 	}
 	
-	public void setSuccesFailScore (double succesFailScore) {
+	public void setSuccesFailScore (Double succesFailScore) {
 		this.succesFailScore = succesFailScore;
 	}
 	

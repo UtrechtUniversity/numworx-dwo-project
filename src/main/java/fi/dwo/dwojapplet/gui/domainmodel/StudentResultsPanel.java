@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.GridLayout;
+import java.awt.Window;
+import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.IdentityHashMap;
@@ -15,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.Icon;
@@ -22,6 +25,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
 import javax.swing.JTree.DynamicUtilTreeNode;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -32,10 +36,12 @@ import javax.swing.tree.TreePath;
 
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JScrollPane;
 import fi.beans.numworxlf.JTree;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinEditPanel2.VoorkennisAction;
+import fi.dwo.dwojapplet.gui.domainmodel.graph.EditableGraph;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
@@ -89,6 +95,48 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     
   }
   
+  final String GRAPH = "Graph"; // i18n
+  final String HIDE_GRAPH = "Hide Graph";
+
+  private class GraphAction extends AbstractAction {
+    private void packWindow() {
+      ((Window) SwingUtilities.getAncestorOfClass(Window.class, StudentResultsPanel.this)).pack();
+  }
+   
+    @Override
+    public void actionPerformed(ActionEvent e) {
+          if (GRAPH == getValue(NAME)) {
+            putValue(NAME, HIDE_GRAPH);
+            split.setResizeWeight(0);
+            split.setRightComponent(graph);
+//            Dimension pref = leftBox.getPreferredSize();
+//            pref.width = 580;
+//            leftBox.setPreferredSize(pref);
+            graph.setPreferredSize(new Dimension(1000, 650));
+            graph.setModel(model);
+            graph.setScore(structureScore);
+            
+            splitLeft.setBottomComponent(right);
+            
+            packWindow();
+            repaint();
+          } else {
+            putValue(NAME, GRAPH);
+            split.setResizeWeight(0.8);
+//            Dimension pref = leftBox.getPreferredSize();
+//            pref.width = 580;
+//            leftBox.setPreferredSize(pref);
+            split.setRightComponent(right);
+            graph.setModel(model);
+            packWindow();
+            repaint();
+          }
+    }
+    private GraphAction() { 
+      super(GRAPH);
+    }
+  }
+  
   
   
   private JLabel titleLabel;
@@ -104,19 +152,25 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
   private DomStudentModelContext context;
   private DomStudentModelStructureScore structureScore;
   private JLabel red, score, green;
+  
+  private EditableGraph graph;
 
   StudentResultsPanel(String student) {
     super(new BorderLayout());
     titleLabel = new JLabel("Kennisontwikkeling " + student);
-    add(titleLabel, BorderLayout.NORTH);
+    JPanel header = new JPanel(new BorderLayout());
+    add(header, BorderLayout.NORTH);
+    header.add(titleLabel, BorderLayout.CENTER);
+    JButton graphBtn = new JButton(new GraphAction());
+    header.add(graphBtn, BorderLayout.LINE_END);
     titleLabel.setBackground(COLOR15);
     titleLabel.setForeground(COLOR20);
     titleLabel.setFont(font.deriveFont(24f));
-    titleLabel.setOpaque(true);
+    titleLabel.setOpaque(false);
     titleLabel.setHorizontalAlignment(JLabel.CENTER);
-    titleLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-
-    JSplitPane split = new JSplitPane();
+    header.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 20));
+    header.setBackground(COLOR15);
+    split = new JSplitPane();
     BasicSplitPaneUI sui = (BasicSplitPaneUI) BasicSplitPaneUI.createUI(split);
     split.setUI(sui);
     BasicSplitPaneDivider divider = sui.getDivider();
@@ -128,14 +182,14 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     split.setBackground(Constants.COLOR20);
     setBackground(Constants.COLOR20);
     add(split, BorderLayout.CENTER);
-    add(split, BorderLayout.CENTER);
     String locale = JComponent.getDefaultLocale().getLanguage();
     NodeVector v = new NodeVector(locale);
     v.setTitle("Leerdomein");
     root = new DynamicUtilTreeNode(v,v);
     model = new InvisibleTreeModel(root);   
     tree = new JTree(model);
-
+    graph = new EditableGraph();
+    
     TreeCellRenderer renderer = new ExtraCellRenderer();
     renderer.updateUI();
     tree.setCellRenderer(renderer);
@@ -160,7 +214,20 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     leftSouth.add(Box.createHorizontalGlue());
     leftSouth.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     leftBox.add(leftSouth, BorderLayout.SOUTH);
-    split.setLeftComponent(leftBox);
+    splitLeft = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+    splitLeft.setBorder(BorderFactory.createEmptyBorder());
+    splitLeft.setResizeWeight(0.9);
+    BasicSplitPaneUI suiLeft = (BasicSplitPaneUI) BasicSplitPaneUI.createUI(splitLeft);
+    splitLeft.setUI(suiLeft);
+    BasicSplitPaneDivider dividerLeft = sui.getDivider();
+    dividerLeft.setBorder(BorderFactory.createEmptyBorder());
+    dividerLeft.setBackground(Constants.COLOR20);
+    
+    splitLeft.setDividerSize(20);
+    
+    splitLeft.setTopComponent(leftBox);
+    
+    split.setLeftComponent(splitLeft);
     
     JPanel rightBox = new JPanel(new BorderLayout());
     subtitle = new JLabel();
@@ -193,16 +260,16 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     
     rightBox.add(settingsRO, BorderLayout.SOUTH);
     rightBox.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
-    red = new JLabel("0%"); red.setForeground(LeerdomeinResultsPanel2.RED);
-    green = new JLabel("0%"); green.setForeground(LeerdomeinResultsPanel2.GREEN);
+    red = new JLabel("  "); red.setForeground(LeerdomeinResultsPanel2.RED);
+    green = new JLabel("  "); green.setForeground(LeerdomeinResultsPanel2.GREEN);
     
     score = new JLabel(new ScoreIcon(0, 0, 0, 0, red.getFontMetrics(red.getFont())));
     Box b = LeerdomeinResultsPanel2.hb(LeerdomeinResultsPanel2.hgl(),  red, score, green, LeerdomeinResultsPanel2.hgl());   
-    JPanel p = new JPanel(new BorderLayout(0,5));
-    p.add(rightBox, BorderLayout.CENTER);
-    p.add(b, BorderLayout.PAGE_START);
+    right = new JPanel(new BorderLayout(0,5));
+    right.add(rightBox, BorderLayout.CENTER);
+    right.add(b, BorderLayout.PAGE_START);
     
-    split.setRightComponent(p);
+    split.setRightComponent(right);
 
     tree.addTreeSelectionListener(this);
 
@@ -223,6 +290,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     //this.tekst.setText(vector.getDescription());
     setDescription(vector);
     this.model.nodeStructureChanged(root);
+    graph.setModel(this.model);
 
   }
 
@@ -321,6 +389,9 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     
     recalculateAncestors((DefaultMutableTreeNode) model.getRoot());
     tree.setSelectionRow(0);
+
+    graph.setModel(model);
+    graph.setScore(structureScore);
   }
 
 
@@ -362,6 +433,9 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
 
 
   private Map<Object, DomStudentModelScore<?>> map = Collections.emptyMap();
+  private JSplitPane split;
+  private JPanel right;
+  private JSplitPane splitLeft;
   
   public void setScore(DomStudentModelStructureScore v) {
     this.structureScore = v;
@@ -376,6 +450,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
       map.put(c.getInfo(), s);
       putObjectiveScore(c.getObjectives(), s.getObjectives());
     }
+    graph.setScore(v);
   }
 
   private void putObjectiveScore(List<DomStudentModelObj> list, List<DomStudentModelObjectiveScore> scores) {
