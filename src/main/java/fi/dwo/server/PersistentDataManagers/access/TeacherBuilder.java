@@ -36,6 +36,7 @@ import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentInClassManager;
+import fi.dwo.server.PersistentDataManagers.util.StudentModelContextUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentModelDataUtilManager;
 import fi.dwo.server.rest.util.Digest;
 
@@ -425,7 +426,7 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
             pModel.setPublishState(model.getPublishState());
             //return instance.teacherActions.updateStudentModel(instance.getContext(), pModel).buildDomStudentModelContext();
             
-            return StudentModelContextManager.edit(pModel).buildDomStudentModelContext(); // FIXME netjes maken!
+            return StudentModelContextUtilManager.edit(pModel).buildDomStudentModelContext(); // FIXME netjes maken!
         } catch (RollbackException|OptimisticLockException rb) {
         	LOG.log(Level.SEVERE, "conflict", rb);
             throw new WebApplicationException(Status.CONFLICT);
@@ -741,7 +742,7 @@ public DomStudentModelContext patchStudentModel(DomStudentModelContextPatch domP
 		result.setModelStructure(deserialize);
 
 		try {
-			DomStudentModelContext context = StudentModelContextManager.edit(result).buildDomStudentModelContext();
+			DomStudentModelContext context = StudentModelContextUtilManager.edit(result).buildDomStudentModelContext();
 			context.setModelStructure(null);
 			return context;
         } catch (RollbackException|OptimisticLockException|EntityNotFoundException e) {
