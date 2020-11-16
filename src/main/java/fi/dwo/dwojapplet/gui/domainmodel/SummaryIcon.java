@@ -55,20 +55,20 @@ public class SummaryIcon implements Icon, PIcon {
     y += h/4; // centreer, halve hoogte
     h = h/2;
     x += 1;
-    g.setColor(Color.WHITE);
-    while ( i < white) {
+    g.setColor(LeerdomeinResultsPanel2.GREEN);
+    while ( i < green) {
       g.fillRect(x, y, w-2, h);
       x += w;
       i++;
     }
     g.setColor(LeerdomeinResultsPanel2.RED);
-    while (i < (red + white)) {
+    while (i < (red + green)) {
       g.fillRect(x, y, w-2, h);
       x += w;
       i++;
       
     }
-    g.setColor(LeerdomeinResultsPanel2.GREEN);
+    g.setColor(Color.WHITE);
     while (i < 20) {
       g.fillRect(x, y, w-2, h);
       x += w;
@@ -88,12 +88,12 @@ public class SummaryIcon implements Icon, PIcon {
 
   @Override
   public String getRedPercentage() {
-    return redText;
+    return "";
   }
 
   @Override
   public String getGreenPercentage() {
-    return greenText;
+    return "";
   }
 
 }
