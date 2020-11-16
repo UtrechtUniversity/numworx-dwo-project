@@ -2,6 +2,7 @@ package fi.dwo.dwojapplet.gui.domainmodel;
 
 import java.util.List;
 import java.util.TreeMap;
+import java.util.UUID;
 import java.util.Vector;
 
 import javax.swing.JComponent;
@@ -38,6 +39,9 @@ public class NodeVector extends Vector<Object> implements Node {
     String title = info.getTitle().get(l);
     this.title = title;
     this.info = new DomStudentModelContextInfo(info);
+    if (this.info.getId() == null) {
+      this.info.setId(UUID.randomUUID().toString());
+    }
     this.lang = l;
     int last = -1;
     for (DomStudentModelCategory cat: categories) {    
@@ -54,6 +58,9 @@ public class NodeVector extends Vector<Object> implements Node {
     copy = true;
     this.title = title;
     this.info = new DomStudentModelContextInfo(leaf);
+    if (this.info.getId() == null) {
+      this.info.setId(UUID.randomUUID().toString());
+    }
     this.lang = l;
     int last = -1;
     for (DomStudentModelObj obj: objectives) {
@@ -83,6 +90,9 @@ public class NodeVector extends Vector<Object> implements Node {
   public NodeVector(DomStudentModelContextInfo org, String lang) {
     copy = true;
     info = new DomStudentModelContextInfo(org);
+    if (this.info.getId() == null) {
+      this.info.setId(UUID.randomUUID().toString());
+    }
     this.lang = lang;
   }
   
