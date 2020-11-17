@@ -16,8 +16,9 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManag
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import java.applet.Applet;
 import java.applet.AppletContext;
@@ -42,7 +43,6 @@ import javax.swing.SwingUtilities;
 
 import com.owlike.genson.GenericType;
 import com.owlike.genson.Genson;
-import com.owlike.genson.GensonBuilder;
 
 /**
  * This class is responsible for the Sco data. It also implements the
@@ -51,7 +51,7 @@ import com.owlike.genson.GensonBuilder;
  * @author M.J.B. Kupers
  *
  */
-public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, AppletStub, Comparable, ScoEditor {
+public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, AppletStub, Comparable<Sco>, ScoEditor {
 
     private static final Logger LOG = Logger.getLogger(Sco.class.getName());
 
@@ -616,6 +616,32 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
 				return null;
 			}
         }
+
+        if ( DwoHelper.isTest() && DwoHelper.isPremium() && "reducedStudentModelContexts".equals(name)) {
+          try {
+            List<DomStudentModelContext> list = SecureTeacherStudentModelManager.getReducedList();
+            Genson genson = StoredRestManager.getInstance().getGenson();
+            return genson.serialize(list);
+          } catch (Exception e) {
+            LOG.log(Level.WARNING, "studentModelContexts", e);
+            return null;
+          }
+        }
+        if ( DwoHelper.isTest() && DwoHelper.isPremium() && name.startsWith("studentModelContext:")) {
+            try {
+              String id = name.substring("studentModelContext:".length());
+              PersistenceId pid = new PersistenceId(id);
+              DomStudentModelContextId stid = new DomStudentModelContextId();
+              stid.setId(pid);
+              DomStudentModelContext result = SecureTeacherStudentModelManager.get(stid);
+              Genson genson = StoredRestManager.getInstance().getGenson();
+              return genson.serialize(result);
+            } catch (Exception e) {
+              LOG.log(Level.WARNING, "studentModelContext", e);
+              return null;
+            }
+        }
+        
         
         if ("abo_type".equals(name)) {
           try {
@@ -815,8 +841,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
-    public int compareTo(Object o) {
-        Sco s = (Sco) o;
+    public int compareTo(Sco s) {
         if (sequencenr == s.getSequencenr()) {
             return 0;
         }
