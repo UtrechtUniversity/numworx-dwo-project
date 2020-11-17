@@ -650,7 +650,7 @@ public class WrapSco extends Sco {
      * @see fi.dwo.client.domain.Sco#compareTo(java.lang.Object)
      */
     @Override
-    public int compareTo(Object o) {
+    public int compareTo(Sco o) {
         return delegate.compareTo(o);
     }
 
