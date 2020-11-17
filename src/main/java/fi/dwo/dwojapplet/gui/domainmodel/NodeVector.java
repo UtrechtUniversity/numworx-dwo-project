@@ -29,6 +29,7 @@ public class NodeVector extends Vector<Object> implements Node {
     title = u.title;
     lang = u.lang;
     info = new DomStudentModelContextInfo(new TreeMap<>(u.info.getTitle()), new TreeMap<>(u.info.getDescription()));
+    info.setId(UUID.randomUUID().toString());
   }
   
   public String title, lang;
@@ -82,6 +83,7 @@ public class NodeVector extends Vector<Object> implements Node {
   public NodeVector(String lang) {
     copy = true;
     info = new DomStudentModelContextInfo(new TreeMap<>(), new TreeMap<>());
+    info.setId(UUID.randomUUID().toString());
     this.lang = lang;
     setDescription("");
     setTitle("");
@@ -103,6 +105,9 @@ public class NodeVector extends Vector<Object> implements Node {
     String title = info.getTitle().get(locale);
     this.title = title;
     this.info = info;
+    if (this.info.getId() == null) {
+      this.info.setId(UUID.randomUUID().toString());
+    }
     this.lang = locale;
     int last = -1;
     for (DomStudentModelCategory cat: categories) {    
@@ -120,6 +125,9 @@ public class NodeVector extends Vector<Object> implements Node {
     copy = b;
     this.title = subtitle;
     this.info = (info2);
+    if (this.info.getId() == null) {
+      this.info.setId(UUID.randomUUID().toString());
+    }
     this.lang = locale;
     int last = -1;
     for (DomStudentModelObj obj: objectives) {
