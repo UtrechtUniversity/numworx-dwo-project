@@ -55,19 +55,30 @@ public class SecuredTeacherStudentModelManager {
     @PUT
     @Produces({"application/json"})
     @Path("/getList")
-    public List<DomStudentModelContext> getStudentModels(@Context SecurityContext sc, RestContext context) {
+    public List<DomStudentModelContext> getMergedStudentModels(@Context SecurityContext sc, RestContext context) {
+        try {
+            TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+                    .setHasRole(context.getRestContext().getDomHasRole())
+                    .buildSchoolAdminTeacher()
+                    .setTeacher();
+            return build.getMergedStudentModels();
+        } catch (Dwo2Exception e) {
+            throw new Dwo2RestException(e);
+        }
+    }
+
+    List<DomStudentModelContext> getStudentModels(@Context SecurityContext sc, RestContext context) {
         try {
             TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
                     .setHasRole(context.getRestContext().getDomHasRole())
                     .buildSchoolAdminTeacher()
                     .setTeacher();
             return build.getStudentModels();
-            //return null;
         } catch (Dwo2Exception e) {
             throw new Dwo2RestException(e);
         }
     }
-    
+   
     
     @PUT
     @Produces({MediaType.APPLICATION_JSON})

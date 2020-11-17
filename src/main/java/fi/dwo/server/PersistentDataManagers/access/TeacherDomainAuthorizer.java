@@ -336,6 +336,7 @@ public class TeacherDomainAuthorizer {
 
         DomLRS getLRS(UriInfo info);
 		DomStudentModelContext patchStudentModel(DomStudentModelContextPatch domPatch) throws Dwo2Exception;
+		List<DomStudentModelContext> getMergedStudentModels() throws Dwo2Exception;
 
 //        TeacherState_HR_R_S_SC_SG_U addASchoolClass(DomSchoolClass schoolClassFrom)  throws Dwo2Exception;
     }

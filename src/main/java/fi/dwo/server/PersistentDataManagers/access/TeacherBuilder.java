@@ -376,7 +376,15 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
     public List<DomStudentModelContext> getStudentModels() throws Dwo2Exception {
         List<PersistentStudentModelContext> pModels = instance.teacherActions.getStudentModels(instance.getContext());
         List<DomStudentModelContext> result = new ArrayList<>(pModels.size());
-        pModels.stream().forEach((m) -> result.add(m.buildDomStudentModelContext()));
+        pModels.forEach((m) -> result.add(m.buildDomStudentModelContext()));
+        return result;
+    }
+    @Override
+    public List<DomStudentModelContext> getMergedStudentModels() throws Dwo2Exception {
+        List<PersistentStudentModelContext> pModels = instance.teacherActions.getStudentModels(instance.getContext());
+        pModels.forEach(StudentModelContextUtilManager::merge);
+        List<DomStudentModelContext> result = new ArrayList<>(pModels.size());
+        pModels.forEach((m) -> result.add(m.buildDomStudentModelContext()));
         return result;
     }
     
