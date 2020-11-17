@@ -18,12 +18,12 @@ public class SummaryIcon implements Icon, PIcon {
   SummaryIcon(DomStudentModelScore<?> s, FontMetrics fm) {
     this.fm = fm;
     double green,red;
-    double scale = s.getTotalCount() > 0 ? s.getCount() / (double)s.getTotalCount(): 1;
+    double scale = 1;
     if (s.getGreenCount() > 0) {
-      green = (s.getGreenScore()/s.getGreenCount() - 0.5) * scale;;
+      green = (s.getGreenScore()/s.getGreenCount() - 0.5) * s.getGreenCount()/s.getTotalCount();
     } else green = 0;
     if (s.getRedCount() > 0) {
-      red = (0.5-s.getRedScore()/s.getRedCount()) * scale;
+      red = (0.5-s.getRedScore()/s.getRedCount()) * s.getRedCount()/s.getTotalCount();
     } else red = 0;
 
     calculate(green, red);
@@ -88,12 +88,12 @@ public class SummaryIcon implements Icon, PIcon {
 
   @Override
   public String getRedPercentage() {
-    return "";
+    return redText;
   }
 
   @Override
   public String getGreenPercentage() {
-    return "";
+    return greenText;
   }
 
 }
