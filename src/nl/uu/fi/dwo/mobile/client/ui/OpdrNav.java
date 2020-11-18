@@ -1229,7 +1229,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 */
 	public double getScore()
 	{
-		if (entry.zelftoetsHighScore)
+		if (entry.zelftoetsHighScore && mode == ZELFTOETS)
 			return getZelftoetsHighScore();
 		else
 		{
