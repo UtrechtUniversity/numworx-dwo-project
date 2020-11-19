@@ -9,7 +9,9 @@ import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import fi.wiskopdr.FormuleParser;
@@ -20,7 +22,7 @@ import fi.wiskopdr.FormuleParser;
  * @author Danny Hendrix
  * 
  */
-public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
+public class FormuleViewer extends FormuleHolder implements FormuleEditorIF, IsWidget
 {
 	private static Logger logger = Logger.getLogger("FormuleViewer");
 	public static final int NONE = 0;
@@ -164,6 +166,11 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 		return sp;
 	}
 
+	@Override
+	public Widget asWidget() {
+		return sp;
+	}
+	
 	@Override
 	public void clearSelection() {
 		if(!selectable) 
