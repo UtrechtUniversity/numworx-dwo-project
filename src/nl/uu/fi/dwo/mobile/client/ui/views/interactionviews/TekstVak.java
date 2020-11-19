@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
@@ -21,6 +22,7 @@ import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -1277,48 +1279,22 @@ public class TekstVak extends LayoutPanel //implements InteractionView
     setObjects(getOpdrachtObjects()); 
     resize();
   }
+
+	public void zoom(TekstVakPanel tekstVakPanel) {
+		
+		parent.zoom(this, rij, kolom);
+		// relayout
+		clearRegels();
+		zwevendeTekstVakken.clear();
+		ArrayList<Object> all = getOpdrachtObjects();
+		all.stream().filter(t -> t != tekstVakPanel && (t instanceof IsWidget))
+			.forEach( item -> 
+			regelLayer.setWidgetVisible(((IsWidget) item).asWidget(), false)
+		);
+		ArrayList<Object> single = new ArrayList<>(); single.add(tekstVakPanel);
+		setObjects(single);
+		zetOpdrachtObjects(all);
+		//resize();
+	}
 	
-	/*
-	@Override
-	public int getWidth() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public HashMap<String, Object> getState() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setState(HashMap<String, Object> h) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public int getScore() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public boolean isCorrect() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void kijkNa() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setCommunicationRoot(OpdrNavIF comRoot) {
-		// TODO Auto-generated method stub
-		
-	}
-	*/
 }
