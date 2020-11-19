@@ -11,6 +11,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Deferred;
@@ -4866,9 +4867,12 @@ private Object CamelCase(String name) {
 		} else if ("action.setNotEditable".equals(command)) {
 			seal(event);
 		} else if ("action.zoom".equals(command)) {
+			orgBreedte = breedte;
 			parent.zoom(this);
+			zetVolledigeBreedte( (int)( (Window.getClientWidth()-20)/responsiveFactor)); // FIXME 20 is toplevel marge
 		} else if ("action.unzoom".equals(command)) {
-			// unzoom
+			zetVolledigeBreedte(orgBreedte);
+			parent.unzoom(this);
 		}
 		
 	}
@@ -5652,6 +5656,27 @@ private Object CamelCase(String name) {
 		if(parent != null) {
 			parent.zoom(this);
 		}
+	}
+
+	public void unzoom(TekstVak tekstVak, int rij, int kolom) {
+		for(int i = 0; i < tekstVakken.length; i++)
+		{
+			for(int j = 0; j < tekstVakken[i].length; j ++)
+			{
+				if (i != rij && j != kolom)
+					tekstVakken[i][j].setVisible(true);				
+			}
+		}
+		float breedte = breedtes.stream().collect(Collectors.summingDouble(Double::doubleValue)).floatValue();
+	    if (breedtes.size()>1) breedte += cellSpaceColumn * (breedtes.size()-1);
+		float hoogte =  hoogtes.stream().collect(Collectors.summingDouble(Double::doubleValue)).floatValue();
+		if (hoogtes.size()>1) hoogte += cellSpaceRow * (hoogtes.size()-1);
+		
+		setCurrentSize(Math.round(breedte), Math.round(hoogte));
+		if(parent != null) {
+			parent.unzoom(this);
+		}
+		
 	}
 
 	

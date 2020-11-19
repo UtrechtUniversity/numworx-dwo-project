@@ -1296,5 +1296,21 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		zetOpdrachtObjects(all);
 		//resize();
 	}
+
+	public void unzoom(TekstVakPanel tekstVakPanel) {
+		
+		parent.unzoom(this, rij, kolom);
+		// relayout
+		clearRegels();
+		zwevendeTekstVakken.clear();
+		ArrayList<Object> all = getOpdrachtObjects();
+		all.stream().filter(t -> t != tekstVakPanel && (t instanceof IsWidget))
+			.forEach( item -> 
+			regelLayer.setWidgetVisible(((IsWidget) item).asWidget(), true)
+		);
+		setObjects(all);
+		//resize();
+	}
+
 	
 }
