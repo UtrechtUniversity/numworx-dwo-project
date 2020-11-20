@@ -7,6 +7,7 @@ import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomStatistics;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -241,4 +242,21 @@ public class SecuredDwoAdminSchoolManagerIT {
         }
     }
 
+    @Test
+    public void testStatisticsSchool() throws Dwo2Exception {
+        SecurityContext sc = new TestSecurityContext("dwoadmin", RoleType.ADMIN);
+
+        SecuredDwoAdminSchoolManager instance = new SecuredDwoAdminSchoolManager();
+        PersistentSchool expResult = null;
+        expResult = SchoolManager.findEntity(3L);
+        RestSchool4DwoAdmin restSchool = new RestSchool4DwoAdmin();
+        DomSchool4DwoAdmin domSchool = expResult.buildDomSchool4DwoAdmin();
+        restSchool.setDomSchool4DwoAdmin(domSchool);
+        restSchool.setRestContext(context);
+        DomStatistics result = instance.getStatistics(sc, restSchool);
+        assertNotNull("School statistics.", result);
+    	assertEquals("items", 17, result.getStatistics().size());
+    }
+    
+    
 }
