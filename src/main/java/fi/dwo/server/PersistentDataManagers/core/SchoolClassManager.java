@@ -11,7 +11,9 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 /**
@@ -184,5 +186,19 @@ public class SchoolClassManager {
             em.close();
         }
     }
+    public static Long getEntityCount(PersistentSchool school) {
+        EntityManager em = getEntityManager();
+        try {
+            CriteriaQuery<Long> cq = em.getCriteriaBuilder().createQuery(Long.class);
+            Root<PersistentSchoolClass> rt = cq.from(PersistentSchoolClass.class);
+            Predicate p = em.getCriteriaBuilder().equal(rt.get("schoolID"), school.getSchoolID());           
+            cq.select(em.getCriteriaBuilder().count(rt));
+            cq.where(p);
+            TypedQuery<Long> q = em.createQuery(cq);
+            return q.getSingleResult();
+        } finally {
+            em.close();
+        }
+	}
 
 }

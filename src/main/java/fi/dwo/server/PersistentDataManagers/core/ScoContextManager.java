@@ -6,6 +6,7 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
@@ -15,7 +16,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 /**
@@ -164,6 +167,22 @@ public class ScoContextManager {
         }
     }
 
+    public static Long getEntityCount(PersistentCourse c) {
+        EntityManager em = getEntityManager();
+        try {
+            CriteriaQuery<Long> cq = em.getCriteriaBuilder().createQuery(Long.class);
+            Root<PersistentScoContext> rt = cq.from(PersistentScoContext.class);
+            Predicate p = em.getCriteriaBuilder().equal(rt.get("courseID"), c.getCourseID());           
+            cq.select(em.getCriteriaBuilder().count(rt));
+            cq.where(p);
+            TypedQuery<Long> q = em.createQuery(cq);
+            return q.getSingleResult();
+        } finally {
+            em.close();
+        }
+
+    }
+    
     /**
      * Finds ScoContexts that belong to a {@Link PersistentCourse}.
      * 
@@ -208,5 +227,20 @@ public class ScoContextManager {
             em.close();
         }
     }
+
+	public static Long getEntityCount(PersistentSchool school) {
+        EntityManager em = getEntityManager();
+        try {
+            CriteriaQuery<Long> cq = em.getCriteriaBuilder().createQuery(Long.class);
+            Root<PersistentScoContext> rt = cq.from(PersistentScoContext.class);
+            Predicate p = em.getCriteriaBuilder().equal(rt.get("schoolID"), school.getSchoolID());           
+            cq.select(em.getCriteriaBuilder().count(rt));
+            cq.where(p);
+            TypedQuery<Long> q = em.createQuery(cq);
+            return q.getSingleResult();
+        } finally {
+            em.close();
+        }
+	}
 
 }

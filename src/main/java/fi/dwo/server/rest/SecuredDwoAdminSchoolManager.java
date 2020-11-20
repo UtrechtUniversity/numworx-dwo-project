@@ -629,7 +629,7 @@ public class SecuredDwoAdminSchoolManager {
         	entry = new DomMapEntry<>(g.getRole().getGroupname() + " size", Integer.toString(size));
         	stats.add(entry);
             long count;
-            long stamp = (System.currentTimeMillis() - 30 * 24 * 3600 * 1000L);
+            long stamp = (System.currentTimeMillis() - 365 * 24 * 3600 * 1000L);
         	count = users.stream()
         	    .filter( f -> f.getUser() != null)
         	    .flatMap(u -> {
@@ -652,41 +652,28 @@ public class SecuredDwoAdminSchoolManager {
         		stats.add(entry);
         	}
         	
-        	studentsco += users.stream().flatMap(u -> {
-        		PersistentHasRolePK key = u.getPersistentHasRolePK();
-				return StudentScoContextManager.findEntities(key).stream();
-        	}).count();
+        	studentsco += StudentScoContextManager.getEntityCount(g);
         }
     	entry = new DomMapEntry<>("studentscos", Long.toString(studentsco));
     	stats.add(entry);       
 }   
         {
-        	List<PersistentSchoolClass> classes = SchoolClassManager.findEntities(school);
-        	entry = new DomMapEntry<>("classes", Integer.toString(classes.size()));
+        	Long size = SchoolClassManager.getEntityCount(school);
+        	entry = new DomMapEntry<>("classes", size.toString());
         	stats.add(entry);       
         }
         {
-        	long count = 0L, scocount = 0L;
-        	List<Long> courses;
-        	do { 
-        		courses = CourseManager.findEntityIDs(school); // Fixed Generates out of memory..
-        		count += courses.size();
-        		scocount += courses.stream().map(item -> {
-					PersistentCourse c = new PersistentCourse(item);
-					List<PersistentScoContext> entities = ScoContextManager.findEntities(c);
-					entities.addAll(ScoContextManager.findTrashedEntities(c));
-					return entities;
-				}).collect(Collectors.summingInt(List::size));
-        	} while(courses.size()>0);
-        	
-        	entry = new DomMapEntry<>("courses", Long.toString(count));
+        	Long count, scocount;
+        	count = CourseManager.getEntityCount(school);
+        	scocount = ScoContextManager.getEntityCount(school);
+         	entry = new DomMapEntry<>("courses", count.toString());
         	stats.add(entry);
-        	entry = new DomMapEntry<>("scos", Long.toString(scocount));
+        	entry = new DomMapEntry<>("scos", scocount.toString());
         	stats.add(entry);
         }
         {
-        	List<PersistentStudentModelContext> models = StudentModelContextManager.findEntities(school);
-        	entry = new DomMapEntry<>("models", Integer.toString(models.size()));
+        	Long size = StudentModelContextManager.getEntityCount(school);
+        	entry = new DomMapEntry<>("models", size.toString());
         	stats.add(entry);
         }
         

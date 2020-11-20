@@ -6,6 +6,7 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.server.persistence.DwoEmfFactory;
@@ -269,4 +270,22 @@ public class StudentScoContextManager {
         em.close();
       }
     }
+    
+    public static Long getEntityCount(PersistentSchoolGroup role) {
+        EntityManager em = getEntityManager();
+        try {
+          CriteriaBuilder builder = em.getCriteriaBuilder();
+          CriteriaQuery<Long> cq = builder.createQuery(Long.class);
+          Root<PersistentStudentScoContext> rt = cq.from(PersistentStudentScoContext.class);
+          cq.select(builder.count(rt));
+          Path<Object> hasRolePath = rt.get("persistentHasRolePK");
+          Predicate exprSG   = builder.equal(hasRolePath.get("schoolGroupID"), role.getSchoolGroupID());
+          cq.where(exprSG);
+          TypedQuery<Long> q = em.createQuery(cq);
+          return q.getSingleResult();        
+        } finally {
+          em.close();
+        }
+      }
+
 }
