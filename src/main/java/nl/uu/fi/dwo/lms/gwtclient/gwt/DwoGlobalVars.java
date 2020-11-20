@@ -260,7 +260,7 @@ public class DwoGlobalVars {
       LOG.log(Level.INFO, "Getting current and available school logins.");
       SecuredUserSchoolLoginManagerV2 loginManager = this.loginManager;
       Promise<DomSchoolsRolesAndClassesV2> logins;
-      if (isTest() && isSaml()) {     
+      if (isTest() && (isSaml()||isSingleSchool())) {     
           OAuthManager oauth = new OAuthManager();
           logins = accountManager.getBearerToken().then(
     		  p -> { 
@@ -279,6 +279,11 @@ public class DwoGlobalVars {
       
       return logins;
   }
+
+	private boolean isSingleSchool() {
+		Boolean singleSchool = currentUser.getSingleSchool();
+		return Boolean.TRUE.equals(singleSchool);
+	}
     /**
      * perform second step: setActiveSchoolAndClass, resolve(LoggedIn)
      * @param resolved
