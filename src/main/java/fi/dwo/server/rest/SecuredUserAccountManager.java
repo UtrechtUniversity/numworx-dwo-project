@@ -377,7 +377,7 @@ public class SecuredUserAccountManager {
                         ) {
 //                        loginContextList.get(0).setLastLogin(null); not for housekeeping users. // changed 6 maart 2019, actie voor maart 2021
                     	String env = System.getProperty("DWO_ENV", "app");
-                    	if (!env.contains("saml"))
+                    	if (!env.contains("saml") || u.isSingleSchoolAccount())
                     	{	loginContextList.get(0).setSecretKey(null);
                         	loginContextList.get(0).setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
                     	}

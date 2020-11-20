@@ -8,10 +8,16 @@ import fi.dwo.commons.persistence.entities.PersistentUser;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.crypto.SecretKey;
+
 import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
@@ -119,6 +125,12 @@ public class LoginContextUtilManager {
                     loginContext = loginContextList.get(0);
                     ThreadLocalRandom.current().nextBytes(bytes);
                     if (newSecret|| loginContext.getSecretKey()==null) loginContext.setSecretKey(bytes);
+                    if (user.isSingleSchoolAccount())
+                    {
+                        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+                        bytes = key.getEncoded();
+                    	loginContext.setNonce(bytes);
+                    }
                     loginContext.setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
                     LoginContextManager.edit(loginContext);
                     break;
