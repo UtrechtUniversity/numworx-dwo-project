@@ -139,7 +139,8 @@ public class XAPIService extends StudentResultsService implements StudentResults
     state.agent = xapi.getAgent();
     state.registration = null;      
     xapi.saveState(state); // store in background
-    
+
+    scores.getDomStudentModelStructureScore().recalculateAncestors();
     return scores;
   }
 

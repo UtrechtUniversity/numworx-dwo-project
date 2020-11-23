@@ -170,11 +170,17 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		} else if (userObject instanceof int[]) {
 			int[] elems = (int[]) userObject;
 			int cat = elems[0], obj = elems[1];
-			TreeItem top = item.getParentItem().getParentItem();
+			TreeItem top = item;
+			for (int i = 0; i < elems.length; i++ ) top = top.getParentItem();
 			DomStudentModelContext model = (DomStudentModelContext) top.getUserObject();
 			DomStudentModelStructure structure = model.getModelStructure();
 			DomStudentModelCategory o = structure.getCategories().get(cat);
-			DomStudentModelObj oo = o.getObjectives().get(obj);
+
+			DomStudentModelObj o0 = o.getObjectives().get(obj);
+			for (int i = 2; i < elems.length; i++ ) {
+				o0 = o0.getObjectives().get(i);
+			}
+			final DomStudentModelObj oo = o0;
 			String text = oo.getInfo().getDescription().get(lang);
 			String json = oo.getInfo().getDescription().get(lang + "@JSON");
 	        widget.get().description.setWidget(createDescription(text,json));
@@ -182,8 +188,26 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
             widget.get().title.setText(text);
 			service.getScore(model).then( p -> { 
 				DomStudentModelObjectiveScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(cat).getObjectives().get(obj);
+				for (int i = 2; i < elems.length; i++ ) score = score.getChildren().get(i);
 				setPerc(score);
-				return p; }, FAILURE);
+				return p; }, FAILURE)
+			.then (p -> {
+				if (oo.getObjectives() != null && oo.getObjectives().size() != item.getChildCount()) {
+					DomStudentModelObjectiveScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(cat).getObjectives().get(obj);
+					for (int i = 2; i < elems.length; i++ ) score = score.getChildren().get(i);
+					int oobj = 0;
+					for (DomStudentModelObj ooo: oo.getObjectives()) {
+						DomStudentModelObjectiveScore s = score.getChildren().get(oobj);
+						float ppp = percentage(s);
+						TreeItem tt = item.addItem(Util.treeItem(ooo.getInfo().getTitle().getOrDefault(lang, ""), ppp, 4));
+						int[] oelems = new int[elems.length+1];
+						System.arraycopy(elems, 0, oelems, 0, elems.length);
+						oelems[elems.length] = oobj;
+						tt.setUserObject(oelems);
+					}
+				}
+				return p;
+			}, p-> item.removeItems());
 		}
 		
 	}
