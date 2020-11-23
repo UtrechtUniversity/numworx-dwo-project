@@ -287,6 +287,10 @@
          <param-name>phrasebook</param-name>
          <param-value>mpreduce</param-value>
       </init-param>
+	  <init-param>
+	  	<param-name>adviseMecgi</param-name>
+	  	<param-value>https://ideastest.science.uu.nl/cgi-bin/advise-me.cgi</param-value>
+	  </init-param>
     </servlet>    
 	<servlet>
 		<servlet-name>MathShell</servlet-name>
@@ -311,10 +315,6 @@
 			<param-name>phrasebook</param-name>
 			<param-value>mpreduce</param-value>
 		</init-param>
-	  <init-param>
-	  	<param-name>adviseMecgi</param-name>
-	  	<param-value>https://ideastest.science.uu.nl/cgi-bin/advise-me.cgi</param-value>
-	  </init-param>
 	</servlet>
   <!-- Servlets -->
 <!--   <servlet> -->
