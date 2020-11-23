@@ -194,8 +194,8 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	}
 float percentage(DomStudentModelScore score) {
   float perc;
-  		if (score.getCount() == 0) perc = 50;
-  		else perc = (float)(score.getScore()*100/score.getCount());
+  		if (score.getGreenCount() == 0) perc = 50;
+  		else perc = (float)(score.getGreenScore()*100/score.getGreenCount());
   return perc;
 }
   private static final String WISKOPDR_SIG = "H4sIAAAAAA";
