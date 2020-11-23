@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSte
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -84,7 +85,7 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 	}
 	
 
-	@Override
+  @Override
   protected Promise<JSONValue> getJSONLaunchDataBytes(String file) {
     return DWOplayer.clientfactory.getRPCHandler().getCourseDescription(file);
   }
@@ -94,9 +95,19 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 		loading.setText(DwoLocalesForGWT.instance.NUM_TBL_FETCHINGDATA());
 		main.setWidget(loading);
 		String xml = "=" + id;
-		loadJSON(xml);
+		loadJSON(xml).recover(this::showError);
 	}
 
+  	Boolean showError(Promise<?> p) {
+  		Throwable fail = p.getFailure();
+  		String message = fail.toString();
+  		if (fail instanceof Dwo2Exception)
+  			message = fail.getLocalizedMessage();
+  		loading.setText("Exception in setup: " + message);
+  		return Boolean.FALSE;
+  	}
+  
+  
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void setupView(HashMap<String, Object> launchData) {
@@ -139,6 +150,8 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 		opdrachtObjects = new ArrayList<Object>();
 		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( opdracht.get("interactiePanelLaunchData") );
 		TekstBuffer tb = new TekstBuffer(varnamen, waarden, getAnchorContext());
+		int[] breedtes = { 578 };  // FIXME variabel, dit is de maat van de info popup
+		tb.zetVolleBreedtes(breedtes);
 		newVersion = !(Boolean) opdracht.get("hasAntwoordVak");
 		//New editor version
 		if (opdrachtGegevens != null || newVersion)
