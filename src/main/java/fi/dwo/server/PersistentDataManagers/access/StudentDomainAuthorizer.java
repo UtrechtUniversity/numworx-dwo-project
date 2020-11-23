@@ -128,9 +128,11 @@ public class StudentDomainAuthorizer {
 
         public DomStudentModelData getStudentModelData(DomScoContextId domScoId) throws Dwo2Exception;
         public DomStudentModelDataScore getStudentModelDataScore(DomStudentModelContextId domModelId) throws Dwo2Exception;
-        public List<DomStudentModelContext> getStudentModelContextList()  throws Dwo2Exception;
+        public List<DomStudentModelContext> getStudentModelContextList() throws Dwo2Exception;
 
         public DomLRS getLRS(UriInfo info);
+
+		public List<DomStudentModelContext> getMergedStudentModelContextList() throws Dwo2Exception;
 
     }
 

@@ -11,6 +11,8 @@ import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer.Stude
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
+import fi.dwo.server.PersistentDataManagers.util.StudentModelContextUtilManager;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -165,13 +167,26 @@ class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U
     @Override
     public DomStudentModelDataScore getStudentModelDataScore(DomStudentModelContextId domModelId) throws Dwo2Exception {
         PersistentStudentModelContext pStudentModel = StudentModelContextManager.findEntity(MySQLPersistenceId.getNativeId(domModelId));
+        StudentModelContextUtilManager.merge(pStudentModel);
         return instance.getStudentActions().getStudentModelData(instance.getContext(), pStudentModel);
     }
     @Override
     public List<DomStudentModelContext> getStudentModelContextList() throws Dwo2Exception{
         List<PersistentStudentModelContext> pModels = instance.getStudentActions().getStudentModels(instance.getContext());
                     List<DomStudentModelContext>  result = new ArrayList<>(pModels.size());
-            pModels.stream().forEach(m -> result.add(m.buildDomStudentModelContext()));
+            pModels.forEach(m -> result.add(m.buildDomStudentModelContext()));
+            return result;
+
+    }
+
+    @Override
+    public List<DomStudentModelContext> getMergedStudentModelContextList() throws Dwo2Exception{
+        List<PersistentStudentModelContext> pModels = instance.getStudentActions().getStudentModels(instance.getContext());
+                    List<DomStudentModelContext>  result = new ArrayList<>(pModels.size());
+            pModels.forEach(m -> {
+                StudentModelContextUtilManager.merge(m);
+            	result.add(m.buildDomStudentModelContext());	
+            });
             return result;
 
     }

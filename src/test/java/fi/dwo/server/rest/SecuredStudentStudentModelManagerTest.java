@@ -66,11 +66,8 @@ public class SecuredStudentStudentModelManagerTest {
      * SecuredTeacherStudentModelManager.
      */
     @Test
-    public void testGetStudentModels() {
-        System.out.println("getStudentModels");
+    public void testGetStudentModels() throws Exception {
         SecuredStudentStudentModelManager instance = new SecuredStudentStudentModelManager();
-        List<DomStudentModelContext> expResult = null;
-        try {
             StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser("user02")
                     .setDefaultHasRole()//
                     .buildStudent();
@@ -81,11 +78,8 @@ public class SecuredStudentStudentModelManagerTest {
             context.setDomHasRole(hr);
             restContext.setRestContext(context);
 
-            List<DomStudentModelContext> result = instance.getStudentModels(sc, restContext);
+            List<DomStudentModelContext> result = instance.getMergedStudentModels(sc, restContext);
             assertEquals(2, result.size());
-        } catch (Dwo2Exception e) {
-            fail("could not fetch models.");
-        }
     }
 
     /**

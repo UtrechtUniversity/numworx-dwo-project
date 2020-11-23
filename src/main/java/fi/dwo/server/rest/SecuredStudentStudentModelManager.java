@@ -52,11 +52,11 @@ public class SecuredStudentStudentModelManager {
     @PUT
     @Produces({"application/json"})
     @Path("/getList")
-    public List<DomStudentModelContext> getStudentModels(@Context SecurityContext sc, RestContext context) throws Dwo2Exception {
+    public List<DomStudentModelContext> getMergedStudentModels(@Context SecurityContext sc, RestContext context) throws Dwo2Exception {
     StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
                 .setHasRole(context.getRestContext().getDomHasRole())//
                 .buildStudent();
-     return state.getStudentModelContextList();        
+     return state.getMergedStudentModelContextList();        
     }
 
     /**
