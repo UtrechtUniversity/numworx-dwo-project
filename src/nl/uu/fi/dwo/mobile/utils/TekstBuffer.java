@@ -234,7 +234,10 @@ public class TekstBuffer
 	{
 		String naam = tekst.substring(i + 2, i + endIndex);
 
-		return new ImageView(naam, volleBreedtes[huidigeKolom]);
+		int kolom = -1; // De default: geen volle breedte
+		if (volleBreedtes != null && volleBreedtes.length > huidigeKolom)
+			kolom = volleBreedtes[huidigeKolom];
+		return new ImageView(naam, kolom);
 	}
 
 	private FormuleViewer getFormuleViewer(String tekst, int i, int endIndex)
