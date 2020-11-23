@@ -83,9 +83,9 @@ public class ImageView implements IsWidget, TekstElement
 			if (url.startsWith("/"))
 				url = "//" + DWOplayer.PARAMETERS.getCDN() + url; // IS DIT ALTIJD GOED?
 			Number width = null, height = null;
-			object = map.get(naam + "/w");
+			object = w();
 			if(object instanceof Number) width = (Number) object;
-			object = map.get(naam + "/h");
+			object = h();
 			if(object instanceof Number) height = (Number) object;
 			if(width != null && height != null)
 			{
@@ -111,9 +111,9 @@ public class ImageView implements IsWidget, TekstElement
 			if (type == null)
 				type = "image/" + url.substring(url.length() - 3, url.length());
 			Number width = null, height = null;
-			object = map.get(naam + "/w");
+			object = w();
 			if(object instanceof Number) width = (Number) object;
-			object = map.get(naam + "/h");
+			object = h();
 			if(object instanceof Number) height = (Number) object;
 			Image im;
 			data = "data:" + type + ";base64," + data;
@@ -132,14 +132,22 @@ public class ImageView implements IsWidget, TekstElement
 			return im;
 		}
 	}
+
+	private Object h() {
+		return map.getOrDefault(naam + "/h", map.get(strip(naam) + "/h"));
+	}
+
+	private Object w() {
+		return map.getOrDefault(naam + "/w", map.get(strip(naam) + "/w"));
+	}
 	
 	public void zetVolledigeBreedte(int volleBreedte) {
 		Object object = map.get(naam + "/v");
 		if (Boolean.TRUE.equals(object) && volleBreedte > 0 && scaledImage!=null ) {
 			Number width = null, height = null;
-			object = map.get(naam + "/w");
+			object = w();
 			if(object instanceof Number) width = (Number) object;
-			object = map.get(naam + "/h");
+			object = h();
 			if(object instanceof Number) height = (Number) object;
 			if(width != null && height != null)	{
 				height = height.intValue() * volleBreedte / width.intValue();
@@ -176,7 +184,7 @@ public class ImageView implements IsWidget, TekstElement
 
 	@Override
 	public int getHeight() {
-		Object height = map.get(naam + "/h");
+		Object height = h();
 		if(height instanceof Number)
 		{
 			Object object = map.get(naam + "/v");
@@ -191,7 +199,7 @@ public class ImageView implements IsWidget, TekstElement
 
 	@Override
 	public int getWidth() {
-		Object width = map.get(naam + "/w");
+		Object width = w();
 		if(width instanceof Number) {
 			Object object = map.get(naam + "/v");
 			if (Boolean.TRUE.equals(object) && vollebreedte > 0) {
