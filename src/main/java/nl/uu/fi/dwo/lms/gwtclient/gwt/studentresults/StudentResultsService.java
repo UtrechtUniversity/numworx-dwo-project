@@ -113,7 +113,8 @@ public class StudentResultsService implements StudentResults {
 
 	private boolean isEmptyTitle(DomStudentModelObj obj) {
 		Map<String, String> title = obj.getInfo().getTitle();
-		return title.isEmpty()
+		return  title == null ||
+				title.isEmpty()
 			|| title.values().stream().allMatch(x -> x == null || x.isEmpty())
 				;
 	}

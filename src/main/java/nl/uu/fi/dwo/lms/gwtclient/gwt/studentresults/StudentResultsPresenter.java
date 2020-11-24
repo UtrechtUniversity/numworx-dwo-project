@@ -7,6 +7,10 @@ import javax.inject.Inject;
 
 import org.osgi.util.promise.Promise;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -31,6 +35,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
@@ -51,6 +56,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	private String lang;
 	
 	@Inject Lazy<StudentResultsWidget> widget;
+	@Inject Lazy<StudentResultsGraph> graph;
 	@Inject StudentResults service;
 	private HandlerRegistration ref;
 	
@@ -78,24 +84,88 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		service.getModels().then(this::getModels, FAILURE);
 	}
 	
-	Promise<?> getModels(Promise<List<DomStudentModelContext>> p) {
-		StudentResultsWidget w = widget.get();
-		List<DomStudentModelContext> list = p.getValue();
-		Tree tree = w.tree;
-		tree.removeItems();
-		for (DomStudentModelContext item : list) {
+	private static final DomStudentModelScore NULLSCORE = new DomStudentModelScore();
+	{
+		NULLSCORE.setScore(0, 0, 0, 0);
+	}
+	class ModelChange implements ChangeHandler, ClickHandler {
+		
+		List<DomStudentModelContext> list;
+		DomStudentModelContext current;
+		
+		@Override
+		public void onChange(ChangeEvent event) {
+			int selection = widget.get().models.getSelectedIndex();
+			LOG.info("selection = " + selection);
+			if(selection == 0) {
+				widget.get().tree.removeItems();
+				widget.get().title.setText("");
+				widget.get().description.clear();
+				widget.get().setPerc(NULLSCORE);
+				current = null;
+				return;
+			}
+			DomStudentModelContext item = list.get(selection-1);
+			current = item;
+			insertTree(item);
+		}
+
+		private ModelChange(List<DomStudentModelContext> list) {
+			this.list = list;
+		}
+
+		
+		private void insertTree(DomStudentModelContext item) {
+			Tree tree = widget.get().tree;
+			tree.removeItems();
 			DomStudentModelStructure structure = item.getModelStructure();
 			String title = structure.getInfo().getTitle().getOrDefault(lang, "");
-			int perc = 50;
-			SafeHtml html = Util.treeItem(title, perc,0);
+			SafeHtml html = Util.treeItem(title, NULLSCORE ,0);
             TreeItem ti = tree.addItem(html);
 			ti.setUserObject(item);
 			service.getScore(item).then(s -> {
               DomStudentModelStructureScore score = s.getValue().getDomStudentModelStructureScore();
-              int percentage = Math.round(percentage(score));
-              ti.setHTML(Util.treeItem(title, percentage,1));
+              ti.setHTML(Util.treeItem(title, score ,0));
+              ti.setSelected(true);
+              addToTree(ti, item);
 			  return s;
 			});
+
+		}
+
+		@Override
+		public void onClick(ClickEvent event) {
+			showHideGraph(current);			
+		}
+		
+	}
+	
+	boolean showGraph;
+	void showHideGraph(DomStudentModelContext item) {
+		showGraph = !showGraph;
+		if(showGraph) {
+			widget.get().description.setWidget(graph.get());
+			graph.get().setModelScore(item, service.getScore(item));
+		} else {
+			setDescription(item.getModelStructure().getInfo());
+		}
+	}
+	
+	Promise<?> getModels(Promise<List<DomStudentModelContext>> p) {
+		StudentResultsWidget w = widget.get();
+		List<DomStudentModelContext> list = p.getValue();
+		ModelChange changes = new ModelChange(list);
+		eventBus.addHandlerToSource(ChangeEvent.getType(), w, changes);
+		eventBus.addHandlerToSource(ClickEvent.getType(), w, changes);
+		Tree tree = w.tree;
+		tree.removeItems();
+		String first = w.models.getItemText(0);
+		w.models.clear();
+		w.models.addItem(first);
+		for (DomStudentModelContext item : list) {
+			DomStudentModelStructure structure = item.getModelStructure();
+			String title = structure.getInfo().getTitle().getOrDefault(lang, "");
+			w.models.addItem(title);
 		}
 		ref = tree.addSelectionHandler(this);
 		
@@ -110,42 +180,14 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		Object userObject = item.getUserObject();
 		if (userObject instanceof DomStudentModelContext) {
 			DomStudentModelContext model = (DomStudentModelContext) userObject;
-			DomStudentModelStructure structure = model.getModelStructure();
-			String text = structure.getInfo().getDescription().get(lang);
-			String json = structure.getInfo().getDescription().get(lang +"@JSON");
-			Widget description = createDescription(text, json);
-			widget.get().description.setWidget(description);
-			text = structure.getInfo().getTitle().get(lang);
-			widget.get().title.setText(text);
-			service.getScore(model).then ( p -> {
-				DomStudentModelStructureScore score = p.getValue().getDomStudentModelStructureScore();
-				setPerc(score);
-				return p;
-			}, FAILURE)
-			.then(p -> { 
-				if (item.getChildCount() != structure.getCategories().size()) {
-					item.removeItems();
-					int cat = 0;
-					for (DomStudentModelCategory o : structure.getCategories()) {
-		                DomStudentModelCategoryScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(cat);
-						TreeItem tt = item.addItem(
-						  Util.treeItem(o.getInfo().getTitle().getOrDefault(lang, ""), (percentage(score)),2));
-						tt.setUserObject(cat);
-						cat++;
-					}
-				}
-				return p; })
-			.then(null, FAILURE);
+			addToTree(item, model);
 			
 		} else if (userObject instanceof Integer) {
 			DomStudentModelContext model = (DomStudentModelContext) item.getParentItem().getUserObject();
 			DomStudentModelStructure structure = model.getModelStructure();
 			DomStudentModelCategory o = structure.getCategories().get(((Integer) userObject).intValue());
-			String text = o.getInfo().getDescription().get(lang);
-			String json = o.getInfo().getDescription().get(lang + "@JSON");
-			Widget description = createDescription(text, json);
-			widget.get().description.setWidget(description);
-            text = o.getInfo().getTitle().get(lang);
+			setDescription(o.getInfo());
+            String text = o.getInfo().getTitle().get(lang);
             widget.get().title.setText(text);
 			service.getScore(model).then(p -> { 
 				DomStudentModelCategoryScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(((Integer) userObject).intValue());
@@ -160,8 +202,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 					for( DomStudentModelObj oo : o.getObjectives()) {
 					    float ppp;
 					    DomStudentModelObjectiveScore s = score.getObjectives().get(obj);
-					    ppp = (percentage(s));
-						TreeItem tt = item.addItem(Util.treeItem(oo.getInfo().getTitle().getOrDefault(lang, ""), ppp,3));
+						TreeItem tt = item.addItem(Util.treeItem(oo.getInfo().getTitle().getOrDefault(lang, ""), s,3));
 						tt.setUserObject(new int[] { cat, obj } );
 						obj++;
 					}
@@ -198,8 +239,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 					int oobj = 0;
 					for (DomStudentModelObj ooo: oo.getObjectives()) {
 						DomStudentModelObjectiveScore s = score.getChildren().get(oobj);
-						float ppp = percentage(s);
-						TreeItem tt = item.addItem(Util.treeItem(ooo.getInfo().getTitle().getOrDefault(lang, ""), ppp, 4));
+						TreeItem tt = item.addItem(Util.treeItem(ooo.getInfo().getTitle().getOrDefault(lang, ""), s, 4));
 						int[] oelems = new int[elems.length+1];
 						System.arraycopy(elems, 0, oelems, 0, elems.length);
 						oelems[elems.length] = oobj;
@@ -212,16 +252,45 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		
 	}
 
-	private void setPerc(DomStudentModelScore score) {
-		float perc = percentage(score);
-		widget.get().setPerc(perc);
+	private void addToTree(TreeItem item, DomStudentModelContext model) {
+		DomStudentModelStructure structure = model.getModelStructure();
+		String text;
+		setDescription(structure.getInfo());
+		text = structure.getInfo().getTitle().get(lang);
+		widget.get().title.setText(text);
+		service.getScore(model).then ( p -> {
+			DomStudentModelStructureScore score = p.getValue().getDomStudentModelStructureScore();
+			setPerc(score);
+			return p;
+		}, FAILURE)
+		.then(p -> { 
+			if (item.getChildCount() != structure.getCategories().size()) {
+				item.removeItems();
+				int cat = 0;
+				for (DomStudentModelCategory o : structure.getCategories()) {
+		            DomStudentModelCategoryScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(cat);
+					TreeItem tt = item.addItem(
+					  Util.treeItem(o.getInfo().getTitle().getOrDefault(lang, ""), (score),2));
+					tt.setUserObject(cat);
+					cat++;
+				}
+			}
+			return p; })
+		.then(null, FAILURE);
 	}
-float percentage(DomStudentModelScore score) {
-  float perc;
-  		if (score.getGreenCount() == 0) perc = 50;
-  		else perc = (float)(score.getGreenScore()*100/score.getGreenCount());
-  return perc;
-}
+
+	private void setDescription(DomStudentModelContextInfo info) {
+		String text = info.getDescription().get(lang);
+		String json = info.getDescription().get(lang +"@JSON");
+		Widget description = createDescription(text, json);
+		widget.get().description.setWidget(description);
+	}
+
+	private void setPerc(DomStudentModelScore<?> score) {
+		widget.get().setPerc(score);
+		
+	}
+
   private static final String WISKOPDR_SIG = "H4sIAAAAAA";
   private String launch_data;
     
@@ -314,17 +383,18 @@ float percentage(DomStudentModelScore score) {
       };
       $wnd.API = api;
       $wnd.API_1484_11 = api;
-}-*/;
+	}-*/;
 
-private String getValue(String key) {
-  LOG.info("GetValue " + key);
-  String value = null;
-  if ("cmi.launch_data".equals(key)) value = launch_data;
-  else if ("cmi.mode".equals(key)) value="browse";
-  if(value == null) value = "";
-  String shortValue = value.length() > 10 ? value.substring(0, 10) + "..." : value;
-  LOG.info("result GetValue: " + shortValue);
-  return value;
-}
+	private String getValue(String key) {
+	  LOG.info("GetValue " + key);
+	  String value = null;
+	  if ("cmi.launch_data".equals(key)) value = launch_data;
+	  else if ("cmi.mode".equals(key)) value="browse";
+	  if(value == null) value = "";
+	  String shortValue = value.length() > 10 ? value.substring(0, 10) + "..." : value;
+	  LOG.info("result GetValue: " + shortValue);
+	  return value;
+	}
+
 
 }

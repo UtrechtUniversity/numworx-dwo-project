@@ -116,6 +116,7 @@ public class XAPIService extends StudentResultsService implements StudentResults
       scores = new DomStudentModelDataScore();
       DomStudentModelStructureScore s = DomStudentModelStructureScoreCodec.CODEC.decode(state.content);
       scores.setDomStudentModelStructureScore(s);
+      // FIXME validate s against context
     }
     if (scores == null) scores = eerstestap(context);
     // Sorteren???
@@ -126,7 +127,10 @@ public class XAPIService extends StudentResultsService implements StudentResults
     		lastTimestamp = result.statements.get(last).timestamp;
     Long stamp = lastTimestamp == null ? 0L : FORMAT_8601.parse(lastTimestamp).getTime();
     scores.setFetchTimeStamp(stamp);
-    if (last < 0) return scores;
+    if (last < 0) {
+        scores.getDomStudentModelStructureScore().recalculateAncestors(); 	
+    	return scores;
+    }
     
     stappen(scores, context, list);
 

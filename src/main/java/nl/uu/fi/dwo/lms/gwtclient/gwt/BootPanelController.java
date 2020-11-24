@@ -177,7 +177,7 @@ public class BootPanelController {
             {
               build = studentBuilder.build();
               mainView.setUserRole(role, single);
-              if(stage > 1) mainView.setPremium(dwoGlobalVars.isPremium()); // results for student is premium
+              mainView.setPremium(dwoGlobalVars.isPremium() && dwoGlobalVars.isTest()); // results for student is premium
               break;
             }
           default:

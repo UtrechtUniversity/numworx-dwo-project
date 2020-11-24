@@ -6,26 +6,55 @@
 		display: inline-block;
 		text-align: right;
 		width: 3em;
+		color: red;
+	}
+	.greenperc {
+		display: inline-block;
+		text-align: left;
+		width: 3em;
+		color: green;
 	}
 	.fullheight {
 		height: 100%;
 	}
 
+	.right {
+		float: right;
+	}
+	
+	.models {
+		width: auto;
+	}
+
 	</ui:style>
 	<g:SplitLayoutPanel styleName='{style.fullheight}'>
-		<g:west size="400">
-			<g:ScrollPanel>
-				<g:Tree ui:field='tree'>
-				</g:Tree>	
-			</g:ScrollPanel>		
+		<g:west size="500">
+			<g:DockLayoutPanel unit='EM'>
+			  <g:north size="2">
+			   <g:FlowPanel>
+			  	<g:ListBox ui:field='models' addStyleNames="{style.models}">
+			  		<g:item>Kies eerst een model</g:item>
+			  	</g:ListBox>
+			   </g:FlowPanel>
+			  </g:north>
+			  <g:center>
+				<g:ScrollPanel>
+					<g:Tree ui:field='tree'>
+					</g:Tree>	
+				</g:ScrollPanel>
+			</g:center>
+			</g:DockLayoutPanel>
 		</g:west>
 		<g:center>
 			<g:DockLayoutPanel unit='EM'  >
-				<g:north size="2"><g:InlineLabel ui:field='title'>Kies eerst een model</g:InlineLabel></g:north>
-				<g:north size='3'><g:FlowPanel>
-					<g:InlineLabel ui:field='perc' styleName='{style.perc}'></g:InlineLabel>
+				<g:north size="2"><g:FlowPanel><g:InlineLabel ui:field='title'></g:InlineLabel><g:Button ui:field='btn' styleName='{style.right}'>Graph</g:Button></g:FlowPanel></g:north>
+				<g:north size='3'>
+				  <g:FlowPanel>
+					<g:InlineLabel ui:field='redPerc' styleName='{style.perc}'></g:InlineLabel>
 						<g:InlineHTML ui:field='outer' />
-				</g:FlowPanel></g:north>
+					<g:InlineLabel ui:field='perc' styleName='{style.greenperc}' />
+				  </g:FlowPanel>
+				</g:north>
 				<g:center>
 				<g:SimplePanel ui:field='description'>
 					
