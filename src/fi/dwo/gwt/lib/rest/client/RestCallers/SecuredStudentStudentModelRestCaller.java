@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContextId;
 
 public interface SecuredStudentStudentModelRestCaller extends RestService{
@@ -29,4 +30,13 @@ public interface SecuredStudentStudentModelRestCaller extends RestService{
   @Path("/sec:{id}/student/studentmodel/getScore")
   void getStudentModelDataScore(@PathParam("id") String id, RestStudentModelContextId restModelId, MethodCallback<DomStudentModelDataScore> callback);
 
+  @PUT
+  @Path("/sec:{id}/student/studentmodel/get")
+  void getStudentModel(@PathParam("id") String id, RestStudentModelContextId context, MethodCallback<DomStudentModelContext> callback);
+  
+  @PUT
+  @Path("/sec:{id}/student/studentmodel/getReducedList")
+  void getReducedList(@PathParam("id") String id, RestSchoolClass context, MethodCallback<List<DomStudentModelContext>> callback);
+  
+  
 }

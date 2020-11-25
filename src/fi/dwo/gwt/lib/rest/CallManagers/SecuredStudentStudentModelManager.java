@@ -7,13 +7,14 @@ import com.google.gwt.core.shared.GWT;
 
 import static fi.dwo.gwt.lib.rest.GwtRestVars.F;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredStudentStudentModelRestCaller;
-import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContextId;
 import nl.uu.fi.dwo.rest.util.PathId;
 
@@ -40,4 +41,18 @@ public class SecuredStudentStudentModelManager {
 	  return F(service::getLRS,PathId.getId(context), rest);
 	}
 	
+	public Promise<List<DomStudentModelContext>> getReducedModels(DomContext context, DomSchoolClass sc) {
+		RestSchoolClass rest = new RestSchoolClass();
+		rest.setDomSchoolClass(sc);
+		rest.setRestContext(context);
+		return F(service::getReducedList, PathId.getId(context), rest);
+	}
+	
+	public Promise<DomStudentModelContext> getStudentModel(DomContext context, DomStudentModelContextId id) {
+		RestStudentModelContextId rest = new RestStudentModelContextId();
+		rest.setDomStudentModelContext(id);
+		rest.setRestContext(context);
+		return F(service::getStudentModel, PathId.getId(context), rest);
+		
+	}
 }
