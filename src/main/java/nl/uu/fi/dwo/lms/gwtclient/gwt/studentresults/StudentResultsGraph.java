@@ -196,8 +196,19 @@ class StudentResultsGraph extends Composite implements MouseMoveHandler, MouseUp
 		
 		Node(DomStudentModelObj obj, String parent) {
 			this.obj = obj;
- 			cx = obj.getInfo().getX().floatValue();
- 			cy = obj.getInfo().getY().floatValue();
+			float cx,cy;
+ 			try {
+				cx = obj.getInfo().getX().floatValue(); // possible NPE
+			} catch (Exception e) {
+				cx = (float)Math.random()*600.0f;
+			}
+ 			this.cx = cx;
+ 			try {
+				cy = obj.getInfo().getY().floatValue();
+			} catch (Exception e) {
+				cy = (float)Math.random()*600.0f;
+			}
+ 			this.cy = cy;
 			circle = doc.createSVGCircleElement(cx, cy, r);
 			short unitType = OMSVGLength.SVG_LENGTHTYPE_NUMBER;
 			text = doc.createSVGTextElement(cx, cy, unitType, parent + obj.getInfo().getTitle().get(lang));
@@ -234,7 +245,8 @@ class StudentResultsGraph extends Composite implements MouseMoveHandler, MouseUp
 		}
 		
 		Stream<Edge> edges() {
-			List<String> voorkennis = obj.getInfo().getVoorkennis();			
+			List<String> voorkennis = obj.getInfo().getVoorkennis();
+			if (voorkennis == null) return Stream.empty();
 			return voorkennis.stream().map( key -> new Edge( map.get(key), this) );
 		}
 
@@ -287,7 +299,7 @@ class StudentResultsGraph extends Composite implements MouseMoveHandler, MouseUp
 		setModel(item.getModelStructure());
 		OMSVGSVGElement svg = getSvgElement();
 		while(svg.getChildNodes().getLength()>0)
-		svg.removeChild(svg.getChildNodes().getItem(0));
+			svg.removeChild(svg.getChildNodes().getItem(0));
 		
 		edges = map.values().stream().flatMap(Node::edges).collect(Collectors.toSet());
 		

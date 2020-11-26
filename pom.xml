@@ -454,7 +454,41 @@
                     <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
 					<contextFile>src/test/tomcat/${context.xml}</contextFile>
                     <webapps>
+                        <webapp>
+                            <groupId>nl.uu.fi.dwo</groupId>
+                            <artifactId>DWOServer</artifactId>
+                            <version>${DWOServerVersion}</version>
+                            <type>war</type>    
+                            <asWebapp>true</asWebapp> 
+                            <contextPath>/dwo</contextPath>
+                            <contextFile>src/test/tomcat/${context.xml}</contextFile>
+                        </webapp>
+                        <webapp>
+                            <groupId>fi.dwo</groupId>
+                            <artifactId>DWO-apps</artifactId> 
+                            <version>2.4.1</version> 
+                            <type>war</type>    
+                            <asWebapp>true</asWebapp> 
+                            <contextPath>/dwo/apps</contextPath>
+                        </webapp>
                        <webapp>
+                            <groupId>nl.uu.fi.dwo.mobile</groupId>
+                            <artifactId>DWOplayer</artifactId>
+                            <version>2.4.11-SNAPSHOT</version>
+                            <classifier>dwo2</classifier>
+                            <type>war</type>
+                            <contextPath>/dwo/tablet</contextPath>
+                            <asWebapp>true</asWebapp>
+                        </webapp>
+                        <webapp>
+                        	<groupId>nl.uu.fi.dwo.register</groupId>
+							<artifactId>Register</artifactId>
+							<version>${registerVersion}</version>
+                            <type>war</type>
+                            <contextPath>/dwo/register</contextPath>
+                            <asWebapp>true</asWebapp>
+                        </webapp>
+                        <webapp>
                           <groupId>fi.servlet</groupId>
   						  <artifactId>ideas</artifactId>
  						  <version>0.0.10-SNAPSHOT</version>

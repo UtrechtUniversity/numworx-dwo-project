@@ -69,13 +69,18 @@ public class AdviseMeService implements StudentResults {
 	}
 	
 	List<DomStudentModelContext> toContext(Usermodel u) {
+		DomStudentModelContext context = to1Context(u);
+		return Collections.singletonList(context);
+	}
+
+	private DomStudentModelContext to1Context(Usermodel u) {
 		DomStudentModelContext context = new DomStudentModelContext();
 		context.setId(new PersistenceId("ADVISEME;"+PersistenceClassType.PersistentStudentModelContext + ";" + u.getStudent()));
 		DomStudentModelStructure structure = new DomStudentModelStructure();
 		structure.setCategories(toCategories(u.getCompetence().getChildren()));
 		structure.setInfo(toInfo(u.getCompetence()));
 		context.setModelStructure(structure);
-		return Collections.singletonList(context);
+		return context;
 	}
 	
 	private List<DomStudentModelCategory> toCategories(List<Competence> children) {
@@ -159,5 +164,11 @@ public class AdviseMeService implements StudentResults {
 	@Override
 	public void clear() {
 		usermodel = null;	
+	}
+
+	@Override
+	public Promise<DomStudentModelContext> getModel(DomStudentModelContextId id) {
+		if (usermodel == null) usermodel = getUsermodel();
+		return usermodel.map(this::to1Context);
 	}
 }

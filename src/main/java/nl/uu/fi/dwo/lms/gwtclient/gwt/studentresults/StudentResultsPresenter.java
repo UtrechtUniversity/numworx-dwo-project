@@ -106,8 +106,11 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 				return;
 			}
 			DomStudentModelContext item = list.get(selection-1);
-			current = item;
-			insertTree(item);
+			service.getModel(item).then(p -> {
+				current = p.getValue();
+				insertTree(item);
+				return p;
+			}, FAILURE);
 		}
 
 		private ModelChange(List<DomStudentModelContext> list) {

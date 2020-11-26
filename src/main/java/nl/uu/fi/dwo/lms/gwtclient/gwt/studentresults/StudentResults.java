@@ -13,4 +13,5 @@ interface StudentResults {
 	void clear();
 	Promise<List<DomStudentModelContext>> getModels();
 	Promise<DomStudentModelDataScore> getScore(DomStudentModelContextId id);
+	Promise<DomStudentModelContext> getModel(DomStudentModelContextId id);
 }
