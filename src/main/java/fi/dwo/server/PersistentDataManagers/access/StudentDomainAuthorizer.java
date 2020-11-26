@@ -134,6 +134,8 @@ public class StudentDomainAuthorizer {
 
 		public List<DomStudentModelContext> getMergedStudentModelContextList() throws Dwo2Exception;
 
+		public DomStudentModelContext getStudentModel(DomStudentModelContextId domStudentModelContext) throws Dwo2Exception;
+
     }
 
    public interface PublicContext {

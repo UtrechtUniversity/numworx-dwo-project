@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.persistence.PersistenceException;
 import javax.ws.rs.core.UriInfo;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
@@ -170,13 +171,13 @@ class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U
         StudentModelContextUtilManager.merge(pStudentModel);
         return instance.getStudentActions().getStudentModelData(instance.getContext(), pStudentModel);
     }
+
     @Override
     public List<DomStudentModelContext> getStudentModelContextList() throws Dwo2Exception{
         List<PersistentStudentModelContext> pModels = instance.getStudentActions().getStudentModels(instance.getContext());
                     List<DomStudentModelContext>  result = new ArrayList<>(pModels.size());
             pModels.forEach(m -> result.add(m.buildDomStudentModelContext()));
             return result;
-
     }
 
     @Override
@@ -188,11 +189,17 @@ class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U
             	result.add(m.buildDomStudentModelContext());	
             });
             return result;
-
     }
 
     @Override
     public DomLRS getLRS(UriInfo info) {
       return instance.getStudentActions().getLRS(instance.getContext(), info);
     }
+
+	@Override
+	public DomStudentModelContext getStudentModel(DomStudentModelContextId domModelId) throws Dwo2Exception {
+        PersistentStudentModelContext pStudentModel = StudentModelContextManager.findEntity(MySQLPersistenceId.getNativeId(domModelId));
+        StudentModelContextUtilManager.merge(pStudentModel);
+        return pStudentModel.buildDomStudentModelContext();
+	}
 }

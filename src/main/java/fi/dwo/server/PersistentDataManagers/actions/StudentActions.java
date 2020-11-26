@@ -7,7 +7,6 @@ import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer;
-
 import java.util.List;
 
 import javax.ws.rs.core.UriInfo;

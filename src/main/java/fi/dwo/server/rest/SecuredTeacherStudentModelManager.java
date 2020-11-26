@@ -4,6 +4,7 @@ import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.util.StudentModelContextUtilManager;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -85,15 +86,7 @@ public class SecuredTeacherStudentModelManager {
     @Path("/getReducedList")
     public List<DomStudentModelContext> getReducedStudentModels(@Context SecurityContext sc, RestContext context) {
     	List<DomStudentModelContext> list = getStudentModels(sc, context);
-    	for(DomStudentModelContext item: list) {
-    		DomStudentModelStructure structure = item.getModelStructure();
-    		structure.setCategories(null);
-    		DomStudentModelContextInfo info = structure.getInfo();
-			info.setDescription(null);
-			info.setVoorkennis(null);
-			info.setMethods(null);
-    	}
-    	return list;
+    	return StudentModelContextUtilManager.reduce(list);
     }
 
     @PUT
