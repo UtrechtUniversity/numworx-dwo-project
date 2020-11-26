@@ -378,7 +378,10 @@
     <servlet-name>oauth2</servlet-name>
     <servlet-class>nl.numworx.oauth2client.server.OAuth2Server</servlet-class>
   </servlet>
-  
+  <servlet>
+  	<servlet-name>sebhosting</servlet-name>
+  	<servlet-class>fi.dwo.server.db.SEBHosting</servlet-class>
+  </servlet>
 
     <!--
     servlet mappings 
@@ -388,14 +391,6 @@
    		<url-pattern>/dwo/snoop</url-pattern>
    		<url-pattern>/dwo/snoop/*</url-pattern>
    </servlet-mapping>
-<!--    <servlet-mapping> -->
-<!--       <servlet-name>dwoparam</servlet-name> -->
-<!--       <url-pattern>/DWOmAccess/lti/dwo.jsp/*</url-pattern> -->
-<!--    </servlet-mapping> -->
-<!--    <servlet-mapping> -->
-<!--       <servlet-name>dwoparam</servlet-name> -->
-<!--       <url-pattern>/DWOmAccess/lti/dwo.jsp</url-pattern> -->
-<!--    </servlet-mapping> -->
    <servlet-mapping>
       <servlet-name>appparam</servlet-name>
       <url-pattern>/DWOmAccess/lti/app.jsp/*</url-pattern>
@@ -405,34 +400,6 @@
       <url-pattern>/DWOmAccess/lti/app.jsp</url-pattern>
    </servlet-mapping>
   
-<!--   <servlet-mapping> -->
-<!-- 	<servlet-name>image.png</servlet-name> -->
-<!-- 	<url-pattern>/DWOmAccess/image.png</url-pattern> -->
-<!--   </servlet-mapping> -->
-<!--    <servlet-mapping> -->
-<!-- 	<servlet-name>image.png</servlet-name> -->
-<!-- 	<url-pattern>/DWOmAccess/partialScore</url-pattern> -->
-<!--   </servlet-mapping> -->
-<!--   <servlet-mapping> -->
-<!-- 	<servlet-name>image.png</servlet-name> -->
-<!-- 	<url-pattern>/DWOmAccess/getLaunchData</url-pattern> -->
-<!--   </servlet-mapping> -->
-<!--   <servlet-mapping> -->
-<!-- 	<servlet-name>image.png</servlet-name> -->
-<!-- 	<url-pattern>/DWOmAccess/getJSONLaunchData</url-pattern> -->
-<!--   </servlet-mapping> -->
-<!--   <servlet-mapping> -->
-<!-- 	<servlet-name>image.png</servlet-name> -->
-<!-- 	<url-pattern>/DWOmAccess/getJSONLaunchDataBytes</url-pattern> -->
-<!--   </servlet-mapping> -->
-<!--   <servlet-mapping> -->
-<!-- 	<servlet-name>image.png</servlet-name> -->
-<!-- 	<url-pattern>/DWOmAccess/getCourseDescription</url-pattern> -->
-<!--   </servlet-mapping> -->
-<!--       <servlet-mapping> -->
-<!--       <servlet-name>ProviderServlet</servlet-name> -->
-<!--       <url-pattern>/DWOmAccess/lti/provider/*</url-pattern> -->
-<!--     </servlet-mapping> -->
 
     <servlet-mapping>
       <servlet-name>ServiceServlet</servlet-name>
@@ -498,45 +465,12 @@
     <url-pattern>/dwo/saml/login</url-pattern>
     <url-pattern>/dwo/saml/uulogin</url-pattern>
   </servlet-mapping>
-<!--    
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>DwoJaxRsRest</web-resource-name>
-            <url-pattern>/dwo/rest/secure/*</url-pattern>
-            <http-method>GET</http-method>
-            <http-method>POST</http-method>
-            <http-method>PUT</http-method>
-        </web-resource-collection>
-        <auth-constraint>
-            <role-name>STUDENT</role-name>
-            <role-name>TEACHER</role-name>
-            <role-name>SCHOOLADMIN</role-name>
-            <role-name>ADMIN</role-name>
-        </auth-constraint>
-        <user-data-constraint>           
-            <transport-guarantee>NONE</transport-guarantee>
-        </user-data-constraint>
-    </security-constraint>
-
-     Required to be directly below the security constraint 
-    <login-config>
-        <auth-method>BASIC</auth-method>
-        <realm-name>DWO.nl</realm-name>
-    </login-config>
-
-     Security roles referenced by this web application 
-    <security-role>
-        <role-name>STUDENT</role-name>
-    </security-role>
-    <security-role>
-        <role-name>TEACHER</role-name>
-    </security-role>
-    <security-role>
-        <role-name>SCHOOLADMIN</role-name>
-    </security-role>
-    <security-role>
-        <role-name>ADMIN</role-name>
-    </security-role>-->
+  
+  <servlet-mapping>
+  	<servlet-name>sebhosting</servlet-name>
+  	<url-pattern>*.seb</url-pattern>
+  </servlet-mapping>
+  
 	<listener>
         <listener-class>
             fi.dwo.server.rest.util.TranslatorServletContextListener 
