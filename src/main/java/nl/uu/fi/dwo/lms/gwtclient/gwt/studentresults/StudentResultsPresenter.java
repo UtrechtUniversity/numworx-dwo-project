@@ -13,7 +13,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -25,6 +24,8 @@ import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.google.web.bindery.event.shared.HandlerRegistrations;
 
 import dagger.Lazy;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
@@ -81,6 +82,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		root.clear();
 		service.clear();
 		view.setHelp(dwoGlobalVars.buildHelpUrl("#studentresults"));
+		showGraph = false;
 		service.getModels().then(this::getModels, FAILURE);
 	}
 	
@@ -138,7 +140,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 
 		@Override
 		public void onClick(ClickEvent event) {
-			showHideGraph(current);			
+			if (current != null) showHideGraph(current);			
 		}
 		
 	}
@@ -158,9 +160,9 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		StudentResultsWidget w = widget.get();
 		List<DomStudentModelContext> list = p.getValue();
 		ModelChange changes = new ModelChange(list);
-		eventBus.addHandlerToSource(ChangeEvent.getType(), w, changes);
-		eventBus.addHandlerToSource(ClickEvent.getType(), w, changes);
 		Tree tree = w.tree;
+		w.description.clear();
+		w.title.setText("");
 		tree.removeItems();
 		String first = w.models.getItemText(0);
 		w.models.clear();
@@ -170,7 +172,12 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			String title = structure.getInfo().getTitle().getOrDefault(lang, "");
 			w.models.addItem(title);
 		}
-		ref = tree.addSelectionHandler(this);
+
+		ref = HandlerRegistrations.compose(
+				eventBus.addHandlerToSource(ChangeEvent.getType(), w, changes),
+				eventBus.addHandlerToSource(ClickEvent.getType(), w, changes),				
+				tree.addSelectionHandler(this)
+		);
 		
 		root.add(w);
 		return null;
@@ -222,23 +229,23 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 
 			DomStudentModelObj o0 = o.getObjectives().get(obj);
 			for (int i = 2; i < elems.length; i++ ) {
-				o0 = o0.getObjectives().get(i);
+				o0 = o0.getObjectives().get(elems[i]);
 			}
 			final DomStudentModelObj oo = o0;
-			String text = oo.getInfo().getDescription().get(lang);
-			String json = oo.getInfo().getDescription().get(lang + "@JSON");
-	        widget.get().description.setWidget(createDescription(text,json));
+			String text;
+			setDescription(oo.getInfo());
 	        text = oo.getInfo().getTitle().get(lang);
             widget.get().title.setText(text);
-			service.getScore(model).then( p -> { 
+
+            service.getScore(model).then( p -> { 
 				DomStudentModelObjectiveScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(cat).getObjectives().get(obj);
-				for (int i = 2; i < elems.length; i++ ) score = score.getChildren().get(i);
+				for (int i = 2; i < elems.length; i++ ) score = score.getChildren().get(elems[i]);
 				setPerc(score);
 				return p; }, FAILURE)
 			.then (p -> {
 				if (oo.getObjectives() != null && oo.getObjectives().size() != item.getChildCount()) {
 					DomStudentModelObjectiveScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(cat).getObjectives().get(obj);
-					for (int i = 2; i < elems.length; i++ ) score = score.getChildren().get(i);
+					for (int i = 2; i < elems.length; i++ ) score = score.getChildren().get(elems[i]);
 					int oobj = 0;
 					for (DomStudentModelObj ooo: oo.getObjectives()) {
 						DomStudentModelObjectiveScore s = score.getChildren().get(oobj);
@@ -283,6 +290,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	}
 
 	private void setDescription(DomStudentModelContextInfo info) {
+		showGraph = false;
 		String text = info.getDescription().get(lang);
 		String json = info.getDescription().get(lang +"@JSON");
 		Widget description = createDescription(text, json);
