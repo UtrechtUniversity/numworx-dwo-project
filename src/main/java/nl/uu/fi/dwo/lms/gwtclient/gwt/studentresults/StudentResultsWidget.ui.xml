@@ -56,9 +56,7 @@
 				  </g:FlowPanel>
 				</g:north>
 				<g:center>
-				<g:SimplePanel ui:field='description'>
-					
-				</g:SimplePanel>
+				<g:SimpleLayoutPanel ui:field='description' />
 			</g:center>
 			</g:DockLayoutPanel>
 		</g:center>

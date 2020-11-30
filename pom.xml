@@ -39,6 +39,7 @@
         <copy.ui.skip>false</copy.ui.skip>
         <registerVersion>2.3.7</registerVersion>
         <gwtModule>nl.uu.fi.dwo.lms.gwtclient.gwtclient</gwtModule>
+        <local.dwo>/dwo</local.dwo>
     </properties>
 
     <scm>
@@ -460,7 +461,7 @@
                             <version>${DWOServerVersion}</version>
                             <type>war</type>    
                             <asWebapp>true</asWebapp> 
-                            <contextPath>/dwo</contextPath>
+                            <contextPath>${local.dwo}</contextPath>
                             <contextFile>src/test/tomcat/${context.xml}</contextFile>
                         </webapp>
                         <webapp>

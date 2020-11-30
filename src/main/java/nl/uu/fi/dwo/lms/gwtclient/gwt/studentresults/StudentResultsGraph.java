@@ -1,26 +1,22 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
-import java.awt.Color;
-import java.awt.Font;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
 import org.osgi.util.promise.Promise;
-import org.vectomatic.dom.svg.OMNode;
-import org.vectomatic.dom.svg.OMNodeList;
-import org.vectomatic.dom.svg.OMSVGAnimatedRect;
 import org.vectomatic.dom.svg.OMSVGCircleElement;
 import org.vectomatic.dom.svg.OMSVGDocument;
 import org.vectomatic.dom.svg.OMSVGGElement;
-import org.vectomatic.dom.svg.OMSVGImageElement;
 import org.vectomatic.dom.svg.OMSVGLength;
 import org.vectomatic.dom.svg.OMSVGLineElement;
 import org.vectomatic.dom.svg.OMSVGMatrix;
@@ -36,6 +32,9 @@ import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.utils.OMSVGParser;
 import org.vectomatic.dom.svg.utils.SVGConstants;
 
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseEvent;
@@ -46,7 +45,8 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
-import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.LayoutPanel;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
@@ -57,7 +57,54 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 
-class StudentResultsGraph extends Composite implements MouseMoveHandler, MouseUpHandler, MouseDownHandler, MouseOutHandler {
+class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, MouseUpHandler, MouseDownHandler, MouseOutHandler {
+
+
+	float factor = 1.0f;
+	class Zoom implements ClickHandler {
+
+		final boolean out;
+		public Zoom(boolean b) {
+			out = b;
+		}
+
+		@Override
+		public void onClick(ClickEvent event) {
+			if (out) resize(factor * 1.2f);
+			else resize(factor / 1.2f);
+		}
+
+	}
+
+	static final private Logger LOG = Logger.getLogger("StudentResultsGraph");
+	
+	public class ZoomFit implements ClickHandler {
+
+		@Override
+		public void onClick(ClickEvent event) {
+			LOG.info("Zoom Fit");
+			Collection<Node> nodes = map.values();
+			
+			OMSVGRect r = null;
+			for(Node node: nodes) {
+				OMSVGRect rect = node.rect.getBBox();
+				if (r == null) {
+					r = getSvgElement().createSVGRect(rect); // make copy
+				} else {
+					r = r.union(rect);
+				}
+			}
+			if (r != null) 
+			{	r = r.inset(-15, -15);
+				factor = Math.max(r.getWidth()/imagewidth, r.getHeight()/imageheight); //
+				r.setWidth(imagewidth*factor);
+				r.setHeight(imageheight*factor);
+				getSvgElement().setViewBox(r);
+				resize(factor);
+			}
+		}
+
+	}
 
 	static ColorStyle colorBlue1 = new ColorStyle(49, 71, 112);
 	static ColorStyle colorBlue4 = new ColorStyle(180,195,228);
@@ -272,13 +319,35 @@ class StudentResultsGraph extends Composite implements MouseMoveHandler, MouseUp
 	
 	private Map<String, Node> map;
 	private Set<Edge> edges;
+	
+	private Button zoomFitBtn, zoomInBtn, zoomOutBtn;
 
 	@Inject StudentResultsGraph() {
 		doc = OMSVGParser.currentDocument();
 		image = new SVGImage();
 		image.setSvgElement(doc.createSVGSVGElement());
 		getSvgElement().setViewBox(0, 0, 500, 500);
-		initWidget(image);
+		
+		add(image);
+		setWidgetTopHeight(image, 0, Unit.PX, 500, Unit.PX);
+		setWidgetLeftWidth(image, 0, Unit.PX, 500, Unit.PX);
+		zoomFitBtn = new Button("\u25a2");
+		add(zoomFitBtn);
+		setWidgetTopHeight(zoomFitBtn, 1, Unit.EM, 2, Unit.EM);
+		zoomInBtn = new Button("+");
+		add(zoomInBtn);
+		setWidgetTopHeight(zoomInBtn, 4, Unit.EM, 2, Unit.EM);
+		zoomOutBtn = new Button("-");
+		add(zoomOutBtn);
+		setWidgetTopHeight(zoomOutBtn, 7, Unit.EM, 2, Unit.EM);
+		
+		setWidgetRightWidth(zoomFitBtn, 1, Unit.EM, 2, Unit.EM);
+		setWidgetRightWidth(zoomInBtn, 1, Unit.EM, 2, Unit.EM);
+		setWidgetRightWidth(zoomOutBtn, 1, Unit.EM, 2, Unit.EM);
+		zoomFitBtn.setStylePrimaryName("graph-Button");
+		zoomInBtn.setStylePrimaryName("graph-Button");
+		zoomOutBtn.setStylePrimaryName("graph-Button");		
+		
 		lang = LocaleInfo.getCurrentLocale().getLocaleName();
 		map = new HashMap<>();
 		edges = Collections.emptySet();
@@ -288,6 +357,10 @@ class StudentResultsGraph extends Composite implements MouseMoveHandler, MouseUp
 		image.addMouseUpHandler(this);
 		image.addMouseDownHandler(this);
 		image.addMouseOutHandler(this);
+		
+		zoomFitBtn.addClickHandler(new ZoomFit());
+		zoomOutBtn.addClickHandler(new Zoom(true));
+		zoomInBtn.addClickHandler(new Zoom(false));
 	}
 
 	private OMSVGSVGElement getSvgElement() {
@@ -418,7 +491,40 @@ class StudentResultsGraph extends Composite implements MouseMoveHandler, MouseUp
 	@Override
 	public void onMouseDown(MouseDownEvent event) {
 		start = image.getSvgElement().createSVGPoint(event.getClientX(), event.getClientY());
-		
+		mouseMove(event);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.google.gwt.user.client.ui.LayoutPanel#onResize()
+	 */
+	@Override
+	public void onResize() {
+		super.onResize();
+		resize(factor);
+	}
+
+	int imagewidth, imageheight;
+	private void resize(float f) {
+		if (imagewidth != getOffsetWidth() || imageheight != getOffsetHeight() || f != factor) {
+			setWidgetTopHeight(image, 0, Unit.PX, imageheight = getOffsetHeight(), Unit.PX);
+			setWidgetLeftWidth(image, 0, Unit.PX, imagewidth = getOffsetWidth(), Unit.PX);
+			factor = f;
+			OMSVGRect rect = getSvgElement().createSVGRect(0, 0, imagewidth*factor, imageheight*factor);
+			OMSVGRect baseVal = getSvgElement().getViewBox().getBaseVal();
+			float x = baseVal.getX();
+			rect.setX(x);
+			float y = baseVal.getY();
+			rect.setY(y);
+// keep center 			
+			float offx = rect.getCenterX()-baseVal.getCenterX();
+			rect.setX(x - offx);
+			float offy = rect.getCenterY()-baseVal.getCenterY();
+			rect.setY(y - offy);
+			
+			getSvgElement().setViewBox(rect);
+		} else {
+			LOG.info("break recursion");
+		}
 	}
 
 	

@@ -97,7 +97,8 @@ public class XAPIService extends StudentResultsService implements StudentResults
       query.ascending = Boolean.TRUE;
       // statements ophalen vanaf tijdstip n
       return 
-          xapi.getState("StudentModelData", a, xapi.getAgent(), null)
+          //xapi.getState("StudentModelData", a, xapi.getAgent(), null)
+    	  Promises.resolved(new StateDocument())
           .recover(oops -> new StateDocument())
           .then( p0 -> {
               StateDocument d = p0.getValue();

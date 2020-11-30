@@ -19,6 +19,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.ResizeLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
@@ -37,6 +38,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
@@ -204,20 +206,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 				setPerc(score);
 				return p; }, FAILURE)
 			.then(p -> {
-                DomStudentModelCategoryScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(((Integer) userObject).intValue());
-				if (item.getChildCount() != o.getObjectives().size()) {
-					item.removeItems();
-					int cat = ((Integer) userObject).intValue();
-					int obj = 0;
-					for( DomStudentModelObj oo : o.getObjectives()) {
-					    float ppp;
-					    DomStudentModelObjectiveScore s = score.getObjectives().get(obj);
-						TreeItem tt = item.addItem(Util.treeItem(oo.getInfo().getTitle().getOrDefault(lang, ""), s,3));
-						tt.setUserObject(new int[] { cat, obj } );
-						obj++;
-					}
-				}
-				return p; },  p -> item.removeItems() );			
+                return addToTree(item, userObject, o, p); },  p -> item.removeItems() );			
 		} else if (userObject instanceof int[]) {
 			int[] elems = (int[]) userObject;
 			int cat = elems[0], obj = elems[1];
@@ -243,23 +232,51 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 				setPerc(score);
 				return p; }, FAILURE)
 			.then (p -> {
-				if (oo.getObjectives() != null && oo.getObjectives().size() != item.getChildCount()) {
-					DomStudentModelObjectiveScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(cat).getObjectives().get(obj);
-					for (int i = 2; i < elems.length; i++ ) score = score.getChildren().get(elems[i]);
-					int oobj = 0;
-					for (DomStudentModelObj ooo: oo.getObjectives()) {
-						DomStudentModelObjectiveScore s = score.getChildren().get(oobj);
-						TreeItem tt = item.addItem(Util.treeItem(ooo.getInfo().getTitle().getOrDefault(lang, ""), s, 4));
-						int[] oelems = new int[elems.length+1];
-						System.arraycopy(elems, 0, oelems, 0, elems.length);
-						oelems[elems.length] = oobj;
-						tt.setUserObject(oelems);
-					}
-				}
-				return p;
+				return addToTree(item, elems, cat, obj, oo, p);
 			}, p-> item.removeItems());
 		}
 		
+	}
+
+	private Promise<DomStudentModelDataScore> addToTree(TreeItem item, int[] elems, int cat, int obj,
+			final DomStudentModelObj oo, Promise<DomStudentModelDataScore> p) {
+		if (oo.getObjectives() != null && oo.getObjectives().size() != item.getChildCount()) {
+			DomStudentModelObjectiveScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(cat).getObjectives().get(obj);
+			for (int i = 2; i < elems.length; i++ ) score = score.getChildren().get(elems[i]);
+			int oobj = 0;
+			for (DomStudentModelObj ooo: oo.getObjectives()) {
+				DomStudentModelObjectiveScore s = score.getChildren().get(oobj);
+				TreeItem tt = item.addItem(Util.treeItem(ooo.getInfo().getTitle().getOrDefault(lang, ""), s, 4));
+				int[] oelems = new int[elems.length+1];
+				System.arraycopy(elems, 0, oelems, 0, elems.length);
+				oelems[elems.length] = oobj;
+				tt.setUserObject(oelems);
+				addToTree(tt, oelems, cat, obj, ooo, p);
+				oobj++;
+			}
+		}
+		return p;
+	}
+
+	private Promise<DomStudentModelDataScore> addToTree(TreeItem item, Object userObject, DomStudentModelCategory o,
+			Promise<DomStudentModelDataScore> p) {
+		DomStudentModelCategoryScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(((Integer) userObject).intValue());
+		if (item.getChildCount() != o.getObjectives().size()) {
+			item.removeItems();
+			int cat = ((Integer) userObject).intValue();
+			int obj = 0;
+			for( DomStudentModelObj oo : o.getObjectives()) {
+			    float ppp;
+			    DomStudentModelObjectiveScore s = score.getObjectives().get(obj);
+				TreeItem tt = item.addItem(Util.treeItem(oo.getInfo().getTitle().getOrDefault(lang, ""), s,3));
+				int[] elems = new int[] { cat, obj };
+				tt.setUserObject(elems );
+
+				addToTree(tt, elems, cat, obj, oo, p);
+				obj++;
+			}
+		}
+		return p;
 	}
 
 	private void addToTree(TreeItem item, DomStudentModelContext model) {
@@ -282,6 +299,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 					TreeItem tt = item.addItem(
 					  Util.treeItem(o.getInfo().getTitle().getOrDefault(lang, ""), (score),2));
 					tt.setUserObject(cat);
+					addToTree(tt, cat, o, p);
 					cat++;
 				}
 			}
