@@ -42,7 +42,7 @@
 		response.sendError(HttpServletResponse.SC_FORBIDDEN);
 		return;
 	}
-	
+	String dwo_env = System.getProperty("DWO_ENV", "app");
 %>
 <html>
   <head>
@@ -52,6 +52,7 @@
     <script>
     	DWO_PROFILE_ID = 77
     	SECURE_MODE="SEB" // possibly others
+        dwo_env = "<%=dwo_env%>"
     	function logout() {
     		window.location = "https://<%=server%>/toets/logout.html"
     	}
