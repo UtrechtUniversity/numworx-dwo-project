@@ -171,7 +171,7 @@ static final String AUTHORIZATION_CODE = "authorization_code";
               if (samlUser==null) 
             	  LOG.log(Level.SEVERE, "not found {0} {1}", new Object[] {samlUserId, samlOrgId});
               else
-            	  LOG.log(Level.SEVERE, "equal {0}, tokenValid {1} {2} time={3}", new Object[]{samlUser.getAuthToken().equals(samlAuthToken), samlUser.tokenIsValid(20000), samlUser, System.currentTimeMillis()});
+            	  LOG.log(Level.SEVERE, "equal {0}, tokenValid {1} {2} delta-time={3}", new Object[]{samlUser.getAuthToken().equals(samlAuthToken), samlUser.tokenIsValid(20000), samlUser, System.currentTimeMillis()-samlUser.getAuthTokenTimestamp()});
 
               if (samlUser != null
                       && samlUser.getAuthToken().equals(samlAuthToken) && samlUser.tokenIsValid(20000) //TODO TESTING, productie aan.
