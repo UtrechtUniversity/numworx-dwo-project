@@ -322,7 +322,7 @@ public class DWOPopupPanel extends PopupPanel {
 		if(moving) {
 			int dx = x - startX;
 			int dy = y - startY;
-			this.setPopupPosition(this.getAbsoluteLeft()+dx, this.getAbsoluteTop()+dy);
+			this.setPopupPosition(this.getAbsoluteLeft()+dx, Math.max(0,this.getAbsoluteTop()+dy));
 			this.show();
 			startX = x;
 			startY = y;
