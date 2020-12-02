@@ -127,12 +127,12 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			tree.removeItems();
 			DomStudentModelStructure structure = item.getModelStructure();
 			String title = structure.getInfo().getTitle().getOrDefault(lang, "");
-			SafeHtml html = Util.treeItem(title, NULLSCORE ,0);
+			Widget html = Util.summaryItem(title, NULLSCORE ,0);
             TreeItem ti = tree.addItem(html);
 			ti.setUserObject(item);
 			service.getScore(item).then(s -> {
               DomStudentModelStructureScore score = s.getValue().getDomStudentModelStructureScore();
-              ti.setHTML(Util.treeItem(title, score ,0));
+              ti.setWidget(Util.summaryItem(title, score ,0));
               ti.setSelected(true);
               addToTree(ti, item);
 			  return s;
@@ -246,7 +246,11 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			int oobj = 0;
 			for (DomStudentModelObj ooo: oo.getObjectives()) {
 				DomStudentModelObjectiveScore s = score.getChildren().get(oobj);
-				TreeItem tt = item.addItem(Util.treeItem(ooo.getInfo().getTitle().getOrDefault(lang, ""), s, 4));
+				TreeItem tt;
+				if (s.getChildren() != null)
+					tt = item.addItem(Util.summaryItem(ooo.getInfo().getTitle().getOrDefault(lang, ""), s,3));
+				else
+					tt = item.addItem(Util.treeItem(ooo.getInfo().getTitle().getOrDefault(lang, ""), s,3));
 				int[] oelems = new int[elems.length+1];
 				System.arraycopy(elems, 0, oelems, 0, elems.length);
 				oelems[elems.length] = oobj;
@@ -268,7 +272,11 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			for( DomStudentModelObj oo : o.getObjectives()) {
 			    float ppp;
 			    DomStudentModelObjectiveScore s = score.getObjectives().get(obj);
-				TreeItem tt = item.addItem(Util.treeItem(oo.getInfo().getTitle().getOrDefault(lang, ""), s,3));
+				TreeItem tt;
+				if (s.getChildren() != null)
+					tt = item.addItem(Util.summaryItem(oo.getInfo().getTitle().getOrDefault(lang, ""), s,2));
+				else
+					tt = item.addItem(Util.treeItem(oo.getInfo().getTitle().getOrDefault(lang, ""), s,2));
 				int[] elems = new int[] { cat, obj };
 				tt.setUserObject(elems );
 
@@ -297,7 +305,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 				for (DomStudentModelCategory o : structure.getCategories()) {
 		            DomStudentModelCategoryScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(cat);
 					TreeItem tt = item.addItem(
-					  Util.treeItem(o.getInfo().getTitle().getOrDefault(lang, ""), (score),2));
+					  Util.summaryItem(o.getInfo().getTitle().getOrDefault(lang, ""), (score),1));
 					tt.setUserObject(cat);
 					addToTree(tt, cat, o, p);
 					cat++;

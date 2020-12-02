@@ -1,0 +1,48 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:s="urn:import:org.vectomatic.dom.svg.ui"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style field='style' type="nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.SummaryIconCSS">
+	.white {
+		fill: white;
+	}
+	.green {
+		fill: green;
+	}
+	.red {
+		fill: red;
+	}
+	.svg {
+	}
+	
+	/* Add CSS here. See the GWT docs on UI Binder for more details */
+	</ui:style>
+	<g:FlowPanel styleName="score-treeItem">
+	<g:InlineLabel styleName='score-title' ui:field='title'>title</g:InlineLabel>
+	<s:SVGImage ui:field="image">
+		<svg 	class='score-template {style.svg}'
+				viewBox="-1 0 140 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+			<rect ui:field='r01' x='0' y='0' width='5' height='10' class='{style.green}'/>
+			<rect ui:field='r02' x='7' y='0' width='5' height='10' class='{style.green}'/>
+			<rect ui:field='r03' x='14' y='0' width='5' height='10' class='{style.green}'/>
+			<rect ui:field='r04' x='21' y='0' width='5' height='10' class='{style.green}'/>
+			<rect ui:field='r05' x='28' y='0' width='5' height='10' class='{style.green}'/>
+			<rect ui:field='r06' x='35' y='0' width='5' height='10' class='{style.green}'/>
+			<rect ui:field='r07' x='42' y='0' width='5' height='10' class='{style.green}'/>
+			<rect ui:field='r08' x='49' y='0' width='5' height='10' class='{style.green}'/>
+			<rect ui:field='r09' x='56' y='0' width='5' height='10' class='{style.red}'/>
+			<rect ui:field='r10' x='63' y='0' width='5' height='10' class='{style.red}'/>
+			<rect ui:field='r11' x='70' y='0' width='5' height='10' class='{style.red}'/>
+			<rect ui:field='r12' x='77' y='0' width='5' height='10' class='{style.red}'/>
+			<rect ui:field='r13' x='84' y='0' width='5' height='10' class='{style.red}'/>
+			<rect ui:field='r14' x='91' y='0' width='5' height='10' class='{style.red}'/>
+			<rect ui:field='r15' x='98' y='0' width='5' height='10' class='{style.white}'/>
+			<rect ui:field='r16' x='105' y='0' width='5' height='10' class='{style.white}'/>
+			<rect ui:field='r17' x='112' y='0' width='5' height='10' class='{style.white}'/>
+			<rect ui:field='r18' x='119' y='0' width='5' height='10' class='{style.white}'/>
+			<rect ui:field='r19' x='126' y='0' width='5' height='10' class='{style.white}'/>
+			<rect ui:field='r20' x='134' y='0' width='5' height='10' class='{style.white}'/>
+		</svg>
+	</s:SVGImage>
+	</g:FlowPanel>
+</ui:UiBinder> 

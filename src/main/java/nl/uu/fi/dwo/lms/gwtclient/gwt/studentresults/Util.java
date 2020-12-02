@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
 
@@ -62,6 +63,11 @@ public class Util {
 		green *= 100;
 		level = Math.max(MAX_LEVEL - level, 0);
 		return scoreTemplate.treeItem(title, red, green, level);
+	}
+	
+	static Widget summaryItem(String title, DomStudentModelScore<?>s, int level) {
+		level = Math.max(MAX_LEVEL - level, 0);
+		return new SummaryIcon(title, s, level);
 	}
 
 }

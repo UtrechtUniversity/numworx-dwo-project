@@ -160,7 +160,6 @@ public class SelectedResultsPresenter implements ResultEventHandler {
                     .then(this::updateResultTree));
         }
         Promises.all(promises).then(null, FAILURE);
-
     }
 
     private static final String WAIT = DwoLocalesForGWT.instance.NUM_DLG_SELECTEDRESULTS_PAGES();
