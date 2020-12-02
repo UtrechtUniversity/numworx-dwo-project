@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="fi.servlet.dwomaccess.Subnet" %>
+<%@ page import="java.util.*" %>
+<%@ page import="java.util.logging.*" %>
 <%@ include file='/dwo/toets_util.jsp' %>
 <!DOCTYPE html>
 <html>
@@ -10,21 +12,19 @@
     <link type="text/css" rel="stylesheet" href="/dwo/oauth2client/OAuth2Client.css">
 </head>
 <body>
-<h1>Start</h1>
-
-<p>
 <%
+	String requestHash = request.getHeader("X-SafeExamBrowser-RequestHash");
 	String host = request.getRemoteAddr();
 	String server = request.getHeader("host");
 	if ( ! Subnet.netMatchRange(IPRANGE, host) ) {
-%>
-	The device at this address <%=host %> is not allowed for assessments. Use a secured device.
-<%	  
+		Logger.getLogger("toets.jsp").severe(request.getRequestURL() +  " wrong host = " + host);
+		response.sendError(HttpServletResponse.SC_NOT_FOUND);
+		return;
 	}
-	else if ( needSEB ) {
-%>
-<a href='sebs://<%=server%>/en/he/exam/leerling.seb'>Start de beveiligde <strong>exam</strong> omgeving</a>
-<%
+	else if ( requestHash == null ) {
+		Logger.getLogger("toets.jsp").severe(request.getRequestURL() +  " no seb host = " + host);
+		response.sendError(HttpServletResponse.SC_NOT_FOUND);
+		return;
 	} else {
 String clientId = "";
 if ("shibboleth".equals(request.getAuthType())) clientId = "f9af29c4-cfc5-11ea-87d0-0242ac130003";
@@ -39,15 +39,6 @@ if ("shibboleth".equals(request.getAuthType())) clientId = "f9af29c4-cfc5-11ea-8
     <script type="text/javascript" src="/dwo/oauth2client/oauth2client/oauth2client.nocache.js"></script>
 <%	  
 	}
-
-	if ( needSEB ) {
 %>
-<h1>Installeren</h1>
-<ul>
-	<li><a href='https://www.dwo.nl/downloads/SEB_3.0.1.163_SetupBundle.exe'>Safe Exam Browser Windows (3.0.1)</a></li>
-	<li><a href='https://www.dwo.nl/downloads/SafeExamBrowser-2.2.1.dmg'>Safe Exam Browser MacOs (2.2.1)</a></li>
-</ul>
-Please note, only these versions work correctly.
-<% } %>
 </body>
 </html>

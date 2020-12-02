@@ -56,7 +56,7 @@
         dwo_env = "<%=dwo_env%>"
     	function logout() {
     		<%
-    		if (needSEB || !"shibboleth".equals(request.getAuthType()) ) {
+    		if (needSEB || !"shibboleth".equals(request.getAuthType()) || requestHash != null ) {
     	%>    		
     	    	top.window.location = "https://<%=server%>/ho/en/exam/logout.html"
     	<% } else { 
