@@ -63,7 +63,7 @@
     		// Let op, dit is UU only.....
     		Object handler = request.getAttribute("Shib-Handler");
     	%>
-    			top.window.location = "<%=handler%>/Logout?return=https://logout.uu.nl"
+    			top.window.location = "<%=handler%>/Logout?return=https://<%=server%>/en/he/exam/"
     		
     	<% } %>	
     	}
