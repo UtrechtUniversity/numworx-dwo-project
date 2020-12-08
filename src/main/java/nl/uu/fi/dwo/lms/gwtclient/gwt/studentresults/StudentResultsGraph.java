@@ -323,6 +323,9 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 	private Button zoomFitBtn, zoomInBtn, zoomOutBtn;
 
 	@Inject StudentResultsGraph() {
+		getElement().getStyle().setMarginLeft(20, Unit.PX);
+		getElement().getStyle().setMarginRight(22, Unit.PX);
+		
 		doc = OMSVGParser.currentDocument();
 		image = new SVGImage();
 		image.setSvgElement(doc.createSVGSVGElement());

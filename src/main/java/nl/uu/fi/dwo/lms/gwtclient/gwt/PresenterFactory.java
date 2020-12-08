@@ -49,6 +49,7 @@ public interface PresenterFactory {
     public ModulesOfSchoolclassPresenter getModulesOfSchoolclassPresenter();
     public ModulesPresenter getModulesPresenter();
     public AbstractResultsPresenter getResultsPresenter();
+    public AbstractResultsPresenter getResultsGraphPresenter();
     public SelectedResultsPresenter getSelectedResultsPresenter();
     public SelectStudentResultsPresenter getSelectStudentResultsPresenter();
     public StudentScoResultPresenter getStudentScoResultPresenter();

@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import org.osgi.util.promise.Promise;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -14,6 +15,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Window.Location;
@@ -31,12 +34,14 @@ import com.google.web.bindery.event.shared.HandlerRegistrations;
 import dagger.Lazy;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsStudentResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.AbstractResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
@@ -44,6 +49,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class StudentResultsPresenter extends AbstractResultsPresenter implements SelectionHandler<TreeItem> {
 
@@ -92,10 +98,12 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	{
 		NULLSCORE.setScore(0, 0, 0, 0);
 	}
+
+	List<DomStudentModelContext> list;
+	DomStudentModelContext current;
+
 	class ModelChange implements ChangeHandler, ClickHandler {
 		
-		List<DomStudentModelContext> list;
-		DomStudentModelContext current;
 		
 		@Override
 		public void onChange(ChangeEvent event) {
@@ -118,26 +126,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		}
 
 		private ModelChange(List<DomStudentModelContext> list) {
-			this.list = list;
-		}
-
-		
-		private void insertTree(DomStudentModelContext item) {
-			Tree tree = widget.get().tree;
-			tree.removeItems();
-			DomStudentModelStructure structure = item.getModelStructure();
-			String title = structure.getInfo().getTitle().getOrDefault(lang, "");
-			Widget html = Util.summaryItem(title, NULLSCORE ,0);
-            TreeItem ti = tree.addItem(html);
-			ti.setUserObject(item);
-			service.getScore(item).then(s -> {
-              DomStudentModelStructureScore score = s.getValue().getDomStudentModelStructureScore();
-              ti.setWidget(Util.summaryItem(title, score ,0));
-              ti.setSelected(true);
-              addToTree(ti, item);
-			  return s;
-			});
-
+			StudentResultsPresenter.this.list = list;
 		}
 
 		@Override
@@ -146,16 +135,38 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		}
 		
 	}
+
+	private void insertTree(DomStudentModelContext item) {
+		Tree tree = widget.get().tree;
+		tree.removeItems();
+		DomStudentModelStructure structure = item.getModelStructure();
+		String title = structure.getInfo().getTitle().getOrDefault(lang, "");
+		Widget html = Util.summaryItem(title, NULLSCORE ,0);
+        TreeItem ti = tree.addItem(html);
+		ti.setUserObject(item);
+		service.getScore(item).then(s -> {
+          DomStudentModelStructureScore score = s.getValue().getDomStudentModelStructureScore();
+          ti.setWidget(Util.summaryItem(title, score ,0));
+          ti.setSelected(true);
+          addToTree(ti, item);
+		  return s;
+		});
+	}
 	
 	boolean showGraph;
 	void showHideGraph(DomStudentModelContext item) {
-		showGraph = !showGraph;
-		if(showGraph) {
-			widget.get().description.setWidget(graph.get());
-			graph.get().setModelScore(item, service.getScore(item));
-		} else {
-			setDescription(item.getModelStructure().getInfo());
-		}
+		JSONObject json = new JSONObject();
+		json.put("title", new JSONString(item.getModelStructure().getInfo().getTitle().get(lang)));
+		json.put("id", new JSONString(item.getId().getIdString()));
+		SwitchViewEvent ev = new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTRESULTSGRAPH, json.getJavaScriptObject());
+		eventBus.fireEvent(ev);
+//		showGraph = !showGraph;
+//		if(showGraph) {
+//			widget.get().description.setWidget(graph.get());
+//			graph.get().setModelScore(item, service.getScore(item));
+//		} else {
+//			setDescription(item.getModelStructure().getInfo());
+//		}
 	}
 	
 	Promise<?> getModels(Promise<List<DomStudentModelContext>> p) {
@@ -330,6 +341,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 
   private static final String WISKOPDR_SIG = "H4sIAAAAAA";
   private String launch_data;
+  private JSONObject resultState;
     
   
 	private Widget createDescription(String text, String json) {
@@ -431,6 +443,28 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	  String shortValue = value.length() > 10 ? value.substring(0, 10) + "..." : value;
 	  LOG.info("result GetValue: " + shortValue);
 	  return value;
+	}
+
+	public void init(JavaScriptObject resultState) {
+		init();
+		if (resultState != null) {
+			this.resultState = new JSONObject(resultState);
+			String id = this.resultState.get("id").isString().stringValue();
+			PersistenceId pid = new PersistenceId(id);
+			DomStudentModelContextId cid = new DomStudentModelContextId(pid);
+			int index = 0;
+			for(int i = 0; i < list.size(); i++) {
+				if(pid .equals (list.get(i).getId())) { index = i+1; break; }
+			}
+			widget.get().models.setSelectedIndex(index);
+			service.getModel(cid).then(p -> {
+				current = p.getValue();
+				insertTree(current);
+				return p;
+			}, FAILURE);
+		
+		}
+		
 	}
 
 

@@ -47,7 +47,7 @@
 		</g:west>
 		<g:center>
 			<g:DockLayoutPanel unit='EM'  >
-				<g:north size="2"><g:FlowPanel><g:InlineLabel ui:field='title'></g:InlineLabel><g:Button ui:field='btn' styleName='{style.right}'>Graph</g:Button></g:FlowPanel></g:north>
+				<g:north size="2"><g:FlowPanel><g:InlineLabel ui:field='title'></g:InlineLabel></g:FlowPanel></g:north>
 				<g:north size='3'>
 				  <g:FlowPanel>
 					<g:InlineLabel ui:field='redPerc' styleName='{style.perc}'></g:InlineLabel>
@@ -55,6 +55,7 @@
 					<g:InlineLabel ui:field='perc' styleName='{style.greenperc}' />
 				  </g:FlowPanel>
 				</g:north>
+				<g:south size="2"><g:FlowPanel><g:Button ui:field='btn' styleName='{style.right}'>Graph</g:Button></g:FlowPanel></g:south>
 				<g:center>
 				<g:SimpleLayoutPanel ui:field='description' />
 			</g:center>

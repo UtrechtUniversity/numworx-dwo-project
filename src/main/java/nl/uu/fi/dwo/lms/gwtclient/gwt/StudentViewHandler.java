@@ -29,12 +29,19 @@ public class StudentViewHandler implements SwitchViewEventHandler {
     SelectedView value = switchViewEvent.getEventValue();
     if (!withUser()) value = SelectedView.LOGIN;
     switch (value) {
+    case STUDENTRESULTSGRAPH:
+    	if (dwoGlobalVars.isPremium()) {
+    		mainView.selectView(value);
+    		mainView.showStudentResultsGraphView();
+    		presenterFactory.getResultsGraphPresenter().init(switchViewEvent.getResultState());
+   		break;
+    	}
     case RESULTS:
     case STUDENTRESULTS:
     	if (dwoGlobalVars.isPremium()) {
     		mainView.selectView(SelectedView.RESULTS);
     		mainView.showStudentResults();
-    		presenterFactory.getResultsPresenter().init();
+    		presenterFactory.getResultsPresenter().init(switchViewEvent.getResultState());
     		break;
     	}
       default:

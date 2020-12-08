@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditTeacherPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.ImportPersonsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsPresenterSchoolAdmin;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.AbstractResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.LogResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectStudentResultsPresenter;
@@ -237,8 +238,12 @@ public class SchoolAdminPresenterFactory implements PresenterFactory {
 
   @Override
   public StudentSchoolclassPresenter getStudentSchoolclassPresenter() {
-    // TODO Auto-generated method stub
     return null;
+  }
+
+  @Override
+  public AbstractResultsPresenter getResultsGraphPresenter() {
+	return null;
   }
 
 }

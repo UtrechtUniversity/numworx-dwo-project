@@ -107,4 +107,6 @@ public class JsMainDisplay {
     
     static native void setIdleTimeout(int millis);
     static native void unsetIdleTimeout();
+    
+    static native void showStudentResultsGraphView();
 }

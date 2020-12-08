@@ -126,6 +126,8 @@ public class MainPresenter {
 
 		void setIdleTimeout(int millis);
 		void unsetIdleTimeout();
+
+		void showStudentResultsGraphView();
     }
 
     private MainPresenter.Display display;

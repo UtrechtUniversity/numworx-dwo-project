@@ -26,6 +26,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.ModulesOfSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentSchoolclassPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraphPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKPresenter;
@@ -41,6 +42,7 @@ public class StudentPresenterFactory implements PresenterFactory {
   @Inject ModulesPresenter modulesPresenter;
   @Inject StudentSchoolclassPresenter studentSchoolclassPresenter;
   @Inject StudentResultsPresenter studentResultsPresenter;
+  @Inject StudentResultsGraphPresenter studentResultsGraphPresenter;
 
   @Override  @JsMethod
   public StudentSchoolclassPresenter getStudentSchoolclassPresenter() {
@@ -118,6 +120,11 @@ public class StudentPresenterFactory implements PresenterFactory {
   @Override @JsMethod
   public StudentResultsPresenter getResultsPresenter() {
     return studentResultsPresenter;
+  }
+  
+  @JsMethod @Override
+  public StudentResultsGraphPresenter getResultsGraphPresenter() {
+	  return studentResultsGraphPresenter;
   }
 
   @Override @JsMethod

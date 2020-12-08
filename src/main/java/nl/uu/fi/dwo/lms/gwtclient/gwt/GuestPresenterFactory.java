@@ -15,6 +15,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditTeacherPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.ImportPersonsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.AbstractResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.LogResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectStudentResultsPresenter;
@@ -199,5 +200,10 @@ public class GuestPresenterFactory implements PresenterFactory {
   public StudentSchoolclassPresenter getStudentSchoolclassPresenter() {
     return null;
   }
+
+  @Override
+  public AbstractResultsPresenter getResultsGraphPresenter() {
+	return null;
+ }
 
 }

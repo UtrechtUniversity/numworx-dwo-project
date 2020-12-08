@@ -197,4 +197,9 @@ public class JsMainView implements MainPresenter.Display{
 	  if (hasIdle)
 		JsMainDisplay.unsetIdleTimeout();
 	}
+	
+	@Override
+	public void showStudentResultsGraphView() {
+		JsMainDisplay.showStudentResultsGraphView();
+	}
 }
