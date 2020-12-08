@@ -662,6 +662,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		model = new InvisibleTreeModel(root);
 		tree = new JTree(model);
         graph = new EditableGraph();
+        graph.addActionListener(new GraphTreeAction(tree));
 
 		TreeCellRenderer renderer = new TreeCellRenderer();
 		renderer.updateUI();
@@ -1285,5 +1286,6 @@ public class LeerdomeinEditPanel2 extends JPanel
 			graph.setModel(model);
 		}
 	}
+
 
 }

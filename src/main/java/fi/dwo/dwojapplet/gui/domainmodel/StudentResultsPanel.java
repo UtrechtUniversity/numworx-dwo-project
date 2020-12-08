@@ -189,6 +189,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     model = new InvisibleTreeModel(root);   
     tree = new JTree(model);
     graph = new EditableGraph();
+    graph.addActionListener(new GraphTreeAction(tree));
     
     TreeCellRenderer renderer = new ExtraCellRenderer();
     renderer.updateUI();
