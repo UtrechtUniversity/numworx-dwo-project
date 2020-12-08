@@ -1,10 +1,13 @@
 package fi.dwo.dwojapplet.gui.domainmodel.graph;
 
+import java.awt.AWTEventMulticaster;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.MenuItem;
 import java.awt.Point;
+import java.awt.PopupMenu;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -46,8 +49,13 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	
 	private int startX = 0;
 	private int startY = 0;
+	private int pressedX = 0;
+	private int pressedY = 0;
 	
 	private boolean isScoreGraph = false;
+	private boolean modelJustSet = false;
+	
+	
 
 	public Graph() {
 		setLayout(null);
@@ -57,7 +65,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		painter = this;
-
+		
 		zoomFitButton = new JButton("\u25a2");
 		zoomFitButton.setBorder(BorderFactory.createEmptyBorder());
 		zoomFitButton.addActionListener(this);
@@ -81,16 +89,20 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	}
 
 	public void paintComponent(Graphics g) {
+		if(modelJustSet) {
+			zoomFit();
+			modelJustSet = false;
+		}
 		super.paintComponent(g);
 		for (int i = 0; i < graphEdges.size(); i++) {
 			GraphEdge edge = graphEdges.get(i);
 			GraphNode source = edge.getSource();
 			GraphNode target = edge.getTarget();
-			Point p = makeTempLocation(source, target);
-			if(source.getTempLocation()==null)
-				source.setTempLocation(makeTempLocation(source, target));
-			if(edge.getLength() < 600)
-				source.setTempLocation(null);
+//			Point p = makeTempLocation(source, target);
+//			if(source.getTempLocation()==null)
+//				source.setTempLocation(makeTempLocation(source, target));
+//			if(edge.getLength() < 600)
+//				source.setTempLocation(null);
 			graphEdges.get(i).paint(g, origin, factor);
 		}
 		for (int i = 0; i < graphNodes.size(); i++) {
@@ -112,14 +124,14 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 				}
 			}
 			graphNodes.get(i).paint(g, origin, factor);
-			graphNodes.get(i).setTempLocation(null);
+			//graphNodes.get(i).setTempLocation(null);
 		}
 		//zoomFitButton.paint(g);
 	}
 	
 	private boolean onPanel(GraphNode node) {
 		Point p = node.getLocationOnPanel(origin, factor);
-		if(p.x > 0 && p.x < getWidth() && p.y > 0 && p.y < getHeight())
+		if(p!=null && p.x > 0 && p.x < getWidth() && p.y > 0 && p.y < getHeight())
 			return true;
 		return false;
 	}
@@ -216,23 +228,26 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		
 		origin.x += (getWidth() - oldWidth)/2;
 		origin.y += (getHeight() - oldHeight)/2;
+		
+		
 		repaint();
 	}
 	
 	
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				int dx = e.getX() - startX;
-				int dy = e.getY() - startY;
-				
-				origin.x += dx;
-				origin.y += dy;
-				
-				repaint();
-				
-				startX = e.getX();
-				startY = e.getY();
-			}
+	
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		int dx = e.getX() - startX;
+		int dy = e.getY() - startY;
+		
+		origin.x += dx;
+		origin.y += dy;
+		
+		repaint();
+		
+		startX = e.getX();
+		startY = e.getY();
+	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
@@ -275,7 +290,17 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
+//		int ex = (int) ((e.getX()-origin.x)/factor);
+//		int ey = (int) ((e.getY()-origin.y)/factor);
+//		GraphNode node = null;
+//		for(int i=0 ; i<graphNodes.size() ; i++) {
+//			if(graphNodes.get(i).contains(ex, ey)) {
+//				node = graphNodes.get(i);
+//				break;
+//			}
+//		}
+//		if(node!=null)
+//			produceAction(node.getID());
 
 	}
 
@@ -283,12 +308,26 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	public void mousePressed(MouseEvent e) {
 		startX = e.getX();
 		startY = e.getY();
-
+		
+		pressedX = e.getX();
+		pressedY = e.getY();
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
+		if(Math.abs(pressedX-e.getX())>2 || Math.abs(pressedY-e.getY())>2)
+			return;
+		int ex = (int) ((e.getX()-origin.x)/factor);
+		int ey = (int) ((e.getY()-origin.y)/factor);
+		GraphNode node = null;
+		for(int i=0 ; i<graphNodes.size() ; i++) {
+			if(graphNodes.get(i).contains(ex, ey)) {
+				node = graphNodes.get(i);
+				break;
+			}
+		}
+		if(node!=null)
+			produceAction(node.getID());
 
 	}
 
@@ -312,7 +351,11 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		setGraphNodes(new ArrayList<>(graphMap.values()));
 		searchEdges(leaves, graphMap, edges);
 		setGraphEdges(edges);
-		//zoomFit();
+		modelJustSet = true;
+//		if(getParent()!=null) {
+//			zoomFit();
+//		}
+			
 		painter.repaint();
 	}
 
@@ -342,15 +385,22 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 				String id = leaf.getId();
 				Integer x = leaf.getX();
 				Integer y = leaf.getY();
-				if (x == null)
-					x = (int) (Math.random() * 600);
-				if (y == null)
-					y = (int) (Math.random() * 600);
-				if(x!=null && y!=null) {
-					GraphNode g = new GraphNode(id, parent, leaf.toString(), x.intValue(), y.intValue());
+//				if (x == null)
+//					x = (int) (Math.random() * 600);
+//				if (y == null)
+//					y = (int) (Math.random() * 600);
+				if(x==null || y==null) {
+					GraphNode g = new GraphNode(id, parent, leaf.toString(), null);
 					graphMap.put(id, g);
 					leaves.add(leaf);
 				}
+				else {
+					GraphNode g = new GraphNode(id, parent, leaf.toString(), x.intValue(), y.intValue());
+					g.setMethodeInfo(leaf.getMethode());
+					graphMap.put(id, g);
+					leaves.add(leaf);
+				}
+				System.out.println("Methode: "+leaf.getMethode().get("Getal&Ruimte"));
 			}
 			return;
 		}
@@ -392,9 +442,13 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 				NodeLeaf leaf = (NodeLeaf) node;
 				String id = leaf.getId();
 				GraphNode gn = graphMap.get(id);
-				if (gn != null) {
+				if (gn != null && gn.getLocation()!=null) {
 					leaf.setX(gn.getLocation().x);
 					leaf.setY(gn.getLocation().y);
+				}
+				else if(gn!=null) {
+					leaf.setX(null);
+					leaf.setY(null);
 				}
 				List<String> voorkennis = leaf.getVoorkennis();
 				if (voorkennis == null)
@@ -435,24 +489,54 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	public void zoomFit() {
 		if(graphNodes.size()<1)
 			return;
-		int xMax = graphNodes.get(0).getLocation().x;
-		int yMax = graphNodes.get(0).getLocation().y;
-		int xMin = graphNodes.get(0).getLocation().x;
-		int yMin = graphNodes.get(0).getLocation().y;
+		
+		int xMax = -10000;//graphNodes.get(0).getLocation().x;
+		int yMax = -10000;//graphNodes.get(0).getLocation().y;
+		int xMin = 10000;//graphNodes.get(0).getLocation().x;
+		int yMin = 10000;//graphNodes.get(0).getLocation().y;
+		
 		for (int i = 0; i < graphNodes.size(); i++) {
-			if(xMax < graphNodes.get(i).getLocation().x)
-				xMax = graphNodes.get(i).getLocation().x;
-			if(yMax < graphNodes.get(i).getLocation().y)
-				yMax = graphNodes.get(i).getLocation().y;
-			if(xMin > graphNodes.get(i).getLocation().x)
-				xMin = graphNodes.get(i).getLocation().x;
-			if(yMin > graphNodes.get(i).getLocation().y)
-				yMin = graphNodes.get(i).getLocation().y;
+			if(graphNodes.get(i).getLocation()!=null) {
+				if(xMax < graphNodes.get(i).getLocation().x)
+					xMax = graphNodes.get(i).getLocation().x;
+				if(yMax < graphNodes.get(i).getLocation().y)
+					yMax = graphNodes.get(i).getLocation().y;
+				if(xMin > graphNodes.get(i).getLocation().x)
+					xMin = graphNodes.get(i).getLocation().x;
+				if(yMin > graphNodes.get(i).getLocation().y)
+					yMin = graphNodes.get(i).getLocation().y;
+			}
 		}
 		factor = Math.min((float)(getWidth()-200)/(float)(xMax-xMin), (float)(getHeight()-80)/(float)(yMax-yMin));
+		if(factor<0 || factor>1)
+			factor=1;
 		origin.x = 100+(int)(-xMin*factor);
 		origin.y = 40+(int)(-yMin*factor);
 		repaint();
 	}
+	
+	//ActionProducer
+	private ActionListener actionListener = null;
+
+	public void addActionListener(ActionListener l) {
+		actionListener = AWTEventMulticaster.add(actionListener, l);
+	}
+
+	public void removeActionListener(ActionListener l) {
+		actionListener = AWTEventMulticaster.remove(actionListener, l);
+	}
+
+	public void produceAction(String command) {
+		if (actionListener != null)	{
+			actionListener.actionPerformed(new ActionEvent(this, 0, command));
+		}
+	}
+
+	public void produceThisAction(ActionEvent e)	{
+		if (actionListener != null)	{
+			actionListener.actionPerformed(e);
+		}
+	}
+	//end ActionProducer
 
 }

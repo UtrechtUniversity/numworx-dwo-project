@@ -16,12 +16,15 @@ public class GraphEdge {
 	private int arrowSize = 5;
 	
 	private boolean blur = false;
+	private boolean sameChapters = true;
 	
 	private Color edgeColor = LeerdomeinGraphPanel.colorBlue4;
+	private Color edgeInterChapColor = new Color(230,210,210);
 	
 	public GraphEdge(GraphNode source, GraphNode target) {
 		this.source = source;
 		this.target = target;
+		sameChapters = GraphNode.hasSameChapterCode(source, target, "Getal&Ruimte");
 	}
 	
 	public boolean contains(int x, int y) {
@@ -59,10 +62,10 @@ public class GraphEdge {
 		float x1 = origin.x + (float)((target.getLocation().x)*factor);
 		float y0 = origin.y + (float)((source.getLocation().y)*factor);
 		float y1 = origin.y + (float)((target.getLocation().y)*factor);
-		if(source.getTempLocation()!=null) {
-			x0 = source.getTempLocation().x;
-			y0 = source.getTempLocation().y;
-		}
+//		if(source.getTempLocation()!=null) {
+//			x0 = source.getTempLocation().x;
+//			y0 = source.getTempLocation().y;
+//		}
 		float mx = (x0 + x1)/2;
 		float my = (y0 + y1)/2;
 		float dm1 = (float)Math.sqrt((x1-mx)*(x1-mx)+(y1-my)*(y1-my));
@@ -76,18 +79,22 @@ public class GraphEdge {
 		g.setPaint(edgeColor);
 		if(target.getSuccesFailScore()!=null)
 			g.setPaint(target.getEdgeSuccesFailColor());
+//		if((target.getSuccesFailScore()==null || target.getSuccesFailScore() < 45)) // &&  source.getSuccesFailScore()!=null && source.getSuccesFailScore() < 45)
+//			g.setPaint(source.getSuccesFailColor());
+		if(!sameChapters)
+			g.setPaint(edgeInterChapColor);
 		if(blur)
 			g.setPaint(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 30));
 		
         g.setStroke(new BasicStroke(1.3f*(float)factor));
-        if(target.getSuccesFailScore()!=null && target.getEdgeSuccesFailColor()!=null)
+        if(target.getSuccesFailScore()!=null && target.getEdgeSuccesFailColor()!=null)// ||  source.getSuccesFailScore()!=null && source.getSuccesFailScore() < 45)
        		g.setStroke(new BasicStroke(5f*(float)factor));
-        if(getLength()>600 || source.getTempLocation()!=null) {
-        		g.setStroke(new BasicStroke(1.3f*(float)factor, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{5,5}, 5));
-        		if(target.getSuccesFailScore()!=null && target.getEdgeSuccesFailColor()!=null)
-        			g.setStroke(new BasicStroke(5f*(float)factor, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{5,5}, 5));
-        		
-        }
+//        if(getLength()>600 || source.getTempLocation()!=null) {
+//        		g.setStroke(new BasicStroke(1.3f*(float)factor, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{5,5}, 5));
+//        		if(target.getSuccesFailScore()!=null && target.getEdgeSuccesFailColor()!=null)
+//        			g.setStroke(new BasicStroke(5f*(float)factor, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{5,5}, 5));
+//        		
+//        }
 		GeneralPath path = new GeneralPath();
 		path.moveTo(x0,y0);
 		path.lineTo(x1,y1);
@@ -104,6 +111,8 @@ public class GraphEdge {
 	}
 	
 	public int getLength() {
+		if(target==null || source==null || target.getLocation()==null || source.getLocation()==null)
+			return 0;
 		float x0 = source.getLocation().x;
 		float y0 = source.getLocation().y;
 		float x1 = target.getLocation().x;

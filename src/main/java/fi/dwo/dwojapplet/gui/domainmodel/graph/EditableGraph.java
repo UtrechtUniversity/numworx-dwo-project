@@ -1,6 +1,9 @@
 package fi.dwo.dwojapplet.gui.domainmodel.graph;
 
+import java.awt.AWTEventMulticaster;
 import java.awt.CardLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 import javax.swing.JPanel;
@@ -10,69 +13,107 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 
-public class EditableGraph extends JPanel {
+public class EditableGraph extends JPanel implements ActionListener{
 
-  private CardLayout cards;
-  private Graph graph;
-  
-  public EditableGraph() {
-    super(null);
-    cards = new CardLayout();
-    setLayout(cards);
-    graph = new Graph();
-    EditGraph editGraph = new EditGraph(graph);
-    graph.painter = this;
-    add(graph);
-    add(editGraph);    
-    cards.first(this);
-    new DropTargetGraph(editGraph);
-  }
+	private CardLayout cards;
+	private Graph graph;
+	private EditGraph editGraph;
 
-  public void setEditMode(boolean b) {
-    if (b) {
-      cards.last(this);
-    } else {
-      cards.first(this);
-    }
-  }
+	public EditableGraph() {
+		super(null);
+		cards = new CardLayout();
+		setLayout(cards);
+		graph = new Graph();
+		graph.addActionListener(this);
+		editGraph = new EditGraph(graph);
+		editGraph.addActionListener(this);
+		graph.painter = this;
+		add(graph);
+		add(editGraph);
+		cards.first(this);
+		new DropTargetGraph(editGraph);
+	}
 
-  public void setModel(TreeModel model) {
-    graph.setModel(model);
-  }
+	public void setEditMode(boolean b) {
+		if (b) {
+			editGraph.setOrigin(graph.getOrigin());
+			editGraph.setFactor(graph.getFactor());
+			cards.last(this);
+		} else {
+			graph.setOrigin(editGraph.getOrigin());
+			graph.setFactor(editGraph.getFactor());
+			cards.first(this);
+		}
+	}
 
-  public void updateModel(TreeModel model) {
-    graph.updateModel(model);
-  }
+	public void setModel(TreeModel model) {
+		graph.setModel(model);
+	}
 
-  public void setScore(DomStudentModelStructureScore scores) {
-    HashMap<String,Double> map = new HashMap<>();
-    setScoreMap(scores, map);
-    for( GraphNode node: graph.graphNodes) {
-      String id = node.getID();
-      Double score = map.get(id);
-      node.setSuccesFailScore(score);
-    }
-    repaint();
-  }
+	public void updateModel(TreeModel model) {
+		graph.updateModel(model);
+	}
 
-  private void setScoreMap(DomStudentModelStructureScore scores, HashMap<String, Double> map) {
-    map.put(scores.getId(), scores.getScore()*100.0);
-    for( DomStudentModelCategoryScore child: scores.getCategories()) 
-      setScoreMap(child, map);   
-  }
+	public void setScore(DomStudentModelStructureScore scores) {
+		HashMap<String, Double> map = new HashMap<>();
+		setScoreMap(scores, map);
+		for (GraphNode node : graph.graphNodes) {
+			String id = node.getID();
+			Double score = map.get(id);
+			node.setSuccesFailScore(score);
+		}
+		repaint();
+	}
 
-  private void setScoreMap(DomStudentModelCategoryScore parent, HashMap<String, Double> map) {
-    map.put(parent.getId(), parent.getScore()*100.0);
-    for( DomStudentModelObjectiveScore child: parent.getObjectives())
-      setScoreMap(child, map);
-  }
+	private void setScoreMap(DomStudentModelStructureScore scores, HashMap<String, Double> map) {
+		map.put(scores.getId(), scores.getScore() * 100.0);
+		for (DomStudentModelCategoryScore child : scores.getCategories())
+			setScoreMap(child, map);
+	}
 
-  private void setScoreMap(DomStudentModelObjectiveScore parent, HashMap<String, Double> map) {
-    map.put(parent.getId(), parent.getScore()*100.0);
-    if (parent.getChildren() != null) {
-      for (DomStudentModelObjectiveScore child: parent.getChildren())
-        setScoreMap(child, map);
-    }   
-  }
+	private void setScoreMap(DomStudentModelCategoryScore parent, HashMap<String, Double> map) {
+		map.put(parent.getId(), parent.getScore() * 100.0);
+		for (DomStudentModelObjectiveScore child : parent.getObjectives())
+			setScoreMap(child, map);
+	}
+
+	private void setScoreMap(DomStudentModelObjectiveScore parent, HashMap<String, Double> map) {
+		map.put(parent.getId(), parent.getScore() * 100.0);
+		if (parent.getChildren() != null) {
+			for (DomStudentModelObjectiveScore child : parent.getChildren())
+				setScoreMap(child, map);
+		}
+	}
+	
+	//ActionProducer
+	private ActionListener actionListener = null;
+
+	public void addActionListener(ActionListener l) {
+		actionListener = AWTEventMulticaster.add(actionListener, l);
+	}
+
+	public void removeActionListener(ActionListener l) {
+		actionListener = AWTEventMulticaster.remove(actionListener, l);
+	}
+
+	public void produceAction(String command) {
+		if (actionListener != null)	{
+			actionListener.actionPerformed(new ActionEvent(this, 0, command));
+		}
+	}
+
+	public void produceThisAction(ActionEvent e)	{
+		if (actionListener != null)	{
+			actionListener.actionPerformed(e);
+		}
+	}
+	//end ActionProducer
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		produceAction(e.getActionCommand());
+		System.out.println("nodeID: " + e.getActionCommand());
+		
+	}
 
 }

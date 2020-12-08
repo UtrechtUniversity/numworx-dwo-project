@@ -1,9 +1,12 @@
 package fi.dwo.dwojapplet.gui.domainmodel.graph;
 
+import java.awt.AWTEventMulticaster;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.MenuItem;
 import java.awt.Point;
+import java.awt.PopupMenu;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,12 +42,19 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 	private int startX = 0;
 	private int startY = 0;
 	
+	private int pressedX = 0;
+	private int pressedY = 0;
+	
 	private Rectangle selectieRectangle = new Rectangle(0,0,0,0);
 	private boolean selectGroep = false;
 	private boolean sleepGroep = false;
 	
 	private Font buttonFont = new Font("SansSerif", Font.BOLD, 20);
 	
+	private PopupMenu popup;
+    private MenuItem miRemove;
+    private GraphNode editPopupNode;
+    
 	public EditGraph() {
 		setLayout(null);
 		setBackground(Color.white);
@@ -52,6 +62,14 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		makeButtons();
+		
+		popup = new PopupMenu();
+        popup.setFont(new Font("SansSerif",Font.PLAIN,13));
+        
+        miRemove = new MenuItem("Remove");
+        miRemove.addActionListener(this);
+        popup.add(miRemove);
+        add(popup);
 	}
 	
 	public EditGraph(Graph graph) {
@@ -60,9 +78,19 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		setBorder(BorderFactory.createLineBorder(LeerdomeinGraphPanel.colorBlue3));
 		graphNodes = graph.getGraphNodes();
 		graphEdges = graph.getGraphEdges();
+		origin = graph.getOrigin();
+		factor = graph.getFactor();
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		makeButtons();
+		
+		popup = new PopupMenu();
+        popup.setFont(new Font("SansSerif",Font.PLAIN,13));
+        
+        miRemove = new MenuItem("Remove from graph");
+        miRemove.addActionListener(this);
+        popup.add(miRemove);
+        add(popup);
 	}
 	
 	private void makeButtons() {
@@ -161,17 +189,41 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		origin.y += (getHeight() - oldHeight)/2;
 		repaint();
 	}
+	
+	public GraphNode findNode(int x, int y) {
+		GraphNode node = null;
+		int ex = (int) ((x-origin.x)/factor);
+		int ey = (int) ((y-origin.y)/factor);
+		for (int i = 0; i < graphNodes.size(); i++) {
+			if (graphNodes.get(i).contains(ex, ey)) {
+				node = graphNodes.get(i);
+				break;
+			}
+		}
+		return node;
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+//		int ex = (int) ((e.getX()-origin.x)/factor);
+//		int ey = (int) ((e.getY()-origin.y)/factor);
+//		GraphNode node = null;
+//		for(int i=0 ; i<graphNodes.size() ; i++) {
+//			if(graphNodes.get(i).contains(ex, ey)) {
+//				node = graphNodes.get(i);
+//				break;
+//			}
+//		}
+//		if(node!=null)
+//			produceAction(node.getID());
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 		startX = e.getX();
 		startY = e.getY();
+		pressedX = e.getX();
+		pressedY = e.getY();
 		
 		int ex = (int) ((e.getX()-origin.x)/factor);
 		int ey = (int) ((e.getY()-origin.y)/factor);
@@ -179,11 +231,17 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 			for(int i=0 ; i<graphEdges.size() ; i++) {
 				if(graphEdges.get(i).contains(ex, ey)) {
 					graphEdges.remove(graphEdges.get(i));
-					break;
+					repaint();
+					return;
 				}
 			}
-			repaint();
-			return;
+			
+			editPopupNode = findNode(e.getX(),e.getY());
+			if(editPopupNode!=null) {
+				popup.show(this, e.getX(), e.getY());
+				return;
+			}
+			
 		}
 		for(int i=0 ; i<graphNodes.size() ; i++) {
 			if(graphNodes.get(i).contains(ex, ey)) {
@@ -210,6 +268,8 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 	public void mouseReleased(MouseEvent e) {
 		int ex = (int) ((e.getX()-origin.x)/factor);
 		int ey = (int) ((e.getY()-origin.y)/factor);
+		
+		
 		
 		for(int i=0 ; i<graphNodes.size() ; i++) {
 			if(graphNodes.get(i).contains(ex, ey)) {
@@ -253,6 +313,18 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 			selectGroep = false;
 			sleepGroep = true;
 		}
+		
+		if(Math.abs(pressedX-e.getX())>2 || Math.abs(pressedY-e.getY())>2)
+			return;
+		GraphNode node = null;
+		for(int i=0 ; i<graphNodes.size() ; i++) {
+			if(graphNodes.get(i).contains(ex, ey)) {
+				node = graphNodes.get(i);
+				break;
+			}
+		}
+		if(node!=null)
+			produceAction(node.getID());
 	}
 
 	@Override
@@ -376,19 +448,51 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 			int xMin = graphNodes.get(0).getLocation().x;
 			int yMin = graphNodes.get(0).getLocation().y;
 			for (int i = 0; i < graphNodes.size(); i++) {
-				if(xMax < graphNodes.get(i).getLocation().x)
-					xMax = graphNodes.get(i).getLocation().x;
-				if(yMax < graphNodes.get(i).getLocation().y)
-					yMax = graphNodes.get(i).getLocation().y;
-				if(xMin > graphNodes.get(i).getLocation().x)
-					xMin = graphNodes.get(i).getLocation().x;
-				if(yMin > graphNodes.get(i).getLocation().y)
-					yMin = graphNodes.get(i).getLocation().y;
+				if(graphNodes.get(i).getLocation()!=null) {
+					if(xMax < graphNodes.get(i).getLocation().x)
+						xMax = graphNodes.get(i).getLocation().x;
+					if(yMax < graphNodes.get(i).getLocation().y)
+						yMax = graphNodes.get(i).getLocation().y;
+					if(xMin > graphNodes.get(i).getLocation().x)
+						xMin = graphNodes.get(i).getLocation().x;
+					if(yMin > graphNodes.get(i).getLocation().y)
+						yMin = graphNodes.get(i).getLocation().y;
+				}
 			}
 			factor = Math.min((float)(getWidth()-200)/(float)(xMax-xMin), (float)(getHeight()-80)/(float)(yMax-yMin));
+			if(factor<0)
+				factor=1;
 			origin.x = 100+(int)(-xMin*factor);
 			origin.y = 40+(int)(-yMin*factor);
 			repaint();
 		}
+		if(e.getSource()==miRemove) {
+			editPopupNode.setLocation(null);
+			editPopupNode = null;
+			repaint();
+		}
 	}
+	//ActionProducer
+	private ActionListener actionListener = null;
+
+	public void addActionListener(ActionListener l) {
+		actionListener = AWTEventMulticaster.add(actionListener, l);
+	}
+
+	public void removeActionListener(ActionListener l) {
+		actionListener = AWTEventMulticaster.remove(actionListener, l);
+	}
+
+	public void produceAction(String command) {
+		if (actionListener != null)	{
+			actionListener.actionPerformed(new ActionEvent(this, 0, command));
+		}
+	}
+
+	public void produceThisAction(ActionEvent e)	{
+		if (actionListener != null)	{
+			actionListener.actionPerformed(e);
+		}
+	}
+	//end ActionProducer
 }
