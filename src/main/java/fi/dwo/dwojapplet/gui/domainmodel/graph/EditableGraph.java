@@ -48,6 +48,7 @@ public class EditableGraph extends JPanel implements ActionListener{
 
 	public void setModel(TreeModel model) {
 		graph.setModel(model);
+		editGraph.setModelJustSet(true);
 	}
 
 	public void updateModel(TreeModel model) {
@@ -111,9 +112,7 @@ public class EditableGraph extends JPanel implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		produceAction(e.getActionCommand());
-		System.out.println("nodeID: " + e.getActionCommand());
-		
+		produceAction(e.getActionCommand());	
 	}
 
 }

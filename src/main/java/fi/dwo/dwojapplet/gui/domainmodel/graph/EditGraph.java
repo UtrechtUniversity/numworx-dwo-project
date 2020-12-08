@@ -55,6 +55,8 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
     private MenuItem miRemove;
     private GraphNode editPopupNode;
     
+    public boolean modelJustSet = false;
+    
 	public EditGraph() {
 		setLayout(null);
 		setBackground(Color.white);
@@ -118,6 +120,10 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		if(modelJustSet) {
+			zoomFit();
+			modelJustSet = false;
+		}
 		for(int i=0 ; i<graphEdges.size() ; i++)
 			graphEdges.get(i).paint(g, origin, factor);
 		for(int i=0 ; i<graphNodes.size() ; i++) {
@@ -143,6 +149,11 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		g.setColor(new Color(200,200,200));
 		g.drawRect(selectieRectangle.x, selectieRectangle.y, selectieRectangle.width, selectieRectangle.height);
 	}
+	
+	public void setModelJustSet(boolean b) {
+		modelJustSet = b;
+	}
+	
 	
 	public void setGraphNodes(ArrayList<GraphNode> graphNodes) {
 		this.graphNodes = graphNodes;
@@ -441,36 +452,42 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 			repaint();
 		}
 		if(e.getSource()==zoomFitButton) {
-			if(graphNodes.size()<1)
-				return;
-			int xMax = graphNodes.get(0).getLocation().x;
-			int yMax = graphNodes.get(0).getLocation().y;
-			int xMin = graphNodes.get(0).getLocation().x;
-			int yMin = graphNodes.get(0).getLocation().y;
-			for (int i = 0; i < graphNodes.size(); i++) {
-				if(graphNodes.get(i).getLocation()!=null) {
-					if(xMax < graphNodes.get(i).getLocation().x)
-						xMax = graphNodes.get(i).getLocation().x;
-					if(yMax < graphNodes.get(i).getLocation().y)
-						yMax = graphNodes.get(i).getLocation().y;
-					if(xMin > graphNodes.get(i).getLocation().x)
-						xMin = graphNodes.get(i).getLocation().x;
-					if(yMin > graphNodes.get(i).getLocation().y)
-						yMin = graphNodes.get(i).getLocation().y;
-				}
-			}
-			factor = Math.min((float)(getWidth()-200)/(float)(xMax-xMin), (float)(getHeight()-80)/(float)(yMax-yMin));
-			if(factor<0)
-				factor=1;
-			origin.x = 100+(int)(-xMin*factor);
-			origin.y = 40+(int)(-yMin*factor);
-			repaint();
+			zoomFit();
 		}
 		if(e.getSource()==miRemove) {
 			editPopupNode.setLocation(null);
 			editPopupNode = null;
 			repaint();
 		}
+	}
+	
+	public void zoomFit() {
+		if(graphNodes.size()<1)
+			return;
+		
+		int xMax = -10000;//graphNodes.get(0).getLocation().x;
+		int yMax = -10000;//graphNodes.get(0).getLocation().y;
+		int xMin = 10000;//graphNodes.get(0).getLocation().x;
+		int yMin = 10000;//graphNodes.get(0).getLocation().y;
+		
+		for (int i = 0; i < graphNodes.size(); i++) {
+			if(graphNodes.get(i).getLocation()!=null) {
+				if(xMax < graphNodes.get(i).getLocation().x)
+					xMax = graphNodes.get(i).getLocation().x;
+				if(yMax < graphNodes.get(i).getLocation().y)
+					yMax = graphNodes.get(i).getLocation().y;
+				if(xMin > graphNodes.get(i).getLocation().x)
+					xMin = graphNodes.get(i).getLocation().x;
+				if(yMin > graphNodes.get(i).getLocation().y)
+					yMin = graphNodes.get(i).getLocation().y;
+			}
+		}
+		factor = Math.min((float)(getWidth()-200)/(float)(xMax-xMin), (float)(getHeight()-80)/(float)(yMax-yMin));
+		if(factor<0 || factor>1)
+			factor=1;
+		origin.x = 100+(int)(-xMin*factor);
+		origin.y = 40+(int)(-yMin*factor);
+		repaint();
 	}
 	//ActionProducer
 	private ActionListener actionListener = null;

@@ -400,7 +400,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 					graphMap.put(id, g);
 					leaves.add(leaf);
 				}
-				System.out.println("Methode: "+leaf.getMethode().get("Getal&Ruimte"));
+				//System.out.println("Methode: "+leaf.getMethode().get("Getal&Ruimte"));
 			}
 			return;
 		}
