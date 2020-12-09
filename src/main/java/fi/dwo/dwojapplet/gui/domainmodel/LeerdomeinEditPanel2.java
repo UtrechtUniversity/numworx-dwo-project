@@ -102,7 +102,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 public class LeerdomeinEditPanel2 extends JPanel
-		implements TreeSelectionListener, ExportPanel, WindowListener, ChangeListener {
+		implements TreeSelectionListener, ExportPanel, WindowListener {
 	static final String WISKOPDR_SIG = "H4sIAAAAAA";
 	static final Logger LOG = Logger.getLogger(LeerdomeinEditPanel2.class.getName());
 
@@ -426,7 +426,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 	}
 
 	public void filter(Map<String, Map<String, Set<Integer>>> filter) {
-		if (graph.isVisible())
+		if (graph.isShowing())
 			graph.updateModel(model);
 		if (filter.isEmpty()) {
 			model.activateFilter(false);
@@ -836,7 +836,8 @@ public class LeerdomeinEditPanel2 extends JPanel
 					pref.width = 580;
 					leftBox.setPreferredSize(pref);
 					split.setRightComponent(rightBox);
-					graph.setModel(model);
+					if(editable)
+					  graph.updateModel(model);
 					packWindow();
 				}
 
@@ -1197,7 +1198,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 
 	private void opslaanAction(ActionEvent e) {
 		safeSelection(tree.getSelectionPath());
-		if (editable && graph.isVisible())
+		if (editable && graph.isShowing())
 			graph.updateModel(model);// voorkennis en x,y
 		resultModel = getTreeModel();
 		resultModel.setOwner(DwoHelper.getCurrentUser().getUniqueDisplayName());
@@ -1238,6 +1239,9 @@ public class LeerdomeinEditPanel2 extends JPanel
 
 	private int confirm() {
 		safeSelection(tree.getSelectionPath());
+// if graph is visible?
+		if (graph.isShowing())
+		  graph.updateModel(tree.getModel());
 		DomStudentModelStructure toSafe = getTreeModel();
 		if (toSafe.same(structure))
 			return JOptionPane.NO_OPTION; // no need to safe.
@@ -1276,16 +1280,16 @@ public class LeerdomeinEditPanel2 extends JPanel
 		return lock;
 	}
 
-	@Override
-	public void stateChanged(ChangeEvent e) {
-		JTabbedPane pane = (JTabbedPane) e.getSource();
-		int index = pane.getSelectedIndex();
-		if (index == 0) {
-			graph.updateModel(model);
-		} else {
-			graph.setModel(model);
-		}
-	}
+//	//@Override
+//	public void stateChanged(ChangeEvent e) {
+//		JTabbedPane pane = (JTabbedPane) e.getSource();
+//		int index = pane.getSelectedIndex();
+//		if (index == 0) {
+//			graph.updateModel(model);
+//		} else {
+//			graph.setModel(model);
+//		}
+//	}
 
 
 }
