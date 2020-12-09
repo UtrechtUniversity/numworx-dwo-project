@@ -17,8 +17,11 @@
 	
 	/* Add CSS here. See the GWT docs on UI Binder for more details */
 	</ui:style>
-	<g:FlowPanel styleName="score-treeItem">
+	<g:DockLayoutPanel unit="PX" styleName="score-treeItem">
+	<g:center>
 	<g:InlineLabel styleName='score-title' ui:field='title'>title</g:InlineLabel>
+	</g:center>
+	<g:east size="100">
 	<s:SVGImage ui:field="image">
 		<svg 	class='score-template {style.svg}'
 				viewBox="-1 0 140 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
@@ -43,6 +46,6 @@
 			<rect ui:field='r19' x='126' y='0' width='5' height='10' class='{style.white}'/>
 			<rect ui:field='r20' x='134' y='0' width='5' height='10' class='{style.white}'/>
 		</svg>
-	</s:SVGImage>
-	</g:FlowPanel>
+	</s:SVGImage></g:east>
+	</g:DockLayoutPanel>
 </ui:UiBinder> 

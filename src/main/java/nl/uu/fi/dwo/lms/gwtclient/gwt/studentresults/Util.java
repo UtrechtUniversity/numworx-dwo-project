@@ -70,4 +70,9 @@ public class Util {
 		return new SummaryIcon(title, s, level);
 	}
 
+	static Widget scoreItem(String title, DomStudentModelScore<?>s, int level) {
+		level = Math.max(MAX_LEVEL - level, 0);
+		return new ScoreIcon(title, s, level);
+	}
+
 }

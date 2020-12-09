@@ -261,7 +261,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 				if (s.getChildren() != null)
 					tt = item.addItem(Util.summaryItem(ooo.getInfo().getTitle().getOrDefault(lang, ""), s,3));
 				else
-					tt = item.addItem(Util.treeItem(ooo.getInfo().getTitle().getOrDefault(lang, ""), s,3));
+					tt = item.addItem(Util.scoreItem(ooo.getInfo().getTitle().getOrDefault(lang, ""), s,3));
 				int[] oelems = new int[elems.length+1];
 				System.arraycopy(elems, 0, oelems, 0, elems.length);
 				oelems[elems.length] = oobj;
@@ -287,7 +287,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 				if (s.getChildren() != null)
 					tt = item.addItem(Util.summaryItem(oo.getInfo().getTitle().getOrDefault(lang, ""), s,2));
 				else
-					tt = item.addItem(Util.treeItem(oo.getInfo().getTitle().getOrDefault(lang, ""), s,2));
+					tt = item.addItem(Util.scoreItem(oo.getInfo().getTitle().getOrDefault(lang, ""), s,2));
 				int[] elems = new int[] { cat, obj };
 				tt.setUserObject(elems );
 
