@@ -29,7 +29,7 @@ public class SecureDwoAdminSchoolManager implements SchoolManager {
 
   public static List<DomSchool4DwoAdmin> getSchoolList() throws Dwo2Exception {
     List<DomSchool4DwoAdmin> src;
-    src = StoredRestManager.getInstance().getList("rest/secure/dwoadmin/school/getList",
+    src = StoredRestManager.getInstance().getList("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/school/getList",
         RestListClassTypes.DomSchool4DwoAdmin);
     LOG.log(Level.FINE, "Retrieved list of schools for the dwoadmin with username {0}.",
         new Object[] {RestAuthenticator.getInstance().getUsername()});
