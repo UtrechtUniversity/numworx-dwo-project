@@ -194,6 +194,7 @@ public class DomStudentModelContextInfo {
 		return Objects.equals(description, other.description) && Objects.equals(id, other.id)
 				&& Objects.equals(init, other.init) && Objects.equals(learn, other.learn)
 				&& Objects.equals(methods, other.methods) && Objects.equals(slip, other.slip)
+				&& Objects.equals(x, other.x) && Objects.equals(y, other.y)
 				&& Objects.equals(title, other.title) && Objects.equals(voorkennis, other.voorkennis);
 	}
 
