@@ -27,15 +27,15 @@ public class GraphNode {
 	private String description;
 	//private String label;
 	private Point location;
-	//private Point tempLocation;
+	private Point tempLocation;
 	private int size = 16;
 	private Color nodeColor = defaultNodeColor;
 	private Color nodeBorderColor = LeerdomeinGraphPanel.colorBlue2;
 	private Color textColor = defaultTextColor;
 	
 	private Map<String, Map<String,Set<Integer>>> methodeInfo;
-	private Map<String, String> methodeInfoString;
-	//private String methodeInfoStringMW;
+	//private Map<String, String> methodeInfoString;
+	private ArrayList<String> methodeCodes;
 	
 	private int textLength;
 	private int textHeight;
@@ -82,13 +82,13 @@ public class GraphNode {
 		//setFont(defaultFont);
 	}
 	
-	public GraphNode(Point p) {
-		this.ID = "0";
-		this.subdomein = "";
-		this.description = "";
-		location = new Point(p);
-		//setFont(defaultFont);
-	}
+//	public GraphNode(Point p) {
+//		this.ID = "0";
+//		this.subdomein = "";
+//		this.description = "";
+//		location = new Point(p);
+//		//setFont(defaultFont);
+//	}
 	
 	public void setSuccesFailScore (Double succesFailScore) {
 		this.succesFailScore = succesFailScore;
@@ -206,31 +206,35 @@ public class GraphNode {
 	public void setMethodeInfo(Map<String, Map<String,Set<Integer>>> methodeInfo) {
 		this.methodeInfo = methodeInfo;
 		
-//		ArrayList<String> methodeCodes = new ArrayList<String>();
-//		for (String methodeName : methodeInfo.keySet()) {
-//			Map<String,Set<Integer>> leerjaren = methodeInfo.get(methodeName);
-//			for (String leerjaarName : leerjaren.keySet()){
-//				Set<Integer> hoofdstukken = 	leerjaren.get(leerjaarName);
-//				for (Integer i : hoofdstukken){
-//					methodeCodes.add(methodeName + leerjaarName + i);
-//				}
-//			}
-//		}
-//		if(methodeCodes.size()>0 && methodeCodes.get(0).startsWith("Getal")) {
-//			methodeInfoStringGR = methodeCodes.get(0);
-//		}
-//		if(methodeCodes.size()>0 && methodeCodes.get(0).startsWith("Mod")) {
-//			methodeInfoStringMW = methodeCodes.get(0);
-//		}
-//		if(methodeCodes.size()>1 && methodeCodes.get(1).startsWith("Mod")) {
-//			methodeInfoStringMW = methodeCodes.get(1);
-//		}
-		
+		this.methodeCodes = new ArrayList<String>();
+		for (String methodeName : methodeInfo.keySet()) {
+			Map<String,Set<Integer>> leerjaren = methodeInfo.get(methodeName);
+			for (String leerjaarName : leerjaren.keySet()){
+				Set<Integer> hoofdstukken = 	leerjaren.get(leerjaarName);
+				for (Integer i : hoofdstukken){
+					methodeCodes.add(methodeName + leerjaarName + i);
+				}
+			}
+		}
 	}
 	
-//	public void setTempLocation(Point p) {
-//		tempLocation = p;
-//	}
+	public boolean hasMethodCode(String code) {
+		if(methodeCodes==null)
+			return false;
+		for(String methodeCode : methodeCodes) {
+			if(code!=null && code.equals(methodeCode))
+				return true;
+		}
+		return false;
+	}
+	
+	public ArrayList<String> getMethodeCodes() {
+		return methodeCodes;
+	}
+	
+	public void setTempLocation(Point p) {
+		tempLocation = p;
+	}
 	
 	public Font getFont() {
 		return font;
