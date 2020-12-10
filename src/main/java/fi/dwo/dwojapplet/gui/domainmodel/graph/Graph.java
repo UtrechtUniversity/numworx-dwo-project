@@ -4,6 +4,7 @@ import java.awt.AWTEventMulticaster;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.MenuItem;
 import java.awt.Point;
@@ -55,12 +56,36 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	private boolean isScoreGraph = false;
 	private boolean modelJustSet = false;
 	
+	private ArrayList<String> hfstCodes = new ArrayList<String>();
+	private ArrayList<Point> hfstCodeLocations = new ArrayList<Point>();
+	
 	
 
 	public Graph() {
 		setLayout(null);
 		setBackground(LeerdomeinGraphPanel.colorGray3);
 		setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+		
+		//tijdelijk even hardcoded
+		hfstCodes.add("Getal&Ruimte1HV1");
+		hfstCodes.add("Getal&Ruimte1HV2");
+		hfstCodes.add("Getal&Ruimte1HV3");
+		hfstCodes.add("Getal&Ruimte1HV4");
+		hfstCodes.add("Getal&Ruimte1HV5");
+		hfstCodes.add("Getal&Ruimte1HV6");
+		hfstCodes.add("Getal&Ruimte1HV7");
+		hfstCodes.add("Getal&Ruimte1HV8");
+		hfstCodes.add("Getal&Ruimte1HV9");
+		
+		hfstCodeLocations.add(new Point(0,0));
+		hfstCodeLocations.add(new Point(0,0));
+		hfstCodeLocations.add(new Point(0,0));
+		hfstCodeLocations.add(new Point(0,0));
+		hfstCodeLocations.add(new Point(0,0));
+		hfstCodeLocations.add(new Point(0,0));
+		hfstCodeLocations.add(new Point(0,0));
+		hfstCodeLocations.add(new Point(0,0));
+		hfstCodeLocations.add(new Point(0,0));
 
 		addMouseListener(this);
 		addMouseMotionListener(this);
@@ -94,6 +119,21 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			modelJustSet = false;
 		}
 		super.paintComponent(g);
+		
+		makeHfstLocations();
+		g.setFont(new Font("SansSerif", Font.BOLD,(int)(160*factor)));
+		FontMetrics fm = g.getFontMetrics();
+		g.setColor(new Color(120, 150, 202, 50));
+		for(int i=0 ; i<hfstCodes.size() ; i++) {
+			int rx = (int)(origin.x+(hfstCodeLocations.get(i).x)*factor);
+			int ry = (int)(origin.y+(hfstCodeLocations.get(i).y)*factor);
+			String label = "1HV H"+(i+1);
+			int textLength = fm.stringWidth(label);
+			int textHeight = fm.getAscent();
+			if(hfstCodeLocations.get(i).x!=0 || hfstCodeLocations.get(i).y!=0)
+				g.drawString(label, rx-textLength/2, ry+textHeight/2);
+		}
+		
 		for (int i = 0; i < graphEdges.size(); i++) {
 			GraphEdge edge = graphEdges.get(i);
 			GraphNode source = edge.getSource();
@@ -105,6 +145,8 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 //				source.setTempLocation(null);
 			graphEdges.get(i).paint(g, origin, factor);
 		}
+		
+				
 		for (int i = 0; i < graphNodes.size(); i++) {
 			if (!graphNodes.get(i).getBlur()) {
 				Rectangle rn = graphNodes.get(i).getTextBB();
@@ -127,6 +169,30 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			//graphNodes.get(i).setTempLocation(null);
 		}
 		//zoomFitButton.paint(g);
+	}
+	
+	private void makeHfstLocations() {
+		int[] hfstCumX = new int[hfstCodes.size()];
+		int[] hfstCumY = new int[hfstCodes.size()];
+		int[] hfstCount  = new int[hfstCodes.size()];
+		
+		for(int i=0 ; i<hfstCodes.size() ; i++) {
+			for (GraphNode node : graphNodes) {
+				if(node.hasMethodCode(hfstCodes.get(i))) {
+					hfstCumX[i]+=node.getLocation().x;
+					hfstCumY[i]+=node.getLocation().y;
+					hfstCount[i]+=1;
+				}
+			}
+			if(hfstCount[i]>0) {
+				hfstCodeLocations.get(i).x = hfstCumX[i]/hfstCount[i];
+				hfstCodeLocations.get(i).y = hfstCumY[i]/hfstCount[i];
+			}
+			else {
+				hfstCodeLocations.get(i).x = 0;
+				hfstCodeLocations.get(i).y = 0;
+			}
+		}
 	}
 	
 	private boolean onPanel(GraphNode node) {
@@ -375,8 +441,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		}
 	}
 
-	private void searchNodes(TreeModel model, Object node, Map<String, GraphNode> graphMap, String parent,
-			List<NodeLeaf> leaves) {
+	private void searchNodes(TreeModel model, Object node, Map<String, GraphNode> graphMap, String parent, 	List<NodeLeaf> leaves) {
 		if (model.isLeaf(node)) {
 			DefaultMutableTreeNode object = (DefaultMutableTreeNode) node;
 			node = object.getUserObject();
@@ -465,6 +530,12 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			updateNodes(model, child, graphMap, edgeMap);
 		}
 
+	}
+	
+	private void mergeHfstCodes(GraphNode node) {
+		ArrayList<String> codes = node.getMethodeCodes();
+		
+		
 	}
 
 	@Override
