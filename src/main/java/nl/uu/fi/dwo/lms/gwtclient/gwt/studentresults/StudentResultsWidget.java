@@ -41,13 +41,15 @@ public class StudentResultsWidget extends Composite {
 	@UiField InlineLabel title, perc, redPerc;
 	@UiField Tree tree;
 	@UiField SimplePanel description;
-	@UiField InlineHTML outer;
+	@UiField SimplePanel outer;
 	@UiField ListBox models;
 	@UiField Button btn;
 
 	void setPerc(DomStudentModelScore<?> s) {
-		SafeHtml sh = Util.percentageBar(s);
-		outer.setHTML(sh);
+		Widget sh = s.getChildren() == null
+				? Util.scoreItem("", s, Util.MAX_LEVEL)
+				: Util.summaryItem("", s, Util.MAX_LEVEL);
+		outer.setWidget(sh);
 		double greenPerc = Util.getGreen(s) * 200;
 		double redPerc =   Util.getRed(s) * 200;
 		this.perc.setText(Math.round(greenPerc)+"%");

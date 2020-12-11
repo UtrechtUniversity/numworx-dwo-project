@@ -31,13 +31,13 @@
 	 <g:east size="100">
 	<s:SVGImage ui:field="image">
 		<svg 	class='score-template {style.svg}'
-				viewBox="-5 0 150 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
-			<rect ui:field='r01' x='0'  y='0' width='70' height='20' class='{style.r01}'/>
-			<rect ui:field='r02' x='70' y='0' width='70' height='20' class='{style.r02}'/>
-			<rect ui:field='r03' x='70' y='0' width='0'  height='10' class='{style.r03}'/>
-			<rect ui:field='r04' x='70' y='0' width='0'  height='10' class='{style.r04}'/>
-			<g ui:field='poly' transform='translate(70,0)'>
-				<polygon points='0,14 5,20 -5,20' class='{style.p}'/>
+				viewBox="-5 0 190 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+			<rect ui:field='r01' x='0'  y='0' width='90' height='20' class='{style.r01}'/>
+			<rect ui:field='r02' x='90' y='0' width='90' height='20' class='{style.r02}'/>
+			<rect ui:field='r03' x='90' y='0' width='0'  height='10' class='{style.r03}'/>
+			<rect ui:field='r04' x='90' y='0' width='0'  height='10' class='{style.r04}'/>
+			<g ui:field='poly' transform='translate(90,0)'>
+				<polygon points='0,10 5,20 -5,20' class='{style.p}'/>
 			</g>			
 		</svg>
 	</s:SVGImage>

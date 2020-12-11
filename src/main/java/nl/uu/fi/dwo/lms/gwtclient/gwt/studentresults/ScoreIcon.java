@@ -11,8 +11,10 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
@@ -21,17 +23,19 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
  * @author peterboon
  *
  */
-public class ScoreIcon extends Composite {
+public class ScoreIcon extends ResizeComposite {
 
 	private static ScoreIconUiBinder uiBinder = GWT.create(ScoreIconUiBinder.class);
-	private static final float WIDTH = 140f;
+	private static final float WIDTH = 180f;
 	
-	interface ScoreIconUiBinder extends UiBinder<Widget, ScoreIcon> {
+	interface ScoreIconUiBinder extends UiBinder<DockLayoutPanel, ScoreIcon> {
 	}
 
 	  @UiField HasText title;
 	  @UiField OMSVGRectElement r01,r02,r03,r04;
 	  @UiField OMSVGGElement poly;
+	  @UiField Widget image;
+	  private DockLayoutPanel root;
 	  
 	/**
 	 * Because this class has a default constructor, it can
@@ -49,12 +53,21 @@ public class ScoreIcon extends Composite {
 	}
 
 	public ScoreIcon() {
-		initWidget(uiBinder.createAndBindUi(this));
+		initWidget(root = uiBinder.createAndBindUi(this));
 	}
+	
+	
+	
 	
 	public ScoreIcon(String title, DomStudentModelScore<?> s, int level) {
 		this(s);
 		setText(title);
+		if (title.isEmpty())
+		{
+			root.setWidgetSize(image, 200);
+			root.setStylePrimaryName("score-modelItem");
+		}
+		
 		getElement().getStyle().setMarginRight(level, Unit.EM);
 		paint(s);
 	}

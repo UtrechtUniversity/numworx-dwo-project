@@ -10,7 +10,9 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
@@ -19,11 +21,11 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
  * @author peterboon
  *
  */
-public class SummaryIcon extends Composite {
+public class SummaryIcon extends ResizeComposite {
 
 	private static SummaryIconUiBinder uiBinder = GWT.create(SummaryIconUiBinder.class);
 
-	interface SummaryIconUiBinder extends UiBinder<Widget, SummaryIcon> {
+	interface SummaryIconUiBinder extends UiBinder<DockLayoutPanel, SummaryIcon> {
 	}
 
 	  int green, red, white;
@@ -31,6 +33,8 @@ public class SummaryIcon extends Composite {
 	  @UiField InlineLabel title;
 	  @UiField OMSVGRectElement r01,r02,r03,r04,r05,r06,r07,r08,r09,r10,r11,r12,r13,r14,r15,r16,r17,r18,r19,r20;
 	  @UiField SummaryIconCSS style;
+	  @UiField Widget image;
+	  private DockLayoutPanel root;
 	  
 	  private OMSVGRectElement r[] = new OMSVGRectElement[20];
 	/**
@@ -58,13 +62,19 @@ public class SummaryIcon extends Composite {
 	}
 
 	public SummaryIcon() {
-		initWidget(uiBinder.createAndBindUi(this));
+		initWidget(root = uiBinder.createAndBindUi(this));
 		r = new OMSVGRectElement[] { r01,r02,r03,r04,r05,r06,r07,r08,r09,r10,r11,r12,r13,r14,r15,r16,r17,r18,r19,r20 };
 	}
 	
 	public SummaryIcon(String title, DomStudentModelScore<?> s, int level) {
 		this(s);
 		setText(title);
+		if (title.isEmpty()) {
+			root.setWidgetSize(image, 200);
+			root.setStylePrimaryName("score-modelItem");
+		}
+			
+		
 		getElement().getStyle().setMarginRight(level, Unit.EM);
 		paint();
 	}

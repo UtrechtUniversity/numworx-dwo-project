@@ -109,14 +109,12 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		public void onChange(ChangeEvent event) {
 			int selection = widget.get().models.getSelectedIndex();
 			LOG.info("selection = " + selection);
-			if(selection == 0) {
-				widget.get().tree.removeItems();
-				widget.get().title.setText("");
-				widget.get().description.clear();
-				widget.get().setPerc(NULLSCORE);
-				current = null;
-				return;
-			}
+			widget.get().tree.removeItems();
+			widget.get().title.setText("");
+			widget.get().description.clear();
+			widget.get().setPerc(NULLSCORE);
+			current = null;
+			if (selection == 0) return;
 			DomStudentModelContext item = list.get(selection-1);
 			service.getModel(item).then(p -> {
 				current = p.getValue();
