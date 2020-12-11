@@ -1,11 +1,14 @@
 package nl.uu.fi.dwo.mobile.client.ui.dwokb;
 
+import java.util.Objects;
+
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
@@ -127,18 +130,33 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 		return this;
 	}
 
-	private String clipboard = "";
+	private String clipboard = null;
 
+	Storage storage = Storage.getLocalStorageIfSupported();
+	
 	private Combined state = Combined.NONE;
+	private static final String CLIPBOARD = "nl.numworx.clipboard";
 
 	@Override
 	public String getClipboard() {
-		return clipboard;
+		if (storage != null) {
+			String c = storage.getItem(CLIPBOARD);
+			if (c != null) clipboard = c;
+		}
+		return Objects.toString(clipboard,"");
 	}
 
 	@Override
 	public void setClipboard(String formule) {
-		clipboard = formule;
+		
+		clipboard = Objects.toString(formule, "");
+		if (storage != null) {
+			try {
+				storage.setItem(CLIPBOARD, clipboard);
+			} catch(Throwable t) {
+				storage = null; // jammer dan.
+			}
+		}
 	}
 
 	@Override
