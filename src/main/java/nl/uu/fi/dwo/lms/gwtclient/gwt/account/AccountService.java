@@ -63,21 +63,21 @@ public class AccountService {
         data.setRole(RoleType.valueOf(role));
         data.setSchoolLogin(schoolLogin);
         data.setSchoolCode(accessCode);
-        return schoolLoginManager.addASchoolLogin(data);
+        return schoolLoginManager.addASchoolLogin(createContext(),data);
     }
 
     Promise<Boolean> removeASchoolLogin(DomSchoolRoleAndClassV2 data) {
-        return schoolLoginManager.removeASchoolLogin(data);
+        return schoolLoginManager.removeASchoolLogin(createContext(),data);
     }
     
     public Promise<String> getBearerToken() {
-      return accountManager.getBearerToken();
+      return accountManager.getBearerToken(createContext());
     }
     
     public Promise<DomSchoolsRolesAndClassesV2> getSchoolLogins(){
         return schoolLoginManager.getSchoolLogins();
     }
     public Promise<Boolean> removeCurrentUser() {
-      return accountManager.removeCurrentUser();
+      return accountManager.removeCurrentUser(createContext());
     }
  }

@@ -25,6 +25,7 @@ import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
@@ -34,6 +35,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import org.osgi.util.promise.Promise;
 
@@ -262,7 +265,8 @@ public class DwoGlobalVars {
       Promise<DomSchoolsRolesAndClassesV2> logins;
       if (isTest() && (isSaml()||isSingleSchool())) {     
           OAuthManager oauth = new OAuthManager();
-          logins = accountManager.getBearerToken().then(
+          DomContext context = createContext(resolved.getValue());
+          logins = accountManager.getBearerToken(context).then(
     		  p -> { 
     			  String token = Base64.btoa("2\f" + p.getValue()); // Format 2 
     			  return oauth.authorization_token(token);
@@ -280,7 +284,39 @@ public class DwoGlobalVars {
       return logins;
   }
 
-	private boolean isSingleSchool() {
+	private DomContext createContext(DomUserFullwLoginContext value) {
+      DomContext context = new DomContext();
+      DomLoginContext loginContext = value.getDomLoginContext();
+      context.setRealm(loginContext.getRealm());
+      DomHasRole domHasRole = new DomHasRole();
+      domHasRole.setUserId(loginContext.getUserId());
+      domHasRole.setSchoolGroupId(loginContext.getSchoolGroupId());
+      //domHasRole.setId(loginContext.getHasRoleId()); FIXME
+      setHasRoleId(domHasRole);
+      domHasRole.setRights(""); // no rights....
+      context.setDomHasRole(domHasRole);
+      return context;
+    }
+
+	/* From PersistentHasRole
+     public static PersistenceId buildPersistenceId(PersistentHasRolePK hasRoleKey) {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d;%020d",
+                PersistenceClassType.PersistentHasRole.name(), hasRoleKey.getUserID(),hasRoleKey.getSchoolGroupID()));
+        return id;
+    }
+
+	 */
+	
+  // This is a big hack, we need getHasRoleId() in login context, deprecated getuserid of getsgid.	
+  private void setHasRoleId(DomHasRole dom) {
+    String uid = dom.getUserId().getIdString().substring(20);
+    String sgid = dom.getSchoolGroupId().getIdString().substring(27);
+    String id = "MYSQL;" + PersistenceClassType.PersistentHasRole.name() + uid + sgid;
+    dom.setId(new PersistenceId(id));    
+  }
+
+  private boolean isSingleSchool() {
 		Boolean singleSchool = currentUser.getSingleSchool();
 		return Boolean.TRUE.equals(singleSchool);
 	}
