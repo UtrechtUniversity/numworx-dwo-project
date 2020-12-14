@@ -11,6 +11,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
@@ -26,6 +27,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.entities.RestSchoolRoleAndClassV2;
 import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.RoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
@@ -254,7 +256,19 @@ public class SecuredUserAccountLoginsManagerV2 {
             u.setSchoolGroupId(
                     MySQLPersistenceId.getNativeId(sarc.getDomSchoolRoleAndClass().getHasRole()).getSchoolGroupID());
             UserManager.edit(u);
-
+            try {
+              List<PersistentLoginContext> list = LoginContextManager.findEntities(u.getId());
+              if (list.size() == 1) {
+                PersistentLoginContext ctx = list.get(0);
+                ctx.setSchoolGroupId(u.getSchoolGroupId());
+                LoginContextManager.edit(ctx);
+              } // FIXME if multiple, which one?
+            } catch (Exception e) {
+              LOG.log(Level.WARNING, "should not happen, non-fatal " + u.getUsername(),e);
+            }
+            
+            
+            
             PersistentHasRole hr = HasRoleManager.findEntity(new PersistentHasRolePK(user.getId(), MySQLPersistenceId.getNativeId(sarc.getDomSchoolRoleAndClass().getHasRole()).getSchoolGroupID()));
             if (sarc.getDomSchoolRoleAndClass().getSchoolClass()!=null && sarc.getDomSchoolRoleAndClass().getSchoolClass().getId() != null) {
                 hr.setClassID(MySQLPersistenceId.getNativeId(sarc.getDomSchoolRoleAndClass().getSchoolClass()));

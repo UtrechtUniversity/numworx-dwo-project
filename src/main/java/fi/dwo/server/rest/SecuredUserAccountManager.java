@@ -170,6 +170,7 @@ public class SecuredUserAccountManager {
             } else {
                 loginContext = new PersistentLoginContext();
                 loginContext.setUserId(user.getId());
+                loginContext.setSchoolGroupId(user.getSchoolGroupId());
                 loginContext.setLastLogin(null);
                 loginContext.setRegisterTimeStamp(user.getRegisterDate().getTime());
                 LoginContextManager.create(loginContext);
