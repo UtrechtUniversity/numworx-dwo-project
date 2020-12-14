@@ -61,34 +61,34 @@ public class SecuredUserSchoolLoginManagerV2 {
         context.setDomHasRole(reqSrac.getHasRole());
 		rsrc.setRestContext(context);
         rsrc.setDomSchoolRoleAndClass(reqSrac);
-        F( (id, arg, c) -> service.switchToSchoolLogin(arg, c), PathId.getId(context), rsrc, callBack);
+        F( (id, arg, c) -> service.switchToSchoolLogin(id, arg, c), PathId.getId(context), rsrc, callBack);
         
     }
 
-    public Promise<Boolean> removeASchoolLogin(DomSchoolRoleAndClassV2 reqSrac) {
+    public Promise<Boolean> removeASchoolLogin(DomContext domContext, DomSchoolRoleAndClassV2 reqSrac) {
         PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
-        this.removeASchoolLogin(reqSrac,defer);
+        this.removeASchoolLogin(domContext, reqSrac,defer);
         return defer.getPromise();
     }
         
     
-    private void removeASchoolLogin(DomSchoolRoleAndClassV2 reqSrac, MethodCallback<Boolean> callBack){
+    private void removeASchoolLogin(DomContext domContext, DomSchoolRoleAndClassV2 reqSrac, MethodCallback<Boolean> callBack){
         RestSchoolRoleAndClassV2 rsrc = new RestSchoolRoleAndClassV2();
-        rsrc.setRestContext(new DomContext());
+        rsrc.setRestContext(domContext);
         rsrc.setDomSchoolRoleAndClass(reqSrac);
-        F( (id, arg, c) -> service.removeASchoolLogin(arg,c), null, rsrc, callBack);
+        F( (id, arg, c) -> service.removeASchoolLogin(id, arg,c), PathId.getId(domContext), rsrc, callBack);
     }
     
-    public Promise<Boolean> addASchoolLogin(DomNewSchoolLogin newSchoolLogin) {
+    public Promise<Boolean> addASchoolLogin(DomContext context, DomNewSchoolLogin newSchoolLogin) {
         PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
-        this.addASchoolLogin(newSchoolLogin,defer);
+        this.addASchoolLogin(context, newSchoolLogin,defer);
         return defer.getPromise();
     }    
 
-    private void addASchoolLogin(DomNewSchoolLogin newSchoolLogin, MethodCallback<Boolean> callBack){
+    private void addASchoolLogin(DomContext context, DomNewSchoolLogin newSchoolLogin, MethodCallback<Boolean> callBack){
         RestNewSchoolLogin rnl = new RestNewSchoolLogin();
-        rnl.setRestContext(new DomContext());
+        rnl.setRestContext(context);
         rnl.setDomNewSchoolLogin(newSchoolLogin);
-        F( (id, arg,c ) -> service.addASchoolLogin(arg,c), null, rnl, callBack);
+        F( (id, arg,c ) -> service.addASchoolLogin(id, arg,c), PathId.getId(context), rnl, callBack);
     }
 }

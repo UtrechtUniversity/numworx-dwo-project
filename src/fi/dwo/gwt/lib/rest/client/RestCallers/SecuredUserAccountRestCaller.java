@@ -36,11 +36,6 @@ public interface SecuredUserAccountRestCaller extends RestService {
     @GET
     @Path("/secure/user/account/loginUser/{user}")
     public void loginUser(@PathParam("user") String user, MethodCallback<DomUserFullwLoginContext> callback);
-
-    @GET
-    @Path("/secure/user/account/get")
-    @Deprecated
-    public void getAccountData(MethodCallback<DomUserFull> callback);
     
     @PUT
     @Path("/sec:{id}/user/account/get")
@@ -72,18 +67,18 @@ public interface SecuredUserAccountRestCaller extends RestService {
     public void loginUserWithPOST( @FormParam("user") String user, MethodCallback<DomUserFullwLoginContext> restcallback);
 
     @GET
-    @Path("/secure/user/account/verifyTOTPv2")
-    public void verifyTOTP(MethodCallback<JSONValue> callback);
+    @Path("/sec:{id}/user/account/verifyTOTPv2")
+    public void verifyTOTP(@PathParam("id") String id, MethodCallback<JSONValue> callback);
     
     @GET
-    @Path("/secure/user/account/getBearerToken")
-    public void getBearerToken(MethodCallback<String> callback);
+    @Path("/sec:{id}/user/account/getBearerToken")
+    public void getBearerToken(@PathParam("id") String id, MethodCallback<String> callback);
     
     @PUT
-    @Path("/secure/user/account/linkSaml")
-    public void linkSaml(RestSamlUser rest, MethodCallback<Boolean> callback);
+    @Path("/sec:{id}/user/account/linkSaml")
+    public void linkSaml(@PathParam("id") String id, RestSamlUser rest, MethodCallback<Boolean> callback);
 
     @GET
-    @Path("/secure/user/account/remove")
-    public void removeCurrentUser(MethodCallback<Boolean> callback);
+    @Path("/sec:{id}/user/account/remove")
+    public void removeCurrentUser(@PathParam("id") String id, MethodCallback<Boolean> callback);
 }

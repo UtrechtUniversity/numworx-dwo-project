@@ -3,6 +3,8 @@ package fi.dwo.gwt.lib.rest.client.RestCallers;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 
 import org.fusesource.restygwt.client.MethodCallback;
@@ -18,14 +20,14 @@ public interface SecuredUserSchoolLoginRestCallerV2 extends RestService {
     public void getSchoolLogins(MethodCallback<DomSchoolsRolesAndClassesV2> callback);
 
     @PUT
-    @Path("/secure/user/account/loginsV2/select")
-    public void switchToSchoolLogin(RestSchoolRoleAndClassV2 rsrc, MethodCallback<DomSchoolRoleAndClassV2> callback);
+    @Path("/sec:{id}/user/account/loginsV2/select")
+    public void switchToSchoolLogin(@PathParam("id") String id, RestSchoolRoleAndClassV2 rsrc, MethodCallback<DomSchoolRoleAndClassV2> callback);
 
     @PUT
-    @Path("/secure/user/account/loginsV2/remove")
-    public void removeASchoolLogin(RestSchoolRoleAndClassV2 rsrc, MethodCallback<Boolean> callback);
+    @Path("/sec:{id}/user/account/loginsV2/remove")
+    public void removeASchoolLogin(@PathParam("id") String id, RestSchoolRoleAndClassV2 rsrc, MethodCallback<Boolean> callback);
 
     @PUT
-    @Path("/secure/user/account/loginsV2/submit")
-    public void addASchoolLogin(RestNewSchoolLogin rnl, MethodCallback<Boolean> callback);
+    @Path("/sec:{id}/user/account/loginsV2/submit")
+    public void addASchoolLogin(@PathParam("id") String id, RestNewSchoolLogin rnl, MethodCallback<Boolean> callback);
 }

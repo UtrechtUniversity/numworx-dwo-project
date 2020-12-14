@@ -370,26 +370,22 @@ public class SecuredUserAccountManager {
         });
     }
     
-    public Promise<JSONValue> verifyTOTP() {
-    	return F( (id, arg, c) -> service.verifyTOTP(c), null, null);
+    public Promise<JSONValue> verifyTOTP(DomContext context) {
+    	return F( (id, arg, c) -> service.verifyTOTP(id, c), PathId.getId(context), null);
     }
   
-    public Promise<String> getBearerToken() {
-        return F( (id, arg, c) -> service.getBearerToken(c), null, null);
+    public Promise<String> getBearerToken(DomContext context) {
+        return F( (id, arg, c) -> service.getBearerToken(id, c), PathId.getId(context), null);
     }
     
     public Promise<Boolean> linkSaml(DomContext context, DomSamlUser samluser) {
     	RestSamlUser rest = new RestSamlUser();
     	rest.setDomSamlUser(samluser);
     	rest.setRestContext(context);
-		return F( (id, arg, c) -> service.linkSaml(arg, c), null, rest);
+		return F( (id, arg, c) -> service.linkSaml(id, arg, c), PathId.getId(context), rest);
     }
-    
-    public Promise<Boolean> linkSaml(DomSamlUser samluser) {
-    	return linkSaml(new DomContext(), samluser);
-    }
-        
-    public Promise<Boolean> removeCurrentUser() {
-      return F( (id, arg, c ) -> service.removeCurrentUser(c), null, null);
+            
+    public Promise<Boolean> removeCurrentUser(DomContext context) {
+      return F( (id, arg, c ) -> service.removeCurrentUser(id, c), PathId.getId(context), null);
     }
 }
