@@ -365,7 +365,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		Map<String,String> headers = vars.getCustomHeaders();
 		headers.put("X-ClassCourseID", Base64.btoa(key));
 		headers.put("X-TOTP", "PLAIN "+Base64.btoa(value));
-		return accountManager.verifyTOTP().then(new Success<JSONValue, Void>() {
+		return accountManager.verifyTOTP(getContext()).then(new Success<JSONValue, Void>() {
 
 			@Override
 			public Promise<Void> call(Promise<JSONValue> resolved) throws Exception {

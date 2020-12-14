@@ -147,7 +147,7 @@ public class SchoolLoginController {
 					public Promise<Boolean> call(Promise<String> t) {
 							if(t.getValue() == null || t.getValue().isEmpty()) // if empty password cancel
 								return null;
-							return manager.removeASchoolLogin(reqSrac);
+							return manager.removeASchoolLogin(DwoGlobalVars.instance().getContext(), reqSrac);
 					}
 				});
     }
@@ -225,7 +225,7 @@ public class SchoolLoginController {
 	
 	public void addASchoolLogin(DomNewSchoolLogin request) {
 		PromiseCallback<Boolean> df = new PromiseCallback<>();
-		manager.addASchoolLogin(request)
+		manager.addASchoolLogin(DwoGlobalVars.instance().getContext(), request)
 		.filter(p -> p.booleanValue()) // must be true
 		.then(p -> {
 			addSchoolPanel.hide();

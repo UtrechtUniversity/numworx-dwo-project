@@ -14,9 +14,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.web.bindery.event.shared.EventBus;
@@ -55,7 +56,7 @@ public class Account implements EntryPoint, ClickHandler {
     private DomUserFull user = null;
     private SecuredUserAccountManager handler = new SecuredUserAccountManager();
     private LoginStatusPanel loginStatusPanel = new LoginStatusPanel();
-    private HeaderPanel header = new HeaderPanel();
+    private FlowPanel header = new FlowPanel();
     private UserBar userBar = new UserBar(bus);
     private Button loginButton;
     private LoginPanel loginPanel;
@@ -91,8 +92,8 @@ public class Account implements EntryPoint, ClickHandler {
         RootPanel.get()
                 .add(header);
 
-        header.setCenter(
-                "Account");
+        header.add(
+                new InlineLabel("Account"));
 
         RootPanel.get().add(loginStatusPanel);
         loginPanel = new LoginPanel();
@@ -157,7 +158,7 @@ public class Account implements EntryPoint, ClickHandler {
 							DomSchoolsRolesAndClassesV2 result = resolved.getValue();
 							DwoGlobalVars.instance().setSchoolLogins(result);
 							DwoGlobalVars.instance().setActiveSchoolRoleAndClass(result.getActiveSchoolRoleAndClass());
-							header.setRightWidget(userBar);
+							header.add(userBar);
 							LOG.log(Level.INFO,
                                   "DwoGlobalVars has user with username:" + DwoGlobalVars.instance().getCurrentUser().getDisplayName() + ".");
 							String s = result.getActiveSchoolRoleAndClass().getRole().getRoleName();
@@ -208,7 +209,6 @@ public class Account implements EntryPoint, ClickHandler {
 				  Throwable t = resolved.getFailure();
                   loginStatusPanel.setStatus("", false);
                   LOG.log(Level.INFO, "failure", t);
-                  header.setRightWidget(null);
 				}
 			})
             ;

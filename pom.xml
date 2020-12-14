@@ -1,9 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>nl.uu.fi.dwo</groupId>
+        <artifactId>DWO</artifactId>
+        <relativePath>../DWO/pom.xml</relativePath>
+        <version>2.4.12-SNAPSHOT</version>
+    </parent>
 
     <groupId>nl.uu.fi.dwo.account</groupId>
     <artifactId>Account</artifactId>
-    <version>2.4.11-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>${project.build.finalName}</name>
@@ -16,7 +21,7 @@
         <maven.test.skip>true</maven.test.skip>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <DwoGWTVersion>2.4.10-SNAPSHOT</DwoGWTVersion>
+        <gwtVersion>2.8.2</gwtVersion>
     </properties>
     <build>
         <outputDirectory>target/${project.build.finalName}/WEB-INF/classes</outputDirectory>
@@ -116,21 +121,20 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.5.3</version>
                 <configuration>
-                    <goals>deploy</goals>
-                </configuration>
-            </plugin>
+                    <preparationGoals>clean verify install</preparationGoals>
+                    <tagBase>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/Account/tags/</tagBase>
+                </configuration>            
+            </plugin>            
         </plugins>
     </build>
     <dependencies>
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-gwt-lib</artifactId>
-            <version>2.4.10</version>
         </dependency>
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-gwt-lib</artifactId>
-            <version>2.4.10</version>
             <classifier>sources</classifier>
         </dependency>         
 
@@ -144,10 +148,7 @@
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.mgwt</groupId>
-            <artifactId>MGWT</artifactId>
+            <version>${gwtVersion}</version>
         </dependency>
         <dependency>
         	<groupId>com.google.gwt</groupId>
@@ -181,12 +182,6 @@
     	</dependency>
     </dependencies>
     <description>Gebruiker: profiel en klas panels</description>
-    <parent>
-        <groupId>nl.uu.fi.dwo</groupId>
-        <artifactId>DWO-GWT</artifactId>
-        <relativePath>../DWO-GWT</relativePath>
-        <version>1.0</version>
-    </parent>
     <scm>
     	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/Account/trunk</developerConnection>
     </scm>

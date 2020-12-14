@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="Account-2.4.6-SNAPSHOT">
+    <wb-module deploy-name="Account-2.4.12-SNAPSHOT">
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
         <wb-resource deploy-path="/" source-path="/war" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-        <dependent-module archiveName="DWO-gwt-lib-2.4.7-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/DWO-gwt-lib/DWO-gwt-lib">
+        <dependent-module archiveName="DWO-gwt-lib-2.4.12-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/DWO-gwt-lib/DWO-gwt-lib">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="DWO-rest-lib-2.4.7-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/DWO-rest-lib/DWO-rest-lib">
+        <dependent-module archiveName="DWO-rest-lib-2.4.12-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/DWO-rest-lib/DWO-rest-lib">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="java-output-path" value="/Account/target/classes"/>
