@@ -235,6 +235,8 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
     public void end() {
         center.showClassList();
         removeButtons();
+        if (wiskOpdrPanel != null) 
+          wiskOpdrPanel.end();
     }
 
     /**

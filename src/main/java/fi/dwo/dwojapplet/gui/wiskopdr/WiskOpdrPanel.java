@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Locale;
@@ -86,4 +87,13 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler {
     }
   }
 
+  public void end() {
+    try {
+      Class<?> wiskopdr = component.getClass();
+      Method m = wiskopdr.getMethod("end");
+      m.invoke(component);
+    } catch (Exception e) {
+      LOG.log(Level.WARNING, "WiskOpdr.end()", e);
+    }
+  }
 }

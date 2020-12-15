@@ -322,7 +322,8 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
      */
     @Override
     public void end() {
-
+      if(wiskOpdrPanel != null)
+        wiskOpdrPanel.end();
     }
 
     /**
