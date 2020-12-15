@@ -63,6 +63,7 @@ public class Snoop extends HttpServlet {
 		while (enum1.hasMoreElements()) {
 			String key = (String) enum1.nextElement();
 			Object value = context.getInitParameter(key);
+			if(key.toLowerCase().contains("password")) value = "**********";
 			out.println("   " + key + " = " + value);
 		}
 		out.println();
