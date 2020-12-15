@@ -200,6 +200,7 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 
 	private void setParentClassCourse(PersistentCourse parentcourse, PersistentClassCourse pcc) {
 		PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(pcc.getClassID());
+		if (schoolClass == null) return;
 		long pid;
 		do { 
 			pid = parentcourse.getParentID();
