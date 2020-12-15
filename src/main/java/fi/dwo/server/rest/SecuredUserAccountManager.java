@@ -167,6 +167,13 @@ public class SecuredUserAccountManager {
             List<PersistentLoginContext> list = LoginContextManager.findEntities(user.getId());
             if (list.size() == 1) {
                 loginContext = list.get(0);
+                if(loginContext.getSchoolGroupId() == null) {
+                	loginContext.setSchoolGroupId(user.getSchoolGroupId());
+                	try {
+						LoginContextManager.edit(loginContext); // not fatal
+					} catch (Exception e) {
+					}
+                }
             } else {
                 loginContext = new PersistentLoginContext();
                 loginContext.setUserId(user.getId());
@@ -206,24 +213,6 @@ public class SecuredUserAccountManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user " + sc.getUserPrincipal() + " .");
         }
 
-//        try {//LoginData may fail, but login should succeed.
-//            //register login action
-//            PersistentLogData loginData = new PersistentLogData();
-//            PersistentLogDataPK ldKey = new PersistentLogDataPK();
-//            ldKey.setUserId(u.getUsername());
-//            ldKey.setUtcTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
-//            PersistentSchoolGroup sg = SchoolGroupManager.findEntity(u.getSchoolGroupId());
-//            PersistentRole g = RoleManager.findEntity((long) sg.getGroupID());
-//            LOG.log(Level.INFO, "Username {0}: Login User with username {1}: uid, sgid {2}, {3}", new Object[]{sc.getUserPrincipal().getName(), u.getUsername(),u.getId(),sg.getSchoolGroupID()});
-//
-//            loginData.setRole(g.getGroupname());
-//            loginData.setMessage(LogType.Login);
-//            loginData.setLogLevel(Level.INFO.toString());
-//            LogDataManager.create(loginData);
-//        }
-//        catch (Exception e) {
-//            LOG.log(Level.SEVERE, null, e);
-//        }
         try {
 //                return u.buildDomUserFullwLoginContext(LoginContextUtilManager.reqLoginContextSession(u));
             //loginDataUtilManager should use the returndata to log any statistical stuff needed for OLAP Warehousing.

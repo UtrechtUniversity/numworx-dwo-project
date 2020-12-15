@@ -132,6 +132,10 @@ public class LoginContextUtilManager {
                     	loginContext.setNonce(bytes);
                     }
                     loginContext.setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+                    if(loginContext.getSchoolGroupId() == null || loginContext.getSchoolGroupId().longValue() == 0L) {
+                    	loginContext.setSchoolGroupId(user.getSchoolGroupId());
+                    }
+                    
                     LoginContextManager.edit(loginContext);
                     break;
                 default:
