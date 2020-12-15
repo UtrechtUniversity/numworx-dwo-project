@@ -179,7 +179,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
     }
 		
     public Promise<JSONValue> refreshExam() {
-    	return accountManager.verifyTOTP().then(p -> { 
+    	return accountManager.verifyTOTP(context).then(p -> { 
     		JSONString str = p.getValue().isString();
     		if (str != null) {
     			GwtRestVars vars = GwtRestVars.getInstance();

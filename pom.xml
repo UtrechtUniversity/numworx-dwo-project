@@ -181,13 +181,13 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.account</groupId>
 			<artifactId>Account</artifactId>
-			<version>2.4.10</version>
+			<version>${accountVersion}</version>
 			<classifier>classes</classifier>
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo.account</groupId>
 			<artifactId>Account</artifactId>
-			<version>2.4.10</version>
+			<version>${accountVersion}</version>
 			<classifier>sources</classifier>
 		</dependency>
 		<dependency>
@@ -263,7 +263,7 @@
 		<runTarget>${project.artifactId}.html</runTarget>
 		<warClassifier />
 		<gwt.copyWebapp>true</gwt.copyWebapp>
-		<accountVersion>2.4.10-SNAPSHOT</accountVersion>
+		<accountVersion>2.4.12-SNAPSHOT</accountVersion>
 		<gwtVersion>2.8.2</gwtVersion>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <maven.javadoc.skip>true</maven.javadoc.skip>

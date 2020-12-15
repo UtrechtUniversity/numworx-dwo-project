@@ -32,29 +32,29 @@ final class Login_Stap3 implements Success<Void, Void> {
 	  }
 
 	
-  private Promise<Void> gotoGwtClient(String page) {
-    final String url = "/gwtclient/index.html";
-    return account.getBearerToken().then(
-      resolved-> {
-        String token = "2\f" + resolved.getValue(); //format 2
-        StringBuilder u = new StringBuilder(url);
-        u.append( "?a=" ) .append (Base64.btoa(token)); // User Auth Token
-        u.append( "&test=on");
-        String profile = String.valueOf(DWOplayer.PROFILE_ID);
-        u.append("&profile=").append(profile);
-        String locale = LocaleInfo.getCurrentLocale().getLocaleName();
-        if ("default".equals(locale) ) locale =  "nl";
-        u.append("&locale=").append(locale);
-        u.append("&view=").append(page);
-        String base = Window.Location.getParameter("base");
-        if(base != null && !base.isEmpty() && legal(base)) 
-          u.append("&base=").append(base);
-        String string = u.toString();
-        Window.Location.replace(string);
-        return null;
-      }     
-     );    
-}	
+//  private Promise<Void> gotoGwtClient(String page) {
+//    final String url = "/gwtclient/index.html";
+//    return account.getBearerToken().then(
+//      resolved-> {
+//        String token = "2\f" + resolved.getValue(); //format 2
+//        StringBuilder u = new StringBuilder(url);
+//        u.append( "?a=" ) .append (Base64.btoa(token)); // User Auth Token
+//        u.append( "&test=on");
+//        String profile = String.valueOf(DWOplayer.PROFILE_ID);
+//        u.append("&profile=").append(profile);
+//        String locale = LocaleInfo.getCurrentLocale().getLocaleName();
+//        if ("default".equals(locale) ) locale =  "nl";
+//        u.append("&locale=").append(locale);
+//        u.append("&view=").append(page);
+//        String base = Window.Location.getParameter("base");
+//        if(base != null && !base.isEmpty() && legal(base)) 
+//          u.append("&base=").append(base);
+//        String string = u.toString();
+//        Window.Location.replace(string);
+//        return null;
+//      }     
+//     );    
+//}	
 	Login_Stap3(ClientFactory clientFactory, Place next) {
 		super();
 		this.clientFactory = clientFactory;

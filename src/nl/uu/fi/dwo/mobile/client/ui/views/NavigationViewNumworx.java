@@ -419,33 +419,33 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	  LOG.info("goto results");
 	  if(Actions.isAvailable())
 		  Actions.RESULTS.execute();
-	  else
-		  gotoGwtClient("RESULTS");
+//	  else
+//		  gotoGwtClient("RESULTS");
 	
 	}
-    private void gotoGwtClient(String page) {
-      final String url = "/gwtclient/index.html";
-      account.getBearerToken().then(
-        resolved-> {
-          String token = "2\f" + resolved.getValue(); //format 2
-          StringBuilder u = new StringBuilder(url);
-          u.append( "?a=" ) .append (Base64.btoa(token)); // User Auth Token
-          u.append( "&test=on");
-          String profile = String.valueOf(DWOplayer.PROFILE_ID);
-          u.append("&profile=").append(profile);
-          String locale = LocaleInfo.getCurrentLocale().getLocaleName();
-          if ("default".equals(locale) ) locale =  "nl";
-          u.append("&locale=").append(locale);
-          u.append("&view=").append(page);
-          String string = u.toString();
-          LOG.info("open URL " + string);
-          Window.Location.replace(string);
-          return null;
-        }     
-       );
-      
-    
-  }
+//    private void gotoGwtClient(String page) {
+//      final String url = "/gwtclient/index.html";
+//      account.getBearerToken().then(
+//        resolved-> {
+//          String token = "2\f" + resolved.getValue(); //format 2
+//          StringBuilder u = new StringBuilder(url);
+//          u.append( "?a=" ) .append (Base64.btoa(token)); // User Auth Token
+//          u.append( "&test=on");
+//          String profile = String.valueOf(DWOplayer.PROFILE_ID);
+//          u.append("&profile=").append(profile);
+//          String locale = LocaleInfo.getCurrentLocale().getLocaleName();
+//          if ("default".equals(locale) ) locale =  "nl";
+//          u.append("&locale=").append(locale);
+//          u.append("&view=").append(page);
+//          String string = u.toString();
+//          LOG.info("open URL " + string);
+//          Window.Location.replace(string);
+//          return null;
+//        }     
+//       );
+//      
+//    
+//  }
 
     
     
@@ -454,16 +454,16 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
       LOG.info("goto persons");
       if(Actions.isAvailable())
     	  Actions.PERSONS.execute();
-      else
-    	  gotoGwtClient("PERSONS");
+//      else
+//    	  gotoGwtClient("PERSONS");
     }
     @UiHandler("classes")
     void onClasses(ClickEvent e) {
       LOG.info("goto classes");
       if(Actions.isAvailable())
     	  Actions.SCHOOLCLASSES.execute();
-      else
-    	  gotoGwtClient("SCHOOLCLASSES");
+//      else
+//    	  gotoGwtClient("SCHOOLCLASSES");
    }
 
     @UiHandler("organization")
@@ -472,8 +472,8 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
     	LOG.info("goto organization");
     	if (Actions.isAvailable())
     		Actions.ORGANISATION.execute();
-    	else
-    		gotoGwtClient("ORGANISATION");
+//    	else
+//    		gotoGwtClient("ORGANISATION");
     }
 
     private boolean icon;
