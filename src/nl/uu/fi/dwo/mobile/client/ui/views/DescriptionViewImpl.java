@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
+import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -28,6 +29,8 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.logical.shared.AttachEvent;
+import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -72,6 +75,16 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 		main = new SimplePanel();
 		main.setStylePrimaryName("descriptionView");
 		contentPanel = new FlowPanel();
+		Handler handler = new Handler() {
+
+			@Override
+			public void onAttachOrDetach(AttachEvent event) {
+				if (!event.isAttached()) {
+					PopupFacade.removeAll();
+				}
+				
+			} } ;
+		main.addAttachHandler(handler );
 	}
 
 	public DescriptionViewImpl(Object id) {
