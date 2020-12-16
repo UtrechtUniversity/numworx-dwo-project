@@ -36,6 +36,11 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 
 	final protected ArrayList<GraphNode> graphNodes = new ArrayList<GraphNode>();
 	final protected ArrayList<GraphEdge> graphEdges = new ArrayList<GraphEdge>();
+	
+	protected ArrayList<ChapterGraphNode> chapterNodes = new ArrayList<ChapterGraphNode>();
+	protected ArrayList<ChapterGraphEdge> chapterEdges = new ArrayList<ChapterGraphEdge>();
+	
+	protected ArrayList<BookGraphNode> bookNodes = new ArrayList<BookGraphNode>();
 
 	private JButton zoomFitButton;
 	private JButton zoomInButton;
@@ -56,9 +61,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	private boolean isScoreGraph = false;
 	private boolean modelJustSet = false;
 	
-	private ArrayList<String> hfstCodes = new ArrayList<String>();
-	private ArrayList<Point> hfstCodeLocations = new ArrayList<Point>();
-	
+	private boolean voorkennisArea = false;
 	
 
 	public Graph() {
@@ -66,27 +69,6 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		setBackground(LeerdomeinGraphPanel.colorGray3);
 		setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		
-		//tijdelijk even hardcoded
-		hfstCodes.add("Getal&Ruimte1HV1");
-		hfstCodes.add("Getal&Ruimte1HV2");
-		hfstCodes.add("Getal&Ruimte1HV3");
-		hfstCodes.add("Getal&Ruimte1HV4");
-		hfstCodes.add("Getal&Ruimte1HV5");
-		hfstCodes.add("Getal&Ruimte1HV6");
-		hfstCodes.add("Getal&Ruimte1HV7");
-		hfstCodes.add("Getal&Ruimte1HV8");
-		hfstCodes.add("Getal&Ruimte1HV9");
-		
-		hfstCodeLocations.add(new Point(0,0));
-		hfstCodeLocations.add(new Point(0,0));
-		hfstCodeLocations.add(new Point(0,0));
-		hfstCodeLocations.add(new Point(0,0));
-		hfstCodeLocations.add(new Point(0,0));
-		hfstCodeLocations.add(new Point(0,0));
-		hfstCodeLocations.add(new Point(0,0));
-		hfstCodeLocations.add(new Point(0,0));
-		hfstCodeLocations.add(new Point(0,0));
-
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		painter = this;
@@ -120,18 +102,35 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		}
 		super.paintComponent(g);
 		
-		makeHfstLocations();
-		g.setFont(new Font("SansSerif", Font.BOLD,(int)(160*factor)));
-		FontMetrics fm = g.getFontMetrics();
-		g.setColor(new Color(120, 150, 202, 50));
-		for(int i=0 ; i<hfstCodes.size() ; i++) {
-			int rx = (int)(origin.x+(hfstCodeLocations.get(i).x)*factor);
-			int ry = (int)(origin.y+(hfstCodeLocations.get(i).y)*factor);
-			String label = "1HV H"+(i+1);
+		if(voorkennisArea) {
+			g.setFont(new Font("SansSerif", Font.BOLD,(int)(120*factor)));
+			FontMetrics fm = g.getFontMetrics();
+			g.setColor(new Color(222, 229, 240));
+			g.fillRoundRect(10, 10, getWidth()-20, getHeight()/4, 40, 40);
+			String label = "Voorkennis";
 			int textLength = fm.stringWidth(label);
 			int textHeight = fm.getAscent();
-			if(hfstCodeLocations.get(i).x!=0 || hfstCodeLocations.get(i).y!=0)
-				g.drawString(label, rx-textLength/2, ry+textHeight/2);
+			g.setColor(LeerdomeinGraphPanel.colorGray3);
+			g.drawString(label, getWidth()/2-textLength/2, getHeight()/8+textHeight/2);
+			
+		}
+		if(factor<0.15) {
+			for(int i=0 ; i<bookNodes.size() ; i++) {
+				bookNodes.get(i).paint(g, origin, factor);
+			}
+		}
+		if(factor<0.05) 
+			return;
+		
+		
+		for(int i=0 ; i<chapterNodes.size() ; i++) {
+			chapterNodes.get(i).paint(g, origin, factor);
+		}
+		for(int i=0 ; i<chapterEdges.size() ; i++) {
+			chapterEdges.get(i).paint(g, origin, factor);
+		}
+		if(factor<0.15) {
+			return;
 		}
 		
 		for (int i = 0; i < graphEdges.size(); i++) {
@@ -143,7 +142,8 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 //				source.setTempLocation(makeTempLocation(source, target));
 //			if(edge.getLength() < 600)
 //				source.setTempLocation(null);
-			graphEdges.get(i).paint(g, origin, factor);
+			if(voorkennisArea || GraphNode.hasSameChapterCode(source, target, "Getal&Ruimte"))
+				graphEdges.get(i).paint(g, origin, factor);
 		}
 		
 				
@@ -169,30 +169,6 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			//graphNodes.get(i).setTempLocation(null);
 		}
 		//zoomFitButton.paint(g);
-	}
-	
-	private void makeHfstLocations() {
-		int[] hfstCumX = new int[hfstCodes.size()];
-		int[] hfstCumY = new int[hfstCodes.size()];
-		int[] hfstCount  = new int[hfstCodes.size()];
-		
-		for(int i=0 ; i<hfstCodes.size() ; i++) {
-			for (GraphNode node : graphNodes) {
-				if(node.hasMethodCode(hfstCodes.get(i))) {
-					hfstCumX[i]+=node.getLocation().x;
-					hfstCumY[i]+=node.getLocation().y;
-					hfstCount[i]+=1;
-				}
-			}
-			if(hfstCount[i]>0) {
-				hfstCodeLocations.get(i).x = hfstCumX[i]/hfstCount[i];
-				hfstCodeLocations.get(i).y = hfstCumY[i]/hfstCount[i];
-			}
-			else {
-				hfstCodeLocations.get(i).x = 0;
-				hfstCodeLocations.get(i).y = 0;
-			}
-		}
 	}
 	
 	private boolean onPanel(GraphNode node) {
@@ -232,6 +208,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		if (graphNodes != this.graphNodes) {
 			this.graphNodes.clear();
 			this.graphNodes.addAll(graphNodes);
+			
 		}
 	}
 
@@ -239,7 +216,31 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		if (graphEdges != this.graphEdges) {
 			this.graphEdges.clear();
 			this.graphEdges.addAll(graphEdges);
+			
+			chapterNodes.clear();
+			for(int i=0 ; i< ChapterGraphNode.hfstCodes.length ; i++) {
+				chapterNodes.add(new ChapterGraphNode(ChapterGraphNode.hfstCodes[i], graphNodes, graphEdges));
+			}
+			bookNodes.clear();
+			for(int i=0 ; i< BookGraphNode.bookCodes.length ; i++) {
+				bookNodes.add(new BookGraphNode(BookGraphNode.bookCodes[i], chapterNodes, graphEdges));
+			}
+			System.out.println("Booknodes count: "+bookNodes.size());
+			System.out.println("Chapternodes count: "+chapterNodes.size());
+			chapterEdges.clear();
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(0), chapterNodes.get(3)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(0), chapterNodes.get(6)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(0), chapterNodes.get(8)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(3), chapterNodes.get(6)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(1), chapterNodes.get(2)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(1), chapterNodes.get(4)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(1), chapterNodes.get(5)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(1), chapterNodes.get(7)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(5), chapterNodes.get(7)));
 		}
+		
+		
+		
 	}
 
 	public ArrayList<GraphNode> getGraphNodes() {
@@ -248,6 +249,14 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 
 	public ArrayList<GraphEdge> getGraphEdges() {
 		return graphEdges;
+	}
+	
+	public ArrayList<ChapterGraphNode> getChapterNodes() {
+		return chapterNodes;
+	}
+
+	public ArrayList<ChapterGraphEdge> getChapterEdges() {
+		return chapterEdges;
 	}
 	
 	public double getFactor() {
@@ -356,17 +365,6 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-//		int ex = (int) ((e.getX()-origin.x)/factor);
-//		int ey = (int) ((e.getY()-origin.y)/factor);
-//		GraphNode node = null;
-//		for(int i=0 ; i<graphNodes.size() ; i++) {
-//			if(graphNodes.get(i).contains(ex, ey)) {
-//				node = graphNodes.get(i);
-//				break;
-//			}
-//		}
-//		if(node!=null)
-//			produceAction(node.getID());
 
 	}
 
@@ -387,15 +385,67 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		int ey = (int) ((e.getY()-origin.y)/factor);
 		GraphNode node = null;
 		for(int i=0 ; i<graphNodes.size() ; i++) {
-			if(graphNodes.get(i).contains(ex, ey)) {
+			if(graphNodes.get(i).contains(ex, ey) || graphNodes.get(i).contains(e.getX(), e.getY())) {
 				node = graphNodes.get(i);
 				break;
 			}
 		}
-		if(node!=null)
+		if(node!=null) {
 			produceAction(node.getID());
+			return;
+		}
+		
+		ChapterGraphNode cNode = null;
+		for(int i=0 ; i<chapterNodes.size() ; i++) {
+			if(chapterNodes.get(i).contains(ex, ey)) {
+				cNode = chapterNodes.get(i);
+				break;
+			}
+		}
+		if(cNode!=null) {
+			voorkennisArea = true;
+			for(int i=0 ; i<graphNodes.size() ; i++) {
+				if(!graphNodes.get(i).hasMethodCode(cNode.getHfstCode()))
+					graphNodes.get(i).setVisible(false);
+			}
+			zoomFit(getHeight()/4);
+			for(int i=0 ; i<chapterNodes.size() ; i++) {
+				chapterNodes.get(i).makeLocation(graphNodes);
+			}
+			ArrayList<GraphNode> voorkennisNodes = cNode.getVoorkennisNodes();
+			ArrayList<Point> pos = maakVoorkennisPosities();
+			for(int i = 0 ; i<Math.min(voorkennisNodes.size(),pos.size()) ; i++) {
+				GraphNode vkNode = voorkennisNodes.get(i);
+				vkNode.setVisible(true);
+				vkNode.setTempLocation(new Point(pos.get(i).x, pos.get(i).y));
+				
+			}
+		}
 
 	}
+	
+	public ArrayList<Point> maakVoorkennisPosities() {
+		ArrayList<Point> posities = new ArrayList<Point>();
+		posities.add(new Point(getWidth()/2, getHeight()/8));
+		
+		posities.add(new Point(250, getHeight()/8-40));
+		posities.add(new Point(getWidth()-250, getHeight()/8+40));
+		posities.add(new Point(200, getHeight()/8+40));
+		posities.add(new Point(getWidth()-200, getHeight()/8-40));
+		
+		posities.add(new Point(280, getHeight()/8-20));
+		posities.add(new Point(getWidth()-280, getHeight()/8+20));
+		posities.add(new Point(230, getHeight()/8+20));
+		posities.add(new Point(getWidth()-230, getHeight()/8-20));
+		
+		posities.add(new Point(310, getHeight()/8-60));
+		posities.add(new Point(getWidth()-310, getHeight()/8+60));
+		posities.add(new Point(310, getHeight()/8+60));
+		posities.add(new Point(getWidth()-310, getHeight()/8-60));
+		return posities;
+		
+	}
+	
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
@@ -537,6 +587,10 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		
 		
 	}
+	
+	public void setVoorkennisArea(boolean b) {
+		voorkennisArea = b;
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -553,11 +607,22 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			repaint();
 		}
 		if(e.getSource()==zoomFitButton) {
+			for(int i=0 ; i<graphNodes.size() ; i++) {
+					graphNodes.get(i).setVisible(true);
+			}
 			zoomFit();
+			for(int i=0 ; i<chapterNodes.size() ; i++) {
+				chapterNodes.get(i).makeLocation(graphNodes);
+			}
+			voorkennisArea = false;
 		}
 	}
 	
 	public void zoomFit() {
+		zoomFit(0);
+	}
+	
+	public void zoomFit(int vkHeight) {
 		if(graphNodes.size()<1)
 			return;
 		
@@ -567,7 +632,8 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		int yMin = 10000;//graphNodes.get(0).getLocation().y;
 		
 		for (int i = 0; i < graphNodes.size(); i++) {
-			if(graphNodes.get(i).getLocation()!=null) {
+			graphNodes.get(i).setTempLocation(null);
+			if(graphNodes.get(i).isVisible() && graphNodes.get(i).getLocation()!=null) {
 				if(xMax < graphNodes.get(i).getLocation().x)
 					xMax = graphNodes.get(i).getLocation().x;
 				if(yMax < graphNodes.get(i).getLocation().y)
@@ -578,11 +644,13 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 					yMin = graphNodes.get(i).getLocation().y;
 			}
 		}
-		factor = Math.min((float)(getWidth()-200)/(float)(xMax-xMin), (float)(getHeight()-80)/(float)(yMax-yMin));
+		factor = Math.min((float)(getWidth()-240)/(float)(xMax-xMin), (float)(getHeight()-80-vkHeight)/(float)(yMax-yMin));
 		if(factor<0 || factor>1)
 			factor=1;
-		origin.x = 100+(int)(-xMin*factor);
-		origin.y = 40+(int)(-yMin*factor);
+		int ruimteX = getWidth() - (int)((xMax-xMin)*factor);
+		int ruimteY = getHeight() - (int)((yMax-yMin)*factor) - (int)(vkHeight);
+		origin.x = ruimteX/2 + (int)(-xMin*factor);
+		origin.y = (int)(vkHeight) + ruimteY/2 + (int)(-yMin*factor);
 		repaint();
 	}
 	

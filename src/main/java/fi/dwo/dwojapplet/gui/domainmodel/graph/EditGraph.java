@@ -26,6 +26,9 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 	private ArrayList<GraphNode> graphNodes = new ArrayList<GraphNode>();
 	private ArrayList<GraphEdge> graphEdges = new ArrayList<GraphEdge>();
 	
+	protected ArrayList<ChapterGraphNode> chapterNodes = new ArrayList<ChapterGraphNode>();
+	protected ArrayList<ChapterGraphEdge> chapterEdges = new ArrayList<ChapterGraphEdge>();
+	
 	private GraphNode activeNode;
 	private GraphNode possibleSourceNode;
 	private GraphNode possibleTargetNode;
@@ -80,6 +83,8 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		setBorder(BorderFactory.createLineBorder(LeerdomeinGraphPanel.colorBlue3));
 		graphNodes = graph.getGraphNodes();
 		graphEdges = graph.getGraphEdges();
+		chapterNodes = graph.getChapterNodes();
+		chapterEdges = graph.getChapterEdges();
 		origin = graph.getOrigin();
 		factor = graph.getFactor();
 		addMouseListener(this);
@@ -124,6 +129,16 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 			zoomFit();
 			modelJustSet = false;
 		}
+		for(int i=0 ; i<chapterNodes.size() ; i++) {
+			chapterNodes.get(i).paint(g, origin, factor, true);
+		}
+		for(int i=0 ; i<chapterEdges.size() ; i++) {
+			chapterEdges.get(i).paint(g, origin, factor, true);
+		}
+		
+		if(factor<0.15)
+			return;
+		
 		for(int i=0 ; i<graphEdges.size() ; i++)
 			graphEdges.get(i).paint(g, origin, factor);
 		for(int i=0 ; i<graphNodes.size() ; i++) {
@@ -336,6 +351,29 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		}
 		if(node!=null)
 			produceAction(node.getID());
+		
+		ChapterGraphNode cNode = null;
+		for(int i=0 ; i<chapterNodes.size() ; i++) {
+			if(chapterNodes.get(i).contains(ex, ey)) {
+				cNode = chapterNodes.get(i);
+				break;
+			}
+		}
+		if(cNode!=null) {
+			for(int i=0 ; i<graphNodes.size() ; i++) {
+				if(!graphNodes.get(i).hasMethodCode(cNode.getHfstCode()))
+					graphNodes.get(i).setVisible(false);
+			}
+			zoomFit();
+			for(int i=0 ; i<graphNodes.size() ; i++) {
+				graphNodes.get(i).setVisible(true);
+			}
+			for(int i=0 ; i<chapterNodes.size() ; i++) {
+				chapterNodes.get(i).makeLocation(graphNodes);
+			}
+			
+		}
+
 	}
 
 	@Override
@@ -452,12 +490,24 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 			repaint();
 		}
 		if(e.getSource()==zoomFitButton) {
+			for(int i=0 ; i<graphNodes.size() ; i++) {
+				graphNodes.get(i).setVisible(true);
+			}
 			zoomFit();
+			for(int i=0 ; i<chapterNodes.size() ; i++) {
+				chapterNodes.get(i).makeLocation(graphNodes);
+			}
 		}
 		if(e.getSource()==miRemove) {
 			editPopupNode.setLocation(null);
 			editPopupNode = null;
 			repaint();
+		}
+	}
+	
+	public void removeTempLocations() {
+		for (int i = 0; i < graphNodes.size(); i++) {
+			graphNodes.get(i).setTempLocation(null);
 		}
 	}
 	
@@ -471,7 +521,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		int yMin = 10000;//graphNodes.get(0).getLocation().y;
 		
 		for (int i = 0; i < graphNodes.size(); i++) {
-			if(graphNodes.get(i).getLocation()!=null) {
+			if(graphNodes.get(i).isVisible() && graphNodes.get(i).getLocation()!=null) {
 				if(xMax < graphNodes.get(i).getLocation().x)
 					xMax = graphNodes.get(i).getLocation().x;
 				if(yMax < graphNodes.get(i).getLocation().y)
@@ -482,11 +532,13 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 					yMin = graphNodes.get(i).getLocation().y;
 			}
 		}
-		factor = Math.min((float)(getWidth()-200)/(float)(xMax-xMin), (float)(getHeight()-80)/(float)(yMax-yMin));
+		factor = Math.min((float)(getWidth()-240)/(float)(xMax-xMin), (float)(getHeight()-80)/(float)(yMax-yMin));
 		if(factor<0 || factor>1)
 			factor=1;
-		origin.x = 100+(int)(-xMin*factor);
-		origin.y = 40+(int)(-yMin*factor);
+		int ruimteX = getWidth() - (int)((xMax-xMin)*factor);
+		int ruimteY = getHeight() - (int)((yMax-yMin)*factor);
+		origin.x = ruimteX/2 + (int)(-xMin*factor);
+		origin.y = ruimteY/2 + (int)(-yMin*factor);
 		repaint();
 	}
 	//ActionProducer

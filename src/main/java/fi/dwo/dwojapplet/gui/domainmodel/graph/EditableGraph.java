@@ -38,10 +38,12 @@ public class EditableGraph extends JPanel implements ActionListener{
 		if (b) {
 			editGraph.setOrigin(graph.getOrigin());
 			editGraph.setFactor(graph.getFactor());
+			editGraph.removeTempLocations();
 			cards.last(this);
 		} else {
 			graph.setOrigin(editGraph.getOrigin());
 			graph.setFactor(editGraph.getFactor());
+			graph.setVoorkennisArea(false);
 			cards.first(this);
 		}
 	}

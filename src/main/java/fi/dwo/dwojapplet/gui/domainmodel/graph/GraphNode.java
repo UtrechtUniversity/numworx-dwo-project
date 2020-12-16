@@ -50,6 +50,8 @@ public class GraphNode {
 	private Color failColor = new Color(200,0,0);
 	private Color halfFailColor = new Color(255,150,150);
 	
+	private boolean visible = true;
+	
 	
 	public GraphNode(String ID, String subdomein, String description) {
 		this.ID = ID;
@@ -103,12 +105,12 @@ public class GraphNode {
 	}
 	
 	public Point getLocation() {
-		return location;
+		return location; 
 	}
 	
-//	public Point getTempLocation() {
-//		return tempLocation;
-//	}
+	public Point getTempLocation() {
+		return tempLocation;
+	}
 	
 	public Point getLocationOnPanel(Point origin, double factor) {
 		if(location==null)
@@ -120,13 +122,13 @@ public class GraphNode {
 	
 	public Color getSuccesFailColor() {
 		if(succesFailScore == null)
-			return new Color(255,255,255,0);
+			return nodeColor;
 		if(succesFailScore < 25) 
 			return failColor;
 		if(succesFailScore <= 45) 
 			return halfFailColor;
 		if(succesFailScore > 45 && succesFailScore < 55)
-			return new Color(255,255,255,0);
+			return nodeColor;
 		if(succesFailScore < 75 && succesFailScore >= 55) 
 			return halfSuccesColor;
 		else 
@@ -247,11 +249,13 @@ public class GraphNode {
 		if(location==null)
 			return false;
 		Rectangle r = new Rectangle(location.x-size/2, location.y-size/2, size, size);
+		if(tempLocation!=null)
+			r = new Rectangle(tempLocation.x-size/2, tempLocation.y-size/2, size, size);
 		return r.contains(x,y);
 	}
 	
 	public void paint(Graphics gr, Point origin, double factor) {
-		if(location==null)
+		if(!visible || location==null || factor<0.15)
 			return;
 		Graphics2D g = (Graphics2D)gr;
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -268,10 +272,10 @@ public class GraphNode {
 		String label = this.subdomein + space + this.description;
 		int x = origin.x + (int)((location.x)*factor);
 		int y = origin.y + (int)((location.y )*factor);
-//		if(tempLocation!=null) {
-//			x = tempLocation.x;
-//			y = tempLocation.y;
-//		}
+		if(tempLocation!=null) {
+			x = tempLocation.x;
+			y = tempLocation.y;
+		}
 		
 		textLength = fm.stringWidth(label);
 		textHeight = fm.getAscent();
@@ -279,11 +283,18 @@ public class GraphNode {
 		int size = (int)(this.size*factor);
 		
 		g.setColor(nodeColor);
-		if(succesFailScore!=null)
+		if(succesFailScore!=null) {
 			g.setColor(getSuccesFailColor());
+			if(!nodeColor.equals(getSuccesFailColor())) {
+				g.setColor(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 60));
+				g.fillOval(x-3*size/2, y-3*size/2+textHeight/6, 3*size, 3*size);
+				g.setColor(getSuccesFailColor());
+			}
+		}
 		if(blur)
 			g.setColor(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 30));
 		g.fillOval(x-size/2, y-size/2+textHeight/6, size, size);
+		
 		g.setColor(nodeBorderColor);
 		if(blur)
 			g.setColor(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 30));
@@ -320,4 +331,13 @@ public class GraphNode {
 	public boolean isSelected() {
 		return selected;
 	}
+	
+	public void setVisible(boolean b) {
+		visible = b;
+	}
+	
+	public boolean isVisible() {
+		return visible;
+	}
+	
 }

@@ -19,7 +19,7 @@ public class GraphEdge {
 	private boolean sameChapters = true;
 	
 	private Color edgeColor = LeerdomeinGraphPanel.colorBlue4;
-	private Color edgeInterChapColor = new Color(230,210,210);
+	private Color edgeInterChapColor = new Color(238,209,180);//230,210,210);
 	
 	public GraphEdge(GraphNode source, GraphNode target) {
 		this.source = source;
@@ -53,7 +53,8 @@ public class GraphEdge {
 	}
 	
 	public void paint(Graphics gr, Point origin, double factor) {
-		if(target==null || source==null || target.getLocation()==null || source.getLocation()==null)
+		if(target==null || source==null || target.getLocation()==null || source.getLocation()==null  || !target.isVisible() || !source.isVisible() ||factor<0.15 
+				||source.getTempLocation()!=null && target.getTempLocation()!=null)
 			return;
 		Graphics2D g = (Graphics2D)gr;
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -62,10 +63,10 @@ public class GraphEdge {
 		float x1 = origin.x + (float)((target.getLocation().x)*factor);
 		float y0 = origin.y + (float)((source.getLocation().y)*factor);
 		float y1 = origin.y + (float)((target.getLocation().y)*factor);
-//		if(source.getTempLocation()!=null) {
-//			x0 = source.getTempLocation().x;
-//			y0 = source.getTempLocation().y;
-//		}
+		if(source.getTempLocation()!=null) {
+			x0 = source.getTempLocation().x;
+			y0 = source.getTempLocation().y;
+		}
 		float mx = (x0 + x1)/2;
 		float my = (y0 + y1)/2;
 		float dm1 = (float)Math.sqrt((x1-mx)*(x1-mx)+(y1-my)*(y1-my));
@@ -81,7 +82,7 @@ public class GraphEdge {
 			g.setPaint(target.getEdgeSuccesFailColor());
 //		if((target.getSuccesFailScore()==null || target.getSuccesFailScore() < 45)) // &&  source.getSuccesFailScore()!=null && source.getSuccesFailScore() < 45)
 //			g.setPaint(source.getSuccesFailColor());
-		if(!sameChapters)
+		if(!sameChapters && target.getMethodeInfo()!=null)
 			g.setPaint(edgeInterChapColor);
 		if(blur)
 			g.setPaint(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 30));
