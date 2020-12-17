@@ -9,6 +9,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -169,26 +171,44 @@ public class GraphNode {
 		Map<String, Map<String,Set<Integer>>> info2 = node2.getMethodeInfo();
 		if(info1==null || info2==null)
 			return false;
-		for (String methodeName1 : info1.keySet()) {
-			if(methode != null && methodeName1.equals(methode)) {
-				Map<String,Set<Integer>> leerjaren1 = info1.get(methodeName1);
-				if(info2.containsKey(methodeName1)) {
-					Map<String,Set<Integer>> leerjaren2 = info2.get(methodeName1);
-					for (String leerjaarName1 : leerjaren1.keySet()){
-						if(leerjaren2.containsKey(leerjaarName1)) {
-							Set<Integer> hoofdstukken1 = leerjaren1.get(leerjaarName1);
-							Set<Integer> hoofdstukken2 = leerjaren2.get(leerjaarName1);
-							for (Integer i1 : hoofdstukken1){
-								for (Integer i2 : hoofdstukken2){
-									if(i1.intValue() == i2.intValue())
-										return true;
-								}
-							}
-						}
-					}
-				}
-			}
+
+		
+		Set<String> infoset = new HashSet<>(info1.keySet());
+		infoset.retainAll(info2.keySet()); // retainall == doorsnede
+		if (methode != null) infoset.retainAll(Collections.singleton(methode));
+		for(String methodeName : infoset) {
+		  Map<String,Set<Integer>> leerjaren1 = info1.get(methodeName);
+		  Map<String,Set<Integer>> leerjaren2 = info2.get(methodeName);
+		  Set<String> leerjarenset = new HashSet<>(leerjaren1.keySet());
+		  leerjarenset.retainAll(leerjaren2.keySet());
+		  for(String leerjaarName: leerjarenset) {
+            Set<Integer> hoofdstukken1 = leerjaren1.get(leerjaarName);
+            Set<Integer> hoofdstukken2 = leerjaren2.get(leerjaarName);
+            if (hoofdstukken1.stream().anyMatch(hoofdstukken2::contains)) return true;
+		  }		  
 		}
+		
+		
+//		for (String methodeName1 : info1.keySet()) {
+//			if(methode != null && methodeName1.equals(methode)) {
+//				Map<String,Set<Integer>> leerjaren1 = info1.get(methodeName1);
+//				if(info2.containsKey(methodeName1)) {
+//					Map<String,Set<Integer>> leerjaren2 = info2.get(methodeName1);
+//					for (String leerjaarName1 : leerjaren1.keySet()){
+//						if(leerjaren2.containsKey(leerjaarName1)) {
+//							Set<Integer> hoofdstukken1 = leerjaren1.get(leerjaarName1);
+//							Set<Integer> hoofdstukken2 = leerjaren2.get(leerjaarName1);
+//							for (Integer i1 : hoofdstukken1){
+//								for (Integer i2 : hoofdstukken2){
+//									if(i1.intValue() == i2.intValue())
+//										return true;
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
 		return false;
 	}
 	
@@ -221,13 +241,9 @@ public class GraphNode {
 	}
 	
 	public boolean hasMethodCode(String code) {
-		if(methodeCodes==null)
+		if(methodeCodes==null || code == null)
 			return false;
-		for(String methodeCode : methodeCodes) {
-			if(code!=null && code.equals(methodeCode))
-				return true;
-		}
-		return false;
+		return methodeCodes.contains(code);
 	}
 	
 	public ArrayList<String> getMethodeCodes() {
