@@ -482,6 +482,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			graphNodes.get(i).setVisible(true);
 			graphNodes.get(i).setTempLocation(null);
 		}
+		produceAction("filter");
 		zoomFit();
 		for(int i=0 ; i<chapterNodes.size() ; i++) {
 			chapterNodes.get(i).makeLocation(graphNodes);
@@ -512,6 +513,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			else
 				graphNodes.get(i).setVisible(true);
 		}
+		produceAction("filter");
 		for(int i=0 ; i<chapterNodes.size() ; i++) {
 			chapterNodes.get(i).makeLocation(graphNodes);
 		}
@@ -538,6 +540,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			if(!graphNodes.get(i).hasMethodCode(hfstCode))
 				graphNodes.get(i).setVisible(false);
 		}
+		produceAction("filter");
 		zoomFit();
 		for(int i=0 ; i<chapterNodes.size() ; i++) {
 			chapterNodes.get(i).makeLocation(graphNodes);
@@ -559,6 +562,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			vkNode.setVisible(true);
 			vkNode.setTempLocation(new Point(pos.get(i).x, pos.get(i).y));
 		}
+		produceAction("filter");
 		voorkennisWegButton.setVisible(true);
 	}
 	
@@ -572,6 +576,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 				vkNode.setTempLocation(null);
 			}
 		}
+		produceAction("filter");
 		voorkennisWegButton.setVisible(false);
 		zoomFit();
 	}
