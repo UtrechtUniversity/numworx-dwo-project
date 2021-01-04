@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui.domainmodel.graph;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -234,7 +235,7 @@ public class GraphNode {
 			for (String leerjaarName : leerjaren.keySet()){
 				Set<Integer> hoofdstukken = 	leerjaren.get(leerjaarName);
 				for (Integer i : hoofdstukken){
-					methodeCodes.add(methodeName + leerjaarName + i);
+					methodeCodes.add(methodeName + "-" + leerjaarName + "-" + i);
 				}
 			}
 		}
@@ -244,6 +245,15 @@ public class GraphNode {
 		if(methodeCodes==null || code == null)
 			return false;
 		return methodeCodes.contains(code);
+	}
+	public boolean hasBookCode(String code) {
+		if(methodeCodes==null)
+			return false;
+		for(String methodeCode : methodeCodes) {
+			if(code!=null && code.equals(methodeCode.substring(0,methodeCode.lastIndexOf("-"))))
+				return true;
+		}
+		return false;
 	}
 	
 	public ArrayList<String> getMethodeCodes() {
@@ -303,6 +313,8 @@ public class GraphNode {
 			g.setColor(getSuccesFailColor());
 			if(!nodeColor.equals(getSuccesFailColor())) {
 				g.setColor(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 60));
+				if(blur)
+					g.setColor(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 10));
 				g.fillOval(x-3*size/2, y-3*size/2+textHeight/6, 3*size, 3*size);
 				g.setColor(getSuccesFailColor());
 			}
@@ -312,6 +324,7 @@ public class GraphNode {
 		g.fillOval(x-size/2, y-size/2+textHeight/6, size, size);
 		
 		g.setColor(nodeBorderColor);
+		g.setStroke(new BasicStroke(2f*(float)factor));
 		if(blur)
 			g.setColor(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 30));
 		if(selected) {
@@ -329,6 +342,9 @@ public class GraphNode {
 	public Rectangle getTextBB() {
 		if(location==null)
 			return new Rectangle(0,0,0,0);
+//		if(tempLocation != null) {
+//			return new Rectangle(tempLocation.x-textLength/2 , tempLocation.y-textHeight/2+3 , textLength, textHeight);
+//		}
 		return new Rectangle(location.x-textLength/2 , location.y-textHeight/2+3 , textLength, textHeight);
 	}
 	

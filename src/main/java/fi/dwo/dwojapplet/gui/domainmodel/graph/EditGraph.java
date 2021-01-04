@@ -29,6 +29,9 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 	protected ArrayList<ChapterGraphNode> chapterNodes = new ArrayList<ChapterGraphNode>();
 	protected ArrayList<ChapterGraphEdge> chapterEdges = new ArrayList<ChapterGraphEdge>();
 	
+	protected ArrayList<BookGraphNode> bookNodes = new ArrayList<BookGraphNode>();
+	protected ArrayList<BookGraphEdge> bookEdges = new ArrayList<BookGraphEdge>();
+	
 	private GraphNode activeNode;
 	private GraphNode possibleSourceNode;
 	private GraphNode possibleTargetNode;
@@ -85,6 +88,8 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		graphEdges = graph.getGraphEdges();
 		chapterNodes = graph.getChapterNodes();
 		chapterEdges = graph.getChapterEdges();
+		bookNodes = graph.getBookNodes();
+		bookEdges = graph.getBookEdges();
 		origin = graph.getOrigin();
 		factor = graph.getFactor();
 		addMouseListener(this);
@@ -129,6 +134,18 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 			zoomFit();
 			modelJustSet = false;
 		}
+		
+		if(factor<0.15) {
+			for(int i=0 ; i<bookNodes.size() ; i++) {
+				bookNodes.get(i).paint(g, origin, factor, true);
+			}
+			for(int i=0 ; i<bookEdges.size() ; i++) {
+				bookEdges.get(i).paint(g, origin, factor, true);
+			}
+		}
+		if(factor<0.05) 
+			return;
+		
 		for(int i=0 ; i<chapterNodes.size() ; i++) {
 			chapterNodes.get(i).paint(g, origin, factor, true);
 		}

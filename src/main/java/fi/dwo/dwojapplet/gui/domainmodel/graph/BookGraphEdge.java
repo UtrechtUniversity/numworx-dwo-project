@@ -8,24 +8,17 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.geom.GeneralPath;
 
-public class ChapterGraphEdge {
+public class BookGraphEdge {
 
-	private ChapterGraphNode source;
-	private ChapterGraphNode target;
-	private int arrowSize = 50;
+	private BookGraphNode source;
+	private BookGraphNode target;
+	private int arrowSize = 150;
 	
 	private Color edgeColor = new Color(222, 229, 240);
-	private Color edgeInterBookColor = new Color(238,209,180);
 	
-	private boolean isSameBook;
-	
-	public ChapterGraphEdge(ChapterGraphNode source, ChapterGraphNode target) {
+	public BookGraphEdge(BookGraphNode source, BookGraphNode target) {
 		this.source = source;
 		this.target = target;
-		if(target.getBookCode().equals(source.getBookCode()))
-			isSameBook = true;
-		else 
-			isSameBook = false;
 	}
 	
 	public void paint(Graphics gr, Point origin, double factor) {
@@ -56,26 +49,23 @@ public class ChapterGraphEdge {
 		float rx = mx+a*(y1-my)/dm1;
 		float ry = my-a*(x1-mx)/dm1;
 		
-		float x00 = x0+3*a*(x1-mx)/dm1;
-		float y00 = y0+3*a*(y1-my)/dm1;
-		float x11 = x1-3*a*(x1-mx)/dm1;
-		float y11 = y1-3*a*(y1-my)/dm1;
+		float x00 = x0+4.5f*a*(x1-mx)/dm1;
+		float y00 = y0+4.5f*a*(y1-my)/dm1;
+		float x11 = x1-4.5f*a*(x1-mx)/dm1;
+		float y11 = y1-4.5f*a*(y1-my)/dm1;
 		
-		if(factor<0.15)
+		if(factor<0.05)
 			g.setPaint(new Color(120, 150, 202));
-		else if(factor<0.22)
-			g.setColor(new Color(202, 209, 229));
-		else if(factor<0.3)
-			g.setColor(new Color(212, 219, 239));
+//		else if(factor<0.22)
+//			g.setColor(new Color(202, 209, 229));
+//		else if(factor<0.3)
+//			g.setColor(new Color(212, 219, 239));
 		else 
 			g.setPaint(edgeColor);
 		
 		if(factor>=0.15 && editGraph)
 			g.setPaint(new Color(233, 239, 249));
-		
-		if(!isSameBook)
-			g.setPaint(edgeInterBookColor);
-		g.setStroke(new BasicStroke(25f*(float)factor));
+		g.setStroke(new BasicStroke(75f*(float)factor));
 //		if(target.getSuccesFailScore()!=null)
 //			g.setPaint(target.getEdgeSuccesFailColor());
 //		if(!sameChapters)
@@ -101,11 +91,11 @@ public class ChapterGraphEdge {
 		g.fill(arrow);
 	}
 	
-	public ChapterGraphNode getSource() {
+	public BookGraphNode getSource() {
 		return source;
 	}
 	
-	public ChapterGraphNode getTarget() {
+	public BookGraphNode getTarget() {
 		return target;
 	}
 }

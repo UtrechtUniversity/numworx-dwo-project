@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui.domainmodel.graph;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -13,17 +14,17 @@ import java.util.HashMap;
 
 public class BookGraphNode {
 	
-	private static HashMap<String, String> bookDescriptionsMap;
+	public static HashMap<String, String> bookDescriptionsMap;
 	public static String[] bookCodes = {
-			"Getal&Ruimte1HV",
-			"Getal&Ruimte2HV",
-			"Getal&Ruimte3V",
+			"Getal&Ruimte-1HV",
+			"Getal&Ruimte-2HV",
+			"Getal&Ruimte-3V"
 			
 	};
 	public static String[] bookDescriptions = {
-			"Leerboek 1HV",
-			"Leerboek 2HV",
-			"Leerboek 3V"
+			"1HV",
+			"2HV",
+			"3V"
 	};
 	private static Color defaultNodeColor = LeerdomeinGraphPanel.colorBlue4;
 	private static Color defaultTextColor = new Color(120, 150, 202, 35);
@@ -43,6 +44,9 @@ public class BookGraphNode {
 	
 	private ArrayList<ChapterGraphNode> chapterNodes = new ArrayList<ChapterGraphNode>();
 	
+	public static String getBookDescription(String bookCode) {
+		return bookDescriptionsMap.get(bookCode);
+	}
 	
 	public BookGraphNode(String bookCode, ArrayList<ChapterGraphNode> chapterGraphNodes, ArrayList<GraphEdge> ChapterGraphEdges) {
 		if(bookDescriptionsMap==null) {
@@ -61,7 +65,7 @@ public class BookGraphNode {
 		int hfstCount = 0;
 		
 		for (ChapterGraphNode node : chapterNodes) {
-			//System.out.println("hasBookCode "+node.hasBookCode(bookCode));
+			System.out.println("hasBookCode "+bookCode +" "+node.hasBookCode(bookCode));
 			if(node.isVisible() && node.hasBookCode(bookCode)) {
 				hfstCumX+=node.getLocation().x;
 				hfstCumY+=node.getLocation().y;
@@ -167,6 +171,10 @@ public class BookGraphNode {
 	
 	public String getBookCode() {
 		return bookCode;
+	}
+	
+	public String getBookDescription() {
+		return bookDescriptionsMap.get(bookCode);
 	}
 
 }

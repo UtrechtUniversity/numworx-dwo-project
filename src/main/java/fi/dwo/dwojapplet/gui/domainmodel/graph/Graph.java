@@ -1,15 +1,20 @@
 package fi.dwo.dwojapplet.gui.domainmodel.graph;
 
 import java.awt.AWTEventMulticaster;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.ComponentOrientation;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.MenuItem;
 import java.awt.Point;
 import java.awt.PopupMenu;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -25,11 +30,14 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 
 import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JComboBox;
 import fi.dwo.dwojapplet.gui.domainmodel.NodeLeaf;
 
 public class Graph extends JPanel implements MouseListener, MouseMotionListener, ActionListener {
@@ -41,12 +49,23 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	protected ArrayList<ChapterGraphEdge> chapterEdges = new ArrayList<ChapterGraphEdge>();
 	
 	protected ArrayList<BookGraphNode> bookNodes = new ArrayList<BookGraphNode>();
+	protected ArrayList<BookGraphEdge> bookEdges = new ArrayList<BookGraphEdge>();
 
+	private JPanel topPanel;
+	private JLabel methodeLabel;
+	private JLabel bookLabel;
+	private JLabel chapterLabel;
+	private JLabel tussenLabel1;
+	private JLabel tussenLabel2;
+	private JComboBox methodeChoice;
 	private JButton zoomFitButton;
 	private JButton zoomInButton;
 	private JButton zoomOutButton;
+	private JButton voorkennisButton;
+	private JButton voorkennisWegButton;
 	
 	private Font buttonFont = new Font("SansSerif", Font.BOLD, 20);
+	private Font font = new Font("SansSerif", Font.BOLD, 16);
 
 	Component painter;
 	
@@ -62,6 +81,13 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	private boolean modelJustSet = false;
 	
 	private boolean voorkennisArea = false;
+	//private boolean bookSelected = false;
+	
+	//private String selectedChapterTitle = "";
+	//private String selectedBookTitle = "";
+	
+	private String selectedChapter;
+	private String selectedBook;
 	
 
 	public Graph() {
@@ -73,29 +99,114 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		addMouseMotionListener(this);
 		painter = this;
 		
+		
+		
+		topPanel = new JPanel();
+		topPanel.setBackground(LeerdomeinGraphPanel.colorBlue3);
+		topPanel.setBounds(0, 0, getWidth(), 24);
+		topPanel.setLayout(null);
+		
+		Box hb = Box.createHorizontalBox();
+		
+		tussenLabel1 = new JLabel("");
+		tussenLabel1.setFont(font);
+		tussenLabel1.setForeground(Color.white);
+		
+		methodeLabel = new JLabel("Getal & Ruimte");
+		methodeLabel.setFont(font);
+		methodeLabel.setForeground(Color.white);
+		methodeLabel.addMouseListener(this);
+		
+		bookLabel = new JLabel("");
+		bookLabel.setFont(font);
+		bookLabel.setForeground(Color.white);
+		bookLabel.addMouseListener(this);
+		
+		tussenLabel2 = new JLabel("");
+		tussenLabel2.setFont(font);
+		tussenLabel2.setForeground(Color.white);
+		
+		chapterLabel = new JLabel("");
+		chapterLabel.setFont(font);
+		chapterLabel.setForeground(Color.white);
+		chapterLabel.addMouseListener(this);
+		
+		hb.setBounds(20,0,1000, 26);
+		
+		methodeChoice = new JComboBox();
+		methodeChoice.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+		methodeChoice.addItem("Getal en Ruimte");
+		methodeChoice.addItem("Moderne Wiskunde");
+		//methodeChoice.addMouseListener(this);
+		//methodeChoice.addActionListener(this);
+		methodeChoice.setForeground(Color.white);
+		methodeChoice.setBackground(LeerdomeinGraphPanel.colorBlue3);
+		methodeChoice.setFont(font);
+		methodeChoice.setBounds(20, 5, 20, 24);
+		methodeChoice.setMaximumSize(new Dimension(20,24));
+		methodeChoice.setPreferredSize(new Dimension(20,24));
+		
+		//hb.add(methodeChoice);
+		hb.add(methodeLabel);
+		hb.add(Box.createHorizontalStrut(40));
+		hb.add(tussenLabel1);
+		hb.add(Box.createHorizontalStrut(40));
+		hb.add(bookLabel);
+		hb.add(Box.createHorizontalStrut(40));
+		hb.add(tussenLabel2);
+		hb.add(Box.createHorizontalStrut(40));
+		hb.add(chapterLabel);
+		hb.add(Box.createHorizontalGlue());
+		
+		topPanel.add(hb);
+		add(topPanel);
+		
+		
 		zoomFitButton = new JButton("\u25a2");
 		zoomFitButton.setBorder(BorderFactory.createEmptyBorder());
 		zoomFitButton.addActionListener(this);
 		zoomFitButton.setFont(buttonFont);
-		zoomFitButton.setBounds(getWidth() - 35, 5, 30, 30);
+		zoomFitButton.setBounds(getWidth() - 35, 35, 30, 30);
 		add(zoomFitButton);
 		
 		zoomInButton = new JButton("+");
 		zoomInButton.setBorder(BorderFactory.createEmptyBorder());
 		zoomInButton.addActionListener(this);
 		zoomInButton.setFont(buttonFont);
-		zoomInButton.setBounds(getWidth() - 35, 40, 30, 30);
+		zoomInButton.setBounds(getWidth() - 35, 70, 30, 30);
 		add(zoomInButton);
 		
 		zoomOutButton = new JButton("-");
 		zoomOutButton.setBorder(BorderFactory.createEmptyBorder());
 		zoomOutButton.addActionListener(this);
 		zoomOutButton.setFont(buttonFont);
-		zoomOutButton.setBounds(getWidth() - 35, 75, 30, 30);
+		zoomOutButton.setBounds(getWidth() - 35, 105, 30, 30);
 		add(zoomOutButton);
+		
+		voorkennisButton = new JButton("Voorkennis");
+		voorkennisButton.setBackground(LeerdomeinGraphPanel.colorBlue3);
+		voorkennisButton.setBorder(BorderFactory.createEmptyBorder());
+		voorkennisButton.addActionListener(this);
+		voorkennisButton.setFont(font);
+		voorkennisButton.setBounds(getWidth()/2 - 60, 30, 120, 24);
+		voorkennisButton.setVisible(false);
+		add(voorkennisButton);
+		
+		voorkennisWegButton = new JButton("Verberg voorkennis  X");
+		voorkennisWegButton.setBackground(LeerdomeinGraphPanel.colorBlue3);
+		voorkennisWegButton.setBorder(BorderFactory.createEmptyBorder());
+		voorkennisWegButton.addActionListener(this);
+		voorkennisWegButton.setFont(font);
+		voorkennisWegButton.setBounds(getWidth() - 220, 1, 200, 24);
+		voorkennisWegButton.setVisible(false);
+		add(voorkennisWegButton);
+		
 	}
 
-	public void paintComponent(Graphics g) {
+	public void paintComponent(Graphics gr) {
+		Graphics2D g = (Graphics2D)gr;
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		
 		if(modelJustSet) {
 			zoomFit();
 			modelJustSet = false;
@@ -103,31 +214,65 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		super.paintComponent(g);
 		
 		if(voorkennisArea) {
-			g.setFont(new Font("SansSerif", Font.BOLD,(int)(120*factor)));
+			g.setFont(new Font("SansSerif", Font.BOLD,16));//"SansSerif", Font.BOLD,(int)(120*factor)));
 			FontMetrics fm = g.getFontMetrics();
-			g.setColor(new Color(222, 229, 240));
-			g.fillRoundRect(10, 10, getWidth()-20, getHeight()/4, 40, 40);
+			//g.setStroke(new BasicStroke(2f*(float)factor));
+			g.setColor(LeerdomeinGraphPanel.colorBlue3);//new Color(222, 229, 240));
+			g.drawRect(1, 1, getWidth()-2, getHeight()/4-20);
+			g.fillRect(1, 1, getWidth()-2, 26);
+			g.drawRect(1, getHeight()/4, getWidth()-2, 3*getHeight()/4-1);
+			g.fillRect(1, getHeight()/4, getWidth()-2, 26);
 			String label = "Voorkennis";
 			int textLength = fm.stringWidth(label);
 			int textHeight = fm.getAscent();
-			g.setColor(LeerdomeinGraphPanel.colorGray3);
-			g.drawString(label, getWidth()/2-textLength/2, getHeight()/8+textHeight/2);
+			g.setColor(Color.white);
+			g.drawString(label, getWidth()/2-textLength/2, 5*textHeight/4);//getHeight()/8+textHeight/2);
 			
+//			g.setFont(new Font("SansSerif", Font.BOLD,16));
+//			fm = g.getFontMetrics();
+//			textLength = fm.stringWidth(selectedChapterTitle);
+//			textHeight = fm.getAscent();
+//			g.setColor(Color.white);
+//			g.drawString(">", 320, getHeight()/4+5*textHeight/4);
+//			g.drawString(selectedChapterTitle, 350, getHeight()/4+5*textHeight/4);
+//			g.drawString(">", 220, getHeight()/4+5*textHeight/4);
+//			g.drawString(selectedBookTitle, 260, getHeight()/4+5*textHeight/4);
+		}
+		else {
+			g.setColor(LeerdomeinGraphPanel.colorBlue3);//new Color(222, 229, 240));
+			g.drawRect(1, 1, getWidth()-2, getHeight()-2);
+			g.fillRect(1, 1, getWidth()-2, 26);
+			
+//			g.setFont(new Font("SansSerif", Font.BOLD,16));
+//			FontMetrics fm = g.getFontMetrics();
+//			int textHeight = fm.getAscent();
+//			g.setColor(Color.white);
+//			if(!"".equals(selectedBookTitle))
+//				g.drawString(">", 220, 5*textHeight/4);
+//			g.drawString(selectedBookTitle, 260, 5*textHeight/4);
 		}
 		if(factor<0.15) {
 			for(int i=0 ; i<bookNodes.size() ; i++) {
 				bookNodes.get(i).paint(g, origin, factor);
 			}
+			for(int i=0 ; i<bookEdges.size() ; i++) {
+				bookEdges.get(i).paint(g, origin, factor);
+			}
 		}
 		if(factor<0.05) 
 			return;
 		
-		
-		for(int i=0 ; i<chapterNodes.size() ; i++) {
-			chapterNodes.get(i).paint(g, origin, factor);
-		}
+		if(selectedChapter==null)
+			for(int i=0 ; i<chapterNodes.size() ; i++) {
+				chapterNodes.get(i).paint(g, origin, factor);
+			}
 		for(int i=0 ; i<chapterEdges.size() ; i++) {
-			chapterEdges.get(i).paint(g, origin, factor);
+			ChapterGraphEdge edge = chapterEdges.get(i);
+			ChapterGraphNode source = edge.getSource();
+			ChapterGraphNode target = edge.getTarget();
+			if(source.getBookCode().equals(target.getBookCode()))
+				chapterEdges.get(i).paint(g, origin, factor);
+			
 		}
 		if(factor<0.15) {
 			return;
@@ -148,7 +293,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		
 				
 		for (int i = 0; i < graphNodes.size(); i++) {
-			if (!graphNodes.get(i).getBlur()) {
+			if (!graphNodes.get(i).getBlur() && graphNodes.get(i).isVisible() && graphNodes.get(i).getTempLocation()==null) {
 				Rectangle rn = graphNodes.get(i).getTextBB();
 				if (rn.width == 0) {
 					graphNodes.get(i).paint(g, origin, factor);
@@ -221,13 +366,9 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			for(int i=0 ; i< ChapterGraphNode.hfstCodes.length ; i++) {
 				chapterNodes.add(new ChapterGraphNode(ChapterGraphNode.hfstCodes[i], graphNodes, graphEdges));
 			}
-			bookNodes.clear();
-			for(int i=0 ; i< BookGraphNode.bookCodes.length ; i++) {
-				bookNodes.add(new BookGraphNode(BookGraphNode.bookCodes[i], chapterNodes, graphEdges));
-			}
-			System.out.println("Booknodes count: "+bookNodes.size());
-			System.out.println("Chapternodes count: "+chapterNodes.size());
+			
 			chapterEdges.clear();
+			//hfst 1
 			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(0), chapterNodes.get(3)));
 			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(0), chapterNodes.get(6)));
 			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(0), chapterNodes.get(8)));
@@ -237,6 +378,53 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(1), chapterNodes.get(5)));
 			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(1), chapterNodes.get(7)));
 			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(5), chapterNodes.get(7)));
+			//hfst 2
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(9), chapterNodes.get(11)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(9), chapterNodes.get(12)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(9), chapterNodes.get(15)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(10), chapterNodes.get(13)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(10), chapterNodes.get(16)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(11), chapterNodes.get(15)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(12), chapterNodes.get(15)));
+			
+			//hfst 1-2
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(4), chapterNodes.get(9)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(7), chapterNodes.get(9)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(6), chapterNodes.get(10)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(8), chapterNodes.get(10)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(12), chapterNodes.get(13)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(4), chapterNodes.get(14)));
+			
+			//hfst 3
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(17), chapterNodes.get(21)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(17), chapterNodes.get(19)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(19), chapterNodes.get(21)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(20), chapterNodes.get(25)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(18), chapterNodes.get(23)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(21), chapterNodes.get(22)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(17), chapterNodes.get(24)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(19), chapterNodes.get(24)));
+			
+			//hfst 2-3
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(9), chapterNodes.get(22)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(11), chapterNodes.get(17)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(15), chapterNodes.get(19)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(13), chapterNodes.get(18)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(14), chapterNodes.get(20)));
+			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(16), chapterNodes.get(18)));
+			
+			
+			bookNodes.clear();
+			for(int i=0 ; i< BookGraphNode.bookCodes.length ; i++) {
+				bookNodes.add(new BookGraphNode(BookGraphNode.bookCodes[i], chapterNodes, graphEdges));
+			}
+			
+			bookEdges.clear();
+			bookEdges.add(new BookGraphEdge(bookNodes.get(0), bookNodes.get(1)));
+			bookEdges.add(new BookGraphEdge(bookNodes.get(1), bookNodes.get(2)));
+			//bookEdges.add(new BookGraphEdge(bookNodes.get(0), bookNodes.get(2)));
+			
+			
 		}
 		
 		
@@ -258,6 +446,14 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	public ArrayList<ChapterGraphEdge> getChapterEdges() {
 		return chapterEdges;
 	}
+
+	public ArrayList<BookGraphNode> getBookNodes() {
+		return bookNodes;
+	}
+
+	public ArrayList<BookGraphEdge> getBookEdges() {
+		return bookEdges;
+	}
 	
 	public double getFactor() {
 		return factor;
@@ -278,7 +474,115 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	public void setAsScoreGraph (Boolean isScoreGraph) {
 		this.isScoreGraph = isScoreGraph;
 	}
-
+	
+	public void selectMethode(String bookCode) {
+		selectedChapter = null;
+		selectedBook = null;
+		for(int i=0 ; i<graphNodes.size() ; i++) {
+			graphNodes.get(i).setVisible(true);
+			graphNodes.get(i).setTempLocation(null);
+		}
+		zoomFit();
+		for(int i=0 ; i<chapterNodes.size() ; i++) {
+			chapterNodes.get(i).makeLocation(graphNodes);
+		}
+		for(int i=0 ; i<chapterNodes.size() ; i++) {
+			chapterNodes.get(i).makeLocation(graphNodes);
+		}
+		for(int i=0 ; i<bookNodes.size() ; i++) {
+			bookNodes.get(i).makeLocation(chapterNodes);
+		}
+		verbergVoorkennis();
+		tussenLabel1.setText("");
+		bookLabel.setText("");
+		tussenLabel2.setText("");
+		chapterLabel.setText("");
+		voorkennisButton.setVisible(false);
+	}
+	
+	public void selectBook(String bookCode) {
+		verbergVoorkennis();
+		selectedChapter = null;
+		selectedBook = bookCode;
+		//bookSelected = true;
+		for(int i=0 ; i<graphNodes.size() ; i++) {
+			graphNodes.get(i).setTempLocation(null);
+			if(!graphNodes.get(i).hasBookCode(bookCode))
+				graphNodes.get(i).setVisible(false);
+			else
+				graphNodes.get(i).setVisible(true);
+		}
+		for(int i=0 ; i<chapterNodes.size() ; i++) {
+			chapterNodes.get(i).makeLocation(graphNodes);
+		}
+		for(int i=0 ; i<bookNodes.size() ; i++) {
+			bookNodes.get(i).makeLocation(chapterNodes);
+		}
+//		for(int i=0 ; i<chapterNodes.size() ; i++) {
+//			if(!chapterNodes.get(i).getBookCode().equals(cNode.getBookCode()))
+//				chapterNodes.get(i).setVisible(false);
+//		}
+		
+		zoomFit();
+		tussenLabel1.setText(">");
+		bookLabel.setText(BookGraphNode.getBookDescription(bookCode));
+		tussenLabel2.setText("");
+		chapterLabel.setText("");
+		voorkennisButton.setVisible(false);
+	}
+	
+	public void selectChapter(String hfstCode) {
+		selectedChapter = hfstCode;
+		selectedBook = hfstCode.substring(0, hfstCode.lastIndexOf("-"));
+		for(int i=0 ; i<graphNodes.size() ; i++) {
+			if(!graphNodes.get(i).hasMethodCode(hfstCode))
+				graphNodes.get(i).setVisible(false);
+		}
+		zoomFit();
+		for(int i=0 ; i<chapterNodes.size() ; i++) {
+			chapterNodes.get(i).makeLocation(graphNodes);
+		}
+		tussenLabel1.setText(">");
+		tussenLabel2.setText(">");
+		chapterLabel.setText(ChapterGraphNode.getChapterDescription(hfstCode));
+		bookLabel.setText(BookGraphNode.getBookDescription(hfstCode.substring(0, hfstCode.lastIndexOf("-"))));
+		voorkennisButton.setVisible(true);
+	}
+	
+	public void selectVoorkennis(String hfstCode) {
+		setVoorkennisArea(true);
+		zoomFit(getHeight()/4);
+		ArrayList<GraphNode> voorkennisNodes = getVoorkennisNodes(hfstCode);
+		ArrayList<Point> pos = maakVoorkennisPosities();
+		for(int i = 0 ; i<Math.min(voorkennisNodes.size(),pos.size()) ; i++) {
+			GraphNode vkNode = voorkennisNodes.get(i);
+			vkNode.setVisible(true);
+			vkNode.setTempLocation(new Point(pos.get(i).x, pos.get(i).y));
+		}
+		voorkennisWegButton.setVisible(true);
+	}
+	
+	public void verbergVoorkennis() {
+		setVoorkennisArea(false);
+		if(selectedChapter!=null) {
+			ArrayList<GraphNode> voorkennisNodes = getVoorkennisNodes(selectedChapter);
+			for(int i = 0 ; i<voorkennisNodes.size() ; i++) {
+				GraphNode vkNode = voorkennisNodes.get(i);
+				vkNode.setVisible(false);
+				vkNode.setTempLocation(null);
+			}
+		}
+		voorkennisWegButton.setVisible(false);
+		zoomFit();
+	}
+	
+	public ArrayList<GraphNode> getVoorkennisNodes(String hfstCode) {
+		for(int i=0 ; i<chapterNodes.size() ; i++) {
+			if(hfstCode.equals(chapterNodes.get(i).getHfstCode()))
+				return chapterNodes.get(i).getVoorkennisNodes();
+		}
+		return new ArrayList<GraphNode>();
+	}
 	
 	
 //	@Override
@@ -297,9 +601,20 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		int oldWidth = getWidth();
 		int oldHeight = getHeight();
 		super.setBounds(x, y, width, height);
-		zoomFitButton.setBounds(getWidth() - 35, 5, 30, 30);
-		zoomInButton.setBounds(getWidth() - 35, 40, 30, 30);
-		zoomOutButton.setBounds(getWidth() - 35, 75, 30, 30);
+		topPanel.setBounds(0, 0, getWidth(), 26);
+		methodeChoice.setBounds(20, 2, 20, 24);
+		zoomFitButton.setBounds(getWidth() - 35, 35, 30, 30);
+		zoomInButton.setBounds(getWidth() - 35, 70, 30, 30);
+		zoomOutButton.setBounds(getWidth() - 35, 105, 30, 30);
+		voorkennisButton.setBounds(getWidth() - 165, 35, 120, 24);
+		voorkennisWegButton.setBounds(getWidth() - 200, 1, 200, 24);
+		if(voorkennisArea) {
+			topPanel.setBounds(0, getHeight()/4, getWidth(), 26);
+			methodeChoice.setBounds(20, getHeight()/4+2, 20, 24);
+			zoomFitButton.setBounds(getWidth() - 35, getHeight()/4+35, 30, 30);
+			zoomInButton.setBounds(getWidth() - 35, getHeight()/4+70, 30, 30);
+			zoomOutButton.setBounds(getWidth() - 35, getHeight()/4+105, 30, 30);
+		}
 		
 		origin.x += (getWidth() - oldWidth)/2;
 		origin.y += (getHeight() - oldHeight)/2;
@@ -373,6 +688,12 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		startX = e.getX();
 		startY = e.getY();
 		
+		if(e.getSource()==bookLabel)
+			selectBook(selectedBook);
+		
+		else if(e.getSource()==methodeLabel)
+			selectMethode((String)(methodeChoice.getSelectedItem()));
+		
 		pressedX = e.getX();
 		pressedY = e.getY();
 	}
@@ -396,30 +717,80 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		}
 		
 		ChapterGraphNode cNode = null;
+//		if(!voorkennisArea) {
+//			selectedChapterTitle = "";
+//		}
 		for(int i=0 ; i<chapterNodes.size() ; i++) {
 			if(chapterNodes.get(i).contains(ex, ey)) {
 				cNode = chapterNodes.get(i);
 				break;
 			}
 		}
+		
 		if(cNode!=null) {
-			voorkennisArea = true;
-			for(int i=0 ; i<graphNodes.size() ; i++) {
-				if(!graphNodes.get(i).hasMethodCode(cNode.getHfstCode()))
-					graphNodes.get(i).setVisible(false);
+			selectChapter(cNode.getHfstCode());
+//			setVoorkennisArea(true);
+//			selectedChapterTitle = cNode.getHfstDescription();
+//			selectedBookTitle = cNode.getBookDescription();
+//			for(int i=0 ; i<graphNodes.size() ; i++) {
+//				if(!graphNodes.get(i).hasMethodCode(cNode.getHfstCode()))
+//					graphNodes.get(i).setVisible(false);
+//			}
+//			zoomFit(getHeight()/4);
+//			for(int i=0 ; i<chapterNodes.size() ; i++) {
+//				chapterNodes.get(i).makeLocation(graphNodes);
+//			}
+//			ArrayList<GraphNode> voorkennisNodes = cNode.getVoorkennisNodes();
+//			ArrayList<Point> pos = maakVoorkennisPosities();
+//			for(int i = 0 ; i<Math.min(voorkennisNodes.size(),pos.size()) ; i++) {
+//				GraphNode vkNode = voorkennisNodes.get(i);
+//				vkNode.setVisible(true);
+//				vkNode.setTempLocation(new Point(pos.get(i).x, pos.get(i).y));
+//				
+//			}
+//			tussenLabel1.setText(">");
+//			bookLabel.setText(selectedBookTitle);
+//			tussenLabel2.setText(">");
+//			chapterLabel.setText(selectedChapterTitle);
+			return;
+		}
+		
+		BookGraphNode bNode = null;
+//		if(!bookSelected && !voorkennisArea) {
+//			selectedBookTitle = "";
+//		}
+		for(int i=0 ; i<bookNodes.size() ; i++) {
+			if(bookNodes.get(i).contains(ex, ey)) {
+				bNode = bookNodes.get(i);
+				break;
 			}
-			zoomFit(getHeight()/4);
-			for(int i=0 ; i<chapterNodes.size() ; i++) {
-				chapterNodes.get(i).makeLocation(graphNodes);
-			}
-			ArrayList<GraphNode> voorkennisNodes = cNode.getVoorkennisNodes();
-			ArrayList<Point> pos = maakVoorkennisPosities();
-			for(int i = 0 ; i<Math.min(voorkennisNodes.size(),pos.size()) ; i++) {
-				GraphNode vkNode = voorkennisNodes.get(i);
-				vkNode.setVisible(true);
-				vkNode.setTempLocation(new Point(pos.get(i).x, pos.get(i).y));
-				
-			}
+		}
+		
+		if(bNode!=null && !voorkennisArea) {
+			selectBook(bNode.getBookCode());
+//			bookSelected = true;
+//			selectedBNode = bNode;
+//			selectedBookTitle = bNode.getBookDescription();
+//			for(int i=0 ; i<graphNodes.size() ; i++) {
+//				if(!graphNodes.get(i).hasBookCode(bNode.getBookCode()))
+//					graphNodes.get(i).setVisible(false);
+//			}
+//			for(int i=0 ; i<chapterNodes.size() ; i++) {
+//				chapterNodes.get(i).makeLocation(graphNodes);
+//			}
+//			for(int i=0 ; i<bookNodes.size() ; i++) {
+//				bookNodes.get(i).makeLocation(chapterNodes);
+//			}
+////			for(int i=0 ; i<chapterNodes.size() ; i++) {
+////				if(!chapterNodes.get(i).getBookCode().equals(cNode.getBookCode()))
+////					chapterNodes.get(i).setVisible(false);
+////			}
+//			zoomFit();
+//			tussenLabel1.setText(">");
+//			bookLabel.setText(selectedBookTitle);
+//			tussenLabel2.setText("");
+//			chapterLabel.setText("");
+			return;
 		}
 
 	}
@@ -468,6 +839,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		searchEdges(leaves, graphMap, edges);
 		setGraphEdges(edges);
 		modelJustSet = true;
+		setVoorkennisArea(false);
 //		if(getParent()!=null) {
 //			zoomFit();
 //		}
@@ -590,11 +962,27 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	
 	public void setVoorkennisArea(boolean b) {
 		voorkennisArea = b;
+		if(b) {
+			topPanel.setBounds(0, getHeight()/4, getWidth(), 26);
+			methodeChoice.setBounds(20, getHeight()/4+2, 20, 24);
+			zoomFitButton.setBounds(getWidth() - 35, getHeight()/4+35, 30, 30);
+			zoomInButton.setBounds(getWidth() - 35, getHeight()/4+70, 30, 30);
+			zoomOutButton.setBounds(getWidth() - 35, getHeight()/4+105, 30, 30);
+			repaint();
+		}
+		else {
+			topPanel.setBounds(0, 0, getWidth(), 26);
+			methodeChoice.setBounds(20, 2, 20, 24);
+			zoomFitButton.setBounds(getWidth() - 35, 35, 30, 30);
+			zoomInButton.setBounds(getWidth() - 35, 70, 30, 30);
+			zoomOutButton.setBounds(getWidth() - 35, 105, 30, 30);
+			repaint();
+		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource()==zoomInButton) {
+		if(e.getSource()==zoomInButton && factor<1) {
 			factor = 1.2*factor;
 			origin.x = (int)(getWidth()/2 + (origin.x - getWidth()/2)*1.2);
 			origin.y = (int)(getHeight()/2 + (origin.y - getHeight()/2)*1.2);
@@ -607,15 +995,41 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			repaint();
 		}
 		if(e.getSource()==zoomFitButton) {
-			for(int i=0 ; i<graphNodes.size() ; i++) {
-					graphNodes.get(i).setVisible(true);
-			}
-			zoomFit();
-			for(int i=0 ; i<chapterNodes.size() ; i++) {
-				chapterNodes.get(i).makeLocation(graphNodes);
-			}
-			voorkennisArea = false;
+//			for(int i=0 ; i<graphNodes.size() ; i++) {
+//					graphNodes.get(i).setVisible(true);
+//			}
+			if(voorkennisArea)
+				zoomFit(getHeight()/4);
+			else
+				zoomFit();
+//			for(int i=0 ; i<chapterNodes.size() ; i++) {
+//				chapterNodes.get(i).makeLocation(graphNodes);
+//			}
+//			for(int i=0 ; i<chapterNodes.size() ; i++) {
+//				chapterNodes.get(i).makeLocation(graphNodes);
+//			}
+//			for(int i=0 ; i<bookNodes.size() ; i++) {
+//				bookNodes.get(i).makeLocation(chapterNodes);
+//			}
+//			setVoorkennisArea(false);
+			//bookSelected = false;
+			//selectedBNode = null;
+//			tussenLabel1.setText("");
+//			bookLabel.setText("");
+//			tussenLabel2.setText("");
+//			chapterLabel.setText("");
 		}
+		if(e.getSource()==voorkennisButton) {
+			voorkennisWegButton.setVisible(true);
+			voorkennisButton.setVisible(false);
+			selectVoorkennis(selectedChapter);
+		}
+		if(e.getSource()==voorkennisWegButton) {
+			voorkennisWegButton.setVisible(false);
+			voorkennisButton.setVisible(true);
+			verbergVoorkennis();
+		}
+		
 	}
 	
 	public void zoomFit() {
@@ -632,8 +1046,8 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		int yMin = 10000;//graphNodes.get(0).getLocation().y;
 		
 		for (int i = 0; i < graphNodes.size(); i++) {
-			graphNodes.get(i).setTempLocation(null);
-			if(graphNodes.get(i).isVisible() && graphNodes.get(i).getLocation()!=null) {
+			//graphNodes.get(i).setTempLocation(null);
+			if(graphNodes.get(i).isVisible() && graphNodes.get(i).getLocation()!=null && graphNodes.get(i).getTempLocation()==null) {
 				if(xMax < graphNodes.get(i).getLocation().x)
 					xMax = graphNodes.get(i).getLocation().x;
 				if(yMax < graphNodes.get(i).getLocation().y)
@@ -651,6 +1065,8 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		int ruimteY = getHeight() - (int)((yMax-yMin)*factor) - (int)(vkHeight);
 		origin.x = ruimteX/2 + (int)(-xMin*factor);
 		origin.y = (int)(vkHeight) + ruimteY/2 + (int)(-yMin*factor);
+		if (voorkennisArea)
+			origin.y +=10;
 		repaint();
 	}
 	

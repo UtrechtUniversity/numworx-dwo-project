@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui.domainmodel.graph;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -10,28 +11,39 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class ChapterGraphNode {
 	
 	private static HashMap<String, String> hfstDescriptionsMap;
 	public static String[] hfstCodes = {
-			"Getal&Ruimte1HV1",
-			"Getal&Ruimte1HV2",
-			"Getal&Ruimte1HV3",
-			"Getal&Ruimte1HV4",
-			"Getal&Ruimte1HV5",
-			"Getal&Ruimte1HV6",
-			"Getal&Ruimte1HV7",
-			"Getal&Ruimte1HV8",
-			"Getal&Ruimte1HV9",
-//			"Getal&Ruimte2HV1",
-//			"Getal&Ruimte2HV2",
-//			"Getal&Ruimte2HV3",
-//			"Getal&Ruimte2HV4",
-//			"Getal&Ruimte2HV5",
-//			"Getal&Ruimte2HV6",
-//			"Getal&Ruimte2HV7",
-//			"Getal&Ruimte2HV8"
+			"Getal&Ruimte-1HV-1",
+			"Getal&Ruimte-1HV-2",
+			"Getal&Ruimte-1HV-3",
+			"Getal&Ruimte-1HV-4",
+			"Getal&Ruimte-1HV-5",
+			"Getal&Ruimte-1HV-6",
+			"Getal&Ruimte-1HV-7",
+			"Getal&Ruimte-1HV-8",
+			"Getal&Ruimte-1HV-9",
+			"Getal&Ruimte-2HV-1",
+			"Getal&Ruimte-2HV-2",
+			"Getal&Ruimte-2HV-3",
+			"Getal&Ruimte-2HV-4",
+			"Getal&Ruimte-2HV-5",
+			"Getal&Ruimte-2HV-6",
+			"Getal&Ruimte-2HV-7",
+			"Getal&Ruimte-2HV-8",
+			"Getal&Ruimte-3V-1",
+			"Getal&Ruimte-3V-2",
+			"Getal&Ruimte-3V-3",
+			"Getal&Ruimte-3V-4",
+			"Getal&Ruimte-3V-5",
+			"Getal&Ruimte-3V-6",
+			"Getal&Ruimte-3V-7",
+			"Getal&Ruimte-3V-8",
+			"Getal&Ruimte-3V-9"
 	};
 	public static String[] hfstDescriptions = {
 			"H1 - Figuren",
@@ -43,14 +55,23 @@ public class ChapterGraphNode {
 			"H7 - Vlakke figuren",
 			"H8 - Herleiden en machten",
 			"H9 - Meten",
-//			"H1 - Rekenen met letters",
-//			"H2 - Vlakke meetkunde",
-//			"H3 - Lineaire formules en vergelijkingen",
-//			"H4 - Kwadraten en wortels",
-//			"H5 - De stelling van Pythagoras",
-//			"H6 - Procenten en diagrammen",
-//			"H7 - Kwadratische vergelijkingen",
-//			"H8 - Inhoud en vergroten",
+			"H1 - Rekenen met letters",
+			"H2 - Vlakke meetkunde",
+			"H3 - Lineaire formules en vergelijkingen",
+			"H4 - Kwadraten en wortels",
+			"H5 - De stelling van Pythagoras",
+			"H6 - Procenten en diagrammen",
+			"H7 - Kwadratische vergelijkingen",
+			"H8 - Inhoud en vergroten",
+			"H1 - Lineaire problemen",
+			"H2 - Gelijkvormigheid",
+			"H3 - Kwadratische problemen",
+			"H4 - Statistiek en procenten",
+			"H5 - Vergelijkingen en ongelijkheden",
+			"H6 - Vaardigheden en vergelijkingen",
+			"H7 - Goniometrie",
+			"H8 - Allerlei verbanden",
+			"H9 - Spreiding tellen en kans"
 			
 	};
 	private static Color defaultNodeColor = LeerdomeinGraphPanel.colorBlue4;
@@ -75,6 +96,10 @@ public class ChapterGraphNode {
 	private ArrayList<GraphEdge> voorkennisEdges = new ArrayList<GraphEdge>();
 	
 	private boolean visible = true;
+	
+	public static String getChapterDescription(String hfstCode) {
+		return hfstDescriptionsMap.get(hfstCode);
+	}
 	
 	public ChapterGraphNode(String hfstCode, ArrayList<GraphNode> graphNodes, ArrayList<GraphEdge> graphEdges) {
 		if(hfstDescriptionsMap==null) {
@@ -115,6 +140,8 @@ public class ChapterGraphNode {
 	public boolean hasBookCode(String bookCode) {
 		return hfstCode.contains(bookCode);
 	}
+	
+	
 	
 	public void setVoorkennis(ArrayList<GraphEdge> graphEdges) {
 		for (GraphEdge edge : graphEdges) {
@@ -158,6 +185,7 @@ public class ChapterGraphNode {
 			g.setColor(nodeColor);
 			g.fillOval(rx-size/2, ry-size/2, size, size);
 			g.setColor(nodeBorderColor);
+			g.setStroke(new BasicStroke(10f*(float)factor));
 			g.drawOval(rx-size/2, ry-size/2, size, size);
 			String label = hfstDescriptionsMap.get(hfstCode);
 			int textLength = fm.stringWidth(label);
@@ -214,6 +242,18 @@ public class ChapterGraphNode {
 	
 	public String getHfstCode() {
 		return hfstCode;
+	}
+	
+	public String getHfstDescription() {
+		return hfstDescriptionsMap.get(hfstCode);
+	}
+	
+	public String getBookCode() {
+		return hfstCode.substring(0,hfstCode.lastIndexOf("-"));
+	}
+	
+	public String getBookDescription() {
+		return BookGraphNode.bookDescriptionsMap.get(getBookCode());
 	}
 	
 	public boolean isVisible() {
