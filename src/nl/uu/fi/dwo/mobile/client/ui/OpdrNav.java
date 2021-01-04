@@ -2852,4 +2852,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		map.put("premium", DWOplayer.isPremium());
 		return JSONUtilities.wrapMap(map);
 	}
+
+  public void setOpdrachtButtonWidth(int width) { // fix roundoff errors
+    for( Widget  w: buttons) {
+      w.setPixelSize(width, -1);
+    }   
+  }
 }

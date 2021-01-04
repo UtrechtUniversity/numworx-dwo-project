@@ -323,7 +323,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			if(newMaxOnBar != lastmax) {
 				lastmax = newMaxOnBar;		
 				on.setMaxOnBar(newMaxOnBar);
-			}
+		        on.setOpdrachtButtonWidth(widthOpdrachtBol);
+		}
 		}
 	}
 		
