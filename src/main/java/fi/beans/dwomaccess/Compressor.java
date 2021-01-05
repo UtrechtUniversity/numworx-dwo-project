@@ -98,7 +98,11 @@ public class Compressor implements Predicate<String> {
 	private boolean tagValue(String key, Map map) {
 		Object value = map.get(key);
 		if(value != null && !"".equals(value)) {
-			keys.add(value.toString());
+			key = value.toString();
+            keys.add(key);
+            int k = key.indexOf(SUFFIX);
+            if (k > 0) 
+              keys.add(key.substring(0,k));         
 			return true;
 		}
 		return false;
