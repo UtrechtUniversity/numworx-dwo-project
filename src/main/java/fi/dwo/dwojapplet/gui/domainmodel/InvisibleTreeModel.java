@@ -3,7 +3,7 @@ package fi.dwo.dwojapplet.gui.domainmodel;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 
-class InvisibleTreeModel extends DefaultTreeModel {
+public class InvisibleTreeModel extends DefaultTreeModel {
 
   protected boolean filterIsActive;
 

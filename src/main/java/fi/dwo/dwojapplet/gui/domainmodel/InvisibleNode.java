@@ -5,7 +5,7 @@ import java.util.Enumeration;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
-class InvisibleNode extends DefaultMutableTreeNode {
+public class InvisibleNode extends DefaultMutableTreeNode {
 
   protected boolean isVisible;
 

@@ -22,6 +22,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -35,9 +36,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
 
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JComboBox;
+import fi.dwo.dwojapplet.gui.domainmodel.InvisibleNode;
+import fi.dwo.dwojapplet.gui.domainmodel.InvisibleTreeModel;
 import fi.dwo.dwojapplet.gui.domainmodel.NodeLeaf;
 
 public class Graph extends JPanel implements MouseListener, MouseMotionListener, ActionListener {
@@ -871,6 +875,11 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	private void searchNodes(TreeModel model, Object node, Map<String, GraphNode> graphMap, String parent, 	List<NodeLeaf> leaves) {
 		if (model.isLeaf(node)) {
 			DefaultMutableTreeNode object = (DefaultMutableTreeNode) node;
+			boolean visible = true;
+			boolean active = false;
+			if (model instanceof InvisibleTreeModel) active = ((InvisibleTreeModel) model).isActivatedFilter();
+			if (active && object instanceof InvisibleNode )
+			  visible = ((InvisibleNode) object).isVisible();
 			node = object.getUserObject();
 			if (node instanceof NodeLeaf) {
 				NodeLeaf leaf = (NodeLeaf) node;
@@ -885,27 +894,31 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 					GraphNode g = new GraphNode(id, parent, leaf.toString(), null);
 					graphMap.put(id, g);
 					leaves.add(leaf);
+					g.setVisible(visible);
 				}
 				else {
 					GraphNode g = new GraphNode(id, parent, leaf.toString(), x.intValue(), y.intValue());
 					g.setMethodeInfo(leaf.getMethode());
+					g.setVisible(visible);
 					graphMap.put(id, g);
 					leaves.add(leaf);
+					
 				}
+				
 				//System.out.println("Methode: "+leaf.getMethode().get("Getal&Ruimte"));
 			}
 			return;
 		}
 		// Non leaf
-		int count = model.getChildCount(node);
 		parent = node.toString(); // Of zo iets
 		int col = parent.indexOf(':');
 		if (col < 0)
 			parent = "";
 		else
 			parent = parent.substring(0, col);
-		for (int i = 0; i < count; i++) {
-			Object child = model.getChild(node, i);
+		Enumeration<?> objects = ((TreeNode)node).children();
+		while (objects.hasMoreElements()) {
+			Object child = objects.nextElement();
 			searchNodes(model, child, graphMap, parent, leaves);
 		}
 	}
@@ -951,9 +964,9 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			}
 			return;
 		}
-		int count = model.getChildCount(node);
-		for (int i = 0; i < count; i++) {
-			Object child = model.getChild(node, i);
+		Enumeration<?> objects = ((TreeNode)node).children();
+		while (objects.hasMoreElements()) {
+			Object child = objects.nextElement();
 			updateNodes(model, child, graphMap, edgeMap);
 		}
 
