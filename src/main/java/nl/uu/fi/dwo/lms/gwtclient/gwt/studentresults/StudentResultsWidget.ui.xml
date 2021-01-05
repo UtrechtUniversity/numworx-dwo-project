@@ -18,8 +18,7 @@
 		height: 100%;
 	}
 
-	.right {
-		float: right;
+	.graph {
 		margin-top: 0.6em;
 	}
 	
@@ -53,6 +52,8 @@
 	    border-bottom-left-radius: 4px;
 	    background-color: white;
 	}
+	.tree {
+	}
 
 	</ui:style>
 	<g:SplitLayoutPanel styleName='{style.fullheight}'>
@@ -65,9 +66,9 @@
 			  	</g:ListBox>
 			   </g:FlowPanel>
 			  </g:north>
-			  <g:south size="2.4"><g:FlowPanel></g:FlowPanel></g:south>
+			  <g:south size="2.4"><g:FlowPanel><g:Button ui:field='btn' styleName='{style.graph}'>Graph</g:Button></g:FlowPanel></g:south>
 			  <g:center>
-				<g:ScrollPanel addStyleNames='{style.border}'>
+				<g:ScrollPanel addStyleNames='{style.tree}'>
 					<g:Tree ui:field='tree'>
 					</g:Tree>	
 				</g:ScrollPanel>
@@ -84,7 +85,7 @@
 					<g:InlineLabel ui:field='perc' styleName='{style.greenperc}' />
 				  </g:FlowPanel>
 				</g:north>
-				<g:south size="2.4"><g:FlowPanel><g:Button ui:field='btn' styleName='{style.right}'>Graph</g:Button></g:FlowPanel></g:south>
+<!-- 				<g:south size="2.4"><g:FlowPanel></g:FlowPanel></g:south> -->
 				<g:center>
 					<g:SimpleLayoutPanel styleName='{style.border}' ui:field='description' />
 				</g:center>
