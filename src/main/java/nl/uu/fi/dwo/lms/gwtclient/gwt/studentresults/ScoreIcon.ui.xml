@@ -28,6 +28,18 @@
 	 <g:center>
 		<g:InlineLabel styleName='score-title' ui:field='title'>title</g:InlineLabel>
 	 </g:center>
+	 <g:west size='16'>
+	 	<s:SVGImage ui:field='icon'>
+			<svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+				 viewBox="0 0 1024 1024" style="enable-background:new 0 0 1024 1024;" xml:space="preserve">
+			<g image-rendering="optimizeQuality" shape-rendering="geometricPrecision">
+				<path style='fill:#FFFFFF' d="M128,64h523c35.2,0,65.6,12.6,90.5,37.5l117,117c24.9,24.9,37.5,55.3,37.5,90.5v651H128V64z"/>
+				<path style='fill:#314770' d="M128,64h523c35.2,0,65.6,12.6,90.5,37.5l117,117c24.9,24.9,37.5,55.3,37.5,90.5v651H128V64z
+					 M704,160v96h96L704,160z M192,128v768h640V352c0-17.6-14.4-32-32-32H640V160c0-17.6-14.4-32-32-32H192z"/>
+			</g>
+			</svg>
+		</s:SVGImage>
+	 </g:west>
 	 <g:east size="100">
 	<s:SVGImage ui:field="image">
 		<svg 	class='score-template {style.svg}'

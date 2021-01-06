@@ -16,6 +16,7 @@
 	}
 	.fullheight {
 		height: 100%;
+		position: relative;
 	}
 
 	.graph {
@@ -54,11 +55,13 @@
 	}
 	.tree {
 	}
+	.west {
+	}
 
 	</ui:style>
-	<g:SplitLayoutPanel styleName='{style.fullheight}'>
-		<g:west size="500">
-			<g:DockLayoutPanel unit='EM'>
+	<g:DockLayoutPanel unit='PX' styleName='{style.fullheight}'>
+		<g:center>
+			<g:DockLayoutPanel unit='EM' addStyleNames="{style.west}">
 			  <g:north size="2">
 			   <g:FlowPanel>
 			  	<g:ListBox ui:field='models' addStyleNames="{style.models}">
@@ -74,22 +77,21 @@
 				</g:ScrollPanel>
 			</g:center>
 			</g:DockLayoutPanel>
-		</g:west>
-		<g:center>
-			<g:DockLayoutPanel unit='EM'  >
+		</g:center>
+		<g:east size='440'>
+			<g:DockLayoutPanel ui:field='east' unit='EM' >
 				<g:north size="2"><g:FlowPanel><g:InlineLabel styleName='{style.title}' ui:field='title'></g:InlineLabel></g:FlowPanel></g:north>
 				<g:north size='3'>
 				  <g:FlowPanel ui:field='north'>
-					<g:InlineLabel ui:field='redPerc' styleName='{style.perc}'></g:InlineLabel>
-						<g:SimplePanel styleName='{style.icon}' ui:field='outer' />
+					<g:InlineLabel ui:field='redPerc' styleName='{style.perc}'/>
+					<g:SimplePanel styleName='{style.icon}' ui:field='outer' />
 					<g:InlineLabel ui:field='perc' styleName='{style.greenperc}' />
 				  </g:FlowPanel>
 				</g:north>
-<!-- 				<g:south size="2.4"><g:FlowPanel></g:FlowPanel></g:south> -->
 				<g:center>
 					<g:SimpleLayoutPanel styleName='{style.border}' ui:field='description' />
 				</g:center>
 			</g:DockLayoutPanel>
-		</g:center>
-	</g:SplitLayoutPanel>
+		</g:east>
+	</g:DockLayoutPanel>
 </ui:UiBinder> 

@@ -15,6 +15,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.ListBox;
@@ -44,6 +45,7 @@ public class StudentResultsWidget extends Composite {
 	@UiField SimplePanel outer;
 	@UiField ListBox models;
 	@UiField Button btn;
+	@UiField DockLayoutPanel east;
 
 	void setPerc(DomStudentModelScore<?> s) {
 		Widget sh = s.getChildren() == null

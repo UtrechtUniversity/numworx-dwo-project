@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import org.osgi.util.promise.Promise;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -17,12 +18,10 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
-import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.ResizeLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
@@ -107,12 +106,14 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		
 		@Override
 		public void onChange(ChangeEvent event) {
-			int selection = widget.get().models.getSelectedIndex();
+			final StudentResultsWidget w = widget.get();
+			int selection = w.models.getSelectedIndex();
 			LOG.info("selection = " + selection);
-			widget.get().tree.removeItems();
-			widget.get().title.setText("");
-			widget.get().description.clear();
-			widget.get().setPerc(NULLSCORE);
+			w.tree.removeItems();
+			w.title.setText("");
+			w.description.clear();
+			w.setPerc(NULLSCORE);
+			w.east.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
 			current = null;
 			if (selection == 0) return;
 			DomStudentModelContext item = list.get(selection-1);
@@ -145,8 +146,9 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		service.getScore(item).then(s -> {
           DomStudentModelStructureScore score = s.getValue().getDomStudentModelStructureScore();
           ti.setWidget(Util.summaryItem(title, score ,0));
-          ti.setSelected(true);
+          //ti.setSelected(true);
           addToTree(ti, item);
+          ti.setState(true);
 		  return s;
 		});
 	}
@@ -158,13 +160,6 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		json.put("id", new JSONString(item.getId().getIdString()));
 		SwitchViewEvent ev = new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTRESULTSGRAPH, json.getJavaScriptObject());
 		eventBus.fireEvent(ev);
-//		showGraph = !showGraph;
-//		if(showGraph) {
-//			widget.get().description.setWidget(graph.get());
-//			graph.get().setModelScore(item, service.getScore(item));
-//		} else {
-//			setDescription(item.getModelStructure().getInfo());
-//		}
 	}
 	
 	Promise<?> getModels(Promise<List<DomStudentModelContext>> p) {
@@ -174,6 +169,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		Tree tree = w.tree;
 		w.description.clear();
 		w.title.setText("");
+		w.east.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
 		tree.removeItems();
 		String first = w.models.getItemText(0);
 		w.models.clear();
@@ -197,6 +193,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	@Override
 	public void onSelection(SelectionEvent<TreeItem> event) {
 		TreeItem item = event.getSelectedItem();
+		widget.get().east.getElement().getStyle().clearVisibility();
 		LOG.info("selected " + item);
 		Object userObject = item.getUserObject();
 		if (userObject instanceof DomStudentModelContext) {

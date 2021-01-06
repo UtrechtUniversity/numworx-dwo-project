@@ -34,7 +34,7 @@ public class ScoreIcon extends ResizeComposite {
 	  @UiField HasText title;
 	  @UiField OMSVGRectElement r01,r02,r03,r04;
 	  @UiField OMSVGGElement poly;
-	  @UiField Widget image;
+	  @UiField Widget image, icon;
 	  private DockLayoutPanel root;
 	  
 	/**
@@ -65,6 +65,7 @@ public class ScoreIcon extends ResizeComposite {
 		if (title.isEmpty())
 		{
 			root.setWidgetSize(image, 200);
+			root.setWidgetHidden(icon, true);
 			root.setStylePrimaryName("score-modelItem");
 		}
 		

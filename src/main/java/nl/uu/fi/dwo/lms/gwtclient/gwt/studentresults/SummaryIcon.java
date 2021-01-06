@@ -4,6 +4,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
 import org.vectomatic.dom.svg.OMSVGRectElement;
+import org.vectomatic.dom.svg.ui.SVGImage;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
@@ -33,7 +34,7 @@ public class SummaryIcon extends ResizeComposite {
 	  @UiField InlineLabel title;
 	  @UiField OMSVGRectElement r01,r02,r03,r04,r05,r06,r07,r08,r09,r10,r11,r12,r13,r14,r15,r16,r17,r18,r19,r20;
 	  @UiField SummaryIconCSS style;
-	  @UiField Widget image;
+	  @UiField SVGImage image, icon;
 	  private DockLayoutPanel root;
 	  
 	  private OMSVGRectElement r[] = new OMSVGRectElement[20];
@@ -72,6 +73,8 @@ public class SummaryIcon extends ResizeComposite {
 		if (title.isEmpty()) {
 			root.setWidgetSize(image, 200);
 			root.setStylePrimaryName("score-modelItem");
+			root.setWidgetHidden(icon, true);
+			//image.getSvgElement().addClassNameBaseVal("score-modelItem");
 		}
 			
 		
@@ -103,5 +106,9 @@ public class SummaryIcon extends ResizeComposite {
 			r[i].setClassNameBaseVal(s);
 		}
 		
+	}
+	
+	public Widget imageOnly() {
+		return image;
 	}
 }

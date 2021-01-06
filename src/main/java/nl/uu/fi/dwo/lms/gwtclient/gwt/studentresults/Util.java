@@ -67,7 +67,9 @@ public class Util {
 	
 	static Widget summaryItem(String title, DomStudentModelScore<?>s, int level) {
 		level = Math.max(MAX_LEVEL - level, 0);
-		return new SummaryIcon(title, s, level);
+		SummaryIcon summaryIcon = new SummaryIcon(title, s, level);
+		//if (title.isEmpty()) return summaryIcon.imageOnly();
+		return summaryIcon;
 	}
 
 	static Widget scoreItem(String title, DomStudentModelScore<?>s, int level) {
