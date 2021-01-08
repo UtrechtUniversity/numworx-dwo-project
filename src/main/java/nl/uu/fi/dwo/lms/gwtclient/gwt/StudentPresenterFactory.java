@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import javax.inject.Inject;
 
+import dagger.Lazy;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
@@ -41,8 +42,8 @@ public class StudentPresenterFactory implements PresenterFactory {
   @Inject AccountPresenter accountPresenter;
   @Inject ModulesPresenter modulesPresenter;
   @Inject StudentSchoolclassPresenter studentSchoolclassPresenter;
-  @Inject StudentResultsPresenter studentResultsPresenter;
-  @Inject StudentResultsGraphPresenter studentResultsGraphPresenter;
+  @Inject Lazy<StudentResultsPresenter> studentResultsPresenter;
+  @Inject Lazy<StudentResultsGraphPresenter> studentResultsGraphPresenter;
 
   @Override  @JsMethod
   public StudentSchoolclassPresenter getStudentSchoolclassPresenter() {
@@ -119,12 +120,12 @@ public class StudentPresenterFactory implements PresenterFactory {
 
   @Override @JsMethod
   public StudentResultsPresenter getResultsPresenter() {
-    return studentResultsPresenter;
+    return studentResultsPresenter.get();
   }
   
   @JsMethod @Override
   public StudentResultsGraphPresenter getResultsGraphPresenter() {
-	  return studentResultsGraphPresenter;
+	  return studentResultsGraphPresenter.get();
   }
 
   @Override @JsMethod
