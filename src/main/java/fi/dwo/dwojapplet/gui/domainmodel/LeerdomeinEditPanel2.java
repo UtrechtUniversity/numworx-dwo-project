@@ -663,6 +663,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		tree = new JTree(model);
         graph = new EditableGraph();
         graph.addActionListener(new GraphTreeAction(tree));
+        graph.addActionListener(this::graphActionPerformed);
 
 		TreeCellRenderer renderer = new TreeCellRenderer();
 		renderer.updateUI();
@@ -1290,6 +1291,37 @@ public class LeerdomeinEditPanel2 extends JPanel
 //			graph.setModel(model);
 //		}
 //	}
+	private void graphActionPerformed(ActionEvent ev) {
+	  if("filter".equals(ev.getActionCommand())) {
+	    Set<String> visible = graph.getVisibleNodes(); // id's of visible nodes
+        model.activateFilter(true);
+        model.setRoot(filter(root, visible));
+	  }
+	}
 
+    private static InvisibleNode filter(DefaultMutableTreeNode parent, Set<String> visible) {
+      InvisibleNode node;
+      if (!(parent instanceof InvisibleNode)) {
+          node = new InvisibleNode(parent.getUserObject());
+          node.setAllowsChildren(parent.getAllowsChildren());
+          Enumeration<?> children = parent.children();
+          while (children.hasMoreElements()) {
+              DefaultMutableTreeNode object = (DefaultMutableTreeNode) children.nextElement();
+              node.add(filter(object, visible));
+          }
+      } else {
+          node = (InvisibleNode) parent;
+      }
+      if (node.isLeaf() && !node.getAllowsChildren()) {
+          NodeLeaf leaf = (NodeLeaf) node.getUserObject();
+          String id = leaf.getId();
+          node.setVisible(visible.contains(id));
+      } else {
+          int cnt = node.getChildCount(true);
+          node.setVisible(cnt != 0);
+      }
+
+      return node;
+    }
 
 }
