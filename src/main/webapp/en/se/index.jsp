@@ -4,9 +4,10 @@
 <!DOCTYPE html>
 <% 
 	int profile = 92;
+	long tstamp = System.currentTimeMillis();
 	String query = request.getQueryString();
 	if(query == null)
-	 	query = "?base=/en/se/&locale=en&profile=" + profile;
+	 	query = "?base=/en/se/&locale=en&profile=" + profile + "&t=" + tstamp;
 	else 
 	  	query = "?base=/en/se/&locale=en&profile=" + profile + "&" + query;
 	String hash = request.getParameter("hash");

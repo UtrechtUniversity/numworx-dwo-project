@@ -4,8 +4,9 @@
 <%@ page import='java.util.regex.*' %>
 <%@ include file="/dwo/saml_util.jsp" %>
 <%
-	String query ;	
-	query = "?base=" + base + "&locale=" + locale + "&profile=" + profile;
+	String query ;
+	long tstamp = System.currentTimeMillis();
+	query = "?base=" + base + "&locale=" + locale + "&profile=" + profile + "&t=" + tstamp;
 	
 	Cookie[] cookies = wrap.getCookies();
 	String u = null, o = null, t = null;
