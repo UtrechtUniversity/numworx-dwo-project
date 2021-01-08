@@ -36,7 +36,7 @@
         <maven.test.skip>true</maven.test.skip>
         <tomcat7.version>7.0.76</tomcat7.version>
         <context.xml>context-dwo_devel.xml</context.xml>
-        <copy.ui.skip>false</copy.ui.skip>
+        <copy.ui.skip>true</copy.ui.skip>
         <registerVersion>2.3.7</registerVersion>
         <gwtModule>nl.uu.fi.dwo.lms.gwtclient.gwtclient</gwtModule>
         <local.dwo>/dwo</local.dwo>
