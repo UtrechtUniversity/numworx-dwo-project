@@ -28,7 +28,7 @@
 	}
 	.icon {
 		display: inline-block;
-		width: 200px;
+		width: 210px;
 	}
 	.title {
 		margin-left: 1em;

@@ -33,30 +33,32 @@
 	</g>
 </svg></s:SVGImage>
 	</g:west>
-	<g:east size="100">
+	<g:east size="105">
 	<s:SVGImage ui:field="image">
 		<svg 	class='score-template {style.svg}'
-				viewBox="-1 0 140 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
-			<rect ui:field='r01' x='0' y='0' width='5' height='10' class='{style.green}'/>
-			<rect ui:field='r02' x='7' y='0' width='5' height='10' class='{style.green}'/>
-			<rect ui:field='r03' x='14' y='0' width='5' height='10' class='{style.green}'/>
-			<rect ui:field='r04' x='21' y='0' width='5' height='10' class='{style.green}'/>
-			<rect ui:field='r05' x='28' y='0' width='5' height='10' class='{style.green}'/>
-			<rect ui:field='r06' x='35' y='0' width='5' height='10' class='{style.green}'/>
-			<rect ui:field='r07' x='42' y='0' width='5' height='10' class='{style.green}'/>
-			<rect ui:field='r08' x='49' y='0' width='5' height='10' class='{style.green}'/>
-			<rect ui:field='r09' x='56' y='0' width='5' height='10' class='{style.red}'/>
-			<rect ui:field='r10' x='63' y='0' width='5' height='10' class='{style.red}'/>
-			<rect ui:field='r11' x='70' y='0' width='5' height='10' class='{style.red}'/>
-			<rect ui:field='r12' x='77' y='0' width='5' height='10' class='{style.red}'/>
-			<rect ui:field='r13' x='84' y='0' width='5' height='10' class='{style.red}'/>
-			<rect ui:field='r14' x='91' y='0' width='5' height='10' class='{style.red}'/>
-			<rect ui:field='r15' x='98' y='0' width='5' height='10' class='{style.white}'/>
-			<rect ui:field='r16' x='105' y='0' width='5' height='10' class='{style.white}'/>
-			<rect ui:field='r17' x='112' y='0' width='5' height='10' class='{style.white}'/>
-			<rect ui:field='r18' x='119' y='0' width='5' height='10' class='{style.white}'/>
-			<rect ui:field='r19' x='126' y='0' width='5' height='10' class='{style.white}'/>
-			<rect ui:field='r20' x='134' y='0' width='5' height='10' class='{style.white}'/>
+				viewBox="-6 0 210 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+	     <g ui:field='scale' transform='scale(2,1)' >
+			<rect ui:field='r01' x='0' y='0' width='4' height='8' class='{style.green}'/>
+			<rect ui:field='r02' x='5' y='0' width='4' height='8' class='{style.green}'/>
+			<rect ui:field='r03' x='10' y='0' width='4' height='8' class='{style.green}'/>
+			<rect ui:field='r04' x='15' y='0' width='4' height='8' class='{style.green}'/>
+			<rect ui:field='r05' x='20' y='0' width='4' height='8' class='{style.green}'/>
+			<rect ui:field='r06' x='25' y='0' width='4' height='8' class='{style.green}'/>
+			<rect ui:field='r07' x='30' y='0' width='4' height='8' class='{style.green}'/>
+			<rect ui:field='r08' x='35' y='0' width='4' height='8' class='{style.green}'/>
+			<rect ui:field='r09' x='40' y='0' width='4' height='8' class='{style.red}'/>
+			<rect ui:field='r10' x='45' y='0' width='4' height='8' class='{style.red}'/>
+			<rect ui:field='r11' x='50' y='0' width='4' height='8' class='{style.red}'/>
+			<rect ui:field='r12' x='55' y='0' width='4' height='8' class='{style.red}'/>
+			<rect ui:field='r13' x='60' y='0' width='4' height='8' class='{style.red}'/>
+			<rect ui:field='r14' x='65' y='0' width='4' height='8' class='{style.red}'/>
+			<rect ui:field='r15' x='70' y='0' width='4' height='8' class='{style.white}'/>
+			<rect ui:field='r16' x='75' y='0' width='4' height='8' class='{style.white}'/>
+			<rect ui:field='r17' x='80' y='0' width='4' height='8' class='{style.white}'/>
+			<rect ui:field='r18' x='85' y='0' width='4' height='8' class='{style.white}'/>
+			<rect ui:field='r19' x='90' y='0' width='4' height='8' class='{style.white}'/>
+			<rect ui:field='r20' x='95' y='0' width='4' height='8' class='{style.white}'/>
+		  </g>
 		</svg>
 	</s:SVGImage></g:east>
 	</g:DockLayoutPanel>

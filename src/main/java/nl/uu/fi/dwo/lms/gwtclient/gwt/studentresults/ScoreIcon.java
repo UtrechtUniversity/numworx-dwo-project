@@ -4,6 +4,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
 import org.vectomatic.dom.svg.OMSVGGElement;
+import org.vectomatic.dom.svg.OMSVGRect;
 import org.vectomatic.dom.svg.OMSVGRectElement;
 
 import com.google.gwt.core.client.GWT;
@@ -26,14 +27,14 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
 public class ScoreIcon extends ResizeComposite {
 
 	private static ScoreIconUiBinder uiBinder = GWT.create(ScoreIconUiBinder.class);
-	private static final float WIDTH = 180f;
+	private static final float WIDTH = 100f;
 	
 	interface ScoreIconUiBinder extends UiBinder<DockLayoutPanel, ScoreIcon> {
 	}
 
 	  @UiField HasText title;
 	  @UiField OMSVGRectElement r01,r02,r03,r04;
-	  @UiField OMSVGGElement poly;
+	  @UiField OMSVGGElement poly, scale;
 	  @UiField Widget image, icon;
 	  private DockLayoutPanel root;
 	  
@@ -64,9 +65,14 @@ public class ScoreIcon extends ResizeComposite {
 		setText(title);
 		if (title.isEmpty())
 		{
-			root.setWidgetSize(image, 200);
+			root.setWidgetSize(image, 210);
 			root.setWidgetHidden(icon, true);
 			root.setStylePrimaryName("score-modelItem");
+		} else {
+			scale.getTransform().getBaseVal().clear();
+			OMSVGRect viewbox = scale.getOwnerSVGElement().getViewBox().getBaseVal();
+			viewbox.setX(-3f);
+			viewbox.setWidth(105f);
 		}
 		
 		getElement().getStyle().setMarginRight(level, Unit.EM);
