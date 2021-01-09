@@ -1,12 +1,17 @@
 package fi.dwo.dwojapplet.gui.domainmodel;
 
 import java.util.Enumeration;
+import java.util.Vector;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
 public class InvisibleNode extends DefaultMutableTreeNode {
 
+  public static void createEmptyChildren(InvisibleNode parent) {
+    parent.children = new Vector<>();
+  }
+  
   protected boolean isVisible;
 
   public InvisibleNode() {

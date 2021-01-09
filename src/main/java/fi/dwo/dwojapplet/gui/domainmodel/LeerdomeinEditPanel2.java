@@ -13,7 +13,6 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,18 +48,14 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
-import javax.swing.JTree.DynamicUtilTreeNode;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.plaf.basic.BasicMenuBarUI;
 import javax.swing.plaf.basic.BasicMenuUI;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -74,7 +69,6 @@ import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JScrollPane;
-import fi.beans.numworxlf.JTabbedPane;
 import fi.beans.numworxlf.JTextField;
 import fi.beans.numworxlf.JTree;
 import fi.beans.numworxlf.NumworxTextFieldUI;
@@ -132,12 +126,12 @@ public class LeerdomeinEditPanel2 extends JPanel
 				return;
 			if(!readonly) graph.updateModel(tree.getModel());
 			
-			DefaultMutableTreeNode root;
-			root = (DefaultMutableTreeNode) tree.getModel().getRoot();
+			InvisibleNode root;
+			root = (InvisibleNode) tree.getModel().getRoot();
 
 			Object node = path.getLastPathComponent();
 			if (node instanceof MutableTreeNode) {
-				DefaultMutableTreeNode mutable = (DefaultMutableTreeNode) node;
+				InvisibleNode mutable = (InvisibleNode) node;
 				Object o = mutable.getUserObject();
 				if (o instanceof NodeLeaf) {
 					NodeLeaf leaf = (NodeLeaf) o;
@@ -215,9 +209,12 @@ public class LeerdomeinEditPanel2 extends JPanel
 
 			if (node instanceof MutableTreeNode) {
 				MutableTreeNode mutable = (MutableTreeNode) node;
-				if (mutable.isLeaf())
+				if (!mutable.getAllowsChildren())
 					return;
-				int index = mutable.getChildCount();
+				boolean old = model.isActivatedFilter();
+				model.activateFilter(false);
+				int index = model.getChildCount(mutable);
+				model.activateFilter(old);
 				Node leaf;
 				String title = "Leerdoel-" + (index + 1);
 				if (untitledObjective != null) {
@@ -226,8 +223,9 @@ public class LeerdomeinEditPanel2 extends JPanel
 					leaf = new NodeLeaf(getLocale().getLanguage());
 					leaf.setTitle(title);
 				}
-				DefaultMutableTreeNode child = new DefaultMutableTreeNode(leaf, false);
+				InvisibleNode child = new InvisibleNode(leaf, false, true);
 				mutable.insert(child, index);
+				index = model.getChildCount(mutable)-1;
 				model.nodesWereInserted(mutable, new int[] { index });
 				tree.setSelectionPath(new TreePath(child.getPath()));
 				subtitle.requestFocusInWindow();
@@ -258,9 +256,13 @@ public class LeerdomeinEditPanel2 extends JPanel
 
 			if (node instanceof MutableTreeNode) {
 				MutableTreeNode mutable = (MutableTreeNode) node;
-				if (mutable.isLeaf())
+				if (!mutable.getAllowsChildren())
 					return;
-				int index = mutable.getChildCount();
+				boolean old = model.isActivatedFilter();
+				model.activateFilter(false);
+				int index = model.getChildCount(node);
+				model.activateFilter(old);
+				
 				Node vector;
 				if (untitledCategory != null) {
 					vector = new NodeVector(untitledCategory.getInfo(), getLocale().getLanguage());
@@ -268,8 +270,9 @@ public class LeerdomeinEditPanel2 extends JPanel
 					vector = new NodeVector(getLocale().getLanguage());
 				}
 				vector.setTitle("Untitled-" + (index + 1));
-				DefaultMutableTreeNode child = new DynamicUtilTreeNode(vector, vector);
+				InvisibleNode child = new InvisibleNode(vector, true, true);
 				mutable.insert(child, index);
+				index = model.getChildCount(mutable)-1;
 				model.nodesWereInserted(mutable, new int[] { index });
 				tree.setSelectionPath(new TreePath(child.getPath()));
 				subtitle.requestFocusInWindow();
@@ -299,7 +302,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 			if (node == root)
 				return;
 			if (node instanceof MutableTreeNode) {
-				DefaultMutableTreeNode mutable = (DefaultMutableTreeNode) node;
+				InvisibleNode mutable = (InvisibleNode) node;
 				TreeNode parent = mutable.getParent();
 				mutable.removeFromParent();
 				model.nodeStructureChanged(parent);
@@ -319,8 +322,8 @@ public class LeerdomeinEditPanel2 extends JPanel
 			TreePath path = tree.getSelectionPath();
 			if (path == null)
 				return;
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-			DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
+			InvisibleNode node = (InvisibleNode) path.getLastPathComponent();
+			InvisibleNode parent = (InvisibleNode) node.getParent();
 			int i = parent.getIndex(node);
 			if (i > 0) {
 				safeSelection(path);
@@ -345,8 +348,8 @@ public class LeerdomeinEditPanel2 extends JPanel
 			TreePath path = tree.getSelectionPath();
 			if (path == null)
 				return;
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-			DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
+			InvisibleNode node = (InvisibleNode) path.getLastPathComponent();
+			InvisibleNode parent = (InvisibleNode) node.getParent();
 			int i = parent.getIndex(node);
 			if (i < parent.getChildCount() - 1) {
 				safeSelection(path);
@@ -359,7 +362,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		}
 	}
 
-	DefaultMutableTreeNode clipboard;
+	InvisibleNode clipboard;
 
 	class Knippen extends AbstractAction {
 		Knippen() {
@@ -376,7 +379,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 				return;
 			if (node instanceof MutableTreeNode) {
 				safeSelection(path);
-				DefaultMutableTreeNode mutable = (DefaultMutableTreeNode) node;
+				InvisibleNode mutable = (InvisibleNode) node;
 				TreeNode parent = mutable.getParent();
 				mutable.removeFromParent();
 				clipboard = mutable;
@@ -408,14 +411,15 @@ public class LeerdomeinEditPanel2 extends JPanel
 
 	}
 
-	public DefaultMutableTreeNode copy(Object node) {
-		if (node instanceof DefaultMutableTreeNode) {
-			DefaultMutableTreeNode mutable = (DefaultMutableTreeNode) node;
+	public InvisibleNode copy(Object node) {
+		if (node instanceof InvisibleNode) {
+			InvisibleNode mutable = (InvisibleNode) node;
 			if (mutable.isLeaf() && !mutable.getAllowsChildren()) {
-				return new DefaultMutableTreeNode(new NodeLeaf((NodeLeaf) mutable.getUserObject()), false);
+				return new InvisibleNode(new NodeLeaf((NodeLeaf) mutable.getUserObject()), false, true);
 			} else {
 				NodeVector v = new NodeVector((NodeVector) mutable.getUserObject());
-				DynamicUtilTreeNode copy = new DynamicUtilTreeNode(v, v);
+				InvisibleNode copy = new InvisibleNode(v, true, true);
+				InvisibleNode.createEmptyChildren(copy);
 				for (int i = 0; i < mutable.getChildCount(); i++) {
 					copy.add(copy(mutable.getChildAt(i)));
 				}
@@ -436,21 +440,28 @@ public class LeerdomeinEditPanel2 extends JPanel
 			model.activateFilter(true);
 			model.setRoot(filter(root, filter));
 		}
+        model.nodeStructureChanged((TreeNode) model.getRoot());
 		graph.setModel(model);
 	}
 
-	static DefaultMutableTreeNode filter(DefaultMutableTreeNode parent, Map<String, Map<String, Set<Integer>>> filter) {
+	static InvisibleNode filter(InvisibleNode parent, Map<String, Map<String, Set<Integer>>> filter) {
 		InvisibleNode node;
 		if (!(parent instanceof InvisibleNode)) {
 			node = new InvisibleNode(parent.getUserObject());
 			node.setAllowsChildren(parent.getAllowsChildren());
 			Enumeration<?> children = parent.children();
 			while (children.hasMoreElements()) {
-				DefaultMutableTreeNode object = (DefaultMutableTreeNode) children.nextElement();
+				InvisibleNode object = (InvisibleNode) children.nextElement();
 				node.add(filter(object, filter));
 			}
 		} else {
 			node = (InvisibleNode) parent;
+            @SuppressWarnings("unchecked")
+            Enumeration<InvisibleNode> children = node.children();
+            while (children.hasMoreElements()) {
+                InvisibleNode object = children.nextElement();
+                filter(object, filter);
+            }
 		}
 		if (node.isLeaf() && !node.getAllowsChildren()) {
 			NodeLeaf leaf = (NodeLeaf) node.getUserObject();
@@ -509,7 +520,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 				if (mutable.isLeaf()) {
 					mutable = (MutableTreeNode) mutable.getParent();
 				}
-				((DefaultMutableTreeNode) mutable).add(clipboard);
+				((InvisibleNode) mutable).add(clipboard);
 				model.nodeStructureChanged(mutable);
 				tree.setSelectionPath(new TreePath(clipboard.getPath()));
 				tree.repaint();
@@ -530,7 +541,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 	private Box south;
 	final JTree tree;
 	InvisibleTreeModel model;
-	DefaultMutableTreeNode root;
+	InvisibleNode root;
 	private JComponent settings;
 	JFormattedTextField slip, init, learn;
 	final private EditableGraph graph;
@@ -658,7 +669,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		String locale = JComponent.getDefaultLocale().getLanguage();
 		NodeVector v = new NodeVector(locale);
 		v.setTitle("Leerdomein");
-		root = new DynamicUtilTreeNode(v, v);
+		root = new InvisibleNode(v, true, true);
 		model = new InvisibleTreeModel(root);
 		tree = new JTree(model);
         graph = new EditableGraph();
@@ -964,7 +975,8 @@ public class LeerdomeinEditPanel2 extends JPanel
 		}
 		this.structure = model;
 		NodeVector vector = new NodeVector(model.getCategories(), model.getInfo(), locale);
-		this.model.setRoot(root = new DynamicUtilTreeNode(vector, vector));
+		this.model.setRoot(root = new InvisibleNode(vector, true, true));
+		insert(vector, root);
 		this.subtitle.setText("");
 		// text.setEditable(false);
 		// OPSLAAN_ACTION.setDescription("");
@@ -977,7 +989,20 @@ public class LeerdomeinEditPanel2 extends JPanel
 
 	}
 
-	DomStudentModelStructure resultModel;
+	private void insert(NodeVector vector, InvisibleNode node) {
+      for(Object child: vector) {
+        if (child instanceof NodeVector) {
+          InvisibleNode parent = new InvisibleNode(child);
+          insert((NodeVector)child, parent);
+          node.add(parent);
+        } else {
+          node.add(new InvisibleNode(child, false, true));
+        }
+      }
+    
+  }
+
+  DomStudentModelStructure resultModel;
 
 	static DomStudentModelStructure untitled;
 	static DomStudentModelCategory untitledCategory;
@@ -1014,7 +1039,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		result.setCategories(categories);
 		Enumeration<TreeNode> children = root.children();
 		while (children.hasMoreElements()) {
-			DefaultMutableTreeNode object = (DefaultMutableTreeNode) children.nextElement();
+			InvisibleNode object = (InvisibleNode) children.nextElement();
 			u = (Node) object.getUserObject();
 			DomStudentModelCategory cat = new DomStudentModelCategory();
 			cat.setInfo(u.getInfo());
@@ -1022,7 +1047,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 			cat.setObjectives(objectives);
 			Enumeration<TreeNode> kids = object.children();
 			while (kids.hasMoreElements()) {
-				DefaultMutableTreeNode kid = (DefaultMutableTreeNode) kids.nextElement();
+				InvisibleNode kid = (InvisibleNode) kids.nextElement();
 				u = (Node) kid.getUserObject();
 				DomStudentModelObj objective = new DomStudentModelObj();
 				objective.setInfo(u.getInfo());
@@ -1042,7 +1067,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		List<DomStudentModelObj> objectives = new ArrayList<>(childCount);
 		node.setObjectives(objectives);
 		while (children.hasMoreElements()) {
-			DefaultMutableTreeNode kid = (DefaultMutableTreeNode) children.nextElement();
+			InvisibleNode kid = (InvisibleNode) children.nextElement();
 			Node u = (Node) kid.getUserObject();
 			DomStudentModelObj objective = new DomStudentModelObj();
 			objective.setInfo(u.getInfo());
@@ -1067,7 +1092,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 			settings.setVisible(false);
 			return;
 		}
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+		InvisibleNode node = (InvisibleNode) path.getLastPathComponent();
 		Object u = node.getUserObject();
 		subtitle.setText(u.toString());
 		setDescription(u);
@@ -1160,7 +1185,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 
 	public void safeSelection(TreePath path) {
 		if (path != null) {
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+			InvisibleNode node = (InvisibleNode) path.getLastPathComponent();
 			Object u = node.getUserObject();
 			String string = subtitle.getText();
 			if (u instanceof Node) {
@@ -1296,21 +1321,28 @@ public class LeerdomeinEditPanel2 extends JPanel
 	    Set<String> visible = graph.getVisibleNodes(); // id's of visible nodes
         model.activateFilter(true);
         model.setRoot(filter(root, visible));
+        model.nodeStructureChanged((TreeNode) model.getRoot());
 	  }
 	}
 
-    private static InvisibleNode filter(DefaultMutableTreeNode parent, Set<String> visible) {
+    private static InvisibleNode filter(InvisibleNode parent, Set<String> visible) {
       InvisibleNode node;
       if (!(parent instanceof InvisibleNode)) {
           node = new InvisibleNode(parent.getUserObject());
           node.setAllowsChildren(parent.getAllowsChildren());
           Enumeration<?> children = parent.children();
           while (children.hasMoreElements()) {
-              DefaultMutableTreeNode object = (DefaultMutableTreeNode) children.nextElement();
+              InvisibleNode object = (InvisibleNode) children.nextElement();
               node.add(filter(object, visible));
           }
       } else {
           node = (InvisibleNode) parent;
+          @SuppressWarnings("unchecked")
+          Enumeration<InvisibleNode> children = node.children();
+          while (children.hasMoreElements()) {
+              InvisibleNode object = children.nextElement();
+              filter(object, visible);
+          }
       }
       if (node.isLeaf() && !node.getAllowsChildren()) {
           NodeLeaf leaf = (NodeLeaf) node.getUserObject();
