@@ -26,7 +26,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
-import javax.swing.JTree.DynamicUtilTreeNode;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
@@ -141,7 +140,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
   
   private JLabel titleLabel;
   private Font font = GuiConstants.NORMAL_TEXT;
-  private DynamicUtilTreeNode root;
+  private InvisibleNode root;
   private InvisibleTreeModel model;
   private JTree tree;
   private JPanel leftBox;
@@ -185,7 +184,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     String locale = JComponent.getDefaultLocale().getLanguage();
     NodeVector v = new NodeVector(locale);
     v.setTitle("Leerdomein");
-    root = new DynamicUtilTreeNode(v,v);
+    root = new InvisibleNode(v);
     model = new InvisibleTreeModel(root);   
     tree = new JTree(model);
     graph = new EditableGraph();
@@ -284,7 +283,8 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     model = AdviseMeResultManager.restructure(model, locale, context);
       
     NodeVector vector = new NodeVector(model.getCategories(), model.getInfo(), locale, false); // use original info for hashmap
-    this.model.setRoot(root = new DynamicUtilTreeNode(vector, vector));
+    this.model.setRoot(root = new InvisibleNode(vector));
+    LeerdomeinEditPanel2.insert(vector, root);
 
     this.subtitle.setText(vector.toString());
     //this.title2.setText(vector.toString());
@@ -387,8 +387,8 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
       model.activateFilter(true);
       model.setRoot(LeerdomeinEditPanel2.filter(root, filter));      
     }
-    
     recalculateAncestors((DefaultMutableTreeNode) model.getRoot());
+    model.nodeStructureChanged(root);
     tree.setSelectionRow(0);
 
     graph.setModel(model);

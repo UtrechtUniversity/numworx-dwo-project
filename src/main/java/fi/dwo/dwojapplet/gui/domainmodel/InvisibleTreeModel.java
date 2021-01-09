@@ -57,11 +57,11 @@ public class InvisibleTreeModel extends DefaultTreeModel {
     try {
       filterIsActive = false;
       if (!old) super.nodeChanged(node);
-      else super.nodeStructureChanged(root);
+      else super.nodeChanged(root);
     } finally {
       if (filterIsActive != old) {
         filterIsActive = old;
-        super.nodeStructureChanged(root);
+        //super.nodeStructureChanged(root);
       }
     }
   }

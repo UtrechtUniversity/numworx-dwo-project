@@ -14,7 +14,6 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
@@ -39,7 +38,6 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
-import javax.swing.JTree.DynamicUtilTreeNode;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
@@ -51,8 +49,6 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import fi.beans.numworxlf.Constants;
@@ -62,10 +58,7 @@ import fi.beans.numworxlf.JScrollPane;
 import fi.beans.numworxlf.JTree;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.gui.ConfirmDialog;
 import fi.dwo.dwojapplet.gui.GuiConstants;
-import fi.dwo.dwojapplet.gui.GuiCreator;
-import fi.dwo.dwojapplet.gui.TeacherStudentModelPanel;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
@@ -82,7 +75,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
-import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -223,7 +215,7 @@ public void actionPerformed(ActionEvent event) {
   private JLabel titleLabel;
   private JTree  tree;
   private Font font = GuiConstants.NORMAL_TEXT;
-  private DefaultMutableTreeNode root;
+  private InvisibleNode root;
   private InvisibleTreeModel model;
   private JLabel subtitle;
   private JTextArea tekst;
@@ -268,7 +260,7 @@ public void actionPerformed(ActionEvent event) {
     //split.setBorder(BorderFactory.createEmptyBorder());
     leftBox = (split);
     leftBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
-    root = new DefaultMutableTreeNode("Handig haakjes wegwerken bij merkwaardige producten");
+    root = new InvisibleNode("Handig haakjes wegwerken bij merkwaardige producten");
     model = new InvisibleTreeModel(root);
     tree = new JTree(model);
     TreeCellRenderer renderer = new TreeCellRenderer();
@@ -371,7 +363,8 @@ public void actionPerformed(ActionEvent event) {
     model = AdviseMeResultManager.restructure(model, locale, context);
       
     NodeVector vector = new NodeVector(model.getCategories(), model.getInfo(), locale);
-    this.model.setRoot(root = new DynamicUtilTreeNode(vector, vector));
+    this.model.setRoot(root = new InvisibleNode(vector));
+    LeerdomeinEditPanel2.insert(vector, root);
 
     this.subtitle.setText(vector.toString());
     //this.title2.setText(vector.toString());

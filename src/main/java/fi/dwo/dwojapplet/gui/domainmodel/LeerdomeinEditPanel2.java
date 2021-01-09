@@ -989,7 +989,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 
 	}
 
-	private void insert(NodeVector vector, InvisibleNode node) {
+	static void insert(NodeVector vector, InvisibleNode node) {
       for(Object child: vector) {
         if (child instanceof NodeVector) {
           InvisibleNode parent = new InvisibleNode(child);
