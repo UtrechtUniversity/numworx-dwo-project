@@ -25,6 +25,8 @@ public class DomStudentModelContextInfo {
     private List<String> voorkennis;
     private Map<String, Map<String, Set<Integer>>> methods;
     private Integer x,y;
+    
+    private List<DomStudentModelMethodInfo> methodInfo;
 
     public DomStudentModelContextInfo(DomStudentModelContextInfo info) {
     	title = info.getTitle(); if(title != null) title = new TreeMap<>(title);
@@ -194,6 +196,7 @@ public class DomStudentModelContextInfo {
 		return Objects.equals(description, other.description) && Objects.equals(id, other.id)
 				&& Objects.equals(init, other.init) && Objects.equals(learn, other.learn)
 				&& Objects.equals(methods, other.methods) && Objects.equals(slip, other.slip)
+				&& Objects.equals(methodInfo, other.methodInfo)
 				&& Objects.equals(x, other.x) && Objects.equals(y, other.y)
 				&& Objects.equals(title, other.title) && Objects.equals(voorkennis, other.voorkennis);
 	}
@@ -224,6 +227,14 @@ public class DomStudentModelContextInfo {
 	 */
 	public void setY(Integer y) {
 		this.y = y;
+	}
+
+	public List<DomStudentModelMethodInfo> getMethodInfo() {
+		return methodInfo;
+	}
+
+	public void setMethodInfo(List<DomStudentModelMethodInfo> methodInfo) {
+		this.methodInfo = methodInfo;
 	}
     
 }
