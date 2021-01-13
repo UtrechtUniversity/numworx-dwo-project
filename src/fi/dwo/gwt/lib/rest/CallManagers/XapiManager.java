@@ -186,8 +186,12 @@ public class XapiManager {
     else {
       r = r.addQueryParam("agent", encode(getAgent()));
     }
+    if (q.relatedActivities != null) r.addQueryParam("related_activities", q.relatedActivities.toString());
+    if (q.activityID != null) r.addQueryParam("activity", q.activityID);
+    if (q.until != null) r.addQueryParam("until", q.until);
+    if (q.limit != null) r.addQueryParam("limit", q.limit.toString());
     //etc
-   
+
     Method method = r.get();
     method.setDispatcher(proxy.getDispatcher());
     method.send(new JsonCallback() {
