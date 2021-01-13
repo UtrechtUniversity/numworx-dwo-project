@@ -355,10 +355,15 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		if(selectGroep) {
 			for(int i=0 ; i<graphNodes.size() ; i++) {
 				
-				if(graphNodes.get(i).getLocationOnPanel(origin, factor)!=null && graphNodes.get(i).inside(selectieRectangle,origin, factor))
-					graphNodes.get(i).setSelected(true);	
-				else
-					graphNodes.get(i).setSelected(false);
+//				if(graphNodes.get(i).getLocationOnPanel(origin, factor)!=null && graphNodes.get(i).inside(selectieRectangle,origin, factor))
+//					graphNodes.get(i).setSelected(true);	
+//				else
+//					graphNodes.get(i).setSelected(false);
+			    GraphNode node = graphNodes.get(i);
+			    if (node.getLocation()!= null) {
+			      node.selectInside(selectieRectangle, origin, factor);
+			    }
+			
 			}
 			selectieRectangle = new Rectangle(0,0,0,0);
 			repaint();

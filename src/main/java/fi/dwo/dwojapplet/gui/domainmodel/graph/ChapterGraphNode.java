@@ -236,7 +236,7 @@ public class ChapterGraphNode {
 	}
 	
 	public boolean contains(int x, int y) {
-		if(location==null)
+		if(location==null || location.x==0 && location.y==0)
 			return false;
 		Rectangle r = new Rectangle(location.x-size/2, location.y-size/2, size, size);
 		return r.contains(x,y);

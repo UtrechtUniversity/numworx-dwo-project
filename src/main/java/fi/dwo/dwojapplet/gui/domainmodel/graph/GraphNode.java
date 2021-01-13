@@ -20,13 +20,14 @@ import java.util.Map;
 import java.util.Set;
 //import javax.validation.constraints.NotNull;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 
 public class GraphNode {
 	
 	static final String NOTFOUND = "NOTFOUND";
-  private static Color defaultNodeColor = LeerdomeinGraphPanel.colorBlue4;
+    private static Color defaultNodeColor = LeerdomeinGraphPanel.colorBlue4;
 	private static Color defaultTextColor = LeerdomeinGraphPanel.colorBlue1;
 	private static int defaultFontSize = 16;
 	private static Font defaultFont = new Font("SansSerif", Font.PLAIN, defaultFontSize);
@@ -54,7 +55,7 @@ public class GraphNode {
 	private int textHeight;
 	
 	private boolean blur;
-	private boolean selected;
+	private final Set<String> selected = new TreeSet<>();
 	
 	private Double succesFailScore = null;
 	
@@ -145,6 +146,15 @@ public class GraphNode {
 	        }
 	        return false;
 	}
+
+	public synchronized void selectInside(Rectangle r, Point origin, double factor) {
+	  selected.clear();
+      for( String code: getMethodeCodes()) {
+        Point location = getLocationOnPanel(code, origin, factor);
+        if (r.contains(location)) selected.add(code);
+      }
+	}
+	
 	
 	public Color getSuccesFailColor() {
 		if(succesFailScore == null)
@@ -317,7 +327,7 @@ public class GraphNode {
 		
 		//g.setFont(defaultFont.deriveFont((int)(defaultFontSize*factor)));
 		g.setFont(new Font("SansSerif", Font.PLAIN, (int)(defaultFontSize*factor)));
-		if(selected)
+		if(selected.contains(code))
 			g.setFont(new Font("SansSerif", Font.BOLD, (int)(defaultFontSize*factor)));
 		fm = g.getFontMetrics();
 			
@@ -356,7 +366,7 @@ public class GraphNode {
 		g.setStroke(new BasicStroke(2f*(float)factor));
 		if(blur)
 			g.setColor(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 30));
-		if(selected) {
+		if(selected.contains(code)) {
 			g.setColor(textColor);
 			g.drawOval(x-size/2-1, y-size/2+textHeight/6-1, size+2, size+2);
 		}
@@ -386,7 +396,10 @@ public class GraphNode {
 	}
 	
 	public void setSelected(boolean b) {
-		selected = b;
+	  if (b)
+		selected.addAll(getMethodeCodes());
+	  else
+	    selected.clear();
 	}
 	
 	public boolean getBlur() {
@@ -394,7 +407,7 @@ public class GraphNode {
 	}
 	
 	public boolean isSelected() {
-		return selected;
+		return !selected.isEmpty();
 	}
 	
 	public void setVisible(boolean b) {
@@ -440,7 +453,7 @@ public class GraphNode {
   }
 
   public void move(int dx, int dy) {
-    for(String code: getMethodeCodes()) {
+    for(String code: selected) {
       Point location = getLocation(code);
       setLocation(code, location.x+dx, location.y+dy);
     }
