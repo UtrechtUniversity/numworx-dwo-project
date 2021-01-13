@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -43,6 +44,9 @@ public class DomStudentModelContextInfo {
     	if (methods != null) {
     		methods = new TreeMap<>(methods);
     		methods.entrySet().forEach((e) -> e.setValue(copyOf(e.getValue())));
+    	}
+    	if(info.getMethodInfo() != null) {
+    	  methodInfo = info.getMethodInfo().stream().map(DomStudentModelMethodInfo::new).collect(Collectors.toList());
     	}
     	
     }

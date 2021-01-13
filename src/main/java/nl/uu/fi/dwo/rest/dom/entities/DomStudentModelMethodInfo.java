@@ -18,6 +18,12 @@ public class DomStudentModelMethodInfo {
 		book = leerjaarName;
 		chapter = i;
 	}
+	
+	public DomStudentModelMethodInfo(DomStudentModelMethodInfo source) {
+		this(source.method, source.book, source.chapter);
+		x = source.x;
+		y = source.y;
+	}
 
 	/**
 	 * @return the method
