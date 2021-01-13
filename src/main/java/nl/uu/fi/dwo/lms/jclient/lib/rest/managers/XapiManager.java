@@ -1,7 +1,5 @@
 package nl.uu.fi.dwo.lms.jclient.lib.rest.managers;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -18,7 +16,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
@@ -34,9 +31,6 @@ import nl.uu.fi.dwo.rest.dom.xapi.StateDocument;
 import nl.uu.fi.dwo.rest.dom.xapi.Statement;
 import nl.uu.fi.dwo.rest.dom.xapi.StatementsQuery;
 import nl.uu.fi.dwo.rest.dom.xapi.StatementsResult;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 public class XapiManager {
 
@@ -109,8 +103,13 @@ public class XapiManager {
       if (q.verbID != null) append(sb,"verb", q.verbID);
       if (q.registration != null) append(sb, "registration", q.registration);
       if (q.since != null) append(sb,"since", q.since);
+      if (q.until != null) append(sb, "until", q.until);
+      if (q.limit != null) append(sb, "limit", q.limit.toString());
       if (q.ascending != null) append(sb,"ascending", q.ascending.toString());
       if (q.agent != null) append(sb,"agent", encode(q.agent));
+      if (q.relatedActivities != null) append(sb, "related_activities", q.relatedActivities.toString());
+      if (q.activityID != null) append(sb, "activity", q.activityID);
+      
       sb.setLength(sb.length()-1);
       URL url = new URL(endpoint, sb.toString());
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();

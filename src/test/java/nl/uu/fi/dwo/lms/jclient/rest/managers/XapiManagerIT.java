@@ -26,6 +26,10 @@ import nl.uu.fi.dwo.rest.dom.xapi.StatementsResult;
 import nl.uu.fi.dwo.rest.dom.xapi.Verb;
 import nl.uu.fi.dwo.rest.util.RestyDateTimeFormat;
 
+
+/*
+ * Deze test draait ten opzichte van ADL-LRS docker xAPI implementatie
+ */
 public class XapiManagerIT {
 
   private static final String VERB = "http://localhost:8080/verbs/test";
