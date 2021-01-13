@@ -10,14 +10,23 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+//import javax.validation.constraints.NotNull;
+import java.util.TreeMap;
+
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 
 public class GraphNode {
 	
-	private static Color defaultNodeColor = LeerdomeinGraphPanel.colorBlue4;
+	static final String NOTFOUND = "NOTFOUND";
+  private static Color defaultNodeColor = LeerdomeinGraphPanel.colorBlue4;
 	private static Color defaultTextColor = LeerdomeinGraphPanel.colorBlue1;
 	private static int defaultFontSize = 16;
 	private static Font defaultFont = new Font("SansSerif", Font.PLAIN, defaultFontSize);
@@ -29,7 +38,7 @@ public class GraphNode {
 	private String subdomein;
 	private String description;
 	//private String label;
-	private Point location;
+	
 	private Point tempLocation;
 	private int size = 16;
 	private Color nodeColor = defaultNodeColor;
@@ -38,7 +47,8 @@ public class GraphNode {
 	
 	private Map<String, Map<String,Set<Integer>>> methodeInfo;
 	//private Map<String, String> methodeInfoString;
-	private ArrayList<String> methodeCodes;
+	//@NotNull
+	private Map<String, DomStudentModelMethodInfo> methodeInfos = Collections.emptyMap(); // Never null
 	
 	private int textLength;
 	private int textHeight;
@@ -63,39 +73,23 @@ public class GraphNode {
 		//setFont(defaultFont);
 	}
 	
-	public GraphNode(String ID, String subdomein, String description, int x, int y) {
+	public GraphNode(String ID, String subdomein, String description, DomStudentModelMethodInfo info) {
 		this.ID = ID;
 		this.subdomein = subdomein;
 		this.description = description;
-		location = new Point(x,y);
-		//setFont(defaultFont);
+		methodeInfos = Collections.singletonMap(info.key(), info);
 	}
-	
-	public GraphNode(String ID, String subdomein, String description, Point p) {
-		this.ID = ID;
-		this.subdomein = subdomein;
-		this.description = description;
-		location = p;
-		//setFont(defaultFont);
-	}
-	
+			
 	public GraphNode(int x, int y) {
-		this.ID = "0";
-		this.subdomein = "";
-		this.description = "";
-		location = new Point(x,y);
-		//setFont(defaultFont);
+	  setLocation(x,y);
 	}
 	
-//	public GraphNode(Point p) {
-//		this.ID = "0";
-//		this.subdomein = "";
-//		this.description = "";
-//		location = new Point(p);
-//		//setFont(defaultFont);
-//	}
-	
-	public void setSuccesFailScore (Double succesFailScore) {
+	public GraphNode(String ID, String subdomain, String description, int x, int y) {
+      this(ID, subdomain, description);
+      setLocation(x,y);
+  }
+
+  public void setSuccesFailScore (Double succesFailScore) {
 		this.succesFailScore = succesFailScore;
 	}
 	
@@ -107,8 +101,19 @@ public class GraphNode {
 		return ID;
 	}
 	
+	@Deprecated
 	public Point getLocation() {
-		return location; 
+	    if (methodeInfos.isEmpty()) return null;
+	    DomStudentModelMethodInfo info = methodeInfos.values().iterator().next();
+		return new Point(info.getX(), info.getY()); 
+	}
+	
+	public Point getLocation(String key) {
+	  DomStudentModelMethodInfo info = methodeInfos.get(key);
+	  if (info != null) {
+	    return new Point(info.getX(), info.getY());
+	  }
+	  return null;
 	}
 	
 	public Point getTempLocation() {
@@ -116,11 +121,29 @@ public class GraphNode {
 	}
 	
 	public Point getLocationOnPanel(Point origin, double factor) {
+	    Point location = getLocation();
 		if(location==null)
 			return null;
 		int x = origin.x + (int)((location.x)*factor);
 		int y = origin.y + (int)((location.y )*factor);
 		return new Point(x,y);
+	}
+
+	public Point getLocationOnPanel(String code, Point origin, double factor) {
+      Point location = getLocation(code);
+      if(location==null)
+          return null;
+      int x = origin.x + (int)((location.x)*factor);
+      int y = origin.y + (int)((location.y )*factor);
+      return new Point(x,y);
+  }
+	
+	public boolean inside(Rectangle r, Point origin, double factor) {
+	     for( String code: getMethodeCodes()) {
+	          Point location = getLocationOnPanel(code, origin, factor);
+	          if (r.contains(location)) return true;
+	        }
+	        return false;
 	}
 	
 	public Color getSuccesFailColor() {
@@ -215,11 +238,14 @@ public class GraphNode {
 	
 
 	public void setLocation(int x, int y) {
-		location = new Point(x,y);
+      if (methodeInfos.isEmpty()) {
+        methodeInfos = Collections.singletonMap(null, new DomStudentModelMethodInfo());
+      }
+        methodeInfos.values().stream().forEach(t -> { t.setX(x); t.setY(y); });
 	}
 	
 	public void setLocation(Point p) {
-		location = p;
+	  setLocation(p.x, p.y);
 	}
 	
 	public Map<String, Map<String,Set<Integer>>> getMethodeInfo() {
@@ -228,36 +254,32 @@ public class GraphNode {
 	
 	public void setMethodeInfo(Map<String, Map<String,Set<Integer>>> methodeInfo) {
 		this.methodeInfo = methodeInfo;
-		
-		this.methodeCodes = new ArrayList<String>();
+		this.methodeInfos = new TreeMap<>();
 		for (String methodeName : methodeInfo.keySet()) {
 			Map<String,Set<Integer>> leerjaren = methodeInfo.get(methodeName);
 			for (String leerjaarName : leerjaren.keySet()){
 				Set<Integer> hoofdstukken = 	leerjaren.get(leerjaarName);
 				for (Integer i : hoofdstukken){
-					methodeCodes.add(methodeName + "-" + leerjaarName + "-" + i);
+					final DomStudentModelMethodInfo info = new DomStudentModelMethodInfo(methodeName, leerjaarName,i);
+                    methodeInfos.put(info.key(), info);
 				}
 			}
 		}
 	}
 	
 	public boolean hasMethodCode(String code) {
-		if(methodeCodes==null || code == null)
+		if (code == null)
 			return false;
-		return methodeCodes.contains(code);
+		return methodeInfos.containsKey(code);
 	}
+
 	public boolean hasBookCode(String code) {
-		if(methodeCodes==null)
-			return false;
-		for(String methodeCode : methodeCodes) {
-			if(code!=null && code.equals(methodeCode.substring(0,methodeCode.lastIndexOf("-"))))
-				return true;
-		}
-		return false;
+	    return methodeInfos.values().stream().anyMatch(t -> code.equals(t.getMethod() + "-" +t.getBook()));
 	}
 	
-	public ArrayList<String> getMethodeCodes() {
-		return methodeCodes;
+	public Collection<DomStudentModelMethodInfo> getMethodeInfos() {
+	    if(methodeInfo == null || methodeInfo.isEmpty()) return null;
+		return methodeInfos.values();
 	}
 	
 	public void setTempLocation(Point p) {
@@ -272,19 +294,26 @@ public class GraphNode {
 	}
 	
 	public boolean contains(int x, int y) {
-		if(location==null)
-			return false;
-		Rectangle r = new Rectangle(location.x-size/2, location.y-size/2, size, size);
-		if(tempLocation!=null)
-			r = new Rectangle(tempLocation.x-size/2, tempLocation.y-size/2, size, size);
-		return r.contains(x,y);
+		for( String code: getMethodeCodes()) {
+		  Point location = getLocation(code);
+		    Rectangle r = new Rectangle(location.x-size/2, location.y-size/2, size, size);
+	        if(tempLocation!=null)
+	            r = new Rectangle(tempLocation.x-size/2, tempLocation.y-size/2, size, size);
+	        if (r.contains(x,y)) return true;
+	        if (tempLocation != null) break;
+		}
+        return false;
 	}
 	
 	public void paint(Graphics gr, Point origin, double factor) {
+	    Point location = getLocation();
 		if(!visible || location==null || factor<0.15)
 			return;
 		Graphics2D g = (Graphics2D)gr;
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+		for (String code: getMethodeCodes()) {
+		  location = getLocation(code);
 		
 		//g.setFont(defaultFont.deriveFont((int)(defaultFontSize*factor)));
 		g.setFont(new Font("SansSerif", Font.PLAIN, (int)(defaultFontSize*factor)));
@@ -337,9 +366,13 @@ public class GraphNode {
 		if(blur)
 			g.setColor(new Color(textColor.getRed(), textColor.getGreen(), textColor.getBlue(), 30));
 		g.drawString(label, x-textLength/2, y+textHeight/2);
+		
+		if (tempLocation != null) break;
+		}
 	}
 	
 	public Rectangle getTextBB() {
+	    Point location = getLocation();
 		if(location==null)
 			return new Rectangle(0,0,0,0);
 //		if(tempLocation != null) {
@@ -371,5 +404,47 @@ public class GraphNode {
 	public boolean isVisible() {
 		return visible;
 	}
+
+  public void setMethodeInfos(List<DomStudentModelMethodInfo> infos) {
+      if (infos != null) { 
+        for(DomStudentModelMethodInfo info: infos) {
+          String key = info.key();
+          methodeInfos.computeIfPresent(key, (k,v) -> info);
+        }
+      }
+    
+  }
+
+  public Set<String> getMethodeCodes() {
+    return methodeInfos.keySet();
+  }
+
+  public String search(int x, int y) {
+    for(String code: getMethodeCodes()) {
+      Point location = getLocation(code);
+      Rectangle r = new Rectangle(location.x-size/2, location.y-size/2, size, size);
+      if (r.contains(x,y)) return code;
+    }
+    return NOTFOUND;
+  }
+
+  public void setLocation(String code, int ex, int ey) {
+    if (methodeInfos.isEmpty()) {
+      methodeInfos = Collections.singletonMap(null, new DomStudentModelMethodInfo());
+    }
+    DomStudentModelMethodInfo info = methodeInfos.get(code);
+    if (info != null) {
+      info.setX(ex);
+      info.setY(ey);
+    }
+  }
+
+  public void move(int dx, int dy) {
+    for(String code: getMethodeCodes()) {
+      Point location = getLocation(code);
+      setLocation(code, location.x+dx, location.y+dy);
+    }
+    
+  }
 	
 }

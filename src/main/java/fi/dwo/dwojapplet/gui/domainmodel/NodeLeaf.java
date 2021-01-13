@@ -1,5 +1,7 @@
 package fi.dwo.dwojapplet.gui.domainmodel;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -7,6 +9,7 @@ import java.util.TreeMap;
 import java.util.UUID;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 
 public class NodeLeaf implements Node {
 
@@ -203,6 +206,15 @@ public class NodeLeaf implements Node {
 
   public void setY(Integer y) {
     info.setY(y);
+  }
+
+  public List<DomStudentModelMethodInfo> getMethodeInfos() {
+    return info.getMethodInfo();
+  }
+
+  public void setMethodeInfos(Collection<DomStudentModelMethodInfo> methodeInfos) {
+    if (methodeInfos == null) info.setMethodInfo(null);
+    else info.setMethodInfo(new ArrayList<>(methodeInfos));  
   }
   
   

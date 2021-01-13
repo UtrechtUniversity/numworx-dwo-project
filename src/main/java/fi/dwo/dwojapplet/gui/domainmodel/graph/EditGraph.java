@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.ToolTipManager;
 
 import fi.beans.numworxlf.JButton;
 
@@ -33,6 +34,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 	protected ArrayList<BookGraphEdge> bookEdges = new ArrayList<BookGraphEdge>();
 	
 	private GraphNode activeNode;
+	private String activeCode;
 	private GraphNode possibleSourceNode;
 	private GraphNode possibleTargetNode;
 	
@@ -78,6 +80,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
         miRemove.addActionListener(this);
         popup.add(miRemove);
         add(popup);
+        ToolTipManager.sharedInstance().registerComponent(this);
 	}
 	
 	public EditGraph(Graph graph) {
@@ -103,6 +106,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
         miRemove.addActionListener(this);
         popup.add(miRemove);
         add(popup);
+        ToolTipManager.sharedInstance().registerComponent(this);
 	}
 	
 	private void makeButtons() {
@@ -286,10 +290,14 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 			}
 			
 		}
+		setToolTipText(null);
 		for(int i=0 ; i<graphNodes.size() ; i++) {
 			if(graphNodes.get(i).contains(ex, ey)) {
 				activeNode = graphNodes.get(i);
 				activeNode.setSelected(true);
+				activeCode = activeNode.search(ex,ey);
+				setToolTipText(activeCode);
+				break;
 			}
 		}
 		if(e.isShiftDown() && activeNode != null) {
@@ -331,6 +339,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		if(activeNode!=null) {
 			activeNode.setSelected(false);
 			activeNode = null;
+			activeCode = null;
 		}
 		if(tempEdge!=null) {
 			graphEdges.remove(tempEdge);
@@ -346,7 +355,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		if(selectGroep) {
 			for(int i=0 ; i<graphNodes.size() ; i++) {
 				
-				if(graphNodes.get(i).getLocationOnPanel(origin, factor)!=null && selectieRectangle.contains(graphNodes.get(i).getLocationOnPanel(origin, factor)))
+				if(graphNodes.get(i).getLocationOnPanel(origin, factor)!=null && graphNodes.get(i).inside(selectieRectangle,origin, factor))
 					graphNodes.get(i).setSelected(true);	
 				else
 					graphNodes.get(i).setSelected(false);
@@ -423,7 +432,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 			int dy = (int)((e.getY() - startY)/factor);
 			for(int i=0 ; i<graphNodes.size() ; i++) {
 				if(graphNodes.get(i).isSelected())
-					graphNodes.get(i).setLocation(graphNodes.get(i).getLocation().x + dx, graphNodes.get(i).getLocation().y + dy);	
+					graphNodes.get(i).move( dx,  dy);	
 			}
 			repaint();
 			startX = e.getX();
@@ -431,7 +440,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 			return;
 		}
 		if(activeNode!=null) {
-			activeNode.setLocation(ex, ey);
+			activeNode.setLocation(activeCode, ex, ey);
 			repaint();
 		}
 		else if(tempEdge!=null) {
@@ -455,6 +464,23 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
+      int ex = (int) ((e.getX()-origin.x)/factor);
+      int ey = (int) ((e.getY()-origin.y)/factor);
+      boolean set = false;
+	     for(int i=0 ; i<graphNodes.size() ; i++) {
+           if(graphNodes.get(i).contains(ex, ey)) {
+               GraphNode activeNode = graphNodes.get(i);
+               activeNode.setSelected(true);
+               String activeCode = activeNode.search(ex,ey);
+               setToolTipText(activeCode); set = true;
+               break;
+           }
+       }
+	   if (!set) setToolTipText(null);
+
+	  
+	  
+	  
 //		GraphNode mouseOverNode = null;
 //		for(int i=0 ; i<graphNodes.size() ; i++) {
 //			if(graphNodes.get(i).contains(e.getX(), e.getY())) {
@@ -538,15 +564,19 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		int yMin = 10000;//graphNodes.get(0).getLocation().y;
 		
 		for (int i = 0; i < graphNodes.size(); i++) {
-			if(graphNodes.get(i).isVisible() && graphNodes.get(i).getLocation()!=null) {
-				if(xMax < graphNodes.get(i).getLocation().x)
-					xMax = graphNodes.get(i).getLocation().x;
-				if(yMax < graphNodes.get(i).getLocation().y)
-					yMax = graphNodes.get(i).getLocation().y;
-				if(xMin > graphNodes.get(i).getLocation().x)
-					xMin = graphNodes.get(i).getLocation().x;
-				if(yMin > graphNodes.get(i).getLocation().y)
-					yMin = graphNodes.get(i).getLocation().y;
+			GraphNode node = graphNodes.get(i);
+            if(node.isVisible() && node.getLocation()!=null) {
+              for(String code: node.getMethodeCodes()) {
+				Point location = node.getLocation(code);
+                if(xMax < location.x)
+					xMax = location.x;
+				if(yMax < location.y)
+					yMax = location.y;
+				if(xMin > location.x)
+					xMin = location.x;
+				if(yMin > location.y)
+					yMin = location.y;
+              }
 			}
 		}
 		factor = Math.min((float)(getWidth()-240)/(float)(xMax-xMin), (float)(getHeight()-80)/(float)(yMax-yMin));

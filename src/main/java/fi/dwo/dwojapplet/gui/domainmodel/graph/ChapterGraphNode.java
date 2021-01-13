@@ -120,8 +120,10 @@ public class ChapterGraphNode {
 		
 		for (GraphNode node : graphNodes) {
 			if(node.isVisible() && node.hasMethodCode(hfstCode)) {
-				hfstCumX+=node.getLocation().x;
-				hfstCumY+=node.getLocation().y;
+				final Point loc = node.getLocation(hfstCode);
+				if (loc == null) continue; // NPE check
+                hfstCumX+=loc.x;
+				hfstCumY+=loc.y;
 				hfstCount+=1;
 				this.graphNodes.add(node);
 			}

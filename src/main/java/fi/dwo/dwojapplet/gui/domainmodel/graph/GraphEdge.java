@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.awt.geom.GeneralPath;
+import java.util.Objects;
 
 public class GraphEdge {
 
@@ -32,10 +33,13 @@ public class GraphEdge {
 			return false;
 		
 		float a = arrowSize;
-		float x0 = source.getLocation().x;
-		float x1 = target.getLocation().x;
-		float y0 = source.getLocation().y;
-		float y1 = target.getLocation().y;
+		for(String scode: source.getMethodeCodes()) 
+		for(String tcode: target.getMethodeCodes()) {
+		
+		float x0 = source.getLocation(scode).x;
+		float x1 = target.getLocation(tcode).x;
+		float y0 = source.getLocation(scode).y;
+		float y1 = target.getLocation(tcode).y;
 		float mx = (x0 + x1)/2;
 		float my = (y0 + y1)/2;
 		float dm1 = (float)Math.sqrt((x1-mx)*(x1-mx)+(y1-my)*(y1-my));
@@ -49,7 +53,9 @@ public class GraphEdge {
 		pol.addPoint((int)px, (int)py);
 		pol.addPoint((int)qx, (int)qy);
 		pol.addPoint((int)rx, (int)ry);
-		return pol.contains(x, y);
+		if (pol.contains(x, y)) return true;
+		}
+		return false;
 	}
 	
 	public void paint(Graphics gr, Point origin, double factor) {
@@ -59,10 +65,15 @@ public class GraphEdge {
 		Graphics2D g = (Graphics2D)gr;
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		float a = (float)(arrowSize*factor);
-		float x0 = origin.x + (float)((source.getLocation().x)*factor);
-		float x1 = origin.x + (float)((target.getLocation().x)*factor);
-		float y0 = origin.y + (float)((source.getLocation().y)*factor);
-		float y1 = origin.y + (float)((target.getLocation().y)*factor);
+
+		for (String scode: source.getMethodeCodes()) {
+		for (String tcode: target.getMethodeCodes()) {
+		boolean sameChapters = Objects.equals(scode, tcode);
+		
+		float x0 = origin.x + (float)((source.getLocation(scode).x)*factor);
+		float x1 = origin.x + (float)((target.getLocation(tcode).x)*factor);
+		float y0 = origin.y + (float)((source.getLocation(scode).y)*factor);
+		float y1 = origin.y + (float)((target.getLocation(tcode).y)*factor);
 		if(source.getTempLocation()!=null) {
 			x0 = source.getTempLocation().x;
 			y0 = source.getTempLocation().y;
@@ -109,17 +120,19 @@ public class GraphEdge {
 		arrow.lineTo(px,py);
 		arrow.closePath();
 		g.fill(arrow);
+		
+		}}
 	}
 	
-	public int getLength() {
-		if(target==null || source==null || target.getLocation()==null || source.getLocation()==null)
-			return 0;
-		float x0 = source.getLocation().x;
-		float y0 = source.getLocation().y;
-		float x1 = target.getLocation().x;
-		float y1 = target.getLocation().y;
-		return (int)Math.sqrt((x1-x0)*(x1-x0)+(y1-y0)*(y1-y0));
-	}
+//	public int getLength() {
+//		if(target==null || source==null || target.getLocation()==null || source.getLocation()==null)
+//			return 0;
+//		float x0 = source.getLocation().x;
+//		float y0 = source.getLocation().y;
+//		float x1 = target.getLocation().x;
+//		float y1 = target.getLocation().y;
+//		return (int)Math.sqrt((x1-x0)*(x1-x0)+(y1-y0)*(y1-y0));
+//	}
 	
 	public GraphNode getSource() {
 		return source;

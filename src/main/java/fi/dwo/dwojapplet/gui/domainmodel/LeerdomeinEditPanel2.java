@@ -271,6 +271,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 				}
 				vector.setTitle("Untitled-" + (index + 1));
 				InvisibleNode child = new InvisibleNode(vector, true, true);
+				InvisibleNode.createEmptyChildren(child);
 				mutable.insert(child, index);
 				index = model.getChildCount(mutable)-1;
 				model.nodesWereInserted(mutable, new int[] { index });
@@ -1052,7 +1053,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 				DomStudentModelObj objective = new DomStudentModelObj();
 				objective.setInfo(u.getInfo());
 				objectives.add(objective);
-				if (!kid.isLeaf()) {
+				if (kid.getAllowsChildren()) {
 					setObjectiveChildren(objective, kid.getChildCount(), kid.children());
 				}
 			}
@@ -1072,7 +1073,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 			DomStudentModelObj objective = new DomStudentModelObj();
 			objective.setInfo(u.getInfo());
 			objectives.add(objective);
-			if (!kid.isLeaf()) {
+			if (kid.getAllowsChildren()) {
 				setObjectiveChildren(objective, kid.getChildCount(), kid.children());
 			}
 

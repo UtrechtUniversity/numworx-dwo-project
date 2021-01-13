@@ -43,6 +43,7 @@ import fi.beans.numworxlf.JComboBox;
 import fi.dwo.dwojapplet.gui.domainmodel.InvisibleNode;
 import fi.dwo.dwojapplet.gui.domainmodel.InvisibleTreeModel;
 import fi.dwo.dwojapplet.gui.domainmodel.NodeLeaf;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 
 public class Graph extends JPanel implements MouseListener, MouseMotionListener, ActionListener {
 
@@ -891,14 +892,19 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 //				if (y == null)
 //					y = (int) (Math.random() * 600);
 				if(x==null || y==null) {
-					GraphNode g = new GraphNode(id, parent, leaf.toString(), null);
+					GraphNode g = new GraphNode(id, parent, leaf.toString());
+					g.setMethodeInfo(leaf.getMethode());
 					graphMap.put(id, g);
 					leaves.add(leaf);
 					g.setVisible(visible);
 				}
 				else {
-					GraphNode g = new GraphNode(id, parent, leaf.toString(), x.intValue(), y.intValue());
+					GraphNode g = new GraphNode(id, parent, leaf.toString());
 					g.setMethodeInfo(leaf.getMethode());
+					List<DomStudentModelMethodInfo> infos = leaf.getMethodeInfos();
+					g.setLocation(x, y);
+					if(infos != null)
+					  g.setMethodeInfos(infos);
 					g.setVisible(visible);
 					graphMap.put(id, g);
 					leaves.add(leaf);
@@ -950,6 +956,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 				if (gn != null && gn.getLocation()!=null) {
 					leaf.setX(gn.getLocation().x);
 					leaf.setY(gn.getLocation().y);
+					leaf.setMethodeInfos(gn.getMethodeInfos());
 				}
 				else if(gn!=null) {
 					leaf.setX(null);
@@ -973,7 +980,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	}
 	
 	private void mergeHfstCodes(GraphNode node) {
-		ArrayList<String> codes = node.getMethodeCodes();
+		Set<String> codes = node.getMethodeCodes();
 		
 		
 	}
@@ -1065,15 +1072,19 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		
 		for (int i = 0; i < graphNodes.size(); i++) {
 			//graphNodes.get(i).setTempLocation(null);
-			if(graphNodes.get(i).isVisible() && graphNodes.get(i).getLocation()!=null && graphNodes.get(i).getTempLocation()==null) {
-				if(xMax < graphNodes.get(i).getLocation().x)
-					xMax = graphNodes.get(i).getLocation().x;
-				if(yMax < graphNodes.get(i).getLocation().y)
-					yMax = graphNodes.get(i).getLocation().y;
-				if(xMin > graphNodes.get(i).getLocation().x)
-					xMin = graphNodes.get(i).getLocation().x;
-				if(yMin > graphNodes.get(i).getLocation().y)
-					yMin = graphNodes.get(i).getLocation().y;
+			GraphNode node = graphNodes.get(i);
+            if(node.isVisible() && node.getLocation()!=null && node.getTempLocation()==null) {
+              for (String code: node.getMethodeCodes()) {
+				Point location = node.getLocation(code);
+                if(xMax < location.x)
+					xMax = location.x;
+				if(yMax < location.y)
+					yMax = location.y;
+				if(xMin > location.x)
+					xMin = location.x;
+				if(yMin > location.y)
+					yMin = location.y;
+              }
 			}
 		}
 		factor = Math.min((float)(getWidth()-240)/(float)(xMax-xMin), (float)(getHeight()-80-vkHeight)/(float)(yMax-yMin));
