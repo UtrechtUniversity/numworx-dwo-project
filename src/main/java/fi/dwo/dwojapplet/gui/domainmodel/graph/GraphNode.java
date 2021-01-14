@@ -106,13 +106,17 @@ public class GraphNode {
 	public Point getLocation() {
 	    if (methodeInfos.isEmpty()) return null;
 	    DomStudentModelMethodInfo info = methodeInfos.values().iterator().next();
+	    if (info.getX() == null || info.getY() == null)
+	      return null;
 		return new Point(info.getX(), info.getY()); 
 	}
 	
 	public Point getLocation(String key) {
 	  DomStudentModelMethodInfo info = methodeInfos.get(key);
-	  if (info != null) {
+	  if (info != null && info.getX() != null && info.getY() != null ) {
 	    return new Point(info.getX(), info.getY());
+	  } else {
+	    System.err.println("node zonder locatie " + key + " " + subdomein + " " + description);
 	  }
 	  return null;
 	}
@@ -304,13 +308,14 @@ public class GraphNode {
 	}
 	
 	public boolean contains(int x, int y) {
+	  
+      if(tempLocation!=null)
+        return new Rectangle(tempLocation.x-size/2, tempLocation.y-size/2, size, size).contains(x, y);
 		for( String code: getMethodeCodes()) {
 		  Point location = getLocation(code);
-		    Rectangle r = new Rectangle(location.x-size/2, location.y-size/2, size, size);
-	        if(tempLocation!=null)
-	            r = new Rectangle(tempLocation.x-size/2, tempLocation.y-size/2, size, size);
-	        if (r.contains(x,y)) return true;
-	        if (tempLocation != null) break;
+		  if (location == null) continue;
+		  Rectangle r = new Rectangle(location.x-size/2, location.y-size/2, size, size);
+	      if (r.contains(x,y)) return true;
 		}
         return false;
 	}
