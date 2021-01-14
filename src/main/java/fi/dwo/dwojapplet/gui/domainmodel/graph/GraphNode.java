@@ -116,7 +116,7 @@ public class GraphNode {
 	  if (info != null && info.getX() != null && info.getY() != null ) {
 	    return new Point(info.getX(), info.getY());
 	  } else {
-	    System.err.println("node zonder locatie " + key + " " + subdomein + " " + description);
+//	    System.err.println("node zonder locatie " + key + " " + subdomein + " " + description);
 	  }
 	  return null;
 	}
