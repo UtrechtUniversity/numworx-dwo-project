@@ -207,6 +207,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     public static class ClassModel extends DefaultComboBoxModel<User> {
 
         private Sco sco;
+        private PartialScoreIF scoreif;
         private int index;
         private List[] lists;
         SchoolClass s;
@@ -227,8 +228,8 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
             index = getIndexOf(u);
             if(index < 0) index = 0;
             lists = new List[getSize()];
-            lists[index] = getScoreListSync(index);
-            
+            scoreif = sco.getPartialScoreIF();
+            lists[index] = getScoreListSync(index);           
         }
 
         private void setComplete(int i, Boolean b) {
@@ -263,8 +264,8 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
             return students;
         }
 
-        public synchronized List getScoreListSync(int i) {
-            return sco.getPartialScoreIF().getScoreMapList(getApi(i));
+        public List getScoreListSync(int i) {
+            return scoreif.getScoreMapList(getApi(i));
         }
         
         public synchronized List getScoreList(final int i) {

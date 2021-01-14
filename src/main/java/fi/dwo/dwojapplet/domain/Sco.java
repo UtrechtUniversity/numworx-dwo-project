@@ -197,6 +197,9 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
 
     public PartialScoreIF getPartialScoreIF() {
         loadApplet();
+        if (true)
+          return new WiskOpdrPartialScore(this);
+
         if (applet instanceof PartialScoreIF) {
             return (PartialScoreIF) applet;
         }
