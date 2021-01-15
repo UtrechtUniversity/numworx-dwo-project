@@ -119,7 +119,7 @@ public class ChapterGraphNode {
 		int hfstCount = 0;
 		
 		for (GraphNode node : graphNodes) {
-			if(node.isVisible() && node.hasMethodCode(hfstCode)) {
+			if(node.isVisible(hfstCode) && node.hasMethodCode(hfstCode)) {
 				final Point loc = node.getLocation(hfstCode);
 				if (loc == null) continue; // NPE check
                 hfstCumX+=loc.x;
@@ -140,14 +140,18 @@ public class ChapterGraphNode {
 	}
 	
 	public boolean hasBookCode(String bookCode) {
-		return hfstCode.contains(bookCode);
+		return hfstCode.startsWith(bookCode);
+	}
+	
+	public ArrayList<GraphNode> getGraphNodes() {
+		return graphNodes;
 	}
 	
 	
 	
 	public void setVoorkennis(ArrayList<GraphEdge> graphEdges) {
 		for (GraphEdge edge : graphEdges) {
-			if(edge.getTarget().hasMethodCode(hfstCode) && !edge.getSource().hasMethodCode(hfstCode)) {
+			if(edge.getTarget().hasChapterCode(hfstCode) && !edge.getSource().hasChapterCode(hfstCode)) {
 				if(!voorkennisNodes.contains(edge.getSource()))
 					voorkennisNodes.add(edge.getSource());
 				if(!voorkennisEdges.contains(edge))

@@ -9,6 +9,7 @@ import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.awt.geom.GeneralPath;
 import java.util.Objects;
+import java.util.Set;
 
 public class GraphEdge {
 
@@ -65,63 +66,76 @@ public class GraphEdge {
 		Graphics2D g = (Graphics2D)gr;
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		float a = (float)(arrowSize*factor);
+		
+//		boolean doorsnedeLeeg = true;
+//		Set<String> sourceVisible = source.getVisibleSet();
+//		Set<String> targetVisible = target.getVisibleSet();
+//		for(String str : sourceVisible) {
+//			if(targetVisible.contains(str)) {
+//				doorsnedeLeeg = false;
+//				break;
+//			}
+//		}
+//		if(doorsnedeLeeg) return;
 
-		for (String scode: source.getMethodeCodes()) {
-		for (String tcode: target.getMethodeCodes()) {
-		boolean sameChapters = Objects.equals(scode, tcode);
-		
-		float x0 = origin.x + (float)((source.getLocation(scode).x)*factor);
-		float x1 = origin.x + (float)((target.getLocation(tcode).x)*factor);
-		float y0 = origin.y + (float)((source.getLocation(scode).y)*factor);
-		float y1 = origin.y + (float)((target.getLocation(tcode).y)*factor);
-		if(source.getTempLocation()!=null) {
-			x0 = source.getTempLocation().x;
-			y0 = source.getTempLocation().y;
+		for (String scode: source.getVisibleSet()) {
+			for (String tcode: target.getVisibleSet()) {
+				if(scode.compareTo(tcode)==0 || source.getVisibleSet().size()==1 && target.getVisibleSet().size()==1) { //&& scode.equals(tcode)
+					boolean sameChapters = Objects.equals(scode, tcode);
+					
+					float x0 = origin.x + (float)((source.getLocation(scode).x)*factor);
+					float x1 = origin.x + (float)((target.getLocation(tcode).x)*factor);
+					float y0 = origin.y + (float)((source.getLocation(scode).y)*factor);
+					float y1 = origin.y + (float)((target.getLocation(tcode).y)*factor);
+					if(source.getTempLocation()!=null) {
+						x0 = source.getTempLocation().x;
+						y0 = source.getTempLocation().y;
+					}
+					float mx = (x0 + x1)/2;
+					float my = (y0 + y1)/2;
+					float dm1 = (float)Math.sqrt((x1-mx)*(x1-mx)+(y1-my)*(y1-my));
+					float px = mx+2*a*(x1-mx)/dm1;
+					float py = my+2*a*(y1-my)/dm1;
+					float qx = mx-a*(y1-my)/dm1;
+					float qy = my+a*(x1-mx)/dm1;
+					float rx = mx+a*(y1-my)/dm1;
+					float ry = my-a*(x1-mx)/dm1;
+					
+					g.setPaint(edgeColor);
+					if(target.getSuccesFailScore()!=null)
+						g.setPaint(target.getEdgeSuccesFailColor());
+			//		if((target.getSuccesFailScore()==null || target.getSuccesFailScore() < 45)) // &&  source.getSuccesFailScore()!=null && source.getSuccesFailScore() < 45)
+			//			g.setPaint(source.getSuccesFailColor());
+					if(!sameChapters && target.getMethodeInfo()!=null)
+						g.setPaint(edgeInterChapColor);
+					if(blur)
+						g.setPaint(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 30));
+					
+			        g.setStroke(new BasicStroke(1.3f*(float)factor));
+			        if(target.getSuccesFailScore()!=null && target.getEdgeSuccesFailColor()!=null)// ||  source.getSuccesFailScore()!=null && source.getSuccesFailScore() < 45)
+			       		g.setStroke(new BasicStroke(5f*(float)factor));
+			//        if(getLength()>600 || source.getTempLocation()!=null) {
+			//        		g.setStroke(new BasicStroke(1.3f*(float)factor, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{5,5}, 5));
+			//        		if(target.getSuccesFailScore()!=null && target.getEdgeSuccesFailColor()!=null)
+			//        			g.setStroke(new BasicStroke(5f*(float)factor, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{5,5}, 5));
+			//        		
+			//        }
+					GeneralPath path = new GeneralPath();
+					path.moveTo(x0,y0);
+					path.lineTo(x1,y1);
+					path.closePath();
+					g.draw(path);
+					
+					GeneralPath arrow = new GeneralPath();
+					arrow.moveTo(px,py);
+					arrow.lineTo(rx,ry);
+					arrow.lineTo(qx,qy);
+					arrow.lineTo(px,py);
+					arrow.closePath();
+					g.fill(arrow);
+				}
+			}
 		}
-		float mx = (x0 + x1)/2;
-		float my = (y0 + y1)/2;
-		float dm1 = (float)Math.sqrt((x1-mx)*(x1-mx)+(y1-my)*(y1-my));
-		float px = mx+2*a*(x1-mx)/dm1;
-		float py = my+2*a*(y1-my)/dm1;
-		float qx = mx-a*(y1-my)/dm1;
-		float qy = my+a*(x1-mx)/dm1;
-		float rx = mx+a*(y1-my)/dm1;
-		float ry = my-a*(x1-mx)/dm1;
-		
-		g.setPaint(edgeColor);
-		if(target.getSuccesFailScore()!=null)
-			g.setPaint(target.getEdgeSuccesFailColor());
-//		if((target.getSuccesFailScore()==null || target.getSuccesFailScore() < 45)) // &&  source.getSuccesFailScore()!=null && source.getSuccesFailScore() < 45)
-//			g.setPaint(source.getSuccesFailColor());
-		if(!sameChapters && target.getMethodeInfo()!=null)
-			g.setPaint(edgeInterChapColor);
-		if(blur)
-			g.setPaint(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 30));
-		
-        g.setStroke(new BasicStroke(1.3f*(float)factor));
-        if(target.getSuccesFailScore()!=null && target.getEdgeSuccesFailColor()!=null)// ||  source.getSuccesFailScore()!=null && source.getSuccesFailScore() < 45)
-       		g.setStroke(new BasicStroke(5f*(float)factor));
-//        if(getLength()>600 || source.getTempLocation()!=null) {
-//        		g.setStroke(new BasicStroke(1.3f*(float)factor, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{5,5}, 5));
-//        		if(target.getSuccesFailScore()!=null && target.getEdgeSuccesFailColor()!=null)
-//        			g.setStroke(new BasicStroke(5f*(float)factor, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{5,5}, 5));
-//        		
-//        }
-		GeneralPath path = new GeneralPath();
-		path.moveTo(x0,y0);
-		path.lineTo(x1,y1);
-		path.closePath();
-		g.draw(path);
-		
-		GeneralPath arrow = new GeneralPath();
-		arrow.moveTo(px,py);
-		arrow.lineTo(rx,ry);
-		arrow.lineTo(qx,qy);
-		arrow.lineTo(px,py);
-		arrow.closePath();
-		g.fill(arrow);
-		
-		}}
 	}
 	
 //	public int getLength() {

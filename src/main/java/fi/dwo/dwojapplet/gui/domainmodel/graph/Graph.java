@@ -480,12 +480,18 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		this.isScoreGraph = isScoreGraph;
 	}
 	
-	public void selectMethode(String bookCode) {
+	public void selectMethode(String methodeCode) {
 		selectedChapter = null;
 		selectedBook = null;
 		for(int i=0 ; i<graphNodes.size() ; i++) {
-			graphNodes.get(i).setVisible(true);
+			graphNodes.get(i).setVisible(false);
+		}
+		for(int i=0 ; i<graphNodes.size() ; i++) {
 			graphNodes.get(i).setTempLocation(null);
+			if(!graphNodes.get(i).hasMethodCode(methodeCode))
+				graphNodes.get(i).setVisible(false);
+			else
+				graphNodes.get(i).setVisible(methodeCode, true);
 		}
 		produceAction("filter");
 		zoomFit();
@@ -512,11 +518,14 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		selectedBook = bookCode;
 		//bookSelected = true;
 		for(int i=0 ; i<graphNodes.size() ; i++) {
+			graphNodes.get(i).setVisible(false);
+		}
+		for(int i=0 ; i<graphNodes.size() ; i++) {
 			graphNodes.get(i).setTempLocation(null);
 			if(!graphNodes.get(i).hasBookCode(bookCode))
 				graphNodes.get(i).setVisible(false);
 			else
-				graphNodes.get(i).setVisible(true);
+				graphNodes.get(i).setVisible(bookCode, true);
 		}
 		produceAction("filter");
 		for(int i=0 ; i<chapterNodes.size() ; i++) {
@@ -542,8 +551,13 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		selectedChapter = hfstCode;
 		selectedBook = hfstCode.substring(0, hfstCode.lastIndexOf("-"));
 		for(int i=0 ; i<graphNodes.size() ; i++) {
-			if(!graphNodes.get(i).hasMethodCode(hfstCode))
+			graphNodes.get(i).setVisible(false);
+		}
+		for(int i=0 ; i<graphNodes.size() ; i++) {
+			if(!graphNodes.get(i).hasChapterCode(hfstCode))
 				graphNodes.get(i).setVisible(false);
+			else
+				graphNodes.get(i).setVisible(hfstCode, true);
 		}
 		produceAction("filter");
 		zoomFit();
@@ -702,7 +716,9 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			selectBook(selectedBook);
 		
 		else if(e.getSource()==methodeLabel)
-			selectMethode((String)(methodeChoice.getSelectedItem()));
+			selectMethode("Getal&Ruimte");
+		
+			//selectMethode((String)(methodeChoice.getSelectedItem()));
 		
 		pressedX = e.getX();
 		pressedY = e.getY();
@@ -770,7 +786,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 //			selectedBookTitle = "";
 //		}
 		for(int i=0 ; i<bookNodes.size() ; i++) {
-			if(bookNodes.get(i).contains(ex, ey)) {
+			if(factor<0.15 && bookNodes.get(i).contains(ex, ey, factor)) {
 				bNode = bookNodes.get(i);
 				break;
 			}
@@ -841,6 +857,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	}
 
 	public void setModel(TreeModel model) {
+		selectMethode("Getal&Ruimte");
 		Map<String, GraphNode> graphMap = new LinkedHashMap<>();
 		List<NodeLeaf> leaves = new ArrayList<>();
 		ArrayList<GraphEdge> edges = new ArrayList<>();
@@ -1073,8 +1090,8 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		for (int i = 0; i < graphNodes.size(); i++) {
 			//graphNodes.get(i).setTempLocation(null);
 			GraphNode node = graphNodes.get(i);
-            if(node.isVisible() && node.getLocation()!=null && node.getTempLocation()==null) {
-              for (String code: node.getMethodeCodes()) {
+            if(node.isVisible()  && node.getLocation()!=null && node.getTempLocation()==null) {
+              for (String code: node.getVisibleSet()) {
 				Point location = node.getLocation(code);
                 if(xMax < location.x)
 					xMax = location.x;

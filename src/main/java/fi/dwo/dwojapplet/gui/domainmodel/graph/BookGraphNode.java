@@ -65,8 +65,8 @@ public class BookGraphNode {
 		int hfstCount = 0;
 		
 		for (ChapterGraphNode node : chapterNodes) {
-			System.out.println("hasBookCode "+bookCode +" "+node.hasBookCode(bookCode));
-			if(node.isVisible() && node.hasBookCode(bookCode)) {
+			//System.out.println("hasBookCode "+bookCode +" "+node.hasBookCode(bookCode));
+			if(node.getGraphNodes().size()>0 && node.isVisible() && node.hasBookCode(bookCode)) {
 				hfstCumX+=node.getLocation().x;
 				hfstCumY+=node.getLocation().y;
 				hfstCount+=1;
@@ -162,11 +162,14 @@ public class BookGraphNode {
 		return location;
 	}
 	
-	public boolean contains(int x, int y) {
+	public boolean contains(int x, int y, double factor) {
 		if(location==null)
 			return false;
+		//int size = (int)(this.size*factor);
 		Rectangle r = new Rectangle(location.x-size/2, location.y-size/2, size, size);
+		System.out.println("BookNode.contains...");
 		return r.contains(x,y);
+		
 	}
 	
 	public String getBookCode() {

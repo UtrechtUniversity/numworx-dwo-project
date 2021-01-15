@@ -9,6 +9,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Stroke;
+import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,6 +27,13 @@ import java.util.TreeSet;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 
 public class GraphNode {
+	
+	final static float dash1[] = {5.0f,5.0f};
+    final static BasicStroke dashed =
+        new BasicStroke(1.0f,
+                        BasicStroke.CAP_BUTT,
+                        BasicStroke.JOIN_MITER,
+                        10.0f, dash1, 0.0f);
 	
 	static final String NOTFOUND = "NOTFOUND";
     private static Color defaultNodeColor = LeerdomeinGraphPanel.colorBlue4;
@@ -56,6 +65,7 @@ public class GraphNode {
 	
 	private boolean blur;
 	private final Set<String> selected = new TreeSet<>();
+	private final Set<String> visible = new TreeSet<>();
 	
 	private Double succesFailScore = null;
 	
@@ -64,7 +74,7 @@ public class GraphNode {
 	private Color failColor = new Color(200,0,0);
 	private Color halfFailColor = new Color(255,150,150);
 	
-	private boolean visible = true;
+	//private boolean visible = true;
 	
 	
 	public GraphNode(String ID, String subdomein, String description) {
@@ -284,11 +294,17 @@ public class GraphNode {
 	public boolean hasMethodCode(String code) {
 		if (code == null)
 			return false;
-		return methodeInfos.containsKey(code);
+		System.out.println("hasMethodeCode()   code: "+code + "  "+methodeInfos.containsKey(code));
+		//return methodeInfos.containsKey(code);
+		return methodeInfos.values().stream().anyMatch(t -> code.startsWith(t.getMethod()));
 	}
 
 	public boolean hasBookCode(String code) {
 	    return methodeInfos.values().stream().anyMatch(t -> code.equals(t.getMethod() + "-" +t.getBook()));
+	}
+	
+	public boolean hasChapterCode(String code) {
+	    return methodeInfos.values().stream().anyMatch(t -> code.equals(t.getMethod() + "-" +t.getBook()+"-"+t.getChapter()));
 	}
 	
 	public Collection<DomStudentModelMethodInfo> getMethodeInfos() {
@@ -322,67 +338,95 @@ public class GraphNode {
 	
 	public void paint(Graphics gr, Point origin, double factor) {
 	    Point location = getLocation();
-		if(!visible || location==null || factor<0.15)
+		if(location==null || factor<0.15)
 			return;
 		Graphics2D g = (Graphics2D)gr;
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-		for (String code: getMethodeCodes()) {
-		  location = getLocation(code);
-		
-		//g.setFont(defaultFont.deriveFont((int)(defaultFontSize*factor)));
-		g.setFont(new Font("SansSerif", Font.PLAIN, (int)(defaultFontSize*factor)));
-		if(selected.contains(code))
-			g.setFont(new Font("SansSerif", Font.BOLD, (int)(defaultFontSize*factor)));
-		fm = g.getFontMetrics();
-			
-		String space = "";
-		if(subdomein!=null && !"".equals(subdomein))
-			space = " - ";
-		String label = this.subdomein + space + this.description;
-		int x = origin.x + (int)((location.x)*factor);
-		int y = origin.y + (int)((location.y )*factor);
-		if(tempLocation!=null) {
-			x = tempLocation.x;
-			y = tempLocation.y;
-		}
-		
-		textLength = fm.stringWidth(label);
-		textHeight = fm.getAscent();
-		
-		int size = (int)(this.size*factor);
-		
-		g.setColor(nodeColor);
-		if(succesFailScore!=null) {
-			g.setColor(getSuccesFailColor());
-			if(!nodeColor.equals(getSuccesFailColor())) {
-				g.setColor(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 60));
-				if(blur)
-					g.setColor(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 10));
-				g.fillOval(x-3*size/2, y-3*size/2+textHeight/6, 3*size, 3*size);
-				g.setColor(getSuccesFailColor());
+		boolean nodeInstancesOverlap = false;
+		for (String v1code: visible) {
+			for (String v2code: visible) {
+				if(v1code.compareTo(v2code)<0) {
+					Point location0 = getLocation(v1code);
+					int x0 = origin.x + (int)((location0.x)*factor);
+					int y0 = origin.y + (int)((location0.y )*factor);
+					Point location1 = getLocation(v2code);
+					int x1 = origin.x + (int)((location1.x)*factor);
+					int y1 = origin.y + (int)((location1.y )*factor);
+					if(Math.abs(x0-x1)<1 && Math.abs(y0-y1)<1)
+						nodeInstancesOverlap = true;
+					BasicStroke dashed = new BasicStroke(1.3f*(float)factor, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash1, 0.0f);
+			        g.setStroke(dashed);
+					g.setPaint(nodeBorderColor);
+					GeneralPath path = new GeneralPath();
+					path.moveTo(x0,y0);
+					path.lineTo(x1,y1);
+					path.moveTo(x0,y0);
+					path.closePath();
+					g.draw(path);
+				}
 			}
 		}
-		if(blur)
-			g.setColor(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 30));
-		g.fillOval(x-size/2, y-size/2+textHeight/6, size, size);
 		
-		g.setColor(nodeBorderColor);
-		g.setStroke(new BasicStroke(2f*(float)factor));
-		if(blur)
-			g.setColor(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 30));
-		if(selected.contains(code)) {
-			g.setColor(textColor);
-			g.drawOval(x-size/2-1, y-size/2+textHeight/6-1, size+2, size+2);
-		}
-		g.drawOval(x-size/2, y-size/2+textHeight/6, size, size);
-		
-		g.setColor(textColor);
-		if(blur)
-			g.setColor(new Color(textColor.getRed(), textColor.getGreen(), textColor.getBlue(), 30));
-		g.drawString(label, x-textLength/2, y+textHeight/2);
-		
-		if (tempLocation != null) break;
+		for (String code: getMethodeCodes()) {
+			if(visible.contains(code)) {
+				location = getLocation(code);
+				//g.setFont(defaultFont.deriveFont((int)(defaultFontSize*factor)));
+				g.setFont(new Font("SansSerif", Font.PLAIN, (int)(defaultFontSize*factor)));
+				if(selected.contains(code))
+					g.setFont(new Font("SansSerif", Font.BOLD, (int)(defaultFontSize*factor)));
+				fm = g.getFontMetrics();
+					
+				String space = "";
+				if(subdomein!=null && !"".equals(subdomein))
+					space = " - ";
+				String label = this.subdomein + space + this.description;
+				int x = origin.x + (int)((location.x)*factor);
+				int y = origin.y + (int)((location.y )*factor);
+				if(tempLocation!=null) {
+					x = tempLocation.x;
+					y = tempLocation.y;
+				}
+				
+				textLength = fm.stringWidth(label);
+				textHeight = fm.getAscent();
+				
+				int size = (int)(this.size*factor);
+				
+				g.setColor(nodeColor);
+				if(nodeInstancesOverlap)
+					g.setColor(Color.red);
+				if(succesFailScore!=null) {
+					g.setColor(getSuccesFailColor());
+					if(!nodeColor.equals(getSuccesFailColor())) {
+						g.setColor(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 60));
+						if(blur)
+							g.setColor(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 10));
+						g.fillOval(x-3*size/2, y-3*size/2+textHeight/6, 3*size, 3*size);
+						g.setColor(getSuccesFailColor());
+					}
+				}
+				if(blur)
+					g.setColor(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 30));
+				g.fillOval(x-size/2, y-size/2+textHeight/6, size, size);
+				
+				g.setColor(nodeBorderColor);
+				g.setStroke(new BasicStroke(2f*(float)factor));
+				if(blur)
+					g.setColor(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 30));
+				if(selected.contains(code)) {
+					g.setColor(textColor);
+					g.drawOval(x-size/2-1, y-size/2+textHeight/6-1, size+2, size+2);
+				}
+				g.drawOval(x-size/2, y-size/2+textHeight/6, size, size);
+				
+				g.setColor(textColor);
+				if(blur)
+					g.setColor(new Color(textColor.getRed(), textColor.getGreen(), textColor.getBlue(), 30));
+				g.drawString(label, x-textLength/2, y+textHeight/2);
+				
+				if (tempLocation != null) break;
+			}
 		}
 	}
 	
@@ -416,13 +460,36 @@ public class GraphNode {
 	}
 	
 	public void setVisible(boolean b) {
-		visible = b;
+		if (b)
+			visible.addAll(getMethodeCodes());
+		else
+			visible.clear();
+	}
+	
+	public void setVisible(String code, boolean b) {
+		for(String methodeCode : getMethodeCodes())
+			if(methodeCode.startsWith(code)) {
+				if(b) {
+					//visible.clear();
+					visible.add(methodeCode);
+				}
+				else
+					visible.remove(methodeCode);
+			}
 	}
 	
 	public boolean isVisible() {
+		return !visible.isEmpty();
+	}
+	
+	public boolean isVisible(String code) {
+		return visible.contains(code);
+	}
+	
+	public Set<String> getVisibleSet() {
 		return visible;
 	}
-
+	
   public void setMethodeInfos(List<DomStudentModelMethodInfo> infos) {
       if (infos != null) { 
         for(DomStudentModelMethodInfo info: infos) {
