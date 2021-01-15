@@ -36,6 +36,7 @@ public class WrapSco extends Sco {
     public WrapSco(Sco delegate) {
         this.delegate = delegate;
         setEditor(delegate);
+        super.setLessonMode(delegate.getLessonMode());
     }
 
     private Sco delegate;
@@ -306,6 +307,7 @@ public class WrapSco extends Sco {
 	 * @see fi.dwo.client.domain.ScoBase#setLessonMode(java.lang.String)
 	 */
 	public void setLessonMode(String lessonMode) {
+	    super.setLessonMode(lessonMode);
 		delegate.setLessonMode(lessonMode);
 	}
 
@@ -315,7 +317,7 @@ public class WrapSco extends Sco {
 	 * @see fi.dwo.client.domain.ScoBase#GetValue(java.lang.String)
 	 */
 	public String GetValue(String iDataModelElement) {
-		System.out.println("wrap.GetValue " + iDataModelElement);
+		//System.out.println("wrap.GetValue " + iDataModelElement);
 		if(LESSON_LOCATION.equals(iDataModelElement))
 		{
 			String value = delegate.getLessonLocation();
