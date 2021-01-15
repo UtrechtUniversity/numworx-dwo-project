@@ -669,6 +669,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 
 			zetAfdekPanelTempotoets(tempotoetsLocked, isAllCorrect());
 		}
+		
+		on.setReviewLocation();
+		
 	}
 
 	/**

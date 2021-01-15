@@ -2858,4 +2858,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
       w.setPixelSize(width, -1);
     }   
   }
+
+	public void setReviewLocation() {
+		if (isReview()) {
+			memento.setCurrentOpdracht(getCurrentOpdracht());
+		}		
+	}
 }
