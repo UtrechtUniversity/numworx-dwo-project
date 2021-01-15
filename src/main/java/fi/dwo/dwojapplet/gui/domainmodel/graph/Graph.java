@@ -256,7 +256,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 //				g.drawString(">", 220, 5*textHeight/4);
 //			g.drawString(selectedBookTitle, 260, 5*textHeight/4);
 		}
-		if(factor<0.15) {
+		if(factor<0.20) {
 			for(int i=0 ; i<bookNodes.size() ; i++) {
 				bookNodes.get(i).paint(g, origin, factor);
 			}
@@ -786,7 +786,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 //			selectedBookTitle = "";
 //		}
 		for(int i=0 ; i<bookNodes.size() ; i++) {
-			if(factor<0.15 && bookNodes.get(i).contains(ex, ey, factor)) {
+			if(factor<0.2 && bookNodes.get(i).contains(ex, ey, factor)) {
 				bNode = bookNodes.get(i);
 				break;
 			}
@@ -857,7 +857,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	}
 
 	public void setModel(TreeModel model) {
-		selectMethode("Getal&Ruimte");
+		//selectMethode("Getal&Ruimte");
 		Map<String, GraphNode> graphMap = new LinkedHashMap<>();
 		List<NodeLeaf> leaves = new ArrayList<>();
 		ArrayList<GraphEdge> edges = new ArrayList<>();

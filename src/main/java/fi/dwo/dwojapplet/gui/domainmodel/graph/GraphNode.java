@@ -346,7 +346,7 @@ public class GraphNode {
 		boolean nodeInstancesOverlap = false;
 		for (String v1code: visible) {
 			for (String v2code: visible) {
-				if(v1code.compareTo(v2code)<0) {
+				if(v1code.compareTo(v2code)<0 && tempLocation==null) {
 					Point location0 = getLocation(v1code);
 					int x0 = origin.x + (int)((location0.x)*factor);
 					int y0 = origin.y + (int)((location0.y )*factor);
