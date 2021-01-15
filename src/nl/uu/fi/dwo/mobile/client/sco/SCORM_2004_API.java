@@ -41,8 +41,8 @@ public class SCORM_2004_API implements Scorm2004IF {
 	}
 	
 	static {
-		loaded = 
-		script("scripts/SCORM_2004_APIWrapper.js"); 
+		loaded = Promises.resolved(null);
+		//script("scripts/SCORM_2004_APIWrapper.js"); 
 	}
 	
 	private native String Initialize0() /*-{
