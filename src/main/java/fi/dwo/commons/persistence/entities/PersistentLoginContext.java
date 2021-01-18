@@ -139,10 +139,13 @@ public class PersistentLoginContext implements Serializable {
         }
         if (this.schoolGroupID != null) {
             loginContext.setSchoolGroupId(PersistentSchoolGroup.buildPersistenceId(schoolGroupID));
+            PersistentHasRolePK pk = new PersistentHasRolePK(userID, schoolGroupID);
+            loginContext.setHasRoleId(PersistentHasRole.buildPersistenceId(pk));
         }
         loginContext.setLastLoginTimeStamp(lastLoginTimeStamp);
         loginContext.setRegisterTimeStamp(registerTimeStamp);
         loginContext.setUserId(PersistentUser.buildPersistenceId(userID));
+        
         //Use hex-encoding for compatibility with software TOTP-generators
         String encoded = secretKey==null ? null : DatatypeConverter.printHexBinary(secretKey);
         //decode with         byte result[] = DatatypeConverter.parseHexBinary(encoded);
