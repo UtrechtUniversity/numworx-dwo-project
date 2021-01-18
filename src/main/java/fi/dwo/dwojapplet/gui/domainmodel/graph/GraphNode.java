@@ -64,8 +64,8 @@ public class GraphNode {
 	private int textHeight;
 	
 	private boolean blur;
-	private final Set<String> selected = new TreeSet<>();
-	private final Set<String> visible = new TreeSet<>();
+	private final Set<String> selected = new HashSet<>();
+	private final Set<String> visible = new HashSet<>();
 	
 	private Double succesFailScore = null;
 	
@@ -278,7 +278,7 @@ public class GraphNode {
 	
 	public void setMethodeInfo(Map<String, Map<String,Set<Integer>>> methodeInfo) {
 		this.methodeInfo = methodeInfo;
-		this.methodeInfos = new TreeMap<>();
+		this.methodeInfos = new HashMap<>();
 		for (String methodeName : methodeInfo.keySet()) {
 			Map<String,Set<Integer>> leerjaren = methodeInfo.get(methodeName);
 			for (String leerjaarName : leerjaren.keySet()){
