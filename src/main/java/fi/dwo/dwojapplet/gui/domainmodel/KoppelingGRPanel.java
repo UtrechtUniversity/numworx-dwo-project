@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.ActionListener;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -59,6 +60,7 @@ public class KoppelingGRPanel extends JPanel implements Constants {
 	private JCheckBox[][] cb;
 	private JComponent[] hf ;
 	private JComponent[] jl ;
+	private JComponent   all;
 	
 	KoppelingGRPanel(String koppeling, String[] jaarlagen, int[] aantal, boolean filter) {
 		super(new BorderLayout());
@@ -135,9 +137,31 @@ public class KoppelingGRPanel extends JPanel implements Constants {
 			jl[i].setForeground(colorBlue1);
 			mainPanel.add(jl[i]);
 		}
-		
-		plaatsGUI();	
+
+		if (filter) {
+		  JCheckBox all = new JCheckBox();
+		  all.addActionListener(ev -> { 
+		    boolean on = all.isSelected();
+		    for(JComponent c: jl) {
+		      JCheckBox cb = (JCheckBox) c;
+		      cb.setSelected(on);
+		      for(ActionListener l : cb.getActionListeners()) { l.actionPerformed(ev); }
+		      mainPanel.repaint(); //????
+		    }		    
+		  });
+		  this.all = all;
+		} else {
+		  all = new JLabel();
+		}
+        all.setBounds(20,30,100,20);
+        all.setForeground(colorBlue1);
+        mainPanel.add(all);
+
+        plaatsGUI();	
 	}
+	
+
+	
 	
 	private JComponent createjl(String string, final int row) {
     if (filter) {
