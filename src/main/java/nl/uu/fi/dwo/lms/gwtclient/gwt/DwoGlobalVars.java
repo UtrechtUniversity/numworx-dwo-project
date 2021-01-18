@@ -244,8 +244,9 @@ public class DwoGlobalVars {
     private Promise<DomSchoolsRolesAndClassesV2> login_step1a(Promise<DomUserFullwLoginContext> resolved) throws Exception {
 
     	currentLoginContext = resolved.getValue().getDomLoginContext();
-        currentUser = resolved.getValue().getDomUserFull();  	
-    	return loginManager.getSchoolLogins();
+        currentUser = resolved.getValue().getDomUserFull();
+        DomContext context = createContext(currentLoginContext);
+    	return loginManager.getSchoolLogins(context);
     }
     
     
@@ -257,15 +258,16 @@ public class DwoGlobalVars {
      */
     private Promise<DomSchoolsRolesAndClassesV2> login_step1(Promise<DomUserFullwLoginContext> resolved) throws Exception {
       LOG.log(Level.INFO, "Login completed setting current user.");
-      GwtRestVars.getInstance().setCurrentUser(resolved.getValue().getDomUserFull(),resolved.getValue().getDomLoginContext().getRealm());
-      setCurrentUser(resolved.getValue().getDomUserFull(), resolved.getValue().getDomLoginContext().getRealm());
       currentLoginContext = resolved.getValue().getDomLoginContext();
+      DomUserFull domUserFull = resolved.getValue().getDomUserFull();
+      GwtRestVars.getInstance().setCurrentUser(domUserFull,currentLoginContext.getRealm());
+      setCurrentUser(domUserFull, currentLoginContext.getRealm());
       LOG.log(Level.INFO, "Getting current and available school logins.");
       SecuredUserSchoolLoginManagerV2 loginManager = this.loginManager;
+      DomContext context = createContext(currentLoginContext);
       Promise<DomSchoolsRolesAndClassesV2> logins;
       if (isTest() && (isSaml()||isSingleSchool())) {     
           OAuthManager oauth = new OAuthManager();
-          DomContext context = createContext(resolved.getValue());
           logins = accountManager.getBearerToken(context).then(
     		  p -> { 
     			  String token = Base64.btoa("2\f" + p.getValue()); // Format 2 
@@ -274,29 +276,28 @@ public class DwoGlobalVars {
         ).then(p -> { 
       	  GwtRestVars.getInstance().setBearerToken(p.getValue().getAccess_token());
       	  GwtRestVars.getInstance().setRefreshToken(p.getValue().getRefresh_token());
-      	  return loginManager.getSchoolLogins();
+      	  return loginManager.getSchoolLogins(context);
       	  
         } );
       } else {
-        logins = loginManager.getSchoolLogins();
+        logins = loginManager.getSchoolLogins(context);
       }
       
       return logins;
   }
 
-	private DomContext createContext(DomUserFullwLoginContext value) {
-      DomContext context = new DomContext();
-      DomLoginContext loginContext = value.getDomLoginContext();
-      context.setRealm(loginContext.getRealm());
-      DomHasRole domHasRole = new DomHasRole();
-      domHasRole.setUserId(loginContext.getUserId());
-      domHasRole.setSchoolGroupId(loginContext.getSchoolGroupId());
-      //domHasRole.setId(loginContext.getHasRoleId()); FIXME
-      setHasRoleId(domHasRole);
-      domHasRole.setRights(""); // no rights....
-      context.setDomHasRole(domHasRole);
-      return context;
-    }
+	public DomContext createContext(DomLoginContext loginContext) {
+    DomContext context = new DomContext();
+    context.setRealm(loginContext.getRealm());
+    DomHasRole domHasRole = new DomHasRole();
+    domHasRole.setUserId(loginContext.getUserId());
+    domHasRole.setSchoolGroupId(loginContext.getSchoolGroupId());
+    //domHasRole.setId(loginContext.getHasRoleId()); FIXME
+    setHasRoleId(domHasRole);
+    domHasRole.setRights(""); // no rights....
+    context.setDomHasRole(domHasRole);
+    return context;
+  }
 
 	/* From PersistentHasRole
      public static PersistenceId buildPersistenceId(PersistentHasRolePK hasRoleKey) {

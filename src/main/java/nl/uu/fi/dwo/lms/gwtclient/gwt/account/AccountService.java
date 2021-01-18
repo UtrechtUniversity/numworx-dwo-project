@@ -75,7 +75,7 @@ public class AccountService {
     }
     
     public Promise<DomSchoolsRolesAndClassesV2> getSchoolLogins(){
-        return schoolLoginManager.getSchoolLogins();
+        return schoolLoginManager.getSchoolLogins(createContext());
     }
     public Promise<Boolean> removeCurrentUser() {
       return accountManager.removeCurrentUser(createContext());
