@@ -19,6 +19,10 @@ public interface SecuredUserSchoolLoginRestCallerV2 extends RestService {
     @Path("/secure/user/account/loginsV2/getList")
     public void getSchoolLogins(MethodCallback<DomSchoolsRolesAndClassesV2> callback);
 
+    @GET
+    @Path("/sec:{id}/user/account/loginsV2/getList")
+    public void getSchoolLogins(@PathParam("id") String id, MethodCallback<DomSchoolsRolesAndClassesV2> callback);
+
     @PUT
     @Path("/sec:{id}/user/account/loginsV2/select")
     public void switchToSchoolLogin(@PathParam("id") String id, RestSchoolRoleAndClassV2 rsrc, MethodCallback<DomSchoolRoleAndClassV2> callback);

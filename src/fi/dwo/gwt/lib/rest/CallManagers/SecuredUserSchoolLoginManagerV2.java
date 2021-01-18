@@ -7,6 +7,7 @@ import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredUserSchoolLoginRestCallerV2
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolLogin;
 import nl.uu.fi.dwo.rest.entities.RestNewSchoolLogin;
 
@@ -44,10 +45,20 @@ public class SecuredUserSchoolLoginManagerV2 {
         this.getSchoolLoginsV2(defer);
         return defer.getPromise();
     }
+ 
+    public Promise<DomSchoolsRolesAndClassesV2> getSchoolLogins(DomContext context) {
+      PromiseCallback<DomSchoolsRolesAndClassesV2> defer = new PromiseCallback<DomSchoolsRolesAndClassesV2>();
+      this.getSchoolLoginsV2(context, defer);
+      return defer.getPromise();
+  }
         
     private void getSchoolLoginsV2(MethodCallback<DomSchoolsRolesAndClassesV2> callBack)  {
         F( (id, arg, c) -> service.getSchoolLogins(c), null, null, callBack);
     }
+
+    private void getSchoolLoginsV2(DomContext context, MethodCallback<DomSchoolsRolesAndClassesV2> callBack)  {     
+      F( (id, arg, c) -> service.getSchoolLogins(id, c), PathId.getId(context), null, callBack);
+  }
 
     public Promise<DomSchoolRoleAndClassV2> switchToSchoolLogin(DomSchoolRoleAndClassV2 reqSrac) {
         PromiseCallback<DomSchoolRoleAndClassV2> defer = new PromiseCallback<DomSchoolRoleAndClassV2>();
