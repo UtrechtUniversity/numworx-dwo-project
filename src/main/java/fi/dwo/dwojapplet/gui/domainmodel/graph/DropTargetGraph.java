@@ -35,6 +35,7 @@ public class DropTargetGraph extends DropTargetAdapter {
 				for (GraphNode node : nodes) {
 					if (node.getID().equals(id)) {
 						node.setLocation(ex, ey);
+						node.setVisible(true); // Feedback
 						break;
 					}
 				}

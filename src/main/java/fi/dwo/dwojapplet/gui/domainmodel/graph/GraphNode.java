@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 //import javax.validation.constraints.NotNull;
 import java.util.TreeMap;
@@ -294,9 +295,7 @@ public class GraphNode {
 	public boolean hasMethodCode(String code) {
 		if (code == null)
 			return false;
-		System.out.println("hasMethodeCode()   code: "+code + "  "+methodeInfos.containsKey(code));
-		//return methodeInfos.containsKey(code);
-		return methodeInfos.values().stream().anyMatch(t -> code.startsWith(t.getMethod()));
+		return methodeInfos.values().stream().anyMatch(t -> code.startsWith(Objects.toString(t.getMethod(), "null")));
 	}
 
 	public boolean hasBookCode(String code) {
@@ -345,6 +344,7 @@ public class GraphNode {
 
 		boolean nodeInstancesOverlap = false;
 		for (String v1code: visible) {
+		    if (v1code == null) continue;
 			for (String v2code: visible) {
 				if(v1code.compareTo(v2code)<0 && tempLocation==null) {
 					Point location0 = getLocation(v1code);
