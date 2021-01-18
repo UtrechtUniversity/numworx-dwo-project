@@ -69,7 +69,7 @@ public class StudentPresenterFactory implements PresenterFactory {
     return loginPresenter;
   }
 
-  @Override @JsMethod
+  @Override
   public WelcomePresenter getWelcomePresenter() {
     return null;
   }
@@ -79,7 +79,7 @@ public class StudentPresenterFactory implements PresenterFactory {
     return accountPresenter;
   }
 
-  @Override @JsMethod
+  @Override
   public SchoolclassesPresenter getSchoolclassesPresenter() {
     // TODO Auto-generated method stub
     return null;
@@ -91,7 +91,7 @@ public class StudentPresenterFactory implements PresenterFactory {
     return null;
   }
 
-  @Override @JsMethod
+  @Override
   public AddStudentToSchoolclassPresenter getAddStudentToSchoolclassPresenter() {
     // TODO Auto-generated method stub
     return null;
@@ -118,7 +118,7 @@ public class StudentPresenterFactory implements PresenterFactory {
     return modulesPresenter;
   }
 
-  @Override @JsMethod
+  @Override
   public StudentResultsPresenter getResultsPresenter() {
     return studentResultsPresenter.get();
   }
