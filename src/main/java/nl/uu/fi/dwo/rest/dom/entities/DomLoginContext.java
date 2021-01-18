@@ -3,7 +3,6 @@
  */
 package nl.uu.fi.dwo.rest.dom.entities;
 
-import java.beans.Transient;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -18,6 +17,7 @@ public class DomLoginContext {
     private PersistenceId id;
     private PersistenceId userId;
     private PersistenceId schoolGroupId;
+    private PersistenceId hasRoleId;
     private Long registerTimeStamp;
     private Long lastLoginTimeStamp;
     private String secretKey, realm;
@@ -129,5 +129,19 @@ public class DomLoginContext {
      */
     public void setRealm(String realm) {
       this.realm = realm;
-    }    
+    }
+
+	/**
+	 * @return the hasRoleId
+	 */
+	public PersistenceId getHasRoleId() {
+		return hasRoleId;
+	}
+
+	/**
+	 * @param hasRoleId the hasRoleId to set
+	 */
+	public void setHasRoleId(PersistenceId hasRoleId) {
+		this.hasRoleId = hasRoleId;
+	}    
 }
