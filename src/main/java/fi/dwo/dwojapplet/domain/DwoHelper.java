@@ -22,6 +22,7 @@ import fi.dwo.dwojapplet.gui.MainPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
@@ -138,23 +139,23 @@ public final class DwoHelper {
         return currentUser.getSingleSchool();
     }
 
-    /**
-     * Initialization function that retrieves some basic configuration data from
-     * the server. DwoHelper is to be initialized after the DWO started and any
-     * pre-initialization occurred specifying resource locations.
-     *
-     * @throws Dwo2Exception
-     */
-    public static void init() throws Dwo2Exception {
-        //Fetch all the login roles from the server for the current roles
-        try {
-            schoolLogins = SecureUserAccountLoginsManager.getSchoolLogins();
-            //TODO should set relevant properties when calling init using REST-interface: school, hasRole etc...
-
-        } catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, "", ex);
-        }
-    }
+//    /**
+//     * Initialization function that retrieves some basic configuration data from
+//     * the server. DwoHelper is to be initialized after the DWO started and any
+//     * pre-initialization occurred specifying resource locations.
+//     *
+//     * @throws Dwo2Exception
+//     */
+//    public static void init() throws Dwo2Exception {
+//        //Fetch all the login roles from the server for the current roles
+//        try {
+//            schoolLogins = SecureUserAccountLoginsManager.getSchoolLogins();
+//            //TODO should set relevant properties when calling init using REST-interface: school, hasRole etc...
+//
+//        } catch (Dwo2Exception ex) {
+//            LOG.log(Level.SEVERE, "", ex);
+//        }
+//    }
 
     /**
      * User initialization. When ever the user changes or his active schoollogin
@@ -173,20 +174,26 @@ public final class DwoHelper {
             if (aCurrentUser != null) {
               String realm = aLoginContext.getRealm();
               //StoredRestManager.getInstance().setBasicAuthString(username, password, realm);
-
+                DomHasRole role = new DomHasRole();
+                role.setId(currentLoginContext.getHasRoleId());
+                role.setSchoolGroupId(currentLoginContext.getSchoolGroupId());
+                role.setUserId(currentLoginContext.getUserId());
+                role.setRights("");
+                DomContext context = new DomContext();
+                context.setRealm(realm);
+                context.setDomHasRole(role);
+                StoredRestManager.getInstance().getAuthenticator().setContext(context);
+               
                 DomSchoolsRolesAndClassesV2 srcs = SecureUserAccountLoginsManager.getSchoolLogins();//update DwoHelper
                 DwoHelper.setSchoolLogins(srcs);
 //                nullSchool = SecureUserAccountManager.getNullSchool();
 // XXX Gert, review: hier okay?                
 // initialize the rest authenticator
-                DomContext context = new DomContext();
                 DomSchoolRoleAndClassV2 activeSchoolRoleAndClass = srcs.getActiveSchoolRoleAndClass();
 				if (activeSchoolRoleAndClass != null) 
 				{
 				  context.setDomHasRole(activeSchoolRoleAndClass.getHasRole());
 				} 
-				context.setRealm(realm);
-				StoredRestManager.getInstance().getAuthenticator().setContext(context);
             } else {
                 schoolLogins = null;
                 StoredRestManager.getInstance().setBasicAuthString(null,null,null);
