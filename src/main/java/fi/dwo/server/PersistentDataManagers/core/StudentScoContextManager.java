@@ -9,6 +9,7 @@ import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;
@@ -225,6 +226,19 @@ public class StudentScoContextManager {
             em.close();
         }
     }
+    
+    public static List<PersistentStudentScoContext> findEntities(PersistentUser key) {
+      EntityManager em = getEntityManager();
+      try {
+          javax.persistence.Query q = em.createNamedQuery("PersistentStudentScoContext.findByUserID");
+          q.setParameter("userID", key.getId());
+          List<PersistentStudentScoContext> list = q.getResultList();
+          LOG.log(Level.FINE, "StudentScoContextManager-manager retrieved {0} PersistentStudentScoContext with key {1}", new Object[]{list.size(), key.toString()});
+          return list;
+      } finally {
+          em.close();
+      }
+  }
 
     public static PersistentStudentScoContext findEntity(Long id)  throws PersistenceException{
         EntityManager em = getEntityManager();

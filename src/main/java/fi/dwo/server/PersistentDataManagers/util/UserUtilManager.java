@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -19,6 +20,8 @@ import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
@@ -28,6 +31,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 
 /**
  * Checks if a user is in a certain role context.
@@ -119,6 +123,16 @@ public class UserUtilManager {
           throw new Dwo2RestException(e);
         }
       });
+// restjes studentSco van een user
+      List<PersistentStudentScoContext> sscList = StudentScoContextManager.findEntities(user);
+      for (PersistentStudentScoContext ssc : sscList) {
+        try {
+          StudentScoDataManager.destroy(ssc.getStudentSco()); //  non-fatal. studentscodata
+        } catch (EntityNotFoundException e1) {}
+        try {
+          StudentScoContextManager.destroy(ssc.getStudentSco());
+        } catch (EntityNotFoundException e) {}
+      }
 
       SamlUserManager.findEntities(user).forEach(t -> SamlUserManager.destroy(t.getId()));
       LoginContextManager.findEntities(user.getId()).forEach( t-> LoginContextManager.destroy(t.getId()));
