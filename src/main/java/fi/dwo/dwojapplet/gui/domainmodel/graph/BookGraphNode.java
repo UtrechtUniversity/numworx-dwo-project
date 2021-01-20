@@ -18,10 +18,16 @@ public class BookGraphNode {
 	public static String[] bookCodes = {
 			"Getal&Ruimte-1HV",
 			"Getal&Ruimte-2HV",
-			"Getal&Ruimte-3V"
+			"Getal&Ruimte-3V",
+			"Moderne Wiskunde-1HV",
+			"Moderne Wiskund-2HV",
+			"Moderne Wiskund-3V"
 			
 	};
 	public static String[] bookDescriptions = {
+			"1HV",
+			"2HV",
+			"3V",
 			"1HV",
 			"2HV",
 			"3V"

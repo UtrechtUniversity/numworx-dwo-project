@@ -306,6 +306,15 @@ public class GraphNode {
 	    return methodeInfos.values().stream().anyMatch(t -> code.equals(t.getMethod() + "-" +t.getBook()+"-"+t.getChapter()));
 	}
 	
+	public boolean hasChapterCode(String methode, String book, Set<Integer> chapters) {
+		for(Integer chapter : chapters) {
+			String code = methode + "-" + book + "-" + chapter;
+			if(methodeInfos.values().stream().anyMatch(t -> code.equals(t.getMethod() + "-" +t.getBook()+"-"+t.getChapter())))
+				return true;	
+		}
+	    return false;
+	}
+	
 	public Collection<DomStudentModelMethodInfo> getMethodeInfos() {
 	    if(methodeInfo == null || methodeInfo.isEmpty()) return null;
 		return methodeInfos.values();
@@ -477,6 +486,25 @@ public class GraphNode {
 					visible.remove(methodeCode);
 			}
 	}
+	
+	public void setVisible(String methode, String book, Set<Integer> chapters, boolean b) {
+		for(String methodeCode : getMethodeCodes()) {
+			boolean match = false;
+			for(Integer chapter : chapters) {
+				String code = methode + "-" + book + "-" + chapter;
+				if(methodeCode.startsWith(code)) {
+					match = true;
+					break;
+				}
+			}
+			if(match && b) {
+				visible.add(methodeCode);
+			}
+			else if(match)
+				visible.remove(methodeCode);
+		}
+	}
+	
 	
 	public boolean isVisible() {
 		return !visible.isEmpty();

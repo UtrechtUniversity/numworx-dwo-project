@@ -68,6 +68,11 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	private JButton zoomOutButton;
 	private JButton voorkennisButton;
 	private JButton voorkennisWegButton;
+	private JButton methodeChoiceButton;
+	private PopupMenu methodeChoicePopup;
+	private MenuItem menuItemAll;
+	private MenuItem menuItemGR;
+	private MenuItem menuItemMW;
 	
 	private Font buttonFont = new Font("SansSerif", Font.BOLD, 20);
 	private Font font = new Font("SansSerif", Font.BOLD, 16);
@@ -93,6 +98,10 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	
 	private String selectedChapter;
 	private String selectedBook;
+	private String selectedMethod;
+	
+	private HashMap<String,String> methodeLabels = new HashMap();
+	
 	
 
 	public Graph() {
@@ -117,7 +126,10 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		tussenLabel1.setFont(font);
 		tussenLabel1.setForeground(Color.white);
 		
-		methodeLabel = new JLabel("Getal & Ruimte");
+		methodeLabels.put("Getal&Ruimte", "Getal & Ruimte");
+		methodeLabels.put("Moderne Wiskunde", "Moderne Wiskunde");
+		
+		methodeLabel = new JLabel("Alle leerdoelen");
 		methodeLabel.setFont(font);
 		methodeLabel.setForeground(Color.white);
 		methodeLabel.addMouseListener(this);
@@ -138,7 +150,27 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		
 		hb.setBounds(20,0,1000, 26);
 		
-		methodeChoice = new JComboBox();
+		methodeChoiceButton = new JButton("\u25be");
+		methodeChoiceButton.addActionListener(this);
+		
+		methodeChoicePopup = new PopupMenu();
+		methodeChoicePopup.setFont(new Font("SansSerif",Font.PLAIN,13));
+		
+		menuItemAll = new MenuItem("Alle leerdoelen");
+		menuItemAll.addActionListener(this);
+		methodeChoicePopup.add(menuItemAll);
+		
+		menuItemGR = new MenuItem("Getal & Ruimte");
+		menuItemGR.addActionListener(this);
+		methodeChoicePopup.add(menuItemGR);
+		
+		menuItemMW = new MenuItem("Moderne Wiskunde");
+        menuItemMW.addActionListener(this);
+        methodeChoicePopup.add(menuItemMW);
+        
+        add(methodeChoicePopup);
+        
+        methodeChoice = new JComboBox();
 		methodeChoice.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		methodeChoice.addItem("Getal en Ruimte");
 		methodeChoice.addItem("Moderne Wiskunde");
@@ -151,7 +183,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		methodeChoice.setMaximumSize(new Dimension(20,24));
 		methodeChoice.setPreferredSize(new Dimension(20,24));
 		
-		//hb.add(methodeChoice);
+		hb.add(methodeChoiceButton);
 		hb.add(methodeLabel);
 		hb.add(Box.createHorizontalStrut(40));
 		hb.add(tussenLabel1);
@@ -292,7 +324,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 //				source.setTempLocation(makeTempLocation(source, target));
 //			if(edge.getLength() < 600)
 //				source.setTempLocation(null);
-			if(voorkennisArea || GraphNode.hasSameChapterCode(source, target, "Getal&Ruimte"))
+			if(voorkennisArea || GraphNode.hasSameChapterCode(source, target))
 				graphEdges.get(i).paint(g, origin, factor);
 		}
 		
@@ -373,17 +405,30 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			}
 			
 			chapterEdges.clear();
-			//hfst 1
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(0), chapterNodes.get(3)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(0), chapterNodes.get(6)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(0), chapterNodes.get(8)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(3), chapterNodes.get(6)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(1), chapterNodes.get(2)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(1), chapterNodes.get(4)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(1), chapterNodes.get(5)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(1), chapterNodes.get(7)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(5), chapterNodes.get(7)));
-			//hfst 2
+			
+			for(ChapterGraphNode cSourceNode : chapterNodes ) {
+				for(ChapterGraphNode cTargetNode : chapterNodes ) {
+					if(cSourceNode!=cTargetNode && cSourceNode.getMethodCode().equals(cTargetNode.getMethodCode())) {
+						for(GraphEdge edge : graphEdges) {
+							if(edge.getSource().hasChapterCode(cSourceNode.getHfstCode()) && edge.getTarget().hasChapterCode(cTargetNode.getHfstCode()) && cSourceNode.getBookCode().compareTo(cTargetNode.getBookCode())==0) {
+								chapterEdges.add(new ChapterGraphEdge(cSourceNode, cTargetNode));
+								break;
+							}
+						}
+					}
+				}
+			}
+//			//hfst 1
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(0), chapterNodes.get(3)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(0), chapterNodes.get(6)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(0), chapterNodes.get(8)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(3), chapterNodes.get(6)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(1), chapterNodes.get(2)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(1), chapterNodes.get(4)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(1), chapterNodes.get(5)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(1), chapterNodes.get(7)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(5), chapterNodes.get(7)));
+//			//hfst 2
 			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(9), chapterNodes.get(11)));
 			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(9), chapterNodes.get(12)));
 			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(9), chapterNodes.get(15)));
@@ -391,16 +436,16 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(10), chapterNodes.get(16)));
 			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(11), chapterNodes.get(15)));
 			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(12), chapterNodes.get(15)));
-			
-			//hfst 1-2
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(4), chapterNodes.get(9)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(7), chapterNodes.get(9)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(6), chapterNodes.get(10)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(8), chapterNodes.get(10)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(12), chapterNodes.get(13)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(4), chapterNodes.get(14)));
-			
-			//hfst 3
+//			
+//			//hfst 1-2
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(4), chapterNodes.get(9)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(7), chapterNodes.get(9)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(6), chapterNodes.get(10)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(8), chapterNodes.get(10)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(12), chapterNodes.get(13)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(4), chapterNodes.get(14)));
+//			
+//			//hfst 3
 			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(17), chapterNodes.get(21)));
 			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(17), chapterNodes.get(19)));
 			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(19), chapterNodes.get(21)));
@@ -409,15 +454,15 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(21), chapterNodes.get(22)));
 			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(17), chapterNodes.get(24)));
 			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(19), chapterNodes.get(24)));
-			
-			//hfst 2-3
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(9), chapterNodes.get(22)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(11), chapterNodes.get(17)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(15), chapterNodes.get(19)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(13), chapterNodes.get(18)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(14), chapterNodes.get(20)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(16), chapterNodes.get(18)));
-			
+//			
+//			//hfst 2-3
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(9), chapterNodes.get(22)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(11), chapterNodes.get(17)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(15), chapterNodes.get(19)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(13), chapterNodes.get(18)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(14), chapterNodes.get(20)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(16), chapterNodes.get(18)));
+//			
 			
 			bookNodes.clear();
 			for(int i=0 ; i< BookGraphNode.bookCodes.length ; i++) {
@@ -427,7 +472,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			bookEdges.clear();
 			bookEdges.add(new BookGraphEdge(bookNodes.get(0), bookNodes.get(1)));
 			bookEdges.add(new BookGraphEdge(bookNodes.get(1), bookNodes.get(2)));
-			//bookEdges.add(new BookGraphEdge(bookNodes.get(0), bookNodes.get(2)));
+//			//bookEdges.add(new BookGraphEdge(bookNodes.get(0), bookNodes.get(2)));
 			
 			
 		}
@@ -479,10 +524,47 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	public void setAsScoreGraph (Boolean isScoreGraph) {
 		this.isScoreGraph = isScoreGraph;
 	}
-	public void selectMethode(String methodeCode) { selectMethode(methodeCode, true); }
-	public void selectMethode(String methodeCode, boolean b) {
+
+	public void deselectMethode() {
+		deselectMethode(true);
+	}
+	
+	public void deselectMethode(boolean b) {
 		selectedChapter = null;
 		selectedBook = null;
+		selectedMethod = null;
+		for(int i=0 ; i<graphNodes.size() ; i++) {
+			graphNodes.get(i).setVisible(true);
+			graphNodes.get(i).setTempLocation(null);
+		}
+		if(b)
+			produceAction("filter");
+		zoomFit();
+		for(int i=0 ; i<chapterNodes.size() ; i++) {
+			chapterNodes.get(i).makeLocation(graphNodes);
+		}
+		for(int i=0 ; i<bookNodes.size() ; i++) {
+			bookNodes.get(i).makeLocation(chapterNodes);
+		}
+		verbergVoorkennis();
+		methodeLabel.setText("Alle leerdoelen");
+		tussenLabel1.setText("");
+		bookLabel.setText("");
+		tussenLabel2.setText("");
+		chapterLabel.setText("");
+		voorkennisButton.setVisible(false);
+	}
+	
+
+	public void selectMethode(String methodeCode) { 
+		selectMethode(methodeCode, true); 
+	}
+	
+	public void selectMethode(String methodeCode, boolean b) {
+
+		selectedChapter = null;
+		selectedBook = null;
+		selectedMethod = methodeCode;
 		for(int i=0 ; i<graphNodes.size() ; i++) {
 			graphNodes.get(i).setVisible(false);
 		}
@@ -498,13 +580,11 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		for(int i=0 ; i<chapterNodes.size() ; i++) {
 			chapterNodes.get(i).makeLocation(graphNodes);
 		}
-		for(int i=0 ; i<chapterNodes.size() ; i++) {
-			chapterNodes.get(i).makeLocation(graphNodes);
-		}
 		for(int i=0 ; i<bookNodes.size() ; i++) {
 			bookNodes.get(i).makeLocation(chapterNodes);
 		}
 		verbergVoorkennis();
+		methodeLabel.setText(methodeLabels.get(methodeCode));
 		tussenLabel1.setText("");
 		bookLabel.setText("");
 		tussenLabel2.setText("");
@@ -513,9 +593,14 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	}
 	
 	public void selectBook(String bookCode) {
+		selectBook(bookCode,true);
+	}
+	
+	public void selectBook(String bookCode, boolean b) {
 		verbergVoorkennis();
 		selectedChapter = null;
 		selectedBook = bookCode;
+		selectedMethod = bookCode.substring(0, bookCode.indexOf("-"));
 		//bookSelected = true;
 		for(int i=0 ; i<graphNodes.size() ; i++) {
 			graphNodes.get(i).setVisible(false);
@@ -527,7 +612,8 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			else
 				graphNodes.get(i).setVisible(bookCode, true);
 		}
-		produceAction("filter");
+		if(b)
+			produceAction("filter");
 		for(int i=0 ; i<chapterNodes.size() ; i++) {
 			chapterNodes.get(i).makeLocation(graphNodes);
 		}
@@ -540,6 +626,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 //		}
 		
 		zoomFit();
+		methodeLabel.setText(methodeLabels.get(selectedMethod));
 		tussenLabel1.setText(">");
 		bookLabel.setText(BookGraphNode.getBookDescription(bookCode));
 		tussenLabel2.setText("");
@@ -548,8 +635,38 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	}
 	
 	public void selectChapter(String hfstCode) {
+		selectChapter(hfstCode, true);
+	}
+	
+	public void selectChapters(String methode, String book, Set<Integer> chapters) {
+		selectedChapter = null;
+		selectedBook = methode + "-" + book;
+		selectedMethod = methode;
+		for(int i=0 ; i<graphNodes.size() ; i++) {
+			graphNodes.get(i).setVisible(false);
+		}
+		for(int i=0 ; i<graphNodes.size() ; i++) {
+			if(!graphNodes.get(i).hasChapterCode(methode, book, chapters))
+				graphNodes.get(i).setVisible(false);
+			else
+				graphNodes.get(i).setVisible(methode, book, chapters, true);
+		}
+		zoomFit();
+		for(int i=0 ; i<chapterNodes.size() ; i++) {
+			chapterNodes.get(i).makeLocation(graphNodes);
+		}
+		methodeLabel.setText(methodeLabels.get(selectedMethod));
+		tussenLabel1.setText(">");
+		tussenLabel2.setText("");
+		chapterLabel.setText("");
+		bookLabel.setText(BookGraphNode.getBookDescription(methode + "-" + book));
+		voorkennisButton.setVisible(false);
+	}
+			
+	public void selectChapter(String hfstCode, boolean b) {
 		selectedChapter = hfstCode;
 		selectedBook = hfstCode.substring(0, hfstCode.lastIndexOf("-"));
+		selectedMethod = hfstCode.substring(0, hfstCode.indexOf("-"));
 		for(int i=0 ; i<graphNodes.size() ; i++) {
 			graphNodes.get(i).setVisible(false);
 		}
@@ -559,11 +676,13 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			else
 				graphNodes.get(i).setVisible(hfstCode, true);
 		}
-		produceAction("filter");
+		if(b)
+			produceAction("filter");
 		zoomFit();
 		for(int i=0 ; i<chapterNodes.size() ; i++) {
 			chapterNodes.get(i).makeLocation(graphNodes);
 		}
+		methodeLabel.setText(methodeLabels.get(selectedMethod));
 		tussenLabel1.setText(">");
 		tussenLabel2.setText(">");
 		chapterLabel.setText(ChapterGraphNode.getChapterDescription(hfstCode));
@@ -716,7 +835,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			selectBook(selectedBook);
 		
 		else if(e.getSource()==methodeLabel)
-			selectMethode("Getal&Ruimte");
+			selectMethode(selectedMethod);
 		
 			//selectMethode((String)(methodeChoice.getSelectedItem()));
 		
@@ -856,10 +975,10 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 
 	}
 
+
 	public void setModel(TreeModel model, Map<String, Map<String, Set<Integer>>> filter) {
-	  
-	  
 	    Map<String, GraphNode> graphMap = new LinkedHashMap<>();
+
 		List<NodeLeaf> leaves = new ArrayList<>();
 		ArrayList<GraphEdge> edges = new ArrayList<>();
 		searchNodes(model, model.getRoot(), graphMap, "", leaves);
@@ -868,16 +987,28 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		setGraphEdges(edges);
 		modelJustSet = true;
 		setVoorkennisArea(false);
-//		if(getParent()!=null) {
-//			zoomFit();
-//		}
 
-		//selectMethode("Getal&Ruimte");
-        if (filter != null && filter.size() == 1) {
-          String methode = filter.keySet().iterator().next();
-          if (methode != null) selectMethode(methode, false);
+		if (filter != null && filter.size() == 1) {
+			String methode = filter.keySet().iterator().next();
+			Map<String, Set<Integer>> methodeMap = filter.values().iterator().next();
+			if(methodeMap!=null && methodeMap.size()==1) {
+				String book = methodeMap.keySet().iterator().next();
+				Set<Integer> bookMap = methodeMap.values().iterator().next();
+				if(bookMap!=null && bookMap.size()==1) {
+					Integer chapter =  bookMap.iterator().next();
+					selectChapter(methode + "-" + book + "-" + chapter, false);
+				}
+				else if(bookMap!=null && bookMap.size()>1){
+					selectChapters(methode, book, bookMap);
+				}
+			}
+			else
+				if (methode != null) selectMethode(methode, false);
         }
-			
+		else {
+			deselectMethode(false);
+		}
+		System.out.println("filter: "+filter);	
 		painter.repaint();
 	}
 
@@ -918,6 +1049,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 				if(x==null || y==null) {
 					GraphNode g = new GraphNode(id, parent, leaf.toString());
 					g.setMethodeInfo(leaf.getMethode());
+					System.out.println("methodeinfo: "+leaf.getMethode());
 					graphMap.put(id, g);
 					leaves.add(leaf);
 					g.setVisible(visible);
@@ -1077,6 +1209,18 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			voorkennisWegButton.setVisible(false);
 			voorkennisButton.setVisible(true);
 			verbergVoorkennis();
+		}
+		if(e.getSource()==methodeChoiceButton) {
+			methodeChoicePopup.show(methodeChoiceButton, 0, 0);
+		}
+		if(e.getSource()==menuItemGR) {
+			selectMethode("Getal&Ruimte");
+		}
+		if(e.getSource()==menuItemMW) {
+			selectMethode("Moderne Wiskunde");
+		}
+		if(e.getSource()==menuItemAll) {
+			deselectMethode();
 		}
 		
 	}

@@ -43,7 +43,47 @@ public class ChapterGraphNode {
 			"Getal&Ruimte-3V-6",
 			"Getal&Ruimte-3V-7",
 			"Getal&Ruimte-3V-8",
-			"Getal&Ruimte-3V-9"
+			"Getal&Ruimte-3V-9",
+			
+			"Moderne Wiskunde-1HV-1",
+			"Moderne Wiskunde-1HV-2",
+			"Moderne Wiskunde-1HV-3",
+			"Moderne Wiskunde-1HV-4",
+			"Moderne Wiskunde-1HV-5",
+			"Moderne Wiskunde-1HV-6",
+			"Moderne Wiskunde-1HV-7",
+			"Moderne Wiskunde-1HV-8",
+			"Moderne Wiskunde-1HV-9",
+			"Moderne Wiskunde-1HV-10",
+			"Moderne Wiskunde-1HV-11",
+			"Moderne Wiskunde-1HV-12",
+			"Moderne Wiskunde-1HV-13",
+			"Moderne Wiskunde-2HV-1",
+			"Moderne Wiskunde-2HV-2",
+			"Moderne Wiskunde-2HV-3",
+			"Moderne Wiskunde-2HV-4",
+			"Moderne Wiskunde-2HV-5",
+			"Moderne Wiskunde-2HV-6",
+			"Moderne Wiskunde-2HV-7",
+			"Moderne Wiskunde-2HV-8",
+			"Moderne Wiskunde-2HV-9",
+			"Moderne Wiskunde-2HV-10",
+			"Moderne Wiskunde-2HV-11",
+			"Moderne Wiskunde-2HV-12",
+			"Moderne Wiskunde-3V-1",
+			"Moderne Wiskunde-3V-2",
+			"Moderne Wiskunde-3V-3",
+			"Moderne Wiskunde-3V-4",
+			"Moderne Wiskunde-3V-5",
+			"Moderne Wiskunde-3V-6",
+			"Moderne Wiskunde-3V-7",
+			"Moderne Wiskunde-3V-8",
+			"Moderne Wiskunde-3V-9",
+			"Moderne Wiskunde-3V-10",
+			"Moderne Wiskunde-3V-11",
+			"Moderne Wiskunde-3V-12",
+			"Moderne Wiskunde-3V-13",
+			"Moderne Wiskunde-3V-14",
 	};
 	public static String[] hfstDescriptions = {
 			"H1 - Figuren",
@@ -71,7 +111,47 @@ public class ChapterGraphNode {
 			"H6 - Vaardigheden en vergelijkingen",
 			"H7 - Goniometrie",
 			"H8 - Allerlei verbanden",
-			"H9 - Spreiding tellen en kans"
+			"H9 - Spreiding tellen en kans",
+			
+			"H1 - GeoDriehoek en passer",
+			"H2 - Ruimtefiguren",
+			"H3 - Getallen",
+			"H4 - Grafieken",
+			"H5 - Lijnen en hoeken",
+			"H6 - Verhoudingen",
+			"H7 - Woordformules",
+			"H8 - Rekenen",
+			"H9 - Negatieve getallen",
+			"H10 - Formules en vergelijkingen",
+			"H11 - Oppervlakte en inhoud",
+			"H12 - Rekenen met variabelen",
+			"H13 - Vlakke figuren",
+			"H1 - Lineaire formules",
+			"H2 - Statistiek",
+			"H3 - Wortels",
+			"H4 - Gelijkvormigheid",
+			"H5 - Kwadratische formules",
+			"H6 - De stelling van Pythagoras",
+			"H7 - Procentuele groei",
+			"H8 - Oppervlakte",
+			"H9 - Lineaire vergelijkingen",
+			"H10 - Formules en vergelijkingen",
+			"H11 - Ontbinden in factoren",
+			"H12 - Kijk op kans",
+			"H1 - Lineaire en exponentiele functies",
+			"H2 - Parabolen",
+			"H3 - Vlakke figuren",
+			"H4 - De abc-formule",
+			"H5 - Nieuwe grafieken",
+			"H6 - Goniometrie",
+			"H7 - Kwadratische functies",
+			"H8 - Statistiek",
+			"H9 - Functies en algebra",
+			"H10 - Redeneren in driehoeken",
+			"H11A - Vergelijkingen en ongelijkheden",
+			"H11B - Vergelijkingen en ongelijkheden",
+			"H12A - Zicht op toeval",
+			"H12B - Cirkels",
 			
 	};
 	private static Color defaultNodeColor = LeerdomeinGraphPanel.colorBlue4;
@@ -152,7 +232,7 @@ public class ChapterGraphNode {
 	public void setVoorkennis(ArrayList<GraphEdge> graphEdges) {
 		for (GraphEdge edge : graphEdges) {
 			if(edge.getTarget().hasChapterCode(hfstCode) && !edge.getSource().hasChapterCode(hfstCode)) {
-				if(!voorkennisNodes.contains(edge.getSource()))
+				if(!voorkennisNodes.contains(edge.getSource()) && edge.getSource().hasMethodCode(hfstCode))
 					voorkennisNodes.add(edge.getSource());
 				if(!voorkennisEdges.contains(edge))
 					voorkennisEdges.add(edge);
@@ -252,6 +332,10 @@ public class ChapterGraphNode {
 	
 	public String getHfstDescription() {
 		return hfstDescriptionsMap.get(hfstCode);
+	}
+	
+	public String getMethodCode() {
+		return hfstCode.substring(0,hfstCode.indexOf("-"));
 	}
 	
 	public String getBookCode() {
