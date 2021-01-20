@@ -11,6 +11,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -51,7 +52,13 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
      * @return
      */
     public Promise<DomUserFullwLoginContext> login(String name, String password) {
-		return accountManager.login(name,  password, null);
+		return accountManager.login(name,  password, null).then( p -> { 
+		  DomHasRole r = new DomHasRole();
+          context.setDomHasRole(r);
+		  r.setId(p.getValue().getDomLoginContext().getHasRoleId());
+		  context.setRealm(p.getValue().getDomLoginContext().getRealm());
+		  return p;
+		});
 	}
 
     /**
@@ -69,7 +76,7 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
      * @return
      */
     public Promise<DomSchoolsRolesAndClassesV2> getSchoolLogins() {
-		return schoolManager.getSchoolLogins();
+		return schoolManager.getSchoolLogins(context);
 	}
 		
  
