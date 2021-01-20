@@ -45,6 +45,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @NamedQuery(name = "PersistentStudentScoContext.findByStudentSco", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.studentSco = :studentSco"),
     @NamedQuery(name = "PersistentStudentScoContext.findByScoID", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.scoID = :scoID"),
     @NamedQuery(name = "PersistentStudentScoContext.findByHasRolePK", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.persistentHasRolePK = :keyID"),
+    @NamedQuery(name = "PersistentStudentScoContext.findByUserID", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.persistentHasRolePK.userID = :userID"),
     @NamedQuery(name = "PersistentStudentScoContext.findByScoIDandSchoolGroupID", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.scoID = :scoID and p.persistentHasRolePK.schoolGroupID = :sgID"),    
     @NamedQuery(name = "PersistentStudentScoContext.findByScoIDandHasRolePK", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.scoID = :scoID and p.persistentHasRolePK = :keyID"),    
     @NamedQuery(name = "PersistentStudentScoContext.removeByScoIDandHasRolePK", query = "DELETE FROM PersistentStudentScoContext p WHERE p.scoID = :scoID and p.persistentHasRolePK = :keyID"),    
