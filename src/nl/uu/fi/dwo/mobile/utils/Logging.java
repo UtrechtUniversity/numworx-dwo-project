@@ -25,6 +25,6 @@ public interface Logging {
 
 	default void updateLog(Map<String, ?> map) { }
 
-	default void getStateHook(HashMap<String, Object> h) {}
+	default void getStateHook(Map<String, Object> h) {}
 
 }
