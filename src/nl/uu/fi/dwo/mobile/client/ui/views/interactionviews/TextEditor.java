@@ -568,7 +568,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			AcceptsOneWidget cmd = widget instanceof AcceptsOneWidget ? (AcceptsOneWidget) widget : null;
 			CorrectieFacade.showReview(h, cmd , this, getScoreMax());
 			setState( JSONUtilities.wrapMap(h));
-			correctie = CorrectieFacade.get(h, this, getScoreMax(),comRoot);
+			correctie = CorrectieFacade.get(h, this, getScoreMax(),comRoot, logging);
 		}
 	}
 

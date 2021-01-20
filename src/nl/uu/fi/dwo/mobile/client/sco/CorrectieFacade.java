@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.sco;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
@@ -25,14 +26,16 @@ import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 import nl.uu.fi.dwo.mobile.client.ui.views.DocentCorrectie;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.DWOPopupPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PopupButton;
+import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 public class CorrectieFacade {
     private static CorrectieFacade instance = GWT.create(CorrectieFacade.class);
     private static CorrectieFacade NULL = new CorrectieFacade();
     
+    @Deprecated
     public static CorrectieFacade get(Map<String,Object> h, InteractionView view, int maxScore, OpdrNavIF comRoot) {
-        return instance.create(h, view, view.asWidget(), maxScore, comRoot);
+        return instance.create(h, view, view.asWidget(), maxScore, comRoot, null);
     }
     public static Widget wrap(Widget view) {
         return instance.prepareWidget(view);
@@ -66,12 +69,13 @@ public class CorrectieFacade {
     return (view);
   }
 
-    public static CorrectieFacade get(Map<String,Object> h, InteractionView view, Widget widget, int maxScore, OpdrNavIF comRoot) {
+  @Deprecated
+  public static CorrectieFacade get(Map<String,Object> h, InteractionView view, Widget widget, int maxScore, OpdrNavIF comRoot) {
 	  //if (comRoot.getMode() != OpdrNavIF.EINDTOETS) return NULL; // alleen EINDTOETS, nee
-      return instance.create(h, view, widget, maxScore, comRoot);
+      return instance.create(h, view, widget, maxScore, comRoot, null);
   }
 
-    protected CorrectieFacade create(Map<String, Object> h, InteractionView view, Widget widget, int maxScore, OpdrNavIF comRoot) {
+    protected CorrectieFacade create(Map<String, Object> h, InteractionView view, Widget widget, int maxScore, OpdrNavIF comRoot, Logging logging) {
       return NULL;
     }
     
@@ -125,7 +129,15 @@ public class CorrectieFacade {
     		p.setWidget(pb);
     	}
     }
-    
+    public static CorrectieFacade get(HashMap<String, Object> h, InteractionView view,
+        int scoreMax, OpdrNavIF comRoot, Logging logging) {
+      return instance.create(h, view, view.asWidget(), scoreMax, comRoot, logging);
+    }
+    public static CorrectieFacade get(HashMap<String, Object> h, InteractionView view, IsWidget w,
+        int scoreMax, OpdrNavIF comRoot, Logging logging) {
+      return instance.create(h, view, w.asWidget(), scoreMax, comRoot, logging);
+    }
+   
     
     
     

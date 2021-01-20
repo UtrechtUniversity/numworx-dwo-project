@@ -258,7 +258,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		else 
 			pendingState = object.toString(); // XXX NPE!
 		if (!isNull)
-			correctie = CorrectieFacade.get(h, this, widget, scoreMax, comRoot);
+			correctie = CorrectieFacade.get(h, this, widget, scoreMax, comRoot, logging);
 	}
 
 	@Override

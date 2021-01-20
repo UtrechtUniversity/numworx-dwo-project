@@ -221,6 +221,7 @@ public class DWOLogger implements Logging {
 		return logIDLabel.stringValue();
 	}
 	
+	@Override
 	public void getStateHook(Map<String,Object> state) {
 		if(attempts != null)
 			state.put("log", attempts);
