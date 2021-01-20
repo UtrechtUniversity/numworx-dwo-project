@@ -479,8 +479,8 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	public void setAsScoreGraph (Boolean isScoreGraph) {
 		this.isScoreGraph = isScoreGraph;
 	}
-	
-	public void selectMethode(String methodeCode) {
+	public void selectMethode(String methodeCode) { selectMethode(methodeCode, true); }
+	public void selectMethode(String methodeCode, boolean b) {
 		selectedChapter = null;
 		selectedBook = null;
 		for(int i=0 ; i<graphNodes.size() ; i++) {
@@ -493,7 +493,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			else
 				graphNodes.get(i).setVisible(methodeCode, true);
 		}
-		produceAction("filter");
+		if (b) produceAction("filter");
 		zoomFit();
 		for(int i=0 ; i<chapterNodes.size() ; i++) {
 			chapterNodes.get(i).makeLocation(graphNodes);
@@ -856,9 +856,10 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 
 	}
 
-	public void setModel(TreeModel model) {
-		//selectMethode("Getal&Ruimte");
-		Map<String, GraphNode> graphMap = new LinkedHashMap<>();
+	public void setModel(TreeModel model, Map<String, Map<String, Set<Integer>>> filter) {
+	  
+	  
+	    Map<String, GraphNode> graphMap = new LinkedHashMap<>();
 		List<NodeLeaf> leaves = new ArrayList<>();
 		ArrayList<GraphEdge> edges = new ArrayList<>();
 		searchNodes(model, model.getRoot(), graphMap, "", leaves);
@@ -870,6 +871,12 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 //		if(getParent()!=null) {
 //			zoomFit();
 //		}
+
+		//selectMethode("Getal&Ruimte");
+        if (filter != null && filter.size() == 1) {
+          String methode = filter.keySet().iterator().next();
+          if (methode != null) selectMethode(methode, false);
+        }
 			
 		painter.repaint();
 	}

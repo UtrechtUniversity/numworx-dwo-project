@@ -22,6 +22,7 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
@@ -178,7 +179,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 							panel.makeChoices();
 							List<String> list = panel.getObjectives();
 							leaf.setVoorkennis(list);
-							graph.setModel(tree.getModel());
+							graph.setModel(tree.getModel(),null);
 						}
 					}
 				}
@@ -442,7 +443,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 			model.setRoot(filter(root, filter));
 		}
         model.nodeStructureChanged((TreeNode) model.getRoot());
-		graph.setModel(model);
+		graph.setModel(model,filter);
 	}
 
 	static InvisibleNode filter(InvisibleNode parent, Map<String, Map<String, Set<Integer>>> filter) {
@@ -479,9 +480,15 @@ public class LeerdomeinEditPanel2 extends JPanel
 	static boolean contains(Map<String, Map<String, Set<Integer>>> filter,
 			Map<String, Map<String, Set<Integer>>> methodes) {
 		for (Map.Entry<String, Map<String, Set<Integer>>> entry : filter.entrySet()) {
+		    if (entry.getKey() == null) {
+		      if (methodes.values().stream().allMatch(Map::isEmpty)) return true;
+		      continue;
+		    }		  
 			Map<String, Set<Integer>> map = methodes.getOrDefault(entry.getKey(), Collections.emptyMap());
 			if (map.isEmpty())
-				continue;
+			{ 
+			  continue;
+			}
 			for (Map.Entry<String, Set<Integer>> m : entry.getValue().entrySet()) {
 				Set<Integer> chapters = new TreeSet<>(map.getOrDefault(m.getKey(), Collections.emptySet()));
 				chapters.retainAll(m.getValue());
@@ -837,7 +844,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 					pref.width = 380;
 					leftBox.setPreferredSize(pref);
 					graph.setPreferredSize(new Dimension(1000, 650));
-					graph.setModel(model);
+					graph.setModel(model, null);
 					
 					splitLeft.setBottomComponent(rightBox);
 					
@@ -985,7 +992,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		this.structure = model;
 		setEditable(editable);
 		// OPSLAAN_ACTION.left();
-		graph.setModel(this.model);
+		graph.setModel(this.model,null);
 		filterAction.doFilter();
 
 	}

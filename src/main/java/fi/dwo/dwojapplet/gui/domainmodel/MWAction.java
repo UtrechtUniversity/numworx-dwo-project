@@ -8,8 +8,8 @@ class MWAction extends MethodeAction {
   MWAction() {
     super("Moderne Wiskunde");
     KOPPELING_LEERDOEL = "Koppeling leerdoel aan Moderne Wiskunde";
-    grJaarlagen       = new String[] { "1Vb", "1Vkgt", "1VgtH", "1HV", "1V", "2HV", "2V", "3H", "3V"};
-    aantalHoofdstukken= new int[]    {  12,    12,      12,      12,    10,   10,    10,   10,   10};   
+    grJaarlagen       = new String[] { "1HV",  "2HV",  "3V"};
+    aantalHoofdstukken= new int[]    {  13,    12,      14 };   
   }
   MWAction(boolean b) {
     this();

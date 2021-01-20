@@ -4,6 +4,8 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -19,6 +21,7 @@ import javax.swing.tree.TreePath;
 import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.ConfirmDialog;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 
 abstract class MethodeAction extends AbstractAction implements TreeSelectionListener {
 
@@ -94,7 +97,25 @@ abstract class MethodeAction extends AbstractAction implements TreeSelectionList
     if (dialog.getOption() == JOptionPane.OK_OPTION) {
       Map<String, Set<Integer>> map = getMethodMap(panel);
       leaf.getMethode().put(name, map);
+// Sync methodeinfos
+      if (leaf.getMethodeInfos() != null) {
+        Iterator<DomStudentModelMethodInfo> list = leaf.getMethodeInfos().iterator();
+        while(list.hasNext()) {
+          DomStudentModelMethodInfo item = list.next();
+          if(item.getMethod() == null) {
+            list.remove();
+          } else {
+          Map<String, Set<Integer>> m0 = leaf.getMethode().get(item.getMethod());
+          if (m0 == null) list.remove();
+          else {
+            Set<Integer> m1 = m0.get(item.getBook());
+            if (m1 == null) list.remove();
+            else if (!m1.contains(item.getChapter())) list.remove();
+          }}
+        }
+      }
     }
+      
   }
 
   Map<String, Set<Integer>> getMethodMap(KoppelingGRPanel panel) {

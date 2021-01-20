@@ -5,6 +5,7 @@ import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -50,8 +51,8 @@ public class EditableGraph extends JPanel implements ActionListener{
 		}
 	}
 
-	public void setModel(TreeModel model) {
-		graph.setModel(model);
+	public void setModel(TreeModel model, Map<String, Map<String, Set<Integer>>> filter) {
+		graph.setModel(model, filter);
 		editGraph.setModelJustSet(true);
 	}
 

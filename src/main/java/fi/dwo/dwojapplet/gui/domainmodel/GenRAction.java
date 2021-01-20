@@ -9,8 +9,8 @@ class GenRAction extends MethodeAction {
   GenRAction() {
     super("Getal&Ruimte");
     KOPPELING_LEERDOEL = "Koppeling leerdoel aan Getal&Ruimte";
-    grJaarlagen       = new String[] { "1HV", "1V", "2HV", "2V", "3H", "3V"};
-    aantalHoofdstukken= new int[]    {  10,    10,   10,    10,   10,   10};
+    grJaarlagen       = new String[] { "1HV", "2HV", "3V"};
+    aantalHoofdstukken= new int[]    {  9,       8,    9 };
   }
 
   GenRAction(boolean b) {

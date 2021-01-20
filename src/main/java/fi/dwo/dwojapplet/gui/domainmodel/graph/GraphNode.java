@@ -264,7 +264,7 @@ public class GraphNode {
 
 	public void setLocation(int x, int y) {
       if (methodeInfos.isEmpty()) {
-        methodeInfos = Collections.singletonMap(null, new DomStudentModelMethodInfo());
+        methodeInfos = new HashMap<>(Collections.singletonMap(null, new DomStudentModelMethodInfo()));
       }
         methodeInfos.values().stream().forEach(t -> { t.setX(x); t.setY(y); });
 	}

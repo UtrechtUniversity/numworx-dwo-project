@@ -12,10 +12,14 @@ import java.util.function.Consumer;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JCheckBox;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JTabbedPane;
 import fi.dwo.commons.system.TextMapper;
@@ -36,6 +40,7 @@ class FilterAction extends AbstractAction {
 
     MWAction mw = new MWAction();
     GenRAction genr = new GenRAction();
+    JCheckBox rest = new JCheckBox("Niet geclassificeerde leerdoelen");
     
 
     KoppelingGRPanel genrtab = genr.getTab();
@@ -46,10 +51,22 @@ class FilterAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
       ConfirmDialog dialog = new ConfirmDialog(owner, getValue(NAME).toString());
-      JTabbedPane tabs = new JTabbedPane();
+      Box tabs = Box.createVerticalBox();
       dialog.getContentPane().setLayout(new BorderLayout());
-      tabs.addTab(genr.getName(), genrtab);
-      tabs.addTab(mw.getName(), mwtab);
+      Border margin = BorderFactory.createEmptyBorder(0, 20, 0, 0);
+      JLabel l = new JLabel(genr.getName());
+      l.setBorder(margin);
+      tabs.add(l);
+      tabs.add(genrtab);
+      l = new JLabel(mw.getName());
+      l.setBorder(margin);
+      tabs.add(l);
+      tabs.add( mwtab);
+      l = new JLabel("Alle leerdoelen");
+      l.setBorder(margin);
+      tabs.add(l);
+      rest.setBorder(margin);
+      tabs.add(rest);
       
       dialog.getContentPane().add(tabs, BorderLayout.CENTER);
       
@@ -67,8 +84,9 @@ class FilterAction extends AbstractAction {
         Map<String, Set<Integer>> mwmap = mw.getMethodMap(mwtab);
         Map<String, Set<Integer>> genrmap = genr.getMethodMap(genrtab);
         filter = new HashMap<>();
-        if (!mwmap.isEmpty()) filter.put(mw.getName(), mwmap);
+        if (!mwmap.isEmpty())   filter.put(mw.getName(), mwmap);
         if (!genrmap.isEmpty()) filter.put(genr.getName(), genrmap);
+        if (rest.isSelected())  filter.put(null,null);
         consumer.accept(filter);
       }
     }
