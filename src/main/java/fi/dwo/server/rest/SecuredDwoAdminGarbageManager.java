@@ -124,7 +124,11 @@ public class SecuredDwoAdminGarbageManager {
       sub = sub.select(context.get("userID"));
       Predicate in = userid.in(sub);
       Predicate and = builder.and(isNull, lt, isFalse, in.not());
-      q = q.select(u).where(and);
+      
+      lt = builder.lessThan(lastLogin, p);
+      Predicate and2 = builder.and(lt, isFalse, in.not());
+      
+      q = q.select(u).where(builder.or(and, and2));
    
       TypedQuery<PersistentUser> query = em.createQuery(q);
       query.setParameter(p, when);
