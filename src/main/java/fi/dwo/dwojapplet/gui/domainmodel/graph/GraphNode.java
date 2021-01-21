@@ -306,10 +306,18 @@ public class GraphNode {
 	    return methodeInfos.values().stream().anyMatch(t -> code.equals(t.getMethod() + "-" +t.getBook()+"-"+t.getChapter()));
 	}
 	
-	public boolean hasChapterCode(String methode, String book, Set<Integer> chapters) {
-		for(Integer chapter : chapters) {
-			String code = methode + "-" + book + "-" + chapter;
-			if(methodeInfos.values().stream().anyMatch(t -> code.equals(t.getMethod() + "-" +t.getBook()+"-"+t.getChapter())))
+//	public boolean hasChapterCode(String methode, String book, Set<Integer> chapters) {
+//		for(Integer chapter : chapters) {
+//			String code = methode + "-" + book + "-" + chapter;
+//			if(methodeInfos.values().stream().anyMatch(t -> code.equals(t.getMethod() + "-" +t.getBook()+"-"+t.getChapter())))
+//				return true;	
+//		}
+//	    return false;
+//	}
+	
+	public boolean hasChapterCode(Map<String,DomStudentModelMethodInfo> filterInfo) {
+		for(String chapter : filterInfo.keySet()) {
+			if(methodeInfos.keySet().contains(chapter))
 				return true;	
 		}
 	    return false;
@@ -487,21 +495,15 @@ public class GraphNode {
 			}
 	}
 	
-	public void setVisible(String methode, String book, Set<Integer> chapters, boolean b) {
+	public void setVisible(Map<String,DomStudentModelMethodInfo> filterInfo, boolean b) {
 		for(String methodeCode : getMethodeCodes()) {
-			boolean match = false;
-			for(Integer chapter : chapters) {
-				String code = methode + "-" + book + "-" + chapter;
-				if(methodeCode.startsWith(code)) {
-					match = true;
-					break;
+			if(filterInfo.containsKey(methodeCode)) {
+				if(b) {
+					visible.add(methodeCode);
 				}
+				else
+					visible.remove(methodeCode);
 			}
-			if(match && b) {
-				visible.add(methodeCode);
-			}
-			else if(match)
-				visible.remove(methodeCode);
 		}
 	}
 	

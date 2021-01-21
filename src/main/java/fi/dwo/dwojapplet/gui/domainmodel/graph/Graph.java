@@ -638,7 +638,60 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		selectChapter(hfstCode, true);
 	}
 	
-	public void selectChapters(String methode, String book, Set<Integer> chapters) {
+	public void selectChapters(String methode, Map<String,DomStudentModelMethodInfo> filterInfo) {
+		selectedChapter = null;
+		selectedBook = null;
+		selectedMethod = methode;
+		for(int i=0 ; i<graphNodes.size() ; i++) {
+			graphNodes.get(i).setVisible(false);
+		}
+		for(int i=0 ; i<graphNodes.size() ; i++) {
+			if(!graphNodes.get(i).hasChapterCode(filterInfo))
+				graphNodes.get(i).setVisible(false);
+			else
+				graphNodes.get(i).setVisible(filterInfo, true);
+		}
+		zoomFit();
+		for(int i=0 ; i<chapterNodes.size() ; i++) {
+			chapterNodes.get(i).makeLocation(graphNodes);
+		}
+		methodeLabel.setText(methode);
+		tussenLabel1.setText("");
+		tussenLabel2.setText("");
+		chapterLabel.setText("");
+		bookLabel.setText("");
+		voorkennisButton.setVisible(false);
+	}
+	
+	public void selectChapters(Map<String,DomStudentModelMethodInfo> filterInfo) {
+		selectedChapter = null;
+		selectedBook = null;
+		selectedMethod = null;
+		for(int i=0 ; i<graphNodes.size() ; i++) {
+			graphNodes.get(i).setVisible(false);
+		}
+		for(int i=0 ; i<graphNodes.size() ; i++) {
+			if(!graphNodes.get(i).hasChapterCode(filterInfo))
+				graphNodes.get(i).setVisible(false);
+			else
+				graphNodes.get(i).setVisible(filterInfo, true);
+		}
+		zoomFit();
+		for(int i=0 ; i<chapterNodes.size() ; i++) {
+			chapterNodes.get(i).makeLocation(graphNodes);
+		}
+		for(int i=0 ; i<bookNodes.size() ; i++) {
+			bookNodes.get(i).makeLocation(chapterNodes);
+		}
+		methodeLabel.setText("Alle leerdoelen");
+		tussenLabel1.setText("");
+		tussenLabel2.setText("");
+		chapterLabel.setText("");
+		bookLabel.setText("");
+		voorkennisButton.setVisible(false);
+	}
+	
+	public void selectChapters(String methode, String book, Map<String,DomStudentModelMethodInfo> filterInfo) {
 		selectedChapter = null;
 		selectedBook = methode + "-" + book;
 		selectedMethod = methode;
@@ -646,14 +699,17 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			graphNodes.get(i).setVisible(false);
 		}
 		for(int i=0 ; i<graphNodes.size() ; i++) {
-			if(!graphNodes.get(i).hasChapterCode(methode, book, chapters))
+			if(!graphNodes.get(i).hasChapterCode(filterInfo))
 				graphNodes.get(i).setVisible(false);
 			else
-				graphNodes.get(i).setVisible(methode, book, chapters, true);
+				graphNodes.get(i).setVisible(filterInfo, true);
 		}
 		zoomFit();
 		for(int i=0 ; i<chapterNodes.size() ; i++) {
 			chapterNodes.get(i).makeLocation(graphNodes);
+		}
+		for(int i=0 ; i<bookNodes.size() ; i++) {
+			bookNodes.get(i).makeLocation(chapterNodes);
 		}
 		methodeLabel.setText(methodeLabels.get(selectedMethod));
 		tussenLabel1.setText(">");
@@ -681,6 +737,9 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		zoomFit();
 		for(int i=0 ; i<chapterNodes.size() ; i++) {
 			chapterNodes.get(i).makeLocation(graphNodes);
+		}
+		for(int i=0 ; i<bookNodes.size() ; i++) {
+			bookNodes.get(i).makeLocation(chapterNodes);
 		}
 		methodeLabel.setText(methodeLabels.get(selectedMethod));
 		tussenLabel1.setText(">");
@@ -988,7 +1047,23 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		modelJustSet = true;
 		setVoorkennisArea(false);
 
+		Map<String, DomStudentModelMethodInfo> filterInfo = new HashMap<>();
+		if(filter!=null) {
+			for (String methodeName : filter.keySet()) {
+				if(methodeName!=null) {
+					Map<String,Set<Integer>> leerjaren = filter.get(methodeName);
+					for (String leerjaarName : leerjaren.keySet()){
+						Set<Integer> hoofdstukken = 	leerjaren.get(leerjaarName);
+						for (Integer i : hoofdstukken){
+							final DomStudentModelMethodInfo info = new DomStudentModelMethodInfo(methodeName, leerjaarName,i);
+							filterInfo.put(info.key(), info);
+						}
+					}
+				}
+			}
+		}
 		if (filter != null && filter.size() == 1) {
+			
 			String methode = filter.keySet().iterator().next();
 			Map<String, Set<Integer>> methodeMap = filter.values().iterator().next();
 			if(methodeMap!=null && methodeMap.size()==1) {
@@ -999,16 +1074,21 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 					selectChapter(methode + "-" + book + "-" + chapter, false);
 				}
 				else if(bookMap!=null && bookMap.size()>1){
-					selectChapters(methode, book, bookMap);
+					selectChapters(methode, book, filterInfo);
 				}
 			}
-			else
-				if (methode != null) selectMethode(methode, false);
+			else if (methode != null && methodeMap.size()>1) {
+					selectChapters(methode, filterInfo);
+			}
         }
+		else if(filter!=null && filter.size() > 1) {
+			selectChapters(filterInfo);
+		}
 		else {
 			deselectMethode(false);
 		}
-		System.out.println("filter: "+filter);	
+		//System.out.println("filter: "+filter);	
+		//System.out.println("filterInfo: "+filterInfo.keySet());
 		painter.repaint();
 	}
 
