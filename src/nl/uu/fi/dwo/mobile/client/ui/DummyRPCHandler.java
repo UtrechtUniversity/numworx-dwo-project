@@ -213,7 +213,7 @@ public class DummyRPCHandler implements RPCHandler {
 
   @Override
   public Promise<XapiManager> getLRS() {
-    return null;
+    return Promises.failed(new NullPointerException("Not implemented"));
   }
 
   @Override

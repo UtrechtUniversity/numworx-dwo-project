@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
@@ -48,6 +49,7 @@ import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -392,7 +394,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 				.setFontSize(font_size, Unit.PX);
 			contentPanel.getElement().getStyle().setPadding(0, Unit.PX); // XXX
 																			// was
-																			// 15
+			String SMintern = instellingen.getString("studentModelId");															// 15
+			if(studentModel == null && SMintern != null) {
+			  studentModel = Promises.resolved(new DomStudentModelContextId(new PersistenceId(SMintern)));
+			}
 			// GEEN randje aan de linkerkant, want dan klopt de maat (100%) niet
 			// meer bij noordhoff
 // ExtensionPoint here.

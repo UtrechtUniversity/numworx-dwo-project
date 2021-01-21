@@ -92,7 +92,7 @@ public class DWOLogger implements Logging {
 	@Override
 	public void updateLog(Map<String, ?> parameters) {
 		String formula = (String)parameters.get("response");
-		map.put(LOGKEY_ANSWER, new JSONString(formula));
+		if (formula != null) map.put(LOGKEY_ANSWER, new JSONString(formula));
 		JSONNumber score = getScore(parameters);
 		if (score != null)
 			map.put(LOGKEY_SCORE, score);
@@ -106,6 +106,8 @@ public class DWOLogger implements Logging {
 		map.put(LOG_ATTEMPTS_COUNT, new JSONNumber(attemptsCount));
 		if(logIDLabel != null)
 			map.put("logIDLabel", logIDLabel);
+		if (delegate != null) 
+		  delegate.updateLog(parameters);
 	}
 	
 	private JSONNumber getScore(Map<String, ?> parameters) {

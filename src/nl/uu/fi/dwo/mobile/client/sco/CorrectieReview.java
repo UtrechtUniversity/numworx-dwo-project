@@ -33,7 +33,7 @@ public class CorrectieReview extends CorrectieFacade {
       this.logging = logging;
       ObjectMap hh = JSONUtilities.wrapMap(h);
       hh = hh.getObjectMap(CorrectieView.REVIEW_INTERACTIE_DATA);
-      if ( hh != null && h.containsKey(CorrectieView.REVIEW_SCORE_CORRECTIE)) {
+      if ( hh != null && hh.containsKey(CorrectieView.REVIEW_SCORE_CORRECTIE)) {
         this.lastcorr = hh.getInt(CorrectieView.REVIEW_SCORE_CORRECTIE);
       } 
     }
@@ -68,7 +68,7 @@ public class CorrectieReview extends CorrectieFacade {
 	private void sendCorrectieStatement(Object o) {
 	    ObjectMap map = JSONUtilities.wrapMap( (Map) o);
 	    int corr = map.getInt(CorrectieView.REVIEW_SCORE_CORRECTIE);
-	    if(corr == lastcorr && logging != null) return;
+	    if(corr == lastcorr || logging == null) return;
 	    lastcorr = corr;
         int raw = iv.getScore() + corr;
 	    Map<String,Object> parameters = new HashMap<>();
@@ -77,6 +77,7 @@ public class CorrectieReview extends CorrectieFacade {
 	      parameters.put("success", Boolean.TRUE);
 	    else if (corr < 0) 
 	      parameters.put("success", Boolean.FALSE);
+	    parameters.put("verb", SMLogger.CORRECTED);
 	    logging.updateLog(parameters);    
 	}
 	

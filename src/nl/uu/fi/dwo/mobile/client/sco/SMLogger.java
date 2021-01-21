@@ -4,13 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
-import java.util.NoSuchElementException;
-
-import javax.inject.Provider;
-
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
-
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
@@ -41,7 +35,7 @@ public class SMLogger implements Logging {
       Memento instance = Memento.instance();
       boolean experiment = instance != null 
     		  && instance.pmodel != null 
-    		  && instance.getLessonMode() == LessonMode.normal
+    		  && (instance.getLessonMode() == LessonMode.normal||instance.getLessonMode() == LessonMode.review)
               && DWOplayer.withUser() 
               && DWOplayer.clientfactory.getRoleType() == RoleType.STUDENT;
       if (experiment) {
@@ -55,6 +49,7 @@ public class SMLogger implements Logging {
   }
 
   public static final String ATTEMPTED = "http://www.dwo.nl/verbs/attempted";
+  public static final String CORRECTED = "http://www.dwo.nl/verbs/corrected";
   public static final DateTimeFormat FORMAT_8601 = DateTimeFormat.getFormat(PredefinedFormat.ISO_8601);
 
   final Memento memento;
@@ -174,5 +169,39 @@ public class SMLogger implements Logging {
 	public void setLogOption(boolean logOption) {
 		delegate.setLogOption(logOption);
 	}
+
+  @Override
+  public void updateLog(Map<String, ?> parameters) {
+    if (
+        CORRECTED == parameters.get("verb") &&
+        !extensions.objectives.isEmpty()) { // no logging if no objectives assigned.
+      Result result = new Result();
+      Statement s = new Statement();
+      s.actor = prototype.actor;
+      s.context = prototype.context;
+      Verb verb = new Verb(); verb.id = CORRECTED;
+      s.verb = verb;
+      s.object = prototype.object;
+  
+      Date now = new Date();
+      s.timestamp = FORMAT_8601.format(now);
+      result.success = (Boolean) parameters.get("success");
+      String response = (String) parameters.get("formula");
+      if(response == null) response = (String) parameters.get("response");
+      result.response = response;
+  
+      try {
+        result.score = new Score();
+        result.score.raw = getScore(parameters);
+        result.score.max = Double.valueOf(maxScore);
+        if (maxScore > 0 && result.score.raw != null)
+          result.score.scaled = result.score.raw.doubleValue() / maxScore;
+      } catch (Exception e) {
+      }
+      s.result = result;  
+      xapi.then(manager -> manager.getValue().saveStatement(s));
+    }
+    delegate.log(parameters);
+  }
 
 }
