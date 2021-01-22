@@ -174,7 +174,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		}
 		if (eindtoetsVerzegeld && cmi_mode == LessonMode.normal)
 			cmi_mode = LessonMode.browse; // No edits possible.
-		cmi_mode = LessonMode.review;
+		//cmi_mode = LessonMode.review;
 		
 		String reviewData = null;
 		if (eindtoetsVerzegeld || cmi_mode == LessonMode.review)
