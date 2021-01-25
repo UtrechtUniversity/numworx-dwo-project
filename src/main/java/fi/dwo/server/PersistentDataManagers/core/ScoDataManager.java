@@ -97,7 +97,7 @@ public class ScoDataManager {
                 ssd.getScoID();
             } catch (EntityNotFoundException e) {
                 LOG.log(Level.FINE, "The PersistentScoData with " + id + " no longer exists.", e);
-                throw new PersistenceException(e);
+                throw e;
             }
             em.remove(ssd);
             em.getTransaction().commit();
