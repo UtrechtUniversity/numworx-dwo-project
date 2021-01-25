@@ -33,6 +33,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.dom.xapi.Activity;
+import nl.uu.fi.dwo.rest.dom.xapi.Agent;
 import nl.uu.fi.dwo.rest.dom.xapi.StateDocument;
 import nl.uu.fi.dwo.rest.dom.xapi.Statement;
 import nl.uu.fi.dwo.rest.dom.xapi.StatementsQuery;
@@ -320,5 +321,11 @@ List<String> metVoorkennis(List<String> ids,
 	  }
 
   
-  
+    public Promise<String> saveStatement(Statement s) {
+      return man.then(xapi -> xapi.getValue().saveStatement(s));
+    }
+    
+    public Promise<Agent> getAgent() {
+      return man.map(XapiManager::getAgent);
+    }
 }

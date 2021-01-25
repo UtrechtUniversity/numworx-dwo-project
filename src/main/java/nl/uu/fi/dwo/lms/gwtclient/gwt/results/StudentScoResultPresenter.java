@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
+import org.fusesource.restygwt.client.JsonEncoderDecoder;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -27,6 +28,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.XAPIService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent.EventType;
@@ -38,6 +40,9 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.xapi.Account;
+import nl.uu.fi.dwo.rest.dom.xapi.Agent;
+import nl.uu.fi.dwo.rest.dom.xapi.Statement;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -55,13 +60,15 @@ public class StudentScoResultPresenter {
 
   private Display view;
   @Inject ResultsService resultService;
+  @Inject XAPIService xapiService;
   private DomResultTree resultTree;
   private DomResultStudentScoContext ssc;
   private Map<String,String> userState;
   @SuppressWarnings("rawtypes")
   private DomResultSchoolClass parent;
   @Inject GwtClientMessages rb;
-private JavaScriptObject resultState;
+  private JavaScriptObject resultState;
+  private DomStudent student;
 
   public interface Display  extends BasicDisplay{
 
@@ -133,7 +140,7 @@ private JavaScriptObject resultState;
       @SuppressWarnings("unchecked")
       DomResultSchoolClass<DomResultStudent> domschoolclass = parent;
       PersistenceId key = new PersistenceId(studentid);
-      DomStudent student = domschoolclass.getChildren().get(key).getStudent();
+      student = domschoolclass.getChildren().get(key).getStudent();
       PersistenceId scoid = ssc.getStudentSco().getScoID();
       DomScoContext sco = new DomScoContext(); sco.setId(scoid);
       Promise<DomStudentScoContext> p1 = resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), Collections.singletonList(student))
@@ -233,9 +240,32 @@ private JavaScriptObject resultState;
     LOG.info("SetValue " + key + ", " + shortValue);
 
     if ( ResultsService.SUSPEND_DATA.equals(key)) return "false"; // never writable
+    if ( "dme.statement".equals(key)) {
+      createStatement(value);
+      return "true";
+    }
     
     userState.put(key,value);
     return "true";
+  }
+
+  
+  public interface StatementCodec extends JsonEncoderDecoder<Statement> {
+    StatementCodec CODEC = GWT.create(StatementCodec.class);
+  }
+
+  private void createStatement(String value) {
+    final Statement s = StatementCodec.CODEC.decode(value);
+    s.actor = new Agent();
+    s.actor.account = new Account();
+    s.actor.name = student.getUserName();
+    s.actor.account.name =  "pid:"+student.getId();
+    xapiService.getAgent().then( a -> { 
+      s.actor.account.homePage = a.getValue().account.homePage;
+      return xapiService.saveStatement(s);
+    });
+    
+    
   }
 
   private String Commit(String dummy) {
@@ -282,6 +312,9 @@ private JavaScriptObject resultState;
     if(komma >=0) {
         scoId = pid.substring(komma+1);
     }
+// remove leading 00000
+    while(scoId.length() > 1 && scoId.startsWith("0")) scoId = scoId.substring(1);
+
     String random = String.valueOf(System.currentTimeMillis());
     LOG.info("Frame = "+random);
     String locale = LocaleInfo.getCurrentLocale().getLocaleName();
