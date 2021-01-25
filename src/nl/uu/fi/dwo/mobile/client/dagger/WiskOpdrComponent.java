@@ -6,9 +6,10 @@ import javax.inject.Singleton;
 import dagger.BindsInstance;
 import dagger.Component;
 import nl.uu.fi.dwo.mobile.WiskOpdrPlayer;
+import nl.uu.fi.dwo.mobile.client.sco.SMLogger;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 
-@Component(modules = { PlayerModule.class, DummyFactory.class, ModuleViewModule.class })
+@Component(modules = { PlayerModule.class, DummyFactory.class, ModuleViewModule.class, SMLogger.WiskOpdrProvider.class })
 @Singleton
 public interface WiskOpdrComponent {
   void inject(WiskOpdrPlayer dwo);

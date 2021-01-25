@@ -7,6 +7,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.fusesource.restygwt.client.Defaults;
+import org.fusesource.restygwt.client.JsonEncoderDecoder;
 import org.osgi.util.promise.Promise;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
@@ -16,12 +18,17 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.SMLogger.LogStrategy;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
+import nl.uu.fi.dwo.rest.dom.xapi.Statement;
+
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.json.client.JSONArray;
@@ -36,6 +43,8 @@ import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+import fi.dwo.gwt.lib.rest.util.DomStudentModelStructureScoreCodec;
+
 //import fi.dwo.gwt.lib.rest.util.DomStudentModelStructureScoreCodec;
 
 /**
@@ -45,7 +54,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
  * @author velth101
  * 
  */
-public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEventListener
+public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEventListener, LogStrategy
 {
 	private static final String INTERACTIE_PANEL_STATES = "interactiePanelStates";
     private static final String BEZOCHT = "bezocht";
@@ -1444,5 +1453,18 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
     } catch(Exception e) {
       return ModuleMode.unknown;
     }
+  }
+  
+  public interface StatementCodec extends JsonEncoderDecoder<Statement> {
+    StatementCodec CODEC = GWT.create(StatementCodec.class);
+  }
+
+  @Override
+  public Promise<String> saveStatement(Statement statement) {
+    Defaults.doesIgnoreJsonNulls();
+    String s  = StatementCodec.CODEC.encode(statement).toString();
+    Defaults.dontIgnoreJsonNulls();
+    api.SetValue("dme.statement", s);
+    return null;
   }
 }

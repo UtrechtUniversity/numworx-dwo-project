@@ -4,6 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import org.osgi.util.promise.Promise;
 
@@ -24,6 +25,7 @@ import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.mobile.client.WiskOpdrDefaults;
 import nl.uu.fi.dwo.mobile.client.dagger.DaggerWiskOpdrComponent;
 import nl.uu.fi.dwo.mobile.client.dagger.ModuleViewModule;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
@@ -33,6 +35,7 @@ import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
+import nl.uu.fi.dwo.mobile.utils.Logging;
 
 public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, CBookEventListener, ClosingHandler {
 
@@ -59,7 +62,12 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 	@Inject void setClientFactory(ClientFactory f) {
 	  DWOplayer.clientfactory = f;
 	}
+
+	public static Provider<Logging> loggingProvider;
 	
+	@Inject void setLogging(Provider<Logging> provider) {
+	  loggingProvider = provider;
+	}
 	
 	
 	@Override

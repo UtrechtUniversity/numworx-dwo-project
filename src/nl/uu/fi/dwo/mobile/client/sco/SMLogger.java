@@ -4,13 +4,22 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
+
+import javax.inject.Named;
+
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
+
+import dagger.Module;
+import dagger.Provides;
 import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.utils.LaTransport;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -25,7 +34,35 @@ import nl.uu.fi.dwo.rest.dom.xapi.Statement;
 import nl.uu.fi.dwo.rest.dom.xapi.Verb;
 
 public class SMLogger implements Logging {
+  
+  @FunctionalInterface
+  public interface LogStrategy {
 
+    Promise<String> saveStatement(Statement s);
+    
+  }
+  
+  @Module public static class WiskOpdrProvider {
+    
+    @Provides static Memento memento() {
+      return Memento.instance();
+    }
+
+    @Provides @Named("delegate") Logging tao() {
+      return LaTransport.newTAOinstance();
+    }
+    
+    @Provides public static Logging wiskopdrLogger(Memento memento, @Named("delegate") Logging delegate, @Named("premium") boolean premium) {
+      if (memento.pmodel == null
+          || memento.getLessonMode() != LessonMode.review
+          || !premium
+      ) return delegate; 
+
+      Promise<LogStrategy> strategy = Promises.resolved(memento);     
+      return new SMLogger(memento, strategy, delegate);
+    }
+  }
+  
   public static class Provider implements javax.inject.Provider<Logging> {
     public Provider(javax.inject.Provider<Logging> delegate) {
       this.delegate = delegate;
@@ -40,7 +77,7 @@ public class SMLogger implements Logging {
               && DWOplayer.clientfactory.getRoleType() == RoleType.STUDENT;
       if (experiment) {
         Promise<XapiManager> xapi = DWOplayer.clientfactory.getRPCHandler().getLRS();
-        return new SMLogger(instance, xapi, delegate.get());
+        return new SMLogger(instance, xapi.map(x -> x::saveStatement), delegate.get());
       }
       return delegate.get();
     }
@@ -53,7 +90,7 @@ public class SMLogger implements Logging {
   public static final DateTimeFormat FORMAT_8601 = DateTimeFormat.getFormat(PredefinedFormat.ISO_8601);
 
   final Memento memento;
-  Promise<XapiManager> xapi;
+  Promise<LogStrategy> xapi;
   Logging delegate; // Chain of command;
   Statement prototype;
   Activity widget;
@@ -61,7 +98,7 @@ public class SMLogger implements Logging {
   Extensions extensions;
   int maxScore;
   
-  public SMLogger(Memento memento, Promise<XapiManager> xapi, Logging delegate) {
+  public SMLogger(Memento memento, Promise<LogStrategy> xapi, Logging delegate) {
     this.memento = memento;
     this.xapi = xapi;
     prototype = new Statement();
