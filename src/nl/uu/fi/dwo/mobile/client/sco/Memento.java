@@ -1461,7 +1461,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 
   @Override
   public Promise<String> saveStatement(Statement statement) {
-    Defaults.doesIgnoreJsonNulls();
+    Defaults.ignoreJsonNulls();
     String s  = StatementCodec.CODEC.encode(statement).toString();
     Defaults.dontIgnoreJsonNulls();
     api.SetValue("dme.statement", s);
