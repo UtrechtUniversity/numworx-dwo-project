@@ -7,6 +7,7 @@ import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JScrollPane;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.beans.scorm.PartialScoreIF;
+import fi.beans.scorm.SCORM12APIInterface;
 import fi.beans.scorm2xml.Scorm2Xml;
 import fi.beans.stringutils.StringUtils;
 import fi.dwo.commons.exceptions.PersistenceException;
@@ -110,7 +111,6 @@ public class ResultLogger extends JPanel implements ActionListener,
 
 	private LogTable[] table = new LogTable[LOGKEYS.length];
 	private JTable cmiTable, leerlingTable, partialTable;
-	private JViewport leerlingView;
 	// private Map itemScores;
 	// private Map logAnswers;
 	// private Map logScores;
@@ -192,13 +192,7 @@ public class ResultLogger extends JPanel implements ActionListener,
 
 		model = new DefaultTableModel(1, 1);
 		scrollPane = new JScrollPane[table.length + 2];
-		ChangeListener changeListener = new ChangeListener() {
-
-			public void stateChanged(ChangeEvent e) {
-				int y2 = ((JViewport) e.getSource()).getViewPosition().y;
-				leerlingView.setViewPosition(new Point(0, y2));
-			}
-		};
+		
 		for (int i = 0; i < table.length; i++) {
 			contentPane = new JPanel(new BorderLayout());
 			table[i] = new LogTable(model);
@@ -209,7 +203,6 @@ public class ResultLogger extends JPanel implements ActionListener,
 			scrollPane[i] = new JScrollPane(contentPane,
 					JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 					JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-			scrollPane[i].getViewport().addChangeListener(changeListener);
 		}
 
 		btn = new JButton(TextMapper.getText(TextMapper.GUIPA_BTN_SAVE));
@@ -238,8 +231,6 @@ public class ResultLogger extends JPanel implements ActionListener,
 				if (index < scrollPane.length) {
 					// resizeTable();
 					int y = scrollPane[index].getViewport().getViewPosition().y;
-					leerlingView.setViewPosition(new Point(0, y));
-					leerlingTable.setRowHeight(getTable(index).getRowHeight());
 				}
 			}
 
@@ -259,8 +250,6 @@ public class ResultLogger extends JPanel implements ActionListener,
 		scrollPane[table.length] = new JScrollPane(pane2,
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scrollPane[table.length].getViewport()
-				.addChangeListener(changeListener);
 		tabpane.add(scrollPane[table.length], "log data");
 		partialModel = new DefaultTableModel(1, 1);
 		partialTable = new JTable(partialModel);
@@ -270,28 +259,12 @@ public class ResultLogger extends JPanel implements ActionListener,
 		scrollPane[table.length + 1] = new JScrollPane(pane2,
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scrollPane[table.length + 1].getViewport().addChangeListener(
-				changeListener);
 		tabpane.add(scrollPane[table.length + 1],
 				TextMapper.getText("deel-scores"));
 
-		split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		split.setDividerLocation(100);
-		Box vbox = Box.createVerticalBox();
-		vbox.add(Box.createVerticalStrut(26)); // FIXME: height of tabs!
-												// experimental value
-		Box vbox2 = Box.createVerticalBox();
-		vbox2.add(leerlingTable.getTableHeader());
-		vbox2.add(leerlingTable);
-		leerlingView = new JViewport();
-		leerlingView.setView(vbox2);
-		vbox.add(leerlingView);
-		vbox.add(Box.createVerticalStrut(20)); // FIXME height of scrollbar
-		split.add(vbox);
 
-		split.add(tabpane);
-
-		add(split, BorderLayout.CENTER);
+		//add(leerlingTable, BorderLayout.EAST);
+		add(tabpane, BorderLayout.CENTER);
 		add(btn, BorderLayout.SOUTH);
 
 		requestLog();
@@ -323,11 +296,15 @@ public class ResultLogger extends JPanel implements ActionListener,
 		});
 		Map[] lists = new Map[leerlingen.length];
 		sco.dwo = GuiCreator.instance().getDWO();
+        PartialScoreIF partialScoreIF = sco.getPartialScoreIF();
 		for (int i = 0; i < leerlingen.length; i++) {
 			User u = leerlingen[i];
 			// sco.setUser(u);
-			List list = sco.getPartialScoreIF().getScoreMapList(
-					new ScoDialog.API(sco, u, schoolClass));
+			SCORM12APIInterface api = new ScoDialog.API(sco, u, schoolClass);
+            boolean old = ReadOnly.hasSuspendData;
+            ReadOnly.hasSuspendData = true; // force get suspend data
+            List list = partialScoreIF.getScoreMapList(api);
+            ReadOnly.hasSuspendData = old;
 			lists[i] = new HashMap();
 			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 				Map object = (Map) iterator.next();
@@ -337,9 +314,10 @@ public class ResultLogger extends JPanel implements ActionListener,
 			}
 		}
 		sco.setUser(DwoHelper.getCurrentFacadeUser(),null);
-		partialModel.setColumnCount(pages.size() * 2);
+		partialModel.setColumnCount(pages.size() * 2+1);
 		for (int i = 0; i < leerlingen.length; i++) {
-			int j = 0;
+		    partialModel.setValueAt(leerlingen[i], i+1, 0);
+			int j = 1;
 			for (Iterator iterator = pages.iterator(); iterator.hasNext(); j += 2) {
 				Object object = iterator.next();
 				Map map = (Map) lists[i].get(object);
@@ -362,7 +340,9 @@ public class ResultLogger extends JPanel implements ActionListener,
 
 		}
 		TableColumnModel columnModel = partialTable.getColumnModel();
-		int j = 0;
+        columnModel.getColumn(0).setHeaderValue(
+          TextMapper.getText(TextMapper.GUIS_STUDENTS));
+		int j = 1;
 		for (Iterator iterator = pages.iterator(); iterator.hasNext(); j += 2) {
 			Object object = iterator.next();
 			columnModel.getColumn(j).setHeaderValue(object + " score");
@@ -381,8 +361,6 @@ public class ResultLogger extends JPanel implements ActionListener,
 		}
 		TableUtil.setJTableSizes(cmiTable);
 		TableUtil.setJTableSizes(partialTable);
-		leerlingTable.setRowHeight(getTable(0).getRowHeight());
-		leerlingTable.setRowMargin(cmiTable.getRowMargin());
 		cmiTable.setRowHeight(cmiTable.getRowHeight());
 		cmiTable.setRowMargin(cmiTable.getRowMargin());
 		contentPane.revalidate();
@@ -414,44 +392,47 @@ public class ResultLogger extends JPanel implements ActionListener,
 			}
 			ReadOnly.hasSuspendData = old;
 			keys.addAll(set);
-			model.setColumnCount(Math.max(keys.size(), 1));
+			model.setColumnCount(Math.max(keys.size(), 1)+1);
 
 			for (int j = 0; j < table.length; j++) {
 				JTable tablei = table[j];
 				TableColumnModel columnModel = tablei.getColumnModel();
+	            columnModel.getColumn(0).setHeaderValue(
+	                    TextMapper.getText(TextMapper.GUIS_STUDENTS));
 				if (keys.isEmpty())
-					columnModel.getColumn(0).setHeaderValue("N/A"); // A is zo
-																	// slordig.
+					columnModel.getColumn(1).setHeaderValue("N/A"); // A is zo																	// slordig.
 				else
 					for (int i = 0; i < keys.size(); i++) {
 						String s = (String) keys.get(i);
 						if (s.endsWith("|")) //
-							columnModel.getColumn(i).setHeaderValue("");
+							columnModel.getColumn(i+1).setHeaderValue("");
 						else
-							columnModel.getColumn(i).setHeaderValue(s);
+							columnModel.getColumn(i+1).setHeaderValue(s);
 					}
 			}
-			TableColumnModel columnModel = leerlingTable.getColumnModel();
-			columnModel.getColumn(0).setHeaderValue(
-					TextMapper.getText(TextMapper.GUIS_STUDENTS));
 
 			for (int i = 0; i < leerlingen.length; i++) {
 				User leerling = leerlingen[i];
 				int i1 = i + 1;
 				leerlingModel.setValueAt(leerling, i1, 0);
+				model.setValueAt(leerling, i1, 0);
 				Map strings = data[i];
 				if (strings == null)
 					continue;
 				Iterator iterator;
 				iterator = strings.entrySet().iterator();
-				for (int j = 0; j < keys.size(); j++) {
+				for (int j = 1; j <= keys.size(); j++) {
 					model.setValueAt(null, i1, j);
 				}
 				while (iterator.hasNext()) {
 					Entry object = (Entry) iterator.next();
 					Object key = object.getKey();
 					Object value = object.getValue();
-					int index = getIndex(key);
+					int index = getIndex(key)+1;
+					if (index == 0) {
+					  System.err.println("error " + key);
+					  continue;
+					}
 					model.setValueAt(value, i1, index);
 					if (value instanceof Map
 							&& ((Map) value).containsKey(LOGKEY_MAXSCORE))
@@ -490,11 +471,13 @@ public class ResultLogger extends JPanel implements ActionListener,
 			}
 
 			cmiKeys.addAll(set);
-			cmiModel.setColumnCount(cmiKeys.size());
+			cmiModel.setColumnCount(cmiKeys.size()+1);
 
 			TableColumnModel columnModel = cmiTable.getColumnModel();
+            columnModel.getColumn(0).setHeaderValue(
+              TextMapper.getText(TextMapper.GUIS_STUDENTS));
 			for (int i = 0; i < cmiKeys.size(); i++) {
-				columnModel.getColumn(i).setHeaderValue(cmiKeys.get(i));
+				columnModel.getColumn(i+1).setHeaderValue(cmiKeys.get(i));
 			}
 
 			for (int i = 0; i < leerlingen.length; i++) {
@@ -505,14 +488,15 @@ public class ResultLogger extends JPanel implements ActionListener,
 					continue;
 				Iterator iterator;
 				iterator = strings.entrySet().iterator();
-				for (int j = 0; j < cmiKeys.size(); j++) {
+				cmiModel.setValueAt(leerling, i1, 0);
+				for (int j = 1; j <= cmiKeys.size(); j++) {
 					cmiModel.setValueAt(null, i1, j);
 				}
 				while (iterator.hasNext()) {
 					Entry object = (Entry) iterator.next();
 					Object key = object.getKey();
 					Object value = object.getValue();
-					int index = cmiKeys.indexOf(key);
+					int index = cmiKeys.indexOf(key)+1;
 					cmiModel.setValueAt(value, i1, index);
 				}
 			}
@@ -529,7 +513,7 @@ public class ResultLogger extends JPanel implements ActionListener,
 			if (key == null)
 				break;
 			int z = keys.indexOf(key);
-			Map map = (Map) model.getValueAt(i, z);
+			Map map = (Map) model.getValueAt(i, z+1);
 			List v = (List) map.get(LOGKEY_ATTEMPTS);
 			if (v == null) {
 				v = new Vector();
@@ -539,7 +523,8 @@ public class ResultLogger extends JPanel implements ActionListener,
 		}
 	}
 
-	private Properties getCMIData(User u, Sco s) throws PersistenceException {
+  @SuppressWarnings("deprecation")
+  private Properties getCMIData(User u, Sco s) throws PersistenceException {
 		final PersistenceFacade instance = PersistenceFacade.instance();
 		String r = instance.LMSGetValue(s, u, schoolClass, Scorm2Xml.COCD);
 		final Scorm2Xml xml = new Scorm2Xml(r);
@@ -557,10 +542,21 @@ public class ResultLogger extends JPanel implements ActionListener,
 			xml.setValue(key, extra);
 
 		key = "cmi.core.session_time"; // ????
+        extra = instance.LMSGetValue(s, u, schoolClass, key);
 		if (extra.length() > 0)
-			extra = instance.LMSGetValue(s, u, schoolClass, key);
-		xml.setValue(key, extra);
+		  xml.setValue(key, extra);
+ 
+        key = "cmi.completion_status";
+        extra = instance.LMSGetValue(s, u, schoolClass, key);
+        if (extra.length() > 0)
+          xml.setValue(key, extra);
 
+        key = "cmi.location";
+        extra = instance.LMSGetValue(s, u, schoolClass, key);
+        if (extra.length() > 0)
+          xml.setValue(key, extra);
+		
+		
 		return xml.toProperties();
 	}
 
@@ -647,7 +643,7 @@ public class ResultLogger extends JPanel implements ActionListener,
 							out.print("");
 							out.print(TAB);
 
-							for (int j = 0; j < width; j++) {
+							for (int j = 1; j < width; j++) {
 								TableColumnModel columnModel = table[0]
 										.getColumnModel();
 								value = columnModel.getColumn(j)
@@ -727,7 +723,7 @@ public class ResultLogger extends JPanel implements ActionListener,
 						int width = model.getColumnCount();
 						out.print(TAB);
 						out.print("Naam");
-						for (int j = 0; j < width; j++) {
+						for (int j = 1; j < width; j++) {
 							TableColumnModel columnModel = table[0]
 									.getColumnModel();
 							Object value = columnModel.getColumn(j)
@@ -742,13 +738,17 @@ public class ResultLogger extends JPanel implements ActionListener,
 									.getUsername() : "");
 							out.print(TAB);
 							out.print(name == null ? "" : name.toString());
-							for (int j = 0; j < width; j++) {
+							for (int j = 1; j < width; j++) {
 								out.print(TAB);
 								Object value = model.getValueAt(i, j);
 								if (value == null)
 									value = "";
-								if (value instanceof Hashtable) {
-									value = ((Hashtable) value).get(logModeKey);
+								if (value instanceof Map) {
+								  if (i == 0) {
+								    value = ((Map) value).get(LOGKEY_LABEL);
+								  } else {
+									value = ((Map) value).get(logModeKey);
+								  }
 								}
 								out.print(value);
 							}
@@ -771,20 +771,20 @@ public class ResultLogger extends JPanel implements ActionListener,
 			int len = m.getRowCount();
 			int width = m.getColumnCount();
 			out.print(TAB);
-			out.print(leerlingTable.getColumnModel().getColumn(0)
+			out.print(table.getColumnModel().getColumn(0)
 					.getHeaderValue());
-			for (int j = 0; j < width; j++) {
+			for (int j = 1; j < width; j++) {
 				out.print(TAB);
 				out.print(table.getColumnModel().getColumn(j).getHeaderValue());
 			}
 			out.println();
 			for (int i = 0; i < len; i++) {
-				Object name = leerlingModel.getValueAt(i, 0);
+				Object name = table.getValueAt(i, 0);
 				out.print(name instanceof User ? ((User) name).getUsername()
 						: "");
 				out.print(TAB);
 				out.print(name == null ? "" : name.toString());
-				for (int j = 0; j < width; j++) {
+				for (int j = 1; j < width; j++) {
 					out.print(TAB);
 					Object value = m.getValueAt(i, j);
 					if (value == null)
@@ -850,13 +850,13 @@ public class ResultLogger extends JPanel implements ActionListener,
 		}
 
 		public TableCellRenderer getCellRenderer(int row, int column) {
-			if (column >= 0)
+			if (column >= 1)
 				return renderer;
 			return super.getCellRenderer(row, column);
 		}
 
 		public TableCellEditor getCellEditor(int row, int column) {
-			if (column >= 0)
+			if (column >= 1)
 				return editor;
 			return super.getCellEditor(row, column);
 		}
