@@ -10,7 +10,7 @@
 
     <!--<groupId>nl.uu.fi.dwo.gwt</groupId>-->
     <artifactId>DWO-gwt-lib</artifactId>
-    <name>${project.build.finalName}</name>
+    <name>DWO gwt lib</name>
     
     <packaging>jar</packaging>
     <developers>
