@@ -5,6 +5,8 @@ import com.google.gwt.core.client.GWT;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
+import dagger.Reusable;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherStudentModelManager;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.PresenterFactory;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.PresenterFactoryGwt;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEventHandler;
@@ -21,5 +23,9 @@ abstract class TeacherModule {
 
   @Provides @RoleScope static GwtClientMessages rb() {
     return GWT.create(GwtClientMessages.class);
+  }
+  
+  @Reusable @Provides static SecuredTeacherStudentModelManager securedTSMM() {
+    return new SecuredTeacherStudentModelManager();
   }
 }

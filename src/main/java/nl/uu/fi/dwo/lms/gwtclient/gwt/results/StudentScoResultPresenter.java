@@ -28,7 +28,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.XAPIService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent.EventType;
@@ -98,6 +97,13 @@ public class StudentScoResultPresenter {
     resultTree = aResultTree;
     this.userState = userState;
     this.ssc = ssc;
+ 
+    parent = ssc.getAncestralSchoolClass();
+    PersistenceId studentid = ssc.getStudentSco().getUserID();
+    DomResultSchoolClass<DomResultStudent> domschoolclass = parent;
+    student = domschoolclass.getChildren().get(studentid).getStudent();
+   
+    
     userState.put("cmi.mode", "review");
     userState.put("dme.abo_type", dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getAboType().name());
     setAPI(this);
@@ -105,7 +111,6 @@ public class StudentScoResultPresenter {
     resultState = context;
     view.init(context);   
     LOG.info("update Frame for " + ssc.getStudentSco().getScoID());
-    parent = ssc.getAncestralSchoolClass();
     updateFrame(ssc.getStudentSco());
   }
 
