@@ -154,6 +154,8 @@ public class GraphNode {
       return new Point(x,y);
   }
 	
+	
+	
 	public boolean inside(Rectangle r, Point origin, double factor) {
 	     for( String code: getMethodeCodes()) {
 	          Point location = getLocationOnPanel(code, origin, factor);

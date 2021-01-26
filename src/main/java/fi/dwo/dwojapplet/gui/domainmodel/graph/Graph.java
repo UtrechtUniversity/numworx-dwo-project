@@ -17,6 +17,7 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -73,6 +74,11 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	private MenuItem menuItemAll;
 	private MenuItem menuItemGR;
 	private MenuItem menuItemMW;
+	
+	private PopupMenu voorkennisPopupMenu;
+    private MenuItem miVoorkennis;
+    private GraphNode voorkennisPopupNode;
+    private boolean voorkennisTree;
 	
 	private Font buttonFont = new Font("SansSerif", Font.BOLD, 20);
 	private Font font = new Font("SansSerif", Font.BOLD, 16);
@@ -238,6 +244,15 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		voorkennisWegButton.setVisible(false);
 		add(voorkennisWegButton);
 		
+		voorkennisPopupMenu = new PopupMenu();
+		voorkennisPopupMenu.setFont(new Font("SansSerif",Font.PLAIN,13));
+		
+		miVoorkennis = new MenuItem("Toon alle voorkennis");
+		miVoorkennis.addActionListener(this);
+		voorkennisPopupMenu.add(miVoorkennis);
+		
+		add(voorkennisPopupMenu);
+		
 	}
 
 	public void paintComponent(Graphics gr) {
@@ -260,20 +275,25 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			g.drawRect(1, getHeight()/4, getWidth()-2, 3*getHeight()/4-1);
 			g.fillRect(1, getHeight()/4, getWidth()-2, 26);
 			String label = "Voorkennis";
+			if(voorkennisTree)
+				label += ": "+voorkennisPopupNode.getDescription();
 			int textLength = fm.stringWidth(label);
 			int textHeight = fm.getAscent();
 			g.setColor(Color.white);
 			g.drawString(label, getWidth()/2-textLength/2, 5*textHeight/4);//getHeight()/8+textHeight/2);
-			
-//			g.setFont(new Font("SansSerif", Font.BOLD,16));
-//			fm = g.getFontMetrics();
-//			textLength = fm.stringWidth(selectedChapterTitle);
-//			textHeight = fm.getAscent();
-//			g.setColor(Color.white);
-//			g.drawString(">", 320, getHeight()/4+5*textHeight/4);
-//			g.drawString(selectedChapterTitle, 350, getHeight()/4+5*textHeight/4);
-//			g.drawString(">", 220, getHeight()/4+5*textHeight/4);
-//			g.drawString(selectedBookTitle, 260, getHeight()/4+5*textHeight/4);
+		}
+		else if(voorkennisTree) {
+			g.setFont(new Font("SansSerif", Font.BOLD,16));//"SansSerif", Font.BOLD,(int)(120*factor)));
+			FontMetrics fm = g.getFontMetrics();
+			//g.setStroke(new BasicStroke(2f*(float)factor));
+			g.setColor(LeerdomeinGraphPanel.colorBlue3);//new Color(222, 229, 240));
+			g.drawRect(1, 1, getWidth()-2, getHeight()-2);
+			g.fillRect(1, 1, getWidth()-2, 26);
+			String label = "Voorkennis: "+voorkennisPopupNode.getDescription();
+			int textLength = fm.stringWidth(label);
+			int textHeight = fm.getAscent();
+			g.setColor(Color.white);
+			g.drawString(label, getWidth()/2-textLength/2, 5*textHeight/4);//getHeight()/8+textHeight/2);
 		}
 		else {
 			g.setColor(LeerdomeinGraphPanel.colorBlue3);//new Color(222, 229, 240));
@@ -324,7 +344,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 //				source.setTempLocation(makeTempLocation(source, target));
 //			if(edge.getLength() < 600)
 //				source.setTempLocation(null);
-			if(voorkennisArea || GraphNode.hasSameChapterCode(source, target))
+			if(voorkennisArea || GraphNode.hasSameChapterCode(source, target) || graphEdges.get(i).isVoorkennisTree())
 				graphEdges.get(i).paint(g, origin, factor);
 		}
 		
@@ -480,6 +500,56 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		
 		
 	}
+	
+	private ArrayList<ArrayList<GraphNode>> getVoorkennisNodes(GraphNode graphNode) {
+		ArrayList<GraphNode> startList= new ArrayList<GraphNode>();
+		startList.add(graphNode);
+		ArrayList<ArrayList<GraphNode>> resultList = new ArrayList<ArrayList<GraphNode>>();
+		resultList.add(startList);
+		return(getVoorkennisNodes(startList, resultList));
+	}
+	
+	private ArrayList<ArrayList<GraphNode>> getVoorkennisNodes(ArrayList<GraphNode> graphNodes, ArrayList<ArrayList<GraphNode>> voorkennisNodes) {
+		ArrayList<GraphNode> vkNodes = new ArrayList<GraphNode>();
+		for(GraphNode graphNode : graphNodes) {
+			for(GraphEdge edge : graphEdges) {
+				if(edge.getTarget() == graphNode) {
+					vkNodes.add(edge.getSource());
+					edge.setVoorkennisTree(true);
+				}
+			}
+		}
+		voorkennisNodes.add(vkNodes);
+		if(vkNodes.size()>0)
+			return(getVoorkennisNodes(vkNodes, voorkennisNodes));
+		return voorkennisNodes;
+	}
+	
+	private void plaatsVoorkennisTree(GraphNode graphNode) {
+		factor = 0.75;
+		for(GraphNode gn : graphNodes) {
+			gn.setVisible(false);
+		}
+		ArrayList<ArrayList<GraphNode>> voorkennisNodes = getVoorkennisNodes(graphNode);
+		for(int i=0 ; i<voorkennisNodes.size() ; i++) {
+			ArrayList<GraphNode> gnList = voorkennisNodes.get(i);
+			for(int j=0 ; j<gnList.size() ; j++) {
+				GraphNode gn = gnList.get(j);
+				gn.setVisible(true);
+				int x = 100 + (j+1)*(getWidth()-200)/(gnList.size()+1);
+				int y = -7*gnList.size()+15*j + (voorkennisNodes.size() - (i))*(getHeight()-50)/(voorkennisNodes.size());
+				gn.setTempLocation(new Point(x,y));
+			}
+		}
+		voorkennisTree = true;
+		topPanel.setBounds(0, getHeight(), getWidth(), 26);
+		voorkennisWegButton.setVisible(true);
+		voorkennisButton.setVisible(false);
+		repaint();
+		produceAction("filter");
+	}
+		
+	
 
 	public ArrayList<GraphNode> getGraphNodes() {
 		return graphNodes;
@@ -763,6 +833,22 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		voorkennisWegButton.setVisible(true);
 	}
 	
+	public void verbergVoorkennisTree() {
+		voorkennisTree = false;
+		for(int i = 0 ; i<graphNodes.size() ; i++) {
+			GraphNode node = graphNodes.get(i);
+			node.setTempLocation(null);
+			if(selectedChapter!=null)
+				selectChapter(selectedChapter);
+			else if(selectedBook!=null)
+				selectBook(selectedBook);
+			else if(selectedMethod!=null)
+				selectMethode(selectedMethod);
+			else
+				deselectMethode();
+		}
+	}
+	
 	public void verbergVoorkennis() {
 		setVoorkennisArea(false);
 		if(selectedChapter!=null) {
@@ -817,6 +903,13 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			zoomInButton.setBounds(getWidth() - 35, getHeight()/4+70, 30, 30);
 			zoomOutButton.setBounds(getWidth() - 35, getHeight()/4+105, 30, 30);
 		}
+		if(voorkennisTree) {
+			topPanel.setBounds(0, getHeight(), getWidth(), 26);
+			methodeChoice.setBounds(20, getHeight()/4+2, 20, 24);
+			zoomFitButton.setBounds(getWidth() - 35, getHeight()/4+35, 30, 30);
+			zoomInButton.setBounds(getWidth() - 35, getHeight()/4+70, 30, 30);
+			zoomOutButton.setBounds(getWidth() - 35, getHeight()/4+105, 30, 30);
+		}
 		
 		origin.x += (getWidth() - oldWidth)/2;
 		origin.y += (getHeight() - oldHeight)/2;
@@ -825,7 +918,18 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		repaint();
 	}
 	
-	
+	public GraphNode findNode(int x, int y) {
+		GraphNode node = null;
+		int ex = (int) ((x-origin.x)/factor);
+		int ey = (int) ((y-origin.y)/factor);
+		for (int i = 0; i < graphNodes.size(); i++) {
+			if (graphNodes.get(i).contains(ex, ey)) {
+				node = graphNodes.get(i);
+				break;
+			}
+		}
+		return node;
+	}
 	
 	@Override
 	public void mouseDragged(MouseEvent e) {
@@ -895,6 +999,14 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		
 		else if(e.getSource()==methodeLabel)
 			selectMethode(selectedMethod);
+		
+		if(!voorkennisTree && e.getModifiers()== InputEvent.BUTTON3_MASK || e.isControlDown()) {
+			voorkennisPopupNode = findNode(e.getX(),e.getY());
+			if(voorkennisPopupNode!=null) {
+				voorkennisPopupMenu.show(this, e.getX(), e.getY());
+				return;
+			}
+		}
 		
 			//selectMethode((String)(methodeChoice.getSelectedItem()));
 		
@@ -1221,6 +1333,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		
 	}
 	
+	
 	public void setVoorkennisArea(boolean b) {
 		voorkennisArea = b;
 		if(b) {
@@ -1289,6 +1402,8 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			voorkennisWegButton.setVisible(false);
 			voorkennisButton.setVisible(true);
 			verbergVoorkennis();
+			if(voorkennisTree)
+				verbergVoorkennisTree();
 		}
 		if(e.getSource()==methodeChoiceButton) {
 			methodeChoicePopup.show(methodeChoiceButton, 0, 0);
@@ -1301,6 +1416,9 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		}
 		if(e.getSource()==menuItemAll) {
 			deselectMethode();
+		}
+		if(e.getSource()==miVoorkennis) {
+			plaatsVoorkennisTree(voorkennisPopupNode);
 		}
 		
 	}

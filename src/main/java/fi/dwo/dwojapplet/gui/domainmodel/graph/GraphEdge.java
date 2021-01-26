@@ -19,6 +19,7 @@ public class GraphEdge {
 	
 	private boolean blur = false;
 	private boolean sameChapters = true;
+	private boolean voorkennisTree;
 	
 	private Color edgeColor = LeerdomeinGraphPanel.colorBlue4;
 	private Color edgeInterChapColor = new Color(238,209,180);//230,210,210);
@@ -61,7 +62,7 @@ public class GraphEdge {
 	
 	public void paint(Graphics gr, Point origin, double factor) {
 		if(target==null || source==null || target.getLocation()==null || source.getLocation()==null  || !target.isVisible() || !source.isVisible() ||factor<0.15 
-				||source.getTempLocation()!=null && target.getTempLocation()!=null)
+				||(source.getTempLocation()!=null && target.getTempLocation()!=null && !voorkennisTree))
 			return;
 		Graphics2D g = (Graphics2D)gr;
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -90,6 +91,10 @@ public class GraphEdge {
 					if(source.getTempLocation()!=null) {
 						x0 = source.getTempLocation().x;
 						y0 = source.getTempLocation().y;
+					}
+					if(voorkennisTree && target.getTempLocation()!=null) {
+						x1 = target.getTempLocation().x;
+						y1 = target.getTempLocation().y;
 					}
 					float mx = (x0 + x1)/2;
 					float my = (y0 + y1)/2;
@@ -162,6 +167,14 @@ public class GraphEdge {
 	
 	public boolean getBlur() {
 		return blur;
+	}
+	
+	public void setVoorkennisTree(boolean b) {
+		voorkennisTree = b;
+	}
+	
+	public boolean isVoorkennisTree() {
+		return voorkennisTree;
 	}
 	
 }
