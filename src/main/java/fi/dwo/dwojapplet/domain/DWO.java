@@ -1284,6 +1284,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
       if (resultsModule == null) {
          try {
             DomSchoolClass sc = new DomSchoolClass();
+            sc.setSchoolClassName(schoolClass.getName());
+            sc.setIconizer(schoolClass.hasIconizer());
             sc.setId(PersistentSchoolClass.buildPersistenceId(Long.valueOf(schoolClass.getID())));
 long w = System.currentTimeMillis();
             DomCoursesOfSchoolClass4Teacher result = 

@@ -140,25 +140,13 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
      */
     public ScoPanel getScoPanel(DWO dwo, User user, SchoolClass cls) {
         this.dwo = dwo;
-//        User lastUser = this.user;
         setUser(user,cls);
-//        if (lastUser != this.user || user == null) {
         applet = null;
-        //MapperCreator.instance(Applet.class).removeAllObjects();
         sc = null;
-//        }
         loadApplet();
         if (applet == null) { //something was wrong with creating the applet
             return null;
         }
-//        if (sc == null) {
-//            sc = new ScoPanel(this);
-//            sc.init();
-//        } else if (lastUser != this.user || user == null) { //if the user is the same as last time, we don't need to refresh the applet 
-//            sc.init();
-//        } else { //if(applet.getClass().getName().equals("fi.popupurlapplet.PopUpURLApplet")) {
-//            sc.init();
-//        }
         sc = new ScoPanel(this);
         sc.init();
         return sc;

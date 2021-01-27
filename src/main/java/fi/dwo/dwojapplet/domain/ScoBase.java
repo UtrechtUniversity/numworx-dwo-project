@@ -287,6 +287,9 @@ private static final Logger LOG = Logger.getLogger(ScoBase.class.getName());
         	if("dme.team".equals(iDataModelElement))
         	{	if(user.getInClass() != null)
         		return ok(user.getInClass().getName());
+        	    if(cls != null) 
+        	      return ok(cls.getName());
+        	
         	} else if ("dme.abo_type".equals(iDataModelElement))
         	{
         	  try {
@@ -531,6 +534,10 @@ private static final Logger LOG = Logger.getLogger(ScoBase.class.getName());
             return features != null && features.indexOf(f) >= 0;
         }
         return false;
+    }
+
+    public SchoolClass getSchoolClass() {
+      return cls;
     }
 
 }

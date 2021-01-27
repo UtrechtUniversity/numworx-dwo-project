@@ -390,8 +390,16 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
       hhbox.add(Box.createHorizontalStrut(10));
       hhbox.add(Box.createGlue());
       printer = new PrintPanel();
-      Sco sco = scoPanel.getSco();
-      //sco = sco.unwrap();     // FIXME WrapSco kan niet printen. en wiskOpdr is niet geinititaliseerd.
+      Sco sco0 = scoPanel.getSco();
+      Sco sco = sco0.unwrap();     // FIXME WrapSco kan niet printen. en wiskOpdr is niet geinititaliseerd.
+      if (sco != sco0) {
+        sco.getScoPanel(sco0.dwo, sco0.getUser(), sco0.getSchoolClass()).ro = true;        
+      }
+      
+      
+      
+      
+      
       PrintComponent component = new PrintComponent(sco.getApplet(), sco);
       printer.setComponent(component);
 // into hbox1        
@@ -517,6 +525,9 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 				case ItemEvent.DESELECTED:
 						sp.getSco().setUser(u,s);
 						sp.getSco().getApplet().stop();
+						if (sp.getSco() != sp.getSco().unwrap()) {
+						  sp.getSco().unwrap().getApplet().stop();
+						}
 						break;
 				case ItemEvent.SELECTED:
 						sp.getSco().setUser(u,s);
@@ -528,7 +539,13 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 						resetSeal(sp, sealmodel);
 						sealmodel.addItemListener(sealListener);
                         sp.appletStart();
-                        sp.repaint();
+                        if (sp.getSco() != sp.getSco().unwrap()) {
+                          try {
+                            sp.getSco().unwrap().getApplet().start();
+                          } catch (Exception e) {
+                          }
+                        }
+                       sp.repaint();
 						break;
 				}
 			}};
@@ -979,8 +996,13 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     @Override
     public void windowClosing(WindowEvent e) {
         setVisible(false);
-        scoPanel.getSco().removePropertyChangeListener(Sco.LESSON_LOCATION, this);
-        scoPanel.getSco().endWithoutSaving();
+        Sco sco0 = scoPanel.getSco();
+        sco0.removePropertyChangeListener(Sco.LESSON_LOCATION, this);
+        sco0.endWithoutSaving();
+        
+        if (sco0 != sco0.unwrap()) {
+          sco0.unwrap().endWithoutSaving();
+        }
         dispose();
     }
 

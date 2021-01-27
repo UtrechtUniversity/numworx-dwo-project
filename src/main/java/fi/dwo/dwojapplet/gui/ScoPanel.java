@@ -72,6 +72,8 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
     private CardLayout layout;
 
     public ParameterManagementPanel tmp;
+    
+    boolean ro = false;
 
     /**
      * Creates a new ScoPanel with an applet of the specified sco.
@@ -444,7 +446,8 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
 //        } catch(Exception e2) {
 ////            DwoMessageDialog.showMessageDialog(null, e2.getMessage());
 //            
-//        }        
+//        }  
+        if (ro) return "true";
         return sco.LMSSetValue(iDataModelElement, iValue);
     }
 
