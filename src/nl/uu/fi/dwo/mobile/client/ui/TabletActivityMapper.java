@@ -5,7 +5,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import nl.uu.fi.dwo.mobile.client.ui.activities.ClassesActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.CourseActivity2;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ExamActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ExamModuleActivity;
@@ -19,13 +18,12 @@ import nl.uu.fi.dwo.mobile.client.ui.activities.SearchActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.TreeModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ViewCourseActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ViewModuleActivity;
-import nl.uu.fi.dwo.mobile.client.ui.places.ClassesPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.Exam;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.LogoutPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.MaybeLogout;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.SearchPlace;
+//import nl.uu.fi.dwo.mobile.client.ui.places.SearchPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewCoursePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
@@ -52,7 +50,7 @@ public class TabletActivityMapper implements ActivityMapper
 	}
 
 	@Inject Provider<MaybeLogoutActivity> maybeLogout;
-	@Inject Provider<ExamActivity> exam;
+//	@Inject Provider<ExamActivity> exam;
 //	@Inject Provider<ClassesActivity> classes;
 	
 	@Inject Map<Class<?>, Provider<Activity>> activityMap;
@@ -69,13 +67,13 @@ public class TabletActivityMapper implements ActivityMapper
 	    return maybeLogout.get().place(place);
 	  }
 	  
-	  if (place instanceof Exam) {
-	      return exam.get();
-	  }
+//	  if (place instanceof Exam) {
+//	      return exam.get();
+//	  }
 	  
-	  if (place instanceof LogoutPlace) {
-		return new LogoutActivity();
-	  }
+//	  if (place instanceof LogoutPlace) {
+//		return new LogoutActivity();
+//	  }
 //	  if (place instanceof ClassesPlace) {
 //		  return classes.get();
 //	  }
@@ -83,10 +81,10 @@ public class TabletActivityMapper implements ActivityMapper
 	    
 	    
 	    
-	    if (place instanceof nl.uu.fi.dwo.mobile.client.ui.places.guest)
-		{
-			return new GuestActivity(clientFactory);
-		}
+//	    if (place instanceof nl.uu.fi.dwo.mobile.client.ui.places.guest)
+//		{
+//			return new GuestActivity(clientFactory);
+//		}
 		
 		if (place instanceof nl.uu.fi.dwo.mobile.client.ui.places.c) 
 		{
@@ -165,10 +163,10 @@ public class TabletActivityMapper implements ActivityMapper
 					? new ExamModuleActivity(clientFactory, item)
 					: new TreeModuleActivity(clientFactory, item); // Anders geen activity reset action;
 		}
-		if (place instanceof SearchPlace) {
-			SearchPlace tmp = (SearchPlace) place;
-			return new SearchActivity(clientFactory, tmp.getId());
-		}
+//		if (place instanceof SearchPlace) {
+//			SearchPlace tmp = (SearchPlace) place;
+//			return new SearchActivity(clientFactory, tmp.getId());
+//		}
 		
 		return null;
 	}

@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
+import javax.inject.Inject;
+
 import org.osgi.util.function.Predicate;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
@@ -21,7 +23,7 @@ public class GuestActivity extends AbstractActivity implements Activity {
 
 	private ClientFactory clientFactory;
 
-	public GuestActivity(ClientFactory clientFactory) {
+	@Inject GuestActivity(ClientFactory clientFactory) {
 		this.clientFactory = clientFactory;
 	}
 

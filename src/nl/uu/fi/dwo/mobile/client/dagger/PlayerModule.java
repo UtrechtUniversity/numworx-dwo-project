@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.Messages.Example;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
@@ -22,7 +23,13 @@ import dagger.multibindings.IntoMap;
 import nl.uu.fi.dwo.mobile.client.ui.AppPlaceHistoryMapper;
 import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ClassesActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.ExamActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.GuestActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.LogoutActivity;
 import nl.uu.fi.dwo.mobile.client.ui.places.ClassesPlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.Exam;
+import nl.uu.fi.dwo.mobile.client.ui.places.LogoutPlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.guest;
 
 @Module
 public abstract class PlayerModule {
@@ -61,5 +68,7 @@ public abstract class PlayerModule {
   }
 
   @Binds @IntoMap @ClassKey(ClassesPlace.class) abstract Activity classesActivity(ClassesActivity classes);
-
+  @Binds @IntoMap @ClassKey(LogoutPlace.class)  abstract Activity logoutActivity(LogoutActivity logout);
+  @Binds @IntoMap @ClassKey(guest.class) abstract Activity guestActivity(GuestActivity guest);
+  @Binds @IntoMap @ClassKey(Exam.class) abstract Activity examActivity(ExamActivity exam);
 }

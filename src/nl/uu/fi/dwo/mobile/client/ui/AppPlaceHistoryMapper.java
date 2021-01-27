@@ -24,7 +24,7 @@ import com.google.gwt.place.shared.WithTokenizers;
  * 
  */
 @WithTokenizers(
-{ Exam.Tokenizer.class, ViewModulePlace.Tokenizer.class, ViewCoursePlace.Tokenizer.class, LoginPlace.Tokenizer.class, ReloginPlace.Tokenizer.class, TreeModulePlace.Tokenizer.class, c.Tokenizer.class, s.Tokenizer.class, guest.Tokenizer.class, SearchPlace.Tokenizer.class, LogoutPlace.Tokenizer.class, MaybeLogout.Tokenizer.class, ClassesPlace.Tokenizer.class })
+{ Exam.Tokenizer.class, ViewModulePlace.Tokenizer.class, ViewCoursePlace.Tokenizer.class, LoginPlace.Tokenizer.class, ReloginPlace.Tokenizer.class, TreeModulePlace.Tokenizer.class, c.Tokenizer.class, s.Tokenizer.class, guest.Tokenizer.class, /*SearchPlace.Tokenizer.class, */ LogoutPlace.Tokenizer.class, MaybeLogout.Tokenizer.class, ClassesPlace.Tokenizer.class })
 public interface AppPlaceHistoryMapper extends PlaceHistoryMapper
 {
 
