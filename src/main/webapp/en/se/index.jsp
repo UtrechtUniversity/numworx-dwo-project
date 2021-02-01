@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="fi.dwo.server.db.TStamp" %>   
 <%@ include file="/dwo/saml_util.jsp" %>
 <!DOCTYPE html>
 <% 
 	int profile = 92;
-	long tstamp = System.currentTimeMillis();
+	long tstamp = TStamp.BOOT;
 	String query = request.getQueryString();
 	if(query == null)
 	 	query = "?base=/en/se/&locale=en&profile=" + profile + "&t=" + tstamp;

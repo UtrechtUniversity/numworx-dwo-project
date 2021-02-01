@@ -1,11 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@page import="java.util.Base64"%>
+<%@ page import="fi.dwo.server.db.TStamp" %>   
 <%@ page import='java.util.regex.*' %>
 <%@ include file="/dwo/saml_util.jsp" %>
 <%
 	String query ;
-	long tstamp = System.currentTimeMillis();
+	long tstamp = TStamp.BOOT;
 	query = "?base=" + base + "&locale=" + locale + "&profile=" + profile + "&t=" + tstamp;
 	
 	Cookie[] cookies = wrap.getCookies();
