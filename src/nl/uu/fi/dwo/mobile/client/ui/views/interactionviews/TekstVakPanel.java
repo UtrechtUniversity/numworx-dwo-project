@@ -1897,10 +1897,10 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		if(h == null || h.isEmpty()) 
 		{
 			setStateNull();
-			if ( !layerVisible) {
+			if ( !layerVisible || zichtbaarNaNakijken) {
 				visible = false;
 				setVisibility(false);
-			}
+			} 
 			return;
 		}
 
