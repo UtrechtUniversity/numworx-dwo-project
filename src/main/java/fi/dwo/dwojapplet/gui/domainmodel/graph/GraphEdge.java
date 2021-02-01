@@ -81,7 +81,7 @@ public class GraphEdge {
 
 		for (String scode: source.getVisibleSet()) {
 			for (String tcode: target.getVisibleSet()) {
-				if(scode.compareTo(tcode)==0 || source.getVisibleSet().size()==1 && target.getVisibleSet().size()==1 || source.getTempLocation()!=null) { //&& scode.equals(tcode)
+				if(scode.equals(tcode) || source.getVisibleSet().size()==1 && target.getVisibleSet().size()==1 || source.getTempLocation()!=null) { //&& scode.equals(tcode)
 					boolean sameChapters = Objects.equals(scode, tcode);
 					
 					float x0 = origin.x + (float)((source.getLocation(scode).x)*factor);

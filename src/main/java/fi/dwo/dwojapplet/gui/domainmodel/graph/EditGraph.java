@@ -302,7 +302,10 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		}
 		if(e.isShiftDown() && activeNode != null) {
 			possibleSourceNode = activeNode;
-			tempEdge = new GraphEdge(possibleSourceNode, new GraphNode(ex,ey));
+			GraphNode helpNode = new GraphNode(ex,ey);
+			helpNode.setVisible(true);
+			//helpNode.setMethodeInfo(possibleSourceNode.getMethodeInfo());
+			tempEdge = new GraphEdge(possibleSourceNode, helpNode);
 			graphEdges.add(tempEdge);
 			activeNode = null;
 		}
@@ -380,8 +383,10 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 				break;
 			}
 		}
-		if(node!=null)
+		if(node!=null) {
 			produceAction(node.getID());
+			return;
+		}
 		
 		ChapterGraphNode cNode = null;
 		for(int i=0 ; i<chapterNodes.size() ; i++) {
@@ -391,17 +396,34 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 			}
 		}
 		if(cNode!=null) {
+//			for(int i=0 ; i<graphNodes.size() ; i++) {
+//				if(!graphNodes.get(i).hasChapterCode(cNode.getHfstCode()))
+//					graphNodes.get(i).setVisible(false);
+//			}
 			for(int i=0 ; i<graphNodes.size() ; i++) {
-				if(!graphNodes.get(i).hasMethodCode(cNode.getHfstCode()))
+				graphNodes.get(i).setVisible(false);
+			}
+			for(int i=0 ; i<graphNodes.size() ; i++) {
+				if(!graphNodes.get(i).hasChapterCode(cNode.getHfstCode()))
 					graphNodes.get(i).setVisible(false);
+				else
+					graphNodes.get(i).setVisible(cNode.getHfstCode(), true);
 			}
+			produceAction("filter");
 			zoomFit();
-			for(int i=0 ; i<graphNodes.size() ; i++) {
-				graphNodes.get(i).setVisible(true);
-			}
+			
 			for(int i=0 ; i<chapterNodes.size() ; i++) {
 				chapterNodes.get(i).makeLocation(graphNodes);
 			}
+			for(int i=0 ; i<bookNodes.size() ; i++) {
+				bookNodes.get(i).makeLocation(chapterNodes);
+			}
+//			for(int i=0 ; i<graphNodes.size() ; i++) {
+//				graphNodes.get(i).setVisible(true);
+//			}
+//			for(int i=0 ; i<chapterNodes.size() ; i++) {
+//				chapterNodes.get(i).makeLocation(graphNodes);
+//			}
 			
 		}
 
@@ -538,13 +560,13 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 			repaint();
 		}
 		if(e.getSource()==zoomFitButton) {
-			for(int i=0 ; i<graphNodes.size() ; i++) {
-				graphNodes.get(i).setVisible(true);
-			}
+//			for(int i=0 ; i<graphNodes.size() ; i++) {
+//				graphNodes.get(i).setVisible(true);
+//			}
 			zoomFit();
-			for(int i=0 ; i<chapterNodes.size() ; i++) {
-				chapterNodes.get(i).makeLocation(graphNodes);
-			}
+//			for(int i=0 ; i<chapterNodes.size() ; i++) {
+//				chapterNodes.get(i).makeLocation(graphNodes);
+//			}
 		}
 		if(e.getSource()==miRemove) {
 			editPopupNode.setLocation(null);
@@ -571,7 +593,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		for (int i = 0; i < graphNodes.size(); i++) {
 			GraphNode node = graphNodes.get(i);
             if(node.isVisible() && node.getLocation()!=null) {
-              for(String code: node.getMethodeCodes()) {
+              for(String code: node.getVisibleSet()) {
 				Point location = node.getLocation(code);
                 if(xMax < location.x)
 					xMax = location.x;

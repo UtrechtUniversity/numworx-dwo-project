@@ -1452,6 +1452,8 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			deselectMethode();
 		}
 		if(e.getSource()==miVoorkennis) {
+			if(voorkennisArea)
+				verbergVoorkennis();
 			plaatsVoorkennisTree(voorkennisPopupNode);
 		}
 		
