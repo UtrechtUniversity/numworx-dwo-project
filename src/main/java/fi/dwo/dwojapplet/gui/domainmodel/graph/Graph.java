@@ -344,7 +344,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 //				source.setTempLocation(makeTempLocation(source, target));
 //			if(edge.getLength() < 600)
 //				source.setTempLocation(null);
-			if(voorkennisArea || GraphNode.hasSameChapterCode(source, target) || graphEdges.get(i).isVoorkennisTree())
+			if(voorkennisArea || GraphNode.hasSameChapterCode(source, target, selectedMethod) || graphEdges.get(i).isVoorkennisTree())
 				graphEdges.get(i).paint(g, origin, factor);
 		}
 		
@@ -514,7 +514,8 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		for(GraphNode graphNode : graphNodes) {
 			for(GraphEdge edge : graphEdges) {
 				if(edge.getTarget() == graphNode) {
-					vkNodes.add(edge.getSource());
+					if(!vkNodes.contains(edge.getSource()))
+						vkNodes.add(edge.getSource());
 					edge.setVoorkennisTree(true);
 				}
 			}
@@ -525,18 +526,45 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		return voorkennisNodes;
 	}
 	
+	private void cleanVoorkennisNodes(ArrayList<ArrayList<GraphNode>> voorkennisNodes) {
+		for(int i=voorkennisNodes.size()-1 ; i>-1 ; i--) {
+			ArrayList<GraphNode> list = voorkennisNodes.get(i);
+			for(int j=0 ; j<list.size() ;  j++) {
+				GraphNode node = list.get(j);
+				for(int k=0 ; k<i ; k++) {
+					ArrayList<GraphNode> otherList = voorkennisNodes.get(k);
+					otherList.remove(node);
+				}
+					
+			}
+		}
+	}
+	
+	private void remove(GraphNode graphNode, ArrayList<ArrayList<GraphNode>> listlist) {
+		for(ArrayList<GraphNode> list: listlist)
+			list.remove(graphNode);
+	}
+	
+	private boolean containsNode(GraphNode graphNode, ArrayList<ArrayList<GraphNode>> listlist) {
+		for(ArrayList<GraphNode> list: listlist)
+			if(list.contains(graphNode))
+				return true;
+		return false;
+	}
+	
 	private void plaatsVoorkennisTree(GraphNode graphNode) {
 		factor = 0.75;
 		for(GraphNode gn : graphNodes) {
 			gn.setVisible(false);
 		}
 		ArrayList<ArrayList<GraphNode>> voorkennisNodes = getVoorkennisNodes(graphNode);
+		cleanVoorkennisNodes(voorkennisNodes);
 		for(int i=0 ; i<voorkennisNodes.size() ; i++) {
 			ArrayList<GraphNode> gnList = voorkennisNodes.get(i);
 			for(int j=0 ; j<gnList.size() ; j++) {
 				GraphNode gn = gnList.get(j);
 				gn.setVisible(true);
-				int x = 100 + (j+1)*(getWidth()-200)/(gnList.size()+1);
+				int x = -20+i%2*40 + 100 + (j+1)*(getWidth()-200)/(gnList.size()+1);
 				int y = -7*gnList.size()+15*j + (voorkennisNodes.size() - (i))*(getHeight()-50)/(voorkennisNodes.size());
 				gn.setTempLocation(new Point(x,y));
 			}
@@ -838,15 +866,19 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		for(int i = 0 ; i<graphNodes.size() ; i++) {
 			GraphNode node = graphNodes.get(i);
 			node.setTempLocation(null);
-			if(selectedChapter!=null)
-				selectChapter(selectedChapter);
-			else if(selectedBook!=null)
-				selectBook(selectedBook);
-			else if(selectedMethod!=null)
-				selectMethode(selectedMethod);
-			else
-				deselectMethode();
 		}
+		for(int i = 0 ; i<graphEdges.size() ; i++) {
+			GraphEdge edge = graphEdges.get(i);
+			edge.setVoorkennisTree(false);
+		}
+		if(selectedChapter!=null)
+			selectChapter(selectedChapter);
+		else if(selectedBook!=null)
+			selectBook(selectedBook);
+		else if(selectedMethod!=null)
+			selectMethode(selectedMethod);
+		else
+			deselectMethode();
 	}
 	
 	public void verbergVoorkennis() {
@@ -923,7 +955,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		int ex = (int) ((x-origin.x)/factor);
 		int ey = (int) ((y-origin.y)/factor);
 		for (int i = 0; i < graphNodes.size(); i++) {
-			if (graphNodes.get(i).contains(ex, ey)) {
+			if (graphNodes.get(i).contains(ex, ey) || graphNodes.get(i).getTempLocation()!=null && graphNodes.get(i).contains(x, y)) {
 				node = graphNodes.get(i);
 				break;
 			}
@@ -1000,7 +1032,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		else if(e.getSource()==methodeLabel)
 			selectMethode(selectedMethod);
 		
-		if(!voorkennisTree && e.getModifiers()== InputEvent.BUTTON3_MASK || e.isControlDown()) {
+		if(e.getModifiers()== InputEvent.BUTTON3_MASK || e.isControlDown()) {
 			voorkennisPopupNode = findNode(e.getX(),e.getY());
 			if(voorkennisPopupNode!=null) {
 				voorkennisPopupMenu.show(this, e.getX(), e.getY());
@@ -1158,6 +1190,8 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		setGraphEdges(edges);
 		modelJustSet = true;
 		setVoorkennisArea(false);
+		if(voorkennisTree)
+			verbergVoorkennisTree();
 
 		Map<String, DomStudentModelMethodInfo> filterInfo = new HashMap<>();
 		if(filter!=null) {
