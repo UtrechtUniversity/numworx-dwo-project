@@ -1224,4 +1224,9 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
   public boolean trashCourse(Course c) {
     return false;
   }
+
+  public void updateScoSequenceNr(Sco sco) {
+    
+    
+  }
 }

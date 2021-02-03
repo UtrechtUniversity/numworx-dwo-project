@@ -8,6 +8,7 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.CoursePanel;
 import fi.dwo.dwojapplet.gui.GuiConstants;
+import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.rest.dom.entities.DomACL;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
@@ -303,6 +304,7 @@ public class Course implements LessonGroup, Comparable<Course>, CourseMap, Descr
         if(scoList[i].getSequencenr() != (i+1)) {
           LOG.severe("FIX SEQUENCENRS FOR " + courseID + "." + i);
           scoList[i].setSequencenr(i+1);
+          GuiCreator.instance().updateScoSequenceNr(scoList[i]);
         }
       }
       

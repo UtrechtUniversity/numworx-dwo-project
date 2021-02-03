@@ -49,6 +49,8 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomACL;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.util.ACL;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -645,4 +647,17 @@ public class GuiCreatorTeacher extends GuiCreator {
     public ConfigManager getConfigManager() {
       return new SecureTeacherConfigManager();
     }
+
+    @Override
+    public void updateScoSequenceNr(Sco sco) {
+      DomScoContextFull domsco = new DomScoContextFull();
+      domsco.setId(PersistentScoContext.buildPersistenceId(Long.valueOf(sco.getID())));
+      domsco.setSequencenr(Long.valueOf(sco.getSequencenr()));
+      try {
+        manager.update(domsco, null, DWO.getDwoProfile());
+      } catch (Dwo2Exception e) {
+      }
+    }
+    
+    
 }
