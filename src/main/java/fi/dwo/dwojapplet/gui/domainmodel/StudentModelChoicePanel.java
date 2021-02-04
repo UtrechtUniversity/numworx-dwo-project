@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.EventObject;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
@@ -19,6 +22,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
@@ -113,7 +117,7 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
      }
  }
 
-  public static class ChoiceCellRenderer implements TreeCellRenderer {
+  public  class ChoiceCellRenderer implements TreeCellRenderer {
 
     private JCheckBox    leafRenderer = new JCheckBox();
     private JRadioButton nonLeafRenderer = new JRadioButton();
@@ -166,7 +170,7 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
             Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
             if (userObject instanceof Node) {
               Node node = (Node) userObject;
-              returnValue.setText(node.toString());
+              returnValue.setText(node.toString() + " " + ids.getOrDefault(node.getInfo().getId(), 1.0));
               returnValue.setSelected(node.isValue());
             }
           }
@@ -226,11 +230,14 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
       WiskOpdrPanel panel = getWiskOpdrPanel(descr);
       scroll.setViewportView(panel);
     }
-    
+    slider = new JSlider(1, 10, 10);
+    slider.setToolTipText("factor");
+    slider.setEnabled(!readonly);
     
     rightBox.add(title);
     rightBox.add(Box.createVerticalStrut(10));
     rightBox.add(scroll);
+    rightBox.add(slider);
     
     tree.addTreeSelectionListener(this);
     
@@ -251,21 +258,25 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
   }
 
   private boolean[][] choices;
-  private List<String> ids;
+  final private Map<String, Double> ids = new TreeMap<>();
   private JScrollPane scroll;
+  private JSlider slider;
   
   public List<String> getObjectives() {
-    return ids;
+    return ids.entrySet().stream()
+          .map(e -> e.getKey() + (e.getValue() != null ? ("/" + e.getValue()): ""))
+          .collect(Collectors.toList());
   }
   
-  private void getObjectives(Object v, List<String> ids) {
+  private void getObjectives(Object v, Map<String,Double> ids) {
     if (v instanceof NodeLeaf) {
       NodeLeaf leaf = (NodeLeaf) v;
-      if (leaf.isValue())
-        ids.add(leaf.getInfo().getId());
+      if (!leaf.isValue())
+        ids.remove(leaf.getInfo().getId());
     } else if (v instanceof NodeVector) {
       NodeVector vector = (NodeVector) v;
-      vector.stream().forEach(item -> getObjectives(item, ids));
+      ids.remove(vector.getInfo().getId());
+      vector.forEach(item -> getObjectives(item, ids));
     }
   }
 
@@ -274,7 +285,11 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
   }
   
   public void setObjectives(List<String> objectives) {
-    ids = objectives;
+    ids.clear();
+    objectives.forEach(s -> {
+      String[] split = s.split("/");
+      ids.put(split[0], split.length>1 ? Double.valueOf(split[1]): null);
+    } );
     makeGUI();
     
   }
@@ -282,7 +297,8 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
   
   public void makeChoices() {
 // new style
-    ids = new ArrayList<>();
+    TreePath p = tree.getSelectionPath();
+    if (p != null) savePath(p);
     getObjectives(root.getUserObject(), ids);    
   }
 
@@ -296,7 +312,7 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
         Object u = node.getUserObject();
         if (u instanceof NodeLeaf) {
           NodeLeaf leaf = (NodeLeaf) u;
-          leaf.setValue(ids.contains(leaf.getInfo().getId()));
+          leaf.setValue(ids.containsKey(leaf.getInfo().getId()));
         }
       }
     }
@@ -306,6 +322,12 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
 
   @Override
   public void valueChanged(TreeSelectionEvent e) {
+    TreePath[] paths = e.getPaths();
+    for( TreePath p: paths) {
+      if (! e.isAddedPath(p)) {
+        savePath(p);        
+      }
+    }
     if (e.isAddedPath()) {
       TreePath path = tree.getSelectionPath();
       if (path == null) {
@@ -319,6 +341,8 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
       title.setText(u.toString());
       if (u instanceof Node) {
         String descr = ((Node) u).getDescription();
+        Double factor = ids.getOrDefault(((Node) u).getInfo().getId(), 1.0);
+        slider.setValue(Math.round(slider.getMaximum() * factor.floatValue()));
         if (descr == null) descr = "";
         if (descr.startsWith(WISKOPDR_SIG)) {
           WiskOpdrPanel panel = getWiskOpdrPanel(descr);
@@ -331,8 +355,16 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
         description.setText("");
         scroll.setViewportView(description);
       }
-    }   
+    }
     repaint();
+  }
+
+  private void savePath(TreePath p) {
+    DefaultMutableTreeNode node = (DefaultMutableTreeNode) p.getLastPathComponent();
+    Object u = node.getUserObject();
+    if (u instanceof Node) {
+      ids.put(((Node) u).getInfo().getId(), (double)slider.getValue()/slider.getMaximum());
+    }
   }
 
   private WiskOpdrPanel getWiskOpdrPanel(String descr) {

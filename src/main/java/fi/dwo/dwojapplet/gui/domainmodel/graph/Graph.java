@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -1245,6 +1246,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			List<String> sources = leaf.getVoorkennis();
 			if (sources != null)
 				for (String source : sources) {
+				    source = source.split("/")[0];
 					GraphNode gns = graphMap.get(source);
 					if (gns != null) {
 						GraphEdge edge = new GraphEdge(gns, gnd);
@@ -1347,8 +1349,14 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 				List<String> voorkennis = leaf.getVoorkennis();
 				if (voorkennis == null)
 					voorkennis = new ArrayList<>();
-				voorkennis.removeAll(graphMap.keySet());
-				voorkennis.addAll(edgeMap.getOrDefault(id, Collections.emptySet()));
+				Set<String> toRemove = new TreeSet<>(graphMap.keySet());
+                Set<String> toAdd = new TreeSet<>(edgeMap.getOrDefault(id, Collections.emptySet()));
+                Set<String> exists = voorkennis.stream().map(s -> s.split("/")[0]).collect(Collectors.toSet());
+                toRemove.removeAll(toAdd);
+                toRemove.retainAll(exists);
+                toAdd.removeAll(exists);
+                voorkennis.removeIf(s -> toRemove.contains(s.split("/")[0]));
+                voorkennis.addAll(toAdd);
 				leaf.setVoorkennis(voorkennis);
 			}
 			return;
