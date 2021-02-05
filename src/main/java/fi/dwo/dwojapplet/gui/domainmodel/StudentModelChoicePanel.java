@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.EventObject;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -105,6 +106,11 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
                  if (stopCellEditing()) {
                      fireEditingStopped();
                      //model.nodeStructureChanged(root);
+                     TreePath path = tree.getSelectionPath();
+                     if (path != null && path.getLastPathComponent() == value) {
+                       savePath(path);
+                     }
+                     
                      repaint();
                  }
              }  
@@ -166,11 +172,16 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
             returnValue.setForeground(textForeground);
             returnValue.setBackground(textBackground);
           }
-          if ((value != null) && (value instanceof DefaultMutableTreeNode)) {
+          if (value instanceof DefaultMutableTreeNode) {
             Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
             if (userObject instanceof Node) {
               Node node = (Node) userObject;
-              returnValue.setText(node.toString() + " " + ids.getOrDefault(node.getInfo().getId(), 1.0));
+              String text = node.toString();
+              Double factor = ids.get(node.getInfo().getId());
+              if (factor == null) factor = 1.0;
+              if (node.isValue() && node instanceof NodeLeaf && factor.doubleValue() <= 0.999)
+                text +=  " " + factor;
+              returnValue.setText(text);
               returnValue.setSelected(node.isValue());
             }
           }
@@ -233,6 +244,13 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
     slider = new JSlider(1, 10, 10);
     slider.setToolTipText("factor");
     slider.setEnabled(!readonly);
+    slider.setMajorTickSpacing(3);
+    Hashtable<Number, JLabel> dict = new Hashtable<>();
+    dict.put(slider.getMinimum(), new JLabel("min"));
+    dict.put(slider.getMaximum(), new JLabel("max"));
+    slider.setLabelTable(dict);
+    slider.setPaintLabels(true);
+    slider.setPaintTicks(true);
     
     rightBox.add(title);
     rightBox.add(Box.createVerticalStrut(10));
@@ -341,7 +359,8 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
       title.setText(u.toString());
       if (u instanceof Node) {
         String descr = ((Node) u).getDescription();
-        Double factor = ids.getOrDefault(((Node) u).getInfo().getId(), 1.0);
+        Double factor = ids.get(((Node) u).getInfo().getId());
+        if (factor == null) factor = 1.0; 
         slider.setValue(Math.round(slider.getMaximum() * factor.floatValue()));
         if (descr == null) descr = "";
         if (descr.startsWith(WISKOPDR_SIG)) {
@@ -364,6 +383,7 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
     Object u = node.getUserObject();
     if (u instanceof Node) {
       ids.put(((Node) u).getInfo().getId(), (double)slider.getValue()/slider.getMaximum());
+      model.nodeChanged(node);
     }
   }
 
