@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
@@ -52,7 +53,8 @@ public class XapiResultsManager {
 
   static private final Logger LOG = Logger.getLogger(XapiResultsManager.class.getName());
   public static final String ATTEMPTED = "http://www.dwo.nl/verbs/attempted";
- 
+  public static final String CORRECTED = "http://www.dwo.nl/verbs/corrected";
+
   XapiManager xapi;
   String homePage;
   Genson genson;
@@ -218,10 +220,17 @@ public class XapiResultsManager {
     
     
     public Promise<DomStudentModelDataStudentScore> then() {
-      StatementsQuery query = new StatementsQuery();
+      final StatementsQuery query = new StatementsQuery();
       query.agent = agent;
       query.verbID = ATTEMPTED;
       query.activityID = activity.id;
+      query.ascending = Boolean.TRUE;
+      final StatementsQuery query2 = new StatementsQuery();
+      query2.agent = agent;
+      query2.verbID = CORRECTED;
+      query2.activityID = activity.id;
+      query2.ascending = Boolean.TRUE;
+      
 
       return
 //          xapi.getState("StudentModelData", activity, agent, null)
@@ -231,8 +240,21 @@ public class XapiResultsManager {
           .then( p0 -> {
             final StateDocument d = p0.getValue();
             query.since = d.timestamp;
+            query2.since = d.timestamp;
             Promise<StatementsResult> queryStatements = xapi.queryStatements(query);
-            return queryStatements
+            Promise<StatementsResult> correctedStatements = xapi.queryStatements(query2);
+            
+            return Promises.all(queryStatements, correctedStatements)
+                .then(all -> {
+                  StatementsResult q = all.getValue().get(0);
+                  StatementsResult c = all.getValue().get(1);
+                  if (!c.statements.isEmpty())
+                    combine(q,c);
+                  return queryStatements;
+                })
+                
+                
+                
             .map(statements -> {
              DomStudentModelDataStudentScore p = toDataScore( statements, d, context);
              return p;
@@ -256,6 +278,29 @@ public class XapiResultsManager {
       return Promises.all(promises).map(p -> scores).recover(p -> scores);
     }
     return Promises.resolved(scores);
+  }
+
+
+
+  public void combine(StatementsResult q, StatementsResult c) {
+    List<Statement> qq = q.statements;
+    for(Statement s: c.statements) {    
+      ListIterator<Statement> iterator = qq.listIterator();
+      String id = s.context.contextActivities.parent.get(0).id;
+      String stamp = s.timestamp;
+      Statement last = null;
+      while(iterator.hasNext()) {
+        Statement cur = iterator.next();
+        if (id .equals(cur.context.contextActivities.parent.get(0).id)) {
+          String curstamp = cur.timestamp;
+          if (curstamp.compareTo(stamp) == +1) break;
+          last = cur;
+        }
+      }
+      if (last != null) {
+        last.result = s.result;
+      }
+    }
   }
 
 
