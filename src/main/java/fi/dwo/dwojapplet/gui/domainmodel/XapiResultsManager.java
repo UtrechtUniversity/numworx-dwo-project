@@ -14,6 +14,8 @@ import java.util.TimeZone;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
@@ -294,6 +296,9 @@ public class XapiResultsManager {
         }
         
         List<String> ids = statement.context.contextActivities.parent.get(0).definition.extensions.objectives;
+        
+        ids = strip(ids);
+        
         if(Boolean.FALSE.equals(success))
         {
             //Calculate prodCorrect based on current scores
@@ -344,8 +349,19 @@ public class XapiResultsManager {
     //TODO: en dan gegevens uit het model weer terugzetten naar de tree? Of is dat niet nodig?
 }
 
+  private List<String> strip(List<String> ids) {
+    return ids.stream().map(s -> s.split("/")[0]).collect(Collectors.toList());
+  }
+
+  private Set<String> strip(Set<String> ids) {
+    return ids.stream().map(s -> s.split("/")[0]).collect(Collectors.toSet());
+  }
+
+
+
 List<String> metVoorkennis(List<String> ids,
       Map<String, DomStudentModelContextInfo> infos) {
+    ids = strip(ids);
     Set<String> all = new TreeSet<String>(ids);
     Set<String> extra = new TreeSet<>();
     Set<String> work = new TreeSet<>(all);
@@ -356,6 +372,7 @@ List<String> metVoorkennis(List<String> ids,
         if (info == null) continue;
         List<String> voorkennis = info.getVoorkennis();
         if (voorkennis == null) continue;
+        voorkennis = strip(voorkennis);
         extra.addAll(voorkennis);
       }
       extra.removeAll(all);
