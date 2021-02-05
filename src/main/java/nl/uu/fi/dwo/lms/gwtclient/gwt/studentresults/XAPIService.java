@@ -1,11 +1,13 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -190,6 +192,7 @@ public class XAPIService extends StudentResultsService implements StudentResults
         }
         
         List<String> ids = statement.context.contextActivities.parent.get(0).definition.extensions.objectives;
+        ids = strip(ids);
         if(Boolean.FALSE.equals(success))
         {
             //Calculate prodCorrect based on current scores
@@ -309,6 +312,7 @@ List<String> metVoorkennis(List<String> ids,
 	        if (info == null) continue;
 	        List<String> voorkennis = info.getVoorkennis();
 	        if (voorkennis == null) continue;
+	        voorkennis = strip(voorkennis);
 	        extra.addAll(voorkennis);
 	      }
 	      extra.removeAll(all);
@@ -327,5 +331,9 @@ List<String> metVoorkennis(List<String> ids,
     
     public Promise<Agent> getAgent() {
       return man.map(XapiManager::getAgent);
+    }
+    
+    private static List<String> strip(Collection<String> list) {
+    	return list.stream().map(s -> s.split("/")[0]).collect(Collectors.toList());
     }
 }
