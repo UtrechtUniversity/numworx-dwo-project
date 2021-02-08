@@ -18,7 +18,7 @@
   	<servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class>
      <init-param>
       <param-name>targetUri</param-name>
-      <param-value>https://test.dwo.nl/data/xAPI</param-value>
+      <param-value>https://repos.dwo.nl/data/xAPI</param-value>
     </init-param>
     <init-param>
       <param-name>log</param-name>
