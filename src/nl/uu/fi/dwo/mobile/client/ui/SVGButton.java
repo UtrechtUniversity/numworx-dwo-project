@@ -185,7 +185,7 @@ public class SVGButton extends SimplePanel {
 			touchEndHandler.removeHandler();
 		}
 	}
-	
+
 	protected void setBorderActive(boolean b) {
 		if(image!=null)
 			return;
@@ -199,7 +199,7 @@ public class SVGButton extends SimplePanel {
 		}
 		else {
 			svg.removeChild(borderActive);
-			
+			borderActive = null;			
 		}
 	}
 	
@@ -330,7 +330,7 @@ public class SVGButton extends SimplePanel {
 		public void onMouseOver(MouseOverEvent event) {
 			if(tooltip!=null) 
 				tooltip.show();
-			setBorderActive(true);
+			if (!isBorderActive()) setBorderActive(true);
 			getElement().getStyle().setCursor(Cursor.POINTER);
 		}
 
@@ -341,7 +341,7 @@ public class SVGButton extends SimplePanel {
 				tooltip.hide();
 			}
 			getElement().getStyle().setCursor(Cursor.DEFAULT);
-			setBorderActive(false);
+			if (isBorderActive()) setBorderActive(false);
 		}
 	}
 
@@ -353,7 +353,7 @@ public class SVGButton extends SimplePanel {
 				tooltip.cancelShow();
 				tooltip.hide();
 			}
-			setBorderActive(false);
+			if (isBorderActive()) setBorderActive(false);
 			getElement().getStyle().setCursor(Cursor.DEFAULT);
 			event.stopPropagation();
 		}
@@ -406,7 +406,11 @@ public class SVGButton extends SimplePanel {
 		return listener;
 	}
 	
-	public void removeButtonListener(ButtonListener listener) {
+	public boolean isBorderActive() {
+    return borderActive != null;
+  }
+
+  public void removeButtonListener(ButtonListener listener) {
 		this.listeners.remove(listener);
 	}
 	

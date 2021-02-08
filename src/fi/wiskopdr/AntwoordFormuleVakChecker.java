@@ -912,7 +912,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 				if(parseString.equals("ANS"))
 				{	parseString = (FormuleParser.geefExpressie(expAntwoordString)).toStringStrikt();
 				}
-				checkString = ""+checkString.substring(0,index1)+parseString+checkString.substring(j+1);
+				checkString = checkString.substring(0,index1)+parseString+checkString.substring(j+1);
 				j=index1;
 			}	
 		}
