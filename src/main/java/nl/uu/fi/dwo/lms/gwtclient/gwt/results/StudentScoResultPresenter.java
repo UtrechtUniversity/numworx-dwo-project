@@ -93,7 +93,7 @@ public class StudentScoResultPresenter {
 
   public void init(DomResultTree aResultTree, DomResultStudentScoContext ssc, JavaScriptObject context, Map<String,String> userState) {
     LOG.fine("entering init");
-    closed = false;
+    closed = finished = false;
     resultTree = aResultTree;
     this.userState = userState;
     this.ssc = ssc;
@@ -124,7 +124,7 @@ public class StudentScoResultPresenter {
     return ssc;
   }
   
-  boolean closed;
+  boolean closed, finished;
   
   @JsMethod 
   public void close(JavaScriptObject resultState) {
@@ -132,6 +132,7 @@ public class StudentScoResultPresenter {
     view.hide();
     this.resultState = resultState;
     closed = true;
+    fireSelectedResultReturn();
 // expect Finish
 //    SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.SELECTEDRESULTSRETURN, resultTree, resultState);   
 //    eventBus.fireEvent(event);
@@ -293,9 +294,11 @@ public class StudentScoResultPresenter {
     	eventBus.fireEvent(ev);
     	resultService.setValues(ssc.getStudentSco(), userState).map(this::updateResultTree).then(null,FAILURE).onResolve(
     			() -> {
-    				fireSelectedResultReturn();
+    			    finished = true;
+    			    fireSelectedResultReturn();
     			});
     } else {
+        finished = true;
 		fireSelectedResultReturn();
     	
     }
@@ -303,7 +306,7 @@ public class StudentScoResultPresenter {
   }
 
   private void fireSelectedResultReturn() {
-	if (closed) {
+	if (closed && finished) {
 		SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.SELECTEDRESULTSRETURN, resultTree, resultState);   
 		eventBus.fireEvent(event);
 	}
