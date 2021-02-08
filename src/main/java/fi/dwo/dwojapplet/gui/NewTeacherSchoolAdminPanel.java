@@ -12,6 +12,8 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -483,13 +485,19 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                 try {
                     for (DomUserFull submit : submitList) {
                         if (NewTeacherSchoolAdminPanelProperties.IsValidUserDataInput(submit)) {
-                            if (!ValidUserFieldsChecker.isValidEmail(submit.getEmail())) {
+                          if (!SimpleValidUserFieldsChecker.isNonEmptyNorNull(submit.getPassword(), submit.getFamilyName(), submit.getGivenName(), submit.getEmail(), submit.getUserName())) {
+                            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_Required_Fields, "required fields missing");
+                          }
+                          if (!ValidUserFieldsChecker.isValidEmail(submit.getEmail())) {
                                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid, "The email address does not  conform with RFC 5322.");
                             }
                             if (!ValidUserFieldsChecker.isValidUserName(submit.getUserName())) {
                                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_UserName_Invalid, "The username address is not correctly formatted.");
                             }
-                        }
+                            if (!SimpleValidUserFieldsChecker.isValidPassword(submit.getPassword())) {
+                              throw new Dwo2Exception(Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven, "wrong password");
+                            }
+                       }
                     }
                 } catch (Dwo2Exception ex) {
                     GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CREATETEACHERERROR));
