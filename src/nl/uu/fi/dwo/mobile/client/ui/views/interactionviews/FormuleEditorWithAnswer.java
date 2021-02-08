@@ -74,6 +74,7 @@ import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.Vergelijking;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
 import fi.wiskopdr.expressies.repr.ContentMathML;
+import fi.wiskopdr.text.Text;
 
 /**
  * Checks inserted formule with the correct answer
@@ -1208,6 +1209,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
                       juisteAntwoord = addFormulaCodes(exp.toString());
                     } else {
                       juisteAntwoord = addFormulaCodes(eersteRegel); // TODO force syntax error, feedback = feedbackTekst08()
+                      feedback = Text.constants.feedbackTekst09();
+                      zetFeedback();
                     }
 				}
 				else
