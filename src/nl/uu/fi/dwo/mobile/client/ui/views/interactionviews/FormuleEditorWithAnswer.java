@@ -1202,8 +1202,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				if (!isVergelijkingVak())
 				{
 					String eersteRegel = removeIsTeken(fews.getFirstViewerString());
-					Expressie exp = Expressie.evalWithCAS(FormuleParser.geefExpressie(addFormulaCodes(eersteRegel)));
-					juisteAntwoord = addFormulaCodes(exp.toString());
+					Expressie geefExpressie = FormuleParser.geefExpressie(addFormulaCodes(eersteRegel));
+					if (geefExpressie != null)
+                    { Expressie exp = Expressie.evalWithCAS(geefExpressie);
+                      juisteAntwoord = addFormulaCodes(exp.toString());
+                    } else {
+                      juisteAntwoord = addFormulaCodes(eersteRegel); // TODO force syntax error, feedback = feedbackTekst08()
+                    }
 				}
 				else
 				{
