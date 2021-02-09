@@ -7,6 +7,7 @@ import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.entities.RestClassCourse;
@@ -38,6 +39,24 @@ public class SecuredDwoAdminGarbageManager {
     result = manager.getList(path, type);    
     return result;
   }
+
+  public List<DomSchool4DwoAdmin> getSchools(Integer amount, Long since) throws Dwo2Exception {
+	    List<DomSchool4DwoAdmin> result = null;
+	    String query = "";
+	    if (amount != null) {
+	      query = "?limit=" + amount;
+	    }
+	    if (since != null) {
+	      if (query.isEmpty()) query = "?"; else query += "&";
+	      query += "before=" + since;
+	    }
+	    String path = "rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/garbage/school/get" + query;
+	    RestListClassTypes type = RestListClassTypes.DomSchool4DwoAdmin;
+	    result = manager.getList(path, type);    
+	    return result;
+	  }
+
+  
   
   public Boolean removeUser(DomUser user) throws Dwo2Exception {
     RestUser rest = new RestUser();
