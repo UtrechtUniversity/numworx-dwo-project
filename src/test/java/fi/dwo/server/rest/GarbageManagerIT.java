@@ -31,6 +31,7 @@ import fi.dwo.server.testutil.TestSecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
@@ -38,6 +39,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.entities.RestSchool;
+import nl.uu.fi.dwo.rest.entities.RestSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
 import nl.uu.fi.dwo.rest.entities.RestUser;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -95,6 +97,28 @@ public class GarbageManagerIT {
     DomContext context = getContext();
     rest.setRestContext(context); 
     manager.removeUser(sc, rest);
+  }
+  
+  
+  @Test
+  public void testDeleteSchool() throws Exception {
+    SecurityContext sc = getSecurityContext();
+    List<DomSchool4DwoAdmin> schools = manager.getSchools(sc, 1);
+    assertTrue(schools.isEmpty());
+    SecuredDwoAdminSchoolManager sm = new SecuredDwoAdminSchoolManager();
+    schools = sm.getSchools(sc);
+    
+    RestSchool4DwoAdmin restSchool = new RestSchool4DwoAdmin();
+    int size = schools.size()-1;
+    restSchool.setDomSchool4DwoAdmin(schools.get(size));
+    sm.removeSchool(sc, restSchool);
+    schools = sm.getSchools(sc);
+    assertEquals(size, schools.size());
+    schools = manager.getSchools(sc, null);
+    assertEquals(1, schools.size());
+    sm.removeSchool(sc, restSchool);
+    schools = manager.getSchools(sc, 1);
+    assertTrue(schools.isEmpty());
   }
 
   SecurityContext getSecurityContext() {

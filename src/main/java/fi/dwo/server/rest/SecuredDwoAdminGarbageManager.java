@@ -30,6 +30,7 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentLoginContext;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
@@ -38,14 +39,17 @@ import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 import nl.uu.fi.dwo.rest.entities.RestClassCourse;
 import nl.uu.fi.dwo.rest.entities.RestLoginContext;
 import nl.uu.fi.dwo.rest.entities.RestUser;
@@ -220,6 +224,26 @@ public class SecuredDwoAdminGarbageManager {
 	    	em.close();
 	    }
   }
+  
+  @GET
+  @Produces({"application/json"})
+  @Path("/school/get")
+  List<DomSchool4DwoAdmin> getSchools(@Context SecurityContext sc, @QueryParam("limit") Integer limit) throws Dwo2Exception
+  {
+      DwoAdminState_HR_R_S_SG_U admin = AnonDomainAuthorizer.build()
+            .submitUser(sc.getUserPrincipal().getName())
+            .setDefaultHasRole().buildDwoAdmin();
+      if (limit == null) limit = 10;
+      List<PersistentSchool> schools = SchoolManager.findEntities();
+            
+      return schools.stream()
+          .filter(s -> s.getDelState() != DelState.not)
+          .limit(limit)
+          .map(PersistentSchool::buildDomSchool4DwoAdmin)
+          .collect(Collectors.toList());
+  }
+  
+  
   
   
   @PUT

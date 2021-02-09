@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentFromTo;
@@ -219,7 +220,8 @@ public class SecuredDwoAdminSchoolManager {
                 LOG.log(Level.FINER, "Fetched all {0} schools. ", new Object[]{schools.size()});
                 domSchools = new ArrayList<>(schools.size());
                 for (PersistentSchool s : schools) {
-                    domSchools.add(s.buildDomSchool4DwoAdmin());
+                    if (s.getDelState() == DelState.not)
+                      domSchools.add(s.buildDomSchool4DwoAdmin());
                 }
             } catch (Exception e) {
                 LOG.log(Level.WARNING, "Unexpected exception", e);
@@ -345,7 +347,14 @@ public class SecuredDwoAdminSchoolManager {
         if (hr != null) {
             try {
         LOG.log(Level.INFO, "Username " + sc.getUserPrincipal().getName() + " started delete school with login "+school.getSchoolLogin()+" and id "+school.getSchoolID()+".");
-                //Loop FromTos in School
+                if (school.getDelState() == DelState.not) {
+                  school.setDelState(DelState.marked);
+                  school.setExpire(new java.util.Date());
+                  SchoolManager.edit(school);
+                  return Boolean.TRUE;
+                }
+
+        //Loop FromTos in School
                 List<PersistentFromTo> ftList = FromToManager.findEntities(school);
                 for (PersistentFromTo ft : ftList) {
                     //Remove FromTo
