@@ -6,6 +6,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFrom;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
+import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -90,6 +91,10 @@ public class PersistentSchool implements Serializable {
     @Column(name= "aboType")
     private AboType aboType = AboType.standard;
     
+    @NotNull
+    @Column(name= "del")
+    private DelState delState = DelState.not;
+    
     public PersistentSchool() {
     }
 
@@ -167,6 +172,22 @@ public class PersistentSchool implements Serializable {
       if(aboType == null) 
         aboType = AboType.standard;
       this.aboType = aboType;
+    }
+
+    public Long getOptlock() {
+      return optlock;
+    }
+
+    public void setOptlock(Long optlock) {
+      this.optlock = optlock;
+    }
+
+    public DelState getDelState() {
+      return delState;
+    }
+
+    public void setDelState(DelState delState) {
+      this.delState = delState;
     }
 
     @Override
@@ -261,6 +282,7 @@ public class PersistentSchool implements Serializable {
     private void fillDomSchool(DomSchool school) {
         if (this.schoolID != null) {
             school.setId(buildPersistenceId());
+            school.setOptLock(optlock);
         }
         school.setSchoolName(this.schoolName);
         //TODO One should filter the rights depending on the security level
