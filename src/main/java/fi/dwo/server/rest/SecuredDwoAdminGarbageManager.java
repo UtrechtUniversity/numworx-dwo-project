@@ -228,7 +228,7 @@ public class SecuredDwoAdminGarbageManager {
   @GET
   @Produces({"application/json"})
   @Path("/school/get")
-  List<DomSchool4DwoAdmin> getSchools(@Context SecurityContext sc, @QueryParam("limit") Integer limit) throws Dwo2Exception
+  public List<DomSchool4DwoAdmin> getSchools(@Context SecurityContext sc, @QueryParam("limit") Integer limit) throws Dwo2Exception
   {
       DwoAdminState_HR_R_S_SG_U admin = AnonDomainAuthorizer.build()
             .submitUser(sc.getUserPrincipal().getName())

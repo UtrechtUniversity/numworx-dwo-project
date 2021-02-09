@@ -353,6 +353,8 @@ public class SecuredDwoAdminSchoolManager {
                   SchoolManager.edit(school);
                   return Boolean.TRUE;
                 }
+                school.setDelState(DelState.deleted);
+                SchoolManager.edit(school);
 
         //Loop FromTos in School
                 List<PersistentFromTo> ftList = FromToManager.findEntities(school);
