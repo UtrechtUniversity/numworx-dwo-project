@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentUser;
@@ -217,7 +218,7 @@ public class SecuredDwoAdminSchoolManagerIT {
      * if a known school can be removed.
      */
     @Test
-    public void testRemoveSchool() {
+    public void testRemoveSchool() throws Exception {
         System.out.println("removeSchool");
         SecurityContext sc = new TestSecurityContext("dwoadmin", RoleType.ADMIN);
 
@@ -230,16 +231,20 @@ public class SecuredDwoAdminSchoolManagerIT {
         domSchool.setId(expResult.buildPersistenceId());
         domSchool.setSchoolLogin("school01");
         domSchool.setSchoolName("Trivial");
-        try {
             Boolean b = instance.removeSchool(sc, restSchool);
             assertEquals("School failed to delete.", b, true);
-        } catch (Dwo2RestException e) {
-            fail("School failed to delete.");
-        }
         PersistentSchool result = SchoolManager.findEntity(3L);
-        if (result != null) {
-            fail("School failed to delete.");
+        if (result == null || result.getDelState() != DelState.marked) {
+          
+            fail("School failed to mark.");
         }
+          b = instance.removeSchool(sc, restSchool);
+          assertEquals("School failed to delete.", b, true);
+      result = SchoolManager.findEntity(3L);
+      if (result != null) {
+        
+          fail("School failed to delete.");
+      }
     }
 
     @Test
