@@ -660,6 +660,14 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
      */
     protected DefaultMutableTreeNode prune(DefaultMutableTreeNode root) {
         TOP_LEVEL = new TopMap(new ProfileDescriptor());
+
+        MutableTreeNode dwonode = (MutableTreeNode) root.getFirstChild();
+        if (dwonode.getChildCount() == 0 && !dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT)) {
+            root.remove(dwonode);
+            if (root.getChildCount() == 1)
+              root = (DefaultMutableTreeNode) root.getFirstChild();
+        }
+        
         return root;
     }
 
