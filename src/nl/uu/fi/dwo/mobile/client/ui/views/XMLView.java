@@ -33,8 +33,6 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSte
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselOplossingenVak;
-import nl.uu.fi.dwo.mobile.utils.StringCodeToHashMap;
-
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -50,10 +48,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.xml.client.Document;
-import com.google.gwt.xml.client.XMLParser;
-//import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
-
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.Expressie;
 /**
@@ -293,57 +287,57 @@ public abstract class XMLView {
 		
 	}
 
-	protected Promise<Boolean> loadXML(String xmlPath) {
-		RequestBuilder.Method method = RequestBuilder.GET;
-		String url = xmlPath;
-		RequestBuilder rb = new RequestBuilder(method, url);
-		Deferred<Boolean> defer = new Deferred<>();
-		try
-		{
-			rb.sendRequest(null, new RequestCallback()
-			{
-	
-				@Override
-				public void onResponseReceived(Request request, Response response)
-				{
-				    if(logger == null) return;
-					String responseText = response.getText();
-					logger.info("Status: " + response.getStatusCode() + " " + response.getStatusText());
-					logger.info(response.getHeadersAsString());
-					logger.info("Data: " + responseText.substring(0, Math.min(300, responseText.length()) ));
-					if (!responseText.isEmpty())
-					{
-						Document dom = XMLParser.parse(responseText);
-//						if(dom == null) 
-//						{
-//						}
-						StringCodeToHashMap sc = new StringCodeToHashMap();
-						launchData = sc.decodeStringToHashMap(dom);
-						setupView(launchData);
-						defer.resolve(Boolean.FALSE);
-					} else {
-						logger.severe("response empty");
-						defer.resolve(Boolean.TRUE);
-					}
-	
-				}
-	
-				@Override
-				public void onError(Request request, Throwable exception)
-				{
-					Window.alert("error");
-					defer.fail(exception);
-				}
-			});
-	
-		}
-		catch (RequestException e)
-		{
-			RootPanel.get().add(new Label("cannot load xml: " + e.getMessage()));
-			defer.fail(e);
-		}
-		return defer.getPromise();
-	}
+//	protected Promise<Boolean> loadXML(String xmlPath) {
+//		RequestBuilder.Method method = RequestBuilder.GET;
+//		String url = xmlPath;
+//		RequestBuilder rb = new RequestBuilder(method, url);
+//		Deferred<Boolean> defer = new Deferred<>();
+//		try
+//		{
+//			rb.sendRequest(null, new RequestCallback()
+//			{
+//	
+//				@Override
+//				public void onResponseReceived(Request request, Response response)
+//				{
+//				    if(logger == null) return;
+//					String responseText = response.getText();
+//					logger.info("Status: " + response.getStatusCode() + " " + response.getStatusText());
+//					logger.info(response.getHeadersAsString());
+//					logger.info("Data: " + responseText.substring(0, Math.min(300, responseText.length()) ));
+//					if (!responseText.isEmpty())
+//					{
+//						Document dom = XMLParser.parse(responseText);
+////						if(dom == null) 
+////						{
+////						}
+//						StringCodeToHashMap sc = new StringCodeToHashMap();
+//						launchData = sc.decodeStringToHashMap(dom);
+//						setupView(launchData);
+//						defer.resolve(Boolean.FALSE);
+//					} else {
+//						logger.severe("response empty");
+//						defer.resolve(Boolean.TRUE);
+//					}
+//	
+//				}
+//	
+//				@Override
+//				public void onError(Request request, Throwable exception)
+//				{
+//					Window.alert("error");
+//					defer.fail(exception);
+//				}
+//			});
+//	
+//		}
+//		catch (RequestException e)
+//		{
+//			RootPanel.get().add(new Label("cannot load xml: " + e.getMessage()));
+//			defer.fail(e);
+//		}
+//		return defer.getPromise();
+//	}
 	abstract AnchorContext getAnchorContext();
 	//public void setObjects(ArrayList<Object> opdrachtObjects, Panel destination) 
 	public void setObjects(HashMap<String, Object> opdracht, final Panel destination, OpdrNavIF comRoot)
@@ -578,14 +572,14 @@ public abstract class XMLView {
 
 	public boolean setupView(String launchDataString) {
 		contentPanel.clear();
-		// voor huub: allow old XML data 
-		if(launchDataString.startsWith("<"))
-		{		
-			Document dom = XMLParser.parse(launchDataString);
-			StringCodeToHashMap sc = new StringCodeToHashMap();
-			launchData = sc.decodeStringToHashMap(dom);
-	
-		} else
+//		// voor huub: allow old XML data 
+//		if(launchDataString.startsWith("<"))
+//		{		
+//			Document dom = XMLParser.parse(launchDataString);
+//			StringCodeToHashMap sc = new StringCodeToHashMap();
+//			launchData = sc.decodeStringToHashMap(dom);
+//	
+//		} else
 		{
 			JSONValue dom = JSONParser.parseStrict(launchDataString);
 			//launchData = JSONUtilities.fromJSONObject(dom.isObject());

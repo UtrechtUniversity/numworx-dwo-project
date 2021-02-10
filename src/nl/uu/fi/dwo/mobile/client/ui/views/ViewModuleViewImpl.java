@@ -232,10 +232,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		contentPanel.clear();
 		readonly = false;
 		if(!DWOplayer.PARAMETERS.isNavTitle()) setTitle(name);
-		if(DWOplayer.JSON) return loadJSON(file); else return loadXML(file);
+		return loadJSON(file);
 	}
 
-	public void preSetupModule(final String link, final String url)
+	public void preSetupModule(final String url)
 	{
 		{
 			setupModule(url, url);
@@ -2070,86 +2070,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		sb.setScrollPanel(this, -sb.getStatusBarHeight());
 
 	}
-	
-//	@Override
-//	public void onModuleLoad()
-//	{
-//		standalone = true;
-//		initialize();
-//		String url = "index.xml";
-//		String link = "index.xmr"; // reference.
-//		String path = Window.Location.getPath();
-//		// strip basename
-//		int slash = path.lastIndexOf('/');
-//		//if (slash >= 0)
-//		//	path = path.substring(slash + 1);
-//		// strip extension
-//		int dot = path.lastIndexOf('.');
-//		if (dot > 0)
-//		{
-//			path = path.substring(0, dot);
-//		}
-//		if (!path.isEmpty())
-//		{
-//			url = path + ".xml";
-//			link = path + ".xmr";
-//		}
-//		ViewPort viewport = new MGWTSettings.ViewPort();
-//		viewport.setTargetDensity(DENSITY.MEDIUM);
-//		viewport.setUserScaleAble(true);
-//		//viewport.setMinimumScale(0.2).setInitialScale(1.0).setMaximumScale(5);
-//
-//		viewport.setMinimumScale(0.15);
-//		viewport.setMaximumScale(3.0);
-//		//viewport.setWidthToDeviceWidth();
-//		//viewport.setHeightToDeviceHeight();
-//		MGWTSettings settings = new MGWTSettings();
-//		settings.setViewPort(viewport);
-//		settings.setAddGlosToIcon(true);
-//		settings.setFullscreen(true);
-//		//settings.setPreventScrolling(true);
-//		MGWT.applySettings(settings);
-//
-//		//RootPanel.get("viewholder").add(new Label("titel"));
-//		RootPanel.get("main").add(this);
-//
-//		RequestBuilder.Method method = RequestBuilder.GET;
-//		preSetupModule(link, url);
-//
-//		//contentPanel.add(kbp);
-//
-//		/*RequestBuilder rb = new RequestBuilder(method, url);
-//		try
-//		{
-//			rb.sendRequest(null, new RequestCallback()
-//			{
-//
-//				@Override
-//				public void onResponseReceived(Request request, Response response)
-//				{
-//					String responseText = response.getText();
-//					setupModule("",responseText);
-//					
-//				}
-//
-//				@Override
-//				public void onError(Request request, Throwable exception)
-//				{
-//					Window.alert("error loading activity.xmx");
-//				}
-//			});
-//
-//		}
-//		catch (RequestException e)
-//		{
-//			Window.alert("error loading activity.xmx");
-//		}*/
-//
-//		//
-//
-//		FocusOnTouch.focus();
-//
-//	}
 
 	@Override
 	public Widget asWidget()

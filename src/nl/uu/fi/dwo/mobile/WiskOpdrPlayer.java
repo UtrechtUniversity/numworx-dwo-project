@@ -263,7 +263,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 
 	protected void setupOldView() {
 		String url = "index.xml";
-		String link = "index.xmr"; // reference.
+//		String link = "index.xmr"; // reference.
 		String path = Window.Location.getPath();
 		while( path.startsWith("//")) // XXX Noordhoff path begint met 1 slash teveel
 			path = path.substring(1);
@@ -280,10 +280,10 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 		if (!path.isEmpty())
 		{
 			url = path + ".xml";
-			link = path + ".xmr";
+//			link = path + ".xmr";
 		}
 		view.setUnitId("scoViewNr");
-		view.preSetupModule(link, url);
+		view.preSetupModule(url);
 	}
 
   public static String ACTION_NEXT_ASSET = "actionNextAsset";

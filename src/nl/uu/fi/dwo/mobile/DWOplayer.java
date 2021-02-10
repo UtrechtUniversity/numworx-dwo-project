@@ -52,7 +52,7 @@ import fi.wiskopdr.text.Text_nl;
  */
 public abstract class DWOplayer
 {
-	public static final boolean JSON = true;
+	//public static final boolean JSON = true;
 	public static int PROFILE_ID = 77;
 	
 	public static final DWOplayerClientBundle DWO_BUNDLE = GWT.create(DWOplayerClientBundle.class);
