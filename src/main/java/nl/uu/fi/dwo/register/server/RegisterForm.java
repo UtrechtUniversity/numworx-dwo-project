@@ -380,7 +380,10 @@ private String encode(String string) {
 			List<DomTeacher> teachers = manager.getTeachersInSchool(school);
 			if (DEMO.equals(id) && teachers.size() > 0) {
 				LOG.warning("has teacher " + teachers.get(0).getUniqueDisplayName());
-				resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+//				resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+				String hetBosIn = mailrb.getString("hetbosin");
+			    RequestDispatcher dispatch = getServletContext().getRequestDispatcher(hetBosIn);			    
+			    dispatch.forward(req, resp);
 				return;
 			}
 			if (WISWISE_FREE.equals(id)) {
