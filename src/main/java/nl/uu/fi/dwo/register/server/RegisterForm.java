@@ -81,6 +81,7 @@ public class RegisterForm extends HttpServlet {
   private RequestDispatcher dispatch;
   private ResourceBundle mailrb;
   private String registerFree;
+  private String pfx;
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -246,8 +247,9 @@ private String encode(String string) {
 
 @Override
   public void init() throws ServletException {
-
 	manager = new Manager().getInstance(getServletContext());
+	this.pfx = getInitParameter("context");
+    if (pfx == null) pfx = "";
 	// mail parameters
     //place this in servlet
     String smtpServer = initParameter("fi.dwo.server.rest.smtp.server");
@@ -382,7 +384,7 @@ private String encode(String string) {
 				LOG.warning("has teacher " + teachers.get(0).getUniqueDisplayName());
 //				resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
 				String hetBosIn = mailrb.getString("hetbosin");
-			    RequestDispatcher dispatch = getServletContext().getRequestDispatcher(hetBosIn);			    
+			    RequestDispatcher dispatch = getServletContext().getRequestDispatcher(pfx + hetBosIn);			    
 			    dispatch.forward(req, resp);
 				return;
 			}

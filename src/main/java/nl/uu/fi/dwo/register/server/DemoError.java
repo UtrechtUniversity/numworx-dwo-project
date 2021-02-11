@@ -11,19 +11,20 @@ import javax.servlet.http.HttpServletResponse;
 @SuppressWarnings("serial")
 public class DemoError extends HttpServlet {
 
+  String pfx = "";
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
 
-    RequestDispatcher dispatch = getServletContext().getRequestDispatcher("/hetbosin.html");
+    RequestDispatcher dispatch = getServletContext().getRequestDispatcher(pfx + "/hetbosin.html");
     
     dispatch.forward(req, resp);
   }
 
   @Override
   public void init() throws ServletException {
-    // TODO Auto-generated method stub
-    super.init();
+    this.pfx = getInitParameter("context");
+    if (pfx == null) pfx = "";
   }
 
 }
