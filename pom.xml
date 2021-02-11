@@ -66,6 +66,6 @@
 		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/gwtpatch/trunk</developerConnection>
 	</scm>
 	<properties>
-		<interactionVersion>0.1.10-SNAPSHOT</interactionVersion>
+		<interactionVersion>0.1.10</interactionVersion>
 	</properties>
 </project>
