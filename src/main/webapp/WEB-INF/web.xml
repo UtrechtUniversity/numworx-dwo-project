@@ -352,6 +352,18 @@
   		<param-name>register.free</param-name>
   		<param-value>/dwo/register/RegisterFree.html</param-value>
   	</init-param>
+  	<init-param>
+  		<param-name>context</param-name>
+  		<param-value>/dwo/register</param-value>
+  	</init-param>
+  </servlet>
+  <servlet>
+  		<servlet-name>demoerror</servlet-name>
+  		<servlet-class>nl.uu.fi.dwo.register.server.DemoError</servlet-class>
+  		<init-param>
+			<param-name>context</param-name>
+			<param-value>/dwo/register</param-value>
+  		</init-param>
   </servlet>
 	<servlet>
 	<servlet-name>update-contact</servlet-name>
@@ -451,6 +463,10 @@
 	<servlet-mapping>
 	 	<servlet-name>RegisterForm</servlet-name>
 	  	<url-pattern>/dwo/register/registerform</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>demoerror</servlet-name>
+		<url-pattern>/dwo/register/demoerror</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>update-contact</servlet-name>
