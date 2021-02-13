@@ -667,9 +667,11 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
                 applet.stop();
                 applet.destroy();
             } catch (RuntimeException e) {
-                //TODO Wim: Dialog: interne fout, sco niet goed afgesloten, mogelijk verlies van gegevens.
-                JOptionPane.showMessageDialog(applet, e.getMessage());
-                LOG.log(Level.SEVERE, null, e);
+                //DONE Wim: Dialog: interne fout, sco niet goed afgesloten, mogelijk verlies van gegevens.
+                JOptionPane.showMessageDialog(applet, 
+                  TextMapper.getText(TextMapper.EXS_SCO_END) +
+                  e.toString());
+                LOG.log(Level.SEVERE, TextMapper.getText(TextMapper.EXS_SCO_END), e);
                 try {
 
                     User localUser = user;
