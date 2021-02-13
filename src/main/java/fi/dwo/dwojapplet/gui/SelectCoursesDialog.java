@@ -1058,6 +1058,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         jTable.setDefaultRenderer(Date.class, new DateCellRenderer());
         jTable.setDefaultRenderer(Boolean.class, new BooleanRenderer());
         jTable.setDefaultEditor(Date.class, new DateCellEditor());
+        jTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
         if (cnt > COURSE_TYPE) {
             jTable.getColumnModel().getColumn(COURSE_TYPE).setCellEditor(new TypeCellEditor());
         }
@@ -1106,6 +1107,10 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
             selectedCourses = null;
             setVisible(false);
         } else if (e.getSource() == okButton) {
+            if (jTable.isEditing()) {
+              jTable.getCellEditor().stopCellEditing();
+            }
+          
             Vector tmpSelected = new Vector();
 
             addSelected(tmpSelected, cd);
