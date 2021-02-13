@@ -278,7 +278,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
                                 } else {
                                     switchToActiveSchoolLogin();
                                 }
-                                switchToActiveSchoolLogin();
+                                //switchToActiveSchoolLogin();
                                 break;
                             case FAILED:
                                 // show warning
