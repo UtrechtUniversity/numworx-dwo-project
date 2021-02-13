@@ -584,6 +584,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
         private Date value;
         private JButton btn;
+        private JTable table;
         private String wat;
 
         public DateCellEditor() {
@@ -598,6 +599,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         public Component getTableCellEditorComponent(JTable table,
                 Object value, boolean isSelected, int row, int column) {
             this.value = (Date) value;
+            this.table = table;
             wat = ""; // of via constructor?
             if (column == 4) {
                 wat = TextMapper.getText(TextMapper.GUICDLG_VANAF);
@@ -616,7 +618,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            value = changeDate(wat, value);
+            value = changeDate(table, wat, value);
             fireEditingStopped();
         }
 
@@ -756,7 +758,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         }
     }
 
-    static Date changeDate(String hoe, Date van) {
+    static Date changeDate(Component parent, String hoe, Date van) {
         Date orig = van;
         if (van == null) {
             van = new Date();
@@ -785,7 +787,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         message.add(dayChooser);
         String msg = TextMapper.getText("Geef tijdstip {0}");
         msg = MessageFormat.format(msg, new Object[]{hoe});
-        int r = JOptionPane.showConfirmDialog(DwoHelper.getApplet(), message, msg, JOptionPane.YES_NO_CANCEL_OPTION);
+        int r = JOptionPane.showConfirmDialog(parent, message, msg, JOptionPane.YES_NO_CANCEL_OPTION);
         if (r == JOptionPane.YES_OPTION) {
             van = dayChooser.getDate();
             Date t = (Date) timeChooser.getValue();
@@ -1058,7 +1060,6 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         jTable.setDefaultRenderer(Date.class, new DateCellRenderer());
         jTable.setDefaultRenderer(Boolean.class, new BooleanRenderer());
         jTable.setDefaultEditor(Date.class, new DateCellEditor());
-        jTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
         if (cnt > COURSE_TYPE) {
             jTable.getColumnModel().getColumn(COURSE_TYPE).setCellEditor(new TypeCellEditor());
         }
