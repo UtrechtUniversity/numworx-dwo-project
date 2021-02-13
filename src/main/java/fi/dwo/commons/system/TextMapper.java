@@ -165,6 +165,8 @@ public abstract class TextMapper {
 	/* Sco Exception Messages */
 	public final static String EXS_SCO_EXISTS = "EXS_SCO_EXISTS";
 	public final static String EXS_NO_APPLET = "EXS_NO_APPLET";
+    public static final String EXS_SCO_END = "EXS_SCO_END";
+
 
 	/* Login Exception Messages */
 	public final static String EXL_UNKNOWN_USER = "EXL_UNKNOWN_USER";
@@ -591,6 +593,7 @@ public abstract class TextMapper {
     public static final String GUIAC_ADD = "GUIAC_ADD";
 
     public static final String GUIC_HIDE_ACTIVITIES = "GUIC_HIDE_ACTIVITIES";
+
 	
 	/**
      *
