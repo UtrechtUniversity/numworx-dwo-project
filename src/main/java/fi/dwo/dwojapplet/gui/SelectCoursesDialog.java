@@ -10,6 +10,7 @@ import fi.beans.numworxlf.JCheckBox;
 import fi.beans.numworxlf.JComboBox;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JScrollPane;
+import fi.beans.numworxlf.JTextField;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.ClassCourse;
@@ -1060,6 +1061,9 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         jTable.setDefaultRenderer(Date.class, new DateCellRenderer());
         jTable.setDefaultRenderer(Boolean.class, new BooleanRenderer());
         jTable.setDefaultEditor(Date.class, new DateCellEditor());
+        DefaultCellEditor editor = new DefaultCellEditor(new JTextField());
+        editor.setClickCountToStart(1);
+        jTable.setDefaultEditor(String.class, editor);
         if (cnt > COURSE_TYPE) {
             jTable.getColumnModel().getColumn(COURSE_TYPE).setCellEditor(new TypeCellEditor());
         }
