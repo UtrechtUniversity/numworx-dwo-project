@@ -564,7 +564,10 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			ArrayList<GraphNode> gnList = voorkennisNodes.get(i);
 			for(int j=0 ; j<gnList.size() ; j++) {
 				GraphNode gn = gnList.get(j);
-				gn.setVisible(true);
+				if(selectedMethod!=null)
+					gn.setVisible(selectedMethod,true);
+				else
+					gn.setVisible(true);
 				int x = -20+i%2*40 + 100 + (j+1)*(getWidth()-200)/(gnList.size()+1);
 				int y = -7*gnList.size()+15*j + (voorkennisNodes.size() - (i))*(getHeight()-50)/(voorkennisNodes.size());
 				gn.setTempLocation(new Point(x,y));
@@ -1246,10 +1249,19 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			List<String> sources = leaf.getVoorkennis();
 			if (sources != null)
 				for (String source : sources) {
-				    source = source.split("/")[0];
-					GraphNode gns = graphMap.get(source);
+					System.out.println("source = "+ source);
+				    //source = source.split("/")[0];
+				    String[] sourceStrings = source.split("/");
+				    source = sourceStrings[0];
+				   
+				    double vkfactor = 1;
+				    if(sourceStrings.length>1) {
+				   		System.out.println("vkFactor = "+ vkfactor);
+				   		vkfactor = Double.parseDouble(sourceStrings[1]);
+				    }
+				    GraphNode gns = graphMap.get(source);
 					if (gns != null) {
-						GraphEdge edge = new GraphEdge(gns, gnd);
+						GraphEdge edge = new GraphEdge(gns, gnd, vkfactor);
 						edges.add(edge);
 					}
 				}

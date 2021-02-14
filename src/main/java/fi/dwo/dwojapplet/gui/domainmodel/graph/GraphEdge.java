@@ -15,6 +15,7 @@ public class GraphEdge {
 
 	private GraphNode source;
 	private GraphNode target;
+	private double vkFactor = 1;
 	private int arrowSize = 5;
 	
 	private boolean blur = false;
@@ -27,6 +28,13 @@ public class GraphEdge {
 	public GraphEdge(GraphNode source, GraphNode target) {
 		this.source = source;
 		this.target = target;
+		sameChapters = GraphNode.hasSameChapterCode(source, target, "Getal&Ruimte");
+	}
+	
+	public GraphEdge(GraphNode source, GraphNode target, double vkFactor) {
+		this.source = source;
+		this.target = target;
+		this.vkFactor = vkFactor;
 		sameChapters = GraphNode.hasSameChapterCode(source, target, "Getal&Ruimte");
 	}
 	
@@ -120,7 +128,8 @@ public class GraphEdge {
 			        if(target.getSuccesFailScore()!=null && target.getEdgeSuccesFailColor()!=null)// ||  source.getSuccesFailScore()!=null && source.getSuccesFailScore() < 45)
 			       		g.setStroke(new BasicStroke(5f*(float)factor));
 			//        if(getLength()>600 || source.getTempLocation()!=null) {
-			//        		g.setStroke(new BasicStroke(1.3f*(float)factor, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{5,5}, 5));
+			//        System.out.println("vkFactor = "+ vkFactor);
+			        		g.setStroke(new BasicStroke(1.3f*(float)factor, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{(float)vkFactor*5f, 5f-(float)vkFactor*5f}, 5));
 			//        		if(target.getSuccesFailScore()!=null && target.getEdgeSuccesFailColor()!=null)
 			//        			g.setStroke(new BasicStroke(5f*(float)factor, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{5,5}, 5));
 			//        		
@@ -128,6 +137,7 @@ public class GraphEdge {
 					GeneralPath path = new GeneralPath();
 					path.moveTo(x0,y0);
 					path.lineTo(x1,y1);
+					path.moveTo(x0,y0);
 					path.closePath();
 					g.draw(path);
 					
