@@ -154,12 +154,8 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
         } catch (Throwable e) {
             // TODO Applet is niet gestart!
             // Dialog: interne fout, sco niet goed geïnitialiseerd.
-            LOG.log(Level.SEVERE,null,e);
+            LOG.log(Level.SEVERE,"ScoPanel.init",e);
             LOG.log(Level.FINE, "{0} Sco {1},{2} exception in ScoPanel.init: {3}", new Object[]{GuiCreator.instance().getUser().getID(), sco.getID(), applet, e.toString()});
-            StringWriter w = new StringWriter();
-            PrintWriter pw = new PrintWriter(w);
-            LOG.log(Level.FINE,w.toString());
-            LOG.log(Level.FINE,pw.toString());
         }
     }
 

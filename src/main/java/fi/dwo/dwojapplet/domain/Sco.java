@@ -673,16 +673,11 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
                   e.toString());
                 LOG.log(Level.SEVERE, TextMapper.getText(TextMapper.EXS_SCO_END), e);
                 try {
-
                     User localUser = user;
                     if (localUser == null) {
                         localUser = dwo.getUser();
                     }
                     LOG.log(Level.FINE, "{0} Sco {1},{2} exception in Sco.end: {3}", new Object[]{localUser.getID(), scoID, applet, e.toString()});
-                    StringWriter w = new StringWriter();
-                    PrintWriter pw = new PrintWriter(w);
-                    e.printStackTrace(pw);
-                    LOG.log(Level.FINE, w.toString());
                 } catch (RuntimeException e1) {
                     LOG.log(Level.SEVERE, null, e1);
                 }
