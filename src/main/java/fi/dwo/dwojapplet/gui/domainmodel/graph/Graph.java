@@ -73,6 +73,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	private JButton methodeChoiceButton;
 	private PopupMenu methodeChoicePopup;
 	private MenuItem menuItemAll;
+
 	private MenuItem menuItemGR;
 	private MenuItem menuItemMW;
 	

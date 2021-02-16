@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -292,9 +293,10 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		}
 		setToolTipText(null);
 		for(int i=0 ; i<graphNodes.size() ; i++) {
+			//graphNodes.get(i).setSelected(false);
 			if(graphNodes.get(i).contains(ex, ey)) {
 				activeNode = graphNodes.get(i);
-				activeNode.setSelected(true);
+				activeNode.selectInside(new Rectangle(e.getX()-(int)(8*factor), e.getY()-(int)(8*factor), (int)(16*factor), (int)(16*factor)), origin, factor);
 				activeCode = activeNode.search(ex,ey);
 				setToolTipText(activeCode);
 				break;
@@ -314,7 +316,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 			selectieRectangle.setLocation(startX, startY);
 			activeNode = null;
 		}
-		
+		repaint();
 		
 	}
 
@@ -337,7 +339,6 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 				graphEdges.add(new GraphEdge(possibleSourceNode, possibleTargetNode));
 				repaint();
 			}
-				
 		}
 		if(activeNode!=null) {
 			activeNode.setSelected(false);
@@ -497,7 +498,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 	     for(int i=0 ; i<graphNodes.size() ; i++) {
            if(graphNodes.get(i).contains(ex, ey)) {
                GraphNode activeNode = graphNodes.get(i);
-               activeNode.setSelected(true);
+               //activeNode.setSelected(true);
                String activeCode = activeNode.search(ex,ey);
                setToolTipText(activeCode); set = true;
                break;
