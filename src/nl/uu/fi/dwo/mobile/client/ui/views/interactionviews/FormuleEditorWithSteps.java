@@ -2655,7 +2655,11 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				if (size >= 2)
 					formuleMin1 = viewers.get(size - 2).toString(); // voor strategieen viewers.get(size - 1).toString()?
 				else
+				{
+// FIXME hasStartString check Wim, okay?
+					if(hasStartString) {score = 0; correct = null; return;}
 					formuleMin1 = null;
+				}
 			}
 			else
 			{
