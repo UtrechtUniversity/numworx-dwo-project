@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -44,6 +45,7 @@ import nl.uu.fi.dwo.rest.dom.xapi.StatementsResult;
 @RoleScope
 public class XAPIService extends StudentResultsService implements StudentResults {
   public static final String ATTEMPTED = "http://www.dwo.nl/verbs/attempted";
+  public static final String CORRECTED = "http://www.dwo.nl/verbs/corrected";
   public static final DateTimeFormat FORMAT_8601 = DateTimeFormat.getFormat(PredefinedFormat.ISO_8601);
 
   private Promise<XapiManager> man;
@@ -98,6 +100,13 @@ public class XAPIService extends StudentResultsService implements StudentResults
       query.activityID = "pid:" + id.getId();
       Activity a = new Activity(); a.id = query.activityID;
       query.ascending = Boolean.TRUE;
+      final StatementsQuery query2 = new StatementsQuery();
+      query2.agent = query.agent;
+      query2.verbID = CORRECTED;
+      query2.activityID = query.activityID;
+      query2.ascending = Boolean.TRUE;
+
+      
       // statements ophalen vanaf tijdstip n
       return 
           //xapi.getState("StudentModelData", a, xapi.getAgent(), null)
@@ -105,13 +114,44 @@ public class XAPIService extends StudentResultsService implements StudentResults
           .recover(oops -> new StateDocument())
           .then( p0 -> {
               StateDocument d = p0.getValue();
-              query.since = d.timestamp;
-          return xapi.queryStatements(query)
-              .map(statements -> toDataScore( statements, d, id, xapi));
+              query.since = query2.since = d.timestamp;
+	          Promise<StatementsResult> result1 = xapi.queryStatements(query);
+	          Promise<StatementsResult> result2 = xapi.queryStatements(query2);
+	          return Promises.all(result1,result2)
+	        		  .map(list -> {
+	        			  				StatementsResult statements = list.get(0);
+	        			  				StatementsResult correctie  = list.get(1);
+	        			  				if (!correctie.statements.isEmpty()) {
+	        			  					combine(statements, correctie);
+	        			  				}
+	        			  				return toDataScore( statements, d, id, xapi);
+	        		  				});
           });
       });
   }
+  
+  void combine(StatementsResult q, StatementsResult c) {
+	    List<Statement> qq = q.statements;
+	    for(Statement s: c.statements) {    
+	      ListIterator<Statement> iterator = qq.listIterator();
+	      String id = s.context.contextActivities.parent.get(0).id;
+	      String stamp = s.timestamp;
+	      Statement last = null;
+	      while(iterator.hasNext()) {
+	        Statement cur = iterator.next();
+	        if (id .equals(cur.context.contextActivities.parent.get(0).id)) {
+	          String curstamp = cur.timestamp;
+	          if (curstamp.compareTo(stamp) == +1) break;
+	          last = cur;
+	        }
+	      }
+	      if (last != null) {
+	        last.result = s.result;
+	      }
+	    }
+	  }
 
+  
   private DomStudentModelDataScore toDataScore(StatementsResult result, StateDocument state,
       DomStudentModelContextId id, XapiManager xapi) {
     DomStudentModelContext context = (DomStudentModelContext) id; // if not, search from models...
