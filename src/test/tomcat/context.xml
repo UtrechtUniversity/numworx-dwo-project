@@ -45,4 +45,23 @@
   		url="jdbc:mysql://localhost:3306/dwo_productie_v1_2"
     />
     <Realm className="org.apache.catalina.realm.DataSourceRealm" dataSourceName="jdbc/dwodb" localDataSource="true" roleNameCol="groupname" userCredCol="passwd" userNameCol="username" userRoleTable="tomcat_roles_view" userTable="tomcat_user_view"/>
+<!--
+    The following System properties should be added to the running tomcat to configure
+    the smtp properties for sending email. One of several options is by adding 
+    them to the catalina.properties in the tomcat/conf directory.     
+SMTP_SERVER=localhost
+SMTP_PORT=25
+SMTP_AUTH=false
+SMTP_TLS=no SMTP_SSL=no
+SMTP_USER=me
+SMTP_PASSWORD=mySmtpSecret
+SMTP_EMAIL=wisweb@fi.uu.nl -->
+    <Parameter name="fi.dwo.server.rest.smtp.server" override="true" value="localhost"/>
+    <Parameter name="fi.dwo.server.rest.smtp.port" override="true" value="25"/>
+    <Parameter name="fi.dwo.server.rest.smtp.auth" override="true" value="false"/>
+    <Parameter name="fi.dwo.server.rest.smtp.tls" override="true" value="no"/>
+    <Parameter name="fi.dwo.server.rest.smtp.ssl" override="true" value="no"/>
+    <Parameter name="fi.dwo.server.rest.smtp.user" override="true" value="root"/>
+    <Parameter name="fi.dwo.server.rest.smtp.password" override="true" value="test"/>
+    <Parameter name="fi.dwo.server.rest.smtp.email" override="true" value="noreply@numworx.nl"/>
 </Context>

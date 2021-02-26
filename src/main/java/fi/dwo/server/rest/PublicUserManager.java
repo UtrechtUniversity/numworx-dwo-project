@@ -85,7 +85,9 @@ import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -868,13 +870,41 @@ pUser.setPassword(""); // INVALID PASSWORD
             url.setLength(i + 1);
             url.append("submitNewPassword").append("?authCode=").append(authCode).append("&language=").append(language);
             MimeMessage message = new MimeMessage(session);
-// FIXME i18n         
-            String content = "Your authcode is: " + authCode;
-            content += "\nGo to\n";
-            content += url.toString();
-            message.setContent(content, "text/plain");
             message.setFrom(new InternetAddress(smtpEmail));
+// FIXME i18n         
+            String content;
 // FIXME Beter subject, nu  "Nieuw wachtwoord"
+
+            InputStream in = getClass().getResourceAsStream("passwordChangeMessage_" + language + ".txt");
+            if (in == null) in = getClass().getResourceAsStream("passwordChangeMessage.txt");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            String r;        
+            r = "";
+            String line;
+            while( (line = reader.readLine()) != null) {
+            	r += line;
+            	r += "\r\n";            }
+            reader.close();
+
+            content = MessageFormat.format(r, 
+            		authCode,
+            		url.toString()
+            		);
+            int sep = content.indexOf("----------");
+            String text = content.substring(0,sep).trim();
+            String html = content.substring(sep+10).trim();
+
+            MimeBodyPart textPart = new MimeBodyPart();
+            textPart.setText(text, "utf-8");
+
+            MimeBodyPart htmlPart = new MimeBodyPart();
+            htmlPart.setContent(html, "text/html; charset=utf-8");
+
+            MimeMultipart multiPart = new MimeMultipart("alternative");
+			multiPart.addBodyPart(textPart); // <-- first
+            multiPart.addBodyPart(htmlPart); // <-- second
+            message.setContent(multiPart);            
+            
             message.setSubject(TextMapper.getText(TextMapper.GUIP_PASSWORD));
             message.addRecipient(Message.RecipientType.TO,
                     new InternetAddress(user.getEmail()));
