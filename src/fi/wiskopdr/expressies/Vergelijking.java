@@ -544,18 +544,18 @@ public class Vergelijking
 	
 	public boolean isStelselEindOplossing(String var, String[] vars)
 	{
-		if(kind1.isVar() && kind1.geefVarNaam().equals(vars))
+		if(kind1.isVar() && kind1.geefVarNaam().equals(var))
 		{
 			for(int i = 0; i < vars.length; i++)
-			{	if(Algebra.bevatVarNaam(kind2, var))
+			{	if(Algebra.bevatVarNaam(kind2, vars[i]))
 					return false;
 			}
 			return true;
 		}
-		if(kind2.isVar() && kind2.geefVarNaam().equals(vars))
+		if(kind2.isVar() && kind2.geefVarNaam().equals(var))
 		{
 			for(int i = 0; i < vars.length; i++)
-			{	if(Algebra.bevatVarNaam(kind1, var))
+			{	if(Algebra.bevatVarNaam(kind1, vars[i]))
 					return false;
 			}
 			return true;
