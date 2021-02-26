@@ -50,7 +50,7 @@ public class SCORM_12_API implements Scorm2004IF {
 			String dworole = GetValue("USER_GROUP");
 			if("UG_TEACHER".equals(dworole))
 				return Role.Instructor;
-		} catch(Exception _) {}
+		} catch(Exception oops) {}
 		
 		return Role.Learner;
 	}

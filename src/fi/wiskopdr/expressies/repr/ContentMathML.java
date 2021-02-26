@@ -277,7 +277,7 @@ public class ContentMathML extends AbstractConverter {
 		try { 
 			Double.parseDouble(basisString);
 			return "<cn>"+basisString+"</cn>"; // a number
-		} catch(Exception _) {
+		} catch(Exception oops) {
 			return "<ci>"+basisString+"</ci>"; // a variable
 		}
 	}
