@@ -8,6 +8,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
+import nl.uu.fi.dwo.rest.entities.RestClassCourse;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
@@ -26,4 +27,9 @@ public interface SecuredStudentExamCourseRestCaller extends RestService, Courses
     @PUT
     @Path("/sec:{id}/student/exam/coursesofschoolclass/getScoContext")
     void getCoursesClass(@PathParam("id") String id, RestScoContext rest, MethodCallback<DomCoursesOfSchoolClass> callback);
+
+    @PUT
+    @Path("/sec:{id}/student/exam/coursesofschoolclass/getClassCourse")
+    void getCoursesClass(String id, RestClassCourse rest, MethodCallback<DomCoursesOfSchoolClass> callback);
+
 }

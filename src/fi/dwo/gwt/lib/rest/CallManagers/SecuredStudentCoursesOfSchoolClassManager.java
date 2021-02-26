@@ -8,6 +8,7 @@ import static fi.dwo.gwt.lib.rest.GwtRestVars.F;
 import fi.dwo.gwt.lib.rest.client.RestCallers.CoursesOfSchoolRestCaller;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredStudentCourse2RestCaller;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredStudentExamCourseRestCaller;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
@@ -15,6 +16,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.entities.RestClassCourse;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
@@ -66,4 +68,14 @@ public class SecuredStudentCoursesOfSchoolClassManager implements CoursesOfSchoo
 		return F(service::getCoursesClass,PathId.getId(context),rest);
 	}
 
+	@Override
+	public Promise<DomCoursesOfSchoolClass> getClassCourse(DomContext context, DomClassCourse classcourse, DomDwoProfile profile) {
+	    RestClassCourse rest = new RestClassCourse();
+	    rest.setRestContext(context);
+	    rest.setDomClassCourse(classcourse);
+	    rest.setDomDwoProfile(profile);
+	    return F(service::getCoursesClass, PathId.getId(context), rest);
+	}
+	
+	
 }

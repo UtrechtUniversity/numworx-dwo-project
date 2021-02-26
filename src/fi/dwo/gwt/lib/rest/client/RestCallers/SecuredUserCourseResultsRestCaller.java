@@ -19,7 +19,7 @@ public interface SecuredUserCourseResultsRestCaller extends RestService {
     @Path("/sec:{id}/user/results/getCourseResults")
     public void getCourseResults(@PathParam("id") String id, RestCourse aCourse,MethodCallback<List<DomStudentScoContext>> callback);
 
-    @PUT
-    @Path("/sec:{id}/user/results/getClassCourseResults")
-    public void getCourseResults(@PathParam("id") String id, RestClassCourse aCourse,MethodCallback<List<DomStudentScoContext>> callback);
+//    @PUT
+//    @Path("/sec:{id}/user/results/getClassCourseResults")
+//    public void getCourseResults(@PathParam("id") String id, RestClassCourse aCourse,MethodCallback<List<DomStudentScoContext>> callback);
 }

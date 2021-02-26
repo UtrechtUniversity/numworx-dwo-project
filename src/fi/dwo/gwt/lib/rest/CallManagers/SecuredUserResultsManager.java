@@ -52,10 +52,10 @@ public class SecuredUserResultsManager implements UserResultsManager {
 		});
 	}
 
-	@Override
-	public Promise<DomResultsPerStudentCourse> getCourseResults(DomContext context, DomClassCourse classCourse,
-			DomDwoProfile profile) {
-		return Promises.failed(new IllegalArgumentException());
-	}
+//	@Override
+//	public Promise<DomResultsPerStudentCourse> getCourseResults(DomContext context, DomClassCourse classCourse,
+//			DomDwoProfile profile) {
+//		return Promises.failed(new IllegalArgumentException());
+//	}
 
 }
