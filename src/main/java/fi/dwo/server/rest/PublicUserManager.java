@@ -352,7 +352,8 @@ public class PublicUserManager {
                 PersistentUser u = UserManager.findByUserName(authFields[0]);
                 List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
                 for (PersistentLoginContext l : loginContextList) {
-                    if (TOTP.verifyTOTP(authFields[1], DatatypeConverter.printHexBinary(l.getSecretKey()), "8")) {
+                    if (l.getSecretKey() != null &&
+                    	  TOTP.verifyTOTP(authFields[1], DatatypeConverter.printHexBinary(l.getSecretKey()), "8")) {
                         return u.buildDomUserFullwLoginContext(l);
                    }
                 }
@@ -390,7 +391,8 @@ public class PublicUserManager {
                     throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Invalid software state. This should not have happened.");
                 }
         }
-        throw new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "The authentication is invalid, this event is logged.");
+       LOG.log(Level.WARNING, "Illegal authToken {0}", restAuthToken.getAuthToken());
+       throw new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "The authentication is invalid, this event is logged.");
     }
 
     @POST
