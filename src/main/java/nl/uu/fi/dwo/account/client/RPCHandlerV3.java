@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
@@ -163,6 +164,13 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			studentManager.getCourseClass(getContext(), schoolclass, course, p.getValue())
 		);
 	}
+	
+	public Promise<DomCoursesOfSchoolClass> getClassCourse(Object id) {
+	  DomClassCourse cc = toClassCourse(id);
+	  return profile.then(p ->
+	    studentManager.getClassCourse(getContext(), cc, p.getValue())
+	  );
+	}
 
 	public Promise<DomCoursesOfSchoolClass> getScoContextClass(Object id, DomSchoolClass schoolclass) {
 		DomScoContext sco = toScoContext(id);
@@ -186,7 +194,19 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	    return NO_ACCESS;
 	  });}
 
-
+	private DomClassCourse toClassCourse(Object id) {
+	  if (id instanceof DomClassCourse) return (DomClassCourse) id;
+	  DomClassCourse result = new DomClassCourse();
+	  if (id instanceof PersistenceId) {
+	    result.setId((PersistenceId) id);
+	  } else {
+	    result.setId(idOf(id, PersistenceClassType.PersistentClassCourse));
+	  }
+	  return result;
+	}
+	
+	
+	
 	private DomCourse toCourse(Object id) {
 		if(id instanceof DomCourse) return (DomCourse) id;
 		DomCourse result = new DomCourse();
