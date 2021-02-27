@@ -35,7 +35,7 @@ public class cc extends Place implements Hash {
 
 	@Override
 	public Type getType() {
-		return Type.c;
+		return Type.cc;
 	}
 
 	@Override
