@@ -20,6 +20,7 @@ import javax.ws.rs.core.SecurityContext;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
@@ -28,9 +29,12 @@ import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder;
 import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SCO_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer.StudentState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
@@ -54,6 +58,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
+import nl.uu.fi.dwo.rest.entities.RestClassCourse;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
@@ -182,7 +187,6 @@ public class SecuredStudentCoursesOfSchoolClassManager {
   @Path("/getCourse")
   public DomCoursesOfSchoolClass getCourse(@Context SecurityContext sc, RestCourse rest) {
     try {
-      DomCoursesOfSchoolClass result = new DomCoursesOfSchoolClass();
       DomCourse courseid = rest.getDomCourse();
       DomSchoolClassId classid = rest.getSchoolClassID();
       DomDwoProfileId profileid = rest.getDomDwoProfile();
@@ -193,60 +197,67 @@ public class SecuredStudentCoursesOfSchoolClassManager {
           CascadingPersistenceBuilder.user(username).addHasRoleIfType(hr, RoleType.STUDENT)
               .addSchoolClass(classid).addProfile(profileid).addCourse(courseid);
       // s contains all data.
-      Date NOW = new Date();
       PersistentClassCourse pcc = s.getClassCourse();
       
       
       PersistentCourse pc = s.getCourse();
       PersistentSchoolClass psc = s.getSchoolClass();
 // FIXME security logic: public courses are ALWAYS accessible. Move to State?
-      if(pcc == null && pc.getSchoolID() == null) {
-    	  pcc = new PersistentClassCourse();
-    	  pcc.setClassCourseID(0);
-    	  pcc.setAccessKey(null);
-    	  pcc.setClassID(psc.getClassID());
-    	  pcc.setCourseID(pc.getCourseID());
-    	  pcc.setLastChangeTimeStamp(NOW.getTime());
-    	  pcc.setType(0);
-    	  pcc.setViewState(ViewState.studentsAndTeachers);
-      }
-
-      if (pcc != null && pcc.getNotAfter() != null) {
-        if (NOW.after(pcc.getNotAfter())) pcc = null;
-      }
-      if (pcc != null && pcc.getNotBefore() != null) {
-        if (NOW.before(pcc.getNotBefore())) pcc = null;
-      }
-      if (pcc != null && (pcc.getViewState() != ViewState.studentsAndTeachers)) pcc = null;
-      if (pcc != null && EXAM.equals(pcc.getType())) pcc = null; // no deeplink for exams
-
-      if (pcc == null) {
-        result.setClassCourses(Collections.emptyList());
-        result.setCourses(Collections.emptyList());
-        result.setScoContexts(Collections.emptyList());
-      } else {
-        DomClassCourse dcc = pcc.buildDomClassCourse();
-        DomCourseStudent dcs = pc.buildDomCourseStudent();
-        DomMapEntry<PersistenceId, DomClassCourse> ecc =
-            new DomMapEntry<PersistenceId, DomClassCourse>(dcc.getId(), dcc);
-        DomMapEntry<PersistenceId, DomCourseStudent> ecs =
-            new DomMapEntry<PersistenceId, DomCourseStudent>(dcs.getId(), dcs);
-        result.setClassCourses(Collections.singletonList(ecc));
-        result.setCourses(Collections.singletonList(ecs));
-// fetch studentScoContexts
-        List<PersistentScoContext> list = ScoContextManager.findEntities(pc);
-        List<DomMapEntry<PersistenceId, DomScoContext>> scos;
-// FIXME NO icons yet!
-        scos = list.stream().map(p -> p.buildDomScoContext()).sorted(new DomScoContextComparator()).map(p -> new DomMapEntry<>(p.getId(), p)).collect(Collectors.toList());
-        result.setScoContexts(scos);       
-      }
-
-      result.setSchoolClass(psc.buildDomSchoolClass());
-      result.setFetchTimeStamp(Long.valueOf(NOW.getTime()));
+      DomCoursesOfSchoolClass result = getCourseForStudent(pcc, pc, psc);
       return result;
     } catch (Dwo2Exception e) {
       throw new Dwo2RestException(e);
     }
+  }
+
+  private DomCoursesOfSchoolClass getCourseForStudent(PersistentClassCourse pcc,
+      PersistentCourse pc, PersistentSchoolClass psc) {
+    Date NOW = new Date();
+    DomCoursesOfSchoolClass result = new DomCoursesOfSchoolClass();
+    if(pcc == null && pc.getSchoolID() == null) {
+      pcc = new PersistentClassCourse();
+      pcc.setClassCourseID(0);
+      pcc.setAccessKey(null);
+      pcc.setClassID(psc.getClassID());
+      pcc.setCourseID(pc.getCourseID());
+      pcc.setLastChangeTimeStamp(NOW.getTime());
+      pcc.setType(0);
+      pcc.setViewState(ViewState.studentsAndTeachers);
+    }
+
+    if (pcc != null && pcc.getNotAfter() != null) {
+      if (NOW.after(pcc.getNotAfter())) pcc = null;
+    }
+    if (pcc != null && pcc.getNotBefore() != null) {
+      if (NOW.before(pcc.getNotBefore())) pcc = null;
+    }
+    if (pcc != null && (pcc.getViewState() != ViewState.studentsAndTeachers)) pcc = null;
+    if (pcc != null && EXAM.equals(pcc.getType())) pcc = null; // no deeplink for exams
+
+    if (pcc == null) {
+      result.setClassCourses(Collections.emptyList());
+      result.setCourses(Collections.emptyList());
+      result.setScoContexts(Collections.emptyList());
+    } else {
+      DomClassCourse dcc = pcc.buildDomClassCourse();
+      DomCourseStudent dcs = pc.buildDomCourseStudent();
+      DomMapEntry<PersistenceId, DomClassCourse> ecc =
+          new DomMapEntry<PersistenceId, DomClassCourse>(dcc.getId(), dcc);
+      DomMapEntry<PersistenceId, DomCourseStudent> ecs =
+          new DomMapEntry<PersistenceId, DomCourseStudent>(dcs.getId(), dcs);
+      result.setClassCourses(Collections.singletonList(ecc));
+      result.setCourses(Collections.singletonList(ecs));
+// fetch studentScoContexts
+      List<PersistentScoContext> list = ScoContextManager.findEntities(pc);
+      List<DomMapEntry<PersistenceId, DomScoContext>> scos;
+// FIXME NO icons yet!
+      scos = list.stream().map(p -> p.buildDomScoContext()).sorted(new DomScoContextComparator()).map(p -> new DomMapEntry<>(p.getId(), p)).collect(Collectors.toList());
+      result.setScoContexts(scos);       
+    }
+
+    result.setSchoolClass(psc.buildDomSchoolClass());
+    result.setFetchTimeStamp(Long.valueOf(NOW.getTime()));
+    return result;
   }
 
   @PUT
@@ -316,4 +327,27 @@ public class SecuredStudentCoursesOfSchoolClassManager {
     }
   }
 
+  @PUT
+  @Path("getClassCourse")
+  public DomCoursesOfSchoolClass getClassCourse(@Context SecurityContext sc, RestClassCourse rest) throws Dwo2Exception {
+    UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      .setHasRole(rest.getRestContext().getDomHasRole());
+      state.buildStudent();
+    Long pid = MySQLPersistenceId.getNativeId(rest.getDomDwoProfile());
+    Long ccid = MySQLPersistenceId.getNativeId(rest.getDomClassCourse());
+    PersistentClassCourse cc = ClassCourseManager.findEntity(ccid);
+    if (cc == null) {
+      LOG.log(Level.WARNING, "classcourse not found  " + ccid);
+      throw new Dwo2Exception(Dwo2ExceptionCode.Client_InternalError, "not found");
+    }
+    PersistentCourse course = CourseManager.findEntity(cc.getCourseID());
+    PersistentSchoolClass schoolclass = SchoolClassManager.findEntity(cc.getClassID());
+    PersistentStudentOfClass okay = StudentOfClassManager.findEntity(new PersistentStudentOfClassPK(state.getUser().getId(), schoolclass.getClassID(), state.getSchoolGroup().getSchoolGroupID()));
+    if (okay == null || !course.getDwoProfileID().equals(pid)) {
+      throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthorizationError, "not authorized");
+    }
+      return getCourseForStudent(cc, course, schoolclass);
+  }
+
+  
 }
