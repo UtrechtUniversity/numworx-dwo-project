@@ -126,6 +126,8 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
 //					view.setDescription(item);
 					view.render(SelectModuleItemHolder.getItems());
 					view.selectModule(item);
+					headerView.setUpPlace(where);
+
 					clientFactory.getNavigationView().hide();
 					if(item.getCourseType() == CourseType.assesment) {
 						final UnSafeModuleView w = new UnSafeModuleView(clientFactory.getHeaderView(), clientFactory.getPlaceController());

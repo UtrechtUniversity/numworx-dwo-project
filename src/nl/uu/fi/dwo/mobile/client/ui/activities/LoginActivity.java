@@ -184,13 +184,16 @@ public class LoginActivity extends MGWTAbstractActivity
 				if(next instanceof Hash) {
 					Hash hash = (Hash) next;
 					String token = hash.getToken();
-					SelectModuleItem item = 
-							hash.getType() == Type.c
-								? SelectModuleItemHolder.getItemByID(token) 
-								: SelectModuleItemHolder.getScoByID(token); // type == Type.s;
-					if(item != null) {
-						nonPublic = item.getNonPublic();
-					}
+					switch(hash.getType()) {
+					  case cc: nonPublic = Boolean.TRUE; break;
+					  case c: case s:
+    					SelectModuleItem item = 
+    							hash.getType() == Type.c
+    								? SelectModuleItemHolder.getItemByID(token) 
+    								: SelectModuleItemHolder.getScoByID(token); // type == Type.s;
+    					if(item != null) {
+    						nonPublic = item.getNonPublic();
+					}}
 				}
 				SelectModuleItemHolder.destroy();
 				String user_id = Cookies.getCookie(DWO_SAML_USER_ID);

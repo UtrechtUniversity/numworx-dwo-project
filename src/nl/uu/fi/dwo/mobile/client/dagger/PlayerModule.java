@@ -22,6 +22,7 @@ import dagger.multibindings.ClassKey;
 import dagger.multibindings.IntoMap;
 import nl.uu.fi.dwo.mobile.client.ui.AppPlaceHistoryMapper;
 import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
+import nl.uu.fi.dwo.mobile.client.ui.activities.ClassCourseActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ClassesActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ExamActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.GuestActivity;
@@ -29,6 +30,7 @@ import nl.uu.fi.dwo.mobile.client.ui.activities.LogoutActivity;
 import nl.uu.fi.dwo.mobile.client.ui.places.ClassesPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.Exam;
 import nl.uu.fi.dwo.mobile.client.ui.places.LogoutPlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.cc;
 import nl.uu.fi.dwo.mobile.client.ui.places.guest;
 
 @Module
@@ -71,4 +73,5 @@ public abstract class PlayerModule {
   @Binds @IntoMap @ClassKey(LogoutPlace.class)  abstract Activity logoutActivity(LogoutActivity logout);
   @Binds @IntoMap @ClassKey(guest.class) abstract Activity guestActivity(GuestActivity guest);
   @Binds @IntoMap @ClassKey(Exam.class) abstract Activity examActivity(ExamActivity exam);
+  @Binds @IntoMap @ClassKey(cc.class) abstract Activity ccActivity(ClassCourseActivity cc);
 }
