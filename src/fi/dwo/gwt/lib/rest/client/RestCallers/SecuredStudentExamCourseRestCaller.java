@@ -30,6 +30,6 @@ public interface SecuredStudentExamCourseRestCaller extends RestService, Courses
 
     @PUT
     @Path("/sec:{id}/student/exam/coursesofschoolclass/getClassCourse")
-    void getCoursesClass(String id, RestClassCourse rest, MethodCallback<DomCoursesOfSchoolClass> callback);
+    void getCoursesClass(@PathParam("id") String id, RestClassCourse rest, MethodCallback<DomCoursesOfSchoolClass> callback);
 
 }
