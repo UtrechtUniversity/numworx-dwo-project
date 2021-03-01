@@ -232,7 +232,6 @@ public class SecuredStudentCoursesOfSchoolClassManager {
       if (NOW.before(pcc.getNotBefore())) pcc = null;
     }
     if (pcc != null && (pcc.getViewState() != ViewState.studentsAndTeachers)) pcc = null;
-    if (pcc != null && EXAM.equals(pcc.getType())) pcc = null; // no deeplink for exams
 
     if (pcc == null) {
       result.setClassCourses(Collections.emptyList());
@@ -247,12 +246,14 @@ public class SecuredStudentCoursesOfSchoolClassManager {
           new DomMapEntry<PersistenceId, DomCourseStudent>(dcs.getId(), dcs);
       result.setClassCourses(Collections.singletonList(ecc));
       result.setCourses(Collections.singletonList(ecs));
-// fetch studentScoContexts
-      List<PersistentScoContext> list = ScoContextManager.findEntities(pc);
-      List<DomMapEntry<PersistenceId, DomScoContext>> scos;
-// FIXME NO icons yet!
-      scos = list.stream().map(p -> p.buildDomScoContext()).sorted(new DomScoContextComparator()).map(p -> new DomMapEntry<>(p.getId(), p)).collect(Collectors.toList());
-      result.setScoContexts(scos);       
+      if (!EXAM.equals(pcc.getType())) { // no sco's for exams
+        // fetch studentScoContexts
+        List<PersistentScoContext> list = ScoContextManager.findEntities(pc);
+        List<DomMapEntry<PersistenceId, DomScoContext>> scos;
+  // FIXME NO icons yet!
+        scos = list.stream().map(p -> p.buildDomScoContext()).sorted(new DomScoContextComparator()).map(p -> new DomMapEntry<>(p.getId(), p)).collect(Collectors.toList());
+        result.setScoContexts(scos);       
+      }
     }
 
     result.setSchoolClass(psc.buildDomSchoolClass());
