@@ -267,7 +267,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
           eventBus.fireEvent(event);
         } else if ("LOGOUT".equals(message)) {
         	if (logout != null)
-        	{
+        	{   view.clear();
         		logout.resolve(Boolean.TRUE);
         		logout = null;
         	}
