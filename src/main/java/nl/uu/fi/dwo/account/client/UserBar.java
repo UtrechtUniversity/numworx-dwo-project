@@ -24,7 +24,6 @@ public class UserBar extends Composite implements Command {
     private final ProfileCommand profileCmd;
     private final SchoolLoginCommand schoolLoginCmd;
     private final SchoolClassStudentCommand schoolClassCmd;
-    private final StudentModelCommand studentModelCmd;
 	private MenuItem itemSchoolClass;
 	private RoleType role;
 	private String display;
@@ -39,7 +38,6 @@ public class UserBar extends Composite implements Command {
     public UserBar(EventBus bus) {
         profileCmd = new ProfileCommand(bus);
         schoolClassCmd = new SchoolClassStudentCommand(this,bus);
-        studentModelCmd = new StudentModelCommand(bus);
         schoolLoginCmd = new SchoolLoginCommand(this,bus);
         init();
     }
@@ -80,8 +78,6 @@ public class UserBar extends Composite implements Command {
         itemSchoolClass = new MenuItem(DwoLocalesForGWT.instance.GUI_MySchoolClasses(), schoolClassCmd);
         items.addItem(itemSchoolClass);
         
-        item = new MenuItem("STUDENT MODEL (exp)", studentModelCmd);
-        items.addItem(item);
     }
 
 	@Override

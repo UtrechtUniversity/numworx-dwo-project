@@ -398,7 +398,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 				}
 				if(ok != null && ok.booleanValue())
 				{ // switch to secure/student/exam stuff
-				  scoManager = new SecuredUserScoContextManager(false); // not yet			  
+				  scoManager = new SecuredUserScoContextManager(true); // not yet			  
 	              scormApi = new SecuredStudentScoDataManager(true);
 				  return null;
 				}
