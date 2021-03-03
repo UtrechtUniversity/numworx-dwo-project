@@ -33,7 +33,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 	private EventBus bus;
 	final private boolean skipPassword;
 
-	@Inject
+	//@Inject
 	public ExamModuleActivity(ClientFactory clientFactory, SelectModuleItem i, Provider<? extends Activity> provider, boolean b)
 	{
 		this.clientFactory = clientFactory;
@@ -116,7 +116,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 					throws Exception {
 				Promise<List<SelectModuleItem>> promise = item.getChildrenAsync();
 				if(promise == null || (promise.isDone() && promise.getFailure() != null)) {
-					promise = DWOplayer.clientfactory.getRPCHandler().getScos(item.getID())
+					promise = clientFactory.getRPCHandler().getScos(item.getID())
 							.map(new SCO_TO_MODULEITEM(item));
 					item.setChildrenAsync(promise);
 				}

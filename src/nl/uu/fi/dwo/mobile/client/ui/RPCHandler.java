@@ -36,7 +36,7 @@ public interface RPCHandler {
 	Promise<DomCoursesOfSchoolClass> getCoursesClass(DomSchoolClass schoolClass);
 	Promise<DomCoursesOfSchoolClass> getCourseClass(Object course, DomSchoolClass schoolClass);
 	Promise<DomCoursesOfSchoolClass> getScoContextClass(Object sco, DomSchoolClass schoolClass);
-	
+	Promise<DomCoursesOfSchoolClass> getClassCourse(Object id);
 //	void getCoursesSchool(Object schoolID,
 //			AsyncCallback<List<Map<String, Object>>> callback);
 	Promise<List<DomCourseStudent>> getCoursesSchool(DomSchool school);

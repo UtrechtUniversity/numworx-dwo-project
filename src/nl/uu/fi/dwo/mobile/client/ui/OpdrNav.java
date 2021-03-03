@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
-import nl.uu.fi.dwo.account.client.StudentModelView;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleButton;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
@@ -1960,10 +1959,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		 * pagina - Berekening en weergave categorie-score
 		 */
 		if(memento.getStudentModelStructure() != null && DWOplayer.isPremium()) {
-			StudentModelView view = StudentModelPanel.BUILDER.get();
-			view.setPopup(scoresObjectivesDialog);
-			Function<? super DomStudentModelContextId, Promise<? extends DomStudentModelContext>> mapper = id -> DWOplayer.clientfactory.getRPCHandler().getStudentModel(id.getId()); // FIXME 
-			view.setInitialStructure(memento.collectStudentModel().flatMap(mapper));
+//			StudentModelView view = StudentModelPanel.BUILDER.get();
+//			view.setPopup(scoresObjectivesDialog);
+//			Function<? super DomStudentModelContextId, Promise<? extends DomStudentModelContext>> mapper = id -> DWOplayer.clientfactory.getRPCHandler().getStudentModel(id.getId()); // FIXME 
+//			view.setInitialStructure(memento.collectStudentModel().flatMap(mapper));
 			scoresObjectivesPanel = null;
 		} else {
 			ScoresObjectivesPanel v;

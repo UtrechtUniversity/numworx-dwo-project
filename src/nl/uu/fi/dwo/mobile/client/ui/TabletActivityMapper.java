@@ -19,6 +19,8 @@ import nl.uu.fi.dwo.mobile.client.ui.activities.TreeModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ViewCourseActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ViewModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.places.Exam;
+import nl.uu.fi.dwo.mobile.client.ui.places.HasHash;
+import nl.uu.fi.dwo.mobile.client.ui.places.Hash;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.LogoutPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.MaybeLogout;
@@ -49,9 +51,10 @@ public class TabletActivityMapper implements ActivityMapper
 		this.clientFactory = cf;
 	}
 
-	@Inject Provider<MaybeLogoutActivity> maybeLogout;
+//  @Inject Provider<MaybeLogoutActivity> maybeLogout;
 //	@Inject Provider<ExamActivity> exam;
 //	@Inject Provider<ClassesActivity> classes;
+	@Inject Provider<LoginActivity> login;
 	
 	@Inject Map<Class<?>, Provider<Activity>> activityMap;
 	
@@ -63,32 +66,13 @@ public class TabletActivityMapper implements ActivityMapper
 		Provider<Activity> provider = activityMap.get(place.getClass());
 		if (provider != null) return provider.get();
 		
-		if (place instanceof MaybeLogout) {
-	    return maybeLogout.get().place(place);
-	  }
-	  
-//	  if (place instanceof Exam) {
-//	      return exam.get();
+//		if (place instanceof MaybeLogout) {
+//	    return maybeLogout.get().place(place);
 //	  }
-	  
-//	  if (place instanceof LogoutPlace) {
-//		return new LogoutActivity();
-//	  }
-//	  if (place instanceof ClassesPlace) {
-//		  return classes.get();
-//	  }
-	    
-	    
-	    
-	    
-//	    if (place instanceof nl.uu.fi.dwo.mobile.client.ui.places.guest)
-//		{
-//			return new GuestActivity(clientFactory);
-//		}
-		
+	  		
 		if (place instanceof nl.uu.fi.dwo.mobile.client.ui.places.c) 
 		{
-			String id = ((nl.uu.fi.dwo.mobile.client.ui.places.c) place).getToken();
+			String id = ((Hash) place).getToken();
 			SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);
 			if(item == null)
 			{
@@ -125,7 +109,7 @@ public class TabletActivityMapper implements ActivityMapper
 			PersistenceId id = where.getID();
 			SelectModuleItem item = SelectModuleItemHolder.getScoByID(id);
 			if(item == null)
-				return new LoginActivity(clientFactory);
+				return login.get();
 			final ViewModuleActivity viewModuleActivity = 
 			    place instanceof ViewCoursePlace 
 			    ? new ViewCourseActivity(clientFactory, item, where)
@@ -142,14 +126,14 @@ public class TabletActivityMapper implements ActivityMapper
 					? new ExamModuleActivity(clientFactory, item, provider, true)				
 					: viewModuleActivity;
 		}
-		if (place instanceof LoginPlace)
-			return new LoginActivity(clientFactory, ((LoginPlace) place).getPlace());
+//		if (place instanceof LoginPlace)
+//			return new LoginActivity(clientFactory, ((LoginPlace) place).getPlace());
 		if (place instanceof ReloginPlace)
 		{
 			if(clientFactory.withUser())
-				return new ReloginActivity(clientFactory, ((ReloginPlace) place).getPlace());
+				return new ReloginActivity(clientFactory, ((HasHash) place).getPlace());
 			else
-				return new LoginActivity(clientFactory, ((ReloginPlace) place).getPlace());
+				return login.get();
 		}
 		if (place instanceof TreeModulePlace)
 		{
@@ -157,7 +141,7 @@ public class TabletActivityMapper implements ActivityMapper
 			String id = tmp.getToken();
 			SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);
 			if(item == null)
-				return new LoginActivity(clientFactory);
+				return login.get();
 			return 
 				item.isExam()
 					? new ExamModuleActivity(clientFactory, item)

@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import dagger.Lazy;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.IdleDetect;
+import nl.uu.fi.dwo.mobile.client.ui.places.HasHash;
 import nl.uu.fi.dwo.mobile.client.ui.places.MaybeLogout;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
@@ -26,15 +27,16 @@ public class MaybeLogoutActivity extends AbstractActivity implements IdleDetect.
   private HeaderView header;
   @Inject Lazy<MaybeLogoutView> view;
   
-  @Inject MaybeLogoutActivity(PlaceController controller, @Named("defaultPlace") Place defaultPlace, IdleDetect idle, ClientFactory cf) {
+  @Inject MaybeLogoutActivity(PlaceController controller, @Named("defaultPlace") Place defaultPlace, IdleDetect idle, HeaderView header) {
     this.controller = controller;
     this.logout = defaultPlace;
     this.idle = idle;
-    header = cf.getHeaderView();   
+    this.header = header;
+    place(controller.getWhere());
   }
     
   public MaybeLogoutActivity place(Place place) {
-    next = ((MaybeLogout) place).getPlace();
+    next = ((HasHash) place).getPlace();
     if (next == null) next = new TreeModulePlace();
     return this;
   }

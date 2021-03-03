@@ -12,7 +12,6 @@ import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
-import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -237,6 +236,12 @@ public Promise<List<DomSchoolClass>> getStudentsSchoolClasses() {
 public Promise<Boolean> setActiveSchoolClass(DomSchoolClass schoolClass) {
 	// TODO Auto-generated method stub
 	return null;
+}
+
+@Override
+public Promise<DomCoursesOfSchoolClass> getClassCourse(Object id) {
+  // TODO Auto-generated method stub
+  return null;
 }
 
 }

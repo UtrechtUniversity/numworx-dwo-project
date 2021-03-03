@@ -4,6 +4,8 @@ import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
+
 import org.osgi.util.function.Predicate;
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Failure;
@@ -18,7 +20,9 @@ import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
+import nl.uu.fi.dwo.mobile.client.ui.places.HasHash;
 import nl.uu.fi.dwo.mobile.client.ui.places.Hash;
+import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.Hash.Type;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
@@ -155,16 +159,19 @@ public class LoginActivity extends MGWTAbstractActivity
 
 	private Deferred<DomUserFullwLoginContext> defer;
 
-	public LoginActivity(ClientFactory clientFactory, Place next)
-	{
-		this(clientFactory);
-		this.next = next;
-	}
+//	public LoginActivity(ClientFactory clientFactory, Place next)
+//	{
+//		this(clientFactory);
+//		this.next = next;
+//	}
 
-	public LoginActivity(ClientFactory clientFactory) {
+	@Inject LoginActivity(ClientFactory clientFactory) {
 		this.clientFactory = clientFactory;
 		this.dwoProfile = clientFactory.getRPCHandler().getDwoProfile();
 		this.LOGIN_STAP1 = new Login_Stap1(clientFactory);
+		Place place = clientFactory.getPlaceController().getWhere();
+		if (place instanceof HasHash)
+		  next = ((HasHash) place).getPlace();
 	}
 
 	@Override

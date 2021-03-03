@@ -5,6 +5,8 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
+import javax.inject.Inject;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -45,7 +47,7 @@ public class ExamModuleView extends Composite {
 	interface ExamModuleViewUiBinder extends UiBinder<Widget, ExamModuleView> {
 	}
 
-	public ExamModuleView(HeaderView headerView) {
+	@Inject public ExamModuleView(HeaderView headerView) {
 		header = headerView;
 		initWidget(uiBinder.createAndBindUi(this));
 // extra's

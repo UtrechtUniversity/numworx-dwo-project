@@ -26,10 +26,14 @@ import nl.uu.fi.dwo.mobile.client.ui.activities.ClassCourseActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ClassesActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ExamActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.GuestActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.LoginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LogoutActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.MaybeLogoutActivity;
 import nl.uu.fi.dwo.mobile.client.ui.places.ClassesPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.Exam;
+import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.LogoutPlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.MaybeLogout;
 import nl.uu.fi.dwo.mobile.client.ui.places.cc;
 import nl.uu.fi.dwo.mobile.client.ui.places.guest;
 
@@ -74,4 +78,6 @@ public abstract class PlayerModule {
   @Binds @IntoMap @ClassKey(guest.class) abstract Activity guestActivity(GuestActivity guest);
   @Binds @IntoMap @ClassKey(Exam.class) abstract Activity examActivity(ExamActivity exam);
   @Binds @IntoMap @ClassKey(cc.class) abstract Activity ccActivity(ClassCourseActivity cc);
+  @Binds @IntoMap @ClassKey(MaybeLogout.class) abstract Activity maybeLogoutActivity(MaybeLogoutActivity maybe);
+  @Binds @IntoMap @ClassKey(LoginPlace.class) abstract Activity loginActivity(LoginActivity login);
 }

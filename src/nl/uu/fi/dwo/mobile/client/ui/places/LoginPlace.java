@@ -3,7 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.places;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceTokenizer;
 
-public class LoginPlace extends Place
+public class LoginPlace extends Place implements HasHash
 {
 	private Hash token;
 

@@ -37,13 +37,11 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import nl.uu.fi.dwo.account.client.ProfileCommand;
 import nl.uu.fi.dwo.account.client.SchoolClassStudentCommand;
-import nl.uu.fi.dwo.account.client.StudentModelCommand;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
-import nl.uu.fi.dwo.mobile.client.ui.StudentModelPanel;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SearchPlace;
@@ -225,17 +223,11 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 			{	
 				m=items.addItem(DwoLocalesForGWT.instance.GUI_MyProfile(), new ProfileCommand(bus));
 				m.addStyleName(style.menuItem());
-			}
-			if(role == RoleType.STUDENT) {
-				ScheduledCommand cmd = new SchoolClassStudentCommand(this, bus);
-				m=items.addItem(DwoLocalesForGWT.instance.GUI_MySchoolClasses(), cmd);
-				m.addStyleName(style.menuItem());
-
-				boolean experimenteel = DWOplayer.isPremium() && "test".equals(DWOplayer.PARAMETERS.getDwoEnv());
-				if(experimenteel) {
-					m=items.addItem(rb.STUDENT_MODELS(), new StudentModelCommand(StudentModelPanel.BUILDER, bus));
-					m.addStyleName(style.menuItem());
-				}
+	            if(role == RoleType.STUDENT) {
+	                ScheduledCommand cmd = new SchoolClassStudentCommand(this, bus);
+	                m=items.addItem(DwoLocalesForGWT.instance.GUI_MySchoolClasses(), cmd);
+	                m.addStyleName(style.menuItem());
+	            }
 			}
 			boolean single = Boolean.TRUE.equals(currentUser.getSingleSchool());
 			if(!single)
