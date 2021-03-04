@@ -6,12 +6,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Deferred;
@@ -19,7 +19,6 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
-import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
@@ -39,7 +38,6 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.sco.ShareFacade;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
@@ -60,7 +58,6 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.dom.client.Touch;
@@ -88,7 +85,6 @@ import com.vaadin.pointerevents.client.PointerCancelEvent;
 import com.vaadin.pointerevents.client.PointerCancelHandler;
 import com.vaadin.pointerevents.client.PointerDownEvent;
 import com.vaadin.pointerevents.client.PointerDownHandler;
-import com.vaadin.pointerevents.client.PointerEvent;
 import com.vaadin.pointerevents.client.PointerMoveEvent;
 import com.vaadin.pointerevents.client.PointerMoveHandler;
 import com.vaadin.pointerevents.client.PointerUpEvent;
@@ -103,8 +99,6 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
-
 import fi.wiskopdr.AntwoordVakChecker;
 import fi.wiskopdr.AntwoordVergelijkingVakChecker;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
@@ -227,6 +221,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	private FormuleKeyboardIF kb = null;
 	private OpdrNavIF comRoot = null;
 	private int breedte = 600;
+	private int orgBreedte = 600;
 	private int hoogte = 250;
 	private boolean volledigeBreedte=false;
 	/**
@@ -385,11 +380,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		ObjectMap colorMap = map != null && map.containsKey(key) ? map.getObjectMap(key) : null ;
 		if(colorMap != null) {
 			r = colorMap.getInt("red");
-					//((Number)colorMap.get("red")).intValue();
 			g = colorMap.getInt("green");
-					//((Number)colorMap.get("green")).intValue();
 			b = colorMap.getInt("blue");
-					//((Number)colorMap.get("blue")).intValue();
 		}
 		return CssColor.make(r, g, b);
 	}
@@ -1815,8 +1807,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	public void setCommunicationRoot(OpdrNavIF comRoot)
 	{
 		this.comRoot = comRoot;
-		if(comRoot != null)
-			mode = comRoot.getMode();
+		mode = comRoot.getMode();
 		if (dwologger != null) dwologger.setCommunicationRoot(comRoot);
 		comRoot.addCBookEventListener(ACTION_SETVISIBLE, this);
 		comRoot.addCBookEventListener(ACTION_SETNOTVISIBLE, this);
@@ -1827,6 +1818,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		comRoot.addCBookEventListener(TVP_KLAPIN, this);
 //		comRoot.addCBookEventListener(TVP_KLAPUIT, this);
 //		comRoot.addCBookEventListener(TVP_KLAPIN, this);
+		comRoot.addCBookEventListener("action.zoom", this);
+		comRoot.addCBookEventListener("action.unzoom", this);
 	}
 
 	public HashMap<String, Object> getState()
@@ -2234,16 +2227,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	
 	public Panel getPanelElement(final FormuleHolder editor)
 	{
-		FlowPanel fp = new FlowPanel();
 		editor.paint();
-
 		final Panel p = editor.getAsPanel();
-		if (p instanceof TouchPanel)
-		{
-			TouchPanel tp = (TouchPanel) p;
-		}
-
-		fp.add(p);
 		return p;
 	}
 
@@ -2254,11 +2239,6 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		else 
 			return mainPanel2;
 	}
-
-//	public void addFormulePanelListeners(final TouchPanel tp, final FormuleHolder editor)
-//	{
-//		tp.addTouchHandler(new FormuleEditorTouchHandler(editor));
-//	}
 
 	private PopupFacade facade;
 	private Widget widget;
@@ -4886,10 +4866,18 @@ private Object CamelCase(String name) {
 			}
 		} else if ("action.setNotEditable".equals(command)) {
 			seal(event);
+		} else if ("action.zoom".equals(command)) {
+			orgBreedte = breedte;
+			parent.zoom(this);
+			zetVolledigeBreedte( (int)( (Window.getClientWidth()-20)/responsiveFactor)); // FIXME 20 is toplevel marge
+		} else if ("action.unzoom".equals(command)) {
+			zetVolledigeBreedte(orgBreedte);
+			parent.unzoom(this);
 		}
 		
 	}
 
+	
 	public void removeFeedback()
 	{
 		TekstVakPanel statPanel = isInIdeasStatistiek();
@@ -5653,6 +5641,42 @@ private Object CamelCase(String name) {
 	public void setParentStappen(SamengesteldeStappenPanel panel)
 	{
 		parentStappen = panel;
+	}
+
+	public void zoom(TekstVak vak, int rij, int kolom) {
+		for(int i = 0; i < tekstVakken.length; i++)
+		{
+			for(int j = 0; j < tekstVakken[i].length; j ++)
+			{
+				if (i != rij && j != kolom)
+					tekstVakken[i][j].setVisible(false);				
+			}
+		}
+		setCurrentSize(Math.round(breedtes.get(kolom).floatValue()),  Math.round(hoogtes.get(rij).floatValue()) );
+		if(parent != null) {
+			parent.zoom(this);
+		}
+	}
+
+	public void unzoom(TekstVak tekstVak, int rij, int kolom) {
+		for(int i = 0; i < tekstVakken.length; i++)
+		{
+			for(int j = 0; j < tekstVakken[i].length; j ++)
+			{
+				if (i != rij && j != kolom)
+					tekstVakken[i][j].setVisible(true);				
+			}
+		}
+		float breedte = breedtes.stream().collect(Collectors.summingDouble(Double::doubleValue)).floatValue();
+	    if (breedtes.size()>1) breedte += cellSpaceColumn * (breedtes.size()-1);
+		float hoogte =  hoogtes.stream().collect(Collectors.summingDouble(Double::doubleValue)).floatValue();
+		if (hoogtes.size()>1) hoogte += cellSpaceRow * (hoogtes.size()-1);
+		
+		setCurrentSize(Math.round(breedte), Math.round(hoogte));
+		if(parent != null) {
+			parent.unzoom(this);
+		}
+		
 	}
 
 	
