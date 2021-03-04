@@ -77,8 +77,10 @@ public class TabletActivityMapper implements ActivityMapper
 			if(item == null)
 			{
 				item = new SelectModuleItem(id, SelectModuleItem.Type.MODULE);
+				item.setPlace(place);
 				SelectModuleItemHolder.insert(item);
 			} else {
+			    item.setPlace(place);
 				if(item.isExam()) {
 					Activity c = new CourseActivity2(clientFactory, item, place);
 					ExamModuleActivity e = new ExamModuleActivity(clientFactory, item, () -> c, false);
@@ -100,6 +102,7 @@ public class TabletActivityMapper implements ActivityMapper
 				item = new SelectModuleItem(sco);
 				SelectModuleItemHolder.insert(item);
 			}
+            item.setPlace(place);
 			return new ScoActivity(clientFactory, item, where);
 		}
 		
@@ -110,6 +113,7 @@ public class TabletActivityMapper implements ActivityMapper
 			SelectModuleItem item = SelectModuleItemHolder.getScoByID(id);
 			if(item == null)
 				return login.get();
+			item.setPlace(place);
 			final ViewModuleActivity viewModuleActivity = 
 			    place instanceof ViewCoursePlace 
 			    ? new ViewCourseActivity(clientFactory, item, where)
@@ -142,6 +146,7 @@ public class TabletActivityMapper implements ActivityMapper
 			SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);
 			if(item == null)
 				return login.get();
+			item.setPlace(place);
 			return 
 				item.isExam()
 					? new ExamModuleActivity(clientFactory, item)

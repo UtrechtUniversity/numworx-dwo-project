@@ -12,6 +12,7 @@ import org.osgi.util.promise.Promises;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
+import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
@@ -24,6 +25,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.place.shared.Place;
 import com.google.gwt.xml.client.Node;
 
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
@@ -48,6 +50,7 @@ public class SelectModuleItem
 	static {
 		ROOT.setName(Text.constants.standaardModules());
 		ROOT.setDescription("<html><body><b>DWO-modules</b><br>In de DWO is veel oefenmateriaal beschikbaar.  Naast dit oefenmateriaal zijn er ook diverse volledige lessen en lessenseries beschikbaar, die kunnen worden gebruikt als aanvulling op of zelfs vervanging van het reguliere boek. In de etalage kunt u een indruk krijgen van de mogelijkheden die de DWO biedt voor de wiskundeles.</body></html>");
+		ROOT.setPlace(new TreeModulePlace());
 	}
 	
 	
@@ -65,6 +68,7 @@ public class SelectModuleItem
 	private DomClassCourse classCourse;
 	private ScoType scoType;
 	private PersistenceId studentModelId;
+	private Place place;
 
 	public ScoType getScoType() {
 		if (getCourseType() == CourseType.assesment)
@@ -423,5 +427,13 @@ public class SelectModuleItem
 		if(classCourse != null) 
 			classCourse.setNotAfter(date);
 	}
+
+  public Place getPlace() {
+    return place;
+  }
+
+  public void setPlace(Place place) {
+    this.place = place;
+  }
 	
 }

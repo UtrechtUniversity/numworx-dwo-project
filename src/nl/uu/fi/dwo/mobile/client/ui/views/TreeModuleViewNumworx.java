@@ -273,7 +273,9 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		    
 		    if(click(eventType) && close(event)) {
 		    	Place place;
-		    	if(value.getType() == Type.SCO)
+		    	if (value.getPlace() != null)
+		    	  place = value.getPlace();
+		    	else if(value.getType() == Type.SCO)
 		    		place = new ViewModulePlace(value.getID());
 		    	else
 		    		place = new TreeModulePlace(value.getID());
@@ -496,8 +498,9 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				favIcon.getParent().setStyleName(style.faviconOFF(), !isLabel(item));
 				title.getParent().setStyleName(style.titlePanelFULL(), !isLabel(item));
 				Object upId=item.getParentID();
-				if(upId==null) upId = "0";
-				header.setUpPlace(new TreeModulePlace(upId));
+                upId = item.getParentID();
+                if(upId==null) header.setUpPlace(header.getHomePlace());
+                else header.setUpPlace(item.getParent().getPlace());
 			break;
 		case MODULE:
 				title.setText(item.getName());
@@ -517,8 +520,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				favIcon.getParent().setStyleName(style.faviconOFF(), !isLabel(item));
 				title.getParent().setStyleName(style.titlePanelFULL(), !isLabel(item));
 				upId = item.getParentID();
-				if(upId==null) upId = "0";
-				header.setUpPlace(new TreeModulePlace(upId));
+				if(upId==null) header.setUpPlace(header.getHomePlace());
+				else header.setUpPlace(item.getParent().getPlace());
 			break;
 		default:
 			

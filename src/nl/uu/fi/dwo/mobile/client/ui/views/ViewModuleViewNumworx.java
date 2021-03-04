@@ -25,8 +25,6 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.googlecode.mgwt.ui.client.widget.HeaderButton;
-
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -36,7 +34,6 @@ import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 
@@ -220,10 +217,9 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		ListIterator<SelectModuleItem> iter = trail.listIterator(Math.min(trail.size(),3));
 		clearKruimels();
 		while (iter.hasPrevious()) {
-			SelectModuleItem selectModuleItem = (SelectModuleItem) iter.previous();
+			SelectModuleItem selectModuleItem = iter.previous();
 			String title = selectModuleItem.getName();
-			String id = selectModuleItem.getID().toString();
-			final TreeModulePlace place = new TreeModulePlace(id);
+			final Place place = selectModuleItem.getPlace();
 			InlineLabel a = new InlineLabel(title);
 			a.setStyleName(t.kruimelpad());
 			kruimels.add(a);
@@ -238,11 +234,12 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 			kruimels.add(new InlineLabel(" > "));
 		}
 
+        HeaderView headerView = DWOplayer.clientfactory.getHeaderView();
 		if(!trail.isEmpty())
-			upId = new TreeModulePlace(trail.get(0).getID());
+			upId = trail.get(0).getPlace();
 		else
-			upId = new TreeModulePlace();
-		DWOplayer.clientfactory.getHeaderView().setUpPlace(upId);
+			upId = headerView.getHomePlace();
+        headerView.setUpPlace(upId);
 	}
 	
 	private void clearKruimels() {
@@ -254,13 +251,8 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		}
 		kruimels.clear();
 	}
-
-//	@UiHandler("homeBtn")
-//	void onHomeBtn(ClickEvent ev) {
-//		goTo(new TreeModulePlace());
-//	}
 	
-	private TreeModulePlace upId = new TreeModulePlace();
+	private Place upId = SelectModuleItem.ROOT.getPlace();
 	private Presenter presenter;
 	@UiHandler({"upBtn","up2Btn"})
 	void onUpBtn(ClickEvent ev) {

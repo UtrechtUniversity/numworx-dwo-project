@@ -1,30 +1,27 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
-import java.awt.BasicStroke;
-
-import org.vectomatic.dom.svg.OMSVGCircleElement;
-import org.vectomatic.dom.svg.OMSVGLength;
-import org.vectomatic.dom.svg.OMSVGLineElement;
 import org.vectomatic.dom.svg.OMSVGPathElement;
 import org.vectomatic.dom.svg.OMSVGPathSegList;
 import org.vectomatic.dom.svg.OMSVGRectElement;
-import org.vectomatic.dom.svg.OMSVGTextElement;
 import org.vectomatic.dom.svg.ui.SVGResource;
 import org.vectomatic.dom.svg.utils.SVGConstants;
 
-import com.google.gwt.canvas.dom.client.CssColor;
-
-import fi.wiskopdr.WiskOpdr;
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
 
 public class FullScreenButton extends SVGButton{
 
-	private String code = "";
 	
 	public FullScreenButton(String code) {
 		super(code);
-		this.code = code;
+	}
+	public int getWidth() {
+	  return width;
+	}
+	public int getHeight() {
+	  return height;
+	}
+	public String getText() {
+	  return text;
 	}
 	
 	public FullScreenButton(SVGResource resource) {
@@ -51,7 +48,7 @@ public class FullScreenButton extends SVGButton{
 		rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + e);
 		
 
-		if ("open".equals(code)) {
+		if ("open".equals(text)) {
 			OMSVGPathElement open = doc.createSVGPathElement();
 			OMSVGPathSegList segsPijlDown = open.getPathSegList();
 			segsPijlDown.appendItem(open.createSVGPathSegMovetoAbs(x+r, y+r));
@@ -83,7 +80,7 @@ public class FullScreenButton extends SVGButton{
 			open.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "transparent");
 			svg.appendChild(open);
 		}
-		else if ("close".equals(code)) {
+		else if ("close".equals(text)) {
 			OMSVGPathElement open = doc.createSVGPathElement();
 			OMSVGPathSegList segsPijlDown = open.getPathSegList();
 			segsPijlDown.appendItem(open.createSVGPathSegMovetoAbs(x+d, y+d));

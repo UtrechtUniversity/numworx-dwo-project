@@ -374,6 +374,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	private int responsiveConstant = 0;
 	private double responsiveFactor = 0;
 	private String logID;
+	private boolean fullScreenOption;
+  private FullScreenButton fsBtn;
 	
 	
 	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
@@ -802,6 +804,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			backButton = launchState.getBoolean("backButton");
 		if(launchState.containsKey("hintButton"))
 			hintButton = launchState.getBoolean("hintButton");
+		fullScreenOption = launchState.getBoolean("fullScreenOption", fullScreenOption);
 		
 // FIXME overleg met Peter		
 //		if(ingeklapt) for(int i = 0; i < hoogtes.size(); i++) {
@@ -989,10 +992,38 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 //		if(inklapbaar)
 //		{	initieerKlapUitButton(ingeklapt);
 //		}
-
+		if (fullScreenOption) {
+		  fsBtn = new FullScreenButton("open");
+		  mainPanel2.add(fsBtn);
+		  mainPanel2.setWidgetRightWidth(fsBtn, 0, Unit.PX, fsBtn.getWidth(), Unit.PX);
+		  mainPanel2.setWidgetTopHeight(fsBtn, 0, Unit.PX, fsBtn.getHeight(), Unit.PX);
+		  fsBtn.addButtonListener(this::zoomunzoomAction);
+		}
 	}
 
-	/**
+	private void zoomAction() {
+	  if(!fullScreenOption || "close".equals(fsBtn.getText())) return;
+      orgBreedte = breedte;
+      parent.zoom(this);
+      zetVolledigeBreedte( (int)( (Window.getClientWidth()-20)/responsiveFactor)); // FIXME 20 is toplevel marge
+      fsBtn.setText("close");
+	}
+	
+	private void zoomunzoomAction(Object btn) {
+	  if ("open".equals(fsBtn.getText()))
+	    zoomAction();
+	  else
+	    unzoomAction();
+	}
+	
+	private void unzoomAction() {
+      if(!fullScreenOption|| "open".equals(fsBtn.getText())) return;
+      zetVolledigeBreedte(orgBreedte);
+      parent.unzoom(this);
+      fsBtn.setText("open");
+  }
+
+  /**
 	 * Set up the call out canvas with the callout drawing.
 	 * 
 	 * @param callOutCanvas
@@ -4867,12 +4898,9 @@ private Object CamelCase(String name) {
 		} else if ("action.setNotEditable".equals(command)) {
 			seal(event);
 		} else if ("action.zoom".equals(command)) {
-			orgBreedte = breedte;
-			parent.zoom(this);
-			zetVolledigeBreedte( (int)( (Window.getClientWidth()-20)/responsiveFactor)); // FIXME 20 is toplevel marge
+		      zoomAction();
 		} else if ("action.unzoom".equals(command)) {
-			zetVolledigeBreedte(orgBreedte);
-			parent.unzoom(this);
+		    unzoomAction();
 		}
 		
 	}

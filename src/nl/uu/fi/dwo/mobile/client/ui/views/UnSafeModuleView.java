@@ -13,10 +13,12 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
+import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.Exam;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
 public class UnSafeModuleView extends Composite {
 
@@ -28,6 +30,7 @@ public class UnSafeModuleView extends Composite {
 	@UiField TreeModuleViewNumworxCss style;
 	HeaderView header;
 	PlaceController controller;
+	Object token;
 	
 	interface UnSafeModuleViewUiBinder extends
 			UiBinder<Widget, UnSafeModuleView> {
@@ -42,15 +45,17 @@ public class UnSafeModuleView extends Composite {
 	public void selectItem(SelectModuleItem item) {
 		header.show();
 		title.setText(item.getName());
-		Object upId = item.getParentID();
-		if (upId == null) 
+		SelectModuleItem parent = item.getParent();
+		if (parent == null) 
 			header.setUpPlace(header.getHomePlace());
 		else
-			header.setUpPlace(new TreeModulePlace(upId));
+			header.setUpPlace(parent.getPlace());
+
+		token = PersistenceIdDecoderInterface.instance.idOf(item.getClassCourse().getId(), PersistenceClassType.PersistentClassCourse);
 	}
 
 	@UiHandler("anchor")
 	void onAnchor(ClickEvent click) {
-		controller.goTo(new Exam());
+		controller.goTo(new Exam(token));
 	}
 }

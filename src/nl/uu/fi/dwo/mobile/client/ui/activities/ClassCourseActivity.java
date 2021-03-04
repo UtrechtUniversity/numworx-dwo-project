@@ -73,7 +73,10 @@ public class ClassCourseActivity implements Activity {
       .map(new CoursesOfClasToSelectItems())
       .then(l -> {
         item = l.getValue().get(0);
+        item.setPlace(where);
         SelectModuleItemHolder.insert(item);
+        header.setHomePlace(where);
+        header.setUpPlace(where);
         header.show(); navigation.hide();
         if (!item.isExam())
          item.setChildrenAsync(

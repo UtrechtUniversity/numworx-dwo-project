@@ -151,8 +151,7 @@ public void setTrail(List<SelectModuleItem> trail) {
   while (iter.hasPrevious()) {
       SelectModuleItem selectModuleItem = (SelectModuleItem) iter.previous();
       String title = selectModuleItem.getName();
-      String id = selectModuleItem.getID().toString();
-      final TreeModulePlace place = new TreeModulePlace(id);
+      final Place place = selectModuleItem.getPlace();
       String command = "GOTO:" + mapper.getToken(place);
       JSONObject obj = new JSONObject();
       obj.put("title", new JSONString(title));
@@ -161,9 +160,9 @@ public void setTrail(List<SelectModuleItem> trail) {
   }
   Actions.TRAIL.execute(array.toString());
   
-  TreeModulePlace upId;
+  Place upId;
   if(!trail.isEmpty())
-      upId = new TreeModulePlace(trail.get(0).getID());
+      upId = trail.get(0).getPlace();
   else
       upId = new TreeModulePlace();
   setUpPlace(upId);

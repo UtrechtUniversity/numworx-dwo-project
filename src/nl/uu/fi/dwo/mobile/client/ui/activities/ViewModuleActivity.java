@@ -26,7 +26,6 @@ import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.EmptyView;
@@ -88,7 +87,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	final static private long BEFORE_AFTER = 30000L;
 	final static private long PREPARE_AFTER = BEFORE_AFTER + 5*60000L; // 5 minuten voor tijd.
 	final private boolean isSEB = DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB;
-	final private Place EXIT_AFTER = isSEB ? new LoginPlace() : new TreeModulePlace();
+	final private Place EXIT_AFTER = isSEB ? new LoginPlace() : SelectModuleItem.ROOT.getPlace();
 	
 	private boolean setNotAfter(final AcceptsOneWidget panel) {
 		Date notAfter = sco.getNotAfter();
@@ -358,7 +357,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 			if (isSEB)
 				goTo(new LoginPlace());
 			else
-				goTo(new TreeModulePlace(sco.getParentID()));
+				goTo(sco.getParent().getPlace());
 		}
 		else if(href.startsWith("goto:.")) defaultContext.gotoUrl(href);
 		else if(href.startsWith("goto:")){
@@ -441,7 +440,8 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
       opdrNav.setChanged(false); 
     if (ev.isSlow() && !sco.isExam()) // no timeout bij exams
     {
-      goTo(new TreeModulePlace(sco.getParentID()));
+      Place place = sco.getParent().getPlace();
+      goTo(place);
     }
   }
 

@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
-import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 import javax.inject.Inject;
@@ -11,6 +10,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.place.shared.Place;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -93,9 +93,11 @@ public class ExamModuleView extends Composite {
 		centerPanel.setStyleName(style.folderBackground(), !hasImage);
 		favIcon.getParent().setStyleName(style.faviconOFF(), !isLabel(item));
 		title.getParent().setStyleName(style.titlePanelFULL(), !isLabel(item));
-		Object parent = item.getParentID();
-		if (parent == null) parent = "0"; // wrong place?
-		header.setUpPlace(new TreeModulePlace(parent));
+		SelectModuleItem parent = item.getParent();
+		Place place;
+		if (parent == null) place = header.getHomePlace();
+		else place = parent.getPlace();
+		header.setUpPlace(place);
 	
 	}
 	private boolean isLabel(SelectModuleItem item) {
