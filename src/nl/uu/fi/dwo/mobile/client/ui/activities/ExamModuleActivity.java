@@ -22,10 +22,12 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
+import dagger.MembersInjector;
+
 public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 
 
-	private ClientFactory clientFactory;
+	@Inject ClientFactory clientFactory;
 	private SelectModuleItem item;
 	private Activity delegate;
 	private Provider<? extends Activity> provider;
@@ -40,6 +42,13 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 		this.item = i;
 		this.provider = provider;
 		this.skipPassword = b;
+	}
+	
+	public ExamModuleActivity(SelectModuleItem i, Provider<? extends Activity> provider, MembersInjector<ExamModuleActivity> injector) {
+	  injector.injectMembers(this);
+	  this.item = i;
+	  this.provider = provider;
+	  this.skipPassword = item.getType() == SelectModuleItem.Type.SCO;
 	}
 	
 	public ExamModuleActivity(ClientFactory factory, SelectModuleItem i) {

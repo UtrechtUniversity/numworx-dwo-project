@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewCoursePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
@@ -46,14 +47,17 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
+import dagger.MembersInjector;
+
 public class CourseActivity2 extends AbstractActivity implements Activity, GotoController {
 
-	private ClientFactory clientFactory;
-	private SelectModuleItem item;
+	@Inject ClientFactory clientFactory;
 	@Inject PlaceController placeController;
 	@Inject Provider<NoCourseView> noCourseView;
-	private Place where;
-	private HeaderView headerView;
+    @Inject HeaderView headerView;
+
+    private Place where;
+    private SelectModuleItem item;
 
 	public CourseActivity2(ClientFactory clientFactory, SelectModuleItem item, Place where) {
 		this.clientFactory = clientFactory;
@@ -64,6 +68,12 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
 		headerView = clientFactory.getHeaderView();
 	}
 
+	public CourseActivity2(SelectModuleItem item, Place where, MembersInjector<CourseActivity2> injector) {
+	  this.item = item;
+	  this.where = where;
+	  injector.injectMembers(this);
+	}
+	
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
@@ -215,6 +225,9 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
 	    if (place instanceof LoginPlace) {
 	        place = new LoginPlace(where); // logout/login
 	      }
+	    if (place instanceof TreeModulePlace) {
+	      place = where;
+	    }
 		placeController.goTo(place);
 	}
 }

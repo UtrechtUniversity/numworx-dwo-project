@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import org.osgi.util.promise.Promise;
 
-import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.shared.EventBus;
@@ -16,10 +16,9 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import dagger.Lazy;
+import dagger.MembersInjector;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.CoursesOfClasToSelectItems;
-import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
@@ -27,14 +26,10 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.mobile.client.ui.places.Hash;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.c;
-import nl.uu.fi.dwo.mobile.client.ui.views.ExamModuleView;
-import nl.uu.fi.dwo.mobile.client.ui.views.ExamModuleView.Presenter;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
+import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
 import nl.uu.fi.dwo.mobile.client.ui.views.UnSafeModuleView;
-import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
-import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -42,18 +37,23 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
-public class ClassCourseActivity extends AbstractActivity {
+public class ClassCourseActivity implements Activity {
 
   @Inject ClassCourseActivity() {}
   @Inject PlaceController placeController;
   @Inject RPCHandler rpc;
   @Inject Lazy<UnSafeModuleView> unsafeModuleView;
+  @Inject Lazy<NoCourseView> noCourseView;
   @Inject TrafficAgent barrier;
   @Inject HeaderView header;
   @Inject NavigationView navigation;
   @Inject DwoGlobalVars instance;
+  @Inject MembersInjector<CourseActivity2> caInjector;
+  @Inject MembersInjector<ExamModuleActivity> exInjector;
+  
   private Promise<DomCoursesOfSchoolClass> promise;
   private SelectModuleItem item;
+  private Activity delegate;
 
   @Override
   public void start(AcceptsOneWidget panel, EventBus eventBus) {
@@ -84,12 +84,16 @@ public class ClassCourseActivity extends AbstractActivity {
                         return scos;
                     }).map(new SCO_TO_MODULEITEM(item)));
         
-        Place cp = Hash.Type.c.getT().getPlace(item.getID().toString());
-        goToAST(cp);
+        Provider<Activity> activity = () -> new CourseActivity2(item, where, caInjector);
+        if (item.isExam()) {
+          delegate = new ExamModuleActivity(item, activity, exInjector);
+        } else 
+          delegate = activity.get();
+        delegate.start(panel, eventBus);
         return null;
       })
       
-      .then(null, f -> placeController.goTo(new LoginPlace(where)));
+      .then(null, f -> panel.setWidget(noCourseView.get()));
       
   }
 
@@ -105,33 +109,21 @@ public class ClassCourseActivity extends AbstractActivity {
     return p;
   }
 
-//  @Override
-//  public void onKO() {
-//    Place where = placeController.getWhere();
-//    goToAST(new LoginPlace(where));
-//  }
-//
-//  @Override
-//  public void onOk(String password, ExamModuleView view) {
-//    Promise<List<SelectModuleItem>> scos = 
-//    barrier.barrier().then(p -> promise)
-//    .then(p -> rpc.startExam(p.getValue().getClassCourses().get(0).getKey().getIdString(), password))
-//    .then(p -> rpc.getScos(promise.getValue().getCourses().get(0).getValue()), f -> view.showFailure(f.getFailure()))
-//    .map(new SCO_TO_MODULEITEM(item));
-// 
-//    item.setChildrenAsync(scos);
-//
-//    
-//    scos.then (p -> {
-//      Place cp = Hash.Type.c.getT().getPlace(item.getID().toString());
-//      goToAST(cp);
-//      return null;
-//    }, 
-//      f -> view.showFailure(f.getFailure())
-//    );
-//
-//    
-//    
-//  }
+  @Override
+  public String mayStop() {
+    if (delegate != null) return delegate.mayStop();
+    return null;
+  }
+
+  @Override
+  public void onCancel() {
+    if (delegate != null) delegate.onCancel();
+  }
+
+  @Override
+  public void onStop() {
+    if (delegate != null) delegate.onStop();
+    
+  }
 
 }
