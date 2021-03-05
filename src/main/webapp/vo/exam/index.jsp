@@ -20,8 +20,17 @@
 <%	  
 	}
 	else if ( needSEB ) {
+	  String leerling = request.getParameter("id"); 
+	  try { 
+	    Integer.parseInt(leerling);
+	  } catch(Exception e) {
+	 	leerling = "leerling";
+	  }
 %>
-<a href='sebs://<%=server %>/toets/leerling.seb'>Start de beveiligde <strong>toets</strong> omgeving</a>
+<a href='sebs://<%=server %>/toets/<%=leerling %>.seb'>Start de beveiligde <strong>toets</strong> omgeving</a>
+<br>SEB QR Code: <img 
+	style='vertical-align: middle'
+	src='/dwo/qrcode.png?qr=sebs://<%=server %>/toets/<%=leerling %>.seb' >
 <%
 	} else {
 %>

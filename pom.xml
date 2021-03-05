@@ -178,6 +178,16 @@
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
+		<dependency>
+		    <groupId>com.google.zxing</groupId>
+		    <artifactId>core</artifactId>
+		    <version>3.4.1</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.google.zxing</groupId>
+		    <artifactId>javase</artifactId>
+		    <version>3.4.1</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<resources>
@@ -584,7 +594,7 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<DWOplayerVersion>2.4.15</DWOplayerVersion>
+		<DWOplayerVersion>2.4.16-SNAPSHOT</DWOplayerVersion>
 		<DWOmAccessVersion>2.4.7</DWOmAccessVersion>
 		<RegisterVersion>2.4.14</RegisterVersion>
 		<DWOGwtClientVersion>2.4.15</DWOGwtClientVersion>

@@ -394,10 +394,18 @@
   	<servlet-name>sebhosting</servlet-name>
   	<servlet-class>fi.dwo.server.db.SEBHosting</servlet-class>
   </servlet>
-
+	<servlet>
+		<servlet-name>qrcode</servlet-name>
+		<servlet-class>fi.dwo.server.qr.QRServlet</servlet-class>
+	</servlet>
     <!--
     servlet mappings 
     -->
+	<servlet-mapping>
+		<servlet-name>qrcode</servlet-name>
+		<url-pattern>/dwo/qrcode.png</url-pattern>
+	</servlet-mapping>
+
    <servlet-mapping>
    		<servlet-name>snoop</servlet-name>
    		<url-pattern>/dwo/snoop</url-pattern>
