@@ -37,6 +37,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	private int rij;
 	private int kolom;
 	private ArrayList<Object> opdrachtObjects = new ArrayList<Object>();
+	private ArrayList<Object> opdrachtObjectsForLayout = opdrachtObjects;
 	private ArrayList<TekstVakPanel> zwevendeTekstVakken = new ArrayList<TekstVakPanel>();
 	private int ashoogte;
 	private double tekstVakBreedte;
@@ -116,9 +117,10 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	}
 	
 
-	public void zetOpdrachtObjects(ArrayList<Object> objects)
+	public void zetOpdrachtObjects(ArrayList<Object> objects, ArrayList<Object> layout)
 	{
 		this.opdrachtObjects = objects;
+		this.opdrachtObjectsForLayout = layout;
 	}
 	
 	public ArrayList<Object> getOpdrachtObjects()
@@ -280,7 +282,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	
 	public void setObjects(ArrayList<Object> opdrachtObjects)
 	{
-		this.opdrachtObjects = opdrachtObjects;
+		this.opdrachtObjects = this.opdrachtObjectsForLayout = opdrachtObjects;
 		
 		aantalRegels = 1;
 		
@@ -1276,7 +1278,11 @@ public class TekstVak extends LayoutPanel //implements InteractionView
   public void reLayout() {
     clearRegels();
     zwevendeTekstVakken.clear();
-    setObjects(getOpdrachtObjects()); 
+// keep subset
+    ArrayList<Object> all = opdrachtObjects;
+    ArrayList<Object> layout = opdrachtObjectsForLayout;
+    setObjects(opdrachtObjectsForLayout); 
+    zetOpdrachtObjects(all, layout);
     resize();
   }
 
@@ -1293,7 +1299,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		);
 		ArrayList<Object> single = new ArrayList<>(); single.add(tekstVakPanel);
 		setObjects(single);
-		zetOpdrachtObjects(all);
+		zetOpdrachtObjects(all, single);
 		//resize();
 	}
 
@@ -1309,6 +1315,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			regelLayer.setWidgetVisible(((IsWidget) item).asWidget(), true)
 		);
 		setObjects(all);
+		zetOpdrachtObjects(all, all);
 		//resize();
 	}
 

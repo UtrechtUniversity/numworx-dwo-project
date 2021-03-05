@@ -1020,6 +1020,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
       if(!fullScreenOption|| "open".equals(fsBtn.getText())) return;
       zetVolledigeBreedte(orgBreedte);
       parent.unzoom(this);
+      zetVolledigeBreedte(orgBreedte);
+      
       fsBtn.setText("open");
   }
 
@@ -1321,9 +1323,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 					opdrachtObjects.add(queuedObject);
 					queuedObject = null;
 				}
-				
-				tekstVakken[i][j].zetOpdrachtObjects(opdrachtObjects);
-				
+								
 				//eerst zorgen dat alle opdrachtObjects goed geïnitialiseerd zijn, daarna zet je ze netjes in het tekstvak neer.
 				//voor goede initialisatie van sleepopdr etc is het wel nodig dat de opdrachtobjects al aan het tekstvak zijn toegevoegd.
 				aantalVakken = initialiseerObjects(opdrachtObjects, opdrachtGegevens, i, j, aantalVakken);
@@ -4838,7 +4838,6 @@ private Object CamelCase(String name) {
 					ArrayList<Object> objectArray = new ArrayList<Object>();
 					objectArray.add(contentString);
 					tekstVakken[0][0].clearRegels();
-					tekstVakken[0][0].zetOpdrachtObjects(objectArray);
 					tekstVakken[0][0].setObjects(objectArray);
 					LOG.info("was here");
 				}
@@ -4933,7 +4932,8 @@ private Object CamelCase(String name) {
 			for(int i = 0; i < opdrObjects.size(); i++)
 				interactionViewObjects.remove(opdrObjects.get(i));
 			tekstVakken[stapNr-1][breedtes.size()-1].clear();
-			tekstVakken[stapNr-1][breedtes.size()-1].zetOpdrachtObjects(new ArrayList<Object>());
+			ArrayList<Object> empty = new ArrayList<Object>();
+            tekstVakken[stapNr-1][breedtes.size()-1].zetOpdrachtObjects(empty, empty);
 			if(stapNr > 0)	
 				stapNr--;
 			if(stappen.size() > stapNr)
@@ -5085,7 +5085,7 @@ private Object CamelCase(String name) {
 		Connector.calculateSubscriptions(xWidgetMap.values());
 		ArrayList<Object> list = new ArrayList<Object>();
 		list.add(tvp);
-		tekstVakken[row][column].zetOpdrachtObjects(list);
+		tekstVakken[row][column].zetOpdrachtObjects(list,list);
 		tekstVakken[row][column].setObjects(list);
 		
 		//setVisibility should not yet been done in setState, so leave out of this method and add separately in maakStap. 
@@ -5116,7 +5116,7 @@ private Object CamelCase(String name) {
 			}
 		}
 		
-		tekstVakken[row][column].zetOpdrachtObjects(opdrachtObjects);
+		tekstVakken[row][column].zetOpdrachtObjects(opdrachtObjects, opdrachtObjects);
 		initialiseerObjects(opdrachtObjects, opdrachtGegevens, row, column, 0);
 		tekstVakken[row][column].setObjects(opdrachtObjects);
 	}

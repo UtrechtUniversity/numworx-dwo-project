@@ -13,6 +13,7 @@ import org.osgi.util.promise.Promises;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
@@ -429,6 +430,10 @@ public class SelectModuleItem
 	}
 
   public Place getPlace() {
+    if(place == null) {
+      if (type == Type.SCO) place = new ViewModulePlace(id);
+      else place = new TreeModulePlace(id);
+    }
     return place;
   }
 
