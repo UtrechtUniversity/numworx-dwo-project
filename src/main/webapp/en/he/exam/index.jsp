@@ -44,7 +44,7 @@ if ("shibboleth".equals(request.getAuthType())) clientId = "f9af29c4-cfc5-11ea-8
 %>
 <h1>Installeren</h1>
 <ul>
-	<li><a href='https://www.dwo.nl/downloads/SEB_3.0.1.163_SetupBundle.exe'>Safe Exam Browser Windows (3.0.1)</a></li>
+	<li><a href='https://www.dwo.nl/downloads/SEB_3.1.1.250_SetupBundle.exe'>Safe Exam Browser Windows (3.1.1)</a></li>
 	<li><a href='https://www.dwo.nl/downloads/SafeExamBrowser-2.2.1.dmg'>Safe Exam Browser MacOs (2.2.1)</a></li>
 </ul>
 Please note, only these versions work correctly.
