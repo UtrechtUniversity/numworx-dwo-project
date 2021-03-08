@@ -5676,10 +5676,16 @@ private Object CamelCase(String name) {
 		{
 			for(int j = 0; j < tekstVakken[i].length; j ++)
 			{
-				if (i != rij && j != kolom)
+				if (i != rij || j != kolom)
 					tekstVakken[i][j].setVisible(false);				
 			}
 		}
+		Style style = mainPanel.getElement().getStyle();
+        style.clearMargin();
+		style.setProperty("borderSpacing", "0px 0px");
+		style.clearBorderWidth();
+       // mainPanel.getElement().getStyle().setProperty("margin", (-0 - randDikte) + "px " + (-0 - randDikte) + "px");
+
 		setCurrentSize(Math.round(breedtes.get(kolom).floatValue()),  Math.round(hoogtes.get(rij).floatValue()) );
 		if(parent != null) {
 			parent.zoom(this);
@@ -5691,7 +5697,7 @@ private Object CamelCase(String name) {
 		{
 			for(int j = 0; j < tekstVakken[i].length; j ++)
 			{
-				if (i != rij && j != kolom)
+				if (i != rij || j != kolom)
 					tekstVakken[i][j].setVisible(true);				
 			}
 		}
@@ -5699,6 +5705,11 @@ private Object CamelCase(String name) {
 	    if (breedtes.size()>1) breedte += cellSpaceColumn * (breedtes.size()-1);
 		float hoogte =  hoogtes.stream().collect(Collectors.summingDouble(Double::doubleValue)).floatValue();
 		if (hoogtes.size()>1) hoogte += cellSpaceRow * (hoogtes.size()-1);
+
+		Style style = mainPanel.getElement().getStyle();
+        style.setProperty("borderSpacing", cellSpaceColumn + "px " + cellSpaceRow + "px");
+        style.setProperty("margin", (-cellSpaceRow - randDikte) + "px " + (-cellSpaceColumn - randDikte) + "px");
+        style.setBorderWidth(randDikte, Unit.PX);
 		
 		setCurrentSize(Math.round(breedte), Math.round(hoogte));
 		if(parent != null) {
