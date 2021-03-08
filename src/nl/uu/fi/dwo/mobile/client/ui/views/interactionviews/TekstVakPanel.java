@@ -5448,6 +5448,10 @@ private Object CamelCase(String name) {
 			return;
 		}
 		if(volledigeBreedte && breedtes!=null) {
+/*
+ * Onderstaande is niet goed als we zoomen. Dan is maar één kolom zichtbaar en de rest niet.
+ */
+			
 			int aantalKolommen = breedtes.size();
 			int teVerdelenBreedte = this.breedte - (aantalKolommen-1)*cellSpaceColumn;
 			double factor = 1.0*(breedte-(aantalKolommen-1)*cellSpaceColumn)/teVerdelenBreedte;
