@@ -29,9 +29,12 @@ public class SEBHosting extends HttpServlet {
 		if (path == null) {
 			path = getServletContext().getRealPath(req.getServletPath());
 		}
+		File f = new File(path).getParentFile();
+		f = new File(f, "leerling.seb");
+		log("reading " + f + " for " + path);
 		Reader in;
 		try {
-			in = new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8);
+			in = new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8);
 		} catch (FileNotFoundException e) {
 			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
