@@ -1005,7 +1005,10 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	  if(!fullScreenOption || "close".equals(fsBtn.getText())) return;
       orgBreedte = breedte;
       parent.zoom(this);
-      zetVolledigeBreedte( (int)( (Window.getClientWidth()-20)/responsiveFactor)); // FIXME 20 is toplevel marge
+      if (responsive)
+    	  zetVolledigeBreedte( (int)( (Window.getClientWidth()-20)/responsiveFactor)); // FIXME 20 is toplevel marge
+      else
+    	  zetVolledigeBreedte(orgBreedte);
       fsBtn.setText("close");
 	}
 	
@@ -5451,7 +5454,7 @@ private Object CamelCase(String name) {
 /*
  * Onderstaande is niet goed als we zoomen. Dan is maar één kolom zichtbaar en de rest niet.
  */
-			
+		if (zoomKolom == null) {	
 			int aantalKolommen = breedtes.size();
 			int teVerdelenBreedte = this.breedte - (aantalKolommen-1)*cellSpaceColumn;
 			double factor = 1.0*(breedte-(aantalKolommen-1)*cellSpaceColumn)/teVerdelenBreedte;
@@ -5482,6 +5485,11 @@ private Object CamelCase(String name) {
 					tekstVakken[j][i].reLayout();
 				}
 			}
+		} else {
+			tekstVakken[zoomRij][zoomKolom].setSize(breedte, tekstVakken[zoomRij][zoomKolom].getHeight());
+			this.breedte = breedte;
+			tekstVakken[zoomRij][zoomKolom].reLayout();
+		}
 		}
 		if(responsive) {
 			int w = breedte;
@@ -5675,6 +5683,9 @@ private Object CamelCase(String name) {
 		parentStappen = panel;
 	}
 
+	private Integer zoomKolom;
+	private Integer zoomRij;
+	
 	public void zoom(TekstVak vak, int rij, int kolom) {
 		for(int i = 0; i < tekstVakken.length; i++)
 		{
@@ -5688,6 +5699,8 @@ private Object CamelCase(String name) {
         style.clearMargin();
 		style.setProperty("borderSpacing", "0px 0px");
 		style.clearBorderWidth();
+		zoomKolom = Integer.valueOf(kolom);
+		zoomRij   = Integer.valueOf(rij);
        // mainPanel.getElement().getStyle().setProperty("margin", (-0 - randDikte) + "px " + (-0 - randDikte) + "px");
 
 		setCurrentSize(Math.round(breedtes.get(kolom).floatValue()),  Math.round(hoogtes.get(rij).floatValue()) );
@@ -5705,6 +5718,7 @@ private Object CamelCase(String name) {
 					tekstVakken[i][j].setVisible(true);				
 			}
 		}
+		zoomKolom = null;
 		float breedte = breedtes.stream().collect(Collectors.summingDouble(Double::doubleValue)).floatValue();
 	    if (breedtes.size()>1) breedte += cellSpaceColumn * (breedtes.size()-1);
 		float hoogte =  hoogtes.stream().collect(Collectors.summingDouble(Double::doubleValue)).floatValue();
