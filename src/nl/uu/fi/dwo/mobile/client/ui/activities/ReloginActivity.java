@@ -5,11 +5,11 @@ import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
+import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
-import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.text.Text;
@@ -18,7 +18,7 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 
-public class ReloginActivity extends MGWTAbstractActivity {
+public class ReloginActivity extends AbstractActivity {
 
 	private ClientFactory clientFactory;
 	private Place next;

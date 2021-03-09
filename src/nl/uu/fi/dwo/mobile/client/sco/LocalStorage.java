@@ -1,9 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.sco;
 
+import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.History;
-import com.googlecode.mgwt.storage.client.LocalStorageGwtImpl;
-import com.googlecode.mgwt.storage.client.LocalStorageImplForTests;
-import com.googlecode.mgwt.storage.client.Storage;
 
 public class LocalStorage extends SCORM_guest {
 	private Storage storage;
@@ -12,7 +10,7 @@ public class LocalStorage extends SCORM_guest {
 	
 	@Override
 	public String GetValue(String name) {
-		if(storage.isSupported())
+		if(Storage.isSupported())
 		{
 			String value = storage.getItem(prefix + name);
 			if(value != null)
@@ -37,7 +35,7 @@ public class LocalStorage extends SCORM_guest {
 
 	@Override
 	public String SetValue(String name, String value) {
-		if(storage.isSupported())
+		if(Storage.isSupported())
 			storage.setItem(prefix + name, value);
 		return super.SetValue(name, value);
 	}
@@ -53,10 +51,10 @@ public class LocalStorage extends SCORM_guest {
 	 * @return
 	 */
 	private Storage getStorage() {
-		if( com.google.gwt.storage.client.Storage.isSupported())
-			return new LocalStorageGwtImpl();
+		if( Storage.isSupported())
+			return Storage.getLocalStorageIfSupported();
 		else
-			return new LocalStorageImplForTests();
+			return null;
 	}
 
 	public LocalStorage(Storage create) {

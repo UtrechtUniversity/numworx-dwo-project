@@ -1,9 +1,8 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
-import com.google.gwt.event.dom.client.HasAllKeyHandlers;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyUpHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.googlecode.mgwt.dom.client.event.tap.HasTapHandlers;
 
 public interface LoginView extends IsWidget
 {
@@ -12,8 +11,8 @@ public interface LoginView extends IsWidget
 	void allowGuest(boolean allow);
 	void setupModule();
 	
-	HasTapHandlers getLoginBtn();
-	HasTapHandlers getGuestBtn();
+	HasClickHandlers getLoginBtn();
+	HasClickHandlers getGuestBtn();
 	HasKeyUpHandlers getMainPanel();
 	
 	void showError(String msg);

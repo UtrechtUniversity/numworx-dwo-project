@@ -29,14 +29,13 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
+import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
-
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 
-public class TreeModuleActivity extends MGWTAbstractActivity implements GotoController, MessageEventHandler, IdleHandler
+public class TreeModuleActivity extends AbstractActivity implements GotoController, MessageEventHandler, IdleHandler
 {
 
 	ClientFactory clientFactory;

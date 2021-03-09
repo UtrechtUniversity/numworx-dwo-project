@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.mobile.client.text.Text;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyUpHandlers;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
@@ -29,8 +30,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.dom.client.event.tap.HasTapHandlers;
-import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 
 /**
  * @author wim
@@ -133,40 +132,50 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 		// TODO Auto-generated method stub
 		
 	}
-	TapHandler loginHandler, guestHandler;
+	ClickHandler loginHandler, guestHandler;
 	@Override
-	public HasTapHandlers getLoginBtn() {
-		return new HasTapHandlers() {
+	public HasClickHandlers getLoginBtn() {
+		return new HasClickHandlers() {
 			
 			@Override
-			public HandlerRegistration addTapHandler(TapHandler handler) {
+			public HandlerRegistration addClickHandler(ClickHandler handler) {
 				loginHandler = handler;
 				return loginBtn.addClickHandler(new ClickHandler() {
 					
 					@Override
 					public void onClick(ClickEvent event) {
 						if(! username.getText().isEmpty())
-							loginHandler.onTap(null);
+							loginHandler.onClick(event);
 					}
 				});
+			}
+
+			@Override
+			public void fireEvent(GwtEvent<?> event) {
+				loginBtn.fireEvent(event);
 			}
 		};
 	}
 	@Override
-	public HasTapHandlers getGuestBtn() {
-		return new HasTapHandlers() {
+	public HasClickHandlers getGuestBtn() {
+		return new HasClickHandlers() {
 
 			@Override
-			public HandlerRegistration addTapHandler(TapHandler handler) {
+			public HandlerRegistration addClickHandler(ClickHandler handler) {
 				guestHandler = handler;
 				return loginBtn.addClickHandler(new ClickHandler() {
 					
 					@Override
 					public void onClick(ClickEvent event) {
 						if (username.getText().isEmpty() && allow) 
-							guestHandler.onTap(null);
+							guestHandler.onClick(event);
 					}
 				});
+			}
+
+			@Override
+			public void fireEvent(GwtEvent<?> event) {
+				loginBtn.fireEvent(event);
 			}
 			
 		};
@@ -216,6 +225,6 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 	@UiHandler({"guestBtn"}) 
 	void onGuestBtn(ClickEvent e) {
 		if (allow && guestHandler != null) 
-			guestHandler.onTap(null);	
+			guestHandler.onClick(e);	
 	}
 }

@@ -22,7 +22,6 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
 import nl.uu.fi.dwo.mobile.client.ui.places.HasHash;
 import nl.uu.fi.dwo.mobile.client.ui.places.Hash;
-import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.Hash.Type;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
@@ -30,6 +29,9 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 
+import com.google.gwt.activity.shared.AbstractActivity;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
@@ -41,11 +43,10 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
-import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
-import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
-import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
+import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.google.web.bindery.event.shared.HandlerRegistrations;
 
-public class LoginActivity extends MGWTAbstractActivity
+public class LoginActivity extends AbstractActivity
 {
 	
 	static final class Login_Stap1 implements Success<DomUserFullwLoginContext, DomSchoolsRolesAndClassesV2> {
@@ -158,6 +159,10 @@ public class LoginActivity extends MGWTAbstractActivity
 	AcceptsOneWidget panel;
 
 	private Deferred<DomUserFullwLoginContext> defer;
+
+	protected HandlerRegistration registrations;
+	
+	
 
 //	public LoginActivity(ClientFactory clientFactory, Place next)
 //	{
@@ -272,17 +277,19 @@ public class LoginActivity extends MGWTAbstractActivity
 						promise = defer.getPromise();
 						panel.setWidget(view);
 					}
-					addHandlerRegistration(view.getLoginBtn().addTapHandler(new TapHandler() {
+					registrations = HandlerRegistrations.compose(
+					
+					(view.getLoginBtn().addClickHandler(new ClickHandler() {
 
 						@Override
-						public void onTap(TapEvent event) {
+						public void onClick(ClickEvent event) {
 							resolve();
 						}
-					}));
-					addHandlerRegistration(view.getGuestBtn().addTapHandler(new TapHandler() {
+					})) ,
+					(view.getGuestBtn().addClickHandler(new ClickHandler() {
 
 						@Override
-						public void onTap(TapEvent event) {
+						public void onClick(ClickEvent event) {
 							if (clientFactory.withUser())
 								clientFactory.logout(); // fail safe?
 							if (defer != null)
@@ -292,10 +299,10 @@ public class LoginActivity extends MGWTAbstractActivity
 									}
 								});
 						}
-					}));
+					})),
 
 					// Register enter handler
-					addHandlerRegistration(view.getMainPanel().addKeyUpHandler(new KeyUpHandler() {
+					(view.getMainPanel().addKeyUpHandler(new KeyUpHandler() {
 
 						@Override
 						public void onKeyUp(KeyUpEvent event) {
@@ -306,7 +313,7 @@ public class LoginActivity extends MGWTAbstractActivity
 								}
 							}
 						}
-					}));
+					})));
 
 				}
 				Logger.getLogger("DWOplayer").log(Level.FINE, "Done with panel");
@@ -346,5 +353,18 @@ public class LoginActivity extends MGWTAbstractActivity
 	private native static void logout()/*-{
 		$wnd.logout()
 	}-*/;
+
+
+	@Override
+	public void onCancel() {
+		if (registrations != null) registrations.removeHandler();
+		super.onCancel();
+	}
+
+	@Override
+	public void onStop() {
+		if (registrations != null) registrations.removeHandler();
+		super.onStop();
+	}
 
 }
