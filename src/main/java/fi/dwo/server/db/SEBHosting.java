@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -14,6 +13,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import fi.dwo.commons.persistence.entities.PersistentClassCourse;
+import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 
 @SuppressWarnings("serial")
 public class SEBHosting extends HttpServlet {
@@ -29,7 +31,8 @@ public class SEBHosting extends HttpServlet {
 		if (path == null) {
 			path = getServletContext().getRealPath(req.getServletPath());
 		}
-		File f = new File(path).getParentFile();
+		File file = new File(path);
+		File f = file.getParentFile();
 		f = new File(f, "leerling.seb");
 		log("reading " + f + " for " + path);
 		Reader in;
@@ -38,6 +41,16 @@ public class SEBHosting extends HttpServlet {
 		} catch (FileNotFoundException e) {
 			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
+		}
+		Long classcourse = null;
+		String base = file.getName();
+		if (base.endsWith(".seb")) {
+			try { 
+				classcourse = Long.valueOf(base.substring(0, base.length()-4));
+				PersistentClassCourse cc = ClassCourseManager.findEntity(classcourse);
+				if (cc == null) 
+					classcourse = null;
+			} catch(Exception e) {}
 		}
 		BufferedReader reader = new BufferedReader(in);
 		try {
@@ -49,7 +62,10 @@ public class SEBHosting extends HttpServlet {
 			}
 			resp.setContentType("application/seb");
 			resp.setCharacterEncoding("UTF-8");
-			resp.getWriter().write(sb.toString().replace("https://app.dwo.nl", replacement));
+			String content = sb.toString().replace("https://app.dwo.nl", replacement);
+			if (classcourse != null)
+				content = content.replace("toets.jsp", "toets.jsp?id="+classcourse);
+			resp.getWriter().write(content);
 		} finally {
 			reader.close();
 		}
