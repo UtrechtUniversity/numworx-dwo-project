@@ -14,18 +14,19 @@
 <%
 	String host = request.getRemoteAddr();
 	String server = request.getHeader("host");
+	  String leerling = request.getParameter("id");
+	  String id = "";
+	  try { 
+	    id = "?id=" + Long.parseLong(leerling);
+	  } catch(Exception e) {
+	 	leerling = "leerling";
+	  }
 	if ( ! Subnet.netMatchRange(IPRANGE, host) ) {
 %>
 	Het apparaat op dit adres <%=host %> is niet toegestaan voor toetsen. Gebruik een beveiligd apparaat.
 <%	  
 	}
 	else if ( needSEB ) {
-	  String leerling = request.getParameter("id"); 
-	  try { 
-	    Integer.parseInt(leerling);
-	  } catch(Exception e) {
-	 	leerling = "leerling";
-	  }
 %>
 <a href='sebs://<%=server %>/toets/<%=leerling %>.seb'>Start de beveiligde <strong>toets</strong> omgeving</a>
 <br>SEB QR Code: <img 
@@ -34,7 +35,7 @@
 <%
 	} else {
 %>
-	  <a href='/toets/toets.jsp'>Start de beveiligde <strong>exam</strong> omgeving</a>
+	  <a target='_top' href='/toets/toets.jsp<%=id%>'>Start de beveiligde <strong>exam</strong> omgeving</a>
 <%	  
 	}
 
