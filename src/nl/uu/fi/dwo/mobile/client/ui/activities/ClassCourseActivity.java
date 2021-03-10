@@ -10,6 +10,7 @@ import org.osgi.util.promise.Promise;
 
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
@@ -96,7 +97,13 @@ public class ClassCourseActivity implements Activity {
         return null;
       })
       
-      .then(null, f -> panel.setWidget(noCourseView.get()));
+      .then(null, f -> {
+        GWT.log("failure in promise", f.getFailure());
+        NoCourseView w = noCourseView.get();
+        w.setHomePlace(where);
+        w.render();
+        panel.setWidget(w);
+      });
       
   }
 

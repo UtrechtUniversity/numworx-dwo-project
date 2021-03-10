@@ -15,6 +15,8 @@ public class ReloginPlace extends Place implements HasHash
 	public ReloginPlace(Place place) {
 		if(place instanceof Hash)
 			this.token = (Hash) place;
+		if (place instanceof LoginPlace) 
+		  this.token = (Hash) ((LoginPlace) place).getPlace();
 	}
 
 	public ReloginPlace()
