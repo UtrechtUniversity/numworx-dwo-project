@@ -57,6 +57,8 @@ public class DWOPopupPanel extends PopupPanel {
 	private Label titleLabel;
 	private ResizableContentIF content;
 	
+	private Widget parent;
+	
 	private boolean moving = false;
 	private int startX, startY;
 	
@@ -75,6 +77,7 @@ public class DWOPopupPanel extends PopupPanel {
 		this.popupListener = popupListener;
 		
 		this.getElement().getStyle().setProperty("touchAction", "none");
+		
 		
 		getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 		getElement().getStyle().setBorderColor(""+CssColor.make(120,150,202));
@@ -322,7 +325,10 @@ public class DWOPopupPanel extends PopupPanel {
 		if(moving) {
 			int dx = x - startX;
 			int dy = y - startY;
-			this.setPopupPosition(this.getAbsoluteLeft()+dx, Math.max(0,this.getAbsoluteTop()+dy));
+			parent = this.getParent();
+			int w = parent.getOffsetWidth();
+			int h = parent.getOffsetHeight();
+			this.setPopupPosition(Math.min(w-20, Math.max(40-this.getOffsetWidth(),this.getAbsoluteLeft()+dx)), Math.min(h-20, Math.max(0,this.getAbsoluteTop()+dy)));
 			this.show();
 			startX = x;
 			startY = y;
