@@ -1168,17 +1168,24 @@ public class TekstVak extends LayoutPanel //implements InteractionView
   }
 
 	public void zoom(TekstVakPanel tekstVakPanel) {
+        ArrayList<Object> single = new ArrayList<>(); single.add(tekstVakPanel);
+        zetOpdrachtObjects(opdrachtObjects, single);
+        ArrayList<Object> all = getOpdrachtObjects();
+        all.stream().filter(t -> t != tekstVakPanel && (t instanceof IsWidget))
+            .forEach( item -> 
+            regelLayer.setWidgetVisible(((IsWidget) item).asWidget(), false)
+        );
 		
 		parent.zoom(this, rij, kolom);
 		// relayout
 		clearRegels();
 		zwevendeTekstVakken.clear();
-		ArrayList<Object> all = getOpdrachtObjects();
+	    all = getOpdrachtObjects();
 		all.stream().filter(t -> t != tekstVakPanel && (t instanceof IsWidget))
 			.forEach( item -> 
 			regelLayer.setWidgetVisible(((IsWidget) item).asWidget(), false)
 		);
-		ArrayList<Object> single = new ArrayList<>(); single.add(tekstVakPanel);
+		single = new ArrayList<>(); single.add(tekstVakPanel);
 		setObjects(single);
 		zetOpdrachtObjects(all, single);
 		//resize();

@@ -1004,11 +1004,15 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	private void zoomAction() {
 	  if(!fullScreenOption || "close".equals(fsBtn.getText())) return;
       orgBreedte = breedte;
+      if (responsive) {
+        zoomKolom = 0;
+        zoomRij = 0;
+      }
       parent.zoom(this);
-      if (responsive)
-    	  zetVolledigeBreedte( (int)( (Window.getClientWidth()-20)/responsiveFactor)); // FIXME 20 is toplevel marge
-      else
-    	  zetVolledigeBreedte(orgBreedte);
+//      if (responsive)
+//    	  zetVolledigeBreedte( (int)( (Window.getClientWidth()-20)/responsiveFactor)); // FIXME 20 is toplevel marge
+//      else
+//    	  zetVolledigeBreedte(orgBreedte);
       fsBtn.setText("close");
 	}
 	
@@ -1021,9 +1025,10 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	
 	private void unzoomAction() {
       if(!fullScreenOption|| "open".equals(fsBtn.getText())) return;
-      zetVolledigeBreedte(orgBreedte);
+      if (responsive) {
+        zoomKolom = zoomRij = null;
+      }
       parent.unzoom(this);
-      zetVolledigeBreedte(orgBreedte);
       
       fsBtn.setText("open");
   }
@@ -5495,14 +5500,14 @@ private Object CamelCase(String name) {
 			int w = breedte;
  			
 			    w = (int)Math.round(responsiveFactor*breedte + responsiveConstant);
-			    if(responsiveFactor*breedte + responsiveConstant< responsiveMinWidth) {
+			    if(responsiveFactor*breedte + responsiveConstant< responsiveMinWidth || zoomKolom != null ) {
 			    		w = breedte;
 			    }
 			    else {
 			    		w = w-1; // correctie voor afrondingen naar boven
 			    }
 			    		
-			    if(w > responsiveMaxWidth)
+			    if(w > responsiveMaxWidth && zoomKolom == null)
 			    		w = responsiveMaxWidth;
 			
 //			int w = breedte;
@@ -5706,6 +5711,8 @@ private Object CamelCase(String name) {
 		setCurrentSize(Math.round(breedtes.get(kolom).floatValue()),  Math.round(hoogtes.get(rij).floatValue()) );
 		if(parent != null) {
 			parent.zoom(this);
+		} else {
+		  zetVolledigeBreedte(Window.getClientWidth());
 		}
 	}
 
@@ -5732,7 +5739,10 @@ private Object CamelCase(String name) {
 		setCurrentSize(Math.round(breedte), Math.round(hoogte));
 		if(parent != null) {
 			parent.unzoom(this);
+		} else {
+		  zetVolledigeBreedte(Window.getClientWidth());
 		}
+		  
 		
 	}
 
