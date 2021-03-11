@@ -52,7 +52,9 @@ import fi.wiskopdr.text.Text_nl;
  */
 public abstract class DWOplayer
 {
-	//public static final boolean JSON = true;
+	public static final boolean RESPONSIVE = "true".equals(Window.Location.getParameter("responsive"));
+
+  //public static final boolean JSON = true;
 	public static int PROFILE_ID = 77;
 	
 	public static final DWOplayerClientBundle DWO_BUNDLE = GWT.create(DWOplayerClientBundle.class);
@@ -112,10 +114,10 @@ public abstract class DWOplayer
 		return clientfactory.withUser();
 	}	
 	
-	@Deprecated
-	private static Deferred<DomDwoProfileFull> deferredProfile;
-	@Deprecated
-	public static Promise<DomDwoProfileFull> dwoProfile; // NEVER NULL
+//	@Deprecated
+//	private static Deferred<DomDwoProfileFull> deferredProfile;
+//	@Deprecated
+//	private static Promise<DomDwoProfileFull> dwoProfile; // NEVER NULL
 	public static ClientFactory clientfactory;
 
 	/**
@@ -124,8 +126,8 @@ public abstract class DWOplayer
 	public void start()
 	{
 		//Logger.getLogger("DWOplayer").log(Level.WARNING, "Version " + BUILD.version + ", build " + BUILD.buildNumber);
-		deferredProfile = new Deferred<DomDwoProfileFull>();
-		dwoProfile = deferredProfile.getPromise();
+//		deferredProfile = new Deferred<DomDwoProfileFull>();
+//		dwoProfile = deferredProfile.getPromise();
 		setupResources();
 		setupDWOPlayer();
 		initProfile();
@@ -143,8 +145,9 @@ public abstract class DWOplayer
 				r.setDescription(p.getDwoProfileText());
 				return promise;
 			}};
-		dwoProfile = dwoProfile.then(getProfileCallback);
-		deferredProfile.resolveWith(clientfactory.getRPCHandler().getDwoProfile());
+//		dwoProfile = dwoProfile.then(getProfileCallback);
+//		deferredProfile.resolveWith(clientfactory.getRPCHandler().getDwoProfile());
+			clientfactory.getRPCHandler().getDwoProfile().then(getProfileCallback);
 		
 	}
 
@@ -155,7 +158,7 @@ public abstract class DWOplayer
 		ViewPort viewport = new MGWTSettings.ViewPort();
 		viewport.setTargetDensity(DENSITY.MEDIUM);
 		viewport.setUserScaleAble(false).setMinimumScale(1.0).setMaximumScale(1.0);
-		if("true".equals(Window.Location.getParameter("responsive")))
+		if(RESPONSIVE)
 			viewport.setWidthToDeviceWidth();
 		else
 			viewport.setWidth(1024);
