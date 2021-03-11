@@ -78,6 +78,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
@@ -106,7 +107,7 @@ import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
  */
 public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder, NextPrevHandler, ObjectivesHandler, MisconceptionsHandler, HasHeight, CombinedState
 {
-	public class ResizeFocusPanel extends FocusPanel implements RequiresResize, ProvidesResize {
+	public static class ResizeFocusPanel extends FocusPanel implements RequiresResize, ProvidesResize {
 
 		@Override
 		public void onResize() {
@@ -118,6 +119,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		public ResizeFocusPanel(Widget child) {
 			super(child);
 		}
+
+        public ResizeFocusPanel() {
+        }
 
 //		@Override
 //		protected void onAttach() {
@@ -144,7 +148,21 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	interface ViewModuleViewImplUiBinder extends UiBinder<Widget, ViewModuleViewImpl> {
 	}
 
+	static class ResizeFlowPanel extends FlowPanel implements RequiresResize, ProvidesResize {
+	  
+      @Override
+      public void onResize() {       
+        for (Widget w: getChildren()) {
+          if (w instanceof RequiresResize) ((RequiresResize) w).onResize();
+        }
+      }
+      
+	}
+	
+	
 	private Widget createAndBindUI() {
+	    content = new ResizeFlowPanel();
+	    content.setStylePrimaryName("resizeFlowPanel");
 		return uiBinder.createAndBindUi(this);
 	}
 	
@@ -152,13 +170,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	OpdrNav on;
 	private Widget mainPanel;
 	@UiField(provided=true) SimplePanel contentScrollPanel =
-//		new FocusPanel() {
-//		{
-//			Style st = getElement().getStyle();
-//			st.setOverflowX(Overflow.HIDDEN);
-//			st.setOverflowY(Overflow.AUTO);
-//			}
-//	};
 		new ScrollPanel() { 
 		@Override
 		public void setAlwaysShowScrollBars(boolean alwaysShow) {
@@ -2233,7 +2244,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	@UiField LayoutPanel fp;
 	@UiField SimplePanel headerView;
 	@UiField SimplePanel statusView;
-	@UiField FlowPanel content;
+	@UiField(provided=true) FlowPanel content;
 	@UiField Widget kbd;
 	
 	
