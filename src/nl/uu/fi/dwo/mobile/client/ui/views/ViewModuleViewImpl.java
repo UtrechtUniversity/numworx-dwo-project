@@ -456,10 +456,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			boolean itemOpnieuw = false;
 			if (wrap != null && wrap.containsKey("itemOpnieuw"))
 			{
-				itemOpnieuw = wrap.getBoolean("itemOpnieuw");
+				itemOpnieuw = wrap.getBoolean("itemOpnieuw") && !on.isVerzegeld();
 				scoreNav.setItemOpnieuw(itemOpnieuw);
 			}
-			scoreNav.setOpnieuw(opnieuw || opnieuwMogelijk);
+			scoreNav.setOpnieuw((opnieuw || opnieuwMogelijk) && !on.isVerzegeld());
 			
 			if ( (opnieuw || opnieuwMogelijk) && scoreNav.getAllesOpnieuwButton() != null) // alles opnieuw; let op: Noordhoff heeft geen 'alles opnieuw'-knop
 			{
