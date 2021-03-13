@@ -36,8 +36,6 @@ public interface ClientFactory
 	ViewModuleView getEntryView();
 
 
-	LoginView getLoginView();
-
 	TreeModuleView getTreeModuleView();
 	HeaderView getHeaderView();
 	

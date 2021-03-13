@@ -10,9 +10,7 @@ import javax.inject.Singleton;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
@@ -22,15 +20,13 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 
-import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
-import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
-import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.LogoutPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
@@ -42,13 +38,15 @@ public class HeaderViewNone extends HTML implements HeaderView, MessageEventHand
   final Logger LOG = Logger.getLogger(getClass().getName());
   private static final String SEARCH = "SEARCH:";
   private static final String GOTO = "GOTO:";
-  private TrafficAgent agent; 
+  private TrafficAgent agent;
+  private DWOplayerParameters PARAMETERS; 
   
   @Inject
-  public HeaderViewNone(EventBus eventBus, PlaceHistoryMapper mapper, PlaceController controller, TrafficAgent a) {
+  public HeaderViewNone(EventBus eventBus, PlaceHistoryMapper mapper, PlaceController controller, TrafficAgent a, DWOplayerParameters p) {
     this.mapper = mapper;
     this.controller = controller;
     this.agent = a;
+    this.PARAMETERS = p;
     eventBus.addHandler(MessageEvent.TYPE, this);
   }
 
@@ -144,7 +142,7 @@ public void setTrail(List<SelectModuleItem> trail) {
     Actions.TRAIL.execute();
     return;
   }
-  if(DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB)
+  if(PARAMETERS.getSecureMode() == SecureMode.SEB)
       trail.clear();
   JSONArray array = new JSONArray();
   ListIterator<SelectModuleItem> iter = trail.listIterator(Math.min(trail.size(),3));

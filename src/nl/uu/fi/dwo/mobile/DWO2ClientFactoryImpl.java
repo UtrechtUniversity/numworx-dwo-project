@@ -16,6 +16,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import dagger.Lazy;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO4;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO5;
@@ -26,9 +27,9 @@ import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewNone;
-import nl.uu.fi.dwo.mobile.client.ui.views.Login3ViewImpl;
-import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationViewNumworx;
+import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
+import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewBuilder;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -37,21 +38,32 @@ import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
+@SuppressWarnings("deprecation")
 @Singleton
 public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
   
         @Inject TrafficAgent agent;
         @Inject PlaceHistoryHandler placeHistoryHandler;
 		@Inject Lazy<ConfirmEventHandler> confirmHandler;
+	    final Provider<? extends TreeModuleView> treeModuleViewProvider;
+	    TreeModuleView treeModuleView;
+	    final private DwoGlobalVars instance;
+	    final private DWOplayerParameters PARAMETERS;
 
 		@Inject DWO2ClientFactoryImpl(EventBus bus, PlaceController controller,
             Provider<PlaceHistoryMapper> mapper,
             Provider<HeaderViewNone> none,
             @Named("header") Provider<HeaderView> numworx,
             Provider<NavigationViewNumworx> navigation,
-		    Provider<ViewModuleViewBuilder> entry, RPCHandler rpcHandler
+		    Provider<ViewModuleViewBuilder> entry, RPCHandler rpcHandler,
+		    Provider<TreeModuleViewNumworx> view,
+		    DwoGlobalVars vars,
+		    DWOplayerParameters params
 		    ) {
               super(bus, controller, mapper, navigation, entry);
+              treeModuleViewProvider = view;
+              instance = vars;
+              PARAMETERS = params;
               setRPCHandler(rpcHandler);
               setup(none,numworx);
         }
@@ -61,20 +73,17 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 			agent.addBarrier(p);
 		}
 
+        @Override
+        public TreeModuleView getTreeModuleView()
+        {
+          if (treeModuleView == null)
+            return treeModuleView = treeModuleViewProvider.get();
+          return treeModuleView;
+        }
+
 		@Override
 		public Promise<Void> barrier() {
 			return agent.barrier();
-		}
-
-		@Override
-		public LoginView getLoginView()
-		{
-			if (loginView == null) loginView = new Login3ViewImpl();
-			return loginView;
-		}
-
-		private Promise<Void> superLogout() {
-			return super.logout();
 		}
 
 		@Override
@@ -94,12 +103,6 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 
 						@Override
 						public Promise<Void> call(Promise<Void> resolved) throws Exception {
-							return superLogout();
-						}}).
-					then(new Success<Void,Void>() {
-
-						@Override
-						public Promise<Void> call(Promise<Void> resolved) throws Exception {
 							treeModuleView = null;
 							return null;
 						}});
@@ -111,7 +114,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 				api = new SCORM_guest();
 			} else {
 // secure alleen voor studenten!
-				boolean secure = DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB && RoleType.STUDENT == getRoleType();
+				boolean secure = PARAMETERS.getSecureMode() == SecureMode.SEB && RoleType.STUDENT == getRoleType();
                 api = new SCORM_DWO5(getSchoolClass(),
 						DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole(),
 						agent,
@@ -129,7 +132,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 
 		@Override
 		public boolean withUser() {
-			return DwoGlobalVars.instance().getCurrentUser() != null;
+			return instance.getCurrentUser() != null;
 		}
 
 		@Override

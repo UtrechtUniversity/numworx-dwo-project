@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
-import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
@@ -60,12 +59,6 @@ public class DummyClientFactory implements ClientFactory {
 		return entryView.get();
 	}
 
-
-	@Override
-	public LoginView getLoginView() {
-		return null;
-	}
-
 	@Override
 	public TreeModuleView getTreeModuleView() {
 		return null;
@@ -85,16 +78,6 @@ public class DummyClientFactory implements ClientFactory {
 	public SCORM_guest setupAPI() {
 		return GWT.create(SCORM_guest.class);
 	}
-
-//	@Override
-//	public IsWidget getLogoutWidget() {
-//		return logoutWidget;
-//	}
-//
-//	@Override
-//	public void setLogoutWidget(IsWidget widget) {
-//		logoutWidget = widget;
-//	}
 
 	@Override
 	public Promise<Void> logout() {

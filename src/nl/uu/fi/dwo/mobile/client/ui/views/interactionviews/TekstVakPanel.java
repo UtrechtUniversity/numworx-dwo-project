@@ -81,6 +81,7 @@ import com.google.gwt.event.dom.client.TouchMoveEvent;
 import com.google.gwt.event.dom.client.TouchMoveHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.vaadin.pointerevents.client.PointerCancelEvent;
 import com.vaadin.pointerevents.client.PointerCancelHandler;
 import com.vaadin.pointerevents.client.PointerDownEvent;
@@ -91,11 +92,13 @@ import com.vaadin.pointerevents.client.PointerUpEvent;
 import com.vaadin.pointerevents.client.PointerUpHandler;
 import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -114,9 +117,10 @@ import fi.wiskopdr.expressies.Vergelijking;
 
 
 
-public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAware, PopupListener, CBookEventListener
+public class TekstVakPanel extends Composite implements InteractionViewWithMisconceptions, FacetAware, PopupListener, CBookEventListener, RequiresResize
 {
-	private static final Logger LOG = Logger.getLogger("TekstVakPanel");
+	private final boolean RESPONSIVE = DWOplayer.RESPONSIVE;
+    private static final Logger LOG = Logger.getLogger("TekstVakPanel");
 	public static final String TVP_KLAPUIT = "action.unfold";
 	public static final String TVP_KLAPIN = "action.fold";
 	public static final String TVP_SELECT = "action.select";
@@ -245,7 +249,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	String[] randomVarNamen = null;
 	HashMap<String, Number> randomVarWaarden = null;
 	
-	private TekstVak parent = null;
+	TekstVak parent = null;
 	private SamengesteldeStappenPanel parentStappen = null;
 	private int mode = OpdrNav.OEFENEN;
 	
@@ -447,6 +451,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		
 		breedtes = Arrays.asList((double) breedte);
 		hoogtes = Arrays.asList((double) hoogte);
+		
+		initWidget();
 	}
 
 	public TekstVakPanel(HashMap<String, Object> hh, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden, AnchorContext context)
@@ -999,6 +1005,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		  mainPanel2.setWidgetTopHeight(fsBtn, 0, Unit.PX, fsBtn.getHeight(), Unit.PX);
 		  fsBtn.addButtonListener(this::zoomunzoomAction);
 		}
+		
+		initWidget();
 	}
 
 	private void zoomAction() {
@@ -1008,7 +1016,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
         zoomKolom = 0;
         zoomRij = 0;
       }
-      parent.zoom(this);
+      parent.zoom1(this);
 //      if (responsive)
 //    	  zetVolledigeBreedte( (int)( (Window.getClientWidth()-20)/responsiveFactor)); // FIXME 20 is toplevel marge
 //      else
@@ -1028,6 +1036,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
       if (responsive) {
         zoomKolom = zoomRij = null;
       }
+      zetVolledigeBreedte1(orgBreedte);
       parent.unzoom(this);
       
       fsBtn.setText("open");
@@ -2280,13 +2289,9 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	}
 
 	private PopupFacade facade;
-	private Widget widget;
-	@Override
-	public Widget asWidget() // MUST BE IDEMPOTENT
-	{
-		if(widget == null)
-			widget = facade.wrap(getAsPanel(), this);
-		return widget;
+
+	private void initWidget() {
+	  initWidget(facade.wrap(getAsPanel(), this));
 	}
 	
 	public boolean isPopup()
@@ -3420,19 +3425,26 @@ private Object CamelCase(String name) {
 			//TODO: replace by resizeCallOutPanel?
 		}
 
-		for (int i = 0; i < hoogtes.size(); i++)
-		{
-			for (int j = 0; j < breedtes.size(); j++)
-			{
-				if (i == 0 || !(inklapbaar && ingeklapt))
-				{
-					tekstVakken[i][j].setSize((int) Math.round(breedtes.get(j).doubleValue()),
-						(int) Math.round(hoogtes.get(i).doubleValue()));
-					tekstVakken[i][j].setAshoogte(ashoogtes[i]);
-				}
-			}
+		if (zoomKolom != null) { // breedtes is niet in effect.
+		  int i = zoomRij.intValue();
+		  int j = zoomKolom.intValue();
+          tekstVakken[i][j].setSize( breedte, hoogte);
+          tekstVakken[i][j].setAshoogte(ashoogtes[i]);	  
+		} else {
+		
+    		for (int i = 0; i < hoogtes.size(); i++)
+    		{
+    			for (int j = 0; j < breedtes.size(); j++)
+    			{
+    				if (i == 0 || !(inklapbaar && ingeklapt))
+    				{
+    					tekstVakken[i][j].setSize((int) Math.round(breedtes.get(j).doubleValue()),
+    						(int) Math.round(hoogtes.get(i).doubleValue()));
+    					tekstVakken[i][j].setAshoogte(ashoogtes[i]);
+    				}
+    			}
+    		}
 		}
-
 		if (parent != null)
 		{
 			if (!callOut && isZwevend() && this.getAsPanel().isAttached())
@@ -5452,51 +5464,20 @@ private Object CamelCase(String name) {
 	}
 	
 	public void zetVolledigeBreedte(int breedte){
-		if(!"true".equals(Window.Location.getParameter("responsive"))) {
+		if(!RESPONSIVE && zoomKolom == null) {
 			return;
 		}
-		if(volledigeBreedte && breedtes!=null) {
+		zetVolledigeBreedte0(breedte);
+	}
+
+  public void zetVolledigeBreedte0(int breedte) {
+    if(volledigeBreedte && breedtes!=null) {
 /*
  * Onderstaande is niet goed als we zoomen. Dan is maar één kolom zichtbaar en de rest niet.
  */
-		if (zoomKolom == null) {	
-			int aantalKolommen = breedtes.size();
-			int teVerdelenBreedte = this.breedte - (aantalKolommen-1)*cellSpaceColumn;
-			double factor = 1.0*(breedte-(aantalKolommen-1)*cellSpaceColumn)/teVerdelenBreedte;
-			double restbreedte = breedte-(aantalKolommen-1)*cellSpaceColumn;				
-			double[] newBreedtes = new double[breedtes.size()];
-			for(int i=0 ; i<aantalKolommen ; i++) {
-				if(i==aantalKolommen-1) {
-					for(int j=0 ; j<hoogtes.size() ; j++) 
-						tekstVakken[j][i].setSize((int)restbreedte, tekstVakken[0][0].getHeight());
-					newBreedtes[i] = restbreedte;		
-				}
-				else {
-					for(int j=0 ; j<hoogtes.size() ; j++)
-						tekstVakken[j][i].setSize((int)(breedtes.get(i)*factor), tekstVakken[0][0].getHeight());
-					newBreedtes[i] = breedtes.get(i)*factor;
-					restbreedte = restbreedte-breedtes.get(i)*factor;
-				}
-			}
-			restbreedte = breedte;
-			for(int i=0 ; i<aantalKolommen ; i++) {
-				breedtes.set(i,newBreedtes[i]);
-			}
-				
-			this.breedte = breedte;
-				
-			for(int i=0 ; i<aantalKolommen ; i++) {
-				for(int j=0 ; j<hoogtes.size() ; j++) {
-					tekstVakken[j][i].reLayout();
-				}
-			}
-		} else {
-			tekstVakken[zoomRij][zoomKolom].setSize(breedte, tekstVakken[zoomRij][zoomKolom].getHeight());
-			this.breedte = breedte;
-			tekstVakken[zoomRij][zoomKolom].reLayout();
+		zetVolledigeBreedte2(breedte);
 		}
-		}
-		if(responsive) {
+		if(responsive && RESPONSIVE ) {
 			int w = breedte;
  			
 			    w = (int)Math.round(responsiveFactor*breedte + responsiveConstant);
@@ -5520,7 +5501,50 @@ private Object CamelCase(String name) {
 			
 			tekstVakken[0][0].reLayout();
 		}
-	}
+  }
+
+  public void zetVolledigeBreedte2(int breedte) {
+    if (zoomKolom == null) {	
+			zetVolledigeBreedte1(breedte);
+		} else {
+			tekstVakken[zoomRij][zoomKolom].setSize(breedte, tekstVakken[zoomRij][zoomKolom].getHeight());
+			this.breedte = breedte;
+			tekstVakken[zoomRij][zoomKolom].reLayout();
+		}
+  }
+
+  public void zetVolledigeBreedte1(int breedte) {
+    int aantalKolommen = breedtes.size();
+    int teVerdelenBreedte = this.breedte - (aantalKolommen-1)*cellSpaceColumn;
+    double factor = 1.0*(breedte-(aantalKolommen-1)*cellSpaceColumn)/teVerdelenBreedte;
+    double restbreedte = breedte-(aantalKolommen-1)*cellSpaceColumn;				
+    double[] newBreedtes = new double[breedtes.size()];
+    for(int i=0 ; i<aantalKolommen ; i++) {
+    	if(i==aantalKolommen-1) {
+    		for(int j=0 ; j<hoogtes.size() ; j++) 
+    			tekstVakken[j][i].setSize((int)restbreedte, tekstVakken[0][0].getHeight());
+    		newBreedtes[i] = restbreedte;		
+    	}
+    	else {
+    		for(int j=0 ; j<hoogtes.size() ; j++)
+    			tekstVakken[j][i].setSize((int)(breedtes.get(i)*factor), tekstVakken[0][0].getHeight());
+    		newBreedtes[i] = breedtes.get(i)*factor;
+    		restbreedte = restbreedte-breedtes.get(i)*factor;
+    	}
+    }
+    restbreedte = breedte;
+    for(int i=0 ; i<aantalKolommen ; i++) {
+    	breedtes.set(i,newBreedtes[i]);
+    }
+    	
+    this.breedte = breedte;
+    	
+    for(int i=0 ; i<aantalKolommen ; i++) {
+    	for(int j=0 ; j<hoogtes.size() ; j++) {
+    		tekstVakken[j][i].reLayout();
+    	}
+    }
+  }
 
 	@Override
 	public void setAsHoogte(int ashoogte) {
@@ -5712,7 +5736,8 @@ private Object CamelCase(String name) {
 		if(parent != null) {
 			parent.zoom(this);
 		} else {
-		  zetVolledigeBreedte(Window.getClientWidth());
+//		  int marge = instellingen.getInt("margeRechts") + instellingen.getInt("margeLinks");
+//		  zetVolledigeBreedte0(Window.getClientWidth()-marge);
 		}
 	}
 
@@ -5740,11 +5765,26 @@ private Object CamelCase(String name) {
 		if(parent != null) {
 			parent.unzoom(this);
 		} else {
-		  zetVolledigeBreedte(Window.getClientWidth());
+          int marge = instellingen.getInt("margeRechts") + instellingen.getInt("margeLinks");
+          zetVolledigeBreedte0(Window.getClientWidth()-marge);
 		}
 		  
 		
 	}
+
+  private ResizeHandler resizeHandler;
+  @Override
+  public void onResize() {
+    GWT.log("On Resize called");
+    if (resizeHandler != null) {
+      resizeHandler.onResize(null);
+    }
+  }
+
+  public HandlerRegistration addResizeHandler(ResizeHandler resize) {
+    resizeHandler = resize;
+    return () -> { if (resizeHandler == resize) resizeHandler = null; };
+  }
 
 	
 }

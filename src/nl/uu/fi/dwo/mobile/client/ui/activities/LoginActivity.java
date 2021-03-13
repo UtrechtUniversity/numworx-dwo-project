@@ -14,6 +14,7 @@ import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
@@ -45,6 +46,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.google.web.bindery.event.shared.HandlerRegistrations;
+
+import dagger.Lazy;
 
 public class LoginActivity extends AbstractActivity
 {
@@ -79,7 +82,7 @@ public class LoginActivity extends AbstractActivity
 		
 		@Override
 		public void fail(Promise<?> promise) throws Exception {
-			panel.setWidget(view);
+			panel.setWidget(view.get());
 			Throwable caught = promise.getFailure();
 			LOG.log(Level.WARNING, "login failure ", caught);
 			if (caught instanceof NoSuchElementException)
@@ -92,7 +95,7 @@ public class LoginActivity extends AbstractActivity
 		}
 
 		private void alert(String string) {
-			view.showError(string);
+			view.get().showError(string);
 		}
 	};
 
@@ -100,7 +103,7 @@ public class LoginActivity extends AbstractActivity
 
 		@Override
 		public void fail(Promise<?> resolved) throws Exception {
-			panel.setWidget(view);
+			panel.setWidget(view.get());
 			Throwable caught = resolved.getFailure();
 			LOG.log(Level.SEVERE, "login failure2 ", caught);
 			if(clientFactory.withUser())
@@ -155,12 +158,14 @@ public class LoginActivity extends AbstractActivity
 	
 	ClientFactory clientFactory;
 	private Place next;
-	LoginView view;
+	@Inject Lazy<LoginView> view;
 	AcceptsOneWidget panel;
 
 	private Deferred<DomUserFullwLoginContext> defer;
 
 	protected HandlerRegistration registrations;
+
+    private final DWOplayerParameters PARAMETERS;
 	
 	
 
@@ -170,8 +175,9 @@ public class LoginActivity extends AbstractActivity
 //		this.next = next;
 //	}
 
-	@Inject LoginActivity(ClientFactory clientFactory) {
+	@Inject LoginActivity(ClientFactory clientFactory, DWOplayerParameters p) {
 		this.clientFactory = clientFactory;
+		this.PARAMETERS = p;
 		this.dwoProfile = clientFactory.getRPCHandler().getDwoProfile();
 		this.LOGIN_STAP1 = new Login_Stap1(clientFactory);
 		Place place = clientFactory.getPlaceController().getWhere();
@@ -210,11 +216,10 @@ public class LoginActivity extends AbstractActivity
 				SelectModuleItemHolder.destroy();
 				String user_id = Cookies.getCookie(DWO_SAML_USER_ID);
 				String org_id = Cookies.getCookie(DWO_SAML_ORGANIZATION_ID);
-				view = clientFactory.getLoginView();
-				view.showError(null);
+				view.get().showError(null);
 				
 				if(Boolean.TRUE.equals(nonPublic)) {
-					view.allowGuest(false);
+					view.get().allowGuest(false);
 				} else {
 					//view.allowGuest(true);
 				dwoProfile.then(new Success<DomDwoProfile, Void>() {
@@ -222,7 +227,7 @@ public class LoginActivity extends AbstractActivity
 					@Override
 					public Promise<Void> call(Promise<DomDwoProfile> promise) throws Exception {
 						String rights = promise.getValue().getDwoProfileRights();
-						view.allowGuest(rights.indexOf('l') < 0);
+						view.get().allowGuest(rights.indexOf('l') < 0);
 						return null;
 					}
 
@@ -275,18 +280,18 @@ public class LoginActivity extends AbstractActivity
 					} else {
 						defer = new Deferred<>();
 						promise = defer.getPromise();
-						panel.setWidget(view);
+						panel.setWidget(view.get());
 					}
 					registrations = HandlerRegistrations.compose(
 					
-					(view.getLoginBtn().addClickHandler(new ClickHandler() {
+					(view.get().getLoginBtn().addClickHandler(new ClickHandler() {
 
 						@Override
 						public void onClick(ClickEvent event) {
 							resolve();
 						}
 					})) ,
-					(view.getGuestBtn().addClickHandler(new ClickHandler() {
+					(view.get().getGuestBtn().addClickHandler(new ClickHandler() {
 
 						@Override
 						public void onClick(ClickEvent event) {
@@ -302,13 +307,13 @@ public class LoginActivity extends AbstractActivity
 					})),
 
 					// Register enter handler
-					(view.getMainPanel().addKeyUpHandler(new KeyUpHandler() {
+					(view.get().getMainPanel().addKeyUpHandler(new KeyUpHandler() {
 
 						@Override
 						public void onKeyUp(KeyUpEvent event) {
 							// on key up, if there is data in the username and password area, simply login
 							if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-								if (!(view.getUsername().isEmpty()) && (!(view.getPassword().isEmpty()))) {
+								if (!(view.get().getUsername().isEmpty()) && (!(view.get().getPassword().isEmpty()))) {
 									resolve();
 								}
 							}
@@ -321,7 +326,7 @@ public class LoginActivity extends AbstractActivity
 			}
 
 			private boolean isSeb() {
-				return SecureMode.SEB == DWOplayer.PARAMETERS.getSecureMode();
+				return SecureMode.SEB == PARAMETERS.getSecureMode();
 			}
 		}
 		);
@@ -337,8 +342,8 @@ public class LoginActivity extends AbstractActivity
 
 	private void resolve() {
 		if (defer == null) return;
-		final Promise<DomUserFullwLoginContext> login = clientFactory.getRPCHandler().login(view.getUsername(),
-				view.getPassword());
+		final Promise<DomUserFullwLoginContext> login = clientFactory.getRPCHandler().login(view.get().getUsername(),
+				view.get().getPassword());
 		dwoProfile.onResolve(
 		new Runnable() {
 			public void run() {

@@ -19,7 +19,6 @@ import org.osgi.util.promise.Success;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ValueUpdater;
-import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
@@ -27,7 +26,6 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -36,8 +34,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -50,10 +46,10 @@ import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SingleSelectionModel;
 
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
-import fi.dwo.gwt.lib.rest.util.Base64;
-import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
+import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
@@ -177,6 +173,8 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	private double width;
 	private boolean none;
 	private RoleType role = RoleType.TEACHER;
+    private final DWOplayerParameters PARAMETERS;
+    final private ClientFactory clientFactory;
 	/**
 	 * Because this class has a default constructor, it can
 	 * be used as a binder template. In other words, it can be used in other
@@ -189,7 +187,9 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	 * implement HasHTML instead of HasText.
 	 */
 
-	@Inject NavigationViewNumworx(final PlaceController controller, RPCHandler rpc) {
+	@Inject NavigationViewNumworx(final PlaceController controller, RPCHandler rpc, DWOplayerParameters param, ClientFactory clientFactory) {
+	    this.PARAMETERS = param;
+	    this.clientFactory = clientFactory;
 		HorizontalCellListResources cellResources;
 		cellResources = GWT.create(HorizontalCellListResources.class);
 		cells = new CellList<SelectModuleItem>(new NavCell(), cellResources);
@@ -221,7 +221,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	}
 
 	private boolean isTest() {
-		return "test".equals(DWOplayer.PARAMETERS.getDwoEnv());
+		return "test".equals(PARAMETERS.getDwoEnv());
 	}
 
 	public void showCells() {
@@ -299,7 +299,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 
 	private String treeItemIcon(String string, String align) {
 		return "<img style='vertical-align:" + align + "'" 
-				+ "width='16' heigth='16' src='" + DWOplayer.PARAMETERS.getResource(string) + "' >";
+				+ "width='16' heigth='16' src='" + PARAMETERS.getResource(string) + "' >";
 	}
 
 	private TreeItem getTreeItem(SelectModuleItem item) {
@@ -331,8 +331,8 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		ArrayList<SelectModuleItem> schoolModel = new ArrayList<SelectModuleItem>(model.size());
 		ArrayList<SelectModuleItem> standardModel = new ArrayList<SelectModuleItem>(model.size());
 		Object schoolName = "school";
-		if(DWOplayer.withUser() && DWOplayer.clientfactory.getSchool() != null)
-			schoolName = DWOplayer.clientfactory.getSchool().getSchoolName();
+		if(clientFactory.withUser() && clientFactory.getSchool() != null)
+			schoolName = clientFactory.getSchool().getSchoolName();
 		setRole();
 		SCHOOL_MODULES = Text.constants.schoolModules() + schoolName;
 		schoolMap = new TreeItem(toSafeHTML(SCHOOL_MODULES, Type.FOLDER));
@@ -415,7 +415,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	
 	@UiHandler("results")
 	void onResults(ClickEvent e) {
-	  if (role != RoleType.TEACHER && !DWOplayer.isPremium() || role == RoleType.SCHOOLADMIN) return;
+	  if (role != RoleType.TEACHER && !clientFactory.isPremium() || role == RoleType.SCHOOLADMIN) return;
 	  LOG.info("goto results");
 	  if(Actions.isAvailable())
 		  Actions.RESULTS.execute();
@@ -423,29 +423,6 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 //		  gotoGwtClient("RESULTS");
 	
 	}
-//    private void gotoGwtClient(String page) {
-//      final String url = "/gwtclient/index.html";
-//      account.getBearerToken().then(
-//        resolved-> {
-//          String token = "2\f" + resolved.getValue(); //format 2
-//          StringBuilder u = new StringBuilder(url);
-//          u.append( "?a=" ) .append (Base64.btoa(token)); // User Auth Token
-//          u.append( "&test=on");
-//          String profile = String.valueOf(DWOplayer.PROFILE_ID);
-//          u.append("&profile=").append(profile);
-//          String locale = LocaleInfo.getCurrentLocale().getLocaleName();
-//          if ("default".equals(locale) ) locale =  "nl";
-//          u.append("&locale=").append(locale);
-//          u.append("&view=").append(page);
-//          String string = u.toString();
-//          LOG.info("open URL " + string);
-//          Window.Location.replace(string);
-//          return null;
-//        }     
-//       );
-//      
-//    
-//  }
 
     
     
@@ -454,16 +431,12 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
       LOG.info("goto persons");
       if(Actions.isAvailable())
     	  Actions.PERSONS.execute();
-//      else
-//    	  gotoGwtClient("PERSONS");
     }
     @UiHandler("classes")
     void onClasses(ClickEvent e) {
       LOG.info("goto classes");
       if(Actions.isAvailable())
     	  Actions.SCHOOLCLASSES.execute();
-//      else
-//    	  gotoGwtClient("SCHOOLCLASSES");
    }
 
     @UiHandler("organization")
@@ -472,8 +445,6 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
     	LOG.info("goto organization");
     	if (Actions.isAvailable())
     		Actions.ORGANISATION.execute();
-//    	else
-//    		gotoGwtClient("ORGANISATION");
     }
 
     private boolean icon;
@@ -500,13 +471,13 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		this.role = role;
 		// if visible?
 		{  	organization.setVisible(role == RoleType.SCHOOLADMIN);
-			results.setVisible(role == RoleType.TEACHER || (role == RoleType.STUDENT && isTest() && DWOplayer.isPremium())); // or student if premium&test.
+			results.setVisible(role == RoleType.TEACHER || (role == RoleType.STUDENT && isTest() && clientFactory.isPremium())); // or student if premium&test.
 			persons.setVisible(role != RoleType.STUDENT);
 		}
 	}
 
 	void setRole() {
-		setRole(DWOplayer.clientfactory.getRoleType());
+		setRole(clientFactory.getRoleType());
 	}
 
 	public void setCells(List<SelectModuleItem> items) {
@@ -532,8 +503,8 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 				SelectModuleItem separator = new SelectModuleItem(null, SelectModuleItem.Type.SEPARATOR);
 
 				Object schoolName = "school";
-				if(DWOplayer.withUser() && DWOplayer.clientfactory.getSchool() != null)
-					schoolName = DWOplayer.clientfactory.getSchool().getSchoolName();
+				if(clientFactory.withUser() && clientFactory.getSchool() != null)
+					schoolName = clientFactory.getSchool().getSchoolName();
 				String SCHOOL_MODULES = Text.constants.schoolModules() + schoolName;
 
 				separator.setName(SCHOOL_MODULES);

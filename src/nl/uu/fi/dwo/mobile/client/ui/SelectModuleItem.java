@@ -4,9 +4,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
@@ -15,20 +12,14 @@ import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
-import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
-import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
-//import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
-import com.google.gwt.xml.client.Node;
-
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 
 /**
@@ -39,7 +30,7 @@ import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
  */
 public class SelectModuleItem
 {
-	
+	@Deprecated
 	public static final String PREFIX = DWOplayer.PREFIX;
 	
 	public enum Type
@@ -87,14 +78,14 @@ public class SelectModuleItem
 
 	private SelectModuleItem() {}
 	
-	public SelectModuleItem(Object id, String name, String file)
-	{
-		this.id = id;
-		this.name = name;
-		this.file = file;
-		this.type = Type.SCO;
-		this.showScore = true; // the default
-	}
+//	public SelectModuleItem(Object id, String name, String file)
+//	{
+//		this.id = id;
+//		this.name = name;
+//		this.file = file;
+//		this.type = Type.SCO;
+//		this.showScore = true; // the default
+//	}
 
 	public SelectModuleItem(Map<String,Object> map, Type type)
 	{
@@ -163,22 +154,22 @@ public class SelectModuleItem
 		return fromSchool;
 	}
 	
-	public SelectModuleItem(Object id, Node node)
-	{
-		this.id = id;
-		this.showScore = false;
-		for (int i = 0; i < node.getChildNodes().getLength(); i++)
-		{
-
-			Node curr = node.getChildNodes().item(i);
-			if (curr.getNodeName().equalsIgnoreCase("name"))
-				this.name = curr.getChildNodes().toString();
-			if (curr.getNodeName().equalsIgnoreCase("file"))
-				this.file = curr.getChildNodes().toString();
-
-		}
-		Logger.getLogger("SelectModuleItem").log(Level.INFO,this.name + " " + this.file);
-	}
+//	public SelectModuleItem(Object id, Node node)
+//	{
+//		this.id = id;
+//		this.showScore = false;
+//		for (int i = 0; i < node.getChildNodes().getLength(); i++)
+//		{
+//
+//			Node curr = node.getChildNodes().item(i);
+//			if (curr.getNodeName().equalsIgnoreCase("name"))
+//				this.name = curr.getChildNodes().toString();
+//			if (curr.getNodeName().equalsIgnoreCase("file"))
+//				this.file = curr.getChildNodes().toString();
+//
+//		}
+//		Logger.getLogger("SelectModuleItem").log(Level.INFO,this.name + " " + this.file);
+//	}
 
 	public SelectModuleItem(Object id, Type module) {
 		this.type = module;
@@ -232,11 +223,6 @@ public class SelectModuleItem
 	public String getFile()
 	{
 		return file;
-	}
-
-	public void setFile(String file)
-	{
-		this.file = file;
 	}
 
 	public Object getID()

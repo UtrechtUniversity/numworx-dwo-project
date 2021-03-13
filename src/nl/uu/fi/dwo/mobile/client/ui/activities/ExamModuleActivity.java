@@ -10,6 +10,7 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
@@ -28,6 +29,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 
 
 	@Inject ClientFactory clientFactory;
+	@Inject DWOplayerParameters PARAMETERS;
 	private SelectModuleItem item;
 	private Activity delegate;
 	private Provider<? extends Activity> provider;
@@ -39,6 +41,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 	public ExamModuleActivity(ClientFactory clientFactory, SelectModuleItem i, Provider<? extends Activity> provider, boolean b)
 	{
 		this.clientFactory = clientFactory;
+		this.PARAMETERS = DWOplayer.PARAMETERS;
 		this.item = i;
 		this.provider = provider;
 		this.skipPassword = b;
@@ -66,7 +69,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 	
 	@Override
 	public void start(final AcceptsOneWidget panel, EventBus eventBus) {
-		if(SecureMode.NORMAL == DWOplayer.PARAMETERS.getSecureMode()) {
+		if(SecureMode.NORMAL == PARAMETERS.getSecureMode()) {
 			final UnSafeModuleView w = new UnSafeModuleView(clientFactory.getHeaderView(), clientFactory.getPlaceController());
 			w.selectItem(item);
 			clientFactory.barrier().onResolve(		

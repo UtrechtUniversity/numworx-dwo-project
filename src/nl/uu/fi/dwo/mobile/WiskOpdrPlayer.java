@@ -25,6 +25,7 @@ import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.WiskOpdrDefaults;
 import nl.uu.fi.dwo.mobile.client.dagger.DaggerWiskOpdrComponent;
 import nl.uu.fi.dwo.mobile.client.dagger.ModuleViewModule;
@@ -61,6 +62,10 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 	@Inject protected ViewModuleViewImpl view;
 	@Inject void setClientFactory(ClientFactory f) {
 	  DWOplayer.clientfactory = f;
+	}
+	@Inject void setParameters(DWOplayerParameters p) {
+	  DWOplayer.PARAMETERS = p;
+	  DWOplayer.PREFIX = p.getLaunchData();
 	}
 
 	public static Provider<Logging> loggingProvider;

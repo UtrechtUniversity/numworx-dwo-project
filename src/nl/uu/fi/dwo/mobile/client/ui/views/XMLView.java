@@ -57,7 +57,8 @@ import fi.wiskopdr.expressies.Expressie;
  */
 public abstract class XMLView {
 
-	protected HashMap<String, Object> launchData;
+	private final boolean RESPONSIVE = DWOplayer.RESPONSIVE;
+    protected HashMap<String, Object> launchData;
 	protected ObjectMap instellingen;
 	protected int font_size = 12;
 	protected String font_name = "Arial";
@@ -418,19 +419,24 @@ public abstract class XMLView {
 		final int mr = margeLinks;
 		
 		ResizeHandler resize = new ResizeHandler() {
-
+		  int clientWidth = -1;
 			@Override
 			public void onResize(ResizeEvent event) {
-				final int w  = Window.getClientWidth()-ml-mr;//-20;
-				hoofdPanel.zetVolledigeBreedte(w);
+			  if (clientWidth != Window.getClientWidth()) {
+			    clientWidth = Window.getClientWidth();
+                final int w  = clientWidth-ml-mr;//-20;
+                hoofdPanel.zetVolledigeBreedte(w);
+			    
+			  }
 			}
 		};
-		resize.onResize(null);
+		//resize.onResize(null);
 		
-		if("true".equals(Window.Location.getParameter("responsive"))) {
-			Window.addResizeHandler(resize);
+		if(RESPONSIVE) {
+//			Window.addResizeHandler(resize);
 			breedte = Window.getClientWidth()-margeLinks-margeRechts;//-20;
 			hoofdPanel.zetVolledigeBreedte(breedte);
+			hoofdPanel.addResizeHandler(resize);
 		}
 	}
 

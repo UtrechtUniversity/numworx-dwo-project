@@ -1,12 +1,8 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -28,12 +24,10 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -44,8 +38,8 @@ import com.google.gwt.view.client.SetSelectionModel;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.googlecode.mgwt.ui.client.MGWT;
 
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
+import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
@@ -56,7 +50,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
-public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorContext /*,  Comparator<SelectModuleItem> */{
+public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorContext {
 
 	static final Logger LOG = Logger.getLogger(TreeModuleViewNumworx.class.getName());
 	
@@ -109,16 +103,6 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		@Override
 		public void render(Context context,
 				SelectModuleItem value, SafeHtmlBuilder sb) {
-/* 					<g:FlowPanel styleName='{style.tile}' >
-						<g:HTML styleName='{style.tileHeader}'>Exponentiele functies</g:HTML>
-						<g:HTML styleName='{style.tileBody}'>TILE BODY</g:HTML>
-						<g:FlowPanel styleName='{style.tileFooter}'>
-							<g:InlineHTML styleName='{style.tileResult}'><span class='fa-stack fa-lg'><i class='fa fa-circle fa-stack-1x' style='color:red;'></i><i class='fa fa-times fa-stack-1x' style='color:white;'></i></span></g:InlineHTML>
-							<g:InlineHTML styleName='{style.tileScore}'>10%</g:InlineHTML>
-							<g:InlineHTML styleName='{style.tileType}'><i class='fa fa-file-text-o'></i></g:InlineHTML>
-						</g:FlowPanel>					
-					</g:FlowPanel>
-*/			
 		    Type typeof = value.getType();
 			sb.appendHtmlConstant("<div class='"+style.tile()+"'>");
 			  sb.appendHtmlConstant("<div class='" + style.tileHeader() + "'><span class='" + style.tileSpan() + "'>");
@@ -315,6 +299,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	private List<SelectModuleItem> list;
 
 	@UiField(provided=true) String pfx;
+
+    final private ClientFactory clientFactory;
 	
 	static String getFaviconUrl() {
 		return "url('"+
@@ -328,15 +314,16 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				"')";	
 	}
 	
-	private static String r(String string) {
-		return DWOplayer.PARAMETERS.getResource(string);
+	private static String r(String resource) {
+		return GWT.getModuleBaseURL() + "../" + resource;
 	}
 
 	interface TreeModuleViewNumworxUiBinder extends UiBinder<Widget, TreeModuleViewNumworx> {
 	}
 
 	@Inject
-	public TreeModuleViewNumworx(HeaderView headerView, NavigationViewNumworx navigationView) {
+	public TreeModuleViewNumworx(HeaderView headerView, NavigationViewNumworx navigationView, ClientFactory clientFactory) {
+	    this.clientFactory = clientFactory;
 		HorizontalCellListResources cellResources;
 		cellResources = GWT.create(HorizontalCellListResources.class);
 		tiles = new CellList<SelectModuleItem>(new TileCell(), cellResources);
@@ -358,7 +345,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 
 	private void selectStrategy() {
 		boolean desktop = MGWT.getOsDetection().isDesktop() /*&& false*/;
-		if (!DWOplayer.clientfactory.isIconizer()) desktop = false; // platte versie bij klas zonder tree
+		if (!clientFactory.isIconizer()) desktop = false; // platte versie bij klas zonder tree
 		navigation = desktop ? new TreeNavStrategy() : new ListNavStrategy();
 	}
 
@@ -425,7 +412,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		Promise<List<SelectModuleItem>> promise = parent.getChildrenAsync();
 
 		if(promise == null || (promise.isDone() && promise.getFailure() != null)) {
-			promise = DWOplayer.clientfactory.getRPCHandler().getCourses(parent.original())
+			promise = clientFactory.getRPCHandler().getCourses(parent.original())
 					.map(new COURSE_TO_MODULEITEM(parent));
 			parent.setChildrenAsync(promise);
 			promise
@@ -436,7 +423,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 					for(SelectModuleItem item: resolved.getValue()) {
 						if(item.getType() == SelectModuleItem.Type.FOLDER) {
 							if(item.getChildrenAsync() == null) {
-								item.setChildrenAsync(DWOplayer.clientfactory.getRPCHandler().getCourses(item.original())
+								item.setChildrenAsync(clientFactory.getRPCHandler().getCourses(item.original())
 										.map(new COURSE_TO_MODULEITEM(item)));
 							}
 						}
@@ -450,7 +437,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		Promise<List<SelectModuleItem>> promise = parent.getChildrenAsync();
 
 		if(promise == null || (promise.isDone() && promise.getFailure() != null)) {
-			promise = DWOplayer.clientfactory.getRPCHandler().getScos(parent.getID())
+			promise = clientFactory.getRPCHandler().getScos(parent.getID())
 					.map(new SCO_TO_MODULEITEM(parent));
 			parent.setChildrenAsync(promise);
 			promise
@@ -626,22 +613,6 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		presenter.goTo(new ReloginPlace());
 	}
 
-
-//	public int compare(SelectModuleItem o1, SelectModuleItem o2) {
-//		boolean b1 = o1.isFromSchool();
-//		boolean b2 = o2.isFromSchool();
-//		if(b1 != b2) {
-//			return Boolean.compare(b1, b2);
-//		}
-//		
-////		if (o1.getType()== SelectModuleItem.Type.SCO & o2.getType() == SelectModuleItem.Type.SCO)
-//		return Integer.signum(o1.getSequencenr()-o2.getSequencenr());
-//
-////		if(sortModel != null)
-////			return sortModel.compare(o1, o2);
-////		else
-////			return o1.getName().compareTo(o2.getName()); // FIXME NIET GOED
-//	}
 
   @Override
   public void setBeheer(boolean b) {

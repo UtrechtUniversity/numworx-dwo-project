@@ -21,12 +21,7 @@ public class DWO2playerDefaults extends DWOplayerDefaults implements DwoConstant
 
 	public DWO2playerDefaults() {
 		super(null);
-//		String host = getHost();
-//		String http = Window.Location.getProtocol();
 		launchData =
-//		    http +"//"
-//				+ host
-//				+ 
 				"/dwo/rest/public/scoData/getJSONLaunchDataBytes?scoId=";
 
 	 //  loggingProvider = () -> LaTransport.newTAOinstance();
@@ -45,9 +40,6 @@ public class DWO2playerDefaults extends DWOplayerDefaults implements DwoConstant
 //		return getDefaultHost();
 	}
 
-//	private String getDefaultHost() {
-//		return "dummytwo.dwo.nl";
-//	}
 
 	@Override
 	public String server() {

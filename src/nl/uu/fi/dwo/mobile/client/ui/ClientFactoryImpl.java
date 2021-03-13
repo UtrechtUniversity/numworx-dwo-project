@@ -30,6 +30,8 @@ import com.google.gwt.place.shared.PlaceHistoryMapper;
 //import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.event.shared.EventBus;
 
+import dagger.Lazy;
+
 /**
  * @see GWT
  * 
@@ -89,8 +91,6 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	
 	private final PlaceController placeController;
 	private Provider<ViewModuleView> entryView;
-	protected LoginView loginView;
-	protected TreeModuleView treeModuleView;
 	private RPCHandler handler;
 	
 	public ClientFactoryImpl(EventBus bus, PlaceController controller, 
@@ -143,19 +143,6 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 //		return loginView;
 //	}
 
-	@Override
-	public TreeModuleView getTreeModuleView()
-	{
-		if (treeModuleView == null){
-			{
-				
-//				entryView = NUMWORX_VIEW;				
-				return this.treeModuleView = new TreeModuleViewNumworx(getHeaderView(), navigationView.get());
-			}
-			
-		}
-		return this.treeModuleView;
-	}
 
 	@Override
 	public RPCHandler getRPCHandler() {
@@ -177,10 +164,6 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 //		return api;
 //	}
 		
-	@Override
-	public Promise<Void> logout() {
-		return Promises.resolved(null);
-	}
 		
 	protected static PersistenceId idOf(Object object, PersistenceClassType type) {
 		if(object == null || "".equals(object))
@@ -190,15 +173,6 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 		return id;
 	}
 
-
-	@Override
-	public Promise<Void> barrier() {
-		return Promises.resolved(null);
-	}
-
-	@Override
-	public void addBarrier(Promise<?> p) {
-	}
 
 	private DomClassCourse exam;
 	

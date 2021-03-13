@@ -22,6 +22,7 @@ import com.google.gwt.json.client.JSONValue;
 
 import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
@@ -38,8 +39,10 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class DummyRPCHandler implements RPCHandler {
  
-	@Inject public DummyRPCHandler() {
-      super();
+	private final DWOplayerParameters PARAMETERS;
+
+  @Inject public DummyRPCHandler(DWOplayerParameters p) {
+	  this.PARAMETERS = p;
     }
 
   @Override
@@ -140,7 +143,7 @@ public class DummyRPCHandler implements RPCHandler {
 	@Override
 	public Promise<JSONValue> getJSONLaunchDataBytes(Object scoID) {
 		final Deferred<String> defer = new Deferred<String>();
-		String url = DWOplayer.PARAMETERS.getLaunchData() + scoID;
+		String url = PARAMETERS.getLaunchData() + scoID;
 		RequestBuilder rb = new RequestBuilder(RequestBuilder.GET, url);
 		rb.setTimeoutMillis(1000000);
 		try

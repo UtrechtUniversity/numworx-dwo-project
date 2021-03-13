@@ -37,7 +37,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import nl.uu.fi.dwo.account.client.ProfileCommand;
 import nl.uu.fi.dwo.account.client.SchoolClassStudentCommand;
-import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
@@ -62,7 +62,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 	interface HeaderViewNumworxUiBinder extends UiBinder<Widget, HeaderViewNumworx> {
 	}
 
-	@UiField(provided=true) String pfx = DWOplayer.PARAMETERS.getResource("");
+	@UiField(provided=true) String pfx;
 	@UiField Label loginLabel;
 	@UiField Text rb;
 	@UiField(provided=true) MenuItem user;
@@ -71,6 +71,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 
 	MenuBar items = new MenuBar(true);
 	final private EventBus bus;
+    final private DWOplayerParameters PARAMETERS;
 
 
 	/**
@@ -84,8 +85,10 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 	 * Note that depending on the widget that is used, it may be necessary to
 	 * implement HasHTML instead of HasText.
 	 */
-	@Inject HeaderViewNumworx(EventBus bus) {
+	@Inject HeaderViewNumworx(EventBus bus, DWOplayerParameters PARAMETERS) {
 		this.bus = bus;
+		this.PARAMETERS = PARAMETERS;
+		pfx = PARAMETERS.getResource("");
         final int correctie = 10; // width popup 
 		user = new MenuItem("<img width='26' height='26' src='" + pfx
 				+ "images/numworx/account.svg' >", true, items) {
@@ -219,7 +222,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 		items.clearItems();
 		MenuItem m;
 		if(withUser) {
-			if (DWOplayer.PARAMETERS.getSecureMode() == SecureMode.NORMAL)
+			if (PARAMETERS.getSecureMode() == SecureMode.NORMAL)
 			{	
 				m=items.addItem(DwoLocalesForGWT.instance.GUI_MyProfile(), new ProfileCommand(bus));
 				m.addStyleName(style.menuItem());

@@ -20,6 +20,8 @@ import dagger.Provides;
 import dagger.Reusable;
 import dagger.multibindings.ClassKey;
 import dagger.multibindings.IntoMap;
+import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.ui.AppPlaceHistoryMapper;
 import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ClassCourseActivity;
@@ -46,7 +48,13 @@ public abstract class PlayerModule {
     return new SimpleEventBus();
   }
 
-  
+  @Singleton
+  @Provides static DWOplayerParameters parameters() {
+    DWOplayerParameters create = GWT.create(DWOplayerParameters.class);
+    DWOplayer.PARAMETERS = create;  // FIXME valsspelen!!!!!
+    return create;
+  }
+
   @Provides
   @Singleton
   static PlaceController getController(EventBus bus) {

@@ -36,6 +36,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	private TekstVakPanel parent;
 	private int rij;
 	private int kolom;
+	private boolean zoom;
 	private ArrayList<Object> opdrachtObjects = new ArrayList<Object>();
 	private ArrayList<Object> opdrachtObjectsForLayout = opdrachtObjects;
 	private ArrayList<TekstVakPanel> zwevendeTekstVakken = new ArrayList<TekstVakPanel>();
@@ -217,7 +218,9 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	{
 		this.breedte = b;
 		this.hoogte = h;
-		tekstVakBreedte = b - 2 * cellMarge - knopBreedte;//hier stond - 2 bij. Die was ergens goed voor, maar levert ook problemen als het vak zijn breedte aanpast aan de inhoud.
+		if (zoom) tekstVakBreedte = b;
+		else
+		  tekstVakBreedte = b - 2 * cellMarge - knopBreedte;//hier stond - 2 bij. Die was ergens goed voor, maar levert ook problemen als het vak zijn breedte aanpast aan de inhoud.
 		if(tekstVakBreedte >= 0 && h >= 0)
 		{	//flowVak.setSize("" + tekstVakBreedte  + "px", "" + h + "px");
 			for(int i = 0; i < aantalRegels  + 1; i++)
@@ -593,7 +596,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		
 		for(int i = 0; i < aantalRegels; i++)
 		{
-			int horPositie = cellMarge + knopBreedte;
+			int horPositie = zoom ? 0 : cellMarge + knopBreedte;
 			if(centerH)
 				horPositie += (int) (tekstVakBreedte - regelVakken[i].getWidth())/2;
 			
@@ -1164,35 +1167,30 @@ public class TekstVak extends LayoutPanel //implements InteractionView
     ArrayList<Object> layout = opdrachtObjectsForLayout;
     setObjects(opdrachtObjectsForLayout); 
     zetOpdrachtObjects(all, layout);
+    regelLayer.forceLayout();
     resize();
   }
 
 	public void zoom(TekstVakPanel tekstVakPanel) {
-        ArrayList<Object> single = new ArrayList<>(); single.add(tekstVakPanel);
-        zetOpdrachtObjects(opdrachtObjects, single);
-        ArrayList<Object> all = getOpdrachtObjects();
-        all.stream().filter(t -> t != tekstVakPanel && (t instanceof IsWidget))
-            .forEach( item -> 
-            regelLayer.setWidgetVisible(((IsWidget) item).asWidget(), false)
-        );
+	    zoomLayout(tekstVakPanel);    
 		
 		parent.zoom(this, rij, kolom);
-		// relayout
-		clearRegels();
-		zwevendeTekstVakken.clear();
-	    all = getOpdrachtObjects();
-		all.stream().filter(t -> t != tekstVakPanel && (t instanceof IsWidget))
-			.forEach( item -> 
-			regelLayer.setWidgetVisible(((IsWidget) item).asWidget(), false)
-		);
-		single = new ArrayList<>(); single.add(tekstVakPanel);
-		setObjects(single);
-		zetOpdrachtObjects(all, single);
+//		// relayout
+//		clearRegels();
+//		zwevendeTekstVakken.clear();
+//	    all = getOpdrachtObjects();
+//		all.stream().filter(t -> t != tekstVakPanel && (t instanceof IsWidget))
+//			.forEach( item -> 
+//			regelLayer.setWidgetVisible(((IsWidget) item).asWidget(), false)
+//		);
+//		single = new ArrayList<>(); single.add(tekstVakPanel);
+//		setObjects(single);
+//		zetOpdrachtObjects(all, single);
 		//resize();
 	}
 
 	public void unzoom(TekstVakPanel tekstVakPanel) {
-		
+		zoom = false;
 		parent.unzoom(this, rij, kolom);
 		// relayout
 		clearRegels();
@@ -1206,6 +1204,27 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		zetOpdrachtObjects(all, all);
 		resize();
 	}
+
+  public void zoom1(TekstVakPanel tekstVakPanel) {
+    zoom(tekstVakPanel);
+    TekstVakPanel t = tekstVakPanel;
+    while (t != null) { 
+      t.zetVolledigeBreedte2(1024); 
+      TekstVak tv = t.parent;
+      t = tv == null ? null : tv.parent; }
+  }
+
+  public void zoomLayout(TekstVakPanel tekstVakPanel) {
+    zoom = true;
+    ArrayList<Object> single = new ArrayList<>(); single.add(tekstVakPanel);
+    ArrayList<Object> all = getOpdrachtObjects();
+    zetOpdrachtObjects(all, single);
+    all.stream().filter(t -> t != tekstVakPanel && (t instanceof IsWidget))
+    .forEach( item -> 
+        regelLayer.setWidgetVisible(((IsWidget) item).asWidget(), false)
+    );
+    reLayout();
+  }
 
 	
 }

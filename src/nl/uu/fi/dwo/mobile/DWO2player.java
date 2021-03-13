@@ -32,6 +32,7 @@ import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import nl.uu.fi.dwo.account.client.AccountBundle;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.DWO2playerDefaults;
+import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.dagger.DWO2PlayerComponent;
 import nl.uu.fi.dwo.mobile.client.dagger.DaggerDWO2PlayerComponent;
@@ -212,8 +213,8 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 	}
 			
   @Inject
-  void createTabletDisplay(ClientFactory factory, TabletActivityMapper appActivityMapper, IdleDetect idleDetect) {
-    super.createTabletDisplay(factory, appActivityMapper);
+  void createTabletDisplay(ClientFactory factory, TabletActivityMapper appActivityMapper, IdleDetect idleDetect, DWOplayerParameters PARAMETERS) {
+    super.createTabletDisplay(factory, appActivityMapper, PARAMETERS);
  
  // TESTING
     factory.getEventBus().addHandler(IdleDetect.TYPE, ev -> { GWT.log(ev.toString()); });
@@ -268,11 +269,11 @@ public void setupDWOPlayer() {
 		SelectModuleItemHolder.clear(); // hier leegmaken of elders?
 		Promise<List<SelectModuleItem>> modules;
 		final RoleType roleType = clientfactory.getRoleType();
-		if( withUser() && clientfactory.getSchoolClass() != null) {
+		if( clientfactory.withUser() && clientfactory.getSchoolClass() != null) {
 			Promise<DomCoursesOfSchoolClass> promise = clientfactory.getRPCHandler().getCoursesClass(clientfactory.getSchoolClass());
 
 			modules = promise.map(new CoursesOfClasToSelectItems());
-		} else if (withUser() && RoleType.STUDENT != roleType)
+		} else if (clientfactory.withUser() && RoleType.STUDENT != roleType)
 		{
 			Promise<List<DomCourseStudent>> p1 = clientfactory.getRPCHandler().getCourses();
 			Promise<List<DomCourseStudent>> p2 = clientfactory.getRPCHandler().getCoursesSchool(clientfactory.getSchool());

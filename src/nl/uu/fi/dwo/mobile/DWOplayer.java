@@ -52,13 +52,14 @@ import fi.wiskopdr.text.Text_nl;
  */
 public abstract class DWOplayer
 {
-	public static final boolean RESPONSIVE = "true".equals(Window.Location.getParameter("responsive"));
+	public static final boolean RESPONSIVE =  "true".equals(Window.Location.getParameter("responsive"));
 
   //public static final boolean JSON = true;
 	public static int PROFILE_ID = 77;
 	
 	public static final DWOplayerClientBundle DWO_BUNDLE = GWT.create(DWOplayerClientBundle.class);
-	public static final DWOplayerParameters PARAMETERS = GWT.create(DWOplayerParameters.class);
+	@Deprecated
+	public static  DWOplayerParameters PARAMETERS;
 	private static DWOplayer instance;
 	
 	private static TemplateCss templateCss;
@@ -90,20 +91,8 @@ public abstract class DWOplayer
 		setDwoProfileID();
 	}
 
-	public static final String PREFIX = PARAMETERS.getLaunchData();
-	
-//	public static int count;
-	
-//	static void goTree() {
-//		if(--count <= 0)
-//			clientfactory.getPlaceController().goTo(new TreeModulePlace("0"));		
-//	}
-//
-//	static void goFlat() {
-//		if(--count <= 0)
-//			clientfactory.getPlaceController().goTo(new FlatModulePlace());		
-//	}
-	
+	public static String PREFIX;
+		
 	private static HashMap<String, String> resources = new HashMap<String, String>();
 
 
@@ -178,16 +167,10 @@ public abstract class DWOplayer
 
 	protected abstract ClientFactory createClientFactory();
 
-	void createTabletDisplay(ClientFactory clientfactory, TabletActivityMapper appActivityMapper)
+	void createTabletDisplay(ClientFactory clientfactory, TabletActivityMapper appActivityMapper, DWOplayerParameters params)
 	{
-//		AnimatableDisplay display = GWT.create(AnimatableDisplay.class);
-//		TabletActivityMapper appActivityMapper = new TabletActivityMapper(clientfactory);
-//		TabletAnimationMapper animationMapper = new TabletAnimationMapper();
-//		AnimatingActivityManager activityMapper = new AnimatingActivityManager(appActivityMapper, animationMapper, clientfactory.getEventBus());
-//		activityMapper.setDisplay(display);
-//		
-//		display.asWidget().addStyleName("RootPanel");
-		
+	    DWOplayer.PARAMETERS = params;
+	    PREFIX = PARAMETERS.getLaunchData();
 		SimplePanel display = new SimpleLayoutPanel();
 		ActivityManager activityMapper = new ActivityManager(appActivityMapper, clientfactory.getEventBus());
 		activityMapper.setDisplay(display);
@@ -409,6 +392,7 @@ public abstract class DWOplayer
 		}
 	}
 
+	@Deprecated 
 	public static boolean isPremium() {
 		try { 
 			return clientfactory.isPremium();

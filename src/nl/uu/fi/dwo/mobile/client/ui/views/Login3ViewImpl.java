@@ -4,9 +4,11 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import nl.uu.fi.dwo.mobile.BUILD;
-import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.text.Text;
+
+import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -31,10 +33,13 @@ import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
+import dagger.Reusable;
+
 /**
  * @author wim
  *
  */
+@Reusable
 public class Login3ViewImpl extends Composite implements LoginView  {
 
 	private static Login3ViewImplUiBinder uiBinder = GWT
@@ -75,10 +80,10 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 	 * Note that depending on the widget that is used, it may be necessary to
 	 * implement HasHTML instead of HasText.
 	 */
-	Widget createAndBindUi() {
+	Widget createAndBindUi(DWOplayerParameters PARAMETERS) {
 		back = URL.encodePathSegment(Window.Location.getHref());
 		build = "Version " + BUILD.version + "." + BUILD.buildNumber;
-		pfx = DWOplayer.PARAMETERS.getResource("");
+        pfx = PARAMETERS.getResource("");
 		for_students = rb.for_students();
 		if(kiosk)
 			for_students = //rb.kiosk_mode
@@ -87,10 +92,12 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 		return uiBinder.createAndBindUi(this);
 	}
 	
-	private boolean kiosk = DWOplayer.PARAMETERS.getSecureMode() != SecureMode.NORMAL;
+	private final boolean kiosk;
 	
-	public Login3ViewImpl() {
-		initWidget(createAndBindUi());
+	@Inject Login3ViewImpl(DWOplayerParameters PARAMETERS) {
+	    kiosk = PARAMETERS.getSecureMode() != SecureMode.NORMAL;
+	    allow = !kiosk;
+		initWidget(createAndBindUi(PARAMETERS));
 		username.getElement().setPropertyString("placeholder", rb.gebruikersnaam());
 		username.getElement().setAttribute("autocomplete", "off");
 		username.getElement().setAttribute("autocapitalize", "off");
@@ -120,7 +127,7 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 		return password.getText();
 	}
 	
-	boolean allow = !kiosk;
+	boolean allow;
 
 	@Override
 	public void allowGuest(boolean allow) {

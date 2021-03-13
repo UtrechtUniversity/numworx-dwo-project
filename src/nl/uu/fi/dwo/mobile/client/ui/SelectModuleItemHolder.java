@@ -41,21 +41,21 @@ public class SelectModuleItemHolder
 				*/
 	}
 
-	public static void insert(Object id, String name, String file)
-	{
-		init();
-		SelectModuleItem item = new SelectModuleItem(id, name, file);
-		map.put(id.toString(), item);
-		list.add(item);
-	}
+//	public static void insert(Object id, String name, String file)
+//	{
+//		init();
+//		SelectModuleItem item = new SelectModuleItem(id, name, file);
+//		map.put(id.toString(), item);
+//		list.add(item);
+//	}
 
-	public static void insert(Object id, Node node)
-	{
-		init();
-		SelectModuleItem item = new SelectModuleItem(id, node);
-		map.put(id.toString(), item);
-		list.add(item);
-	}
+//	public static void insert(Object id, Node node)
+//	{
+//		init();
+//		SelectModuleItem item = new SelectModuleItem(id, node);
+//		map.put(id.toString(), item);
+//		list.add(item);
+//	}
 	
 	public static void insert(SelectModuleItem item) {
 		init();
