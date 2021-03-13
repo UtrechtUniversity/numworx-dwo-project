@@ -1016,7 +1016,8 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
         zoomKolom = 0;
         zoomRij = 0;
       }
-      parent.zoom1(this);
+      int width = getWindowWidth();
+      parent.zoom1(this, width);
 //      if (responsive)
 //    	  zetVolledigeBreedte( (int)( (Window.getClientWidth()-20)/responsiveFactor)); // FIXME 20 is toplevel marge
 //      else
@@ -5765,12 +5766,18 @@ private Object CamelCase(String name) {
 		if(parent != null) {
 			parent.unzoom(this);
 		} else {
-          int marge = instellingen.getInt("margeRechts") + instellingen.getInt("margeLinks");
-          zetVolledigeBreedte0(Window.getClientWidth()-marge);
+          int width = getWindowWidth();
+          zetVolledigeBreedte0(width);
 		}
 		  
 		
 	}
+
+  public int getWindowWidth() {
+    int marge = instellingen.getInt("margeRechts") + instellingen.getInt("margeLinks");
+    int width = Window.getClientWidth()-marge;
+    return width;
+  }
 
   private ResizeHandler resizeHandler;
   @Override

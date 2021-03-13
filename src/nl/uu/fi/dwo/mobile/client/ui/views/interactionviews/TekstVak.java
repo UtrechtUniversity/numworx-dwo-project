@@ -22,6 +22,7 @@ import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -1205,11 +1206,11 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		resize();
 	}
 
-  public void zoom1(TekstVakPanel tekstVakPanel) {
+  public void zoom1(TekstVakPanel tekstVakPanel, int width) {
     zoom(tekstVakPanel);
     TekstVakPanel t = tekstVakPanel;
     while (t != null) { 
-      t.zetVolledigeBreedte2(1024); 
+      t.zetVolledigeBreedte2(width); 
       TekstVak tv = t.parent;
       t = tv == null ? null : tv.parent; }
   }
