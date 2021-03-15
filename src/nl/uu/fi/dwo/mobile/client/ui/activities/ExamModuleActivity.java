@@ -24,6 +24,7 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import dagger.MembersInjector;
+import dagger.Reusable;
 
 public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 
@@ -37,8 +38,18 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 	private EventBus bus;
 	final private boolean skipPassword;
 
+	@Reusable
+	public static class Factory {
+	  @Inject MembersInjector<ExamModuleActivity> injector;
+	  @Inject Factory() {}
+	  public ExamModuleActivity create(SelectModuleItem item, Provider<? extends Activity> provider) {
+	    return new ExamModuleActivity(item, provider, injector);
+	  }
+	}
+	
+	
 	//@Inject
-	public ExamModuleActivity(ClientFactory clientFactory, SelectModuleItem i, Provider<? extends Activity> provider, boolean b)
+	ExamModuleActivity(ClientFactory clientFactory, SelectModuleItem i, Provider<? extends Activity> provider, boolean b)
 	{
 		this.clientFactory = clientFactory;
 		this.PARAMETERS = DWOplayer.PARAMETERS;
@@ -47,23 +58,23 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 		this.skipPassword = b;
 	}
 	
-	public ExamModuleActivity(SelectModuleItem i, Provider<? extends Activity> provider, MembersInjector<ExamModuleActivity> injector) {
+	ExamModuleActivity(SelectModuleItem i, Provider<? extends Activity> provider, MembersInjector<ExamModuleActivity> injector) {
 	  injector.injectMembers(this);
 	  this.item = i;
 	  this.provider = provider;
 	  this.skipPassword = item.getType() == SelectModuleItem.Type.SCO;
 	}
 	
-	public ExamModuleActivity(ClientFactory factory, SelectModuleItem i) {
-		this(factory, i, null, false);
-		provider = new Provider<Activity>() {
-
-			@Override
-			public Activity get() {
-				return new TreeModuleActivity(clientFactory, item);
-			}
-		};
-	}
+//	public ExamModuleActivity(ClientFactory factory, SelectModuleItem i) {
+//		this(factory, i, null, false);
+//		provider = new Provider<Activity>() {
+//
+//			@Override
+//			public Activity get() {
+//				return new TreeModuleActivity(clientFactory, item);
+//			}
+//		};
+//	}
 	
 	
 	

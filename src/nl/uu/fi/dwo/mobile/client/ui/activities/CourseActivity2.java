@@ -48,9 +48,20 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import dagger.MembersInjector;
+import dagger.Reusable;
 
 public class CourseActivity2 extends AbstractActivity implements Activity, GotoController {
 
+    @Reusable
+    public static class Factory {
+       @Inject MembersInjector<CourseActivity2> caInjector;
+       @Inject Factory() {} 
+       public CourseActivity2 create(SelectModuleItem item, Place where) {
+         return new CourseActivity2(item, where, caInjector);
+       }
+    }
+  
+  
 	@Inject ClientFactory clientFactory;
 	@Inject PlaceController placeController;
 	@Inject Provider<NoCourseView> noCourseView;
@@ -59,7 +70,7 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
     private Place where;
     private SelectModuleItem item;
 
-	public CourseActivity2(ClientFactory clientFactory, SelectModuleItem item, Place where) {
+	CourseActivity2(ClientFactory clientFactory, SelectModuleItem item, Place where) {
 		this.clientFactory = clientFactory;
 		this.item = item;
 		this.where = where;
@@ -68,7 +79,7 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
 		headerView = clientFactory.getHeaderView();
 	}
 
-	public CourseActivity2(SelectModuleItem item, Place where, MembersInjector<CourseActivity2> injector) {
+	CourseActivity2(SelectModuleItem item, Place where, MembersInjector<CourseActivity2> injector) {
 	  this.item = item;
 	  this.where = where;
 	  injector.injectMembers(this);

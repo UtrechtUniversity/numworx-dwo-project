@@ -49,7 +49,7 @@ public class ClassCourseActivity implements Activity {
   @Inject HeaderView header;
   @Inject NavigationView navigation;
   @Inject DwoGlobalVars instance;
-  @Inject MembersInjector<CourseActivity2> caInjector;
+  @Inject CourseActivity2.Factory caFactory;
   @Inject MembersInjector<ExamModuleActivity> exInjector;
   
   private Promise<DomCoursesOfSchoolClass> promise;
@@ -88,7 +88,7 @@ public class ClassCourseActivity implements Activity {
                         return scos;
                     }).map(new SCO_TO_MODULEITEM(item)));
         
-        Provider<Activity> activity = () -> new CourseActivity2(item, where, caInjector);
+        Provider<Activity> activity = () -> caFactory.create(item, where);
         if (item.isExam()) {
           delegate = new ExamModuleActivity(item, activity, exInjector);
         } else 

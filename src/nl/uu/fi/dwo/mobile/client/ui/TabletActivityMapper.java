@@ -6,24 +6,15 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import nl.uu.fi.dwo.mobile.client.ui.activities.CourseActivity2;
-import nl.uu.fi.dwo.mobile.client.ui.activities.ExamActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ExamModuleActivity;
-import nl.uu.fi.dwo.mobile.client.ui.activities.GuestActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LoginActivity;
-import nl.uu.fi.dwo.mobile.client.ui.activities.LogoutActivity;
-import nl.uu.fi.dwo.mobile.client.ui.activities.MaybeLogoutActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ReloginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ScoActivity;
-import nl.uu.fi.dwo.mobile.client.ui.activities.SearchActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.TreeModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ViewCourseActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ViewModuleActivity;
-import nl.uu.fi.dwo.mobile.client.ui.places.Exam;
 import nl.uu.fi.dwo.mobile.client.ui.places.HasHash;
 import nl.uu.fi.dwo.mobile.client.ui.places.Hash;
-import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.LogoutPlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.MaybeLogout;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
 //import nl.uu.fi.dwo.mobile.client.ui.places.SearchPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
@@ -37,6 +28,8 @@ import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
+
+import dagger.Lazy;
 
 /**
  * @see GWT
@@ -57,6 +50,8 @@ public class TabletActivityMapper implements ActivityMapper
 	@Inject Provider<LoginActivity> login;
 	
 	@Inject Map<Class<?>, Provider<Activity>> activityMap;
+	@Inject Lazy<CourseActivity2.Factory> caFactory;
+	@Inject Lazy<ExamModuleActivity.Factory> exFactory;
 	
 	
 	@Override
@@ -82,12 +77,12 @@ public class TabletActivityMapper implements ActivityMapper
 			} else {
 			    item.setPlace(place);
 				if(item.isExam()) {
-					Activity c = new CourseActivity2(clientFactory, item, place);
-					ExamModuleActivity e = new ExamModuleActivity(clientFactory, item, () -> c, false);
+					Activity c = caFactory.get().create(item, place);
+					ExamModuleActivity e = exFactory.get().create(item, () -> c);
 					return e;
 				}
 			}
-			return new CourseActivity2(clientFactory, item, place);
+			return caFactory.get().create(item, place);
 		}
 
 		if (place instanceof s) 
@@ -127,7 +122,7 @@ public class TabletActivityMapper implements ActivityMapper
 			};
 			return 
 					item.isExam()
-					? new ExamModuleActivity(clientFactory, item, provider, true)				
+					? exFactory.get().create(item, provider)				
 					: viewModuleActivity;
 		}
 //		if (place instanceof LoginPlace)
@@ -149,7 +144,7 @@ public class TabletActivityMapper implements ActivityMapper
 			item.setPlace(place);
 			return 
 				item.isExam()
-					? new ExamModuleActivity(clientFactory, item)
+					? exFactory.get().create(item, () -> new TreeModuleActivity(clientFactory, item) )
 					: new TreeModuleActivity(clientFactory, item); // Anders geen activity reset action;
 		}
 //		if (place instanceof SearchPlace) {
