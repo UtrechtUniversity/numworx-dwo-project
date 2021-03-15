@@ -19,7 +19,8 @@ class TeacherStudentModelPanelTableModel extends AbstractTableModel {
     private String[] columnNames = {TextMapper.getText(TextMapper.GUIMNU_STUDENTMODELS),
         TextMapper.getText(TextMapper.TBL_SELECT),
         TextMapper.getText(TextMapper.TBL_DELETE), 
-        TextMapper.getText(TextMapper.GUIMNU_RESULTS)
+        TextMapper.getText(TextMapper.GUIMNU_RESULTS),
+        TextMapper.getText(TextMapper.UG_CLASSES)
     };
 
     static boolean DEBUG = false;
@@ -28,7 +29,7 @@ class TeacherStudentModelPanelTableModel extends AbstractTableModel {
 
     private Object[][] data;
 
-    public void init(List<DomStudentModelContext> modelList, Image searchImage, Image removeImage, Image resultsImage) throws Dwo2Exception {
+    public void init(List<DomStudentModelContext> modelList, Image searchImage, Image removeImage, Image resultsImage, Image classImage) throws Dwo2Exception {
 
         
         int rows = 0;
@@ -38,7 +39,7 @@ class TeacherStudentModelPanelTableModel extends AbstractTableModel {
 
         rows = modelList.size();
 
-        data = new Object[rows][6];
+        data = new Object[rows][7];
         int j = 0;
         for (DomStudentModelContext m : modelList) {
             String language = m.getModelStructure().getInfo().getTitle().get(DwoHelper.getLocale().getLocale());
@@ -49,7 +50,8 @@ class TeacherStudentModelPanelTableModel extends AbstractTableModel {
             data[j][1] = searchImage;
             data[j][2] = removeImage;
             data[j][3] = resultsImage;
-            data[j][4] = m;
+            data[j][4] = classImage;
+            data[j][5] = m;
             j++;
         }
         fireTableDataChanged();

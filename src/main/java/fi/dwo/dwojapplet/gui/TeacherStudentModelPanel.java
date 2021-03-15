@@ -9,9 +9,11 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.domainmodel.ImportAction;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinEditPanel2;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinResultsPanel2;
+import fi.dwo.dwojapplet.gui.domainmodel.SettingsSchoolClassPanel;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.MediaTracker;
@@ -65,7 +67,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
     private JPanel jtbl;
     private TableRowSorter<TeacherStudentModelPanelTableModel> rowSorter;
 
-    private Image searchImage, removeImage, resultsImage;
+    private Image searchImage, removeImage, resultsImage, classImage;
     int row;
 
     private JScrollPane scrollPane;
@@ -148,7 +150,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
                 GuiCreator.instance().ShowErrorDialog(center, e);
               } finally {
                 try {
-                  tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage);
+                  tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage, classImage);
                 } catch (Dwo2Exception e) {
                   LOG.log(Level.SEVERE, "refresh list " + title, e);
                   GuiCreator.instance().ShowErrorDialog(center, e);
@@ -162,7 +164,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
               if ( ok == JOptionPane.OK_OPTION) {
                 try {
                   prop.removeModel(model);
-                  tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage);
+                  tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage, classImage);
                 } catch (Dwo2Exception e) {
                   LOG.log(Level.SEVERE, "remove model " + title, e);
                   GuiCreator.instance().ShowErrorDialog(center, e);
@@ -194,6 +196,23 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 //              int w = dialog.getWidth(), h = dialog.getHeight();
 //              Dimension m = dialog.getMaximumSize();
               //dialog.setSize(Math.min(w, m.width), Math.min(h, m.height));
+              dialog.center();
+              dialog.setVisible(true);
+            }
+            
+            if (value == classImage) {
+              DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
+              List<DomSchoolClass> list;
+              try {
+                list = SecureTeacherSchoolClassManager.getTeachersSchoolClasses();
+              } catch (Dwo2Exception e) {
+                list = Collections.emptyList();
+              }
+ 
+              ConfirmDialog dialog = new ConfirmDialog(TeacherStudentModelPanel.this, "Instelling leerdomein per klas");
+              Container pane = new SettingsSchoolClassPanel(list, model);
+              dialog.setContentPane(pane);
+              dialog.pack();
               dialog.center();
               dialog.setVisible(true);
             }
@@ -268,7 +287,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
         tableModel = new TeacherStudentModelPanelTableModel();
 
-        tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage);
+        tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage, classImage);
         jtable.setModel(tableModel);
         rowSorter = new TableRowSorter<TeacherStudentModelPanelTableModel>(tableModel);
         rowSorter.toggleSortOrder(0);//
@@ -326,9 +345,11 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         searchImage = DwoHelper.getResourceImage(GuiConstants.EDIT_STUDENTMODEL_IMAGE);
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_STUDENTMODEL_IMAGE);
         resultsImage = DwoHelper.getResourceImage(GuiConstants.SEARCH_IMAGE);
+        classImage = DwoHelper.getResourceImage(GuiConstants.USERS_CLASS_IMAGE);
         tr.addImage(searchImage, 0);
         tr.addImage(removeImage, 0);
         tr.addImage(searchImage, 0);
+        tr.addImage(classImage, 0);
         try {
             tr.waitForAll();
         } catch (Exception e) {
@@ -443,7 +464,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 
     public void addModel(DomStudentModelContext model) throws Dwo2Exception {
       prop.addModel(model);
-      tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage);
+      tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage, classImage);
     }
 
     /**
