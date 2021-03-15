@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.rest.entities;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 
 /**
@@ -10,11 +11,11 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
  * @author plas0006
  */
 @XmlRootElement
-
 public class RestStudentModelContext {
     
     private DomContext restContext;
     private DomStudentModelContext domStudentModelContext;
+    private DomSchoolClassId domSchoolClass;
 
     /**
      * @return the restContext
@@ -43,6 +44,20 @@ public class RestStudentModelContext {
     public void setDomStudentModelContext(DomStudentModelContext domStudentModelContext) {
         this.domStudentModelContext = domStudentModelContext;
     }
+
+	/**
+	 * @return the domSchoolClass
+	 */
+	public DomSchoolClassId getDomSchoolClass() {
+		return domSchoolClass;
+	}
+
+	/**
+	 * @param domSchoolClass the domSchoolClass to set
+	 */
+	public void setDomSchoolClass(DomSchoolClassId domSchoolClass) {
+		this.domSchoolClass = domSchoolClass;
+	}
 
 
 }
