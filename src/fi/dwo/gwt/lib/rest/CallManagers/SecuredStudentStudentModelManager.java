@@ -48,10 +48,11 @@ public class SecuredStudentStudentModelManager {
 		return F(service::getReducedList, PathId.getId(context), rest);
 	}
 	
-	public Promise<DomStudentModelContext> getStudentModel(DomContext context, DomStudentModelContextId id) {
+	public Promise<DomStudentModelContext> getStudentModel(DomContext context, DomStudentModelContextId id, DomSchoolClass sc) {
 		RestStudentModelContextId rest = new RestStudentModelContextId();
 		rest.setDomStudentModelContext(id);
 		rest.setRestContext(context);
+		rest.setDomSchoolClass(sc);
 		return F(service::getStudentModel, PathId.getId(context), rest);
 		
 	}
