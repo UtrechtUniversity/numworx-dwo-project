@@ -141,7 +141,7 @@ public class StudentResultsService implements StudentResults {
 
 	private Promise<DomStudentModelContext> getFull(Promise<DomStudentModelContext> p) {
 		if (p.getValue().getModelStructure().getCategories() == null) {
-			return manager.getStudentModel(context, p.getValue())
+			return manager.getStudentModel(context, p.getValue(), sc)
 					.map(this::trimObjectives)
 					.then(q -> { copy(p,q); return p;}); 
 		}

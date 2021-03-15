@@ -292,8 +292,9 @@ public class DwoGlobalVars {
     DomHasRole domHasRole = new DomHasRole();
     domHasRole.setUserId(loginContext.getUserId());
     domHasRole.setSchoolGroupId(loginContext.getSchoolGroupId());
-    //domHasRole.setId(loginContext.getHasRoleId()); FIXME
-    setHasRoleId(domHasRole);
+    domHasRole.setId(loginContext.getHasRoleId());
+    if (domHasRole.getId()== null)
+    	setHasRoleId(domHasRole);
     domHasRole.setRights(""); // no rights....
     context.setDomHasRole(domHasRole);
     return context;
@@ -397,8 +398,7 @@ public class DwoGlobalVars {
       			}
       	).then(
       			q -> { 
-      				DomContext context = new DomContext();
-      				context.setRealm(q.getValue().getRealm());
+      				DomContext context = createContext(q.getValue());
       			return accountManager.getAccountData(context).map( 
       					data -> { 
       				DomUserFullwLoginContext all = new DomUserFullwLoginContext();
