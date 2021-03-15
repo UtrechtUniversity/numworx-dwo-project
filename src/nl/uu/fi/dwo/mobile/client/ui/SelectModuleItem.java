@@ -30,8 +30,6 @@ import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
  */
 public class SelectModuleItem
 {
-	@Deprecated
-	public static final String PREFIX = DWOplayer.PREFIX;
 	
 	public enum Type
 	{
@@ -47,7 +45,6 @@ public class SelectModuleItem
 	
 	
 	private String name;
-	private String file;
 	private String description;
 	private Object id, original;
 	private boolean showScore, fromSchool;
@@ -122,7 +119,6 @@ public class SelectModuleItem
 			this.name = map.get("sconame").toString();
 			this.description = (String) map.get("description");
 			this.id =  map.get("scoID");
-			this.file = PREFIX + this.id;
 			this.showScore = !Boolean.TRUE.equals(map.get("showscore")); // reverse logica
 			this.sequencenr = ((Number) map.get("sequencenr")).intValue();
 			parentID = map.get("courseID");
@@ -174,10 +170,6 @@ public class SelectModuleItem
 	public SelectModuleItem(Object id, Type module) {
 		this.type = module;
 		this.id = id;
-		if(module == Type.SCO)
-		{
-			this.file = PREFIX + id;
-		}
 	}
 
 	public SelectModuleItem(DomCourseStudent course, DomClassCourse domClassCourse) {
@@ -194,7 +186,6 @@ public class SelectModuleItem
 		Long sequence = sco.getSequencenr();
 		sequencenr = sequence != null ? sequence.intValue() : Integer.MAX_VALUE;
 		showScore = !Boolean.TRUE.equals(sco.getShowScore());
-		this.file = PREFIX + this.id;
 		if(parent != null) {
 			if(getParent() != null) {
 				SelectModuleItem parent = getParent();
@@ -218,11 +209,6 @@ public class SelectModuleItem
 	public void setName(String name)
 	{
 		this.name = name;
-	}
-
-	public String getFile()
-	{
-		return file;
 	}
 
 	public Object getID()

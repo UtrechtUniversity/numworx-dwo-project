@@ -28,8 +28,10 @@ import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceController;
 
 import dagger.Lazy;
+import dagger.MembersInjector;
 
 /**
  * @see GWT
@@ -52,6 +54,11 @@ public class TabletActivityMapper implements ActivityMapper
 	@Inject Map<Class<?>, Provider<Activity>> activityMap;
 	@Inject Lazy<CourseActivity2.Factory> caFactory;
 	@Inject Lazy<ExamModuleActivity.Factory> exFactory;
+	@Inject Lazy<ScoActivity.Factory> scoFactory;
+
+	@Inject PlaceController placeController;
+	@Inject MembersInjector<ViewModuleActivity> vmInjector;
+	@Inject MembersInjector<TreeModuleActivity> trInjector;
 	
 	
 	@Override
@@ -60,11 +67,7 @@ public class TabletActivityMapper implements ActivityMapper
 // simple case 
 		Provider<Activity> provider = activityMap.get(place.getClass());
 		if (provider != null) return provider.get();
-		
-//		if (place instanceof MaybeLogout) {
-//	    return maybeLogout.get().place(place);
-//	  }
-	  		
+			  		
 		if (place instanceof nl.uu.fi.dwo.mobile.client.ui.places.c) 
 		{
 			String id = ((Hash) place).getToken();
@@ -98,7 +101,7 @@ public class TabletActivityMapper implements ActivityMapper
 				SelectModuleItemHolder.insert(item);
 			}
             item.setPlace(place);
-			return new ScoActivity(clientFactory, item, where);
+			return scoFactory.get().create(item, where);
 		}
 		
 		
@@ -111,8 +114,8 @@ public class TabletActivityMapper implements ActivityMapper
 			item.setPlace(place);
 			final ViewModuleActivity viewModuleActivity = 
 			    place instanceof ViewCoursePlace 
-			    ? new ViewCourseActivity(clientFactory, item, where)
-			    : new ViewModuleActivity(clientFactory, item, where);
+			    ? new ViewCourseActivity(vmInjector, item, where)
+			    : new ViewModuleActivity(vmInjector, item, where);
 			    provider = new Provider<Activity>() {
 				
 				@Override
@@ -130,7 +133,7 @@ public class TabletActivityMapper implements ActivityMapper
 		if (place instanceof ReloginPlace)
 		{
 			if(clientFactory.withUser())
-				return new ReloginActivity(clientFactory, ((HasHash) place).getPlace());
+				return new ReloginActivity(clientFactory, ((HasHash) place).getPlace(), placeController);
 			else
 				return login.get();
 		}
@@ -144,8 +147,8 @@ public class TabletActivityMapper implements ActivityMapper
 			item.setPlace(place);
 			return 
 				item.isExam()
-					? exFactory.get().create(item, () -> new TreeModuleActivity(clientFactory, item) )
-					: new TreeModuleActivity(clientFactory, item); // Anders geen activity reset action;
+					? exFactory.get().create(item, () -> new TreeModuleActivity(trInjector, item) )
+					: new TreeModuleActivity(trInjector, item); // Anders geen activity reset action;
 		}
 //		if (place instanceof SearchPlace) {
 //			SearchPlace tmp = (SearchPlace) place;

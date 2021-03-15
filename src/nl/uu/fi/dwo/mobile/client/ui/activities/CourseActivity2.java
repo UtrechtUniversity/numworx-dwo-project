@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.ViewCoursePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
+import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.UnSafeModuleView;
@@ -66,18 +67,20 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
 	@Inject PlaceController placeController;
 	@Inject Provider<NoCourseView> noCourseView;
     @Inject HeaderView headerView;
+    @Inject Provider<UnSafeModuleView> unsafe;
+    @Inject NavigationView navigation;
 
     private Place where;
     private SelectModuleItem item;
 
-	CourseActivity2(ClientFactory clientFactory, SelectModuleItem item, Place where) {
-		this.clientFactory = clientFactory;
-		this.item = item;
-		this.where = where;
-		placeController = clientFactory.getPlaceController();
-		noCourseView = clientFactory.getNoCourseView();
-		headerView = clientFactory.getHeaderView();
-	}
+//	CourseActivity2(ClientFactory clientFactory, SelectModuleItem item, Place where) {
+//		this.clientFactory = clientFactory;
+//		this.item = item;
+//		this.where = where;
+//		placeController = clientFactory.getPlaceController();
+//		noCourseView = clientFactory.getNoCourseView();
+//		headerView = clientFactory.getHeaderView();
+//	}
 
 	CourseActivity2(SelectModuleItem item, Place where, MembersInjector<CourseActivity2> injector) {
 	  this.item = item;
@@ -89,7 +92,7 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
 		final TreeModuleView view = clientFactory.getTreeModuleView();
-		clientFactory.getNavigationView().hide();
+		navigation.hide();
 		view.setBeheer(false);
 		view.setPresenter(this);
 		DomUserFull currentUser = DwoGlobalVars.instance().getCurrentUser();
@@ -149,11 +152,11 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
 					view.selectModule(item);
 					headerView.setUpPlace(where);
 
-					clientFactory.getNavigationView().hide();
+					navigation.hide();
 					if(item.getCourseType() == CourseType.assesment) {
-						final UnSafeModuleView w = new UnSafeModuleView(clientFactory.getHeaderView(), clientFactory.getPlaceController());
+						final UnSafeModuleView w = unsafe.get();
 						w.selectItem(item);
-						clientFactory.getNavigationView().hide();
+						navigation.hide();
 						clientFactory.barrier().onResolve(		
 								new Runnable() {
 									public void run() {
@@ -209,7 +212,7 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
 //					view.setDescription(item);
 					view.render(SelectModuleItemHolder.getItems());
 					view.selectModule(item);
-					clientFactory.getNavigationView().hide();
+					navigation.hide();
 					return null;
 				}
 			}, failure);
@@ -217,7 +220,7 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
 		} else {
 			view.render(SelectModuleItemHolder.getItems());
 			view.selectModule(item);
-			clientFactory.getNavigationView().hide();			
+			navigation.hide();			
 		}
 //		view.setDescription(item);
 		panel.setWidget(view);

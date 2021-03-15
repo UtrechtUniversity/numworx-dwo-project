@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window.Location;
@@ -18,6 +19,7 @@ public class ExamActivity extends AbstractActivity {
 
   @Inject ExamActivity() {  }
   @Inject ClientFactory clientFactory;
+  @Inject PlaceController placeController;
   
   boolean legal(String base) {
     RegExp r = RegExp.compile("^/[a-z]+(/[a-z]+)*/$");
@@ -27,7 +29,7 @@ public class ExamActivity extends AbstractActivity {
   
   @Override
   public void start(AcceptsOneWidget panel, EventBus eventBus) {
-    String token = ((Exam) clientFactory.getPlaceController().getWhere()).getToken();
+    String token = ((Exam) placeController.getWhere()).getToken();
     if (!token.isEmpty()) token = "?id=" + token;
     panel.setWidget(new Label());
     Actions.EXAM.execute();

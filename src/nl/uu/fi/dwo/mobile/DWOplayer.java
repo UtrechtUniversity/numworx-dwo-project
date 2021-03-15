@@ -24,6 +24,8 @@ import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
+import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
+import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.core.client.GWT;
@@ -158,29 +160,33 @@ public abstract class DWOplayer
 		settings.setPreventScrolling(true);
 		MGWT.applySettings(settings);
 
-		//GWT Settings//
-		clientfactory = createClientFactory();
-		final PlaceHistoryHandler historyHandler = clientfactory.getPlaceHistoryHandler();
-
-		historyHandler.handleCurrentHistory();
+		createClientFactory();
 	}
 
-	protected abstract ClientFactory createClientFactory();
+	
+	protected void start(PlaceHistoryHandler h) {
+		h.handleCurrentHistory();
+	}
+	
+	
+	protected abstract void createClientFactory();
 
-	void createTabletDisplay(ClientFactory clientfactory, TabletActivityMapper appActivityMapper, DWOplayerParameters params)
+	void createTabletDisplay(ClientFactory clientfactory, TabletActivityMapper appActivityMapper, 
+			DWOplayerParameters params, NavigationView navigation, HeaderView header)
 	{
 	    DWOplayer.PARAMETERS = params;
+	    DWOplayer.clientfactory = clientfactory;
 	    PREFIX = PARAMETERS.getLaunchData();
 		SimplePanel display = new SimpleLayoutPanel();
 		ActivityManager activityMapper = new ActivityManager(appActivityMapper, clientfactory.getEventBus());
 		activityMapper.setDisplay(display);
 		display.asWidget().addStyleName("RootPanel");
-		RootLayoutPanel.get().add(clientfactory.getHeaderView());
-		RootLayoutPanel.get().add(clientfactory.getNavigationView());
+		RootLayoutPanel.get().add(header);
+		RootLayoutPanel.get().add(navigation);
 		RootLayoutPanel.get().add(display);
-		clientfactory.getNavigationView().setDisplay(display);
-		clientfactory.getHeaderView().setDisplay(display,clientfactory.getNavigationView());
-		clientfactory.getHeaderView().hide();
+		navigation.setDisplay(display);
+		header.setDisplay(display,navigation);
+		header.hide();
 	}
 
 	public void onModuleLoad()

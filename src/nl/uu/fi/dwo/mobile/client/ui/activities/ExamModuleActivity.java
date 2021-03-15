@@ -31,6 +31,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 
 	@Inject ClientFactory clientFactory;
 	@Inject DWOplayerParameters PARAMETERS;
+	@Inject Provider<UnSafeModuleView> unsafe;
 	private SelectModuleItem item;
 	private Activity delegate;
 	private Provider<? extends Activity> provider;
@@ -47,17 +48,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 	  }
 	}
 	
-	
-	//@Inject
-	ExamModuleActivity(ClientFactory clientFactory, SelectModuleItem i, Provider<? extends Activity> provider, boolean b)
-	{
-		this.clientFactory = clientFactory;
-		this.PARAMETERS = DWOplayer.PARAMETERS;
-		this.item = i;
-		this.provider = provider;
-		this.skipPassword = b;
-	}
-	
+		
 	ExamModuleActivity(SelectModuleItem i, Provider<? extends Activity> provider, MembersInjector<ExamModuleActivity> injector) {
 	  injector.injectMembers(this);
 	  this.item = i;
@@ -81,7 +72,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 	@Override
 	public void start(final AcceptsOneWidget panel, EventBus eventBus) {
 		if(SecureMode.NORMAL == PARAMETERS.getSecureMode()) {
-			final UnSafeModuleView w = new UnSafeModuleView(clientFactory.getHeaderView(), clientFactory.getPlaceController());
+			final UnSafeModuleView w = unsafe.get();
 			w.selectItem(item);
 			clientFactory.barrier().onResolve(		
 			new Runnable() {

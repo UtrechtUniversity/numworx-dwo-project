@@ -30,8 +30,6 @@ public interface ClientFactory
 {
 	EventBus getEventBus();
 
-	@Deprecated
-	PlaceController getPlaceController();
 
 	ViewModuleView getEntryView();
 
@@ -40,27 +38,12 @@ public interface ClientFactory
 	HeaderView getHeaderView();
 	
 	RPCHandler getRPCHandler();
-	
-//	IsWidget getLogoutWidget();
-//	void setLogoutWidget(IsWidget widget);
-	
-	/**
-	 * FIXME deze moet weer weg als TreeModuleView één view gebruikt in plaats van steeds een nieuwe.
-	 * @param view
-	 */
-//	@Deprecated
-//	void setEntryView(ViewModuleView view);
-	
-	public SCORM_guest setupAPI();
-
+			
 	Promise<Void> logout();	
 	Promise<Void> barrier();
 	void addBarrier(Promise<?> p);
 	
 	boolean withUser();
-// Low level functions	
-//	Object getSchoolID();
-//	Object getClassID();
 	DomSchool getSchool();
 	DomSchoolClass getSchoolClass();
 	
@@ -68,26 +51,12 @@ public interface ClientFactory
 	RoleType getRoleType();
 	
 	Object getUserID();
-//	Object getSchoolName();
 
 	Promise<Void> startExam(DomClassCourse classCourse, String password);
 
 	boolean inExam(DomClassCourse classCourse);
 
-	NavigationView getNavigationView();
-
-    Provider<NoCourseView> getNoCourseView();
-
 	boolean isPremium();
 
-	@Deprecated
-  PlaceHistoryHandler getPlaceHistoryHandler();
 
-// High level functions
-/*	Full varianten?
-	DomUserFull getUser();
-	DomSchoolFull   getSchool();
-	DomSchoolClassFull getSchoolClass();
-	
-*/	
 }

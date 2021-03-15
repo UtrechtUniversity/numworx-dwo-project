@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.Login3ViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
+import nl.uu.fi.dwo.mobile.client.ui.views.NavigationViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewBuilder;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewNumworx;
@@ -55,7 +56,7 @@ public abstract class HeaderLessModule {
   @Provides static HeaderView headerview(DWO2ClientFactoryImpl impl) {
     return impl.getHeaderView();
   }
-  @Provides static NavigationView navigationview(DWO2ClientFactoryImpl impl) {
-    return impl.getNavigationView();
+  @Provides static NavigationView navigationview(NavigationViewNumworx impl) {
+    return impl;
   }
 }

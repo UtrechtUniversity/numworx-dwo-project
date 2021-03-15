@@ -8,6 +8,7 @@ import org.osgi.util.promise.Success;
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 
@@ -25,10 +26,12 @@ public class ReloginActivity extends AbstractActivity {
 
 	private String username;
 	private String password;
+	private PlaceController placeController;
 
-	public ReloginActivity(ClientFactory clientFactory, Place next) {
+	public ReloginActivity(ClientFactory clientFactory, Place next, PlaceController controller) {
 		this.clientFactory = clientFactory;
 		this.next = next;
+		this.placeController = controller;
 	}
 
 
@@ -72,7 +75,7 @@ public class ReloginActivity extends AbstractActivity {
 		})
 		.then(new LoginActivity.Login_Stap1(clientFactory))
 		.then(LoginActivity.LOGIN_STAP2, FAILURE1)
-		.then(new Login_Stap3(clientFactory, next));
+		.then(new Login_Stap3(clientFactory, next, placeController));
 	}
 
 	private String getUsername() {

@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
+import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
@@ -39,6 +40,7 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -166,6 +168,8 @@ public class LoginActivity extends AbstractActivity
 	protected HandlerRegistration registrations;
 
     private final DWOplayerParameters PARAMETERS;
+
+	@Inject PlaceController placeController;
 	
 	
 
@@ -175,12 +179,12 @@ public class LoginActivity extends AbstractActivity
 //		this.next = next;
 //	}
 
-	@Inject LoginActivity(ClientFactory clientFactory, DWOplayerParameters p) {
+	@Inject LoginActivity(ClientFactory clientFactory, DWOplayerParameters p, RPCHandler rpc, PlaceController placeController) {
 		this.clientFactory = clientFactory;
 		this.PARAMETERS = p;
-		this.dwoProfile = clientFactory.getRPCHandler().getDwoProfile();
+		this.dwoProfile = rpc.getDwoProfile();
 		this.LOGIN_STAP1 = new Login_Stap1(clientFactory);
-		Place place = clientFactory.getPlaceController().getWhere();
+		Place place = placeController.getWhere();
 		if (place instanceof HasHash)
 		  next = ((HasHash) place).getPlace();
 	}
@@ -337,7 +341,7 @@ public class LoginActivity extends AbstractActivity
 		.then(LOGIN_STAP1)
 		.filter(LOGIN_LIMITED)
 		.then(LOGIN_STAP2, FAILURE1)
-		.then(new Login_Stap3(clientFactory, next), FAILURE2);
+		.then(new Login_Stap3(clientFactory, next, placeController), FAILURE2);
 	}
 
 	private void resolve() {

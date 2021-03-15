@@ -32,10 +32,6 @@ public class DummyClientFactory implements ClientFactory {
 	private Lazy<ViewModuleView> entryView;
 	private TrafficAgent agent;
 	
-//	public DummyClientFactory() {
-//	  this(new SimpleEventBus(),new DummyRPCHandler(), new TrafficAgent(), false);
-//	}
-
 	@Inject DummyClientFactory(EventBus eventBus, RPCHandler handler, TrafficAgent agent, @Named("premium") boolean premium) {
       this.eventBus = eventBus;
       this.handler = handler;
@@ -47,11 +43,6 @@ public class DummyClientFactory implements ClientFactory {
   @Override
 	public EventBus getEventBus() {
 		return eventBus;
-	}
-
-	@Override
-	public PlaceController getPlaceController() {
-		return null;
 	}
 
 	@Override
@@ -72,11 +63,6 @@ public class DummyClientFactory implements ClientFactory {
 	@Inject
 	public void setEntryView(Lazy<ViewModuleView> entryView) {
 		this.entryView = entryView;
-	}
-
-	@Override
-	public SCORM_guest setupAPI() {
-		return GWT.create(SCORM_guest.class);
 	}
 
 	@Override
@@ -151,18 +137,6 @@ public class DummyClientFactory implements ClientFactory {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public NavigationView getNavigationView() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-  @Override
-  public Provider<NoCourseView> getNoCourseView() {
-    // TODO Auto-generated method stub
-    return null;
-  }
   
   
 	@Override
@@ -170,9 +144,4 @@ public class DummyClientFactory implements ClientFactory {
 		return premium; // FIXME komt van buitenaf.
 	}
 
-  @Override
-  public PlaceHistoryHandler getPlaceHistoryHandler() {
-    // TODO Auto-generated method stub
-    return null;
-  }
 }

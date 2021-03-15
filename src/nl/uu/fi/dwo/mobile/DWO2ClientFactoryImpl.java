@@ -9,7 +9,6 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
 import com.google.gwt.place.shared.PlaceController;
-import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -27,7 +26,6 @@ import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewNone;
-import nl.uu.fi.dwo.mobile.client.ui.views.NavigationViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewBuilder;
@@ -43,7 +41,6 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
   
         @Inject TrafficAgent agent;
-        @Inject PlaceHistoryHandler placeHistoryHandler;
 		@Inject Lazy<ConfirmEventHandler> confirmHandler;
 	    final Provider<? extends TreeModuleView> treeModuleViewProvider;
 	    TreeModuleView treeModuleView;
@@ -54,13 +51,12 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
             Provider<PlaceHistoryMapper> mapper,
             Provider<HeaderViewNone> none,
             @Named("header") Provider<HeaderView> numworx,
-            Provider<NavigationViewNumworx> navigation,
 		    Provider<ViewModuleViewBuilder> entry, RPCHandler rpcHandler,
 		    Provider<TreeModuleViewNumworx> view,
 		    DwoGlobalVars vars,
 		    DWOplayerParameters params
 		    ) {
-              super(bus, controller, mapper, navigation, entry);
+              super(bus, controller, entry);
               treeModuleViewProvider = view;
               instance = vars;
               PARAMETERS = params;
@@ -116,7 +112,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 // secure alleen voor studenten!
 				boolean secure = PARAMETERS.getSecureMode() == SecureMode.SEB && RoleType.STUDENT == getRoleType();
                 api = new SCORM_DWO5(getSchoolClass(),
-						DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole(),
+						instance.getActiveSchoolRoleAndClass().getHasRole(),
 						agent,
 						secure,
 						getEventBus(),
@@ -138,7 +134,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 		@Override
 		public DomSchool getSchool() {
 			try {
-				return DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getSchool();
+				return instance.getActiveSchoolRoleAndClass().getSchool();
 			} catch (Exception e) {
 				return null;
 			}
@@ -146,7 +142,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 
 		@Override
 		public DomSchoolClass getSchoolClass() {
-			return DwoGlobalVars.instance().getCurrentSchoolClass();
+			return instance.getCurrentSchoolClass();
 		}
 
 		@Override
@@ -161,7 +157,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 		@Override
 		public RoleType getRoleType() {
 			try {
-				String roleName = DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getRole().getRoleName();
+				String roleName = instance.getActiveSchoolRoleAndClass().getRole().getRoleName();
 				return RoleType.valueOf(roleName);
 			} catch (Exception e) {
 				return RoleType.ANONYMOUS;
@@ -170,7 +166,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 
 		@Override
 		public Object getUserID() {
-			PersistenceId id = DwoGlobalVars.instance().getCurrentUser().getId();
+			PersistenceId id = instance.getCurrentUser().getId();
 			return PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentUser);
 		}
 
@@ -179,13 +175,5 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 			//return withUser() && getSchool().getAboType() == AboType.premium;
 			return !withUser() || getSchool().getAboType() == AboType.premium;
 		}
-
-		/* (non-Javadoc)
-		   * @see nl.uu.fi.dwo.mobile.client.ui.ClientFactory#getPlaceHistoryHandler()
-		   */
-		  @Override
-		  public PlaceHistoryHandler getPlaceHistoryHandler() {
-		    return placeHistoryHandler;
-		  }
 
 	}

@@ -10,18 +10,26 @@ import org.osgi.util.promise.Success;
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
+import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
+import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 public class GuestActivity extends AbstractActivity implements Activity {
 
 	private ClientFactory clientFactory;
+	@Inject PlaceController placeController;
+	@Inject HeaderView headerView;
+	@Inject DwoGlobalVars instance;
+	@Inject RPCHandler rpc;
+	
 
 	@Inject GuestActivity(ClientFactory clientFactory) {
 		this.clientFactory = clientFactory;
@@ -31,7 +39,7 @@ public class GuestActivity extends AbstractActivity implements Activity {
 	public void start(AcceptsOneWidget panel, EventBus eventBus) {
 		clientFactory.logout();
 		panel.setWidget(new Label());
-		clientFactory.getRPCHandler().getDwoProfile()
+		rpc.getDwoProfile()
 			.filter(new Predicate<DomDwoProfileFull>() {
 
 				@Override
@@ -44,11 +52,10 @@ public class GuestActivity extends AbstractActivity implements Activity {
 
 				@Override
 				public Promise<Void> call(Promise<DomDwoProfileFull> resolved) throws Exception {
-					DwoGlobalVars instance = DwoGlobalVars.instance();
 					instance.setCurrentLoginContext(null);
 					instance.setCurrentUser(null);
 					instance.setActiveSchoolRoleAndClass(null);
-					clientFactory.getHeaderView().setUserAndRole(null, RoleType.STUDENT);
+					headerView.setUserAndRole(null, RoleType.STUDENT);
 					DWOplayer.gotoCourses();
 					return null;
 				}
@@ -57,7 +64,7 @@ public class GuestActivity extends AbstractActivity implements Activity {
 				
 				@Override
 				public void fail(Promise<?> resolved) throws Exception {
-					clientFactory.getPlaceController().goTo(new LoginPlace());
+					placeController.goTo(new LoginPlace());
 				}
 			}
 		);

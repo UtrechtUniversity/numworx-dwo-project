@@ -2,7 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.activities;
 
 import com.google.gwt.place.shared.Place;
 
-import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
+import dagger.MembersInjector;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
@@ -11,9 +11,9 @@ import nl.uu.fi.dwo.mobile.client.ui.places.c;
 
 public class ViewCourseActivity extends ViewModuleActivity {
 
-  public ViewCourseActivity(ClientFactory clientFactory, SelectModuleItem sco,
+  public ViewCourseActivity(MembersInjector<ViewModuleActivity> injector, SelectModuleItem sco,
       ViewModulePlace where) {
-    super(clientFactory, sco, where);
+    super(injector, sco, where);
   }
 
   @Override

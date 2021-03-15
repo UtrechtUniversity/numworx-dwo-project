@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
+
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
@@ -14,6 +16,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.text.Text;
@@ -24,6 +27,7 @@ import nl.uu.fi.dwo.mobile.client.ui.IdleDetect.IdleEvent;
 import nl.uu.fi.dwo.mobile.client.ui.IdleDetect.IdleHandler;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
+import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
@@ -43,6 +47,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -50,6 +55,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+
+import dagger.MembersInjector;
 
 /**
  * Display module activity
@@ -60,7 +67,16 @@ import com.google.gwt.user.client.ui.Widget;
 public class ViewModuleActivity extends AbstractActivity implements AnchorContext, ViewModuleView.Presenter, 
   CBookEventListener, MessageEventHandler, GotoController, IdleHandler
 {
-	private ClientFactory clientFactory;
+	@Inject ClientFactory clientFactory;
+	@Inject PlaceController placeController;
+	@Inject RPCHandler rpc;
+	private DWOplayerParameters PARAMETERS;
+	@Inject void setParameters(DWOplayerParameters p) {
+		PARAMETERS = p;
+		isSEB = p.getSecureMode() == SecureMode.SEB;
+		EXIT_AFTER = isSEB ? new LoginPlace() : SelectModuleItem.ROOT.getPlace();
+	}
+
 	private ViewModuleView view;
 	private AnchorContext defaultContext;
 	SelectModuleItem sco;
@@ -77,17 +93,17 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 		return super.mayStop();
 	}
 
-	public ViewModuleActivity(ClientFactory clientFactory, SelectModuleItem sco, ViewModulePlace where)
+	public ViewModuleActivity(MembersInjector<ViewModuleActivity> injector, SelectModuleItem sco, ViewModulePlace where)
 	{
-		this.clientFactory = clientFactory;
+		injector.injectMembers(this);
 		this.sco = sco;
 		this.location = where.getLocation();
 	}
 	
 	final static private long BEFORE_AFTER = 30000L;
 	final static private long PREPARE_AFTER = BEFORE_AFTER + 5*60000L; // 5 minuten voor tijd.
-	final private boolean isSEB = DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB;
-	final private Place EXIT_AFTER = isSEB ? new LoginPlace() : SelectModuleItem.ROOT.getPlace();
+	private boolean isSEB;
+	private Place EXIT_AFTER;
 	
 	private boolean setNotAfter(final AcceptsOneWidget panel) {
 		Date notAfter = sco.getNotAfter();
@@ -137,7 +153,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 						Promise<Date> p;
 						if (isSEB) {
 						  p = 
-						  clientFactory.getRPCHandler().refreshExam().then(pr -> { 
+						  rpc.refreshExam().then(pr -> { 
 							JSONString jwt = pr.getValue().isString();
 							if (jwt != null) {
 								String[] split = jwt.stringValue().split(" ");
@@ -152,7 +168,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 							p = Promises.resolved(sco.getNotAfter());
 							if ( clientFactory.getSchoolClass() != null) {
 								final Promise<Date> p0 = p;
-								p = clientFactory.getRPCHandler().getCourseClass(sco.getParentID(), clientFactory.getSchoolClass()).
+								p = rpc.getCourseClass(sco.getParentID(), clientFactory.getSchoolClass()).
 								filter(pr-> !pr.getClassCourses().isEmpty()).
 								then(pr -> { 
 									DomClassCourse cc = pr.getValue().getClassCourses().get(0).getValue();
@@ -262,9 +278,9 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 				Logger.getLogger("ViewModuleActivity").log(Level.SEVERE, "initialize()", caught);
 				//Window.alert(caught.getMessage());
 				started = false;
+				view = null;
 				History.back();
 				//view.setupModule(sco.getName(), sco.getFile());
-				view = null;
 			}
 
 			@Override
@@ -273,7 +289,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 					view.getApi().SetValue(Memento.LOCATION, location);
 				}
 					started = !Memento.COMPLETED.equals(view.getApi().GetValue(Memento.COMPLETION_STATUS));
-					view.setupModule(sco.getName(), sco.getFile()).then(p -> {
+					view.setupModule(sco.getName(), PARAMETERS.getLaunchData() + sco.getID()).then(p -> {
 						if (p.getValue()) {
 							Window.alert("Error: need a Premium subscription");
 							started = false;
@@ -396,7 +412,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	@Override
 	public void goTo(Place place) {
 		started = false;
-		clientFactory.getPlaceController().goTo(place);
+		placeController.goTo(place);
 	}
 
   @Override

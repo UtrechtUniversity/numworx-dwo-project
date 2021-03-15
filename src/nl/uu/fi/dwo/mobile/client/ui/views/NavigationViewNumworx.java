@@ -164,6 +164,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	@UiField FlowPanel beheer;
 	@UiField HTML bibliotheek, results, organization, persons;
 	GotoController presenter;
+	final GotoController defaultPresenter;
 	private String SCHOOL_MODULES;
 	private TreeItem schoolMap;
 	private TreeItem standardMap;
@@ -217,7 +218,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		  none = !isTest();
 		}
 		if(!none) setBeheer(false);
-		presenter = controller::goTo;
+		presenter = defaultPresenter = controller::goTo;
 	}
 
 	private boolean isTest() {
@@ -363,7 +364,8 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		}
 	}
 
-	public void setPresenter(GotoController presenter) {
+	private void setPresenter(GotoController presenter) {
+		if (presenter == null) presenter = defaultPresenter;
 		this.presenter = presenter;		
 	}
 

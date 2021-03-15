@@ -7,6 +7,7 @@ import org.osgi.util.promise.Success;
 
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Window;
 
@@ -25,6 +26,7 @@ final class Login_Stap3 implements Success<Void, Void> {
 	Place next;
 
 	@Inject SecuredUserAccountManager account = new SecuredUserAccountManager();
+	private PlaceController placeController;
   
 	  boolean legal(String base) {
 	    RegExp r = RegExp.compile("^/[a-z]+(/[a-z]+)*/$");
@@ -55,10 +57,11 @@ final class Login_Stap3 implements Success<Void, Void> {
 //      }     
 //     );    
 //}	
-	Login_Stap3(ClientFactory clientFactory, Place next) {
+	Login_Stap3(ClientFactory clientFactory, Place next, PlaceController placeController) {
 		super();
 		this.clientFactory = clientFactory;
 		this.next = next;
+		this.placeController = placeController;
 	}
 
 	@Override
@@ -78,7 +81,7 @@ final class Login_Stap3 implements Success<Void, Void> {
 		  DWOplayer.gotoCourses();
 		}
 		else
-			clientFactory.getPlaceController().goTo(next);
+			placeController.goTo(next);
 		return null;
 
 	}

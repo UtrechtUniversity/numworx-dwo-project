@@ -10,6 +10,7 @@ import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
@@ -24,8 +25,9 @@ public class SearchActivity extends AbstractActivity implements Activity, GotoCo
 	private long id;
 	private TreeModuleView view;
 	private List<SelectModuleItem> currentModel;
+	private PlaceController placeController;
 
-	public SearchActivity(ClientFactory clientFactory, long id) {
+	public SearchActivity(ClientFactory clientFactory, long id, PlaceController controller) {
 		this.clientFactory = clientFactory;
 		this.id = id;
 	}
@@ -63,7 +65,7 @@ public class SearchActivity extends AbstractActivity implements Activity, GotoCo
 
 	@Override
 	public void goTo(Place place) {
-		clientFactory.getPlaceController().goTo(place);
+		placeController.goTo(place);
 	}
 
 }

@@ -18,6 +18,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 
@@ -46,6 +47,8 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
 import nl.uu.fi.dwo.mobile.client.ui.places.ClassesPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
+import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
@@ -213,8 +216,10 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 	}
 			
   @Inject
-  void createTabletDisplay(ClientFactory factory, TabletActivityMapper appActivityMapper, IdleDetect idleDetect, DWOplayerParameters PARAMETERS) {
-    super.createTabletDisplay(factory, appActivityMapper, PARAMETERS);
+  void createTabletDisplay(ClientFactory factory, TabletActivityMapper appActivityMapper, 
+		  IdleDetect idleDetect, DWOplayerParameters PARAMETERS, 
+		  NavigationView navigation, HeaderView header) {
+    super.createTabletDisplay(factory, appActivityMapper, PARAMETERS, navigation, header);
  
  // TESTING
     factory.getEventBus().addHandler(IdleDetect.TYPE, ev -> { GWT.log(ev.toString()); });
@@ -236,13 +241,13 @@ public class DWO2player extends DWOplayer implements EntryPoint {
     }
   }
 
-  protected ClientFactory createClientFactory() {
+  protected void createClientFactory() {
         DWO2RPCHandler rpc = new DWO2RPCHandler(PROFILE_ID);
         DWO2PlayerComponent create = DaggerDWO2PlayerComponent.builder()
             .rpcHandler(rpc)
             .build();
         create.inject(this);
-		return create.clientFactory();
+		start(create.placeHistoryHandler());
 	}
 
 	
@@ -263,6 +268,8 @@ public void setupDWOPlayer() {
 			return result;
 		}};
 	
+	@Inject RPCHandler rpc;
+	@Inject PlaceController placeController;
 	
 	@Override
 	protected void gotoCourses_impl() {
@@ -270,7 +277,7 @@ public void setupDWOPlayer() {
 		Promise<List<SelectModuleItem>> modules;
 		final RoleType roleType = clientfactory.getRoleType();
 		if( clientfactory.withUser() && clientfactory.getSchoolClass() != null) {
-			Promise<DomCoursesOfSchoolClass> promise = clientfactory.getRPCHandler().getCoursesClass(clientfactory.getSchoolClass());
+			Promise<DomCoursesOfSchoolClass> promise = rpc.getCoursesClass(clientfactory.getSchoolClass());
 
 			modules = promise.map(new CoursesOfClasToSelectItems());
 		} else if (clientfactory.withUser() && RoleType.STUDENT != roleType)
@@ -289,7 +296,7 @@ public void setupDWOPlayer() {
 				}})
 					.map(TO_SELECTMODULEITEM);
 		} else if (SecureMode.NORMAL == PARAMETERS.getSecureMode() ) { // no free lunch in exam
-			modules = clientfactory.getRPCHandler().getCourses().map(TO_SELECTMODULEITEM);
+			modules = rpc.getCourses().map(TO_SELECTMODULEITEM);
 		} else {
 			modules = Promises.resolved(Collections.emptyList());
 		}
@@ -303,10 +310,10 @@ public void setupDWOPlayer() {
 				@Override
 				public void run() {
 					if( SecureMode.NORMAL == PARAMETERS.getSecureMode() || roleType != RoleType.STUDENT)
-						clientfactory.getPlaceController().goTo(new TreeModulePlace("0"));
+						placeController.goTo(new TreeModulePlace("0"));
 					else 
 					{ // was FlatModulePlace();
-						clientfactory.getPlaceController().goTo(new ClassesPlace());
+						placeController.goTo(new ClassesPlace());
 					}
 				}});
 			return;

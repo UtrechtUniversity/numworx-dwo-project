@@ -18,6 +18,7 @@ import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
@@ -50,44 +51,60 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+
+import dagger.MembersInjector;
+import dagger.Reusable;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 
 public class ScoActivity extends AbstractActivity implements AnchorContext, ViewModuleView.Presenter, GotoController {
 
-	@Inject SelectModuleItem item;
-	@Inject ViewModuleView view;
+	private ViewModuleView view;
 	private String name;
 	private AnchorContext defaultContext;
 	final private LoginPlace next;
 	final private String location;
 	@Inject PlaceController placeController;
 	@Inject nl.uu.fi.dwo.mobile.client.ui.RPCHandler rpcHandler;
+	@Inject DWOplayerParameters PARAMETERS;
 	private boolean started;
-    @Inject DomSchoolClass schoolClass;
-    @Inject DomSchool school;
-    @Inject RoleType  role;
+
+	private DomSchoolClass schoolClass;
+    private DomSchool school;
+    private RoleType  role;
+
     @Inject Provider<NoCourseView> noCourseView;
     @Inject HeaderView headerView;
     private final PersistenceId where;
     private Promise<List<DomScoContext>> scoList;
-	@Inject ScoActivity(s where) {
+	private SelectModuleItem item;
+	private ScoActivity(s where) {
 	    this.where = where.getID();
 		next = new LoginPlace(where);
 		location = where.getLocation();
 	}
 		
-	public ScoActivity(ClientFactory clientFactory, SelectModuleItem item, s where) {
+	@Reusable public static class Factory {
+		@Inject MembersInjector<ScoActivity> injector;
+		@Inject ClientFactory clientFactory;
+		@Inject Factory() {}
+		
+		public ScoActivity create(SelectModuleItem item, Place place) {
+			ScoActivity activity = new ScoActivity(clientFactory, item, (s)place);
+			injector.injectMembers(activity);
+			return activity;
+		}
+	}
+	
+	
+	
+	private ScoActivity(ClientFactory clientFactory, SelectModuleItem item, s where) {
 		this(where);
 		this.item = item;
-		placeController = clientFactory.getPlaceController();
-		view = clientFactory.getEntryView();
-		rpcHandler = clientFactory.getRPCHandler();
 		schoolClass = clientFactory.getSchoolClass();
-		noCourseView = clientFactory.getNoCourseView();
 		school = clientFactory.getSchool();
-		headerView = clientFactory.getHeaderView();
 		role = clientFactory.getRoleType();
+		view = clientFactory.getEntryView();
 	}
 
 	DomScoContext findSco(DomCoursesOfSchoolClass csc) {
@@ -223,7 +240,7 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 						if(location != null) {
 							view.getApi().SetValue(Memento.LOCATION, location);
 						}
-						view.setupModule(name, item.getFile());
+						view.setupModule(name, PARAMETERS.getLaunchData() + item.getID());
 						panel.setWidget(view);
 	                    view.setAnchorContext(ScoActivity.this);
 						return null;

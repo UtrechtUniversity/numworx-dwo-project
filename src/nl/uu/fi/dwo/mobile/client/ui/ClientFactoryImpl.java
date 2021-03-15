@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import javax.inject.Provider;
 
+import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 //import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWOmAccess;
 //import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
@@ -41,27 +42,6 @@ import dagger.Lazy;
 public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 {
 	private final EventBus eventBus;
-    final Provider<PlaceHistoryMapper> mapper;  
-
-//	final Provider<ViewModuleView> NORMAL = new Provider<ViewModuleView>() {
-//
-//		@Override
-//		public ViewModuleView get() {
-//			ViewModuleViewImpl impl = new ViewModuleViewImpl(true, setupAPI());
-//			impl.initialize();
-//			impl.zetMaat();
-//			return impl;
-//		}};
-//	
-//	final Provider<ViewModuleView> NUMWORX_VIEW = new Provider<ViewModuleView>() {
-//
-//		@Override
-//		public ViewModuleView get() {
-//			ViewModuleViewNumworx impl = new ViewModuleViewNumworx(setupAPI());
-//			return impl.initialize();
-//		}
-//		
-//	};
 			
 	// singleton pattern.
 	Provider<HeaderView> headerView;
@@ -79,14 +59,14 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	    headerView = () -> impl;
 	  }
 	};
+		
+//	final Provider<NavigationViewNumworx> navigationView;
 	
-	final Provider<NavigationViewNumworx> navigationView;
-	
-	public NavigationView getNavigationView() {
-		NavigationViewNumworx view = navigationView.get();
-		view.setPresenter(this);
-		return view;
-	}
+//	public NavigationView getNavigationView() {
+//		NavigationViewNumworx view = navigationView.get();
+//		view.setPresenter(this);
+//		return view;
+//	}
 	
 	
 	private final PlaceController placeController;
@@ -94,15 +74,11 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	private RPCHandler handler;
 	
 	public ClientFactoryImpl(EventBus bus, PlaceController controller, 
-	                 Provider<PlaceHistoryMapper> mapper, 
-	                 Provider<NavigationViewNumworx> navigationView,
 	                 final Provider<ViewModuleViewBuilder> entryView	                 
 	       )
 	{
 	  this.eventBus = bus;
 	  this.placeController = controller;
-	  this.mapper = mapper;
-	  this.navigationView = navigationView;
 	  this.entryView = () -> {
 	    ViewModuleViewBuilder view = entryView.get();
 	    view.initialize(setupAPI());
@@ -110,16 +86,12 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	  };
 	}
 
+	protected abstract Scorm2004IF setupAPI();
+
 	@Override
 	public EventBus getEventBus()
 	{
 		return eventBus;
-	}
-
-	@Override
-	public PlaceController getPlaceController()
-	{
-		return placeController;
 	}
 
 	@Override
@@ -129,7 +101,6 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 		return view;
 	}
 
-	@Override 
 	public HeaderView getHeaderView() {
 		return headerView.get();
 	}
@@ -209,23 +180,6 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	@Override
 	public void goTo(Place place) {
 		placeController.goTo(place);
-	}
-
-  @Override
-  public Provider<NoCourseView> getNoCourseView() {
-    return new Provider<NoCourseView>() {
-      
-      @Override
-      public NoCourseView get() {
-          HeaderView header;
-          NavigationView navigation;
-          header = getHeaderView();
-          navigation = getNavigationView();
-          return new NoCourseView(header, navigation);
-      }
-  };
- }
-
-	
+	}	
 	
 }

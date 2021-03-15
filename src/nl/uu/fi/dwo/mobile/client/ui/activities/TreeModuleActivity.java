@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+
+import javax.inject.Inject;
+
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -32,20 +35,25 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+
+import dagger.MembersInjector;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 
 public class TreeModuleActivity extends AbstractActivity implements GotoController, MessageEventHandler, IdleHandler
 {
 
-	ClientFactory clientFactory;
+	@Inject ClientFactory clientFactory;
+	@Inject PlaceController placeController;
+	
 	private List<SelectModuleItem> currentModel;
 	private TreeModuleView view;
 	private SelectModuleItem item;
 
-	public TreeModuleActivity(ClientFactory clientFactory, SelectModuleItem i)
+	public TreeModuleActivity(MembersInjector<TreeModuleActivity> injector, SelectModuleItem i)
 	{
-		this.clientFactory = clientFactory;
+		injector.injectMembers(this);
 		this.item = i;
 	}
 
@@ -128,7 +136,7 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 
 	@Override
 	public void goTo(Place place) {
-		clientFactory.getPlaceController().goTo(place);
+		placeController.goTo(place);
 	}
 
   @Override
