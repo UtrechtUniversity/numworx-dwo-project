@@ -131,12 +131,6 @@ public class DummyClientFactory implements ClientFactory {
 	public boolean inExam(DomClassCourse classCourse) {
 		return true;
 	}
-
-	@Override
-	public HeaderView getHeaderView() {
-		// TODO Auto-generated method stub
-		return null;
-	}
   
   
 	@Override

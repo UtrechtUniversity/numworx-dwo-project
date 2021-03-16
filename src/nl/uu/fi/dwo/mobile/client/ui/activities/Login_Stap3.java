@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
+import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
@@ -27,6 +28,8 @@ final class Login_Stap3 implements Success<Void, Void> {
 
 	@Inject SecuredUserAccountManager account = new SecuredUserAccountManager();
 	private PlaceController placeController;
+	private HeaderView headerView;
+	private DwoGlobalVars instance;
   
 	  boolean legal(String base) {
 	    RegExp r = RegExp.compile("^/[a-z]+(/[a-z]+)*/$");
@@ -57,19 +60,21 @@ final class Login_Stap3 implements Success<Void, Void> {
 //      }     
 //     );    
 //}	
-	Login_Stap3(ClientFactory clientFactory, Place next, PlaceController placeController) {
+	Login_Stap3(ClientFactory clientFactory, Place next, PlaceController placeController, HeaderView headerView, DwoGlobalVars vars) {
 		super();
 		this.clientFactory = clientFactory;
 		this.next = next;
 		this.placeController = placeController;
+		this.headerView = headerView;
+		this.instance = vars;
 	}
 
 	@Override
 	public Promise<Void> call(Promise<Void> resolved) throws Exception {
 
-		DomUserFull currentUser = DwoGlobalVars.instance().getCurrentUser();
+		DomUserFull currentUser = instance.getCurrentUser();
 		RoleType roleType = clientFactory.getRoleType();
-		clientFactory.getHeaderView().setUserAndRole(currentUser, roleType);
+		headerView.setUserAndRole(currentUser, roleType);
 		if(next == null)
 		{ // Niet meer relevant: switch naar gwtclient als test en teacher
 //		  boolean test = "test".equals(DWOplayer.PARAMETERS.getDwoEnv()); // FIXME GERT test = true dan altijd een switch bij docent

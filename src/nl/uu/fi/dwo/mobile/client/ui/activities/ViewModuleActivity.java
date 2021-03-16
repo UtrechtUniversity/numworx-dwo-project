@@ -34,6 +34,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.EmptyView;
 import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
+import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
@@ -70,6 +71,8 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	@Inject ClientFactory clientFactory;
 	@Inject PlaceController placeController;
 	@Inject RPCHandler rpc;
+	@Inject HeaderView headerView;
+	
 	private DWOplayerParameters PARAMETERS;
 	@Inject void setParameters(DWOplayerParameters p) {
 		PARAMETERS = p;
@@ -244,7 +247,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 		started = true;
 		eventBus.addHandler(CBookEvent.TYPE, this);
 		eventBus.addHandler(IdleDetect.TYPE, this);
-		clientFactory.getHeaderView().hide();
+		headerView.hide();
 		panel.setWidget(view); // terug naar af. problemen met gekke scrolls
 		{
 			final String id = sco.getID().toString();
@@ -256,11 +259,11 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 				parent = parent.getParent();
 			}
 			view.setTrail(trail);
-			clientFactory.getHeaderView().setTrail(trail);
+			headerView.setTrail(trail);
 			view.setTitle(sco.getName());
 			view.setScoType(sco.getScoType());
 			view.setPresenter(this);
-			clientFactory.getHeaderView().setPresenter(this);
+			headerView.setPresenter(this);
 			defaultContext = view.getAnchorContext();
 			view.setAnchorContext(this);
 			view.setUnitId(id);
@@ -333,8 +336,8 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 
 	@Override
 	public void onStop() {
-	    clientFactory.getHeaderView().setTrail(null);
-		clientFactory.getHeaderView().setPresenter((GotoController) clientFactory); // FIXME ONS KENT ONS
+	    headerView.setTrail(null);
+		headerView.setPresenter(placeController::goTo);
 		if (tm != null) {
 			tm.cancel();
 			tm = null;

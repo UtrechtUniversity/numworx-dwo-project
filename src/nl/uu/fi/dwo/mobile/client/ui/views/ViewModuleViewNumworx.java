@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.inject.Inject;
+
 import org.osgi.util.promise.Promise;
 
 import com.google.gwt.core.client.GWT;
@@ -27,11 +29,12 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
-import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
+import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
@@ -50,14 +53,21 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 
 	private DockLayoutPanel root;
 	private MenuBar items = new MenuBar(true);
-    final boolean seb = DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB;
+    final boolean seb;
+	final HeaderView headerView;
+	final ClientFactory clientFactory;
+	final DwoGlobalVars instance;
 	
-	
-	public ViewModuleViewNumworx() {}
+	@Inject ViewModuleViewNumworx(HeaderView headerView, DWOplayerParameters PARAMETERS, ClientFactory client, DwoGlobalVars vars) {
+		this.headerView = headerView;
+		this.seb = PARAMETERS.getSecureMode() == SecureMode.SEB;
+	    pfx = PARAMETERS.getResource("");
+	    clientFactory = client;
+	    instance = vars;
+	}
 
 	public void initialize(Scorm2004IF api) {
       delegate = new ViewModuleViewImpl(false, api);
-      pfx = DWOplayer.PARAMETERS.getResource("");
       final int correctie = 10; // width popup 
       user = new MenuItem("<img width='26' height='26' src='" + pfx
 				+ "images/numworx/account.svg' >", true, items) {
@@ -137,9 +147,9 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	}
 
 	public Promise<Boolean> setupModule(String name, String file) {
-		String login = DWOplayer.clientfactory.withUser()? DwoGlobalVars.instance().getCurrentUser().getDisplayName() : "";
+		String login = clientFactory.withUser()? instance.getCurrentUser().getDisplayName() : "";
 		loginLabel.setText(login);
-		headerTop.setWidgetHidden(loginflow, !DWOplayer.clientfactory.withUser());
+		headerTop.setWidgetHidden(loginflow, !clientFactory.withUser());
 		headerTop.forceLayout();
 		headerTop.setWidgetSize(loginflow, loginLabel.getOffsetWidth());
 		setupMenu(items);
@@ -194,7 +204,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		String logout;
         if (seb)
 		  logout = Text.constants.inleveren();
-		else if(DWOplayer.clientfactory.withUser()) {
+		else if(clientFactory.withUser()) {
 		  logout = Text.constants.logout();
 		} else {
 		  logout = Text.constants.aanmelden();
@@ -234,7 +244,6 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 			kruimels.add(new InlineLabel(" > "));
 		}
 
-        HeaderView headerView = DWOplayer.clientfactory.getHeaderView();
 		if(!trail.isEmpty())
 			upId = trail.get(0).getPlace();
 		else

@@ -1,6 +1,9 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
 import java.util.NoSuchElementException;
+
+import javax.inject.Inject;
+
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -12,28 +15,37 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 
+import dagger.MembersInjector;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
+import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 
 public class ReloginActivity extends AbstractActivity {
 
-	private ClientFactory clientFactory;
+	@Inject ClientFactory clientFactory;
+	@Inject HeaderView headerView;
+	@Inject DwoGlobalVars vars;
 	private Place next;
 
 	private String username;
 	private String password;
-	private PlaceController placeController;
+	@Inject PlaceController placeController;
+	@Inject RPCHandler rpc;
 
-	public ReloginActivity(ClientFactory clientFactory, Place next, PlaceController controller) {
+	private ReloginActivity(ClientFactory clientFactory, Place next, PlaceController controller) {
 		this.clientFactory = clientFactory;
 		this.next = next;
 		this.placeController = controller;
 	}
-
+	public ReloginActivity(MembersInjector<ReloginActivity> injector, Place next) {
+		injector.injectMembers(this);
+		this.next = next;
+	}
 
 	public static final Failure FAILURE1 = new Failure() {
 		
@@ -58,9 +70,9 @@ public class ReloginActivity extends AbstractActivity {
 	@Override
 	public void start(final AcceptsOneWidget panel, EventBus eventBus)
 	{
-		password = DwoGlobalVars.instance().getCurrentUser().getPassword();
-		username = DwoGlobalVars.instance().getCurrentUser().getUserName();
-		String realm = DwoGlobalVars.instance().getCurrentLoginContext().getRealm();
+		password = vars.getCurrentUser().getPassword();
+		username = vars.getCurrentUser().getUserName();
+		String realm = vars.getCurrentLoginContext().getRealm();
 		if (realm != null) username += realm;
 		
 		clientFactory.logout()
@@ -70,12 +82,12 @@ public class ReloginActivity extends AbstractActivity {
 			public Promise<DomUserFullwLoginContext> call(Promise<Void> resolved) throws Exception {
 				SelectModuleItemHolder.destroy();
 				panel.setWidget(new Label());
-				return clientFactory.getRPCHandler().loginMD5(getUsername(), getPassword());
+				return rpc.loginMD5(getUsername(), getPassword());
 			}
 		})
 		.then(new LoginActivity.Login_Stap1(clientFactory))
 		.then(LoginActivity.LOGIN_STAP2, FAILURE1)
-		.then(new Login_Stap3(clientFactory, next, placeController));
+		.then(new Login_Stap3(clientFactory, next, placeController, headerView, vars));
 	}
 
 	private String getUsername() {

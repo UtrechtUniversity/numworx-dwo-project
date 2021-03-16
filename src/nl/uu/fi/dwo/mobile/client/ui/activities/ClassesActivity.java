@@ -16,7 +16,6 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.CoursesOfClasToSelectItems;
 import nl.uu.fi.dwo.mobile.DWO2player.InsertSelectItems;
-import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
@@ -37,15 +36,7 @@ public class ClassesActivity extends AbstractActivity implements ValueChangeHand
 	@Inject RPCHandler rpc;
 	@Inject ClassesViewImpl view;
 	@Inject NavigationViewNumworx navigation;
-	private HeaderView header;
-
-	/**
-	 * FIXME upgrade to setHeaderView
-	 * @param factory
-	 */
-	@Inject void setClientFactory(ClientFactory factory) {
-		header = factory.getHeaderView();
-	}
+	@Inject HeaderView header;
 
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus) {

@@ -59,6 +59,7 @@ public class TabletActivityMapper implements ActivityMapper
 	@Inject PlaceController placeController;
 	@Inject MembersInjector<ViewModuleActivity> vmInjector;
 	@Inject MembersInjector<TreeModuleActivity> trInjector;
+	@Inject MembersInjector<ReloginActivity> rlInjector;
 	
 	
 	@Override
@@ -133,7 +134,7 @@ public class TabletActivityMapper implements ActivityMapper
 		if (place instanceof ReloginPlace)
 		{
 			if(clientFactory.withUser())
-				return new ReloginActivity(clientFactory, ((HasHash) place).getPlace(), placeController);
+				return new ReloginActivity(rlInjector, ((HasHash) place).getPlace());
 			else
 				return login.get();
 		}

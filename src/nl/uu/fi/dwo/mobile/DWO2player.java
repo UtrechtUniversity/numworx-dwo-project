@@ -282,8 +282,8 @@ public void setupDWOPlayer() {
 			modules = promise.map(new CoursesOfClasToSelectItems());
 		} else if (clientfactory.withUser() && RoleType.STUDENT != roleType)
 		{
-			Promise<List<DomCourseStudent>> p1 = clientfactory.getRPCHandler().getCourses();
-			Promise<List<DomCourseStudent>> p2 = clientfactory.getRPCHandler().getCoursesSchool(clientfactory.getSchool());
+			Promise<List<DomCourseStudent>> p1 = rpc.getCourses();
+			Promise<List<DomCourseStudent>> p2 = rpc.getCoursesSchool(clientfactory.getSchool());
 			modules = Promises.all(p1,p2).map(new Function<List<List<DomCourseStudent>>,List<DomCourseStudent>>() {
 
 				@Override

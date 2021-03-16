@@ -78,6 +78,9 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
     private final PersistenceId where;
     private Promise<List<DomScoContext>> scoList;
 	private SelectModuleItem item;
+	private DwoGlobalVars vars;
+	private ClientFactory clientFactory;
+
 	private ScoActivity(s where) {
 	    this.where = where.getID();
 		next = new LoginPlace(where);
@@ -87,10 +90,11 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 	@Reusable public static class Factory {
 		@Inject MembersInjector<ScoActivity> injector;
 		@Inject ClientFactory clientFactory;
+		@Inject DwoGlobalVars vars;
 		@Inject Factory() {}
 		
 		public ScoActivity create(SelectModuleItem item, Place place) {
-			ScoActivity activity = new ScoActivity(clientFactory, item, (s)place);
+			ScoActivity activity = new ScoActivity(clientFactory, item, (s)place, vars);
 			injector.injectMembers(activity);
 			return activity;
 		}
@@ -98,10 +102,12 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 	
 	
 	
-	private ScoActivity(ClientFactory clientFactory, SelectModuleItem item, s where) {
+	private ScoActivity(ClientFactory clientFactory, SelectModuleItem item, s where, DwoGlobalVars vars) {
 		this(where);
 		this.item = item;
-		schoolClass = clientFactory.getSchoolClass();
+		this.vars = vars;
+		this.clientFactory = clientFactory;
+		schoolClass = vars.getCurrentSchoolClass();
 		school = clientFactory.getSchool();
 		role = clientFactory.getRoleType();
 		view = clientFactory.getEntryView();
@@ -208,7 +214,7 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 				if (t instanceof NoSuchElementException || t instanceof Dwo2Exception)
                 {
                     NoCourseView view = noCourseView.get();
-            		DomUserFull currentUser = DwoGlobalVars.instance().getCurrentUser();
+            		DomUserFull currentUser = vars.getCurrentUser();
             		headerView.setUserAndRole(currentUser, role);
             		headerView.setPresenter(ScoActivity.this);
                     panel.setWidget(view);
@@ -266,7 +272,7 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 
 	@Override
 	public String mayStop() {
-		if (started && DWOplayer.withUser())
+		if (started && clientFactory.withUser())
 			return Text.constants.maybe_lost_data();
 		return super.mayStop();
 	}

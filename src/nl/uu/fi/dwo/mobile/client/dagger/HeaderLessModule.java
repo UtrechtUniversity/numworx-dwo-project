@@ -4,7 +4,6 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Window;
 
 import dagger.Binds;
@@ -12,7 +11,6 @@ import dagger.Module;
 import dagger.Provides;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.DWO2ClientFactoryImpl;
-import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderLessView;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
@@ -41,11 +39,11 @@ public abstract class HeaderLessModule {
   }
   
   @Provides
-  static ViewModuleViewBuilder builder() {
+  static ViewModuleViewBuilder builder(Provider<ViewModuleViewNumworx> numworx) {
     if (headerless()) {
       return new ViewModuleViewImpl();
     } else {
-      return new ViewModuleViewNumworx();
+      return numworx.get();
     }
   }
   @Binds abstract ClientFactory factory(DWO2ClientFactoryImpl impl);

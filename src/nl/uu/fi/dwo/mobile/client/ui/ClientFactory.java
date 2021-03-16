@@ -35,7 +35,6 @@ public interface ClientFactory
 
 
 	TreeModuleView getTreeModuleView();
-	HeaderView getHeaderView();
 	
 	RPCHandler getRPCHandler();
 			

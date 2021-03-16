@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
 import nl.uu.fi.dwo.mobile.client.ui.places.HasHash;
 import nl.uu.fi.dwo.mobile.client.ui.places.Hash;
 import nl.uu.fi.dwo.mobile.client.ui.places.Hash.Type;
+import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
@@ -45,6 +46,7 @@ import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.google.web.bindery.event.shared.HandlerRegistrations;
@@ -170,7 +172,9 @@ public class LoginActivity extends AbstractActivity
     private final DWOplayerParameters PARAMETERS;
 
 	@Inject PlaceController placeController;
-	
+
+	@Inject HeaderView headerView;
+	@Inject DwoGlobalVars vars;
 	
 
 //	public LoginActivity(ClientFactory clientFactory, Place next)
@@ -195,7 +199,7 @@ public class LoginActivity extends AbstractActivity
 		this.panel = panel;
 		final boolean logout = clientFactory.withUser();
 		WaitScreen.instance().w();
-		clientFactory.getHeaderView().hide();
+		headerView.hide();
 		clientFactory.logout().onResolve (
 		
 		new Runnable() {
@@ -341,7 +345,7 @@ public class LoginActivity extends AbstractActivity
 		.then(LOGIN_STAP1)
 		.filter(LOGIN_LIMITED)
 		.then(LOGIN_STAP2, FAILURE1)
-		.then(new Login_Stap3(clientFactory, next, placeController), FAILURE2);
+		.then(new Login_Stap3(clientFactory, next, placeController, headerView, vars), FAILURE2);
 	}
 
 	private void resolve() {

@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.views.ExamModuleView;
+import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.UnSafeModuleView;
 
 import com.google.gwt.activity.shared.Activity;
@@ -32,6 +33,8 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 	@Inject ClientFactory clientFactory;
 	@Inject DWOplayerParameters PARAMETERS;
 	@Inject Provider<UnSafeModuleView> unsafe;
+	@Inject HeaderView headerView;
+	
 	private SelectModuleItem item;
 	private Activity delegate;
 	private Provider<? extends Activity> provider;
@@ -88,7 +91,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 				delegate = provider.get();
 				delegate.start(panel, eventBus);
 			} else {
-				ExamModuleView view = new ExamModuleView(clientFactory.getHeaderView());
+				ExamModuleView view = new ExamModuleView(headerView);
 				view.selectItem(item);
 				view.setPresenter(this);
 				panel.setWidget(view);

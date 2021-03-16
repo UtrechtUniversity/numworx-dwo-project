@@ -17,7 +17,6 @@ import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
-import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO4;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO5;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
