@@ -998,3 +998,18 @@ CREATE TABLE `tblcoursedata` (
   `del` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`courseID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `tblstudentmodelof`;
+CREATE TABLE `tblstudentmodelof` (
+  `modelID` int(11) NOT NULL,
+  `classID` int(11) NOT NULL,
+  `schoolID` int(11) NOT NULL,
+  `optlock` int(11) NOT NULL,
+  `lastChangeTimeStamp` bigint(20) NOT NULL,
+  `value` mediumtext NOT NULL,
+  `del` tinyint(4) NOT NULL,
+  PRIMARY KEY (`modelID`,`classID`,`schoolID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `tblstudentmodelof` (`modelID`, `classID`, `schoolID`, `optlock`, `lastChangeTimeStamp`, `value`, `del`) VALUES ('1', '2', '3', '0', '0', '{}', '0');
+

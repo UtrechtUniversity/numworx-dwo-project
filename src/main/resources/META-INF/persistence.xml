@@ -29,6 +29,7 @@
     <class>fi.dwo.commons.persistence.entities.PersistentUser</class>
     <class>fi.dwo.commons.persistence.entities.PersistentStudentModelContext</class>
     <class>fi.dwo.commons.persistence.entities.PersistentStudentModelData</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentStudentModelOfClass</class>
     <class>fi.dwo.commons.persistence.entities.PersistentACL</class>
     <class>fi.dwo.commons.persistence.entities.PersistentStudentModelItem</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
