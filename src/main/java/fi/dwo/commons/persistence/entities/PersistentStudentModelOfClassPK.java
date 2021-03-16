@@ -1,5 +1,7 @@
 package fi.dwo.commons.persistence.entities;
 
+import java.util.Objects;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -47,6 +49,21 @@ public class PersistentStudentModelOfClassPK {
   }
   public void setSchoolID(Long schoolID) {
     this.schoolID = schoolID;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(classID, modelID, schoolID);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
+    PersistentStudentModelOfClassPK other = (PersistentStudentModelOfClassPK) obj;
+    return Objects.equals(classID, other.classID) && Objects.equals(modelID, other.modelID)
+        && Objects.equals(schoolID, other.schoolID);
   }
 
 }
