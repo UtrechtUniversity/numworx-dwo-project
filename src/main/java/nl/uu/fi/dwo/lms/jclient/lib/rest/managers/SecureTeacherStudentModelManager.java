@@ -12,12 +12,14 @@ import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextPatch;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
+import nl.uu.fi.dwo.rest.entities.RestStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContextId;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContextPatch;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelScorePerTeacher;
@@ -84,25 +86,24 @@ public class SecureTeacherStudentModelManager {
 	    return result;
 	  }
   
-  public static Boolean updateModelForClass(DomStudentModelContext submit, DomSchoolClassId sc) 
+  public static Boolean updateModelForClass(DomStudentModelContext4Student submit) 
   			throws Dwo2Exception {
-	  RestStudentModelContext rest = new RestStudentModelContext();
+	  RestStudentModelContext4Student rest = new RestStudentModelContext4Student();
 	  rest.setRestContext(getContext());
 	  rest.setDomStudentModelContext(submit);
-	  rest.setDomSchoolClass(sc);
 	  Boolean result = StoredRestManager.getInstance()
 			  .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentModel/updateForClass", Boolean.class, rest);
 	  return result;
   }
   
-	public static DomStudentModelContext getForClass(DomStudentModelContextId modelContext, DomSchoolClassId sc) throws Dwo2Exception {
+	public static DomStudentModelContext4Student getForClass(DomStudentModelContextId modelContext, DomSchoolClassId sc) throws Dwo2Exception {
 		 RestStudentModelContextId rest = new RestStudentModelContextId();
 		 rest.setRestContext(getContext());
 		 rest.setDomStudentModelContext(modelContext);
 		 rest.setDomSchoolClass(sc);
-		 DomStudentModelContext src =
+		 DomStudentModelContext4Student src =
 				        StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/getForClass",
-				            DomStudentModelContext.class, rest);
+				        		DomStudentModelContext4Student.class, rest);
 		 LOG.log(Level.FINE, "Retrieved  studentmodel for schoolclass of the teacher with username {0}.",
 			new Object[] {RestAuthenticator.getInstance().getUsername()});
 	     return src;
