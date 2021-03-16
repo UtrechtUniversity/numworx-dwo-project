@@ -38,35 +38,16 @@ class FilterAction extends AbstractAction {
 //      genr.setTree(tree);
     }
 
-    MWAction mw = new MWAction();
-    GenRAction genr = new GenRAction();
-    JCheckBox rest = new JCheckBox("Niet geclassificeerde leerdoelen");
+    FilterPanel p;
     
-
-    KoppelingGRPanel genrtab = genr.getTab();
-    KoppelingGRPanel mwtab = mw.getTab();
-
+    
     Map<String,Map<String,Set<Integer>>> filter = Collections.emptyMap();
 
     @Override
     public void actionPerformed(ActionEvent e) {
       ConfirmDialog dialog = new ConfirmDialog(owner, getValue(NAME).toString());
-      Box tabs = Box.createVerticalBox();
+      FilterPanel tabs = new FilterPanel();
       dialog.getContentPane().setLayout(new BorderLayout());
-      Border margin = BorderFactory.createEmptyBorder(0, 20, 0, 0);
-      JLabel l = new JLabel(genr.getName());
-      l.setBorder(margin);
-      tabs.add(l);
-      tabs.add(genrtab);
-      l = new JLabel(mw.getName());
-      l.setBorder(margin);
-      tabs.add(l);
-      tabs.add( mwtab);
-      l = new JLabel("Alle leerdoelen");
-      l.setBorder(margin);
-      tabs.add(l);
-      rest.setBorder(margin);
-      tabs.add(rest);
       
       dialog.getContentPane().add(tabs, BorderLayout.CENTER);
       
@@ -81,12 +62,7 @@ class FilterAction extends AbstractAction {
       dialog.pack();
       dialog.show();
       if (JOptionPane.OK_OPTION == dialog.getOption()) {
-        Map<String, Set<Integer>> mwmap = mw.getMethodMap(mwtab);
-        Map<String, Set<Integer>> genrmap = genr.getMethodMap(genrtab);
-        filter = new HashMap<>();
-        if (!mwmap.isEmpty())   filter.put(mw.getName(), mwmap);
-        if (!genrmap.isEmpty()) filter.put(genr.getName(), genrmap);
-        if (rest.isSelected())  filter.put(null,null);
+        filter = p.getFilter();
         consumer.accept(filter);
       }
     }

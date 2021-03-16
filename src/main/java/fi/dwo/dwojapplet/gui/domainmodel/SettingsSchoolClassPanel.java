@@ -8,6 +8,8 @@ import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.EventObject;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.Action;
@@ -29,6 +31,7 @@ import fi.dwo.dwojapplet.gui.TableUtil;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -37,25 +40,26 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 public class SettingsSchoolClassPanel extends JPanel {
   
   private final String FILTER_LEERDOELEN = "Filter leerdoelen";
-  private final JButton filter = new JButton(FILTER_LEERDOELEN);
+  private final JButton filterBtn = new JButton(FILTER_LEERDOELEN);
+  private ClassTableModel model;
 
   class ClassTableModel extends AbstractTableModel {
     
     List<DomSchoolClass> classes;
     boolean[] check;
-    DomStudentModelContext[] list;
+    DomStudentModelContext4Student[] list;
     private DomStudentModelContext id;
-    private List<String>[] objectives;
+    private Map[] filter;
     
     
     public ClassTableModel(List<DomSchoolClass> classes, DomStudentModelContext id) {
       
       check = new boolean[classes.size()];
-      objectives = new List[classes.size()];
+      filter = new Map[classes.size()];
       this.classes = classes;
       this.id = id;
       try {
-        list = new DomStudentModelContext[classes.size()];
+        list = new DomStudentModelContext4Student[classes.size()];
         for(int i = 0; i < classes.size(); i++) {
             list[i] = SecureTeacherStudentModelManager.getForClass(id, classes.get(i));
             check[i] = list[i] != null;
@@ -79,7 +83,7 @@ public class SettingsSchoolClassPanel extends JPanel {
       switch(columnIndex) {
         case 0: return classes.get(rowIndex).getSchoolClassName();
         case 1: return check[rowIndex];
-        case 2: return check[rowIndex] ? filter : null;
+        case 2: return check[rowIndex] ? filterBtn : null;
         case 3: return classes.get(rowIndex);
         case 4: return list[rowIndex];
       }
@@ -108,12 +112,11 @@ public class SettingsSchoolClassPanel extends JPanel {
             fireTableCellUpdated(rowIndex, columnIndex+1);
             fireTableCellUpdated(rowIndex, columnIndex);
             if (!check[rowIndex]) {
-              objectives[rowIndex] = null;
-            } else if (objectives[rowIndex] == null) {
-              objectives[rowIndex] = Collections.emptyList();
+              filter[rowIndex] = null;
+            } else if (filter[rowIndex] == null) {
+              filter[rowIndex] = Collections.emptyMap();
             }
             return;
-        case 4: list[rowIndex] = (DomStudentModelContext) aValue; return;
         default: super.setValueAt(aValue, rowIndex, columnIndex);
       }
     }
@@ -136,7 +139,7 @@ public class SettingsSchoolClassPanel extends JPanel {
       public ButtonRenderer() {
         super("");
         setOpaque(true);
-        setSize(filter.getPreferredSize());
+        setSize(filterBtn.getPreferredSize());
         setPreferredSize(getSize());
       }
 
@@ -179,7 +182,7 @@ public class SettingsSchoolClassPanel extends JPanel {
 
     @Override
     public Object getCellEditorValue() {
-      return filter;
+      return filterBtn;
     }
 
 
@@ -187,20 +190,19 @@ public class SettingsSchoolClassPanel extends JPanel {
     public void actionPerformed(ActionEvent e) {
       DomSchoolClass sc = model.classes.get(row);
       
-      ConfirmDialog cd = new ConfirmDialog(SettingsSchoolClassPanel.this, "Leerdoelen voor " + sc.getSchoolClassName());
-      DomStudentModelStructure str = model.id.getModelStructure();
-      if (str.getCategories() == null) {
-        try {
-          model.id = SecureTeacherStudentModelManager.get(model.id);
-          str = model.id.getModelStructure();
-        } catch (Dwo2Exception e1) {
-        }
-      }
-      NodeVector vector = new NodeVector(str.getCategories(), str.getInfo(), getLocale().getLanguage());
-      StudentModelChoicePanel panel = new StudentModelChoicePanel(vector);
-      List<String> objectives = model.objectives[row];
-      if(objectives == null) objectives = Collections.emptyList();
-      panel.setObjectives(objectives);
+      ConfirmDialog cd = new ConfirmDialog(SettingsSchoolClassPanel.this, "Leerdoelen filter voor " + sc.getSchoolClassName());
+//      DomStudentModelStructure str = model.id.getModelStructure();
+//      if (str.getCategories() == null) {
+//        try {
+//          model.id = SecureTeacherStudentModelManager.get(model.id);
+//          str = model.id.getModelStructure();
+//        } catch (Dwo2Exception e1) {
+//        }
+//      }
+      FilterPanel panel = new FilterPanel();
+      Map<String, Map<String, Set<Integer>>> filter = model.filter[row];
+      if(filter == null) filter = Collections.emptyMap();
+      panel.setFilter(filter);;
       cd.getContentPane().add(panel);
       JButton ok = new JButton("OK");
       ok.addActionListener(cd::ok);
@@ -209,8 +211,8 @@ public class SettingsSchoolClassPanel extends JPanel {
       cd.center();
       cd.setVisible(true);
       if (cd.getOption() == JOptionPane.OK_OPTION) {
-        panel.makeChoices();
-        model.objectives[row] = panel.getObjectives();        
+        
+        model.filter[row] = panel.getFilter();        
       }
     }
 
@@ -255,7 +257,7 @@ public class SettingsSchoolClassPanel extends JPanel {
   public SettingsSchoolClassPanel(List<DomSchoolClass> classes, DomStudentModelContext context) {
     super();
     
-    ClassTableModel model = new ClassTableModel(classes, context);
+    model = new ClassTableModel(classes, context);
     JTable table = new JTable(model);
     JScrollPane pane = new JScrollPane(table);
     TableUtil.setDefaults(table, true, null, null);
@@ -267,4 +269,38 @@ public class SettingsSchoolClassPanel extends JPanel {
     add(pane);    
   }
 
+  public void update() {
+      DomStudentModelContext4Student[] models = model.list;
+      List<DomSchoolClass> classes = model.classes;
+      Map[] filters = model.filter;
+      DomStudentModelContext id = model.id;
+      int length = model.getRowCount();
+      for (int i = 0; i < length; i++) {
+        DomSchoolClass sc = classes.get(i);
+        if (filters[i] == null && models[i] != null) {
+          models[i].setFilter(null);
+          updateModel(models[i]);
+        } else if (filters[i] != null && models[i] != null) {
+            models[i].setFilter(filters[i]);
+            updateModel(models[i]);
+        } else if (filters[i] != null && models[i] == null) {
+            DomStudentModelContext4Student model = new DomStudentModelContext4Student(id.getId());
+            model.setSchoolClass(sc);
+            model.setFilter(filters[i]);
+            updateModel(model);
+        }        
+      }
+      
+      
+  }
+
+  private void updateModel(DomStudentModelContext4Student m) {
+    try {
+      SecureTeacherStudentModelManager.updateModelForClass(m);
+    } catch (Dwo2Exception e) {
+        System.err.println(e);
+    }
+  }
+  
+  
 }

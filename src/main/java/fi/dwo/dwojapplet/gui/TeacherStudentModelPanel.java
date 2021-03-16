@@ -11,6 +11,7 @@ import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinEditPanel2;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinResultsPanel2;
 import fi.dwo.dwojapplet.gui.domainmodel.SettingsSchoolClassPanel;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -210,11 +211,17 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
               }
  
               ConfirmDialog dialog = new ConfirmDialog(TeacherStudentModelPanel.this, "Instelling leerdomein per klas");
-              Container pane = new SettingsSchoolClassPanel(list, model);
-              dialog.setContentPane(pane);
+              SettingsSchoolClassPanel pane = new SettingsSchoolClassPanel(list, model);
+              dialog.getContentPane().add(pane, BorderLayout.CENTER);
+              JButton ok = new JButton("OK");
+              ok.addActionListener(dialog::ok);
+              dialog.getContentPane().add(ok, BorderLayout.SOUTH);
               dialog.pack();
               dialog.center();
               dialog.setVisible(true);
+              if (dialog.getOption() == JOptionPane.OK_OPTION) {
+                pane.update();
+              }
             }
         }
 //        private void recursiveUnfocusButtons(Component component) {

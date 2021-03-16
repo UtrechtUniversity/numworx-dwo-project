@@ -1,6 +1,8 @@
 package fi.dwo.dwojapplet.gui.domainmodel;
 
 import java.awt.Component;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JTree;
 

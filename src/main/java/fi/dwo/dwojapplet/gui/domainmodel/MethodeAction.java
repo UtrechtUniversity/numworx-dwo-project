@@ -132,6 +132,21 @@ abstract class MethodeAction extends AbstractAction implements TreeSelectionList
     return map;
   }
 
+  public void setMethodMap(KoppelingGRPanel panel, Map<String, Set<Integer>> map) {
+    boolean[][] state;
+    state = panel.getState();
+    for (int i = 0; i < state.length; i++) {
+      Set<Integer> set = map.getOrDefault(grJaarlagen[i], Collections.emptySet());
+      boolean[] statei = state[i];
+      for (int j = 0; j < statei.length; j++) {
+          statei[j] = set.contains(j+1);
+      }
+    }
+    panel.setState(state);
+    
+  }
+
+  
   KoppelingGRPanel createKoppelingPanel(boolean filter) {
     return new KoppelingGRPanel(KOPPELING_LEERDOEL, grJaarlagen, aantalHoofdstukken, filter);
   }
