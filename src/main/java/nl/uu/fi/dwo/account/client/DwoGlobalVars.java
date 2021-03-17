@@ -12,17 +12,24 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
 
 import fi.dwo.gwt.lib.rest.DwoConstants;
 import fi.dwo.gwt.lib.rest.GwtRestVars;
+import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -399,5 +406,45 @@ public class DwoGlobalVars {
 	public void setContext(DomContext context) {
 		this.context = context;
 	}
+
+    public boolean withUser() {
+        return getCurrentUser() != null;
+    }
+
+    public DomSchool getSchool() {
+        try {
+            return getActiveSchoolRoleAndClass().getSchool();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public boolean isIconizer() {
+        try {
+            return getCurrentSchoolClass().getIconizer().booleanValue();
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
+    public RoleType getRoleType() {
+        try {
+            String roleName = getActiveSchoolRoleAndClass().getRole().getRoleName();
+            return RoleType.valueOf(roleName);
+        } catch (Exception e) {
+            return RoleType.ANONYMOUS;
+        }
+    }
+   
+    public Object getUserID() {
+        PersistenceId id = getCurrentUser().getId();
+        return PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentUser);
+    }
+
+    public boolean isPremium() {
+        //return withUser() && getSchool().getAboType() == AboType.premium;
+        return !withUser() || getSchool().getAboType() == AboType.premium;
+    }
+
 
 }
