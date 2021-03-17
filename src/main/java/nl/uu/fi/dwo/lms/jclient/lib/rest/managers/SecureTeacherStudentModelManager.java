@@ -92,7 +92,7 @@ public class SecureTeacherStudentModelManager {
 	  rest.setRestContext(getContext());
 	  rest.setDomStudentModelContext(submit);
 	  Boolean result = StoredRestManager.getInstance()
-			  .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentModel/updateForClass", Boolean.class, rest);
+			  .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/updateForClass", Boolean.class, rest);
 	  return result;
   }
   
