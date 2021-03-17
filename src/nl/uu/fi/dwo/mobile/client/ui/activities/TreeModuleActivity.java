@@ -13,6 +13,7 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.IdleDetect;
@@ -20,8 +21,10 @@ import nl.uu.fi.dwo.mobile.client.ui.IdleDetect.IdleEvent;
 import nl.uu.fi.dwo.mobile.client.ui.IdleDetect.IdleHandler;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
+import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
 import nl.uu.fi.dwo.mobile.client.ui.places.MaybeLogout;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
@@ -46,6 +49,9 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 
 	@Inject ClientFactory clientFactory;
 	@Inject PlaceController placeController;
+	@Inject DwoGlobalVars vars;
+	@Inject RPCHandler rpc;
+	@Inject TrafficAgent agent;
 	
 	private List<SelectModuleItem> currentModel;
 	private TreeModuleView view;
@@ -62,7 +68,7 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 	{
 		view = clientFactory.getTreeModuleView();
 		
-		RoleType role = clientFactory.getRoleType();
+		RoleType role = vars.getRoleType();
 		boolean beheerder = 
 		    role == RoleType.TEACHER || 
 		    role == RoleType.SCHOOLADMIN || 
@@ -75,10 +81,10 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
           eventBus.addHandler(IdleDetect.TYPE, this);
         }
 		
-		if(item.getType() == Type.MODULE && clientFactory.withUser()) {
-			Object userID = clientFactory.getUserID();
+		if(item.getType() == Type.MODULE && vars.withUser()) {
+			Object userID = vars.getUserID();
 		if(userID != null && item.getPromisedScoreMap() == null) {
-			Promise<DomResultsPerStudentCourse> p = clientFactory.getRPCHandler().getUserResults(item.getID(), userID);
+			Promise<DomResultsPerStudentCourse> p = rpc.getUserResults(item.getID(), userID);
 			item.setPromisedScoreMap(
 			p.map(new Function<DomResultsPerStudentCourse, Map<Object, Number>>() {
 
@@ -111,7 +117,7 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 		currentModel = SelectModuleItemHolder.getItems();
 		view.setPresenter(TreeModuleActivity.this);
 		view.render(currentModel);
-		clientFactory.barrier().then(new Success<Void, Map<Object,Number>>() {
+		agent.barrier().then(new Success<Void, Map<Object,Number>>() {
 
 			@Override
 			public Promise<Map<Object, Number>> call(Promise<Void> resolved) throws Exception {

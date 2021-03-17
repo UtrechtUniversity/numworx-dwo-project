@@ -46,10 +46,10 @@ import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SingleSelectionModel;
 
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
-import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
@@ -175,7 +175,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	private boolean none;
 	private RoleType role = RoleType.TEACHER;
     private final DWOplayerParameters PARAMETERS;
-    final private ClientFactory clientFactory;
+    final private DwoGlobalVars vars;
 	/**
 	 * Because this class has a default constructor, it can
 	 * be used as a binder template. In other words, it can be used in other
@@ -188,9 +188,9 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	 * implement HasHTML instead of HasText.
 	 */
 
-	@Inject NavigationViewNumworx(final PlaceController controller, RPCHandler rpc, DWOplayerParameters param, ClientFactory clientFactory) {
+	@Inject NavigationViewNumworx(final PlaceController controller, RPCHandler rpc, DWOplayerParameters param, DwoGlobalVars vars) {
 	    this.PARAMETERS = param;
-	    this.clientFactory = clientFactory;
+	    this.vars = vars;
 		HorizontalCellListResources cellResources;
 		cellResources = GWT.create(HorizontalCellListResources.class);
 		cells = new CellList<SelectModuleItem>(new NavCell(), cellResources);
@@ -332,8 +332,8 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		ArrayList<SelectModuleItem> schoolModel = new ArrayList<SelectModuleItem>(model.size());
 		ArrayList<SelectModuleItem> standardModel = new ArrayList<SelectModuleItem>(model.size());
 		Object schoolName = "school";
-		if(clientFactory.withUser() && clientFactory.getSchool() != null)
-			schoolName = clientFactory.getSchool().getSchoolName();
+		if(vars.withUser() && vars.getSchool() != null)
+			schoolName = vars.getSchool().getSchoolName();
 		setRole();
 		SCHOOL_MODULES = Text.constants.schoolModules() + schoolName;
 		schoolMap = new TreeItem(toSafeHTML(SCHOOL_MODULES, Type.FOLDER));
@@ -417,7 +417,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	
 	@UiHandler("results")
 	void onResults(ClickEvent e) {
-	  if (role != RoleType.TEACHER && !clientFactory.isPremium() || role == RoleType.SCHOOLADMIN) return;
+	  if (role != RoleType.TEACHER && !vars.isPremium() || role == RoleType.SCHOOLADMIN) return;
 	  LOG.info("goto results");
 	  if(Actions.isAvailable())
 		  Actions.RESULTS.execute();
@@ -473,13 +473,13 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		this.role = role;
 		// if visible?
 		{  	organization.setVisible(role == RoleType.SCHOOLADMIN);
-			results.setVisible(role == RoleType.TEACHER || (role == RoleType.STUDENT && isTest() && clientFactory.isPremium())); // or student if premium&test.
+			results.setVisible(role == RoleType.TEACHER || (role == RoleType.STUDENT && isTest() && vars.isPremium())); // or student if premium&test.
 			persons.setVisible(role != RoleType.STUDENT);
 		}
 	}
 
 	void setRole() {
-		setRole(clientFactory.getRoleType());
+		setRole(vars.getRoleType());
 	}
 
 	public void setCells(List<SelectModuleItem> items) {
@@ -505,8 +505,8 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 				SelectModuleItem separator = new SelectModuleItem(null, SelectModuleItem.Type.SEPARATOR);
 
 				Object schoolName = "school";
-				if(clientFactory.withUser() && clientFactory.getSchool() != null)
-					schoolName = clientFactory.getSchool().getSchoolName();
+				if(vars.withUser() && vars.getSchool() != null)
+					schoolName = vars.getSchool().getSchoolName();
 				String SCHOOL_MODULES = Text.constants.schoolModules() + schoolName;
 
 				separator.setName(SCHOOL_MODULES);

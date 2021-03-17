@@ -270,20 +270,21 @@ public void setupDWOPlayer() {
 	
 	@Inject RPCHandler rpc;
 	@Inject PlaceController placeController;
+	@Inject DwoGlobalVars vars;
 	
 	@Override
 	protected void gotoCourses_impl() {
 		SelectModuleItemHolder.clear(); // hier leegmaken of elders?
 		Promise<List<SelectModuleItem>> modules;
-		final RoleType roleType = clientfactory.getRoleType();
-		if( clientfactory.withUser() && clientfactory.getSchoolClass() != null) {
-			Promise<DomCoursesOfSchoolClass> promise = rpc.getCoursesClass(clientfactory.getSchoolClass());
+		final RoleType roleType = vars.getRoleType();
+		if( vars.withUser() && vars.getCurrentSchoolClass() != null) {
+			Promise<DomCoursesOfSchoolClass> promise = rpc.getCoursesClass(vars.getCurrentSchoolClass());
 
 			modules = promise.map(new CoursesOfClasToSelectItems());
-		} else if (clientfactory.withUser() && RoleType.STUDENT != roleType)
+		} else if (vars.withUser() && RoleType.STUDENT != roleType)
 		{
 			Promise<List<DomCourseStudent>> p1 = rpc.getCourses();
-			Promise<List<DomCourseStudent>> p2 = rpc.getCoursesSchool(clientfactory.getSchool());
+			Promise<List<DomCourseStudent>> p2 = rpc.getCoursesSchool(vars.getSchool());
 			modules = Promises.all(p1,p2).map(new Function<List<List<DomCourseStudent>>,List<DomCourseStudent>>() {
 
 				@Override
@@ -301,7 +302,7 @@ public void setupDWOPlayer() {
 			modules = Promises.resolved(Collections.emptyList());
 		}
 			
-		boolean iconizer = clientfactory.isIconizer();
+		boolean iconizer = vars.isIconizer();
 		if (roleType == RoleType.STUDENT && PARAMETERS.getSecureMode() !=  SecureMode.NORMAL )
 			iconizer = false;
 

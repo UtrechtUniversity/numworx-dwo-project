@@ -38,8 +38,10 @@ import com.google.gwt.view.client.SetSelectionModel;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.googlecode.mgwt.ui.client.MGWT;
 
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
+import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
@@ -300,9 +302,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 
 	@UiField(provided=true) String pfx;
 
-    final private ClientFactory clientFactory;
-	
-	static String getFaviconUrl() {
+    static String getFaviconUrl() {
 		return "url('"+
 				r("images/numworx/favicon-numworx-wit.svg") +
 				"')";	
@@ -322,9 +322,9 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	}
 
 	@Inject
-	public TreeModuleViewNumworx(HeaderView headerView, NavigationViewNumworx navigationView, ClientFactory clientFactory) {
-	    this.clientFactory = clientFactory;
-		HorizontalCellListResources cellResources;
+	public TreeModuleViewNumworx(HeaderView headerView, NavigationViewNumworx navigationView, RPCHandler rpc, DwoGlobalVars vars) {
+	    HorizontalCellListResources cellResources;
+	    this.rpc = rpc;
 		cellResources = GWT.create(HorizontalCellListResources.class);
 		tiles = new CellList<SelectModuleItem>(new TileCell(), cellResources);
 		tiles.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
@@ -339,13 +339,13 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 
 		root.forceLayout();
 // Strategy stuff desktop/tablet
-		selectStrategy();
+		selectStrategy(vars);
 	}
 
 
-	private void selectStrategy() {
+	private void selectStrategy(DwoGlobalVars vars) {
 		boolean desktop = MGWT.getOsDetection().isDesktop() /*&& false*/;
-		if (!clientFactory.isIconizer()) desktop = false; // platte versie bij klas zonder tree
+		if (!vars.isIconizer()) desktop = false; // platte versie bij klas zonder tree
 		navigation = desktop ? new TreeNavStrategy() : new ListNavStrategy();
 	}
 
@@ -358,6 +358,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	private SelectModuleItem selection;
 
 	@UiField Text rb;
+
+	final private RPCHandler rpc;
 
 	
 	class ListNavStrategy implements NavStrategy {
@@ -412,7 +414,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		Promise<List<SelectModuleItem>> promise = parent.getChildrenAsync();
 
 		if(promise == null || (promise.isDone() && promise.getFailure() != null)) {
-			promise = clientFactory.getRPCHandler().getCourses(parent.original())
+			promise = rpc.getCourses(parent.original())
 					.map(new COURSE_TO_MODULEITEM(parent));
 			parent.setChildrenAsync(promise);
 			promise
@@ -423,7 +425,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 					for(SelectModuleItem item: resolved.getValue()) {
 						if(item.getType() == SelectModuleItem.Type.FOLDER) {
 							if(item.getChildrenAsync() == null) {
-								item.setChildrenAsync(clientFactory.getRPCHandler().getCourses(item.original())
+								item.setChildrenAsync(rpc.getCourses(item.original())
 										.map(new COURSE_TO_MODULEITEM(item)));
 							}
 						}
@@ -437,7 +439,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		Promise<List<SelectModuleItem>> promise = parent.getChildrenAsync();
 
 		if(promise == null || (promise.isDone() && promise.getFailure() != null)) {
-			promise = clientFactory.getRPCHandler().getScos(parent.getID())
+			promise = rpc.getScos(parent.getID())
 					.map(new SCO_TO_MODULEITEM(parent));
 			parent.setChildrenAsync(promise);
 			promise

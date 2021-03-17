@@ -73,7 +73,7 @@ final class Login_Stap3 implements Success<Void, Void> {
 	public Promise<Void> call(Promise<Void> resolved) throws Exception {
 
 		DomUserFull currentUser = instance.getCurrentUser();
-		RoleType roleType = clientFactory.getRoleType();
+		RoleType roleType = instance.getRoleType();
 		headerView.setUserAndRole(currentUser, roleType);
 		if(next == null)
 		{ // Niet meer relevant: switch naar gwtclient als test en teacher

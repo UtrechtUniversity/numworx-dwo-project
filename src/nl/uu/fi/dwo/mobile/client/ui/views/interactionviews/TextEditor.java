@@ -64,6 +64,7 @@ import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.text.Text;
 import fi.wiskopdr.expressies.DecRound;
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
@@ -467,16 +468,17 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	}
 
 	private void adviseMe() {
-		if (DWOplayer.clientfactory.withUser() && logging != null && comRoot.getLessonMode() == LessonMode.normal ) {
+		DwoGlobalVars vars = DwoGlobalVars.instance();
+		if (vars.withUser() && logging != null && comRoot.getLessonMode() == LessonMode.normal ) {
 			String id = loggingID;
 			if(id == null || !id.startsWith("adviseMe:")) 
 				return;
 			String[] split = id.split(":");
 			String math = toMathML();
-			String userid = DWOplayer.clientfactory.getUserID().toString();
+			String userid = vars.getUserID().toString();
 			String classid;
 			try {
-				classid = DWOplayer.clientfactory.getSchoolClass().getId().getIdString();
+				classid = vars.getCurrentSchoolClass().getId().getIdString();
 			} catch (Exception e) {
 				classid = "";
 			}

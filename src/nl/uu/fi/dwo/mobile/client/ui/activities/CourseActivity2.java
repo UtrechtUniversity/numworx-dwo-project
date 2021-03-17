@@ -69,6 +69,7 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
     @Inject HeaderView headerView;
     @Inject Provider<UnSafeModuleView> unsafe;
     @Inject NavigationView navigation;
+    @Inject DwoGlobalVars vars;
 
     private Place where;
     private SelectModuleItem item;
@@ -95,8 +96,8 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
 		navigation.hide();
 		view.setBeheer(false);
 		view.setPresenter(this);
-		DomUserFull currentUser = DwoGlobalVars.instance().getCurrentUser();
-		RoleType roleType = clientFactory.getRoleType();
+		DomUserFull currentUser = vars.getCurrentUser();
+		RoleType roleType = vars.getRoleType();
 		headerView.setUserAndRole(currentUser, roleType);
 		headerView.setPresenter(this);
 		headerView.setHomePlace(where);
@@ -140,8 +141,8 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
 // Start downloading sco's
 
 // start downloading description/name/attributes
-			if ( clientFactory.getSchoolClass() != null) {
-				Promise<DomCoursesOfSchoolClass> filtered = clientFactory.getRPCHandler().getCourseClass(item.getID(), clientFactory.getSchoolClass()).
+			if ( vars.getCurrentSchoolClass() != null) {
+				Promise<DomCoursesOfSchoolClass> filtered = clientFactory.getRPCHandler().getCourseClass(item.getID(), vars.getCurrentSchoolClass()).
 				filter(p-> !p.getClassCourses().isEmpty()).
 				then(p -> { 
 					DomClassCourse cc = p.getValue().getClassCourses().get(0).getValue();
@@ -227,7 +228,7 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
 	}
 
 	private boolean allowAccess(PersistenceId schoolId) {
-		DomSchool school = clientFactory.getSchool();
+		DomSchool school = vars.getSchool();
 		return schoolId == null || (school != null && schoolId.equals(school.getId()));
 	}
 

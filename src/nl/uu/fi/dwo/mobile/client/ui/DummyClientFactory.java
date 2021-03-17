@@ -70,48 +70,6 @@ public class DummyClientFactory implements ClientFactory {
 		return null;
 	}
 
-	public boolean withUser() {
-		return false;
-	}
-	
-	public Object getSchoolID() {
-		return "";
-	}
-
-	public Object getClassID() {
-		return "";
-	}
-
-	@Override
-	public boolean isIconizer() {
-		return true;
-	}
-
-	@Override
-	public RoleType getRoleType() {
-		return RoleType.ANONYMOUS;
-	}
-
-	@Override
-	public Object getUserID() {
-		return null;
-	}
-
-	public Object getSchoolName() {
-		return "";
-	}
-
-	@Override
-	public DomSchool getSchool() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public DomSchoolClass getSchoolClass() {
-		return null;
-	}
-
 	@Override
 	public Promise<Void> barrier() {
 		return agent.barrier();

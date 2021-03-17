@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
@@ -69,6 +70,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
   CBookEventListener, MessageEventHandler, GotoController, IdleHandler
 {
 	@Inject ClientFactory clientFactory;
+	@Inject DwoGlobalVars vars;
 	@Inject PlaceController placeController;
 	@Inject RPCHandler rpc;
 	@Inject HeaderView headerView;
@@ -91,7 +93,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	@Override
 	public String mayStop() {
 	    if (view != null) view.getOpdrNav().setChanged(false);
-		if (started && clientFactory.withUser() && clientFactory.getRoleType() == RoleType.STUDENT)
+		if (started && vars.withUser() && vars.getRoleType() == RoleType.STUDENT)
 			return Text.constants.maybe_lost_data();
 		return super.mayStop();
 	}
@@ -169,9 +171,9 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 						});
 						} else {
 							p = Promises.resolved(sco.getNotAfter());
-							if ( clientFactory.getSchoolClass() != null) {
+							if ( vars.getCurrentSchoolClass() != null) {
 								final Promise<Date> p0 = p;
-								p = rpc.getCourseClass(sco.getParentID(), clientFactory.getSchoolClass()).
+								p = rpc.getCourseClass(sco.getParentID(), vars.getCurrentSchoolClass()).
 								filter(pr-> !pr.getClassCourses().isEmpty()).
 								then(pr -> { 
 									DomClassCourse cc = pr.getValue().getClassCourses().get(0).getValue();

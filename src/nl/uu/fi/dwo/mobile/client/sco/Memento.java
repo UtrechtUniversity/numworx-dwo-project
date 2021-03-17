@@ -672,7 +672,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	
 	Promise<DomStudentModelContextId> pmodel;
 	protected Promise<?> setStudentModelDataScore() {
-		if(DWOplayer.withUser() && pmodel != null) {
+		if(pmodel != null) {
 			Promise<?> then = pmodel.then(p -> { 
 				//DomStudentModelStructure model = p.getValue().getModelStructure();
 				//DomStudentModelStructureScore data = model.generateStudentModelStructureScore();
@@ -687,7 +687,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	}
 	
 	public Promise<DomStudentModelContextId> collectStudentModel() {
-		if(pmodel != null && DWOplayer.withUser()) {
+		if(pmodel != null) {
 			return pmodel.then(p-> {
 				//DomStudentModelStructure model = p.getValue().getModelStructure();
 				//DomStudentModelStructureScore data = model.generateStudentModelStructureScore();

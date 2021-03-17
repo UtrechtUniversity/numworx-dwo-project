@@ -34,7 +34,6 @@ import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
-import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
@@ -55,14 +54,12 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	private MenuBar items = new MenuBar(true);
     final boolean seb;
 	final HeaderView headerView;
-	final ClientFactory clientFactory;
 	final DwoGlobalVars instance;
 	
-	@Inject ViewModuleViewNumworx(HeaderView headerView, DWOplayerParameters PARAMETERS, ClientFactory client, DwoGlobalVars vars) {
+	@Inject ViewModuleViewNumworx(HeaderView headerView, DWOplayerParameters PARAMETERS, DwoGlobalVars vars) {
 		this.headerView = headerView;
 		this.seb = PARAMETERS.getSecureMode() == SecureMode.SEB;
 	    pfx = PARAMETERS.getResource("");
-	    clientFactory = client;
 	    instance = vars;
 	}
 
@@ -147,9 +144,9 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	}
 
 	public Promise<Boolean> setupModule(String name, String file) {
-		String login = clientFactory.withUser()? instance.getCurrentUser().getDisplayName() : "";
+		String login = instance.withUser()? instance.getCurrentUser().getDisplayName() : "";
 		loginLabel.setText(login);
-		headerTop.setWidgetHidden(loginflow, !clientFactory.withUser());
+		headerTop.setWidgetHidden(loginflow, !instance.withUser());
 		headerTop.forceLayout();
 		headerTop.setWidgetSize(loginflow, loginLabel.getOffsetWidth());
 		setupMenu(items);
@@ -204,7 +201,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		String logout;
         if (seb)
 		  logout = Text.constants.inleveren();
-		else if(clientFactory.withUser()) {
+		else if(instance.withUser()) {
 		  logout = Text.constants.logout();
 		} else {
 		  logout = Text.constants.aanmelden();

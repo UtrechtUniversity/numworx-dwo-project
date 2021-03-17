@@ -99,12 +99,7 @@ public abstract class DWOplayer
 
 
 	public static Text_nl rb = new Text_nl();
-	
-	@Deprecated
-	public static boolean withUser() {
-		return clientfactory.withUser();
-	}	
-	
+		
 //	@Deprecated
 //	private static Deferred<DomDwoProfileFull> deferredProfile;
 //	@Deprecated

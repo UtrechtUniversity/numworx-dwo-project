@@ -16,6 +16,7 @@ import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import dagger.Module;
 import dagger.Provides;
 import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -70,11 +71,12 @@ public class SMLogger implements Logging {
 
     public Logging get() {
       Memento instance = Memento.instance();
+      DwoGlobalVars vars = DwoGlobalVars.instance();
       boolean experiment = instance != null 
     		  && instance.pmodel != null 
     		  && (instance.getLessonMode() == LessonMode.normal||instance.getLessonMode() == LessonMode.review)
-              && DWOplayer.withUser() 
-              && DWOplayer.clientfactory.getRoleType() == RoleType.STUDENT;
+              && vars.withUser() 
+              && vars.getRoleType() == RoleType.STUDENT;
       if (experiment) {
         Promise<XapiManager> xapi = DWOplayer.clientfactory.getRPCHandler().getLRS();
         return new SMLogger(instance, xapi.map(x -> x::saveStatement), delegate.get());

@@ -58,15 +58,17 @@ public class LoginActivity extends AbstractActivity
 	
 	static final class Login_Stap1 implements Success<DomUserFullwLoginContext, DomSchoolsRolesAndClassesV2> {
 
-		private ClientFactory clientFactory;
+		private RPCHandler rpc;
+		private DwoGlobalVars vars;
 
-		public Login_Stap1(ClientFactory clientFactory) {
-			this.clientFactory = clientFactory;
+		public Login_Stap1(RPCHandler rpc, DwoGlobalVars vars) {
+			this.rpc = rpc;
+			this.vars = vars;
 		}
 
 		@Override
 		public Promise<DomSchoolsRolesAndClassesV2> call(Promise<DomUserFullwLoginContext> promise) throws Exception {
-			DwoGlobalVars instance = DwoGlobalVars.instance();
+			DwoGlobalVars instance = vars;
 			DomUserFullwLoginContext value = promise.getValue();
 			if(value == null) {
 				instance.setCurrentLoginContext(null);
@@ -75,7 +77,7 @@ public class LoginActivity extends AbstractActivity
 			} else {
 				instance.setCurrentLoginContext(value.getDomLoginContext());
 				instance.setCurrentUser(value.getDomUserFull());
-				return clientFactory.getRPCHandler().getSchoolLogins();
+				return rpc.getSchoolLogins();
 			}
 		}
 	}
@@ -110,7 +112,7 @@ public class LoginActivity extends AbstractActivity
 			panel.setWidget(view.get());
 			Throwable caught = resolved.getFailure();
 			LOG.log(Level.SEVERE, "login failure2 ", caught);
-			if(clientFactory.withUser())
+			if(vars.withUser())
 				clientFactory.logout();
 			defer = new Deferred<>();
 			rearm(defer.getPromise());
@@ -174,7 +176,8 @@ public class LoginActivity extends AbstractActivity
 	@Inject PlaceController placeController;
 
 	@Inject HeaderView headerView;
-	@Inject DwoGlobalVars vars;
+	final private DwoGlobalVars vars;
+	final private RPCHandler rpc;
 	
 
 //	public LoginActivity(ClientFactory clientFactory, Place next)
@@ -183,11 +186,13 @@ public class LoginActivity extends AbstractActivity
 //		this.next = next;
 //	}
 
-	@Inject LoginActivity(ClientFactory clientFactory, DWOplayerParameters p, RPCHandler rpc, PlaceController placeController) {
+	@Inject LoginActivity(ClientFactory clientFactory, DWOplayerParameters p, RPCHandler rpc, PlaceController placeController, DwoGlobalVars vars) {
 		this.clientFactory = clientFactory;
 		this.PARAMETERS = p;
+		this.rpc = rpc;
 		this.dwoProfile = rpc.getDwoProfile();
-		this.LOGIN_STAP1 = new Login_Stap1(clientFactory);
+		this.vars = vars;
+		this.LOGIN_STAP1 = new Login_Stap1(rpc, vars);
 		Place place = placeController.getWhere();
 		if (place instanceof HasHash)
 		  next = ((HasHash) place).getPlace();
@@ -197,7 +202,7 @@ public class LoginActivity extends AbstractActivity
 	public void start(final AcceptsOneWidget panel, EventBus eventBus)
 	{
 		this.panel = panel;
-		final boolean logout = clientFactory.withUser();
+		final boolean logout = vars.withUser();
 		WaitScreen.instance().w();
 		headerView.hide();
 		clientFactory.logout().onResolve (
@@ -263,19 +268,19 @@ public class LoginActivity extends AbstractActivity
 // ?a= en bovendien saml cookies.
 					String authToken = Window.Location.getParameter("a");
 					if (authToken != null && !authToken.isEmpty())
-						promise = clientFactory.getRPCHandler().getUserFromAuthToken(authToken)
+						promise = rpc.getUserFromAuthToken(authToken)
 // XXX wel of niet ook met saml?
-						.recoverWith(p -> clientFactory.getRPCHandler().samlLogin(user_id, org_id))
+						.recoverWith(p -> rpc.samlLogin(user_id, org_id))
 						;
 					else
-						promise = clientFactory.getRPCHandler().samlLogin(user_id, org_id);
+						promise = rpc.samlLogin(user_id, org_id);
 				} else {
 
 					String authToken = Window.Location.getParameter("a");
 					if (authToken != null && !authToken.isEmpty()) {
 						if (!logout)
 						{	panel.setWidget(new Label());
-							promise = clientFactory.getRPCHandler().getUserFromAuthToken(authToken);
+							promise = rpc.getUserFromAuthToken(authToken);
 						}
 						else {
 							// redirect to zonder ?a=
@@ -303,7 +308,7 @@ public class LoginActivity extends AbstractActivity
 
 						@Override
 						public void onClick(ClickEvent event) {
-							if (clientFactory.withUser())
+							if (vars.withUser())
 								clientFactory.logout(); // fail safe?
 							if (defer != null)
 								dwoProfile.onResolve(new Runnable() {

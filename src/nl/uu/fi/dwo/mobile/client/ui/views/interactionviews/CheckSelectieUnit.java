@@ -40,6 +40,7 @@ import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
 import fi.wiskopdr.text.Text;
 import fi.wiskopdr.text.TextConstants;
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.ideas.client.RuleIF;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
@@ -812,15 +813,16 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	}
 
 	private void adviseMe() {
-		if (DWOplayer.clientfactory.withUser() && logOption && comRoot.getLessonMode() == LessonMode.normal) {
+		DwoGlobalVars instance = DwoGlobalVars.instance();
+		if (instance.withUser() && logOption && comRoot.getLessonMode() == LessonMode.normal) {
 			String id = logID;
 			if(! id.startsWith("adviseMe:")) 
 				return;
 			String[] split = id.split(":");
-			String userid = DWOplayer.clientfactory.getUserID().toString();
+			String userid = instance.getUserID().toString();
 			String classid;
 			try {
-				classid = DWOplayer.clientfactory.getSchoolClass().getId().getIdString();
+				classid = instance.getCurrentSchoolClass().getId().getIdString();
 			} catch (Exception e) {
 				classid = "";
 			}

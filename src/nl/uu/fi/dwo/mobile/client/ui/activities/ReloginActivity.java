@@ -85,7 +85,7 @@ public class ReloginActivity extends AbstractActivity {
 				return rpc.loginMD5(getUsername(), getPassword());
 			}
 		})
-		.then(new LoginActivity.Login_Stap1(clientFactory))
+		.then(new LoginActivity.Login_Stap1(rpc, vars))
 		.then(LoginActivity.LOGIN_STAP2, FAILURE1)
 		.then(new Login_Stap3(clientFactory, next, placeController, headerView, vars));
 	}

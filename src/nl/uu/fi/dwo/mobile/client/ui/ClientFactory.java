@@ -42,14 +42,14 @@ public interface ClientFactory
 	Promise<Void> barrier();
 	void addBarrier(Promise<?> p);
 	
-	boolean withUser();
-	DomSchool getSchool();
-	DomSchoolClass getSchoolClass();
-	
-	boolean isIconizer();
-	RoleType getRoleType();
-	
-	Object getUserID();
+//	boolean withUser();
+//	DomSchool getSchool();
+//	DomSchoolClass getSchoolClass();
+//	
+//	boolean isIconizer();
+//	RoleType getRoleType();
+//	
+//	Object getUserID();
 
 	Promise<Void> startExam(DomClassCourse classCourse, String password);
 

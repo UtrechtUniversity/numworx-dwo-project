@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.ui.activities.CourseActivity2;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ExamModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LoginActivity;
@@ -60,7 +61,7 @@ public class TabletActivityMapper implements ActivityMapper
 	@Inject MembersInjector<ViewModuleActivity> vmInjector;
 	@Inject MembersInjector<TreeModuleActivity> trInjector;
 	@Inject MembersInjector<ReloginActivity> rlInjector;
-	
+	@Inject DwoGlobalVars vars;
 	
 	@Override
 	public Activity getActivity(Place place)
@@ -133,7 +134,7 @@ public class TabletActivityMapper implements ActivityMapper
 //			return new LoginActivity(clientFactory, ((LoginPlace) place).getPlace());
 		if (place instanceof ReloginPlace)
 		{
-			if(clientFactory.withUser())
+			if(vars.withUser())
 				return new ReloginActivity(rlInjector, ((HasHash) place).getPlace());
 			else
 				return login.get();

@@ -89,7 +89,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 						@Override
 						public Promise<Void> call(Promise<Void> resolved) throws Exception {
 //								menuWidget = null;
-							if(withUser()) {
+							if(instance.withUser()) {
 								return getRPCHandler().logout();
 							}
 							return resolved;
@@ -105,7 +105,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 
 		public SCORM_guest setupAPI() {
 			SCORM_guest api;
-			if(!withUser()) {
+			if(!instance.withUser()) {
 				api = new SCORM_guest();
 			} else {
 // secure alleen voor studenten!
@@ -125,12 +125,12 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 			return confirmHandler;
 		}
 
-		@Override
+		
 		public boolean withUser() {
 			return instance.getCurrentUser() != null;
 		}
 
-		@Override
+		
 		public DomSchool getSchool() {
 			try {
 				return instance.getActiveSchoolRoleAndClass().getSchool();
@@ -139,12 +139,12 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 			}
 		}
 
-		@Override
+		
 		public DomSchoolClass getSchoolClass() {
 			return instance.getCurrentSchoolClass();
 		}
 
-		@Override
+		
 		public boolean isIconizer() {
 			try {
 				return getSchoolClass().getIconizer().booleanValue();
@@ -153,7 +153,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 			}
 		}
 
-		@Override
+		
 		public RoleType getRoleType() {
 			try {
 				String roleName = instance.getActiveSchoolRoleAndClass().getRole().getRoleName();
@@ -163,7 +163,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 			}
 		}
 
-		@Override
+		
 		public Object getUserID() {
 			PersistenceId id = instance.getCurrentUser().getId();
 			return PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentUser);
@@ -171,8 +171,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 
 		@Override
 		public boolean isPremium() {
-			//return withUser() && getSchool().getAboType() == AboType.premium;
-			return !withUser() || getSchool().getAboType() == AboType.premium;
+			return instance.isPremium();
 		}
 
 	}

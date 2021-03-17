@@ -19,6 +19,7 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
@@ -5664,15 +5665,16 @@ private Object CamelCase(String name) {
 	}
 
 	private void adviseMe() {
-		if (DWOplayer.clientfactory.withUser() && logOption && comRoot.getLessonMode() == LessonMode.normal) {
+		DwoGlobalVars vars = DwoGlobalVars.instance();
+		if (vars.withUser() && logOption && comRoot.getLessonMode() == LessonMode.normal) {
 			String id = logID;
 			if(! id.startsWith("adviseMe:")) 
 				return;
 			String[] split = id.split(":");
-			String userid = DWOplayer.clientfactory.getUserID().toString();
+			String userid = vars.getUserID().toString();
 			String classid;
 			try {
-				classid = DWOplayer.clientfactory.getSchoolClass().getId().getIdString();
+				classid = vars.getCurrentSchoolClass().getId().getIdString();
 			} catch (Exception e) {
 				classid = "";
 			}

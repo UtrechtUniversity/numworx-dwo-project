@@ -79,7 +79,7 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
     private Promise<List<DomScoContext>> scoList;
 	private SelectModuleItem item;
 	private DwoGlobalVars vars;
-	private ClientFactory clientFactory;
+	private boolean withUser;
 
 	private ScoActivity(s where) {
 	    this.where = where.getID();
@@ -106,11 +106,11 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 		this(where);
 		this.item = item;
 		this.vars = vars;
-		this.clientFactory = clientFactory;
 		schoolClass = vars.getCurrentSchoolClass();
-		school = clientFactory.getSchool();
-		role = clientFactory.getRoleType();
+		school = vars.getSchool();
+		role = vars.getRoleType();
 		view = clientFactory.getEntryView();
+		withUser = vars.withUser();
 	}
 
 	DomScoContext findSco(DomCoursesOfSchoolClass csc) {
@@ -272,7 +272,7 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 
 	@Override
 	public String mayStop() {
-		if (started && clientFactory.withUser())
+		if (started && withUser)
 			return Text.constants.maybe_lost_data();
 		return super.mayStop();
 	}
