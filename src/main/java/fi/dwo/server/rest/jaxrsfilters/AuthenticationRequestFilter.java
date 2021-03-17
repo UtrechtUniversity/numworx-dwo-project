@@ -64,6 +64,7 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
 
         public DwoUserSecurityContext(DwoUserPrincipal user, boolean secure, String scheme) {
             u = user;
+            role = RoleType.NONE;
         }
 
         public DwoUserSecurityContext(DwoUserPrincipal principal, boolean secure,

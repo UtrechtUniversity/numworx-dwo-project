@@ -1,31 +1,58 @@
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelOfClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelOfClassPK;
+import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
+import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
+import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
-import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
+import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentModelOfClassManager;
+import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentModelContextUtilManager;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
 import javax.annotation.security.PermitAll;
-import javax.ws.rs.GET;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
+import nl.uu.fi.dwo.rest.entities.RestStudentModelContext4Student;
+import nl.uu.fi.dwo.rest.entities.RestStudentModelContextId;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContextPatch;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -40,7 +67,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
  *
  * @author G.A.J. van der Plas
  */
-@PermitAll
+@RolesAllowed({"TEACHER"})
 @Path("/secure/teacher/studentmodel")
 public class SecuredTeacherStudentModelManager {
 
@@ -194,4 +221,93 @@ public class SecuredTeacherStudentModelManager {
       return state.getLRS(info);
     }
 
+    
+    @PUT
+    @Produces("application/json")
+    @Path("/updateForClass")
+    public Boolean updateForClass(@Context SecurityContext sc, RestStudentModelContext4Student rest) throws Dwo2Exception {
+    	UserState_U ustate = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName());
+		UserState_HR_R_S_SG_U hrstate = ustate.setHasRole(rest.getRestContext().getDomHasRole());
+		TeacherState_HR_R_S_SG_U state = hrstate.buildSchoolAdminTeacher().setTeacher();
+    	DomStudentModelContext4Student dom = rest.getDomStudentModelContext();
+    	DomSchoolClassId schoolClass = dom.getSchoolClass();
+    	// verify schoolclass belongs to teacher
+    	PersistentUser teacher = hrstate.getUser();
+    	PersistentSchool school = hrstate.getSchool();
+    	PersistentSchoolClass psc = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(schoolClass));
+    	PersistentStudentModelContext model = StudentModelContextManager.findEntity(MySQLPersistenceId.getNativeId(dom));
+    	if (school.getSchoolID().longValue() != psc.getSchoolID().longValue())
+    		throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "wrong school");
+    	PersistentTeacherOfClass ptoc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(teacher.getId(), psc.getClassID(), hrstate.getSchoolGroup().getSchoolGroupID()));
+    	if (ptoc == null) {
+    		throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "not a member");
+    	}
+    	PersistentStudentModelOfClassPK pk = new PersistentStudentModelOfClassPK(psc.getClassID(), model.getModelID(), school.getSchoolID());
+    	
+    	Map<String, Map<String, Set<Integer>>> filter = dom.getFilter();
+    	String value = JSONObject.toJSONString(filter);
+    	
+    	PersistentStudentModelOfClass entity = StudentModelOfClassManager.findEntity(pk);
+    	if (entity == null && filter != null) {
+    		entity = new PersistentStudentModelOfClass();
+    		entity.setId(pk);
+    		entity.setValue(value);
+    		StudentModelOfClassManager.create(entity);
+    		return Boolean.TRUE;
+    	} else if (filter != null) {
+    		entity.setValue(value);
+    		StudentModelOfClassManager.edit(entity);
+    	} else {
+    		StudentModelOfClassManager.destroy(entity.getId());
+    	}
+    	return Boolean.FALSE;
+    }
+
+    @PUT
+    @Produces("application/json")
+    @Path("/getForClass")
+    public DomStudentModelContext4Student gettForClass(@Context SecurityContext sc, RestStudentModelContextId rest) throws Dwo2Exception, ParseException {
+    	UserState_U ustate = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName());
+		UserState_HR_R_S_SG_U hrstate = ustate.setHasRole(rest.getRestContext().getDomHasRole());
+		TeacherState_HR_R_S_SG_U state = hrstate.buildSchoolAdminTeacher().setTeacher();
+		DomStudentModelContextId dom = rest.getDomStudentModelContext();
+    	DomSchoolClassId schoolClass = rest.getDomSchoolClass();
+    	// verify schoolclass belongs to teacher
+    	PersistentUser teacher = hrstate.getUser();
+    	PersistentSchool school = hrstate.getSchool();
+    	PersistentSchoolClass psc = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(schoolClass));
+    	PersistentStudentModelContext model = StudentModelContextManager.findEntity(MySQLPersistenceId.getNativeId(dom));
+    	if (school.getSchoolID().longValue() != psc.getSchoolID().longValue())
+    		throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "wrong school");
+    	PersistentTeacherOfClass ptoc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(teacher.getId(), psc.getClassID(), hrstate.getSchoolGroup().getSchoolGroupID()));
+    	if (ptoc == null) {
+    		throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "not a member");
+    	}
+    	PersistentStudentModelOfClassPK pk = new PersistentStudentModelOfClassPK(psc.getClassID(), model.getModelID(), school.getSchoolID());
+    	PersistentStudentModelOfClass of = StudentModelOfClassManager.findEntity(pk);
+    	if(of == null) return null;
+    	DomStudentModelContext context = state.getStudentModel(dom);
+    	DomStudentModelContext4Student result = new DomStudentModelContext4Student(context.getId());
+    	result.setFilter(toFilter(of));
+    	result.setSchoolClass(schoolClass);
+    	result.setModelStructure(context.getModelStructure());
+    	
+    	return result;
+    }
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private Map<String,Map<String,Set<Integer>>> toFilter(PersistentStudentModelOfClass of) throws ParseException {
+		HashMap<String,Map<String,Set<Integer>>> result = new HashMap<>();
+		Map<String,?> map = (Map) new JSONParser().parse(of.getValue());
+		Set<String> keys = map.keySet();
+		for (String k : keys) {
+			Map<String, ?> m = (Map) map.get(k);
+			Map r = result.computeIfAbsent(k, q -> new HashMap<>());
+			for (String l: m.keySet()) {
+				Collection<Number> set = (Collection<Number>) m.get(l);
+				r.put(l, set.stream().map(Number::intValue).collect(Collectors.toSet()));
+			}
+		}
+		return result;
+	}
 }

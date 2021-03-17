@@ -67,7 +67,7 @@ public class StudentModelOfClassManager {
      * @param studentOf
      * @throws Exception
      */
-    public static void edit(PersistentStudentModelOfClass studentOf) throws PersistenceException, Exception {
+    public static void edit(PersistentStudentModelOfClass studentOf) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
