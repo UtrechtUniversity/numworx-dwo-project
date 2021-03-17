@@ -62,7 +62,11 @@ public class SettingsSchoolClassPanel extends JPanel {
         list = new DomStudentModelContext4Student[classes.size()];
         for(int i = 0; i < classes.size(); i++) {
             list[i] = SecureTeacherStudentModelManager.getForClass(id, classes.get(i));
-            check[i] = list[i] != null;
+            if (check[i] = list[i] != null)
+            {
+                filter[i] = list[i].getFilter();
+                if (filter[i].remove("", Collections.emptyMap())) filter[i].put(null, null);
+            }
         }
       } catch (Dwo2Exception e) {
       }
@@ -282,10 +286,15 @@ public class SettingsSchoolClassPanel extends JPanel {
           updateModel(models[i]);
         } else if (filters[i] != null && models[i] != null) {
             models[i].setFilter(filters[i]);
-            updateModel(models[i]);
+            if (filters[i] != null && filters[i].remove(null, null))
+              filters[i].put("", Collections.emptyMap());
+           updateModel(models[i]);
         } else if (filters[i] != null && models[i] == null) {
             DomStudentModelContext4Student model = new DomStudentModelContext4Student(id.getId());
             model.setSchoolClass(sc);
+
+            if (filters[i] != null && filters[i].remove(null, null))
+                filters[i].put("", Collections.emptyMap());
             model.setFilter(filters[i]);
             updateModel(model);
         }        
