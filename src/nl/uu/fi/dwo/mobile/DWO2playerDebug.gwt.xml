@@ -89,7 +89,7 @@
     	<when-type-is class="fi.wiskopdr.FailingIdeas" />
     </replace-with>
     
-    <replace-with class="nl.uu.fi.dwo.mobile.client.DWO2playerDefaults">
+    <replace-with class="nl.uu.fi.dwo.mobile.client.DWO2Constants">
     	<when-type-is class="fi.dwo.gwt.lib.rest.DwoConstants" />
     </replace-with>
      <replace-with class="nl.uu.fi.dwo.mobile.client.sco.StudentModelLogger.Provider" >

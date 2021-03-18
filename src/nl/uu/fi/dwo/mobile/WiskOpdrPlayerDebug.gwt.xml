@@ -23,7 +23,7 @@
     </replace-with>
     
 	 <replace-with class="nl.uu.fi.dwo.mobile.client.WiskOpdrDefaults">
-        <when-type-is class="nl.uu.fi.dwo.mobile.client.DWOplayerParameters" />
+        <when-type-is class="nl.uu.fi.dwo.mobile.client.DWOplayerDefaults" />
     </replace-with>
  
     <set-property name="gwt.logging.enabled" value="TRUE"/>

@@ -8,6 +8,7 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWOplayerDefaults;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.DummyClientFactory;
@@ -23,7 +24,7 @@ public abstract class DummyFactory {
   @Binds abstract ViewModuleView viewModuleView(ViewModuleViewImpl impl);
   @Singleton
   @Provides static DWOplayerParameters parameters() {
-    DWOplayerParameters create = GWT.create(DWOplayerParameters.class);
+    DWOplayerParameters create = GWT.create(DWOplayerDefaults.class);
     DWOplayer.PARAMETERS = create;  // FIXME valsspelen!!!!!
     return create;
   }
