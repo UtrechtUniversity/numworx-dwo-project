@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -325,34 +326,31 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		}
 		return p;
 	}
+	static boolean contains(Map<String, Map<String, Set<Integer>>> filter,
+			Map<String, Map<String, Set<Integer>>> methodes) {
+		for (Map.Entry<String, Map<String, Set<Integer>>> entry : filter.entrySet()) {
+		    if (entry.getKey().isEmpty()) {
+		      if (methodes.values().stream().allMatch(Map::isEmpty)) return true;
+		      continue;
+		    }		  
+			Map<String, Set<Integer>> map = methodes.getOrDefault(entry.getKey(), Collections.emptyMap());
+			if (map.isEmpty())
+			{ 
+			  continue;
+			}
+			for (Map.Entry<String, Set<Integer>> m : entry.getValue().entrySet()) {
+				Set<Integer> chapters = new TreeSet<>(map.getOrDefault(m.getKey(), Collections.emptySet()));
+				chapters.retainAll(m.getValue());
+				if (!chapters.isEmpty())
+					return true;
+			}
+		}
+		return false;
+	}
 
 	private boolean inFilter(Map<String, Map<String, Set<Integer>>> filter, DomStudentModelObj oo) {
-		boolean add = true;
-			Map<String, Map<String, Set<Integer>>> methods = oo.getInfo().getMethods();
-			if (!filter.isEmpty()) {
-				methods.keySet().retainAll(filter.keySet());
-				Iterator<String> methodkeys = methods.keySet().iterator();
-				while(methodkeys.hasNext()) {
-					String method = methodkeys.next();
-					Map<String, Set<Integer>> books = methods.get(method);
-					Map<String, Set<Integer>> bookfilter = filter.get(method);
-					books.keySet().retainAll(bookfilter.keySet());
-					Iterator<String> bookkeys = books.keySet().iterator();
-					while (bookkeys.hasNext()) {
-						String book = bookkeys.next();
-						Set<Integer> chapters = books.get(book);
-						Set<Integer> chfilter = bookfilter.get(book);
-						chapters.retainAll(chfilter);
-						if (chapters.isEmpty()) {
-							bookkeys.remove();
-						}	
-					}
-					if (books.isEmpty()) 
-						methodkeys.remove();
-				}
-				add = !methods.isEmpty();
-			}
-		return add;
+		Map<String, Map<String, Set<Integer>>> methods = oo.getInfo().getMethods();
+		return contains(filter, methods);
 	}
 
 	private void addToTree(TreeItem item, DomStudentModelContext4Student model) {
