@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.entities.RestContext;
@@ -47,6 +48,13 @@ public class SecuredStudentStudentModelManager {
 		rest.setRestContext(context);
 		return F(service::getReducedList, PathId.getId(context), rest);
 	}
+
+	public Promise<List<DomStudentModelContext4Student>> getReducedModelsForClass(DomContext context, DomSchoolClass sc) {
+		RestSchoolClass rest = new RestSchoolClass();
+		rest.setDomSchoolClass(sc);
+		rest.setRestContext(context);
+		return F(service::getReducedListForClass, PathId.getId(context), rest);
+	}
 	
 	public Promise<DomStudentModelContext> getStudentModel(DomContext context, DomStudentModelContextId id, DomSchoolClass sc) {
 		RestStudentModelContextId rest = new RestStudentModelContextId();
@@ -54,6 +62,16 @@ public class SecuredStudentStudentModelManager {
 		rest.setRestContext(context);
 		rest.setDomSchoolClass(sc);
 		return F(service::getStudentModel, PathId.getId(context), rest);
+	}
+
+	public Promise<DomStudentModelContext4Student> getStudentModelForClass(DomContext context, DomStudentModelContextId id, DomSchoolClass sc) {
+		RestStudentModelContextId rest = new RestStudentModelContextId();
+		rest.setDomStudentModelContext(id);
+		rest.setRestContext(context);
+		rest.setDomSchoolClass(sc);
+		return F(service::getForClass, PathId.getId(context), rest);
 		
 	}
+
+
 }
