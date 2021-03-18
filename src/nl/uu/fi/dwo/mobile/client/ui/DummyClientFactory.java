@@ -27,14 +27,12 @@ import dagger.Lazy;
 public class DummyClientFactory implements ClientFactory {
 
 	final private EventBus eventBus;
-	final private RPCHandler handler;
 	final private boolean premium;
 	private Lazy<ViewModuleView> entryView;
 	private TrafficAgent agent;
 	
-	@Inject DummyClientFactory(EventBus eventBus, RPCHandler handler, TrafficAgent agent, @Named("premium") boolean premium) {
+	@Inject DummyClientFactory(EventBus eventBus, TrafficAgent agent, @Named("premium") boolean premium) {
       this.eventBus = eventBus;
-      this.handler = handler;
       this.agent = agent;
       this.premium = premium;
       java.util.logging.Logger.getLogger("DummyClientFactory " + premium);
@@ -53,11 +51,6 @@ public class DummyClientFactory implements ClientFactory {
 	@Override
 	public TreeModuleView getTreeModuleView() {
 		return null;
-	}
-
-	@Override
-	public RPCHandler getRPCHandler() {
-		return handler;
 	}
 
 	@Inject

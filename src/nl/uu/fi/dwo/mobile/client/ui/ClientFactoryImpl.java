@@ -59,19 +59,11 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	    headerView = () -> impl;
 	  }
 	};
-		
-//	final Provider<NavigationViewNumworx> navigationView;
-	
-//	public NavigationView getNavigationView() {
-//		NavigationViewNumworx view = navigationView.get();
-//		view.setPresenter(this);
-//		return view;
-//	}
-	
+
 	
 	private final PlaceController placeController;
 	private Provider<ViewModuleView> entryView;
-	private RPCHandler handler;
+	protected RPCHandler handler;
 	
 	public ClientFactoryImpl(EventBus bus, PlaceController controller, 
 	                 final Provider<ViewModuleViewBuilder> entryView	                 
@@ -104,38 +96,11 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	public HeaderView getHeaderView() {
 		return headerView.get();
 	}
-	
-	
-//	@Override
-//	public LoginView getLoginView()
-//	{
-//		if (loginView == null)
-//			loginView = new LoginViewImpl();
-//		return loginView;
-//	}
-
-
-	@Override
-	public RPCHandler getRPCHandler() {
-		return this.handler;
-	}
-
+		
 	protected void setRPCHandler(RPCHandler handler) {
 		this.handler = handler;
 	}
-	
-//	public SCORM_guest setupAPI() {
-//		SCORM_guest api;
-//		if(!withUser()) {
-//			api = new SCORM_guest();
-//		} else {
-//			Integer userID = (Integer) getUserID();
-//			api = new SCORM_DWOmAccess(userID.intValue());
-//		}
-//		return api;
-//	}
-		
-		
+			
 	protected static PersistenceId idOf(Object object, PersistenceClassType type) {
 		if(object == null || "".equals(object))
 				return null;
@@ -144,9 +109,7 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 		return id;
 	}
 
-
-	private DomClassCourse exam;
-	
+	private DomClassCourse exam;	
 	
 	@Override
 	public Promise<Void> startExam(final DomClassCourse classCourse, final String password) {
@@ -156,7 +119,7 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 					@Override
 					public Promise<Void> call(Promise<Void> resolved)
 							throws Exception {
-						return getRPCHandler().startExam(classCourse.getId().toString(), password);
+						return handler.startExam(classCourse.getId().toString(), password);
 					}
 			})
 			.then(new Success<Void, Void>() {

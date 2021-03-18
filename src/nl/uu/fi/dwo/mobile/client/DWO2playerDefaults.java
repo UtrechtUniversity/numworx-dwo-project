@@ -1,14 +1,17 @@
 package nl.uu.fi.dwo.mobile.client;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 
 import fi.dwo.gwt.lib.rest.DwoConstants;
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.sco.SMLogger;
 //import nl.uu.fi.dwo.mobile.client.sco.StudentModelLogger;
 import nl.uu.fi.dwo.mobile.client.ui.IdleDetect;
+import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.dwokb.NoStatusKeyboard;
 //import nl.uu.fi.dwo.mobile.utils.LaTransport;
@@ -17,12 +20,16 @@ import nl.uu.fi.dwo.mobile.utils.NoLogging;
 
 public class DWO2playerDefaults extends DWOplayerDefaults implements DwoConstants {
 
-	public static IdleDetect idle;
+	private IdleDetect idle;
 
-	public DWO2playerDefaults() {
+	@Inject DWO2playerDefaults(IdleDetect idle, DwoGlobalVars vars, RPCHandler rpc) {
 		super(null);
+		this.idle = idle;
+		
 		launchData =
 				"/dwo/rest/public/scoData/getJSONLaunchDataBytes?scoId=";
+		loggingProvider = new SMLogger.Provider(	    
+			      () -> NoLogging.instance, vars, rpc);
 
 	 //  loggingProvider = () -> LaTransport.newTAOinstance();
 
@@ -85,11 +92,7 @@ public class DWO2playerDefaults extends DWOplayerDefaults implements DwoConstant
 		return secureMode;
 	}
 
-	public Provider<Logging> loggingProvider = 
-	    new SMLogger.Provider(	    
-	      () -> NoLogging.instance);
-	      //new StudentModelLogger.Provider());
-			//GWT.create(LoggingProvider.class);
+	private final Provider<Logging> loggingProvider;
 	
 	@Override
 	public Logging getLogging() {

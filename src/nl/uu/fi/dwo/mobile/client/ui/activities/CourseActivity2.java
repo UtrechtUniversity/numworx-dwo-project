@@ -9,6 +9,7 @@ import javax.inject.Provider;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
+import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
@@ -64,6 +65,7 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
   
   
 	@Inject ClientFactory clientFactory;
+	@Inject RPCHandler rpc;
 	@Inject PlaceController placeController;
 	@Inject Provider<NoCourseView> noCourseView;
     @Inject HeaderView headerView;
@@ -142,7 +144,7 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
 
 // start downloading description/name/attributes
 			if ( vars.getCurrentSchoolClass() != null) {
-				Promise<DomCoursesOfSchoolClass> filtered = clientFactory.getRPCHandler().getCourseClass(item.getID(), vars.getCurrentSchoolClass()).
+				Promise<DomCoursesOfSchoolClass> filtered = rpc.getCourseClass(item.getID(), vars.getCurrentSchoolClass()).
 				filter(p-> !p.getClassCourses().isEmpty()).
 				then(p -> { 
 					DomClassCourse cc = p.getValue().getClassCourses().get(0).getValue();
@@ -189,11 +191,11 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
 									return resolved;
 								}
 					};
-					promise = clientFactory.getRPCHandler().getScos(item.getID())
+					promise = rpc.getScos(item.getID())
 							.map(new SCO_TO_MODULEITEM(item)).then(success , failure);
 					item.setChildrenAsync(promise);
 				}			
-			clientFactory.getRPCHandler().getCourse(item.getID())
+			rpc.getCourse(item.getID())
 
 			.filter(p -> allowAccess(p.getSchoolId()))
 			

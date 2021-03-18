@@ -90,7 +90,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 						public Promise<Void> call(Promise<Void> resolved) throws Exception {
 //								menuWidget = null;
 							if(instance.withUser()) {
-								return getRPCHandler().logout();
+								return handler.logout();
 							}
 							return resolved;
 						}}).

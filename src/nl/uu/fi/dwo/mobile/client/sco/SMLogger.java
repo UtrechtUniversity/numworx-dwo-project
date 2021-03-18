@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.utils.LaTransport;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
@@ -65,20 +66,24 @@ public class SMLogger implements Logging {
   }
   
   public static class Provider implements javax.inject.Provider<Logging> {
-    public Provider(javax.inject.Provider<Logging> delegate) {
+    private DwoGlobalVars vars;
+	private RPCHandler rpc;
+
+	public Provider(javax.inject.Provider<Logging> delegate, DwoGlobalVars vars, RPCHandler rpc) {
       this.delegate = delegate;
+      this.vars = vars;
+      this.rpc  = rpc;
     }
 
     public Logging get() {
       Memento instance = Memento.instance();
-      DwoGlobalVars vars = DwoGlobalVars.instance();
       boolean experiment = instance != null 
     		  && instance.pmodel != null 
     		  && (instance.getLessonMode() == LessonMode.normal||instance.getLessonMode() == LessonMode.review)
               && vars.withUser() 
               && vars.getRoleType() == RoleType.STUDENT;
       if (experiment) {
-        Promise<XapiManager> xapi = DWOplayer.clientfactory.getRPCHandler().getLRS();
+        Promise<XapiManager> xapi = rpc.getLRS();
         return new SMLogger(instance, xapi.map(x -> x::saveStatement), delegate.get());
       }
       return delegate.get();

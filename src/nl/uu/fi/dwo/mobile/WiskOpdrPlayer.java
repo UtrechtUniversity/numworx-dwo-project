@@ -33,6 +33,7 @@ import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.sco.WiskOpdrMemento;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 import nl.uu.fi.dwo.mobile.utils.Logging;
@@ -176,17 +177,17 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 
 
 	@Override
-    protected ViewModuleViewImpl getViewModuleView(Scorm2004IF api, ClientFactory clientFactory) {
+    protected ViewModuleViewImpl getViewModuleView(RPCHandler rpc, Scorm2004IF api, ClientFactory clientFactory) {
 		logger.info("getViewModuleView " + clientFactory.isPremium());
 // FIXME Smelly code. clientfactory injected early.
 		DWOplayer.clientfactory = clientFactory;
-		return createEntryView(header, api);
+		return createEntryView(rpc, header, api);
     }
 	  
 	}
 		
-	protected final ViewModuleViewImpl createEntryView(boolean header, Scorm2004IF api) {
-		return new ViewModuleViewImpl(header, api) {
+	protected final ViewModuleViewImpl createEntryView(RPCHandler rpc, boolean header, Scorm2004IF api) {
+		return new ViewModuleViewImpl(rpc, header, api) {
 			@Override
 			protected Memento createMemento() {
 				return new WiskOpdrMemento(getApi(), this, studentModel); // terminate at close, no "almost" close

@@ -30,6 +30,7 @@ import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.web.bindery.event.shared.EventBus;
 
 import dagger.Reusable;
+import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 
@@ -100,15 +101,17 @@ public class ClassesViewImpl extends Composite  implements AnchorContext {
 	}
 	ProvideTileKey keyprovider = new ProvideTileKey();
 
-	private EventBus eventBus;
+	private final EventBus eventBus;
+	private final RPCHandler rpc;
 
 	private static ClassesViewImplUiBinder uiBinder = GWT.create(ClassesViewImplUiBinder.class);
 
 	interface ClassesViewImplUiBinder extends UiBinder<Widget, ClassesViewImpl> {
 	}
 
-	@Inject ClassesViewImpl(EventBus bus) {
+	@Inject ClassesViewImpl(EventBus bus, RPCHandler rpc) {
 		this.eventBus = bus;
+		this.rpc = rpc;
 		CellList.Resources cellResources;
 		cellResources = GWT.create(ClassesCellListResources.class);
 		cells = new CellList<DomSchoolClass>(new NavCell(),cellResources);
@@ -140,7 +143,7 @@ public class ClassesViewImpl extends Composite  implements AnchorContext {
 		String description = item.getDescription();
 		if(description.startsWith(DescriptionView.GZIPPREFIX))
 		{
-			w = new DescriptionViewImpl(item.getID(), (AnchorContext) this).asWidget();
+			w = new DescriptionViewImpl(rpc, item.getID(), (AnchorContext) this).asWidget();
 		} else
 		if(description.startsWith("<html>")) {
 			w = new HTML(description);

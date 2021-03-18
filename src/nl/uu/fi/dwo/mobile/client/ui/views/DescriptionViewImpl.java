@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
@@ -39,10 +40,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 public class DescriptionViewImpl extends XMLView implements DescriptionView, OpdrNavIF {
-
-//	private static final String GET_COURSE_DESCRIPTION = 
-//			DWOplayer.PARAMETERS.getCourseDescription();
-	
 	
 	private SimplePanel main;
 	private Label loading = new Label("Loading...");
@@ -63,15 +60,8 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 		return main;
 	}
 
-//	@Override
-//	public void onModuleLoad() {
-//		int courseID = 13033; // lessenseries/onderbouw/kwadratische vergelijkingen
-//		setupModule(courseID);		
-//		RootPanel.get().add(asWidget());
-//	}
-
-	public DescriptionViewImpl() {
-		super();
+	public DescriptionViewImpl(RPCHandler rpc) {
+		super(rpc);
 		main = new SimplePanel();
 		main.setStylePrimaryName("descriptionView");
 		contentPanel = new FlowPanel();
@@ -87,12 +77,12 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 		main.addAttachHandler(handler );
 	}
 
-	public DescriptionViewImpl(Object id) {
-		this();
+	public DescriptionViewImpl(RPCHandler rpc, Object id) {
+		this(rpc);
 		setupModule(id);
 	}
-	public DescriptionViewImpl(Object id, AnchorContext context) {
-		this();
+	public DescriptionViewImpl(RPCHandler rpc, Object id, AnchorContext context) {
+		this(rpc);
 		setAnchorContext(context);
 		setupModule(id);
 	}
@@ -100,7 +90,7 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 
   @Override
   protected Promise<JSONValue> getJSONLaunchDataBytes(String file) {
-    return DWOplayer.clientfactory.getRPCHandler().getCourseDescription(file);
+    return rpc.getCourseDescription(file);
   }
 
   @Override

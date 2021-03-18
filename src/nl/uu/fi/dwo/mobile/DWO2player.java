@@ -52,6 +52,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -224,7 +225,6 @@ public class DWO2player extends DWOplayer implements EntryPoint {
  // TESTING
     factory.getEventBus().addHandler(IdleDetect.TYPE, ev -> { GWT.log(ev.toString()); });
     idleDetect.start();
-    DWO2playerDefaults.idle = idleDetect;
   
     MsgDialogPresenter mdp = new MsgDialogPresenter(factory.getEventBus());
     DwoStyle style = GWT.<AccountBundle>create(AccountBundle.class).style();
@@ -320,5 +320,23 @@ public void setupDWOPlayer() {
 			return;
 		
 	}
+
+	void initProfile() {
+			Success<DomDwoProfileFull, DomDwoProfileFull> getProfileCallback = new Success<DomDwoProfileFull, DomDwoProfileFull>() {
+	
+				@Override
+				public Promise<DomDwoProfileFull> call(Promise<DomDwoProfileFull> promise)
+						throws Exception {
+					SelectModuleItem r = SelectModuleItem.ROOT;
+					DomDwoProfileFull p = promise.getValue();
+					r.setName(p.getDwoProfileDescription());
+					r.setDescription(p.getDwoProfileText());
+					return promise;
+				}};
+	//		dwoProfile = dwoProfile.then(getProfileCallback);
+	//		deferredProfile.resolveWith(clientfactory.getRPCHandler().getDwoProfile());
+				rpc.getDwoProfile().then(getProfileCallback);
+			
+		}
 
 }

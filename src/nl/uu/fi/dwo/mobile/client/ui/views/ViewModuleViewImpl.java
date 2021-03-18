@@ -36,6 +36,7 @@ import nl.uu.fi.dwo.mobile.client.text.Text;
 //import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 //import nl.uu.fi.dwo.mobile.client.ui.KeyBoardTabPanel;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF.MisconceptionsHandler;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF.NextPrevHandler;
@@ -213,17 +214,19 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	private Scorm2004IF api;
 	private DWOLogger dwologger;
 
-	public ViewModuleViewImpl(boolean b, Scorm2004IF api) 
+	public ViewModuleViewImpl(RPCHandler rpc, boolean b, Scorm2004IF api) 
 	{
-		this(api);
+		this(rpc, api);
 		standalone = b;
 	}
 	
-	public ViewModuleViewImpl(Scorm2004IF api) {
+	public ViewModuleViewImpl(RPCHandler rpc, Scorm2004IF api) {
+		super(rpc);
 		this.api = api;
 	}
 
-	public ViewModuleViewImpl() {	  
+	public ViewModuleViewImpl(RPCHandler rpc) {
+		super(rpc);
 	}
 
 	public void initialize(Scorm2004IF api) {

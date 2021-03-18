@@ -9,10 +9,10 @@ import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
+import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.views.ExamModuleView;
@@ -34,6 +34,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 	@Inject DWOplayerParameters PARAMETERS;
 	@Inject Provider<UnSafeModuleView> unsafe;
 	@Inject HeaderView headerView;
+	@Inject RPCHandler rpc;
 	
 	private SelectModuleItem item;
 	private Activity delegate;
@@ -58,20 +59,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 	  this.provider = provider;
 	  this.skipPassword = item.getType() == SelectModuleItem.Type.SCO;
 	}
-	
-//	public ExamModuleActivity(ClientFactory factory, SelectModuleItem i) {
-//		this(factory, i, null, false);
-//		provider = new Provider<Activity>() {
-//
-//			@Override
-//			public Activity get() {
-//				return new TreeModuleActivity(clientFactory, item);
-//			}
-//		};
-//	}
-	
-	
-	
+		
 	@Override
 	public void start(final AcceptsOneWidget panel, EventBus eventBus) {
 		if(SecureMode.NORMAL == PARAMETERS.getSecureMode()) {
@@ -91,7 +79,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 				delegate = provider.get();
 				delegate.start(panel, eventBus);
 			} else {
-				ExamModuleView view = new ExamModuleView(headerView);
+				ExamModuleView view = new ExamModuleView(headerView, rpc);
 				view.selectItem(item);
 				view.setPresenter(this);
 				panel.setWidget(view);
@@ -133,7 +121,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 					throws Exception {
 				Promise<List<SelectModuleItem>> promise = item.getChildrenAsync();
 				if(promise == null || (promise.isDone() && promise.getFailure() != null)) {
-					promise = clientFactory.getRPCHandler().getScos(item.getID())
+					promise = rpc.getScos(item.getID())
 							.map(new SCO_TO_MODULEITEM(item));
 					item.setChildrenAsync(promise);
 				}

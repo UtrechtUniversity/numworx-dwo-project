@@ -4,6 +4,7 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 
 import dagger.Binds;
@@ -11,7 +12,11 @@ import dagger.Module;
 import dagger.Provides;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.DWO2ClientFactoryImpl;
+import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWO2playerDefaults;
+import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
+import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderLessView;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewNumworx;
@@ -39,9 +44,9 @@ public abstract class HeaderLessModule {
   }
   
   @Provides
-  static ViewModuleViewBuilder builder(Provider<ViewModuleViewNumworx> numworx) {
+  static ViewModuleViewBuilder builder(Provider<ViewModuleViewNumworx> numworx, RPCHandler rpc) {
     if (headerless()) {
-      return new ViewModuleViewImpl();
+      return new ViewModuleViewImpl(rpc);
     } else {
       return numworx.get();
     }
@@ -57,4 +62,11 @@ public abstract class HeaderLessModule {
   @Provides static NavigationView navigationview(NavigationViewNumworx impl) {
     return impl;
   }
+  
+  @Singleton
+  @Provides static DWOplayerParameters parameters(DWO2playerDefaults create) {
+    DWOplayer.PARAMETERS = create;  // FIXME valsspelen!!!!!
+    return create;
+  }
+
 }

@@ -26,6 +26,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.AntwoordTekstVak2;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
@@ -519,8 +520,13 @@ public abstract class XMLView {
 		return getJSONLaunchDataBytes(file).then(success, failure);
 	}
 
+  protected final RPCHandler rpc;
+  protected XMLView(RPCHandler rpc) {
+	this.rpc = rpc;
+  }
+
   protected Promise<JSONValue> getJSONLaunchDataBytes(String file) {
-    return DWOplayer.clientfactory.getRPCHandler().getJSONLaunchDataBytes(file);
+    return rpc.getJSONLaunchDataBytes(file);
   }
 	
 	Promise<Boolean> loadJSON_org(String file) {

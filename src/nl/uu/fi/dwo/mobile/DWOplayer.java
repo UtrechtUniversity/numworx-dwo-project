@@ -10,8 +10,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.osgi.util.promise.Deferred;
-import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.mobile.client.DWOplayerClientBundle;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
@@ -26,7 +24,7 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
-import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+
 import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
@@ -119,24 +117,8 @@ public abstract class DWOplayer
 		initProfile();
 	}
 
-	void initProfile() {
-		Success<DomDwoProfileFull, DomDwoProfileFull> getProfileCallback = new Success<DomDwoProfileFull, DomDwoProfileFull>() {
-
-			@Override
-			public Promise<DomDwoProfileFull> call(Promise<DomDwoProfileFull> promise)
-					throws Exception {
-				SelectModuleItem r = SelectModuleItem.ROOT;
-				DomDwoProfileFull p = promise.getValue();
-				r.setName(p.getDwoProfileDescription());
-				r.setDescription(p.getDwoProfileText());
-				return promise;
-			}};
-//		dwoProfile = dwoProfile.then(getProfileCallback);
-//		deferredProfile.resolveWith(clientfactory.getRPCHandler().getDwoProfile());
-			clientfactory.getRPCHandler().getDwoProfile().then(getProfileCallback);
-		
-	}
-
+	abstract void initProfile();
+	
 	//Sets up the GWT and MGWT settings needed to run the application
 	public void setupDWOPlayer()
 	{

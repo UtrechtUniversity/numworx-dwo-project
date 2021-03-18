@@ -539,7 +539,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		String description = item.getDescription();
 		if(description.startsWith(DescriptionView.GZIPPREFIX))
 		{
-			w = new DescriptionViewImpl(item.getID(), this).asWidget();
+			w = new DescriptionViewImpl(rpc, item.getID(), this).asWidget();
 		} else
 		if(description.startsWith("<html>")) {
 			w = new HTML(description);

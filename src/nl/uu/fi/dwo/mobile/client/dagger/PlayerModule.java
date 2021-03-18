@@ -48,12 +48,6 @@ public abstract class PlayerModule {
     return new SimpleEventBus();
   }
 
-  @Singleton
-  @Provides static DWOplayerParameters parameters() {
-    DWOplayerParameters create = GWT.create(DWOplayerParameters.class);
-    DWOplayer.PARAMETERS = create;  // FIXME valsspelen!!!!!
-    return create;
-  }
 
   @Provides
   @Singleton

@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.mobile.client.sco;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,6 +9,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
+
 import org.fusesource.restygwt.client.FailedResponseException;
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Deferred;
@@ -18,8 +19,8 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
+import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -28,9 +29,10 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 
 import fi.wiskopdr.text.Text;
 
+@Deprecated
 public class SCORM_DWO3 extends SCORM_guest {
 
-	public SCORM_DWO3() {
+	@Inject SCORM_DWO3() {
 		pending = false;
 	}
 
@@ -62,11 +64,11 @@ public class SCORM_DWO3 extends SCORM_guest {
 	private Map<String,String> map = new HashMap<String, String>();
 	private Map<String,String> dirty = new HashMap<String, String>();
 	
-	// Same URL als rpchandler.
-	private RPCHandler client = DWOplayer.clientfactory.getRPCHandler();
+	@Inject RPCHandler client;
+	@Inject TrafficAgent agent;
 	
 	private <T> Promise<T> ag(Promise<T> p) {
-		DWOplayer.clientfactory.addBarrier(p);
+		agent.addBarrier(p);
 		return p;
 	}
 		
@@ -287,7 +289,7 @@ log("initialized " +result.keySet());
 					return null;
 				}
 			};
-			DWOplayer.clientfactory.barrier().then(new Success<Void,Void>(){
+			agent.barrier().then(new Success<Void,Void>(){
 
 				@Override
 				public Promise<Void> call(Promise<Void> resolved) throws Exception {

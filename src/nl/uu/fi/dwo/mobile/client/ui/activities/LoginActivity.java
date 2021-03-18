@@ -13,7 +13,6 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.text.Text;
@@ -355,7 +354,7 @@ public class LoginActivity extends AbstractActivity
 
 	private void resolve() {
 		if (defer == null) return;
-		final Promise<DomUserFullwLoginContext> login = clientFactory.getRPCHandler().login(view.get().getUsername(),
+		final Promise<DomUserFullwLoginContext> login = rpc.login(view.get().getUsername(),
 				view.get().getPassword());
 		dwoProfile.onResolve(
 		new Runnable() {
