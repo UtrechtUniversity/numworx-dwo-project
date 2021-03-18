@@ -1,6 +1,10 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -154,6 +158,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	}
 	
 	boolean showGraph;
+	private Map<String,Map<String, Set<Integer>>> filter = Collections.emptyMap();
 	void showHideGraph(DomStudentModelContext4Student item) {
 		JSONObject json = new JSONObject();
 		json.put("title", new JSONString(item.getModelStructure().getInfo().getTitle().get(lang)));
@@ -187,6 +192,11 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		);
 		
 		root.add(w);
+		
+		if (list.size() == 1) {
+			w.models.setSelectedIndex(1);
+			changes.onChange(null);
+		}
 		return null;
 	}
 
@@ -212,7 +222,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 				setPerc(score);
 				return p; }, FAILURE)
 			.then(p -> {
-                return addToTree(item, userObject, o, p); },  p -> item.removeItems() );			
+                return addToTree(item, userObject, o, p, filter); },  p -> item.removeItems() );			
 		} else if (userObject instanceof int[]) {
 			int[] elems = (int[]) userObject;
 			int cat = elems[0], obj = elems[1];
@@ -238,14 +248,14 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 				setPerc(score);
 				return p; }, FAILURE)
 			.then (p -> {
-				return addToTree(item, elems, cat, obj, oo, p);
+				return addToTree(item, elems, cat, obj, oo, p, filter);
 			}, p-> item.removeItems());
 		}
 		
 	}
 
 	private Promise<DomStudentModelDataScore> addToTree(TreeItem item, int[] elems, int cat, int obj,
-			final DomStudentModelObj oo, Promise<DomStudentModelDataScore> p) {
+			final DomStudentModelObj oo, Promise<DomStudentModelDataScore> p, Map<String, Map<String, Set<Integer>>> filter) {
 		if (oo.getObjectives() != null && oo.getObjectives().size() != item.getChildCount()) {
 			DomStudentModelObjectiveScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(cat).getObjectives().get(obj);
 			for (int i = 2; i < elems.length; i++ ) score = score.getChildren().get(elems[i]);
@@ -256,20 +266,36 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 				if (s.getChildren() != null)
 					tt = item.addItem(Util.summaryItem(ooo.getInfo().getTitle().getOrDefault(lang, ""), s,3));
 				else
-					tt = item.addItem(Util.scoreItem(ooo.getInfo().getTitle().getOrDefault(lang, ""), s,3));
+				{	boolean add = inFilter(filter, ooo);
+					tt = item.addItem(Util.scoreItem(oo.getInfo().getTitle().getOrDefault(lang, ""), s,2));
+					tt.setVisible(add);
+				}
 				int[] oelems = new int[elems.length+1];
 				System.arraycopy(elems, 0, oelems, 0, elems.length);
 				oelems[elems.length] = oobj;
-				tt.setUserObject(oelems);
-				addToTree(tt, oelems, cat, obj, ooo, p);
+				{
+					tt.setUserObject(oelems);
+					addToTree(tt, oelems, cat, obj, ooo, p, filter);
+					if (s.getChildren() != null && getVisibleChildCount(tt) == 0) 
+						tt.setVisible(false);
+				}
 				oobj++;
 			}
 		}
 		return p;
 	}
 
+	private int getVisibleChildCount(TreeItem tt) {
+		int cnt = 0;
+		int len = tt.getChildCount();
+		for (int i = 0; i < len; i++) {
+			if (tt.getChild(i).isVisible()) cnt++;
+		}
+		return cnt;
+	}
+
 	private Promise<DomStudentModelDataScore> addToTree(TreeItem item, Object userObject, DomStudentModelCategory o,
-			Promise<DomStudentModelDataScore> p) {
+			Promise<DomStudentModelDataScore> p, Map<String, Map<String, Set<Integer>>> filter) {
 		DomStudentModelCategoryScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(((Integer) userObject).intValue());
 		if (item.getChildCount() != o.getObjectives().size()) {
 			item.removeItems();
@@ -282,19 +308,56 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 				if (s.getChildren() != null)
 					tt = item.addItem(Util.summaryItem(oo.getInfo().getTitle().getOrDefault(lang, ""), s,2));
 				else
+				{	boolean add = inFilter(filter, oo);
 					tt = item.addItem(Util.scoreItem(oo.getInfo().getTitle().getOrDefault(lang, ""), s,2));
+					tt.setVisible(add);
+				}
 				int[] elems = new int[] { cat, obj };
-				tt.setUserObject(elems );
+				{
+					tt.setUserObject(elems );
+					addToTree(tt, elems, cat, obj, oo, p, filter);
+					if (s.getChildren() != null && getVisibleChildCount(tt) == 0) 
+						tt.setVisible(false);
+				}
 
-				addToTree(tt, elems, cat, obj, oo, p);
 				obj++;
 			}
 		}
 		return p;
 	}
 
+	private boolean inFilter(Map<String, Map<String, Set<Integer>>> filter, DomStudentModelObj oo) {
+		boolean add = true;
+			Map<String, Map<String, Set<Integer>>> methods = oo.getInfo().getMethods();
+			if (!filter.isEmpty()) {
+				methods.keySet().retainAll(filter.keySet());
+				Iterator<String> methodkeys = methods.keySet().iterator();
+				while(methodkeys.hasNext()) {
+					String method = methodkeys.next();
+					Map<String, Set<Integer>> books = methods.get(method);
+					Map<String, Set<Integer>> bookfilter = filter.get(method);
+					books.keySet().retainAll(bookfilter.keySet());
+					Iterator<String> bookkeys = books.keySet().iterator();
+					while (bookkeys.hasNext()) {
+						String book = bookkeys.next();
+						Set<Integer> chapters = books.get(book);
+						Set<Integer> chfilter = bookfilter.get(book);
+						chapters.retainAll(chfilter);
+						if (chapters.isEmpty()) {
+							bookkeys.remove();
+						}	
+					}
+					if (books.isEmpty()) 
+						methodkeys.remove();
+				}
+				add = !methods.isEmpty();
+			}
+		return add;
+	}
+
 	private void addToTree(TreeItem item, DomStudentModelContext4Student model) {
 		DomStudentModelStructure structure = model.getModelStructure();
+		Map<String, Map<String, Set<Integer>>> filter = model.getFilter();
 		String text;
 		setDescription(structure.getInfo());
 		text = structure.getInfo().getTitle().get(lang);
@@ -313,7 +376,9 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 					TreeItem tt = item.addItem(
 					  Util.summaryItem(o.getInfo().getTitle().getOrDefault(lang, ""), (score),1));
 					tt.setUserObject(cat);
-					addToTree(tt, cat, o, p);
+					addToTree(tt, cat, o, p, filter);
+					if (getVisibleChildCount(tt) == 0) 
+						tt.setVisible(false);
 					cat++;
 				}
 			}
