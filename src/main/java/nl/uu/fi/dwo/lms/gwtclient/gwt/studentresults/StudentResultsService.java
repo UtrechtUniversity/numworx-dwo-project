@@ -23,6 +23,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
@@ -49,26 +50,26 @@ public class StudentResultsService implements StudentResults {
 		}
 	}
 
-	Promise<List<DomStudentModelContext>> models;
+	Promise<List<DomStudentModelContext4Student>> models;
 	Map<PersistenceId, Promise<DomStudentModelDataScore>> map = new HashMap<>();
 
-	public Promise<List<DomStudentModelContext>> getModels() {
+	public Promise<List<DomStudentModelContext4Student>> getModels() {
 		if (models == null || (models.isDone() && models.getFailure() != null) ) {
-			models = manager.getReducedModels(context, sc)
-					.recoverWith(p -> manager.getStudentModels(context))					
+			models = manager.getReducedModelsForClass(context, sc)
+					//.recoverWith(p -> manager.getStudentModels(context))					
 					.then(this::insertAdviseMe);
 		}		
 		return models;
 	}
 	
 	
-	private Promise<List<DomStudentModelContext>> insertAdviseMe(Promise<List<DomStudentModelContext>> p) {
-		List<DomStudentModelContext> list = p.getValue();
-		Iterator<DomStudentModelContext> iter = list.iterator();
+	private Promise<List<DomStudentModelContext4Student>> insertAdviseMe(Promise<List<DomStudentModelContext4Student>> p) {
+		List<DomStudentModelContext4Student> list = p.getValue();
+		Iterator<DomStudentModelContext4Student> iter = list.iterator();
 		String lang = LocaleInfo.getCurrentLocale().getLocaleName();
 		boolean advise = false;
 		while (iter.hasNext()) {
-			DomStudentModelContext context = iter.next();
+			DomStudentModelContext4Student context = iter.next();
 			String title = context.getModelStructure().getInfo().getTitle().get(lang);
 			if ("AdviseMe:".equals(title)) {
 				advise = true;
@@ -77,7 +78,8 @@ public class StudentResultsService implements StudentResults {
 			}
 		}
 		if (advise) 
-			return adviseMe.get().getModels().map( l -> { l = new ArrayList<>(l); l.addAll(list); return l; });
+			return adviseMe.get().getModels()
+					.map( l -> { l = new ArrayList<>(l); l.addAll(list); return l; });
 		return p;
 	}
 	
@@ -86,8 +88,8 @@ public class StudentResultsService implements StudentResults {
 		PersistenceId pid = id.getId();
 		Promise<DomStudentModelDataScore> result = map.get(pid);
 		if (result == null) {
-			if (id instanceof DomStudentModelContext) {
-				DomStudentModelStructureScore s = ((DomStudentModelContext) id).getModelStructure().generateStudentModelStructureScore();
+			if (id instanceof DomStudentModelContext4Student) {
+				DomStudentModelStructureScore s = ((DomStudentModelContext4Student) id).getModelStructure().generateStudentModelStructureScore();
 				s.recalculateAncestors();
 				DomStudentModelDataScore ss = new DomStudentModelDataScore();
 				ss.setDomStudentModelStructureScore(s);
@@ -103,14 +105,23 @@ public class StudentResultsService implements StudentResults {
 		return result;
 	}
 	
-	List<DomStudentModelContext> trimObjectives(List<DomStudentModelContext> list) {
+	List<DomStudentModelContext4Student> trimObjectives(List<DomStudentModelContext4Student> list) {
 		list.forEach(this::trimObjectives);
 		return list;
 	}
 
 
-	private DomStudentModelContext trimObjectives(DomStudentModelContext item) {
+	private DomStudentModelContext4Student trimObjectives(DomStudentModelContext4Student item) {
 		DomStudentModelStructure structure = item.getModelStructure();
+		trimStructure(structure);
+		return item;
+	}
+	private DomStudentModelContext trimObjectives(DomStudentModelContext item) {
+		trimStructure(item.getModelStructure());
+		return item;
+	}
+
+	private void trimStructure(DomStudentModelStructure structure) {
 		structure.getCategories().forEach(cat -> { 
 			List<DomStudentModelObj> objectives = cat.getObjectives();
 			int size = objectives.size();
@@ -124,7 +135,6 @@ public class StudentResultsService implements StudentResults {
 				}
 			}
 		});
-		return item;
 	}
 
 	private boolean isEmptyTitle(DomStudentModelObj obj) {
@@ -139,26 +149,32 @@ public class StudentResultsService implements StudentResults {
 		map.clear();
 	}
 
-	private Promise<DomStudentModelContext> getFull(Promise<DomStudentModelContext> p) {
+	private Promise<DomStudentModelContext4Student> getFull(Promise<DomStudentModelContext4Student> p) {
 		if (p.getValue().getModelStructure().getCategories() == null) {
 			return manager.getStudentModel(context, p.getValue(), sc)
 					.map(this::trimObjectives)
-					.then(q -> { copy(p,q); return p;}); 
+					.then(q -> { copy0(p,q); return p;}); 
 		}
 		return p;
 	}
 
-	private void copy(Promise<DomStudentModelContext> p, Promise<DomStudentModelContext> q) {
-		DomStudentModelContext vp = p.getValue();
-		DomStudentModelContext vq = q.getValue();
-		vp.setLastChangeTimeStamp(vq.getLastChangeTimeStamp());
+	private void copy(Promise<DomStudentModelContext4Student> p, Promise<DomStudentModelContext4Student> q) {
+		DomStudentModelContext4Student vp = p.getValue();
+		DomStudentModelContext4Student vq = q.getValue();
 		vp.setModelStructure(vq.getModelStructure());
 		vp.setOptLock(vq.getOptLock());
-		vp.setPublishState(vq.getPublishState());		
+		vp.setFilter(vq.getFilter());
+	}
+	private void copy0(Promise<DomStudentModelContext4Student> p, Promise<DomStudentModelContext> q) {
+		DomStudentModelContext4Student vp = p.getValue();
+		DomStudentModelContext vq = q.getValue();
+		vp.setModelStructure(vq.getModelStructure());
+		//vp.setOptLock(vq.getOptLock());
+		//vp.setFilter(vq.getFilter());
 	}
 
 	@Override
-	public Promise<DomStudentModelContext> getModel(DomStudentModelContextId id) {
+	public Promise<DomStudentModelContext4Student> getModel(DomStudentModelContextId id) {
 		return getModels()
 				.map(list -> list.stream().filter(item -> id.getId().equals(item.getId())).findAny())
 				.map(Optional::get) // can produce an failure

@@ -24,6 +24,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
@@ -68,18 +69,19 @@ public class AdviseMeService implements StudentResults {
 		return callback.getPromise().map(ar -> ar[0]);
 	}
 	
-	List<DomStudentModelContext> toContext(Usermodel u) {
-		DomStudentModelContext context = to1Context(u);
+	List<DomStudentModelContext4Student> toContext(Usermodel u) {
+		DomStudentModelContext4Student context = to1Context(u);
 		return Collections.singletonList(context);
 	}
 
-	private DomStudentModelContext to1Context(Usermodel u) {
-		DomStudentModelContext context = new DomStudentModelContext();
+	private DomStudentModelContext4Student to1Context(Usermodel u) {
+		DomStudentModelContext4Student context = new DomStudentModelContext4Student();
 		context.setId(new PersistenceId("ADVISEME;"+PersistenceClassType.PersistentStudentModelContext + ";" + u.getStudent()));
 		DomStudentModelStructure structure = new DomStudentModelStructure();
 		structure.setCategories(toCategories(u.getCompetence().getChildren()));
 		structure.setInfo(toInfo(u.getCompetence()));
 		context.setModelStructure(structure);
+		context.setFilter(Collections.emptyMap());
 		return context;
 	}
 	
@@ -150,7 +152,7 @@ public class AdviseMeService implements StudentResults {
 		}).collect(Collectors.toList());
 	}
 
-	public Promise<List<DomStudentModelContext>> getModels() {
+	public Promise<List<DomStudentModelContext4Student>> getModels() {
 		if (usermodel == null) usermodel = getUsermodel();
 		return usermodel.map(this::toContext);
 	}
@@ -167,7 +169,7 @@ public class AdviseMeService implements StudentResults {
 	}
 
 	@Override
-	public Promise<DomStudentModelContext> getModel(DomStudentModelContextId id) {
+	public Promise<DomStudentModelContext4Student> getModel(DomStudentModelContextId id) {
 		if (usermodel == null) usermodel = getUsermodel();
 		return usermodel.map(this::to1Context);
 	}

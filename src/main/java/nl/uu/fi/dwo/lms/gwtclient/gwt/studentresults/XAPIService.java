@@ -27,6 +27,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
@@ -72,10 +73,10 @@ public class XAPIService extends StudentResultsService implements StudentResults
     super.clear();
   }
 
-  @Override
-  public Promise<List<DomStudentModelContext>> getModels() {
-    return super.getModels();
-  }
+//  @Override
+//  public Promise<List<DomStudentModelContext>> getModels() {
+//    return super.getModels();
+//  }
 
   @Override
   public Promise<DomStudentModelDataScore> getScore(DomStudentModelContextId id) {
@@ -154,7 +155,7 @@ public class XAPIService extends StudentResultsService implements StudentResults
   
   private DomStudentModelDataScore toDataScore(StatementsResult result, StateDocument state,
       DomStudentModelContextId id, XapiManager xapi) {
-    DomStudentModelContext context = (DomStudentModelContext) id; // if not, search from models...
+    DomStudentModelContext4Student context = (DomStudentModelContext4Student) id; // if not, search from models...
     DomStudentModelDataScore scores = null;
     if (state.content != null) {
       scores = new DomStudentModelDataScore();
@@ -193,8 +194,16 @@ public class XAPIService extends StudentResultsService implements StudentResults
   }
 
   private DomStudentModelDataScore eerstestap(DomStudentModelContext context) {
-    DomStudentModelDataScore result = new DomStudentModelDataScore();
     DomStudentModelStructure structure = context.getModelStructure();
+    return eerstestap(context, structure);
+  }
+  
+  private DomStudentModelDataScore eerstestap(DomStudentModelContext4Student context) {
+	  return eerstestap(context, context.getModelStructure());
+  }
+
+private DomStudentModelDataScore eerstestap(DomStudentModelContextId context, DomStudentModelStructure structure) {
+	DomStudentModelDataScore result = new DomStudentModelDataScore();
     DomStudentModelStructureScore score = structure.generateStudentModelStructureScore();
     result.setDomStudentModelStructureScore(score);
     result.setModelId(context);
@@ -205,7 +214,7 @@ public class XAPIService extends StudentResultsService implements StudentResults
   
   
   @SuppressWarnings("rawtypes")
-  private void stappen( DomStudentModelDataScore scores, DomStudentModelContext context, List<Statement> statements) {
+  private void stappen( DomStudentModelDataScore scores, DomStudentModelContext4Student context, List<Statement> statements) {
     // converteer scores naar een map<String, Score>
     
     Map<String, DomStudentModelScore> model = new HashMap<>();

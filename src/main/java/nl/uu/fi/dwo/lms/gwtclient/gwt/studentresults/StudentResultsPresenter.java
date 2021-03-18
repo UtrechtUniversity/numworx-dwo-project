@@ -39,7 +39,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.results.AbstractResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
@@ -98,8 +98,8 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		NULLSCORE.setScore(0, 0, 0, 0);
 	}
 
-	List<DomStudentModelContext> list;
-	DomStudentModelContext current;
+	List<DomStudentModelContext4Student> list;
+	DomStudentModelContext4Student current;
 
 	class ModelChange implements ChangeHandler, ClickHandler {
 		
@@ -116,7 +116,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			w.east.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
 			current = null;
 			if (selection == 0) return;
-			DomStudentModelContext item = list.get(selection-1);
+			DomStudentModelContext4Student item = list.get(selection-1);
 			service.getModel(item).then(p -> {
 				current = p.getValue();
 				insertTree(item);
@@ -124,7 +124,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			}, FAILURE);
 		}
 
-		private ModelChange(List<DomStudentModelContext> list) {
+		private ModelChange(List<DomStudentModelContext4Student> list) {
 			StudentResultsPresenter.this.list = list;
 		}
 
@@ -135,7 +135,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		
 	}
 
-	private void insertTree(DomStudentModelContext item) {
+	private void insertTree(DomStudentModelContext4Student item) {
 		Tree tree = widget.get().tree;
 		tree.removeItems();
 		DomStudentModelStructure structure = item.getModelStructure();
@@ -154,7 +154,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	}
 	
 	boolean showGraph;
-	void showHideGraph(DomStudentModelContext item) {
+	void showHideGraph(DomStudentModelContext4Student item) {
 		JSONObject json = new JSONObject();
 		json.put("title", new JSONString(item.getModelStructure().getInfo().getTitle().get(lang)));
 		json.put("id", new JSONString(item.getId().getIdString()));
@@ -162,9 +162,9 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		eventBus.fireEvent(ev);
 	}
 	
-	Promise<?> getModels(Promise<List<DomStudentModelContext>> p) {
+	Promise<?> getModels(Promise<List<DomStudentModelContext4Student>> p) {
 		StudentResultsWidget w = widget.get();
-		List<DomStudentModelContext> list = p.getValue();
+		List<DomStudentModelContext4Student> list = p.getValue();
 		ModelChange changes = new ModelChange(list);
 		Tree tree = w.tree;
 		w.description.clear();
@@ -174,7 +174,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		String first = w.models.getItemText(0);
 		w.models.clear();
 		w.models.addItem(first);
-		for (DomStudentModelContext item : list) {
+		for (DomStudentModelContext4Student item : list) {
 			DomStudentModelStructure structure = item.getModelStructure();
 			String title = structure.getInfo().getTitle().getOrDefault(lang, "");
 			w.models.addItem(title);
@@ -196,12 +196,12 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		widget.get().east.getElement().getStyle().clearVisibility();
 		LOG.info("selected " + item);
 		Object userObject = item.getUserObject();
-		if (userObject instanceof DomStudentModelContext) {
-			DomStudentModelContext model = (DomStudentModelContext) userObject;
+		if (userObject instanceof DomStudentModelContext4Student) {
+			DomStudentModelContext4Student model = (DomStudentModelContext4Student) userObject;
 			addToTree(item, model);
 			
 		} else if (userObject instanceof Integer) {
-			DomStudentModelContext model = (DomStudentModelContext) item.getParentItem().getUserObject();
+			DomStudentModelContext4Student model = (DomStudentModelContext4Student) item.getParentItem().getUserObject();
 			DomStudentModelStructure structure = model.getModelStructure();
 			DomStudentModelCategory o = structure.getCategories().get(((Integer) userObject).intValue());
 			setDescription(o.getInfo());
@@ -218,7 +218,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			int cat = elems[0], obj = elems[1];
 			TreeItem top = item;
 			for (int i = 0; i < elems.length; i++ ) top = top.getParentItem();
-			DomStudentModelContext model = (DomStudentModelContext) top.getUserObject();
+			DomStudentModelContext4Student model = (DomStudentModelContext4Student) top.getUserObject();
 			DomStudentModelStructure structure = model.getModelStructure();
 			DomStudentModelCategory o = structure.getCategories().get(cat);
 
@@ -293,7 +293,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		return p;
 	}
 
-	private void addToTree(TreeItem item, DomStudentModelContext model) {
+	private void addToTree(TreeItem item, DomStudentModelContext4Student model) {
 		DomStudentModelStructure structure = model.getModelStructure();
 		String text;
 		setDescription(structure.getInfo());

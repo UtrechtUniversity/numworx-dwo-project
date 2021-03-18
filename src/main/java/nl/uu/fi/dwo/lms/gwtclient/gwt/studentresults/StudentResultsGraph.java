@@ -51,6 +51,7 @@ import com.google.gwt.user.client.ui.LayoutPanel;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
@@ -370,7 +371,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		return image.getSvgElement();
 	}
 
-	public void setModelScore(DomStudentModelContext item, Promise<DomStudentModelDataScore> score) {
+	public void setModelScore(DomStudentModelContext4Student item, Promise<DomStudentModelDataScore> score) {
 		map.clear();
 		setModel(item.getModelStructure());
 		OMSVGSVGElement svg = getSvgElement();

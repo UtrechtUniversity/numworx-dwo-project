@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.AbstractResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -74,7 +75,7 @@ public class StudentResultsGraphPresenter extends AbstractResultsPresenter {
 		service.getModel(cid).then(p -> {
 			root.add(main);
 			main.setWidget(graph.get());
-			DomStudentModelContext item = p.getValue();
+			DomStudentModelContext4Student item = p.getValue();
 			graph.get().setModelScore(item, service.getScore(item));
 			
 			return p;
