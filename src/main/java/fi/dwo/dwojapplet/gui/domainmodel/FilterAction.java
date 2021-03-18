@@ -46,10 +46,10 @@ class FilterAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
       ConfirmDialog dialog = new ConfirmDialog(owner, getValue(NAME).toString());
-      FilterPanel tabs = new FilterPanel();
+      p = new FilterPanel();
       dialog.getContentPane().setLayout(new BorderLayout());
       
-      dialog.getContentPane().add(tabs, BorderLayout.CENTER);
+      dialog.getContentPane().add(p, BorderLayout.CENTER);
       
       JButton ok = new JButton(TextMapper.getText(TextMapper.BTN_OK));
       ok.addActionListener(dialog::ok);
