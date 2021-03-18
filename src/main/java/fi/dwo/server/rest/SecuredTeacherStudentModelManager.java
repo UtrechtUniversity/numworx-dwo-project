@@ -296,7 +296,8 @@ public class SecuredTeacherStudentModelManager {
     }
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private Map<String,Map<String,Set<Integer>>> toFilter(PersistentStudentModelOfClass of) throws ParseException {
+	public
+	static Map<String,Map<String,Set<Integer>>> toFilter(PersistentStudentModelOfClass of) throws ParseException {
 		HashMap<String,Map<String,Set<Integer>>> result = new HashMap<>();
 		Map<String,?> map = (Map) new JSONParser().parse(of.getValue());
 		Set<String> keys = map.keySet();

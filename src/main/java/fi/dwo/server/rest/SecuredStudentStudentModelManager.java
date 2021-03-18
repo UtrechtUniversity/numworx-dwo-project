@@ -20,6 +20,7 @@ import javax.ws.rs.core.UriInfo;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -70,6 +71,16 @@ public class SecuredStudentStudentModelManager {
                 .setHasRole(context.getRestContext().getDomHasRole())//
                 .buildStudent();
      return StudentModelContextUtilManager.reduce(state.getStudentModelContextList());        
+    }
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getReducedListForClass")
+    public List<DomStudentModelContext4Student> getReducedStudentModelsforClass(@Context SecurityContext sc, RestSchoolClass context) throws Dwo2Exception {
+    StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+                .setHasRole(context.getRestContext().getDomHasRole())//
+                .buildStudent();
+     state = state.setSchoolClass(context.getDomSchoolClass());
+     return StudentModelContextUtilManager.reduce4s(state.getStudentModelContextListForClass());        
     }
 
     /**

@@ -9,8 +9,10 @@ import java.util.logging.Logger;
 import javax.ws.rs.core.UriInfo;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
@@ -135,6 +137,10 @@ public class StudentDomainAuthorizer {
 		public List<DomStudentModelContext> getMergedStudentModelContextList() throws Dwo2Exception;
 
 		public DomStudentModelContext getStudentModel(DomStudentModelContextId domStudentModelContext) throws Dwo2Exception;
+
+		public List<DomStudentModelContext4Student> getStudentModelContextListForClass() throws Dwo2Exception;
+
+		public StudentState_HR_R_S_SG_U setSchoolClass(DomSchoolClass domSchoolClass) throws Dwo2Exception;
 
     }
 

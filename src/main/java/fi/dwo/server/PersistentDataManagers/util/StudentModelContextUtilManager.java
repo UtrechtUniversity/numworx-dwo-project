@@ -11,6 +11,7 @@ import fi.dwo.server.PersistentDataManagers.core.StudentModelItemManager;
 import jersey.repackaged.com.google.common.base.Objects;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
@@ -92,6 +93,18 @@ public class StudentModelContextUtilManager {
 			info.setMethods(null);
     	}
 		return list;
+	}
+
+	public static List<DomStudentModelContext4Student> reduce4s(List<DomStudentModelContext4Student> list) {
+	    	for(DomStudentModelContext4Student item: list) {
+	    		DomStudentModelStructure structure = item.getModelStructure();
+	    		structure.setCategories(null);
+	    		DomStudentModelContextInfo info = structure.getInfo();
+				info.setDescription(null);
+				info.setVoorkennis(null);
+				info.setMethods(null);
+	    	}
+			return list;
 	}
 	
 }

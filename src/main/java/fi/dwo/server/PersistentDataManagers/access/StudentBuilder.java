@@ -4,14 +4,22 @@
 package fi.dwo.server.PersistentDataManagers.access;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelOfClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer.StudentState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentModelOfClassManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentModelContextUtilManager;
+import fi.dwo.server.rest.SecuredTeacherStudentModelManager;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -22,9 +30,13 @@ import java.util.logging.Logger;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.core.UriInfo;
 
+import org.json.simple.parser.ParseException;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
@@ -201,5 +213,43 @@ class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U
         PersistentStudentModelContext pStudentModel = StudentModelContextManager.findEntity(MySQLPersistenceId.getNativeId(domModelId));
         StudentModelContextUtilManager.merge(pStudentModel);
         return pStudentModel.buildDomStudentModelContext();
+	}
+
+	@Override
+	public List<DomStudentModelContext4Student> getStudentModelContextListForClass() throws Dwo2Exception {
+        PersistentSchoolClass sc = instance.getContext().getStudentCtx().schoolClass;
+        List<PersistentStudentModelOfClass> p4Class = StudentModelOfClassManager.findEntities(sc);
+        List<DomStudentModelContext4Student>  result = new ArrayList<>(p4Class.size());
+        for(PersistentStudentModelOfClass item: p4Class) {
+        	Long id = item.getId().getModelID();
+        	PersistentStudentModelContext context = StudentModelContextManager.findEntity(id);
+        	DomStudentModelContext r = context.buildDomStudentModelContext();
+        	DomStudentModelContext4Student rr = new DomStudentModelContext4Student(r.getId());
+        	rr.setModelStructure(r.getModelStructure());
+        	try {
+				rr.setFilter(SecuredTeacherStudentModelManager.toFilter(item));
+			} catch (ParseException e) {
+				LOG.log(Level.SEVERE, "conversie to filter", e);
+			}
+        	rr.setOptLock(item.getOptlock());
+        	rr.setSchoolClass(sc.buildDomSchoolClass());
+        	result.add(rr);
+        }
+		return result;
+	}
+
+	@Override
+	public StudentState_HR_R_S_SG_U setSchoolClass(DomSchoolClass domSchoolClass) throws Dwo2Exception {
+		if (domSchoolClass == null) {
+			instance.getContext().getStudentCtx().schoolClass = null;
+		} else {
+			instance.getContext().getStudentCtx().schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(domSchoolClass));
+			Long userID = instance.getContext().getUserCtx().user.getId();
+			Long classID = instance.getContext().getStudentCtx().schoolClass.getClassID();
+			Long schoolGroupID = instance.getContext().getUserCtx().schoolGroup.getSchoolGroupID();
+			PersistentStudentOfClass soc = StudentOfClassManager.findEntity(new PersistentStudentOfClassPK(userID, classID, schoolGroupID));
+			if (soc == null) throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "not a member of schoolclass");
+		}
+		return this;
 	}
 }
