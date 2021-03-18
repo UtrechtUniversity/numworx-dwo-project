@@ -18,7 +18,7 @@ import nl.uu.fi.dwo.mobile.client.ui.dwokb.NoStatusKeyboard;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.NoLogging;
 
-public class DWO2playerDefaults extends DWOplayerDefaults implements DwoConstants {
+public class DWO2playerDefaults extends DWOplayerDefaults {
 
 	private IdleDetect idle;
 
@@ -48,12 +48,6 @@ public class DWO2playerDefaults extends DWOplayerDefaults implements DwoConstant
 	}
 
 
-	@Override
-	public String server() {
-		String host = getHost();
-		String http = Window.Location.getProtocol();
-		return http + "//" + host + "/dwo/rest/";
-	}
 
 	@Override
 	public String getCDN() {
