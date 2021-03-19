@@ -99,7 +99,14 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
      * @return
      */
     public Promise<DomUserFullwLoginContext> getUserFromAuthToken(String authToken) {
-		return accountManager.getUserFromAuthToken(authToken);
+		return accountManager.getUserFromAuthToken(authToken)
+		    .then( p -> {
+	          DomHasRole r = new DomHasRole();
+	          context.setDomHasRole(r);
+	          r.setId(p.getValue().getDomLoginContext().getHasRoleId());
+	          context.setRealm(p.getValue().getDomLoginContext().getRealm());
+		      return p;
+		    });
 	}
 		
     /**

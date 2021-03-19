@@ -30,6 +30,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
+import org.eclipse.jdt.internal.core.SetContainerOperation;
 import org.fusesource.restygwt.client.Defaults;
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
@@ -462,8 +463,12 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
                 }
         ).then(
                 q -> { 
-                    DomContext context = new DomContext();
+                    DomContext context = this.context;
                     context.setRealm(q.getValue().getRealm());
+                    context.setDomHasRole(new DomHasRole());
+                    context.getDomHasRole().setId(q.getValue().getHasRoleId());
+                    context.getDomHasRole().setSchoolGroupId(q.getValue().getSchoolGroupId());
+                    context.getDomHasRole().setUserId(q.getValue().getUserId());
                 return accountManager.getAccountData(context).map( 
                         data -> { 
                     DomUserFullwLoginContext all = new DomUserFullwLoginContext();
