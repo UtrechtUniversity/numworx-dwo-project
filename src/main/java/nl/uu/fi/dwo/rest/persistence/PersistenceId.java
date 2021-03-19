@@ -1,6 +1,8 @@
 /*Copyrighted 2015. */
 package nl.uu.fi.dwo.rest.persistence;
 
+import java.beans.Transient;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -74,6 +76,7 @@ public class PersistenceId implements Comparable<PersistenceId>, Cloneable {
      * 
      * @return returns the PersistenceId type.
      */
+    @Transient
     public PersistenceClassType getType() {
         return type;
     }
