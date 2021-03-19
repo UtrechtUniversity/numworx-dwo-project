@@ -7,22 +7,37 @@ import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.util.StudentModelContextUtilManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Logger;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.dom.xapi.Account;
@@ -31,6 +46,8 @@ import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContextId;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * StudentModel manager for the student. Basic operations.
@@ -107,10 +124,33 @@ public class SecuredStudentStudentModelManager {
     StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
                 .setHasRole(restModelId.getRestContext().getDomHasRole())//
                 .buildStudent();
-     return state.getStudentModel(restModelId.getDomStudentModelContext());        
+     return reduce(state.getStudentModel(restModelId.getDomStudentModelContext()));        
     }
 
-    @PUT
+    private DomStudentModelContext reduce(DomStudentModelContext studentModel) {
+		reduce(studentModel.getModelStructure());
+		return studentModel;
+	}
+
+    final static private Map<String, String> EMPTY = Collections.emptyMap();
+	private void reduce(DomStudentModelStructure modelStructure) {
+		modelStructure.getInfo().setDescription(EMPTY);
+		List<DomStudentModelCategory> list = modelStructure.getCategories();
+		list.forEach(this::reduce);
+	}
+	private void reduce(DomStudentModelCategory cat) {
+		cat.getInfo().setDescription(EMPTY);
+		List<DomStudentModelObj> list = cat.getObjectives();
+		list.forEach(this::reduce);
+	}
+	private void reduce(DomStudentModelObj obj) {
+		obj.getInfo().setDescription(EMPTY);
+		List<DomStudentModelObj> list = obj.getObjectives();
+		if (list != null) list.forEach(this::reduce);
+	}
+	
+
+	@PUT
     @Produces("application/json")
     @Path("/getLRS") 
     public DomLRS getLRS(@Context SecurityContext sc, @Context UriInfo info, RestContext rest) throws Dwo2Exception {
@@ -120,4 +160,64 @@ public class SecuredStudentStudentModelManager {
       return state.getLRS(info);
     }
 
+	@GET
+	@Produces ("application/json") 
+	@Path ("/getDescription")
+	public Response getDescription(@Context SecurityContext sc, 
+			@QueryParam("id") String uuid, @QueryParam("modelId") String modelid,
+			@QueryParam("hasRoleId") String sgid, @QueryParam("locale") String locale
+		) {
+		DomHasRole hr = new DomHasRole();
+		hr.setId(new PersistenceId(sgid));
+		DomStudentModelContextId smc = new DomStudentModelContextId(new PersistenceId(modelid));
+	      try {
+			StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+			          .setHasRole(hr)
+			          .buildStudent();
+			DomStudentModelContext result = state.getStudentModel(smc);
+			DomStudentModelStructure struct = result.getModelStructure();
+			String obj = getStruct(struct, uuid, locale);
+			
+			return Response.ok(obj, MediaType.APPLICATION_JSON_TYPE).build();
+		} catch (Dwo2Exception e) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+	}
+
+	private String getStruct(DomStudentModelStructure struct, String uuid, String locale) throws Dwo2Exception {
+		if (uuid.equals(struct.getInfo().getId())) {
+			return description(struct.getInfo(), locale);
+		}
+		for( DomStudentModelCategory cat: struct.getCategories()) {
+			if (uuid.equals(cat.getInfo().getId())) {
+				return description(cat.getInfo(), locale);
+			}
+			for (DomStudentModelObj obj : cat.getObjectives()) {
+				Optional<String> result = getObj(obj, uuid, locale); 
+				if (result.isPresent()) return result.get();
+			}
+		}
+		throw new Dwo2Exception(Dwo2ExceptionCode.Rest_FormatError, "not found");
+	}
+
+	private Optional<String> getObj(DomStudentModelObj obj, String uuid, String locale) {
+		if (uuid.equals(obj.getInfo().getId()))
+			return Optional.ofNullable(description(obj.getInfo(), locale));
+		List<DomStudentModelObj> list = obj.getObjectives();
+		if(list != null) for (DomStudentModelObj o: list) {
+			Optional<String> result = getObj(o, uuid, locale);
+			if (result.isPresent()) return result;
+ 		}
+		return Optional.empty();
+	}
+
+	private String description(DomStudentModelContextInfo info, String locale) {
+		String json = info.getDescription().get(locale + "@JSON");
+		if (json == null || json.isEmpty())
+			return info.getDescription().getOrDefault(locale, "");
+		return json;
+	}
+	
+	
+	
 }
