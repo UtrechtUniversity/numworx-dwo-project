@@ -15,6 +15,7 @@ import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
+import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.mobile.client.ui.views.ExamModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.UnSafeModuleView;
@@ -35,6 +36,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 	@Inject Provider<UnSafeModuleView> unsafe;
 	@Inject HeaderView headerView;
 	@Inject RPCHandler rpc;
+	@Inject TrafficAgent agent;
 	
 	private SelectModuleItem item;
 	private Activity delegate;
@@ -65,7 +67,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 		if(SecureMode.NORMAL == PARAMETERS.getSecureMode()) {
 			final UnSafeModuleView w = unsafe.get();
 			w.selectItem(item);
-			clientFactory.barrier().onResolve(		
+			agent.barrier().onResolve(		
 			new Runnable() {
 				public void run() {
 					panel.setWidget(w);
@@ -74,7 +76,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 		} else {
 			this.panel = panel;
 			this.bus = eventBus;
-			if(skipPassword && clientFactory.inExam(item.getClassCourse()))
+			if(skipPassword && rpc.inExam(item.getClassCourse()))
 			{
 				delegate = provider.get();
 				delegate.start(panel, eventBus);
@@ -113,7 +115,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 
 		
 		
-		clientFactory.startExam(item.getClassCourse(), password)
+		rpc.startExam(item.getClassCourse(), password)
 		.then(new Success<Void, List<SelectModuleItem>>(){
 
 			@Override

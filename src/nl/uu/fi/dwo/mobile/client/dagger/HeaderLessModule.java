@@ -12,6 +12,7 @@ import dagger.Module;
 import dagger.Provides;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.DWO2ClientFactoryImpl;
+import nl.uu.fi.dwo.mobile.DWO2RPCHandler;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWO2playerDefaults;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
@@ -24,6 +25,8 @@ import nl.uu.fi.dwo.mobile.client.ui.views.Login3ViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationViewNumworx;
+import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
+import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewBuilder;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewNumworx;
@@ -59,6 +62,17 @@ public abstract class HeaderLessModule {
   @Provides static HeaderView headerview(DWO2ClientFactoryImpl impl) {
     return impl.getHeaderView();
   }
+  
+  @Provides static TreeModuleView treemoduleview(DWO2ClientFactoryImpl impl) {
+    return impl.getTreeModuleView();
+  }
+
+  @Provides static ViewModuleView viewmoduleview(DWO2ClientFactoryImpl impl) {
+    return impl.getEntryView();
+  }
+  
+  
+  
   @Provides static NavigationView navigationview(NavigationViewNumworx impl) {
     return impl;
   }
@@ -69,4 +83,5 @@ public abstract class HeaderLessModule {
     return create;
   }
 
+  @Binds abstract RPCHandler rpc(DWO2RPCHandler rpc);
 }

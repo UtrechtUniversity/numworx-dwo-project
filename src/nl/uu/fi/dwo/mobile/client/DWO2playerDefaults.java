@@ -22,7 +22,7 @@ public class DWO2playerDefaults extends DWOplayerDefaults {
 
 	private IdleDetect idle;
 
-	@Inject DWO2playerDefaults(IdleDetect idle, DwoGlobalVars vars, RPCHandler rpc) {
+	@Inject DWO2playerDefaults(IdleDetect idle, DwoGlobalVars vars, Provider<RPCHandler> rpc) {
 		super(null);
 		this.idle = idle;
 		

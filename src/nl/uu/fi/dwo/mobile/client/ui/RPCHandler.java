@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
@@ -69,7 +70,7 @@ public interface RPCHandler {
 	Promise<?> setValues(Object scoID, Map<String, String> values);
 	Promise<JSONValue> getJSONLaunchDataBytes(Object scoID);
 // V4 stuff
-	Promise<Void> startExam(String id, String password);
+	//Promise<Void> startExam(String id, String password);
 
 	Promise<DomStudentModelContext> getStudentModel(PersistenceId id);
 	Promise<List<DomStudentModelContext>> getStudentModels();
@@ -85,4 +86,8 @@ public interface RPCHandler {
 // schoolclasses for students	
 	Promise<List<DomSchoolClass>> getStudentsSchoolClasses();
 	Promise<Boolean> setActiveSchoolClass(DomSchoolClass schoolClass);
+
+	Promise<Void> startExam(DomClassCourse classCourse, String password);
+
+	boolean inExam(DomClassCourse classCourse);
 }

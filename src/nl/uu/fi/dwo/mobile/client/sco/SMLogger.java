@@ -67,9 +67,9 @@ public class SMLogger implements Logging {
   
   public static class Provider implements javax.inject.Provider<Logging> {
     private DwoGlobalVars vars;
-	private RPCHandler rpc;
+	private javax.inject.Provider<RPCHandler> rpc;
 
-	public Provider(javax.inject.Provider<Logging> delegate, DwoGlobalVars vars, RPCHandler rpc) {
+	public Provider(javax.inject.Provider<Logging> delegate, DwoGlobalVars vars, javax.inject.Provider<RPCHandler> rpc) {
       this.delegate = delegate;
       this.vars = vars;
       this.rpc  = rpc;
@@ -83,7 +83,7 @@ public class SMLogger implements Logging {
               && vars.withUser() 
               && vars.getRoleType() == RoleType.STUDENT;
       if (experiment) {
-        Promise<XapiManager> xapi = rpc.getLRS();
+        Promise<XapiManager> xapi = rpc.get().getLRS();
         return new SMLogger(instance, xapi.map(x -> x::saveStatement), delegate.get());
       }
       return delegate.get();

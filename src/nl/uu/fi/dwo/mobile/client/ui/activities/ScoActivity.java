@@ -89,7 +89,7 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 		
 	@Reusable public static class Factory {
 		@Inject MembersInjector<ScoActivity> injector;
-		@Inject ClientFactory clientFactory;
+		@Inject Provider<ViewModuleView> clientFactory;
 		@Inject DwoGlobalVars vars;
 		@Inject Factory() {}
 		
@@ -102,14 +102,14 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 	
 	
 	
-	private ScoActivity(ClientFactory clientFactory, SelectModuleItem item, s where, DwoGlobalVars vars) {
+	private ScoActivity(Provider<ViewModuleView> clientFactory, SelectModuleItem item, s where, DwoGlobalVars vars) {
 		this(where);
 		this.item = item;
 		this.vars = vars;
 		schoolClass = vars.getCurrentSchoolClass();
 		school = vars.getSchool();
 		role = vars.getRoleType();
-		view = clientFactory.getEntryView();
+		view = clientFactory.get();
 		withUser = vars.withUser();
 	}
 

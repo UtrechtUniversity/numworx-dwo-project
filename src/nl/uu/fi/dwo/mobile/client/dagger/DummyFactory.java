@@ -21,6 +21,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 public abstract class DummyFactory {
   @Binds abstract ClientFactory clientFactory(DummyClientFactory dummy);
   @Binds abstract RPCHandler  rpcHandler(DummyRPCHandler dummy);
+  @Singleton
   @Binds abstract ViewModuleView viewModuleView(ViewModuleViewImpl impl);
   @Singleton
   @Provides static DWOplayerParameters parameters() {

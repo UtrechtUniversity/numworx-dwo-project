@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
@@ -15,7 +16,6 @@ import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
-import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.IdleDetect;
 import nl.uu.fi.dwo.mobile.client.ui.IdleDetect.IdleEvent;
 import nl.uu.fi.dwo.mobile.client.ui.IdleDetect.IdleHandler;
@@ -47,11 +47,11 @@ import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 public class TreeModuleActivity extends AbstractActivity implements GotoController, MessageEventHandler, IdleHandler
 {
 
-	@Inject ClientFactory clientFactory;
 	@Inject PlaceController placeController;
 	@Inject DwoGlobalVars vars;
 	@Inject RPCHandler rpc;
 	@Inject TrafficAgent agent;
+	@Inject Provider<TreeModuleView> treeModuleView;
 	
 	private List<SelectModuleItem> currentModel;
 	private TreeModuleView view;
@@ -66,7 +66,7 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 	@Override
 	public void start(final AcceptsOneWidget panel, final EventBus eventBus)
 	{
-		view = clientFactory.getTreeModuleView();
+		view = treeModuleView.get();
 		
 		RoleType role = vars.getRoleType();
 		boolean beheerder = 

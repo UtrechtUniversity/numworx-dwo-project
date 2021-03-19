@@ -6,7 +6,6 @@ import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import com.google.gwt.canvas.dom.client.CssColor;
-import com.google.gwt.json.client.JSONObject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.google.web.bindery.event.shared.HandlerRegistrations;

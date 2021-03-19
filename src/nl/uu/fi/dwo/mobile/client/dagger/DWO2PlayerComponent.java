@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.dagger;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import com.google.gwt.place.shared.PlaceHistoryHandler;
@@ -17,7 +18,7 @@ public interface DWO2PlayerComponent {
   PlaceHistoryHandler placeHistoryHandler();
   @Component.Builder
   interface Builder {
-    @BindsInstance Builder rpcHandler(RPCHandler rpcHandler);
+    @BindsInstance Builder profile(@Named("profile") int profile);
     DWO2PlayerComponent build();
   }
 

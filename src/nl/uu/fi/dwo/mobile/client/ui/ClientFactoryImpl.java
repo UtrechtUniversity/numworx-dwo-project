@@ -86,7 +86,6 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 		return eventBus;
 	}
 
-	@Override
 	public ViewModuleView getEntryView()
 	{
 		ViewModuleView view = entryView.get();
@@ -109,36 +108,6 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 		return id;
 	}
 
-	private DomClassCourse exam;	
-	
-	@Override
-	public Promise<Void> startExam(final DomClassCourse classCourse, final String password) {
-		Promise<Void> p = barrier()
-			.then(new Success<Void, Void>() {
-
-					@Override
-					public Promise<Void> call(Promise<Void> resolved)
-							throws Exception {
-						return handler.startExam(classCourse.getId().toString(), password);
-					}
-			})
-			.then(new Success<Void, Void>() {
-
-				@Override
-				public Promise<Void> call(Promise<Void> resolved)
-						throws Exception {
-					exam = classCourse;
-					return null;
-				}
-			});
-		addBarrier(p); // 
-		return p;
-	}
-	
-	public boolean inExam(DomClassCourse classCourse) {
-		return (exam != null) &&
-			exam.getId().equals(classCourse.getId());
-	}
 
 	@Override
 	public void goTo(Place place) {

@@ -23,6 +23,7 @@ import com.google.gwt.json.client.JSONValue;
 import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
@@ -136,6 +137,16 @@ public class DummyRPCHandler implements RPCHandler {
 		return null;
 	}
 
+	@Override
+	public Promise<Void> startExam(DomClassCourse classCourse, String password) {
+		return Promises.resolved(null);
+	}
+
+	@Override
+	public boolean inExam(DomClassCourse classCourse) {
+		return true;
+	}
+ 
 /** 
  * Not so dummy implementation.
  * @param scoID sco id
@@ -181,11 +192,6 @@ public class DummyRPCHandler implements RPCHandler {
 			public JSONValue apply(String t) {
 				return JSONParser.parseStrict(t);
 			}});
-	}
-
-	@Override
-	public Promise<Void> startExam(String id, String password) {
-		return Promises.resolved(null);
 	}
 
 	@Override

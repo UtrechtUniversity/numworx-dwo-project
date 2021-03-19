@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -22,7 +23,6 @@ import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
-import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.IdleDetect;
 import nl.uu.fi.dwo.mobile.client.ui.IdleDetect.IdleEvent;
 import nl.uu.fi.dwo.mobile.client.ui.IdleDetect.IdleHandler;
@@ -69,7 +69,7 @@ import dagger.MembersInjector;
 public class ViewModuleActivity extends AbstractActivity implements AnchorContext, ViewModuleView.Presenter, 
   CBookEventListener, MessageEventHandler, GotoController, IdleHandler
 {
-	@Inject ClientFactory clientFactory;
+	@Inject Provider<ViewModuleView> clientFactory;
 	@Inject DwoGlobalVars vars;
 	@Inject PlaceController placeController;
 	@Inject RPCHandler rpc;
@@ -225,24 +225,15 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 			tm.schedule((int)timeToGo); 
 		}
 		return false;
-
-		
-		
-		
-		
-		
-		
 		
 	}
-	
-	
 	
 	@Override
 	public void start(final AcceptsOneWidget panel, EventBus eventBus)
 	{
 		if (setNotAfter(panel)) return;			
 // All systems go
-        view = clientFactory.getEntryView();
+        view = clientFactory.get();
 		eventBus.addHandler(MessageEvent.TYPE, this);
 		onMessage(MessageEvent.getLastEvent());
 

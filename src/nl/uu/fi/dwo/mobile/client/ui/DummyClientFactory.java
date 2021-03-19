@@ -1,34 +1,22 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
-import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
-import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
-import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
-import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
-import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
-import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
-import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.RoleType;
-
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.osgi.util.promise.Promise;
-import com.google.gwt.core.shared.GWT;
-import com.google.gwt.place.shared.PlaceController;
-import com.google.gwt.place.shared.PlaceHistoryHandler;
+
 import com.google.web.bindery.event.shared.EventBus;
+
 import dagger.Lazy;
+import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
+import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 
 @Singleton
 public class DummyClientFactory implements ClientFactory {
 
 	final private EventBus eventBus;
 	final private boolean premium;
-	private Lazy<ViewModuleView> entryView;
 	private TrafficAgent agent;
 	
 	@Inject DummyClientFactory(EventBus eventBus, TrafficAgent agent, @Named("premium") boolean premium) {
@@ -41,21 +29,6 @@ public class DummyClientFactory implements ClientFactory {
   @Override
 	public EventBus getEventBus() {
 		return eventBus;
-	}
-
-	@Override
-	public ViewModuleView getEntryView() {
-		return entryView.get();
-	}
-
-	@Override
-	public TreeModuleView getTreeModuleView() {
-		return null;
-	}
-
-	@Inject
-	public void setEntryView(Lazy<ViewModuleView> entryView) {
-		this.entryView = entryView;
 	}
 
 	@Override
@@ -72,18 +45,7 @@ public class DummyClientFactory implements ClientFactory {
 	public void addBarrier(Promise<?> p) {
 		agent.addBarrier(p);
 	}
-
-	@Override
-	public Promise<Void> startExam(DomClassCourse classCourse, String password) {
-		return barrier();
-	}
-
-	@Override
-	public boolean inExam(DomClassCourse classCourse) {
-		return true;
-	}
-  
-  
+ 
 	@Override
 	public boolean isPremium() {
 		return premium; // FIXME komt van buitenaf.

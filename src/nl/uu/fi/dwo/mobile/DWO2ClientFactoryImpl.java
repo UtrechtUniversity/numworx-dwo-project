@@ -31,7 +31,6 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewBuilder;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
-import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -63,12 +62,11 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
               setup(none,numworx);
         }
 
-    @Override
+		@Override
 		public void addBarrier(Promise<?> p) {
 			agent.addBarrier(p);
 		}
 
-        @Override
         public TreeModuleView getTreeModuleView()
         {
           if (treeModuleView == null)
@@ -83,7 +81,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 
 		@Override
 		public Promise<Void> logout() {
-			return barrier().
+			return agent.barrier().
 					then(new Success<Void,Void>(){
 
 						@Override

@@ -8,11 +8,11 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
-import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewCoursePlace;
@@ -63,8 +63,7 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
        }
     }
   
-  
-	@Inject ClientFactory clientFactory;
+    @Inject TrafficAgent agent;
 	@Inject RPCHandler rpc;
 	@Inject PlaceController placeController;
 	@Inject Provider<NoCourseView> noCourseView;
@@ -72,18 +71,10 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
     @Inject Provider<UnSafeModuleView> unsafe;
     @Inject NavigationView navigation;
     @Inject DwoGlobalVars vars;
+    @Inject Provider<TreeModuleView> treeModuleView;
 
     private Place where;
     private SelectModuleItem item;
-
-//	CourseActivity2(ClientFactory clientFactory, SelectModuleItem item, Place where) {
-//		this.clientFactory = clientFactory;
-//		this.item = item;
-//		this.where = where;
-//		placeController = clientFactory.getPlaceController();
-//		noCourseView = clientFactory.getNoCourseView();
-//		headerView = clientFactory.getHeaderView();
-//	}
 
 	CourseActivity2(SelectModuleItem item, Place where, MembersInjector<CourseActivity2> injector) {
 	  this.item = item;
@@ -94,7 +85,7 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
-		final TreeModuleView view = clientFactory.getTreeModuleView();
+		final TreeModuleView view = treeModuleView.get();
 		navigation.hide();
 		view.setBeheer(false);
 		view.setPresenter(this);
@@ -160,7 +151,7 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
 						final UnSafeModuleView w = unsafe.get();
 						w.selectItem(item);
 						navigation.hide();
-						clientFactory.barrier().onResolve(		
+						agent.barrier().onResolve(		
 								new Runnable() {
 									public void run() {
 										panel.setWidget(w);

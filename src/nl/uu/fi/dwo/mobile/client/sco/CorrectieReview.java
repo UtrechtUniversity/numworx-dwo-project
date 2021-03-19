@@ -14,9 +14,6 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 import nl.uu.fi.dwo.mobile.utils.Logging;
-import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
-import nl.uu.fi.dwo.rest.dom.xapi.Result;
-import nl.uu.fi.dwo.rest.dom.xapi.Score;
 
 public class CorrectieReview extends CorrectieFacade {
     private Provider<?> correctie;

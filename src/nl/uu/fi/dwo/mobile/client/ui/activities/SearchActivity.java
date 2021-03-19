@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Provider;
+
 import org.osgi.util.promise.Promises;
 
 import com.google.gwt.activity.shared.AbstractActivity;
@@ -12,7 +14,6 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
@@ -21,15 +22,16 @@ import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 
 public class SearchActivity extends AbstractActivity implements Activity, GotoController {
 
-	private ClientFactory clientFactory;
+	private Provider<TreeModuleView> treeModuleView;
 	private long id;
 	private TreeModuleView view;
 	private List<SelectModuleItem> currentModel;
 	private PlaceController placeController;
 
-	public SearchActivity(ClientFactory clientFactory, long id, PlaceController controller) {
-		this.clientFactory = clientFactory;
+	public SearchActivity(Provider<TreeModuleView> t, long id, PlaceController controller) {
+		this.treeModuleView = t;
 		this.id = id;
+		this.placeController = controller;
 	}
 
 	@Override
@@ -40,7 +42,7 @@ public class SearchActivity extends AbstractActivity implements Activity, GotoCo
 
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus) {
-		view = clientFactory.getTreeModuleView();
+		view = treeModuleView.get();
 		currentModel = SelectModuleItemHolder.getItems();
 		view.setPresenter(this);
 		view.render(currentModel);
