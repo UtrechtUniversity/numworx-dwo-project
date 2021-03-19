@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import com.google.gwt.i18n.client.LocaleInfo;
 
@@ -172,5 +173,10 @@ public class AdviseMeService implements StudentResults {
 	public Promise<DomStudentModelContext4Student> getModel(DomStudentModelContextId id) {
 		if (usermodel == null) usermodel = getUsermodel();
 		return usermodel.map(this::to1Context);
+	}
+
+	@Override
+	public Promise<String> getDescription(DomStudentModelContextId id, DomStudentModelContextInfo info) {
+		return Promises.resolved(info.getDescription().get(locale));
 	}
 }

@@ -268,7 +268,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 					tt = item.addItem(Util.summaryItem(ooo.getInfo().getTitle().getOrDefault(lang, ""), s,3));
 				else
 				{	boolean add = inFilter(filter, ooo);
-					tt = item.addItem(Util.scoreItem(oo.getInfo().getTitle().getOrDefault(lang, ""), s,2));
+					tt = item.addItem(Util.scoreItem(ooo.getInfo().getTitle().getOrDefault(lang, ""), s,3));
 					tt.setVisible(add);
 				}
 				int[] oelems = new int[elems.length+1];
@@ -386,10 +386,17 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 
 	private void setDescription(DomStudentModelContextInfo info) {
 		showGraph = false;
-		String text = info.getDescription().get(lang);
-		String json = info.getDescription().get(lang +"@JSON");
-		Widget description = createDescription(text, json);
-		widget.get().description.setWidget(description);
+		service.getDescription(current, info).then(p -> {
+			String text = p.getValue();
+			String json = null;
+			if (text.startsWith("{")) {
+				json = text;
+				text = WISKOPDR_SIG;
+			}
+			Widget description = createDescription(text, json);
+			widget.get().description.setWidget(description);
+			return null;
+		});
 	}
 
 	private void setPerc(DomStudentModelScore<?> score) {

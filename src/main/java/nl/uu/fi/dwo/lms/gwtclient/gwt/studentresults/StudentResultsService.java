@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
@@ -179,5 +180,12 @@ public class StudentResultsService implements StudentResults {
 				.map(list -> list.stream().filter(item -> id.getId().equals(item.getId())).findAny())
 				.map(Optional::get) // can produce an failure
 				.then(this::getFull);//.recover(p -> null);
+	}
+
+	String lang = LocaleInfo.getCurrentLocale().getLocaleName();
+
+	@Override
+	public Promise<String> getDescription(DomStudentModelContextId id, DomStudentModelContextInfo info) {
+		return manager.getDescription(id, sc, info.getId(), lang, context);
 	}
 }
