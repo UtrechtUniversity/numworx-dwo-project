@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,6 +26,7 @@ import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
+import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
@@ -211,6 +213,34 @@ public class GwtRestVars {
 	 * @param callback
 	 */
 
+	public class Retry<T> implements Function<Promise<T>, Promise<T>> {
+
+		@Override
+		public Promise<T> apply(Promise<T> t) {
+			if (t instanceof Dwo2Exception) {
+				if (Dwo2ExceptionCode.User_AuthenticationError == ((Dwo2Exception) t).getDwo2Code()) {
+					if (tokenRequest == null) {
+						tokenRequest = oauth.refresh_token(refresh_token);
+					} else return t;
+					return tokenRequest.then(
+							p -> {
+								DomToken dt = p.getValue();							
+								setBearerToken(dt.getAccess_token());
+								setRefreshToken(dt.getRefresh_token());
+								return supplier.get();
+							}).fallbackTo(t);
+				}
+			}
+			return t;
+		}
+		
+		private final Supplier<Promise<T>> supplier;
+
+		public Retry(Supplier<Promise<T>> supplier) {
+			this.supplier = supplier;
+		}
+	}
+	
 	class RetryCallback<T> implements MethodCallback<T> {
 
 		MethodCallback<T> delegate;
