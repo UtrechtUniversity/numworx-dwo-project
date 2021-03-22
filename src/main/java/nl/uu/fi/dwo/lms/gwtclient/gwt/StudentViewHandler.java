@@ -38,6 +38,7 @@ public class StudentViewHandler implements SwitchViewEventHandler {
     	}
     case RESULTS:
     case STUDENTRESULTS:
+    case KNOWLEDGE:
     	if (dwoGlobalVars.isPremium()) {
     		mainView.selectView(SelectedView.RESULTS);
     		mainView.showStudentResults();
