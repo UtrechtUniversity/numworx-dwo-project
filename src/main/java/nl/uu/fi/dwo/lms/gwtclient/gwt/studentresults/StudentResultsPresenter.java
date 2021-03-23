@@ -116,12 +116,14 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			LOG.info("selection = " + selection);
 			w.tree.removeItems();
 			w.title.setText("");
+			w.filter.setText("");
 			w.description.clear();
 			w.setPerc(NULLSCORE);
 			w.east.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
 			current = null;
 			if (selection == 0) return;
 			DomStudentModelContext4Student item = list.get(selection-1);
+			w.setFilter(item.getFilter());
 			service.getModel(item).then(p -> {
 				current = p.getValue();
 				insertTree(item);

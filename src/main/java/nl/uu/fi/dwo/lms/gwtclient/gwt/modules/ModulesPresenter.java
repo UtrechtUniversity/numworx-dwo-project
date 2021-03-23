@@ -256,7 +256,11 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         if (ISMAINNAVVISIBLE.equals(message)) {
           view.sendMessage( view.isMainNavVisible() ? SHOWMAINNAV : HIDEMAINNAV);
         } else 
-        if (select(SelectedView.RESULTS, message) || select(SelectedView.PERSONS,message) || select(SelectedView.SCHOOLCLASSES,message) || select(SelectedView.ORGANISATION, message)) {
+        if (select(SelectedView.RESULTS, message) 
+        		|| select(SelectedView.KNOWLEDGE, message)
+        		|| select(SelectedView.PERSONS,message) 
+        		|| select(SelectedView.SCHOOLCLASSES,message) 
+        		|| select(SelectedView.ORGANISATION, message)) {
           mainView.setIdleTimeout(MainPresenter.IDLE);
         } else if (select(SelectedView.TRAIL,message)) {
         } 

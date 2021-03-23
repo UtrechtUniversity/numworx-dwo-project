@@ -40,7 +40,7 @@ public class StudentViewHandler implements SwitchViewEventHandler {
     case STUDENTRESULTS:
     case KNOWLEDGE:
     	if (dwoGlobalVars.isPremium()) {
-    		mainView.selectView(SelectedView.RESULTS);
+    		mainView.selectView(SelectedView.KNOWLEDGE);
     		mainView.showStudentResults();
     		presenterFactory.getResultsPresenter().init(switchViewEvent.getResultState());
     		break;

@@ -437,7 +437,7 @@
                        <webapp>
                             <groupId>nl.uu.fi.dwo.mobile</groupId>
                             <artifactId>DWOplayer</artifactId>
-                            <version>2.4.12-SNAPSHOT</version>
+                            <version>2.4.16-SNAPSHOT</version>
                             <classifier>dwo2</classifier>
                             <type>war</type>
                             <contextPath>/dwo/tablet</contextPath>
@@ -454,7 +454,7 @@
                         <webapp>
                           <groupId>fi.servlet</groupId>
   						  <artifactId>ideas</artifactId>
- 						  <version>0.0.10-SNAPSHOT</version>
+ 						  <version>0.0.10</version>
                           <type>war</type>
                           <contextPath>/ideas</contextPath>
                           <asWebapp>true</asWebapp>              

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -88,7 +89,9 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			
 			OMSVGRect r = null;
 			for(Node node: nodes) {
-				OMSVGRect rect = node.rect.getBBox();
+				OMSVGRectElement rect0 = node.rect;
+				if (rect0 == null) continue; // missing sometimes
+				OMSVGRect rect = rect0.getBBox();
 				if (r == null) {
 					r = getSvgElement().createSVGRect(rect); // make copy
 				} else {
@@ -140,6 +143,9 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		ColorStyle edgeColor = defaultEdgeColor;
 
 		Edge(Node from, Node to) {
+			Objects.requireNonNull(from, "no from");
+			Objects.requireNonNull(to, "no to");
+			
 			this.from = from;
 			this.to = to;
 		}
@@ -295,7 +301,9 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		Stream<Edge> edges() {
 			List<String> voorkennis = obj.getInfo().getVoorkennis();
 			if (voorkennis == null) return Stream.empty();
-			return voorkennis.stream().map( key -> new Edge( map.get(key), this) );
+			return voorkennis.stream()
+					.filter(key -> map.containsKey(key))
+					.map( key -> new Edge( map.get(key), this) );
 		}
 
 		public void setScore(DomStudentModelScore<?> cat) {

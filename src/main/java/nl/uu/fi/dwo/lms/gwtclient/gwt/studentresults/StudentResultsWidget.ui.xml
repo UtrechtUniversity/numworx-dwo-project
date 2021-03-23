@@ -31,33 +31,62 @@
 		width: 210px;
 	}
 	.title {
-		margin-left: 1em;
+		margin-left: 0.4em;
+		display: block;
+		padding-top: 1em;
+		font-weight: bold;
 		color: #7297c7;
 	}
 	.border {
 	    border: 2px #1b75bb solid; /*color14*/
+	    border-top-width: 0px;
+	    box-sizing: border-box;
+	    -moz-box-sizing: border-box;
+	    -webkit-box-sizing: border-box;
+	    -webkit-border-top-left-radius: 0px;
+	    -webkit-border-top-right-radius: 0px;
+	    -webkit-border-bottom-right-radius: 4px;
+	    -webkit-border-bottom-left-radius: 4px;
+	    -moz-border-radius-topleft: 0px;
+	    -moz-border-radius-topright: 0px;
+	    -moz-border-radius-bottomright: 4px;
+	    -moz-border-radius-bottomleft: 4px;
+	    border-top-left-radius: 0px;
+	    border-top-right-radius: 0px;
+	    border-bottom-right-radius: 4px;
+	    border-bottom-left-radius: 4px;
+	    background-color: white;
+	}
+	.border-top {
+	    border: 2px #1b75bb solid; /*color14*/
+	    border-bottom-width: 0px;
 	    box-sizing: border-box;
 	    -moz-box-sizing: border-box;
 	    -webkit-box-sizing: border-box;
 	    -webkit-border-top-left-radius: 4px;
 	    -webkit-border-top-right-radius: 4px;
-	    -webkit-border-bottom-right-radius: 4px;
-	    -webkit-border-bottom-left-radius: 4px;
+	    -webkit-border-bottom-right-radius: 0px;
+	    -webkit-border-bottom-left-radius: 0px;
 	    -moz-border-radius-topleft: 4px;
 	    -moz-border-radius-topright: 4px;
-	    -moz-border-radius-bottomright: 4px;
-	    -moz-border-radius-bottomleft: 4px;
+	    -moz-border-radius-bottomright: 0px;
+	    -moz-border-radius-bottomleft: 0px;
 	    border-top-left-radius: 4px;
 	    border-top-right-radius: 4px;
-	    border-bottom-right-radius: 4px;
-	    border-bottom-left-radius: 4px;
+	    border-bottom-right-radius: 0px;
+	    border-bottom-left-radius: 0px;
 	    background-color: white;
 	}
+
+
 	.tree {
 	}
 	.west {
 	}
 
+	.score {
+		padding-top: 1em;
+	}
 	</ui:style>
 	<g:DockLayoutPanel unit='PX' styleName='{style.fullheight}'>
 		<g:center>
@@ -68,6 +97,9 @@
 			  		<g:item>Kies eerst een model</g:item>
 			  	</g:ListBox>
 			   </g:FlowPanel>
+			  </g:north>
+			  <g:north size="3">
+			  	<g:Label ui:field='filter' addStyleNames="{style.title}">Getal &amp; Ruimte  >  1HV  >  H2 - Getallen en formules</g:Label>
 			  </g:north>
 			  <g:south size="2.4"><g:FlowPanel><g:Button ui:field='btn' styleName='{style.graph}'>Graph</g:Button></g:FlowPanel></g:south>
 			  <g:center>
@@ -80,18 +112,19 @@
 		</g:center>
 		<g:east size='440'>
 			<g:DockLayoutPanel ui:field='east' unit='EM' >
-				<g:north size="2"><g:FlowPanel><g:InlineLabel styleName='{style.title}' ui:field='title'></g:InlineLabel></g:FlowPanel></g:north>
-				<g:north size='3'>
-				  <g:FlowPanel ui:field='north'>
+				<g:north size="3"><g:FlowPanel styleName='{style.border-top}' ><g:InlineLabel styleName='{style.title}' ui:field='title'></g:InlineLabel></g:FlowPanel></g:north>
+				<g:south size='3'>
+				  <g:FlowPanel ui:field='north' styleName='{style.score}'>
 					<g:InlineLabel ui:field='redPerc' styleName='{style.perc}'/>
 					<g:SimplePanel styleName='{style.icon}' ui:field='outer' />
 					<g:InlineLabel ui:field='perc' styleName='{style.greenperc}' />
 				  </g:FlowPanel>
-				</g:north>
+				</g:south>
 				<g:center>
 					<g:SimpleLayoutPanel styleName='{style.border}' ui:field='description' />
 				</g:center>
 			</g:DockLayoutPanel>
 		</g:east>
+		<g:east size="10"><g:SimplePanel /></g:east>
 	</g:DockLayoutPanel>
 </ui:UiBinder> 

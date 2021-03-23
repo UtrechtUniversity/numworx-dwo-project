@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -79,7 +80,7 @@ public class StudentResultsGraphPresenter extends AbstractResultsPresenter {
 			graph.get().setModelScore(item, service.getScore(item));
 			
 			return p;
-		});
+		}).then(null, oops -> LOG.log(Level.SEVERE, "init state", oops.getFailure()));
 		
 	}
 }
