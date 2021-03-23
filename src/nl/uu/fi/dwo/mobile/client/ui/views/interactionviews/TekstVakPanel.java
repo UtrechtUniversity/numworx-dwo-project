@@ -40,6 +40,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.ShareFacade;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
@@ -380,7 +381,8 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 	private double responsiveFactor = 0;
 	private String logID;
 	private boolean fullScreenOption;
-  private FullScreenButton fsBtn;
+	private FullScreenButton fsBtn;
+	private final ActivityComponent activity;
 	
 	
 	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
@@ -394,8 +396,9 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 	}
 	
 	//Hiermee maak je het basispanel dat alle componenten van een pagina bevat.
-	public TekstVakPanel(int breedte, int hoogte, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
+	public TekstVakPanel(ActivityComponent a, int breedte, int hoogte, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
+		activity = a;
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
 		this.volledigeBreedte = true;
@@ -456,9 +459,9 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		initWidget();
 	}
 
-	public TekstVakPanel(HashMap<String, Object> hh, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden, AnchorContext context)
+	public TekstVakPanel(ActivityComponent a, HashMap<String, Object> hh, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden, AnchorContext context)
 	{
-		this(hh, randomVarNamen, randomVarWaarden);
+		this(a, hh, randomVarNamen, randomVarWaarden);
 		this.anchorContext = context;
 	}
 	
@@ -469,8 +472,9 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 			return comRoot.getUUID();
 	}
 	
-	public TekstVakPanel(HashMap<String, Object> hh, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
+	public TekstVakPanel(ActivityComponent a, HashMap<String, Object> hh, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
+		activity = a;
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
 		ObjectMap h = JSONUtilities.wrapMap(hh);
@@ -1159,9 +1163,9 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 //		}
 //	}
 	
-	public TekstVakPanel(int breedte, int hoogte, String[] randomVarNamen,
+	public TekstVakPanel(ActivityComponent a, int breedte, int hoogte, String[] randomVarNamen,
 			HashMap randomVarWaarden, AnchorContext anchorContext) {
-		this(breedte, hoogte, randomVarNamen, randomVarWaarden);
+		this(a, breedte, hoogte, randomVarNamen, randomVarWaarden);
 		this.anchorContext = anchorContext;
 	}
 
@@ -1321,7 +1325,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 			}
 		}
 		
-		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden, anchorContext);
+		TekstBuffer tb = new TekstBuffer(activity, randomVarNamen, randomVarWaarden, anchorContext);
 		int[] volleBreedtes = new int[breedtes.size()];
 		for (int j = 0; j < breedtes.size(); j++)
 		{	volleBreedtes[j] =  (int) (breedtes.get(j).doubleValue() - 2 * cellMarge);
@@ -1655,7 +1659,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 	
 	public ArrayList<Tupel> getAnswerModels(ObjectMap map)
 	{
-		TekstVakPanel tvp = new TekstVakPanel((HashMap<String, Object>) map, randomVarNamen, randomVarWaarden);
+		TekstVakPanel tvp = new TekstVakPanel(activity, (HashMap<String, Object>) map, randomVarNamen, randomVarWaarden);
 		tvp.zetInstellingen(instellingen);
 		tvp.setKeyboard(kb);
 		final Object orgObject = tvp;
@@ -2502,7 +2506,7 @@ private void vulFeedbackPanelEnVoegToe(String feedbackTekst)
 	}
 	feedbackPanel.removeFromParent();
 	
-	TekstBuffer b = new TekstBuffer();
+	TekstBuffer b = new TekstBuffer(activity);
 	ArrayList<Object> feedbackList = b.convertTekst(feedbackTekst, null, false);
 	feedbackPanel.clear();
 	feedbackPanel.setSize(breedte, 34);
@@ -4830,11 +4834,11 @@ private Object CamelCase(String name) {
 	}
 
 	public HandlerRegistration addCBookEventListener(CBookEventListener listener) {
-		return DWOplayer.clientfactory.getEventBus().addHandlerToSource(CBookEvent.TYPE, this, listener);
+		return activity.getEventBus().addHandlerToSource(CBookEvent.TYPE, this, listener);
 	}
 
 	private void fireEvent(CBookEvent event) {
-		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this);
+		activity.getEventBus().fireEventFromSource(event, this);
 		comRoot.fireEvent(event);
 	}
 	
@@ -5087,7 +5091,7 @@ private Object CamelCase(String name) {
 	
 	private void addTekstVakPanel(HashMap<String, Object> contentMap, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int row, int column)
 	{
-		TekstVakPanel tvp = new TekstVakPanel(contentMap, randomVarNamen, randomVarWaarden);
+		TekstVakPanel tvp = new TekstVakPanel(activity, contentMap, randomVarNamen, randomVarWaarden);
 		tvp.setParent(tekstVakken[row][column]);
 		tvp.zetInstellingen(instellingen);
 		tvp.setKeyboard(kb);
@@ -5116,7 +5120,7 @@ private Object CamelCase(String name) {
 	
 	private void addStepContents(ArrayList<Object> stepContents, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int row, int column)
 	{
-		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden, null);
+		TekstBuffer tb = new TekstBuffer(activity, randomVarNamen, randomVarWaarden, null);
 		ArrayList<Object> opdrachtObjects = new ArrayList<Object>();
 		ArrayList<Object> opdrachtGegevens = new ArrayList<Object>();
 		
@@ -5561,9 +5565,9 @@ private Object CamelCase(String name) {
 		return xWidgetMap;
 	}
 	
-	public static boolean isNoordhoff()
+	public boolean isNoordhoff()
 	{
-		String dependentName = DWOplayer.PARAMETERS.keyboardStyle();
+		String dependentName = activity.parameters().keyboardStyle();
 		return "noordhoff".equals(dependentName);
 	}
 	
@@ -5687,7 +5691,7 @@ private Object CamelCase(String name) {
 			RuleIF[] math = new RuleIF[] { getSelectRule(id2, context) };
 			PromiseCallback<RuleIF> defer = new PromiseCallback<>();
 			WiskOpdr.ideas.adviseMe(math, exerciseid, defer );
-			DWOplayer.clientfactory.addBarrier(defer.getPromise());
+			activity.agent().addBarrier(defer.getPromise());
 			defer.getPromise().onResolve(() -> { 
 				Promise<RuleIF> p = defer.getPromise();
 				Throwable t = p.getFailure();

@@ -53,6 +53,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.Logging;
@@ -61,6 +62,8 @@ import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
 public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEventListener {
 	
+	private final ActivityComponent activity;
+
 	//public static Text_nl rb = new Text_nl();
 	
 	public static final String ACTION_CORRECT = "action.correct";
@@ -165,9 +168,9 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 	private CorrectieFacade correctie;
 	
 	
-	public AntwoordKeuzeVak(HashMap<String, Object> h, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden, int volleBreedte)
+	public AntwoordKeuzeVak(ActivityComponent activity, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden, int volleBreedte)
 	{
-		
+		this.activity = activity;
 		if (h != null && h.containsKey("breedte"))
 			breedte = ((Number) h.get("breedte")).intValue();
 		if (h != null && h.containsKey("hoogte"))
@@ -294,7 +297,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 				if(!editable) return;
 				
 				int top = basisPanel.getAbsoluteTop() + basisPanel.getOffsetHeight();
-			    int topMax = DWOplayer.PARAMETERS.getWindowHeight() - hoogtePopup;
+			    int topMax = activity.parameters().getWindowHeight() - hoogtePopup;
 			    top = Math.min(top,topMax);
 			    popupBox.setPopupPosition(basisPanel.getAbsoluteLeft(), top);
 				if(isShowing)
@@ -327,18 +330,9 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		
 		//TODO: Noordhoff-onderscheid maken (ook in plaatsing, alleen in Noordhoff in knop?)
 		
-		//goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.goedkrul_en().getSafeUri());
-		//foutKruisImage = new Image(DWOplayer.DWO_BUNDLE.foutkruis().getSafeUri());
 		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
 		goedKrulHalfImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());
 		foutKruisImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
-		
-		
-//		checkimg = new Image(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
-//		checkimg.setVisible(false);
-//		checkimg.getElement().getStyle().setProperty("marginLeft", "3px");
-//		checkimg.getElement().getStyle().setProperty("marginTop", "-5px"); //in plaats hiervan zou marginTop -5px ook goed kunnen werken.
-//		checkimg.getElement().getStyle().setProperty("marginBottom", "-6px");
 		
 		feedbackPanel = new PopupPanel(true);
 		feedbackPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
@@ -446,7 +440,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 				
 		int aantalKeuzes = 0;
 		int hoogtePanels = 0;
-		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden, null);
+		TekstBuffer tb = new TekstBuffer(activity, randomVarNamen, randomVarWaarden, null);
 		if (keuzeMogelijkheden != null)
 			aantalKeuzes = keuzeMogelijkheden.length;
 		keuzeOptieVakken = new TekstVak[aantalKeuzes + 1];
@@ -581,7 +575,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 				if (!editable) return;
 				
 				int top = basisPanel.getAbsoluteTop() + basisPanel.getOffsetHeight();
-				int topMax = DWOplayer.PARAMETERS.getWindowHeight() - hoogtePopup;
+				int topMax = activity.parameters().getWindowHeight() - hoogtePopup;
 				top = Math.min(top, topMax);
 				popupBox.setPopupPosition(basisPanel.getAbsoluteLeft(), top);
 				if(isShowing)
@@ -599,73 +593,6 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		
 		
 		
-//		uitklapPijlCanvas = Canvas.createIfSupported();
-//		gIm = uitklapPijlCanvas.getContext2d();
-//		
-//		uitklapPijlCanvas.setWidth(20 + "px");
-//		uitklapPijlCanvas.setHeight(hoogte + "px");
-//		uitklapPijlCanvas.setCoordinateSpaceWidth(20);
-//		uitklapPijlCanvas.setCoordinateSpaceHeight(hoogte);
-//		
-////		CanvasGradient gradient = gIm.createLinearGradient(0, 0, 20, hoogte);
-////		gradient.addColorStop(0, "white");
-////		gradient.addColorStop(1, CssColor.make(200, 200, 200).toString());
-////		gIm.setFillStyle(gradient);
-//		gIm.setFillStyle("lightGray");
-//		gIm.setStrokeStyle(CssColor.make(150, 150, 150));
-//		gIm.setLineWidth(1.0d);
-//		gIm.rect(0, 0, 20, hoogte);
-//		gIm.fill();
-//		gIm.stroke();
-//		
-//		gIm.beginPath();
-//		gIm.moveTo(5, hoogte / 2 - 3);
-//		gIm.lineTo(15, hoogte / 2 - 3);
-//		gIm.lineTo(11, hoogte / 2 + 3);
-//		gIm.lineTo(10, hoogte / 2 + 3);
-//		gIm.closePath();
-//		gIm.setFillStyle(""+CssColor.make(80, 80, 80));
-//		gIm.fill();
-//		
-//		basisPanel.add(uitklapPijlCanvas);
-//		basisPanel.setWidgetRightWidth(uitklapPijlCanvas, 20, Style.Unit.PX, 20, Style.Unit.PX);
-//		basisPanel.setWidgetTopBottom(uitklapPijlCanvas, 0, Style.Unit.PX, 0, Style.Unit.PX);
-//		
-//		
-//		uitklapPijlCanvas.addDomHandler(new ClickHandler(){
-//			public void onClick(ClickEvent e)
-//			{
-//				if (!editable) return;
-//				
-//				int top = basisPanel.getAbsoluteTop() + basisPanel.getOffsetHeight();
-//				int topMax = DWOplayer.PARAMETERS.getWindowHeight() - hoogtePopup;
-//				top = Math.min(top, topMax);
-//				popupBox.setPopupPosition(basisPanel.getAbsoluteLeft(), top);
-//				if(isShowing)
-//				{	popupBox.hide();
-//					isShowing = false;
-//				}
-//				else
-//				{	popupBox.show();
-//					isShowing = true;
-//				}
-//			}
-//		}, ClickEvent.getType());
-//		
-//		uitklapPijlCanvas.addDomHandler(new MouseOverHandler(){
-//			public void onMouseOver(MouseOverEvent e)
-//			{	if(!isShowing && popupBox.isShowing())
-//				{	isShowing = true;
-//					
-//				}
-//			}
-//		}, MouseOverEvent.getType());
-//		
-//		uitklapPijlCanvas.addDomHandler(new MouseOutHandler(){
-//			public void onMouseOut(MouseOutEvent e)
-//			{	isShowing = false;
-//			}
-//		}, MouseOutEvent.getType());
 	}
 	
 	public void voegFeedbackSluitKnopToe()
@@ -717,7 +644,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		ArrayList<Object> huidigeKeuze = new ArrayList<Object> ();
 		huidigeKeuze.add(Text.constants.keuzeVakKiesLabel());
 		
-		TekstBuffer tb = new TekstBuffer();
+		TekstBuffer tb = new TekstBuffer(activity);
 		if(index > 0)
 			huidigeKeuze = tb.convertTekst(keuzeMogelijkheden[index - 1], null, false);
 		
@@ -958,7 +885,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		ArrayList<Object> huidigeKeuze = new ArrayList<Object> ();
 		huidigeKeuze.add(Text.constants.keuzeVakKiesLabel());
 		
-		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden, null);
+		TekstBuffer tb = new TekstBuffer(activity, randomVarNamen, randomVarWaarden, null);
 		if(selectedIndex > 0)
 			huidigeKeuze = tb.convertTekst(keuzeMogelijkheden[selectedIndex - 1], null, false);
 		
@@ -1039,7 +966,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 	
 	private void fireEvent(CBookEvent event) 
 	{
-		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this);
+		activity.getEventBus().fireEventFromSource(event, this);
 		comRoot.fireEvent(event);
 	}
 
@@ -1270,7 +1197,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 	
 	public void zetFeedback()
 	{
-		TekstBuffer b = new TekstBuffer();
+		TekstBuffer b = new TekstBuffer(activity);
 		try{
 			feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
 		}

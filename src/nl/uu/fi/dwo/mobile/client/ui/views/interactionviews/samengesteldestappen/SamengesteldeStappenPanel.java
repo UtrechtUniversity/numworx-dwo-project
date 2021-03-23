@@ -26,6 +26,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
@@ -66,10 +67,13 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 	
 	String[] randomVarNamen = null;
 	HashMap<String, Number> randomVarWaarden = null;
+
+	private ActivityComponent activity;
 	
 	
-	public SamengesteldeStappenPanel(HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int volleBreedte)
+	public SamengesteldeStappenPanel(ActivityComponent a, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int volleBreedte)
 	{
+		this.activity = a;
 		if (h != null && h.containsKey("breedte"))
 			breedte = ((Number) h.get("breedte")).intValue();
 		if (h != null && h.containsKey("hoogte"))
@@ -165,7 +169,7 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 		keuzeVakMap.put("breedte", breedte - buttonWidth - labelWidth - 2 * offset - (ideasStatistiek?(offset + buttonWidth):0)); 
 		keuzeVakMap.put("height", buttonHeight);
 		keuzeVakMap.put("launchState", launchState);
-		keuzeVak = new StappenKeuzeVak(keuzeVakMap, randomVarNamen, randomVarWaarden);
+		keuzeVak = new StappenKeuzeVak(activity, keuzeVakMap, randomVarNamen, randomVarWaarden);
 		keuzeVak.setParent(this);
 		Widget kvWidget = keuzeVak.asWidget();
 		kvWidget.getElement().getStyle().setProperty("display", "inline-block");
@@ -305,7 +309,7 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
       launchData.put("volledigeBreedte", volledigeBreedte);
       launchData.put("hoogte", new Integer(4));
       
-      TekstVakPanel stappenVak = new TekstVakPanel(launchData, randomVarNamen, randomVarWaarden);
+      TekstVakPanel stappenVak = new TekstVakPanel(activity, launchData, randomVarNamen, randomVarWaarden);
       stappenVak.setKeyboard(kb);
       //stappenVak.setCommunicationRoot(comRoot); // gebeurt nu in setComRoot. 
       stappenVak.initialiseerStappen();

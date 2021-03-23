@@ -36,12 +36,6 @@ public class DummyClientFactory implements ClientFactory {
 		return null;
 	}
 
-	@Override
-	public Promise<Void> barrier() {
-		return agent.barrier();
-	}
-
-	@Override
 	public void addBarrier(Promise<?> p) {
 		agent.addBarrier(p);
 	}

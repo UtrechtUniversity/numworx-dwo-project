@@ -40,6 +40,8 @@ import com.googlecode.mgwt.ui.client.MGWT;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.text.Text;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent.Builder;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
@@ -302,6 +304,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 
 	@UiField(provided=true) String pfx;
 
+	private Builder builder;
+
     static String getFaviconUrl() {
 		return "url('"+
 				r("images/numworx/favicon-numworx-wit.svg") +
@@ -322,9 +326,10 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	}
 
 	@Inject
-	public TreeModuleViewNumworx(HeaderView headerView, NavigationViewNumworx navigationView, RPCHandler rpc, DwoGlobalVars vars) {
+	public TreeModuleViewNumworx(HeaderView headerView, NavigationViewNumworx navigationView, RPCHandler rpc, DwoGlobalVars vars, ActivityComponent.Builder builder) {
 	    HorizontalCellListResources cellResources;
 	    this.rpc = rpc;
+	    this.builder = builder;
 		cellResources = GWT.create(HorizontalCellListResources.class);
 		tiles = new CellList<SelectModuleItem>(new TileCell(), cellResources);
 		tiles.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
@@ -539,7 +544,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		String description = item.getDescription();
 		if(description.startsWith(DescriptionView.GZIPPREFIX))
 		{
-			w = new DescriptionViewImpl(rpc, item.getID(), this).asWidget();
+			w = new DescriptionViewImpl(rpc, item.getID(), this, builder.build()).asWidget();
 		} else
 		if(description.startsWith("<html>")) {
 			w = new HTML(description);

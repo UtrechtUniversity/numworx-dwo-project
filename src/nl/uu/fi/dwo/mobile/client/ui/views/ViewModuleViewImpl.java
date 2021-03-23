@@ -33,6 +33,7 @@ import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.text.Text;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 //import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 //import nl.uu.fi.dwo.mobile.client.ui.KeyBoardTabPanel;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
@@ -214,19 +215,19 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	private Scorm2004IF api;
 	private DWOLogger dwologger;
 
-	public ViewModuleViewImpl(RPCHandler rpc, boolean b, Scorm2004IF api) 
+	public ViewModuleViewImpl(ActivityComponent a, RPCHandler rpc, boolean b, Scorm2004IF api) 
 	{
-		this(rpc, api);
+		this(a,rpc, api);
 		standalone = b;
 	}
 	
-	public ViewModuleViewImpl(RPCHandler rpc, Scorm2004IF api) {
-		super(rpc);
+	public ViewModuleViewImpl(ActivityComponent a, RPCHandler rpc, Scorm2004IF api) {
+		super(rpc,a);
 		this.api = api;
 	}
 
-	public ViewModuleViewImpl(RPCHandler rpc) {
-		super(rpc);
+	public ViewModuleViewImpl(ActivityComponent a, RPCHandler rpc) {
+		super(rpc,a);
 	}
 
 	public void initialize(Scorm2004IF api) {
@@ -245,7 +246,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	{
 		contentPanel.clear();
 		readonly = false;
-		if(!DWOplayer.PARAMETERS.isNavTitle()) setTitle(name);
+		if(!activity.parameters().isNavTitle()) setTitle(name);
 		return loadJSON(file);
 	}
 
@@ -512,7 +513,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			Window.alert("Exception in setup: " + e.toString()
 				+ "\nActivity might be instable");
 		}
-		if (DWOplayer.PARAMETERS.isNavTitle())
+		if (activity.parameters().isNavTitle())
 			setTitle("Vraag " + (1 + on.getCurrentOpdracht()) + " van "
 				+ on.getAantalOpdrachten());
 		// call SetupDone Handler, if an object is provided
@@ -542,7 +543,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			@Override
 			public Promise<Void> checkOpdracht(final ScoreNavIF source)
 			{	final Deferred<Void> defer = new Deferred<Void>();
-				DWOplayer.clientfactory.addBarrier(defer.getPromise());
+				activity.agent().addBarrier(defer.getPromise());
 				p();
 				OpdrNav.defer(new ScheduledCommand()
 				{
@@ -803,7 +804,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	}
 
 	protected Memento createMemento() {
-		return new Memento(getApi(), this, studentModel);
+		return new Memento(activity, getApi(), this, studentModel);
 	}
 	
 
@@ -963,7 +964,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 
 		opdrachtObjects = new ArrayList<Object>();
 		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( opdracht.get("interactiePanelLaunchData") );
-		TekstBuffer tb = new TekstBuffer(varnamen, waarden, getAnchorContext());
+		TekstBuffer tb = new TekstBuffer(activity, varnamen, waarden, getAnchorContext());
 		int[] breedtes = new int[] { 800 };
 		tb.zetVolleBreedtes(breedtes);
 		newVersion = Boolean.FALSE.equals( opdracht.get("hasAntwoordVak") );
@@ -1060,7 +1061,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 
 		opdrachtObjects = new ArrayList<Object>();
 		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( opdracht.get("interactiePanelLaunchData") );
-		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden, getAnchorContext());
+		TekstBuffer tb = new TekstBuffer(activity, randomVarNamen, randomVarWaarden, getAnchorContext());
 		int[] breedtes = new int[] { 800 };
 		tb.zetVolleBreedtes(breedtes);
 		newVersion = Boolean.FALSE.equals( opdracht.get("hasAntwoordVak") );
@@ -1457,7 +1458,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		//setObjects(opdrachtObjects, tekst);
 		setObjects(opdracht, tekst, on);
 		contentPanel.add(tekst);
-		FormuleEditorWithSteps fews = new FormuleEditorWithSteps(opdracht, false, tb.getVarNamen(), tb.getVarWaarden(), null);
+		FormuleEditorWithSteps fews = new FormuleEditorWithSteps(activity, opdracht, false, tb.getVarNamen(), tb.getVarWaarden(), null);
 
 		//fews.getEditor().requestFocus();
 		
@@ -1903,7 +1904,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		mainPanel = createAndBindUI();
 		//mainPanel = FocusOnTouch.wrap(mainPanel);
 		mainPanel.setStylePrimaryName("mainPanel");
-		mainPanel.addStyleDependentName(DWOplayer.PARAMETERS.keyboardStyle());
+		mainPanel.addStyleDependentName(activity.parameters().keyboardStyle());
 		mainPanel.setStyleDependentName("standalone", standalone);
 		
 		focusPanel = new ResizeFocusPanel(mainPanel); // wrap focuspanel
@@ -1913,11 +1914,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		mainPanel.setStylePrimaryName("mainPanel");
 		
 		state = lastState;
-		sb = DWOplayer.PARAMETERS.getStatusBar(); // new nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard();
+		sb = activity.parameters().getStatusBar(); // new nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard();
 		sb.setCombinedState(this);
 		kb = sb.getFormuleKeyboard();
 		cb = sb.getFormuleClipboard();
-		scoreNav = DWOplayer.PARAMETERS.getScoreNav();
+		scoreNav = activity.parameters().getScoreNav();
 		POPUP = scoreNav.getPopup();
 
 		scoreNav.setStatusBar(sb);
@@ -1925,7 +1926,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		FocusOnTouch.installKeyboard(kb, cb);
 		FormuleHolder.installKeyboard(kb);
 		
-		hp = new HeaderPanel(DWOplayer.PARAMETERS.headercss());
+		hp = new HeaderPanel(activity.parameters().headercss());
 		setTitle("");
 		next = scoreNav.getNextButton();
 		prev = scoreNav.getPrevButton();
@@ -1937,7 +1938,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			//if(end != null)
 			//	hbox.add(end);
 			hp.setRightWidget(hbox);
-			hb = new HeaderButton(DWOplayer.PARAMETERS.headercss());
+			hb = new HeaderButton(activity.parameters().headercss());
 			hb.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.menuIcon().getSafeUri().asString() + "')");
 			hp.setLeftWidget(hb);
 //			headerView.setWidget(hp);
@@ -2072,7 +2073,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	public void zetMaat() {
 
 		// FIXME HACK voor DWOplayer zelf		
-		hb = new HeaderButton(DWOplayer.PARAMETERS.headercss()); hb.setBackButton(true);
+		hb = new HeaderButton(activity.parameters().headercss()); hb.setBackButton(true);
 		hb.setText(fi.wiskopdr.text.Text.constants.terugKnopLabel());
 		hp.setLeftWidget(hb);
 		hp.setRightWidget(null);
@@ -2277,7 +2278,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	public void p() {
 		if( sema++ == 0) {
 			sema2 = new Deferred<Void>();
-			DWOplayer.clientfactory.addBarrier(sema2.getPromise());
+			activity.agent().addBarrier(sema2.getPromise());
 			waitscreen.w();
 		}
 	}

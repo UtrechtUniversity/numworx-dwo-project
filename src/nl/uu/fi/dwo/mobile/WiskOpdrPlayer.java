@@ -31,6 +31,7 @@ import nl.uu.fi.dwo.mobile.client.dagger.ModuleViewModule;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.sco.WiskOpdrMemento;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
@@ -177,20 +178,20 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 
 
 	@Override
-    protected ViewModuleViewImpl getViewModuleView(RPCHandler rpc, Scorm2004IF api, ClientFactory clientFactory) {
+    protected ViewModuleViewImpl getViewModuleView(RPCHandler rpc, Scorm2004IF api, ClientFactory clientFactory, ActivityComponent.Builder builder) {
 		logger.info("getViewModuleView " + clientFactory.isPremium());
 // FIXME Smelly code. clientfactory injected early.
 		DWOplayer.clientfactory = clientFactory;
-		return createEntryView(rpc, header, api);
+		return createEntryView(rpc, header, api, builder);
     }
 	  
 	}
 		
-	protected final ViewModuleViewImpl createEntryView(RPCHandler rpc, boolean header, Scorm2004IF api) {
-		return new ViewModuleViewImpl(rpc, header, api) {
+	protected final ViewModuleViewImpl createEntryView(RPCHandler rpc, boolean header, Scorm2004IF api, ActivityComponent.Builder builder) {
+		return new ViewModuleViewImpl(builder.build(), rpc, header, api) {
 			@Override
 			protected Memento createMemento() {
-				return new WiskOpdrMemento(getApi(), this, studentModel); // terminate at close, no "almost" close
+				return new WiskOpdrMemento(activity, getApi(), this, studentModel); // terminate at close, no "almost" close
 			} } 
 		.initialize();
 	}

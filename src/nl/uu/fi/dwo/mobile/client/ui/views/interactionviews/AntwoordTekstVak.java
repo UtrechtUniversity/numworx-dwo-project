@@ -23,6 +23,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.Logging;
@@ -153,10 +154,11 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 	private boolean formuleToolBijFocus;
 	
 	private TekstRegel parentRegel;
+	private ActivityComponent activity;
 	
 
-	public AntwoordTekstVak(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
-	{
+	public AntwoordTekstVak(ActivityComponent a, HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
+	{	this.activity = a;
 		if(h != null)
 		{	ObjectMap map = JSONUtilities.wrapMap(h);
 			if(map.containsKey("breedte"))
@@ -988,7 +990,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 
 	private void fireEvent(CBookEvent event) 
 	{
-		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this);
+		activity.getEventBus().fireEventFromSource(event, this);
 		comRoot.fireEvent(event);
 	}
 
@@ -1079,7 +1081,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 	}
 	
 	public void setFeedback(String feedback, boolean closeable)
-	{	TekstBuffer b = new TekstBuffer();
+	{	TekstBuffer b = new TekstBuffer(activity);
 		try{
 			feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
 		}

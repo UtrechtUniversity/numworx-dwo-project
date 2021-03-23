@@ -24,6 +24,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
@@ -219,8 +220,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	{	fontOvererving = b;
 	}
 
-	public FormuleEditorWithSteps(HashMap<String, Object> h, boolean isVergelijkingVak, String[] randomVarNamen, HashMap randomVarWaarden, AntwoordVakChecker avChecker)
-	{
+	public FormuleEditorWithSteps(ActivityComponent a, HashMap<String, Object> h, boolean isVergelijkingVak, String[] randomVarNamen, HashMap randomVarWaarden, AntwoordVakChecker avChecker)
+	{	activity = a;
 		font = FormuleFont.createFromFontSize(XMLView.getDefaultFontSize());
 		
 		FormuleEditorWithSteps.randomVarNamen = randomVarNamen;
@@ -543,7 +544,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			subLaunchState.putAll(launchState);
 			subLaunchState.put("substitutieVak", Boolean.TRUE);
 			hh.put("interactiePanelLaunchState", subLaunchState);
-			gebruikersSubstitutiesVak = new FormuleEditorWithSteps(hh, true, randomVarNamen, randomVarWaarden, null);
+			gebruikersSubstitutiesVak = new FormuleEditorWithSteps(activity, hh, true, randomVarNamen, randomVarWaarden, null);
 			
 		}
 		
@@ -1220,6 +1221,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 
   private CorrectieFacade correctie;
   private LessonMode lessonMode = LessonMode.normal;
+ 
+  protected final ActivityComponent activity;
 
 	private void requestFocus() {
 		if(focusEnabled && editor != null)
@@ -1306,7 +1309,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	{
 		this.feedback = feedback;
 		hasFeedback = !"".equals(feedback.trim());
-		TekstBuffer b = new TekstBuffer();
+		TekstBuffer b = new TekstBuffer(activity);
 		//Ik denk dat randomvariabelen bij initialisatie feedback al zijn ingevuld. 
 //		try{
 //			feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
@@ -1651,12 +1654,12 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 
 	static class FormuleEditorWithCalculator extends FormuleEditorWithAnswer {
 
-		public FormuleEditorWithCalculator(HashMap<String, Object> h,
+		public FormuleEditorWithCalculator(ActivityComponent activity, HashMap<String, Object> h,
 				boolean isVergelijkingVak, FormuleEditorWithSteps fe,
 				String[] randomVarNamen,
 				HashMap<String, Number> randomVarWaarden,
 				AntwoordVakChecker avChecker) {
-			super(h, isVergelijkingVak, fe, randomVarNamen, randomVarWaarden, avChecker);
+			super(activity, h, isVergelijkingVak, fe, randomVarNamen, randomVarWaarden, avChecker);
 		}
 
 		@Override
@@ -1669,9 +1672,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	
 	FormuleEditorWithAnswer editorInstance() {
 		if(rmknop && !teltMee && !check)  // en een andere conditie?
-			return new FormuleEditorWithCalculator(h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden, avChecker);
+			return new FormuleEditorWithCalculator(activity, h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden, avChecker);
 		
-		return new FormuleEditorWithAnswer(h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden, avChecker);
+		return new FormuleEditorWithAnswer(activity, h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden, avChecker);
 		
 	}
 
@@ -2947,7 +2950,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	 */
 	void fireEvent(CBookEvent event) 
 	{
-		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this);
+		activity.getEventBus().fireEventFromSource(event, this);
 		if(comRoot != null) //comRoot is null bij substitutieAntwoordVak
 			comRoot.fireEvent(event);
 	}
@@ -4167,9 +4170,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			comRoot.fireEvent(new CBookEvent(this, command, message));	
 	}
 	
-	public static boolean isNoordhoff()
+	public boolean isNoordhoff()
 	{
-		String dependentName = DWOplayer.PARAMETERS.keyboardStyle();
+		String dependentName = activity.parameters().keyboardStyle();
 		return "noordhoff".equals(dependentName);
 	}
 

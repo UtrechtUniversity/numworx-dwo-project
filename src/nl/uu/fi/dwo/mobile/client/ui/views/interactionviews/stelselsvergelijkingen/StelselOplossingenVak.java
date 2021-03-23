@@ -29,6 +29,7 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
@@ -89,14 +90,17 @@ public class StelselOplossingenVak
 	
 	private OpdrNavIF comRoot;
 	private boolean formuleToolBijFocus = true;
+
+	private ActivityComponent activity;
 	
 	public static void zetFontOverervingForm(boolean b)
 	{	fontOvererving = b;
 	}
 
 	
-	public StelselOplossingenVak(StelselAntwoordVak parent, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
+	public StelselOplossingenVak(ActivityComponent a, StelselAntwoordVak parent, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
+		this.activity = a;
 		ObjectMap map = JSONUtilities.wrapMap(h);
 		this.breedte = map.getInt("breedte");
 		this.hoogte = map.getInt("hoogte");
@@ -116,7 +120,7 @@ public class StelselOplossingenVak
 		avChecker.zetOplossingen(juisteOplossingen);
 		avChecker.zetVarNamen(varNamen);
 		
-		editor = new FormuleEditorWithAnswer(h, false, null, randomVarNamen, randomVarWaarden, avChecker);
+		editor = new FormuleEditorWithAnswer(activity, h, false, null, randomVarNamen, randomVarWaarden, avChecker);
 		editor.getAsPanel().getElement().getStyle().setBorderWidth(1, Unit.PX);
 		editor.getAsPanel().getElement().getStyle().setProperty("borderRadius", "0px");
 		editor.setFormuleToolBijFocus(formuleToolBijFocus);

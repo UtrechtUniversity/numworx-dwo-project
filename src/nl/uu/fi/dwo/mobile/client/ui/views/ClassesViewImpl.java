@@ -30,6 +30,8 @@ import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.web.bindery.event.shared.EventBus;
 
 import dagger.Reusable;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent.Builder;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -103,15 +105,17 @@ public class ClassesViewImpl extends Composite  implements AnchorContext {
 
 	private final EventBus eventBus;
 	private final RPCHandler rpc;
+	private Builder builder;
 
 	private static ClassesViewImplUiBinder uiBinder = GWT.create(ClassesViewImplUiBinder.class);
 
 	interface ClassesViewImplUiBinder extends UiBinder<Widget, ClassesViewImpl> {
 	}
 
-	@Inject ClassesViewImpl(EventBus bus, RPCHandler rpc) {
+	@Inject ClassesViewImpl(EventBus bus, RPCHandler rpc, ActivityComponent.Builder builder) {
 		this.eventBus = bus;
 		this.rpc = rpc;
+		this.builder = builder;
 		CellList.Resources cellResources;
 		cellResources = GWT.create(ClassesCellListResources.class);
 		cells = new CellList<DomSchoolClass>(new NavCell(),cellResources);
@@ -143,7 +147,8 @@ public class ClassesViewImpl extends Composite  implements AnchorContext {
 		String description = item.getDescription();
 		if(description.startsWith(DescriptionView.GZIPPREFIX))
 		{
-			w = new DescriptionViewImpl(rpc, item.getID(), (AnchorContext) this).asWidget();
+			ActivityComponent activity = builder.build();
+			w = new DescriptionViewImpl(rpc, item.getID(), (AnchorContext) this, activity).asWidget();
 		} else
 		if(description.startsWith("<html>")) {
 			w = new HTML(description);

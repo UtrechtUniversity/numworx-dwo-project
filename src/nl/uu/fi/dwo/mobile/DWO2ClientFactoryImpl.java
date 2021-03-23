@@ -62,10 +62,9 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
               setup(none,numworx);
         }
 
-		@Override
-		public void addBarrier(Promise<?> p) {
-			agent.addBarrier(p);
-		}
+//		public void addBarrier(Promise<?> p) {
+//			agent.addBarrier(p);
+//		}
 
         public TreeModuleView getTreeModuleView()
         {
@@ -74,10 +73,9 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
           return treeModuleView;
         }
 
-		@Override
-		public Promise<Void> barrier() {
-			return agent.barrier();
-		}
+//		public Promise<Void> barrier() {
+//			return agent.barrier();
+//		}
 
 		@Override
 		public Promise<Void> logout() {

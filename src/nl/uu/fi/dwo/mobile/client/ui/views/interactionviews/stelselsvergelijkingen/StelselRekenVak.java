@@ -8,6 +8,7 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 
 import com.google.gwt.dom.client.Style;
@@ -54,9 +55,12 @@ public class StelselRekenVak extends LayoutPanel  {
 	
 	//Image ic;
 	private OpdrNavIF comRoot;
+
+	private ActivityComponent activity;
 	
-	public StelselRekenVak(StelselAntwoordVak antwoordVak, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
+	public StelselRekenVak(ActivityComponent a, StelselAntwoordVak antwoordVak, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
+		this.activity = a;
 		int hoogte = antwoordVak.hoogte - (antwoordVak.oplossingenRegelZichtbaar?27:0);
 		scrollHoogte = hoogte - headerHoogte - marge - 2*borderWidth;
 		scrollWidth = antwoordVak.breedte - 2*borderWidth;
@@ -82,7 +86,7 @@ public class StelselRekenVak extends LayoutPanel  {
 		{	launchState = map.getMap("interactiePanelLaunchState");
 		}
 		AntwoordStelselVakChecker avChecker = new AntwoordStelselVakChecker((HashMap<String, Object>) launchState, randomVarNamen, randomVarWaarden);
-		hoofdEditor = new StelselEditor(this, h, randomVarNamen, randomVarWaarden, avChecker);
+		hoofdEditor = new StelselEditor(activity, this, h, randomVarNamen, randomVarWaarden, avChecker);
 		contentPanel.add(hoofdEditor);
 		contentPanel.setWidgetLeftRight(hoofdEditor, -1, Style.Unit.PX, 0, Style.Unit.PX);
 		contentPanel.setWidgetTopHeight(hoofdEditor, 0, Style.Unit.PX, 100, Style.Unit.PX);

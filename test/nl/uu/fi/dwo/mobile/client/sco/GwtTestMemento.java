@@ -80,7 +80,7 @@ public class GwtTestMemento extends GWTTestCase {
       api.SetValue(Memento.SUSPEND_DATA, suspend_data);
       api.SetValue(Memento.COMPLETION_STATUS, Memento.COMPLETED);
       api.SetValue(Memento.LESSON_MODE, LessonMode.review.name());
-      m = new Memento(api, view, defer) {
+      m = new Memento(null, api, view, defer) {
 
         @Override
         void register() { // whipeout registrations
@@ -105,7 +105,7 @@ public class GwtTestMemento extends GWTTestCase {
     api.SetValue(Memento.SUSPEND_DATA, suspend_data);
     api.SetValue(Memento.COMPLETION_STATUS, Memento.COMPLETED);
     api.SetValue(Memento.LESSON_MODE, LessonMode.review.name());
-    m = new Memento(api, view, defer) {
+    m = new Memento(null, api, view, defer) {
 
       @Override
       void register() { // whipeout registrations

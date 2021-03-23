@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
@@ -84,9 +85,11 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware, TekstEle
 	private Expressie[][] oplossingen;
 	private OpdrNavIF comRoot;
 	private CorrectieFacade correctie;
+	private ActivityComponent activity;
 	
-	public StelselAntwoordVak(HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
+	public StelselAntwoordVak(ActivityComponent a, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
+		this.activity = a;
 		if (h != null && h.containsKey("breedte"))
 			breedte = ((Number) h.get("breedte")).intValue();
 		if (h != null && h.containsKey("hoogte"))
@@ -217,7 +220,7 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware, TekstEle
 				// hier heb ik het font nog niet, pas in setParentRegel()
 			}
 			
-			TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden, null);
+			TekstBuffer tb = new TekstBuffer(activity, randomVarNamen, randomVarWaarden, null);
 //			ArrayList<Object> opdrachtObjects = new ArrayList<Object>();
 			opdrachtObjects = new ArrayList<Object>();
 			opdrachtObjects = tb.convertTekst(Text.constants.oplossingenLabel() + "$f(" + variabelenString + ")@:", null, false);
@@ -261,7 +264,7 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware, TekstEle
 			rekenVakMap.put("hoogte", h);
 			rekenVakMap.put("volledigeBreedte", volledigeBreedte);
 			rekenVakMap.put("interactiePanelLaunchState", launchState);
-			rekenVak = new StelselRekenVak(this, rekenVakMap, randomVarNamen, randomVarWaarden);
+			rekenVak = new StelselRekenVak(activity, this, rekenVakMap, randomVarNamen, randomVarWaarden);
 			if(!boxMetRand) {
 				rekenVak.getElement().getStyle().setBackgroundColor("transparent");
 			}
@@ -278,7 +281,7 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware, TekstEle
 			oplossingenVakMap.put("hoogte", 30);//deze hoogte doet er volgens mij niet zo veel meer toe.
 			oplossingenVakMap.put("volledigeBreedte", volledigeBreedte);
 			oplossingenVakMap.put("interactiePanelLaunchState", launchState);
-			oplossingenVak = new StelselOplossingenVak(this, oplossingenVakMap, randomVarNamen, randomVarWaarden); // font meegeven? 
+			oplossingenVak = new StelselOplossingenVak(activity, this, oplossingenVakMap, randomVarNamen, randomVarWaarden); // font meegeven? 
 			oplossingenVak.zetVarNamen(varNamen);
 			oplossingenVak.zetJuisteOplossingen(oplossingen);
 			

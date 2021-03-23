@@ -34,6 +34,7 @@ import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
@@ -57,17 +58,19 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	final HeaderView headerView;
 	final DwoGlobalVars instance;
 	final private RPCHandler rpc;
+	private final ActivityComponent activity;
 	
-	@Inject ViewModuleViewNumworx(HeaderView headerView, DWOplayerParameters PARAMETERS, DwoGlobalVars vars, RPCHandler rpc) {
+	@Inject ViewModuleViewNumworx(HeaderView headerView, DWOplayerParameters PARAMETERS, DwoGlobalVars vars, RPCHandler rpc, ActivityComponent.Builder builder) {
 		this.rpc = rpc;
 		this.headerView = headerView;
 		this.seb = PARAMETERS.getSecureMode() == SecureMode.SEB;
 	    pfx = PARAMETERS.getResource("");
 	    instance = vars;
+	    activity = builder.build();
 	}
 
 	public void initialize(Scorm2004IF api) {
-      delegate = new ViewModuleViewImpl(rpc, false, api);
+      delegate = new ViewModuleViewImpl(activity, rpc, false, api);
       final int correctie = 10; // width popup 
       user = new MenuItem("<img width='26' height='26' src='" + pfx
 				+ "images/numworx/account.svg' >", true, items) {

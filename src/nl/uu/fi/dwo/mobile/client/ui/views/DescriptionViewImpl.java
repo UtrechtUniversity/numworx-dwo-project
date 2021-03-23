@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
@@ -60,8 +61,8 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 		return main;
 	}
 
-	public DescriptionViewImpl(RPCHandler rpc) {
-		super(rpc);
+	public DescriptionViewImpl(RPCHandler rpc, ActivityComponent a) {
+		super(rpc,a);
 		main = new SimplePanel();
 		main.setStylePrimaryName("descriptionView");
 		contentPanel = new FlowPanel();
@@ -77,12 +78,12 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 		main.addAttachHandler(handler );
 	}
 
-	public DescriptionViewImpl(RPCHandler rpc, Object id) {
-		this(rpc);
+	public DescriptionViewImpl(RPCHandler rpc, Object id, ActivityComponent a) {
+		this(rpc,a);
 		setupModule(id);
 	}
-	public DescriptionViewImpl(RPCHandler rpc, Object id, AnchorContext context) {
-		this(rpc);
+	public DescriptionViewImpl(RPCHandler rpc, Object id, AnchorContext context, ActivityComponent a) {
+		this(rpc,a);
 		setAnchorContext(context);
 		setupModule(id);
 	}
@@ -152,7 +153,7 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 
 		opdrachtObjects = new ArrayList<Object>();
 		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( opdracht.get("interactiePanelLaunchData") );
-		TekstBuffer tb = new TekstBuffer(varnamen, waarden, getAnchorContext());
+		TekstBuffer tb = new TekstBuffer(activity, varnamen, waarden, getAnchorContext());
 		int[] breedtes = { 578 };  // FIXME variabel, dit is de maat van de info popup
 		tb.zetVolleBreedtes(breedtes);
 		newVersion = !(Boolean) opdracht.get("hasAntwoordVak");
@@ -222,7 +223,7 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 		//setObjects(opdrachtObjects, tekst);
 		setObjects(opdracht, tekst, null);
 		contentPanel.add(tekst);
-		FormuleEditorWithSteps fews = new FormuleEditorWithSteps(opdracht, false, tb.getVarNamen(), tb.getVarWaarden(), null);
+		FormuleEditorWithSteps fews = new FormuleEditorWithSteps(activity, opdracht, false, tb.getVarNamen(), tb.getVarWaarden(), null);
 
 		//kb.setEditor(fews.getEditor());
 		//fews.setKeyboard(kb);

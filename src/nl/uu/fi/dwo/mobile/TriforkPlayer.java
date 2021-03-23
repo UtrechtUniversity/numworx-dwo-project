@@ -36,7 +36,7 @@ try {
 		logger.severe(getTarget());
 		
 		MGWTsetup();
-		view = new TriforkModuleViewImpl(null, GWT.create(Scorm2004IF.class));
+		view = new TriforkModuleViewImpl(null, null, GWT.create(Scorm2004IF.class));
 		view.initialize();
 		view.zetMaat();
 		//RootPanel.get().add(view);

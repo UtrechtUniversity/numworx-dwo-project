@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.swing.text.View;
-
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
@@ -27,6 +25,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.Logging;
@@ -159,9 +158,10 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	private static boolean fontOvererving = false;
 	private FormuleFont font;
 	private CorrectieFacade correctie;
+	private ActivityComponent activity;
 
-	public AntwoordTekstVak2(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
-	{
+	public AntwoordTekstVak2(ActivityComponent a, HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
+	{	activity = a;
 		font = FormuleFont.createFromFontSize(XMLView.getDefaultFontSize());
 
 		if (h != null)
@@ -273,7 +273,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		//basisPanel.getElement().getStyle().setBackgroundColor(CssColor.make(0, 0, 255).toString());
 		//basisPanel.getElement().getStyle().setProperty("border", "1px solid gray");
 		
-		antwoordTF = new TextEditor(breedte-2*borderWidth, hoogte-3, boxMetRand)
+		antwoordTF = new TextEditor(activity, breedte-2*borderWidth, hoogte-3, boxMetRand)
 		{
 			@Override
 			public void enter()
@@ -1027,7 +1027,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 
 	private void fireEvent(CBookEvent event) 
 	{
-		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this);
+		activity.getEventBus().fireEventFromSource(event, this);
 		comRoot.fireEvent(event);
 	}
 
@@ -1125,7 +1125,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	
 	public void setFeedback(String feedback, boolean closeable)
 	{
-		TekstBuffer b = new TekstBuffer();
+		TekstBuffer b = new TekstBuffer(activity);
 		try
 		{
 			feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);

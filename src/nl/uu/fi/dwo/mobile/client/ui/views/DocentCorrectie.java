@@ -41,7 +41,7 @@ public class DocentCorrectie extends Composite {
 			content.removeFromParent();
 			opmerking.removeFromParent();
 		} else {
-			TekstBuffer b = new TekstBuffer();
+			TekstBuffer b = new TekstBuffer(null);
 			ArrayList<Object> feedbackList = b.convertTekst(scoreComment, null, false);
 			content.setFontSize(14);
 			content.setFontName(XMLView.getDefaultFontName());

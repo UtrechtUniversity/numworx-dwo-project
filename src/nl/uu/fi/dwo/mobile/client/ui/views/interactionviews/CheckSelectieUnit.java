@@ -55,6 +55,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieReview;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
@@ -325,7 +326,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
     
 	private void fireEvent(CBookEvent event) 
 	{
-		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this);
+		activity.getEventBus().fireEventFromSource(event, this);
 		comRoot.fireEvent(event);
 	}
 
@@ -354,6 +355,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	}
 
 	private CorrectieFacade correctie;
+	private final ActivityComponent activity;
 
 	@Override
 	public HashMap<String, Object> getState() {
@@ -712,9 +714,9 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		comRoot.addCBookEventListener("action.setNotEditable", this);
 	}
 	
-	public CheckSelectieUnit(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipList)
+	public CheckSelectieUnit(ActivityComponent a, HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipList)
 	{
-		
+		this.activity = a;
 //		if (h != null && h.containsKey("breedte"))
 //			breedte = ((Number) h.get("breedte")).intValue();
 //		if (h != null && h.containsKey("hoogte"))
@@ -835,7 +837,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 			RuleIF[] math = toMathML(id2, context);
 			PromiseCallback<RuleIF> defer = new PromiseCallback<>();
 			WiskOpdr.ideas.adviseMe(math, exerciseid, defer );
-			DWOplayer.clientfactory.addBarrier(defer.getPromise());
+			activity.agent().addBarrier(defer.getPromise());
 			Logger LOG = Logger.getLogger("TextEditor");
 			defer.getPromise().onResolve(() -> { 
 				Promise<RuleIF> p = defer.getPromise();

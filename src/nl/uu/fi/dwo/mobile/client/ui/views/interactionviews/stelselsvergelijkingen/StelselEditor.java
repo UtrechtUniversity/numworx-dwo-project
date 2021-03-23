@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import fi.wiskopdr.AntwoordStelselVakChecker;
 import fi.wiskopdr.AntwoordVakChecker;
@@ -65,9 +66,9 @@ public class StelselEditor extends FormuleEditorWithSteps
 	private StelselPijl[] pijlen = null;
 	
 	
-	public StelselEditor(StelselRekenVak hoofdPanel, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, AntwoordVakChecker avChecker)
+	public StelselEditor(ActivityComponent a, StelselRekenVak hoofdPanel, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, AntwoordVakChecker avChecker)
 	{
-		super(h, true, randomVarNamen, randomVarWaarden, avChecker);
+		super(a, h, true, randomVarNamen, randomVarWaarden, avChecker);
 		zetStandaardOpties();
 		heeftFocus = true;
 		this.hoofdPanel = hoofdPanel;
@@ -75,9 +76,9 @@ public class StelselEditor extends FormuleEditorWithSteps
 		hoogte = hoofdPanel.getOffsetHeight();
 	}
 	
-	public StelselEditor(StelselEditor parent, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, AntwoordVakChecker avChecker)
+	public StelselEditor(ActivityComponent a, StelselEditor parent, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, AntwoordVakChecker avChecker)
 	{
-		super(h, true, randomVarNamen, randomVarWaarden, avChecker);
+		super(a, h, true, randomVarNamen, randomVarWaarden, avChecker);
 		this.parent = parent;
 		this.varNamen = parent.geefVarNamen();
 		zetStandaardOpties();
@@ -170,7 +171,7 @@ public class StelselEditor extends FormuleEditorWithSteps
 		for(int i = 0; i < k; i++)
 		{
 			AntwoordStelselVakChecker newAvChecker = new AntwoordStelselVakChecker((AntwoordStelselVakChecker) avChecker);
-			StelselEditor stelselEditor = new StelselEditor(this, h, randomVarNamen, randomVarWaarden, newAvChecker);
+			StelselEditor stelselEditor = new StelselEditor(activity, this, h, randomVarNamen, randomVarWaarden, newAvChecker);
 			Vergelijking vergelijking = vergelijkingen.geefVergelijking(i);
 			int teller = 0;
 			for(int j = 0; j < oplossingen.length; j++)

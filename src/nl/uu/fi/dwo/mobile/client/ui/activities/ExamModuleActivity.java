@@ -11,6 +11,7 @@ import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
@@ -37,6 +38,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 	@Inject HeaderView headerView;
 	@Inject RPCHandler rpc;
 	@Inject TrafficAgent agent;
+	@Inject ActivityComponent.Builder builder;
 	
 	private SelectModuleItem item;
 	private Activity delegate;
@@ -81,7 +83,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 				delegate = provider.get();
 				delegate.start(panel, eventBus);
 			} else {
-				ExamModuleView view = new ExamModuleView(headerView, rpc);
+				ExamModuleView view = new ExamModuleView(headerView, rpc, builder);
 				view.selectItem(item);
 				view.setPresenter(this);
 				panel.setWidget(view);

@@ -29,6 +29,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.template.TemplateCss;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.ResizableContentIF;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
@@ -84,6 +85,8 @@ import fi.wiskopdr.text.Text;
  */
 public class FormuleEditorWithAnswer extends FormuleEditor implements InteractionViewWithMisconceptions, CBookEventListener, FacetAware, TekstElementWithFont, PopupListener
 {
+	
+	private final ActivityComponent activity;
 	class RestartStatistiek implements RestartHandler {
 		Promise<?> r;
 		
@@ -119,15 +122,15 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	{
 		boolean transfer;
 
-		public FormuleEditorPopup(HashMap<String, Object> h,
+		public FormuleEditorPopup(ActivityComponent a, HashMap<String, Object> h,
 				boolean isVergelijkingVak, String[] randomVarNamen,
 				HashMap randomVarWaarden) {
-			super(h, isVergelijkingVak, randomVarNamen, randomVarWaarden, null);
+			super(a, h, isVergelijkingVak, randomVarNamen, randomVarWaarden, null);
 		}
 		
-		public FormuleEditorPopup(HashMap<String, Object> h, boolean isVergelijkingVak, AntwoordVakChecker avChecker)
+		public FormuleEditorPopup(ActivityComponent a, HashMap<String, Object> h, boolean isVergelijkingVak, AntwoordVakChecker avChecker)
 		{
-			super(h, isVergelijkingVak, randomVarNamen, randomVarWaarden, avChecker);
+			super(a, h, isVergelijkingVak, randomVarNamen, randomVarWaarden, avChecker);
 		}
 
 //		@Override
@@ -161,7 +164,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 		@Override
 		FormuleEditorWithAnswer editorInstance() {
-			return new FormuleEditorWithAnswer(super.h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden, avChecker)
+			return new FormuleEditorWithAnswer(activity, super.h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden, avChecker)
 			{
 				@Override
 				public void enter() {
@@ -361,9 +364,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 //		this(h, isVergelijkingVak, fe, null, null, avChecker);
 //	}
 	
-	public FormuleEditorWithAnswer(HashMap<String, Object> h, boolean isVergelijkingVak, FormuleEditorWithSteps fe, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, AntwoordVakChecker avChecker)
+	public FormuleEditorWithAnswer(ActivityComponent a, HashMap<String, Object> h, boolean isVergelijkingVak, FormuleEditorWithSteps fe, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, AntwoordVakChecker avChecker)
 	{
 		super();
+		activity = a;
 		//getMainRegel().setEditorParent(this);
 		//getMainRegel().setDefaultHeight(24);
 
@@ -474,7 +478,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 						HashMap ll = new HashMap();
 						hh.put("interactiePanelLaunchState", launchState);
 						
-						formuleEditorPopup = new FormuleEditorPopup(hh,isVergelijkingVak,this.avChecker);
+						formuleEditorPopup = new FormuleEditorPopup(activity, hh,isVergelijkingVak,this.avChecker);
 						formuleEditorPopup.removeBorder();
 					}
 				}
@@ -739,7 +743,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		else
 			checkPanel.getElement().getStyle().setCursor(Cursor.DEFAULT);
 // bij noordhof nooit.
-		if (!DWOplayer.PARAMETERS.keyboardStyle().equals("noordhoff")) {
+		if (!activity.parameters().keyboardStyle().equals("noordhoff")) {
 		// popup met feedback alleen tonen als niet correct 
 		if (feedbackLabel.isVisible() && (isCorrect() == null || !isCorrect())) // correct is null is half/doorgaan, correct is true is goed, correct is false is fout
 		{
@@ -1419,7 +1423,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	private void fireEvent(CBookEvent event) 
 	{
-		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this);
+		activity.getEventBus().fireEventFromSource(event, this);
 		if (this.comRoot != null)
 			this.comRoot.fireEvent(event);
 		else if (this.fews != null)
@@ -1434,7 +1438,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public void zetFeedback()
 	{
-		TekstBuffer b = new TekstBuffer();
+		TekstBuffer b = new TekstBuffer(activity);
 		//Volgens mij zijn randomvariabelen feedback bij aanmaken antwoordmodel al ingevuld, dus hier weggelaten.
 //		try{
 //			feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);

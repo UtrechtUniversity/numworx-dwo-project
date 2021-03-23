@@ -46,6 +46,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
@@ -55,15 +56,15 @@ import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
 
 public class CheckButton implements InteractionStub, CBookEventListener
 {
-  static class ActionNextPage implements ButtonListener {
-    private static final CBookEvent NEXT_PAGE_EVENT = new CBookEvent(ACTION_NEXT_PAGE);
+   private final CBookEvent NEXT_PAGE_EVENT = new CBookEvent(ACTION_NEXT_PAGE);
+   class ActionNextPage implements ButtonListener {
 
     @Override
     public void onClick(Object sender) {
       logger.warning("CheckButton " + ACTION_NEXT_PAGE);
       Promise<Void> defer = 
-      DWOplayer.clientfactory.barrier().then( p ->
-      	{DWOplayer.clientfactory.getEventBus().fireEvent(NEXT_PAGE_EVENT);return null; }
+    		  activity.agent().barrier().then( p ->
+      	{activity.getEventBus().fireEvent(NEXT_PAGE_EVENT);return null; }
       );
       //DWOplayer.clientfactory.addBarrier(defer);
     }
@@ -122,7 +123,7 @@ public class CheckButton implements InteractionStub, CBookEventListener
 			if(!editable) return;
 			//event.stopPropagation();
 			logger.warning("CheckButton nakijkenPagina");
-			DWOplayer.clientfactory.getEventBus().fireEvent(CHECK_EVENT); // ASYNCHROON EVENT!!!
+			activity.getEventBus().fireEvent(CHECK_EVENT); // ASYNCHROON EVENT!!!
 		}
 	}
 
@@ -145,12 +146,12 @@ public class CheckButton implements InteractionStub, CBookEventListener
 			//event.stopPropagation();
 			logger.warning("CheckButton actieAfronden");
 			//confirm()
-			Promise<Void> defer = DWOplayer.clientfactory.barrier()
+			Promise<Void> defer = activity.agent().barrier()
 			.then(new Success<Void, Void>() {
 
 				@Override
 				public Promise<Void> call(Promise<Void> resolved) throws Exception {
-					DWOplayer.clientfactory.getEventBus().fireEvent(SEAL_EVENT);
+					activity.getEventBus().fireEvent(SEAL_EVENT);
 					return null;
 				}
 			});
@@ -181,7 +182,7 @@ public class CheckButton implements InteractionStub, CBookEventListener
 			//event.stopPropagation();
 			logger.warning("CheckButton actieBewaren");
 			Promise<Void> defer = 
-			DWOplayer.clientfactory.barrier().then( p -> {
+					activity.agent().barrier().then( p -> {
 				comRoot.setChanged(false);
 				return null;});
 			//DWOplayer.clientfactory.addBarrier(defer);
@@ -213,10 +214,12 @@ public class CheckButton implements InteractionStub, CBookEventListener
 	private boolean actieBewaren=false;
 	private boolean actieAfronden=false;
     private boolean actionNextPage=false;
+	private final ActivityComponent activity;
 
 	
-	public CheckButton(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
+	public CheckButton(ActivityComponent a, HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
+		this.activity = a;
 		ObjectMap map = JSONUtilities.wrapMap(h);
 //		if (h != null && map.containsKey("breedte") )
 //			breedte = map.getInt("breedte");

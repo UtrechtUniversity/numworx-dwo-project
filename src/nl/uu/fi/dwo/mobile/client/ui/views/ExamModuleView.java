@@ -1,6 +1,8 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import nl.uu.fi.dwo.mobile.client.text.Text;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent.Builder;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -44,15 +46,18 @@ public class ExamModuleView extends Composite {
 
 	private final RPCHandler rpc;
 
+	private Builder builder;
+
 	private static ExamModuleViewUiBinder uiBinder = GWT
 			.create(ExamModuleViewUiBinder.class);
 
 	interface ExamModuleViewUiBinder extends UiBinder<Widget, ExamModuleView> {
 	}
 
-	@Inject public ExamModuleView(HeaderView headerView, RPCHandler rpc) {
+	@Inject public ExamModuleView(HeaderView headerView, RPCHandler rpc, ActivityComponent.Builder builder) {
 		header = headerView;
 		this.rpc = rpc;
+		this.builder = builder;
 		initWidget(uiBinder.createAndBindUi(this));
 // extra's
 		textView.getElement().setAttribute("autocorrect", "off");
@@ -117,7 +122,7 @@ public class ExamModuleView extends Composite {
 		String description = item.getDescription();
 		if(description.startsWith(DescriptionView.GZIPPREFIX))
 		{
-			w = new DescriptionViewImpl(rpc, item.getID()).asWidget();
+			w = new DescriptionViewImpl(rpc, item.getID(), builder.build()).asWidget();
 		} else
 		if(description.startsWith("<html>")) {
 			w = new HTML(description);

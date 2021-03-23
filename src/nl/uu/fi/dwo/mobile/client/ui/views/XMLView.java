@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
@@ -130,6 +131,7 @@ public abstract class XMLView {
 	
 	TekstVakPanel hoofdPanel;
 	protected FlowPanel contentPanel;
+	protected final ActivityComponent activity;
 
 	protected void setupView(HashMap<String, Object> launchData)
 	{
@@ -385,7 +387,7 @@ public abstract class XMLView {
 //			Window.addResizeHandler(resize);
 //		}
 // FIXME ....	
-		hoofdPanel = new TekstVakPanel(breedte, hoogte, randomVarNamen, randomVarWaarden, getAnchorContext());
+		hoofdPanel = new TekstVakPanel(activity, breedte, hoogte, randomVarNamen, randomVarWaarden, getAnchorContext());
 		hoofdPanel.setCommunicationRoot(comRoot);
 		hoofdPanel.setHoofdPanel(true);
 		hoofdPanel.zetInstellingen(instellingen);
@@ -521,8 +523,9 @@ public abstract class XMLView {
 	}
 
   protected final RPCHandler rpc;
-  protected XMLView(RPCHandler rpc) {
+  protected XMLView(RPCHandler rpc, ActivityComponent a) {
 	this.rpc = rpc;
+	this.activity = a;
   }
 
   protected Promise<JSONValue> getJSONLaunchDataBytes(String file) {

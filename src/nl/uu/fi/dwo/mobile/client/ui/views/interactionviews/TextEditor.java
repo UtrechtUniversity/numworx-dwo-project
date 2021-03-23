@@ -87,6 +87,7 @@ import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
@@ -150,9 +151,11 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
     private int scoreMax;
 	private String loggingID;
 	private AnimationHandle handle;
+	private final ActivityComponent activity;
 	
-	TextEditor(int breedte, int hoogte, boolean boxMetRand)
+	TextEditor(ActivityComponent a, int breedte, int hoogte, boolean boxMetRand)
 	{
+		this.activity = a;
 		// voor checktextantwoordvak
 		this.width = breedte;
 		this.height = hoogte;
@@ -187,9 +190,10 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		//shown = true;
 	}
 	
-	public TextEditor(HashMap<String, Object> currentVakGegevens,
+	public TextEditor(ActivityComponent a, HashMap<String, Object> currentVakGegevens,
 			String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
+		this.activity = a;
 		ObjectMap h = JSONUtilities.wrapMap(currentVakGegevens);
 		ObjectMap launchdata = h.getObjectMap("interactiePanelLaunchState");
 		width = h.getInt("breedte");
@@ -254,7 +258,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		//shown = true;
 	}
 
-	public TextEditor(int w, int h, boolean rand, boolean formule) {
+	public TextEditor(ActivityComponent a, int w, int h, boolean rand, boolean formule) {
+		this.activity = a;
 		width = w;
 		height = h;
 		volledigeBreedte = false;
@@ -385,12 +390,6 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private Widget getMenuBar(boolean formuleKnop, boolean rekentool, boolean graftool) {
 		FlowPanel menubar = new FlowPanel();
 		menubar.setStyleName(css.balk());
-		//Button fx = new Button("f(x)"); 
-		
-//		PushButton fx = new PushButton(new Image(DWOplayer.PARAMETERS.getResource("images/resources/formuleknop.gif")));
-//		fx.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-//		if(formuleKnop) menubar.add(fx);
-//		fx.addClickHandler(new FXHandler());
 		
 		FEWSButton formuleButton = new FEWSButton("formule");
 		formuleButton.addButtonListener(new FXHandler());
@@ -401,13 +400,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		if(formuleKnop) menubar.add(formuleButton);
 		
 		//Button calc = new Button("calc"); 
-		Image upImage = new Image(DWOplayer.PARAMETERS.getResource("images/resources/rmknop.gif"));
+		Image upImage = new Image(activity.parameters().getResource("images/resources/rmknop.gif"));
 		upImage.getElement().setAttribute("width","18");
 		upImage.getElement().setAttribute("height","18");
-//		PushButton calc = new PushButton(upImage);
-//		calc.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-//		if(rekentool) menubar.add(calc);
-//		calc.addClickHandler(new CalcHandler());
 		
 		FEWSButton calcButton = new FEWSButton("rekenmachine");
 		calcButton.addButtonListener(new CalcHandler());
@@ -417,8 +412,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		calcButton.getElement().getStyle().setMargin(2,Unit.PX);
 		if(rekentool) menubar.add(calcButton);
 		
-		//Button graph = new Button("gr");  
-		PushButton graph = new PushButton(new Image(DWOplayer.PARAMETERS.getResource("images/resources/grafiekknop.gif")));
+		PushButton graph = new PushButton(new Image(activity.parameters().getResource("images/resources/grafiekknop.gif")));
 		if(graftool) menubar.add(graph);
 		
 		return menubar;
@@ -508,7 +502,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			};
 			PromiseCallback<RuleIF> defer = new PromiseCallback<>();
 			WiskOpdr.ideas.adviseMe(new RuleIF[] { rule }, exerciseid, defer );
-			DWOplayer.clientfactory.addBarrier(defer.getPromise());
+			activity.agent().addBarrier(defer.getPromise());
 			Logger LOG = Logger.getLogger("TextEditor");
 			defer.getPromise().onResolve(() -> { 
 				Promise<RuleIF> p = defer.getPromise();

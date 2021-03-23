@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.mobile.DWO2RPCHandler;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWO2playerDefaults;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderLessView;
@@ -31,7 +32,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewBuilder;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewNumworx;
 
-@Module
+@Module(subcomponents= {ActivityComponent.class})
 public abstract class HeaderLessModule {
 
   static boolean headerless() {
@@ -47,9 +48,9 @@ public abstract class HeaderLessModule {
   }
   
   @Provides
-  static ViewModuleViewBuilder builder(Provider<ViewModuleViewNumworx> numworx, RPCHandler rpc) {
+  static ViewModuleViewBuilder builder(Provider<ViewModuleViewNumworx> numworx, RPCHandler rpc, ActivityComponent.Builder builder) {
     if (headerless()) {
-      return new ViewModuleViewImpl(rpc);
+      return new ViewModuleViewImpl(builder.build(), rpc);
     } else {
       return numworx.get();
     }

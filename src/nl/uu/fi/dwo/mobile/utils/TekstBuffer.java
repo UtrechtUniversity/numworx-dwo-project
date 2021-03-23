@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.sco.ShareFacade;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.IFrameView;
@@ -55,21 +56,23 @@ public class TekstBuffer
 	 * @param randomVarNamen
 	 * @param randomVarWaarden
 	 */
-	public TekstBuffer(String[] randomVarNamen, HashMap randomVarWaarden)
+	public TekstBuffer(ActivityComponent a, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
+		this(a);
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
-		aantalVakken = 0;
 	}
 	
 	private AnchorContext context;
+	private ActivityComponent activity;
 	/**
 	 * Tekst parser met context voor goto links.
 	 * @param names
 	 * @param values
 	 * @param anchorContext
 	 */
-	public TekstBuffer(String[] names, HashMap<String,Number> values, AnchorContext anchorContext) {
+	public TekstBuffer(ActivityComponent a, String[] names, HashMap<String,Number> values, AnchorContext anchorContext) {
+		this(a);
 		randomVarNamen = names;
 		randomVarWaarden = values;
 		context = anchorContext;
@@ -85,8 +88,9 @@ public class TekstBuffer
 	}
 	*/
 
-	public TekstBuffer()
+	public TekstBuffer(ActivityComponent activity)
 	{
+		this.activity = activity;
 		aantalVakken = 0;
 	}
 
@@ -362,7 +366,7 @@ public class TekstBuffer
 //			
 //			return x(map, new MC2View(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 4: 
-			return x(map, new PopupFacadeWithFont(map, new TextEditor( currentVakGegevens, randomVarNamen, randomVarWaarden )));
+			return x(map, new PopupFacadeWithFont(map, new TextEditor(activity, currentVakGegevens, randomVarNamen, randomVarWaarden )));
 		
 		
 		case 39: case 10: // geogebra3
@@ -446,26 +450,26 @@ public class TekstBuffer
 			);
 // Wim: ander check-tekstantwoordvak in tekstmodus
 		case 13:
-			return x(map, new AntwoordTekstVak2(currentVakGegevens, randomVarNamen, randomVarWaarden));
+			return x(map, new AntwoordTekstVak2(activity, currentVakGegevens, randomVarNamen, randomVarWaarden));
 
 		
 		}
 
 		if (soortVak == 0)
 		{
-			result = x(map,new FormuleEditorWithSteps(currentVakGegevens, false, randomVarNamen, randomVarWaarden, null));
+			result = x(map,new FormuleEditorWithSteps(activity, currentVakGegevens, false, randomVarNamen, randomVarWaarden, null));
 		}
 		else if (soortVak == 1)
 		{
-			result = x(map,new FormuleEditorWithSteps(currentVakGegevens, true, randomVarNamen, randomVarWaarden, null));
+			result = x(map,new FormuleEditorWithSteps(activity, currentVakGegevens, true, randomVarNamen, randomVarWaarden, null));
 		}
 		else if (soortVak == 2)
 		{
-			result = x(map,new FormuleEditorWithAnswer(currentVakGegevens, false, null, randomVarNamen, randomVarWaarden, null));
+			result = x(map,new FormuleEditorWithAnswer(activity, currentVakGegevens, false, null, randomVarNamen, randomVarWaarden, null));
 		}
 		else if (soortVak == 3)
 		{
-			result = x(map,new FormuleEditorWithAnswer(currentVakGegevens, true, null, randomVarNamen, randomVarWaarden, null));
+			result = x(map,new FormuleEditorWithAnswer(activity, currentVakGegevens, true, null, randomVarNamen, randomVarWaarden, null));
 		}
 		else if (soortVak == 6)
 		{
@@ -475,7 +479,7 @@ public class TekstBuffer
 		else if (soortVak == 9)
 		{
 			AnchorContext anchorContext = getAnchorContext();
-			result = x(map, x(new TekstVakPanel(currentVakGegevens, randomVarNamen, randomVarWaarden, anchorContext)));
+			result = x(map, x(new TekstVakPanel(activity, currentVakGegevens, randomVarNamen, randomVarWaarden, anchorContext)));
 		}
 		else if(soortVak == 11) 
 		{
@@ -486,18 +490,18 @@ public class TekstBuffer
 		}
 		else if(soortVak == 12)
 		{	
-			result = x(map, new CheckSelectieUnit(currentVakGegevens, randomVarNamen, randomVarWaarden));
+			result = x(map, new CheckSelectieUnit(activity, currentVakGegevens, randomVarNamen, randomVarWaarden));
 			
 		}
 		else if(soortVak == 49)
 		{
-			result = x(map, new CheckButton(currentVakGegevens, randomVarNamen, randomVarWaarden));
+			result = x(map, new CheckButton(activity, currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 		else if(soortVak == 14) 
 		{
 // Deze werkt niet als stub.
 			result = //new StubView("AntwoordKeuzeVakGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
-					 x(map, new AntwoordKeuzeVak(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom]));
+					 x(map, new AntwoordKeuzeVak(activity, currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom]));
 		}
 		else if(soortVak == 16)
 		{	
@@ -528,7 +532,7 @@ public class TekstBuffer
 		//binnenkort
 		else if (soortVak == 53)
 		{
-			result = new StelselAntwoordVak(currentVakGegevens, randomVarNamen, randomVarWaarden);
+			result = new StelselAntwoordVak(activity, currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//result = "";
 		}
 		else if (soortVak == 55)
@@ -537,7 +541,7 @@ public class TekstBuffer
 		}
 		else if (soortVak == 60)
 		{
-			result = new SamengesteldeStappenPanel(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom]);
+			result = new SamengesteldeStappenPanel(activity, currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom]);
 		}
 		else
 		{

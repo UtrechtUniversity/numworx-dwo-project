@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.SMLogger.LogStrategy;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
@@ -160,9 +161,11 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private Number score;
 	private JSONArray aantalNakijken;
 	private LessonMode cmi_mode;
+	private ActivityComponent activity;
 
-	public Memento(Scorm2004IF api, ViewModuleView view, Promise<DomStudentModelContextId> studentModel)
+	public Memento(ActivityComponent a, Scorm2004IF api, ViewModuleView view, Promise<DomStudentModelContextId> studentModel)
 	{
+		this.activity = a;
 		this.api = api;
 		this.view = view;
 		this.pmodel = studentModel;
@@ -241,7 +244,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
   void register() {
     registration[0] = Window.addWindowClosingHandler(this);
 		registration[1] = Window.addCloseHandler(this);
-		registration[2] = DWOplayer.clientfactory.getEventBus().addHandler(CBookEvent.TYPE, this);
+		registration[2] = activity.getEventBus().addHandler(CBookEvent.TYPE, this);
   }
 
 	private void incAantalSessies() {
@@ -645,7 +648,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		{
 			setSessionTimes();
 //			if(this == _instance) // API break?
-				DWOplayer.clientfactory.addBarrier(api.Commit());
+			activity.agent().addBarrier(api.Commit());
 //			else 
 //				logger.fine("No commit, since we are closing, terminate should follow!");
 		}
@@ -664,7 +667,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		removeRegistration();
 		runner.run();
 		setSessionTimes();
-		DWOplayer.clientfactory.addBarrier(
+		activity.agent().addBarrier(
 		setStudentModelDataScore() // and terminate.
 		);
 			
@@ -714,7 +717,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		logger.fine("almost closing memento");
 		runner.run();
 		setSessionTimes();
-		DWOplayer.clientfactory.addBarrier(api.Commit());
+		activity.agent().addBarrier(api.Commit());
 	}
 
 	private long parse(String totalStr) {

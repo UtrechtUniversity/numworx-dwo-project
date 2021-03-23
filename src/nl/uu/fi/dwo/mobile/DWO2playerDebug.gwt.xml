@@ -89,9 +89,6 @@
     	<when-type-is class="fi.wiskopdr.FailingIdeas" />
     </replace-with>
     
-    <replace-with class="nl.uu.fi.dwo.mobile.client.DWO2Constants">
-    	<when-type-is class="fi.dwo.gwt.lib.rest.DwoConstants" />
-    </replace-with>
      <replace-with class="nl.uu.fi.dwo.mobile.client.sco.StudentModelLogger.Provider" >
     		<when-type-is class="nl.uu.fi.dwo.mobile.utils.LoggingProvider" />
     </replace-with>

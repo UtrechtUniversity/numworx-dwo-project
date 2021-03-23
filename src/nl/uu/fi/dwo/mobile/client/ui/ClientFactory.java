@@ -15,8 +15,6 @@ public interface ClientFactory
 	EventBus getEventBus();
 				
 	Promise<Void> logout();	
-	Promise<Void> barrier();
-	void addBarrier(Promise<?> p);
 	
 	boolean isPremium();
 
