@@ -90,8 +90,6 @@ public abstract class DWOplayer
 		instance = this;
 		setDwoProfileID();
 	}
-
-	public static String PREFIX;
 		
 	private static HashMap<String, String> resources = new HashMap<String, String>();
 
@@ -153,7 +151,6 @@ public abstract class DWOplayer
 	{
 	    DWOplayer.PARAMETERS = params;
 	    DWOplayer.clientfactory = clientfactory;
-	    PREFIX = PARAMETERS.getLaunchData();
 		SimplePanel display = new SimpleLayoutPanel();
 		ActivityManager activityMapper = new ActivityManager(appActivityMapper, clientfactory.getEventBus());
 		activityMapper.setDisplay(display);

@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieReview;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
@@ -122,10 +123,11 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
 	private boolean view = false;
 	private CorrectieFacade correctie;
 	private Widget widget;
+	private final ActivityComponent activity;
 	
-	public CheckValueUnit(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipValueList)
+	public CheckValueUnit(ActivityComponent activity, HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipValueList)
 	{
-		
+		this.activity = activity;
 //		if (h != null && h.get("breedte") != null)
 //			breedte = ((Number) h.get("breedte")).intValue();
 //		if (h != null && h.get("hoogte") != null)
@@ -383,7 +385,7 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
         
         if(ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)||Review.isReview(comRoot))) 
         	kijkNa();
-        correctie = CorrectieFacade.get(h, this, getScoreMax(),comRoot,dwologger);
+        correctie = CorrectieFacade.get(h, this, getScoreMax(),comRoot,dwologger, activity);
 	}
 	
 	public HashMap<String, Object> getState()
@@ -853,7 +855,7 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
     
 	private void fireEvent(CBookEvent event) 
 	{
-		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this);
+		activity.getEventBus().fireEventFromSource(event, this);
 		comRoot.fireEvent(event);
 	}
 

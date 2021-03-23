@@ -61,12 +61,13 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 	private static Logger logger = Logger.getLogger("WiskOpdrPlayer");
 
 	@Inject protected ViewModuleViewImpl view;
+	private String PREFIX;
 	@Inject void setClientFactory(ClientFactory f) {
 	  DWOplayer.clientfactory = f;
 	}
 	@Inject void setParameters(DWOplayerParameters p) {
 	  DWOplayer.PARAMETERS = p;
-	  DWOplayer.PREFIX = p.getLaunchData();
+	  this.PREFIX = p.getLaunchData();
 	}
 
 	public static Provider<Logging> loggingProvider;
@@ -218,12 +219,12 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 		if (!(event instanceof InitialValueChangeEvent))
 			view.close();
 		String value = event.getValue();
-		String target = DWOplayer.PREFIX + value;
+		String target = PREFIX + value;
 		logger.info(value);
 		if(value.startsWith(LAUNCH_DATA))
 			setupLaunchData(value);
 		else
-		if(DWOplayer.PREFIX == null || value == null || value.equals(""))
+		if(PREFIX == null || value == null || value.equals(""))
 			setupOldView();
 		else
 		{
@@ -249,7 +250,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 		{
 			logger.severe("launchdata empty + " + launchData);
 			if(k > 0) {
-				String target = DWOplayer.PREFIX + value;
+				String target = PREFIX + value;
 				DWOplayer.insertCSS(value);
 				view.setupModule(value, target);
 			} else

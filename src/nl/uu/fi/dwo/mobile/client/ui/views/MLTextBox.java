@@ -15,6 +15,11 @@ public class MLTextBox extends Composite implements HasText {
 		initWidget(area.asWidget());
 	}
 
+	@Deprecated
+	public MLTextBox() {
+		this(null);
+	}
+	
 	@Override
 	public String getText() {
 		return area.getText();

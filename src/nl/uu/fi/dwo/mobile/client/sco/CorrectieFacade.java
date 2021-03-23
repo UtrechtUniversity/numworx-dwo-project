@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 import nl.uu.fi.dwo.mobile.client.ui.views.DocentCorrectie;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.DWOPopupPanel;
@@ -33,10 +34,11 @@ public class CorrectieFacade {
     private static CorrectieFacade instance = GWT.create(CorrectieFacade.class);
     private static CorrectieFacade NULL = new CorrectieFacade();
     
-    @Deprecated
-    public static CorrectieFacade get(Map<String,Object> h, InteractionView view, int maxScore, OpdrNavIF comRoot) {
-        return instance.create(h, view, view.asWidget(), maxScore, comRoot, null);
-    }
+//    @Deprecated
+//    public static CorrectieFacade get(Map<String,Object> h, InteractionView view, int maxScore, OpdrNavIF comRoot) {
+//        return instance.create(h, view, view.asWidget(), maxScore, comRoot, null, null);
+//    }
+ 
     public static Widget wrap(Widget view) {
         return instance.prepareWidget(view);
     }
@@ -72,10 +74,10 @@ public class CorrectieFacade {
   @Deprecated
   public static CorrectieFacade get(Map<String,Object> h, InteractionView view, Widget widget, int maxScore, OpdrNavIF comRoot) {
 	  //if (comRoot.getMode() != OpdrNavIF.EINDTOETS) return NULL; // alleen EINDTOETS, nee
-      return instance.create(h, view, widget, maxScore, comRoot, null);
+      return instance.create(h, view, widget, maxScore, comRoot, null, null);
   }
 
-    protected CorrectieFacade create(Map<String, Object> h, InteractionView view, Widget widget, int maxScore, OpdrNavIF comRoot, Logging logging) {
+    protected CorrectieFacade create(Map<String, Object> h, InteractionView view, Widget widget, int maxScore, OpdrNavIF comRoot, Logging logging, ActivityComponent a) {
       return NULL;
     }
     
@@ -130,12 +132,12 @@ public class CorrectieFacade {
     	}
     }
     public static CorrectieFacade get(HashMap<String, Object> h, InteractionView view,
-        int scoreMax, OpdrNavIF comRoot, Logging logging) {
-      return instance.create(h, view, view.asWidget(), scoreMax, comRoot, logging);
+        int scoreMax, OpdrNavIF comRoot, Logging logging, ActivityComponent a) {
+      return instance.create(h, view, view.asWidget(), scoreMax, comRoot, logging, a);
     }
     public static CorrectieFacade get(HashMap<String, Object> h, InteractionView view, IsWidget w,
-        int scoreMax, OpdrNavIF comRoot, Logging logging) {
-      return instance.create(h, view, w.asWidget(), scoreMax, comRoot, logging);
+        int scoreMax, OpdrNavIF comRoot, Logging logging, ActivityComponent a) {
+      return instance.create(h, view, w.asWidget(), scoreMax, comRoot, logging, a);
     }
    
     

@@ -162,7 +162,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	@UiField FlowPanel deck;
 	@UiField TreeModuleViewNumworxCss style;
 	@UiField FlowPanel beheer;
-	@UiField HTML bibliotheek, results, organization, persons;
+	@UiField HTML bibliotheek, results, organization, persons, knowledge;
 	GotoController presenter;
 	final GotoController defaultPresenter;
 	private String SCHOOL_MODULES;
@@ -417,17 +417,20 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	
 	@UiHandler("results")
 	void onResults(ClickEvent e) {
-	  if (role != RoleType.TEACHER && !vars.isPremium() || role == RoleType.SCHOOLADMIN) return;
+	  if (role != RoleType.TEACHER) return;
 	  LOG.info("goto results");
 	  if(Actions.isAvailable())
 		  Actions.RESULTS.execute();
-//	  else
-//		  gotoGwtClient("RESULTS");
-	
 	}
-
-    
-    
+	@UiHandler("knowledge")
+	void onKnowledge(ClickEvent e) {
+		if (role == RoleType.STUDENT && vars.isPremium()) {
+			LOG.info("goto kennis");
+			if (Actions.isAvailable())
+				Actions.KNOWLEDGE.execute();
+		}
+	}
+        
     @UiHandler("persons")
     void onPersons(ClickEvent e) {
       LOG.info("goto persons");
@@ -473,8 +476,9 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		this.role = role;
 		// if visible?
 		{  	organization.setVisible(role == RoleType.SCHOOLADMIN);
-			results.setVisible(role == RoleType.TEACHER || (role == RoleType.STUDENT && isTest() && vars.isPremium())); // or student if premium&test.
+			results.setVisible(role == RoleType.TEACHER); // or student if premium&test.
 			persons.setVisible(role != RoleType.STUDENT);
+			knowledge.setVisible((role == RoleType.STUDENT && isTest() && vars.isPremium()));
 		}
 	}
 

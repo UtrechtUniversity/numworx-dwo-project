@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
@@ -95,9 +96,10 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}
 	private HandlerRegistration detachhandler; 
 
-	public StubView(String html, HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden)
+	public StubView(ActivityComponent activity, String html, HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden)
 	{
-		html = DWOplayer.PARAMETERS.getStubView() + html;
+		this.activity = activity;
+		html = activity.parameters().getStubView() + html;
 		String locale = getLocale();		
 		html += "?locale=" + locale;
 		
@@ -202,6 +204,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}
 
 	private HashMap<String, Object> lastResort;
+	private final ActivityComponent activity;
 	private HashMap<String, Object> getState0() {
 		if(innerView != null)
 		{
@@ -257,7 +260,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		else 
 			pendingState = object.toString(); // XXX NPE!
 		if (!isNull)
-			correctie = CorrectieFacade.get(h, this, widget, scoreMax, comRoot, logging);
+			correctie = CorrectieFacade.get(h, this, widget, scoreMax, comRoot, logging, activity);
 	}
 
 	@Override
@@ -462,7 +465,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}-*/;
 
 	private void tickle() {
-		DWOplayer.PARAMETERS.tickle();
+		activity.parameters().tickle();
 	}
 	
 	

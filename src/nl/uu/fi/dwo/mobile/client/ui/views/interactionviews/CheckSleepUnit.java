@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
-import java.awt.Component;
 import java.util.Collections;
 //import java.util.ArrayList;
 import java.util.Date;
@@ -20,6 +19,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieReview;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
@@ -28,13 +28,8 @@ import nl.uu.fi.dwo.mobile.utils.Review;
 import nl.uu.fi.dwo.mobile.utils.StringUtils;
 
 import com.google.gwt.canvas.dom.client.CssColor;
-import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
-import com.google.gwt.dom.client.Style.TextAlign;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
@@ -42,15 +37,12 @@ import com.google.gwt.event.dom.client.TouchStartHandler;
 
 import com.vaadin.pointerevents.client.PointerDownEvent;
 import com.vaadin.pointerevents.client.PointerDownHandler;
-import com.vaadin.pointerevents.client.PointerEvent;
-
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
-import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
 import fi.wiskopdr.FormuleParser;
@@ -146,6 +138,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	private DWOLogger dwologger;
 	private CorrectieFacade correctie;
 	private Widget widget;
+	private ActivityComponent activity;
 	
 	public void randomizePositions()
 	{
@@ -316,7 +309,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
         {
         	kijkNa();
         }
-        correctie = CorrectieFacade.get(h, this, getScoreMax(),comRoot,dwologger);
+        correctie = CorrectieFacade.get(h, this, getScoreMax(),comRoot,dwologger, activity);
 	}
 	
 	public void setAttempt()
@@ -687,7 +680,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 
 	private void fireEvent(CBookEvent event) 
 	{
-		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this);
+		activity.getEventBus().fireEventFromSource(event, this);
 		comRoot.fireEvent(event);
 	}
 
@@ -712,9 +705,9 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	}
 	
 	
-    public CheckSleepUnit(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipListSleep, TekstVakPanel[] ipListDoel)
+    public CheckSleepUnit(ActivityComponent activity, HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipListSleep, TekstVakPanel[] ipListDoel)
 	{
-		
+		this.activity = activity;
 //		if (h != null && h.get("breedte") != null)
 //			breedte = ((Number) h.get("breedte")).intValue();
 //		if (h != null && h.get("hoogte") != null)

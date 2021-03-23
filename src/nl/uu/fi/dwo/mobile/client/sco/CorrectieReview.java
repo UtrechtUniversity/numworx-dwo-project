@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 
@@ -22,8 +23,8 @@ public class CorrectieReview extends CorrectieFacade {
     CorrectieReview() {
     }
 
-    private CorrectieReview(Map<String, Object> h, InteractionView iv, Widget widget, int maxScore, OpdrNavIF comRoot, Logging logging) {
-      correctie = CorrectieView.addCorrection(h, iv, widget, maxScore, comRoot);
+    private CorrectieReview(Map<String, Object> h, InteractionView iv, Widget widget, int maxScore, OpdrNavIF comRoot, Logging logging, ActivityComponent a) {
+      correctie = CorrectieView.addCorrection(h, iv, widget, maxScore, comRoot, a);
       this.comRoot = comRoot;
       this.iv = iv;
       this.maxScore = maxScore;
@@ -36,13 +37,13 @@ public class CorrectieReview extends CorrectieFacade {
     }
 
     @Override
-    protected CorrectieFacade create(Map<String, Object> h, InteractionView iv, Widget widget, int maxScore, OpdrNavIF comRoot, Logging logging) {
+    protected CorrectieFacade create(Map<String, Object> h, InteractionView iv, Widget widget, int maxScore, OpdrNavIF comRoot, Logging logging, ActivityComponent a) {
       if(
     	  DWOplayer.isPremium() &&   		  
     	  Memento.instance().isReview() && Memento.instance().isEindtoetsVerzegeld() && maxScore > 0) {
-          return new CorrectieReview(h, iv, widget, maxScore, comRoot, logging);
+          return new CorrectieReview(h, iv, widget, maxScore, comRoot, logging, a);
       }
-      return super.create(h, iv, widget, maxScore, comRoot, logging);
+      return super.create(h, iv, widget, maxScore, comRoot, logging, a);
     }
 
 

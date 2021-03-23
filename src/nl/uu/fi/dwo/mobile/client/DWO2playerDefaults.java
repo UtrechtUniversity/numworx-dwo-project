@@ -6,7 +6,6 @@ import javax.inject.Provider;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 
-import fi.dwo.gwt.lib.rest.DwoConstants;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.sco.SMLogger;
 //import nl.uu.fi.dwo.mobile.client.sco.StudentModelLogger;

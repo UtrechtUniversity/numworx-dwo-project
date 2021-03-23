@@ -370,83 +370,83 @@ public class TekstBuffer
 		
 		
 		case 39: case 10: // geogebra3
-			return x(map, new GeogebraView(currentVakGegevens, randomVarNamen, randomVarWaarden));
+			return x(map, new GeogebraView(activity, currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 45: // GraphTool
-			return x(map, new StubView("GraphToolGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
+			return x(map, new StubView(activity, "GraphToolGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
 			//			return x(map, new PopupFacade(currentVakGegevens, new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom])));
 
 		case 15: 
-			return new StubView("DoorzienGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return new StubView(activity, "DoorzienGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		    //return new PopupFacade( currentVakGegevens, new fi.doorziengwt.client.DoorzienGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 20: 
 // Een eerste pesterij: gooi currentVakGegevens door JSONUtilities heen.
 			//currentVakGegevens = JSONUtilities.fromJSONObject( JSONUtilities.toJSONObject(currentVakGegevens).isObject());
 
-			return new StubView("GeomAlgGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return new StubView(activity, "GeomAlgGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade( currentVakGegevens, new fi.geomalggwt.client.GeomAlgGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 5 :
-			return new StubView("AlgebraPijlenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return new StubView(activity, "AlgebraPijlenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade( currentVakGegevens, new fi.algebrapijlengwt.client.AlgebraPijlenGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 35 :
-			return new StubView("AlgebraExprGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return new StubView(activity, "AlgebraExprGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade(currentVakGegevens, new fi.algebraexprgwt.client.AlgebraExprGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 56 :
-			return new StubView("HeksGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return new StubView(activity, "HeksGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade(currentVakGegevens, new fi.heksgwt.client.HeksGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 
 		
 		case 46 :
-			return new StubView("DraaibankGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return new StubView(activity, "DraaibankGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade(currentVakGegevens, new fi.draaibankgwt.client.DraaibankGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 30:
-			return x(map, new StubView("StatistiekGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
+			return x(map, new StubView(activity, "StatistiekGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
 			//return x(map, new PopupFacade(currentVakGegevens, new fi.statistiekgwt.client.StatistiekGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom])));
 		case 43:
-			return new StubView("CalculatorGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return new StubView(activity, "CalculatorGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade(currentVakGegevens, new fi.calculatorgwt.client.CalculatorGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 42:
-			return new StubView("KansbomenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return new StubView(activity, "KansbomenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade(currentVakGegevens, new fi.kansbomengwt.client.KansbomenGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 26:
-			return new StubView("TekenVeelvlakGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return new StubView(activity, "TekenVeelvlakGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade(map, new fi.tekenveelvlakgwt.client.TekenVeelvlakGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 19:
-			return new StubView("VerknippenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return new StubView(activity, "VerknippenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		case 22: 
-			return new StubView("NormVerdGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return new StubView(activity, "NormVerdGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		case 24:
-			return new StubView("BinomVerdGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return new StubView(activity, "BinomVerdGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		case 27:
-			return new StubView("MozarchGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return new StubView(activity, "MozarchGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade(map, new fi.mozarchgwt.client.MozarchGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 48:
-			return x(map,new StubView("StatSimGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
+			return x(map,new StubView(activity, "StatSimGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
 			//return x(map,new PopupFacade(map, new fi.statsimgwt.client.StatSimGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)));
 		case 54:
-			return x(map, new StubView("WebLogoGWT.html",currentVakGegevens, randomVarNamen, randomVarWaarden));
+			return x(map, new StubView(activity, "WebLogoGWT.html",currentVakGegevens, randomVarNamen, randomVarWaarden));
 			//return new PopupFacade(map, new fi.weblogogwt.client.WebLogoGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 58:
-			return x(map, new StubView("WebLogo3dGWT.html",currentVakGegevens, randomVarNamen, randomVarWaarden));
+			return x(map, new StubView(activity, "WebLogo3dGWT.html",currentVakGegevens, randomVarNamen, randomVarWaarden));
 			//return new PopupFacade(map, new fi.weblogo3dgwt.client.WebLogo3dGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 38:
-			return new StubView("Grafiek3DGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return new StubView(activity, "Grafiek3DGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade(map, new fi.grafiek3dgwt.client.Grafiek3DGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 32:
-			return new StubView("TegelsLeggenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return new StubView(activity, "TegelsLeggenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		case 40:
 			return x(map,
-					new StubView("StippelPatronenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden)
+					new StubView(activity, "StippelPatronenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden)
 					//new fi.stippelpatronengwt.client.StippelPatronenGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)
 					);
 		case 31:
-			return new StubView("StroomDiagrammenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return new StubView(activity, "StroomDiagrammenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		case 50:
-			return x(map, new StubView("SliderWidgetGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
+			return x(map, new StubView(activity, "SliderWidgetGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
 			//return x(map, new PopupFacade(currentVakGegevens, new fi.sliderwidgetgwt.client.SliderWidgetGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom])));
 		case 57:
 			//if(true) return new nl.numworx.geodefinergwt.client.GeoDefinerGWT(currentVakGegevens, randomVarWaarden, volleBreedtes[huidigeKolom]);
 			return x(map, 
-					new StubView("GeoDefinerGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden)
+					new StubView(activity, "GeoDefinerGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden)
 			);
 // Wim: ander check-tekstantwoordvak in tekstmodus
 		case 13:
@@ -473,7 +473,7 @@ public class TekstBuffer
 		}
 		else if (soortVak == 6)
 		{
-			result = x(map, new StubView("NabouwenAanzichtenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
+			result = x(map, new StubView(activity, "NabouwenAanzichtenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
 			//result = x(map, new PopupFacade(currentVakGegevens, new fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)));
 		}
 		else if (soortVak == 9)
@@ -485,7 +485,7 @@ public class TekstBuffer
 		{
 			result =x(map,
 					//new fi.balansfruitgwt.client.BalansFruitGWT(currentVakGegevens)
-					new StubView("BalansFruitGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden)
+					new StubView(activity, "BalansFruitGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden)
 					);
 		}
 		else if(soortVak == 12)
@@ -505,25 +505,25 @@ public class TekstBuffer
 		}
 		else if(soortVak == 16)
 		{	
-			result = x(map, new CheckSleepUnit(currentVakGegevens, randomVarNamen, randomVarWaarden));
+			result = x(map, new CheckSleepUnit(activity, currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 		else if(soortVak == 33)
-		{	result = x(map, new CheckValueUnit(currentVakGegevens, randomVarNamen, randomVarWaarden));
+		{	result = x(map, new CheckValueUnit(activity, currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 		else if (soortVak == 41)
 		{
 			//result =  x(map, new PopupFacade(currentVakGegevens, new fi.kladjegwt.client.KladjeGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)));
-			result = x(map, new StubView("KladjeGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
+			result = x(map, new StubView(activity, "KladjeGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 		else if (soortVak == 61)
 		{
 			//result =  x(map, new PopupFacade(currentVakGegevens, new fi.mathscratchgwt.client.MathScratchGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)));
-			result = x(map, new StubView("MathScratchGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
+			result = x(map, new StubView(activity, "MathScratchGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 		else if (soortVak == 59)
 		{
 			//result =  x(map, new PopupFacade(currentVakGegevens, new fi.ivmdrawgwt.client.IVMdrawGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)));
-			result = x(map, new StubView("IVMdrawGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
+			result = x(map, new StubView(activity, "IVMdrawGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 		else if (soortVak == 25)
 		{

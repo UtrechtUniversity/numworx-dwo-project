@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
-import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
@@ -17,6 +16,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ImageTextButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
@@ -119,6 +119,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	 * Deze zet namelijk changed op true en haalt de feedbackimmages weg.
 	 */
 	private boolean processingDWOCheck = false;
+	private ActivityComponent activity;
 	
 	public native static Object getGgbWindow(Element frame) /*-{
 		return frame.contentWindow;
@@ -177,16 +178,17 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 
 	}-*/;
 
-	public GeogebraView()
+	private GeogebraView(ActivityComponent a)
 	{
 		super();
+		this.activity = a;
 		mainPanel = new SimplePanel();
 		mainPanel.setStylePrimaryName("GeogebraView");
 	}
 
-	public GeogebraView(HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap<String,?> randomVarWaarden)
+	public GeogebraView(ActivityComponent a, HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap<String,?> randomVarWaarden)
 	{
-		this();
+		this(a);
 		if(!randomVarWaarden.isEmpty()) 
 			randomVars = JSONUtilities.wrapMap(randomVarWaarden);
 		init(launchdata);
@@ -230,7 +232,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		if (ggbMap.containsKey("scoreMax")) 
 			scoreMax = ggbMap.getInt("scoreMax");
 				
-		frame = new Frame(DWOplayer.PARAMETERS.getStubView() + "GeoGebra.html?locale=" + StubView.getLocale());
+		frame = new Frame(activity.parameters().getStubView() + "GeoGebra.html?locale=" + StubView.getLocale());
 		frame.setStylePrimaryName("StubView");
 		frame.addStyleDependentName("borderless");
 		frame.addAttachHandler(this);
@@ -271,7 +273,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	{
 
 		LOG.info("fire + " + event.getCommand() + " s: " + event.getSource());
-		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this); // Why?
+		activity.getEventBus().fireEventFromSource(event, this); // Why?
 		if (this.comRoot != null)
 			this.comRoot.fireEvent(event);
 	}
@@ -513,7 +515,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		{
 			setVisibleFeedbackImages(false, false, false);
 		}
-		correctie = CorrectieFacade.get(h, this, getWidget(), scoreMax, comRoot, dwologger);
+		correctie = CorrectieFacade.get(h, this, getWidget(), scoreMax, comRoot, dwologger, activity);
 	}
 
 	/**

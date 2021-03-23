@@ -1764,7 +1764,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		setEditable(editable);
 
 		if (!isNull && correctie == null) // eenmalig
-			correctie = CorrectieFacade.get(h, this, getAsPanel(), scoreMax, comRoot, logging);
+			correctie = CorrectieFacade.get(h, this, getAsPanel(), scoreMax, comRoot, logging, activity);
 
 	}
 
