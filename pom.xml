@@ -4,11 +4,11 @@
 	<parent>
 		<groupId>fi.parentgwt</groupId>
 		<artifactId>ParentGWT</artifactId>
-		<version>0.0.1</version>
+		<version>0.0.6</version>
 	</parent>
 	<groupId>nl.uu.fi.dwo.mobile</groupId>
 	<artifactId>promise-api</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>Promise API</name>
 	<dependencies>
 		<dependency>

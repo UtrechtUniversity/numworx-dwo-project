@@ -79,14 +79,18 @@ public class Promises {
         }
         for (final Promise<S> promise : promises) {
             promise.then(new Success<S, T>() {
-                @Override
+                @SuppressWarnings("unchecked")
+				@Override
                 public Promise<T> call(Promise<S> resolved) throws Exception {
                     // "S is subtype of the value type of the List"
-                    @SuppressWarnings("unchecked")
-                    T value = (T) resolved.getValue();
+                    T value = (T) null; // placeholder!!!
                     resolvedValues.add(value);
 
                     if (resolvedValues.size() == promises.size()) {
+                    	//resolvedValues in wrong order, correct!
+                    	resolvedValues.clear();
+                    	for(Promise<S> p: promises) resolvedValues.add((T) p.getValue());
+                    	
                         result.resolve(resolvedValues);
                     } else if (failedPromises.size() + resolvedValues.size() == promises.size()) {
                         result.fail(new FailedPromisesException(failedPromises));
