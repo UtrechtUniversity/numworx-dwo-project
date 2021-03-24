@@ -340,8 +340,12 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			{ 
 			  continue;
 			}
+			if (entry.getValue().isEmpty()) return true;
 			for (Map.Entry<String, Set<Integer>> m : entry.getValue().entrySet()) {
-				Set<Integer> chapters = new TreeSet<>(map.getOrDefault(m.getKey(), Collections.emptySet()));
+				Set<Integer> chapters = map.getOrDefault(m.getKey(), Collections.emptySet());
+				if (chapters.isEmpty()) continue;
+				if (m.getValue().isEmpty()) return true;
+				chapters = new TreeSet<>(chapters);
 				chapters.retainAll(m.getValue());
 				if (!chapters.isEmpty())
 					return true;
@@ -350,7 +354,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		return false;
 	}
 
-	private boolean inFilter(Map<String, Map<String, Set<Integer>>> filter, DomStudentModelObj oo) {
+	static boolean inFilter(Map<String, Map<String, Set<Integer>>> filter, DomStudentModelObj oo) {
 		Map<String, Map<String, Set<Integer>>> methods = oo.getInfo().getMethods();
 		return contains(filter, methods);
 	}

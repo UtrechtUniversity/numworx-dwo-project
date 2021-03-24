@@ -120,8 +120,8 @@ public class XAPIService extends StudentResultsService implements StudentResults
 	          Promise<StatementsResult> result2 = xapi.queryStatements(query2);
 	          return Promises.all(result1,result2)
 	        		  .map(list -> {
-	        			  				StatementsResult statements = list.get(0);
-	        			  				StatementsResult correctie  = list.get(1);
+	        			  				StatementsResult statements = result1.getValue();
+	        			  				StatementsResult correctie  = result2.getValue();
 	        			  				if (!correctie.statements.isEmpty()) {
 	        			  					combine(statements, correctie);
 	        			  				}
