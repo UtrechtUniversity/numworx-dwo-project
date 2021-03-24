@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.keyboard.client.DWOCombinedKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.KeyboardFactory;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 
@@ -40,7 +41,7 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 	private HasHeight scrollPanel;
 	private static DWOplayerCss dwoplayercss = DWOplayer.DWO_BUNDLE.dwoplayercss();
 		
-	public DWOKeyboard() {
+	public DWOKeyboard(ActivityComponent activity) {
 		setStylePrimaryName("dwo");
 		
 		factory = new DWOCombinedKeyboardFactory();
@@ -48,9 +49,9 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 		
 		staticPanel = new FlowPanel();
 				
-		java.util.logging.Logger.getLogger("DWOKeyboard").info("Keyboard " + DWOplayer.isPremium() + " " + state);
+		java.util.logging.Logger.getLogger("DWOKeyboard").info("Keyboard " + activity.isPremium() + " " + state);
 		
-		factory.setPremium(DWOplayer.isPremium()); // inject premium feature
+		factory.setPremium(activity.isPremium()); // inject premium feature
 
 // css style! FIXME naar dwoplayercss
 		Style style;

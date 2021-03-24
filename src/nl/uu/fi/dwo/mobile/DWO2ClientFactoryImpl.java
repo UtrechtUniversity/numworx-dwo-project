@@ -110,18 +110,12 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 						instance.getActiveSchoolRoleAndClass().getHasRole(),
 						agent,
 						secure,
-						getEventBus(),
-						getConfirmHandler());
+						eventBus,
+						confirmHandler);
 			}
 			return api;
 		}
 
-		private Lazy<ConfirmEventHandler> getConfirmHandler() {
-			
-			return confirmHandler;
-		}
-
-		
 		public boolean withUser() {
 			return instance.getCurrentUser() != null;
 		}
@@ -163,11 +157,6 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 		public Object getUserID() {
 			PersistenceId id = instance.getCurrentUser().getId();
 			return PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentUser);
-		}
-
-		@Override
-		public boolean isPremium() {
-			return instance.isPremium();
 		}
 
 	}

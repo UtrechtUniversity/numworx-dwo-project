@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client;
 
 import nl.uu.fi.dwo.mobile.client.ui.NavigationCss;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.NavigationBundle;
 import nl.uu.fi.dwo.mobile.client.ui.NavigationTextAndroid;
 import nl.uu.fi.dwo.mobile.client.ui.NavigationTextDefault;
@@ -99,8 +100,8 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 	}
 
 	@Override
-	public StatusBarIF getStatusBar() {
-		return new nl.uu.fi.dwo.mobile.client.ui.dwokb.DWOKeyboard();
+	public StatusBarIF getStatusBar(ActivityComponent a) {
+		return new nl.uu.fi.dwo.mobile.client.ui.dwokb.DWOKeyboard(a);
 
 		//return new nl.uu.fi.dwo.mobile.client.ui.dwokb.FormuleKeyboard();
 	}

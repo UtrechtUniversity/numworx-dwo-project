@@ -424,7 +424,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	}
 
 	private void initWidget(Widget w) {
-		this.widget = CorrectieFacade.wrap(w);
+		this.widget = CorrectieFacade.wrap(w, activity);
 		this.widget.setPixelSize(width, height);
 	}
 

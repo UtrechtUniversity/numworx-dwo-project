@@ -1282,7 +1282,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	public Widget getAsPanel()
 	{
 	    if (widget == null) {
-	    	widget = CorrectieFacade.wrap(basisPanel);
+	    	widget = CorrectieFacade.wrap(basisPanel, activity);
 	    	widget.setPixelSize(breedte, hoogte);
 	    }
 		return widget;

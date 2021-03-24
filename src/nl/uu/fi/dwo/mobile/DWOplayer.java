@@ -36,6 +36,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
@@ -147,12 +148,12 @@ public abstract class DWOplayer
 	protected abstract void createClientFactory();
 
 	void createTabletDisplay(ClientFactory clientfactory, TabletActivityMapper appActivityMapper, 
-			DWOplayerParameters params, NavigationView navigation, HeaderView header)
+			DWOplayerParameters params, NavigationView navigation, HeaderView header, EventBus bus)
 	{
 	    DWOplayer.PARAMETERS = params;
-	    DWOplayer.clientfactory = clientfactory;
+	    //DWOplayer.clientfactory = clientfactory;
 		SimplePanel display = new SimpleLayoutPanel();
-		ActivityManager activityMapper = new ActivityManager(appActivityMapper, clientfactory.getEventBus());
+		ActivityManager activityMapper = new ActivityManager(appActivityMapper, bus);
 		activityMapper.setDisplay(display);
 		display.asWidget().addStyleName("RootPanel");
 		RootLayoutPanel.get().add(header);
@@ -369,16 +370,6 @@ public abstract class DWOplayer
 			LinkElement link = style; style = null;
 			Element head = getHead();
 			head.removeChild(link);
-		}
-	}
-
-	@Deprecated 
-	public static boolean isPremium() {
-		try { 
-			return clientfactory.isPremium();
-		} catch (Throwable t){
-			Logger.getLogger("DWOplayer").log(Level.INFO,"isPremium", t);
-			return false;
 		}
 	}
 

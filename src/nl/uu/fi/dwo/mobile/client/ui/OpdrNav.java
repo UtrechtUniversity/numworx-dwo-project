@@ -1958,7 +1958,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		 * en niet alleen laatste status - Zichtbaarheid knop: alleen op laatste
 		 * pagina - Berekening en weergave categorie-score
 		 */
-		if(memento.getStudentModelStructure() != null && DWOplayer.isPremium()) {
+		if(memento.getStudentModelStructure() != null && entry.activity.isPremium()) {
 //			StudentModelView view = StudentModelPanel.BUILDER.get();
 //			view.setPopup(scoresObjectivesDialog);
 //			Function<? super DomStudentModelContextId, Promise<? extends DomStudentModelContext>> mapper = id -> DWOplayer.clientfactory.getRPCHandler().getStudentModel(id.getId()); // FIXME 
@@ -2848,7 +2848,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("roles", getRole().name());
 		map.put("lesson_mode", getLessonMode().name());
-		map.put("premium", DWOplayer.isPremium());
+		map.put("premium", entry.activity.isPremium());
 		return JSONUtilities.wrapMap(map);
 	}
 

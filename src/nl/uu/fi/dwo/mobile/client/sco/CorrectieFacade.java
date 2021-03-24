@@ -39,8 +39,8 @@ public class CorrectieFacade {
 //        return instance.create(h, view, view.asWidget(), maxScore, comRoot, null, null);
 //    }
  
-    public static Widget wrap(Widget view) {
-        return instance.prepareWidget(view);
+    public static Widget wrap(Widget view, ActivityComponent activity) {
+        return instance.prepareWidget(view, activity);
     }
     
     static class CorrectieLayer extends LayoutPanel implements AcceptsOneWidget {
@@ -65,8 +65,8 @@ public class CorrectieFacade {
 	}
   }
     
-  protected Widget prepareWidget(Widget view) {
-    if(Memento.instance() != null && Memento.instance().isEindtoetsVerzegeld() && DWOplayer.isPremium()) 
+  protected Widget prepareWidget(Widget view, ActivityComponent activity) {
+    if(Memento.instance() != null && Memento.instance().isEindtoetsVerzegeld() && activity.isPremium()) 
       return new CorrectieLayer(view);
     return (view);
   }

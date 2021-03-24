@@ -4,6 +4,7 @@ import com.google.gwt.core.shared.GWT;
 import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavPanel;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
@@ -52,7 +53,7 @@ public class DWOplayerNoordhoff extends DWOplayerDefaults implements DWOplayerPa
 //	}
 
 	@Override
-	public StatusBarIF getStatusBar() {
+	public StatusBarIF getStatusBar(ActivityComponent a) {
 		return new nl.uu.fi.dwo.mobile.client.ui.noordhoffkb.NoordhoffKeyboard();
 	}
 

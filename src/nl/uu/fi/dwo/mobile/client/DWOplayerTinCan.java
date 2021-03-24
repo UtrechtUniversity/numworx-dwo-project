@@ -4,6 +4,7 @@ import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
 
 import nl.uu.fi.dwo.ideas.client.IdeasIF;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavPanel;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
@@ -40,7 +41,7 @@ public class DWOplayerTinCan extends WiskOpdrDefaults {
 	}
 
 	@Override
-	public StatusBarIF getStatusBar() {
+	public StatusBarIF getStatusBar(ActivityComponent a) {
 		return new nl.uu.fi.dwo.mobile.client.ui.noordhoffkb.NoordhoffKeyboard();
 	}
 	@Override
@@ -52,11 +53,6 @@ public class DWOplayerTinCan extends WiskOpdrDefaults {
 	public HeaderCss headercss() {
 		return  DWOplayer.DWO_BUNDLE.headercss();
 	}
-
-  @Override
-  public IdeasIF ideas() {
-    return new DWOIdeasClient();
-  }
 
 	@Override
 	public Logging getLogging() {

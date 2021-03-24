@@ -59,6 +59,9 @@ public abstract class HeaderLessModule {
   @Binds abstract LoginView loginview(Login3ViewImpl view);
   
   @Provides static DwoGlobalVars vars() { return DwoGlobalVars.instance(); }
+  @Provides @Named("premium") static boolean premium(DwoGlobalVars vars) {
+	  return vars.isPremium();
+  }
   
   @Provides static HeaderView headerview(DWO2ClientFactoryImpl impl) {
     return impl.getHeaderView();

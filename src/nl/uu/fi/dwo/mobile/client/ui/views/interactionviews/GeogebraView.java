@@ -773,7 +773,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 
 	private Widget widget;
 	public Widget getWidget() 
-	{   if (widget == null) widget = CorrectieFacade.wrap(mainPanel);
+	{   if (widget == null) widget = CorrectieFacade.wrap(mainPanel, activity);
 		return widget;
 	}
 	

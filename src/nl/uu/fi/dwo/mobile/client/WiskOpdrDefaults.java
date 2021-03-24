@@ -6,6 +6,7 @@ import com.google.gwt.user.client.Window;
 import fi.wiskopdr.CasServer;
 import nl.uu.fi.dwo.ideas.client.IdeasIF;
 import nl.uu.fi.dwo.mobile.WiskOpdrPlayer;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.dwokb.NoStatusKeyboard;
 import nl.uu.fi.dwo.mobile.utils.Logging;
@@ -38,15 +39,10 @@ public class WiskOpdrDefaults extends DWOplayerDefaults {
      * @see nl.uu.fi.dwo.mobile.client.DWOplayerDefaults#getStatusBar()
      */
     @Override
-    public StatusBarIF getStatusBar() {
+    public StatusBarIF getStatusBar(ActivityComponent a) {
         if ("none".equals(Window.Location.getParameter("footer")))
-            return new NoStatusKeyboard();
-        return super.getStatusBar();
-    }
-
-    @Override
-    public IdeasIF ideas() {
-      return CasServer.create();
+            return new NoStatusKeyboard(a);
+        return super.getStatusBar(a);
     }
     
 	@Override

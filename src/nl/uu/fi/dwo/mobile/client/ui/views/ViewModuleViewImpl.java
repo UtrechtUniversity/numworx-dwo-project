@@ -632,7 +632,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 
 		sbw.onResize0();
 		sb.setOnResize(sbw);
-		scoreNav.started();
+		scoreNav.started(activity.getEventBus());
 	
 		if (isTempotoets())
 		{
@@ -1914,7 +1914,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		mainPanel.setStylePrimaryName("mainPanel");
 		
 		state = lastState;
-		sb = activity.parameters().getStatusBar(); // new nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard();
+		sb = activity.parameters().getStatusBar(activity); // new nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard();
 		sb.setCombinedState(this);
 		kb = sb.getFormuleKeyboard();
 		cb = sb.getFormuleClipboard();

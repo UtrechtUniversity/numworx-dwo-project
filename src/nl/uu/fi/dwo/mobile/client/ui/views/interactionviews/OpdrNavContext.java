@@ -31,7 +31,7 @@ public class OpdrNavContext implements OpdrNavIF {
 				
 			}
 		};
-	private OpdrNavIF comRoot;
+	private final OpdrNavIF comRoot;
 	private String UUID, UUIDpfx;
 
 	public void pause() {
@@ -214,9 +214,7 @@ public class OpdrNavContext implements OpdrNavIF {
 
 	@Override
 	public ObjectMap getContext() {
-		if (comRoot != null)
-			return comRoot.getContext();
-		return JSONUtilities.wrapMap(Collections.singletonMap("premium", DWOplayer.isPremium()));
+		return comRoot.getContext();
 	}
 
 }

@@ -542,7 +542,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	private Widget widget;
 	public Widget asWidget() {
 	    if(widget == null)
-	      widget = CorrectieFacade.wrap(frame);
+	      widget = CorrectieFacade.wrap(frame, activity);
 		return facade.wrap(widget, this);
 	}
 
@@ -1014,7 +1014,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			return comRoot.getContext();
 		}
 		JSONObject object = new JSONObject();
-		object.put("premium", JSONBoolean.getInstance(DWOplayer.isPremium())); //werkt altijd!
+		object.put("premium", JSONBoolean.getInstance(activity.isPremium())); //werkt altijd!
 		return JSONUtilities.wrapMap(object);
 	}
 

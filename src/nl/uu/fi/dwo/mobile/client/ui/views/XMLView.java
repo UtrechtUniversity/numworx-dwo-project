@@ -131,7 +131,7 @@ public abstract class XMLView {
 	
 	TekstVakPanel hoofdPanel;
 	protected FlowPanel contentPanel;
-	protected final ActivityComponent activity;
+	public final ActivityComponent activity;
 
 	protected void setupView(HashMap<String, Object> launchData)
 	{
@@ -606,9 +606,9 @@ public abstract class XMLView {
 		return false;
 	}
 	
-	protected static boolean needsPremium(ObjectMap data) {
+	protected boolean needsPremium(ObjectMap data) {
 		boolean premiumfeatures = Boolean.TRUE.toString().equals(data.getString("premium"));
-		return premiumfeatures && ! DWOplayer.isPremium();
+		return premiumfeatures && ! activity.isPremium();
 	}
 
 	/**

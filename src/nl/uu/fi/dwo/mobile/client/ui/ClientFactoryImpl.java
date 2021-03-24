@@ -41,7 +41,7 @@ import dagger.Lazy;
  */
 public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 {
-	private final EventBus eventBus;
+	protected final EventBus eventBus;
 			
 	// singleton pattern.
 	Provider<HeaderView> headerView;
@@ -80,7 +80,6 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 
 	protected abstract Scorm2004IF setupAPI();
 
-	@Override
 	public EventBus getEventBus()
 	{
 		return eventBus;

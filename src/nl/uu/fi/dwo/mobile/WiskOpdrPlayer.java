@@ -17,6 +17,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
@@ -61,9 +62,10 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 	private static Logger logger = Logger.getLogger("WiskOpdrPlayer");
 
 	@Inject protected ViewModuleViewImpl view;
+	@Inject protected EventBus bus;
 	private String PREFIX;
 	@Inject void setClientFactory(ClientFactory f) {
-	  DWOplayer.clientfactory = f;
+	  //DWOplayer.clientfactory = f;
 	}
 	@Inject void setParameters(DWOplayerParameters p) {
 	  DWOplayer.PARAMETERS = p;
@@ -99,7 +101,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 		Promise<String> inject = inject();
 		Promise<Void> v = inject.then(p -> {
 
-			DWOplayer.clientfactory.getEventBus().addHandler(CBookEvent.TYPE, this);
+			bus.addHandler(CBookEvent.TYPE, this);
 			MGWTsetup();
 
 			DWOplayer.DWO_BUNDLE.dwoplayercss().ensureInjected();
@@ -180,9 +182,8 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 
 	@Override
     protected ViewModuleViewImpl getViewModuleView(RPCHandler rpc, Scorm2004IF api, ClientFactory clientFactory, ActivityComponent.Builder builder) {
-		logger.info("getViewModuleView " + clientFactory.isPremium());
 // FIXME Smelly code. clientfactory injected early.
-		DWOplayer.clientfactory = clientFactory;
+		//DWOplayer.clientfactory = clientFactory;
 		return createEntryView(rpc, header, api, builder);
     }
 	  
@@ -299,7 +300,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
     if (CheckButton.ACTION_NEXT_PAGE.equals(event.getCommand()))
     {
         if (! view.nextPageAction())
-          DWOplayer.clientfactory.getEventBus().fireEvent(new CBookEvent(ACTION_NEXT_ASSET));
+          bus.fireEvent(new CBookEvent(ACTION_NEXT_ASSET));
     }
     
   }

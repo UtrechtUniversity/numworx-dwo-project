@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import fi.wiskopdr.text.Text;
@@ -438,8 +439,8 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 	HandlerRegistration registration;
 	
 	@Override
-	public void started() {
-		registration = DWOplayer.clientfactory.getEventBus().addHandler(CBookEvent.TYPE, this);
+	public void started(EventBus bus) {
+		registration = bus.addHandler(CBookEvent.TYPE, this);
 	}
 
 	@Override

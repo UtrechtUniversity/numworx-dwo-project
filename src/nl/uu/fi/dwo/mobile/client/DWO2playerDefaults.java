@@ -8,6 +8,7 @@ import com.google.gwt.user.client.Window;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.sco.SMLogger;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 //import nl.uu.fi.dwo.mobile.client.sco.StudentModelLogger;
 import nl.uu.fi.dwo.mobile.client.ui.IdleDetect;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
@@ -96,10 +97,10 @@ public class DWO2playerDefaults extends DWOplayerDefaults {
 	 * @see nl.uu.fi.dwo.mobile.client.DWOplayerDefaults#getStatusBar()
 	 */
 	@Override
-	public StatusBarIF getStatusBar() {
+	public StatusBarIF getStatusBar(ActivityComponent a) {
 		if ("none".equals(Window.Location.getParameter("footer")))
-			return new NoStatusKeyboard();
-		return super.getStatusBar();
+			return new NoStatusKeyboard(a);
+		return super.getStatusBar(a);
 	}
 
 	/* (non-Javadoc)

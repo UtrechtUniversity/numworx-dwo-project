@@ -12,7 +12,7 @@
 	
 <!--     <inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" /> -->
 
-	<entry-point class='nl.uu.fi.dwo.mobile.NoordhoffPlayer'/>
+	<entry-point class='nl.uu.fi.dwo.mobile.TinCanPlayer'/>
 	
 	 <replace-with class="nl.uu.fi.dwo.mobile.client.sco.TinCanAPI">
     	<when-type-is class="nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF"/>

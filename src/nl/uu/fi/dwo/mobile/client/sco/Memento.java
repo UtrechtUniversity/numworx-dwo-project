@@ -841,10 +841,10 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	//	logout();
 	}
 
-  protected void logout() {
-    if(!Actions.isAvailable())
-		  DWOplayer.clientfactory.logout();
-  }
+//  protected void logout() {
+//    if(!Actions.isAvailable())
+//		  DWOplayer.clientfactory.logout();
+//  }
 
 	@Override
 	public void onWindowClosing(ClosingEvent event)

@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import javax.inject.Named;
+
 import com.google.web.bindery.event.shared.EventBus;
 
 import dagger.Subcomponent;
@@ -18,4 +20,7 @@ public abstract class ActivityComponent {
 	interface Builder {
 		ActivityComponent build();
 	}
+
+	@Named("premium")
+	public abstract boolean isPremium();
 }

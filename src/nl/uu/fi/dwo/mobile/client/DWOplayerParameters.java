@@ -1,14 +1,11 @@
 package nl.uu.fi.dwo.mobile.client;
 
-import nl.uu.fi.dwo.ideas.client.IdeasIF;
-import nl.uu.fi.dwo.mobile.client.text.Text;
-import nl.uu.fi.dwo.mobile.client.ui.NavigationCss;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.Prepare;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 
-import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
 
@@ -57,7 +54,7 @@ public interface DWOplayerParameters {
 	
 	
 	int getWindowHeight();
-	StatusBarIF getStatusBar();
+	StatusBarIF getStatusBar(ActivityComponent a);
 	ScoreNavIF  getScoreNav();
 	Logging getLogging();
 	String getHost();
@@ -70,5 +67,4 @@ public interface DWOplayerParameters {
 	String getDwoEnv();
 	default void tickle() {}
 	
-	default IdeasIF ideas() { return GWT.create(IdeasIF.class); }
 }

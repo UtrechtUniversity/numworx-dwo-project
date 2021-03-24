@@ -26,8 +26,5 @@ public class WiskOpdrMemento extends Memento {
 		close();
 	}
 
-  @Override
-  protected void logout() {
-  }
 
 }

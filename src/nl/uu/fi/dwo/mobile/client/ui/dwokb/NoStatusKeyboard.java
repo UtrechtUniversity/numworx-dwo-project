@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.dwokb;
 
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+
 public class NoStatusKeyboard extends DWOKeyboard {
 
 	/* (non-Javadoc)
@@ -10,8 +12,8 @@ public class NoStatusKeyboard extends DWOKeyboard {
 		return 0;
 	}
 
-	public NoStatusKeyboard() {
-		super();
+	public NoStatusKeyboard(ActivityComponent a) {
+		super(a);
 		staticPanel.setVisible(false);
 		staticPanel.removeFromParent();
 	}

@@ -17,6 +17,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.Window;
+import com.google.web.bindery.event.shared.EventBus;
 
 import fi.dwo.gwt.lib.rest.css.DwoStyle;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
@@ -142,19 +143,19 @@ public class DWO2player extends DWOplayer implements EntryPoint {
   @Inject
   void createTabletDisplay(ClientFactory factory, TabletActivityMapper appActivityMapper, 
 		  IdleDetect idleDetect, DWOplayerParameters PARAMETERS, 
-		  NavigationView navigation, HeaderView header) {
-    super.createTabletDisplay(factory, appActivityMapper, PARAMETERS, navigation, header);
+		  NavigationView navigation, HeaderView header, EventBus bus) {
+    super.createTabletDisplay(factory, appActivityMapper, PARAMETERS, navigation, header, bus);
  
  // TESTING
-    factory.getEventBus().addHandler(IdleDetect.TYPE, ev -> { GWT.log(ev.toString()); });
+    bus.addHandler(IdleDetect.TYPE, ev -> { GWT.log(ev.toString()); });
     idleDetect.start();
   
-    MsgDialogPresenter mdp = new MsgDialogPresenter(factory.getEventBus());
+    MsgDialogPresenter mdp = new MsgDialogPresenter(bus);
     DwoStyle style = GWT.<AccountBundle>create(AccountBundle.class).style();
     style.ensureInjected();
     new MsgDialogView(mdp, style);
     
-    MessageEvent.initialize(factory.getEventBus());
+    MessageEvent.initialize(bus);
     Actions.isMainNavVisible.execute();
     
     if (!Actions.isAvailable()) {

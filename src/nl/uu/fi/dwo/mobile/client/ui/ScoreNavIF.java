@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
 
 public interface ScoreNavIF {
 
@@ -98,7 +99,7 @@ public interface ScoreNavIF {
 	void setAuthELOcheck(boolean b);
 	void setAuthELOhelp(boolean b);
 
-	void started();
+	void started(EventBus bus);
 	void stopped();
 	
 }

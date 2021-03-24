@@ -344,7 +344,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	@Override
 	public Widget asWidget() {
 		if (widget == null) {
-			widget = CorrectieReview.wrap(basisPanel);
+			widget = CorrectieReview.wrap(basisPanel, activity);
 		}
 		return widget;
 	}

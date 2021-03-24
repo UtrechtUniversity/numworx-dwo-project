@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.mobile.WiskOpdrPlayer;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 public class TinCanAPI extends SCORM_guest implements Scorm2004IF, CBookEventListener {
@@ -280,7 +281,6 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF, CBookEventLis
 
 	@Override
 	public void Initialize(AsyncCallback<Void> callback) {
-		regis = DWOplayer.clientfactory.getEventBus().addHandler(CBookEvent.TYPE, this);
 		this.callback = callback;
 		if(true)
 			Initialize0(this);
@@ -317,5 +317,9 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF, CBookEventLis
       sendActionNextAsset();
     }
   }
-	
+
+  public void register(EventBus bus) {
+	regis = bus.addHandler(CBookEvent.TYPE, this);
+  }
+  
 }

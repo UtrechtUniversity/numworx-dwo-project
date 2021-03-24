@@ -8,6 +8,7 @@ import nl.uu.fi.dwo.mobile.utils.LaTransport;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
 
 public class ScoreNavMC2 extends ScoreNavFacade {
 
@@ -60,14 +61,14 @@ public class ScoreNavMC2 extends ScoreNavFacade {
 	}
 
 	@Override
-	public void started() {
+	public void started(EventBus bus) {
 		if(gotoOpdracht != null)
 		{
 			logging.startSession();
 			currentOpdracht = gotoOpdracht.getCurrentOpdracht();
 			logging.setLocation(Integer.toString(currentOpdracht+1));
 		}
-		super.started();
+		super.started(bus);
 	}
 
 	@Override
