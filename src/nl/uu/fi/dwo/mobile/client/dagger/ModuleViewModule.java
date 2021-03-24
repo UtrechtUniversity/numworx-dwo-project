@@ -13,7 +13,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 @Module
 public class ModuleViewModule {
 
-  @Provides @Singleton protected ViewModuleViewImpl getViewModuleView(RPCHandler rpc, Scorm2004IF api, ClientFactory factory, ActivityComponent.Builder builder) {
+  @Provides @Singleton protected ViewModuleViewImpl getViewModuleView(RPCHandler rpc, Scorm2004IF api, ActivityComponent.Builder builder) {
     return null;
   }
   

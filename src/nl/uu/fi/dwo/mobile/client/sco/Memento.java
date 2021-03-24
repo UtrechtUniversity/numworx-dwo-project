@@ -17,15 +17,12 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.SMLogger.LogStrategy;
-import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.dom.xapi.Statement;
 
 import com.google.gwt.core.client.JsArray;
@@ -43,8 +40,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-
-import fi.dwo.gwt.lib.rest.util.DomStudentModelStructureScoreCodec;
 
 //import fi.dwo.gwt.lib.rest.util.DomStudentModelStructureScoreCodec;
 

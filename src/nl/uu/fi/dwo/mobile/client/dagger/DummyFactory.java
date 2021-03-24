@@ -20,7 +20,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 
 @Module(subcomponents= {ActivityComponent.class})
 public abstract class DummyFactory {
-  @Binds abstract ClientFactory clientFactory(DummyClientFactory dummy);
+  ///@Binds abstract ClientFactory clientFactory(DummyClientFactory dummy);
   @Binds abstract RPCHandler  rpcHandler(DummyRPCHandler dummy);
   @Singleton
   @Binds abstract ViewModuleView viewModuleView(ViewModuleViewImpl impl);

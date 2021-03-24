@@ -64,9 +64,9 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 	@Inject protected ViewModuleViewImpl view;
 	@Inject protected EventBus bus;
 	private String PREFIX;
-	@Inject void setClientFactory(ClientFactory f) {
-	  //DWOplayer.clientfactory = f;
-	}
+//	@Inject void setClientFactory(ClientFactory f) {
+//	  //DWOplayer.clientfactory = f;
+//	}
 	@Inject void setParameters(DWOplayerParameters p) {
 	  DWOplayer.PARAMETERS = p;
 	  this.PREFIX = p.getLaunchData();
@@ -181,7 +181,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 
 
 	@Override
-    protected ViewModuleViewImpl getViewModuleView(RPCHandler rpc, Scorm2004IF api, ClientFactory clientFactory, ActivityComponent.Builder builder) {
+    protected ViewModuleViewImpl getViewModuleView(RPCHandler rpc, Scorm2004IF api, ActivityComponent.Builder builder) {
 // FIXME Smelly code. clientfactory injected early.
 		//DWOplayer.clientfactory = clientFactory;
 		return createEntryView(rpc, header, api, builder);
