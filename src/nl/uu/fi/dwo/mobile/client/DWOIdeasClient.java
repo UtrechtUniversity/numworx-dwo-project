@@ -1,10 +1,7 @@
 package nl.uu.fi.dwo.mobile.client;
 
 import com.google.gwt.core.shared.GWT;
-import com.google.gwt.user.client.Window;
-
 import nl.uu.fi.dwo.ideas.client.IdeasClient;
-import nl.uu.fi.dwo.mobile.DWOplayer;
 
 public class DWOIdeasClient extends IdeasClient {
 
@@ -14,7 +11,7 @@ public class DWOIdeasClient extends IdeasClient {
 	
 	
 	private static int ENDPOINT = IdeasClient.DEFAULT;
-	private static String BASE = Window.Location.getProtocol() + "//" + DWOplayer.PARAMETERS.getHost();
+	private static String BASE = "";
 
 	static {
 		try {

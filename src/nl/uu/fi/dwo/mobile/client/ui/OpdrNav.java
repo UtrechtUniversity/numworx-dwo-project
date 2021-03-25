@@ -1806,7 +1806,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			source.setItemScore(oldOpdr, getScoresHuidigeActiviteit()[oldOpdr]);
 		}
 
-		if (DWOplayer.PARAMETERS.isNavTitle())
+		if (entry.activity.parameters().isNavTitle())
 			entry.setTitle("Vraag " + (getCurrentOpdracht() + 1) + " van " + getAantalOpdrachten());
 	}
 
@@ -2367,7 +2367,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht],
 				states[currentActiviteit][currentOpdracht]);
 
-		if (DWOplayer.PARAMETERS.isNavTitle())
+		if (entry.activity.parameters().isNavTitle())
 			entry.setTitle("Vraag " + (getCurrentOpdracht() + 1) + " van " + getAantalOpdrachten());
 	}
 

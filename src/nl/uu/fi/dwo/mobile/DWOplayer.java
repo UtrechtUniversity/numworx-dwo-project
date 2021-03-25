@@ -147,11 +147,10 @@ public abstract class DWOplayer
 	
 	protected abstract void createClientFactory();
 
-	void createTabletDisplay(ClientFactory clientfactory, TabletActivityMapper appActivityMapper, 
+	void createTabletDisplay(TabletActivityMapper appActivityMapper, 
 			DWOplayerParameters params, NavigationView navigation, HeaderView header, EventBus bus)
 	{
 	    DWOplayer.PARAMETERS = params;
-	    //DWOplayer.clientfactory = clientfactory;
 		SimplePanel display = new SimpleLayoutPanel();
 		ActivityManager activityMapper = new ActivityManager(appActivityMapper, bus);
 		activityMapper.setDisplay(display);

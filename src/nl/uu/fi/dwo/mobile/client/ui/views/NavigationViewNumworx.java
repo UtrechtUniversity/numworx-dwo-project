@@ -478,7 +478,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		{  	organization.setVisible(role == RoleType.SCHOOLADMIN);
 			results.setVisible(role == RoleType.TEACHER); // or student if premium&test.
 			persons.setVisible(role != RoleType.STUDENT);
-			knowledge.setVisible((role == RoleType.STUDENT && isTest() && vars.isPremium()));
+			knowledge.setVisible((role == RoleType.STUDENT && isTest() && vars.isPremium() && vars.getCurrentSchoolClass() != null));
 		}
 	}
 

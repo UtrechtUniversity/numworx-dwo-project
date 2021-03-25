@@ -182,8 +182,6 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 
 	@Override
     protected ViewModuleViewImpl getViewModuleView(RPCHandler rpc, Scorm2004IF api, ActivityComponent.Builder builder) {
-// FIXME Smelly code. clientfactory injected early.
-		//DWOplayer.clientfactory = clientFactory;
 		return createEntryView(rpc, header, api, builder);
     }
 	  

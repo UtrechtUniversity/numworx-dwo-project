@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.dwokb;
 
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;

@@ -144,7 +144,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
   void createTabletDisplay(ClientFactory factory, TabletActivityMapper appActivityMapper, 
 		  IdleDetect idleDetect, DWOplayerParameters PARAMETERS, 
 		  NavigationView navigation, HeaderView header, EventBus bus) {
-    super.createTabletDisplay(factory, appActivityMapper, PARAMETERS, navigation, header, bus);
+    super.createTabletDisplay(appActivityMapper, PARAMETERS, navigation, header, bus);
  
  // TESTING
     bus.addHandler(IdleDetect.TYPE, ev -> { GWT.log(ev.toString()); });
