@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
+import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -61,6 +63,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
@@ -161,6 +164,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 
 	}
 
+	static ColorStyle white  = new ColorStyle(255,255,255);
 	static ColorStyle colorBlue1 = new ColorStyle(49, 71, 112);
 	static ColorStyle colorBlue4 = new ColorStyle(180,195,228);
 	static ColorStyle colorBlue2 = new ColorStyle(38, 115, 182);
@@ -172,7 +176,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 	private static ColorStyle defaultRectBorderColor = new ColorStyle( colorGray3.getRGB()&0xFFFFFF | (90<<24));
 
 	private static int defaultFontSize = 16;
-	private static String defaultFont = "SansSerif";
+	private static String defaultFont = "Ubuntu";
 
 	private ColorStyle succesColor = new ColorStyle(0,200,0);
 	private ColorStyle halfSuccesColor = new ColorStyle(180,240,180);
@@ -187,12 +191,90 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 	private OMSVGPoint start;
 	private static final String HIDDEN_NODE = "hidden-node";
 	
-	class Edge {
-		final Node from, to;
+	abstract class AbstractEdge {
 		final OMSVGGElement g = doc.createSVGGElement();
 		boolean blur;
 
 		ColorStyle edgeColor = defaultEdgeColor;
+		// opacity: 30/255
+		ColorStyle blur(ColorStyle org) {
+			if(!blur) return org;
+			return new ColorStyle( org.getRGB()&0xFFFFFF | (30<<24));
+		}
+
+		void colorize() {
+			String color = blur(edgeColor).getColor();
+			OMSVGStyle style = g.getStyle();
+			style.setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, color);
+			style.setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, color);		
+		}
+		
+	}
+	
+	class ChapterEdge extends AbstractEdge {
+		final ChapterNode from, to;
+		ChapterEdge(ChapterNode from, ChapterNode to) {
+			Objects.requireNonNull(from, "no from");
+			Objects.requireNonNull(to, "no to");
+			this.from = from;
+			this.to = to;
+		}
+		void setVisible() {
+			if (from.isVisible() && to.isVisible()) {
+				g.removeClassNameBaseVal(HIDDEN_NODE);
+			} else 
+				g.addClassNameBaseVal(HIDDEN_NODE);
+		}
+
+		OMSVGGElement build() {
+			float x1 = from.getCx();
+			float y1 = from.getCy();
+			float x2 = to.getCx();
+			float y2 = to.getCy();
+			OMSVGLineElement line = doc.createSVGLineElement(x1, y1, x2, y2);
+			line.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "30");
+			g.appendChild(line);
+// triangle
+			float x = (x1+x2)/2;
+			float y = (y1+y2)/2;
+			float dx = x1 - x2;
+			float dy = y1 - y2;
+			float len = (float) Math.hypot(dx, dy) / 90;
+			dx /= len;
+			dy /= len;
+			OMSVGPathElement path = doc.createSVGPathElement();
+			OMSVGPathSegList points = path.getPathSegList();
+			points.appendItem(path.createSVGPathSegMovetoAbs(x, y));		
+			points.appendItem(path.createSVGPathSegLinetoAbs(x + dx + dy/2, y + dy -dx/2));
+			points.appendItem(path.createSVGPathSegLinetoAbs(x + dx - dy/2, y + dy +dx/2));
+			points.appendItem(path.createSVGPathSegClosePath());
+			g.appendChild(path);
+			colorize();
+			return g;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(from, to);
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			ChapterEdge other = (ChapterEdge) obj;
+			return Objects.equals(from, other.from) && Objects.equals(to, other.to);
+		}
+	}
+	
+	
+	
+	class Edge extends AbstractEdge {
+		final Node from, to;
 
 		Edge(Node from, Node to) {
 			Objects.requireNonNull(from, "no from");
@@ -208,11 +290,6 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 				g.addClassNameBaseVal(HIDDEN_NODE);
 		}
 		
-		// opacity: 30/255
-		ColorStyle blur(ColorStyle org) {
-			if(!blur) return org;
-			return new ColorStyle( org.getRGB()&0xFFFFFF | (30<<24));
-		}
 		
 		OMSVGGElement build() {
 			float x1 = from.cx;
@@ -245,12 +322,6 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			colorize();
 		}
 
-		private void colorize() {
-			String color = blur(edgeColor).getColor();
-			OMSVGStyle style = g.getStyle();
-			style.setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, color);
-			style.setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, color);		
-		}
 		
 		void setSuccesFailColor() {
 			OMSVGStyle style = g.getStyle();
@@ -267,45 +338,21 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			colorize();
 		}
 	}
-	
-	
-	class Node {
 
-		final private DomStudentModelObj obj;
+	abstract class AbstractNode {
+		boolean blur;
+		boolean visible = true;
 		final OMSVGGElement g = doc.createSVGGElement();
-		final float cx,cy;
-		private boolean blur;
-				
-		private ColorStyle nodeColor = defaultNodeColor;
-		private ColorStyle nodeBorderColor = colorBlue2;
-		private ColorStyle textColor = defaultTextColor;
-		private ColorStyle edgeColor;
-		private OMSVGCircleElement circle;
-		private OMSVGTextElement text;
-		private OMSVGRectElement rect;
-		private	float r = 15;
-		private boolean visible = true;
+		OMSVGCircleElement circle;
+		OMSVGTextElement text;
+		ColorStyle nodeColor = defaultNodeColor;
+		ColorStyle nodeBorderColor = colorBlue2;
+		ColorStyle textColor = defaultTextColor;
+		ColorStyle edgeColor;
+		float cx,cy;				
+		float r;
 
-		void setBlur(boolean blur) {
-			this.blur = blur;
-			colorize();
-		}
 
-		boolean isBlur() {
-			return blur;
-		}
-		
-		void setVisible(boolean b) {
-			visible = b;
-			if (b) 
-				g.removeClassNameBaseVal(HIDDEN_NODE);
-			else
-				g.addClassNameBaseVal(HIDDEN_NODE);
-		}
-		
-		boolean isVisible() {
-			return visible;
-		}
 		boolean contains(float x, float y) {
 			float dx = x - cx;
 			float dy = y - cy;
@@ -317,18 +364,154 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			if(!blur) return org;
 			return new ColorStyle( org.getRGB()&0xFFFFFF | (30<<24));
 		}
+
+		void colorize() {
+			String color = blur(nodeColor).getColor();
+			circle.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, color);
+			circle.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, blur(nodeBorderColor).getColor());
+ 			color = blur(textColor).getColor();
+ 			text.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, color);
+
+		}
+
+		boolean isBlur() {
+			return blur;
+		}
+		void setBlur(boolean blur) {
+			this.blur = blur;
+			colorize();
+		}
+
+		void setVisible(boolean b) {
+			visible = b;
+			if (b) 
+				g.removeClassNameBaseVal(HIDDEN_NODE);
+			else
+				g.addClassNameBaseVal(HIDDEN_NODE);
+		}
 		
-		Node(DomStudentModelObj obj, String parent) {
+		boolean isVisible() {
+			return visible;
+		}
+		
+	}
+	
+	class BookNode extends AbstractNode {
+		final String method, book;
+		private List<ChapterNode> list = new ArrayList<>();
+		public float getCx() {
+			return this.cx / list.size();
+		}
+		public float getCy() {
+			return this.cy / list.size();
+		}
+
+		BookNode(String method, String book) {
+			this.method = method;
+			this.book = book;
+			r = 700f;
+			textColor = colorGray3;
+			nodeBorderColor = nodeColor = new ColorStyle(222, 229, 240);
+		}
+
+		void add(ChapterNode obj) {
+			list.add(obj);
+			this.cx += obj.getCx();
+			this.cy += obj.getCy();
+		}
+
+		OMSVGGElement build() {
+			float cx = getCx();
+			float cy = getCy();
+			circle = doc.createSVGCircleElement(cx, cy, r);
+			short unitType = OMSVGLength.SVG_LENGTHTYPE_NUMBER;
+			text = doc.createSVGTextElement(cx, cy, unitType, book);
+ 			text.getStyle().setSVGProperty(SVGConstants.CSS_TEXT_ANCHOR_PROPERTY, "middle");
+ 			text.getStyle().setSVGProperty(SVGConstants.CSS_DOMINANT_BASELINE_PROPERTY, "central");
+ 			text.getStyle().setSVGProperty(SVGConstants.CSS_FONT_FAMILY_PROPERTY, defaultFont);
+ 			text.getStyle().setSVGProperty(SVGConstants.CSS_FONT_SIZE_PROPERTY, Integer.toString(defaultFontSize*44));
+ 			colorize();
+ 			g.appendChild(circle);
+ 			g.appendChild(text);
+ 			return g;
+		}
+		
+		void setVisible() {
+			setVisible(list.stream().anyMatch(ChapterNode::isVisible));
+		}
+		void hide() { setVisible(false); }
+		
+	}
+	
+	class ChapterNode extends AbstractNode {
+		final private DomStudentModelMethodInfo info;
+		private List<Node> list = new ArrayList<>();
+		
+
+		ChapterNode(DomStudentModelMethodInfo info) {
+			this.info = new DomStudentModelMethodInfo(info);
+			this.info.setX(0);
+			this.info.setY(0);
+			r = 150f;
+			textColor = white;
+			nodeBorderColor = nodeColor;
+		}
+		
+		public float getCx() {
+			return this.cx / list.size();
+		}
+		public float getCy() {
+			return this.cy / list.size();
+		}
+
+		void add(Node obj) {
+			list.add(obj);
+			this.cx += obj.cx;
+			this.cy += obj.cy;
+		}
+		
+		OMSVGGElement build() {
+			float cx = getCx();
+			float cy = getCy();
+			circle = doc.createSVGCircleElement(cx, cy, r);
+			short unitType = OMSVGLength.SVG_LENGTHTYPE_NUMBER;
+			text = doc.createSVGTextElement(cx, cy, unitType, "H" + info.getChapter());
+ 			text.getStyle().setSVGProperty(SVGConstants.CSS_TEXT_ANCHOR_PROPERTY, "middle");
+ 			text.getStyle().setSVGProperty(SVGConstants.CSS_DOMINANT_BASELINE_PROPERTY, "central");
+ 			text.getStyle().setSVGProperty(SVGConstants.CSS_FONT_FAMILY_PROPERTY, defaultFont);
+ 			text.getStyle().setSVGProperty(SVGConstants.CSS_FONT_SIZE_PROPERTY, Integer.toString(defaultFontSize*4));
+ 			colorize();
+ 			g.appendChild(circle);
+ 			g.appendChild(text);
+ 			return g;
+		}
+		
+		void setVisible() {
+			setVisible(list.stream().anyMatch(Node::isVisible));
+		}
+		void hide() {
+			setVisible(false);
+		}
+	}
+	
+	class Node extends AbstractNode {
+		final private DomStudentModelMethodInfo info;
+		final private DomStudentModelObj obj;
+		private OMSVGRectElement rect;
+		
+		Node(DomStudentModelObj obj, DomStudentModelMethodInfo info, String parent) {
 			this.obj = obj;
+			r = 15;
+			this.info = info;
 			float cx,cy;
  			try {
-				cx = obj.getInfo().getX().floatValue(); // possible NPE
+				cx = info.getX().floatValue(); // possible NPE
 			} catch (Exception e) {
 				cx = (float)Math.random()*600.0f;
 			}
  			this.cx = cx;
  			try {
-				cy = obj.getInfo().getY().floatValue();
+				cy = info.getY().floatValue();
 			} catch (Exception e) {
 				cy = (float)Math.random()*600.0f;
 			}
@@ -338,8 +521,8 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			text = doc.createSVGTextElement(cx, cy, unitType, parent + obj.getInfo().getTitle().get(lang));
 		}
 		
-		Node(DomStudentModelObj obj) {
-			this(obj,"");
+		Node(DomStudentModelObj obj, DomStudentModelMethodInfo info) {
+			this(obj,info, "");
 		}
 		
 		OMSVGGElement build() {
@@ -359,14 +542,6 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			return g;
 		}
 
-		private void colorize() {
-			String color = blur(nodeColor).getColor();
-			circle.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, color);
-			circle.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, blur(nodeBorderColor).getColor());
- 			color = blur(textColor).getColor();
- 			text.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, color);
-
-		}
 		
 		Stream<Edge> edges() {
 			List<String> voorkennis = obj.getInfo().getVoorkennis();
@@ -397,7 +572,10 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 	}
 	
 	private Map<String, Node> map;
+	private Map<String, ChapterNode> chapters;
+	private Map<String, BookNode> books;
 	private Set<Edge> edges;
+	private Set<ChapterEdge> chapterEdges;
 	
 	private Button zoomFitBtn, zoomInBtn, zoomOutBtn, voorkennisBtn;
 	private DockLayoutPanel title;
@@ -466,7 +644,10 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		
 		lang = LocaleInfo.getCurrentLocale().getLocaleName();
 		map = new HashMap<>();
+		chapters = new HashMap<>();
+		books = new HashMap<>();
 		edges = Collections.emptySet();
+		chapterEdges = Collections.emptySet();
 		getElement().getStyle().setBackgroundColor(colorGray3.getColor());
 		
 		image.addMouseMoveHandler(this);
@@ -489,7 +670,9 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			for(Node n: map.values()) n.setVisible(true);
 		    methodeBtn.setSelectedIndex(0);
 		    edges.forEach(Edge::setVisible);
-		    book.setText("?");
+		    chapters.values().forEach(ChapterNode::setVisible);
+		    books.values().forEach(BookNode::setVisible);
+		    book.setText("");
 		    return;
 		} else if (f.size() == 1) {
 			String key = f.keySet().iterator().next();
@@ -501,17 +684,20 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 				book.setText(f.get(key).keySet().iterator().next());
 				// label is chapters.....
 				
-			} else book.setText("?");
+			} else book.setText("");
 		} else 
 		{
 			methodeBtn.setSelectedIndex(0);
 			book.setText("?");
 		}
 		for (Node n: map.values()) {
-			boolean ok = StudentResultsPresenter.inFilter(f, n.obj);
+			boolean ok = StudentResultsPresenter.inFilter(f, n.info);
 			n.setVisible(ok);
 		}
 	    edges.forEach(Edge::setVisible);
+	    chapters.values().forEach(ChapterNode::setVisible);
+	    chapterEdges.forEach(ChapterEdge::setVisible);
+	    books.values().forEach(BookNode::setVisible);
 	}
 
 	private OMSVGSVGElement getSvgElement() {
@@ -520,13 +706,46 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 
 	public void setModelScore(DomStudentModelContext4Student item, Promise<DomStudentModelDataScore> score) {
 		map.clear();
+		chapters.clear();
 		setModel(item.getModelStructure());
 		OMSVGSVGElement svg = getSvgElement();
 		while(svg.getChildNodes().getLength()>0)
 			svg.removeChild(svg.getChildNodes().getItem(0));
 		
 		edges = map.values().stream().flatMap(Node::edges).collect(Collectors.toSet());
+// chapters
+		map.values()
+			.forEach(node -> {
+				if (node.info.getMethod() == null) return;
+				String key = node.info.key();
+				ChapterNode chap = chapters.computeIfAbsent(key, k -> new ChapterNode(node.info));
+				chap.add(node);				
+			});
+		chapterEdges = edges.stream().map( e -> {
+			DomStudentModelMethodInfo fromInfo = e.from.info;
+			String from = fromInfo.key();
+			DomStudentModelMethodInfo toInfo = e.to.info;
+			String to   = toInfo.key();
+			if (from.equals(to) || !Objects.equals(fromInfo.getMethod(), toInfo.getMethod()) || !Objects.equals(toInfo.getBook(), fromInfo.getBook())) return null;
+			return new ChapterEdge(chapters.get(from), chapters.get(to));			
+		}).filter(Objects::nonNull).collect(Collectors.toSet());
 		
+		
+// books 
+		chapters.values().forEach(chp -> {
+			String method = chp.info.getMethod();
+			String book = chp.info.getBook();
+			String key = method + "-" + book;
+			BookNode bk = books.computeIfAbsent(key, k -> new BookNode(method, book));
+			bk.add(chp);
+		});
+		
+		books.values().stream().map(BookNode::build).forEach(svg::appendChild);
+
+		chapterEdges.stream().map(ChapterEdge::build).forEach(svg::appendChild);
+		chapters.values().forEach(chap -> { 
+			svg.appendChild(chap.build());
+		});
 		edges.stream().map(Edge::build).forEach(t -> svg.appendChild(t));
 		map.values().forEach(t -> svg.appendChild(t.g));
 		map.values().forEach(Node::build);
@@ -571,7 +790,34 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 	private boolean setModel(DomStudentModelObj obj) {
 		if (obj.getObjectives() == null) {
 			String id = obj.getInfo().getId();
-			map.put(id, new Node(obj));
+
+			if (obj.getInfo().getMethodInfo() == null) {
+				obj.getInfo().setMethodInfo(new ArrayList<>());
+			}
+			List<DomStudentModelMethodInfo> methodInfo = obj.getInfo().getMethodInfo();
+			if (methodInfo.isEmpty()) {
+				Map<String, Map<String, Set<Integer>>> meth = obj.getInfo().getMethods();
+				if (meth.isEmpty()) {
+					DomStudentModelMethodInfo m = new DomStudentModelMethodInfo();
+					methodInfo.add(m);
+					m.setX(obj.getInfo().getX());
+					m.setY(obj.getInfo().getY());
+				} else {
+					for(String m: meth.keySet()) {
+						Map<String, Set<Integer>> mm = meth.get(m);
+						for (String b: mm.keySet()) {
+							Set<Integer> chps = mm.get(b);
+							chps.forEach(chp -> {
+								DomStudentModelMethodInfo mi = new DomStudentModelMethodInfo(m, b, chp);
+								mi.setX(obj.getInfo().getX());
+								mi.setY(obj.getInfo().getY());
+								methodInfo.add(mi);
+							});
+						}
+					}
+				}
+ 			}
+			map.put(id, new Node(obj, methodInfo.get(0)));
 			return true;
 		}
 		for (DomStudentModelObj leaf : obj.getObjectives()) setModel(leaf);

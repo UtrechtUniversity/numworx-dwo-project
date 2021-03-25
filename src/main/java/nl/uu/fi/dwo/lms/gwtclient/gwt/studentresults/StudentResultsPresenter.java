@@ -48,6 +48,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
@@ -357,6 +358,12 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	static boolean inFilter(Map<String, Map<String, Set<Integer>>> filter, DomStudentModelObj oo) {
 		Map<String, Map<String, Set<Integer>>> methods = oo.getInfo().getMethods();
 		return contains(filter, methods);
+	}
+
+	static boolean inFilter(Map<String, Map<String, Set<Integer>>> filter, DomStudentModelMethodInfo info) {
+		if (info.getMethod() == null)
+			return contains(filter, Collections.emptyMap());
+		return contains(filter, Collections.singletonMap(info.getMethod(), Collections.singletonMap(info.getBook(), Collections.singleton(info.getChapter()))));
 	}
 
 	private void addToTree(TreeItem item, DomStudentModelContext4Student model) {
