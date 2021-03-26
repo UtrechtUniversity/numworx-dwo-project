@@ -550,7 +550,7 @@
                         <executions>
                             <execution>
                                 <id>normalize-jars</id>
-                                <phase>package</phase>
+                                <phase>none</phase>
                                 <goals>
                                     <goal>pack</goal>
                                 </goals>
