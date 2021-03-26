@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -35,6 +36,7 @@ import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.utils.OMSVGParser;
 import org.vectomatic.dom.svg.utils.SVGConstants;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.TextAlign;
@@ -62,6 +64,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
@@ -88,18 +91,27 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 
 	Map<String, Map<String,Set<Integer>>> filter;
 	
-	private class MethodeChange implements ChangeHandler {
+	private class MethodeChange implements ChangeHandler, ClickHandler {
 
 		@Override
 		public void onChange(ChangeEvent event) {
+			GWT.log("Methode change");
 			int index = methodeBtn.getSelectedIndex();
 			Map<String, Map<String,Set<Integer>>> filter = null;
 			switch(index) {
+			default:
 			case 0: filter = Collections.emptyMap(); break;
 			case 1: filter = Collections.singletonMap(GETALENRUIMTE, Collections.emptyMap()); break;
 			case 2: filter = Collections.singletonMap(MODERNEWISKUNDE, Collections.emptyMap());	break;				
 			}
 			doFilter(filter);
+		}
+
+		@Override
+		public void onClick(ClickEvent event) {
+			GWT.log("Methode click");
+			onChange(null);
+			event.preventDefault();
 		}
 
 	}
@@ -138,10 +150,11 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		@Override
 		public void onClick(ClickEvent event) {
 			LOG.info("Zoom Fit");
-			Collection<Node> nodes = map.values();
+			Collection<List<Node>> nodes = map.values();
 			
 			OMSVGRect r = null;
-			for(Node node: nodes) {
+			for(List<Node> nodeList: nodes) 
+			  for(Node node: nodeList){
 				if (node.isVisible()) {
 					OMSVGRectElement rect0 = node.rect;
 					if (rect0 == null) continue; // missing sometimes
@@ -396,8 +409,8 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		
 	}
 	
-	class BookNode extends AbstractNode {
-		final String method, book;
+	class BookNode extends AbstractNode implements ClickHandler {
+		final DomStudentModelMethodInfo info;
 		private List<ChapterNode> list = new ArrayList<>();
 		public float getCx() {
 			return this.cx / list.size();
@@ -407,8 +420,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		}
 
 		BookNode(String method, String book) {
-			this.method = method;
-			this.book = book;
+			info = new DomStudentModelMethodInfo(method, book, null);
 			r = 700f;
 			textColor = colorGray3;
 			nodeBorderColor = nodeColor = new ColorStyle(222, 229, 240);
@@ -424,8 +436,10 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			float cx = getCx();
 			float cy = getCy();
 			circle = doc.createSVGCircleElement(cx, cy, r);
+			circle.addClickHandler(this);
 			short unitType = OMSVGLength.SVG_LENGTHTYPE_NUMBER;
-			text = doc.createSVGTextElement(cx, cy, unitType, book);
+			text = doc.createSVGTextElement(cx, cy, unitType, info.getBook());
+			text.addClickHandler(this);
  			text.getStyle().setSVGProperty(SVGConstants.CSS_TEXT_ANCHOR_PROPERTY, "middle");
  			text.getStyle().setSVGProperty(SVGConstants.CSS_DOMINANT_BASELINE_PROPERTY, "central");
  			text.getStyle().setSVGProperty(SVGConstants.CSS_FONT_FAMILY_PROPERTY, defaultFont);
@@ -439,11 +453,17 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		void setVisible() {
 			setVisible(list.stream().anyMatch(ChapterNode::isVisible));
 		}
+
 		void hide() { setVisible(false); }
+
+		@Override
+		public void onClick(ClickEvent event) {
+			doFilter(info);
+		}
 		
 	}
 	
-	class ChapterNode extends AbstractNode {
+	class ChapterNode extends AbstractNode implements ClickHandler {
 		final private DomStudentModelMethodInfo info;
 		private List<Node> list = new ArrayList<>();
 		
@@ -465,7 +485,8 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		}
 
 		void add(Node obj) {
-			list.add(obj);
+			if (obj.invalid()) return;
+ 			list.add(obj);
 			this.cx += obj.cx;
 			this.cy += obj.cy;
 		}
@@ -474,8 +495,10 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			float cx = getCx();
 			float cy = getCy();
 			circle = doc.createSVGCircleElement(cx, cy, r);
+			circle.addClickHandler(this);
 			short unitType = OMSVGLength.SVG_LENGTHTYPE_NUMBER;
 			text = doc.createSVGTextElement(cx, cy, unitType, "H" + info.getChapter());
+			text.addClickHandler(this);
  			text.getStyle().setSVGProperty(SVGConstants.CSS_TEXT_ANCHOR_PROPERTY, "middle");
  			text.getStyle().setSVGProperty(SVGConstants.CSS_DOMINANT_BASELINE_PROPERTY, "central");
  			text.getStyle().setSVGProperty(SVGConstants.CSS_FONT_FAMILY_PROPERTY, defaultFont);
@@ -492,6 +515,12 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		void hide() {
 			setVisible(false);
 		}
+
+		@Override
+		public void onClick(ClickEvent event) {
+			GWT.log("click in " + info.key());
+			doFilter(info);
+		}
 	}
 	
 	class Node extends AbstractNode {
@@ -507,15 +536,16 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
  			try {
 				cx = info.getX().floatValue(); // possible NPE
 			} catch (Exception e) {
-				cx = (float)Math.random()*600.0f;
+				cx = Float.NaN;
 			}
  			this.cx = cx;
  			try {
 				cy = info.getY().floatValue();
 			} catch (Exception e) {
-				cy = (float)Math.random()*600.0f;
+				cy = Float.NaN;
 			}
  			this.cy = cy;
+ 			if(invalid()) return;
 			circle = doc.createSVGCircleElement(cx, cy, r);
 			short unitType = OMSVGLength.SVG_LENGTHTYPE_NUMBER;
 			text = doc.createSVGTextElement(cx, cy, unitType, parent + obj.getInfo().getTitle().get(lang));
@@ -526,6 +556,11 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		}
 		
 		OMSVGGElement build() {
+			if (invalid()) {
+				super.setVisible(false);
+				return g;
+			}
+			
  			g.appendChild(circle);
  			text.getStyle().setSVGProperty(SVGConstants.CSS_TEXT_ANCHOR_PROPERTY, "middle");
  			text.getStyle().setSVGProperty(SVGConstants.CSS_DOMINANT_BASELINE_PROPERTY, "central");
@@ -542,13 +577,18 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			return g;
 		}
 
+		private boolean invalid() {
+			return Float.isNaN(cx)||Float.isNaN(cy);
+		}
+
 		
 		Stream<Edge> edges() {
 			List<String> voorkennis = obj.getInfo().getVoorkennis();
-			if (voorkennis == null) return Stream.empty();
+			if (voorkennis == null|| invalid()) return Stream.empty();
 			return voorkennis.stream()
 					.filter(key -> map.containsKey(key))
-					.map( key -> new Edge( map.get(key), this) );
+					.flatMap( key -> 
+						map.get(key).stream().map(n -> new Edge(n, this)) );
 		}
 
 		public void setScore(DomStudentModelScore<?> cat) {
@@ -569,9 +609,22 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		ColorStyle getEdgeColor() {
 			return edgeColor;
 		}
+
+		@Override
+		void setVisible(boolean b) {
+			if(!invalid())
+				super.setVisible(b);
+		}
+
+		@Override
+		void colorize() {
+			if (!invalid())
+				super.colorize();
+		}
+		
 	}
 	
-	private Map<String, Node> map;
+	private Map<String, List<Node>> map;
 	private Map<String, ChapterNode> chapters;
 	private Map<String, BookNode> books;
 	private Set<Edge> edges;
@@ -581,6 +634,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 	private DockLayoutPanel title;
 	private ListBox methodeBtn;
 	private Button book;
+	private Label  chapter;
 
 	@Inject StudentResultsGraph() {
 		getElement().getStyle().setMarginLeft(20, Unit.PX);
@@ -634,9 +688,21 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		style.setColor("white");
 		style.setTextAlign(TextAlign.CENTER);
 		style.setFontSize(20, Unit.PX);
-
+		Label postbook = new Label(" > ");
+		style = postbook.getElement().getStyle();
+		style.setPaddingTop(0.2, Unit.EM);
+		style.setColor("white");
+		style.setTextAlign(TextAlign.CENTER);
+		style.setFontSize(20, Unit.PX);
+		chapter = new Label("h1");
+		style = chapter.getElement().getStyle();
+		style.setPaddingTop(0.2, Unit.EM);
+		style.setColor("white");
+		style.setFontSize(20, Unit.PX);
 		title.addWest(prebook, 3);
 		title.addWest(book, 10);
+		title.addWest(postbook, 3);
+		title.add(chapter);
 		
 		setWidgetLeftRight(title, 0, Unit.EM, 0, Unit.EM);
 		setWidgetTopHeight(title, 0, Unit.EM, 2, Unit.EM);
@@ -659,20 +725,32 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		zoomOutBtn.addClickHandler(new Zoom(true));
 		zoomInBtn.addClickHandler(new Zoom(false));
 		voorkennisBtn.addClickHandler(new Voorkennis());
-		methodeBtn.addChangeHandler(new MethodeChange());
+		MethodeChange handler = new MethodeChange();
+		methodeBtn.addChangeHandler(handler);
+		methodeBtn.addClickHandler(handler);
 		book.addClickHandler(new Book());
+	}
+
+	private void doFilter(DomStudentModelMethodInfo info) {
+		if (info.getChapter() == null) {
+			doFilter(Collections.singletonMap(info.getMethod(), Collections.singletonMap(info.getBook(), Collections.emptySet())));
+		} else {
+			doFilter(Collections.singletonMap(info.getMethod(), Collections.singletonMap(info.getBook(), Collections.singleton(info.getChapter()))));	
+		}
 	}
 
 	public void doFilter(Map<String, Map<String, Set<Integer>>> f) {
 		if (f == null) return;
 		filter = f;
 		if (f.isEmpty()) {
-			for(Node n: map.values()) n.setVisible(true);
+			for(List<Node> n: map.values()) for(Node node: n) node.setVisible(true);
 		    methodeBtn.setSelectedIndex(0);
 		    edges.forEach(Edge::setVisible);
 		    chapters.values().forEach(ChapterNode::setVisible);
+		    chapterEdges.forEach(ChapterEdge::setVisible);
 		    books.values().forEach(BookNode::setVisible);
 		    book.setText("");
+		    chapter.setText("");
 		    return;
 		} else if (f.size() == 1) {
 			String key = f.keySet().iterator().next();
@@ -682,15 +760,24 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			methodeBtn.setSelectedIndex(index);
 			if (f.get(key).size() == 1) {
 				book.setText(f.get(key).keySet().iterator().next());
-				// label is chapters.....
-				
-			} else book.setText("");
+				Set<Integer> chapters = f.get(key).get(book.getText());
+				if (chapters.size() == 1) {
+					chapter.setText("h" + chapters.iterator().next());
+				} else {
+					chapter.setText("");
+				}			
+			} else {
+				chapter.setText("");
+				book.setText("");
+			}
 		} else 
 		{
 			methodeBtn.setSelectedIndex(0);
-			book.setText("?");
+			book.setText("");
 		}
-		for (Node n: map.values()) {
+		Iterator<Node> i =  nodeStream().iterator();
+		while (i.hasNext()) {
+			Node n = i.next();
 			boolean ok = StudentResultsPresenter.inFilter(f, n.info);
 			n.setVisible(ok);
 		}
@@ -712,9 +799,9 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		while(svg.getChildNodes().getLength()>0)
 			svg.removeChild(svg.getChildNodes().getItem(0));
 		
-		edges = map.values().stream().flatMap(Node::edges).collect(Collectors.toSet());
+		edges = nodeStream().flatMap(Node::edges).collect(Collectors.toSet());
 // chapters
-		map.values()
+		nodeStream()
 			.forEach(node -> {
 				if (node.info.getMethod() == null) return;
 				String key = node.info.key();
@@ -747,8 +834,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			svg.appendChild(chap.build());
 		});
 		edges.stream().map(Edge::build).forEach(t -> svg.appendChild(t));
-		map.values().forEach(t -> svg.appendChild(t.g));
-		map.values().forEach(Node::build);
+		nodeStream().forEach(t -> {svg.appendChild(t.g); t.build(); }); // THIS ORDER eerst er in hangen, dan pas build.
 		doFilter(item.getFilter());
 		score.then(this::withScore);
 		
@@ -770,8 +856,8 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			for( DomStudentModelScore<?> obj : children) { withScore(obj); }
 		}
 		String id = cat.getId();
-		Node n = map.get(id);
-		if (n != null) n.setScore(cat);
+		List<Node> n = map.get(id);
+		if (n != null) n.forEach( nn -> nn.setScore(cat));
 	}
 
 	private void setModel(DomStudentModelStructure modelStructure) {
@@ -783,11 +869,11 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 
 	private void setModel(DomStudentModelCategory cat) {
 		for (DomStudentModelObj obj: cat.getObjectives()) {
-			setModel(obj);			
+			setModel(obj, cat.getInfo());			
 		}
 	}
 
-	private boolean setModel(DomStudentModelObj obj) {
+	private boolean setModel(DomStudentModelObj obj, DomStudentModelContextInfo parent) {
 		if (obj.getObjectives() == null) {
 			String id = obj.getInfo().getId();
 
@@ -817,11 +903,24 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 					}
 				}
  			}
-			map.put(id, new Node(obj, methodInfo.get(0)));
+			final String p = parentOf(parent);
+			map.put( id, methodInfo.stream().map(info -> new Node(obj, info, p))
+					.filter(t -> !t.invalid())
+					.collect(Collectors.toList()));
 			return true;
 		}
-		for (DomStudentModelObj leaf : obj.getObjectives()) setModel(leaf);
+		for (DomStudentModelObj leaf : obj.getObjectives()) setModel(leaf, obj.getInfo());
 		return false;
+	}
+
+	private String parentOf(DomStudentModelContextInfo info) {
+		String parent = info.getTitle().get(lang);
+		int col = parent.indexOf(':');
+		if (col < 0)
+			parent = "";
+		else
+			parent = parent.substring(0, col) + " - ";		
+		return parent;
 	}
 
 	@Override
@@ -841,18 +940,22 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		float sx = point.getX();
 		float sy = point.getY();
 		// blur nodes and edges: find node, focus on node and edges.
-		Optional<Node> find = map.values().stream().filter(node -> node.contains(sx, sy)).findAny();
+		Optional<Node> find = nodeStream().filter(node -> node.contains(sx, sy)).findAny();
 		if (find.isPresent()) {
 			Node node = find.get();
 			Set<Edge> set = edges.stream().filter(edge -> edge.to == node).collect(Collectors.toSet());
 			Set<Node> nodes = set.stream().map(t -> t.from).collect(Collectors.toSet());
 			nodes.add(node);
 			edges.forEach(e -> e.setBlur(!set.contains(e)));
-			map.values().forEach(n -> n.setBlur(!nodes.contains(n)));			
+			nodeStream().forEach(n -> n.setBlur(!nodes.contains(n)));			
 		} else {
 			edges.forEach(e -> e.setBlur(false));
-			map.values().forEach(n -> n.setBlur(false));
+			nodeStream().forEach(n -> n.setBlur(false));
 		}		
+	}
+
+	private Stream<Node> nodeStream() {
+		return map.values().stream().flatMap(List::stream);
 	}
 
 	private void mouseDrag(MouseEvent<?> event) {
