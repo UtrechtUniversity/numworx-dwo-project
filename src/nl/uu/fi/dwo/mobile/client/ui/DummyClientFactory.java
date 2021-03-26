@@ -17,4 +17,10 @@ public class DummyClientFactory implements ClientFactory {
 		return null;
 	}
 
+	@Override
+	public void gotoCourses() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -191,58 +191,7 @@ public void setupDWOPlayer() {
 			return result;
 		}};
 	
-	@Inject RPCHandler rpc;
-	@Inject PlaceController placeController;
-	@Inject DwoGlobalVars vars;
-	
-	@Override
-	protected void gotoCourses_impl() {
-		SelectModuleItemHolder.clear(); // hier leegmaken of elders?
-		Promise<List<SelectModuleItem>> modules;
-		final RoleType roleType = vars.getRoleType();
-		if( vars.withUser() && vars.getCurrentSchoolClass() != null) {
-			Promise<DomCoursesOfSchoolClass> promise = rpc.getCoursesClass(vars.getCurrentSchoolClass());
-
-			modules = promise.map(new CoursesOfClasToSelectItems());
-		} else if (vars.withUser() && RoleType.STUDENT != roleType)
-		{
-			Promise<List<DomCourseStudent>> p1 = rpc.getCourses();
-			Promise<List<DomCourseStudent>> p2 = rpc.getCoursesSchool(vars.getSchool());
-			modules = Promises.all(p1,p2).map(new Function<List<List<DomCourseStudent>>,List<DomCourseStudent>>() {
-
-				@Override
-				public List<DomCourseStudent> apply(List<List<DomCourseStudent>> t) {
-					List<DomCourseStudent> result = new ArrayList<DomCourseStudent>();
-					for (List<DomCourseStudent> item: t) { 
-						result.addAll(item);
-					}
-					return result;
-				}})
-					.map(TO_SELECTMODULEITEM);
-		} else if (SecureMode.NORMAL == PARAMETERS.getSecureMode() ) { // no free lunch in exam
-			modules = rpc.getCourses().map(TO_SELECTMODULEITEM);
-		} else {
-			modules = Promises.resolved(Collections.emptyList());
-		}
-			
-		boolean iconizer = vars.isIconizer();
-		if (roleType == RoleType.STUDENT && PARAMETERS.getSecureMode() !=  SecureMode.NORMAL )
-			iconizer = false;
-
-		modules.then(new InsertSelectItems(iconizer, roleType)).onResolve(new Runnable() {
-
-				@Override
-				public void run() {
-					if( SecureMode.NORMAL == PARAMETERS.getSecureMode() || roleType != RoleType.STUDENT)
-						placeController.goTo(new TreeModulePlace("0"));
-					else 
-					{ // was FlatModulePlace();
-						placeController.goTo(new ClassesPlace());
-					}
-				}});
-			return;
-		
-	}
+	@Inject RPCHandler rpc;	
 
 	void initProfile() {
 			Success<DomDwoProfileFull, DomDwoProfileFull> getProfileCallback = new Success<DomDwoProfileFull, DomDwoProfileFull>() {

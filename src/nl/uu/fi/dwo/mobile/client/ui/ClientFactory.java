@@ -12,7 +12,9 @@ import com.google.gwt.core.client.GWT;
 public interface ClientFactory
 {
 				
-	Promise<Void> logout();	
+	Promise<Void> logout();
+
+	void gotoCourses();	
 	
 
 }

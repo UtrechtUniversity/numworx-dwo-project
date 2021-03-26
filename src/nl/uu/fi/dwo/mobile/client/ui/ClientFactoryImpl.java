@@ -61,7 +61,7 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	};
 
 	
-	private final PlaceController placeController;
+	protected final PlaceController placeController;
 	private Provider<ViewModuleView> entryView;
 	protected RPCHandler handler;
 	

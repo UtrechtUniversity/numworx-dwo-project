@@ -348,8 +348,8 @@ public class LoginActivity extends AbstractActivity
 		promise
 		.then(LOGIN_STAP1)
 		.filter(LOGIN_LIMITED)
-		.then(LOGIN_STAP2, FAILURE1)
-		.then(new Login_Stap3(clientFactory, next, placeController, headerView, vars), FAILURE2);
+		.then(LOGIN_STAP2, FAILURE1).map(nop -> next)
+		.then(new Login_Stap3(clientFactory, placeController, headerView, vars), FAILURE2);
 	}
 
 	private void resolve() {

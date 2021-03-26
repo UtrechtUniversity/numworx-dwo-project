@@ -56,7 +56,7 @@ public class GuestActivity extends AbstractActivity implements Activity {
 					instance.setCurrentUser(null);
 					instance.setActiveSchoolRoleAndClass(null);
 					headerView.setUserAndRole(null, RoleType.STUDENT);
-					DWOplayer.gotoCourses();
+					clientFactory.gotoCourses();
 					return null;
 				}
 				

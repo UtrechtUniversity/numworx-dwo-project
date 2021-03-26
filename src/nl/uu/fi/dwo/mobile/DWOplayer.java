@@ -221,44 +221,6 @@ public abstract class DWOplayer
 		Logger.getLogger("DWOplayer").log(Level.INFO,log);
 	}
 
-	public static void gotoCourses() {
-		instance.gotoCourses_impl();
-	}
-	
-	protected void gotoCourses_impl() {
-//		SelectModuleItemHolder.clear(); // hier leegmaken of elders?
-//		count = 1;
-//		AsyncCallback<List<Map<String, Object>>> callback = GETCOURSES_CALLBACK;
-//		if(!DWOplayer.withUser())
-//			api = clientfactory.setupAPI();
-//		else
-//		{	
-//			api = clientfactory.setupAPI();
-//			if(!"".equals(clientfactory.getClassID()))
-//			{
-//				boolean iconizer = clientfactory.isIconizer(); 
-//						
-//				if(iconizer)
-//					callback = GETCOURSES_CALLBACK_CLASS_TREE;
-//				else
-//					callback = GETCOURSES_CALLBACK_CLASS_FLAT;
-//				clientfactory.getRPCHandler().getCoursesClass(clientfactory.getClassID(), callback);
-//				return;
-//			}
-//// DONE als je wel student bent, maar niet in een klas zit, krijg je ook dit te zien!!!! FIXME voor MC2
-//			if(!"".equals(clientfactory.getSchoolID()) 
-//					&&  RoleType.STUDENT != clientfactory.getRoleType() )
-//			{
-//				count = 2;
-//				clientfactory.getRPCHandler().getCoursesSchool(clientfactory.getSchoolID(), callback);
-//			}
-//		
-//		}
-//
-//		final AsyncCallback<List<Map<String, Object>>> callback_final = callback;
-//				clientfactory.getRPCHandler().getCourses(callback_final);
-//		
-	}
 
 	public static long timezone = 0L;
 	

@@ -37,11 +37,6 @@ public class ReloginActivity extends AbstractActivity {
 	@Inject PlaceController placeController;
 	@Inject RPCHandler rpc;
 
-	private ReloginActivity(ClientFactory clientFactory, Place next, PlaceController controller) {
-		this.clientFactory = clientFactory;
-		this.next = next;
-		this.placeController = controller;
-	}
 	public ReloginActivity(MembersInjector<ReloginActivity> injector, Place next) {
 		injector.injectMembers(this);
 		this.next = next;
@@ -86,8 +81,8 @@ public class ReloginActivity extends AbstractActivity {
 			}
 		})
 		.then(new LoginActivity.Login_Stap1(rpc, vars))
-		.then(LoginActivity.LOGIN_STAP2, FAILURE1)
-		.then(new Login_Stap3(clientFactory, next, placeController, headerView, vars));
+		.then(LoginActivity.LOGIN_STAP2, FAILURE1).map(nop -> next)
+		.then(new Login_Stap3(clientFactory, placeController, headerView, vars));
 	}
 
 	private String getUsername() {
