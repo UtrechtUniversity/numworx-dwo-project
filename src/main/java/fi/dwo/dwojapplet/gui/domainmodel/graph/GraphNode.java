@@ -169,7 +169,7 @@ public class GraphNode {
 		selected.clear();
 		for (String code : getMethodeCodes()) {
 			Point location = getLocationOnPanel(code, origin, factor);
-			if (r.contains(location))
+			if (r.contains(location) && isVisible(code))
 				selected.add(code);
 		}
 	}

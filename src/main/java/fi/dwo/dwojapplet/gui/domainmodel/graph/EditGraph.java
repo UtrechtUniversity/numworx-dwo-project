@@ -164,7 +164,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		for(int i=0 ; i<graphEdges.size() ; i++)
 			graphEdges.get(i).paint(g, origin, factor);
 		for(int i=0 ; i<graphNodes.size() ; i++) {
-			if(!graphNodes.get(i).getBlur())
+			if(!graphNodes.get(i).getBlur() && graphNodes.get(i).isVisible())
 			{	Rectangle rn = graphNodes.get(i).getTextBB();
 				if (rn.width == 0) {
 					graphNodes.get(i).paint(g, origin, factor);
@@ -294,7 +294,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		setToolTipText(null);
 		for(int i=0 ; i<graphNodes.size() ; i++) {
 			//graphNodes.get(i).setSelected(false);
-			if(graphNodes.get(i).contains(ex, ey)) {
+			if(graphNodes.get(i).contains(ex, ey) && graphNodes.get(i).isVisible()) {
 				activeNode = graphNodes.get(i);
 				activeNode.selectInside(new Rectangle(e.getX()-(int)(8*factor), e.getY()-(int)(8*factor), (int)(16*factor), (int)(16*factor)), origin, factor);
 				activeCode = activeNode.search(ex,ey);
@@ -379,7 +379,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 			return;
 		GraphNode node = null;
 		for(int i=0 ; i<graphNodes.size() ; i++) {
-			if(graphNodes.get(i).contains(ex, ey)) {
+			if(graphNodes.get(i).contains(ex, ey) && graphNodes.get(i).isVisible()) {
 				node = graphNodes.get(i);
 				break;
 			}
@@ -496,7 +496,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
       int ey = (int) ((e.getY()-origin.y)/factor);
       boolean set = false;
 	     for(int i=0 ; i<graphNodes.size() ; i++) {
-           if(graphNodes.get(i).contains(ex, ey)) {
+           if(graphNodes.get(i).contains(ex, ey) && graphNodes.get(i).isVisible()) {
                GraphNode activeNode = graphNodes.get(i);
                //activeNode.setSelected(true);
                String activeCode = activeNode.search(ex,ey);
