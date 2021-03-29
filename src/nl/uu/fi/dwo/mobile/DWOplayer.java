@@ -61,7 +61,6 @@ public abstract class DWOplayer
 	public static final DWOplayerClientBundle DWO_BUNDLE = GWT.create(DWOplayerClientBundle.class);
 	@Deprecated
 	public static  DWOplayerParameters PARAMETERS;
-	private static DWOplayer instance;
 	
 	private static TemplateCss templateCss;
 	public static TemplateConstants templateConstants = new TemplateBasicConstants(); // Never null
@@ -88,7 +87,6 @@ public abstract class DWOplayer
 	
 	DWOplayer() {
 		super();
-		instance = this;
 		setDwoProfileID();
 	}
 		
@@ -101,7 +99,7 @@ public abstract class DWOplayer
 //	private static Deferred<DomDwoProfileFull> deferredProfile;
 //	@Deprecated
 //	private static Promise<DomDwoProfileFull> dwoProfile; // NEVER NULL
-	public static ClientFactory clientfactory;
+//	public static ClientFactory clientfactory;
 
 	/**
 	 * This is the entry point method.

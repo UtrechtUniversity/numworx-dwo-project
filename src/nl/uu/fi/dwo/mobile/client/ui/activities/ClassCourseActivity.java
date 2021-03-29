@@ -49,6 +49,7 @@ public class ClassCourseActivity implements Activity {
   @Inject HeaderView header;
   @Inject NavigationView navigation;
   @Inject DwoGlobalVars instance;
+  @Inject Lazy<CoursesOfClasToSelectItems> coursesToItems;
   @Inject CourseActivity2.Factory caFactory;
   @Inject MembersInjector<ExamModuleActivity> exInjector;
   
@@ -71,7 +72,7 @@ public class ClassCourseActivity implements Activity {
       PersistenceId id = hash.getID();
       promise = rpc.getClassCourse(id);
       promise.then(this::succes)
-      .map(new CoursesOfClasToSelectItems())
+      .map(coursesToItems.get())
       .then(l -> {
         item = l.getValue().get(0);
         item.setPlace(where);

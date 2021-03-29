@@ -8,9 +8,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.osgi.util.function.Function;
 
+import dagger.Reusable;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
+import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
@@ -24,7 +28,13 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public final class CoursesOfClasToSelectItems
 			implements Function<DomCoursesOfSchoolClass, List<SelectModuleItem>> {
-		private Collection<DomClassCourse> sort(List<DomMapEntry<PersistenceId, DomClassCourse>> list, DomCoursesOfSchoolClass t) {
+        private DWOplayerParameters PARAMETERS;        
+  
+		@Inject CoursesOfClasToSelectItems(DWOplayerParameters pARAMETERS) {
+          PARAMETERS = pARAMETERS;
+        }
+
+    private Collection<DomClassCourse> sort(List<DomMapEntry<PersistenceId, DomClassCourse>> list, DomCoursesOfSchoolClass t) {
 			boolean again;
 			List<DomClassCourse> classcourses = null;
 			if(list != null) {
@@ -113,7 +123,7 @@ public final class CoursesOfClasToSelectItems
 				DWO2player.timezone += serverNow.longValue() - now;
 				now = serverNow.longValue();
 			}
-			boolean inExam = DWO2player.PARAMETERS.getSecureMode() != SecureMode.NORMAL;
+			boolean inExam = PARAMETERS.getSecureMode() != SecureMode.NORMAL;
 			Map<PersistenceId, DomCourseStudent> courses = map(t.getCourses());
 			Collection<DomClassCourse> classcourses = sort(t.getClassCourses(),t);
 			List<SelectModuleItem> result = new ArrayList<SelectModuleItem>(classcourses.size());

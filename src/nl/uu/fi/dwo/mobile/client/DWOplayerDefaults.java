@@ -156,20 +156,7 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 		return launchData;
 	}
 	
-//	public String getCourseDescription() {
-//		return courseDescription;
-//	}
-	
-	
-	@Override
-	public EventBus getEventBus() {
-		return new SimpleEventBus();
-	}
-	
-	public Prepare getPrepareInstance() {
-		return new Prepare();
-	}
-
+		
 	@Override
 	public String getCDN() {
 		return getHost();

@@ -58,9 +58,7 @@ public interface DWOplayerParameters {
 	ScoreNavIF  getScoreNav();
 	Logging getLogging();
 	String getHost();
-	EventBus getEventBus();
 // More to come....
-	Prepare getPrepareInstance();
 //	String getCourseDescription();
 	String getCDN();
 	SecureMode getSecureMode();

@@ -194,7 +194,7 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
 			if (smObjectives != null && smObjectives.length > 0)
 				logOption = true;
 			if(logOption) {
-				dwologger = new DWOLogger();
+				dwologger = new DWOLogger(activity);
 				dwologger.setLogID(logID);
 				dwologger.setClassName("fi.wiskopdr.CheckValueUnitPanel");
 				dwologger.setMaxScore(scoreMax);

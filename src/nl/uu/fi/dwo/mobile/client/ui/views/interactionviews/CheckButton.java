@@ -258,7 +258,7 @@ public class CheckButton implements InteractionStub, CBookEventListener
 
 		if (logOption)
 	    {	
-	    	DWOLogger dwologger = new DWOLogger();
+	    	DWOLogger dwologger = new DWOLogger(activity);
 	    	dwologger.setMaxScore(0);
 			dwologger.setLogID(logID);
 	    	dwologger.setClassName("fi.wiskopdr.CheckButton");

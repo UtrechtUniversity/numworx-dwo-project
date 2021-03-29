@@ -441,7 +441,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 					{
 						logging = fe.dwologger;
 					} else {
-						LogBuilder dwoLogger = new LogBuilder().setLogOption(launchState.getBoolean("logOption", false));
+						LogBuilder dwoLogger = new LogBuilder(activity).setLogOption(launchState.getBoolean("logOption", false));
 						if(launchState.containsKey("scoreMax"))
 						{
 							dwoLogger.setMaxScore(scoreMax);

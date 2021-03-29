@@ -237,7 +237,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 				logOption = true;
 			if (logOption  )
 		    {	
-		    	DWOLogger dwologger = new DWOLogger();
+		    	DWOLogger dwologger = new DWOLogger(activity);
 		    	dwologger.setMaxScore(scoreMax);
 		    	dwologger.setLogID(logID);
 		    	dwologger.setClassName("fi.wiskopdr.AntwoordKeuzeVak/"+keuzeMogelijkheden.length);

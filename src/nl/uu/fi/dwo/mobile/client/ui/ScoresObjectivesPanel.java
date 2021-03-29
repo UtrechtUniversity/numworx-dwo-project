@@ -88,18 +88,20 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 	//display student model as number of stars instead of categories
 	//TODO: set boolean stars from settings attached student model.
 	private boolean stars = false;
+    final private ActivityComponent activity;
 	
 	//display links to useful material in student model
 	//TODO: obtain links from settings attached student model (?)
 	//private boolean showLinks = false;
 	
-	public ScoresObjectivesPanel(HashMap<String, Object> map, boolean pilot)
+	public ScoresObjectivesPanel(ActivityComponent a, HashMap<String, Object> map, boolean pilot)
 	{
-		this(map, pilot, false);
+		this(a, map, pilot, false);
 	}
 	
-	public ScoresObjectivesPanel(HashMap<String, Object> map, boolean pilot, boolean stars)
+	public ScoresObjectivesPanel(ActivityComponent a, HashMap<String, Object> map, boolean pilot, boolean stars)
 	{
+	    this.activity = a;
 		this.pilot = pilot;
 		this.stars = stars;
 		canvas = Canvas.createIfSupported();
@@ -278,7 +280,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		{
 			if(dwologger == null)
 			{
-				dwologger = new DWOLogger();
+				dwologger = new DWOLogger(activity);
 			    dwologger.setMaxScore(0);
 			    dwologger.setLogID("StudentModel");
 			}

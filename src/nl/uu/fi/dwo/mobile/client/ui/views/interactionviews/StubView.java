@@ -177,7 +177,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 //
 //		}
 		int soortVak = outermap.getInt("soortInteractiePanel");
-		logging = new LogBuilder().setClassName(className(soortVak)).setLaunchData(innerMap).build();
+		logging = new LogBuilder(activity).setClassName(className(soortVak)).setLaunchData(innerMap).build();
 	}
 	private String className(int s) {
 		switch(s) {

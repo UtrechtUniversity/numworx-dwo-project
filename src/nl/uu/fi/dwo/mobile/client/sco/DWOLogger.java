@@ -12,7 +12,7 @@ import com.google.gwt.json.client.JSONValue;
 
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
-import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 
 public class DWOLogger implements Logging {
@@ -39,12 +39,12 @@ public class DWOLogger implements Logging {
 	private JSONBoolean teltMee;
 	private boolean logOption = true;
 
-	public DWOLogger() {
-		this(DWOplayer.PARAMETERS.getLogging());
+	public DWOLogger(ActivityComponent a) {
+		this(a.parameters().getLogging(), Memento.instance());
 	}
 	
-	public DWOLogger(Logging delegate) {		
-		memento = Memento.instance();
+	private DWOLogger(Logging delegate, Memento m) {		
+		memento = m;
 		this.delegate = delegate;
 	}
 /*

@@ -786,7 +786,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 				knopImageString = (String)launchData.get("knopImageString");
 			
 			if(logOption) {
-				dwologger = new DWOLogger();
+				dwologger = new DWOLogger(activity);
 				dwologger.setLogID(logID);
 				dwologger.setClassName("fi.wiskopdr.CheckSleepUnitPanel/" + getAantalSleepObjects() + "," + getAantalDoelObjects());
 				dwologger.setMaxScore(scoreMax);

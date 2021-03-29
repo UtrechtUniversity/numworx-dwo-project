@@ -70,6 +70,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.google.web.bindery.event.shared.ResettableEventBus;
+import com.google.web.bindery.event.shared.SimpleEventBus;
+
 import fi.wiskopdr.text.Text;
 
 /**
@@ -177,28 +179,28 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private int currentActiviteit = 0;
 	private ArrayList<FormuleButton> buttons = new ArrayList<FormuleButton>();
 	Memento memento;
-	private final static ResettableEventBus BUS = new ResettableEventBus(DWOplayer.PARAMETERS.getEventBus());
+	private final static ResettableEventBus BUS = new ResettableEventBus(new SimpleEventBus());
 
-	static private Prepare prepare = DWOplayer.PARAMETERS.getPrepareInstance();
+	static private Prepare prepare = new Prepare();
 
-	public static class MC2Prepare extends Prepare
-	{
-		private static final CBookEvent STOP = new CBookEvent("stop");
-
-		void defer(final ScheduledCommand cmd)
-		{
-			BUS.fireEvent(STOP); // ask CBook Widgets to send 'getState' events.
-			Timer t = new Timer()
-			{
-				@Override
-				public void run()
-				{
-					cmd.execute();
-				}
-			};
-			t.schedule(100);
-		}
-	}
+//	public static class MC2Prepare extends Prepare
+//	{
+//		private static final CBookEvent STOP = new CBookEvent("stop");
+//
+//		void defer(final ScheduledCommand cmd)
+//		{
+//			BUS.fireEvent(STOP); // ask CBook Widgets to send 'getState' events.
+//			Timer t = new Timer()
+//			{
+//				@Override
+//				public void run()
+//				{
+//					cmd.execute();
+//				}
+//			};
+//			t.schedule(100);
+//		}
+//	}
 
 	@Deprecated
 	public static void immediate(ScheduledCommand cmd)
@@ -1967,9 +1969,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		} else {
 			ScoresObjectivesPanel v;
 			if (pilot) 
-				v = (new ScoresObjectivesPanel(getScoresObjectivesForDiagramFromLogs(), pilot));
+				v = (new ScoresObjectivesPanel(entry.activity, getScoresObjectivesForDiagramFromLogs(), pilot));
 			else
-				v = (new ScoresObjectivesPanel(getScoresObjectivesForDiagram(), pilot));
+				v = (new ScoresObjectivesPanel(entry.activity, getScoresObjectivesForDiagram(), pilot));
 			scoresObjectivesPanel = v;
 			scoresObjectivesDialog.add(scoresObjectivesPanel.asWidget());
 		}
@@ -2012,7 +2014,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		// scoresObjectivesDialog = new DialogBox(true);
 		viewMisconceptionsDialog.setText(Text.constants.viewMisconceptionsKnopLabel());
 		// scoresObjectivesDialog = new DialogBox(this,"deelscores", true);
-		viewMisconceptionsPanel = new ScoresObjectivesPanel(getMisconceptionsForDiagram(), false);
+		viewMisconceptionsPanel = new ScoresObjectivesPanel(entry.activity, getMisconceptionsForDiagram(), false);
 		viewMisconceptionsPanel.zetKleurNeutraal();
 
 		// if(aantalDiagrammen < 4)

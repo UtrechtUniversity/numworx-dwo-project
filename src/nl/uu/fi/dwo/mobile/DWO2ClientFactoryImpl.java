@@ -53,6 +53,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
   
         @Inject TrafficAgent agent;
 		@Inject Lazy<ConfirmEventHandler> confirmHandler;
+		@Inject Lazy<CoursesOfClasToSelectItems> coursesToItems;
 	    final Provider<? extends TreeModuleView> treeModuleViewProvider;
 	    TreeModuleView treeModuleView;
 	    final private DwoGlobalVars instance;
@@ -183,7 +184,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 			if( vars.withUser() && vars.getCurrentSchoolClass() != null) {
 				Promise<DomCoursesOfSchoolClass> promise = rpc.getCoursesClass(vars.getCurrentSchoolClass());
 
-				modules = promise.map(new CoursesOfClasToSelectItems());
+				modules = promise.map(coursesToItems.get());
 			} else if (vars.withUser() && RoleType.STUDENT != roleType)
 			{
 				Promise<List<DomCourseStudent>> p1 = rpc.getCourses();

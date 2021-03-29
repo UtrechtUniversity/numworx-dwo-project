@@ -303,7 +303,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			else 
 				logOption = launchStateMap.getBoolean("logOption", false);
 			if(logOption) {
-				LogBuilder builder = new LogBuilder();
+				LogBuilder builder = new LogBuilder(activity);
 				builder.setLogOption(launchStateMap.getBoolean("logOption", false));
 				String type = isVergelijkingVak? "Vergelijking":"Formule";
 				if (launchStateMap.containsKey("logID"))

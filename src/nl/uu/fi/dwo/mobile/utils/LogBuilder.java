@@ -6,11 +6,16 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 
 public class LogBuilder {
 	
-	
-	private boolean logOption;
+	private ActivityComponent activity;
+	public LogBuilder(ActivityComponent activity) {
+    this.activity = activity;
+  }
+
+  private boolean logOption;
 	private String logID;
 	private String[] smObjectives;
 	private boolean[][] logObjectives;
@@ -51,7 +56,7 @@ public class LogBuilder {
 		
 		if (logOption || smObjectives != null) {
 			String logID = logOption ? this.logID : null;
-			DWOLogger dwoLogger = new DWOLogger();					
+			DWOLogger dwoLogger = new DWOLogger(activity);					
 			dwoLogger.setTeltMee(teltMee);
 			dwoLogger.setLogIDLabel(logIDLabel);
 

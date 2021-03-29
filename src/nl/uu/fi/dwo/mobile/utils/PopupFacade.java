@@ -18,7 +18,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.GeogebraView;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.MC2View;
+//import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.MC2View;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PopupButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
 import static nl.uu.fi.dwo.mobile.utils.ImageUtils.newImage;
@@ -123,17 +123,17 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 		return container;
 	}
 	
-	public Widget wrap(MC2View container) {
-		if(popup) {
-			if (popupBtn == null) {
-				popupBtn = new PopupButton(container.getWidget(), getImage(), container, popupListener);
-				popupBtn.setTitle(popupTitel);
-			}
-			list.add(popupBtn);
-			return popupBtn;
-		}
-		return container;
-	}
+//	public Widget wrap(MC2View container) {
+//		if(popup) {
+//			if (popupBtn == null) {
+//				popupBtn = new PopupButton(container.getWidget(), getImage(), container, popupListener);
+//				popupBtn.setTitle(popupTitel);
+//			}
+//			list.add(popupBtn);
+//			return popupBtn;
+//		}
+//		return container;
+//	}
 	
 	public Widget wrap(GeogebraView container) {
 		if(popup) {

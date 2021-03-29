@@ -224,7 +224,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 			if(map.containsKey("logIDLabel"))
 				logIDLabel = map.getString("logIDLabel");
 			if(logOption) {
-				DWOLogger dwologger = new DWOLogger();
+				DWOLogger dwologger = new DWOLogger(activity);
 				dwologger.setMaxScore(scoreMax);
 				dwologger.setLogID(logID);
 				dwologger.setClassName("fi.wiskopdr.AntwoordTekstVak");

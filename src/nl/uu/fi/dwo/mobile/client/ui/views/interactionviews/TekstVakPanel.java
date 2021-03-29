@@ -542,7 +542,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 			puntenAftrekPopup = launchState.getInt("puntenAftrekPopup");
 		logOption = launchState.getBoolean("logOption", false);
 		if(logOption) {
-			LogBuilder builder = new LogBuilder()
+			LogBuilder builder = new LogBuilder(activity)
 				.setLogOption(true)
 				.setLogID(launchState.getString("logID"))
 				.setMaxScore(0)

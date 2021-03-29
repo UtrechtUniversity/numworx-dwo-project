@@ -23,4 +23,5 @@ public abstract class ActivityComponent {
 
 	@Named("premium")
 	public abstract boolean isPremium();
+		
 }

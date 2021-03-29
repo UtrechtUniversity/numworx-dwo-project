@@ -2212,7 +2212,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	{
 		if(dwologger == null)
 		{
-			dwologger = new DWOLogger();
+			dwologger = new DWOLogger(activity);
 		    dwologger.setMaxScore(0);
 		    dwologger.setLogID("StudentModelButton");
 		}

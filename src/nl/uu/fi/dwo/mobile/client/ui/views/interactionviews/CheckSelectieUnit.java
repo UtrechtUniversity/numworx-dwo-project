@@ -798,7 +798,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 
 		String[] smObjectives = JSONUtilities.toStringArray(launchData.get("smObjectives"));
 		if(logOption || smObjectives != null) {
-			LogBuilder builder = new LogBuilder()
+			LogBuilder builder = new LogBuilder(activity)
 					.setLogOption(logOption)
 					.setLogID(logID)
 					.setClassName("fi.wiskopdr.CheckUnitPanel/" + getAantalSelectieObjecten())

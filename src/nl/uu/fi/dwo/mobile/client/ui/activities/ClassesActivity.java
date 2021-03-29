@@ -13,6 +13,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
+import dagger.Lazy;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.CoursesOfClasToSelectItems;
 import nl.uu.fi.dwo.mobile.DWO2player.InsertSelectItems;
@@ -37,6 +38,7 @@ public class ClassesActivity extends AbstractActivity implements ValueChangeHand
 	@Inject ClassesViewImpl view;
 	@Inject NavigationViewNumworx navigation;
 	@Inject HeaderView header;
+	@Inject Lazy<CoursesOfClasToSelectItems> coursesToItems;
 
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus) {
@@ -63,7 +65,7 @@ public class ClassesActivity extends AbstractActivity implements ValueChangeHand
 				.map( t -> { 
 					t.getSchoolClass().setIconizer(Boolean.FALSE);
 					return t;})
-				.map(new CoursesOfClasToSelectItems());
+				.map(coursesToItems.get());
 		list.then(new InsertSelectItems(false, RoleType.STUDENT))
 		
 		.onResolve( 
