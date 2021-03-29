@@ -335,6 +335,19 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
       }
     }
     model.nodeStructureChanged(root);
+
+    @SuppressWarnings("unchecked")
+    Enumeration<DefaultMutableTreeNode> all = root.depthFirstEnumeration();
+    while (all.hasMoreElements()) {
+      DefaultMutableTreeNode node = all.nextElement();
+      Object u = node.getUserObject();
+      if (u instanceof NodeLeaf) {
+        NodeLeaf leaf = (NodeLeaf) u;
+        if (leaf.isValue()) {
+          tree.makeVisible(new TreePath(node.getPath()));
+        }
+      }
+    }
     return this;
   }
 
