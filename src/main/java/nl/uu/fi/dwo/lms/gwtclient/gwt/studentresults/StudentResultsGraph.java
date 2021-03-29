@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -38,7 +37,6 @@ import org.vectomatic.dom.svg.utils.SVGConstants;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -116,16 +114,105 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 
 	}
 
-
+	static final float  VOORKENNIS_HEIGHT = 192f; // 12em
+	boolean inVoorkennis;
 	private class Voorkennis implements ClickHandler {
+
+		public OMSVGPoint create(float x, float y) {
+			return image.getSvgElement().createSVGPoint(x, y);
+		}
+		
+		
+		public Iterable<OMSVGPoint> maakVoorkennisPosities(float x, float y, float width, float height, float f) {
+			ArrayList<OMSVGPoint> posities = new ArrayList<OMSVGPoint>();
+			float centerx = x + width/2;
+			float centery = y + height/2;
+			posities.add(create(centerx, centery));
+			
+			posities.add(create(x+f*250, y+height-f*40));
+			posities.add(create(width-f*250, y+height+f*40));
+			posities.add(create(x+f*200, y + height+40));
+			posities.add(create(x+width-f*200, y+height-f*40));
+			
+			posities.add(create(x+f*280, y+height-f*20));
+			posities.add(create(x+width-f*280, y+height+f*20));
+			posities.add(create(x+f*230, y+height+f*20));
+			posities.add(create(x+width-f*230, y+height-f*20));
+			
+			posities.add(create(x+f*310, y+height-f*60));
+			posities.add(create(x+width-f*310, y+height+f*60));
+			posities.add(create(x+f*310, y+height+f*60));
+			posities.add(create(x+width-f*310, y+height-f*60));
+			return posities;
+			
+		}
+
+		
+		
+		
+		
+		@Override
+		public void onClick(ClickEvent event) {
+			setWidgetTopHeight(title, 12, Unit.EM, 2, Unit.EM);
+			setWidgetTopHeight(zoomFitBtn, 3+12, Unit.EM, 2, Unit.EM);
+			setWidgetTopHeight(zoomInBtn, 6+12, Unit.EM, 2, Unit.EM);
+			setWidgetTopHeight(zoomOutBtn, 9+12, Unit.EM, 2, Unit.EM);
+			setWidgetTopHeight(voorkennisBtn, 3+12, Unit.EM, 2, Unit.EM);
+			setWidgetVisible(voorkennistitle, true);
+			setWidgetVisible(voorkennisBtn, false);
+			OMSVGRect viewbox = image.getSvgElement().getViewBox().getBaseVal();
+			float dy = VOORKENNIS_HEIGHT;
+			OMSVGMatrix ctm = image.getSvgElement().getScreenCTM();
+			dy /= ctm.getA();
+			viewbox.setY(viewbox.getY()-dy);
+			image.getSvgElement().setViewBox(viewbox);
+			inVoorkennis = true;
+			Set<String> voorkennisIds = 
+			nodeStream().filter(Node::isVisible).flatMap(t -> t.obj.getInfo().getVoorkennis().stream()).collect(Collectors.toSet());
+			GWT.log("aantal = " + voorkennisIds.size());
+			float centerx = viewbox.getCenterX();
+			float centery = viewbox.getY() + dy/2;
+			Iterator<OMSVGPoint> points = maakVoorkennisPosities(viewbox.getX(), viewbox.getY(), viewbox.getWidth(), dy, 1f/ctm.getA()).iterator();
+			for(String id: voorkennisIds) {
+				List<Node> list = map.get(id);
+				if (list != null && !list.stream().anyMatch(Node::isVisible)) {
+					Node n = list.stream().findAny().get();
+					n.setVisible(true);
+					n.setVoorkennis(true);
+					if (points.hasNext()) {
+						OMSVGPoint p  = points.next();
+						n.moveTo(p.getX(), p.getY());
+					} else
+						n.moveTo(centerx, centery);
+				}
+			}
+			edges.forEach(Edge::setVisible);
+			
+		}
+	}
+	private class VerbergVoorkennis implements ClickHandler {
 
 		@Override
 		public void onClick(ClickEvent event) {
-			// TODO Auto-generated method stub
-
+			setWidgetTopHeight(title, 0, Unit.EM, 2, Unit.EM);
+			setWidgetTopHeight(zoomFitBtn, 3, Unit.EM, 2, Unit.EM);
+			setWidgetTopHeight(zoomInBtn, 6, Unit.EM, 2, Unit.EM);
+			setWidgetTopHeight(zoomOutBtn, 9, Unit.EM, 2, Unit.EM);
+			setWidgetTopHeight(voorkennisBtn, 3, Unit.EM, 2, Unit.EM);
+			setWidgetVisible(voorkennistitle, false);
+			setWidgetVisible(voorkennisBtn, true);
+			OMSVGRect viewbox = image.getSvgElement().getViewBox().getBaseVal();
+			float dy = VOORKENNIS_HEIGHT;
+			OMSVGMatrix ctm = image.getSvgElement().getScreenCTM();
+			dy /= ctm.getA();
+			viewbox.setY(viewbox.getY()+dy);
+			image.getSvgElement().setViewBox(viewbox);
+			inVoorkennis = false;
+			doFilter(filter);
 		}
-
+		
 	}
+	
 
 	float factor = 1.0f;
 	class Zoom implements ClickHandler {
@@ -527,6 +614,27 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		final private DomStudentModelMethodInfo info;
 		final private DomStudentModelObj obj;
 		private OMSVGRectElement rect;
+		private boolean voorkennis;
+		private float tmpx, tmpy;
+		
+		void moveTo(float x, float y) {
+			if (voorkennis) {
+				tmpx = x;
+				tmpy = y;				
+			} else {
+				cx = x;
+				cy = y;
+			}
+			circle.getCx().getBaseVal().setValue(x);
+			circle.getCy().getBaseVal().setValue(y);
+			text.getX().getBaseVal().getItem(0).setValue(x);
+			text.getY().getBaseVal().getItem(0).setValue(y);
+			OMSVGRect bbox = text.getBBox();
+			rect.getX().getBaseVal().setValue(bbox.getX());
+			rect.getY().getBaseVal().setValue(bbox.getY());
+			
+		}
+		
 		
 		Node(DomStudentModelObj obj, DomStudentModelMethodInfo info, String parent) {
 			this.obj = obj;
@@ -551,6 +659,18 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			text = doc.createSVGTextElement(cx, cy, unitType, parent + obj.getInfo().getTitle().get(lang));
 		}
 		
+		public void setVoorkennis(boolean b) {
+			voorkennis = b;
+			if (b) {
+				moveTo(tmpx, tmpy);
+			} else {
+				moveTo(cx, cy);
+			}
+		}
+		public boolean isVoorkennis() {
+			return voorkennis;
+		}
+
 		Node(DomStudentModelObj obj, DomStudentModelMethodInfo info) {
 			this(obj,info, "");
 		}
@@ -630,8 +750,8 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 	private Set<Edge> edges;
 	private Set<ChapterEdge> chapterEdges;
 	
-	private Button zoomFitBtn, zoomInBtn, zoomOutBtn, voorkennisBtn;
-	private DockLayoutPanel title;
+	private Button zoomFitBtn, zoomInBtn, zoomOutBtn, voorkennisBtn, verbergBtn;
+	private DockLayoutPanel title, voorkennistitle;
 	private ListBox methodeBtn;
 	private Button book;
 	private Label  chapter;
@@ -707,6 +827,24 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		setWidgetLeftRight(title, 0, Unit.EM, 0, Unit.EM);
 		setWidgetTopHeight(title, 0, Unit.EM, 2, Unit.EM);
 		
+		voorkennistitle = new DockLayoutPanel(Unit.EM);
+		voorkennistitle.getElement().getStyle().setBackgroundColor("#1B75BB");
+		add(voorkennistitle);
+		
+		setWidgetLeftRight(voorkennistitle, 0, Unit.EM, 0, Unit.EM);
+		setWidgetTopHeight(voorkennistitle, 0, Unit.EM, 2, Unit.EM);
+		setWidgetVisible(voorkennistitle, false);
+		verbergBtn = new Button("X");
+		verbergBtn.setStylePrimaryName("graph-Button");
+		voorkennistitle.addEast(verbergBtn, 3);
+		Label vtt = new Label("Voorkennis");
+		style = vtt.getElement().getStyle();
+		style.setPaddingTop(0.2, Unit.EM);
+		style.setColor("white");
+		style.setTextAlign(TextAlign.CENTER);
+		style.setFontSize(20, Unit.PX);
+		voorkennistitle.add(vtt);
+		
 		
 		lang = LocaleInfo.getCurrentLocale().getLocaleName();
 		map = new HashMap<>();
@@ -729,6 +867,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		methodeBtn.addChangeHandler(handler);
 		methodeBtn.addClickHandler(handler);
 		book.addClickHandler(new Book());
+		verbergBtn.addClickHandler(new VerbergVoorkennis());
 	}
 
 	private void doFilter(DomStudentModelMethodInfo info) {
