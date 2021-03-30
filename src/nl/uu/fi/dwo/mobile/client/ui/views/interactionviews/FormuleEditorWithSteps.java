@@ -3848,8 +3848,21 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				}
 				else
 				{
-					fv.showResult(FormuleViewer.CORRECT);
-					setAndAddFeedback(Text.constants.feedbackTekst04());
+					HashMap<String, Object> checkResults = null;
+					try {
+						checkResults = avChecker.checkAnswer("$f" + vergNieuw.toString() + "@");
+					}
+					catch (RestartException e)
+					{}
+
+					boolean eindStapOk = true;
+					String feedback = Text.constants.feedbackTekst04();
+					if(checkResults!=null) {
+						eindStapOk = (Boolean)checkResults.get("correct");
+						feedback = (String)checkResults.get("feedback");
+					}
+					fv.showResult(eindStapOk ? FormuleViewer.CORRECT : FormuleViewer.WRONG);
+					setAndAddFeedback(eindStapOk ? Text.constants.feedbackTekst04() : feedback);
 				}
 				//"De vergelijking is correct opgelost."
 				setStapOk(false);
@@ -3867,8 +3880,20 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			}
 			else if (vergNieuw != null && linStrategieVersie)
 			{	
-				fv.showResult(FormuleViewer.NONE);
-				setStapOk(true);
+				HashMap<String, Object> checkResults = null;
+				try {
+					checkResults = avChecker.checkAnswer("$f" + vergNieuw.toString() + "@");
+				}
+				catch (RestartException e)
+				{}
+
+				boolean stapCorrect = true;
+				if(checkResults!=null) {
+					stapCorrect = (Boolean)checkResults.get("isGelijkwaardig");
+				}
+				setAndAddFeedback(stapCorrect ? "" : Text.constants.feedbackTekst23());
+				fv.showResult(stapCorrect ? FormuleViewer.NONE : FormuleViewer.WRONG);
+				setStapOk(stapCorrect);
 			}
 			else if (vergNieuw != null && !substitutieVak)
 			{

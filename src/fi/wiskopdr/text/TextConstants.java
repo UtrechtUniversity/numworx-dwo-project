@@ -94,6 +94,8 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	String feedbackTekst21b();
 	@DefaultStringValue("Je hebt de oplossingen in deze tak gevonden, ga verder met een andere tak.")
 	String feedbackTekst22();
+	@DefaultStringValue("Je verliest oplossingen. Doe een stap terug")
+	String feedbackTekst23();
 	
 	
 	
