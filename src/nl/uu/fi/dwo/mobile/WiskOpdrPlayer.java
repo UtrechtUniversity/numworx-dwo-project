@@ -68,7 +68,6 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 //	  //DWOplayer.clientfactory = f;
 //	}
 	@Inject void setParameters(DWOplayerParameters p) {
-	  DWOplayer.PARAMETERS = p;
 	  this.PREFIX = p.getLaunchData();
 	}
 

@@ -249,7 +249,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		                popup.setPopupPosition(left, top);
 		              }
 		            });
-		    		InfoPanel info = new InfoPanel(popup);
+		    		InfoPanel info = new InfoPanel(popup, pfx);
 		    		info.setName(value.getName());
 		    		info.setDescription(getLabel(value));
 					popup.setWidget(info);

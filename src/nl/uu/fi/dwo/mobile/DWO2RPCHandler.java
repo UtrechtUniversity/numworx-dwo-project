@@ -95,7 +95,7 @@ public final class DWO2RPCHandler extends nl.uu.fi.dwo.account.client.RPCHandler
     public Promise<Boolean> setActiveSchoolClass(DomSchoolClass schoolClass) {
     	return classManager.setActiveSchoolClass(context, schoolClass).then(p -> { 
     		if (p.getValue())
-    			DwoGlobalVars.instance().getActiveSchoolRoleAndClass().setSchoolClass(schoolClass);
+    			vars.getActiveSchoolRoleAndClass().setSchoolClass(schoolClass);
     		return p;
     	});
     }

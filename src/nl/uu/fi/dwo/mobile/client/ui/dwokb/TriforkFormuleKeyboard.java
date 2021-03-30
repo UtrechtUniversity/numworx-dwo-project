@@ -3,12 +3,14 @@ package nl.uu.fi.dwo.mobile.client.ui.dwokb;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 
 public class TriforkFormuleKeyboard extends FormuleKeyboard implements
 		StatusBarIF {
 
-	public TriforkFormuleKeyboard() {
+	public TriforkFormuleKeyboard(ActivityComponent a) {
+		super(a);
 	}
 
 	public void zetMaat() {

@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
@@ -72,7 +73,7 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 	protected GotoOpdracht gotoOpdracht;
 	protected int currentOpdracht;
 
-	public ScoreNavFacade() {
+	public ScoreNavFacade(ActivityComponent a) {
 		nakijkKnop = new PushButton(Text.constants.nakijkKnopLabel());
 		nakijkKnop.setStylePrimaryName(MYPUSHBUTTON);
 		nakijkKnop.addClickHandler(new ClickHandler(){

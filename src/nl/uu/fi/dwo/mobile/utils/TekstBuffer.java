@@ -241,7 +241,7 @@ public class TekstBuffer
 		int kolom = -1; // De default: geen volle breedte
 		if (volleBreedtes != null && volleBreedtes.length > huidigeKolom)
 			kolom = volleBreedtes[huidigeKolom];
-		return new ImageView(naam, kolom);
+		return new ImageView(naam, kolom, activity);
 	}
 
 	private FormuleViewer getFormuleViewer(String tekst, int i, int endIndex)
@@ -366,7 +366,7 @@ public class TekstBuffer
 //			
 //			return x(map, new MC2View(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 4: 
-			return x(map, new PopupFacadeWithFont(map, new TextEditor(activity, currentVakGegevens, randomVarNamen, randomVarWaarden )));
+			return x(map, new PopupFacadeWithFont(map, new TextEditor(activity, currentVakGegevens, randomVarNamen, randomVarWaarden ), activity));
 		
 		
 		case 39: case 10: // geogebra3

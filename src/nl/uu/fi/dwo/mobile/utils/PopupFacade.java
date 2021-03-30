@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
@@ -55,10 +56,11 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 	private Image  popupImage;
 	private InteractionView delegate;
 	private PopupListener   popupListener;
+	private ActivityComponent activity;
 	
 	
 	@Deprecated
-	public PopupFacade(HashMap<String, Object> h)
+	private PopupFacade(HashMap<String, Object> h)
 	{
 		if(h == null) return;
 		popup =  Boolean.TRUE.equals(h.get("popup"));
@@ -74,19 +76,20 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 	}
 	
 	@Deprecated
-	public PopupFacade(HashMap<String,Object> h, InteractionView delegate)
+	private PopupFacade(HashMap<String,Object> h, InteractionView delegate)
 	{
 		this(h);
 		this.delegate = delegate;
 	}
-	public PopupFacade(ObjectMap h, InteractionView delegate)
+	public PopupFacade(ObjectMap h, InteractionView delegate, ActivityComponent a)
 	{
-		this(h);
+		this(h,a);
 		this.delegate = delegate;
 	}
 	
 	
-	public PopupFacade(ObjectMap h) {
+	public PopupFacade(ObjectMap h, ActivityComponent a) {
+		this.activity = a;
 		if(h == null) return;
 		popup = h.getBoolean("popup", false);
 		if(h.containsKey("setNr"))
@@ -168,7 +171,7 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 	private Image getImage() {
 		if(popupImage != null) return popupImage;
 		if(popupImageString != null && popupImageString.length()>0) {
-			ImageView imageView = new ImageView(popupImageString);
+			ImageView imageView = new ImageView(popupImageString, activity);
 			imageHeight = imageView.getHeight();
 			imageWidth = imageView.getWidth();
 			return popupImage = imageView.getImage();
@@ -177,7 +180,7 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 		imageWidth = widths[setNr];
 		imageHeight = heights[setNr];
 		
-		return popupImage = newImage(interactiePanelSetNames[setNr]);
+		return popupImage = newImage(interactiePanelSetNames[setNr], activity.parameters());
 	}
 	
 	public InteractionView getDelegate()

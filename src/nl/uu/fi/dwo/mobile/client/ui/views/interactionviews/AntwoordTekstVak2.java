@@ -177,7 +177,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 				launchState = map.getMap("interactiePanelLaunchState");
 		}
 
-		facade = new PopupFacade(h);
+		facade = new PopupFacade(JSONUtilities.wrapMap(h), activity);
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
 		init(breedte, hoogte, launchState, randomVarWaarden);

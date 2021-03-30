@@ -379,7 +379,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		{
 			this.fews = fe;
 		}
-		facade = new PopupFacade(h);
+		facade = new PopupFacade(JSONUtilities.wrapMap(h), activity);
 		sp = createPanel();
 		
 		if(h == null)

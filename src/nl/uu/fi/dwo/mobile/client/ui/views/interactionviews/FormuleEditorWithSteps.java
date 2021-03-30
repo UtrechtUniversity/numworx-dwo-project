@@ -237,7 +237,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		if (map.containsKey("volledigeBreedte"))
 			volledigeBreedte = map.getBoolean("volledigeBreedte");
 		
-		facade = new PopupFacade(map);
+		facade = new PopupFacade(map, activity);
 		rmknop = false;
 		
 		// 'eigen opdracht' voor vergelijkingvak
@@ -647,7 +647,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	
 	private FEWSButton makeFEWSButton(String code, boolean alignRight, String tooltipText) 
 	{
-		FEWSButton button = new FEWSButton(code);
+		FEWSButton button = new FEWSButton(code, isNoordhoff());
 		button.setSize(28, 28);
 		button.getElement().getStyle().setMarginTop(4, Unit.PX);
 		if(alignRight) {

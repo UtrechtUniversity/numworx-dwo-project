@@ -217,7 +217,7 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
 		int imHeight = hoogte;
 		Image knopImage = null;
 		if(knopImageString!=null && !"".equals(knopImageString))
-       	{  	ImageView imageView = new ImageView(knopImageString);
+       	{  	ImageView imageView = new ImageView(knopImageString,activity);
        		knopImage = imageView.getImage();
 			if(knopImage != null)
 			{

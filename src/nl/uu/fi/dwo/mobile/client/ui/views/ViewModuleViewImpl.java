@@ -1918,7 +1918,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		sb.setCombinedState(this);
 		kb = sb.getFormuleKeyboard();
 		cb = sb.getFormuleClipboard();
-		scoreNav = activity.parameters().getScoreNav();
+		scoreNav = activity.parameters().getScoreNav(activity);
 		POPUP = scoreNav.getPopup();
 
 		scoreNav.setStatusBar(sb);

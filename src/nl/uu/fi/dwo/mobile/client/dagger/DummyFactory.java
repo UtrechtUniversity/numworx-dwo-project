@@ -27,7 +27,6 @@ public abstract class DummyFactory {
   @Singleton
   @Provides static DWOplayerParameters parameters() {
     DWOplayerParameters create = GWT.create(DWOplayerDefaults.class);
-    DWOplayer.PARAMETERS = create;  // FIXME valsspelen!!!!!
     return create;
   }
 

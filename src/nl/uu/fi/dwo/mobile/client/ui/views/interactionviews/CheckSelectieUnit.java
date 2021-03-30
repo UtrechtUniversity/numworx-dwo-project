@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -814,16 +815,17 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	}
 
 	private void adviseMe() {
-		DwoGlobalVars instance = DwoGlobalVars.instance();
-		if (instance.withUser() && logOption && comRoot.getLessonMode() == LessonMode.normal) {
+		Optional<DwoGlobalVars> instance = activity.vars();
+		if (instance.isPresent() &&
+			instance.get().withUser() && logOption && comRoot.getLessonMode() == LessonMode.normal) {
 			String id = logID;
 			if(! id.startsWith("adviseMe:")) 
 				return;
 			String[] split = id.split(":");
-			String userid = instance.getUserID().toString();
+			String userid = instance.get().getUserID().toString();
 			String classid;
 			try {
-				classid = instance.getCurrentSchoolClass().getId().getIdString();
+				classid = instance.get().getCurrentSchoolClass().getId().getIdString();
 			} catch (Exception e) {
 				classid = "";
 			}
@@ -878,7 +880,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		int imHeight = hoogte;
 		Image knopImage = null;
 		if(knopImageString!=null && !"".equals(knopImageString))
-       	{  	ImageView imageView = new ImageView(knopImageString);
+       	{  	ImageView imageView = new ImageView(knopImageString, activity);
        		knopImage = imageView.getImage();
 			if(knopImage != null)
 			{

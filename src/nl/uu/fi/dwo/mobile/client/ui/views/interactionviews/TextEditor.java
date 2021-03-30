@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,7 +47,6 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.google.web.bindery.event.shared.HandlerRegistrations;
 import com.vaadin.pointerevents.client.PointerDownEvent;
@@ -391,7 +391,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		FlowPanel menubar = new FlowPanel();
 		menubar.setStyleName(css.balk());
 		
-		FEWSButton formuleButton = new FEWSButton("formule");
+		FEWSButton formuleButton = new FEWSButton("formule",isNoordhoff());
 		formuleButton.addButtonListener(new FXHandler());
 		formuleButton.setTooltip(Text.constants.tooltip_formuleButton());
 		formuleButton.setSize(27, 27);
@@ -404,7 +404,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		upImage.getElement().setAttribute("width","18");
 		upImage.getElement().setAttribute("height","18");
 		
-		FEWSButton calcButton = new FEWSButton("rekenmachine");
+		FEWSButton calcButton = new FEWSButton("rekenmachine", isNoordhoff());
 		calcButton.addButtonListener(new CalcHandler());
 		calcButton.setTooltip(Text.constants.tooltip_calcButton());
 		calcButton.setSize(27, 27);
@@ -416,6 +416,11 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		if(graftool) menubar.add(graph);
 		
 		return menubar;
+	}
+
+	private boolean isNoordhoff() {
+		String dependentName = activity.parameters().keyboardStyle();
+		return "noordhoff".equals(dependentName);
 	}
 
 	@Override
@@ -462,17 +467,17 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	}
 
 	private void adviseMe() {
-		DwoGlobalVars vars = DwoGlobalVars.instance();
-		if (vars.withUser() && logging != null && comRoot.getLessonMode() == LessonMode.normal ) {
+		Optional<DwoGlobalVars> vars = activity.vars();
+		if (vars.isPresent() && vars.get().withUser() && logging != null && comRoot.getLessonMode() == LessonMode.normal ) {
 			String id = loggingID;
 			if(id == null || !id.startsWith("adviseMe:")) 
 				return;
 			String[] split = id.split(":");
 			String math = toMathML();
-			String userid = vars.getUserID().toString();
+			String userid = vars.get().getUserID().toString();
 			String classid;
 			try {
-				classid = vars.getCurrentSchoolClass().getId().getIdString();
+				classid = vars.get().getCurrentSchoolClass().getId().getIdString();
 			} catch (Exception e) {
 				classid = "";
 			}
@@ -1774,7 +1779,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			h.initHandler();
 			calculator.addDomHandler(new FormuleTapper(editor, this), ClickEvent.getType());
 			calculator.add(panel);
-			btn = new FEWSButton("=");
+			btn = new FEWSButton("=", isNoordhoff());
 			btn.addPointerDownHandler(); // Alleen voor deze [=]
 			btn.addButtonListener(this);
 			btn.setSize(20, 20);

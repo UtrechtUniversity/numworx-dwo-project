@@ -77,13 +77,13 @@ public class KeyBoardTabPanel
 	public void zetMaat() {
 		zetMaatCommon();
 		staticpanel.getElement().getStyle().setBackgroundImage("url("
-				+ DWOplayer.PARAMETERS.getResource("images/resources/footerbgimage.png")
+				+ kb.activity.parameters().getResource("images/resources/footerbgimage.png")
 				+ ")");
 		contentpanel.getElement().getStyle().setBackgroundImage("url("
-				+ DWOplayer.PARAMETERS.getResource("images/resources/keyboardgradientimage-new.png")
+				+ kb.activity.parameters().getResource("images/resources/keyboardgradientimage-new.png")
 				+ ")");
 
-		Image buttonImage = ImageUtils.newImage("images/resources/keyboardbutton.png");
+		Image buttonImage = ImageUtils.newImage("images/resources/keyboardbutton.png", kb.activity.parameters());
 		buttonImage.getElement().getStyle().setMargin(5, Unit.PX);
 		keyboardButton.add(buttonImage);
 		keyboardButton.addClickHandler(new ClickHandler() {
@@ -97,7 +97,7 @@ public class KeyBoardTabPanel
 			}});
 		if(!FormuleKeyboard.hasKeyboard)
 		{
-			buttonImage = ImageUtils.newImage("images/resources/digits.png");
+			buttonImage = ImageUtils.newImage("images/resources/digits.png",kb.activity.parameters());
 			buttonImage.getElement().getStyle().setMargin(5, Unit.PX);
 			digitsButton.add(buttonImage);
 			digitsButton.addClickHandler(new ClickHandler() {
@@ -169,7 +169,7 @@ public class KeyBoardTabPanel
 	public void addTab(String buttonText, Panel p, int height)
 	{
 		p.setStylePrimaryName("tabkeyboard");
-		p.addStyleDependentName(FormuleKeyBoardButtons.getDependentName());
+		p.addStyleDependentName(FormuleKeyBoardButtons.getDependentName(kb.activity.parameters()));
 
 		FormuleButton button = new FormuleButton();
 		button.setText(buttonText);

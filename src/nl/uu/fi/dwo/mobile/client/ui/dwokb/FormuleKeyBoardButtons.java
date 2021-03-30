@@ -7,6 +7,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.keyboard.client.DWOkeyboardBundle;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style.Display;
@@ -288,6 +289,7 @@ public abstract class FormuleKeyBoardButtons
 
 	public static TouchPanel getButton(String key, FormuleKeyboard kb)
 	{
+		DWOplayerParameters PARAMETERS = kb.activity.parameters();
 		setUp();
 		String key1 = key;
 		// HACK r? -> ? voor ?=x,y
@@ -302,16 +304,16 @@ public abstract class FormuleKeyBoardButtons
 		java.util.Collections.addAll(disabled, diabledItems);
 
 		if (buttonImages.containsKey(key) == true){
-			b = getImageButton(buttonImages.get(key));
+			b = getImageButton(buttonImages.get(key), PARAMETERS);
 		}
 		else if (buttonTexts.containsKey(key) == true){
-			b = getNewButton(buttonTexts.get(key));
+			b = getNewButton(buttonTexts.get(key), PARAMETERS);
 		}
 		else
 		{
-			b = getNewButton(key);
+			b = getNewButton(key, PARAMETERS);
 			if (key.length() == 1 && Character.isDigit(key.charAt(0))){
-				b.addStyleDependentName(getDependentName() + "-numeric");
+				b.addStyleDependentName(getDependentName(PARAMETERS) + "-numeric");
 				//b.getElement().getStyle().setBackgroundImage("url(images/resources/numericbuttongradient.png)");
 			}
 				
@@ -333,7 +335,7 @@ public abstract class FormuleKeyBoardButtons
 		return b;
 	}
 
-	public static TouchPanel getNewButton(String t)
+	public static TouchPanel getNewButton(String t, DWOplayerParameters PARAMETERS)
 	{
 		//Button b = new Button();
 		TouchPanel b = new TouchPanel();
@@ -342,24 +344,24 @@ public abstract class FormuleKeyBoardButtons
 		b.getElement().setInnerText(t);
 		//b.getElement().getStyle().setFloat(Style.Float.LEFT);
 		b.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-		b.addStyleDependentName(getDependentName());
+		b.addStyleDependentName(getDependentName(PARAMETERS));
 		return b;
 	}
 
-	static String getDependentName() {
-		return DWOplayer.PARAMETERS.keyboardStyle();
+	static String getDependentName(DWOplayerParameters PARAMETERS) {
+		return PARAMETERS.keyboardStyle();
 	}
 	
 	
-	public static TouchPanel getImageButton(String src)
+	public static TouchPanel getImageButton(String src, DWOplayerParameters PARAMETERS)
 	{
 		TouchPanel b = new TouchPanel();
 		b.setStylePrimaryName("kbd-Button");
-		b.addStyleDependentName(getDependentName()); // else buttonDWO
+		b.addStyleDependentName(getDependentName(PARAMETERS)); // else buttonDWO
 		//b.getElement().getStyle().setFloat(Style.Float.LEFT);
 		b.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-		Image img = newImage(src);
-		img.addStyleDependentName(getDependentName());
+		Image img = newImage(src,PARAMETERS);
+		img.addStyleDependentName(getDependentName(PARAMETERS));
 		if("images/resources/zoomuitknop.gif".equals(src) || "images/resources/zoominknop.gif".equals(src))
 		{
 			img.setHeight("32px");

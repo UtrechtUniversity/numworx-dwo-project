@@ -25,6 +25,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.ui.client.theme.base.ButtonCss;
+import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
 import com.googlecode.mgwt.ui.client.widget.Button;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 
@@ -91,7 +92,12 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 	SimpleProgressBar totaalscoreBar, beantwoordBar;
 	Grid  vragen;
 	int rows = 10;
-	public ScoreNavPanel() {
+
+
+	private HeaderCss headercss;
+
+	public ScoreNavPanel(ActivityComponent activity) {
+		headercss = activity.parameters().headercss();
 		top = new VerticalPanel();
 		initialize();
 		dock = new DockLayoutPanel(Unit.PX);
@@ -314,7 +320,7 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 	@Override
 	public Widget getNextButton() {
 		if(next == null) {
-			next = new HeaderButton(DWOplayer.PARAMETERS.headercss()); next.setText("Volgende >");
+			next = new HeaderButton(headercss); next.setText("Volgende >");
 			next.addTapHandler(new TapHandler() {
 				
 				@Override
@@ -330,7 +336,7 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 	@Override
 	public Widget getPrevButton() {
 		if(prev == null) {
-			prev = new HeaderButton(DWOplayer.PARAMETERS.headercss()); prev.setText("< Vorige");
+			prev = new HeaderButton(headercss); prev.setText("< Vorige");
 			prev.addTapHandler(new TapHandler() {
 				
 				@Override

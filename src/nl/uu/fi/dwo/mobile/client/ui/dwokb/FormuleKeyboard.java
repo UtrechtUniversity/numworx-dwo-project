@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 
@@ -40,6 +41,13 @@ import fi.writemathgwt.client.WritePanelHolder;
  */
 public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, FormuleClipboardIF, StatusBarIF
 {
+	final ActivityComponent activity;
+
+	public FormuleKeyboard(ActivityComponent a) {
+		super();
+		activity = a;
+	}
+
 	static final String VVV = "VVV";
 	static final String _123 = "123";
 	static final String ΑΒ = "\u03b1\u03b2..";

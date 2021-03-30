@@ -59,8 +59,6 @@ public abstract class DWOplayer
 	public static int PROFILE_ID = 77;
 	
 	public static final DWOplayerClientBundle DWO_BUNDLE = GWT.create(DWOplayerClientBundle.class);
-	@Deprecated
-	public static  DWOplayerParameters PARAMETERS;
 	
 	private static TemplateCss templateCss;
 	public static TemplateConstants templateConstants = new TemplateBasicConstants(); // Never null
@@ -148,7 +146,6 @@ public abstract class DWOplayer
 	void createTabletDisplay(TabletActivityMapper appActivityMapper, 
 			DWOplayerParameters params, NavigationView navigation, HeaderView header, EventBus bus)
 	{
-	    DWOplayer.PARAMETERS = params;
 		SimplePanel display = new SimpleLayoutPanel();
 		ActivityManager activityMapper = new ActivityManager(appActivityMapper, bus);
 		activityMapper.setDisplay(display);

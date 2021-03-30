@@ -1,12 +1,10 @@
 package nl.uu.fi.dwo.mobile.client;
 
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
-import nl.uu.fi.dwo.mobile.client.ui.Prepare;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 
-import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
 
 /**
@@ -35,10 +33,6 @@ public interface DWOplayerParameters {
 	
 	/**
 	 * 
-	 */
-	//void keyboardSetup();
-	/**
-	 * 
 	 * @return StyleDependentName
 	 */
 	String keyboardStyle();
@@ -55,7 +49,7 @@ public interface DWOplayerParameters {
 	
 	int getWindowHeight();
 	StatusBarIF getStatusBar(ActivityComponent a);
-	ScoreNavIF  getScoreNav();
+	ScoreNavIF  getScoreNav(ActivityComponent a);
 	Logging getLogging();
 	String getHost();
 // More to come....

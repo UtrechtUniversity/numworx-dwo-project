@@ -55,6 +55,29 @@ import dagger.Lazy;
 public class LoginActivity extends AbstractActivity
 {
 	
+	static final class Login_Stap2 implements Success<DomSchoolsRolesAndClassesV2, Void> {
+		private final DwoGlobalVars vars;
+				
+		public Login_Stap2(DwoGlobalVars vars) {
+			this.vars = vars;
+		}
+
+
+		@Override
+		public Promise<Void> call(Promise<DomSchoolsRolesAndClassesV2> promise) throws Exception {
+			DomSchoolsRolesAndClassesV2 value = promise.getValue();
+			if(value != null) {
+				vars.setSchoolLogins(value);
+				vars.setActiveSchoolRoleAndClass(value.getActiveSchoolRoleAndClass());
+				if(value.getActiveSchoolRoleAndClass() != null)
+					vars.setCurrentSchoolClass(value.getActiveSchoolRoleAndClass().getSchoolClass());
+				else
+					vars.setCurrentSchoolClass(null);
+			}
+			return null;
+		}
+	}
+
 	static final class Login_Stap1 implements Success<DomUserFullwLoginContext, DomSchoolsRolesAndClassesV2> {
 
 		private RPCHandler rpc;
@@ -138,25 +161,6 @@ public class LoginActivity extends AbstractActivity
 			
 			
 			
-	public static final Success<DomSchoolsRolesAndClassesV2, Void> LOGIN_STAP2 = 
-			 new Success<DomSchoolsRolesAndClassesV2, Void>() {
-
-				@Override
-				public Promise<Void> call(Promise<DomSchoolsRolesAndClassesV2> promise) throws Exception {
-					DwoGlobalVars instance = DwoGlobalVars.instance();
-					DomSchoolsRolesAndClassesV2 value = promise.getValue();
-					if(value != null) {
-						instance.setSchoolLogins(value);
-						instance.setActiveSchoolRoleAndClass(value.getActiveSchoolRoleAndClass());
-						if(value.getActiveSchoolRoleAndClass() != null)
-							instance.setCurrentSchoolClass(value.getActiveSchoolRoleAndClass().getSchoolClass());
-						else
-							instance.setCurrentSchoolClass(null);
-					}
-					return null;
-				}
-			};
-
     static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
 	static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
 	
@@ -177,6 +181,8 @@ public class LoginActivity extends AbstractActivity
 	@Inject HeaderView headerView;
 	final private DwoGlobalVars vars;
 	final private RPCHandler rpc;
+
+	private Login_Stap2 LOGIN_STAP2;
 	
 
 //	public LoginActivity(ClientFactory clientFactory, Place next)
@@ -192,6 +198,7 @@ public class LoginActivity extends AbstractActivity
 		this.dwoProfile = rpc.getDwoProfile();
 		this.vars = vars;
 		this.LOGIN_STAP1 = new Login_Stap1(rpc, vars);
+		this.LOGIN_STAP2 = new Login_Stap2(vars);
 		Place place = placeController.getWhere();
 		if (place instanceof HasHash)
 		  next = ((HasHash) place).getPlace();

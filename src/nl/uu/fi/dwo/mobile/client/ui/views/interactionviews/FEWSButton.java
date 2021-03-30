@@ -12,23 +12,25 @@ import org.vectomatic.dom.svg.utils.SVGConstants;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
 
 public class FEWSButton extends SVGButton{
 
 	private String code = "";
+	private final boolean noordhoff;
 	
-	public FEWSButton(String code) {
+	public FEWSButton(String code, boolean noordhoff) {
 		super(code);
 		this.code = code;
+		this.noordhoff = noordhoff;
 		
 		if(isNoordhoff())
 			defaultForegroundColor = CssColor.make("GRAY");
 	}
 	
-	public FEWSButton(SVGResource resource) {
+	public FEWSButton(SVGResource resource, boolean noordhoff) {
 		super(resource);
+		this.noordhoff = noordhoff;
 	}
 	
 	protected void setBorderActive(boolean b) {
@@ -360,8 +362,7 @@ public class FEWSButton extends SVGButton{
 
 	}
 	
-	public static boolean isNoordhoff() {
-		String dependentName = DWOplayer.PARAMETERS.keyboardStyle();
-		return "noordhoff".equals(dependentName);
+	private boolean isNoordhoff() {
+		return noordhoff;
 	}
 }

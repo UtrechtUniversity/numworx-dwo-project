@@ -8,6 +8,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.ResizableContentIF;
 import nl.uu.fi.dwo.mobile.client.ui.ResizableDialogBox;
@@ -403,15 +404,16 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 	public PopupButton(StubView view) {
 		this(view.getWidget(),new Image(DWOplayer.DWO_BUNDLE.appletknop().getSafeUri()), view, null);
 	}
-
+	
+	public PopupButton(IsWidget content, InteractionView view, PopupListener popupListener, ActivityComponent a) {
+		this(content, new Image(a.parameters().getResource("images/resources/tekstknop.gif")), view, popupListener);
+	}
+	
 	public PopupButton(IsWidget content, Image image, InteractionView view, PopupListener popupListener) {
 		Image img = image;
 		this.listener = popupListener == null ? 
 				(view == null ? NOVIEW_LISTENER : new DefaultListener()) 
 			  : popupListener;
-		if(img == null) {
-			img = new Image(DWOplayer.PARAMETERS.getResource("images/resources/tekstknop.gif"));
-		}
 		btn = new PushButton(img);
 		btn.getElement().getStyle().setPadding(0, Style.Unit.PX);
 		btn.getElement().getStyle().setBorderStyle(BorderStyle.NONE);

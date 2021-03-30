@@ -197,7 +197,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	private GeogebraView init(HashMap<String, Object> launchData)
 	{
 		ObjectMap json = JSONUtilities.wrapMap(launchData);
-		facade = new PopupFacade(json);
+		facade = new PopupFacade(json, activity);
 		String randje = "#FFFFFF";
 		if(json.getBoolean("border", false))
 			randje = "#000000";

@@ -413,7 +413,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	}
 
 	
-	/*@Inject*/ SecuredUserAccountManager account = new SecuredUserAccountManager();
+//	/*@Inject*/ SecuredUserAccountManager account = new SecuredUserAccountManager();
 	
 	@UiHandler("results")
 	void onResults(ClickEvent e) {

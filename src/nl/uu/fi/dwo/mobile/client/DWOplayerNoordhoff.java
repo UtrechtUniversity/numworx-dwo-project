@@ -65,8 +65,8 @@ public class DWOplayerNoordhoff extends DWOplayerDefaults implements DWOplayerPa
 	}
 
 	@Override
-	public ScoreNavIF getScoreNav() {
-		return new ScoreNavPanel();
+	public ScoreNavIF getScoreNav(ActivityComponent a) {
+		return new ScoreNavPanel(a);
 	}
 
 }

@@ -129,7 +129,7 @@ public class PijlVak extends LayoutPanel
 		{
 			width = Math.max(MIN_WIDTH_ABC_SUB, (int) ctx.measureText(MARGE_VOOR + "Discriminant" + MARGE_NA).getWidth());
 			
-			sluitKnop = new FEWSButton("sluit");
+			sluitKnop = new FEWSButton("sluit", fe.isNoordhoff());
 			sluitKnop.setSize(18, 18);
 			sluitKnop.addButtonListener(new ButtonListener() {
 				@Override

@@ -45,8 +45,8 @@ public class DWOplayerTinCan extends WiskOpdrDefaults {
 		return new nl.uu.fi.dwo.mobile.client.ui.noordhoffkb.NoordhoffKeyboard();
 	}
 	@Override
-	public ScoreNavIF getScoreNav() {
-		return new ScoreNavPanel();
+	public ScoreNavIF getScoreNav(ActivityComponent a) {
+		return new ScoreNavPanel(a);
 	}
 
 	@Override

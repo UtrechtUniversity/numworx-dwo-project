@@ -107,8 +107,8 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 	}
 
 	@Override
-	public ScoreNavIF getScoreNav() {
-		return new ScoreNavFacade();
+	public ScoreNavIF getScoreNav(ActivityComponent a) {
+		return new ScoreNavFacade(a);
 	}
 	
 	@Override

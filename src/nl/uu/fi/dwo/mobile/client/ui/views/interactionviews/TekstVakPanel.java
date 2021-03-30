@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -404,7 +405,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		this.volledigeBreedte = true;
 		
 		//niet nodig waarschijnlijk
-		facade = new PopupFacade((ObjectMap)null);
+		facade = new PopupFacade((ObjectMap)null, a);
 		facade.setPopupListener(this);
 		mainPanel2 = new LayoutPanel(); 
 		mainPanel2.setStylePrimaryName("tekstvakpanel");
@@ -478,7 +479,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
 		ObjectMap h = JSONUtilities.wrapMap(hh);
-		facade = new PopupFacade(h);
+		facade = new PopupFacade(h, activity);
 		facade.setPopupListener(this);
 		ObjectMap launchState = null;
 		if (h != null && h.containsKey("breedte") )
@@ -761,9 +762,9 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		if (launchState.containsKey("uitklapHoogtes"))
 			uitklapHoogtes = launchState.getDoubleList("uitklapHoogtes");
 		if (launchState.containsKey("knopImageString1"))
-			knopImageView1 = new ImageView(launchState.getString("knopImageString1"));
+			knopImageView1 = new ImageView(launchState.getString("knopImageString1"), activity);
 		if (launchState.containsKey("knopImageString2"))
-			knopImageView2 = new ImageView(launchState.getString("knopImageString2"));
+			knopImageView2 = new ImageView(launchState.getString("knopImageString2"), activity);
 // launchState never null!
 		
 		// call out
@@ -5669,16 +5670,16 @@ private Object CamelCase(String name) {
 	}
 
 	private void adviseMe() {
-		DwoGlobalVars vars = DwoGlobalVars.instance();
-		if (vars.withUser() && logOption && comRoot.getLessonMode() == LessonMode.normal) {
+		Optional<DwoGlobalVars> vars = activity.vars();
+		if (vars.isPresent() && vars.get().withUser() && logOption && comRoot.getLessonMode() == LessonMode.normal) {
 			String id = logID;
 			if(! id.startsWith("adviseMe:")) 
 				return;
 			String[] split = id.split(":");
-			String userid = vars.getUserID().toString();
+			String userid = vars.get().getUserID().toString();
 			String classid;
 			try {
-				classid = vars.getCurrentSchoolClass().getId().getIdString();
+				classid = vars.get().getCurrentSchoolClass().getId().getIdString();
 			} catch (Exception e) {
 				classid = "";
 			}

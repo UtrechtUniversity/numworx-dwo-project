@@ -15,11 +15,13 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
 import dagger.Binds;
+import dagger.BindsOptionalOf;
 import dagger.Module;
 import dagger.Provides;
 import dagger.Reusable;
 import dagger.multibindings.ClassKey;
 import dagger.multibindings.IntoMap;
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.ui.AppPlaceHistoryMapper;
@@ -48,6 +50,7 @@ public abstract class PlayerModule {
     return new SimpleEventBus();
   }
 
+  @BindsOptionalOf abstract DwoGlobalVars novars();
 
   @Provides
   @Singleton

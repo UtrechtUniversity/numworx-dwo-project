@@ -127,7 +127,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		ObjectMap outermap = JSONUtilities.wrapMap(launchData);
 		innerMap = outermap.getObjectMap("interactiePanelLaunchState");
 		randomVars = randomVarWaarden;
-		facade = new PopupFacade(outermap);
+		facade = new PopupFacade(outermap, activity);
 		frame = new Frame(html);
 		frame.getElement().getStyle().setOverflow(Overflow.HIDDEN);
 		frame.setStylePrimaryName("StubView");
