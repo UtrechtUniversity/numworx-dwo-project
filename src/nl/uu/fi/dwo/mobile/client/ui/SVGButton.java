@@ -414,7 +414,7 @@ public class SVGButton extends SimplePanel {
 		this.listeners.remove(listener);
 	}
 	
-	private void callOnClick() {
+	protected void callOnClick() {
 		for(int i = 0 ; i<listeners.size() ; i++) {
 			listeners.get(i).onClick(SVGButton.this);
 		}
