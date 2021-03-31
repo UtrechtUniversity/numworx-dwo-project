@@ -80,6 +80,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			String m = GETALENRUIMTE;
 			if (methodeBtn.getSelectedIndex() == 2) m = MODERNEWISKUNDE;
 			doFilter(Collections.singletonMap(m, Collections.singletonMap(b, Collections.emptySet())));
+			zoomFit();
 		}
 
 	}
@@ -116,6 +117,8 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 
 	static final float  VOORKENNIS_HEIGHT = 192f; // 12em
 	boolean inVoorkennis;
+	Collection<Edge> voorkennisEdges = Collections.emptySet();
+	
 	private class Voorkennis implements ClickHandler {
 
 		public OMSVGPoint create(float x, float y) {
@@ -127,21 +130,22 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			ArrayList<OMSVGPoint> posities = new ArrayList<OMSVGPoint>();
 			float centerx = x + width/2;
 			float centery = y + height/2;
+			height /= 2;
 			posities.add(create(centerx, centery));
 			
-			posities.add(create(x+f*250, y+height-f*40));
-			posities.add(create(width-f*250, y+height+f*40));
-			posities.add(create(x+f*200, y + height+40));
+			posities.add(create(x      +f*250, y+height-f*40));
+			posities.add(create(x+width-f*250, y+height+f*40));
+			posities.add(create(x      +f*200, y+height+f*40));
 			posities.add(create(x+width-f*200, y+height-f*40));
 			
-			posities.add(create(x+f*280, y+height-f*20));
+			posities.add(create(x      +f*280, y+height-f*20));
 			posities.add(create(x+width-f*280, y+height+f*20));
-			posities.add(create(x+f*230, y+height+f*20));
+			posities.add(create(x      +f*230, y+height+f*20));
 			posities.add(create(x+width-f*230, y+height-f*20));
 			
-			posities.add(create(x+f*310, y+height-f*60));
+			posities.add(create(x      +f*310, y+height-f*60));
 			posities.add(create(x+width-f*310, y+height+f*60));
-			posities.add(create(x+f*310, y+height+f*60));
+			posities.add(create(x      +f*310, y+height+f*60));
 			posities.add(create(x+width-f*310, y+height-f*60));
 			return posities;
 			
@@ -169,7 +173,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			inVoorkennis = true;
 			Set<String> voorkennisIds = 
 			nodeStream().filter(Node::isVisible).flatMap(t -> t.obj.getInfo().getVoorkennis().stream()).collect(Collectors.toSet());
-			GWT.log("aantal = " + voorkennisIds.size());
+			LOG.info("aantal = " + voorkennisIds.size());
 			float centerx = viewbox.getCenterX();
 			float centery = viewbox.getY() + dy/2;
 			Iterator<OMSVGPoint> points = maakVoorkennisPosities(viewbox.getX(), viewbox.getY(), viewbox.getWidth(), dy, 1f/ctm.getA()).iterator();
@@ -186,28 +190,15 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 						n.moveTo(centerx, centery);
 				}
 			}
-			edges.forEach(Edge::setVisible);
-			
+			voorkennisEdges = edges.stream().map(Edge::withVoorkennis).filter(Objects::nonNull).collect(Collectors.toList());
+			LOG.info("voorkennis edges = " + voorkennisEdges.size());
 		}
 	}
 	private class VerbergVoorkennis implements ClickHandler {
 
 		@Override
 		public void onClick(ClickEvent event) {
-			setWidgetTopHeight(title, 0, Unit.EM, 2, Unit.EM);
-			setWidgetTopHeight(zoomFitBtn, 3, Unit.EM, 2, Unit.EM);
-			setWidgetTopHeight(zoomInBtn, 6, Unit.EM, 2, Unit.EM);
-			setWidgetTopHeight(zoomOutBtn, 9, Unit.EM, 2, Unit.EM);
-			setWidgetTopHeight(voorkennisBtn, 3, Unit.EM, 2, Unit.EM);
-			setWidgetVisible(voorkennistitle, false);
-			setWidgetVisible(voorkennisBtn, true);
-			OMSVGRect viewbox = image.getSvgElement().getViewBox().getBaseVal();
-			float dy = VOORKENNIS_HEIGHT;
-			OMSVGMatrix ctm = image.getSvgElement().getScreenCTM();
-			dy /= ctm.getA();
-			viewbox.setY(viewbox.getY()+dy);
-			image.getSvgElement().setViewBox(viewbox);
-			inVoorkennis = false;
+			verbergVoorkennis();
 			doFilter(filter);
 		}
 		
@@ -237,29 +228,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		@Override
 		public void onClick(ClickEvent event) {
 			LOG.info("Zoom Fit");
-			Collection<List<Node>> nodes = map.values();
-			
-			OMSVGRect r = null;
-			for(List<Node> nodeList: nodes) 
-			  for(Node node: nodeList){
-				if (node.isVisible()) {
-					OMSVGRectElement rect0 = node.rect;
-					if (rect0 == null) continue; // missing sometimes
-					OMSVGRect rect = rect0.getBBox();
-					if (r == null) {
-						r = getSvgElement().createSVGRect(rect); // make copy
-					} else {
-						r = r.union(rect);
-				}}
-			}
-			if (r != null) 
-			{	r = r.inset(-15, -15);
-				factor = Math.max(r.getWidth()/imagewidth, r.getHeight()/imageheight); //
-				r.setWidth(imagewidth*factor);
-				r.setHeight(imageheight*factor);
-				getSvgElement().setViewBox(r);
-				resize(factor);
-			}
+			zoomFit();
 		}
 
 	}
@@ -389,13 +358,34 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			} else 
 				g.addClassNameBaseVal(HIDDEN_NODE);
 		}
-		
+
+		Edge withVoorkennis() {
+			if (from.isVoorkennis()) {
+				g.removeChild(g.getFirstChild());
+				g.removeChild(g.getFirstChild());
+				setVisible();
+				build();
+				return this;
+			}
+			return null;
+		}
+
+		void reset() {
+			from.setVoorkennis(false);
+			from.setVisible(false);
+			g.removeChild(g.getFirstChild());
+			g.removeChild(g.getFirstChild());
+			build();
+			setVisible();
+		}
 		
 		OMSVGGElement build() {
 			float x1 = from.cx;
 			float y1 = from.cy;
 			float x2 = to.cx;
 			float y2 = to.cy;
+			if (from.isVoorkennis()) { x1 = from.tmpx; y1 = from.tmpy; }
+					
 			OMSVGLineElement line = doc.createSVGLineElement(x1, y1, x2, y2);
 			g.appendChild(line);
 // triangle
@@ -436,6 +426,24 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 				style.setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "1.3");
 			}
 			colorize();
+		}
+
+		public void move(float dx, float dy) {
+			float x = from.tmpx - dx;
+			float y = from.tmpy - dy;
+			from.moveTo(x, y);
+			g.removeChild(g.getFirstChild());
+			g.removeChild(g.getFirstChild());
+			build();
+		}
+
+		public void transform(OMSVGMatrix ctm) {
+			OMSVGPoint p = getSvgElement().createSVGPoint(from.tmpx, from.tmpy);
+			p = p.matrixTransform(ctm);
+			from.moveTo(p.getX(), p.getY());
+			g.removeChild(g.getFirstChild());
+			g.removeChild(g.getFirstChild());
+			build();			
 		}
 	}
 
@@ -546,6 +554,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		@Override
 		public void onClick(ClickEvent event) {
 			doFilter(info);
+			zoomFit();
 		}
 		
 	}
@@ -561,7 +570,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			this.info.setY(0);
 			r = 150f;
 			textColor = white;
-			nodeBorderColor = nodeColor;
+			nodeBorderColor = nodeColor = colorBlue4;
 		}
 		
 		public float getCx() {
@@ -607,6 +616,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		public void onClick(ClickEvent event) {
 			GWT.log("click in " + info.key());
 			doFilter(info);
+			zoomFit();
 		}
 	}
 	
@@ -880,7 +890,10 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 
 	public void doFilter(Map<String, Map<String, Set<Integer>>> f) {
 		if (f == null) return;
+		if (inVoorkennis) verbergVoorkennis();
 		filter = f;
+		boolean showchapters = true;
+		boolean showbooks = true;
 		if (f.isEmpty()) {
 			for(List<Node> n: map.values()) for(Node node: n) node.setVisible(true);
 		    methodeBtn.setSelectedIndex(0);
@@ -890,6 +903,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		    books.values().forEach(BookNode::setVisible);
 		    book.setText("");
 		    chapter.setText("");
+		    setWidgetVisible(voorkennisBtn, false);
 		    return;
 		} else if (f.size() == 1) {
 			String key = f.keySet().iterator().next();
@@ -899,9 +913,11 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			methodeBtn.setSelectedIndex(index);
 			if (f.get(key).size() == 1) {
 				book.setText(f.get(key).keySet().iterator().next());
+				showbooks = false;
 				Set<Integer> chapters = f.get(key).get(book.getText());
 				if (chapters.size() == 1) {
 					chapter.setText("h" + chapters.iterator().next());
+					showchapters = false;
 				} else {
 					chapter.setText("");
 				}			
@@ -920,10 +936,13 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			boolean ok = StudentResultsPresenter.inFilter(f, n.info);
 			n.setVisible(ok);
 		}
+		setWidgetVisible(voorkennisBtn, !showchapters);
 	    edges.forEach(Edge::setVisible);
-	    chapters.values().forEach(ChapterNode::setVisible);
+	    if(showchapters) chapters.values().forEach(ChapterNode::setVisible);
+	    else chapters.values().forEach(ChapterNode::hide);
 	    chapterEdges.forEach(ChapterEdge::setVisible);
-	    books.values().forEach(BookNode::setVisible);
+	    if (showbooks) books.values().forEach(BookNode::setVisible);
+	    else books.values().forEach(BookNode::hide);
 	}
 
 	private OMSVGSVGElement getSvgElement() {
@@ -975,7 +994,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		edges.stream().map(Edge::build).forEach(t -> svg.appendChild(t));
 		nodeStream().forEach(t -> {svg.appendChild(t.g); t.build(); }); // THIS ORDER eerst er in hangen, dan pas build.
 		doFilter(item.getFilter());
-		score.then(this::withScore);
+		score.then(this::withScore).onResolve(this::zoomFit);
 		
 	}
 
@@ -1073,8 +1092,8 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 	private void mouseMove(MouseEvent<?> event) {
 		float x = event.getClientX();
 		float y = event.getClientY();
-		OMSVGPoint point = image.getSvgElement().createSVGPoint(x, y);
-		OMSVGMatrix ctm = image.getSvgElement().getScreenCTM().inverse();
+		OMSVGPoint point = getSvgElement().createSVGPoint(x, y);
+		OMSVGMatrix ctm = getSvgElement().getScreenCTM().inverse();
 		point = point.matrixTransform(ctm);
 		float sx = point.getX();
 		float sy = point.getY();
@@ -1100,16 +1119,21 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 	private void mouseDrag(MouseEvent<?> event) {
 		float x = event.getClientX();
 		float y = event.getClientY();
-		float dx = x - start.getX();
-		float dy = y - start.getY();
 		OMSVGMatrix ctm = image.getSvgElement().getScreenCTM();
-		dx = dx / ctm.getA();
-		dy = dy / ctm.getA(); // is dat zo? E?
+		float dx = (x - start.getX()) / ctm.getA();
+		float dy = (y - start.getY()) / ctm.getD();
+		if (dx == 0 && dy == 0) return;
+		
 		OMSVGRect viewbox = image.getSvgElement().getViewBox().getBaseVal();
 		viewbox.setX(viewbox.getX()-dx);
 		viewbox.setY(viewbox.getY()-dy);
 		image.getSvgElement().setViewBox(viewbox);
 		start = image.getSvgElement().createSVGPoint(x, y);
+		
+		
+		LOG.info("move delta " + dx + ", " + dy +  "ctm=" + ctm.getA() + " , " + ctm.getD());
+		
+		voorkennisEdges.forEach(t -> t.move(dx, dy));
 	}
 	
 	
@@ -1118,6 +1142,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		mouseDrag(event);
 		start = null;
 		mouseMove(event);
+		event.preventDefault();
 		
 	}
 
@@ -1144,7 +1169,9 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 
 	int imagewidth, imageheight;
 	private void resize(float f) {
+		f = Math.max(f, 0.5f);
 		if (imagewidth != getOffsetWidth() || imageheight != getOffsetHeight() || f != factor) {
+			LOG.info("factor = " + f);
 			setWidgetTopHeight(image, 2, Unit.EM, imageheight = getOffsetHeight(), Unit.PX);
 			setWidgetLeftWidth(image, 0, Unit.PX, imagewidth = getOffsetWidth(), Unit.PX);
 			factor = f;
@@ -1159,10 +1186,58 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			rect.setX(x - offx);
 			float offy = rect.getCenterY()-baseVal.getCenterY();
 			rect.setY(y - offy);
-			
+			OMSVGMatrix ctm = getSvgElement().getScreenCTM();
 			getSvgElement().setViewBox(rect);
+			OMSVGMatrix ctmfinal = getSvgElement().getScreenCTM().inverse().multiply(ctm);
+			LOG.info("ctm.a = " + ctmfinal.getA());
+			voorkennisEdges.forEach(t -> t.transform(ctmfinal) );
 		} else {
 			LOG.info("break recursion");
+		}
+	}
+
+	private void verbergVoorkennis() {
+		setWidgetTopHeight(title, 0, Unit.EM, 2, Unit.EM);
+		setWidgetTopHeight(zoomFitBtn, 3, Unit.EM, 2, Unit.EM);
+		setWidgetTopHeight(zoomInBtn, 6, Unit.EM, 2, Unit.EM);
+		setWidgetTopHeight(zoomOutBtn, 9, Unit.EM, 2, Unit.EM);
+		setWidgetTopHeight(voorkennisBtn, 3, Unit.EM, 2, Unit.EM);
+		setWidgetVisible(voorkennistitle, false);
+		setWidgetVisible(voorkennisBtn, true);
+		OMSVGRect viewbox = image.getSvgElement().getViewBox().getBaseVal();
+		float dy = VOORKENNIS_HEIGHT;
+		OMSVGMatrix ctm = image.getSvgElement().getScreenCTM();
+		dy /= ctm.getA();
+		viewbox.setY(viewbox.getY()+dy);
+		image.getSvgElement().setViewBox(viewbox);
+		inVoorkennis = false;
+		voorkennisEdges.forEach(Edge::reset);
+		voorkennisEdges = Collections.emptySet();
+	}
+
+	private void zoomFit() {
+		Collection<List<Node>> nodes = map.values();
+		
+		OMSVGRect r = null;
+		for(List<Node> nodeList: nodes) 
+		  for(Node node: nodeList){
+			if (node.isVisible()) {
+				OMSVGRectElement rect0 = node.rect;
+				if (rect0 == null) continue; // missing sometimes
+				OMSVGRect rect = rect0.getBBox();
+				if (r == null) {
+					r = getSvgElement().createSVGRect(rect); // make copy
+				} else {
+					r = r.union(rect);
+			}}
+		}
+		if (r != null) 
+		{	r = r.inset(-15, -15);
+			factor = Math.max(r.getWidth()/imagewidth, r.getHeight()/imageheight); //
+			r.setWidth(imagewidth*factor);
+			r.setHeight(imageheight*factor);
+			getSvgElement().setViewBox(r);
+			resize(factor);
 		}
 	}
 
