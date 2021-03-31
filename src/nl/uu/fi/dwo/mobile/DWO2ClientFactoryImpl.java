@@ -178,6 +178,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 		public void gotoCourses() {
 			DwoGlobalVars vars = instance;
 			RPCHandler rpc = handler;
+			treeModuleView = null;
 			SelectModuleItemHolder.clear(); // hier leegmaken of elders?
 			Promise<List<SelectModuleItem>> modules;
 			final RoleType roleType = vars.getRoleType();

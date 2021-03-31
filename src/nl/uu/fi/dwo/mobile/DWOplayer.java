@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.osgi.util.promise.Deferred;
-
 import nl.uu.fi.dwo.mobile.client.DWOplayerClientBundle;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.template.TemplateBasicConstants;
@@ -18,7 +16,6 @@ import nl.uu.fi.dwo.mobile.client.template.TemplateConstants;
 import nl.uu.fi.dwo.mobile.client.template.TemplateCss;
 import nl.uu.fi.dwo.mobile.client.template.TemplateNumworxConstants;
 import nl.uu.fi.dwo.mobile.client.template.TemplateUUTestConstants;
-import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;

@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
@@ -34,6 +35,8 @@ public class ReloginActivity extends AbstractActivity {
 	@Inject ClientFactory clientFactory;
 	@Inject HeaderView headerView;
 	@Inject DwoGlobalVars vars;
+	@Inject TrafficAgent agent;
+
 	private Place next;
 
 	private String username;
@@ -76,7 +79,7 @@ public class ReloginActivity extends AbstractActivity {
 		String realm = vars.getCurrentLoginContext().getRealm();
 		if (realm != null) username += realm;
 		
-		clientFactory.logout()
+		(getPassword().isEmpty() ? agent.barrier() : clientFactory.logout())
 		.then(new Success<Void, DomUserFullwLoginContext>() {
 
 			@Override
