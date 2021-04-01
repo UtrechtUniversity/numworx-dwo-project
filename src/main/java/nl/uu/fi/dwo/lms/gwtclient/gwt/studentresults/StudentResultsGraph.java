@@ -104,6 +104,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			case 2: filter = Collections.singletonMap(MODERNEWISKUNDE, Collections.emptyMap());	break;				
 			}
 			doFilter(filter);
+			zoomFit();
 		}
 
 		@Override
@@ -173,6 +174,8 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			inVoorkennis = true;
 			Set<String> voorkennisIds = 
 			nodeStream().filter(Node::isVisible).flatMap(t -> t.obj.getInfo().getVoorkennis().stream()).collect(Collectors.toSet());
+			voorkennisIds.removeAll(nodeStream().filter(Node::isVisible).map(n -> n.obj.getInfo().getId()).collect(Collectors.toSet()));
+			Set<String> methodes = filter.keySet();
 			LOG.info("aantal = " + voorkennisIds.size());
 			float centerx = viewbox.getCenterX();
 			float centery = viewbox.getY() + dy/2;
@@ -180,7 +183,9 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			for(String id: voorkennisIds) {
 				List<Node> list = map.get(id);
 				if (list != null && !list.stream().anyMatch(Node::isVisible)) {
-					Node n = list.stream().findAny().get();
+					list.stream()
+					.filter(n -> methodes.contains(n.info.getMethod()))
+					.findAny().ifPresent(n -> {
 					n.setVisible(true);
 					n.setVoorkennis(true);
 					if (points.hasNext()) {
@@ -188,9 +193,11 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 						n.moveTo(p.getX(), p.getY());
 					} else
 						n.moveTo(centerx, centery);
-				}
-			}
-			voorkennisEdges = edges.stream().map(Edge::withVoorkennis).filter(Objects::nonNull).collect(Collectors.toList());
+				});
+			}}
+			voorkennisEdges = edges.stream().map(Edge::withVoorkennis)
+					.filter(Objects::nonNull)
+					.collect(Collectors.toList());
 			LOG.info("voorkennis edges = " + voorkennisEdges.size());
 		}
 	}
@@ -360,7 +367,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		}
 
 		Edge withVoorkennis() {
-			if (from.isVoorkennis()) {
+			if (from.isVoorkennis() && to.isVisible() && !to.isVoorkennis()) {
 				g.removeChild(g.getFirstChild());
 				g.removeChild(g.getFirstChild());
 				setVisible();
@@ -385,7 +392,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			float x2 = to.cx;
 			float y2 = to.cy;
 			if (from.isVoorkennis()) { x1 = from.tmpx; y1 = from.tmpy; }
-					
+			if (to.isVoorkennis()) { x2 = to.tmpx; y2 = to.tmpy; }		
 			OMSVGLineElement line = doc.createSVGLineElement(x1, y1, x2, y2);
 			g.appendChild(line);
 // triangle
@@ -428,23 +435,12 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			colorize();
 		}
 
-		public void move(float dx, float dy) {
-			float x = from.tmpx - dx;
-			float y = from.tmpy - dy;
-			from.moveTo(x, y);
+		public void move() {
 			g.removeChild(g.getFirstChild());
 			g.removeChild(g.getFirstChild());
 			build();
 		}
 
-		public void transform(OMSVGMatrix ctm) {
-			OMSVGPoint p = getSvgElement().createSVGPoint(from.tmpx, from.tmpy);
-			p = p.matrixTransform(ctm);
-			from.moveTo(p.getX(), p.getY());
-			g.removeChild(g.getFirstChild());
-			g.removeChild(g.getFirstChild());
-			build();			
-		}
 	}
 
 	abstract class AbstractNode {
@@ -626,6 +622,18 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		private OMSVGRectElement rect;
 		private boolean voorkennis;
 		private float tmpx, tmpy;
+		
+		
+		void move(float dx, float dy) {
+			moveTo(tmpx+dx, tmpy+dy);
+		}
+
+		public void transform(OMSVGMatrix ctm) {
+			OMSVGPoint p = getSvgElement().createSVGPoint(tmpx, tmpy);
+			p = p.matrixTransform(ctm);
+			moveTo(p.getX(), p.getY());
+					
+		}
 		
 		void moveTo(float x, float y) {
 			if (voorkennis) {
@@ -1130,17 +1138,19 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		image.getSvgElement().setViewBox(viewbox);
 		start = image.getSvgElement().createSVGPoint(x, y);
 		
-		
 		LOG.info("move delta " + dx + ", " + dy +  "ctm=" + ctm.getA() + " , " + ctm.getD());
 		
-		voorkennisEdges.forEach(t -> t.move(dx, dy));
+		voorkennisEdges.stream().map(t -> t.from).distinct().forEach(t -> t.move(-dx,  -dy));
+		voorkennisEdges.forEach(Edge::move);
 	}
 	
 	
 	@Override
 	public void onMouseUp(MouseUpEvent event) {
-		mouseDrag(event);
-		start = null;
+		if(start != null) {
+			mouseDrag(event);
+			start = null;
+		}
 		mouseMove(event);
 		event.preventDefault();
 		
@@ -1190,7 +1200,8 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			getSvgElement().setViewBox(rect);
 			OMSVGMatrix ctmfinal = getSvgElement().getScreenCTM().inverse().multiply(ctm);
 			LOG.info("ctm.a = " + ctmfinal.getA());
-			voorkennisEdges.forEach(t -> t.transform(ctmfinal) );
+			voorkennisEdges.stream().map(t -> t.from).distinct().forEach(n -> n.transform(ctmfinal));
+			voorkennisEdges.forEach(Edge::move);
 		} else {
 			LOG.info("break recursion");
 		}
