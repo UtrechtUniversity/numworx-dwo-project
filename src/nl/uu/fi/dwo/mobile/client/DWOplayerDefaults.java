@@ -49,45 +49,45 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 		return MGWTStyle.getTheme().getMGWTClientBundle().getHeaderCss();
 	}
 
-	private NavigationBundle navigationBundle;
+//	private NavigationBundle navigationBundle;
 	protected String launchData;//, courseDescription;
 	
-	NavigationCss navigationcss() {		
-		if(navigationBundle == null) {
-		    OsDetection detection = MGWT.getOsDetection();
-
-		    if (detection.isAndroidPhone()) {
-		    	navigationBundle = GWT.create(NavigationTextAndroid.class);
-		    }
-
-		    if (detection.isAndroidTablet()) {
-		    	navigationBundle = GWT.create(NavigationTextAndroid.class);
-		    }
-
-		    if (detection.isIPhone()) {
-		        if (detection.isRetina()) {
-		        	navigationBundle = GWT.create(NavigationTextIpad.class);
-		        } else {
-		        	navigationBundle = GWT.create(NavigationTextIpad.class);
-		        }
-		      }
-
-		      if (detection.isIPad()) {
-		        if (detection.isIPadRetina()) {
-		        	navigationBundle = GWT.create(NavigationTextIpad.class);
-		        } else {
-		        	navigationBundle = GWT.create(NavigationTextIpad.class);
-		        }
-		      }
-		    
-		    
-			if(navigationBundle == null)
-				navigationBundle = GWT.create(NavigationTextDefault.class);
-		}
-		NavigationCss navigationcss = navigationBundle.navigationcss();
-		navigationcss.ensureInjected();
-		return navigationcss;
-	}
+//	NavigationCss navigationcss() {		
+//		if(navigationBundle == null) {
+//		    OsDetection detection = MGWT.getOsDetection();
+//
+//		    if (detection.isAndroidPhone()) {
+//		    	navigationBundle = GWT.create(NavigationTextAndroid.class);
+//		    }
+//
+//		    if (detection.isAndroidTablet()) {
+//		    	navigationBundle = GWT.create(NavigationTextAndroid.class);
+//		    }
+//
+//		    if (detection.isIPhone()) {
+//		        if (detection.isRetina()) {
+//		        	navigationBundle = GWT.create(NavigationTextIpad.class);
+//		        } else {
+//		        	navigationBundle = GWT.create(NavigationTextIpad.class);
+//		        }
+//		      }
+//
+//		      if (detection.isIPad()) {
+//		        if (detection.isIPadRetina()) {
+//		        	navigationBundle = GWT.create(NavigationTextIpad.class);
+//		        } else {
+//		        	navigationBundle = GWT.create(NavigationTextIpad.class);
+//		        }
+//		      }
+//		    
+//		    
+//			if(navigationBundle == null)
+//				navigationBundle = GWT.create(NavigationTextDefault.class);
+//		}
+//		NavigationCss navigationcss = navigationBundle.navigationcss();
+//		navigationcss.ensureInjected();
+//		return navigationcss;
+//	}
 
 	@Override
 	public boolean isNavTitle() {

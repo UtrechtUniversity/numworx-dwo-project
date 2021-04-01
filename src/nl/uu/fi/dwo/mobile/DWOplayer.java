@@ -85,7 +85,7 @@ public abstract class DWOplayer
 		setDwoProfileID();
 	}
 		
-	private static HashMap<String, String> resources = new HashMap<String, String>();
+	//private static HashMap<String, String> resources = new HashMap<String, String>();
 
 
 	public static Text_nl rb = new Text_nl();
@@ -219,71 +219,71 @@ public abstract class DWOplayer
 	/**
 	 * @param result
 	 */
-	private static void insertFlat(List<Map<String, Object>> result) {
-		long now = System.currentTimeMillis() + timezone;
-		for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
-			Map<String, Object> map = iterator.next();
-			Object o = map.get("notBefore");
-            if (o instanceof Date) {
-                if (now < ((Date) o).getTime()) {
-                    continue;
-                }
-            }
-            o = map.get("notAfter");
-            if (o instanceof Date) {
-                if (now > ((Date) o).getTime()) {
-                    continue;
-                }
-            }
+//	private static void insertFlat(List<Map<String, Object>> result) {
+//		long now = System.currentTimeMillis() + timezone;
+//		for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
+//			Map<String, Object> map = iterator.next();
+//			Object o = map.get("notBefore");
+//            if (o instanceof Date) {
+//                if (now < ((Date) o).getTime()) {
+//                    continue;
+//                }
+//            }
+//            o = map.get("notAfter");
+//            if (o instanceof Date) {
+//                if (now > ((Date) o).getTime()) {
+//                    continue;
+//                }
+//            }
+//
+//            SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.MODULE);
+//			SelectModuleItemHolder.insert(item);
+//		}
+//	}
 
-            SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.MODULE);
-			SelectModuleItemHolder.insert(item);
-		}
-	}
-
-	private static void insertTree(List<Map<String,Object>> result) {
-		long now = System.currentTimeMillis() + timezone;
-		for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
-			Map<String, Object> map = iterator.next();
-			
-			Object o = map.get("notBefore");
-            if (o instanceof Date) {
-                if (now < ((Date) o).getTime()) {
-                    continue;
-                }
-            }
-            o = map.get("notAfter");
-            if (o instanceof Date) {
-                if (now > ((Date) o).getTime()) {
-                    continue;
-                }
-            }
-						
-			SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.MODULE);
-			if (Boolean.TRUE.equals (map.get("withChildren")))
-			{
-				List<SelectModuleItem> children = item.getChildren();
-				if(children == null)
-					item.setChildren(children = new ArrayList<SelectModuleItem>());
-			}
-				
-			Integer parentID = (Integer) map.get("parentID"); // FIXME voor MC Squared type parentID?
-			if(parentID != null && parentID.intValue()> 0 )
-			{
-				SelectModuleItem parent = SelectModuleItemHolder.getItemByID(parentID);
-				if( parent != null)
-				{
-					List<SelectModuleItem> children = parent.getChildren();
-					if(children == null)
-						parent.setChildren(children = new ArrayList<SelectModuleItem>());
-					children.add(item);
-					item.setParent(parent);
-				} 
-			} 
-			SelectModuleItemHolder.insert(item);
-			
-		}
-	}
+//	private static void insertTree(List<Map<String,Object>> result) {
+//		long now = System.currentTimeMillis() + timezone;
+//		for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
+//			Map<String, Object> map = iterator.next();
+//			
+//			Object o = map.get("notBefore");
+//            if (o instanceof Date) {
+//                if (now < ((Date) o).getTime()) {
+//                    continue;
+//                }
+//            }
+//            o = map.get("notAfter");
+//            if (o instanceof Date) {
+//                if (now > ((Date) o).getTime()) {
+//                    continue;
+//                }
+//            }
+//						
+//			SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.MODULE);
+//			if (Boolean.TRUE.equals (map.get("withChildren")))
+//			{
+//				List<SelectModuleItem> children = item.getChildren();
+//				if(children == null)
+//					item.setChildren(children = new ArrayList<SelectModuleItem>());
+//			}
+//				
+//			Integer parentID = (Integer) map.get("parentID"); // FIXME voor MC Squared type parentID?
+//			if(parentID != null && parentID.intValue()> 0 )
+//			{
+//				SelectModuleItem parent = SelectModuleItemHolder.getItemByID(parentID);
+//				if( parent != null)
+//				{
+//					List<SelectModuleItem> children = parent.getChildren();
+//					if(children == null)
+//						parent.setChildren(children = new ArrayList<SelectModuleItem>());
+//					children.add(item);
+//					item.setParent(parent);
+//				} 
+//			} 
+//			SelectModuleItemHolder.insert(item);
+//			
+//		}
+//	}
 	
 	public static void insertCSS(String value) {
 		String href = DwoConstants.constants.server() + 
