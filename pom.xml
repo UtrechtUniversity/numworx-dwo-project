@@ -815,19 +815,19 @@
 	    	<groupId>com.teamdev.jxbrowser</groupId>
 	    	<artifactId>jxbrowser-cross-platform</artifactId>
 	    	<type>pom</type>
-	    	<version>7.10</version>
+	    	<version>7.13</version>
 	    	<scope>provided</scope>
 		</dependency>
 	  	<dependency>
 	  		<groupId>com.teamdev.jxbrowser</groupId>
 	  		<artifactId>jxbrowser-swing</artifactId>
-	  		<version>7.10</version>
+	  		<version>7.13</version>
 	    	<scope>runtime</scope>
 	  	</dependency>
 		    	<dependency>
 		    		<groupId>nl.numworx.swingbrowser</groupId>
 		    		<artifactId>swingbrowser-jxb</artifactId>
-		    		<version>0.0.7</version>
+		    		<version>0.0.9-SNAPSHOT</version>
 	    			<scope>runtime</scope>
 		    	</dependency>
         	</dependencies>
