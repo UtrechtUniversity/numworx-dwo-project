@@ -1347,6 +1347,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 					opdrachtObjects.add(queuedObject);
 					queuedObject = null;
 				}
+				tekstVakken[i][j].zetOpdrachtObjects(opdrachtObjects, opdrachtObjects); // opdrachtObjects wordt al gebruikt next line
 								
 				//eerst zorgen dat alle opdrachtObjects goed geïnitialiseerd zijn, daarna zet je ze netjes in het tekstvak neer.
 				//voor goede initialisatie van sleepopdr etc is het wel nodig dat de opdrachtobjects al aan het tekstvak zijn toegevoegd.
