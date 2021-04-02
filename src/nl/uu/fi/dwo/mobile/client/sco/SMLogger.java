@@ -45,15 +45,11 @@ public class SMLogger implements Logging {
   
   @Module public static class WiskOpdrProvider {
     
-    @Provides static Memento memento() {
-      return Memento.instance();
-    }
-
     @Provides @Named("delegate") Logging tao() {
       return LaTransport.newTAOinstance();
     }
     
-    @Provides public static Logging wiskopdrLogger(Memento memento, @Named("delegate") Logging delegate, @Named("premium") boolean premium) {
+    public static Logging wiskopdrLogger(Memento memento, Logging delegate, boolean premium) {
       if (memento.pmodel == null
           || memento.getLessonMode() != LessonMode.review
           || !premium

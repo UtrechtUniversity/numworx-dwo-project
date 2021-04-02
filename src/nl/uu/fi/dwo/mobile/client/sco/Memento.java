@@ -105,7 +105,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	public static final String LESSON_MODE = "cmi.mode";
 	public static final String SHARE_MAP = "shareMap";
     final private Scorm2004IF api;
-	final private ViewModuleView view; 
+	private ViewModuleView view; 
 	private JSONObject suspendData;
 	private JSONObject onsState, shareMap;
 	private JSONObject logState;
@@ -158,12 +158,9 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private LessonMode cmi_mode;
 	private ActivityComponent activity;
 
-	public Memento(ActivityComponent a, Scorm2004IF api, ViewModuleView view, Promise<DomStudentModelContextId> studentModel)
-	{
+	Memento(ActivityComponent a, Scorm2004IF api) {
 		this.activity = a;
 		this.api = api;
-		this.view = view;
-		this.pmodel = studentModel;
 		_instance = this;
 		register();
 		//initialize(); is already done!
@@ -234,6 +231,14 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		
 		ShareFacade.setSharedState(shareMap);
 		//StudentModelLogger.destroy();
+	}
+	
+	
+	Memento(ActivityComponent a, Scorm2004IF api, ViewModuleView view, Promise<DomStudentModelContextId> studentModel)
+	{
+		this(a, api);
+		setView(view);
+		setStudentModelStructure(studentModel);
 	}
 
   void register() {
@@ -1465,4 +1470,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
     api.SetValue("dme.statement", s);
     return null;
   }
+
+public void setView(ViewModuleView view) {
+	this.view = view;
+}
 }

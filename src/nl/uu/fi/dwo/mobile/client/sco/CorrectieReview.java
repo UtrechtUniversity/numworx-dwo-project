@@ -39,7 +39,7 @@ public class CorrectieReview extends CorrectieFacade {
     protected CorrectieFacade create(Map<String, Object> h, InteractionView iv, Widget widget, int maxScore, OpdrNavIF comRoot, Logging logging, ActivityComponent a) {
       if(
     	  a.isPremium() &&   		  
-    	  Memento.instance().isReview() && Memento.instance().isEindtoetsVerzegeld() && maxScore > 0) {
+    	  a.memento().isReview() && a.memento().isEindtoetsVerzegeld() && maxScore > 0) {
           return new CorrectieReview(h, iv, widget, maxScore, comRoot, logging, a);
       }
       return super.create(h, iv, widget, maxScore, comRoot, logging, a);

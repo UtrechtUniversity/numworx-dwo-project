@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -18,6 +19,7 @@ import nl.uu.fi.dwo.mobile.client.ui.dwokb.NoStatusKeyboard;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.NoLogging;
 
+@Singleton
 public class DWO2playerDefaults extends DWOplayerDefaults {
 
 	private IdleDetect idle;

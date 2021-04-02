@@ -14,9 +14,9 @@ import dagger.Provides;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.DWO2ClientFactoryImpl;
 import nl.uu.fi.dwo.mobile.DWO2RPCHandler;
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWO2playerDefaults;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
+import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
@@ -51,11 +51,15 @@ public abstract class HeaderLessModule {
   @Provides
   static ViewModuleViewBuilder builder(Provider<ViewModuleViewNumworx> numworx, RPCHandler rpc, ActivityComponent.Builder builder) {
     if (headerless()) {
-      return new ViewModuleViewImpl(builder.build(), rpc);
+      ActivityComponent a = builder.build();
+      ViewModuleViewImpl view = new ViewModuleViewImpl(a, rpc);
+      view.initialize(a.api());
+	return view;
     } else {
       return numworx.get();
     }
   }
+  
   @Binds abstract ClientFactory factory(DWO2ClientFactoryImpl impl);
   @Binds abstract LoginView loginview(Login3ViewImpl view);
 
@@ -76,7 +80,10 @@ public abstract class HeaderLessModule {
   @Provides static ViewModuleView viewmoduleview(DWO2ClientFactoryImpl impl) {
     return impl.getEntryView();
   }
-  
+ 
+  @Provides @Named("parentAPI") static Scorm2004IF api(DWO2ClientFactoryImpl impl) {
+	  return impl.setupAPI();
+  }
   
   
   @Provides static NavigationView navigationview(NavigationViewNumworx impl) {

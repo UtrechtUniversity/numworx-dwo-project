@@ -73,7 +73,6 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	  this.placeController = controller;
 	  this.entryView = () -> {
 	    ViewModuleViewBuilder view = entryView.get();
-	    view.initialize(setupAPI());
 	    return view;
 	  };
 	}

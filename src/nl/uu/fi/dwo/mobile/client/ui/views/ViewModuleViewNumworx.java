@@ -67,6 +67,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	    pfx = PARAMETERS.getResource("");
 	    instance = vars;
 	    activity = builder.build();
+	    initialize(activity.api());
 	}
 
 	public void initialize(Scorm2004IF api) {

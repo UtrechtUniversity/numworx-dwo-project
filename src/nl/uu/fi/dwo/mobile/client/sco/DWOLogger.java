@@ -40,7 +40,7 @@ public class DWOLogger implements Logging {
 	private boolean logOption = true;
 
 	public DWOLogger(ActivityComponent a) {
-		this(a.parameters().getLogging(), Memento.instance());
+		this(a.parameters().getLogging(), a.memento());
 	}
 	
 	private DWOLogger(Logging delegate, Memento m) {		

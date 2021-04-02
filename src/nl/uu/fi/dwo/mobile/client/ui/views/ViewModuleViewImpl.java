@@ -804,7 +804,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	}
 
 	protected Memento createMemento() {
-		return new Memento(activity, getApi(), this, studentModel);
+		Memento m = activity.memento();
+		m.setView(this);
+		m.setStudentModelStructure(studentModel);
+		return m;
 	}
 	
 

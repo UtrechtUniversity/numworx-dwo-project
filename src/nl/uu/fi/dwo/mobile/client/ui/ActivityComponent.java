@@ -9,8 +9,13 @@ import com.google.web.bindery.event.shared.EventBus;
 import dagger.Subcomponent;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
+import nl.uu.fi.dwo.mobile.client.dagger.ActivityScope;
+import nl.uu.fi.dwo.mobile.client.sco.Memento;
+import nl.uu.fi.dwo.mobile.client.sco.MementoModule;
+import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 
-@Subcomponent
+@Subcomponent(modules= {MementoModule.class} )
+@ActivityScope
 public abstract class ActivityComponent {
 
 	public abstract EventBus getEventBus();
@@ -18,10 +23,14 @@ public abstract class ActivityComponent {
 	public abstract TrafficAgent agent();
 	public abstract Optional<DwoGlobalVars> vars();
 	
+	public abstract Memento memento();
+	@Named("API") public abstract Scorm2004IF api();
+	
 	@Subcomponent.Builder
 	public
 	interface Builder {
 		ActivityComponent build();
+		Builder mementoModule(MementoModule module);
 	}
 
 	@Named("premium")

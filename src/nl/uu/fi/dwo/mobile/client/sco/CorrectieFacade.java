@@ -66,7 +66,7 @@ public class CorrectieFacade {
   }
     
   protected Widget prepareWidget(Widget view, ActivityComponent activity) {
-    if(Memento.instance() != null && Memento.instance().isEindtoetsVerzegeld() && activity.isPremium()) 
+    if(activity.memento() != null && activity.memento().isEindtoetsVerzegeld() && activity.isPremium()) 
       return new CorrectieLayer(view);
     return (view);
   }

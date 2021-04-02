@@ -4,6 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 
 import org.osgi.util.promise.Promise;
@@ -30,15 +31,17 @@ import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.dagger.DaggerWiskOpdrComponent;
 import nl.uu.fi.dwo.mobile.client.dagger.ModuleViewModule;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
+import nl.uu.fi.dwo.mobile.client.sco.MementoModule;
+import nl.uu.fi.dwo.mobile.client.sco.SMLogger;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.sco.WiskOpdrMemento;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
-import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 import nl.uu.fi.dwo.mobile.utils.Logging;
+import nl.uu.fi.dwo.mobile.utils.NoLogging;
 
 public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, CBookEventListener, ClosingHandler {
 
@@ -64,16 +67,13 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 	@Inject protected ViewModuleViewImpl view;
 	@Inject protected EventBus bus;
 	private String PREFIX;
-//	@Inject void setClientFactory(ClientFactory f) {
-//	  //DWOplayer.clientfactory = f;
-//	}
 	@Inject void setParameters(DWOplayerParameters p) {
 	  this.PREFIX = p.getLaunchData();
 	}
 
-	public static Provider<Logging> loggingProvider;
+	public static Provider<Logging> loggingProvider = () -> NoLogging.instance;
 	
-	@Inject void setLogging(Provider<Logging> provider) {
+	void setLogging(@Named("delegate") Provider<Logging> provider) {
 	  loggingProvider = provider;
 	}
 	
@@ -158,6 +158,15 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 			.moduleView(new ModuleViewModuleImpl())
 			.build()
 			.inject(this);
+		
+		final Provider<Logging> delegate = loggingProvider;
+		loggingProvider = () -> {
+			Memento memento = view.activity.memento();
+			boolean premium = view.activity.isPremium();
+			return SMLogger.WiskOpdrProvider.wiskopdrLogger(memento, delegate.get(), premium);
+		};
+		
+		
 		return p;
     });
   }
@@ -186,12 +195,19 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 	  
 	}
 		
+	
+	class WiskOpdrMementoModule extends MementoModule {
+
+		@Override
+		protected Memento memento(ActivityComponent a, Scorm2004IF api) {
+			return new WiskOpdrMemento(a, api);
+		}
+		
+	}
+	
+	
 	protected final ViewModuleViewImpl createEntryView(RPCHandler rpc, boolean header, Scorm2004IF api, ActivityComponent.Builder builder) {
-		return new ViewModuleViewImpl(builder.build(), rpc, header, api) {
-			@Override
-			protected Memento createMemento() {
-				return new WiskOpdrMemento(activity, getApi(), this, studentModel); // terminate at close, no "almost" close
-			} } 
+		return new ViewModuleViewImpl(builder.mementoModule(new WiskOpdrMementoModule()).build(), rpc, header, api) 
 		.initialize();
 	}
 
