@@ -58,6 +58,7 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.PopupPanel;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
@@ -616,7 +617,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		}
 	}
 	
-	class Node extends AbstractNode {
+	class Node extends AbstractNode implements ClickHandler {
 		final private DomStudentModelMethodInfo info;
 		final private DomStudentModelObj obj;
 		private OMSVGRectElement rect;
@@ -675,6 +676,8 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			circle = doc.createSVGCircleElement(cx, cy, r);
 			short unitType = OMSVGLength.SVG_LENGTHTYPE_NUMBER;
 			text = doc.createSVGTextElement(cx, cy, unitType, parent + obj.getInfo().getTitle().get(lang));
+			text.addClickHandler(this);
+			circle.addClickHandler(this);
 		}
 		
 		public void setVoorkennis(boolean b) {
@@ -710,6 +713,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
  			rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "6");
  			rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, defaultRectColor.getColor());
  			rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultRectBorderColor.getColor());
+ 			rect.addClickHandler(this);
 			g.insertBefore(rect, circle);
 			colorize();
 			return g;
@@ -758,6 +762,17 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		void colorize() {
 			if (!invalid())
 				super.colorize();
+		}
+
+		@Override
+		public void onClick(ClickEvent event) {
+			PopupPanel popup = new PopupPanel(true, true);
+			popup.setTitle("Node description");
+			popup.setStyleDependentName("Node", true);
+			popup.setGlassEnabled(true);
+			popup.getElement().getStyle().setZIndex(10000);
+			popup.add( new Label("description of " + obj.getInfo().getTitle().get(lang)));			
+			popup.center();
 		}
 		
 	}
