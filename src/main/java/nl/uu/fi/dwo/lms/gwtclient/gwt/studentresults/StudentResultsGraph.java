@@ -54,11 +54,13 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
@@ -623,6 +625,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		private OMSVGRectElement rect;
 		private boolean voorkennis;
 		private float tmpx, tmpy;
+		private String parent = "";
 		
 		
 		void move(float dx, float dy) {
@@ -673,6 +676,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 			}
  			this.cy = cy;
  			if(invalid()) return;
+ 			this.parent = parent;
 			circle = doc.createSVGCircleElement(cx, cy, r);
 			short unitType = OMSVGLength.SVG_LENGTHTYPE_NUMBER;
 			text = doc.createSVGTextElement(cx, cy, unitType, parent + obj.getInfo().getTitle().get(lang));
@@ -766,13 +770,20 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 
 		@Override
 		public void onClick(ClickEvent event) {
-			PopupPanel popup = new PopupPanel(true, true);
-			popup.setTitle("Node description");
+			DialogBox popup = new DialogBox(true, true);
+			popup.getCaption().setText(parent + obj.getInfo().getTitle().get(lang));
+			popup.setTitle(obj.getInfo().getTitle().get(lang));
 			popup.setStyleDependentName("Node", true);
 			popup.setGlassEnabled(true);
 			popup.getElement().getStyle().setZIndex(10000);
-			popup.add( new Label("description of " + obj.getInfo().getTitle().get(lang)));			
-			popup.center();
+
+			description.get(current, obj.getInfo()).then(p -> {
+				Widget w = p.getValue();
+				w.addStyleDependentName("Graph");
+				popup.add(w);
+				popup.center();
+				return null;
+			});
 		}
 		
 	}
@@ -788,6 +799,9 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 	private ListBox methodeBtn;
 	private Button book;
 	private Label  chapter;
+	
+	@Inject DescriptionPresenter description;
+	private DomStudentModelContext4Student current;
 
 	@Inject StudentResultsGraph() {
 		getElement().getStyle().setMarginLeft(20, Unit.PX);
@@ -973,6 +987,7 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 	}
 
 	public void setModelScore(DomStudentModelContext4Student item, Promise<DomStudentModelDataScore> score) {
+		this.current = item;
 		map.clear();
 		chapters.clear();
 		setModel(item.getModelStructure());

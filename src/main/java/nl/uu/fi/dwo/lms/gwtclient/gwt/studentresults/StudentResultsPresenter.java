@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Style;
@@ -72,6 +73,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	@Inject Lazy<StudentResultsWidget> widget;
 	@Inject Lazy<StudentResultsGraph> graph;
 	@Inject StudentResults service;
+	@Inject DescriptionPresenter description;
 	private HandlerRegistration ref;
 	
 	@Inject StudentResultsPresenter(EventBus bus, DwoGlobalVars vars) {
@@ -399,14 +401,8 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 
 	private void setDescription(DomStudentModelContextInfo info) {
 		showGraph = false;
-		service.getDescription(current, info).then(p -> {
-			String text = p.getValue();
-			String json = null;
-			if (text.startsWith("{")) {
-				json = text;
-				text = WISKOPDR_SIG;
-			}
-			Widget description = createDescription(text, json);
+		description.get(current, info)
+		.then(p -> { Widget description = p.getValue();
 			widget.get().description.setWidget(description);
 			return null;
 		});
@@ -414,114 +410,11 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 
 	private void setPerc(DomStudentModelScore<?> score) {
 		widget.get().setPerc(score);
-		
 	}
 
-  private static final String WISKOPDR_SIG = "H4sIAAAAAA";
-  private String launch_data;
   private JSONObject resultState;
     
   
-	private Widget createDescription(String text, String json) {
-	    if (text != null && text.startsWith(WISKOPDR_SIG))
-	    {
-	      Frame wiskopdr;
-	      String random = String.valueOf(System.currentTimeMillis());
-	      LOG.info("Frame = "+random);
-	      String locale = LocaleInfo.getCurrentLocale().getLocaleName();
-	      if ("default".equals(locale) ) locale =  "nl";
-	      String profile = Location.getParameter("profile");
-	      if(profile == null || profile.isEmpty()) profile = "77";
-
-	      String url = "/dwo/apps/player.html?footer=none&locale="
-	          + locale
-	          + "&profile="
-	          + profile
-	          + "&t=" + random + "#cmi.launch_data:0";
-	      LOG.info("openUrl " + url);
-	      wiskopdr = new Frame(url);
-	      wiskopdr.setStylePrimaryName("score-frame");
-	      launch_data = json;
-	      setAPI(this);
-	      return wiskopdr;
-	    }
-	  
-	  
-		Widget description;
-		SafeHtmlBuilder builder = new SafeHtmlBuilder();
-		if (text == null) text = "";
-		builder.appendEscapedLines(text);
-		description = new HTML(builder.toSafeHtml());
-		description.setStylePrimaryName("score-html");
-		return description;
-	}
-
-	  private native static void setAPI(StudentResultsPresenter view) /*-{
-      var api = {
-          "LMSGetValue" : function(key) {
-              return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsPresenter::getValue(Ljava/lang/String;)(key)
-          },
-          "LMSInitialize" : function(dummy) {
-              return "true"
-          },
-          "LMSGetLastError" : function() {
-              return "0"
-          },
-          "LMSGetDiagnostic" : function(dummy) {
-              return ""
-          },
-          "LMSGetErrorString" : function(code) {
-              return ""
-          },
-          "LMSCommit" : function(dummy) {
-              return "true"
-          },
-          "LMSFinish" : function(dummy) {
-              return "true"
-          },
-          "LMSSetValue" : function(key, value) {
-              return "true"
-          },
-          "Initialize" : function(dummy) {
-              return "true"
-          },
-          "GetValue" : function(key) {
-              return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsPresenter::getValue(Ljava/lang/String;)(key)
-          },
-          "SetValue" : function(key, value) {
-              return "true"
-          },
-          "GetLastError" : function() {
-              return "0"
-          },
-          "GetDiagnostic" : function(dummy) {
-              return ""
-          },
-          "GetErrorString" : function(code) {
-              return ""
-          },
-          "Commit" : function(dummy) {
-              return "true"
-          },
-          "Terminate" : function(dummy) {
-              return "true"
-          },
-      // TODO more to follow...           
-      };
-      $wnd.API = api;
-      $wnd.API_1484_11 = api;
-	}-*/;
-
-	private String getValue(String key) {
-	  LOG.info("GetValue " + key);
-	  String value = null;
-	  if ("cmi.launch_data".equals(key)) value = launch_data;
-	  else if ("cmi.mode".equals(key)) value="browse";
-	  if(value == null) value = "";
-	  String shortValue = value.length() > 10 ? value.substring(0, 10) + "..." : value;
-	  LOG.info("result GetValue: " + shortValue);
-	  return value;
-	}
 
 	public void init(JavaScriptObject resultState) {
 		init();

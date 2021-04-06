@@ -99,7 +99,7 @@
 			   </g:FlowPanel>
 			  </g:north>
 			  <g:north size="3">
-			  	<g:Label ui:field='filter' addStyleNames="{style.title}">Getal &amp; Ruimte  >  1HV  >  H2 - Getallen en formules</g:Label>
+			  	<g:Label ui:field='filter' addStyleNames="{style.title}"></g:Label>
 			  </g:north>
 			  <g:south size="2.4"><g:FlowPanel><g:Button ui:field='btn' styleName='{style.graph}'>Graph</g:Button></g:FlowPanel></g:south>
 			  <g:center>
