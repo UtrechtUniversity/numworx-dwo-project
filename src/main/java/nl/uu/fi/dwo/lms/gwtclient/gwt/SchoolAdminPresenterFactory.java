@@ -87,7 +87,7 @@ public class SchoolAdminPresenterFactory implements PresenterFactory {
     return loginPresenter;
   }
 
-  @Override @JsMethod
+  @Override //@JsMethod
   public WelcomePresenter getWelcomePresenter() {
     return welcomePresenter;
   }

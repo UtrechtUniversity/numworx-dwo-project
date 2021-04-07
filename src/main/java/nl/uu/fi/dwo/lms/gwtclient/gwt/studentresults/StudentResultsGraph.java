@@ -53,8 +53,10 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.DialogBox.Caption;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
@@ -771,7 +773,14 @@ class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, Mouse
 		@Override
 		public void onClick(ClickEvent event) {
 			DialogBox popup = new DialogBox(true, true);
-			popup.getCaption().setText(parent + obj.getInfo().getTitle().get(lang));
+			SafeHtmlBuilder builder = new SafeHtmlBuilder();
+			builder.appendEscaped(parent + obj.getInfo().getTitle().get(lang));
+			popup.getCaption().setHTML(builder.toSafeHtml());
+			DialogBox.Caption cap = popup.getCaption();
+			cap.asWidget().addDomHandler(e -> {
+				if (e.getX() > 400)
+					popup.hide();
+			}, ClickEvent.getType());
 			popup.setTitle(obj.getInfo().getTitle().get(lang));
 			popup.setStyleDependentName("Node", true);
 			popup.setGlassEnabled(true);
