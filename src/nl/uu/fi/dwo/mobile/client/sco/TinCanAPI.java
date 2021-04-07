@@ -43,6 +43,7 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF, CBookEventLis
 	private long    startTime  = System.currentTimeMillis();
 	private String duration;
     private HandlerRegistration regis;
+	private Memento memento;
 	/**
 	 * @return the completion
 	 */
@@ -246,7 +247,7 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF, CBookEventLis
 			callback.onSuccess(null);
 			callback = null;
 		} else if (NAVIGATE_VERB.equals(verb)) {
-			Memento.unload();
+			memento.close();
 		}
 	}
 	
@@ -320,6 +321,10 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF, CBookEventLis
 
   public void register(EventBus bus) {
 	regis = bus.addHandler(CBookEvent.TYPE, this);
+  }
+
+  public void setMemento(Memento memento) {
+	this.memento = memento;
   }
   
 }

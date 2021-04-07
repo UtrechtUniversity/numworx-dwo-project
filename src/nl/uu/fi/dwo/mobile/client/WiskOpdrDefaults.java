@@ -3,8 +3,6 @@ package nl.uu.fi.dwo.mobile.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 
-import fi.wiskopdr.CasServer;
-import nl.uu.fi.dwo.ideas.client.IdeasIF;
 import nl.uu.fi.dwo.mobile.WiskOpdrPlayer;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
@@ -45,9 +43,4 @@ public class WiskOpdrDefaults extends DWOplayerDefaults {
         return super.getStatusBar(a);
     }
     
-	@Override
-	public Logging getLogging() {
-		return WiskOpdrPlayer.loggingProvider.get();
-	}
-
 }

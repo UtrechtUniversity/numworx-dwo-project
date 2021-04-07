@@ -30,6 +30,7 @@ import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.web.bindery.event.shared.EventBus;
 
 import dagger.Reusable;
+import nl.uu.fi.dwo.mobile.client.sco.SMLogger;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent.Builder;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;

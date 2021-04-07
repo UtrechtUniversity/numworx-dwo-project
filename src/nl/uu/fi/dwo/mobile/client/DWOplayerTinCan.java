@@ -54,9 +54,4 @@ public class DWOplayerTinCan extends WiskOpdrDefaults {
 		return  DWOplayer.DWO_BUNDLE.headercss();
 	}
 
-	@Override
-	public Logging getLogging() {
-		return NoLogging.instance;
-	}
-
 }

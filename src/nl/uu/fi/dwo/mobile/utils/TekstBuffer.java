@@ -346,7 +346,7 @@ public class TekstBuffer
 
 		result = getVak0(currentVakGegevens);
 		if(result instanceof InteractionView)
-			result = ShareFacade.wrap(JSONUtilities.wrapMap(currentVakGegevens), (InteractionView)result);
+			result = ShareFacade.wrap(JSONUtilities.wrapMap(currentVakGegevens), (InteractionView)result, activity);
 		return result;
 	}
 	

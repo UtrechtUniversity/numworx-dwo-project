@@ -16,6 +16,8 @@ public class TinCanPlayer extends NoordhoffPlayer {
 			WiskOpdrComponent build = DaggerWiskOpdrComponent.builder().api(api).moduleView(new ModuleViewModuleImpl(true)).premium(true).build();
 			api.register(build.bus());
 			build.inject(this);
+			
+			api.setMemento(view.activity.memento()); // backlink
 			return p;
 		});
 	}

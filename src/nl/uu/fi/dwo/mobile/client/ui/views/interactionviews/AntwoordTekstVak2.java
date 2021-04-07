@@ -712,7 +712,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			basisPanel.add(p);
 			basisPanel.setWidgetBottomHeight(p, 0, Unit.PX, 16, Unit.PX);
 			basisPanel.setWidgetRightWidth(p, 0, Unit.PX, 16, Unit.PX);
-		}, this, scoreMax);
+		}, this, scoreMax, activity);
 
 		if (map.containsKey("ingevuld"))
 			ingevuld = map.getBoolean("ingevuld");

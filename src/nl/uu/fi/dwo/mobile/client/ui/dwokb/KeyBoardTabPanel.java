@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleButton;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.utils.ImageUtils;
 
 import com.google.gwt.dom.client.Style;

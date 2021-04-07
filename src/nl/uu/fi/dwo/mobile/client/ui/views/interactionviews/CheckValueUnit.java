@@ -357,7 +357,7 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
 	    Vector attempts = new Vector();
 	    int attemptsCount = 0;
 		int errorCount = 0;
-		CorrectieFacade.showReview(h, asOne(), this, getScoreMax());
+		CorrectieFacade.showReview(h, asOne(), this, getScoreMax(), activity);
       
 	    if(h.get("ingevuld") != null) 
 	    	ingevuld = ((Boolean)h.get("ingevuld")).booleanValue();

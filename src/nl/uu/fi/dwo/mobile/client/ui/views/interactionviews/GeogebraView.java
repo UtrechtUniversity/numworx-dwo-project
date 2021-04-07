@@ -498,7 +498,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 			this.pendingState = null;
 		}
 		AcceptsOneWidget cmd = getWidget() instanceof AcceptsOneWidget ? (AcceptsOneWidget) widget : null;
-		CorrectieFacade.showReview(h, cmd, this, scoreMax);
+		CorrectieFacade.showReview(h, cmd, this, scoreMax, activity);
 		ObjectMap wrap = JSONUtilities.wrapMap(h);
 		ingevuld = wrap.getBoolean("ingevuld", false);
 		nagekeken = wrap.getBoolean("nagekeken", false);

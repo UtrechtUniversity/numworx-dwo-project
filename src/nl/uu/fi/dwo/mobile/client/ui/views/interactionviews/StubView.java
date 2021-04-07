@@ -249,7 +249,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		if(h.containsKey("STUBVIEW_correct"))
 			correct = toBoolean(h.get("STUBVIEW_correct").toString());
 		AcceptsOneWidget cmd = widget instanceof AcceptsOneWidget ? (AcceptsOneWidget) widget : null;
-		CorrectieFacade.showReview(h, cmd, this, scoreMax);
+		CorrectieFacade.showReview(h, cmd, this, scoreMax, activity);
 		JSONValue object = JSONUtilities.toJSONObject(h);
 		if(innerView != null)
 		{

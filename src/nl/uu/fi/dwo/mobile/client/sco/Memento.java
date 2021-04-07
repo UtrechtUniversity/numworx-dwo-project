@@ -57,19 +57,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private static final String ZELFTOETS_NAGEKEKEN = "zelftoetsNagekeken";
 	private static final String TEMPOTOETS_LOCKED = "tempotoetsLocked";
 	private static final String TEMPOTOETS_SECONDS_LEFT = "tempotoetsSecondsLeft";
-	private static Memento _instance;
 	static private Logger logger = Logger.getLogger("Memento");
-
-	static Memento instance() {
-		return _instance;
-	}
 	
-	static void unload()
-	{
-		logger.fine("unload");
-		if (_instance != null)
-			_instance.close();
-	}
 
 	private static final String OPDR_CONT_STATES = "opdrContStates";
 	private static final String STRAFPUNTEN = "strafpunten"; // optional!
@@ -161,7 +150,6 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	Memento(ActivityComponent a, Scorm2004IF api) {
 		this.activity = a;
 		this.api = api;
-		_instance = this;
 		register();
 		//initialize(); is already done!
 		String value;
@@ -229,9 +217,21 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		
 		//instalOnBeforeUnload();
 		
-		ShareFacade.setSharedState(shareMap);
+		//ShareFacade.setSharedState(shareMap);
 		//StudentModelLogger.destroy();
 	}
+	
+	void clearSharedState(String key) {
+	  if (shareMap != null) {
+	    shareMap.put(key, null);
+	  }
+	}
+	public  void clearSharedState() {
+	if(shareMap != null) {
+		shareMap = new JSONObject();
+	}
+}
+
 	
 	
 	Memento(ActivityComponent a, Scorm2004IF api, ViewModuleView view, Promise<DomStudentModelContextId> studentModel)
@@ -662,7 +662,6 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 //		if (this != _instance)
 //			return;
 //		_instance = null;
-		if(_instance==this) _instance = null;
 		logger.fine("closing memento");
 		removeRegistration();
 		runner.run();
@@ -1473,5 +1472,9 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 
 public void setView(ViewModuleView view) {
 	this.view = view;
+}
+
+public JSONObject getShareMap() {
+	return shareMap;
 }
 }

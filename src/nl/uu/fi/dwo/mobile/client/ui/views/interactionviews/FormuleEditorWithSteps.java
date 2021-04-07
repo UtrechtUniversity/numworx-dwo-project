@@ -2184,7 +2184,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			mainPanel.add(p);
 			if (null != mainPanel.getElement().getStyle().getPosition())
 				mainPanel.getElement().getStyle().setPosition(Position.RELATIVE);
-		}, this, scoreMax);
+		}, this, scoreMax, activity);
 		if (h.get("stapNr") != null)
 			stapNr = ((Number) h.get("stapNr")).intValue();
 		if (h.get("stapOk") != null)

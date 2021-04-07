@@ -111,12 +111,6 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 		return new ScoreNavFacade(a);
 	}
 	
-	@Override
-	public Logging getLogging() {
-		return NoLogging.instance;
-	}
-
-	
 	
 	DWOplayerDefaults(String launchData) {
 		super();

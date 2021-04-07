@@ -438,7 +438,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	    int attemptsCount = 0;
 		int errorCount = 0;
         ObjectMap map = JSONUtilities.wrapMap(h);
-		CorrectieFacade.showReview(h, asOne(), this, getScoreMax());
+		CorrectieFacade.showReview(h, asOne(), this, getScoreMax(), activity);
 		if(map.containsKey("randomizedPositions")) 
 	    {	ObjectList list = map.getObjectList("randomizedPositions");
 	    	randomizedPositions = new Point[list.size()];

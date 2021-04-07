@@ -2299,7 +2299,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		{
 			randomize = true; // Alles opnieuw, dus ook nieuwe random variabelen
 			currentOpdracht = 0;
-			ShareFacade.clearSharedState();
+			memento.clearSharedState();
 			for (opdracht = 0; opdracht < aantalOpdrachten[currentActiviteit]; opdracht++)
 			{
 				clearState(opdracht, source);

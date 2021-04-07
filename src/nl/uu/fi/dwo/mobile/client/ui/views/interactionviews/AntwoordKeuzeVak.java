@@ -844,7 +844,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 			basisPanel.setWidgetBottomHeight(p, 0, Unit.PX, 16, Unit.PX);
 			basisPanel.setWidgetRightWidth(p, 0, Unit.PX, 16, Unit.PX);
 		};
-		CorrectieFacade.showReview(h, cmd, this, scoreMax);
+		CorrectieFacade.showReview(h, cmd, this, scoreMax, activity);
 
 		if (h.containsKey("ingevuld"))
 			ingevuld = ((Boolean) h.get("ingevuld")).booleanValue();

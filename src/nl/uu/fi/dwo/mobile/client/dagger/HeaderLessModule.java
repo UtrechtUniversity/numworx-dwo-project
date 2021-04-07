@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.mobile.DWO2ClientFactoryImpl;
 import nl.uu.fi.dwo.mobile.DWO2RPCHandler;
 import nl.uu.fi.dwo.mobile.client.DWO2playerDefaults;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
+import nl.uu.fi.dwo.mobile.client.sco.SMLogger;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
@@ -49,9 +50,9 @@ public abstract class HeaderLessModule {
   }
   
   @Provides
-  static ViewModuleViewBuilder builder(Provider<ViewModuleViewNumworx> numworx, RPCHandler rpc, ActivityComponent.Builder builder) {
+  static ViewModuleViewBuilder builder(Provider<ViewModuleViewNumworx> numworx, RPCHandler rpc, ActivityComponent.Builder builder, Provider<SMLogger.LoggingModule>loggingProvider ) {
     if (headerless()) {
-      ActivityComponent a = builder.build();
+      ActivityComponent a = builder.loggingModule(loggingProvider.get()).build();
       ViewModuleViewImpl view = new ViewModuleViewImpl(a, rpc);
       view.initialize(a.api());
 	return view;
@@ -62,6 +63,7 @@ public abstract class HeaderLessModule {
   
   @Binds abstract ClientFactory factory(DWO2ClientFactoryImpl impl);
   @Binds abstract LoginView loginview(Login3ViewImpl view);
+  @Binds abstract SMLogger.LoggingModule loggingModule(SMLogger.DWO2playerProvider impl);
 
   @BindsOptionalOf abstract DwoGlobalVars optionalvars();
   @Provides static DwoGlobalVars vars() { return DwoGlobalVars.instance(); }

@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import nl.uu.fi.dwo.mobile.client.sco.SMLogger;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
@@ -16,6 +17,8 @@ public class ModuleViewModule {
   @Provides @Singleton protected ViewModuleViewImpl getViewModuleView(RPCHandler rpc, @Named("parentAPI") Scorm2004IF api, ActivityComponent.Builder builder) {
     return null;
   }
+  
+  @Provides @Singleton protected SMLogger.LoggingModule loggingModule() { return new SMLogger.LoggingModule(); }
   
   protected ModuleViewModule() {}
 }

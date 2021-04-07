@@ -84,8 +84,8 @@ public class CorrectieFacade {
     public void correctie(Map<String,Object> state) {}
 
     @Deprecated
-    public static void showReview(Map<String,Object> h0, IsWidget w) {
-    	if(h0 == null || Memento.instance().getLessonMode() != LessonMode.browse) return;
+    public static void showReview(Map<String,Object> h0, IsWidget w, ActivityComponent a) {
+    	if(h0 == null || a.memento().getLessonMode() != LessonMode.browse) return;
     	ObjectMap h = JSONUtilities.wrapMap(h0);
     	h = h.getObjectMap("reviewInteractieData");
     	if(h != null && h.containsKey("reviewScoreCorrectie") && h.getInt("reviewScoreCorrectie")!=0) {
@@ -93,8 +93,8 @@ public class CorrectieFacade {
     	}
     }
     
-    public static void showReview(Map<String,Object> h0, AcceptsOneWidget p, InteractionView view, int maxScore) {
-    	if(h0 == null || Memento.instance().getLessonMode() != LessonMode.browse) return;
+    public static void showReview(Map<String,Object> h0, AcceptsOneWidget p, InteractionView view, int maxScore, ActivityComponent a) {
+    	if(h0 == null || a.memento().getLessonMode() != LessonMode.browse) return;
     	ObjectMap h = JSONUtilities.wrapMap(h0);
     	h = h.getObjectMap(CorrectieView.REVIEW_INTERACTIE_DATA);
     	if (h == null) return;

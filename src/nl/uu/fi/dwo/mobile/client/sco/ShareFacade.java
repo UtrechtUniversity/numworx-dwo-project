@@ -1,9 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.sco;
 
 import java.util.HashMap;
-import java.util.Map;
-
-import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.Widget;
@@ -12,6 +9,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 
@@ -24,47 +22,48 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 public class ShareFacade implements InteractionView, TekstElementWithFont {
 
 	public static final String SHARE_KEY = "shareKey";
-	private static JSONObject stateMap = new JSONObject();
-	private Memento memento;
+	private final JSONObject stateMap;
+	private final Memento memento;
 	public ShareFacade(String key, InteractionView view,
-			TekstElementWithFont withfont) {
+			TekstElementWithFont withfont, Memento memento) {
 		delegate = view;
 		shareKey = key;
 		this.withfont = withfont;
-		memento = Memento.instance(); // NON NULL!!!!
+		this.memento = memento; // NON NULL!!!!
+		this.stateMap = memento.getShareMap();
 	}
 
 	public InteractionView unwrap() {
 		return delegate;
 	}
 	
-	public static InteractionView wrap(ObjectMap launchData, InteractionView view)
+	public static InteractionView wrap(ObjectMap launchData, InteractionView view, ActivityComponent activity)
 	{
 		if( ! launchData.containsKey(SHARE_KEY))		
 			return view;
 		String key = launchData.getString(SHARE_KEY);
 		if ( view instanceof TekstElementWithFont )
-			return new ShareFacade(key, view, (TekstElementWithFont) view );
+			return new ShareFacade(key, view, (TekstElementWithFont) view, activity.memento() );
 		else
-			return new ShareFacade(key, view, null);
+			return new ShareFacade(key, view, null, activity.memento());
 	}
 	
-	static void setSharedState(JSONObject stateMap) {
-		if(stateMap == null) stateMap = new JSONObject();
-		ShareFacade.stateMap = stateMap;
-	}
-	
-	static void clearSharedState(String key) {
-	  if (stateMap != null) {
-	    stateMap.put(key, null);
-	  }
-	}
-	
-	public static void clearSharedState() {
-		if(stateMap != null) {
-			stateMap = new JSONObject();
-		}
-	}
+//	static void setSharedState(JSONObject stateMap) {
+//		if(stateMap == null) stateMap = new JSONObject();
+//		ShareFacade.stateMap = stateMap;
+//	}
+//	
+//	static void clearSharedState(String key) {
+//	  if (stateMap != null) {
+//	    stateMap.put(key, null);
+//	  }
+//	}
+//	
+//	public static void clearSharedState() {
+//		if(stateMap != null) {
+//			stateMap = new JSONObject();
+//		}
+//	}
 
 	
 	private InteractionView delegate;

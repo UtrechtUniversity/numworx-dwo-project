@@ -5,23 +5,25 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
-import javax.inject.Named;
-
+import javax.inject.Inject;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 
+import dagger.Lazy;
 import dagger.Module;
 import dagger.Provides;
 import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.utils.LaTransport;
 import nl.uu.fi.dwo.mobile.utils.Logging;
+import nl.uu.fi.dwo.mobile.utils.NoLogging;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.xapi.Activity;
@@ -43,35 +45,43 @@ public class SMLogger implements Logging {
     
   }
   
-  @Module public static class WiskOpdrProvider {
+  @Module public static class LoggingModule {
+	  
+	  @Provides Logging logging(ActivityComponent activity) {
+		  return NoLogging.instance;
+	  }
+  }
     
-    @Provides @Named("delegate") Logging tao() {
+  public static class WiskOpdrProvider extends LoggingModule {
+    
+    Logging tao() {
       return LaTransport.newTAOinstance();
     }
     
-    public static Logging wiskopdrLogger(Memento memento, Logging delegate, boolean premium) {
+    public  Logging logging(ActivityComponent activity) {
+      Memento memento = activity.memento();
+      boolean premium = activity.isPremium();
       if (memento.pmodel == null
           || memento.getLessonMode() != LessonMode.review
           || !premium
-      ) return delegate; 
+      ) return tao(); 
 
       Promise<LogStrategy> strategy = Promises.resolved(memento);     
-      return new SMLogger(memento, strategy, delegate);
+      return new SMLogger(memento, strategy, tao());
     }
   }
   
-  public static class Provider implements javax.inject.Provider<Logging> {
+  public static class DWO2playerProvider extends LoggingModule {
     private DwoGlobalVars vars;
-	private javax.inject.Provider<RPCHandler> rpc;
+	private Lazy<RPCHandler> rpc;
 
-	public Provider(javax.inject.Provider<Logging> delegate, DwoGlobalVars vars, javax.inject.Provider<RPCHandler> rpc) {
-      this.delegate = delegate;
+	@Inject DWO2playerProvider(DwoGlobalVars vars, Lazy<RPCHandler> rpc) {
       this.vars = vars;
       this.rpc  = rpc;
     }
 
-    public Logging get() {
-      Memento instance = Memento.instance();
+    public Logging logging(ActivityComponent activity) {
+      Memento instance = activity.memento();
       boolean experiment = instance != null 
     		  && instance.pmodel != null 
     		  && (instance.getLessonMode() == LessonMode.normal||instance.getLessonMode() == LessonMode.review)
@@ -79,12 +89,12 @@ public class SMLogger implements Logging {
               && vars.getRoleType() == RoleType.STUDENT;
       if (experiment) {
         Promise<XapiManager> xapi = rpc.get().getLRS();
-        return new SMLogger(instance, xapi.map(x -> x::saveStatement), delegate.get());
+        return new SMLogger(instance, xapi.map(x -> x::saveStatement), super.logging(activity));
       }
-      return delegate.get();
+      return super.logging(activity);
     }
 
-    javax.inject.Provider<Logging> delegate;
+    
   }
 
   public static final String ATTEMPTED = "http://www.dwo.nl/verbs/attempted";

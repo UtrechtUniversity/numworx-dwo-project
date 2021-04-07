@@ -31,6 +31,7 @@ import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
+import nl.uu.fi.dwo.mobile.client.sco.SMLogger;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
@@ -60,13 +61,15 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	final private RPCHandler rpc;
 	private final ActivityComponent activity;
 	
-	@Inject ViewModuleViewNumworx(HeaderView headerView, DWOplayerParameters PARAMETERS, DwoGlobalVars vars, RPCHandler rpc, ActivityComponent.Builder builder) {
+	@Inject ViewModuleViewNumworx(HeaderView headerView, DWOplayerParameters PARAMETERS, 
+			DwoGlobalVars vars, RPCHandler rpc, ActivityComponent.Builder builder,
+			SMLogger.LoggingModule loggingModule) {
 		this.rpc = rpc;
 		this.headerView = headerView;
 		this.seb = PARAMETERS.getSecureMode() == SecureMode.SEB;
 	    pfx = PARAMETERS.getResource("");
 	    instance = vars;
-	    activity = builder.build();
+	    activity = builder.loggingModule(loggingModule).build();
 	    initialize(activity.api());
 	}
 

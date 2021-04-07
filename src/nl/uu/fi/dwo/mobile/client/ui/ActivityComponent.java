@@ -12,9 +12,11 @@ import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.dagger.ActivityScope;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.MementoModule;
+import nl.uu.fi.dwo.mobile.client.sco.SMLogger;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
+import nl.uu.fi.dwo.mobile.utils.Logging;
 
-@Subcomponent(modules= {MementoModule.class} )
+@Subcomponent(modules= {MementoModule.class, SMLogger.LoggingModule.class} )
 @ActivityScope
 public abstract class ActivityComponent {
 
@@ -31,9 +33,12 @@ public abstract class ActivityComponent {
 	interface Builder {
 		ActivityComponent build();
 		Builder mementoModule(MementoModule module);
+		Builder loggingModule(SMLogger.LoggingModule module);
 	}
 
 	@Named("premium")
 	public abstract boolean isPremium();
+
+	public abstract Logging getLogging();
 		
 }

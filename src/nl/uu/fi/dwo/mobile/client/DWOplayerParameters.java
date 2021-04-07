@@ -50,7 +50,7 @@ public interface DWOplayerParameters {
 	int getWindowHeight();
 	StatusBarIF getStatusBar(ActivityComponent a);
 	ScoreNavIF  getScoreNav(ActivityComponent a);
-	Logging getLogging();
+
 	String getHost();
 // More to come....
 //	String getCourseDescription();

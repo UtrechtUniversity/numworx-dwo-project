@@ -253,7 +253,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	    Vector attempts = new Vector();
 	    int attemptsCount = 0;
 		int errorCount = 0;
-		CorrectieFacade.showReview(h, asOne(), this, getScoreMax());
+		CorrectieFacade.showReview(h, asOne(), this, getScoreMax(), activity);
 
 		if(h.get("randomizedPositions") != null) 
 	    {	List<Object> randomizedPositionsList = JSONUtilities.toArrayList(h.get("randomizedPositions"));

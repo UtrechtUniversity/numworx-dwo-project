@@ -202,7 +202,7 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 	public void setState(HashMap<String, Object> h) {
 			setPopupState(h);
 			delegate.setState(h);
-			CorrectieFacade.showReview(h, delegate);
+			CorrectieFacade.showReview(h, delegate, activity);
 	}
 
 	public void setPopupState(HashMap<String, Object> h) {

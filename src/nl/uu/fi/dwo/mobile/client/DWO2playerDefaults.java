@@ -30,8 +30,8 @@ public class DWO2playerDefaults extends DWOplayerDefaults {
 		
 		launchData =
 				"/dwo/rest/public/scoData/getJSONLaunchDataBytes?scoId=";
-		loggingProvider = new SMLogger.Provider(	    
-			      () -> NoLogging.instance, vars, rpc);
+//		loggingProvider = new SMLogger.Provider(	    
+//			      () -> NoLogging.instance, vars, rpc);
 
 	 //  loggingProvider = () -> LaTransport.newTAOinstance();
 
@@ -88,12 +88,12 @@ public class DWO2playerDefaults extends DWOplayerDefaults {
 		return secureMode;
 	}
 
-	private final Provider<Logging> loggingProvider;
-	
-	@Override
-	public Logging getLogging() {
-		return loggingProvider.get();
-	}
+//	private final Provider<Logging> loggingProvider;
+//	
+//	@Override
+//	public Logging getLogging() {
+//		return loggingProvider.get();
+//	}
 
 	/* (non-Javadoc)
 	 * @see nl.uu.fi.dwo.mobile.client.DWOplayerDefaults#getStatusBar()

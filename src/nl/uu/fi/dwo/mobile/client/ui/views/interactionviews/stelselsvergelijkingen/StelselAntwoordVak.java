@@ -365,7 +365,7 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware, TekstEle
 			mainPanel.add(p);
 			if (null != mainPanel.getElement().getStyle().getPosition())
 				mainPanel.getElement().getStyle().setPosition(Position.RELATIVE);
-		}, this, scoreMax);
+		}, this, scoreMax, activity);
 		if (rekenVakZichtbaar)
 			rekenVak.setState(h);
 		if (oplossingenRegelZichtbaar)

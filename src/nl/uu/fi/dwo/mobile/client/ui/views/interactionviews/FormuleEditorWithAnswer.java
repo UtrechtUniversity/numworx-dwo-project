@@ -1713,7 +1713,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			sp.add(p);
 			if (null != sp.getElement().getStyle().getPosition())
 				sp.getElement().getStyle().setPosition(Position.RELATIVE);
-		}, this, scoreMax);
+		}, this, scoreMax, activity);
 
 		
 		
