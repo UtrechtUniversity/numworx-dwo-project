@@ -4,6 +4,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
+
 import org.osgi.util.promise.Promise;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -180,8 +182,8 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 	class WiskOpdrMementoModule extends MementoModule {
 
 		@Override
-		protected Memento memento(ActivityComponent a, Scorm2004IF api) {
-			return new WiskOpdrMemento(a, api);
+		protected Memento memento(ActivityComponent a, Provider<Scorm2004IF> api) {
+			return new WiskOpdrMemento(a, api.get());
 		}
 		
 	}

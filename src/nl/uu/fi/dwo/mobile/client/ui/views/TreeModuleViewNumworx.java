@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
@@ -39,6 +40,10 @@ import com.google.gwt.view.client.SingleSelectionModel;
 import com.googlecode.mgwt.ui.client.MGWT;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.mobile.client.sco.Memento;
+import nl.uu.fi.dwo.mobile.client.sco.MementoModule;
+import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
+import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent.Builder;
@@ -544,7 +549,21 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		String description = item.getDescription();
 		if(description.startsWith(DescriptionView.GZIPPREFIX))
 		{
-			w = new DescriptionViewImpl(rpc, item.getID(), this, builder.build()).asWidget();
+			
+			MementoModule module = new MementoModule() {
+				@Override
+				protected Scorm2004IF api(Provider<Scorm2004IF> parent) {
+					LOG.info("supplying scorm_guest");
+					return new SCORM_guest();
+				}
+
+				@Override
+				protected Memento memento(ActivityComponent a, Provider<Scorm2004IF> api) {
+					return null;
+				}
+				
+			};
+			w = new DescriptionViewImpl(rpc, item.getID(), this, builder.mementoModule(module).build()).asWidget();
 		} else
 		if(description.startsWith("<html>")) {
 			w = new HTML(description);

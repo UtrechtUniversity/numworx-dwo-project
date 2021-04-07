@@ -1,6 +1,8 @@
 package nl.uu.fi.dwo.mobile.client.sco;
 
+import javax.annotation.Nullable;
 import javax.inject.Named;
+import javax.inject.Provider;
 
 import dagger.Module;
 import dagger.Provides;
@@ -10,9 +12,9 @@ import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 @Module
 public class MementoModule {
 
-	@ActivityScope @Provides protected Memento memento(ActivityComponent a, @Named("API") Scorm2004IF api) {
-		return new Memento(a, api);
+	@ActivityScope @Provides @Nullable protected Memento memento(ActivityComponent a, @Named("API") Provider<Scorm2004IF> api) {
+		return new Memento(a, api.get());
 	}
 	
-	@ActivityScope @Named("API") @Provides Scorm2004IF api(@Named("parentAPI") Scorm2004IF api) { return api; }
+	@ActivityScope @Named("API") @Provides protected Scorm2004IF api(@Named("parentAPI") Provider<Scorm2004IF> api) { return api.get(); }
 }

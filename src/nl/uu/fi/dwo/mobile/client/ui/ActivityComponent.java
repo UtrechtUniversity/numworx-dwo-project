@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import java.util.Optional;
 
+import javax.annotation.Nullable;
 import javax.inject.Named;
 
 import com.google.web.bindery.event.shared.EventBus;
@@ -25,7 +26,7 @@ public abstract class ActivityComponent {
 	public abstract TrafficAgent agent();
 	public abstract Optional<DwoGlobalVars> vars();
 	
-	public abstract Memento memento();
+	@Nullable public abstract Memento memento();
 	@Named("API") public abstract Scorm2004IF api();
 	
 	@Subcomponent.Builder
