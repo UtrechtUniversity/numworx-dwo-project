@@ -4,7 +4,8 @@
 	<ui:with type="nl.uu.fi.dwo.mobile.client.text.Text" field="rb" />
 	<ui:with type="java.lang.String" field="build" />
 	<ui:with type="java.lang.String" field="back" />
-	<ui:with type="java.lang.String" field="pfx" />
+	<ui:with type="com.google.gwt.safehtml.shared.SafeUri" field='login_png' />
+	<ui:with type="com.google.gwt.safehtml.shared.SafeUri" field='logo_svg' />
 	<ui:with type="java.lang.String" field='for_students' />
 	<ui:style field='style' type='nl.uu.fi.dwo.mobile.client.ui.views.Login3ViewImpl.Login3ViewImplCSS'>
 	@def regular 400;
@@ -239,10 +240,10 @@
 	<g:FlowPanel styleName='{style.outer}'>
 	<g:FlowPanel styleName='{style.screen}'>
 		<g:HTML styleName="{style.logo}">
-			<img src='{pfx}images/numworx/login.png' title="{build}"/>
+			<img src='{login_png}' title="{build}"/>
 		</g:HTML>
 		<g:HTML ui:field='logoPanel' styleName='{style.logotekst}'>
-			<img src='{pfx}images/numworx/logo-Numworx-wit-blauw3.svg' />
+			<img src='{logo_svg}' />
 			<p><ui:text from='{for_students}'/></p>
 		</g:HTML>
 		<g:Frame ui:field='messagePanel' styleName='{style.messages}' />

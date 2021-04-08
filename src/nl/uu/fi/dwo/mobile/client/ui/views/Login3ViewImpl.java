@@ -21,6 +21,8 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.safehtml.shared.SafeUri;
+import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -67,7 +69,7 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 	@UiField TextBox username;
 	@UiField PasswordTextBox password;
 	@UiField(provided=true) Text rb = Text.constants;
-	@UiField(provided=true) String pfx;
+	@UiField(provided=true) SafeUri login_png, logo_svg;
 
 	/**
 	 * Because this class has a default constructor, it can
@@ -83,7 +85,8 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 	Widget createAndBindUi(DWOplayerParameters PARAMETERS) {
 		back = URL.encodePathSegment(Window.Location.getHref());
 		build = "Version " + BUILD.version + "." + BUILD.buildNumber;
-        pfx = PARAMETERS.getResource("");
+        login_png = UriUtils.fromString(PARAMETERS.getResource("images/numworx/login.png"));
+        logo_svg = UriUtils.fromString(PARAMETERS.getResource("images/numworx/logo-Numworx-wit-blauw3.svg"));
 		for_students = rb.for_students();
 		if(kiosk)
 			for_students = //rb.kiosk_mode
