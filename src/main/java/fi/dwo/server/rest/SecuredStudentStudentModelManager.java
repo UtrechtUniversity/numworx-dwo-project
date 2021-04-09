@@ -96,6 +96,7 @@ public class SecuredStudentStudentModelManager {
     StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
                 .setHasRole(context.getRestContext().getDomHasRole())//
                 .buildStudent();
+     if (context.getDomSchoolClass() == null) return Collections.emptyList();
      state = state.setSchoolClass(context.getDomSchoolClass());
      return StudentModelContextUtilManager.reduce4s(state.getStudentModelContextListForClass());        
     }

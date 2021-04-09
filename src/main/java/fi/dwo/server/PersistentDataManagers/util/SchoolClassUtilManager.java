@@ -41,9 +41,9 @@ public class SchoolClassUtilManager {
                     java.util.Date d2 = o2.getRegisterDate();
                     int c = d1.compareTo(d2);
                     if (c == 0) {
-                        o1.getPersistentStudentOfClassPK().getClassID().compareTo(o2.getPersistentStudentOfClassPK().getClassID());
+                        c = o1.getPersistentStudentOfClassPK().getClassID().compareTo(o2.getPersistentStudentOfClassPK().getClassID());
                     }
-                    return 0;
+                    return c;
                 });
                 ListIterator<PersistentStudentOfClass> iterator = candidates.listIterator(candidates.size());
                 while (iterator.hasPrevious()) {

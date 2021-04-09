@@ -7,10 +7,13 @@ import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -27,6 +30,7 @@ import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassFull;
@@ -417,4 +421,31 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
 
     }
 
+    @Test
+    public void testRemoveStudentFromSchoolClass() throws Exception  {
+        SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
+        SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
+       	RestRemoveStudentFromSchoolClass rest = new RestRemoveStudentFromSchoolClass();
+        DomSchoolClass domSchoolClass = new DomSchoolClass();
+        domSchoolClass.setId(PersistentSchoolClass.buildPersistenceId(2L));
+        domSchoolClass.setSchoolClassName("SchoolClass02");
+        DomRemoveStudentFromSchoolClass dom = new DomRemoveStudentFromSchoolClass();
+        dom.setSchoolClass(domSchoolClass);
+        DomStudent student = new DomStudent();
+        PersistenceId id = PersistentUser.buildPersistenceId(9L);
+		student.setId(id);
+		dom.setStudent(student);
+		rest.setDomRemoveStudentFromSchoolClass(dom);
+        DomContext context = new DomContext();
+		rest.setRestContext(context);
+   	
+		assertTrue(instance.removeStudentFromSchoolClass(sc, rest));
+        sc = new TestSecurityContext("user02", RoleType.STUDENT);//school01
+        SecuredUserAccountLoginsManagerV2 alm = new SecuredUserAccountLoginsManagerV2();
+        DomSchoolsRolesAndClassesV2 result = alm.getSchoolLogins(sc);
+        assertEquals(result.getActiveSchoolRoleAndClass().getSchoolClass().getId(), PersistentSchoolClass.buildPersistenceId(1L));
+		
+		
+        
+    }
 }
