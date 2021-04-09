@@ -59,7 +59,7 @@ public class GuestPresenterFactory implements PresenterFactory {
     return loginPresenter;
   }
 
-  @Override @JsMethod
+  @Override
   public WelcomePresenter getWelcomePresenter() {
     return null;
   }

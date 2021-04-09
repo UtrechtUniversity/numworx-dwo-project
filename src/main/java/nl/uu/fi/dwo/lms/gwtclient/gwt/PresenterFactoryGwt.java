@@ -201,7 +201,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the addSchoolclassPresenter
      */
-    @JsMethod
+    //@JsMethod
     @Override
     public WelcomePresenter getWelcomePresenter() {
         return welcomePresenter;

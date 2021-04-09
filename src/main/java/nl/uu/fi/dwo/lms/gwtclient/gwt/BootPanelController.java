@@ -32,6 +32,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomHeartBeat;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import nl.uu.fi.dwo.rest.util.Dwo2LocaleMessageTranslator;
 import org.osgi.util.promise.Promise;
@@ -167,21 +168,25 @@ public class BootPanelController {
           case TEACHER:
               build = teacherBuilder.build();
               mainView.setUserRole(role, false);
+              mainView.setPremium(dwoGlobalVars.isPremium() && dwoGlobalVars.isTest()); // knowledge for teacher is premium
              break;
           case SCHOOLADMIN:
               build = schoolAdminBuilder.build();
              mainView.setUserRole(role, false);
+             mainView.setPremium(false); // no schooladmin premium features
             break;
           case STUDENT:
             //if (stage > 0)
             {
               build = studentBuilder.build();
               mainView.setUserRole(role, single);
-              mainView.setPremium(dwoGlobalVars.isPremium() && dwoGlobalVars.isTest()); // results for student is premium
+              DomSchoolClass sc = dwoGlobalVars.getCurrentSchoolClass();
+              mainView.setPremium(dwoGlobalVars.isPremium() && dwoGlobalVars.isTest() && sc != null); // knowledge for student is premium and only in class
               break;
             }
           default:
             mainView.setUserRole(RoleType.ANONYMOUS, false);
+            mainView.setPremium(false);
             build = guestBuilder.build();
         }
         presenterFactory = build.presenterFactory();
