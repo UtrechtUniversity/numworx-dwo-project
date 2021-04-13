@@ -128,6 +128,8 @@ public class MainPresenter {
 		void unsetIdleTimeout();
 
 		void showStudentResultsGraphView();
+
+		void showTeacherStudentModelView();
     }
 
     private MainPresenter.Display display;

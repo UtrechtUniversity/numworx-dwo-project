@@ -96,6 +96,8 @@ public class JsMainDisplay {
     public static native void showLogResultsView();
     /** show student's schoolclass view */
     public static native void showStudentSchoolclassView();
+    /** show teacher studentmodel view */
+    public static native void showTeacherStudentModelView();
     
     static native String getSearchInput();
     
