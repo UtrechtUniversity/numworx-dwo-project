@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
+import fi.dwo.commons.persistence.entities.PersistentACL;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentFromTo;
@@ -23,6 +24,8 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelItem;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
@@ -34,6 +37,8 @@ import nl.uu.fi.dwo.rest.entities.RestSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.core.ACLManager;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.FromToManager;
@@ -46,6 +51,7 @@ import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentModelItemManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
@@ -166,8 +172,11 @@ public class SecuredDwoAdminSchoolManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole hr = null;
+        
         try {
-            hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+            UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(school.getRestContext().getDomHasRole(), RoleType.ADMIN);
+            hr = state.getHasRole();
+            state.buildDwoAdmin();
         } catch (Dwo2Exception ex) {
             Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
@@ -253,7 +262,9 @@ public class SecuredDwoAdminSchoolManager {
     PersistentHasRole hr = null;
     DomSchoolFull school = restSchool.getDomSchoolFull();
     try {
-      hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(restSchool.getRestContext().getDomHasRole(), RoleType.ADMIN);
+        hr = state.getHasRole();
+        state.buildDwoAdmin();
     } catch (Dwo2Exception ex) {
       Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
       throw new Dwo2RestException(ex);
@@ -338,8 +349,10 @@ public class SecuredDwoAdminSchoolManager {
 
         PersistentHasRole hr = null;
         try {
-            hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-        } catch (Dwo2Exception ex) {
+            UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(restSchool.getRestContext().getDomHasRole(), RoleType.ADMIN);
+            hr = state.getHasRole();
+            state.buildDwoAdmin();
+       } catch (Dwo2Exception ex) {
             Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
@@ -355,7 +368,15 @@ public class SecuredDwoAdminSchoolManager {
                 }
                 school.setDelState(DelState.deleted);
                 SchoolManager.edit(school);
-
+        // loop studentmodels en studentmodelitems
+                List<PersistentStudentModelContext> smList = StudentModelContextManager.findEntities(school);
+                for(PersistentStudentModelContext sm: smList) {
+                	List<PersistentStudentModelItem> itemList = StudentModelItemManager.findEntities(sm);
+                	itemList.forEach(item -> StudentModelItemManager.destroy(item.getItemID()));
+                	StudentModelContextManager.destroy(sm.getModelID());
+                }
+                
+                
         //Loop FromTos in School
                 List<PersistentFromTo> ftList = FromToManager.findEntities(school);
                 for (PersistentFromTo ft : ftList) {
@@ -363,14 +384,6 @@ public class SecuredDwoAdminSchoolManager {
                     FromToManager.destroy(ft.getPersistentFromToPK());
                 }
 
-/* OBSOLETE 
- *               //Loop CourseSequences in School
-                List<PersistentCourseSequence> csList = CourseSequenceManager.findEntities(school);
-                for (PersistentCourseSequence cs : csList) {
-                    //Remove CourseSequence
-                    CourseSequenceManager.destroy(cs.getCoursesequenceID());
-                }
-*/
                 //Loop SchoolGroups in School
                 List<PersistentSchoolGroup> sgList = SchoolGroupManager.findEntities(school);
                 for (PersistentSchoolGroup sg : sgList) {
@@ -467,6 +480,8 @@ public class SecuredDwoAdminSchoolManager {
                         //Remove ScoContext
                         ScoContextManager.destroy(psc.getScoID());
                     }
+                    List<PersistentACL> acls = ACLManager.findByCourse(c);
+                    acls.forEach(acl -> ACLManager.destroy(acl.getAclID()));
                     ///Remove Course
                     CourseManager.destroy(c.getCourseID());
                 }
@@ -504,7 +519,9 @@ public class SecuredDwoAdminSchoolManager {
         List<DomTeacherAndHasRole> resultList = null;
 
         try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+            UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(restSchool.getRestContext().getDomHasRole(), RoleType.ADMIN);
+            phr = state.getHasRole();
+            state.buildDwoAdmin();
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
@@ -556,7 +573,9 @@ public class SecuredDwoAdminSchoolManager {
         PersistentHasRole hr = null;
         DomHasRole domHasRole = restHasRole.getDomHasRole();
         try {
-            hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+            UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(restHasRole.getRestContext().getDomHasRole(), RoleType.ADMIN);
+            hr = state.getHasRole();
+            state.buildDwoAdmin();
         } catch (Dwo2Exception ex) {
             Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
