@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.studentmodel;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
@@ -13,8 +15,11 @@ import jsinterop.annotations.JsType;
  * @author Wim van Velthoven
  */
 @JsType(isNative = true, name = "jsTeacherStudentModelDisplay", namespace = JsPackage.GLOBAL)
-public class JsTeacherStudentModelDisplay {
-    public static native void clear();
-    public static native void setHelp(String url);
-    public static native void init();
+class JsTeacherStudentModelDisplay {
+    static native void clear();
+    static native void setHelp(String url);
+    static native void init();
+    static native void showSchoolClasses(JavaScriptObject data);
+	static native void showModels(JavaScriptObject data);
+	static native void showTree(JavaScriptObject javaScriptObject);
 }

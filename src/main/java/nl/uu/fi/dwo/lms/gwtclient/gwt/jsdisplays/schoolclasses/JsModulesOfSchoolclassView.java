@@ -117,7 +117,7 @@ public class JsModulesOfSchoolclassView implements ModulesOfSchoolclassPresenter
 
         JSONObject object = buildSubTree(tree);
         LOG.log(Level.INFO, "tree: " + object.toString());
-        JsModulesOfSchoolclassDisplay.setTree(object.isObject().getJavaScriptObject());
+        JsModulesOfSchoolclassDisplay.setTree(object.getJavaScriptObject());
     }
 
     @Override

@@ -14,9 +14,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditTeacherPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.ImportPersonsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.results.AbstractResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.LogResultsPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectStudentResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectedResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter;
@@ -45,7 +43,7 @@ public class StudentPresenterFactory implements PresenterFactory {
   @Inject Lazy<StudentResultsPresenter> studentResultsPresenter;
   @Inject Lazy<StudentResultsGraphPresenter> studentResultsGraphPresenter;
 
-  @Override  @JsMethod
+  @JsMethod
   public StudentSchoolclassPresenter getStudentSchoolclassPresenter() {
     return studentSchoolclassPresenter;
   }

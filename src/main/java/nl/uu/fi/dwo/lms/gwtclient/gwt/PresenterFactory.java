@@ -42,7 +42,6 @@ public interface PresenterFactory {
     public AccountPresenter getAccountPresenter();
     public SchoolclassesPresenter getSchoolclassesPresenter();
     public EditSchoolclassPresenter getEditSchoolclassPresenter();
-    public StudentSchoolclassPresenter getStudentSchoolclassPresenter();
     public AddStudentToSchoolclassPresenter getAddStudentToSchoolclassPresenter();
     public CopyOrMoveStudentToSchoolclassPresenter getCopyOrMoveStudentToSchoolclassPresenter();
     public AddTeacherToSchoolclassPresenter getAddTeacherToSchoolclassPresenter();

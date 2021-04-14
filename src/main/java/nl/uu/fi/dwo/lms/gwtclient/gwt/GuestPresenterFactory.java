@@ -197,11 +197,6 @@ public class GuestPresenterFactory implements PresenterFactory {
   }
 
   @Override
-  public StudentSchoolclassPresenter getStudentSchoolclassPresenter() {
-    return null;
-  }
-
-  @Override
   public AbstractResultsPresenter getResultsGraphPresenter() {
 	return null;
  }

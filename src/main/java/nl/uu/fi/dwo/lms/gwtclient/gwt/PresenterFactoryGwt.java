@@ -4,7 +4,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.StudentModelPresenter;
 
 import javax.inject.Inject;
@@ -358,16 +357,12 @@ public class PresenterFactoryGwt implements PresenterFactory {
       return null;
     }
 
-    @Override
-    public StudentSchoolclassPresenter getStudentSchoolclassPresenter() {
-      return null;
-    }
-
 	@Override
 	public AbstractResultsPresenter getResultsGraphPresenter() {
 		return null;
 	}
 
+	@JsMethod
 	public StudentModelPresenter getStudentModelPresenter() {
 		return studentModelPresenter;
 	}
