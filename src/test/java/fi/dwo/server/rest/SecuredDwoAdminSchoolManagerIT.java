@@ -226,6 +226,7 @@ public class SecuredDwoAdminSchoolManagerIT {
         PersistentSchool expResult = null;
         expResult = SchoolManager.findEntity(3L);
         RestSchool4DwoAdmin restSchool = new RestSchool4DwoAdmin();
+        restSchool.setRestContext(context);
         DomSchool4DwoAdmin domSchool = expResult.buildDomSchool4DwoAdmin();
         restSchool.setDomSchool4DwoAdmin(domSchool);
         domSchool.setId(expResult.buildPersistenceId());

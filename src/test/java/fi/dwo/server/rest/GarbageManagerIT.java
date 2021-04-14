@@ -109,6 +109,7 @@ public class GarbageManagerIT {
     schools = sm.getSchools(sc);
     
     RestSchool4DwoAdmin restSchool = new RestSchool4DwoAdmin();
+    restSchool.setRestContext(getContext());
     int size = schools.size()-1;
     restSchool.setDomSchool4DwoAdmin(schools.get(size));
     sm.removeSchool(sc, restSchool);
