@@ -38,6 +38,7 @@ public class GraphNode {
 
 	static final String NOTFOUND = "NOTFOUND";
 	private static Color defaultNodeColor = LeerdomeinGraphPanel.colorBlue4;
+	private static Color defaultKennenNodeColor = new Color(255,150,150);
 	private static Color defaultTextColor = LeerdomeinGraphPanel.colorBlue1;
 	private static int defaultFontSize = 16;
 	private static Font defaultFont = new Font("SansSerif", Font.PLAIN, defaultFontSize);
@@ -75,6 +76,8 @@ public class GraphNode {
 	private Color halfSuccesColor = new Color(180, 240, 180);
 	private Color failColor = new Color(200, 0, 0);
 	private Color halfFailColor = new Color(255, 150, 150);
+	
+	private boolean kennenLeerdoel;
 
 	// private boolean visible = true;
 
@@ -82,6 +85,9 @@ public class GraphNode {
 		this.ID = ID;
 		this.subdomein = subdomein;
 		this.description = description;
+		kennenLeerdoel = description.startsWith("W:");
+		if(kennenLeerdoel)
+			nodeColor = defaultKennenNodeColor;
 		// setFont(defaultFont);
 	}
 
@@ -89,6 +95,9 @@ public class GraphNode {
 		this.ID = ID;
 		this.subdomein = subdomein;
 		this.description = description;
+		kennenLeerdoel = description.startsWith("W:");
+		if(kennenLeerdoel)
+			nodeColor = defaultKennenNodeColor;
 		methodeInfos = Collections.singletonMap(info.key(), info);
 	}
 
