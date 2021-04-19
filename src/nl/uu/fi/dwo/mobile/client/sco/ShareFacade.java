@@ -30,7 +30,7 @@ public class ShareFacade implements InteractionView, TekstElementWithFont {
 		shareKey = key;
 		this.withfont = withfont;
 		this.memento = memento; // NON NULL!!!!
-		this.stateMap = memento.getShareMap();
+		this.stateMap = memento.getShareMap(); // NOT NULL!!
 	}
 
 	public InteractionView unwrap() {
