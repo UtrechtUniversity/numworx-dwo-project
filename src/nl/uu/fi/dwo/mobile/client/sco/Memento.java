@@ -1475,6 +1475,7 @@ public void setView(ViewModuleView view) {
 }
 
 public JSONObject getShareMap() {
+	if (shareMap == null) shareMap = new JSONObject();
 	return shareMap;
 }
 }
