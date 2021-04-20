@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -15,7 +14,6 @@ import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 
@@ -128,7 +126,7 @@ public class DescriptionPresenter {
 			return description;
 		}
 
-		@Inject StudentResults service;
+		@Inject DescriptionService service;
 		DomStudentModelContextId current;
 
 		public Promise<Widget> get(DomStudentModelContextId current, DomStudentModelContextInfo info) {

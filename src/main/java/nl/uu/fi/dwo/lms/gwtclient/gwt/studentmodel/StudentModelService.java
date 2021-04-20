@@ -2,18 +2,29 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.inject.Inject;
 
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
+import com.google.gwt.i18n.client.LocaleInfo;
+
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherStudentModelManager;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionService;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
-class StudentModelService {
+@RoleScope
+public class StudentModelService implements DescriptionService {
+
+	private final String lang = LocaleInfo.getCurrentLocale().getLocaleName();
 
 	SecuredTeacherStudentModelManager manager = new SecuredTeacherStudentModelManager();
 
@@ -33,5 +44,32 @@ class StudentModelService {
 		if (models == null)
 			return models = manager.getReducedList(context);
 		return models;
+	}
+
+	public Promise<DomStudentModelContext> getStudentModel(PersistenceId pid) {
+		return getModels().map(list -> {
+			for(DomStudentModelContext item: list) {
+				if (item.getId().equals(pid)) return item;
+			}
+			throw new NoSuchElementException();
+		}).then(p -> { 
+			DomStudentModelContext sm = p.getValue();
+			if (sm.getModelStructure().getCategories() == null) {
+				return manager.getStudentModel(context, sm)
+						.then( q -> {  
+							sm.getModelStructure().setCategories(q.getValue().getModelStructure().getCategories());
+							sm.getModelStructure().setInfo(q.getValue().getModelStructure().getInfo());
+							sm.setOptLock(q.getValue().getOptLock());
+							return p;} );
+			}
+			
+			return p;
+		});
+		
+	}
+
+	@Override
+	public Promise<String> getDescription(DomStudentModelContextId id, DomStudentModelContextInfo info) {
+			return manager.getDescription(id, info.getId(), lang, context);
 	}
 }

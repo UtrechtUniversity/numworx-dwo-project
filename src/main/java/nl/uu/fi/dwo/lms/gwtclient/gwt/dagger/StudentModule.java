@@ -14,6 +14,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsStudentSchoolCl
 import nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessagesStudent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentSchoolclassPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionService;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResults;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraphPresenter;
 
 @Module
@@ -22,6 +24,7 @@ abstract class StudentModule {
   @Binds abstract SwitchViewEventHandler viewHandler(StudentViewHandler handler);
   @Binds abstract StudentSchoolclassPresenter.Display studentSchoolClassView(JsStudentSchoolClassView view);
   @Binds abstract StudentResultsGraphPresenter.Display studentResultGraphView(JsStudentResultsGraphView view);
+  @Binds abstract DescriptionService descriptionService(StudentResults results);
   @Provides @RoleScope static GwtClientMessages rb() {
     return GWT.create(GwtClientMessagesStudent.class);
   }

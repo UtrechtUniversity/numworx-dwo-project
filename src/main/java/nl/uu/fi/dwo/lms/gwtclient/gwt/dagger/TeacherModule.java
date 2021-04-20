@@ -14,12 +14,15 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.TeacherViewHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsServiceTeacher;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.StudentModelService;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionService;
 
 @Module
 abstract class TeacherModule {
   @Binds abstract PresenterFactory presenterFactory(PresenterFactoryGwt factory);
   @Binds abstract SwitchViewEventHandler viewHandler(TeacherViewHandler handler);
   @Binds abstract PersonsService personsService(PersonsServiceTeacher service);
+  @Binds abstract DescriptionService descriptionService(StudentModelService service);
 
   @Provides @RoleScope static GwtClientMessages rb() {
     return GWT.create(GwtClientMessages.class);
