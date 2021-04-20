@@ -10,6 +10,7 @@ import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
@@ -31,24 +32,30 @@ import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Response.Status;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext4Student;
@@ -58,6 +65,7 @@ import nl.uu.fi.dwo.rest.entities.RestStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * StudentModel manager for the teacher. Basic operations.
@@ -315,4 +323,30 @@ public class SecuredTeacherStudentModelManager {
 		}
 		return result;
 	}
+	
+	@GET
+	@Produces ("application/json") 
+	@Path ("/getDescription")
+	public Response getDescription(@Context SecurityContext sc, 
+			@QueryParam("id") String uuid, @QueryParam("modelId") String modelid,
+			@QueryParam("hasRoleId") String sgid, @QueryParam("locale") String locale
+		) {
+		DomHasRole hr = new DomHasRole();
+		hr.setId(new PersistenceId(sgid));
+		DomStudentModelContextId smc = new DomStudentModelContextId(new PersistenceId(modelid));
+	      try {
+			TeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+			          .setHasRole(hr)
+			          .buildSchoolAdminTeacher().setTeacher();
+			DomStudentModelContext result = state.getStudentModel(smc);
+			DomStudentModelStructure struct = result.getModelStructure();
+			String obj = SecuredStudentStudentModelManager.getStruct(struct, uuid, locale);
+			
+			return Response.ok(obj, MediaType.APPLICATION_JSON_TYPE).build();
+		} catch (Dwo2Exception e) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+	}
+
+	
 }

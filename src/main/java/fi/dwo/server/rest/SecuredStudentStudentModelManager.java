@@ -185,7 +185,7 @@ public class SecuredStudentStudentModelManager {
 		}
 	}
 
-	private String getStruct(DomStudentModelStructure struct, String uuid, String locale) throws Dwo2Exception {
+	static String getStruct(DomStudentModelStructure struct, String uuid, String locale) throws Dwo2Exception {
 		if (uuid.equals(struct.getInfo().getId())) {
 			return description(struct.getInfo(), locale);
 		}
@@ -201,7 +201,7 @@ public class SecuredStudentStudentModelManager {
 		throw new Dwo2Exception(Dwo2ExceptionCode.Rest_FormatError, "not found");
 	}
 
-	private Optional<String> getObj(DomStudentModelObj obj, String uuid, String locale) {
+	private static Optional<String> getObj(DomStudentModelObj obj, String uuid, String locale) {
 		if (uuid.equals(obj.getInfo().getId()))
 			return Optional.ofNullable(description(obj.getInfo(), locale));
 		List<DomStudentModelObj> list = obj.getObjectives();
@@ -212,7 +212,7 @@ public class SecuredStudentStudentModelManager {
 		return Optional.empty();
 	}
 
-	private String description(DomStudentModelContextInfo info, String locale) {
+	private static String description(DomStudentModelContextInfo info, String locale) {
 		String json = info.getDescription().get(locale + "@JSON");
 		if (json == null || json.isEmpty())
 			return info.getDescription().getOrDefault(locale, "");
