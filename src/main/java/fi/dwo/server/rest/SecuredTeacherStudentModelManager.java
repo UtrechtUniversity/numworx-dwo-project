@@ -111,8 +111,12 @@ public class SecuredTeacherStudentModelManager {
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getReducedList")
-    public List<DomStudentModelContext> getReducedStudentModels(@Context SecurityContext sc, RestContext context) {
-    	List<DomStudentModelContext> list = getStudentModels(sc, context);
+    public List<DomStudentModelContext> getReducedStudentModels(@Context SecurityContext sc, RestContext context) throws Dwo2Exception {
+        TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+                .setHasRole(context.getRestContext().getDomHasRole())
+                .buildSchoolAdminTeacher()
+                .setTeacher();
+    	List<DomStudentModelContext> list = build.getReducedStudentModels();
     	return StudentModelContextUtilManager.reduce(list);
     }
 

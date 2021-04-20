@@ -29,6 +29,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  */
 public interface TeacherActions  {
     public List<PersistentStudentModelContext> getStudentModels(TeacherDomainAuthorizer.Context context) throws Dwo2Exception;
+    public List<PersistentStudentModelContext> getReducedStudentModels(TeacherDomainAuthorizer.Context context) throws Dwo2Exception;
     public PersistentStudentModelContext addStudentModel(TeacherDomainAuthorizer.Context context, PersistentStudentModelContext model) throws Dwo2Exception;
 	public PersistentStudentModelContext getStudentModel(Context context, DomStudentModelContextId id) throws Dwo2Exception;
     public List<PersistentSchoolClass> getSchoolClasses(TeacherDomainAuthorizer.Context context) throws Dwo2Exception;

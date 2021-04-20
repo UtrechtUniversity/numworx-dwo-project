@@ -33,6 +33,7 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.GensonMapConverter;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import org.json.JSONException;
@@ -110,9 +111,10 @@ public class SecuredTeacherStudentModelManagerIT {
     /**
      * Test of getStudentModels method, of class
      * SecuredTeacherStudentModelManager.
+     * @throws Dwo2Exception 
      */
     @Test
-    public void testGetReducedStudentModels() {
+    public void testGetReducedStudentModels() throws Dwo2Exception {
 
         System.out.println("getReducedStudentModels");
         SecurityContext sc = new TestSecurityContext("user03", RoleType.TEACHER);
