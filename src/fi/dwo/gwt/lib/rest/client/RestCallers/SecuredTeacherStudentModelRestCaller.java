@@ -12,6 +12,7 @@ import org.fusesource.restygwt.client.RestService;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
 
 public interface SecuredTeacherStudentModelRestCaller extends RestService {
 
@@ -22,4 +23,8 @@ public interface SecuredTeacherStudentModelRestCaller extends RestService {
   @Path("/sec:{id}/teacher/studentmodel/getReducedList")
   @PUT
   void getReducedList(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomStudentModelContext>> callback);
+
+  @PUT
+  @Path("/sec:{id}/teacher/studentmodel/get")
+  void getStudentModel(@PathParam("id") String id, RestStudentModelContext rest, MethodCallback<DomStudentModelContext> callback);
 }
