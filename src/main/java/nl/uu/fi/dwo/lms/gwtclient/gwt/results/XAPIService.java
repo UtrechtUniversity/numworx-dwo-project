@@ -6,7 +6,6 @@ import org.fusesource.restygwt.client.Defaults;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
-import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentStudentModelManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherStudentModelManager;
 import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
@@ -17,8 +16,6 @@ import nl.uu.fi.dwo.rest.dom.xapi.Statement;
 
 @RoleScope
 class XAPIService {
-
-  SecuredTeacherStudentModelManager manager;
   
   private Promise<XapiManager> man;
 

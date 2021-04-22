@@ -39,6 +39,7 @@ public class JsTeacherStudentModelView implements StudentModelPresenter.Display,
     public void clear() {
     	JsTeacherStudentModelDisplay.clear();
     	treewrap.clear();
+    	descriptionwrap.clear();
     }
 
     @Override
@@ -112,5 +113,9 @@ public class JsTeacherStudentModelView implements StudentModelPresenter.Display,
 		descriptionwrap.add(w);
 	}
 	
+	@Override
+	public void setTitle(String title) {
+		JsTeacherStudentModelDisplay.setTitle(title);
+	}
 	
 }

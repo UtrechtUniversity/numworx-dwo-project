@@ -7,6 +7,8 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window.Location;
 import com.google.web.bindery.event.shared.EventBus;
 
+import dagger.Lazy;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -59,7 +61,7 @@ public class StudentScoResultPresenter {
 
   private Display view;
   @Inject ResultsService resultService;
-  @Inject XAPIService xapiService;
+  @Inject Lazy<XAPIService> xapiService;
   private DomResultTree resultTree;
   private DomResultStudentScoContext ssc;
   private Map<String,String> userState;
@@ -266,9 +268,10 @@ public class StudentScoResultPresenter {
     s.actor.account = new Account();
     s.actor.name = student.getUserName();
     s.actor.account.name =  "pid:"+student.getId();
-    xapiService.getAgent().then( a -> { 
+    XAPIService x = xapiService.get();
+	x.getAgent().then( a -> { 
       s.actor.account.homePage = a.getValue().account.homePage;
-      return xapiService.saveStatement(s);
+      return x.saveStatement(s);
     });
     
     

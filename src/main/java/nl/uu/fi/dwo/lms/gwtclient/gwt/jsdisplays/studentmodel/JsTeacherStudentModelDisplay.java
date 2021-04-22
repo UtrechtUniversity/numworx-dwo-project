@@ -24,4 +24,5 @@ class JsTeacherStudentModelDisplay {
 	static native void showTree(JavaScriptObject javaScriptObject);
 	static native String getTreeId();
 	static native String getDescriptionId();
+	static native void setTitle(String title);
 }

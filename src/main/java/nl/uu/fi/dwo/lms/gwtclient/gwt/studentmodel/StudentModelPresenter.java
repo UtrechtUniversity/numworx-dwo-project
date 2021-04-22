@@ -24,7 +24,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.studentmodel.JsTeacherStudentMo
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.DomTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -49,6 +48,7 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		void showTree(DomTree<String> tree);
 		void setLoadingTreeMessage();
 		void setDescription(IsWidget w);
+		void setTitle(String title);
     }
     
     @Inject void setView(JsTeacherStudentModelView view) {
@@ -168,6 +168,20 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 	@JsMethod
 	public void onFilter() {
 		LOG.info("on filter click");
+	}
+	
+	@JsMethod
+	public void onSchoolClass(String id) {
+		if (id.isEmpty()) return;
+		DomSchoolClass sc = schoolClasses.get(id).getSchoolClass();
+		LOG.info("on schoolclass " + sc.getSchoolClassName());
+	}
+	
+	@JsMethod
+	public void onSchoolClassFilter(String id) {
+		if (id.isEmpty()) return;
+		DomSchoolClass sc = schoolClasses.get(id).getSchoolClass();
+		LOG.info("on schoolclass filter " + sc.getSchoolClassName());
 	}
 
 	@Override
