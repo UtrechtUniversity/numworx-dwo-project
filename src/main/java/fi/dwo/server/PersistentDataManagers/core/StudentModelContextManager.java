@@ -186,8 +186,7 @@ public class StudentModelContextManager {
 					sc.setSchoolID( ((Number) item[1]).longValue());
 					String title = (String) item[2];
 					sc.setModelStructure(new DomStudentModelStructure());
-					JSONParser parser = new JSONParser();
-					Map<String, String> aTitle = (JSONObject) parser.parse(title);
+					Map<String, String> aTitle = toJSONObject(title);
 					sc.getModelStructure().setInfo(new DomStudentModelContextInfo(aTitle, null));
 					sc.setOptlock(((Number) item[3]).longValue());
 					sc.setLastChangeTimeStamp((Long) item[4]);
@@ -206,6 +205,14 @@ public class StudentModelContextManager {
         	em.close();
         }
     }
+
+	private static Map<String, String> toJSONObject(String title) throws ParseException {
+		if (title == null || "null".equals(title))
+			return null;
+		JSONParser parser = new JSONParser();
+		Map<String, String> aTitle = (JSONObject) parser.parse(title);
+		return aTitle;
+	}
     
 
     private static Long toLong(Object object) {
