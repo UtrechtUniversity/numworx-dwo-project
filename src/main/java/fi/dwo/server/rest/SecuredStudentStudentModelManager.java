@@ -128,26 +128,26 @@ public class SecuredStudentStudentModelManager {
      return reduce(state.getStudentModel(restModelId.getDomStudentModelContext()));        
     }
 
-    private DomStudentModelContext reduce(DomStudentModelContext studentModel) {
+    static DomStudentModelContext reduce(DomStudentModelContext studentModel) {
 		reduce(studentModel.getModelStructure());
 		return studentModel;
 	}
 
     final static private Map<String, String> EMPTY = Collections.emptyMap();
-	private void reduce(DomStudentModelStructure modelStructure) {
+	static void reduce(DomStudentModelStructure modelStructure) {
 		modelStructure.getInfo().setDescription(EMPTY);
 		List<DomStudentModelCategory> list = modelStructure.getCategories();
-		list.forEach(this::reduce);
+		list.forEach(SecuredStudentStudentModelManager::reduce);
 	}
-	private void reduce(DomStudentModelCategory cat) {
+	private static void reduce(DomStudentModelCategory cat) {
 		cat.getInfo().setDescription(EMPTY);
 		List<DomStudentModelObj> list = cat.getObjectives();
-		list.forEach(this::reduce);
+		list.forEach(SecuredStudentStudentModelManager::reduce);
 	}
-	private void reduce(DomStudentModelObj obj) {
+	private static void reduce(DomStudentModelObj obj) {
 		obj.getInfo().setDescription(EMPTY);
 		List<DomStudentModelObj> list = obj.getObjectives();
-		if (list != null) list.forEach(this::reduce);
+		if (list != null) list.forEach(SecuredStudentStudentModelManager::reduce);
 	}
 	
 

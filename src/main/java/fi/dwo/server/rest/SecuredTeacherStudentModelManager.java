@@ -140,7 +140,12 @@ public class SecuredTeacherStudentModelManager {
     }
     
     
-    
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("getReduced")
+    public DomStudentModelContext getReduced(@Context SecurityContext sc, RestStudentModelContext rest) throws Dwo2Exception {
+    	return SecuredStudentStudentModelManager.reduce(getStudentModel(sc, rest));
+    }
     /**
      * Returns the school data to be displayed.
      *
