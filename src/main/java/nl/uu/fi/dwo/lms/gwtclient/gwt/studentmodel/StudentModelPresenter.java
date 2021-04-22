@@ -99,7 +99,9 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 	private Promise<?> stap2(Promise<List<DomStudentModelContext>> p) {
 		models.clear();
 		LinkedHashMap<String,String> titles = new LinkedHashMap<>();
-		p.getValue().stream().sorted(this).forEach(model -> { 
+		p.getValue().stream()
+		.filter(model -> model.getModelStructure().getInfo().getTitle() != null)
+		.sorted(this).forEach(model -> { 
 			String key = model.getId().getIdString();
 			String title = model.getModelStructure().getInfo().getTitle().getOrDefault(lang, "");
 			titles.put(key, title);
