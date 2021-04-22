@@ -48,6 +48,8 @@
     </developers>
     <properties>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+		<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>
     </properties>
 
     <!-- update the https path for a different branch or tag! -->
@@ -307,6 +309,7 @@
        	  <configuration>
        	    <niceManifest>true</niceManifest>
           	<instructions>
+   							<_snapshot>${osgi.qualifier}</_snapshot>
                             <Bundle-Name>DWO v2</Bundle-Name>
                             <Bundle-SymbolicName>fi.dwo.dwojapplet.domain.DWO</Bundle-SymbolicName>
                             <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
