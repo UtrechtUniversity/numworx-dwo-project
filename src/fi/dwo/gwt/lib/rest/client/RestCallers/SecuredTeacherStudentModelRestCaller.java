@@ -25,6 +25,6 @@ public interface SecuredTeacherStudentModelRestCaller extends RestService {
   void getReducedList(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomStudentModelContext>> callback);
 
   @PUT
-  @Path("/sec:{id}/teacher/studentmodel/get")
+  @Path("/sec:{id}/teacher/studentmodel/getReduced")
   void getStudentModel(@PathParam("id") String id, RestStudentModelContext rest, MethodCallback<DomStudentModelContext> callback);
 }
