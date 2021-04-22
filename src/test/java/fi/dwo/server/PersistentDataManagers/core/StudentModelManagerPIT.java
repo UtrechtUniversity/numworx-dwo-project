@@ -321,7 +321,13 @@ public class StudentModelManagerPIT {
     	PersistentSchool school = new PersistentSchool(3L);
     	List<PersistentStudentModelContext> result = StudentModelContextManager.findReducedEntities(school);
     	assertNotNull (result);
+    	assertEquals(2, result.size());
     	
+    	school = new PersistentSchool(1234L);
+    	result = StudentModelContextManager.findReducedEntities(school);
+    	assertNotNull (result);
+    	assertEquals(0, result.size());
+   	
     }
     
 }
