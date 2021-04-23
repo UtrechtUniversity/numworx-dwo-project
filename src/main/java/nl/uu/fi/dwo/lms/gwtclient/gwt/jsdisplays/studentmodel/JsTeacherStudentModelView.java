@@ -117,5 +117,10 @@ public class JsTeacherStudentModelView implements StudentModelPresenter.Display,
 	public void setTitle(String title) {
 		JsTeacherStudentModelDisplay.setTitle(title);
 	}
+
+	@Override
+	public void setModelSelect(String id) {
+		JsTeacherStudentModelDisplay.setModelSelect(id);
+	}
 	
 }

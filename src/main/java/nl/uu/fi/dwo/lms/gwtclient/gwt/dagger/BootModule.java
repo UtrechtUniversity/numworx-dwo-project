@@ -14,6 +14,8 @@ import fi.dwo.gwt.lib.rest.CallManagers.OAuthManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentStudentModelManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
+import nl.uu.fi.dwo.ideas.client.IdeasClient;
+import nl.uu.fi.dwo.ideas.client.IdeasIF;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactory;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactoryJs;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.modules.JsModulesView;
@@ -52,7 +54,11 @@ abstract class BootModule {
 	@Reusable @Provides static SecuredStudentStudentModelManager studentStudenModelManager() {
 		return new SecuredStudentStudentModelManager();
 	}
-	
+
+	@Provides @Singleton static IdeasIF ideas() {
+		return new IdeasClient("/ideas/IdeasServlet");
+	}
+
 //	@IntoMap
 //	@RoleKey(RoleType.ANONYMOUS)
 //	@Provides

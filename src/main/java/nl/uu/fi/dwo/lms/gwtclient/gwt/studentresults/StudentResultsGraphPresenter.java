@@ -36,11 +36,12 @@ public class StudentResultsGraphPresenter extends AbstractResultsPresenter {
 	private RootPanel root;
 	private SimplePanel main;
 	private JSONObject resultState;
-	@Inject StudentResults service;
+	private StudentResults service;
 	@Inject Lazy<StudentResultsGraph> graph;
 	
-	@Inject StudentResultsGraphPresenter(EventBus bus, DwoGlobalVars vars, Display view) {
+	@Inject StudentResultsGraphPresenter(EventBus bus, DwoGlobalVars vars, Display view, StudentResults service) {
 		super(bus, vars);
+		this.service = service;
 		this.view = view;
 		root = RootPanel.get(view.getId());
 		root.clear();

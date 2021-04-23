@@ -167,12 +167,20 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
 
              case KNOWLEDGE:
              case TEACHERSTUDENTMODEL:
+             case STUDENTRESULTS:
             	  if (dwoGlobalVars.isPremium()) {
               		  mainView.selectView(SelectedView.KNOWLEDGE);
 	            	  mainView.showTeacherStudentModelView();
-	            	  presenterFactory.getStudentModelPresenter().init();
+	            	  presenterFactory.getStudentModelPresenter().init(switchViewEvent.getResultState());
 	                  break;
             	  }
+             case STUDENTRESULTSGRAPH:
+             	if (dwoGlobalVars.isPremium()) {
+             		mainView.selectView(SelectedView.KNOWLEDGE);
+             		mainView.showStudentResultsGraphView();
+             		presenterFactory.getResultsGraphPresenter().init(switchViewEvent.getResultState());
+            		break;
+             	}
               default:
                   eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
                   LOG.log(Level.SEVERE, "Switch panel failed in app controller.");

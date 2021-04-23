@@ -11,15 +11,19 @@ import javax.inject.Inject;
 
 import org.osgi.util.promise.Promise;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.web.bindery.event.shared.EventBus;
 
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.studentmodel.JsTeacherStudentModelView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass;
@@ -49,6 +53,7 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		void setLoadingTreeMessage();
 		void setDescription(IsWidget w);
 		void setTitle(String title);
+		void setModelSelect(String id);
     }
     
     @Inject void setView(JsTeacherStudentModelView view) {
@@ -66,6 +71,7 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 	private EventBus bus;
 
 	private Promise<DomStudentModelContext> currentModel;
+	private Promise<?> allModels;
     
     @Inject StudentModelPresenter(EventBus bus) {
     	this.bus = bus;
@@ -82,7 +88,7 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
     }
 
     private void updateStudentModels() {
-		service.getModels().then(this::stap2, FAILURE);
+		allModels = service.getModels().then(this::stap2, FAILURE);
 	}
 
 	private Promise<?> stap1(Promise<List<DomSchoolClass>> p) {
@@ -165,6 +171,15 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 	@JsMethod
 	public void onGraph() {
 		LOG.info("on graph click");
+		currentModel.then(p -> {
+			DomStudentModelContext item = p.getValue();
+			JSONObject json = new JSONObject();
+			json.put("title", new JSONString(item.getModelStructure().getInfo().getTitle().get(lang)));
+			json.put("id", new JSONString(item.getId().getIdString()));
+			SwitchViewEvent ev = new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTRESULTSGRAPH, json.getJavaScriptObject());
+			bus.fireEvent(ev);
+			return null;
+		});
 	}
 	
 	@JsMethod
@@ -195,5 +210,16 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		currentModel.then( p -> 
 			description.get(p.getValue(), info))
 		.then(p -> {view.setDescription(p.getValue()); return p;}, FAILURE);
+	}
+
+	public void init(JavaScriptObject resultState) {
+		init();
+		if (resultState != null) {
+			allModels.then(p -> {
+				String id = new JSONObject(resultState).get("id").isString().stringValue();
+				view.setModelSelect(id);
+				selectModel(id);				
+				return p; } );
+		}
 	}
 }

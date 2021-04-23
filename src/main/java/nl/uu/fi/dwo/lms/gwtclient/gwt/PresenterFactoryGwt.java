@@ -5,6 +5,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.StudentModelPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraphPresenter;
 
 import javax.inject.Inject;
 
@@ -73,6 +74,8 @@ public class PresenterFactoryGwt implements PresenterFactory {
     @Inject ProgressDialogWithAbortPresenter progressDialogWithAbortPresenter;
     
     @Inject StudentModelPresenter studentModelPresenter;
+    @Inject StudentResultsGraphPresenter studentResultsGraphPresenter;
+
 
     @Inject public PresenterFactoryGwt(/*EventBus anEventBus, DwoGlobalVars aDwoGlobalVars*/) {
 //        dwoGlobalVars = aDwoGlobalVars;
@@ -358,8 +361,9 @@ public class PresenterFactoryGwt implements PresenterFactory {
     }
 
 	@Override
-	public AbstractResultsPresenter getResultsGraphPresenter() {
-		return null;
+	@JsMethod
+	public StudentResultsGraphPresenter getResultsGraphPresenter() {
+		return studentResultsGraphPresenter;
 	}
 
 	@JsMethod
