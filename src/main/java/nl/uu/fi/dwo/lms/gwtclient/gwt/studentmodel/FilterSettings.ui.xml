@@ -1,0 +1,86 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel>
+		<p>Getal&amp;Ruimte</p>
+		<table>
+			<tr>
+				<td><g:CheckBox ui:field='gr'/></td>
+				<td>hfst 1</td>
+				<td>hfst 2</td>
+				<td>hfst 3</td>
+				<td>hfst 4</td>
+				<td>hfst 5</td>
+				<td>hfst 6</td>
+				<td>hfst 7</td>
+				<td>hfst 8</td>
+				<td>hfst 9</td>
+			</tr>
+			<tr>
+				<td><g:CheckBox ui:field='gr1'>1HV</g:CheckBox></td>
+				<td><g:CheckBox ui:field='gr11'/></td><td><g:CheckBox ui:field='gr12'/></td><td><g:CheckBox ui:field='gr13'/></td><td><g:CheckBox ui:field='gr14'/></td>
+				<td><g:CheckBox ui:field='gr15'/></td><td><g:CheckBox ui:field='gr16'/></td><td><g:CheckBox ui:field='gr17'/></td><td><g:CheckBox ui:field='gr18'/></td>
+				<td><g:CheckBox ui:field='gr19'/></td>			
+			</tr>
+			<tr>
+				<td><g:CheckBox ui:field='gr2'>2HV</g:CheckBox></td>
+				<td><g:CheckBox ui:field='gr21'/></td><td><g:CheckBox ui:field='gr22'/></td><td><g:CheckBox ui:field='gr23'/></td><td><g:CheckBox ui:field='gr24'/></td>
+				<td><g:CheckBox ui:field='gr25'/></td><td><g:CheckBox ui:field='gr26'/></td><td><g:CheckBox ui:field='gr27'/></td><td><g:CheckBox ui:field='gr28'/></td>
+			</tr>
+			<tr>
+				<td><g:CheckBox ui:field='gr3'>3V</g:CheckBox></td>
+				<td><g:CheckBox ui:field='gr31'/></td><td><g:CheckBox ui:field='gr32'/></td><td><g:CheckBox ui:field='gr33'/></td><td><g:CheckBox ui:field='gr34'/></td>
+				<td><g:CheckBox ui:field='gr35'/></td><td><g:CheckBox ui:field='gr36'/></td><td><g:CheckBox ui:field='gr37'/></td><td><g:CheckBox ui:field='gr38'/></td>
+				<td><g:CheckBox ui:field='gr39'/></td>			
+			</tr>
+		</table>
+				<p>Moderne Wiskunde</p>
+		<table>
+			<tr>
+				<td><g:CheckBox ui:field='mw'/></td>
+				<td><label>hfst 1</label></td>
+				<td><label>hfst 2</label></td>
+				<td><label>hfst 3</label></td>
+				<td><label>hfst 4</label></td>
+				<td><label>hfst 5</label></td>
+				<td><label>hfst 6</label></td>
+				<td><label>hfst 7</label></td>
+				<td><label>hfst 8</label></td>
+				<td><label>hfst 9</label></td>
+				<td><label>hfst 10</label></td>
+				<td><label>hfst 11</label></td>
+				<td><label>hfst 12</label></td>
+				<td><label>hfst 13</label></td>
+				<td><label>hfst 14</label></td>
+			</tr>
+			<tr>
+				<td><g:CheckBox ui:field='mw1'>1HV</g:CheckBox></td>
+				<td><g:CheckBox ui:field='mw11'/></td><td><g:CheckBox ui:field='mw12'/></td><td><g:CheckBox ui:field='mw13'/></td><td><g:CheckBox ui:field='mw14'/></td>
+				<td><g:CheckBox ui:field='mw15'/></td><td><g:CheckBox ui:field='mw16'/></td><td><g:CheckBox ui:field='mw17'/></td><td><g:CheckBox ui:field='mw18'/></td>
+				<td><g:CheckBox ui:field='mw19'/></td><td><g:CheckBox ui:field='mw110'/></td><td><g:CheckBox ui:field='mw111'/></td><td><g:CheckBox ui:field='mw112'/></td>
+				<td><g:CheckBox ui:field='mw113'/></td>			
+			</tr>
+			<tr>
+				<td><g:CheckBox ui:field='mw2'>2HV</g:CheckBox></td>
+				<td><g:CheckBox ui:field='mw21'/></td><td><g:CheckBox ui:field='mw22'/></td><td><g:CheckBox ui:field='mw23'/></td><td><g:CheckBox ui:field='mw24'/></td>
+				<td><g:CheckBox ui:field='mw25'/></td><td><g:CheckBox ui:field='mw26'/></td><td><g:CheckBox ui:field='mw27'/></td><td><g:CheckBox ui:field='mw28'/></td>
+				<td><g:CheckBox ui:field='mw29'/></td><td><g:CheckBox ui:field='mw210'/></td><td><g:CheckBox ui:field='mw211'/></td><td><g:CheckBox ui:field='mw212'/></td>
+			</tr>
+			<tr>
+				<td><g:CheckBox ui:field='mw3'>3V</g:CheckBox></td>
+				<td><g:CheckBox ui:field='mw31'/></td><td><g:CheckBox ui:field='mw32'/></td><td><g:CheckBox ui:field='mw33'/></td><td><g:CheckBox ui:field='mw34'/></td>
+				<td><g:CheckBox ui:field='mw35'/></td><td><g:CheckBox ui:field='mw36'/></td><td><g:CheckBox ui:field='mw37'/></td><td><g:CheckBox ui:field='mw38'/></td>
+				<td><g:CheckBox ui:field='mw39'/></td><td><g:CheckBox ui:field='mw310'/></td><td><g:CheckBox ui:field='mw311'/></td><td><g:CheckBox ui:field='mw312'/></td>
+				<td><g:CheckBox ui:field='mw313'/></td>			
+				<td><g:CheckBox ui:field='mw314'/></td>			
+			</tr>
+		</table>
+			<p>Alle leerdoelen</p>
+			<table>
+				<tr><td><g:CheckBox ui:field='rest'>Niet geclassificeerde leerdoelen</g:CheckBox></td></tr>
+			</table>
+	</g:HTMLPanel>
+</ui:UiBinder> 

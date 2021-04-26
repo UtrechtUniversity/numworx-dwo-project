@@ -101,6 +101,11 @@ public class JsTeacherStudentModelView implements StudentModelPresenter.Display,
         Label l = new Label(DwoLocalesForGWT.instance.NUM_TBL_FETCHINGDATA());
         treewrap.add(l);
     }
+	
+	@Override
+	public void setEmptyTreeMessage() {
+		treewrap.clear();
+	}
 
 	@Override
 	public void onSelection(SelectionEvent<TreeItem> event) {
