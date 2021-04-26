@@ -250,6 +250,7 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		if (id.isEmpty()) return;
 		DomSchoolClass sc = schoolClasses.get(id).getSchoolClass();
 		LOG.info("on schoolclass " + sc.getSchoolClassName());
+		bus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SMCLASSRESULTS, sc));
 	}
 	
 	@JsMethod

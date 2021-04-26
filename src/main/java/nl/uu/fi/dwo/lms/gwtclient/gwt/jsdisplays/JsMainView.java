@@ -208,4 +208,9 @@ public class JsMainView implements MainPresenter.Display{
 	public void showStudentResultsGraphView() {
 		JsMainDisplay.showStudentResultsGraphView();
 	}
+	
+	@Override
+	public void showTeacherSMClassResultsView() {
+		JsMainDisplay.showTeacherSMClassResultsView();
+	}
 }

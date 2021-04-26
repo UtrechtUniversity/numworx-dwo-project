@@ -11,7 +11,6 @@
     <artifactId>DWOGwtClient</artifactId>
     <packaging>war</packaging>
 
-    <name>${project.build.finalName}</name>
     <url>http://www.dwo.nl</url>
     <!-- Update year to current when starting a new project -->
     <inceptionYear>2017</inceptionYear> 
@@ -80,7 +79,6 @@
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-dev</artifactId>
-            <version>${gwt.version}</version>
             <!-- "provided" so that we don't deploy -->
             <scope>provided</scope>
         </dependency>
@@ -665,5 +663,4 @@
     		</properties>
     	</profile>
     </profiles>
-    <version>2.4.17-SNAPSHOT</version>
 </project>

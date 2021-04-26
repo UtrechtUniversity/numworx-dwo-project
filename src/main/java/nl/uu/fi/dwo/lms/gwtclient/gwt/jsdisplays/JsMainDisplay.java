@@ -111,4 +111,5 @@ public class JsMainDisplay {
     static native void unsetIdleTimeout();
     
     static native void showStudentResultsGraphView();
+    static native void showTeacherSMClassResultsView();
 }

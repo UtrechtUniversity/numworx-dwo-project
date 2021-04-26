@@ -130,6 +130,8 @@ public class MainPresenter {
 		void showStudentResultsGraphView();
 
 		void showTeacherStudentModelView();
+
+		void showTeacherSMClassResultsView();
     }
 
     private MainPresenter.Display display;
