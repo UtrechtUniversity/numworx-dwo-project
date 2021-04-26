@@ -158,6 +158,7 @@ public class OAuth2Server extends HttpServlet {
 			location += "&state=" + URLEncoder.encode(state);
 		}
 		location = client.resolve(location).toASCIIString();
+		LOG.info("redirect temp to " + location );
 		resp.sendRedirect(location);
 	}
 
