@@ -12,7 +12,6 @@
 
 function later() {
 	try {
-		if ("false" == doInitialize()) throw "Illegal use"
         if (window.location.search) {
             var args = new URLSearchParams(window.location.search);
             var code = args.get("code");
@@ -25,6 +24,9 @@ function later() {
       				arg = encodeURIComponent(arg);
       				window.location = location + "?q=" + arg
       		  } else {
+      			if ("false" == doInitialize()) {
+      				throw "Illegal use"
+      			}
 				doSetValue("dme.oauth.code",  code);
 				doSetValue("dmw.oauth.state", state);
 				doTerminate("");
@@ -36,6 +38,9 @@ function later() {
             	window.sessionStorage.setItem("r", r);
             }
         }
+		if ("false" == doInitialize()) {
+			throw "Illegal use"
+		}
    	    var authorizeEndpoint = doGetValue("dme.oauth.endpoint");
    	    
    	    var clientId = doGetValue("dme.oauth.client_id");
@@ -50,7 +55,7 @@ function later() {
                code_challenge: codeChallenge,
                redirect_uri: redirectUri
            });
-           window.location = authorizeEndpoint + "?" + args;
+           window.open( authorizeEndpoint + "?" + args , "_top");
          	
  	} catch(e) {
  		console.error("Error in login");
