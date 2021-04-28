@@ -19,10 +19,16 @@ import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredTeacherStudentModelRestCall
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
+import nl.uu.fi.dwo.rest.entities.RestStudentModelContext4Student;
+import nl.uu.fi.dwo.rest.entities.RestStudentModelContextId;
+import nl.uu.fi.dwo.rest.entities.RestStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -52,6 +58,26 @@ public class SecuredTeacherStudentModelManager {
 		 rest.setDomStudentModelContext(sm);
 		 return F(service::getStudentModel, PathId.getId(context), rest);
 
+  }
+  
+  public Promise<DomStudentModelContext4Student> getStudentModelForClass(DomContext context, DomStudentModelContextId id, DomSchoolClassId sc) {
+	  RestStudentModelContextId rest = new RestStudentModelContextId();
+	  rest.setRestContext(context);
+	  rest.setDomSchoolClass(sc);
+	  rest.setDomStudentModelContext(id);
+	  return F(service::getStudentModelForClass, PathId.getId(context), rest);
+  }
+  
+  public  Promise<Boolean> updateModelForClass(DomContext context, DomStudentModelContext4Student submit)  {
+	  RestStudentModelContext4Student rest = new RestStudentModelContext4Student();
+	  rest.setRestContext(context);
+	  rest.setDomStudentModelContext(submit);
+	  return F(service::updateModelForClass, PathId.getId(context), rest);
+  }
+  
+  public Promise<DomStudentModelScorePerTeacher> getScores(DomContext context, DomStudentModelScorePerTeacher submit) {
+	  RestStudentModelScorePerTeacher rest = new RestStudentModelScorePerTeacher(context, submit);
+	  return F(service::getScores, PathId.getId(context), rest);
   }
 
 public Promise<String> getDescription(DomStudentModelContextId pid, String uuid, String locale, DomContext context) {

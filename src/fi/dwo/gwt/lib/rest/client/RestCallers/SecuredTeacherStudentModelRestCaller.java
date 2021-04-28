@@ -11,8 +11,13 @@ import org.fusesource.restygwt.client.RestService;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
+import nl.uu.fi.dwo.rest.entities.RestStudentModelContext4Student;
+import nl.uu.fi.dwo.rest.entities.RestStudentModelContextId;
+import nl.uu.fi.dwo.rest.entities.RestStudentModelScorePerTeacher;
 
 public interface SecuredTeacherStudentModelRestCaller extends RestService {
 
@@ -27,4 +32,17 @@ public interface SecuredTeacherStudentModelRestCaller extends RestService {
   @PUT
   @Path("/sec:{id}/teacher/studentmodel/getReduced")
   void getStudentModel(@PathParam("id") String id, RestStudentModelContext rest, MethodCallback<DomStudentModelContext> callback);
+
+  @PUT
+  @Path("/sec:{id}/teacher/studentmodel/getForClass")
+  void getStudentModelForClass(@PathParam("id") String id, RestStudentModelContextId rest, MethodCallback<DomStudentModelContext4Student> callback);
+
+
+  @PUT
+  @Path("/sec:{id}/teacher/studentmodel/updateForClass")
+  void updateModelForClass(@PathParam("id") String id, RestStudentModelContext4Student rest, MethodCallback<Boolean> callback);
+  
+  @PUT
+  @Path("/sec:{id}/teacher/studentmodel/getScores")
+  void getScores(@PathParam("id") String id, RestStudentModelScorePerTeacher rest, MethodCallback<DomStudentModelScorePerTeacher> callback);
 }
