@@ -2542,8 +2542,7 @@ if (false) {
       responseHeaders.put("Set-Cookie", cookies); // inject DWO cookies.
       handler.put(DwoHelper.getServerUrlPath().toURI(), responseHeaders);
     
-      String token = "3\f" + samlUserID + '\f' + samlOrgID + '\f' + authToken;
-      token = Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
+      String token = p.getProperty("dme.oauth.code");
       String clientId = p.getProperty("dme.oauth.client_id");
       String verifier = p.getProperty("dme.oauth.code_verifier");
       String redirectUri = p.getProperty("dme.oauth.redirect_uri");

@@ -243,11 +243,10 @@ if(DwoHelper.isSamlLogin()) {
     loginOnly = true;
     p.setLayout(new BorderLayout());
     SAMLLoginIF browser = getSAMLLogin();
-    String redirectUri = DwoHelper.getServerUrlPath() + "saml/login2.jsp";
+    String redirectUri = DwoHelper.getServerUrlPath() + "oauth2/login3.jsp";
     browser.loadURL(redirectUri);
     browser.getPromise().then(pr -> {
       profileselect.switchProfile();
-      pr.getValue().setProperty("dme.oauth.redirect_uri", redirectUri);
       GuiCreator.instance().dwo.loginViaSaml(pr.getValue());
       return null;
     }).then(null, 
