@@ -5,10 +5,14 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.fusesource.restygwt.client.JsonEncoderDecoder;
+
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -22,6 +26,9 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClassCodec;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.SMClassResultsPresenter;
 import nl.uu.fi.dwo.rest.dom.DomTree;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataStudentScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**
@@ -30,13 +37,11 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
  * @author Wim van Velthoven
  */
 @Singleton
-public class JsTeacherSMClassResultsView implements SMClassResultsPresenter.Display, SelectionHandler<TreeItem> {
-
-	private RootPanel treewrap;
-	@Inject EventBus bus;
+public class JsTeacherSMClassResultsView extends AbstractStudentModelView implements SMClassResultsPresenter.Display {
 
 	@Override
     public void clear() {
+		super.clear();
 		JsTeacherSMClassResultsDisplay.clear();
     }
 
@@ -54,57 +59,48 @@ public class JsTeacherSMClassResultsView implements SMClassResultsPresenter.Disp
     public void showSchoolClasses(Map<String, TaggedDomSchoolClass> schoolClasses) {
       JSONObject json = new JSONObject();
       schoolClasses.forEach((k,v) -> {json.put(k, TaggedDomSchoolClassCodec.CODEC.encode(v));});        
-      JsTeacherSMClassResultsDisplay.showSchoolClasses(json.getJavaScriptObject());
+      JsTeacherSMClassResultsDisplay.showSchoolclasses(json.getJavaScriptObject());
     }
 
-    @Inject JsTeacherSMClassResultsView() {
-		treewrap = RootPanel.get(JsTeacherSMClassResultsDisplay.getTreeId());
+    @Inject JsTeacherSMClassResultsView(EventBus bus) {
+		super(JsTeacherSMClassResultsDisplay.getTreeId(),bus);
     }
-
-	@Override
-	public void showTree(DomTree<String> tree) {
-		treewrap.clear();
-		Tree t = new Tree();
-		t.addSelectionHandler(this);
-		treewrap.add(t);
-		for (Map.Entry<String,DomTree<String>> item: tree.getChildren().entrySet())
-		{
-			TreeItem ti = t.addTextItem(item.getValue().getObject());
-			ti.setUserObject(item.getKey());
-			children(ti, item.getValue().getChildren());
-		}
-	}
-	
-    private void children(TreeItem t, Map<String, DomTree<String>> children) {
-    	if (children != null) {
-		for (Map.Entry<String,DomTree<String>> item: children.entrySet())
-		{
-			TreeItem ti = t.addTextItem(item.getValue().getObject());
-			ti.setUserObject(item.getKey());
-			children(ti, item.getValue().getChildren());
-		}}
-	}
-
-	@Override
-    public void setLoadingTreeMessage() {
-        treewrap.clear();
-        Label l = new Label(DwoLocalesForGWT.instance.NUM_TBL_FETCHINGDATA());
-        treewrap.add(l);
-    }
-	
-	@Override
-	public void setEmptyTreeMessage() {
-		treewrap.clear();
-	}
-
-	@Override
-	public void onSelection(SelectionEvent<TreeItem> event) {
-		bus.fireEventFromSource(event, this);
-	}
-	
+		
 	@Override
 	public void setTitle(String title) {
 		JsTeacherSMClassResultsDisplay.setTitle(title);
+	}
+
+	public interface DomStudentModelScoreCodec extends JsonEncoderDecoder<DomStudentModelObjectiveScore> {
+	}
+	DomStudentModelScoreCodec CODEC = GWT.create(DomStudentModelScoreCodec.class);
+	
+	private JSONObject enc(DomStudentModelObjectiveScore s) {
+		return CODEC.encode(s).isObject();
+	}
+	
+	@Override
+	public void setScores(Map<String, DomStudentModelObjectiveScore> result) {
+		JSONObject obj = new JSONObject();
+		DomStudentModelObjectiveScore gemiddelde = new DomStudentModelObjectiveScore();
+		long gt = 0, rt = 0;
+		double gs = 0, rs = 0;
+		for(Map.Entry<String, DomStudentModelObjectiveScore> entry: result.entrySet())
+		{
+			String k = entry.getKey();
+			DomStudentModelObjectiveScore v = entry.getValue();
+			obj.put(k, enc(v));
+			if (v.getGreenCount() > 0) {
+			  gt += v.getGreenCount();
+			  gs += v.getGreenScore();
+			}
+			if (v.getRedCount() > 0) {
+				  rt += v.getRedCount();
+				  rs += v.getRedScore();
+			}
+		}
+		gemiddelde.setScore(gs, gt, rs, rt);
+		JsTeacherSMClassResultsDisplay.setScore(obj.getJavaScriptObject(), enc(gemiddelde).getJavaScriptObject());
 	}
 	
 }

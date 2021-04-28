@@ -248,9 +248,15 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 	@JsMethod
 	public void onSchoolClass(String id) {
 		if (id.isEmpty()) return;
+		if (currentModel == null) return;
 		DomSchoolClass sc = schoolClasses.get(id).getSchoolClass();
 		LOG.info("on schoolclass " + sc.getSchoolClassName());
-		bus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SMCLASSRESULTS, sc));
+		currentModel.then( p ->  {
+			JSONObject state = new JSONObject();
+			state.put("id", new JSONString(p.getValue().getId().getIdString()));
+			bus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SMCLASSRESULTS, sc, state.getJavaScriptObject()));
+			return p;
+		});
 	}
 	
 	@JsMethod

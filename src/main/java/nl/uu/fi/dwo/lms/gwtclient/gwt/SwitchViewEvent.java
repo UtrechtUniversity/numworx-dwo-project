@@ -161,7 +161,12 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
       this.scoResult = sco;
     }
 
-  @Override
+  public SwitchViewEvent(SelectedView smclassresults, DomSchoolClass sc, JavaScriptObject javaScriptObject) {
+		this(smclassresults, sc);
+		this.moduleIds = javaScriptObject;
+	}
+
+@Override
     public Type<SwitchViewEventHandler> getAssociatedType() {
         return TYPE;
     }

@@ -19,8 +19,8 @@ class JsTeacherSMClassResultsDisplay {
     static native void clear();
     static native void setHelp(String url);
     static native void init();
-    static native void showSchoolClasses(JavaScriptObject data);
-	static native void showTree(JavaScriptObject javaScriptObject);
+    static native void showSchoolclasses(JavaScriptObject data);
 	static native void setTitle(String title);
 	native static String getTreeId();
+	native static void setScore(JavaScriptObject students, JavaScriptObject gemiddelde);
 }

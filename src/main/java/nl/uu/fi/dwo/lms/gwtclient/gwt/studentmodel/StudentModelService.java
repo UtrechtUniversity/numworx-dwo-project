@@ -16,9 +16,13 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionService;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 @RoleScope
@@ -71,5 +75,13 @@ public class StudentModelService implements DescriptionService {
 	@Override
 	public Promise<String> getDescription(DomStudentModelContextId id, DomStudentModelContextInfo info) {
 			return manager.getDescription(id, info.getId(), lang, context);
+	}
+	
+	public Promise<DomStudentModelContext4Student> getForClass(DomStudentModelContextId id, DomSchoolClassId sc ) {
+		return manager.getStudentModelForClass(context, id, sc);
+	}
+	
+	public Promise<DomStudentModelScorePerTeacher> getScores(DomStudentModelScorePerTeacher scores) {
+		return manager.getScores(context, scores);
 	}
 }

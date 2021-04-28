@@ -16,13 +16,9 @@ import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.web.bindery.event.shared.EventBus;
 
-import nl.uu.fi.dwo.lms.gwtclient.gwt.BootPanelController;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsModulesOfSchoolclassDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClassCodec;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.StudentModelPresenter;
-import nl.uu.fi.dwo.rest.dom.DomTree;
-import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**
  * Mapper to allow java interface implementation.
@@ -30,15 +26,13 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
  * @author Wim van Velthoven
  */
 @Singleton
-public class JsTeacherStudentModelView implements StudentModelPresenter.Display, SelectionHandler<TreeItem> {
-	private final RootPanel treewrap, descriptionwrap;
+public class JsTeacherStudentModelView extends AbstractStudentModelView implements StudentModelPresenter.Display {
+	final RootPanel descriptionwrap;
 	
-	@Inject EventBus bus;
-
 	@Override
     public void clear() {
     	JsTeacherStudentModelDisplay.clear();
-    	treewrap.clear();
+    	super.clear();
     	descriptionwrap.clear();
     }
 
@@ -59,8 +53,8 @@ public class JsTeacherStudentModelView implements StudentModelPresenter.Display,
       JsTeacherStudentModelDisplay.showSchoolClasses(json.getJavaScriptObject());
     }
 
-    @Inject JsTeacherStudentModelView() {
-		treewrap = RootPanel.get(JsTeacherStudentModelDisplay.getTreeId());
+    @Inject JsTeacherStudentModelView(EventBus bus) {
+		super(JsTeacherStudentModelDisplay.getTreeId(), bus);
 		descriptionwrap = RootPanel.get(JsTeacherStudentModelDisplay.getDescriptionId());
     }
 
@@ -69,47 +63,6 @@ public class JsTeacherStudentModelView implements StudentModelPresenter.Display,
 	      JSONObject json = new JSONObject();
 	      models.forEach((k,v) -> json.put(k, new JSONString(v)));        
 	      JsTeacherStudentModelDisplay.showModels(json.getJavaScriptObject());
-	}
-
-	@Override
-	public void showTree(DomTree<String> tree) {
-		treewrap.clear();
-		Tree t = new Tree();
-		t.addSelectionHandler(this);
-		treewrap.add(t);
-		for (Map.Entry<String,DomTree<String>> item: tree.getChildren().entrySet())
-		{
-			TreeItem ti = t.addTextItem(item.getValue().getObject());
-			ti.setUserObject(item.getKey());
-			children(ti, item.getValue().getChildren());
-		}
-	}
-	
-    private void children(TreeItem t, Map<String, DomTree<String>> children) {
-    	if (children != null) {
-		for (Map.Entry<String,DomTree<String>> item: children.entrySet())
-		{
-			TreeItem ti = t.addTextItem(item.getValue().getObject());
-			ti.setUserObject(item.getKey());
-			children(ti, item.getValue().getChildren());
-		}}
-	}
-
-	@Override
-    public void setLoadingTreeMessage() {
-        treewrap.clear();
-        Label l = new Label(DwoLocalesForGWT.instance.NUM_TBL_FETCHINGDATA());
-        treewrap.add(l);
-    }
-	
-	@Override
-	public void setEmptyTreeMessage() {
-		treewrap.clear();
-	}
-
-	@Override
-	public void onSelection(SelectionEvent<TreeItem> event) {
-		bus.fireEventFromSource(event, this);
 	}
 
 	@Override
