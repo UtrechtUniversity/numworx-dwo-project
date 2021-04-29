@@ -170,9 +170,9 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 			DomStudent student = students.get(sid);
 			String name = student.getDisplayName();
 			DomStudentModelObjectiveScore copy = new DomStudentModelObjectiveScore();
-			copy.setId(sid.getIdString());
+			copy.setId(name);
 			copy.setScore(org.getGreenScore(),org.getGreenCount(), org.getRedScore(), org.getRedCount(), org.getTotalCount());
-			result.put(name, copy);
+			result.put(sid.getIdString(), copy);
 		}
 		view.setScores(result);
 		
@@ -247,5 +247,10 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 			filter = filterPanel.get().getValue();
 			showModel();
 		});
+	}
+	
+	@JsMethod
+	public void onPerson(String id) {
+		LOG.info("on Person " + id);
 	}
 }
