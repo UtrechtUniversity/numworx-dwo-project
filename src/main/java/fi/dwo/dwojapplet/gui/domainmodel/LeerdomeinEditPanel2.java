@@ -514,7 +514,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 
 			Object node = path.getLastPathComponent();
 			if (node == root) {
-				if (clipboard.isLeaf())
+				if (!clipboard.getAllowsChildren())
 					return;
 				root.add(clipboard);
 				model.nodeStructureChanged(root);
@@ -525,7 +525,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 			}
 			if (node instanceof MutableTreeNode) {
 				MutableTreeNode mutable = (MutableTreeNode) node;
-				if (mutable.isLeaf()) {
+				if (!mutable.getAllowsChildren()) {
 					mutable = (MutableTreeNode) mutable.getParent();
 				}
 				((InvisibleNode) mutable).add(clipboard);
