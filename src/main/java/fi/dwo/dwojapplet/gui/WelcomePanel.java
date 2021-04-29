@@ -256,7 +256,7 @@ if(DwoHelper.isSamlLogin()) {
           new Runnable() {
             public void run() {
           
-              failure.printStackTrace();
+              LOG.log(Level.WARNING, "samllogin fail", failure);
               if(failure instanceof Dwo2Exception)
                 GuiCreator.instance().ShowErrorDialog(dialog, (Dwo2Exception) failure);
               else
@@ -266,7 +266,7 @@ if(DwoHelper.isSamlLogin()) {
             }
           });
         }
-    );
+    ).onResolve(() -> DwoHelper.getFrameForComponent(null));
     p.add(browser.asComponent(), BorderLayout.CENTER);
     p.setSize(p.getWidth(), browser.asComponent().getHeight());
 } else {
