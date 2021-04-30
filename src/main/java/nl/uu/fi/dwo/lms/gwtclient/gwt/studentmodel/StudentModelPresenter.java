@@ -28,6 +28,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import dagger.Lazy;
 import jsinterop.annotations.JsMethod;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.studentmodel.JsTeacherStudentModelView;
@@ -79,17 +80,21 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 
 	private Promise<DomStudentModelContext> currentModel;
 	private Promise<?> allModels;
+
+	private DwoGlobalVars dwoGlobalVars;
     
-    @Inject StudentModelPresenter(EventBus bus) {
+    @Inject StudentModelPresenter(EventBus bus, DwoGlobalVars vars) {
     	this.bus = bus;
         this.FAILURE = new LoggingFailure(LOG, bus);
 		lang = LocaleInfo.getCurrentLocale().getLocaleName();
-		
+		this.dwoGlobalVars = vars;
     }
     
     public void init() {
     	view.clear();
     	view.init();
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#studentmodel"));
+
     	updateSchoolclasses();
     	updateStudentModels();
     }

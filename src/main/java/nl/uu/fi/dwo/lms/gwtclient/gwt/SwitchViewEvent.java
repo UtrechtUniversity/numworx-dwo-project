@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.vectomatic.file.File;
 
+import com.gargoylesoftware.htmlunit.javascript.configuration.JavaScriptConfiguration;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.GwtEvent;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
@@ -165,6 +166,12 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
 		this(smclassresults, sc);
 		this.moduleIds = javaScriptObject;
 	}
+
+public SwitchViewEvent(SelectedView studentresults, DomStudent domStudent, DomSchoolClass schoolClass2,
+		JavaScriptObject javaScriptObject) {
+	this(studentresults, schoolClass2, javaScriptObject);
+	user = domStudent;
+}
 
 @Override
     public Type<SwitchViewEventHandler> getAssociatedType() {

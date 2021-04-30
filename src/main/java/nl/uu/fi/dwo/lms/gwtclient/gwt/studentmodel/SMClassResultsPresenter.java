@@ -26,6 +26,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import dagger.Lazy;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.studentmodel.JsTeacherSMClassResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass;
@@ -43,7 +45,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataStudentScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
@@ -80,6 +81,7 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 	private Map<String, Map<String, Set<Integer>>> filter;
 	@Inject Lazy<FilterSettings> filterPanel;
 	private DomStudentModelContext4Student currentModel;
+	private Map<PersistenceId, DomStudent> students;
 	
 	@Inject void setView(JsTeacherSMClassResultsView view) {
 		this.view = view;
@@ -158,7 +160,7 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 	}
 
 	private Promise<?> stap3(Promise<DomStudentModelScorePerTeacher> scores) {
-		Map<PersistenceId, DomStudent> students = scores.getValue().getStudents().stream().collect(Collectors.toMap(DomMapEntry<PersistenceId,DomStudent>::getKey, DomMapEntry<PersistenceId,DomStudent>::getValue));
+		students = scores.getValue().getStudents().stream().collect(Collectors.toMap(DomMapEntry<PersistenceId,DomStudent>::getKey, DomMapEntry<PersistenceId,DomStudent>::getValue));
 		
 		Map<String, DomStudentModelObjectiveScore> result = new HashMap<>();
 		
@@ -252,5 +254,16 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 	@JsMethod
 	public void onPerson(String id) {
 		LOG.info("on Person " + id);
+		SwitchViewEvent event = new SwitchViewEvent(SelectedView.STUDENTRESULTS, students.get(new PersistenceId(id)), schoolClass, state.getJavaScriptObject());;
+		
+	}
+	
+	@JsMethod
+	public void onChange(String id) {
+		LOG.info("on Change Class " + id);
+		DomSchoolClass sc = new DomSchoolClass();
+		sc.setId(new PersistenceId(id));
+		SwitchViewEvent event = new SwitchViewEvent(SelectedView.SMCLASSRESULTS, sc, state.getJavaScriptObject());
+		bus.fireEvent(event);
 	}
 }

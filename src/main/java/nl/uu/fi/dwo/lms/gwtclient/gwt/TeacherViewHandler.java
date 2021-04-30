@@ -167,7 +167,7 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
 
              case KNOWLEDGE:
              case TEACHERSTUDENTMODEL:
-             case STUDENTRESULTS:
+             case STUDENTRESULTS: // is return van graph ook voor docent.
             	  if (dwoGlobalVars.isPremium()) {
               		  mainView.selectView(SelectedView.KNOWLEDGE);
 	            	  mainView.showTeacherStudentModelView();
