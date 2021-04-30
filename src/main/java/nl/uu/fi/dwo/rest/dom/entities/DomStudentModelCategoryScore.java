@@ -15,6 +15,7 @@ public class DomStudentModelCategoryScore extends DomStudentModelScore<DomStuden
     /**
      * @return the objectives of the category.
      */
+	@Transient
     public List<DomStudentModelObjectiveScore> getObjectives() {
         return getChildren();
     }
