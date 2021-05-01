@@ -255,6 +255,11 @@
             <artifactId>genson</artifactId>
             <version>1.4</version>
         </dependency> 
+ 		<dependency>
+			<groupId>nl.uu.fi.dwo</groupId>
+			<artifactId>async-lib</artifactId>
+			<version>0.0.3</version>
+		</dependency>
         <!-- bad media type json support
            <dependency>
                    <groupId>org.glassfish.jersey.media</groupId>
@@ -271,6 +276,11 @@
         	<groupId>org.osgi</groupId>
         	<artifactId>osgi.promise</artifactId>
         	<version>6.0.0</version>
+        </dependency>
+        <dependency>
+        	<groupId>nl.uu.fi.dwo.rest</groupId>
+        	<artifactId>DWO-jclient-lib</artifactId>
+        	<scope>test</scope>
         </dependency>
     </dependencies>
     
