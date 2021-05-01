@@ -10,6 +10,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
@@ -41,7 +42,9 @@ import javax.swing.tree.TreePath;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JComboBox;
 import fi.beans.numworxlf.JScrollPane;
+import fi.dwo.commons.domainmodel.XapiResultsManager;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
@@ -322,7 +325,8 @@ public class LeerdomeinMockupResultPanel extends JPanel implements ActionListene
 					} else {
 
 						DomLRS lrs = SecureTeacherStudentModelManager.getLRS();
-						XapiResultsManager xapi = new XapiResultsManager(lrs);
+						URL url = DwoHelper.getServerUrlPath();
+                        XapiResultsManager xapi = new XapiResultsManager(lrs, url);
 						try {
 							scores = xapi.fromXAPI(scores).getValue();
 						} catch (InvocationTargetException e1) {
@@ -348,7 +352,7 @@ public class LeerdomeinMockupResultPanel extends JPanel implements ActionListene
 					table.getColumnModel().getColumn(1).setCellRenderer(new IconRenderer());
 					table.setRowHeight(score.getPreferredSize().height + 2);
 					table.clearSelection();
-				} catch (Dwo2Exception e1) {
+				} catch (Dwo2Exception | MalformedURLException e1) {
 					LOG.log(Level.SEVERE, "getScores", e1);
 				}
 			} else {

@@ -56,6 +56,7 @@ import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JScrollPane;
 import fi.beans.numworxlf.JTree;
+import fi.dwo.commons.domainmodel.XapiResultsManager;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
@@ -468,7 +469,7 @@ public void actionPerformed(ActionEvent event) {
 // fetch students of class         
 
           DomLRS lrs = SecureTeacherStudentModelManager.getLRS();
-          XapiResultsManager xapi = new XapiResultsManager(lrs);
+          XapiResultsManager xapi = new XapiResultsManager(lrs, DwoHelper.getServerUrlPath());
           try {
             scores = xapi.fromXAPI(scores).getValue();
           } catch (InvocationTargetException e1) {
