@@ -6,6 +6,7 @@ package nl.uu.fi.dwo.rest.dom.entities;
 import java.beans.Transient;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * A class for transferring need-to-know User data over the REST-interface.
@@ -124,6 +125,7 @@ public class DomUser extends DomId {
      * name &gt;'.
      */
     @Transient
+    @XmlTransient
     public String getUniqueDisplayName() {
         StringBuilder result = new StringBuilder();
         result.append(this.userName)
@@ -145,6 +147,7 @@ public class DomUser extends DomId {
      * @return 
      */
     @Transient
+    @XmlTransient
     public String getDisplayName() {
         StringBuilder result = new StringBuilder();
         result.append(this.givenName)

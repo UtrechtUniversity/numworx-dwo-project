@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.rest.dom.entities;
 import java.beans.Transient;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * Tree root for DomStudentModel score tree.
@@ -16,6 +17,7 @@ public class DomStudentModelStructureScore extends DomStudentModelScore<DomStude
      * @return the categories
      */
 	@Transient
+	@XmlTransient
     public List<DomStudentModelCategoryScore> getCategories() {
         return getChildren();
     }
