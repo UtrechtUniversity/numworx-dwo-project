@@ -352,7 +352,7 @@ public class LeerdomeinMockupResultPanel extends JPanel implements ActionListene
 					table.getColumnModel().getColumn(1).setCellRenderer(new IconRenderer());
 					table.setRowHeight(score.getPreferredSize().height + 2);
 					table.clearSelection();
-				} catch (Dwo2Exception | MalformedURLException e1) {
+				} catch (Dwo2Exception e1) {
 					LOG.log(Level.SEVERE, "getScores", e1);
 				}
 			} else {
