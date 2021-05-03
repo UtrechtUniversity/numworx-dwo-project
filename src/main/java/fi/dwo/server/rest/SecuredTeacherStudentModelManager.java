@@ -10,7 +10,6 @@ import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
-import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
@@ -23,14 +22,12 @@ import fi.dwo.server.PersistentDataManagers.util.StudentModelContextUtilManager;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -283,7 +280,7 @@ public class SecuredTeacherStudentModelManager {
     @PUT
     @Produces("application/json")
     @Path("/getForClass")
-    public DomStudentModelContext4Student gettForClass(@Context SecurityContext sc, RestStudentModelContextId rest) throws Dwo2Exception, ParseException {
+    public DomStudentModelContext4Student getForClass(@Context SecurityContext sc, RestStudentModelContextId rest) throws Dwo2Exception, ParseException {
     	UserState_U ustate = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName());
 		UserState_HR_R_S_SG_U hrstate = ustate.setHasRole(rest.getRestContext().getDomHasRole());
 		TeacherState_HR_R_S_SG_U state = hrstate.buildSchoolAdminTeacher().setTeacher();

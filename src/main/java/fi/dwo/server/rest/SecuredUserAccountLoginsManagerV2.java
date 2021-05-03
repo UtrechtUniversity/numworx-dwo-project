@@ -21,6 +21,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import fi.dwo.commons.persistence.*;
 import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
@@ -412,7 +413,8 @@ public class SecuredUserAccountLoginsManagerV2 {
 
         PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersManager.findByName("NullSchoolLogin").getValue());
         Long sgId = SchoolGroupManager.findEntity(nullSchool, RoleType.STUDENT).getSchoolGroupID();
-        if (sarc.getDomSchoolRoleAndClass().getHasRole().getSchoolGroupId().equals(sgId)) {
+        PersistenceId sgPid = PersistentSchoolGroup.buildPersistenceId(sgId);
+        if (sarc.getDomSchoolRoleAndClass().getHasRole().getSchoolGroupId().equals(sgPid)) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: tried to remove the null school login of  user {1}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Only system has the right to remove a null school login of user " + user.getUsername() + ".");
         }

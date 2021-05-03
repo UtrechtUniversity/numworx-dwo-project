@@ -680,7 +680,22 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
 				.stream()
 				.filter( t -> set.contains(t.getKey()))
 				.collect(Collectors.toList()));
+
+// fill studentmodelcontext
 		
+		dom.getStudentModelContexts().forEach(
+			entry -> {
+				try {
+					PersistenceId key = entry.getKey();
+					DomStudentModelContextId cid = new DomStudentModelContextId(key);
+					PersistentStudentModelContext entity = StudentModelContextManager.findEntity(MySQLPersistenceId.getNativeId(cid));
+					entity = StudentModelContextUtilManager.merge(entity);
+					entry.setValue(entity.buildDomStudentModelContext()); // FIXME zonder description
+				} catch (Dwo2Exception e) {
+					throw new Dwo2RestException(e);
+				}
+			}
+		);
 // iterate over students and contexts	
         dom.setStudentScores(Collections.emptyList());
         Stream<DomStudentModelDataStudentScore> stream = 
@@ -697,19 +712,9 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
           .flatMap(
               hr -> 
                   {
-                    Stream<Long> stream2 = dom.getStudentModelContexts().stream()
-                  
-                    .map(DomMapEntry::getValue)
-                    .map(t -> {
-                        try {
-                          return MySQLPersistenceId.getNativeId(t);
-                        } catch (Dwo2Exception e) {
-                          throw new Dwo2RestException(e);
-                        }
-                  });
+                    Stream<DomStudentModelContext> stream2 = dom.getStudentModelContexts().stream().map(DomMapEntry::getValue);
+ 
                     Stream<DomStudentModelDataStudentScore> stream3 = stream2
-                    .map( StudentModelContextManager::findEntity)
-                    .map(StudentModelContextUtilManager::merge)
                     .map(
                       t -> {                        
                         DomStudentModelStructureScore score;
@@ -720,7 +725,7 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
                     }
                         DomStudentModelDataStudentScore result = new DomStudentModelDataStudentScore();
                         result.setDomStudentModelStructureScore(score);
-                        result.setModelId(t.buildDomStudentModelContext());
+                        result.setModelId(t);
                         result.setStudentId(PersistentUser.buildPersistenceId(hr.getPersistentHasRolePK().getUserID()));
                         return result;
                       });

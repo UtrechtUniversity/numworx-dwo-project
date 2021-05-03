@@ -9,6 +9,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.server.PersistentDataManagers.actions.MySQLStudentActions;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -48,5 +49,15 @@ public class StudentModelDataUtilManager {
         //prep return 
         return score;
       }
+
+public static DomStudentModelStructureScore calculateStudentModelScore(DomStudentModelContext t, PersistentHasRole hr) throws Dwo2Exception {
+
+	DomStudentModelStructureScore score = t.getModelStructure().generateStudentModelStructureScore();
+// fetch ....
+	
+	score.recalculateAncestors();
+
+    return score;
+}
 
 }
