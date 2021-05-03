@@ -3,6 +3,7 @@
  */
 package fi.dwo.server.PersistentDataManagers.access;
 
+import fi.dwo.commons.domainmodel.XapiResultsManager;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
@@ -42,6 +43,9 @@ import fi.dwo.server.rest.util.Digest;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,6 +69,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+
+import org.osgi.util.promise.Promise;
 
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
@@ -623,9 +629,15 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
     }
 
 	@Override
-	public DomStudentModelScorePerTeacher getScores(DomStudentModelScorePerTeacher dom) throws Dwo2Exception {
+	public DomStudentModelScorePerTeacher getScores(DomStudentModelScorePerTeacher dom, UriInfo info) throws Dwo2Exception {
 	  PersistentSchool school = getSchool();
 	  PersistentSchoolGroup studentgroup = SchoolGroupManager.findBySchoolAndRole(school, RoleType.STUDENT);
+	  URL url = null;
+    try {
+      url = new URL("https://repos.dwo.nl/");
+    } catch (MalformedURLException e1) {
+    }
+    XapiResultsManager xapi = new XapiResultsManager(getLRS(info), url);
 	  dom.setFetchTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
 		String realm = instance.getContext().getUserCtx().getRealm();
 		dom.setTeacher(instance.getContext().getUserCtx().user.buildDomTeacher(realm));
@@ -669,55 +681,73 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
 				.filter( t -> set.contains(t.getKey()))
 				.collect(Collectors.toList()));
 		
-// iterate over students and contexts		
-		dom.setStudentScores(Collections.emptyList());
-		Stream<DomStudentModelDataStudentScore> stream = 
-		dom.getStudents().stream()
-		  .map(DomMapEntry::getValue)
-		  .map(arg0 -> {
+// iterate over students and contexts	
+        dom.setStudentScores(Collections.emptyList());
+        Stream<DomStudentModelDataStudentScore> stream = 
+        dom.getStudents().stream()
+          .map(DomMapEntry::getValue)
+          .map(arg0 -> {
         try {
           return MySQLPersistenceId.getNativeId(arg0);
         } catch (Dwo2Exception e) {
           throw new Dwo2RestException(e);
         }
       })
-		  .map( t -> new PersistentHasRole(new PersistentHasRolePK(t, studentgroup.getSchoolGroupID())))
-		  .flatMap(
-		      hr -> 
-		          {
-		            Stream<Long> stream2 = dom.getStudentModelContexts().stream()
-		          
-		            .map(DomMapEntry::getValue)
-		            .map(t -> {
+          .map( t -> new PersistentHasRole(new PersistentHasRolePK(t, studentgroup.getSchoolGroupID())))
+          .flatMap(
+              hr -> 
+                  {
+                    Stream<Long> stream2 = dom.getStudentModelContexts().stream()
+                  
+                    .map(DomMapEntry::getValue)
+                    .map(t -> {
                         try {
                           return MySQLPersistenceId.getNativeId(t);
                         } catch (Dwo2Exception e) {
                           throw new Dwo2RestException(e);
                         }
                   });
-		            Stream<DomStudentModelDataStudentScore> stream3 = stream2
-		            .map( StudentModelContextManager::findEntity)
-		            .map(
-		              t -> {		                
-		                DomStudentModelStructureScore score;
+                    Stream<DomStudentModelDataStudentScore> stream3 = stream2
+                    .map( StudentModelContextManager::findEntity)
+                    .map(StudentModelContextUtilManager::merge)
+                    .map(
+                      t -> {                        
+                        DomStudentModelStructureScore score;
                     try {
                       score = StudentModelDataUtilManager.calculateStudentModelScore(t, hr);
                     } catch (Dwo2Exception e) {
                       throw new Dwo2RestException(e);
                     }
-		                DomStudentModelDataStudentScore result = new DomStudentModelDataStudentScore();
-		                result.setDomStudentModelStructureScore(score);
-		                result.setModelId(t.buildDomStudentModelContext());
-		                result.setStudentId(PersistentUser.buildPersistenceId(hr.getPersistentHasRolePK().getUserID()));
+                        DomStudentModelDataStudentScore result = new DomStudentModelDataStudentScore();
+                        result.setDomStudentModelStructureScore(score);
+                        result.setModelId(t.buildDomStudentModelContext());
+                        result.setStudentId(PersistentUser.buildPersistenceId(hr.getPersistentHasRolePK().getUserID()));
                         return result;
-		              });
-		            return stream3;
-		          }
-		      )
-		;  
-		  
-		dom.setStudentScores(stream
-		  .collect(Collectors.toList()));
+                      });
+                    return stream3;
+                  }
+              )
+        ;  
+          
+        dom.setStudentScores(stream
+          .collect(Collectors.toList()));
+
+		
+		
+		
+		
+		
+		
+		
+		
+// new		
+		Promise<DomStudentModelScorePerTeacher> prom = xapi.fromXAPI(dom);
+		try {
+      return prom.getValue();
+    } catch (InvocationTargetException e) {
+       LOG.log(Level.SEVERE, "getScores", e);
+    } catch (InterruptedException e) {
+    }
 		return dom;
 	}
 

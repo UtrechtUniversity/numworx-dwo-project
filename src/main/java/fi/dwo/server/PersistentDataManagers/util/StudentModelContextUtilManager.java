@@ -18,7 +18,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 
 public class StudentModelContextUtilManager {
 
-	public static void merge(PersistentStudentModelContext pModel) {
+	public static PersistentStudentModelContext merge(PersistentStudentModelContext pModel) {
 		List<PersistentStudentModelItem> objs = StudentModelItemManager.findEntities(pModel);
 		// Merge
 		Map<String, DomStudentModelObj> map = new HashMap<>();
@@ -32,6 +32,7 @@ public class StudentModelContextUtilManager {
 				objList.set(i, obj);
 			}
 		}
+		return pModel;
 	}
 	
 	public static PersistentStudentModelContext edit(PersistentStudentModelContext pModel) {

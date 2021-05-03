@@ -10,7 +10,8 @@ import javax.ws.rs.core.UriInfo;
 
 public class TestUriInfo implements UriInfo {
 
-	public URI requestUri = URI.create("http://test.dwo.nl/dwo/rest/something/usefull");
+	public URI requestUri = URI.create("https://test.dwo.nl/dwo/rest/something/usefull");
+	public URI baseUri = requestUri.resolve("/");
 
 	@Override
 	public String getPath() {
@@ -61,8 +62,7 @@ public class TestUriInfo implements UriInfo {
 
 	@Override
 	public URI getBaseUri() {
-		// TODO Auto-generated method stub
-		return null;
+		return baseUri;
 	}
 
 	@Override

@@ -540,7 +540,7 @@ CREATE TABLE `tblschool` (
 
 LOCK TABLES `tblschool` WRITE;
 /*!40000 ALTER TABLE `tblschool` DISABLE KEYS */;
-INSERT INTO `tblschool` VALUES (0,'DwoSchool','dwo','',1,'_',NULL,NULL,0,0,0,0),(1,'NULL','null','',0,'_',NULL,NULL,0,0,0,0),(3,'School01','school01','',0,'_',NULL,NULL,0,0,0,0),(4,'School02','school02','',0,'_c',NULL,NULL,0,0,0,0);
+INSERT INTO `tblschool` VALUES (0,'DwoSchool','dwo','',1,'_',NULL,NULL,0,0,0,0),(1,'NULL','null','',0,'_',NULL,NULL,0,0,0,0),(3,'School01','school01','',0,'_',NULL,NULL,0,0,0,3),(4,'School02','school02','',0,'_c',NULL,NULL,0,0,0,0);
 /*!40000 ALTER TABLE `tblschool` ENABLE KEYS */;
 UNLOCK TABLES;
 

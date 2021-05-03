@@ -243,7 +243,7 @@ public class StudentModelContextManager {
     public static int getEntityCount() {
         EntityManager em = getEntityManager();
         try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+            CriteriaQuery<Long> cq = em.getCriteriaBuilder().createQuery(Long.class);
             Root<PersistentStudentModelContext> rt = cq.from(PersistentStudentModelContext.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);

@@ -332,7 +332,7 @@ public class TeacherDomainAuthorizer {
 
         Boolean removeStudentModel(DomStudentModelContext domStudentModelContext) throws Dwo2Exception;
 
-		DomStudentModelScorePerTeacher getScores(DomStudentModelScorePerTeacher domStudentModelScorePerTeacher) throws Dwo2Exception;
+		DomStudentModelScorePerTeacher getScores(DomStudentModelScorePerTeacher domStudentModelScorePerTeacher, UriInfo info) throws Dwo2Exception;
 
         DomLRS getLRS(UriInfo info);
 		DomStudentModelContext patchStudentModel(DomStudentModelContextPatch domPatch) throws Dwo2Exception;

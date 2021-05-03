@@ -15,24 +15,32 @@ import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.testutil.TestSecurityContext;
+import fi.dwo.server.testutil.TestUriInfo;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.GensonMapConverter;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
+import nl.uu.fi.dwo.rest.entities.RestStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -273,4 +281,26 @@ public class SecuredTeacherStudentModelManagerIT {
       jsonAssert(model,result);
     }
     
+    
+    @Test public void testScores() throws Exception {
+      SecurityContext sc = new TestSecurityContext("user03", RoleType.TEACHER);
+      DomHasRole hr = new DomHasRole();
+      //MYSQL;PersistentHasRole;00000000000000000010;00000000000000000003 TEACHER School01
+      PersistentHasRolePK key = new PersistentHasRolePK(10L, 3L);
+      PersistenceId id = PersistentHasRole.buildPersistenceId(key);
+      hr.setId(id);
+      hr.setUserId(PersistentUser.buildPersistenceId(10L));
+      hr.setSchoolGroupId(PersistentSchoolGroup.buildPersistenceId(3L));
+      DomContext context = new DomContext();
+      context.setDomHasRole(hr);
+      SecuredTeacherStudentModelManager instance = new SecuredTeacherStudentModelManager();
+      DomStudentModelScorePerTeacher scores = new DomStudentModelScorePerTeacher();
+      DomStudentModelContext model = new DomStudentModelContext();
+      model.setId(PersistentStudentModelContext.buildPersistenceId(1L));
+      scores.setStudentModelContexts(Collections.singletonList(new DomMapEntry<PersistenceId, DomStudentModelContext>(model.getId(), model)));
+      TestUriInfo info = new TestUriInfo();
+      RestStudentModelScorePerTeacher rest = new RestStudentModelScorePerTeacher(context, scores);
+      DomStudentModelScorePerTeacher result = instance.getScores(sc, info, rest);
+      assertNotNull(result);
+    }
 }

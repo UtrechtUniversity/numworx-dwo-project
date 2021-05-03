@@ -214,13 +214,13 @@ public class SecuredTeacherStudentModelManager {
     @PUT
     @Produces({"application/json"})
     @Path("getScores")
-    public DomStudentModelScorePerTeacher getScores(@Context SecurityContext sc, RestStudentModelScorePerTeacher rest) {
+    public DomStudentModelScorePerTeacher getScores(@Context SecurityContext sc, @Context UriInfo info, RestStudentModelScorePerTeacher rest) {
     	try {
             TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
                     .setHasRole(rest.getRestContext().getDomHasRole())
                     .buildSchoolAdminTeacher()
                     .setTeacher();
-            return build.getScores(rest.getDomStudentModelScorePerTeacher());
+            return build.getScores(rest.getDomStudentModelScorePerTeacher(), info);
     	} catch (Dwo2Exception e) {
     		throw new Dwo2RestException(e);
     	}
