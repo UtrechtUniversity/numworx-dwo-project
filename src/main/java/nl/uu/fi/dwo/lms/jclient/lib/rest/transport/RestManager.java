@@ -4,6 +4,7 @@ package nl.uu.fi.dwo.lms.jclient.lib.rest.transport;
 import com.owlike.genson.GenericType;
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
+import com.owlike.genson.ext.jaxb.JAXBBundle;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletFull;
@@ -58,8 +59,11 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 class RestManager extends RestyDateTimeFormat {
 
   private static final DateFormat yourDateFormat = new SimpleDateFormat(RESTY_DATETIME_FORMAT);
-  private final Genson genson = new GensonBuilder().useDateFormat(yourDateFormat)
-      .useDateAsTimestamp(DATE_AS_TIMESTAMP).create();
+  private final Genson genson = new GensonBuilder()
+		  .withBundle(new JAXBBundle())
+		  .useDateFormat(yourDateFormat)
+		  .useDateAsTimestamp(DATE_AS_TIMESTAMP)
+		  .create();
 
   private static final Logger LOG = Logger.getLogger(RestManager.class.getName());
 
