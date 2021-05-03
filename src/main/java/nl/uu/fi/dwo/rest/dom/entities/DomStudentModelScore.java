@@ -4,6 +4,7 @@ import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * A StudentModelStructure score root node. 
@@ -26,6 +27,7 @@ public class DomStudentModelScore<T extends DomStudentModelScore> {
      * @return the score
      */
     @Transient
+    @XmlTransient
     public double getScore() {
         return redScore+greenScore;
     }
@@ -34,6 +36,7 @@ public class DomStudentModelScore<T extends DomStudentModelScore> {
      * @param score the score to set
      */
     @Transient
+    @XmlTransient
     public void setScore(double score) {
     	if (score == 0.5) {
     		redScore = 0; greenScore = 0.5; redCount = greenCount = 0;
@@ -48,6 +51,7 @@ public class DomStudentModelScore<T extends DomStudentModelScore> {
      * @return the count
      */
     @Transient
+    @XmlTransient
     public long getCount() {
         return redCount + greenCount;
     }
