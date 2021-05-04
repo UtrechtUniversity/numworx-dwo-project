@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,9 +18,13 @@ import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.AbstractResultsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.SingleStudentResults;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class StudentResultsGraphPresenter extends AbstractResultsPresenter {
@@ -36,8 +41,11 @@ public class StudentResultsGraphPresenter extends AbstractResultsPresenter {
 	private RootPanel root;
 	private SimplePanel main;
 	private JSONObject resultState;
-	private StudentResults service;
+	private StudentResults service, currentService;
+	@Inject Lazy<SingleStudentResults> single;
 	@Inject Lazy<StudentResultsGraph> graph;
+	private DomSchoolClass schoolclass;
+	private DomStudent user;
 	
 	@Inject StudentResultsGraphPresenter(EventBus bus, DwoGlobalVars vars, Display view, StudentResults service) {
 		super(bus, vars);
@@ -61,10 +69,18 @@ public class StudentResultsGraphPresenter extends AbstractResultsPresenter {
 	    view.hide();
 	    root.clear();
 	    main.clear();
-	    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTRESULTS, resultState));
+	    if (service == currentService)
+	    	eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTRESULTS, resultState));
+	    else 
+	    	eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SMSTUDENTRESULTS, user, schoolclass, resultState));
 	  }
 
 	public void init(JavaScriptObject resultState) {
+		currentService = service;
+		init2(resultState);		
+	}
+
+	private void init2(JavaScriptObject resultState) {
 		root.clear();
 		view.clear();
 		view.init(resultState);
@@ -72,14 +88,24 @@ public class StudentResultsGraphPresenter extends AbstractResultsPresenter {
 		String id = this.resultState.get("id").isString().stringValue();
 		PersistenceId pid = new PersistenceId(id);
 		DomStudentModelContextId cid = new DomStudentModelContextId(pid);
-		service.getModel(cid).then(p -> {
+		currentService.getModel(cid).then(p -> {
 			root.add(main);
 			main.setWidget(graph.get());
 			DomStudentModelContext4Student item = p.getValue();
-			graph.get().setModelScore(item, service.getScore(item));
+			graph.get().setModelScore(item, currentService.getScore(item));
 			
 			return p;
 		}).then(null, oops -> LOG.log(Level.SEVERE, "init state", oops.getFailure()));
+	}
+
+	public void init(DomUser user, DomSchoolClass schoolClass, JavaScriptObject resultState2) {
+		currentService = single.get();
+		this.user = new DomStudent(user);
+		this.schoolclass = schoolClass;
+		single.get().setUser(user);
+		single.get().setSchoolClass(schoolClass);
+		single.get().setState(resultState2);
+		init2(resultState2);
 		
 	}
 }

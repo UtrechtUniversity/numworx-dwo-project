@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -11,8 +10,6 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -24,10 +21,6 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.user.client.Window.Location;
-import com.google.gwt.user.client.ui.Frame;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
@@ -68,18 +61,20 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	private final LoggingFailure FAILURE;
 	private Display view;
 	private RootPanel root;
-	private String lang;
+	private final String lang;
 	
 	@Inject Lazy<StudentResultsWidget> widget;
 	@Inject Lazy<StudentResultsGraph> graph;
-	@Inject StudentResults service;
+	final private StudentResults service;
 	@Inject DescriptionPresenter description;
 	private HandlerRegistration ref;
 	
-	@Inject StudentResultsPresenter(EventBus bus, DwoGlobalVars vars) {
+	@Inject
+	protected StudentResultsPresenter(EventBus bus, DwoGlobalVars vars, StudentResults service) {
 		super(bus, vars);
 		FAILURE = new LoggingFailure(LOG, bus);
 		lang = LocaleInfo.getCurrentLocale().getLocaleName();
+		this.service = service;
 	}
 	
 	@Inject void setView(JsStudentResultsView view) {
@@ -169,8 +164,12 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		JSONObject json = new JSONObject();
 		json.put("title", new JSONString(item.getModelStructure().getInfo().getTitle().get(lang)));
 		json.put("id", new JSONString(item.getId().getIdString()));
-		SwitchViewEvent ev = new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTRESULTSGRAPH, json.getJavaScriptObject());
+		SwitchViewEvent ev = onGraphEvent(json);
 		eventBus.fireEvent(ev);
+	}
+
+	protected SwitchViewEvent onGraphEvent(JSONObject json) {
+		return new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTRESULTSGRAPH, json.getJavaScriptObject());
 	}
 	
 	Promise<?> getModels(Promise<List<DomStudentModelContext4Student>> p) {
@@ -424,6 +423,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			PersistenceId pid = new PersistenceId(id);
 			DomStudentModelContextId cid = new DomStudentModelContextId(pid);
 			int index = 0;
+			if (list != null)
 			for(int i = 0; i < list.size(); i++) {
 				if(pid .equals (list.get(i).getId())) { index = i+1; break; }
 			}

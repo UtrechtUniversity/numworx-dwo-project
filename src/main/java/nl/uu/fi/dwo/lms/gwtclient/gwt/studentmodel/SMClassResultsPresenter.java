@@ -45,6 +45,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataStudentScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
@@ -81,6 +82,9 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 	private Map<String, Map<String, Set<Integer>>> filter;
 	@Inject Lazy<FilterSettings> filterPanel;
 	private DomStudentModelContext4Student currentModel;
+	
+	
+	private Promise<DomStudentModelScorePerTeacher> scores;
 	private Map<PersistenceId, DomStudent> students;
 	
 	@Inject void setView(JsTeacherSMClassResultsView view) {
@@ -105,12 +109,12 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 		cid.setId(pid);
 		
 		Promise<?> p2 = showSchoolModel(cid, domSchoolClass);
-		Promise<?> p3 = getResults(cid, domSchoolClass);
-		Promises.all(p1, p2, p3).then(null, FAILURE);
+		scores = getResults(cid, domSchoolClass);
+		Promises.all(p1, p2, scores).then(null, FAILURE);
 	}
 
 	
-	private Promise<?> getResults(DomStudentModelContext cid, DomSchoolClass domSchoolClass) {
+	private Promise<DomStudentModelScorePerTeacher> getResults(DomStudentModelContext cid, DomSchoolClass domSchoolClass) {
 		DomStudentModelScorePerTeacher result = new DomStudentModelScorePerTeacher();
 		result.setSchoolClasses(Collections.singletonList(new DomMapEntry<PersistenceId, DomSchoolClass>(domSchoolClass.getId(), domSchoolClass)));
 		result.setStudentModelContexts(Collections.singletonList(new DomMapEntry<PersistenceId, DomStudentModelContext>(cid.getId(), cid)));
@@ -119,7 +123,7 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 
 	private Promise<?> showSchoolModel(DomStudentModelContextId cid, DomSchoolClass domSchoolClass) {
 		return service.getForClass(cid, domSchoolClass)
-				.then(p -> stap0(p, cid, domSchoolClass))
+				.then(p -> service.stap0(p, cid, domSchoolClass))
 				.then(this::stap2);
 		
 	}
@@ -136,19 +140,6 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
     	return p;
     }
 
-	private Promise<DomStudentModelContext4Student> stap0(Promise<DomStudentModelContext4Student> p, DomStudentModelContextId cid, DomSchoolClassId schoolClass) {
-		if (p.getValue() != null)		
-			return p;
-		return service.getStudentModel(cid.getId()).map( model -> {
-			DomStudentModelContext4Student result = new DomStudentModelContext4Student();
-			result.setFilter(Collections.emptyMap());
-			result.setId(model.getId());
-			result.setModelStructure(model.getModelStructure());
-			result.setOptLock(model.getOptLock());
-			result.setSchoolClass(schoolClass);
-			return result;
-		});
-	}
 	
 	
 	
@@ -159,16 +150,24 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 		return p;
 	}
 
-	private Promise<?> stap3(Promise<DomStudentModelScorePerTeacher> scores) {
+	private Promise<DomStudentModelScorePerTeacher> stap3(Promise<DomStudentModelScorePerTeacher> scores) {
 		students = scores.getValue().getStudents().stream().collect(Collectors.toMap(DomMapEntry<PersistenceId,DomStudent>::getKey, DomMapEntry<PersistenceId,DomStudent>::getValue));
-		
+		String uuid = scores.getValue().getStudentModelContexts().get(0).getValue().getModelStructure().getInfo().getId();
+		setScores(scores, uuid);		
+		return scores;
+	}
+
+	private void setScores(Promise<DomStudentModelScorePerTeacher> scores, String uuid) {
 		Map<String, DomStudentModelObjectiveScore> result = new HashMap<>();
 		
 		List<DomStudentModelDataStudentScore> list = scores.getValue().getStudentScores();
 		
 		for(DomStudentModelDataStudentScore item: list) {
 			PersistenceId sid = item.getStudentId();
-			DomStudentModelStructureScore org = item.getDomStudentModelStructureScore();
+			DomStudentModelScore<?> org = item.getDomStudentModelStructureScore();
+			org = find(org, uuid);
+			if (org == null) org = item.getDomStudentModelStructureScore();
+			
 			DomStudent student = students.get(sid);
 			String name = student.getDisplayName();
 			DomStudentModelObjectiveScore copy = new DomStudentModelObjectiveScore();
@@ -177,12 +176,21 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 			result.put(sid.getIdString(), copy);
 		}
 		view.setScores(result);
-		
-		return scores;
 	}
 	
 	
 	
+	private DomStudentModelScore<?> find(DomStudentModelScore<?> org, String uuid) {
+		if (uuid.equals(org.getId()))
+			return org;
+		if (org.getChildren() != null)
+		for (DomStudentModelScore<?> item: org.getChildren()) {
+			item = find(item, uuid);
+			if (item != null) return item;
+		}
+		return null;
+	}
+
 	private void showModel() {
 		DomTree<String> tree = new DomTree<>("");
 		DomStudentModelStructure struc = currentModel.getModelStructure();
@@ -233,7 +241,14 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 	@Override
 	public void onSelection(SelectionEvent<TreeItem> event) {
 		String id = (String) event.getSelectedItem().getUserObject();
-		LOG.info("on selection " + id);	
+		LOG.info("on selection " + id);
+		scores.then(p -> { 
+				setScores(p, id);
+			
+			
+			
+			
+			return p;} );
 	}
 
 	@JsMethod
@@ -254,8 +269,8 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 	@JsMethod
 	public void onPerson(String id) {
 		LOG.info("on Person " + id);
-		SwitchViewEvent event = new SwitchViewEvent(SelectedView.STUDENTRESULTS, students.get(new PersistenceId(id)), schoolClass, state.getJavaScriptObject());;
-		
+		SwitchViewEvent event = new SwitchViewEvent(SelectedView.SMSTUDENTRESULTS, students.get(new PersistenceId(id)), schoolClass, state.getJavaScriptObject());;
+		bus.fireEvent(event);
 	}
 	
 	@JsMethod

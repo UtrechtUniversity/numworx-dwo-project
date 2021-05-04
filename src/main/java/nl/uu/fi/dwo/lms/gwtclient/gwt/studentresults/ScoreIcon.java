@@ -11,10 +11,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HasText;
-import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -95,5 +93,9 @@ public class ScoreIcon extends ResizeComposite {
 			poly.getTransform().getBaseVal().getItem(0).setTranslate(x,0);
 		}
 		
+	}
+
+	public Widget imageOnly() {
+		return image;
 	}
 }

@@ -84,4 +84,19 @@ public class StudentModelService implements DescriptionService {
 	public Promise<DomStudentModelScorePerTeacher> getScores(DomStudentModelScorePerTeacher scores) {
 		return manager.getScores(context, scores);
 	}
+	
+	Promise<DomStudentModelContext4Student> stap0(Promise<DomStudentModelContext4Student> p, DomStudentModelContextId cid, DomSchoolClassId schoolClass) {
+		if (p.getValue() != null)		
+			return p;
+		return getStudentModel(cid.getId()).map( model -> {
+			DomStudentModelContext4Student result = new DomStudentModelContext4Student();
+			result.setFilter(Collections.emptyMap());
+			result.setId(model.getId());
+			result.setModelStructure(model.getModelStructure());
+			result.setOptLock(model.getOptLock());
+			result.setSchoolClass(schoolClass);
+			return result;
+		});
+	}
+
 }

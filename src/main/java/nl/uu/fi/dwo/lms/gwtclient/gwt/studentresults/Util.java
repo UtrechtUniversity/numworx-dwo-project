@@ -33,7 +33,7 @@ public class Util {
 		return sh;
 	}
 
-	static double getRed(DomStudentModelScore<?> s) {
+	public static double getRed(DomStudentModelScore<?> s) {
 		double red;
 		if (s.getRedCount() > 0) {
 			red = (0.5 - s.getRedScore() / s.getRedCount()) * s.getRedCount() / s.getTotalCount();
@@ -42,7 +42,7 @@ public class Util {
 		return red;
 	}
 
-	static double getGreen(DomStudentModelScore<?> s) {
+	public static double getGreen(DomStudentModelScore<?> s) {
 		double green;
 		if (s.getGreenCount() > 0) {
 			green = (s.getGreenScore() / s.getGreenCount() - 0.5) * s.getGreenCount() / s.getTotalCount();
@@ -51,7 +51,7 @@ public class Util {
 		return green;
 	}
 
-	static final int MAX_LEVEL = 3;
+	public static final int MAX_LEVEL = 3;
 
 	static SafeHtml treeItem(String title, DomStudentModelScore<?> s, int level) {
 		double green, red;
@@ -65,14 +65,14 @@ public class Util {
 		return scoreTemplate.treeItem(title, red, green, level);
 	}
 	
-	static Widget summaryItem(String title, DomStudentModelScore<?>s, int level) {
+	public static Widget summaryItem(String title, DomStudentModelScore<?>s, int level) {
 		level = Math.max(MAX_LEVEL - level, 0);
 		SummaryIcon summaryIcon = new SummaryIcon(title, s, level);
 		//if (title.isEmpty()) return summaryIcon.imageOnly();
 		return summaryIcon;
 	}
 
-	static Widget scoreItem(String title, DomStudentModelScore<?>s, int level) {
+	public static Widget scoreItem(String title, DomStudentModelScore<?>s, int level) {
 		level = Math.max(MAX_LEVEL - level, 0);
 		return new ScoreIcon(title, s, level);
 	}

@@ -5,6 +5,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.SMClassResultsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.SMStudentResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.StudentModelPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraphPresenter;
 
@@ -44,8 +45,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 @RoleScope // one per Role change
 public class PresenterFactoryGwt implements PresenterFactory {
 
-//    private final DwoGlobalVars dwoGlobalVars;
-//    private final EventBus eventBus;
     @Inject MainPresenter mainPresenter;
     @Inject LoginPresenter loginPresenter;
     @Inject WelcomePresenter welcomePresenter;
@@ -77,39 +76,10 @@ public class PresenterFactoryGwt implements PresenterFactory {
     @Inject StudentModelPresenter studentModelPresenter;
     @Inject StudentResultsGraphPresenter studentResultsGraphPresenter;
     @Inject SMClassResultsPresenter smClassResultPresenter;
+	@Inject SMStudentResultsPresenter smStudentResultsPresenter;
 
 
-    @Inject public PresenterFactoryGwt(/*EventBus anEventBus, DwoGlobalVars aDwoGlobalVars*/) {
-//        dwoGlobalVars = aDwoGlobalVars;
-//        eventBus = anEventBus;
-        //mainPresenter = new MainPresenter(eventBus, dwoGlobalVars);
-        //loginPresenter = new LoginPresenter(eventBus, dwoGlobalVars);
-        //welcomePresenter = new WelcomePresenter(eventBus, dwoGlobalVars, rb);
-        //accountPresenter = new AccountPresenter(eventBus, dwoGlobalVars, accountManager);
-        //schoolclassesPresenter = new SchoolclassesPresenter(eventBus, dwoGlobalVars);
-        //editSchoolclassPresenter = new EditSchoolclassPresenter(eventBus, dwoGlobalVars);
-        //addStudentToSchoolclassPresenter = new AddStudentToSchoolclassPresenter(eventBus, dwoGlobalVars);
-        //copyOrMoveStudentToSchoolclassPresenter = new CopyOrMoveStudentToSchoolclassPresenter(eventBus, dwoGlobalVars);
-        //addTeacherToSchoolclassPresenter = new AddTeacherToSchoolclassPresenter(eventBus, dwoGlobalVars);
-        //modulesOfSchoolclassPresenter = new ModulesOfSchoolclassPresenter(eventBus, dwoGlobalVars);
-        //modulesPresenter = new ModulesPresenter(eventBus, dwoGlobalVars);
-        //resultsPresenter = new ResultsPresenter(eventBus, dwoGlobalVars);
-        //selectedResultsPresenter = new SelectedResultsPresenter(eventBus, dwoGlobalVars);
-        //studentScoResultPresenter = new StudentScoResultPresenter(eventBus, dwoGlobalVars);
-        //selectStudentResultsPresenter = new SelectStudentResultsPresenter(eventBus, dwoGlobalVars);
-        //personsPresenter = new PersonsPresenter(anEventBus, aDwoGlobalVars);
-        //addStudentPresenter = new AddStudentPresenter(anEventBus, aDwoGlobalVars);
-        //importPersonsPresenter = new ImportPersonsPresenter(anEventBus, aDwoGlobalVars);
-        //editStudentPresenter = new EditStudentPresenter(anEventBus, aDwoGlobalVars);
-        //editTeacherPresenter = new EditTeacherPresenter(anEventBus, aDwoGlobalVars);
-
-        //messageDialogWithOKPresenter = new MessageDialogWithOKPresenter(eventBus);
-        //alertDialogWithOKPresenter = new AlertDialogWithOKPresenter(eventBus);
-        //alertDialogWithConfirmCancelPresenter = new AlertDialogWithConfirmCancelPresenter(eventBus);
-//        promisedDialogWithOKPresenter = new PromisedDialogWithOKPresenter(eventBus);
-        //progressDialogWithAbortPresenter = new ProgressDialogWithAbortPresenter(eventBus);
-
-    }
+    @Inject public PresenterFactoryGwt() {}
 
     @Override @Inject
     public void bindViewFactory(ViewFactory viewFactory) {
@@ -376,5 +346,10 @@ public class PresenterFactoryGwt implements PresenterFactory {
 	@JsMethod
 	public SMClassResultsPresenter getSMClassResultsPresenter() {
 		return smClassResultPresenter;
+	}
+
+	@JsMethod
+	public SMStudentResultsPresenter getSMResultsPresenter() {
+		return smStudentResultsPresenter;
 	}
 }
