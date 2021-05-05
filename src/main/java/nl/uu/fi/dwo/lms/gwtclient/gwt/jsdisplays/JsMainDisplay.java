@@ -112,4 +112,5 @@ public class JsMainDisplay {
     
     static native void showStudentResultsGraphView();
     static native void showTeacherSMClassResultsView();
+    static native void showTeacherClassFilterView();
 }

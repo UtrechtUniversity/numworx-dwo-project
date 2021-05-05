@@ -132,6 +132,8 @@ public class MainPresenter {
 		void showTeacherStudentModelView();
 
 		void showTeacherSMClassResultsView();
+
+		void showTeacherClassFilterView();
     }
 
     private MainPresenter.Display display;

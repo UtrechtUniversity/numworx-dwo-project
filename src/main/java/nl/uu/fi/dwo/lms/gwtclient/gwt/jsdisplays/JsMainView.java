@@ -213,4 +213,8 @@ public class JsMainView implements MainPresenter.Display{
 	public void showTeacherSMClassResultsView() {
 		JsMainDisplay.showTeacherSMClassResultsView();
 	}
+	@Override
+	public void showTeacherClassFilterView() {
+		JsMainDisplay.showTeacherClassFilterView();
+	}
 }

@@ -4,6 +4,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.FilterPanel;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.SMClassResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.SMStudentResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.StudentModelPresenter;
@@ -11,6 +12,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraphPresente
 
 import javax.inject.Inject;
 
+import dagger.Lazy;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
@@ -351,5 +353,10 @@ public class PresenterFactoryGwt implements PresenterFactory {
 	@JsMethod
 	public SMStudentResultsPresenter getSMResultsPresenter() {
 		return smStudentResultsPresenter;
+	}
+
+	@Inject Lazy<FilterPanel> filterpanel;
+	public FilterPanel getTeacherClassFilterPresenter() {
+		return filterpanel.get();
 	}
 }

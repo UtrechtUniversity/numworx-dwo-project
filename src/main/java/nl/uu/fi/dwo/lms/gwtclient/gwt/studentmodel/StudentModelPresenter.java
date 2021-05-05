@@ -11,6 +11,7 @@ import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.GET;
 
 import org.osgi.util.promise.Promise;
@@ -31,6 +32,7 @@ import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.studentmodel.JsTeacherStudentModelView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass;
@@ -263,12 +265,15 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 			return p;
 		});
 	}
-	
+		
 	@JsMethod
-	public void onSchoolClassFilter(String id) {
-		if (id.isEmpty()) return;
-		DomSchoolClass sc = schoolClasses.get(id).getSchoolClass();
-		LOG.info("on schoolclass filter " + sc.getSchoolClassName());
+	public void onSchoolClassFilter(String id) {		
+		currentModel.then(m -> { 
+			JSONObject state = new JSONObject();
+			state.put("id", new JSONString(m.getValue().getId().getIdString()));
+			bus.fireEvent(new SwitchViewEvent(SelectedView.SMCLASSFILTER, state.getJavaScriptObject()));
+			return null;
+		});		
 	}
 
 	@Override

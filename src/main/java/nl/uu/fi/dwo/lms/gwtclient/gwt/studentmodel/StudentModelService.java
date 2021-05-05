@@ -99,4 +99,8 @@ public class StudentModelService implements DescriptionService {
 		});
 	}
 
+	public Promise<Boolean> updateForClass(DomStudentModelContext4Student object) {
+		return manager.updateModelForClass(context, object);		
+	}
+
 }

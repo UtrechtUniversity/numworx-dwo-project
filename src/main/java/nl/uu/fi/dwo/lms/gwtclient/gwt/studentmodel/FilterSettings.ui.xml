@@ -2,22 +2,28 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:style>
+	.top {
+	}
+	
+	.top th {
+		width: 2.5em;
+	}
 	
 	</ui:style>
-	<g:HTMLPanel>
+	<g:HTMLPanel addStyleNames='{style.top}'>
 		<p>Getal&amp;Ruimte</p>
 		<table>
 			<tr>
 				<td><g:CheckBox ui:field='gr'/></td>
-				<td>hfst 1</td>
-				<td>hfst 2</td>
-				<td>hfst 3</td>
-				<td>hfst 4</td>
-				<td>hfst 5</td>
-				<td>hfst 6</td>
-				<td>hfst 7</td>
-				<td>hfst 8</td>
-				<td>hfst 9</td>
+				<th><label>hfst 1</label></th>
+				<th><label>hfst 2</label></th>
+				<th><label>hfst 3</label></th>
+				<th><label>hfst 4</label></th>
+				<th><label>hfst 5</label></th>
+				<th><label>hfst 6</label></th>
+				<th><label>hfst 7</label></th>
+				<th><label>hfst 8</label></th>
+				<th><label>hfst 9</label></th>
 			</tr>
 			<tr>
 				<td><g:CheckBox ui:field='gr1'>1HV</g:CheckBox></td>
@@ -41,20 +47,20 @@
 		<table>
 			<tr>
 				<td><g:CheckBox ui:field='mw'/></td>
-				<td><label>hfst 1</label></td>
-				<td><label>hfst 2</label></td>
-				<td><label>hfst 3</label></td>
-				<td><label>hfst 4</label></td>
-				<td><label>hfst 5</label></td>
-				<td><label>hfst 6</label></td>
-				<td><label>hfst 7</label></td>
-				<td><label>hfst 8</label></td>
-				<td><label>hfst 9</label></td>
-				<td><label>hfst 10</label></td>
-				<td><label>hfst 11</label></td>
-				<td><label>hfst 12</label></td>
-				<td><label>hfst 13</label></td>
-				<td><label>hfst 14</label></td>
+				<th><label>hfst 1</label></th>
+				<th><label>hfst 2</label></th>
+				<th><label>hfst 3</label></th>
+				<th><label>hfst 4</label></th>
+				<th><label>hfst 5</label></th>
+				<th><label>hfst 6</label></th>
+				<th><label>hfst 7</label></th>
+				<th><label>hfst 8</label></th>
+				<th><label>hfst 9</label></th>
+				<th><label>hfst 10</label></th>
+				<th><label>hfst 11</label></th>
+				<th><label>hfst 12</label></th>
+				<th><label>hfst 13</label></th>
+				<th><label>hfst 14</label></th>
 			</tr>
 			<tr>
 				<td><g:CheckBox ui:field='mw1'>1HV</g:CheckBox></td>
