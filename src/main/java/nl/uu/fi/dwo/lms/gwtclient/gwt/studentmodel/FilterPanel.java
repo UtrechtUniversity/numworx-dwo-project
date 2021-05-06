@@ -14,6 +14,7 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
 import com.google.gwt.cell.client.ButtonCell;
+import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -75,6 +76,13 @@ public class FilterPanel extends Composite implements ProvidesKey<DomStudentMode
 	  public String getValue(DomStudentModelContext4Student object) {
 	    return "open Filter";
 	  }
+
+	@Override
+	public String getCellStyleNames(Context context, DomStudentModelContext4Student object) {
+		Boolean v = check.getOrDefault(getKey(object), Boolean.FALSE);
+		if (!v) return "hidden-node";
+		return super.getCellStyleNames(context, object);
+	}
 	};
 	
 	@Inject Lazy<FilterSettings> settings;
@@ -119,11 +127,13 @@ public class FilterPanel extends Composite implements ProvidesKey<DomStudentMode
 						copy.setModelStructure(null);	
 						service.updateForClass(copy);
 					}
+					table.redrawRow(index);
 				}
 			}
 		});
 		ProvidesKey<DomStudentModelContext4Student> keyProvider = this;
 		table = new CellTable<>(keyProvider);
+		table.addStyleName("dwo");
 		table.addColumn(nameColumn, "Naam");
 		table.addColumn(checkColumn, "Filter");
 		table.addColumn(buttonColumn, "");

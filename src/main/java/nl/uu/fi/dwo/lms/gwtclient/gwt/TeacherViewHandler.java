@@ -207,6 +207,7 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
             		 mainView.selectView(SelectedView.KNOWLEDGE);
             		 mainView.showTeacherClassFilterView();
             		 presenterFactory.getTeacherClassFilterPresenter().init(switchViewEvent.getResultState());
+            		 break;
             	 }
              default:
                   eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
