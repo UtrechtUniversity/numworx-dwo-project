@@ -11,6 +11,9 @@ import fi.dwo.commons.persistence.entities.PersistentUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.entities.RestUserFull;
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestUser;
 
 /**
@@ -69,6 +73,20 @@ public class SecuredDwoAdminUserManager {
         return domUsers;
     }
     
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getList")
+    public static List<DomUserFull> getUsersInSchool(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
+    	DwoAdminState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN).buildDwoAdmin();
+    	String realm = rest.getRestContext().getRealm();
+    	List<PersistentUser> userList = UserManager.findEntities();
+        ArrayList<DomUserFull> domUsers = new ArrayList<DomUserFull>(userList.size());
+        for (PersistentUser u : userList) {
+            domUsers.add(u.buildDomUserFull(realm));
+        }
+        return domUsers;
+   	
+    }
     /**
      * Edits a singleSchoolStudent.
      *
@@ -88,7 +106,8 @@ public class SecuredDwoAdminUserManager {
         DomUser domUser = restUser.getDomUser();
         PersistentHasRole phr = null;
         try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        	UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(restUser.getRestContext().getDomHasRole(), RoleType.ADMIN);
+            phr = state.getHasRole();
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access dwoadmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
@@ -103,7 +122,7 @@ public class SecuredDwoAdminUserManager {
                 LOG.log(Level.SEVERE, null, ex);
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
             }
-            return user.buildDomUserFull();
+            return user.buildDomUserFull(restUser.getRestContext().getRealm());
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to change a user with username {1} by dwoadmin {0}.", new Object[]{sc.getUserPrincipal().getName(), domUser.getUserName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -139,7 +158,8 @@ public class SecuredDwoAdminUserManager {
         
         PersistentHasRole phr = null;
         try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        	UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(restUser.getRestContext().getDomHasRole(), RoleType.ADMIN);
+            phr = state.getHasRole();
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access admin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
@@ -154,14 +174,6 @@ public class SecuredDwoAdminUserManager {
                 LOG.log(Level.SEVERE, null, ex);
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
             }
-//            if (user == null) {
-//                LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: could not find user with id to update {1}.", new Object[]{sc.getUserPrincipal().getName(), nssStudent.getDomSingleSchoolStudent().getId()});
-//                throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update user with username " + nssStudent.getDomSingleSchoolStudent().getUserName() + ".");
-//            }
-//            if (!user.isSingleSchoolAccount()) {
-//                LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to change a non-single school user with username {1} by schooladmin {0}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
-//                throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
-//            }
             user.setUsername(domUser.getUserName());
             user.setEmail(domUser.getEmail());
             user.setGivenName(domUser.getGivenName());
@@ -169,13 +181,13 @@ public class SecuredDwoAdminUserManager {
             user.setLastname(domUser.getFamilyName());
             user.setPassword(domUser.getPassword());
             try {
-                UserManager.edit(user);
+                user = UserManager.edit(user);
             } catch (PersistenceException ex) {
                 LOG.log(Level.WARNING, "User {0} could not update user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), domUser.getUserName()});
                 LOG.log(Level.SEVERE, "", ex);
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update user " + sc.getUserPrincipal().getName() + ".");
             }
-            return user.buildDomUserFull();
+            return user.buildDomUserFull(restUser.getRestContext().getRealm());
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to change a user with username {1} by dwoadmin {0}.", new Object[]{sc.getUserPrincipal().getName(), domUser.getUserName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
