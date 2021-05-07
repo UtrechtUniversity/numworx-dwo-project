@@ -21,6 +21,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -57,7 +58,7 @@ public class FilterPanel extends Composite implements ProvidesKey<DomStudentMode
     TextColumn<DomStudentModelContext4Student> nameColumn = new TextColumn<DomStudentModelContext4Student>() {
         @Override
         public String getValue(DomStudentModelContext4Student item) {
-          return classes.get(item.getSchoolClass().getId().getIdString());
+          return classes.get(getKey(item));
         }
       };
      
@@ -65,7 +66,7 @@ public class FilterPanel extends Composite implements ProvidesKey<DomStudentMode
 
 		@Override
 		public Boolean getValue(DomStudentModelContext4Student object) {
-			return check.getOrDefault(object.getSchoolClass().getId().getIdString(), Boolean.FALSE);
+			return check.getOrDefault(getKey(object), Boolean.FALSE);
 		}
 		
 	};
@@ -134,6 +135,7 @@ public class FilterPanel extends Composite implements ProvidesKey<DomStudentMode
 		ProvidesKey<DomStudentModelContext4Student> keyProvider = this;
 		table = new CellTable<>(keyProvider);
 		table.addStyleName("dwo");
+		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 		table.addColumn(nameColumn, "Naam");
 		table.addColumn(checkColumn, "Filter");
 		table.addColumn(buttonColumn, "");
