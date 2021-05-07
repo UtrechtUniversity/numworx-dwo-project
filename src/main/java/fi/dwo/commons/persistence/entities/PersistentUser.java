@@ -372,6 +372,7 @@ public class PersistentUser implements Serializable {
     private void fillDomUser(DomUser user) {
         if (getId() != null) {
             user.setId(buildPersistenceId());
+            user.setOptLock(optlock);
         } else {
             user.setId(null);
         }
