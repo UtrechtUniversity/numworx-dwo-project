@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestUser;
 import nl.uu.fi.dwo.rest.entities.RestUserFull;
 
@@ -25,8 +26,10 @@ public class SecureDwoAdminUserManager {
 
   public static List<DomUserFull> getUserList() throws Dwo2Exception {
     List<DomUserFull> src;
-    src = StoredRestManager.getInstance().getList("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/user/getList",
-        RestListClassTypes.DomUserFull);
+    RestContext rest = new RestContext();
+    rest.setRestContext(getContext());
+    src = StoredRestManager.getInstance().getPutList("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/user/getList", 
+        RestListClassTypes.DomUserFull, rest);
     LOG.log(Level.FINE, "Retrieved list of schoolsfor the dwoadmin with username {0}.",
         new Object[] {RestAuthenticator.getInstance().getUsername()});
     return src;

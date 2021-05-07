@@ -493,6 +493,8 @@ class RestManager extends RestyDateTimeFormat {
       switch (type) {
         case DomUser:
           return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomUser>>() {});
+        case DomUserFull:
+            return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomUserFull>>() {});
         case DomRole:
           return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomRole>>() {});
         case DomStudent:
