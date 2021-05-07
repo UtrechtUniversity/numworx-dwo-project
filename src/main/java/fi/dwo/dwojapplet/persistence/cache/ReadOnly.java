@@ -4,7 +4,7 @@ import fi.dwo.commons.exceptions.PersistenceException;
 
 public class ReadOnly extends NoCache {
 	
-	public static boolean hasSuspendData;
+	public static boolean hasSuspendData; // if true, access is STUDENT
 
     public ReadOnly() {
         super();
@@ -12,6 +12,7 @@ public class ReadOnly extends NoCache {
 
     @Override
     public String setValue(int uid, int scoid, int sgid, int clsid, String key, String value) throws PersistenceException {
+        if (hasSuspendData) sgid = Integer.MAX_VALUE;
  		if(hasSuspendData && allowWrite(key)) // verzegelen.
 			return super.setValue(uid, scoid, sgid, clsid, key, value);
 		return "true";
@@ -23,6 +24,7 @@ public class ReadOnly extends NoCache {
 	
     @Override
     public String getValue(int uid, int scoid, int sgid, int clsid, String key) throws PersistenceException {
+      if (hasSuspendData) sgid = Integer.MAX_VALUE;
         if ("suspendData".equals(key) && !hasSuspendData) {
             return "";
         }
