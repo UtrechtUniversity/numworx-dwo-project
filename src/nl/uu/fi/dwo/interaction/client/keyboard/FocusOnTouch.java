@@ -102,6 +102,8 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 		event.stopPropagation();
 	}
 
+	java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(getClass().getName());
+	
 	@Override
 	public void onKeyPress(KeyPressEvent event)
 	{
@@ -112,7 +114,21 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 		FormuleEditorIF editor = kb.getEditor();
 		
 		if (event.isAltKeyDown() || event.isControlKeyDown() || event.isMetaKeyDown())
-		{	return;
+		{
+//			boolean down = event.isAltKeyDown() && !event.isControlKeyDown(); // alt of alt-shift
+//
+//			if (down && kb != null && kb.getEditor() != null)
+//			{
+//				ch = greek(ch); 
+//				LOG.info("alt - " + ch + " = " + (int) ch);
+//				
+//				if (ch != '\0') {
+//					editor.insert( ch);
+//					event.preventDefault();
+//					event.stopPropagation();
+//				}
+//			}
+			return;
 		}
 		if (kb != null && kb.getEditor() != null)
 		{
@@ -146,7 +162,38 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 		}
 
 	}
-
+ 
+	private char greek(int code) {
+		switch(code) {
+		case KeyCodes.KEY_A: return 'α';
+		case KeyCodes.KEY_B: return 'β';
+		case KeyCodes.KEY_C: return 'χ';
+		case KeyCodes.KEY_D: return 'δ';
+		case KeyCodes.KEY_E: return 'ε';
+		case KeyCodes.KEY_V:
+		case KeyCodes.KEY_F: return '\u03c6';
+		case KeyCodes.KEY_G: return 'γ';
+		case KeyCodes.KEY_H: return 'η';
+		case KeyCodes.KEY_I: return 'ι';
+		case KeyCodes.KEY_J: return '∆'; // Op mac toetsenbord Option-J
+		case KeyCodes.KEY_K: return '\u03ba';
+		case KeyCodes.KEY_L: return '\u03bb';
+		case KeyCodes.KEY_M: return '\u03bc';
+		case KeyCodes.KEY_N: return '\u03bd';
+		case KeyCodes.KEY_O: return '\u03bf';
+		case KeyCodes.KEY_P: return '\u03c0';
+		case KeyCodes.KEY_Q: return '\u03b8';
+		case KeyCodes.KEY_R: return '\u03c1';
+		case KeyCodes.KEY_S: return '\u03c3';
+		case KeyCodes.KEY_T: return '\u03c4';
+		case KeyCodes.KEY_U: return '\u03c5';
+		case KeyCodes.KEY_W: return '\u03c9';
+		case KeyCodes.KEY_X: return '\u03be';
+		case KeyCodes.KEY_Y: return '\u03c8';
+		case KeyCodes.KEY_Z: return '\u03b6';
+		}
+		return '\0';
+	}
 	private boolean allowed(char ch)
 	{
 		if (ch >= ' ' && ch < '\u007F' && ch != '^')
@@ -186,6 +233,19 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 				editor.plak(clip);
 				event.preventDefault();
 				event.stopPropagation();
+			}
+			boolean down = event.isAltKeyDown() && !event.isControlKeyDown()
+					&& code >= KeyCodes.KEY_A && code <= KeyCodes.KEY_Z; // alt of alt-shift
+			
+			if (down && kb != null && kb.getEditor() != null)
+			{
+				
+				char ch = greek(code);
+				if (ch != '\0') {
+					editor.insert( ch);
+					event.preventDefault();
+					event.stopPropagation();
+				}
 			}
 		
 			return;
