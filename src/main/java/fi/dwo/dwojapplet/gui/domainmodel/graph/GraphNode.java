@@ -617,6 +617,18 @@ public class GraphNode {
 		}
 
 	}
+	
+	public void setSelectionOnGrid() {
+		for (String code : selected) {
+			Point location = getLocation(code);
+			int locx = location.x;
+			int locy = location.y;
+			int corrx = locx<0 ? -15 : 15;
+			int corry = locy<0 ? -15 : 15;
+			setLocation(code, corrx+locx/30*30, corry+locy/30*30);
+		}
+
+	}
 
 	public class CompositeStroke implements Stroke {
 		private Stroke stroke1, stroke2;

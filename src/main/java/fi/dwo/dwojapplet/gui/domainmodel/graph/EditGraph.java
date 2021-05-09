@@ -319,7 +319,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		repaint();
 		
 	}
-
+	
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		int ex = (int) ((e.getX()-origin.x)/factor);
@@ -341,7 +341,9 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 			}
 		}
 		if(activeNode!=null) {
+			activeNode.setSelectionOnGrid();
 			activeNode.setSelected(false);
+			repaint();
 			activeNode = null;
 			activeCode = null;
 		}
@@ -353,8 +355,12 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		if(sleepGroep) {
 			sleepGroep = false;
 			for(int i=0 ; i<graphNodes.size() ; i++) {
-				graphNodes.get(i).setSelected(false);
+				if(graphNodes.get(i).isSelected()) {
+					graphNodes.get(i).setSelectionOnGrid();
+					graphNodes.get(i).setSelected(false);
+				}	
 			}
+			repaint();
 		}
 		if(selectGroep) {
 			for(int i=0 ; i<graphNodes.size() ; i++) {
