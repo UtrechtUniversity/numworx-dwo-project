@@ -86,7 +86,7 @@ public class FilterPanel extends Composite implements ProvidesKey<DomStudentMode
 	}
 	};
 	
-	@Inject Lazy<FilterSettings> settings;
+	@Inject Lazy<FilterDialog> settings;
 	
 	@Inject FilterPanel(EventBus bus) {
 		root = RootPanel.get(JsTeacherClassFilterDisplay.getId());
@@ -95,12 +95,10 @@ public class FilterPanel extends Composite implements ProvidesKey<DomStudentMode
 		
 		buttonColumn.setFieldUpdater(new FieldUpdater<DomStudentModelContext4Student, String>() {
 			  public void update(int index, DomStudentModelContext4Student object, String value) {
-					PopupPanel popup = new PopupPanel(true,true);
 					Map<String, Map<String, Set<Integer>>> filter = object.getFilter();
 					settings.get().setValue(filter);
-					popup.setWidget(settings.get());
-					popup.center();
-					popup.addCloseHandler(ev -> { 
+					
+					settings.get().addCloseHandler(ev -> { 
 						LOG.info("filter settings closed");
 						Map<String, Map<String, Set<Integer>>> nieuw = settings.get().getValue();
 						changed.add(getKey(object));
@@ -109,6 +107,7 @@ public class FilterPanel extends Composite implements ProvidesKey<DomStudentMode
 							service.updateForClass(object);
 						}
 					});
+					settings.get().show();
 			  }
 			});
 		checkColumn.setFieldUpdater(new FieldUpdater<DomStudentModelContext4Student, Boolean>() {

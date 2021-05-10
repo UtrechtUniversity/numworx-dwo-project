@@ -403,7 +403,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		description.get(current, info)
 		.then(p -> { Widget description = p.getValue();
 			widget.get().description.setWidget(description);
-			return null;
+			return p;
 		});
 	}
 

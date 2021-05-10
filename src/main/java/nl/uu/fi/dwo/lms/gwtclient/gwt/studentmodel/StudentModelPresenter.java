@@ -37,6 +37,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.studentmodel.JsTeacherStudentMo
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.FilterUtil;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.DomTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -60,7 +61,7 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		void showStudentModels(Map<String, String> models);
 		void showTree(DomTree<String> tree);
 		void setLoadingTreeMessage();
-		void setDescription(IsWidget w);
+		void setDescription(String string, IsWidget w);
 		void setTitle(String title);
 		void setModelSelect(String id);
 		void setEmptyTreeMessage();
@@ -208,7 +209,7 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 			}
 			for (Map.Entry<String, Set<Integer>> m : entry.getValue().entrySet()) {
 				Set<Integer> chapters = new TreeSet<>(map.getOrDefault(m.getKey(), Collections.emptySet()));
-				chapters.retainAll(m.getValue());
+				if(!m.getValue().isEmpty()) chapters.retainAll(m.getValue());
 				if (!chapters.isEmpty())
 					return true;
 			}
@@ -234,22 +235,20 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		});
 	}
 	
-	@Inject Lazy<FilterSettings> filterPanel;
+	@Inject Lazy<FilterDialog> filterPanel;
 	
 	private Map<String,Map<String,Set<Integer>>> filter = Collections.emptyMap();
 		
 	@JsMethod
 	public void onFilter() {
-		LOG.info("on filter click");
-		PopupPanel popup = new PopupPanel(true,true);
 		filterPanel.get().setValue(filter);
-		popup.setWidget(filterPanel.get());
-		popup.center();
-		popup.addCloseHandler(ev -> { 
+		filterPanel.get().addCloseHandler(ev -> { 
 			LOG.info("filter settings closed");
 			filter = filterPanel.get().getValue();
 			selectModel(currentModel.getValue().getId().getIdString());
+			view.setTitle(FilterUtil.setFilter(filter));
 		});
+		filterPanel.get().show();
 	}
 	
 	@JsMethod
@@ -284,7 +283,7 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		info.setId(id);
 		currentModel.then( p -> 
 			description.get(p.getValue(), info))
-		.then(p -> {view.setDescription(p.getValue()); return p;}, FAILURE);
+		.then(p -> {view.setDescription(event.getSelectedItem().getText(), p.getValue()); return p;}, FAILURE);
 	}
 
 	public void init(JavaScriptObject resultState) {

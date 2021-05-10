@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -39,8 +40,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -59,7 +58,6 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
@@ -75,50 +73,20 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 
 public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, MouseUpHandler, MouseDownHandler, MouseOutHandler {
 
-	private class Book implements ClickHandler {
-
-		@Override
-		public void onClick(ClickEvent event) {
-			String b = book.getText();
-			String m = GETALENRUIMTE;
-			if (methodeBtn.getSelectedIndex() == 2) m = MODERNEWISKUNDE;
-			doFilter(Collections.singletonMap(m, Collections.singletonMap(b, Collections.emptySet())));
-			zoomFit();
-		}
-
-	}
-
-	static final String GETALENRUIMTE = "Getal&Ruimte";
-	static final String MODERNEWISKUNDE = "Moderne Wiskunde";
 
 	Map<String, Map<String,Set<Integer>>> filter;
 	
-	private class MethodeChange implements ChangeHandler, ClickHandler {
+	private class FilterConsumer implements Consumer<Map<String, Map<String, Set<Integer>>>> {
 
 		@Override
-		public void onChange(ChangeEvent event) {
-			GWT.log("Methode change");
-			int index = methodeBtn.getSelectedIndex();
-			Map<String, Map<String,Set<Integer>>> filter = null;
-			switch(index) {
-			default:
-			case 0: filter = Collections.emptyMap(); break;
-			case 1: filter = Collections.singletonMap(GETALENRUIMTE, Collections.emptyMap()); break;
-			case 2: filter = Collections.singletonMap(MODERNEWISKUNDE, Collections.emptyMap());	break;				
-			}
-			doFilter(filter);
-			zoomFit();
-		}
-
-		@Override
-		public void onClick(ClickEvent event) {
-			GWT.log("Methode click");
-			onChange(null);
-			event.preventDefault();
-		}
-
+		public void accept(Map<String, Map<String, Set<Integer>>> t) {
+			doFilter(t);
+			zoomFit();			
+		}		
 	}
-
+	
+	
+	
 	static final float  VOORKENNIS_HEIGHT = 192f; // 12em
 	boolean inVoorkennis;
 	Collection<Edge> voorkennisEdges = Collections.emptySet();
@@ -802,11 +770,9 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	private Set<ChapterEdge> chapterEdges;
 	
 	private Button zoomFitBtn, zoomInBtn, zoomOutBtn, voorkennisBtn, verbergBtn;
-	private DockLayoutPanel title, voorkennistitle;
-	private ListBox methodeBtn;
-	private Button book;
-	private Label  chapter;
-	
+	private DockLayoutPanel voorkennistitle;
+	private FilterTitle title;
+		
 	@Inject DescriptionPresenter description;
 	private DomStudentModelContext4Student current;
 
@@ -843,40 +809,10 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		zoomInBtn.setStylePrimaryName("graph-Button");
 		zoomOutBtn.setStylePrimaryName("graph-Button");		
 		voorkennisBtn.setStylePrimaryName("dwo-Button");
-		title = new DockLayoutPanel(Unit.EM);
-		title.getElement().getStyle().setBackgroundColor("#1B75BB");
+		title = new FilterTitle();
+		title.setFilter(new FilterConsumer());
 		add(title);
-		methodeBtn = new ListBox();
-		methodeBtn.addItem("Alle leerdoelen");
-		methodeBtn.addItem("Getal & Ruimte");
-		methodeBtn.addItem("Moderne Wiskunde");
-		methodeBtn.setStylePrimaryName("graph-ListBox");
 		
-		title.addWest(methodeBtn, 10);
-		
-		book = new Button("1HV");
-		book.setStylePrimaryName("dwo-Button");
-		Label prebook = new Label(" > ");
-		Style style = prebook.getElement().getStyle();
-		style.setPaddingTop(0.2, Unit.EM);
-		style.setColor("white");
-		style.setTextAlign(TextAlign.CENTER);
-		style.setFontSize(20, Unit.PX);
-		Label postbook = new Label(" > ");
-		style = postbook.getElement().getStyle();
-		style.setPaddingTop(0.2, Unit.EM);
-		style.setColor("white");
-		style.setTextAlign(TextAlign.CENTER);
-		style.setFontSize(20, Unit.PX);
-		chapter = new Label("h1");
-		style = chapter.getElement().getStyle();
-		style.setPaddingTop(0.2, Unit.EM);
-		style.setColor("white");
-		style.setFontSize(20, Unit.PX);
-		title.addWest(prebook, 3);
-		title.addWest(book, 10);
-		title.addWest(postbook, 3);
-		title.add(chapter);
 		
 		setWidgetLeftRight(title, 0, Unit.EM, 0, Unit.EM);
 		setWidgetTopHeight(title, 0, Unit.EM, 2, Unit.EM);
@@ -892,7 +828,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		verbergBtn.setStylePrimaryName("graph-Button");
 		voorkennistitle.addEast(verbergBtn, 3);
 		Label vtt = new Label("Voorkennis");
-		style = vtt.getElement().getStyle();
+		Style style = vtt.getElement().getStyle();
 		style.setPaddingTop(0.2, Unit.EM);
 		style.setColor("white");
 		style.setTextAlign(TextAlign.CENTER);
@@ -917,10 +853,6 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		zoomOutBtn.addClickHandler(new Zoom(true));
 		zoomInBtn.addClickHandler(new Zoom(false));
 		voorkennisBtn.addClickHandler(new Voorkennis());
-		MethodeChange handler = new MethodeChange();
-		methodeBtn.addChangeHandler(handler);
-		methodeBtn.addClickHandler(handler);
-		book.addClickHandler(new Book());
 		verbergBtn.addClickHandler(new VerbergVoorkennis());
 	}
 
@@ -933,6 +865,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	}
 
 	public void doFilter(Map<String, Map<String, Set<Integer>>> f) {
+		title.accept(f);
 		if (f == null) return;
 		if (inVoorkennis) verbergVoorkennis();
 		filter = f;
@@ -940,39 +873,25 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		boolean showbooks = true;
 		if (f.isEmpty()) {
 			for(List<Node> n: map.values()) for(Node node: n) node.setVisible(true);
-		    methodeBtn.setSelectedIndex(0);
 		    edges.forEach(Edge::setVisible);
 		    chapters.values().forEach(ChapterNode::setVisible);
 		    chapterEdges.forEach(ChapterEdge::setVisible);
 		    books.values().forEach(BookNode::setVisible);
-		    book.setText("");
-		    chapter.setText("");
 		    setWidgetVisible(voorkennisBtn, false);
 		    return;
 		} else if (f.size() == 1) {
 			String key = f.keySet().iterator().next();
-			int index = 0;
-			if (GETALENRUIMTE.equals(key)) index = 1;
-			if (MODERNEWISKUNDE.equals(key)) index = 2;
-			methodeBtn.setSelectedIndex(index);
 			if (f.get(key).size() == 1) {
-				book.setText(f.get(key).keySet().iterator().next());
 				showbooks = false;
-				Set<Integer> chapters = f.get(key).get(book.getText());
+				Set<Integer> chapters = f.get(key).values().iterator().next();
 				if (chapters.size() == 1) {
-					chapter.setText("h" + chapters.iterator().next());
 					showchapters = false;
 				} else {
-					chapter.setText("");
 				}			
 			} else {
-				chapter.setText("");
-				book.setText("");
 			}
 		} else 
 		{
-			methodeBtn.setSelectedIndex(0);
-			book.setText("");
 		}
 		Iterator<Node> i =  nodeStream().iterator();
 		while (i.hasNext()) {

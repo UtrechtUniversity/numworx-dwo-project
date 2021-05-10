@@ -128,7 +128,12 @@ public class FilterSettings extends Composite implements LeafValueEditor<Map<Str
 	}
 
 	private void setValue(Map<String, Set<Integer>> GenR, String hfst, CheckBox[] g) {
-		Set<Integer> h1 = GenR.getOrDefault(hfst, Collections.emptySet());
+		Set<Integer> h1 = GenR.get(hfst);
+		if (h1 == null) return;
+		if (h1.isEmpty()) {
+			setValue(true,g);
+			return;
+		}
 		h1.forEach(item -> g[item.intValue()].setValue(true));
 		g[0].setValue(h1.size() == g.length-1);
 	}
@@ -146,15 +151,33 @@ public class FilterSettings extends Composite implements LeafValueEditor<Map<Str
 		Map<String, Map<String,Set<Integer>>> result = new HashMap<>();
 		Map<String, Set<Integer>> GenR = new HashMap<>();
 		Set<Integer> h;
-		h = getValue(gr1s);if (!h.isEmpty()) GenR.put("1HV", h);
-		h = getValue(gr2s);if (!h.isEmpty()) GenR.put("2HV", h);
-		h = getValue(gr3s);if (!h.isEmpty()) GenR.put("3V", h);
+		h = getValue(gr1s);if (!h.isEmpty()) {
+			if (h.size() == gr1s.length-1) h = Collections.emptySet();
+			GenR.put("1HV", h);
+		}
+		h = getValue(gr2s);if (!h.isEmpty()) {
+			if (h.size() == gr2s.length-1) h = Collections.emptySet();
+			GenR.put("2HV", h);
+		}
+		h = getValue(gr3s);if (!h.isEmpty()) {
+			if (h.size() == gr3s.length-1) h = Collections.emptySet();
+			GenR.put("3V", h);
+		}
 		if (!GenR.isEmpty()) result.put("Getal&Ruimte", GenR);
 		Map<String, Set<Integer>> MW = new HashMap<>();
-		h = getValue(mw1s);if (!h.isEmpty()) GenR.put("1HV", h);
-		h = getValue(mw2s);if (!h.isEmpty()) GenR.put("2HV", h);
-		h = getValue(mw3s);if (!h.isEmpty()) GenR.put("3V", h);
-		if (!GenR.isEmpty()) result.put("Moderne Wiskunde", MW);
+		h = getValue(mw1s);if (!h.isEmpty()) {
+			if (h.size() == mw1s.length-1) h = Collections.emptySet();
+			MW.put("1HV", h);
+		}
+		h = getValue(mw2s);if (!h.isEmpty()) {
+			if (h.size() == mw2s.length-1) h = Collections.emptySet();
+			MW.put("2HV", h);
+		}
+		h = getValue(mw3s);if (!h.isEmpty()) {
+			if (h.size() == mw3s.length-1) h = Collections.emptySet();
+			MW.put("3V", h);
+		}
+		if (!MW.isEmpty()) result.put("Moderne Wiskunde", MW);
 		
 		if (rest.isChecked()) result.put("", Collections.emptyMap());
 		

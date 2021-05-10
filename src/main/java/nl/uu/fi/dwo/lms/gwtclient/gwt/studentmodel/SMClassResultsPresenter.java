@@ -31,6 +31,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.studentmodel.JsTeacherSMClassResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.FilterUtil;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.DomTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
@@ -80,7 +81,7 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 	private JSONObject state;
 	
 	private Map<String, Map<String, Set<Integer>>> filter;
-	@Inject Lazy<FilterSettings> filterPanel;
+	@Inject Lazy<FilterDialog> filterPanel;
 	private DomStudentModelContext4Student currentModel;
 	
 	
@@ -205,6 +206,7 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 				map.put(cat.getInfo().getId(), tcat);
 		}
 		view.showTree(tree);
+		view.setTitle(FilterUtil.setFilter(filter));
 	}
  	
 	private Map<String, DomTree<String>> children(List<DomStudentModelObj> objectives) {
@@ -255,15 +257,13 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 	public void onFilter() {
 		if(currentModel == null) return;
 		LOG.info("on filter click");
-		PopupPanel popup = new PopupPanel(true,true);
 		filterPanel.get().setValue(filter);
-		popup.setWidget(filterPanel.get());
-		popup.center();
-		popup.addCloseHandler(ev -> { 
+		filterPanel.get().addCloseHandler(ev -> { 
 			LOG.info("filter settings closed");
 			filter = filterPanel.get().getValue();
 			showModel();
 		});
+		filterPanel.get().show();
 	}
 	
 	@JsMethod

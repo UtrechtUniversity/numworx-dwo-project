@@ -68,34 +68,10 @@ public class StudentResultsWidget extends Composite {
 	@UiHandler("btn") void onGraph(ClickEvent ev) {
 		bus.fireEventFromSource(ev, this);
 	}
-	
-	void setFilter(Map<String, Map<String, Set<Integer>>> map) {
-		if (map.size() == 1) {
-			String methode = map.keySet().iterator().next();
-			Map<String, Set<Integer>> m = map.get(methode);
-			if (m.size() == 1) {
-				String boek = m.keySet().iterator().next();
-				Set<Integer> hfstk = m.get(boek);
-				filter.setText(methode + " > " + boek + " >" + h(hfstk));
-				return;
-			} else {
-				StringBuilder sb = new StringBuilder(methode).append(" > ");
-				m.keySet().stream().sorted().forEach(k -> {
-					Set<Integer> hfstk = m.get(k);
-					sb.append(k).append("-h");
-					hfstk.stream().sorted().forEach(i -> sb.append(i).append(',') );
-					sb.deleteCharAt(sb.length()-1).append(" ; ");
-				});
-				filter.setText(sb.substring(0, sb.length()-3));
-				return;
-			}
-		}
-		filter.setText(String.valueOf(map));
-	}
 
-	private String h(Set<Integer> hfstk ) {
-		StringBuilder sb = new StringBuilder(" ");
-		hfstk.stream().sorted().forEach(i -> sb.append('h').append(i).append(','));
-		return sb.deleteCharAt(sb.length()-1).toString();
+	public void setFilter(Map<String, Map<String, Set<Integer>>> filter2) {
+		filter.setText(FilterUtil.setFilter(filter2));
+		
 	}
+	
 }

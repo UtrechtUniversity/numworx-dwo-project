@@ -31,7 +31,7 @@ public class SMStudentResultsPresenter extends StudentResultsPresenter {
 
 	@Override
 	protected SwitchViewEvent onGraphEvent(JSONObject json) {
-		json.put("title", new JSONString(json.get("title").isString().stringValue() + " : " + service.user.getUniqueDisplayName()));
+		json.put("user", new JSONString(service.user.getDisplayName()));
 		return new SwitchViewEvent(SwitchViewEvent.SelectedView.SMSTUDENTRESULTSGRAPH, service.user, service.schoolClass, json.getJavaScriptObject());
 	}
 

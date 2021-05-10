@@ -77,6 +77,12 @@ public class ScoreIcon extends ResizeComposite {
 		paint(s);
 	}
 
+	public ScoreIcon(String object) {
+		this();
+		setText(object);
+		image.removeFromParent();
+	}
+
 	public void setText(String text) {
 		title.setText(text);
 	}

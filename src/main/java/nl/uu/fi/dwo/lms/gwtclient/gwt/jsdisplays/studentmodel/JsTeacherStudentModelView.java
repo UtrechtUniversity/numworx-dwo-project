@@ -66,8 +66,11 @@ public class JsTeacherStudentModelView extends AbstractStudentModelView implemen
 	}
 
 	@Override
-	public void setDescription(IsWidget w) {
+	public void setDescription(String title, IsWidget w) {
 		descriptionwrap.clear();
+		Label header = new Label(title);
+		header.setStylePrimaryName("description-title");
+		descriptionwrap.add(header);
 		descriptionwrap.add(w);
 	}
 	
