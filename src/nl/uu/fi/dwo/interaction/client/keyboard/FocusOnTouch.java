@@ -236,7 +236,9 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 			}
 			boolean down = event.isAltKeyDown() && !event.isControlKeyDown()
 					&& code >= KeyCodes.KEY_A && code <= KeyCodes.KEY_Z; // alt of alt-shift
-			
+
+LOG.severe("on key down " + down + " " + code);					
+					
 			if (down && kb != null && kb.getEditor() != null)
 			{
 				
