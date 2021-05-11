@@ -144,6 +144,13 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>nl.uu.fi.dwo.mobile</groupId>
+			<artifactId>interaction</artifactId>
+			<scope>provided</scope>
+			<classifier>sources</classifier>
+			<version>${interactionVersion}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.googlecode.mgwt</groupId>
 			<artifactId>MGWT</artifactId>
 			<scope>provided</scope>
