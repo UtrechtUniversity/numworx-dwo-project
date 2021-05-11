@@ -68,7 +68,7 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 
 		void setTitle(String title);
 
-		void setScores(Map<String, DomStudentModelObjectiveScore> result);		
+		void setScores(Map<String, DomStudentModelObjectiveScore> result, boolean leaf);		
 	}
 	
 	private Display view;
@@ -154,11 +154,11 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 	private Promise<DomStudentModelScorePerTeacher> stap3(Promise<DomStudentModelScorePerTeacher> scores) {
 		students = scores.getValue().getStudents().stream().collect(Collectors.toMap(DomMapEntry<PersistenceId,DomStudent>::getKey, DomMapEntry<PersistenceId,DomStudent>::getValue));
 		String uuid = scores.getValue().getStudentModelContexts().get(0).getValue().getModelStructure().getInfo().getId();
-		setScores(scores, uuid);		
+		setScores(scores, uuid, false);		
 		return scores;
 	}
 
-	private void setScores(Promise<DomStudentModelScorePerTeacher> scores, String uuid) {
+	private void setScores(Promise<DomStudentModelScorePerTeacher> scores, String uuid, boolean leaf) {
 		Map<String, DomStudentModelObjectiveScore> result = new HashMap<>();
 		
 		List<DomStudentModelDataStudentScore> list = scores.getValue().getStudentScores();
@@ -168,7 +168,6 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 			DomStudentModelScore<?> org = item.getDomStudentModelStructureScore();
 			org = find(org, uuid);
 			if (org == null) org = item.getDomStudentModelStructureScore();
-			
 			DomStudent student = students.get(sid);
 			String name = student.getDisplayName();
 			DomStudentModelObjectiveScore copy = new DomStudentModelObjectiveScore();
@@ -176,7 +175,7 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 			copy.setScore(org.getGreenScore(),org.getGreenCount(), org.getRedScore(), org.getRedCount(), org.getTotalCount());
 			result.put(sid.getIdString(), copy);
 		}
-		view.setScores(result);
+		view.setScores(result, leaf);
 	}
 	
 	
@@ -242,14 +241,11 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 
 	@Override
 	public void onSelection(SelectionEvent<TreeItem> event) {
+		boolean leaf = event.getSelectedItem().getChildCount() == 0;
 		String id = (String) event.getSelectedItem().getUserObject();
 		LOG.info("on selection " + id);
 		scores.then(p -> { 
-				setScores(p, id);
-			
-			
-			
-			
+				setScores(p, id, leaf);
 			return p;} );
 	}
 

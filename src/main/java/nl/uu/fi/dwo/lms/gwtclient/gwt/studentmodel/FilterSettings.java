@@ -31,9 +31,9 @@ public class FilterSettings extends Composite implements LeafValueEditor<Map<Str
 		gr2s = new CheckBox[] { gr2, gr21, gr22, gr23, gr24, gr25, gr26,gr27, gr28};
 		gr3s = new CheckBox[] { gr3, gr31, gr32, gr33, gr34, gr35, gr36,gr37, gr38, gr39};
 
-		mw1s = new CheckBox[] { mw1, mw11, mw12, mw13, mw14, mw15, mw16,mw17, mw18, mw19};
-		mw2s = new CheckBox[] { mw2, mw21, mw22, mw23, mw24, mw25, mw26,mw27, mw28};
-		mw3s = new CheckBox[] { mw3, mw31, mw32, mw33, mw34, mw35, mw36,mw37, mw38, mw39};
+		mw1s = new CheckBox[] { mw1, mw11, mw12, mw13, mw14, mw15, mw16,mw17, mw18, mw19, mw110, mw111, mw112, mw113};
+		mw2s = new CheckBox[] { mw2, mw21, mw22, mw23, mw24, mw25, mw26,mw27, mw28, mw29, mw210, mw211, mw212};
+		mw3s = new CheckBox[] { mw3, mw31, mw32, mw33, mw34, mw35, mw36,mw37, mw38, mw39, mw310, mw311, mw312, mw313, mw314};
 
 	
 	}
@@ -71,9 +71,9 @@ public class FilterSettings extends Composite implements LeafValueEditor<Map<Str
 	}
 
 	@UiField CheckBox mw, 
-	mw1, mw11, mw12, mw13, mw14, mw15, mw16,mw17, mw18, mw19,
-	mw2, mw21, mw22, mw23, mw24, mw25, mw26,mw27, mw28, 
-	mw3, mw31, mw32, mw33, mw34, mw35, mw36,mw37, mw38, mw39;
+	mw1, mw11, mw12, mw13, mw14, mw15, mw16,mw17, mw18, mw19, mw110, mw111, mw112, mw113,
+	mw2, mw21, mw22, mw23, mw24, mw25, mw26,mw27, mw28, mw29, mw210, mw211, mw212,
+	mw3, mw31, mw32, mw33, mw34, mw35, mw36,mw37, mw38, mw39, mw310, mw311, mw312, mw313, mw314;
 
 	CheckBox mw1s[], mw2s[], mw3s[];
 	

@@ -19,8 +19,11 @@
 		position: relative;
 	}
 
-	.graph {
+	.graph, .filter {
 		margin-top: 0.6em;
+	}
+	.filter {
+		float: right;
 	}
 	
 	.models {
@@ -101,7 +104,10 @@
 			  <g:north size="3">
 			  	<g:Label ui:field='filter' addStyleNames="{style.title}"></g:Label>
 			  </g:north>
-			  <g:south size="2.4"><g:FlowPanel><g:Button ui:field='btn' styleName='{style.graph}'>Graph</g:Button></g:FlowPanel></g:south>
+			  <g:south size="2.4"><g:FlowPanel>
+			  	<g:Button ui:field='btn' styleName='{style.graph}'>Graph</g:Button>
+			    <g:Button ui:field='filterBtn' styleName='{style.filter}' addStyleNames='teacher-only'>Filter</g:Button>
+			  </g:FlowPanel></g:south>
 			  <g:center>
 				<g:ScrollPanel addStyleNames='{style.tree}'>
 					<g:Tree ui:field='tree'>

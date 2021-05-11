@@ -2,12 +2,8 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.studentmodel;
 
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Tree;

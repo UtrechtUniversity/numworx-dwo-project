@@ -104,6 +104,13 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	List<DomStudentModelContext4Student> list;
 	DomStudentModelContext4Student current;
 
+	protected void setupTree(DomStudentModelContext4Student item) {
+		final StudentResultsWidget w = widget.get();
+		w.tree.removeItems();
+		w.setFilter(item.getFilter());
+		insertTree(item);
+	}
+	
 	class ModelChange implements ChangeHandler, ClickHandler {
 		
 		
@@ -135,7 +142,12 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 
 		@Override
 		public void onClick(ClickEvent event) {
-			if (current != null) showHideGraph(current);			
+			if (current != null) {
+				if (widget.get().isFilter()) {
+					doFilter(current);
+				} else
+					showHideGraph(current);			
+			}
 		}
 		
 	}
@@ -158,6 +170,11 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		});
 	}
 	
+	protected void doFilter(DomStudentModelContext4Student item) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	boolean showGraph;
 	private Map<String,Map<String, Set<Integer>>> filter = Collections.emptyMap();
 	void showHideGraph(DomStudentModelContext4Student item) {
@@ -332,6 +349,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	}
 	static boolean contains(Map<String, Map<String, Set<Integer>>> filter,
 			Map<String, Map<String, Set<Integer>>> methodes) {
+		if (filter.isEmpty()) return true;
 		for (Map.Entry<String, Map<String, Set<Integer>>> entry : filter.entrySet()) {
 		    if (entry.getKey().isEmpty()) {
 		      if (methodes.values().stream().allMatch(Map::isEmpty)) return true;

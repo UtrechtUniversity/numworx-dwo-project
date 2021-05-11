@@ -7,10 +7,12 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.web.bindery.event.shared.EventBus;
 
+import dagger.Lazy;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsPresenter;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 
 public class SMStudentResultsPresenter extends StudentResultsPresenter {
@@ -22,6 +24,8 @@ public class SMStudentResultsPresenter extends StudentResultsPresenter {
 		this.service = service;
 	}
 
+	@Inject Lazy<FilterDialog> filterDialog;
+	
 	public void init(DomUser user, DomSchoolClass schoolClass, JavaScriptObject resultState) {
 		service.setUser(user);
 		service.setSchoolClass(schoolClass);
@@ -33,6 +37,18 @@ public class SMStudentResultsPresenter extends StudentResultsPresenter {
 	protected SwitchViewEvent onGraphEvent(JSONObject json) {
 		json.put("user", new JSONString(service.user.getDisplayName()));
 		return new SwitchViewEvent(SwitchViewEvent.SelectedView.SMSTUDENTRESULTSGRAPH, service.user, service.schoolClass, json.getJavaScriptObject());
+	}
+
+	@Override
+	protected void doFilter(DomStudentModelContext4Student item) {
+		FilterDialog d = filterDialog.get();
+		d.setValue(item.getFilter());
+		d.addCloseHandler(ev -> {
+			item.setFilter(d.getValue());
+			setupTree(item);
+			
+		});
+		d.show();
 	}
 
 	

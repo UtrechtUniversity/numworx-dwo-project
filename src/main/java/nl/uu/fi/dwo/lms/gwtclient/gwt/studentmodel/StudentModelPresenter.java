@@ -11,9 +11,6 @@ import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.ws.rs.GET;
-
 import org.osgi.util.promise.Promise;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -23,7 +20,6 @@ import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -97,7 +93,7 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
     	view.clear();
     	view.init();
         view.setHelp(dwoGlobalVars.buildHelpUrl("#studentmodel"));
-
+        filter = Collections.emptyMap();
     	updateSchoolclasses();
     	updateStudentModels();
     }
@@ -147,6 +143,7 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 	public void selectModel(String id) {
 		if (id == null|| id.isEmpty()) {
 			view.setEmptyTreeMessage();
+			view.setTitle("");
 			this.currentModel = null;
 			return;
 		}
@@ -169,6 +166,7 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 				map.put(cat.getInfo().getId(), tcat);
 		}
 		view.showTree(tree);
+		view.setTitle(FilterUtil.setFilter(filter));
 		return p;
 		
 	}
@@ -246,7 +244,6 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 			LOG.info("filter settings closed");
 			filter = filterPanel.get().getValue();
 			selectModel(currentModel.getValue().getId().getIdString());
-			view.setTitle(FilterUtil.setFilter(filter));
 		});
 		filterPanel.get().show();
 	}

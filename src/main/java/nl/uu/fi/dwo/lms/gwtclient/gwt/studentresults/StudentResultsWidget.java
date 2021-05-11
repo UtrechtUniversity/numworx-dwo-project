@@ -33,6 +33,7 @@ public class StudentResultsWidget extends Composite {
 	}
 
 	private final EventBus bus;
+	private boolean filterBtn;
 
 	@Inject StudentResultsWidget(EventBus bus) {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -66,12 +67,20 @@ public class StudentResultsWidget extends Composite {
 	}
 
 	@UiHandler("btn") void onGraph(ClickEvent ev) {
+		filterBtn = false;
+		bus.fireEventFromSource(ev, this);
+	}
+	
+	@UiHandler("filterBtn") void onFilter(ClickEvent ev) {
+		filterBtn = true;
 		bus.fireEventFromSource(ev, this);
 	}
 
 	public void setFilter(Map<String, Map<String, Set<Integer>>> filter2) {
 		filter.setText(FilterUtil.setFilter(filter2));
-		
 	}
 	
+	public boolean isFilter() {
+		return filterBtn;
+	}
 }

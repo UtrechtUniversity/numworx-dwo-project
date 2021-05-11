@@ -8,7 +8,9 @@
 	.top th {
 		width: 2.5em;
 	}
-	
+	.top table {
+		margin-bottom: 18px;
+	}
 	</ui:style>
 	<g:HTMLPanel addStyleNames='{style.top}'>
 		<p>Getal&amp;Ruimte</p>
