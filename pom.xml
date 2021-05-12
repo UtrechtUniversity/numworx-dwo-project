@@ -148,7 +148,6 @@
 			<artifactId>interaction</artifactId>
 			<scope>provided</scope>
 			<classifier>sources</classifier>
-			<version>${interactionVersion}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.googlecode.mgwt</groupId>
