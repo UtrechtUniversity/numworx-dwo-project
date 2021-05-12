@@ -102,7 +102,8 @@ public class OAuth2Server extends HttpServlet {
           boolean scheme =  server.getScheme().equals(client.getScheme());
           boolean host   =  server.getHost().equals(client.getHost());
           boolean port   =  server.getPort() == client.getPort();
-          if (!scheme || !host || !port) 
+          boolean local  = "127.0.0.1".equals(client.getHost());          
+          if ((!scheme || !host || !port) && !local) 
             throw new URISyntaxException(redirectUrl, "not a lookalike " + client + " " + server);        
         } catch (URISyntaxException e) {
           resp.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -156,7 +157,8 @@ public class OAuth2Server extends HttpServlet {
 		if (state != null) {
 			location += "&state=" + URLEncoder.encode(state);
 		}
-		location = server.resolve(location).toASCIIString();
+		location = client.resolve(location).toASCIIString();
+		LOG.info("redirect temp to " + location );
 		resp.sendRedirect(location);
 	}
 
