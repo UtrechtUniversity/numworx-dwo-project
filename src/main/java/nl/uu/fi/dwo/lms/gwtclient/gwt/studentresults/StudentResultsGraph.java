@@ -289,6 +289,8 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			float len = (float) Math.hypot(dx, dy) / 90;
 			dx /= len;
 			dy /= len;
+			x -= dx/2;
+			y -= dy/2;
 			OMSVGPathElement path = doc.createSVGPathElement();
 			OMSVGPathSegList points = path.getPathSegList();
 			points.appendItem(path.createSVGPathSegMovetoAbs(x, y));		
@@ -331,11 +333,22 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			this.to = to;
 		}
 		void setVisible() {
-			if (from.isVisible() && to.isVisible()) {
+			if (from.isVisible() && to.isVisible() && ( from.isVoorkennis() || sameChapter() )  ) {
 				g.removeClassNameBaseVal(HIDDEN_NODE);
 			} else 
 				g.addClassNameBaseVal(HIDDEN_NODE);
 		}
+		
+		boolean sameChapter() {
+			String bf = from.info.getBook();
+			String bt = to.info.getBook();
+			Integer cf = from.info.getChapter();
+			Integer ct = to.info.getChapter();
+			String mf = from.info.getMethod();
+			String mt = to.info.getMethod();
+			return Objects.equals(bf,bt) && Objects.equals(cf, ct) && Objects.equals(mf, mt);
+		}
+		
 
 		Edge withVoorkennis() {
 			if (from.isVoorkennis() && to.isVisible() && !to.isVoorkennis()) {
@@ -374,6 +387,8 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			float len = (float) Math.hypot(dx, dy) / 15;
 			dx /= len;
 			dy /= len;
+			x -= dx/2;
+			y -= dy/2;
 			OMSVGPathElement path = doc.createSVGPathElement();
 			OMSVGPathSegList points = path.getPathSegList();
 			points.appendItem(path.createSVGPathSegMovetoAbs(x, y));		
@@ -628,7 +643,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		
 		Node(DomStudentModelObj obj, DomStudentModelMethodInfo info, String parent) {
 			this.obj = obj;
-			r = 15;
+			r = 12;
 			this.info = info;
 			float cx,cy;
  			try {
