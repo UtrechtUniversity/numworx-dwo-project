@@ -38,7 +38,8 @@ public class GraphNode {
 
 	static final String NOTFOUND = "NOTFOUND";
 	private static Color defaultNodeColor = LeerdomeinGraphPanel.colorBlue4;
-	private static Color defaultKennenNodeColor = new Color(255,150,150);
+	private static Color defaultKennenNodeColor = new Color(255,255,150);
+	private static Color defaultKennenNodeBorderColor = new Color(255,200,150);
 	private static Color defaultTextColor = LeerdomeinGraphPanel.colorBlue1;
 	private static int defaultFontSize = 16;
 	private static Font defaultFont = new Font("SansSerif", Font.PLAIN, defaultFontSize);
@@ -52,7 +53,7 @@ public class GraphNode {
 	// private String label;
 
 	private Point tempLocation;
-	private int size = 16;
+	private int size = 24;//Node size
 	private Color nodeColor = defaultNodeColor;
 	private Color nodeBorderColor = LeerdomeinGraphPanel.colorBlue2;
 	private Color textColor = defaultTextColor;
@@ -86,8 +87,10 @@ public class GraphNode {
 		this.subdomein = subdomein;
 		this.description = description;
 		kennenLeerdoel = description.startsWith("W:");
-		if(kennenLeerdoel)
+		if(kennenLeerdoel) {
 			nodeColor = defaultKennenNodeColor;
+			nodeBorderColor = defaultKennenNodeBorderColor;
+		}
 		// setFont(defaultFont);
 	}
 
@@ -372,8 +375,12 @@ public class GraphNode {
 		}
 		return false;
 	}
-
+	
 	public void paint(Graphics gr, Point origin, double factor) {
+		paint(gr,origin,factor,true);
+	}
+
+	public void paint(Graphics gr, Point origin, double factor, boolean connectInstances) {
 		Point location = getLocation();
 		if (location == null || factor < 0.15)
 			return;
@@ -381,34 +388,36 @@ public class GraphNode {
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 		boolean nodeInstancesOverlap = false;
-		for (String v1code : visible) {
-			if (v1code == null)
-				continue;
-			for (String v2code : visible) {
-				if (v1code.compareTo(v2code) < 0 && tempLocation == null) {
-					Point location0 = getLocation(v1code);
-					int x0 = origin.x + (int) ((location0.x) * factor);
-					int y0 = origin.y + (int) ((location0.y) * factor);
-					Point location1 = getLocation(v2code);
-					int x1 = origin.x + (int) ((location1.x) * factor);
-					int y1 = origin.y + (int) ((location1.y) * factor);
-					if (Math.abs(x0 - x1) < 1 && Math.abs(y0 - y1) < 1)
-						nodeInstancesOverlap = true;
-					// BasicStroke dashed = new BasicStroke(1.3f*(float)factor,
-					// BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash1, 0.0f);
-					CompositeStroke compStroke = new CompositeStroke(new BasicStroke(2f * (float) factor),
-							new BasicStroke(0.3f * (float) factor));
-					ZigzagStroke zzStroke = new ZigzagStroke(new BasicStroke(1f * (float) factor),
-							5.3f * (float) factor, 5.3f * (float) factor);
-					g.setStroke(zzStroke);
-					// g.setPaint(nodeBorderColor);
-					g.setPaint(edgeColor);
-					GeneralPath path = new GeneralPath();
-					path.moveTo(x0, y0);
-					path.lineTo(x1, y1);
-					path.moveTo(x0, y0);
-					path.closePath();
-					g.draw(path);
+		if(connectInstances) {
+			for (String v1code : visible) {
+				if (v1code == null)
+					continue;
+				for (String v2code : visible) {
+					if (v1code.compareTo(v2code) < 0 && tempLocation == null) {
+						Point location0 = getLocation(v1code);
+						int x0 = origin.x + (int) ((location0.x) * factor);
+						int y0 = origin.y + (int) ((location0.y) * factor);
+						Point location1 = getLocation(v2code);
+						int x1 = origin.x + (int) ((location1.x) * factor);
+						int y1 = origin.y + (int) ((location1.y) * factor);
+						if (Math.abs(x0 - x1) < 1 && Math.abs(y0 - y1) < 1)
+							nodeInstancesOverlap = true;
+						// BasicStroke dashed = new BasicStroke(1.3f*(float)factor,
+						// BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash1, 0.0f);
+						CompositeStroke compStroke = new CompositeStroke(new BasicStroke(2f * (float) factor),
+								new BasicStroke(0.3f * (float) factor));
+						ZigzagStroke zzStroke = new ZigzagStroke(new BasicStroke(1f * (float) factor),
+								5.3f * (float) factor, 5.3f * (float) factor);
+						g.setStroke(zzStroke);
+						// g.setPaint(nodeBorderColor);
+						g.setPaint(edgeColor);
+						GeneralPath path = new GeneralPath();
+						path.moveTo(x0, y0);
+						path.lineTo(x1, y1);
+						path.moveTo(x0, y0);
+						path.closePath();
+						g.draw(path);
+					}
 				}
 			}
 		}

@@ -350,7 +350,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 				graphEdges.get(i).paint(g, origin, factor);
 		}
 		
-				
+		
 		for (int i = 0; i < graphNodes.size(); i++) {
 			if (!graphNodes.get(i).getBlur() && graphNodes.get(i).isVisible() && graphNodes.get(i).getTempLocation()==null) {
 				Rectangle rn = graphNodes.get(i).getTextBB();
@@ -369,7 +369,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 					g.drawRect(r.x + k / 2 - j, r.y + k / 2 - j, r.width - (k - 2 * j), r.height - (k - 2 * j));
 				}
 			}
-			graphNodes.get(i).paint(g, origin, factor);
+			graphNodes.get(i).paint(g, origin, factor, false);
 			//graphNodes.get(i).setTempLocation(null);
 		}
 		//zoomFitButton.paint(g);
