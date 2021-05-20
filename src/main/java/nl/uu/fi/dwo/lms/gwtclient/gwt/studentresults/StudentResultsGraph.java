@@ -73,7 +73,29 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 
 public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, MouseUpHandler, MouseDownHandler, MouseOutHandler {
 
+	
+	static final StudentResultsGraphBundle bundle = GWT.create(StudentResultsGraphBundle.class);
 
+	static final double XLARGE = 1.5;
+	static final double LARGE =  1.0;
+	static final double SMALL =  0.5;
+	static final double XSMALL = 0.1;
+	
+// range size 0.. 2	
+	private String cssSize(double size) {
+		StudentResultsGraphCSS css = bundle.css();
+		if (size > XLARGE) return css.xlarge();
+		if (size > LARGE) return css.large();
+		if (size < XSMALL) return css.xsmall();
+		if (size < SMALL) return css.small();
+		return css.normal();
+		
+ 		
+	}
+	
+	
+	
+	
 	Map<String, Map<String,Set<Integer>>> filter;
 	
 	private class FilterConsumer implements Consumer<Map<String, Map<String, Set<Integer>>>> {
@@ -261,6 +283,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	class ChapterEdge extends AbstractEdge {
 		final ChapterNode from, to;
 		ChapterEdge(ChapterNode from, ChapterNode to) {
+			g.setClassNameBaseVal(bundle.css().chapteredge());
 			Objects.requireNonNull(from, "no from");
 			Objects.requireNonNull(to, "no to");
 			this.from = from;
@@ -279,7 +302,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			float x2 = to.getCx();
 			float y2 = to.getCy();
 			OMSVGLineElement line = doc.createSVGLineElement(x1, y1, x2, y2);
-			line.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "30");
+	//		line.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "30");
 			g.appendChild(line);
 // triangle
 			float x = (x1+x2)/2;
@@ -298,7 +321,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			points.appendItem(path.createSVGPathSegLinetoAbs(x + dx - dy/2, y + dy +dx/2));
 			points.appendItem(path.createSVGPathSegClosePath());
 			g.appendChild(path);
-			colorize();
+			//colorize();
 			return g;
 		}
 
@@ -442,6 +465,9 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		float cx,cy;				
 		float r;
 
+		void setClassName(String name) {
+			g.setClassNameBaseVal(name);
+		}
 
 		boolean contains(float x, float y) {
 			float dx = x - cx;
@@ -466,10 +492,6 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 
 		boolean isBlur() {
 			return blur;
-		}
-		void setBlur(boolean blur) {
-			this.blur = blur;
-			colorize();
 		}
 
 		void setVisible(boolean b) {
@@ -497,6 +519,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		}
 
 		BookNode(String method, String book) {
+			setClassName(bundle.css().booknode());
 			info = new DomStudentModelMethodInfo(method, book, null);
 			r = 700f;
 			textColor = colorGray3;
@@ -517,11 +540,11 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			short unitType = OMSVGLength.SVG_LENGTHTYPE_NUMBER;
 			text = doc.createSVGTextElement(cx, cy, unitType, info.getBook());
 			text.addClickHandler(this);
- 			text.getStyle().setSVGProperty(SVGConstants.CSS_TEXT_ANCHOR_PROPERTY, "middle");
- 			text.getStyle().setSVGProperty(SVGConstants.CSS_DOMINANT_BASELINE_PROPERTY, "central");
- 			text.getStyle().setSVGProperty(SVGConstants.CSS_FONT_FAMILY_PROPERTY, defaultFont);
- 			text.getStyle().setSVGProperty(SVGConstants.CSS_FONT_SIZE_PROPERTY, Integer.toString(defaultFontSize*44));
- 			colorize();
+// 			text.getStyle().setSVGProperty(SVGConstants.CSS_TEXT_ANCHOR_PROPERTY, "middle");
+// 			text.getStyle().setSVGProperty(SVGConstants.CSS_DOMINANT_BASELINE_PROPERTY, "central");
+// 			text.getStyle().setSVGProperty(SVGConstants.CSS_FONT_FAMILY_PROPERTY, defaultFont);
+// 			text.getStyle().setSVGProperty(SVGConstants.CSS_FONT_SIZE_PROPERTY, Integer.toString(defaultFontSize*44));
+// 			colorize();
  			g.appendChild(circle);
  			g.appendChild(text);
  			return g;
@@ -547,6 +570,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		
 
 		ChapterNode(DomStudentModelMethodInfo info) {
+			setClassName(bundle.css().chapternode());
 			this.info = new DomStudentModelMethodInfo(info);
 			this.info.setX(0);
 			this.info.setY(0);
@@ -577,10 +601,6 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			short unitType = OMSVGLength.SVG_LENGTHTYPE_NUMBER;
 			text = doc.createSVGTextElement(cx, cy, unitType, "H" + info.getChapter());
 			text.addClickHandler(this);
- 			text.getStyle().setSVGProperty(SVGConstants.CSS_TEXT_ANCHOR_PROPERTY, "middle");
- 			text.getStyle().setSVGProperty(SVGConstants.CSS_DOMINANT_BASELINE_PROPERTY, "central");
- 			text.getStyle().setSVGProperty(SVGConstants.CSS_FONT_FAMILY_PROPERTY, defaultFont);
- 			text.getStyle().setSVGProperty(SVGConstants.CSS_FONT_SIZE_PROPERTY, Integer.toString(defaultFontSize*4));
  			colorize();
  			g.appendChild(circle);
  			g.appendChild(text);
@@ -599,6 +619,10 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			GWT.log("click in " + info.key());
 			doFilter(info);
 			zoomFit();
+		}
+
+		@Override
+		void colorize() {
 		}
 	}
 	
@@ -642,6 +666,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		
 		
 		Node(DomStudentModelObj obj, DomStudentModelMethodInfo info, String parent) {
+			setClassName(bundle.css().node());
 			this.obj = obj;
 			r = 12;
 			this.info = info;
@@ -690,6 +715,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			}
 			
  			g.appendChild(circle);
+ // Needed for bbox calculation
  			text.getStyle().setSVGProperty(SVGConstants.CSS_TEXT_ANCHOR_PROPERTY, "middle");
  			text.getStyle().setSVGProperty(SVGConstants.CSS_DOMINANT_BASELINE_PROPERTY, "central");
  			text.getStyle().setSVGProperty(SVGConstants.CSS_FONT_FAMILY_PROPERTY, defaultFont);
@@ -697,9 +723,6 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
  			g.appendChild(text);
  			OMSVGRect box = text.getBBox();
  			rect = doc.createSVGRectElement(box);
- 			rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "6");
- 			rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, defaultRectColor.getColor());
- 			rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, defaultRectBorderColor.getColor());
  			rect.addClickHandler(this);
 			g.insertBefore(rect, circle);
 			colorize();
@@ -748,7 +771,16 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		@Override
 		void colorize() {
 			if (!invalid())
+			{
+				if (blur) g.addClassNameBaseVal(bundle.css().blur());
+				else g.removeClassNameBaseVal(bundle.css().blur());
 				super.colorize();
+			}
+		}
+
+		void setBlur(boolean blur) {
+			this.blur = blur;
+			colorize();
 		}
 
 		@Override
@@ -792,12 +824,16 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	private DomStudentModelContext4Student current;
 
 	@Inject StudentResultsGraph() {
+		
+		bundle.css().ensureInjected();
+		
 		getElement().getStyle().setMarginLeft(20, Unit.PX);
 		getElement().getStyle().setMarginRight(22, Unit.PX);
 		
 		doc = OMSVGParser.currentDocument();
 		image = new SVGImage();
 		image.setSvgElement(doc.createSVGSVGElement());
+		image.setClassNameBaseVal(bundle.css().normal());
 		getSvgElement().setViewBox(0, 0, 500, 500);
 		
 		add(image);
@@ -1151,8 +1187,9 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	int imagewidth, imageheight;
 	private void resize(float f) {
 		f = Math.max(f, 0.5f);
+		image.setClassNameBaseVal(cssSize(1/f));
 		if (imagewidth != getOffsetWidth() || imageheight != getOffsetHeight() || f != factor) {
-			LOG.info("factor = " + f);
+			LOG.info("factor = " + 1/f);
 			setWidgetTopHeight(image, 2, Unit.EM, imageheight = getOffsetHeight(), Unit.PX);
 			setWidgetLeftWidth(image, 0, Unit.PX, imagewidth = getOffsetWidth(), Unit.PX);
 			factor = f;
@@ -1173,6 +1210,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			LOG.info("ctm.a = " + ctmfinal.getA());
 			voorkennisEdges.stream().map(t -> t.from).distinct().forEach(n -> n.transform(ctmfinal));
 			voorkennisEdges.forEach(Edge::move);
+			
 		} else {
 			LOG.info("break recursion");
 		}

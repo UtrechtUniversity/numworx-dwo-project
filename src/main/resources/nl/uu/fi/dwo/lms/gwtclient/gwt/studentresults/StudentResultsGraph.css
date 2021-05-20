@@ -1,0 +1,81 @@
+@charset "UTF-8";
+@external .normal .small .xsmall .large .xlarge;
+
+.booknode {
+	fill: rgb(222, 229, 240);
+    stroke: rgb(222, 229, 240);
+}
+
+
+
+.chapternode, .chapteredge {
+	fill: rgb(180,195,228);
+	stroke: rgb(180,195,228);
+}
+
+.chapteredge line {
+	stroke-width: 30;
+}
+
+.node {
+	
+}
+
+.blur {
+	
+}
+
+.chapternode text {
+	text-anchor: middle;
+    dominant-baseline: central;
+    font-family: Ubuntu;
+    font-size: 128px;
+    fill: rgb(255, 255, 255);
+    stroke: white;
+}
+
+.booknode text {
+	text-anchor: middle;
+    dominant-baseline: central;
+    font-family: Ubuntu;
+    font-size: 704px;
+    fill: rgb(237, 239, 241);
+    stroke: rgb(237, 239, 241);
+}
+
+
+.node text {
+	text-anchor: middle;
+    dominant-baseline: central;
+    font-family: Ubuntu;
+    font-size: 16px;
+    fill: rgb(49, 71, 112);
+}
+.node rect {
+	stroke-width: 6;
+    fill: rgba(237, 239, 241, 0.73);
+    stroke: rgba(237, 239, 241, 0.353);
+}
+
+.normal { }
+
+.small { }
+
+.xsmall { }
+
+.xsmall .node { display: none; }
+.xsmall .edge { display: none; }
+.xsmall .chapternode, .xsmall .chapteredge {
+	fill: rgb(18,19,22);
+	stroke: rgb(18,19,22);
+}
+
+
+.large { }
+
+.xlarge { }
+
+.large .chapternode {
+	.fill: red;
+	.stroke: red;
+}
