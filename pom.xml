@@ -89,6 +89,26 @@
 	    <version>2.4.7</version>
 	    <classifier>classes</classifier>	
 	</dependency>
+	<dependency>
+	    <groupId>org.apache.oltu.oauth2</groupId>
+	    <artifactId>org.apache.oltu.oauth2.client</artifactId>
+	    <version>1.0.2</version>
+	</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.10.5</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.10.5</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>0.10.5</version>
+		</dependency>
 
   </dependencies>
 
