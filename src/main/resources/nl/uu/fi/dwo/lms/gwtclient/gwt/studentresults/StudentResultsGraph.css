@@ -63,19 +63,67 @@
 
 .xsmall { }
 
-.xsmall .node { display: none; }
-.xsmall .edge { display: none; }
-.xsmall .chapternode, .xsmall .chapteredge {
-	fill: rgb(18,19,22);
-	stroke: rgb(18,19,22);
+
+.xlarge .chapternode, .xlarge .chapteredge {
+	fill: rgb(222, 229, 240);
+	stroke: rgb(222, 229, 240);
+}
+
+.large .chapternode, .large .chapteredge {
+	fill: rgb(212, 219, 239);
+	stroke: rgb(212, 219, 239);
+}
+
+.normal .chapteredge {
+	fill: rgb(202, 209, 229);
+	stroke: rgb(202, 209, 229);
+}
+
+.normal .chapternode {
+	fill: rgb(202, 209, 229);
+	stroke: rgb(202, 209, 229);
+}
+.normal .chapternode text, .large .chapternode text, .xlarge .chapternode text {
+	fill: rgb(237, 239, 241);
+	stroke: rgb(237, 239, 241);
+}
+
+
+.small .node, .small .edge,
+.xsmall .chapternode, .xsmall .chapteredge,
+.xsmall .node, .xsmall .edge,
+.large .booknode,
+.xlarge .booknode
+{ display: none; }
+
+
+.small .chapternode {
+	fill: rgb(180,195,228);
+	stroke: rgb(38, 115, 182);
+	stroke-width: 10;
+}
+.small .chapteredge {
+	fill: rgb(120, 150, 202);
+	stroke: rgb(120, 150, 202);
+}
+
+.small .chapternode text {
+	fill: rgb(49, 71, 112);
+	stroke: none;
+}
+
+
+.xsmall .booknode { 
+	fill: rgb(180,195,228);
+	stroke: rgb(38, 115, 182);
+	stroke-width: 30;
+}
+.xsmall .booknode text {
+	fill: rgb(49, 71, 112);
+	stroke: none;
 }
 
 
 .large { }
 
 .xlarge { }
-
-.large .chapternode {
-	.fill: red;
-	.stroke: red;
-}

@@ -76,10 +76,10 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	
 	static final StudentResultsGraphBundle bundle = GWT.create(StudentResultsGraphBundle.class);
 
-	static final double XLARGE = 1.5;
-	static final double LARGE =  1.0;
-	static final double SMALL =  0.5;
-	static final double XSMALL = 0.1;
+	static final double XLARGE = 0.3;
+	static final double LARGE =  0.21;
+	static final double SMALL =  0.15;
+	static final double XSMALL = 0.05;
 	
 // range size 0.. 2	
 	private String cssSize(double size) {
@@ -354,6 +354,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			
 			this.from = from;
 			this.to = to;
+			g.setClassNameBaseVal(bundle.css().edge());
 		}
 		void setVisible() {
 			if (from.isVisible() && to.isVisible() && ( from.isVoorkennis() || sameChapter() )  ) {
