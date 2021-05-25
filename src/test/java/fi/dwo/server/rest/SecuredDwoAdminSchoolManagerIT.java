@@ -18,6 +18,7 @@ import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchool;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestNewSchool;
 import nl.uu.fi.dwo.rest.entities.RestSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
@@ -91,7 +92,6 @@ public class SecuredDwoAdminSchoolManagerIT {
      */
     @Test
     public void testSubmitSchool() throws Dwo2Exception {
-        System.out.println("submitSchool");
         SecurityContext sc = new TestSecurityContext("dwoadmin", RoleType.ADMIN);
         PersistentSchool school = new PersistentSchool();
         school.setExport(Boolean.TRUE);
@@ -131,7 +131,6 @@ public class SecuredDwoAdminSchoolManagerIT {
      */
     @Test
     public void testGetSchool() {
-        System.out.println("getSchool");
         SecurityContext sc = new TestSecurityContext("dwoadmin", RoleType.ADMIN);
 
         SecuredDwoAdminSchoolManager instance = new SecuredDwoAdminSchoolManager();
@@ -157,14 +156,16 @@ public class SecuredDwoAdminSchoolManagerIT {
     /**
      * Test of getSchools method, of class SecuredDwoAdminSchoolManager. Tests
      * if the number of schools fetched is as expected.
+     * @throws Dwo2Exception 
      */
     @Test
-    public void testGetSchools() {
-        System.out.println("getSchools");
+    public void testGetSchools() throws Dwo2Exception {
         SecurityContext sc = new TestSecurityContext("dwoadmin", RoleType.ADMIN);
+        RestContext rest = new RestContext();
+        rest.setRestContext(context);
         SecuredDwoAdminSchoolManager instance = new SecuredDwoAdminSchoolManager();
         List<PersistentSchool> expResult = SchoolManager.findEntities();
-        List<DomSchool4DwoAdmin> result = instance.getSchools(sc);
+        List<DomSchool4DwoAdmin> result = instance.getSchools(sc, rest);
         assertEquals("The number of schools found did not match.", expResult.size(), result.size());
     }
 
@@ -175,7 +176,6 @@ public class SecuredDwoAdminSchoolManagerIT {
      */
     @Test
     public void testUpdateSchool() {
-        System.out.println("updateSchool");
         SecurityContext sc = new TestSecurityContext("dwoadmin", RoleType.ADMIN);
         PersistentSchool school = SchoolManager.findBySchoolLogin("school01");
         school.setExport(Boolean.TRUE);

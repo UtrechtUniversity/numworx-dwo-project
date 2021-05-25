@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.GET;
@@ -19,10 +20,13 @@ import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfileFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 
@@ -32,6 +36,17 @@ import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 public class SecuredDwoAdminProfileManager {
     private static final Logger LOG = Logger.getLogger(SecuredDwoAdminProfileManager.class.getName());
 
+    
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getList")
+    public List<DomDwoProfileFull> getProfiles(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
+        UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN);
+        state.buildDwoAdmin();
+        return DwoProfileManager.findEntities().stream()
+        		.map(PersistentDwoProfile::buildDomDwoProfileFull)
+        		.collect(Collectors.toList());
+    }
     /**
      * Returns the school data to be displayed.
      *
@@ -78,23 +93,20 @@ public class SecuredDwoAdminProfileManager {
      * @param sc
      * @param restDwoProfile
      * @return
+     * @throws Dwo2Exception 
      */
     @PUT
     @Produces({"application/json"})
     @Path("/submit")
-    public Boolean submitProfile(@Context SecurityContext sc, RestDwoProfileFull restDwoProfile) {
+    public Boolean submitProfile(@Context SecurityContext sc, RestDwoProfileFull restDwoProfile) throws Dwo2Exception {
         if(restDwoProfile==null){
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole hr = null;
+        UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(restDwoProfile.getRestContext().getDomHasRole(), RoleType.ADMIN);
+        hr = state.getHasRole();
+        state.buildDwoAdmin();
         DomDwoProfileFull profile = restDwoProfile.getDomDwoProfile() ;
-        try {
-            hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-        }
-        catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, "", ex);
-            throw new Dwo2RestException(ex);
-        }
 
         if (hr != null) {
             // allowed user role
@@ -123,23 +135,23 @@ public class SecuredDwoAdminProfileManager {
      * @param sc
      * @param restDwoProfile
      * @return
+     * @throws Dwo2Exception 
      */
     @PUT
     @Produces({"application/json"})
     @Path("/update")
-    public Boolean updateProfile(@Context SecurityContext sc, RestDwoProfileFull restProfile) {
+    public Boolean updateProfile(@Context SecurityContext sc, RestDwoProfileFull restProfile) throws Dwo2Exception {
         if(restProfile==null){
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole hr = null;
+        UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(restProfile.getRestContext().getDomHasRole(), RoleType.ADMIN);
+        hr = state.getHasRole();
+        state.buildDwoAdmin();
+
+        
+        
         DomDwoProfileFull profile = restProfile.getDomDwoProfile();
-        try {
-            hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-        }
-        catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
-            throw new Dwo2RestException(ex);
-        }
         if (hr != null) {
             try {
                 long id = MySQLPersistenceId.getNativeId(profile);

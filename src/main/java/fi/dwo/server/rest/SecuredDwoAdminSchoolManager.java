@@ -31,6 +31,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchool;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestHasRole;
 import nl.uu.fi.dwo.rest.entities.RestNewSchool;
 import nl.uu.fi.dwo.rest.entities.RestSchool4DwoAdmin;
@@ -203,13 +204,31 @@ public class SecuredDwoAdminSchoolManager {
 
     ;
 
+    
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getList")
+    public List<DomSchool4DwoAdmin> getSchools(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
+        PersistentHasRole hr = null;
+        UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN);
+        hr = state.getHasRole();
+        state.buildDwoAdmin();
+    	
+        return SchoolManager.findEntities().stream()
+        		.filter(s -> DelState.not == s.getDelState())
+        		.map(PersistentSchool::buildDomSchool4DwoAdmin)
+        		.collect(Collectors.toList());
+    }
+    
+    
+    
         /**
          * Returns the school data to be displayed.
          *
          * @param sc
          * @return
          */
-        @GET
+    @GET
     @Produces({"application/json"})
     @Path("/getList")
     public List<DomSchool4DwoAdmin> getSchools(@Context SecurityContext sc

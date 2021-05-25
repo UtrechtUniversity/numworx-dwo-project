@@ -27,6 +27,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.entities.RestAppletConfig;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfileFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -90,14 +91,16 @@ public class SecuredDwoAdminConfigManagerIT {
 	}
 
 	@Test
-	public void testGetConfigurations() {
+	public void testGetConfigurations() throws Dwo2Exception {
         SecurityContext sc = new TestSecurityContext("dwoadmin", RoleType.ADMIN);
-		List<DomAppletConfig> list = manager.getConfigurations(sc);
+        RestContext rest = new RestContext();
+        rest.setRestContext(context);
+		List<DomAppletConfig> list = manager.getConfigurations(sc, rest);
 		assertEquals("getProfiles listsize", 1, list.size());
 	}
 
 	@Test
-	public void testSubmitAppletConfig() {
+	public void testSubmitAppletConfig() throws Dwo2Exception {
         SecurityContext sc = new TestSecurityContext("dwoadmin", RoleType.ADMIN);
 		RestAppletConfig restDwoProfile;
 		DomAppletConfig  profile;
@@ -122,7 +125,7 @@ public class SecuredDwoAdminConfigManagerIT {
 	}
 
 	@Test
-	public void testUpdateAppletConfig() {
+	public void testUpdateAppletConfig() throws Dwo2Exception {
         SecurityContext sc = new TestSecurityContext("dwoadmin", RoleType.ADMIN);
 		RestAppletConfig restConfig;
 		DomAppletConfig  config;

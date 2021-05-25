@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
 import javax.persistence.PersistenceException;
@@ -22,11 +23,13 @@ import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.entities.RestAppletConfig;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.AppletConfigManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 
@@ -36,6 +39,18 @@ import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 public class SecuredDwoAdminConfigManager {
   private static final Logger LOG = Logger.getLogger(SecuredDwoAdminConfigManager.class.getName());
 
+  @PUT
+  @Produces({"application/json"})
+  @Path("/getList")
+  public List<DomAppletConfig> getConfigurations(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
+      UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN);
+      state.buildDwoAdmin();
+  
+      return AppletConfigManager.findEntities().stream()
+    		  .map(PersistentAppletConfig::buildDomAppletConfig)
+    		  .collect(Collectors.toList());
+  }
+  
   /**
    * Returns the applet configs to be displayed.
    *
@@ -92,6 +107,23 @@ public class SecuredDwoAdminConfigManager {
     }
     return list;
   }
+  
+  @PUT
+  @Produces({"application/json"})
+  @Path("/getList/{language}")
+  public List<DomAppletConfig> getConfigurations(@Context SecurityContext sc, RestContext rest,
+      @PathParam("language") String language) throws Dwo2Exception {
+    List<DomAppletConfig> list = getConfigurations(sc, rest);
+    Iterator<DomAppletConfig> it = list.iterator();
+    while (it.hasNext()) {
+      DomAppletConfig type = it.next();
+      if (!type.getLanguage().equals(language)) it.remove();
+    }
+    return list;
+  }
+  
+  
+  
 
   /**
    * Registers a new DwoProfile.
@@ -99,23 +131,21 @@ public class SecuredDwoAdminConfigManager {
    * @param sc
    * @param restConfig
    * @return
+ * @throws Dwo2Exception 
    */
   @PUT
   @Produces({"application/json"})
   @Path("/submit")
-  public Boolean submitAppletConfig(@Context SecurityContext sc, RestAppletConfig restConfig) {
+  public Boolean submitAppletConfig(@Context SecurityContext sc, RestAppletConfig restConfig) throws Dwo2Exception {
     if (restConfig == null) {
       throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError,
           "Incorrect formatted REST-request.");
     }
     PersistentHasRole hr = null;
+    UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(restConfig.getRestContext().getDomHasRole(), RoleType.ADMIN);
+    hr = state.getHasRole();
+    state.buildDwoAdmin();
     DomAppletConfig config = restConfig.getDomAppletConfig();
-    try {
-      hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-    } catch (Dwo2Exception ex) {
-      LOG.log(Level.SEVERE, "", ex);
-      throw new Dwo2RestException(ex);
-    }
 
     if (hr != null) {
       // allowed user role
@@ -153,23 +183,21 @@ public class SecuredDwoAdminConfigManager {
    * @param sc
    * @param restConfig
    * @return
+ * @throws Dwo2Exception 
    */
   @PUT
   @Produces({"application/json"})
   @Path("/update")
-  public Boolean updateConfig(@Context SecurityContext sc, RestAppletConfig restConfig) {
+  public Boolean updateConfig(@Context SecurityContext sc, RestAppletConfig restConfig) throws Dwo2Exception {
     if (restConfig == null) {
       throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError,
           "Incorrect formatted REST-request.");
     }
     PersistentHasRole hr = null;
+    UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(restConfig.getRestContext().getDomHasRole(), RoleType.ADMIN);
+    hr = state.getHasRole();
+    state.buildDwoAdmin();
     DomAppletConfig config = restConfig.getDomAppletConfig();
-    try {
-      hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-    } catch (Dwo2Exception ex) {
-      Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
-      throw new Dwo2RestException(ex);
-    }
     if (hr != null) {
       try {
         long id = MySQLPersistenceId.getNativeId(config);

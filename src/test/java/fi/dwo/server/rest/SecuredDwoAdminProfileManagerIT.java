@@ -15,12 +15,20 @@ import org.junit.Test;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
+import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfileFull;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
+import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.testutil.TestSecurityContext;
@@ -31,6 +39,8 @@ public class SecuredDwoAdminProfileManagerIT {
 
     private static DatabaseManager instance = null;
     SecuredDwoAdminProfileManager manager;
+
+	private DomContext context;
 
 	
 	
@@ -90,6 +100,11 @@ public class SecuredDwoAdminProfileManagerIT {
 //        profile.setDwoProfileText("default");
 //        DwoProfileManager.create(profile);        
         manager = new SecuredDwoAdminProfileManager();
+        PersistentUser pUser = UserManager.findByUserName("dwoadmin");
+        PersistentSchool pSchool = SchoolManager.findEntity(0L);
+        PersistentHasRole pHasRole = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, pSchool, RoleType.ADMIN);
+        context = new DomContext();
+        context.setDomHasRole(pHasRole.buildDomHasRole());
 	}
 
 	@After
@@ -98,14 +113,16 @@ public class SecuredDwoAdminProfileManagerIT {
 	}
 
 	@Test
-	public void testGetProfiles() {
+	public void testGetProfiles() throws Dwo2Exception {
         SecurityContext sc = new TestSecurityContext("dwoadmin", RoleType.ADMIN);
-		List<DomDwoProfileFull> list = manager.getProfiles(sc);
+        RestContext rest = new RestContext();
+        rest.setRestContext(context);
+		List<DomDwoProfileFull> list = manager.getProfiles(sc, rest);
 		assertEquals("getProfiles listsize", 3, list.size());
 	}
 
 	@Test
-	public void testSubmitProfile() {
+	public void testSubmitProfile() throws Dwo2Exception {
         SecurityContext sc = new TestSecurityContext("dwoadmin", RoleType.ADMIN);
 		RestDwoProfileFull restDwoProfile;
 		DomDwoProfileFull  profile;
@@ -115,7 +132,7 @@ public class SecuredDwoAdminProfileManagerIT {
 		profile.setDwoProfileRights("rights");
 		profile.setDwoProfileText("text");
 		restDwoProfile = new RestDwoProfileFull();
-		restDwoProfile.setRestContext(new DomContext());
+		restDwoProfile.setRestContext(context);
 		restDwoProfile.setDomDwoProfile(profile);
                 int size = manager.getProfiles(sc).size();
 		Boolean result = manager.submitProfile(sc, restDwoProfile);
@@ -131,7 +148,7 @@ public class SecuredDwoAdminProfileManagerIT {
 	}
 
 	@Test
-	public void testUpdateProfile() {
+	public void testUpdateProfile() throws Dwo2Exception {
         SecurityContext sc = new TestSecurityContext("dwoadmin", RoleType.ADMIN);
 		RestDwoProfileFull restDwoProfile;
 		DomDwoProfileFull  profile;
@@ -143,7 +160,7 @@ public class SecuredDwoAdminProfileManagerIT {
 		profile.setDwoProfileText("other text");
                 int size = manager.getProfiles(sc).size();
 		restDwoProfile = new RestDwoProfileFull();
-		restDwoProfile.setRestContext(new DomContext());
+		restDwoProfile.setRestContext(context);
 		restDwoProfile.setDomDwoProfile(profile);
 		Boolean result = manager.updateProfile(sc, restDwoProfile);
 		assertTrue("submit profile", result.booleanValue());
