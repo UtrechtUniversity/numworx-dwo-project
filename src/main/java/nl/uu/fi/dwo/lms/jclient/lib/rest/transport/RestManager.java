@@ -539,6 +539,10 @@ class RestManager extends RestyDateTimeFormat {
         case DomScoContext:
           return (List<T>) genson.deserialize(json.toString(),
             new GenericType<List<DomScoContext>>() {});
+        case DomDwoProfile:
+            return (List<T>) genson.deserialize(json.toString(),
+                    new GenericType<List<DomDwoProfileFull>>() {});
+      	
         default:
           String msg = "Programming error, trying to get an unsupported dataType.";
           LOG.log(Level.SEVERE, msg);

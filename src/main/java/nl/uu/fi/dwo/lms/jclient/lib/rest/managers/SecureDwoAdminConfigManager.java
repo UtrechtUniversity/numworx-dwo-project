@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.entities.RestAppletConfig;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.PathId;
 
@@ -21,8 +22,10 @@ public class SecureDwoAdminConfigManager implements ConfigManager {
 
   public List<DomAppletConfig> getConfigurations(Locale locale) throws Dwo2Exception {
     List<DomAppletConfig> src;
-    src = StoredRestManager.getInstance().getList("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/config/getList/" + locale,
-        RestListClassTypes.DomAppletConfig);
+    RestContext rest = new RestContext();
+    rest.setRestContext(getContext());
+    src = StoredRestManager.getInstance().getPutList("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/config/getList/" + locale,
+        RestListClassTypes.DomAppletConfig, rest);
     LOG.log(Level.FINE, "Retrieved list of appletconfigs for the dwoadmin with username {0}.",
         new Object[] {RestAuthenticator.getInstance().getUsername()});
     return src;

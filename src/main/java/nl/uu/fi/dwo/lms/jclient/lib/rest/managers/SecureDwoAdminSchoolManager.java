@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.PathId;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestHasRole;
 import nl.uu.fi.dwo.rest.entities.RestSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
@@ -29,8 +30,10 @@ public class SecureDwoAdminSchoolManager implements SchoolManager {
 
   public static List<DomSchool4DwoAdmin> getSchoolList() throws Dwo2Exception {
     List<DomSchool4DwoAdmin> src;
-    src = StoredRestManager.getInstance().getList("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/school/getList",
-        RestListClassTypes.DomSchool4DwoAdmin);
+    RestContext rest = new RestContext();
+    rest.setRestContext(getContext());
+    src = StoredRestManager.getInstance().getPutList("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/school/getList",
+        RestListClassTypes.DomSchool4DwoAdmin, rest);
     LOG.log(Level.FINE, "Retrieved list of schools for the dwoadmin with username {0}.",
         new Object[] {RestAuthenticator.getInstance().getUsername()});
     return src;
