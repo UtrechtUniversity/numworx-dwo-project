@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -103,11 +104,13 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 
 	List<DomStudentModelContext4Student> list;
 	DomStudentModelContext4Student current;
+	Map<String, DomStudentModelContextInfo> currentInfo = new HashMap<String, DomStudentModelContextInfo>();
 
 	protected void setupTree(DomStudentModelContext4Student item) {
 		final StudentResultsWidget w = widget.get();
 		w.tree.removeItems();
 		w.setFilter(item.getFilter());
+		setCurrentInfo(item.getModelStructure().getCategories(), item.getModelStructure().getInfo());
 		insertTree(item);
 	}
 	
@@ -126,11 +129,13 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			w.setPerc(NULLSCORE);
 			w.east.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
 			current = null;
+			currentInfo.clear();
 			if (selection == 0) return;
 			DomStudentModelContext4Student item = list.get(selection-1);
 			w.setFilter(item.getFilter());
 			service.getModel(item).then(p -> {
 				current = p.getValue();
+				setCurrentInfo(current.getModelStructure().getCategories(), current.getModelStructure().getInfo());
 				insertTree(item);
 				return p;
 			}, FAILURE);
@@ -162,6 +167,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		ti.setUserObject(item);
 		service.getScore(item).then(s -> {
           DomStudentModelStructureScore score = s.getValue().getDomStudentModelStructureScore();
+          applyFilter(score);
           ti.setWidget(Util.summaryItem(title, score ,0));
           //ti.setSelected(true);
           addToTree(ti, item);
@@ -170,6 +176,77 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		});
 	}
 	
+	public void setCurrentInfo(List<DomStudentModelCategory> categories, DomStudentModelContextInfo info) {
+		currentInfo.put(info.getId(), info);
+		if (categories != null) {
+			for (DomStudentModelCategory item: categories) {
+				setCurrentInfoObj(item.getObjectives(), item.getInfo());
+			}
+		}		
+	}
+
+	private void setCurrentInfoObj(List<DomStudentModelObj> objectives, DomStudentModelContextInfo info) {
+		currentInfo.put(info.getId(), info);
+		if (objectives != null) {
+			for (DomStudentModelObj item: objectives) {
+				setCurrentInfoObj(item.getObjectives(), item.getInfo());
+			}
+		}
+	}
+
+	private void applyFilter(DomStudentModelStructureScore score) {
+		long greenCount = 0, redCount = 0, totalCount = 0;
+		double greenScore = 0, redScore = 0;
+		for (DomStudentModelCategoryScore cat: score.getCategories()) {
+			applyFilter(cat);
+			greenCount += cat.getGreenCount();
+			redCount += cat.getRedCount();
+			totalCount += cat.getTotalCount();
+			if (cat.getGreenCount() > 0) greenScore += cat.getGreenScore();
+			if (cat.getRedCount() > 0) redScore += cat.getRedScore();
+		}
+		score.setScore(greenScore, greenCount, redScore, redCount, totalCount);		
+	}
+
+	private void applyFilter(DomStudentModelCategoryScore cat) {
+		long greenCount = 0, redCount = 0, totalCount = 0;
+		double greenScore = 0, redScore = 0;
+		for (DomStudentModelObjectiveScore obj : cat.getObjectives()) {
+			if (applyFilter(obj)) {
+				greenCount += obj.getGreenCount();
+				redCount += obj.getRedCount();
+				totalCount += obj.getTotalCount();
+				if (obj.getGreenCount() > 0) greenScore += obj.getGreenScore();
+				if (obj.getRedCount() > 0) redScore += obj.getRedScore();				
+			}
+		}
+		cat.setScore(greenScore, greenCount, redScore, redCount, totalCount);
+	}
+
+	private boolean applyFilter(DomStudentModelObjectiveScore obj) {
+		if (obj.getChildren() == null) {
+	// leaf
+			DomStudentModelContextInfo info = currentInfo.get(obj.getId());
+			if (info == null) return false;
+			return contains(filter, info.getMethods());		
+		}
+   // interior node
+		long greenCount = 0, redCount = 0, totalCount = 0;
+		double greenScore = 0, redScore = 0;
+		for (DomStudentModelObjectiveScore child : obj.getChildren()) {
+			if (applyFilter(child)) {
+				greenCount += child.getGreenCount();
+				redCount += child.getRedCount();
+				totalCount += child.getTotalCount();
+				if (child.getGreenCount() > 0) greenScore += child.getGreenScore();
+				if (child.getRedCount() > 0) redScore += child.getRedScore();				
+			}
+		}
+		obj.setScore(greenScore, greenCount, redScore, redCount, totalCount);
+		return true;
+		
+	}
+
 	protected void doFilter(DomStudentModelContext4Student item) {
 		// TODO Auto-generated method stub
 		
@@ -196,6 +273,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		Tree tree = w.tree;
 		w.description.clear();
 		w.title.setText("");
+		w.filter.setText("");
 		w.east.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
 		tree.removeItems();
 		String first = w.models.getItemText(0);
@@ -448,6 +526,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			widget.get().models.setSelectedIndex(index);
 			service.getModel(cid).then(p -> {
 				current = p.getValue();
+				setCurrentInfo(current.getModelStructure().getCategories(), current.getModelStructure().getInfo());
 				insertTree(current);
 				return p;
 			}, FAILURE);
