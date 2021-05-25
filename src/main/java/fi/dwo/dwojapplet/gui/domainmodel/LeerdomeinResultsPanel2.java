@@ -49,6 +49,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import fi.beans.numworxlf.Constants;
@@ -649,6 +650,7 @@ public void actionPerformed(ActionEvent event) {
       model.activateFilter(true);
       model.setRoot(LeerdomeinEditPanel2.filter(root, filter));      
     }
+    model.nodeStructureChanged((TreeNode) model.getRoot());
     if(scores != null)
       recalculateAncestors((DefaultMutableTreeNode) model.getRoot(), scores.getStudentScores());
   }

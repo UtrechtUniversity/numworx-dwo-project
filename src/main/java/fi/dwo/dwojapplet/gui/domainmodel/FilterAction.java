@@ -5,23 +5,16 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
-
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
-import fi.beans.numworxlf.JCheckBox;
 import fi.beans.numworxlf.JOptionPane;
-import fi.beans.numworxlf.JTabbedPane;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.ConfirmDialog;
 

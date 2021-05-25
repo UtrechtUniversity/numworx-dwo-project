@@ -4,6 +4,7 @@ import java.awt.AWTEventMulticaster;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -121,6 +122,7 @@ public class EditableGraph extends JPanel implements ActionListener{
 	}
 
   public Set<String> getVisibleNodes() {
+    if (!graph.isFiltered()) return Collections.emptySet();
     return graph.graphNodes.stream()
         .filter(GraphNode::isVisible)
         .map(GraphNode::getID)

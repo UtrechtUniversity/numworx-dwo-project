@@ -1546,4 +1546,8 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	}
 	//end ActionProducer
 
+  public boolean isFiltered() {
+    return selectedMethod != null;
+  }
+
 }
