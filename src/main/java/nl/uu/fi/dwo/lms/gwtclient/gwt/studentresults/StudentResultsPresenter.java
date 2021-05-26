@@ -109,8 +109,8 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	protected void setupTree(DomStudentModelContext4Student item) {
 		final StudentResultsWidget w = widget.get();
 		w.tree.removeItems();
-		w.setFilter(item.getFilter());
-		setCurrentInfo(item.getModelStructure().getCategories(), item.getModelStructure().getInfo());
+		w.setFilter(filter);
+		setCurrentInfo(item.getModelStructure());
 		insertTree(item);
 	}
 	
@@ -135,7 +135,8 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			w.setFilter(item.getFilter());
 			service.getModel(item).then(p -> {
 				current = p.getValue();
-				setCurrentInfo(current.getModelStructure().getCategories(), current.getModelStructure().getInfo());
+				filter = current.getFilter();
+				setCurrentInfo(current.getModelStructure());
 				insertTree(item);
 				return p;
 			}, FAILURE);
@@ -176,29 +177,38 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		});
 	}
 	
-	public void setCurrentInfo(List<DomStudentModelCategory> categories, DomStudentModelContextInfo info) {
+	public void setCurrentInfo(DomStudentModelStructure model) {
+		setCurrentInfo(model.getCategories(), model.getInfo(), currentInfo);
+	}
+	
+	public static void setCurrentInfo(List<DomStudentModelCategory> categories, DomStudentModelContextInfo info, Map<String, DomStudentModelContextInfo> currentInfo) {
 		currentInfo.put(info.getId(), info);
 		if (categories != null) {
 			for (DomStudentModelCategory item: categories) {
-				setCurrentInfoObj(item.getObjectives(), item.getInfo());
+				setCurrentInfoObj(item.getObjectives(), item.getInfo(), currentInfo);
 			}
 		}		
 	}
 
-	private void setCurrentInfoObj(List<DomStudentModelObj> objectives, DomStudentModelContextInfo info) {
+	private static void setCurrentInfoObj(List<DomStudentModelObj> objectives, DomStudentModelContextInfo info, Map<String, DomStudentModelContextInfo> currentInfo) {
 		currentInfo.put(info.getId(), info);
 		if (objectives != null) {
 			for (DomStudentModelObj item: objectives) {
-				setCurrentInfoObj(item.getObjectives(), item.getInfo());
+				setCurrentInfoObj(item.getObjectives(), item.getInfo(), currentInfo);
 			}
 		}
 	}
 
 	private void applyFilter(DomStudentModelStructureScore score) {
+		applyFilter(score, filter, currentInfo);
+	}
+	
+	
+	public static void applyFilter(DomStudentModelStructureScore score, Map<String, Map<String, Set<Integer>>> filter, Map<String, DomStudentModelContextInfo> currentInfo) {
 		long greenCount = 0, redCount = 0, totalCount = 0;
 		double greenScore = 0, redScore = 0;
 		for (DomStudentModelCategoryScore cat: score.getCategories()) {
-			applyFilter(cat);
+			applyFilter(cat, filter, currentInfo);
 			greenCount += cat.getGreenCount();
 			redCount += cat.getRedCount();
 			totalCount += cat.getTotalCount();
@@ -208,11 +218,11 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		score.setScore(greenScore, greenCount, redScore, redCount, totalCount);		
 	}
 
-	private void applyFilter(DomStudentModelCategoryScore cat) {
+	private static void applyFilter(DomStudentModelCategoryScore cat, Map<String, Map<String, Set<Integer>>> filter, Map<String, DomStudentModelContextInfo> currentInfo) {
 		long greenCount = 0, redCount = 0, totalCount = 0;
 		double greenScore = 0, redScore = 0;
 		for (DomStudentModelObjectiveScore obj : cat.getObjectives()) {
-			if (applyFilter(obj)) {
+			if (applyFilter(obj, filter, currentInfo)) {
 				greenCount += obj.getGreenCount();
 				redCount += obj.getRedCount();
 				totalCount += obj.getTotalCount();
@@ -223,7 +233,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		cat.setScore(greenScore, greenCount, redScore, redCount, totalCount);
 	}
 
-	private boolean applyFilter(DomStudentModelObjectiveScore obj) {
+	private static boolean applyFilter(DomStudentModelObjectiveScore obj, Map<String, Map<String, Set<Integer>>> filter, Map<String, DomStudentModelContextInfo> currentInfo) {
 		if (obj.getChildren() == null) {
 	// leaf
 			DomStudentModelContextInfo info = currentInfo.get(obj.getId());
@@ -234,7 +244,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		long greenCount = 0, redCount = 0, totalCount = 0;
 		double greenScore = 0, redScore = 0;
 		for (DomStudentModelObjectiveScore child : obj.getChildren()) {
-			if (applyFilter(child)) {
+			if (applyFilter(child, filter, currentInfo)) {
 				greenCount += child.getGreenCount();
 				redCount += child.getRedCount();
 				totalCount += child.getTotalCount();
@@ -253,7 +263,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	}
 
 	boolean showGraph;
-	private Map<String,Map<String, Set<Integer>>> filter = Collections.emptyMap();
+	protected Map<String,Map<String, Set<Integer>>> filter = Collections.emptyMap();
 	void showHideGraph(DomStudentModelContext4Student item) {
 		JSONObject json = new JSONObject();
 		json.put("title", new JSONString(item.getModelStructure().getInfo().getTitle().get(lang)));
@@ -526,7 +536,8 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			widget.get().models.setSelectedIndex(index);
 			service.getModel(cid).then(p -> {
 				current = p.getValue();
-				setCurrentInfo(current.getModelStructure().getCategories(), current.getModelStructure().getInfo());
+				filter = current.getFilter();
+				setCurrentInfo(current.getModelStructure());
 				insertTree(current);
 				return p;
 			}, FAILURE);

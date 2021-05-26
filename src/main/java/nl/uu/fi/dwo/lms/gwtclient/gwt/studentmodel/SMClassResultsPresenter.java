@@ -32,6 +32,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.studentmodel.JsTeacherSMClassRe
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.FilterUtil;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.DomTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
@@ -87,6 +88,7 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 	
 	private Promise<DomStudentModelScorePerTeacher> scores;
 	private Map<PersistenceId, DomStudent> students;
+	private Map<String, DomStudentModelContextInfo> currentInfo = new HashMap<>();
 	
 	@Inject void setView(JsTeacherSMClassResultsView view) {
 		this.view = view;
@@ -125,8 +127,7 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 	private Promise<?> showSchoolModel(DomStudentModelContextId cid, DomSchoolClass domSchoolClass) {
 		return service.getForClass(cid, domSchoolClass)
 				.then(p -> service.stap0(p, cid, domSchoolClass))
-				.then(this::stap2);
-		
+				.then(this::stap2);		
 	}
 
 	private Promise<?> stap1(Promise<List<DomSchoolClass>> p) {
@@ -147,6 +148,9 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 	private Promise<?> stap2(Promise<DomStudentModelContext4Student> p) {		
 		currentModel = p.getValue();
 		filter = currentModel.getFilter();
+		List<DomStudentModelCategory> categories = currentModel.getModelStructure().getCategories();
+		DomStudentModelContextInfo info = currentModel.getModelStructure().getInfo();
+		StudentResultsPresenter.setCurrentInfo(categories, info, currentInfo);
 		showModel();
 		return p;
 	}
@@ -165,7 +169,9 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 		
 		for(DomStudentModelDataStudentScore item: list) {
 			PersistenceId sid = item.getStudentId();
-			DomStudentModelScore<?> org = item.getDomStudentModelStructureScore();
+			DomStudentModelStructureScore score;
+			DomStudentModelScore<?> org = score = item.getDomStudentModelStructureScore();
+			StudentResultsPresenter.applyFilter(score, filter, currentInfo );
 			org = find(org, uuid);
 			if (org == null) org = item.getDomStudentModelStructureScore();
 			DomStudent student = students.get(sid);

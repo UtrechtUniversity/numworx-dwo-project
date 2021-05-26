@@ -42,8 +42,9 @@ public class SMStudentResultsPresenter extends StudentResultsPresenter {
 	@Override
 	protected void doFilter(DomStudentModelContext4Student item) {
 		FilterDialog d = filterDialog.get();
-		d.setValue(item.getFilter());
+		d.setValue(filter);
 		d.addCloseHandler(ev -> {
+			filter = d.getValue();
 			item.setFilter(d.getValue());
 			setupTree(item);
 			

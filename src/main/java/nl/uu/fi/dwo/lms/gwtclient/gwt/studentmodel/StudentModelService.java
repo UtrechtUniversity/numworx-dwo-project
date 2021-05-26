@@ -1,7 +1,9 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel;
 
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import javax.inject.Inject;
@@ -17,7 +19,10 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionService;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
@@ -34,6 +39,8 @@ public class StudentModelService implements DescriptionService {
 
 	final DomContext context;
 	Promise<List<DomStudentModelContext>> models;
+	
+	Map<String, Promise<?>> promises = new LinkedHashMap<>();
 	
 	@Inject StudentModelService(DwoGlobalVars vars) {
 		context = new DomContext();
@@ -72,17 +79,64 @@ public class StudentModelService implements DescriptionService {
 		
 	}
 
+	private String key(DomStudentModelContextId id, DomStudentModelContextInfo info) {
+		return id.getId().getIdString() + "/" + info.getId();
+	}
+	
+	private String key(DomStudentModelContextId id, DomSchoolClassId sc) {
+		return id.getId().getIdString() + "/" + sc.getId().getIdString();
+	}
+	private String key(DomStudentModelContext4Student c) {
+		return key(c, c.getSchoolClass());
+	}
+		
+	private String key(DomStudentModelScorePerTeacher scores) {
+		StringBuilder sb = new StringBuilder();
+		for (DomMapEntry<PersistenceId, DomSchoolClass> x: scores.getSchoolClasses()) 
+			sb.append(x.getKey().getIdString());
+		sb.append("/");
+		for (DomMapEntry<PersistenceId, DomStudentModelContext> x: scores.getStudentModelContexts())
+			sb.append(x.getKey().getIdString());
+		sb.append("/");
+		if (scores.getStudents() != null) {
+			for (DomMapEntry<PersistenceId, DomStudent> x: scores.getStudents())
+				sb.append(x.getKey().getIdString());
+		}
+		return sb.toString();
+	}
+	
+	private <T> Promise<T> put(String key,  Promise<T> value) {
+		promises.put(key, value);
+		return value;
+	}
+	
+	private boolean containsKey(String key) {
+		return promises.containsKey(key);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private <T> Promise<T> get(String key) {
+		return (Promise<T>) promises.get(key);
+	}
+	
+	
 	@Override
 	public Promise<String> getDescription(DomStudentModelContextId id, DomStudentModelContextInfo info) {
-			return manager.getDescription(id, info.getId(), lang, context);
+		    String key = key(id, info);
+		    if (containsKey(key)) return get(key);
+			return put(key, manager.getDescription(id, info.getId(), lang, context));
 	}
 	
 	public Promise<DomStudentModelContext4Student> getForClass(DomStudentModelContextId id, DomSchoolClassId sc ) {
-		return manager.getStudentModelForClass(context, id, sc);
+		String key = key(id, sc);
+		if (containsKey(key)) return get(key);
+		return put(key, manager.getStudentModelForClass(context, id, sc));
 	}
 	
 	public Promise<DomStudentModelScorePerTeacher> getScores(DomStudentModelScorePerTeacher scores) {
-		return manager.getScores(context, scores);
+		String key = key(scores);
+		if (containsKey(key)) return get(key);
+		return put(key, manager.getScores(context, scores));
 	}
 	
 	Promise<DomStudentModelContext4Student> stap0(Promise<DomStudentModelContext4Student> p, DomStudentModelContextId cid, DomSchoolClassId schoolClass) {
@@ -100,6 +154,8 @@ public class StudentModelService implements DescriptionService {
 	}
 
 	public Promise<Boolean> updateForClass(DomStudentModelContext4Student object) {
+		String key = key(object);
+		promises.remove(key);
 		return manager.updateModelForClass(context, object);		
 	}
 
