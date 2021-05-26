@@ -1,18 +1,11 @@
 package fi.dwo.server.rest;
 
-import fi.dwo.commons.persistence.entities.PersistentSchool;
-import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
-import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer;
-import fi.dwo.server.PersistentDataManagers.util.StudentModelContextUtilManager;
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
-import javax.annotation.security.PermitAll;
+
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -21,12 +14,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.util.StudentModelContextUtilManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
@@ -34,14 +29,9 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
-import nl.uu.fi.dwo.rest.dom.entities.RoleType;
-import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
-import nl.uu.fi.dwo.rest.dom.xapi.Account;
-import nl.uu.fi.dwo.rest.dom.xapi.Agent;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContextId;

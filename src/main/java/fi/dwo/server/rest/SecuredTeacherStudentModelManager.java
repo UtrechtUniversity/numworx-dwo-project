@@ -217,7 +217,9 @@ public class SecuredTeacherStudentModelManager {
                     .setHasRole(rest.getRestContext().getDomHasRole())
                     .buildSchoolAdminTeacher()
                     .setTeacher();
-            return build.getScores(rest.getDomStudentModelScorePerTeacher(), info);
+            DomStudentModelScorePerTeacher scores = build.getScores(rest.getDomStudentModelScorePerTeacher(), info);
+            scores.getStudentModelContexts().forEach(t -> SecuredStudentStudentModelManager.reduce(t.getValue()));
+            return scores;
     	} catch (Dwo2Exception e) {
     		throw new Dwo2RestException(e);
     	}
@@ -304,6 +306,7 @@ public class SecuredTeacherStudentModelManager {
     	DomStudentModelContext4Student result = new DomStudentModelContext4Student(context.getId());
     	result.setFilter(toFilter(of));
     	result.setSchoolClass(schoolClass);
+		SecuredStudentStudentModelManager.reduce(context.getModelStructure());
     	result.setModelStructure(context.getModelStructure());
     	
     	return result;
