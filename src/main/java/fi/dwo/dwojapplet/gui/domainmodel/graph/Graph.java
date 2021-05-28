@@ -649,7 +649,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		for(int i=0 ; i<bookNodes.size() ; i++) {
 			bookNodes.get(i).makeLocation(chapterNodes);
 		}
-		verbergVoorkennis();
+		verbergVoorkennis(b);
 		methodeLabel.setText("Alle leerdoelen");
 		tussenLabel1.setText("");
 		bookLabel.setText("");
@@ -662,13 +662,17 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	public void selectMethode(String methodeCode) { 
 		selectMethode(methodeCode, true); 
 	}
+
+	public void setMethode(String methodeCode) {
+	  selectedChapter = null;
+	  selectedBook = null;
+	  selectedMethod = methodeCode;
+	}
 	
 	public void selectMethode(String methodeCode, boolean b) {
 
-		selectedChapter = null;
-		selectedBook = null;
-		selectedMethod = methodeCode;
-		for(int i=0 ; i<graphNodes.size() ; i++) {
+	  setMethode(methodeCode);
+	  for(int i=0 ; i<graphNodes.size() ; i++) {
 			graphNodes.get(i).setVisible(false);
 		}
 		for(int i=0 ; i<graphNodes.size() ; i++) {
@@ -686,7 +690,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		for(int i=0 ; i<bookNodes.size() ; i++) {
 			bookNodes.get(i).makeLocation(chapterNodes);
 		}
-		verbergVoorkennis();
+		verbergVoorkennis(b);
 		methodeLabel.setText(methodeLabels.get(methodeCode));
 		tussenLabel1.setText("");
 		bookLabel.setText("");
@@ -699,11 +703,15 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		selectBook(bookCode,true);
 	}
 	
+	public void setBook(String bookCode) {
+      selectedChapter = null;
+      selectedBook = bookCode;
+      selectedMethod = bookCode.substring(0, bookCode.indexOf("-"));
+	}
+	
 	public void selectBook(String bookCode, boolean b) {
-		verbergVoorkennis();
-		selectedChapter = null;
-		selectedBook = bookCode;
-		selectedMethod = bookCode.substring(0, bookCode.indexOf("-"));
+		verbergVoorkennis(b);
+		setBook(bookCode);
 		//bookSelected = true;
 		for(int i=0 ; i<graphNodes.size() ; i++) {
 			graphNodes.get(i).setVisible(false);
@@ -822,10 +830,16 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		voorkennisButton.setVisible(false);
 	}
 			
+	public void setChapter(String hfstCode) {
+      selectedChapter = hfstCode;
+      selectedBook = hfstCode.substring(0, hfstCode.lastIndexOf("-"));
+      selectedMethod = hfstCode.substring(0, hfstCode.indexOf("-"));
+	}
+	
+	
 	public void selectChapter(String hfstCode, boolean b) {
-		selectedChapter = hfstCode;
-		selectedBook = hfstCode.substring(0, hfstCode.lastIndexOf("-"));
-		selectedMethod = hfstCode.substring(0, hfstCode.indexOf("-"));
+	    setChapter(hfstCode);
+	  
 		for(int i=0 ; i<graphNodes.size() ; i++) {
 			graphNodes.get(i).setVisible(false);
 		}
@@ -886,7 +900,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			deselectMethode();
 	}
 	
-	public void verbergVoorkennis() {
+	public void verbergVoorkennis(boolean b) {
 		setVoorkennisArea(false);
 		if(selectedChapter!=null) {
 			ArrayList<GraphNode> voorkennisNodes = getVoorkennisNodes(selectedChapter);
@@ -896,7 +910,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 				vkNode.setTempLocation(null);
 			}
 		}
-		produceAction("filter");
+		if (b) produceAction("filter");
 		voorkennisWegButton.setVisible(false);
 		zoomFit();
 	}
@@ -1456,7 +1470,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		if(e.getSource()==voorkennisWegButton) {
 			voorkennisWegButton.setVisible(false);
 			voorkennisButton.setVisible(true);
-			verbergVoorkennis();
+			verbergVoorkennis(true);
 			if(voorkennisTree)
 				verbergVoorkennisTree();
 		}
@@ -1474,7 +1488,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		}
 		if(e.getSource()==miVoorkennis) {
 			if(voorkennisArea)
-				verbergVoorkennis();
+				verbergVoorkennis(true);
 			plaatsVoorkennisTree(voorkennisPopupNode);
 		}
 		

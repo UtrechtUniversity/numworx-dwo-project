@@ -66,7 +66,9 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
     
     public boolean modelJustSet = false;
     
-	public EditGraph() {
+    private Graph graph;
+
+    public EditGraph() {
 		setLayout(null);
 		setBackground(Color.white);
 		setBorder(BorderFactory.createLineBorder(LeerdomeinGraphPanel.colorBlue3));
@@ -88,6 +90,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		setLayout(null);
 		setBackground(Color.white);
 		setBorder(BorderFactory.createLineBorder(LeerdomeinGraphPanel.colorBlue3));
+		this.graph = graph;
 		graphNodes = graph.getGraphNodes();
 		graphEdges = graph.getGraphEdges();
 		chapterNodes = graph.getChapterNodes();
@@ -403,6 +406,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 			}
 		}
 		if(cNode!=null) {
+		    graph.setChapter(cNode.getHfstCode());
 //			for(int i=0 ; i<graphNodes.size() ; i++) {
 //				if(!graphNodes.get(i).hasChapterCode(cNode.getHfstCode()))
 //					graphNodes.get(i).setVisible(false);
