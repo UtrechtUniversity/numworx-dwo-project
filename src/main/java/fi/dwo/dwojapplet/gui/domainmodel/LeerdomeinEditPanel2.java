@@ -83,6 +83,7 @@ import fi.dwo.dwojapplet.gui.TeacherStudentModelPanelProperties;
 import fi.dwo.dwojapplet.gui.domainmodel.ExportAction.ExportPanel;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.EditableGraph;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.TreeTransferHandler;
+import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsPanel;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
@@ -364,6 +365,25 @@ public class LeerdomeinEditPanel2 extends JPanel
 		}
 	}
 
+    private static final MethodsPanel METHODS_PANEL = new MethodsPanel();
+	class MethodeAction extends AbstractAction {
+
+    MethodeAction() {
+	    super("Lesmethoden");
+	  }
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        MethodsPanel panel = METHODS_PANEL;
+        panel.loadFrom(prop.getCurrent());
+        int ok = JOptionPane.showConfirmDialog(LeerdomeinEditPanel2.this, panel, "Instellingen lesmethoden", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);       
+        if (ok == JOptionPane.OK_OPTION) {
+            panel.safeTo(prop.getCurrent());
+        }
+      }
+	}
+	
+	
 	InvisibleNode clipboard;
 
 	class Knippen extends AbstractAction {
@@ -624,6 +644,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		setBackground(Constants.COLOR20);
 		JMenu Bestand = new JMenu(TextMapper.getText("file"));
 		JMenu Bewerken = new JMenu(TextMapper.getText("edit"));
+		JMenu Instellingen = new JMenu(TextMapper.getText("Instellingen"));
 		bar.setBackground(Constants.COLOR21);
 		bar.setBorder(BorderFactory.createEmptyBorder());
 		Dimension pref = bar.getPreferredSize();
@@ -671,6 +692,16 @@ public class LeerdomeinEditPanel2 extends JPanel
 		Bewerken.add(new JMenuItem(new Omhoog()));
 		Bewerken.add(new JMenuItem(new Omlaag()));
 		Bewerken.add(new JMenuItem(new Verwijderen()));
+		bar.add(Instellingen);
+		Instellingen.setBackground(Constants.COLOR21);
+		Instellingen.setForeground(Constants.COLOR15);
+		Instellingen.setUI(new BasicMenuUI() {
+            public void paint(Graphics g) {
+            }
+        });
+		Instellingen.add(new JMenuItem(new MethodeAction()));
+		
+		
 		bar.add(Box.createHorizontalGlue());
 
 		add(split, BorderLayout.CENTER);
