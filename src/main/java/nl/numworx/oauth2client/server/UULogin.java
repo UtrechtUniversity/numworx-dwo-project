@@ -16,15 +16,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.servlet.ServletConfig;
+
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
-import org.apache.oltu.oauth2.client.response.OAuthAccessTokenResponse;
-import org.apache.oltu.oauth2.client.response.OAuthClientResponse;
+import org.apache.oltu.oauth2.client.request.OAuthClientRequest.AuthenticationRequestBuilder;
 import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
 import org.apache.oltu.oauth2.client.response.OAuthResourceResponse;
-import org.apache.oltu.oauth2.client.validator.OAuthClientValidator;
-import org.apache.oltu.oauth2.client.validator.ResourceValidator;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
@@ -43,6 +42,8 @@ import io.jsonwebtoken.SigningKeyResolver;
 public class UULogin implements SigningKeyResolver {
 
     public static final String ID_TOKEN= "id_token";
+    public static final String PASSWORD = "urn:uu.nl:idp:contract:password";
+    public static final String PASSWORD_MFA = "urn:uu.nl:idp:contract:password:multifactor";
 
 	String client_id = "87e22bd9-ac67-4457-b4c3-c039c42cf052";
 	String client_secret = "LPb6jeN6q7CYurh96iZZAVz3cqab7r_3hVxkqGzj0j5_1Bf-rhjsNYnIUrpqw5y8hu1ckesX5-fmtINofw6jrw";
@@ -61,11 +62,28 @@ public class UULogin implements SigningKeyResolver {
 
 
     Long expiresIn, now;
+	private OAuthToken token;
 
+    public UULogin(ServletConfig servletConfig) {
+		
+	}
+    public UULogin() {
+    	
+    }
+    
+    
 	public String login() throws OAuthSystemException {
+    	return login(null, null, null);
+    }
+    
+	public String login(String state, String nonce, Boolean acr) throws OAuthSystemException {
 		    
-		    OAuthClientRequest request = OAuthClientRequest
-		        .authorizationLocation(AUTHORIZATION_URL)
+		    AuthenticationRequestBuilder builder = OAuthClientRequest.authorizationLocation(AUTHORIZATION_URL);
+		    if (state != null) builder.setState(state);
+		    if (nonce != null) builder.setParameter("nonce", nonce);
+		    if (acr != null) builder.setParameter("acr_values", acr?PASSWORD_MFA:PASSWORD);
+		    
+			OAuthClientRequest request = builder
 		        .setClientId(client_id)
 		        .setRedirectURI(redirect_url)
 		        .setResponseType("code")
@@ -76,7 +94,7 @@ public class UULogin implements SigningKeyResolver {
 		  }
 
 	
-	  OAuthToken getToken(String code) throws OAuthSystemException, OAuthProblemException { // code fromn login response
+	  Claims getToken(String code) throws OAuthSystemException, OAuthProblemException { // code fromn login response
 		    OAuthClientRequest request = OAuthClientRequest
 		        .tokenLocation(TOKEN_URL)
 		        .setGrantType(GrantType.AUTHORIZATION_CODE)
@@ -87,11 +105,9 @@ public class UULogin implements SigningKeyResolver {
 		        .buildBodyMessage();
 		    now = System.currentTimeMillis();
 		    OAuthJSONAccessTokenResponse oAuthResponse = oAuthClient.accessToken(request);
-		    idToken(oAuthResponse.getParam(ID_TOKEN));
-		    accessToken(oAuthResponse.getAccessToken());
-		    refreshToken(oAuthResponse.getRefreshToken());
-		    expiresIn = oAuthResponse.getExpiresIn();		    
-		    return oAuthResponse.getOAuthToken();
+		    Claims claims = idToken(oAuthResponse.getParam(ID_TOKEN));
+		    token = oAuthResponse.getOAuthToken();
+		    return claims;
 		  }
 
 	static class ResourceRequest extends OAuthClientRequest {
@@ -145,28 +161,19 @@ public class UULogin implements SigningKeyResolver {
 		return null;
 	}
 	
-	private void refreshToken(String refreshToken) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void accessToken(String accessToken) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	String sn, givenName, email, uid, insertion, affiliation, studentNumber;
+	String nonce;
 	
 	
-	void idToken(String idToken) {
+	Claims idToken(String idToken) {
 		JwtParser parser = Jwts.parser().setSigningKeyResolver(this);
 
-		parser.setClock(new Clock() {
-
-			@Override
-			public Date now() {
-				return new Date(1621597188L);
-			} });
+//		parser.setClock(new Clock() {
+//
+//			@Override
+//			public Date now() {
+//				return new Date(1621597188L);
+//			} });
 
 		parser.requireIssuer(ISSUER);
 		parser.requireAudience(client_id);
@@ -176,12 +183,14 @@ public class UULogin implements SigningKeyResolver {
 		
 		sn = body.get("sn", String.class);
 		givenName = body.get("givenName", String.class);
-		insertion = body.get("insertion", String.class);
+		insertion = body.get("uuSurnamePrefix", String.class);
 		email = body.get("mail", String.class);
 		uid   = body.get("uuShortID", String.class);
-		studentNumber = body.get("studentNumber", String.class);
+		studentNumber = body.get("uuStudentNumber", String.class);
 		affiliation = body.get("urn:mace:dir:attribute-def:eduPersonAffiliation", String.class);
-		
+		nonce = body.get("nonce", String.class);
+
+		return body;
 	}
 	
 	@Override

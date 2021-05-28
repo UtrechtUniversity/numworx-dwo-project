@@ -9,6 +9,8 @@ import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.token.OAuthToken;
 import org.json.simple.parser.ParseException;
 
+import io.jsonwebtoken.Claims;
+
 
 public class UULoginTest {
 
@@ -22,9 +24,9 @@ public class UULoginTest {
 	
 	public static void main(String[] args) throws Exception {
 		UULoginTest main = new UULoginTest();
-		main.interpret();
-		System.exit(0);
-		main.test();
+//		main.interpret();
+//		System.exit(0);
+//		main.test();
 		UULogin l = new UULogin();
 		
 		String code;
@@ -36,7 +38,7 @@ public class UULoginTest {
 		System.out.print("code>");
 		System.out.flush();
 		code = r.readLine();
-		OAuthToken result = l.getToken(code);
+		Claims result = l.getToken(code);
 		System.out.println(result);
 	}
 	

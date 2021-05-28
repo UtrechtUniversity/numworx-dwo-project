@@ -1,0 +1,58 @@
+package nl.numworx.oauth2client.server;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
+
+public class LoginServlet extends HttpServlet {
+
+	private UULogin config;
+	
+	
+	
+	
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String responseType = req.getParameter("response_type");
+		String redirectUri  = req.getParameter("redirect_uri");
+		String codeChallenge = req.getParameter("code_challenge");
+		String state = req.getParameter("state");
+		String client_id = req.getParameter("client_id");
+		String path = req.getServletPath();
+		
+		
+		if ("code".equals(responseType) && client_id != null && !client_id.isEmpty()) {
+			
+			
+			Boolean asr = null;
+			if (path.endsWith("mfalogin"))
+				asr = Boolean.TRUE;
+			try {
+				state = redirectUri + ";" + state;
+				String login = config.login(state, codeChallenge, asr);
+				resp.sendRedirect(login);
+				return;
+			} catch (OAuthSystemException e) {
+				log("doGet", e);
+			}
+		}
+		
+		resp.sendError(HttpServletResponse.SC_FORBIDDEN);	
+	}
+
+
+
+
+
+	@Override
+	public void init() throws ServletException {
+		config = new UULogin();		
+	}
+
+}
