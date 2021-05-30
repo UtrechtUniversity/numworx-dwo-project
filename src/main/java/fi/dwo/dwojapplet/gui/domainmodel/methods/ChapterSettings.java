@@ -249,8 +249,9 @@ class ChapterSettings extends JPanel implements ActionListener
 	}
 
   public void makeGUI() {
-    if(chapters != null && chapters.length > 0)
+    if(chapters != null)
     {   aantalKolommen = chapters.length;
+        aantalRijen = 0;
         for(int i = 0; i < chapters.length; i++)
                 if(chapters[i] != null && chapters[i].length > aantalRijen)
                     aantalRijen = chapters[i].length;
@@ -264,6 +265,7 @@ class ChapterSettings extends JPanel implements ActionListener
         chapterTextFields[j][i].setText("");        
       bookTextFields[j].setText(bookString[j]);
     }
+    resize();
   }
 
 }

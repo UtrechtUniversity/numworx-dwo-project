@@ -1,0 +1,59 @@
+{
+	"books": [
+		"1HV",
+		"2HV",
+		"3V"
+	],
+	"chapters": [
+		[
+			"H1 - GeoDriehoek en passer",
+			"H2 - Ruimtefiguren",
+			"H3 - Getallen",
+			"H4 - Grafieken",
+			"H5 - Lijnen en hoeken",
+			"H6 - Verhoudingen",
+			"H7 - Woordformules",
+			"H8 - Rekenen",
+			"H9 - Negatieve getallen",
+			"H10 - Formules en vergelijkingen",
+			"H11 - Oppervlakte en inhoud",
+			"H12 - Rekenen met variabelen",
+			"H13 - Vlakke figuren"
+		],
+		[
+			"H1 - Lineaire formules",
+			"H2 - Statistiek",
+			"H3 - Wortels",
+			"H4 - Gelijkvormigheid",
+			"H5 - Kwadratische formules",
+			"H6 - De stelling van Pythagoras",
+			"H7 - Procentuele groei",
+			"H8 - Oppervlakte",
+			"H9 - Lineaire vergelijkingen",
+			"H10 - Formules en vergelijkingen",
+			"H11 - Ontbinden in factoren",
+			"H12 - Kijk op kans"
+		],
+		[
+			"H1 - Lineaire en exponentiele functies",
+			"H2 - Parabolen",
+			"H3 - Vlakke figuren",
+			"H4 - De abc-formule",
+			"H5 - Nieuwe grafieken",
+			"H6 - Goniometrie",
+			"H7 - Kwadratische functies",
+			"H8 - Statistiek",
+			"H9 - Functies en algebra",
+			"H10 - Redeneren in driehoeken",
+			"H11A - Vergelijkingen en ongelijkheden",
+			"H11B - Vergelijkingen en ongelijkheden",
+			"H12A - Zicht op toeval",
+			"H12B - Cirkels"
+		]
+	],
+	"id": {
+		"idString": "LOCAL;none;Moderne Wiskunde"
+	},
+	"method": "Moderne Wiskunde",
+	"optLock": null
+}

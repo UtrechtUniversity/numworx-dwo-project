@@ -180,7 +180,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 							panel.makeChoices();
 							List<String> list = panel.getObjectives();
 							leaf.setVoorkennis(list);
-							graph.setModel(tree.getModel(),null);
+							graph.setModel(tree.getModel(),null, null);
 						}
 					}
 				}
@@ -463,7 +463,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 			model.setRoot(filter(root, filter));
 		}
         model.nodeStructureChanged((TreeNode) model.getRoot());
-		graph.setModel(model,filter);
+		graph.setModel(model,filter, structure.getActiveMethod());
 	}
 
 	static InvisibleNode filter(InvisibleNode parent, Map<String, Map<String, Set<Integer>>> filter) {
@@ -875,7 +875,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 					pref.width = 380;
 					leftBox.setPreferredSize(pref);
 					graph.setPreferredSize(new Dimension(1000, 650));
-					graph.setModel(model, null);
+					graph.setModel(model, null, structure.getActiveMethod());
 					
 					splitLeft.setBottomComponent(rightBox);
 					
@@ -1023,7 +1023,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		this.structure = model;
 		setEditable(editable);
 		// OPSLAAN_ACTION.left();
-		graph.setModel(this.model,null);
+		graph.setModel(this.model,null, model.getActiveMethod());
 		filterAction.doFilter();
 
 	}
@@ -1268,6 +1268,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		resultModel = getTreeModel();
 		resultModel.setOwner(DwoHelper.getCurrentUser().getUniqueDisplayName());
 		resultModel.setTimestamp(System.currentTimeMillis());
+		resultModel.setActiveMethod(structure.getActiveMethod());
 		structure = resultModel;
 		try {
 			prop.updateModel(resultModel);

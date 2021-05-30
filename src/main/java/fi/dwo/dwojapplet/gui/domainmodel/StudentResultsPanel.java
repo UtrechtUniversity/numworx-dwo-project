@@ -112,7 +112,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
 //            pref.width = 580;
 //            leftBox.setPreferredSize(pref);
             graph.setPreferredSize(new Dimension(1000, 650));
-            graph.setModel(model,null);
+            graph.setModel(model,null, context.getModelStructure().getActiveMethod());
             graph.setScore(structureScore);
             
             splitLeft.setBottomComponent(right);
@@ -126,7 +126,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
 //            pref.width = 580;
 //            leftBox.setPreferredSize(pref);
             split.setRightComponent(right);
-            graph.setModel(model,null);
+            graph.setModel(model,null, context.getModelStructure().getActiveMethod());
             packWindow();
             repaint();
           }
@@ -291,7 +291,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     //this.tekst.setText(vector.getDescription());
     setDescription(vector);
     this.model.nodeStructureChanged(root);
-    graph.setModel(this.model,null);
+    graph.setModel(this.model,null,context.getModelStructure().getActiveMethod());
 
   }
 
@@ -391,7 +391,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     model.nodeStructureChanged(root);
     tree.setSelectionRow(0);
 
-    graph.setModel(model,null);
+    graph.setModel(model,null, context.getModelStructure().getActiveMethod());
     graph.setScore(structureScore);
   }
 

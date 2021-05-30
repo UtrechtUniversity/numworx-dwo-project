@@ -14,10 +14,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+
 public class ChapterGraphNode {
 	
-	private static HashMap<String, String> hfstDescriptionsMap;
-	public static String[] hfstCodes = {
+	public  static Map<String, String> hfstDescriptionsMap;
+	private static String[] hfstCodes = {
 			"Getal&Ruimte-1HV-1",
 			"Getal&Ruimte-1HV-2",
 			"Getal&Ruimte-1HV-3",
@@ -181,12 +184,13 @@ public class ChapterGraphNode {
 		return hfstDescriptionsMap.get(hfstCode);
 	}
 	
-	public ChapterGraphNode(String hfstCode, ArrayList<GraphNode> graphNodes, ArrayList<GraphEdge> graphEdges) {
+	public ChapterGraphNode(String hfstCode, ArrayList<GraphNode> graphNodes, ArrayList<GraphEdge> graphEdges, PersistenceId activeMethod) {
 		if(hfstDescriptionsMap==null) {
 			hfstDescriptionsMap = new HashMap<String, String>();
-			for(int i=0 ; i<hfstCodes.length ; i++) {
-				hfstDescriptionsMap.put(hfstCodes[i], hfstDescriptions[i]);
-			}
+//			for(int i=0 ; i<hfstCodes.length ; i++) {
+//				hfstDescriptionsMap.put(hfstCodes[i], hfstDescriptions[i]);
+//			}
+			hfstDescriptionsMap.putAll(MethodsProperties.instance().getDescriptionsMap(activeMethod));
 		}
 		this.hfstCode = hfstCode;
 		makeLocation(graphNodes);

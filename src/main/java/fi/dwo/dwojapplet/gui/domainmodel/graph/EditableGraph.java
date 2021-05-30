@@ -16,6 +16,7 @@ import javax.swing.tree.TreeModel;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class EditableGraph extends JPanel implements ActionListener{
 
@@ -52,8 +53,8 @@ public class EditableGraph extends JPanel implements ActionListener{
 		}
 	}
 
-	public void setModel(TreeModel model, Map<String, Map<String, Set<Integer>>> filter) {
-		graph.setModel(model, filter);
+	public void setModel(TreeModel model, Map<String, Map<String, Set<Integer>>> filter, PersistenceId activeMethod) {
+		graph.setModel(model, filter, activeMethod);
 		editGraph.setModelJustSet(true);
 	}
 

@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui.domainmodel.methods;
 
+import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -14,6 +16,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.AbstractCellEditor;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
@@ -26,10 +29,12 @@ import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellEditor;
 
 import com.owlike.genson.Genson;
 
 import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JTextField;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
@@ -45,7 +50,38 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
   private static final String NEW  = "NEW";
   private static final Logger LOG = Logger.getLogger(MethodsPanel.class.getName());
   
-  
+  public class IconButtonEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
+
+    Object value;
+    int row;
+//ClassTeacherPanelTableModel model;
+
+  @Override
+  public Component getTableCellEditorComponent(JTable table, Object value,
+        boolean arg2, int aRow, int aCol) {
+    this.value = value;
+    JButton button = new JButton((Icon) value);
+    button.addActionListener(this);
+    row = aRow;
+    //model = (ClassTeacherPanelTableModel) table.getModel();
+    return button;
+  }
+
+  @Override
+  public Object getCellEditorValue() {
+    return value;
+  }
+
+  @Override
+  public void actionPerformed(ActionEvent event) {
+    if (value == removeIcon) {
+      int ok = JOptionPane.showConfirmDialog(MethodsPanel.this, "Weet je het zeker?", TextMapper.getText(TextMapper.TBL_DELETE), JOptionPane.YES_NO_OPTION);
+      if (ok == JOptionPane.YES_OPTION) 
+        tableModel.delete(row);
+    }
+  }
+
+  }
   
   private JFileChooser choose = new JFileChooser();
  
@@ -56,14 +92,6 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
   private JTextField txtField;
   private ChapterSettings settings;
     
-  public static class Row {
-    public PersistenceId id;
-    public Long optLock;
-    public String method;
-    public String[] books;
-    public String[][] chapters;
-  }
-  
   private List<Row> model = new ArrayList<>();
   private PersistenceId current;
   private Row rowSet;
@@ -77,6 +105,12 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
       return model.size();
     }
 
+    public void delete(int row) {
+      if (row == 0) return;
+      model.remove(row);
+      fireTableRowsDeleted(row, row);
+    }
+
     @Override
     public int getColumnCount() {
       return 3;
@@ -88,7 +122,9 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
       switch(columnIndex) {
         case 0: return row.method;
         case 1: return Objects.equals(row.id, current);
-        case 2: return removeIcon;
+        case 2: 
+          if (rowIndex > 0)
+            return removeIcon;
       }
       return null;
     }
@@ -122,11 +158,13 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
+      if (rowIndex == 0 && columnIndex != 1) return false;
       return true;
     }
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+      if (! isCellEditable(rowIndex, columnIndex) || columnIndex == 2) return;
       Row row = model.get(rowIndex);
       switch(columnIndex) {
         case 0: row.method = Objects.toString(aValue, ""); break;
@@ -149,13 +187,14 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
       int rowIndex = tbl.getSelectedRow();
       if (!event.getValueIsAdjusting() && rowIndex != -1) {
         
-        // do some actions here, for example
-        // print first column value from selected row
+        settings.setVisible(rowIndex != 0);
         rowSet = model.get(rowIndex);
         txtField.setText(rowSet.method);
+        txtField.setEnabled(rowIndex != 0);
         settings.setBooks(rowSet.books);
         settings.setChapters(rowSet.chapters);
         settings.makeGUI();
+        if (rowIndex == 0) rowSet = null;
       }
     }
 
@@ -166,13 +205,14 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
     JLabel l;
     l = new JLabel("Gekoppelde methodes");
     add(l);
+    model = MethodsProperties.instance();
     tbl = new JTable(tableModel = new Model());
+    tbl.setDefaultEditor(Icon.class, new IconButtonEditor());
+
+    
     
     tbl.getSelectionModel().addListSelectionListener(this);
-    
-    
-    
-    
+
     removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_STUDENTMODEL_IMAGE);
     removeIcon  = new ImageIcon(removeImage);
     add(new JScrollPane(tbl));
@@ -194,12 +234,14 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
     
     settings = new ChapterSettings("Hoofdstuk", "Leerjaar");
     settings.makeTextFields();
-    settings.makeGUI(settings.aantalRijen, settings.aantalKolommen);
+    settings.makeGUI(0,0);
+    settings.setVisible(false);
     
     add(settings);
     
     
   }
+
 
   @Override
   public void actionPerformed(ActionEvent e) {
@@ -250,7 +292,7 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
   }
 
   public void safeTo(DomStudentModelContext current) {
-    // TODO Auto-generated method stub
+    
     
   }
 

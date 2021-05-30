@@ -45,7 +45,9 @@ import fi.beans.numworxlf.JComboBox;
 import fi.dwo.dwojapplet.gui.domainmodel.InvisibleNode;
 import fi.dwo.dwojapplet.gui.domainmodel.InvisibleTreeModel;
 import fi.dwo.dwojapplet.gui.domainmodel.NodeLeaf;
+import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class Graph extends JPanel implements MouseListener, MouseMotionListener, ActionListener {
 
@@ -109,6 +111,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	private String selectedMethod;
 	
 	private HashMap<String,String> methodeLabels = new HashMap();
+    private PersistenceId activeMethod;
 	
 	
 
@@ -422,8 +425,9 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			this.graphEdges.addAll(graphEdges);
 			
 			chapterNodes.clear();
-			for(int i=0 ; i< ChapterGraphNode.hfstCodes.length ; i++) {
-				chapterNodes.add(new ChapterGraphNode(ChapterGraphNode.hfstCodes[i], graphNodes, graphEdges));
+			ChapterGraphNode.hfstDescriptionsMap = (MethodsProperties.instance().getDescriptionsMap(activeMethod));
+			for(String hfstCodes : ChapterGraphNode.hfstDescriptionsMap.keySet() ) {
+				chapterNodes.add(new ChapterGraphNode(hfstCodes, graphNodes, graphEdges, activeMethod));
 			}
 			
 			chapterEdges.clear();
@@ -1198,9 +1202,9 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	}
 
 
-	public void setModel(TreeModel model, Map<String, Map<String, Set<Integer>>> filter) {
+	public void setModel(TreeModel model, Map<String, Map<String, Set<Integer>>> filter, PersistenceId activeMethod) {
 	    Map<String, GraphNode> graphMap = new LinkedHashMap<>();
-
+	    this.activeMethod = activeMethod;
 		List<NodeLeaf> leaves = new ArrayList<>();
 		ArrayList<GraphEdge> edges = new ArrayList<>();
 		searchNodes(model, model.getRoot(), graphMap, "", leaves);
