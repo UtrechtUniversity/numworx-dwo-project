@@ -6,6 +6,8 @@ import java.util.Objects;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+
 /**
  * A StudentModelContext node.
  *
@@ -18,6 +20,7 @@ public class DomStudentModelStructure {
     private List<DomStudentModelCategory> categories;
     private String owner;
     private Long timestamp;
+    private PersistenceId activeMethod;
     /**
      * @return the info
      */
@@ -63,7 +66,7 @@ public class DomStudentModelStructure {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(categories, info, owner, timestamp);
+		return Objects.hash(categories, info, owner, timestamp, activeMethod);
 	}
 
 	public boolean equals(Object obj) {
@@ -78,7 +81,8 @@ public class DomStudentModelStructure {
 		}
 		DomStudentModelStructure other = (DomStudentModelStructure) obj;
 		return Objects.equals(owner, other.owner) 
-				&& Objects.equals(timestamp, other.timestamp) 
+				&& Objects.equals(timestamp, other.timestamp)
+				&& Objects.equals(activeMethod, other.activeMethod)
 				&& Objects.equals(categories, other.categories) 
 				&& Objects.equals(info, other.info);
 	}
@@ -111,6 +115,20 @@ public class DomStudentModelStructure {
 
 	public void setTimestamp(Long timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	/**
+	 * @return the activeMethod
+	 */
+	public PersistenceId getActiveMethod() {
+		return activeMethod;
+	}
+
+	/**
+	 * @param activeMethod the activeMethod to set
+	 */
+	public void setActiveMethod(PersistenceId activeMethod) {
+		this.activeMethod = activeMethod;
 	}
 
 }
