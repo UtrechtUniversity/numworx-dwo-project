@@ -7,7 +7,7 @@
 
   <context-param>
   	<param-name>dbrest.url</param-name>
-	<param-value>https://idptestbed/dwo/rest/</param-value>  
+	<param-value>http://localhost:8080/dwo/rest/</param-value>  
   </context-param>
   <!-- Servlets -->
   <servlet>

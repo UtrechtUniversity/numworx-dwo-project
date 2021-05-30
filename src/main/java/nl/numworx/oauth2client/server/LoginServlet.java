@@ -12,11 +12,7 @@ import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 public class LoginServlet extends HttpServlet {
 
 	private UULogin config;
-	
-	
-	
-	
-	
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String responseType = req.getParameter("response_type");

@@ -47,7 +47,7 @@ public class RedirectServlet extends HttpServlet {
 			String user_id = login.studentNumber;
 			if (user_id == null || user_id.isEmpty() )
 				user_id = login.uid;
-			String lti_id = login.uid;
+			String lti_id = login.uid; // should be token.sub
 			String first = login.givenName;
 			String middle = login.insertion;
 			String last = login.sn;

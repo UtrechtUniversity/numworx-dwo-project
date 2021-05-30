@@ -82,8 +82,8 @@ public class UULogin implements SigningKeyResolver {
 		    if (state != null) builder.setState(state);
 		    if (nonce != null) builder.setParameter("nonce", nonce);
 		    if (acr != null) builder.setParameter("acr_values", acr?PASSWORD_MFA:PASSWORD);
-		    
-			OAuthClientRequest request = builder
+		    builder.setParameter("prompt", "login"); // always login 
+		    OAuthClientRequest request = builder
 		        .setClientId(client_id)
 		        .setRedirectURI(redirect_url)
 		        .setResponseType("code")
