@@ -84,6 +84,7 @@ import fi.dwo.dwojapplet.gui.domainmodel.ExportAction.ExportPanel;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.EditableGraph;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.TreeTransferHandler;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsPanel;
+import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
@@ -96,6 +97,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class LeerdomeinEditPanel2 extends JPanel
 		implements TreeSelectionListener, ExportPanel, WindowListener {
@@ -375,10 +377,10 @@ public class LeerdomeinEditPanel2 extends JPanel
       @Override
       public void actionPerformed(ActionEvent e) {
         MethodsPanel panel = METHODS_PANEL;
-        panel.loadFrom(prop.getCurrent());
+        panel.setActiveMethod(activeMethod);
         int ok = JOptionPane.showConfirmDialog(LeerdomeinEditPanel2.this, panel, "Instellingen lesmethoden", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);       
         if (ok == JOptionPane.OK_OPTION) {
-            panel.safeTo(prop.getCurrent());
+            activeMethod = panel.getActiveMethod();
         }
       }
 	}
@@ -569,6 +571,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 	private Box south;
 	final JTree tree;
 	InvisibleTreeModel model;
+	PersistenceId activeMethod;
 	InvisibleNode root;
 	private JComponent settings;
 	JFormattedTextField slip, init, learn;
@@ -771,12 +774,17 @@ public class LeerdomeinEditPanel2 extends JPanel
 		voorkennisRO.setPreferredSize(new Dimension(120, 24));
 		settingsRO.add(voorkennisRO);
 		settingsRO.add(Box.createHorizontalGlue());
-		JButton genrRO = new JButton(new GenRAction(true, this, tree));
+		AnyMethodAction methodeAction3 = new AnyMethodAction(true, this, tree);
+        AnyMethodAction methodeAction4 = new AnyMethodAction(true, this, tree);
+		methodeAction3.setMethode(MethodsProperties.instance().get(1));
+        methodeAction4.setMethode(MethodsProperties.instance().get(2));
+		
+        JButton genrRO = new JButton(methodeAction3);
 		genrRO.setFont(font);
 		genrRO.setPreferredSize(new Dimension(140, 24));
 		settingsRO.add(genrRO);
 		settingsRO.add(Box.createHorizontalStrut(10));
-		JButton mwRO = new JButton(new MWAction(true, this, tree));
+		JButton mwRO = new JButton(methodeAction4);
 		mwRO.setFont(font);
 		mwRO.setPreferredSize(new Dimension(140, 24));
 		settingsRO.add(mwRO);
@@ -834,12 +842,17 @@ public class LeerdomeinEditPanel2 extends JPanel
 		parametersLabel.setForeground(Constants.COLOR15);
 		bkt.add(parametersLabel);
 		bkt.add(Box.createHorizontalGlue());
-		JButton genr = new JButton(new GenRAction(this, tree));
+		AnyMethodAction methodeAction2 = new AnyMethodAction(this, tree);
+        AnyMethodAction methodeAction = new AnyMethodAction(this, tree);
+		methodeAction.setMethode(MethodsProperties.instance().get(1));
+		methodeAction2.setMethode(MethodsProperties.instance().get(2));
+		
+        JButton genr = new JButton(methodeAction);
 		genr.setFont(font);
 		genr.setPreferredSize(new Dimension(140, 20));
 		bkt.add(genr);
 		bkt.add(Box.createHorizontalStrut(10));
-		JButton mw = new JButton(new MWAction(this, tree));
+		JButton mw = new JButton(methodeAction2);
 		mw.setFont(font);
 		mw.setPreferredSize(new Dimension(140, 20));
 		bkt.add(mw);
@@ -1023,6 +1036,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		this.structure = model;
 		setEditable(editable);
 		// OPSLAAN_ACTION.left();
+		activeMethod = model.getActiveMethod();
 		graph.setModel(this.model,null, model.getActiveMethod());
 		filterAction.doFilter();
 
@@ -1098,6 +1112,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 			categories.add(cat);
 		}
 		result.setCategories(categories);
+		result.setActiveMethod(activeMethod);
 		return result;
 	}
 
@@ -1268,7 +1283,6 @@ public class LeerdomeinEditPanel2 extends JPanel
 		resultModel = getTreeModel();
 		resultModel.setOwner(DwoHelper.getCurrentUser().getUniqueDisplayName());
 		resultModel.setTimestamp(System.currentTimeMillis());
-		resultModel.setActiveMethod(structure.getActiveMethod());
 		structure = resultModel;
 		try {
 			prop.updateModel(resultModel);

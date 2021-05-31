@@ -25,6 +25,9 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 
 abstract class MethodeAction extends AbstractAction implements TreeSelectionListener {
 
+  protected static String KEY = "Key";
+
+  
   String KOPPELING_LEERDOEL;
   String[] grJaarlagen;
   int aantalHoofdstukken[];
@@ -34,10 +37,14 @@ abstract class MethodeAction extends AbstractAction implements TreeSelectionList
   
   MethodeAction(String name) {
     super(name);
+    putValue(KEY, name);
   }
   
   String getName() {
     return getValue(NAME).toString();
+  }
+  String getKey() {
+    return getValue(KEY).toString();
   }
 
   
@@ -65,7 +72,7 @@ abstract class MethodeAction extends AbstractAction implements TreeSelectionList
   }
 
   private void actionOnLeaf(NodeLeaf leaf) {
-    String name = getName();
+    String name = getKey();
     Map<String,Set<Integer>> methode = leaf.getMethode().getOrDefault(name, Collections.emptyMap());
     
     ConfirmDialog dialog = new ConfirmDialog(owner, "");

@@ -41,6 +41,7 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class MethodsPanel extends JPanel implements ActionListener, ListSelectionListener {
@@ -291,13 +292,13 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
     
   }
 
-  public void safeTo(DomStudentModelContext current) {
-    
-    
+  
+  public void setActiveMethod(PersistenceId id) {
+    current = id;
   }
-
-  public void loadFrom(DomStudentModelContext current) {
-    // TODO Auto-generated method stub
-    
+  
+  public PersistenceId getActiveMethod() {
+    return current;
   }
+  
 }

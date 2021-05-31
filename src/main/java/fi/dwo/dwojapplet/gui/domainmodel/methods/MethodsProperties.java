@@ -3,6 +3,7 @@ package fi.dwo.dwojapplet.gui.domainmodel.methods;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -70,6 +71,12 @@ public class MethodsProperties extends ArrayList<Row> {
     }
     return result;
   }
-  
+
+  public Row getMethod(PersistenceId activeMethod) {
+    for (Row row: this) {
+      if (Objects.equals(activeMethod, row.id)) return row;
+    }
+    return null;
+  }
 
 }

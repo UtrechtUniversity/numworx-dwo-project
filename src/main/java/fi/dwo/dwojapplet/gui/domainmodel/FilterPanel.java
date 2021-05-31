@@ -15,8 +15,8 @@ import fi.beans.numworxlf.JCheckBox;
 
 public class FilterPanel extends JPanel {
 
-  MWAction mw = new MWAction();
-  GenRAction genr = new GenRAction();
+  MethodeAction mw = new AnyMethodAction().init(2);
+  MethodeAction genr = new AnyMethodAction().init(1);
   JCheckBox rest = new JCheckBox("Niet geclassificeerde leerdoelen");
   
 

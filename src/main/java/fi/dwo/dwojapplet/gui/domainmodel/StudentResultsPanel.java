@@ -248,11 +248,11 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     voorkennisRO.setPreferredSize(new Dimension(120,24));
     settingsRO.add(voorkennisRO);
     settingsRO.add(Box.createHorizontalGlue());
-    JButton genrRO = new JButton(new GenRAction(true, this, tree)); genrRO.setFont(font);
+    JButton genrRO = new JButton(new AnyMethodAction(true, this, tree).init(1)); genrRO.setFont(font);
     genrRO.setPreferredSize(new Dimension(140,24));
     settingsRO.add(genrRO);
     settingsRO.add(Box.createHorizontalStrut(10));
-    JButton mwRO = new JButton(new MWAction(true, this, tree)); mwRO.setFont(font);
+    JButton mwRO = new JButton(new AnyMethodAction(true, this, tree).init(2)); mwRO.setFont(font);
     mwRO.setPreferredSize(new Dimension(140,24));
     settingsRO.add(mwRO);
     settingsRO.setBorder(BorderFactory.createEmptyBorder(10,10,8,10));
