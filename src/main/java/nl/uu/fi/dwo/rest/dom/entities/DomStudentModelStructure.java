@@ -98,7 +98,7 @@ public class DomStudentModelStructure {
 			return false;
 		}
 		DomStudentModelStructure other = (DomStudentModelStructure) obj;
-		return Objects.equals(categories, other.categories) && Objects.equals(info, other.info);
+		return Objects.equals(categories, other.categories) && Objects.equals(info, other.info) && Objects.equals(activeMethod, other.activeMethod);
 	}
 
 	public String getOwner() {
