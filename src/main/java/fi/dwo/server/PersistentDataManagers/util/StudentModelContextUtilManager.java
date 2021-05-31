@@ -42,6 +42,7 @@ public class StudentModelContextUtilManager {
 		DomStudentModelStructure structure = pModel.getModelStructure();
 		DomStudentModelStructure copy = new DomStudentModelStructure();
 		copy.setInfo(structure.getInfo());
+		copy.setActiveMethod(structure.getActiveMethod());
 		copy.setTimestamp(structure.getTimestamp());
 		copy.setOwner(structure.getOwner());
 		copy.setCategories(new ArrayList<>());
