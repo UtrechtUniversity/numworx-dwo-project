@@ -5,6 +5,7 @@ package fi.dwo.commons.persistence;
 
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
+import com.owlike.genson.ext.jaxb.JAXBBundle;
 
 import fi.dwo.commons.util.UEscape;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
@@ -24,7 +25,9 @@ import org.eclipse.persistence.sessions.Session;
 public class JpaEclipseConverterDomStudentModelStructure implements Converter {
     private static final Charset ISO_8859_1 = StandardCharsets.ISO_8859_1;
     private static final Charset UTF8 = StandardCharsets.UTF_8;
-    private Genson g = new GensonBuilder().withConverters(new GensonMapConverter()).create();
+    private Genson g = new GensonBuilder()
+        .withBundle(new JAXBBundle())
+        .withConverters(new GensonMapConverter()).create();
     
     @Override
     public Object convertObjectValueToDataValue(Object objectValue, Session session) {        
