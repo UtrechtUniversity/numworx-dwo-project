@@ -89,13 +89,8 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		if (size < XSMALL) return css.xsmall();
 		if (size < SMALL) return css.small();
 		return css.normal();
-		
- 		
 	}
-	
-	
-	
-	
+		
 	Map<String, Map<String,Set<Integer>>> filter;
 	
 	private class FilterConsumer implements Consumer<Map<String, Map<String, Set<Integer>>>> {
@@ -106,9 +101,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			zoomFit();			
 		}		
 	}
-	
-	
-	
+		
 	static final float  VOORKENNIS_HEIGHT = 192f; // 12em
 	boolean inVoorkennis;
 	Collection<Edge> voorkennisEdges = Collections.emptySet();
@@ -166,7 +159,9 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			image.getSvgElement().setViewBox(viewbox);
 			inVoorkennis = true;
 			Set<String> voorkennisIds = 
-			nodeStream().filter(Node::isVisible).flatMap(t -> t.obj.getInfo().getVoorkennis().stream()).collect(Collectors.toSet());
+			nodeStream().filter(Node::isVisible).flatMap(t -> t.obj.getInfo().getVoorkennis().stream())
+			.map(StudentResultsGraph::strip)
+			.collect(Collectors.toSet());
 			voorkennisIds.removeAll(nodeStream().filter(Node::isVisible).map(n -> n.obj.getInfo().getId()).collect(Collectors.toSet()));
 			Set<String> methodes = filter.keySet();
 			LOG.info("aantal = " + voorkennisIds.size());
@@ -626,6 +621,10 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		void colorize() {
 		}
 	}
+
+	static String strip(String id) {
+		return id.split("/",2)[0];
+	}
 	
 	class Node extends AbstractNode implements ClickHandler {
 		final private DomStudentModelMethodInfo info;
@@ -635,6 +634,9 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		private float tmpx, tmpy;
 		private String parent = "";
 		
+//		public String toString() {
+//			return "Node[" + obj.getInfo().getId() + "," + obj.getInfo().getTitle().get(lang) + "]";
+//		}
 		
 		void move(float dx, float dy) {
 			moveTo(tmpx+dx, tmpy+dy);
@@ -735,10 +737,12 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		}
 
 		
+		
 		Stream<Edge> edges() {
 			List<String> voorkennis = obj.getInfo().getVoorkennis();
 			if (voorkennis == null|| invalid()) return Stream.empty();
 			return voorkennis.stream()
+					.map(StudentResultsGraph::strip)
 					.filter(key -> map.containsKey(key))
 					.flatMap( key -> 
 						map.get(key).stream().map(n -> new Edge(n, this)) );
