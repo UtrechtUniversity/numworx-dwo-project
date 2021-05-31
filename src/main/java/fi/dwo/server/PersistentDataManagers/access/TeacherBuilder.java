@@ -74,6 +74,7 @@ import org.osgi.util.promise.Promise;
 
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
+import com.owlike.genson.ext.jaxb.JAXBBundle;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
@@ -770,7 +771,8 @@ public DomStudentModelContext patchStudentModel(DomStudentModelContextPatch domP
 		// patch
 		String value = domPatch.getPatch();
 		String digest = domPatch.getDigest();
-		Genson g = new GensonBuilder().withConverters(new GensonMapConverter()).create(); // met de juiste opties
+		Genson g = new GensonBuilder().withBundle(new JAXBBundle())
+				.withConverters(new GensonMapConverter()).create(); // met de juiste opties
 		String oldValue = g.serialize(result.getModelStructure());
         JsonParser parser = Json.createParser(new StringReader(oldValue));
         parser.next();
