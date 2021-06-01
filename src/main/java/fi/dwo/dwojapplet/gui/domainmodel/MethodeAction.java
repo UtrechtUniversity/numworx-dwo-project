@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -25,7 +26,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 
 abstract class MethodeAction extends AbstractAction implements TreeSelectionListener {
 
-  protected static String KEY = "Key";
+  protected final static String KEY = "Key";
 
   
   String KOPPELING_LEERDOEL;
@@ -44,7 +45,7 @@ abstract class MethodeAction extends AbstractAction implements TreeSelectionList
     return getValue(NAME).toString();
   }
   String getKey() {
-    return getValue(KEY).toString();
+    return Objects.toString(getValue(KEY),null);
   }
 
   
@@ -171,7 +172,7 @@ abstract class MethodeAction extends AbstractAction implements TreeSelectionList
 
   void setPath(TreePath path) {
     this.path = path;
-    setEnabled(path != null);
+    setEnabled(path != null && getKey() != null);
   }
 
   void setTree(JTree tree) {

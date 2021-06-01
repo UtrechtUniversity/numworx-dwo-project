@@ -122,7 +122,7 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
       Row row = model.get(rowIndex);
       switch(columnIndex) {
         case 0: return row.method;
-        case 1: return Objects.equals(row.id, current);
+        case 1: return Objects.equals(row.getId(), current);
         case 2: 
           if (rowIndex > 0)
             return removeIcon;
@@ -169,8 +169,8 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
       Row row = model.get(rowIndex);
       switch(columnIndex) {
         case 0: row.method = Objects.toString(aValue, ""); break;
-        case 1: if (Boolean.FALSE.equals(aValue) && Objects.equals(current,row.id)) current = null;
-                if (Boolean.TRUE.equals(aValue)) current = row.id;
+        case 1: if (Boolean.FALSE.equals(aValue) && Objects.equals(current,row.getId())) current = null;
+                if (Boolean.TRUE.equals(aValue)) current = row.getId();
                 fireTableDataChanged();
       }
     }
@@ -276,9 +276,9 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
       row.method = "Untitled";
       row.books = new String[] { "Untitled book" };
       row.chapters  = new String[][] {{ "Untitled chapter" }};
-      row.id = new PersistenceId();
+      row.setId(new PersistenceId());
       Random random = new Random();
-      row.id.setIdString("LOCAL;none;" + (random.nextLong() >>> 1));
+      row.getId().setIdString("LOCAL;none;" + (random.nextLong() >>> 1));
       
       tableModel.add(row);
     } else

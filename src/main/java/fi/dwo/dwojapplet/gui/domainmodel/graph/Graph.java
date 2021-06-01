@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
@@ -46,6 +47,7 @@ import fi.dwo.dwojapplet.gui.domainmodel.InvisibleNode;
 import fi.dwo.dwojapplet.gui.domainmodel.InvisibleTreeModel;
 import fi.dwo.dwojapplet.gui.domainmodel.NodeLeaf;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
+import fi.dwo.dwojapplet.gui.domainmodel.methods.Row;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -66,7 +68,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	private JLabel chapterLabel;
 	private JLabel tussenLabel1;
 	private JLabel tussenLabel2;
-	private JComboBox methodeChoice;
+	//private JComboBox methodeChoice;
 	private JButton zoomFitButton;
 	private JButton zoomInButton;
 	private JButton zoomOutButton;
@@ -77,7 +79,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	private MenuItem menuItemAll;
 
 	private MenuItem menuItemGR;
-	private MenuItem menuItemMW;
+	//private MenuItem menuItemMW;
 	
 	private PopupMenu voorkennisPopupMenu;
     private MenuItem miVoorkennis;
@@ -112,6 +114,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	
 	private HashMap<String,String> methodeLabels = new HashMap();
     private PersistenceId activeMethod;
+    private Row activeRow;
 	
 	
 
@@ -136,10 +139,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		tussenLabel1 = new JLabel("");
 		tussenLabel1.setFont(font);
 		tussenLabel1.setForeground(Color.white);
-		
-		methodeLabels.put("Getal&Ruimte", "Getal & Ruimte");
-		methodeLabels.put("Moderne Wiskunde", "Moderne Wiskunde");
-		
+				
 		methodeLabel = new JLabel("Alle leerdoelen");
 		methodeLabel.setFont(font);
 		methodeLabel.setForeground(Color.white);
@@ -171,28 +171,29 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		menuItemAll.addActionListener(this);
 		methodeChoicePopup.add(menuItemAll);
 		
-		menuItemGR = new MenuItem("Getal & Ruimte");
+		menuItemGR = new MenuItem("Geen Methode");
+		menuItemGR.setEnabled(false);
 		menuItemGR.addActionListener(this);
 		methodeChoicePopup.add(menuItemGR);
 		
-		menuItemMW = new MenuItem("Moderne Wiskunde");
-        menuItemMW.addActionListener(this);
-        methodeChoicePopup.add(menuItemMW);
+//		menuItemMW = new MenuItem("Moderne Wiskunde");
+//        menuItemMW.addActionListener(this);
+//        methodeChoicePopup.add(menuItemMW);
         
         add(methodeChoicePopup);
         
-        methodeChoice = new JComboBox();
-		methodeChoice.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-		methodeChoice.addItem("Getal en Ruimte");
-		methodeChoice.addItem("Moderne Wiskunde");
-		//methodeChoice.addMouseListener(this);
-		//methodeChoice.addActionListener(this);
-		methodeChoice.setForeground(Color.white);
-		methodeChoice.setBackground(LeerdomeinGraphPanel.colorBlue3);
-		methodeChoice.setFont(font);
-		methodeChoice.setBounds(20, 5, 20, 24);
-		methodeChoice.setMaximumSize(new Dimension(20,24));
-		methodeChoice.setPreferredSize(new Dimension(20,24));
+//        methodeChoice = new JComboBox();
+//		methodeChoice.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+//		methodeChoice.addItem("Getal en Ruimte");
+//		methodeChoice.addItem("Moderne Wiskunde");
+//		//methodeChoice.addMouseListener(this);
+//		//methodeChoice.addActionListener(this);
+//		methodeChoice.setForeground(Color.white);
+//		methodeChoice.setBackground(LeerdomeinGraphPanel.colorBlue3);
+//		methodeChoice.setFont(font);
+//		methodeChoice.setBounds(20, 5, 20, 24);
+//		methodeChoice.setMaximumSize(new Dimension(20,24));
+//		methodeChoice.setPreferredSize(new Dimension(20,24));
 		
 		hb.add(methodeChoiceButton);
 		hb.add(methodeLabel);
@@ -945,7 +946,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		int oldHeight = getHeight();
 		super.setBounds(x, y, width, height);
 		topPanel.setBounds(0, 0, getWidth(), 26);
-		methodeChoice.setBounds(20, 2, 20, 24);
+		//methodeChoice.setBounds(20, 2, 20, 24);
 		zoomFitButton.setBounds(getWidth() - 35, 35, 30, 30);
 		zoomInButton.setBounds(getWidth() - 35, 70, 30, 30);
 		zoomOutButton.setBounds(getWidth() - 35, 105, 30, 30);
@@ -953,14 +954,14 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		voorkennisWegButton.setBounds(getWidth() - 200, 1, 200, 24);
 		if(voorkennisArea) {
 			topPanel.setBounds(0, getHeight()/4, getWidth(), 26);
-			methodeChoice.setBounds(20, getHeight()/4+2, 20, 24);
+			//methodeChoice.setBounds(20, getHeight()/4+2, 20, 24);
 			zoomFitButton.setBounds(getWidth() - 35, getHeight()/4+35, 30, 30);
 			zoomInButton.setBounds(getWidth() - 35, getHeight()/4+70, 30, 30);
 			zoomOutButton.setBounds(getWidth() - 35, getHeight()/4+105, 30, 30);
 		}
 		if(voorkennisTree) {
 			topPanel.setBounds(0, getHeight(), getWidth(), 26);
-			methodeChoice.setBounds(20, getHeight()/4+2, 20, 24);
+			//methodeChoice.setBounds(20, getHeight()/4+2, 20, 24);
 			zoomFitButton.setBounds(getWidth() - 35, getHeight()/4+35, 30, 30);
 			zoomInButton.setBounds(getWidth() - 35, getHeight()/4+70, 30, 30);
 			zoomOutButton.setBounds(getWidth() - 35, getHeight()/4+105, 30, 30);
@@ -1205,6 +1206,11 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	public void setModel(TreeModel model, Map<String, Map<String, Set<Integer>>> filter, PersistenceId activeMethod) {
 	    Map<String, GraphNode> graphMap = new LinkedHashMap<>();
 	    this.activeMethod = activeMethod;
+	    this.activeRow = MethodsProperties.instance().getMethod(activeMethod);
+	    menuItemGR.setLabel(this.activeRow.getMethod());
+	    menuItemGR.setEnabled(activeMethod != null);
+	    methodeLabels.putAll(MethodsProperties.instance().stream().collect(Collectors.toMap(Row::key, Row::getMethod)));
+	    
 		List<NodeLeaf> leaves = new ArrayList<>();
 		ArrayList<GraphEdge> edges = new ArrayList<>();
 		searchNodes(model, model.getRoot(), graphMap, "", leaves);
@@ -1411,7 +1417,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		voorkennisArea = b;
 		if(b) {
 			topPanel.setBounds(0, getHeight()/4, getWidth(), 26);
-			methodeChoice.setBounds(20, getHeight()/4+2, 20, 24);
+			//methodeChoice.setBounds(20, getHeight()/4+2, 20, 24);
 			zoomFitButton.setBounds(getWidth() - 35, getHeight()/4+35, 30, 30);
 			zoomInButton.setBounds(getWidth() - 35, getHeight()/4+70, 30, 30);
 			zoomOutButton.setBounds(getWidth() - 35, getHeight()/4+105, 30, 30);
@@ -1419,7 +1425,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		}
 		else {
 			topPanel.setBounds(0, 0, getWidth(), 26);
-			methodeChoice.setBounds(20, 2, 20, 24);
+			//methodeChoice.setBounds(20, 2, 20, 24);
 			zoomFitButton.setBounds(getWidth() - 35, 35, 30, 30);
 			zoomInButton.setBounds(getWidth() - 35, 70, 30, 30);
 			zoomOutButton.setBounds(getWidth() - 35, 105, 30, 30);
@@ -1482,11 +1488,11 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			methodeChoicePopup.show(methodeChoiceButton, 0, 0);
 		}
 		if(e.getSource()==menuItemGR) {
-			selectMethode("Getal&Ruimte");
+			selectMethode(activeRow.key());
 		}
-		if(e.getSource()==menuItemMW) {
-			selectMethode("Moderne Wiskunde");
-		}
+//		if(e.getSource()==menuItemMW) {
+//			selectMethode("Moderne Wiskunde");
+//		}
 		if(e.getSource()==menuItemAll) {
 			deselectMethode();
 		}

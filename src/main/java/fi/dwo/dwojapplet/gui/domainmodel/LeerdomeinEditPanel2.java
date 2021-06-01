@@ -380,7 +380,7 @@ public class LeerdomeinEditPanel2 extends JPanel
         panel.setActiveMethod(activeMethod);
         int ok = JOptionPane.showConfirmDialog(LeerdomeinEditPanel2.this, panel, "Instellingen lesmethoden", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);       
         if (ok == JOptionPane.OK_OPTION) {
-            activeMethod = panel.getActiveMethod();
+            setActiveMethod(panel.getActiveMethod());
         }
       }
 	}
@@ -775,15 +775,15 @@ public class LeerdomeinEditPanel2 extends JPanel
 		settingsRO.add(voorkennisRO);
 		settingsRO.add(Box.createHorizontalGlue());
 		AnyMethodAction methodeAction3 = new AnyMethodAction(true, this, tree);
-        AnyMethodAction methodeAction4 = new AnyMethodAction(true, this, tree);
+        methodeAction4 = new AnyMethodAction(true, this, tree);
 		methodeAction3.setMethode(MethodsProperties.instance().get(1));
-        methodeAction4.setMethode(MethodsProperties.instance().get(2));
+        methodeAction4.setMethode(MethodsProperties.instance().get(0));
 		
         JButton genrRO = new JButton(methodeAction3);
 		genrRO.setFont(font);
 		genrRO.setPreferredSize(new Dimension(140, 24));
-		settingsRO.add(genrRO);
-		settingsRO.add(Box.createHorizontalStrut(10));
+//		settingsRO.add(genrRO);
+//		settingsRO.add(Box.createHorizontalStrut(10));
 		JButton mwRO = new JButton(methodeAction4);
 		mwRO.setFont(font);
 		mwRO.setPreferredSize(new Dimension(140, 24));
@@ -842,16 +842,16 @@ public class LeerdomeinEditPanel2 extends JPanel
 		parametersLabel.setForeground(Constants.COLOR15);
 		bkt.add(parametersLabel);
 		bkt.add(Box.createHorizontalGlue());
-		AnyMethodAction methodeAction2 = new AnyMethodAction(this, tree);
+		methodeAction2 = new AnyMethodAction(this, tree);
         AnyMethodAction methodeAction = new AnyMethodAction(this, tree);
 		methodeAction.setMethode(MethodsProperties.instance().get(1));
-		methodeAction2.setMethode(MethodsProperties.instance().get(2));
+		methodeAction2.setMethode(MethodsProperties.instance().get(0));
 		
         JButton genr = new JButton(methodeAction);
 		genr.setFont(font);
 		genr.setPreferredSize(new Dimension(140, 20));
-		bkt.add(genr);
-		bkt.add(Box.createHorizontalStrut(10));
+//		bkt.add(genr);
+//		bkt.add(Box.createHorizontalStrut(10));
 		JButton mw = new JButton(methodeAction2);
 		mw.setFont(font);
 		mw.setPreferredSize(new Dimension(140, 20));
@@ -1036,11 +1036,18 @@ public class LeerdomeinEditPanel2 extends JPanel
 		this.structure = model;
 		setEditable(editable);
 		// OPSLAAN_ACTION.left();
-		activeMethod = model.getActiveMethod();
-		graph.setModel(this.model,null, model.getActiveMethod());
+		setActiveMethod(model.getActiveMethod());
+		graph.setModel(this.model,null, activeMethod);
 		filterAction.doFilter();
 
 	}
+
+  protected void setActiveMethod(PersistenceId am) {
+    activeMethod = am;
+	filterAction.setActiveMethod(am);
+	methodeAction4.setMethode(am);
+	methodeAction2.setMethode(am);
+  }
 
 	static void insert(NodeVector vector, InvisibleNode node) {
       for(Object child: vector) {
@@ -1061,6 +1068,8 @@ public class LeerdomeinEditPanel2 extends JPanel
 	static DomStudentModelCategory untitledCategory;
 	static DomStudentModelObj untitledObjective;
   private FilterAction filterAction;
+  private AnyMethodAction methodeAction4;
+  private AnyMethodAction methodeAction2;
 
 	static {
 		Genson genson = new GensonBuilder().create();

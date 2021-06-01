@@ -229,6 +229,7 @@ public void actionPerformed(ActionEvent event) {
   private DomStudentModelScorePerTeacher scores;
   private JLabel red, score, green;
   private Icon lens;
+  private FilterAction filterAction;
   
   public LeerdomeinResultsPanel2() {
     super(new BorderLayout());
@@ -247,8 +248,8 @@ public void actionPerformed(ActionEvent event) {
     Box vb = Box.createVerticalBox();
     JPanel filterBox = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
     Consumer<Map<String, Map<String, Set<Integer>>>> consumer = this::filter;
-    FilterAction fa = new FilterAction(this, consumer);
-    JButton filter = new JButton(fa);
+    filterAction = new FilterAction(this, consumer);
+    JButton filter = new JButton(filterAction);
     filterBox.add(filter);
     vb.add(filterBox);
     JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -373,6 +374,7 @@ public void actionPerformed(ActionEvent event) {
     //this.tekst.setText(vector.getDescription());
     setDescription(vector);
     this.model.nodeStructureChanged(root);
+    filterAction.setActiveMethod(model.getActiveMethod());
 
   }
 

@@ -52,6 +52,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class StudentResultsPanel extends JPanel implements Constants, TreeSelectionListener {
 
@@ -208,7 +209,8 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     
     leftBox.add(scrollpane, BorderLayout.CENTER);
     leftSouth = Box.createHorizontalBox();
-    JButton filter = new JButton(new FilterAction(this, this::filter));
+    filterAction = new FilterAction(this, this::filter);
+    JButton filter = new JButton(filterAction);
     leftSouth.add(Box.createHorizontalGlue());
     leftSouth.add(filter);
     leftSouth.add(Box.createHorizontalGlue());
@@ -291,7 +293,9 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     //this.tekst.setText(vector.getDescription());
     setDescription(vector);
     this.model.nodeStructureChanged(root);
-    graph.setModel(this.model,null,context.getModelStructure().getActiveMethod());
+    PersistenceId activeMethod = context.getModelStructure().getActiveMethod();
+    graph.setModel(this.model,null,activeMethod);
+    filterAction.setActiveMethod(activeMethod);
 
   }
 
@@ -437,6 +441,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
   private JSplitPane split;
   private JPanel right;
   private JSplitPane splitLeft;
+  private FilterAction filterAction;
   
   public void setScore(DomStudentModelStructureScore v) {
     this.structureScore = v;

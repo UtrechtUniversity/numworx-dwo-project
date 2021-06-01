@@ -17,6 +17,7 @@ import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.ConfirmDialog;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 class FilterAction extends AbstractAction {
 
@@ -33,13 +34,16 @@ class FilterAction extends AbstractAction {
 
     FilterPanel p;
     
+    PersistenceId activeMethod;
+    
     
     Map<String,Map<String,Set<Integer>>> filter = Collections.emptyMap();
 
     @Override
     public void actionPerformed(ActionEvent e) {
       ConfirmDialog dialog = new ConfirmDialog(owner, getValue(NAME).toString());
-      p = new FilterPanel();
+      FilterPanel p;
+      p = new FilterPanel(activeMethod);
       dialog.getContentPane().setLayout(new BorderLayout());
       
       dialog.getContentPane().add(p, BorderLayout.CENTER);
@@ -62,5 +66,13 @@ class FilterAction extends AbstractAction {
     
     public void doFilter() {
       consumer.accept(filter);
+    }
+
+    public PersistenceId getActiveMethod() {
+      return activeMethod;
+    }
+
+    public void setActiveMethod(PersistenceId activeMethod) {
+      this.activeMethod = activeMethod;
     }
   }

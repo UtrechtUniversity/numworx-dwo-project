@@ -203,7 +203,7 @@ public class SettingsSchoolClassPanel extends JPanel {
 //        } catch (Dwo2Exception e1) {
 //        }
 //      }
-      FilterPanel panel = new FilterPanel();
+      FilterPanel panel = new FilterPanel(model.id.getModelStructure().getActiveMethod());
       Map<String, Map<String, Set<Integer>>> filter = model.filter[row];
       if(filter == null) filter = Collections.emptyMap();
       panel.setFilter(filter);;

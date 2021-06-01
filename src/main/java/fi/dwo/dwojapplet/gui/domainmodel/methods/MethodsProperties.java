@@ -58,7 +58,7 @@ public class MethodsProperties extends ArrayList<Row> {
   public Map<String, String> getDescriptionsMap(PersistenceId activeMethod) {
     Map<String,String> result = new TreeMap<String,String>();
     for (Row row: this) {
-      if (row.id != null) {
+      if (row.getId() != null) {
         String key = row.key();
         for (int i = 0; i < row.books.length; i++ ) {
           String book = row.books[i];
@@ -74,7 +74,7 @@ public class MethodsProperties extends ArrayList<Row> {
 
   public Row getMethod(PersistenceId activeMethod) {
     for (Row row: this) {
-      if (Objects.equals(activeMethod, row.id)) return row;
+      if (Objects.equals(activeMethod, row.getId())) return row;
     }
     return null;
   }

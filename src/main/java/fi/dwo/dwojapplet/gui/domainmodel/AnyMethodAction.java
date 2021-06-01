@@ -40,13 +40,20 @@ public class AnyMethodAction extends MethodeAction {
   }
 
   void setMethode(PersistenceId active) {
+    setEnabled(active != null);
     setMethode(MethodsProperties.instance().getMethod(active));
   }
   
   // hulpje voor constructor;
   AnyMethodAction init(int i) {
+    setEnabled(i != 0);
     setMethode(MethodsProperties.instance().get(i));
     return this;
+  }
+  @Override
+  public void setEnabled(boolean newValue) {
+    // TODO Auto-generated method stub
+    super.setEnabled(newValue);
   }
 
   
