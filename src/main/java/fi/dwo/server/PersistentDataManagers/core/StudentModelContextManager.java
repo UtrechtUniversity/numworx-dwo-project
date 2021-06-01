@@ -25,6 +25,7 @@ import org.json.simple.parser.ParseException;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
@@ -176,7 +177,7 @@ public class StudentModelContextManager {
 	public static List<PersistentStudentModelContext> findReducedEntities(PersistentSchool s) {
         EntityManager em = getEntityManager();
         try {
-        	Query q = em.createNativeQuery("SELECT modelID, schoolID, json_extract(model, \"$.info.title\"), optlock, lastChangeTimeStamp, publishState, json_extract(model, \"$.owner\"), json_extract(model, \"$.timestamp\"), json_extract(model, \"$.info.id\") FROM tblstudentmodelcontext WHERE schoolID = ?" );
+        	Query q = em.createNativeQuery("SELECT modelID, schoolID, json_extract(model, \"$.info.title\"), optlock, lastChangeTimeStamp, publishState, json_extract(model, \"$.owner\"), json_extract(model, \"$.timestamp\"), json_extract(model, \"$.info.id\"), json_extract(model, \"$.activeMethod.idString\") FROM tblstudentmodelcontext WHERE schoolID = ?" );
         	q.setParameter(1, s.getSchoolID());
         	List<Object[]> result = q.getResultList();
         	List<PersistentStudentModelContext> list = new ArrayList<>();        	
@@ -196,6 +197,7 @@ public class StudentModelContextManager {
 					sc.getModelStructure().setOwner( toString( item[6] ));
 					sc.getModelStructure().setTimestamp(toLong(item[7])); 
 				    sc.getModelStructure().getInfo().setId(toString(item[8]));
+				    sc.getModelStructure().setActiveMethod(toPersistenceId(item[9]));
 					list.add(sc);
 				} catch (ParseException e) {
 					LOG.log(Level.SEVERE, "findReducedEntities", e);
@@ -227,6 +229,13 @@ public class StudentModelContextManager {
 			return null;
 		return new JSONParser().parse(object.toString()).toString();
 	}
+	private static PersistenceId toPersistenceId(Object object) throws ParseException {
+		object = toString(object);
+		if (object == null || "null".equals(object))
+			return null;
+		return new PersistenceId(object.toString());
+	}
+	
 
 	public static PersistentStudentModelContext findEntity(Long id) throws PersistenceException {
         EntityManager em = getEntityManager();
