@@ -18,7 +18,7 @@ if ("shibboleth".equals(request.getAuthType())) clientId = "f9af29c4-cfc5-11ea-8
 <meta charset="UTF-8">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="viewport" content="width=1024">
-<title>Numworx Higher Education (NL)</title>
+<title>Numworx Higher Education</title>
     <link type="text/css" rel="stylesheet" href="/dwo/oauth2client/OAuth2Client.css">
     <script>
     	endpoint = "<%=player%>"
