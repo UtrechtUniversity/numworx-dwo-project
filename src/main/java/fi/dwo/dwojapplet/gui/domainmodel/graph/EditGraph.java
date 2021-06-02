@@ -66,7 +66,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
     
     public boolean modelJustSet = false;
     
-    private Graph graph;
+    Graph graph;
 
     public EditGraph() {
 		setLayout(null);
@@ -168,10 +168,13 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 			graphEdges.get(i).paint(g, origin, factor);
 		for(int i=0 ; i<graphNodes.size() ; i++) {
 			if(!graphNodes.get(i).getBlur() && graphNodes.get(i).isVisible())
-			{	Rectangle rn = graphNodes.get(i).getTextBB();
+			{	
+			  
+			  for (String code: graphNodes.get(i).getVisibleSet()) {
+			    Rectangle rn = graphNodes.get(i).getTextBB(code);
 				if (rn.width == 0) {
 					graphNodes.get(i).paint(g, origin, factor);
-					rn = graphNodes.get(i).getTextBB();
+					rn = graphNodes.get(i).getTextBB(code);
 				}
 				int rx = (int)(origin.x+(rn.x)*factor);
 				int ry = (int)(origin.y+(rn.y)*factor);
@@ -182,7 +185,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 					if(j==0)
 						g.fillRect(r.x+k/2-j, r.y+k/2-j, r.width-(k-2*j), r.height-(k-2*j));
 					g.drawRect(r.x+k/2-j, r.y+k/2-j, r.width-(k-2*j), r.height-(k-2*j));
-				}
+				}}
 			}
 			graphNodes.get(i).paint(g, origin, factor);
 		}
@@ -288,7 +291,9 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 			}
 			
 			editPopupNode = findNode(e.getX(),e.getY());
+			
 			if(editPopupNode!=null) {
+			    editPopupNode.selectAround(ex, ey);		  
 				popup.show(this, e.getX(), e.getY());
 				return;
 			}
@@ -373,7 +378,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 //				else
 //					graphNodes.get(i).setSelected(false);
 			    GraphNode node = graphNodes.get(i);
-			    if (node.getLocation()!= null) {
+			    if (node.isVisible()) {
 			      node.selectInside(selectieRectangle, origin, factor);
 			    }
 			
@@ -603,9 +608,10 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		
 		for (int i = 0; i < graphNodes.size(); i++) {
 			GraphNode node = graphNodes.get(i);
-            if(node.isVisible() && node.getLocation()!=null) {
+            if(node.isVisible()) {
               for(String code: node.getVisibleSet()) {
 				Point location = node.getLocation(code);
+				if (location == null) continue;
                 if(xMax < location.x)
 					xMax = location.x;
 				if(yMax < location.y)

@@ -74,11 +74,11 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	private JButton zoomOutButton;
 	private JButton voorkennisButton;
 	private JButton voorkennisWegButton;
-	private JButton methodeChoiceButton;
-	private PopupMenu methodeChoicePopup;
-	private MenuItem menuItemAll;
+//	private JButton methodeChoiceButton;
+//	private PopupMenu methodeChoicePopup;
+//	private MenuItem menuItemAll;
 
-	private MenuItem menuItemGR;
+	//private MenuItem menuItemGR;
 	//private MenuItem menuItemMW;
 	
 	private PopupMenu voorkennisPopupMenu;
@@ -114,7 +114,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	
 	private HashMap<String,String> methodeLabels = new HashMap();
     private PersistenceId activeMethod;
-    private Row activeRow;
+    Row activeRow;
 	
 	
 
@@ -161,26 +161,26 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		
 		hb.setBounds(20,0,1000, 26);
 		
-		methodeChoiceButton = new JButton("\u25be");
-		methodeChoiceButton.addActionListener(this);
-		
-		methodeChoicePopup = new PopupMenu();
-		methodeChoicePopup.setFont(new Font("SansSerif",Font.PLAIN,13));
-		
-		menuItemAll = new MenuItem("Alle leerdoelen");
-		menuItemAll.addActionListener(this);
-		methodeChoicePopup.add(menuItemAll);
-		
-		menuItemGR = new MenuItem("Geen Methode");
-		menuItemGR.setEnabled(false);
-		menuItemGR.addActionListener(this);
-		methodeChoicePopup.add(menuItemGR);
+//		methodeChoiceButton = new JButton("\u25be");
+//		methodeChoiceButton.addActionListener(this);
+//		
+//		methodeChoicePopup = new PopupMenu();
+//		methodeChoicePopup.setFont(new Font("SansSerif",Font.PLAIN,13));
+//		
+//		menuItemAll = new MenuItem("Alle leerdoelen");
+//		menuItemAll.addActionListener(this);
+//		methodeChoicePopup.add(menuItemAll);
+//		
+//		menuItemGR = new MenuItem("Geen Methode");
+//		menuItemGR.setEnabled(false);
+//		menuItemGR.addActionListener(this);
+//		methodeChoicePopup.add(menuItemGR);
 		
 //		menuItemMW = new MenuItem("Moderne Wiskunde");
 //        menuItemMW.addActionListener(this);
 //        methodeChoicePopup.add(menuItemMW);
         
-        add(methodeChoicePopup);
+//        add(methodeChoicePopup);
         
 //        methodeChoice = new JComboBox();
 //		methodeChoice.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
@@ -195,7 +195,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 //		methodeChoice.setMaximumSize(new Dimension(20,24));
 //		methodeChoice.setPreferredSize(new Dimension(20,24));
 		
-		hb.add(methodeChoiceButton);
+//		hb.add(methodeChoiceButton);
 		hb.add(methodeLabel);
 		hb.add(Box.createHorizontalStrut(40));
 		hb.add(tussenLabel1);
@@ -357,10 +357,12 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		
 		for (int i = 0; i < graphNodes.size(); i++) {
 			if (!graphNodes.get(i).getBlur() && graphNodes.get(i).isVisible() && graphNodes.get(i).getTempLocation()==null) {
-				Rectangle rn = graphNodes.get(i).getTextBB();
+			  for (String  code: graphNodes.get(i).getVisibleSet()) {
+			  
+			    Rectangle rn = graphNodes.get(i).getTextBB(code);
 				if (rn.width == 0) {
 					graphNodes.get(i).paint(g, origin, factor);
-					rn = graphNodes.get(i).getTextBB();
+					rn = graphNodes.get(i).getTextBB(code);
 				}
 				int rx = (int)(origin.x+(rn.x)*factor);
 				int ry = (int)(origin.y+(rn.y)*factor);
@@ -371,7 +373,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 					if (j == 0)
 						g.fillRect(r.x + k / 2 - j, r.y + k / 2 - j, r.width - (k - 2 * j), r.height - (k - 2 * j));
 					g.drawRect(r.x + k / 2 - j, r.y + k / 2 - j, r.width - (k - 2 * j), r.height - (k - 2 * j));
-				}
+				}}
 			}
 			graphNodes.get(i).paint(g, origin, factor, false);
 			//graphNodes.get(i).setTempLocation(null);
@@ -380,37 +382,41 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	}
 	
 	private boolean onPanel(GraphNode node) {
-		Point p = node.getLocationOnPanel(origin, factor);
+	  for (String code : node.getVisibleSet()) {
+		Point p = node.getLocationOnPanel(code, origin, factor);
 		if(p!=null && p.x > 0 && p.x < getWidth() && p.y > 0 && p.y < getHeight())
 			return true;
-		return false;
+	  }
+	  return false;
 	}
 	
-	private Point makeTempLocation (GraphNode source, GraphNode target) {
-		Point pTemp = null;
-		if(source==null)
-			return null;
-		if(!onPanel(source) && onPanel(target)) {
-			int x = 0;
-			int y = 0;
-			int w = getWidth();
-			int h = getHeight();
-			int a = source.getLocationOnPanel(origin, factor).x;
-			int b = source.getLocationOnPanel(origin, factor).y;
-			int c = target.getLocationOnPanel(origin, factor).x;
-			int d = target.getLocationOnPanel(origin, factor).y;
-			Point py0 = new Point((int)(a+(double)(0-b)/(double)(d-b)*(c-a)), 0);
-			if(py0.x > 0 && py0.x < w)
-				return py0;
-			Point px0 = new Point(0, (int)(b+(double)(0-a)/(double)(c-a)*(d-b)));
-			if(px0.y > 0 && px0.y < h)
-				return px0;
-			return pTemp;
-		}
-		
-		
-		return pTemp;
-	}
+//	private Point makeTempLocation (GraphNode source, GraphNode target) {
+//		Point pTemp = null;
+//		if(source==null)
+//			return null;
+//		if(!onPanel(source) && onPanel(target)) {
+//			int x = 0;
+//			int y = 0;
+//			int w = getWidth();
+//			int h = getHeight();
+//			String code = source.getVisibleSet().iterator().next();
+//			int a = source.getLocationOnPanel(code, origin, factor).x;
+//			int b = source.getLocationOnPanel(code, origin, factor).y;
+//			code = target.getVisibleSet().iterator().next();
+//			int c = target.getLocationOnPanel(code, origin, factor).x;
+//			int d = target.getLocationOnPanel(code, origin, factor).y;
+//			Point py0 = new Point((int)(a+(double)(0-b)/(double)(d-b)*(c-a)), 0);
+//			if(py0.x > 0 && py0.x < w)
+//				return py0;
+//			Point px0 = new Point(0, (int)(b+(double)(0-a)/(double)(c-a)*(d-b)));
+//			if(px0.y > 0 && px0.y < h)
+//				return px0;
+//			return pTemp;
+//		}
+//		
+//		
+//		return pTemp;
+//	}
 
 	public void setGraphNodes(ArrayList<GraphNode> graphNodes) {
 		if (graphNodes != this.graphNodes) {
@@ -677,6 +683,8 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	public void selectMethode(String methodeCode, boolean b) {
 
 	  setMethode(methodeCode);
+      methodeLabel.setText(methodeLabels.get(methodeCode));
+	  methodeCode = String.valueOf(methodeCode);
 	  for(int i=0 ; i<graphNodes.size() ; i++) {
 			graphNodes.get(i).setVisible(false);
 		}
@@ -696,7 +704,6 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			bookNodes.get(i).makeLocation(chapterNodes);
 		}
 		verbergVoorkennis(b);
-		methodeLabel.setText(methodeLabels.get(methodeCode));
 		tussenLabel1.setText("");
 		bookLabel.setText("");
 		tussenLabel2.setText("");
@@ -1072,6 +1079,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
+	    if (e.getSource() == bookLabel || e.getSource() == methodeLabel) return;
 		if(Math.abs(pressedX-e.getX())>2 || Math.abs(pressedY-e.getY())>2)
 			return;
 		int ex = (int) ((e.getX()-origin.x)/factor);
@@ -1207,8 +1215,8 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	    Map<String, GraphNode> graphMap = new LinkedHashMap<>();
 	    this.activeMethod = activeMethod;
 	    this.activeRow = MethodsProperties.instance().getMethod(activeMethod);
-	    menuItemGR.setLabel(this.activeRow.getMethod());
-	    menuItemGR.setEnabled(activeMethod != null);
+//	    menuItemGR.setLabel(this.activeRow.getMethod());
+//	    menuItemGR.setEnabled(activeMethod != null);
 	    methodeLabels.putAll(MethodsProperties.instance().stream().collect(Collectors.toMap(Row::key, Row::getMethod)));
 	    
 		List<NodeLeaf> leaves = new ArrayList<>();
@@ -1260,7 +1268,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			selectChapters(filterInfo);
 		}
 		else {
-			deselectMethode(false);
+			selectMethode(activeRow.key(), false);
 		}
 		//System.out.println("filter: "+filter);	
 		//System.out.println("filterInfo: "+filterInfo.keySet());
@@ -1307,13 +1315,11 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 				String id = leaf.getId();
 				Integer x = leaf.getX();
 				Integer y = leaf.getY();
-//				if (x == null)
-//					x = (int) (Math.random() * 600);
-//				if (y == null)
-//					y = (int) (Math.random() * 600);
 				if(x==null || y==null) {
 					GraphNode g = new GraphNode(id, parent, leaf.toString());
 					g.setMethodeInfo(leaf.getMethode());
+                    List<DomStudentModelMethodInfo> infos = leaf.getMethodeInfos();
+                    g.setMethodeInfos(infos);
 					System.out.println("methodeinfo: "+leaf.getMethode());
 					graphMap.put(id, g);
 					leaves.add(leaf);
@@ -1322,14 +1328,17 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 				else {
 					GraphNode g = new GraphNode(id, parent, leaf.toString());
 					g.setMethodeInfo(leaf.getMethode());
+					List<DomStudentModelMethodInfo> glist = new ArrayList<>();
+					DomStudentModelMethodInfo nul = new DomStudentModelMethodInfo();
+					nul.setX(x);
+					nul.setY(y);
+                    glist.add(nul);
 					List<DomStudentModelMethodInfo> infos = leaf.getMethodeInfos();
-					g.setLocation(x, y);
-					if(infos != null)
-					  g.setMethodeInfos(infos);
+                    if(infos != null) glist.addAll(infos);
+                    g.setMethodeInfos(glist);
 					g.setVisible(visible);
 					graphMap.put(id, g);
-					leaves.add(leaf);
-					
+					leaves.add(leaf);				
 				}
 				
 				//System.out.println("Methode: "+leaf.getMethode().get("Getal&Ruimte"));
@@ -1374,9 +1383,9 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 				NodeLeaf leaf = (NodeLeaf) node;
 				String id = leaf.getId();
 				GraphNode gn = graphMap.get(id);
-				if (gn != null && gn.getLocation()!=null) {
-					leaf.setX(gn.getLocation().x);
-					leaf.setY(gn.getLocation().y);
+				if (gn != null && gn.getLocation(GraphNode.NULLKEY)!=null) {
+					leaf.setX(gn.getLocation(GraphNode.NULLKEY).x);
+					leaf.setY(gn.getLocation(GraphNode.NULLKEY).y);
 					leaf.setMethodeInfos(gn.getMethodeInfos());
 				}
 				else if(gn!=null) {
@@ -1405,13 +1414,6 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		}
 
 	}
-	
-	private void mergeHfstCodes(GraphNode node) {
-		Set<String> codes = node.getMethodeCodes();
-		
-		
-	}
-	
 	
 	public void setVoorkennisArea(boolean b) {
 		voorkennisArea = b;
@@ -1484,18 +1486,18 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			if(voorkennisTree)
 				verbergVoorkennisTree();
 		}
-		if(e.getSource()==methodeChoiceButton) {
-			methodeChoicePopup.show(methodeChoiceButton, 0, 0);
-		}
-		if(e.getSource()==menuItemGR) {
-			selectMethode(activeRow.key());
-		}
+//		if(e.getSource()==methodeChoiceButton) {
+//			methodeChoicePopup.show(methodeChoiceButton, 0, 0);
+//		}
+//		if(e.getSource()==menuItemGR) {
+//			selectMethode(activeRow.key());
+//		}
 //		if(e.getSource()==menuItemMW) {
 //			selectMethode("Moderne Wiskunde");
 //		}
-		if(e.getSource()==menuItemAll) {
-			deselectMethode();
-		}
+//		if(e.getSource()==menuItemAll) {
+//			deselectMethode();
+//		}
 		if(e.getSource()==miVoorkennis) {
 			if(voorkennisArea)
 				verbergVoorkennis(true);
@@ -1520,9 +1522,10 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		for (int i = 0; i < graphNodes.size(); i++) {
 			//graphNodes.get(i).setTempLocation(null);
 			GraphNode node = graphNodes.get(i);
-            if(node.isVisible()  && node.getLocation()!=null && node.getTempLocation()==null) {
+            if(node.isVisible() && node.getTempLocation()==null) {
               for (String code: node.getVisibleSet()) {
 				Point location = node.getLocation(code);
+				if (location == null) continue;
                 if(xMax < location.x)
 					xMax = location.x;
 				if(yMax < location.y)

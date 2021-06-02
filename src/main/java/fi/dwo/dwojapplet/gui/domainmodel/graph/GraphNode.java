@@ -14,19 +14,16 @@ import java.awt.Stroke;
 import java.awt.geom.FlatteningPathIterator;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-//import javax.validation.constraints.NotNull;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 
@@ -37,6 +34,7 @@ public class GraphNode {
 			0.0f);
 
 	static final String NOTFOUND = "NOTFOUND";
+	static final String NULLKEY = "null-null-null";
 	private static Color defaultNodeColor = LeerdomeinGraphPanel.colorBlue4;
 	private static Color defaultKennenNodeColor = new Color(255,255,150);
 	private static Color defaultKennenNodeBorderColor = new Color(255,200,150);
@@ -94,21 +92,23 @@ public class GraphNode {
 		// setFont(defaultFont);
 	}
 
-	public GraphNode(String ID, String subdomein, String description, DomStudentModelMethodInfo info) {
-		this.ID = ID;
-		this.subdomein = subdomein;
-		this.description = description;
-		kennenLeerdoel = description.startsWith("W:");
-		if(kennenLeerdoel)
-			nodeColor = defaultKennenNodeColor;
-		methodeInfos = Collections.singletonMap(info.key(), info);
+//	public GraphNode(String ID, String subdomein, String description, DomStudentModelMethodInfo info) {
+//		this.ID = ID;
+//		this.subdomein = subdomein;
+//		this.description = description;
+//		kennenLeerdoel = description.startsWith("W:");
+//		if(kennenLeerdoel)
+//			nodeColor = defaultKennenNodeColor;
+//		methodeInfos = Collections.singletonMap(info.key(), info);
+//	}
+
+	GraphNode(int x, int y) {
+	    visible.add(NULLKEY);
+	    methodeInfos = Collections.singletonMap(NULLKEY, new DomStudentModelMethodInfo());
+	    setLocation(NULLKEY, x, y);
 	}
 
-	public GraphNode(int x, int y) {
-		setLocation(x, y);
-	}
-
-	public GraphNode(String ID, String subdomain, String description, int x, int y) {
+	GraphNode(String ID, String subdomain, String description, int x, int y) {
 		this(ID, subdomain, description);
 		setLocation(x, y);
 	}
@@ -125,16 +125,6 @@ public class GraphNode {
 		return ID;
 	}
 
-	@Deprecated
-	public Point getLocation() {
-		if (methodeInfos.isEmpty())
-			return null;
-		DomStudentModelMethodInfo info = methodeInfos.values().iterator().next();
-		if (info.getX() == null || info.getY() == null)
-			return null;
-		return new Point(info.getX(), info.getY());
-	}
-
 	public Point getLocation(String key) {
 		DomStudentModelMethodInfo info = methodeInfos.get(key);
 		if (info != null && info.getX() != null && info.getY() != null) {
@@ -148,15 +138,6 @@ public class GraphNode {
 
 	public Point getTempLocation() {
 		return tempLocation;
-	}
-
-	public Point getLocationOnPanel(Point origin, double factor) {
-		Point location = getLocation();
-		if (location == null)
-			return null;
-		int x = origin.x + (int) ((location.x) * factor);
-		int y = origin.y + (int) ((location.y) * factor);
-		return new Point(x, y);
 	}
 
 	public Point getLocationOnPanel(String code, Point origin, double factor) {
@@ -179,13 +160,27 @@ public class GraphNode {
 
 	public synchronized void selectInside(Rectangle r, Point origin, double factor) {
 		selected.clear();
-		for (String code : getMethodeCodes()) {
+		for (String code : visible) {
 			Point location = getLocationOnPanel(code, origin, factor);
 			if (r.contains(location) && isVisible(code))
 				selected.add(code);
 		}
 	}
 
+	public synchronized void selectAround(int x, int y) {
+	     selected.clear();	     
+	     for (String code : visible) {
+           Point location = getLocation(code);
+           if (location == null)
+               continue;
+           Rectangle r = new Rectangle(location.x - size / 2, location.y - size / 2, size, size);
+           if (r.contains(x, y))
+               selected.add(code);
+       }
+
+	}
+	
+	
 	public Color getSuccesFailColor() {
 		if (succesFailScore == null)
 			return nodeColor;
@@ -277,17 +272,26 @@ public class GraphNode {
 	}
 
 	public void setLocation(int x, int y) {
-		if (methodeInfos.isEmpty()) {
-			methodeInfos = new HashMap<>(Collections.singletonMap(null, new DomStudentModelMethodInfo()));
-		}
-		methodeInfos.values().stream().forEach(t -> {
-			t.setX(x);
-			t.setY(y);
-		});
+	  if (tempLocation != null) tempLocation.setLocation(x, y);
+	  else
+      for (String code : selected) {
+        setLocation(code, x, y);
+        break;
+      }
 	}
 
 	public void setLocation(Point p) {
+	  if (p == null) {
+	    Iterator<String> iter = selected.iterator();
+	    if (iter.hasNext()) {
+	      String code = iter.next(); iter.remove();
+	      DomStudentModelMethodInfo m = methodeInfos.get(code);
+	      m.setX(null);m.setY(null);
+	      visible.remove(code);
+	    }
+	  } else {
 		setLocation(p.x, p.y);
+	  }
 	}
 
 	public Map<String, Map<String, Set<Integer>>> getMethodeInfo() {
@@ -297,6 +301,8 @@ public class GraphNode {
 	public void setMethodeInfo(Map<String, Map<String, Set<Integer>>> methodeInfo) {
 		this.methodeInfo = methodeInfo;
 		this.methodeInfos = new HashMap<>();
+		DomStudentModelMethodInfo nul = new DomStudentModelMethodInfo();
+        this.methodeInfos.put(nul.key(), nul); // null position
 		for (String methodeName : methodeInfo.keySet()) {
 			Map<String, Set<Integer>> leerjaren = methodeInfo.get(methodeName);
 			for (String leerjaarName : leerjaren.keySet()) {
@@ -346,7 +352,7 @@ public class GraphNode {
 	public Collection<DomStudentModelMethodInfo> getMethodeInfos() {
 		if (methodeInfo == null || methodeInfo.isEmpty())
 			return null;
-		return methodeInfos.values();
+		return methodeInfos.values().stream().filter(t -> t.getMethod() != null).collect(Collectors.toList());
 	}
 
 	public void setTempLocation(Point p) {
@@ -365,7 +371,7 @@ public class GraphNode {
 
 		if (tempLocation != null)
 			return new Rectangle(tempLocation.x - size / 2, tempLocation.y - size / 2, size, size).contains(x, y);
-		for (String code : getMethodeCodes()) {
+		for (String code : visible) {
 			Point location = getLocation(code);
 			if (location == null)
 				continue;
@@ -381,8 +387,8 @@ public class GraphNode {
 	}
 
 	public void paint(Graphics gr, Point origin, double factor, boolean connectInstances) {
-		Point location = getLocation();
-		if (location == null || factor < 0.15)
+		
+		if (!isVisible() || factor < 0.15)
 			return;
 		Graphics2D g = (Graphics2D) gr;
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -424,7 +430,8 @@ public class GraphNode {
 
 		for (String code : getMethodeCodes()) {
 			if (visible.contains(code)) {
-				location = getLocation(code);
+				Point location = getLocation(code);
+				if (location == null) continue;
 				// g.setFont(defaultFont.deriveFont((int)(defaultFontSize*factor)));
 				g.setFont(new Font("SansSerif", Font.PLAIN, (int) (defaultFontSize * factor)));
 				if (selected.contains(code))
@@ -487,8 +494,8 @@ public class GraphNode {
 		}
 	}
 
-	public Rectangle getTextBB() {
-		Point location = getLocation();
+	public Rectangle getTextBB(String code) {
+		Point location = getLocation(code);
 		if (location == null)
 			return new Rectangle(0, 0, 0, 0);
 		// if(tempLocation != null) {
@@ -599,7 +606,7 @@ public class GraphNode {
 	}
 
 	public String search(int x, int y) {
-		for (String code : getMethodeCodes()) {
+		for (String code : visible) {
 			Point location = getLocation(code);
 			Rectangle r = new Rectangle(location.x - size / 2, location.y - size / 2, size, size);
 			if (r.contains(x, y))
@@ -609,9 +616,6 @@ public class GraphNode {
 	}
 
 	public void setLocation(String code, int ex, int ey) {
-		if (methodeInfos.isEmpty()) {
-			methodeInfos = Collections.singletonMap(null, new DomStudentModelMethodInfo());
-		}
 		DomStudentModelMethodInfo info = methodeInfos.get(code);
 		if (info != null) {
 			info.setX(ex);

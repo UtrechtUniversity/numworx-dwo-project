@@ -34,8 +34,20 @@ public class DropTargetGraph extends DropTargetAdapter {
 				List<GraphNode> nodes = graph.getGraphNodes();
 				for (GraphNode node : nodes) {
 					if (node.getID().equals(id)) {
+					    if (node.isVisible()) {
+					        node.getVisibleSet().forEach(t -> node.setSelected(t, true));
+					    } else {
+					        String prefix = String.valueOf(graph.graph.activeRow.key());
+					        node.getMethodeCodes().stream()
+					        .filter (t -> t.startsWith(prefix))
+					        .forEach(t -> {
+					          node.setSelected(t, true);
+					          node.setVisible(t,  true);
+					        }
+					        );
+					    }
 						node.setLocation(ex, ey);
-						node.setVisible(true); // Feedback
+						node.setSelected(false);
 						break;
 					}
 				}

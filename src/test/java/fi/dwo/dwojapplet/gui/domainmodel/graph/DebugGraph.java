@@ -100,8 +100,8 @@ public class DebugGraph extends Graph {
   	for(int i=0 ; i<graphNodes.size() ; i++) {
   		GraphNode gn = graphNodes.get(i);
   		double factor = 0.5;
-  		int x = (int)(factor*(gn.getLocation().x+1200));
-  		int y = (int)(factor*(-gn.getLocation().y+900));
+  		int x = (int)(factor*(gn.getLocation(GraphNode.NULLKEY).x+1200));
+  		int y = (int)(factor*(-gn.getLocation(GraphNode.NULLKEY).y+900));
   		graphNodesNew.add(new GraphNode(gn.getID(), gn.getSubdomein(), gn.getDescription(), x, y));
   	}
   	return graphNodesNew;

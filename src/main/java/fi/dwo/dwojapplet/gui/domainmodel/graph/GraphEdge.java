@@ -39,17 +39,20 @@ public class GraphEdge {
 	}
 	
 	public boolean contains(int x, int y) {
-		if(target==null || source==null || target.getLocation()==null || source.getLocation()==null)
+		if(target==null || source==null || target.isVisible()==false || source.isVisible()==false)
 			return false;
 		
 		float a = arrowSize;
-		for(String scode: source.getMethodeCodes()) 
-		for(String tcode: target.getMethodeCodes()) {
+		for(String scode: source.getVisibleSet()) 
+		for(String tcode: target.getVisibleSet()) {
 		
-		float x0 = source.getLocation(scode).x;
-		float x1 = target.getLocation(tcode).x;
-		float y0 = source.getLocation(scode).y;
-		float y1 = target.getLocation(tcode).y;
+		Point sourceLocation = source.getLocation(scode);
+	    Point targetLocation = target.getLocation(tcode);
+	    if (targetLocation == null || sourceLocation == null) continue;
+         float x0 = sourceLocation.x;
+        float x1 = targetLocation.x;
+		float y0 = sourceLocation.y;
+		float y1 = targetLocation.y;
 		float mx = (x0 + x1)/2;
 		float my = (y0 + y1)/2;
 		float dm1 = (float)Math.sqrt((x1-mx)*(x1-mx)+(y1-my)*(y1-my));
@@ -69,7 +72,7 @@ public class GraphEdge {
 	}
 	
 	public void paint(Graphics gr, Point origin, double factor) {
-		if(target==null || source==null || target.getLocation()==null || source.getLocation()==null  || !target.isVisible() || !source.isVisible() ||factor<0.15 
+		if(target==null || source==null || !target.isVisible() || !source.isVisible() ||factor<0.15 
 				||(source.getTempLocation()!=null && target.getTempLocation()!=null && !voorkennisTree))
 			return;
 		Graphics2D g = (Graphics2D)gr;
@@ -92,18 +95,28 @@ public class GraphEdge {
 				if(scode.equals(tcode) || source.getVisibleSet().size()==1 && target.getVisibleSet().size()==1 || source.getTempLocation()!=null) { //&& scode.equals(tcode)
 					boolean sameChapters = Objects.equals(scode, tcode);
 					
-					float x0 = origin.x + (float)((source.getLocation(scode).x)*factor);
-					float x1 = origin.x + (float)((target.getLocation(tcode).x)*factor);
-					float y0 = origin.y + (float)((source.getLocation(scode).y)*factor);
-					float y1 = origin.y + (float)((target.getLocation(tcode).y)*factor);
-					if(source.getTempLocation()!=null) {
-						x0 = source.getTempLocation().x;
-						y0 = source.getTempLocation().y;
-					}
-					if(voorkennisTree && target.getTempLocation()!=null) {
-						x1 = target.getTempLocation().x;
-						y1 = target.getTempLocation().y;
-					}
+					Point sourceLocation = source.getTempLocation();
+					if (sourceLocation == null)
+					  sourceLocation = source.getLocation(scode);
+					if (sourceLocation == null) continue;
+                    Point targetLocation = target.getTempLocation();
+                    if (targetLocation == null || !voorkennisTree)
+                      targetLocation = target.getLocation(tcode);
+					if (targetLocation == null) continue;
+					
+					
+                    float x0 = origin.x + (float)((sourceLocation.x)*factor);
+                    float x1 = origin.x + (float)((targetLocation.x)*factor);
+					float y0 = origin.y + (float)((sourceLocation.y)*factor);
+					float y1 = origin.y + (float)((targetLocation.y)*factor);
+//					if(source.getTempLocation()!=null) {
+//						x0 = source.getTempLocation().x;
+//						y0 = source.getTempLocation().y;
+//					}
+//					if(voorkennisTree && target.getTempLocation()!=null) {
+//						x1 = target.getTempLocation().x;
+//						y1 = target.getTempLocation().y;
+//					}
 					float mx = (x0 + x1)/2;
 					float my = (y0 + y1)/2;
 					float dm1 = (float)Math.sqrt((x1-mx)*(x1-mx)+(y1-my)*(y1-my));
