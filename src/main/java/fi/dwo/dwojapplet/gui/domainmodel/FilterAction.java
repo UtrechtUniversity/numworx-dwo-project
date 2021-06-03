@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -28,6 +29,7 @@ class FilterAction extends AbstractAction {
       super("Filter leerdoelen");
       this.owner = owner;
       this.consumer = consumer;
+      setEnabled(false);
 //      mw.setTree(tree);
 //      genr.setTree(tree);
     }
@@ -73,6 +75,10 @@ class FilterAction extends AbstractAction {
     }
 
     public void setActiveMethod(PersistenceId activeMethod) {
-      this.activeMethod = activeMethod;
+      if (!Objects.equals(activeMethod, this.activeMethod)) {
+        this.activeMethod = activeMethod;
+        filter = Collections.emptyMap();
+        setEnabled(activeMethod != null);
+      }
     }
   }
