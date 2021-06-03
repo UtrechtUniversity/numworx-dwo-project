@@ -107,6 +107,11 @@ public class GraphNode {
 	    methodeInfos = Collections.singletonMap(NULLKEY, new DomStudentModelMethodInfo());
 	    setLocation(NULLKEY, x, y);
 	}
+    GraphNode(int x, int y, String code) {
+      visible.add(code);
+      methodeInfos = Collections.singletonMap(code, new DomStudentModelMethodInfo());
+      setLocation(code, x, y);
+  }
 
 	GraphNode(String ID, String subdomain, String description, int x, int y) {
 		this(ID, subdomain, description);

@@ -314,7 +314,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 			possibleSourceNode = activeNode;
 			GraphNode helpNode = new GraphNode(ex,ey);
 			helpNode.setVisible(true);
-			//helpNode.setMethodeInfo(possibleSourceNode.getMethodeInfo());
+			helpNode.setSelected(true);
 			tempEdge = new GraphEdge(possibleSourceNode, helpNode);
 			graphEdges.add(tempEdge);
 			activeNode = null;
@@ -332,8 +332,6 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 	public void mouseReleased(MouseEvent e) {
 		int ex = (int) ((e.getX()-origin.x)/factor);
 		int ey = (int) ((e.getY()-origin.y)/factor);
-		
-		
 		
 		for(int i=0 ; i<graphNodes.size() ; i++) {
 			if(graphNodes.get(i).contains(ex, ey)) {
