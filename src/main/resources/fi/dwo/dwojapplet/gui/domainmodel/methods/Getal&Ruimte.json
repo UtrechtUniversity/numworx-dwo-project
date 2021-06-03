@@ -2,7 +2,8 @@
 	"books": [
 		"1HV",
 		"2HV",
-		"3V"
+		"3V",
+		"3H"
 	],
 	"chapters": [
 		[
@@ -33,6 +34,17 @@
 			"H4 - Statistiek en procenten",
 			"H5 - Vergelijkingen en ongelijkheden",
 			"H6 - Vaardigheden en vergelijkingen",
+			"H7 - Goniometrie",
+			"H8 - Allerlei verbanden",
+			"H9 - Spreiding tellen en kans"
+		],
+		[
+			"H1 - Lineaire problemen",
+			"H2 - Gelijkvormigheid en hellingen",
+			"H3 - Kwadratische problemen",
+			"H4 - Statistiek en procenten",
+			"H5 - Algebraische vaardigheden",
+			"H6 - Kwadratische vergelijkingen en ongelijkheden",
 			"H7 - Goniometrie",
 			"H8 - Allerlei verbanden",
 			"H9 - Spreiding tellen en kans"
