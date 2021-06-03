@@ -11,27 +11,14 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+
+import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class BookGraphNode {
 	
-	public static HashMap<String, String> bookDescriptionsMap;
-	public static String[] bookCodes = {
-			"Getal&Ruimte-1HV",
-			"Getal&Ruimte-2HV",
-			"Getal&Ruimte-3V",
-			"Moderne Wiskunde-1HV",
-			"Moderne Wiskund-2HV",
-			"Moderne Wiskund-3V"
-			
-	};
-	public static String[] bookDescriptions = {
-			"1HV",
-			"2HV",
-			"3V",
-			"1HV",
-			"2HV",
-			"3V"
-	};
+	public static Map<String, String> bookDescriptionsMap;
 	private static Color defaultNodeColor = LeerdomeinGraphPanel.colorBlue4;
 	private static Color defaultTextColor = new Color(120, 150, 202, 35);
 	private static int defaultFontSize = 640;
@@ -54,12 +41,11 @@ public class BookGraphNode {
 		return bookDescriptionsMap.get(bookCode);
 	}
 	
-	public BookGraphNode(String bookCode, ArrayList<ChapterGraphNode> chapterGraphNodes, ArrayList<GraphEdge> ChapterGraphEdges) {
+	public BookGraphNode(String bookCode, ArrayList<ChapterGraphNode> chapterGraphNodes, ArrayList<GraphEdge> ChapterGraphEdges,PersistenceId activeMethod) {
 		if(bookDescriptionsMap==null) {
 			bookDescriptionsMap = new HashMap<String, String>();
-			for(int i=0 ; i<bookCodes.length ; i++) {
-				bookDescriptionsMap.put(bookCodes[i], bookDescriptions[i]);
-			}
+			bookDescriptionsMap.putAll(MethodsProperties.instance().getBookDescriptionsMap(activeMethod));
+		
 		}
 		this.bookCode = bookCode;
 		makeLocation(chapterGraphNodes);

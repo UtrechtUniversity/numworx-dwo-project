@@ -153,6 +153,10 @@
 -keep  class  nl.uu.fi.dwo.rest.dom.xapi.** { *; } 
 -keep  class  nl.uu.fi.dwo.rest.dom.oauth.** { *; } 
 -keep  class nl.uu.fi.dwo.rest.entities.** { *; } 
+-keep  class fi.dwo.dwojapplet.gui.domainmodel.methods.Row { *; }
+
+
+
 -keepattributes Signature
 -keepattributes *Annotation*
 #keep stuff for Genson

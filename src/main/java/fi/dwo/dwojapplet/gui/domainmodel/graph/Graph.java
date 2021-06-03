@@ -462,13 +462,13 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 //			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(1), chapterNodes.get(7)));
 //			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(5), chapterNodes.get(7)));
 //			//hfst 2
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(9), chapterNodes.get(11)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(9), chapterNodes.get(12)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(9), chapterNodes.get(15)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(10), chapterNodes.get(13)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(10), chapterNodes.get(16)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(11), chapterNodes.get(15)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(12), chapterNodes.get(15)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(9), chapterNodes.get(11)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(9), chapterNodes.get(12)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(9), chapterNodes.get(15)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(10), chapterNodes.get(13)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(10), chapterNodes.get(16)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(11), chapterNodes.get(15)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(12), chapterNodes.get(15)));
 //			
 //			//hfst 1-2
 //			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(4), chapterNodes.get(9)));
@@ -479,14 +479,14 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 //			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(4), chapterNodes.get(14)));
 //			
 //			//hfst 3
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(17), chapterNodes.get(21)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(17), chapterNodes.get(19)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(19), chapterNodes.get(21)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(20), chapterNodes.get(25)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(18), chapterNodes.get(23)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(21), chapterNodes.get(22)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(17), chapterNodes.get(24)));
-			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(19), chapterNodes.get(24)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(17), chapterNodes.get(21)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(17), chapterNodes.get(19)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(19), chapterNodes.get(21)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(20), chapterNodes.get(25)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(18), chapterNodes.get(23)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(21), chapterNodes.get(22)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(17), chapterNodes.get(24)));
+//			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(19), chapterNodes.get(24)));
 //			
 //			//hfst 2-3
 //			chapterEdges.add(new ChapterGraphEdge(chapterNodes.get(9), chapterNodes.get(22)));
@@ -498,13 +498,16 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 //			
 			
 			bookNodes.clear();
-			for(int i=0 ; i< BookGraphNode.bookCodes.length ; i++) {
-				bookNodes.add(new BookGraphNode(BookGraphNode.bookCodes[i], chapterNodes, graphEdges));
+			BookGraphNode.bookDescriptionsMap = MethodsProperties.instance().getBookDescriptionsMap(activeMethod);
+			for(String bookCode: BookGraphNode.bookDescriptionsMap.keySet()) {
+				bookNodes.add(new BookGraphNode(bookCode, chapterNodes, graphEdges, activeMethod));
 			}
 			
 			bookEdges.clear();
 			bookEdges.add(new BookGraphEdge(bookNodes.get(0), bookNodes.get(1)));
 			bookEdges.add(new BookGraphEdge(bookNodes.get(1), bookNodes.get(2)));
+            bookEdges.add(new BookGraphEdge(bookNodes.get(1), bookNodes.get(3)));
+			
 //			//bookEdges.add(new BookGraphEdge(bookNodes.get(0), bookNodes.get(2)));
 			
 			
@@ -1386,12 +1389,12 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 				if (gn != null && gn.getLocation(GraphNode.NULLKEY)!=null) {
 					leaf.setX(gn.getLocation(GraphNode.NULLKEY).x);
 					leaf.setY(gn.getLocation(GraphNode.NULLKEY).y);
-					leaf.setMethodeInfos(gn.getMethodeInfos());
 				}
 				else if(gn!=null) {
 					leaf.setX(null);
 					leaf.setY(null);
 				}
+                leaf.setMethodeInfos(gn.getMethodeInfos());
 				List<String> voorkennis = leaf.getVoorkennis();
 				if (voorkennis == null)
 					voorkennis = new ArrayList<>();

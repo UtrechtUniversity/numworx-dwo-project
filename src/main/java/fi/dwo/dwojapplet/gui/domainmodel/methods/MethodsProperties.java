@@ -79,4 +79,20 @@ public class MethodsProperties extends ArrayList<Row> {
     return null;
   }
 
+
+  public Map<String, String> getBookDescriptionsMap(
+      PersistenceId activeMethod) {
+    Map<String,String> result = new TreeMap<String,String>();
+    for (Row row: this) {
+      if (row.getId() != null) {
+        String key = row.key();
+        for (int i = 0; i < row.books.length; i++ ) {
+          String book = row.books[i];
+          result.put(key + "-" + book, book);
+        }
+      }
+    }
+    return result;
+  }
+
 }
