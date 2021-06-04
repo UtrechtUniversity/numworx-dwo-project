@@ -642,35 +642,35 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		this.isScoreGraph = isScoreGraph;
 	}
 
-	public void deselectMethode() {
-		deselectMethode(true);
-	}
-	
-	public void deselectMethode(boolean b) {
-		selectedChapter = null;
-		selectedBook = null;
-		selectedMethod = null;
-		for(int i=0 ; i<graphNodes.size() ; i++) {
-			graphNodes.get(i).setVisible(true);
-			graphNodes.get(i).setTempLocation(null);
-		}
-		if(b)
-			produceAction("filter");
-		zoomFit();
-		for(int i=0 ; i<chapterNodes.size() ; i++) {
-			chapterNodes.get(i).makeLocation(graphNodes);
-		}
-		for(int i=0 ; i<bookNodes.size() ; i++) {
-			bookNodes.get(i).makeLocation(chapterNodes);
-		}
-		verbergVoorkennis(b);
-		methodeLabel.setText("Alle leerdoelen");
-		tussenLabel1.setText("");
-		bookLabel.setText("");
-		tussenLabel2.setText("");
-		chapterLabel.setText("");
-		voorkennisButton.setVisible(false);
-	}
+//	public void deselectMethode() {
+//		deselectMethode(true);
+//	}
+//	
+//	public void deselectMethode(boolean b) {
+//		selectedChapter = null;
+//		selectedBook = null;
+//		selectedMethod = null;
+//		for(int i=0 ; i<graphNodes.size() ; i++) {
+//			graphNodes.get(i).setVisible(true);
+//			graphNodes.get(i).setTempLocation(null);
+//		}
+//		if(b)
+//			produceAction("filter");
+//		zoomFit();
+//		for(int i=0 ; i<chapterNodes.size() ; i++) {
+//			chapterNodes.get(i).makeLocation(graphNodes);
+//		}
+//		for(int i=0 ; i<bookNodes.size() ; i++) {
+//			bookNodes.get(i).makeLocation(chapterNodes);
+//		}
+//		verbergVoorkennis(b);
+//		methodeLabel.setText("Alle leerdoelen");
+//		tussenLabel1.setText("");
+//		bookLabel.setText("");
+//		tussenLabel2.setText("");
+//		chapterLabel.setText("");
+//		voorkennisButton.setVisible(false);
+//	}
 	
 
 	public void selectMethode(String methodeCode) { 
@@ -912,7 +912,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		else if(selectedMethod!=null)
 			selectMethode(selectedMethod);
 		else
-			deselectMethode();
+			selectMethode(activeRow.key());
 	}
 	
 	public void verbergVoorkennis(boolean b) {

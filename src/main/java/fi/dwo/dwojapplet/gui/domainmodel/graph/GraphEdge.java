@@ -19,7 +19,6 @@ public class GraphEdge {
 	private int arrowSize = 5;
 	
 	private boolean blur = false;
-	private boolean sameChapters = true;
 	private boolean voorkennisTree;
 	
 	private Color edgeColor = LeerdomeinGraphPanel.colorBlue4;
@@ -28,14 +27,12 @@ public class GraphEdge {
 	public GraphEdge(GraphNode source, GraphNode target) {
 		this.source = source;
 		this.target = target;
-		sameChapters = GraphNode.hasSameChapterCode(source, target, "Getal&Ruimte");
 	}
 	
 	public GraphEdge(GraphNode source, GraphNode target, double vkFactor) {
 		this.source = source;
 		this.target = target;
 		this.vkFactor = vkFactor;
-		sameChapters = GraphNode.hasSameChapterCode(source, target, "Getal&Ruimte");
 	}
 	
 	public boolean contains(int x, int y) {
@@ -109,14 +106,15 @@ public class GraphEdge {
                     float x1 = origin.x + (float)((targetLocation.x)*factor);
 					float y0 = origin.y + (float)((sourceLocation.y)*factor);
 					float y1 = origin.y + (float)((targetLocation.y)*factor);
-//					if(source.getTempLocation()!=null) {
-//						x0 = source.getTempLocation().x;
-//						y0 = source.getTempLocation().y;
-//					}
-//					if(voorkennisTree && target.getTempLocation()!=null) {
-//						x1 = target.getTempLocation().x;
-//						y1 = target.getTempLocation().y;
-//					}
+// temp location is in device units, not model units
+					if(source.getTempLocation()!=null) {
+						x0 = source.getTempLocation().x;
+						y0 = source.getTempLocation().y;
+					}
+					if(voorkennisTree && target.getTempLocation()!=null) {
+						x1 = target.getTempLocation().x;
+						y1 = target.getTempLocation().y;
+					}
 					float mx = (x0 + x1)/2;
 					float my = (y0 + y1)/2;
 					float dm1 = (float)Math.sqrt((x1-mx)*(x1-mx)+(y1-my)*(y1-my));

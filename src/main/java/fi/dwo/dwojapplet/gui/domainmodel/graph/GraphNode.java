@@ -157,7 +157,7 @@ public class GraphNode {
 	public boolean inside(Rectangle r, Point origin, double factor) {
 		for (String code : getMethodeCodes()) {
 			Point location = getLocationOnPanel(code, origin, factor);
-			if (r.contains(location))
+			if (location != null && r.contains(location))
 				return true;
 		}
 		return false;
@@ -167,7 +167,7 @@ public class GraphNode {
 		selected.clear();
 		for (String code : visible) {
 			Point location = getLocationOnPanel(code, origin, factor);
-			if (r.contains(location) && isVisible(code))
+			if (location != null && r.contains(location))
 				selected.add(code);
 		}
 	}
@@ -226,11 +226,12 @@ public class GraphNode {
 		return description;
 	}
 
-	public static boolean hasSameChapterCode(GraphNode node1, GraphNode node2) {
-		return hasSameChapterCode(node1, node2, null);
-	}
+//	public static boolean hasSameChapterCode(GraphNode node1, GraphNode node2) {
+//		return hasSameChapterCode(node1, node2, null);
+//	}
 
 	public static boolean hasSameChapterCode(GraphNode node1, GraphNode node2, String methode) {
+	    if (methode == null) return true; // Geen methode -> altijd same chapter
 		Map<String, Map<String, Set<Integer>>> info1 = node1.getMethodeInfo();
 		Map<String, Map<String, Set<Integer>>> info2 = node2.getMethodeInfo();
 		if (info1 == null || info2 == null)
@@ -238,8 +239,7 @@ public class GraphNode {
 
 		Set<String> infoset = new HashSet<>(info1.keySet());
 		infoset.retainAll(info2.keySet()); // retainall == doorsnede
-		if (methode != null)
-			infoset.retainAll(Collections.singleton(methode));
+		infoset.retainAll(Collections.singleton(methode));
 		for (String methodeName : infoset) {
 			Map<String, Set<Integer>> leerjaren1 = info1.get(methodeName);
 			Map<String, Set<Integer>> leerjaren2 = info2.get(methodeName);
@@ -406,9 +406,11 @@ public class GraphNode {
 				for (String v2code : visible) {
 					if (v1code.compareTo(v2code) < 0 && tempLocation == null) {
 						Point location0 = getLocation(v1code);
+						if (location0 == null) continue;
 						int x0 = origin.x + (int) ((location0.x) * factor);
 						int y0 = origin.y + (int) ((location0.y) * factor);
 						Point location1 = getLocation(v2code);
+						if (location1 == null) continue;
 						int x1 = origin.x + (int) ((location1.x) * factor);
 						int y1 = origin.y + (int) ((location1.y) * factor);
 						if (Math.abs(x0 - x1) < 1 && Math.abs(y0 - y1) < 1)
