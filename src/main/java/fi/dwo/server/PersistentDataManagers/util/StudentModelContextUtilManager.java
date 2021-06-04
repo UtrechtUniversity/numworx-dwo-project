@@ -1,6 +1,7 @@
 package fi.dwo.server.PersistentDataManagers.util;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,56 @@ public class StudentModelContextUtilManager {
 		}
 		return pModel;
 	}
+	
+	public static PersistentStudentModelContext create(PersistentStudentModelContext pModel) {
+		List<PersistentStudentModelItem> objs = new ArrayList<>();
+		DomStudentModelStructure structure = pModel.getModelStructure();
+		DomStudentModelStructure copy = new DomStudentModelStructure();
+		copy.setInfo(structure.getInfo());
+		copy.setActiveMethod(structure.getActiveMethod());
+		copy.setTimestamp(structure.getTimestamp());
+		copy.setOwner(structure.getOwner());
+		copy.setCategories(new ArrayList<>());
+		for (DomStudentModelCategory cat : structure.getCategories()) {
+			DomStudentModelCategory copycat = new DomStudentModelCategory();
+			copycat.setInfo(cat.getInfo());
+			copycat.setObjectives(new ArrayList<>());
+			copy.getCategories().add(copycat);
+			for(DomStudentModelObj obj: cat.getObjectives()) {
+				String id = obj.getInfo().getId();
+				if (id == null) {
+					copycat.getObjectives().add(obj);
+					continue;
+				}
+				DomStudentModelObj copyobj = new DomStudentModelObj();
+				copyobj.setInfo(new DomStudentModelContextInfo());
+				copyobj.getInfo().setId(obj.getInfo().getId());
+				copycat.getObjectives().add(copyobj);
+				PersistentStudentModelItem item;
+				item = new PersistentStudentModelItem();
+				item.setId(id);
+				item.setModelID(pModel.getModelID());
+				item.setSchoolID(pModel.getSchoolID());
+				item.setItem(obj);
+				objs.add(item);			
+			}
+		}
+		try { 
+			pModel.setModelStructure(copy);
+			pModel = StudentModelContextManager.create(pModel);
+			for(PersistentStudentModelItem item:objs) {
+				item.setModelID(pModel.getModelID());
+				StudentModelItemManager.create(item);
+			}
+		} finally {
+			pModel.setModelStructure(structure);
+		}
+		return pModel;
+	}
+	
+	
+	
+	
 	
 	public static PersistentStudentModelContext edit(PersistentStudentModelContext pModel) {
 		List<PersistentStudentModelItem> objs = StudentModelItemManager.findEntities(pModel);
