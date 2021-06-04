@@ -1318,19 +1318,12 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 				String id = leaf.getId();
 				Integer x = leaf.getX();
 				Integer y = leaf.getY();
+                GraphNode g = new GraphNode(id, parent, leaf.toString());
+                g.setMethodeInfo(leaf.getMethode());
 				if(x==null || y==null) {
-					GraphNode g = new GraphNode(id, parent, leaf.toString());
-					g.setMethodeInfo(leaf.getMethode());
                     List<DomStudentModelMethodInfo> infos = leaf.getMethodeInfos();
                     g.setMethodeInfos(infos);
-					System.out.println("methodeinfo: "+leaf.getMethode());
-					graphMap.put(id, g);
-					leaves.add(leaf);
-					g.setVisible(visible);
-				}
-				else {
-					GraphNode g = new GraphNode(id, parent, leaf.toString());
-					g.setMethodeInfo(leaf.getMethode());
+				} else {
 					List<DomStudentModelMethodInfo> glist = new ArrayList<>();
 					DomStudentModelMethodInfo nul = new DomStudentModelMethodInfo();
 					nul.setX(x);
@@ -1339,10 +1332,11 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 					List<DomStudentModelMethodInfo> infos = leaf.getMethodeInfos();
                     if(infos != null) glist.addAll(infos);
                     g.setMethodeInfos(glist);
-					g.setVisible(visible);
-					graphMap.put(id, g);
-					leaves.add(leaf);				
-				}
+  				}
+                String code = String.valueOf(activeRow.key());
+                g.setVisible(code, visible);
+                graphMap.put(id, g);
+                leaves.add(leaf);               
 				
 				//System.out.println("Methode: "+leaf.getMethode().get("Getal&Ruimte"));
 			}
