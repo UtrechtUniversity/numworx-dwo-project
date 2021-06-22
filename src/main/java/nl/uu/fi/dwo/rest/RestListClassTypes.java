@@ -24,6 +24,7 @@ public enum RestListClassTypes {
         DomHasRole,
         DomImage,
         DomJars,
+        DomMethod,
         DomRole,
         DomResultsPerTeacher,        
         DomSamlUser,
@@ -53,5 +54,5 @@ public enum RestListClassTypes {
         DomUserFullwLoginContext,
         DomLoginContext,
         //Non-persistent classes
-        PersistenceId
+        PersistenceId, 
     }
