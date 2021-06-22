@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -542,7 +543,8 @@ class RestManager extends RestyDateTimeFormat {
         case DomDwoProfile:
             return (List<T>) genson.deserialize(json.toString(),
                     new GenericType<List<DomDwoProfileFull>>() {});
-      	
+        case DomMethod:
+        	return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomMethod>>() { });
         default:
           String msg = "Programming error, trying to get an unsupported dataType.";
           LOG.log(Level.SEVERE, msg);
