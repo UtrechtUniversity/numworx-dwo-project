@@ -5,7 +5,7 @@ import java.awt.Component;
 import javax.swing.JTree;
 
 import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
-import fi.dwo.dwojapplet.gui.domainmodel.methods.Row;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class AnyMethodAction extends MethodeAction {
@@ -28,7 +28,7 @@ public class AnyMethodAction extends MethodeAction {
   }
 
 
-  void setMethode(Row methode) {
+  void setMethode(DomMethod methode) {
     putValue(NAME, methode.method);
     putValue(KEY,  methode.key());
     KOPPELING_LEERDOEL = "Koppeling leerdoel aan " + methode.method;

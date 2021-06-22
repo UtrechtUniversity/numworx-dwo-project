@@ -1,11 +1,8 @@
 package fi.dwo.dwojapplet.gui.domainmodel.graph;
 
 import java.awt.AWTEventMulticaster;
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.ComponentOrientation;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -30,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
@@ -42,12 +38,11 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 
 import fi.beans.numworxlf.JButton;
-import fi.beans.numworxlf.JComboBox;
 import fi.dwo.dwojapplet.gui.domainmodel.InvisibleNode;
 import fi.dwo.dwojapplet.gui.domainmodel.InvisibleTreeModel;
 import fi.dwo.dwojapplet.gui.domainmodel.NodeLeaf;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
-import fi.dwo.dwojapplet.gui.domainmodel.methods.Row;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -114,7 +109,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	
 	private HashMap<String,String> methodeLabels = new HashMap();
     private PersistenceId activeMethod;
-    Row activeRow;
+    DomMethod activeRow;
 	
 	
 
@@ -504,9 +499,14 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			}
 			
 			bookEdges.clear();
-			bookEdges.add(new BookGraphEdge(bookNodes.get(0), bookNodes.get(1)));
-			bookEdges.add(new BookGraphEdge(bookNodes.get(1), bookNodes.get(2)));
-            bookEdges.add(new BookGraphEdge(bookNodes.get(1), bookNodes.get(3)));
+			int[][] edges = MethodsProperties.instance().getBookEdges(activeMethod);
+			for(int[] edge : edges) {
+				bookEdges.add(new BookGraphEdge(bookNodes.get(edge[0]), bookNodes.get(edge[1])));
+			}
+// FIXME install edges			
+//			bookEdges.add(new BookGraphEdge(bookNodes.get(0), bookNodes.get(1)));
+//			bookEdges.add(new BookGraphEdge(bookNodes.get(1), bookNodes.get(2)));
+//          bookEdges.add(new BookGraphEdge(bookNodes.get(1), bookNodes.get(3)));
 			
 //			//bookEdges.add(new BookGraphEdge(bookNodes.get(0), bookNodes.get(2)));
 			
@@ -1220,7 +1220,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	    this.activeRow = MethodsProperties.instance().getMethod(activeMethod);
 //	    menuItemGR.setLabel(this.activeRow.getMethod());
 //	    menuItemGR.setEnabled(activeMethod != null);
-	    methodeLabels.putAll(MethodsProperties.instance().stream().collect(Collectors.toMap(Row::key, Row::getMethod)));
+	    methodeLabels.putAll(MethodsProperties.instance().stream().collect(Collectors.toMap(DomMethod::key, DomMethod::getMethod)));
 	    
 		List<NodeLeaf> leaves = new ArrayList<>();
 		ArrayList<GraphEdge> edges = new ArrayList<>();

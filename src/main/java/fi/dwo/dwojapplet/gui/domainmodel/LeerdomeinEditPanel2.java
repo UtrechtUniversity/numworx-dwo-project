@@ -380,6 +380,7 @@ public class LeerdomeinEditPanel2 extends JPanel
         panel.setActiveMethod(activeMethod);
         int ok = JOptionPane.showConfirmDialog(LeerdomeinEditPanel2.this, panel, "Instellingen lesmethoden", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);       
         if (ok == JOptionPane.OK_OPTION) {
+            panel.updateMethods();
             setActiveMethod(panel.getActiveMethod());
         }
       }
@@ -774,14 +775,14 @@ public class LeerdomeinEditPanel2 extends JPanel
 		voorkennisRO.setPreferredSize(new Dimension(120, 24));
 		settingsRO.add(voorkennisRO);
 		settingsRO.add(Box.createHorizontalGlue());
-		AnyMethodAction methodeAction3 = new AnyMethodAction(true, this, tree);
+//		AnyMethodAction methodeAction3 = new AnyMethodAction(true, this, tree);
         methodeAction4 = new AnyMethodAction(true, this, tree);
-		methodeAction3.setMethode(MethodsProperties.instance().get(1));
+//		methodeAction3.setMethode(MethodsProperties.instance().get(1));
         methodeAction4.setMethode(MethodsProperties.instance().get(0));
 		
-        JButton genrRO = new JButton(methodeAction3);
-		genrRO.setFont(font);
-		genrRO.setPreferredSize(new Dimension(140, 24));
+//        JButton genrRO = new JButton(methodeAction3);
+//		genrRO.setFont(font);
+//		genrRO.setPreferredSize(new Dimension(140, 24));
 //		settingsRO.add(genrRO);
 //		settingsRO.add(Box.createHorizontalStrut(10));
 		JButton mwRO = new JButton(methodeAction4);
@@ -843,13 +844,13 @@ public class LeerdomeinEditPanel2 extends JPanel
 		bkt.add(parametersLabel);
 		bkt.add(Box.createHorizontalGlue());
 		methodeAction2 = new AnyMethodAction(this, tree);
-        AnyMethodAction methodeAction = new AnyMethodAction(this, tree);
-		methodeAction.setMethode(MethodsProperties.instance().get(1));
+//        AnyMethodAction methodeAction = new AnyMethodAction(this, tree);
+//		methodeAction.setMethode(MethodsProperties.instance().get(1));
 		methodeAction2.setMethode(MethodsProperties.instance().get(0));
 		
-        JButton genr = new JButton(methodeAction);
-		genr.setFont(font);
-		genr.setPreferredSize(new Dimension(140, 20));
+//        JButton genr = new JButton(methodeAction);
+//.setFont(font);
+//		genr.setPreferredSize(new Dimension(140, 20));
 //		bkt.add(genr);
 //		bkt.add(Box.createHorizontalStrut(10));
 		JButton mw = new JButton(methodeAction2);

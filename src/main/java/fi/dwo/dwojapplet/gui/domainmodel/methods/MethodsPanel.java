@@ -10,9 +10,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,9 +42,12 @@ import fi.beans.numworxlf.JTextField;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherMethodManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class MethodsPanel extends JPanel implements ActionListener, ListSelectionListener {
@@ -92,10 +98,11 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
   private Icon  removeIcon;
   private JTextField txtField;
   private ChapterSettings settings;
+  private Set<DomMethod> update = new HashSet<>();
     
-  private List<Row> model = new ArrayList<>();
+  private final MethodsProperties model;
   private PersistenceId current;
-  private Row rowSet;
+  private DomMethod rowSet;
   
   private Model tableModel;
   
@@ -119,7 +126,7 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-      Row row = model.get(rowIndex);
+      DomMethod row = model.get(rowIndex);
       switch(columnIndex) {
         case 0: return row.method;
         case 1: return Objects.equals(row.getId(), current);
@@ -130,7 +137,7 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
       return null;
     }
 
-    void add(Row row) {
+    void add(DomMethod row) {
       int size = getRowCount();
       model.add(row);
       fireTableRowsInserted(size, size);     
@@ -166,7 +173,7 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
       if (! isCellEditable(rowIndex, columnIndex) || columnIndex == 2) return;
-      Row row = model.get(rowIndex);
+      DomMethod row = model.get(rowIndex);
       switch(columnIndex) {
         case 0: row.method = Objects.toString(aValue, ""); break;
         case 1: if (Boolean.FALSE.equals(aValue) && Objects.equals(current,row.getId())) current = null;
@@ -184,6 +191,7 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
         settings.makeObjects();
         rowSet.books = settings.getBooks();
         rowSet.chapters = settings.getChapters();
+        update.add(rowSet);
       }
       int rowIndex = tbl.getSelectedRow();
       if (!event.getValueIsAdjusting() && rowIndex != -1) {
@@ -251,8 +259,9 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
       if (JFileChooser.APPROVE_OPTION  == choose.showOpenDialog(this))  {
         try {
           FileInputStream in = new FileInputStream(choose.getSelectedFile());
-          Row row = genson.deserialize(in, Row.class);
+          DomMethod row = genson.deserialize(in, DomMethod.class);
           in.close();
+          row = model.persist(row);
           tableModel.add(row);
         } catch (IOException e1) {
           LOG.log(Level.SEVERE, "Open", e1);
@@ -272,14 +281,13 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
       }
     } else
     if (NEW == action) {
-      Row row = new Row();
+      DomMethod row = new DomMethod();
       row.method = "Untitled";
       row.books = new String[] { "Untitled book" };
       row.chapters  = new String[][] {{ "Untitled chapter" }};
+      row.edges = new int[0][];
       row.setId(new PersistenceId());
-      Random random = new Random();
-      row.getId().setIdString("LOCAL;none;" + (random.nextLong() >>> 1));
-      
+      row = model.persist(row);
       tableModel.add(row);
     } else
     if ( txtField == e.getSource()) {
@@ -299,6 +307,19 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
   
   public PersistenceId getActiveMethod() {
     return current;
+  }
+
+  public void updateMethods() {
+    Iterator<DomMethod> iter = update.iterator();
+    while(iter.hasNext()) {
+      try {
+        SecureTeacherMethodManager.updateModel(iter.next());
+        iter.remove();
+      } catch (Dwo2Exception e) {
+        LOG.log(Level.SEVERE, "update methods", e);
+      }
+    }
+    
   }
   
 }

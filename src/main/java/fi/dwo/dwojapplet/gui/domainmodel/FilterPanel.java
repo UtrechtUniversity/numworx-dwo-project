@@ -17,15 +17,15 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class FilterPanel extends JPanel {
 
-  MethodeAction mw = new AnyMethodAction().init(2);
-  MethodeAction genr = new AnyMethodAction().init(1);
+ // MethodeAction mw = new AnyMethodAction().init(2);
+ // MethodeAction genr = new AnyMethodAction().init(1);
   
   AnyMethodAction m;
   JCheckBox rest = new JCheckBox("Niet geclassificeerde leerdoelen");
   
 
-  KoppelingGRPanel genrtab = genr.getTab();
-  KoppelingGRPanel mwtab = mw.getTab();
+//  KoppelingGRPanel genrtab = genr.getTab();
+//  KoppelingGRPanel mwtab = mw.getTab();
   KoppelingGRPanel mtab;
 
   
@@ -44,14 +44,14 @@ public class FilterPanel extends JPanel {
       add(l);
       add(mtab = m.getTab());
     } else {
-      l = new JLabel(genr.getName());
-      l.setBorder(margin);
-      add(l);
-      add(genrtab);
-      l = new JLabel(mw.getName());
-      l.setBorder(margin);
-      add(l);
-      add( mwtab);
+//      l = new JLabel(genr.getName());
+//      l.setBorder(margin);
+//      add(l);
+ //     add(genrtab);
+ //     l = new JLabel(mw.getName());
+ //     l.setBorder(margin);
+//      add(l);
+//      add( mwtab);
     }
     l = new JLabel("Alle leerdoelen");
     l.setBorder(margin);
@@ -62,15 +62,16 @@ public class FilterPanel extends JPanel {
   }
 
     Map<String,Map<String,Set<Integer>>> getFilter() {
-      Map<String, Set<Integer>> mwmap = mw.getMethodMap(mwtab);
-      Map<String, Set<Integer>> genrmap = genr.getMethodMap(genrtab);
+//      Map<String, Set<Integer>> mwmap = mw.getMethodMap(mwtab);
+//      Map<String, Set<Integer>> genrmap = genr.getMethodMap(genrtab);
       Map<String,Map<String,Set<Integer>>> filter = new HashMap<>();
+      Map<String, Set<Integer>> mwmap;
       if (m != null) {
         mwmap = m.getMethodMap(mtab);
         if (!mwmap.isEmpty()) filter.put(m.getKey(), mwmap);
       } else {
-        if (!mwmap.isEmpty())   filter.put(mw.getKey(), mwmap);
-        if (!genrmap.isEmpty()) filter.put(genr.getKey(), genrmap);
+//        if (!mwmap.isEmpty())   filter.put(mw.getKey(), mwmap);
+//        if (!genrmap.isEmpty()) filter.put(genr.getKey(), genrmap);
       }
       if (rest.isSelected()) filter.put(null,null);
       return filter;
@@ -82,10 +83,10 @@ public class FilterPanel extends JPanel {
         Map<String, Set<Integer>> mwmap = filter.getOrDefault(m.getKey(), Collections.emptyMap());
         m.setMethodMap(mtab, mwmap);
       } else {
-        Map<String, Set<Integer>> mwmap = filter.getOrDefault(mw.getKey(), Collections.emptyMap());
-        mw.setMethodMap(mwtab, mwmap);
-        Map<String, Set<Integer>> genrmap = filter.getOrDefault(genr.getKey(), Collections.emptyMap());
-        genr.setMethodMap(genrtab, genrmap);
+//        Map<String, Set<Integer>> mwmap = filter.getOrDefault(mw.getKey(), Collections.emptyMap());
+//        mw.setMethodMap(mwtab, mwmap);
+//        Map<String, Set<Integer>> genrmap = filter.getOrDefault(genr.getKey(), Collections.emptyMap());
+//        genr.setMethodMap(genrtab, genrmap);
       }
     }
 }
