@@ -69,8 +69,8 @@ public class KoppelingGRPanel extends JPanel implements Constants {
 		aantalJaarlagen = jaarlagen.length;
 		grJaarlagen = jaarlagen;
 		aantalHoofdstukken = aantal;
-		maxAantalHoofdstukken = aantal[0];
-		for(int i = 1; i < aantalJaarlagen; i++) {
+		maxAantalHoofdstukken = 0;
+		for(int i = 0; i < aantalJaarlagen; i++) {
 		  if (aantal[i] > maxAantalHoofdstukken)
 		    maxAantalHoofdstukken = aantal[i];
 		}
