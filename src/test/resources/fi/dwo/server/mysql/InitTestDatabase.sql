@@ -1013,3 +1013,18 @@ CREATE TABLE `tblstudentmodelof` (
 
 INSERT INTO `tblstudentmodelof` (`modelID`, `classID`, `schoolID`, `optlock`, `lastChangeTimeStamp`, `value`, `del`) VALUES ('1', '2', '3', '0', '0', '{}', '0');
 
+
+DROP TABLE IF EXISTS `tblmethod`;
+CREATE TABLE `tblmethod` (
+  `methodID` varchar(45) NOT NULL,
+  `schoolID` int(11) NOT NULL,
+  `optlock` int(11) NOT NULL,
+  `lastChangeTimeStamp` bigint(20) NOT NULL,
+  `del` tinyint(4) NOT NULL,
+  `method` mediumtext NOT NULL,
+  PRIMARY KEY (`methodID`),
+  KEY `schoolID_idx` (`schoolID`),
+  CONSTRAINT `schoolID` FOREIGN KEY (`schoolID`) REFERENCES `tblschool` (`schoolID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+

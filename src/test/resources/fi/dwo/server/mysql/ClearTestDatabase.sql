@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS `tblgroup`;
 DROP TABLE IF EXISTS `tblhasrole`;
 DROP TABLE IF EXISTS `tblimage`;
 DROP TABLE IF EXISTS `tbllogincontext`;
+DROP TABLE IF EXISTS `tblmethod`;
 DROP TABLE IF EXISTS `tblmonitorlog`;
 DROP TABLE IF EXISTS `tblsamluser`;
 DROP TABLE IF EXISTS `tblschool`;

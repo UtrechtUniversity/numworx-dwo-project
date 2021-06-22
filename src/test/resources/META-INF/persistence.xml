@@ -34,6 +34,7 @@
     <class>fi.dwo.commons.persistence.entities.PersistentStudentModelData</class>
     <class>fi.dwo.commons.persistence.entities.PersistentStudentModelOfClass</class>
     <class>fi.dwo.commons.persistence.entities.PersistentACL</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentMethod</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
     <properties>
