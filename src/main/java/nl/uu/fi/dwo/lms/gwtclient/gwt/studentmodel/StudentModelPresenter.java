@@ -6,12 +6,14 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -233,19 +235,29 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		});
 	}
 	
-	@Inject Lazy<FilterDialog> filterPanel;
 	
 	private Map<String,Map<String,Set<Integer>>> filter = Collections.emptyMap();
+	private Map<PersistenceId, Promise<FilterMethodDialog>> filterDialogs = new HashMap<>();
 		
 	@JsMethod
 	public void onFilter() {
-		filterPanel.get().setValue(filter);
-		filterPanel.get().addCloseHandler(ev -> { 
-			LOG.info("filter settings closed");
-			filter = filterPanel.get().getValue();
-			selectModel(currentModel.getValue().getId().getIdString());
+		Promise<FilterMethodDialog> p;
+		
+		p = currentModel.flatMap((DomStudentModelContext m) -> {
+			PersistenceId key = m.getModelStructure().getActiveMethod();
+			if (key == null) throw new NoSuchElementException();
+			return filterDialogs.computeIfAbsent(key, k -> service.getActiveMethod(k).map(FilterMethodDialog::new));
 		});
-		filterPanel.get().show();
+		p.then( q -> {		
+			FilterMethodDialog filterPanel = q.getValue();
+			filterPanel.setValue(filter);
+			filterPanel.addCloseHandler(ev -> { 
+				LOG.info("filter settings closed");
+				filter = filterPanel.getValue();
+				selectModel(currentModel.getValue().getId().getIdString());
+			});
+			filterPanel.show();
+			return null; });
 	}
 	
 	@JsMethod

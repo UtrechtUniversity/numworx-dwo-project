@@ -2,19 +2,17 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
-
 import javax.inject.Inject;
 
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
 
+import fi.dwo.gwt.lib.rest.CallManagers.MethodManager;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResults;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
@@ -23,12 +21,14 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 @RoleScope public class SingleStudentResults implements StudentResults {
 
 	@Inject StudentModelService service;
+	@Inject MethodManager methodManager;
 	@Inject SingleStudentResults() {
 	}
 
@@ -78,6 +78,12 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 		String id = state.get("id").isString().stringValue();
 		currentModel = new DomStudentModelContext();
 		currentModel.setId(new PersistenceId(id));		
+	}
+
+	@Override
+	public Promise<DomMethod> getActiveMethod(DomStudentModelStructure structure) {
+		DomMethod method = new DomMethod(structure.getActiveMethod());
+		return methodManager.getMethod(service.context, method);
 	}
 
 }

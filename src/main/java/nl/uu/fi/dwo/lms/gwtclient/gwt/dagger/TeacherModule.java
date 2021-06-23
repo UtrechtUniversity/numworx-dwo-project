@@ -6,6 +6,7 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import dagger.Reusable;
+import fi.dwo.gwt.lib.rest.CallManagers.MethodManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherStudentModelManager;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.PresenterFactory;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.PresenterFactoryGwt;
@@ -36,5 +37,9 @@ abstract class TeacherModule {
   
   @Reusable @Provides static SecuredTeacherStudentModelManager securedTSMM() {
     return new SecuredTeacherStudentModelManager();
+  }
+  
+  @Reusable @Provides static MethodManager methodManager() {
+	  return MethodManager.teacher();
   }
 }

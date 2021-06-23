@@ -17,10 +17,12 @@ import org.osgi.util.promise.Promises;
 import com.google.gwt.i18n.client.LocaleInfo;
 
 import dagger.Lazy;
+import fi.dwo.gwt.lib.rest.CallManagers.MethodManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentStudentModelManager;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
@@ -36,12 +38,14 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 public class StudentResultsService implements StudentResults {
 	
 	SecuredStudentStudentModelManager manager;
+	MethodManager methodMan;
 	DomContext context;
 	DomSchoolClass sc;
 	@Inject Lazy<AdviseMeService> adviseMe;
 
-	@Inject StudentResultsService(SecuredStudentStudentModelManager manager, DwoGlobalVars vars) {
+	@Inject StudentResultsService(SecuredStudentStudentModelManager manager, DwoGlobalVars vars, MethodManager methodMan) {
 		this.manager = manager;
+		this.methodMan = methodMan;
 		context = new DomContext();
 		context.setDomHasRole(vars.getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
 		context.setRealm(vars.getCurrentLoginContext().getRealm());
@@ -53,6 +57,7 @@ public class StudentResultsService implements StudentResults {
 
 	Promise<List<DomStudentModelContext4Student>> models;
 	Map<PersistenceId, Promise<DomStudentModelDataScore>> map = new HashMap<>();
+	Map<PersistenceId, Promise<DomMethod>> methods = new HashMap<>();
 
 	public Promise<List<DomStudentModelContext4Student>> getModels() {
 		if (models == null || (models.isDone() && models.getFailure() != null) ) {
@@ -187,5 +192,13 @@ public class StudentResultsService implements StudentResults {
 	@Override
 	public Promise<String> getDescription(DomStudentModelContextId id, DomStudentModelContextInfo info) {
 		return manager.getDescription(id, sc, info.getId(), lang, context);
+	}
+
+	@Override
+	public Promise<DomMethod> getActiveMethod(DomStudentModelStructure structure) {		
+		return methods.computeIfAbsent(structure.getActiveMethod(), id -> { 			
+			DomMethod method = new DomMethod(id);
+			return methodMan.getMethod(context, method);
+		});
 	}
 }

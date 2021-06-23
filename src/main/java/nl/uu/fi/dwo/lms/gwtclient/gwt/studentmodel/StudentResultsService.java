@@ -9,19 +9,22 @@ import javax.inject.Inject;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
+import fi.dwo.gwt.lib.rest.CallManagers.MethodManager;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResults;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 
 @RoleScope
 public class StudentResultsService implements StudentResults {
 	
 	@Inject StudentModelService service;
-	
+	@Inject MethodManager methods;
 
 	@Inject StudentResultsService() {
 	}
@@ -63,6 +66,13 @@ public class StudentResultsService implements StudentResults {
 	@Override
 	public Promise<DomStudentModelContext4Student> getModel(DomStudentModelContextId id) {
 		return service.getStudentModel(id.getId()).map(this::to4Student);
+	}
+
+
+	@Override
+	public Promise<DomMethod> getActiveMethod(DomStudentModelStructure structure) {
+		DomMethod id = new DomMethod(structure.getActiveMethod());
+		return methods.getMethod(service.context, id);
 	}
 
 }

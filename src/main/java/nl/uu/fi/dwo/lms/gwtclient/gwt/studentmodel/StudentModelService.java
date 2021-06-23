@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import org.osgi.util.promise.Promises;
 
 import com.google.gwt.i18n.client.LocaleInfo;
 
+import fi.dwo.gwt.lib.rest.CallManagers.MethodManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherStudentModelManager;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
@@ -20,6 +22,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionService;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
@@ -28,6 +31,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 @RoleScope
@@ -157,6 +161,17 @@ public class StudentModelService implements DescriptionService {
 		String key = key(object);
 		promises.remove(key);
 		return manager.updateModelForClass(context, object);		
+	}
+
+	Map<PersistenceId, Promise<DomMethod>> methods = new HashMap<>();
+
+	@Inject MethodManager methodMan;
+
+	public Promise<DomMethod> getActiveMethod(PersistenceId pid) {		
+		return methods.computeIfAbsent(pid, id -> { 			
+			DomMethod method = new DomMethod(id);
+			return methodMan.getMethod(context, method);
+		});
 	}
 
 }

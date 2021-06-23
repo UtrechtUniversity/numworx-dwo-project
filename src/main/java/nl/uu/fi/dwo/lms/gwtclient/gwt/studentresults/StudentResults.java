@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.osgi.util.promise.Promise;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 
 public interface StudentResults extends DescriptionService {
 
@@ -14,5 +16,6 @@ public interface StudentResults extends DescriptionService {
 	Promise<List<DomStudentModelContext4Student>> getModels();
 	Promise<DomStudentModelDataScore> getScore(DomStudentModelContextId id);
 	Promise<DomStudentModelContext4Student> getModel(DomStudentModelContextId id);
+	Promise<DomMethod> getActiveMethod(DomStudentModelStructure structure);
 	
 }

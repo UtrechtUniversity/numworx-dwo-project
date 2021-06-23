@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.ideas.client.Usermodel;
 import nl.uu.fi.dwo.ideas.client.Usermodel.Competence;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
@@ -178,5 +179,15 @@ public class AdviseMeService implements StudentResults {
 	@Override
 	public Promise<String> getDescription(DomStudentModelContextId id, DomStudentModelContextInfo info) {
 		return Promises.resolved(info.getDescription().get(locale));
+	}
+
+	@Override
+	public Promise<DomMethod> getActiveMethod(DomStudentModelStructure structure) {
+		DomMethod method = new DomMethod(structure.getActiveMethod());
+		method.setMethod("AdviseMe");
+		method.books = Collections.emptyList();
+		method.chapters = Collections.emptyList();
+		method.edges = Collections.emptyList();
+		return Promises.resolved(method);
 	}
 }

@@ -19,6 +19,7 @@ import org.osgi.util.promise.Promises;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 
+import fi.dwo.gwt.lib.rest.CallManagers.MethodManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentStudentModelManager;
 import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
 import fi.dwo.gwt.lib.rest.util.DomStudentModelStructureScoreCodec;
@@ -51,8 +52,8 @@ public class XAPIService extends StudentResultsService implements StudentResults
 
   private Promise<XapiManager> man;
 
-  @Inject XAPIService(SecuredStudentStudentModelManager manager, DwoGlobalVars vars) {
-    super(manager, vars);
+  @Inject XAPIService(SecuredStudentStudentModelManager manager, DwoGlobalVars vars, MethodManager mm) {
+    super(manager, vars, mm);
     if (!vars.isPremium()) {
         man = Promises.failed(new IllegalArgumentException());
     } else {

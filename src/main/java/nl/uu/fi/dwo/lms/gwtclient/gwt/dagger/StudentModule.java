@@ -5,6 +5,8 @@ import com.google.gwt.core.client.GWT;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
+import dagger.Reusable;
+import fi.dwo.gwt.lib.rest.CallManagers.MethodManager;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.PresenterFactory;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.StudentPresenterFactory;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.StudentViewHandler;
@@ -28,4 +30,8 @@ abstract class StudentModule {
   @Provides @RoleScope static GwtClientMessages rb() {
     return GWT.create(GwtClientMessagesStudent.class);
   }
+  @Reusable @Provides static MethodManager methodManager() {
+	  return MethodManager.student();
+  }
+
 }
