@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.editor.client.LeafValueEditor;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -19,6 +21,38 @@ public class FilterMethodSettings extends Composite implements LeafValueEditor<M
 	private final String key;
 	private final String[] books;
 	private CheckBox gr, rest, gri[][];
+
+	private static void setValue(CheckBox gri[], Boolean value) {
+		for (int i = 0; i < gri.length; i++) {
+			CheckBox checkBox = gri[i];
+			checkBox.setValue(value, false);
+		}
+	}
+	
+	class GRHandler implements ValueChangeHandler<Boolean> {
+
+		@Override
+		public void onValueChange(ValueChangeEvent<Boolean> event) {
+			for (int i = 0; i < gri.length; i++) {
+				CheckBox[] g = gri[i];
+				setValue(g, event.getValue());
+			}	
+		}		
+	}
+	
+	static class GRiHandler implements ValueChangeHandler<Boolean> {
+		private CheckBox[] gri;
+
+		private GRiHandler(CheckBox[] gri) {
+			this.gri = gri;
+		}
+
+		@Override
+		public void onValueChange(ValueChangeEvent<Boolean> event) {
+			setValue(gri, event.getValue());
+		}
+	}
+	
 	
 	public FilterMethodSettings(DomMethod method) {
 		key = method.key();
@@ -50,7 +84,9 @@ public class FilterMethodSettings extends Composite implements LeafValueEditor<M
 				this.gri[row-1][i] = gri;
 				grid.setWidget(row, i, gri);
 			}
+			grrow.addValueChangeHandler(new GRiHandler(gri[row-1]));
 		}
+		gr.addValueChangeHandler(new GRHandler());
 		Label alle = new Label("Alle leerdoelen");flow.add(alle); flow.add(alle);
 		grid = new Grid(1,1); flow.add(grid);
 		rest = new CheckBox("Niet geclassificeerde leerdoelen");
