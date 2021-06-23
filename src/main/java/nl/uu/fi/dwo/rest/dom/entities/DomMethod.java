@@ -1,22 +1,22 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import java.util.List;
+
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class DomMethod extends DomId {
 
 	public DomMethod(PersistenceId id) {
 		super(id);
-		// TODO Auto-generated constructor stub
 	}
 
 	public DomMethod() {
-		// TODO Auto-generated constructor stub
 	}
 
 	  public String method;
-	  public String[] books;
-	  public String[][] chapters;
-	  public int[][] edges;
+	  public List<String> books;
+	  public List<List<String>> chapters;
+	  public List<List<Integer>> edges;
 	  
 	  public String key() {
 	    if (getId() == null) return null;
