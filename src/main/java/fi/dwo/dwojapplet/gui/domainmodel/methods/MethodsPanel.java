@@ -10,6 +10,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -189,8 +191,13 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
       if (rowSet != null) {
         rowSet.method = txtField.getText();
         settings.makeObjects();
-        rowSet.books = settings.getBooks();
-        rowSet.chapters = settings.getChapters();
+        rowSet.books = Arrays.asList(settings.getBooks());
+        String[][] chapters = settings.getChapters();
+        rowSet.chapters = new ArrayList<>(chapters.length);
+        for (int i = 0; i < chapters.length; i++) {
+          String[] strings = chapters[i];
+          rowSet.chapters.add(Arrays.asList(strings));
+        }      
         update.add(rowSet);
       }
       int rowIndex = tbl.getSelectedRow();
@@ -200,8 +207,13 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
         rowSet = model.get(rowIndex);
         txtField.setText(rowSet.method);
         txtField.setEnabled(rowIndex != 0);
-        settings.setBooks(rowSet.books);
-        settings.setChapters(rowSet.chapters);
+        settings.setBooks(rowSet.books.toArray(new String[rowSet.books.size()]));
+        String[][] chapters = new String[rowSet.chapters.size()][];
+        for (int i = 0; i < chapters.length; i++) {
+          List<String> list = rowSet.chapters.get(i);
+          chapters[i] = list.toArray(new String[list.size()]);
+        }
+        settings.setChapters(chapters);
         settings.makeGUI();
         if (rowIndex == 0) rowSet = null;
       }
@@ -283,9 +295,9 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
     if (NEW == action) {
       DomMethod row = new DomMethod();
       row.method = "Untitled";
-      row.books = new String[] { "Untitled book" };
-      row.chapters  = new String[][] {{ "Untitled chapter" }};
-      row.edges = new int[0][];
+      row.books = Collections.singletonList( "Untitled book" );
+      row.chapters  = Collections.singletonList(Collections.singletonList( "Untitled chapter" ));
+      row.edges = Collections.emptyList();
       row.setId(new PersistenceId());
       row = model.persist(row);
       tableModel.add(row);

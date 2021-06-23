@@ -2,6 +2,7 @@ package fi.dwo.dwojapplet.gui.domainmodel.methods;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,11 +70,11 @@ public class MethodsProperties extends ArrayList<DomMethod> {
     for (DomMethod row: this) {
       if (row.getId() != null) {
         String key = row.key();
-        for (int i = 0; i < row.books.length; i++ ) {
-          String book = row.books[i];
-          String[] chapters = row.chapters[i];
-          for (int j = 0; j < chapters.length; j++) {
-            result.put(key + "-" + book + "-" + String.valueOf(j+1), chapters[j]);
+        for (int i = 0; i < row.books.size(); i++ ) {
+          String book = row.books.get(i);
+          List<String> chapters = row.chapters.get(i);
+          for (int j = 0; j < chapters.size(); j++) {
+            result.put(key + "-" + book + "-" + String.valueOf(j+1), chapters.get(j));
           }
         }
       }
@@ -86,8 +87,9 @@ public class MethodsProperties extends ArrayList<DomMethod> {
       if (Objects.equals(activeMethod, row.getId())) return row;
     }
     DomMethod dm = new DomMethod(activeMethod);
-    dm.books = new String[0];
-    dm.chapters = new String[0][];
+    dm.books = Collections.emptyList();
+    dm.chapters = Collections.emptyList();
+    dm.edges = Collections.emptyList();
     dm.method  = "Unknown method " + dm.key();
     
     return dm;
@@ -100,8 +102,8 @@ public class MethodsProperties extends ArrayList<DomMethod> {
     for (DomMethod row: this) {
       if (row.getId() != null) {
         String key = row.key();
-        for (int i = 0; i < row.books.length; i++ ) {
-          String book = row.books[i];
+        for (int i = 0; i < row.books.size(); i++ ) {
+          String book = row.books.get(i);
           result.put(key + "-" + book, book);
         }
       }
@@ -127,7 +129,17 @@ public class MethodsProperties extends ArrayList<DomMethod> {
   public int[][] getBookEdges(PersistenceId activeMethod) {
     for( DomMethod row: this) {
       if (Objects.equals(activeMethod, row.getId())) {
-        if (row.edges != null) return row.edges;
+        if (row.edges != null) {
+          int[][] result = new int[row.edges.size()][];
+          for (int i = 0; i < result.length; i++) {
+            List<Integer> li = row.edges.get(i);
+            int[] ri = result[i] = new int[li.size()];
+            for (int j = 0; j < ri.length; j++) {
+              ri[j] = li.get(j);
+            }
+          }
+          return result;
+        }
       }
     }
     // TODO Auto-generated method stub
