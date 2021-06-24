@@ -32,10 +32,10 @@ public class AnyMethodAction extends MethodeAction {
     putValue(NAME, methode.method);
     putValue(KEY,  methode.key());
     KOPPELING_LEERDOEL = "Koppeling leerdoel aan " + methode.method;
-    grJaarlagen       = methode.books;
+    grJaarlagen       = methode.books.toArray(new String[methode.books.size()]);
     aantalHoofdstukken= new int[grJaarlagen.length];
     for (int i = 0; i < aantalHoofdstukken.length; i++) {
-      aantalHoofdstukken[i] = methode.chapters[i].length;
+      aantalHoofdstukken[i] = methode.chapters.get(i).size();
     }
   }
 
