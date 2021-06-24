@@ -561,11 +561,21 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		
 	}
 	
+	static final double CHAPTER_ZOOM = SMALL;
 	class ChapterNode extends AbstractNode implements ClickHandler {
 		final private DomStudentModelMethodInfo info;
 		private List<Node> list = new ArrayList<>();
+		String longText, shortText;
+		boolean longer;
 		
-
+		void setText(boolean longer) {
+			if (longer != this.longer) {
+				this.longer = longer;
+				String t = longer ? longText: shortText;
+				text.getFirstChild().setNodeValue(t);
+			}
+		}
+		
 		ChapterNode(DomStudentModelMethodInfo info) {
 			setClassName(bundle.css().chapternode());
 			this.info = new DomStudentModelMethodInfo(info);
@@ -574,6 +584,18 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			r = 150f;
 			textColor = white;
 			nodeBorderColor = nodeColor = colorBlue4;
+			
+			shortText = "H" + info.getChapter();
+			longText = shortText;
+			DomMethod method = title.getMethod();
+			if (method != null && method.key().equals(info.getMethod()))
+			for (int i = 0; i < method.books.size(); i++) {
+				if (info.getBook().equals(method.books.get(i))) {
+					int j = info.getChapter() - 1;
+					longText = method.chapters.get(i).get(j);
+					break;
+				}
+			}
 		}
 		
 		public float getCx() {
@@ -596,7 +618,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			circle = doc.createSVGCircleElement(cx, cy, r);
 			circle.addClickHandler(this);
 			short unitType = OMSVGLength.SVG_LENGTHTYPE_NUMBER;
-			text = doc.createSVGTextElement(cx, cy, unitType, "H" + info.getChapter());
+			text = doc.createSVGTextElement(cx, cy, unitType, shortText);
 			text.addClickHandler(this);
  			colorize();
  			g.appendChild(circle);
@@ -1217,6 +1239,8 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			LOG.info("ctm.a = " + ctmfinal.getA());
 			voorkennisEdges.stream().map(t -> t.from).distinct().forEach(n -> n.transform(ctmfinal));
 			voorkennisEdges.forEach(Edge::move);
+			boolean longer = 1/f < CHAPTER_ZOOM;
+			chapters.values().forEach(item -> item.setText(longer));
 			
 		} else {
 			LOG.info("break recursion");
