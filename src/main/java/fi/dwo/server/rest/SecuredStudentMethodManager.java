@@ -17,7 +17,7 @@ import nl.uu.fi.dwo.rest.entities.RestMethod;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 @RolesAllowed({"STUDENT"})
-@Path("/secure/teacher/method")
+@Path("/secure/student/method")
 public class SecuredStudentMethodManager {
 
 	@PUT
