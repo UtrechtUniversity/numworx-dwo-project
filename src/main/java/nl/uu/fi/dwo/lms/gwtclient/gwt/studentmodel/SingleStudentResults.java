@@ -8,7 +8,6 @@ import org.osgi.util.promise.Promise;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
 
-import fi.dwo.gwt.lib.rest.CallManagers.MethodManager;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResults;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
@@ -28,7 +27,6 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @RoleScope public class SingleStudentResults implements StudentResults {
 
 	@Inject StudentModelService service;
-	@Inject MethodManager methodManager;
 	@Inject SingleStudentResults() {
 	}
 
@@ -64,7 +62,6 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 		return service.getForClass(currentModel, schoolClass).then(p->service.stap0(p,id,schoolClass));
 	}
 
-	
 	public void setUser(DomUser user) {
 		this.user = new DomStudent(user);
 	}
@@ -82,8 +79,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 	@Override
 	public Promise<DomMethod> getActiveMethod(DomStudentModelStructure structure) {
-		DomMethod method = new DomMethod(structure.getActiveMethod());
-		return methodManager.getMethod(service.context, method);
+		return service.getActiveMethod(structure.getActiveMethod());
 	}
 
 }
