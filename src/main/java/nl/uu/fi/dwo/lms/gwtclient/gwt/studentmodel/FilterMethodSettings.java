@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.tapestry.form.Checkbox;
+
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.editor.client.LeafValueEditor;
@@ -122,6 +124,7 @@ public class FilterMethodSettings extends Composite implements LeafValueEditor<M
 
 	private void setValue(Map<String, Set<Integer>> GenR, String hfst, CheckBox[] g) {
 		Set<Integer> h1 = GenR.get(hfst);
+		for(CheckBox gr: g) gr.setValue(Boolean.FALSE);
 		if (h1 == null) return;
 		if (h1.isEmpty()) {
 			setValue(g,Boolean.TRUE);

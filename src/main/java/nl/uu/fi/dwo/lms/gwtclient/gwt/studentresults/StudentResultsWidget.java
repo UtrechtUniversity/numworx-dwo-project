@@ -10,6 +10,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.web.bindery.event.shared.EventBus;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
 
 import com.google.gwt.uibinder.client.UiBinder;
@@ -76,8 +77,8 @@ public class StudentResultsWidget extends Composite {
 		bus.fireEventFromSource(ev, this);
 	}
 
-	public void setFilter(Map<String, Map<String, Set<Integer>>> filter2) {
-		filter.setText(FilterUtil.setFilter(filter2));
+	public void setFilter(Map<String, Map<String, Set<Integer>>> filter2, DomMethod method) {
+		filter.setText(FilterUtil.setFilter(filter2, method));
 	}
 	
 	public boolean isFilter() {

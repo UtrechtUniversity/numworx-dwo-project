@@ -24,19 +24,19 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph.Chapter
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph.ChapterNode;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph.Edge;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph.Node;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 
 public class FilterTitle extends ResizeComposite implements Consumer<Map<String, Map<String, Set<Integer>>>> {
 
 	public static final String ALLE_LEERDOELEN = "Alle leerdoelen";
-	public static final String GETALENRUIMTE = "Getal&Ruimte";
-	public static final String MODERNEWISKUNDE = "Moderne Wiskunde";
 	
-
+	
 	
 	DockLayoutPanel root;
 	private ListBox methodeBtn;
 	private Button book;
 	private Label chapter;
+	private DomMethod method;
 	
 	private Consumer<Map<String, Map<String, Set<Integer>>>> filter = this;
 	
@@ -45,8 +45,7 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 		@Override
 		public void onClick(ClickEvent event) {
 			String b = book.getText();
-			String m = GETALENRUIMTE;
-			if (methodeBtn.getSelectedIndex() == 2) m = MODERNEWISKUNDE;
+			String m = method.key();
 			
 			Map<String, Map<String, Set<Integer>>> t = Collections.singletonMap(m, Collections.singletonMap(b, Collections.emptySet()));
 			acceptFilter(t);
@@ -61,8 +60,7 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 			switch(index) {
 			default:
 			case 0: filter = Collections.emptyMap(); break;
-			case 1: filter = Collections.singletonMap(GETALENRUIMTE, Collections.emptyMap()); break;
-			case 2: filter = Collections.singletonMap(MODERNEWISKUNDE, Collections.emptyMap());	break;				
+			case 1: filter = Collections.singletonMap(method.key(), Collections.emptyMap()); break;
 			}
 			acceptFilter(filter);
 		}
@@ -75,7 +73,8 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 
 	}
 
-	public FilterTitle() {
+	public FilterTitle(DomMethod method) {
+		this.method = method;
 		root = new DockLayoutPanel(Unit.EM);
 		initWidget(root);
 		root.setStylePrimaryName("filter-title");
@@ -83,8 +82,7 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 
 		methodeBtn = new ListBox();
 		methodeBtn.addItem(ALLE_LEERDOELEN);
-		methodeBtn.addItem("Getal & Ruimte");
-		methodeBtn.addItem("Moderne Wiskunde");
+		if (method != null) methodeBtn.addItem(method.getMethod());
 		methodeBtn.setStylePrimaryName("graph-ListBox");		
 		root.addWest(methodeBtn, 10);
 
@@ -143,18 +141,35 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 		} else {
 			String key = f.keySet().iterator().next();
 			int index = 0;
-			if (GETALENRUIMTE.equals(key)) index = 1;
-			if (MODERNEWISKUNDE.equals(key)) index = 2;
+			if (method.key().equals(key)) index = 1;
 			methodeBtn.setSelectedIndex(index);
 			if (f.get(key).size() == 1) {
 				book.setText(f.get(key).keySet().iterator().next());
 				Set<Integer> chapters = f.get(key).get(book.getText());
-				chapter.setText(FilterUtil.h(chapters));
+				List<String> titles = null;
+				for(int i = 0 ; i < method.books.size(); i++) {
+					if (method.books.get(i).equals(book.getText())) 
+						titles = method.chapters.get(i);
+				}
+				chapter.setText(FilterUtil.h(chapters, titles));
 							
 			} else {
 				chapter.setText("");
 				book.setText("");
 			}
+		}
+	}
+
+	public DomMethod getMethod() {
+		return method;
+	}
+
+	public void setMethod(DomMethod method) {
+		this.method = method;
+		if (methodeBtn.getItemCount() == 2) {
+			methodeBtn.setItemText(1, method.getMethod());
+		} else {
+			methodeBtn.addItem(method.getMethod());
 		}
 	}
 

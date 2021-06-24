@@ -1,6 +1,11 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.inject.Inject;
+
+import org.osgi.util.promise.Promise;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
@@ -14,6 +19,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsPresenter;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class SMStudentResultsPresenter extends StudentResultsPresenter {
 
@@ -23,8 +29,6 @@ public class SMStudentResultsPresenter extends StudentResultsPresenter {
 		super(bus, vars, service);
 		this.service = service;
 	}
-
-	@Inject Lazy<FilterDialog> filterDialog;
 	
 	public void init(DomUser user, DomSchoolClass schoolClass, JavaScriptObject resultState) {
 		service.setUser(user);
@@ -39,18 +43,25 @@ public class SMStudentResultsPresenter extends StudentResultsPresenter {
 		return new SwitchViewEvent(SwitchViewEvent.SelectedView.SMSTUDENTRESULTSGRAPH, service.user, service.schoolClass, json.getJavaScriptObject());
 	}
 
+	private Map<PersistenceId, Promise<FilterMethodDialog>> filterDialogs = new HashMap<>();
+
 	@Override
 	protected void doFilter(DomStudentModelContext4Student item) {
-		FilterDialog d = filterDialog.get();
-		d.setValue(filter);
-		d.addCloseHandler(ev -> {
-			filter = d.getValue();
-			item.setFilter(d.getValue());
-			setupTree(item);
-			
+		PersistenceId key = item.getModelStructure().getActiveMethod();
+		if (key == null) return;
+		Promise<FilterMethodDialog> p;
+		p = filterDialogs.computeIfAbsent(key, k -> service.getActiveMethod(item.getModelStructure()).map(FilterMethodDialog::new));
+		p.then( q -> {		
+			FilterMethodDialog d = q.getValue();
+			d.setValue(filter);
+			d.addCloseHandler(ev -> {
+				filter = d.getValue();
+				item.setFilter(d.getValue());
+				setupTree(item);
+				
+			});
+			d.show();
+			return q;
 		});
-		d.show();
 	}
-
-	
 }

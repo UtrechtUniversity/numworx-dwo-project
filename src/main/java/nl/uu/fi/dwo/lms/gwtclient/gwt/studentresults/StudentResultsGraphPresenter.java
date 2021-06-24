@@ -92,9 +92,11 @@ public class StudentResultsGraphPresenter extends AbstractResultsPresenter {
 			root.add(main);
 			main.setWidget(graph.get());
 			DomStudentModelContext4Student item = p.getValue();
-			graph.get().setModelScore(item, currentService.getScore(item));
+			return currentService.getActiveMethod(item.getModelStructure()).then(q -> {
+				graph.get().setModelScore(item, currentService.getScore(item), q.getValue());
+				return q;
+			});
 			
-			return p;
 		}).then(null, oops -> LOG.log(Level.SEVERE, "init state", oops.getFailure()));
 	}
 

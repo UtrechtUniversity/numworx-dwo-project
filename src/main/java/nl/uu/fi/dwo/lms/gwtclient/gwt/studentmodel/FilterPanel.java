@@ -24,13 +24,11 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.web.bindery.event.shared.EventBus;
 
-import dagger.Lazy;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.studentmodel.JsTeacherClassFilterDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
@@ -85,8 +83,7 @@ public class FilterPanel extends Composite implements ProvidesKey<DomStudentMode
 		return super.getCellStyleNames(context, object);
 	}
 	};
-	
-	@Inject Lazy<FilterDialog> settings;
+	private Map<PersistenceId, Promise<FilterMethodDialog>> filterDialogs = new HashMap<>();
 	
 	@Inject FilterPanel(EventBus bus) {
 		root = RootPanel.get(JsTeacherClassFilterDisplay.getId());
@@ -96,18 +93,31 @@ public class FilterPanel extends Composite implements ProvidesKey<DomStudentMode
 		buttonColumn.setFieldUpdater(new FieldUpdater<DomStudentModelContext4Student, String>() {
 			  public void update(int index, DomStudentModelContext4Student object, String value) {
 					Map<String, Map<String, Set<Integer>>> filter = object.getFilter();
-					settings.get().setValue(filter);
 					
-					settings.get().addCloseHandler(ev -> { 
-						LOG.info("filter settings closed");
-						Map<String, Map<String, Set<Integer>>> nieuw = settings.get().getValue();
-						changed.add(getKey(object));
-						object.setFilter(nieuw);
-						if (check.getOrDefault(getKey(object), Boolean.FALSE)) {
-							service.updateForClass(object);
-						}
+					PersistenceId pid = object.getModelStructure().getActiveMethod();
+					if (pid == null) {
+						
+						return;
+					}
+					Promise<FilterMethodDialog> p = 
+							filterDialogs.computeIfAbsent(pid, key -> service.getActiveMethod(pid).map(FilterMethodDialog::new));
+					p.then(q -> {
+						FilterMethodDialog settings = q.getValue();
+						settings.setValue(filter);
+						
+						settings.addCloseHandler(ev -> { 
+							LOG.info("filter settings closed");
+							Map<String, Map<String, Set<Integer>>> nieuw = settings.getValue();
+							changed.add(getKey(object));
+							object.setFilter(nieuw);
+							if (check.getOrDefault(getKey(object), Boolean.FALSE)) {
+								service.updateForClass(object);
+							}
+						});
+						settings.show();					
+						return q;
 					});
-					settings.get().show();
+					
 			  }
 			});
 		checkColumn.setFieldUpdater(new FieldUpdater<DomStudentModelContext4Student, Boolean>() {

@@ -168,9 +168,10 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 				map.put(cat.getInfo().getId(), tcat);
 		}
 		view.showTree(tree);
-		view.setTitle(FilterUtil.setFilter(filter));
-		return p;
-		
+		return service.getActiveMethod(struc.getActiveMethod()).then(m -> {
+			view.setTitle(FilterUtil.setFilter(filter, m.getValue()));
+			return p;
+		});	
 	}
 		
 	private Map<String, DomTree<String>> children(List<DomStudentModelObj> objectives) {

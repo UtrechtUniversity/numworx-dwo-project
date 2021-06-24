@@ -60,6 +60,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
@@ -865,7 +866,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		zoomInBtn.setStylePrimaryName("graph-Button");
 		zoomOutBtn.setStylePrimaryName("graph-Button");		
 		voorkennisBtn.setStylePrimaryName("dwo-Button");
-		title = new FilterTitle();
+		title = new FilterTitle(null);
 		title.setFilter(new FilterConsumer());
 		add(title);
 		
@@ -968,8 +969,9 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		return image.getSvgElement();
 	}
 
-	public void setModelScore(DomStudentModelContext4Student item, Promise<DomStudentModelDataScore> score) {
+	public void setModelScore(DomStudentModelContext4Student item, Promise<DomStudentModelDataScore> score, DomMethod domMethod) {
 		this.current = item;
+		title.setMethod(domMethod);
 		map.clear();
 		chapters.clear();
 		setModel(item.getModelStructure());

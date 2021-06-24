@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -82,7 +83,6 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 	private JSONObject state;
 	
 	private Map<String, Map<String, Set<Integer>>> filter;
-	@Inject Lazy<FilterDialog> filterPanel;
 	private DomStudentModelContext4Student currentModel;
 	
 	
@@ -211,7 +211,10 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 				map.put(cat.getInfo().getId(), tcat);
 		}
 		view.showTree(tree);
-		view.setTitle(FilterUtil.setFilter(filter));
+		service.getActiveMethod(struc.getActiveMethod()).then(m -> {
+			view.setTitle(FilterUtil.setFilter(filter, m.getValue()));
+			return m;
+		});
 	}
  	
 	private Map<String, DomTree<String>> children(List<DomStudentModelObj> objectives) {
@@ -255,17 +258,27 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 			return p;} );
 	}
 
+	private Map<PersistenceId, Promise<FilterMethodDialog>> filterDialogs = new HashMap<>();
+
 	@JsMethod
 	public void onFilter() {
 		if(currentModel == null) return;
 		LOG.info("on filter click");
-		filterPanel.get().setValue(filter);
-		filterPanel.get().addCloseHandler(ev -> { 
-			LOG.info("filter settings closed");
-			filter = filterPanel.get().getValue();
-			showModel();
+		Promise<FilterMethodDialog> p;
+		PersistenceId key = currentModel.getModelStructure().getActiveMethod();
+		if (key == null) return;
+		p = filterDialogs.computeIfAbsent(key, k -> service.getActiveMethod(k).map(FilterMethodDialog::new));
+		p.then( q -> {		
+			FilterMethodDialog filterPanel = q.getValue();
+			filterPanel.setValue(filter);
+			filterPanel.addCloseHandler(ev -> { 
+				LOG.info("filter settings closed");
+				filter = filterPanel.getValue();
+				showModel();
+			});
+			filterPanel.show();
+			return null;
 		});
-		filterPanel.get().show();
 	}
 	
 	@JsMethod

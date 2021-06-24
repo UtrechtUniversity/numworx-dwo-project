@@ -37,6 +37,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsStudentResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.AbstractResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
@@ -109,7 +110,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	protected void setupTree(DomStudentModelContext4Student item) {
 		final StudentResultsWidget w = widget.get();
 		w.tree.removeItems();
-		w.setFilter(filter);
+		w.setFilter(filter, method);
 		setCurrentInfo(item.getModelStructure());
 		insertTree(item);
 	}
@@ -132,10 +133,13 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			currentInfo.clear();
 			if (selection == 0) return;
 			DomStudentModelContext4Student item = list.get(selection-1);
-			w.setFilter(item.getFilter());
 			service.getModel(item).then(p -> {
 				current = p.getValue();
+				return service.getActiveMethod(current.getModelStructure());
+			}).then( p -> {
+				method = p.getValue();
 				filter = current.getFilter();
+				w.setFilter(item.getFilter(), method);
 				setCurrentInfo(current.getModelStructure());
 				insertTree(item);
 				return p;
@@ -264,6 +268,8 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 
 	boolean showGraph;
 	protected Map<String,Map<String, Set<Integer>>> filter = Collections.emptyMap();
+	protected DomMethod method;
+	
 	void showHideGraph(DomStudentModelContext4Student item) {
 		JSONObject json = new JSONObject();
 		json.put("title", new JSONString(item.getModelStructure().getInfo().getTitle().get(lang)));
@@ -536,6 +542,9 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			widget.get().models.setSelectedIndex(index);
 			service.getModel(cid).then(p -> {
 				current = p.getValue();
+				return service.getActiveMethod(current.getModelStructure());
+			}).then( p -> {
+				method = p.getValue();
 				filter = current.getFilter();
 				setCurrentInfo(current.getModelStructure());
 				insertTree(current);
