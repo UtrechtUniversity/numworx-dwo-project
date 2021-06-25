@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 
 import com.owlike.genson.Genson;
 
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherMethodManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
@@ -32,7 +33,7 @@ public class MethodsProperties extends ArrayList<DomMethod> {
       try {
         InputStream in;
         DomMethod row;
-        in = getClass().getResourceAsStream("none.json");
+        in = DwoHelper.getAu().getStream("resources/none.json");
         row = genson.deserialize(in, DomMethod.class);
         add(row);
         in.close();
