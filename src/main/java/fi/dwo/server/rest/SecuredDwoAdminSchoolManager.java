@@ -19,6 +19,7 @@ import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentFromTo;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentLoginContext;
+import fi.dwo.commons.persistence.entities.PersistentMethod;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
@@ -45,6 +46,7 @@ import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.FromToManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
+import fi.dwo.server.PersistentDataManagers.core.MethodManager;
 import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
@@ -394,9 +396,12 @@ public class SecuredDwoAdminSchoolManager {
                 	itemList.forEach(item -> StudentModelItemManager.destroy(item.getItemID()));
                 	StudentModelContextManager.destroy(sm.getModelID());
                 }
-                
-                
-        //Loop FromTos in School
+        // loop methods
+                List<PersistentMethod> mList = MethodManager.findEntities(school);
+                for (PersistentMethod m: mList) {
+                	MethodManager.destroy(m.getId());
+                }
+        // Loop FromTos in School
                 List<PersistentFromTo> ftList = FromToManager.findEntities(school);
                 for (PersistentFromTo ft : ftList) {
                     //Remove FromTo
