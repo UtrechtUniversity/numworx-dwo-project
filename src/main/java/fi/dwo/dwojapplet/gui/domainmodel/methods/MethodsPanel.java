@@ -2,13 +2,12 @@ package fi.dwo.dwojapplet.gui.domainmodel.methods;
 
 import java.awt.Component;
 import java.awt.Image;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,7 +15,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,6 +29,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -47,8 +46,6 @@ import fi.dwo.dwojapplet.gui.GuiConstants;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherMethodManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -83,15 +80,32 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
 
   @Override
   public void actionPerformed(ActionEvent event) {
-    if (value == removeIcon) {
+    if (value == removeIcon && row != 0) {
       int ok = JOptionPane.showConfirmDialog(MethodsPanel.this, "Weet je het zeker?", TextMapper.getText(TextMapper.TBL_DELETE), JOptionPane.YES_NO_OPTION);
-      if (ok == JOptionPane.YES_OPTION) 
+      if (ok == JOptionPane.YES_OPTION)
+      {
+        tbl.getSelectionModel().clearSelection();
+        DomMethod rowSet = model.get(row);
         tableModel.delete(row);
+        delete.add(rowSet);
+        txtField.invalidate();
+        txtField.setSize(txtField.getPreferredSize());
+        resize();
+      }
     }
   }
 
+
   }
-  
+  void resize() {
+    invalidate();
+    Window w = SwingUtilities.windowForComponent(this);
+    w.setSize(w.getPreferredSize());
+    w.validate();
+    w.pack();
+    repaint();  
+}
+
   private JFileChooser choose = new JFileChooser();
  
   private JTable tbl;
@@ -101,8 +115,9 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
   private JTextField txtField;
   private ChapterSettings settings;
   private Set<DomMethod> update = new HashSet<>();
+  private Set<DomMethod> delete = new HashSet<>();
     
-  private final MethodsProperties model;
+  public final MethodsProperties model;
   private PersistenceId current;
   private DomMethod rowSet;
   
@@ -188,22 +203,19 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
   
     
     public void valueChanged(ListSelectionEvent event) {
-      if (rowSet != null) {
-        rowSet.method = txtField.getText();
-        settings.makeObjects();
-        rowSet.books = Arrays.asList(settings.getBooks());
-        String[][] chapters = settings.getChapters();
-        rowSet.chapters = new ArrayList<>(chapters.length);
-        for (int i = 0; i < chapters.length; i++) {
-          String[] strings = chapters[i];
-          rowSet.chapters.add(Arrays.asList(strings));
-        }      
-        update.add(rowSet);
-      }
+      System.err.println(event);
       int rowIndex = tbl.getSelectedRow();
+      if (!event.getValueIsAdjusting())
+      {
+        updateRowSet();
+        settings.setVisible(rowIndex > 0);
+        if (rowIndex <= 0) {
+          rowSet = null;
+          txtField.setText("");
+          txtField.setEnabled(false);
+        }
+      }
       if (!event.getValueIsAdjusting() && rowIndex != -1) {
-        
-        settings.setVisible(rowIndex != 0);
         rowSet = model.get(rowIndex);
         txtField.setText(rowSet.method);
         txtField.setEnabled(rowIndex != 0);
@@ -216,6 +228,22 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
         settings.setChapters(chapters);
         settings.makeGUI();
         if (rowIndex == 0) rowSet = null;
+      }
+    }
+
+    private void updateRowSet() {
+      if (rowSet != null) {
+        rowSet.method = txtField.getText();
+        settings.makeObjects();
+        rowSet.books = Arrays.asList(settings.getBooks());
+        String[][] chapters = settings.getChapters();
+        rowSet.chapters = new ArrayList<>(chapters.length);
+        for (int i = 0; i < chapters.length; i++) {
+          String[] strings = chapters[i];
+          rowSet.chapters.add(Arrays.asList(strings));
+        }   
+        System.err.println("update rowset " + rowSet.method + " " + settings.aantalKolommen + " " + settings.aantalRijen  + " " + rowSet.books.size());
+        update.add(rowSet);
       }
     }
 
@@ -295,10 +323,9 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
     if (NEW == action) {
       DomMethod row = new DomMethod();
       row.method = "Untitled";
-      row.books = Collections.singletonList( "Untitled book" );
-      row.chapters  = Collections.singletonList(Collections.singletonList( "Untitled chapter" ));
+      row.books = Collections.singletonList( settings.columnLabel + " 1" );
+      row.chapters  = Collections.singletonList(Collections.singletonList( settings.rowLabel + " 1" ));
       row.edges = Collections.emptyList();
-      row.setId(new PersistenceId());
       row = model.persist(row);
       tableModel.add(row);
     } else
@@ -322,6 +349,8 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
   }
 
   public void updateMethods() {
+    updateRowSet();
+    update.removeAll(delete);
     Iterator<DomMethod> iter = update.iterator();
     while(iter.hasNext()) {
       try {
@@ -331,7 +360,23 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
         LOG.log(Level.SEVERE, "update methods", e);
       }
     }
-    
+    iter = delete.iterator();
+    while(iter.hasNext()) {
+      try {
+        SecureTeacherMethodManager.removeMethod(iter.next());
+        iter.remove();
+      } catch (Dwo2Exception e) {
+        LOG.log(Level.SEVERE, "delete methods", e);
+      }
+    }    
+  }
+
+  public void refresh() {
+    model.refresh();
+    update.clear();
+    delete.clear();
+    rowSet = null;
+    tableModel.fireTableDataChanged();
   }
   
 }

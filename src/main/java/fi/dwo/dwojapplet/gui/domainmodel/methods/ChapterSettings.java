@@ -28,8 +28,8 @@ class ChapterSettings extends JPanel implements ActionListener
 	
 	private String[] bookString;
 	
-	private int maxObjectives  = 20;
-	private int maxCategories = 10; // Sietske heeft er 7 in haar nieuwe domainmodel
+	private static final int maxObjectives  = 20;
+	private static final int maxCategories = 10; // Sietske heeft er 7 in haar nieuwe domainmodel
 	int aantalRijen = 4;
 	int aantalKolommen = 1;
 	PlusMinKnop aantalRijenKnop;
@@ -40,8 +40,8 @@ class ChapterSettings extends JPanel implements ActionListener
 	final JPanel mainPanel;
 	JScrollPane scrollPane;
 		
-	private String rowLabel;
-	private String columnLabel;
+	final String rowLabel;
+	final String columnLabel;
 		
 			
 	public ChapterSettings(String rowLabel, String columnLabel){	
@@ -61,18 +61,18 @@ class ChapterSettings extends JPanel implements ActionListener
 	void makeObjects(){   
     	chapters = null;
     	String[] newObjects = null;
-    	for(int j=0 ; j<maxCategories ; j++)
+    	for(int j=0 ; j<aantalKolommen ; j++)
     	{	String checkObject = chapterTextFields[j][0].getText();
    			if(checkObject==null || "".equals(checkObject.trim()))
    			{	chapters = new String[j][];
    				break;
    			}
    			if(chapters == null)
-   				chapters = new String[maxCategories][];
+   				chapters = new String[aantalKolommen][];
     	}
     	for(int j=0 ; j<chapters.length ; j++)
-    	{	newObjects = new String[maxObjectives];
-	        for(int i=0 ; i<maxObjectives ; i++){   
+    	{	newObjects = new String[aantalRijen];
+	        for(int i=0 ; i<aantalRijen ; i++){   
 	        	String checkObject = chapterTextFields[j][i].getText();
 	       		if(checkObject!=null && !"".equals(checkObject.trim())){	
 	       			newObjects[i] = checkObject;
@@ -83,7 +83,7 @@ class ChapterSettings extends JPanel implements ActionListener
 	            }
 	        }
 	        if(chapters[j]==null){
-	        	chapters[j] = new String[maxObjectives];
+	        	chapters[j] = new String[aantalRijen];
 	        }
 	        for(int i=0 ; i<chapters[j].length ; i++){
 	        	chapters[j][i] = newObjects[i];
@@ -93,8 +93,8 @@ class ChapterSettings extends JPanel implements ActionListener
     	bookString = new String[chapters.length];
     	for(int i = 0; i < chapters.length; i++)
     	{	bookString[i] = bookTextFields[i].getText();
-    		if(bookString[i].equals(columnLabel + " "  + (i+1)))
-    			bookString[i] = "";
+//    		if(bookString[i].equals(columnLabel + " "  + (i+1)))
+//    			bookString[i] = "";
     	}	
     }
     
@@ -128,6 +128,14 @@ class ChapterSettings extends JPanel implements ActionListener
 	    }
     }
     
+    private void clearFields() {
+      for (int j = 0; j < maxCategories; j++) bookTextFields[j].setText(columnLabel + " " + (j+1)); 
+      for (int i = 0; i < maxObjectives; i++) 
+        for (int j = 0; j < maxCategories; j++)
+          chapterTextFields[j][i].setText("");   
+    }
+    
+    
     public void makeGUI(int aantalRijen, int aantalKolommen){
     		objectivesPanel = new JPanel();
     		objectivesPanel.setBackground(colorGray3);
@@ -146,10 +154,15 @@ class ChapterSettings extends JPanel implements ActionListener
         leegLabel.setPreferredSize(new Dimension(100,20));
         boxh.add(leegLabel);
         
+       
         for(int j = 0; j < aantalKolommen; j++)
-        	boxh.add(bookTextFields[j]);
+        {
+          boxh.add(bookTextFields[j]);
+        }
         
         boxv.add(boxh);
+        
+        
         
         for(int i = 0; i < aantalRijen; i++)
         {	boxh = Box.createHorizontalBox();
@@ -206,10 +219,10 @@ class ChapterSettings extends JPanel implements ActionListener
     }
     
         
-    private void resize() {
+    void resize() {
         invalidate();
         Window w = SwingUtilities.windowForComponent(this);
-        w.setSize(w.getSize());
+        w.setSize(w.getPreferredSize());
         w.validate();
         w.pack();
         repaint();
@@ -249,13 +262,15 @@ class ChapterSettings extends JPanel implements ActionListener
 	}
 
   public void makeGUI() {
-    if(chapters != null)
-    {   aantalKolommen = chapters.length;
-        aantalRijen = 0;
-        for(int i = 0; i < chapters.length; i++)
-                if(chapters[i] != null && chapters[i].length > aantalRijen)
-                    aantalRijen = chapters[i].length;
+    if (chapters != null)
+    {
+      aantalKolommen = chapters.length;
+      aantalRijen = 0;
+      for (int i = 0; i < chapters.length; i++)
+        if (chapters[i] != null && chapters[i].length > aantalRijen)
+          aantalRijen = chapters[i].length;
     }
+    clearFields();
     makeGUI(aantalRijen, aantalKolommen);
     for (int j = 0 ; chapters!=null &&  j < chapters.length; j++)
     { int i;

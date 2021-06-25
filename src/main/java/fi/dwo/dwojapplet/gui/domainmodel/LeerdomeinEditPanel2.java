@@ -382,7 +382,9 @@ public class LeerdomeinEditPanel2 extends JPanel
         if (ok == JOptionPane.OK_OPTION) {
             panel.updateMethods();
             setActiveMethod(panel.getActiveMethod());
-        }
+        } else 
+          panel.refresh();
+
       }
 	}
 	

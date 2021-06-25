@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Random;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -55,6 +56,16 @@ public class MethodsProperties extends ArrayList<DomMethod> {
        
   }; 
   
+  void refresh() {
+    try {
+      List<DomMethod> list = SecureTeacherMethodManager.getList();
+      removeRange(1, size());
+      addAll(list);
+    } catch(Exception e) {
+      LOG.log(Level.WARNING, "refresh", e);
+    }
+  }
+  
   private static MethodsProperties instance = new MethodsProperties();
     
   public static MethodsProperties instance() {
@@ -82,19 +93,23 @@ public class MethodsProperties extends ArrayList<DomMethod> {
     return result;
   }
 
-  public DomMethod getMethod(PersistenceId activeMethod) {
+  private Optional<DomMethod> getMethod0(PersistenceId pid) {
     for (DomMethod row: this) {
-      if (Objects.equals(activeMethod, row.getId())) return row;
-    }
-    DomMethod dm = new DomMethod(activeMethod);
-    dm.books = Collections.emptyList();
-    dm.chapters = Collections.emptyList();
-    dm.edges = Collections.emptyList();
-    dm.method  = "Unknown method " + dm.key();
-    
-    return dm;
+      if (Objects.equals(pid, row.getId())) return Optional.of(row);
+    }    
+    return Optional.empty();
   }
-
+    
+  public DomMethod getMethod(PersistenceId activeMethod) {
+    return getMethod0(activeMethod).orElseGet(() -> {
+      DomMethod dm = new DomMethod(activeMethod);
+      dm.books = Collections.emptyList();
+      dm.chapters = Collections.emptyList();
+      dm.edges = Collections.emptyList();
+      dm.method = "Unknown method " + dm.key();
+      return dm;
+    });
+  }
 
   public Map<String, String> getBookDescriptionsMap(
       PersistenceId activeMethod) {
@@ -110,14 +125,19 @@ public class MethodsProperties extends ArrayList<DomMethod> {
     }
     return result;
   }
+
   Random random = new Random();
 
   public DomMethod persist(DomMethod row) {
     
     try {
       if (row.getId() == null) {
-        String idString = ("MYSQL;PersistentMethod;" + (random.nextLong() >>> 1));
-        row.setId(new PersistenceId(idString));
+        PersistenceId id;
+        do {
+          String idString = ("MYSQL;PersistentMethod;" + (random.nextLong() >>> 1));
+          id = new PersistenceId(idString);
+        } while(getMethod0(id).isPresent());
+        row.setId(id);
       }
       row = SecureTeacherMethodManager.addModel(row);
     } catch (Dwo2Exception e) {
