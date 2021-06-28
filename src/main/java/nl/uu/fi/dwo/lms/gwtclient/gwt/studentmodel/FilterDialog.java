@@ -36,7 +36,7 @@ public class FilterDialog extends Composite implements CloseHandler<PopupPanel> 
 	private CloseHandler<PopupPanel> close;
 	private PopupPanel popup;
 	
-	@Inject FilterDialog() {
+	FilterDialog() {
 		initWidget(uiBinder.createAndBindUi(this));
 		style.ensureInjected();
 		popup = new PopupPanel(true,true);		
