@@ -57,6 +57,7 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**
  * @author peterboon
@@ -424,7 +425,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	}
 	@UiHandler("knowledge")
 	void onKnowledge(ClickEvent e) {
-		if (role == RoleType.STUDENT && vars.isPremium()) {
+		if ((role == RoleType.STUDENT || role == RoleType.TEACHER) && vars.isPremium()) {
 			LOG.info("goto kennis");
 			if (Actions.isAvailable())
 				Actions.KNOWLEDGE.execute();
@@ -478,7 +479,12 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		{  	organization.setVisible(role == RoleType.SCHOOLADMIN);
 			results.setVisible(role == RoleType.TEACHER); // or student if premium&test.
 			persons.setVisible(role != RoleType.STUDENT);
-			knowledge.setVisible((role == RoleType.STUDENT && isTest() && vars.isPremium() && vars.getCurrentSchoolClass() != null));
+			boolean premiumStudent = role == RoleType.STUDENT && isTest() && vars.isPremium() && vars.getCurrentSchoolClass() != null;
+			boolean premiumTeacher = role == RoleType.TEACHER && isTest() && vars.isPremium();
+			String title = DwoLocalesForGWT.instance.NUM_MNU_KNOWLEDGE();
+			if(premiumTeacher) title = DwoLocalesForGWT.instance.NUM_MNU_STUDENTMODEL();
+			knowledge.setTitle(title);
+			knowledge.setVisible(premiumStudent||premiumTeacher);
 		}
 	}
 
