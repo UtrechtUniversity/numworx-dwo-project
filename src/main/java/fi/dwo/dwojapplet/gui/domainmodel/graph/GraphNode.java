@@ -14,15 +14,18 @@ import java.awt.Stroke;
 import java.awt.geom.FlatteningPathIterator;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
@@ -598,11 +601,50 @@ public class GraphNode {
 		return visible;
 	}
 
+	private int compare(DomStudentModelMethodInfo a, DomStudentModelMethodInfo b) {
+	  String ma = Objects.toString(a.getMethod(), "");
+	  String mb = Objects.toString(b.getMethod(), "");
+	  int result = ma.compareTo(mb);
+	  if (result != 0) return result;
+	  String ba = Objects.toString(a.getBook(), "");
+	  String bb = Objects.toString(b.getBook(), "");
+	  result = ba.compareTo(bb);
+	  if (result != 0) return result;
+	  Integer ca = a.getChapter(); if (ca == null) ca = Integer.valueOf(0);
+	  Integer cb = b.getChapter(); if (cb == null) cb = Integer.valueOf(0);
+	  return ca.compareTo(cb);
+	}
+	
+	
 	public void setMethodeInfos(List<DomStudentModelMethodInfo> infos) {
 		if (infos != null) {
+		    
 			for (DomStudentModelMethodInfo info : infos) {
 				String key = info.key();
 				methodeInfos.computeIfPresent(key, (k, v) -> info);
+			}
+			infos = new ArrayList<DomStudentModelMethodInfo>(methodeInfos.values());
+			Collections.sort(infos, this::compare);
+			int size = infos.size();
+			DomStudentModelMethodInfo first = null, last = null;
+			for(int i = 0; i < size; i ++ ) {
+			  DomStudentModelMethodInfo item = infos.get(i);
+			  if (first != null && !Objects.equals(first.getMethod(),item.getMethod())) first = null;
+			  if (item.getX() == null || item.getY() == null) {
+			    last = first;
+			    for (int j = i+1; j < size; j++) {
+			      DomStudentModelMethodInfo other = infos.get(j);
+			      if (!Objects.equals(item.getMethod(), other.getMethod())) break;
+			      if (other.getX() != null && other.getY() != null) last = other;
+			    }
+			    if (last != null) {
+			      item.setX(first.getX());
+			      item.setY(first.getY());
+			      first = item;
+			    }
+			  } else {
+			    first = item;
+			  }			  
 			}
 		}
 
