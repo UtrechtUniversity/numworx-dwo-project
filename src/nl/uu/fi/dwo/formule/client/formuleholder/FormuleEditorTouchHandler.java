@@ -29,6 +29,7 @@ import com.vaadin.pointerevents.client.PointerCancelEvent;
 import com.vaadin.pointerevents.client.PointerCancelHandler;
 import com.vaadin.pointerevents.client.PointerDownEvent;
 import com.vaadin.pointerevents.client.PointerDownHandler;
+import com.vaadin.pointerevents.client.PointerEventsSupport;
 import com.vaadin.pointerevents.client.PointerMoveEvent;
 import com.vaadin.pointerevents.client.PointerMoveHandler;
 import com.vaadin.pointerevents.client.PointerUpEvent;
@@ -84,6 +85,7 @@ public class FormuleEditorTouchHandler
          
         EventTarget target = event.target;
         boolean when = Element.is(target) && (Element.as(target) == editor.getCanvas().getElement());
+        when = PointerEventsSupport.isSupported();
         if(when) {
         	LOG.severe("CAPTURE " + event);
         	capture = editor.getAsPanel().getElement();
@@ -121,14 +123,22 @@ public class FormuleEditorTouchHandler
 	public FormuleEditorTouchHandler(FormuleHolder editor)
 	{
 		this.editor = editor;
+		PointerEventsSupport.init();
+		LOG.severe( "supported " + PointerEventsSupport.isSupported());
 	}
 
 	HandlerRegistration oldRegistration;
 	
 	public HandlerRegistration initHandler() {
 	  FormulePanel w = (FormulePanel) editor.getAsPanel();
-	  HandlerRegistration mouseRegistration = w.addMouseHandler(this);
-	  HandlerRegistration pointerRegistration = w.addPointerHandler(this);
+	  HandlerRegistration mouseRegistration = HandlerRegistrations.compose(
+	    w.addMouseDownHandler(this),
+	    w.addMouseMoveHandler(this),
+	    w.addMouseUpHandler(this));
+	  HandlerRegistration pointerRegistration = 
+	      HandlerRegistrations.compose(
+	        w.addMouseOutHandler(this), // no pointerout
+	        w.addPointerHandler(this));
 	  HandlerRegistration touchRegistration = w.addTouchHandler(this);
 	  oldRegistration = HandlerRegistrations.compose(mouseRegistration, touchRegistration);
     return HandlerRegistrations.compose(oldRegistration, pointerRegistration);
@@ -282,6 +292,11 @@ public class FormuleEditorTouchHandler
 
   @Override
   public void onPointerUp(PointerUpEvent event) {
+    if (!mousedown) {
+      LOG.log(Level.SEVERE, "pointer UPUP");
+      release();
+      return;
+    }
     try {
       mousedown = false;
       int x = event.getRelativeX(editor.getCanvas().getElement());
