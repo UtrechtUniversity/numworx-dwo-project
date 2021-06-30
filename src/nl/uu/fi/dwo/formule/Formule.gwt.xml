@@ -6,6 +6,13 @@
 	<inherits name="nl.uu.fi.dwo.interaction.Interaction" />
 	<inherits name="fi.wiskopdr.WiskOpdr" />
 	<inherits name="org.vectomatic.libgwtsvg" />
+
+	<replace-with class="com.vaadin.pointerevents.client.ModernSupportImpl">
+		<when-type-is class="com.vaadin.pointerevents.client.PointerEventsSupport"/>
+	</replace-with>
+
 	<inherits name="com.vaadin.pointerevents.PointerEvents" />
+	<set-property name="modernie" value="yes" />
+	
 	<source path="client"/>
 </module>
