@@ -638,8 +638,8 @@ public class GraphNode {
 			      if (other.getX() != null && other.getY() != null) last = other;
 			    }
 			    if (last != null) {
-			      item.setX(first.getX());
-			      item.setY(first.getY());
+			      item.setX(last.getX());
+			      item.setY(last.getY());
 			      first = item;
 			    }
 			  } else {
