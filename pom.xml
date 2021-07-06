@@ -36,7 +36,7 @@
         <tomcat7.version>7.0.76</tomcat7.version>
         <context.xml>context-dwo_devel.xml</context.xml>
         <copy.ui.skip>true</copy.ui.skip>
-        <registerVersion>2.3.7</registerVersion>
+        <registerVersion>2.4.14</registerVersion>
         <gwtModule>nl.uu.fi.dwo.lms.gwtclient.gwtclient</gwtModule>
         <local.dwo>/dwo</local.dwo>
     </properties>

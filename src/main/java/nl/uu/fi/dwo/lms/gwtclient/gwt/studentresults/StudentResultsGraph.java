@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -42,6 +43,8 @@ import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseEvent;
@@ -53,11 +56,13 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
@@ -72,7 +77,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 
-public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, MouseUpHandler, MouseDownHandler, MouseOutHandler {
+public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, MouseUpHandler, MouseDownHandler, MouseOutHandler, ContextMenuHandler {
 
 	
 	static final StudentResultsGraphBundle bundle = GWT.create(StudentResultsGraphBundle.class);
@@ -239,6 +244,8 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	private static ColorStyle defaultTextColor = colorBlue1;
 	private static ColorStyle defaultRectColor = new ColorStyle( colorGray3.getRGB()&0xFFFFFF | (186<<24));
 	private static ColorStyle defaultRectBorderColor = new ColorStyle( colorGray3.getRGB()&0xFFFFFF | (90<<24));
+	private static ColorStyle kennenNodeColor = new ColorStyle(255,255,150);
+	private static ColorStyle kennenNodeBorderColor = new ColorStyle(255,200,150);
 
 	private static int defaultFontSize = 16;
 	private static String defaultFont = "Ubuntu";
@@ -652,6 +659,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	class Node extends AbstractNode implements ClickHandler {
 		final private DomStudentModelMethodInfo info;
 		final private DomStudentModelObj obj;
+		final private boolean kennen;
 		private OMSVGRectElement rect;
 		private boolean voorkennis;
 		private float tmpx, tmpy;
@@ -709,11 +717,18 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 				cy = Float.NaN;
 			}
  			this.cy = cy;
+			String descr = obj.getInfo().getTitle().get(lang);
+			kennen = descr.startsWith("W:");
  			if(invalid()) return;
  			this.parent = parent;
 			circle = doc.createSVGCircleElement(cx, cy, r);
 			short unitType = OMSVGLength.SVG_LENGTHTYPE_NUMBER;
-			text = doc.createSVGTextElement(cx, cy, unitType, parent + obj.getInfo().getTitle().get(lang));
+			if (kennen) {
+				nodeColor = kennenNodeColor;
+				nodeBorderColor = kennenNodeBorderColor;
+				g.addClassNameBaseVal(bundle.css().kennen());
+			}
+			text = doc.createSVGTextElement(cx, cy, unitType, parent + descr);
 			text.addClickHandler(this);
 			circle.addClickHandler(this);
 		}
@@ -933,6 +948,75 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		zoomInBtn.addClickHandler(new Zoom(false));
 		voorkennisBtn.addClickHandler(new Voorkennis());
 		verbergBtn.addClickHandler(new VerbergVoorkennis());
+		
+		
+		addDomHandler(this, ContextMenuEvent.getType());
+
+	}
+
+	PopupPanel popupMenu;
+	
+	@Override
+	public void onContextMenu(ContextMenuEvent event) {
+		int x = event.getNativeEvent().getClientX();
+		int y = event.getNativeEvent().getClientY();
+		LOG.info("on context menu hit "  + x);
+		OMSVGPoint point = getSvgElement().createSVGPoint(x, y);
+		OMSVGMatrix ctm = getSvgElement().getScreenCTM().inverse();
+		point = point.matrixTransform(ctm);
+		float sx = point.getX();
+		float sy = point.getY();
+		// blur nodes and edges: find node, focus on node and edges.
+		Optional<Node> find = nodeStream().filter(node -> node.contains(sx, sy)).findAny();
+		LOG.info(find.toString());	
+		if (find.isPresent())
+		{
+			LOG.info("ON present " + find.get().obj.getInfo().getTitle().get(lang) );
+			if (popupMenu==null) {
+				popupMenu = new PopupPanel(true, true);
+				popupMenu.getElement().getStyle().setZIndex(9999);
+				Label item = new Label("Toon alle voorkennis");
+				popupMenu.add(item);
+				item.addClickHandler(new ClickHandler() {
+					
+					@Override
+					public void onClick(ClickEvent event) {
+						nodeStream().forEach(n -> n.setVisible(false));
+						List<Set<Node>> voorkennistree = new ArrayList<>();
+						Set<Node> to = Collections.singleton(find.get());
+						Set<Node> from;
+						do { voorkennistree.add(to);
+							 from = getVoorkennis(to);
+							 to = from;
+						} while(!to.isEmpty());
+						ListIterator<Set<Node>> last = voorkennistree.listIterator(voorkennistree.size());
+						while(last.hasPrevious()) {
+							Set<Node> items = last.previous();
+							ListIterator<Set<Node>>less = voorkennistree.listIterator(last.previousIndex());
+							while(less.hasPrevious()) {
+								less.previous().removeAll(items);
+							}
+						}
+						
+						voorkennistree.stream().flatMap(Set::stream).forEach(n -> n.setVisible(true));
+						
+						
+						popupMenu.hide();
+						LOG.info("ON Voorkennis " + find.get().obj.getInfo().getTitle().get(lang) );
+					}
+
+					private Set<Node> getVoorkennis(Set<Node> to) {				
+						return to.stream().flatMap(node -> edges.stream().filter(e -> e.to == node).map( e-> e.from)).collect(Collectors.toSet());
+					}
+				});
+			}
+			popupMenu.setPopupPosition(event.getNativeEvent().getClientX(),
+	                 event.getNativeEvent().getClientY());
+	        popupMenu.show();
+			
+			
+		}
+		event.preventDefault();
 	}
 
 	private void doFilter(DomStudentModelMethodInfo info) {

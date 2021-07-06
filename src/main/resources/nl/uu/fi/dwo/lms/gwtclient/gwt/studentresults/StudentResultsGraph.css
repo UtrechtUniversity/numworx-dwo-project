@@ -127,3 +127,8 @@
 .large { }
 
 .xlarge { }
+
+.kennen.node circle { 
+	fill: rgb(255,255,150);
+	stroke: rgb(255,200,150);
+}
