@@ -5,11 +5,9 @@ import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.PathId;
-import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.entities.RestNewSchoolClass4Student;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
@@ -54,14 +52,14 @@ public class SecureStudentSchoolClassManager {
     return result;
   }
 
-  public static List<DomSchoolClass> getStudentsSchoolClasses() throws Dwo2Exception {
-    List<DomSchoolClass> src;
-    src = StoredRestManager.getInstance().getList("rest/sec:" + PathId.getId(getContext()) + "/student/schoolclass/getList",
-        RestListClassTypes.DomSchoolClass);
-    LOG.log(Level.FINE, "Retrieved list of schoolclasses of the student with username {0}.",
-        new Object[] {RestAuthenticator.getInstance().getUsername()});
-    return src;
-  }
+//  public static List<DomSchoolClass> getStudentsSchoolClasses() throws Dwo2Exception {
+//    List<DomSchoolClass> src;
+//    src = StoredRestManager.getInstance().getList("rest/sec:" + PathId.getId(getContext()) + "/student/schoolclass/getList",
+//        RestListClassTypes.DomSchoolClass);
+//    LOG.log(Level.FINE, "Retrieved list of schoolclasses of the student with username {0}.",
+//        new Object[] {RestAuthenticator.getInstance().getUsername()});
+//    return src;
+//  }
 
   public static Boolean registerStudentForSchoolClass(DomNewSchoolClass4Student submit)
       throws Dwo2Exception {
@@ -77,22 +75,22 @@ public class SecureStudentSchoolClassManager {
     return result;
   }
 
-  public static List<DomSchoolClass> getSchoolsClasses() throws Dwo2Exception {
-    List<DomSchoolClass> src;
-    src = StoredRestManager.getInstance().getList("rest/sec:" + PathId.getId(getContext()) + "/student/schoolclass/getSchoolsList",
-        RestListClassTypes.DomSchoolClass);
-    LOG.log(Level.FINE, "Retrieved list of schoolclasses of the school with username {0}.",
-        new Object[] {RestAuthenticator.getInstance().getUsername()});
-    return src;
-  }
+//  public static List<DomSchoolClass> getSchoolsClasses() throws Dwo2Exception {
+//    List<DomSchoolClass> src;
+//    src = StoredRestManager.getInstance().getList("rest/sec:" + PathId.getId(getContext()) + "/student/schoolclass/getSchoolsList",
+//        RestListClassTypes.DomSchoolClass);
+//    LOG.log(Level.FINE, "Retrieved list of schoolclasses of the school with username {0}.",
+//        new Object[] {RestAuthenticator.getInstance().getUsername()});
+//    return src;
+//  }
 
-  public static DomSchoolClass getActiveSchoolClass() throws Dwo2Exception {
-    DomSchoolClass sc;
-    sc = StoredRestManager.getInstance().get("rest/sec:" + PathId.getId(getContext()) + "/student/schoolclass/getActive",
-        DomSchoolClass.class);
-    LOG.log(Level.FINE,
-        "Retrieved the active schoolclass with id {1} of the student with username {0}.",
-        new Object[] {RestAuthenticator.getInstance().getUsername(), sc.getId()});
-    return sc;
-  }
+//  public static DomSchoolClass getActiveSchoolClass() throws Dwo2Exception {
+//    DomSchoolClass sc;
+//    sc = StoredRestManager.getInstance().get("rest/sec:" + PathId.getId(getContext()) + "/student/schoolclass/getActive",
+//        DomSchoolClass.class);
+//    LOG.log(Level.FINE,
+//        "Retrieved the active schoolclass with id {1} of the student with username {0}.",
+//        new Object[] {RestAuthenticator.getInstance().getUsername(), sc.getId()});
+//    return sc;
+//  }
 }
