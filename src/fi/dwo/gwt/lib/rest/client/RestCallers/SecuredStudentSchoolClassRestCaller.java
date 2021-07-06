@@ -24,10 +24,10 @@ public interface SecuredStudentSchoolClassRestCaller extends RestService {
     @Path("/sec:{id}/student/schoolclass/remove")
     public void removeSchoolClass(@PathParam("id") String id, RestSchoolClass restSchoolClass, MethodCallback<Boolean> callback);
 
-    @GET
-    @Path("/sec:{id}/student/schoolclass/getList")
-    @Deprecated
-    public void getStudentsSchoolClasses(@PathParam("id") String id, MethodCallback<List<DomSchoolClass>> callback);
+//    @GET
+//    @Path("/sec:{id}/student/schoolclass/getList")
+//    @Deprecated
+//    public void getStudentsSchoolClasses(@PathParam("id") String id, MethodCallback<List<DomSchoolClass>> callback);
     @PUT
     @Path("/sec:{id}/student/schoolclass/getList")
     public void getStudentsSchoolClasses(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomSchoolClass>> callback);
@@ -36,19 +36,19 @@ public interface SecuredStudentSchoolClassRestCaller extends RestService {
     @Path("/sec:{id}/student/schoolclass/submit")
     public void registerStudentForSchoolClass(@PathParam("id") String id, RestNewSchoolClass4Student restData, MethodCallback<Boolean> callback);
 
-    @GET
-    @Path("/sec:{id}/student/schoolclass/getSchoolsList")
-    @Deprecated
-    public void getSchoolsClasses(@PathParam("id") String id, MethodCallback<List<DomSchoolClass>> callback);
+//    @GET
+//    @Path("/sec:{id}/student/schoolclass/getSchoolsList")
+//    @Deprecated
+//    public void getSchoolsClasses(@PathParam("id") String id, MethodCallback<List<DomSchoolClass>> callback);
 
     @PUT
     @Path("/sec:{id}/student/schoolclass/getSchoolsList")
     public void getSchoolsClasses(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomSchoolClass>> callback);
 
-    @GET
-    @Path("/sec:{id}/student/schoolclass/getActive")
-    @Deprecated
-    public void getActiveSchoolClass(@PathParam("id") String id, MethodCallback<DomSchoolClass> callback);
+//    @GET
+//    @Path("/sec:{id}/student/schoolclass/getActive")
+//    @Deprecated
+//    public void getActiveSchoolClass(@PathParam("id") String id, MethodCallback<DomSchoolClass> callback);
 
     @PUT
     @Path("/sec:{id}/student/schoolclass/getActive")
