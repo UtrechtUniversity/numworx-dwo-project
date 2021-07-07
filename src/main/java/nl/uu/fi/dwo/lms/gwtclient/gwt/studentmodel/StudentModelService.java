@@ -52,6 +52,10 @@ public class StudentModelService implements DescriptionService {
 		context.setRealm(vars.getCurrentLoginContext().getRealm());
 		if (!vars.isPremium()) {
 			models = Promises.resolved(Collections.emptyList());
+		} else {
+			DomMethod value = new DomMethod();
+			value.setMethod("Geen methode"); // FIXME i18n
+			methods.put(null, Promises.resolved(value));
 		}
 	}
 

@@ -360,10 +360,14 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			g.setClassNameBaseVal(bundle.css().edge());
 		}
 		void setVisible() {
-			if (from.isVisible() && to.isVisible() && ( from.isVoorkennis() || sameChapter() )  ) {
+			if (isVisible()  ) {
 				g.removeClassNameBaseVal(HIDDEN_NODE);
 			} else 
 				g.addClassNameBaseVal(HIDDEN_NODE);
+		}
+
+		boolean isVisible() {
+			return from.isVisible() && to.isVisible() && ( from.isVoorkennis() || sameChapter() );
 		}
 		
 		boolean sameChapter() {
@@ -958,6 +962,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	
 	@Override
 	public void onContextMenu(ContextMenuEvent event) {
+		start = null;
 		int x = event.getNativeEvent().getClientX();
 		int y = event.getNativeEvent().getClientY();
 		LOG.info("on context menu hit "  + x);
@@ -971,7 +976,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		LOG.info(find.toString());	
 		if (find.isPresent())
 		{
-			LOG.info("ON present " + find.get().obj.getInfo().getTitle().get(lang) );
+			LOG.info("ON present " + find.get().obj.getInfo().getTitle().get(lang)   + " at " + x + " , " + y);
 			if (popupMenu==null) {
 				popupMenu = new PopupPanel(true, true);
 				popupMenu.getElement().getStyle().setZIndex(9999);
@@ -982,31 +987,50 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 					@Override
 					public void onClick(ClickEvent event) {
 						nodeStream().forEach(n -> n.setVisible(false));
+						chapters.values().forEach(ChapterNode::hide);
+						chapterEdges.forEach(ChapterEdge::setVisible); // hide all
+						books.values().forEach(BookNode::hide);
+						
 						List<Set<Node>> voorkennistree = new ArrayList<>();
-						Set<Node> to = Collections.singleton(find.get());
+						Set<Node> to = Stream.of(find.get()).collect(Collectors.toSet());
+						String method = find.get().info.getMethod();
 						Set<Node> from;
 						do { voorkennistree.add(to);
-							 from = getVoorkennis(to);
+							 from = getVoorkennis(to, method);
 							 to = from;
 						} while(!to.isEmpty());
 						ListIterator<Set<Node>> last = voorkennistree.listIterator(voorkennistree.size());
 						while(last.hasPrevious()) {
 							Set<Node> items = last.previous();
-							ListIterator<Set<Node>>less = voorkennistree.listIterator(last.previousIndex());
+							ListIterator<Set<Node>>less = voorkennistree.listIterator(last.nextIndex());
 							while(less.hasPrevious()) {
 								less.previous().removeAll(items);
 							}
 						}
 						
-						voorkennistree.stream().flatMap(Set::stream).forEach(n -> n.setVisible(true));
-						
-						
+						voorkennistree.stream().flatMap(Set::stream).forEach(n -> {
+							n.tmpx = n.cx; n.tmpy = n.cy;
+							n.setVoorkennis(true);
+							n.setVisible(true);
+							n.setBlur(false);
+						});
+						edges.forEach(Edge::setVisible);
+						voorkennisEdges = edges.stream().filter(Edge::isVisible).collect(Collectors.toList());
+						inVoorkennis = true; // zonder ..
+						setWidgetVisible(voorkennisBtn, false);
+
 						popupMenu.hide();
 						LOG.info("ON Voorkennis " + find.get().obj.getInfo().getTitle().get(lang) );
+						zoomFit();
+						popupMenu = null;
+						start = null;
 					}
 
-					private Set<Node> getVoorkennis(Set<Node> to) {				
-						return to.stream().flatMap(node -> edges.stream().filter(e -> e.to == node).map( e-> e.from)).collect(Collectors.toSet());
+					private Set<Node> getVoorkennis(Set<Node> to, String method) {				
+						return to.stream()
+								.flatMap(node -> edges.stream().filter(e -> e.to == node).map( e-> e.from))
+								.filter(n -> Objects.equals(method, n.info.getMethod())) // within same method????
+								.collect(Collectors.toSet());
 					}
 				});
 			}
@@ -1080,6 +1104,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		title.setMethod(domMethod);
 		map.clear();
 		chapters.clear();
+		books.clear();
 		setModel(item.getModelStructure());
 		OMSVGSVGElement svg = getSvgElement();
 		while(svg.getChildNodes().getLength()>0)
@@ -1190,9 +1215,19 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 				}
  			}
 			final String p = parentOf(parent);
-			map.put( id, methodInfo.stream().map(info -> new Node(obj, info, p))
+			String method = title.getMethod().key();
+			if (method == null) {
+				DomStudentModelMethodInfo info = new DomStudentModelMethodInfo();
+				info.setX(obj.getInfo().getX());
+				info.setY(obj.getInfo().getY());
+				map.put( id, Collections.singletonList( new Node(obj, info, p)));
+			} else {
+				map.put( id, methodInfo.stream()
+					.filter(info -> Objects.equals(method, info.getMethod()))
+					.map(info -> new Node(obj, info, p))
 					.filter(t -> !t.invalid())
 					.collect(Collectors.toList()));
+			}
 			return true;
 		}
 		for (DomStudentModelObj leaf : obj.getObjectives()) setModel(leaf, obj.getInfo());
@@ -1228,6 +1263,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		// blur nodes and edges: find node, focus on node and edges.
 		Optional<Node> find = nodeStream().filter(node -> node.contains(sx, sy)).findAny();
 		if (find.isPresent()) {
+			LOG.info("ON present " + find.get().obj.getInfo().getTitle().get(lang)  + " at " + x + " , " + y);
 			Node node = find.get();
 			Set<Edge> set = edges.stream().filter(edge -> edge.to == node).collect(Collectors.toSet());
 			Set<Node> nodes = set.stream().map(t -> t.from).collect(Collectors.toSet());
@@ -1352,7 +1388,8 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 
 	private void zoomFit() {
 		Collection<List<Node>> nodes = map.values();
-		
+		int imagewidth = image.getParent().getOffsetWidth();
+		int imageheight = image.getParent().getOffsetHeight();
 		OMSVGRect r = null;
 		for(List<Node> nodeList: nodes) 
 		  for(Node node: nodeList){
@@ -1369,6 +1406,10 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		if (r != null) 
 		{	r = r.inset(-15, -15);
 			factor = Math.max(r.getWidth()/imagewidth, r.getHeight()/imageheight); //
+			float deltax = imagewidth*factor - r.getWidth();
+			float deltay = imageheight*factor - r.getHeight();
+			r.setX(r.getX() - deltax/2);
+			r.setY(r.getY() - deltay/2);
 			r.setWidth(imagewidth*factor);
 			r.setHeight(imageheight*factor);
 			getSvgElement().setViewBox(r);

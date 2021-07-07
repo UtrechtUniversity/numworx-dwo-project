@@ -72,7 +72,7 @@ public class StudentResultsService implements StudentResults {
 	@Override
 	public Promise<DomMethod> getActiveMethod(DomStudentModelStructure structure) {
 		DomMethod id = new DomMethod(structure.getActiveMethod());
-		return methods.getMethod(service.context, id);
+		return service.getActiveMethod(structure.getActiveMethod());
 	}
 
 }

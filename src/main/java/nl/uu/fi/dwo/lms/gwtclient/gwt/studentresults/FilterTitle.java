@@ -33,7 +33,7 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 	
 	
 	DockLayoutPanel root;
-	private ListBox methodeBtn;
+	private Button methodeBtn;
 	private Button book;
 	private Label chapter;
 	private DomMethod method;
@@ -45,6 +45,7 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 		@Override
 		public void onClick(ClickEvent event) {
 			String b = book.getText();
+			if (b.isEmpty()) return;
 			String m = method.key();
 			
 			Map<String, Map<String, Set<Integer>>> t = Collections.singletonMap(m, Collections.singletonMap(b, Collections.emptySet()));
@@ -55,7 +56,7 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 
 		@Override
 		public void onChange(ChangeEvent event) {
-			int index = methodeBtn.getSelectedIndex();
+			int index = method == null ? 0 : 1;
 			Map<String, Map<String,Set<Integer>>> filter = null;
 			switch(index) {
 			default:
@@ -80,13 +81,12 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 		root.setStylePrimaryName("filter-title");
 		root.getElement().getStyle().setBackgroundColor("#1B75BB");
 
-		methodeBtn = new ListBox();
-		methodeBtn.addItem(ALLE_LEERDOELEN);
-		if (method != null) methodeBtn.addItem(method.getMethod());
-		methodeBtn.setStylePrimaryName("graph-ListBox");		
+		methodeBtn = new Button(ALLE_LEERDOELEN);
+		if (method != null) methodeBtn.setText(method.getMethod());
+		methodeBtn.setStylePrimaryName("dwo-Button");		
 		root.addWest(methodeBtn, 10);
 
-		book = new Button("1HV");
+		book = new Button("");
 		book.setStylePrimaryName("dwo-Button");
 		Label prebook = new Label(" > ");
 		Style style = prebook.getElement().getStyle();
@@ -102,16 +102,16 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 		style.setFontSize(20, Unit.PX);
 		chapter = new Label("h1");
 		style = chapter.getElement().getStyle();
-		style.setPaddingTop(0.2, Unit.EM);
-		style.setColor("white");
-		style.setFontSize(20, Unit.PX);
+		style.setProperty("maxWidth", "initial");
+		style.setTextAlign(TextAlign.LEFT);
+		chapter.setStylePrimaryName("pseudobutton");
+		
 		root.addWest(prebook, 3);
 		root.addWest(book, 10);
 		root.addWest(postbook, 3);
 		root.add(chapter);
 
 		MethodeChange handler = new MethodeChange();
-		methodeBtn.addChangeHandler(handler);
 		methodeBtn.addClickHandler(handler);
 		book.addClickHandler(new Book());
 		
@@ -134,7 +134,6 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 	public void accept(Map<String, Map<String, Set<Integer>>> f) {
 		if (f == null) return;
 		if (f.size() != 1) {
-		    methodeBtn.setSelectedIndex(0);
 		    book.setText("");
 		    chapter.setText("");
 		    return;
@@ -142,7 +141,6 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 			String key = f.keySet().iterator().next();
 			int index = 0;
 			if (method.key().equals(key)) index = 1;
-			methodeBtn.setSelectedIndex(index);
 			if (f.get(key).size() == 1) {
 				book.setText(f.get(key).keySet().iterator().next());
 				Set<Integer> chapters = f.get(key).get(book.getText());
@@ -166,10 +164,10 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 
 	public void setMethod(DomMethod method) {
 		this.method = method;
-		if (methodeBtn.getItemCount() == 2) {
-			methodeBtn.setItemText(1, method.getMethod());
+		if (method == null) {
+			methodeBtn.setText(ALLE_LEERDOELEN);
 		} else {
-			methodeBtn.addItem(method.getMethod());
+			methodeBtn.setText(method.getMethod());
 		}
 	}
 
