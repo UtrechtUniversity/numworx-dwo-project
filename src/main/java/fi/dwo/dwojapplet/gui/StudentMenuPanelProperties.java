@@ -6,6 +6,8 @@ package fi.dwo.dwojapplet.gui;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureStudentSchoolClassManager;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -23,7 +25,7 @@ public class StudentMenuPanelProperties {
     }
     
     public void init() throws Dwo2Exception{
-        schoolClassList = SecureStudentSchoolClassManager.getStudentsSchoolClasses();
+        schoolClassList = Collections.emptyList(); // SecureStudentSchoolClassManager.getStudentsSchoolClasses();
     }
 
     /**

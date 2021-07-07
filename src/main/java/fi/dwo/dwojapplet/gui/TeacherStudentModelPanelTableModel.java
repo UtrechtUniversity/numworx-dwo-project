@@ -6,6 +6,7 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
@@ -34,7 +35,7 @@ class TeacherStudentModelPanelTableModel extends AbstractTableModel {
         
         int rows = 0;
         if (modelList == null) {
-            modelList = new ArrayList<DomStudentModelContext>();
+            modelList = Collections.emptyList();
         }
 
         rows = modelList.size();

@@ -130,4 +130,9 @@ public class EditableGraph extends JPanel implements ActionListener{
         .collect(Collectors.toSet());
   }
 
+  public void end() {
+    // TODO Auto-generated method stub
+    
+  }
+
 }

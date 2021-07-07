@@ -151,6 +151,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
                 GuiCreator.instance().ShowErrorDialog(center, e);
               } finally {
                 try {
+                  textArea.end();
                   tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage, classImage);
                 } catch (Dwo2Exception e) {
                   LOG.log(Level.SEVERE, "refresh list " + title, e);
@@ -398,7 +399,13 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
      */
     @Override
     public void end() {
-
+      LOG.info("End of " + this);
+      try {
+        tableModel.init(Collections.emptyList(), searchImage, removeImage, resultsImage, classImage);
+      } catch (Dwo2Exception e) {
+        LOG.log(Level.WARNING, "should not happen", e);
+      }
+      prop.end();
     }
 
     /**

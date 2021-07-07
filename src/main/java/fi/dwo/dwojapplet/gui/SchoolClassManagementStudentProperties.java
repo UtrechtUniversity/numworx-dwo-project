@@ -15,6 +15,7 @@ import java.util.logging.Logger;
  *
  *
  * @author Gert van der Plas
+ * @deprecated
  */
 public class SchoolClassManagementStudentProperties {
 
@@ -24,20 +25,24 @@ public class SchoolClassManagementStudentProperties {
 
     public void init() throws Dwo2Exception {
         try {
-            scList = SecureStudentSchoolClassManager.getStudentsSchoolClasses();
-            activeSchoolClass = SecureStudentSchoolClassManager.getActiveSchoolClass();
+            scList = initStudentsSchoolClasses(); 
+            activeSchoolClass = null; // SecureStudentSchoolClassManager.getActiveSchoolClass();
         } catch (Dwo2Exception ex) {
             if (ex.getDwo2Code().equals(Dwo2ExceptionCode.Rest_Active_SchoolClass_Not_Set)) {
                 LOG.log(Level.FINE, ex.getMessage());
             } else {
                 LOG.log(Level.SEVERE, ex.getMessage());
                 if (scList == null) {
-                    scList = new ArrayList<DomSchoolClass>();
+                    scList = getStudentsSchoolClasses();
                 }
                 activeSchoolClass = null;
                 throw ex;
             }
         }
+    }
+
+    ArrayList<DomSchoolClass> initStudentsSchoolClasses() throws Dwo2Exception {
+      return new ArrayList<DomSchoolClass>(); //SecureStudentSchoolClassManager.getStudentsSchoolClasses();
     }
 
     /**
@@ -51,7 +56,7 @@ public class SchoolClassManagementStudentProperties {
      * @return the user
      */
     public List<DomSchoolClass> getSchoolsClasses() throws Dwo2Exception {
-        return SecureStudentSchoolClassManager.getSchoolsClasses();
+        return new ArrayList<DomSchoolClass>(); //SecureStudentSchoolClassManager.getSchoolsClasses();
     }
 
     /**

@@ -15,6 +15,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureStudentSchoolClassManage
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +30,7 @@ import javax.swing.border.Border;
  * This class is the menu panel for the user who logged in.
  *
  * @author M.J.B. Kupers
- *
+ * @deprecated
  */
 public class StudentMenuPanel extends UserMenuPanel {
 
@@ -105,8 +106,8 @@ public class StudentMenuPanel extends UserMenuPanel {
         	) {
             List<DomSchoolClass> scList = null;
             try {
-                scList = SecureStudentSchoolClassManager.getStudentsSchoolClasses();
-            } catch (Dwo2Exception ex) {
+                scList = Collections.emptyList(); // SecureStudentSchoolClassManager.getStudentsSchoolClasses();
+            } catch (Exception ex) {
                 Logger.getLogger(StudentMenuPanel.class.getName()).log(Level.SEVERE, "", ex);
             }
 

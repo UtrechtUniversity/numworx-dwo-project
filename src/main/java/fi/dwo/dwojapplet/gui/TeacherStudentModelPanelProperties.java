@@ -158,4 +158,8 @@ public class TeacherStudentModelPanelProperties {
       this.current = current;
     }
     
+    void end() {
+      current = null;
+      structure = null;
+    }
 }

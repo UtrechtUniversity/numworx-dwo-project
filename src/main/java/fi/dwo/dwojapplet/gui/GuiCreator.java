@@ -527,13 +527,13 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
      * @return The StudentMenuPanel with all the menu-options for the type user.
      */
     public GuestMenuPanel getMenuPanel() {
-        User u = dwo.getUser();
-
-        if (u == null || u instanceof Guest) {
+//        User u = dwo.getUser();
+//
+//        if (u == null || u instanceof Guest) {
             return new GuestMenuPanel();
-        } else {
-            return new StudentMenuPanel();
-        }
+//        } else {
+//            return new StudentMenuPanel();
+//        }
     }
 
     public WelcomePanel getWelcomePanel() {

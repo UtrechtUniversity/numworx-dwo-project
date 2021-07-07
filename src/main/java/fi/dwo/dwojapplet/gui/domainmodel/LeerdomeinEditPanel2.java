@@ -1422,4 +1422,16 @@ public class LeerdomeinEditPanel2 extends JPanel
       return node;
     }
 
+    public void end() {
+      graph.end();
+      root = null;
+      structure = null;
+      model.setRoot(null);
+      container.removeAll();
+      long voor = Runtime.getRuntime().freeMemory();
+      System.gc();
+      long na = Runtime.getRuntime().freeMemory();
+      LOG.log(Level.INFO, "voor {0}, na {1}, diff {2}", new Object[] {voor, na, na-voor});
+    }
+
 }
