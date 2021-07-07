@@ -600,7 +600,7 @@
 		<DWOplayerVersion>2.4.18</DWOplayerVersion>
 		<DWOmAccessVersion>2.4.7</DWOmAccessVersion>
 		<RegisterVersion>2.4.14</RegisterVersion>
-		<DWOGwtClientVersion>2.4.18</DWOGwtClientVersion>
+		<DWOGwtClientVersion>2.4.19-SNAPSHOT</DWOGwtClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testeb3server</aws.environmentName>
