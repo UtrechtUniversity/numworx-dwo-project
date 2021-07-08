@@ -26,7 +26,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph.Edge;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph.Node;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 
-public class FilterTitle extends ResizeComposite implements Consumer<Map<String, Map<String, Set<Integer>>>> {
+public class FilterTitle extends ResizeComposite implements Consumer<Map<String, Map<String, Set<Integer>>>>, Runnable {
 
 	public static final String ALLE_LEERDOELEN = "Alle leerdoelen";
 	
@@ -35,10 +35,14 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 	DockLayoutPanel root;
 	private Button methodeBtn;
 	private Button book;
+	private Button close;
 	private Label chapter;
 	private DomMethod method;
 	
 	private Consumer<Map<String, Map<String, Set<Integer>>>> filter = this;
+	
+	private Map<String, Map<String, Set<Integer>>> cfg = Collections.emptyMap();
+	
 	
 	private class Book implements ClickHandler {
 
@@ -47,11 +51,31 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 			String b = book.getText();
 			if (b.isEmpty()) return;
 			String m = method.key();
-			
-			Map<String, Map<String, Set<Integer>>> t = Collections.singletonMap(m, Collections.singletonMap(b, Collections.emptySet()));
-			acceptFilter(t);
+			closeClose();
+			cfg = Collections.singletonMap(m, Collections.singletonMap(b, Collections.emptySet()));
+			acceptFilter(cfg);
 		}
 	}
+	
+	private Runnable closer = this;
+	
+	private class Close implements ClickHandler {
+
+		@Override
+		public void onClick(ClickEvent event) {
+			Runnable cmd = closer;
+			closeClose();
+			cmd.run();
+			acceptFilter(cfg);
+		}
+		
+	}
+	
+	public void showClose(Runnable callback) {
+		closer = callback;
+		root.setWidgetHidden(close, false);
+	}
+	
 	private class MethodeChange implements ChangeHandler, ClickHandler {
 
 		@Override
@@ -63,6 +87,7 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 			case 0: filter = Collections.emptyMap(); break;
 			case 1: filter = Collections.singletonMap(method.key(), Collections.emptyMap()); break;
 			}
+			closeClose();
 			acceptFilter(filter);
 		}
 
@@ -105,7 +130,12 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 		style.setProperty("maxWidth", "initial");
 		style.setTextAlign(TextAlign.LEFT);
 		chapter.setStylePrimaryName("pseudobutton");
-		
+
+		close = new Button("Verberg voorkennis X");
+		close.setStylePrimaryName("dwo-Button");
+		root.addEast(close, 10);
+		close.getElement().getStyle().setProperty("maxWidth", 15, Unit.EM);
+		root.setWidgetHidden(close, true);
 		root.addWest(prebook, 3);
 		root.addWest(book, 10);
 		root.addWest(postbook, 3);
@@ -114,7 +144,7 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 		MethodeChange handler = new MethodeChange();
 		methodeBtn.addClickHandler(handler);
 		book.addClickHandler(new Book());
-		
+		close.addClickHandler(new Close());
 	}
 
 	public Consumer<Map<String, Map<String, Set<Integer>>>> getFilter() {
@@ -127,12 +157,14 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 	}
 
 	private void acceptFilter(Map<String, Map<String, Set<Integer>>> t) {
+		cfg = t;
 		filter.accept(t);
 	}
 
 
 	public void accept(Map<String, Map<String, Set<Integer>>> f) {
 		if (f == null) return;
+		cfg = f;
 		if (f.size() != 1) {
 		    book.setText("");
 		    chapter.setText("");
@@ -169,6 +201,15 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 		} else {
 			methodeBtn.setText(method.getMethod());
 		}
+	}
+
+	@Override
+	public void run() {
+	}
+
+	private void closeClose() {
+		closer = FilterTitle.this;
+		root.setWidgetHidden(close, true);
 	}
 
 }
