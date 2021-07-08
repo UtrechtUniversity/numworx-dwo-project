@@ -80,6 +80,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, MouseUpHandler, MouseDownHandler, MouseOutHandler, ContextMenuHandler {
 
 	
+	private static final int TITLE_HEIGHT = 32;
+
 	static final StudentResultsGraphBundle bundle = GWT.create(StudentResultsGraphBundle.class);
 
 	static final double XLARGE = 0.3;
@@ -109,7 +111,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	}
 		
 	static final float  VOORKENNIS_HEIGHT = 192f; // 12em
-	boolean inVoorkennis;
+	boolean inVoorkennis, inVoorkennisTree;
 	Collection<Edge> voorkennisEdges = Collections.emptySet();
 	
 	private class Voorkennis implements ClickHandler {
@@ -391,10 +393,26 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			}
 			return null;
 		}
+		
+		Edge withVoorkennisTree() {
+			if (from.isVoorkennis() && to.isVoorkennis() && to.isVisible() && from.isVisible()) {
+				blur = false;
+				g.removeChild(g.getFirstChild());
+				g.removeChild(g.getFirstChild());
+				setVisible();
+				build();
+				return this;
+			}
+			return null;
+		}
 
 		void reset() {
-			from.setVoorkennis(false);
+			if (from.isVoorkennis()) from.setVoorkennis(false);
 			from.setVisible(false);
+			if(inVoorkennisTree && to.isVoorkennis()) {
+				to.setVoorkennis(false);
+				to.setVisible(false);
+			}
 			g.removeChild(g.getFirstChild());
 			g.removeChild(g.getFirstChild());
 			build();
@@ -972,15 +990,15 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		float sx = point.getX();
 		float sy = point.getY();
 		// blur nodes and edges: find node, focus on node and edges.
-		Optional<Node> find = nodeStream().filter(node -> node.contains(sx, sy)).findAny();
+		Optional<Node> find = nodeStream().filter(node -> node.isVisible() && node.contains(sx, sy)).findAny();
 		LOG.info(find.toString());	
 		if (find.isPresent())
 		{
-			LOG.info("ON present " + find.get().obj.getInfo().getTitle().get(lang)   + " at " + x + " , " + y);
-			if (popupMenu==null) {
+			 {
 				popupMenu = new PopupPanel(true, true);
 				popupMenu.getElement().getStyle().setZIndex(9999);
 				Label item = new Label("Toon alle voorkennis");
+				item.setStylePrimaryName("pseudobutton");
 				popupMenu.add(item);
 				item.addClickHandler(new ClickHandler() {
 					
@@ -1014,13 +1032,35 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 							n.setVisible(true);
 							n.setBlur(false);
 						});
-						edges.forEach(Edge::setVisible);
-						voorkennisEdges = edges.stream().filter(Edge::isVisible).collect(Collectors.toList());
+						
+						int i,j;
+						i = 0;
+						int treesize = voorkennistree.size();
+						int width = getOffsetWidth();
+						int height = getOffsetHeight();
+						factor = 0.75f;
+						for(Set<Node> set : voorkennistree) {
+							j = 0;
+							int setsize = set.size();
+							for (Node node: set) {
+								// i, j, treesize, setsize;
+								int x = -20+i%2*40 + 100 + (j+1)*(width-200)/(setsize+1);
+								int y = -7*setsize+15*j + (treesize - (i))*(height-50)/(treesize);
+								node.moveTo(x, y);
+								
+								j++;
+							}
+							i++;
+						}
+												
+						voorkennisEdges = edges.stream()
+								.map(Edge::withVoorkennisTree)
+								.filter(Objects::nonNull).collect(Collectors.toList());
 						inVoorkennis = true; // zonder ..
+						inVoorkennisTree = true;
 						setWidgetVisible(voorkennisBtn, false);
-
+						title.showClose(this::run);
 						popupMenu.hide();
-						LOG.info("ON Voorkennis " + find.get().obj.getInfo().getTitle().get(lang) );
 						zoomFit();
 						popupMenu = null;
 						start = null;
@@ -1031,6 +1071,10 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 								.flatMap(node -> edges.stream().filter(e -> e.to == node).map( e-> e.from))
 								.filter(n -> Objects.equals(method, n.info.getMethod())) // within same method????
 								.collect(Collectors.toSet());
+					}
+					
+					public void run() {
+						verbergVoorkennis();
 					}
 				});
 			}
@@ -1253,6 +1297,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	}
 
 	private void mouseMove(MouseEvent<?> event) {
+		if (inVoorkennisTree) return; // GEEN BLUR!
 		float x = event.getClientX();
 		float y = event.getClientY();
 		OMSVGPoint point = getSvgElement().createSVGPoint(x, y);
@@ -1261,7 +1306,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		float sx = point.getX();
 		float sy = point.getY();
 		// blur nodes and edges: find node, focus on node and edges.
-		Optional<Node> find = nodeStream().filter(node -> node.contains(sx, sy)).findAny();
+		Optional<Node> find = nodeStream().filter(node -> node.isVisible() && node.contains(sx, sy)).findAny();
 		if (find.isPresent()) {
 			LOG.info("ON present " + find.get().obj.getInfo().getTitle().get(lang)  + " at " + x + " , " + y);
 			Node node = find.get();
@@ -1295,9 +1340,10 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		start = image.getSvgElement().createSVGPoint(x, y);
 		
 		LOG.info("move delta " + dx + ", " + dy +  "ctm=" + ctm.getA() + " , " + ctm.getD());
-		
-		voorkennisEdges.stream().map(t -> t.from).distinct().forEach(t -> t.move(-dx,  -dy));
-		voorkennisEdges.forEach(Edge::move);
+		if (!inVoorkennisTree) {
+			voorkennisEdges.stream().map(t -> t.from).distinct().forEach(t -> t.move(-dx,  -dy));
+			voorkennisEdges.forEach(Edge::move);
+		}
 	}
 	
 	
@@ -1339,10 +1385,12 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		image.setClassNameBaseVal(cssSize(1/f));
 		if (imagewidth != getOffsetWidth() || imageheight != getOffsetHeight() || f != factor) {
 			LOG.info("factor = " + 1/f);
-			setWidgetTopHeight(image, 2, Unit.EM, imageheight = getOffsetHeight(), Unit.PX);
+			imageheight = getOffsetHeight();
+			int svgheight = imageheight - TITLE_HEIGHT;
+			setWidgetTopHeight(image, 2, Unit.EM, svgheight , Unit.PX);
 			setWidgetLeftWidth(image, 0, Unit.PX, imagewidth = getOffsetWidth(), Unit.PX);
 			factor = f;
-			OMSVGRect rect = getSvgElement().createSVGRect(0, 0, imagewidth*factor, imageheight*factor);
+			OMSVGRect rect = getSvgElement().createSVGRect(0, 0, imagewidth*factor, svgheight*factor);
 			OMSVGRect baseVal = getSvgElement().getViewBox().getBaseVal();
 			float x = baseVal.getX();
 			rect.setX(x);
@@ -1357,8 +1405,10 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			getSvgElement().setViewBox(rect);
 			OMSVGMatrix ctmfinal = getSvgElement().getScreenCTM().inverse().multiply(ctm);
 			LOG.info("ctm.a = " + ctmfinal.getA());
-			voorkennisEdges.stream().map(t -> t.from).distinct().forEach(n -> n.transform(ctmfinal));
-			voorkennisEdges.forEach(Edge::move);
+			if(!inVoorkennisTree) {
+				voorkennisEdges.stream().map(t -> t.from).distinct().forEach(n -> n.transform(ctmfinal));
+				voorkennisEdges.forEach(Edge::move);
+			}
 			boolean longer = 1/f < CHAPTER_ZOOM;
 			chapters.values().forEach(item -> item.setText(longer));
 			
@@ -1383,13 +1433,14 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		image.getSvgElement().setViewBox(viewbox);
 		inVoorkennis = false;
 		voorkennisEdges.forEach(Edge::reset);
+		inVoorkennisTree = false;
 		voorkennisEdges = Collections.emptySet();
 	}
 
 	private void zoomFit() {
 		Collection<List<Node>> nodes = map.values();
-		int imagewidth = image.getParent().getOffsetWidth();
-		int imageheight = image.getParent().getOffsetHeight();
+		int imagewidth = getOffsetWidth();
+		int imageheight = getOffsetHeight() - TITLE_HEIGHT;
 		OMSVGRect r = null;
 		for(List<Node> nodeList: nodes) 
 		  for(Node node: nodeList){
