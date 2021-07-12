@@ -92,7 +92,11 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	
 	@Override
 	public String mayStop() {
-	    if (view != null) view.getOpdrNav().setChanged(false);
+	    if (view != null) {
+	    	OpdrNavIF opdrNav = view.getOpdrNav();
+	    	if (opdrNav == null) return super.mayStop(); // komt voor als je een Premium activiteit start als standaard school
+			opdrNav.setChanged(false);			
+	    }
 		if (started && vars.withUser() && vars.getRoleType() == RoleType.STUDENT)
 			return Text.constants.maybe_lost_data();
 		return super.mayStop();
