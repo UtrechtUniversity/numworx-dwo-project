@@ -16,7 +16,9 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
@@ -229,12 +231,22 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 		{
 			view.setUnitId(value);
 			DWOplayer.insertCSS(value);
-			view.setupModule(value, target).onResolve(() -> 
+			view.setupModule(value, target).then(this::checkPremium).onResolve(() -> 
 			debug("FinishedSetupModule")
 			);
 		}
 	}
 
+	
+	private Promise<Boolean> checkPremium(Promise<Boolean> p) {
+		if (! p.getValue().booleanValue()) {
+			RootLayoutPanel.get().add(new Label("Error: need a Premium subscription"));
+			view.getApi().Terminate();
+		}
+		return p;
+	}
+	
+	
 	protected void setupLaunchData(String value) {
 		Scorm2004IF api = view.getApi();
 		
@@ -251,7 +263,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 			if(k > 0) {
 				String target = PREFIX + value;
 				DWOplayer.insertCSS(value);
-				view.setupModule(value, target);
+				view.setupModule(value, target).then(this::checkPremium);
 			} else
 				setupOldView();
 		}
