@@ -16,14 +16,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.ResizeComposite;
 
-import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph.BookNode;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph.ChapterEdge;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph.ChapterNode;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph.Edge;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph.Node;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 
 public class FilterTitle extends ResizeComposite implements Consumer<Map<String, Map<String, Set<Integer>>>>, Runnable {
