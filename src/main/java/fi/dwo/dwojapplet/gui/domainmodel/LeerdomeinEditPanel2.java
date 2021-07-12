@@ -468,7 +468,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 			model.setRoot(filter(root, filter));
 		}
         model.nodeStructureChanged((TreeNode) model.getRoot());
-		graph.setModel(model,filter, structure.getActiveMethod());
+		graph.setModel(model,filter, activeMethod);
 	}
 
 	static InvisibleNode filter(InvisibleNode parent, Map<String, Map<String, Set<Integer>>> filter) {
@@ -1050,6 +1050,10 @@ public class LeerdomeinEditPanel2 extends JPanel
 	filterAction.setActiveMethod(am);
 	methodeAction4.setMethode(am);
 	methodeAction2.setMethode(am);
+	if (graph.isShowing()) {
+      graph.setModel(this.model,null,activeMethod);
+      filterAction.doFilter();	  
+	}
   }
 
 	static void insert(NodeVector vector, InvisibleNode node) {
