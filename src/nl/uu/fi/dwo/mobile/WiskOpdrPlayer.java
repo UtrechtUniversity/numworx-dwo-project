@@ -231,7 +231,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 		{
 			view.setUnitId(value);
 			DWOplayer.insertCSS(value);
-			view.setupModule(value, target).then(this::checkPremium).onResolve(() -> 
+			view.setupModule(value, target).then(this::checkPremium, this::failure).onResolve(() -> 
 			debug("FinishedSetupModule")
 			);
 		}
@@ -240,13 +240,19 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 	
 	private Promise<Boolean> checkPremium(Promise<Boolean> p) {
 		if (! p.getValue().booleanValue()) {
-			view.asWidget().removeFromParent();
+				view.asWidget().removeFromParent();
 			RootLayoutPanel.get().add(new Label("Error: need a Premium subscription"));
 			view.getApi().Terminate();
 		}
 		return p;
 	}
 	
+	private void failure(Promise<?>p) {
+		logger.log(Level.SEVERE, "failure to start", p.getFailure());
+		view.getApi().Terminate();
+		view.asWidget().removeFromParent();
+		RootLayoutPanel.get().add(new Label("Error: failure to start " + p.getFailure()));
+	}
 	
 	protected void setupLaunchData(String value) {
 		Scorm2004IF api = view.getApi();
@@ -264,7 +270,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 			if(k > 0) {
 				String target = PREFIX + value;
 				DWOplayer.insertCSS(value);
-				view.setupModule(value, target).then(this::checkPremium);
+				view.setupModule(value, target).then(this::checkPremium, this::failure);
 			} else
 				setupOldView();
 		}
