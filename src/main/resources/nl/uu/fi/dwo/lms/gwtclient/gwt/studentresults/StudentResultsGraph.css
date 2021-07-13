@@ -132,3 +132,9 @@
 	fill: rgb(255,255,150);
 	stroke: rgb(255,200,150);
 }
+
+.graphButton { 
+	overflow-x: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}

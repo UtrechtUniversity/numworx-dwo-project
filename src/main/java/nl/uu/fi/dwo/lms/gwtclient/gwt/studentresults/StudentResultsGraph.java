@@ -1075,6 +1075,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 					
 					public void run() {
 						verbergVoorkennis();
+						unBlur();
 					}
 				});
 			}
@@ -1098,7 +1099,10 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	public void doFilter(Map<String, Map<String, Set<Integer>>> f) {
 		title.accept(f);
 		if (f == null) return;
-		if (inVoorkennis) verbergVoorkennis();
+		if (inVoorkennis) {
+			verbergVoorkennis();
+			unBlur();
+		}
 		filter = f;
 		boolean showchapters = true;
 		boolean showbooks = true;
@@ -1127,7 +1131,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		Iterator<Node> i =  nodeStream().iterator();
 		while (i.hasNext()) {
 			Node n = i.next();
-			boolean ok = StudentResultsPresenter.inFilter(f, n.info);
+			boolean ok = StudentResultsPresenter.inFilter(f, n.info, title.getMethod());
 			n.setVisible(ok);
 		}
 		setWidgetVisible(voorkennisBtn, !showchapters);
@@ -1316,9 +1320,13 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			edges.forEach(e -> e.setBlur(!set.contains(e)));
 			nodeStream().forEach(n -> n.setBlur(!nodes.contains(n)));			
 		} else {
-			edges.forEach(e -> e.setBlur(false));
-			nodeStream().forEach(n -> n.setBlur(false));
+			unBlur();
 		}		
+	}
+
+	private void unBlur() {
+		edges.forEach(e -> e.setBlur(false));
+		nodeStream().forEach(n -> n.setBlur(false));
 	}
 
 	private Stream<Node> nodeStream() {

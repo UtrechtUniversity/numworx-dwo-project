@@ -21,5 +21,5 @@ public interface StudentResultsGraphCSS extends CssResource {
 	String blur();
 	
 	String kennen();
-	
+	String graphButton();
 }

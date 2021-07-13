@@ -204,15 +204,15 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	}
 
 	private void applyFilter(DomStudentModelStructureScore score) {
-		applyFilter(score, filter, currentInfo);
+		applyFilter(score, filter, currentInfo, method);
 	}
 	
 	
-	public static void applyFilter(DomStudentModelStructureScore score, Map<String, Map<String, Set<Integer>>> filter, Map<String, DomStudentModelContextInfo> currentInfo) {
+	public static  void applyFilter(DomStudentModelStructureScore score, Map<String, Map<String, Set<Integer>>> filter, Map<String, DomStudentModelContextInfo> currentInfo, DomMethod method) {
 		long greenCount = 0, redCount = 0, totalCount = 0;
 		double greenScore = 0, redScore = 0;
 		for (DomStudentModelCategoryScore cat: score.getCategories()) {
-			applyFilter(cat, filter, currentInfo);
+			applyFilter(cat, filter, currentInfo, method);
 			greenCount += cat.getGreenCount();
 			redCount += cat.getRedCount();
 			totalCount += cat.getTotalCount();
@@ -222,11 +222,11 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		score.setScore(greenScore, greenCount, redScore, redCount, totalCount);		
 	}
 
-	private static void applyFilter(DomStudentModelCategoryScore cat, Map<String, Map<String, Set<Integer>>> filter, Map<String, DomStudentModelContextInfo> currentInfo) {
+	private static  void applyFilter(DomStudentModelCategoryScore cat, Map<String, Map<String, Set<Integer>>> filter, Map<String, DomStudentModelContextInfo> currentInfo, DomMethod method) {
 		long greenCount = 0, redCount = 0, totalCount = 0;
 		double greenScore = 0, redScore = 0;
 		for (DomStudentModelObjectiveScore obj : cat.getObjectives()) {
-			if (applyFilter(obj, filter, currentInfo)) {
+			if (applyFilter(obj, filter, currentInfo, method)) {
 				greenCount += obj.getGreenCount();
 				redCount += obj.getRedCount();
 				totalCount += obj.getTotalCount();
@@ -237,18 +237,18 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		cat.setScore(greenScore, greenCount, redScore, redCount, totalCount);
 	}
 
-	private static boolean applyFilter(DomStudentModelObjectiveScore obj, Map<String, Map<String, Set<Integer>>> filter, Map<String, DomStudentModelContextInfo> currentInfo) {
+	private static boolean applyFilter(DomStudentModelObjectiveScore obj, Map<String, Map<String, Set<Integer>>> filter, Map<String, DomStudentModelContextInfo> currentInfo, DomMethod method) {
 		if (obj.getChildren() == null) {
 	// leaf
 			DomStudentModelContextInfo info = currentInfo.get(obj.getId());
 			if (info == null) return false;
-			return contains(filter, info.getMethods());		
+			return contains(filter, info.getMethods(), method);		
 		}
    // interior node
 		long greenCount = 0, redCount = 0, totalCount = 0;
 		double greenScore = 0, redScore = 0;
 		for (DomStudentModelObjectiveScore child : obj.getChildren()) {
-			if (applyFilter(child, filter, currentInfo)) {
+			if (applyFilter(child, filter, currentInfo, method)) {
 				greenCount += child.getGreenCount();
 				redCount += child.getRedCount();
 				totalCount += child.getTotalCount();
@@ -441,12 +441,14 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		}
 		return p;
 	}
-	static boolean contains(Map<String, Map<String, Set<Integer>>> filter,
-			Map<String, Map<String, Set<Integer>>> methodes) {
+	 static boolean contains(Map<String, Map<String, Set<Integer>>> filter,
+			Map<String, Map<String, Set<Integer>>> methodes, DomMethod method) {
 		if (filter.isEmpty()) return true;
 		for (Map.Entry<String, Map<String, Set<Integer>>> entry : filter.entrySet()) {
 		    if (entry.getKey().isEmpty()) {
-		      if (methodes.values().stream().allMatch(Map::isEmpty)) return true;
+		      final String currentKey = method.key();
+		      //if (methodes.values().stream().allMatch(Map::isEmpty)) return true;
+		      if ( methodes.entrySet().stream().allMatch(e -> e.getValue().isEmpty()||!e.getKey().equals(currentKey))) return true;
 		      continue;
 		    }		  
 			Map<String, Set<Integer>> map = methodes.getOrDefault(entry.getKey(), Collections.emptyMap());
@@ -468,15 +470,15 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		return false;
 	}
 
-	static boolean inFilter(Map<String, Map<String, Set<Integer>>> filter, DomStudentModelObj oo) {
+	boolean inFilter(Map<String, Map<String, Set<Integer>>> filter, DomStudentModelObj oo) {
 		Map<String, Map<String, Set<Integer>>> methods = oo.getInfo().getMethods();
-		return contains(filter, methods);
+		return contains(filter, methods, method);
 	}
 
-	static boolean inFilter(Map<String, Map<String, Set<Integer>>> filter, DomStudentModelMethodInfo info) {
+	 static boolean inFilter(Map<String, Map<String, Set<Integer>>> filter, DomStudentModelMethodInfo info, DomMethod method) {
 		if (info.getMethod() == null)
-			return contains(filter, Collections.emptyMap());
-		return contains(filter, Collections.singletonMap(info.getMethod(), Collections.singletonMap(info.getBook(), Collections.singleton(info.getChapter()))));
+			return contains(filter, Collections.emptyMap(), method);
+		return contains(filter, Collections.singletonMap(info.getMethod(), Collections.singletonMap(info.getBook(), Collections.singleton(info.getChapter()))), method);
 	}
 
 	private void addToTree(TreeItem item, DomStudentModelContext4Student model) {

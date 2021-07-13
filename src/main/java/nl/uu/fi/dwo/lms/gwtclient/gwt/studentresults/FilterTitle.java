@@ -24,7 +24,7 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 
 	public static final String ALLE_LEERDOELEN = "Alle leerdoelen";
 	
-	
+	private static final String graphBtnStyle = StudentResultsGraph.bundle.css().graphButton();
 	
 	DockLayoutPanel root;
 	private Button methodeBtn;
@@ -102,11 +102,11 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 
 		methodeBtn = new Button(ALLE_LEERDOELEN);
 		if (method != null) methodeBtn.setText(method.getMethod());
-		methodeBtn.setStylePrimaryName("dwo-Button");		
+		methodeBtn.setStylePrimaryName(graphBtnStyle);		
 		root.addWest(methodeBtn, 10);
 
 		book = new Button("");
-		book.setStylePrimaryName("dwo-Button");
+		book.setStylePrimaryName(graphBtnStyle);
 		Label prebook = new Label(" > ");
 		Style style = prebook.getElement().getStyle();
 		style.setPaddingTop(0.2, Unit.EM);
@@ -119,7 +119,7 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 		style.setColor("white");
 		style.setTextAlign(TextAlign.CENTER);
 		style.setFontSize(20, Unit.PX);
-		chapter = new Label("h1");
+		chapter = new Label("");
 		style = chapter.getElement().getStyle();
 		style.setProperty("maxWidth", "initial");
 		style.setTextAlign(TextAlign.LEFT);

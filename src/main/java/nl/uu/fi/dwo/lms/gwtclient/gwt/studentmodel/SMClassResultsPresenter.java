@@ -37,6 +37,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.DomTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
@@ -158,11 +159,13 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 	private Promise<DomStudentModelScorePerTeacher> stap3(Promise<DomStudentModelScorePerTeacher> scores) {
 		students = scores.getValue().getStudents().stream().collect(Collectors.toMap(DomMapEntry<PersistenceId,DomStudent>::getKey, DomMapEntry<PersistenceId,DomStudent>::getValue));
 		String uuid = scores.getValue().getStudentModelContexts().get(0).getValue().getModelStructure().getInfo().getId();
-		setScores(scores, uuid, false);		
-		return scores;
+		PersistenceId pid = currentModel.getModelStructure().getActiveMethod();
+		return service.getActiveMethod(pid).then( q -> {
+		setScores(scores, uuid, false, q.getValue());		
+		return scores;});
 	}
 
-	private void setScores(Promise<DomStudentModelScorePerTeacher> scores, String uuid, boolean leaf) {
+	private void setScores(Promise<DomStudentModelScorePerTeacher> scores, String uuid, boolean leaf, DomMethod method) {
 		Map<String, DomStudentModelObjectiveScore> result = new HashMap<>();
 		
 		List<DomStudentModelDataStudentScore> list = scores.getValue().getStudentScores();
@@ -171,7 +174,7 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 			PersistenceId sid = item.getStudentId();
 			DomStudentModelStructureScore score;
 			DomStudentModelScore<?> org = score = item.getDomStudentModelStructureScore();
-			StudentResultsPresenter.applyFilter(score, filter, currentInfo );
+			StudentResultsPresenter.applyFilter(score, filter, currentInfo, method);
 			org = find(org, uuid);
 			if (org == null) org = item.getDomStudentModelStructureScore();
 			DomStudent student = students.get(sid);
@@ -253,9 +256,14 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 		boolean leaf = event.getSelectedItem().getChildCount() == 0;
 		String id = (String) event.getSelectedItem().getUserObject();
 		LOG.info("on selection " + id);
+		PersistenceId pid = currentModel.getModelStructure().getActiveMethod();
+		service.getActiveMethod(pid).then ( q -> {
+		DomMethod method = q.getValue();
 		scores.then(p -> { 
-				setScores(p, id, leaf);
+				setScores(p, id, leaf, method);
 			return p;} );
+		return q;
+		} );
 	}
 
 	private Map<PersistenceId, Promise<FilterMethodDialog>> filterDialogs = new HashMap<>();
