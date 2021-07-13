@@ -238,10 +238,14 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 		}
 	}
 
-	
+	/** check result of needspremium: 
+	 *  
+	 * @param p resolves to true if premium is needed
+	 * @return p
+	 */
 	private Promise<Boolean> checkPremium(Promise<Boolean> p) {
-		if (! p.getValue().booleanValue()) {
-				view.asWidget().removeFromParent();
+		if (p.getValue().booleanValue()) {
+			view.asWidget().removeFromParent();
 			RootLayoutPanel.get().add(new Label("Error: need a Premium subscription"));
 			view.getApi().Terminate();
 		}

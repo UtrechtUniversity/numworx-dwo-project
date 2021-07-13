@@ -237,19 +237,19 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 						return callback.getPromise();
 					}
 				}
-				).then(new Success<Void, Void>() {
+				).then(new Success<Void, Boolean>() {
 
 					@Override
-					public Promise<Void> call(Promise<Void> resolved)
+					public Promise<Boolean> call(Promise<Void> resolved)
 							throws Exception {
 						started = ! Memento.COMPLETED.equals(view.getApi().GetValue(Memento.COMPLETION_STATUS));
 						if(location != null) {
 							view.getApi().SetValue(Memento.LOCATION, location);
 						}
-						view.setupModule(name, PARAMETERS.getLaunchData() + item.getID());
+						Promise<Boolean> p = view.setupModule(name, PARAMETERS.getLaunchData() + item.getID());
 						panel.setWidget(view);
 	                    view.setAnchorContext(ScoActivity.this);
-						return null;
+						return p; // true is fout
 					}
 				}, failure);
 		
