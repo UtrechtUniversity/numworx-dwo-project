@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -279,7 +280,11 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 			OpdrNav.defer(
 			  new Command() {
 				public void execute() {
-					view.setupView(launchData);
+					try {
+						checkPremium( Promises.resolved( view.setupView(launchData)) );
+					} catch (Throwable e) {
+						failure( Promises.failed(e));
+					}
 				}
 			  }
 			);
