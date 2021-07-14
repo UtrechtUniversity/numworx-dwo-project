@@ -389,7 +389,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
       if (model.getRoot() != root) model.setRoot(root);
     } else {
       model.activateFilter(true);
-      model.setRoot(LeerdomeinEditPanel2.filter(root, filter));      
+      model.setRoot(LeerdomeinEditPanel2.filter(root, filter, filterAction.getActiveMethod()));      
     }
     recalculateAncestors((DefaultMutableTreeNode) model.getRoot());
     model.nodeStructureChanged(root);

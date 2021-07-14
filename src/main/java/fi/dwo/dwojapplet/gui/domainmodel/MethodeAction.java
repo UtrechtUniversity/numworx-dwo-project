@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -20,7 +19,6 @@ import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import fi.beans.numworxlf.JOptionPane;
-import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.ConfirmDialog;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 
@@ -72,7 +70,7 @@ abstract class MethodeAction extends AbstractAction implements TreeSelectionList
     return panel;
   }
 
-  private void actionOnLeaf(NodeLeaf leaf) {
+  protected void actionOnLeaf(NodeLeaf leaf) {
     String name = getKey();
     Map<String,Set<Integer>> methode = leaf.getMethode().getOrDefault(name, Collections.emptyMap());
     

@@ -89,6 +89,7 @@ import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
@@ -465,13 +466,13 @@ public class LeerdomeinEditPanel2 extends JPanel
 				model.setRoot(root);
 		} else {
 			model.activateFilter(true);
-			model.setRoot(filter(root, filter));
+			model.setRoot(filter(root, filter, activeMethod));
 		}
         model.nodeStructureChanged((TreeNode) model.getRoot());
 		graph.setModel(model,filter, activeMethod);
 	}
 
-	static InvisibleNode filter(InvisibleNode parent, Map<String, Map<String, Set<Integer>>> filter) {
+	static InvisibleNode filter(InvisibleNode parent, Map<String, Map<String, Set<Integer>>> filter, PersistenceId activeMethod) {
 		InvisibleNode node;
 		if (!(parent instanceof InvisibleNode)) {
 			node = new InvisibleNode(parent.getUserObject());
@@ -479,7 +480,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 			Enumeration<?> children = parent.children();
 			while (children.hasMoreElements()) {
 				InvisibleNode object = (InvisibleNode) children.nextElement();
-				node.add(filter(object, filter));
+				node.add(filter(object, filter, activeMethod));
 			}
 		} else {
 			node = (InvisibleNode) parent;
@@ -487,13 +488,13 @@ public class LeerdomeinEditPanel2 extends JPanel
             Enumeration<InvisibleNode> children = node.children();
             while (children.hasMoreElements()) {
                 InvisibleNode object = children.nextElement();
-                filter(object, filter);
+                filter(object, filter, activeMethod);
             }
 		}
 		if (node.isLeaf() && !node.getAllowsChildren()) {
 			NodeLeaf leaf = (NodeLeaf) node.getUserObject();
 			Map<String, Map<String, Set<Integer>>> methodes = leaf.getMethode();
-			node.setVisible(contains(filter, methodes));
+			node.setVisible(contains(filter, methodes, activeMethod));
 		} else {
 			int cnt = node.getChildCount(true);
 			node.setVisible(cnt != 0);
@@ -503,10 +504,12 @@ public class LeerdomeinEditPanel2 extends JPanel
 	}
 
 	static boolean contains(Map<String, Map<String, Set<Integer>>> filter,
-			Map<String, Map<String, Set<Integer>>> methodes) {
+			Map<String, Map<String, Set<Integer>>> methodes, PersistenceId activeMethod) {
+	    String currentKey = key(activeMethod);
 		for (Map.Entry<String, Map<String, Set<Integer>>> entry : filter.entrySet()) {
 		    if (entry.getKey() == null) {
-		      if (methodes.values().stream().allMatch(Map::isEmpty)) return true;
+		      //if (methodes.values().stream().allMatch(Map::isEmpty)) return true;
+              if ( methodes.entrySet().stream().allMatch(e -> e.getValue().isEmpty()||!e.getKey().equals(currentKey))) return true;
 		      continue;
 		    }		  
 			Map<String, Set<Integer>> map = methodes.getOrDefault(entry.getKey(), Collections.emptyMap());
@@ -523,6 +526,12 @@ public class LeerdomeinEditPanel2 extends JPanel
 		}
 		return false;
 	}
+// XXX Move to DomMethod
+  static String key(PersistenceId activeMethod) {
+    if (activeMethod == null) return null;
+    String[] split = activeMethod.getIdString().split(";", 3);
+    return split[2];
+  }
 
 	class Plakken extends AbstractAction {
 		Plakken() {

@@ -37,7 +37,7 @@ public class DropTargetGraph extends DropTargetAdapter {
 					    if (node.isVisible()) {
 					        node.getVisibleSet().forEach(t -> node.setSelected(t, true));
 					    } else {
-					        String prefix = String.valueOf(graph.graph.activeRow.key());
+					        String prefix = String.valueOf(graph.graph.activeRow.key());					        
 					        node.getMethodeCodes().stream()
 					        .filter (t -> t.startsWith(prefix))
 					        .forEach(t -> {
