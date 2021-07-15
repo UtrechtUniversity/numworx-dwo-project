@@ -4,6 +4,7 @@
 package fi.dwo.server.PersistentDataManagers.access;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentMethod;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
@@ -12,6 +13,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentModelOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer.StudentState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.core.MethodManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
@@ -24,6 +26,9 @@ import fi.dwo.server.rest.SecuredTeacherStudentModelManager;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,6 +38,7 @@ import javax.ws.rs.core.UriInfo;
 import org.json.simple.parser.ParseException;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
@@ -227,7 +233,26 @@ class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U
         	DomStudentModelContext4Student rr = new DomStudentModelContext4Student(r.getId());
         	rr.setModelStructure(r.getModelStructure());
         	try {
-				rr.setFilter(SecuredTeacherStudentModelManager.toFilter(item));
+				final Map<String, Map<String, Set<Integer>>> filter = SecuredTeacherStudentModelManager.toFilter(item);
+				rr.setFilter(filter);
+				String filterKey = key(filter);
+				String methodKey = DomMethod.key(rr.getModelStructure().getActiveMethod());
+				if (filterKey != null && !Objects.equals(filterKey, methodKey)) {
+					try {
+						List<PersistentMethod> ms = MethodManager.findEntities(instance.getContext().getUserCtx().school);
+						for(PersistentMethod m: ms) {
+							String mKey = DomMethod.key(m.buildPersistenceId());
+							if (Objects.equals(mKey, filterKey)) {
+								rr.getModelStructure().setActiveMethod(m.buildPersistenceId());
+								break;
+							}
+						}
+					} catch(Exception oops) {
+						LOG.log(Level.WARNING, "extract filter method");
+					}
+				}
+				
+				
 			} catch (ParseException e) {
 				LOG.log(Level.SEVERE, "conversie to filter", e);
 			}
@@ -236,6 +261,10 @@ class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U
         	result.add(rr);
         }
 		return result;
+	}
+
+	private String key(Map<String, Map<String, Set<Integer>>> filter) {
+		return filter.keySet().stream().filter(key -> key != null && !key.isEmpty()).findAny().orElse(null);
 	}
 
 	@Override

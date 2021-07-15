@@ -1,6 +1,7 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentMethod;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
@@ -14,6 +15,7 @@ import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
+import fi.dwo.server.PersistentDataManagers.core.MethodManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelOfClassManager;
@@ -24,7 +26,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -47,6 +51,7 @@ import org.json.simple.parser.ParseException;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
@@ -279,6 +284,11 @@ public class SecuredTeacherStudentModelManager {
     	return Boolean.FALSE;
     }
 
+    
+	private String key(Map<String, Map<String, Set<Integer>>> filter) {
+		return filter.keySet().stream().filter(key -> key != null && !key.isEmpty()).findAny().orElse(null);
+	}
+
     @PUT
     @Produces("application/json")
     @Path("/getForClass")
@@ -308,7 +318,23 @@ public class SecuredTeacherStudentModelManager {
     	result.setSchoolClass(schoolClass);
 		SecuredStudentStudentModelManager.reduce(context.getModelStructure());
     	result.setModelStructure(context.getModelStructure());
-    	
+
+    	String filterKey = key(result.getFilter());
+		String methodKey = DomMethod.key(result.getModelStructure().getActiveMethod());
+		if (filterKey != null && !Objects.equals(filterKey, methodKey)) {
+			try {
+				List<PersistentMethod> ms = MethodManager.findEntities(school);
+				for(PersistentMethod m: ms) {
+					String mKey = DomMethod.key(m.buildPersistenceId());
+					if (Objects.equals(mKey, filterKey)) {
+						result.getModelStructure().setActiveMethod(m.buildPersistenceId());
+						break;
+					}
+				}
+			} catch(Exception oops) {
+				LOG.log(Level.WARNING, "extract filter method");
+			}
+		}
     	return result;
     }
 
