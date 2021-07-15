@@ -113,16 +113,17 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 		cid.setId(pid);
 		
 		Promise<?> p2 = showSchoolModel(cid, domSchoolClass);
-		scores = getResults(cid, domSchoolClass);
+		scores = getResults(cid, domSchoolClass, p2);
 		Promises.all(p1, p2, scores).then(null, FAILURE);
 	}
 
 	
-	private Promise<DomStudentModelScorePerTeacher> getResults(DomStudentModelContext cid, DomSchoolClass domSchoolClass) {
+	private Promise<DomStudentModelScorePerTeacher> getResults(DomStudentModelContext cid, DomSchoolClass domSchoolClass, Promise<?> p2) {
 		DomStudentModelScorePerTeacher result = new DomStudentModelScorePerTeacher();
 		result.setSchoolClasses(Collections.singletonList(new DomMapEntry<PersistenceId, DomSchoolClass>(domSchoolClass.getId(), domSchoolClass)));
 		result.setStudentModelContexts(Collections.singletonList(new DomMapEntry<PersistenceId, DomStudentModelContext>(cid.getId(), cid)));
-		return service.getScores(result).then(this::stap3);
+// p2 (stap2) moet klaar zijn voordat stap3 mag 
+		return Promises.all(service.getScores(result), p2).map(list -> (DomStudentModelScorePerTeacher)list.get(0)).then(this::stap3);
 	}
 
 	private Promise<?> showSchoolModel(DomStudentModelContextId cid, DomSchoolClass domSchoolClass) {
