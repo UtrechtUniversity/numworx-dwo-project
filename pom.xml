@@ -332,7 +332,7 @@
                             <Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
                             <Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch>
                             <DWOJApplet-Implementation-Build>${buildNumber}</DWOJApplet-Implementation-Build>
-                            <Class-Path>swingbrowser-jxb.jar swingbrowser-jfx.jar swingbrowser-api.jar</Class-Path>
+                            <Class-Path>swingbrowser-jxb.jar swingbrowser-api.jar</Class-Path>
           	</instructions>
           </configuration>
 		</plugin>   
