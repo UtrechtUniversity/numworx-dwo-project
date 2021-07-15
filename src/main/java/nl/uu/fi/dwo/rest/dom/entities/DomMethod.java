@@ -6,6 +6,9 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class DomMethod extends DomId {
 
+	
+	
+	
 	public DomMethod(PersistenceId id) {
 		super(id);
 	}
@@ -18,10 +21,14 @@ public class DomMethod extends DomId {
 	  public List<List<String>> chapters;
 	  public List<List<Integer>> edges;
 	  
-	  public String key() {
-	    if (getId() == null) return null;
-	    String[] split = getId().getIdString().split(";", 3);
+	  public static String key(PersistenceId id) {
+	    if (id == null) return null;
+	    String[] split = id.getIdString().split(";", 3);
 	    return split[2];
+	  }
+
+	  public String key() {
+	    return key(getId());
 	  }
 
 	  public String getMethod() {
