@@ -505,7 +505,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 
 	static boolean contains(Map<String, Map<String, Set<Integer>>> filter,
 			Map<String, Map<String, Set<Integer>>> methodes, PersistenceId activeMethod) {
-	    String currentKey = key(activeMethod);
+	    String currentKey = DomMethod.key(activeMethod);
 		for (Map.Entry<String, Map<String, Set<Integer>>> entry : filter.entrySet()) {
 		    if (entry.getKey() == null) {
 		      //if (methodes.values().stream().allMatch(Map::isEmpty)) return true;
@@ -526,12 +526,6 @@ public class LeerdomeinEditPanel2 extends JPanel
 		}
 		return false;
 	}
-// XXX Move to DomMethod
-  static String key(PersistenceId activeMethod) {
-    if (activeMethod == null) return null;
-    String[] split = activeMethod.getIdString().split(";", 3);
-    return split[2];
-  }
 
 	class Plakken extends AbstractAction {
 		Plakken() {
