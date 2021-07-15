@@ -15,12 +15,13 @@ public class FilterUtil {
 			String methode = map.keySet().iterator().next();
 			if (methode.isEmpty()) return FilterTitle.ALLE_LEERDOELEN;
 			Map<String, Set<Integer>> m = map.get(methode); // KEY
-			if (methode.equals(method.key())) methode = method.getMethod(); // TITLE
+			final boolean keyOkay = methode.equals(method.key());
+			if (keyOkay) methode = method.getMethod(); // TITLE
 			if (m.size() == 1) {
 				String boek = m.keySet().iterator().next();
 				List<String> chapters = null;
 				for(int i = 0; i < method.books.size(); i++) {
-					if (boek.equals(method.books.get(i))) chapters = method.chapters.get(i);
+					if (keyOkay && boek.equals(method.books.get(i))) chapters = method.chapters.get(i); // CHAPTER
 				}
 				Set<Integer> hfstk = m.get(boek);
 				return (methode + " > " + boek + " >" + h(hfstk, chapters));

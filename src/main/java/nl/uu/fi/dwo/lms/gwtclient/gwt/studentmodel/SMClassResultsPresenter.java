@@ -207,39 +207,39 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 		tree.setChildren(Collections.singletonMap(struc.getInfo().getId(), root));
 		Map<String, DomTree<String>> map = new LinkedHashMap<>();
 		root.setChildren(map);
-		for ( DomStudentModelCategory cat : struc.getCategories()) {
-			DomTree<String> tcat = new DomTree<>(getTitle(cat.getInfo()));
-			tcat.setChildren(children(cat.getObjectives()));
-			if (!tcat.getChildren().isEmpty())
-				map.put(cat.getInfo().getId(), tcat);
-		}
-		view.showTree(tree);
 		service.getActiveMethod(struc.getActiveMethod()).then(m -> {
+			for ( DomStudentModelCategory cat : struc.getCategories()) {
+				DomTree<String> tcat = new DomTree<>(getTitle(cat.getInfo()));
+				tcat.setChildren(children(cat.getObjectives(), m.getValue()));
+				if (!tcat.getChildren().isEmpty())
+					map.put(cat.getInfo().getId(), tcat);
+			}
+			view.showTree(tree);
 			view.setTitle(FilterUtil.setFilter(filter, m.getValue()));
 			return m;
 		});
 	}
  	
-	private Map<String, DomTree<String>> children(List<DomStudentModelObj> objectives) {
+	private Map<String, DomTree<String>> children(List<DomStudentModelObj> objectives, DomMethod method) {
 		if (objectives == null) 
 			return null;
 		Map<String, DomTree<String>> map = new LinkedHashMap<>();
 		for( DomStudentModelObj obj : objectives) {
 			if (! filter.isEmpty()) {
-				if (!checkFilter( obj.getInfo().getMethods() ) )
+				if (!checkFilter( obj.getInfo().getMethods(), method ) )
 						continue;
 			}
 			DomTree<String> tobj = new DomTree<>(getTitle(obj.getInfo()));
-			tobj.setChildren(children(obj.getObjectives()));
+			tobj.setChildren(children(obj.getObjectives(), method));
 			if (tobj.getChildren() == null || ! tobj.getChildren().isEmpty())
 				map.put(obj.getInfo().getId(), tobj);
 		}
 		return map;
 	}
 
-	private boolean checkFilter(Map<String, Map<String, Set<Integer>>> methods) {
+	private boolean checkFilter(Map<String, Map<String, Set<Integer>>> methods, DomMethod method) {
 		if (methods == null) return true;
-		return StudentModelPresenter.contains(filter, methods);
+		return StudentModelPresenter.contains(filter, methods, method);
 	}
 
 	private String getTitle(DomStudentModelContextInfo info) {

@@ -38,6 +38,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.FilterUtil;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.DomTree;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
@@ -161,46 +162,48 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		DomTree<String> tree = new DomTree<>(t);
 		Map<String, DomTree<String>> map = new LinkedHashMap<>();
 		tree.setChildren(map);
-		for ( DomStudentModelCategory cat : struc.getCategories()) {
-			DomTree<String> tcat = new DomTree<>(getTitle(cat.getInfo()));
-			tcat.setChildren(children(cat.getObjectives()));
-			if (!tcat.getChildren().isEmpty())
-				map.put(cat.getInfo().getId(), tcat);
-		}
-		view.showTree(tree);
 		return service.getActiveMethod(struc.getActiveMethod()).then(m -> {
+			for ( DomStudentModelCategory cat : struc.getCategories()) {
+				DomTree<String> tcat = new DomTree<>(getTitle(cat.getInfo()));
+				tcat.setChildren(children(cat.getObjectives(), m.getValue()));
+				if (!tcat.getChildren().isEmpty())
+					map.put(cat.getInfo().getId(), tcat);
+			}
+			view.showTree(tree);
 			view.setTitle(FilterUtil.setFilter(filter, m.getValue()));
 			return p;
 		});	
 	}
 		
-	private Map<String, DomTree<String>> children(List<DomStudentModelObj> objectives) {
+	private Map<String, DomTree<String>> children(List<DomStudentModelObj> objectives, DomMethod method) {
 		if (objectives == null) 
 			return null;
 		Map<String, DomTree<String>> map = new LinkedHashMap<>();
 		for( DomStudentModelObj obj : objectives) {
 			if (! filter.isEmpty()) {
-				if (!checkFilter( obj.getInfo().getMethods() ) )
+				if (!checkFilter( obj.getInfo().getMethods(), method ) )
 						continue;
 			}
 			DomTree<String> tobj = new DomTree<>(getTitle(obj.getInfo()));
-			tobj.setChildren(children(obj.getObjectives()));
+			tobj.setChildren(children(obj.getObjectives(), method));
 			if (tobj.getChildren() == null || ! tobj.getChildren().isEmpty())
 				map.put(obj.getInfo().getId(), tobj);
 		}
 		return map;
 	}
 
-	private boolean checkFilter(Map<String, Map<String, Set<Integer>>> methods) {
+	private boolean checkFilter(Map<String, Map<String, Set<Integer>>> methods, DomMethod method) {
 		if (methods == null) return true;
-		return contains(filter, methods);
+		return contains(filter, methods, method);
 	}
 
 	static boolean contains(Map<String, Map<String, Set<Integer>>> filter,
-			Map<String, Map<String, Set<Integer>>> methodes) {
+			Map<String, Map<String, Set<Integer>>> methodes, DomMethod method) {
 		for (Map.Entry<String, Map<String, Set<Integer>>> entry : filter.entrySet()) {
 		    if (entry.getKey() == null || entry.getKey().isEmpty()) {
-		      if (methodes.values().stream().allMatch(Map::isEmpty)) return true;
+			      final String currentKey = method.key();
+			      //if (methodes.values().stream().allMatch(Map::isEmpty)) return true;
+			      if ( methodes.entrySet().stream().allMatch(e -> e.getValue().isEmpty()||!e.getKey().equals(currentKey))) return true;
 		      continue;
 		    }		  
 			Map<String, Set<Integer>> map = methodes.getOrDefault(entry.getKey(), Collections.emptyMap());
