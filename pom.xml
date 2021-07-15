@@ -269,12 +269,12 @@
 									<version>0.0.3</version>
 									<destFileName>dwo/swingbrowser-api.jar</destFileName>
 								</artifactItem>
-								<artifactItem>
-									<groupId>nl.numworx.swingbrowser</groupId>
-									<artifactId>swingbrowser-jfx</artifactId>
-									<version>0.0.3</version>
-									<destFileName>dwo/swingbrowser-jfx.jar</destFileName>
-								</artifactItem>
+<!-- 								<artifactItem> -->
+<!-- 									<groupId>nl.numworx.swingbrowser</groupId> -->
+<!-- 									<artifactId>swingbrowser-jfx</artifactId> -->
+<!-- 									<version>0.0.3</version> -->
+<!-- 									<destFileName>dwo/swingbrowser-jfx.jar</destFileName> -->
+<!-- 								</artifactItem> -->
 								<artifactItem>
 									<groupId>nl.numworx.swingbrowser</groupId>
 									<artifactId>swingbrowser-jxb</artifactId>

@@ -105,7 +105,8 @@ public class GwtClientWrap implements Filter {
 				}
 				content = content.replace("type=\"password\"", "type=\"text\"");
 			}
-			
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.setCharacterEncoding("UTF-8");
 			resp.getWriter().write(content);
 		}
 
