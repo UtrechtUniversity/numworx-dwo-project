@@ -4,9 +4,12 @@
 package fi.dwo.server.rest.jaxrsfilters;
 
 import fi.dwo.commons.persistence.entities.PersistentLoginContext;
+import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import fi.dwo.server.xss.SecFilter;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwsHeader;
@@ -65,6 +68,7 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
         public DwoUserSecurityContext(DwoUserPrincipal user, boolean secure, String scheme) {
             u = user;
             role = RoleType.NONE;
+            this.scheme = scheme;
         }
 
         public DwoUserSecurityContext(DwoUserPrincipal principal, boolean secure,
@@ -144,7 +148,19 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
 
         PersistentUser u = UserManager.login(authFields[0], authFields[1]);
         if (u != null) {
-            SecurityContext sc = new DwoUserSecurityContext(new DwoUserPrincipal(u), secCtx.isSecure(), SecurityContext.BASIC_AUTH);
+        	SecurityContext sc;
+        	Object uid = request.getAttribute(SecFilter.USER_ID);
+        	if (uid != null & ! u.getId().equals(uid))
+        		return null;
+        	Object sgid = request.getAttribute(SecFilter.SCHOOLGROUP_ID);
+        	PersistentSchoolGroup sg = null;
+        	if (sgid != null)
+        		sg = SchoolGroupManager.findEntity( (Long) sgid);
+        	if (sg != null) {
+        		DwoUserPrincipal du = new DwoUserPrincipal(u, sg);
+        		sc = new DwoUserSecurityContext(du, secCtx.isSecure(), SecurityContext.BASIC_AUTH, du.getRole());
+        	} else
+        		sc = new DwoUserSecurityContext(new DwoUserPrincipal(u), secCtx.isSecure(), SecurityContext.BASIC_AUTH);
             setUsername(sc);
             return sc;
         }
