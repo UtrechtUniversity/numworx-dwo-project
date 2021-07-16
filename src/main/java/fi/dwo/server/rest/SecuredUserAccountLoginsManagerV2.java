@@ -15,6 +15,7 @@ import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -273,7 +274,11 @@ public class SecuredUserAccountLoginsManagerV2 {
             PersistentHasRole hr = HasRoleManager.findEntity(new PersistentHasRolePK(user.getId(), MySQLPersistenceId.getNativeId(sarc.getDomSchoolRoleAndClass().getHasRole()).getSchoolGroupID()));
             if (sarc.getDomSchoolRoleAndClass().getSchoolClass()!=null && sarc.getDomSchoolRoleAndClass().getSchoolClass().getId() != null) {
  // FIXME bestaat schoolclass wel? VERIFIEREN!           	
-            	hr.setClassID(MySQLPersistenceId.getNativeId(sarc.getDomSchoolRoleAndClass().getSchoolClass()));
+            	Long scId = MySQLPersistenceId.getNativeId(sarc.getDomSchoolRoleAndClass().getSchoolClass());
+            	PersistentStudentOfClassPK id = new PersistentStudentOfClassPK(user.getId(), scId, hr.getPersistentHasRolePK().getSchoolGroupID());
+            	PersistentStudentOfClass soc = StudentOfClassManager.findEntity(id);
+// soc != null is een test of student lid is van klas.
+            	if (soc != null) hr.setClassID(soc.getPersistentStudentOfClassPK().getClassID());
             }
             HasRoleManager.edit(hr);
 
