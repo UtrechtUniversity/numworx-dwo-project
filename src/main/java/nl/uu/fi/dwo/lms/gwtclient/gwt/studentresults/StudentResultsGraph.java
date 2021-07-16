@@ -11,7 +11,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -235,6 +238,11 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		}
 
 	}
+
+	public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {		  
+		    Map<Object, Boolean> seen = new ConcurrentHashMap<>(); 
+		    return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null; 
+		}
 
 	static ColorStyle white  = new ColorStyle(255,255,255);
 	static ColorStyle colorBlue1 = new ColorStyle(49, 71, 112);
@@ -695,6 +703,10 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			moveTo(tmpx+dx, tmpy+dy);
 		}
 
+		String uuid() {
+			return obj.getInfo().getId();
+		}
+		
 		public void transform(OMSVGMatrix ctm) {
 			OMSVGPoint p = getSvgElement().createSVGPoint(tmpx, tmpy);
 			p = p.matrixTransform(ctm);
@@ -1066,10 +1078,13 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 						start = null;
 					}
 
-					private Set<Node> getVoorkennis(Set<Node> to, String method) {				
+					
+					
+					private Set<Node> getVoorkennis(Set<Node> to, String method) {						
 						return to.stream()
 								.flatMap(node -> edges.stream().filter(e -> e.to == node).map( e-> e.from))
 								.filter(n -> Objects.equals(method, n.info.getMethod())) // within same method????
+								.filter(distinctByKey(Node::uuid))
 								.collect(Collectors.toSet());
 					}
 					
