@@ -48,7 +48,7 @@ public class SecuredTeacherClassCourseManager {
 		DomClassCourseFull cc = rest.getDomCourse();
     	try {
 // Security...
-    		AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+    		AnonDomainAuthorizer.build().submitUser(sc)
     		.setHasRole(rest.getRestContext().getDomHasRole())
     		.buildSchoolAdminTeacher().setTeacher();
     		

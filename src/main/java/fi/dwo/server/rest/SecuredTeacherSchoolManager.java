@@ -37,7 +37,7 @@ public class SecuredTeacherSchoolManager {
     @Produces({"application/json"})
     @Path("/update")
     public Boolean updateSchool(@Context SecurityContext sc, RestSchoolFull rest) throws Dwo2Exception {
-        UserState_U user = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName());
+        UserState_U user = AnonDomainAuthorizer.build().submitUser(sc);
         UserState_HR_R_S_SG_U role = user.setHasRole(rest.getRestContext().getDomHasRole());
         PersistentSchool ps = role.getSchool();
         TeacherState_HR_R_S_SG_U state = role.buildSchoolAdminTeacher().setTeacher();

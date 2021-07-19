@@ -18,6 +18,9 @@ import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import fi.dwo.server.rest.jaxrsfilters.DwoUserPrincipal;
+
+import java.security.Principal;
 import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -309,5 +312,20 @@ class UserBuilder implements UserDomainAuthorizer.UserState_U, UserDomainAuthori
       instance.getContext().getUserCtx().setRealm(realm);
       return this;
     }
+
+    
+	UserState_U setUser(Principal principal) throws Dwo2Exception {
+		PersistentUser user;
+		if (principal instanceof DwoUserPrincipal)
+			user = ((DwoUserPrincipal) principal).getUser();
+		else
+			user = UserManager.findByUserName(principal.getName());
+        this.instance.getContext().getUserCtx().setUser(user);
+        if (user == null) {
+            LOG.log(Level.WARNING, "Username {0}: Internal error user does not exist.", new Object[]{principal});
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Internal error user does not exist.");
+        }
+        return this;
+	}
 
 }

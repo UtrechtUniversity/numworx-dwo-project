@@ -74,7 +74,7 @@ public class SecuredStudentExamScoContextManager {
     PersistentSchoolClass schoolClass = classOf(rest);
     PersistentCourse course = courseOf(rest);
     verifyTOTP(sc, ccid, totp, course, schoolClass);
-    UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRole(rest.getRestContext().getDomHasRole());
+    UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
     state.buildStudent();
 
     PersistentHasRole phr = state.getHasRole();

@@ -77,7 +77,7 @@ public class SecuredDwoAdminUserManager {
     @Produces({"application/json"})
     @Path("/getList")
     public static List<DomUserFull> getUsersInSchool(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
-    	DwoAdminState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN).buildDwoAdmin();
+    	DwoAdminState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN).buildDwoAdmin();
     	String realm = rest.getRestContext().getRealm();
     	List<PersistentUser> userList = UserManager.findEntities();
         ArrayList<DomUserFull> domUsers = new ArrayList<DomUserFull>(userList.size());
@@ -106,7 +106,7 @@ public class SecuredDwoAdminUserManager {
         DomUser domUser = restUser.getDomUser();
         PersistentHasRole phr = null;
         try {
-        	UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(restUser.getRestContext().getDomHasRole(), RoleType.ADMIN);
+        	UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(restUser.getRestContext().getDomHasRole(), RoleType.ADMIN);
             phr = state.getHasRole();
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access dwoadmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
@@ -158,7 +158,7 @@ public class SecuredDwoAdminUserManager {
         
         PersistentHasRole phr = null;
         try {
-        	UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(restUser.getRestContext().getDomHasRole(), RoleType.ADMIN);
+        	UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(restUser.getRestContext().getDomHasRole(), RoleType.ADMIN);
             phr = state.getHasRole();
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access admin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});

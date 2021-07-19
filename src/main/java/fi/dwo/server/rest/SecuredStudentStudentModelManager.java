@@ -64,7 +64,7 @@ public class SecuredStudentStudentModelManager {
     @Produces({"application/json"})
     @Path("/getList")
     public List<DomStudentModelContext> getMergedStudentModels(@Context SecurityContext sc, RestContext context) throws Dwo2Exception {
-    StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+    StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
                 .setHasRole(context.getRestContext().getDomHasRole())//
                 .buildStudent();
      return state.getMergedStudentModelContextList();        
@@ -74,7 +74,7 @@ public class SecuredStudentStudentModelManager {
     @Produces({"application/json"})
     @Path("/getReducedList")
     public List<DomStudentModelContext> getReducedStudentModels(@Context SecurityContext sc, RestSchoolClass context) throws Dwo2Exception {
-    StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+    StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
                 .setHasRole(context.getRestContext().getDomHasRole())//
                 .buildStudent();
      return StudentModelContextUtilManager.reduce(state.getStudentModelContextList());        
@@ -83,7 +83,7 @@ public class SecuredStudentStudentModelManager {
     @Produces({"application/json"})
     @Path("/getReducedListForClass")
     public List<DomStudentModelContext4Student> getReducedStudentModelsforClass(@Context SecurityContext sc, RestSchoolClass context) throws Dwo2Exception {
-    StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+    StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
                 .setHasRole(context.getRestContext().getDomHasRole())//
                 .buildStudent();
      if (context.getDomSchoolClass() == null) return Collections.emptyList();
@@ -102,7 +102,7 @@ public class SecuredStudentStudentModelManager {
     @Produces({"application/json"})
     @Path("/getScore")
     public DomStudentModelDataScore getStudentModelDataScore(@Context SecurityContext sc, RestStudentModelContextId restModelId) throws Dwo2Exception {
-    StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+    StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
                 .setHasRole(restModelId.getRestContext().getDomHasRole())//
                 .buildStudent();
      return state.getStudentModelDataScore(restModelId.getDomStudentModelContext());        
@@ -112,7 +112,7 @@ public class SecuredStudentStudentModelManager {
     @Produces({"application/json"})
     @Path("/get")
     public DomStudentModelContext get(@Context SecurityContext sc, RestStudentModelContextId restModelId) throws Dwo2Exception {
-    StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+    StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
                 .setHasRole(restModelId.getRestContext().getDomHasRole())//
                 .buildStudent();
      return reduce(state.getStudentModel(restModelId.getDomStudentModelContext()));        
@@ -145,7 +145,7 @@ public class SecuredStudentStudentModelManager {
     @Produces("application/json")
     @Path("/getLRS") 
     public DomLRS getLRS(@Context SecurityContext sc, @Context UriInfo info, RestContext rest) throws Dwo2Exception {
-      StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
           .setHasRole(rest.getRestContext().getDomHasRole())
           .buildStudent();
       return state.getLRS(info);
@@ -162,7 +162,7 @@ public class SecuredStudentStudentModelManager {
 		hr.setId(new PersistenceId(sgid));
 		DomStudentModelContextId smc = new DomStudentModelContextId(new PersistenceId(modelid));
 	      try {
-			StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+			StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
 			          .setHasRole(hr)
 			          .buildStudent();
 			DomStudentModelContext result = state.getStudentModel(smc);

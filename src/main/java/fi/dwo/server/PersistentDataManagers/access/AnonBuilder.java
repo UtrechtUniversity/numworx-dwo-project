@@ -3,6 +3,8 @@
  */
 package fi.dwo.server.PersistentDataManagers.access;
 
+import javax.ws.rs.core.SecurityContext;
+
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.actions.AnonActions;
 import fi.dwo.server.PersistentDataManagers.actions.MySQLAnonActions;
@@ -48,6 +50,14 @@ class AnonBuilder implements AnonDomainAuthorizer.AnonState, AnonDomainAuthorize
         return builder.setUser(username);
     }
 
+    public UserDomainAuthorizer.UserState_U submitUser(SecurityContext sc) throws Dwo2Exception {
+    	UserBuilder builder = new UserBuilder();
+    	builder.init(instance.getContext());
+    	builder.setRealm(Realm.of(sc.getUserPrincipal()));
+    	return builder.setUser(sc.getUserPrincipal());
+    	
+    }
+    
     public UserDomainAuthorizer.UserState_U submitUser(DomUser u) throws Dwo2Exception {
         UserBuilder builder = new UserBuilder();
         builder.init(this.instance.getContext());

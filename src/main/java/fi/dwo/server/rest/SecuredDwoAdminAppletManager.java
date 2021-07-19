@@ -28,7 +28,7 @@ public class SecuredDwoAdminAppletManager {
   @Path("/getList")
   public List<DomAppletFull> getApplets(RestContext rest, @Context SecurityContext sc) throws Dwo2Exception {
     AnonDomainAuthorizer.build()
-    .submitUser(sc.getUserPrincipal().getName())
+    .submitUser(sc)
     .setHasRole(rest.getRestContext().getDomHasRole())
     .buildDwoAdmin();
     return AppletManager.findEntities().stream().map(PersistentApplet::buildDomAppletFull).collect(Collectors.toList());

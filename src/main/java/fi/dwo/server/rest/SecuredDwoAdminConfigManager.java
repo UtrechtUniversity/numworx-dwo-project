@@ -43,7 +43,7 @@ public class SecuredDwoAdminConfigManager {
   @Produces({"application/json"})
   @Path("/getList")
   public List<DomAppletConfig> getConfigurations(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
-      UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN);
+      UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN);
       state.buildDwoAdmin();
   
       return AppletConfigManager.findEntities().stream()
@@ -142,7 +142,7 @@ public class SecuredDwoAdminConfigManager {
           "Incorrect formatted REST-request.");
     }
     PersistentHasRole hr = null;
-    UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(restConfig.getRestContext().getDomHasRole(), RoleType.ADMIN);
+    UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(restConfig.getRestContext().getDomHasRole(), RoleType.ADMIN);
     hr = state.getHasRole();
     state.buildDwoAdmin();
     DomAppletConfig config = restConfig.getDomAppletConfig();
@@ -194,7 +194,7 @@ public class SecuredDwoAdminConfigManager {
           "Incorrect formatted REST-request.");
     }
     PersistentHasRole hr = null;
-    UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(restConfig.getRestContext().getDomHasRole(), RoleType.ADMIN);
+    UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(restConfig.getRestContext().getDomHasRole(), RoleType.ADMIN);
     hr = state.getHasRole();
     state.buildDwoAdmin();
     DomAppletConfig config = restConfig.getDomAppletConfig();
@@ -243,7 +243,7 @@ public class SecuredDwoAdminConfigManager {
           "Incorrect formatted REST-request.");
     }
     DwoAdminState_HR_R_S_SG_U state = AnonDomainAuthorizer.build()
-        .submitUser(sc.getUserPrincipal().getName())
+        .submitUser(sc)
         .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN)
         .buildDwoAdmin();
 //TODO move to Action:

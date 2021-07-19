@@ -29,7 +29,7 @@ public class SecuredDwoAdminScoContextManager {
     public DomScoContextFull update(@Context SecurityContext sc, RestScoContextFull4DwoAdmin rest) throws Dwo2Exception {
 
     DwoAdminState_HR_P_R_S_SG_U state = AnonDomainAuthorizer.build()
-        .submitUser(sc.getUserPrincipal().getName())
+        .submitUser(sc)
         .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN)
         .buildDwoAdmin().addDwoProfile(rest.getDomDwoProfile());
 
@@ -45,7 +45,7 @@ public class SecuredDwoAdminScoContextManager {
 	@Produces({"application/json"})
 	public DomScoContextFull add(@Context SecurityContext sc, RestScoContextFull rest) throws Dwo2Exception {
 	    DwoAdminState_HR_P_R_S_SG_U state = AnonDomainAuthorizer.build()
-	        .submitUser(sc.getUserPrincipal().getName())
+	        .submitUser(sc)
 	        .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN)
 	        .buildDwoAdmin().addDwoProfile(rest.getDomDwoProfile());
 
@@ -61,7 +61,7 @@ public class SecuredDwoAdminScoContextManager {
 	@Produces({"application/json"})
 	public Boolean remove(@Context SecurityContext sc, RestScoContext rest) throws Dwo2Exception {
       DwoAdminState_HR_P_R_S_SG_U state = AnonDomainAuthorizer.build()
-          .submitUser(sc.getUserPrincipal().getName())
+          .submitUser(sc)
           .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN)
           .buildDwoAdmin().addDwoProfile(rest.getDomDwoProfile());
 

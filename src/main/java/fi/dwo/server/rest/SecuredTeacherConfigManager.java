@@ -29,7 +29,7 @@ public class SecuredTeacherConfigManager {
       @PathParam("language") String language, RestDwoProfile rest) throws Dwo2Exception {
 
     AnonDomainAuthorizer.build()
-      .submitUser(sc.getUserPrincipal().getName())
+      .submitUser(sc)
       .setHasRole(rest.getRestContext().getDomHasRole())
       .buildSchoolAdminTeacher();
     Long pid = MySQLPersistenceId.getNativeId(rest.getDomDwoProfile());

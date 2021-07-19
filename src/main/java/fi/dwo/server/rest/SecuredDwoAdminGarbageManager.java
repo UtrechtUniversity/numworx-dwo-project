@@ -68,7 +68,7 @@ public class SecuredDwoAdminGarbageManager {
   public List<DomLoginContext> getContexts(@Context SecurityContext sc, @QueryParam("limit") Integer limit) throws Dwo2Exception
   {
     DwoAdminState_HR_R_S_SG_U admin = AnonDomainAuthorizer.build()
-        .submitUser(sc.getUserPrincipal().getName())
+        .submitUser(sc)
         .setDefaultHasRole().buildDwoAdmin();
     if (limit == null) limit = 100;
     EntityManager em = DwoEmfFactory.getEntityManager();
@@ -101,7 +101,7 @@ public class SecuredDwoAdminGarbageManager {
   @Path("/user/get") 
   public List<DomUserFullwLoginContext> getUsers(@Context SecurityContext sc, @QueryParam("before") Long before, @QueryParam("limit") Integer limit) throws Dwo2Exception {
     DwoAdminState_HR_R_S_SG_U admin = AnonDomainAuthorizer.build()
-        .submitUser(sc.getUserPrincipal().getName())
+        .submitUser(sc)
         .setDefaultHasRole().buildDwoAdmin();
     Date when = new Date(System.currentTimeMillis() - 3L*365*24*3600*1000); // sensible defaults
     if (before != null) when.setTime(before.longValue());
@@ -190,7 +190,7 @@ public class SecuredDwoAdminGarbageManager {
   public List<DomClassCourse> getClassCourses(@Context SecurityContext sc, @QueryParam("limit") Integer limit) throws Dwo2Exception
   {
 	    DwoAdminState_HR_R_S_SG_U admin = AnonDomainAuthorizer.build()
-	            .submitUser(sc.getUserPrincipal().getName())
+	            .submitUser(sc)
 	            .setDefaultHasRole().buildDwoAdmin();
 	    if (limit == null) limit = 100;
 	    EntityManager em = DwoEmfFactory.getEntityManager();
@@ -231,7 +231,7 @@ public class SecuredDwoAdminGarbageManager {
   public List<DomSchool4DwoAdmin> getSchools(@Context SecurityContext sc, @QueryParam("limit") Integer limit) throws Dwo2Exception
   {
       DwoAdminState_HR_R_S_SG_U admin = AnonDomainAuthorizer.build()
-            .submitUser(sc.getUserPrincipal().getName())
+            .submitUser(sc)
             .setDefaultHasRole().buildDwoAdmin();
       if (limit == null) limit = 10;
       List<PersistentSchool> schools = SchoolManager.findEntities();
@@ -251,7 +251,7 @@ public class SecuredDwoAdminGarbageManager {
   @Path("/user/remove") 
   public Boolean removeUser(@Context SecurityContext sc, RestUser rest) throws Dwo2Exception {
   DwoAdminState_HR_R_S_SG_U admin = AnonDomainAuthorizer.build()
-      .submitUser(sc.getUserPrincipal().getName())
+      .submitUser(sc)
       .setHasRole(rest.getRestContext().getDomHasRole()).buildDwoAdmin();
     Long id = MySQLPersistenceId.getNativeId(rest.getDomUser());
     PersistentUser user = UserManager.findEntity(id);
@@ -266,7 +266,7 @@ public class SecuredDwoAdminGarbageManager {
   @Path("/context/remove") 
   public Boolean removeContext(@Context SecurityContext sc, RestLoginContext rest) throws Dwo2Exception {
   DwoAdminState_HR_R_S_SG_U admin = AnonDomainAuthorizer.build()
-      .submitUser(sc.getUserPrincipal().getName())
+      .submitUser(sc)
       .setHasRole(rest.getRestContext().getDomHasRole()).buildDwoAdmin();
     Long id = MySQLPersistenceId.getNativeId(rest.getDomLoginContext());
     PersistentLoginContext context = LoginContextManager.findEntity(id);
@@ -283,7 +283,7 @@ public class SecuredDwoAdminGarbageManager {
   @Path("/classcourse/remove") 
   public Boolean removeClassCourse(@Context SecurityContext sc, RestClassCourse rest) throws Dwo2Exception {
 	  DwoAdminState_HR_R_S_SG_U admin = AnonDomainAuthorizer.build()
-		      .submitUser(sc.getUserPrincipal().getName())
+		      .submitUser(sc)
 		      .setHasRole(rest.getRestContext().getDomHasRole()).buildDwoAdmin();
 	Long id = MySQLPersistenceId.getNativeId(rest.getDomClassCourse());
 	PersistentClassCourse cc = ClassCourseManager.findEntity(id);
@@ -302,7 +302,7 @@ public class SecuredDwoAdminGarbageManager {
   @Path("/hasrole/get")
   public List<DomHasRole> getHasRoles(@Context SecurityContext sc, @QueryParam("limit") Integer limit) throws Dwo2Exception {
 	  DwoAdminState_HR_R_S_SG_U admin = AnonDomainAuthorizer.build()
-	            .submitUser(sc.getUserPrincipal().getName())
+	            .submitUser(sc)
 	            .setDefaultHasRole().buildDwoAdmin();
 	  if (limit == null) limit = 100;
 	  return Collections.emptyList();

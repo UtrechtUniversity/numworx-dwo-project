@@ -120,7 +120,7 @@ public class SecuredUserScoContextManager {
     @Path("/getTrashedScos")
     @Produces({"application/json"})
     public List<DomScoContext> getTrashedScos(@Context SecurityContext sc, RestCourse rest, @Context UriInfo info) throws Dwo2Exception {
-    	UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRole(rest.getRestContext().getDomHasRole());
+    	UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
     	state.buildSchoolAdminTeacher();
 		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
 		DomCourse domCourse = rest.getDomCourse();
@@ -251,7 +251,7 @@ public class SecuredUserScoContextManager {
     @Path("/getData")
     @Produces({"application/json"})
     public DomScoData getData(@Context SecurityContext sc, RestScoContextId rest) throws Dwo2Exception {
-      UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRole(rest.getRestContext().getDomHasRole());
+      UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
       Long id = MySQLPersistenceId.getNativeId(rest.getDomScoContext());
       PersistentScoContext sco = ScoContextManager.findEntity(id);
       Long pid = MySQLPersistenceId.getNativeId(rest.getDomDwoProfile());

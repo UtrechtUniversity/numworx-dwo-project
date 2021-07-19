@@ -70,7 +70,7 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
     @Produces({"application/json"})
     public Boolean remove(@Context SecurityContext sc, RestScoContext rest) throws Dwo2Exception {
         SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build()
-        .submitUser(sc.getUserPrincipal().getName()).setHasRole(rest.getRestContext().getDomHasRole())
+        .submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole())
         .buildSchoolAdminTeacher();
         // TODO state.addProfile().addScoContext().removeSco();
         
@@ -88,7 +88,7 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
     @Produces({"application/json"})
     public Boolean trash(@Context SecurityContext sc, RestScoContext rest) throws Dwo2Exception {
         SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build()
-        .submitUser(sc.getUserPrincipal().getName()).setHasRole(rest.getRestContext().getDomHasRole())
+        .submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole())
         .buildSchoolAdminTeacher();
         // TODO state.addProfile().addScoContext().removeSco();
         
@@ -106,7 +106,7 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
     @Produces({"application/json"})
     public DomScoContextFull update(@Context SecurityContext sc, RestScoContextFull rest) throws Dwo2Exception {
       AnonState s0 = AnonDomainAuthorizer.build();
-      UserState_U s1 = s0.submitUser(sc.getUserPrincipal().getName());
+      UserState_U s1 = s0.submitUser(sc);
       UserState_HR_R_S_SG_U s2 = s1.setHasRole(rest.getRestContext().getDomHasRole());
       SchoolAdminTeacherState_HR_R_S_SG_U state = s2.buildSchoolAdminTeacher();
       
@@ -123,7 +123,7 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
     @Produces({"application/json"})
     public int countStudents(@Context SecurityContext sc, RestScoContext rest) throws Dwo2Exception {
         AnonState s0 = AnonDomainAuthorizer.build();
-        UserState_U s1 = s0.submitUser(sc.getUserPrincipal().getName());
+        UserState_U s1 = s0.submitUser(sc);
         UserState_HR_R_S_SG_U s2 = s1.setHasRole(rest.getRestContext().getDomHasRole());
         SchoolAdminTeacherState_HR_R_S_SG_U state = s2.buildSchoolAdminTeacher();
         DomScoContextId sco = rest.getDomScoContext();

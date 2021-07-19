@@ -102,7 +102,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
     @PUT
     @Path("/selectedTeachersResults")
     public DomResultsPerTeacher selectedTeachersResults(@Context SecurityContext sc, RestResultsPerTeacher rest) throws Dwo2Exception {
-      UserState_HR_R_S_SG_U s1 = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      UserState_HR_R_S_SG_U s1 = AnonDomainAuthorizer.build().submitUser(sc)
       .setRealm(rest.getRestContext().getRealm())
       .setHasRole(rest.getRestContext().getDomHasRole());
       PersistentHasRole phr = s1.getHasRole();
@@ -610,7 +610,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
     @Produces({"application/json"})
     @Path("/createStudentResults")
     public DomResultsPerTeacher createStudentResults(@Context SecurityContext sc, RestClearStudentDataForScoAndClass rest) throws Dwo2Exception {
-      TeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      TeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
           .setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher().setTeacher();
 
       DomClearStudentDataForScoAndClass dom = rest.getClearStudentDataForScoAndClass();

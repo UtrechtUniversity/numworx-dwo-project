@@ -165,7 +165,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     @Produces({"application/json"})
     @Path("/getList")
     public List<DomSchoolClass> getTeachersSchoolClasses(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
-    	TeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher().setTeacher();
+    	TeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher().setTeacher();
     	return state.getSchoolClasses();
     }
 
@@ -300,7 +300,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     public List<DomStudent> getTeachersStudents(@Context SecurityContext sc) {
         List<DomStudent> domStudents = null;
         try {
-            TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+            TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
                     .setDefaultHasRole()
                     .buildSchoolAdminTeacher()
                     .setTeacher();
@@ -316,7 +316,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     public List<DomStudent> getTeachersStudents(@Context SecurityContext sc, RestContext rest) {
         List<DomStudent> domStudents = null;
         try {
-            TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+            TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
             	   .setRealm(rest.getRestContext().getRealm())
                    .setHasRole(rest.getRestContext().getDomHasRole())
                     .buildSchoolAdminTeacher()
@@ -1195,7 +1195,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     @Produces({"application/json"})
     @Path("/getModules")
     public DomCoursesOfSchoolClass4Teacher getModules(@Context SecurityContext sc, RestSchoolClassAndProfile rest) throws Dwo2Exception {
-        UserState_U ustate = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName());
+        UserState_U ustate = AnonDomainAuthorizer.build().submitUser(sc);
         UserState_HR_R_S_SG_U hrstate = ustate.setHasRole(rest.getRestContext().getDomHasRole());
         TeacherState_HR_R_S_SG_U tstate = hrstate.buildSchoolAdminTeacher().setTeacher();
         TeacherState_HR_P_R_S_SC_SG_U psstate = tstate.addProfile(rest.getDomSchoolClassAndProfile().getDomDwoProfile()).addSchoolClass(rest.getDomSchoolClassAndProfile().getDomSchoolClass());
@@ -1329,7 +1329,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     public Boolean addCourseToClass(@Context SecurityContext sc, RestSchoolClassCourseAndProfileNew rest) throws Dwo2Exception {
         //secure builder to detach course by setting it invisible.
         try {
-            TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+            TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
                     .setHasRole(rest.getRestContext().getDomHasRole())
                     .buildSchoolAdminTeacher()
                     .setTeacher()
@@ -1358,7 +1358,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     public Boolean attachCourseToClass(@Context SecurityContext sc, RestSchoolClassCourseAndProfile rest) throws Dwo2Exception {
         //secure builder to detach course by setting it invisible.
         try {
-            TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+            TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
                     .setHasRole(rest.getRestContext().getDomHasRole())
                     .buildSchoolAdminTeacher()
                     .setTeacher()
@@ -1384,7 +1384,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     @Path("/detachCourseFromClass")
     public Boolean detachCourseFromClass(@Context SecurityContext sc, RestSchoolClassCourseAndProfile rest) throws Dwo2Exception {
         try {
-            TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+            TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
                     .setHasRole(rest.getRestContext().getDomHasRole())
                     .buildSchoolAdminTeacher()
                     .setTeacher()
@@ -1537,7 +1537,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     @Produces({"application/json"})
     @Path("/getTeachersClassesOfStudent")
     public List<DomSchoolClassId> getTeachersClassesOfStudent(@Context SecurityContext sc, RestStudent restStudent) throws Dwo2Exception {
-        TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+        TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
                 .setHasRole(restStudent.getRestContext().getDomHasRole())
                 .buildSchoolAdminTeacher()
                 .setTeacher();
@@ -1548,7 +1548,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     @Produces({"application/json"})
     @Path("/getSharedTeacherClasses")
     public List<DomSchoolClassId> getSharedTeacherClasses(@Context SecurityContext sc, RestTeacher restTeacher) throws Dwo2Exception {
-        TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+        TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
                 .setHasRole(restTeacher.getRestContext().getDomHasRole())
                 .buildSchoolAdminTeacher()
                 .setTeacher();

@@ -331,7 +331,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
   @PUT
   @Path("getClassCourse")
   public DomCoursesOfSchoolClass getClassCourse(@Context SecurityContext sc, RestClassCourse rest) throws Dwo2Exception {
-    UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+    UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
       .setHasRole(rest.getRestContext().getDomHasRole());
       state.buildStudent();
     Long pid = MySQLPersistenceId.getNativeId(rest.getDomDwoProfile());

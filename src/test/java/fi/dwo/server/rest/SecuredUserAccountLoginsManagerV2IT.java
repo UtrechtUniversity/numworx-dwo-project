@@ -123,17 +123,17 @@ public class SecuredUserAccountLoginsManagerV2IT {
         DomSchoolRoleAndClassV2 result = instance.switchToSchoolLogin(sc, sarc);
 
         long sgId=-1;
-        long scId=-1;
+        Long scId=null;
         
         try {
             sgId = (long) MySQLPersistenceId.getNativeId(result.getHasRole()).getSchoolGroupID();
-            scId = (long) MySQLPersistenceId.getNativeId(result.getSchoolClass());
+            scId = MySQLPersistenceId.getNativeId(result.getSchoolClass());
         } catch (Dwo2Exception ex) {
             Logger.getLogger(SecuredUserAccountLoginsManagerV2IT.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         if (sgId == oldSchoolGroup
-                || sgId != 7L || scId != 3) {
+                || sgId != 7L || scId != null) {
             fail("SchoolClass or SchoolGroup did not change.");
         }
     }

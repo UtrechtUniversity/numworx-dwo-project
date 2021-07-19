@@ -28,7 +28,7 @@ public class SecuredTeacherMethodManager {
     @Produces({"application/json"})
     @Path("/getList")
     public List<DomMethod> getMethods(@Context SecurityContext sc, RestContext context) throws Dwo2Exception {
-    	UserState_HR_R_S_SG_U hasRole = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRole(context.getRestContext().getDomHasRole());
+    	UserState_HR_R_S_SG_U hasRole = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(context.getRestContext().getDomHasRole());
     	PersistentSchool school = hasRole.getSchool();
     	hasRole.buildSchoolAdminTeacher().setTeacher();
     	
@@ -40,7 +40,7 @@ public class SecuredTeacherMethodManager {
     @Produces({"application/json"})
     @Path("/add")
     public DomMethod add(@Context SecurityContext sc, RestMethod rest) throws Dwo2Exception {
-    	UserState_HR_R_S_SG_U hasRole = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRole(rest.getRestContext().getDomHasRole());
+    	UserState_HR_R_S_SG_U hasRole = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
     	PersistentSchool school = hasRole.getSchool();
     	hasRole.buildSchoolAdminTeacher().setTeacher();
     	PersistentMethod p = MethodManager.toValue(rest.getDomMethod(), school);
@@ -52,7 +52,7 @@ public class SecuredTeacherMethodManager {
     @Produces({"application/json"})
     @Path("/update")
     public DomMethod update(@Context SecurityContext sc, RestMethod rest) throws Dwo2Exception {
-    	UserState_HR_R_S_SG_U hasRole = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRole(rest.getRestContext().getDomHasRole());
+    	UserState_HR_R_S_SG_U hasRole = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
     	PersistentSchool school = hasRole.getSchool();
     	hasRole.buildSchoolAdminTeacher().setTeacher();
     	PersistentMethod p = MethodManager.toValue(rest.getDomMethod(), school);
@@ -64,7 +64,7 @@ public class SecuredTeacherMethodManager {
     @Produces({"application/json"})
     @Path("/remove")
     public Boolean remove(@Context SecurityContext sc, RestMethod rest) throws Dwo2Exception {
-    	UserState_HR_R_S_SG_U hasRole = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRole(rest.getRestContext().getDomHasRole());
+    	UserState_HR_R_S_SG_U hasRole = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
     	PersistentSchool school = hasRole.getSchool();
     	hasRole.buildSchoolAdminTeacher().setTeacher();
     	PersistentMethod p = MethodManager.toValue(rest.getDomMethod(), school);
@@ -76,7 +76,7 @@ public class SecuredTeacherMethodManager {
     @Produces({"application/json"})
     @Path("/get")
     public DomMethod get(@Context SecurityContext sc, RestMethod rest) throws Dwo2Exception {
-    	UserState_HR_R_S_SG_U hasRole = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRole(rest.getRestContext().getDomHasRole());
+    	UserState_HR_R_S_SG_U hasRole = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
     	PersistentSchool school = hasRole.getSchool();
     	hasRole.buildSchoolAdminTeacher().setTeacher();
     	PersistentMethod p = MethodManager.toValue(rest.getDomMethod(), school);

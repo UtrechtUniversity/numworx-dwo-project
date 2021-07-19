@@ -459,7 +459,7 @@ public class SecuredUserAccountManager {
         }
 //clear results
         try {            
-            UserDomainAuthorizer.UserState_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName());
+            UserDomainAuthorizer.UserState_U build = AnonDomainAuthorizer.build().submitUser(sc);
             DomContext context = user.getRestContext(); // in de test null
             build.setRealm(context == null ? null : context.getRealm());
             return build.UpdateAccount(user.getDomUserFull());
@@ -487,7 +487,7 @@ public class SecuredUserAccountManager {
         if (u == null) {
             return Boolean.TRUE;
         }
-        UserState_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName());
+        UserState_U state = AnonDomainAuthorizer.build().submitUser(sc);
         PersistentUser user = state.getUser();
         if (user.isSingleSchoolAccount())
         {
@@ -647,7 +647,7 @@ public class SecuredUserAccountManager {
     @Path("linkSaml")
     public Boolean linkSaml(@Context SecurityContext sc, RestSamlUser rest) throws Dwo2Exception
     {
-      UserState_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName());
+      UserState_U state = AnonDomainAuthorizer.build().submitUser(sc);
       PersistentUser user = state.getUser();
       String org = rest.getDomSamlUser().getSamlOrgId();
       String account = rest.getDomSamlUser().getSamlUserId();

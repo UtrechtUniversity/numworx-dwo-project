@@ -113,7 +113,7 @@ public class SecuredDwoAdminSchoolManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
 
-        DwoAdminState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(restSchool.getRestContext().getDomHasRole(), RoleType.ADMIN).buildDwoAdmin();
+        DwoAdminState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(restSchool.getRestContext().getDomHasRole(), RoleType.ADMIN).buildDwoAdmin();
         
         
         
@@ -177,7 +177,7 @@ public class SecuredDwoAdminSchoolManager {
         PersistentHasRole hr = null;
         
         try {
-            UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(school.getRestContext().getDomHasRole(), RoleType.ADMIN);
+            UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(school.getRestContext().getDomHasRole(), RoleType.ADMIN);
             hr = state.getHasRole();
             state.buildDwoAdmin();
         } catch (Dwo2Exception ex) {
@@ -212,7 +212,7 @@ public class SecuredDwoAdminSchoolManager {
     @Path("/getList")
     public List<DomSchool4DwoAdmin> getSchools(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
         PersistentHasRole hr = null;
-        UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN);
+        UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN);
         hr = state.getHasRole();
         state.buildDwoAdmin();
     	
@@ -283,7 +283,7 @@ public class SecuredDwoAdminSchoolManager {
     PersistentHasRole hr = null;
     DomSchoolFull school = restSchool.getDomSchoolFull();
     try {
-        UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(restSchool.getRestContext().getDomHasRole(), RoleType.ADMIN);
+        UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(restSchool.getRestContext().getDomHasRole(), RoleType.ADMIN);
         hr = state.getHasRole();
         state.buildDwoAdmin();
     } catch (Dwo2Exception ex) {
@@ -370,7 +370,7 @@ public class SecuredDwoAdminSchoolManager {
 
         PersistentHasRole hr = null;
         try {
-            UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(restSchool.getRestContext().getDomHasRole(), RoleType.ADMIN);
+            UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(restSchool.getRestContext().getDomHasRole(), RoleType.ADMIN);
             hr = state.getHasRole();
             state.buildDwoAdmin();
        } catch (Dwo2Exception ex) {
@@ -543,7 +543,7 @@ public class SecuredDwoAdminSchoolManager {
         List<DomTeacherAndHasRole> resultList = null;
 
         try {
-            UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(restSchool.getRestContext().getDomHasRole(), RoleType.ADMIN);
+            UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(restSchool.getRestContext().getDomHasRole(), RoleType.ADMIN);
             phr = state.getHasRole();
             state.buildDwoAdmin();
         } catch (Dwo2Exception ex) {
@@ -597,7 +597,7 @@ public class SecuredDwoAdminSchoolManager {
         PersistentHasRole hr = null;
         DomHasRole domHasRole = restHasRole.getDomHasRole();
         try {
-            UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(restHasRole.getRestContext().getDomHasRole(), RoleType.ADMIN);
+            UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(restHasRole.getRestContext().getDomHasRole(), RoleType.ADMIN);
             hr = state.getHasRole();
             state.buildDwoAdmin();
         } catch (Dwo2Exception ex) {
@@ -626,7 +626,7 @@ public class SecuredDwoAdminSchoolManager {
     @Path("/add")
     public DomSchoolFull addSchool(@Context SecurityContext sc, RestSchoolFull rest) throws Dwo2Exception {
       DwoAdminState_HR_R_S_SG_U state = AnonDomainAuthorizer.build()
-          .submitUser(sc.getUserPrincipal().getName())
+          .submitUser(sc)
           .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN)
           .buildDwoAdmin();
 // TODO move to Action:
@@ -658,7 +658,7 @@ public class SecuredDwoAdminSchoolManager {
     @Path("/statistics")
     public DomStatistics getStatistics(@Context SecurityContext sc, RestSchool4DwoAdmin rest) throws Dwo2Exception {
         DwoAdminState_HR_R_S_SG_U state = AnonDomainAuthorizer.build()
-                .submitUser(sc.getUserPrincipal().getName())
+                .submitUser(sc)
                 .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN)
                 .buildDwoAdmin();
    	

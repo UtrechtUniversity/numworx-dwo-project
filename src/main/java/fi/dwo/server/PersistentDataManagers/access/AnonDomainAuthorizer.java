@@ -2,6 +2,9 @@ package fi.dwo.server.PersistentDataManagers.access;
 
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
 import java.util.logging.Logger;
+
+import javax.ws.rs.core.SecurityContext;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginCheck;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -77,6 +80,8 @@ public class AnonDomainAuthorizer {
         UserState_U submitUser(DomUser u) throws Dwo2Exception;
 
         public boolean LoginCheck(DomLoginCheck check) throws Dwo2Exception;
+
+		UserState_U submitUser(SecurityContext sc) throws Dwo2Exception;
     }
 
     public interface PublicContext {

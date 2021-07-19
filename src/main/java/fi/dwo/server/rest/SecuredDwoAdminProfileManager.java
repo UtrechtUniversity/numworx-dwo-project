@@ -41,7 +41,7 @@ public class SecuredDwoAdminProfileManager {
     @Produces({"application/json"})
     @Path("/getList")
     public List<DomDwoProfileFull> getProfiles(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
-        UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN);
+        UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN);
         state.buildDwoAdmin();
         return DwoProfileManager.findEntities().stream()
         		.map(PersistentDwoProfile::buildDomDwoProfileFull)
@@ -103,7 +103,7 @@ public class SecuredDwoAdminProfileManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole hr = null;
-        UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(restDwoProfile.getRestContext().getDomHasRole(), RoleType.ADMIN);
+        UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(restDwoProfile.getRestContext().getDomHasRole(), RoleType.ADMIN);
         hr = state.getHasRole();
         state.buildDwoAdmin();
         DomDwoProfileFull profile = restDwoProfile.getDomDwoProfile() ;
@@ -145,7 +145,7 @@ public class SecuredDwoAdminProfileManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole hr = null;
-        UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(restProfile.getRestContext().getDomHasRole(), RoleType.ADMIN);
+        UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(restProfile.getRestContext().getDomHasRole(), RoleType.ADMIN);
         hr = state.getHasRole();
         state.buildDwoAdmin();
 

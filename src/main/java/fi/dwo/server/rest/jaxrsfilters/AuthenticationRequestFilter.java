@@ -3,9 +3,12 @@
  */
 package fi.dwo.server.rest.jaxrsfilters;
 
+import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
@@ -153,15 +156,16 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
         	if (uid != null & ! u.getId().equals(uid))
         		return null;
         	Object sgid = request.getAttribute(SecFilter.SCHOOLGROUP_ID);
-        	PersistentSchoolGroup sg = null;
-        	if (sgid != null)
-        		sg = SchoolGroupManager.findEntity( (Long) sgid);
-        	if (sg != null) {
-        		DwoUserPrincipal du = new DwoUserPrincipal(u, sg);
+        	if (sgid != null) {
+        		PersistentHasRolePK pk = new PersistentHasRolePK(u.getId(), (Long)sgid);
+        		PersistentHasRole hr = HasRoleManager.findEntity(pk);
+        		if (hr == null) return null;
+        		DwoUserPrincipal du = new DwoUserPrincipal(hr);
         		sc = new DwoUserSecurityContext(du, secCtx.isSecure(), SecurityContext.BASIC_AUTH, du.getRole());
-        	} else
+        	} else {
         		sc = new DwoUserSecurityContext(new DwoUserPrincipal(u), secCtx.isSecure(), SecurityContext.BASIC_AUTH);
-            setUsername(sc);
+        	}
+        	setUsername(sc);
             return sc;
         }
         //else error

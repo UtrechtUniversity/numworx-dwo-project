@@ -32,7 +32,7 @@ public class SecuredDwoAdminCourseManager {
     PersistenceId id = rest.getDomCourse().getDwoProfileId();
 
     DwoAdminState_HR_P_R_S_SG_U state =
-        AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+        AnonDomainAuthorizer.build().submitUser(sc)
             .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN).buildDwoAdmin()
             .addDwoProfile(new DomDwoProfileId(id));
 
@@ -45,7 +45,7 @@ public class SecuredDwoAdminCourseManager {
   public DomCourseFull add(@Context SecurityContext sc, RestCourseFull rest) throws Dwo2Exception {
     PersistenceId id = rest.getDomCourse().getDwoProfileId();
     DwoAdminState_HR_P_R_S_SG_U state =
-        AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+        AnonDomainAuthorizer.build().submitUser(sc)
             .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN).buildDwoAdmin()
             .addDwoProfile(new DomDwoProfileId(id));
     DomCourseFull course = state.add(rest.getDomCourse());
@@ -57,7 +57,7 @@ public class SecuredDwoAdminCourseManager {
   @Produces({"application/json"})
   public Boolean remove(@Context SecurityContext sc, RestCourse rest) throws Dwo2Exception {
     DwoAdminState_HR_P_R_S_SG_U state =
-        AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+        AnonDomainAuthorizer.build().submitUser(sc)
             .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN).buildDwoAdmin()
             .addDwoProfile(rest.getDomDwoProfile());
     return state.addCourse(rest.getDomCourse()).removeCourse();

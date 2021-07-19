@@ -36,18 +36,21 @@ public class SecFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		HttpServletRequest req  = (HttpServletRequest) request;
-		String path = req.getRequestURI();
-		int start = path.indexOf("/sec:1-");
-		if (start >=0) {
-			int end = path.indexOf("/", start+3);
-			if (end < 0) end = path.length();
-			path = path.substring(start, end);
-			String[] split = path.split("-");
-			Long userid = Long.valueOf(split[1]);
-			Long sgid = Long.valueOf(split[2]);
-			request.setAttribute(USER_ID, userid);
-			request.setAttribute(SCHOOLGROUP_ID, sgid);
+		try {
+			HttpServletRequest req  = (HttpServletRequest) request;
+			String path = req.getRequestURI();
+			int start = path.indexOf("/sec:1-");
+			if (start >=0) {
+				int end = path.indexOf("/", start+3);
+				if (end < 0) end = path.length();
+				path = path.substring(start, end);
+				String[] split = path.split("-");
+				Long userid = Long.valueOf(split[1]);
+				Long sgid = Long.valueOf(split[2]);
+				request.setAttribute(USER_ID, userid);
+				request.setAttribute(SCHOOLGROUP_ID, sgid);
+			}
+		} catch (Exception e) {
 		}
 		chain.doFilter(request, response);
 	}

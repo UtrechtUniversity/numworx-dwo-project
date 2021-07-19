@@ -59,7 +59,7 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
     @Path("remove")
     @Produces({"application/json"})
     public Boolean remove(@Context SecurityContext sc, RestCourse rest) throws Dwo2Exception {
-      SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
           .setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher();
  
       Long id = MySQLPersistenceId.getNativeId(rest.getDomCourse());
@@ -72,7 +72,7 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
     @Path("trash")
     @Produces({"application/json"})
     public Boolean trash(@Context SecurityContext sc, RestCourse rest) throws Dwo2Exception {
-      SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
           .setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher();
  
       Long id = MySQLPersistenceId.getNativeId(rest.getDomCourse());
@@ -85,7 +85,7 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
     @Path("update")
     @Produces({"application/json"})
     public DomCourseFull update(@Context SecurityContext sc, RestCourseFull rest) throws Dwo2Exception {
-      UserState_HR_R_S_SG_U withrole = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      UserState_HR_R_S_SG_U withrole = AnonDomainAuthorizer.build().submitUser(sc)
           .setHasRole(rest.getRestContext().getDomHasRole());
       PersistentSchool school = withrole.getSchool();
       SchoolAdminTeacherState_HR_R_S_SG_U state = withrole.buildSchoolAdminTeacher();
@@ -231,7 +231,7 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
     @Path("add")
     @Produces({"application/json"})
     public DomCourseFull add(@Context SecurityContext sc, RestCourseFull rest) throws Dwo2Exception {
-      SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
           .setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher();
 
       

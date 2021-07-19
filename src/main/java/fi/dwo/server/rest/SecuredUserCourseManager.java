@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
+import java.security.Principal;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
@@ -64,6 +65,7 @@ import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
+import fi.dwo.server.rest.jaxrsfilters.DwoUserPrincipal;
 import fi.dwo.server.rest.util.CourseBuilder;
 
 /**
@@ -190,7 +192,7 @@ public class SecuredUserCourseManager {
     @Path("/getTrashedSchool")
     @Produces({MediaType.APPLICATION_JSON})
     public List<DomCourseStudent> getTrashedCourse(@Context SecurityContext sc, RestDwoProfile rest, @Context UriInfo info) throws Dwo2Exception {
-    	UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRole(rest.getRestContext().getDomHasRole());
+    	UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
     	PersistentDwoProfile profile = DwoProfileManager.findEntity(MySQLPersistenceId.getNativeId(rest.getDomDwoProfile()));
     	List<PersistentCourse> list = CourseManager.findTrashedChildrenOf(profile, state.getSchool());
     	return list.stream().map(course -> {
@@ -298,6 +300,10 @@ public class SecuredUserCourseManager {
 	private static PersistentUser getUserFromContext(SecurityContext sc) {
 		PersistentUser user = null;
 		try {
+			Principal principal = sc.getUserPrincipal();
+			if (principal instanceof DwoUserPrincipal)
+				return ((DwoUserPrincipal) principal).getUser();
+			
 		    user = UserManager.findByUserName(sc.getUserPrincipal().getName());
 		    LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
 		}
@@ -418,7 +424,7 @@ public class SecuredUserCourseManager {
     @Path("/getTrashedChildren")
     @Produces({"application/json"})
     public List<DomCourseStudent> getTrashedCourses(@Context SecurityContext sc, RestCourse rest, @Context UriInfo info) throws Dwo2Exception {
-    	SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher();
+    	SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher();
     	Long courseId = MySQLPersistenceId.getNativeId(rest.getDomCourse());
     	PersistentCourse c = CourseManager.findEntity(courseId);
 // TODO Security: profile match, school match, ACL?

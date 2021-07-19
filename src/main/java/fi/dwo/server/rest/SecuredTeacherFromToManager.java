@@ -47,7 +47,7 @@ public class SecuredTeacherFromToManager {
     @Path("get")
     @Produces({"application/json"})
     public DomSchoolFromTo get(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
-      SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
           .setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher();
       DomSchoolFromTo result = new DomSchoolFromTo();
       PersistentHasRolePK pk = MySQLPersistenceId.getNativeId(rest.getRestContext().getDomHasRole());
@@ -75,7 +75,7 @@ public class SecuredTeacherFromToManager {
     @Path("set")
     @Produces({"application/json"})
     public Boolean  set(@Context SecurityContext sc, RestSchoolFromTo rest) throws Dwo2Exception {
-      SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
           .setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher();
 
       PersistentHasRolePK pk = MySQLPersistenceId.getNativeId(rest.getRestContext().getDomHasRole());
@@ -106,7 +106,7 @@ public class SecuredTeacherFromToManager {
     @Path("getExports")
     @Produces({"application/json"})
     public List<DomSchoolFrom> getExports(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
-      SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
           .setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher();
     
       List<PersistentSchool> list = SchoolManager.findEntities();
@@ -120,7 +120,7 @@ public class SecuredTeacherFromToManager {
     @Path("getCourses")
     @Produces({"application/json"})
     public List<DomCourse> getCourses(@Context SecurityContext sc, RestSchoolAndProfile rest) throws PersistenceException, Dwo2Exception {
-      SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
           .setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher();
       //TeacherState_HR_P_R_S_SG_U teacher = state.setTeacher().addProfile(rest.getDomSchoolAndProfile().getDomDwoProfile());
       

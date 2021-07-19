@@ -24,7 +24,7 @@ public class SecuredStudentMethodManager {
     @Produces({"application/json"})
     @Path("/get")
     public DomMethod get(@Context SecurityContext sc, RestMethod rest) throws Dwo2Exception {
-    	UserState_HR_R_S_SG_U hasRole = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRole(rest.getRestContext().getDomHasRole());
+    	UserState_HR_R_S_SG_U hasRole = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
     	PersistentSchool school = hasRole.getSchool();
     	hasRole.buildStudent();
     	PersistentMethod p = MethodManager.toValue(rest.getDomMethod(), school);

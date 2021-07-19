@@ -71,7 +71,7 @@ public class SecuredStudentSchoolClassManager {
     @Produces({"application/json"})
     @Path("/getActive")
     public DomSchoolClass getActiveSchoolClass(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
-      UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
       .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.STUDENT);
       PersistentHasRole phr = state.getHasRole();
       PersistentSchool school = state.getSchool();
@@ -278,7 +278,7 @@ public class SecuredStudentSchoolClassManager {
     @Produces({"application/json"})
     @Path("/getList")
     public List<DomSchoolClass> getStudentsSchoolClasses(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
-      UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
       .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.STUDENT);
       PersistentHasRole phr = state.getHasRole();
       List<PersistentStudentOfClass> tocList = StudentOfClassManager.findEntities(phr.getPersistentHasRolePK());
@@ -333,7 +333,7 @@ public class SecuredStudentSchoolClassManager {
     @Produces({"application/json"})
     @Path("/getSchoolsList")
     public List<DomSchoolClass> getSchoolsClasses(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
-      UserState_HR_R_S_SG_U ustate = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      UserState_HR_R_S_SG_U ustate = AnonDomainAuthorizer.build().submitUser(sc)
       .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.STUDENT);
       PersistentSchool school = ustate.getSchool();
       List<PersistentSchoolClass> scList = SchoolClassManager.findEntities(school);
