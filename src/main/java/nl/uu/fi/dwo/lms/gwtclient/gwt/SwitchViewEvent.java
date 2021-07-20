@@ -99,7 +99,7 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
     private Map<String,String> userState;
 
     public static Type<SwitchViewEventHandler> TYPE = new Type<SwitchViewEventHandler>();
-    public static SelectedView eventValue;
+    private SelectedView eventValue;
 
     public SwitchViewEvent(SelectedView aState) {
         this.setEventValue(aState);

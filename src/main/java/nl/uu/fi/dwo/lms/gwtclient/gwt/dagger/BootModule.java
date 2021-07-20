@@ -14,6 +14,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.OAuthManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentStudentModelManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
+import fi.dwo.gwt.lib.rest.ui.IdleDetect;
 import nl.uu.fi.dwo.ideas.client.IdeasClient;
 import nl.uu.fi.dwo.ideas.client.IdeasIF;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactory;
@@ -34,6 +35,10 @@ abstract class BootModule {
       return new SimpleEventBus();
     }
   
+    @Singleton @Provides static IdleDetect idle(SimpleEventBus bus) {
+    	return new IdleDetect(bus);
+    }
+    
 	@Singleton @Provides static ResettableEventBus resettableEventBus(SimpleEventBus bus) {
 		return new ResettableEventBus(bus);
 	}

@@ -49,8 +49,6 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @Singleton
 public class ModulesPresenter implements SwitchViewEventHandler {
 
-    private final static boolean IFRAME = true;
-    
     private static final Logger LOG = Logger.getLogger(ModulesPresenter.class.getName());
 
     private static final String SHOWMAINNAV = "showMainNav";
@@ -72,6 +70,8 @@ public class ModulesPresenter implements SwitchViewEventHandler {
     private DwoGlobalVars dwoGlobalVars;
 
     private MainPresenter.Display mainView;
+
+	private boolean idleOn = true;
 
     private static final boolean tablet;
     static {
@@ -123,6 +123,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
           }
 
           LOG.info("switch to modules view " + p.getValue());
+          idleOn = false;
           eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.MODULESVIEW));
           mainView.unsetIdleTimeout();
           if(tablet) {
@@ -157,7 +158,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         u.setProtocol(Location.getProtocol());
         u.setHost(Location.getHost());
         u.setHash("#guest:");
-        if (IFRAME)
+        if (true)
           u.setParameter("header", "none");
         String base = Location.getParameter("base");
         if(base != null && !base.isEmpty() && legal(base)) {
@@ -175,14 +176,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         }
         String string = u.buildString();
         LOG.info("open URL " + string);
-        if(IFRAME)
-        {
-          view.openUrl(string);
-        }
-        else {
-          controller.get().setSession(false); // LEAVING.....
-          Location.replace(string);
-        }
+        view.openUrl(string);
         init =  Promises.resolved(string);
        }
       }
@@ -198,7 +192,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
      u.setProtocol(Location.getProtocol());
      u.setHost(Location.getHost());
      u.setParameter("a",Base64.btoa(token)); // User Auth Token
-     if(IFRAME)
+     if(true)
        u.setParameter( "header","none");
      //u.setParameter("dwo_env","test");
      String base = Location.getParameter("base");
@@ -213,14 +207,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
      u.setParameter("locale",locale);
      String string = u.buildString();
      LOG.info("open URL " + string);
-     if(IFRAME)
-     {
-       view.openUrl(string);
-     }
-     else {
-       controller.get().setSession(false); // LEAVING.....
-       Location.replace(string);
-     }
+     view.openUrl(string);
      return Promises.resolved(string);
     }
     
@@ -261,6 +248,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         		|| select(SelectedView.PERSONS,message) 
         		|| select(SelectedView.SCHOOLCLASSES,message) 
         		|| select(SelectedView.ORGANISATION, message)) {
+          idleOn = true;
           mainView.setIdleTimeout(MainPresenter.IDLE);
         } else if (select(SelectedView.TRAIL,message)) {
         } 
@@ -279,12 +267,17 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         		eventBus.fireEvent(new LoginEvent(State.LOGOUT));
         } else if ("EXAM".equals(message)) {
           controller.get().setSession(false);
-        } else if (select(SelectedView.MAYBELOGOUT, message)) {
+        } else if (isVisible() && select(SelectedView.MAYBELOGOUT, message)) {
           
         }
     }
 
-    private boolean select(SelectedView select, String message) {
+// true if modules visible.    
+    private boolean isVisible() {
+		return !idleOn;
+	}
+
+	private boolean select(SelectedView select, String message) {
       if(select.name().equals(message)) {
         eventBus.fireEvent(new SwitchViewEvent(select));
         return true;
@@ -297,6 +290,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
       SelectedView select = switchViewEvent.getEventValue();
       switch(select) {
         case ACCOUNT:
+          idleOn = true;
           mainView.setIdleTimeout(MainPresenter.IDLE);
           break;
         case GOTO:

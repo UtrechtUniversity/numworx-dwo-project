@@ -31,7 +31,7 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
   @Override
   public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
       Display mainView = viewFactory.getMainView();
-      if (SwitchViewEvent.eventValue != SelectedView.LOGIN
+      if (switchViewEvent.getEventValue() != SelectedView.LOGIN
               && (dwoGlobalVars.getActiveSchoolRoleAndClass() == null
               || dwoGlobalVars.getActiveSchoolRoleAndClass().getRole() == null
               || !dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name()))) {
@@ -41,7 +41,7 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
           presenterFactory.getAccountPresenter().init();
           mainView.showAccountView();
       } else {
-          if (SwitchViewEvent.eventValue != SelectedView.LOGIN) {
+          if (switchViewEvent.getEventValue() != SelectedView.LOGIN) {
               mainView.setSchoolName(dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getSchoolName());
               mainView.setPresentationName(dwoGlobalVars.getCurrentUser().getDisplayName());
           }

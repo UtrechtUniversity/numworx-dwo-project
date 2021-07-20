@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.web.bindery.event.shared.EventBus;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
@@ -17,6 +18,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
@@ -51,6 +53,7 @@ public class StudentResultsWidget extends Composite {
 	@UiField Button btn;
 	@UiField DockLayoutPanel east;
 	@UiField Label filter;
+	@UiField CheckBox viewBtn;
 
 	void setPerc(DomStudentModelScore<?> s) {
 		Widget sh = s.getChildren() == null
@@ -76,12 +79,24 @@ public class StudentResultsWidget extends Composite {
 		filterBtn = true;
 		bus.fireEventFromSource(ev, this);
 	}
+	
+	@UiHandler("viewBtn") void viewChange(ValueChangeEvent<Boolean> ev) {
+		bus.fireEventFromSource(ev, this);
+	}
+	
 
 	public void setFilter(Map<String, Map<String, Set<Integer>>> filter2, DomMethod method) {
+		viewBtn.setText(method.getMethod());
+		if (method.getId() == null) viewBtn.setValue(Boolean.FALSE);
+		viewBtn.setEnabled(method.getId() != null);
 		filter.setText(FilterUtil.setFilter(filter2, method));
 	}
 	
 	public boolean isFilter() {
 		return filterBtn;
+	}
+	
+	public boolean isMethod() {
+		return viewBtn.getValue().booleanValue();
 	}
 }
