@@ -43,6 +43,10 @@
         <filter-name>xss</filter-name>
         <filter-class>fi.dwo.server.xss.XSSFilter</filter-class>
     </filter>
+	<filter>
+		<filter-name>sec</filter-name>
+		<filter-class>fi.dwo.server.xss.SecFilter</filter-class>
+	</filter>
     <filter>
     	<filter-name>gwtclientwrap</filter-name>
     	<filter-class>fi.dwo.server.db.GwtClientWrap</filter-class>
@@ -50,10 +54,11 @@
     <filter-mapping>
         <filter-name>xss</filter-name>
         <url-pattern>/dwo/*</url-pattern>
+        <url-pattern>/gwtclient/gwtclient/*</url-pattern>
     </filter-mapping>
     <filter-mapping>
-        <filter-name>xss</filter-name>
-        <url-pattern>/gwtclient/gwtclient/*</url-pattern>
+    	<filter-name>sec</filter-name>
+    	<url-pattern>/dwo/rest/*</url-pattern>
     </filter-mapping>
 	<filter-mapping>
 		<filter-name>gwtclientwrap</filter-name>
