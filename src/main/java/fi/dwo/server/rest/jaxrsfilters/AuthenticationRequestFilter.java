@@ -58,6 +58,7 @@ import nl.uu.fi.dwo.rest.security.TOTP;
 public class AuthenticationRequestFilter implements ContainerRequestFilter, SigningKeyResolver {
 
     static final Logger LOG = Logger.getLogger(AuthenticationRequestFilter.class.getName());
+    static final String BEARER = "BEARER";
 	
 	@Context HttpServletRequest request;
 	
@@ -153,7 +154,7 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
         if (u != null) {
         	SecurityContext sc;
         	Object uid = request.getAttribute(SecFilter.USER_ID);
-        	if (uid != null & ! u.getId().equals(uid))
+        	if (uid != null && ! u.getId().equals(uid))
         		return null;
         	Object sgid = request.getAttribute(SecFilter.SCHOOLGROUP_ID);
         	if (sgid != null) {
@@ -194,7 +195,20 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
         RoleType type = RoleType.valueOf(role);
         PersistentUser u = findByUsername(username);
         if (u == null) return null;
-        SecurityContext sc = new DwoUserSecurityContext(new DwoUserPrincipal(u), ctx.isSecure(), "BEARER", type);
+    	SecurityContext sc;
+    	Object uid = request.getAttribute(SecFilter.USER_ID);
+    	if (uid != null && ! u.getId().equals(uid))
+    		return null;
+    	Object sgid = request.getAttribute(SecFilter.SCHOOLGROUP_ID);
+    	if (sgid != null) {
+    		PersistentHasRolePK pk = new PersistentHasRolePK(u.getId(), (Long)sgid);
+    		PersistentHasRole hr = HasRoleManager.findEntity(pk);
+    		if (hr == null) return null;
+    		DwoUserPrincipal du = new DwoUserPrincipal(hr);
+    		sc = new DwoUserSecurityContext(du, ctx.isSecure(), BEARER, du.getRole());
+    	} else {
+    		sc = new DwoUserSecurityContext(new DwoUserPrincipal(u), ctx.isSecure(), BEARER, type);
+    	}
         setUsername(sc);
         return sc;
     } catch (Exception e) {
