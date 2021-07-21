@@ -26,4 +26,5 @@ class JsTeacherStudentModelDisplay {
 	static native String getDescriptionId();
 	static native void setTitle(String title);
 	native static void setModelSelect(String id);
+	static native boolean isMethod();
 }

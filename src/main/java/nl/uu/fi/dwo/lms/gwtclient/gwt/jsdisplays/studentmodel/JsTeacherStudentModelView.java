@@ -83,5 +83,10 @@ public class JsTeacherStudentModelView extends AbstractStudentModelView implemen
 	public void setModelSelect(String id) {
 		JsTeacherStudentModelDisplay.setModelSelect(id);
 	}
+
+	@Override
+	public boolean isMethod() {
+		return JsTeacherStudentModelDisplay.isMethod();
+	}
 	
 }

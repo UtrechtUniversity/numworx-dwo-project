@@ -8,13 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -25,13 +24,13 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.web.bindery.event.shared.EventBus;
 
-import dagger.Lazy;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.studentmodel.JsTeacherStudentModelView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsutil.ValueSortedMap;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionPresenter;
@@ -64,6 +63,7 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		void setTitle(String title);
 		void setModelSelect(String id);
 		void setEmptyTreeMessage();
+		boolean isMethod();
     }
     
     @Inject void setView(JsTeacherStudentModelView view) {
@@ -153,7 +153,11 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		view.setLoadingTreeMessage();
 		LOG.info("select Model " + id);
 		PersistenceId pid = new PersistenceId(id);
-		this.currentModel = service.getStudentModel(pid).then(this::studentModel, FAILURE);
+		currentModel = service.getStudentModel(pid);
+		if (!view.isMethod())
+			currentModel = currentModel.then(this::studentModel, FAILURE);
+		else
+			currentModel = currentModel.then(this::studentModelMethod, FAILURE);
 	}
 	
 	Promise<DomStudentModelContext> studentModel(Promise<DomStudentModelContext> p) {
@@ -175,6 +179,81 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		});	
 	}
 		
+	Promise<DomStudentModelContext> studentModelMethod(Promise<DomStudentModelContext> p) {
+		DomStudentModelStructure struc = p.getValue().getModelStructure();
+		if (struc.getActiveMethod() == null) return studentModel(p);
+		return service.getActiveMethod(struc.getActiveMethod()).then(m -> {
+			DomMethod method = m.getValue();
+			String t = method.getMethod();
+			Map<String, Set<Integer>> mf = filter.getOrDefault(method.key(), Collections.emptyMap());
+			DomTree<String> tree = new DomTree<>(t);
+			Map<String, DomTree<String>> map = new LinkedHashMap<>(), all = new HashMap<>();
+			tree.setChildren(map);
+			int bsize = method.books.size();
+			for(int i = 0; i < bsize; i++) {
+				String book = method.books.get(i);
+				if (! filter.isEmpty() && ! mf.containsKey(book) ) continue;
+				Set<Integer> mc = mf.getOrDefault(book, Collections.emptySet());
+				DomTree<String> tbook = new DomTree<>(book);
+				map.put(method.key() + "-" + book, tbook);
+				Map<String, DomTree<String>> bmap = new LinkedHashMap<>();
+				tbook.setChildren(bmap);
+				List<String> chapters = method.chapters.get(i);
+				int csize = chapters.size();
+				for (int j = 0; j < csize; j++) {
+					if (!mc.isEmpty() && !mc.contains(Integer.valueOf(j+1))) continue;
+					String chapter = chapters.get(j);
+					DomTree<String> ctree = new DomTree<>(chapter);
+					ctree.setChildren(new ValueSortedMap<String, DomTree<String>>(this::methodOrder));
+					bmap.put(method.key() + "-" + book + "-" + (j+1), ctree);
+					all. put(method.key() + "-" + book + "-" + (j+1), ctree);
+				}
+			}
+			insertChildren(all, struc.getCategories());
+			view.showTree(tree);
+			view.setTitle(FilterUtil.setFilter(filter, m.getValue()));
+			return p;
+		});
+	}
+	
+	int methodOrder(DomTree<String> a, DomTree<String> b) {
+		String as = a.getObject();
+		String bs = b.getObject();
+		boolean ab = as.startsWith("W:");
+		boolean bb = bs.startsWith("W:");
+		if (ab && !bb) return -1;
+		if (bb && !ab) return +1;
+		return as.compareTo(bs);
+	}
+	
+	
+	private void insertChildren(Map<String, DomTree<String>> all, List<DomStudentModelCategory> categories) {
+		for(DomStudentModelCategory cat: categories) {
+			insertChildrenObj(all, cat.getObjectives());
+		}	
+	}
+
+	private void insertChildrenObj(Map<String, DomTree<String>> all, List<DomStudentModelObj> objectives) {
+		for (DomStudentModelObj obj: objectives) {
+			if (obj.getObjectives() == null) { // leave
+				Map<String, Map<String, Set<Integer>>> methods = obj.getInfo().getMethods();
+				methods.forEach(
+						(key, books) -> {
+							books.forEach( (book, chapters) -> chapters.forEach(chap -> {
+								String item = key + "-" + book + "-" + chap;
+								all.computeIfPresent(item, (k, v) -> { 
+									DomTree<String> vv = new DomTree<>(getTitle(obj.getInfo())); vv.setChildren(null);
+									v.getChildren().put(obj.getInfo().getId(), vv);							
+								return v;});
+							}));});
+						
+							
+			} else {
+				insertChildrenObj(all, obj.getObjectives());
+			}}
+		}
+		
+
 	private Map<String, DomTree<String>> children(List<DomStudentModelObj> objectives, DomMethod method) {
 		if (objectives == null) 
 			return null;
@@ -288,10 +367,21 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		});		
 	}
 
+	@JsMethod
+	public void onMethod(boolean value) {
+		LOG.info("on method " + value);
+		if (!value)
+			currentModel = currentModel.then(this::studentModel, FAILURE);
+		else
+			currentModel = currentModel.then(this::studentModelMethod, FAILURE);
+		
+	}
+	
 	@Override
 	public void onSelection(SelectionEvent<TreeItem> event) {
 		String id = (String) event.getSelectedItem().getUserObject();
-		LOG.info("on selection " + id);		
+		LOG.info("on selection " + id);
+		if (id.startsWith(String.valueOf(DomMethod.key(currentModel.getValue().getModelStructure().getActiveMethod())))) return;
 		DomStudentModelContextInfo info = new DomStudentModelContextInfo();
 		info.setId(id);
 		currentModel.then( p -> 
