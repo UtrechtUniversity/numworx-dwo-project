@@ -6,6 +6,8 @@ import java.security.Key;
 import java.util.Arrays;
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.ws.rs.core.SecurityContext;
 
 import org.junit.After;
@@ -55,6 +57,12 @@ public class AuthenticationTest {
       keyuse++;
       return key;
     }
+
+	@Override
+	protected
+	Object getAttribute(String key) {
+		return null;
+	}
     
   }
   

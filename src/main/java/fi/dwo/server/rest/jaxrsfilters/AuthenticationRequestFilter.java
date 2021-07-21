@@ -153,10 +153,10 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
         PersistentUser u = UserManager.login(authFields[0], authFields[1]);
         if (u != null) {
         	SecurityContext sc;
-        	Object uid = request.getAttribute(SecFilter.USER_ID);
+        	Object uid = getAttribute(SecFilter.USER_ID);
         	if (uid != null && ! u.getId().equals(uid))
         		return null;
-        	Object sgid = request.getAttribute(SecFilter.SCHOOLGROUP_ID);
+        	Object sgid = getAttribute(SecFilter.SCHOOLGROUP_ID);
         	if (sgid != null) {
         		PersistentHasRolePK pk = new PersistentHasRolePK(u.getId(), (Long)sgid);
         		PersistentHasRole hr = HasRoleManager.findEntity(pk);
@@ -186,6 +186,11 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
 
 	}
 
+	protected Object getAttribute(String key) {
+		return request.getAttribute(key);
+	}
+	
+	
 	public SecurityContext validateJWTToken(String token, SecurityContext ctx) {	  
 	  try {
         JwtParser parser = Jwts.parser().setSigningKeyResolver(this);
@@ -196,10 +201,10 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
         PersistentUser u = findByUsername(username);
         if (u == null) return null;
     	SecurityContext sc;
-    	Object uid = request.getAttribute(SecFilter.USER_ID);
+    	Object uid = getAttribute(SecFilter.USER_ID);
     	if (uid != null && ! u.getId().equals(uid))
     		return null;
-    	Object sgid = request.getAttribute(SecFilter.SCHOOLGROUP_ID);
+    	Object sgid = getAttribute(SecFilter.SCHOOLGROUP_ID);
     	if (sgid != null) {
     		PersistentHasRolePK pk = new PersistentHasRolePK(u.getId(), (Long)sgid);
     		PersistentHasRole hr = HasRoleManager.findEntity(pk);

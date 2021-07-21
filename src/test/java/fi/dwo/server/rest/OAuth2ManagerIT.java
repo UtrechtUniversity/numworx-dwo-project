@@ -68,7 +68,12 @@ public class OAuth2ManagerIT {
     DomToken token = (DomToken) response.getEntity();
     assertNotNull(token);
     assertNotNull(token.getAccess_token());
-    AuthenticationRequestFilter filter = new AuthenticationRequestFilter();
+    AuthenticationRequestFilter filter = new AuthenticationRequestFilter() {
+
+		@Override
+		protected Object getAttribute(String key) {
+			return null;
+		} } ;
     SecurityContext ctx = filter.validateJWTToken(token.getAccess_token(), sc);
     assertNotNull(ctx);
     assertEquals("user01", ctx.getUserPrincipal().getName());
