@@ -17,6 +17,7 @@ import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
@@ -38,6 +39,7 @@ import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentModelOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
@@ -751,6 +753,14 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
 
         if (schoolClass.getSchoolID().equals(school.getSchoolID())) {
             try {
+            	// loop student models in class
+            	List<PersistentStudentModelOfClass> ofClass = StudentModelOfClassManager.findEntities(schoolClass);
+                for( PersistentStudentModelOfClass item: ofClass) {
+              	  try {
+      				StudentModelOfClassManager.destroy(item.getId()); // not fatal
+              	  } catch (PersistenceException e) {
+              	  }
+                }
                 //Loop students in class
                 List<PersistentStudentOfClass> studentList = StudentOfClassManager.findEntities(schoolClass);
                 for (PersistentStudentOfClass t : studentList) {

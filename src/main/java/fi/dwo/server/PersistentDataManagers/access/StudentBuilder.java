@@ -229,6 +229,7 @@ class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U
         for(PersistentStudentModelOfClass item: p4Class) {
         	Long id = item.getId().getModelID();
         	PersistentStudentModelContext context = StudentModelContextManager.findEntity(id);
+        	if (context == null) continue; // id is verwijdert, komt voor
         	DomStudentModelContext r = context.buildDomStudentModelContext();
         	DomStudentModelContext4Student rr = new DomStudentModelContext4Student(r.getId());
         	rr.setModelStructure(r.getModelStructure());
