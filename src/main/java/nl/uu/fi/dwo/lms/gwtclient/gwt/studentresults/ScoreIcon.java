@@ -22,7 +22,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
  * @author peterboon
  *
  */
-public class ScoreIcon extends ResizeComposite {
+public class ScoreIcon extends ResizeComposite implements HasText {
 
 	private static ScoreIconUiBinder uiBinder = GWT.create(ScoreIconUiBinder.class);
 	private static final float WIDTH = 100f;
@@ -83,6 +83,7 @@ public class ScoreIcon extends ResizeComposite {
 		image.removeFromParent();
 	}
 
+	@Override
 	public void setText(String text) {
 		title.setText(text);
 	}
@@ -103,5 +104,10 @@ public class ScoreIcon extends ResizeComposite {
 
 	public Widget imageOnly() {
 		return image;
+	}
+
+	@Override
+	public String getText() {
+		return title.getText();
 	}
 }

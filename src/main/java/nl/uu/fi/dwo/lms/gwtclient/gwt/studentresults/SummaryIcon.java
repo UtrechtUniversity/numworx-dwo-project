@@ -14,6 +14,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
@@ -24,7 +25,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
  * @author peterboon
  *
  */
-public class SummaryIcon extends ResizeComposite {
+public class SummaryIcon extends ResizeComposite implements HasText {
 
 	private static SummaryIconUiBinder uiBinder = GWT.create(SummaryIconUiBinder.class);
 
@@ -95,6 +96,7 @@ public class SummaryIcon extends ResizeComposite {
 		paint();
 	}
 
+	@Override
 	public void setText(String text) {
 		title.setText(text);
 	}
@@ -123,5 +125,10 @@ public class SummaryIcon extends ResizeComposite {
 	
 	public Widget imageOnly() {
 		return image;
+	}
+
+	@Override
+	public String getText() {
+		return title.getText();
 	}
 }

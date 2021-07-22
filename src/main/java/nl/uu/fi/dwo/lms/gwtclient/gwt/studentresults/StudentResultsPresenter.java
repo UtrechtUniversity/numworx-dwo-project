@@ -25,6 +25,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
+import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
@@ -193,17 +194,21 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	private void insertMethodTree(DomStudentModelContext4Student item, DomMethod method) {
 		Tree tree = widget.get().tree;
 		tree.removeItems();
-//		DomStudentModelStructure structure = item.getModelStructure();
 		String title = method.getMethod();
+		Map<String, Set<Integer>> bookfilter = filter.getOrDefault(method.key(), Collections.emptyMap());
 		Widget html = Util.summaryItem(title, NULLSCORE, 0);
 		TreeItem ti = tree.addItem(html);
 		List<String> books = method.books;
 		for(int i = 0; i < books.size(); i++) {
-			html = Util.summaryItem(books.get(i), NULLSCORE, 1);
+			String booktitle = books.get(i);
+			if (! filter.isEmpty() && !bookfilter.containsKey(booktitle)) continue;
+			Set<Integer> chapterfilter = bookfilter.getOrDefault(booktitle, Collections.emptySet());
+			html = Util.summaryItem(booktitle, NULLSCORE, 1);
 			TreeItem bi = ti.addItem(html);
 			bi.setUserObject(Integer.valueOf(i));
 			List<String> chapters = method.chapters.get(i);
 			for(int j = 0; j < chapters.size(); j++) {
+				if ( !chapterfilter.isEmpty() && !chapterfilter.contains(Integer.valueOf(j+1))) continue;
 				html = Util.summaryItem(chapters.get(j), NULLSCORE, 2);
 				TreeItem ci = bi.addItem(html);
 				ci.setUserObject(new int[] {i, j});
@@ -553,9 +558,20 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			List<DomStudentModelObjectiveScore> objscores = icatscores.hasNext() ? icatscores.next().getObjectives() : Collections.emptyList();
 			addToMethodTree(item, objs, objscores, method);
 		}
+		scoreMap.forEach( (key, value) -> 
+		{	String t = ((HasText) key.getWidget()).getText();
+			int i = key.getParentItem() == null ? 0 : 1;
+ 			key.setWidget(Util.summaryItem(t, value, i));
+		}
+		);
+		scoreMap.clear();
 		
 	}
 
+	Map<TreeItem, DomStudentModelScore<?>> scoreMap = new HashMap<>();
+	
+	
+	
 	private void addToMethodTree(TreeItem item, List<DomStudentModelObj> objs, List<DomStudentModelObjectiveScore> objscores, DomMethod method) {
 		Iterator<DomStudentModelObj> iobjs = objs.iterator();
 		Iterator<DomStudentModelObjectiveScore> iobjscores = objscores.iterator();
@@ -592,12 +608,66 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			TreeItem bookitem = item.getChild(i);
 			String titlebook = method.books.get(i);
 			if (titlebook.equals(book)) {
-				TreeItem chapitem = bookitem.getChild(chapter.intValue()-1);
-				chapitem.setUserObject(score);
-				chapitem.addItem(scoreItem);
+				int chaptercount = bookitem.getChildCount();
+				for (int j = 0; j < chaptercount; j++) {
+					TreeItem chapitem = bookitem.getChild(j);
+					int chapnr = ((int[])chapitem.getUserObject())[1];
+					if (chapnr+1 == chapter.intValue()) {
+						insertMethodTree(chapitem, scoreItem).setUserObject(score);
+						insertMethodMap(chapitem, score);
+						break;
+					}
+				}
+				break;
+			}
+		}	
+	}
+
+	private void insertMethodMap(TreeItem chapitem, DomStudentModelScore<?> score) {
+		DomStudentModelScore<?> summary = scoreMap.computeIfAbsent(chapitem, k -> {
+			DomStudentModelScore<?> r = new DomStudentModelScore();
+			r.setScore(0, 0, 0, 0, 0);
+			return r;
+		});
+		long gc = score.getGreenCount();
+		if (gc != 0L) {
+			summary.setGreenCount(summary.getGreenCount() + gc);
+			summary.setGreenScore(summary.getGreenScore() + score.getGreenScore());
+		}
+		long rc = score.getRedCount();
+		if (rc != 0L) {
+			summary.setRedCount(summary.getRedCount() + rc);
+			summary.setRedScore(summary.getRedScore() + score.getRedScore());
+		}
+		summary.setTotalCount(summary.getTotalCount() + score.getTotalCount());
+		TreeItem parent = chapitem.getParentItem();
+		if (parent != null) insertMethodMap(parent, score);
+	}
+
+	TreeItem insertMethodTree(TreeItem item, Widget scoreItem) {
+		if (scoreItem instanceof HasText) {
+			String text = ((HasText) scoreItem).getText();
+			int count = item.getChildCount();
+			for(int i = 0 ;i < count; i++) {
+				Widget w = item.getChild(i).getWidget();
+				if (w instanceof HasText) {
+					String wt = ((HasText) w).getText();
+					if (compareM(text,wt ) <= 0)
+					{
+						return item.insertItem(i, scoreItem);
+					}
+				}
 			}
 		}
-		
+		return item.addItem(scoreItem);
+	}
+
+	private int compareM(String as, String bs) {
+		boolean ab = as.startsWith("W:");
+		boolean bb = bs.startsWith("W:");
+		if (ab && !bb) return -1;
+		if (bb && !ab) return +1;
+		return as.compareTo(bs);
 	}
 
 	private void addToTree(TreeItem item, DomStudentModelContext4Student model) {
