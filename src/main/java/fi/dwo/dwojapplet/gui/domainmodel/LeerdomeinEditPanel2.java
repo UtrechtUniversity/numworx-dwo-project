@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -26,6 +27,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
@@ -57,6 +59,7 @@ import javax.swing.plaf.basic.BasicMenuBarUI;
 import javax.swing.plaf.basic.BasicMenuUI;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -68,6 +71,7 @@ import com.owlike.genson.GensonBuilder;
 import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JCheckBox;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JScrollPane;
 import fi.beans.numworxlf.JTextField;
@@ -82,6 +86,7 @@ import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.TeacherStudentModelPanelProperties;
 import fi.dwo.dwojapplet.gui.domainmodel.ExportAction.ExportPanel;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.EditableGraph;
+import fi.dwo.dwojapplet.gui.domainmodel.graph.GraphNode;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.TreeTransferHandler;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsPanel;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
@@ -93,6 +98,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
@@ -470,8 +476,45 @@ public class LeerdomeinEditPanel2 extends JPanel
 		}
         model.nodeStructureChanged((TreeNode) model.getRoot());
 		graph.setModel(model,filter, activeMethod);
+		filterMethod(filter);
 	}
 
+	private void filterMethod(Map<String, Map<String, Set<Integer>>> filter) {
+	  if (methodModel != null) {
+	    InvisibleNode root = (InvisibleNode) methodModel.getRoot();
+	    if (filter.isEmpty()) {
+	      methodModel.activateFilter(false);
+	    } else {
+	      methodModel.activateFilter(true);
+	      String key = DomMethod.key(activeMethod);
+	      Map<String, Set<Integer>> map = filter.getOrDefault(key, Collections.emptyMap());
+	      Enumeration<InvisibleNode> books = root.children();
+	      while(books.hasMoreElements()) {
+	        InvisibleNode book = books.nextElement();
+	        String booktitle = book.toString();
+	        if (map.containsKey(booktitle)) {
+	          book.setVisible(true);
+	          Set<Integer> set = map.getOrDefault(booktitle, Collections.emptySet());
+	          int count = book.getChildCount();
+	          for(int i = 0; i < count; i++) {
+	            ((InvisibleNode) book.getChildAt(i)).setVisible(set.contains(Integer.valueOf(i+1)));
+	          }
+	        } else {
+	          book.setVisible(false);
+	        }
+	        
+	      }
+	    }
+	    
+	    
+	    methodModel.nodeStructureChanged(root);
+	  }
+	  
+	}
+	
+	
+	
+	
 	static InvisibleNode filter(InvisibleNode parent, Map<String, Map<String, Set<Integer>>> filter, PersistenceId activeMethod) {
 		InvisibleNode node;
 		if (!(parent instanceof InvisibleNode)) {
@@ -576,7 +619,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 	private JButton graphButton;
 	private Box south;
 	final JTree tree;
-	InvisibleTreeModel model;
+	InvisibleTreeModel model, methodModel;
 	PersistenceId activeMethod;
 	InvisibleNode root;
 	private JComponent settings;
@@ -744,6 +787,9 @@ public class LeerdomeinEditPanel2 extends JPanel
 		leftSouth = Box.createHorizontalBox();
 		filterAction = new FilterAction(this, this::filter);
         JButton filterBtn = new JButton(filterAction);
+        methodBox = new JCheckBox("Methode");
+        methodBox.addItemListener(this::methodChange);
+        leftSouth.add(methodBox);
 		leftSouth.add(Box.createHorizontalGlue());
 		leftSouth.add(filterBtn);
 		leftSouth.add(Box.createHorizontalGlue());
@@ -915,7 +961,69 @@ public class LeerdomeinEditPanel2 extends JPanel
 		});
 	}
 	
-	private void packWindow() {
+	private void methodChange(ItemEvent ev) {
+	  if (methodBox.isSelected()) {
+	    if (methodModel == null) {
+	      Map<String, InvisibleNode> nodes = new HashMap<>();
+	      DomMethod current = MethodsProperties.instance().getMethod(filterAction.getActiveMethod());
+	      Object userObject = current.getMethod();
+          InvisibleNode root = new InvisibleNode(userObject, true, true);
+          int bookcount = current.books.size();
+          for(int i = 0; i < bookcount; i++ ) {
+            InvisibleNode book = new InvisibleNode(current.books.get(i), true, true);
+            root.add(book);
+            List<String> chapters = current.chapters.get(i);
+            int chapsize = chapters.size();
+            for(int j = 0; j < chapsize; j ++) {
+              InvisibleNode chap = new InvisibleNode(chapters.get(j), true, true);
+              book.add(chap);
+              String key = current.key() + "-" + book.toString() + "-" + (j+1);
+              nodes.put(key, chap);
+            }
+          }
+          Enumeration<DefaultMutableTreeNode> all = this.root.depthFirstEnumeration();
+          while( all.hasMoreElements() ) {
+            Object o = all.nextElement().getUserObject();
+            if (o instanceof NodeLeaf) {
+              NodeLeaf nl = (NodeLeaf)o;
+              Set<String> infos = GraphNode.extractInfos(nl.getMethode()).keySet();
+              String title = nl.toString();
+              for(String mi : infos) {
+                nodes.computeIfPresent(mi, (k, n) -> { InvisibleNode node = new InvisibleNode(new NodeLeaf(title, nl.getInfo(),nl.getLanguage()), false, true);insertMethod(n,node); return n; });
+              }
+            }
+          }
+	      methodModel = new InvisibleTreeModel(root);
+	      filterMethod(filterAction.filter);
+	    }
+	    tree.setModel(methodModel);
+	  } else {
+	    tree.setModel(model);
+	  }
+	}
+	
+	private void insertMethod(InvisibleNode parent, InvisibleNode node) {
+      int count = parent.getChildCount();
+      String title = node.toString();
+      for (int i = 0; i < count; i++) {
+        TreeNode child = parent.getChildAt(i);
+        if (compareMethod(title, child.toString()) < 0) {
+          parent.insert(node, i);
+          return;
+        }
+      }
+      parent.add(node);
+  }
+
+  private int compareMethod(String as, String bs) {
+    boolean wa = as.startsWith("W:");
+    boolean wb = bs.startsWith("W:");
+    if (wa && ! wb) return -1;
+    if (!wa && wb) return +1;
+    return as.compareTo(bs);
+  }
+
+  private void packWindow() {
 		((Window) SwingUtilities.getAncestorOfClass(Window.class, this)).pack();
 	}
 
@@ -986,7 +1094,12 @@ public class LeerdomeinEditPanel2 extends JPanel
 		boolean visible = settings.isVisible();
 		if (b) {
 			settings = settingsRW;
+			methodBox.setSelected(false);
+			methodBox.setVisible(false);
+			tree.setModel(model);
+			methodModel = null;
 		} else {
+		    methodBox.setVisible(true);
 			settings = settingsRO;
 		}
 		parent.add(settings, BorderLayout.SOUTH);
@@ -1057,6 +1170,8 @@ public class LeerdomeinEditPanel2 extends JPanel
       graph.setModel(this.model,null,activeMethod);
       filterAction.doFilter();	  
 	}
+	methodBox.setText(MethodsProperties.instance().getMethod(am).getMethod());
+	methodBox.setEnabled(am != null);
   }
 
 	static void insert(NodeVector vector, InvisibleNode node) {
@@ -1080,6 +1195,7 @@ public class LeerdomeinEditPanel2 extends JPanel
   private FilterAction filterAction;
   private AnyMethodAction methodeAction4;
   private AnyMethodAction methodeAction2;
+  private JCheckBox methodBox;
 
 	static {
 		Genson genson = new GensonBuilder().create();
@@ -1434,6 +1550,9 @@ public class LeerdomeinEditPanel2 extends JPanel
       root = null;
       structure = null;
       model.setRoot(null);
+      methodBox.setSelected(false);
+      tree.setModel(model);
+      methodModel = null;
       container.removeAll();
       long voor = Runtime.getRuntime().freeMemory();
       System.gc();

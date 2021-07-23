@@ -308,9 +308,13 @@ public class GraphNode {
 
 	public void setMethodeInfo(Map<String, Map<String, Set<Integer>>> methodeInfo) {
 		this.methodeInfo = methodeInfo;
-		this.methodeInfos = new HashMap<>();
+		this.methodeInfos = extractInfos(methodeInfo);
+	}
+
+    public static Map<String, DomStudentModelMethodInfo> extractInfos(Map<String, Map<String, Set<Integer>>> methodeInfo) {
+        Map<String, DomStudentModelMethodInfo> methodeInfos = new HashMap<>();
 		DomStudentModelMethodInfo nul = new DomStudentModelMethodInfo();
-        this.methodeInfos.put(nul.key(), nul); // null position
+        methodeInfos.put(nul.key(), nul); // null position
 		for (String methodeName : methodeInfo.keySet()) {
 			Map<String, Set<Integer>> leerjaren = methodeInfo.get(methodeName);
 			for (String leerjaarName : leerjaren.keySet()) {
@@ -321,7 +325,8 @@ public class GraphNode {
 				}
 			}
 		}
-	}
+		return methodeInfos;
+    }
 
 	public boolean hasMethodCode(String code) {
 		if (code == null)
