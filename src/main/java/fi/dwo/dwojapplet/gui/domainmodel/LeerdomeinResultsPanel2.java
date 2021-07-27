@@ -54,6 +54,7 @@ import javax.swing.tree.TreePath;
 
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JCheckBox;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JScrollPane;
 import fi.beans.numworxlf.JTree;
@@ -61,6 +62,7 @@ import fi.dwo.commons.domainmodel.XapiResultsManager;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
+import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
@@ -230,6 +232,8 @@ public void actionPerformed(ActionEvent event) {
   private JLabel red, score, green;
   private Icon lens;
   private FilterAction filterAction;
+  private JCheckBox methodBox;
+  private MethodListener methodListener;
   
   public LeerdomeinResultsPanel2() {
     super(new BorderLayout());
@@ -249,6 +253,8 @@ public void actionPerformed(ActionEvent event) {
     JPanel filterBox = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
     Consumer<Map<String, Map<String, Set<Integer>>>> consumer = this::filter;
     filterAction = new FilterAction(this, consumer);
+    methodBox = new JCheckBox("Methode");
+    filterBox.add(methodBox);
     JButton filter = new JButton(filterAction);
     filterBox.add(filter);
     vb.add(filterBox);
@@ -342,6 +348,7 @@ public void actionPerformed(ActionEvent event) {
     add(rightBox, BorderLayout.EAST);
     setOpaque(true);
     setBackground(COLOR20);
+    methodListener = new MethodListener(methodBox, tree, filterAction);
   }
 
   private void setDescription(Node n) {
@@ -375,7 +382,7 @@ public void actionPerformed(ActionEvent event) {
     setDescription(vector);
     this.model.nodeStructureChanged(root);
     filterAction.setActiveMethod(model.getActiveMethod());
-
+    methodListener.setActiveMethod(model.getActiveMethod());
   }
 
   public void setClasses(List<DomSchoolClass> list) {
@@ -403,7 +410,9 @@ public void actionPerformed(ActionEvent event) {
     Object[] o = path.getPath();
     int[] result = new int[o.length];
     for (int i = 0; i < result.length; i++) {
-      result[i] = ((Node) ((DefaultMutableTreeNode) o[i]).getUserObject()).getPath();
+      Object userObject = ((DefaultMutableTreeNode) o[i]).getUserObject();
+      if (! (userObject instanceof Node)) return null;
+      result[i] = ((Node) userObject).getPath();
     }
     return result;
   }
@@ -414,11 +423,18 @@ public void actionPerformed(ActionEvent event) {
     if (e.isAddedPath()) {
       TreePath path = tree.getSelectionPath();
       DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-      Node n = (Node)node.getUserObject();
-      subtitle.setText(n.toString());
-      //title2.setText(n.toString());
-      setDescription(n);     
-      calculatePath(path,n);     
+      if (node.getUserObject() instanceof Node) {
+        Node n = (Node)node.getUserObject();
+        subtitle.setText(n.toString());
+        //title2.setText(n.toString());
+        setDescription(n);     
+        calculatePath(path,n);     
+      } else {
+        subtitle.setText(node.toString());
+        tekst.setText("");
+        scroll.setViewportView(tekst);
+       
+      }
     }
 
     
@@ -655,6 +671,7 @@ public void actionPerformed(ActionEvent event) {
     model.nodeStructureChanged((TreeNode) model.getRoot());
     if(scores != null)
       recalculateAncestors((DefaultMutableTreeNode) model.getRoot(), scores.getStudentScores());
+    methodListener.filterMethod(filter);
   }
 
   private void recalculateAncestors(DefaultMutableTreeNode node,

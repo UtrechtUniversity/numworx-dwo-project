@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.geom.GeneralPath;
+import java.util.Objects;
 
 public class ChapterGraphEdge {
 
@@ -108,4 +109,18 @@ public class ChapterGraphEdge {
 	public ChapterGraphNode getTarget() {
 		return target;
 	}
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(source, target);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
+    ChapterGraphEdge other = (ChapterGraphEdge) obj;
+    return Objects.equals(source, other.source) && Objects.equals(target, other.target);
+  }
 }

@@ -80,7 +80,9 @@ public class MethodsProperties extends ArrayList<DomMethod> {
   public Map<String, String> getDescriptionsMap(PersistenceId activeMethod) {
     Map<String,String> result = new TreeMap<String,String>();
     for (DomMethod row: this) {
-      if (row.getId() != null) {
+      if (row.getId() != null
+          && row.getId().equals(activeMethod)
+          ) {
         String key = row.key();
         for (int i = 0; i < row.books.size(); i++ ) {
           String book = row.books.get(i);
@@ -116,7 +118,9 @@ public class MethodsProperties extends ArrayList<DomMethod> {
       PersistenceId activeMethod) {
     Map<String,String> result = new LinkedHashMap<String,String>();
     for (DomMethod row: this) {
-      if (row.getId() != null) {
+      if (row.getId() != null
+          && row.getId().equals(activeMethod)
+          ) {
         String key = row.key();
         for (int i = 0; i < row.books.size(); i++ ) {
           String book = row.books.get(i);
@@ -163,7 +167,6 @@ public class MethodsProperties extends ArrayList<DomMethod> {
         }
       }
     }
-    // TODO Auto-generated method stub
     return new int[0][];
   }
 

@@ -339,8 +339,9 @@ public class GraphNode {
 	}
 
 	public boolean hasChapterCode(String code) {
-		return methodeInfos.values().stream()
-				.anyMatch(t -> code.equals(t.getMethod() + "-" + t.getBook() + "-" + t.getChapter()));
+	    return methodeInfos.containsKey(code);	  
+//		return methodeInfos.values().stream()
+//				.anyMatch(t -> code.equals(t.getMethod() + "-" + t.getBook() + "-" + t.getChapter()));
 	}
 
 	// public boolean hasChapterCode(String methode, String book, Set<Integer>

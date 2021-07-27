@@ -35,12 +35,14 @@ import javax.swing.tree.TreePath;
 
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JCheckBox;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JScrollPane;
 import fi.beans.numworxlf.JTree;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinEditPanel2.VoorkennisAction;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.EditableGraph;
+import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
@@ -152,6 +154,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
   private DomStudentModelContext context;
   private DomStudentModelStructureScore structureScore;
   private JLabel red, score, green;
+  private JCheckBox methodBox;
   
   private EditableGraph graph;
 
@@ -209,9 +212,11 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     
     leftBox.add(scrollpane, BorderLayout.CENTER);
     leftSouth = Box.createHorizontalBox();
+    methodBox = new JCheckBox("Method");
     filterAction = new FilterAction(this, this::filter);
     JButton filter = new JButton(filterAction);
     leftSouth.add(Box.createHorizontalGlue());
+    leftSouth.add(methodBox);
     leftSouth.add(filter);
     leftSouth.add(Box.createHorizontalGlue());
     leftSouth.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -296,6 +301,9 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     PersistenceId activeMethod = context.getModelStructure().getActiveMethod();
     graph.setModel(this.model,null,activeMethod);
     filterAction.setActiveMethod(activeMethod);
+    methodBox.setText(MethodsProperties.instance().getMethod(activeMethod).getMethod());
+    methodBox.setEnabled(activeMethod != null);
+    methodBox.setSelected(false);
 
   }
 

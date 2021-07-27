@@ -1,0 +1,158 @@
+package fi.dwo.dwojapplet.gui.domainmodel;
+
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.swing.JCheckBox;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
+
+import fi.dwo.dwojapplet.gui.domainmodel.graph.GraphNode;
+import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+
+public class MethodListener implements ItemListener {
+
+  final JCheckBox methodBox;
+  InvisibleTreeModel methodModel;
+  private PersistenceId activeMethod;
+  final private JTree tree;
+  final private TreeModel model;
+  private FilterAction filterAction;
+  
+  public MethodListener(JCheckBox box, JTree tree, FilterAction filteraction) {
+    methodBox = box;
+    this.tree = tree;
+    this.model = tree.getModel();
+    this.filterAction = filteraction;
+    box.addItemListener(this);  
+  }
+
+  @Override
+  public void itemStateChanged(ItemEvent e) {
+    if (methodBox.isSelected()) {
+      if (methodModel == null) {
+        Map<String, InvisibleNode> nodes = new HashMap<>();
+        DomMethod current = MethodsProperties.instance().getMethod(activeMethod);
+        Object userObject = current.getMethod();
+        InvisibleNode root = new InvisibleNode(userObject, true, true);
+        int bookcount = current.books.size();
+        for(int i = 0; i < bookcount; i++ ) {
+          InvisibleNode book = new InvisibleNode(current.books.get(i), true, true);
+          root.add(book);
+          List<String> chapters = current.chapters.get(i);
+          int chapsize = chapters.size();
+          for(int j = 0; j < chapsize; j ++) {
+            InvisibleNode chap = new InvisibleNode(chapters.get(j), true, true);
+            book.add(chap);
+            String key = current.key() + "-" + book.toString() + "-" + (j+1);
+            nodes.put(key, chap);
+          }
+        }
+        Enumeration<DefaultMutableTreeNode> all = ((DefaultMutableTreeNode) model.getRoot()).depthFirstEnumeration();
+        while( all.hasMoreElements() ) {
+          Object o = all.nextElement().getUserObject();
+          if (o instanceof NodeLeaf) {
+            NodeLeaf nl = (NodeLeaf)o;
+            Set<String> infos = GraphNode.extractInfos(nl.getMethode()).keySet();
+            String title = nl.toString();
+            for(String mi : infos) {
+              nodes.computeIfPresent(mi, (k, n) -> { InvisibleNode node = new InvisibleNode(new NodeLeaf(title, nl.getInfo(),nl.getLanguage()), false, true);insertMethod(n,node); return n; });
+            }
+          }
+        }
+        methodModel = new InvisibleTreeModel(root);
+        filterMethod(filterAction.filter);
+      }
+      tree.setModel(methodModel);
+    } else {
+      tree.setModel(model);
+    }
+  }
+
+  void setActiveMethod(PersistenceId am) {
+    this.activeMethod = am;
+    methodBox.setText(MethodsProperties.instance().getMethod(am).getMethod());
+    methodBox.setEnabled(am != null);
+  }
+
+  public void end() {
+    tree.setModel(model);
+    methodBox.setSelected(false);
+    methodModel = null;
+  }
+
+  void filterMethod(Map<String, Map<String, Set<Integer>>> filter) {
+    if (methodModel != null) {
+      InvisibleNode root = (InvisibleNode) methodModel.getRoot();
+      if (filter.isEmpty()) {
+        methodModel.activateFilter(false);
+      } else {
+        methodModel.activateFilter(true);
+        String key = DomMethod.key(activeMethod);
+        Map<String, Set<Integer>> map = filter.getOrDefault(key, Collections.emptyMap());
+        Enumeration<InvisibleNode> books = root.children();
+        while(books.hasMoreElements()) {
+          InvisibleNode book = books.nextElement();
+          String booktitle = book.toString();
+          if (map.containsKey(booktitle)) {
+            book.setVisible(true);
+            Set<Integer> set = map.getOrDefault(booktitle, Collections.emptySet());
+            int count = book.getChildCount();
+            for(int i = 0; i < count; i++) {
+              ((InvisibleNode) book.getChildAt(i)).setVisible(set.contains(Integer.valueOf(i+1)));
+            }
+          } else {
+            book.setVisible(false);
+          }
+          
+        }
+      }
+      methodModel.nodeStructureChanged(root);
+    }
+    
+  }
+
+  private void insertMethod(InvisibleNode parent, InvisibleNode node) {
+    int count = parent.getChildCount();
+    String title = node.toString();
+    for (int i = 0; i < count; i++) {
+      TreeNode child = parent.getChildAt(i);
+      if (compareMethod(title, child.toString()) < 0) {
+        parent.insert(node, i);
+        return;
+      }
+    }
+    parent.add(node);
+  }
+
+  private int compareMethod(String as, String bs) {
+    boolean wa = as.startsWith("W:");
+    boolean wb = bs.startsWith("W:");
+    if (wa && ! wb) return -1;
+    if (!wa && wb) return +1;
+    return as.compareTo(bs);
+  }
+
+  public void setEditable(boolean b) {
+    if (b) {
+      methodBox.setSelected(false);
+      methodBox.setVisible(false);
+      tree.setModel(model);
+      methodModel = null;      
+    } else {
+      methodBox.setVisible(true);      
+    }
+  }
+
+}
