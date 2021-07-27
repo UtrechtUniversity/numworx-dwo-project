@@ -107,7 +107,7 @@
 			  <g:south size="2.4"><g:FlowPanel>
 			  	<g:Button ui:field='btn' styleName='{style.graph}'>Graph</g:Button>
 			    <g:Button ui:field='filterBtn' styleName='{style.filter}' addStyleNames='teacher-only'>Filter</g:Button>
-			    <g:CheckBox ui:field='viewBtn' styleName='{style.filter}' >Methode</g:CheckBox>
+			    <g:CheckBox ui:field='viewBtn' styleName='{style.filter}' checked="true" >Methode</g:CheckBox>
 			  </g:FlowPanel></g:south>
 			  <g:center>
 				<g:ScrollPanel addStyleNames='{style.tree}'>

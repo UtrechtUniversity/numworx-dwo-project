@@ -45,7 +45,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 	@Override
 	public Promise<List<DomStudentModelContext4Student>> getModels() {
-		return getModel(null).map(Collections::singletonList);
+		return getModel(currentModel).map(Collections::singletonList);
 	}
 
 	@Override

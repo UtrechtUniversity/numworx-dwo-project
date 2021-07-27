@@ -58,6 +58,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class StudentResultsPresenter extends AbstractResultsPresenter implements SelectionHandler<TreeItem> {
 
+	private static final String BEGRIPPEN_EN_VAKTAAL = "Begrippen en vaktaal";
 	private static final Logger LOG = Logger.getLogger(StudentResultsPresenter.class.getName());
 
 	public interface Display extends BasicDisplay {
@@ -116,7 +117,8 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		w.tree.removeItems();
 		w.setFilter(filter, method);
 		setCurrentInfo(item.getModelStructure());
-		insertTree(item);
+		if (w.isMethod()) insertMethodTree(item, method);
+		else insertTree(item);
 	}
 	
 	class ModelChange implements ChangeHandler, ClickHandler, ValueChangeHandler<Boolean> {
@@ -212,6 +214,9 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 				html = Util.summaryItem(chapters.get(j), NULLSCORE, 2);
 				TreeItem ci = bi.addItem(html);
 				ci.setUserObject(new int[] {i, j});
+				html = Util.summaryItem(BEGRIPPEN_EN_VAKTAAL, NULLSCORE, 3);
+				TreeItem wi = ci.addItem(html);
+				wi.setUserObject("W:");
 			}
 		}
 		ti.setUserObject(item);
@@ -323,8 +328,6 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	}
 
 	protected void doFilter(DomStudentModelContext4Student item) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	boolean showGraph;
@@ -484,7 +487,6 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			int cat = ((Integer) userObject).intValue();
 			int obj = 0;
 			for( DomStudentModelObj oo : o.getObjectives()) {
-			    float ppp;
 			    DomStudentModelObjectiveScore s = score.getObjectives().get(obj);
 				TreeItem tt;
 				if (s.getChildren() != null)
@@ -613,8 +615,9 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 					TreeItem chapitem = bookitem.getChild(j);
 					int chapnr = ((int[])chapitem.getUserObject())[1];
 					if (chapnr+1 == chapter.intValue()) {
-						insertMethodTree(chapitem, scoreItem).setUserObject(score);
-						insertMethodMap(chapitem, score);
+						TreeItem obj = insertMethodTree(chapitem, scoreItem);
+						obj.setUserObject(score);
+						insertMethodMap(obj.getParentItem(), score);
 						break;
 					}
 				}
@@ -647,6 +650,9 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	TreeItem insertMethodTree(TreeItem item, Widget scoreItem) {
 		if (scoreItem instanceof HasText) {
 			String text = ((HasText) scoreItem).getText();
+			if (text.startsWith("W:")) {
+				item = item.getChild(item.getChildCount()-1);
+			}
 			int count = item.getChildCount();
 			for(int i = 0 ;i < count; i++) {
 				Widget w = item.getChild(i).getWidget();
@@ -663,10 +669,10 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	}
 
 	private int compareM(String as, String bs) {
-		boolean ab = as.startsWith("W:");
-		boolean bb = bs.startsWith("W:");
-		if (ab && !bb) return -1;
-		if (bb && !ab) return +1;
+		boolean ab = as.equals(BEGRIPPEN_EN_VAKTAAL);
+		boolean bb = bs.equals(BEGRIPPEN_EN_VAKTAAL);
+		if (ab && !bb) return +1;
+		if (bb && !ab) return -1;
 		return as.compareTo(bs);
 	}
 
@@ -738,7 +744,10 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 				method = p.getValue();
 				filter = current.getFilter();
 				setCurrentInfo(current.getModelStructure());
-				insertTree(current);
+				if (widget.get().isMethod())
+					insertMethodTree(current, method);
+				else
+					insertTree(current);
 				return p;
 			}, FAILURE);
 		
