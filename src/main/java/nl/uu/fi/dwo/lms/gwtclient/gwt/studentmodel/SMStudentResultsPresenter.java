@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -63,4 +64,16 @@ public class SMStudentResultsPresenter extends StudentResultsPresenter {
 			return q;
 		});
 	}
+
+	@Override
+	protected Map<String, Map<String, Set<Integer>>> getCurrentFilter(DomStudentModelContext4Student item) {
+		PersistenceId key = item.getModelStructure().getActiveMethod();
+		Promise<FilterMethodDialog> obj = filterDialogs.get(key);
+		if (obj != null && obj.isDone() && obj.getFailure() == null) {
+			return obj.getValue().getValue();
+		}
+		return super.getCurrentFilter(item);
+	}
+	
+	
 }

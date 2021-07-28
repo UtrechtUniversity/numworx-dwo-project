@@ -71,7 +71,7 @@ public class JsTeacherStudentModelView extends AbstractStudentModelView implemen
 		Label header = new Label(title);
 		header.setStylePrimaryName("description-title");
 		descriptionwrap.add(header);
-		descriptionwrap.add(w);
+		if (w != null) descriptionwrap.add(w);
 	}
 	
 	@Override
@@ -87,6 +87,11 @@ public class JsTeacherStudentModelView extends AbstractStudentModelView implemen
 	@Override
 	public boolean isMethod() {
 		return JsTeacherStudentModelDisplay.isMethod();
+	}
+	
+	@Override
+	public void setMethod(String label) {
+		JsTeacherStudentModelDisplay.setMethodLabel(label);
 	}
 	
 }

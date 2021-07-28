@@ -64,6 +64,7 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		void setModelSelect(String id);
 		void setEmptyTreeMessage();
 		boolean isMethod();
+		void setMethod(String label);
     }
     
     @Inject void setView(JsTeacherStudentModelView view) {
@@ -167,6 +168,7 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		Map<String, DomTree<String>> map = new LinkedHashMap<>();
 		tree.setChildren(map);
 		return service.getActiveMethod(struc.getActiveMethod()).then(m -> {
+			view.setMethod(m.getValue().getMethod());
 			for ( DomStudentModelCategory cat : struc.getCategories()) {
 				DomTree<String> tcat = new DomTree<>(getTitle(cat.getInfo()));
 				tcat.setChildren(children(cat.getObjectives(), m.getValue()));
@@ -381,7 +383,10 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 	public void onSelection(SelectionEvent<TreeItem> event) {
 		String id = (String) event.getSelectedItem().getUserObject();
 		LOG.info("on selection " + id);
-		if (id.startsWith(String.valueOf(DomMethod.key(currentModel.getValue().getModelStructure().getActiveMethod())))) return;
+		if (id.startsWith(String.valueOf(DomMethod.key(currentModel.getValue().getModelStructure().getActiveMethod())))) {
+			view.setDescription(id, null);
+			return;
+		}
 		DomStudentModelContextInfo info = new DomStudentModelContextInfo();
 		info.setId(id);
 		currentModel.then( p -> 

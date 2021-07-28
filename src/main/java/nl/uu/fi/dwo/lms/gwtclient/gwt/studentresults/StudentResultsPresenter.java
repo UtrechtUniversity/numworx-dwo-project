@@ -144,8 +144,8 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 				return service.getActiveMethod(current.getModelStructure());
 			}).then( p -> {
 				method = p.getValue();
-				filter = current.getFilter();
-				w.setFilter(item.getFilter(), method);
+				filter = getCurrentFilter(current);
+				w.setFilter(filter, method);
 				setCurrentInfo(current.getModelStructure());
 				if (w.isMethod()) insertMethodTree(item, method);
 				else insertTree(item);
@@ -381,16 +381,51 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		return null;
 	}
 
+	private void onMethodSelection(TreeItem item, Object userObject) {
+		widget.get().east.getElement().getStyle().clearVisibility();
+		DomStudentModelScore<?> score = scoreMap.get(item);
+		if ("W:".equals(userObject)) {
+			userObject = item.getParentItem().getUserObject();
+		}
+		if (userObject instanceof DomStudentModelScore<?>) {
+			score = (DomStudentModelScore<?>) userObject;
+			String id = score.getId();
+			DomStudentModelContextInfo info = currentInfo.get(id);
+			String text;
+			setDescription(info);
+	        text = info.getTitle().get(lang);
+            widget.get().title.setText(text);
+		} else if (userObject instanceof Integer) {
+			widget.get().title.setText(method.books.get(((Integer) userObject).intValue()));
+			widget.get().description.clear();
+		} else if (userObject instanceof int[]) {
+			int[] arr = (int[]) userObject;
+			String text = method.chapters.get(arr[0]).get(arr[1]);
+			widget.get().title.setText(text);
+			widget.get().description.clear();
+		} else {
+			widget.get().title.setText(method.getMethod());
+			widget.get().description.clear();
+		}	
+		if (score != null) setPerc(score); else setPerc(NULLSCORE);
+	}
+	
+	
+	
+	
 	@Override
 	public void onSelection(SelectionEvent<TreeItem> event) {
 		TreeItem item = event.getSelectedItem();
-		if (widget.get().isMethod()) return;
+		LOG.info("selected " + item);
+		Object userObject = item.getUserObject();
+		if (widget.get().isMethod()) {
+			onMethodSelection(item, userObject);
+			return;
+		}
 		
 		
 		
 		widget.get().east.getElement().getStyle().clearVisibility();
-		LOG.info("selected " + item);
-		Object userObject = item.getUserObject();
 		if (userObject instanceof DomStudentModelContext4Student) {
 			DomStudentModelContext4Student model = (DomStudentModelContext4Student) userObject;
 			addToTree(item, model);
@@ -555,6 +590,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		List<DomStudentModelCategoryScore> catscores = score.getCategories();
 		Iterator<DomStudentModelCategory> icats = cats.iterator();
 		Iterator<DomStudentModelCategoryScore> icatscores = catscores.iterator();
+		scoreMap.clear();
 		while( icats.hasNext()) {
 			List<DomStudentModelObj> objs = icats.next().getObjectives();
 			List<DomStudentModelObjectiveScore> objscores = icatscores.hasNext() ? icatscores.next().getObjectives() : Collections.emptyList();
@@ -566,7 +602,6 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
  			key.setWidget(Util.summaryItem(t, value, i));
 		}
 		);
-		scoreMap.clear();
 		
 	}
 
@@ -593,13 +628,14 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 
 	private void addToMethodTree(TreeItem item, DomStudentModelObj obj, DomStudentModelScore<?> s, DomMethod method) {
 		Map<String, Map<String, Set<Integer>>> map = obj.getInfo().getMethods();
-		String title = obj.getInfo().getTitle().get(lang);
-		Map<String, Set<Integer>> books = map.getOrDefault(method.key(), Collections.emptyMap());
-		for( Map.Entry<String, Set<Integer>> entry: books.entrySet()) {
-			String book = entry.getKey();
-			for (Integer chapter: entry.getValue()) {
-				if (contains(filter, obj.getInfo().getMethods(), method))
+		if (contains(filter, map, method)) {
+			String title = obj.getInfo().getTitle().get(lang);
+			Map<String, Set<Integer>> books = map.getOrDefault(method.key(), Collections.emptyMap());
+			for( Map.Entry<String, Set<Integer>> entry: books.entrySet()) {
+				String book = entry.getKey();
+				for (Integer chapter: entry.getValue()) {
 					addToMethodTree(item, book, chapter, Util.scoreItem(title, s, 3), method, s);
+				}
 			}
 		}
 	}
@@ -608,7 +644,8 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		int kidscount = item.getChildCount();
 		for (int i = 0; i < kidscount; i++) {
 			TreeItem bookitem = item.getChild(i);
-			String titlebook = method.books.get(i);
+			int index = ((Number) bookitem.getUserObject()).intValue();
+			String titlebook = method.books.get(index);
 			if (titlebook.equals(book)) {
 				int chaptercount = bookitem.getChildCount();
 				for (int j = 0; j < chaptercount; j++) {
@@ -743,6 +780,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			}).then( p -> {
 				method = p.getValue();
 				filter = current.getFilter();
+				widget.get().setFilter(filter, method);
 				setCurrentInfo(current.getModelStructure());
 				if (widget.get().isMethod())
 					insertMethodTree(current, method);
@@ -753,6 +791,10 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		
 		}
 		
+	}
+
+	protected Map<String, Map<String, Set<Integer>>> getCurrentFilter(DomStudentModelContext4Student item) {
+		return item.getFilter();
 	}
 
 
