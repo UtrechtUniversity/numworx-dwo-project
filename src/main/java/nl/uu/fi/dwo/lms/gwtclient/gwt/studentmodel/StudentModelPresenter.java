@@ -20,8 +20,10 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
+import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.TreeItem;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 
 import jsinterop.annotations.JsMethod;
@@ -384,6 +386,8 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		String id = (String) event.getSelectedItem().getUserObject();
 		LOG.info("on selection " + id);
 		if (id.startsWith(String.valueOf(DomMethod.key(currentModel.getValue().getModelStructure().getActiveMethod())))) {
+			Widget w = event.getSelectedItem().getWidget();
+			if (w instanceof HasText) id = ((HasText) w).getText();
 			view.setDescription(id, null);
 			return;
 		}

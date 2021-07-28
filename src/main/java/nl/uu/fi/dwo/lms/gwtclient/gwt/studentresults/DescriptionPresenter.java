@@ -7,11 +7,13 @@ import javax.inject.Inject;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
