@@ -58,7 +58,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class StudentResultsPresenter extends AbstractResultsPresenter implements SelectionHandler<TreeItem> {
 
-	private static final String BEGRIPPEN_EN_VAKTAAL = "Begrippen en vaktaal";
+	public static final String BEGRIPPEN_EN_VAKTAAL = "Begrippen en vaktaal";
 	private static final Logger LOG = Logger.getLogger(StudentResultsPresenter.class.getName());
 
 	public interface Display extends BasicDisplay {

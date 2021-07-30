@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
@@ -37,6 +36,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.FilterUtil;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.DomTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
@@ -189,6 +189,7 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		return service.getActiveMethod(struc.getActiveMethod()).then(m -> {
 			DomMethod method = m.getValue();
 			String t = method.getMethod();
+			view.setMethod(t);
 			Map<String, Set<Integer>> mf = filter.getOrDefault(method.key(), Collections.emptyMap());
 			DomTree<String> tree = new DomTree<>(t);
 			Map<String, DomTree<String>> map = new LinkedHashMap<>(), all = new HashMap<>();
@@ -209,13 +210,18 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 					String chapter = chapters.get(j);
 					DomTree<String> ctree = new DomTree<>(chapter);
 					ctree.setChildren(new ValueSortedMap<String, DomTree<String>>(this::methodOrder));
-					bmap.put(method.key() + "-" + book + "-" + (j+1), ctree);
-					all. put(method.key() + "-" + book + "-" + (j+1), ctree);
+					String key = method.key() + "-" + book + "-" + (j+1);
+					bmap.put(key, ctree);
+					DomTree<String> weetjes = new DomTree<>(StudentResultsPresenter.BEGRIPPEN_EN_VAKTAAL);
+					weetjes.setChildren(new ValueSortedMap<String, DomTree<String>>(this::methodOrder));
+					ctree.getChildren().put(key + "-W", weetjes);
+					all.put(key, ctree);
+					all.put(key + "-W", weetjes);
 				}
 			}
 			insertChildren(all, struc.getCategories());
 			view.showTree(tree);
-			view.setTitle(FilterUtil.setFilter(filter, m.getValue()));
+			view.setTitle(FilterUtil.setFilter(filter, method));
 			return p;
 		});
 	}
@@ -223,10 +229,10 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 	int methodOrder(DomTree<String> a, DomTree<String> b) {
 		String as = a.getObject();
 		String bs = b.getObject();
-		boolean ab = as.startsWith("W:");
-		boolean bb = bs.startsWith("W:");
-		if (ab && !bb) return -1;
-		if (bb && !ab) return +1;
+		boolean ab = as.equals(StudentResultsPresenter.BEGRIPPEN_EN_VAKTAAL);
+		boolean bb = bs.equals(StudentResultsPresenter.BEGRIPPEN_EN_VAKTAAL);
+		if (ab && !bb) return +1;
+		if (bb && !ab) return -1;
 		return as.compareTo(bs);
 	}
 	
@@ -241,12 +247,14 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		for (DomStudentModelObj obj: objectives) {
 			if (obj.getObjectives() == null) { // leave
 				Map<String, Map<String, Set<Integer>>> methods = obj.getInfo().getMethods();
+				String title = getTitle(obj.getInfo());
+				String ext = title.startsWith("W:") ? "-W" : "";
 				methods.forEach(
 						(key, books) -> {
 							books.forEach( (book, chapters) -> chapters.forEach(chap -> {
-								String item = key + "-" + book + "-" + chap;
+								String item = key + "-" + book + "-" + chap + ext;
 								all.computeIfPresent(item, (k, v) -> { 
-									DomTree<String> vv = new DomTree<>(getTitle(obj.getInfo())); vv.setChildren(null);
+									DomTree<String> vv = new DomTree<>(title); vv.setChildren(null);
 									v.getChildren().put(obj.getInfo().getId(), vv);							
 								return v;});
 							}));});
