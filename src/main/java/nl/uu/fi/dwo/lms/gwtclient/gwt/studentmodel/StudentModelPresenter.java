@@ -382,6 +382,7 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 	@JsMethod
 	public void onMethod(boolean value) {
 		LOG.info("on method " + value);
+		if (currentModel == null) return;
 		if (!value)
 			currentModel = currentModel.then(this::studentModel, FAILURE);
 		else
