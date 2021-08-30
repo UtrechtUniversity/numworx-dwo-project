@@ -128,7 +128,7 @@ public class TeacherStudentModelPanelProperties {
         return context;
       } catch (Dwo2Exception e) {
         structure = null;
-        if (e.getDwo2Code() == Dwo2ExceptionCode.Rest_ObjectModified) throw e;
+        if (e.getDwo2Code() == Dwo2ExceptionCode.Rest_ObjectModified  ||e.getDwo2Code() == Dwo2ExceptionCode.User_IllegalAction) throw e;
       } catch(Exception oops) {
         LOG.log(Level.WARNING, "should not happen", oops);
         structure = null;

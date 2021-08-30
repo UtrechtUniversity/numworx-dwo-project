@@ -950,7 +950,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 					return false;
 				}
 				if (!current.getOptLock().equals(version)) {
-					setModel(current.getModelStructure());
+					setModel(current.getModelStructure(), current.getPublishState());
 				}
 				if (current.getPublishState() == PublishState.edit) {
 
@@ -1035,8 +1035,9 @@ public class LeerdomeinEditPanel2 extends JPanel
 		graph.setEditMode(b);
 	}
 
-	public void setModel(DomStudentModelStructure model) {
+	public void setModel(DomStudentModelStructure model, PublishState ps) {
 		lock = false;
+		bewerken.setEnabled(ps != PublishState.overt);
 		setModel0(model);
 		resultModel = null;
 	}

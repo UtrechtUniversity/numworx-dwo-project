@@ -130,7 +130,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
                   JOptionPane.showMessageDialog(TeacherStudentModelPanel.this, "Er werkt al mogelijk iemand mee!",title, JOptionPane.WARNING_MESSAGE);
                }
                 textArea.setEditable(false);
-                textArea.setModel(model.getModelStructure());
+                textArea.setModel(model.getModelStructure(), model.getPublishState());
 //                cancelButton.setEnabled(true);
 //                addModelButton.setText(TextMapper.getText(TextMapper.BTN_UPDATE));
                 int ok = showConfirmDialog(TeacherStudentModelPanel.this, scrollPane, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
@@ -443,7 +443,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == addModelButton) {
-                textArea.setModel(null);
+                textArea.setModel(null, PublishState.published);
                 prop.setCurrent(null);
                 textArea.setEditable(true);
                 int ok = showConfirmDialog(TeacherStudentModelPanel.this, textArea, e.getActionCommand(), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
