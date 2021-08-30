@@ -11,10 +11,12 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.ScoPanel;
+import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
@@ -633,7 +635,17 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
             }
         }
         
-        
+        if ( DwoHelper.isTest() && DwoHelper.isPremium() && name.startsWith("studentModelMethod:")) {
+          try {
+            String id = name.substring("studentModelMethod:".length());
+            PersistenceId pid = new PersistenceId(id);
+            DomMethod result = MethodsProperties.instance().getMethod(pid);
+            Genson genson = StoredRestManager.getInstance().getGenson();
+            return genson.serialize(result);         
+          } catch (Exception e) {
+            LOG.log(Level.WARNING, "studentModelMethod", e);
+          }
+        }
         if ("abo_type".equals(name)) {
           try {
             String abo_type = DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getAboType().name();
