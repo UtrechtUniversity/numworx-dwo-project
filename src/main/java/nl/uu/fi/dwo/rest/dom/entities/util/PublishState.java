@@ -12,5 +12,6 @@ public enum PublishState {
     edit, //Someone is editing the data, userid should be added
     review, // Data may be reviewed and tested by editors. State may change to edit.
     published,//Users may use the data. 
-    archived //Data is available for viewing by editors for example but not visible for consumers.
+    archived, //Data is available for viewing by editors for example but not visible for consumers.
+    overt // public to all premium schools, implies readonly
 }
