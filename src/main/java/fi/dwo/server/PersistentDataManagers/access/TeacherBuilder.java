@@ -434,7 +434,7 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
             if ( pModel == null) {
               throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Illegal operation");
             }
-            //verify if course is in school
+            //verify if student model is in school
             if ( !pModel.getSchoolID().equals(instance.getContext().getUserCtx().school.getSchoolID())) {
                 LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested studentmode {2} is from a different school that is registered for hasRole in school {1} with usercode {0}.", new Object[]{this.instance.getContext().getUserCtx().getUser().getUsername(), instance.getContext().getUserCtx().getSchool().getSchoolID(), (pModel != null) ? pModel.getSchoolID() : "model==null"});
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + this.instance.getContext().getUserCtx().getUser().getUsername() + ".");
@@ -448,6 +448,11 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
             }
             pModel.setModelStructure(model.getModelStructure());
             pModel.setPublishState(model.getPublishState());
+            
+            if (PublishState.overt == model.getPublishState()) {
+            	pModel.setSchoolID(Long.valueOf(0)); // NUL not NULL
+            }
+            
             //return instance.teacherActions.updateStudentModel(instance.getContext(), pModel).buildDomStudentModelContext();
             
             return StudentModelContextUtilManager.edit(pModel).buildDomStudentModelContext(); // FIXME netjes maken!
@@ -774,9 +779,19 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
 @Override
 public DomStudentModelContext patchStudentModel(DomStudentModelContextPatch domPatch) throws Dwo2Exception {
 	PersistentStudentModelContext result = instance.teacherActions.getStudentModel(instance.getContext(), domPatch);
+	long uSchoolId = instance.getContext().getUserCtx().school.getSchoolID().longValue();
+	long mSchoolId = result.getSchoolID().longValue();
+	if (mSchoolId != uSchoolId)
+	{
+		throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "illegal operation: wrong school");
+	}	
 	if (result.getOptlock().equals(domPatch.getOptLock()) && result.getLastChangeTimeStamp()==domPatch.getLastChangeTimeStamp()) {
 		
-		if (domPatch.getPublishState() != null) result.setPublishState(domPatch.getPublishState());
+		if (domPatch.getPublishState() != null) {
+			result.setPublishState(domPatch.getPublishState());
+			if (domPatch.getPublishState() == PublishState.overt)
+				result.setSchoolID(Long.valueOf(0));
+		}
 		// patch
 		String value = domPatch.getPatch();
 		String digest = domPatch.getDigest();

@@ -93,8 +93,10 @@ public class MySQLTeacherActions implements TeacherActions {
         if ( pModel == null) {
           throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Illegal operation");
         }
-        //verify if course is in school
-        if ( !pModel.getSchoolID().equals(context.getUserCtx().school.getSchoolID())) {
+        //verify if studentModel is in school
+        long uSchoolID = context.getUserCtx().school.getSchoolID().longValue();
+		long mSchoolID = pModel.getSchoolID().longValue();
+		if ( mSchoolID != 0L && mSchoolID != uSchoolID) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested studentmode {2} is from a different school that is registered for hasRole in school {1} with usercode {0}.", new Object[]{context.getUserCtx().getUser().getUsername(), context.getUserCtx().getSchool().getSchoolID(), (pModel != null) ? pModel.getSchoolID() : "model==null"});
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + context.getUserCtx().getUser().getUsername() + ".");
         }
