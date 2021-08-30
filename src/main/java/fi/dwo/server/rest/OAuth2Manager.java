@@ -198,7 +198,7 @@ static final String AUTHORIZATION_CODE = "authorization_code";
     } else if (REFRESH_TOKEN.equals(grant)) {
       try {
 		return refresh(params);
-	} catch (SignatureException | UnsupportedJwtException | MalformedJwtException | NullPointerException
+	} catch (SignatureException | UnsupportedJwtException | MalformedJwtException | NullPointerException | ExpiredJwtException
 			| IllegalArgumentException e) {
 		ErrorResponse error = new ErrorResponse("invalid_grant");
         return Response.status(Status.BAD_REQUEST).entity(error).build();
