@@ -34,7 +34,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PersistentMethod.findAll", query = "SELECT p FROM PersistentMethod p"),
-    @NamedQuery(name = "PersistentMethod.findBySchoolID", query = "SELECT p FROM PersistentMethod p WHERE p.id.schoolID = :schoolID")
+    @NamedQuery(name = "PersistentMethod.findBySchoolID", query = "SELECT q FROM PersistentMethod q WHERE q.id.schoolID = 0 OR q.id.schoolID = :schoolID")
 })
 @Cache( type=CacheType.SOFT, // Cache everything until the JVM decides memory is low. 
         size=10, // Use 64,000 as the initial cache size. 
