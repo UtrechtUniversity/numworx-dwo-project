@@ -390,16 +390,18 @@ public class SecuredDwoAdminSchoolManager {
                 school.setDelState(DelState.deleted);
                 SchoolManager.edit(school);
         // loop studentmodels en studentmodelitems
-                List<PersistentStudentModelContext> smList = StudentModelContextManager.findEntities(school);
+                List<PersistentStudentModelContext> smList = StudentModelContextManager.findEntities(school); // XXX ook met standaard 
                 for(PersistentStudentModelContext sm: smList) {
-                	List<PersistentStudentModelItem> itemList = StudentModelItemManager.findEntities(sm);
-                	itemList.forEach(item -> StudentModelItemManager.destroy(item.getItemID()));
-                	StudentModelContextManager.destroy(sm.getModelID());
-                }
+                	if (school.getSchoolID().equals(sm.getSchoolID())) {
+                		List<PersistentStudentModelItem> itemList = StudentModelItemManager.findEntities(sm);
+                		itemList.forEach(item -> StudentModelItemManager.destroy(item.getItemID()));
+                		StudentModelContextManager.destroy(sm.getModelID());
+                	}}
         // loop methods
-                List<PersistentMethod> mList = MethodManager.findEntities(school);
+                List<PersistentMethod> mList = MethodManager.findEntities(school); // XXX ook met standaard 
                 for (PersistentMethod m: mList) {
-                	MethodManager.destroy(m.getId());
+                	if (school.getSchoolID().equals(m.getSchoolID()))
+                		MethodManager.destroy(m.getMethodID());
                 }
         // Loop FromTos in School
                 List<PersistentFromTo> ftList = FromToManager.findEntities(school);

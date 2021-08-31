@@ -8,7 +8,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
 import fi.dwo.commons.persistence.entities.PersistentMethod;
-import fi.dwo.commons.persistence.entities.PersistentMethodPK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
@@ -29,13 +28,12 @@ public class SecuredStudentMethodManager {
     	PersistentSchool school = hasRole.getSchool();
     	hasRole.buildStudent();
     	PersistentMethod p = MethodManager.toValue(rest.getDomMethod(), school);
-    	PersistentMethodPK id = p.getId();
-		p = MethodManager.findEntity(id);
-    	if (p == null) {
-    		id.setSchoolID(0L);
-    		p = MethodManager.findEntity(id);
-    	}
-    	return MethodManager.toDom(p);
+		p = MethodManager.findEntity(p.getMethodID());
+		long ms = p.getSchoolID().longValue();
+		long ss = school.getSchoolID().longValue();
+		if (ss == ms || ms == 0L)
+			return MethodManager.toDom(p);
+		return null;
     }
 
 }

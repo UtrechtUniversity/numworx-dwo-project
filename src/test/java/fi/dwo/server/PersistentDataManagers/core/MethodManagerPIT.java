@@ -75,7 +75,7 @@ public class MethodManagerPIT {
 
 	@Test
 	public void testDestroy() {
-		MethodManager.destroy(create().getId());
+		MethodManager.destroy(create().getMethodID());
 	}
 
 	@Test
@@ -90,7 +90,7 @@ public class MethodManagerPIT {
 	@Test
 	public void testFindEntity() {
 		PersistentMethod m = create();
-		PersistentMethod m2 = MethodManager.findEntity(m.getId());
+		PersistentMethod m2 = MethodManager.findEntity(m.getMethodID());
 		assertNotNull(m2);
 	}
 
@@ -99,7 +99,7 @@ public class MethodManagerPIT {
 		assertEquals(0, MethodManager.getEntityCount());
 		PersistentMethod m = create();
 		assertEquals(1, MethodManager.getEntityCount());
-		MethodManager.destroy(m.getId());
+		MethodManager.destroy(m.getMethodID());
 		assertEquals(0, MethodManager.getEntityCount());
 	}
 

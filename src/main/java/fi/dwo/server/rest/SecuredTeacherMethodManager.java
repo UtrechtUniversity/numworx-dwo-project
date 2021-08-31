@@ -68,7 +68,7 @@ public class SecuredTeacherMethodManager {
     	PersistentSchool school = hasRole.getSchool();
     	hasRole.buildSchoolAdminTeacher().setTeacher();
     	PersistentMethod p = MethodManager.toValue(rest.getDomMethod(), school);
-    	MethodManager.destroy(p.getId());
+    	MethodManager.destroy(p.getMethodID());
     	return Boolean.TRUE;
     }
 
@@ -80,7 +80,11 @@ public class SecuredTeacherMethodManager {
     	PersistentSchool school = hasRole.getSchool();
     	hasRole.buildSchoolAdminTeacher().setTeacher();
     	PersistentMethod p = MethodManager.toValue(rest.getDomMethod(), school);
-    	p = MethodManager.findEntity(p.getId());
-    	return MethodManager.toDom(p);
+    	p = MethodManager.findEntity(p.getMethodID());
+		long ms = p.getSchoolID().longValue();
+		long ss = school.getSchoolID().longValue();
+		if (ss == ms || ms == 0L)
+			return MethodManager.toDom(p);
+		return null;
     }
 }

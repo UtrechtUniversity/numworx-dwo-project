@@ -14,16 +14,14 @@ import javax.persistence.criteria.Root;
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 
-import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentMethod;
-import fi.dwo.commons.persistence.entities.PersistentMethodPK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 public class MethodManager {
     private static final Logger LOG = Logger.getLogger(MethodManager.class.getName());
+    private static final Long NUL = Long.valueOf(0L);
 
 	private MethodManager() {
 	}
@@ -77,7 +75,7 @@ public class MethodManager {
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                PersistentMethodPK id = method.getId();
+                String id = method.getMethodID();
                 if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The PersistentMethod with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
@@ -94,19 +92,19 @@ public class MethodManager {
     /**
      * Removes a user from the persistent store.
      *
-     * @param persistentMethodPK
+     * @param id
      */
-    public static void destroy(PersistentMethodPK persistentMethodPK) throws PersistenceException {
+    public static void destroy(String id) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             PersistentMethod method = null;
             try {
-                method = em.getReference(PersistentMethod.class, persistentMethodPK);
+                method = em.getReference(PersistentMethod.class, id);
                 method.getMethodID();
             } catch (EntityNotFoundException e) {
-                LOG.log(Level.FINE, "The PersistentMethod with " + persistentMethodPK + " no longer exists.", e);
+                LOG.log(Level.FINE, "The PersistentMethod with " + id + " no longer exists.", e);
                 throw e;
             }
             em.remove(method);
@@ -142,7 +140,7 @@ public class MethodManager {
         }
     }
 
-    public static PersistentMethod findEntity(PersistentMethodPK id) throws PersistenceException{
+    public static PersistentMethod findEntity(String id) throws PersistenceException{
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentMethod.class, id);
@@ -167,13 +165,14 @@ public class MethodManager {
         }
     }
 
-    static Genson genson = new GensonBuilder().setSkipNull(true).create();
+    static Genson genson = new GensonBuilder().setSkipNull(true).exclude("standard").create();
     
     
     public static DomMethod toDom(PersistentMethod p) {
     	DomMethod dm = genson.deserialize(p.getMethod(), DomMethod.class);
     	dm.setId(p.buildPersistenceId());
     	dm.setOptLock(p.getOptlock());
+    	dm.standard = NUL.equals(p.getSchoolID());
     	return dm;
     }
 
@@ -186,7 +185,7 @@ public class MethodManager {
     	dm.books = m.books;
     	p.setMethod(genson.serialize(dm));
     	p.setOptlock(m.getOptLock());
-    	p.setSchoolID(school.getSchoolID());
+    	p.setSchoolID(m.standard ? NUL : school.getSchoolID());
     	p.setMethodID(m.getId().getIdString());
     	return p;
     }
