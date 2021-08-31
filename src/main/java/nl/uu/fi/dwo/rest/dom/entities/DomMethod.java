@@ -20,6 +20,7 @@ public class DomMethod extends DomId {
 	  public List<String> books;
 	  public List<List<String>> chapters;
 	  public List<List<Integer>> edges;
+	  public boolean standard;
 	  
 	  public static String key(PersistenceId id) {
 	    if (id == null) return null;
