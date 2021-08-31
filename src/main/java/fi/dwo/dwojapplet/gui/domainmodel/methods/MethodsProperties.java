@@ -110,6 +110,7 @@ public class MethodsProperties extends ArrayList<DomMethod> {
       dm.chapters = Collections.emptyList();
       dm.edges = Collections.emptyList();
       dm.method = "Unknown method " + dm.key();
+      dm.standard = true;
       return dm;
     });
   }

@@ -95,6 +95,7 @@ import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherMethodManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
@@ -397,6 +398,35 @@ public class LeerdomeinEditPanel2 extends JPanel
 
       }
 	}
+	
+	class StandardAction extends AbstractAction {
+	  StandardAction() {
+	    super("Maak standaard leerdoel");
+	  }
+	  
+	  @Override
+	  public void actionPerformed(ActionEvent e) {
+	    int ok = JOptionPane.showConfirmDialog(LeerdomeinEditPanel2.this, "Weet je het echt heel zeker?", (String) getValue(NAME), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+	    if (ok == JOptionPane.OK_OPTION) {
+          try {
+            opslaanAction(e);
+            setEditable(false);
+            DomMethod dom = MethodsProperties.instance().getMethod(activeMethod);
+            if (dom != null && !dom.standard) {
+              dom.standard = true;
+              SecureTeacherMethodManager.updateModel(dom);
+            }
+            setModel(structure,PublishState.overt);
+            prop.getCurrent().setPublishState(PublishState.overt);
+            prop.updateModel(prop.getCurrent().getModelStructure());
+          } catch (Dwo2Exception e1) {
+            LOG.log(Level.SEVERE, "update to overt mode", e1);
+          }
+	    }
+	  }
+	}
+	
+	
 	
 	
 	InvisibleNode clipboard;
@@ -723,7 +753,7 @@ public class LeerdomeinEditPanel2 extends JPanel
             }
         });
 		Instellingen.add(new JMenuItem(new MethodeAction()));
-		
+		Instellingen.add(new JMenuItem(new StandardAction()));
 		
 		bar.add(Box.createHorizontalGlue());
 

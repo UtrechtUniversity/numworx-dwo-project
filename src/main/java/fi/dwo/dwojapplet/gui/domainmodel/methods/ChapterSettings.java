@@ -25,6 +25,7 @@ class ChapterSettings extends JPanel implements ActionListener
     private JTextField[][] chapterTextFields;
 	private JLabel[] chapterLabels;
 	private JTextField[] bookTextFields;
+	private boolean readonly;
 	
 	private String[] bookString;
 	
@@ -281,6 +282,24 @@ class ChapterSettings extends JPanel implements ActionListener
       bookTextFields[j].setText(bookString[j]);
     }
     resize();
+  }
+
+  /**
+   * @return the readonly
+   */
+  public boolean isReadonly() {
+    return readonly;
+  }
+
+  /**
+   * @param readonly the readonly to set
+   */
+  public void setReadonly(boolean readonly) {
+    this.readonly = readonly;
+    for(JTextField f: bookTextFields) f.setEnabled(!readonly);
+    for(JTextField[] fa: chapterTextFields)
+      for(JTextField f: fa)
+        f.setEnabled(!readonly);
   }
 
 }

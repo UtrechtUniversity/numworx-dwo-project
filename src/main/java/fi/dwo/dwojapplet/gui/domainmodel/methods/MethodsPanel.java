@@ -138,7 +138,7 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
 
     @Override
     public int getColumnCount() {
-      return 3;
+      return 4;
     }
 
     @Override
@@ -147,8 +147,9 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
       switch(columnIndex) {
         case 0: return row.method;
         case 1: return Objects.equals(row.getId(), current);
+        case 3: return row.standard;
         case 2: 
-          if (rowIndex > 0)
+          if (rowIndex > 0 && !row.standard)
             return removeIcon;
       }
       return null;
@@ -166,6 +167,7 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
         case 0: return "Lesmethode";
         case 1: return "Actieve lesmethode";
         case 2: return TextMapper.getText(TextMapper.TBL_DELETE);
+        case 3: return "Standaard";
 
       }
       return super.getColumnName(column);
@@ -175,6 +177,7 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
     public Class<?> getColumnClass(int columnIndex) {
       switch(columnIndex) {
         case 0: return String.class;
+        case 3:
         case 1: return Boolean.class;
         case 2: return Icon.class;
       }
@@ -184,6 +187,7 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
       if (rowIndex == 0 && columnIndex != 1) return false;
+      if (columnIndex == 3) return false;
       return true;
     }
 
@@ -227,12 +231,13 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
         }
         settings.setChapters(chapters);
         settings.makeGUI();
+        settings.setReadonly(rowSet.standard);
         if (rowIndex == 0) rowSet = null;
       }
     }
 
     private void updateRowSet() {
-      if (rowSet != null) {
+      if (rowSet != null && !rowSet.standard) {
         rowSet.method = txtField.getText();
         settings.makeObjects();
         rowSet.books = Arrays.asList(settings.getBooks());
