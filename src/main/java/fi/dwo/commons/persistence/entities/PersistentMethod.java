@@ -4,10 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
@@ -15,7 +12,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -25,16 +21,14 @@ import org.eclipse.persistence.annotations.Cache;
 import org.eclipse.persistence.annotations.CacheType;
 
 import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
-import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 @Entity
-@Table(name = "tblmethod", schema = "", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"schoollogin"})})
+@Table(name = "tblmethod", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PersistentMethod.findAll", query = "SELECT p FROM PersistentMethod p"),
-    @NamedQuery(name = "PersistentMethod.findBySchoolID", query = "SELECT q FROM PersistentMethod q WHERE q.id.schoolID = 0 OR q.id.schoolID = :schoolID")
+    @NamedQuery(name = "PersistentMethod.findBySchoolID", query = "SELECT q FROM PersistentMethod q WHERE q.schoolID = 0 OR q.schoolID = :schoolID")
 })
 @Cache( type=CacheType.SOFT, // Cache everything until the JVM decides memory is low. 
         size=10, // Use 64,000 as the initial cache size. 
@@ -43,9 +37,12 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 public class PersistentMethod implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    private PersistentMethodPK id = new PersistentMethodPK();
-     
+
+    @Id
+    @Column(name = "methodID", nullable = false)
+    private String methodID;
+    @Column(name = "schoolID", nullable = false)
+    private Long schoolID;
     @Column(name = "optlock")
     @Version 
     private Long optlock;
@@ -72,25 +69,22 @@ public class PersistentMethod implements Serializable {
      * @return persistenceId
      */
     public PersistenceId buildPersistenceId() {
-        if(id.getMethodID() == null) return null;
-        PersistenceId id = new PersistenceId(this.id.getMethodID());
+        if(getMethodID() == null) return null;
+        PersistenceId id = new PersistenceId(getMethodID());
         return id;
     }
 
-    public PersistentMethodPK getId() {
-        return id;
-    }
     public String getMethodID() {
-      return id.getMethodID();
+      return methodID;
     }
     public void setMethodID(String methodID) {
-      id.setMethodID(methodID);
+      this.methodID = methodID;
     }
     public Long getSchoolID() {
-      return id.getSchoolID();
+      return schoolID;
     }
     public void setSchoolID(Long schoolID) {
-      id.setSchoolID(schoolID);
+      this.schoolID = schoolID;
     }
     public Long getOptlock() {
       return optlock;
