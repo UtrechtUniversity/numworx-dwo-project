@@ -68,7 +68,11 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
       DomStudentModelScore<?> s = null;
       Node n = null;
       if (value instanceof DefaultMutableTreeNode) {
-        n = (Node) ((DefaultMutableTreeNode) value).getUserObject();
+        Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
+        if (!(userObject instanceof Node)) {
+          return label;
+        }
+        n = (Node) userObject;
         s = map.get(n.getInfo());
       }
       Box hb = Box.createHorizontalBox();
@@ -157,6 +161,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
   private JCheckBox methodBox;
   
   private EditableGraph graph;
+  private MethodListener methodListener;
 
   StudentResultsPanel(String student) {
     super(new BorderLayout());
@@ -215,6 +220,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     methodBox = new JCheckBox("Method");
     filterAction = new FilterAction(this, this::filter);
     JButton filter = new JButton(filterAction);
+    methodListener = new MethodListener(methodBox, tree, filterAction);
     leftSouth.add(Box.createHorizontalGlue());
     leftSouth.add(methodBox);
     leftSouth.add(filter);
@@ -255,13 +261,10 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     voorkennisRO.setPreferredSize(new Dimension(120,24));
     settingsRO.add(voorkennisRO);
     settingsRO.add(Box.createHorizontalGlue());
-    JButton genrRO = new JButton(new AnyMethodAction(true, this, tree).init(1)); genrRO.setFont(font);
-    genrRO.setPreferredSize(new Dimension(140,24));
-    settingsRO.add(genrRO);
-    settingsRO.add(Box.createHorizontalStrut(10));
-    JButton mwRO = new JButton(new AnyMethodAction(true, this, tree).init(2)); mwRO.setFont(font);
-    mwRO.setPreferredSize(new Dimension(140,24));
-    settingsRO.add(mwRO);
+    amAction = new AnyMethodAction(true, this, tree).init(0);
+    JButton activeMethodRO = new JButton(amAction); activeMethodRO.setFont(font);
+    activeMethodRO.setPreferredSize(new Dimension(140,24));
+    settingsRO.add(activeMethodRO);
     settingsRO.setBorder(BorderFactory.createEmptyBorder(10,10,8,10));
   
     
@@ -301,8 +304,8 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     PersistenceId activeMethod = context.getModelStructure().getActiveMethod();
     graph.setModel(this.model,null,activeMethod);
     filterAction.setActiveMethod(activeMethod);
-    methodBox.setText(MethodsProperties.instance().getMethod(activeMethod).getMethod());
-    methodBox.setEnabled(activeMethod != null);
+    methodListener.setActiveMethod(activeMethod);
+    amAction.setMethode(activeMethod);
     methodBox.setSelected(false);
 
   }
@@ -337,20 +340,22 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     if (e.isAddedPath()) {
       TreePath path = tree.getSelectionPath();
       DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-      Node n = (Node)node.getUserObject();
+      Object userObject = node.getUserObject();
       FontMetrics fontMetrics = score.getFontMetrics(score.getFont());
       PIcon icon;
-      DomStudentModelScore<?> s = map.get(n.getInfo());
-      icon = createIcon(n, s, fontMetrics);
-
-      score.setIcon(icon);
-      
+      if (userObject instanceof String) {
+        icon = new ScoreIcon(ScoreIcon.UNSURE, ScoreIcon.UNSURE, fontMetrics);        
+      } else {
+        Node n = (Node)userObject;
+        DomStudentModelScore<?> s = map.get(n.getInfo());
+        icon = createIcon(n, s, fontMetrics);
+      }
+      score.setIcon(icon);      
       red.setText(icon.getRedPercentage());
       green.setText(icon.getGreenPercentage());
-
-      subtitle.setText(n.toString());
-      setDescription(n);     
-      calculatePath(path);     
+      subtitle.setText(userObject.toString());
+      setDescription(userObject);     
+      //calculatePath(path);     
     }
   }
 
@@ -375,7 +380,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     Object[] o = path.getPath();
     int[] result = new int[o.length];
     for (int i = 0; i < result.length; i++) {
-      result[i] = ((Node) ((DefaultMutableTreeNode) o[i]).getUserObject()).getPath();
+      result[i] = ((Node) ((DefaultMutableTreeNode) o[i]).getUserObject()).getPath(); // cast to Node
     }
     return result;
   }
@@ -405,6 +410,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
 
     graph.setModel(model,null, context.getModelStructure().getActiveMethod());
     graph.setScore(structureScore);
+    methodListener.filterMethod(filter);
   }
 
 
@@ -450,6 +456,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
   private JPanel right;
   private JSplitPane splitLeft;
   private FilterAction filterAction;
+  private AnyMethodAction amAction;
   
   public void setScore(DomStudentModelStructureScore v) {
     this.structureScore = v;

@@ -67,7 +67,7 @@ public class MethodListener implements ItemListener {
             Set<String> infos = GraphNode.extractInfos(nl.getMethode()).keySet();
             String title = nl.toString();
             for(String mi : infos) {
-              nodes.computeIfPresent(mi, (k, n) -> { InvisibleNode node = new InvisibleNode(new NodeLeaf(title, nl.getInfo(),nl.getLanguage()), false, true);insertMethod(n,node); return n; });
+              nodes.computeIfPresent(mi, (k, n) -> { InvisibleNode node = new InvisibleNode(new NodeLeaf(title, nl.getInfo(),nl.getLanguage(), false), false, true);insertMethod(n,node); return n; });
             }
           }
         }

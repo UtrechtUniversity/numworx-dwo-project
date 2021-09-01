@@ -790,7 +790,6 @@ public class LeerdomeinEditPanel2 extends JPanel
         JButton filterBtn = new JButton(filterAction);
         methodBox = new JCheckBox("Methode");
         methodListener = new MethodListener(methodBox, tree, filterAction);
-        methodBox.addItemListener(methodListener);
         leftSouth.add(methodBox);
 		leftSouth.add(Box.createHorizontalGlue());
 		leftSouth.add(filterBtn);
@@ -831,7 +830,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 //		AnyMethodAction methodeAction3 = new AnyMethodAction(true, this, tree);
         methodeAction4 = new AnyMethodAction(true, this, tree);
 //		methodeAction3.setMethode(MethodsProperties.instance().get(1));
-        methodeAction4.setMethode(MethodsProperties.instance().get(0));
+        methodeAction4.init(0);
 		
 //        JButton genrRO = new JButton(methodeAction3);
 //		genrRO.setFont(font);
