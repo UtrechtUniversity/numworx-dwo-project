@@ -396,7 +396,8 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                 case 5:
                     return cd[rowIndex].tot;
                 case 6: 
-                	return cd[rowIndex].accessKey;
+                    if (OBJECT_TYPE[1] == getValueAt(rowIndex, COURSE_TYPE))
+                      return cd[rowIndex].accessKey;
             }
             return null;
         }
@@ -441,11 +442,15 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
             switch (columnIndex) {
+              case 6: // ww
+                return 
+                    OBJECT_TYPE[1] == getValueAt(rowIndex, COURSE_TYPE) &&
+                    Boolean.TRUE.equals(cd[rowIndex].select);
                 case COURSE_TYPE:
                 case 4:
                 case 5:
-                case 6:
                     return Boolean.TRUE.equals(cd[rowIndex].select);
+
                 case 0:
                     return !cd[rowIndex].course.isWithChildren();
                 case 1:
@@ -481,6 +486,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                     } else {
                         cd[rowIndex].type = 0;
                     }
+                    fireTableCellUpdated(rowIndex, 6);
                     break;
                 case 4:
                     cd[rowIndex].van = (Date) aValue;
