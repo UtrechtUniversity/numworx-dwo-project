@@ -788,7 +788,12 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         message.add(dayChooser);
         String msg = TextMapper.getText("Geef tijdstip {0}");
         msg = MessageFormat.format(msg, new Object[]{hoe});
-        int r = JOptionPane.showConfirmDialog(parent, message, msg, JOptionPane.YES_NO_CANCEL_OPTION);
+        int r = JOptionPane.showOptionDialog(parent, message, msg, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, 
+          new Object[] { 
+                        TextMapper.getText(TextMapper.GUIP_BTN_SAVE), 
+                        TextMapper.getText(TextMapper.TBL_DELETE), 
+                        TextMapper.getText(TextMapper.BTN_CANCEL)}, 
+          null);
         if (r == JOptionPane.YES_OPTION) {
             van = dayChooser.getDate();
             Date t = (Date) timeChooser.getValue();
