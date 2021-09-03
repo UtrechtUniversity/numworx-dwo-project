@@ -929,7 +929,7 @@ CREATE TABLE `tbluser` (
   KEY `USER_GROUP_FK` (`schoolGroupID`),
   KEY `STUDENT_CLASS_FK` (`classID`),
   CONSTRAINT `tbluser_ibfk_1` FOREIGN KEY (`schoolGroupID`) REFERENCES `tblschoolgroup` (`schoolGroupID`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
