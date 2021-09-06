@@ -65,6 +65,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
@@ -500,22 +501,30 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         final ItemListener sealListener = new ItemListener() {
 
           @Override
-          public void itemStateChanged(ItemEvent e) {
-              boolean selected = sealmodel.isSelected();
-              if (!selected && DwoHelper.isPremium()) {
-                int ok = JOptionPane.showConfirmDialog(sd.studentSeal, 
-                  TextMapper.dwo2Message().NUM_LBL_UNSEAL(), 
-                  TextMapper.dwo2Message().NUM_LBL_STUDENTSCO_SEAL(), JOptionPane.OK_CANCEL_OPTION);
-                if (ok != JOptionPane.OK_OPTION) {
-                  sealmodel.setSelected(true);
-                  return;
-                }
+          public void itemStateChanged(ItemEvent e) { // Focuslost event zit in de weg, die set de checkbox stiekem weer aan.
+                SwingUtilities.invokeLater(
+                new Runnable() {
+                  public void run() {
+                    boolean selected = sealmodel.isSelected();
+                    if (!selected && DwoHelper.isPremium()) {
+                    int ok = JOptionPane.showConfirmDialog(sd.studentSeal,
+                        TextMapper.dwo2Message().NUM_LBL_UNSEAL(),
+                        TextMapper.dwo2Message().NUM_LBL_STUDENTSCO_SEAL(),
+                        JOptionPane.OK_CANCEL_OPTION);
+                    if (ok != JOptionPane.OK_OPTION) {
+                      sealmodel.setSelected(true);
+                      return;
+                    } else {
+                      //sd.studentSeal.setSelected(false);
+                    }}
+                    sp.getSco().getApplet().stop();
+                    sp.LMSSetValue("cmi.completion_status", selected ? "completed" : "incomplete");
+                    sp.appletStart(); 
+                  }
+                });
               }
-              sp.getSco().getApplet().stop();
-              sp.LMSSetValue("cmi.completion_status", selected ? "completed" : "incomplete");
-              sp.appletStart(); 
           }
-        };;
+        ;
 
         final ItemListener itemListener = new ItemListener() {
 
