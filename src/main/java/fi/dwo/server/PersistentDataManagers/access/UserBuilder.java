@@ -112,17 +112,26 @@ class UserBuilder implements UserDomainAuthorizer.UserState_U, UserDomainAuthori
         PersistentHasRole phr;
         //determine default hasRole.
         phr = HasRoleManager.findEntity(phrPK);
-        if (phr == null || phr.getUser().getId().longValue() != instance.getContext().getUserCtx().user.getId().longValue() //users is valid
+        UserPersistentContext userCtx = instance.getContext().getUserCtx();
+		if (phr == null || phr.getUser().getId().longValue() != userCtx.user.getId().longValue() //users is valid
                 || phr.getSchoolGroup().getSchoolGroupID().longValue() != phrPK.getSchoolGroupID().longValue() //requested hasRole exists
                 ) {
-            String msg = MessageFormat.format("Hasrole {1} for userlogin {0} could not be found.", new Object[]{instance.getContext().getUserCtx().getUser().getUsername(), this.instance.getContext().getUserCtx().getHasRole().getPersistentHasRolePK()});
+            String msg = MessageFormat.format("Hasrole {1} for userlogin {0} could not be found.", new Object[]{userCtx.getUser().getUsername(), userCtx.getHasRole().getPersistentHasRolePK()});
             LOG.log(Level.SEVERE, msg);
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, msg);
         }
-        instance.getContext().getUserCtx().setSchoolGroup(phr.getSchoolGroup());
-        instance.getContext().getUserCtx().school = phr.getSchoolGroup().getSchool();
-        instance.getContext().getUserCtx().setHasRole(phr);
-        instance.getContext().getUserCtx().setRoleType(RoleType.values()[phr.getSchoolGroup().getRole().getGroupID().intValue()]);
+        if (userCtx.getSchoolGroup() != null) {
+        	if ( !userCtx.getSchoolGroup() .getSchoolGroupID().equals(phrPK.getSchoolGroupID())) {
+                String msg = MessageFormat.format("Hasrole {1} not equals {0} something nasty happened.", new Object[]{phrPK, this.instance.getContext().getUserCtx().getSchoolGroup().getSchoolGroupID()});
+                LOG.log(Level.SEVERE, msg);
+                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, msg);
+      		
+        	}
+        }
+        userCtx.setSchoolGroup(phr.getSchoolGroup());
+        userCtx.school = phr.getSchoolGroup().getSchool();
+        userCtx.setHasRole(phr);
+        userCtx.setRoleType(RoleType.values()[phr.getSchoolGroup().getRole().getGroupID().intValue()]);
         return this;
     }
 
@@ -317,7 +326,13 @@ class UserBuilder implements UserDomainAuthorizer.UserState_U, UserDomainAuthori
 	UserState_U setUser(Principal principal) throws Dwo2Exception {
 		PersistentUser user;
 		if (principal instanceof DwoUserPrincipal)
-			user = ((DwoUserPrincipal) principal).getUser();
+		{
+			DwoUserPrincipal dwoUserPrincipal = (DwoUserPrincipal) principal;
+			user = dwoUserPrincipal.getUser();
+			PersistentSchoolGroup sg = dwoUserPrincipal.getSg();
+			instance.getContext().getUserCtx().setSchoolGroup(sg);
+			instance.getContext().getUserCtx().setSchool(sg.getSchool());
+		}
 		else
 			user = UserManager.findByUserName(principal.getName());
         this.instance.getContext().getUserCtx().setUser(user);
