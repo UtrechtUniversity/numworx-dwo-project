@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -20,14 +21,19 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEventHandler;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsServiceTeacher;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.ModulesOfSchoolclassService;
 import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
@@ -68,6 +74,7 @@ public class ResultsService implements SwitchViewEventHandler {
     private SecuredTeacherResultsManager manager = new SecuredTeacherResultsManager();
     private SecuredTeacherScormValuesManager scormValues = new SecuredTeacherScormValuesManager();
     private SecuredStudentScoDataManager scoData = new SecuredStudentScoDataManager();
+    private ModulesOfSchoolclassService modules;
 
     private final DwoGlobalVars dwoGlobalVars;
 
@@ -86,6 +93,19 @@ public class ResultsService implements SwitchViewEventHandler {
     ResultsService(DwoGlobalVars aDwoGlobalVars) {
         dwoGlobalVars = aDwoGlobalVars;
     }
+    
+    @Inject
+    void setModulesService(ModulesOfSchoolclassService service) {
+    	modules = service;
+    }
+    
+    Promise<DomCoursesOfSchoolClass4Teacher> getModules(DomSchoolClass dsc) {
+    	return modules.getModules(dsc).then(this::modulesSort);
+    }
+    
+    private void logfailure(Promise<?> q) {
+    	LOG.log(Level.SEVERE, "failure", q.getFailure());
+    }
 
     Promise<DomResultsPerTeacher> getResultsPerTeacher() {
         DomContext context = getContext();
@@ -96,17 +116,71 @@ public class ResultsService implements SwitchViewEventHandler {
                     Promise<DomDwoProfile> resolved) throws Exception {
                 return manager.getTeachersResults(context, resolved.getValue());
             }
-        });
+        }).then(this::courseSort).then(null, this::logfailure);
     }
 
-    Promise<DomResultsPerTeacher> selectedResultsPerTeacher(DomSchoolClass schoolClass, Collection<DomCourse> courseList) {
+    Promise<DomCoursesOfSchoolClass4Teacher> modulesSort(Promise<DomCoursesOfSchoolClass4Teacher> p ) {
+    	absoluteOrdening(p.getValue().getCourses(), p.getValue().getCourses());
+    	return p;
+    }
+    
+    
+    Promise<DomResultsPerTeacher> courseSort(Promise<DomResultsPerTeacher> p) {
+    	List<DomMapEntry<PersistenceId, DomSchoolClass>> list = p.getValue().getSchoolClasses();
+    	if (!list.isEmpty()) {
+    		DomSchoolClass sample = list.get(0).getValue();
+    		return modules.getModules(sample).then(q -> {
+    			
+    			absoluteOrdening(q.getValue().getCourses(), p.getValue().getCourses());
+    			return p;
+    		});
+    	}
+    	return p;
+    }
+    
+    
+    private void setPath(Map<PersistenceId, DomCourse> tree, DomCourse course) {
+    	StringBuilder sb = new StringBuilder();
+    	DomCourse item = course;
+    	do {
+    		Long sequenceNr = item.getSequenceNr();
+    		char sequence;
+    		if (sequenceNr != null)
+			  sequence = (char) (sequenceNr.intValue()+'0');
+    		else
+    		  sequence = ' ';
+    		sb.insert(0, sequence);
+    		PersistenceId parent = item.getParentID();
+    		item = tree.get(parent);
+    	} while(item != null);
+    	if (course.getSchoolId() == null) {
+    		sb.insert(0,'0');
+    	} else {
+    		sb.insert(0,  '1');
+    	}
+    	course.setTreeIndex(sb.toString());
+    }
+    
+    // sort the array courses useing 'all' courses tree
+    private void absoluteOrdening(List<DomMapEntry<PersistenceId, DomCourse>> all,
+			List<DomMapEntry<PersistenceId, DomCourse>> courses) {
+		final Map<PersistenceId, DomCourse> tree = all.stream().collect(Collectors.toMap(DomMapEntry::getKey, DomMapEntry::getValue));
+		courses.forEach(item -> setPath(tree, item.getValue()));
+		Collections.sort(courses, (a,b) -> a.getValue().getTreeIndex().compareTo(b.getValue().getTreeIndex()));
+		long seq = 1;
+		for(DomMapEntry<PersistenceId, DomCourse> item: courses) {
+			item.getValue().setSequenceNr(seq++);
+		}
+	}
+
+	Promise<DomResultsPerTeacher> selectedResultsPerTeacher(DomSchoolClass schoolClass, Collection<DomCourse> courseList) {
       DomContext context = getContext();
       DomResultsPerTeacher dom = new DomResultsPerTeacher();
       dom.setSchoolClasses(Collections.singletonList(new DomMapEntry<PersistenceId, DomSchoolClass>(schoolClass.getId(), schoolClass)));
       dom.setCourses(courseList.stream()
         .map( item -> new DomMapEntry<>(item.getId(), item))
         .collect(Collectors.toList()));
-      return dwoGlobalVars.getProfile().flatMap((profile) -> manager.selectedTeachersResults(context, profile, dom));
+      return dwoGlobalVars.getProfile().flatMap((profile) -> manager.selectedTeachersResults(context, profile, dom)).then(this::courseSort);
     }
     
     

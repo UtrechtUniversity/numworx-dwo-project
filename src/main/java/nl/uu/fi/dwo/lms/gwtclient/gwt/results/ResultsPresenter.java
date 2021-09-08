@@ -58,7 +58,6 @@ public class ResultsPresenter extends AbstractResultsPresenter {
     private Display view;
     @Inject ResultsService resultService;
     @Inject PersonsService  personService;
-    @Inject ModulesOfSchoolclassService modulesService;
 
    //premodel
     private Promise<DomMappedResultsPerTeacher> mappedResults;
@@ -224,7 +223,7 @@ public class ResultsPresenter extends AbstractResultsPresenter {
         mappedResults = mappedResults.flatMap(map -> {
           if (map.getClassCourses().values().stream().map(DomClassCourse4Teacher::getClassId).anyMatch(id::equals))
             return Promises.resolved(map);
-          return modulesService.getModules(findSchoolClass(map, id)).map( modules -> inject(map, modules));
+          return resultService.getModules(findSchoolClass(map, id)).map( modules -> inject(map, modules));
         } ).fallbackTo(recover);
 
         // if no classcourses of schoolclass, fetch them from server....
