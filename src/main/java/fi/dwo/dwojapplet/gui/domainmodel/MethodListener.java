@@ -12,7 +12,6 @@ import java.util.Set;
 import javax.swing.JCheckBox;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 
@@ -22,6 +21,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class MethodListener implements ItemListener {
+  public static final String BEGRIPPEN_EN_VAKTAAL = "Begrippen en vaktaal";
 
   final JCheckBox methodBox;
   InvisibleTreeModel methodModel;
@@ -57,6 +57,10 @@ public class MethodListener implements ItemListener {
             book.add(chap);
             String key = current.key() + "-" + book.toString() + "-" + (j+1);
             nodes.put(key, chap);
+            InvisibleNode benv = new InvisibleNode(BEGRIPPEN_EN_VAKTAAL, true, true);
+            chap.add(benv);
+            key = key + "-W:";
+            nodes.put(key,  benv);
           }
         }
         Enumeration<DefaultMutableTreeNode> all = ((DefaultMutableTreeNode) model.getRoot()).depthFirstEnumeration();
@@ -67,6 +71,8 @@ public class MethodListener implements ItemListener {
             Set<String> infos = GraphNode.extractInfos(nl.getMethode()).keySet();
             String title = nl.toString();
             for(String mi : infos) {
+              if (title.startsWith("W:")) 
+                mi += "-W:";
               nodes.computeIfPresent(mi, (k, n) -> { InvisibleNode node = new InvisibleNode(new NodeLeaf(title, nl.getInfo(),nl.getLanguage(), false), false, true);insertMethod(n,node); return n; });
             }
           }
@@ -137,10 +143,10 @@ public class MethodListener implements ItemListener {
   }
 
   private int compareMethod(String as, String bs) {
-    boolean wa = as.startsWith("W:");
-    boolean wb = bs.startsWith("W:");
-    if (wa && ! wb) return -1;
-    if (!wa && wb) return +1;
+    boolean wa = as == BEGRIPPEN_EN_VAKTAAL;
+    boolean wb = bs == BEGRIPPEN_EN_VAKTAAL;
+    if (wa && !wb) return +1;
+    if (!wa && wb) return -1;
     return as.compareTo(bs);
   }
 

@@ -8,7 +8,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.FocusTraversalPolicy;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.MouseAdapter;
@@ -27,10 +26,8 @@ import java.net.CookiePolicy;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -46,7 +43,6 @@ import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.JApplet;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -63,6 +59,7 @@ import fi.beans.dwomaccess.Compressor;
 import fi.beans.jxbchecker.JXBChecker;
 import fi.beans.loader.Loader;
 import fi.beans.mainframe.MainFrame;
+import fi.beans.mainframe.JApplet;
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
@@ -1918,12 +1915,6 @@ LOG.info("time results = " + (-t) + " ms");
      */
     public static void main(String[] args) throws Exception {
 
-        //String  lookAndFeel = UIManager.getCrossPlatformLookAndFeelClassName();
-        //lookAndFeel = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
-        //lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
-        //lookAndFeel = UIManager.getSystemLookAndFeelClassName();
-        //UIManager.setLookAndFeel(lookAndFeel);
-//        UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
         LOG.log(Level.INFO, "Starting the DWO as an application.");
         int width = GuiConstants.DWO_WIDTH;
         int height = GuiConstants.DWO_HEIGHT;
