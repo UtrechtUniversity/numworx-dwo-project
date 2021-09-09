@@ -91,7 +91,8 @@ public class OrganisationPresenter {
     DomSchool school = dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool();
     String schoolRights = school.getSchoolRights();
     boolean premium = dwoGlobalVars.isPremium();
-	view.initEditModules(schoolRights.contains("m"), schoolRights.contains("X") && premium, premium);
+    boolean visible = dwoGlobalVars.isTest() || dwoGlobalVars.isSaml();
+	view.initEditModules(schoolRights.contains("m"), schoolRights.contains("X") && premium, visible && premium);
     view.initChooseClass(schoolRights.contains("c"));
     
     Promise<List<DomSchoolClass>> pp = service.getTeachersSchoolClasses().then(
