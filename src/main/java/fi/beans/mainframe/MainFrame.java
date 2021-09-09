@@ -1,6 +1,6 @@
 package fi.beans.mainframe;
 
-import java.applet.*;
+import java.applet.Applet;
 import java.awt.*;
 import java.awt.image.*;
 import java.net.*;
@@ -37,6 +37,11 @@ public class MainFrame extends Frame implements WindowListener, AppletStub, Appl
     
     private Applet applet;
 
+    public MainFrame(JApplet japplet, int width, int height) {
+      this( (Applet)japplet, width, height);
+    }
+    
+    @Deprecated
     public MainFrame(Applet applet, int width, int height) {
         this.applet = applet;
 
@@ -123,11 +128,6 @@ public class MainFrame extends Frame implements WindowListener, AppletStub, Appl
         return this;
     }
 
-    // AppletContext methodes
-    @Override
-    public AudioClip getAudioClip(URL url) {
-        return java.applet.Applet.newAudioClip(url);
-    }
 
     @Override
     public Image getImage(URL url) {
@@ -139,16 +139,6 @@ public class MainFrame extends Frame implements WindowListener, AppletStub, Appl
         catch (Exception e) {
             return null;
         }
-    }
-
-    @Override
-    public Applet getApplet(String name) {
-        return null;
-    }
-
-    @Override
-    public Enumeration getApplets() {
-        return null;
     }
 
     @Override
