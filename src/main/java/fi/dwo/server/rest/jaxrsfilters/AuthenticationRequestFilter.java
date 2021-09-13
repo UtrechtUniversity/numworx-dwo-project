@@ -239,6 +239,7 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
         }
         String authFields[] = headerString.trim().split(":");
         PersistentUser u = UserManager.findByUserName(authFields[0]);
+        if (u == null) return null;
         List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
         for (PersistentLoginContext l : loginContextList) {
             if (TOTP.verifyTOTP(authFields[1], DatatypeConverter.printHexBinary(l.getSecretKey()), "8")) {

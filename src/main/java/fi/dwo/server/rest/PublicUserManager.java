@@ -352,6 +352,10 @@ public class PublicUserManager {
                 }
                 String authFields[] = headerString.trim().split(":");
                 PersistentUser u = UserManager.findByUserName(authFields[0]);
+                if (u == null) {
+                    LOG.log(Level.SEVERE, "Illegal authToken {0}, no user", authFields[0]); // ik denk een caching effect in de ...?a=XXXX parameter
+                    break;
+                }
                 List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
                 for (PersistentLoginContext l : loginContextList) {
                     if (l.getSecretKey() != null &&
