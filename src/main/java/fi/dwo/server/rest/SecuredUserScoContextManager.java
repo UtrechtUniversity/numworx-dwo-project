@@ -2,6 +2,7 @@ package fi.dwo.server.rest;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -24,6 +25,7 @@ import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer.StudentState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
@@ -36,6 +38,7 @@ import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -62,14 +65,14 @@ public class SecuredUserScoContextManager {
     @Path("/getScos")
     @Produces({"application/json"})
     public List<DomScoContext> getScos(@Context SecurityContext sc, RestCourse rest, @Context UriInfo info) throws Dwo2Exception {
+    	UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
 // TODO NPE tests 		    		
 		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
-		DomHasRole domHasRole = rest.getRestContext().getDomHasRole();
 		DomCourse domCourse = rest.getDomCourse();
 // Context
         PersistentUser user = null;
         try {
-            user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+            user = state.getUser();
             LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
         }
         catch (Exception e) {
@@ -79,12 +82,11 @@ public class SecuredUserScoContextManager {
 // Security 		
 		long pid = MySQLPersistenceId.getNativeId(domDwoProfile);
 		long cid = MySQLPersistenceId.getNativeId(domCourse);
-        PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(domHasRole);
 
 		PersistentDwoProfile profile = DwoProfileManager.findEntity(pid);
 		PersistentCourse parent = CourseManager.findEntity(cid);
-        PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
-        PersistentSchool school = HasRoleUtilManager.getSchoolforHasRole(phr);
+        PersistentHasRole phr = state.getHasRole();
+        PersistentSchool school = state.getSchool();
 // match profile		
 		if ( pid != parent.getDwoProfileID().longValue())
 		{
@@ -92,6 +94,8 @@ public class SecuredUserScoContextManager {
 			//return Collections.emptyList();
 		}
 // match school
+		Predicate<PersistentScoContext> predicate = t -> true;
+		
 		if (parent.getSchoolID() != null) {
 			if (parent.getSchoolID().longValue() != school.getSchoolID().longValue())
 			{
@@ -102,7 +106,19 @@ public class SecuredUserScoContextManager {
 			if (profile.isLimited()) {
 				// assert school in profile database....
 			}
+			RoleType role = state.getRoleType();
+			if (role == RoleType.STUDENT && rest.getSchoolClassID() == null)
+			{
+				predicate = PersistentScoContext::isOefenen;
+			} else if (role == RoleType.STUDENT) {
+				DomSchoolClass domSchoolClass = new DomSchoolClass();
+				domSchoolClass.setId(rest.getSchoolClassID().getId());
+				StudentState_HR_R_S_SG_U s = state.buildStudent().setSchoolClass(domSchoolClass);
+				
+			// FIXME more checks... parent en PersistentSchoolClass s.getSchoolClass();
+			}
 		}
+		
 // userid must match
 		if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
 		{
@@ -112,7 +128,9 @@ public class SecuredUserScoContextManager {
 
 		List<PersistentScoContext> list = ScoContextManager.findEntities(parent);
 		String hasRoleId = phr.buildPersistenceId().getIdString();
-		return list.stream().map((s)->builder(s,parent,info,hasRoleId)).sorted(new DomScoContextComparator()).collect(Collectors.toList());    	
+		return list.stream()
+				.filter(predicate)
+				.map((s)->builder(s,parent,info,hasRoleId)).sorted(new DomScoContextComparator()).collect(Collectors.toList());    	
     }
 
     

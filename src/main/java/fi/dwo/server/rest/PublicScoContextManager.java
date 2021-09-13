@@ -71,7 +71,9 @@ public class PublicScoContextManager {
 		}
 		
 		List<PersistentScoContext> list = ScoContextManager.findEntities(parent);	
-		return list.stream().map((s)->builder(s,parent, info)).sorted(new DomScoContextComparator()).collect(Collectors.toList());    	
+		return list.stream()
+				.filter(PersistentScoContext::isOefenen)
+				.map((s)->builder(s,parent, info)).sorted(new DomScoContextComparator()).collect(Collectors.toList());    	
     }
 
     private DomScoContext builder(PersistentScoContext s, PersistentCourse parent, UriInfo info) {
