@@ -57,7 +57,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 
     private static final Logger LOG = Logger.getLogger(TeacherStudentModelPanel.class.getName());
 
-    public TeacherStudentModelPanelProperties prop = new TeacherStudentModelPanelProperties();
+    public final TeacherStudentModelPanelProperties prop;
     private TeacherStudentModelPanelTableModel tableModel;
 
     private CenterPanel center;
@@ -333,13 +333,19 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 
     }
 
+    
+    
     /**
      * Creates a new ClassPanel which shows a list of classes.
      *
      * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public TeacherStudentModelPanel() throws Dwo2Exception {
+      this(new TeacherStudentModelPanelProperties());
+    }
+    public TeacherStudentModelPanel(TeacherStudentModelPanelProperties prop) throws Dwo2Exception {
         super(null);
+        this.prop = prop;
         this.setSize(480, 500);
 
         //fetch user details.

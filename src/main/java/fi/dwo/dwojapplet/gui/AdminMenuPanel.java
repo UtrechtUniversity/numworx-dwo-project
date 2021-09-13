@@ -3,6 +3,8 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.gui.GuestMenuPanel.MenuPanelButton;
 import fi.dwo.dwojapplet.gui.action.AppletConfigAction;
 import fi.dwo.dwojapplet.gui.action.DwoProfileAction;
 
@@ -20,6 +22,7 @@ public class AdminMenuPanel extends UserMenuPanel {
     private MenuPanelButton userManagementButton;
     private MenuPanelButton profileManagementButton;
     private MenuPanelButton schoolManagementButton;
+    private MenuPanelButton studentModelButton;
 
     /* (non-Javadoc)
      * @see fi.dwo.client.gui.StudentMenuPanel#createMenuButtons()
@@ -45,6 +48,13 @@ public class AdminMenuPanel extends UserMenuPanel {
         createGap();
         this.add(new MenuPanelButton(new AppletConfigAction()));
         createGap();
+        /* Add StudentModel Button */
+//      studentModelButton = new MenuPanelButton(Dwo2LocaleMessageTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2LocaleMessageCode.GUI_Button_StudentModels));
+        if(DwoHelper.isTest()){
+          studentModelButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_STUDENTMODELS));
+          studentModelButton.addActionListener(this);
+          this.add(studentModelButton);
+        }
 
 //        /* Add CourseManagement Button */
 //        if (CenterPanel.isIconizer()) {
@@ -79,24 +89,26 @@ public class AdminMenuPanel extends UserMenuPanel {
     @Override
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-
-//        if (e.getSource() == courseManagementButton) {
-//            GuiCreator.instance().setWait();
-//            CenterSubPanel cp = GuiCreator.instance().getCourseManagementPanel();
-//            center.loadCenter(cp);
-//            GuiCreator.instance().setReady();
-//        } else 
-          if (e.getSource() == schoolManagementButton) {
-            GuiCreator.instance().setWait();
-            CenterSubPanel cp = GuiCreator.instance().getSchoolPanel();
+        Object source = e.getSource();
+        GuiCreator instance = GuiCreator.instance();
+        if (source == schoolManagementButton) {
+            instance.setWait();
+            CenterSubPanel cp = instance.getSchoolPanel();
             center.loadCenter(cp);
-            GuiCreator.instance().setReady();
-        } else if (e.getSource() == userManagementButton) {
-            GuiCreator.instance().setWait();
-            CenterSubPanel cp = GuiCreator.instance().getUserManagementPanel();
+            instance.setReady();
+        } else if (source == userManagementButton) {
+            instance.setWait();
+            CenterSubPanel cp = instance.getUserManagementPanel();
             center.loadCenter(cp);
-            GuiCreator.instance().setReady();
-        }
+            instance.setReady();
+        } else if (source == studentModelButton) {
+            instance.setWait();
+            try { 
+              CenterSubPanel cp = instance.getStudentModelPanel();
+              center.loadCenter(cp);
+            } finally { instance.setReady(); }
+            return;
+      }
     }
 
 }

@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 
 /**
  *
@@ -49,7 +50,8 @@ class TeacherStudentModelPanelTableModel extends AbstractTableModel {
             }
             data[j][0] = m.getModelStructure().getInfo().getTitle().get(DwoHelper.getLocale().getLocale());
             data[j][1] = searchImage;
-            data[j][2] = removeImage;
+            boolean readonly = m.getPublishState() == PublishState.overt;
+            data[j][2] = readonly ? null : removeImage;
             data[j][3] = resultsImage;
             data[j][4] = classImage;
             data[j][5] = m;
@@ -85,6 +87,7 @@ class TeacherStudentModelPanelTableModel extends AbstractTableModel {
      */
     @Override
     public Class getColumnClass(int c) {
+        if (c == 2) return Image.class;
         if (getRowCount() > 0 && getValueAt(0, c) != null) {
             return getValueAt(0, c).getClass();
         }
@@ -98,6 +101,9 @@ class TeacherStudentModelPanelTableModel extends AbstractTableModel {
     public boolean isCellEditable(int row, int col) {
         //Note that the data/cell address is constant,
         //no matter where the cell appears onscreen.
+        if (col == 2) {
+          return data[row][2] != null;
+        }
         if (col < 1) {
             return false;
         } else {

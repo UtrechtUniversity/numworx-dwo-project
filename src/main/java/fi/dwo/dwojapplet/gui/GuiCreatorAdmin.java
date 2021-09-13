@@ -44,6 +44,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminConfigManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminScoContextManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminStudentModelManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
@@ -467,6 +468,18 @@ public class GuiCreatorAdmin extends GuiCreator {
      */
     public boolean readOnly(Object o) {
       return false;
+    }
+
+    
+    @Override
+    public CenterSubPanel getStudentModelPanel()  {
+        try {
+            return new TeacherStudentModelPanel(new TeacherStudentModelPanelProperties(new SecureDwoAdminStudentModelManager()));
+        } catch (Dwo2Exception ex) {
+            Logger.getLogger(GuiCreatorTeacher.class.getName()).log(Level.SEVERE, null, ex);
+            this.ShowErrorDialog(welcomePanel, ex);
+            return null;
+        }
     }
 
 }

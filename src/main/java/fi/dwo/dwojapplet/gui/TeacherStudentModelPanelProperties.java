@@ -13,6 +13,7 @@ import com.owlike.genson.Genson;
 import fi.dwo.dwojapplet.domain.utils.Digest;
 import nl.numworx.gwtpatch.client.GWTPatch;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureStudentModelManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
@@ -76,11 +77,14 @@ public class TeacherStudentModelPanelProperties {
     }
   
     private static final Logger LOG = Logger.getLogger(TeacherStudentModelPanelProperties.class.getName());
+    private final SecureStudentModelManager manager;
 
-    TeacherStudentModelPanelProperties(){
-        
+    TeacherStudentModelPanelProperties(SecureStudentModelManager manager){
+        this.manager = manager;
     }
-
+    TeacherStudentModelPanelProperties() {
+      this(new SecureTeacherStudentModelManager());
+    }
     void init() throws Dwo2Exception {
     }
     
@@ -89,7 +93,7 @@ public class TeacherStudentModelPanelProperties {
     }
 
     List<DomStudentModelContext> getModelList() throws Dwo2Exception {
-        return SecureTeacherStudentModelManager.getReducedList();
+        return manager.getReducedList();
     }
 
     DomStudentModelContext updateModel(DomStudentModelContext modelContext) throws Dwo2Exception {
