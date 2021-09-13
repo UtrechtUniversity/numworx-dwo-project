@@ -29,7 +29,7 @@ import nl.uu.fi.dwo.rest.entities.RestStudentModelScorePerTeacher;
  *
  * @author G.A.J. van der Plas
  */
-public class SecureTeacherStudentModelManager {
+public class SecureTeacherStudentModelManager implements SecureStudentModelManager {
 
   private static final Logger LOG =
       Logger.getLogger(SecureTeacherStudentModelManager.class.getName());
@@ -45,7 +45,7 @@ public class SecureTeacherStudentModelManager {
     return src;
   }  
 
-  public static List<DomStudentModelContext> getReducedList() throws Dwo2Exception {
+  public List<DomStudentModelContext> getReducedList() throws Dwo2Exception {
 	    RestContext rest = new RestContext();
 	    rest.setRestContext(getContext());
 	    List<DomStudentModelContext> src =
