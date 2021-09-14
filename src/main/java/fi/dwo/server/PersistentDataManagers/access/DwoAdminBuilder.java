@@ -14,12 +14,14 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +31,7 @@ import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.actions.DwoAdminActions;
 import fi.dwo.server.PersistentDataManagers.actions.MySQLDwoAdminActions;
@@ -158,6 +161,14 @@ class DwoAdminBuilder
   @Override
   public DomCourseFull add(DomCourseFull course) throws Dwo2Exception {
     return actions.add(instance.getContext(), course);
+  }
+
+  @Override
+  public List<DomStudentModelContext> getReducedStudentModels() throws Dwo2Exception {
+      List<PersistentStudentModelContext> pModels = actions.getReducedStudentModels(instance.getContext());
+      List<DomStudentModelContext> result = new ArrayList<>(pModels.size());
+      pModels.forEach((m) -> result.add(m.buildDomStudentModelContext()));
+      return result;
   }
 
 }

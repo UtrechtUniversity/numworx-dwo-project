@@ -1,11 +1,16 @@
 package fi.dwo.server.PersistentDataManagers.actions;
 
+import java.util.List;
+
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.Context;
 import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminPersistentContext;
 import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
@@ -61,6 +66,12 @@ public class MySQLDwoAdminActions implements DwoAdminActions {
       MySQLCourseActions.remove(course);
       return Boolean.TRUE;
     }
+  }
+
+  public List<PersistentStudentModelContext> getReducedStudentModels(Context context) {
+    PersistentSchool dummy = new PersistentSchool(0L);
+	List<PersistentStudentModelContext> pModels = StudentModelContextManager.findReducedEntities(dummy);
+    return pModels;
   }
 
 }

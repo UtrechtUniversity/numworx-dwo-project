@@ -1,5 +1,8 @@
 package fi.dwo.server.PersistentDataManagers.actions;
 
+import java.util.List;
+
+import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.Context;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
@@ -19,5 +22,7 @@ public interface DwoAdminActions {
   DomCourseFull update(Context context, DomCourseFull course);
   
   Boolean removeCourse(Context context);
+
+  List<PersistentStudentModelContext> getReducedStudentModels(Context context);
 
 }
