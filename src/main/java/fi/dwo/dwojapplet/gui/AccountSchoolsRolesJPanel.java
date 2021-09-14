@@ -143,8 +143,12 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
         public Component getTableCellRendererComponent(JTable table,
                 Object value, boolean selected, boolean hasFocus, int row, int col) {
             Image image = (Image) value;
-            icon.setImage(image);
-            setIcon(icon);
+            if (image != null) {
+              icon.setImage(image);
+              setIcon(icon);
+            } else {
+              setIcon(null);
+            }
             setHorizontalAlignment(SwingConstants.CENTER);
             setOpaque(true);
             Object[] arguments = new Object[]{table.getValueAt(row, 0)};
