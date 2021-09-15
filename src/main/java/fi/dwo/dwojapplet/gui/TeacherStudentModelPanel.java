@@ -58,7 +58,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
     private static final Logger LOG = Logger.getLogger(TeacherStudentModelPanel.class.getName());
 
     public final TeacherStudentModelPanelProperties prop;
-    private TeacherStudentModelPanelTableModel tableModel;
+    private final TeacherStudentModelPanelTableModel tableModel;
 
     private CenterPanel center;
 
@@ -128,7 +128,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
             if (value == searchImage) {
               String title = (String) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), 0);
               try {
-               DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
+               DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getContextColumn());
                model = prop.getModel(model);
                if (model.getPublishState() == PublishState.edit) {
                   JOptionPane.showMessageDialog(TeacherStudentModelPanel.this, "Er werkt al mogelijk iemand mee!",title, JOptionPane.WARNING_MESSAGE);
@@ -297,7 +297,6 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         jtbl.add(jtable);
         jtbl.add(Box.createHorizontalGlue());
         //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
-        tableModel = new TeacherStudentModelPanelTableModel();
 
         tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage, classImage);
         jtable.setModel(tableModel);
@@ -341,11 +340,13 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
      * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public TeacherStudentModelPanel() throws Dwo2Exception {
-      this(new TeacherStudentModelPanelProperties());
+      this(new TeacherStudentModelPanelProperties(), new TeacherStudentModelPanelTableModel());
     }
-    public TeacherStudentModelPanel(TeacherStudentModelPanelProperties prop) throws Dwo2Exception {
+    public TeacherStudentModelPanel(TeacherStudentModelPanelProperties prop, TeacherStudentModelPanelTableModel tmodel) throws Dwo2Exception {
         super(null);
         this.prop = prop;
+        tableModel = tmodel;
+
         this.setSize(480, 500);
 
         //fetch user details.

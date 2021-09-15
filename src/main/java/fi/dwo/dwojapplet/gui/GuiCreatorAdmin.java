@@ -474,7 +474,15 @@ public class GuiCreatorAdmin extends GuiCreator {
     @Override
     public CenterSubPanel getStudentModelPanel()  {
         try {
-            return new TeacherStudentModelPanel(new TeacherStudentModelPanelProperties(new SecureDwoAdminStudentModelManager()));
+        	
+            TeacherStudentModelPanelTableModel tmodel = new TeacherStudentModelPanelTableModel() {
+            	   @Override
+            	    public int getColumnCount() {
+            	        return 2;
+            	    }
+
+            };
+            return new TeacherStudentModelPanel(new TeacherStudentModelPanelProperties(new SecureDwoAdminStudentModelManager()), tmodel);
         } catch (Dwo2Exception ex) {
             Logger.getLogger(GuiCreatorTeacher.class.getName()).log(Level.SEVERE, null, ex);
             this.ShowErrorDialog(welcomePanel, ex);

@@ -626,7 +626,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
               PersistenceId pid = new PersistenceId(id);
               DomStudentModelContextId stid = new DomStudentModelContextId();
               stid.setId(pid);
-              DomStudentModelContext result = SecureTeacherStudentModelManager.get(stid);
+              DomStudentModelContext result = new SecureTeacherStudentModelManager().get(stid);
               Genson genson = StoredRestManager.getInstance().getGenson();
               return genson.serialize(result);
             } catch (Exception e) {

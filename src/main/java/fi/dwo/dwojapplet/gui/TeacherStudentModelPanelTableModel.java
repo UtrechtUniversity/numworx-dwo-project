@@ -163,4 +163,8 @@ class TeacherStudentModelPanelTableModel extends AbstractTableModel {
     public void setSelectedColumn(int selectedColumn) {
         this.selectedColumn = selectedColumn;
     }
+
+    public int getContextColumn() {
+      return columnNames.length;
+    }
 }

@@ -97,7 +97,7 @@ public class TeacherStudentModelPanelProperties {
     }
 
     DomStudentModelContext updateModel(DomStudentModelContext modelContext) throws Dwo2Exception {
-      current = SecureTeacherStudentModelManager.updateModel(modelContext);
+      current = manager.updateModel(modelContext);
       structure = StoredRestManager.getInstance().getGenson().serialize(current.getModelStructure());
       return current;
     }
@@ -126,7 +126,7 @@ public class TeacherStudentModelPanelProperties {
       domPatch.setPatch(patch);
       domPatch.setDigest(digest);
       try {
-        DomStudentModelContext result = SecureTeacherStudentModelManager.patchModel(domPatch);
+        DomStudentModelContext result = manager.patchModel(domPatch);
         context.setLastChangeTimeStamp(result.getLastChangeTimeStamp());
         context.setOptLock(result.getOptLock());
         return context;
@@ -141,7 +141,7 @@ public class TeacherStudentModelPanelProperties {
     }
 
     public DomStudentModelContext getModel(DomStudentModelContextId modelContext) throws Dwo2Exception {
-       current = SecureTeacherStudentModelManager.get(modelContext);
+       current = manager.get(modelContext);
        structure = StoredRestManager.getInstance().getGenson().serialize(current.getModelStructure());
        return current;
     }

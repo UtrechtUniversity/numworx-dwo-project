@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import com.owlike.genson.Genson;
 
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminMethodManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherMethodManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
@@ -38,7 +39,7 @@ public class MethodsProperties extends ArrayList<DomMethod> {
         add(row);
         in.close();
         
-        List<DomMethod> list = SecureTeacherMethodManager.getList();
+        List<DomMethod> list = getCurrentList();
         addAll(list);
         
 //        in = getClass().getResourceAsStream("Getal&Ruimte.json");
@@ -55,11 +56,17 @@ public class MethodsProperties extends ArrayList<DomMethod> {
         LOG.log(Level.WARNING, "load initial methods", e);
       }
        
+  }
+
+  private List<DomMethod> getCurrentList() throws Dwo2Exception {
+    if (DwoHelper.isAdminLoggedIn())
+      return SecureDwoAdminMethodManager.getList();
+    return SecureTeacherMethodManager.getList();
   }; 
   
   void refresh() {
     try {
-      List<DomMethod> list = SecureTeacherMethodManager.getList();
+      List<DomMethod> list = getCurrentList();
       removeRange(1, size());
       addAll(list);
     } catch(Exception e) {
