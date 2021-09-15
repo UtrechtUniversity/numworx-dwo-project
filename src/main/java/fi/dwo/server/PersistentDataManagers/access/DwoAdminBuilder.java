@@ -1,5 +1,6 @@
 package fi.dwo.server.PersistentDataManagers.access;
 
+import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.Context;
 import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_C;
 import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_C_S;
 import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_HR_P_R_S_SG_U;
@@ -8,6 +9,9 @@ import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
+import fi.dwo.server.PersistentDataManagers.util.StudentModelContextUtilManager;
+import fi.dwo.server.rest.util.Digest;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
@@ -15,16 +19,37 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextPatch;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.GensonMapConverter;
+import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.stream.JsonParser;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.OptimisticLockException;
+import javax.persistence.RollbackException;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response.Status;
+
+import com.owlike.genson.Genson;
+import com.owlike.genson.GensonBuilder;
+import com.owlike.genson.ext.jaxb.JAXBBundle;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
@@ -169,6 +194,107 @@ class DwoAdminBuilder
       List<DomStudentModelContext> result = new ArrayList<>(pModels.size());
       pModels.forEach((m) -> result.add(m.buildDomStudentModelContext()));
       return result;
+  }
+
+  @Override
+  public DomStudentModelContext updateStudentModel(DomStudentModelContext model) throws Dwo2Exception {
+      try {            
+          Long id = MySQLPersistenceId.getNativeId(model);
+          PersistentStudentModelContext pModel = StudentModelContextManager.findEntity(id);
+          if ( pModel == null) {
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Illegal operation");
+          }
+          if ( model.getOptLock() != null && !pModel.getOptlock() .equals (model.getOptLock())) {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested studentmode {2} is from a different optlock that is registered for hasRole in school {1} with usercode {0}.", new Object[]{this.instance.getContext().getUserCtx().getUser().getUsername(), instance.getContext().getUserCtx().getSchool().getSchoolID(), (pModel != null) ? pModel.getSchoolID() : "model==null"});     
+            throw new WebApplicationException(Status.CONFLICT);
+          } else 
+          if (model.getOptLock() != null) {
+            pModel.setOptlock(model.getOptLock());
+          }
+          pModel.setModelStructure(model.getModelStructure());
+//          pModel.setPublishState(model.getPublishState());
+//          
+//          if (PublishState.overt == model.getPublishState()) {
+//          	pModel.setSchoolID(Long.valueOf(0)); // NUL not NULL
+//          }
+          
+          //return instance.teacherActions.updateStudentModel(instance.getContext(), pModel).buildDomStudentModelContext();
+          
+          return StudentModelContextUtilManager.edit(pModel).buildDomStudentModelContext(); // FIXME netjes maken!
+      } catch (RollbackException|OptimisticLockException rb) {
+      	LOG.log(Level.SEVERE, "conflict", rb);
+          throw new WebApplicationException(Status.CONFLICT);
+      } catch (Dwo2Exception e) {
+          String msg = MessageFormat.format("Username {0}: Internal error: {1}", new Object[]{instance.getContext().getUserCtx().getUser().getUsername(), e.getMessage()});
+          LOG.log(Level.WARNING, msg, e);
+          throw new Dwo2RestException(e.getDwo2Code(), msg);
+      }
+  }
+
+  @Override
+  public DomStudentModelContext patchStudentModel(DomStudentModelContextPatch domPatch) throws Dwo2Exception {
+  	PersistentStudentModelContext result = getStudentModel(instance.getContext(), domPatch);
+
+  	if (result.getOptlock().equals(domPatch.getOptLock()) && result.getLastChangeTimeStamp()==domPatch.getLastChangeTimeStamp()) {
+  		
+//  		if (domPatch.getPublishState() != null) {
+//  			result.setPublishState(domPatch.getPublishState());
+//  			if (domPatch.getPublishState() == PublishState.overt)
+//  				result.setSchoolID(Long.valueOf(0));
+//  		}
+// patch
+  		String value = domPatch.getPatch();
+  		String digest = domPatch.getDigest();
+  		Genson g = new GensonBuilder().withBundle(new JAXBBundle())
+  				.withConverters(new GensonMapConverter()).create(); // met de juiste opties
+  		String oldValue = g.serialize(result.getModelStructure());
+          JsonParser parser = Json.createParser(new StringReader(oldValue));
+          parser.next();
+          JsonObject oldObject = parser.getObject();
+          parser = Json.createParser(new StringReader(value));
+          parser.next();
+          JsonArray  patch     = parser.getArray();
+          JsonObject newObject = Json.createPatch(patch).apply(oldObject);
+          if (digest != null) {
+            String patched = new Digest().digest(newObject);
+            if( !digest.equals(patched)) {
+              LOG.severe("patch digest error " + patched + " " + digest);
+              throw new WebApplicationException(Status.PRECONDITION_FAILED);
+            }
+          }
+          StringWriter newValue = new StringWriter();
+          Json.createWriter(newValue).write(newObject);
+          DomStudentModelStructure deserialize = g.deserialize(newValue.toString(), DomStudentModelStructure.class);
+  		result.setModelStructure(deserialize);
+
+  		try {
+  			DomStudentModelContext context = StudentModelContextUtilManager.edit(result).buildDomStudentModelContext();
+  			context.setModelStructure(null);
+  			return context;
+          } catch (RollbackException|OptimisticLockException|EntityNotFoundException e) {
+          	throw new WebApplicationException(Status.CONFLICT);
+          }
+  	}
+  	throw new WebApplicationException(Status.CONFLICT);
+  }
+
+  @Override
+  public DomStudentModelContext getStudentModel(DomStudentModelContextId id) throws Dwo2Exception {
+  	PersistentStudentModelContext result = getStudentModel(instance.getContext(), id);
+  	DomStudentModelContext dom = result.buildDomStudentModelContext();
+  	dom.setPublishState(PublishState.review);
+	return dom;
+  }
+
+  
+  private PersistentStudentModelContext getStudentModel(Context context, DomStudentModelContextId model) throws Dwo2Exception {
+      Long id = MySQLPersistenceId.getNativeId(model);
+      PersistentStudentModelContext pModel = StudentModelContextManager.findEntity(id);
+      if ( pModel == null) {
+        throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Illegal operation");
+      }
+      StudentModelContextUtilManager.merge(pModel);
+      return pModel;
   }
 
 }

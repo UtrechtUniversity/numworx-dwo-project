@@ -7,6 +7,7 @@ import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
@@ -14,6 +15,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextPatch;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 public class DwoAdminDomainAuthorizer {
@@ -76,7 +79,11 @@ public class DwoAdminDomainAuthorizer {
   public interface DwoAdminState_HR_R_S_SG_U  {
     DwoAdminState_HR_P_R_S_SG_U addDwoProfile(DomDwoProfileId id) throws Dwo2Exception;
 
-	List<DomStudentModelContext> getReducedStudentModels() throws Dwo2Exception;   
+	List<DomStudentModelContext> getReducedStudentModels() throws Dwo2Exception;
+	DomStudentModelContext updateStudentModel(DomStudentModelContext domStudentModelContext) throws Dwo2Exception;
+	DomStudentModelContext patchStudentModel(DomStudentModelContextPatch domPatch) throws Dwo2Exception;
+
+	DomStudentModelContext getStudentModel(DomStudentModelContextId domStudentModelContext) throws Dwo2Exception;   
   }
  
   public interface DwoAdminState_HR_P_R_S_SG_U {
@@ -95,4 +102,5 @@ public class DwoAdminDomainAuthorizer {
   public Context getContext() {
     return context;
   }
+
 }

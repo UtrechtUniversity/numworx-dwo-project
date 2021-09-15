@@ -120,8 +120,9 @@ public class StudentModelContextUtilManager {
 					item.setSchoolID(pModel.getSchoolID());
 					item.setItem(obj);
 					StudentModelItemManager.create(item);
-				} else if (!Objects.equal(obj, item.getItem())){
+				} else if (!Objects.equal(obj, item.getItem()) || !Objects.equal(item.getSchoolID(), pModel.getSchoolID())) {
 					item.setItem(obj);
+					item.setSchoolID(pModel.getSchoolID());
 					StudentModelItemManager.edit(item);
 				}
 			}

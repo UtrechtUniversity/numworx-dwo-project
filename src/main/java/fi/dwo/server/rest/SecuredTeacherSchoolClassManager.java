@@ -70,6 +70,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -1242,7 +1243,8 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         Collection<PersistentCourse> listCourse = CourseManager.findEntities(profileID, school.getSchoolID()); // XXX children of trashed folders in list
         Map<Long, PersistentCourse> courseMap = new TreeMap<>();
         listCourse.forEach(item -> courseMap.put(item.getCourseID(), item));
- // Filter by schoolAccess       
+        listCourse = new LinkedList<>(listCourse); // implementatie met snelle Iterator.remove voor accesscontrol en trash
+// Filter by schoolAccess       
         if (school.accessControl()) {
           List<PersistentACL> acls = ACLManager.findBySchool(school, profile);
           List<PersistentSchoolClass> classes = SchoolClassUtilManager.getSchoolClassesOfTeacher(phr);
@@ -1260,6 +1262,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
           while (iterator.hasNext()) {
             PersistentCourse pc = iterator.next();
             if (pc.getSchoolID() == null) continue;
+            final PersistentCourse pc0 = pc;
             List<PersistentACL> a = aclmap.get(pc.getCourseID());
             boolean parent = false;
             while ( (a == null || a.isEmpty()) && pc != null) {
@@ -1269,7 +1272,11 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
               else a = null;
             }
             if (a ==null) {
-              if (! school.teachersCanWrite()) iterator.remove();
+              if (! school.teachersCanWrite()) {
+            	  
+            	  iterator.remove();
+                  courseMap.remove(pc0.getCourseID(), pc0);
+              }
             } else {
               ACL acl = a.stream()
                   .filter(item -> rights.contains(item.getEntity()))
@@ -1279,11 +1286,12 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                   .orElse(ACL.NONE);
               if ( acl == ACL.NONE|| (parent && acl == ACL.ACCESS))
                 iterator.remove();
+                courseMap.remove(pc0.getCourseID(), pc0);
             }
           }
           
         }
- // filter children of trash
+ // filter children/offspring of trash
         boolean trashed;
         do {
         	trashed = false;
@@ -1293,6 +1301,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         		long parent = pc.getParentID();
         		if (parent != 0 && !courseMap.containsKey(Long.valueOf(parent))) {
         			iterator.remove();
+        			courseMap.remove(pc.getCourseID(), pc);
         			trashed = true;
         		}
         	}
