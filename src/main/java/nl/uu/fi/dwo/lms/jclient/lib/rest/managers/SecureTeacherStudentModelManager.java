@@ -73,7 +73,7 @@ public class SecureTeacherStudentModelManager implements SecureStudentModelManag
     return result;
   }
 
-  public static DomStudentModelContext updateModel(DomStudentModelContext submit)
+  public DomStudentModelContext updateModel(DomStudentModelContext submit)
 	      throws Dwo2Exception {
 	    RestStudentModelContext rest = new RestStudentModelContext();
 	    rest.setRestContext(getContext());
@@ -110,7 +110,7 @@ public class SecureTeacherStudentModelManager implements SecureStudentModelManag
 		}
   
 
-  public static DomStudentModelContext patchModel(DomStudentModelContextPatch submit)
+  public DomStudentModelContext patchModel(DomStudentModelContextPatch submit)
 	      throws Dwo2Exception {
 	    RestStudentModelContextPatch rest = new RestStudentModelContextPatch();
 	    rest.setRestContext(getContext());
@@ -155,7 +155,7 @@ public class SecureTeacherStudentModelManager implements SecureStudentModelManag
 	  return lrs;
 	}
 
-	public static DomStudentModelContext get(DomStudentModelContextId modelContext) throws Dwo2Exception {
+	public DomStudentModelContext get(DomStudentModelContextId modelContext) throws Dwo2Exception {
 	 RestStudentModelContext rest = new RestStudentModelContext();
 	 rest.setRestContext(getContext());
 	 DomStudentModelContext context = new DomStudentModelContext();
