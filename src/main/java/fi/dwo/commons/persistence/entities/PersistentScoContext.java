@@ -301,7 +301,7 @@ public class PersistentScoContext implements Serializable {
 	}
 
 	public boolean isOefenen() {
-	  return getScoType() != ScoType.EINDTOETS && getScoType() != ScoType.ZELFTOETS;
+	  return getScoType() != ScoType.EINDTOETS;
 	}
 	
 	
