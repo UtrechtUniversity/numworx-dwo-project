@@ -1,5 +1,7 @@
 package fi.dwo.dwojapplet.gui.domainmodel;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Collections;
@@ -15,12 +17,13 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 
+import fi.dwo.dwojapplet.gui.domainmodel.graph.EditableGraph;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.GraphNode;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
-public class MethodListener implements ItemListener {
+public class MethodListener implements ItemListener, ActionListener {
   public static final String BEGRIPPEN_EN_VAKTAAL = "Begrippen en vaktaal";
 
   final JCheckBox methodBox;
@@ -158,6 +161,22 @@ public class MethodListener implements ItemListener {
       methodModel = null;      
     } else {
       methodBox.setVisible(true);      
+    }
+  }
+
+  @Override
+  public void actionPerformed(ActionEvent e) {
+    Object source = e.getSource();
+    if ("filter".equals(e.getActionCommand()) && source instanceof EditableGraph && methodModel != null) {
+      EditableGraph graph = (EditableGraph) source;
+      if ( graph.isShowing()) {
+        Set<String> visible = graph.getVisibleNodes(); // id's of visible nodes
+        methodModel.activateFilter(!visible.isEmpty());
+        InvisibleNode root = (InvisibleNode) methodModel.getRoot();
+        methodModel.setRoot(LeerdomeinEditPanel2.filter(root, visible));
+        methodModel.nodeStructureChanged((TreeNode) model.getRoot());
+
+      }
     }
   }
 

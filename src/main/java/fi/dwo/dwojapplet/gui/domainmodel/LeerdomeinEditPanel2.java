@@ -790,6 +790,7 @@ public class LeerdomeinEditPanel2 extends JPanel
         JButton filterBtn = new JButton(filterAction);
         methodBox = new JCheckBox("Methode");
         methodListener = new MethodListener(methodBox, tree, filterAction);
+        graph.addActionListener(methodListener);
         leftSouth.add(methodBox);
 		leftSouth.add(Box.createHorizontalGlue());
 		leftSouth.add(filterBtn);
@@ -1450,7 +1451,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 	  }
 	}
 
-    private static InvisibleNode filter(InvisibleNode parent, Set<String> visible) {
+    static InvisibleNode filter(InvisibleNode parent, Set<String> visible) {
       InvisibleNode node;
       if (!(parent instanceof InvisibleNode)) {
           node = new InvisibleNode(parent.getUserObject());

@@ -19,7 +19,8 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class ChapterGraphNode {
 	
-	public  static Map<String, String> hfstDescriptionsMap;
+	private static final String DASH = " - ";
+  public  static Map<String, String> hfstDescriptionsMap;
 	private static Color defaultNodeColor = LeerdomeinGraphPanel.colorBlue4;
 	private static Color defaultTextColor = new Color(120, 150, 202, 35);
 	private static int defaultFontSize = 130;
@@ -155,7 +156,9 @@ public class ChapterGraphNode {
 				g.setColor(new Color(233, 239, 249));
 			g.fillOval(rx-size/2, ry-size/2, size, size);
 			String label = hfstDescriptionsMap.get(hfstCode);
-			label = label.substring(0, label.indexOf(" - "));
+			int dash = label.indexOf(DASH);
+			if (dash > 0)
+              label = label.substring(0, dash);
 			int textLength = fm.stringWidth(label);
 			int textHeight = fm.getAscent();
 			g.setColor(LeerdomeinGraphPanel.colorGray3);
