@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.TreeMap;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,7 +24,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
-public class MethodsProperties extends ArrayList<DomMethod> {
+public class MethodsProperties extends Vector<DomMethod> {
   private static final Logger LOG = Logger.getLogger(MethodsProperties.class.getName());
 
   private final Genson genson;
