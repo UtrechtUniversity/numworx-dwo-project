@@ -66,7 +66,7 @@ public class MethodListener implements ItemListener, ActionListener {
             nodes.put(key,  benv);
           }
         }
-        Enumeration<DefaultMutableTreeNode> all = ((DefaultMutableTreeNode) model.getRoot()).depthFirstEnumeration();
+        Enumeration<DefaultMutableTreeNode> all = (Enumeration)((DefaultMutableTreeNode) model.getRoot()).depthFirstEnumeration();
         while( all.hasMoreElements() ) {
           Object o = all.nextElement().getUserObject();
           if (o instanceof NodeLeaf) {
@@ -110,7 +110,7 @@ public class MethodListener implements ItemListener, ActionListener {
         methodModel.activateFilter(true);
         String key = DomMethod.key(activeMethod);
         Map<String, Set<Integer>> map = filter.getOrDefault(key, Collections.emptyMap());
-        Enumeration<InvisibleNode> books = root.children();
+        Enumeration<InvisibleNode> books = (Enumeration) root.children();
         while(books.hasMoreElements()) {
           InvisibleNode book = books.nextElement();
           String booktitle = book.toString();

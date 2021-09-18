@@ -422,7 +422,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
       DomStudentModelScore<?> s = map.get(info);
       double redScore = 0, greenScore = 0;
       long redCount = 0, greenCount = 0, totalCount = 0;
-      Enumeration<DefaultMutableTreeNode> children = node.children();
+      Enumeration<DefaultMutableTreeNode> children = (Enumeration) node.children();
       while (children.hasMoreElements()) {
         DefaultMutableTreeNode child = children.nextElement();
         if (invisible(child)) continue;

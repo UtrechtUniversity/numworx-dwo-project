@@ -337,7 +337,7 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
     model.nodeStructureChanged(root);
 
     @SuppressWarnings("unchecked")
-    Enumeration<DefaultMutableTreeNode> all = root.depthFirstEnumeration();
+    Enumeration<DefaultMutableTreeNode> all = (Enumeration) root.depthFirstEnumeration();
     while (all.hasMoreElements()) {
       DefaultMutableTreeNode node = all.nextElement();
       Object u = node.getUserObject();

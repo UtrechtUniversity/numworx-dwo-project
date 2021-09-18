@@ -524,7 +524,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		} else {
 			node = (InvisibleNode) parent;
             @SuppressWarnings("unchecked")
-            Enumeration<InvisibleNode> children = node.children();
+            Enumeration<InvisibleNode> children = (Enumeration) node.children();
             while (children.hasMoreElements()) {
                 InvisibleNode object = children.nextElement();
                 filter(object, filter, activeMethod);
@@ -1462,7 +1462,7 @@ public class LeerdomeinEditPanel2 extends JPanel
       } else {
           node = (InvisibleNode) parent;
           @SuppressWarnings("unchecked")
-          Enumeration<InvisibleNode> children = node.children();
+          Enumeration<InvisibleNode> children = (Enumeration) node.children();
           while (children.hasMoreElements()) {
               InvisibleNode object = children.nextElement();
               filter(object, visible);
