@@ -16,10 +16,12 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureStudentModelManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextPatch;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
+import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
@@ -103,6 +105,14 @@ public class TeacherStudentModelPanelProperties {
     }
     
     public DomStudentModelStructure updateModel(DomStudentModelStructure model) throws Dwo2Exception {
+      if (current.getPublishState() == PublishState.overt) {
+        DomSchoolMethod dsm = SecureTeacherStudentModelManager.getActiveMethod(current);
+        dsm.setActiveMethod(model.getActiveMethod());
+        SecureTeacherStudentModelManager.updateActiveMethod(dsm);
+        current.setModelStructure(model);
+        return model;
+      }
+
       if (structure != null) {      
         JavaPatch patch = new JavaPatch();
         Genson genson = StoredRestManager.getInstance().getGenson();
@@ -143,6 +153,11 @@ public class TeacherStudentModelPanelProperties {
     public DomStudentModelContext getModel(DomStudentModelContextId modelContext) throws Dwo2Exception {
        current = manager.get(modelContext);
        structure = StoredRestManager.getInstance().getGenson().serialize(current.getModelStructure());
+       if (current.getPublishState() == PublishState.overt)
+       {
+         DomSchoolMethod dsm = SecureTeacherStudentModelManager.getActiveMethod(modelContext);
+         current.getModelStructure().setActiveMethod(dsm.getActiveMethod());
+       }
        return current;
     }
     
