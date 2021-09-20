@@ -70,6 +70,11 @@ class FilterAction extends AbstractAction {
       consumer.accept(filter);
     }
 
+    public void unsetFilter() {
+      filter = Collections.emptyMap();
+      doFilter();
+    }
+    
     public PersistenceId getActiveMethod() {
       return activeMethod;
     }

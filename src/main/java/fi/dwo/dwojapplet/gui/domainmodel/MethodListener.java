@@ -90,6 +90,7 @@ public class MethodListener implements ItemListener, ActionListener {
   }
 
   void setActiveMethod(PersistenceId am) {
+    end();
     this.activeMethod = am;
     //methodBox.setText(MethodsProperties.instance().getMethod(am).getMethod());
     methodBox.setEnabled(am != null);

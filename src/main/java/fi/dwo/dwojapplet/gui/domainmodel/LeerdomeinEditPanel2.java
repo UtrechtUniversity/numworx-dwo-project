@@ -11,9 +11,11 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -29,6 +31,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -104,7 +107,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class LeerdomeinEditPanel2 extends JPanel
-		implements TreeSelectionListener, ExportPanel, WindowListener {
+		implements TreeSelectionListener, ExportPanel, WindowListener, ItemListener {
 	static final String WISKOPDR_SIG = "H4sIAAAAAA";
 	static final Logger LOG = Logger.getLogger(LeerdomeinEditPanel2.class.getName());
 
@@ -781,18 +784,24 @@ public class LeerdomeinEditPanel2 extends JPanel
 		scrollpane.setPreferredSize(pref);
 
 		leftBox.add(scrollpane, BorderLayout.CENTER);
-		leftSouth = Box.createHorizontalBox();
+		leftSouth = Box.createVerticalBox();
 		filterAction = new FilterAction(this, this::filter);
         JButton filterBtn = new JButton(filterAction);
         methodBox = new JCheckBox("Methode-indeling");
         methodSelect = new JComboBox<DomMethod>(MethodsProperties.instance());
         methodListener = new MethodListener(methodBox, tree, filterAction);
         graph.addActionListener(methodListener);
+        methodSelect.addItemListener(this);
+        methodSelect.setAlignmentX(0);
         leftSouth.add(methodBox);
-        leftSouth.add(methodSelect);
-		leftSouth.add(Box.createHorizontalGlue());
-		leftSouth.add(filterBtn);
-		leftSouth.add(Box.createHorizontalGlue());
+        Box hb = Box.createHorizontalBox();
+        hb.setAlignmentX(0);
+        hb.add(new JLabel("Actieve methode"));
+        hb.add(methodSelect);
+		hb.add(Box.createHorizontalGlue());
+		hb.add(filterBtn);
+		hb.add(Box.createHorizontalGlue());
+		leftSouth.add(hb);
 		leftSouth.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		leftBox.add(leftSouth, BorderLayout.SOUTH);
 		
@@ -1098,14 +1107,15 @@ public class LeerdomeinEditPanel2 extends JPanel
 
   protected void setActiveMethod(PersistenceId am) {
     activeMethod = am;
+    methodListener.setActiveMethod(am);
+    methodSelect.setSelectedItem(MethodsProperties.instance().getMethod(am));
 	filterAction.setActiveMethod(am);
 	methodeAction4.setMethode(am);
 	methodeAction2.setMethode(am);
 	if (graph.isShowing()) {
       graph.setModel(this.model,null,activeMethod);
-      filterAction.doFilter();	  
 	}
-	methodListener.setActiveMethod(am);
+    filterAction.doFilter();    
   }
 
 	static void insert(NodeVector vector, InvisibleNode node) {
@@ -1369,7 +1379,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 	// }
 
 	private void closeWindow(ConfirmDialog window) {
-		if (editable) {
+		if (editable || !Objects.equals(activeMethod,structure.getActiveMethod()) ) {
 			int option = confirm();
 			switch (option) {
 			case JOptionPane.CANCEL_OPTION:
@@ -1491,6 +1501,19 @@ public class LeerdomeinEditPanel2 extends JPanel
       System.gc();
       long na = Runtime.getRuntime().freeMemory();
       LOG.log(Level.INFO, "voor {0}, na {1}, diff {2}", new Object[] {voor, na, na-voor});
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+      if (e.getSource() == methodSelect) {
+        if (e.getStateChange() == ItemEvent.SELECTED) {
+          DomMethod m = (DomMethod) e.getItem();
+          if (m != null && !Objects.equals(m.getId(),activeMethod)) {
+            setActiveMethod(m.getId());
+          }
+        }
+      }
+      
     }
 
 }
