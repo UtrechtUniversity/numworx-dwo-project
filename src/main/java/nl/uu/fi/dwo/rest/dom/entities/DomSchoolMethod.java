@@ -2,7 +2,7 @@ package nl.uu.fi.dwo.rest.dom.entities;
 
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
-public class DomSchoolMethod extends DomId {
+public class DomSchoolMethod extends DomStudentModelContextId {
 	
     private PersistenceId activeMethod;
 
