@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
@@ -18,6 +19,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextPatch;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
+import nl.uu.fi.dwo.rest.entities.RestSchoolMethod;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContextId;
@@ -86,15 +88,27 @@ public class SecureTeacherStudentModelManager implements SecureStudentModelManag
 	    return result;
 	  }
   
-  public static Boolean updateModelForClass(DomStudentModelContext4Student submit) 
+  public static Boolean updateActiveMethod(DomSchoolMethod submit) 
   			throws Dwo2Exception {
+	  RestSchoolMethod rest = new RestSchoolMethod();
+	  rest.setRestContext(getContext());
+	  rest.setDomSchoolMethod(submit);
+	  Boolean result = StoredRestManager.getInstance()
+			  .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/updateMethod", Boolean.class, rest);
+	  return result;
+  }
+  
+  public static Boolean updateModelForClass(DomStudentModelContext4Student submit) 
+			throws Dwo2Exception {
 	  RestStudentModelContext4Student rest = new RestStudentModelContext4Student();
 	  rest.setRestContext(getContext());
 	  rest.setDomStudentModelContext(submit);
 	  Boolean result = StoredRestManager.getInstance()
 			  .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/updateForClass", Boolean.class, rest);
 	  return result;
-  }
+}
+
+  
   
 	public static DomStudentModelContext4Student getForClass(DomStudentModelContextId modelContext, DomSchoolClassId sc) throws Dwo2Exception {
 		 RestStudentModelContextId rest = new RestStudentModelContextId();
