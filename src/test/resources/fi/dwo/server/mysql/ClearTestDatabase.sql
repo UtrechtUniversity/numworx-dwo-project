@@ -18,6 +18,7 @@ DROP TABLE IF EXISTS `tblmonitorlog`;
 DROP TABLE IF EXISTS `tblsamluser`;
 DROP TABLE IF EXISTS `tblschool`;
 DROP TABLE IF EXISTS `tblschooldata`;
+DROP TABLE IF EXISTS `tblschoolmethod`;
 DROP TABLE IF EXISTS `tblsco`;
 DROP TABLE IF EXISTS `tblscocontext`;
 DROP TABLE IF EXISTS `tblscodata`;

@@ -1028,3 +1028,13 @@ CREATE TABLE `tblmethod` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
+DROP TABLE IF EXISTS `tblschoolmethod`;
+CREATE TABLE `tblschoolmethod` (
+  `schoolID` int(11) NOT NULL,
+  `modelID` int(11) NOT NULL,
+  `methodID` varchar(45) DEFAULT NULL,
+  `optlock` int(11) DEFAULT NULL,
+  `del` tinyint(4) DEFAULT NULL,
+  `lastChangeTimeStamp` bigint(22) DEFAULT NULL,
+  PRIMARY KEY (`schoolID`,`modelID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;

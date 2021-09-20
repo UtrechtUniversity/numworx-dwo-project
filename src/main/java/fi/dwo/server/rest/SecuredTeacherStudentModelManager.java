@@ -4,6 +4,8 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentMethod;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentSchoolMethod;
+import fi.dwo.commons.persistence.entities.PersistentSchoolMethodPK;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelOfClassPK;
@@ -17,6 +19,7 @@ import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserStat
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
 import fi.dwo.server.PersistentDataManagers.core.MethodManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolMethodManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
@@ -53,12 +56,14 @@ import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestSchoolMethod;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContextId;
@@ -379,5 +384,57 @@ public class SecuredTeacherStudentModelManager {
 		}
 	}
 
-	
+    @PUT
+    @Produces("application/json")
+    @Path("/updateMethod")
+    public DomSchoolMethod updateActiveMethod(@Context SecurityContext sc, RestSchoolMethod rest) throws Dwo2Exception {
+    	UserState_U ustate = AnonDomainAuthorizer.build().submitUser(sc);
+		UserState_HR_R_S_SG_U hrstate = ustate.setHasRole(rest.getRestContext().getDomHasRole());
+		TeacherState_HR_R_S_SG_U state = hrstate.buildSchoolAdminTeacher().setTeacher();
+    	DomSchoolMethod dom = rest.getDomSchoolMethod();
+		Long smID = MySQLPersistenceId.getNativeId(dom);
+		Long optLock = dom.getOptLock();
+    	PersistentStudentModelContext context = StudentModelContextManager.findEntity(smID);
+    	PersistentSchool school = hrstate.getSchool();
+    	
+    	PersistentSchoolMethodPK pk = new PersistentSchoolMethodPK(school.getSchoolID(), context.getModelID());
+    	PersistentSchoolMethod   sm = SchoolMethodManager.findEntity(pk);
+    	if (sm == null) {
+    		sm = new PersistentSchoolMethod(pk);
+    		sm.setMethodID(dom.getActiveMethod());
+    		SchoolMethodManager.create(sm);
+    	} else {
+    		sm.setMethodID(dom.getActiveMethod());
+    		sm.setOptlock(optLock);
+    		sm = SchoolMethodManager.edit(sm);   	
+    	}
+    	return sm.buildDomSchoolMethod();
+    }
+    @PUT
+    @Produces("application/json")
+    @Path("/getMethod")
+    public DomSchoolMethod updateActiveMethod(@Context SecurityContext sc, RestStudentModelContextId rest) throws Dwo2Exception {
+    	UserState_U ustate = AnonDomainAuthorizer.build().submitUser(sc);
+		UserState_HR_R_S_SG_U hrstate = ustate.setHasRole(rest.getRestContext().getDomHasRole());
+		TeacherState_HR_R_S_SG_U state = hrstate.buildSchoolAdminTeacher().setTeacher();
+    	DomStudentModelContextId dom = rest.getDomStudentModelContext();
+		Long smID = MySQLPersistenceId.getNativeId(dom);
+    	PersistentStudentModelContext context = StudentModelContextManager.findEntity(smID);
+    	if (context == null) return null;
+    	Long schoolID = context.getSchoolID();
+    	PersistentSchool school = hrstate.getSchool();
+    	if (schoolID.longValue() != 0L && !schoolID.equals(school.getSchoolID()))
+    		return null; // illegal....
+    	
+    	PersistentSchoolMethodPK pk = new PersistentSchoolMethodPK(school.getSchoolID(), context.getModelID());
+    	PersistentSchoolMethod   sm = SchoolMethodManager.findEntity(pk);
+    	if (sm != null) {
+    		return sm.buildDomSchoolMethod();
+    	} else {
+    		DomSchoolMethod dsm = new DomSchoolMethod(context.buildPersistenceId());
+    		dsm.setActiveMethod(context.getModelStructure().getActiveMethod());
+    		dsm.setOptLock(null); // fake, geen optlock
+    		return dsm;
+    	}
+    }
 }
