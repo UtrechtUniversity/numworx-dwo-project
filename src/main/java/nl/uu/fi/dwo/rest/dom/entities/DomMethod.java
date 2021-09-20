@@ -1,13 +1,12 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
 import java.util.List;
+import java.util.Objects;
 
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class DomMethod extends DomId {
 
-	
-	
 	
 	public DomMethod(PersistenceId id) {
 		super(id);
@@ -40,6 +39,8 @@ public class DomMethod extends DomId {
 	    this.method = method;
 	  }
 
-	
+	  public String toString() {
+		  return Objects.toString(method);
+	  }
 	
 }
