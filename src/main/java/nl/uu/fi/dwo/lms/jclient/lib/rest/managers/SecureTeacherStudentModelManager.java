@@ -88,15 +88,27 @@ public class SecureTeacherStudentModelManager implements SecureStudentModelManag
 	    return result;
 	  }
   
-  public static Boolean updateActiveMethod(DomSchoolMethod submit) 
+  public static DomSchoolMethod updateActiveMethod(DomSchoolMethod submit) 
   			throws Dwo2Exception {
 	  RestSchoolMethod rest = new RestSchoolMethod();
 	  rest.setRestContext(getContext());
 	  rest.setDomSchoolMethod(submit);
-	  Boolean result = StoredRestManager.getInstance()
-			  .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/updateMethod", Boolean.class, rest);
+	  DomSchoolMethod result = StoredRestManager.getInstance()
+			  .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/updateMethod", DomSchoolMethod.class, rest);
 	  return result;
   }
+  
+  public static DomSchoolMethod getActiveMethod(DomStudentModelContextId id) throws Dwo2Exception {
+	  RestStudentModelContextId rest = new RestStudentModelContextId();
+	  rest.setRestContext(getContext());
+	  rest.setDomStudentModelContext(id);
+	  rest.setDomSchoolClass(null);
+	  DomSchoolMethod result = StoredRestManager.getInstance()
+			  .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/getMethod", DomSchoolMethod.class, rest);
+	  return result;
+  }
+  
+  
   
   public static Boolean updateModelForClass(DomStudentModelContext4Student submit) 
 			throws Dwo2Exception {
