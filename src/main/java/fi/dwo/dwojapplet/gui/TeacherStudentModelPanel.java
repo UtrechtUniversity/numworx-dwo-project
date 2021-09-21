@@ -139,7 +139,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 //                addModelButton.setText(TextMapper.getText(TextMapper.BTN_UPDATE));
                 int ok = showConfirmDialog(TeacherStudentModelPanel.this, scrollPane, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 model = prop.getCurrent();
-                if ( ok == JOptionPane.OK_OPTION) {
+                if ( ok == JOptionPane.OK_OPTION && model.getPublishState() == PublishState.edit) {
                   DomStudentModelStructure modelStructure = textArea.getModel();
                   model.setModelStructure(modelStructure);
                   model.setPublishState(PublishState.published);

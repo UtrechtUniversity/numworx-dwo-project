@@ -101,11 +101,12 @@ public class TeacherStudentModelPanelProperties {
     DomStudentModelContext updateModel(DomStudentModelContext modelContext) throws Dwo2Exception {
       current = manager.updateModel(modelContext);
       structure = StoredRestManager.getInstance().getGenson().serialize(current.getModelStructure());
-      return current;
+      standard = current.getPublishState() == PublishState.overt;
+     return current;
     }
     
     public DomStudentModelStructure updateModel(DomStudentModelStructure model) throws Dwo2Exception {
-      if (current.getPublishState() == PublishState.overt) {
+      if (standard) {
         DomSchoolMethod dsm = SecureTeacherStudentModelManager.getActiveMethod(current);
         dsm.setActiveMethod(model.getActiveMethod());
         SecureTeacherStudentModelManager.updateActiveMethod(dsm);
@@ -123,6 +124,7 @@ public class TeacherStudentModelPanelProperties {
         current.setModelStructure(model);
         structure = now;
         model = patchModel(diff, patch.digest).getModelStructure();
+        standard = current.getPublishState() == PublishState.overt;
         return model;
       }
       current.setModelStructure(model);
@@ -153,7 +155,8 @@ public class TeacherStudentModelPanelProperties {
     public DomStudentModelContext getModel(DomStudentModelContextId modelContext) throws Dwo2Exception {
        current = manager.get(modelContext);
        structure = StoredRestManager.getInstance().getGenson().serialize(current.getModelStructure());
-       if (current.getPublishState() == PublishState.overt)
+       standard = current.getPublishState() == PublishState.overt;
+       if (standard)
        {
          DomSchoolMethod dsm = SecureTeacherStudentModelManager.getActiveMethod(modelContext);
          current.getModelStructure().setActiveMethod(dsm.getActiveMethod());
@@ -168,6 +171,7 @@ public class TeacherStudentModelPanelProperties {
         
     private DomStudentModelContext current;
     private String structure;
+    private boolean standard; // current is standard model
 
     public DomStudentModelContext getCurrent() {
       return current;

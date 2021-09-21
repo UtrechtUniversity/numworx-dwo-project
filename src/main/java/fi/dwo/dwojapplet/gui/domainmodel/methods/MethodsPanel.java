@@ -1,6 +1,7 @@
 package fi.dwo.dwojapplet.gui.domainmodel.methods;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -269,7 +270,15 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
 
     removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_STUDENTMODEL_IMAGE);
     removeIcon  = new ImageIcon(removeImage);
-    add(new JScrollPane(tbl));
+    JScrollPane sp = new JScrollPane(tbl);
+    int rh = tbl.getRowHeight() + tbl.getRowMargin();
+    Dimension dim = sp.getPreferredSize();
+    dim.height = 5 * rh; // 5 rows preferred
+    sp.setPreferredSize(dim);
+    dim = sp.getMaximumSize();
+    dim.height = 8 * rh; // 8 rows max
+    sp.setMaximumSize(dim);
+    add(sp);
     
     JButton btn;
     Box box = Box.createHorizontalBox();
