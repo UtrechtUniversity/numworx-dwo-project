@@ -1033,8 +1033,8 @@ CREATE TABLE `tblschoolmethod` (
   `schoolID` int(11) NOT NULL,
   `modelID` int(11) NOT NULL,
   `methodID` varchar(45) DEFAULT NULL,
-  `optlock` int(11) DEFAULT NULL,
-  `del` tinyint(4) DEFAULT NULL,
-  `lastChangeTimeStamp` bigint(22) DEFAULT NULL,
+  `optlock` int(11) NOT NULL,
+  `del` tinyint(4) NOT NULL,
+  `lastChangeTimeStamp` bigint(22) NOT NULL,
   PRIMARY KEY (`schoolID`,`modelID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
