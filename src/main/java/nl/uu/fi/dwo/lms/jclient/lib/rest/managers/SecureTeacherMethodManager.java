@@ -86,13 +86,13 @@ public class SecureTeacherMethodManager {
 	  }
   
 
-	public static DomStudentModelContext get(DomMethod context) throws Dwo2Exception {
+	public static DomMethod get(DomMethod context) throws Dwo2Exception {
 		RestMethod rest = new RestMethod();
 	 rest.setRestContext(getContext());
 	 rest.setDomMethod(context);
-	 DomStudentModelContext src =
+	 DomMethod src =
 			        StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/method/get",
-			            DomStudentModelContext.class, rest);
+			            DomMethod.class, rest);
 	 LOG.log(Level.FINE, "Retrieved method of the teacher with username {0}.",
 		new Object[] {authenticator().getUsername()});
      return src;
