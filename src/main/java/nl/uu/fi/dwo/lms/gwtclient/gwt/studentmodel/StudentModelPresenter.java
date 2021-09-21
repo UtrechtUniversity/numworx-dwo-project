@@ -67,6 +67,8 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		void setEmptyTreeMessage();
 		boolean isMethod();
 		void setMethod(String label);
+		void showMethods(List<DomMethod> methods);
+		void setActiveMethod(PersistenceId id);
     }
     
     @Inject void setView(JsTeacherStudentModelView view) {
@@ -100,11 +102,16 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
     	view.init();
         view.setHelp(dwoGlobalVars.buildHelpUrl("#studentmodel"));
         filter = Collections.emptyMap();
+        updateMethods();
     	updateSchoolclasses();
     	updateStudentModels();
     }
 
-    private void updateStudentModels() {
+    private void updateMethods() {
+		service.getMethods().then( list -> { view.showMethods(list.getValue()); return null; });	
+	}
+
+	private void updateStudentModels() {
 		allModels = service.getModels().then(this::stap2, FAILURE);
 	}
 
@@ -170,7 +177,7 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		Map<String, DomTree<String>> map = new LinkedHashMap<>();
 		tree.setChildren(map);
 		return service.getActiveMethod(struc.getActiveMethod()).then(m -> {
-			view.setMethod(m.getValue().getMethod());
+			view.setActiveMethod(m.getValue().getId());
 			for ( DomStudentModelCategory cat : struc.getCategories()) {
 				DomTree<String> tcat = new DomTree<>(getTitle(cat.getInfo()));
 				tcat.setChildren(children(cat.getObjectives(), m.getValue()));
@@ -189,7 +196,7 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		return service.getActiveMethod(struc.getActiveMethod()).then(m -> {
 			DomMethod method = m.getValue();
 			String t = method.getMethod();
-			view.setMethod(t);
+			view.setActiveMethod(method.getId());
 			Map<String, Set<Integer>> mf = filter.getOrDefault(method.key(), Collections.emptyMap());
 			DomTree<String> tree = new DomTree<>(t);
 			Map<String, DomTree<String>> map = new LinkedHashMap<>(), all = new HashMap<>();

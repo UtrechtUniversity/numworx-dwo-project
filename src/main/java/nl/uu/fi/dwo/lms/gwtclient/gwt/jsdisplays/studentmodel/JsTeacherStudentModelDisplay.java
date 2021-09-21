@@ -22,10 +22,12 @@ class JsTeacherStudentModelDisplay {
     static native void showSchoolClasses(JavaScriptObject data);
 	static native void showModels(JavaScriptObject data);
 	static native void showTree(JavaScriptObject javaScriptObject);
+	static native void showMethods(JavaScriptObject data);
 	static native String getTreeId();
 	static native String getDescriptionId();
 	static native void setTitle(String title);
 	static native void setMethodLabel(String label);
 	native static void setModelSelect(String id);
+	static native void setActiveMethod(String id);
 	static native boolean isMethod();
 }

@@ -178,4 +178,16 @@ public class StudentModelService implements DescriptionService {
 		});
 	}
 
+	public Promise<List<DomMethod>> getMethods() {
+		return methodMan.getList(context).then(p -> { 
+			List<DomMethod> all = p.getValue();
+			for (DomMethod m: all) {
+				PersistenceId id = m.getId();
+				methods.computeIfAbsent(id, pid -> Promises.resolved(m));
+			}
+			all.add(0, methods.get(null).getValue());
+			return p; });
+	}
+	
+	
 }

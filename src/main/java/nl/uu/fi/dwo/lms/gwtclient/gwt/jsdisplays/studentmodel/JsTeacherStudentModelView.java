@@ -1,6 +1,8 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.studentmodel;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -27,6 +29,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClassCodec;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.StudentModelPresenter;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * Mapper to allow java interface implementation.
@@ -76,6 +80,18 @@ public class JsTeacherStudentModelView extends AbstractStudentModelView implemen
 	      models.forEach((k,v) -> json.put(k, new JSONString(v)));        
 	      JsTeacherStudentModelDisplay.showModels(json.getJavaScriptObject());
 	}
+
+	@Override
+	public void showMethods(List<DomMethod> methods) {
+	    JSONObject json = new JSONObject();
+		for(DomMethod m: methods) {
+			String key = Objects.toString(m.getId(), "");
+			String value = m.getMethod();
+			json.put(key, new JSONString(value));
+		}
+		JsTeacherStudentModelDisplay.showMethods(json.getJavaScriptObject());
+	}
+	
 	
 	@Override
 	public void setDescription(String title, IsWidget w) {
@@ -116,9 +132,17 @@ public class JsTeacherStudentModelView extends AbstractStudentModelView implemen
 	}
 
 	@Override
+	public void setActiveMethod(PersistenceId id) {
+		String key = Objects.toString(id, "");
+		JsTeacherStudentModelDisplay.setActiveMethod(key);
+	}
+	
+	
+	@Override
 	public void onResize(ResizeEvent event) {
 		Widget w = rlp.getWidget();
 		w.getElement().getStyle().setHeight(event.getHeight(), Unit.PX);	
 	}
+	
 	
 }
