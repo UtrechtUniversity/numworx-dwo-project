@@ -117,5 +117,54 @@ public Promise<String> getDescription(DomStudentModelContextId pid, String uuid,
 		defer.fail(e);
 	}		
 	return defer.getPromise().recoverWith(GwtRestVars.getInstance().new Retry(() -> getDescription(pid, uuid, locale, context) ));
-}
+  }
+
+/*
+ *   public DomStudentModelContext updateModel(DomStudentModelContext submit)
+          throws Dwo2Exception {
+        RestStudentModelContext rest = new RestStudentModelContext();
+        rest.setRestContext(getContext());
+        rest.setDomStudentModelContext(submit);
+
+        DomStudentModelContext result = StoredRestManager.getInstance()
+            .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/update", DomStudentModelContext.class, rest);
+        LOG.log(Level.FINE, "Updated studentmodel of teacher with username {0} to his school.",
+            new Object[] {RestAuthenticator.getInstance().getUsername()});
+        return result;
+      }
+   public DomStudentModelContext patchModel(DomStudentModelContextPatch submit)
+          throws Dwo2Exception {
+        RestStudentModelContextPatch rest = new RestStudentModelContextPatch();
+        rest.setRestContext(getContext());
+        rest.setDomPatch(submit);
+
+        DomStudentModelContext result = StoredRestManager.getInstance()
+            .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/patch", DomStudentModelContext.class, rest);
+        LOG.log(Level.FINE, "Patch studentmodel of teacher with username {0} to his school.",
+            new Object[] {RestAuthenticator.getInstance().getUsername()});
+        return result;
+      }
+  public static DomSchoolMethod updateActiveMethod(DomSchoolMethod submit) 
+            throws Dwo2Exception {
+      RestSchoolMethod rest = new RestSchoolMethod();
+      rest.setRestContext(getContext());
+      rest.setDomSchoolMethod(submit);
+      DomSchoolMethod result = StoredRestManager.getInstance()
+              .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/updateMethod", DomSchoolMethod.class, rest);
+      return result;
+  }
+  
+  public static DomSchoolMethod getActiveMethod(DomStudentModelContextId id) throws Dwo2Exception {
+      RestStudentModelContextId rest = new RestStudentModelContextId();
+      rest.setRestContext(getContext());
+      rest.setDomStudentModelContext(id);
+      rest.setDomSchoolClass(null);
+      DomSchoolMethod result = StoredRestManager.getInstance()
+              .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/getMethod", DomSchoolMethod.class, rest);
+      return result;
+  }
+  
+  
+*/
+
 }
