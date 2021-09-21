@@ -9,10 +9,13 @@ import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredStudentMethodRestCalller;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredTeacherMethodRestCaller;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestMethod;
 import nl.uu.fi.dwo.rest.util.PathId;
 
 import static fi.dwo.gwt.lib.rest.GwtRestVars.F;
+
+import java.util.List;
 
 public class MethodManager {
 
@@ -37,4 +40,9 @@ public class MethodManager {
 		return F(service::getMethod, PathId.getId(context), rest);
 	}
 	
+	public Promise<List<DomMethod>> getList(DomContext context) {
+		RestContext rest = new RestContext();
+		rest.setRestContext(context);
+		return F(service::getList, PathId.getId(context), rest); 
+	}
 }
