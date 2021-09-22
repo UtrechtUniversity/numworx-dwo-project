@@ -20,11 +20,13 @@ import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestSchoolMethod;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContextId;
@@ -118,6 +120,21 @@ public Promise<String> getDescription(DomStudentModelContextId pid, String uuid,
 	}		
 	return defer.getPromise().recoverWith(GwtRestVars.getInstance().new Retry(() -> getDescription(pid, uuid, locale, context) ));
   }
+
+
+	public Promise<DomSchoolMethod> updateActiveMethod(DomContext context, DomSchoolMethod domMethod) {
+		RestSchoolMethod rest = new RestSchoolMethod();
+		rest.setRestContext(context);
+		rest.setDomSchoolMethod(domMethod);
+		return F(service::updateMethod, PathId.getId(context), rest);
+	}
+
+	public Promise<DomSchoolMethod> getActiveMethod(DomContext context, DomStudentModelContextId id) {
+		RestStudentModelContextId rest = new RestStudentModelContextId();
+		rest.setRestContext(context);
+		rest.setDomStudentModelContext(id);
+		return F(service::getMethod, PathId.getId(context), rest);
+	}
 
 /*
  *   public DomStudentModelContext updateModel(DomStudentModelContext submit)

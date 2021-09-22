@@ -10,10 +10,12 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestSchoolMethod;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContextId;
@@ -45,4 +47,13 @@ public interface SecuredTeacherStudentModelRestCaller extends RestService {
   @PUT
   @Path("/sec:{id}/teacher/studentmodel/getScores")
   void getScores(@PathParam("id") String id, RestStudentModelScorePerTeacher rest, MethodCallback<DomStudentModelScorePerTeacher> callback);
+
+  @PUT
+  @Path("/sec:{id}/teacher/studentmodel/updateMethod")
+  void updateMethod(@PathParam("id") String id, RestSchoolMethod rest, MethodCallback<DomSchoolMethod> callback);
+
+  @PUT
+  @Path("/sec:{id}/teacher/studentmodel/getMethod")
+  void getMethod(@PathParam("id") String id, RestStudentModelContextId rest, MethodCallback<DomSchoolMethod> callback);
+
 }
