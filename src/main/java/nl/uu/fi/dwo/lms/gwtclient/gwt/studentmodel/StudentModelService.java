@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
@@ -32,6 +33,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
+import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 @RoleScope
@@ -79,6 +81,13 @@ public class StudentModelService implements DescriptionService {
 							sm.getModelStructure().setCategories(q.getValue().getModelStructure().getCategories());
 							sm.getModelStructure().setInfo(q.getValue().getModelStructure().getInfo());
 							sm.setOptLock(q.getValue().getOptLock());
+							if (q.getValue().getPublishState() == PublishState.overt) {
+								return manager.getActiveMethod(context, p.getValue()).flatMap(x -> {
+									sm.setOptLock(x.getOptLock());
+									sm.getModelStructure().setActiveMethod(x.getActiveMethod());
+									return p;
+								});
+							}
 							return p;} );
 			}
 			
@@ -189,5 +198,16 @@ public class StudentModelService implements DescriptionService {
 			return p; });
 	}
 	
+	public Promise<DomStudentModelContext> updateActiveMethod(DomStudentModelContext model) {
+		DomSchoolMethod domMethod = new DomSchoolMethod();
+		domMethod.setActiveMethod(model.getModelStructure().getActiveMethod());
+		domMethod.setId(model.getId());
+		domMethod.setOptLock(model.getOptLock());
+		return manager.updateActiveMethod(context, domMethod).then(p -> { 
+			model.setOptLock(p.getValue().getOptLock());
+			model.getModelStructure().setActiveMethod(p.getValue().getActiveMethod());
+			return Promises.resolved(model);
+		});
+	}
 	
 }

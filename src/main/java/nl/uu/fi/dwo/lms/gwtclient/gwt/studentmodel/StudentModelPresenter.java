@@ -424,4 +424,18 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 				return p; } );
 		}
 	}
+	
+	@JsMethod
+	public void onMethodsSelect(String id) {
+		LOG.info("methods change " + id);
+		if (currentModel == null) return;
+		final PersistenceId activeMethod = id.isEmpty()? null : new PersistenceId(id);
+		currentModel = currentModel.then(p -> updateActiveMethod(p, activeMethod));
+		currentModel.onResolve( () -> { boolean check = view.isMethod(); onMethod(check); });
+	}
+	
+	private Promise<DomStudentModelContext> updateActiveMethod(Promise<DomStudentModelContext> p, PersistenceId activeMethod) {
+		p.getValue().getModelStructure().setActiveMethod(activeMethod);
+		return service.updateActiveMethod(p.getValue());
+	}
 }
