@@ -8,6 +8,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextPatch;
@@ -81,5 +82,11 @@ public class SecureDwoAdminStudentModelManager implements SecureStudentModelMana
 			new Object[] {RestAuthenticator.getInstance().getUsername()});
 	     return src;
 		}
+
+	@Override
+	public DomSchoolMethod getActiveMethod(DomStudentModelContextId modelContext) throws Dwo2Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

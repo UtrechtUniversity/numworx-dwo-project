@@ -98,7 +98,7 @@ public class SecureTeacherStudentModelManager implements SecureStudentModelManag
 	  return result;
   }
   
-  public static DomSchoolMethod getActiveMethod(DomStudentModelContextId id) throws Dwo2Exception {
+  public DomSchoolMethod getActiveMethod(DomStudentModelContextId id) throws Dwo2Exception {
 	  RestStudentModelContextId rest = new RestStudentModelContextId();
 	  rest.setRestContext(getContext());
 	  rest.setDomStudentModelContext(id);
