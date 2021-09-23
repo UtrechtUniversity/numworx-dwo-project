@@ -4,8 +4,12 @@ import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserPersistentContext;
 import fi.dwo.server.PersistentDataManagers.actions.MySQLSchoolAdminTeacherActions;
 import fi.dwo.server.PersistentDataManagers.actions.SchoolAdminTeacherActions;
+
+import java.util.List;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
@@ -97,6 +101,8 @@ public class SchoolAdminTeacherDomainAuthorizer {
         public PersistentStudentModelContext getStudentModel(DomScoContextId ctxId) throws Dwo2Exception;
         public TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U setTeacher() throws Dwo2Exception;
 		public int countStudents(DomScoContextId sco) throws Dwo2Exception;
+		public List<DomStudentModelContext> getReducedStudentModels()  throws Dwo2Exception;
+		public DomStudentModelContext getStudentModel(DomStudentModelContextId domStudentModelContext)  throws Dwo2Exception;
 
     }
 

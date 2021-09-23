@@ -424,7 +424,7 @@ public class SecuredTeacherStudentModelManager {
     @PUT
     @Produces("application/json")
     @Path("/getMethod")
-    public DomSchoolMethod updateActiveMethod(@Context SecurityContext sc, RestStudentModelContextId rest) throws Dwo2Exception {
+    public DomSchoolMethod getActiveMethod(@Context SecurityContext sc, RestStudentModelContextId rest) throws Dwo2Exception {
     	UserState_U ustate = AnonDomainAuthorizer.build().submitUser(sc);
 		UserState_HR_R_S_SG_U hrstate = ustate.setHasRole(rest.getRestContext().getDomHasRole());
 		TeacherState_HR_R_S_SG_U state = hrstate.buildSchoolAdminTeacher().setTeacher();

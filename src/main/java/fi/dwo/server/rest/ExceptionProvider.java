@@ -17,6 +17,13 @@ public class ExceptionProvider implements javax.ws.rs.ext.ExceptionMapper<Except
 
 	@Override
 	public Response toResponse(Exception exception) {
+// no exceptional logging with "no such user/wrong password" 
+		if (exception instanceof WebApplicationException) {
+			WebApplicationException ex = (WebApplicationException) exception;
+			if (401 == ex.getResponse().getStatus()) 
+				return ex.getResponse();
+		}
+		
 	    if (exception instanceof NotFoundException) {
 	      LOG.log(Level.WARNING, "Not Found Exception " + exception.getLocalizedMessage());
 	    } else
