@@ -84,9 +84,7 @@ public class TeacherStudentModelPanelProperties {
     TeacherStudentModelPanelProperties(SecureStudentModelManager manager){
         this.manager = manager;
     }
-    TeacherStudentModelPanelProperties() {
-      this(new SecureTeacherStudentModelManager());
-    }
+
     void init() throws Dwo2Exception {
     }
     
@@ -107,7 +105,7 @@ public class TeacherStudentModelPanelProperties {
     
     public DomStudentModelStructure updateModel(DomStudentModelStructure model) throws Dwo2Exception {
       if (standard) {
-        DomSchoolMethod dsm = SecureTeacherStudentModelManager.getActiveMethod(current);
+        DomSchoolMethod dsm = manager.getActiveMethod(current);
         dsm.setActiveMethod(model.getActiveMethod());
         SecureTeacherStudentModelManager.updateActiveMethod(dsm);
         current.setModelStructure(model);
@@ -158,7 +156,7 @@ public class TeacherStudentModelPanelProperties {
        standard = current.getPublishState() == PublishState.overt;
        if (standard)
        {
-         DomSchoolMethod dsm = SecureTeacherStudentModelManager.getActiveMethod(modelContext);
+         DomSchoolMethod dsm = manager.getActiveMethod(modelContext);
          current.getModelStructure().setActiveMethod(dsm.getActiveMethod());
        }
        return current;

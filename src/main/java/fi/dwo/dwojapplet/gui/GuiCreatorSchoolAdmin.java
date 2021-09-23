@@ -2,6 +2,9 @@ package fi.dwo.dwojapplet.gui;
 
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureSchoolAdminSchoolManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureSchoolAdminStudentModelManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureStudentModelManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManager;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
@@ -23,7 +26,6 @@ public class GuiCreatorSchoolAdmin extends GuiCreatorTeacher {
 
     public GuiCreatorSchoolAdmin(DWO dwo) {
         super(dwo);
-
     }
 
     @Override
@@ -105,4 +107,9 @@ public class GuiCreatorSchoolAdmin extends GuiCreatorTeacher {
       return true;
     }
     
+    @Override
+    public SecureStudentModelManager getStudentModelManager() {
+      if (studentModelManager == null) studentModelManager = new SecureSchoolAdminStudentModelManager();
+      return studentModelManager;
+    }
 }

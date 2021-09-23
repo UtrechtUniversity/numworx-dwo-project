@@ -340,7 +340,9 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
      * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public TeacherStudentModelPanel() throws Dwo2Exception {
-      this(new TeacherStudentModelPanelProperties(), new TeacherStudentModelPanelTableModel());
+      this(new TeacherStudentModelPanelProperties(
+        GuiCreator.instance().getStudentModelManager()
+        ), new TeacherStudentModelPanelTableModel());
     }
     public TeacherStudentModelPanel(TeacherStudentModelPanelProperties prop, TeacherStudentModelPanelTableModel tmodel) throws Dwo2Exception {
         super(null);

@@ -239,14 +239,6 @@ public final class DwoHelper {
         return applet;
     }
 
-    @Deprecated
-    public static Object getJSObject() {
-        if (applet == null) {
-            return null;
-        }
-        return null;
-    }
-
     /**
      * Sets the current Applet.
      *

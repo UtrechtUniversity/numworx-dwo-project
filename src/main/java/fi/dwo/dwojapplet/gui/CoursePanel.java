@@ -469,7 +469,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 
     public Object getJSObject() {
         if (jsObject == null) {
-            setJSObject(DwoHelper.getJSObject());
+            setJSObject(null);
         }
         return jsObject;
     }

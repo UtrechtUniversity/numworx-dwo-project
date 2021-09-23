@@ -13,13 +13,16 @@ import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureStudentModelManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
+import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import java.applet.Applet;
@@ -598,21 +601,22 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
                 return String.valueOf(tmpSc);
             }
         }
-// FIXME export schoolmodels
-        if ( DwoHelper.isTest() && DwoHelper.isPremium() && "studentModelContexts".equals(name)) {
-        		try {
-				List<DomStudentModelContext> list = SecureTeacherStudentModelManager.getList();
-				Genson genson = StoredRestManager.getInstance().getGenson();
-				return genson.serialize(list);
-			} catch (Exception e) {
-				LOG.log(Level.WARNING, "studentModelContexts", e);
-				return null;
-			}
-        }
+// export schoolmodels
+//        if ( DwoHelper.isTest() && DwoHelper.isPremium() && "studentModelContexts".equals(name)) {
+//        		try {
+//				List<DomStudentModelContext> list = SecureTeacherStudentModelManager.getList();
+//				Genson genson = StoredRestManager.getInstance().getGenson();
+//				return genson.serialize(list);
+//			} catch (Exception e) {
+//				LOG.log(Level.WARNING, "studentModelContexts", e);
+//				return null;
+//			}
+//        }
 
         if ( DwoHelper.isTest() && DwoHelper.isPremium() && "reducedStudentModelContexts".equals(name)) {
           try {
-            List<DomStudentModelContext> list = new SecureTeacherStudentModelManager().getReducedList();
+            SecureStudentModelManager manager = GuiCreator.instance().getStudentModelManager();
+            List<DomStudentModelContext> list = manager.getReducedList();
             Genson genson = StoredRestManager.getInstance().getGenson();
             return genson.serialize(list);
           } catch (Exception e) {
@@ -626,7 +630,12 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
               PersistenceId pid = new PersistenceId(id);
               DomStudentModelContextId stid = new DomStudentModelContextId();
               stid.setId(pid);
-              DomStudentModelContext result = new SecureTeacherStudentModelManager().get(stid);
+              SecureStudentModelManager manager = GuiCreator.instance().getStudentModelManager();
+              DomStudentModelContext result = manager.get(stid);
+              if (result.getPublishState() == PublishState.overt) {
+                DomSchoolMethod activeMethod = manager.getActiveMethod(result);
+                result.getModelStructure().setActiveMethod(activeMethod.getActiveMethod());
+              }
               Genson genson = StoredRestManager.getInstance().getGenson();
               return genson.serialize(result);
             } catch (Exception e) {

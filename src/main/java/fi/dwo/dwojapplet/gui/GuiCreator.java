@@ -47,6 +47,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.LoginManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.OAuthManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminConfigManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureStudentModelManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
@@ -1228,5 +1229,9 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
   public void updateScoSequenceNr(Sco sco) {
     
     
+  }
+
+  public SecureStudentModelManager getStudentModelManager() {
+    return null;
   }
 }

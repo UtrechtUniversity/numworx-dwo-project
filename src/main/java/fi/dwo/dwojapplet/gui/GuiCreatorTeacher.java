@@ -40,9 +40,11 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.ConfigManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SchoolManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureStudentModelManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherConfigManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherScoContextManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
@@ -657,6 +659,14 @@ public class GuiCreatorTeacher extends GuiCreator {
         manager.update(domsco, null, DWO.getDwoProfile());
       } catch (Dwo2Exception e) {
       }
+    }
+
+    protected SecureStudentModelManager studentModelManager;
+
+    @Override
+    public SecureStudentModelManager getStudentModelManager() {
+      if (studentModelManager == null) studentModelManager = new SecureTeacherStudentModelManager();
+      return studentModelManager;
     }
     
     

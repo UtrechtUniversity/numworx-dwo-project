@@ -18,6 +18,7 @@ import com.owlike.genson.Genson;
 
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminMethodManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureSchoolAdminMethodManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherMethodManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
@@ -62,6 +63,8 @@ public class MethodsProperties extends Vector<DomMethod> {
   private List<DomMethod> getCurrentList() throws Dwo2Exception {
     if (DwoHelper.isAdminLoggedIn())
       return SecureDwoAdminMethodManager.getList();
+    if (DwoHelper.isContact())
+      return SecureSchoolAdminMethodManager.getList();
     return SecureTeacherMethodManager.getList();
   }; 
   
