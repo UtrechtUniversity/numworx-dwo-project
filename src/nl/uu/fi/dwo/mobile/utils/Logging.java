@@ -18,6 +18,7 @@ public interface Logging {
 
 	void setLogObjectives(boolean[][] objectives);	
 	void setSMObjectives(String[] objectives);
+	default void setSMForeknowledge(String[] foreknowledge) { } 
 
     void setMaxScore(int max);
 
@@ -26,5 +27,6 @@ public interface Logging {
 	default void updateLog(Map<String, ?> map) { }
 
 	default void getStateHook(Map<String, Object> h) {}
+
 
 }

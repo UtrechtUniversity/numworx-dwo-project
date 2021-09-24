@@ -798,6 +798,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		}
 
 		String[] smObjectives = JSONUtilities.toStringArray(launchData.get("smObjectives"));
+		String[] smForeknowledge = JSONUtilities.toStringArray(launchData.get("smForeknowledge"));
 		if(logOption || smObjectives != null) {
 			LogBuilder builder = new LogBuilder(activity)
 					.setLogOption(logOption)
@@ -806,6 +807,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 					.setMaxScore(scoreMax)
 					.setLogObjectives(logObjectives)
 					.setSmObjectives(smObjectives)
+					.setSmForeknowledge(smForeknowledge)
 					.setTeltMee(teltMee);
 			
 			dwologger = builder.build();

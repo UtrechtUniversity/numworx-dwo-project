@@ -252,4 +252,13 @@ public class DWOLogger implements Logging {
 		this.logOption = logOption;
 		if (delegate != null) delegate.setLogOption(logOption);
 	}
+
+	@Override
+	public void setSMForeknowledge(String[] foreknowledge) {
+		if (delegate != null) {
+			delegate.setSMForeknowledge(foreknowledge);
+		}
+	}
+	
+	
 }

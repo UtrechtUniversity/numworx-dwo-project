@@ -208,6 +208,13 @@ public class SMLogger implements Logging {
     		Arrays.asList(objectives);
     delegate.setSMObjectives(objectives);
   }
+  
+  @Override
+  public void setSMForeknowledge(String[] foreknowledge) {
+	  extensions.foreknowledge = 
+			  foreknowledge != null ? Arrays.asList(foreknowledge) : null;
+	  delegate.setSMForeknowledge(foreknowledge);
+  }
 
   @Override
   public void setMaxScore(int max) {

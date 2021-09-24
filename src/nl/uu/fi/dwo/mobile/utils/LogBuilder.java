@@ -17,7 +17,7 @@ public class LogBuilder {
 
   private boolean logOption;
 	private String logID;
-	private String[] smObjectives;
+	private String[] smObjectives, smForeknowledge;
 	private boolean[][] logObjectives;
 	private String className = "";
 	private boolean teltMee = true;
@@ -30,6 +30,8 @@ public class LogBuilder {
 		if (map.containsKey("smObjectives")) {
 			smObjectives = map.getStringArray("smObjectives");
 		}
+		if (map.containsKey("smForeknowledge"))
+			smForeknowledge = map.getStringArray("smForeknowledge");
 		if (map.containsKey("scoreMax")) {
 			maxScore = map.getInt("scoreMax");
 		}
@@ -68,6 +70,7 @@ public class LogBuilder {
 			logging.setClassName(className);
 			logging.setLogObjectives(logObjectives);
 			logging.setSMObjectives(smObjectives);
+			logging.setSMForeknowledge(smForeknowledge);
 			logging.setLogOption(logOption);
 		}		
 		return logging;
@@ -97,6 +100,10 @@ public class LogBuilder {
 
 	public LogBuilder setSmObjectives(String[] smObjectives) {
 		this.smObjectives = smObjectives;
+		return this;
+	}
+	public LogBuilder setSmForeknowledge(String[] smForeknowledge) {
+		this.smForeknowledge = smForeknowledge;
 		return this;
 	}
 

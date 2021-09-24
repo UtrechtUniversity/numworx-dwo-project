@@ -313,7 +313,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 					builder.setLogIDLabel(launchStateMap.getString("logIDLabel"));
 				builder.setMaxScore(scoreMax);
 				builder.setLogObjectives(logObjectives);
-				builder.setSmObjectives(smObjectives);
+				String[] smForeknowledge = null;
+				if (launchStateMap.containsKey("smForeknowledge"))
+					smForeknowledge = launchStateMap.getStringArray("smForeknowledge");
+				builder.setSmObjectives(smObjectives).setSmForeknowledge(smForeknowledge);
 				builder.setTeltMee(teltMee);
 				dwologger = builder.build();
 			}
