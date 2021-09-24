@@ -1404,12 +1404,12 @@ LOG.info("time results = " + (-t) + " ms");
         if (!DwoHelper.setApplet(this)) {
             return;
         }
-// remove security manager completely
-        try {
-			System.setSecurityManager(null);
-		} catch (Exception e1) {
-			LOG.log(Level.WARNING, "running with securitymanager",e1);
-		}
+// remove security manager completely obsolete
+//        try {
+//			System.setSecurityManager(null);
+//		} catch (Exception e1) {
+//			LOG.log(Level.WARNING, "running with securitymanager",e1);
+//		}
         
         if (DwoHelper.isApplication() == false || isRunningJavaWebStart()) {
             Authenticator.setDefault(null);
