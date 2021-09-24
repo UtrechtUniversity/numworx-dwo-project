@@ -10,4 +10,8 @@ public class Extensions {
   @com.fasterxml.jackson.annotation.JsonProperty("http://www.dwo.nl/extensions/objectives")
   public List<String> objectives;
 
+  @JsonProperty("http://www.dwo.nl/extensions/foreknowledge")
+  @com.fasterxml.jackson.annotation.JsonProperty("http://www.dwo.nl/extensions/foreknowledge")
+  public List<String> foreknowledge;
+
 }
