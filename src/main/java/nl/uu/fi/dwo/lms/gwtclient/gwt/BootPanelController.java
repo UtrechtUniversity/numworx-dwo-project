@@ -168,7 +168,7 @@ public class BootPanelController {
           case TEACHER:
               build = teacherBuilder.build();
               mainView.setUserRole(role, false);
-              mainView.setPremium(dwoGlobalVars.isPremium() && dwoGlobalVars.isTest()); // knowledge for teacher is premium
+              mainView.setPremium(dwoGlobalVars.isPremium()); // knowledge for teacher is premium
              break;
           case SCHOOLADMIN:
               build = schoolAdminBuilder.build();
@@ -181,7 +181,7 @@ public class BootPanelController {
               build = studentBuilder.build();
               mainView.setUserRole(role, single);
               DomSchoolClass sc = dwoGlobalVars.getCurrentSchoolClass();
-              mainView.setPremium(dwoGlobalVars.isPremium() && dwoGlobalVars.isTest() && sc != null); // knowledge for student is premium and only in class
+              mainView.setPremium(dwoGlobalVars.isPremium() && sc != null); // knowledge for student is premium and only in class
               break;
             }
           default:

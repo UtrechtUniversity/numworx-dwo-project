@@ -1,9 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
-import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.i18n.client.LocaleInfo;
-import com.google.gwt.user.client.Window.Location;
-
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
