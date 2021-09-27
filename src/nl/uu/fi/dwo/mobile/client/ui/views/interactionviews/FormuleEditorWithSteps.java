@@ -2761,13 +2761,25 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		
 		if (stapNr + start > viewers.size() - 1 && editor != null && !editor.toString().isEmpty()) // is er nog een (niet-lege) editor die niet is nagekeken?
 		{
-			// verwerk het antwoord in de editor 
-			editor.bepaalScoreEnCorrect();
-			voortgangsScore = Math.max(voortgangsScore, editor.getScore());
+			
+			if (editor.hasFeedback()) {
+				HashMap results = editor.kijkNa(true);
+				if(scoreCumulatief && results!=null && results.containsKey("answerModelNr")) {
+					scoreContainer[stapNr] = (Integer)results.get("answerModelNr");
+					//logger.info("scStapNr="+stapNr);
+				}
+			
+				else {
+				// verwerk het antwoord in de editor 
+					editor.bepaalScoreEnCorrect();
+					voortgangsScore = Math.max(voortgangsScore, editor.getScore());
+				}
+			}
 			this.correct = editor.isCorrect();
 		}
+		if (!scoreCumulatief && editor != null && editor.hasFeedback())
+			this.score = voortgangsScore;
 		
-		this.score = voortgangsScore;
 	}
 	
 	/**
@@ -2979,7 +2991,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		if(!isToets() && editor != null)
 		{	
 			HashMap results = editor.kijkNa(backStep, show, setState);
-			if(results!=null && results.containsKey("answerModelNr"))
+			if(scoreCumulatief && results!=null && results.containsKey("answerModelNr"))
 				scoreContainer[stapNr] = (Integer)results.get("answerModelNr");
 			//logger.info("In kijkNa"+scoreContainer[stapNr]);
 		}
@@ -3081,8 +3093,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			HashMap results = editor.kijkNa(setState); // dit evalueert voor een toets met feedback per stap met het eindantwoord.
 			
 			if (editor.hasFeedback()) {
-				if(scoreCumulatief && results!=null && results.containsKey("answerModelNr"))
+				if(scoreCumulatief && results!=null && results.containsKey("answerModelNr")) {
 					scoreContainer[stapNr] = (Integer)results.get("answerModelNr");
+					logger.info("scStapNr="+stapNr);
+				}
 				else
 					voortgangsScore = Math.max(voortgangsScore,score);
 			}
