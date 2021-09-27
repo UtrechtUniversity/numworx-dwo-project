@@ -50,7 +50,7 @@ public class AdminMenuPanel extends UserMenuPanel {
         createGap();
         /* Add StudentModel Button */
 //      studentModelButton = new MenuPanelButton(Dwo2LocaleMessageTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2LocaleMessageCode.GUI_Button_StudentModels));
-        if(DwoHelper.isTest()){
+        if(true){
           studentModelButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_STUDENTMODELS));
           studentModelButton.addActionListener(this);
           this.add(studentModelButton);

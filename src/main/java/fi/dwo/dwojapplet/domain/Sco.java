@@ -602,7 +602,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
             }
         }
 // export schoolmodels
-//        if ( DwoHelper.isTest() && DwoHelper.isPremium() && "studentModelContexts".equals(name)) {
+//        if (DwoHelper.isPremium() && "studentModelContexts".equals(name)) {
 //        		try {
 //				List<DomStudentModelContext> list = SecureTeacherStudentModelManager.getList();
 //				Genson genson = StoredRestManager.getInstance().getGenson();
@@ -613,7 +613,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
 //			}
 //        }
 
-        if ( DwoHelper.isTest() && DwoHelper.isPremium() && "reducedStudentModelContexts".equals(name)) {
+        if ( DwoHelper.isPremium() && "reducedStudentModelContexts".equals(name)) {
           try {
             SecureStudentModelManager manager = GuiCreator.instance().getStudentModelManager();
             List<DomStudentModelContext> list = manager.getReducedList();
@@ -624,7 +624,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
             return null;
           }
         }
-        if ( DwoHelper.isTest() && DwoHelper.isPremium() && name.startsWith("studentModelContext:")) {
+        if ( DwoHelper.isPremium() && name.startsWith("studentModelContext:")) {
             try {
               String id = name.substring("studentModelContext:".length());
               PersistenceId pid = new PersistenceId(id);
@@ -644,7 +644,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
             }
         }
         
-        if ( DwoHelper.isTest() && DwoHelper.isPremium() && name.startsWith("studentModelMethod:")) {
+        if ( DwoHelper.isPremium() && name.startsWith("studentModelMethod:")) {
           try {
             String id = name.substring("studentModelMethod:".length());
             PersistenceId pid = new PersistenceId(id);

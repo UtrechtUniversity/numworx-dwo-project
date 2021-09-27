@@ -24,7 +24,7 @@ public class JXBChecker {
 
   public void check() {
     
-    if (true || !DwoHelper.isTest()) {
+    if (true) {
       try {
         Class.forName(CLASS);
         

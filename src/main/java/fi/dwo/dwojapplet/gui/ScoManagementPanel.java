@@ -291,7 +291,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             openDial.setDirectory(System.getProperty("user.dir", "."));
         }
         
-        if (DwoHelper.isPremium() && DwoHelper.isTest()) {
+        if (DwoHelper.isPremium()) {
           JButton trash = new JButton(new ScoUnTrashAction(course));
           trash.setContentAreaFilled(false);
           trash.setHorizontalAlignment(SwingConstants.RIGHT);
