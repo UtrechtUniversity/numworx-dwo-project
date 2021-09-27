@@ -1965,10 +1965,11 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 			if(!hoogtes.isEmpty() && Math.round(hoogtes.get(0).doubleValue()) > hoogte)
 				hoogte = (int) Math.round(hoogtes.get(0).doubleValue());
 		}
+		boolean shouldVisible = visible;
 		if(map.containsKey("visible"))
-			visible = map.getBoolean("visible");
-		if(!layerVisible) visible = false;
-		if(!visible)
+			shouldVisible = map.getBoolean("visible");
+		if(!layerVisible) shouldVisible = false;
+		if(!shouldVisible)
 		{	hoogte = 0;
 			breedte = 0;
 		}
@@ -2102,7 +2103,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		if(zichtbaarNaNakijken)
 			setVisibility(nagekeken&&layerVisible);
 		else
-			setVisibility(visible);
+			setVisibility(shouldVisible);
 		
 	}
 /**
