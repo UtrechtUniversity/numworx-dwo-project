@@ -316,6 +316,7 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
           DomMethod row = genson.deserialize(in, DomMethod.class);
           in.close();
           row = model.persist(row);
+          update.add(row);
           tableModel.add(row);
         } catch (IOException e1) {
           LOG.log(Level.SEVERE, "Open", e1);

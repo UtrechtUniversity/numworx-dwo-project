@@ -155,6 +155,15 @@ public class MethodsProperties extends Vector<DomMethod> {
           id = new PersistenceId(idString);
         } while(getMethod0(id).isPresent());
         row.setId(id);
+      } else {
+        Optional<DomMethod> m = getMethod0(row.getId());
+        if (m.isPresent()) {
+          remove(m.get());
+          row.setOptLock(m.get().getOptLock());
+          return row;
+        }
+        
+        
       }
       row = SecureTeacherMethodManager.addModel(row);
     } catch (Dwo2Exception e) {
