@@ -56,7 +56,7 @@
 		<dependency>
 			<groupId>fi.servlet</groupId>
 			<artifactId>ideas-servlet</artifactId>
-			<version>0.0.11-SNAPSHOT</version>
+			<version>0.0.11</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.tue.win.riaca.openmath</groupId>
@@ -597,10 +597,10 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<DWOplayerVersion>2.5.0-SNAPSHOT</DWOplayerVersion>
+		<DWOplayerVersion>2.5.0</DWOplayerVersion>
 		<DWOmAccessVersion>2.4.7</DWOmAccessVersion>
 		<RegisterVersion>2.4.14</RegisterVersion>
-		<DWOGwtClientVersion>2.5.0-SNAPSHOT</DWOGwtClientVersion>
+		<DWOGwtClientVersion>2.5.0</DWOGwtClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testeb3server</aws.environmentName>
