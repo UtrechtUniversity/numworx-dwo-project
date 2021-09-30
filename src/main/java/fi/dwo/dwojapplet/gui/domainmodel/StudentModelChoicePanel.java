@@ -241,7 +241,7 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
       WiskOpdrPanel panel = getWiskOpdrPanel(descr);
       scroll.setViewportView(panel);
     }
-    slider = new JSlider(1, 10, 10);
+    slider = new JSlider(1, 10, 10);            slider.setVisible(false);
     slider.setToolTipText("factor");
     slider.setEnabled(!readonly);
     slider.setMajorTickSpacing(3);

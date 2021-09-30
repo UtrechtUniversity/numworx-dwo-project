@@ -511,28 +511,15 @@ public class LeerdomeinEditPanel2 extends JPanel
 	}
 
 	
-	
-	
-	
 	static InvisibleNode filter(InvisibleNode parent, Map<String, Map<String, Set<Integer>>> filter, PersistenceId activeMethod) {
 		InvisibleNode node;
-		if (!(parent instanceof InvisibleNode)) {
-			node = new InvisibleNode(parent.getUserObject());
-			node.setAllowsChildren(parent.getAllowsChildren());
-			Enumeration<?> children = parent.children();
-			while (children.hasMoreElements()) {
-				InvisibleNode object = (InvisibleNode) children.nextElement();
-				node.add(filter(object, filter, activeMethod));
-			}
-		} else {
-			node = (InvisibleNode) parent;
-            @SuppressWarnings("unchecked")
-            Enumeration<InvisibleNode> children = (Enumeration) node.children();
-            while (children.hasMoreElements()) {
-                InvisibleNode object = children.nextElement();
-                filter(object, filter, activeMethod);
-            }
-		}
+		node = parent;
+          @SuppressWarnings("unchecked")
+          Enumeration<InvisibleNode> children = (Enumeration) node.children();
+          while (children.hasMoreElements()) {
+              InvisibleNode object = children.nextElement();
+              filter(object, filter, activeMethod);
+          }
 		if (node.isLeaf() && !node.getAllowsChildren()) {
 			NodeLeaf leaf = (NodeLeaf) node.getUserObject();
 			Map<String, Map<String, Set<Integer>>> methodes = leaf.getMethode();
