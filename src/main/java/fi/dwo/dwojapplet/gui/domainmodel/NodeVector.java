@@ -1,11 +1,11 @@
 package fi.dwo.dwojapplet.gui.domainmodel;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.UUID;
 import java.util.Vector;
-
-import javax.swing.JComponent;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
@@ -24,6 +24,32 @@ public class NodeVector extends Vector<Object> implements Node {
     this.path = path;
   }
 
+  /**
+   * Utility method
+   * @param title
+   * @param locale
+   * @return
+   */
+  public static String getTitle(Map<String,String> title, String locale) {
+    String language = title.getOrDefault(locale, "").trim();
+    if (language.isEmpty() && !"en".equals(locale))
+    {
+      language = title.getOrDefault("en", "");
+    }
+    if (language.isEmpty() || "Untitled".equals(language)) {
+      language = title.getOrDefault("nl", "Untitled");
+    }
+    if (language.isEmpty())
+      language = "Untitled";
+    
+//    if ("Untitled".equals(language))
+//      System.out.println(title);
+        
+    return language;
+  }
+  
+  
+  
   NodeVector(NodeVector u) {
     copy = true;
     title = u.title;
@@ -37,7 +63,7 @@ public class NodeVector extends Vector<Object> implements Node {
 
   public NodeVector(List<DomStudentModelCategory> categories, DomStudentModelContextInfo info, String l) {
     copy = true;
-    String title = info.getTitle().get(l);
+    String title = getTitle(info.getTitle(), l);
     this.title = title;
     this.info = new DomStudentModelContextInfo(info);
     if (this.info.getId() == null) {
@@ -46,7 +72,7 @@ public class NodeVector extends Vector<Object> implements Node {
     this.lang = l;
     int last = -1;
     for (DomStudentModelCategory cat: categories) {    
-      String subtitle = cat.getInfo().getTitle().getOrDefault(l,"untitled");
+      String subtitle = getTitle(cat.getInfo().getTitle(),l);
       if (!subtitle.isEmpty()) last = size();
       NodeVector nv = new NodeVector(cat.getObjectives(), subtitle, l, cat.getInfo());
       nv.setPath(elementCount);
@@ -65,7 +91,7 @@ public class NodeVector extends Vector<Object> implements Node {
     this.lang = l;
     int last = -1;
     for (DomStudentModelObj obj: objectives) {
-      String subtitle = obj.getInfo().getTitle().getOrDefault(l,"untitled");
+      String subtitle = getTitle(obj.getInfo().getTitle(),l);
       if (!subtitle.isEmpty()) last = size();
       if (obj.getObjectives()==null)
       {  NodeLeaf nodeleaf = new NodeLeaf(subtitle, obj.getInfo(), l);
@@ -102,7 +128,7 @@ public class NodeVector extends Vector<Object> implements Node {
   public NodeVector(List<DomStudentModelCategory> categories, DomStudentModelContextInfo info,
       String locale, boolean b) {
     copy = b;
-    String title = info.getTitle().get(locale);
+    String title = getTitle(info.getTitle(),locale);
     this.title = title;
     this.info = info;
     if (this.info.getId() == null) {
@@ -111,7 +137,7 @@ public class NodeVector extends Vector<Object> implements Node {
     this.lang = locale;
     int last = -1;
     for (DomStudentModelCategory cat: categories) {    
-      String subtitle = cat.getInfo().getTitle().getOrDefault(locale,"untitled");
+      String subtitle = getTitle(cat.getInfo().getTitle(),locale);
       if (!subtitle.isEmpty()) last = size();
       NodeVector nv = new NodeVector(cat.getObjectives(), subtitle, locale, cat.getInfo(), b);
       nv.setPath(elementCount);
@@ -131,7 +157,7 @@ public class NodeVector extends Vector<Object> implements Node {
     this.lang = locale;
     int last = -1;
     for (DomStudentModelObj obj: objectives) {
-      String subtitle1 = obj.getInfo().getTitle().getOrDefault(locale,"untitled");
+      String subtitle1 = getTitle(obj.getInfo().getTitle(),locale);
       if (!subtitle1.isEmpty()) last = size();
       if (obj.getObjectives()==null)
       {  NodeLeaf nodeleaf = new NodeLeaf(subtitle1, obj.getInfo(), locale,b);
@@ -147,7 +173,7 @@ public class NodeVector extends Vector<Object> implements Node {
   }
 
   public String toString() {
-    return title;
+    return Objects.toString(title);
   }
 
   @Override

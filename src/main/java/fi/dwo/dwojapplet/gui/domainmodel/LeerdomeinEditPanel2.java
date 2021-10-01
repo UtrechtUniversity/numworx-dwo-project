@@ -1007,7 +1007,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 
 	private String getTitle() {
 		if (structure != null) {
-			return structure.getInfo().getTitle().get(getLocale().getLanguage());
+			return NodeVector.getTitle(structure.getInfo().getTitle(),getLocale().getLanguage());
 		}
 		return "Leerdomein";
 	}
