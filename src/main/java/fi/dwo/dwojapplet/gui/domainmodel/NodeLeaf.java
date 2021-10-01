@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
@@ -104,7 +105,7 @@ public class NodeLeaf implements Node {
   }
 
   public String toString() {
-    return title;
+    return Objects.toString(title);
   }
 
   @Override

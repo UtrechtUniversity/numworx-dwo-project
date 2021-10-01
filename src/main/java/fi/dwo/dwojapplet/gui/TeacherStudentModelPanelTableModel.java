@@ -4,10 +4,14 @@ package fi.dwo.dwojapplet.gui;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.gui.domainmodel.NodeVector;
+
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
 import javax.swing.table.AbstractTableModel;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
@@ -44,11 +48,10 @@ class TeacherStudentModelPanelTableModel extends AbstractTableModel {
         data = new Object[rows][7];
         int j = 0;
         for (DomStudentModelContext m : modelList) {
-            String language = m.getModelStructure().getInfo().getTitle().get(DwoHelper.getLocale().getLocale());
-            if(language ==null) {
-                m.getModelStructure().getInfo().getTitle().get(DwoHelper.getLocale().getDefaultLocale());
-            }
-            data[j][0] = m.getModelStructure().getInfo().getTitle().get(DwoHelper.getLocale().getLocale());
+            Map<String, String> title = m.getModelStructure().getInfo().getTitle();
+            String locale = DwoHelper.getLocale().getLocale();
+            
+            data[j][0] = NodeVector.getTitle(title, locale);
             data[j][1] = searchImage;
             boolean readonly = m.getPublishState() == PublishState.overt;
             data[j][2] = readonly ? null : removeImage;
