@@ -616,7 +616,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
         if ( DwoHelper.isPremium() && "reducedStudentModelContexts".equals(name)) {
           try {
             SecureStudentModelManager manager = GuiCreator.instance().getStudentModelManager();
-            List<DomStudentModelContext> list = manager.getReducedList();
+            List<DomStudentModelContext> list = manager.getReducedList(DWO.getDwoProfile());
             Genson genson = StoredRestManager.getInstance().getGenson();
             return genson.serialize(list);
           } catch (Exception e) {

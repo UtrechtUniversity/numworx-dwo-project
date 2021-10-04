@@ -10,6 +10,7 @@ import org.json.simple.parser.ParseException;
 
 import com.owlike.genson.Genson;
 
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.utils.Digest;
 import nl.numworx.gwtpatch.client.GWTPatch;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
@@ -93,7 +94,7 @@ public class TeacherStudentModelPanelProperties {
     }
 
     List<DomStudentModelContext> getModelList() throws Dwo2Exception {
-        return manager.getReducedList();
+        return manager.getReducedList(DWO.getDwoProfile());
     }
 
     DomStudentModelContext updateModel(DomStudentModelContext modelContext) throws Dwo2Exception {

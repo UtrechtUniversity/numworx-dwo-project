@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.LoginManager;
@@ -13,6 +14,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManag
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
@@ -47,7 +49,9 @@ public class ShowDomainResults extends JFrame {
     
 //    DwoHelper.setCurrentUser(user.getDomUserFull(),user.getDomLoginContext());
 
-    List<DomStudentModelContext> list = SecureTeacherStudentModelManager.getList();
+    DomDwoProfile profile = new DomDwoProfile();
+    profile.setId(PersistentDwoProfile.buildPersistenceId(77L));
+    List<DomStudentModelContext> list = new SecureTeacherStudentModelManager().getReducedList(profile);
     List<DomSchoolClass> classes = SecureTeacherSchoolClassManager.getTeachersSchoolClasses();
     int i = 0;
     ShowDomainResults main = new ShowDomainResults();
