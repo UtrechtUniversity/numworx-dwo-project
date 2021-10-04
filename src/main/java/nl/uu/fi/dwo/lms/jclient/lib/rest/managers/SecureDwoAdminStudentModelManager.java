@@ -8,11 +8,13 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextPatch;
 import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContextPatch;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -25,9 +27,10 @@ public class SecureDwoAdminStudentModelManager implements SecureStudentModelMana
 	private final StoredRestManager restManager = StoredRestManager.getInstance();
 
 	@Override
-	public List<DomStudentModelContext> getReducedList() throws Dwo2Exception {
-	    RestContext rest = new RestContext();
+	public List<DomStudentModelContext> getReducedList(DomDwoProfile profile) throws Dwo2Exception {
+		RestDwoProfile rest = new RestDwoProfile();
 	    rest.setRestContext(getContext());
+	    rest.setDomDwoProfile(profile);
 	    List<DomStudentModelContext> src =
 	        restManager.getPutList("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/studentmodel/getReducedList",
 	            RestListClassTypes.DomStudentModelContext, rest);

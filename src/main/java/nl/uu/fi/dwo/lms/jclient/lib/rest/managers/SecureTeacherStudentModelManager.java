@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolMethod;
@@ -18,6 +19,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextPatch;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolMethod;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
@@ -36,20 +38,21 @@ public class SecureTeacherStudentModelManager implements SecureStudentModelManag
   private static final Logger LOG =
       Logger.getLogger(SecureTeacherStudentModelManager.class.getName());
 
-  public static List<DomStudentModelContext> getList() throws Dwo2Exception {
-    RestContext rest = new RestContext();
-    rest.setRestContext(getContext());
-    List<DomStudentModelContext> src =
-        StoredRestManager.getInstance().getPutList("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/getList",
-            RestListClassTypes.DomStudentModelContext, rest);
-    LOG.log(Level.FINE, "Retrieved list of studentmodels of the teacher with username {0}.",
-        new Object[] {RestAuthenticator.getInstance().getUsername()});
-    return src;
-  }  
-
-  public List<DomStudentModelContext> getReducedList() throws Dwo2Exception {
-	    RestContext rest = new RestContext();
+//  public static List<DomStudentModelContext> getList() throws Dwo2Exception {
+//    RestContext rest = new RestContext();
+//    rest.setRestContext(getContext());
+//    List<DomStudentModelContext> src =
+//        StoredRestManager.getInstance().getPutList("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/getList",
+//            RestListClassTypes.DomStudentModelContext, rest);
+//    LOG.log(Level.FINE, "Retrieved list of studentmodels of the teacher with username {0}.",
+//        new Object[] {RestAuthenticator.getInstance().getUsername()});
+//    return src;
+//  }  
+  @Override
+  public List<DomStudentModelContext> getReducedList(DomDwoProfile profile) throws Dwo2Exception {
+	  	RestDwoProfile rest = new RestDwoProfile();
 	    rest.setRestContext(getContext());
+	    rest.setDomDwoProfile(profile);
 	    List<DomStudentModelContext> src =
 	        StoredRestManager.getInstance().getPutList("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/getReducedList",
 	            RestListClassTypes.DomStudentModelContext, rest);
