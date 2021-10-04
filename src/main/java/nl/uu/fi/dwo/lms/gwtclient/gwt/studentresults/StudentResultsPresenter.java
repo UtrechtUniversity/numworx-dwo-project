@@ -40,6 +40,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsStudentResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.AbstractResultsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.StudentModelPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
@@ -178,7 +179,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		Tree tree = widget.get().tree;
 		tree.removeItems();
 		DomStudentModelStructure structure = item.getModelStructure();
-		String title = structure.getInfo().getTitle().getOrDefault(lang, "");
+		String title = StudentModelPresenter.getTitle(structure.getInfo(),lang);
 		Widget html = Util.summaryItem(title, NULLSCORE ,0);
         TreeItem ti = tree.addItem(html);
 		ti.setUserObject(item);
@@ -336,7 +337,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	
 	void showHideGraph(DomStudentModelContext4Student item) {
 		JSONObject json = new JSONObject();
-		json.put("title", new JSONString(item.getModelStructure().getInfo().getTitle().get(lang)));
+		json.put("title", new JSONString(StudentModelPresenter.getTitle(item.getModelStructure().getInfo(),lang)));
 		json.put("id", new JSONString(item.getId().getIdString()));
 		SwitchViewEvent ev = onGraphEvent(json);
 		eventBus.fireEvent(ev);
@@ -361,7 +362,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		w.models.addItem(first);
 		for (DomStudentModelContext4Student item : list) {
 			DomStudentModelStructure structure = item.getModelStructure();
-			String title = structure.getInfo().getTitle().getOrDefault(lang, "");
+			String title = StudentModelPresenter.getTitle(structure.getInfo(),lang);
 			w.models.addItem(title);
 		}
 
@@ -393,7 +394,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			DomStudentModelContextInfo info = currentInfo.get(id);
 			String text;
 			setDescription(info);
-	        text = info.getTitle().get(lang);
+	        text = StudentModelPresenter.getTitle(info,lang);
             widget.get().title.setText(text);
 		} else if (userObject instanceof Integer) {
 			widget.get().title.setText(method.books.get(((Integer) userObject).intValue()));
@@ -435,7 +436,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			DomStudentModelStructure structure = model.getModelStructure();
 			DomStudentModelCategory o = structure.getCategories().get(((Integer) userObject).intValue());
 			setDescription(o.getInfo());
-            String text = o.getInfo().getTitle().get(lang);
+            String text = StudentModelPresenter.getTitle(o.getInfo(),lang);
             widget.get().title.setText(text);
 			service.getScore(model).then(p -> { 
 				DomStudentModelCategoryScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(((Integer) userObject).intValue());
@@ -459,7 +460,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			final DomStudentModelObj oo = o0;
 			String text;
 			setDescription(oo.getInfo());
-	        text = oo.getInfo().getTitle().get(lang);
+	        text = StudentModelPresenter.getTitle(oo.getInfo(),lang);
             widget.get().title.setText(text);
 
             service.getScore(model).then( p -> { 
@@ -484,10 +485,10 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 				DomStudentModelObjectiveScore s = score.getChildren().get(oobj);
 				TreeItem tt;
 				if (s.getChildren() != null)
-					tt = item.addItem(Util.summaryItem(ooo.getInfo().getTitle().getOrDefault(lang, ""), s,3));
+					tt = item.addItem(Util.summaryItem(StudentModelPresenter.getTitle(ooo.getInfo(),lang), s,3));
 				else
 				{	boolean add = inFilter(filter, ooo);
-					tt = item.addItem(Util.scoreItem(ooo.getInfo().getTitle().getOrDefault(lang, ""), s,3));
+					tt = item.addItem(Util.scoreItem(StudentModelPresenter.getTitle(ooo.getInfo(),lang), s,3));
 					tt.setVisible(add);
 				}
 				int[] oelems = new int[elems.length+1];
@@ -525,10 +526,10 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			    DomStudentModelObjectiveScore s = score.getObjectives().get(obj);
 				TreeItem tt;
 				if (s.getChildren() != null)
-					tt = item.addItem(Util.summaryItem(oo.getInfo().getTitle().getOrDefault(lang, ""), s,2));
+					tt = item.addItem(Util.summaryItem(StudentModelPresenter.getTitle(oo.getInfo(),lang), s,2));
 				else
 				{	boolean add = inFilter(filter, oo);
-					tt = item.addItem(Util.scoreItem(oo.getInfo().getTitle().getOrDefault(lang, ""), s,2));
+					tt = item.addItem(Util.scoreItem(StudentModelPresenter.getTitle(oo.getInfo(),lang), s,2));
 					tt.setVisible(add);
 				}
 				int[] elems = new int[] { cat, obj };
@@ -629,7 +630,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	private void addToMethodTree(TreeItem item, DomStudentModelObj obj, DomStudentModelScore<?> s, DomMethod method) {
 		Map<String, Map<String, Set<Integer>>> map = obj.getInfo().getMethods();
 		if (contains(filter, map, method)) {
-			String title = obj.getInfo().getTitle().get(lang);
+			String title = StudentModelPresenter.getTitle(obj.getInfo(),lang);
 			Map<String, Set<Integer>> books = map.getOrDefault(method.key(), Collections.emptyMap());
 			for( Map.Entry<String, Set<Integer>> entry: books.entrySet()) {
 				String book = entry.getKey();
@@ -718,7 +719,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		Map<String, Map<String, Set<Integer>>> filter = model.getFilter();
 		String text;
 		setDescription(structure.getInfo());
-		text = structure.getInfo().getTitle().get(lang);
+		text = StudentModelPresenter.getTitle(structure.getInfo(),lang);
 		widget.get().title.setText(text);
 		service.getScore(model).then ( p -> {
 			DomStudentModelStructureScore score = p.getValue().getDomStudentModelStructureScore();
@@ -732,7 +733,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 				for (DomStudentModelCategory o : structure.getCategories()) {
 		            DomStudentModelCategoryScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(cat);
 					TreeItem tt = item.addItem(
-					  Util.summaryItem(o.getInfo().getTitle().getOrDefault(lang, ""), (score),1));
+					  Util.summaryItem(StudentModelPresenter.getTitle(o.getInfo(),lang), (score),1));
 					tt.setUserObject(cat);
 					addToTree(tt, cat, o, p, filter);
 					if (getVisibleChildCount(tt) == 0) 

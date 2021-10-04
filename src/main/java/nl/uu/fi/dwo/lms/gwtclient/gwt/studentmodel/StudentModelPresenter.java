@@ -133,7 +133,7 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		.filter(model -> model.getModelStructure().getInfo().getTitle() != null)
 		.sorted(this).forEach(model -> { 
 			String key = model.getId().getIdString();
-			String title = model.getModelStructure().getInfo().getTitle().getOrDefault(lang, "");
+			String title = getTitle(model.getModelStructure().getInfo(),lang);
 			titles.put(key, title);
 			models.put(key, model);			
 		});
@@ -147,8 +147,8 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 
 	@Override
 	public int compare(DomStudentModelContext o1, DomStudentModelContext o2) {
-		String t1 = o1.getModelStructure().getInfo().getTitle().getOrDefault(lang, "");
-		String t2 = o2.getModelStructure().getInfo().getTitle().getOrDefault(lang, "");
+		String t1 = getTitle(o1.getModelStructure().getInfo(),lang);
+		String t2 = getTitle(o2.getModelStructure().getInfo(),lang);
 		return String.CASE_INSENSITIVE_ORDER.compare(t1, t2);
 	}
 	
@@ -319,8 +319,27 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		return false;
 	}
 
+	
+	
+	
 	private String getTitle(DomStudentModelContextInfo info) {
-		return info.getTitle().getOrDefault(lang, "");
+		return getTitle(info, lang);
+	}
+
+	public static String getTitle(DomStudentModelContextInfo info, String locale) {
+		return getTitle(info.getTitle(), locale);
+	}
+	
+	
+	private static String getTitle(Map<String, String> title, String locale) {
+		String language = title.getOrDefault(locale, "");
+		if (language.isEmpty()) 
+			language = title.getOrDefault("en", "");
+		if (language.isEmpty() || "Untitled".equals(language))
+			language = title.getOrDefault("nl", "Untitled");
+		if (language.isEmpty())
+			language = "Untitled";
+		return language;
 	}
 
 	@JsMethod
@@ -329,7 +348,7 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 		currentModel.then(p -> {
 			DomStudentModelContext item = p.getValue();
 			JSONObject json = new JSONObject();
-			json.put("title", new JSONString(item.getModelStructure().getInfo().getTitle().get(lang)));
+			json.put("title", new JSONString(getTitle(item.getModelStructure().getInfo(),lang)));
 			json.put("id", new JSONString(item.getId().getIdString()));
 			SwitchViewEvent ev = new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTRESULTSGRAPH, json.getJavaScriptObject());
 			bus.fireEvent(ev);
