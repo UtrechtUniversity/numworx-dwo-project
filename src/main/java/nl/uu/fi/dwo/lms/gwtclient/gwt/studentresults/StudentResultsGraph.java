@@ -68,6 +68,7 @@ import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.StudentModelPresenter;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
@@ -751,7 +752,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 				cy = Float.NaN;
 			}
  			this.cy = cy;
-			String descr = obj.getInfo().getTitle().get(lang);
+			String descr = StudentModelPresenter.getTitle(obj.getInfo(),lang);
 			kennen = descr.startsWith("W:");
  			if(invalid()) return;
  			this.parent = parent;
@@ -864,14 +865,14 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		public void onClick(ClickEvent event) {
 			DialogBox popup = new DialogBox(true, true);
 			SafeHtmlBuilder builder = new SafeHtmlBuilder();
-			builder.appendEscaped(parent + obj.getInfo().getTitle().get(lang));
+			builder.appendEscaped(parent + StudentModelPresenter.getTitle(obj.getInfo(),lang));
 			popup.getCaption().setHTML(builder.toSafeHtml());
 			DialogBox.Caption cap = popup.getCaption();
 			cap.asWidget().addDomHandler(e -> {
 				if (e.getX() > 400)
 					popup.hide();
 			}, ClickEvent.getType());
-			popup.setTitle(obj.getInfo().getTitle().get(lang));
+			popup.setTitle(StudentModelPresenter.getTitle(obj.getInfo(),lang));
 			popup.setStyleDependentName("Node", true);
 			popup.setGlassEnabled(true);
 			popup.getElement().getStyle().setZIndex(10000);
@@ -1298,7 +1299,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	}
 
 	private String parentOf(DomStudentModelContextInfo info) {
-		String parent = info.getTitle().get(lang);
+		String parent = StudentModelPresenter.getTitle(info,lang);
 		int col = parent.indexOf(':');
 		if (col < 0)
 			parent = "";
@@ -1327,7 +1328,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		// blur nodes and edges: find node, focus on node and edges.
 		Optional<Node> find = nodeStream().filter(node -> node.isVisible() && node.contains(sx, sy)).findAny();
 		if (find.isPresent()) {
-			LOG.info("ON present " + find.get().obj.getInfo().getTitle().get(lang)  + " at " + x + " , " + y);
+			LOG.info("ON present " + StudentModelPresenter.getTitle(find.get().obj.getInfo(),lang)  + " at " + x + " , " + y);
 			Node node = find.get();
 			Set<Edge> set = edges.stream().filter(edge -> edge.to == node).collect(Collectors.toSet());
 			Set<Node> nodes = set.stream().map(t -> t.from).collect(Collectors.toSet());

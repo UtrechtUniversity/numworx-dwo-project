@@ -21,6 +21,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.MethodManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentStudentModelManager;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.StudentModelPresenter;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -80,7 +81,7 @@ public class StudentResultsService implements StudentResults {
 		boolean advise = false;
 		while (iter.hasNext()) {
 			DomStudentModelContext4Student context = iter.next();
-			String title = context.getModelStructure().getInfo().getTitle().get(lang);
+			String title = StudentModelPresenter.getTitle(context.getModelStructure().getInfo(),lang);
 			if ("AdviseMe:".equals(title)) {
 				advise = true;
 				iter.remove();

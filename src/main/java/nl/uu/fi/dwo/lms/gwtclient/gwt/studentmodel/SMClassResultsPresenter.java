@@ -244,7 +244,7 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 	}
 
 	private String getTitle(DomStudentModelContextInfo info) {
-		return info.getTitle().getOrDefault(lang, "");
+		return StudentModelPresenter.getTitle(info,lang);
 	}
 
 	private Promise<?> showSchoolClasses(DomSchoolClass domSchoolClass) {
