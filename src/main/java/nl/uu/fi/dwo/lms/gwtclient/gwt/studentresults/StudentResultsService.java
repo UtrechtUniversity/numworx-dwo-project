@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
+import com.gargoylesoftware.htmlunit.html.DomProcessingInstruction;
 import com.google.gwt.i18n.client.LocaleInfo;
 
 import dagger.Lazy;
@@ -23,8 +24,10 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.StudentModelPresenter;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
@@ -42,7 +45,9 @@ public class StudentResultsService implements StudentResults {
 	MethodManager methodMan;
 	DomContext context;
 	DomSchoolClass sc;
+	Promise<DomDwoProfileFull> profile;
 	@Inject Lazy<AdviseMeService> adviseMe;
+	
 
 	@Inject StudentResultsService(SecuredStudentStudentModelManager manager, DwoGlobalVars vars, MethodManager methodMan) {
 		this.manager = manager;
@@ -51,6 +56,7 @@ public class StudentResultsService implements StudentResults {
 		context.setDomHasRole(vars.getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
 		context.setRealm(vars.getCurrentLoginContext().getRealm());
 		sc = vars.getCurrentSchoolClass();
+		profile = vars.getProfile();
 		if (!vars.isPremium()) {
 			models = Promises.resolved(Collections.emptyList());
 		} else {
@@ -66,7 +72,8 @@ public class StudentResultsService implements StudentResults {
 
 	public Promise<List<DomStudentModelContext4Student>> getModels() {
 		if (models == null || (models.isDone() && models.getFailure() != null) ) {
-			models = manager.getReducedModelsForClass(context, sc)
+			
+			models = profile.then( p -> manager.getReducedModelsForClass(context, sc, p.getValue()))
 					//.recoverWith(p -> manager.getStudentModels(context))					
 					.then(this::insertAdviseMe);
 		}		

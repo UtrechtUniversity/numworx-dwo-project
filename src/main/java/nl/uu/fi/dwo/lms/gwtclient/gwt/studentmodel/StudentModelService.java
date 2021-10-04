@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionService;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
@@ -47,11 +48,14 @@ public class StudentModelService implements DescriptionService {
 	Promise<List<DomStudentModelContext>> models;
 	
 	Map<String, Promise<?>> promises = new LinkedHashMap<>();
+
+	private Promise<DomDwoProfileFull> profile;
 	
 	@Inject StudentModelService(DwoGlobalVars vars) {
 		context = new DomContext();
 		context.setDomHasRole(vars.getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
 		context.setRealm(vars.getCurrentLoginContext().getRealm());
+		profile = vars.getProfile();
 		if (!vars.isPremium()) {
 			models = Promises.resolved(Collections.emptyList());
 		} else {
@@ -63,7 +67,7 @@ public class StudentModelService implements DescriptionService {
 
 	public Promise<List<DomStudentModelContext>> getModels() {
 		if (models == null)
-			return models = manager.getReducedList(context);
+			return models = profile.then( t -> manager.getReducedList(context, t.getValue()));
 		return models;
 	}
 
