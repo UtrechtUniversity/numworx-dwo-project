@@ -14,6 +14,7 @@ import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_P_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
@@ -63,6 +64,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolMethod;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext4Student;
@@ -126,11 +128,11 @@ public class SecuredTeacherStudentModelManager {
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getReducedList")
-    public List<DomStudentModelContext> getReducedStudentModels(@Context SecurityContext sc, RestContext context) throws Dwo2Exception {
-        TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
+    public List<DomStudentModelContext> getReducedStudentModels(@Context SecurityContext sc, RestDwoProfile context) throws Dwo2Exception {
+        TeacherState_HR_P_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
                 .setHasRole(context.getRestContext().getDomHasRole())
                 .buildSchoolAdminTeacher()
-                .setTeacher();
+                .setTeacher().addProfile(context.getDomDwoProfile());
     	List<DomStudentModelContext> list = build.getReducedStudentModels();
     	return StudentModelContextUtilManager.reduce(list);
     }

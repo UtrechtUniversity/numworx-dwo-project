@@ -3,6 +3,7 @@ package fi.dwo.server.PersistentDataManagers.actions;
 import java.util.List;
 
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
@@ -70,7 +71,8 @@ public class MySQLDwoAdminActions implements DwoAdminActions {
 
   public List<PersistentStudentModelContext> getReducedStudentModels(Context context) {
     PersistentSchool dummy = new PersistentSchool(0L);
-	List<PersistentStudentModelContext> pModels = StudentModelContextManager.findReducedEntities(dummy);
+    PersistentDwoProfile profile = context.getAdminCtx().profile;
+	List<PersistentStudentModelContext> pModels = StudentModelContextManager.findReducedEntities(dummy, profile);
     return pModels;
   }
 

@@ -83,7 +83,7 @@ public class MySQLTeacherActions implements TeacherActions {
     }
 
     public List<PersistentStudentModelContext> getReducedStudentModels(TeacherDomainAuthorizer.Context context) throws Dwo2Exception {
-        List<PersistentStudentModelContext> pModels = StudentModelContextManager.findReducedEntities(context.getUserCtx().getSchool());
+    	List<PersistentStudentModelContext> pModels = StudentModelContextManager.findReducedEntities(context.getUserCtx().getSchool(), context.getTeacherCtx().getProfile());
         return pModels;
     }
 

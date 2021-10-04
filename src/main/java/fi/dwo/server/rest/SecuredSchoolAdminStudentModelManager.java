@@ -1,5 +1,6 @@
 package fi.dwo.server.rest;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
@@ -28,6 +29,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContextId;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -38,12 +40,12 @@ public class SecuredSchoolAdminStudentModelManager {
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getReducedList")
-    public List<DomStudentModelContext> getReducedStudentModels(@Context SecurityContext sc, RestContext context) throws Dwo2Exception {
+    public List<DomStudentModelContext> getReducedStudentModels(@Context SecurityContext sc, RestDwoProfile context) throws Dwo2Exception {
          SchoolAdminTeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
                 .setHasRole(context.getRestContext().getDomHasRole())
                 .buildSchoolAdminTeacher();
                 
-    	List<DomStudentModelContext> list = build.getReducedStudentModels();
+    	List<DomStudentModelContext> list = build.getReducedStudentModels(context.getDomDwoProfile());
     	return StudentModelContextUtilManager.reduce(list);
     }
 

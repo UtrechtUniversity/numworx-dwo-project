@@ -6,6 +6,7 @@ package fi.dwo.server.rest;
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
@@ -28,6 +29,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
@@ -39,6 +41,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.GensonMapConverter;
 import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -126,7 +129,7 @@ public class SecuredTeacherStudentModelManagerIT {
 
         System.out.println("getReducedStudentModels");
         SecurityContext sc = new TestSecurityContext("user03", RoleType.TEACHER);
-        RestContext restContext = new RestContext();
+        RestDwoProfile restContext = new RestDwoProfile();
         DomHasRole hr = new DomHasRole();
         //MYSQL;PersistentHasRole;00000000000000000010;00000000000000000003 TEACHER School01
         PersistentHasRolePK key = new PersistentHasRolePK(10L, 3L);
@@ -137,6 +140,9 @@ public class SecuredTeacherStudentModelManagerIT {
         DomContext context = new DomContext();
         context.setDomHasRole(hr);
         restContext.setRestContext(context);
+        DomDwoProfile domDwoProfile = new DomDwoProfile();
+        domDwoProfile.setId(PersistentDwoProfile.buildPersistenceId(1L));
+		restContext.setDomDwoProfile(domDwoProfile);
         SecuredTeacherStudentModelManager instance = new SecuredTeacherStudentModelManager();
         List<DomStudentModelContext> expResult = null;
         List<DomStudentModelContext> result = instance.getReducedStudentModels(sc, restContext);

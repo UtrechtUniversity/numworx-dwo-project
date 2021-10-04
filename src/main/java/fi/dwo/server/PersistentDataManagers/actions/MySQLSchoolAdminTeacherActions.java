@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
@@ -31,8 +32,8 @@ public class MySQLSchoolAdminTeacherActions extends MySQLUserActions implements 
     return (int) StudentScoContextManager.getEntityCount(scoCtx, role);
   }
 
-  public List<PersistentStudentModelContext> getReducedStudentModels(Context context) throws Dwo2Exception {
-      List<PersistentStudentModelContext> pModels = StudentModelContextManager.findReducedEntities(context.getUserCtx().getSchool());
+  public List<PersistentStudentModelContext> getReducedStudentModels(Context context, PersistentDwoProfile profile) throws Dwo2Exception {   
+	List<PersistentStudentModelContext> pModels = StudentModelContextManager.findReducedEntities(context.getUserCtx().getSchool(), profile);
       return pModels;
   }
 

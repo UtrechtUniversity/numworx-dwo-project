@@ -1,6 +1,7 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.persistence.DwoEmfFactory;
 
@@ -174,11 +175,12 @@ public class StudentModelContextManager {
     }
     
     @SuppressWarnings("unchecked")
-	public static List<PersistentStudentModelContext> findReducedEntities(PersistentSchool s) {
+	public static List<PersistentStudentModelContext> findReducedEntities(PersistentSchool s, PersistentDwoProfile profile) {
         EntityManager em = getEntityManager();
         try {
         	Query q = em.createNativeQuery("SELECT modelID, schoolID, json_extract(model, \"$.info.title\"), optlock, lastChangeTimeStamp, publishState, json_extract(model, \"$.owner\"), json_extract(model, \"$.timestamp\"), json_extract(model, \"$.info.id\"), json_extract(model, \"$.activeMethod.idString\") FROM tblstudentmodelcontext WHERE schoolID = ? or schoolID = 0" );
         	q.setParameter(1, s.getSchoolID());
+        	q.setParameter(2, profile.getDwoProfileID());
         	List<Object[]> result = q.getResultList();
         	List<PersistentStudentModelContext> list = new ArrayList<>();        	
         	for(Object[] item: result) {

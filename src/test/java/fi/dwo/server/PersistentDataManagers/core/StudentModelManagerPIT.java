@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.GensonMapConverter;
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.server.mysql.DatabaseManager;
@@ -319,12 +320,13 @@ public class StudentModelManagerPIT {
     public void testGetReducedList() throws Exception {
     	
     	PersistentSchool school = new PersistentSchool(3L);
-    	List<PersistentStudentModelContext> result = StudentModelContextManager.findReducedEntities(school);
+    	PersistentDwoProfile profile = new PersistentDwoProfile(1L);
+    	List<PersistentStudentModelContext> result = StudentModelContextManager.findReducedEntities(school, profile);
     	assertNotNull (result);
     	assertEquals(2, result.size());
     	
     	school = new PersistentSchool(1234L);
-    	result = StudentModelContextManager.findReducedEntities(school);
+    	result = StudentModelContextManager.findReducedEntities(school, profile);
     	assertNotNull (result);
     	assertEquals(0, result.size());
    	

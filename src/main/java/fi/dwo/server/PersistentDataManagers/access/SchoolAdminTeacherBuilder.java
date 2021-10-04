@@ -2,9 +2,11 @@
 package fi.dwo.server.PersistentDataManagers.access;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.logging.Logger;
 
 import javax.persistence.PersistenceException;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
@@ -94,8 +97,9 @@ class SchoolAdminTeacherBuilder implements SchoolAdminTeacherDomainAuthorizer.Sc
 	}
 
 	@Override
-	public List<DomStudentModelContext> getReducedStudentModels() throws Dwo2Exception {
-        List<PersistentStudentModelContext> pModels = instance.schoolAdminTeacherActions.getReducedStudentModels(instance.getContext());
+	public List<DomStudentModelContext> getReducedStudentModels(DomDwoProfileId profile) throws Dwo2Exception {
+		PersistentDwoProfile persistentProfile = DwoProfileManager.findEntity(MySQLPersistenceId.getNativeId(profile));
+        List<PersistentStudentModelContext> pModels = instance.schoolAdminTeacherActions.getReducedStudentModels(instance.getContext(), persistentProfile);
         List<DomStudentModelContext> result = new ArrayList<>(pModels.size());
         pModels.forEach((m) -> result.add(m.buildDomStudentModelContext()));
         return result;
