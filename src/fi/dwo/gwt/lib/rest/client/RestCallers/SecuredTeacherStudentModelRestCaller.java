@@ -15,6 +15,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolMethod;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext4Student;
@@ -29,7 +30,7 @@ public interface SecuredTeacherStudentModelRestCaller extends RestService {
   
   @Path("/sec:{id}/teacher/studentmodel/getReducedList")
   @PUT
-  void getReducedList(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomStudentModelContext>> callback);
+  void getReducedList(@PathParam("id") String id, RestDwoProfile rest, MethodCallback<List<DomStudentModelContext>> callback);
 
   @PUT
   @Path("/sec:{id}/teacher/studentmodel/getReduced")

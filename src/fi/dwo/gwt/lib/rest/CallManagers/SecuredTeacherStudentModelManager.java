@@ -18,6 +18,7 @@ import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredTeacherStudentModelRestCaller;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolMethod;
@@ -26,6 +27,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolMethod;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext4Student;
@@ -46,9 +48,10 @@ public class SecuredTeacherStudentModelManager {
     return F(service::getLRS,PathId.getId(context), rest);
   }
   
-  public Promise<List<DomStudentModelContext>> getReducedList(DomContext context) {
-	RestContext rest = new RestContext();
+  public Promise<List<DomStudentModelContext>> getReducedList(DomContext context, DomDwoProfile profile) {
+	RestDwoProfile rest = new RestDwoProfile();
 	rest.setRestContext(context);
+	rest.setDomDwoProfile(profile);
 	return F(service::getReducedList,PathId.getId(context), rest);
   }
   

@@ -23,12 +23,14 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContextId;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -58,16 +60,25 @@ public class SecuredStudentStudentModelManager {
 	  return F(service::getLRS,PathId.getId(context), rest);
 	}
 	
-	public Promise<List<DomStudentModelContext>> getReducedModels(DomContext context, DomSchoolClass sc) {
-		RestSchoolClass rest = new RestSchoolClass();
-		rest.setDomSchoolClass(sc);
+	
+	public Promise<List<DomStudentModelContext>> getReducedModels(DomContext context, DomSchoolClassAndProfile sc) {
+		RestSchoolClassAndProfile rest = new RestSchoolClassAndProfile();
+		rest.setDomSchoolClassAndProfile(sc);
 		rest.setRestContext(context);
 		return F(service::getReducedList, PathId.getId(context), rest);
 	}
 
-	public Promise<List<DomStudentModelContext4Student>> getReducedModelsForClass(DomContext context, DomSchoolClass sc) {
-		RestSchoolClass rest = new RestSchoolClass();
-		rest.setDomSchoolClass(sc);
+	
+	public Promise<List<DomStudentModelContext4Student>> getReducedModelsForClass(DomContext context, DomSchoolClass sc, DomDwoProfile profile) {
+		DomSchoolClassAndProfile scp = new DomSchoolClassAndProfile();
+		scp.setDomDwoProfile(profile);
+		scp.setDomSchoolClass(sc);
+		return getReducedModelsForClass(context, scp);
+	}
+	
+	public Promise<List<DomStudentModelContext4Student>> getReducedModelsForClass(DomContext context, DomSchoolClassAndProfile sc) {
+		RestSchoolClassAndProfile rest = new RestSchoolClassAndProfile();
+		rest.setDomSchoolClassAndProfile(sc);
 		rest.setRestContext(context);
 		return F(service::getReducedListForClass, PathId.getId(context), rest);
 	}
