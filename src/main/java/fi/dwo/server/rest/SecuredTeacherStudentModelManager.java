@@ -1,6 +1,7 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentMethod;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
@@ -53,6 +54,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
@@ -129,7 +131,11 @@ public class SecuredTeacherStudentModelManager {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getReducedList")
     public List<DomStudentModelContext> getReducedStudentModels(@Context SecurityContext sc, RestDwoProfile context) throws Dwo2Exception {
-        TeacherState_HR_P_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
+    	if (context.getDomDwoProfile() == null) {
+    		context.setDomDwoProfile(new DomDwoProfile());
+    		context.getDomDwoProfile().setId(PersistentDwoProfile.buildPersistenceId(77L));
+    	}
+    	TeacherState_HR_P_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
                 .setHasRole(context.getRestContext().getDomHasRole())
                 .buildSchoolAdminTeacher()
                 .setTeacher().addProfile(context.getDomDwoProfile());
@@ -166,6 +172,10 @@ public class SecuredTeacherStudentModelManager {
     @Produces({"application/json"})
     @Path("/add")
     public DomStudentModelContext addStudentModel(@Context SecurityContext sc, RestStudentModelContext model) {
+    	if (model.getDomDwoProfile() == null) {
+    		model.setDomDwoProfile(new DomDwoProfile());
+    		model.getDomDwoProfile().setId(PersistentDwoProfile.buildPersistenceId(77L));
+    	}
         try {
             TeacherState_HR_P_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
                     .setHasRole(model.getRestContext().getDomHasRole())
