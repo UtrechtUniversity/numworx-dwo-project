@@ -72,6 +72,8 @@ public class PersistentStudentModelContext implements Serializable {
     @NotNull
     @Column(name = "publishState", nullable = false)
     private PublishState publishState = PublishState.published;
+    @Column(name = "dwoProfileID")
+    private Long dwoProfileID;
 //Future design
 //    @NotNull
 //    @Column(name="classType", nullable = false)
@@ -216,6 +218,14 @@ public class PersistentStudentModelContext implements Serializable {
     @PreUpdate
     void changeTimestamp() {
         lastChangeTimeStamp = System.currentTimeMillis();
+    }
+
+    public void setDwoProfileID(Long dwoProfileID) {
+      this.dwoProfileID = dwoProfileID;
+    }
+
+    public Long getDwoProfileID() {
+      return dwoProfileID;
     }
 
 }
