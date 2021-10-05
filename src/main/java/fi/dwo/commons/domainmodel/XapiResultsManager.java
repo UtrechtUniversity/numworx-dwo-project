@@ -5,6 +5,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -42,6 +43,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.dom.xapi.Account;
 import nl.uu.fi.dwo.rest.dom.xapi.Activity;
 import nl.uu.fi.dwo.rest.dom.xapi.Agent;
+import nl.uu.fi.dwo.rest.dom.xapi.Extensions;
 import nl.uu.fi.dwo.rest.dom.xapi.StateDocument;
 import nl.uu.fi.dwo.rest.dom.xapi.Statement;
 import nl.uu.fi.dwo.rest.dom.xapi.StatementsQuery;
@@ -275,7 +277,8 @@ public class XapiResultsManager {
             guess = 1.0/nrOfChoices;
         }
         
-        List<String> ids = statement.context.contextActivities.parent.get(0).definition.extensions.objectives;
+        Extensions extensions = statement.context.contextActivities.parent.get(0).definition.extensions;
+        List<String> ids = extensions.objectives;
         
         ids = strip(ids);
         
@@ -308,7 +311,13 @@ public class XapiResultsManager {
         }
         else if(Boolean.TRUE.equals(success))
         {
-          ids = metVoorkennis(ids, infos);
+          Collection<String> voorkennis = extensions.foreknowledge;
+          if (voorkennis != null) {
+            voorkennis = new TreeSet<>(voorkennis);
+            voorkennis.addAll(ids);
+            ids = new ArrayList<>(voorkennis);
+          } else 
+            ids = metVoorkennis(ids, infos);
           
           
           
