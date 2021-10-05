@@ -188,6 +188,21 @@
 		    <artifactId>javase</artifactId>
 		    <version>3.4.1</version>
 		</dependency>
+		<dependency>
+			<groupId>fi.tegels</groupId>
+			<artifactId>tegels</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>fi.mozarch</groupId>
+			<artifactId>mozarch</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>fi.verknippen</groupId>
+			<artifactId>verknippen</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<resources>
