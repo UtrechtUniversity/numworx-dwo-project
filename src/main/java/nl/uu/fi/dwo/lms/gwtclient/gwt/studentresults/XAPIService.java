@@ -39,6 +39,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.dom.xapi.Activity;
 import nl.uu.fi.dwo.rest.dom.xapi.Agent;
+import nl.uu.fi.dwo.rest.dom.xapi.Extensions;
 import nl.uu.fi.dwo.rest.dom.xapi.StateDocument;
 import nl.uu.fi.dwo.rest.dom.xapi.Statement;
 import nl.uu.fi.dwo.rest.dom.xapi.StatementsQuery;
@@ -241,7 +242,8 @@ private DomStudentModelDataScore eerstestap(DomStudentModelContextId context, Do
             guess = 1/nrOfChoices;
         }
         
-        List<String> ids = statement.context.contextActivities.parent.get(0).definition.extensions.objectives;
+        Extensions extensions = statement.context.contextActivities.parent.get(0).definition.extensions;
+		List<String> ids = extensions.objectives;
         ids = strip(ids);
         if(Boolean.FALSE.equals(success))
         {
@@ -272,7 +274,13 @@ private DomStudentModelDataScore eerstestap(DomStudentModelContextId context, Do
         }
         else if(Boolean.TRUE.equals(success))
         {
-        	ids = metVoorkennis(ids, infos);
+            Collection<String> voorkennis = extensions.foreknowledge;
+            if (voorkennis != null) {
+              voorkennis = new TreeSet<>(voorkennis);
+              voorkennis.addAll(ids);
+              ids = new ArrayList<>(voorkennis);
+            } else 
+            	ids = metVoorkennis(ids, infos);
             //Immediately calculate new scores for all ids
             for(String id: ids)
             {   DomStudentModelScore modelScore = model.get(id);
