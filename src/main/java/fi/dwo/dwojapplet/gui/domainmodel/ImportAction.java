@@ -16,6 +16,7 @@ import com.owlike.genson.GensonBuilder;
 import fi.dwo.dwojapplet.gui.TeacherStudentModelPanel;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
+import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 
 public class ImportAction extends AbstractAction {
 
@@ -52,6 +53,7 @@ public class ImportAction extends AbstractAction {
         input.close();      
         DomStudentModelContext model = new DomStudentModelContext();
         model.setModelStructure(structure);
+        model.setPublishState(PublishState.published);
         if (parent != null) parent.addModel(model);
         if (panel != null) panel.importModel(structure);
       } catch (Exception e1) {

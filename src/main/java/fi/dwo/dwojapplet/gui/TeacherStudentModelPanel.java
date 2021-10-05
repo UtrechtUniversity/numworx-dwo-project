@@ -462,10 +462,11 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
                 int ok = showConfirmDialog(TeacherStudentModelPanel.this, textArea, e.getActionCommand(), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 if (ok == JOptionPane.OK_OPTION) {
                   try {
-                    DomStudentModelStructure modelStructure = textArea.getModel();
-                    DomStudentModelContext model = new DomStudentModelContext();
-                    model.setModelStructure(modelStructure);
-                    addModel(model);
+                    if (textArea.isLock()) {
+                      prop.getCurrent().setPublishState(PublishState.published);
+                      prop.updateModel(prop.getCurrent());
+                    }                   
+                    tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage, classImage);
                   } catch (Dwo2Exception ex) {
                       LOG.log(Level.SEVERE, "new model", ex);
                       GuiCreator.instance().ShowErrorDialog(center, ex);

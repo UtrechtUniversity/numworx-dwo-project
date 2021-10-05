@@ -1074,6 +1074,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 			model.getInfo().getTitle().put(locale, "Model");
 			model.getInfo().getDescription().put(locale, "");
 			model.setCategories(new ArrayList<>());
+			lock = true;
 		}
 		this.structure = model;
 		NodeVector vector = new NodeVector(model.getCategories(), model.getInfo(), locale);

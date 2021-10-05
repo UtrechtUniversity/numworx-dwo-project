@@ -90,7 +90,7 @@ public class TeacherStudentModelPanelProperties {
     }
     
     DomStudentModelContext addModel(DomStudentModelContext modelContext) throws Dwo2Exception{
-        return SecureTeacherStudentModelManager.addModel(modelContext);
+        return SecureTeacherStudentModelManager.addModel(modelContext, DWO.getDwoProfile());
     }
 
     List<DomStudentModelContext> getModelList() throws Dwo2Exception {
@@ -125,6 +125,12 @@ public class TeacherStudentModelPanelProperties {
         model = patchModel(diff, patch.digest).getModelStructure();
         standard = current.getPublishState() == PublishState.overt;
         return model;
+      } else if (current == null) {
+        current = new DomStudentModelContext();
+        current.setModelStructure(model);
+        current.setPublishState(PublishState.edit);
+        current = addModel(current);
+        return current.getModelStructure();
       }
       current.setModelStructure(model);
       return updateModel(current).getModelStructure();
