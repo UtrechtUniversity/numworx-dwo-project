@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolMethod;
@@ -65,11 +66,12 @@ public class SecureTeacherStudentModelManager implements SecureStudentModelManag
     return RestAuthenticator.getInstance().getContext();
   }
 
-  public static DomStudentModelContext addModel(DomStudentModelContext submit)
+  public static DomStudentModelContext addModel(DomStudentModelContext submit, DomDwoProfileId profile)
       throws Dwo2Exception {
     RestStudentModelContext rest = new RestStudentModelContext();
     rest.setRestContext(getContext());
     rest.setDomStudentModelContext(submit);
+    rest.setDomDwoProfile(profile);
 
     DomStudentModelContext result = StoredRestManager.getInstance()
         .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/add", DomStudentModelContext.class, rest);
