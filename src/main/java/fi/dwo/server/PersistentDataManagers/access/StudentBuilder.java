@@ -13,6 +13,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentModelOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer.StudentState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.MethodManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
@@ -37,6 +38,8 @@ import javax.ws.rs.core.UriInfo;
 
 import org.json.simple.parser.ParseException;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -224,12 +227,14 @@ class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U
 	@Override
 	public List<DomStudentModelContext4Student> getStudentModelContextListForClass() throws Dwo2Exception {
         PersistentSchoolClass sc = instance.getContext().getStudentCtx().schoolClass;
+        long pid = instance.getContext().getStudentCtx().dwoProfile.getDwoProfileID().longValue();
         List<PersistentStudentModelOfClass> p4Class = StudentModelOfClassManager.findEntities(sc);
         List<DomStudentModelContext4Student>  result = new ArrayList<>(p4Class.size());
         for(PersistentStudentModelOfClass item: p4Class) {
         	Long id = item.getId().getModelID();
         	PersistentStudentModelContext context = StudentModelContextManager.findEntity(id);
         	if (context == null) continue; // id is verwijdert, komt voor
+        	if (context.getDwoProfileID() != null && pid != context.getDwoProfileID().longValue()) continue; // filter by profileid
         	DomStudentModelContext r = context.buildDomStudentModelContext();
         	DomStudentModelContext4Student rr = new DomStudentModelContext4Student(r.getId());
         	rr.setModelStructure(r.getModelStructure());
@@ -279,6 +284,16 @@ class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U
 			Long schoolGroupID = instance.getContext().getUserCtx().schoolGroup.getSchoolGroupID();
 			PersistentStudentOfClass soc = StudentOfClassManager.findEntity(new PersistentStudentOfClassPK(userID, classID, schoolGroupID));
 			if (soc == null) throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "not a member of schoolclass");
+		}
+		return this;
+	}
+
+	@Override
+	public StudentState_HR_R_S_SG_U setDwoProfile(DomDwoProfileId domDwoProfile) throws Dwo2Exception {
+		if (domDwoProfile == null) {
+			instance.getContext().getStudentCtx().dwoProfile = null;
+		} else {
+			instance.getContext().getStudentCtx().dwoProfile = DwoProfileManager.findEntity(MySQLPersistenceId.getNativeId(domDwoProfile));
 		}
 		return this;
 	}

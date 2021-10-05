@@ -68,7 +68,8 @@ public class MySQLTeacherActions implements TeacherActions {
             PersistentStudentModelContext pModel = new PersistentStudentModelContext();
             pModel.setModelStructure(model.getModelStructure());
             pModel.setSchoolID(model.getSchoolID());
-            pModel.setPublishState(PublishState.published);
+            pModel.setPublishState(model.getPublishState());
+            pModel.setDwoProfileID(model.getDwoProfileID());
             return StudentModelContextUtilManager.create(pModel);
         } catch (Exception e) {
             String msg = MessageFormat.format("Username {0}: Internal error: {1}", new Object[]{context.getUserCtx().getUser().getUsername(), e.getMessage()});

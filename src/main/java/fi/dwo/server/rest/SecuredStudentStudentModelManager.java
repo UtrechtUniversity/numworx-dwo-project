@@ -34,6 +34,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContextId;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -82,12 +83,13 @@ public class SecuredStudentStudentModelManager {
     @PUT
     @Produces({"application/json"})
     @Path("/getReducedListForClass")
-    public List<DomStudentModelContext4Student> getReducedStudentModelsforClass(@Context SecurityContext sc, RestSchoolClass context) throws Dwo2Exception {
+    public List<DomStudentModelContext4Student> getReducedStudentModelsforClass(@Context SecurityContext sc, RestSchoolClassAndProfile context) throws Dwo2Exception {
     StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
                 .setHasRole(context.getRestContext().getDomHasRole())//
                 .buildStudent();
      if (context.getDomSchoolClass() == null) return Collections.emptyList();
      state = state.setSchoolClass(context.getDomSchoolClass());
+     state = state.setDwoProfile(context.getDomDwoProfile());
      return StudentModelContextUtilManager.reduce4s(state.getStudentModelContextListForClass());        
     }
 

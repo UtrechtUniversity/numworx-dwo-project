@@ -178,7 +178,7 @@ public class StudentModelContextManager {
 	public static List<PersistentStudentModelContext> findReducedEntities(PersistentSchool s, PersistentDwoProfile profile) {
         EntityManager em = getEntityManager();
         try {
-        	Query q = em.createNativeQuery("SELECT modelID, schoolID, json_extract(model, \"$.info.title\"), optlock, lastChangeTimeStamp, publishState, json_extract(model, \"$.owner\"), json_extract(model, \"$.timestamp\"), json_extract(model, \"$.info.id\"), json_extract(model, \"$.activeMethod.idString\") FROM tblstudentmodelcontext WHERE schoolID = ? or schoolID = 0" );
+        	Query q = em.createNativeQuery("SELECT modelID, schoolID, json_extract(model, \"$.info.title\"), optlock, lastChangeTimeStamp, publishState, json_extract(model, \"$.owner\"), json_extract(model, \"$.timestamp\"), json_extract(model, \"$.info.id\"), json_extract(model, \"$.activeMethod.idString\") FROM tblstudentmodelcontext WHERE (schoolID = ? or schoolID = 0) AND (dwoProfileID = ? or dwoProfileID is NULL)" );
         	q.setParameter(1, s.getSchoolID());
         	q.setParameter(2, profile.getDwoProfileID());
         	List<Object[]> result = q.getResultList();

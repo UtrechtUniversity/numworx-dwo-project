@@ -1,5 +1,6 @@
 package fi.dwo.server.PersistentDataManagers.access;
 
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.server.PersistentDataManagers.actions.MySQLStudentActions;
 import fi.dwo.server.PersistentDataManagers.actions.StudentActions;
@@ -8,6 +9,7 @@ import java.util.logging.Logger;
 
 import javax.ws.rs.core.UriInfo;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
@@ -106,6 +108,7 @@ public class StudentDomainAuthorizer {
     public static class StudentPersistentContext {
 
         public PersistentSchoolClass schoolClass;
+		public PersistentDwoProfile dwoProfile;
 
         protected StudentPersistentContext() {
         }
@@ -141,6 +144,8 @@ public class StudentDomainAuthorizer {
 		public List<DomStudentModelContext4Student> getStudentModelContextListForClass() throws Dwo2Exception;
 
 		public StudentState_HR_R_S_SG_U setSchoolClass(DomSchoolClass domSchoolClass) throws Dwo2Exception;
+
+		public StudentState_HR_R_S_SG_U setDwoProfile(DomDwoProfileId domDwoProfile) throws Dwo2Exception;
 
     }
 

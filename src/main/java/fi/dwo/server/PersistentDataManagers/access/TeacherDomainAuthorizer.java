@@ -21,6 +21,7 @@ import javax.ws.rs.core.UriInfo;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
@@ -316,9 +317,7 @@ public class TeacherDomainAuthorizer {
         List<DomStudentModelContext> getStudentModels() throws Dwo2Exception;
         DomStudentModelContext getStudentModel(DomStudentModelContextId id) throws Dwo2Exception;
 
-        DomStudentModelContext addStudentModel(DomStudentModelContext model) throws Dwo2Exception;
-
-        TeacherState_HR_P_R_S_SG_U addProfile(DomDwoProfile p) throws Dwo2Exception;
+        TeacherState_HR_P_R_S_SG_U addProfile(DomDwoProfileId domDwoProfileId) throws Dwo2Exception;
 
         List<DomSchoolClass> getSchoolClasses() throws Dwo2Exception;
 
@@ -347,6 +346,7 @@ public class TeacherDomainAuthorizer {
         TeacherState_HR_P_R_S_SC_SG_U addSchoolClass(DomSchoolClass s) throws Dwo2Exception;
         List<DomSchoolClass> getSchoolClasses() throws Dwo2Exception;
 		List<DomStudentModelContext> getReducedStudentModels() throws Dwo2Exception;
+		DomStudentModelContext addStudentModel(DomStudentModelContext domStudentModelContext)  throws Dwo2Exception;
 
     }
 

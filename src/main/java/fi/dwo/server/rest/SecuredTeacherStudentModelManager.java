@@ -167,10 +167,10 @@ public class SecuredTeacherStudentModelManager {
     @Path("/add")
     public DomStudentModelContext addStudentModel(@Context SecurityContext sc, RestStudentModelContext model) {
         try {
-            TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
+            TeacherState_HR_P_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
                     .setHasRole(model.getRestContext().getDomHasRole())
                     .buildSchoolAdminTeacher()
-                    .setTeacher();
+                    .setTeacher().addProfile(model.getDomDwoProfile());
             return build.addStudentModel(model.getDomStudentModelContext());
             
         } catch (Dwo2Exception e) {

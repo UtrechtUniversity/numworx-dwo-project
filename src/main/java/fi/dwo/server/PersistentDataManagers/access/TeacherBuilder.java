@@ -80,6 +80,7 @@ import com.owlike.genson.ext.jaxb.JAXBBundle;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -176,7 +177,7 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
      * @throws Dwo2Exception
      */
     @Override
-    public TeacherDomainAuthorizer.TeacherState_HR_P_R_S_SG_U addProfile(DomDwoProfile p) throws Dwo2Exception {
+    public TeacherDomainAuthorizer.TeacherState_HR_P_R_S_SG_U addProfile(DomDwoProfileId p) throws Dwo2Exception {
         //fetch profile
         Long profileId = MySQLPersistenceId.getNativeId(p);
         PersistentDwoProfile profile = DwoProfileManager.findEntity(profileId);
@@ -417,7 +418,8 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
             pModel.setModelStructure(model.getModelStructure());
             //requires the school context
             pModel.setSchoolID(instance.getContext().getUserCtx().school.getSchoolID());
-            pModel.setPublishState(PublishState.published);
+            pModel.setDwoProfileID(instance.getContext().getTeacherCtx().getProfile().getDwoProfileID());
+            pModel.setPublishState(model.getPublishState());
             return instance.teacherActions.addStudentModel(instance.getContext(), pModel).buildDomStudentModelContext();
         } catch (Dwo2Exception e) {
             String msg = MessageFormat.format("Username {0}: Internal error: {1}", new Object[]{instance.getContext().getUserCtx().getUser().getUsername(), e.getMessage()});
