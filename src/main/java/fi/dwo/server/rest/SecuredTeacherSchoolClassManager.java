@@ -1309,7 +1309,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         result.setCourses(listCourse.stream().map((e) -> new DomMapEntry<PersistenceId, DomCourse>(e.buildPersistenceId(), e.buildDomCourse()))
                 .collect(Collectors.toList()));
 
-        List<PersistentClassCourse> listClassCourse = ClassCourseManager.findEntities(schoolClass);
+        List<PersistentClassCourse> listClassCourse = ClassCourseManager.findEntities(schoolClass, profileID);
 
         Map<PersistenceId, DomClassCourse4Teacher> classCourseMap = new HashMap<>();
  

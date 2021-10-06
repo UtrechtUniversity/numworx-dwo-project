@@ -1,6 +1,5 @@
 package fi.dwo.server.rest;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,7 +19,6 @@ import javax.ws.rs.core.SecurityContext;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
-import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
@@ -55,7 +53,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestClassCourse;
@@ -139,7 +136,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
 
     // List<PersistentClassCourse> listClassCourse = ClassCourseManager.findEntities(schoolClass);
     List<PersistentClassCourse> listClassCourse =
-        ClassCourseManager.findVisibleEntities(schoolClass, ViewState.studentsAndTeachers);
+        ClassCourseManager.findVisibleEntities(schoolClass, ViewState.studentsAndTeachers, profileID);
 
     Map<PersistenceId, DomClassCourse> classCourseMap = new HashMap<>();
     Map<PersistenceId, DomCourseStudent> courseMap = new HashMap<>();

@@ -181,6 +181,7 @@ public class MySQLTeacherActions implements TeacherActions {
                 PersistentClassCourse cc = new PersistentClassCourse();
                 cc.setClassID(context.getTeacherCtx().getSchoolClass().getClassID());
                 cc.setCourseID(curCourse.getCourseID());
+                cc.setDwoProfileID(curCourse.getDwoProfileID());
                 cc.setNotAfter(to);
                 cc.setNotBefore(from);
                 cc.setAccessKey(accessKey);
@@ -223,6 +224,7 @@ public class MySQLTeacherActions implements TeacherActions {
                 PersistentClassCourse cc = new PersistentClassCourse();
                 cc.setClassID(context.getTeacherCtx().getSchoolClass().getClassID());
                 cc.setCourseID(curCourse.getCourseID());
+                cc.setDwoProfileID(curCourse.getDwoProfileID());
                 cc.setNotAfter(null);
                 cc.setNotBefore(null);
                 cc.setType(CourseType.normal.ordinal());

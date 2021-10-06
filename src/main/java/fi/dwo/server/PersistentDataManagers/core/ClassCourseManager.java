@@ -318,12 +318,13 @@ public class ClassCourseManager {
         }
     }
 
-    public static List<PersistentClassCourse> findVisibleEntities(PersistentSchoolClass c, ViewState viewState) {
+    public static List<PersistentClassCourse> findVisibleEntities(PersistentSchoolClass c, ViewState viewState, Long profileID) {
         EntityManager em = getEntityManager();
         try {
-            javax.persistence.Query q = em.createNamedQuery("PersistentClassCourse.findVisibleByClassID");
+            javax.persistence.Query q = em.createNamedQuery("PersistentClassCourse.findVisibleByProfileInClass");
             q.setParameter("classID", c.getClassID());
             q.setParameter("viewState", viewState);
+            q.setParameter("dwoProfileID", profileID);
             List<PersistentClassCourse> list = q.getResultList();
             LOG.log(Level.FINE, "ClassCourse-manager retrieved {0} PersistentClassCourse with classid {1}", new Object[]{list.size(), c.getClassID()});
             return list;
@@ -409,4 +410,8 @@ public class ClassCourseManager {
             }
         }
     }
+
+	public static List<PersistentClassCourse> findEntities(PersistentSchoolClass schoolClass, Long profileID) {
+		return findEntities(schoolClass); // FIXME nu is er toch nog een test op een bestaande course.
+	}
 }

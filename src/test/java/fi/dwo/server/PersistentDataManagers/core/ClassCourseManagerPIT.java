@@ -68,20 +68,18 @@ public class ClassCourseManagerPIT {
             PersistentClassCourse cc = PersistentClassCourse.buildEmptyPersistentClassCourse();
             cc.setClassID(2);
             cc.setCourseID(6);
+            cc.setDwoProfileID(1L);
             ClassCourseManager.create(cc);
             fail("Creating double copy should not work."); //unless nosql
         } catch (Exception e) {
             //success
         }
         //create
-        try {
             PersistentClassCourse cc = PersistentClassCourse.buildEmptyPersistentClassCourse();
             cc.setClassID(1);
             cc.setCourseID(7);
+            cc.setDwoProfileID(1L);
             ClassCourseManager.create(cc);
-        } catch (Exception e) {
-            fail("Failed to create legit classcourse.");
-        }
     }
 
     /**

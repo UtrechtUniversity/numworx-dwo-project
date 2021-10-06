@@ -93,6 +93,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  *
  * @author G.A.J. van der Plas
  */
+@SuppressWarnings("deprecation")
 @PermitAll
 @Path("/secure/teacher/results")
 public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
