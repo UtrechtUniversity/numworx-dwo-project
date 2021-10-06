@@ -12,6 +12,7 @@ import com.owlike.genson.Genson;
 
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.utils.Digest;
+import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
 import nl.numworx.gwtpatch.client.GWTPatch;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureStudentModelManager;
@@ -87,6 +88,7 @@ public class TeacherStudentModelPanelProperties {
     }
 
     void init() throws Dwo2Exception {
+      MethodsProperties.reset();
     }
     
     DomStudentModelContext addModel(DomStudentModelContext modelContext) throws Dwo2Exception{
