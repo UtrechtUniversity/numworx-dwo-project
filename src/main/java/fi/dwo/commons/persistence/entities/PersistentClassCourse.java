@@ -87,6 +87,7 @@ import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
     @NamedQuery(name = "PersistentClassCourse.findByClassCourseID", query = "SELECT p FROM PersistentClassCourse p WHERE p.classCourseID = :classCourseID"),
     @NamedQuery(name = "PersistentClassCourse.findByClassID", query = "SELECT p FROM PersistentClassCourse p WHERE p.classID = :classID"),
     @NamedQuery(name = "PersistentClassCourse.findVisibleByClassID", query = "SELECT p FROM PersistentClassCourse p WHERE p.classID = :classID and p.viewState = :viewState"),
+    @NamedQuery(name = "PersistentClassCourse.findVisibleByProfileInClass", query = "SELECT p FROM PersistentClassCourse p WHERE p.classID = :classID and p.viewState = :viewState and (p.dwoProfileID = :dwoProfileID or p.dwoProfileID = null)"),
     @NamedQuery(name = "PersistentClassCourse.findByClassIDAndCourseID", query = "SELECT p FROM PersistentClassCourse p WHERE p.classID = :classID and p.courseID = :courseID"),
     @NamedQuery(name = "PersistentClassCourse.findByType", query = "SELECT p FROM PersistentClassCourse p WHERE p.type = :type"),
     @NamedQuery(name = "PersistentClassCourse.findByNotBefore", query = "SELECT p FROM PersistentClassCourse p WHERE p.notBefore = :notBefore"),
@@ -140,7 +141,12 @@ public class PersistentClassCourse implements Serializable {
     @Version int optlock;
     @Column(name = "lastChangeTimeStamp")
     long lastChangeTimeStamp;
-    
+    /**
+     * @Since 1.5.5
+     */
+    @Column(name = "dwoProfileID")
+    private Long dwoProfileID;
+   
     @PrePersist
     @PreUpdate
     void changeTimestamp() {
@@ -176,6 +182,10 @@ public class PersistentClassCourse implements Serializable {
         this.classID = classID;
     }
 
+    public void setClassID(Long classID) {
+      this.classID = classID;
+  }
+
     public Integer getType() {
         return type;
     }
@@ -207,6 +217,10 @@ public class PersistentClassCourse implements Serializable {
     public void setCourseID(long courseID) {
         this.courseID = courseID;
     }
+
+    public void setCourseID(Long courseID) {
+      this.courseID = courseID;
+  }
 
     @Override
     public int hashCode() {
@@ -244,22 +258,22 @@ public class PersistentClassCourse implements Serializable {
         return result;
     }
 
-    /**
-     * Builds a PersistentClassCourse
-     *
-     * @return
-     */
-    public static PersistentClassCourse buildFilledPersistentClassCourse() {
-        PersistentClassCourse result = new PersistentClassCourse();
-        result.setClassCourseID(01);
-        result.setClassID(02);
-        result.setCourseID(03);
-        result.setNotBefore(DwoDateUtilities.getStartOfDay());
-        result.setNotAfter(DwoDateUtilities.getEndOfDay());
-        result.setType(CourseType.normal.ordinal());
-        result.setViewState(ViewState.invisible);
-        return result;
-    }
+//    /**
+//     * Builds a PersistentClassCourse
+//     *
+//     * @return
+//     */
+//    public static PersistentClassCourse buildFilledPersistentClassCourse() {
+//        PersistentClassCourse result = new PersistentClassCourse();
+//        result.setClassCourseID(01);
+//        result.setClassID(02);
+//        result.setCourseID(03);
+//        result.setNotBefore(DwoDateUtilities.getStartOfDay());
+//        result.setNotAfter(DwoDateUtilities.getEndOfDay());
+//        result.setType(CourseType.normal.ordinal());
+//        result.setViewState(ViewState.invisible);
+//        return result;
+//    }
 
     public DomClassCourse4Teacher buildDomClassCourse4Teacher() {
         DomClassCourse4Teacher classCourse = new DomClassCourse4Teacher();
@@ -360,5 +374,13 @@ public class PersistentClassCourse implements Serializable {
 	public void setLastChangeTimeStamp(long lastChangeTimestamp) {
 		this.lastChangeTimeStamp = lastChangeTimestamp;
 	}
+
+  public Long getDwoProfileID() {
+    return dwoProfileID;
+  }
+
+  public void setDwoProfileID(Long dwoProfileID) {
+    this.dwoProfileID = dwoProfileID;
+  }
     
 }
