@@ -30,6 +30,7 @@ import javax.ws.rs.core.UriInfo;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
@@ -221,6 +222,8 @@ public class SecuredTeacherStudentModelManagerIT {
 ///        DomStudentModelStructureScore ds = domModel.getModelStructure().generateStudentModelStructureScore();
         
         restModel.setDomStudentModelContext(domModel);
+        DomDwoProfileId domDwoProfile = new DomDwoProfileId(PersistentDwoProfile.buildPersistenceId(1L));
+		restModel.setDomDwoProfile(domDwoProfile);
         DomStudentModelContext expResult = null;
         SecuredTeacherStudentModelManager instance = new SecuredTeacherStudentModelManager();
         expResult = instance.addStudentModel(sc, restModel);

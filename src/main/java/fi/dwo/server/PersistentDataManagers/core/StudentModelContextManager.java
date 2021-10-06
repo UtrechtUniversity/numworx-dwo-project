@@ -57,9 +57,9 @@ public class StudentModelContextManager {
             em.persist(model);
             em.getTransaction().commit();
             return model;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             LOG.log(Level.SEVERE, "Can't create the PersistentStudentModelContext.", e);
-            throw new PersistenceException(e);
+            throw e;
         } finally {
             if (em != null) {
                 em.close();

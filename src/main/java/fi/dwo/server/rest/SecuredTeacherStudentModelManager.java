@@ -65,6 +65,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
+import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolMethod;
@@ -176,6 +177,8 @@ public class SecuredTeacherStudentModelManager {
     		model.setDomDwoProfile(new DomDwoProfile());
     		model.getDomDwoProfile().setId(PersistentDwoProfile.buildPersistenceId(77L));
     	}
+    	if (model.getDomStudentModelContext().getPublishState() == null)
+    		model.getDomStudentModelContext().setPublishState(PublishState.published); // the default state
         try {
             TeacherState_HR_P_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
                     .setHasRole(model.getRestContext().getDomHasRole())
