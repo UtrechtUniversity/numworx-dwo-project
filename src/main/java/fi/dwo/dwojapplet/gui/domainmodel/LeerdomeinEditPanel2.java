@@ -85,6 +85,7 @@ import fi.dwo.dwojapplet.gui.ConfirmDialog;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.TeacherStudentModelPanelProperties;
+import fi.dwo.dwojapplet.gui.action.GuiAction;
 import fi.dwo.dwojapplet.gui.domainmodel.ExportAction.ExportPanel;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.EditableGraph;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.TreeTransferHandler;
@@ -397,9 +398,10 @@ public class LeerdomeinEditPanel2 extends JPanel
       }
 	}
 	
-	class StandardAction extends AbstractAction {
+	class StandardAction extends GuiAction {
 	  StandardAction() {
 	    super("Maak standaard leerdoel");
+	    setEnabled(hasAdminRight());
 	  }
 	  
 	  @Override
@@ -734,12 +736,11 @@ public class LeerdomeinEditPanel2 extends JPanel
 		bar.add(Instellingen);
 		Instellingen.setBackground(Constants.COLOR21);
 		Instellingen.setForeground(Constants.COLOR15);
-		Instellingen.setUI(new BasicMenuUI() {
-            public void paint(Graphics g) {
-            }
-        });
+		Instellingen.setUI(new BasicMenuUI());
 		Instellingen.add(new JMenuItem(new MethodeAction()));
-		Instellingen.add(new JMenuItem(new StandardAction()));
+		StandardAction action = new StandardAction();
+        if (action.isEnabled())
+          Instellingen.add(new JMenuItem(action));
 		
 		bar.add(Box.createHorizontalGlue());
 

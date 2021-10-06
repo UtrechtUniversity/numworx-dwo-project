@@ -16,7 +16,7 @@ abstract public class GuiAction extends AbstractAction implements PropertyChange
 
     private CenterPanel center;
 
-    final boolean hasAdminRight() {
+    final public boolean hasAdminRight() {
         return instance().getUser().hasRight(User.PROFILE_ADMIN_RIGHT);
     }
 
