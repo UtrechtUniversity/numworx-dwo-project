@@ -26,6 +26,7 @@ DROP TABLE IF EXISTS `tblscoview`;
 DROP TABLE IF EXISTS `tblstudentof`;
 DROP TABLE IF EXISTS `tblstudentmodelcontext`;
 DROP TABLE IF EXISTS `tblstudentmodeldata`;
+DROP TABLE IF EXISTS `tblstudentmodelof`;
 DROP TABLE IF EXISTS `tblstudentscodata`;
 DROP TABLE IF EXISTS `tblstudentscocontext`;
 DROP TABLE IF EXISTS `tblteacherof`;
