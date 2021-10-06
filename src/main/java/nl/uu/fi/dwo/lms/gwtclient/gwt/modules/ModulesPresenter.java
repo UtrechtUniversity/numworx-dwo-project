@@ -39,6 +39,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -334,6 +335,8 @@ public class ModulesPresenter implements SwitchViewEventHandler {
           }
         } else {
           view.sendMessage("GOTO:");
+          final RoleType role = RoleType.valueOf(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName()); // FIXME herontwerp getactive...
+          if (role == RoleType.STUDENT) return;
         }
       }
 // switch to other view.     
