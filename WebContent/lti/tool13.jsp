@@ -1,0 +1,48 @@
+<html>
+<head>
+  <title>IMS Basic Learning Tools Interoperability</title>
+</head>
+<body style="font-family:sans-serif">
+<img src="http://www.sun.com/images/l2/l2_duke_java.gif" align="right">
+<p><b>IMS BasicLTI Java Provider</b></p>
+<p>This is a very simple reference implementaton of the tool side (i.e. provider) for IMS BasicLTI.</p>
+<p>This tool is configured with an LMS-wide guid of "lmsng.school.edu" protected by a secret of "secret".
+For this tool, all resource level secrets are also "secret".</p>
+</p>
+<%@ page import="javax.servlet.http.HttpServletRequest" %>
+<%@ page import="java.util.Enumeration" %>
+<%@ page import="io.jsonwebtoken.*" %>
+<%@ page import="fi.servlet.lti.*" %>
+<pre>
+
+<%! 
+
+	ProviderKeyResolver resolver = new ProviderKeyResolver();
+		
+	void println(JspWriter out, Object o ) {
+		try {
+			out.println(o);
+		} catch(Exception io) {
+			
+		}
+}
+%>
+<%
+
+  Enumeration<String> en = request.getParameterNames();
+  while (en.hasMoreElements()) {
+    String paramName = (String) en.nextElement();
+    out.println(paramName + " = " + request.getParameter(paramName) );
+  }
+
+  String token = request.getParameter("id_token");
+  JwtParser parser = Jwts.parser().setSigningKeyResolver(resolver);
+  
+  Jws<Claims> claims = parser.parseClaimsJws(token);
+  // iss is platform, aud onze clientid, sub = userid 
+  Claims body = claims.getBody();
+  for (String key: body.keySet()) {
+	  println(out, key + " = " + body.get(key));
+  }
+%>
+</pre>
