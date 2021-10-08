@@ -49,6 +49,7 @@ public class SecuredTeacherScoContextManager extends AbstractScoContextManager {
     return result;
   }
 
+  @Override
   public Integer countStudents(DomScoContext edit, DomDwoProfile profile) throws Dwo2Exception {
 	  RestScoContext rest = new RestScoContext();
 	  rest.setDomScoContext(edit);
