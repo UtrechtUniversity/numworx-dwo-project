@@ -9,7 +9,9 @@ import fi.beans.numworxlf.JScrollPane;
 import fi.beans.scorm.Parameter;
 import fi.beans.scorm.ScormAppletIF;
 import fi.beans.scorm.ScormEditComponentIF;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.ScoEditor;
@@ -22,6 +24,10 @@ import fi.dwo.dwojapplet.parameters.domain.ConvertorCreator;
 import fi.dwo.dwojapplet.parameters.domain.ConvertorIF;
 import fi.dwo.dwojapplet.parameters.gui.MainParameterComponent;
 import fi.dwo.dwojapplet.parameters.gui.ParameterComponent;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherScoContextManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+
 import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -497,7 +503,8 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         int result = JOptionPane.NO_OPTION;
 // Deze tekst is m.i. niet helemaal lekker geformuleerd. Wim
         if (!(compareMap(tmp, old))
-                && ((result = confirm(message)) == JOptionPane.YES_OPTION || result == 3)) {
+            
+                && (noUsers(sco) || (result = confirm(message)) == JOptionPane.YES_OPTION || result == 3)) {
             final GuiCreator instance = GuiCreator.instance();
             instance.setWait();
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -512,6 +519,17 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         }
         forcepaint();
         return result; // NO, CANCEL, CLOSED
+    }
+
+    private boolean noUsers(Sco sco) {
+      
+      DomScoContext edit = new DomScoContext();
+      edit.setId(PersistentScoContext.buildPersistenceId((long)sco.getID()) );
+      try {
+        return GuiCreator.instance().getScoContextManager().countStudents(edit, DWO.getDwoProfile()).intValue() == 0;
+      } catch (Dwo2Exception e) {
+        return false;
+      }
     }
 
     // kopietje van bovenstaande 
