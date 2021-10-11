@@ -412,8 +412,11 @@ public class Text_en extends ListResourceBundle {
 			{ TextMapper.GUIPA_DLG_TTL, "Edit-Mode of Activity {0}" },
 			{
 					TextMapper.GUIPA_MSG_PARAM_SAVE,
-					"If you save this new configuration,\nthe result of the older items will be removed\n \nAre you sure you want to save this configuration?" },
-			{ TextMapper.GUIPA_MSG_TTL_PARAM_SAVE, "Save configuration" },
+					"If you save this new activity,\nthe result of the older items will be removed\n \nAre you sure you want to save this activity?" },
+            {
+                      TextMapper.GUIPA_MSG_PARAM_SAVE0,
+                      "Do you wish to save this activity?" },
+			{ TextMapper.GUIPA_MSG_TTL_PARAM_SAVE, "Save Activity" },
 			{ TextMapper.GUIPA_PARAMS_OF_SCO, "Parameters ({0})" },
 			{ "cut", "Cut" },
 			{ "copy", "Copy" },

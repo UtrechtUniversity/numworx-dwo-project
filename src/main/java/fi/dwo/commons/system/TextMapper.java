@@ -498,7 +498,9 @@ public abstract class TextMapper {
 	public final static String GUIPA_PARAMS_OF_SCO = "GUIPA_PARAMS_OF_SCO";
 
 	public final static String GUIPA_MSG_PARAM_SAVE = "GUIPA_MSG_PARAM_SAVE";
-	public final static String GUIPA_MSG_TTL_PARAM_SAVE = "GUIPA_MSG_TTL_PARAM_SAVE";
+    public final static String GUIPA_MSG_PARAM_SAVE0 = "GUIPA_MSG_PARAM_SAVE0";
+
+    public final static String GUIPA_MSG_TTL_PARAM_SAVE = "GUIPA_MSG_TTL_PARAM_SAVE";
 
 	public static final String GUIC_COURSE_SHARE = "GUIC_COURSE_SHARE";
 

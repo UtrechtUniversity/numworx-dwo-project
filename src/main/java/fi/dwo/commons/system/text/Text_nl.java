@@ -424,11 +424,16 @@ public class Text_nl extends ListResourceBundle {
 			{ TextMapper.GUIPA_DLG_TTL, "Edit-Mode van activiteit \"{0}\"" },
 			{
 					TextMapper.GUIPA_MSG_PARAM_SAVE,
-					"Wilt u deze instellingen opslaan?\n\nWanneer u deze nieuwe instellingen opslaat,\ndan worden de resultaten van de oude opdrachten verwijderd." },
+					"Wilt u deze activiteit opslaan?\n\nWanneer u deze nieuwe activiteit opslaat,\ndan worden de resultaten van de oude opdrachten verwijderd." },
+
+	         {
+	                    TextMapper.GUIPA_MSG_PARAM_SAVE0,
+	                    "Wilt u deze activiteit opslaan?" },
+
 			{
 					TextMapper.GUIPA_MSG_PARAM_UNSAFESAVE,
 					"<html>Wilt u deze instellingen opslaan?<br><br>Wanneer u deze nieuwe instellingen opslaat,<br>dan worden de resultaten van de oude opdrachten <i>NIET</i> verwijderd.</html>" },
-			{ TextMapper.GUIPA_MSG_TTL_PARAM_SAVE, "Instellingen opslaan" },
+			{ TextMapper.GUIPA_MSG_TTL_PARAM_SAVE, "Activiteit opslaan" },
 			{ TextMapper.GUIPA_PARAMS_OF_SCO, "Parameters ({0})" },
 			{ "cut", "Knippen" },
 			{ "copy", "Kopiëren" },
