@@ -46,6 +46,7 @@ class FilterAction extends AbstractAction {
       ConfirmDialog dialog = new ConfirmDialog(owner, getValue(NAME).toString());
       FilterPanel p;
       p = new FilterPanel(activeMethod);
+      p.setFilter(filter);
       dialog.getContentPane().setLayout(new BorderLayout());
       
       dialog.getContentPane().add(p, BorderLayout.CENTER);
