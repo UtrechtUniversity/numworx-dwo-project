@@ -442,7 +442,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			float y = (y1+y2)/2;
 			float dx = x1 - x2;
 			float dy = y1 - y2;
-			float len = (float) Math.hypot(dx, dy) / 15;
+			float len = (float) Math.hypot(dx, dy) / 6;
 			dx /= len;
 			dy /= len;
 			x -= dx/2;
@@ -656,7 +656,8 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			circle = doc.createSVGCircleElement(cx, cy, r);
 			circle.addClickHandler(this);
 			short unitType = OMSVGLength.SVG_LENGTHTYPE_NUMBER;
-			text = doc.createSVGTextElement(cx, cy, unitType, shortText);
+			String t = longer ? longText: shortText;
+			text = doc.createSVGTextElement(cx, cy, unitType, t);
 			text.addClickHandler(this);
  			colorize();
  			g.appendChild(circle);
@@ -1480,7 +1481,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		}
 		if (r != null) 
 		{	r = r.inset(-15, -15);
-			factor = Math.max(r.getWidth()/imagewidth, r.getHeight()/imageheight); //
+			float factor = Math.max(r.getWidth()/imagewidth, r.getHeight()/imageheight); //
 			float deltax = imagewidth*factor - r.getWidth();
 			float deltay = imageheight*factor - r.getHeight();
 			r.setX(r.getX() - deltax/2);
