@@ -311,7 +311,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
     public void end() {
         if (!done) {
             done = true;
-            saveSco();
+            saveSco(true);
         }
         sco.setEditor(null);
         center.getMenu().setEditing(false);
@@ -387,7 +387,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
         if (src == stopBtn) {
-            int x = saveSco();
+            int x = saveSco(true);
             if (x == JOptionPane.CLOSED_OPTION || x == JOptionPane.CANCEL_OPTION) {
                 return;
             }
@@ -415,7 +415,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             return;
         }
         if (src == closeButton) {
-            int x = saveSco();
+            int x = saveSco(true);
             if (x == JOptionPane.CLOSED_OPTION || x == JOptionPane.CANCEL_OPTION) {
                 return;
             }
@@ -454,7 +454,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             sco.setLaunchdata(old);
 
         } else if (src == saveButton || src == saveBtn) {
-            int x = saveSco();
+            int x = saveSco(false);
             done = false;
 //        	if(editMode&&POPUP) {
 //                editModeDialog.setVisible(false);
@@ -485,8 +485,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         return tmp;
     }
 
-    private int saveSco() {
-        String message;
+    private int saveSco(boolean stop) {
         Hashtable tmp;
         tmp = getLaunchdata();
         Hashtable old = sco.getLaunchdata();
@@ -499,12 +498,25 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             sco.SetValue(Sco.LESSON_LOCATION, location);
         }
 
-        message = TextMapper.getText(TextMapper.GUIPA_MSG_PARAM_SAVE);
+        String message = TextMapper.getText(TextMapper.GUIPA_MSG_PARAM_SAVE0);
         int result = JOptionPane.NO_OPTION;
 // Deze tekst is m.i. niet helemaal lekker geformuleerd. Wim
-        if (!(compareMap(tmp, old))
-            
-                && (noUsers(sco) || (result = confirm(message)) == JOptionPane.YES_OPTION || result == 3)) {
+        boolean safe = !(compareMap(tmp, old)); // verschillend.
+        boolean ask = stop;
+        int question = JOptionPane.PLAIN_MESSAGE;
+        if (safe) {
+// met users?
+          if (!noUsers(sco)) { 
+            ask = true; 
+            question = JOptionPane.WARNING_MESSAGE;
+            message = TextMapper.getText(TextMapper.GUIPA_MSG_PARAM_SAVE);
+         }
+        }
+        if (safe && ask) {
+          safe = (result = confirm(message, question)) == JOptionPane.YES_OPTION || result == 3;
+        }
+
+        if (safe) {
             final GuiCreator instance = GuiCreator.instance();
             instance.setWait();
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -545,7 +557,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         message = TextMapper.getText(TextMapper.GUIPA_MSG_PARAM_UNSAFESAVE);
         int result = JOptionPane.NO_OPTION;
         if (!(compareMap(tmp, old))
-                && ((result = confirm(message)) == JOptionPane.YES_OPTION || result == JOptionPane.CANCEL_OPTION)) {
+                && ((result = confirm(message,JOptionPane.QUESTION_MESSAGE)) == JOptionPane.YES_OPTION || result == JOptionPane.CANCEL_OPTION)) {
             final GuiCreator instance = GuiCreator.instance();
             instance.setWait();
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -563,11 +575,12 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 
     /**
      * @param message
+     * @param question 
      * @return
      */
-    private int confirm(String message) {
+    private int confirm(String message, int question) {
         if (!GuiConstants.GUI_SCOUPDATE_UNSAFE) {
-            return JOptionPane.showConfirmDialog(this, message, TextMapper.getText(TextMapper.GUIPA_MSG_TTL_PARAM_SAVE), JOptionPane.YES_NO_CANCEL_OPTION);
+            return JOptionPane.showConfirmDialog(this, message, TextMapper.getText(TextMapper.GUIPA_MSG_TTL_PARAM_SAVE), JOptionPane.YES_NO_CANCEL_OPTION, question);
         }
         Object[] options = new Object[]{"Ja", "Nee", "Cancel", "Wel opslaan, niet verwijderen"};
         return JOptionPane.showOptionDialog(this, message, TextMapper.getText(TextMapper.GUIPA_MSG_TTL_PARAM_SAVE), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, null);
