@@ -479,8 +479,8 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		{  	organization.setVisible(role == RoleType.SCHOOLADMIN);
 			results.setVisible(role == RoleType.TEACHER); // or student if premium&test.
 			persons.setVisible(role != RoleType.STUDENT);
-			boolean premiumStudent = role == RoleType.STUDENT && isTest() && vars.isPremium() && vars.getCurrentSchoolClass() != null;
-			boolean premiumTeacher = role == RoleType.TEACHER && isTest() && vars.isPremium();
+			boolean premiumStudent = role == RoleType.STUDENT && vars.isPremium() && vars.getCurrentSchoolClass() != null;
+			boolean premiumTeacher = role == RoleType.TEACHER && vars.isPremium();
 			String title = DwoLocalesForGWT.instance.NUM_MNU_KNOWLEDGE();
 			if(premiumTeacher) title = DwoLocalesForGWT.instance.NUM_MNU_STUDENTMODEL();
 			knowledge.setTitle(title);
