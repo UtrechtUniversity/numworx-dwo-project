@@ -23,9 +23,10 @@ import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 class TeacherStudentModelPanelTableModel extends AbstractTableModel {
 
     private String[] columnNames = {TextMapper.getText(TextMapper.GUIMNU_STUDENTMODELS),
-        TextMapper.getText(TextMapper.TBL_SELECT),
-        TextMapper.getText(TextMapper.TBL_DELETE), 
-        TextMapper.getText(TextMapper.GUIMNU_RESULTS),
+        TextMapper.getText(TextMapper.TBL_VIEW),
+        TextMapper.getText(TextMapper.TBL_DELETE),
+        TextMapper.getText("copy"),
+        TextMapper.getText(TextMapper.TBL_RESULTS),
         TextMapper.getText(TextMapper.UG_CLASSES)
     };
 
@@ -35,7 +36,7 @@ class TeacherStudentModelPanelTableModel extends AbstractTableModel {
 
     private Object[][] data;
 
-    public void init(List<DomStudentModelContext> modelList, Image searchImage, Image removeImage, Image resultsImage, Image classImage) throws Dwo2Exception {
+    public void init(List<DomStudentModelContext> modelList, Image searchImage, Image removeImage, Image copyImage, Image resultsImage, Image classImage) throws Dwo2Exception {
 
         
         int rows = 0;
@@ -55,9 +56,10 @@ class TeacherStudentModelPanelTableModel extends AbstractTableModel {
             data[j][1] = searchImage;
             boolean readonly = m.getPublishState() == PublishState.overt;
             data[j][2] = readonly ? null : removeImage;
-            data[j][3] = resultsImage;
-            data[j][4] = classImage;
-            data[j][5] = m;
+            data[j][3] = copyImage;
+            data[j][4] = resultsImage;
+            data[j][5] = classImage;
+            data[j][6] = m;
             j++;
         }
         fireTableDataChanged();

@@ -73,6 +73,8 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 
     private JScrollPane scrollPane;
 
+    private Image copyImage;
+
     public class ImageRenderer extends JLabel implements TableCellRenderer {
 
         private ImageIcon icon = new ImageIcon();
@@ -156,7 +158,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
               } finally {
                 try {
                   textArea.end();
-                  tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage, classImage);
+                  tableModel.init(prop.getModelList(), searchImage, removeImage, copyImage, resultsImage, classImage);
                 } catch (Dwo2Exception e) {
                   LOG.log(Level.SEVERE, "refresh list " + title, e);
                   GuiCreator.instance().ShowErrorDialog(center, e);
@@ -170,7 +172,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
               if ( ok == JOptionPane.OK_OPTION) {
                 try {
                   prop.removeModel(model);
-                  tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage, classImage);
+                  tableModel.init(prop.getModelList(), searchImage, removeImage, copyImage, resultsImage, classImage);
                 } catch (Dwo2Exception e) {
                   LOG.log(Level.SEVERE, "remove model " + title, e);
                   GuiCreator.instance().ShowErrorDialog(center, e);
@@ -298,7 +300,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         jtbl.add(Box.createHorizontalGlue());
         //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
 
-        tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage, classImage);
+        tableModel.init(prop.getModelList(), searchImage, removeImage, copyImage, resultsImage, classImage);
         jtable.setModel(tableModel);
         rowSorter = new TableRowSorter<TeacherStudentModelPanelTableModel>(tableModel);
         rowSorter.toggleSortOrder(0);//
@@ -414,7 +416,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
     public void end() {
       LOG.info("End of " + this);
       try {
-        tableModel.init(Collections.emptyList(), searchImage, removeImage, resultsImage, classImage);
+        tableModel.init(Collections.emptyList(), searchImage, removeImage, copyImage, resultsImage, classImage);
       } catch (Dwo2Exception e) {
         LOG.log(Level.WARNING, "should not happen", e);
       }
@@ -466,7 +468,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
                       prop.getCurrent().setPublishState(PublishState.published);
                       prop.updateModel(prop.getCurrent());
                     }                   
-                    tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage, classImage);
+                    tableModel.init(prop.getModelList(), searchImage, removeImage, copyImage, resultsImage, classImage);
                   } catch (Dwo2Exception ex) {
                       LOG.log(Level.SEVERE, "new model", ex);
                       GuiCreator.instance().ShowErrorDialog(center, ex);
@@ -492,7 +494,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 
     public void addModel(DomStudentModelContext model) throws Dwo2Exception {
       prop.addModel(model);
-      tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage, classImage);
+      tableModel.init(prop.getModelList(), searchImage, removeImage, copyImage, resultsImage, classImage);
     }
 
     /**
