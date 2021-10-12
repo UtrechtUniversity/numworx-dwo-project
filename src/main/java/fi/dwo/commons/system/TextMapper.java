@@ -90,6 +90,8 @@ public abstract class TextMapper {
 	public static final String TBL_DELETE = "TBL_DELETE";
 	public static final String TBL_EDIT = "TBL_EDIT";
 	public static final String TBL_SELECT = "TBL_SELECT";
+	public static final String TBL_VIEW = "TBL_VIEW";
+	public static final String TBL_RESULTS = "TBL_RESULTS";
 
 	public static final String TBL_DB_KEY = "DB KEY";
 	public static final String TBL_GIVENNAME = "TBL_GIVENNAME";

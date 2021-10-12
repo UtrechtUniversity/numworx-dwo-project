@@ -19,6 +19,7 @@ public class StringCodeObject {
             		: new DWOInputStream(zis, cl);
             object = invoer.readObject();
             codeString = s;
+            invoer.close();
         }
         catch (Exception io) {	
         	//System.out.println(io.toString());
@@ -58,6 +59,7 @@ public class StringCodeObject {
             		? new ObjectInputStream(zis)
             		: new DWOInputStream(zis, cl);
             o = invoer.readObject();
+            invoer.close();
         }
         catch (Exception io) {	//
         	//System.out.println(io.toString());

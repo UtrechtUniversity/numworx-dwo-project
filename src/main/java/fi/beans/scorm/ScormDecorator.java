@@ -12,10 +12,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
 
-public class ScormDecorator extends Applet implements SCORM12APIInterface {
+import fi.beans.mainframe.JApplet;
 
-    @SuppressWarnings("FieldMayBeFinal")
-    private Applet applet;
+public class ScormDecorator extends JApplet implements SCORM12APIInterface {
+
+    private final Applet applet;
     private final String lineSeparator = System.getProperty("line.separator", "\n");
 
     private class Stub implements AppletStub {

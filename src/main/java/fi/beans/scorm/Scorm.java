@@ -21,8 +21,8 @@ public abstract class Scorm {
         String API = applet.getParameter("API");
         if (API != null) {
             // sequence for new API(applet);
-            Class c = Class.forName(API);
-            Constructor cc = c.getDeclaredConstructor(new Class[]{Applet.class});
+            Class<?> c = Class.forName(API);
+            Constructor<?> cc = c.getDeclaredConstructor(new Class[]{Applet.class});
             return (SCORM12APIInterface) cc.newInstance(new Object[]{applet});
         }
         //Hier komt de default Scorm.findAPI(applet)....
