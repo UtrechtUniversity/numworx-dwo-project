@@ -15,16 +15,12 @@ import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.osgi.util.promise.Failure;
-import org.osgi.util.promise.Promises;
-
-import nl.uu.fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**

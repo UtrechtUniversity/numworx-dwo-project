@@ -1,14 +1,12 @@
 package nl.uu.fi.dwo.account.client;
 
-import com.google.gwt.user.client.Window;
-import com.google.web.bindery.event.shared.EventBus;
-
-import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
-import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.osgi.util.promise.Failure;
+
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 
 /**
  *

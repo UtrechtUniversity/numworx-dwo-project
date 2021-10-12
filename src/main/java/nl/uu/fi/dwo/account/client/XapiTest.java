@@ -4,12 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-
 import org.fusesource.restygwt.client.Defaults;
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
-
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -22,7 +18,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
-import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.xapi.Activity;
 import nl.uu.fi.dwo.rest.dom.xapi.ActivityDefinition;
 import nl.uu.fi.dwo.rest.dom.xapi.Agent;

@@ -6,7 +6,6 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.web.bindery.event.shared.EventBus;
 
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import java.util.logging.Logger;
 

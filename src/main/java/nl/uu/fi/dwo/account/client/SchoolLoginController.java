@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
-import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManager;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolLogin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
@@ -18,9 +18,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionInterface;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import java.util.logging.Logger;
 
@@ -40,7 +37,7 @@ public class SchoolLoginController {
     private static final Logger LOG = Logger.getLogger(SchoolLoginController.class.getName());
 
     private SchoolLoginPanel view = null;
-    private SecuredUserSchoolLoginManager manager = new SecuredUserSchoolLoginManager();
+    private SecuredUserSchoolLoginManagerV2 manager = new SecuredUserSchoolLoginManagerV2();
     private DomSchoolsRolesAndClassesV2 srcs;
 
 	private HandlerRegistration registration;

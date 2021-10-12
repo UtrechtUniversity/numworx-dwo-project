@@ -15,8 +15,6 @@ import java.util.logging.Logger;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
-
 /**
  *
  * @author Gert van der Plas

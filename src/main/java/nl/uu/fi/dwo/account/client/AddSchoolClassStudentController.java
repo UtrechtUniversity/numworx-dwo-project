@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.account.client;
 
-import com.google.gwt.core.client.Callback;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentSchoolClassManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;

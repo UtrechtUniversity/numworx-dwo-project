@@ -30,7 +30,6 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
-import org.eclipse.jdt.internal.core.SetContainerOperation;
 import org.fusesource.restygwt.client.Defaults;
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
