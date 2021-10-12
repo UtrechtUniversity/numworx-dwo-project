@@ -42,7 +42,6 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -51,6 +50,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
@@ -73,6 +73,7 @@ import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JCheckBox;
+import fi.beans.numworxlf.JComboBox;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JScrollPane;
 import fi.beans.numworxlf.JTextField;
@@ -617,7 +618,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 	private Box settingsRO;
 	private JPanel settingsRW;
 	private final TeacherStudentModelPanelProperties prop;
-  private JComboBox<DomMethod> methodSelect;
+    private JComboBox<DomMethod> methodSelect;
 
 	private static final Font font = new Font("SansSerif", Font.PLAIN, 12);
 
@@ -777,6 +778,9 @@ public class LeerdomeinEditPanel2 extends JPanel
 		filterAction = new FilterAction(this, this::filter);
         JButton filterBtn = new JButton(filterAction);
         methodBox = new JCheckBox("Methode-indeling");
+        methodBox.setFont(font);
+        methodBox.setBorder(BorderFactory.createEmptyBorder(4, 0, 10, 4));
+        methodBox.setHorizontalAlignment(SwingConstants.LEFT);
         methodSelect = new JComboBox<DomMethod>(MethodsProperties.instance());
         methodListener = new MethodListener(methodBox, tree, filterAction);
         graph.addActionListener(methodListener);
@@ -785,7 +789,11 @@ public class LeerdomeinEditPanel2 extends JPanel
         leftSouth.add(methodBox);
         Box hb = Box.createHorizontalBox();
         hb.setAlignmentX(0);
-        hb.add(new JLabel("Actieve methode"));
+        JLabel l = new JLabel("Actieve methode");
+        l.setForeground(Constants.COLOR15);
+        l.setFont(font);
+        hb.add(l);
+        hb.add(Box.createHorizontalStrut(16));
         hb.add(methodSelect);
 		hb.add(Box.createHorizontalGlue());
 		hb.add(filterBtn);
@@ -802,7 +810,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 	    BasicSplitPaneDivider dividerLeft = sui.getDivider();
 	    dividerLeft.setBorder(BorderFactory.createEmptyBorder());
 	    dividerLeft.setBackground(Constants.COLOR20);
-	    splitLeft.setDividerSize(20);
+	    splitLeft.setDividerSize(0);
 		
 	    splitLeft.setTopComponent(leftBox);
 		
@@ -858,7 +866,6 @@ public class LeerdomeinEditPanel2 extends JPanel
 		settings.add(Box.createVerticalStrut(10));
 
 		bkt = Box.createHorizontalBox();
-		JLabel l;
 		JLabel parametersLabel = new JLabel("Knowledge tracing parameters:");
 		parametersLabel.setForeground(Constants.COLOR15);
 		bkt.add(parametersLabel);
@@ -941,7 +948,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 					graph.setModel(model, null, activeMethod);
 					
 					splitLeft.setBottomComponent(rightBox);
-					
+					splitLeft.setDividerSize(20);
 					packWindow();
 				} else {
 					graphButton.setText("Graph");
@@ -950,6 +957,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 					pref.width = 580;
 					leftBox.setPreferredSize(pref);
 					split.setRightComponent(rightBox);
+					splitLeft.setDividerSize(0);
 					if(editable)
 					  graph.updateModel(model);
 					packWindow();
@@ -1064,6 +1072,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 	public void setModel(DomStudentModelStructure model, PublishState ps) {
 		lock = false;
 		bewerken.setEnabled(ps != PublishState.overt);
+        filterAction.unset();
 		setModel0(model);
 		resultModel = null;
 	}
@@ -1422,6 +1431,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 
 	public void importModel(DomStudentModelStructure model) {
 		DomStudentModelStructure tmp = structure;
+		filterAction.unset();
 		setModel0(model);
 		structure = tmp;
 	}
@@ -1430,16 +1440,6 @@ public class LeerdomeinEditPanel2 extends JPanel
 		return lock;
 	}
 
-//	//@Override
-//	public void stateChanged(ChangeEvent e) {
-//		JTabbedPane pane = (JTabbedPane) e.getSource();
-//		int index = pane.getSelectedIndex();
-//		if (index == 0) {
-//			graph.updateModel(model);
-//		} else {
-//			graph.setModel(model);
-//		}
-//	}
 	private void graphActionPerformed(ActionEvent ev) {
 	  if("filter".equals(ev.getActionCommand()) && graph.isShowing()) {
 	    Set<String> visible = graph.getVisibleNodes(); // id's of visible nodes

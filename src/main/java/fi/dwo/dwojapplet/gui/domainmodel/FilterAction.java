@@ -72,7 +72,7 @@ class FilterAction extends AbstractAction {
     }
 
     public void unsetFilter() {
-      filter = Collections.emptyMap();
+      unset();
       doFilter();
     }
     
@@ -86,5 +86,9 @@ class FilterAction extends AbstractAction {
         filter = Collections.emptyMap();
         setEnabled(activeMethod != null);
       }
+    }
+
+    void unset() {
+      filter = Collections.emptyMap();
     }
   }
