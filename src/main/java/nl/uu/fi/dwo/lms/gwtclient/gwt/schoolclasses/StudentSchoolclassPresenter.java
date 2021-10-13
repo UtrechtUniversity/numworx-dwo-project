@@ -73,7 +73,7 @@ private static final Logger LOG = Logger.getLogger(StudentSchoolclassPresenter.c
       view.init();
       view.clear();
       view.setLoadingTableMessage();
-      list = Collections.EMPTY_LIST;
+      list = Collections.emptyList();
       active = dwoGlobalVars.getCurrentSchoolClass();
       manager.getStudentsSchoolClasses().then(p -> { 
         list = p.getValue();

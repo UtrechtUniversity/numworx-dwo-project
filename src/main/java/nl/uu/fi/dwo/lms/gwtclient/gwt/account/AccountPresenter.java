@@ -59,7 +59,7 @@ public class AccountPresenter {
     private Map<String, DomSchoolRoleAndClassV2> sracData;
 
     private Display view;
-private LoggingFailure FAILURE;
+    private LoggingFailure FAILURE;
 
     /**
      * @param view the view to set
@@ -120,13 +120,17 @@ private LoggingFailure FAILURE;
         DomSchoolRoleAndClassV2 srac = sracData.get(hasRoleId);
 
         if (srac != null) { //&& srac.getRole().getRoleName().equals(RoleType.TEACHER.name())) {
-            dwoGlobalVars.setActiveSchoolRoleAndClass(srac);
-            dwoGlobalVars.getSchoolLogins().setActiveSchoolRoleAndClass(srac);
+//            dwoGlobalVars.setActiveSchoolRoleAndClass(srac);
+//            dwoGlobalVars.getSchoolLogins().setActiveSchoolRoleAndClass(srac);
             Promise<DomSchoolRoleAndClassV2> promise = accountService.switchToSchoolLogin(srac);
 
             promise.then(new Success<DomSchoolRoleAndClassV2, Void>() {
                 @Override
                 public Promise<Void> call(Promise<DomSchoolRoleAndClassV2> resolved) throws Exception {
+                	DomSchoolRoleAndClassV2 srac = resolved.getValue();
+                    dwoGlobalVars.setActiveSchoolRoleAndClass(srac);
+                    dwoGlobalVars.getSchoolLogins().setActiveSchoolRoleAndClass(srac);
+                	
                     if (!dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
                         eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
                     };
