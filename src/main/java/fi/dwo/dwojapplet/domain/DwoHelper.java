@@ -34,6 +34,7 @@ import java.awt.Frame;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Point;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
@@ -810,5 +811,16 @@ public final class DwoHelper {
       } catch (Exception e) {
       }
       return false;
+    }
+
+    static File currentDirectory = new File(System.getProperty("user.home", "."));
+    public static File getCurrentDirectory() {
+      return currentDirectory;
+    }
+
+    public static void setCurrentDirectory(File dir) {
+      if (dir == null) return;
+      if (!dir.isDirectory()) dir = dir.getParentFile();
+      currentDirectory = dir;
     }
 }

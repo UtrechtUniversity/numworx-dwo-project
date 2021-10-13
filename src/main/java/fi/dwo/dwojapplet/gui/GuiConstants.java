@@ -52,6 +52,7 @@ public abstract class GuiConstants {
     public final static String USERS_CLASS_IMAGE = "resources/userlist.gif";
     public final static String TEACHER_CLASS_IMAGE = "resources/teacherlist.gif";
     public final static String STUDENT_IMAGE = "resources/student.png";
+    public final static String COPY_IMAGE = "resources/copy16.png";
 
 
     ////peter

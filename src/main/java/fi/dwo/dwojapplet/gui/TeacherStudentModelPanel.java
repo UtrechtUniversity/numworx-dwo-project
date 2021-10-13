@@ -10,6 +10,7 @@ import fi.dwo.dwojapplet.gui.domainmodel.ImportAction;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinEditPanel2;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinResultsPanel2;
 import fi.dwo.dwojapplet.gui.domainmodel.SettingsSchoolClassPanel;
+import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsTableModel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -21,6 +22,7 @@ import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +31,7 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -39,6 +42,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
@@ -62,7 +66,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 
     private CenterPanel center;
 
-    private JButton addModelButton, importModelButton;
+    private JButton addModelButton, importModelButton, addMethodButton, importMethodButton;
     private LeerdomeinEditPanel2 textArea;
 
     private JPanel jtbl;
@@ -183,6 +187,22 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
               
               
             }
+            if (value == copyImage) {
+              String title = (String) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), 0);
+              try {
+                DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getContextColumn());
+                model = prop.getModel(model);
+                DomStudentModelStructure structure = model.getModelStructure();
+                String locale = DwoHelper.getLocale().getLocale();
+                title = "Kopie " + title;
+                structure.getInfo().getTitle().put(locale, title);
+                editNewModel(structure, title);
+              } catch (Dwo2Exception e) {
+                LOG.log(Level.SEVERE, "update model " + title, e);
+                GuiCreator.instance().ShowErrorDialog(center, e);
+              }
+
+            }
             
             if (value == resultsImage) {
               DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
@@ -290,30 +310,20 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         }
         jtbl = new JPanel();
 
-        JTable jtable = new JTable();
-        jtable.setForeground(GuiConstants.MAIN_FOREGROUND);
-        jtable.getTableHeader().setForeground(GuiConstants.MAIN_FOREGROUND);
-        jtable.getTableHeader().setReorderingAllowed(false);
+        tableModel.init(prop.getModelList(), searchImage, removeImage, copyImage, resultsImage, classImage);
+        JTable jtable = new JTable(tableModel);
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
         jtbl.add(jtable.getTableHeader());
         jtbl.add(jtable);
         jtbl.add(Box.createHorizontalGlue());
         //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
 
-        tableModel.init(prop.getModelList(), searchImage, removeImage, copyImage, resultsImage, classImage);
-        jtable.setModel(tableModel);
         rowSorter = new TableRowSorter<TeacherStudentModelPanelTableModel>(tableModel);
         rowSorter.toggleSortOrder(0);//
         jtable.setRowSorter(rowSorter);
 
-        if (jtable.getRowCount() > 0) {
-            jtable.setRowSelectionInterval(0, 0);
-        }
-        jtable.setRowSelectionAllowed(false);
-        jtable.setColumnSelectionAllowed(false);
-        jtable.setCellSelectionEnabled(false);
         TableUtil.setDefaults(jtable, true, new TeacherStudentModelPanel.ImageRenderer(), new TeacherStudentModelPanel.ImageButtonEditor());
-        TableUtil.setJTableSizes(jtable);
+        initTable(jtable);
 
 //        TableUtil.setDefaults(jtable, false, new ImageRenderer(), new ImageButtonEditor());
 //        TableUtil.setJTableSizes(jtable);
@@ -325,7 +335,6 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 //        jtable.setMaximumSize(size);
         jtbl.setLocation(30, addModelButton.getSize().height
                 + addModelButton.getLocation().y + 15);
-        TableUtil.setBorder(jtable);
         //TableUtil.shrinkToFit(table, jtbl, 520, 405);
         jtbl.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
         jtbl.setVisible(false);
@@ -333,6 +342,29 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         jtbl.setVisible(true);
 
     }
+
+
+
+    public void initTable(JTable jtable) {
+      jtable.setForeground(GuiConstants.MAIN_FOREGROUND);
+      jtable.getTableHeader().setForeground(GuiConstants.MAIN_FOREGROUND);
+      jtable.getTableHeader().setReorderingAllowed(false);
+      if (jtable.getRowCount() > 0) {
+        jtable.setRowSelectionInterval(0, 0);
+      }
+      jtable.setRowSelectionAllowed(false);
+      jtable.setColumnSelectionAllowed(false);
+      jtable.setCellSelectionEnabled(false);
+      TableUtil.setJTableSizes(jtable);
+      TableUtil.setBorder(jtable);
+      int w = 80; // icon width
+      for( int i = 1; i < jtable.getColumnCount(); i++) {
+        TableColumn column = jtable.getColumnModel().getColumn(i);
+        column.setPreferredWidth(w);
+        column.setMinWidth(w);
+        column.setMaxWidth(w);
+      }
+   }
 
     
     
@@ -369,10 +401,12 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_STUDENTMODEL_IMAGE);
         resultsImage = DwoHelper.getResourceImage(GuiConstants.SEARCH_IMAGE);
         classImage = DwoHelper.getResourceImage(GuiConstants.USERS_CLASS_IMAGE);
+        copyImage = DwoHelper.getResourceImage(GuiConstants.COPY_IMAGE);
         tr.addImage(searchImage, 0);
         tr.addImage(removeImage, 0);
         tr.addImage(searchImage, 0);
         tr.addImage(classImage, 0);
+        tr.addImage(copyImage,  0);
         try {
             tr.waitForAll();
         } catch (Exception e) {
@@ -383,17 +417,12 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         addModelButton.setSize(addModelButton.getPreferredSize());
         addModelButton.addActionListener(this);
         importModelButton = new JButton(new ImportAction(this));
-//        cancelButton = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
-//        cancelButton.setSize(addModelButton.getPreferredSize());
-//        cancelButton.addActionListener(this);
-//        cancelButton.setEnabled(false);
 
         Box header = Box.createHorizontalBox();
         header.add(addModelButton);
         header.add(Box.createRigidArea(new Dimension(10,1)));
         header.add(importModelButton);
         header.add(Box.createHorizontalGlue());
-//        header.add(cancelButton);
         header.add(Box.createRigidArea(new Dimension(10, 0)));
         header.setPreferredSize(header.getMinimumSize());
         this.add(header);
@@ -401,11 +430,33 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         this.add(Box.createVerticalStrut(15));
         buildJTable();
         this.add(Box.createVerticalStrut(15));
-        //textArea = new DomainModelEditor();
         textArea = new LeerdomeinEditPanel2(prop);
         textArea.setEditable(false);
-//        this.add(scrollPane);
 
+        MethodsTableModel dm = new MethodsTableModel();
+        header = Box.createHorizontalBox();
+        addMethodButton = new JButton("Nieuwe methode");
+        header.add(addMethodButton);
+        header.add(Box.createRigidArea(new Dimension(10,1)));
+        importMethodButton = new JButton(dm.getImportAction());
+        header.add(importMethodButton);
+        header.add(Box.createHorizontalGlue());
+        header.add(Box.createRigidArea(new Dimension(10, 0)));
+        header.setPreferredSize(header.getMinimumSize());
+        this.add(header);
+        this.add(Box.createVerticalStrut(15));
+        JTable methodTable = new JTable(dm);
+        TableUtil.setDefaults(methodTable, true, null, null);
+        initTable(methodTable);
+        methodTable.setDefaultEditor(Icon.class, dm.getEditor());
+        JPanel mpanel = new JPanel(null);
+        mpanel.setLayout(new BoxLayout(mpanel, BoxLayout.Y_AXIS));
+        mpanel.add(methodTable.getTableHeader());
+        mpanel.add(methodTable);
+        mpanel.add(Box.createHorizontalGlue());
+        mpanel.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
+        this.add(mpanel);
+        this.add(Box.createVerticalStrut(15));
     }
 
     /**
@@ -458,23 +509,31 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == addModelButton) {
-                textArea.setModel(null, PublishState.published);
-                prop.setCurrent(null);
-                textArea.setEditable(true);
-                int ok = showConfirmDialog(TeacherStudentModelPanel.this, textArea, e.getActionCommand(), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-                if (ok == JOptionPane.OK_OPTION) {
-                  try {
-                    if (textArea.isLock()) {
-                      prop.getCurrent().setPublishState(PublishState.published);
-                      prop.updateModel(prop.getCurrent());
-                    }                   
-                    tableModel.init(prop.getModelList(), searchImage, removeImage, copyImage, resultsImage, classImage);
-                  } catch (Dwo2Exception ex) {
-                      LOG.log(Level.SEVERE, "new model", ex);
-                      GuiCreator.instance().ShowErrorDialog(center, ex);
-                  } 
-                }
+                DomStudentModelStructure model = null;
+                String title = e.getActionCommand();
+                editNewModel(model, title);
             }
+    }
+
+
+
+    private void editNewModel(DomStudentModelStructure model, String title) {
+      prop.end();
+      textArea.setModel(model, PublishState.published);
+      textArea.setEditAndLock();
+      int ok = showConfirmDialog(TeacherStudentModelPanel.this, textArea, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+      if (ok == JOptionPane.OK_OPTION) {
+        try {
+          if (textArea.isLock()) {
+            prop.getCurrent().setPublishState(PublishState.published);
+            prop.updateModel(prop.getCurrent());
+          }                   
+          tableModel.init(prop.getModelList(), searchImage, removeImage, copyImage, resultsImage, classImage);
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, "new model", ex);
+            GuiCreator.instance().ShowErrorDialog(center, ex);
+        } 
+      }
     }
 
     private int showConfirmDialog(TeacherStudentModelPanel teacherStudentModelPanel,

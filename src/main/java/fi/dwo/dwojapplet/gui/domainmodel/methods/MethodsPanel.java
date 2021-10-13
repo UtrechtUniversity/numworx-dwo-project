@@ -310,18 +310,6 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
   public void actionPerformed(ActionEvent e) {
     String action = e.getActionCommand();
     if (OPEN == action) {
-      if (JFileChooser.APPROVE_OPTION  == choose.showOpenDialog(this))  {
-        try {
-          FileInputStream in = new FileInputStream(choose.getSelectedFile());
-          DomMethod row = genson.deserialize(in, DomMethod.class);
-          in.close();
-          row = model.persist(row);
-          update.add(row);
-          tableModel.add(row);
-        } catch (IOException e1) {
-          LOG.log(Level.SEVERE, "Open", e1);
-        }
-      }
     } else
     if (SAVE == action) {
       int r = tbl.getSelectedRow();

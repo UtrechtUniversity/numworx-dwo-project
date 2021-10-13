@@ -1031,6 +1031,12 @@ public class LeerdomeinEditPanel2 extends JPanel
 	private JPanel leftBox;
 	private boolean lock;
 
+	public void setEditAndLock() {
+	  lock = true;
+	  setEditable(true);
+	}
+	
+	
 	public void setEditable(boolean b) {
 		editable = b;
 		Container parent = settings.getParent();
@@ -1402,7 +1408,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		if (graph.isShowing())
 		  graph.updateModel(tree.getModel());
 		DomStudentModelStructure toSafe = getTreeModel();
-		if (toSafe.same(structure))
+		if (toSafe.same(structure) && prop.getCurrent() != null)
 			return JOptionPane.NO_OPTION; // no need to safe.
 
 		return JOptionPane.showConfirmDialog(this, okButton.getText(), "", JOptionPane.YES_NO_CANCEL_OPTION,

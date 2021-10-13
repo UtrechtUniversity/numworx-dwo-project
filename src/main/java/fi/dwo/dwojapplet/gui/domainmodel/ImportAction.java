@@ -13,6 +13,7 @@ import javax.swing.JFileChooser;
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.TeacherStudentModelPanel;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
@@ -45,8 +46,10 @@ public class ImportAction extends AbstractAction {
 
   @Override
   public void actionPerformed(ActionEvent e) {
+    chooser.setCurrentDirectory(DwoHelper.getCurrentDirectory());
     if (chooser.showOpenDialog(component) == JFileChooser.APPROVE_OPTION) {
       File toImport = chooser.getSelectedFile();
+      DwoHelper.setCurrentDirectory(chooser.getCurrentDirectory());
       try {
         FileInputStream input = new FileInputStream(toImport);
         DomStudentModelStructure structure = genson.deserialize(input, DomStudentModelStructure.class);

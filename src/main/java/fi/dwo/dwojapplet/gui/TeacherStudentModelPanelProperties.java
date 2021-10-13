@@ -173,7 +173,7 @@ public class TeacherStudentModelPanelProperties {
     
     void removeModel(DomStudentModelContext modelContext) throws Dwo2Exception {
       SecureTeacherStudentModelManager.removeModel(modelContext);
-      if(modelContext == getCurrent()) setCurrent(null);
+      if(modelContext == getCurrent()) end();
     }
         
     private DomStudentModelContext current;
@@ -191,5 +191,6 @@ public class TeacherStudentModelPanelProperties {
     void end() {
       current = null;
       structure = null;
+      standard = false;
     }
 }
