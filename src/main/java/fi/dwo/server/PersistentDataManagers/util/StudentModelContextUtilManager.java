@@ -3,13 +3,17 @@ package fi.dwo.server.PersistentDataManagers.util;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelItem;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelItemManager;
 import jersey.repackaged.com.google.common.base.Objects;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
@@ -33,8 +37,33 @@ public class StudentModelContextUtilManager {
 				objList.set(i, obj);
 			}
 		}
+		if (pModel.getModelStructure().getMethods() == null) {
+			DomStudentModelStructure structure = pModel.getModelStructure();
+			Set<String> keySet = new HashSet<>();
+			keySet.add(DomMethod.key(structure.getActiveMethod()));
+			for (DomStudentModelCategory cat: structure.getCategories()) {
+				for (DomStudentModelObj obj: cat.getObjectives()) {
+					addKeySet(obj, keySet);
+				}
+			}
+			keySet.remove(null);
+			structure.setMethods(new ArrayList<>(keySet));
+		}
 		return pModel;
 	}
+	
+	private static void addKeySet(DomStudentModelObj obj, Set<String> keySet) {
+		if (obj.getObjectives() != null) 
+			for (DomStudentModelObj o : obj.getObjectives()) addKeySet(o, keySet);
+		else {
+		  try {	
+			Set<String> keys = obj.getInfo().getMethods().keySet(); // expect NPE's
+			keySet.addAll(keys);
+		  } catch (Exception oops) {}
+		}
+	}
+	
+	
 	
 	public static PersistentStudentModelContext create(PersistentStudentModelContext pModel) {
 		List<PersistentStudentModelItem> objs = new ArrayList<>();
