@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui.domainmodel.methods;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Window;
@@ -10,17 +11,17 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JScrollPane;
+import fi.beans.numworxlf.JTextField;
 
 class ChapterSettings extends JPanel implements ActionListener
 {
 	private static final Color colorBlue1 = Constants.colorBlue1;
 
-    private static final Color colorGray3 = Constants.COLOR10;
+    //private static final Color colorGray3 = Constants.COLOR10;
 
     private JTextField[][] chapterTextFields;
 	private JLabel[] chapterLabels;
@@ -38,17 +39,16 @@ class ChapterSettings extends JPanel implements ActionListener
 	private String[][] chapters;
 	
 	JPanel objectivesPanel = new JPanel();
-	final JPanel mainPanel;
 	JScrollPane scrollPane;
 		
 	final String rowLabel;
 	final String columnLabel;
 		
 			
-	public ChapterSettings(String rowLabel, String columnLabel){	
+	public ChapterSettings(String rowLabel, String columnLabel){
+	    super(new BorderLayout());
 		this.rowLabel = rowLabel;
 		this.columnLabel = columnLabel;
-		mainPanel = this;
 	}
 	
 	public void setChapters(String[][] objectives){   
@@ -115,7 +115,6 @@ class ChapterSettings extends JPanel implements ActionListener
 	    for(int j = 0; j < maxCategories; j++)
 	    {	bookTextFields[j] = new JTextField(columnLabel + " "  + (j+1));
 		    	bookTextFields[j].setPreferredSize(new Dimension(180,20));
-		    	bookTextFields[j].setForeground(colorBlue1);
 	    }
 	    for(int i=0 ; i<maxObjectives ; i++)
 	    {	chapterLabels[i] = new JLabel(rowLabel + " " +(i+1));
@@ -123,7 +122,6 @@ class ChapterSettings extends JPanel implements ActionListener
 	   		chapterLabels[i].setPreferredSize(new Dimension(100,20));
 	   		for(int j = 0; j<maxCategories; j++)
 	        {	chapterTextFields[j][i] = new JTextField("");
-	        		chapterTextFields[j][i].setForeground(colorBlue1);
 	    			chapterTextFields[j][i].setPreferredSize(new Dimension(180,20));
 	        }
 	    }
@@ -139,12 +137,12 @@ class ChapterSettings extends JPanel implements ActionListener
     
     public void makeGUI(int aantalRijen, int aantalKolommen){
     		objectivesPanel = new JPanel();
-    		objectivesPanel.setBackground(colorGray3);
+    		//objectivesPanel.setBackground(colorGray3);
     		objectivesPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 50, 30));
     		
     		//mainPanel.setBackground(colorGray3);
-    		mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-    		mainPanel.removeAll();
+    		//mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+    		removeAll();
 		
         
 		Box boxh1 = Box.createHorizontalBox();
@@ -196,15 +194,11 @@ class ChapterSettings extends JPanel implements ActionListener
         objectivesPanel.setSize(objectivesPanel.getPreferredSize());       
 		scrollPane = new JScrollPane(objectivesPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.setBorder(BorderFactory.createEmptyBorder());
-		scrollPane.setBackground(colorGray3);
+		//scrollPane.setBackground(colorGray3);
 		scrollPane.setVisible(true);
 		
-		Box vb = Box.createVerticalBox();
-	    vb.add(Box.createVerticalStrut(20));
-	    vb.add(scrollPane);
-	    vb.add(Box.createVerticalGlue());
 	    
-	    mainPanel.add(vb);
+	    add(scrollPane);
     }
     
     
@@ -223,6 +217,7 @@ class ChapterSettings extends JPanel implements ActionListener
     void resize() {
         invalidate();
         Window w = SwingUtilities.windowForComponent(this);
+        if (w == null) return; // if not showing
         w.setSize(w.getPreferredSize());
         w.validate();
         w.pack();
@@ -231,7 +226,8 @@ class ChapterSettings extends JPanel implements ActionListener
     }
 	
 	public void actionPerformed(ActionEvent e)
-	{	if(e.getSource().equals(aantalRijenKnop))
+	{	if(readonly) return;
+	    if(e.getSource().equals(aantalRijenKnop))
 		{	if(e.getActionCommand().equals("plus") && aantalRijen > 0)
 			{	makeGUI(aantalRijen - 1, aantalKolommen);
 				aantalRijen--;

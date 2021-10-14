@@ -15,6 +15,7 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JTable;
 import javax.swing.event.CellEditorListener;
@@ -28,8 +29,10 @@ import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherMethodManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 public class MethodsTableModel extends AbstractTableModel {
 
@@ -131,6 +134,7 @@ public class MethodsTableModel extends AbstractTableModel {
       btn.addActionListener(this);
       return btn;
     }
+
     @Override
     public void actionPerformed(ActionEvent e) {
       if (value == delete) {
@@ -139,7 +143,17 @@ public class MethodsTableModel extends AbstractTableModel {
           String input = JOptionPane.showInputDialog(table, "Nieuwe naam");
         
       } else if (value == view) {
-          JOptionPane.showMessageDialog(table, "Edit " + getValueAt(row,0));
+          MethodsEditPanel panel = new MethodsEditPanel();
+          panel.setMethod(model.get(row+1));
+          if (panel.showDialog((JComponent) e.getSource())== JOptionPane.OK_OPTION) {
+            DomMethod m = panel.getMethod();
+            try {
+              SecureTeacherMethodManager.updateModel(m);
+            } catch (Dwo2Exception e1) {
+              LOG.log(Level.SEVERE, "update failed", e1);
+            }
+            fireTableRowsUpdated(row, row);
+          }
        
       }
       fireEditingStopped();
