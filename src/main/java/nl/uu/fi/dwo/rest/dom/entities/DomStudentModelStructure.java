@@ -21,6 +21,7 @@ public class DomStudentModelStructure {
     private String owner;
     private Long timestamp;
     private PersistenceId activeMethod;
+    private List<PersistenceId> methods;
     /**
      * @return the info
      */
@@ -66,7 +67,7 @@ public class DomStudentModelStructure {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(categories, info, owner, timestamp, activeMethod);
+		return Objects.hash(categories, info, owner, timestamp, methods, activeMethod);
 	}
 
 	public boolean equals(Object obj) {
@@ -82,6 +83,7 @@ public class DomStudentModelStructure {
 		DomStudentModelStructure other = (DomStudentModelStructure) obj;
 		return Objects.equals(owner, other.owner) 
 				&& Objects.equals(timestamp, other.timestamp)
+				&& Objects.equals(methods, other.methods)
 				&& Objects.equals(activeMethod, other.activeMethod)
 				&& Objects.equals(categories, other.categories) 
 				&& Objects.equals(info, other.info);
@@ -98,7 +100,10 @@ public class DomStudentModelStructure {
 			return false;
 		}
 		DomStudentModelStructure other = (DomStudentModelStructure) obj;
-		return Objects.equals(categories, other.categories) && Objects.equals(info, other.info) && Objects.equals(activeMethod, other.activeMethod);
+		return Objects.equals(categories, other.categories) 
+				&& Objects.equals(info, other.info) 
+				&& Objects.equals(methods, other.methods)
+				&& Objects.equals(activeMethod, other.activeMethod);
 	}
 
 	public String getOwner() {
@@ -129,6 +134,20 @@ public class DomStudentModelStructure {
 	 */
 	public void setActiveMethod(PersistenceId activeMethod) {
 		this.activeMethod = activeMethod;
+	}
+
+	/**
+	 * @return the methods
+	 */
+	public List<PersistenceId> getMethods() {
+		return methods;
+	}
+
+	/**
+	 * @param methods the methods to set
+	 */
+	public void setMethods(List<PersistenceId> methods) {
+		this.methods = methods;
 	}
 
 }
