@@ -21,7 +21,7 @@ public class DomStudentModelStructure {
     private String owner;
     private Long timestamp;
     private PersistenceId activeMethod;
-    private List<PersistenceId> methods;
+    private List<String> methods;
     /**
      * @return the info
      */
@@ -139,14 +139,14 @@ public class DomStudentModelStructure {
 	/**
 	 * @return the methods
 	 */
-	public List<PersistenceId> getMethods() {
+	public List<String> getMethods() {
 		return methods;
 	}
 
 	/**
 	 * @param methods the methods to set
 	 */
-	public void setMethods(List<PersistenceId> methods) {
+	public void setMethods(List<String> methods) {
 		this.methods = methods;
 	}
 
