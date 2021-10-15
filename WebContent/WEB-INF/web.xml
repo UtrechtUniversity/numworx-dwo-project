@@ -63,7 +63,10 @@
     	<servlet-name>appparam</servlet-name>
     	<jsp-file>/lti/_app.jsp</jsp-file>
     </servlet>
-    
+    <servlet>
+    	<servlet-name>jwks</servlet-name>
+    	<servlet-class>fi.servlet.lti.JwksServlet</servlet-class>
+    </servlet>
    <servlet-mapping>
       <servlet-name>dwoparam</servlet-name>
       <url-pattern>/lti/dwo.jsp/*</url-pattern>
@@ -80,7 +83,10 @@
       <servlet-name>appparam</servlet-name>
       <url-pattern>/lti/app.jsp</url-pattern>
    </servlet-mapping>
-  
+  <servlet-mapping>
+  		<servlet-name>jwks</servlet-name>
+  		<url-pattern>/lti/jwks.json</url-pattern>
+  </servlet-mapping>
 <!--   <servlet-mapping> -->
 <!-- 	<servlet-name>image.png</servlet-name> -->
 <!-- 	<url-pattern>/image.png</url-pattern> -->

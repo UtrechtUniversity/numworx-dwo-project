@@ -13,11 +13,11 @@ For this tool, all resource level secrets are also "secret".</p>
 <%@ page import="java.util.Enumeration" %>
 <%@ page import="io.jsonwebtoken.*" %>
 <%@ page import="fi.servlet.lti.*" %>
+<%@ page import="edu.uoc.elc.lti.tool.Tool" %>
 <pre>
 
 <%! 
 
-	ProviderKeyResolver resolver = new ProviderKeyResolver();
 		
 	void println(JspWriter out, Object o ) {
 		try {
@@ -28,6 +28,7 @@ For this tool, all resource level secrets are also "secret".</p>
 }
 %>
 <%
+  Tool tool = (Tool) session.getAttribute("tool");
 
   Enumeration<String> en = request.getParameterNames();
   while (en.hasMoreElements()) {
@@ -36,13 +37,14 @@ For this tool, all resource level secrets are also "secret".</p>
   }
 
   String token = request.getParameter("id_token");
-  JwtParser parser = Jwts.parser().setSigningKeyResolver(resolver);
-  
-  Jws<Claims> claims = parser.parseClaimsJws(token);
-  // iss is platform, aud onze clientid, sub = userid 
-  Claims body = claims.getBody();
-  for (String key: body.keySet()) {
-	  println(out, key + " = " + body.get(key));
+  String state = request.getParameter("state");
+  boolean valid = tool.validate(token, state);
+  if (valid) {
+    out.println("valid");
+    out.println(tool.getMessageType());
+  } else {
+    out.println("invalid");
+    out.println(tool.getReason());
   }
 %>
 </pre>
