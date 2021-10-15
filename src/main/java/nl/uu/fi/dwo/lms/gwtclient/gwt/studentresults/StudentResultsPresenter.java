@@ -64,10 +64,11 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 
 	public interface Display extends BasicDisplay {
 		String getId();
+		void setTitle(String title);
 	}
 	
 	private final LoggingFailure FAILURE;
-	private Display view;
+	protected Display view;
 	private RootPanel root;
 	private final String lang;
 	
@@ -97,6 +98,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	
 	public void init() {
 		if (ref != null) {ref.removeHandler(); ref = null;}
+		view.init();
 		root.clear();
 		service.clear();
 		view.setHelp(dwoGlobalVars.buildHelpUrl("#studentresults"));

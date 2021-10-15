@@ -24,4 +24,5 @@ public class JsStudentResultsDisplay{
     public static native void setHelp(String url);
     
     public static native String getId();
+    public static native void setTitle(String title);
 }

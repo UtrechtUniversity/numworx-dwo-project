@@ -13,12 +13,14 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.web.bindery.event.shared.EventBus;
 
+import fi.dwo.gwt.lib.rest.util.StringFormatter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsPresenter;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class SMStudentResultsPresenter extends StudentResultsPresenter {
@@ -35,6 +37,7 @@ public class SMStudentResultsPresenter extends StudentResultsPresenter {
 		service.setSchoolClass(schoolClass);
 		service.setState(resultState);
 		super.init(resultState);
+		view.setTitle(StringFormatter.format(DwoLocalesForGWT.instance.NUM_LBL_KNOWLEDGE_OF_(), user.getDisplayName()));
 	}
 
 	@Override

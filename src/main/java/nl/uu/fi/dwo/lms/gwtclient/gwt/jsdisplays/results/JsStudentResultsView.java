@@ -34,4 +34,8 @@ public class JsStudentResultsView implements Display {
 		return JsStudentResultsDisplay.getId();
 	}
 
+	@Override
+	public void setTitle(String title) {
+		JsStudentResultsDisplay.setTitle(title);
+	}
 }
