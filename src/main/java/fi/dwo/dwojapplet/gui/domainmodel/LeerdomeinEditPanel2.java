@@ -35,13 +35,17 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -90,6 +94,7 @@ import fi.dwo.dwojapplet.gui.action.GuiAction;
 import fi.dwo.dwojapplet.gui.domainmodel.ExportAction.ExportPanel;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.EditableGraph;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.TreeTransferHandler;
+import fi.dwo.dwojapplet.gui.domainmodel.methods.KoppelPanel;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsPanel;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
@@ -378,24 +383,22 @@ public class LeerdomeinEditPanel2 extends JPanel
 		}
 	}
 
-    private static final MethodsPanel METHODS_PANEL = new MethodsPanel();
 	class MethodeAction extends AbstractAction {
 
     MethodeAction() {
-	    super("Lesmethoden");
+	    super("Koppel Lesmethoden");
 	  }
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        MethodsPanel panel = METHODS_PANEL;
-        panel.setActiveMethod(activeMethod);
-        int ok = JOptionPane.showConfirmDialog(LeerdomeinEditPanel2.this, panel, "Instellingen lesmethoden", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);       
+        LeerdomeinEditPanel2 parent = LeerdomeinEditPanel2.this;
+        KoppelPanel panel = new KoppelPanel();
+        panel.setMethods(koppeling);
+        int ok = panel.showDialog(parent);
         if (ok == JOptionPane.OK_OPTION) {
-            panel.updateMethods();
-            setActiveMethod(panel.getActiveMethod());
-        } else 
-          panel.refresh();
-
+          koppeling = panel.getMethods();
+          initMethodSelect(koppeling);
+        }
       }
 	}
 	
@@ -619,6 +622,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 	private JPanel settingsRW;
 	private final TeacherStudentModelPanelProperties prop;
     private JComboBox<DomMethod> methodSelect;
+    private List<String> koppeling = Collections.emptyList();
 
 	private static final Font font = new Font("SansSerif", Font.PLAIN, 12);
 
@@ -694,16 +698,10 @@ public class LeerdomeinEditPanel2 extends JPanel
 		bar.setPreferredSize(pref);
 		Bestand.setBackground(Constants.COLOR21);
 		Bestand.setForeground(Constants.COLOR15);
-		Bestand.setUI(new BasicMenuUI() {
-			public void paint(Graphics g) {
-			}
-		});
+		Bestand.setUI(new BasicMenuUI());
 		Bewerken.setBackground(Constants.COLOR21);
 		Bewerken.setForeground(Constants.COLOR15);
-		Bewerken.setUI(new BasicMenuUI() {
-			public void paint(Graphics g) {
-			}
-		});
+		Bewerken.setUI(new BasicMenuUI());
 		bar.setOpaque(true);
 		bar.setUI(new BasicMenuBarUI());
 		bar.add(Bestand);
@@ -1083,6 +1081,25 @@ public class LeerdomeinEditPanel2 extends JPanel
 		resultModel = null;
 	}
 
+  public void initMethodSelect(DomStudentModelStructure model) {
+    koppeling = model.getMethods();    
+    initMethodSelect(koppeling);
+  }
+
+  public void initMethodSelect(List<String> koppeling) {
+    Vector<DomMethod> methods = MethodsProperties.instance();
+    Object selected = MethodsProperties.instance().getMethod(activeMethod);
+    if (koppeling != null) {
+      methods =
+          methods.stream().filter(t -> t == selected || t.key() == null || koppeling.contains(t.key()))
+              .collect(Vector::new, Vector::add, Vector::addAll);
+    }
+    DefaultComboBoxModel<DomMethod> selectmodel;
+    selectmodel = new DefaultComboBoxModel<>(methods);
+    methodSelect.setModel(selectmodel);
+    methodSelect.setSelectedItem(selected);
+  }
+
 	private void setModel0(DomStudentModelStructure model) {
 		String locale = getLocale().getLanguage();
 		if (model == null) {
@@ -1104,10 +1121,10 @@ public class LeerdomeinEditPanel2 extends JPanel
 		this.structure = model;
 		setEditable(editable);
 		// OPSLAAN_ACTION.left();
-		setActiveMethod(model.getActiveMethod());
+        setActiveMethod(model.getActiveMethod());
+        initMethodSelect(structure);
 		graph.setModel(this.model,null, activeMethod);
 		filterAction.doFilter();
-
 	}
 
   protected void setActiveMethod(PersistenceId am) {
@@ -1198,6 +1215,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		}
 		result.setCategories(categories);
 		result.setActiveMethod(activeMethod);
+		result.setMethods(koppeling);
 		return result;
 	}
 
