@@ -209,6 +209,7 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 			    PersistentClassCourse cc = new PersistentClassCourse();
 			    cc.setClassID(pcc.getClassID());
 			    cc.setCourseID(parentcourse.getCourseID());
+			    cc.setDwoProfileID(parentcourse.getDwoProfileID());
 			    cc.setNotAfter(null);
 			    cc.setNotBefore(null);
 			    cc.setType(CourseType.normal.ordinal());
