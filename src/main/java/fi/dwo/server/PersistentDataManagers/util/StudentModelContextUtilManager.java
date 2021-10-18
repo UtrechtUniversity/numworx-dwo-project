@@ -1,18 +1,17 @@
 package fi.dwo.server.PersistentDataManagers.util;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelItem;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelItemManager;
-import jersey.repackaged.com.google.common.base.Objects;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
@@ -149,7 +148,7 @@ public class StudentModelContextUtilManager {
 					item.setSchoolID(pModel.getSchoolID());
 					item.setItem(obj);
 					StudentModelItemManager.create(item);
-				} else if (!Objects.equal(obj, item.getItem()) || !Objects.equal(item.getSchoolID(), pModel.getSchoolID())) {
+				} else if (!Objects.equals(obj, item.getItem()) || !Objects.equals(item.getSchoolID(), pModel.getSchoolID())) {
 					item.setItem(obj);
 					item.setSchoolID(pModel.getSchoolID());
 					StudentModelItemManager.edit(item);
