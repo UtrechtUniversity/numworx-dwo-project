@@ -8,6 +8,7 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.security.spec.RSAPublicKeySpec;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -76,7 +77,6 @@ public class ProviderKeyResolver implements SigningKeyResolver {
 	}
 
 	
-	@Override
 	public Key resolveSigningKey(JwsHeader header, Claims claims) {
 		String kid = header.getKeyId();
 		String iss = claims.getIssuer();
@@ -91,7 +91,6 @@ public class ProviderKeyResolver implements SigningKeyResolver {
 		return publicKey;
 	}
 
-	@Override
 	public Key resolveSigningKey(JwsHeader header, String plaintext) {
 		return resolveSigningKey(header, (Claims) null);
 	}

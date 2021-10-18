@@ -13,6 +13,7 @@ import edu.uoc.elc.lti.tool.oidc.LoginRequest;
 import edu.uoc.elc.lti.tool.oidc.LoginRequest.LoginRequestBuilder;
 import edu.uoc.lti.accesstoken.JSONAccessTokenRequestBuilderImpl;
 import edu.uoc.lti.claims.ClaimAccessor;
+import edu.uoc.lti.claims.ClaimsEnum;
 import edu.uoc.lti.jwt.claims.JWSClaimAccessor;
 import edu.uoc.lti.jwt.client.JWSClientCredentialsTokenBuilder;
 import edu.uoc.lti.jwt.deeplink.JWSTokenBuilder;
@@ -36,13 +37,31 @@ public class ProviderInfo {
     public Tool tool; // = new Tool(toolDefinition, claimAccessor, oidcLaunchSession, toolBuilders)
   
 	public String
+	    platform = "http://localhost:9100",
 		client_id = "d42df408-70f5-4b60-8274-6c98d3b9468d",
         auth_login_url = "http://localhost:9001/platform/login.php",
         auth_token_url = "http://localhost:9001/platform/token.php",
         key_set_url = "http://localhost:9001/platform/jwks.php",
         kid = "58f36e10-c1c1-4df0-af8b-85c857d1634f",   
 		deployment = "8c49a5fa-f955-405e-865f-3d7e959e809f";	
-
+/* Moodle
+Platform ID: http://localhost
+Client ID: Fyod8LYgnpG084A
+Deployment ID: 1
+Public keyset URL: http://localhost/mod/lti/certs.php
+Access token URL: http://localhost/mod/lti/token.php
+Authentication request URL: http://localhost/mod/lti/auth.php
+ */
+	
+	{
+		platform = "http://localhost";
+		client_id = "Fyod8LYgnpG084A";
+		deployment = "1";	
+        key_set_url = "http://localhost/mod/lti/certs.php";
+        auth_token_url = "http://localhost:9001/platform/token.php";
+        auth_login_url = "http://localhost/mod/lti/auth.php";
+	}
+	
     String publicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0MkrXiaPUxRzGOwrmSQKlDXUFn9veJlUybecFN07QIlqU758DxsSAvv8ZGPnzQVBKy9ykoXoaxecpKEIe/kK5qPbAVvnK6lGFbUl1QkK/NnHwf2zDy4S1f/OLh0oyKcI7izkUUl4lLzim5jsNChxpY00xqi5lh8Sk2qRppbbUR8rojTnl64mZq3P6Rl3GlXKj4GpRCFTdWb4Gyrx6KU6IZ2rufnGSSfRK4jnuASvTBW4PBbipxXN3mjPukx0tsWIYHh3hhv0DZUnOPBShPf0aTeT4c8+rjZ7EhDZJJr/OlLW9d+wonFKIz+fCdjzBxdGUEdoMsU7pW5xsmp8obAHUQIDAQAB";
     String privateKey = "MIIEpQIBAAKCAQEA0MkrXiaPUxRzGOwrmSQKlDXUFn9veJlUybecFN07QIlqU758DxsSAvv8ZGPnzQVBKy9ykoXoaxecpKEIe/kK5qPbAVvnK6lGFbUl1QkK/NnHwf2zDy4S1f/OLh0oyKcI7izkUUl4lLzim5jsNChxpY00xqi5lh8Sk2qRppbbUR8rojTnl64mZq3P6Rl3GlXKj4GpRCFTdWb4Gyrx6KU6IZ2rufnGSSfRK4jnuASvTBW4PBbipxXN3mjPukx0tsWIYHh3hhv0DZUnOPBShPf0aTeT4c8+rjZ7EhDZJJr/OlLW9d+wonFKIz+fCdjzBxdGUEdoMsU7pW5xsmp8obAHUQIDAQABAoIBAQC9MX4t++0mkMJXlDNRu1omwbxlgqcFdpRhkhNKyMqXia4jItqSaaphr+wfIHT90MQkGQPOiK9609OrTw08IgnhxBuB2MDbTLHom9UjfeVKCSK9xGKM3+hLqVkxalT5tnseMOnYSyaMSbli3Ck2fmu1ZAat+ljqE1Am64v+lHc6wsq4tUXvZ6/dIthvcnbuPP0RwdZH05GWqiI8sUz0W2zi7rqFJadaEZbxb/WFhO51MbyrZh34/MpxfqJEIkFnrzt+FgJ4F7mbQrv+XXo1mQ2I0MCknzWspYLwCsVyGV9jSuK+zmD9R/JGByf2rCeO3BAlNBnnE/Fu103DkZIFD5vBAoGBAPtEruX93ggJfK/dY/Bq3WRC7S5dGnRQZ7Z5lErK2ZX448HOhwdOH5e9FXPH5X+QpYkDFMe49BD6eDNCPrdF+0ttMrQfV2HtKiTbRae7rYrsRBkY+MKENixz4ENVNQdueyv0CvBe7Ba7bXHdrPdiSUwEBmkn9wG+btDy+ItHYX65AoGBANS3r63tVIraNT5mhfBHChmmy35A2YaJc2IJGWTOZjNb+CHu/99DwiHWvYhWp4RZ0BKK/7GkBetDhVg21sscL2981oTOIiul8wc5P252QJvjsyumuB5+NcdmzYF7PbvotuKI4o8hu7dHYY4Qp/MGz2eQhYGBSB9GqbRMJShtjkFZAoGBAIaxI7xAIRRX2ZIAcIFBF9qWEcRnvjWZoG7tr3OEV60QFS8gAbwFweO6RVSiVEDUjhfrIemKGLM9QM/hc/MUvYeKSsLJhjMFSjElpaorbfTpf/ugKkFDVDLyDsapV1rbe4VtNavyhkYNRLbkKMMX2ci446Lc/Ijfx1GU3Wzz36xpAoGAQ4mutcJMvWlazl0u2YM0qcBTi9p7NkQd5lqNPXxq5pOkzOFdTD3vPV84/jjFJzh83+ZSGMzDNFdT1xZSTFq+lN9GHRR1tPYTm4+JnEDfcp9xG8LrYoMgABeb2CiRCUByEKr1hAxp1V9MkhanvHnFEFTKjrvFcmi1KRGkGpnuOMECgYEA88kCnSMb1yHfexJQZ+WUgb8m+WeyOgW2a2DzU1yXLFoCEZlbNQYFFWbDeTHfmaur3rox0ZvcoDv1ohXCsULZz9uu72cgRaObgGsjFAo9J0btEJT7s1ljUr55NwLsaPUkWzTIce2BnIE388y74i9DcPRrFkbOlxXPzvP0E1r6SK4=";
 	
@@ -52,7 +71,7 @@ public class ProviderInfo {
 	      .clientId(client_id)
 	      .deploymentId(deployment)
 	      .keySetUrl(key_set_url)
-	      .platform("http://localhost:9001")
+	      .platform(platform)
 	      .name("DWOmAccess")
 	      .publicKey(publicKey)
 	      .privateKey(privateKey)
@@ -63,7 +82,19 @@ public class ProviderInfo {
 	    new JWSTokenBuilder(toolDefinition.getPublicKey(), toolDefinition.getPrivateKey()));
 
 
-    ClaimAccessor claimAccessor = new JWSClaimAccessor(toolDefinition.getKeySetUrl());
+    ClaimAccessor claimAccessor = new JWSClaimAccessor(toolDefinition.getKeySetUrl()) {
+
+		@Override
+		public String getAudience() {
+			// Implementation expects comma separated string, not JSON array.
+			String audience = super.getAudience();
+			if (audience != null && audience.startsWith("[") && audience.endsWith("]")) {
+				audience = audience.substring(1, audience.length()-1);
+			}
+			return audience;
+		}
+    	
+    };
 	
 	private ProviderInfo() {
 	  OIDCLaunchSession oidcLaunchSession = new InMemoryOIDCLaunchSession();
@@ -100,6 +131,12 @@ public class ProviderInfo {
 	 * @return
 	 */
 	
+	
+	
+	String getKid() { // somewhere missing????????
+		    return "58f36e10-c1c1-4df0-af8b-85c857d1634f";
+	}
+
 	public String redirect_url(String launch_url, HttpServletRequest request) {
 	    LoginRequestBuilder builder = LoginRequest.builder();
 	    builder.target_link_uri(launch_url);
