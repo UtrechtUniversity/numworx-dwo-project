@@ -945,6 +945,29 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		this.correct = (Boolean) checkResults.get("correct");
 	}
 
+	private Integer bepaalCumulatief0() throws RestartException {
+		String useranswer = "$f" + this.toString() + "@";
+		
+		HashMap<String, Object> checkResults = new HashMap<String, Object>();
+		checkResults = avChecker.checkAnswer(useranswer);
+		return (Integer) checkResults.get("answerModelNr");
+	}
+	
+	public Integer bepaalCumulatief() {
+		final Integer[] holder = new Integer[1];
+		new Runnable() {
+			public void run() {
+				try { 
+					holder[0] = bepaalCumulatief0();
+				} catch(RestartException e) {
+					e.restart(this);
+				}
+			}
+		}.run();
+		return holder[0];
+	}
+	
+	
 	/**
 	 * Deze methode checkt of de betreffende string een double bevat,
 	 * eerst met het locale scheidingsteken daarna eventueel nog met ".".

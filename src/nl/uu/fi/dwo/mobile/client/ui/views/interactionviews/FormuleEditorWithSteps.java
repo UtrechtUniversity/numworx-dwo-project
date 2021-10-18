@@ -2763,9 +2763,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{
 			
 			if (editor.hasFeedback()) {
-				HashMap results = editor.kijkNa(true);
-				if(scoreCumulatief && results!=null && results.containsKey("answerModelNr")) {
-					scoreContainer[stapNr] = (Integer)results.get("answerModelNr");
+				if(scoreCumulatief ) {
+					Integer results = editor.bepaalCumulatief();
+					if  (results!=null)
+						scoreContainer[stapNr] = results;
 					//logger.info("scStapNr="+stapNr);
 				}
 			
