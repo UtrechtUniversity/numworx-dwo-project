@@ -60,6 +60,18 @@ public class MethodsProperties extends Vector<DomMethod> {
        
   }
 
+  
+  public DomMethod delete(int i) {
+    DomMethod m = remove(i);
+    try {     
+      SecureTeacherMethodManager.removeMethod(m);
+    } catch (Dwo2Exception e) {
+      LOG.log(Level.SEVERE, "failed remove", e);
+    }
+    return m;
+  }
+  
+  
   private List<DomMethod> getCurrentList() throws Dwo2Exception {
     if (DwoHelper.isAdminLoggedIn())
       return SecureDwoAdminMethodManager.getList();

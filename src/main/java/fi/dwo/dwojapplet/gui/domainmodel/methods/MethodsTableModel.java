@@ -59,7 +59,7 @@ public class MethodsTableModel extends AbstractTableModel {
   }
 
   public void delete(int row) {
-    model.remove(row+1);
+    model.delete(row+1);
     fireTableRowsDeleted(row, row);
   }
 
@@ -82,6 +82,7 @@ public class MethodsTableModel extends AbstractTableModel {
 
   void add(DomMethod row) {
     int size = getRowCount();
+    row = model.persist(row);
     model.add(row);
     fireTableRowsInserted(size, size);     
   }
@@ -139,9 +140,23 @@ public class MethodsTableModel extends AbstractTableModel {
     public void actionPerformed(ActionEvent e) {
       if (value == delete) {
          int ok = JOptionPane.showConfirmDialog(table, "Weet je het zeker?", "verwijderen", JOptionPane.YES_NO_OPTION);
+         if (ok == JOptionPane.OK_OPTION) {
+           delete(row);
+         }
       } else if (value == copy) {
-          String input = JOptionPane.showInputDialog(table, "Nieuwe naam");
-        
+          MethodsEditPanel panel = new MethodsEditPanel();
+          DomMethod old = model.get(row+1);
+          DomMethod method = new DomMethod();
+          method.method = "Kopie " + old.method;
+          method.books  = old.books;
+          method.chapters = old.chapters;
+          method.edges = old.edges;
+          method.standard = false;
+          panel.setMethod(method);
+          if (panel.showDialog((JComponent)e.getSource())== JOptionPane.OK_OPTION) {
+            DomMethod m = panel.getMethod();
+            add(m);
+          }
       } else if (value == view) {
           MethodsEditPanel panel = new MethodsEditPanel();
           panel.setMethod(model.get(row+1));
