@@ -58,7 +58,7 @@ Authentication request URL: http://localhost/mod/lti/auth.php
 		client_id = "Fyod8LYgnpG084A";
 		deployment = "1";	
         key_set_url = "http://localhost/mod/lti/certs.php";
-        auth_token_url = "http://localhost:9001/platform/token.php";
+        auth_token_url = "http://localhost/mod/lti/token.php";
         auth_login_url = "http://localhost/mod/lti/auth.php";
 	}
 	

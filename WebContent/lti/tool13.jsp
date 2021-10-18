@@ -41,7 +41,7 @@ For this tool, all resource level secrets are also "secret".</p>
   boolean valid = tool.validate(token, state);
   if (valid) {
     out.println("valid");
-    out.println(tool.getMessageType());
+    out.println(tool.getAccessToken().getAccessToken());
   } else {
     out.println("invalid");
     out.println(tool.getReason());
