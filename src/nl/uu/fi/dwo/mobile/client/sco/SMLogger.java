@@ -160,7 +160,9 @@ public class SMLogger implements Logging {
     Date now = new Date();
     s.timestamp = FORMAT_8601.format(now);
     result.duration = memento.format(now.getTime()-memento.startDate.getTime());
-    result.success = (Boolean) parameters.get("success");
+    Object success = parameters.get("success");
+    if (success instanceof Boolean)
+    	result.success = (Boolean) success;
     String response = (String) parameters.get("formula");
     if(response == null) response = (String) parameters.get("response");
     result.response = response;
