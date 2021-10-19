@@ -28,3 +28,15 @@ a {
 		vertical-align: top;
 		overflow: hidden;
 	}
+	
+#footer {
+        position: absolute;
+        bottom: 0em;
+        right: 0em;
+        background-color: #d2e5f5;
+}
+
+#footer iframe {
+        border: 0;
+}
+	
