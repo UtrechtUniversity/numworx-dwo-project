@@ -165,6 +165,16 @@ public class PublicServerStatus {
     }
 
     @GET
+    @Produces({"text/html"})
+    @Path("/version")
+    public String getVersion() throws IOException {
+        Attributes manifestAttributes = getManifestAttributes();
+        String softwareVersion = manifestAttributes.getValue("Implementation-Version");
+    	return "<span style='float:right;color:white'>" + softwareVersion + "</span>";
+    }
+    
+    
+    @GET
     @Produces({"application/json"})
     @Path("/getSoftwareVersions")
     @Deprecated
