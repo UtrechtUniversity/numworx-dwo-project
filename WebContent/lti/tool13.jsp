@@ -13,7 +13,9 @@ For this tool, all resource level secrets are also "secret".</p>
 <%@ page import="java.util.Enumeration" %>
 <%@ page import="io.jsonwebtoken.*" %>
 <%@ page import="fi.servlet.lti.*" %>
-<%@ page import="edu.uoc.elc.lti.tool.Tool" %>
+<%@ page import="edu.uoc.elc.lti.tool.*" %>
+<%@ page import="edu.uoc.elc.lti.platform.ags.*" %>
+<%@ page import="edu.uoc.elc.lti.platform.*" %>
 <pre>
 
 <%! 
@@ -42,6 +44,9 @@ For this tool, all resource level secrets are also "secret".</p>
   if (valid) {
     out.println("valid");
     out.println(tool.getAccessToken().getAccessToken());
+    AgsClientFactory ags = tool.getAssignmentGradeServiceClientFactory();
+    NamesRoleService nameroles = tool.getNameRoleService();
+    out.println(nameroles.getContext_memberships_url());
   } else {
     out.println("invalid");
     out.println(tool.getReason());

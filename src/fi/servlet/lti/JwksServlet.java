@@ -80,8 +80,8 @@ public class JwksServlet extends HttpServlet {
 	  Keys keys = new Keys();
 	  keys.keys.add(key);
 	  ObjectWriter writer = mapper.writerFor(Keys.class);
-	  writer.writeValue(System.out, keys);
 	  writer.writeValue(resp.getOutputStream(), keys);
+	  log("writing jkws");
 	  
   }
   
