@@ -1557,7 +1557,7 @@ public class FormuleRegel extends FormuleElement
 			el = this.children.elementAt(i);
 			//selection inside element?
 			if (selectionStartX >= el.x && selectionEndX < el.x + el.width 
-					&& selectionStartY > this.getAsHoogte() - el.getAsHoogte() && selectionEndY < this.getAsHoogte() - el.getAsHoogte() + el.height)
+					&& selectionStartY >= 0 && selectionEndY < 0 + height)
 			{
 				selectionfound = true;
 				el.setSelected(false);
