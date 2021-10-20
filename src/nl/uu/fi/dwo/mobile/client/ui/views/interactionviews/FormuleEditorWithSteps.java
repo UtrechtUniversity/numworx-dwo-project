@@ -1638,8 +1638,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 						else if (event.getClientX() < editor.getAsPanel().getAbsoluteLeft())
 						{	
 							requestFocus();
-							editor.startSelection(0, 0);
-							editor.endSelection(0, 0);
+							MainFormuleRegel mainRegel = editor.getMainRegel();
+							int h = mainRegel.getHeight();
+							editor.startSelection(2, h/2);
+							editor.endSelection(2, h/2);
 							editor.cursorToLeft();
 						}
 						else if (!editor.getKeyboard().getEditor().equals(editor))
