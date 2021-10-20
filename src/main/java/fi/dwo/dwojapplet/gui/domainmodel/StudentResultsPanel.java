@@ -31,12 +31,12 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JCheckBox;
-import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JScrollPane;
 import fi.beans.numworxlf.JTree;
 import fi.dwo.dwojapplet.gui.GuiConstants;
@@ -65,16 +65,26 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     public Component getTreeCellRendererComponent(javax.swing.JTree tree, Object value, boolean sel,
         boolean expanded, boolean leaf, int row, boolean hasFocus) {
       Component label = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+      FontMetrics fontMetrics = tree.getFontMetrics(tree.getFont());
       DomStudentModelScore<?> s = null;
       Node n = null;
+      Icon icn;
       if (value instanceof DefaultMutableTreeNode) {
         Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
         if (!(userObject instanceof Node)) {
-          return label;
-        }
-        n = (Node) userObject;
-        s = map.get(n.getInfo());
+          s = getNodeScores((DefaultMutableTreeNode) value, tree.getModel());
+          icn = new SummaryIcon(s, fontMetrics);        
+        } else {
+          n = (Node) userObject;
+          s = map.get(n.getInfo());
+          if (s != null) {
+            icn = createIcon(n, s, fontMetrics);
+         } else {
+            icn = new ScoreIcon(ScoreIcon.UNSURE, ScoreIcon.UNSURE, fontMetrics);
+         }
       }
+      } else 
+        return label;
       Box hb = Box.createHorizontalBox();
       hb.add(label);
       label.setMaximumSize(new Dimension(300,Short.MAX_VALUE));
@@ -85,13 +95,6 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
       label.setPreferredSize(dim);
       label.validate();
       hb.add(Box.createHorizontalStrut(20));
-      FontMetrics fontMetrics = tree.getFontMetrics(tree.getFont());
-      Icon icn;
-      if (s != null) {
-         icn = createIcon(n, s, fontMetrics);
-      } else {
-         icn = new ScoreIcon(ScoreIcon.UNSURE, ScoreIcon.UNSURE, fontMetrics);
-      }
       hb.add(new JLabel(icn));
       hb.add(Box.createHorizontalGlue());
       hb.setSize(hb.getPreferredSize());
@@ -217,7 +220,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     
     leftBox.add(scrollpane, BorderLayout.CENTER);
     leftSouth = Box.createHorizontalBox();
-    methodBox = new JCheckBox("Method");
+    methodBox = new JCheckBox("Methode");
     filterAction = new FilterAction(this, this::filter);
     JButton filter = new JButton(filterAction);
     methodListener = new MethodListener(methodBox, tree, filterAction);
@@ -305,6 +308,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     graph.setModel(this.model,null,activeMethod);
     filterAction.setActiveMethod(activeMethod);
     methodListener.setActiveMethod(activeMethod);
+    methodBox.setText(MethodsProperties.instance().getMethod(activeMethod).getMethod());
     amAction.setMethode(activeMethod);
     methodBox.setSelected(false);
 
@@ -344,7 +348,8 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
       FontMetrics fontMetrics = score.getFontMetrics(score.getFont());
       PIcon icon;
       if (userObject instanceof String) {
-        icon = new ScoreIcon(ScoreIcon.UNSURE, ScoreIcon.UNSURE, fontMetrics);        
+        DomStudentModelScore<?> s = getNodeScores(node, tree.getModel());
+        icon = new SummaryIcon(s, fontMetrics);        
       } else {
         Node n = (Node)userObject;
         DomStudentModelScore<?> s = map.get(n.getInfo());
@@ -357,6 +362,32 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
       setDescription(userObject);     
       //calculatePath(path);     
     }
+  }
+
+  private DomStudentModelScore<?> getNodeScores(DefaultMutableTreeNode node, TreeModel model2) {
+    Object userObject = node.getUserObject();
+    if (userObject instanceof Node) {
+      DomStudentModelScore<?> s = map.get(((Node) userObject).getInfo());
+      if (s == null) s = new DomStudentModelScore<>();
+      return s;
+    }
+    DomStudentModelScore<?> s = new DomStudentModelScore<>();
+    s.setScore(0, 0, 0, 0);
+    int cnt = model2.getChildCount(node);
+    for (int i = 0; i < cnt; i++) {
+      DefaultMutableTreeNode child = (DefaultMutableTreeNode) model2.getChild(node, i);
+      DomStudentModelScore<?> c = getNodeScores(child, model2);
+      if (c.getGreenCount() > 0) {
+        s.setGreenCount(s.getGreenCount() + c.getGreenCount());
+        s.setGreenScore(s.getGreenScore() + c.getGreenScore());
+      }
+      if (c.getRedCount() > 0) {
+        s.setRedCount(s.getRedCount() + c.getRedCount());
+        s.setRedScore(s.getRedScore() + c.getRedScore());
+      }
+      s.setTotalCount(s.getTotalCount()+c.getTotalCount());
+    }
+    return s;
   }
 
   static PIcon createIcon(Node n, DomStudentModelScore<?> s, FontMetrics fontMetrics) {

@@ -381,8 +381,10 @@ public void actionPerformed(ActionEvent event) {
     //this.tekst.setText(vector.getDescription());
     setDescription(vector);
     this.model.nodeStructureChanged(root);
-    filterAction.setActiveMethod(model.getActiveMethod());
-    methodListener.setActiveMethod(model.getActiveMethod());
+    PersistenceId activeMethod = model.getActiveMethod();
+    filterAction.setActiveMethod(activeMethod);
+    methodListener.setActiveMethod(activeMethod);
+    methodBox.setText(MethodsProperties.instance().getMethod(activeMethod).getMethod());
   }
 
   public void setClasses(List<DomSchoolClass> list) {
