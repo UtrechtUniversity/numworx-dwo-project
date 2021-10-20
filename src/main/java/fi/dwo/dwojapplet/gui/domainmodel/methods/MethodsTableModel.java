@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.EventObject;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -29,12 +30,38 @@ import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
+import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsTableModel.NewAction;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherMethodManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 public class MethodsTableModel extends AbstractTableModel {
+
+  public class NewAction extends AbstractAction {
+
+    NewAction() {
+      super("Nieuwe methode");
+    }
+    
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      DomMethod row = new DomMethod();
+      row.method = "Untitled";
+      row.books = Collections.singletonList( "Leerjaar" + " 1" );
+      row.chapters  = Collections.singletonList(Collections.singletonList( "Hoofdstuk" + " 1" ));
+      row.edges = Collections.emptyList();
+      MethodsEditPanel panel = new MethodsEditPanel();
+      panel.setMethod(row);
+      if (panel.showDialog((JComponent)e.getSource())== JOptionPane.OK_OPTION) {
+        DomMethod m = panel.getMethod();
+        add(m);
+      }
+    
+    
+    }
+
+  }
 
   private static final Logger LOG = Logger.getLogger(MethodsTableModel.class.getName());
 
@@ -213,5 +240,9 @@ public class MethodsTableModel extends AbstractTableModel {
 
   public Action getImportAction() {
     return new ImportAction();
+  }
+  
+  public Action getNewAction() {
+    return new NewAction();
   }
 }

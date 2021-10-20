@@ -1,5 +1,7 @@
 package fi.dwo.dwojapplet.gui;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -11,7 +13,9 @@ import org.json.simple.parser.ParseException;
 import com.owlike.genson.Genson;
 
 import fi.dwo.dwojapplet.domain.DWO;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.utils.Digest;
+import fi.dwo.dwojapplet.gui.domainmodel.NodeVector;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
 import nl.numworx.gwtpatch.client.GWTPatch;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
@@ -32,7 +36,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
  *
  * @author Gert van der Plas
  */
-public class TeacherStudentModelPanelProperties {
+public class TeacherStudentModelPanelProperties implements Comparator<DomStudentModelContext>{
   
     static class JavaBuilder implements GWTPatch.Builder {
 
@@ -96,7 +100,12 @@ public class TeacherStudentModelPanelProperties {
     }
 
     List<DomStudentModelContext> getModelList() throws Dwo2Exception {
-        return manager.getReducedList(DWO.getDwoProfile());
+        return sort(manager.getReducedList(DWO.getDwoProfile()));
+    }
+
+    private List<DomStudentModelContext> sort(List<DomStudentModelContext> list) {
+      Collections.sort(list, this);
+      return list;
     }
 
     DomStudentModelContext updateModel(DomStudentModelContext modelContext) throws Dwo2Exception {
@@ -192,5 +201,23 @@ public class TeacherStudentModelPanelProperties {
       current = null;
       structure = null;
       standard = false;
+    }
+
+    private String getTitle(DomStudentModelContext m) {
+      Map<String, String> title = m.getModelStructure().getInfo().getTitle();
+      String locale = DwoHelper.getLocale().getLocale();
+      return NodeVector.getTitle(title, locale);
+    }
+    
+    @Override
+    public int compare(DomStudentModelContext o1, DomStudentModelContext o2) {
+      PublishState p1 = o1.getPublishState();
+      PublishState p2 = o2.getPublishState();
+      if (p1 == PublishState.overt && p2 != PublishState.overt) return -1;
+      if (p2 == PublishState.overt && p1 != PublishState.overt) return +1;
+      
+      String s1 = getTitle(o1);
+      String s2 = getTitle(o2);
+      return s1.compareTo(s2);
     }
 }

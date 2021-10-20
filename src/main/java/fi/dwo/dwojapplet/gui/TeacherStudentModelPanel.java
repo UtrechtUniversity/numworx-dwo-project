@@ -46,6 +46,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
@@ -70,7 +71,6 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
     private LeerdomeinEditPanel2 textArea;
 
     private JPanel jtbl;
-    private TableRowSorter<TeacherStudentModelPanelTableModel> rowSorter;
 
     private Image searchImage, removeImage, resultsImage, classImage;
     int row;
@@ -132,9 +132,9 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         @Override
         public void actionPerformed(ActionEvent event) {
             if (value == searchImage) {
-              String title = (String) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), 0);
+              String title = (String) tableModel.getValueAt(row, 0);
               try {
-               DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getContextColumn());
+               DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(row, tableModel.getContextColumn());
                model = prop.getModel(model);
                if (model.getPublishState() == PublishState.edit) {
                   JOptionPane.showMessageDialog(TeacherStudentModelPanel.this, "Er werkt al mogelijk iemand mee!",title, JOptionPane.WARNING_MESSAGE);
@@ -170,8 +170,8 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
               }
             }
             if (value == removeImage) {
-              DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
-              String title = (String) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), 0);
+              DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(row, tableModel.getColumnCount());
+              String title = (String) tableModel.getValueAt(row, 0);
               int ok = JOptionPane.showConfirmDialog(TeacherStudentModelPanel.this, "Zeker '" + title + "' weg?", title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
               if ( ok == JOptionPane.OK_OPTION) {
                 try {
@@ -188,9 +188,9 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
               
             }
             if (value == copyImage) {
-              String title = (String) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), 0);
+              String title = (String) tableModel.getValueAt(row, 0);
               try {
-                DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getContextColumn());
+                DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(row, tableModel.getContextColumn());
                 model = prop.getModel(model);
                 DomStudentModelStructure structure = model.getModelStructure();
                 String locale = DwoHelper.getLocale().getLocale();
@@ -205,7 +205,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
             }
             
             if (value == resultsImage) {
-              DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
+              DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(row, tableModel.getColumnCount());
               //String title = (String) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), 0);
               LeerdomeinResultsPanel2 panel = new LeerdomeinResultsPanel2();
               List<DomSchoolClass> list;
@@ -229,7 +229,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
             }
             
             if (value == classImage) {
-              DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
+              DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(row, tableModel.getColumnCount());
               List<DomSchoolClass> list;
               try {
                 list = SecureTeacherSchoolClassManager.getTeachersSchoolClasses();
@@ -317,10 +317,6 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         jtbl.add(jtable);
         jtbl.add(Box.createHorizontalGlue());
         //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
-
-        rowSorter = new TableRowSorter<TeacherStudentModelPanelTableModel>(tableModel);
-        rowSorter.toggleSortOrder(0);//
-        jtable.setRowSorter(rowSorter);
 
         TableUtil.setDefaults(jtable, true, new TeacherStudentModelPanel.ImageRenderer(), new TeacherStudentModelPanel.ImageButtonEditor());
         initTable(jtable);
@@ -435,7 +431,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 
         MethodsTableModel dm = new MethodsTableModel();
         header = Box.createHorizontalBox();
-        addMethodButton = new JButton("Nieuwe methode");
+        addMethodButton = new JButton(dm.getNewAction());
         header.add(addMethodButton);
         header.add(Box.createRigidArea(new Dimension(10,1)));
         importMethodButton = new JButton(dm.getImportAction());
@@ -513,6 +509,9 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
                 String title = e.getActionCommand();
                 editNewModel(model, title);
             }
+        if (e.getSource() == addMethodButton) {
+ 
+        }
     }
 
 

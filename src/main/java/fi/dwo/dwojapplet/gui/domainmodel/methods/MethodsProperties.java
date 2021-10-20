@@ -3,6 +3,7 @@ package fi.dwo.dwojapplet.gui.domainmodel.methods;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
-public class MethodsProperties extends Vector<DomMethod> {
+public class MethodsProperties extends Vector<DomMethod> implements Comparator<DomMethod>{
   private static final Logger LOG = Logger.getLogger(MethodsProperties.class.getName());
 
   private final Genson genson;
@@ -42,6 +43,7 @@ public class MethodsProperties extends Vector<DomMethod> {
         in.close();
         
         List<DomMethod> list = getCurrentList();
+        Collections.sort(list,this);
         addAll(list);
         
 //        in = getClass().getResourceAsStream("Getal&Ruimte.json");
@@ -83,6 +85,7 @@ public class MethodsProperties extends Vector<DomMethod> {
   void refresh() {
     try {
       List<DomMethod> list = getCurrentList();
+      Collections.sort(list, this);
       removeRange(1, size());
       addAll(list);
     } catch(Exception e) {
@@ -201,6 +204,15 @@ public class MethodsProperties extends Vector<DomMethod> {
       }
     }
     return new int[0][];
+  }
+
+  @Override
+  public int compare(DomMethod o1, DomMethod o2) {
+    if (o1.standard && !o2.standard) return -1;
+    if (o2.standard && !o1.standard) return +1;
+    String s1 = o1.getMethod();
+    String s2 = o2.getMethod();
+    return s1.compareTo(s2);
   }
 
 }
