@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
+import nl.uu.fi.dwo.formule.client.formuleholder.MainFormuleRegel;
 import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
@@ -1628,8 +1629,11 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 						if (event.getClientX() > editor.getAsPanel().getAbsoluteLeft() + editor.getMainRegel().getWidth())	
 						{	
 							requestFocus();
-							editor.startSelection(editor.getMainRegel().getWidth(), 0);
-							editor.endSelection(editor.getMainRegel().getWidth(), 0);
+							MainFormuleRegel mainRegel = editor.getMainRegel();
+							int w = mainRegel.getWidth();
+							int h = mainRegel.getHeight();
+                            editor.startSelection(w-1, h/2);
+							editor.endSelection(w-1, h/2);
 						}
 						else if (event.getClientX() < editor.getAsPanel().getAbsoluteLeft())
 						{	
