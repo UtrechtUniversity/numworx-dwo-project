@@ -165,7 +165,10 @@ Authentication request URL: http://localhost/mod/lti/auth.php
 
 	public String redirect_url(String launch_url, HttpServletRequest request) {
 	    LoginRequestBuilder builder = LoginRequest.builder();
-	    builder.target_link_uri(launch_url);
+	    String target = request.getParameter("target_link_uri");
+	    // FIXME security: check target vs launch_url
+	    // if (not okay) target = launch_url
+	    builder.target_link_uri(URLEncoder.encode(target));
 		String login_hint = request.getParameter("login_hint");
 		login_hint = URLEncoder.encode(login_hint);
         builder.login_hint(login_hint);
@@ -174,17 +177,10 @@ Authentication request URL: http://localhost/mod/lti/auth.php
 			lti_message_hint = URLEncoder.encode(lti_message_hint);
         builder.lti_message_hint(lti_message_hint);
 		try {
-      return tool.getOidcAuthUrl(builder.build());
-    } catch (URISyntaxException e) {
-        throw new RuntimeException(e);
-    }
-//		return auth_login_url + "?scope=openid&response_type=id_token&response_mode=form_post&prompt=none" +
-//						"&client_id=" + client_id +
-//						"&redirect_uri=" + launch_url +
-//						"&state=" + state +
-//						"&nonce=" + nonce +
-//						"&login_hint=" + login_hint +
-//						lti_message_hint;
+          return tool.getOidcAuthUrl(builder.build());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
 	}
 	
 }
