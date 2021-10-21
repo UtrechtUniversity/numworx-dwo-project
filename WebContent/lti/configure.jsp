@@ -13,9 +13,11 @@ For this tool, all resource level secrets are also "secret".</p>
 <%@ page import="java.util.Enumeration" %>
 <%@ page import="io.jsonwebtoken.*" %>
 <%@ page import="fi.servlet.lti.*" %>
+<%@ page import="edu.uoc.lti.deeplink.content.*" %>
 <%@ page import="edu.uoc.elc.lti.tool.*" %>
 <%@ page import="edu.uoc.elc.lti.platform.ags.*" %>
 <%@ page import="edu.uoc.elc.lti.platform.*" %>
+<%@ page import="edu.uoc.elc.lti.platform.deeplinking.*" %>
 <pre>
 
 <%! 
@@ -40,20 +42,36 @@ For this tool, all resource level secrets are also "secret".</p>
 
   String token = request.getParameter("id_token");
   String state = request.getParameter("state");
+  String jwt   = "";
+  String url   = "";
+  DeepLinkingClient client = tool.getDeepLinkingClient();
+  
   boolean valid = tool.validate(token, state);
   if (valid) {
     out.println("valid");
-    if (tool.isDeepLinkingRequest()) {
-    	
-    } else {
-    	out.println(tool.getAccessToken().getAccessToken());
-    	AgsClientFactory ags = tool.getAssignmentGradeServiceClientFactory();
-    	NamesRoleService nameroles = tool.getNameRoleService();
-    	out.println(nameroles.getContext_memberships_url());
-    }
+	url = client.getReturnUrl().toExternalForm();
+	LtiResourceItem item = LtiResourceItem.builder()
+			.title("DWOmAccess configured")
+			.url("http://localhost:8081/DWOmAccess/lti/tool13.jsp")
+			.build();
+	client.addItem(item);
+	
+	
+  	jwt = client.buildJWT();
+  
   } else {
     out.println("invalid");
     out.println(tool.getReason());
   }
 %>
 </pre>
+
+
+<form method="post" action="<%=url %>" >
+
+<input name="jwt" value="<%=jwt%>" >
+<input type="submit">
+</form>
+
+</body>
+</html>

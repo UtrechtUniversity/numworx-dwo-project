@@ -168,6 +168,7 @@ Authentication request URL: http://localhost/mod/lti/auth.php
 	    String target = request.getParameter("target_link_uri");
 	    // FIXME security: check target vs launch_url
 	    // if (not okay) target = launch_url
+	    if (true) target = launch_url;
 	    builder.target_link_uri(URLEncoder.encode(target));
 		String login_hint = request.getParameter("login_hint");
 		login_hint = URLEncoder.encode(login_hint);
