@@ -12,11 +12,13 @@ import javax.ws.rs.core.SecurityContext;
 
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_HR_P_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.util.StudentModelContextUtilManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContextPatch;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -30,10 +32,10 @@ public class SecuredDwoAdminStudentModelManager {
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getReducedList")
-    public List<DomStudentModelContext> getReducedStudentModels(@Context SecurityContext sc, RestContext context) throws Dwo2Exception {
-        DwoAdminState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
+    public List<DomStudentModelContext> getReducedStudentModels(@Context SecurityContext sc, RestDwoProfile context) throws Dwo2Exception {
+         DwoAdminState_HR_P_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
                 .setHasRole(context.getRestContext().getDomHasRole())
-                .buildDwoAdmin();
+                .buildDwoAdmin().addDwoProfile(context.getDomDwoProfile());
     	List<DomStudentModelContext> list = build.getReducedStudentModels();
     	return StudentModelContextUtilManager.reduce(list);
     }

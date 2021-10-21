@@ -79,7 +79,6 @@ public class DwoAdminDomainAuthorizer {
   public interface DwoAdminState_HR_R_S_SG_U  {
     DwoAdminState_HR_P_R_S_SG_U addDwoProfile(DomDwoProfileId id) throws Dwo2Exception;
 
-	List<DomStudentModelContext> getReducedStudentModels() throws Dwo2Exception;
 	DomStudentModelContext updateStudentModel(DomStudentModelContext domStudentModelContext) throws Dwo2Exception;
 	DomStudentModelContext patchStudentModel(DomStudentModelContextPatch domPatch) throws Dwo2Exception;
 
@@ -90,6 +89,7 @@ public class DwoAdminDomainAuthorizer {
     DwoAdminState_C_S addScoContext(DomScoContextId scoContext) throws Dwo2Exception;
     DwoAdminState_C   addCourse(DomCourse course) throws Dwo2Exception;
     DomCourseFull     add(DomCourseFull course) throws Dwo2Exception;
+	List<DomStudentModelContext> getReducedStudentModels() throws Dwo2Exception;
   }
   
   
