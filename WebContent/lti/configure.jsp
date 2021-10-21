@@ -44,11 +44,11 @@ For this tool, all resource level secrets are also "secret".</p>
   String state = request.getParameter("state");
   String jwt   = "";
   String url   = "";
-  DeepLinkingClient client = tool.getDeepLinkingClient();
   
   boolean valid = tool.validate(token, state);
   if (valid) {
     out.println("valid");
+    DeepLinkingClient client = tool.getDeepLinkingClient();
 	url = client.getReturnUrl().toExternalForm();
 	LtiResourceItem item = LtiResourceItem.builder()
 			.title("DWOmAccess configured")
@@ -69,7 +69,7 @@ For this tool, all resource level secrets are also "secret".</p>
 
 <form method="post" action="<%=url %>" >
 
-<input name="jwt" value="<%=jwt%>" >
+<input name="JWT" value="<%=jwt%>" >
 <input type="submit">
 </form>
 
