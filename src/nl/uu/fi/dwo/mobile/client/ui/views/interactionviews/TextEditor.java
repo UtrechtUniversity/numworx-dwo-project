@@ -245,16 +245,6 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		LogBuilder logBuilder = new LogBuilder(activity).setClassName("fi.wiskopdr.tekstobjects.TekstEditor").setLaunchData(launchdata);
 		loggingID = logBuilder.getLogID();
 		logging = logBuilder.build();
-//		boolean logOption = launchdata.getBoolean("logOption", false);
-//		if (logOption)
-//		{
-//			String logID = launchdata.getString("logID");
-//			DWOLogger dwologger = new DWOLogger();
-//			dwologger.setLogID(logID);
-//			dwologger.setClassName("fi.wiskopdr.tekstobjects.TekstEditor");
-//			dwologger.setMaxScore(scoreMax);
-//			logging = dwologger;
-//		}
 		//shown = true;
 	}
 

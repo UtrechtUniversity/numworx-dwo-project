@@ -184,8 +184,10 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			default: return "nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView";
 			case 6:  return "fi.nabouwenaanzichten.NabouwenAanzichten";
 			case 26: return "fi.tekenveelvlakopdr.TekenVeelvlakOpdr";
+			case 41: return "fi.kladje.Kladje";
 			case 45: return "fi.graphtool.GraphTool";
 			case 57: return "nl.numworx.geodefiner.GeoDefiner";
+			case 61: return "fi.mathscratch.MathScratch";
 		}
 	}
 	
