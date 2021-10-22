@@ -117,6 +117,7 @@ public class SMLogger implements Logging {
     Verb verb = new Verb(); verb.id = ATTEMPTED;
     prototype.verb = verb;
     prototype.context = new Context();
+    prototype.context.registration = memento.getRegistration();
     prototype.context.contextActivities = new ContextActivities();
     widget = new Activity();
     prototype.context.contextActivities.parent = Collections.singletonList(widget);

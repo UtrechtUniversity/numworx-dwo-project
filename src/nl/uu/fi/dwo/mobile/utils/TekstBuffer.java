@@ -512,7 +512,7 @@ public class TekstBuffer
 		}
 		else if (soortVak == 41)
 		{
-			//result =  x(map, new PopupFacade(currentVakGegevens, new fi.kladjegwt.client.KladjeGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)));
+			//result =  x(map, new PopupFacade(JSONUtilities.wrapMap(currentVakGegevens), new fi.kladjegwt.client.KladjeGWT(currentVakGegevens, randomVarNamen, randomVarWaarden), activity));
 			result = x(map, new StubView(activity, "KladjeGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 		else if (soortVak == 61)

@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
+import nl.uu.fi.dwo.mobile.utils.GUID;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.xapi.Statement;
 
@@ -35,6 +36,7 @@ import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
@@ -73,6 +75,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private static final String LOG_STATE = "log";
 	private static final String AANTAL_NAKIJKEN = "aantalNakijken";
 	private static final String AANTAL_SESSIES = "aantalSessies";
+	private static final String REGISTRATION = "registration";
 
 	static final String SUSPEND_DATA = "cmi.suspend_data";
 	static final String SCORE_RAW = "cmi.score.raw";
@@ -99,6 +102,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private JSONObject onsState, shareMap;
 	private JSONObject logState;
 	private JSONArray opdrContStates, opdrStrafpunten, opdrGoedFout, opdrScores, opdrBezocht;
+	private JSONString register;
 	/**
 	 * Scores (per activiteit, per opdracht/pagina, vgl. opdrScores) die getoond worden 
 	 * in een nagekeken zelftoets. Als een antwoord gewijzigd is na
@@ -191,6 +195,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 			tempotoetsSecondsLeft = (JSONNumber) onsState.get(TEMPOTOETS_SECONDS_LEFT);
 			aantalNakijken = (JSONArray) onsState.get(AANTAL_NAKIJKEN);
 			logState = (JSONObject) suspendData.get(LOG_STATE);
+			register = (JSONString) suspendData.get(REGISTRATION);
 			shareMap = (JSONObject) onsState.get(SHARE_MAP);
 			if (reviewData != null && reviewData.length() > 2)
 				opdrContStates = mergeReviewData(opdrContStates, reviewData);
@@ -211,6 +216,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 			suspendData = new JSONObject();
 			suspendData.put(ONS_STATE, onsState);
 			shareMap = null;
+			register = null;
 		}
 
 		incAantalSessies();
@@ -1478,4 +1484,14 @@ public JSONObject getShareMap() {
 	if (shareMap == null) shareMap = new JSONObject();
 	return shareMap;
 }
+
+
+	public String getRegistration() {
+		if (register == null) {
+			register = new JSONString(GUID.get());
+			suspendData.put(REGISTRATION, register);
+		}
+		return register.stringValue();
+	}
+
 }
