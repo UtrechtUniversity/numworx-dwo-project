@@ -54,6 +54,7 @@ For this tool, all resource level secrets are also "secret".</p>
 			.title("DWOmAccess configured")
 			.url("http://localhost:8081/DWOmAccess/lti/tool13.jsp")
 			.build();
+	item.setCustom("sco", "12334");
 	client.addItem(item);
 	
 	

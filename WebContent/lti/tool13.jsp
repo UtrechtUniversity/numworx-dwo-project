@@ -55,5 +55,12 @@ For this tool, all resource level secrets are also "secret".</p>
     out.println("invalid");
     out.println(tool.getReason());
   }
+  String return_url = tool.getPresentation().getReturnUrl();
+  String provider   = tool.getPlatform().getName();
+  String sco  = tool.getCustomParameter("sco");
+  String course = tool.getCustomParameter("course");
 %>
 </pre>
+<p> return to <a href='<%=return_url%>'><%=provider%></a>
+
+<p>display course <%=course %> and sco <%=sco %> here ....
