@@ -15,7 +15,6 @@ import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.ScoEditor;
-import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.action.ImportScorm;
 import fi.dwo.dwojapplet.gui.action.PreviewHtml5;
 import fi.dwo.dwojapplet.gui.action.Save2004Action;
@@ -24,7 +23,6 @@ import fi.dwo.dwojapplet.parameters.domain.ConvertorCreator;
 import fi.dwo.dwojapplet.parameters.domain.ConvertorIF;
 import fi.dwo.dwojapplet.parameters.gui.MainParameterComponent;
 import fi.dwo.dwojapplet.parameters.gui.ParameterComponent;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherScoContextManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 

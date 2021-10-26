@@ -11,11 +11,14 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Vector;
+import java.util.stream.Collectors;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -39,12 +42,14 @@ import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JCheckBox;
 import fi.beans.numworxlf.JScrollPane;
 import fi.beans.numworxlf.JTree;
+import fi.dwo.commons.domainmodel.XapiResultsManager;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinEditPanel2.VoorkennisAction;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.EditableGraph;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
@@ -58,6 +63,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class StudentResultsPanel extends JPanel implements Constants, TreeSelectionListener {
 
+  public boolean useCopy;
   
   class ExtraCellRenderer extends TreeCellRenderer {
 
@@ -78,6 +84,9 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
           n = (Node) userObject;
           s = map.get(n.getInfo());
           if (s != null) {
+            if(useCopy) // opties....
+              s = copies.getOrDefault(n.getInfo(), s);            
+            
             icn = createIcon(n, s, fontMetrics);
          } else {
             icn = new ScoreIcon(ScoreIcon.UNSURE, ScoreIcon.UNSURE, fontMetrics);
@@ -353,6 +362,8 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
       } else {
         Node n = (Node)userObject;
         DomStudentModelScore<?> s = map.get(n.getInfo());
+        if (useCopy) 
+          s = copies.getOrDefault(n.getInfo(), s);
         icon = createIcon(n, s, fontMetrics);
       }
       score.setIcon(icon);      
@@ -393,12 +404,14 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
   static PIcon createIcon(Node n, DomStudentModelScore<?> s, FontMetrics fontMetrics) {
     PIcon icon;
     if(n instanceof NodeLeaf) {
+      double score = s.getScore()/s.getTotalCount(); // posibly NaN/Inf
       if (s.getCount() == 0) {
         icon = new ScoreIcon(ScoreIcon.UNSURE, ScoreIcon.UNSURE, fontMetrics);
-      } else if (s.getScore() > 0.5) {
-        icon = new ScoreIcon(s.getScore(), ScoreIcon.UNSURE, fontMetrics);
+      } else 
+        if (score > 0.5) {
+        icon = new ScoreIcon(score, ScoreIcon.UNSURE, fontMetrics);
       } else {
-        icon = new ScoreIcon(ScoreIcon.UNSURE, s.getScore(), fontMetrics);
+        icon = new ScoreIcon(ScoreIcon.UNSURE, score, fontMetrics);
       }
     } else {
       icon = new SummaryIcon(s, fontMetrics);        
@@ -453,7 +466,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
       DomStudentModelScore<?> s = map.get(info);
       double redScore = 0, greenScore = 0;
       long redCount = 0, greenCount = 0, totalCount = 0;
-      Enumeration<DefaultMutableTreeNode> children = (Enumeration) node.children();
+      Enumeration<DefaultMutableTreeNode> children = (Enumeration<DefaultMutableTreeNode>) node.children();
       while (children.hasMoreElements()) {
         DefaultMutableTreeNode child = children.nextElement();
         if (invisible(child)) continue;
@@ -488,11 +501,14 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
   private JSplitPane splitLeft;
   private FilterAction filterAction;
   private AnyMethodAction amAction;
+  private HashMap<String, DomStudentModelContextInfo> infos;
+  private Map<Object, DomStudentModelScore<?>> copies;
   
   public void setScore(DomStudentModelStructureScore v) {
     this.structureScore = v;
     v.recalculateAncestors();
     map = new IdentityHashMap<>();
+    infos = new HashMap<>();
     DomStudentModelStructure r = context.getModelStructure();
     map.put(r.getInfo(), v);
     int sizei = r.getCategories().size();
@@ -502,16 +518,66 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
       map.put(c.getInfo(), s);
       putObjectiveScore(c.getObjectives(), s.getObjectives());
     }
+    
+    
+    copies = new IdentityHashMap<>();
+    
+    for (DomStudentModelScore<?> value: map.values()) {
+       String id = value.getId();
+       DomStudentModelContextInfo info = infos.get(id);
+       DomStudentModelScore<?> org = value;
+       if (info == null || org.getChildren() != null) {
+         System.out.println(id);
+         continue;
+       }
+       List<String> voorkennis = info.getVoorkennis();
+       if (voorkennis == null)
+         voorkennis = Collections.emptyList();
+       voorkennis = XapiResultsManager.metVoorkennis(voorkennis, infos);
+       if (voorkennis.isEmpty()) continue;
+       DomStudentModelObjectiveScore score = new DomStudentModelObjectiveScore();
+       double greenScore = org.getGreenScore();
+       long greenCount = org.getGreenCount();
+       double redScore = org.getRedScore();
+       long redCount = org.getRedCount();
+       score.setScore(greenScore, greenCount, redScore, redCount, org.getTotalCount());
+       score.setId(org.getId());
+       score.setChildren(null);
+       copies.put(info, score);
+       for(String key: voorkennis) {
+           DomStudentModelScore<?> vs = map.get(infos.get(key));
+           if (vs.getGreenCount() > 0) {
+             greenScore += vs.getGreenScore();
+             greenCount += vs.getGreenCount();           
+           } else
+           if (vs.getRedCount() > 0) {
+             redScore += vs.getRedScore();
+             redCount += vs.getRedCount();
+           } else {
+             greenScore += 0.5;
+             greenCount += 1;
+           }
+       }
+       score.setScore(greenScore, greenCount, redScore, redCount, org.getTotalCount() + voorkennis.size());
+    }
+    
     graph.setScore(v);
   }
 
+  private List<String> strip(List<String> ids) {
+    return ids.stream().map(s -> s.split("/")[0]).collect(Collectors.toList());
+  }
+
+  
   private void putObjectiveScore(List<DomStudentModelObj> list, List<DomStudentModelObjectiveScore> scores) {
     if (list == null) return;
     int sizej = Math.min(list.size(), scores.size());
     for (int j = 0; j < sizej; j++) {
       DomStudentModelObj o = list.get(j);
       DomStudentModelObjectiveScore so = scores.get(j);
-      map.put(o.getInfo(), so);
+      DomStudentModelContextInfo info = o.getInfo();
+      map.put(info, so);
+      infos.put(info.getId(), info);
       putObjectiveScore(o.getObjectives(), so.getChildren());    
     }
   }
