@@ -338,17 +338,17 @@ public class XapiResultsManager {
     //TODO: en dan gegevens uit het model weer terugzetten naar de tree? Of is dat niet nodig?
 }
 
-  private List<String> strip(List<String> ids) {
+  private static List<String> strip(List<String> ids) {
     return ids.stream().map(s -> s.split("/")[0]).collect(Collectors.toList());
   }
 
-  private Set<String> strip(Set<String> ids) {
+  private static Set<String> strip(Set<String> ids) {
     return ids.stream().map(s -> s.split("/")[0]).collect(Collectors.toSet());
   }
 
 
 
-List<String> metVoorkennis(List<String> ids,
+static public List<String> metVoorkennis(List<String> ids,
       Map<String, DomStudentModelContextInfo> infos) {
     ids = strip(ids);
     Set<String> all = new TreeSet<String>(ids);
