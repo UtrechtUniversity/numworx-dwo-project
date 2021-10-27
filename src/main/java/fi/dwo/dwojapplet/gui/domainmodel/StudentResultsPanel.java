@@ -9,15 +9,15 @@ import java.awt.FontMetrics;
 import java.awt.GridLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
-import java.util.Vector;
 import java.util.stream.Collectors;
 
 import javax.swing.AbstractAction;
@@ -34,7 +34,9 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import fi.beans.numworxlf.Constants;
@@ -43,13 +45,13 @@ import fi.beans.numworxlf.JCheckBox;
 import fi.beans.numworxlf.JScrollPane;
 import fi.beans.numworxlf.JTree;
 import fi.dwo.commons.domainmodel.XapiResultsManager;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinEditPanel2.VoorkennisAction;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.EditableGraph;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
-import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
@@ -170,7 +172,7 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
   private DomStudentModelContext context;
   private DomStudentModelStructureScore structureScore;
   private JLabel red, score, green;
-  private JCheckBox methodBox;
+  private JCheckBox methodBox, calcBox;
   
   private EditableGraph graph;
   private MethodListener methodListener;
@@ -230,9 +232,21 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
     leftBox.add(scrollpane, BorderLayout.CENTER);
     leftSouth = Box.createHorizontalBox();
     methodBox = new JCheckBox("Methode");
+    calcBox = new JCheckBox("met voorkennis");
+    calcBox.setSelected(useCopy);
+    calcBox.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        useCopy = calcBox.isSelected();
+        TreeModel model = tree.getModel();
+        ((DefaultTreeModel) model).nodeChanged((TreeNode) model.getRoot());;
+        
+      }});
     filterAction = new FilterAction(this, this::filter);
     JButton filter = new JButton(filterAction);
     methodListener = new MethodListener(methodBox, tree, filterAction);
+    if (DwoHelper.isTest()) leftSouth.add(calcBox);
     leftSouth.add(Box.createHorizontalGlue());
     leftSouth.add(methodBox);
     leftSouth.add(filter);
@@ -519,14 +533,14 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
       putObjectiveScore(c.getObjectives(), s.getObjectives());
     }
     
-    
+// Bereken met voorkennis erbij... uitmiddelen    
     copies = new IdentityHashMap<>();
-    
+    if (DwoHelper.isTest())
     for (DomStudentModelScore<?> value: map.values()) {
        String id = value.getId();
        DomStudentModelContextInfo info = infos.get(id);
        DomStudentModelScore<?> org = value;
-       if (info == null || org.getChildren() != null) {
+       if (info == null || org.getChildren() != null || org.getGreenCount() == 0) {
          System.out.println(id);
          continue;
        }
@@ -537,24 +551,32 @@ public class StudentResultsPanel extends JPanel implements Constants, TreeSelect
        if (voorkennis.isEmpty()) continue;
        DomStudentModelObjectiveScore score = new DomStudentModelObjectiveScore();
        double greenScore = org.getGreenScore();
+       double green = Math.max(ScoreIcon.UNSURE, greenScore); // cut off green score, never worse
        long greenCount = org.getGreenCount();
        double redScore = org.getRedScore();
        long redCount = org.getRedCount();
+       double red = redCount == 0 ? ScoreIcon.UNSURE : redScore;
        score.setScore(greenScore, greenCount, redScore, redCount, org.getTotalCount());
        score.setId(org.getId());
        score.setChildren(null);
        copies.put(info, score);
-       for(String key: voorkennis) {
+       Iterator<String> iter = voorkennis.iterator();
+       while (iter.hasNext()) {
+           String key = iter.next();
            DomStudentModelScore<?> vs = map.get(infos.get(key));
+           if (vs == null) {
+             iter.remove();
+             continue;
+           }
            if (vs.getGreenCount() > 0) {
-             greenScore += vs.getGreenScore();
+             greenScore += Math.min(vs.getGreenScore(),green);
              greenCount += vs.getGreenCount();           
            } else
            if (vs.getRedCount() > 0) {
-             redScore += vs.getRedScore();
+             redScore += Math.max(vs.getRedScore(), red);
              redCount += vs.getRedCount();
            } else {
-             greenScore += 0.5;
+             greenScore += ScoreIcon.UNSURE;
              greenCount += 1;
            }
        }
