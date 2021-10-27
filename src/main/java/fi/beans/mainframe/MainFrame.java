@@ -8,6 +8,7 @@ import java.io.*;
 import java.util.*;
 import java.awt.event.*;
 
+@SuppressWarnings("serial")
 public class MainFrame extends Frame implements WindowListener, AppletStub, AppletContext {
 
     // Check that we are on Mac OS X.  This is crucial to loading and using the OSXAdapter class.
@@ -17,7 +18,7 @@ public class MainFrame extends Frame implements WindowListener, AppletStub, Appl
     // Checks the platform, then attempts to register with the Apple EAWT
     // See OSXAdapter.java to see how this is done without directly referencing any Apple APIs
     protected void registerForMacOSXEvents() {
-        if (MAC_OS_X) {
+        if (Java9Adapter.setQuitHandler(this) && MAC_OS_X) {
             try {
                 // Generate and register the OSXAdapter, passing it a hash of all the methods we wish to
                 // use as delegates for various com.apple.eawt.ApplicationListener methods

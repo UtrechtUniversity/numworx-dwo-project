@@ -282,6 +282,12 @@
         	<artifactId>DWO-jclient-lib</artifactId>
         	<scope>test</scope>
         </dependency>
+        <dependency>
+        	<groupId>fi.dwo</groupId>
+        	<artifactId>fi.dwo.eawt</artifactId>
+        	<version>0.0.2-SNAPSHOT</version>
+        	<scope>provided</scope>
+        </dependency>
     </dependencies>
     
     <!--    <distributionManagement>
