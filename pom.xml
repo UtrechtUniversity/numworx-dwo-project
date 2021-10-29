@@ -404,8 +404,8 @@
 			</properties>
 		</profile>
 	</profiles>
-	<version>2.5.1-SNAPSHOT</version>
+	<version>2.5.1</version>
 	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DwoPlayer/GWT/trunk</developerConnection>
+		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DwoPlayer/GWT/tags/DWOplayer-2.5.1</developerConnection>
 	</scm>
 </project>
