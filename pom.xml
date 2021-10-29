@@ -8,7 +8,7 @@
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO</artifactId>
-        <version>2.5.1-SNAPSHOT</version>
+        <version>2.5.1</version>
         <relativePath>../DWO/pom.xml</relativePath>
     </parent>
     <!-- Adjust artifact, name and description for new projects -->
@@ -53,8 +53,8 @@
 
     <!-- update the https path for a different branch or tag! -->
     <scm>
-        <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOJClient/trunk</connection>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOJClient/trunk</developerConnection>
+        <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOJClient/tags/DWOJClient-2.5.1</connection>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOJClient/tags/DWOJClient-2.5.1</developerConnection>
     </scm>
 
     <dependencies>
@@ -208,7 +208,7 @@
     	<dependency>
     		<groupId>fi.dwo</groupId>
     		<artifactId>fi.dwo.eawt</artifactId>
-    		<version>0.0.2-SNAPSHOT</version>
+    		<version>0.0.2</version>
     		<scope>runtime</scope>
     	</dependency>
     </dependencies>      
@@ -868,7 +868,7 @@
 	    	<dependency>
 	    		<groupId>fi.dwo</groupId>
 	    		<artifactId>fi.dwo.eawt</artifactId>
-	    		<version>0.0.2-SNAPSHOT</version>
+	    		<version>0.0.2</version>
 	    		<scope>runtime</scope>
 	    	</dependency>
 			<dependency>
