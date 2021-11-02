@@ -11,7 +11,7 @@
 <%
 	ProviderInfo info = ProviderInfo.get(request);
 	String launch_url = "http://localhost:8081/DWOmAccess/lti/tool13.jsp";
-	session.setAttribute("tool", info.tool);
+	//session.setAttribute("tool", info.tool);
 %>
 </head>
 <body>

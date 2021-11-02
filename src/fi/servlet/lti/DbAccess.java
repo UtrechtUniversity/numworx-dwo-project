@@ -20,6 +20,7 @@ import edu.uoc.elc.lti.tool.Platform;
 import edu.uoc.elc.lti.tool.Tool;
 import edu.uoc.elc.lti.tool.User;
 import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SystemManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
@@ -32,6 +33,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 public class DbAccess {
 	
@@ -48,6 +50,7 @@ public class DbAccess {
 	  authenticator = new RestAuthenticator();
 	  restManager = new StoredRestManager(authenticator);
 	  systemManager = new SystemManager(restManager);
+      Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
 	}
 	
 	public DbAccess(ServletContext context) {
@@ -186,6 +189,53 @@ public class DbAccess {
     return String.valueOf(o);
   }
 
+	public boolean setEntreeCookie(Tool tool, HttpServletRequest request, HttpServletResponse response ) {
+		User tuser = tool.getUser();
+		Platform platform = tool.getPlatform();
+		Context context = tool.getContext();
+		String user_id = tool.getCustomParameter("userid");
+		String lti_id = tuser.getId();
+		if (user_id == null) user_id = lti_id;
+		String organisation = platform.getName();
+		String org_id = "\"lti13:" + tool.getIssuer() + "\"";
+		String context_label = context.getLabel();
+
+		   DomSamlUser u = new DomSamlUser();
+		   u.setSamlOrgId(s(org_id));
+		   u.setSamlUserId(s(user_id));
+		   String path = "/";
+	       Cookie user = new Cookie(DWO_SAML_USER_ID, u.getSamlUserId());
+	       user.setPath(path);
+	       user.setSecure(request.isSecure());
+	       Cookie orgid = new Cookie(DWO_SAML_ORGANIZATION_ID, u.getSamlOrgId());
+	       orgid.setPath(path);
+	       orgid.setSecure(request.isSecure());
+	       response.addCookie(user);
+	       response.addCookie(orgid);
+		   try {
+		       u = systemManager.requestSamlToken(u);
+		       Cookie authToken = new Cookie(DWO_SAML_AUTH_TOKEN, u.getAuthToken());
+		       authToken.setSecure(request.isSecure());
+		       authToken.setPath(path);
+		       response.addCookie(authToken);
+		       return false;	  	       
+		   } catch(Dwo2Exception e) {
+		       LOG.log(Level.WARNING, "request SAML token: " + u.getSamlUserId() + " " + u.getSamlOrgId(), e);
+		       try {
+		         response.sendRedirect("/dwo/register/Register.html?cancel="
+		        	    + URLEncoder.encode(tool.getPresentation().getReturnUrl(), "UTF-8")
+		         		+ "&next=" + 
+		         		  URLEncoder.encode(request.getRequestURL().toString(), "UTF-8")
+		         );
+		       } catch (IOException e1) {
+		       }
+		       return true;
+		   }
+		}
+
+  
+  
+  
   	public void setCookie(Tool tool, HttpServletResponse response, String schoolID) {
 		User user = tool.getUser();
 		Platform platform = tool.getPlatform();

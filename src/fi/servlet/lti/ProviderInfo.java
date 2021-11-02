@@ -45,7 +45,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
     }
  */
 public class ProviderInfo {
-    public Tool tool; // = new Tool(toolDefinition, claimAccessor, oidcLaunchSession, toolBuilders)
+    public static Tool tool; // = new Tool(toolDefinition, claimAccessor, oidcLaunchSession, toolBuilders)
   
 	public String
 	    platform = "http://localhost:9100",

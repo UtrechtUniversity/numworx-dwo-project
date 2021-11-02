@@ -1,14 +1,32 @@
 <html>
 <head>
-  <title>IMS Basic Learning Tools Interoperability</title>
+  <title>Digital Mathematical Environment</title>
+  <script>
+	var API_1484_11 = {
+		Initialize: function(ignore) { return "true"; },
+		Terminate:  function(ignore) { return "true"; },
+		Commit: function(ignore) { return "true"; },
+		GetValue: function(key)  { return "";  },
+		SetValue: function(key, value) { return "true"; },
+		GetLastError: function(ignore) { return "0"; },
+		GetErrorString: function(code) { return "no error"; },
+		GetDiagnostic:  function(code) { return "no diagnostic"; }
+	}
+	window.API_1484_11 = API_1484_11
+	function logout() {
+		window.location = document.getElementById("return_url").href
+	}
+  </script>
+  <style>
+  	iframe {
+  		border: 0px;
+  	}
+    #headerpane {
+    	display: none;
+    } 
+  </style> 
 </head>
 <body style="font-family:sans-serif">
-<img src="http://www.sun.com/images/l2/l2_duke_java.gif" align="right">
-<p><b>IMS BasicLTI Java Provider</b></p>
-<p>This is a very simple reference implementaton of the tool side (i.e. provider) for IMS BasicLTI.</p>
-<p>This tool is configured with an LMS-wide guid of "lmsng.school.edu" protected by a secret of "secret".
-For this tool, all resource level secrets are also "secret".</p>
-</p>
 <%@ page import="javax.servlet.http.HttpServletRequest" %>
 <%@ page import="java.util.Enumeration" %>
 <%@ page import="io.jsonwebtoken.*" %>
@@ -17,10 +35,15 @@ For this tool, all resource level secrets are also "secret".</p>
 <%@ page import="edu.uoc.elc.lti.platform.ags.*" %>
 <%@ page import="edu.uoc.elc.lti.platform.*" %>
 <%@ page import="edu.uoc.lti.deeplink.content.*" %>
-<pre>
-
 <%! 
-
+	private DbAccess instance;
+	
+	private DbAccess getDbAccess() {
+		if(instance == null) {
+			instance = new DbAccess(getServletContext());
+		}
+		return instance;
+	}
 		
 	void println(JspWriter out, Object o ) {
 		try {
@@ -31,7 +54,7 @@ For this tool, all resource level secrets are also "secret".</p>
 }
 %>
 <%
-  Tool tool = (Tool) session.getAttribute("tool");
+  Tool tool = ProviderInfo.tool; // (Tool) session.getAttribute("tool");
 
   Enumeration<String> en = request.getParameterNames();
   while (en.hasMoreElements()) {
@@ -41,39 +64,34 @@ For this tool, all resource level secrets are also "secret".</p>
 
   String token = request.getParameter("id_token");
   String state = request.getParameter("state");
-  boolean valid = tool.validate(token, state);
+  boolean valid = tool.isValid() || tool.validate(token, state);
   if (valid) {
-    out.println("valid");
     if (tool.isDeepLinkingRequest()) {
     	
     } else {
-//     	out.println(tool.getAccessToken().getAccessToken());
-//     	AgsClientFactory ags = tool.getAssignmentGradeServiceClientFactory();
-//     	NamesRoleService nameroles = tool.getNameRoleService();
-//     	out.println(nameroles.getContext_memberships_url());
-     }
+    	if (getDbAccess().setEntreeCookie(tool, request, response)) return;
+    }
   } else {
 	   response.sendError(400, tool.getReason());
 	   return;
   }
   Presentation presentation = tool.getPresentation();
   String return_url = presentation.getReturnUrl();
-  String language = presentation.getLocale();
+  String language = presentation.getLocale(); if (language == null) language = "nl";
   int width = presentation.getWidth();
   int height = presentation.getHeight();
 // fullscreen
   if (width == 0) width = 1024;
   if (height == 0) height = 768;
 
-  String provider   = tool.getPlatform().getName();
+  String provider = tool.getPlatform().getName();
   String sco  = tool.getCustomParameter("sco");
   String course = tool.getCustomParameter("course");
-  String profile =  tool.getCustomParameter("profile");
+  String profile =  tool.getCustomParameter("profile"); if (profile == null) profile = "77";
   String sconr = "#LoginPlace:";
   if(sco != null) sconr = "#LoginPlace:s/" + sco;
   else if(course != null) sconr = "#LoginPlace:c/" + course;
 %>
-</pre>
 <div id='headerpane' >
 <a id='return_url' href='<%=return_url%>'>Logout</a>
 </div>

@@ -275,7 +275,7 @@
                 <comment>speciaal for localhost met dummytwo.dwo.nl als database</comment>
                 <dsaccess>http://127.0.0.1:8080/dwo/xmlrpc</dsaccess>
                 <dsaccess.url>http://127.0.0.1:8080/dwo/xmlrpc</dsaccess.url>
-                <dsrest.url>http://127.0.0.1:8080/dwo/rest/</dsrest.url>
+                <dsrest.url>http://127.0.0.1:8080/dwo/</dsrest.url>
             </properties>
         </profile>
     </profiles>
