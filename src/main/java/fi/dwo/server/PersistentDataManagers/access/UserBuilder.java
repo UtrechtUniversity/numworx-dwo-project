@@ -331,7 +331,7 @@ class UserBuilder implements UserDomainAuthorizer.UserState_U, UserDomainAuthori
 			user = dwoUserPrincipal.getUser();
 			PersistentSchoolGroup sg = dwoUserPrincipal.getSg();
 			instance.getContext().getUserCtx().setSchoolGroup(sg);
-			instance.getContext().getUserCtx().setSchool(sg.getSchool());
+			instance.getContext().getUserCtx().setSchool(sg != null ? sg.getSchool(): null);
 		}
 		else
 			user = UserManager.findByUserName(principal.getName());
