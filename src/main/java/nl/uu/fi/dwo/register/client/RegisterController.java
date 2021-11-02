@@ -7,8 +7,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicUserManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
@@ -17,12 +15,8 @@ import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
-import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
-import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
-
 import org.osgi.util.function.*;
 import org.osgi.util.promise.*;
 
@@ -77,7 +71,8 @@ public class RegisterController {
 		if (samlUser != null) {
 			Success<Boolean, Boolean> link = (promise) -> {
 				GwtRestVars.instance().setCredentials(domNewUser.getUsername(), domNewUser.getPassword(), null);			
-				return manager.linkSaml(samlUser);
+				DomContext context = new DomContext();
+				return manager.linkSaml(context, samlUser);
 				
 			};
 			Function<Promise<?>, Promise<? extends Boolean>> recovery = (promise) -> {
@@ -97,7 +92,8 @@ public class RegisterController {
 	void link(DomNewUser u) {
 		SecuredUserAccountManager manager = new SecuredUserAccountManager();
 		GwtRestVars.instance().setCredentials(u.getUsername(), u.getPassword(), null);
-		manager.linkSaml(samlUser).then(succes,failure);
+		
+		manager.linkSaml(new DomContext(), samlUser).then(succes,failure);
 	}
 	
 	

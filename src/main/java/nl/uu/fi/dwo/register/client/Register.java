@@ -48,7 +48,12 @@ public class Register implements EntryPoint, Command {
         	cancelURL = newURL;
         
         boolean free = getFree();
+		String user_id = Cookies.getCookie(DWO_SAML_USER_ID);
+		String org_id = Cookies.getCookie(DWO_SAML_ORGANIZATION_ID);
         boolean saml = getSAML();
+        
+        saml = saml || user_id != null && org_id != null;
+        
 		content = new RegisterPanel(free, saml);
 		RegisterController controller = content.getController();
 		controller.setNext(this);
@@ -59,8 +64,6 @@ public class Register implements EntryPoint, Command {
 				Window.Location.assign(cancelURL);
 				
 			}});
-		String user_id = Cookies.getCookie(DWO_SAML_USER_ID);
-		String org_id = Cookies.getCookie(DWO_SAML_ORGANIZATION_ID);
 		if (saml && user_id != null && org_id != null) {	
 			DomSamlUser samlUser = new DomSamlUser();
 			samlUser.setSamlOrgId(org_id);
