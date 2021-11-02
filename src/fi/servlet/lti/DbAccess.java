@@ -15,6 +15,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.uoc.elc.lti.tool.Context;
+import edu.uoc.elc.lti.tool.Platform;
+import edu.uoc.elc.lti.tool.Tool;
+import edu.uoc.elc.lti.tool.User;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SystemManager;
@@ -182,6 +186,55 @@ public class DbAccess {
     return String.valueOf(o);
   }
 
+  	public void setCookie(Tool tool, HttpServletResponse response, String schoolID) {
+		User user = tool.getUser();
+		Platform platform = tool.getPlatform();
+		Context context = tool.getContext();
+		String user_id = tool.getCustomParameter("userid");
+		String lti_id = user.getId();
+		if (user_id == null) user_id = lti_id;
+		String name_given = user.getGivenName();
+		String name_family = user.getFamilyName();
+		String name_prefix = "";
+		int komma = name_family.indexOf(',');
+		if (komma > 0) {
+			name_prefix = name_family.substring(komma + 1);
+			name_family = name_family.substring(0, komma);
+		}
+		String email = user.getEmail();
+		String organisation = platform.getName();
+		String orgid = "lti13:" + tool.getIssuer();
+		
+		String role = "STUDENT";
+		if(!tool.isLearner())
+			role = "TEACHER";
+		String context_label = context.getLabel();
+		
+		String authTokenStr;
+		try {
+			authTokenStr = rest.registerSAML(
+					user_id,
+					lti_id,
+					orgid,
+					name_given, name_prefix, name_family,
+					email,
+					role,
+					schoolID,
+					context_label
+					);
+			Cookie authToken = new Cookie(DWO_SAML_AUTH_TOKEN, authTokenStr);
+			String path = "/DWOmAccess";
+			authToken.setPath(path);
+			response.addCookie(authToken);
+		} catch (IOException e) {
+			LOG.log(Level.SEVERE, "setCookie", e);
+		}
+
+		
+	}
+  
+  
+  
   public void setCookie(HttpServletRequest request, HttpServletResponse response) {
 // persoonsgegevens:
 		String user_id = request.getParameter("custom_userid");
