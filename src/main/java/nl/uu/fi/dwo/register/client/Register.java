@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.register.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -48,8 +47,8 @@ public class Register implements EntryPoint, Command {
         	cancelURL = newURL;
         
         boolean free = getFree();
-		String user_id = Cookies.getCookie(DWO_SAML_USER_ID);
-		String org_id = Cookies.getCookie(DWO_SAML_ORGANIZATION_ID);
+		String user_id = getCookieOnce(DWO_SAML_USER_ID);
+		String org_id = getCookieOnce(DWO_SAML_ORGANIZATION_ID);
         boolean saml = getSAML();
         
         saml = saml || user_id != null && org_id != null;
