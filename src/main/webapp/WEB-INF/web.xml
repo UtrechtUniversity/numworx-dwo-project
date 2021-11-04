@@ -2,12 +2,8 @@
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/javaee/web-app_3_0.xsd">
     <display-name>EBServer</display-name>
   <context-param>
-  	<param-name>dbaccess.url</param-name>
-	<param-value>http://127.0.0.1/dwo/xmlrpc</param-value>  
-  </context-param>
-  <context-param>
   	<param-name>dbrest.url</param-name>
-	<param-value>http://127.0.0.1/dwo/</param-value>  
+	<param-value>http://127.0.0.1:${http.port}/dwo/</param-value>  
   </context-param>
   <context-param>
   	<param-name>SERVLET</param-name>
