@@ -242,7 +242,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
 	        	dwo.setWait();
 	            Thread thread = new Thread() {	
 	                public void run() {	
-	                    boolean html5 = DwoHelper.isTest();
+	                    boolean html5 = true;
 	                    final Sco wrap = html5 ? new WrapSco(sco) : sco;
 
 			            ScoPanel sp = wrap.getScoPanel(dwo, user,(SchoolClass)currentlyZoomedUser);
