@@ -87,7 +87,7 @@ public final class DwoHelper {
     private static URL appUrlPath;
     private static URL jarUrlPath;
     private static HttpAuthenticationType httpAuthenticationType;
-    protected static boolean test=false;
+    private static boolean test=false;
     
     private static DomSchool nullSchool;
 
