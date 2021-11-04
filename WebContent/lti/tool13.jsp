@@ -54,7 +54,7 @@
 }
 %>
 <%
-  Tool tool = ProviderInfo.tool; // (Tool) session.getAttribute("tool");
+  Tool tool = ProviderInfo.getTool(request); // (Tool) session.getAttribute("tool");
 
   Enumeration<String> en = request.getParameterNames();
   while (en.hasMoreElements()) {

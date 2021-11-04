@@ -181,6 +181,10 @@ Authentication request URL: http://localhost/mod/lti/auth.php
       tool = new Tool(toolDefinition, claimAccessor, oidcLaunchSession, toolBuilders);
 	}
 	
+	private ProviderInfo(OIDCLaunchSession launchSession) {
+		tool = new Tool(toolDefinition, claimAccessor, launchSession, toolBuilders);
+	}
+	
 	public static ProviderInfo get(String iss) {
 		if (iss == null || iss.isEmpty()) return null; // not found.
 		return new ProviderInfo();
@@ -190,7 +194,17 @@ Authentication request URL: http://localhost/mod/lti/auth.php
 // require login_hint and iss.
 		String login_hint = request.getParameter("login_hint");
 		if (login_hint == null|| login_hint.isEmpty()) return null;
-		return get(request.getParameter("iss"));
+		
+		String iss = request.getParameter("iss");
+		HttpSessionOIDCLaunchSession session = new HttpSessionOIDCLaunchSession(request);
+		session.clear();
+		if (iss != null) session.setIssuer(iss);
+		return new ProviderInfo(session);
+	}
+	
+	public static Tool getTool(HttpServletRequest request) {
+		HttpSessionOIDCLaunchSession session = new HttpSessionOIDCLaunchSession(request);
+		return new ProviderInfo(session).tool;
 	}
 
 	/** create redirect url 
