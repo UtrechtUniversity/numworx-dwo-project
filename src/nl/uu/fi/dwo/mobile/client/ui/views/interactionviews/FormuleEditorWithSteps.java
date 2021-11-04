@@ -991,7 +991,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				editor.insert(currentTekst);
 				requestFocus();
 			}
-			terugButton.getElement().getStyle().setVisibility(Visibility.VISIBLE);
+			if (stapNr > 1 || !hasStartString)
+				terugButton.getElement().getStyle().setVisibility(Visibility.VISIBLE);
 			
 			setStapOk(true);
 		}
@@ -1188,7 +1189,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			
 //			setStapOk(false); // verplaatst naar later hieronder 
 			
-			if (stapNr == 0 && hasStartString)
+			if (stapNr <= 1 && hasStartString)
 				terugButton.getElement().getStyle().setVisibility(Visibility.HIDDEN);
 				
 			if (!isToets() && stapNr == 0 && eigenOpdr)
@@ -2566,7 +2567,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			}
 		}
 
-		if (stapNr > 0 || stapNr == 0 && !hasStartString)
+		if (stapNr > 1 || !hasStartString)
 			terugButton.getElement().getStyle().setVisibility(Visibility.VISIBLE);
 		
 		if (editor != null)
@@ -3971,7 +3972,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			}
 		}
 		
-		if (stapNr > 0 || stapNr == 0 && !hasStartString)
+		if (stapNr > 1 || !hasStartString)
 			terugButton.getElement().getStyle().setVisibility(Visibility.VISIBLE);
 	}
 	

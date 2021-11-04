@@ -1195,7 +1195,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 					if (expUserAnswer != null)
 					{
 						Expressie exp = Expressie.evalWithCAS(expUserAnswer);
-						juisteAntwoord = addFormulaCodes(exp.toString());
+						if (exp != null)
+							juisteAntwoord = addFormulaCodes(exp.toString()); // FIXME NPE als evalwithCas mislukt
 					}
 				}
 				else
