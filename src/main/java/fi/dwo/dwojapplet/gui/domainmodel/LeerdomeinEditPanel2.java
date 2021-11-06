@@ -732,7 +732,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		Bewerken.add(new JMenuItem(new Omhoog()));
 		Bewerken.add(new JMenuItem(new Omlaag()));
 		Bewerken.add(new JMenuItem(new Verwijderen()));
-		if (DwoHelper.isTest())
+		//if (DwoHelper.isTest())
 		  bar.add(Instellingen);
 		Instellingen.setBackground(Constants.COLOR21);
 		Instellingen.setForeground(Constants.COLOR15);
