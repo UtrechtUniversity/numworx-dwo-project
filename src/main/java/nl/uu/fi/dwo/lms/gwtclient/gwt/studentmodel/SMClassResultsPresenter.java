@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+import javax.swing.text.View;
 
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -71,7 +72,9 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 
 		void setTitle(String title);
 
-		void setScores(Map<String, DomStudentModelObjectiveScore> result, boolean leaf);		
+		void setScores(Map<String, DomStudentModelObjectiveScore> result, boolean leaf);
+
+		void setMethod(String label);		
 	}
 	
 	private Display view;
@@ -162,8 +165,10 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 		String uuid = scores.getValue().getStudentModelContexts().get(0).getValue().getModelStructure().getInfo().getId();
 		PersistenceId pid = currentModel.getModelStructure().getActiveMethod();
 		return service.getActiveMethod(pid).then( q -> {
-		setScores(scores, uuid, false, q.getValue());		
-		return scores;});
+			view.setMethod(q.getValue().getMethod());
+			setScores(scores, uuid, false, q.getValue());		
+			return scores;
+		});
 	}
 
 	private void setScores(Promise<DomStudentModelScorePerTeacher> scores, String uuid, boolean leaf, DomMethod method) {
@@ -304,5 +309,10 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 		sc.setId(new PersistenceId(id));
 		SwitchViewEvent event = new SwitchViewEvent(SelectedView.SMCLASSRESULTS, sc, state.getJavaScriptObject());
 		bus.fireEvent(event);
+	}
+	
+	@JsMethod
+	public void onMethod(boolean value) {
+		LOG.info("on method " + value);
 	}
 }

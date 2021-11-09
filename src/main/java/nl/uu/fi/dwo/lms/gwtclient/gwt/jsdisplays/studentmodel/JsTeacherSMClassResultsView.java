@@ -109,5 +109,10 @@ public class JsTeacherSMClassResultsView extends AbstractStudentModelView implem
 		gemiddelde.setScore(gs, gt, rs, rt, t);
 		JsTeacherSMClassResultsDisplay.setScore(obj.getJavaScriptObject(), enc(gemiddelde, false).getJavaScriptObject());
 	}
-	
+
+	@Override
+	public void setMethod(String label) {
+		JsTeacherSMClassResultsDisplay.setMethodLabel(label);
+	}
+
 }
