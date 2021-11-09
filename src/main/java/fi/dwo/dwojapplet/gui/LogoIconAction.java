@@ -112,10 +112,12 @@ public class LogoIconAction extends AbstractAction implements Action {
         Image reduced;
 	       if (iconDial == null) iconDial = new IconDialog();
 	        iconDial.setDialogTitle(TextMapper.format(TextMapper.GUIS_LOAD_LOGO, new Object[]{toString()}));
+            iconDial.setCurrentDirectory(DwoHelper.getCurrentDirectory());
 	        int r = iconDial.showOpenDialog((Component) e.getSource());
 	        File file = iconDial.getSelectedFile();
 			naam = (r == JFileChooser.CANCEL_OPTION || file == null) ? null : file.getName();
 	        if(naam == null && r == JFileChooser.APPROVE_OPTION) {
+	            DwoHelper.setCurrentDirectory(iconDial.getCurrentDirectory());
 	        	naam = iconDial.url.getText();
 	        	URL url = new URL(naam);
 	        	setImageUrl(naam);

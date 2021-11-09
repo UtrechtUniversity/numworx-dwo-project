@@ -69,10 +69,12 @@ public class BackupMapAction extends GuiAction {
 }
 
 	private void export(CourseMap selection) throws Exception {
+      chooser.setCurrentDirectory(DwoHelper.getCurrentDirectory());
 		int result = chooser.showSaveDialog(instance().getMainPanel());
 		if(result == JFileChooser.APPROVE_OPTION)
 		{
 			try {
+	            DwoHelper.setCurrentDirectory(chooser.getCurrentDirectory());
 				instance().setWait();
 				File file = chooser.getSelectedFile();
 				ZipOutputStream zipper = new ZipOutputStream(new FileOutputStream(file));

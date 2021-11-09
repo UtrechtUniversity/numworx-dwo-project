@@ -29,6 +29,7 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.AppletConfig;
 import fi.dwo.dwojapplet.domain.AppletData;
 import fi.dwo.dwojapplet.domain.DWO;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.action.ImportScorm;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
@@ -72,9 +73,11 @@ class AddConfigDwoAdminJPanel extends JPanel implements Comparator<AppletData >{
 		public void actionPerformed(ActionEvent e) {
 			Component source = (Component) e.getSource();
 			chooser.setLocale(source.getLocale());
+	        chooser.setCurrentDirectory(DwoHelper.getCurrentDirectory());
 			int ok = chooser.showOpenDialog(source);
 			if (ok == JFileChooser.APPROVE_OPTION)
 			{
+	            DwoHelper.setCurrentDirectory(chooser.getCurrentDirectory());
 				File f = chooser.getSelectedFile();
 				Sco sco = new Sco();
 				ImportScorm.readZip(f.getAbsolutePath(), sco);

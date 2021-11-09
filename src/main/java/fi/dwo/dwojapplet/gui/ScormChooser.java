@@ -65,21 +65,6 @@ public class ScormChooser extends JFileChooser {
         return box;
     }
 
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
-        Frame dummy = new Frame("dummy");
-        dummy.show();
-        ScormChooser chooser = new ScormChooser();
-        chooser.showSaveDialog(dummy);
-
-        System.out.println(chooser.getSelectedFile());
-        System.out.println(chooser.isScorm2004());
-        System.out.println(chooser.isHTML5());
-        System.exit(0);
-    }
-
     public boolean isScorm2004() {
         return scorm2004.isSelected();
     }

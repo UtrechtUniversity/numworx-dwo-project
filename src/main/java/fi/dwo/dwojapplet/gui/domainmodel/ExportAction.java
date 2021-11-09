@@ -23,6 +23,7 @@ import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 
 public class ExportAction extends AbstractAction {
@@ -51,7 +52,9 @@ public class ExportAction extends AbstractAction {
 
   @Override
   public void actionPerformed(ActionEvent e) {
+    chooser.setCurrentDirectory(DwoHelper.getCurrentDirectory());
     if (chooser.showSaveDialog(panel.asComponent()) == JFileChooser.APPROVE_OPTION) {
+      DwoHelper.setCurrentDirectory(chooser.getCurrentDirectory());
       File toSave = chooser.getSelectedFile();
       DomStudentModelStructure model = panel.getModel();
       try {

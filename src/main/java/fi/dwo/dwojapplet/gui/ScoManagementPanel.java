@@ -725,10 +725,12 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
  //       naam = openDial.getFile();
         if (iconDial == null) iconDial = new IconDialog();
         iconDial.setDialogTitle(TextMapper.format(TextMapper.GUIS_LOAD_LOGO, new Object[]{course.toString()}));
-        int r = iconDial.showOpenDialog(this);
+        iconDial.setCurrentDirectory(DwoHelper.getCurrentDirectory());
+       int r = iconDial.showOpenDialog(this);
         File file = iconDial.getSelectedFile();
 		naam = (r == iconDial.CANCEL_OPTION || file == null) ? null : file.getName();
         if(naam == null && r == iconDial.APPROVE_OPTION) {
+            DwoHelper.setCurrentDirectory(iconDial.getCurrentDirectory());
         	naam = iconDial.url.getText();
         	course.setImageUrl(naam);
         	course.setImageData(new byte[0]);

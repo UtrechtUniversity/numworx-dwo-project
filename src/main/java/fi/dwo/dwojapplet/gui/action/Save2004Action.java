@@ -81,9 +81,11 @@ public class Save2004Action extends GuiAction {
             scormChooser.html5.setText("Noordhoff HTML5");
         }
         this.sco = sco; // design error: sco is een parameter, geen field!  
+        scormChooser.setCurrentDirectory(DwoHelper.getCurrentDirectory());
 
         int result = scormChooser.showSaveDialog(GuiCreator.instance().getMainPanel());
         if (result == JFileChooser.APPROVE_OPTION) {
+            DwoHelper.setCurrentDirectory(scormChooser.getCurrentDirectory());
             File file = scormChooser.getSelectedFile();
             boolean is2004 = scormChooser.isScorm2004();
             boolean ishtml5 = scormChooser.isHTML5();
