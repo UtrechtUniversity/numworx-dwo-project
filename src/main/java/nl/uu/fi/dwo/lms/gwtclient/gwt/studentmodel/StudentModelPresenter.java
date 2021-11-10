@@ -7,8 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -31,12 +29,9 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.studentmodel.JsTeacherStudentModelView;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.jsutil.ValueSortedMap;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.FilterUtil;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.DomTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
@@ -44,22 +39,20 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
-public class StudentModelPresenter implements Comparator<DomStudentModelContext>, SelectionHandler<TreeItem> {
+public class StudentModelPresenter extends AbstractStudentModelPresenter implements Comparator<DomStudentModelContext>, SelectionHandler<TreeItem> {
 	private static final Logger LOG = Logger.getLogger(StudentModelPresenter.class.getName());
 
-    private Display view;
+    Display view;
     private Map<String, TaggedDomSchoolClass> schoolClasses = new HashMap<>();
     private Map<String, DomStudentModelContext> models = new LinkedHashMap<>();
     
-    public interface Display extends BasicDisplay {
+    public interface Display extends AbstractDisplay {
 
 		void showSchoolClasses(Map<String, TaggedDomSchoolClass> schoolClasses);
 		void showStudentModels(Map<String, String> models);
-		void showTree(DomTree<String> tree);
 		void setLoadingTreeMessage();
 		void setDescription(String string, IsWidget w);
 		void setTitle(String title);
@@ -72,29 +65,17 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
     }
     
     @Inject void setView(JsTeacherStudentModelView view) {
+        super.setView(view);
     	this.view = view;
     	bus.addHandlerToSource(SelectionEvent.getType(), view, this);
     }
-    @Inject PersonsService persons;
-    @Inject StudentModelService service;
     @Inject DescriptionPresenter description;
-
-	private final LoggingFailure FAILURE;
-
-	private final String lang;
-
-	private EventBus bus;
 
 	private Promise<DomStudentModelContext> currentModel;
 	private Promise<?> allModels;
 
-	private DwoGlobalVars dwoGlobalVars;
-    
-    @Inject StudentModelPresenter(EventBus bus, DwoGlobalVars vars) {
-    	this.bus = bus;
-        this.FAILURE = new LoggingFailure(LOG, bus);
-		lang = LocaleInfo.getCurrentLocale().getLocaleName();
-		this.dwoGlobalVars = vars;
+	@Inject StudentModelPresenter(EventBus bus, DwoGlobalVars vars) {
+	    super(bus, LOG, vars);
     }
     
     public void init() {
@@ -193,156 +174,14 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 	Promise<DomStudentModelContext> studentModelMethod(Promise<DomStudentModelContext> p) {
 		DomStudentModelStructure struc = p.getValue().getModelStructure();
 		if (struc.getActiveMethod() == null) return studentModel(p);
-		return service.getActiveMethod(struc.getActiveMethod()).then(m -> {
-			DomMethod method = m.getValue();
-			String t = method.getMethod();
-			view.setActiveMethod(method.getId());
-			Map<String, Set<Integer>> mf = filter.getOrDefault(method.key(), Collections.emptyMap());
-			DomTree<String> tree = new DomTree<>(t);
-			Map<String, DomTree<String>> map = new LinkedHashMap<>(), all = new HashMap<>();
-			tree.setChildren(map);
-			int bsize = method.books.size();
-			for(int i = 0; i < bsize; i++) {
-				String book = method.books.get(i);
-				if (! filter.isEmpty() && ! mf.containsKey(book) ) continue;
-				Set<Integer> mc = mf.getOrDefault(book, Collections.emptySet());
-				DomTree<String> tbook = new DomTree<>(book);
-				map.put(method.key() + "-" + book, tbook);
-				Map<String, DomTree<String>> bmap = new LinkedHashMap<>();
-				tbook.setChildren(bmap);
-				List<String> chapters = method.chapters.get(i);
-				int csize = chapters.size();
-				for (int j = 0; j < csize; j++) {
-					if (!mc.isEmpty() && !mc.contains(Integer.valueOf(j+1))) continue;
-					String chapter = chapters.get(j);
-					DomTree<String> ctree = new DomTree<>(chapter);
-					ctree.setChildren(new ValueSortedMap<String, DomTree<String>>(this::methodOrder));
-					String key = method.key() + "-" + book + "-" + (j+1);
-					bmap.put(key, ctree);
-					DomTree<String> weetjes = new DomTree<>(StudentResultsPresenter.BEGRIPPEN_EN_VAKTAAL);
-					weetjes.setChildren(new ValueSortedMap<String, DomTree<String>>(this::methodOrder));
-					ctree.getChildren().put(key + "-W", weetjes);
-					all.put(key, ctree);
-					all.put(key + "-W", weetjes);
-				}
-			}
-			insertChildren(all, struc.getCategories());
-			view.showTree(tree);
-			view.setTitle(FilterUtil.setFilter(filter, method));
-			return p;
+		return studentModelMethodTree(struc)
+		.flatMap(method -> {
+          view.setActiveMethod(method.getId());
+		  return p;
 		});
 	}
-	
-	int methodOrder(DomTree<String> a, DomTree<String> b) {
-		String as = a.getObject();
-		String bs = b.getObject();
-		boolean ab = as.equals(StudentResultsPresenter.BEGRIPPEN_EN_VAKTAAL);
-		boolean bb = bs.equals(StudentResultsPresenter.BEGRIPPEN_EN_VAKTAAL);
-		if (ab && !bb) return +1;
-		if (bb && !ab) return -1;
-		return as.compareTo(bs);
-	}
-	
-	
-	private void insertChildren(Map<String, DomTree<String>> all, List<DomStudentModelCategory> categories) {
-		for(DomStudentModelCategory cat: categories) {
-			insertChildrenObj(all, cat.getObjectives());
-		}	
-	}
 
-	private void insertChildrenObj(Map<String, DomTree<String>> all, List<DomStudentModelObj> objectives) {
-		for (DomStudentModelObj obj: objectives) {
-			if (obj.getObjectives() == null) { // leave
-				Map<String, Map<String, Set<Integer>>> methods = obj.getInfo().getMethods();
-				String title = getTitle(obj.getInfo());
-				String ext = title.startsWith("W:") ? "-W" : "";
-				methods.forEach(
-						(key, books) -> {
-							books.forEach( (book, chapters) -> chapters.forEach(chap -> {
-								String item = key + "-" + book + "-" + chap + ext;
-								all.computeIfPresent(item, (k, v) -> { 
-									DomTree<String> vv = new DomTree<>(title); vv.setChildren(null);
-									v.getChildren().put(obj.getInfo().getId(), vv);							
-								return v;});
-							}));});
-						
-							
-			} else {
-				insertChildrenObj(all, obj.getObjectives());
-			}}
-		}
-		
-
-	private Map<String, DomTree<String>> children(List<DomStudentModelObj> objectives, DomMethod method) {
-		if (objectives == null) 
-			return null;
-		Map<String, DomTree<String>> map = new LinkedHashMap<>();
-		for( DomStudentModelObj obj : objectives) {
-			if (! filter.isEmpty()) {
-				if (!checkFilter( obj.getInfo().getMethods(), method ) )
-						continue;
-			}
-			DomTree<String> tobj = new DomTree<>(getTitle(obj.getInfo()));
-			tobj.setChildren(children(obj.getObjectives(), method));
-			if (tobj.getChildren() == null || ! tobj.getChildren().isEmpty())
-				map.put(obj.getInfo().getId(), tobj);
-		}
-		return map;
-	}
-
-	private boolean checkFilter(Map<String, Map<String, Set<Integer>>> methods, DomMethod method) {
-		if (methods == null) return true;
-		return contains(filter, methods, method);
-	}
-
-	static boolean contains(Map<String, Map<String, Set<Integer>>> filter,
-			Map<String, Map<String, Set<Integer>>> methodes, DomMethod method) {
-		for (Map.Entry<String, Map<String, Set<Integer>>> entry : filter.entrySet()) {
-		    if (entry.getKey() == null || entry.getKey().isEmpty()) {
-			      final String currentKey = method.key();
-			      //if (methodes.values().stream().allMatch(Map::isEmpty)) return true;
-			      if ( methodes.entrySet().stream().allMatch(e -> e.getValue().isEmpty()||!e.getKey().equals(currentKey))) return true;
-		      continue;
-		    }		  
-			Map<String, Set<Integer>> map = methodes.getOrDefault(entry.getKey(), Collections.emptyMap());
-			if (map.isEmpty())
-			{ 
-			  continue;
-			}
-			for (Map.Entry<String, Set<Integer>> m : entry.getValue().entrySet()) {
-				Set<Integer> chapters = new TreeSet<>(map.getOrDefault(m.getKey(), Collections.emptySet()));
-				if(!m.getValue().isEmpty()) chapters.retainAll(m.getValue());
-				if (!chapters.isEmpty())
-					return true;
-			}
-		}
-		return false;
-	}
-
-	
-	
-	
-	private String getTitle(DomStudentModelContextInfo info) {
-		return getTitle(info, lang);
-	}
-
-	public static String getTitle(DomStudentModelContextInfo info, String locale) {
-		return getTitle(info.getTitle(), locale);
-	}
-	
-	
-	private static String getTitle(Map<String, String> title, String locale) {
-		String language = title.getOrDefault(locale, "");
-		if (language.isEmpty()) 
-			language = title.getOrDefault("en", "");
-		if (language.isEmpty() || "Untitled".equals(language))
-			language = title.getOrDefault("nl", "Untitled");
-		if (language.isEmpty())
-			language = "Untitled";
-		return language;
-	}
-
-	@JsMethod
+  @JsMethod
 	public void onGraph() {
 		LOG.info("on graph click");
 		currentModel.then(p -> {
@@ -357,7 +196,6 @@ public class StudentModelPresenter implements Comparator<DomStudentModelContext>
 	}
 	
 	
-	private Map<String,Map<String,Set<Integer>>> filter = Collections.emptyMap();
 	private Map<PersistenceId, Promise<FilterMethodDialog>> filterDialogs = new HashMap<>();
 		
 	@JsMethod

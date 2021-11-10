@@ -5,14 +5,11 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
-import javax.swing.text.View;
-
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
@@ -21,17 +18,14 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.web.bindery.event.shared.EventBus;
 
-import dagger.Lazy;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.studentmodel.JsTeacherSMClassResultsView;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.FilterUtil;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsPresenter;
@@ -56,13 +50,11 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
-public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
+public class SMClassResultsPresenter extends AbstractStudentModelPresenter implements SelectionHandler<TreeItem>{
 
 	private static final Logger LOG = Logger.getLogger(SMClassResultsPresenter.class.getName());
 	
-	public interface Display extends BasicDisplay {
-
-		void showTree(DomTree<String> tree);
+	public interface Display extends AbstractDisplay {
 
 		void showSchoolClasses(Map<String, TaggedDomSchoolClass> schoolClasses);
 
@@ -70,23 +62,15 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 
 		void setEmptyTreeMessage();
 
-		void setTitle(String title);
-
 		void setScores(Map<String, DomStudentModelObjectiveScore> result, boolean leaf);
 
 		void setMethod(String label);		
 	}
 	
 	private Display view;
-	@Inject StudentModelService service;
-	@Inject PersonsService persons;
-	final private EventBus bus;
 	private DomSchoolClass schoolClass;
-	private final LoggingFailure FAILURE;
-	private final String lang;
 	private JSONObject state;
 	
-	private Map<String, Map<String, Set<Integer>>> filter;
 	private DomStudentModelContext4Student currentModel;
 	
 	
@@ -95,14 +79,13 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 	private Map<String, DomStudentModelContextInfo> currentInfo = new HashMap<>();
 	
 	@Inject void setView(JsTeacherSMClassResultsView view) {
+	    super.setView(view);
 		this.view = view;
 		bus.addHandlerToSource(SelectionEvent.getType(), view, this);
 	}
 	
 	@Inject SMClassResultsPresenter(EventBus bus) {
-		this.bus = bus;
-		FAILURE = new LoggingFailure(LOG, bus);
-		lang = LocaleInfo.getCurrentLocale().getLocaleName();
+	    super(bus, LOG, null);
 	}
 
 	public void init(DomSchoolClass domSchoolClass, JavaScriptObject javaScriptObject) {
@@ -207,13 +190,17 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 	}
 
 	private void showModel() {
-		DomTree<String> tree = new DomTree<>("");
-		DomStudentModelStructure struc = currentModel.getModelStructure();
-		DomTree<String> root = new DomTree<>(getTitle(struc.getInfo()));
-		tree.setChildren(Collections.singletonMap(struc.getInfo().getId(), root));
-		Map<String, DomTree<String>> map = new LinkedHashMap<>();
-		root.setChildren(map);
-		service.getActiveMethod(struc.getActiveMethod()).then(m -> {
+        DomStudentModelStructure struc = currentModel.getModelStructure();
+		studentModelTree(struc);
+	}
+
+  protected Promise<DomMethod> studentModelTree(DomStudentModelStructure struc) {
+    DomTree<String> tree = new DomTree<>("");
+	DomTree<String> root = new DomTree<>(getTitle(struc.getInfo()));
+	tree.setChildren(Collections.singletonMap(struc.getInfo().getId(), root));
+	Map<String, DomTree<String>> map = new LinkedHashMap<>();
+	root.setChildren(map);
+	return service.getActiveMethod(struc.getActiveMethod()).then(m -> {
 			for ( DomStudentModelCategory cat : struc.getCategories()) {
 				DomTree<String> tcat = new DomTree<>(getTitle(cat.getInfo()));
 				tcat.setChildren(children(cat.getObjectives(), m.getValue()));
@@ -224,34 +211,8 @@ public class SMClassResultsPresenter implements SelectionHandler<TreeItem>{
 			view.setTitle(FilterUtil.setFilter(filter, m.getValue()));
 			return m;
 		});
-	}
+  }
  	
-	private Map<String, DomTree<String>> children(List<DomStudentModelObj> objectives, DomMethod method) {
-		if (objectives == null) 
-			return null;
-		Map<String, DomTree<String>> map = new LinkedHashMap<>();
-		for( DomStudentModelObj obj : objectives) {
-			if (! filter.isEmpty()) {
-				if (!checkFilter( obj.getInfo().getMethods(), method ) )
-						continue;
-			}
-			DomTree<String> tobj = new DomTree<>(getTitle(obj.getInfo()));
-			tobj.setChildren(children(obj.getObjectives(), method));
-			if (tobj.getChildren() == null || ! tobj.getChildren().isEmpty())
-				map.put(obj.getInfo().getId(), tobj);
-		}
-		return map;
-	}
-
-	private boolean checkFilter(Map<String, Map<String, Set<Integer>>> methods, DomMethod method) {
-		if (methods == null) return true;
-		return StudentModelPresenter.contains(filter, methods, method);
-	}
-
-	private String getTitle(DomStudentModelContextInfo info) {
-		return StudentModelPresenter.getTitle(info,lang);
-	}
-
 	private Promise<?> showSchoolClasses(DomSchoolClass domSchoolClass) {
 		schoolClass = domSchoolClass;
 		return persons.getTeachersSchoolClasses().then(this::stap1);		
