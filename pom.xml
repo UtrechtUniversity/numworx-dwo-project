@@ -625,7 +625,7 @@
 		<DWOplayerVersion>2.5.2-SNAPSHOT</DWOplayerVersion>
 		<DWOmAccessVersion>2.5.2-SNAPSHOT</DWOmAccessVersion>
 		<RegisterVersion>2.5.2-SNAPSHOT</RegisterVersion>
-		<DWOGwtClientVersion>2.5.1</DWOGwtClientVersion>
+		<DWOGwtClientVersion>2.5.2-SNAPSHOT</DWOGwtClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testeb3server</aws.environmentName>
@@ -643,7 +643,7 @@
 			<properties>
 				<aws.serverId>dev</aws.serverId>
 				<aws.applicationName>teuniz</aws.applicationName>
-				<aws.environmentName>teunis4</aws.environmentName>
+				<aws.environmentName>teunis6</aws.environmentName>
 			</properties>
 		</profile>
 		<profile>
