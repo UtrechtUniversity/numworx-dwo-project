@@ -24,4 +24,5 @@ class JsTeacherSMClassResultsDisplay {
 	native static String getTreeId();
 	native static void setScore(JavaScriptObject students, JavaScriptObject gemiddelde);
 	static native void setMethodLabel(String label);
+    static native boolean isMethod();
 }

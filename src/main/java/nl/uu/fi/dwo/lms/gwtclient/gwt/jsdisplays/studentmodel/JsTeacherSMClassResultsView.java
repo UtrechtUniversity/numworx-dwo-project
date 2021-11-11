@@ -115,4 +115,9 @@ public class JsTeacherSMClassResultsView extends AbstractStudentModelView implem
 		JsTeacherSMClassResultsDisplay.setMethodLabel(label);
 	}
 
+  @Override
+  public boolean isMethod() {
+    return JsTeacherSMClassResultsDisplay.isMethod();
+  }
+
 }

@@ -58,7 +58,6 @@ public class StudentModelPresenter extends AbstractStudentModelPresenter impleme
 		void setTitle(String title);
 		void setModelSelect(String id);
 		void setEmptyTreeMessage();
-		boolean isMethod();
 		void setMethod(String label);
 		void showMethods(List<DomMethod> methods);
 		void setActiveMethod(PersistenceId id);

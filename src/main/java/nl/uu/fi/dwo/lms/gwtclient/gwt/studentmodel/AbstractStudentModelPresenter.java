@@ -35,7 +35,8 @@ abstract class AbstractStudentModelPresenter {
   interface AbstractDisplay extends BasicDisplay {
     void showTree(DomTree<String> tree);
     void setTitle(String title);
-  
+    boolean isMethod();
+
   }
   
   public static String getTitle(DomStudentModelContextInfo info, String locale) {

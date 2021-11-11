@@ -71,7 +71,8 @@ public class SMClassResultsPresenter extends AbstractStudentModelPresenter imple
 	private DomSchoolClass schoolClass;
 	private JSONObject state;
 	
-	private DomStudentModelContext4Student currentModel;
+	private Promise<DomStudentModelContext4Student> currentModel;
+	private Promise<DomMethod> currentMethod;
 	
 	
 	private Promise<DomStudentModelScorePerTeacher> scores;
@@ -98,21 +99,22 @@ public class SMClassResultsPresenter extends AbstractStudentModelPresenter imple
 		DomStudentModelContext cid = new DomStudentModelContext();
 		cid.setId(pid);
 		
-		Promise<?> p2 = showSchoolModel(cid, domSchoolClass);
-		scores = getResults(cid, domSchoolClass, p2);
-		Promises.all(p1, p2, scores).then(null, FAILURE);
+		currentMethod = showSchoolModel(cid, domSchoolClass);
+		scores = getResults(cid, domSchoolClass, currentMethod);
+		Promises.all(p1, currentMethod, scores).then(null, FAILURE);
 	}
 
 	
-	private Promise<DomStudentModelScorePerTeacher> getResults(DomStudentModelContext cid, DomSchoolClass domSchoolClass, Promise<?> p2) {
+	private Promise<DomStudentModelScorePerTeacher> getResults(DomStudentModelContext cid, DomSchoolClass domSchoolClass, Promise<DomMethod> p2) {
 		DomStudentModelScorePerTeacher result = new DomStudentModelScorePerTeacher();
 		result.setSchoolClasses(Collections.singletonList(new DomMapEntry<PersistenceId, DomSchoolClass>(domSchoolClass.getId(), domSchoolClass)));
 		result.setStudentModelContexts(Collections.singletonList(new DomMapEntry<PersistenceId, DomStudentModelContext>(cid.getId(), cid)));
 // p2 (stap2) moet klaar zijn voordat stap3 mag 
-		return Promises.all(service.getScores(result), p2).map(list -> (DomStudentModelScorePerTeacher)list.get(0)).then(this::stap3);
+		Promise<DomStudentModelScorePerTeacher> p1 = service.getScores(result);
+        return Promises.all(p1, p2).flatMap(list -> stap3(p1,p2));
 	}
 
-	private Promise<?> showSchoolModel(DomStudentModelContextId cid, DomSchoolClass domSchoolClass) {
+	private Promise<DomMethod> showSchoolModel(DomStudentModelContextId cid, DomSchoolClass domSchoolClass) {
 		return service.getForClass(cid, domSchoolClass)
 				.then(p -> service.stap0(p, cid, domSchoolClass))
 				.then(this::stap2);		
@@ -133,21 +135,20 @@ public class SMClassResultsPresenter extends AbstractStudentModelPresenter imple
 	
 	
 	
-	private Promise<?> stap2(Promise<DomStudentModelContext4Student> p) {		
-		currentModel = p.getValue();
+	private Promise<DomMethod> stap2(Promise<DomStudentModelContext4Student> p) {
+	    this.currentModel = p;
+	    DomStudentModelContext4Student currentModel = p.getValue();
 		filter = currentModel.getFilter();
 		List<DomStudentModelCategory> categories = currentModel.getModelStructure().getCategories();
 		DomStudentModelContextInfo info = currentModel.getModelStructure().getInfo();
 		StudentResultsPresenter.setCurrentInfo(categories, info, currentInfo);
-		showModel();
-		return p;
+		return showModel(currentModel);
 	}
 
-	private Promise<DomStudentModelScorePerTeacher> stap3(Promise<DomStudentModelScorePerTeacher> scores) {
+	private Promise<DomStudentModelScorePerTeacher> stap3(Promise<DomStudentModelScorePerTeacher> scores, Promise<DomMethod> p2) {
 		students = scores.getValue().getStudents().stream().collect(Collectors.toMap(DomMapEntry<PersistenceId,DomStudent>::getKey, DomMapEntry<PersistenceId,DomStudent>::getValue));
 		String uuid = scores.getValue().getStudentModelContexts().get(0).getValue().getModelStructure().getInfo().getId();
-		PersistenceId pid = currentModel.getModelStructure().getActiveMethod();
-		return service.getActiveMethod(pid).then( q -> {
+		return p2.then( q -> {
 			view.setMethod(q.getValue().getMethod());
 			setScores(scores, uuid, false, q.getValue());		
 			return scores;
@@ -189,9 +190,11 @@ public class SMClassResultsPresenter extends AbstractStudentModelPresenter imple
 		return null;
 	}
 
-	private void showModel() {
+	private Promise<DomMethod> showModel(DomStudentModelContext4Student currentModel) {
         DomStudentModelStructure struc = currentModel.getModelStructure();
-		studentModelTree(struc);
+        if (view.isMethod() && struc.getActiveMethod() != null)
+          return studentModelMethodTree(struc);
+		return studentModelTree(struc);
 	}
 
   protected Promise<DomMethod> studentModelTree(DomStudentModelStructure struc) {
@@ -223,8 +226,7 @@ public class SMClassResultsPresenter extends AbstractStudentModelPresenter imple
 		boolean leaf = event.getSelectedItem().getChildCount() == 0;
 		String id = (String) event.getSelectedItem().getUserObject();
 		LOG.info("on selection " + id);
-		PersistenceId pid = currentModel.getModelStructure().getActiveMethod();
-		service.getActiveMethod(pid).then ( q -> {
+		currentMethod.then ( q -> {
 		DomMethod method = q.getValue();
 		scores.then(p -> { 
 				setScores(p, id, leaf, method);
@@ -234,22 +236,23 @@ public class SMClassResultsPresenter extends AbstractStudentModelPresenter imple
 	}
 
 	private Map<PersistenceId, Promise<FilterMethodDialog>> filterDialogs = new HashMap<>();
-
+	{
+	  filterDialogs.put(null, Promises.failed(new NullPointerException()));
+	}
 	@JsMethod
 	public void onFilter() {
-		if(currentModel == null) return;
+		if(currentModel == null || currentMethod == null) return;
 		LOG.info("on filter click");
 		Promise<FilterMethodDialog> p;
-		PersistenceId key = currentModel.getModelStructure().getActiveMethod();
-		if (key == null) return;
-		p = filterDialogs.computeIfAbsent(key, k -> service.getActiveMethod(k).map(FilterMethodDialog::new));
+		p = currentMethod.flatMap(m ->
+		    filterDialogs.computeIfAbsent(m.getId(), k -> Promises.resolved(new FilterMethodDialog(m))));
 		p.then( q -> {		
 			FilterMethodDialog filterPanel = q.getValue();
 			filterPanel.setValue(filter);
 			filterPanel.addCloseHandler(ev -> { 
 				LOG.info("filter settings closed");
 				filter = filterPanel.getValue();
-				showModel();
+				currentModel.flatMap(this::showModel);
 			});
 			filterPanel.show();
 			return null;
@@ -275,5 +278,6 @@ public class SMClassResultsPresenter extends AbstractStudentModelPresenter imple
 	@JsMethod
 	public void onMethod(boolean value) {
 		LOG.info("on method " + value);
+		currentModel.flatMap(this::showModel);
 	}
 }
