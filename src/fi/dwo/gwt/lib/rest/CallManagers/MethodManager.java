@@ -8,8 +8,11 @@ import fi.dwo.gwt.lib.rest.client.RestCallers.MethodRestCaller;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredStudentMethodRestCalller;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredTeacherMethodRestCaller;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.entities.RestMethod;
 import nl.uu.fi.dwo.rest.util.PathId;
 
@@ -33,16 +36,18 @@ public class MethodManager {
 	}
 
 
-	public Promise<DomMethod> getMethod(DomContext context, DomMethod id) {
+	public Promise<DomMethod> getMethod(DomContext context, DomMethod id, DomDwoProfileId profile) {
 		RestMethod rest = new RestMethod();
 		rest.setDomMethod(id);
+		rest.setDomDwoProfile(profile);
 		rest.setRestContext(context);
 		return F(service::getMethod, PathId.getId(context), rest);
 	}
 	
-	public Promise<List<DomMethod>> getList(DomContext context) {
-		RestContext rest = new RestContext();
+	public Promise<List<DomMethod>> getList(DomContext context, DomDwoProfile profile) {
+		RestDwoProfile rest = new RestDwoProfile();
 		rest.setRestContext(context);
+		rest.setDomDwoProfile(profile);
 		return F(service::getList, PathId.getId(context), rest); 
 	}
 }

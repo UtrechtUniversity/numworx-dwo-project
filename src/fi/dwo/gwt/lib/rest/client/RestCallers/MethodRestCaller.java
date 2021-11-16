@@ -5,12 +5,12 @@ import java.util.List;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
-import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.entities.RestMethod;
 
 public interface MethodRestCaller  {
 	void getMethod(String id, RestMethod rest, MethodCallback<DomMethod> callback);
-	default void getList(String id, RestContext rest, MethodCallback<List<DomMethod>> callback) {
+	default void getList(String id, RestDwoProfile rest, MethodCallback<List<DomMethod>> callback) {
 		callback.onSuccess(null, Collections.emptyList());
 	}
 }
