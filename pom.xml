@@ -203,6 +203,13 @@
 			<artifactId>verknippen</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+		    <groupId>de.javakaffee.msm</groupId>
+		    <artifactId>memcached-session-manager-tc8</artifactId>
+		    <version>2.3.2</version>
+		    <scope>test</scope>
+		</dependency>
+		
 	</dependencies>
 	<build>
 		<resources>
@@ -247,6 +254,15 @@
 				<artifactId>maven-dependency-plugin</artifactId>
 				<version>2.10</version>
 				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>process-resources</phase>
+						<goals><goal>copy-dependencies</goal></goals>
+						<configuration>
+							<includeGroupIds>de.javakaffee.msm,net.spy</includeGroupIds>
+							<outputDirectory>${project.build.directory}/${project.build.finalName}/.ebextensions</outputDirectory>
+						</configuration>
+					</execution>
 					<execution>
 						<id>copy</id>
 						<phase>process-resources</phase>
