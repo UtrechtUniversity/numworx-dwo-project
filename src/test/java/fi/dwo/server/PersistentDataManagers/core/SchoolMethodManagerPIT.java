@@ -12,6 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentMethod;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolMethod;
@@ -68,9 +69,10 @@ public class SchoolMethodManagerPIT {
 
 	private PersistentMethod createMethod() {
 		PersistentMethod method = new PersistentMethod();
+		PersistentDwoProfile profile = new PersistentDwoProfile(1L);
 		InputStream in = getClass().getResourceAsStream("/fi/dwo/server/mysql/Getal&Ruimte.json");
 		DomMethod dm = MethodManager.genson.deserialize(in, DomMethod.class);
-		method = MethodManager.toValue(dm, school);
+		method = MethodManager.toValue(dm, school, profile);
 		MethodManager.create(method);
 		return method;
 	}

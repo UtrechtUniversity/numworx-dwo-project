@@ -19,6 +19,7 @@ import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.Teach
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
+import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.MethodManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolMethodManager;
@@ -343,7 +344,8 @@ public class SecuredTeacherStudentModelManager {
 		String methodKey = DomMethod.key(result.getModelStructure().getActiveMethod());
 		if (filterKey != null && !Objects.equals(filterKey, methodKey)) {
 			try {
-				List<PersistentMethod> ms = MethodManager.findEntities(school);
+				PersistentDwoProfile profile = new PersistentDwoProfile(model.getDwoProfileID());
+                List<PersistentMethod> ms = MethodManager.findEntities(school, profile);
 				for(PersistentMethod m: ms) {
 					String mKey = DomMethod.key(m.buildPersistenceId());
 					if (Objects.equals(mKey, filterKey)) {

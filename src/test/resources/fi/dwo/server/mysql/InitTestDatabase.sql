@@ -1024,6 +1024,7 @@ CREATE TABLE `tblmethod` (
   `lastChangeTimeStamp` bigint(20) NOT NULL,
   `del` tinyint(4) NOT NULL,
   `method` mediumtext NOT NULL,
+  `dwoProfileID` int(11) NOT NULL,
   PRIMARY KEY (`methodID`),
   KEY `schoolID_idx` (`schoolID`),
   CONSTRAINT `schoolID` FOREIGN KEY (`schoolID`) REFERENCES `tblschool` (`schoolID`) ON DELETE NO ACTION ON UPDATE NO ACTION

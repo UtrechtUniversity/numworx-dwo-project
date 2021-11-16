@@ -12,6 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentMethod;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.mysql.DatabaseManager;
@@ -59,7 +60,8 @@ public class MethodManagerPIT {
 		PersistentMethod method = new PersistentMethod();
 		InputStream in = getClass().getResourceAsStream("/fi/dwo/server/mysql/Getal&Ruimte.json");
 		DomMethod dm = MethodManager.genson.deserialize(in, DomMethod.class);
-		method = MethodManager.toValue(dm, school);
+		PersistentDwoProfile profile = new PersistentDwoProfile(Long.valueOf(1));
+    method = MethodManager.toValue(dm, school, profile);
 		MethodManager.create(method);
 		return method;
 	}
@@ -110,4 +112,19 @@ public class MethodManagerPIT {
 		assertEquals(p.getMethodID(), m.getId().getIdString());
 	}
 
+	
+	@Test
+	public void testFindEntitiesSchool() {
+	  PersistentMethod p = create();
+	  List<PersistentMethod> list;
+	  list = MethodManager.findEntities(school, null);
+	  assertEquals(1, list.size());
+	  PersistentDwoProfile profile = new PersistentDwoProfile(1L);
+	  list = MethodManager.findEntities(school, profile);
+      assertEquals(1, list.size());
+       profile = new PersistentDwoProfile(2L);
+      list = MethodManager.findEntities(school, profile);
+      assertTrue(list.isEmpty());
+	  
+	}
 }

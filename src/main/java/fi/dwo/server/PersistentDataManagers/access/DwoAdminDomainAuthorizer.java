@@ -11,6 +11,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
@@ -90,6 +91,7 @@ public class DwoAdminDomainAuthorizer {
     DwoAdminState_C   addCourse(DomCourse course) throws Dwo2Exception;
     DomCourseFull     add(DomCourseFull course) throws Dwo2Exception;
 	List<DomStudentModelContext> getReducedStudentModels() throws Dwo2Exception;
+	List<DomMethod> getMethods() throws Dwo2Exception;
   }
   
   

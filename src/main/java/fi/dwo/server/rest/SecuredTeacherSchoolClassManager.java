@@ -1257,7 +1257,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             if (l == null) { l = new ArrayList<>(); aclmap.put(acl.getCourseID(), l); }
             l.add(acl);
           });
-          listCourse = courseMap.values();
+          //listCourse = courseMap.values();
           Iterator<PersistentCourse> iterator = listCourse.iterator();
           while (iterator.hasNext()) {
             PersistentCourse pc = iterator.next();

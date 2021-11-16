@@ -8,6 +8,7 @@ import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoA
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
+import fi.dwo.server.PersistentDataManagers.core.MethodManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentModelContextUtilManager;
@@ -15,6 +16,7 @@ import fi.dwo.server.rest.util.Digest;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
@@ -36,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -55,6 +58,8 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
+import fi.dwo.commons.persistence.entities.PersistentMethod;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer;
@@ -295,6 +300,14 @@ class DwoAdminBuilder
       }
       StudentModelContextUtilManager.merge(pModel);
       return pModel;
+  }
+
+  @Override
+  public List<DomMethod> getMethods() throws Dwo2Exception {
+    PersistentSchool school = new PersistentSchool(0L);
+    PersistentDwoProfile profile = instance.getContext().getAdminCtx().profile;
+    List<PersistentMethod> methods = MethodManager.findEntities(school, profile);
+    return methods.stream().map(MethodManager::toDom).collect(Collectors.toList());
   }
 
 }

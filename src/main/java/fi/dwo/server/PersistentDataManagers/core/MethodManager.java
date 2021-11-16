@@ -10,10 +10,12 @@ import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.validation.constraints.Null;
 
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentMethod;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.persistence.DwoEmfFactory;
@@ -176,7 +178,7 @@ public class MethodManager {
     	return dm;
     }
 
-    public static PersistentMethod toValue(DomMethod m, PersistentSchool school) {
+    public static PersistentMethod toValue(DomMethod m, PersistentSchool school, PersistentDwoProfile profile) {
     	PersistentMethod p = new PersistentMethod();
     	DomMethod dm = new DomMethod();
     	dm.method = m.method;
@@ -187,14 +189,20 @@ public class MethodManager {
     	p.setOptlock(m.getOptLock());
     	p.setSchoolID(m.standard ? NUL : school.getSchoolID());
     	p.setMethodID(m.getId().getIdString());
+    	if (profile != null)
+    	  p.setDwoProfileID(profile.getDwoProfileID());
     	return p;
     }
 
-	public static List<PersistentMethod> findEntities(PersistentSchool school) {
+	public static List<PersistentMethod> findEntities(PersistentSchool school, PersistentDwoProfile profile) {
 		EntityManager em = getEntityManager();
 		try {
-			TypedQuery<PersistentMethod> query = em.createNamedQuery("PersistentMethod.findBySchoolID", PersistentMethod.class);
+			TypedQuery<PersistentMethod> query = 
+			    em.createNamedQuery(
+			      profile != null ? "PersistentMethod.findBySchoolIDandProfile" : "PersistentMethod.findBySchoolID"
+			      , PersistentMethod.class);
 			query.setParameter("schoolID", school.getSchoolID());
+			if (profile != null) query.setParameter("dwoProfileID", profile.getDwoProfileID());
 			return query.getResultList();
 		} finally {
 			em.close();

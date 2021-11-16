@@ -1,5 +1,6 @@
 package fi.dwo.server.rest;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,11 +11,13 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpUtils;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
@@ -41,6 +44,7 @@ import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
+import fi.dwo.server.rest.util.CourseBuilder;
 import fi.servlet.dwomaccess.Subnet;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
@@ -67,6 +71,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @Path("/secure/student/coursesofschoolclass")
 public class SecuredStudentCoursesOfSchoolClassManager {
   final static Integer EXAM = Integer.valueOf(1);
+  private static final String PUBLIC_COURSE_GET_IMAGE = "../../../public/course/getImage";
 
   private static final Logger LOG =
       Logger.getLogger(SecuredStudentCoursesOfSchoolClassManager.class.getName());
@@ -141,7 +146,10 @@ public class SecuredStudentCoursesOfSchoolClassManager {
     Map<PersistenceId, DomClassCourse> classCourseMap = new HashMap<>();
     Map<PersistenceId, DomCourseStudent> courseMap = new HashMap<>();
     Date NOW = new Date();
-    listClassCourse.stream().forEach((scc) -> {
+    URI uri = URI.create(request.getRequestURL().toString());
+    String pfx = uri.resolve(PUBLIC_COURSE_GET_IMAGE).toString();
+    CourseBuilder cb = new CourseBuilder(pfx, rest.getRestContext().getDomHasRole(),false);
+   listClassCourse.stream().forEach((scc) -> {
       // if (scc.getViewState().equals(ViewState.invisible))
       // return;
       // FIXME after and before
@@ -162,7 +170,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
         if (profileID.equals(course.getDwoProfileID())) {
           DomClassCourse dcc = scc.buildDomClassCourse();
           classCourseMap.put(dcc.getId(), dcc);
-          DomCourseStudent dcs = course.buildDomCourseStudent();
+          DomCourseStudent dcs = cb.apply(course);
           courseMap.put(dcs.getId(), dcs);
         }
       }

@@ -10,6 +10,7 @@ import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.commons.persistence.entities.PersistentMethod;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
@@ -26,6 +27,7 @@ import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
+import fi.dwo.server.PersistentDataManagers.core.MethodManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
@@ -83,6 +85,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
@@ -829,4 +832,21 @@ public DomStudentModelContext patchStudentModel(DomStudentModelContextPatch domP
 	}
 	throw new WebApplicationException(Status.CONFLICT);
 }
+
+  @Override
+  public List<DomMethod> getMethods() throws Dwo2Exception {
+    PersistentSchool school = instance.getContext().getUserCtx().school;
+    PersistentDwoProfile profile = instance.getContext().getTeacherCtx().profile;
+    List<PersistentMethod> methods = MethodManager.findEntities(school, profile);
+    return methods.stream().map(MethodManager::toDom).collect(Collectors.toList());
+  }
+
+  @Override
+  public DomMethod addMethod(DomMethod domMethod) {
+    PersistentSchool school = instance.getContext().getUserCtx().school;
+    PersistentDwoProfile profile = instance.getContext().getTeacherCtx().profile;
+    PersistentMethod p = MethodManager.toValue(domMethod, school, profile);
+    MethodManager.create(p);
+    return MethodManager.toDom(p);
+  }
 }

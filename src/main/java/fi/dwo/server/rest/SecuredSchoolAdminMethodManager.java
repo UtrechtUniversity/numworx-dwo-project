@@ -10,13 +10,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
+import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentMethod;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.MethodManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
-import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 @RolesAllowed({"SCHOOLADMIN"})
@@ -25,12 +28,12 @@ public class SecuredSchoolAdminMethodManager {
     @PUT
     @Produces({"application/json"})
     @Path("/getList")
-    public List<DomMethod> getMethods(@Context SecurityContext sc, RestContext context) throws Dwo2Exception {
+    public List<DomMethod> getMethods(@Context SecurityContext sc, RestDwoProfile context) throws Dwo2Exception {
     	UserState_HR_R_S_SG_U hasRole = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(context.getRestContext().getDomHasRole());
     	hasRole.buildSchoolAdminTeacher();
-    	
+    	PersistentDwoProfile profile = DwoProfileManager.findEntity(MySQLPersistenceId.getNativeId(context.getDomDwoProfile()));
     	PersistentSchool school = hasRole.getSchool();
-    	List<PersistentMethod> methods = MethodManager.findEntities(school);
+    	List<PersistentMethod> methods = MethodManager.findEntities(school, profile);
     	return methods.stream().map(MethodManager::toDom).collect(Collectors.toList());
     }
 

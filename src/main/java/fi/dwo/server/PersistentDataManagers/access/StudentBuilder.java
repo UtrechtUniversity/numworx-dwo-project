@@ -4,6 +4,7 @@
 package fi.dwo.server.PersistentDataManagers.access;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentMethod;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
@@ -227,7 +228,8 @@ class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U
 	@Override
 	public List<DomStudentModelContext4Student> getStudentModelContextListForClass() throws Dwo2Exception {
         PersistentSchoolClass sc = instance.getContext().getStudentCtx().schoolClass;
-        long pid = instance.getContext().getStudentCtx().dwoProfile.getDwoProfileID().longValue();
+        PersistentDwoProfile dwoProfile = instance.getContext().getStudentCtx().dwoProfile;
+        long pid = dwoProfile.getDwoProfileID().longValue();
         List<PersistentStudentModelOfClass> p4Class = StudentModelOfClassManager.findEntities(sc);
         List<DomStudentModelContext4Student>  result = new ArrayList<>(p4Class.size());
         for(PersistentStudentModelOfClass item: p4Class) {
@@ -245,7 +247,7 @@ class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U
 				String methodKey = DomMethod.key(rr.getModelStructure().getActiveMethod());
 				if (filterKey != null && !Objects.equals(filterKey, methodKey)) {
 					try {
-						List<PersistentMethod> ms = MethodManager.findEntities(instance.getContext().getUserCtx().school);
+						List<PersistentMethod> ms = MethodManager.findEntities(instance.getContext().getUserCtx().school, dwoProfile);
 						for(PersistentMethod m: ms) {
 							String mKey = DomMethod.key(m.buildPersistenceId());
 							if (Objects.equals(mKey, filterKey)) {

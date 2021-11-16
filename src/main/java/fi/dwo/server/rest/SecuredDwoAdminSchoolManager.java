@@ -398,7 +398,7 @@ public class SecuredDwoAdminSchoolManager {
                 		StudentModelContextManager.destroy(sm.getModelID());
                 	}}
         // loop methods
-                List<PersistentMethod> mList = MethodManager.findEntities(school); // XXX ook met standaard 
+                List<PersistentMethod> mList = MethodManager.findEntities(school, null); // XXX ook met standaard 
                 for (PersistentMethod m: mList) {
                 	if (school.getSchoolID().equals(m.getSchoolID()))
                 		MethodManager.destroy(m.getMethodID());
