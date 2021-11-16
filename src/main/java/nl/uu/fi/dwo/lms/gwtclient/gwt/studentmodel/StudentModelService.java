@@ -187,12 +187,12 @@ public class StudentModelService implements DescriptionService {
 	public Promise<DomMethod> getActiveMethod(PersistenceId pid) {		
 		return methods.computeIfAbsent(pid, id -> { 			
 			DomMethod method = new DomMethod(id);
-			return methodMan.getMethod(context, method);
+			return methodMan.getMethod(context, method, profile.getValue());
 		});
 	}
 
 	public Promise<List<DomMethod>> getMethods() {
-		return methodMan.getList(context).then(p -> { 
+		return methodMan.getList(context, profile.getValue()).then(p -> { 
 			List<DomMethod> all = p.getValue();
 			for (DomMethod m: all) {
 				PersistenceId id = m.getId();

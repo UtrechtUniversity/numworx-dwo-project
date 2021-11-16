@@ -210,7 +210,7 @@ public class StudentResultsService implements StudentResults {
 	public Promise<DomMethod> getActiveMethod(DomStudentModelStructure structure) {		
 		return methods.computeIfAbsent(structure.getActiveMethod(), id -> { 			
 			DomMethod method = new DomMethod(id);
-			return methodMan.getMethod(context, method);
+			return methodMan.getMethod(context, method, profile.getValue());
 		});
 	}
 }
