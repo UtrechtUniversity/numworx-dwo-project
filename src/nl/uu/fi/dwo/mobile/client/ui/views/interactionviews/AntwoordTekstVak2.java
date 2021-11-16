@@ -418,8 +418,8 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 //			else
 			if (!boxMetRand)
 			{
-				achtergrondPanel.getElement().getStyle().setBackgroundColor("transparant");
-				basisPanel.getElement().getStyle().setBackgroundColor("transparant");
+				achtergrondPanel.getElement().getStyle().setBackgroundColor("transparent");
+				basisPanel.getElement().getStyle().setBackgroundColor("transparent");
 				basisPanel.getElement().getStyle().setProperty("border", "none");
 			}
 			basisPanel.add(achtergrondPanel);
@@ -445,7 +445,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			if (!boxMetRand)
 			{
 				basisPanel.getElement().getStyle().clearProperty("backgroundColor");
-				basisPanel.getElement().getStyle().setBackgroundColor("transparant");
+				basisPanel.getElement().getStyle().setBackgroundColor("transparent");
 				basisPanel.getElement().getStyle().setProperty("border", "none");
 			}
 			basisPanel.add(antwoordTF);

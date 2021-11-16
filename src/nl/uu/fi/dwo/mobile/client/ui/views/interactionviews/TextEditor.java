@@ -183,8 +183,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		//	hbox.getElement().getStyle().setProperty("border", "1px solid gray");
 		if (!boxMetRand) {
 				hbox.getElement().getStyle().setProperty("border", "none");
-				hbox.getElement().getStyle().setBackgroundColor("transparant");
-				content.getElement().getStyle().setBackgroundColor("transparant");
+				hbox.getElement().getStyle().setBackgroundColor("transparent");
+				content.getElement().getStyle().setBackgroundColor("transparent");
 		}
 		logging = null;
 		//shown = true;
