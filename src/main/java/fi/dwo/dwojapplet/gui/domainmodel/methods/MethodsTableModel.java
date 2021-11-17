@@ -28,6 +28,7 @@ import com.owlike.genson.Genson;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsTableModel.NewAction;
@@ -190,7 +191,7 @@ public class MethodsTableModel extends AbstractTableModel {
           if (panel.showDialog((JComponent) e.getSource())== JOptionPane.OK_OPTION) {
             DomMethod m = panel.getMethod();
             try {
-              SecureTeacherMethodManager.updateModel(m);
+              SecureTeacherMethodManager.updateModel(m, DWO.getDwoProfile());
             } catch (Dwo2Exception e1) {
               LOG.log(Level.SEVERE, "update failed", e1);
             }

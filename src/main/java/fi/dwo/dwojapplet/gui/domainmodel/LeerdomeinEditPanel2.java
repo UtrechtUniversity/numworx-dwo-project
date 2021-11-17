@@ -80,6 +80,7 @@ import fi.beans.numworxlf.JTextField;
 import fi.beans.numworxlf.JTree;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.ConfirmDialog;
 import fi.dwo.dwojapplet.gui.GuiConstants;
@@ -412,7 +413,7 @@ public class LeerdomeinEditPanel2 extends JPanel
             DomMethod dom = MethodsProperties.instance().getMethod(activeMethod);
             if (dom != null && !dom.standard) {
               dom.standard = true;
-              SecureTeacherMethodManager.updateModel(dom);
+              SecureTeacherMethodManager.updateModel(dom, DWO.getDwoProfile());
             }
             setModel(structure,PublishState.overt);
             prop.getCurrent().setPublishState(PublishState.overt);

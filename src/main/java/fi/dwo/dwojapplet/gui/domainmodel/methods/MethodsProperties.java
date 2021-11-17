@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 
 import com.owlike.genson.Genson;
 
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminMethodManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureSchoolAdminMethodManager;
@@ -66,7 +67,7 @@ public class MethodsProperties extends Vector<DomMethod> implements Comparator<D
   public DomMethod delete(int i) {
     DomMethod m = remove(i);
     try {     
-      SecureTeacherMethodManager.removeMethod(m);
+      SecureTeacherMethodManager.removeMethod(m, DWO.getDwoProfile());
     } catch (Dwo2Exception e) {
       LOG.log(Level.SEVERE, "failed remove", e);
     }
@@ -76,10 +77,10 @@ public class MethodsProperties extends Vector<DomMethod> implements Comparator<D
   
   private List<DomMethod> getCurrentList() throws Dwo2Exception {
     if (DwoHelper.isAdminLoggedIn())
-      return SecureDwoAdminMethodManager.getList();
+      return SecureDwoAdminMethodManager.getList(DWO.getDwoProfile());
     if (DwoHelper.isContact())
-      return SecureSchoolAdminMethodManager.getList();
-    return SecureTeacherMethodManager.getList();
+      return SecureSchoolAdminMethodManager.getList(DWO.getDwoProfile());
+    return SecureTeacherMethodManager.getList(DWO.getDwoProfile());
   }; 
   
   void refresh() {
@@ -180,7 +181,7 @@ public class MethodsProperties extends Vector<DomMethod> implements Comparator<D
         
         
       }
-      row = SecureTeacherMethodManager.addModel(row);
+      row = SecureTeacherMethodManager.addModel(row, DWO.getDwoProfile());
     } catch (Dwo2Exception e) {
       LOG.log(Level.SEVERE, "add method", e);
     }

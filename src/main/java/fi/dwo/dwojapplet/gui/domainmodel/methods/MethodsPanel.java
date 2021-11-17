@@ -42,6 +42,7 @@ import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JTextField;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherMethodManager;
@@ -359,7 +360,7 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
     Iterator<DomMethod> iter = update.iterator();
     while(iter.hasNext()) {
       try {
-        SecureTeacherMethodManager.updateModel(iter.next());
+        SecureTeacherMethodManager.updateModel(iter.next(), DWO.getDwoProfile());
         iter.remove();
       } catch (Dwo2Exception e) {
         LOG.log(Level.SEVERE, "update methods", e);
@@ -368,7 +369,7 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
     iter = delete.iterator();
     while(iter.hasNext()) {
       try {
-        SecureTeacherMethodManager.removeMethod(iter.next());
+        SecureTeacherMethodManager.removeMethod(iter.next(), DWO.getDwoProfile());
         iter.remove();
       } catch (Dwo2Exception e) {
         LOG.log(Level.SEVERE, "delete methods", e);
