@@ -66,7 +66,10 @@ import javax.swing.tree.DefaultTreeCellRenderer;
  *
  */
 public class CourseManagementPanel extends JPanel implements CenterSubPanel, ActionListener, CourseMap {
-     private static final Course STANDAARD_MODULE_PARENT = new Course();
+     public static final byte[] IMAGEURL = new byte[0];
+
+
+    private static final Course STANDAARD_MODULE_PARENT = new Course();
 
 
 	CourseManagementPanel(CourseMap map) {
@@ -897,7 +900,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
             DwoHelper.setCurrentDirectory(iconDial.getCurrentDirectory());
         	naam = iconDial.url.getText();
         	course.setImageUrl(naam);
-        	course.setImageData(new byte[0]);
+        	course.setImageData(IMAGEURL);
         	update = true;
         	return;
         }

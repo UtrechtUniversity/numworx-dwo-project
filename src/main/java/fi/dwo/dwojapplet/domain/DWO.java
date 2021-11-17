@@ -82,6 +82,7 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.BUILD;
 import fi.dwo.dwojapplet.domain.utils.CheckEmail;
 import fi.dwo.dwojapplet.gui.CenterSubPanel;
+import fi.dwo.dwojapplet.gui.CourseManagementPanel;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.IdleDetect;
@@ -2094,7 +2095,10 @@ LOG.info("time results = " + (-t) + " ms");
     		buildPersistentCourse(course, pc);
  // should work with DomCourseFull
     		DomCourseFull edit = pc.buildDomCourseFull();
-			edit = manager.update(edit);
+    		if (edit.getImageData() != CourseManagementPanel.IMAGEURL && !"".equals(edit.getImage())) 
+    		  edit.setImage(null);
+
+    		edit = manager.update(edit);
     		return true;
     	} catch (Dwo2Exception e) {
     	  GuiCreator.instance().ShowErrorDialog(this, e);
