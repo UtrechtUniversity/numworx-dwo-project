@@ -28,13 +28,18 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PersistentMethod.findAll", query = "SELECT p FROM PersistentMethod p"),
-    @NamedQuery(name = "PersistentMethod.findBySchoolID", query = "SELECT q FROM PersistentMethod q WHERE q.schoolID = 0 OR q.schoolID = :schoolID")
+    @NamedQuery(name = "PersistentMethod.findBySchoolID", query = "SELECT q FROM PersistentMethod q WHERE q.schoolID = 0 OR q.schoolID = :schoolID"),
+    @NamedQuery(name = "PersistentMethod.findBySchoolIDandProfile", query = "SELECT q FROM PersistentMethod q WHERE q.dwoProfileID = :dwoProfileID and (q.schoolID = 0 OR q.schoolID = :schoolID)")
 })
 @Cache( type=CacheType.SOFT, // Cache everything until the JVM decides memory is low. 
         size=10, // Use 64,000 as the initial cache size. 
         expiry=36000000 // 10 minutes 
 )
 public class PersistentMethod implements Serializable {
+
+    public PersistentMethod() {
+      dwoProfileID = Long.valueOf(77); // FIXME temporaly
+    }
 
     private static final long serialVersionUID = 1L;
 
@@ -53,6 +58,8 @@ public class PersistentMethod implements Serializable {
     @Basic(optional = false)
     @Column(name = "lastChangeTimeStamp", nullable = true)
     private Long lastChangeTimeStamp;
+    @Column(name = "dwoProfileID")
+    private Long dwoProfileID;
 
     @Basic(optional = false)
     @NotNull
@@ -110,5 +117,13 @@ public class PersistentMethod implements Serializable {
       private void now() {
         lastChangeTimeStamp = System.currentTimeMillis();
       }
+
+    public Long getDwoProfileID() {
+      return dwoProfileID;
+    }
+
+    public void setDwoProfileID(Long dwoProfileID) {
+      this.dwoProfileID = dwoProfileID;
+    }
 
 }
