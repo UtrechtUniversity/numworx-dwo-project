@@ -8,9 +8,12 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.entities.RestMethod;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.PathId;
@@ -25,9 +28,10 @@ public class SecureTeacherMethodManager {
   private static final Logger LOG =
       Logger.getLogger(SecureTeacherMethodManager.class.getName());
 
-  public static List<DomMethod> getList() throws Dwo2Exception {
-    RestContext rest = new RestContext();
+  public static List<DomMethod> getList(DomDwoProfile profile) throws Dwo2Exception {
+    RestDwoProfile rest = new RestDwoProfile();
     rest.setRestContext(getContext());
+    rest.setDomDwoProfile(profile);
     List<DomMethod> src =
         StoredRestManager.getInstance().getPutList("rest/sec:" + PathId.getId(getContext()) + "/teacher/method/getList",
             RestListClassTypes.DomMethod, rest);
@@ -45,10 +49,11 @@ public class SecureTeacherMethodManager {
     return authenticator().getContext();
   }
 
-  public static DomMethod addModel(DomMethod submit)
+  public static DomMethod addModel(DomMethod submit, DomDwoProfileId profile)
       throws Dwo2Exception {
     RestMethod rest = new RestMethod();
     rest.setRestContext(getContext());
+    rest.setDomDwoProfile(profile);
     rest.setDomMethod(submit);
 
     DomMethod result = StoredRestManager.getInstance()
@@ -58,10 +63,11 @@ public class SecureTeacherMethodManager {
     return result;
   }
 
-  public static DomMethod updateModel(DomMethod submit)
+  public static DomMethod updateModel(DomMethod submit, DomDwoProfileId profile)
 	      throws Dwo2Exception {
 	  	RestMethod rest = new RestMethod();
 	    rest.setRestContext(getContext());
+	    rest.setDomDwoProfile(profile);
 	    rest.setDomMethod(submit);
 
 	    DomMethod result = StoredRestManager.getInstance()
@@ -72,10 +78,11 @@ public class SecureTeacherMethodManager {
 	  }
   
 
-  public static Boolean removeMethod(DomMethod submit)
+  public static Boolean removeMethod(DomMethod submit, DomDwoProfileId profile)
 	      throws Dwo2Exception {
 	  	RestMethod rest = new RestMethod();
 	    rest.setRestContext(getContext());
+	    rest.setDomDwoProfile(profile);
 	    rest.setDomMethod(submit);
 
 	    Boolean result = StoredRestManager.getInstance()
@@ -86,9 +93,10 @@ public class SecureTeacherMethodManager {
 	  }
   
 
-	public static DomMethod get(DomMethod context) throws Dwo2Exception {
+	public static DomMethod get(DomMethod context, DomDwoProfileId profile) throws Dwo2Exception {
 		RestMethod rest = new RestMethod();
 	 rest.setRestContext(getContext());
+	 rest.setDomDwoProfile(profile);
 	 rest.setDomMethod(context);
 	 DomMethod src =
 			        StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/method/get",

@@ -8,8 +8,9 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
-import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.PathId;
 
@@ -17,9 +18,10 @@ public class SecureSchoolAdminMethodManager {
 	  private static final Logger LOG =
 		      Logger.getLogger(SecureSchoolAdminMethodManager.class.getName());
 
-		  public static List<DomMethod> getList() throws Dwo2Exception {
-		    RestContext rest = new RestContext();
+		  public static List<DomMethod> getList(DomDwoProfile profile) throws Dwo2Exception {
+		    RestDwoProfile rest = new RestDwoProfile();
 		    rest.setRestContext(getContext());
+		    rest.setDomDwoProfile(profile);
 		    List<DomMethod> src =
 		        StoredRestManager.getInstance().getPutList("rest/sec:" + PathId.getId(getContext()) + "/schooladmin/method/getList",
 		            RestListClassTypes.DomMethod, rest);
