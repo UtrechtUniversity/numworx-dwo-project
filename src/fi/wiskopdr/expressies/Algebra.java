@@ -1040,6 +1040,17 @@ public class Algebra
 		{
 			return false;
 		}
+		else if (e1 instanceof FunctieMV && e2 instanceof FunctieMV && ((FunctieMV)e1).geefFunctieNaam().equals(((FunctieMV)e2).geefFunctieNaam()))
+		{	int aantalVar = ((FunctieMV)e1).kinderen.length;
+			boolean kinderenGelijk = true;
+			for(int i=0 ; i<aantalVar ; i++)
+			{	kinderenGelijk = kinderenGelijk && zijnGelijk(((FunctieMV)e1).kinderen[i],((FunctieMV)e2).kinderen[i],vorm);
+			}
+			return kinderenGelijk;
+		}
+		else if (e1 instanceof FunctieMV || e2 instanceof FunctieMV)
+		{	return false;
+		}
 		else if (e1 instanceof Aftrekking && e2 instanceof Aftrekking && e1.kind1 instanceof BasisExpressie && e1.kind1.geefWaarde() == 0 && e2.kind1 instanceof BasisExpressie && e2.kind1.geefWaarde() == 0)
 		{
 			return zijnGelijk(e1.kind2, e2.kind2, vorm);
