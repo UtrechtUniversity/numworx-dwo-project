@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.Map;
+import java.util.Scanner;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.interaction.client.TekstElement;
@@ -137,16 +138,39 @@ public class ImageView implements IsWidget, TekstElement
 		}
 	}
 
+	/*   
+	  if (name.contains(SUFFIX+"w")) {
+      int i = name.indexOf(SUFFIX);
+      name = name.substring(i+1);
+      try (Scanner scan = new Scanner(name)) {
+        scan.useDelimiter("[vwh]");
+        i = scan.nextInt();
+        if ("/w".equals(ext)) return i;
+        return scan.nextInt(); // "/h"
+      }
+	 */
+	
 	private Object h() {
+	    int i = naam.indexOf(SUFFIX+"w");
+	    if (i>=0) {
+	      i = naam.indexOf("h", i);
+	      int end = naam.endsWith("v") ? (naam.length()-1) : naam.length();
+	      return Integer.parseInt(naam.substring(i+1, end));
+	    }
 		return map.getOrDefault(naam + "/h", map.get(strip(naam) + "/h"));
 	}
 
 	private Object w() {
-		return map.getOrDefault(naam + "/w", map.get(strip(naam) + "/w"));
+      int i = naam.indexOf(SUFFIX+"w");
+      if (i>=0) {
+        int end = naam.indexOf('h', i);
+        return Integer.parseInt(naam.substring(i+2, end));
+      }
+	  return map.getOrDefault(naam + "/w", map.get(strip(naam) + "/w"));
 	}
 	
 	public void zetVolledigeBreedte(int volleBreedte) {
-		Object object = map.get(naam + "/v");
+		Object object = v();
 		if (Boolean.TRUE.equals(object) && volleBreedte > 0 && scaledImage!=null ) {
 			Number width = null, height = null;
 			object = w();
@@ -163,6 +187,10 @@ public class ImageView implements IsWidget, TekstElement
 			}
 		}
 	}
+
+  protected Object v() {
+    return map.getOrDefault(naam + "/v", naam.contains(SUFFIX+"w") && naam.endsWith("v"));
+  }
 
 	public static Map<String, Object> getMap()
 	{
@@ -191,9 +219,9 @@ public class ImageView implements IsWidget, TekstElement
 		Object height = h();
 		if(height instanceof Number)
 		{
-			Object object = map.get(naam + "/v");
+			Object object = v();
 			if (Boolean.TRUE.equals(object) && vollebreedte > 0) {
-				Number width = (Number) map.getOrDefault(naam + "/w", Integer.valueOf(16));
+				Number width = (Number) w(); if (width==null) width = 16;
 				height = ((Number) height).intValue() * vollebreedte / width.intValue();
 			}
 			return ((Number) height).intValue();
@@ -205,7 +233,7 @@ public class ImageView implements IsWidget, TekstElement
 	public int getWidth() {
 		Object width = w();
 		if(width instanceof Number) {
-			Object object = map.get(naam + "/v");
+			Object object = v();
 			if (Boolean.TRUE.equals(object) && vollebreedte > 0) {
 				return vollebreedte;
 			}
