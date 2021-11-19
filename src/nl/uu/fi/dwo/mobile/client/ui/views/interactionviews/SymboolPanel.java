@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.TekstComponent;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 
@@ -112,9 +113,17 @@ public class SymboolPanel implements InteractionStub, FacetAware
 	{
 		
 		ctx = symboolCanvas.getContext2d();
+		double ratio = TekstComponent.getDeviceRatio(ctx);
 		symboolCanvas.setPixelSize(breedte, hoogte);
-		symboolCanvas.setCoordinateSpaceHeight(hoogte);
-		symboolCanvas.setCoordinateSpaceWidth(breedte);
+		if(ratio > 1.0) {
+			symboolCanvas.setCoordinateSpaceHeight((int)(hoogte*ratio));
+			symboolCanvas.setCoordinateSpaceWidth((int) (breedte*ratio));
+			ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+		} else {
+		//change the canvas dimensions
+			symboolCanvas.setCoordinateSpaceHeight(hoogte);
+			symboolCanvas.setCoordinateSpaceWidth(breedte);
+		}
 		
 		paintComponent(ctx);
 	}
