@@ -10,6 +10,8 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.user.client.ui.Widget;
 
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.CanvasBuilder;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PathBuilder;
 import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
@@ -30,7 +32,8 @@ public class SymboolPanel implements InteractionStub, FacetAware
 	int ashoogte = 12;
 	
 	private final Canvas symboolCanvas;
-	private Context2d ctx;
+	private PathBuilder ctx;
+	private Context2d ctx0;
 	
 	private int dikte, richting, type;
 	private CssColor kleur;
@@ -111,8 +114,8 @@ public class SymboolPanel implements InteractionStub, FacetAware
 	
 	public void initialize()
 	{
-		
-		ctx = symboolCanvas.getContext2d();
+		Context2d ctx;
+		ctx0 = ctx = symboolCanvas.getContext2d();
 		double ratio = TekstComponent.getDeviceRatio(ctx);
 		symboolCanvas.setPixelSize(breedte, hoogte);
 		if(ratio > 1.0) {
@@ -124,14 +127,14 @@ public class SymboolPanel implements InteractionStub, FacetAware
 			symboolCanvas.setCoordinateSpaceHeight(hoogte);
 			symboolCanvas.setCoordinateSpaceWidth(breedte);
 		}
-		
-		paintComponent(ctx);
+		this.ctx = new CanvasBuilder(ctx);
+		paintComponent(this.ctx);
 	}
 	
-	public void paintComponent(Context2d ctx)
+	public void paintComponent(PathBuilder ctx)
 	{	
-		ctx.setStrokeStyle(kleur);
-		ctx.setFillStyle(kleur);
+		ctx.setStrokeStyle(kleur.value());
+		ctx.setFillStyle(kleur.value());
 		ctx.setLineWidth(dikte);
 		
 		if(type == PIJL)
@@ -310,8 +313,8 @@ public class SymboolPanel implements InteractionStub, FacetAware
 				ctx.beginPath();
 				ctx.arc(x + 5, 6, 5, 3 * Math.PI / 2, Math.PI, true);
 				ctx.lineTo(x, hoogte / 2 - 3);
-				ctx.arc(x - 4, hoogte / 2 - 4, 4, 0, Math.PI / 2);
-				ctx.arc(x - 4, hoogte / 2 + 4, 4, 3 * Math.PI / 2, 0);
+				ctx.arc(x - 4, hoogte / 2 - 4, 4, 0, Math.PI / 2, false);
+				ctx.arc(x - 4, hoogte / 2 + 4, 4, 3 * Math.PI / 2, 0, false);
 				ctx.lineTo(x, hoogte - 6);
 				ctx.arc(x + 5, hoogte - 7, 5, Math.PI, Math.PI / 2, true);
 				ctx.stroke();
@@ -329,12 +332,12 @@ public class SymboolPanel implements InteractionStub, FacetAware
 			{
 				int x = breedte / 2;
 				ctx.beginPath();
-				ctx.arc(x - 5, 6, 5, 3 * Math.PI / 2, 2 * Math.PI);//kan het laatste argument hier ook 0 zijn?
+				ctx.arc(x - 5, 6, 5, 3 * Math.PI / 2, 2 * Math.PI, false);//kan het laatste argument hier ook 0 zijn?
 				ctx.lineTo(x, hoogte / 2 - 3);
 				ctx.arc(x + 4, hoogte / 2 - 4, 4, Math.PI, Math.PI / 2, true);
 				ctx.arc(x + 4, hoogte / 2 + 4, 4, 3 * Math.PI / 2, Math.PI, true);
 				ctx.lineTo(x, hoogte - 6);
-				ctx.arc(x - 5, hoogte - 7, 5, 0, Math.PI / 2);
+				ctx.arc(x - 5, hoogte - 7, 5, 0, Math.PI / 2, false);
 				ctx.stroke();
 				
 //				int x = this.getWidth()/2;
@@ -351,8 +354,8 @@ public class SymboolPanel implements InteractionStub, FacetAware
 				ctx.beginPath();
 				ctx.arc(6, y - 5, 5, Math.PI, Math.PI / 2, true);
 				ctx.lineTo(breedte / 2 - 3, y);
-				ctx.arc(breedte / 2 - 4, y + 4, 4, 3 * Math.PI / 2, 2 * Math.PI);
-				ctx.arc(breedte / 2 + 4, y + 4, 4, Math.PI, 3 * Math.PI / 2);
+				ctx.arc(breedte / 2 - 4, y + 4, 4, 3 * Math.PI / 2, 2 * Math.PI, false);
+				ctx.arc(breedte / 2 + 4, y + 4, 4, Math.PI, 3 * Math.PI / 2, false);
 				ctx.lineTo(breedte - 6, y);
 				ctx.arc(breedte - 7, y - 5, 5, Math.PI / 2, 0, true);
 				ctx.stroke();
@@ -369,12 +372,12 @@ public class SymboolPanel implements InteractionStub, FacetAware
 			{
 				int y = hoogte / 2;
 				ctx.beginPath();
-				ctx.arc(6, y + 5, 5, Math.PI, 3 * Math.PI / 2);
+				ctx.arc(6, y + 5, 5, Math.PI, 3 * Math.PI / 2, false);
 				ctx.lineTo(breedte / 2 - 3, y);
 				ctx.arc(breedte / 2 - 4, y - 4, 4, Math.PI / 2, 0, true);
 				ctx.arc(breedte / 2 + 4, y - 4, 4, Math.PI, Math.PI / 2, true);
 				ctx.lineTo(breedte - 6, y);
-				ctx.arc(breedte - 7, y + 5, 5, 3 * Math.PI / 2, 2 * Math.PI);
+				ctx.arc(breedte - 7, y + 5, 5, 3 * Math.PI / 2, 2 * Math.PI, false);
 				ctx.stroke();
 				
 //				int y = this.getHeight()/2;
@@ -388,11 +391,11 @@ public class SymboolPanel implements InteractionStub, FacetAware
 		}
 		else if(type == ELLIPS)
 		{
-			ctx.save();
+			ctx0.save(); // FIXME
 			ctx.beginPath();
-			ctx.scale(breedte, hoogte);
-			ctx.arc(0.5, 0.5, 0.5 - ((double) dikte)/((double) Math.min(breedte, hoogte)) , 0, 2 * Math.PI);
-			ctx.restore();
+			ctx0.scale(breedte, hoogte);
+			ctx.arc(0.5, 0.5, 0.5 - ((double) dikte)/((double) Math.min(breedte, hoogte)) , 0, 2 * Math.PI, false);
+			ctx0.restore();
 			ctx.stroke();			
 			 
 //			g2.draw(new Ellipse2D.Double(dikte, dikte, this.getWidth() - 2 * dikte, this.getHeight() - 2 * dikte));
@@ -412,9 +415,9 @@ public class SymboolPanel implements InteractionStub, FacetAware
 			{
 				int x = breedte / 2;
 				ctx.beginPath();
-				ctx.arc(x - 5, 6, 5, 3 * Math.PI / 2, 2 * Math.PI);//kan het laatste argument hier ook 0 zijn?
+				ctx.arc(x - 5, 6, 5, 3 * Math.PI / 2, 2 * Math.PI, false);//kan het laatste argument hier ook 0 zijn?
 				ctx.lineTo(x, hoogte - 6);
-				ctx.arc(x - 5, hoogte - 7, 5, 0, Math.PI / 2);
+				ctx.arc(x - 5, hoogte - 7, 5, 0, Math.PI / 2, false);
 				ctx.stroke();
 			}
 		}
