@@ -668,5 +668,15 @@
         		<http.port>8080</http.port>			
 			</properties>
 		</profile>
+		<profile>
+			<id>java17</id>
+			<dependencies>
+			 <dependency>
+	    		<groupId>javax.xml.bind</groupId>
+	    		<artifactId>jaxb-api-osgi</artifactId>
+	    		<version>2.2.7</version>
+			 </dependency>
+			</dependencies>
+		</profile>
 	</profiles>
 </project>
