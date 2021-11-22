@@ -15,6 +15,8 @@ import javax.json.JsonObject;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
+import fi.dwo.commons.util.DatatypeConverter;
+
 /**
  * The server-side implementation of the RPC service.
  */
@@ -26,7 +28,7 @@ public class Digest  {
       MessageDigest md5 = MessageDigest.getInstance("MD5");
       digest(value, md5);
       byte[] bytes = md5.digest();
-      return javax.xml.bind.DatatypeConverter.printHexBinary(bytes).toLowerCase();
+      return DatatypeConverter.printHexBinary(bytes).toLowerCase();
     } catch (NoSuchAlgorithmException e) {
     }
     return null;
@@ -82,7 +84,7 @@ public class Digest  {
     MessageDigest md5 = MessageDigest.getInstance("MD5");
     hash(value, md5);
     byte[] bytes = md5.digest();
-    return javax.xml.bind.DatatypeConverter.printHexBinary(bytes).toLowerCase();
+    return DatatypeConverter.printHexBinary(bytes).toLowerCase();
   }
 
   @SuppressWarnings("unchecked")
