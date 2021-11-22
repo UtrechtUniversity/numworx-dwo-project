@@ -94,7 +94,7 @@ public class ImageView implements IsWidget, TekstElement
 			if(object instanceof Number) height = (Number) object;
 			if(width != null && height != null)
 			{
-				object = map.get(naam + "/v");
+				object = v();
 				if (Boolean.TRUE.equals(object) && vollebreedte > 0) {
 					height = height.intValue() * vollebreedte / width.intValue();
 					width  = vollebreedte;
@@ -124,7 +124,7 @@ public class ImageView implements IsWidget, TekstElement
 			data = "data:" + type + ";base64," + data;
 			if(width != null && height != null)
 			{
-				object = map.get(naam + "/v");
+				object = v();
 				if (Boolean.TRUE.equals(object) && vollebreedte > 0) {
 					height = height.intValue() * vollebreedte / width.intValue();
 					width  = vollebreedte;
