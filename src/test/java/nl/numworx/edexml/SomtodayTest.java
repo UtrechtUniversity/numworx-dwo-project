@@ -55,17 +55,17 @@ public class SomtodayTest extends TestCase {
 	}
 
 	public void testSetLesGroupDocentSource() throws Exception {
-		InputStream in  = getClass().getResourceAsStream("/lesgroep_docent.tsv");
+		InputStream in  = getClass().getResourceAsStream("/lesgroep-docent.csv");
 		assertNotNull(in);
 		InputSource is = new InputSource();
 		is.setByteStream(in);
 		is.setEncoding("UTF-8");
 		builder.setLesGroupDocentSource(is);
 		Map<String,DomUserFull> docenten = builder.parseLeerkrachten();
-		assertEquals(9, docenten.size());
+		assertEquals(6, docenten.size());
 		Map<String,DomSchoolClassFull> result = builder.parseGroepen();
-		assertEquals(37, result.size());
+		assertEquals(29, result.size());
 		Map<String,?> memberships = builder.memberships();
-		assertEquals(9, memberships.size());
+		assertEquals(6, memberships.size());
 	}
 }
