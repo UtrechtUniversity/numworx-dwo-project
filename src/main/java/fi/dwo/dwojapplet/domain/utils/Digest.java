@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import fi.dwo.commons.util.DatatypeConverter;
+
 
 /**
  * The java client-side implementation.
@@ -20,7 +22,7 @@ public class Digest  {
     MessageDigest md5 = MessageDigest.getInstance("MD5");
     hash(value, md5);
     byte[] bytes = md5.digest();
-    return javax.xml.bind.DatatypeConverter.printHexBinary(bytes).toLowerCase();
+    return DatatypeConverter.printHexBinary(bytes).toLowerCase();
   }
 
   @SuppressWarnings("unchecked")
