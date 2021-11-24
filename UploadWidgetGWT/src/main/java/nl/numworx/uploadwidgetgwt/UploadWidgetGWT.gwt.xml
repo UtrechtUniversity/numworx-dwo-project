@@ -12,7 +12,7 @@
 
   <!-- Other module inherits                                      -->
    <inherits name="nl.uu.fi.dwo.interaction.Interaction" />
-   <inherits name='com.vaadin.pointerevents.PointerEvents' />
+   <inherits name="gwtupload.GWTUpload" />
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='nl.numworx.uploadwidgetgwt.client.UploadWidgetGWT' />

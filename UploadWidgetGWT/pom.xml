@@ -59,6 +59,11 @@
 		    <artifactId>pointer-events</artifactId>
 		    <version>1.0</version>
 		</dependency>
+		<dependency>
+		    <groupId>com.googlecode.gwtupload</groupId>
+		    <artifactId>gwtupload</artifactId>
+		    <version>1.0.3</version>
+		</dependency>
   </dependencies>
 
   <build>
