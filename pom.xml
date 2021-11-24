@@ -3,7 +3,7 @@
 	<groupId>fi.dwo</groupId>
 	<artifactId>DWO-apps</artifactId>
 	<packaging>war</packaging>
-	<version>2.4.10-SNAPSHOT</version>
+	<version>2.5.3-SNAPSHOT</version>
 	<name>DWO-apps ${project.version}</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
