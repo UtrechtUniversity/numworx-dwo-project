@@ -34,6 +34,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -46,6 +47,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.Digest;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentScoDataManager;
 import fi.dwo.gwt.lib.rest.CallManagers.StudentScoDataManager;
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
+import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import fi.wiskopdr.text.Text;
 
 public class SCORM_DWO5 extends SCORM_guest {
@@ -74,6 +76,7 @@ public class SCORM_DWO5 extends SCORM_guest {
 		this.bus = bus;
 		digest = new Digest();
 		this.confirmHandler = confirmHandler;
+		map.put(Memento.LEARNER_ID, PathId.getId(context));
 	}
 
 	enum Status { NORMAL, DIRTY, BUSY, RETRY };
@@ -372,9 +375,7 @@ log("Commit " + dirty.isEmpty());
 
 	@Override
 	public String GetValue(String name) {
-		String result = map.get(name);
-		if(result == null) return "";
-		return result;
+		return map.getOrDefault(name, "");
 	}
 
 	private void log(String msg, Throwable e) {
@@ -466,6 +467,11 @@ log("initialized " +result.keySet());
 			
 		}));
 		
+	}
+
+	@Override
+	public String getAuthorization() {
+		return RestAuthenticator.instance.getAuthorization();
 	}
 
 

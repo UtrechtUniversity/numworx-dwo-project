@@ -1494,4 +1494,8 @@ public JSONObject getShareMap() {
 		return register.stringValue();
 	}
 
+	public String getAuthorization() {
+		return api.getAuthorization();
+	}
+
 }

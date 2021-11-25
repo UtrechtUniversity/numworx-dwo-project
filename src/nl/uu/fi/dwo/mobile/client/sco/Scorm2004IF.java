@@ -26,4 +26,6 @@ public interface Scorm2004IF {
 	Role getRole();
 
 	void setScoID(String unitId);
+
+	default String getAuthorization() { return "None"; }
 }
