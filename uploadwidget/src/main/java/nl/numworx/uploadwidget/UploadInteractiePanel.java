@@ -2,11 +2,15 @@ package nl.numworx.uploadwidget;
 
 import java.awt.AWTEventMulticaster;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.Hashtable;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
 
+import org.cbook.cbookif.AssessmentMode;
 import org.cbook.cbookif.CBookEvent;
 import org.cbook.cbookif.CBookEventListener;
 
@@ -15,10 +19,10 @@ import fi.beans.wiskopdrbeans.CBookAware;
 import fi.beans.wiskopdrbeans.InteractieEditPanel;
 import fi.beans.wiskopdrbeans.InteractiePanel;
 
-public class UploadInteractiePanel implements InteractiePanel, CBookAware {
+public class UploadInteractiePanel extends JPanel implements InteractiePanel, CBookAware {
 
 	
-	@Inject UploadInteractiePanel() {}
+	@Inject UploadInteractiePanel() {super(null);}
 	@Inject Provider<InteractieEditPanel> editfactory;
 	@Inject Lazy<Upload> instance;
 	
@@ -48,7 +52,6 @@ public class UploadInteractiePanel implements InteractiePanel, CBookAware {
 
 	@Override
 	public int getIpId() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -57,15 +60,15 @@ public class UploadInteractiePanel implements InteractiePanel, CBookAware {
 		return instance.get().getScore();
 	}
 
+	private int scoreMax;
+	
 	@Override
 	public int getScoreMax() {
-		// TODO Auto-generated method stub
-		return 0;
+		return scoreMax;
 	}
 
 	@Override
 	public int[][] getScoreObjectives() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -76,13 +79,11 @@ public class UploadInteractiePanel implements InteractiePanel, CBookAware {
 
 	@Override
 	public boolean isCorrect() {
-		// TODO Auto-generated method stub
-		return false;
+		return scoreMax == 0;
 	}
 
 	@Override
 	public boolean isFout() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -100,22 +101,23 @@ public class UploadInteractiePanel implements InteractiePanel, CBookAware {
 
 	@Override
 	public void opnieuw() {
-		// TODO Auto-generated method stub
-
+		instance.get().reset();
 	}
 
 	@Override
 	public void setBounds(int arg0, int arg1, int arg2, int arg3) {
-		// TODO Auto-generated method stub
-
+		super.setBounds(arg0, arg1, arg2, arg3);
+		instance.get().setSize(arg2, arg3);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void setEditState(Hashtable arg0) {
-		// TODO Auto-generated method stub
-
+		zetMaat();
+		instance.get().setLaunchData(arg0, Collections.emptyMap());
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void setState(Hashtable arg0) {
 		instance.get().setState(arg0);
@@ -124,6 +126,7 @@ public class UploadInteractiePanel implements InteractiePanel, CBookAware {
 
 	@Override
 	public void start() {
+		zetMaat();
 		instance.get().start();
 
 	}
@@ -142,14 +145,15 @@ public class UploadInteractiePanel implements InteractiePanel, CBookAware {
 
 	@Override
 	public void zetMaat() {
-		// TODO Auto-generated method stub
-
+		removeAll();
+		JComponent c = instance.get().asComponent();
+		c.setSize(getSize());
+		add(c);
 	}
 
 	@Override
 	public void zetMode(int arg0) {
-		// TODO Auto-generated method stub
-
+		instance.get().setAssessmentMode(AssessmentMode.values()[arg0]);
 	}
 
 	@Override
@@ -158,10 +162,10 @@ public class UploadInteractiePanel implements InteractiePanel, CBookAware {
 
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void zetOpdracht(Hashtable arg0, String[] arg1, Hashtable arg2) {
-		// TODO Auto-generated method stub
-
+		instance.get().setLaunchData(arg0, arg2);
 	}
 
 	@Override

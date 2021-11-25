@@ -183,7 +183,7 @@ public class Upload extends JPanel implements CBookWidgetInstanceIF, CBookEventL
 			}
 			
 		} catch(IOException | ParserConfigurationException | SAXException io) {
-			
+			io.printStackTrace();
 		}
 		
 		

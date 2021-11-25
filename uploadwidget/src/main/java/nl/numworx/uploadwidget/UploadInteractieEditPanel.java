@@ -3,19 +3,28 @@ package nl.numworx.uploadwidget;
 import java.util.Hashtable;
 
 import javax.inject.Inject;
+import javax.swing.JPanel;
 
 import fi.beans.wiskopdrbeans.InteractieEditPanel;
 
-public class UploadInteractieEditPanel implements InteractieEditPanel {
+@SuppressWarnings("serial")
+public class UploadInteractieEditPanel extends JPanel implements InteractieEditPanel {
 
-	@Inject UploadInteractieEditPanel() { }
+	private final Editor editor;
+
+	@Inject UploadInteractieEditPanel(Editor editor) {
+		this.editor = editor;
+		add(editor);
+	}
 	
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Hashtable getEditState() {
 		Hashtable editstate = new Hashtable();
 		return editstate;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void setEditState(Hashtable arg0) {
 	}
