@@ -1,6 +1,7 @@
 package nl.numworx.uploadwidget;
 
 import java.awt.Dimension;
+import java.text.ParseException;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -18,11 +19,21 @@ import fi.beans.numworxlf.JComboBox;
 import fi.beans.numworxlf.JFormattedTextField;
 import fi.beans.numworxlf.JLabel;
 import fi.wiskopdr.ObjectiveChoiceButton;
+import nl.numworx.uploadwidget.shared.Constants;
 
 @SuppressWarnings("serial")
-public class Editor extends JPanel implements CBookWidgetEditIF {
+public class Editor extends JPanel implements CBookWidgetEditIF, Constants {
 	
-	
+	enum FileInputType { 
+		ANCHOR("anchor"),
+		BROWSER_INPUT("browser_input"),
+		BUTTON("button"),
+		LABEL("label"),
+		DROPZONE("drop zone");
+
+		FileInputType(String s) { string = s; }
+		final String string; public String toString() { return string; }
+	}
 	
 	
 	private JFormattedTextField maxField;
@@ -30,7 +41,7 @@ public class Editor extends JPanel implements CBookWidgetEditIF {
 	
 	private JFormattedTextField itemField;	
 	private JComboBox<String> mediatypes;
-	private JComboBox<String> widgettype;
+	private JComboBox<FileInputType> widgettype;
 	
 	@Inject Editor() {
 		super(null);
@@ -79,7 +90,7 @@ public class Editor extends JPanel implements CBookWidgetEditIF {
 		vb.add(hb);
 		hb = Box.createHorizontalBox();hb.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		hb.add(new JLabel("Stijl"));hb.add(Box.createHorizontalGlue());
-		widgettype = new JComboBox<>(new String[] { "anchor", "browser_input", "button", "custom", "dropzone", "label" });
+		widgettype = new JComboBox<>(FileInputType.values());
 		widgettype.setSelectedIndex(1);
 		widgettype.setMaximumSize(pref);widgettype.setPreferredSize(pref);
 		mediatypes.setMaximumSize(pref);mediatypes.setPreferredSize(pref);
@@ -117,9 +128,22 @@ public class Editor extends JPanel implements CBookWidgetEditIF {
 		return new Dimension(w, h);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Hashtable<String, ?> getLaunchData() {
-		Hashtable<String, ?> launchdata = new Hashtable<>();
+		Hashtable<String, Object> launchdata = new Hashtable<>();
+		try {
+			maxField.commitEdit();
+			max = ((Number) maxField.getValue()).intValue();
+			itemField.commitEdit();
+		} catch (ParseException e) {
+		}
+		launchdata.put(SCORE_MAX, max);
+		launchdata.put(ITEMS_MAX, itemField.getValue());
+		launchdata.put(MEDIATYPES, mediatypes.getSelectedItem());
+		launchdata.put(FILE_INPUT_TYPE, ((FileInputType) widgettype.getSelectedItem()).name());
+		if (ObjectiveChoiceButton.hasObjectiveChoices())
+			launchdata.putAll(objectives.getEditState(max));		
 		return launchdata;
 	}
 
@@ -147,13 +171,27 @@ public class Editor extends JPanel implements CBookWidgetEditIF {
 	@Override
 	public void setInstanceWidth(int arg0) {
 		this.w = arg0;
-
 	}
 
 	@Override
-	public void setLaunchData(Map<String, ?> arg0) {
-		
-
+	public void setLaunchData(Map<String, ?> h) {
+		if (h.containsKey(SCORE_MAX)) {
+			max = ((Number) h.get(SCORE_MAX)).intValue();
+			maxField.setValue(max);
+		}
+		if (h.containsKey(ITEMS_MAX)) {
+			itemField.setValue(h.get(ITEMS_MAX));
+		}
+		if (ObjectiveChoiceButton.hasObjectiveChoices())
+			objectives.setEditState(h);
+		if (h.containsKey(FILE_INPUT_TYPE)) {
+			FileInputType t = FileInputType.valueOf(h.get(FILE_INPUT_TYPE).toString());
+			widgettype.setSelectedItem(t);
+		}
+		if (h.containsKey(MEDIATYPES)) {
+			String media = h.get(MEDIATYPES).toString();
+			mediatypes.setSelectedItem(media);
+		}
 	}
 
 	@Override
