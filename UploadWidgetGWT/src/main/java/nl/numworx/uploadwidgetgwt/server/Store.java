@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import nl.numworx.uploadwidgetgwt.shared.AtomEntry;
+import nl.numworx.uploadwidget.shared.AtomEntry;
 
 public class Store {
 	private List<AtomEntry> entries = new Vector<>();

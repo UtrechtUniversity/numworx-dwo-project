@@ -1,5 +1,8 @@
 package nl.numworx.uploadwidget.module;
 
+import java.util.Locale;
+
+import javax.annotation.Nullable;
 import javax.inject.Singleton;
 
 import org.cbook.cbookif.CBookContext;
@@ -19,6 +22,7 @@ public interface Components {
 	@Component.Builder
 	interface Builder {
 		@BindsInstance Builder context(CBookContext context);
+		@BindsInstance Builder locale(@Nullable Locale locale);
 		Components build();
 	}
 

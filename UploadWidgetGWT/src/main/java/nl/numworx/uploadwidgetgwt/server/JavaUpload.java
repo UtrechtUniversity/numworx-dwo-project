@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import nl.numworx.uploadwidgetgwt.shared.AtomEntry;
+import nl.numworx.uploadwidget.shared.AtomEntry;
 
 @SuppressWarnings("serial")
 public class JavaUpload extends HttpServlet {

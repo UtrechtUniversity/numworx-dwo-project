@@ -13,7 +13,7 @@ import org.apache.commons.fileupload.FileItem;
 
 import gwtupload.server.UploadAction;
 import gwtupload.server.exceptions.UploadActionException;
-import nl.numworx.uploadwidgetgwt.shared.AtomEntry;
+import nl.numworx.uploadwidget.shared.AtomEntry;
 
 @SuppressWarnings("serial")
 public class Upload extends UploadAction {

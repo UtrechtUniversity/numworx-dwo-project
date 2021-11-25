@@ -28,7 +28,7 @@ public class UploadWidget extends JApplet implements WiskOpdrApplet, CBookWidget
 
 	public UploadWidget(Locale locale) {
 		setLocale(locale);
-		builder = DaggerComponents.builder();
+		builder = DaggerComponents.builder().locale(locale);
 	}
 
 	Components.Builder builder;

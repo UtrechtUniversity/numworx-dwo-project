@@ -50,6 +50,11 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+    	<groupId>${project.groupId}</groupId>
+    	<artifactId>uploadwidget-common</artifactId>
+    	<version>${project.version}</version>
+    </dependency>
+    <dependency>
 	    	<groupId>nl.uu.fi.dwo.mobile</groupId>
 	    	<artifactId>interaction</artifactId>
 	    	<version>0.1.7</version>
