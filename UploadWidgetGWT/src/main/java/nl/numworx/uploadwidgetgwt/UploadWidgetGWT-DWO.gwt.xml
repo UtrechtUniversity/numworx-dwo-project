@@ -14,6 +14,14 @@
    <inherits name="nl.uu.fi.dwo.interaction.Interaction" />
    <inherits name="gwtupload.GWTUpload" />
 
+    <replace-with class="nl.numworx.uploadwidgetgwt.client.UploadSession">
+        <when-type-is class="gwtupload.client.ISession.CORSSession" />
+    </replace-with>
+    <replace-with class="nl.numworx.uploadwidgetgwt.client.UploadSession">
+        <when-type-is class="gwtupload.client.ISession.Session" />
+    </replace-with>
+
+
   <!-- Specify the paths for translatable code                    -->
   <source path='client' />
 

@@ -1,7 +1,7 @@
 package nl.numworx.uploadwidgetgwt.server;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import nl.numworx.uploadwidget.shared.AtomEntry;
@@ -15,10 +15,14 @@ public class Store {
 		return entries;
 	}
 	
-	public void addEntry(AtomEntry entry) {
+	public void addEntry(AtomEntry entry, Map<String,String> tags) {
 		entries.add(entry);
 	}
 	// TODO remove...
+	
+	public void removeEntry(AtomEntry entry) {
+		
+	}
 	
 	private static final Store _instance = new Store();
 	

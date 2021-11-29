@@ -85,7 +85,7 @@ public class UploadWidgetGWT implements EntryPoint, InteractionStub {
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
-		
+		panel.setComRoot(comRoot);
 	}
 
 	@Override

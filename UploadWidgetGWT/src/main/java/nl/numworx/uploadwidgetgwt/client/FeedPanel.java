@@ -1,13 +1,18 @@
 package nl.numworx.uploadwidgetgwt.client;
 
+
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -19,8 +24,10 @@ import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
 
 import gwtupload.client.Utils;
+import nl.numworx.uploadwidgetgwt.shared.Constants;
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 
-public class FeedPanel extends Composite {
+public class FeedPanel extends Composite implements Constants {
 
 	
 	static final String ENTRY = "entry";
@@ -63,10 +70,23 @@ public class FeedPanel extends Composite {
 	};
 	private FlowPanel flow;
 	
+	private String registration = "123-321-323324";
+	private OpdrNavIF comRoot;
+	private String uuid;
+	private String learnerId;
+	
 	void doRequest() {
-		RequestBuilder req = new RequestBuilder(RequestBuilder.GET, "/feed.xml");
-		req.setCallback(response);
 		try {
+			UrlBuilder builder = null;
+			builder = new UrlBuilder();
+			builder.setProtocol(Location.getProtocol());
+			builder.setHost(Location.getHost());
+			builder.setPath("/dwo/dav/upload/dir/" + uuid + "/"+ registration + "/");
+			builder.setParameter("learnerId", learnerId);
+			RequestBuilder req = new RequestBuilder(RequestBuilder.GET, builder.buildString());			
+			req.setIncludeCredentials(true);
+			req.setHeader(AUTHORIZATION, comRoot.getContext().getString(AUTHORIZATION));
+			req.setCallback(response);
 			Request request = req.send();
 		} catch (RequestException e) {
 			GWT.log("doRequest", e);
@@ -76,6 +96,13 @@ public class FeedPanel extends Composite {
 	FeedPanel() {
 		flow = new FlowPanel(); 
 		initWidget(flow);
+	}
+
+	public void setComRoot(OpdrNavIF comRoot) {
+		this.comRoot = comRoot;
+		this.registration = comRoot.getContext().getString("registration");
+		this.uuid = comRoot.getUUID();
+		this.learnerId = comRoot.getLearnerId();
 		doRequest();
 	}
 	

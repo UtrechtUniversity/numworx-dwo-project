@@ -19,6 +19,7 @@
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <gwt.style>PRETTY</gwt.style>
+    <dbrest.url>http://localhost:8080/dwo/rest/</dbrest.url>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -55,19 +56,26 @@
     	<version>${project.version}</version>
     </dependency>
     <dependency>
+    	<groupId>${project.groupId}</groupId>
+    	<artifactId>uploadwidget-common</artifactId>
+    	<version>${project.version}</version>
+    	<classifier>sources</classifier>
+    </dependency>
+    <dependency>
 	    	<groupId>nl.uu.fi.dwo.mobile</groupId>
 	    	<artifactId>interaction</artifactId>
 	    	<version>0.1.7</version>
+	    	<scope>provided</scope>
     </dependency>
-	<dependency>
-		    <groupId>com.vaadin.addon</groupId>
-		    <artifactId>pointer-events</artifactId>
-		    <version>1.0</version>
-		</dependency>
 		<dependency>
 		    <groupId>com.googlecode.gwtupload</groupId>
 		    <artifactId>gwtupload</artifactId>
 		    <version>1.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>nl.uu.fi.dwo.rest</groupId>
+			<artifactId>DWO-jclient-lib</artifactId>
+			<version>2.5.3-SNAPSHOT</version>
 		</dependency>
   </dependencies>
 
@@ -100,6 +108,13 @@
           </modules>
         </configuration>
       </plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<attachClasses>true</attachClasses>
+                    <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
+				</configuration>
+			</plugin>
     </plugins>
   </build>
 

@@ -16,6 +16,13 @@
    <inherits name="gwtupload.GWTUpload" />
    <inherits name="nl.numworx.uploadwidget.UploadWidget" />
 
+    <replace-with class="nl.numworx.uploadwidgetgwt.client.UploadSession">
+        <when-type-is class="gwtupload.client.ISession.CORSSession" />
+    </replace-with>
+    <replace-with class="nl.numworx.uploadwidgetgwt.client.UploadSession">
+        <when-type-is class="gwtupload.client.ISession.Session" />
+    </replace-with>
+
   <!-- Specify the app entry point class.                         -->
   <entry-point class='nl.numworx.uploadwidgetgwt.client.UploadWidgetGWTDebug' />
 
@@ -33,5 +40,13 @@
     <extend-property name="locale" values="gr"/> 	
 -->
   	<set-property-fallback name="locale" value="nl"/> <!-- English is the default -->
+
+
+    <replace-with class="nl.numworx.uploadwidgetgwt.client.UploadSession">
+        <when-type-is class="gwtupload.client.ISession.CORSSession" />
+    </replace-with>
+    <replace-with class="nl.numworx.uploadwidgetgwt.client.UploadSession">
+        <when-type-is class="gwtupload.client.ISession.Session" />
+    </replace-with>
 
 </module>

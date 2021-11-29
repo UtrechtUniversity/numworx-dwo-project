@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app>
+  <context-param>
+  	<param-name>dbrest.url</param-name>
+	<param-value>${dbrest.url}</param-value>  
+  </context-param>
   <servlet>
   	<servlet-name>upload</servlet-name>
   	<servlet-class>nl.numworx.uploadwidgetgwt.server.Upload</servlet-class>
+  	<init-param>
+  		<param-name>corsDomainsRegex</param-name>
+  		<param-value>.*</param-value>
+  	</init-param>
   </servlet>
   <servlet>
   	<servlet-name>javaupload</servlet-name>
@@ -11,12 +19,16 @@
   
   <servlet-mapping>
   	<servlet-name>upload</servlet-name>
-    <url-pattern>*.gupld</url-pattern>  
+    <url-pattern>*.gupld</url-pattern>
+    <url-pattern>/servlet.gupld</url-pattern>
+    <url-pattern>/dwo/dav/upload/servlet.gupld</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
   	<servlet-name>javaupload</servlet-name>
-    <url-pattern>/feed.xml</url-pattern>  
+  	<url-pattern>/dir/*</url-pattern>
+    <url-pattern>/feed.xml</url-pattern>
+    <url-pattern>/dwo/dav/upload/dir/*</url-pattern> 
   </servlet-mapping>
 
   <!-- Default page to serve -->
