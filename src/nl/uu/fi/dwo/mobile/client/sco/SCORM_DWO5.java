@@ -138,6 +138,8 @@ log("setScoID " + scoID);
 			}
 			
 			map.clear();
+			map.put(Memento.LEARNER_ID, PathId.getId(context));
+
 			if(!dirty.isEmpty())
 				logger.severe("wij hebben een probleem setScoID "+ dirty);
 			dirty.clear(); // als niet clear dan hebben we een probleem!!!!
