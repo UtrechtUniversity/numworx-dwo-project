@@ -678,5 +678,29 @@
 			 </dependency>
 			</dependencies>
 		</profile>
+		<profile>
+			<id>upload</id>
+			<dependencies>
+				<dependency>
+					<groupId>nl.numworx.uploadwidget</groupId>
+					<artifactId>UploadWidgetGWT</artifactId>
+					<version>0.0.1-SNAPSHOT</version>
+					<classifier>classes</classifier>
+				</dependency>			
+			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<version>3.0.0</version>
+						<configuration>
+							<webXml>src/main/webxml/web.xml</webXml>
+						</configuration>	
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		
 	</profiles>
 </project>
