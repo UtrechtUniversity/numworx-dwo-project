@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+import gwtupload.client.IFileInput.FileInputType;
 import nl.numworx.uploadwidgetgwt.shared.Constants;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
@@ -189,7 +190,11 @@ public class UploadWidgetGWTDebug extends UploadWidgetGWT {
 		int height = 100;
 		
 		Map<String, Object> launchdata = new HashMap<>();
-		
+		launchdata.put(Constants.FILE_INPUT_TYPE, FileInputType.DROPZONE.name());
+		launchdata.put(Constants.MEDIATYPES, "gif, png, jpg, jpeg");
+		launchdata.put(Constants.ITEMS_MAX, 2);
+		launchdata.put(Constants.SCORE_MAX, 10);
+		launchdata.put(Constants.AUTO_SUBMIT, true);
 		
 		init(width, height, launchdata, Collections.emptyMap());
 		MockOpdrNav opdrnav = new MockOpdrNav();

@@ -1,13 +1,16 @@
 package nl.numworx.uploadwidgetgwt.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Hidden;
+import com.google.gwt.user.client.ui.InlineHTML;
 
+import gwtupload.client.IFileInput.FileInputType;
 import gwtupload.client.ISession;
 import gwtupload.client.ISession.Session;
 import gwtupload.client.IUploader;
@@ -34,10 +37,7 @@ class UploadPanel extends Composite implements ClickHandler, OnFinishUploaderHan
 		
 		// Basic sample
 		FlowPanel flow = new FlowPanel();
-		
-		ISession s = GWT.create(Session.class);
-		GWT.log(s.toString());
-		
+
 		uploader = new SingleUploader();
 		// options:
 		uploader.setAutoSubmit(false);
@@ -47,10 +47,13 @@ class UploadPanel extends Composite implements ClickHandler, OnFinishUploaderHan
 		UploaderConstants strs = GWT.create(I18NConstants.class);
 		uploader.setI18Constants(strs);
 		uploader.setServletPath("/dwo/dav/upload/servlet.gupld");
+		uploader.getElement().getStyle().setBottom(0, Style.Unit.PX);
+		uploader.getElement().getStyle().setPosition(Style.Position.ABSOLUTE);
+		
 		feed = new FeedPanel();		
 		
-		Button btn = new Button("refresh"); btn.addClickHandler(this);
-
+		InlineHTML btn = new InlineHTML("<i class=\"fa fa-refresh\"></i>"); btn.addClickHandler(this);
+		btn.getElement().getStyle().setFloat(Style.Float.RIGHT);
 		flow.add(btn);
 		flow.add(feed);
 		flow.add(uploader);
@@ -59,6 +62,10 @@ class UploadPanel extends Composite implements ClickHandler, OnFinishUploaderHan
 	}
 
 
+	void setValidExtensions(String ext) {
+		uploader.setValidExtensions(ext);
+	}
+	
 	@Override
 	public void onClick(ClickEvent event) {
 		feed.doRequest();
@@ -92,6 +99,20 @@ class UploadPanel extends Composite implements ClickHandler, OnFinishUploaderHan
 			uploader.setEnabled(false);
 		}
 		feed.setComRoot(comRoot);
+	}
+
+
+	void setFileInputType(FileInputType type) {
+		uploader.setFileInput(type.getInstance());
+	}
+
+	void setAutoSubmit(boolean b) {
+		uploader.setAutoSubmit(b);
+	}
+
+	void setItemsMax(int max) {
+		feed.setItemsMax(max);
+		uploader.setMultipleSelection(max > 1);
 	}
 
 }

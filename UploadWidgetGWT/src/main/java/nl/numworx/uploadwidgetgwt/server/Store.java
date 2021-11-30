@@ -1,7 +1,9 @@
 package nl.numworx.uploadwidgetgwt.server;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Vector;
 
 import nl.numworx.uploadwidget.shared.AtomEntry;
@@ -28,6 +30,30 @@ public class Store {
 	
 	public static Store instance() {
 		return _instance;
+	}
+
+	public void deleteByURL(String url) {
+		Iterator<AtomEntry> iter = getEntries().iterator();
+		while (iter.hasNext()) {
+			AtomEntry entry =  iter.next();
+			if (url.equals(entry.url)) 
+			{
+				iter.remove();
+				break;
+			}
+		}
+	}
+
+	public Optional<AtomEntry> findByURL(String url) {
+		Iterator<AtomEntry> iter = getEntries().iterator();
+		while (iter.hasNext()) {
+			AtomEntry entry =  iter.next();
+			if (url.equals(entry.url)) 
+			{
+				return Optional.of(entry);
+			}
+		}
+		return Optional.empty();
 	}
 	
 	

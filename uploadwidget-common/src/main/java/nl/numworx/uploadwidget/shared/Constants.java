@@ -5,4 +5,5 @@ public interface Constants {
 	String SCORE_MAX = "scoreMax";
 	String ITEMS_MAX = "itemsMax";
 	String FILE_INPUT_TYPE = "fileInputType";
+	String AUTO_SUBMIT = "autoSubmit";
 }

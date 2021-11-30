@@ -2,6 +2,8 @@ package nl.numworx.uploadwidgetgwt.client;
 
 
 
+import java.util.ArrayList;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
@@ -11,12 +13,11 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
@@ -24,15 +25,29 @@ import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
 
 import gwtupload.client.Utils;
+import nl.numworx.uploadwidget.shared.AtomEntry;
 import nl.numworx.uploadwidgetgwt.shared.Constants;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 
-public class FeedPanel extends Composite implements Constants {
+public class FeedPanel extends Composite implements Constants, RequestCallback {
 
 	
 	static final String ENTRY = "entry";
 	private  RequestCallback response = new RequestCallback() {
 
+		private void doClick(AtomEntry entry) {
+			RequestBuilder req = new RequestBuilder(RequestBuilder.DELETE, entry.url);
+			req.setIncludeCredentials(true);
+			req.setHeader(AUTHORIZATION, comRoot.getContext().getString(AUTHORIZATION));
+			req.setCallback(FeedPanel.this);
+			try {
+				Request request = req.send();
+			} catch (RequestException e) {
+				GWT.log("click response", e);
+			}
+		}
+		
+		
 		@Override
 		public void onResponseReceived(Request request, Response response) {
 		      String text = response.getText();
@@ -41,25 +56,35 @@ public class FeedPanel extends Composite implements Constants {
 		      GWT.log(String.valueOf(document));
 		      NodeList list = document.getElementsByTagName(ENTRY);
 		      flow.clear();
+		      ArrayList<AtomEntry> entries = new ArrayList<>(list.getLength());
 		      for(int i = 0; i < list.getLength(); i++) {
+		    	  AtomEntry entry = new AtomEntry();
 		    	  Node item = list.item(i);
 		    	  XMLParser.removeWhitespace(item);
 		    	  Node node = item.getFirstChild();
-		    	  String title = Utils.getXmlNodeValue(node);
+		    	  entry.title = Utils.getXmlNodeValue(node);
 		    	  node = node.getNextSibling();
 		    	  NamedNodeMap attributes = node.getAttributes();
-		    	  String url = attributes.getNamedItem("href").getNodeValue();
-		    	  String type = attributes.getNamedItem("type").getNodeValue();
+		    	  entry.url = attributes.getNamedItem("href").getNodeValue();
+		    	  entry.type = attributes.getNamedItem("type").getNodeValue();
 		    	  String length = attributes.getNamedItem("length").getNodeValue();
-		    	  
-		    	  GWT.log("found: " + title + " " + url + " " + type + " " + length);
-		    	  SafeHtml html = new SafeHtmlBuilder().appendEscaped(title).toSafeHtml();
-		    	  InlineLabel space = new InlineLabel(" ");
-		    	  Anchor a = new Anchor(html, url);
+		    	  entry.length = Long.parseLong(length);
+		    	  node = node.getNextSibling();
+		    	  entry.id = Utils.getXmlNodeValue(node);
+		    	  GWT.log("found: " + entry.title + " " + entry.url + " " + entry.type + " " + entry.length);
+		    	  SafeHtml html = new SafeHtmlBuilder().appendEscaped(entry.title).toSafeHtml();
+		    	  Anchor a = new Anchor(html, entry.url);
 		    	  a.setTarget("_blank");
 		    	  flow.add(a);
-		    	  flow.add(space);
+		    	  InlineHTML x = new InlineHTML(" <i class=\"fa fa-trash-o\"></i> ");
+		    	  x.addClickHandler(ev -> doClick(entry));
+		    	  flow.add(x);
+		    	  entries.add(entry);
 		      }
+//		      if (entries.size() > itemsMax) {
+//		    	  doClick(entries.get(0));
+//		      }
+		      
 		}
 
 		@Override
@@ -74,15 +99,15 @@ public class FeedPanel extends Composite implements Constants {
 	private OpdrNavIF comRoot;
 	private String uuid;
 	private String learnerId;
+	private int itemsMax = Short.MAX_VALUE;
 	
 	void doRequest() {
 		try {
 			UrlBuilder builder = null;
-			builder = new UrlBuilder();
-			builder.setProtocol(Location.getProtocol());
-			builder.setHost(Location.getHost());
+			builder = Location.createUrlBuilder();
 			builder.setPath("/dwo/dav/upload/dir/" + uuid + "/"+ registration + "/");
 			builder.setParameter("learnerId", learnerId);
+			builder.setHash(null);
 			RequestBuilder req = new RequestBuilder(RequestBuilder.GET, builder.buildString());			
 			req.setIncludeCredentials(true);
 			req.setHeader(AUTHORIZATION, comRoot.getContext().getString(AUTHORIZATION));
@@ -104,6 +129,26 @@ public class FeedPanel extends Composite implements Constants {
 		this.uuid = comRoot.getUUID();
 		this.learnerId = comRoot.getLearnerId();
 		doRequest();
+	}
+
+	@Override
+	public void onResponseReceived(Request request, Response response) {
+		int code = response.getStatusCode();
+		if (code >= 400) {
+			GWT.log("onResponseReceived " + request.toString() + " code " + code);
+			return;
+		}
+		doRequest();		
+	}
+
+	@Override
+	public void onError(Request request, Throwable exception) {
+		GWT.log("onError " + request.toString(), exception);
+		if (false) doRequest(); // FIXME 
+	}
+
+	public void setItemsMax(int max) {
+		itemsMax = max;
 	}
 	
 	

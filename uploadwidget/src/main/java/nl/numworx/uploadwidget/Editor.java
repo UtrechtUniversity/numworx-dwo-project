@@ -26,7 +26,7 @@ public class Editor extends JPanel implements CBookWidgetEditIF, Constants {
 	
 	enum FileInputType { 
 		ANCHOR("anchor"),
-		BROWSER_INPUT("browser_input"),
+		BROWSER_INPUT("browser input"),
 		BUTTON("button"),
 		LABEL("label"),
 		DROPZONE("drop zone");
@@ -143,7 +143,8 @@ public class Editor extends JPanel implements CBookWidgetEditIF, Constants {
 		launchdata.put(MEDIATYPES, mediatypes.getSelectedItem());
 		launchdata.put(FILE_INPUT_TYPE, ((FileInputType) widgettype.getSelectedItem()).name());
 		if (ObjectiveChoiceButton.hasObjectiveChoices())
-			launchdata.putAll(objectives.getEditState(max));		
+			launchdata.putAll(objectives.getEditState(max));
+		launchdata.put("premium", Boolean.TRUE);
 		return launchdata;
 	}
 
