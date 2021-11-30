@@ -406,6 +406,16 @@
 <!--                         <contextFile>src/test/tomcat/context-dwo_devel.xml</contextFile> -->
                             <contextFile>src/test/tomcat/${context.xml}</contextFile>
                             <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
+                        <webapps>
+                          <webapp>
+						    <groupId>nl.numworx.uploadwidget</groupId>
+						    <artifactId>UploadWidgetGWT</artifactId>
+						    <version>0.0.1-SNAPSHOT</version>
+                            <type>war</type>
+                            <contextPath>/dwo/dav/upload</contextPath>
+                            <asWebapp>true</asWebapp>
+                          </webapp>
+                        </webapps>
                     </configuration>
                     <dependencies>
                         <dependency>
