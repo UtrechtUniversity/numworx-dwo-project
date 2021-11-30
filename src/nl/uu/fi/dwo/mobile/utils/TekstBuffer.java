@@ -451,6 +451,11 @@ public class TekstBuffer
 // Wim: ander check-tekstantwoordvak in tekstmodus
 		case 13:
 			return x(map, new AntwoordTekstVak2(activity, currentVakGegevens, randomVarNamen, randomVarWaarden));
+		case 62:
+			//if(true) return x(map, new nl.numworx.uploadwidgetgwt.client.UploadWidgetGWT(currentVakGegevens, randomVarWaarden, volleBreedtes[huidigeKolom]));
+			return x(map, 
+					new StubView(activity, "UploadWidgetGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden)
+			);
 
 		
 		}
