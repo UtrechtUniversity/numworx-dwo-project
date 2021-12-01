@@ -229,7 +229,7 @@ class CourseMapper  implements Comparator<Course> {
       return NO_ACCESS;
     }
 
-    Course[] getObjectFromDCS(Collection<DomCourseStudent> data) {
+    private Course[] getObjectFromDCS(List<DomCourseStudent> data) {
       Course[] result = createArray(data.size());
       int i = 0;
       for(DomCourseStudent item: data) {
@@ -242,7 +242,7 @@ class CourseMapper  implements Comparator<Course> {
         System.arraycopy(result, 0, r, 0, i);
         result = r;
       }
-      Arrays.sort(result,this);
+      //Arrays.sort(result,this);
       return result;
     }
     
@@ -292,8 +292,8 @@ class CourseMapper  implements Comparator<Course> {
           return o1.getName().compareTo(o2.getName());
         return sort;
       }
-      if(o1.sequencenr == null) return -1;
-      if(o2.sequencenr == null) return +1;
+      if(o1.sequencenr == null) return +1;
+      if(o2.sequencenr == null) return -1;
       return o1.getName().compareTo(o2.getName());
     }
     
