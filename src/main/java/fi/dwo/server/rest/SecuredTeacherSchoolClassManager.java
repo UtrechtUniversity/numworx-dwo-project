@@ -1285,8 +1285,9 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                   .findFirst()
                   .orElse(ACL.NONE);
               if ( acl == ACL.NONE|| (parent && acl == ACL.ACCESS))
-                iterator.remove();
-                courseMap.remove(pc0.getCourseID(), pc0);
+              {  iterator.remove();
+                 courseMap.remove(pc0.getCourseID(), pc0);
+              }
             }
           }
           
