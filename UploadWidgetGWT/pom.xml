@@ -19,7 +19,7 @@
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <gwt.style>PRETTY</gwt.style>
-    <dbrest.url>http://localhost:8080/dwo/rest/</dbrest.url>
+    <dbrest.url>http://localhost:8080/dwo/</dbrest.url>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -77,6 +77,16 @@
 			<artifactId>DWO-jclient-lib</artifactId>
 			<version>2.5.3-SNAPSHOT</version>
 		</dependency>
+	<dependency>
+	    <groupId>software.amazon.awssdk</groupId>
+	    <artifactId>s3</artifactId>
+	    <version>2.15.2</version>
+	</dependency>
+	<dependency>
+	    <groupId>software.amazon.awssdk</groupId>
+	    <artifactId>sdk-core</artifactId>
+	    <version>2.15.2</version>
+	</dependency>
   </dependencies>
 
   <build>

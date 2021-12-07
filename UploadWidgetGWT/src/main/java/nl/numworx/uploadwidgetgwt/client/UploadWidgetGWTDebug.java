@@ -190,7 +190,7 @@ public class UploadWidgetGWTDebug extends UploadWidgetGWT {
 		int height = 100;
 		
 		Map<String, Object> launchdata = new HashMap<>();
-		launchdata.put(Constants.FILE_INPUT_TYPE, FileInputType.DROPZONE.name());
+		launchdata.put(Constants.FILE_INPUT_TYPE, FileInputType.BROWSER_INPUT.name());
 		launchdata.put(Constants.MEDIATYPES, "gif, png, jpg, jpeg");
 		launchdata.put(Constants.ITEMS_MAX, 2);
 		launchdata.put(Constants.SCORE_MAX, 10);

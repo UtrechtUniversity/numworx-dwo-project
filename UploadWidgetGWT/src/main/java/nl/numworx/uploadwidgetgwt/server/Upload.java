@@ -1,9 +1,11 @@
 package nl.numworx.uploadwidgetgwt.server;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.servlet.ServletConfig;
@@ -19,6 +21,8 @@ import nl.numworx.uploadwidget.shared.AtomEntry;
 import nl.numworx.uploadwidgetgwt.shared.Constants;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 
 @SuppressWarnings("serial")
 public class Upload extends UploadAction {
@@ -55,35 +59,34 @@ public class Upload extends UploadAction {
 		String registration = null;
 		String uuid = null;
 		String authorization = (String) request.getSession().getAttribute(Constants.AUTHORIZATION);
+		Optional<DomSchoolRoleAndClassV2> actor = Optional.empty();
 		rest.setBearerAuthString(authorization);
 		for(FileItem item: sessionFiles) {
 			if (item.isFormField()) {
 				String key = item.getFieldName();
 				if ("learnerId-0".equals(key)) {
 					learnerId = item.getString();
+					actor = JavaUpload.getActor(authorization, learnerId);
 				} else if ("registration-0".equals(key)) {
 					registration = item.getString();
 				} else if ("uuid-0".equals(key)) {
-					uuid = item.getString();
+					uuid = item.getString().replace('-', '/');
 				}
 				continue;
 			}
+			DomSchool school = actor.get().getSchool();
 			AtomEntry entry = new AtomEntry();
 			entry.title = item.getName();
 			entry.type  = item.getContentType();
 			entry.length = item.getSize();
-			StringBuffer requestURL = request.getRequestURL();
-			requestURL.setLength(requestURL.lastIndexOf("/")+1);
-			String guid = UUID.randomUUID().toString();
-			entry.id = guid;
-			requestURL.append("download/")
+			StringBuffer requestURL = new StringBuffer();		
+			requestURL.append(school.getId()).append("/")
 				.append(uuid).append("/")
 				.append(registration).append("/")
-				.append(guid).append("/")
 				.append(entry.title);
 			entry.url = requestURL.toString();
-			Map<String, String> map = Collections.singletonMap("learnerId", learnerId);
-			store.addEntry(entry, map);
+			Map<String, String> map = Collections.singletonMap("learnerid", learnerId);
+			store.addEntry(entry, map, item);
 			item.delete();
 		}
 		return super.executeAction(request, sessionFiles);

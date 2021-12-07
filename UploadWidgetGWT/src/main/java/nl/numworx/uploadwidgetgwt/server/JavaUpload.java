@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Base64;
+import java.util.Optional;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,8 +14,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import nl.numworx.uploadwidget.shared.AtomEntry;
 import nl.numworx.uploadwidgetgwt.shared.Constants;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 @SuppressWarnings("serial")
 public class JavaUpload extends HttpServlet implements Constants {
@@ -49,24 +60,92 @@ public class JavaUpload extends HttpServlet implements Constants {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 		String bearer = req.getHeader(AUTHORIZATION);
+		if (bearer == null) bearer = (String) req.getSession().getAttribute(AUTHORIZATION);
+		else req.getSession().setAttribute(AUTHORIZATION, bearer);
+		String path = req.getPathInfo();
+		int index = path.indexOf("/sec:");
+		String paths[] = path.substring(index+5).split("/");
+		Optional<DomSchoolRoleAndClassV2> actor = getActor(bearer, paths[0]);
+
+		if (!actor.isPresent()) {
+			resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+			return;
+			
+		}
+		DomSchool school = actor.get().getSchool();		
+		String prefix = getPrefix(paths, school);
 		
+		if (paths.length == 3) {
+			StringBuffer url = req.getRequestURL();
+			resp.setContentType("application/atom+xml");
+			resp.setCharacterEncoding("UTF-8");
+			PrintWriter out = resp.getWriter();
+			out.print(feed);
+			for (AtomEntry entry: store.getEntries(prefix)) {
+				out.println("<entry>");
+				out.print(" <title>");out.print(entry.title);out.println("</title>");
+				out.print(" <link href='");out.print(url + entry.url);out.print("' type='");out.print(entry.type);out.print("' length='");out.print(entry.length);out.println("' />");
+				out.print(" <id>urn:uuid:");out.print(entry.id);out.println("</id>");
+				out.println("</entry>");
+			}
+			out.print(tail);
+			return;
+		} 
+		if (paths.length == 4) {
+			Optional<AtomEntry> found = store.findByURL(prefix + paths[3]);
+			if (store.ownedBy(found, actor)) {
+				resp.sendRedirect(found.get().url);
+				return;
+			}
+ 		} 
+		
+		resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+	}
+
+	private String getPrefix(String[] paths, DomSchool school) {
+		return school.getId() + "/" + paths[1].replace('-', '/') + "/" + paths[2] + "/";
+	}
+
+	static Optional<DomSchoolRoleAndClassV2> getActor(String bearer, String pathid) {
 		StoredRestManager rest = StoredRestManager.getInstance(); // Should not be a singleton!
+		DomContext context = new DomContext();
+		context.setRealm(null);
+		context.setDomHasRole(new DomHasRole());
+		rest.getAuthenticator().setContext(context);
 		if (bearer != null && bearer.startsWith("Bearer"))
 		{
 			rest.setBearerAuthString(bearer.substring(6));
+		} else if (bearer != null && bearer.startsWith("Basic")) {
+			bearer = new String(Base64.getDecoder().decode(bearer.substring(6)));
+			String[] split = bearer.split(":", 2);
+			rest.setBasicAuthString(split[0], split[1], null);
 		}
-		resp.setContentType("application/atom+xml");
-		resp.setCharacterEncoding("UTF-8");
-		PrintWriter out = resp.getWriter();
-		out.print(feed);
-		for (AtomEntry entry: store.getEntries()) {
-			out.println("<entry>");
-			out.print(" <title>");out.print(entry.title);out.println("</title>");
-			out.print(" <link href='");out.print(entry.url);out.print("' type='");out.print(entry.type);out.print("' length='");out.print(entry.length);out.println("' />");
-			out.print(" <id>urn:uuid:");out.print(entry.id);out.println("</id>");
-			out.println("</entry>");
+		DomUserFull user;
+		DomSchoolsRolesAndClassesV2 logins;
+		DomHasRole hasRole;
+		try {
+			user   = SecureUserAccountManager.getAccountData();
+			logins = SecureUserAccountLoginsManager.getSchoolLogins();
+		} catch (Dwo2Exception e) {
+			return Optional.empty();
 		}
-		out.print(tail);
+		//search paths[0] in logins for school;
+		hasRole = logins.getActiveSchoolRoleAndClass().getHasRole();
+		String current = getPathId(hasRole);
+		if (current.equals(pathid) && user.getId().equals(hasRole.getUserId()))
+		{
+			context.setDomHasRole(hasRole);
+			return Optional.of(logins.getActiveSchoolRoleAndClass());
+		}
+		return Optional.empty();
+	}
+
+	public static String getPathId(DomHasRole hasRole) {
+		try {
+			return "1" + hasRole.getId().getIdString().substring(23).replace(';', '-');
+		} catch (Exception e) {
+			return "-";
+		}
 	}
 
 	@Override
@@ -95,8 +174,26 @@ public class JavaUpload extends HttpServlet implements Constants {
 
 	@Override
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		super.doDelete(req, resp);
+		String bearer = req.getHeader(AUTHORIZATION);
+		String path = req.getPathInfo();
+		int index = path.indexOf("/sec:");
+		String paths[] = path.substring(index+5).split("/");
+		if (paths.length == 4) {
+			Optional<DomSchoolRoleAndClassV2> actor = getActor(bearer, paths[0]);
+			if (actor.isPresent()) {
+				DomSchool school = actor.get().getSchool();
+				String url = getPrefix(paths, school) + paths[3];
+				Optional<AtomEntry> item = store.findByURL(url);
+				if (store.ownedBy(item, actor)) {
+					store.deleteByURL(url);
+					resp.sendError(HttpServletResponse.SC_NO_CONTENT);
+					return;					
+				}
+			} else {
+				resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+			}
+ 		}
+		resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 	}
 
 }

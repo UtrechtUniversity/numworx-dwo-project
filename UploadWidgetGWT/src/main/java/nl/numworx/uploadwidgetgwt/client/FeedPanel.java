@@ -105,8 +105,7 @@ public class FeedPanel extends Composite implements Constants, RequestCallback {
 		try {
 			UrlBuilder builder = null;
 			builder = Location.createUrlBuilder();
-			builder.setPath("/dwo/dav/upload/dir/" + uuid + "/"+ registration + "/");
-			builder.setParameter("learnerId", learnerId);
+			builder.setPath("/dwo/dav/upload/dir/sec:" + learnerId + "/"  + uuid + "/"+ registration + "/");
 			builder.setHash(null);
 			RequestBuilder req = new RequestBuilder(RequestBuilder.GET, builder.buildString());			
 			req.setIncludeCredentials(true);

@@ -29,4 +29,15 @@
         <when-type-is class="gwtupload.client.ISession.Session" />
     </replace-with>
 
+<!-- language, independent of country -->
+  	<extend-property name="locale" values="en"/>
+    <extend-property name="locale" values="nl"/> 	
+    <extend-property name="locale" values="fr"/> 	
+ <!--
+    <extend-property name="locale" values="de"/> 	
+    <extend-property name="locale" values="es"/> 	
+    <extend-property name="locale" values="gr"/> 	
+-->
+  	<set-property-fallback name="locale" value="nl"/> <!-- English is the default -->
+
 </module>
