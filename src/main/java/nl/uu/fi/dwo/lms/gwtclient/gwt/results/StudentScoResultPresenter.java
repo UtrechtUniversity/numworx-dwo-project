@@ -8,6 +8,7 @@ import com.google.gwt.user.client.Window.Location;
 import com.google.web.bindery.event.shared.EventBus;
 
 import dagger.Lazy;
+import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -108,6 +109,9 @@ public class StudentScoResultPresenter {
     
     userState.put("cmi.mode", "review");
     userState.put("dme.abo_type", dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getAboType().name());
+    userState.put("dme.authorization", RestAuthenticator.instance.getAuthorization());
+    String learnerId = getLearnerId(studentid.toString(), domschoolclass.getId());
+    userState.put("cmi.learner_id", learnerId);
     setAPI(this);
     LOG.info("view.init " + context + "  " + view);
     resultState = context;
@@ -116,7 +120,18 @@ public class StudentScoResultPresenter {
     updateFrame(ssc.getStudentSco());
   }
 
-  public void setView(Display aView) {
+  /* learnerid proxy, geen hasrole voor deze student, maar wel z'n schoolklas waar die in zit */
+  
+  private String getLearnerId(String studentid, String schoolclassid) {
+	int index;
+	index = studentid.lastIndexOf(";");
+	studentid = studentid.substring(index+1);
+	index = schoolclassid.lastIndexOf(";");
+	schoolclassid = schoolclassid.substring(index+1);
+	return "2-" + studentid + "-" + schoolclassid;
+}
+
+public void setView(Display aView) {
     view = aView;
   }
 
