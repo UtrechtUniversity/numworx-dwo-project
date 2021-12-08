@@ -128,5 +128,12 @@ public class SCORM_2004_API implements Scorm2004IF {
 	    }
 	  }
 
+	@Override
+	public String getAuthorization() {
+		String authorization = GetValue("dme.authorization");
+		if (authorization.isEmpty()) return "None";
+		return authorization;
+	}
+
 
 }
