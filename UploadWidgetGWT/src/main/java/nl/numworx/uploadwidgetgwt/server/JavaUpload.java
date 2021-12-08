@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.ServletException;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import nl.numworx.uploadwidget.shared.AtomEntry;
 import nl.numworx.uploadwidgetgwt.shared.Constants;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
@@ -21,10 +24,14 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 @SuppressWarnings("serial")
 public class JavaUpload extends HttpServlet implements Constants {
@@ -126,9 +133,6 @@ public class JavaUpload extends HttpServlet implements Constants {
 		try {
 			user   = SecureUserAccountManager.getAccountData();
 			logins = SecureUserAccountLoginsManager.getSchoolLogins();
-		} catch (Dwo2Exception e) {
-			return Optional.empty();
-		}
 		//search paths[0] in logins for school;
 		hasRole = logins.getActiveSchoolRoleAndClass().getHasRole();
 		String current = getPathId(hasRole);
@@ -136,6 +140,28 @@ public class JavaUpload extends HttpServlet implements Constants {
 		{
 			context.setDomHasRole(hasRole);
 			return Optional.of(logins.getActiveSchoolRoleAndClass());
+		} else {
+			if (pathid.startsWith("2-")) {
+				context.setDomHasRole(hasRole);
+				String [] split = pathid.split("-");
+				split[1] = "MYSQL;PersistentUser;"+split[1];
+				split[2] = "MYSQL;PersistentSchoolClass;" + split[2];
+				List<DomStudent> students = SecureTeacherSchoolClassManager.getTeachersStudents();
+				Optional<DomStudent> b1 = students.stream().filter(s -> s.getId().toString().equals(split[1])).findAny();
+				List<DomSchoolClass> classes = SecureTeacherSchoolClassManager.getTeachersSchoolClasses();
+				Optional<DomSchoolClass> b2 = classes.stream().filter(c -> c.getId().getIdString().equals(split[2])).findAny();
+				if (b1.isPresent() && b2.isPresent()) {
+					DomSchoolRoleAndClassV2 result = logins.getActiveSchoolRoleAndClass();
+					result.getHasRole().setId(null);
+					result.getHasRole().setSchoolGroupId(null);
+					result.getHasRole().setUserId(b1.get().getId());
+					result.setSchoolClass(b2.get());
+					return Optional.of(result);
+				}
+			}
+		}
+		} catch (Dwo2Exception e) {
+			return Optional.empty();
 		}
 		return Optional.empty();
 	}
@@ -143,6 +169,8 @@ public class JavaUpload extends HttpServlet implements Constants {
 	public static String getPathId(DomHasRole hasRole) {
 		try {
 			return "1" + hasRole.getId().getIdString().substring(23).replace(';', '-');
+		} catch (NullPointerException e) {
+			return "1-" + hasRole.getUserId().getIdString().substring(21) + "-";
 		} catch (Exception e) {
 			return "-";
 		}

@@ -91,7 +91,8 @@ public class S3Store extends Store {
 	public boolean ownedBy(Optional<AtomEntry> item, Optional<DomSchoolRoleAndClassV2> actor) {
 		if (!item.isPresent()) return false;
 		S3AtomEntry entry = (S3AtomEntry) item.get();		
-		return JavaUpload.getPathId(actor.get().getHasRole()).equals(entry.learnerId);
+		String user = JavaUpload.getPathId(actor.get().getHasRole());
+		return entry.learnerId.startsWith(user);
 	}
 
 	@Override

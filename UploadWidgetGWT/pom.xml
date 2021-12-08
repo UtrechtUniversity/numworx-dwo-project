@@ -20,6 +20,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <gwt.style>PRETTY</gwt.style>
     <dbrest.url>http://localhost:8080/dwo/</dbrest.url>
+    <maven.test.skip>true</maven.test.skip>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -120,6 +121,7 @@
       </plugin>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
+				<version>2.2</version>
 				<configuration>
 					<attachClasses>true</attachClasses>
                     <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
