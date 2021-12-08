@@ -88,6 +88,18 @@ public class SecureTeacherSchoolClassManager {
     return src;
   }
 
+  public static List<DomStudent> getTeachersStudents() throws Dwo2Exception {
+	  List<DomStudent> src;
+	  RestContext rest = new RestContext();
+	  rest.setRestContext(getContext());
+	    src = getRestManager().getPutList("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/getTeachersStudents",
+	            RestListClassTypes.DomStudent, rest);
+	        LOG.log(Level.FINE,
+	            "Retrieved list of teachers in the school for the teacher with username {0}.",
+	            new Object[] {getUserName()});
+	        return src;
+ }
+  
   private static String getUserName() {
     return getRestManager().getAuthenticator().getUsername();
   }
