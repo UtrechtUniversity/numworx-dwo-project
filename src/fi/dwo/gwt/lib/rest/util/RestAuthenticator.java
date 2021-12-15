@@ -4,6 +4,13 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 import org.fusesource.restygwt.client.dispatcher.DispatcherFilter;
 
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.http.client.RequestBuilder;
 
 /**
@@ -11,13 +18,16 @@ import com.google.gwt.http.client.RequestBuilder;
  * @author wim
  *
  */
-public class RestAuthenticator implements DispatcherFilter {
+public class RestAuthenticator implements DispatcherFilter, HasValueChangeHandlers<String> {
+		
+	
 	private String username;
 	private String password;
 	private String realm = "";
 	private String authorization;
+	private final EventBus bus = new SimpleEventBus();
 	private boolean haspassword;
-	
+		
 	@Override
 	public boolean filter(Method method, RequestBuilder builder) {
 		if(haspassword)
@@ -43,17 +53,20 @@ public class RestAuthenticator implements DispatcherFilter {
   }
 
   public void setCredentials(String aUsername, String aPassword, String realm){
+	  	String old = getAuthorization();
         username = aUsername;
         password = aPassword;
     	haspassword = username != null && password != null;
         setRealm(realm);
+        ValueChangeEvent.fireIfNotEqual(this, old, getAuthorization());
     }
     
   public void setBearer(String bearer) {
 	  if (bearer != null)
-	  {
+	  {	  String old = getAuthorization();
 		  authorization = "Bearer " + bearer;
 		  haspassword = true;
+	      ValueChangeEvent.fireIfNotEqual(this, old, getAuthorization());
 	  }
 	  else // reset to basic/none
 		  setCredentials(username, password, realm);
@@ -71,6 +84,16 @@ public class RestAuthenticator implements DispatcherFilter {
     	if (haspassword) return authorization;
     	else return "None";
     }
+
+	@Override
+	public void fireEvent(GwtEvent<?> event) {
+		bus.fireEventFromSource(event,this);
+	}
+
+	@Override
+	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
+		return bus.addHandlerToSource(ValueChangeEvent.getType(), this, handler);
+	}
     
     
 }
