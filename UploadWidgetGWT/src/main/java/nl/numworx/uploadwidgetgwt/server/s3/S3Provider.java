@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.io.IOUtils;
 
 import software.amazon.awssdk.core.ResponseInputStream;
@@ -28,6 +27,8 @@ import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequ
 
 public class S3Provider {
 
+	private static final String DEFAULT_S3_BUCKET = "cds-dev-dwo-nl";
+	private static final String S3_BUCKET = "S3_BUCKET";
 	S3Client client;
 	S3Presigner presigner;
 	String bucket;
@@ -37,7 +38,8 @@ public class S3Provider {
 	}
 
 	public S3Provider() {
-		bucket = "cds-dev-dwo-nl";
+		bucket = System.getProperty(S3_BUCKET);
+		if (bucket == null || bucket.isEmpty()) bucket = DEFAULT_S3_BUCKET;
 	}
 
 	public void init() {
