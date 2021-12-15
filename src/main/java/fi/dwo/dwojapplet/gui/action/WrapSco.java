@@ -327,7 +327,7 @@ public class WrapSco extends Sco {
 		{
 			String value = delegate.getLessonMode();
 			return ok(value);
-		}		
+		}
     	if(LAUNCH_DATA.equals(iDataModelElement))
     	{
     		String value = getLaunchdataString();

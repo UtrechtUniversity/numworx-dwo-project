@@ -1778,7 +1778,7 @@ LOG.info("time results = " + (-t) + " ms");
      * Returns the LMS value for the specified sco and the specified user.
      *
      * @param sco The sco wherefrom the LMS value is asked.
-     * @param user The usere wherefrom the LMS value is asked.
+     * @param user The user wherefrom the LMS value is asked.
      * @param iDataModelElement The parameter to ask for.
      * @return The value representing for the specified sco, user and parameter.
      */
@@ -1787,8 +1787,13 @@ LOG.info("time results = " + (-t) + " ms");
             if (user == null) {
                 return Guest.instance().getUsername();
             }
-            return user.getUsername();
-        }
+            String value;
+            if (cls != null)
+              value = String.format("2-%020d-%020d",user.getID(),cls.getID());
+            else
+              value = String.format("1-%020d-%s", user.getID(), user.getSchoolGroupID().getIdString().substring(28));
+            return value;
+    }
         if (LEARNER_NAME.equals(iDataModelElement)) {
             if (user == null) {
                 return Guest.instance().getStudentName();
