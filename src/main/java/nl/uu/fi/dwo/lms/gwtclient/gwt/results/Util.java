@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
+import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -99,14 +100,19 @@ class Util {
     LOG.info("getPages maxscores = " + Arrays.asList(maxScores));
     JSONNumber correctie[] = getCorrectie(review_data, aantal);
     LOG.info("getPages correctie = " + Arrays.asList(correctie));
-    
+    boolean checkDocent[] = getCheckDocent(launchdata, "", correctie, aantal);
     for(int i = 0; i < aantal; i++) {
       String label = String.valueOf(i+1);
       DomResultStudentScoPage item = new DomResultStudentScoPage(label);
       item.setNodeId(i);
+
+      if (scores[i] == null) scores[i] = new JSONNumber(0); // FIXME dit is alleen voor het testen XXX 
+
       if (i < ls && scores[i] != null)
       {
-    	  item.setScore(scores[i].doubleValue());
+    	  if (checkDocent[i]) item.setScore(-1.0);
+    	  else
+    		  item.setScore(scores[i].doubleValue());
     	  item.setMaxScore(maxScores[i].doubleValue());
       }
       if (i < correctie.length && correctie[i] != null)
@@ -118,7 +124,20 @@ class Util {
     
   }
 
-  private static JSONNumber[] getCorrectie(String review_data, int aantal) {
+  private static boolean[] getCheckDocent(JSONValue launchdata, String string, JSONNumber[] correctie, int aantal) {
+	boolean checkDocent[] = new boolean[aantal];
+	JSONArray checked = ((string.isEmpty())  ? JSONNull.getInstance() : JSONParser.parseStrict(string)).isArray();
+	for (int i = 0; i < aantal; i++) {
+		JSONObject obj = launchdata.isObject().get("opdracht_1_" + (i+1)).isObject();
+		JSONValue check = obj.get("checkDocent");
+		checkDocent[i] = JSONBoolean.getInstance(true).equals(check);
+		if (checked != null) checkDocent[i] = checked.get(i).isBoolean().booleanValue();
+		else if (i < correctie.length && correctie[i].doubleValue() != 0) checkDocent[i] = false; // FIXME alleen even omdat string niet bestaat....
+	}
+	return checkDocent;
+}
+
+private static JSONNumber[] getCorrectie(String review_data, int aantal) {
     LOG.info("getCorrectie " + review_data);
     if(review_data == null || !review_data.startsWith("{"))
         return EMPTY_NUMBERS;

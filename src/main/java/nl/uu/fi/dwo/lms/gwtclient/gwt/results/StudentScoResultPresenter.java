@@ -303,7 +303,7 @@ public void setView(Display aView) {
       this.userState.remove(ResultsService.REVIEW_DATA);
     }
     Map<String,String> userState = new HashMap<> (this.userState);
-    userState.keySet().retainAll(Arrays.asList("cmi.score.raw",ResultsService.REVIEW_DATA));
+    userState.keySet().retainAll(Arrays.asList("cmi.score.raw",ResultsService.REVIEW_DATA, ResultsService.REVIEW_CHECK));
     LOG.info( "update Score/Review " + userState);
     if (dwoGlobalVars.isPremium())
     {	String score = userState.get("cmi.score.raw");
