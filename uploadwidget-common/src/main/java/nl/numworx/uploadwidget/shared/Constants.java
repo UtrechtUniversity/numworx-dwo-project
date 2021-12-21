@@ -6,4 +6,5 @@ public interface Constants {
 	String ITEMS_MAX = "itemsMax";
 	String FILE_INPUT_TYPE = "fileInputType";
 	String AUTO_SUBMIT = "autoSubmit";
+	String CHECK_DOCENT = "checkDocent";
 }

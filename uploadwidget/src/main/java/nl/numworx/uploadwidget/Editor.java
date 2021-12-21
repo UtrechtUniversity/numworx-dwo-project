@@ -139,6 +139,7 @@ public class Editor extends JPanel implements CBookWidgetEditIF, Constants {
 		} catch (ParseException e) {
 		}
 		launchdata.put(SCORE_MAX, max);
+		launchdata.put(CHECK_DOCENT, max > 0);
 		launchdata.put(ITEMS_MAX, itemField.getValue());
 		launchdata.put(MEDIATYPES, mediatypes.getSelectedItem());
 		launchdata.put(FILE_INPUT_TYPE, ((FileInputType) widgettype.getSelectedItem()).name());
