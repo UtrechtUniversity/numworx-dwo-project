@@ -367,7 +367,10 @@ public class SelectedResultsPresenter implements ResultEventHandler {
                     JSONValue launchdata = p2.getValue();
                     String review_data = p3.getValue().get(ResultsService.REVIEW_DATA);
                     String suspend_data = p3.getValue().get(ResultsService.SUSPEND_DATA);
-                    Map<PersistenceId, DomResultStudentScoPage> children = Util.getPages(launchdata, suspend_data, review_data);
+                    String review_check = p3.getValue().get(ResultsService.REVIEW_CHECK);
+                    boolean premium = dwoGlobalVars.isPremium();
+                    premium = premium && ResultsService.COMPLETED.equals(ssc.getStudentSco().getCompletionStatus());
+					Map<PersistenceId, DomResultStudentScoPage> children = Util.getPages(launchdata, suspend_data, review_data, review_check, premium);
                     LOG.info("setChildren for " + ssc.getId() + " " + children);
                     ssc.setChildren(children);
                     if (System.currentTimeMillis() - PREPARE_TIMEOUT > prepareStart) {

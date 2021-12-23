@@ -87,7 +87,7 @@ class Util {
       }
   }
   
-  static Map<PersistenceId, DomResultStudentScoPage> getPages(JSONValue launchdata, String suspend_data, String review_data) {
+  static Map<PersistenceId, DomResultStudentScoPage> getPages(JSONValue launchdata, String suspend_data, String review_data, String review_check, boolean premium) {
     HashMap<PersistenceId, DomResultStudentScoPage> result = new HashMap<>();
     
     int aantal = getAantalOpdrachten(launchdata);
@@ -98,9 +98,9 @@ class Util {
     LOG.info("getPages scores = " + Arrays.asList(scores)   + " " + ls);
     JSONNumber maxScores[] = getMaxScores(launchdata, aantal);
     LOG.info("getPages maxscores = " + Arrays.asList(maxScores));
-    JSONNumber correctie[] = getCorrectie(review_data, aantal);
+    JSONNumber correctie[] = getCorrectie(review_data, aantal, premium);
     LOG.info("getPages correctie = " + Arrays.asList(correctie));
-    boolean checkDocent[] = getCheckDocent(launchdata, "", correctie, aantal);
+    boolean checkDocent[] = getCheckDocent(launchdata, review_check, correctie, aantal, premium);
     for(int i = 0; i < aantal; i++) {
       String label = String.valueOf(i+1);
       DomResultStudentScoPage item = new DomResultStudentScoPage(label);
@@ -124,22 +124,24 @@ class Util {
     
   }
 
-  private static boolean[] getCheckDocent(JSONValue launchdata, String string, JSONNumber[] correctie, int aantal) {
+  private static boolean[] getCheckDocent(JSONValue launchdata, String string, JSONNumber[] correctie, int aantal, boolean premium) {
 	boolean checkDocent[] = new boolean[aantal];
-	JSONArray checked = ((string.isEmpty())  ? JSONNull.getInstance() : JSONParser.parseStrict(string)).isArray();
-	for (int i = 0; i < aantal; i++) {
-		JSONObject obj = launchdata.isObject().get("opdracht_1_" + (i+1)).isObject();
-		JSONValue check = obj.get("checkDocent");
-		checkDocent[i] = JSONBoolean.getInstance(true).equals(check);
-		if (checked != null) checkDocent[i] = checked.get(i).isBoolean().booleanValue();
-		else if (i < correctie.length && correctie[i].doubleValue() != 0) checkDocent[i] = false; // FIXME alleen even omdat string niet bestaat....
+	if (premium) {
+		JSONArray checked = ((string.isEmpty())  ? JSONNull.getInstance() : JSONParser.parseStrict(string)).isArray();
+		for (int i = 0; i < aantal; i++) {
+			JSONObject obj = launchdata.isObject().get("opdracht_1_" + (i+1)).isObject();
+			JSONValue check = obj.get("checkDocent");
+			checkDocent[i] = JSONBoolean.getInstance(true).equals(check);
+			if (checked != null && i < checked.size()) checkDocent[i] = checked.get(i).isBoolean().booleanValue();
+			else if (i < correctie.length && correctie[i].doubleValue() != 0) checkDocent[i] = false; // FIXME alleen even omdat string niet bestaat....
+		}
 	}
 	return checkDocent;
 }
 
-private static JSONNumber[] getCorrectie(String review_data, int aantal) {
+private static JSONNumber[] getCorrectie(String review_data, int aantal, boolean premium) {
     LOG.info("getCorrectie " + review_data);
-    if(review_data == null || !review_data.startsWith("{"))
+    if(review_data == null || !review_data.startsWith("{") || !premium)
         return EMPTY_NUMBERS;
     
     try {
