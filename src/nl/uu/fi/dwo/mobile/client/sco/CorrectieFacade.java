@@ -27,6 +27,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 import nl.uu.fi.dwo.mobile.client.ui.views.DocentCorrectie;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.DWOPopupPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PopupButton;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TextEditor;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
@@ -74,10 +75,10 @@ public class CorrectieFacade {
   @Deprecated
   public static CorrectieFacade get(Map<String,Object> h, InteractionView view, Widget widget, int maxScore, OpdrNavIF comRoot) {
 	  //if (comRoot.getMode() != OpdrNavIF.EINDTOETS) return NULL; // alleen EINDTOETS, nee
-      return instance.create(h, view, widget, maxScore, comRoot, null, null);
+      return instance.create(h, view, widget, maxScore, comRoot, null, null, false);
   }
 
-    protected CorrectieFacade create(Map<String, Object> h, InteractionView view, Widget widget, int maxScore, OpdrNavIF comRoot, Logging logging, ActivityComponent a) {
+    protected CorrectieFacade create(Map<String, Object> h, InteractionView view, Widget widget, int maxScore, OpdrNavIF comRoot, Logging logging, ActivityComponent a, boolean checkDocent) {
       return NULL;
     }
     
@@ -133,12 +134,17 @@ public class CorrectieFacade {
     }
     public static CorrectieFacade get(HashMap<String, Object> h, InteractionView view,
         int scoreMax, OpdrNavIF comRoot, Logging logging, ActivityComponent a) {
-      return instance.create(h, view, view.asWidget(), scoreMax, comRoot, logging, a);
+      return instance.create(h, view, view.asWidget(), scoreMax, comRoot, logging, a, false);
     }
     public static CorrectieFacade get(HashMap<String, Object> h, InteractionView view, IsWidget w,
         int scoreMax, OpdrNavIF comRoot, Logging logging, ActivityComponent a) {
-      return instance.create(h, view, w.asWidget(), scoreMax, comRoot, logging, a);
+      return instance.create(h, view, w.asWidget(), scoreMax, comRoot, logging, a, false);
     }
+
+	public static CorrectieFacade get(HashMap<String, Object> h, TextEditor view, int scoreMax, OpdrNavIF comRoot,
+			Logging logging, ActivityComponent activity, boolean checkDocent) {
+		return instance.create(h, view, view.asWidget(), scoreMax, comRoot, logging, activity, checkDocent);
+	}
    
     
     

@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.sco;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -93,6 +94,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	public static final String LEARNER_PREFERENCE_LANGUAGE = "cmi.learner_preference.language";
 	public static final String LOCATION = "cmi.location";
 	static final String REVIEW_DATA = "cmi.comments_from_lms.0.comment";
+	static final String REVIEW_CHECK = "cmi.comments_from_lms.1.comment";
 	
 	public static final String LESSON_MODE = "cmi.mode";
 	public static final String SHARE_MAP = "shareMap";
@@ -174,7 +176,9 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		
 		String reviewData = null;
 		if (eindtoetsVerzegeld || cmi_mode == LessonMode.review)
+		{
 			reviewData = getValue(REVIEW_DATA);
+		}
 		try
 		{
 			value = getValue(SUSPEND_DATA);
@@ -1398,7 +1402,9 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
   public void mergeIntoReview(int currentActiviteit, int currentOpdracht,
       HashMap<String, Object> state) {
     JSONObject reviewPage = strip(JSONUtilities.wrapMap(state), 5);
+    JSONValue  checkDocent = JSONNull.getInstance();
     if(reviewPage != null) {
+      checkDocent = reviewPage.get("checkDocent");
       reviewPage = reviewPage.get("interactiePanelStates").isArray().get(0).isObject();
       JSONArray array = reviewPage.get("interactiePanelStates").isArray();
       // insert 5x null
@@ -1408,6 +1414,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
       reviewPage.put("interactiePanelStates", array);
     }
     String reviewData = api.GetValue(REVIEW_DATA);
+    String reviewCheck = api.GetValue(REVIEW_CHECK);
     JSONObject r;
     JSONArray  statei;
     if (reviewData.startsWith("{") ) {
@@ -1430,26 +1437,47 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
     statej.set(currentOpdracht, reviewPage);
 
     reviewData = r.toString();
-    if(isReview())
-    	api.SetValue(REVIEW_DATA, reviewData); 
+    
+    JSONArray c = new JSONArray();
+    if (reviewCheck.startsWith("[")) {
+    	c = JSONParser.parseStrict(reviewCheck).isArray();
+    }
+    c.set(currentOpdracht, checkDocent);
+    reviewCheck = c.toString();
+    
+    if(isReview())  {
+    	api.SetValue(REVIEW_DATA, reviewData);
+    	api.SetValue(REVIEW_CHECK, reviewCheck);
+    }
   }
 
   private JSONObject strip(ObjectMap state, int off) {
     if (state == null) return null;
     JSONObject result = new JSONObject();
     ObjectList interactionsIn = state.getObjectList(INTERACTIE_PANEL_STATES);
+    JSONValue checkDocent = JSONNull.getInstance();
     if(interactionsIn != null) {
       JSONArray  interactionsOut = new JSONArray();
       for(int i = off; i < interactionsIn.size(); i++) {
         JSONObject item = strip(interactionsIn.getObjectMap(i),0);
+        JSONValue checkItem = item.get("checkDocent");
+        if (Objects.equals(checkItem, JSONBoolean.getInstance(true))) 
+        	checkDocent = checkItem;
+        else if (checkDocent == null || checkDocent == JSONNull.getInstance()) 
+        	checkDocent = checkItem;
         interactionsOut.set(i-off, item);
       }
       result.put(INTERACTIE_PANEL_STATES, interactionsOut);
+      if (checkDocent != null && checkDocent != JSONNull.getInstance()) {
+    	  result.put("checkDocent", checkDocent);
+      }
     }
     if (state.containsKey(CorrectieView.REVIEW_INTERACTIE_DATA))
     { ObjectMap reviewData = state.getObjectMap(CorrectieView.REVIEW_INTERACTIE_DATA);
       JSONValue wrap = JSONUtilities.toJSONObject(reviewData);
       result.put(CorrectieView.REVIEW_INTERACTIE_DATA, wrap);
+      if (reviewData.containsKey("checkDocent"))
+    	  result.put("checkDocent", JSONBoolean.getInstance(reviewData.getBoolean("checkDocent", true)));
     }
     return result;
   }

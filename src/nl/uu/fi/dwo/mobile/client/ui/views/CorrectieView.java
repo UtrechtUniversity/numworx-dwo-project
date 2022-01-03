@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +34,7 @@ import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 public class CorrectieView extends Composite implements HasHide {
 
+  private static final String CHECK_DOCENT = "checkDocent";
   public static final String REVIEW_SCORE_CORRECTIE = "reviewScoreCorrectie";
   public static final String REVIEW_SCORE_COMMENT   = "reviewScoreComment";
   public static final String REVIEW_INTERACTIE_DATA = "reviewInteractieData";
@@ -40,7 +42,7 @@ public class CorrectieView extends Composite implements HasHide {
   public static final String CORRECTIE = DWOplayer.DWO_BUNDLE.dwoplayercss().correctie();
   public static final String CORRECTED = DWOplayer.DWO_BUNDLE.dwoplayercss().corrected();
   
-  public static Provider<Map<String,Object>> addCorrection(Map<String,Object> map, InteractionView iv, final Widget widget, int scoreMax, OpdrNavIF comRoot, ActivityComponent a) {
+  public static Provider<Map<String,Object>> addCorrection(Map<String,Object> map, InteractionView iv, final Widget widget, int scoreMax, OpdrNavIF comRoot, ActivityComponent a, boolean checkDocent) {
     widget.addStyleName(CORRECTIE);
     ObjectMap h = JSONUtilities.wrapMap(map);
     h = h.getObjectMap(REVIEW_INTERACTIE_DATA);
@@ -54,7 +56,10 @@ public class CorrectieView extends Composite implements HasHide {
       @Override
       public Map<String, Object> get() {
         if(result.isEmpty())
-          return null;
+        {
+        	if (checkDocent) return Collections.singletonMap(CHECK_DOCENT, Boolean.TRUE);
+        	return null;
+        }
         return result;
       }
 
@@ -66,6 +71,8 @@ public class CorrectieView extends Composite implements HasHide {
             result.put(REVIEW_SCORE_CORRECTIE, h.getInt(REVIEW_SCORE_CORRECTIE));
           if (h.containsKey(REVIEW_SCORE_COMMENT))
         	result.put(REVIEW_SCORE_COMMENT, h.getString(REVIEW_SCORE_COMMENT));
+          if (h.containsKey(CHECK_DOCENT))
+        	  result.put(CHECK_DOCENT, h.getBoolean(CHECK_DOCENT, checkDocent));
         }
         widget.addDomHandler(event -> {
           int x = event.getRelativeX(widget.getElement());
@@ -79,7 +86,7 @@ public class CorrectieView extends Composite implements HasHide {
             	popup.center();
             } else {
               //iv.kijkNa();iv.getState(); // wat is nodig voor score?????? FIXME
-              popup = startCorrection(result, widget, iv.getScore(), scoreMax, comRoot, a);
+              popup = startCorrection(result, widget, iv.getScore(), scoreMax, comRoot, a, checkDocent);
             }
           }
         }, MouseUpEvent.getType());
@@ -93,7 +100,7 @@ public class CorrectieView extends Composite implements HasHide {
                 popup.center();
               } else {
                 //iv.kijkNa();iv.getState(); // wat is nodig voor score?????? FIXME
-                popup = startCorrection(result, widget, iv.getScore(), scoreMax, comRoot, a);
+                popup = startCorrection(result, widget, iv.getScore(), scoreMax, comRoot, a, checkDocent);
               }
             }
           }, PointerUpEvent.getType());
@@ -103,8 +110,9 @@ public class CorrectieView extends Composite implements HasHide {
   }
   
   int minCor,maxCor;
+private boolean checkDocent;
   
-  private static PopupPanel startCorrection(Map<String, Object> map, Widget w, int score, int scoreMax, OpdrNavIF comRoot, ActivityComponent a) {
+  private static PopupPanel startCorrection(Map<String, Object> map, Widget w, int score, int scoreMax, OpdrNavIF comRoot, ActivityComponent a, boolean checkDocent) {
       CorrectieView view = new CorrectieView(a, w, comRoot);
       view.setObject(map);      
       Object correctie = map.getOrDefault(REVIEW_SCORE_CORRECTIE,"0");
@@ -115,6 +123,7 @@ public class CorrectieView extends Composite implements HasHide {
       view.max.setText(Integer.toString(scoreMax));
       view.score.setText(Integer.toString(score));
       view.area.setText(String.valueOf(comment));
+      view.checkDocent = checkDocent;
 //      PopupPanel popup = new PopupPanel();
 //      popup.setWidget(view);
 //      view.setPopup(popup);      
@@ -171,6 +180,8 @@ public class CorrectieView extends Composite implements HasHide {
     object.put(REVIEW_SCORE_CORRECTIE, (n));
     String comment = area.getText();
     object.put(REVIEW_SCORE_COMMENT, comment);
+    if(checkDocent)
+    	object.put(CHECK_DOCENT, Boolean.FALSE);
     if(parent != null) {
       parent.setStyleName(CORRECTED, n!=0);
     }
