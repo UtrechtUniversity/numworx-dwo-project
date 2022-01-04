@@ -132,8 +132,11 @@ class Util {
 			JSONObject obj = launchdata.isObject().get("opdracht_1_" + (i+1)).isObject();
 			JSONValue check = obj.get("checkDocent");
 			checkDocent[i] = JSONBoolean.getInstance(true).equals(check);
-			if (checked != null && i < checked.size()) checkDocent[i] = checked.get(i).isBoolean().booleanValue();
-			else if (i < correctie.length && correctie[i].doubleValue() != 0) checkDocent[i] = false; // FIXME alleen even omdat string niet bestaat....
+			if (checked != null && i < checked.size()) {
+				JSONBoolean bool = checked.get(i).isBoolean();
+				if (bool != null) checkDocent[i] = bool.booleanValue();
+			}
+			//else if (i < correctie.length && correctie[i].doubleValue() != 0) checkDocent[i] = false; // FIXME alleen even omdat string niet bestaat....
 		}
 	}
 	return checkDocent;
