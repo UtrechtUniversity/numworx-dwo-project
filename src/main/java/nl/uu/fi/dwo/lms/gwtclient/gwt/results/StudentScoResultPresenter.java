@@ -13,6 +13,7 @@ import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -301,6 +302,7 @@ public void setView(Display aView) {
     LOG.info("Finish " + dummy);
     if (!ResultsService.COMPLETED.equals(ssc.getStudentSco().getCompletionStatus())) {
       this.userState.remove(ResultsService.REVIEW_DATA);
+      this.userState.remove(ResultsService.REVIEW_CHECK);
     }
     Map<String,String> userState = new HashMap<> (this.userState);
     userState.keySet().retainAll(Arrays.asList("cmi.score.raw",ResultsService.REVIEW_DATA, ResultsService.REVIEW_CHECK));
@@ -381,11 +383,18 @@ public void setView(Display aView) {
       }, FAILURE);
   }
 
+  private static final Map<String, String> CLEAR_REVIEW = new LinkedHashMap<>();
+  static {
+	  CLEAR_REVIEW.put(ResultsService.REVIEW_DATA, "");
+	  CLEAR_REVIEW.put(ResultsService.REVIEW_CHECK, "");
+  }
+  
   private Promise<DomStudentScoContext> seal(boolean value, DomStudentScoContext dssc) {
     if (!value) { 
       setValue(ResultsService.REVIEW_DATA, "");
+      setValue(ResultsService.REVIEW_CHECK, "");
       return 
-        resultService.setValues(ssc.getStudentSco(), Collections.singletonMap(ResultsService.REVIEW_DATA, ""))
+        resultService.setValues(ssc.getStudentSco(), CLEAR_REVIEW)
         .then(p -> resultService.seal(dssc, false));
     }
     return resultService.seal(dssc, value);
