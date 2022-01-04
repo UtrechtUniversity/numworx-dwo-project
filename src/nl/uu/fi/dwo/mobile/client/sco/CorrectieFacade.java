@@ -27,6 +27,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 import nl.uu.fi.dwo.mobile.client.ui.views.DocentCorrectie;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.DWOPopupPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PopupButton;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TextEditor;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
@@ -144,6 +145,11 @@ public class CorrectieFacade {
 	public static CorrectieFacade get(HashMap<String, Object> h, TextEditor view, int scoreMax, OpdrNavIF comRoot,
 			Logging logging, ActivityComponent activity, boolean checkDocent) {
 		return instance.create(h, view, view.asWidget(), scoreMax, comRoot, logging, activity, checkDocent);
+	}
+
+	public static CorrectieFacade get(HashMap<String, Object> h, StubView view, Widget widget, int scoreMax,
+			OpdrNavIF comRoot, Logging logging, ActivityComponent activity, boolean checkDocent) {
+		return instance.create(h, view, widget, scoreMax, comRoot, logging, activity, checkDocent);
 	}
    
     

@@ -64,7 +64,9 @@ public class CorrectieReview extends CorrectieFacade {
 	// send een correctie logentry naar de logger
 	private void sendCorrectieStatement(Object o) {
 	    ObjectMap map = JSONUtilities.wrapMap( (Map) o);
-	    int corr = map.getInt(CorrectieView.REVIEW_SCORE_CORRECTIE);
+	    int corr = map.containsKey(CorrectieView.REVIEW_SCORE_CORRECTIE) ?
+	    			map.getInt(CorrectieView.REVIEW_SCORE_CORRECTIE) :
+	    			0;
 	    if(corr == lastcorr || logging == null) return;
 	    lastcorr = corr;
         int raw = iv.getScore() + corr;

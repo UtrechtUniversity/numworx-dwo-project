@@ -76,6 +76,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	private boolean[][] logObjectives;
 	private int scoreMax, score;
 	private boolean teltmee = true;
+	private boolean checkDocent;
 	private Boolean correct;
 	private CorrectieFacade correctie;
 	private Logging logging;
@@ -177,6 +178,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 //
 //		}
 		int soortVak = outermap.getInt("soortInteractiePanel");
+		if (innerMap.containsKey("checkDocent")) checkDocent = innerMap.getBoolean("checkDocent");
 		logging = new LogBuilder(activity).setClassName(className(soortVak)).setLaunchData(innerMap).build();
 	}
 	private String className(int s) {
@@ -188,6 +190,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			case 45: return "fi.graphtool.GraphTool";
 			case 57: return "nl.numworx.geodefiner.GeoDefiner";
 			case 61: return "fi.mathscratch.MathScratch";
+			case 62: return "nl.numworx.uploadwidget.UploadWidget";
 		}
 	}
 	
@@ -262,7 +265,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		else 
 			pendingState = object.toString(); // XXX NPE!
 		if (!isNull)
-			correctie = CorrectieFacade.get(h, this, widget, scoreMax, comRoot, logging, activity);
+			correctie = CorrectieFacade.get(h, this, widget, scoreMax, comRoot, logging, activity,checkDocent);
 	}
 
 	@Override
