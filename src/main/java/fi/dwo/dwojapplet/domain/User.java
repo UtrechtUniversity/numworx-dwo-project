@@ -3,6 +3,7 @@
 package fi.dwo.dwojapplet.domain;
 
 import java.util.Collections;
+import java.util.Objects;
 
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -377,7 +378,7 @@ public class User implements UserGroup, Comparable {
      */
     @Override
     public String getOrderName() {
-        return lastName.toLowerCase();
+        return lastName.toLowerCase() + " " + firstname.toLowerCase() + " " + Objects.toString(middleName, "").toLowerCase();
     }
 
     /**

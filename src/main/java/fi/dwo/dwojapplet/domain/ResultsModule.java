@@ -52,6 +52,8 @@ import java.util.Vector;
  */
 public class ResultsModule implements ResultsModuleIF, Comparator {
 
+    private static final User SORTBYUSER = new User();
+
     private int orderedLessonIndex;
 
     private int orderedWay;
@@ -304,7 +306,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
           }
         }
         
-        return getResults();
+        return orderBy(SORTBYUSER, orderedWay);
     }
 
     /**
@@ -339,7 +341,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
         }
         
         
-        return getResults();
+        return orderBy(SORTBYUSER, orderedWay);
     }
 
     /**
@@ -376,9 +378,8 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
-     
-        
-        return getResults();
+
+        return orderBy(SORTBYUSER, orderedWay);
     }
 
     /**
@@ -418,7 +419,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
         }
         
         
-        return getResults();
+        return orderBy(SORTBYUSER, orderedWay);
     }
 
     /**
