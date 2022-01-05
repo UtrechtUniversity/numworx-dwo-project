@@ -100,6 +100,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	private boolean hasPrefix = false;
 	boolean hasStartString = false;
 	boolean boxMetRand = true;
+	boolean pasAanH = false;
 	private Boolean exact = false;
 	private boolean eigenOpdr = false;
 	private boolean editable = true;
@@ -260,6 +261,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			
 			if (launchStateMap.containsKey("scoreCumulatief"))
 				scoreCumulatief = launchStateMap.getBoolean("scoreCumulatief");
+			pasAanH = launchStateMap.getBoolean("pasAanH", false);
 			if (launchStateMap.containsKey("startString"))
 				startString = launchStateMap.getString("startString");
 			if (launchState.get("exact") != null)
@@ -1229,6 +1231,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
  
   protected final ActivityComponent activity;
 
+  private TekstRegel parentRegel;
+
 	private void requestFocus() {
 		if(focusEnabled && editor != null)
 			editor.requestFocus();
@@ -1517,6 +1521,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	
 	public void setParentRegel(TekstRegel parentRegel)
 	{
+		this.parentRegel = parentRegel;
 		setFont(parentRegel);
 	}
 	
@@ -4009,6 +4014,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	
 	protected TekstRegel findParentRegel()
 	{
+		if (parentRegel != null)
+			return parentRegel;
 		Widget parent = asWidget();
 		while (parent != null && !(parent instanceof TekstVak))
 		{
