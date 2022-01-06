@@ -35,7 +35,7 @@ public class JFileChooser extends javax.swing.JFileChooser {
    * 
    */
   public JFileChooser() {
-	  super();
+	  this(getGlobalDirectory());
   }
 
   /**
@@ -56,7 +56,7 @@ public class JFileChooser extends javax.swing.JFileChooser {
    * @param fsv
    */
   public JFileChooser(FileSystemView fsv) {
-    super(fsv);
+    super(getGlobalDirectory(), fsv);
   }
 
   /**
