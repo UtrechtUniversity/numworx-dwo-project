@@ -49,7 +49,6 @@ import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -88,7 +87,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 
     private JCheckBox editorCB, visibleCB;
 
-    static class IconDialog extends JFileChooser implements ActionListener {
+    static class IconDialog extends fi.beans.numworxlf.JFileChooser implements ActionListener {
     	JTextField url;
     	JDialog dialog;
     	IconDialog() {
@@ -725,12 +724,10 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
  //       naam = openDial.getFile();
         if (iconDial == null) iconDial = new IconDialog();
         iconDial.setDialogTitle(TextMapper.format(TextMapper.GUIS_LOAD_LOGO, new Object[]{course.toString()}));
-        iconDial.setCurrentDirectory(DwoHelper.getCurrentDirectory());
        int r = iconDial.showOpenDialog(this);
         File file = iconDial.getSelectedFile();
 		naam = (r == iconDial.CANCEL_OPTION || file == null) ? null : file.getName();
         if(naam == null && r == iconDial.APPROVE_OPTION) {
-            DwoHelper.setCurrentDirectory(iconDial.getCurrentDirectory());
         	naam = iconDial.url.getText();
         	course.setImageUrl(naam);
         	course.setImageData(new byte[0]);

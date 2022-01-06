@@ -207,7 +207,7 @@ public class MethodsTableModel extends AbstractTableModel {
   
   class ImportAction extends AbstractAction {
     
-    JFileChooser choose = new JFileChooser();
+    JFileChooser choose = new fi.beans.numworxlf.JFileChooser();
     
     
     public ImportAction() {
@@ -216,10 +216,8 @@ public class MethodsTableModel extends AbstractTableModel {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-      choose.setCurrentDirectory(DwoHelper.getCurrentDirectory());
       if (JFileChooser.APPROVE_OPTION  == choose.showOpenDialog((Component) e.getSource()))  {
         try {
-          DwoHelper.setCurrentDirectory(choose.getCurrentDirectory());
           FileInputStream in = new FileInputStream(choose.getSelectedFile());
           DomMethod row = genson.deserialize(in, DomMethod.class);
           in.close();

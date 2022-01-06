@@ -813,14 +813,4 @@ public final class DwoHelper {
       return false;
     }
 
-    static File currentDirectory = new File(System.getProperty("user.home", "."));
-    public static File getCurrentDirectory() {
-      return currentDirectory;
-    }
-
-    public static void setCurrentDirectory(File dir) {
-      if (dir == null) return;
-      if (!dir.isDirectory()) dir = dir.getParentFile();
-      currentDirectory = dir;
-    }
 }

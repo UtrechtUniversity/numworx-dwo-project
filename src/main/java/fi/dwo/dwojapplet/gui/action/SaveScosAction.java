@@ -60,10 +60,8 @@ public class SaveScosAction extends GuiAction {
             scormChooser.html5.setSelected(true);
         }
         course = userObject;
-        scormChooser.setCurrentDirectory(DwoHelper.getCurrentDirectory());
         int result = scormChooser.showSaveDialog(GuiCreator.instance().getMainPanel());
         if (result == JFileChooser.APPROVE_OPTION) {
-            DwoHelper.setCurrentDirectory(scormChooser.getCurrentDirectory());
             File file = scormChooser.getSelectedFile();
             boolean is2004 = scormChooser.isScorm2004();
             boolean ishtml5 = scormChooser.isHTML5();

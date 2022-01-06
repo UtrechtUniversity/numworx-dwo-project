@@ -30,7 +30,7 @@ public class ImportAction extends AbstractAction {
 
   public ImportAction(TeacherStudentModelPanel parent) {
     super("Import");
-    this.chooser = new JFileChooser();
+    this.chooser = new fi.beans.numworxlf.JFileChooser();
     this.parent = parent;
     this.component = parent;
     this.genson = new GensonBuilder().create();
@@ -38,7 +38,7 @@ public class ImportAction extends AbstractAction {
   
   public ImportAction(LeerdomeinEditPanel2 panel) {
     super("Import");
-    this.chooser = new JFileChooser();
+    this.chooser = new fi.beans.numworxlf.JFileChooser();
     this.genson = new GensonBuilder().create();
     this.panel = panel;
     this.component = panel;
@@ -46,10 +46,8 @@ public class ImportAction extends AbstractAction {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    chooser.setCurrentDirectory(DwoHelper.getCurrentDirectory());
     if (chooser.showOpenDialog(component) == JFileChooser.APPROVE_OPTION) {
       File toImport = chooser.getSelectedFile();
-      DwoHelper.setCurrentDirectory(chooser.getCurrentDirectory());
       try {
         FileInputStream input = new FileInputStream(toImport);
         DomStudentModelStructure structure = genson.deserialize(input, DomStudentModelStructure.class);

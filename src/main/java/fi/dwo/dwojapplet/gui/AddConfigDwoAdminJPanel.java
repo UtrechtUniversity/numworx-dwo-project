@@ -65,7 +65,7 @@ class AddConfigDwoAdminJPanel extends JPanel implements Comparator<AppletData >{
 
 		public ImportScoAction() {
 			super("Open ZIP");
-			chooser = new JFileChooser();
+			chooser = new fi.beans.numworxlf.JFileChooser();
 			chooser.setFileFilter(ZIP_FILTER);
 		}
 
@@ -73,11 +73,9 @@ class AddConfigDwoAdminJPanel extends JPanel implements Comparator<AppletData >{
 		public void actionPerformed(ActionEvent e) {
 			Component source = (Component) e.getSource();
 			chooser.setLocale(source.getLocale());
-	        chooser.setCurrentDirectory(DwoHelper.getCurrentDirectory());
 			int ok = chooser.showOpenDialog(source);
 			if (ok == JFileChooser.APPROVE_OPTION)
 			{
-	            DwoHelper.setCurrentDirectory(chooser.getCurrentDirectory());
 				File f = chooser.getSelectedFile();
 				Sco sco = new Sco();
 				ImportScorm.readZip(f.getAbsolutePath(), sco);

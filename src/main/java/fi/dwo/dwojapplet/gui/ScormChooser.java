@@ -5,14 +5,12 @@ package fi.dwo.dwojapplet.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Frame;
 import java.awt.HeadlessException;
 import java.io.File;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.filechooser.FileFilter;
 
@@ -22,7 +20,7 @@ import fi.beans.numworxlf.JRadioButton;
  * @author Wim
  *
  */
-public class ScormChooser extends JFileChooser {
+public class ScormChooser extends fi.beans.numworxlf.JFileChooser {
 
     public JRadioButton scorm12, scorm2004, html5;
 

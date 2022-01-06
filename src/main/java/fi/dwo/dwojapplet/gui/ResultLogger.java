@@ -576,11 +576,9 @@ public class ResultLogger extends JPanel implements ActionListener,
 				clipboard.setContents(this, this);
 			}
 		} else if (e.getActionCommand() == SAVE) {
-			JFileChooser chooser = new JFileChooser();
-	        chooser.setCurrentDirectory(DwoHelper.getCurrentDirectory());
+			JFileChooser chooser = new fi.beans.numworxlf.JFileChooser();
 			int result = chooser.showSaveDialog(this);
 			if (result == JFileChooser.APPROVE_OPTION) {
-	            DwoHelper.setCurrentDirectory(chooser.getCurrentDirectory());
 				File f = chooser.getSelectedFile();
 				if (logModeKey.equals(PARTIAL))
 					saveTable(f, partialTable);

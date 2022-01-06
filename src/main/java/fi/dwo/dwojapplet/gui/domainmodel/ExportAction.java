@@ -43,7 +43,7 @@ public class ExportAction extends AbstractAction {
   public ExportAction(ExportPanel leerdomeinEditPanel) {
     super("Export");
     panel = leerdomeinEditPanel;
-    chooser = new JFileChooser();
+    chooser = new fi.beans.numworxlf.JFileChooser();
     genson = new GensonBuilder()
         .useIndentation(true)
         .setSkipNull(true)
@@ -52,9 +52,7 @@ public class ExportAction extends AbstractAction {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    chooser.setCurrentDirectory(DwoHelper.getCurrentDirectory());
     if (chooser.showSaveDialog(panel.asComponent()) == JFileChooser.APPROVE_OPTION) {
-      DwoHelper.setCurrentDirectory(chooser.getCurrentDirectory());
       File toSave = chooser.getSelectedFile();
       DomStudentModelStructure model = panel.getModel();
       try {

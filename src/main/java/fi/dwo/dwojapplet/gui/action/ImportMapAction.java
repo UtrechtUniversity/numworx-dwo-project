@@ -45,7 +45,7 @@ public class ImportMapAction extends GuiAction {
 		super(TextMapper.getText("Import map"));;
 		Clipboard.addPropertyChangeListener("selection", this);
 		setEnabled(false);
-		chooser = new JFileChooser();
+		chooser = new fi.beans.numworxlf.JFileChooser();
 		log = Logger.getLogger(getClass().getName());
 	}
 
@@ -78,11 +78,9 @@ public class ImportMapAction extends GuiAction {
 	}
 
 	private void importMap(CourseMap selection) throws IOException, ParserConfigurationException, SAXException, PersistenceException, CourseException, Dwo2Exception {
-	    chooser.setCurrentDirectory(DwoHelper.getCurrentDirectory());
 	    int result = chooser.showOpenDialog(instance().getMainPanel());
 		if(result == JFileChooser.APPROVE_OPTION)
 		try {
-		    DwoHelper.setCurrentDirectory(chooser.getCurrentDirectory());
 			instance().setWait();
 			Map<String,CourseMap> directory = new HashMap<String,CourseMap>();
 			directory.put("/", selection);

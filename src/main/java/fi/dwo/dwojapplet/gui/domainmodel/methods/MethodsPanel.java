@@ -108,7 +108,7 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
     repaint();  
 }
 
-  private JFileChooser choose = new JFileChooser();
+  private JFileChooser choose = new fi.beans.numworxlf.JFileChooser();
  
   private JTable tbl;
   private Genson genson;
@@ -314,10 +314,8 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
     } else
     if (SAVE == action) {
       int r = tbl.getSelectedRow();
-      choose.setCurrentDirectory(DwoHelper.getCurrentDirectory());
       if (r >= 0 && JFileChooser.APPROVE_OPTION == choose.showSaveDialog(this)) {
         try {
-          DwoHelper.setCurrentDirectory(choose.getCurrentDirectory());
           FileOutputStream out = new FileOutputStream(choose.getSelectedFile());
           genson.serialize(model.get(r), out);
           out.close();
