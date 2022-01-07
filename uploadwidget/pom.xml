@@ -87,7 +87,7 @@
 						<Bundle-SymbolicName>nl.numworx.uploadwidget.UploadWidget</Bundle-SymbolicName>
 						<Export-Package>nl.numworx.uploadwidget</Export-Package>
 						<Main-class>nl.numworx.uploadwidget.UploadWidget</Main-class>
-						<Import-Package>!dagger.internal.codegen,!dagger.releasablereferences,!com.google.*,!com.googlecode.*,!nl.uu.fi.dwo.interaction.client.*,fi.*,*</Import-Package>
+						<Import-Package>!dagger.internal.codegen,!dagger.releasablereferences,!com.google.*,!com.googlecode.*,!nl.uu.fi.dwo.interaction.client.*,fi.*,javax.annotation;resolution:=optional,*</Import-Package>
 						<Private-Package>
 							nl.numworx.uploadwidget.*,
 							dagger,
