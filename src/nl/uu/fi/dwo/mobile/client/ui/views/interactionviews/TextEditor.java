@@ -123,7 +123,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	
 	private int width;
 	private int height;
-	private boolean volledigeBreedte;
+	private boolean volledigeBreedte, pasAanH;
 	private int asHoogte = 17;
 	OpdrNavIF comRoot;
 	private FormuleFont defaultfont = FormuleFont.createFromFontSize(14);
@@ -152,6 +152,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private String loggingID;
 	private AnimationHandle handle;
 	private final ActivityComponent activity;
+	private TekstRegel regel;
 	
 	TextEditor(ActivityComponent a, int breedte, int hoogte, boolean boxMetRand)
 	{
@@ -200,6 +201,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		height = h.getInt("hoogte");
 		volledigeBreedte = h.getBoolean("volledigeBreedte", false);
 		boxMetRand = launchdata.getBoolean("boxMetRand", true);
+		pasAanH = launchdata.getBoolean("pasAanH", false);
 
 		if(teltMee = launchdata.containsKey("scoreMax")) 
 			scoreMax = launchdata.getInt("scoreMax");
@@ -224,7 +226,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		}
 		
 		content = getContent(launchdata);
-		content.setPixelSize(width-boxsize-padding, height-menuheight-boxsize-padding);
+		content.setPixelSize(width-boxsize-padding, pasAanH ? -1 : height-menuheight-boxsize-padding);
 		Style style = content.getElement().getStyle();
 		style.setPadding(padding/2, Unit.PX);
 		//style.setBackgroundColor("white");
@@ -330,6 +332,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			setReadonly();
 		//shown = true;
 		updateEmpty();
+		pasAanH();
 	}
 
 	private Widget getContent(ObjectMap launchdata)
@@ -648,6 +651,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		selectionEnd = -1;
 		flow.clear();
 		flow.add(setCursorWidget(new InlineHTML(" \u200A")));
+		pasAanH();
 	}
 
 	@Override
@@ -692,6 +696,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				}
 		}
 		showCursor();
+		pasAanH();
 	}
 
 	private int findAt(char[] chars, int i, int length) {
@@ -743,6 +748,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		flow.insert(new Enter(), cursor); cursor++;
 		showCursor();
 		setAttempt();
+		pasAanH();
 	}
 
 	private void setAttempt() {
@@ -753,7 +759,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	    if(cursor > 0 && editable)
 	    {   flow.remove(--cursor);
 //	      sb.replace(cursor, cursor+1, "");
-	        showCursor();
+	        showCursor(); pasAanH();
 	    }
 	  }
 	  @Override
@@ -778,7 +784,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	    int max = flow.getWidgetCount()-1;
 	    if(cursor < max && editable){
 	        flow.remove(cursor);
-	        setCursorWidget(flow.getWidget(cursor));
+	        setCursorWidget(flow.getWidget(cursor)); pasAanH();
 //	      sb.replace(cursor, cursor+1, "");
 	    }
 	  }
@@ -873,6 +879,16 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		
 	}
 	
+	protected void pasAanH() {
+		if (pasAanH && regel != null && visibleChain()) {
+			int offsetHeight = flow.getOffsetHeight();
+			if (height != offsetHeight + boxsize + padding + menuheight) {
+				height  = offsetHeight + boxsize + padding + menuheight;
+				hbox.setPixelSize(-1, height-boxsize);
+				regel.resize();
+		}}
+	}
+
 	@Override
 	public void insert(char charAt)
 	{
@@ -889,14 +905,13 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		new TapForFocus(w);
 		flow.insert(w,cursor++);
 		showCursor();
+		pasAanH();
 	}
 
 	private void showCursor()
 	{
 		if (shown && visibleChain())
 			OpdrNav.defer(()->cursorWidget.getElement().scrollIntoView());
-			
-			;
 	}
 
 	private boolean visibleChain() {
@@ -1172,6 +1187,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	{
 		font = regel.getFont();
 		defaultfont = font;
+		this.regel = regel;
+		pasAanH();
 	}
 
 	@Override
@@ -1895,6 +1912,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			//comRoot.getKeyboard().setEditor(panel.editor);
 			panel.editor.requestFocus();
 			//FocusOnTouch.focus();
+			pasAanH();
 		}
 	}
 	
@@ -1910,6 +1928,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			flow.insert(panel, cursor++);
 			panel.editor.requestFocus();
 			hideEmpty();
+			pasAanH();
 		}
 		
 	}
@@ -1957,6 +1976,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				else 
 					flow.getElement().getStyle().setDisplay(Display.BLOCK);
 				handle = null;
+				pasAanH();
 			}, flow.getElement());
 	}
 
