@@ -5,6 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.vectomatic.dom.svg.OMNode;
+import org.vectomatic.dom.svg.OMNodeList;
+import org.vectomatic.dom.svg.OMSVGDocument;
+import org.vectomatic.dom.svg.OMSVGSVGElement;
+import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.utils.OMSVGParser;
+
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -12,6 +19,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.CanvasBuilder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PathBuilder;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SvgBuilder;
 import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
@@ -31,7 +39,8 @@ public class SymboolPanel implements InteractionStub, FacetAware
 	private boolean volledigeBreedte = false;
 	int ashoogte = 12;
 	
-	private final Canvas symboolCanvas;
+	private Canvas symboolCanvas;
+	private final SVGImage symboolSVG;
 	private PathBuilder ctx;
 	private Context2d ctx0;
 	
@@ -69,18 +78,20 @@ public class SymboolPanel implements InteractionStub, FacetAware
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
 		
 		init0(breedte, hoogte, launchState, randomVarWaarden);		
-		initialize();
+		if (type == ELLIPS) initialize(); else initializeSVG();
 	}
 	
 	public SymboolPanel() {
 	     symboolCanvas = Canvas.createIfSupported();
+		 OMSVGDocument doc = OMSVGParser.currentDocument();
+	     symboolSVG = new SVGImage(doc.createSVGSVGElement());
 	}
 
 	@Override
 	public void init(int width, int height, Map<String, Object> launchData,
             Map<String, Number> values ) {
 	  init0(width, height, launchData, values);
-	  initialize();
+	  if (type == ELLIPS) initialize(); else initializeSVG();
 	}
 	
 	private void init0(int width, int height, Map<String, Object> launchData,
@@ -128,6 +139,13 @@ public class SymboolPanel implements InteractionStub, FacetAware
 			symboolCanvas.setCoordinateSpaceWidth(breedte);
 		}
 		this.ctx = new CanvasBuilder(ctx);
+		paintComponent(this.ctx);
+	}
+
+	public void initializeSVG()
+	{	symboolCanvas = null;
+		symboolSVG.setPixelSize(breedte, hoogte);
+		this.ctx = new SvgBuilder(symboolSVG.getSvgElement(), 0, 0);
 		paintComponent(this.ctx);
 	}
 	
@@ -461,27 +479,47 @@ public class SymboolPanel implements InteractionStub, FacetAware
 
 	@Override
 	public void zetVolledigeBreedte(int breedte) {
-		if(volledigeBreedte)
+		if(volledigeBreedte && symboolCanvas != null)
 		{	this.breedte = breedte;
 			symboolCanvas.setCoordinateSpaceWidth(breedte);
 			symboolCanvas.setPixelSize(breedte, hoogte);
 			paintComponent(ctx);
+		} else if (volledigeBreedte) {
+			this.breedte = breedte;
+			symboolSVG.setPixelSize(breedte, hoogte);
+			OMSVGSVGElement svg = symboolSVG.getSvgElement();
+			while (svg.getChildNodes().getLength() > 0) {
+				svg.removeChild(svg.getLastChild());
+			}
+			paintComponent(ctx);		
 		}
 	}
 	
 	public void zetVolledigeHoogte(int hoogte) {
-		if(vulHoogte)
+		if(vulHoogte && symboolCanvas != null)
 		{
 			this.hoogte = hoogte;
 			symboolCanvas.setCoordinateSpaceHeight(hoogte);
 			symboolCanvas.setPixelSize(breedte, hoogte);
 			paintComponent(ctx);
+		} else if (vulHoogte) {
+			this.hoogte = hoogte;
+			symboolSVG.setPixelSize(breedte, hoogte);
+			OMSVGSVGElement svg = symboolSVG.getSvgElement();
+			while (svg.getChildNodes().getLength() > 0) {
+				svg.removeChild(svg.getLastChild());
+			}
+			paintComponent(ctx);
+			
 		}
 	}
 
 	@Override
 	public Widget asWidget() {
-		return symboolCanvas;
+		if (symboolCanvas != null)
+			return symboolCanvas;
+		else 
+			return symboolSVG;
 	}
 
 	@Override
