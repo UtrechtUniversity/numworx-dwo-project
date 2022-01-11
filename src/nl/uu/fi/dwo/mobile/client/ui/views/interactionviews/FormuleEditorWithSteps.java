@@ -37,6 +37,9 @@ import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
+import com.google.gwt.animation.client.AnimationScheduler;
+import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
+import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -217,6 +220,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	private boolean scoreCumulatief = false;
 	
 	private int borderWidth = (Integer)DWOplayer.templateConstants.answerboxFEWA("border-width");
+
+	private AnimationHandle handle;
 	
 	public static void zetFontOverervingForm(boolean b)
 	{	fontOvererving = b;
@@ -238,6 +243,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			hoogte = map.getInt("hoogte");
 		if (map.containsKey("volledigeBreedte"))
 			volledigeBreedte = map.getBoolean("volledigeBreedte");
+		minHeight = hoogte - 30;
 		
 		facade = new PopupFacade(map, activity);
 		rmknop = false;
@@ -608,7 +614,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				contentPanel.add(pijlVak);
 				contentPanel.setWidgetRightWidth(pijlVak, 0, Style.Unit.PX, pijlX, Style.Unit.PX);
 				contentPanel.setWidgetTopHeight(pijlVak, y, Style.Unit.PX, pijlVak.getHeight(), Style.Unit.PX);
-				pijlVak.setPijlVisible(pijl);
+				pijlVak.setPijlVisible(pijl, contentPanel);
 				
 				pijlVakken.add(pijlVak);
 				
@@ -739,7 +745,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			viewers.remove(stepPanels.size() - 1);
 		}
 		editor = null;
-		checkimg.setVisible(false);
+		hideCheckimg();
 		if (hasPrefix)
 			current.remove(prefixViewer.getAsPanel());
 		terugButton.getElement().getStyle().setVisibility(Visibility.VISIBLE);
@@ -829,7 +835,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		pijlVak.zetMaat();
 		contentPanel.setWidgetRightWidth(pijlVak, 0, Style.Unit.PX, pijlX, Style.Unit.PX);
 		contentPanel.setWidgetTopHeight(pijlVak, y, Style.Unit.PX, pijlVak.getHeight(), Style.Unit.PX);
-		pijlVak.setPijlVisible(pijl);
+		pijlVak.setPijlVisible(pijl, contentPanel);
 		pijlVakken.add(pijlVak);
 		pijlVak.paintComponent();
 		
@@ -855,7 +861,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		stepPanelY += fv.getHeightWithImage() + stapH;
 		contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
 		requestFocus();
-		checkimg.setVisible(false);
+		hideCheckimg();
 		
 		//nodig om te zorgen dat gebruikerssubstituties voor pijlen blijven staan:
 		if (gebruikersSubstitutiesVak != null && gebruikersSubstitutiesVak.asWidget().isAttached())
@@ -937,8 +943,41 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + hoogteStepPanelMetEditor()+8, Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX);
 			}
 		}
+		if (pasAanH) {
+			pasAanH();
+		}
+		
 		scrollToBottom();
 		scrollToHorizontalFocus();
+	}
+
+	private int minHeight;
+	
+	private void pasAanH() {
+		if (handle != null || !pasAanH) return;
+		AnimationCallback r = new AnimationCallback() {
+
+			public void execute(double d) {
+				int count = contentPanel.getWidgetCount();
+				int height = minHeight; // 1 regel minimum
+				for (int i = 0; i < count; i++) {
+					Widget w = contentPanel.getWidget(i);
+					com.google.gwt.dom.client.Element item = contentPanel.getWidgetContainerElement(w);
+					int oh = item.getOffsetHeight();
+					int ow = item.getOffsetWidth();
+					boolean vis = w.isVisible();
+					if (oh > 0 && ow > 0 && vis)
+						height = Math.max(height, oh + item.getOffsetTop());
+				}
+				GWT.log("height = " + height + " >= " + minHeight);
+				if (parentRegel != null && height != hoogte - 30) {
+					setSize(breedte, height + 30);
+					parentRegel.resize();
+				}
+				handle = null;
+			}
+		};
+		handle = AnimationScheduler.get().requestAnimationFrame(r);
 	}
 
 	public void resizeStelselContentPanel()
@@ -1107,7 +1146,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				current.remove(editor.getAsPanel());
 				if (hasPrefix)
 					current.remove(prefixViewer.getAsPanel());
-				checkimg.setVisible(false);
+				hideCheckimg();
 			}
 			if (stapNr > 0)
 			{	
@@ -1184,7 +1223,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			}
 			else
 			{	editor = null;
-				checkimg.setVisible(false);
+			hideCheckimg();
 			}
 			if (stapNr > 0)
 				stapNr--;
@@ -2348,7 +2387,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 					stepPanel.remove(editor.getAsPanel());
 					editor.getAsPanel().removeFromParent();
 					editor = null;
-					checkimg.setVisible(false);
+					hideCheckimg();
 				}
 				else if (viewers.size() > i)
 					stepPanel.remove(viewers.get(i).getAsPanel());
@@ -2471,7 +2510,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 					{
 						//stap terug doen en die nakijken, zodat de feedback goed kan worden bepaald. Alleen nodig bij oefenmodi.
 						stepPanel.remove(editor);
-						checkimg.setVisible(false);
+						hideCheckimg();
 						stapNr--;
 						this.stapNr--;
 						stepPanels.remove(stepPanels.size() - 1);
@@ -2938,7 +2977,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		checkimg.removeFromParent();
 		LayoutPanel parent = (LayoutPanel) editor.getAsPanel().getParent();
 		parent.add(checkimg);
-		checkimg.setVisible(true);
+		parent.setWidgetVisible(checkimg, true);
 		parent.setWidgetLeftWidth(checkimg, 0, Style.Unit.PX, 20, Style.Unit.PX);
 		parent.setWidgetTopHeight(checkimg, 0, Style.Unit.PX, 20, Style.Unit.PX);
 	}
@@ -2948,13 +2987,20 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	 */
 	void resetimg() 
 	{
-		checkimg.setVisible(false);
+		hideCheckimg();
 		
 		// verberg de feedback
 		if (hasFeedback)
 		{
 			feedbackPanel.removeFromParent();
 		}
+	}
+
+	private void hideCheckimg() {
+		if (checkimg.getParent() instanceof LayoutPanel) {
+			((LayoutPanel) checkimg.getParent()).setWidgetVisible(checkimg, false);
+		} else
+			checkimg.setVisible(false);
 	}
 	
 	public void kijkNa()
@@ -3569,7 +3615,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				{	
 					current.remove(editor.getAsPanel());
 					editor = null;
-					checkimg.setVisible(false);
+					hideCheckimg();
 				}
 				if (hasPrefix)
 					current.remove(prefixViewer.getAsPanel());
@@ -3646,7 +3692,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		
 		int goedHalfFout = editor.getGoedHalfFout();
 		editor = null;
-		checkimg.setVisible(false);
+		hideCheckimg();
 		
 		if (hasPrefix)
 		{
@@ -3937,7 +3983,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			}
 
 			Panel p = fv.getAsPanel();
-			p.getElement().getStyle().setProperty("display", "inline");
+			p.getElement().getStyle().setDisplay(Style.Display.INLINE);
 			stepPanel.add(p);
 			if (bordjesMethode)
 				addFormulePanelListeners(fv); 

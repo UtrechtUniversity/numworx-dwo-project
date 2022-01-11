@@ -332,6 +332,14 @@ public class PijlVak extends LayoutPanel
 		else
 			setVisible(true);
 	}
+
+	public void setPijlVisible(boolean b, LayoutPanel parent)
+	{
+		if (!b && (operator.equals("implicatie") || operator.equals("")) && geefExpressieString().length() < 1)
+			parent.setWidgetVisible(this, false);
+		else
+			parent.setWidgetVisible(this, true);
+	}
 	
 	public void paintComponent()
 	{
