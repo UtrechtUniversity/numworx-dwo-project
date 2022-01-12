@@ -7,10 +7,14 @@ import java.util.Map;
 
 import org.vectomatic.dom.svg.OMNode;
 import org.vectomatic.dom.svg.OMNodeList;
+import org.vectomatic.dom.svg.OMSVGCircleElement;
 import org.vectomatic.dom.svg.OMSVGDocument;
+import org.vectomatic.dom.svg.OMSVGEllipseElement;
 import org.vectomatic.dom.svg.OMSVGSVGElement;
+import org.vectomatic.dom.svg.OMSVGStyle;
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.utils.OMSVGParser;
+import org.vectomatic.dom.svg.utils.SVGConstants;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -78,7 +82,8 @@ public class SymboolPanel implements InteractionStub, FacetAware
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
 		
 		init0(breedte, hoogte, launchState, randomVarWaarden);		
-		if (type == ELLIPS) initialize(); else initializeSVG();
+		//if (type == ELLIPS) initialize(); else 
+		initializeSVG();
 	}
 	
 	public SymboolPanel() {
@@ -91,7 +96,8 @@ public class SymboolPanel implements InteractionStub, FacetAware
 	public void init(int width, int height, Map<String, Object> launchData,
             Map<String, Number> values ) {
 	  init0(width, height, launchData, values);
-	  if (type == ELLIPS) initialize(); else initializeSVG();
+	  //if (type == ELLIPS) initialize(); else 
+	  initializeSVG();
 	}
 	
 	private void init0(int width, int height, Map<String, Object> launchData,
@@ -407,7 +413,7 @@ public class SymboolPanel implements InteractionStub, FacetAware
 //				g2.drawArc(getSize().width - 12, y, 10, 10, 0, 90);
 			}
 		}
-		else if(type == ELLIPS)
+		else if(type == ELLIPS && ctx instanceof CanvasBuilder)
 		{
 			ctx0.save(); // FIXME
 			ctx.beginPath();
@@ -418,6 +424,19 @@ public class SymboolPanel implements InteractionStub, FacetAware
 			 
 //			g2.draw(new Ellipse2D.Double(dikte, dikte, this.getWidth() - 2 * dikte, this.getHeight() - 2 * dikte));
 		}
+		else if (type == ELLIPS && ctx instanceof SvgBuilder) {
+			
+			OMSVGEllipseElement ellipse = new OMSVGEllipseElement(breedte/2.0f, hoogte/2.0f, (breedte-dikte)/2.0f, (hoogte-dikte)/2.0f);
+			OMSVGStyle style = ellipse.getStyle();
+			
+			style.setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, kleur.value());
+			style.setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, SVGConstants.CSS_NONE_VALUE);
+			style.setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, Double.toString(dikte));
+			symboolSVG.getSvgElement().appendChild(ellipse);
+		}
+		
+		
+		
 		else if(type == HAAK)
 		{
 			if(richting == RICHTING_LINKS)
