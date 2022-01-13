@@ -3,7 +3,7 @@
   <parent>
     <groupId>nl.numworx.uploadwidget</groupId>
     <artifactId>UploadWidget-parent</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
     <relativePath>../</relativePath>
   </parent>
   <artifactId>uploadwidget</artifactId>
@@ -12,7 +12,7 @@
   	<dependency>
   		<groupId>nl.numworx.uploadwidget</groupId>
   		<artifactId>uploadwidget-common</artifactId>
-  		<version>0.0.1</version>
+  		<version>0.0.2-SNAPSHOT</version>
   	</dependency>
 		<dependency>
 			<groupId>javax.inject</groupId>
