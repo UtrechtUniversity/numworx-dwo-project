@@ -638,10 +638,10 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<DWOplayerVersion>2.5.4-SNAPSHOT</DWOplayerVersion>
+		<DWOplayerVersion>2.5.4</DWOplayerVersion>
 		<DWOmAccessVersion>2.5.2</DWOmAccessVersion>
 		<RegisterVersion>2.5.2</RegisterVersion>
-		<DWOGwtClientVersion>2.5.4-SNAPSHOT</DWOGwtClientVersion>
+		<DWOGwtClientVersion>2.5.4</DWOGwtClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testeb4server</aws.environmentName>
@@ -684,7 +684,7 @@
 				<dependency>
 					<groupId>nl.numworx.uploadwidget</groupId>
 					<artifactId>UploadWidgetGWT</artifactId>
-					<version>0.0.1-SNAPSHOT</version>
+					<version>0.0.1</version>
 					<classifier>classes</classifier>
 				</dependency>			
 			</dependencies>
