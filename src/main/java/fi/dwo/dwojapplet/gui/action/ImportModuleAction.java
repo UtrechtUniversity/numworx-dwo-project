@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui.action;
 
+import fi.beans.numworxlf.JFileChooser;
 import fi.dwo.commons.exceptions.CourseException;
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.exceptions.PersistenceException;
@@ -43,7 +44,7 @@ public class ImportModuleAction extends GuiAction {
     private static final Logger LOG = Logger.getLogger(ImportModuleAction.class.getName());
 
     private CourseMap course;
-    private FileDialog openDial;
+    private JFileChooser openDial;
     private String dir;
 
     {
@@ -76,9 +77,8 @@ public class ImportModuleAction extends GuiAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Frame topFrame = DwoHelper.getFrameForComponent(null);
-        openDial = new FileDialog(topFrame, getToolTipText(), FileDialog.LOAD);
-        openDial.setDirectory(dir);
+//        Frame topFrame = DwoHelper.getFrameForComponent(null);
+        openDial = new JFileChooser(getToolTipText());
         if (course instanceof Course && !((Course) course).isWithChildren()) {
             try {
                 importScos((Course) course);
@@ -121,14 +121,15 @@ public class ImportModuleAction extends GuiAction {
     }
 
     private void importScos(Course course) throws ParserConfigurationException, SAXException, IOException, DwoXmlRpcException, XmlRpcException, SQLException, PersistenceException, Dwo2Exception {
-        String naam;
-        openDial.setTitle(getToolTipText());
-        openDial.show();
-        naam = openDial.getFile();
-        if (naam != null) {
-            File dir = new File(openDial.getDirectory());
+        File naam;
+        openDial.setDialogTitle(getToolTipText());
+        final Frame topFrame = DwoHelper.getFrameForComponent(null);
+        int ok = openDial.showOpenDialog(topFrame);
+        naam = openDial.getSelectedFile();
+        if (ok == JFileChooser.APPROVE_OPTION && naam != null) {
+            File dir = (openDial.getCurrentDirectory());
             this.dir = dir.getAbsolutePath();
-            File file = new File(dir, naam);
+            File file = naam;
             FileInputStream input = new FileInputStream(file);
             DWOFile zipper = new DWOFile();
             Hashtable result = zipper.inputIMSManifest(input);
@@ -155,17 +156,18 @@ public class ImportModuleAction extends GuiAction {
 
 	// import a backup into a map
 	private void upload(CourseMap map) throws Exception {
-		
-    	String naam;
-    	openDial.setTitle("Restore module backup");
-		openDial.show();
-		naam = openDial.getFile();
+        final Frame topFrame = DwoHelper.getFrameForComponent(null);
+
+    	File naam;
+    	openDial.setDialogTitle("Restore module backup");
+		int ok = openDial.showOpenDialog(topFrame);
+		naam = openDial.getSelectedFile();
 		//CourseMap courses[] = map.getChildren();
-		if(naam!=null)
+		if(ok == JFileChooser.APPROVE_OPTION && naam!=null)
 		{	
-			File dir = new File(openDial.getDirectory());
+			File dir = (openDial.getCurrentDirectory());
 			this.dir = dir.getAbsolutePath();
-			File file = new File(dir, naam);
+			File file = naam;
 			FileInputStream input = new FileInputStream(file);
 			DWOFile zipper = new DWOFile();
 			importModule(map, input, zipper);

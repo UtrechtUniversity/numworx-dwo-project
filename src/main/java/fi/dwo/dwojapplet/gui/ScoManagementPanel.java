@@ -83,7 +83,6 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     private JLabel label;
 
     private JLabel noScosLabel;
-    private FileDialog saveDial, openDial;
 
     private JCheckBox editorCB, visibleCB;
 
@@ -282,13 +281,6 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         noScosLabel.setLocation((this.getSize().width / 2) - (noScosLabel.getSize().width / 2), 100);
 
         addScoTable();
-        if (DwoHelper.isSecure()) {
-            final Frame topFrame = DwoHelper.getFrameForComponent(null);
-            saveDial = new FileDialog(topFrame, exportCourseButton.getToolTipText(), FileDialog.SAVE);
-            saveDial.setDirectory(System.getProperty("user.dir", "."));
-            openDial = new FileDialog(topFrame, importScosButton.getToolTipText(), FileDialog.LOAD);
-            openDial.setDirectory(System.getProperty("user.dir", "."));
-        }
         
         if (DwoHelper.isPremium()) {
           JButton trash = new JButton(new ScoUnTrashAction(course));

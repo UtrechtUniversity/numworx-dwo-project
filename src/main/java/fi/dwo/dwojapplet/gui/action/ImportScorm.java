@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui.action;
 
+import fi.beans.numworxlf.JFileChooser;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DwoHelper;
@@ -9,6 +10,7 @@ import java.awt.FileDialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,7 +23,7 @@ import java.util.zip.ZipFile;
 public class ImportScorm extends GuiAction {
     private static final Logger LOG = Logger.getLogger(ImportScorm.class.getName());
 
-    private FileDialog openDial;
+    private JFileChooser openDial;
     private Sco sco;
 
     public ImportScorm() {
@@ -38,28 +40,27 @@ public class ImportScorm extends GuiAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Component source = (Component) e.getSource();
-        final Frame topFrame = DwoHelper.getFrameForComponent(source);
-        openDial = new FileDialog(topFrame, "openen", FileDialog.LOAD);
-        openDial.setDirectory(System.getProperty("user.dir", "."));
+        openDial = new JFileChooser("openen");
+        //openDial.setDirectory(System.getProperty("user.dir", "."));
 
 		if(sco == null)
 		{
 			final CourseMap selection = Clipboard.getSelection();
 			if(selection != null && selection.getUserObject() instanceof Sco)
-				open( (Sco) selection.getUserObject());
+				open( (Sco) selection.getUserObject(), source);
 		}
 	    else
-	    	open(sco);
+	    	open(sco, source);
 	}
 	
 	
-	private void open(Sco sco)
-	{	String directory,naam;
-		openDial.show();
-		directory = openDial.getDirectory();
-		naam = openDial.getFile();
-		if(naam!=null)
-		{	readZip(directory+naam, sco);
+	private void open(Sco sco, Component source)
+	{	File directory,naam;
+		int ok = openDial.showOpenDialog(source);
+		directory = openDial.getCurrentDirectory();
+		naam = openDial.getSelectedFile();
+		if(ok == JFileChooser.APPROVE_OPTION && naam!=null)
+		{	readZip(naam.getAbsolutePath(), sco);
 		}
 	}
 		
