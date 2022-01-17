@@ -40,7 +40,7 @@ public class ImportScorm extends GuiAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Component source = (Component) e.getSource();
-        openDial = new JFileChooser("openen");
+        openDial = new JFileChooser();openDial.setDialogTitle("openen");
         //openDial.setDirectory(System.getProperty("user.dir", "."));
 
 		if(sco == null)

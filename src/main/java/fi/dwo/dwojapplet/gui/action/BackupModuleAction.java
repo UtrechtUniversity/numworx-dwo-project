@@ -64,7 +64,7 @@ public class BackupModuleAction extends GuiAction {
     private void export(Course course) throws ParserConfigurationException, TransformerException, SQLException, IOException, XmlRpcException, PersistenceException {
         File naam;
         final Frame topFrame = DwoHelper.getFrameForComponent(null);
-        saveDial = new JFileChooser(tip);
+        saveDial = new JFileChooser();saveDial.setDialogTitle(tip);
         int ok = saveDial.showSaveDialog(topFrame);
         naam = saveDial.getSelectedFile();
         if (ok == JFileChooser.APPROVE_OPTION && naam != null) {
