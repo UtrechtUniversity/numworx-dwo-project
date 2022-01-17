@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +83,7 @@ abstract class AbstractStudentModelPresenter {
   protected final String lang;
   protected final EventBus bus;
   protected Map<String,Map<String,Set<Integer>>> filter = Collections.emptyMap();
+  protected Map<DomTree<String>, Integer> treeOrder;
   protected DwoGlobalVars dwoGlobalVars;
   @Inject
   protected StudentModelService service;
@@ -93,6 +95,7 @@ abstract class AbstractStudentModelPresenter {
     this.FAILURE = new LoggingFailure(LOG, bus);
     lang = LocaleInfo.getCurrentLocale().getLocaleName();
     this.dwoGlobalVars = vars;
+    this.treeOrder = new IdentityHashMap<DomTree<String>, Integer>();
   }
 
   protected String getTitle(DomStudentModelContextInfo info) {
@@ -163,6 +166,7 @@ abstract class AbstractStudentModelPresenter {
     			}
     		}
     		insertChildren(all, struc.getCategories());
+    		treeOrder.clear();
     		view.showTree(tree);
     		view.setTitle(FilterUtil.setFilter(filter, method));
     		return m;
@@ -170,6 +174,10 @@ abstract class AbstractStudentModelPresenter {
   }
 
   int methodOrder(DomTree<String> a, DomTree<String> b) {
+	Integer ia = treeOrder.get(a);
+	Integer ib = treeOrder.get(b);
+	if (ia != null && ib != null) return ia.compareTo(ib);
+	  
   	String as = a.getObject();
   	String bs = b.getObject();
   	boolean ab = as.equals(StudentResultsPresenter.BEGRIPPEN_EN_VAKTAAL);
@@ -197,6 +205,7 @@ abstract class AbstractStudentModelPresenter {
   						String item = key + "-" + book + "-" + chap + ext;
   						all.computeIfPresent(item, (k, v) -> { 
   							DomTree<String> vv = new DomTree<>(title); vv.setChildren(null);
+  							treeOrder.put(vv, treeOrder.size());
   							v.getChildren().put(obj.getInfo().getId(), vv);							
   						return v;});
   					}));});
