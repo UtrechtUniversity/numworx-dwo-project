@@ -78,7 +78,7 @@ public class ImportModuleAction extends GuiAction {
     @Override
     public void actionPerformed(ActionEvent e) {
 //        Frame topFrame = DwoHelper.getFrameForComponent(null);
-        openDial = new JFileChooser(getToolTipText());
+        openDial = new JFileChooser();openDial.setDialogTitle(getToolTipText());
         if (course instanceof Course && !((Course) course).isWithChildren()) {
             try {
                 importScos((Course) course);

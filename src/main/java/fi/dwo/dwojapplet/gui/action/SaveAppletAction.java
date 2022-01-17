@@ -50,7 +50,7 @@ public class SaveAppletAction extends GuiAction {
             }
         }
 //DwoHelper.getFrameForComponent((Component) e.getSource()),
-        saveDial = new JFileChooser("opslaan");
+        saveDial = new JFileChooser();saveDial.setDialogTitle("opslaan");
         saveDial.setName("*.htm");
 
         saveApplet((Component) e.getSource());
