@@ -7,6 +7,7 @@ import java.awt.event.ItemListener;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,6 +32,7 @@ public class MethodListener implements ItemListener, ActionListener {
   private PersistenceId activeMethod;
   final private JTree tree;
   final private TreeModel model;
+  private Map<Object, Integer> treeOrder = new IdentityHashMap<>();
   private FilterAction filterAction;
   
   public MethodListener(JCheckBox box, JTree tree, FilterAction filteraction) {
@@ -76,11 +78,15 @@ public class MethodListener implements ItemListener, ActionListener {
             for(String mi : infos) {
               if (title.startsWith("W:")) 
                 mi += "-W:";
-              nodes.computeIfPresent(mi, (k, n) -> { InvisibleNode node = new InvisibleNode(new NodeLeaf(title, nl.getInfo(),nl.getLanguage(), false), false, true);insertMethod(n,node); return n; });
+              nodes.computeIfPresent(mi, (k, n) -> { 
+                InvisibleNode node = new InvisibleNode(new NodeLeaf(title, nl.getInfo(),nl.getLanguage(), false), false, true);
+                treeOrder.put(node, treeOrder.size());
+                insertMethod(n,node); return n; });
             }
           }
         }
         methodModel = new InvisibleTreeModel(root);
+        treeOrder.clear();
         filterMethod(filterAction.filter);
       }
       tree.setModel(methodModel);
@@ -138,12 +144,21 @@ public class MethodListener implements ItemListener, ActionListener {
     String title = node.toString();
     for (int i = 0; i < count; i++) {
       TreeNode child = parent.getChildAt(i);
-      if (compareMethod(title, child.toString()) < 0) {
+      if (compareMethod(node, child, title, child.toString()) < 0) {
         parent.insert(node, i);
         return;
       }
     }
     parent.add(node);
+  }
+
+  // TreeOrder is nu nog gegenereerd, maar kan ook uit een 'database' komen. 
+  private int compareMethod(InvisibleNode a, TreeNode b, String as, String bs) {
+    Integer ia = treeOrder.get(a);
+    Integer ib = treeOrder.get(b);
+    if (ia != null && ib != null) return ia.compareTo(ib);
+    
+    return compareMethod(as, bs);
   }
 
   private int compareMethod(String as, String bs) {
