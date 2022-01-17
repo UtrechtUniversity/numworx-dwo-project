@@ -25,9 +25,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.FileDialog;
 import java.awt.FlowLayout;
-import java.awt.Frame;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -103,7 +101,6 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
     private JLabel noCoursesLabel;
 
-	private FileDialog openDial;
 	private CourseMap  map = this;
 
 	private JTable jTable;
@@ -547,11 +544,6 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         //this.add(noCoursesLabel);
         buildJTable();
 
-        if(DwoHelper.isSecure()) {
-        	final Frame topFrame = DwoHelper.getFrameForComponent(null);
-        	openDial = new FileDialog(topFrame, uploadCourseButton.getLabel(), FileDialog.LOAD);
-        	openDial.setDirectory(System.getProperty("user.dir","."));
-        }
     }
 
  
@@ -887,9 +879,6 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 // KOPIE van ScoManagement
     private void importCourseLogo(Course course) throws IOException {
         String naam; // FIXME
- //       openDial.setTitle(TextMapper.format(TextMapper.GUIS_LOAD_LOGO, new Object[]{course.toString()}));
- //       openDial.show();
- //       naam = openDial.getFile();
         if (iconDial == null) iconDial = new IconDialog();
         iconDial.setDialogTitle(TextMapper.format(TextMapper.GUIS_LOAD_LOGO, new Object[]{course.toString()}));
         int r = iconDial.showOpenDialog(this);
@@ -906,7 +895,6 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         
         if (naam != null) {
             ByteArrayOutputStream output = new ByteArrayOutputStream();
-            //File dir = new File(openDial.getDirectory());
             BufferedImage img = ImageIO.read(file);
             Image reduced;
             int w = img.getWidth();

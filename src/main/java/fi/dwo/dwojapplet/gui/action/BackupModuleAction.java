@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui.action;
 
+import fi.beans.numworxlf.JFileChooser;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
@@ -23,16 +24,12 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 public class BackupModuleAction extends GuiAction {
     private static final Logger LOG = Logger.getLogger(BackupModuleAction.class.getName());
 
-    private FileDialog saveDial;
+    private JFileChooser saveDial;
     private String tip;
-    private String dir;
 
     public BackupModuleAction(Course course) {
         super(TextMapper.getText("Backup module"));
         setEnabled(DwoHelper.isSecure());
-        if (isEnabled()) {
-            dir = System.getProperty("user.dir", ".");
-        }
         tip = TextMapper.getText("Backup module");
         this.course = course;
         tip = "Backup activiteiten van module " + course;  // TODO vertalen
@@ -45,9 +42,6 @@ public class BackupModuleAction extends GuiAction {
     public BackupModuleAction() {
         super(TextMapper.getText("Backup module"));
         setEnabled(DwoHelper.isSecure());
-        if (isEnabled()) {
-            dir = System.getProperty("user.dir", ".");
-        }
         tip = TextMapper.getText("Backup module");
         Clipboard.addPropertyChangeListener("selection", this);
         setEnabled(false);
@@ -68,16 +62,13 @@ public class BackupModuleAction extends GuiAction {
     }
 
     private void export(Course course) throws ParserConfigurationException, TransformerException, SQLException, IOException, XmlRpcException, PersistenceException {
-        String naam;
+        File naam;
         final Frame topFrame = DwoHelper.getFrameForComponent(null);
-        saveDial = new FileDialog(topFrame, tip, FileDialog.SAVE);
-        saveDial.setDirectory(dir);
-        saveDial.show();
-        naam = saveDial.getFile();
-        if (naam != null) {
-            File lclDir = new File(saveDial.getDirectory());
-            this.dir = lclDir.getAbsolutePath();
-            File file = new File(lclDir, naam);
+        saveDial = new JFileChooser(tip);
+        int ok = saveDial.showSaveDialog(topFrame);
+        naam = saveDial.getSelectedFile();
+        if (ok == JFileChooser.APPROVE_OPTION && naam != null) {
+            File file = naam;
             FileOutputStream out = new FileOutputStream(file);
             DWOFile zipper = new DWOFile();
             zipper.createIMSManifest(course, out);

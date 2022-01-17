@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui.action;
 
+import fi.beans.numworxlf.JFileChooser;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.CourseMap;
@@ -10,6 +11,7 @@ import java.awt.Component;
 import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,7 +25,7 @@ import java.util.Hashtable;
 public class SaveAppletAction extends GuiAction {
 
     private Sco sco0, sco; // in constructor
-    private FileDialog saveDial;
+    private JFileChooser saveDial;
 
     public SaveAppletAction(Sco sco) {
         super("Export Applet");
@@ -47,25 +49,25 @@ public class SaveAppletAction extends GuiAction {
                 return;
             }
         }
-
-        saveDial = new FileDialog(DwoHelper.getFrameForComponent((Component) e.getSource()), "opslaan", FileDialog.SAVE);
-        saveDial.setDirectory(System.getProperty("user.dir", "."));
+//DwoHelper.getFrameForComponent((Component) e.getSource()),
+        saveDial = new JFileChooser("opslaan");
         saveDial.setName("*.htm");
 
-        saveApplet();
+        saveApplet((Component) e.getSource());
 
     }
 
-    private void saveApplet() {
-        String directory, naam;
-        saveDial.show();
-        directory = saveDial.getDirectory();
-        naam = saveDial.getFile();
-        if (naam != null) {
-            if (naam.indexOf(".") > -1) {
+    private void saveApplet(Component source) {
+        File file, directory;
+        int ok = saveDial.showSaveDialog(source);
+        file = saveDial.getSelectedFile();
+        directory = saveDial.getCurrentDirectory();
+        if (ok == JFileChooser.APPROVE_OPTION && file != null) {
+            String naam = file.getAbsolutePath();
+            if (naam.lastIndexOf(".") > -1) {
                 naam = naam.substring(0, naam.indexOf("."));
             }
-            schrijfGrApplet(directory + "" + sco.getScoName() + ".htm");
+            schrijfGrApplet(directory.getAbsolutePath() + "" + sco.getScoName() + ".htm");
         }
     }
 
