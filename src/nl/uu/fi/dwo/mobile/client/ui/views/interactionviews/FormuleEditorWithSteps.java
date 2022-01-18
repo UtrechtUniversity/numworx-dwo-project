@@ -1230,7 +1230,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			
 //			setStapOk(false); // verplaatst naar later hieronder 
 			
-			if (stapNr <= 1 && hasStartString)
+			if (stapNr <= 1 && hasStartString && !(bordjesMethode && stapNr==1))
 				terugButton.getElement().getStyle().setVisibility(Visibility.HIDDEN);
 				
 			if (!isToets() && stapNr == 0 && eigenOpdr)
@@ -2611,7 +2611,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			}
 		}
 
-		if (stapNr > 1 || !hasStartString)
+		if (stapNr > 1 || !hasStartString || (stapNr>0 && bordjesMethode))
 			terugButton.getElement().getStyle().setVisibility(Visibility.VISIBLE);
 		
 		if (editor != null)
