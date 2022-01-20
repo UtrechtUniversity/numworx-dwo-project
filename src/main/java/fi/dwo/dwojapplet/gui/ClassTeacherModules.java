@@ -17,6 +17,7 @@ import org.osgi.util.promise.Promises;
 
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.dwojapplet.domain.ClassCourse;
 import fi.dwo.dwojapplet.domain.Course;
@@ -29,6 +30,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManage
 import nl.uu.fi.dwo.rest.dom.DomCoursesOfSchoolclassTree;
 import nl.uu.fi.dwo.rest.dom.DomTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
@@ -220,6 +222,7 @@ final public class ClassTeacherModules {
     return c;
   }
 
+  // XXX uitzoeken hoe we 4 setXXX calls kunnen vervangen door 1 update
   private void saveSelectedCourses(DomSchoolClass schoolClass, MyCourse[] oldselected,
                                    Course[] selected) {
                                  // TODO attach selected & detach oldselected
@@ -256,12 +259,20 @@ final public class ClassTeacherModules {
                                  type.setDomDwoProfile(DWO.getDwoProfile());
                                  type.setDomSchoolClass(schoolClass);
                                  
+                                 DomClassCourseFull ccfull = new DomClassCourseFull();
+                                 ccfull.setClassId(schoolClass.getId());
+                                 
                                  selectedList = Arrays.asList(oldselected);
                                  for(Course c: selected) {
                                    if(c.link == null) 
                                      c.link = new ClassCourse();
                                    DomCourse domcourse = toDomCourse(c);
-
+                                   ccfull.setCourseId(domcourse.getId());
+                                   if (c.link.getClassCourseID() != 0)
+                                     ccfull.setId(PersistentClassCourse.buildPersistenceId(Long.valueOf(c.link.getClassCourseID())));
+                                   else 
+                                     ccfull.setId(null);
+                                   
                                    if (!selectedList.contains(c)) {
                                      try {
                                        dom.setCourse(domcourse);
@@ -274,6 +285,7 @@ final public class ClassTeacherModules {
 
                                    from.setCourse(domcourse);
                                    from.setFrom(c.link.getNotBefore());
+                                   ccfull.setNotBefore(c.link.getNotBefore());
                                    try {
                                      SecureTeacherSchoolClassManager.setFromDataClassCourse(from);
                                    } catch (Dwo2Exception e) {
@@ -283,6 +295,7 @@ final public class ClassTeacherModules {
 
                                    to.setCourse(domcourse);
                                    to.setTo(c.link.getNotAfter());
+                                   ccfull.setNotAfter(c.link.getNotAfter());
                                    try {
                                      SecureTeacherSchoolClassManager.setToDataClassCourse(to);
                                    } catch (Dwo2Exception e) {
@@ -291,6 +304,7 @@ final public class ClassTeacherModules {
                                    }
                                    type.setCourse(domcourse);
                                    type.setType(CourseType.values()[c.link.getType()]);
+                                   ccfull.setCourseType(type.getType());
                                    try {
                                      SecureTeacherSchoolClassManager.setClassCourseType(type);
                                    } catch (Dwo2Exception e) {
@@ -298,7 +312,8 @@ final public class ClassTeacherModules {
                                      return;
                                    }
                                    key.setCourse(domcourse);
-                                   key.setAccessKey(c.link.getAccessKey());;
+                                   key.setAccessKey(c.link.getAccessKey());
+                                   ccfull.setAccessKey(key.getAccessKey());
                                    try {
                                      SecureTeacherSchoolClassManager.setAccessKeyClassCourse(key);
                                    } catch (Dwo2Exception e) {
@@ -306,6 +321,16 @@ final public class ClassTeacherModules {
                                      return;
                                    }
                                   
+                                   if (ccfull.getId() != null && false) {
+                                     try {
+                                       SecureTeacherSchoolClassManager.updateClassCourse(ccfull);
+                                     } catch (Dwo2Exception e) {
+                                       LOG.log(Level.SEVERE, "update", e);
+
+                                     }
+                                   }
+                                   
+                                   
                                    if (!selectedList.contains(c)) {
                                      try {
                                        SecureTeacherSchoolClassManager.attachCourseToClass(dom); // commit attach

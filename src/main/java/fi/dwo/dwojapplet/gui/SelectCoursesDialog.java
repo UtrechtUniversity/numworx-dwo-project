@@ -1149,6 +1149,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
             if (children == null && Boolean.TRUE.equals(cds[i].select)) {
                 Course course = cds[i].course;
                 if (sc != null) {
+                    ClassCourse old = course.link;
                     ClassCourse link = course.link = new ClassCourse();
                     link.setCourseID(course.getID());
                     link.setClassID(sc.getID());
@@ -1156,6 +1157,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                     link.setNotBefore(cds[i].van);
                     link.setType(cds[i].type);
                     link.setAccessKey(cds[i].accessKey);
+                    if (old != null) link.setClassCourseID(old.getClassCourseID());
                 }
                 vector.addElement(course);
                 addParent(vector, course);
