@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.jclient.lib.rest.managers;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
@@ -24,6 +25,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.PathId;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
+import nl.uu.fi.dwo.rest.entities.RestClassCourseFull;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
@@ -402,5 +404,11 @@ public class SecureTeacherSchoolClassManager {
     return getModules(submit);
   }
   
+  public static DomClassCourseFull updateClassCourse(DomClassCourseFull submit) throws Dwo2Exception {
+	  RestClassCourseFull rest = new RestClassCourseFull();
+	  rest.setDomCourse(submit);
+	  rest.setRestContext(getContext());
+	  return getRestManager().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/classcourse/update", DomClassCourseFull.class, rest);
+  }
   
 }
