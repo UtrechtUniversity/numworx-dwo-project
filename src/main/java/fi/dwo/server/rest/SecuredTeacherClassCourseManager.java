@@ -58,8 +58,11 @@ public class SecuredTeacherClassCourseManager {
 // editable fields?
 			if(cc.getAccessKey() != null) pc.setAccessKey(cc.getAccessKey());
 			if(cc.getCourseType() != null) pc.setType(cc.getCourseType().ordinal());
-			if(cc.getNotAfter() != null) pc.setNotAfter(cc.getNotAfter());
-			if(cc.getNotBefore() != null) pc.setNotBefore(cc.getNotBefore());
+// null is een acceptable value
+			//if(cc.getNotAfter() != null)
+				pc.setNotAfter(cc.getNotAfter());
+			//if(cc.getNotBefore() != null) 
+				pc.setNotBefore(cc.getNotBefore());
 			if(cc.getViewState() != null) pc.setViewState(cc.getViewState());
 // optimistic locking or user managed?
 
