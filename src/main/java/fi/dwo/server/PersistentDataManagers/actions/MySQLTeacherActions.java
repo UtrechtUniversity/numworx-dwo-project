@@ -182,10 +182,14 @@ public class MySQLTeacherActions implements TeacherActions {
                 cc.setClassID(context.getTeacherCtx().getSchoolClass().getClassID());
                 cc.setCourseID(curCourse.getCourseID());
                 cc.setDwoProfileID(curCourse.getDwoProfileID());
-                cc.setNotAfter(to);
-                cc.setNotBefore(from);
-                cc.setAccessKey(accessKey);
-                cc.setType(courseType.ordinal());
+                if (treePath.size() > 0) {
+                    cc.setType(CourseType.normal.ordinal());  // intermediate node
+                } else {
+                	cc.setNotAfter(to);
+                	cc.setNotBefore(from);
+                	cc.setAccessKey(accessKey);
+                	cc.setType(courseType.ordinal());
+                }
                 cc.setViewState(ViewState.studentsAndTeachers);
                 ClassCourseManager.insertOrUpdateViewState(cc);
 //                    LOG.log(Level.INFO, "created cc of "+ccResult);

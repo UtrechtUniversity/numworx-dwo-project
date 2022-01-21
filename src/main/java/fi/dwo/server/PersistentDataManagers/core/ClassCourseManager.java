@@ -106,12 +106,13 @@ public class ClassCourseManager {
             q.setParameter("classID", cc.getClassID());
             List<PersistentClassCourse> list = q.getResultList();
             
-            if(list.size()==0){
+            if(list.isEmpty()){
                 //insert
                 em.persist(cc);
             } else {
                 //merge
-                em.merge(list.get(0));                
+            	list.get(0).setViewState(cc.getViewState()); // ???? missing, irrelevant?
+                cc = em.merge(list.get(0));                
             }
             em.getTransaction().commit();
         } catch (Exception e) {
