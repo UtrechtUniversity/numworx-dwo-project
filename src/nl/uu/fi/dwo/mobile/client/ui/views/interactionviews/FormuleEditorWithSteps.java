@@ -840,8 +840,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		pijlVak.paintComponent();
 		
 		if(stapNr>-1 && stapNr<lijnen.size()) {
-			int w = pijl ? this.breedte-pijlX-30 : this.breedte-10;
-			contentPanel.setWidgetLeftWidth(lijnen.get(stapNr), 5, Style.Unit.PX, w, Style.Unit.PX);
+			int w = pijl ? pijlX+20 : 5;
+			contentPanel.setWidgetLeftRight(lijnen.get(stapNr), 5, Style.Unit.PX, w, Style.Unit.PX);
 			contentPanel.setWidgetTopHeight(lijnen.get(stapNr), y + pijlVak.getHeight()/2, Style.Unit.PX, 1, Style.Unit.PX);
 		}
 		
@@ -1398,9 +1398,19 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		scrollToBottom();
 	}
 
-	public Panel getAsPanel()
+//	public Panel getAsPanel()
+//	{
+//		return mainPanel;
+//	}
+
+	Widget widget;
+	public Widget getAsPanel()
 	{
-		return mainPanel;
+	    if (widget == null) {
+	    	widget = activity.memento().isReview() ? CorrectieFacade.wrap(mainPanel, activity) : mainPanel;
+	    	if (widget != mainPanel) widget.setPixelSize(breedte, hoogte);
+	    }
+		return widget;
 	}
 
 	public Boolean getEigenOpdr()
@@ -2925,8 +2935,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		pijlVak.setPijlVisible(pijl);
 		
 		if(stapNr>-1 && stapNr<lijnen.size()) {
-			int w = pijl ? this.breedte-pijlX-30 : this.breedte-10;
-			contentPanel.setWidgetLeftWidth(lijnen.get(i), 5, Style.Unit.PX, w, Style.Unit.PX);
+			int w = pijl ? pijlX+20 : 5;
+			contentPanel.setWidgetLeftRight(lijnen.get(i), 5, Style.Unit.PX, w, Style.Unit.PX);
 			contentPanel.setWidgetTopHeight(lijnen.get(i), h + pijlVak.getHeight()/2, Style.Unit.PX, 1, Style.Unit.PX);
 		}
 		//if ("GR".equals(WiskOpdr.deployVariant) && pijlVakOperatoren != null && pijlVakOperatoren[i] != null && (pijlVakOperatoren[i].equals("sub") || pijlVakOperatoren[i].equals("abc")))
@@ -3641,8 +3651,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			contentPanel.setWidgetTopHeight(pijlVak, y, Style.Unit.PX, pijlVak.getHeight(), Style.Unit.PX);
 			
 			if(stapNr>-1 && stapNr<lijnen.size()) {
-				int w = pijl ? this.breedte-pijlX-30 : this.breedte-10;
-				contentPanel.setWidgetLeftWidth(lijnen.get(stapNr), 5, Style.Unit.PX, w, Style.Unit.PX);
+				int w = pijl ? pijlX+20 : 5;
+				contentPanel.setWidgetLeftRight(lijnen.get(stapNr), 5, Style.Unit.PX, w, Style.Unit.PX);
 				contentPanel.setWidgetTopHeight(lijnen.get(stapNr), y + pijlVak.getHeight()/2, Style.Unit.PX, 1, Style.Unit.PX);
 			}
 			
@@ -4164,10 +4174,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			breedte = w;
 			hoogte = h;
 			mainPanel.setPixelSize(breedte - 2*borderWidth, hoogte - 2*borderWidth);
-			sp.setPixelSize(breedte - 3-2*borderWidth, hoogte - 50 + 20); // waar komt die 50
+			sp.setPixelSize(breedte - 3-2*borderWidth, hoogte - 32 - 2*borderWidth); // waar komt die 50
 															// vandaan, er kan nog
 															// 20 pixels bij
-			headerPanel.setPixelSize(breedte - 4, 22); // anders vallen knoppen buiten beeld...
+			headerPanel.setPixelSize(breedte - 4, 32); // anders vallen knoppen buiten beeld...
 		}
 	}
 
@@ -4182,14 +4192,14 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{
 			breedte = w;
 			mainPanel.setPixelSize(breedte - 2*borderWidth, hoogte - 2*borderWidth);
-			sp.setPixelSize(breedte - 3 - 2*borderWidth, hoogte - 50 + 20); // waar komt die 50
+			sp.setPixelSize(breedte - 3 - 2*borderWidth, hoogte - 32 - 2*borderWidth); // waar komt die 50
 															// vandaan, er kan nog
 															// 20 pixels bij
 			if(stelselScrollPanel != null)
 			{ 	stelselScrollPanel.setPixelSize(breedte - 3 - 2*borderWidth,  hoogte);// - 50 + 20);
 				resizeStelselContentPanel();
 			}
-			headerPanel.setPixelSize(breedte - 2*borderWidth, 22); // anders vallen knoppen buiten beeld...
+			headerPanel.setPixelSize(breedte - 2*borderWidth, 32); // anders vallen knoppen buiten beeld...
 		}
 	}
 
@@ -4204,7 +4214,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{
 			hoogte = h;
 			mainPanel.setPixelSize(breedte - 2*borderWidth, hoogte - 2*borderWidth);
-			sp.setPixelSize(breedte - 3 - 2*borderWidth, hoogte - 50 + 20); // waar komt die 50
+			sp.setPixelSize(breedte - 3 - 2*borderWidth, hoogte - 32 - 2*borderWidth); // waar komt die 50
 															// vandaan, er kan nog
 															// 20 pixels bij
 			headerPanel.setPixelSize(breedte - 2*borderWidth, 22); // anders vallen knoppen buiten beeld...
@@ -4489,7 +4499,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 
 	void setEditable(boolean editable) {
 		this.editable = editable;
-		getAsPanel().setStyleDependentName("readonly", !editable);
+		mainPanel.setStyleDependentName("readonly", !editable);
 // TODO in css regelen 
 		if(!editable) contentPanel.getElement().getStyle().setProperty("pointerEvents", "none");
 		else contentPanel.getElement().getStyle().clearProperty("pointerEvents");
