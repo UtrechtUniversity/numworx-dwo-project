@@ -3,9 +3,6 @@ package nl.uu.fi.dwo.mobile.client;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
-import nl.uu.fi.dwo.mobile.utils.Logging;
-
-import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
 
 /**
  * Module parameters. Waar staat wat.
@@ -36,11 +33,6 @@ public interface DWOplayerParameters {
 	 * @return StyleDependentName
 	 */
 	String keyboardStyle();
-	/**
-	 * Header style
-	 * @deprecated
-	 */
-	HeaderCss headercss();
 	/**
 	 * type of title
 	 */

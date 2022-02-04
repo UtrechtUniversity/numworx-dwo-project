@@ -5,9 +5,11 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.NoordhoffPlayerClientBundle;
 import nl.uu.fi.dwo.mobile.client.ui.views.MyPopup;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Composite;
@@ -94,10 +96,10 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 	int rows = 10;
 
 
-	private HeaderCss headercss;
+	private final HeaderCss headercss;
 
-	public ScoreNavPanel(ActivityComponent activity) {
-		headercss = activity.parameters().headercss();
+	public ScoreNavPanel(ActivityComponent activity, HeaderCss headercss) {
+		this.headercss = headercss;
 		top = new VerticalPanel();
 		initialize();
 		dock = new DockLayoutPanel(Unit.PX);
@@ -108,6 +110,9 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 		popup = new MyPopup(this);
 	}
 	
+	
+	static private final NoordhoffPlayerClientBundle DWO_BUNDLE = GWT.create(NoordhoffPlayerClientBundle.class);
+
 	private void initialize() {
 		Label text;
 		setFontFamily(top);
@@ -122,11 +127,11 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 		grid.getColumnFormatter().setWidth(2, "70px");
 		grid.setCellPadding(10);
 		grid.setCellSpacing(10);
-		reloadTotal = new Button(DWOplayer.DWO_BUNDLE.imgbutton());
+		reloadTotal = new Button(DWO_BUNDLE.imgbutton());
 		reloadTotal.addTapHandler(new ReloadHandler(-1));
 		reloadTotal.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.reload().getSafeUri().asString() + "')");
 		grid.setWidget(0, 3, reloadTotal);
-		checkBtn = new Button( DWOplayer.DWO_BUNDLE.txtbutton(),Text.constants.nakijkKnopLabel());
+		checkBtn = new Button( DWO_BUNDLE.txtbutton(),Text.constants.nakijkKnopLabel());
 		checkBtn.addTapHandler(new CheckHandler());
 		grid.setWidget(1, 3, checkBtn);
 		checkBtn.setVisible(false);
@@ -214,7 +219,7 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 			setFontFamily(text);
 			text.getElement().getStyle().setFontWeight(FontWeight.BOLD);
 // Wat voor button moet hier komen?
-			ButtonCss css = DWOplayer.DWO_BUNDLE.imgbutton();
+			ButtonCss css = DWO_BUNDLE.imgbutton();
 			Button p = new Button(css);
 			p.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.arrowRightBig().getSafeUri().asString() + "')");
 			

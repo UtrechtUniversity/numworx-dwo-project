@@ -92,11 +92,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
-import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.ui.client.MGWT;
-import com.googlecode.mgwt.ui.client.widget.HeaderButton;
-import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 
 
 
@@ -196,8 +192,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	
 	public boolean zelftoetsNagekeken = false;
 	
-	private HeaderButton hb;
-	private HeaderPanel hp;
+//	private HeaderButton hb;
+//	private HeaderPanel hp;
 	private WaitScreen waitscreen = WaitScreen.instance();
 	
 	private PopupPanel timerPanel;
@@ -234,10 +230,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	  zetMaat();
 	}
 	
-	public HeaderButton getBackButton()
-	{
-		return hb;
-	}
+//	public HeaderButton getBackButton()
+//	{
+//		return hb;
+//	}
 
 	@Override
 	public Promise<Boolean> setupModule(String name, String file)
@@ -265,13 +261,13 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	}
 
 	private void removeTitle() {
-		hp.removeFromParent();
+//		hp.removeFromParent();
 		setWindowTop(0);
 //		int h = mainPanel.getOffsetHeight();
 //		sb.setScrollPanel(this, h);
 	}
 	private void addTitle() {
-	  if (standalone) headerView.setWidget(hp);
+//	  if (standalone) headerView.setWidget(hp);
 	  setWindowTop(extraHeight);
 	}
 	
@@ -1927,7 +1923,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		FocusOnTouch.installKeyboard(kb, cb);
 		FormuleHolder.installKeyboard(kb);
 		
-		hp = new HeaderPanel(activity.parameters().headercss());
+//		hp = new HeaderPanel(activity.parameters().headercss());
 		setTitle("");
 		next = scoreNav.getNextButton();
 		prev = scoreNav.getPrevButton();
@@ -1938,10 +1934,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			//tijdelijk: nog even weglaten.
 			//if(end != null)
 			//	hbox.add(end);
-			hp.setRightWidget(hbox);
-			hb = new HeaderButton(activity.parameters().headercss());
-			hb.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.menuIcon().getSafeUri().asString() + "')");
-			hp.setLeftWidget(hb);
+//			hp.setRightWidget(hbox);
+//			hb = new HeaderButton(activity.parameters().headercss());
+//			hb.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.menuIcon().getSafeUri().asString() + "')");
+//			hp.setLeftWidget(hb);
 //			headerView.setWidget(hp);
 //			setWindowTop(extraHeight);
 		}
@@ -1992,19 +1988,19 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		statusView.setWidget(kbp);
 
 // POPUP of floating in ????
-		if(hb != null && POPUP != null)
-		{  hb.addTapHandler(new TapHandler() {
-
-			@Override
-			public void onTap(TapEvent event) {
-				if(POPUP.isShowing())
-						POPUP.hide();
-				else
-						popupNavPanel();
-				
-			}});
-			POPUP.addAutoHidePartner(hb.getElement());
-		}
+//		if(hb != null && POPUP != null)
+//		{  hb.addTapHandler(new TapHandler() {
+//
+//			@Override
+//			public void onTap(TapEvent event) {
+//				if(POPUP.isShowing())
+//						POPUP.hide();
+//				else
+//						popupNavPanel();
+//				
+//			}});
+//			POPUP.addAutoHidePartner(hb.getElement());
+//		}
 		//initWidget(mainPanel);
 		
 		return this;
@@ -2036,7 +2032,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	            int left = (Window.getClientWidth() - offsetWidth) / 3;
 	            int top = (Window.getClientHeight() - offsetHeight) / 3;
 	            left = 0;
-	            top  = hp.getOffsetHeight();
+	            top  = headerView.getOffsetHeight();
 	            popup.setPopupPosition(left, top);
 	            popup.setPixelSize(offsetWidth, Window.getClientHeight()-top-12);
 	          }
@@ -2074,10 +2070,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	public void zetMaat() {
 
 		// FIXME HACK voor DWOplayer zelf		
-		hb = new HeaderButton(activity.parameters().headercss()); hb.setBackButton(true);
-		hb.setText(fi.wiskopdr.text.Text.constants.terugKnopLabel());
-		hp.setLeftWidget(hb);
-		hp.setRightWidget(null);
+//		hb = new HeaderButton(activity.parameters().headercss()); hb.setBackButton(true);
+//		hb.setText(fi.wiskopdr.text.Text.constants.terugKnopLabel());
+//		hp.setLeftWidget(hb);
+//		hp.setRightWidget(null);
 		
 		///contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
 		//int contentHeight = Window.getClientHeight() - extraHeight;
@@ -2132,7 +2128,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 
 	public void setTitle(String string) {
 		if(string == null) string = "";
-		if(standalone) hp.setCenter(string);
+//		if(standalone) hp.setCenter(string);
 		
 	}
 

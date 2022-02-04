@@ -44,10 +44,9 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 		return "dwo";
 	}
 
-	@Override
-	public HeaderCss headercss() {
-		return MGWTStyle.getTheme().getMGWTClientBundle().getHeaderCss();
-	}
+//	public HeaderCss headercss() {
+//		return MGWTStyle.getTheme().getMGWTClientBundle().getHeaderCss();
+//	}
 
 //	private NavigationBundle navigationBundle;
 	protected String launchData;//, courseDescription;

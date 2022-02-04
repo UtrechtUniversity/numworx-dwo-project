@@ -37,9 +37,9 @@ public class DWOplayerNoordhoff extends DWOplayerDefaults implements DWOplayerPa
 		return "noordhoff";
 	}
 
-	@Override
-	public HeaderCss headercss() {
-		return  DWOplayer.DWO_BUNDLE.headercss();
+	private HeaderCss headercss() {
+		NoordhoffPlayerClientBundle bundle = GWT.create(NoordhoffPlayerClientBundle.class);
+		return  bundle.headercss();
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class DWOplayerNoordhoff extends DWOplayerDefaults implements DWOplayerPa
 
 	@Override
 	public ScoreNavIF getScoreNav(ActivityComponent a) {
-		return new ScoreNavPanel(a);
+		return new ScoreNavPanel(a, headercss());
 	}
 
 }

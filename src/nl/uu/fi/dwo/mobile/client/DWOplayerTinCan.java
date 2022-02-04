@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client;
 
+import com.google.gwt.core.client.GWT;
 import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
 
 import nl.uu.fi.dwo.ideas.client.IdeasIF;
@@ -46,12 +47,12 @@ public class DWOplayerTinCan extends WiskOpdrDefaults {
 	}
 	@Override
 	public ScoreNavIF getScoreNav(ActivityComponent a) {
-		return new ScoreNavPanel(a);
+		return new ScoreNavPanel(a, headercss());
 	}
 
-	@Override
-	public HeaderCss headercss() {
-		return  DWOplayer.DWO_BUNDLE.headercss();
+	private HeaderCss headercss() {
+		NoordhoffPlayerClientBundle bundle = GWT.create(NoordhoffPlayerClientBundle.class);
+		return  bundle.headercss();
 	}
 
 }
