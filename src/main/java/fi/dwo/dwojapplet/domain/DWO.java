@@ -2244,7 +2244,10 @@ LOG.info("time results = " + (-t) + " ms");
 		    manager.update(scoContext, scoData, getDwoProfile());
 			sco.setImageData(null);
 			sco.setCourseChanged(false);
-			sco.setDataChanged(false);
+			if (sco.isDataChanged()) {
+			  sco.setSaved();
+	          sco.setDataChanged(false);
+			}
 		} catch (Dwo2Exception e) {
             GuiCreator.instance().ShowErrorDialog(this, e);
             return false;
@@ -2693,7 +2696,7 @@ if (false) {
             Sco[] scos = sco1.getCourse().getScoList();
             scos[nr2 - 1] = sco1;
             scos[nr1 - 1] = sco2;
-            return true; //PersistenceFacade.instance().swapScoSequenceNr(sco1, sco2);
+            return true;
         } catch (ScoException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return false;

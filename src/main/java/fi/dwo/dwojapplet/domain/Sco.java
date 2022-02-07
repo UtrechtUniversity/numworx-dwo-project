@@ -3,6 +3,7 @@
 package fi.dwo.dwojapplet.domain;
 
 import fi.beans.dwomaccess.JSONEncoder;
+import fi.beans.mainframe.JApplet;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.scorm.PartialScoreIF;
 import fi.beans.scorm.SCORM12APIInterface;
@@ -157,6 +158,12 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
         return sc;
     }
 
+    public void setSaved() {
+      if (applet instanceof JApplet)
+        applet.firePropertyChange("saved", 0L, 1L);
+    }
+    
+    
     /**
      * Loads the applet corresponding to this sco.
      *

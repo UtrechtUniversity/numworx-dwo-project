@@ -318,7 +318,7 @@
                             <Bundle-SymbolicName>fi.dwo.dwojapplet.domain.DWO</Bundle-SymbolicName>
                             <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
                             <Fragment-Host>fi.dwo.dwojapplet</Fragment-Host>
-                            <Export-Package>fi.beans.numworxlf,fi.beans.copyright,fi.beans.loader,fi.beans.scorm,fi.beans.xmlrpc,fi.beans.mainframe</Export-Package>
+                            <Export-Package>fi.beans.numworxlf,fi.beans.copyright,fi.beans.loader,fi.beans.scorm,fi.beans.xmlrpc,fi.beans.mainframe,fi.beans.ideas</Export-Package>
   							<Import-Package>nl.numworx.swingbrowser.api;version="[1.0,2)",
  								com.teamdev.jxbrowser.engine;resolution:=optional,
  								com.teamdev.jxbrowser;resolution:=optional,
