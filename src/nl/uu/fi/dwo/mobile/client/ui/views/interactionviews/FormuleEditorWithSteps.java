@@ -2263,9 +2263,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			isVeranderdNaNakijken = ((Boolean) h.get("isVeranderdNaNakijken")).booleanValue();
 		if (h.get("errorCount") != null)
 			errorCount = ((Number) h.get("errorCount")).intValue();
-		if (h.get("formuleVakInhouden") != null)
+		if (hh.containsKey("formuleVakInhouden") )
 		{
-			formuleVakInhouden = JSONUtilities.toStringArray(h.get("formuleVakInhouden"));
+			formuleVakInhouden = hh.getStringArray("formuleVakInhouden");
 			
 			// workaroud... FIXME Waarom is de laatste formuleVakInhouden null (strategiemodus)?
 			if (formuleVakInhouden[formuleVakInhouden.length - 1] == null)
@@ -2285,6 +2285,15 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			{
 				if (formuleVakInhouden[i].startsWith("$f"))
 					formuleVakInhouden[i] = formuleVakInhouden[i].substring(2, formuleVakInhouden[i].length()-1);
+			}
+// XXX komt voor 2 maal "" aan het eind van de vakinhouden. Mag eigenlijk niet voorkomen. 
+			while (formuleVakInhouden.length > 1) {
+				int l = formuleVakInhouden.length-1;
+				if (formuleVakInhouden[l-1].isEmpty() && formuleVakInhouden[l].isEmpty()) {
+					formuleVakInhouden = partArray(formuleVakInhouden, l);
+				} else {
+					break; // done
+				}
 			}
 		}
 		if (h.containsKey("pijlVakInhouden"))
