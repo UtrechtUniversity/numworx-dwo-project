@@ -73,6 +73,7 @@ import java.util.stream.Collectors;
 import javax.annotation.security.PermitAll;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
+import javax.persistence.RollbackException;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -632,27 +633,32 @@ public class SecuredDwoAdminSchoolManager {
           .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN)
           .buildDwoAdmin();
 // TODO move to Action:
-        DomSchoolFull school = rest.getDomSchoolFull();
-        PersistentSchool ps = new PersistentSchool();
-        ps.setSchoolLogin(school.getSchoolLogin());
-        ps.setSchoolName(school.getSchoolName());
-        ps.setSchoolRights("_"); // Default rights
-        school.setSchoolRights("_");
-        ps.setExport(Boolean.FALSE); // no export
-        school.setExport(Boolean.FALSE);
-        ps.setExpire(school.getExpire());
-        ps.setAboType(school.getAboType());
-        SchoolManager.create(ps);
-        List<DomMapEntry<RoleType, String>> passwords = school.getPasswords();
-        for(DomMapEntry<RoleType, String> entry: passwords) {
-          PersistentSchoolGroup psg = new PersistentSchoolGroup();
-          psg.setPasswd(entry.getValue());
-          psg.setSchoolID(ps.getSchoolID().intValue());
-          psg.setGroupID(entry.getKey().ordinal());
-          SchoolGroupManager.create(psg);
-        }
-      school.setId(ps.buildPersistenceId());
-      return school;
+        try {
+			DomSchoolFull school = rest.getDomSchoolFull();
+			PersistentSchool ps = new PersistentSchool();
+			ps.setSchoolLogin(school.getSchoolLogin());
+			ps.setSchoolName(school.getSchoolName());
+			ps.setSchoolRights("_"); // Default rights
+			school.setSchoolRights("_");
+			ps.setExport(Boolean.FALSE); // no export
+			school.setExport(Boolean.FALSE);
+			ps.setExpire(school.getExpire());
+			ps.setAboType(school.getAboType());
+			SchoolManager.create(ps);
+			List<DomMapEntry<RoleType, String>> passwords = school.getPasswords();
+			for(DomMapEntry<RoleType, String> entry: passwords) {
+			  PersistentSchoolGroup psg = new PersistentSchoolGroup();
+			  psg.setPasswd(entry.getValue());
+			  psg.setSchoolID(ps.getSchoolID().intValue());
+			  psg.setGroupID(entry.getKey().ordinal());
+			  SchoolGroupManager.create(psg);
+			}
+		     school.setId(ps.buildPersistenceId());
+		     return school;
+		} catch (RollbackException e) {
+			LOG.log(Level.SEVERE, "rollback addSchool");
+			throw new Dwo2Exception(Dwo2ExceptionCode.Rest_ObjectAlreadyExists, e.toString());
+		}
     }
 
     @PUT
