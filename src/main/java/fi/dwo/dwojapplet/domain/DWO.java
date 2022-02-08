@@ -124,6 +124,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
@@ -2765,7 +2766,10 @@ if (false) {
           s.setDomSchool(school); // DUMMY, null/nonnull
           return s;
         } catch (Dwo2Exception e) {
-           throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR);
+           int code = SchoolException.EX_UNKNOWN_ERROR;
+           if (e.getDwo2Code() == Dwo2ExceptionCode.Rest_ObjectAlreadyExists)
+        	   code = SchoolException.SE_SCHOOL_EXISTS;
+          throw new SchoolException(code);
         }
      }
 
