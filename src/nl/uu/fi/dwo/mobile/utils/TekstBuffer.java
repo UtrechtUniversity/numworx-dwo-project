@@ -33,7 +33,6 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TextEditor;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.berekeningvak.BerekeningVak;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.samengesteldestappen.SamengesteldeStappenPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselAntwoordVak;
-import fi.kladjegwt.client.KladjeGWT;
 
 /**
  * Uses information in the launchdata HashMap to create objects that will be
@@ -519,8 +518,8 @@ public class TekstBuffer
 		}
 		else if (soortVak == 41)
 		{
-			result =  x(map, new PopupFacade(JSONUtilities.wrapMap(currentVakGegevens), new fi.kladjegwt.client.KladjeGWT(currentVakGegevens, randomVarNamen, randomVarWaarden), activity));
-			//result = x(map, new StubView(activity, "KladjeGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
+			//result =  x(map, new PopupFacade(JSONUtilities.wrapMap(currentVakGegevens), new fi.kladjegwt.client.KladjeGWT(currentVakGegevens, randomVarNamen, randomVarWaarden), activity));
+			result = x(map, new StubView(activity, "KladjeGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 		else if (soortVak == 61)
 		{
