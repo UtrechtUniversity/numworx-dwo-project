@@ -13,13 +13,14 @@ import fi.wiskopdr.expressies.DecRound;
 import fi.wiskopdr.expressies.Expressie;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FEWSButton;
 
 public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 	
-	private BerekeningVak berekeningVak;
+	protected BerekeningVak berekeningVak;
 	//componenten
 	private BerekeningVakFormuleEditor formuleEditor = null;
 	private Panel formulePanel = null;
@@ -29,21 +30,23 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 	private int breedte;
 	private int hoogte;
 	
+	//private boolean actief;
+	
 	static final double E_MAX = 1.0E7;
 	static final double E_MIN = 1.0E-3;
 	static final double MARGE = 0.00000000000000001;
 	
-	public BerekeningVakRegel(BerekeningVak berekeningVak) {
+	public BerekeningVakRegel(BerekeningVak berekeningVak, int width, int height) {
 		this.berekeningVak = berekeningVak;
 		
-		breedte = berekeningVak.settings.breedte();
-		hoogte = berekeningVak.settings.hoogte();
+		breedte = width;
+		hoogte = height;
 		
 		mainPanel = new HorizontalPanel();
 		mainPanel.getElement().getStyle().setBorderStyle(Style.BorderStyle.NONE);
 		mainPanel.getElement().getStyle().setBackgroundColor("transparent");
 		
-		formuleEditor = new BerekeningVakFormuleEditor(berekeningVak);
+		formuleEditor = new BerekeningVakFormuleEditor(this);
 		formuleEditor.getMainRegel().setMinimumWidth(breedte - 40);
 		formuleEditor.getMainRegel().setMinimumHeight(hoogte - 3);
 		formuleEditor.setFormuleToolBijFocus(berekeningVak.settings.formuleToolBijFocus());
@@ -56,12 +59,18 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 		rekenButton.setSize(20, 20);
 		rekenButton.addButtonListener(new RekenButtonListener());
 		rekenButton.setTooltip("Bereken");
+		rekenButton.setVisible(false);
 		mainPanel.add(rekenButton);
 		
 		regelResize();
 					
 		formuleEditor.register(new FormuleEditorTouchHandler(formuleEditor).initHandler());
 	}
+	
+	public void setActief(boolean b) {
+		rekenButton.setVisible(b);
+	}
+	
 	
 	private void berekenEnPlaatsExpressie() {
 		String isGelijkAntwoord = calculateAndFormatExpression(formuleEditor); //isteken + antwoord
@@ -125,13 +134,21 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 	}
 	
 	public void regelResize() {	
-		if(!berekeningVak.settings.volledigeBreedte())
-			breedte = formuleEditor.getMainRegel().getWidth() + 44;//extraWidth; //checkPanel.getOffsetWidth() + extraWidth;// + (getImageVisible()?26:0);
+		if(!berekeningVak.settings.volledigeBreedte() && !berekeningVak.settings.meerregelig())
+			breedte = formuleEditor.getMainRegel().getWidth() + 42;//extraWidth; //checkPanel.getOffsetWidth() + extraWidth;// + (getImageVisible()?26:0);
 		hoogte = formuleEditor.getMainRegel().getHeight();
-		formulePanel.setPixelSize((breedte-40) , hoogte );
+		formulePanel.setPixelSize((breedte-30) , hoogte );
 		mainPanel.setPixelSize((breedte-1) , hoogte-1 );
 		if(rekenButton != null) 
-			rekenButton.getElement().getStyle().setMarginTop(getAsHoogte()-17, Unit.PX);
+			rekenButton.getElement().getStyle().setMarginTop(getAsHoogte()-14, Unit.PX);
+	}
+	
+	public void setFont(FormuleFont fm) {
+		formuleEditor.setFont(fm);
+		formuleEditor.setDefaultFont(fm);
+		formuleEditor.getMainRegel().setMinimumHeight(fm.getHeight() + 3);
+		formuleEditor.paint();
+		regelResize();
 	}
 	
 	public void setEnabled(boolean b) {
@@ -178,7 +195,7 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 		mainPanel.setPixelSize((breedte) , (hoogte) );
 	}
 	
-private class RekenButtonListener implements ButtonListener {
+	private class RekenButtonListener implements ButtonListener {
 		
 		public void onClick(Object sender) {
 			berekenEnPlaatsExpressie();

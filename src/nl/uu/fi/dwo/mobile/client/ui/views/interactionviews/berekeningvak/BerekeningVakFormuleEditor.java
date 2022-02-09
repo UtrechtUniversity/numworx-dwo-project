@@ -1,16 +1,19 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.berekeningvak;
 
+import java.util.ArrayList;
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleholder.MainFormuleRegel;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 
 public class BerekeningVakFormuleEditor extends FormuleEditor {
 	
-	private BerekeningVak berekeningVak;
+	private BerekeningVakRegel berekeningVakRegel;
 	
-	public BerekeningVakFormuleEditor(BerekeningVak berekeningVak) {
+	public BerekeningVakFormuleEditor(BerekeningVakRegel berekeningVakRegel) {
 		super();
-		this.berekeningVak = berekeningVak;
+		this.berekeningVakRegel = berekeningVakRegel;
 	}
 	
 	public boolean isInputNeeded() {
@@ -21,33 +24,96 @@ public class BerekeningVakFormuleEditor extends FormuleEditor {
 	}
 	
 	@Override
-	public void enter() {
-		berekeningVak.maakRegel();
+	public void requestFocus() {
+		super.requestFocus();
+		berekeningVakRegel.berekeningVak.zetActieveRegel(berekeningVakRegel);
 	}
 	
+	@Override
+	public void enter() {
+		if(berekeningVakRegel.berekeningVak.settings.meerregelig() 
+				&& getMainRegel().getCurrentPosition()==-1 || getCurrentElement().getParent()==getMainRegel())
+		berekeningVakRegel.berekeningVak.maakRegel(getTailString());
+	}
+	
+	
+	public String getTailString() {
+		String headString = "";
+		String tailString = "";
+		MainFormuleRegel mainRegel = getMainRegel();
+		for(int i=0 ; i<mainRegel.getElementCount() ; i++) {
+			FormuleElement element = mainRegel.getElementAt(i);
+			if(i>mainRegel.getCurrentPosition()) 
+				tailString += element.toString();
+			else
+				headString += element.toString();
+		}
+		clearAll();
+		insert(headString);
+		paint();
+		return tailString;
+	}
+	
+	@Override
 	public void addElement(FormuleElement e)	{	
 		super.addElement(e);
-		berekeningVak.rresize();
+		berekeningVakRegel.berekeningVak.rresize();
 	}
+	
+	@Override
 	public void removeCurrentElement() {
-		super.removeCurrentElement();
-		berekeningVak.rresize();
+		String tailString = toString();
+		if(getMainRegel().getCurrentPosition()==-1)
+			berekeningVakRegel.berekeningVak.removeActieveRegel(tailString);
+		else if(getCurrentElement()!=null)
+			super.removeCurrentElement();
+		berekeningVakRegel.berekeningVak.rresize();
 	}
 
+	@Override
 	public void removeNextElement()	{
 		super.removeNextElement();
-		berekeningVak.rresize();
+		berekeningVakRegel.berekeningVak.rresize();
 	}
+	
+	@Override
+	public void cursorUp() {
+		super.cursorUp();
+		berekeningVakRegel.berekeningVak.cursorUp();
+	}
+	
+	@Override
+	public void cursorDown() {
+		super.cursorDown();
+		berekeningVakRegel.berekeningVak.cursorDown();
+	}
+//	
+//	@Override
+//	public void cursorToLeft() {
+//		super.cursorToLeft();
+//		berekeningVakRegel.berekeningVak.cursorToLeft();
+//	}
+//	
+//	@Override
+//	public void cursorToRight() {
+//		super.cursorToRight();
+//		berekeningVakRegel.berekeningVak.cursorToRight();
+//	}
+	
+	
+	@Override
 	public void insert(String text)	{
 		super.insert(text);
-		berekeningVak.rresize();
+		berekeningVakRegel.berekeningVak.rresize();
 	}
-		
+	
+	@Override	
 	public void setFont(FormuleFont fm) {
 		super.setFont(fm);
 		getMainRegel().setMinimumHeight(fm.getHeight() + 3);
-		berekeningVak.rresize();
+		berekeningVakRegel.berekeningVak.rresize();
 	}
+	
 }
 
 

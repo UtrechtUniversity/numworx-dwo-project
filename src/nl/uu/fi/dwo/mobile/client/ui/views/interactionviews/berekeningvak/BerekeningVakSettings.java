@@ -30,6 +30,7 @@ public class BerekeningVakSettings {
 	private boolean scoreCumulatief = false;
 	//layout
 	private boolean boxMetRand = true;
+	private boolean meerregelig = false;
 	private boolean pasAanH = true;
 	
 	
@@ -68,6 +69,8 @@ public class BerekeningVakSettings {
 		
 		if(launchState.containsKey("boxMetRand"))
 			boxMetRand = launchState.getBoolean("boxMetRand");
+		if(launchState.containsKey("meerregelig"))
+			meerregelig = launchState.getBoolean("meerregelig");
 		
 	}
 	public ObjectMap launchState() {return launchState;}
@@ -91,4 +94,5 @@ public class BerekeningVakSettings {
 	public boolean scoreCumulatief() {return scoreCumulatief;}
 	
 	public boolean boxMetRand() {return boxMetRand;}
+	public boolean meerregelig() {return meerregelig;}
 }

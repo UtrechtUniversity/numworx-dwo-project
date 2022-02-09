@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.berekeningvak;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -30,6 +31,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
+import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FEWSButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselEditor;
@@ -53,11 +55,9 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 	private AntwoordFormuleVakChecker avChecker ;
 	
 	//componenten
-	private BerekeningVakRegel vakRegel;
-	//private FormuleEditor formuleEditor = null;
-	//private Panel formulePanel = null;
+	private ArrayList<BerekeningVakRegel> vakRegels = new ArrayList<BerekeningVakRegel>();
+	private BerekeningVakRegel actieveRegel;
 	private VerticalPanel vakPanel;
-	//private FEWSButton rekenButton;
 		
 	//instellingen
 	protected BerekeningVakSettings settings;
@@ -72,10 +72,12 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 	// overige attributen
 	private int breedte;
 	private int hoogte;
+	private FormuleFont font;
 	
 	
 	public BerekeningVak(ActivityComponent a, HashMap<String, Object> launchData, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden) {
 		activity = a;
+		font = FormuleFont.createFromFontSize(XMLView.getDefaultFontSize());
 		if(launchData == null)
 			return;
 		facade = new PopupFacade(JSONUtilities.wrapMap(launchData), activity);
@@ -88,14 +90,20 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 		
 		avChecker = new AntwoordFormuleVakChecker((HashMap<String, Object>) settings.launchState(), randomVarNamen, randomVarWaarden);
 		
-		vakRegel = new BerekeningVakRegel(this);
+		actieveRegel = new BerekeningVakRegel(this,breedte-6-2*borderWidth, settings.hoogte()-2*borderWidth);
+		actieveRegel.setActief(true);
+		vakRegels.add(actieveRegel);
+		
+		
 		vakPanel = new VerticalPanel();
 		vakPanel.setStyleName(DWOplayer.templateCss().answerboxFEWA());
 		if(!settings.boxMetRand())	{
 			vakPanel.getElement().getStyle().setBorderStyle(Style.BorderStyle.NONE);
 			vakPanel.getElement().getStyle().setBackgroundColor("transparent");
 		}
-		vakPanel.add(vakRegel.getAsPanel());
+		vakPanel.add(actieveRegel.getAsPanel());
+		
+		setFont(font);
 		rresize();
 	}
 	
@@ -111,7 +119,106 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 		}
 	}
 	
-	public void maakRegel() {
+	public void maakRegel(String tailString) {
+		if(!settings.meerregelig())
+			return;
+		int regelNr = vakRegels.indexOf(actieveRegel);
+		BerekeningVakRegel vakRegel = new BerekeningVakRegel(this,breedte-6-2*borderWidth, settings.hoogte()-2*borderWidth);
+		vakRegel.setFont(font);
+		
+		if(tailString!=null && !"".equals(tailString))
+			vakRegel.geefFormuleEditor().getMainRegel().insert(tailString);
+		if(vakRegel.geefFormuleEditor().getMainRegel().getElementCount()>0) {
+			vakRegel.geefFormuleEditor().getMainRegel().setIndexAt(0);
+			vakRegel.geefFormuleEditor().cursorToLeft();
+			vakRegel.geefFormuleEditor().cursorToLeft();
+			vakRegel.geefFormuleEditor().cursorToLeft();
+		}
+		else {
+			vakRegel.geefFormuleEditor().clearMain();
+		}
+		vakRegel.geefFormuleEditor().paint();
+		
+		
+		vakRegels.add(regelNr+1,vakRegel);
+		vakPanel.insert(vakRegel.getAsPanel(), regelNr+1);
+		zetActieveRegel(vakRegel);
+		rresize();
+	}
+	
+	public void removeActieveRegel(String tailString) {
+		if(!settings.meerregelig())
+			return;
+		int regelNr = vakRegels.indexOf(actieveRegel);
+		if(regelNr>0) {
+			int aantalVorige = vakRegels.get(regelNr-1).geefFormuleEditor().getMainRegel().getElementCount();
+			if(aantalVorige==0) {
+				vakPanel.remove(vakRegels.get(regelNr-1).getAsPanel());
+				vakRegels.remove(vakRegels.get(regelNr-1));
+			}
+			else {
+				if(tailString!=null && !"".equals(tailString))
+					vakRegels.get(regelNr-1).geefFormuleEditor().insert(tailString);
+				FormuleElement  element = vakRegels.get(regelNr-1).geefFormuleEditor().getMainRegel().getElementAt(aantalVorige-1);
+				vakRegels.get(regelNr-1).geefFormuleEditor().setCurrentElement(element);
+				vakRegels.get(regelNr-1).geefFormuleEditor().getMainRegel().setIndexAt(aantalVorige-1);
+				vakRegels.get(regelNr-1).geefFormuleEditor().paint();
+				vakRegels.remove(actieveRegel);
+				vakPanel.remove(actieveRegel.getAsPanel());
+				zetActieveRegel(vakRegels.get(regelNr-1));
+			}
+		}
+	}
+	
+	public void cursorUp() {
+		int regelNr = vakRegels.indexOf(actieveRegel);
+		if(regelNr > 0) {
+			if(vakRegels.get(regelNr-1).geefFormuleEditor().getMainRegel().getElementCount()>0) {
+				vakRegels.get(regelNr-1).geefFormuleEditor().getMainRegel().setIndexAt(regelNr);
+				vakRegels.get(regelNr-1).geefFormuleEditor().cursorToLeft();
+				vakRegels.get(regelNr-1).geefFormuleEditor().cursorToLeft();
+				vakRegels.get(regelNr-1).geefFormuleEditor().cursorToLeft();
+			}
+			else {
+				vakRegels.get(regelNr-1).geefFormuleEditor().clearMain();
+			}
+			vakRegels.get(regelNr-1).geefFormuleEditor().paint();
+			zetActieveRegel(vakRegels.get(regelNr-1));
+		}
+	}
+	
+	public void cursorDown() {
+		int regelNr = vakRegels.indexOf(actieveRegel);
+		if(regelNr < vakRegels.size()-1) {
+			if(vakRegels.get(regelNr+1).geefFormuleEditor().getMainRegel().getElementCount()>0) {
+				vakRegels.get(regelNr+1).geefFormuleEditor().getMainRegel().setIndexAt(0);
+				vakRegels.get(regelNr+1).geefFormuleEditor().cursorToLeft();
+				vakRegels.get(regelNr+1).geefFormuleEditor().cursorToLeft();
+				vakRegels.get(regelNr+1).geefFormuleEditor().cursorToLeft();
+			}
+			else {
+				vakRegels.get(regelNr+1).geefFormuleEditor().clearMain();
+			}
+			vakRegels.get(regelNr+1).geefFormuleEditor().paint();
+			zetActieveRegel(vakRegels.get(regelNr+1));
+		}
+	}
+	
+	public void zetActieveRegel(BerekeningVakRegel berekeningVakRegel) {
+		if(berekeningVakRegel == actieveRegel)
+			return;
+		actieveRegel.setActief(false);
+		berekeningVakRegel.setActief(true);
+		actieveRegel = berekeningVakRegel;
+		requestFocus();
+	}
+ 
+	private int meetHoogteRegels() {
+		int hoogte = 0;
+		for(int i=0 ; i<vakRegels.size() ; i++) {
+			hoogte += vakRegels.get(i).getHeight();
+		}
+		return hoogte;
 	}
 	
 	public Panel getAsPanel() {
@@ -128,10 +235,12 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 	}
 	
 	public void rresize() {	
-		vakRegel.regelResize();
-		if(!settings.volledigeBreedte())
-			breedte = vakRegel.getWidth()+8;//extraWidth; //checkPanel.getOffsetWidth() + extraWidth;// + (getImageVisible()?26:0);
-		hoogte = vakRegel.getHeight()+8;
+		for(int i=0 ; i<vakRegels.size() ; i++) {
+			 vakRegels.get(i).regelResize();
+		}
+		if(!settings.volledigeBreedte() && !settings.meerregelig())
+			breedte = actieveRegel.getWidth()+8;//extraWidth; //checkPanel.getOffsetWidth() + extraWidth;// + (getImageVisible()?26:0);
+		hoogte = meetHoogteRegels() + 3+2*borderWidth;
 		vakPanel.setPixelSize((breedte-2*borderWidth) , (hoogte-2*borderWidth) );
 		if(parentRegel != null) {	
 			parentRegel.resize();
@@ -148,19 +257,22 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 	
 	public int getAsHoogte() {
 		int corr = settings.boxMetRand() ? 2*borderWidth : paddingTop;
-		return facade.wrapAsHoogte(vakRegel.geefFormuleEditor().getMainRegel().getAsHoogte() + corr); //+ 6 /* margin top + padding top */);
+		return facade.wrapAsHoogte(actieveRegel.geefFormuleEditor().getMainRegel().getAsHoogte() + corr); //+ 6 /* margin top + padding top */);
 	}
 	
 	public void requestFocus() {
-		vakRegel.geefFormuleEditor().requestFocus();
+		actieveRegel.geefFormuleEditor().requestFocus();
+		
 	}
 
 	@Override
 	public HashMap<String, Object> getState() {
-		String antwoordString = vakRegel.geefFormuleEditor().toString();
-		
+		String[] antwoordStrings = new String[vakRegels.size()];
+		for(int i=0 ; i<vakRegels.size() ; i++) {
+			antwoordStrings[i] = vakRegels.get(i).geefFormuleEditor().toString();
+		}		
 		HashMap<String, Object> h = new HashMap<String, Object>();
-		h.put("antwoordString", antwoordString);
+		h.put("antwoordStrings", antwoordStrings);
 		
 		return h;
 	}
@@ -169,9 +281,26 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 	public void setState(HashMap<String, Object> h) {
 		if(h==null)
 			return;
-		String antwoordString = (String)h.get("antwoordString");
-		if(antwoordString!=null && !"".equals(antwoordString.trim()))
-			vakRegel.geefFormuleEditor().insert(antwoordString);
+		ObjectMap state = JSONUtilities.wrapMap(h);
+		String[] antwoordStrings = null;
+		if(h.containsKey("antwoordStrings"))
+			antwoordStrings = state.getStringArray("antwoordStrings");
+		if(antwoordStrings!=null) {
+			for(int i=0 ; i<antwoordStrings.length ; i++) {
+				if(i>0  && vakRegels.size()<i+1) {
+					vakRegels.add(new BerekeningVakRegel(this,breedte-6-2*borderWidth, font.getHeight()+3));
+					vakRegels.get(i).setFont(font);
+					vakPanel.add(vakRegels.get(i).getAsPanel());
+				}
+				if(antwoordStrings[i]!=null && !"".equals(antwoordStrings[i].trim())) {
+					vakRegels.get(i).geefFormuleEditor().clearAll();
+					vakRegels.get(i).geefFormuleEditor().insert(antwoordStrings[i]);
+					vakRegels.get(i).geefFormuleEditor().requestFocus();
+				}
+			}
+			rresize();
+			requestFocus();
+		}
 	}
 
 	@Override
@@ -212,19 +341,29 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 		if(settings.volledigeBreedte())	{	
 			this.breedte = breedte;
 			vakPanel.setPixelSize((breedte-2*borderWidth) , (hoogte-2*borderWidth) );
-			vakRegel.zetVolledigeBreedte(breedte-6-2*borderWidth);
+			actieveRegel.zetVolledigeBreedte(breedte-6-2*borderWidth);
 		}
 		
 	}
 
 	public void setEnabled(boolean b) {
-		vakRegel.setEnabled(b);
+		for(int i=0 ; i<vakRegels.size() ; i++) {
+			vakRegels.get(i).setEnabled(b);
+		}
 	}
 
 	void setEditable(boolean editable) {
 		this.editable = editable;
 		getAsPanel().setStyleDependentName("readonly", !editable);
 		if(!editable) setEnabled(false);
+	}
+	
+	public void setFont(FormuleFont fm) {
+		for(int i=0 ; i<vakRegels.size() ; i++) {
+			 vakRegels.get(i).setFont(fm);
+		}
+		
+		rresize();
 	}
 
 	@Override
@@ -251,10 +390,8 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 			FormuleFont font = FormuleFont.createFromFontSize(parentRegel.getFont().getFontSize(), false);
 			if (!FormuleFont.formTimes)
 				font.setFont(parentRegel.getFont().getFont());
-			vakRegel.geefFormuleEditor().setFont(font);
-			vakRegel.geefFormuleEditor().setDefaultFont(font);
+			setFont(font);
 		}
-		vakRegel.geefFormuleEditor().paint();
 	}
 
 	@Override
@@ -262,13 +399,4 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 		// TODO Auto-generated method stub
 		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }
