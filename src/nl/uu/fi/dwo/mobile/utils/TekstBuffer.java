@@ -33,6 +33,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TextEditor;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.berekeningvak.BerekeningVak;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.samengesteldestappen.SamengesteldeStappenPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselAntwoordVak;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.strategievak.StrategieVak;
 
 /**
  * Uses information in the launchdata HashMap to create objects that will be
@@ -457,7 +458,8 @@ public class TekstBuffer
 			return x(map, 
 					new StubView(activity, "UploadWidgetGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden)
 			);
-
+		case 64:
+			return new StrategieVak(activity, currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom]);
 		
 		}
 

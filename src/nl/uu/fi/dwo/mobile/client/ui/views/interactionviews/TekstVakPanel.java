@@ -42,6 +42,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.ShareFacade;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.HasResize;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
@@ -253,7 +254,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 	HashMap<String, Number> randomVarWaarden = null;
 	
 	TekstVak parent = null;
-	private SamengesteldeStappenPanel parentStappen = null;
+	private HasResize parentStappen = null;
 	private int mode = OpdrNav.OEFENEN;
 	
 	private ArrayList<Object> interactionViewObjects = new ArrayList<Object>();
@@ -5717,7 +5718,7 @@ private Object CamelCase(String name) {
 		return(tekstVakken[row][col]);
 	}
 	
-	public void setParentStappen(SamengesteldeStappenPanel panel)
+	public void setParentStappen(HasResize panel)
 	{
 		parentStappen = panel;
 	}

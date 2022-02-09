@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.samengesteldestappen;
+package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.strategievak;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,11 +33,10 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel.Tupel;
 
-public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, TekstElementWithFont, HasResize {
+public class StrategieVak implements InteractionStub, FacetAware, TekstElementWithFont, HasResize {
 	
-	private final static Logger logger = Logger.getLogger("samengesteldeStappen");
+	private final static Logger logger = Logger.getLogger("StrategieVak");
 	
-	static final String holderId = "dockholder";
 	private HashMap<String, Object> launchState; 
 	private OpdrNavIF comRoot = null;
 	
@@ -59,20 +58,17 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 	
 	private FormuleKeyboardIF kb = null;
 	
-	private boolean ideasStatistiek = false;
 	private int scoreMax = 10;
 	private boolean[] stepRequired = null;
 	private ArrayList<Integer> selectedSteps = new ArrayList<Integer>();
-	
-	Canvas hintButton = null;
-	
+		
 	String[] randomVarNamen = null;
 	HashMap<String, Number> randomVarWaarden = null;
 
 	private ActivityComponent activity;
 	
 	
-	public SamengesteldeStappenPanel(ActivityComponent a, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int volleBreedte)
+	public StrategieVak(ActivityComponent a, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int volleBreedte)
 	{
 		this.activity = a;
 		if (h != null && h.containsKey("breedte"))
@@ -100,8 +96,6 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 		ObjectMap map = JSONUtilities.wrapMap(launchData);
 		if (map != null)
 		{
-			if(map.containsKey("ideasStatistiek"))
-				this.ideasStatistiek = map.getBoolean("ideasStatistiek");
 			if(map.containsKey("scoreMax"))
 				this.scoreMax = map.getInt("scoreMax");
 			if(map.containsKey("stepRequired"))
@@ -167,13 +161,13 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 		
 		//KeuzeVak initialiseren
 		HashMap<String, Object> keuzeVakMap = new HashMap<String, Object>();
-		keuzeVakMap.put("breedte", breedte - buttonWidth - labelWidth - 2 * offset - (ideasStatistiek?(offset + buttonWidth):0)); 
+		keuzeVakMap.put("breedte", breedte - buttonWidth - labelWidth - 2 * offset); 
 		keuzeVakMap.put("height", buttonHeight);
 		keuzeVakMap.put("launchState", launchState);
 		keuzeVak = new StappenKeuzeVak(activity, keuzeVakMap, randomVarNamen, randomVarWaarden);
 		keuzeVak.setParent(this);
 		Widget kvWidget = keuzeVak.asWidget();
-		kvWidget.getElement().getStyle().setProperty("display", "inline-block");
+		kvWidget.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
 		kvWidget.getElement().getStyle().setMarginRight(offset - 1, Style.Unit.PX);
 		kvWidget.getElement().getStyle().setMarginLeft(offset - 1, Style.Unit.PX);
 		kvWidget.getElement().getStyle().setMarginTop(offset - 1, Style.Unit.PX);
@@ -184,48 +178,6 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 			}
 		}, MouseOverEvent.getType());
 		choiceLine.add(kvWidget);
-		
-		if(ideasStatistiek)
-		{
-			hintButton = Canvas.createIfSupported();
-			gIm = hintButton.getContext2d();
-			
-			hintButton.setWidth(buttonWidth + "px");
-			hintButton.setHeight(buttonHeight + "px");
-			hintButton.setCoordinateSpaceWidth(buttonWidth);
-			hintButton.setCoordinateSpaceHeight(buttonHeight);
-			
-			CanvasGradient gradient = gIm.createLinearGradient(0, 0, buttonWidth, buttonHeight);
-			gradient.addColorStop(0, "white");
-			gradient.addColorStop(1, CssColor.make(200, 200, 200).toString());
-			gIm.setFillStyle(gradient);
-			gIm.setStrokeStyle("black");
-			gIm.setLineWidth(1.0d);
-			gIm.rect(0, 0, buttonWidth, buttonHeight);
-			gIm.fill();
-			gIm.stroke();
-			
-			gIm.setFillStyle("black");
-			gIm.setFont("bold 14px Arial");
-			gIm.fillText("?", 5, 18);
-			hintButton.getElement().getStyle().setProperty("display", "inline-block");
-			hintButton.getElement().getStyle().setMarginRight(4, Style.Unit.PX);
-			choiceLine.add(hintButton);
-			hintButton.addDomHandler(new ClickHandler(){
-				public void onClick(ClickEvent e)
-				{
-					stappenVak.getHintIdeasStatistiek();
-				    resize();
-				}
-			}, ClickEvent.getType());
-
-			hintButton.addDomHandler(new MouseOverHandler() {
-				public void onMouseOver(MouseOverEvent event) 
-				{
-				hintButton.getElement().getStyle().setCursor(Cursor.POINTER);  
-				}
-			}, MouseOverEvent.getType());
-		}
 		
 		Canvas backButton = Canvas.createIfSupported();
 		gIm = backButton.getContext2d();
@@ -300,7 +252,6 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
       ipLaunchState.put("cellSpaceRow", new Integer(6));
       ipLaunchState.put("breedtes", breedtes);
       ipLaunchState.put("hoogtes", hoogtes);
-      ipLaunchState.put("ideasStatistiek", ideasStatistiek);
       
       HashMap<String, Object> launchData = new HashMap<String, Object>();
       launchData.put("soortInteractiePanel", new Integer(9));
@@ -373,10 +324,6 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 	public void zetInstellingen(ObjectMap instellingen)
 	{
 		stappenVak.zetInstellingen(instellingen);
-		if(ideasStatistiek)
-	    {   ArrayList<Tupel> initialState = getInitialStatistiekState(instellingen);
-	        stappenVak.initialiseIdeasStatistiek(initialState);
-	    }
 	}
 	
 	public void setKeyboard(FormuleKeyboardIF kb)
@@ -423,11 +370,6 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 
 	@Override
 	public Boolean isCorrect() {
-		if(ideasStatistiek)
-		{
-			return(stappenVak.isCorrect()); 
-		}
-		
 		if(stappenVak.isCorrect() == null)
 			return null;
 		//Requirement 1: stappenVak is correct
@@ -454,8 +396,6 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 	@Override
 	public void kijkNa() {
 		stappenVak.kijkNa();
-		if(ideasStatistiek && (comRoot.getMode() == OpdrNavIF.EINDTOETS || comRoot.getMode() == OpdrNavIF.ZELFTOETS))
-			stappenVak.kijkNaIdeasStatistiek();
 	}
 
 	@Override
@@ -467,9 +407,9 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
 		stappenVak.setCommunicationRoot(comRoot);
-		if(ideasStatistiek && (comRoot.getMode() == OpdrNavIF.EINDTOETS || comRoot.getMode() == OpdrNavIF.ZELFTOETS))
-			hintButton.removeFromParent();
-		
+// instellingen en keyboard zelf ophalen
+		zetInstellingen(comRoot.getConfiguration());
+		setKeyboard(comRoot.getKeyboard());
 	}
 
 	@Override
