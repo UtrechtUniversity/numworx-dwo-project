@@ -6,6 +6,7 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.DataResource.MimeType;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.ClientBundle.Source;
 import com.googlecode.mgwt.ui.client.theme.base.ButtonCss;
 import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
 
@@ -112,6 +113,9 @@ public interface DWOplayerClientBundle extends ClientBundle {
 	@Source("nl/uu/fi/dwo/mobile/client/resources/kb/desktop_active.png")
 	ImageResource desktop_active();
 
-	
+	  @Source("nl/uu/fi/dwo/mobile/client/resources/Verwijder.svg")
+	  @MimeType("image/svg+xml")
+	  DataResource verwijder_svg();
+
 	
 }

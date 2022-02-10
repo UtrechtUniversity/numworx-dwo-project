@@ -16,7 +16,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
 import fi.wiskopdr.text.Text;
@@ -26,6 +29,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.HasResize;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
@@ -103,6 +107,22 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 		}
 	}
 	
+	class RemoveStap implements ClickHandler {
+	  RemoveStap(int i) { this.nr = i;}
+	  int nr;
+ 
+	  @Override
+      public void onClick(ClickEvent event) {
+        logger.info("remove " + nr);
+        stappenVak.removeFeedback();
+        stappenVak.backAction();
+        if(selectedSteps.size() > 0)
+            selectedSteps.remove(selectedSteps.size() - 1);
+        resize();
+        comRoot.setChanged(isCorrect() == null || !isCorrect().equals(Boolean.TRUE));
+     }
+	  
+	}
 	public void initialize(HashMap<String, Object> h)
 	{
 		// alle vakken op een panel zetten. 
@@ -114,27 +134,15 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 	    stappenVak = makeStepsTVP(nrOfSteps);
 	    
 		mainPanel.add(stappenVak);
-		Canvas[] stepNumbers = new Canvas[nrOfSteps];
-		Context2d gIm;
 		for(int i = 0; i < nrOfSteps; i++)
 		{
-			stepNumbers[i] = Canvas.createIfSupported();
-			gIm = stepNumbers[i].getContext2d();
-			
-			stepNumbers[i].setWidth(labelWidth + "px");
-			stepNumbers[i].setHeight(labelHeight + "px");
-			stepNumbers[i].setCoordinateSpaceWidth(labelWidth);
-			stepNumbers[i].setCoordinateSpaceHeight(labelHeight);
-			
-			gIm.setFillStyle(CssColor.make(220, 220, 220).toString());
-			gIm.setLineWidth(1.0d);
-			gIm.rect(0, 0, labelWidth, labelHeight);
-			gIm.fill();
-			gIm.setFillStyle("black");
-			gIm.setFont("bold 14px Arial");
-			gIm.fillText("" + (i + 1), i<10?23:18, 18);
-			
-			stappenVak.geefTekstVak(i, 0).add(stepNumbers[i]);
+		    DataResource v = DWOplayer.DWO_BUNDLE.verwijder_svg();
+			Image img = new Image(v.getSafeUri());
+			img.setPixelSize(-1, labelHeight);
+            PushButton stepNumbersi = new PushButton(img);
+            stepNumbersi.addClickHandler(new RemoveStap(i));
+			stepNumbersi.setPixelSize(labelWidth-12 ,labelHeight-8); // pushbutton marge = 12x8
+			stappenVak.geefTekstVak(i, 0).add(stepNumbersi);
 		}
 		
 		
@@ -142,7 +150,7 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 		//choiceLine.getElement().getStyle().setBackgroundColor("seaGreen");
 		
 		Canvas actionBox = Canvas.createIfSupported();
-		gIm = actionBox.getContext2d();
+		Context2d gIm = actionBox.getContext2d();
 		
 		actionBox.setWidth(labelWidth + "px");
 		actionBox.setHeight(labelHeight + "px");
@@ -155,13 +163,13 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 		gIm.fill();
 		gIm.setFillStyle("black");
 		gIm.setFont("bold 14px Arial");
-		gIm.fillText(Text.constants.actionLabel(), 5, 18);
-		actionBox.getElement().getStyle().setProperty("display", "inline-block");
+		gIm.fillText("+", 5, 18);
+		actionBox.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
 		choiceLine.add(actionBox);
 		
 		//KeuzeVak initialiseren
 		HashMap<String, Object> keuzeVakMap = new HashMap<String, Object>();
-		keuzeVakMap.put("breedte", breedte - buttonWidth - labelWidth - 2 * offset); 
+		keuzeVakMap.put("breedte", breedte - labelWidth - 2 * offset); 
 		keuzeVakMap.put("height", buttonHeight);
 		keuzeVakMap.put("launchState", launchState);
 		keuzeVak = new StappenKeuzeVak(activity, keuzeVakMap, randomVarNamen, randomVarWaarden);
@@ -171,63 +179,7 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 		kvWidget.getElement().getStyle().setMarginRight(offset - 1, Style.Unit.PX);
 		kvWidget.getElement().getStyle().setMarginLeft(offset - 1, Style.Unit.PX);
 		kvWidget.getElement().getStyle().setMarginTop(offset - 1, Style.Unit.PX);
-		kvWidget.addDomHandler(new MouseOverHandler() {
-			public void onMouseOver(MouseOverEvent event) 
-			{
-				kvWidget.getElement().getStyle().setCursor(Cursor.POINTER);  
-			}
-		}, MouseOverEvent.getType());
 		choiceLine.add(kvWidget);
-		
-		Canvas backButton = Canvas.createIfSupported();
-		gIm = backButton.getContext2d();
-		
-		backButton.setWidth(buttonWidth + "px");
-		backButton.setHeight(buttonHeight + "px");
-		backButton.setCoordinateSpaceWidth(buttonWidth);
-		backButton.setCoordinateSpaceHeight(buttonHeight);
-		
-		CanvasGradient gradient = gIm.createLinearGradient(0, 0, buttonWidth, buttonHeight);
-		gradient.addColorStop(0, "white");
-		gradient.addColorStop(1, CssColor.make(200, 200, 200).toString());
-		gIm.setFillStyle(gradient);
-		gIm.setStrokeStyle("black");
-		gIm.setLineWidth(1.0d);
-		gIm.rect(0, 0, buttonWidth, buttonHeight);
-		gIm.fill();
-		gIm.stroke();
-		
-		gIm.setLineWidth(2.0d);
-		gIm.beginPath();
-		gIm.moveTo(6, 9);
-		gIm.lineTo(13, 9);
-		gIm.lineTo(13, 17);
-		gIm.moveTo(8, 7);
-		gIm.lineTo(6, 9);
-		gIm.lineTo(8, 11);
-		gIm.closePath();
-		gIm.stroke();
-		
-		choiceLine.add(backButton);
-		
-		backButton.addDomHandler(new ClickHandler(){
-			public void onClick(ClickEvent e)
-			{
-				stappenVak.removeFeedback();
-				stappenVak.backAction();
-				if(selectedSteps.size() > 0)
-			        selectedSteps.remove(selectedSteps.size() - 1);
-				resize();
-				comRoot.setChanged(isCorrect() == null || !isCorrect().equals(Boolean.TRUE));
-			}
-		}, ClickEvent.getType());
-		
-		backButton.addDomHandler(new MouseOverHandler() {
-			public void onMouseOver(MouseOverEvent event) 
-			{
-			backButton.getElement().getStyle().setCursor(Cursor.POINTER);  
-			}
-		}, MouseOverEvent.getType());
 		
 		mainPanel.add(choiceLine);
 		resize();
