@@ -173,8 +173,9 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 	public void cursorUp() {
 		int regelNr = vakRegels.indexOf(actieveRegel);
 		if(regelNr > 0) {
-			if(vakRegels.get(regelNr-1).geefFormuleEditor().getMainRegel().getElementCount()>0) {
-				vakRegels.get(regelNr-1).geefFormuleEditor().getMainRegel().setIndexAt(regelNr);
+			int aantalElements = vakRegels.get(regelNr-1).geefFormuleEditor().getMainRegel().getElementCount();
+			if(aantalElements>0) {
+				vakRegels.get(regelNr-1).geefFormuleEditor().getMainRegel().setIndexAt(0);
 				vakRegels.get(regelNr-1).geefFormuleEditor().cursorToLeft();
 				vakRegels.get(regelNr-1).geefFormuleEditor().cursorToLeft();
 				vakRegels.get(regelNr-1).geefFormuleEditor().cursorToLeft();
