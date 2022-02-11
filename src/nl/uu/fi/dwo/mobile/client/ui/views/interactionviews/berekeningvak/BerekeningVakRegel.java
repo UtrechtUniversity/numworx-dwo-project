@@ -20,12 +20,13 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FEWSButton;
 
 public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 	
+	//parent
 	protected BerekeningVak berekeningVak;
 	//componenten
 	private BerekeningVakFormuleEditor formuleEditor = null;
 	private Panel formulePanel = null;
 	private HorizontalPanel mainPanel;
-	private FEWSButton rekenButton;
+	private BerekeningVakButton rekenButton;
 	
 	private int breedte;
 	private int hoogte;
@@ -55,7 +56,7 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 		formulePanel.add(formuleEditor.getMainRegel().asWidget());
 		mainPanel.add(formulePanel);
 		
-		rekenButton = new FEWSButton("rekenmachine", false);
+		rekenButton = new BerekeningVakButton("rekenmachine");
 		rekenButton.setSize(20, 20);
 		rekenButton.addButtonListener(new RekenButtonListener());
 		rekenButton.setTooltip("Bereken");
@@ -74,9 +75,16 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 	
 	private void berekenEnPlaatsExpressie() {
 		String isGelijkAntwoord = calculateAndFormatExpression(formuleEditor); //isteken + antwoord
-		if(isGelijkAntwoord == null)
+		if(isGelijkAntwoord == null) {
+			berekeningVak.setFeedback();
 			return;
+		}
+		
 		String formule0 = formuleEditor.toString();
+		if(formuleEditor.hasSelection()) {
+			formule0 = formuleEditor.getTillSelectionString();
+		}
+			
 		if(formule0.endsWith("=") || formule0.endsWith("\u2248"))
 			formule0 = formule0.substring(0, formule0.length()-1);
 		formuleEditor.clearMain();
@@ -84,7 +92,11 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 	}
 	
 	public String getTailString(FormuleEditor formuleEditor) {
-		String rekenString = "$f"+formuleEditor.toString()+"@";
+		String rekenString = null;
+		if(formuleEditor.hasSelection())
+			rekenString = "$f"+formuleEditor.getSelectionString()+"@";
+		else
+			rekenString = "$f"+formuleEditor.toString()+"@";
 		if(rekenString.endsWith("=@") || rekenString.endsWith("\u2248"+"@"))
 			rekenString = rekenString.substring(0, rekenString.length()-2)+"@";
 		if(rekenString.indexOf("=")>-1)
@@ -134,8 +146,14 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 	}
 	
 	public void regelResize() {	
-		if(!berekeningVak.settings.volledigeBreedte() && !berekeningVak.settings.meerregelig())
-			breedte = formuleEditor.getMainRegel().getWidth() + 42;//extraWidth; //checkPanel.getOffsetWidth() + extraWidth;// + (getImageVisible()?26:0);
+		if(!berekeningVak.settings.volledigeBreedte() && !berekeningVak.settings.meerregelig()) {
+			breedte = formuleEditor.getMainRegel().getWidth() + 42;
+		}
+		if(berekeningVak.settings.meerregelig()) {
+			if(formuleEditor.getMainRegel().getWidth() > breedte -40) {
+				//wat te doen bij overloop van een regel?
+			}
+		}
 		hoogte = formuleEditor.getMainRegel().getHeight();
 		formulePanel.setPixelSize((breedte-30) , hoogte );
 		mainPanel.setPixelSize((breedte-1) , hoogte-1 );

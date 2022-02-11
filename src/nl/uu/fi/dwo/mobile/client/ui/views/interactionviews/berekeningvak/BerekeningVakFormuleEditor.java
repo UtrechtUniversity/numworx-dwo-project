@@ -54,6 +54,16 @@ public class BerekeningVakFormuleEditor extends FormuleEditor {
 		return tailString;
 	}
 	
+	public String getTillSelectionString() {
+		String string = "";
+		MainFormuleRegel mainRegel = getMainRegel();
+		int endSelectionIndex = mainRegel.getSelectionEnd();
+		for(int i=0 ; i<endSelectionIndex+1 ; i++) {
+			FormuleElement element = mainRegel.getElementAt(i);
+			string += element.toString();
+		}
+		return string;
+	}
 	@Override
 	public void addElement(FormuleElement e)	{	
 		super.addElement(e);
