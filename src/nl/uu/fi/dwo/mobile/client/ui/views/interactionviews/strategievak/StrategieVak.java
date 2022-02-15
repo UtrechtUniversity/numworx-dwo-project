@@ -108,14 +108,17 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 	}
 	
 	class RemoveStap implements ClickHandler {
-	  RemoveStap(int i) { this.nr = i;}
-	  int nr;
+	  RemoveStap(Widget w) { this.w = w;}
+	  Widget w;
  
 	  @Override
       public void onClick(ClickEvent event) {
+	    int nr;
+	    Widget vak = w.getParent();
+        nr = stappenVak.getRowOf(vak);
         logger.info("remove " + nr);
         stappenVak.removeFeedback();
-        stappenVak.backAction();
+        stappenVak.backStep(nr);
         if(selectedSteps.size() > 0)
             selectedSteps.remove(selectedSteps.size() - 1);
         resize();
@@ -140,7 +143,7 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 			Image img = new Image(v.getSafeUri());
 			img.setPixelSize(-1, labelHeight);
             PushButton stepNumbersi = new PushButton(img);
-            stepNumbersi.addClickHandler(new RemoveStap(i));
+            stepNumbersi.addClickHandler(new RemoveStap(stepNumbersi));
 			stepNumbersi.setPixelSize(labelWidth-12 ,labelHeight-8); // pushbutton marge = 12x8
 			stappenVak.geefTekstVak(i, 0).add(stepNumbersi);
 		}

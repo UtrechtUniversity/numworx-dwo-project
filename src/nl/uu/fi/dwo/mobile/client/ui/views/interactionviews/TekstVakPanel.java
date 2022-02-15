@@ -362,7 +362,6 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 	private boolean doorzochtDoorTab = false;
 	private boolean randomPositioned = false; //Bij randomized meerkeuzeopdrachten kan de tabsequence anders worden
 	
-	//private boolean isStappenVak = false;
 	private int stapNr = 0;
 	private List<Object> stappen = null;
 	
@@ -1995,28 +1994,6 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 				//old situation, before SamengesteldeStappenPanel
 				try {
 					addTekstVakPanel((HashMap<String, Object>) stappen.get(i), randomVarNamen, randomVarWaarden, i, breedtes.size() -1);
-//				TekstVakPanel tvp = new TekstVakPanel((HashMap<String, Object>) stappen.get(i), null, null);
-//				tvp.setParent(tekstVakken[i][breedtes.size() - 1]);
-//				tvp.zetInstellingen(instellingen);
-//				tvp.setKeyboard(kb);
-//				final Object orgObject = tvp;
-//				OpdrNavIF comRoot2 = comRoot;
-//				Connector connector = find(tvp);
-//				comRoot2 = new OpdrNavContext(comRoot,connector, this.bgColorZichtbaar ? bgColor : comRoot.getBackground());
-//				((InteractionView) orgObject).setCommunicationRoot(comRoot2);
-//				if(! (tvp instanceof StateLess))
-//				{	interactionViewObjects.add(orgObject);
-//				}
-//									
-//				HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) stappen.get(i)).get("interactiePanelLaunchState");
-//				tvp.zetOpdracht(launchState);
-//				tvp.setContainer(new TekstVakContext(i,breedtes.size() - 1));
-//				xWidgetMap.putAll(tvp.xWidgetMap);
-//				Connector.calculateSubscriptions(xWidgetMap.values());
-//				ArrayList<Object> list = new ArrayList<Object>();
-//				list.add(tvp);
-//				tekstVakken[i][breedtes.size() - 1].zetOpdrachtObjects(list);
-//				tekstVakken[i][breedtes.size() - 1].setObjects(list);
 				}
 				//new situation, with SamengesteldeStappenPanel
 				catch(Exception e) {
@@ -4953,6 +4930,37 @@ private Object CamelCase(String name) {
 		}
 	}
 	
+	public boolean backStep(int index) {
+	  if (index == stapNr-1) return backAction();
+	  List<Object> opdrObjects = tekstVakken[index][breedtes.size()-1].getOpdrachtObjects();
+	  for(Object o : opdrObjects) interactionViewObjects.remove(o);
+	  tekstVakken[index][breedtes.size()-1].clear();
+      ArrayList<Object> empty = new ArrayList<Object>();
+      tekstVakken[index][breedtes.size()-1].zetOpdrachtObjects(empty, empty);
+// move tekstVakken[index] to bottom
+      mainPanel.removeRow(index);
+      int size = hoogtes.size();
+      mainPanel.insertRow(size-1);
+      TekstVak[] safe = tekstVakken[index];
+      System.arraycopy(tekstVakken, index+1, tekstVakken, index, size-index-1);
+      tekstVakken[size-1] = safe;
+      for (int i = 0; i < safe.length; i++ ) mainPanel.setWidget(size-1, i, safe[i]);
+
+      Double h = hoogtes.get(index);
+      for(int i = size-1; i >= index; i--) {
+        Double x = hoogtes.get(i);
+        hoogtes.set(i, h);
+        h = x;
+      }
+      stappen.remove(index);
+      stapNr--;
+      resize();
+      goedHalfFoutStatistiek = AntwoordVakChecker.GEEN;
+	  return true;
+	}
+	
+	
+	
 	public boolean backAction()
 	{
 		//back has to be performed on this TekstVakPanel
@@ -5801,6 +5809,16 @@ private Object CamelCase(String name) {
   public HandlerRegistration addResizeHandler(ResizeHandler resize) {
     resizeHandler = resize;
     return () -> { if (resizeHandler == resize) resizeHandler = null; };
+  }
+
+  public int getRowOf(Widget vak) {
+    for (int row = 0; row < tekstVakken.length; row++) {
+      for (int col = 0; col <tekstVakken[row].length; col++) {
+        if (vak == tekstVakken[row][col]) return row;
+      }
+    }
+    
+    return -1;
   }
 
 	
