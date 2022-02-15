@@ -48,7 +48,7 @@ public class FormuleEditorTouchHandler
 {
   
     public class MoveEvent {
-      final int x, y;
+      public final int x, y;
 
       MoveEvent(int x, int y) {
         this.x = x;
@@ -57,7 +57,7 @@ public class FormuleEditorTouchHandler
   }
 
     public class StartEvent {
-      final int x, y;
+      public final int x, y;
       final EventTarget target;
       StartEvent(int x, int y, EventTarget target) {
         this.x = x;
@@ -67,16 +67,12 @@ public class FormuleEditorTouchHandler
     }
   
     public class EndEvent {
-      final int x, y;
+      public final int x, y;
 
       EndEvent(int x, int y) {
         this.x = x;
         this.y = y;
       }
-    }
-
-    private Element getElement(StartEvent event) {
-      return Element.as(event.target);
     }
     
     protected void onStart(StartEvent event) {
@@ -113,10 +109,10 @@ public class FormuleEditorTouchHandler
     }
     
 	protected final FormuleHolder editor;
-	final HashMap<String, Double> dif = new HashMap<String, Double>();
-	int x,y;
-	boolean soft;
-	Element capture;
+	//private final HashMap<String, Double> dif = new HashMap<String, Double>();
+	protected int x,y;
+	//private boolean soft;
+	protected Element capture;
     private boolean mousedown;
 	private static Logger LOG = Logger.getLogger("FormuleEditorTouchHandler");
 	
