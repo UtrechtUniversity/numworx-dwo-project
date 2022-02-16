@@ -1,28 +1,25 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.strategievak;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import com.google.gwt.canvas.client.Canvas;
-import com.google.gwt.canvas.dom.client.CanvasGradient;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
-import fi.wiskopdr.text.Text;
 import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
@@ -56,7 +53,7 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
     int buttonHeight = 24;
 	
 	private FlowPanel mainPanel;
-	private TekstVakPanel stappenVak;
+	TekstVakPanel stappenVak;
 	private StappenKeuzeVak keuzeVak;
 	private TekstRegel parent;
 	
@@ -107,6 +104,22 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 		}
 	}
 	
+	class SwapStap implements ClickHandler {
+	  private Widget w;
+
+    SwapStap(Widget w) { this.w = w; }
+
+    @Override
+    public void onClick(ClickEvent event) {
+      int nr;
+      Widget vak = w.getParent();
+      nr = stappenVak.getRowOf(vak);
+      moveKeuzeVak(nr);     
+    }
+	  
+	}
+	
+	
 	class RemoveStap implements ClickHandler {
 	  RemoveStap(Widget w) { this.w = w;}
 	  Widget w;
@@ -119,10 +132,17 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
         logger.info("remove " + nr);
         stappenVak.removeFeedback();
         stappenVak.backStep(nr);
+        stappenVak.backStep(nr);
         if(selectedSteps.size() > 0)
-            selectedSteps.remove(selectedSteps.size() - 1);
+            selectedSteps.remove(nr/2);
         resize();
         comRoot.setChanged(isCorrect() == null || !isCorrect().equals(Boolean.TRUE));
+        
+        nr = stappenVak.getRowOf(keuzeVak.asWidget().getParent());
+        if (nr < 0 || nr > selectedSteps.size() * 2) {
+          moveKeuzeVak(selectedSteps.size()*2);
+        }
+        
      }
 	  
 	}
@@ -133,11 +153,11 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 		mainPanel = new FlowPanel();
 		
 		//Stappenvak initialiseren
-		int nrOfSteps = 20;//later nog wat flexibeler?
+		int nrOfSteps = 21;//later nog wat flexibeler?
 	    stappenVak = makeStepsTVP(nrOfSteps);
 	    
 		mainPanel.add(stappenVak);
-		for(int i = 0; i < nrOfSteps; i++)
+		for(int i = 1; i < nrOfSteps; i += 2)
 		{
 		    DataResource v = DWOplayer.DWO_BUNDLE.verwijder_svg();
 			Image img = new Image(v.getSafeUri());
@@ -145,30 +165,16 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
             PushButton stepNumbersi = new PushButton(img);
             stepNumbersi.addClickHandler(new RemoveStap(stepNumbersi));
 			stepNumbersi.setPixelSize(labelWidth-12 ,labelHeight-8); // pushbutton marge = 12x8
-			stappenVak.geefTekstVak(i, 0).add(stepNumbersi);
+			stappenVak.geefTekstVak(i, 2).add(stepNumbersi);
 		}
-		
-		
-		FlowPanel choiceLine = new FlowPanel();
-		//choiceLine.getElement().getStyle().setBackgroundColor("seaGreen");
-		
-		Canvas actionBox = Canvas.createIfSupported();
-		Context2d gIm = actionBox.getContext2d();
-		
-		actionBox.setWidth(labelWidth + "px");
-		actionBox.setHeight(labelHeight + "px");
-		actionBox.setCoordinateSpaceWidth(labelWidth);
-		actionBox.setCoordinateSpaceHeight(labelHeight);
-		
-		gIm.setFillStyle(CssColor.make(220, 220, 220).toString());
-		gIm.setLineWidth(1.0d);
-		gIm.rect(0, 0, labelWidth, labelHeight);
-		gIm.fill();
-		gIm.setFillStyle("black");
-		gIm.setFont("bold 14px Arial");
-		gIm.fillText("+", 5, 18);
-		actionBox.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
-		choiceLine.add(actionBox);
+		for(int i = 0; i < nrOfSteps; i += 2)
+        {
+            
+            Label stepNumbersi = new Label("+");
+            stepNumbersi.addClickHandler(new SwapStap(stepNumbersi));
+            //stepNumbersi.setPixelSize(labelWidth-12 ,labelHeight-8); // pushbutton marge = 12x8
+            stappenVak.geefTekstVak(i, 0).add(stepNumbersi);
+        }
 		
 		//KeuzeVak initialiseren
 		HashMap<String, Object> keuzeVakMap = new HashMap<String, Object>();
@@ -177,14 +183,9 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 		keuzeVakMap.put("launchState", launchState);
 		keuzeVak = new StappenKeuzeVak(activity, keuzeVakMap, randomVarNamen, randomVarWaarden);
 		keuzeVak.setParent(this);
-		Widget kvWidget = keuzeVak.asWidget();
-		kvWidget.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
-		kvWidget.getElement().getStyle().setMarginRight(offset - 1, Style.Unit.PX);
-		kvWidget.getElement().getStyle().setMarginLeft(offset - 1, Style.Unit.PX);
-		kvWidget.getElement().getStyle().setMarginTop(offset - 1, Style.Unit.PX);
-		choiceLine.add(kvWidget);
 		
-		mainPanel.add(choiceLine);
+        makeStep(new ArrayList<>());
+		stappenVak.geefTekstVak(0, 1).add(keuzeVak);
 		resize();
 	}
 	
@@ -195,56 +196,39 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
       ArrayList<ArrayList<String>> teksten = new ArrayList<ArrayList<String>>();
      
       ArrayList<Double> breedtes = new ArrayList<Double>();
+      breedtes.add(10.0);
+      breedtes.add(breedte - 52.0 - 10.0);
       breedtes.add(52.0);
-      breedtes.add((double) (breedte - 52));
-
+      
       ArrayList<Double> hoogtes = new ArrayList<Double>();
       for(int i = 0; i < number; i++)
     	  hoogtes.add(27.0);
       
       ipLaunchState.put("teksten", teksten);
-      ipLaunchState.put("pasAanH", new Boolean(true));
-      ipLaunchState.put("cellSpaceRow", new Integer(6));
+      ipLaunchState.put("pasAanH", Boolean.valueOf(true));
+      ipLaunchState.put("cellSpaceRow", Integer.valueOf(0));
       ipLaunchState.put("breedtes", breedtes);
       ipLaunchState.put("hoogtes", hoogtes);
       
       HashMap<String, Object> launchData = new HashMap<String, Object>();
-      launchData.put("soortInteractiePanel", new Integer(9));
-      launchData.put("setNr", new Integer(3));
+      launchData.put("soortInteractiePanel", Integer.valueOf(9));
+      launchData.put("setNr", Integer.valueOf(3));
       launchData.put("interactiePanelLaunchState", ipLaunchState);
-      launchData.put("breedte", new Integer(breedte));
+      launchData.put("breedte", Integer.valueOf(breedte));
       launchData.put("volledigeBreedte", volledigeBreedte);
-      launchData.put("hoogte", new Integer(4));
+      launchData.put("hoogte", Integer.valueOf(4));
       
       TekstVakPanel stappenVak = new TekstVakPanel(activity, launchData, randomVarNamen, randomVarWaarden);
       stappenVak.setKeyboard(kb);
-      //stappenVak.setCommunicationRoot(comRoot); // gebeurt nu in setComRoot. 
       stappenVak.initialiseerStappen();
-      //stappenVak.addActionListener(this);
+      stappenVak.setKolom(1);
       stappenVak.setParentStappen(this);
       return stappenVak;
     }
 	
-	private ArrayList<Tupel> getInitialStatistiekState(ObjectMap instellingen)
-	{
-		ArrayList<Tupel> initialState = new ArrayList<Tupel>();
-		ArrayList<Object>[] stepContents = keuzeVak.getStepContents();
-		for(int i = 0; i < stepContents.length; i++)
-		{
-			ArrayList<Object> contentMap = stepContents[i];
-			TekstVakPanel tempVak = makeStepsTVP(20);
-			tempVak.setCommunicationRoot(comRoot);
-			tempVak.zetInstellingen(instellingen);
-			
-			initialState.addAll(tempVak.getAnswerModelsNew(contentMap));
-			//initialState.addAll(stappenVak.getAnswerModels(contentMap));
-		}
-		return initialState;
-	}
-	
 	public void resize()
 	{
-		hoogte = stappenVak.getHeight() + choiceHeight;
+		hoogte = stappenVak.getHeight();
 		mainPanel.setHeight(hoogte + "px");
 		if(parent != null)
 			parent.resize();
@@ -265,6 +249,10 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 		//Eerst even wachten hoe dit eruit gaat zien. 
 	}
 	
+	public void makeStep(int index, ArrayList<Object> stepContents) {
+	  stappenVak.forwardStep(index, stepContents, randomVarNamen, randomVarWaarden);
+	}
+	
 	public void makeStep(ObjectMap contentMap)
 	{
 		stappenVak.maakStap(contentMap, randomVarNamen, randomVarWaarden);
@@ -276,6 +264,10 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 	  selectedSteps.add(stepNr);
 	}
 	
+	public void addSelectedStep(int index, int stepNr) {
+	  selectedSteps.add(index, stepNr);
+	}
+	
 	public void zetInstellingen(ObjectMap instellingen)
 	{
 		stappenVak.zetInstellingen(instellingen);
@@ -284,6 +276,7 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 	public void setKeyboard(FormuleKeyboardIF kb)
 	{
 		this.kb = kb;
+		stappenVak.setKeyboard(kb);
 	}
 
 	@Override
@@ -299,14 +292,13 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 		ObjectMap map = JSONUtilities.wrapMap(h);
 		if(map == null)
 			return;
-		int[] selectedStepsList = null;
+		List<Integer> selectedStepsList = Collections.emptyList();
 		if(map.containsKey("selectedSteps"))
-			selectedStepsList = map.getIntArray("selectedSteps");
-		selectedSteps = new ArrayList<Integer>();
-		for(int i = 0; i < selectedStepsList.length; i++)
-			selectedSteps.add(selectedStepsList[i]);
+			selectedStepsList = map.getIntegerList("selectedSteps");
+		selectedSteps = new ArrayList<Integer>(selectedStepsList);
 		stappenVak.setState(h);
 		resize();
+		moveKeuzeVak();
 	}
 
 	@Override
@@ -422,5 +414,17 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 		// TODO Auto-generated method stub
 		
 	}
+
+  protected void moveKeuzeVak(int nr) {
+    if (nr == stappenVak.getRowOf(keuzeVak.asWidget().getParent())) 
+      return;
+    
+    keuzeVak.asWidget().removeFromParent();
+    stappenVak.geefTekstVak(nr, 1).add(keuzeVak);
+  }
+
+  public void moveKeuzeVak() {
+    moveKeuzeVak(selectedSteps.size()*2);
+  }
 	
 }

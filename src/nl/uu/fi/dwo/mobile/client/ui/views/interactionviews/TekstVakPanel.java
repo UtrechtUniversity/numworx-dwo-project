@@ -269,6 +269,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 	int bovenMarge = 0;
 	int ronding = 0;
 	int hoek = 0;
+	int kolom = -1;
 	CssColor bgColor = CssColor.make(255, 255, 255);
 	CssColor fgColor = CssColor.make(0, 0, 0);
 	CssColor randColor = CssColor.make(150, 150, 150);
@@ -1149,21 +1150,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 				breedtes.set(0, (double) breedte - callOutMargeX0 - callOutMargeX1 - 2 * randDikte);
 		}
 	}
-	
-//	public void setTableBounds()
-//	{
-//		int b = breedte;
-//		int h = hoogte;
-//		for (int i = 0; i < hoogtes.size(); i++)
-//		{
-//			for (int j = 0; j < breedtes.size(); j++)
-//			{
-//				tekstVakken[i][j].setSize(breedtes.get(j).intValue(), hoogtes.get(i).intValue());
-//				
-//			}
-//		}
-//	}
-	
+		
 	public TekstVakPanel(ActivityComponent a, int breedte, int hoogte, String[] randomVarNamen,
 			HashMap randomVarWaarden, AnchorContext anchorContext) {
 		this(a, breedte, hoogte, randomVarNamen, randomVarWaarden);
@@ -1277,29 +1264,6 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		{	myVak.getRegelVak(i).hervulRegel();
 			
 		}
-		//	myVak.getRegelVak(i).resize();
-		
-		
-//		com.google.gwt.user.client.Element element = child.getAsPanel().getElement();
-//		element.getStyle().setProperty("verticalAlign", (tekstGrootte - cch + 1) + "px");
-		//if(pasAanH)
-		//{
-//			int cellHoogte = hoogtes.get(rij).intValue();
-//			int c0 = Math.max(cellHoogte, minHoogtes.get(rij).intValue());
-//			cellHoogte += delta;
-//			hoogtes.set(rij, Double.valueOf(cellHoogte));
-//			cellHoogte = Math.max(cellHoogte, minHoogtes.get(rij).intValue());
-//			for(int j = 0; j < breedtes.size(); j ++)
-//			{
-//				tekstVakken[rij][j].setPixelSize(-1, (int) cellHoogte);
-//			}
-//			delta = cellHoogte - c0;
-//			System.out.println("new size = " + breedte + "x" + "(" + hoogte + "+ " + delta + ")");
-//			//mainPanel2.setPixelSize(width, height += delta);
-//						setCurrentSize(-1, hoogte + delta);
-		//resize();
-		//}
-		
 	}
 	
 	public void zetOpdracht(HashMap<String, Object> interactiePanelLaunchState)
@@ -1830,6 +1794,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 	public void initialiseerStappen()
 	{
 		stappen = new ArrayList<Object>();
+		setKolom(breedtes.size()-1);
 		resize();
 	}
 
@@ -1993,7 +1958,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 			{	
 				//old situation, before SamengesteldeStappenPanel
 				try {
-					addTekstVakPanel((HashMap<String, Object>) stappen.get(i), randomVarNamen, randomVarWaarden, i, breedtes.size() -1);
+					addTekstVakPanel((HashMap<String, Object>) stappen.get(i), randomVarNamen, randomVarWaarden, i, kolom);
 				}
 				//new situation, with SamengesteldeStappenPanel
 				catch(Exception e) {
@@ -2005,11 +1970,11 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 						ArrayList<Object> stepContentsList = new ArrayList<Object> ();
 						for(int j = 0; j < stepContentsArray.length; j++)
 							stepContentsList.add(stepContentsArray[j]);
-						addStepContents(stepContentsList, randomVarNamen, randomVarWaarden, i, breedtes.size() - 1);
+						addStepContents(stepContentsList, randomVarNamen, randomVarWaarden, i, kolom);
 					}
 					else
 					{
-						addStepContents((ArrayList<Object>) stappen.get(i), randomVarNamen, randomVarWaarden, i, breedtes.size() - 1);	
+						addStepContents((ArrayList<Object>) stappen.get(i), randomVarNamen, randomVarWaarden, i, kolom);	
 					}
 					
 				}
@@ -3652,28 +3617,7 @@ private Object CamelCase(String name) {
 			}
 		}
 	}
-	
-	/*
-	public Vector geefInteractiePanels()
-	{
-		Vector v = new Vector();
-		for (int i = 0; i < hoogtes.size(); i++)
-		{
-			for (int j = 0; j < breedtes.size(); j++)
-			{
-				//for(int k = 0; k < tekstVakken[i][j].getFlowPanel().getWidgetCount(); k++)
-				//	if(tekstVakken[i][j].getFlowPanel().getWidget(k) != null)
-				//		v.add(tekstVakken[i][j].getFlowPanel().getWidget(k));
-				for(int k = 0; k < tekstVakken[i][j].getWidgetCount(); k++)
-					if(tekstVakken[i][j].getWidget(k) != null)
-						v.add(tekstVakken[i][j].getWidget(k));
-				
-				
-			}
-		}
-		return v;
-	}*/
-	
+		
 	public void zetGoedFout(boolean b)
 	{
 //		if (b)
@@ -4930,13 +4874,47 @@ private Object CamelCase(String name) {
 		}
 	}
 	
-	public boolean backStep(int index) {
-	  if (index == stapNr-1) return backAction();
-	  List<Object> opdrObjects = tekstVakken[index][breedtes.size()-1].getOpdrachtObjects();
-	  for(Object o : opdrObjects) interactionViewObjects.remove(o);
-	  tekstVakken[index][breedtes.size()-1].clear();
+	public boolean forwardStep(int index,ArrayList<Object> stepContents, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden) {
+	  int size = hoogtes.size();
+      List<Object> opdrObjects = tekstVakken[size-1][kolom].getOpdrachtObjects();
+	  interactionViewObjects.removeAll(opdrObjects);
+      tekstVakken[size-1][kolom].clear();
       ArrayList<Object> empty = new ArrayList<Object>();
-      tekstVakken[index][breedtes.size()-1].zetOpdrachtObjects(empty, empty);
+      tekstVakken[size-1][kolom].zetOpdrachtObjects(empty, empty);
+	  mainPanel.removeRow(size-1);
+	  mainPanel.insertRow(index);
+
+      TekstVak[] safe = tekstVakken[size-1];
+      System.arraycopy(tekstVakken, index, tekstVakken, index+1, size-index-1);
+      tekstVakken[index] = safe;
+      for (int i = 0; i < safe.length; i++ ) mainPanel.setWidget(index, i, safe[i]);
+      Double h = hoogtes.get(size-1);
+      for(int i = index; i < size; i++) {
+        Double x = hoogtes.get(i);
+        hoogtes.set(i, h);
+        h = x;
+      }
+      stappen.add(index, stepContents==null ? empty : stepContents);
+      stapNr++;
+
+      if(stepContents != null) 
+      {   addStepContents( stepContents, randomVarNamen, randomVarWaarden, index, kolom);
+          setVisibility(layerVisible);
+      }
+	  
+	  return true;
+	}
+	
+	
+	
+	
+	public boolean backStep(int index) {
+	  //if (index == stapNr-1) return backAction();
+	  List<Object> opdrObjects = tekstVakken[index][kolom].getOpdrachtObjects();
+	  for(Object o : opdrObjects) interactionViewObjects.remove(o);
+	  tekstVakken[index][kolom].clear();
+      ArrayList<Object> empty = new ArrayList<Object>();
+      tekstVakken[index][kolom].zetOpdrachtObjects(empty, empty);
 // move tekstVakken[index] to bottom
       mainPanel.removeRow(index);
       int size = hoogtes.size();
@@ -4966,12 +4944,11 @@ private Object CamelCase(String name) {
 		//back has to be performed on this TekstVakPanel
 		if(stappen != null && stappen.size() > 0)
 		{
-			ArrayList<Object> opdrObjects = tekstVakken[stapNr-1][breedtes.size()-1].getOpdrachtObjects();
-			for(int i = 0; i < opdrObjects.size(); i++)
-				interactionViewObjects.remove(opdrObjects.get(i));
-			tekstVakken[stapNr-1][breedtes.size()-1].clear();
+			ArrayList<Object> opdrObjects = tekstVakken[stapNr-1][kolom].getOpdrachtObjects();
+			interactionViewObjects.removeAll(opdrObjects);
+			tekstVakken[stapNr-1][kolom].clear();
 			ArrayList<Object> empty = new ArrayList<Object>();
-            tekstVakken[stapNr-1][breedtes.size()-1].zetOpdrachtObjects(empty, empty);
+            tekstVakken[stapNr-1][kolom].zetOpdrachtObjects(empty, empty);
 			if(stapNr > 0)	
 				stapNr--;
 			if(stappen.size() > stapNr)
@@ -5014,13 +4991,13 @@ private Object CamelCase(String name) {
 		
 		if(stappen.size() > stapNr)
 			stappen.remove(stapNr);
-		if(stapNr >= tekstVakken.length)
+		if(isFull())
 			return;
 		stappen.add(contentMap);
 		stapNr++;
 		
 		if(contentMap != null) 
-		{	addTekstVakPanel((HashMap<String, Object>) contentMap, randomVarNamen, randomVarWaarden, stapNr - 1, breedtes.size() -1);
+		{	addTekstVakPanel((HashMap<String, Object>) contentMap, randomVarNamen, randomVarWaarden, stapNr - 1, kolom);
 			setVisibility(layerVisible);
 		}
 	}
@@ -5037,17 +5014,21 @@ private Object CamelCase(String name) {
 		
 		if(stappen.size() > stapNr)
 			stappen.remove(stapNr);
-		if(stapNr >= tekstVakken.length)
+		if(isFull())
 			return;
 		stappen.add(stepContents);
 		stapNr++;
 		
 		if(stepContents != null)
 		{
-			addStepContents(stepContents, randomVarNamen, randomVarWaarden, stapNr - 1, breedtes.size() - 1);
+			addStepContents(stepContents, randomVarNamen, randomVarWaarden, stapNr - 1, kolom);
 			setVisibility(layerVisible);
 		}
 	}
+
+  public boolean isFull() {
+    return stapNr >= tekstVakken.length;
+  }
 
 	// visible (default) or hidden.
 	private void setVisibility(boolean b) {
@@ -5812,13 +5793,17 @@ private Object CamelCase(String name) {
   }
 
   public int getRowOf(Widget vak) {
-    for (int row = 0; row < tekstVakken.length; row++) {
-      for (int col = 0; col <tekstVakken[row].length; col++) {
-        if (vak == tekstVakken[row][col]) return row;
-      }
-    }
-    
+    if (vak != null)
+      for (int row = 0; row < tekstVakken.length; row++) {
+        for (int col = 0; col <tekstVakken[row].length; col++) {
+          if (vak == tekstVakken[row][col]) return row;
+        }
+      }    
     return -1;
+  }
+
+  public void setKolom(int kolom) {
+    this.kolom = kolom;
   }
 
 	

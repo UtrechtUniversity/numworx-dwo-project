@@ -19,6 +19,7 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -35,7 +36,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVak;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
-public class StappenKeuzeVak {
+public class StappenKeuzeVak implements IsWidget {
 	
 	StrategieVak parent;
 	private ArrayList<Object>[] stepContents;
@@ -140,7 +141,10 @@ public class StappenKeuzeVak {
               
               @Override
               public void onClick(ClickEvent event) {
-                zetSelectie(index);
+                //zetSelectie(index);
+                int pos = parent.stappenVak.getRowOf(StappenKeuzeVak.this.asWidget().getParent());
+                zetSelectie(pos, index);
+                parent.moveKeuzeVak();
               }
             }, ClickEvent.getType());
 			huidigeKeuzeVak.add(keuzeOptiePanels[i]);
@@ -175,9 +179,17 @@ public class StappenKeuzeVak {
 	public void zetSelectie(int index)
 	{		
 		parent.makeStep(stepContents[index - 1]);
-		parent.addSelectedStep(index - 1);
-	    
+		parent.makeStep(new ArrayList<>());
+		parent.addSelectedStep(index - 1);	    
 	}
+
+	public void zetSelectie(int pos, int index) {
+	    if (parent.stappenVak.isFull()) return;
+	    parent.makeStep(pos, new ArrayList<>());
+	    parent.makeStep(pos+1, stepContents[index-1]);
+	    parent.addSelectedStep(pos/2, index-1);
+	}
+	
 	
 	public ArrayList<Object>[] getStepContents()
 	{
