@@ -88,7 +88,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 	private String casString = "";
 	private boolean casResult = false;
 	
-	private int currentAnswerModel = 0;
+	private int currentAnswerModel = -1;
 	
 	//ideas instellingen
 	
@@ -348,18 +348,18 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		}
 		
 		HashMap checkResults = new HashMap();
-		checkResults.put("isGelijkwaardig", new Boolean(isGelijkwaardig));
-		checkResults.put("isHerleid", new Boolean(isHerleid));
-		checkResults.put("isSignificant", new Boolean(isSignificant));
-		checkResults.put("isExact", new Boolean(isExact));
+		checkResults.put("isGelijkwaardig", Boolean.valueOf(isGelijkwaardig));
+		checkResults.put("isHerleid", Boolean.valueOf(isHerleid));
+		checkResults.put("isSignificant", Boolean.valueOf(isSignificant));
+		checkResults.put("isExact", Boolean.valueOf(isExact));
 		
-		if(goedHalfFout != GEEN) checkResults.put("correct", new Boolean(correct));
-		checkResults.put("fout", new Boolean(fout));
-		checkResults.put("goedHalfFout", new Integer(goedHalfFout));
-		checkResults.put("score", new Integer(score));
+		if(goedHalfFout != GEEN) checkResults.put("correct", Boolean.valueOf(correct));
+		checkResults.put("fout", Boolean.valueOf(fout));
+		checkResults.put("goedHalfFout", Integer.valueOf(goedHalfFout));
+		checkResults.put("score", Integer.valueOf(score));
 		checkResults.put("feedback", feedback);
-		checkResults.put("syntaxFout", new Boolean(syntaxFout));
-		checkResults.put("answerModelNr", new Integer(currentAnswerModel));
+		checkResults.put("syntaxFout", Boolean.valueOf(syntaxFout));
+		if (hasFeedback) checkResults.put("answerModelNr", Integer.valueOf(currentAnswerModel));
 		
 		
 		return checkResults;
@@ -947,6 +947,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 	{	
 		syntaxFout = false;
 		leeg = false;
+        currentAnswerModel = -1;
 		
 		Expressie antwoord = FormuleParser.geefExpressie(expAntwoordString, functieMVDefSet);
 		//logger.fine("check antwoord  " + (antwoord == null) );
