@@ -587,6 +587,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	public void setChanged(boolean fout) // FIXME Trifork: hier safepoint?
 	{
+      saveCurrentState();
 		Boolean check = entry.isCorrect();
 		boolean correct = Boolean.TRUE.equals(check);
 		isCorrect[currentActiviteit][currentOpdracht] = correct;
@@ -603,7 +604,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		// (ging bijv. mis voor geval je het goede antw weghaalt in
 		// uitklapvak/popup en daarna vak/popup sluit; button werd weer rood,
 		// maar score bleef staan)
-		saveCurrentState();
+//		saveCurrentState();
 
 		if (buttons != null && buttons.size() > currentOpdracht)
 		{

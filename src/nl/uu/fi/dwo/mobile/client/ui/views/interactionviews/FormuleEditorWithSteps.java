@@ -2824,6 +2824,12 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				text = viewers.get(i).toString();
 			editor.insert(text);
 			editor.bepaalScoreEnCorrect();
+// is niet altijd gevuld
+			if (scoreCumulatief && scoreContainer[i] == -1 && editor.hasFeedback()) {
+              Integer results = editor.bepaalCumulatief(); // Niet heel efficient!
+              if  (results!=null)
+                  scoreContainer[i] = results;
+			}
 
 			voortgangsScore = Math.max(voortgangsScore, editor.getScore());
 			this.correct = editor.isCorrect(); // het laatst ingevoerde geldige antwoord bepaalt of het correct is
@@ -3416,9 +3422,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	private int getCumScore() {
 		int scoreCum = 0;
 		int[] scoreContainerTemp = new int[scoreContainer.length];
-		for(int i=0 ; i<scoreContainer.length ; i++) {
-			scoreContainerTemp[i] = scoreContainer[i];
-		}
+		System.arraycopy(scoreContainer, 0, scoreContainerTemp, 0, scoreContainer.length);
 		for(int i=0 ; i<scoreContainerTemp.length ; i++) {
 			int amNr = scoreContainerTemp[i];
 			if(amNr>-1) {

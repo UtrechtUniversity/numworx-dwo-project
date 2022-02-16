@@ -950,6 +950,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		
 		HashMap<String, Object> checkResults = new HashMap<String, Object>();
 		checkResults = avChecker.checkAnswer(useranswer);
+	    this.correct = (Boolean) checkResults.get("correct");
+        this.score = (Integer) checkResults.get("score");
 		return (Integer) checkResults.get("answerModelNr");
 	}
 	
