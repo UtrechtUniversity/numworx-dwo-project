@@ -14,6 +14,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.DataResource;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -31,6 +32,7 @@ import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.HasResize;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVak;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel.Tupel;
 
@@ -157,15 +159,16 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 	    stappenVak = makeStepsTVP(nrOfSteps);
 	    
 		mainPanel.add(stappenVak);
+        ImageResource v = DWOplayer.DWO_BUNDLE.verwijder();
+        String css = DWOplayer.DWO_BUNDLE.dwoplayercss().removeBtn();
 		for(int i = 1; i < nrOfSteps; i += 2)
 		{
-		    DataResource v = DWOplayer.DWO_BUNDLE.verwijder_svg();
-			Image img = new Image(v.getSafeUri());
-			img.setPixelSize(-1, labelHeight);
-            PushButton stepNumbersi = new PushButton(img);
-            stepNumbersi.addClickHandler(new RemoveStap(stepNumbersi));
-			stepNumbersi.setPixelSize(labelWidth-12 ,labelHeight-8); // pushbutton marge = 12x8
-			stappenVak.geefTekstVak(i, 2).add(stepNumbersi);
+		  Image img = new Image(v);
+		  img.setStylePrimaryName(css);
+          img.addClickHandler(new RemoveStap(img));
+          TekstVak vak = stappenVak.geefTekstVak(i, 2);
+          vak.add(img); 
+          vak.setSize(labelWidth, labelHeight);
 		}
 		for(int i = 0; i < nrOfSteps; i += 2)
         {

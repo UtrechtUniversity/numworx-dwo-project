@@ -113,9 +113,8 @@ public interface DWOplayerClientBundle extends ClientBundle {
 	@Source("nl/uu/fi/dwo/mobile/client/resources/kb/desktop_active.png")
 	ImageResource desktop_active();
 
-	  @Source("nl/uu/fi/dwo/mobile/client/resources/Verwijder.svg")
-	  @MimeType("image/svg+xml")
-	  DataResource verwijder_svg();
+	@Source("nl/uu/fi/dwo/mobile/client/resources/bin.png")
+	ImageResource verwijder();
 
 	
 }

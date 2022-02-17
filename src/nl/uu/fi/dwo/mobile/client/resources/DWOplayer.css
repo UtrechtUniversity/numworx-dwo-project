@@ -466,3 +466,14 @@ span.textEditor_select {
 	outline: none;
 }
 
+.removeBtn {
+	width: 13px;
+	height: 17px;
+	padding: 2px 4px;
+	border-width: 1px;
+	border-color: rgb(175, 192, 217);
+	border-style: solid;
+	border-radius: 3px;
+	background-color: rgb(218, 224, 242);
+	margin-left: 8px;
+}

@@ -86,5 +86,5 @@ public interface DWOplayerCss extends CssResource {
 	String tablet_active();
 	String desktop_active();
 
-
+	String removeBtn();
 }
