@@ -121,7 +121,7 @@ public class BerekeningVakFormuleEditor extends FormuleEditor {
 	public void setFont(FormuleFont fm) {
 		super.setFont(fm);
 		getMainRegel().setMinimumHeight(fm.getHeight() + 3);
-		berekeningVakRegel.berekeningVak.rresize();
+		//berekeningVakRegel.berekeningVak.rresize();
 	}
 	
 }

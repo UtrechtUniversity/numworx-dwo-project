@@ -5,48 +5,12 @@ import java.util.HashMap;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.BorderStyle;
-import com.google.gwt.dom.client.Style.TextAlign;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.MouseMoveEvent;
-import com.google.gwt.event.dom.client.MouseMoveHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.event.dom.client.TouchEndEvent;
-import com.google.gwt.event.dom.client.TouchEndHandler;
-import com.google.gwt.event.dom.client.TouchMoveEvent;
-import com.google.gwt.event.dom.client.TouchMoveHandler;
-import com.google.gwt.event.dom.client.TouchStartEvent;
-import com.google.gwt.event.dom.client.TouchStartHandler;
-import com.google.gwt.event.logical.shared.AttachEvent;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.dom.client.recognizer.swipe.SwipeEvent.DIRECTION;
-import com.vaadin.pointerevents.client.PointerDownEvent;
-import com.vaadin.pointerevents.client.PointerDownHandler;
-import com.vaadin.pointerevents.client.PointerMoveEvent;
-import com.vaadin.pointerevents.client.PointerMoveHandler;
-import com.vaadin.pointerevents.client.PointerUpEvent;
-import com.vaadin.pointerevents.client.PointerUpHandler;
-
 
 import fi.wiskopdr.AntwoordFormuleVakChecker;
-import fi.wiskopdr.FormuleParser;
-import fi.wiskopdr.expressies.Algebra;
-import fi.wiskopdr.expressies.BasisExpressie;
-import fi.wiskopdr.expressies.DecRound;
-import fi.wiskopdr.expressies.Expressie;
-import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
-import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
@@ -58,11 +22,8 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
-import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FEWSButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselEditor;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 public class BerekeningVak implements InteractionView, TekstElementWithFont{
@@ -84,10 +45,11 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 	
 	//componenten
 	private ArrayList<BerekeningVakRegel> vakRegels = new ArrayList<BerekeningVakRegel>();
+	private ArrayList<SimplePanel> seperators = new ArrayList<SimplePanel>();
 	private BerekeningVakRegel actieveRegel;
 	private VerticalPanel vakPanel;
-	private PopupPanel feedbackPanel = new PopupPanel(true);
-	private LayoutPanel feedbackTekst = new LayoutPanel();
+	private BerekeningVakFeedbackPanel feedbackPanel;
+	
 		
 	//instellingen
 	protected BerekeningVakSettings settings;
@@ -120,68 +82,22 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 		
 		avChecker = new AntwoordFormuleVakChecker((HashMap<String, Object>) settings.launchState(), randomVarNamen, randomVarWaarden);
 		
-		actieveRegel = new BerekeningVakRegel(this,breedte-6-2*borderWidth, settings.hoogte()-2*borderWidth);
-		actieveRegel.setActief(true);
-		vakRegels.add(actieveRegel);
-		
-		
 		vakPanel = new VerticalPanel();
 		vakPanel.setStyleName(DWOplayer.templateCss().answerboxFEWA());
 		if(!settings.boxMetRand())	{
 			vakPanel.getElement().getStyle().setBorderStyle(Style.BorderStyle.NONE);
 			vakPanel.getElement().getStyle().setBackgroundColor("transparent");
 		}
-		vakPanel.add(actieveRegel.getAsPanel());
 		
-		setFont(font);
-		rresize();
-		
-		feedbackTekst.getElement().setInnerText("Niet duidelijk wat er moet worden uitgerekend. Selecteer een berekening en klik opnieuw.");
-		feedbackTekst.getElement().getStyle().setColor(""+CssColor.make(49,71,112));
-		
-		BerekeningVakButton closeButton = new BerekeningVakButton("sluit");
-		closeButton.setSize(15, 15);
-		closeButton.addButtonListener(new CloseButtonListener());
-		closeButton.asWidget().getElement().getStyle().setTextAlign(TextAlign.RIGHT);
-		
-		VerticalPanel vp = new VerticalPanel();
-		HorizontalPanel hp = new HorizontalPanel();
-		hp.setWidth("100%");
-		hp.add(closeButton);
-		hp.setCellHorizontalAlignment(closeButton, HasHorizontalAlignment.ALIGN_RIGHT);
-		
-		vp.add(hp);
-		vp.add(feedbackTekst);
-		
-		feedbackPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
-		feedbackPanel.getElement().getStyle().setBorderColor(""+CssColor.make(38,115,182));
-		feedbackPanel.getElement().getStyle().setBorderWidth(1, Style.Unit.PX);
-		feedbackPanel.getElement().getStyle().setPadding(5, Style.Unit.PX);
-		feedbackPanel.getElement().getStyle().setBackgroundColor(""+CssColor.make(239,241,243));
-		feedbackPanel.getElement().getStyle().setProperty("boxShadow", "3px 3px 3px #96A1BD");
-		feedbackPanel.add(vp);
-		feedbackPanel.setAutoHideEnabled(false);
-		feedbackPanel.setWidth("180px");
-		
-		vakPanel.addAttachHandler(new AttachEvent.Handler() {
-			@Override
-			public void onAttachOrDetach(AttachEvent event) {
-				if(feedbackPanel!=null)
-					feedbackPanel.hide();
-			}
-		});
+		maakRegel(null);
 	}
 	
-	public void setFeedback() {
-		feedbackPanel.setPopupPosition(actieveRegel.getAsPanel().getAbsoluteLeft()+actieveRegel.getWidth()-30, actieveRegel.getAsPanel().getAbsoluteTop()+30);
-		
-			feedbackPanel.show();
-			feedbackPanel.setVisible(true);
-		
-	}
-	
-	public void closeFeedback() {
-		feedbackPanel.hide();
+	public void showFeedback(BerekeningVakRegel vakRegel) {
+		if(feedbackPanel == null)
+			feedbackPanel = new BerekeningVakFeedbackPanel(vakPanel);
+		feedbackPanel.show(vakRegel.getAsPanel().getAbsoluteLeft()+actieveRegel.getWidth()-30, vakRegel.getAsPanel().getAbsoluteTop()+30);
+		feedbackPanel.show();
+		feedbackPanel.setVisible(true);
 	}
 	
 	public void tab() {
@@ -197,7 +113,7 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 	}
 	
 	public void maakRegel(String tailString) {
-		if(!settings.meerregelig())
+		if(!settings.meerregelig() && vakRegels.size()>0)
 			return;
 		int regelNr = vakRegels.indexOf(actieveRegel);
 		BerekeningVakRegel vakRegel = new BerekeningVakRegel(this,breedte-6-2*borderWidth, settings.hoogte()-2*borderWidth);
@@ -214,11 +130,11 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 		else {
 			vakRegel.geefFormuleEditor().clearMain();
 		}
+		
 		vakRegel.geefFormuleEditor().paint();
-		
-		
 		vakRegels.add(regelNr+1,vakRegel);
 		vakPanel.insert(vakRegel.getAsPanel(), regelNr+1);
+		
 		zetActieveRegel(vakRegel);
 		rresize();
 	}
@@ -285,7 +201,8 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 	public void zetActieveRegel(BerekeningVakRegel berekeningVakRegel) {
 		if(berekeningVakRegel == actieveRegel)
 			return;
-		actieveRegel.setActief(false);
+		if(actieveRegel!=null)
+				actieveRegel.setActief(false);
 		berekeningVakRegel.setActief(true);
 		actieveRegel = berekeningVakRegel;
 		requestFocus();
@@ -478,10 +395,5 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 		
 	}
 	
-	private class CloseButtonListener implements ButtonListener {
-		
-		public void onClick(Object sender) {
-			feedbackPanel.hide();
-		}
-	}
+	
 }

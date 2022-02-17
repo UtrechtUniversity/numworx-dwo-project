@@ -1,9 +1,12 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.berekeningvak;
 
+import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import fi.wiskopdr.FormuleParser;
@@ -25,7 +28,9 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 	//componenten
 	private BerekeningVakFormuleEditor formuleEditor = null;
 	private Panel formulePanel = null;
-	private HorizontalPanel mainPanel;
+	private VerticalPanel mainPanel;
+	private HorizontalPanel regelPanel;
+	private SimplePanel separator;
 	private BerekeningVakButton rekenButton;
 	
 	private int breedte;
@@ -43,9 +48,11 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 		breedte = width;
 		hoogte = height;
 		
-		mainPanel = new HorizontalPanel();
-		mainPanel.getElement().getStyle().setBorderStyle(Style.BorderStyle.NONE);
-		mainPanel.getElement().getStyle().setBackgroundColor("transparent");
+		mainPanel = new VerticalPanel();
+		
+		regelPanel = new HorizontalPanel();
+		regelPanel.getElement().getStyle().setBorderStyle(Style.BorderStyle.NONE);
+		regelPanel.getElement().getStyle().setBackgroundColor("transparent");
 		
 		formuleEditor = new BerekeningVakFormuleEditor(this);
 		formuleEditor.getMainRegel().setMinimumWidth(breedte - 40);
@@ -54,18 +61,25 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 		
 		formulePanel = formuleEditor.getAsPanel();
 		formulePanel.add(formuleEditor.getMainRegel().asWidget());
-		mainPanel.add(formulePanel);
+		regelPanel.add(formulePanel);
 		
 		rekenButton = new BerekeningVakButton("rekenmachine");
 		rekenButton.setSize(20, 20);
 		rekenButton.addButtonListener(new RekenButtonListener());
 		rekenButton.setTooltip("Bereken");
 		rekenButton.setVisible(false);
-		mainPanel.add(rekenButton);
+		regelPanel.add(rekenButton);
+		
+		mainPanel.add(regelPanel);
+		
+		separator = new SimplePanel();
+		separator.getElement().getStyle().setBackgroundColor(""+CssColor.make(211,229,244));
+		if(berekeningVak.settings.meerregelig())
+			mainPanel.add(separator);
 		
 		regelResize();
 					
-		formuleEditor.register(new FormuleEditorTouchHandler(formuleEditor).initHandler());
+		formuleEditor.register(new BVformuleEditorTouchHandler(formuleEditor).initHandler());
 	}
 	
 	public void setActief(boolean b) {
@@ -76,7 +90,7 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 	private void berekenEnPlaatsExpressie() {
 		String isGelijkAntwoord = calculateAndFormatExpression(formuleEditor); //isteken + antwoord
 		if(isGelijkAntwoord == null) {
-			berekeningVak.setFeedback();
+			berekeningVak.showFeedback(this);
 			return;
 		}
 		
@@ -154,9 +168,14 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 				//wat te doen bij overloop van een regel?
 			}
 		}
-		hoogte = formuleEditor.getMainRegel().getHeight();
+		int extraSpace = 0;
+		if(berekeningVak.settings.meerregelig())
+			extraSpace = 2;
+		hoogte = formuleEditor.getMainRegel().getHeight()+ extraSpace;
 		formulePanel.setPixelSize((breedte-30) , hoogte );
-		mainPanel.setPixelSize((breedte-1) , hoogte-1 );
+		regelPanel.setPixelSize((breedte-1) , hoogte-1 );
+		mainPanel.setPixelSize((breedte-1) , hoogte );
+		separator.setPixelSize((breedte-1) , 1 );
 		if(rekenButton != null) 
 			rekenButton.getElement().getStyle().setMarginTop(getAsHoogte()-14, Unit.PX);
 	}
@@ -192,7 +211,7 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 	}
 			
 	public int getHeight() {
-		return hoogte;
+		return hoogte+1;
 	}
 	
 	public int getWidth() {	
