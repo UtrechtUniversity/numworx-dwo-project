@@ -87,4 +87,7 @@ public interface DWOplayerCss extends CssResource {
 	String desktop_active();
 
 	String removeBtn();
+	String strategieKeuzeVak();
+	String strategieKeuze();
+	String strategieLabel();
 }

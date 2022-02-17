@@ -4,26 +4,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-import com.google.gwt.canvas.client.Canvas;
-import com.google.gwt.canvas.dom.client.CanvasGradient;
-import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
-import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
 import fi.wiskopdr.FormuleParser;
@@ -31,18 +21,19 @@ import fi.wiskopdr.text.Text;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVak;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
-public class StappenKeuzeVak implements IsWidget {
+class StappenKeuzeVak implements IsWidget {
 	
 	StrategieVak parent;
 	private ArrayList<Object>[] stepContents;
 	private String[] keuzeMogelijkheden;
 		
-	private LayoutPanel basisPanel;
+	private FlowPanel basisPanel;
 	int breedte = 300; 
 	int hoogte = 24;
 	
@@ -52,7 +43,7 @@ public class StappenKeuzeVak implements IsWidget {
 	private ActivityComponent activity;
 	
 	
-	public StappenKeuzeVak(ActivityComponent a, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden)
+	StappenKeuzeVak(ActivityComponent a, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden)
 	{
 		this.activity = a;
 		HashMap<String, Object> launchState = null;
@@ -68,7 +59,7 @@ public class StappenKeuzeVak implements IsWidget {
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
 		
-		basisPanel = new LayoutPanel();
+		basisPanel = new FlowPanel();
 		basisPanel.setPixelSize(breedte, hoogte);
 		
 		ObjectMap map = JSONUtilities.wrapMap(launchState);
@@ -107,12 +98,11 @@ public class StappenKeuzeVak implements IsWidget {
 		}
 	    		
 		huidigeKeuzeVak = new HorizontalPanel();
-		huidigeKeuzeVak.getElement().getStyle().setBorderColor(CssColor.make(128, 128, 128).toString());
-		huidigeKeuzeVak.getElement().getStyle().setBorderWidth(1, Style.Unit.PX);
-		huidigeKeuzeVak.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+		huidigeKeuzeVak.addStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().strategieKeuzeVak());
 		huidigeKeuzeVak.setPixelSize(breedte - 2, hoogte - 2);
 		basisPanel.add(huidigeKeuzeVak);
 		Label kies = new Label(Text.constants.keuzeVakKiesLabel());
+		kies.setStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().strategieLabel());
 		huidigeKeuzeVak.add(kies);
 
 		int aantalKeuzes = 0;
@@ -142,7 +132,7 @@ public class StappenKeuzeVak implements IsWidget {
               @Override
               public void onClick(ClickEvent event) {
                 //zetSelectie(index);
-                int pos = parent.stappenVak.getRowOf(StappenKeuzeVak.this.asWidget().getParent());
+                int pos = parent.stappenVak.getRowOf(basisPanel.getParent());
                 zetSelectie(pos, index);
                 parent.moveKeuzeVak();
               }
@@ -155,12 +145,11 @@ public class StappenKeuzeVak implements IsWidget {
 	   public TekstVak maakKeuzeVak()
 	    {
 	        TekstVak vak = new TekstVak();
+	        vak.addStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().strategieKeuze());
 	        vak.setSize(breedte - 3, hoogte);
-	        vak.setMarges(2, 5);
-	        vak.getElement().getStyle().setBackgroundColor(CssColor.make(238, 238, 238).toString());
 	        vak.setFontName(XMLView.getDefaultFontName());
 	        vak.setFontSize(XMLView.getDefaultFontSize());
-	        vak.setColor(CssColor.make("black"));
+	        vak.setColor(CssColor.make(38, 115, 182));
 	        vak.setCentering(false, true);
 	        return vak;
 	    }

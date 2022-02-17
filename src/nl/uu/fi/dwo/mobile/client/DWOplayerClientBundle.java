@@ -6,9 +6,6 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.DataResource.MimeType;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.resources.client.ClientBundle.Source;
-import com.googlecode.mgwt.ui.client.theme.base.ButtonCss;
-import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
 
 import nl.uu.fi.dwo.mobile.client.template.TemplateBasicCss;
 import nl.uu.fi.dwo.mobile.client.template.TemplateNumworxCss;
