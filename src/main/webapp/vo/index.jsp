@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <%! 
 	boolean illegal(String q) {
-		if (! Pattern.matches("[%#:a-z0-9=&:.]*", q))
+		if (! Pattern.matches("[%#:a-zA-Z0-9=&:.]*", q))
 			return true;
 		return false;
 }
