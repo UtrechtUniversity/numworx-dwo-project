@@ -2295,6 +2295,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 					break; // done
 				}
 			}
+		} else {
+			formuleVakInhouden = new String[0]; // anders NPE
 		}
 		if (h.containsKey("pijlVakInhouden"))
 		{	
@@ -2901,6 +2903,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	}
 	
 	private String setViewerString(String[] formuleVakInhouden, int i) {
+		if (formuleVakInhouden == null) {
+			return "";
+		}
 		String string = formuleVakInhouden.length > i?formuleVakInhouden[i]:"";
 		if(hasPrefix && !isVergelijkingVak) {
 			string = prefix.substring(2, prefix.length()-1) + string;

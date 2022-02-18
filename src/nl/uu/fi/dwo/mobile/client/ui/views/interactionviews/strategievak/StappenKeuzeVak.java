@@ -9,6 +9,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -37,7 +38,7 @@ class StappenKeuzeVak implements IsWidget {
 	int breedte = 300; 
 	int hoogte = 24;
 	
-	HorizontalPanel huidigeKeuzeVak;
+	DockLayoutPanel huidigeKeuzeVak;
 	String[] randomVarNamen = null;
 	HashMap<String, Number> randomVarWaarden = null;
 	private ActivityComponent activity;
@@ -60,6 +61,7 @@ class StappenKeuzeVak implements IsWidget {
 		this.randomVarWaarden = randomVarWaarden;
 		
 		basisPanel = new FlowPanel();
+		basisPanel.setStyleName("stappenKeuzeVak");
 		basisPanel.setPixelSize(breedte, hoogte);
 		
 		ObjectMap map = JSONUtilities.wrapMap(launchState);
@@ -97,13 +99,14 @@ class StappenKeuzeVak implements IsWidget {
 			}
 		}
 	    		
-		huidigeKeuzeVak = new HorizontalPanel();
+		huidigeKeuzeVak = new DockLayoutPanel(Style.Unit.PX);
 		huidigeKeuzeVak.addStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().strategieKeuzeVak());
-		huidigeKeuzeVak.setPixelSize(breedte - 2, hoogte - 2);
+		huidigeKeuzeVak.setPixelSize(breedte-2, hoogte - 2);
 		basisPanel.add(huidigeKeuzeVak);
 		Label kies = new Label(Text.constants.keuzeVakKiesLabel());
 		kies.setStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().strategieLabel());
-		huidigeKeuzeVak.add(kies);
+		huidigeKeuzeVak.addNorth(new FlowPanel(), 7);
+		huidigeKeuzeVak.addWest(kies, 50);
 
 		int aantalKeuzes = 0;
 		if (keuzeMogelijkheden != null)
@@ -137,7 +140,10 @@ class StappenKeuzeVak implements IsWidget {
                 parent.moveKeuzeVak();
               }
             }, ClickEvent.getType());
-			huidigeKeuzeVak.add(keuzeOptiePanels[i]);
+			int bVak = keuzeOptiePanels[i].breedte;
+			bVak = Math.max(bVak, 50);
+			bVak += 4;
+			huidigeKeuzeVak.addWest(keuzeOptiePanels[i], bVak);
 		}
 	
 	}

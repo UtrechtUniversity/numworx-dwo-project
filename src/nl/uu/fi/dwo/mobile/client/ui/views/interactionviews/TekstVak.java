@@ -44,7 +44,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	private int ashoogte;
 	private double tekstVakBreedte;
 	
-	private boolean pasAanH = false;
+	boolean pasAanH = false;
 	private boolean pasAanB = false;
 	
 	private boolean centerH = false;
@@ -67,8 +67,8 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	private int font_style;
 	private String font_name;
 	private CssColor fgColor;
-	int hoogte = 0;
-	int breedte = 0;
+	public int hoogte = 0;
+	public int breedte = 0;
 	
 	
 	public TekstVak(TekstVakPanel parent, int rij, int kolom)

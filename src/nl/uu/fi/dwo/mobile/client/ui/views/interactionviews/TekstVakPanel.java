@@ -3299,7 +3299,7 @@ private Object CamelCase(String name) {
 			{
 				// opnieuw alles plaatsen qua hoogte; zoals het tekstvak het
 				// zelf zou doen als hem geen hoogte was opgelegd.
-				if (pasAanH)
+				if (tekstVakken[i][j].pasAanH)
 					tekstVakken[i][j].pasHoogteAanInhoudAan(true);
 				else
 					for (int k = 0; k < tekstVakken[i][j].getAantalRegels(); k++)

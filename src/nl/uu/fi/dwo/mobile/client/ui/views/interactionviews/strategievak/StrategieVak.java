@@ -7,18 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import com.google.gwt.canvas.client.Canvas;
-import com.google.gwt.canvas.dom.client.Context2d;
-import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.interaction.client.FacetAware;
@@ -34,7 +29,6 @@ import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVak;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel.Tupel;
 
 public class StrategieVak implements InteractionStub, FacetAware, TekstElementWithFont, HasResize {
 	
@@ -177,11 +171,15 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
             stepNumbersi.addClickHandler(new SwapStap(stepNumbersi));
             //stepNumbersi.setPixelSize(labelWidth-12 ,labelHeight-8); // pushbutton marge = 12x8
             stappenVak.geefTekstVak(i, 0).add(stepNumbersi);
+            stappenVak.geefTekstVak(i, 0).setPasHoogteBreedteAan(false, false);
+            stappenVak.geefTekstVak(i, 1).setPasHoogteBreedteAan(false, false);
+            stappenVak.geefTekstVak(i, 1).getElement().getStyle().setOverflow(Style.Overflow.VISIBLE);                      
+            stappenVak.geefTekstVak(i, 2).setPasHoogteBreedteAan(false, false);
         }
 		
 		//KeuzeVak initialiseren
 		HashMap<String, Object> keuzeVakMap = new HashMap<String, Object>();
-		keuzeVakMap.put("breedte", breedte - labelWidth - 2 * offset); 
+		keuzeVakMap.put("breedte", breedte - 10); 
 		keuzeVakMap.put("height", buttonHeight);
 		keuzeVakMap.put("launchState", launchState);
 		keuzeVak = new StappenKeuzeVak(activity, keuzeVakMap, randomVarNamen, randomVarWaarden);
@@ -205,7 +203,7 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
       
       ArrayList<Double> hoogtes = new ArrayList<Double>();
       for(int i = 0; i < number; i++)
-    	  hoogtes.add(27.0);
+    	  hoogtes.add(Double.valueOf(plusHoogte));
       
       ipLaunchState.put("teksten", teksten);
       ipLaunchState.put("pasAanH", Boolean.valueOf(true));
@@ -418,12 +416,22 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 		
 	}
 
+	int plusHoogte = 12;// hoogte van de + als er geen keuzevak is.
   protected void moveKeuzeVak(int nr) {
-    if (nr == stappenVak.getRowOf(keuzeVak.asWidget().getParent())) 
+    int old = stappenVak.getRowOf(keuzeVak.asWidget().getParent());
+	if (nr == old) 
       return;
-    
+	if (old > -1) {
+	  stappenVak.geefTekstVak(old, 0).setSize(10, plusHoogte); 
+	  stappenVak.geefTekstVak(old, 1).setSize(breedte - 52 - 10, plusHoogte);
+	  stappenVak.geefTekstVak(old, 2).setSize(52, plusHoogte);
+	}
     keuzeVak.asWidget().removeFromParent();
-    stappenVak.geefTekstVak(nr, 1).add(keuzeVak);
+    TekstVak vak = stappenVak.geefTekstVak(nr, 1);
+	vak.add(keuzeVak);
+	vak.getWidgetContainerElement(keuzeVak.asWidget()).getStyle().clearOverflow();
+	vak.setSize(breedte - 52 - 10, buttonHeight+10+4); // padding 5 margin 2
+	stappenVak.resize();
   }
 
   public void moveKeuzeVak() {
