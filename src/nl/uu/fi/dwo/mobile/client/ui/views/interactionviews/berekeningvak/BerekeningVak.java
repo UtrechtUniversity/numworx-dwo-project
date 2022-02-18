@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import fi.wiskopdr.AntwoordFormuleVakChecker;
+import fi.wiskopdr.expressies.Expressie;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
@@ -90,6 +91,17 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 		}
 		
 		maakRegel(null);
+	}
+	
+	public ArrayList<Expressie> getAnswerExpressies() {
+		ArrayList<Expressie> expressies = new ArrayList<Expressie>();
+		for(int i=0 ; i<vakRegels.size() ; i++) {
+			ArrayList<Expressie> regelExpressies = vakRegels.get(i).getExpressions();
+			for (int j=0 ; j<regelExpressies.size() ; j++) {
+				expressies.add(regelExpressies.get(j));
+			}
+		}
+		return expressies;
 	}
 	
 	public void showFeedback(BerekeningVakRegel vakRegel) {

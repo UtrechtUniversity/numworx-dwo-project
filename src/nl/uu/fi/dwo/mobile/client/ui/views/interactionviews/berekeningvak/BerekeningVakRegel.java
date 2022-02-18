@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.berekeningvak;
 
+import java.util.ArrayList;
+
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
@@ -86,6 +88,20 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 		rekenButton.setVisible(b);
 	}
 	
+	public ArrayList<Expressie> getExpressions() {
+		ArrayList<Expressie> expressies = new ArrayList<Expressie>();
+		String regelString = formuleEditor.toString();
+		regelString = regelString.replace('\u2248', '=');
+		regelString = regelString.replace(';', '=');
+		String[] deelStrings = regelString.split("=");
+		for(int i=0 ; i<deelStrings.length ; i++) {
+			Expressie expressie = FormuleParser.geefExpressie(deelStrings[i]);
+			if(expressie!=null)
+				expressies.add(expressie);
+			
+		}
+		return expressies;
+	}
 	
 	private void berekenEnPlaatsExpressie() {
 		String isGelijkAntwoord = calculateAndFormatExpression(formuleEditor); //isteken + antwoord
