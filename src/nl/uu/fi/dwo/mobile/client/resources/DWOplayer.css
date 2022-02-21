@@ -493,9 +493,17 @@ span.textEditor_select {
 .strategieLabel {
 	color: white;
 	margin-left: 10px;
+	margin-top: 5px;
+	font-weight: bold;
 }
 
 .strategieKeuze {
 	background-color: rgb(218, 224, 242);
-	color: rgb(38, 115, 182)
+	color: rgb(38, 115, 182);
+	border-color: #2673B6;
+	border-radius: 3px;
+	border-width: 1px;
+	margin-left: 5px;
+	margin-top: 3px;
+	border-style:solid;
 }

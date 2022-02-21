@@ -6,15 +6,12 @@ import java.util.HashMap;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import fi.wiskopdr.FormuleParser;
@@ -105,7 +102,7 @@ class StappenKeuzeVak implements IsWidget {
 		basisPanel.add(huidigeKeuzeVak);
 		Label kies = new Label(Text.constants.keuzeVakKiesLabel());
 		kies.setStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().strategieLabel());
-		huidigeKeuzeVak.addNorth(new FlowPanel(), 7);
+		huidigeKeuzeVak.addNorth(new FlowPanel(), 3);
 		huidigeKeuzeVak.addWest(kies, 50);
 
 		int aantalKeuzes = 0;
@@ -118,7 +115,6 @@ class StappenKeuzeVak implements IsWidget {
 		for (int i = 0; i < aantalKeuzes; i++)
 		{			
 			keuzeOptiePanels[i] = maakKeuzeVak();
-	        keuzeOptiePanels[i].setPasHoogteBreedteAan(true, true);
 	        try {
               keuzeMogelijkheden[i] = FormuleParser.randomizeTekstVakString(keuzeMogelijkheden[i], randomVarNamen, randomVarWaarden);
             } catch (Exception e) {
@@ -142,7 +138,7 @@ class StappenKeuzeVak implements IsWidget {
             }, ClickEvent.getType());
 			int bVak = keuzeOptiePanels[i].breedte;
 			bVak = Math.max(bVak, 50);
-			bVak += 4;
+			bVak += 10;
 			huidigeKeuzeVak.addWest(keuzeOptiePanels[i], bVak);
 		}
 	
@@ -152,11 +148,12 @@ class StappenKeuzeVak implements IsWidget {
 	    {
 	        TekstVak vak = new TekstVak();
 	        vak.addStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().strategieKeuze());
-	        vak.setSize(breedte - 3, hoogte);
+	        vak.setPasHoogteBreedteAan(false, false);
+	        vak.setSize(51, 23);
 	        vak.setFontName(XMLView.getDefaultFontName());
 	        vak.setFontSize(XMLView.getDefaultFontSize());
 	        vak.setColor(CssColor.make(38, 115, 182));
-	        vak.setCentering(false, true);
+	        vak.setCentering(true, true);
 	        return vak;
 	    }
 
@@ -181,6 +178,7 @@ class StappenKeuzeVak implements IsWidget {
 	public void zetSelectie(int pos, int index) {
 	    if (parent.stappenVak.isFull()) return;
 	    parent.makeStep(pos, new ArrayList<>());
+	    parent.makeSmall(pos);
 	    parent.makeStep(pos+1, stepContents[index-1]);
 	    parent.addSelectedStep(pos/2, index-1);
 	}

@@ -46,7 +46,7 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
     int labelWidth = 50;
     int labelHeight = 25;
     int buttonWidth = 20;
-    int buttonHeight = 24;
+    final static int buttonHeight = 24;
 	
 	private FlowPanel mainPanel;
 	TekstVakPanel stappenVak;
@@ -180,14 +180,13 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 		//KeuzeVak initialiseren
 		HashMap<String, Object> keuzeVakMap = new HashMap<String, Object>();
 		keuzeVakMap.put("breedte", breedte - 10); 
-		keuzeVakMap.put("height", buttonHeight);
+		keuzeVakMap.put("hoogte", buttonHeight);
 		keuzeVakMap.put("launchState", launchState);
 		keuzeVak = new StappenKeuzeVak(activity, keuzeVakMap, randomVarNamen, randomVarWaarden);
 		keuzeVak.setParent(this);
 		
         makeStep(new ArrayList<>());
-		stappenVak.geefTekstVak(0, 1).add(keuzeVak);
-		resize();
+		moveKeuzeVak(0);
 	}
 	
 	private TekstVakPanel makeStepsTVP(int number) 
@@ -422,9 +421,7 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 	if (nr == old) 
       return;
 	if (old > -1) {
-	  stappenVak.geefTekstVak(old, 0).setSize(10, plusHoogte); 
-	  stappenVak.geefTekstVak(old, 1).setSize(breedte - 52 - 10, plusHoogte);
-	  stappenVak.geefTekstVak(old, 2).setSize(52, plusHoogte);
+	  makeSmall(old);
 	}
     keuzeVak.asWidget().removeFromParent();
     TekstVak vak = stappenVak.geefTekstVak(nr, 1);
@@ -436,6 +433,12 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 
   public void moveKeuzeVak() {
     moveKeuzeVak(selectedSteps.size()*2);
+  }
+
+  public void makeSmall(int old) {
+	  stappenVak.geefTekstVak(old, 0).setSize(10, plusHoogte); 
+	  stappenVak.geefTekstVak(old, 1).setSize(breedte - 52 - 10, plusHoogte);
+	  stappenVak.geefTekstVak(old, 2).setSize(52, plusHoogte);
   }
 	
 }

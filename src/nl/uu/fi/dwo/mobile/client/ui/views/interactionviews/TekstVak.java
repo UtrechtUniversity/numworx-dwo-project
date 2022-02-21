@@ -42,7 +42,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	private ArrayList<Object> opdrachtObjectsForLayout = opdrachtObjects;
 	private ArrayList<TekstVakPanel> zwevendeTekstVakken = new ArrayList<TekstVakPanel>();
 	private int ashoogte;
-	private double tekstVakBreedte;
+	double tekstVakBreedte;
 	
 	boolean pasAanH = false;
 	private boolean pasAanB = false;

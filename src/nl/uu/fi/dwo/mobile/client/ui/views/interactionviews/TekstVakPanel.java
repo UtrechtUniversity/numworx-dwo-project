@@ -5114,6 +5114,9 @@ private Object CamelCase(String name) {
 	private void addStepContents(ArrayList<Object> stepContents, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int row, int column)
 	{
 		TekstBuffer tb = new TekstBuffer(activity, randomVarNamen, randomVarWaarden, null);
+		int[] breedtes = new int[1];
+		breedtes[0] = (int) tekstVakken[row][column].tekstVakBreedte;
+		tb.zetVolleBreedtes(breedtes);
 		ArrayList<Object> opdrachtObjects = new ArrayList<Object>();
 		ArrayList<Object> opdrachtGegevens = new ArrayList<Object>();
 		
