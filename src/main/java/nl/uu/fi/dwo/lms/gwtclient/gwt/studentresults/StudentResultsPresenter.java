@@ -163,6 +163,9 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		@Override
 		public void onClick(ClickEvent event) {
 			if (current != null) {
+				if (widget.get().isBack()) {
+					doBack(current);
+				} else
 				if (widget.get().isFilter()) {
 					doFilter(current);
 				} else
@@ -333,6 +336,10 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	protected void doFilter(DomStudentModelContext4Student item) {
 	}
 
+	protected void doBack(DomStudentModelContext4Student item) {
+		LOG.info("do back " + item);
+	}
+	
 	boolean showGraph;
 	protected Map<String,Map<String, Set<Integer>>> filter = Collections.emptyMap();
 	protected DomMethod method;

@@ -34,9 +34,9 @@ public class StudentResultsWidget extends Composite {
 
 	interface StudentResultsWidgetUiBinder extends UiBinder<Widget, StudentResultsWidget> {
 	}
-
+	enum Which { filter, graph, back };
 	private final EventBus bus;
-	private boolean filterBtn;
+	private Which which;
 
 	@Inject StudentResultsWidget(EventBus bus) {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -71,12 +71,12 @@ public class StudentResultsWidget extends Composite {
 	}
 
 	@UiHandler("btn") void onGraph(ClickEvent ev) {
-		filterBtn = false;
+		which = Which.graph;
 		bus.fireEventFromSource(ev, this);
 	}
 	
 	@UiHandler("filterBtn") void onFilter(ClickEvent ev) {
-		filterBtn = true;
+		which = Which.filter;
 		bus.fireEventFromSource(ev, this);
 	}
 	
@@ -84,6 +84,11 @@ public class StudentResultsWidget extends Composite {
 		bus.fireEventFromSource(ev, this);
 	}
 	
+	
+	@UiHandler("back") void onBack(ClickEvent ev) {
+		which = Which.back;
+		bus.fireEventFromSource(ev, this);
+	}
 
 	public void setFilter(Map<String, Map<String, Set<Integer>>> filter2, DomMethod method) {
 		viewBtn.setText(method.getMethod());
@@ -93,7 +98,10 @@ public class StudentResultsWidget extends Composite {
 	}
 	
 	public boolean isFilter() {
-		return filterBtn;
+		return which == Which.filter;
+	}
+	public boolean isBack() {
+		return which == Which.back;
 	}
 	
 	public boolean isMethod() {

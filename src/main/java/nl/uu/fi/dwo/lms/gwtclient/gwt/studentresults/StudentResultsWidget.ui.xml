@@ -1,5 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:style>
 	.perc {
@@ -87,6 +88,12 @@
 	.west {
 	}
 
+	.anchor {
+		padding-top: 1em;
+		font-size: 0.875em;
+		cursor: pointer;
+	}
+	
 	.score {
 		padding-top: 1em;
 	}
@@ -108,6 +115,9 @@
 			  <g:north size="3">
 			  	<g:Label ui:field='filter' addStyleNames="{style.title}"></g:Label>
 			  </g:north>
+			  <g:south size="3">
+			  	<g:Anchor styleName='{style.anchor}' addStyleNames='backlink' ui:field='back'>◀ ︎Terug naar kennisoverzicht klas</g:Anchor>
+			  </g:south>
 			  <g:south size="2.4"><g:FlowPanel>
 			  	<g:Button ui:field='btn' styleName='{style.graph}'>Graph</g:Button>
 			    <g:Button ui:field='filterBtn' styleName='{style.filter}' addStyleNames='{style.space} teacher-only'>Filter</g:Button>

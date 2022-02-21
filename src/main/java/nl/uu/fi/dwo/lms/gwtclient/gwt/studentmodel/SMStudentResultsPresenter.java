@@ -46,6 +46,9 @@ public class SMStudentResultsPresenter extends StudentResultsPresenter {
 		return new SwitchViewEvent(SwitchViewEvent.SelectedView.SMSTUDENTRESULTSGRAPH, service.user, service.schoolClass, json.getJavaScriptObject());
 	}
 
+	
+	
+	
 	private Map<PersistenceId, Promise<FilterMethodDialog>> filterDialogs = new HashMap<>();
 
 	@Override
@@ -76,6 +79,16 @@ public class SMStudentResultsPresenter extends StudentResultsPresenter {
 			return obj.getValue().getValue();
 		}
 		return super.getCurrentFilter(item);
+	}
+
+	@Override
+	protected void doBack(DomStudentModelContext4Student item) {
+		super.doBack(item);
+		JSONObject state = new JSONObject();
+		state.put("id", new JSONString(item.getId().getIdString()));
+
+		SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.SMCLASSRESULTS, service.schoolClass, state.getJavaScriptObject());
+		eventBus.fireEvent(event);
 	}
 	
 	
