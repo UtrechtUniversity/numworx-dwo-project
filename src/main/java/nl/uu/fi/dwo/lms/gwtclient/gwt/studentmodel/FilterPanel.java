@@ -19,6 +19,7 @@ import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
@@ -29,7 +30,9 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.web.bindery.event.shared.EventBus;
 
+import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.studentmodel.JsTeacherClassFilterDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -84,8 +87,11 @@ public class FilterPanel extends Composite implements ProvidesKey<DomStudentMode
 	}
 	};
 	private Map<PersistenceId, Promise<FilterMethodDialog>> filterDialogs = new HashMap<>();
+
+	private final EventBus bus;
 	
 	@Inject FilterPanel(EventBus bus) {
+		this.bus = bus;
 		root = RootPanel.get(JsTeacherClassFilterDisplay.getId());
 		FAILURE = new LoggingFailure(LOG, bus);
 		nameColumn.setSortable(true);
@@ -200,6 +206,15 @@ public class FilterPanel extends Composite implements ProvidesKey<DomStudentMode
 	@Override
 	public String getKey(DomStudentModelContext4Student item) {		
 		return item.getSchoolClass().getId().getIdString();
+	}
+	
+	@JsMethod
+	public void back() {
+		LOG.info("Back to StudentModel");
+		JSONObject state = new JSONObject();
+		state.put("id", new JSONString(modelId.getId().getIdString()));
+		SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.TEACHERSTUDENTMODEL, state.getJavaScriptObject());
+		bus.fireEvent(event);
 	}
 	
 	

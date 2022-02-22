@@ -355,6 +355,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
 	}
 
 	@Inject Lazy<FilterPanel> filterpanel;
+	@JsMethod
 	public FilterPanel getTeacherClassFilterPresenter() {
 		return filterpanel.get();
 	}
