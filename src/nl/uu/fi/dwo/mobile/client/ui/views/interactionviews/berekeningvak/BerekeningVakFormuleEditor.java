@@ -49,9 +49,9 @@ public class BerekeningVakFormuleEditor extends FormuleEditor {
 				headString += element.toString();
 		}
 		clearAll();
-		insert(headString);
+		insert(headString+"\u2705");
 		paint();
-		return tailString;
+		return tailString+"\u274c";
 	}
 	
 	public String getTillSelectionString() {

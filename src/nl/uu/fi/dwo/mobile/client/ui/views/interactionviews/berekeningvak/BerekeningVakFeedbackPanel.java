@@ -30,6 +30,11 @@ public class BerekeningVakFeedbackPanel extends PopupPanel{
 		VerticalPanel vp = new VerticalPanel();
 		HorizontalPanel hp = new HorizontalPanel();
 		hp.setWidth("100%");
+		
+		LayoutPanel warning = new LayoutPanel();
+		warning.getElement().setInnerText("\u2757");
+		hp.add(warning);
+		
 		hp.add(closeButton);
 		hp.setCellHorizontalAlignment(closeButton, HasHorizontalAlignment.ALIGN_RIGHT);
 		
