@@ -43,9 +43,9 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 	int choiceHeight = 30;
 	
 	int offset = 5;
-    int labelWidth = 50;
+    final static int labelWidth = 33;
     int labelHeight = 25;
-    int buttonWidth = 20;
+    final static int buttonWidth = 10;
     final static int buttonHeight = 24;
 	
 	private FlowPanel mainPanel;
@@ -179,7 +179,7 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 		
 		//KeuzeVak initialiseren
 		HashMap<String, Object> keuzeVakMap = new HashMap<String, Object>();
-		keuzeVakMap.put("breedte", breedte - 10); 
+		keuzeVakMap.put("breedte", breedte - buttonWidth); 
 		keuzeVakMap.put("hoogte", buttonHeight);
 		keuzeVakMap.put("launchState", launchState);
 		keuzeVak = new StappenKeuzeVak(activity, keuzeVakMap, randomVarNamen, randomVarWaarden);
@@ -196,9 +196,9 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
       ArrayList<ArrayList<String>> teksten = new ArrayList<ArrayList<String>>();
      
       ArrayList<Double> breedtes = new ArrayList<Double>();
-      breedtes.add(10.0);
-      breedtes.add(breedte - 52.0 - 10.0);
-      breedtes.add(52.0);
+      breedtes.add(Double.valueOf(buttonWidth));
+      breedtes.add(Double.valueOf(breedte - labelWidth - buttonWidth));
+      breedtes.add(Double.valueOf(labelWidth));
       
       ArrayList<Double> hoogtes = new ArrayList<Double>();
       for(int i = 0; i < number; i++)
@@ -427,7 +427,7 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
     TekstVak vak = stappenVak.geefTekstVak(nr, 1);
 	vak.add(keuzeVak);
 	vak.getWidgetContainerElement(keuzeVak.asWidget()).getStyle().clearOverflow();
-	vak.setSize(breedte - 52 - 10, buttonHeight+10+4); // padding 5 margin 2
+	vak.setSize(breedte - labelWidth - buttonWidth, buttonHeight+10+4); // padding 5 margin 2
 	stappenVak.resize();
   }
 
@@ -436,9 +436,9 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
   }
 
   public void makeSmall(int old) {
-	  stappenVak.geefTekstVak(old, 0).setSize(10, plusHoogte); 
-	  stappenVak.geefTekstVak(old, 1).setSize(breedte - 52 - 10, plusHoogte);
-	  stappenVak.geefTekstVak(old, 2).setSize(52, plusHoogte);
+	  stappenVak.geefTekstVak(old, 0).setSize(buttonWidth, plusHoogte); 
+	  stappenVak.geefTekstVak(old, 1).setSize(breedte - labelWidth - buttonWidth, plusHoogte);
+	  stappenVak.geefTekstVak(old, 2).setSize(labelWidth, plusHoogte);
   }
 	
 }
