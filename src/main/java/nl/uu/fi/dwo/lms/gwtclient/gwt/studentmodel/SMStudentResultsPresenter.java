@@ -38,6 +38,7 @@ public class SMStudentResultsPresenter extends StudentResultsPresenter {
 		service.setState(resultState);
 		super.init(resultState);
 		view.setTitle(StringFormatter.format(DwoLocalesForGWT.instance.NUM_LBL_KNOWLEDGE_OF_(), user.getDisplayName()));
+		setBackVisible(true);
 	}
 
 	@Override

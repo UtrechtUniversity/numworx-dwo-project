@@ -280,4 +280,11 @@ public class SMClassResultsPresenter extends AbstractStudentModelPresenter imple
 		LOG.info("on method " + value);
 		currentModel.flatMap(this::showModel);
 	}
+	
+	@JsMethod
+	public void back( ) {
+		LOG.info("back to Student model"); 
+		SwitchViewEvent event = new SwitchViewEvent(SelectedView.KNOWLEDGE, schoolClass, state.getJavaScriptObject());
+		bus.fireEvent(event);
+	}
 }

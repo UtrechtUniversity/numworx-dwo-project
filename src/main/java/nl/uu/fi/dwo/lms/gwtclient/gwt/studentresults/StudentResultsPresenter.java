@@ -86,6 +86,10 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		this.service = service;
 	}
 	
+	protected void setBackVisible(Boolean b) {
+		widget.get().setBackVisible(b);
+	}
+	
 	@Inject void setView(JsStudentResultsView view) {
 		this.view = view;
 		attachWidget(view);

@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
@@ -32,19 +33,24 @@ public class StudentResultsWidget extends Composite {
 
 	private static StudentResultsWidgetUiBinder uiBinder = GWT.create(StudentResultsWidgetUiBinder.class);
 
-	interface StudentResultsWidgetUiBinder extends UiBinder<Widget, StudentResultsWidget> {
+	interface StudentResultsWidgetUiBinder extends UiBinder<DockLayoutPanel, StudentResultsWidget> {
 	}
 	enum Which { filter, graph, back };
 	private final EventBus bus;
+	private final DockLayoutPanel root;
 	private Which which;
 
 	@Inject StudentResultsWidget(EventBus bus) {
-		initWidget(uiBinder.createAndBindUi(this));
+		initWidget(root = uiBinder.createAndBindUi(this));
 		setHeight("100%");
 		this.bus = bus;
-		
+		setBackVisible(false);		
 	}
 
+	public void setBackVisible(boolean b) {
+		root.setWidgetHidden(back, !b);
+	}
+	
 	@UiField InlineLabel title, perc, redPerc;
 	@UiField Tree tree;
 	@UiField SimplePanel description;
@@ -54,6 +60,7 @@ public class StudentResultsWidget extends Composite {
 	@UiField DockLayoutPanel east;
 	@UiField Label filter;
 	@UiField CheckBox viewBtn;
+	@UiField Anchor back;
 
 	void setPerc(DomStudentModelScore<?> s) {
 		Widget sh = s.getChildren() == null
