@@ -34,8 +34,9 @@ public class BerekeningVakFormuleEditor extends FormuleEditor {
 		if(berekeningVakRegel.berekeningVak.settings.meerregelig() 
 				&& (getMainRegel().getCurrentPosition()==-1 || getCurrentElement().getParent()==getMainRegel()))
 			berekeningVakRegel.berekeningVak.maakRegel(getTailString());
-		else if(!berekeningVakRegel.berekeningVak.settings.meerregelig())
-			berekeningVakRegel.checkRegel();
+		else if(!berekeningVakRegel.berekeningVak.settings.meerregelig()) {
+			berekeningVakRegel.berekeningVak.checkManager.check_enter();
+		}
 	}
 	
 	

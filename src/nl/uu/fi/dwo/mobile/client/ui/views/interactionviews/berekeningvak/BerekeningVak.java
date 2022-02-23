@@ -44,6 +44,7 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 	}
 	
 	protected AntwoordFormuleVakChecker avChecker ;
+	protected BerekeningVakCheckManager checkManager ;
 	
 	//componenten
 	private ArrayList<BerekeningVakRegel> vakRegels = new ArrayList<BerekeningVakRegel>();
@@ -68,6 +69,10 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 	private int hoogte;
 	private FormuleFont font;
 	
+	private int score;
+	private boolean correct;
+	private boolean nagekeken;
+	
 	
 	public BerekeningVak(ActivityComponent a, HashMap<String, Object> launchData, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden) {
 		activity = a;
@@ -83,6 +88,7 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 		hoogte = settings.hoogte();
 		
 		avChecker = new AntwoordFormuleVakChecker((HashMap<String, Object>) settings.launchState(), randomVarNamen, randomVarWaarden);
+		checkManager = new BerekeningVakCheckManager(this);
 		
 		vakPanel = new VerticalPanel();
 		vakPanel.setStyleName(DWOplayer.templateCss().answerboxFEWA());
@@ -94,36 +100,38 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 		maakRegel(null);
 	}
 	
-	public ArrayList<Expressie> getAnswerExpressies() {
-		ArrayList<Expressie> expressies = new ArrayList<Expressie>();
-		for(int i=0 ; i<vakRegels.size() ; i++) {
-			ArrayList<Expressie> regelExpressies = vakRegels.get(i).getExpressions();
-			for (int j=0 ; j<regelExpressies.size() ; j++) {
-				expressies.add(regelExpressies.get(j));
-			}
-		}
-		return expressies;
+//	public ArrayList<Expressie> getAnswerExpressies() {
+//		ArrayList<Expressie> expressies = new ArrayList<Expressie>();
+//		for(int i=0 ; i<vakRegels.size() ; i++) {
+//			ArrayList<Expressie> regelExpressies = vakRegels.get(i).getExpressions();
+//			for (int j=0 ; j<regelExpressies.size() ; j++) {
+//				expressies.add(regelExpressies.get(j));
+//			}
+//		}
+//		return expressies;
+//	}
+//	
+//	public void check(ArrayList<Expressie> expressies) {
+//		for(int i=0 ; i<expressies.size() ; i++) {
+//			HashMap<String, Object> checkResults = new HashMap<String, Object>();
+//			try {
+//				checkResults = avChecker.checkAnswer(expressies.get(i).toString());
+//			}
+//			catch (RestartException e){}
+//			
+//		}
+//	}
+	
+	public BerekeningVakRegel geefVakRegel(int index) {
+		return vakRegels.get(index);
 	}
-	
-	public void check(ArrayList<Expressie> expressies) {
-		for(int i=0 ; i<expressies.size() ; i++) {
-			HashMap<String, Object> checkResults = new HashMap<String, Object>();
-			try {
-				checkResults = avChecker.checkAnswer(expressies.get(i).toString());
-			}
-			catch (RestartException e){}
-			
-		}
-	}
-	
-	
 	
 	public void showFeedback(BerekeningVakRegel vakRegel) {
 		if(feedbackPanel == null)
 			feedbackPanel = new BerekeningVakFeedbackPanel(vakPanel);
 		feedbackPanel.show(vakRegel.getAsPanel().getAbsoluteLeft()+actieveRegel.getWidth()-30, vakRegel.getAsPanel().getAbsoluteTop()+30);
-		feedbackPanel.show();
-		feedbackPanel.setVisible(true);
+		//feedbackPanel.show();
+		//feedbackPanel.setVisible(true);
 	}
 	
 	public void tab() {
@@ -295,6 +303,9 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		h.put("antwoordStrings", antwoordStrings);
 		
+		if(!settings.meerregelig())
+			checkManager.check_getState();
+		
 		return h;
 	}
 
@@ -319,14 +330,21 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 					vakRegels.get(i).geefFormuleEditor().requestFocus();
 				}
 			}
+			if(!settings.meerregelig())
+				checkManager.check_setState();
 			rresize();
 			requestFocus();
 		}
 	}
+	
+	public void setScore(int score) {
+		this.score = score;
+	}
 
 	@Override
 	public int getScore() {
-		// TODO Auto-generated method stub
+		if(!settings.meerregelig())
+			return score;
 		return 0;
 	}
 
@@ -335,26 +353,45 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public void setCorrect(boolean correct) {
+		this.correct = correct;
+	}
 
 	@Override
 	public Boolean isCorrect() {
-		// TODO Auto-generated method stub
-		return null;
+		if(!settings.meerregelig())
+			return correct;
+		return true;
 	}
 
 	@Override
 	public void kijkNa() {
-		// TODO Auto-generated method stub
+		if(!settings.meerregelig())
+			checkManager.check_kijkNa();
 	}
 
 	@Override
 	public void zetNagekeken(boolean b) {
-		// TODO Auto-generated method stub
+		nagekeken = b;
+	}
+	
+	public boolean isNagekeken() {
+		return nagekeken;
 	}
 
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
+		checkManager.setMode(comRoot.getMode());
+	}
+	
+	public void setChanged() {
+		comRoot.setChanged(false);
+	}
+	
+	public int getMode() {
+		return comRoot.getMode();
 	}
 
 	@Override
