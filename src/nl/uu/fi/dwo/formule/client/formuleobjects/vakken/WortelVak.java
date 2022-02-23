@@ -26,7 +26,7 @@ public class WortelVak extends FormuleElementWithChildren
 	@Override
 	public void zetMaat() {
 		width = 5 * fm.getAscent() / 6 + getChild().width;
-		height = fm.getAscent() / 4 + getChild().height;// + 3; //+3 omdat dat werkt.. is misschien niet de netste oplossing.
+		height = fm.getAscent() / 4 + getChild().height + 2; //+3 omdat dat werkt.. is misschien niet de netste oplossing.
 
 		this.setAsHoogte(getChild().getAsHoogte() + fm.getAscent() / 4);
 		this.setSize(width, height);
@@ -90,16 +90,16 @@ public class WortelVak extends FormuleElementWithChildren
 		OMSVGPointList list = line.getPoints();
 		float x, y;
 		OMSVGPoint item;
-		x = 0; y = 2*height/3;
+		x = 0; y = 2*height/3-2;
 		item = getSVGSVGElement(svg).createSVGPoint(x+this.x, y+this.y);
 		list.appendItem(item);
-		x = fm.getAscent()/3; y = height;
+		x = fm.getAscent()/3; y = height-2;
 		item = getSVGSVGElement(svg).createSVGPoint(x+this.x, y+this.y);
 		list.appendItem(item);
-		x = 0.9f; y = 2*height/3;
+		x = 0.9f; y = 2*height/3-2;
 		item = getSVGSVGElement(svg).createSVGPoint(x+this.x, y+this.y);
 		list.appendItem(item);
-		x = fm.getAscent()/3+0.9f; y = height;
+		x = fm.getAscent()/3+0.9f; y = height-2;
 		item = getSVGSVGElement(svg).createSVGPoint(x+this.x, y+this.y);
 		list.appendItem(item);
 		x= 2 * fm.getAscent() / 3 - 1; y =fm.getAscent() / 8 + 1;

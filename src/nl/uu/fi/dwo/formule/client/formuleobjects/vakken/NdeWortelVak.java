@@ -68,10 +68,10 @@ public class NdeWortelVak extends FormuleElementWithChildren
 		ctx.setLineWidth(fm.getStrokeWidth());
 
 		ctx.beginPath();
-		ctx.moveTo(getChild(1).width - 1, 2 * height / 3);
-		ctx.lineTo(fm.getAscent() / 3 + getChild(1).width - 1, height);
-		ctx.moveTo(getChild(1).width - 2, 2 * height / 3);
-		ctx.lineTo(fm.getAscent() / 3 + getChild(1).width - 2, height);
+		ctx.moveTo(getChild(1).width - 1, 2 * height / 3-2);
+		ctx.lineTo(fm.getAscent() / 3 + getChild(1).width - 1, height-2);
+		ctx.moveTo(getChild(1).width - 2, 2 * height / 3-2);
+		ctx.lineTo(fm.getAscent() / 3 + getChild(1).width - 2, height-2);
 		ctx.lineTo(2 * fm.getAscent() / 3 + getChild(1).width - 3, fm.getAscent() / 8);
 		//ctx.moveTo(2 * fm.getAscent() / 3 + getChild(1).width - 2, fm.getAscent() / 8);
 		ctx.lineTo(width , fm.getAscent() / 8);
@@ -82,7 +82,7 @@ public class NdeWortelVak extends FormuleElementWithChildren
 	public void zetMaat() {
 		//setSize(5 * fm.getAscent() / 6 + getChild(0).width + 5, fm.getAscent() / 4 + getChild(0).height);
 		//System.out.println("getChild(1).width = " + getChild(1).width);
-		setSize(getChild(1).width + getChild(0).width + 5 * fm.getAscent() / 6 - 2, fm.getAscent() / 4 + getChild(0).height);
+		setSize(getChild(1).width + getChild(0).width + 5 * fm.getAscent() / 6 - 2, fm.getAscent() / 4 + getChild(0).height+2);
 		getChild(0).x = 5 * fm.getAscent() / 7 + getChild(1).width - 2;
 		setAsHoogte(getChild(0).getAsHoogte() + fm.getAscent() / 4);
 		super.zetMaat();
