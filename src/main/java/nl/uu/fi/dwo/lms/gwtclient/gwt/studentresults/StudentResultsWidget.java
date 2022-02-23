@@ -59,7 +59,7 @@ public class StudentResultsWidget extends Composite {
 	@UiField Button btn;
 	@UiField DockLayoutPanel east;
 	@UiField Label filter;
-	@UiField CheckBox viewBtn;
+	@UiField nl.uu.fi.dwo.lms.gwtclient.gwt.jsutil.CheckBox viewBtn;
 	@UiField Anchor back;
 
 	void setPerc(DomStudentModelScore<?> s) {

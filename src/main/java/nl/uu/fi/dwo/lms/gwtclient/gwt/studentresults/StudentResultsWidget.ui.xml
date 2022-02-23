@@ -1,8 +1,10 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:x='urn:import:nl.uu.fi.dwo.lms.gwtclient.gwt.jsutil'
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:style>
+@external checkbox;
 	.perc {
 		display: inline-block;
 		text-align: right;
@@ -25,6 +27,9 @@
 	}
 	.filter {
 		float: right;
+	}
+	.filter .checkbox {
+		zoom: 0.8;
 	}
 	
 	.models {
@@ -123,7 +128,7 @@
 			  <g:south size="2.4"><g:FlowPanel>
 			  	<g:Button ui:field='btn' styleName='{style.graph}'>Graph</g:Button>
 			    <g:Button ui:field='filterBtn' styleName='{style.filter}' addStyleNames='{style.space} teacher-only'>Filter</g:Button>
-			    <g:CheckBox ui:field='viewBtn' styleName='{style.filter}' checked="true" >Methode</g:CheckBox>
+			    <x:CheckBox ui:field='viewBtn' addStyleNames='{style.filter}' checked="true" >Methode</x:CheckBox>
 			  </g:FlowPanel></g:south>
 			  <g:center>
 				<g:ScrollPanel addStyleNames='{style.tree}'>
