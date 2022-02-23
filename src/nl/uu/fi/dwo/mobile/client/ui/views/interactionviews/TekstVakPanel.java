@@ -420,7 +420,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		
 		
 		tekstVakken = new TekstVak[1][1];	
-		tekstVakken[0][0] = new TekstVak(this, 0, 0);
+		tekstVakken[0][0] = createTekstVak(0, 0);
 		tekstVakken[0][0].setSize(breedte, hoogte);
 		tekstVakken[0][0].setColor(fgColor);
 		
@@ -952,7 +952,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 				double tekstVakBreedte =  breedtes.get(j).doubleValue() - 2 * cellMarge;
 				if( tekstVakBreedte < 0) tekstVakBreedte = 0;
 				
-				tekstVakken[i][j] = new TekstVak(this, i, j);
+				tekstVakken[i][j] = createTekstVak(i, j);
 				int th = (int) (Math.round(hoogtes.get(i).doubleValue()));
 				tekstVakken[i][j].setSize((int) (Math.round(breedtes.get(j).doubleValue())), th);
 				tekstVakken[i][j].setVisible(th>0);
@@ -1014,6 +1014,10 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		}
 		
 		initWidget();
+	}
+
+	protected TekstVak createTekstVak(int i, int j) {
+		return new TekstVak(this, i, j);
 	}
 
 	private void zoomAction() {

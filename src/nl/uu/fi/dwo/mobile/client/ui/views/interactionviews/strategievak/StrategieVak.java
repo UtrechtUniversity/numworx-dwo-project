@@ -62,7 +62,7 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 	String[] randomVarNamen = null;
 	HashMap<String, Number> randomVarWaarden = null;
 
-	private ActivityComponent activity;
+	private final ActivityComponent activity;
 	
 	
 	public StrategieVak(ActivityComponent a, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int volleBreedte)
@@ -164,12 +164,14 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
           vak.add(img); 
           vak.setSize(labelWidth, labelHeight);
 		}
+		css = DWOplayer.DWO_BUNDLE.dwoplayercss().strategiePlus();
 		for(int i = 0; i < nrOfSteps; i += 2)
         {
             
             Label stepNumbersi = new Label("+");
+            stepNumbersi.setStyleName(css);
             stepNumbersi.addClickHandler(new SwapStap(stepNumbersi));
-            //stepNumbersi.setPixelSize(labelWidth-12 ,labelHeight-8); // pushbutton marge = 12x8
+            stappenVak.geefTekstVak(i, 0).setFontSize(1);
             stappenVak.geefTekstVak(i, 0).add(stepNumbersi);
             stappenVak.geefTekstVak(i, 0).setPasHoogteBreedteAan(false, false);
             stappenVak.geefTekstVak(i, 1).setPasHoogteBreedteAan(false, false);
@@ -218,7 +220,7 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
       launchData.put("volledigeBreedte", volledigeBreedte);
       launchData.put("hoogte", Integer.valueOf(4));
       
-      TekstVakPanel stappenVak = new TekstVakPanel(activity, launchData, randomVarNamen, randomVarWaarden);
+      TekstVakPanel stappenVak = new StrategieTekstVakPanel(activity, launchData, randomVarNamen, randomVarWaarden);
       stappenVak.setKeyboard(kb);
       stappenVak.initialiseerStappen();
       stappenVak.setKolom(1);
@@ -415,7 +417,7 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 		
 	}
 
-	int plusHoogte = 12;// hoogte van de + als er geen keuzevak is.
+  final static int plusHoogte = 8;// hoogte van de + als er geen keuzevak is. (1 ex)
   protected void moveKeuzeVak(int nr) {
     int old = stappenVak.getRowOf(keuzeVak.asWidget().getParent());
 	if (nr == old) 
@@ -427,7 +429,10 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
     TekstVak vak = stappenVak.geefTekstVak(nr, 1);
 	vak.add(keuzeVak);
 	vak.getWidgetContainerElement(keuzeVak.asWidget()).getStyle().clearOverflow();
-	vak.setSize(breedte - labelWidth - buttonWidth, buttonHeight+10+4); // padding 5 margin 2
+	vak.setSize(breedte - labelWidth - buttonWidth, buttonHeight+10+plusHoogte*2); // padding 5 margin plusHoogte*2
+	
+	vak = stappenVak.geefTekstVak(nr,0);
+	vak.addStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().strategieMenu());
 	stappenVak.resize();
   }
 
@@ -436,7 +441,9 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
   }
 
   public void makeSmall(int old) {
-	  stappenVak.geefTekstVak(old, 0).setSize(buttonWidth, plusHoogte); 
+	  TekstVak plusVak = stappenVak.geefTekstVak(old, 0);
+	  plusVak.removeStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().strategieMenu());
+	  plusVak.setSize(buttonWidth, plusHoogte); 
 	  stappenVak.geefTekstVak(old, 1).setSize(breedte - labelWidth - buttonWidth, plusHoogte);
 	  stappenVak.geefTekstVak(old, 2).setSize(labelWidth, plusHoogte);
   }

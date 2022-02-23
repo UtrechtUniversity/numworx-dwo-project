@@ -54,7 +54,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	private TekstRegel[] regelVakken;
 	final LayoutPanel regelLayer = new LayoutPanel();
 	//private VerticalPanel vPanel;
-	private int aantalRegels;
+	protected int aantalRegels;
 	
 	private int cellMarge;
 	private int bovenMarge;

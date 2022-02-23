@@ -90,4 +90,6 @@ public interface DWOplayerCss extends CssResource {
 	String strategieKeuzeVak();
 	String strategieKeuze();
 	String strategieLabel();
+	String strategiePlus();
+	String strategieMenu();
 }

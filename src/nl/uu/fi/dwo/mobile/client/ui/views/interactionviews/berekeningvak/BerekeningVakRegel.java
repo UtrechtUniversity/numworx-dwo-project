@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
-import org.eclipse.jetty.util.StringUtil;
-
-import com.gargoylesoftware.htmlunit.util.StringUtils;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
@@ -28,7 +25,6 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FEWSButton;
 
 public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 	
