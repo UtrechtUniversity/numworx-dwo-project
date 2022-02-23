@@ -43,7 +43,7 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 		fontOvererving = b;
 	}
 	
-	private AntwoordFormuleVakChecker avChecker ;
+	protected AntwoordFormuleVakChecker avChecker ;
 	
 	//componenten
 	private ArrayList<BerekeningVakRegel> vakRegels = new ArrayList<BerekeningVakRegel>();
@@ -115,6 +115,8 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont{
 			
 		}
 	}
+	
+	
 	
 	public void showFeedback(BerekeningVakRegel vakRegel) {
 		if(feedbackPanel == null)

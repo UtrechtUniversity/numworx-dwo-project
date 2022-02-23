@@ -32,8 +32,10 @@ public class BerekeningVakFormuleEditor extends FormuleEditor {
 	@Override
 	public void enter() {
 		if(berekeningVakRegel.berekeningVak.settings.meerregelig() 
-				&& getMainRegel().getCurrentPosition()==-1 || getCurrentElement().getParent()==getMainRegel())
-		berekeningVakRegel.berekeningVak.maakRegel(getTailString());
+				&& (getMainRegel().getCurrentPosition()==-1 || getCurrentElement().getParent()==getMainRegel()))
+			berekeningVakRegel.berekeningVak.maakRegel(getTailString());
+		else if(!berekeningVakRegel.berekeningVak.settings.meerregelig())
+			berekeningVakRegel.checkRegel();
 	}
 	
 	
@@ -64,6 +66,14 @@ public class BerekeningVakFormuleEditor extends FormuleEditor {
 		}
 		return string;
 	}
+	
+	public String clean(String s) {
+		s = s.replace("\u2705", "");
+		s = s.replace("\u2714", "");
+		s = s.replace("\u274c", "");
+		return s;
+	}
+	
 	@Override
 	public void addElement(FormuleElement e)	{	
 		super.addElement(e);
@@ -78,6 +88,13 @@ public class BerekeningVakFormuleEditor extends FormuleEditor {
 		else if(getCurrentElement()!=null)
 			super.removeCurrentElement();
 		berekeningVakRegel.berekeningVak.rresize();
+	}
+	
+	@Override
+	public String toString() {
+		String s = super.toString();
+		s = clean(s);
+		return s;
 	}
 
 	@Override

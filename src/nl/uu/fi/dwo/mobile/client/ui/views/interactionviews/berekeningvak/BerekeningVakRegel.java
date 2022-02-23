@@ -1,7 +1,12 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.berekeningvak;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.logging.Logger;
 
+import org.eclipse.jetty.util.StringUtil;
+
+import com.gargoylesoftware.htmlunit.util.StringUtils;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
@@ -11,7 +16,9 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import fi.wiskopdr.AntwoordFormuleVakChecker;
 import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.RestartException;
 import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.DecRound;
@@ -43,6 +50,8 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 	static final double E_MAX = 1.0E7;
 	static final double E_MIN = 1.0E-3;
 	static final double MARGE = 0.00000000000000001;
+	
+	static private Logger logger = Logger.getLogger("BerekeningVakRegel");
 	
 	public BerekeningVakRegel(BerekeningVak berekeningVak, int width, int height) {
 		this.berekeningVak = berekeningVak;
@@ -86,6 +95,61 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 	
 	public void setActief(boolean b) {
 		rekenButton.setVisible(b);
+	}
+	
+	public void checkRegel() {
+		AntwoordFormuleVakChecker avChecker = berekeningVak.avChecker;
+		String regelString = formuleEditor.toString();
+		regelString = regelString.replace("\u2248", "§\u2248§");
+		regelString = regelString.replace("=", "§=§");
+		regelString = regelString.replace(";", "§;§");
+		String[] deelStrings = regelString.split("§");
+		for(int i=0 ; i<deelStrings.length ; i++) {
+			Expressie expressie = FormuleParser.geefExpressie("$f"+deelStrings[i]+"@");
+			if(expressie!=null) {
+				HashMap<String, Object> checkResults = new HashMap<String, Object>();
+				try {
+					//logger.info("deelString["+i+": $f"+deelStrings[i]+"@");
+					checkResults = avChecker.checkAnswer("$f"+deelStrings[i]+"@");
+					int goedHalfFout = (Integer)checkResults.get("goedHalfFout");
+					if(goedHalfFout==avChecker.GOED)
+						deelStrings[i] = deelStrings[i]+"\u2705";
+					else if(goedHalfFout==avChecker.HALF || goedHalfFout==avChecker.DOOR)
+						deelStrings[i] = deelStrings[i]+"\u2714";
+					else if(goedHalfFout==avChecker.FOUT)
+						deelStrings[i] = deelStrings[i]+"\u274c";
+				}
+				catch (RestartException e){}
+			}
+		}
+		String checkedString = "";
+		for(int i=0 ; i<deelStrings.length ; i++) {
+			checkedString = checkedString + deelStrings[i];
+		}
+		//logger.info(checkedString);
+		formuleEditor.clearMain();
+		formuleEditor.insert(checkedString);
+		formuleEditor.paint();
+		regelResize();
+	}
+	
+	
+	public String getString() {
+		return formuleEditor.toString();
+	}
+	
+	public ArrayList<String> getExpressieStrings() {
+		ArrayList<String> strings = new ArrayList<String>();
+		String regelString = formuleEditor.toString();
+		regelString = regelString.replace('\u2248', '=');
+		regelString = regelString.replace(';', '=');
+		String[] deelStrings = regelString.split("=");
+		for(int i=0 ; i<deelStrings.length ; i++) {
+			Expressie expressie = FormuleParser.geefExpressie(deelStrings[i]);
+			if(expressie!=null)
+				strings.add(deelStrings[i]);
+		}
+		return strings;
 	}
 	
 	public ArrayList<Expressie> getExpressions() {
