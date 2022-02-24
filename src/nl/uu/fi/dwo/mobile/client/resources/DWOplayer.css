@@ -30,6 +30,7 @@ iframe {
 .textEditor {
 	background-color: #C0C0C0;
 	white-space: pre-wrap;
+	color: black;
 }
 
 .textEditor_readonly {
