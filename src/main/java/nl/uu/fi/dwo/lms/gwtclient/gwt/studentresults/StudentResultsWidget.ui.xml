@@ -123,7 +123,7 @@
 			  <g:south size="3">
 			  	<g:Anchor styleName='{style.anchor}' addStyleNames='backlink' ui:field='back'><svg viewBox="0 0 74 74" class="icon">
 									  <use xlink:href="#arrowLeft"></use>
-								</svg>︎Terug naar kennisoverzicht klas</g:Anchor>
+								</svg>Terug naar kennisoverzicht klas</g:Anchor>
 			  </g:south>
 			  <g:south size="2.4"><g:FlowPanel>
 			  	<g:Button ui:field='btn' styleName='{style.graph}'>Graph</g:Button>
