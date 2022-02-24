@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.interaction.client.FacetAware;
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
@@ -56,6 +57,7 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 	private FormuleKeyboardIF kb = null;
 	
 	private int scoreMax = 10;
+	private int asHoogte = FormuleFont.createFromFontSize(18).getAscent();
 	private boolean[] stepRequired = null;
 	private ArrayList<Integer> selectedSteps = new ArrayList<Integer>();
 		
@@ -373,9 +375,8 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 
 	@Override
 	public int getAsHoogte() {
-		//return 12;
-		
-		return stappenVak.getAsHoogte();
+		//return 12;		
+		return asHoogte;
 	}
 
 	@Override
@@ -390,7 +391,7 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 
 	@Override
 	public void setAsHoogte(int ashoogte) {
-		stappenVak.setAsHoogte(ashoogte);
+		this.asHoogte = ashoogte;
 	}
 
 	@Override
@@ -401,8 +402,8 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 
 	@Override
 	public void setFontSize(int font_size) {
-		// TODO Auto-generated method stub
-		
+		FormuleFont font = FormuleFont.createFromFontSize(font_size);
+		setAsHoogte(font.getAscent());
 	}
 
 	@Override
