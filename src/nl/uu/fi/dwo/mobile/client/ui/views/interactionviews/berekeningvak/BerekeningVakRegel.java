@@ -22,6 +22,7 @@ import fi.wiskopdr.expressies.DecRound;
 import fi.wiskopdr.expressies.Expressie;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
+import nl.uu.fi.dwo.formule.client.formuleholder.MainFormuleRegel;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
@@ -226,7 +227,9 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 		int extraSpace = 0;
 		if(berekeningVak.settings.meerregelig())
 			extraSpace = 2;
-		hoogte = formuleEditor.getMainRegel().getHeight()+ extraSpace;
+		int left =  formuleEditor.getMainRegel().getHeight();       // hoogte formule regel
+		int right = rekenButton == null ? left : getAsHoogte()+6;  	// hoogte rekenButton = as - 14 + 20
+		hoogte = Math.max(left,right) + extraSpace;
 		formulePanel.setPixelSize((breedte-30) , hoogte );
 		regelPanel.setPixelSize((breedte-1) , hoogte-1 );
 		mainPanel.setPixelSize((breedte-1) , hoogte );
