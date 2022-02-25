@@ -99,9 +99,9 @@ public class VectorNotatieVak extends FormuleElementWithChildren
 	{
 		setSize(getChild(0).width, getChild(0).height + 2);
 		setAsHoogte(getChild(0).getAsHoogte() + 2);
-		
-		if (getParent() instanceof FormuleElement)
-			((FormuleElement) getParent()).zetMaat();
+		super.zetMaat();	
+//		if (getParent() instanceof FormuleElement)
+//			((FormuleElement) getParent()).zetMaat();
 	}
 
 	public String toString()
