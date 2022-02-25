@@ -26,14 +26,14 @@ public class BerekeningVakFormuleEditor extends FormuleEditor {
 	@Override
 	public void requestFocus() {
 		super.requestFocus();
-		berekeningVakRegel.berekeningVak.zetActieveRegel(berekeningVakRegel);
+		berekeningVakRegel.berekeningVak.regelManager.zetActieveRegel(berekeningVakRegel);
 	}
 	
 	@Override
 	public void enter() {
 		if(berekeningVakRegel.berekeningVak.settings.meerregelig() 
 				&& (getMainRegel().getCurrentPosition()==-1 || getCurrentElement().getParent()==getMainRegel()))
-			berekeningVakRegel.berekeningVak.maakRegel(getTailString());
+			berekeningVakRegel.berekeningVak.regelManager.maakRegel(getTailString());
 		else if(!berekeningVakRegel.berekeningVak.settings.meerregelig()) {
 			berekeningVakRegel.berekeningVak.checkManager.check_enter();
 		}
@@ -78,17 +78,17 @@ public class BerekeningVakFormuleEditor extends FormuleEditor {
 	@Override
 	public void addElement(FormuleElement e)	{	
 		super.addElement(e);
-		berekeningVakRegel.berekeningVak.rresize();
+		berekeningVakRegel.berekeningVak.resize();
 	}
 	
 	@Override
 	public void removeCurrentElement() {
 		String tailString = toString();
 		if(getMainRegel().getCurrentPosition()==-1)
-			berekeningVakRegel.berekeningVak.removeActieveRegel(tailString);
+			berekeningVakRegel.berekeningVak.regelManager.removeActieveRegel(tailString);
 		else if(getCurrentElement()!=null)
 			super.removeCurrentElement();
-		berekeningVakRegel.berekeningVak.rresize();
+		berekeningVakRegel.berekeningVak.resize();
 	}
 	
 	@Override
@@ -101,19 +101,19 @@ public class BerekeningVakFormuleEditor extends FormuleEditor {
 	@Override
 	public void removeNextElement()	{
 		super.removeNextElement();
-		berekeningVakRegel.berekeningVak.rresize();
+		berekeningVakRegel.berekeningVak.resize();
 	}
 	
 	@Override
 	public void cursorUp() {
 		super.cursorUp();
-		berekeningVakRegel.berekeningVak.cursorUp();
+		berekeningVakRegel.berekeningVak.regelManager.cursorUp();
 	}
 	
 	@Override
 	public void cursorDown() {
 		super.cursorDown();
-		berekeningVakRegel.berekeningVak.cursorDown();
+		berekeningVakRegel.berekeningVak.regelManager.cursorDown();
 	}
 //	
 //	@Override
@@ -132,7 +132,7 @@ public class BerekeningVakFormuleEditor extends FormuleEditor {
 	@Override
 	public void insert(String text)	{
 		super.insert(text);
-		berekeningVakRegel.berekeningVak.rresize();
+		berekeningVakRegel.berekeningVak.resize();
 	}
 	
 	@Override	
