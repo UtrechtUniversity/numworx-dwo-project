@@ -13,6 +13,7 @@ import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Overflow;
@@ -153,6 +154,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private AnimationHandle handle;
 	private final ActivityComponent activity;
 	private TekstRegel regel;
+	private com.google.gwt.user.client.Element formuleElement;
 	
 	TextEditor(ActivityComponent a, int breedte, int hoogte, boolean boxMetRand)
 	{
@@ -220,15 +222,27 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		{
 			menuheight = 30;
 			menubar.setPixelSize(width-boxsize, menuheight);
-			menubar.getElement().getStyle().setBackgroundColor("transparent");//CssColor.make(229,240,249).toString());
-			menubar.getElement().getStyle().setOverflowY(Overflow.HIDDEN);
+			Style style = menubar.getElement().getStyle();
+			style.setBackgroundColor("transparent");//CssColor.make(229,240,249).toString());
+			style.setOverflowY(Overflow.HIDDEN);
+			if (pasAanH) {
+				style.clearWidth();
+				style.setFloat(Style.Float.RIGHT);
+				menuheight=10;
+			}
 			hbox.add(menubar);
 		}
 		
 		content = getContent(launchdata);
 		content.setPixelSize(width-boxsize-padding, pasAanH ? -1 : height-menuheight-boxsize-padding);
 		Style style = content.getElement().getStyle();
-		style.setPadding(padding/2, Unit.PX);
+		if (pasAanH) {
+			style.setDisplay(Style.Display.INLINE);
+			style.clearWidth();
+		} else {
+			style.setPadding(padding/2, Unit.PX);
+		}
+		
 		//style.setBackgroundColor("white");
 		//style.setOverflow(Overflow.AUTO);
 		hbox.add(content);
@@ -339,7 +353,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	{
 		FlowPanel touch = new FlowPanel();
 		Tapper tapper = new Tapper(this,touch.getElement());		
-        tapper.initHandlers(touch);
+        tapper.initHandlers(pasAanH ? hbox : touch); // 
 		flow = touch; // XXX voorlopig ok
 		setState(launchdata);
 		return touch;
@@ -390,7 +404,21 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		formuleButton.setSize(27, 27);
 		formuleButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		formuleButton.getElement().getStyle().setMargin(2,Unit.PX);
-		if(formuleKnop) menubar.add(formuleButton);
+		if(formuleKnop) {
+			formuleButton.addPointerDownHandler();
+/* Dit is nodig, anders komt de "tapper" er doorheen */
+			formuleButton.addDomHandler(new PointerDownHandler() {
+				
+				@Override
+				public void onPointerDown(PointerDownEvent event) {
+					GWT.log(" on pointer ");
+					event.preventDefault();
+					event.stopPropagation();
+				}
+			}, PointerDownEvent.getType());
+			
+			menubar.add(formuleButton);
+		}
 		
 		//Button calc = new Button("calc"); 
 		Image upImage = new Image(activity.parameters().getResource("images/resources/rmknop.gif"));
@@ -446,7 +474,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		if(volledigeBreedte)
 		{
 			this.width = breedte;
-			if (menubar != null)
+			if (menubar != null && !pasAanH)
 				menubar.setPixelSize(width-boxsize, menuheight);
 			content.setPixelSize(width-boxsize-padding, pasAanH ? -1 : height-menuheight-boxsize-padding);
 			hbox.setPixelSize(width-boxsize, height-boxsize);
@@ -1351,6 +1379,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 		private void start(DomEvent<?> event) {
 		    GWT.log(event.getAssociatedType().getName()+  " " + lastX + " " + lastY);
+		    
 			downWidget = findWidget(downX, downY);
 		    down=move=cursor;
 		    deSelection();
@@ -1970,11 +1999,13 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private void forceflow() {
 		if (handle == null)
 			handle = AnimationScheduler.get().requestAnimationFrame( (t) -> {
-				String display = flow.getElement().getStyle().getDisplay();
-				if (!Display.INLINE_BLOCK.getCssName().equals( display))
-					flow.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-				else 
-					flow.getElement().getStyle().setDisplay(Display.BLOCK);
+				if (!pasAanH) {				
+					String display = flow.getElement().getStyle().getDisplay();
+					if (!Display.INLINE_BLOCK.getCssName().equals( display))
+						flow.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+					else 
+						flow.getElement().getStyle().setDisplay(Display.BLOCK);
+				}
 				handle = null;
 				pasAanH();
 			}, flow.getElement());
