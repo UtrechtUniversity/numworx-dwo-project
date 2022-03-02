@@ -276,8 +276,6 @@ final public class ClassTeacherModules {
                                    
                                    if (!selectedList.contains(c)) {
                                      try {
-//                                       dom.setCourse(domcourse);
-//                                       SecureTeacherSchoolClassManager.attachCourseToClass(dom); // Prepare attach
                                        if (ccfull.getId() == null) {
                                          DomSchoolClassCourseAndProfileNew ccnew = new DomSchoolClassCourseAndProfileNew();
                                          ccnew.setCourse(domcourse);
@@ -288,6 +286,7 @@ final public class ClassTeacherModules {
                                          ccnew.setFrom(c.link.getNotBefore());
                                          ccnew.setTo(c.link.getNotAfter());
                                          SecureTeacherSchoolClassManager.addCourseToClass(ccnew);
+                                         continue;
                                        }
                                        
                                        
@@ -297,19 +296,10 @@ final public class ClassTeacherModules {
                                      }
                                    }
 
-                                   from.setCourse(domcourse);
-                                   from.setFrom(c.link.getNotBefore());
                                    ccfull.setNotBefore(c.link.getNotBefore());
-
-                                   to.setCourse(domcourse);
-                                   to.setTo(c.link.getNotAfter());
                                    ccfull.setNotAfter(c.link.getNotAfter());
-                                   type.setCourse(domcourse);
-                                   type.setType(CourseType.values()[c.link.getType()]);
-                                   ccfull.setCourseType(type.getType());
-                                   key.setCourse(domcourse);
-                                   key.setAccessKey(c.link.getAccessKey());
-                                   ccfull.setAccessKey(key.getAccessKey());
+                                   ccfull.setCourseType(CourseType.values()[c.link.getType()]);
+                                   ccfull.setAccessKey(c.link.getAccessKey());
                                   
                                    if (ccfull.getId() != null) {
                                      try {
@@ -321,26 +311,34 @@ final public class ClassTeacherModules {
                                    } else {
                                      
                                      try {
-                                       SecureTeacherSchoolClassManager.setFromDataClassCourse(from);
+                                       from.setCourse(domcourse);
+                                       from.setFrom(c.link.getNotBefore());
+                                     SecureTeacherSchoolClassManager.setFromDataClassCourse(from);
                                      } catch (Dwo2Exception e) {
                                        LOG.log(Level.SEVERE, "from", e);
                                        return;
                                      }
                                      
                                      try {
+                                       to.setCourse(domcourse);
+                                       to.setTo(c.link.getNotAfter());
                                        SecureTeacherSchoolClassManager.setToDataClassCourse(to);
                                      } catch (Dwo2Exception e) {
                                        LOG.log(Level.SEVERE, "to", e);
                                        return;
                                      }
                                      try {
+                                       type.setCourse(domcourse);
+                                       type.setType(ccfull.getCourseType());
                                        SecureTeacherSchoolClassManager.setClassCourseType(type);
                                      } catch (Dwo2Exception e) {
                                        LOG.log(Level.SEVERE, "type", e);
                                        return;
                                      }
                                      try {
-                                       SecureTeacherSchoolClassManager.setAccessKeyClassCourse(key);
+                                       key.setCourse(domcourse);
+                                       key.setAccessKey(ccfull.getAccessKey());
+                                      SecureTeacherSchoolClassManager.setAccessKeyClassCourse(key);
                                      } catch (Dwo2Exception e) {
                                        LOG.log(Level.SEVERE, "key", e);
                                        return;
@@ -351,6 +349,7 @@ final public class ClassTeacherModules {
                                    
                                    if (!selectedList.contains(c)) {
                                      try {
+                                       dom.setCourse(domcourse);
                                        SecureTeacherSchoolClassManager.attachCourseToClass(dom); // commit attach
                                      } catch (Dwo2Exception e) {
                                        LOG.log(Level.SEVERE, "attach", e);
