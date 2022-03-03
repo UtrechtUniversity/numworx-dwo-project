@@ -98,7 +98,18 @@ import nl.uu.fi.dwo.mobile.utils.Logging;
 @SuppressWarnings("deprecation")
 public class TextEditor  implements InteractionView, TouchStartHandler, FormuleEditorIF, FacetAware, CBookEventListener, TekstElementWithFont, HasText {
 	
-	public interface IsEditable {
+	private static final class PreventTapper implements PointerDownHandler {
+    @Override
+    public void onPointerDown(PointerDownEvent event) {
+    	GWT.log(" on pointer ");
+    	event.preventDefault();
+    	event.stopPropagation();
+    }
+  }
+
+
+
+  public interface IsEditable {
 
 		void setEditable(boolean b);
 
@@ -407,16 +418,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		if(formuleKnop) {
 			formuleButton.addPointerDownHandler();
 /* Dit is nodig, anders komt de "tapper" er doorheen */
-			formuleButton.addDomHandler(new PointerDownHandler() {
-				
-				@Override
-				public void onPointerDown(PointerDownEvent event) {
-					GWT.log(" on pointer ");
-					event.preventDefault();
-					event.stopPropagation();
-				}
-			}, PointerDownEvent.getType());
-			
+			formuleButton.addDomHandler(new PreventTapper(), PointerDownEvent.getType());		
 			menubar.add(formuleButton);
 		}
 		
@@ -431,10 +433,14 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		calcButton.setSize(27, 27);
 		calcButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		calcButton.getElement().getStyle().setMargin(2,Unit.PX);
-		if(rekentool) menubar.add(calcButton);
-		
-		PushButton graph = new PushButton(new Image(activity.parameters().getResource("images/resources/grafiekknop.gif")));
-		if(graftool) menubar.add(graph);
+		if(rekentool) {
+		  calcButton.addPointerDownHandler();
+		  calcButton.addDomHandler(new PreventTapper(), PointerDownEvent.getType());
+		  menubar.add(calcButton);
+		}
+// wordt niet gebruikt		
+//		PushButton graph = new PushButton(new Image(activity.parameters().getResource("images/resources/grafiekknop.gif")));
+//		if(graftool) menubar.add(graph);
 		
 		return menubar;
 	}
