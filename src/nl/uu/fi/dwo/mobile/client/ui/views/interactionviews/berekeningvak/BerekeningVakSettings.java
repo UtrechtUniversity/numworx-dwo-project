@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.berekeningvak;
 import java.util.HashMap;
 
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 public class BerekeningVakSettings {
@@ -17,6 +18,10 @@ public class BerekeningVakSettings {
 	private boolean teltMee = true;
 	private boolean logOption = false;
 	private String logID = null;
+	private String logIDLabel = null;
+	private boolean[][] logObjectives = null;
+	private String[] smObjectives = null;
+	private String[] smForeknowledge = null;
 	//settings
 	private boolean formuleToolBijFocus = true;
 	private boolean rmKnop = true;
@@ -49,6 +54,8 @@ public class BerekeningVakSettings {
 			logOption = launchState.getBoolean("logOption");
 		if(launchState.containsKey("logID"))
 			logID = launchState.getString("logID");
+		if(launchState.containsKey("logIDLabel"))
+			logID = launchState.getString("logIDLabel");
 		
 		if(launchState.containsKey("formuleToolBijFocus"))
 			formuleToolBijFocus = launchState.getBoolean("formuleToolBijFocus");
@@ -72,6 +79,19 @@ public class BerekeningVakSettings {
 		if(launchState.containsKey("meerregelig"))
 			meerregelig = launchState.getBoolean("meerregelig");
 		
+		if(launchState.containsKey("logObjectives"))
+		{	ObjectList logObjectivesList = ( launchState.getObjectList("logObjectives") );
+			logObjectives = new boolean[logObjectivesList.size()][];
+			for(int i = 0; i < logObjectivesList.size(); i++)
+			{	logObjectives[i] = logObjectivesList.getBooleanArray(i);
+			}
+		}
+		if (launchState.containsKey("smObjectives")) {
+			  smObjectives = launchState.getStringArray("smObjectives");
+		}
+		if (launchState.containsKey("smForeknowledge"))
+			smForeknowledge = launchState.getStringArray("smForeknowledge");
+		
 	}
 	public ObjectMap launchState() {return launchState;}
 	public int breedte() {return breedte;}
@@ -82,6 +102,7 @@ public class BerekeningVakSettings {
 	public boolean teltMee() {return teltMee;}
 	public boolean logOption() {return logOption;}
 	public String logID() {return logID;}
+	public String logIDLabel() {return logIDLabel;}
 	
 	public boolean formuleToolBijFocus() {return formuleToolBijFocus;}
 	public boolean rmKnop() {return rmKnop;}
@@ -95,4 +116,8 @@ public class BerekeningVakSettings {
 	
 	public boolean boxMetRand() {return boxMetRand;}
 	public boolean meerregelig() {return meerregelig;}
+	
+	public boolean[][] logObjectives() {return logObjectives;}
+	public String[] smObjectives() {return smObjectives;}
+	public String[] smForeknowledge() {return smForeknowledge;}
 }

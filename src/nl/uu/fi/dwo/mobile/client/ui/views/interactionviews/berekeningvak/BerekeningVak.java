@@ -1,15 +1,17 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.berekeningvak;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import fi.wiskopdr.AntwoordFormuleVakChecker;
 
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
@@ -20,6 +22,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
@@ -43,13 +46,15 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 	
 	// tools
 	protected BerekeningVakCheckManager checkManager;
-	protected BerekeningVakRegelManager regelManager ;
+	protected BerekeningVakRegelManager regelManager;
+	protected BerekeningVakLoggingManager loggingManager;
 	
 	//componenten
 	private ArrayList<BerekeningVakRegel> vakRegels = new ArrayList<BerekeningVakRegel>();
 	private ArrayList<SimplePanel> seperators = new ArrayList<SimplePanel>();
 	private VerticalPanel vakPanel;
 	private BerekeningVakFeedbackPanel feedbackPanel;
+	private CorrectieFacade correctieFacade;
 		
 	//instellingen
 	protected BerekeningVakSettings settings;
@@ -89,6 +94,8 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 		}
 		regelManager = new BerekeningVakRegelManager(this);
 		regelManager.maakRegel(null);
+		
+		loggingManager = new BerekeningVakLoggingManager(this, settings, activity);
 	}
 	
 	public ArrayList<BerekeningVakRegel> geefVakRegels() {
@@ -166,8 +173,9 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 	
 	public void requestFocus() {
 		regelManager.actieveRegel.geefFormuleEditor().requestFocus();
-		
 	}
+	
+	
 
 	@Override
 	public HashMap<String, Object> getState() {
@@ -175,13 +183,18 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 		for(int i=0 ; i<vakRegels.size() ; i++) {
 			antwoordStrings[i] = vakRegels.get(i).geefFormuleEditor().toString();
 		}		
-		HashMap<String, Object> h = new HashMap<String, Object>();
-		h.put("antwoordStrings", antwoordStrings);
+		HashMap<String, Object> state = new HashMap<String, Object>();
+		state.put("antwoordStrings", antwoordStrings);
+		state.put("editable", Boolean.valueOf(editable));
+		checkManager.getCheckerState(state);
 		
 		if(!settings.meerregelig())
 			checkManager.check_getState();
 		
-		return h;
+		if(correctieFacade != null) 
+			correctieFacade.correctie(state);
+		
+		return state;
 	}
 
 	@Override
@@ -189,7 +202,15 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 		if(h==null)
 			return;
 		ObjectMap state = JSONUtilities.wrapMap(h);
+		
+		CorrectieFacade.showReview(h, p -> {
+			vakPanel.add(p);
+			if (null != vakPanel.getElement().getStyle().getPosition())
+				vakPanel.getElement().getStyle().setPosition(Position.RELATIVE);
+		}, this, settings.scoreMax(), activity);
+		
 		String[] antwoordStrings = null;
+		checkManager.setCheckerState(state);
 		if(h.containsKey("antwoordStrings"))
 			antwoordStrings = state.getStringArray("antwoordStrings");
 		if(antwoordStrings!=null) {
@@ -210,6 +231,8 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 			resize();
 			requestFocus();
 		}
+		if (correctieFacade == null) // eenmalig
+			correctieFacade = CorrectieFacade.get(h, this, getAsPanel(), settings.scoreMax(), comRoot, loggingManager.logging, activity);
 	}
 	
 	@Override
@@ -243,10 +266,14 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 		checkManager.zetNagekeken(b);
 	}
 	
+	public void setChanged() {
+		comRoot.setChanged(false);
+	}
+	
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
-		checkManager.zetMode(comRoot.getMode(), comRoot.getLessonMode());
+		checkManager.setCommunicationRoot(comRoot);
 		
 		comRoot.addCBookEventListener("input", this);
 		comRoot.addCBookEventListener("index", this);
@@ -256,13 +283,9 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 		comRoot.addCBookEventListener("action.setNotEditable", this);
 		comRoot.addCBookEventListener("action.check", this);
 
-//		if (logging != null) 
-//			logging.setCommunicationRoot(comRoot);
+		if (loggingManager.logging != null) 
+			loggingManager.logging.setCommunicationRoot(comRoot);
 		
-	}
-	
-	public void setChanged() {
-		comRoot.setChanged(false);
 	}
 	
 	public int getMode() {

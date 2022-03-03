@@ -13,16 +13,13 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import fi.wiskopdr.AntwoordFormuleVakChecker;
 import fi.wiskopdr.FormuleParser;
-import fi.wiskopdr.RestartException;
 import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.DecRound;
 import fi.wiskopdr.expressies.Expressie;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
-import nl.uu.fi.dwo.formule.client.formuleholder.MainFormuleRegel;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
@@ -80,7 +77,8 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 		rekenButton.addButtonListener(new RekenButtonListener());
 		rekenButton.setTooltip("Bereken");
 		rekenButton.setVisible(false);
-		regelPanel.add(rekenButton);
+		if(berekeningVak.settings.rmKnop())
+			regelPanel.add(rekenButton);
 		
 		mainPanel.add(regelPanel);
 		
@@ -112,35 +110,6 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 	
 	public String getString() {
 		return formuleEditor.toString();
-	}
-	
-	public ArrayList<String> getExpressieStrings() {
-		ArrayList<String> strings = new ArrayList<String>();
-		String regelString = formuleEditor.toString();
-		regelString = regelString.replace('\u2248', '=');
-		regelString = regelString.replace(';', '=');
-		String[] deelStrings = regelString.split("=");
-		for(int i=0 ; i<deelStrings.length ; i++) {
-			Expressie expressie = FormuleParser.geefExpressie(deelStrings[i]);
-			if(expressie!=null)
-				strings.add(deelStrings[i]);
-		}
-		return strings;
-	}
-	
-	public ArrayList<Expressie> getExpressions() {
-		ArrayList<Expressie> expressies = new ArrayList<Expressie>();
-		String regelString = formuleEditor.toString();
-		regelString = regelString.replace('\u2248', '=');
-		regelString = regelString.replace(';', '=');
-		String[] deelStrings = regelString.split("=");
-		for(int i=0 ; i<deelStrings.length ; i++) {
-			Expressie expressie = FormuleParser.geefExpressie(deelStrings[i]);
-			if(expressie!=null)
-				expressies.add(expressie);
-			
-		}
-		return expressies;
 	}
 	
 	private void berekenEnPlaatsExpressie() {
