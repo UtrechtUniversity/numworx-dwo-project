@@ -459,7 +459,7 @@ public class TekstBuffer
 					new StubView(activity, "UploadWidgetGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden)
 			);
 		case 64:
-			return new StrategieVak(activity, currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom]);
+			return x(map, new StrategieVak(activity, currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom]));
 		
 		}
 
