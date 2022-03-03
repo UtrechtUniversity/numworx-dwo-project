@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 import nl.uu.fi.dwo.mobile.utils.Logging;
@@ -15,7 +16,7 @@ public class BerekeningVakLoggingManager {
 	
 	public BerekeningVakLoggingManager(BerekeningVak berekeningVak, BerekeningVakSettings settings, ActivityComponent activity) {
 		this.berekeningVak = berekeningVak;
-		if(settings.smObjectives() !=null) {
+		if(settings.smObjectives() !=null || settings.logOption()) {
 			LogBuilder dwoLogger = new LogBuilder(activity).setLogOption(settings.logOption());
 			dwoLogger.setMaxScore(settings.scoreMax());
 			dwoLogger.setLogIDLabel(settings.logIDLabel());
@@ -25,6 +26,14 @@ public class BerekeningVakLoggingManager {
 			dwoLogger.setTeltMee(settings.teltMee());
 			logging = dwoLogger.build();
 		}
+	}
+	
+	public BerekeningVakLoggingManager(BerekeningVak berekeningVak, ObjectMap launchdata, ActivityComponent activity) {
+		this.berekeningVak = berekeningVak;
+		this.logging = new LogBuilder(activity)
+				.setLaunchData(launchdata)
+				.setClassName("fi.wiskopdr.BerekeningVak")
+				.build(); // is 'null' als alles uit staat
 	}
 	
 	public void logAttempt()	{

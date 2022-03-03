@@ -9,7 +9,10 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 public class BerekeningVakSettings {
 	
 	//general settings
-	private ObjectMap launchState;
+	private final ObjectMap launchState;
+	ObjectMap getLaunchState() {
+		return launchState;
+	}
 	private int breedte = 0;
 	private int hoogte = 0;
 	private boolean volledigeBreedte;
