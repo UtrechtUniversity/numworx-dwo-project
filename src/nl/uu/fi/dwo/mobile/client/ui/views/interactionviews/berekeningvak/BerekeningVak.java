@@ -96,7 +96,8 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 		regelManager.maakRegel(null);
 		
 		loggingManager = new BerekeningVakLoggingManager(this, settings, activity);
-		// alternatief = new BerekeningVakLoggingManager(this, settings.getLaunchState(), activity);
+		// alternatief 
+		// loggingManager = new BerekeningVakLoggingManager(this, settings.launchState(), activity);
 	}
 	
 	public ArrayList<BerekeningVakRegel> geefVakRegels() {

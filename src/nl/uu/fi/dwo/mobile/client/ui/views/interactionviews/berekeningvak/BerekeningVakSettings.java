@@ -10,9 +10,6 @@ public class BerekeningVakSettings {
 	
 	//general settings
 	private final ObjectMap launchState;
-	ObjectMap getLaunchState() {
-		return launchState;
-	}
 	private int breedte = 0;
 	private int hoogte = 0;
 	private boolean volledigeBreedte;
