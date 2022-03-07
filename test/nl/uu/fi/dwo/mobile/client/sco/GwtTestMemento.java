@@ -92,8 +92,8 @@ public class GwtTestMemento extends GWTTestCase {
       String result = api.GetValue(Memento.REVIEW_DATA);
       String test = patch.createPatch(review2, result);
       assertEquals("patch equals", "[]", test);
-      assertEquals("getter", 8, getter);
-      assertEquals("setter", 5, setter);
+      assertEquals("getter", 9, getter);
+      assertEquals("setter", 6, setter);
   }
 
   @SuppressWarnings("unchecked")
@@ -120,8 +120,8 @@ public class GwtTestMemento extends GWTTestCase {
     String test = patch.createPatch(review, result);
     assertEquals("patch equals", "[]", test);
     assertEquals("review ", review, result);
-    assertEquals("getter", 9, getter);
-    assertEquals("setter", 6, setter);
+    assertEquals("getter", 11, getter);
+    assertEquals("setter", 8, setter);
     
   } 
   
