@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.strategievak;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
@@ -38,6 +39,18 @@ class StrategieTekstVakPanel extends TekstVakPanel {
 		if (i % 2 != 0)
 			return super.createTekstVak(i, j);
 		return new EmptyTekstVak(this, i, j);
+	}
+
+	@Override
+	public HashMap<String, Object> getState() {
+// This is the right order.
+		interactionViewObjects.clear();
+		int size = hoogtes.size();
+		for(int i = 0; i < size; i++) {
+			ArrayList<Object> list = tekstVakken[i][kolom].getOpdrachtObjects();
+			interactionViewObjects.addAll(list);
+		}
+		return super.getState();
 	}
 
 	

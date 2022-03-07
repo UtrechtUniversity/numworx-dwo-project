@@ -248,7 +248,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 	private Canvas callOutCanvas = null;
 	//private LayoutPanel randPanel = null;
 	//private LayoutPanel[][] tekstVakken = null;
-	private TekstVak[][] tekstVakken = null;
+	protected TekstVak[][] tekstVakken = null;
 	//private FlowPanel[][] tekstVakken = null;
 	String[] randomVarNamen = null;
 	HashMap<String, Number> randomVarWaarden = null;
@@ -257,10 +257,10 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 	private HasResize parentStappen = null;
 	private int mode = OpdrNav.OEFENEN;
 	
-	private ArrayList<Object> interactionViewObjects = new ArrayList<Object>();
+	protected ArrayList<Object> interactionViewObjects = new ArrayList<Object>();
 
 	List<Double> breedtes = null;
-	List<Double> hoogtes = null;
+	protected List<Double> hoogtes = null;
 	List<Double> minHoogtes = null;
 	List<Double> uitklapHoogtes = null;
 	int cellSpaceColumn = 0;
@@ -269,7 +269,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 	int bovenMarge = 0;
 	int ronding = 0;
 	int hoek = 0;
-	int kolom = -1;
+	protected int kolom = -1;
 	CssColor bgColor = CssColor.make(255, 255, 255);
 	CssColor fgColor = CssColor.make(0, 0, 0);
 	CssColor randColor = CssColor.make(150, 150, 150);
