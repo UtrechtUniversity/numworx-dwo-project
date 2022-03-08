@@ -1,18 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="fi.dwo.server.db.Util" %>
 <%@ include file="/dwo/saml_util.jsp" %>
 <!DOCTYPE html>
 <% 
 	int profile = 108;
 	String query = request.getQueryString();
-	if(query == null)
+	if(Util.illegal(query))
 	 	query = "?base=/embod/&profile=" + profile;
 	else 
 	  	query = "?base=/embod/&profile=" + profile + "&" + query;
 	String hash = request.getParameter("hash");
 	String player = "/gwtclient/index.html";
 
-	if ( hash != null) // Deeplink
+	if (!Util.illegal(hash)) // Deeplink
 		player = "/dwo/tablet/DWOplayer.jsp";
 	else
 		hash = "";

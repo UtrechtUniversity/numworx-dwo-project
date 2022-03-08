@@ -1,11 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="fi.dwo.server.db.Util" %>
 <%@ include file="/dwo/saml_util.jsp" %>
 <!DOCTYPE html>
 <% 
 	int profile = 108;
 	String query = request.getQueryString();
-	if(query == null)
+	if(Util.illegal(query))
 	 	query = "?base=/embod/start/&header=less&profile=" + profile;
 	else 
 	  	query = "?base=/embod/start/&header=less&profile=" + profile + "&" + query;

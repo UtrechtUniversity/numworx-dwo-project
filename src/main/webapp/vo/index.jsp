@@ -1,21 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="fi.dwo.server.db.TStamp" %>
-<%@ page import="java.util.regex.Pattern" %>   
+<%@ page import="fi.dwo.server.db.Util" %>
 <%@ include file="/dwo/saml_util.jsp" %>
 <!DOCTYPE html>
-<%! 
-	boolean illegal(String q) {
-		if (! Pattern.matches("[%#:a-zA-Z0-9=&:.]*", q))
-			return true;
-		return false;
-}
-%>
 <% 
 	int profile = 77;
 	long tstamp = TStamp.BOOT;
 	String query = request.getQueryString();
-	if(query == null || illegal(query))
+	if(Util.illegal(query))
 	 	query = "?base=/vo/&profile=" + profile + "&t=" + tstamp;
 	else
 	  	query = "?base=/vo/&profile=" + profile + "&" + query;
@@ -23,7 +16,7 @@
 	String hash = request.getParameter("hash");
 	String player = "/gwtclient/index.html";
 
-	if ( hash != null && !illegal(hash)) // Deeplink
+	if ( !Util.illegal(hash)) // Deeplink
 		player = "/dwo/tablet/DWOplayer.jsp";
 	else
 		hash = "";

@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="fi.dwo.server.db.Util" %>
 <!DOCTYPE html>
 <% 
 	int profile = 91;
 	String query = request.getQueryString();
-	if(query == null)
+	if(Util.illegal(query))
 	 	query = "?base=/ho/&locale=nl&profile=" + profile;
 	else 
 	  	query = "?base=/ho/&locale=nl&profile=" + profile + "&" + query;
