@@ -13,7 +13,7 @@
 	String hash = request.getParameter("hash");
 	String player = "/gwtclient/index.html";
 
-	if (!Util.query(hash)) // Deeplink
+	if (!Util.illegal(hash)) // Deeplink
 		player = "/dwo/tablet/DWOplayer.jsp";
 	else
 		hash = "";
