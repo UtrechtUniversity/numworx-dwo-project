@@ -87,8 +87,6 @@ public class BerekeningVakCheckManager {
 	}
 	
 	private void checkRegel(boolean view) {
-		if(!berekeningVak.settings.check())
-			return;
 		int regelScore = 0;
 		boolean regelCorrect = false;
 		String regelString = berekeningVak.geefVakRegel(0).geefFormuleEditor().toString();

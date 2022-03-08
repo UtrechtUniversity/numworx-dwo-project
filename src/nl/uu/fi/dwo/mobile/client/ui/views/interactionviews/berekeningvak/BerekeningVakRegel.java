@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.RestartException;
 import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.DecRound;
@@ -148,6 +149,13 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 	public String calculateAndFormatExpression(FormuleEditor formuleEditor) {
 		String expressieString = getTailString(formuleEditor);
 		Expressie expressie = FormuleParser.geefExpressie(expressieString);
+//		if(casNodig(expressie)) {
+//			try {
+//				expressie = Expressie.evalWithCAS(expressie);
+//			}
+//			catch(RestartException e) {}
+//		}
+//		logger.info("Na CAS:" + expressie.toString());
 		if(expressie!=null && !(expressie instanceof BasisExpressie)) {
 			double approxDouble = expressie.geefWaarde();
 			double afgerond = new DecRound(new BasisExpressie(approxDouble), new BasisExpressie(berekeningVak.settings.aantalDecRm())).geefWaarde();
@@ -170,6 +178,13 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 			}
 		}
 		return null;
+	}
+	
+	private boolean casNodig(Expressie antwoord) {
+		boolean casNodig;
+		String string = antwoord.toString();
+		casNodig = string.indexOf("$i")>-1 || string.indexOf("$d")>-1 || string.indexOf("$T")>-1  || string.indexOf("$S")>-1  || string.indexOf("$P")>-1;
+		return casNodig;
 	}
 	
 	public FormuleEditor geefFormuleEditor() {

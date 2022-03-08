@@ -190,7 +190,7 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 		state.put("editable", Boolean.valueOf(editable));
 		checkManager.getCheckerState(state);
 		
-		if(!settings.meerregelig())
+		if(!settings.meerregelig() && settings.check())
 			checkManager.check_getState();
 		
 		if(correctieFacade != null) 
@@ -228,7 +228,7 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 					vakRegels.get(i).geefFormuleEditor().requestFocus();
 				}
 			}
-			if(!settings.meerregelig())
+			if(!settings.meerregelig() && settings.check())
 				checkManager.check_setState();
 			resize();
 			requestFocus();
@@ -259,7 +259,7 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 
 	@Override
 	public void kijkNa() {
-		if(!settings.meerregelig())
+		if(!settings.meerregelig() && settings.check())
 			checkManager.check_kijkNa();
 	}
 
