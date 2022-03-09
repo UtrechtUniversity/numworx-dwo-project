@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import org.osgi.util.promise.Promise;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.web.bindery.event.shared.EventBus;
@@ -40,11 +41,16 @@ public class SMStudentResultsPresenter extends StudentResultsPresenter {
 		view.setTitle(StringFormatter.format(DwoLocalesForGWT.instance.NUM_LBL_KNOWLEDGE_OF_(), user.getDisplayName()));
 		setBackVisible(true);
 	}
+	
+	public void init(DomUser user, DomSchoolClass schoolClass, DomStudentModelContext4Student context, JavaScriptObject jso) {
+		service.setContext(context);
+		init(user, schoolClass, jso);
+	}
 
 	@Override
 	protected SwitchViewEvent onGraphEvent(JSONObject json) {
 		json.put("user", new JSONString(service.user.getDisplayName()));
-		return new SwitchViewEvent(SwitchViewEvent.SelectedView.SMSTUDENTRESULTSGRAPH, service.user, service.schoolClass, json.getJavaScriptObject());
+		return new SwitchViewEvent(SwitchViewEvent.SelectedView.SMSTUDENTRESULTSGRAPH, service.user, service.schoolClass, service.context, json.getJavaScriptObject());
 	}
 
 	
@@ -87,8 +93,9 @@ public class SMStudentResultsPresenter extends StudentResultsPresenter {
 		super.doBack(item);
 		JSONObject state = new JSONObject();
 		state.put("id", new JSONString(item.getId().getIdString()));
+		state.put("method", JSONBoolean.getInstance(isMethod()));
 
-		SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.SMCLASSRESULTS, service.schoolClass, state.getJavaScriptObject());
+		SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.SMCLASSRESULTS, item, state.getJavaScriptObject());
 		eventBus.fireEvent(event);
 	}
 	

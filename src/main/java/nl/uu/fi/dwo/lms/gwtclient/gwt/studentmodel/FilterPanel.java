@@ -18,8 +18,6 @@ import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
@@ -37,7 +35,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.studentmodel.JsTeacherClassFilt
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class FilterPanel extends Composite implements ProvidesKey<DomStudentModelContext4Student> {
@@ -51,7 +48,8 @@ public class FilterPanel extends Composite implements ProvidesKey<DomStudentMode
 	private Map<String,Boolean> check = new HashMap<>();
 	private Set<String> changed = new HashSet<>();
 	private CellTable<DomStudentModelContext4Student> table;
-	private DomStudentModelContextId modelId;
+	private DomStudentModelContext4Student modelId;
+	private JavaScriptObject state;
 	private final LoggingFailure FAILURE;
 	private final RootPanel root;
 	
@@ -161,16 +159,14 @@ public class FilterPanel extends Composite implements ProvidesKey<DomStudentMode
 	    initWidget(table);
 	}
 
-	public Promise<?> init(JavaScriptObject resultState) {
+	public Promise<?> init(DomStudentModelContext4Student context, JavaScriptObject resultState) {
 		root.clear();
 		filters.clear();
 
-		JSONObject state = new JSONObject(resultState);
 		Promise<List<DomSchoolClass>> classes = persons.getTeachersSchoolClasses();
 		classes = classes.then(this::toClassName);
-		String id = state.get("id").isString().stringValue();
-		PersistenceId pid = new PersistenceId(id);
-		modelId = new DomStudentModelContextId(pid);
+		modelId = context;
+		state = resultState;
 		Promise<List<DomStudentModelContext4Student>> promises = classes.then(p -> { 
 			
 			List<Promise<DomStudentModelContext4Student>> list =
@@ -211,9 +207,7 @@ public class FilterPanel extends Composite implements ProvidesKey<DomStudentMode
 	@JsMethod
 	public void back() {
 		LOG.info("Back to StudentModel");
-		JSONObject state = new JSONObject();
-		state.put("id", new JSONString(modelId.getId().getIdString()));
-		SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.TEACHERSTUDENTMODEL, state.getJavaScriptObject());
+		SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.TEACHERSTUDENTMODEL, modelId, state);
 		bus.fireEvent(event);
 	}
 	

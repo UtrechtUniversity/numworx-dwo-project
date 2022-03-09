@@ -33,7 +33,7 @@ public class StudentViewHandler implements SwitchViewEventHandler {
     	if (dwoGlobalVars.isPremium()) {
     		mainView.selectView(value);
     		mainView.showStudentResultsGraphView();
-    		presenterFactory.getResultsGraphPresenter().init(switchViewEvent.getResultState());
+    		presenterFactory.getResultsGraphPresenter().init(switchViewEvent.getStudentModelContext(), switchViewEvent.getResultState());
    		break;
     	}
     case RESULTS:

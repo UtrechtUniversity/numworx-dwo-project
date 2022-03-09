@@ -17,5 +17,6 @@ public interface StudentResults extends DescriptionService {
 	Promise<DomStudentModelDataScore> getScore(DomStudentModelContextId id);
 	Promise<DomStudentModelContext4Student> getModel(DomStudentModelContextId id);
 	Promise<DomMethod> getActiveMethod(DomStudentModelStructure structure);
+	default void setContext(DomStudentModelContext4Student context) {}
 	
 }

@@ -15,6 +15,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.ui.HasText;
@@ -38,6 +39,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -134,6 +136,11 @@ public class StudentModelPresenter extends AbstractStudentModelPresenter impleme
 	
 	@JsMethod
 	public void selectModel(String id) {
+		filter = Collections.emptyMap();
+		selectModel0(id);
+	}
+	
+	private void selectModel0(String id) {
 		if (id == null|| id.isEmpty()) {
 			view.setEmptyTreeMessage();
 			view.setTitle("");
@@ -188,7 +195,13 @@ public class StudentModelPresenter extends AbstractStudentModelPresenter impleme
 			JSONObject json = new JSONObject();
 			json.put("title", new JSONString(getTitle(item.getModelStructure().getInfo(),lang)));
 			json.put("id", new JSONString(item.getId().getIdString()));
-			SwitchViewEvent ev = new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTRESULTSGRAPH, json.getJavaScriptObject());
+			json.put("method", JSONBoolean.getInstance(view.isMethod()));
+			DomStudentModelContext4Student context = new DomStudentModelContext4Student(item.getId());
+			context.setFilter(filter);
+			context.setSchoolClass(null);
+			context.setModelStructure(item.getModelStructure());
+			context.setOptLock(item.getOptLock());
+			SwitchViewEvent ev = new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTRESULTSGRAPH, context, json.getJavaScriptObject());
 			bus.fireEvent(ev);
 			return null;
 		});
@@ -212,7 +225,7 @@ public class StudentModelPresenter extends AbstractStudentModelPresenter impleme
 			filterPanel.addCloseHandler(ev -> { 
 				LOG.info("filter settings closed");
 				filter = filterPanel.getValue();
-				selectModel(currentModel.getValue().getId().getIdString());
+				selectModel0(currentModel.getValue().getId().getIdString());
 			});
 			filterPanel.show();
 			return null; });
@@ -227,7 +240,12 @@ public class StudentModelPresenter extends AbstractStudentModelPresenter impleme
 		currentModel.then( p ->  {
 			JSONObject state = new JSONObject();
 			state.put("id", new JSONString(p.getValue().getId().getIdString()));
-			bus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SMCLASSRESULTS, sc, state.getJavaScriptObject()));
+			state.put("method", JSONBoolean.getInstance(view.isMethod()));
+			DomStudentModelContext4Student context = new DomStudentModelContext4Student(p.getValue().getId());
+			context.setModelStructure(p.getValue().getModelStructure());
+			context.setSchoolClass(sc);
+			context.setFilter(filter);
+			bus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SMCLASSRESULTS, context, state.getJavaScriptObject()));
 			return p;
 		});
 	}
@@ -237,7 +255,12 @@ public class StudentModelPresenter extends AbstractStudentModelPresenter impleme
 		currentModel.then(m -> { 
 			JSONObject state = new JSONObject();
 			state.put("id", new JSONString(m.getValue().getId().getIdString()));
-			bus.fireEvent(new SwitchViewEvent(SelectedView.SMCLASSFILTER, state.getJavaScriptObject()));
+			state.put("method", JSONBoolean.getInstance(view.isMethod()));
+			DomStudentModelContext4Student context = new DomStudentModelContext4Student(m.getValue().getId());
+			context.setFilter(this.filter);
+			context.setSchoolClass(null); // not yet
+			context.setModelStructure(m.getValue().getModelStructure());
+			bus.fireEvent(new SwitchViewEvent(SelectedView.SMCLASSFILTER, context, state.getJavaScriptObject()));
 			return null;
 		});		
 	}
@@ -270,8 +293,17 @@ public class StudentModelPresenter extends AbstractStudentModelPresenter impleme
 		.then(p -> {view.setDescription(event.getSelectedItem().getText(), p.getValue()); return p;}, FAILURE);
 	}
 
-	public void init(JavaScriptObject resultState) {
+	public void init(DomStudentModelContext4Student context, JavaScriptObject resultState) {
 		init();
+		if (context != null) {
+			String id = context.getId().getIdString();
+			filter    = context.getFilter();
+			allModels.then(p -> {
+				view.setModelSelect(id);
+				selectModel0(id);
+				return p;
+			});
+		} else
 		if (resultState != null) {
 			allModels.then(p -> {
 				String id = new JSONObject(resultState).get("id").isString().stringValue();
@@ -286,6 +318,7 @@ public class StudentModelPresenter extends AbstractStudentModelPresenter impleme
 		LOG.info("methods change " + id);
 		if (currentModel == null) return;
 		final PersistenceId activeMethod = id.isEmpty()? null : new PersistenceId(id);
+		filter = Collections.emptyMap();
 		currentModel = currentModel.then(p -> updateActiveMethod(p, activeMethod));
 		currentModel.onResolve( () -> { boolean check = view.isMethod(); onMethod(check); });
 	}

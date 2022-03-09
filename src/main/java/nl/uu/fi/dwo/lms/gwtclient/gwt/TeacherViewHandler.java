@@ -171,42 +171,42 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
             	  if (dwoGlobalVars.isPremium()) {
               		  mainView.selectView(SelectedView.KNOWLEDGE);
 	            	  mainView.showTeacherStudentModelView();
-	            	  presenterFactory.getStudentModelPresenter().init(switchViewEvent.getResultState());
+	            	  presenterFactory.getStudentModelPresenter().init(switchViewEvent.getStudentModelContext(), switchViewEvent.getResultState());
 	                  break;
             	  }
              case STUDENTRESULTSGRAPH:
              	if (dwoGlobalVars.isPremium()) {
              		mainView.selectView(SelectedView.KNOWLEDGE);
              		mainView.showStudentResultsGraphView();
-             		presenterFactory.getResultsGraphPresenter().init(switchViewEvent.getResultState());
+             		presenterFactory.getResultsGraphPresenter().init(switchViewEvent.getStudentModelContext(), switchViewEvent.getResultState());
             		break;
              	}
              case SMCLASSRESULTS:
             	 if (dwoGlobalVars.isPremium()) {
             		 mainView.selectView(SelectedView.KNOWLEDGE);
             		 mainView.showTeacherSMClassResultsView();
-            		 presenterFactory.getSMClassResultsPresenter().init(switchViewEvent.getSchoolClass(), switchViewEvent.getResultState());
+            		 presenterFactory.getSMClassResultsPresenter().init(switchViewEvent.getStudentModelContext(), switchViewEvent.getResultState());
             		 break;
             	 }
              case SMSTUDENTRESULTS:
             	 if (dwoGlobalVars.isPremium()) {
             		 mainView.selectView(SelectedView.KNOWLEDGE);
             		 mainView.showStudentResults();
-            		 presenterFactory.getSMResultsPresenter().init(switchViewEvent.getUser(),switchViewEvent.getSchoolClass(), switchViewEvent.getResultState());
+            		 presenterFactory.getSMResultsPresenter().init(switchViewEvent.getUser(),switchViewEvent.getSchoolClass(), switchViewEvent.getStudentModelContext(), switchViewEvent.getResultState());
             		 break;
             	 }
              case SMSTUDENTRESULTSGRAPH:
               	if (dwoGlobalVars.isPremium()) {
               		mainView.selectView(SelectedView.KNOWLEDGE);
               		mainView.showStudentResultsGraphView();
-              		presenterFactory.getResultsGraphPresenter().init(switchViewEvent.getUser(),switchViewEvent.getSchoolClass(), switchViewEvent.getResultState());
+              		presenterFactory.getResultsGraphPresenter().init(switchViewEvent.getUser(),switchViewEvent.getSchoolClass(), switchViewEvent.getStudentModelContext(), switchViewEvent.getResultState());
              		break;
               	}
              case SMCLASSFILTER:
             	 if (dwoGlobalVars.isPremium()) {
             		 mainView.selectView(SelectedView.KNOWLEDGE);
             		 mainView.showTeacherClassFilterView();
-            		 presenterFactory.getTeacherClassFilterPresenter().init(switchViewEvent.getResultState());
+            		 presenterFactory.getTeacherClassFilterPresenter().init(switchViewEvent.getStudentModelContext(), switchViewEvent.getResultState());
             		 break;
             	 }
              default:

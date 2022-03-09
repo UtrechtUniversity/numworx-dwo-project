@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,6 +45,7 @@ public class StudentResultsGraphPresenter extends AbstractResultsPresenter {
 	@Inject Lazy<StudentResultsGraph> graph;
 	private DomSchoolClass schoolclass;
 	private DomStudent user;
+	private DomStudentModelContext4Student context;
 	
 	@Inject StudentResultsGraphPresenter(EventBus bus, DwoGlobalVars vars, Display view, StudentResults service) {
 		super(bus, vars);
@@ -70,13 +70,15 @@ public class StudentResultsGraphPresenter extends AbstractResultsPresenter {
 	    root.clear();
 	    main.clear();
 	    if (service == currentService)
-	    	eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTRESULTS, resultState));
+	    	eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTRESULTS, context, resultState));
 	    else 
-	    	eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SMSTUDENTRESULTS, user, schoolclass, resultState));
+	    	eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SMSTUDENTRESULTS, user, schoolclass, context, resultState));
 	  }
 
-	public void init(JavaScriptObject resultState) {
+	public void init(DomStudentModelContext4Student context, JavaScriptObject resultState) {
 		currentService = service;
+		this.context = context;
+		service.setContext(context);
 		init2(resultState);		
 	}
 
@@ -100,14 +102,15 @@ public class StudentResultsGraphPresenter extends AbstractResultsPresenter {
 		}).then(null, oops -> LOG.log(Level.SEVERE, "init state", oops.getFailure()));
 	}
 
-	public void init(DomUser user, DomSchoolClass schoolClass, JavaScriptObject resultState2) {
+	public void init(DomUser user, DomSchoolClass schoolClass, DomStudentModelContext4Student context, JavaScriptObject resultState2) {
 		currentService = single.get();
 		this.user = new DomStudent(user);
 		this.schoolclass = schoolClass;
+		this.context = context;
+		single.get().setContext(context);
 		single.get().setUser(user);
 		single.get().setSchoolClass(schoolClass);
 		single.get().setState(resultState2);
-		init2(resultState2);
-		
+		init2(resultState2);		
 	}
 }

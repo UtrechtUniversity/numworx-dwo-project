@@ -5,6 +5,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
 
@@ -33,6 +35,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 	private DomStudentModelContext currentModel;
 	DomSchoolClass schoolClass;
 	DomStudent user;
+	DomStudentModelContext4Student context;
 	
 	@Override
 	public Promise<String> getDescription(DomStudentModelContextId id, DomStudentModelContextInfo info) {
@@ -59,6 +62,8 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 	@Override
 	public Promise<DomStudentModelContext4Student> getModel(DomStudentModelContextId id) {
+		if (context != null && id.getId().equals(context.getId())) 
+			return Promises.resolved(context);
 		return service.getForClass(currentModel, schoolClass).then(p->service.stap0(p,id,schoolClass));
 	}
 
@@ -80,6 +85,10 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 	@Override
 	public Promise<DomMethod> getActiveMethod(DomStudentModelStructure structure) {
 		return service.getActiveMethod(structure.getActiveMethod());
+	}
+
+	public void setContext(DomStudentModelContext4Student context) {
+		this.context = context;	
 	}
 
 }

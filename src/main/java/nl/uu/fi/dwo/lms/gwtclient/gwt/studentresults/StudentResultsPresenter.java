@@ -23,6 +23,7 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.ui.HasText;
@@ -90,6 +91,10 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		widget.get().setBackVisible(b);
 	}
 	
+	protected boolean isMethod() {
+		return widget.get().isMethod();
+	}
+ 	
 	@Inject void setView(JsStudentResultsView view) {
 		this.view = view;
 		attachWidget(view);
@@ -352,6 +357,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		JSONObject json = new JSONObject();
 		json.put("title", new JSONString(StudentModelPresenter.getTitle(item.getModelStructure().getInfo(),lang)));
 		json.put("id", new JSONString(item.getId().getIdString()));
+		json.put("method", JSONBoolean.getInstance(isMethod()));
 		SwitchViewEvent ev = onGraphEvent(json);
 		eventBus.fireEvent(ev);
 	}

@@ -25,6 +25,7 @@ public class StudentResultsService implements StudentResults {
 	
 	@Inject StudentModelService service;
 	@Inject MethodManager methods;
+	private DomStudentModelContext4Student context;
 
 	@Inject StudentResultsService() {
 	}
@@ -55,6 +56,8 @@ public class StudentResultsService implements StudentResults {
 	}
 
 	private DomStudentModelContext4Student to4Student(DomStudentModelContext model) {
+		if(context != null && context.getId().equals(model.getId())) return context;
+		
 		DomStudentModelContext4Student result = new DomStudentModelContext4Student(model.getId());
 		result.setFilter(Collections.emptyMap());
 		result.setModelStructure(model.getModelStructure());
@@ -73,6 +76,12 @@ public class StudentResultsService implements StudentResults {
 	public Promise<DomMethod> getActiveMethod(DomStudentModelStructure structure) {
 		DomMethod id = new DomMethod(structure.getActiveMethod());
 		return service.getActiveMethod(structure.getActiveMethod());
+	}
+
+
+	@Override
+	public void setContext(DomStudentModelContext4Student context) {
+		this.context = context;
 	}
 
 }

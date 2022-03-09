@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 
@@ -97,6 +98,7 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
     private DomResultStudentScoContext resultStudentScoContext;
     private JavaScriptObject moduleIds;
     private Map<String,String> userState;
+    private DomStudentModelContext4Student studentModelContext;
 
     public static Type<SwitchViewEventHandler> TYPE = new Type<SwitchViewEventHandler>();
     private SelectedView eventValue;
@@ -132,7 +134,13 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
     public SwitchViewEvent(SelectedView aState, JavaScriptObject jso) {
       this.setEventValue(aState);
       moduleIds = jso;
-  }
+    }  
+    public SwitchViewEvent(SelectedView aState, DomStudentModelContext4Student studentModelContext, JavaScriptObject jso) {
+    	this.setEventValue(aState);
+    	moduleIds = jso;
+    	this.studentModelContext = studentModelContext;
+    }
+
 
 //    public SwitchViewEvent(SelectedView aState, DomResultTree aResultTree,
 //            DomResultScoContext aStudentSco, DomResultStudent aResultStudent,
@@ -171,6 +179,12 @@ public SwitchViewEvent(SelectedView studentresults, DomStudent domStudent, DomSc
 		JavaScriptObject javaScriptObject) {
 	this(studentresults, schoolClass2, javaScriptObject);
 	user = domStudent;
+}
+
+public SwitchViewEvent(SelectedView smstudentresults, DomStudent domStudent, DomSchoolClass schoolClass2,
+		DomStudentModelContext4Student value, JavaScriptObject javaScriptObject) {
+	this(smstudentresults, domStudent, schoolClass2, javaScriptObject);
+	this.studentModelContext = value;
 }
 
 @Override
@@ -246,5 +260,9 @@ public SwitchViewEvent(SelectedView studentresults, DomStudent domStudent, DomSc
     
     protected File getFile() {
       return moduleIds.cast();
+    }
+    
+    public DomStudentModelContext4Student getStudentModelContext() {
+    	return studentModelContext;
     }
 }

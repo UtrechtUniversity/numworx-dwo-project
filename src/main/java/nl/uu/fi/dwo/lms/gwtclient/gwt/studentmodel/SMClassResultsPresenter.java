@@ -17,6 +17,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.web.bindery.event.shared.EventBus;
@@ -89,18 +90,35 @@ public class SMClassResultsPresenter extends AbstractStudentModelPresenter imple
 	    super(bus, LOG, null);
 	}
 
-	public void init(DomSchoolClass domSchoolClass, JavaScriptObject javaScriptObject) {
+	@Deprecated
+	private void init(DomSchoolClass domSchoolClass, JavaScriptObject javaScriptObject) {
 		view.init();
 		view.clear();
 		state = new JSONObject(javaScriptObject);
 		Promise<?> p1 = showSchoolClasses(domSchoolClass);	
 		String id = state.get("id").isString().stringValue();
-		PersistenceId pid = new PersistenceId(id);
+		pid = new PersistenceId(id);
 		DomStudentModelContext cid = new DomStudentModelContext();
 		cid.setId(pid);
 		
 		currentMethod = showSchoolModel(cid, domSchoolClass);
 		scores = getResults(cid, domSchoolClass, currentMethod);
+		Promises.all(p1, currentMethod, scores).then(null, FAILURE);
+	}
+	
+	public void init(DomStudentModelContext4Student context, JavaScriptObject jso) {
+		view.init();
+		view.clear();
+		state = new JSONObject(jso);
+		Promise<?> p1 = showSchoolClasses(context.getSchoolClass());
+		pid = context.getId();
+		currentMethod = p1.map(x -> context)
+				.then(p -> service.stap0(p, context, schoolClass))
+				.then(this::stap2);
+		DomStudentModelContext model = new DomStudentModelContext();
+		model.setId(context.getId());
+		model.setModelStructure(context.getModelStructure());
+		scores = getResults(model, schoolClass, currentMethod);
 		Promises.all(p1, currentMethod, scores).then(null, FAILURE);
 	}
 
@@ -127,7 +145,9 @@ public class SMClassResultsPresenter extends AbstractStudentModelPresenter imple
     		TaggedDomSchoolClass value = new TaggedDomSchoolClass(sc);
     		schoolClasses.put(key, value);
     	});
-    	schoolClasses.get(schoolClass.getId().getIdString()).setTag(true);
+    	TaggedDomSchoolClass tag = schoolClasses.get(schoolClass.getId().getIdString());
+		tag.setTag(true);
+		schoolClass = tag.getSchoolClass();
     	view.showSchoolClasses(schoolClasses);
     	return p;
     }
@@ -216,8 +236,9 @@ public class SMClassResultsPresenter extends AbstractStudentModelPresenter imple
 		});
   }
  	
-	private Promise<?> showSchoolClasses(DomSchoolClass domSchoolClass) {
-		schoolClass = domSchoolClass;
+	private Promise<?> showSchoolClasses(DomSchoolClassId domSchoolClassId) {
+		schoolClass = new DomSchoolClass();
+		schoolClass.setId(domSchoolClassId.getId());
 		return persons.getTeachersSchoolClasses().then(this::stap1);		
 	}
 
@@ -236,6 +257,7 @@ public class SMClassResultsPresenter extends AbstractStudentModelPresenter imple
 	}
 
 	private Map<PersistenceId, Promise<FilterMethodDialog>> filterDialogs = new HashMap<>();
+	private PersistenceId pid;
 	{
 	  filterDialogs.put(null, Promises.failed(new NullPointerException()));
 	}
@@ -262,16 +284,22 @@ public class SMClassResultsPresenter extends AbstractStudentModelPresenter imple
 	@JsMethod
 	public void onPerson(String id) {
 		LOG.info("on Person " + id);
-		SwitchViewEvent event = new SwitchViewEvent(SelectedView.SMSTUDENTRESULTS, students.get(new PersistenceId(id)), schoolClass, state.getJavaScriptObject());;
+		DomStudentModelContext4Student context = currentModel.getValue();
+		context.setFilter(filter);
+		context.setSchoolClass(schoolClass);
+		SwitchViewEvent event = new SwitchViewEvent(SelectedView.SMSTUDENTRESULTS, students.get(new PersistenceId(id)), schoolClass, context, state.getJavaScriptObject());;
 		bus.fireEvent(event);
 	}
 	
 	@JsMethod
 	public void onChange(String id) {
 		LOG.info("on Change Class " + id);
-		DomSchoolClass sc = new DomSchoolClass();
-		sc.setId(new PersistenceId(id));
-		SwitchViewEvent event = new SwitchViewEvent(SelectedView.SMCLASSRESULTS, sc, state.getJavaScriptObject());
+		DomSchoolClassId sc = new DomSchoolClassId(new PersistenceId(id));
+		DomStudentModelContext4Student context = currentModel.getValue();
+		context.setFilter(filter);
+		context.setSchoolClass(sc);
+		state.put("method", JSONBoolean.getInstance(view.isMethod()));
+		SwitchViewEvent event = new SwitchViewEvent(SelectedView.SMCLASSRESULTS, context, state.getJavaScriptObject());
 		bus.fireEvent(event);
 	}
 	
@@ -283,8 +311,18 @@ public class SMClassResultsPresenter extends AbstractStudentModelPresenter imple
 	
 	@JsMethod
 	public void back( ) {
-		LOG.info("back to Student model"); 
-		SwitchViewEvent event = new SwitchViewEvent(SelectedView.KNOWLEDGE, schoolClass, state.getJavaScriptObject());
-		bus.fireEvent(event);
+		LOG.info("back to Student model");
+		currentModel
+			.fallbackTo(Promises.resolved(new DomStudentModelContext4Student(pid)))
+			.then( p -> { 
+				state.put("method", JSONBoolean.getInstance(view.isMethod()));
+				DomStudentModelContext4Student context = p.getValue();
+				context.setSchoolClass(schoolClass);
+				context.setFilter(filter);
+				SwitchViewEvent event = new SwitchViewEvent(SelectedView.KNOWLEDGE, context, state.getJavaScriptObject());
+				bus.fireEvent(event);
+				return null;
+			});
+			
 	}
 }
