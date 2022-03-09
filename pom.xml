@@ -680,12 +680,26 @@
 		</profile>
 		<profile>
 			<id>upload</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<dependencies>
 				<dependency>
 					<groupId>nl.numworx.uploadwidget</groupId>
 					<artifactId>UploadWidgetGWT</artifactId>
 					<version>0.0.1</version>
 					<classifier>classes</classifier>
+					<exclusions>
+						<exclusion>
+							<groupId>nl.numworx.uploadwidget</groupId>
+							<artifactId>uploadwidget-common</artifactId>
+						</exclusion>				
+					</exclusions>
+				</dependency>
+				<dependency>
+					<groupId>nl.numworx.uploadwidget</groupId>
+					<artifactId>uploadwidget-common</artifactId>
+					<version>0.0.1</version>
 				</dependency>			
 			</dependencies>
 			<build>
