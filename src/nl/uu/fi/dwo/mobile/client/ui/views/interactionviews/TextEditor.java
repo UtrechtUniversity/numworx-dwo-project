@@ -155,6 +155,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private int boxsize;
 	int menuheight = 0;
 	int padding = 4; // TODO bepaal padding;
+	int paddingH = 0; // padding Hbox, actief bij pasAanH
 	
 	Logging logging;
 	private String lastAttempt;
@@ -250,6 +251,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		if (pasAanH) {
 			style.setDisplay(Style.Display.INLINE);
 			style.clearWidth();
+			paddingH = padding; // Effect
+			padding = 0; // No effect 
+			hbox.getElement().getStyle().setPadding(paddingH/2, Style.Unit.PX);
 		} else {
 			style.setPadding(padding/2, Unit.PX);
 		}
@@ -258,7 +262,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		//style.setOverflow(Overflow.AUTO);
 		hbox.add(content);
 		//hbox.getElement().getStyle().setBackgroundColor("#C0C0C0");
-		hbox.setPixelSize(width-boxsize, height-boxsize);
+		hbox.setPixelSize(width-boxsize-paddingH, height-boxsize-paddingH);
 		if (boxMetRand)
 			;//hbox.getElement().getStyle().setProperty("border", "1px solid gray");
 		else
@@ -413,8 +417,15 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		formuleButton.addButtonListener(new FXHandler());
 		formuleButton.setTooltip(Text.constants.tooltip_formuleButton());
 		formuleButton.setSize(27, 27);
-		formuleButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-		formuleButton.getElement().getStyle().setMargin(2,Unit.PX);
+		Style formuleStyle = formuleButton.getElement().getStyle();
+		formuleStyle.setDisplay(Display.INLINE_BLOCK);
+		if (pasAanH) {
+			formuleStyle.setMarginBottom(2, Unit.PX);
+			formuleStyle.setMarginLeft(2, Unit.PX);
+			if(rekentool) 
+				formuleStyle.setMarginRight(2, Unit.PX);
+		} else
+			formuleStyle.setMargin(2,Unit.PX);
 		if(formuleKnop) {
 			formuleButton.addPointerDownHandler();
 /* Dit is nodig, anders komt de "tapper" er doorheen */
@@ -431,8 +442,13 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		calcButton.addButtonListener(new CalcHandler());
 		calcButton.setTooltip(Text.constants.tooltip_calcButton());
 		calcButton.setSize(27, 27);
-		calcButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-		calcButton.getElement().getStyle().setMargin(2,Unit.PX);
+		Style calcStyle = calcButton.getElement().getStyle();
+		calcStyle.setDisplay(Display.INLINE_BLOCK);
+		if (pasAanH) {
+			calcStyle.setMarginBottom(2, Unit.PX);
+			calcStyle.setMarginLeft(2, Unit.PX);
+		} else
+			calcStyle.setMargin(2,Unit.PX);
 		if(rekentool) {
 		  calcButton.addPointerDownHandler();
 		  calcButton.addDomHandler(new PreventTapper(), PointerDownEvent.getType());
@@ -483,8 +499,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			if (menubar != null && !pasAanH)
 				menubar.setPixelSize(width-boxsize, menuheight);
 			content.setPixelSize(width-boxsize-padding, pasAanH ? -1 : height-menuheight-boxsize-padding);
-			hbox.setPixelSize(width-boxsize, height-boxsize);
-			widget.setPixelSize(breedte-boxsize, -1);
+			hbox.setPixelSize(width-boxsize-paddingH, height-boxsize-paddingH);
+			if (widget != hbox) widget.setPixelSize(breedte, -1);
 		}
 	}
 
@@ -915,14 +931,30 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	
 	protected void pasAanH() {
 		if (pasAanH && regel != null && visibleChain()) {
-			int offsetHeight = flow.getOffsetHeight();
-			if (height != offsetHeight + boxsize + padding + menuheight) {
-				height  = offsetHeight + boxsize + padding + menuheight;
-				hbox.setPixelSize(-1, height-boxsize);
+			int offsetHeight = flowHeight();
+			if (height != offsetHeight + boxsize + paddingH + menuheight) {
+				height  = offsetHeight + boxsize + paddingH + menuheight;
+				hbox.setPixelSize(-1, height-boxsize-paddingH);
+				if (widget != hbox) widget.setPixelSize(-1, height);
 				regel.resize();
 		}}
 	}
 
+	private int flowHeight() {
+		int xmin = flow.getAbsoluteTop();
+		int xmax = xmin + flow.getOffsetHeight(); // Helaas geen uitsteeksels
+		int size = flow.getWidgetCount();
+		for (int i = 0; i < size; i++) { // eigenlijk alleen de eerste en de laatste regel nodig
+			Widget w = flow.getWidget(i);
+			int min = w.getAbsoluteTop();
+			int max = w.getOffsetHeight() + min;
+			if (max > xmax) xmax = max;
+			if (min < xmin) xmin = min;
+		}
+		return xmax - xmin;
+	}
+	
+	
 	@Override
 	public void insert(char charAt)
 	{
