@@ -42,7 +42,7 @@
       <property name="eclipselink.cache.shared.default" value="false"/>
       <property name="eclipselink.allow-zero-id" value="true"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1:3306/dwojunittest"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1:3306/dwojunittest?useSSL=false"/>
       <property name="javax.persistence.jdbc.user" value="test"/>
       <property name="javax.persistence.jdbc.password" value="test"/>
 <!--      <property name="eclipselink.weaving" value="static"/>

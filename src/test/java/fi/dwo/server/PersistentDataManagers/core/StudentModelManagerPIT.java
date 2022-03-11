@@ -14,6 +14,7 @@ import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
+import fi.dwo.commons.util.UEscape;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.ArrayList;
@@ -215,7 +216,9 @@ public class StudentModelManagerPIT {
             System.out.println("reading modelA ");
             PersistentStudentModelContext modelD = StudentModelContextManager.findEntity(modelA.getModelID());
             assertEquals(modelA.getModelID(), modelD.getModelID());
-            assertEquals(modelA.getModelStructure().getInfo().getTitle(), modelD.getModelStructure().getInfo().getTitle());
+            String expected = UEscape.convertUEsc(modelA.getModelStructure().getInfo().getTitle().toString());
+			String was = UEscape.convertUEsc(modelD.getModelStructure().getInfo().getTitle().toString());
+			assertEquals(expected, was);
 //            JSONAssert.assertEquals(modelA.getModelStructure().toJSONString(), modelD.getModelStructure().toJSONString(), JSONCompareMode.NON_EXTENSIBLE);
             //should succeed            
         } catch (Exception e) {
