@@ -424,7 +424,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			}
 			
 			// voor numworx
-			if (   !bolletjesZichtbaar 
+			if (   !bolletjesZichtbaar() 
 			    && !volgendeKnopZichtbaar
 			    && !vorigeKnopZichtbaar
 			    && mode != OpdrNav.ZELFTOETS
@@ -440,7 +440,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			
 			onp.setStyleName(dwoplayercss.opdrachtbollen(), true);
 			
-			if (bolletjesZichtbaar)
+			if (bolletjesZichtbaar() ) // altijd bollen in review
 			{
 				sb.addNavPanel(onp);
 				sbw.widthOnp = onp.getOffsetWidth();
@@ -2624,6 +2624,11 @@ public Combined getCombined() {
 public int getWidth() {
 	if(soortKeyboard != 0) return 0;
 	return 70;
+}
+
+@Override
+public boolean bolletjesZichtbaar() {
+	return super.bolletjesZichtbaar() || on.isReview();
 }
 
 }
