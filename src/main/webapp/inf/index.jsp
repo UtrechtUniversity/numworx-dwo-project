@@ -9,9 +9,9 @@
 	long tstamp = TStamp.BOOT;
 	String query = request.getQueryString();
 	if(Util.illegal(query))
-	 	query = "?base=/inf/&profile=" + profile + "&t=" + tstamp;
+	 	query = "?profile=" + profile + "&t=" + tstamp;
 	else 
-	  	query = "?base=/inf/&profile=" + profile + "&" + query;
+	  	query = "?profile=" + profile + "&" + query;
 	String hash = request.getParameter("hash");
 	String player = "/gwtclient/index.html";
 
