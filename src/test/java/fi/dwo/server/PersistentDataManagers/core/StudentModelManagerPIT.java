@@ -33,6 +33,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -148,7 +149,7 @@ public class StudentModelManagerPIT {
     /**
      * Light testing CRUD and more of class SchoolManager.
      */
-    @Test
+    @Test @Ignore
     public void testDomStudentModelContextSerialization() {
         DomStudentModelStructure model = new DomStudentModelStructure();
         Map<String, String> titleMap = new HashMap<>();
