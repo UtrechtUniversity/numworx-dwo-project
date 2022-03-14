@@ -2143,21 +2143,31 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			gebruikersSubStrings = gebruikersSubstitutiesVak.geefRegels();
 
 		HashMap<String, Object> h = new HashMap<String, Object>();
-		h.put("stapNr", new Integer(stapNr));
+		h.put("stapNr", Integer.valueOf(stapNr));
 		h.put("formuleVakInhouden", formuleVakInhouden);
 		h.put("antwoordString", "$f" + antwoordString + "@");
 		h.put("pijlVakInhouden", pijlVakInhouden);
 		h.put("pijlVakOperatoren", pijlVakOperatoren);
-		h.put("ingevuld", new Boolean(ingevuld));
-		h.put("nagekeken", new Boolean(nagekeken));
+		h.put("ingevuld", Boolean.valueOf(ingevuld));
+		h.put("nagekeken", Boolean.valueOf(nagekeken));
 		h.put("editable", Boolean.valueOf(editable));
-		h.put("isVeranderdNaNakijken", new Boolean(isVeranderdNaNakijken));
-		h.put("errorCount", new Integer(errorCount));
+		h.put("isVeranderdNaNakijken", Boolean.valueOf(isVeranderdNaNakijken));
+		h.put("errorCount", Integer.valueOf(errorCount));
 		h.put("substitutieString", substitutieString);
 		h.put("gebruikersSubStrings", gebruikersSubStrings);
 		h.put("eigenOpdr", eigenOpdr);
 		h.put("stapOk", stapOk);
 		h.put("openstaandePijl", openstaandePijl);
+		
+		if (scoreCumulatief) {
+			int len = scoreContainer.length;
+			while(len > 0 && scoreContainer[len-1]==-1) len--;
+			int[] copy = new int[len];
+			System.arraycopy(scoreContainer, 0, copy, 0, len);
+			h.put("scoreContainer", copy);
+		}
+		
+		
 		
 		if (dwologger!= null) 
 		{
@@ -2263,6 +2273,15 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			isVeranderdNaNakijken = ((Boolean) h.get("isVeranderdNaNakijken")).booleanValue();
 		if (h.get("errorCount") != null)
 			errorCount = ((Number) h.get("errorCount")).intValue();
+		
+		if (hh.containsKey("scoreContainer")) {
+			int copy[] = hh.getIntArray("scoreContainer");
+			int len = copy.length; 
+			System.arraycopy(copy, 0, scoreContainer, 0, len);
+			while(len < scoreContainer.length) scoreContainer[len++] = -1;
+		}
+		
+		
 		if (hh.containsKey("formuleVakInhouden") )
 		{
 			formuleVakInhouden = hh.getStringArray("formuleVakInhouden");
@@ -3105,7 +3124,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		if (hasStartString)
 			start = 1;
 		
-		if (editor != null && editor.toString().equals(""))
+		if (editor != null && editor.toString().equals("") && stapNr > start)
 		{	
 			backStep(setState); 
 		}
