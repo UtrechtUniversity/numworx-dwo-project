@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 import com.google.gwt.user.client.Window;
@@ -20,6 +21,7 @@ import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 //import fi.wiskopdr.formuleobjects.*;
 //import fi.wiskopdr.tekstobjects.TekstArea;
 import fi.wiskopdr.expressies.*;
+import fi.wiskopdr.expressies.repr.CasCheck;
 import fi.wiskopdr.text.Text;
 //import fi.wiskopdr.WiskOpdr;
 
@@ -902,6 +904,12 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		}
 	}
 	
+	
+	private boolean checkCasNodig(String s) { // zonder DIFF, wel INTEGRAAL, PRIMITIEVE, LIMIET, SOM
+	      boolean casNodig = s.contains("$i") || s.contains("$T") || s.contains("$P") || s.contains("$S");
+	      return casNodig;
+	}
+	
 	public void checkCasStatement(String expAntwoordString) throws RestartException	
 	{
 		String checkString = casString;
@@ -917,10 +925,25 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 			}	
 		}
 		VergelijkingMeerv v = FormuleParser.parseVergelijking("$f" + checkString +"@");
-		if (!casNodig(v) && v.geefVarN().isEmpty()) {
-			casResult = v.isOplossing();
+		if (v == null) {
+			casResult = false; return;
+		}
+		Vector namen = v.geefVarN();
+		int vars = namen.size();
+		if (!checkCasNodig(checkString) && (!v.isOngelijkheid() || vars == 0) && vars <= 1) { // ongelijkheid mogelijk als vars = 0
+			if (vars == 0) {
+				casResult = v.isOplossing();
+			} else {
+			    String var = namen.get(0).toString();
+			    casResult =  v.isOplossing(new BasisExpressie(var), var);
+			}
 			return;
 		}
+		
+//		if (!casNodig(v) && v.geefVarN().isEmpty()) {
+//			casResult = v.isOplossing();
+//			return;
+//		}
 		
 		Expressie e = Expressie.decideWithCas(v);
 		casResult = e != null && e.geefWaarde() == 1.0;
@@ -1142,7 +1165,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 
 	private boolean casNodig(Expressie antwoord) {
 		boolean casNodig;
-		String string = antwoord.toString();
+		String string = antwoord.visit(CasCheck.getInstance()).toString();
 		casNodig = string.indexOf("$i")>-1 || string.indexOf("$d")>-1 || string.indexOf("$T")>-1  || string.indexOf("$S")>-1  || string.indexOf("$P")>-1;
 		return casNodig;
 	}	

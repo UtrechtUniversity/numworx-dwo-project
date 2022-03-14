@@ -2,8 +2,6 @@ package fi.wiskopdr.expressies;
 
 import java.util.logging.Logger;
 
-import org.junit.Test;
-
 import com.google.gwt.junit.client.GWTTestCase;
 
 import fi.wiskopdr.FormuleParser;
@@ -15,7 +13,7 @@ public class GwtTestExpressie extends GWTTestCase {
 	    LOG = Logger.getLogger("Expressie");
 	  }
 	
-@Test public void testParser() {
+public void testParser() {
 	String formuleString = FormuleParser.formuleString("$f" + "0" + "@"); assertNotNull(formuleString);
 	String schoon = FormuleParser.schoon(formuleString);assertNotNull(schoon);
 	Expressie parse = FormuleParser.parse(schoon);
@@ -24,7 +22,7 @@ public class GwtTestExpressie extends GWTTestCase {
 	  
 	  
 	  
-@Test public void testDecideWithoutCAS() {
+public void testDecideWithoutCAS() {
 // 0 variables
 	assertTrue( decide("0=0"));
     assertTrue( decide("2=1+1"));

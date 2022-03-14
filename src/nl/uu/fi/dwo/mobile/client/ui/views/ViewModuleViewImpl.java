@@ -416,7 +416,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 
 			// voor noordhoff
 			int aantalOpdrachten = on.getAantalOpdrachten();
-			if (standalone && !bolletjesZichtbaar && !volgendeKnopZichtbaar
+			if (standalone && !bolletjesZichtbaar() && !volgendeKnopZichtbaar
 				&& !vorigeKnopZichtbaar && aantalOpdrachten == 1)
 				removeTitle();
 			else {
@@ -829,7 +829,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			}
 			source.setKijkNaEnabled(!zelftoetsGeenCorr || on.isReview());
 			//scoresObjectivesKnop.setEnabled(true);//goed? nodig?
-			prev.setVisible(vorigeKnopZichtbaar || !bolletjesZichtbaar && zelftoetsNagekeken);
+			prev.setVisible(vorigeKnopZichtbaar || !bolletjesZichtbaar() && zelftoetsNagekeken);
 			scoreNav.setScoresObjectivesKnop(on.zijnObjectivesAanwezig());
 			scoreNav.setViewMisconceptionsKnop(on.zijnMisconceptionsAanwezig());
 			

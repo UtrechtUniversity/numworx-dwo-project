@@ -75,7 +75,7 @@ public abstract class XMLView {
 	private static int defaultFontSize = 12;
 	private static String defaultFontName = "Arial";
 	
-	protected boolean bolletjesZichtbaar = true;
+	private boolean bolletjesZichtbaar = true;
 	protected boolean volgendeKnopZichtbaar = false;
 	protected boolean vorigeKnopZichtbaar = false;
 	protected boolean scoresZichtbaar = true;

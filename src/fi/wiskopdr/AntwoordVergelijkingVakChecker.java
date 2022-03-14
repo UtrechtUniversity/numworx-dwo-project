@@ -501,7 +501,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		if(answerModels==null || answerModels.get(answerModelNr)==null)
 			return 0;
 		ObjectMap map = JSONUtilities.wrapMap(answerModels.get(answerModelNr));
-		return (Integer)map.getInt("puntenFeedback");
+		return map.getInt("puntenFeedback");
 	}
 	
 	
