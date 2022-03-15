@@ -69,6 +69,8 @@ public class StudentResultsGraphPresenter extends AbstractResultsPresenter {
 	    view.hide();
 	    root.clear();
 	    main.clear();
+	    if (context != null) 
+	    	context.setFilter(graph.get().filter);
 	    if (service == currentService)
 	    	eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTRESULTS, context, resultState));
 	    else 
