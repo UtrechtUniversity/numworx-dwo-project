@@ -790,7 +790,20 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
                 sco.setLocationOverride(loc);
                 table.repaint();
             }
-            combo.setSelectedIndex(n);
+            int old = combo.getSelectedIndex();
+            if (n == old) {
+// force deselect/select 
+              ItemListener[] ll = combo.getItemListeners();
+              Object user = combo.getItemAt(n);
+              ItemEvent deselectEvent = new ItemEvent(combo, ItemEvent.ITEM_STATE_CHANGED, user, ItemEvent.DESELECTED);
+              ItemEvent selectEvent = new ItemEvent(combo, ItemEvent.ITEM_STATE_CHANGED, user, ItemEvent.SELECTED);
+              for(ItemListener l:ll) {
+                l.itemStateChanged(deselectEvent);
+                l.itemStateChanged(selectEvent);                
+              }
+            } else {
+              combo.setSelectedIndex(n);
+            }
             //combo.repaint();
             fireEditingCanceled();
         }
