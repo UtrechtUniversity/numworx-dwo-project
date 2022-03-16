@@ -91,4 +91,12 @@ class FilterAction extends AbstractAction {
     void unset() {
       filter = Collections.emptyMap();
     }
+
+    Map<String, Map<String, Set<Integer>>> getFilter() {
+      return filter;
+    }
+
+    void setFilter(Map<String, Map<String, Set<Integer>>> filter) {
+      this.filter = filter;
+    }
   }

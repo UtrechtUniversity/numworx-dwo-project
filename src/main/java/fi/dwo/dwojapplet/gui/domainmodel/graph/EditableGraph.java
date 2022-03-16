@@ -135,4 +135,9 @@ public class EditableGraph extends JPanel implements ActionListener{
     
   }
 
+  public Map<String, Map<String, Set<Integer>>> getFilter() {
+    if (!graph.isFiltered()) return Collections.emptyMap();
+    return graph.getFilter();
+  }
+
 }

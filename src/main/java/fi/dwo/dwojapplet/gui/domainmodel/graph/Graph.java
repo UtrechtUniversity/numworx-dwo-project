@@ -114,8 +114,13 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
     private PersistenceId activeMethod;
     DomMethod activeRow;
 	
-	
+	private Map<String,Map<String,Set<Integer>>> filter = Collections.emptyMap();
 
+	public Map<String,Map<String,Set<Integer>>> getFilter() { 
+	  return filter;
+	}
+	
+	
 	public Graph() {
 		setLayout(null);
 		setBackground(LeerdomeinGraphPanel.colorGray3);
@@ -711,6 +716,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	  selectedChapter = null;
 	  selectedBook = null;
 	  selectedMethod = methodeCode;
+	  filter = Collections.singletonMap(methodeCode, Collections.emptyMap());
 	}
 	
 	public void selectMethode(String methodeCode, boolean b) {
@@ -752,6 +758,8 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
       selectedChapter = null;
       selectedBook = bookCode;
       selectedMethod = bookCode.substring(0, bookCode.indexOf("-"));
+      String boek = selectedBook = bookCode.substring(bookCode.indexOf('-')+1);
+      filter = Collections.singletonMap(selectedMethod, Collections.singletonMap(boek, Collections.emptySet()));
 	}
 	
 	public void selectBook(String bookCode, boolean b) {
@@ -879,6 +887,9 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
       selectedChapter = hfstCode;
       selectedBook = hfstCode.substring(0, hfstCode.lastIndexOf("-"));
       selectedMethod = hfstCode.substring(0, hfstCode.indexOf("-"));
+      String boek = selectedBook.substring(selectedMethod.length()+1);
+      String hfstk = selectedChapter.substring(selectedBook.length()+1);
+      filter = Collections.singletonMap(selectedMethod, Collections.singletonMap(boek, Collections.singleton(Integer.valueOf(hfstk))));
 	}
 	
 	

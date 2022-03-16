@@ -1460,6 +1460,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 	  if("filter".equals(ev.getActionCommand()) && graph.isShowing()) {
 	    Set<String> visible = graph.getVisibleNodes(); // id's of visible nodes
         model.activateFilter(!visible.isEmpty());
+        filterAction.setFilter(graph.getFilter());
         model.setRoot(filter(root, visible));
         model.nodeStructureChanged((TreeNode) model.getRoot());
 	  }
