@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 
 import org.osgi.util.function.Function;
@@ -49,6 +50,7 @@ import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
@@ -67,6 +69,7 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 	@Inject PlaceController placeController;
 	@Inject nl.uu.fi.dwo.mobile.client.ui.RPCHandler rpcHandler;
 	@Inject DWOplayerParameters PARAMETERS;
+	@Inject PlaceHistoryMapper mapper;
 	private boolean started;
 
 	private DomSchoolClass schoolClass;
@@ -342,6 +345,15 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 	@Override
 	public void goTo(Place place) {
 		gotoNext();	
+	}
+
+	@Inject @Named("defaultPlace") Place defaultPlace;
+	@Override
+	public void gotoPlace(String token) {
+		Place place = mapper.getPlace(token);
+		if (place==null) place = defaultPlace;
+		started = false;
+		placeController.goTo(place);
 	}
 
 }

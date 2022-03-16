@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ValueUpdater;
@@ -15,6 +16,9 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.LegacyHandlerWrapper;
+import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -113,6 +117,9 @@ public class ClassesViewImpl extends Composite  implements AnchorContext {
 	interface ClassesViewImplUiBinder extends UiBinder<Widget, ClassesViewImpl> {
 	}
 
+	@Inject PlaceHistoryMapper mapper;
+	@Inject PlaceController placeController;
+
 	@Inject ClassesViewImpl(EventBus bus, RPCHandler rpc, ActivityComponent.Builder builder) {
 		this.eventBus = bus;
 		this.rpc = rpc;
@@ -164,6 +171,14 @@ public class ClassesViewImpl extends Composite  implements AnchorContext {
 
 	@Override
 	public void gotoUrl(String href) {
+	}
+
+	@Inject @Named("defaultPlace") Place defaultPlace;
+	@Override
+	public void gotoPlace(String token) {
+		Place place = mapper.getPlace(token);
+		if (place==null) place = defaultPlace;
+		placeController.goTo(place);
 	}
 
 

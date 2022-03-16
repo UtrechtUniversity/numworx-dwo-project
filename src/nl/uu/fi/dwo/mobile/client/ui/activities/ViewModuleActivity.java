@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 
 import org.osgi.util.promise.Promise;
@@ -50,6 +51,7 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -74,7 +76,8 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	@Inject PlaceController placeController;
 	@Inject RPCHandler rpc;
 	@Inject HeaderView headerView;
-	
+	@Inject PlaceHistoryMapper mapper;
+
 	private DWOplayerParameters PARAMETERS;
 	@Inject void setParameters(DWOplayerParameters p) {
 		PARAMETERS = p;
@@ -409,6 +412,14 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 				defaultContext.gotoUrl("goto:." + (location+1));
 			}
 		}
+	}
+
+	@Inject @Named("defaultPlace") Place defaultPlace;
+	@Override
+	public void gotoPlace(String token) {
+		Place place = mapper.getPlace(token);
+		if (place==null) place = defaultPlace;
+		goTo(place);
 	}
 
 	@Override

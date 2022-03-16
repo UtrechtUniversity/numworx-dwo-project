@@ -62,7 +62,7 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 
 	
 	protected final PlaceController placeController;
-	private Provider<ViewModuleView> entryView;
+	private final Provider<ViewModuleViewBuilder> entryView;
 	protected RPCHandler handler;
 	
 	public ClientFactoryImpl(EventBus bus, PlaceController controller, 
@@ -71,10 +71,7 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	{
 	  this.eventBus = bus;
 	  this.placeController = controller;
-	  this.entryView = () -> {
-	    ViewModuleViewBuilder view = entryView.get();
-	    return view;
-	  };
+	  this.entryView = entryView;
 	}
 
 	protected abstract Scorm2004IF setupAPI();

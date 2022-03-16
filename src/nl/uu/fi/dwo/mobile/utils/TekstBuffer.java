@@ -573,8 +573,10 @@ public class TekstBuffer
 
 		@Override
 		public void gotoUrl(String href) {
-			
-			
+		}
+
+		@Override
+		public void gotoPlace(String token) {
 		}};
 			
 	/**

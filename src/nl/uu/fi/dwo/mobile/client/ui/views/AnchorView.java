@@ -23,6 +23,14 @@ public class AnchorView implements IsWidget, ClickHandler, TekstElementWithFont 
 		@Override
 		public void gotoUrl(String href) {
 		}
+
+		@Override
+		public void gotoPlace(String token) {
+			UrlBuilder builder = Window.Location.createUrlBuilder();
+			builder.setHash(token);
+			prepareLeave();
+			Window.Location.assign(builder.buildString());			
+		}
 	}
 	
 	static final AnchorContext NULL = new AnchorAdapter();
@@ -66,6 +74,18 @@ public class AnchorView implements IsWidget, ClickHandler, TekstElementWithFont 
 		} else
 		{	
 			href = href.replace('!', '#'); // een echte ! is %21
+			if (href.startsWith("#") && context != null) {
+				final String token = href.substring(1);
+				anchor = new Anchor(tekst,"javascript:return false;");
+				anchor.addClickHandler(event -> { 
+					event.stopPropagation();
+					event.preventDefault();
+					context.gotoPlace(token);
+				});
+			} else	{
+			
+			
+			
 			anchor = new Anchor(tekst, href);
 			if (! href.startsWith("#") && !"_self".equals(target))
 				anchor .setTarget(target);
@@ -75,7 +95,7 @@ public class AnchorView implements IsWidget, ClickHandler, TekstElementWithFont 
 				anchor.setHref(builder.buildString());
 				this.context = context;
 				anchor.addClickHandler(this::onLeave);
-			}
+			}}
 		}
 		ctx = Canvas.createIfSupported().getContext2d();
 		setContextFont();

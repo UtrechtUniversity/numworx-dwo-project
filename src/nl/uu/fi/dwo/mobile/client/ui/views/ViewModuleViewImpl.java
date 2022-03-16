@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
+
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -69,6 +71,7 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -1890,7 +1893,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			} // iets met de place controller.....
 			
 		}
-		
+
+		@Override
+		public void gotoPlace(String token) {
+		}
+
 	}
 	AnchorContext anchorContext = new MyAnchorContext();
 	

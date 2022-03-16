@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 
 import org.osgi.util.promise.Failure;
@@ -21,6 +22,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -329,6 +331,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	interface TreeModuleViewNumworxUiBinder extends UiBinder<Widget, TreeModuleViewNumworx> {
 	}
 
+	@Inject PlaceHistoryMapper mapper;
+
 	@Inject
 	public TreeModuleViewNumworx(HeaderView headerView, NavigationViewNumworx navigationView, RPCHandler rpc, DwoGlobalVars vars, ActivityComponent.Builder builder) {
 	    HorizontalCellListResources cellResources;
@@ -593,6 +597,15 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	public void gotoUrl(String href) {
 		gotoSelected(href, selection);		
 	}
+	
+	@Inject @Named("defaultPlace") Place defaultPlace;
+	@Override
+	public void gotoPlace(String token) {
+		Place place = mapper.getPlace(token);
+		if (place==null) place = defaultPlace;
+		presenter.goTo(place);
+	}
+	
 	
 	void gotoSelected(String href, SelectModuleItem parent) {
 		//String page = "";
