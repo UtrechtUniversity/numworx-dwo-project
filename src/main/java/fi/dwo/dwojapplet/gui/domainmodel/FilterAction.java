@@ -5,10 +5,14 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -18,6 +22,8 @@ import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.ConfirmDialog;
+import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 class FilterAction extends AbstractAction {
@@ -97,6 +103,21 @@ class FilterAction extends AbstractAction {
     }
 
     void setFilter(Map<String, Map<String, Set<Integer>>> filter) {
+      DomMethod dm;
+      dm = MethodsProperties.instance().getMethod(activeMethod);
+      Map<String, Set<Integer>> method = filter.getOrDefault(dm.key(), Collections.emptyMap());
+      if (method.size() == 1) {
+        Entry<String, Set<Integer>> entry = method.entrySet().iterator().next();
+        if (entry.getValue().isEmpty()) {
+          String key = entry.getKey();
+          int i = dm.books.indexOf(key);
+          int aantalHoofdstukken = dm.chapters.get(i).size();
+          Set<Integer> set;
+          filter = new HashMap<>(filter);
+          set = (IntStream.range(1, 1+aantalHoofdstukken).mapToObj(Integer::valueOf).collect(Collectors.toSet()));
+          filter.put(dm.key(), Collections.singletonMap(key, set));
+        }
+      }
       this.filter = filter;
     }
   }
