@@ -126,6 +126,8 @@ public class JavaUpload extends HttpServlet implements Constants {
 			bearer = new String(Base64.getDecoder().decode(bearer.substring(6)));
 			String[] split = bearer.split(":", 2);
 			rest.setBasicAuthString(split[0], split[1], null);
+		} else {
+			return Optional.empty();
 		}
 		DomUserFull user;
 		DomSchoolsRolesAndClassesV2 logins;
