@@ -91,7 +91,7 @@ jarUrlPath=FILE:jars
     -->
     <Resource abandonWhenPercentageFull="50" auth="Container" 
               factory="org.apache.commons.dbcp.BasicDataSourceFactory"
-              driverClassName="com.mysql.jdbc.Driver" 
+              driverClassName="software.aws.rds.jdbc.mysql.Driver" 
               jdbcInterceptors="ResetAbandonedTimer" 
               logAbandoned="true" maxTotal="100" maxIdle="50" 
               maxWaitMillis="10000" minEvictableIdleTimeMillis="60000" minIdle="30" 

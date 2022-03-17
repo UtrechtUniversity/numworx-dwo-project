@@ -28,11 +28,16 @@
 			<artifactId>DWOServer</artifactId>
 			<classifier>classes</classifier>
 		</dependency>
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.49</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>mysql</groupId> -->
+<!-- 			<artifactId>mysql-connector-java</artifactId> -->
+<!-- 			<version>5.1.49</version> -->
+<!-- 		</dependency> -->
+<dependency>
+  <groupId>software.aws.rds</groupId>
+  <artifactId>aws-mysql-jdbc</artifactId>
+  <version>1.0.0</version>
+</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

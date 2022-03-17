@@ -2,6 +2,7 @@ package fi.dwo.server.db;
 
 import java.sql.Driver;
 import java.sql.SQLException;
+import java.util.ServiceLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,9 +20,9 @@ public class DBInstaller implements ServletContextListener {
   public void contextInitialized(ServletContextEvent e) {
     Driver driver;
     try {
-      driver = new com.mysql.jdbc.Driver();
+      driver = ServiceLoader.load(java.sql.Driver.class).iterator().next();
       LOG.log(Level.INFO, "initialized " + driver);
-    } catch (SQLException e1) {
+    } catch (Exception e1) {
       LOG.log(Level.SEVERE, "contextInitialized exception", e1);
     }
   }
