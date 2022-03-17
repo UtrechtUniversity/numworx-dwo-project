@@ -28,10 +28,12 @@ import javax.ws.rs.ext.Provider;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentLoginContext;
+import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.DatatypeConverter;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.xss.SecFilter;
 import io.jsonwebtoken.Claims;
@@ -159,7 +161,21 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
         		PersistentHasRolePK pk = new PersistentHasRolePK(u.getId(), (Long)sgid);
         		PersistentHasRole hr = HasRoleManager.findEntity(pk);
         		if (hr == null) return null;
-        		DwoUserPrincipal du = new DwoUserPrincipal(hr);
+        		PersistentSchoolGroup sg = hr.getSchoolGroup();        		
+        		if (sg == null) {
+        			LOG.severe("SG is null " + uid + " " + sgid);
+        			sg = SchoolGroupManager.findEntity( (Long) sgid);
+        		}
+        		if (hr.getUser() == null) {
+        			LOG.severe("USER is null " + uid + " " + sgid);
+        		}
+        		if (sg.getRole() == null) {
+        			LOG.severe("ROLE is null " + sg.getGroupID());
+        		} else if (sg.getRole().getGroupID() == null) {
+        			LOG.severe("GROUPID is null " + sg.getRole() + " " + sg.getGroupID());
+        		}
+        		
+        		DwoUserPrincipal du = new DwoUserPrincipal(u, hr, sg);
         		sc = new DwoUserSecurityContext(du, secCtx.isSecure(), SecurityContext.BASIC_AUTH, du.getRole());
         	} else {
         		sc = new DwoUserSecurityContext(new DwoUserPrincipal(u), secCtx.isSecure(), SecurityContext.BASIC_AUTH);

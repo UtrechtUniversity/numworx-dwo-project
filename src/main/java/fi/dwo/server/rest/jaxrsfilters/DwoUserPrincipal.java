@@ -35,6 +35,13 @@ public class DwoUserPrincipal implements Principal {
     	this.role = RoleType.values()[sg.getRole().getGroupID().intValue()];    	
     }
 
+    DwoUserPrincipal(PersistentUser u, PersistentHasRole hr, PersistentSchoolGroup sg) {
+    	this.hr = hr;
+    	this.sg = sg;
+    	this.u  = u;
+    	this.role = RoleType.values()[sg.getGroupID()];    	
+    }
+
     @Override
     public String getName() {
         return u.getUsername();
