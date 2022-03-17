@@ -35,8 +35,11 @@ public class AlertDialogWithOKPresenter  implements AlertDialogWithOKEventHandle
 
     }
 
+    private AlertDialogWithOKEvent last;
+ 
     @Override
     public void onDialogEvent(AlertDialogWithOKEvent aDialogEvent) {
+    	last = aDialogEvent;
         if (aDialogEvent.getEventValue()==AlertDialogWithOKEvent.Dialogs.Message) {
             view.showDialog(aDialogEvent.getMessage());
         }else if (aDialogEvent.getEventValue()==AlertDialogWithOKEvent.Dialogs.Dwo2ExceptionDialog){
@@ -70,5 +73,6 @@ public class AlertDialogWithOKPresenter  implements AlertDialogWithOKEventHandle
     @JsMethod
     public void hide() {
         view.hideDialog();
+        last.callback();
     }
 }

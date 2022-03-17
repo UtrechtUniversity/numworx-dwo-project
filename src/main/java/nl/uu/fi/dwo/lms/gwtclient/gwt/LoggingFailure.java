@@ -14,10 +14,12 @@ import org.osgi.util.promise.Promise;
 
 import com.google.web.bindery.event.shared.EventBus;
 
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
-public class LoggingFailure implements Failure {
+public class LoggingFailure implements Failure, Runnable {
 	
 	final private Logger LOG;
 	final private EventBus eventBus;
@@ -49,7 +51,10 @@ public class LoggingFailure implements Failure {
 	    }
 	    if (fail instanceof Dwo2Exception) {
 	        LOG.log(Level.SEVERE, fail.getMessage(), fail);
-	        eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
+	        Runnable callback = null;	        
+			Dwo2Exception ex = (Dwo2Exception) fail;
+			if (ex.getDwo2Code() == Dwo2ExceptionCode.Rest_LoginNeeded) callback = this;
+			eventBus.fireEvent(new AlertDialogWithOKEvent(ex, callback));
 	    } else {
 	        LOG.log(Level.SEVERE, fail.getMessage(), fail);
 	        eventBus.fireEvent(new AlertDialogWithOKEvent(fail.toString()));
@@ -73,5 +78,10 @@ public class LoggingFailure implements Failure {
         		  set.add(failure.toString());
         }}
         return set;
+	}
+
+	@Override
+	public void run() {
+		eventBus.fireEvent(new SwitchViewEvent(SelectedView.LOGOUT));	
 	}
 }

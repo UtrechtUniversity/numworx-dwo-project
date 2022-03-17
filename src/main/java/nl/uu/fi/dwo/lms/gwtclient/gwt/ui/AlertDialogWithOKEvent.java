@@ -10,7 +10,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
  *
  * @author Gert van der Plas
  */
-public class AlertDialogWithOKEvent extends Event<AlertDialogWithOKEventHandler> {
+public class AlertDialogWithOKEvent extends Event<AlertDialogWithOKEventHandler> implements Runnable {
 
     /**
      * @return the message
@@ -35,6 +35,7 @@ public class AlertDialogWithOKEvent extends Event<AlertDialogWithOKEventHandler>
     
     private String message;
     private Dwo2Exception exception;
+    private Runnable runner = this;
 
     public static Type<AlertDialogWithOKEventHandler> TYPE = new Type<AlertDialogWithOKEventHandler>();
     public static Dialogs eventValue;
@@ -47,6 +48,15 @@ public class AlertDialogWithOKEvent extends Event<AlertDialogWithOKEventHandler>
     public AlertDialogWithOKEvent(Dwo2Exception e) {
         this.setEventValue(Dialogs.Dwo2ExceptionDialog);
         exception = e;
+    }
+    
+    public AlertDialogWithOKEvent(Dwo2Exception e, Runnable callback) {
+    	this(e);
+    	runner = callback==null?this:callback;
+    }
+    
+    public void callback() {
+    	runner.run();
     }
     
     public AlertDialogWithOKEvent(Dwo2ExceptionCode code, String msg) {
@@ -73,4 +83,7 @@ public class AlertDialogWithOKEvent extends Event<AlertDialogWithOKEventHandler>
     public Dialogs getEventValue() {
         return eventValue;
     }
+
+	@Override
+	public void run() {}
 }

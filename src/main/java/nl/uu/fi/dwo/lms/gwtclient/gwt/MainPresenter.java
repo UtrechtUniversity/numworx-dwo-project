@@ -201,7 +201,13 @@ public class MainPresenter {
         logout(p);
     }
 
-	void logout(Promise<Boolean> p) {
+	void forceLogout() {
+		logout(Promises.resolved(Boolean.TRUE));
+	}
+    
+    
+    
+    void logout(Promise<Boolean> p) {
 		p.then(modules::logout)
         .then(resolved -> { 
             if (resolved.getValue()) {

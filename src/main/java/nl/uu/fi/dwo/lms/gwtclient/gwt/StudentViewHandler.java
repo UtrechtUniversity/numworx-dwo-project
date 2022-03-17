@@ -84,6 +84,9 @@ public class StudentViewHandler implements SwitchViewEventHandler {
       case MAYBELOGOUT:
         presenterFactory.getMainPresenter().maybeLogout();
         break;
+      case LOGOUT:
+    	  presenterFactory.getMainPresenter().forceLogout();
+    	  break;
    }  }
 
   private boolean withUser() {

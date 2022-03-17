@@ -40,6 +40,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -270,8 +272,14 @@ public class ModulesPresenter implements SwitchViewEventHandler {
           controller.get().setSession(false);
         } else if (isVisible() && select(SelectedView.MAYBELOGOUT, message)) {
           
+        } else if (isVisible() && "LOGINNEEDED".equals(message)) {
+        	loginNeeded();
         }
     }
+
+    private void loginNeeded() {
+		Promises.failed(new Dwo2Exception(Dwo2ExceptionCode.Rest_LoginNeeded, "")).then(null, FAILURE);
+	}
 
 // true if modules visible.    
     private boolean isVisible() {
