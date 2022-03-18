@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.berekeningvak;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -157,9 +159,10 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 //		}
 //		logger.info("Na CAS:" + expressie.toString());
 		if(expressie!=null && !(expressie instanceof BasisExpressie)) {
-			double approxDouble = expressie.geefWaarde();
-			double afgerond = new DecRound(new BasisExpressie(approxDouble), new BasisExpressie(berekeningVak.settings.aantalDecRm())).geefWaarde();
-			boolean isAfgerond = !Algebra.isGelijkDouble(approxDouble, afgerond, MARGE);
+			double approxDouble = expressie.geefWaarde()/1.000000000000001; // ivm vreemde implementatie van DecRound.geefWaarde(
+			int decimals = Math.min(14-(int)Math.log10(approxDouble), berekeningVak.settings.aantalDecRm());//anders heb je meer decimalen dan de rekenprecisie
+			double afgerond = new DecRound(new BasisExpressie(approxDouble), new BasisExpressie(decimals)).geefWaarde();
+			boolean isAfgerond = !Algebra.isGelijkDouble(expressie.geefWaarde(), afgerond, MARGE);
 			if (!Double.isNaN(approxDouble)) {
 				String antwoord;
 				double abs = Math.abs(afgerond);
