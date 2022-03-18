@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.util.function.Function;
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
@@ -26,6 +27,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
@@ -59,6 +61,7 @@ import fi.wiskopdr.expressies.Expressie;
  */
 public abstract class XMLView {
 
+	protected NeedLogin<JSONValue> OOPS = NeedLogin.instance();
 	private final boolean RESPONSIVE = DWOplayer.RESPONSIVE;
     protected HashMap<String, Object> launchData;
 	protected ObjectMap instellingen;
@@ -512,14 +515,14 @@ public abstract class XMLView {
 			
 			@Override
 			public void fail(Promise<?> resolved) throws Exception {
-			    if (logger == null) return;
+			    if (logger == null || OOPS.needed(resolved)) return;
 				Throwable exception = resolved.getFailure();
 				Window.alert(Text.constants.noJSONreceived() + 
 						"\nerror " + exception);
 				logger.log(Level.SEVERE, exception.toString(), exception);
 			}
 		};
-		return getJSONLaunchDataBytes(file).then(success, failure);
+		return getJSONLaunchDataBytes(file).recoverWith(OOPS).then(success, failure);
 	}
 
   protected final RPCHandler rpc;
