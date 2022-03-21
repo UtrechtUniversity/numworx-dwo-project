@@ -25,6 +25,7 @@ public abstract class ActivityComponent {
 	public abstract DWOplayerParameters parameters();
 	public abstract TrafficAgent agent();
 	public abstract Optional<DwoGlobalVars> vars();
+	public abstract NeedLogin needLogin();
 	
 	@Nullable public abstract Memento memento();
 	@Named("API") public abstract Scorm2004IF api();

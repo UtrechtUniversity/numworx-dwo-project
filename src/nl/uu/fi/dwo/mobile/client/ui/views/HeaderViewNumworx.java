@@ -6,11 +6,13 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.osgi.util.function.Function;
+import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
@@ -35,11 +37,14 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 
+import nl.uu.fi.dwo.account.client.DialogFailure;
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.account.client.ProfileCommand;
 import nl.uu.fi.dwo.account.client.SchoolClassStudentCommand;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.text.Text;
+import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
@@ -59,6 +64,21 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 	
 	private static HeaderViewNumworxUiBinder uiBinder = GWT.create(HeaderViewNumworxUiBinder.class);
 
+	static final class DialogFailureWithOops extends DialogFailure {
+		private final NeedLogin oops;
+
+		DialogFailureWithOops(EventBus bus, NeedLogin oops) {
+			super(bus);
+			this.oops = oops;
+		}
+
+		@Override
+		public void fail(Promise<?> resolved) {
+			if (oops.needed(resolved)) oops.apply(resolved);
+			else super.fail(resolved);
+		}
+	}
+
 	interface HeaderViewNumworxUiBinder extends UiBinder<Widget, HeaderViewNumworx> {
 	}
 
@@ -72,6 +92,8 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 	MenuBar items = new MenuBar(true);
 	final private EventBus bus;
     final private DWOplayerParameters PARAMETERS;
+    final private Optional<DwoGlobalVars> vars;
+    final private Failure failure;
 
 
 	/**
@@ -85,9 +107,10 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 	 * Note that depending on the widget that is used, it may be necessary to
 	 * implement HasHTML instead of HasText.
 	 */
-	@Inject HeaderViewNumworx(EventBus bus, DWOplayerParameters PARAMETERS) {
+	@Inject HeaderViewNumworx(EventBus bus, DWOplayerParameters PARAMETERS, Optional<DwoGlobalVars> vars, NeedLogin oops) {
 		this.bus = bus;
 		this.PARAMETERS = PARAMETERS;
+		failure = new DialogFailureWithOops(bus, oops);
 		pfx = PARAMETERS.getResource("");
         final int correctie = 10; // width popup 
 		user = new MenuItem("<img width='26' height='26' src='" + pfx
@@ -100,7 +123,8 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
             }
 		};
 		initWidget(uiBinder.createAndBindUi(this));
-		//searchInput.getElement().setPropertyString("placeholder", rb.search());
+		this.vars = vars;
+		
 	}
 
 	@Override
@@ -227,7 +251,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 				m=items.addItem(DwoLocalesForGWT.instance.GUI_MyProfile(), new ProfileCommand(bus));
 				m.addStyleName(style.menuItem());
 	            if(role == RoleType.STUDENT) {
-	                ScheduledCommand cmd = new SchoolClassStudentCommand(this, bus);
+	                ScheduledCommand cmd = new SchoolClassStudentCommand(this, bus, vars.get(), failure);
 	                m=items.addItem(DwoLocalesForGWT.instance.GUI_MySchoolClasses(), cmd);
 	                m.addStyleName(style.menuItem());
 	            }

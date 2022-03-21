@@ -5,20 +5,21 @@ import org.osgi.util.promise.Promise;
 
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.user.client.Window;
+import com.google.web.bindery.event.shared.EventBus;
 
-import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
+import fi.dwo.gwt.lib.rest.ui.DialogEvent;
+import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogEvent;
+import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogPromise;
+import nl.uu.fi.dwo.mobile.client.ui.places.LogoutPlace;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
-public class NeedLogin<T> implements Function<Promise<?>, Promise<? extends T>> {
+public class NeedLogin<T> implements Function<Promise<?>, Promise<? extends T>>, NeedLoginHandler {
 
-
-	public static <S> NeedLogin<S> instance() {
-		if (Actions.isAvailable())
-			return new ActionNeedLogin<S>();
-		return new NeedLogin<S>();
-	}
-		
+	
+	public static <T> NeedLogin<T> instance() { return new NeedLogin<>(); }
+	
 	protected NeedLogin() {}
 
 	@SuppressWarnings("unchecked")
@@ -27,12 +28,25 @@ public class NeedLogin<T> implements Function<Promise<?>, Promise<? extends T>> 
 		return (Promise<T>) t;
 	}
 
-	static class ActionNeedLogin<T> extends NeedLogin<T> {
+	static final NeedLoginEvent event = new NeedLoginEvent();
+	static class PlaceNeedLogin<T> extends NeedLogin<T> implements NeedLoginHandler {
 
+		Place place;
+		final PlaceController controller;
+		final EventBus bus;
+	
+		
+		PlaceNeedLogin(Place place, PlaceController controller, EventBus bus2) {
+			this.place = place;
+			this.controller = controller;
+			this.bus = bus2;
+		}
+		
 		@Override
 		public Promise<T> apply(Promise<?> t) {
 			if (needed(t)) {
-				Actions.LOGINNEEDED.execute();
+				event.resolved = t;
+				bus.fireEvent(event);
 			}
 			return super.apply(t);
 		}
@@ -41,7 +55,17 @@ public class NeedLogin<T> implements Function<Promise<?>, Promise<? extends T>> 
 			Throwable t = resolved.getFailure();
 			return  (t instanceof Dwo2Exception && Dwo2ExceptionCode.Rest_LoginNeeded == ((Dwo2Exception) t).getDwo2Code());
 		}
+
+		@Override
+		public void onNeedLogin(NeedLoginEvent ev) {
+			MsgClickedDialogPromise defer = new MsgClickedDialogPromise(event.resolved.getFailure().getLocalizedMessage());
+			bus.fireEvent(new MsgClickedDialogEvent(MsgClickedDialogEvent.EventType.MsgClickedDialog, defer));
+			defer.getPromise().onResolve(() -> controller.goTo(place));
+		}
 		
+		public void setPlace(Place p) {
+			this.place = p;
+		}
 	}
 
 	public boolean needed(Promise<?> resolved) {
@@ -49,23 +73,25 @@ public class NeedLogin<T> implements Function<Promise<?>, Promise<? extends T>> 
 	}
 	
 	
-	static public class PlaceNeedLogin<T> extends ActionNeedLogin<T> {
-		private final GotoController controller;
-		private final Place place;
+	static public class ActionNeedLogin<T> extends PlaceNeedLogin<T> {
+
+
+		public ActionNeedLogin(PlaceController controller, EventBus bus) {
+			super(LogoutPlace.INSTANCE, controller, bus);
+		}
 
 		@Override
-		public Promise<T> apply(Promise<?> t) {
-			if (needed(t)) {
-				controller.goTo(place);
-			}
-			return (Promise<T>) (t);
-		}
-
-		public PlaceNeedLogin(Place place, GotoController controller) {
-			this.place = place;
-			this.controller = controller;
+		public void onNeedLogin(NeedLoginEvent ev) {
+			controller.goTo(place);
+			Actions.LOGINNEEDED.execute();
 		}
 		
+		public void setPlace(Place place) { }
 	}
- 
+
+	@Override
+	public void onNeedLogin(NeedLoginEvent ev) {
+	}
+	public void setPlace(Place place) {
+	}
 }

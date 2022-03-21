@@ -29,6 +29,8 @@ import nl.uu.fi.dwo.mobile.client.ui.IdleDetect.IdleEvent;
 import nl.uu.fi.dwo.mobile.client.ui.IdleDetect.IdleHandler;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
+import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
+import nl.uu.fi.dwo.mobile.client.ui.NeedLoginEvent;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
@@ -77,6 +79,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	@Inject RPCHandler rpc;
 	@Inject HeaderView headerView;
 	@Inject PlaceHistoryMapper mapper;
+	@Inject NeedLogin oops;
 
 	private DWOplayerParameters PARAMETERS;
 	@Inject void setParameters(DWOplayerParameters p) {
@@ -242,6 +245,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 // All systems go
         view = clientFactory.get();
 		eventBus.addHandler(MessageEvent.TYPE, this);
+		eventBus.addHandler(NeedLoginEvent.TYPE, oops);
 		onMessage(MessageEvent.getLastEvent());
 
 		started = true;
@@ -283,7 +287,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 				started = false;
 				view = null;
 				History.back();
-				//view.setupModule(sco.getName(), sco.getFile());
+				oops.apply(Promises.failed(caught));
 			}
 
 			@Override
@@ -292,7 +296,8 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 					view.getApi().SetValue(Memento.LOCATION, location);
 				}
 					started = !Memento.COMPLETED.equals(view.getApi().GetValue(Memento.COMPLETION_STATUS));
-					view.setupModule(sco.getName(), PARAMETERS.getLaunchData() + sco.getID()).then(p -> {
+					view.setupModule(sco.getName(), PARAMETERS.getLaunchData() + sco.getID())
+					.then(p -> {
 						if (p.getValue()) {
 							Window.alert("Error: need a Premium subscription");
 							started = false;

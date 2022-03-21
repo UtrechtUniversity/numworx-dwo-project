@@ -21,6 +21,8 @@ import nl.uu.fi.dwo.mobile.client.ui.IdleDetect.IdleEvent;
 import nl.uu.fi.dwo.mobile.client.ui.IdleDetect.IdleHandler;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
+import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
+import nl.uu.fi.dwo.mobile.client.ui.NeedLoginEvent;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
@@ -52,6 +54,8 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 	@Inject RPCHandler rpc;
 	@Inject TrafficAgent agent;
 	@Inject Provider<TreeModuleView> treeModuleView;
+	@SuppressWarnings("rawtypes")
+	@Inject NeedLogin OOPS;
 	
 	private List<SelectModuleItem> currentModel;
 	private TreeModuleView view;
@@ -76,6 +80,7 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
         view.setBeheer(beheerder);
  
         if(beheerder) {
+    	  eventBus.addHandler(NeedLoginEvent.TYPE, OOPS);
           eventBus.addHandler(MessageEvent.TYPE, this);
           onMessage(MessageEvent.getLastEvent());          
           eventBus.addHandler(IdleDetect.TYPE, this);
@@ -98,7 +103,8 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 					}
 					return scoreMap;
 				}
-			}).recover(new Function<Promise<?>, Map<Object,Number>>() {
+			})
+			.recoverWith(OOPS).recover(new Function<Promise<?>, Map<Object,Number>>() {
 
 				@Override
 				public Map<Object, Number> apply(Promise<?> t) {

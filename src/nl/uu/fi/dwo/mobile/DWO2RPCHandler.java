@@ -7,7 +7,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import com.google.gwt.json.client.JSONString;
@@ -15,6 +17,7 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Cookies;
 
 import fi.dwo.gwt.lib.rest.GwtRestVars;
+import fi.dwo.gwt.lib.rest.CallManagers.OAuthManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
 import fi.dwo.gwt.lib.rest.util.Base64;
@@ -23,6 +26,8 @@ import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 
@@ -132,6 +137,43 @@ public final class DWO2RPCHandler extends nl.uu.fi.dwo.account.client.RPCHandler
 	public boolean inExam(DomClassCourse classCourse) {
 		return (exam != null) &&
 			exam.getId().equals(classCourse.getId());
+	}
+	@Override
+	public Promise<DomUserFullwLoginContext> login(String name, String password) {
+		// TODO Auto-generated method stub
+		Promise<DomUserFullwLoginContext> login = super.login(name, password);
+		if (!PARAMETERS.getDwoEnv().contains("test")) return login;
+
+		return login
+		   .flatMap(
+				(DomUserFullwLoginContext dom) ->
+				{
+					if (!dom.getDomUserFull().getSingleSchool()) return login;
+					
+					DomContext context = new DomContext();
+					context.setDomHasRole(new DomHasRole());
+					context.getDomHasRole().setId(dom.getDomLoginContext().getHasRoleId());
+					return
+					accountManager.getBearerToken(context)
+					.then(
+				    	(Promise<String> p) -> { 
+				            OAuthManager oauth = new OAuthManager();
+				            String token = Base64.btoa("2\f" + p.getValue()); // Format 2 
+				            return oauth.authorization_token(token);
+				    	}   		  
+				        ).then(p -> { 
+				      	  GwtRestVars.getInstance().setBearerToken(p.getValue().getAccess_token());
+				      	  GwtRestVars.getInstance().setRefreshToken(p.getValue().getRefresh_token());
+				      	  return login;
+				      	  
+				        });
+					
+				});
+	}
+	@Override
+	public Promise<DomUserFullwLoginContext> loginMD5(String name, String password) {
+		// TODO Auto-generated method stub
+		return super.loginMD5(name, password);
 	}
 
 	

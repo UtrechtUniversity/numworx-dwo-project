@@ -7,13 +7,11 @@ import com.google.gwt.core.client.GWT;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerDefaults;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
-import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
-import nl.uu.fi.dwo.mobile.client.ui.DummyClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.DummyRPCHandler;
+import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
@@ -30,4 +28,7 @@ public abstract class DummyFactory {
     return create;
   }
 
+  @Provides @Singleton static NeedLogin needLogin() {
+	  return NeedLogin.instance();
+  }
 }

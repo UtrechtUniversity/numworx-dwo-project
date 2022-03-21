@@ -63,6 +63,7 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 
 	public DescriptionViewImpl(RPCHandler rpc, ActivityComponent a) {
 		super(rpc,a);
+		OOPS = a.needLogin();
 		main = new SimplePanel();
 		main.setStylePrimaryName("descriptionView");
 		contentPanel = new FlowPanel();
