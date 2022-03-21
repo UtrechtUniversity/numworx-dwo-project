@@ -14,6 +14,8 @@ import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Failure;
+
 /**
  *
  * @author Gert van der Plas
@@ -23,14 +25,24 @@ public class SchoolClassStudentCommand implements Command {
     private static final Logger LOG = Logger.getLogger(ProfileCommand.class.getName());
     private Command resetLogin;
     private EventBus bus;
+    private Failure failure;
+    private DwoGlobalVars vars;
+    
 
     /**
      *
      * @param resetLogin
      */
-    public SchoolClassStudentCommand(Command resetLogin, EventBus bus) {
+    public SchoolClassStudentCommand(Command resetLogin, EventBus bus, DwoGlobalVars vars, Failure failure) {
         this.resetLogin = resetLogin;
         this.bus = bus;
+        this.vars = vars;
+        this.failure = failure;
+        
+    }
+    
+    public SchoolClassStudentCommand(Command resetLogin, EventBus bus) {
+      this(resetLogin, bus, DwoGlobalVars.instance(), new DialogFailure(bus));
     }
 
     /**
@@ -51,7 +63,7 @@ public class SchoolClassStudentCommand implements Command {
 
     @Override
     public void execute() {
-        if (DwoGlobalVars.instance().getCurrentUser() == null) {
+        if (vars.getCurrentUser() == null) {
             bus.fireEvent(new DialogEvent(Dwo2ExceptionCode.GUI_NoUserIsSignedIn));
             return;
         }
@@ -59,7 +71,7 @@ public class SchoolClassStudentCommand implements Command {
         final PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
 		popup.setStyleName("numworx-popup");
        //popup.setSize("500", "400");
-        SchoolClassStudentPanel panel = new SchoolClassStudentPanel(resetLogin, DwoGlobalVars.instance().getCurrentUser(), DwoGlobalVars.instance().getContext(), new DialogFailure(bus));
+        SchoolClassStudentPanel panel = new SchoolClassStudentPanel(resetLogin, vars.getCurrentUser(), vars.getContext(), failure);
         panel.setPopup(popup);
         //panel.setSize("300", "200");
         popup.add(panel);
