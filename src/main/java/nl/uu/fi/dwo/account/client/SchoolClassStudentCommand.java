@@ -12,7 +12,6 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import java.util.logging.Logger;
 
 import org.osgi.util.promise.Failure;
 
@@ -22,7 +21,7 @@ import org.osgi.util.promise.Failure;
  */
 public class SchoolClassStudentCommand implements Command {
 
-    private static final Logger LOG = Logger.getLogger(ProfileCommand.class.getName());
+    //private static final Logger LOG = Logger.getLogger(ProfileCommand.class.getName());
     private Command resetLogin;
     private EventBus bus;
     private Failure failure;
@@ -70,10 +69,8 @@ public class SchoolClassStudentCommand implements Command {
         // Create the new popup.
         final PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
 		popup.setStyleName("numworx-popup");
-       //popup.setSize("500", "400");
-        SchoolClassStudentPanel panel = new SchoolClassStudentPanel(resetLogin, vars.getCurrentUser(), vars.getContext(), failure);
+        SchoolClassStudentPanel panel = new SchoolClassStudentPanel(resetLogin, vars, vars.getContext(), failure);
         panel.setPopup(popup);
-        //panel.setSize("300", "200");
         popup.add(panel);
         popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
             @Override

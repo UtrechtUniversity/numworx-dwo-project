@@ -21,6 +21,7 @@ class ProfileController {
   private DomUserFull updateUser = null;
   private SecuredUserAccountManager manager = new SecuredUserAccountManager();
   private Failure fail;
+  private DwoGlobalVars vars;
 
   /**
    *
@@ -28,10 +29,11 @@ class ProfileController {
    * @param user
    * @param fail 
    */
-  public ProfileController(ProfilePanel view, DomUserFull user, Failure fail) {
+  ProfileController(ProfilePanel view, DwoGlobalVars vars, Failure fail) {
     this.view = view;
     this.fail = fail;
-    this.init(user);
+    this.vars = vars;
+    this.init(vars.getCurrentUser());
   }
 
   /**
@@ -49,13 +51,13 @@ class ProfileController {
    */
   public void callUpdate() {
     LOG.log(Level.INFO, "Calling REST-interface login.");
-    manager.updateAccountData(DwoGlobalVars.instance().getContext(), updateUser).then(p -> {
+    manager.updateAccountData(vars.getContext(), updateUser).then(p -> {
       DomUserFull result = p.getValue();
       LOG.log(Level.INFO, "update was succesful.");
       currentUser = result;
       updateUser = currentUser.duplicate();
       // update Globals otherwise can't loginUser in passwd change!
-      DwoGlobalVars.instance().setCurrentUser(currentUser);
+      vars.setCurrentUser(currentUser);
       // update rest authentication done by setcurrentuser
       view.init(currentUser);
       view.getPopup().hide();

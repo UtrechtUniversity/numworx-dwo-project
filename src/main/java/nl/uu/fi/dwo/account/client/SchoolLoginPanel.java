@@ -52,17 +52,6 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
 			return null;
 		}
 	}
-
-    final class RestFailure implements Failure {
-
-		@Override
-		public void fail(Promise<?> resolved) throws Exception {
-			Throwable t = resolved.getFailure();
-            Window.alert(t.getMessage()); // FIXME betere foutmelding
-            LOG.log(Level.WARNING, "failure", t);
-		}
-    	
-    }
     
     /**
      *
@@ -80,6 +69,7 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
     PopupPanel popup;
     private Button addBtn;
     private Button closeBtn;
+    private Failure failure;
 
     /**
      *
@@ -118,6 +108,7 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
     SchoolLoginPanel(Command resetLogin, DomUserFull user, Failure failure) throws Dwo2Exception {
         init(user);
         this.resetLogin = resetLogin;
+        this.failure = failure;
         control = new SchoolLoginController(this, user, failure);
         //control.init(user); dubbel!
     }
@@ -186,8 +177,7 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
                     switch (columnIndex) {
                         case 2: //relogin with schoolclass set...
                         	control.switchToSchoolLogin(sc)
-                        		.then(new HideAndReset<DomSchoolRoleAndClassV2>(), new RestFailure());
-                        	
+                        		.then(new HideAndReset<DomSchoolRoleAndClassV2>(), failure);                     	
                               break;
                         case 3: 
                         	
@@ -195,7 +185,7 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
                         	//remove school and relogin if it was the active schoolclass.
 //                            if (sc.getId().equals(DwoGlobalVars.instance().getCurrentSchoolClass().getId())) {
                             control.removeASchoolLogin(sc)
-                    			.then(new HideAndReset<Boolean>(), new RestFailure());
+                    			.then(new HideAndReset<Boolean>(), failure);
                           break;
                         default:
                     }

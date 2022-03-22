@@ -33,7 +33,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.util.function.Function;
 import org.osgi.util.promise.Failure;
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import nl.uu.fi.dwo.account.client.icons.AccountImageBundle;
 
@@ -70,6 +73,8 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 
     private Failure failure;
 
+    private DwoGlobalVars vars;
+
     /**
      *
      * @return
@@ -92,20 +97,18 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
      * @param user
      * @param failure 
      */
-    SchoolClassStudentPanel(Command resetLogin, DomUserFull user, DomContext context, Failure failure) {
+    SchoolClassStudentPanel(Command resetLogin, DwoGlobalVars vars, DomContext context, Failure failure) {
         this.resetLogin = resetLogin;
         this.failure = failure;
-        init(user);
-        control = new SchoolClassStudentController(this, user, context, failure);
-//        addSchoolClassPanel = new AddSchoolClassStudentPanel(user, control);
-//        control.init(user); wordt al in constructor gedaan.
-
+        this.vars = vars;
+        init(vars.getCurrentUser());
+        control = new SchoolClassStudentController(this, vars.getCurrentUser(), context, failure);
     }
 
     private boolean isCurrentSchoolClass(DomSchoolClass object) {
-        return DwoGlobalVars.instance().getCurrentSchoolClass() != null
+        return vars.getCurrentSchoolClass() != null
                 && object != null
-                && object.getId().equals(DwoGlobalVars.instance().getCurrentSchoolClass().getId());
+                && object.getId().equals(vars.getCurrentSchoolClass().getId());
     }
 
     /**
@@ -113,30 +116,6 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
      * @param user
      */
     public void init(DomUserFull user) {
-        //this.setSize("400", "500");
-
-        //control.getSchoolClasses();
-//        Grid g = new Grid(control.getSchoolClasses().size() + 1, 3);
-//        for (int i = 0; i < control.getSchoolClasses().size(); i++) {
-//            g.setText(i, 0, control.getSchoolClasses().get(i).getSchoolClassName());
-//            loginBtn = new Button("login");
-//            loginBtn.addClickHandler(this);
-//            g.setWidget(i, 1, loginBtn);
-//            delBtn = new Button("del");
-//            delBtn.addClickHandler(this);
-//            g.setWidget(i, 2, delBtn);
-//        }
-//
-//        // Just for good measure, let's put a button in the center.
-//        doneButton = new Button("Done");
-//        doneButton.addClickHandler(this);
-//        g.setWidget(control.getSchoolClasses().size(), 0, doneButton);
-//        newBtn = new Button("NEW");
-//        newBtn.addClickHandler(this);
-//        g.setWidget(control.getSchoolClasses().size(), 2, newBtn);
-//        this.clear();
-//        this.add(g);
-//
         table = new CellTable<DomSchoolClass>();
         // Create name column.
         TextColumn<DomSchoolClass> schoolClassColumn = new TextColumn<DomSchoolClass>() {
@@ -163,7 +142,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
                 = new Column<DomSchoolClass, ImageResource>(new ImageResourceCell()) {
             @Override
             public ImageResource getValue(DomSchoolClass object) {
-                if (DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()) {
+                if (vars.getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()) {
                     return AccountImageBundle.instance.delete();
                 } else {
                     return AccountImageBundle.instance.empty();
@@ -171,19 +150,6 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 
             }
         };
-//        TextColumn<DomSchoolClass> loginColumn = new TextColumn<DomSchoolClass>() {
-//            @Override
-//            public Image getValue(DomSchoolClass data) {
-//                return AccountImageBundle.instance.student();
-//            }
-//        };
-//
-//        ImageColumn<DomSchoolClass> deleteColumn = new TextColumn<DomSchoolClass>() {
-//            @Override
-//            public Image getValue(DomSchoolClass data) {
-//                return AccountImageBundle.instance.delete();
-//            }
-//        };
 
         CellPreviewEvent.Handler<DomSchoolClass> cellPreviewHandler = new CellPreviewEvent.Handler<DomSchoolClass>() {
             @Override
@@ -203,61 +169,39 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
                                 return;
                             }
                             deregister(); // remove popup, select currentclass by hand
-                            //relogin with schoolclass set... FIXME alleen bij getContext
-//                            if (Window.confirm(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_User_ConfirmSchoolClassSwitch()) == false) {
-//                                return;
-//                            }
                             control.setActiveSchoolClass(sc).then(p-> {popup.hide();
                             resetLogin.execute();return null;}, failure);
                             break;
                         case 2:     //remove schoolclass and relogin if it was the active schoolclass.
-                            if (DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()) {
-//                            if (sc.getId().equals(DwoGlobalVars.instance().getCurrentSchoolClass().getId())) {
-                                control.removeSchoolClass(sc, new AsyncCallback<Boolean>() {
-                                    @Override
-                                    public void onFailure(Throwable t) {
-                                        //fail and reset all the data.
-                                        Window.alert(t.getMessage());
-                                        //TODO Wim
-                                        //Window.alert("wim handles error here.");
-                                    }
-
-                                    @Override
-                                    public void onSuccess(Boolean result) {
-                                        //If active schoolClass is the same in DwoGlobalsVars 
-                                        //then we did not unsubscribe from the active schoolClass
-                                        control.getActiveSchoolClass(new AsyncCallback<DomSchoolClass>() {
-                                            @Override
-                                            public void onFailure(Throwable t) {
-                                                if (t instanceof Dwo2Exception) {
-                                                    Dwo2ExceptionCode code = ((Dwo2Exception) t).getDwo2Code();
-                                                    if (code == Dwo2ExceptionCode.Rest_Active_SchoolClass_Not_Set) {
-                                                        onSuccess(null);
-                                                        return;
-                                                    }
-                                                }
-                                                //fail and reset all the data.
-                                                Window.alert(t.getMessage());
-                                            }
-
-                                            @Override
-                                            public void onSuccess(DomSchoolClass result) {
-                                                DomSchoolClass current = DwoGlobalVars.instance().getCurrentSchoolClass();
-                                                if (result != current
-                                                        && (result == null
-                                                        || current == null
-                                                        || !result.getId().equals(current.getId()))) {
-                                                    deregister();
-                                                    popup.hide();
-                                                    resetLogin.execute();
-                                                    // no need to update schoolclassses.
-                                                } else {
-                                                    control.updateStudentsSchoolClassesInView();
-                                                }
-                                            }
-                                        });
-                                    }
-                                });
+                            if (vars.getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()) {
+                                
+                                control.removeSchoolClass(sc)
+                                .then(p -> control.getActiveSchoolClass())
+                                .recoverWith(fail ->  {
+                                  Throwable t = fail.getFailure();
+                                  if (t instanceof Dwo2Exception) {
+                                    Dwo2ExceptionCode code = ((Dwo2Exception) t).getDwo2Code();
+                                    if (code == Dwo2ExceptionCode.Rest_Active_SchoolClass_Not_Set) {            
+                                      return Promises.resolved(null);
+                                  }       }    
+                                  return (Promise<? extends DomSchoolClass>)fail;
+                                })
+                                .then(p -> {
+                                  DomSchoolClass result = p.getValue();
+                                  DomSchoolClass current = vars.getCurrentSchoolClass();
+                                  if (result != current
+                                          && (result == null
+                                          || current == null
+                                          || !result.getId().equals(current.getId()))) {
+                                      deregister();
+                                      popup.hide();
+                                      resetLogin.execute();
+                                      // no need to update schoolclassses.
+                                  } else {
+                                      control.updateStudentsSchoolClassesInView();
+                                  }                              
+                                  return p;
+                                },failure);
                             }
                             break;
                         default:
@@ -270,7 +214,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
         // Add the columns.
         table.addColumn(schoolClassColumn, DwoLocalesForGWT.instance.GUI_SchoolclassName());
         table.addColumn(loginColumn, DwoLocalesForGWT.instance.GUI_Login());
-        if (DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()) {
+        if (vars.getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()) {
         table.addColumn(deleteColumn, DwoLocalesForGWT.instance.GUI_Delete());
         }
         dataProvider.addDataDisplay(table);
@@ -286,7 +230,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
         closeBtn.addClickHandler(this);
 
         addBtn = new Button("Add");
-        if (DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()) {
+        if (vars.getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()) {
             addBtn.setVisible(true);
         } else {
             addBtn.setVisible(false);
@@ -311,7 +255,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
             LOG.log(Level.INFO, "Popup of AddSchoolClassStudentPanel.");
             final PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
             //popup.setSize("500", "400");
-            AddSchoolClassStudentPanel panel = new AddSchoolClassStudentPanel(DwoGlobalVars.instance().getCurrentUser(), control);
+            AddSchoolClassStudentPanel panel = new AddSchoolClassStudentPanel(vars.getCurrentUser(), control);
             control.setAddSchoolClassView(panel);
             panel.setPopup(popup);
 //            panel.setPixelSize(-1,200);
@@ -332,7 +276,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
             popup.center();
 
 // If current school class is empty, and we have available classes, relogin            
-            if (DwoGlobalVars.instance().getCurrentSchoolClass() == null && registration == null) {
+            if (vars.getCurrentSchoolClass() == null && registration == null) {
                 registration = this.popup.addCloseHandler(new CloseHandler<PopupPanel>() {
 
                     @Override

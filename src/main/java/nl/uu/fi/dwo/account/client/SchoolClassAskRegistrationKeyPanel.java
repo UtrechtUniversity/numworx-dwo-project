@@ -137,25 +137,34 @@ public class SchoolClassAskRegistrationKeyPanel extends VerticalPanel implements
             LOG.log(Level.INFO, "Should add new window for adding a schoolclass.");
             DomNewSchoolClass4Student nsc = new DomNewSchoolClass4Student(schoolClass);
             nsc.setRegistrationKey(regKeyText.getText());
-            control.registerStudentForSchoolClass(nsc, new AsyncCallback<Boolean>() {
-                @Override
-                public void onFailure(Throwable t) {
-                	LOG.log(Level.SEVERE, "onFailure", t);
-                    String message = t.getMessage();
-                	if(t instanceof Dwo2Exception) {
-                		Dwo2ExceptionCode code = ((Dwo2Exception) t).getDwo2Code();
-                		message = Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), code);
-                	}
-                	Window.alert(message);
-                }
-
-                @Override
-                public void onSuccess(Boolean result) {
-                    //update a view list
-                    control.updateStudentsSchoolClassesInView();
-                    popup.hide();
-                }
-            });
+            control.registerStudentForSchoolClass(nsc)
+            .then(p -> {
+              control.updateStudentsSchoolClassesInView();
+              popup.hide();
+              return p;
+            }, control.failure);
+            
+            
+            
+//            , new AsyncCallback<Boolean>() {
+//                @Override
+//                public void onFailure(Throwable t) {
+//                	LOG.log(Level.SEVERE, "onFailure", t);
+//                    String message = t.getMessage();
+//                	if(t instanceof Dwo2Exception) {
+//                		Dwo2ExceptionCode code = ((Dwo2Exception) t).getDwo2Code();
+//                		message = Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), code);
+//                	}
+//                	Window.alert(message);
+//                }
+//
+//                @Override
+//                public void onSuccess(Boolean result) {
+//                    //update a view list
+//                    control.updateStudentsSchoolClassesInView();
+//                    popup.hide();
+//                }
+//            });
         } else if (event.getSource() == closeBtn) {
             LOG.log(Level.INFO, "Done, hiding window.");
             popup.hide();

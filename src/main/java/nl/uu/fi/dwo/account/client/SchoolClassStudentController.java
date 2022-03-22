@@ -1,8 +1,6 @@
 package nl.uu.fi.dwo.account.client;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentSchoolClassManager;
-import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -27,12 +25,11 @@ class SchoolClassStudentController {
     private DomUserFull currentUser;
     private List<DomSchoolClass> schoolClasses = new ArrayList<DomSchoolClass>();
     private SecuredStudentSchoolClassManager manager = new SecuredStudentSchoolClassManager();
-    private SecuredUserSchoolLoginManagerV2 loginManager = new SecuredUserSchoolLoginManagerV2();
     private AddSchoolClassStudentPanel addSchoolClassView;
 
 	private final DomContext context;
 
-	private Failure failure;
+	Failure failure;
 
     /**
      *
@@ -126,33 +123,35 @@ class SchoolClassStudentController {
         return manager.setActiveSchoolClass(context, submit);
     }
 
-    /**
-     *
-     * @param callBack
-     * @deprecated
-     */
-    public void getActiveSchoolClass(AsyncCallback<DomSchoolClass> callBack) {
-        manager.getActiveSchoolClass(context).then(p -> {callBack.onSuccess(p.getValue());return p;}, p-> callBack.onFailure(p.getFailure()));
-    }
+//    /**
+//     *
+//     * @param callBack
+//     * @deprecated
+//     */
+//    public void getActiveSchoolClass(AsyncCallback<DomSchoolClass> callBack) {
+//        manager.getActiveSchoolClass(context).then(p -> {callBack.onSuccess(p.getValue());return p;}, p-> callBack.onFailure(p.getFailure()));
+//    }
+    public Promise<DomSchoolClass> getActiveSchoolClass() {
+      return manager.getActiveSchoolClass(context);
+  }
 
-    /**
-     *
-     * @param submit
-     * @param callBack
-     * @deprecated
-     */
-    public void removeSchoolClass(DomSchoolClass submit, AsyncCallback<Boolean> callBack) {
-        manager.removeSchoolClass(context, submit).then(p -> {callBack.onSuccess(p.getValue());return p;}, p-> callBack.onFailure(p.getFailure()));
-    }
+    public Promise<Boolean> removeSchoolClass(DomSchoolClass submit) {
+      return manager.removeSchoolClass(context, submit);
+  }
 
-    /**
-     *
-     * @param submit
-     * @param callBack
-     * @deprecated
-     */
-    public void registerStudentForSchoolClass(DomNewSchoolClass4Student submit, AsyncCallback<Boolean> callBack) {
-        manager.registerStudentForSchoolClass(context, submit).then(p -> {callBack.onSuccess(p.getValue());return p;}, p-> callBack.onFailure(p.getFailure()));
+    
+//    /**
+//     *
+//     * @param submit
+//     * @param callBack
+//     * @deprecated
+//     */
+//    public void registerStudentForSchoolClass(DomNewSchoolClass4Student submit, AsyncCallback<Boolean> callBack) {
+//        manager.registerStudentForSchoolClass(context, submit).then(p -> {callBack.onSuccess(p.getValue());return p;}, p-> callBack.onFailure(p.getFailure()));
+//    }
+    
+    public Promise<Boolean> registerStudentForSchoolClass(DomNewSchoolClass4Student submit) {
+      return manager.registerStudentForSchoolClass(context, submit);
     }
 
     /**

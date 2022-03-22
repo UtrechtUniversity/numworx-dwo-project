@@ -7,9 +7,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import java.util.logging.Logger;
-
-import javax.inject.Inject;
+import org.osgi.util.promise.Failure;
 
 /**
  *
@@ -17,18 +15,26 @@ import javax.inject.Inject;
  */
 public class ProfileCommand implements Command {
 
-    private static final Logger LOG = Logger.getLogger(ProfileCommand.class.getName());
+    //private static final Logger LOG = Logger.getLogger(ProfileCommand.class.getName());
     final EventBus bus;
+    final DwoGlobalVars vars;
+    final Failure failure;
     /**
      *
      */
-    @Inject public ProfileCommand(EventBus bus) {
+    public ProfileCommand(EventBus bus, DwoGlobalVars vars, Failure failure) {
       this.bus = bus;
+      this.vars = vars;
+      this.failure = failure;
     }
     
+    public ProfileCommand(EventBus bus2) {
+      this(bus2, DwoGlobalVars.instance(), new DialogFailure(bus2));
+    }
+
     @Override
     public void execute() {
-        if(DwoGlobalVars.instance().getCurrentUser()==null){
+        if(vars.getCurrentUser()==null){
             bus.fireEvent(new DialogEvent(Dwo2ExceptionCode.GUI_NoUserIsSignedIn));
             return;
         }
@@ -37,7 +43,7 @@ public class ProfileCommand implements Command {
 		popup.setStyleName("numworx-popup");
 
         //popup.setSize("500", "400");
-        ProfilePanel panel = new ProfilePanel(DwoGlobalVars.instance().getCurrentUser(), bus);
+        ProfilePanel panel = new ProfilePanel(vars, bus, failure);
         panel.setPopup(popup);
         //panel.setSize("300", "200");
         popup.add(panel);

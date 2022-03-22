@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Failure;
+
 /**
  *
  * @author G.A.J. van der Plas
@@ -75,6 +77,7 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
         dataProvider.getList().clear();
         selectedClass = null;
         control = aControl;
+        failure = control.failure;
         init(user);
 //        control.init(user);
 
@@ -98,6 +101,8 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
 		};
 
 	private SingleSelectionModel<DomSchoolClass> selectionModel;
+
+    private Failure failure;
 
     /**
      *
@@ -205,21 +210,10 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
                 popup.center();
             } else if (selectedClass != null) {
                 DomNewSchoolClass4Student nsc = new DomNewSchoolClass4Student(selectedClass);
-                control.registerStudentForSchoolClass(nsc, new AsyncCallback<Boolean>() {
-                    @Override
-                    public void onFailure(Throwable t) {
-                        //fail and reset all the data.
-                        Window.alert(t.getMessage());
-                    }
-
-                    @Override
-                    public void onSuccess(Boolean result) {
-                        //update a view list
-                        control.updateStudentsSchoolClassesInView();
-                        popup.hide();
-                    }
-                });
-            }
+                control.registerStudentForSchoolClass(nsc)
+                .then(p -> {control.updateStudentsSchoolClassesInView();
+                        popup.hide(); return p;}, failure);
+             }
             popup.hide();
         } else if (event.getSource() == closeBtn) {
             LOG.log(Level.INFO, "Done, hiding window.");

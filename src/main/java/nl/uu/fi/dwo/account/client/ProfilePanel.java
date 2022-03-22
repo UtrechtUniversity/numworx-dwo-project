@@ -131,13 +131,13 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
      * @param user
      * @param bus 
      */
-    ProfilePanel(DomUserFull user, EventBus bus) {
+    ProfilePanel(DwoGlobalVars vars, EventBus bus, Failure failure) {
     	Style style = getElement().getStyle();
     	style.setBackgroundColor("#E4F2FB");
     	this.bus = bus;
-    	fail = new DialogFailure(bus);
-        control = new ProfileController(this, user, fail);
-        init(user);
+    	fail = failure;
+        control = new ProfileController(this, vars, fail);
+        init(vars.getCurrentUser());
     }
 
     /**
