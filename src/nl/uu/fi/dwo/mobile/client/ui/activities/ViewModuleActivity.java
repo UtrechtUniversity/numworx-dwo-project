@@ -31,6 +31,7 @@ import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLoginEvent;
+import nl.uu.fi.dwo.mobile.client.ui.NeedLoginHandler;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
@@ -61,6 +62,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import dagger.MembersInjector;
 
@@ -71,7 +73,7 @@ import dagger.MembersInjector;
  * 
  */
 public class ViewModuleActivity extends AbstractActivity implements AnchorContext, ViewModuleView.Presenter, 
-  CBookEventListener, MessageEventHandler, GotoController, IdleHandler
+  CBookEventListener, MessageEventHandler, GotoController, IdleHandler, NeedLoginHandler
 {
 	@Inject Provider<ViewModuleView> clientFactory;
 	@Inject DwoGlobalVars vars;
@@ -238,6 +240,8 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 		
 	}
 	
+	HandlerRegistration registration;
+	
 	@Override
 	public void start(final AcceptsOneWidget panel, EventBus eventBus)
 	{
@@ -245,7 +249,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 // All systems go
         view = clientFactory.get();
 		eventBus.addHandler(MessageEvent.TYPE, this);
-		eventBus.addHandler(NeedLoginEvent.TYPE, oops);
+		registration = eventBus.addHandler(NeedLoginEvent.TYPE, this);
 		onMessage(MessageEvent.getLastEvent());
 
 		started = true;
@@ -467,7 +471,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 
   @Override
   public void onIdle(IdleEvent ev) {   
-    OpdrNavIF opdrNav = view.getOpdrNav(); // komt soms te vroeg, en dan heb je nog geen opdrnav
+    OpdrNavIF opdrNav = view == null ? null : view.getOpdrNav(); // komt soms te vroeg, en dan heb je nog geen opdrnav
     if (opdrNav != null 
     		&& opdrNav.getLessonMode() == LessonMode.normal
     		&& (opdrNav.getMode() == OpdrNavIF.ZELFTOETS || opdrNav.getMode() == OpdrNavIF.EINDTOETS || sco.isExam() ))
@@ -488,6 +492,14 @@ private void commitView() {
 			GWT.log("opdr nav null");
 		}
 	}
+}
+
+@Override
+public void onNeedLogin(NeedLoginEvent ev) {
+	view = null;
+	started = false;
+	registration.removeHandler();
+	oops.onNeedLogin(ev);
 }
 	
 }

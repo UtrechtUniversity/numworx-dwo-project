@@ -25,6 +25,7 @@ import nl.numworx.gwtpatch.client.GWTPatch;
 import nl.numworx.gwtpatch.client.JSONBuilder;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ConfirmEventHandler;
+import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
@@ -55,6 +56,7 @@ public class SCORM_DWO5 extends SCORM_guest {
     public static final String SUSPEND_DIGEST = "cmi.suspend_digest";
     Digest digest;
 	private Lazy<ConfirmEventHandler> confirmHandler;
+	private final NeedLogin oops;
   
 // DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole();
 // DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB
@@ -65,8 +67,10 @@ public class SCORM_DWO5 extends SCORM_guest {
                     TrafficAgent barrier, 
                     @Named("secure") boolean secure, 
                     EventBus bus,
-                    Lazy<ConfirmEventHandler> confirmHandler
+                    Lazy<ConfirmEventHandler> confirmHandler,
+                    NeedLogin oops
 		  	) {
+	    this.oops = oops;
 		pending = false;
 		schoolClassID = dsci;
 		context = new DomContext();
@@ -196,6 +200,10 @@ log("setScoID " + scoID);
 		
 		@Override
 		public void fail(Promise<?> t) {
+			if ( oops.needed(t)) {
+				oops.apply(t);
+				return;
+			}
 			addTime();
 			Throwable caught = t.getFailure();
 			logger.log(Level.SEVERE, "Commit failed: "+ caught, caught);
@@ -313,7 +321,7 @@ log("setScoID " + scoID);
 						patchMap.put(SUSPEND_DIGEST, digest.digest(suspendData));
 	                patchMap.put(Memento.SUSPEND_DATA, patch);
 	                started = System.currentTimeMillis();
-					scoDataManager.patchValues(sco, schoolClassID, context, patchMap).then(
+					Promise<String> then = scoDataManager.patchValues(sco, schoolClassID, context, patchMap).then(
 							p -> {
 								Object tag = p.getValue();
 								Map copy2 = new HashMap(copy);
@@ -322,8 +330,12 @@ log("setScoID " + scoID);
 									copy2.put("ETag", tag);
 								return scoDataManager.setValuesETag(sco, schoolClassID, context, copy2);
 							}
-							)
-							.recoverWith(p->scoDataManager.setValuesETag(sco, schoolClassID, context, copy))
+							);
+					then
+							.recoverWith((Promise<?> p)-> 
+							{   if (oops.needed(p)) return (Promise<String>)p;
+								return (Promise<String>) scoDataManager.setValuesETag(sco, schoolClassID, context, copy);
+							})
 							.then(this,this);
 					return;
 				} catch (Throwable e) {

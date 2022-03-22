@@ -34,17 +34,19 @@ public class NeedLogin<T> implements Function<Promise<?>, Promise<? extends T>>,
 		Place place;
 		final PlaceController controller;
 		final EventBus bus;
-	
+		final TrafficAgent traffic;
 		
-		PlaceNeedLogin(Place place, PlaceController controller, EventBus bus2) {
+		PlaceNeedLogin(Place place, PlaceController controller, EventBus bus2, TrafficAgent traffic) {
 			this.place = place;
 			this.controller = controller;
 			this.bus = bus2;
+			this.traffic = traffic;
 		}
 		
 		@Override
 		public Promise<T> apply(Promise<?> t) {
 			if (needed(t)) {
+				traffic.reset(t.getFailure());
 				event.resolved = t;
 				bus.fireEvent(event);
 			}
@@ -76,8 +78,8 @@ public class NeedLogin<T> implements Function<Promise<?>, Promise<? extends T>>,
 	static public class ActionNeedLogin<T> extends PlaceNeedLogin<T> {
 
 
-		public ActionNeedLogin(PlaceController controller, EventBus bus) {
-			super(LogoutPlace.INSTANCE, controller, bus);
+		public ActionNeedLogin(PlaceController controller, EventBus bus, TrafficAgent a) {
+			super(LogoutPlace.INSTANCE, controller, bus,a);
 		}
 
 		@Override

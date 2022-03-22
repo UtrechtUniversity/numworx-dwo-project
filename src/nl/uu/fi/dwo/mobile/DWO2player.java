@@ -21,6 +21,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import fi.dwo.gwt.lib.rest.css.DwoStyle;
 import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogPresenter;
+import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogView;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogView;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
@@ -155,7 +156,8 @@ public class DWO2player extends DWOplayer implements EntryPoint {
     DwoStyle style = GWT.<AccountBundle>create(AccountBundle.class).style();
     style.ensureInjected();
     new MsgDialogView(mdp, style);
-    new MsgClickedDialogPresenter(bus);
+    MsgClickedDialogPresenter mcdp = new MsgClickedDialogPresenter(bus);
+    new MsgClickedDialogView(mcdp, style);
     
     MessageEvent.initialize(bus);
     Actions.isMainNavVisible.execute();

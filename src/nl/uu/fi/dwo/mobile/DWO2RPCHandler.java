@@ -142,6 +142,10 @@ public final class DWO2RPCHandler extends nl.uu.fi.dwo.account.client.RPCHandler
 	public Promise<DomUserFullwLoginContext> login(String name, String password) {
 		// TODO Auto-generated method stub
 		Promise<DomUserFullwLoginContext> login = super.login(name, password);
+		return tokenize(login);
+	}
+
+	private Promise<DomUserFullwLoginContext> tokenize(Promise<DomUserFullwLoginContext> login) {
 		if (!PARAMETERS.getDwoEnv().contains("test")) return login;
 
 		return login
@@ -170,10 +174,10 @@ public final class DWO2RPCHandler extends nl.uu.fi.dwo.account.client.RPCHandler
 					
 				});
 	}
+
 	@Override
 	public Promise<DomUserFullwLoginContext> loginMD5(String name, String password) {
-		// TODO Auto-generated method stub
-		return super.loginMD5(name, password);
+		return tokenize(super.loginMD5(name, password));
 	}
 
 	

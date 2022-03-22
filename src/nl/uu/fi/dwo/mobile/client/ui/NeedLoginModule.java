@@ -12,11 +12,12 @@ import dagger.Provides;
 
 @Module
 public abstract class NeedLoginModule {
+	@SuppressWarnings("rawtypes")
 	@Provides
-	@Singleton static NeedLogin needLogin(@Named("defaultPlace") Place place, PlaceController controller, EventBus bus) {
+	@Singleton static NeedLogin needLogin(@Named("defaultPlace") Place place, PlaceController controller, EventBus bus, TrafficAgent agent) {
 		if (Actions.isAvailable()) {
-			return new NeedLogin.ActionNeedLogin(controller, bus);
+			return new NeedLogin.ActionNeedLogin(controller, bus, agent);
 		}
-		return new NeedLogin.PlaceNeedLogin(place, controller, bus);
+		return new NeedLogin.PlaceNeedLogin(place, controller, bus, agent);
 	}
 }

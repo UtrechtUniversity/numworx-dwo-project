@@ -65,7 +65,7 @@ public class TrafficAgent implements Failure, Success<Object, Void> {
 		if(leftover.isEmpty())
 		{	Deferred<Void> d = defer;
 			defer = null;
-			d.resolve(null);
+			if (!d.getPromise().isDone()) d.resolve(null);
 			return d.getPromise();
 		}
 		return Promises.all(leftover).then(this, this);
@@ -76,6 +76,12 @@ public class TrafficAgent implements Failure, Success<Object, Void> {
 		
 		Promises.all(copy(list)).then(this, this);
 		
+	}
+
+	public void reset(Throwable t ) {
+		//if (defer == null) defer = new Deferred<>();
+		list.clear();
+		if (defer != null && !defer.getPromise().isDone()) defer.fail(t);
 	}
 
 	

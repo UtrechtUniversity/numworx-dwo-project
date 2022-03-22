@@ -28,6 +28,7 @@ import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO5;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
 import nl.uu.fi.dwo.mobile.client.ui.ConfirmEventHandler;
+import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
@@ -54,6 +55,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
         @Inject TrafficAgent agent;
 		@Inject Lazy<ConfirmEventHandler> confirmHandler;
 		@Inject Lazy<CoursesOfClasToSelectItems> coursesToItems;
+		@Inject NeedLogin oops;
 	    final Provider<? extends TreeModuleView> treeModuleViewProvider;
 	    TreeModuleView treeModuleView;
 	    final private DwoGlobalVars instance;
@@ -125,7 +127,8 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 						agent,
 						secure,
 						eventBus,
-						confirmHandler);
+						confirmHandler 
+						,oops);
 			}
 			return api;
 		}

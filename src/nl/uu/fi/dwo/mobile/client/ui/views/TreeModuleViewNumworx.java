@@ -49,6 +49,7 @@ import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent.Builder;
+import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
@@ -78,6 +79,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			if (failure instanceof Dwo2Exception) {
 				Dwo2ExceptionCode code = ((Dwo2Exception) failure).getDwo2Code();
 				switch(code) {
+				case User_AuthenticationError:
+				case Rest_LoginNeeded:
 				case Exam_AuthenticationError:
 				case Exam_InvalidSession: 
 					//parent.setChildren(Collections.emptyList());
@@ -89,7 +92,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		}
 	}
 
-
+	@Inject NeedLogin oops;
 
 	final class ProvideCells implements Success<List<SelectModuleItem>, Void> {
 		@Override
@@ -431,6 +434,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 					.map(new COURSE_TO_MODULEITEM(parent));
 			parent.setChildrenAsync(promise);
 			promise
+			.recoverWith(oops)
 			.then(new Success<List<SelectModuleItem>, List<SelectModuleItem>>() {
 
 				@Override
@@ -456,6 +460,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 					.map(new SCO_TO_MODULEITEM(parent));
 			parent.setChildrenAsync(promise);
 			promise
+			.recoverWith(oops)
 			.then(null, new ChildrenFailure(parent));
 		}
 		return promise;
