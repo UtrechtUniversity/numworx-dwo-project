@@ -8,7 +8,7 @@
                         <g:HTML ui:field="htmlText" > </g:HTML>
                     <g:HorizontalPanel width='90%'>
                         <g:cell addStyleNames="{dwoStyle.floatRight}">
-                    <g:Button addStyleNames="{dwoStyle.dwoButton}"  ui:field="okButton"><ui:text from="{rb.GUI_Button_Ok}" /></g:Button>
+                    <g:Button addStyleNames="{dwoStyle.dwoButton}"  ui:field="okButton"><ui:text from="{rb.GUI_BTN_Ok}" /></g:Button>
                     </g:cell>
                     </g:HorizontalPanel>
     </g:FlowPanel>
