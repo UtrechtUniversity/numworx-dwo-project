@@ -248,7 +248,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 		if(withUser) {
 			if (PARAMETERS.getSecureMode() == SecureMode.NORMAL)
 			{	
-				m=items.addItem(DwoLocalesForGWT.instance.GUI_MyProfile(), new ProfileCommand(bus));
+				m=items.addItem(DwoLocalesForGWT.instance.GUI_MyProfile(), new ProfileCommand(bus, vars.get(), failure));
 				m.addStyleName(style.menuItem());
 	            if(role == RoleType.STUDENT) {
 	                ScheduledCommand cmd = new SchoolClassStudentCommand(this, bus, vars.get(), failure);
@@ -260,7 +260,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 			if(!single)
 			{
 				Command cmd = null;
-				cmd = new nl.uu.fi.dwo.account.client.SchoolLoginCommand(this, bus);			
+				cmd = new nl.uu.fi.dwo.account.client.SchoolLoginCommand(this, bus, vars.get(), failure);			
 				m=items.addItem(DwoLocalesForGWT.instance.GUI_MySchoolLogins(), cmd);
 				m.addStyleName(style.menuItem());
 			}
