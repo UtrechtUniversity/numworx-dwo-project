@@ -60,11 +60,9 @@ class ProfileController {
       vars.setCurrentUser(currentUser);
       // update rest authentication done by setcurrentuser
       view.init(currentUser);
-      view.getPopup().hide();
       return null;
     }, fail
-    );
-
+    ).onResolve(() -> view.getPopup().hide());
   }
 
   /**

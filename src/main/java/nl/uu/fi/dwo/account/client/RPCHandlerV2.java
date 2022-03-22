@@ -36,6 +36,14 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 	protected DomContext context = new DomContext();
 	protected static final String DWO_SAML_AUTH_TOKEN = "dwoSAMLAuthToken";
 
+  private Success<? super DomUserFullwLoginContext, ? extends DomUserFullwLoginContext> setContext = p -> { 
+    DomHasRole r = new DomHasRole();
+        context.setDomHasRole(r);
+    r.setId(p.getValue().getDomLoginContext().getHasRoleId());
+    context.setRealm(p.getValue().getDomLoginContext().getRealm());
+    return p;
+  };
+
     /**
      *
      * @param server
@@ -52,13 +60,7 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
      * @return
      */
     public Promise<DomUserFullwLoginContext> login(String name, String password) {
-		return accountManager.login(name,  password, null).then( p -> { 
-		  DomHasRole r = new DomHasRole();
-          context.setDomHasRole(r);
-		  r.setId(p.getValue().getDomLoginContext().getHasRoleId());
-		  context.setRealm(p.getValue().getDomLoginContext().getRealm());
-		  return p;
-		});
+		return accountManager.login(name,  password, null).then( setContext);
 	}
 
     /**
@@ -68,7 +70,7 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
      * @return
      */
     public Promise<DomUserFullwLoginContext> loginMD5(String name, String password) {
-		return accountManager.loginMD5(name,  password);
+		return accountManager.loginMD5(name,  password).then(setContext);
 	}
 	
     /**
