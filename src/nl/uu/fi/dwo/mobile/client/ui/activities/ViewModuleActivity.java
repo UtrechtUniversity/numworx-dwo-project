@@ -290,8 +290,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 				//Window.alert(caught.getMessage());
 				started = false;
 				view = null;
-				History.back();
-				oops.apply(Promises.failed(caught));
+				if (!oops.needed(oops.apply(Promises.failed(caught)))) History.back();
 			}
 
 			@Override
@@ -308,7 +307,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 							History.back();
 						}
 						return null;
-					}, p -> { started = false; History.back(); });
+					}, p -> { started = false; if (!oops.needed(p))History.back(); });
 			}
 		};
 		view.getApi().Initialize(callback);
@@ -499,6 +498,7 @@ public void onNeedLogin(NeedLoginEvent ev) {
 	view = null;
 	started = false;
 	registration.removeHandler();
+	view.
 	oops.onNeedLogin(ev);
 }
 	

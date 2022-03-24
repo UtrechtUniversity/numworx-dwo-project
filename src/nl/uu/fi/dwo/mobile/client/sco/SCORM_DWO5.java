@@ -49,6 +49,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentScoDataManager;
 import fi.dwo.gwt.lib.rest.CallManagers.StudentScoDataManager;
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
+import fi.dwo.gwt.lib.rest.util.RestyException;
 import fi.wiskopdr.text.Text;
 
 public class SCORM_DWO5 extends SCORM_guest {
@@ -417,6 +418,8 @@ log("Initialize "+ pending);
 				@Override
 				public void fail(Promise<?> resolved) throws Exception {
 					Throwable caught = resolved.getFailure();
+					if (caught instanceof RestyException) 
+						caught = caught.getCause(); // getValues returns resty exception
 					logger.log(Level.SEVERE, "Initialize", caught);
 					pending = false;
 					if(callback!=null)callback.onFailure(caught);
