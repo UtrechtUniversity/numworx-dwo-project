@@ -17,7 +17,6 @@ import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.GeogebraView;
 //import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.MC2View;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PopupButton;
@@ -59,28 +58,6 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 	private ActivityComponent activity;
 	
 	
-	@Deprecated
-	private PopupFacade(HashMap<String, Object> h)
-	{
-		if(h == null) return;
-		popup =  Boolean.TRUE.equals(h.get("popup"));
-		Object value = h.get("setNr");
-		if(value == null)
-			setNr = 0;
-		else {
-			setNr = ((Number) value).intValue();
-		}
-		popupImageString = (String) h.get("popupImageString");
-		if(h.containsKey("popupTitel"))
-			popupTitel = (String) h.get("popupImageString");
-	}
-	
-	@Deprecated
-	private PopupFacade(HashMap<String,Object> h, InteractionView delegate)
-	{
-		this(h);
-		this.delegate = delegate;
-	}
 	public PopupFacade(ObjectMap h, InteractionView delegate, ActivityComponent a)
 	{
 		this(h,a);

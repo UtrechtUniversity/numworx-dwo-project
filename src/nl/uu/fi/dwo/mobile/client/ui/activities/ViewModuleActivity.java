@@ -495,10 +495,10 @@ private void commitView() {
 
 @Override
 public void onNeedLogin(NeedLoginEvent ev) {
+	// if (view) view.abort????
 	view = null;
 	started = false;
 	registration.removeHandler();
-	view.
 	oops.onNeedLogin(ev);
 }
 	
