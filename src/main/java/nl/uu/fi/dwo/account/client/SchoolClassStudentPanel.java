@@ -169,12 +169,13 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
                                 return;
                             }
                             deregister(); // remove popup, select currentclass by hand
-                            control.setActiveSchoolClass(sc).then(p-> {popup.hide();
-                            resetLogin.execute();return null;}, failure);
+                            popup.hide();
+                            control.setActiveSchoolClass(sc).then(p-> {resetLogin.execute();return null;}, failure);
                             break;
                         case 2:     //remove schoolclass and relogin if it was the active schoolclass.
                             if (vars.getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()) {
                                 
+                                popup.hide();
                                 control.removeSchoolClass(sc)
                                 .then(p -> control.getActiveSchoolClass())
                                 .recoverWith(fail ->  {
@@ -194,7 +195,6 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
                                           || current == null
                                           || !result.getId().equals(current.getId()))) {
                                       deregister();
-                                      popup.hide();
                                       resetLogin.execute();
                                       // no need to update schoolclassses.
                                   } else {
