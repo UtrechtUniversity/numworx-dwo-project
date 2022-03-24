@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO</artifactId>
-		<version>2.5.7-SNAPSHOT</version>
+		<version>2.5.7</version>
 		<relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 	<artifactId>EBServer</artifactId>
@@ -646,7 +646,7 @@
 		<DWOplayerVersion>2.5.7-SNAPSHOT</DWOplayerVersion>
 		<DWOmAccessVersion>2.5.2</DWOmAccessVersion>
 		<RegisterVersion>2.5.2</RegisterVersion>
-		<DWOGwtClientVersion>2.5.7-SNAPSHOT</DWOGwtClientVersion>
+		<DWOGwtClientVersion>2.5.7</DWOGwtClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testeb4server</aws.environmentName>
@@ -692,7 +692,7 @@
 				<dependency>
 					<groupId>nl.numworx.uploadwidget</groupId>
 					<artifactId>UploadWidgetGWT</artifactId>
-					<version>0.0.2-SNAPSHOT</version>
+					<version>0.0.2</version>
 					<classifier>classes</classifier>
 					<exclusions>
 						<exclusion>
@@ -704,7 +704,7 @@
 				<dependency>
 					<groupId>nl.numworx.uploadwidget</groupId>
 					<artifactId>uploadwidget-common</artifactId>
-					<version>0.0.2-SNAPSHOT</version>
+					<version>0.0.2</version>
 				</dependency>			
 			</dependencies>
 			<build>
@@ -722,4 +722,5 @@
 		</profile>
 		
 	</profiles>
+	<version>2.5.7-SNAPSHOT</version>
 </project>
