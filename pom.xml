@@ -7,7 +7,7 @@
     </parent>
   <groupId>nl.numworx.uploadwidget</groupId>
   <artifactId>UploadWidget-parent</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.0.2</version>
   <packaging>pom</packaging>
   <name>UploadWidget parent</name>
   <modules>
@@ -48,6 +48,6 @@
 	</distributionManagement>
 
 	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/UploadWidget/trunk</developerConnection>
+		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/UploadWidget/tags/0.0.2</developerConnection>
 	</scm>
 </project>
