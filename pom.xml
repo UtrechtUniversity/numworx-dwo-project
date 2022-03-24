@@ -409,7 +409,7 @@
 				<dependency>
 				    <groupId>nl.numworx.uploadwidget</groupId>
 		    		<artifactId>UploadWidgetGWT</artifactId>
-		    		<version>0.0.1-SNAPSHOT</version>
+		    		<version>0.0.2</version>
 		    		<classifier>classes</classifier>		
 				</dependency>
 			</dependencies>		
