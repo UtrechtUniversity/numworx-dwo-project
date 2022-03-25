@@ -170,7 +170,12 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 	
 	public int getAsHoogte() {
 		int corr = settings.boxMetRand() ? 2*borderWidth : paddingTop;
-		return facade.wrapAsHoogte(regelManager.actieveRegel.geefFormuleEditor().getMainRegel().getAsHoogte() + corr); //+ 6 /* margin top + padding top */);
+		if(settings.meerregelig()) {
+			return  font.getAscent() + corr; 
+		}
+		else {
+			return facade.wrapAsHoogte(regelManager.actieveRegel.geefFormuleEditor().getMainRegel().getAsHoogte() + corr); //+ 6 /* margin top + padding top */);
+		}
 	}
 	
 	public void requestFocus() {
