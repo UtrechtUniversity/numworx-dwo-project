@@ -336,15 +336,15 @@
 						<artifactInstaller>
 							<groupId>org.apache.tomcat</groupId>
 							<artifactId>tomcat</artifactId>
-							<version>8.5.61</version>
+							<version>8.5.77</version>
 						</artifactInstaller>
 						<systemProperties>
 							<DWO_ENV>test</DWO_ENV>
 						</systemProperties>
 						<dependencies>
 							<dependency>
-								<groupId>mysql</groupId>
-								<artifactId>mysql-connector-java</artifactId>
+								  <groupId>software.aws.rds</groupId>
+								  <artifactId>aws-mysql-jdbc</artifactId>
 							</dependency>
 						</dependencies>
 					</container>
