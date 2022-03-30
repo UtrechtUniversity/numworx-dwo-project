@@ -764,7 +764,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, /*ScormAccessIF,*
                 LOG.log(Level.INFO, "Dbacces DEBUG aan");
             }
             //check for proper DB version
-            PreparedStatement ps = getStatement("select * from tblDWOSystemParameters where name like 'DBVersion%'");
+            PreparedStatement ps = getStatement("select * from tbldwosystemparameters where name like 'DBVersion%'");
             ResultSet rs = ps.executeQuery();
             HashMap<String, String> hashMap = new HashMap<String, String>(5);
             while (rs.next()) {
