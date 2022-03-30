@@ -28,24 +28,17 @@
 			<artifactId>DWOServer</artifactId>
 			<classifier>classes</classifier>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>mysql</groupId> -->
-<!-- 			<artifactId>mysql-connector-java</artifactId> -->
-<!-- 			<version>5.1.49</version> -->
-<!-- 		</dependency> -->
-<dependency>
-  <groupId>software.aws.rds</groupId>
-  <artifactId>aws-mysql-jdbc</artifactId>
-  <version>1.0.0</version>
-</dependency>
+		<dependency>
+		  <groupId>software.aws.rds</groupId>
+		  <artifactId>aws-mysql-jdbc</artifactId>
+		  <version>1.0.0</version>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- best found media type json support, faster than jackson -->
-
 		<dependency>
 			<groupId>fi.servlet</groupId>
 			<artifactId>DWOmAccess</artifactId>
@@ -305,12 +298,6 @@
 									<version>0.0.3</version>
 									<destFileName>dwo/swingbrowser-api.jar</destFileName>
 								</artifactItem>
-<!-- 								<artifactItem> -->
-<!-- 									<groupId>nl.numworx.swingbrowser</groupId> -->
-<!-- 									<artifactId>swingbrowser-jfx</artifactId> -->
-<!-- 									<version>0.0.3</version> -->
-<!-- 									<destFileName>dwo/swingbrowser-jfx.jar</destFileName> -->
-<!-- 								</artifactItem> -->
 								<artifactItem>
 									<groupId>nl.numworx.swingbrowser</groupId>
 									<artifactId>swingbrowser-jxb</artifactId>
@@ -366,7 +353,7 @@
 						<datasources>
 							<datasource>
 								<jndiName>jdbc/dwodb</jndiName>
-								<driverClass>com.mysql.jdbc.Driver</driverClass>
+								<driverClass>software.aws.rds.jdbc.mysql.Driver</driverClass>
 								<url>jdbc:mysql://localhost:3306/dwo_productie_v1_2</url>
 								<username>${cargo.username}</username>
 								<password>${cargo.password}</password>
@@ -678,8 +665,8 @@
 			<dependencies>
 			 <dependency>
 	    		<groupId>javax.xml.bind</groupId>
-	    		<artifactId>jaxb-api-osgi</artifactId>
-	    		<version>2.2.7</version>
+	    		<artifactId>jaxb-api</artifactId>
+	    		<version>2.3.0</version>
 			 </dependency>
 			</dependencies>
 		</profile>
