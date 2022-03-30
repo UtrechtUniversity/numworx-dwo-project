@@ -706,32 +706,24 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 
 	TreeItem insertMethodTree(TreeItem item, Widget scoreItem) {
 		if (scoreItem instanceof HasText) {
+			int count = item.getChildCount()-1;
 			String text = ((HasText) scoreItem).getText();
 			if (text.startsWith("W:")) {
-				item = item.getChild(item.getChildCount()-1);
+				item = item.getChild(count); /// Dit is "Begrippen en vaktaal"
+				count = item.getChildCount();
 			}
-			int count = item.getChildCount();
-			for(int i = 0 ;i < count; i++) {
-				Widget w = item.getChild(i).getWidget();
-				if (w instanceof HasText) {
-					String wt = ((HasText) w).getText();
-					if (compareM(text,wt ) <= 0)
-					{
-						return item.insertItem(i, scoreItem);
-					}
-				}
-			}
+			return item.insertItem(count, scoreItem);
 		}
 		return item.addItem(scoreItem);
 	}
 
-	private int compareM(String as, String bs) {
-		boolean ab = as.equals(BEGRIPPEN_EN_VAKTAAL);
-		boolean bb = bs.equals(BEGRIPPEN_EN_VAKTAAL);
-		if (ab && !bb) return +1;
-		if (bb && !ab) return -1;
-		return as.compareTo(bs);
-	}
+//	private int compareM(String as, String bs) {
+//		boolean ab = as.equals(BEGRIPPEN_EN_VAKTAAL);
+//		boolean bb = bs.equals(BEGRIPPEN_EN_VAKTAAL);
+//		if (ab && !bb) return +1;
+//		if (bb && !ab) return -1;
+//		return as.compareTo(bs);
+//	}
 
 	private void addToTree(TreeItem item, DomStudentModelContext4Student model) {
 		DomStudentModelStructure structure = model.getModelStructure();
