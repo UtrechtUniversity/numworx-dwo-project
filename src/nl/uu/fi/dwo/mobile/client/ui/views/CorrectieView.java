@@ -164,12 +164,14 @@ private boolean checkDocent;
   @UiField TextBox correctie;
   @UiField(provided=true) MLTextBox area;
   private final Widget parent;
+  private final OpdrNavIF comroot;
 
   private CorrectieView(ActivityComponent a, Widget w, OpdrNavIF comRoot) {
     parent = w;
     area = new MLTextBox(a);
     initWidget(uiBinder.createAndBindUi(this));
     area.setCommunicationRoot(comRoot);
+    comroot = comRoot;
   }
 
   @UiHandler("ok")
@@ -186,6 +188,7 @@ private boolean checkDocent;
       parent.setStyleName(CORRECTED, n!=0);
     }
     hide();
+    comroot.setChanged(false); // checkpoint???????
   }
 
   @UiHandler("cancel")

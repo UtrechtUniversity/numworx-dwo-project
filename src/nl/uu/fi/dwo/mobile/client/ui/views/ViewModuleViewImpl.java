@@ -485,7 +485,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			// pas vanaf hier toevoegen mogelijk.
 			scoreNav.setBeantwoord(on.getAantalBeantwoord());
 			scoreNav.setItemScores(on.getScoresHuidigeActiviteit());
-			scoreNav.setTotaalScore((int) on.getScore());
+			//scoreNav.setTotaalScore((int) on.getScore()); later 
 			scoreNav.setGotoOpdracht(on);
 // FIXME authELO
 			if (false)

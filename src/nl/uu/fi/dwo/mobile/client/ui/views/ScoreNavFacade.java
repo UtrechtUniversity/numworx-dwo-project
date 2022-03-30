@@ -134,6 +134,8 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 
 	@Override
 	public void setTotaalScore(int score) {
+		if (getTotaalScoreLabel() != null)
+			setTotaalScoreLabel(score);
 	}
 
 	@Override

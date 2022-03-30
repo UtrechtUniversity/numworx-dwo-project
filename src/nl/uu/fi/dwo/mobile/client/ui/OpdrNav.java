@@ -1497,7 +1497,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		{
 			source.setItemScore(currentOpdracht, scores[currentActiviteit][currentOpdracht]);
 			source.setTotaalScore((int) score);
-			source.setTotaalScoreLabel((int) getScore()); // toon percentagescore
+//			source.setTotaalScoreLabel((int) getScore()); // toon percentagescore
 		}
 		
 		source.setBeantwoord(getAantalBeantwoord()); // noordhoff
@@ -2321,8 +2321,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 			// reset totaalscore en keer nagekeken
 //			entry.scoreNav.setTotaalScoreLabel(getTotaalScore());
-			entry.scoreNav.setTotaalScoreLabel((int) getScore()); // toon percentagescore
-			entry.scoreNav.setKeerNagekekenLabel(getKeerNagekeken());
+//			entry.scoreNav.setTotaalScoreLabel((int) getScore()); // toon percentagescore
+			source.setKeerNagekekenLabel(getKeerNagekeken());
 
 			// reset bezocht
 			resetBezocht();
