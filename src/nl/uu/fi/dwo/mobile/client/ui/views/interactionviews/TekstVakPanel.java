@@ -461,11 +461,11 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		initWidget();
 	}
 
-	public TekstVakPanel(ActivityComponent a, HashMap<String, Object> hh, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden, AnchorContext context)
-	{
-		this(a, hh, randomVarNamen, randomVarWaarden);
-		this.anchorContext = context;
-	}
+//	public TekstVakPanel(ActivityComponent a, HashMap<String, Object> hh, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden, AnchorContext context)
+//	{
+//		this(a, hh, randomVarNamen, randomVarWaarden);
+//		this.anchorContext = context;
+//	}
 	
 	String getLogID() { 
 		if (dwologger != null)
@@ -474,7 +474,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 			return comRoot.getUUID();
 	}
 	
-	public TekstVakPanel(ActivityComponent a, HashMap<String, Object> hh, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
+	public TekstVakPanel(ActivityComponent a, HashMap<String, Object> hh, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int volleBreedte)
 	{
 		activity = a;
 		this.randomVarNamen = randomVarNamen;
@@ -491,6 +491,9 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		
 		if (h != null && h.containsKey("volledigeBreedte"))
 			volledigeBreedte = h.getBoolean("volledigeBreedte");
+		
+		if (volledigeBreedte && volleBreedte > 0)
+			breedte = volleBreedte;
 		
 		if (h != null && h.containsKey("interactiePanelLaunchState"))
 			launchState =  h.getObjectMap("interactiePanelLaunchState");
@@ -523,8 +526,12 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		if (launchState.containsKey("breedtes") )
 		{
 			breedtes = launchState.getDoubleList("breedtes");
-			if(!breedtes.isEmpty() && Math.round(breedtes.get(0).doubleValue()) > breedte)
+			if(!breedtes.isEmpty() && Math.round(breedtes.get(0).doubleValue()) > breedte && !volledigeBreedte)
 				breedte = (int) Math.round(breedtes.get(0).doubleValue());
+// XXX weet nog niet in andere gevallen	
+			if (volledigeBreedte && breedtes.size() == 1) {
+				breedtes.set(0, Double.valueOf(breedte));
+			}
 		}
 		else
 			breedtes = (Arrays.asList(600.0));
@@ -1161,6 +1168,12 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		this.anchorContext = anchorContext;
 	}
 
+	public TekstVakPanel(ActivityComponent a, HashMap<String, Object> hh,
+			String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, AnchorContext anchorContext, int vollebreedte) {
+		this(a, hh, randomVarNamen, randomVarWaarden, vollebreedte);
+		this.anchorContext = anchorContext;
+	}
+
 	public void plaatsTabelRanden()
 	{
 		double hoogteCum = -0.5 - cellSpaceRow / 2 - randDikte;
@@ -1629,7 +1642,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 	
 	public ArrayList<Tupel> getAnswerModels(ObjectMap map)
 	{
-		TekstVakPanel tvp = new TekstVakPanel(activity, (HashMap<String, Object>) map, randomVarNamen, randomVarWaarden);
+		TekstVakPanel tvp = new TekstVakPanel(activity, (HashMap<String, Object>) map, randomVarNamen, randomVarWaarden, map.getInt("breedte"));
 		tvp.zetInstellingen(instellingen);
 		tvp.setKeyboard(kb);
 		final Object orgObject = tvp;
@@ -5088,7 +5101,7 @@ private Object CamelCase(String name) {
 	
 	private void addTekstVakPanel(HashMap<String, Object> contentMap, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int row, int column)
 	{
-		TekstVakPanel tvp = new TekstVakPanel(activity, contentMap, randomVarNamen, randomVarWaarden);
+		TekstVakPanel tvp = new TekstVakPanel(activity, contentMap, randomVarNamen, randomVarWaarden, JSONUtilities.wrapMap(contentMap).getInt("breedte"));
 		tvp.setParent(tekstVakken[row][column]);
 		tvp.zetInstellingen(instellingen);
 		tvp.setKeyboard(kb);

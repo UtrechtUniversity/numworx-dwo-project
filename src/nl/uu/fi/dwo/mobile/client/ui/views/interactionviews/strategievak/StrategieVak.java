@@ -222,7 +222,7 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
       launchData.put("volledigeBreedte", volledigeBreedte);
       launchData.put("hoogte", Integer.valueOf(4));
       
-      TekstVakPanel stappenVak = new StrategieTekstVakPanel(activity, launchData, randomVarNamen, randomVarWaarden);
+      TekstVakPanel stappenVak = new StrategieTekstVakPanel(activity, launchData, randomVarNamen, randomVarWaarden, breedte);
       stappenVak.setKeyboard(kb);
       stappenVak.initialiseerStappen();
       stappenVak.setKolom(1);

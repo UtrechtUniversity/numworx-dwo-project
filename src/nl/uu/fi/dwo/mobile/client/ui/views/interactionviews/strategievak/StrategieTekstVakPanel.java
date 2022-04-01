@@ -17,14 +17,14 @@ class StrategieTekstVakPanel extends TekstVakPanel {
 	}
 
 	public StrategieTekstVakPanel(ActivityComponent a, HashMap<String, Object> hh, String[] randomVarNamen,
-			HashMap<String, Number> randomVarWaarden, AnchorContext context) {
-		super(a, hh, randomVarNamen, randomVarWaarden, context);
+			HashMap<String, Number> randomVarWaarden, AnchorContext context, int breedte) {
+		super(a, hh, randomVarNamen, randomVarWaarden, context, breedte);
 		// TODO Auto-generated constructor stub
 	}
 
 	public StrategieTekstVakPanel(ActivityComponent a, HashMap<String, Object> hh, String[] randomVarNamen,
-			HashMap<String, Number> randomVarWaarden) {
-		super(a, hh, randomVarNamen, randomVarWaarden);
+			HashMap<String, Number> randomVarWaarden, int breedte) {
+		super(a, hh, randomVarNamen, randomVarWaarden, breedte);
 		// TODO Auto-generated constructor stub
 	}
 

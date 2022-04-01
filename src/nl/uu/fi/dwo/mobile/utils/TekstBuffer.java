@@ -487,7 +487,7 @@ public class TekstBuffer
 		else if (soortVak == 9)
 		{
 			AnchorContext anchorContext = getAnchorContext();
-			result = x(map, x(new TekstVakPanel(activity, currentVakGegevens, randomVarNamen, randomVarWaarden, anchorContext)));
+			result = x(map, x(new TekstVakPanel(activity, currentVakGegevens, randomVarNamen, randomVarWaarden, anchorContext, volleBreedtes[huidigeKolom])));
 		}
 		else if(soortVak == 11) 
 		{

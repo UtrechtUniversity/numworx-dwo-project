@@ -310,7 +310,7 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
       launchData.put("volledigeBreedte", volledigeBreedte);
       launchData.put("hoogte", new Integer(4));
       
-      TekstVakPanel stappenVak = new TekstVakPanel(activity, launchData, randomVarNamen, randomVarWaarden);
+      TekstVakPanel stappenVak = new TekstVakPanel(activity, launchData, randomVarNamen, randomVarWaarden, breedte);
       stappenVak.setKeyboard(kb);
       //stappenVak.setCommunicationRoot(comRoot); // gebeurt nu in setComRoot. 
       stappenVak.initialiseerStappen();
