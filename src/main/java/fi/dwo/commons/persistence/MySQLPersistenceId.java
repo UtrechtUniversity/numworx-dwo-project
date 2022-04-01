@@ -9,7 +9,6 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import nl.uu.fi.dwo.rest.dom.entities.DomACL;
 import nl.uu.fi.dwo.rest.dom.entities.DomACLId;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfigDataId;
@@ -20,7 +19,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
