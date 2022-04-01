@@ -149,7 +149,7 @@ public class StudentModelManagerPIT {
     /**
      * Light testing CRUD and more of class SchoolManager.
      */
-    @Test @Ignore
+    @Test 
     public void testDomStudentModelContextSerialization() {
         DomStudentModelStructure model = new DomStudentModelStructure();
         Map<String, String> titleMap = new HashMap<>();
