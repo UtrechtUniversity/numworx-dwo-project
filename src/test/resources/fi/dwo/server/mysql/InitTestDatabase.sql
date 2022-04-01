@@ -678,7 +678,7 @@ DROP TABLE IF EXISTS `tblstudentmodelcontext`;
 CREATE TABLE `tblstudentmodelcontext` (
   `modelID` int(11) NOT NULL AUTO_INCREMENT,
   `schoolID` int(11) NOT NULL,
-  `model` json NOT NULL,
+  `model` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   `publishState` tinyint(4) NOT NULL DEFAULT '0',
   `optlock` int(11) DEFAULT '0',
   `lastChangeTimeStamp` bigint(20) DEFAULT '0',
