@@ -4,7 +4,6 @@ package fi.dwo.dwojapplet.persistence;
 
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.dwojapplet.domain.Course;
