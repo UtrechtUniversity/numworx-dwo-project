@@ -244,11 +244,15 @@
         </init-param>
         <init-param>
             <param-name>projectVersion</param-name>
-            <param-value>1.0.1-SNAPSHOT</param-value>
+            <param-value>${project.version}</param-value>
         </init-param>
         <init-param>
             <param-name>buildnumber</param-name>
-            <param-value>9537</param-value>
+            <param-value>${buildNumber}</param-value>
+        </init-param>
+        <init-param>
+        	<param-name>timestamp</param-name>
+        	<param-value>${timestamp}</param-value>
         </init-param>
         <load-on-startup>0</load-on-startup>
     </servlet>
