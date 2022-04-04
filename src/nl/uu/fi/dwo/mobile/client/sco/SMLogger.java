@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.sco;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -17,6 +18,7 @@ import dagger.Module;
 import dagger.Provides;
 import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
@@ -99,6 +101,12 @@ public class SMLogger implements Logging {
 
   public static final String ATTEMPTED = "http://www.dwo.nl/verbs/attempted";
   public static final String CORRECTED = "http://www.dwo.nl/verbs/corrected";
+  public static final String[] ASSESSMENT_TYPE = {
+		  null,
+		  null,
+		  "self-test",
+		  "test"
+  };
   public static final DateTimeFormat FORMAT_8601 = DateTimeFormat.getFormat(PredefinedFormat.ISO_8601);
 
   final Memento memento;
@@ -184,6 +192,8 @@ public class SMLogger implements Logging {
   @Override
   public void setCommunicationRoot(OpdrNavIF comRoot) {
     widget.id = "uuid:" + comRoot.getUUID();
+    int mode = comRoot.getMode();
+    extensions.assessmentType = ASSESSMENT_TYPE[mode];
     delegate.setCommunicationRoot(comRoot);
   }
 
@@ -229,7 +239,8 @@ public class SMLogger implements Logging {
 		delegate.setLogOption(logOption);
 	}
 
-  @Override
+  @SuppressWarnings("unchecked")
+@Override
   public void updateLog(Map<String, ?> parameters) {
     if (
         CORRECTED == parameters.get("verb") &&
@@ -257,6 +268,13 @@ public class SMLogger implements Logging {
           result.score.scaled = result.score.raw.doubleValue() / maxScore;
       } catch (Exception e) {
       }
+// extensions      
+      if (parameters.get(Extensions.OBJECTIVES) != null) {
+    	  result.extensions = new Extensions();
+    	  result.extensions.objectives = 
+    			  Arrays.asList(JSONUtilities.toStringArray( parameters.get(Extensions.OBJECTIVES)));
+      }
+
       s.result = result;  
       xapi.then(manager -> manager.getValue().saveStatement(s));
     }
