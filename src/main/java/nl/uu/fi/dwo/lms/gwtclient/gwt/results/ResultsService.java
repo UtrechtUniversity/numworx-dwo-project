@@ -3,6 +3,8 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentScoDataManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherResultsManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherScormValuesManager;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherStudentModelManager;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserScoContextManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,8 +39,11 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.entities.RestClearStudentDataForScoAndClass;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import org.osgi.util.promise.Promise;
@@ -75,8 +80,10 @@ public class ResultsService implements SwitchViewEventHandler {
     private SecuredTeacherResultsManager manager = new SecuredTeacherResultsManager();
     private SecuredTeacherScormValuesManager scormValues = new SecuredTeacherScormValuesManager();
     private SecuredStudentScoDataManager scoData = new SecuredStudentScoDataManager();
-    private ModulesOfSchoolclassService modules;
+    private SecuredUserScoContextManager scoContext = new SecuredUserScoContextManager();
+    private SecuredTeacherStudentModelManager studentModel = new SecuredTeacherStudentModelManager();
 
+    private ModulesOfSchoolclassService modules;
     private final DwoGlobalVars dwoGlobalVars;
 
     static final Collection<String> keys = Arrays.asList(
@@ -222,6 +229,8 @@ public class ResultsService implements SwitchViewEventHandler {
 
     Map<PersistenceId, Promise<JSONValue>> launchDataCache = new HashMap<>();
     Map<PersistenceId, Promise<Map<String, String>>> suspendDataCache = new HashMap<>();
+    Map<PersistenceId, Promise<DomScoContext>> scoContextCache = new HashMap<>();
+    Map<PersistenceId, Promise<DomStudentModelContext>> studentModelCache = new HashMap<>();
 
     public Promise<JSONValue> getJSONLaunchDataBytes(DomScoContext sco, DomSchoolClassId schoolClass) {
         Promise<JSONValue> cache = launchDataCache.get(sco.getId());
@@ -277,6 +286,7 @@ public class ResultsService implements SwitchViewEventHandler {
     void clearCache() {
         suspendDataCache.clear();
         launchDataCache.clear();
+        scoContextCache.clear();
     }
 
     @Override
@@ -287,5 +297,29 @@ public class ResultsService implements SwitchViewEventHandler {
         }
     }
     
+    Promise<DomScoContext> getSco0(PersistenceId scoId) {
+    	DomScoContext sco = new DomScoContext(); sco.setId(scoId);
+    	Promise<DomDwoProfileFull> profile = dwoGlobalVars.getProfile();
+    	return profile.flatMap(p -> scoContext.getSco(sco, p, null, getContext()));
+    }
+    
+    Promise<DomScoContext> getSco(PersistenceId scoId) {
+    	return scoContextCache.computeIfAbsent(scoId, this::getSco0);
+    }
+    
+    Promise<DomStudentModelContext> getStudentModel0(PersistenceId id) {
+    	if (id == null) return Promises.resolved(null);
+    	if (id.getType() == PersistenceClassType.PersistentScoContext) {
+    		return getSco(id)
+    				.map(DomScoContext::getStudentModelContext)
+    				.flatMap(this::getStudentModel);
+    	}
+    	DomStudentModelContextId smid = new DomStudentModelContextId(id);
+    	return studentModel.getStudentModel(getContext(), smid);
+    }
+    
+    Promise<DomStudentModelContext> getStudentModel(PersistenceId id) {
+    	return studentModelCache.computeIfAbsent(id, this::getStudentModel0);
+    }
     
 }
