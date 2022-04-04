@@ -5,13 +5,20 @@ import java.util.List;
 import com.owlike.genson.annotation.JsonProperty;
 
 public class Extensions {
-
-  @JsonProperty("http://www.dwo.nl/extensions/objectives")
-  @com.fasterxml.jackson.annotation.JsonProperty("http://www.dwo.nl/extensions/objectives")
+  public final static String OBJECTIVES = "http://www.dwo.nl/extensions/objectives";
+  public final static String FOREKNOWLEDGE = "http://www.dwo.nl/extensions/foreknowledge";
+  public final static String ASSESSMENT_TYPE = "http://id.tincanapi.com/extension/assessment-type";
+	
+  @JsonProperty(OBJECTIVES)
+  @com.fasterxml.jackson.annotation.JsonProperty(OBJECTIVES)
   public List<String> objectives;
 
-  @JsonProperty("http://www.dwo.nl/extensions/foreknowledge")
-  @com.fasterxml.jackson.annotation.JsonProperty("http://www.dwo.nl/extensions/foreknowledge")
+  @JsonProperty(FOREKNOWLEDGE)
+  @com.fasterxml.jackson.annotation.JsonProperty(FOREKNOWLEDGE)
   public List<String> foreknowledge;
+  
+  @JsonProperty(ASSESSMENT_TYPE)
+  @com.fasterxml.jackson.annotation.JsonProperty(ASSESSMENT_TYPE)
+  public String assessmentType;
 
 }
