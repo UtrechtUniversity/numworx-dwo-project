@@ -39,7 +39,10 @@ public class BerekeningVakFormuleEditor extends FormuleEditor {
 		if(berekeningVakRegel.berekeningVak.settings.meerregelig() 
 				&& (getMainRegel().getCurrentPosition()==-1 || getCurrentElement().getParent()==getMainRegel()))
 			regelManager.maakRegel(getTailString());
-		else if(!berekeningVakRegel.berekeningVak.settings.meerregelig() && berekeningVakRegel.berekeningVak.settings.check()) {
+//		else if(!berekeningVakRegel.berekeningVak.settings.meerregelig() && berekeningVakRegel.berekeningVak.settings.check()) {
+//			checkManager.check_enter();
+//		}
+		else if(berekeningVakRegel.berekeningVak.settings.check()) {
 			checkManager.check_enter();
 		}
 	}

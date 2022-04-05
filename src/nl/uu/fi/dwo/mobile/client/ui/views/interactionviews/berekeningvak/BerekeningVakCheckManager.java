@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.berekeningvak;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -42,7 +43,7 @@ public class BerekeningVakCheckManager {
 	public void check_enter() {
 		logger.info("check-Enter");
 		if(mode==OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN) {
-			checkRegel(true);
+			checkRegels(true);
 			setChanged();
 		}
 	}
@@ -50,7 +51,7 @@ public class BerekeningVakCheckManager {
 	public void check_kijkNa() {
 		logger.info("check-KijkNa");
 		if(mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (mode==OpdrNavIF.ZELFTOETS && !nagekeken )) {
-			checkRegel(true);
+			checkRegels(true);
 			zetNagekeken(true);
 			setChanged();
 		}
@@ -59,26 +60,26 @@ public class BerekeningVakCheckManager {
 	public void check_getState() {
 		logger.info("check-getState");
 		if(mode==OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN) {
-			checkRegel(true);
+			checkRegels(true);
 			setChanged();
 		}
 		if(mode==OpdrNavIF.ZELFTOETS && !nagekeken || mode == OpdrNavIF.EINDTOETS) {
-			checkRegel(false);
+			checkRegels(false);
 		}
 	}
 	
 	public void check_setState() {
 		logger.info("check-setState");
 		if(browse || review || mode==OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN) {
-			checkRegel(true);
+			checkRegels(true);
 			setChanged();
 		}
 		if(mode==OpdrNavIF.ZELFTOETS && nagekeken) {
-			checkRegel(true);
+			checkRegels(true);
 			setChanged();
 		}
 		else if(mode==OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS) {
-			checkRegel(false);
+			checkRegels(false);
 		}
 	}
 	
@@ -86,7 +87,24 @@ public class BerekeningVakCheckManager {
 		nagekeken = false;
 	}
 	
-	private void checkRegel(boolean view) {
+	private int tempVakScore = 0;
+	private boolean tempVakCorrect = false;
+	
+	private void checkRegels(boolean view) {
+		tempVakScore = 0;
+		tempVakCorrect = false;
+		ArrayList<Integer> scoreContainer = new ArrayList<Integer>();
+		for(int i=0 ; i<berekeningVak.geefVakRegels().size() ; i++) {
+			checkRegel(scoreContainer, view);
+		}
+		score = tempVakScore;
+		if(berekeningVak.settings.scoreCumulatief()) 
+			score = getCumScore(scoreContainer);
+		correct = tempVakCorrect;
+	}
+	
+	
+	private void checkRegel(ArrayList<Integer> scoreContainer, boolean view) {
 		int regelScore = 0;
 		boolean regelCorrect = false;
 		String regelString = berekeningVak.geefVakRegel(0).geefFormuleEditor().toString();
@@ -98,9 +116,9 @@ public class BerekeningVakCheckManager {
 		regelString = regelString.replace(";", "§;§");
 		String[] deelStrings = regelString.split("§");
 		
-		int[] scoreContainer = new int[deelStrings.length];
+		//int[] scoreContainer = new int[deelStrings.length];
 		for(int i=0 ; i<deelStrings.length ; i++) {
-			scoreContainer[i] = -1;
+			scoreContainer.add(new Integer(-1));
 		}
 		for(int i=0 ; i<deelStrings.length ; i++) {
 			Expressie expressie = FormuleParser.geefExpressie("$f"+deelStrings[i]+"@");
@@ -122,16 +140,17 @@ public class BerekeningVakCheckManager {
 					regelCorrect = regelCorrect || (Boolean)checkResults.get("correct");
 					
 					if(berekeningVak.settings.scoreCumulatief())
-						scoreContainer[i] = answerModelNr;
+						scoreContainer.add(new Integer(answerModelNr));
+						//scoreContainer[i] = answerModelNr;
 				}
 				catch (RestartException e){}
 			}
 		}
-		if(berekeningVak.settings.scoreCumulatief()) 
-			regelScore = getCumScore(scoreContainer);
+		//if(berekeningVak.settings.scoreCumulatief()) 
+		//	regelScore = getCumScore(scoreContainer);
 		
-		score = regelScore;
-		correct = regelCorrect;
+		tempVakScore += Math.max(tempVakScore, regelScore);
+		tempVakCorrect = tempVakCorrect || regelCorrect;
 		
 		String checkedString = "";
 		for(int i=0 ; i<deelStrings.length ; i++) {
@@ -164,6 +183,21 @@ public class BerekeningVakCheckManager {
 				for(int j=i ; j<scoreContainerTemp.length ; j++) {
 					if(scoreContainerTemp[j] == amNr) 
 						scoreContainerTemp[j] = -1;
+				}
+			}
+		}
+		return scoreCum;
+	}
+	
+	private int getCumScore(ArrayList<Integer> scoreContainerTemp) {
+		int scoreCum = 0;
+		for(int i=0 ; i<scoreContainerTemp.size() ; i++) {
+			int amNr = scoreContainerTemp.get(i);
+			if(amNr>-1) {
+				scoreCum = scoreCum + avChecker.getAnswerModelScore(amNr);
+				for(int j=i ; j<scoreContainerTemp.size() ; j++) {
+					if(scoreContainerTemp.get(j) == amNr) 
+						scoreContainerTemp.set(j, -1);
 				}
 			}
 		}
