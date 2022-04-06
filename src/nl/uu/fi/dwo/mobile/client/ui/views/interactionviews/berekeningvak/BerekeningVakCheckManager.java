@@ -89,13 +89,14 @@ public class BerekeningVakCheckManager {
 	
 	private int tempVakScore = 0;
 	private boolean tempVakCorrect = false;
+	private ArrayList<Integer> scoreContainer = null;
 	
 	private void checkRegels(boolean view) {
 		tempVakScore = 0;
 		tempVakCorrect = false;
-		ArrayList<Integer> scoreContainer = new ArrayList<Integer>();
+		scoreContainer = new ArrayList<Integer>();
 		for(int i=0 ; i<berekeningVak.geefVakRegels().size() ; i++) {
-			checkRegel(scoreContainer, view);
+			checkRegel(i, view);
 		}
 		score = tempVakScore;
 		if(berekeningVak.settings.scoreCumulatief()) 
@@ -104,10 +105,10 @@ public class BerekeningVakCheckManager {
 	}
 	
 	
-	private void checkRegel(ArrayList<Integer> scoreContainer, boolean view) {
+	private void checkRegel(int regelNr, boolean view) {
 		int regelScore = 0;
 		boolean regelCorrect = false;
-		String regelString = berekeningVak.geefVakRegel(0).geefFormuleEditor().toString();
+		String regelString = berekeningVak.geefVakRegel(regelNr).geefFormuleEditor().toString();
 		ingevuld = (regelString.equals("") ? false : true);
 		if(!ingevuld) 
 			return;
@@ -116,10 +117,6 @@ public class BerekeningVakCheckManager {
 		regelString = regelString.replace(";", "§;§");
 		String[] deelStrings = regelString.split("§");
 		
-		//int[] scoreContainer = new int[deelStrings.length];
-		for(int i=0 ; i<deelStrings.length ; i++) {
-			scoreContainer.add(new Integer(-1));
-		}
 		for(int i=0 ; i<deelStrings.length ; i++) {
 			Expressie expressie = FormuleParser.geefExpressie("$f"+deelStrings[i]+"@");
 			if(expressie!=null) {
@@ -141,25 +138,21 @@ public class BerekeningVakCheckManager {
 					
 					if(berekeningVak.settings.scoreCumulatief())
 						scoreContainer.add(new Integer(answerModelNr));
-						//scoreContainer[i] = answerModelNr;
 				}
 				catch (RestartException e){}
 			}
 		}
-		//if(berekeningVak.settings.scoreCumulatief()) 
-		//	regelScore = getCumScore(scoreContainer);
-		
-		tempVakScore += Math.max(tempVakScore, regelScore);
+		tempVakScore = Math.max(tempVakScore, regelScore);
 		tempVakCorrect = tempVakCorrect || regelCorrect;
 		
 		String checkedString = "";
 		for(int i=0 ; i<deelStrings.length ; i++) {
 			checkedString = checkedString + deelStrings[i];
 		}
-		berekeningVak.geefVakRegel(0).geefFormuleEditor().clearMain();
-		berekeningVak.geefVakRegel(0).geefFormuleEditor().insert(checkedString);
-		berekeningVak.geefVakRegel(0).geefFormuleEditor().paint();
-		berekeningVak.geefVakRegel(0).regelResize();
+		berekeningVak.geefVakRegel(regelNr).geefFormuleEditor().clearMain();
+		berekeningVak.geefVakRegel(regelNr).geefFormuleEditor().insert(checkedString);
+		berekeningVak.geefVakRegel(regelNr).geefFormuleEditor().paint();
+		berekeningVak.geefVakRegel(regelNr).regelResize();
 	}
 	
 	public void getCheckerState(HashMap<String, Object> state) {
@@ -223,11 +216,11 @@ public class BerekeningVakCheckManager {
 	}
 	
 	public void setChanged() {
-		if(!lastAnswer.equals(berekeningVak.geefVakRegel(0).geefFormuleEditor().toString())) {
-			lastAnswer = berekeningVak.geefVakRegel(0).geefFormuleEditor().toString();
+//		if(!lastAnswer.equals(berekeningVak.geefVakRegel(0).geefFormuleEditor().toString())) {
+//			lastAnswer = berekeningVak.geefVakRegel(0).geefFormuleEditor().toString();
 			if(berekeningVak.settings.teltMee() && comRoot!=null)
 				comRoot.setChanged(false);
-		}
+//		}
 	}
 	
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
