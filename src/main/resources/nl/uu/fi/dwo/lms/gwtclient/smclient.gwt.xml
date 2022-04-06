@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.6.0//EN"
+  "http://google-web-toolkit.googlecode.com/svn/tags/2.6.0/distro-source/core/src/gwt-module.dtd">
+<module rename-to='smclient'>
+  <inherits name="com.google.gwt.user.User"/>
+
+  <source path='gwt'/>
+  
+  <!-- Specify the app entry point class.                         -->
+  <entry-point class="nl.uu.fi.dwo.lms.gwtclient.gwt.StudentModelPanel"/>
+
+</module>

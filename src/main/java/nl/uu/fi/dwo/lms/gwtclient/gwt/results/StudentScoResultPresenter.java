@@ -8,6 +8,7 @@ import com.google.gwt.user.client.Window.Location;
 import com.google.web.bindery.event.shared.EventBus;
 
 import dagger.Lazy;
+import fi.dwo.gwt.lib.rest.util.DomStudentModelStructureCodec;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 
 import java.util.Arrays;
@@ -43,6 +44,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.dom.xapi.Account;
 import nl.uu.fi.dwo.rest.dom.xapi.Agent;
 import nl.uu.fi.dwo.rest.dom.xapi.Statement;
@@ -113,13 +115,38 @@ public class StudentScoResultPresenter {
     userState.put("dme.authorization", RestAuthenticator.instance.getAuthorization());
     String learnerId = getLearnerId(studentid.toString(), domschoolclass.getId());
     userState.put("cmi.learner_id", learnerId);
-    setAPI(this);
+// if premium && completed
+// find out if we have studentmodel in launchdata.
+    if ( AboType.premium == dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getAboType() && ResultsService.COMPLETED.equals(userState.get(ResultsService.COMPLETION_STATUS))) {
+    	LOG.severe("KIJK VOOR STUDENTMODEL"); // XXX
+    	String launchdata = userState.get("cmi.launch_data");
+    	// search usermodel....
+    	LOG.fine(launchdata);
+    	String MAGIC = "\"studentModelId\":\"MYSQL;PersistentStudentModelContext";
+    	int start = launchdata.indexOf(MAGIC);
+    	if (start > 0) {
+    		start += 18;
+    		int end = launchdata.indexOf('"', start);
+    		String id = launchdata.substring(start, end);
+    		PersistenceId pid = new PersistenceId(id);
+    		resultService.getStudentModel(pid).then(p -> {
+    			userState.put("dme.studentmodelstructure", DomStudentModelStructureCodec.toString(p.getValue().getModelStructure()));
+    			return p;
+    		}).onResolve(() -> initTail(ssc, context));
+    		return;
+    	}
+    }
+    initTail(ssc, context);
+  }
+
+protected void initTail(DomResultStudentScoContext ssc, JavaScriptObject context) {
+	setAPI(this);
     LOG.info("view.init " + context + "  " + view);
     resultState = context;
     view.init(context);   
     LOG.info("update Frame for " + ssc.getStudentSco().getScoID());
     updateFrame(ssc.getStudentSco());
-  }
+}
 
   /* learnerid proxy, geen hasrole voor deze student, maar wel z'n schoolklas waar die in zit */
   
