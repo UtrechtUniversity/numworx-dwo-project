@@ -1,12 +1,12 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.dagger;
 
+import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
+
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SMDescriptionService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionService;
 
 @Module
 abstract class StudentModelModule {
-	@Provides static DescriptionService description() {
-		return null;
-	}
+	@Binds abstract DescriptionService description(SMDescriptionService sm);
 }
