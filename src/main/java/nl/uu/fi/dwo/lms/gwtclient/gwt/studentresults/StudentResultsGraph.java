@@ -85,7 +85,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	
 	private static final int TITLE_HEIGHT = 32;
 
-	static final StudentResultsGraphBundle bundle = GWT.create(StudentResultsGraphBundle.class);
+	protected static final StudentResultsGraphBundle bundle = GWT.create(StudentResultsGraphBundle.class);
 
 	static final double XLARGE = 0.3;
 	static final double LARGE =  0.21;
@@ -267,7 +267,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	private ColorStyle defaultEdgeColor = colorBlue4;
 	
 	private OMSVGDocument doc;
-	private SVGImage image;
+	protected SVGImage image;
 	private String lang;
 	
 	private OMSVGPoint start;
@@ -489,7 +489,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	abstract class AbstractNode {
 		boolean blur;
 		boolean visible = true;
-		final OMSVGGElement g = doc.createSVGGElement();
+		final protected OMSVGGElement g = doc.createSVGGElement();
 		OMSVGCircleElement circle;
 		OMSVGTextElement text;
 		ColorStyle nodeColor = defaultNodeColor;
@@ -524,7 +524,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 
 		}
 
-		boolean isBlur() {
+		protected boolean isBlur() {
 			return blur;
 		}
 
@@ -687,7 +687,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		return id.split("/",2)[0];
 	}
 	
-	class Node extends AbstractNode implements ClickHandler {
+	protected class Node extends AbstractNode implements ClickHandler {
 		final private DomStudentModelMethodInfo info;
 		final private DomStudentModelObj obj;
 		final private boolean kennen;
@@ -704,7 +704,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			moveTo(tmpx+dx, tmpy+dy);
 		}
 
-		String uuid() {
+		public String uuid() {
 			return obj.getInfo().getId();
 		}
 		
@@ -734,7 +734,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		}
 		
 		
-		Node(DomStudentModelObj obj, DomStudentModelMethodInfo info, String parent) {
+		protected Node(DomStudentModelObj obj, DomStudentModelMethodInfo info, String parent) {
 			setClassName(bundle.css().node());
 			this.obj = obj;
 			r = 12;
@@ -778,10 +778,6 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		}
 		public boolean isVoorkennis() {
 			return voorkennis;
-		}
-
-		Node(DomStudentModelObj obj, DomStudentModelMethodInfo info) {
-			this(obj,info, "");
 		}
 		
 		OMSVGGElement build() {
@@ -847,7 +843,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		}
 
 		@Override
-		void colorize() {
+		protected void colorize() {
 			if (!invalid())
 			{
 				if (blur) g.addClassNameBaseVal(bundle.css().blur());
@@ -856,7 +852,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			}
 		}
 
-		void setBlur(boolean blur) {
+		protected void setBlur(boolean blur) {
 			this.blur = blur;
 			colorize();
 		}
@@ -888,20 +884,20 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		
 	}
 	
-	private Map<String, List<Node>> map;
+	protected Map<String, List<Node>> map;
 	private Map<String, ChapterNode> chapters;
 	private Map<String, BookNode> books;
 	private Set<Edge> edges;
 	private Set<ChapterEdge> chapterEdges;
 	
-	private Button zoomFitBtn, zoomInBtn, zoomOutBtn, voorkennisBtn, verbergBtn;
+	protected Button zoomFitBtn, zoomInBtn, zoomOutBtn, voorkennisBtn, verbergBtn;
 	private DockLayoutPanel voorkennistitle;
 	private FilterTitle title;
 		
 	@Inject DescriptionPresenter description;
 	private DomStudentModelContext4Student current;
 
-	@Inject StudentResultsGraph() {
+	@Inject protected StudentResultsGraph() {
 		
 		bundle.css().ensureInjected();
 		
@@ -973,6 +969,11 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		chapterEdges = Collections.emptySet();
 		getElement().getStyle().setBackgroundColor(colorGray3.getColor());
 		
+		initHandlers();
+
+	}
+
+	protected void initHandlers() {
 		image.addMouseMoveHandler(this);
 		image.addMouseUpHandler(this);
 		image.addMouseDownHandler(this);
@@ -986,7 +987,6 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		
 		
 		addDomHandler(this, ContextMenuEvent.getType());
-
 	}
 
 	PopupPanel popupMenu;
@@ -1284,11 +1284,11 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 				DomStudentModelMethodInfo info = new DomStudentModelMethodInfo();
 				info.setX(obj.getInfo().getX());
 				info.setY(obj.getInfo().getY());
-				map.put( id, Collections.singletonList( new Node(obj, info, p)));
+				map.put( id, Collections.singletonList( nodeFactory(obj, p, info)));
 			} else {
 				map.put( id, methodInfo.stream()
 					.filter(info -> Objects.equals(method, info.getMethod()))
-					.map(info -> new Node(obj, info, p))
+					.map(info -> nodeFactory(obj, p, info))
 					.filter(t -> !t.invalid())
 					.collect(Collectors.toList()));
 			}
@@ -1296,6 +1296,14 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		}
 		for (DomStudentModelObj leaf : obj.getObjectives()) setModel(leaf, obj.getInfo());
 		return false;
+	}
+
+	protected Node nodeFactory(DomStudentModelObj obj, final String p, DomStudentModelMethodInfo info) {
+		return new Node(obj, info, p);
+	}
+	
+	protected Node nodeFactory(DomStudentModelObj obj, DomStudentModelMethodInfo info) {
+		return nodeFactory(obj, "", info);
 	}
 
 	private String parentOf(DomStudentModelContextInfo info) {

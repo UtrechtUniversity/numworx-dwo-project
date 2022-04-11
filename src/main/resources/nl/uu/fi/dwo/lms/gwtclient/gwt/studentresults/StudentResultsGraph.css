@@ -25,6 +25,17 @@
 	
 }
 
+
+.goals .goal.node {
+	fill: rgb(240,240,240);
+}
+.goals .node {
+	fill: rgb(240, 240, 255);
+}
+.goals .check.goal.node {
+	fill: rgb(64,64,64);
+}
+
 .chapternode text {
 	text-anchor: middle;
     dominant-baseline: central;

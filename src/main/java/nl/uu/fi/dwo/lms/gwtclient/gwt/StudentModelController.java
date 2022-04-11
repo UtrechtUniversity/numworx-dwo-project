@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -9,7 +10,7 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
 import com.google.gwt.user.client.ui.LayoutPanel;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.StudentModelGraph;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
@@ -23,7 +24,7 @@ public class StudentModelController {
 	String lang = "nl";
 
 	@Inject StudentModelController() { }
-	@Inject StudentResultsGraph graph;
+	@Inject StudentModelGraph graph;
 	
 	private DomStudentModelStructure mock() {
 		DomStudentModelStructure result = new DomStudentModelStructure();
@@ -62,7 +63,6 @@ public class StudentModelController {
 		DomStudentModelContext4Student item = new DomStudentModelContext4Student();
 		DomStudentModelStructure modelStructure = mock();
 		item.setModelStructure(modelStructure);
-		Promise<DomStudentModelDataScore> score = Promises.failed(new IllegalArgumentException());
 
 		DomMethod method = new DomMethod();
 		method.books = Collections.emptyList();
@@ -71,6 +71,10 @@ public class StudentModelController {
 		method.standard = true;
 		method.method = "Geen methode";
 		
-		graph.setModelScore(item, score, method);
+		graph.setModel(item, method);
+		List<String> ids = Arrays.asList("obj1");
+		List<String> set = Collections.emptyList();
+		
+		graph.setGoals(ids, set);
 	}
 }

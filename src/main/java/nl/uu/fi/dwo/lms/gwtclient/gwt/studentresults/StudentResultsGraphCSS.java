@@ -22,4 +22,8 @@ public interface StudentResultsGraphCSS extends CssResource {
 	
 	String kennen();
 	String graphButton();
+	
+	String check();
+	String goal();
+	String goals();
 }
