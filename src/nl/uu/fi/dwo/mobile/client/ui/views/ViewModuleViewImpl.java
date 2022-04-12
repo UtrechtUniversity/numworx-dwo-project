@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.inject.Inject;
-
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -26,6 +24,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
+import nl.uu.fi.dwo.interaction.client.keyboard.ResizeFocusPanel;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
 import nl.uu.fi.dwo.keyboard.client.Combined;
 import nl.uu.fi.dwo.keyboard.client.CombinedState;
@@ -36,8 +35,6 @@ import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
-//import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
-//import nl.uu.fi.dwo.mobile.client.ui.KeyBoardTabPanel;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
@@ -71,7 +68,6 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
-import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -106,30 +102,6 @@ import com.googlecode.mgwt.ui.client.MGWT;
  */
 public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder, NextPrevHandler, ObjectivesHandler, MisconceptionsHandler, HasHeight, CombinedState
 {
-	public static class ResizeFocusPanel extends FocusPanel implements RequiresResize, ProvidesResize {
-
-		@Override
-		public void onResize() {
-			Widget w = getWidget();
-			if(w instanceof RequiresResize)
-				((RequiresResize) w).onResize();
-		}
-
-		public ResizeFocusPanel(Widget child) {
-			super(child);
-		}
-
-        public ResizeFocusPanel() {
-        }
-
-//		@Override
-//		protected void onAttach() {
-//			// TODO Auto-generated method stub
-//			super.onAttach();
-//			fp.forceLayout();
-//		}
-
-	}
 	private static final String RANDOM_VAR_WAARDEN = "RandomVarWaarden";
 	private static final String RANDOM_VAR_NAMEN = "RandomVarNamen";
 	private static final String KEYBOARD = "keyboardNr";
