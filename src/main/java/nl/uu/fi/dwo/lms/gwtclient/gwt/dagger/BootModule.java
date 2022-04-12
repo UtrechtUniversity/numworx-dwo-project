@@ -7,6 +7,7 @@ import com.google.web.bindery.event.shared.ResettableEventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
 import dagger.Binds;
+import dagger.BindsOptionalOf;
 import dagger.Module;
 import dagger.Provides;
 import dagger.Reusable;
@@ -43,6 +44,7 @@ abstract class BootModule {
 		return new ResettableEventBus(bus);
 	}
 
+	@BindsOptionalOf abstract EventBus optionalEventBus();
 	@Binds abstract EventBus eventBus(ResettableEventBus bus); // for RoleScope eventHandlers
 	@Binds abstract ViewFactory viewFactory(ViewFactoryJs view);
 	

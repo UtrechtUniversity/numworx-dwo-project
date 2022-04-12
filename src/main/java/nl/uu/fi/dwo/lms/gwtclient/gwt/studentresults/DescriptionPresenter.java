@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -7,14 +8,13 @@ import javax.inject.Inject;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
@@ -22,7 +22,11 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 public class DescriptionPresenter {
 	private static final Logger LOG = Logger.getLogger(DescriptionPresenter.class.getName());
 
-	@Inject DescriptionPresenter() {}
+	private Optional<EventBus> bus;
+	
+	@Inject DescriptionPresenter(Optional<EventBus> bus) { 
+		this.bus = bus;
+	}
 	
 	  private native static void setAPI(DescriptionPresenter view) /*-{
       var api = {
@@ -57,7 +61,7 @@ public class DescriptionPresenter {
               return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionPresenter::getValue(Ljava/lang/String;)(key)
           },
           "SetValue" : function(key, value) {
-              return "true"
+              return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionPresenter::setValue(Ljava/lang/String;Ljava/lang/String)(key, value)
           },
           "GetLastError" : function() {
               return "0"
@@ -72,7 +76,7 @@ public class DescriptionPresenter {
               return "true"
           },
           "Terminate" : function(dummy) {
-              return "true"
+              return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionPresenter::terminate(Ljava/lang/String;)(dummy)
           },
       // TODO more to follow...           
       };
@@ -94,6 +98,16 @@ public class DescriptionPresenter {
 			  return value;
 			}
 
+		private String setValue(String key, String value) {
+			LOG.info("SetValue "+ key);
+			return "true";
+		}
+		
+		private String terminate(String dummy) {
+			return "true";
+		}
+		
+		
 		Widget createDescription(String text, String json) {
 		    if (text != null && text.startsWith(WISKOPDR_SIG))
 		    {
