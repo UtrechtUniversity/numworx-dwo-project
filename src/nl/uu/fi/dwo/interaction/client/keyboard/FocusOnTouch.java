@@ -21,6 +21,7 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
 
 final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPressHandler
@@ -36,7 +37,7 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 		if(w instanceof FocusPanel) 
 			focus = (FocusPanel) w;
 		else {
-			focus = new FocusPanel();
+			focus = w instanceof RequiresResize ? new ResizeFocusPanel(): new FocusPanel();
 			focus.add(w);
 		}
 		if(main)
