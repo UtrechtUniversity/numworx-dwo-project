@@ -98,7 +98,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	
 	public static final String LESSON_MODE = "cmi.mode";
 	public static final String SHARE_MAP = "shareMap";
-    final private Scorm2004IF api;
+    protected final Scorm2004IF api;
 	private ViewModuleView view; 
 	private JSONObject suspendData;
 	private JSONObject onsState, shareMap;
@@ -151,7 +151,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private Number score;
 	private JSONArray aantalNakijken;
 	private LessonMode cmi_mode;
-	private ActivityComponent activity;
+	protected ActivityComponent activity;
 
 	Memento(ActivityComponent a, Scorm2004IF api) {
 		this.activity = a;
@@ -1524,6 +1524,9 @@ public JSONObject getShareMap() {
 
 	public String getAuthorization() {
 		return api.getAuthorization();
+	}
+
+	public void gotoUrl(String href) {
 	}
 
 }

@@ -22,5 +22,14 @@ public class WiskOpdrMemento extends Memento {
 		close();
 	}
 
+	final static String GOTO_URL = "dme.goto_url";
+	@Override
+	public void gotoUrl(String href) {
+		boolean result = setValue(GOTO_URL, href);
+		if (result) {
+			close();
+		}
+	}
+
 
 }

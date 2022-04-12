@@ -1862,12 +1862,17 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			{
 				int opdrnr = Integer.parseInt(href.substring(6)) -1 ; // 0based
 				on.gotoOpdracht(opdrnr, scoreNav);
-			} // iets met de place controller.....
+			} else {
+				on.gotoUrl(href);
+			}
+			
+			// iets met de place controller.....
 			
 		}
 
 		@Override
 		public void gotoPlace(String token) {
+			on.gotoUrl("#" + token);
 		}
 
 	}
