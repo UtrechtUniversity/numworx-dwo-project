@@ -61,7 +61,7 @@ public class DescriptionPresenter {
               return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionPresenter::getValue(Ljava/lang/String;)(key)
           },
           "SetValue" : function(key, value) {
-              return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionPresenter::setValue(Ljava/lang/String;Ljava/lang/String)(key, value)
+              return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionPresenter::setValue(Ljava/lang/String;Ljava/lang/String;)(key, value)
           },
           "GetLastError" : function() {
               return "0"
