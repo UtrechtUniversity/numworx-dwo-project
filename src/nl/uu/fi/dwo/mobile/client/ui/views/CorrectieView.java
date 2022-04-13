@@ -162,9 +162,14 @@ private boolean checkDocent;
     parent = w;
     area = new MLTextBox(a);
     initWidget(uiBinder.createAndBindUi(this));
+    leerdoelen.setVisible(isTest(a));
     area.setCommunicationRoot(comRoot);
     comroot = comRoot;
   }
+
+protected boolean isTest(ActivityComponent a) {
+	return a.parameters().getDwoEnv().contains("test");
+}
 
   @UiHandler("ok")
   void onOk(ClickEvent e) {

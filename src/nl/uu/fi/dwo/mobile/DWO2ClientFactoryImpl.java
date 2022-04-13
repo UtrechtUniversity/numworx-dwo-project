@@ -78,10 +78,6 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
               setup(none,numworx);
         }
 
-//		public void addBarrier(Promise<?> p) {
-//			agent.addBarrier(p);
-//		}
-
         public TreeModuleView getTreeModuleView()
         {
           if (treeModuleView == null)
