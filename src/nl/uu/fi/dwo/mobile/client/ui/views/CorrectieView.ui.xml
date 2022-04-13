@@ -61,7 +61,7 @@
 	<g:HTMLPanel addStyleNames='{style.flow}'>
 		<p class='{style.max}' ><ui:text from="{rb.maximaleScore}"/><g:InlineLabel ui:field='max' text='10' /></p>
 		<p class='{style.score}'><ui:text from='{rb.score}' /><g:InlineLabel ui:field='score' text='4'/></p>
-		<p class='{style.correctie}' ><ui:text from='{rb.toevoeging}' /><g:TextBox ui:field='correctie' text='0'/></p>
+		<p class='{style.correctie}' ><ui:text from='{rb.toevoeging}' /><g:TextBox ui:field='correctie' text='0'/> <g:Button ui:field='leerdoelen' addStyleNames='{style.button}' text="Leerdoelen" /></p>
 		<p class='{style.opmerking}' ><ui:text from='{rb.opmerkingen}' /></p>
 		<p class='{style.content}'><v:MLTextBox ui:field='area' /></p>
 		<div class='{style.buttons}'>

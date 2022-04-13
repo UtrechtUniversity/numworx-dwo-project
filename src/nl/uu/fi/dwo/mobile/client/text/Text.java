@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.mobile.client.text;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.i18n.client.Constants;
-import com.google.gwt.i18n.client.Constants.DefaultStringValue;
 
 public interface Text extends Constants {
 	Text constants = GWT.create(Text.class);

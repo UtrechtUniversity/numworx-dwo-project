@@ -13,6 +13,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -31,8 +32,9 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.DWOPopupPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PopupButton;
 import nl.uu.fi.dwo.mobile.utils.HasHide;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
+import nl.uu.fi.dwo.mobile.utils.PopupFacade.PopupListener;
 
-public class CorrectieView extends Composite implements HasHide {
+public class CorrectieView extends Composite implements HasHide, PopupListener {
 
   private static final String CHECK_DOCENT = "checkDocent";
   public static final String REVIEW_SCORE_CORRECTIE = "reviewScoreCorrectie";
@@ -80,9 +82,7 @@ public class CorrectieView extends Composite implements HasHide {
           int width = widget.getOffsetWidth() - 16;
           int height = widget.getOffsetHeight() - 16;
           if (x > width && y > height) {
-            if(popup != null) {
-             
-              //popup.showRelativeTo(widget);
+            if(popup != null) {            
             	popup.center();
             } else {
               //iv.kijkNa();iv.getState(); // wat is nodig voor score?????? FIXME
@@ -124,20 +124,11 @@ private boolean checkDocent;
       view.score.setText(Integer.toString(score));
       view.area.setText(String.valueOf(comment));
       view.checkDocent = checkDocent;
-//      PopupPanel popup = new PopupPanel();
-//      popup.setWidget(view);
-//      view.setPopup(popup);      
-//      popup.showRelativeTo(w);
-//      return popup;
-
-		DWOPopupPanel panel = new DWOPopupPanel(Text.constants.docentCorrectieTitle(), PopupButton.NOVIEW_LISTENER);
-		panel.addContent(view);
-		view.setPopup(panel);
-		panel.center();
-     return panel;
-      
-      
-      
+      DWOPopupPanel panel = new DWOPopupPanel(Text.constants.docentCorrectieTitle(), view);
+      panel.addContent(view);
+      view.setPopup(panel);
+      panel.center();
+      return panel;
   }
 
   private Map<String,Object> object;
@@ -146,7 +137,7 @@ private boolean checkDocent;
     this.object = map;
   }
 
-  private PopupPanel popup;
+  private PopupPanel popup, leerdoelenPopup;
 
   private void setPopup(PopupPanel popup) {
     this.popup = popup;
@@ -163,6 +154,7 @@ private boolean checkDocent;
   @UiField HasText max, score;
   @UiField TextBox correctie;
   @UiField(provided=true) MLTextBox area;
+  @UiField Button leerdoelen;
   private final Widget parent;
   private final OpdrNavIF comroot;
 
@@ -200,9 +192,19 @@ private boolean checkDocent;
     hide();
   }
 
+  @UiHandler("leerdoelen")
+  void onLeerdoelen(ClickEvent e) {
+	  DWOPopupPanel popup = new DWOPopupPanel("Leerdoelen", PopupButton.NOVIEW_LISTENER);
+	  LeerdoelenView view = new LeerdoelenView();
+	  popup.addContent(view);
+	  leerdoelenPopup = popup;
+	  popup.center();
+  }
+  
   @Override
   public void hide() {
     popup.hide();
+    if (leerdoelenPopup != null) leerdoelenPopup.hide();
   }
  
   @UiHandler("correctie")
@@ -216,5 +218,14 @@ private boolean checkDocent;
 		
 	}
   }
+
+	@Override
+	public void onShow() {
+	}
+	
+	@Override
+	public void onHide() {
+	    if (leerdoelenPopup != null) leerdoelenPopup.hide();
+	}
   
 }
