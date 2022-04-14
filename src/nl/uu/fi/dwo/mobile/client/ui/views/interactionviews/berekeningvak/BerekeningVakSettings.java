@@ -9,7 +9,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 public class BerekeningVakSettings {
 	
 	//general settings
-	private final ObjectMap launchState;
+	private final ObjectMap launchState; 
 	private int breedte = 0;
 	private int hoogte = 0;
 	private boolean volledigeBreedte;
@@ -37,6 +37,9 @@ public class BerekeningVakSettings {
 	private boolean boxMetRand = true;
 	private boolean meerregelig = false;
 	private boolean pasAanH = true;
+	//antwoordmodel
+	private ObjectMap formuleAntwoordModel;
+	private ObjectMap vergelijkingAntwoordModel;
 	
 	
 	public BerekeningVakSettings(HashMap<String, Object> launchData) {
@@ -79,6 +82,11 @@ public class BerekeningVakSettings {
 		if(launchState.containsKey("meerregelig"))
 			meerregelig = launchState.getBoolean("meerregelig");
 		
+		if(launchState.containsKey("formuleAntwoordModel"))
+			formuleAntwoordModel = launchState.getObjectMap("formuleAntwoordModel");
+		if(launchState.containsKey("vergelijkingAntwoordModel"))
+			vergelijkingAntwoordModel = launchState.getObjectMap("vergelijkingAntwoordModel");
+		
 		if(launchState.containsKey("logObjectives"))
 		{	ObjectList logObjectivesList = ( launchState.getObjectList("logObjectives") );
 			logObjectives = new boolean[logObjectivesList.size()][];
@@ -116,6 +124,9 @@ public class BerekeningVakSettings {
 	
 	public boolean boxMetRand() {return boxMetRand;}
 	public boolean meerregelig() {return meerregelig;}
+	
+	public ObjectMap formuleAntwoordModel() {return formuleAntwoordModel;}
+	public ObjectMap vergelijkingAntwoordModel() {return vergelijkingAntwoordModel;}
 	
 	public boolean[][] logObjectives() {return logObjectives;}
 	public String[] smObjectives() {return smObjectives;}
