@@ -67,9 +67,9 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	private OpdrNavIF comRoot = this;
 	private HashMap<String, Number> randomVars;
 	private String pendingState;
-	private int width;
+	private int width, fullwidth;
 	private int height;
-	private boolean volledigeBreedte;
+	private boolean volledigeBreedte, hasFullWidth;
 	private PopupFacade facade;
 	private static FormuleFont defaultFont = FormuleFont.createFromFontSize(18);
 	private HandlerRegistration loadhandler;
@@ -138,8 +138,10 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		boolean volledigeBreedte = false; if(outermap.containsKey("volledigeBreedte")) volledigeBreedte = outermap.getBoolean("volledigeBreedte");
 		
 		this.volledigeBreedte = volledigeBreedte;
+		hasFullWidth = volledigeBreedte && ! facade.isPopup();
 		this.width = width;
 		this.height = height;
+		this.fullwidth = width;
 		if(!volledigeBreedte ) initFrame();
 		if(innerMap.containsKey("logObjectives")) 
 		{
@@ -155,28 +157,6 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		teltmee = true;
 		if(innerMap.containsKey("teltmee")) 
 			teltmee = innerMap.getBoolean("teltmee");
-//		boolean logOption = innerMap.getBoolean("logOption", false);
-//		if (logOption || innerMap.containsKey("smObjectives")) {
-//			String logID = logOption ? innerMap.getString("logID") : null;
-//			DWOLogger dwoLogger = new DWOLogger();
-//			if(innerMap.containsKey("scoreMax"))
-//			{
-//				dwoLogger.setMaxScore(scoreMax);
-//			}
-//			logging = dwoLogger;
-//			logging.setLogID( logID);
-//			int soortVak = outermap.getInt("soortInteractiePanel");
-//
-//			logging.setClassName(className(soortVak));
-//			dwoLogger.setLogObjectives(logObjectives);
-//			String[] smObjectives = null;
-//			if (innerMap.containsKey("smObjectives")) {
-//				  smObjectives = innerMap.getStringArray("smObjectives");
-//				}
-//			dwoLogger.setSMObjectives(smObjectives);
-//			dwoLogger.setTeltMee(teltmee);
-//
-//		}
 		int soortVak = outermap.getInt("soortInteractiePanel");
 		if (innerMap.containsKey("checkDocent")) checkDocent = innerMap.getBoolean("checkDocent");
 		logging = new LogBuilder(activity).setClassName(className(soortVak)).setLaunchData(innerMap).build();
@@ -854,21 +834,30 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 	@Override
 	public int getHeight() {
+		if (hasFullWidth) return fullheight();
 		return facade.wrapHeight(height);
 	}
 
 	@Override
 	public int getWidth() {
+		if (hasFullWidth) return fullwidth;
 		return facade.wrapWidth(width);
 	}
 	
   public void zetVolledigeBreedte(int breedte) {
     if (volledigeBreedte) {
       volledigeBreedte = false; // one-shot, kan maar één keer worden aangeroepen.
-      width = breedte;
+      width = fullwidth = breedte;
       initFrame();
+    } else if (hasFullWidth) {
+    	frame.setPixelSize(fullwidth, fullheight());
+    	
     }
   }
+
+	private int fullheight() {
+	return height * fullwidth / width;
+}
 
 	@Override
 	public void setAsHoogte(int ashoogte) {
