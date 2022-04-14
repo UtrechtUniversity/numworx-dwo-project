@@ -417,7 +417,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 			{	
 				goTo(new ViewModulePlace(scoid,location));
 			} else if (page >= 0){
-				defaultContext.gotoUrl("goto:." + (location+1));
+				defaultContext.gotoUrl("goto:." + (Integer.parseInt(location)+1));
 			}
 		}
 	}
