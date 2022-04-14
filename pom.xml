@@ -274,11 +274,11 @@
 		<runTarget>${project.artifactId}.html</runTarget>
 		<warClassifier />
 		<gwt.copyWebapp>true</gwt.copyWebapp>
-		<accountVersion>2.5.8-SNAPSHOT</accountVersion>
+		<accountVersion>2.5.8</accountVersion>
 		<gwtVersion>2.8.2</gwtVersion>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <maven.javadoc.skip>true</maven.javadoc.skip>
-    	<interactionVersion>0.1.12-SNAPSHOT</interactionVersion>
+    	<interactionVersion>0.1.12</interactionVersion>
 	</properties>
 	<profiles>
 		<profile>
