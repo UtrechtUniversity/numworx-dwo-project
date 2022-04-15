@@ -849,9 +849,9 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
       volledigeBreedte = false; // one-shot, kan maar één keer worden aangeroepen.
       width = fullwidth = breedte;
       initFrame();
-    } else if (hasFullWidth) {
+    } else if (hasFullWidth && breedte != fullwidth) {
+    	fullwidth = breedte;
     	frame.setPixelSize(fullwidth, fullheight());
-    	
     }
   }
 
