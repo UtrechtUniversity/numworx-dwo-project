@@ -381,6 +381,8 @@ public void setView(Display aView) {
         + locale
         + "&profile="
         + profile
+        + "&env="
+        + (dwoGlobalVars.isTest()?"test":"app")
         + "&t=" + random + "#cmi.launch_data:"+scoId;
     LOG.info("openUrl " + url);
     view.openUrl(url);

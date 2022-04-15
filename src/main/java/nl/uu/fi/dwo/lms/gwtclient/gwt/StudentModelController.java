@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -9,7 +10,13 @@ import javax.inject.Inject;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
+import com.google.gwt.core.client.JsonUtils;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.LayoutPanel;
+
+import fi.dwo.gwt.lib.rest.util.DomStudentModelStructureCodec;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.StudentModelGraph;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
@@ -54,14 +61,39 @@ public class StudentModelController {
 		return result;
 	}
 	
+	private native String GetValue0(String name) /*-{
+		return $wnd.doGetValue(name)
+	}-*/;
 	
+	public String GetValue(String name) {
+	  try {
+	    return GetValue0(name);
+	  } catch(Exception e) {
+	    return "";
+	  }
+	}
+	
+	
+	private native String SetValue0(String name, String value) /*-{
+		return $wnd.doSetValue(name, value)
+	}-*/;
+	
+	public String SetValue(String name, String value) {
+	  try { 
+	    return SetValue0(name, value);
+	  } catch(Exception e) {
+	    return "false";
+	  }
+	}
+
 	
 
 	public void go(LayoutPanel root) {
 		
 		root.add(graph);
 		DomStudentModelContext4Student item = new DomStudentModelContext4Student();
-		DomStudentModelStructure modelStructure = mock();
+		String sm = GetValue("dme.studentmodelstructure");
+		DomStudentModelStructure modelStructure = DomStudentModelStructureCodec.CODEC.decode(sm);
 		item.setModelStructure(modelStructure);
 
 		DomMethod method = new DomMethod();
@@ -72,7 +104,9 @@ public class StudentModelController {
 		method.method = "Geen methode";
 		
 		graph.setModel(item, method);
-		List<String> ids = Arrays.asList("obj1");
+		JSONArray value = JSONParser.parseStrict(GetValue("dme.studentmodelitems")).isArray();
+		List<String> ids = new ArrayList<>(value.size());
+		for(int i = 0; i < value.size(); i++) ids.add(value.get(i).isString().stringValue());
 		List<String> set = Collections.emptyList();
 		
 		graph.setGoals(ids, set);

@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@external .normal .small .xsmall .large .xlarge;
+@external .normal .small .xsmall .large .xlarge .goal .node .check .blur .goals .kennen;
 
 .booknode {
 	fill: rgb(222, 229, 240);
@@ -26,14 +26,18 @@
 }
 
 
-.goals .goal.node {
-	fill: rgb(240,240,240);
+.goals .goal.node circle {
+	fill: rgb(180,195,228); 
+	stroke: rgb(180,195,228); // colorblue4 (actief)
 }
-.goals .node {
-	fill: rgb(240, 240, 255);
+
+.goals .node circle {
+	fill: rgb(229,240,249); 
+	stroke: rgb(180,195,228); // colorblue6+4 (inactief)
 }
-.goals .check.goal.node {
-	fill: rgb(64,64,64);
+.goals .check.goal.node circle {
+	fill: rgb(120,150,202); 
+	stroke: rgb(120,150,202); // colorblue3 (check)
 }
 
 .chapternode text {
@@ -55,13 +59,18 @@
 }
 
 
-.node text {
+.node text, .goals .goal.node text {
 	text-anchor: middle;
     dominant-baseline: central;
     font-family: Ubuntu;
     font-size: 16px;
-    fill: rgb(49, 71, 112);
+    fill: rgb(49, 71, 112); // colorblue1
 }
+.goals .node text {
+	fill: rgb(38,115,182); // colorblue2
+}
+
+
 .node rect {
 	stroke-width: 6;
     fill: rgba(237, 239, 241, 0.73);

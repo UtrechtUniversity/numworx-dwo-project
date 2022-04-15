@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -52,7 +53,7 @@ public class StudentModelGraph extends StudentResultsGraph {
 		protected void colorize() {
 			setClassName(bundle.css().goal(), goal);
 			setClassName(bundle.css().check(), check);
-			super.colorize();
+			//super.colorize();
 		}
 
 		@Override
@@ -94,13 +95,13 @@ public class StudentModelGraph extends StudentResultsGraph {
 
 	@Override
 	protected void initHandlers() {
-		super.initHandlers();
+//		super.initHandlers();
 	}
 
 
 
 	public void setGoals(List<String> ids, List<String> set) {
-		ids.stream().map(map::get).flatMap(List::stream).forEach(n -> {
+		ids.stream().map(map::get).filter(Objects::nonNull).flatMap(List::stream).forEach(n -> {
 			GoalNode node = (GoalNode) n;
 			node.setGoal(true);
 			node.setCheck(set.contains(node.uuid()));
