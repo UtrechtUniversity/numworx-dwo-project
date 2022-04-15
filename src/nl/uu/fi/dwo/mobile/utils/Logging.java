@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.mobile.utils;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
@@ -18,7 +17,10 @@ public interface Logging {
 
 	void setLogObjectives(boolean[][] objectives);	
 	void setSMObjectives(String[] objectives);
-	default void setSMForeknowledge(String[] foreknowledge) { } 
+	String[] getSMObjectives();
+
+	default void setSMForeknowledge(String[] foreknowledge) { }
+	default String[] getSMForeknowledge() { return null; }
 
     void setMaxScore(int max);
 

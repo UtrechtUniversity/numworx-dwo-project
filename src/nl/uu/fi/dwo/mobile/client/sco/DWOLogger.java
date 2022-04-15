@@ -247,6 +247,10 @@ public class DWOLogger implements Logging {
       delegate.setSMObjectives(objectives);
     }
   }
+  @Override
+  public String[] getSMObjectives() {
+	  return delegate != null ? delegate.getSMObjectives(): null;
+  }
 
 	public void setLogOption(boolean logOption) {
 		this.logOption = logOption;
@@ -259,6 +263,9 @@ public class DWOLogger implements Logging {
 			delegate.setSMForeknowledge(foreknowledge);
 		}
 	}
-	
+	@Override
+	public String[] getSMForeknowledge() {
+		return delegate != null ? delegate.getSMForeknowledge(): null;
+	}
 	
 }

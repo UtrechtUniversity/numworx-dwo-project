@@ -23,7 +23,7 @@ public class CorrectieReview extends CorrectieFacade {
     }
 
     private CorrectieReview(Map<String, Object> h, InteractionView iv, Widget widget, int maxScore, OpdrNavIF comRoot, Logging logging, ActivityComponent a, boolean checkDocent) {
-      correctie = CorrectieView.addCorrection(h, iv, widget, maxScore, comRoot, a, checkDocent);
+      correctie = CorrectieView.addCorrection(h, iv, widget, maxScore, comRoot, a, checkDocent, logging);
       this.comRoot = comRoot;
       this.iv = iv;
       this.maxScore = maxScore;

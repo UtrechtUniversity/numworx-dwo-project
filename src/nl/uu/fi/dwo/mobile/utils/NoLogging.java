@@ -32,12 +32,15 @@ public final class NoLogging implements Logging {
 
   @Override
   public void setMaxScore(int max) {
-    // TODO Auto-generated method stub
-    
   }
 
   @Override
   public void setLogOption(boolean logOption) {	
+  }
+
+  @Override
+  public String[] getSMObjectives() {
+	return null;
   }
 
 }

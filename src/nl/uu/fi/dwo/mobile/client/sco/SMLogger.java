@@ -222,11 +222,20 @@ public class SMLogger implements Logging {
     delegate.setSMObjectives(objectives);
   }
   
+  @Override public String[] getSMObjectives() {
+	  return extensions.objectives == null ? null : extensions.objectives.toArray(new String[0]);
+  }
+  
   @Override
   public void setSMForeknowledge(String[] foreknowledge) {
 	  extensions.foreknowledge = 
 			  foreknowledge != null ? Arrays.asList(foreknowledge) : null;
 	  delegate.setSMForeknowledge(foreknowledge);
+  }
+
+  @Override
+  public String[] getSMForeknowledge() {
+	  return extensions.foreknowledge == null ? null : extensions.foreknowledge.toArray(new String[0]);
   }
 
   @Override

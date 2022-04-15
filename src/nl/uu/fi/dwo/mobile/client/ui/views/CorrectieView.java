@@ -27,11 +27,13 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.DWOPopupPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PopupButton;
 import nl.uu.fi.dwo.mobile.utils.HasHide;
+import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade.PopupListener;
 
@@ -45,7 +47,7 @@ public class CorrectieView extends Composite implements HasHide, PopupListener {
   public static final String CORRECTIE = DWOplayer.DWO_BUNDLE.dwoplayercss().correctie();
   public static final String CORRECTED = DWOplayer.DWO_BUNDLE.dwoplayercss().corrected();
   
-  public static Provider<Map<String,Object>> addCorrection(Map<String,Object> map, InteractionView iv, final Widget widget, int scoreMax, OpdrNavIF comRoot, ActivityComponent a, boolean checkDocent) {
+  public static Provider<Map<String,Object>> addCorrection(Map<String,Object> map, InteractionView iv, final Widget widget, int scoreMax, OpdrNavIF comRoot, ActivityComponent a, boolean checkDocent, Logging logger) {
     widget.addStyleName(CORRECTIE);
     ObjectMap h = JSONUtilities.wrapMap(map);
     h = h.getObjectMap(REVIEW_INTERACTIE_DATA);
@@ -87,7 +89,7 @@ public class CorrectieView extends Composite implements HasHide, PopupListener {
             	popup.center();
             } else {
               //iv.kijkNa();iv.getState(); // wat is nodig voor score?????? FIXME
-              popup = startCorrection(result, widget, iv.getScore(), scoreMax, comRoot, a, checkDocent);
+              popup = startCorrection(result, widget, iv.getScore(), scoreMax, comRoot, a, checkDocent, logger);
             }
           }
         }, MouseUpEvent.getType());
@@ -101,7 +103,7 @@ public class CorrectieView extends Composite implements HasHide, PopupListener {
                 popup.center();
               } else {
                 //iv.kijkNa();iv.getState(); // wat is nodig voor score?????? FIXME
-                popup = startCorrection(result, widget, iv.getScore(), scoreMax, comRoot, a, checkDocent);
+                popup = startCorrection(result, widget, iv.getScore(), scoreMax, comRoot, a, checkDocent, logger);
               }
             }
           }, PointerUpEvent.getType());
@@ -113,8 +115,8 @@ public class CorrectieView extends Composite implements HasHide, PopupListener {
   int minCor,maxCor;
 private boolean checkDocent;
   
-  private static PopupPanel startCorrection(Map<String, Object> map, Widget w, int score, int scoreMax, OpdrNavIF comRoot, ActivityComponent a, boolean checkDocent) {
-      CorrectieView view = new CorrectieView(a, w, comRoot);
+  private static PopupPanel startCorrection(Map<String, Object> map, Widget w, int score, int scoreMax, OpdrNavIF comRoot, ActivityComponent a, boolean checkDocent, Logging logger) {
+      CorrectieView view = new CorrectieView(a, w, comRoot, logger);
       view.setObject(map);      
       Object correctie = map.getOrDefault(REVIEW_SCORE_CORRECTIE,"0");
       Object comment   = map.getOrDefault(REVIEW_SCORE_COMMENT, "");
@@ -158,12 +160,16 @@ private boolean checkDocent;
   @UiField Button leerdoelen;
   private final Widget parent;
   private final OpdrNavIF comroot;
+  private final Scorm2004IF api;
+  private String[] smObjectives;
 
-  private CorrectieView(ActivityComponent a, Widget w, OpdrNavIF comRoot) {
+  private CorrectieView(ActivityComponent a, Widget w, OpdrNavIF comRoot, Logging logger) {
     parent = w;
     area = new MLTextBox(a);
+    api = a.api();
     initWidget(uiBinder.createAndBindUi(this));
-    leerdoelen.setVisible(isTest(a));
+    smObjectives = logger.getSMObjectives();
+	leerdoelen.setVisible(isTest(a) && smObjectives != null);
     area.setCommunicationRoot(comRoot);
     comroot = comRoot;
   }
@@ -202,6 +208,8 @@ protected boolean isTest(ActivityComponent a) {
 
   @UiHandler("leerdoelen")
   void onLeerdoelen(ClickEvent e) {
+	  String value = JSONUtilities.toJSONArray(smObjectives).toString();
+	  api.SetValue("dme.studentmodelitems", value);
 	  DWOPopupPanel popup = new DWOPopupPanel("Leerdoelen", PopupButton.NOVIEW_LISTENER);
 	  LeerdoelenView view = new LeerdoelenView();
 	  popup.addContent(view);

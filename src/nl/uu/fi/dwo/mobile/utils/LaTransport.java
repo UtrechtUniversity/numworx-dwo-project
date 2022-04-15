@@ -351,7 +351,8 @@ public class LaTransport implements Logging {
   @Override
   public void setSMObjectives(String[] objectives) {
   }
-
+  @Override
+  public String[] getSMObjectives() { return null; }
 
   @Override
   public void setMaxScore(int max) {
