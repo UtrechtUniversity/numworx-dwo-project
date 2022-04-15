@@ -55,4 +55,9 @@ public class DWOplayerTinCan extends WiskOpdrDefaults {
 		return  bundle.headercss();
 	}
 
+	@Override
+	public String getDwoEnv() {
+		return "tincan";
+	}
+
 }

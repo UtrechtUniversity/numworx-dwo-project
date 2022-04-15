@@ -42,5 +42,12 @@ public class WiskOpdrDefaults extends DWOplayerDefaults {
             return new NoStatusKeyboard(a);
         return super.getStatusBar(a);
     }
+
+	@Override
+	public String getDwoEnv() {
+		String env = Window.Location.getParameter("env");
+		if (env != null) return env;
+		return super.getDwoEnv();
+	}
     
 }
