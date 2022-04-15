@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.inject.Provider;
 
@@ -168,7 +169,9 @@ private boolean checkDocent;
   }
 
 protected boolean isTest(ActivityComponent a) {
-	return a.parameters().getDwoEnv().contains("test");
+	String dwoEnv = a.parameters().getDwoEnv();
+	Logger.getLogger(getClass().getName()).severe("is Test " + dwoEnv);
+	return dwoEnv.contains("test");
 }
 
   @UiHandler("ok")

@@ -3,11 +3,9 @@ package nl.uu.fi.dwo.mobile.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 
-import nl.uu.fi.dwo.mobile.WiskOpdrPlayer;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.dwokb.NoStatusKeyboard;
-import nl.uu.fi.dwo.mobile.utils.Logging;
 
 public class WiskOpdrDefaults extends DWOplayerDefaults {
 	@Override
