@@ -222,7 +222,7 @@ protected boolean isTest(ActivityComponent a) {
     correctie.setText(n.toString());
     Object comment = object.getOrDefault(REVIEW_SCORE_COMMENT, "");
     area.setText(comment.toString());
-    studentmodelSet = object.getOrDefault(REVIEW_STUDENTMODELSET, "[]");
+    studentmodelSet = object.getOrDefault(REVIEW_STUDENTMODELSET, "[]").toString();
     
     hide();
   }
