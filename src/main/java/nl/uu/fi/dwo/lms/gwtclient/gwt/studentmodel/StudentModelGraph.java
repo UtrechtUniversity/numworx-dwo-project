@@ -146,7 +146,7 @@ public class StudentModelGraph extends StudentResultsGraph {
 	public List<String> getGoals() {
 		return map.values().stream()
 		.flatMap(List::stream)
-		.map(GoalNode.class::cast)
+		.map(n -> (GoalNode)n)
 		.filter(GoalNode::isCheck)
 		.map(GoalNode::getId)
 		.collect(Collectors.toList());
