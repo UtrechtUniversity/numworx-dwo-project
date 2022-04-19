@@ -135,7 +135,7 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
  */
 public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInterface, IdleListener {
 
-    private static final String DWO_ENV = "dwo_env";
+    public static final String DWO_ENV = "dwo_env";
 
 	private static final Logger LOG = Logger.getLogger("fi.dwo");
 
