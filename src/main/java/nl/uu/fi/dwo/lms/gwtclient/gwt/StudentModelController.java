@@ -88,12 +88,13 @@ public class StudentModelController implements ClickHandler {
 	public void go(LayoutPanel root) {
 		
 		root.add(graph);
-		root.setWidgetTopBottom(graph, 0, Unit.PX, 1, Unit.EM);
+		root.setWidgetTopBottom(graph, 0, Unit.PX, 1.3, Unit.EM);
 		Button b = new Button("doorgaan");
 		b.addClickHandler(this);
 		b.addStyleName("doorgaan");
 		root.add(b);
-		root.setWidgetBottomHeight(b, 0, Unit.PX, 1, Unit.EM);
+		root.setWidgetBottomHeight(b, 0, Unit.PX, 1.2, Unit.EM);
+		root.setWidgetLeftRight(b, 10, Unit.PX, 10, Unit.PX);
 		
 		DomStudentModelContext4Student item = new DomStudentModelContext4Student();
 		String sm = GetValue("dme.studentmodelstructure");
@@ -129,6 +130,11 @@ public class StudentModelController implements ClickHandler {
 		for(int i = 0; i < set.size(); i++) {
 			array.set(i, new JSONString(set.get(i)));
 		}
-		SetValue("dme.studentmodelset", array.toString()); 
+		SetValue("dme.studentmodelset", array.toString());
+		closeWindow();
 	}
+
+	private native void closeWindow() /*-{
+		$wnd.parent.closeWindow();
+	}-*/;;
 }

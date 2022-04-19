@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -11,8 +12,14 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.event.dom.client.MouseUpEvent;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph.VerbergVoorkennis;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph.Voorkennis;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph.Zoom;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph.ZoomFit;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
@@ -28,7 +35,9 @@ public class StudentModelGraph extends StudentResultsGraph {
 		
 		private boolean goal, check;
 		
-		
+		String getId() {
+			return obj.getInfo().getId();
+		}
 		private void setClassName(String name, boolean b) {
 			if (b) {
 				g.addClassNameBaseVal(name);
@@ -95,8 +104,27 @@ public class StudentModelGraph extends StudentResultsGraph {
 
 
 	@Override
+	public void onMouseUp(MouseUpEvent event) {
+		// TODO Auto-generated method stub
+		super.onMouseUp(event);
+	}
+
+
+	@Override
 	protected void initHandlers() {
-//		super.initHandlers();
+//		image.addMouseMoveHandler(this);
+//		image.addMouseUpHandler(this);
+//		image.addMouseDownHandler(this);
+//		image.addMouseOutHandler(this);
+		
+		zoomFitBtn.addClickHandler(new ZoomFit());
+		zoomOutBtn.addClickHandler(new Zoom(true));
+		zoomInBtn.addClickHandler(new Zoom(false));
+		voorkennisBtn.addClickHandler(new Voorkennis());
+		verbergBtn.addClickHandler(new VerbergVoorkennis());
+		
+		
+		addDomHandler(this, ContextMenuEvent.getType());
 	}
 
 
@@ -116,8 +144,12 @@ public class StudentModelGraph extends StudentResultsGraph {
 
 
 	public List<String> getGoals() {
-		// TODO list of selected ids
-		return Collections.emptyList();
+		return map.values().stream()
+		.flatMap(List::stream)
+		.map(GoalNode.class::cast)
+		.filter(GoalNode::isCheck)
+		.map(GoalNode::getId)
+		.collect(Collectors.toList());
 	}
 
 }

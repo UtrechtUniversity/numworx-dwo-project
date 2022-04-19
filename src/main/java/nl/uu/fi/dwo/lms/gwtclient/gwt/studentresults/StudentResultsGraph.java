@@ -117,7 +117,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	boolean inVoorkennis, inVoorkennisTree;
 	Collection<Edge> voorkennisEdges = Collections.emptySet();
 	
-	private class Voorkennis implements ClickHandler {
+	public class Voorkennis implements ClickHandler {
 
 		public OMSVGPoint create(float x, float y) {
 			return image.getSvgElement().createSVGPoint(x, y);
@@ -200,7 +200,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			LOG.info("voorkennis edges = " + voorkennisEdges.size());
 		}
 	}
-	private class VerbergVoorkennis implements ClickHandler {
+	public class VerbergVoorkennis implements ClickHandler {
 
 		@Override
 		public void onClick(ClickEvent event) {
@@ -212,7 +212,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	
 
 	float factor = 1.0f;
-	class Zoom implements ClickHandler {
+	public class Zoom implements ClickHandler {
 
 		final boolean out;
 		public Zoom(boolean b) {
@@ -689,7 +689,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	
 	protected class Node extends AbstractNode implements ClickHandler {
 		final private DomStudentModelMethodInfo info;
-		final private DomStudentModelObj obj;
+		final protected DomStudentModelObj obj;
 		final private boolean kennen;
 		private OMSVGRectElement rect;
 		private boolean voorkennis;
