@@ -43,6 +43,7 @@ public class CorrectieView extends Composite implements HasHide, PopupListener {
   public static final String REVIEW_SCORE_CORRECTIE = "reviewScoreCorrectie";
   public static final String REVIEW_SCORE_COMMENT   = "reviewScoreComment";
   public static final String REVIEW_INTERACTIE_DATA = "reviewInteractieData";
+  public static final String REVIEW_STUDENTMODELSET = "reviewStudentModelSet";
   
   public static final String CORRECTIE = DWOplayer.DWO_BUNDLE.dwoplayercss().correctie();
   public static final String CORRECTED = DWOplayer.DWO_BUNDLE.dwoplayercss().corrected();
@@ -78,6 +79,8 @@ public class CorrectieView extends Composite implements HasHide, PopupListener {
         	result.put(REVIEW_SCORE_COMMENT, h.getString(REVIEW_SCORE_COMMENT));
           if (h.containsKey(CHECK_DOCENT))
         	  result.put(CHECK_DOCENT, h.getBoolean(CHECK_DOCENT, checkDocent));
+          if (h.containsKey(REVIEW_STUDENTMODELSET))
+        	  result.put(REVIEW_STUDENTMODELSET, h.getString(REVIEW_STUDENTMODELSET));
         }
         widget.addDomHandler(event -> {
           int x = event.getRelativeX(widget.getElement());
@@ -120,6 +123,7 @@ private boolean checkDocent;
       view.setObject(map);      
       Object correctie = map.getOrDefault(REVIEW_SCORE_CORRECTIE,"0");
       Object comment   = map.getOrDefault(REVIEW_SCORE_COMMENT, "");
+      Object studentmodelSet = map.getOrDefault(REVIEW_STUDENTMODELSET, "[]");
       view.maxCor = scoreMax - score;
       view.minCor = -score;
       view.correctie.setText(correctie.toString());
@@ -127,6 +131,7 @@ private boolean checkDocent;
       view.score.setText(Integer.toString(score));
       view.area.setText(String.valueOf(comment));
       view.checkDocent = checkDocent;
+      view.studentmodelSet = String.valueOf(studentmodelSet);
       DWOPopupPanel panel = new DWOPopupPanel(Text.constants.docentCorrectieTitle(), view);
       panel.addContent(view);
       view.setPopup(panel);
@@ -162,7 +167,20 @@ private boolean checkDocent;
   private final OpdrNavIF comroot;
   private final Scorm2004IF api;
   private String[] smObjectives;
+  private String studentmodelSet = "[]";
+  
+  private native static void closeWindow(CorrectieView view) /*-{
+  	$wnd.closeWindow = function() {
+  		view::nl.uu.fi.dwo.mobile.client.ui.views.onCloseView()()
+  }-*/;
+  
 
+  private void onCloseView() {
+	  String set = api.GetValue("dme.studentmodelset");
+	  onHide();
+	  studentmodelSet = set;
+  }
+  
   private CorrectieView(ActivityComponent a, Widget w, OpdrNavIF comRoot, Logging logger) {
     parent = w;
     area = new MLTextBox(a);
@@ -193,6 +211,7 @@ protected boolean isTest(ActivityComponent a) {
     if(parent != null) {
       parent.setStyleName(CORRECTED, n!=0);
     }
+    object.put(REVIEW_STUDENTMODELSET, studentmodelSet);
     hide();
     comroot.setChanged(false); // checkpoint???????
   }
@@ -203,6 +222,8 @@ protected boolean isTest(ActivityComponent a) {
     correctie.setText(n.toString());
     Object comment = object.getOrDefault(REVIEW_SCORE_COMMENT, "");
     area.setText(comment.toString());
+    studentmodelSet = object.getOrDefault(REVIEW_STUDENTMODELSET, "[]");
+    
     hide();
   }
 
@@ -210,10 +231,12 @@ protected boolean isTest(ActivityComponent a) {
   void onLeerdoelen(ClickEvent e) {
 	  String value = JSONUtilities.toJSONArray(smObjectives).toString();
 	  api.SetValue("dme.studentmodelitems", value);
+	  api.SetValue("dme.studentmodelset", studentmodelSet);
 	  DWOPopupPanel popup = new DWOPopupPanel("Leerdoelen", PopupButton.NOVIEW_LISTENER);
 	  LeerdoelenView view = new LeerdoelenView();
 	  popup.addContent(view);
 	  leerdoelenPopup = popup;
+	  closeWindow(this);
 	  popup.center();
   }
   
