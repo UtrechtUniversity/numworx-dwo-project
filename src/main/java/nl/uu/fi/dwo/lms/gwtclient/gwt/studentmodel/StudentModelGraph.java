@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -111,6 +112,12 @@ public class StudentModelGraph extends StudentResultsGraph {
 	@Override
 	protected Node nodeFactory(DomStudentModelObj obj, String p, DomStudentModelMethodInfo info) {
 		return new GoalNode(obj, info, p);
+	}
+
+
+	public List<String> getGoals() {
+		// TODO list of selected ids
+		return Collections.emptyList();
 	}
 
 }

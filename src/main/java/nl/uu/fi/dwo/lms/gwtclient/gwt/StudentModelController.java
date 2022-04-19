@@ -7,13 +7,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
-
-import com.google.gwt.core.client.JsonUtils;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.json.client.JSONString;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.LayoutPanel;
 
 import fi.dwo.gwt.lib.rest.util.DomStudentModelStructureCodec;
@@ -22,11 +22,10 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 
-public class StudentModelController {
+public class StudentModelController implements ClickHandler {
 	
 	String lang = "nl";
 
@@ -86,11 +85,16 @@ public class StudentModelController {
 	  }
 	}
 
-	
-
 	public void go(LayoutPanel root) {
 		
 		root.add(graph);
+		root.setWidgetTopBottom(graph, 0, Unit.PX, 1, Unit.EM);
+		Button b = new Button("doorgaan");
+		b.addClickHandler(this);
+		b.addStyleName("doorgaan");
+		root.add(b);
+		root.setWidgetBottomHeight(b, 0, Unit.PX, 1, Unit.EM);
+		
 		DomStudentModelContext4Student item = new DomStudentModelContext4Student();
 		String sm = GetValue("dme.studentmodelstructure");
 		DomStudentModelStructure modelStructure = DomStudentModelStructureCodec.CODEC.decode(sm);
@@ -107,8 +111,24 @@ public class StudentModelController {
 		JSONArray value = JSONParser.parseStrict(GetValue("dme.studentmodelitems")).isArray();
 		List<String> ids = new ArrayList<>(value.size());
 		for(int i = 0; i < value.size(); i++) ids.add(value.get(i).isString().stringValue());
+
 		List<String> set = Collections.emptyList();
+		try {
+			value = JSONParser.parseStrict(GetValue("dme.studentmodelset")).isArray();
+			set = new ArrayList<>(value.size());
+			for(int i = 0; i < value.size(); i++) set.add(value.get(i).isString().stringValue());
+		} catch(Exception e) { } 
 		
 		graph.setGoals(ids, set);
+	}
+
+	@Override
+	public void onClick(ClickEvent event) {
+		List<String> set = graph.getGoals();
+		JSONArray array = new JSONArray();
+		for(int i = 0; i < set.size(); i++) {
+			array.set(i, new JSONString(set.get(i)));
+		}
+		SetValue("dme.studentmodelset", array.toString()); 
 	}
 }
