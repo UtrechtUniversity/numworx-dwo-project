@@ -171,7 +171,7 @@ private boolean checkDocent;
   
   private native static void closeWindow(CorrectieView view) /*-{
   	$wnd.closeWindow = function() {
-  		view::nl.uu.fi.dwo.mobile.client.ui.views.onCloseView()()
+  		view.@nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView::onCloseView()()
   }-*/;
   
 
