@@ -107,12 +107,14 @@ public class TabletActivityMapper implements ActivityMapper
 		}
 		
 		
-		if (place instanceof ViewModulePlace)
+		if (place instanceof ViewModulePlace) // or s
 		{	ViewModulePlace where = (ViewModulePlace) place;
 			PersistenceId id = where.getID();
 			SelectModuleItem item = SelectModuleItemHolder.getScoByID(id);
 			if(item == null)
+			{
 				return login.get();
+			}
 			item.setPlace(place);
 			final ViewModuleActivity viewModuleActivity = 
 			    place instanceof ViewCoursePlace 

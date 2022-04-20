@@ -1,11 +1,5 @@
 package nl.uu.fi.dwo.mobile;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,8 +10,6 @@ import nl.uu.fi.dwo.mobile.client.template.TemplateConstants;
 import nl.uu.fi.dwo.mobile.client.template.TemplateCss;
 import nl.uu.fi.dwo.mobile.client.template.TemplateNumworxConstants;
 import nl.uu.fi.dwo.mobile.client.template.TemplateUUTestConstants;
-import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
-import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
@@ -50,9 +42,8 @@ import fi.wiskopdr.text.Text_nl;
  */
 public abstract class DWOplayer
 {
-	public static final boolean RESPONSIVE =  "true".equals(Window.Location.getParameter("responsive"));
+	public static final boolean RESPONSIVE =  true || "true".equals(Window.Location.getParameter("responsive"));
 
-  //public static final boolean JSON = true;
 	public static int PROFILE_ID = 77;
 	
 	public static final DWOplayerClientBundle DWO_BUNDLE = GWT.create(DWOplayerClientBundle.class);
@@ -85,25 +76,13 @@ public abstract class DWOplayer
 		setDwoProfileID();
 	}
 		
-	//private static HashMap<String, String> resources = new HashMap<String, String>();
-
-
 	public static Text_nl rb = new Text_nl();
-		
-//	@Deprecated
-//	private static Deferred<DomDwoProfileFull> deferredProfile;
-//	@Deprecated
-//	private static Promise<DomDwoProfileFull> dwoProfile; // NEVER NULL
-//	public static ClientFactory clientfactory;
 
 	/**
 	 * This is the entry point method.
 	 */
 	public void start()
 	{
-		//Logger.getLogger("DWOplayer").log(Level.WARNING, "Version " + BUILD.version + ", build " + BUILD.buildNumber);
-//		deferredProfile = new Deferred<DomDwoProfileFull>();
-//		dwoProfile = deferredProfile.getPromise();
 		setupResources();
 		setupDWOPlayer();
 		initProfile();
@@ -216,74 +195,6 @@ public abstract class DWOplayer
 
 	public static long timezone = 0L;
 	
-	/**
-	 * @param result
-	 */
-//	private static void insertFlat(List<Map<String, Object>> result) {
-//		long now = System.currentTimeMillis() + timezone;
-//		for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
-//			Map<String, Object> map = iterator.next();
-//			Object o = map.get("notBefore");
-//            if (o instanceof Date) {
-//                if (now < ((Date) o).getTime()) {
-//                    continue;
-//                }
-//            }
-//            o = map.get("notAfter");
-//            if (o instanceof Date) {
-//                if (now > ((Date) o).getTime()) {
-//                    continue;
-//                }
-//            }
-//
-//            SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.MODULE);
-//			SelectModuleItemHolder.insert(item);
-//		}
-//	}
-
-//	private static void insertTree(List<Map<String,Object>> result) {
-//		long now = System.currentTimeMillis() + timezone;
-//		for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
-//			Map<String, Object> map = iterator.next();
-//			
-//			Object o = map.get("notBefore");
-//            if (o instanceof Date) {
-//                if (now < ((Date) o).getTime()) {
-//                    continue;
-//                }
-//            }
-//            o = map.get("notAfter");
-//            if (o instanceof Date) {
-//                if (now > ((Date) o).getTime()) {
-//                    continue;
-//                }
-//            }
-//						
-//			SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.MODULE);
-//			if (Boolean.TRUE.equals (map.get("withChildren")))
-//			{
-//				List<SelectModuleItem> children = item.getChildren();
-//				if(children == null)
-//					item.setChildren(children = new ArrayList<SelectModuleItem>());
-//			}
-//				
-//			Integer parentID = (Integer) map.get("parentID"); // FIXME voor MC Squared type parentID?
-//			if(parentID != null && parentID.intValue()> 0 )
-//			{
-//				SelectModuleItem parent = SelectModuleItemHolder.getItemByID(parentID);
-//				if( parent != null)
-//				{
-//					List<SelectModuleItem> children = parent.getChildren();
-//					if(children == null)
-//						parent.setChildren(children = new ArrayList<SelectModuleItem>());
-//					children.add(item);
-//					item.setParent(parent);
-//				} 
-//			} 
-//			SelectModuleItemHolder.insert(item);
-//			
-//		}
-//	}
 	
 	public static void insertCSS(String value) {
 		String href = DwoConstants.constants.server() + 

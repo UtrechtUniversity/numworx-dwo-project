@@ -44,7 +44,7 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	protected final EventBus eventBus;
 			
 	// singleton pattern.
-	Provider<HeaderView> headerView;
+	Provider<? extends HeaderView> headerView;
 
 	protected void setup(Provider<HeaderViewNone> none, Provider<HeaderView> numworx)
 	{
@@ -52,11 +52,11 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	  {
 	    HeaderViewNone headerViewNone = none.get();
 	    headerViewNone.setPresenter(this);
-	    headerView = () -> headerViewNone;
+	    headerView = none;
 	  } else {
         HeaderView impl = numworx.get();
         impl.setPresenter(this);
-	    headerView = () -> impl;
+	    headerView = numworx;
 	  }
 	};
 

@@ -122,18 +122,21 @@ public void onMessage(MessageEvent event) {
 //    presenter.goTo(HeaderViewNumworx.computeSearch(message, Text.constants));
 //  } else 
 	  if (message.startsWith(GOTO)) {
-    message = message.substring(GOTO.length());
-    Place place = mapper.getPlace(message);
-    if (place != null) presenter.goTo(place);
-    else presenter.goTo(getHomePlace());
-  } else if (Actions.LOGOUT.name().equals(message)) {
-      LOG.info("logout received");
-	  presenter.goTo(LogoutPlace.INSTANCE);
-	  LOG.info("wait");
-	  agent.barrier().onResolve(() -> { LOG.info("execute");Actions.LOGOUT.execute();});
-	  LOG.info("waiting");
-  }
-  
+		  LOG.info("found goto " + message);
+		  message = message.substring(GOTO.length());
+		  Place place = mapper.getPlace(message);
+		  LOG.info("place = " + place);
+		  if (place != null) {
+	    	presenter.goTo(place);
+		  }
+		  else presenter.goTo(getHomePlace());
+	  } else if (Actions.LOGOUT.name().equals(message)) {
+	      LOG.info("logout received");
+		  presenter.goTo(LogoutPlace.INSTANCE);
+		  LOG.info("wait");
+		  agent.barrier().onResolve(() -> { LOG.info("execute");Actions.LOGOUT.execute();});
+		  LOG.info("waiting");
+	  } 
 }
 
 public void setTrail(List<SelectModuleItem> trail) {
