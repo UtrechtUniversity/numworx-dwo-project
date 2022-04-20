@@ -153,6 +153,10 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
               case MODULES:
                   mainView.selectView(SelectedView.MODULES);
                   presenterFactory.getModulesPresenter().show();
+                  break;
+              case GOTO_URL:
+                  mainView.selectView(SelectedView.MODULES);
+                  presenterFactory.getModulesPresenter().show(switchViewEvent.getSearch().get("message"));              
               case ARROWUP: case SEARCH: case GOTO: case CLOSING:
                   break;
               case MODULESVIEW:

@@ -3,10 +3,12 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.dagger;
 import com.google.gwt.core.client.GWT;
 
 import dagger.Binds;
+import dagger.BindsOptionalOf;
 import dagger.Module;
 import dagger.Provides;
 import dagger.Reusable;
 import fi.dwo.gwt.lib.rest.CallManagers.MethodManager;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.PresenterFactory;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.StudentPresenterFactory;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.StudentViewHandler;

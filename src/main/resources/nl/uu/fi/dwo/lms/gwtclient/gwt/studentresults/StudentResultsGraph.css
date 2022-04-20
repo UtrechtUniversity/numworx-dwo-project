@@ -28,16 +28,16 @@
 
 .goals .goal.node circle {
 	fill: rgb(180,195,228); 
-	stroke: rgb(180,195,228); // colorblue4 (actief)
+	stroke: rgb(180,195,228); 
 }
 
 .goals .node circle {
 	fill: rgb(229,240,249); 
-	stroke: rgb(180,195,228); // colorblue6+4 (inactief)
+	stroke: rgb(180,195,228); 
 }
 .goals .check.goal.node circle {
 	fill: rgb(120,150,202); 
-	stroke: rgb(120,150,202); // colorblue3 (check)
+	stroke: rgb(120,150,202); 
 }
 
 .chapternode text {
@@ -64,10 +64,10 @@
     dominant-baseline: central;
     font-family: Ubuntu;
     font-size: 16px;
-    fill: rgb(49, 71, 112); // colorblue1
+    fill: rgb(49, 71, 112); 
 }
 .goals .node text {
-	fill: rgb(38,115,182); // colorblue2
+	fill: rgb(38,115,182); 
 }
 
 

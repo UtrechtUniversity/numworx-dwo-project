@@ -1,9 +1,11 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -16,6 +18,8 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 
@@ -23,9 +27,11 @@ public class DescriptionPresenter {
 	private static final Logger LOG = Logger.getLogger(DescriptionPresenter.class.getName());
 
 	private Optional<EventBus> bus;
+	private String test = "app";
 	
-	@Inject DescriptionPresenter(Optional<EventBus> bus) { 
+	@Inject DescriptionPresenter(Optional<EventBus> bus, @Named("test") boolean test) { 
 		this.bus = bus;
+		if (test) this.test = "test";
 	}
 	
 	  private native static void setAPI(DescriptionPresenter view) /*-{
@@ -85,7 +91,9 @@ public class DescriptionPresenter {
 	}-*/;
 
 	  static final String WISKOPDR_SIG = "H4sIAAAAAA";
+	  static final String GOTO_URL = "dme.goto_url";
 	  private String launch_data;
+	  private SwitchViewEvent event;
 
 		private String getValue(String key) {
 			  LOG.info("GetValue " + key);
@@ -100,10 +108,17 @@ public class DescriptionPresenter {
 
 		private String setValue(String key, String value) {
 			LOG.info("SetValue "+ key);
+			if (GOTO_URL.equals(key) && value.startsWith("#") && bus.isPresent()) {
+				event = new SwitchViewEvent(SelectedView.GOTO_URL, Collections.singletonMap("message", "GOTO:" + value.substring(1)));
+			}
 			return "true";
 		}
 		
 		private String terminate(String dummy) {
+			if (event != null) {
+				SwitchViewEvent e = event; event = null;
+				bus.get().fireEvent(e);
+			}
 			return "true";
 		}
 		
@@ -123,11 +138,14 @@ public class DescriptionPresenter {
 		          + locale
 		          + "&profile="
 		          + profile
+		          + "&env="
+		          + test
 		          + "&t=" + random + "#cmi.launch_data:0";
 		      LOG.info("openUrl " + url);
 		      wiskopdr = new Frame(url);
 		      wiskopdr.setStylePrimaryName("score-frame");
 		      launch_data = json;
+		      event = null;
 		      setAPI(this);
 		      return wiskopdr;
 		    }

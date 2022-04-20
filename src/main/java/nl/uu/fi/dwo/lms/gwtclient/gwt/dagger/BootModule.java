@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.dagger;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import com.google.web.bindery.event.shared.EventBus;
@@ -18,6 +19,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.ui.IdleDetect;
 import nl.uu.fi.dwo.ideas.client.IdeasClient;
 import nl.uu.fi.dwo.ideas.client.IdeasIF;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactory;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactoryJs;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.modules.JsModulesView;
@@ -45,6 +47,7 @@ abstract class BootModule {
 	}
 
 	@BindsOptionalOf abstract EventBus optionalEventBus();
+	@Provides @Named("test") static boolean test(DwoGlobalVars vars) { return vars.isTest(); }
 	@Binds abstract EventBus eventBus(ResettableEventBus bus); // for RoleScope eventHandlers
 	@Binds abstract ViewFactory viewFactory(ViewFactoryJs view);
 	

@@ -4,11 +4,9 @@ import java.util.Map;
 
 import org.vectomatic.file.File;
 
-import com.gargoylesoftware.htmlunit.javascript.configuration.JavaScriptConfiguration;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.GwtEvent;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
@@ -85,6 +83,7 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
         // TEACHERSINSCHOOLCLASS,
         , TEACHERSTUDENTMODEL
         , LOGOUT
+        , GOTO_URL
     }
 
 //    private DomStudent student;

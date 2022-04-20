@@ -114,12 +114,15 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         this.mainView = viewFactory.getMainView();
     }
 
-//    @JsMethod not required unless testing stuff.
-    public void show() {
+    public Promise<String> show(String message) {
+    	return show().then(p -> { view.sendMessage(message); return p;});
+    }
+    
+    public Promise<String> show() {
       if (init == null || (init.isDone() && init.getFailure() != null)) {
         init();
       } 
-        init.then(p-> {
+      return init.then(p-> {
           if(register == null)
           {
         	  register = eventBus.addHandler(SwitchViewEvent.TYPE, this);
@@ -136,7 +139,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
             view.setMainNavVisible(true);
             view.sendMessage(SHOWMAINNAV);
           }
-          return null;
+          return p;
         });
     }
  
@@ -306,8 +309,6 @@ public class ModulesPresenter implements SwitchViewEventHandler {
           String cmd = switchViewEvent.getSearch().get("message");
           LOG.info("goto "+cmd);
           view.sendMessage(cmd);
-        case TRAIL: 
-          return;
         case ARROWUP:
           LOG.info("sending arrowUp message");
           view.sendMessage(select.name());
@@ -317,9 +318,11 @@ public class ModulesPresenter implements SwitchViewEventHandler {
           LOG.info("sending search message " + search);
           String message = select.name() + ":" + toString(search);
           view.sendMessage(message);
+        case TRAIL: 
         case MODULES:
         case MODULESVIEW:
         case MAYBELOGOUT:
+        case GOTO_URL:
           return;
         case CLOSING:
         	view.sendMessage(select.name());
