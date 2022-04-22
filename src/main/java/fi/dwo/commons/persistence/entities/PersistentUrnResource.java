@@ -21,7 +21,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  *
  */
 @Entity
-@Table(name = "tblUrnResource", schema = "")
+@Table(name = "tblurnresource", schema = "")
 public class PersistentUrnResource {
 
 	@Id

@@ -20,7 +20,7 @@ import org.json.simple.JSONObject;
  * @author Gert van der Plas
  */
 @Entity
-@Table(name = "tblLogData", schema = "")
+@Table(name = "tbllogdata", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "LoginData.findByTimeStampRangeAndUsername", query = "SELECT p FROM PersistentLoginData p WHERE p.userId = :userId and p.utcTimeStamp > :fromTimestamp and p.utcTimeStamp < :toTimestamp "),
