@@ -139,7 +139,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
             view.setMainNavVisible(true);
             view.sendMessage(SHOWMAINNAV);
           }
-          return p;
+          return inited.getPromise();
         });
     }
  
@@ -155,6 +155,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
       DomSchoolClass klas = dwoGlobalVars.getActiveSchoolRoleAndClass().getSchoolClass();
       schoolClassId = klas == null ? null : klas.getId();
       LOG.fine("role = " + roleId);
+      inited = new Deferred<>();
       if (roleId != null)
         init = account.getBearerToken().then(this::gotToken,FAILURE);
       else
@@ -164,8 +165,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         u.setProtocol(Location.getProtocol());
         u.setHost(Location.getHost());
         u.setHash("#guest:");
-        if (true)
-          u.setParameter("header", "none");
+        u.setParameter("header", "none");
         String base = Location.getParameter("base");
         if(base != null && !base.isEmpty() && legal(base)) {
           u.setParameter("base",base);
@@ -277,6 +277,8 @@ public class ModulesPresenter implements SwitchViewEventHandler {
           
         } else if (isVisible() && "LOGINNEEDED".equals(message)) {
         	loginNeeded();
+        } else if ("INITED".equals(message)) {
+        	if (!inited.getPromise().isDone())inited.resolve(message);
         }
     }
 
@@ -368,6 +370,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
     }
 
     Deferred<Boolean> logout;
+    Deferred<String>  inited;
     public Promise<Boolean> logout(Promise<Boolean> p) {
       if (p.getValue() && init != null) {
         logout = new Deferred<>();
