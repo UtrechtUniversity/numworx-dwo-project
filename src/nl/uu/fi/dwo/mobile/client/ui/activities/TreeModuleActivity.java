@@ -136,6 +136,7 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 						view.selectModule(item);
 						WaitScreen.instance().hide();
 						panel.setWidget(view);
+						if (item == SelectModuleItem.ROOT && Actions.isAvailable()) Actions.INITED.execute();
 					}
 				}
 			);

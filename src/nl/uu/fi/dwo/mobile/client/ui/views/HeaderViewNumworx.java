@@ -147,6 +147,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 	}
 
 	public void setPresenter(GotoController presenter) {
+		if (presenter == null) presenter = controller::goTo; // never null
 		this.presenter = presenter;
 	}
 

@@ -104,6 +104,7 @@ public class HeaderViewNone extends HTML implements HeaderView, MessageEventHand
 
 @Override
 public void setPresenter(GotoController presenter) {
+  if (presenter == null) presenter = controller::goTo; // never null
   this.presenter = presenter;
 }
 

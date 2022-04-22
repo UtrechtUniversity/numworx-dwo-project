@@ -130,7 +130,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 		}
 
 		public boolean withUser() {
-			return instance.getCurrentUser() != null;
+			return instance.withUser();
 		}
 
 		

@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.mobile.client.ui.activities.ActivityFactory;
 import nl.uu.fi.dwo.mobile.client.ui.activities.CourseActivity2;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ExamModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LoginActivity;
@@ -14,6 +15,7 @@ import nl.uu.fi.dwo.mobile.client.ui.activities.ScoActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.TreeModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ViewCourseActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ViewModuleActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.ViewScoActivity;
 import nl.uu.fi.dwo.mobile.client.ui.places.HasHash;
 import nl.uu.fi.dwo.mobile.client.ui.places.Hash;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
@@ -56,6 +58,7 @@ public class TabletActivityMapper implements ActivityMapper
 	@Inject Lazy<CourseActivity2.Factory> caFactory;
 	@Inject Lazy<ExamModuleActivity.Factory> exFactory;
 	@Inject Lazy<ScoActivity.Factory> scoFactory;
+	@Inject Lazy<ViewScoActivity.Factory> viewScoFactory;
 
 	@Inject PlaceController placeController;
 	@Inject MembersInjector<ViewModuleActivity> vmInjector;
@@ -103,7 +106,8 @@ public class TabletActivityMapper implements ActivityMapper
 				SelectModuleItemHolder.insert(item);
 			}
             item.setPlace(place);
-			return scoFactory.get().create(item, where);
+            ActivityFactory f = Actions.isAvailable() ? viewScoFactory.get() : scoFactory.get();
+			return f.create(item, where);
 		}
 		
 		

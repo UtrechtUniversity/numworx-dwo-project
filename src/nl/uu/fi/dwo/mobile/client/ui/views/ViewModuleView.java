@@ -10,7 +10,6 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 
-import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.IsWidget;
 
 /**
@@ -20,8 +19,7 @@ import com.google.gwt.user.client.ui.IsWidget;
  */
 public interface ViewModuleView extends IsWidget
 {
-	interface Presenter {
-		void goTo(Place place);
+	interface Presenter extends GotoController {
 	}
 	
 	void removeBtns();

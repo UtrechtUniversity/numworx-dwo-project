@@ -22,7 +22,6 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.text.Text;
-import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
@@ -90,7 +89,7 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 		location = where.getLocation();
 	}
 		
-	@Reusable public static class Factory {
+	@Reusable public static class Factory implements ActivityFactory {
 		@Inject MembersInjector<ScoActivity> injector;
 		@Inject Provider<ViewModuleView> clientFactory;
 		@Inject DwoGlobalVars vars;
