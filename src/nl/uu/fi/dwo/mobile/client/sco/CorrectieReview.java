@@ -1,10 +1,15 @@
 package nl.uu.fi.dwo.mobile.client.sco;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.inject.Provider;
+
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
@@ -14,6 +19,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 import nl.uu.fi.dwo.mobile.utils.Logging;
+import nl.uu.fi.dwo.rest.dom.xapi.Extensions;
 
 public class CorrectieReview extends CorrectieFacade {
     private Provider<?> correctie;
@@ -32,6 +38,9 @@ public class CorrectieReview extends CorrectieFacade {
       hh = hh.getObjectMap(CorrectieView.REVIEW_INTERACTIE_DATA);
       if ( hh != null && hh.containsKey(CorrectieView.REVIEW_SCORE_CORRECTIE)) {
         this.lastcorr = hh.getInt(CorrectieView.REVIEW_SCORE_CORRECTIE);
+      } 
+      if ( hh != null && hh.containsKey(CorrectieView.REVIEW_STUDENTMODELSET)) {
+          this.lastSet = hh.getString(CorrectieView.REVIEW_STUDENTMODELSET);
       } 
     }
 
@@ -59,6 +68,7 @@ public class CorrectieReview extends CorrectieFacade {
 	private OpdrNavIF comRoot;
 	private InteractionView iv;
 	private int maxScore, lastcorr;
+	private String lastSet;
 	private Logging logging;
 	
 	// send een correctie logentry naar de logger
@@ -67,8 +77,10 @@ public class CorrectieReview extends CorrectieFacade {
 	    int corr = map.containsKey(CorrectieView.REVIEW_SCORE_CORRECTIE) ?
 	    			map.getInt(CorrectieView.REVIEW_SCORE_CORRECTIE) :
 	    			0;
-	    if(corr == lastcorr || logging == null) return;
+	    String set = map.getString(CorrectieView.REVIEW_STUDENTMODELSET);
+	    if(corr == lastcorr && Objects.equals(set, lastSet)|| logging == null) return;
 	    lastcorr = corr;
+	    lastSet  = set;
         int raw = iv.getScore() + corr;
 	    Map<String,Object> parameters = new HashMap<>();
 	    parameters.put("score", Collections.singletonMap("raw", raw));
@@ -77,6 +89,15 @@ public class CorrectieReview extends CorrectieFacade {
 	    else if (corr < 0) 
 	      parameters.put("success", Boolean.FALSE);
 	    parameters.put("verb", SMLogger.CORRECTED);
+	    if (set != null) {
+	    	JSONArray value = JSONParser.parseStrict(set).isArray();
+	    	if (value != null) {
+	    		int len = value.size();
+	    		ArrayList<String> list = new ArrayList<>(len);
+	    		for (int i = 0; i < len; i++ ) list.add(value.get(i).isString().stringValue());
+		    	parameters.put(Extensions.OBJECTIVES, list); // is JSON string, should be List<String>, JSONArray toegestaan?
+	    	}
+	    }
 	    logging.updateLog(parameters);    
 	}
 	
