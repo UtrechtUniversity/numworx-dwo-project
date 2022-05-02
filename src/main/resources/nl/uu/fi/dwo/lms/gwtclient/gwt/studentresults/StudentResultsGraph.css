@@ -32,9 +32,10 @@
 }
 
 .goals .node circle {
-	fill: rgb(229,240,249); 
-	stroke: rgb(180,195,228); 
+    fill:   rgba(228,240,248,0.75);
+    stroke: rgba(179,195,227,0.25);
 }
+
 .goals .check.goal.node circle {
 	fill: rgb(120,150,202); 
 	stroke: rgb(120,150,202); 
@@ -66,10 +67,11 @@
     font-size: 16px;
     fill: rgb(49, 71, 112); 
 }
-.goals .node text {
-	fill: rgb(38,115,182); 
-}
 
+
+.goals .node text {
+	fill: rgba(32,112,183,0.125);
+}
 
 .node rect {
 	stroke-width: 6;

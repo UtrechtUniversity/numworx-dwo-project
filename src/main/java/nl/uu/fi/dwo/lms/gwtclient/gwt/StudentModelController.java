@@ -16,6 +16,7 @@ import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.LayoutPanel;
 
+import fi.dwo.gwt.lib.rest.util.DomMethodCodec;
 import fi.dwo.gwt.lib.rest.util.DomStudentModelStructureCodec;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.StudentModelGraph;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
@@ -88,25 +89,32 @@ public class StudentModelController implements ClickHandler {
 	public void go(LayoutPanel root) {
 		
 		root.add(graph);
-		root.setWidgetTopBottom(graph, 0, Unit.PX, 1.3, Unit.EM);
-		Button b = new Button("doorgaan");
+		root.setWidgetTopBottom(graph, 0, Unit.PX, 2.2, Unit.EM);
+		Button b = new Button("OK");
 		b.addClickHandler(this);
 		b.addStyleName("doorgaan");
 		root.add(b);
-		root.setWidgetBottomHeight(b, 0, Unit.PX, 1.2, Unit.EM);
-		root.setWidgetLeftRight(b, 10, Unit.PX, 10, Unit.PX);
+		root.setWidgetBottomHeight(b, 0, Unit.PX, 2, Unit.EM);
+		root.setWidgetLeftRight(b, 20, Unit.PX, 20, Unit.PX);
 		
 		DomStudentModelContext4Student item = new DomStudentModelContext4Student();
 		String sm = GetValue("dme.studentmodelstructure");
 		DomStudentModelStructure modelStructure = DomStudentModelStructureCodec.CODEC.decode(sm);
 		item.setModelStructure(modelStructure);
 
-		DomMethod method = new DomMethod();
-		method.books = Collections.emptyList();
-		method.chapters = Collections.emptyList();
-		method.edges = Collections.emptyList();
-		method.standard = true;
-		method.method = "Geen methode";
+		String dm = GetValue("dme.studentmodelmethod");		
+		DomMethod method = DomMethodCodec.toValue(dm);
+		if (method == null) {
+			method = new DomMethod();
+			method.books = Collections.emptyList();
+			method.chapters = Collections.emptyList();
+			method.edges = Collections.emptyList();
+			method.standard = true;
+			method.method = "Geen methode";
+		}
+		
+		
+		item.getModelStructure().setActiveMethod(method.getId()); // should be a no-op
 		
 		graph.setModel(item, method);
 		JSONArray value = JSONParser.parseStrict(GetValue("dme.studentmodelitems")).isArray();

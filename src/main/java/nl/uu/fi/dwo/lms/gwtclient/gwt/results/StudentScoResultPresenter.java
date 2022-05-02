@@ -8,6 +8,7 @@ import com.google.gwt.user.client.Window.Location;
 import com.google.web.bindery.event.shared.EventBus;
 
 import dagger.Lazy;
+import fi.dwo.gwt.lib.rest.util.DomMethodCodec;
 import fi.dwo.gwt.lib.rest.util.DomStudentModelStructureCodec;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 
@@ -33,6 +34,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.StudentModelService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent.EventType;
@@ -65,6 +67,7 @@ public class StudentScoResultPresenter {
 
   private Display view;
   @Inject ResultsService resultService;
+  @Inject Lazy<StudentModelService> studentModelService;
   @Inject Lazy<XAPIService> xapiService;
   private DomResultTree resultTree;
   private DomResultStudentScoContext ssc;
@@ -131,8 +134,13 @@ public class StudentScoResultPresenter {
     		PersistenceId pid = new PersistenceId(id);
     		resultService.getStudentModel(pid).then(p -> {
     			userState.put("dme.studentmodelstructure", DomStudentModelStructureCodec.toString(p.getValue().getModelStructure()));
+    			return studentModelService.get().getActiveMethod(p.getValue().getModelStructure().getActiveMethod());
+    		})
+    		.then(p -> {
+    			userState.put("dme.studentmodelmethod", DomMethodCodec.toString(p.getValue()));
     			return p;
-    		}).onResolve(() -> initTail(ssc, context));
+    		})
+    		.onResolve(() -> initTail(ssc, context));
     		return;
     	}
     }

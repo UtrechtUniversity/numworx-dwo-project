@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -13,13 +12,12 @@ import org.osgi.util.promise.Promises;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph.VerbergVoorkennis;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph.Voorkennis;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph.Zoom;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph.ZoomFit;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
@@ -111,11 +109,39 @@ public class StudentModelGraph extends StudentResultsGraph {
 
 
 	@Override
+	public void onMouseMove(MouseMoveEvent event) {
+		// TODO Auto-generated method stub
+		super.onMouseMove(event);
+	}
+
+
+	@Override
+	public void onMouseOut(MouseOutEvent event) {
+		// TODO Auto-generated method stub
+		super.onMouseOut(event);
+	}
+
+
+	@Override
+	public void onMouseDown(MouseDownEvent event) {
+		// TODO Auto-generated method stub
+		super.onMouseDown(event);
+	}
+
+
+	@Override
+	public void onContextMenu(ContextMenuEvent event) {
+		// TODO Auto-generated method stub
+		super.onContextMenu(event);
+	}
+
+
+	@Override
 	protected void initHandlers() {
-//		image.addMouseMoveHandler(this);
-//		image.addMouseUpHandler(this);
-//		image.addMouseDownHandler(this);
-//		image.addMouseOutHandler(this);
+		image.addMouseMoveHandler(this);
+		image.addMouseUpHandler(this);
+		image.addMouseDownHandler(this);
+		image.addMouseOutHandler(this);
 		
 		zoomFitBtn.addClickHandler(new ZoomFit());
 		zoomOutBtn.addClickHandler(new Zoom(true));
@@ -124,7 +150,7 @@ public class StudentModelGraph extends StudentResultsGraph {
 		verbergBtn.addClickHandler(new VerbergVoorkennis());
 		
 		
-		addDomHandler(this, ContextMenuEvent.getType());
+		//addDomHandler(this, ContextMenuEvent.getType());
 	}
 
 
