@@ -120,7 +120,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	private JTextComponent area;
 	private WiskOpdrEditPanel wiskOpdrEditPanel;
 	
-	private JCheckBox editorCB;
+	private JCheckBox editorCB, visibleCB;
 	private Box editorBox = Box.createVerticalBox();
 
 
@@ -425,9 +425,14 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         {	
         	editorCB = new JCheckBox("Editor");
             editorCB.addActionListener(this);
-            editorBox.add(editorCB);
             Course course = (Course) userObject;
-			if(course.getText().startsWith("H4sIAAAAAA") || course.getText().isEmpty())
+            visibleCB = new JCheckBox("Map verbergen");
+            visibleCB.setSelected(course.isNotVisible());
+            if (DwoHelper.isTest() && DwoHelper.isPremium()) editorBox.add(visibleCB);
+            editorBox.add(editorCB);
+            
+            
+            if(course.getText().startsWith("H4sIAAAAAA") || course.getText().isEmpty())
             {	editorCB.setSelected(true); editorCB.setVisible(false);
             	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getText());
             	wiskOpdrEditPanel.setPreferredSize(new Dimension(800,350));
@@ -769,6 +774,11 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         	else if(!editorCB.isSelected() && area!=null && !area.getText().equals(course.getText()))
             {	course.setDescription(area.getText());
             	update = true;
+            }
+            if(course.isNotVisible() != visibleCB.isSelected())
+            {
+                update = true;
+                course.setNotVisible(visibleCB.isSelected());
             }
         	if (update) {
         		GuiCreator.instance().updateCourse(course);

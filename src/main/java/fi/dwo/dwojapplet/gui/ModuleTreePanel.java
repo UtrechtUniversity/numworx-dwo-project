@@ -33,15 +33,18 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.swing.Box;
 import javax.swing.Icon;
@@ -537,7 +540,13 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
             if (!loadedChildren) {
                 if (course.isWithChildren()) {
                     CourseMap[] courses;
-                    childValue = courses = course.getChildren();
+                    courses = course.getChildren();
+                    if (!DwoHelper.isPremium()) {
+                      List<CourseMap> list = Arrays.asList(courses).stream().filter(c -> !c.isNotVisible()).collect(Collectors.toList());
+                      courses = list.toArray(new CourseMap[list.size()]);
+                    }
+                    
+                    childValue = courses;
                     loadedChildren = true;
                     for (int i = 0; i < courses.length; i++) {
                         ((Course) courses[i]).setParentMap(course); // FIXME rare plek voor deze link leggen?
@@ -589,6 +598,8 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
             DefaultMutableTreeNode node;
             for (int i = 0; i < courses.length; i++) {
                 Course course = courses[i];
+                if (course.isWithChildren() && course.isNotVisible() && !DwoHelper.isPremium())
+                  continue;
                 node = new LazyMutableTreeNode(course);
 //				if(course.isWithChildren())
 //				{

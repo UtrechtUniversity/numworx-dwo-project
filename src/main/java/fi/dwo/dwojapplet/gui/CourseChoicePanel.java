@@ -26,6 +26,10 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -135,6 +139,12 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
 
     private void initialize(Descriptor dwoProfile, CourseMap[] courseList) {
         CourseMap[] courses = courseList;
+        if (!DwoHelper.isPremium()) {
+          List<CourseMap> list = Arrays.asList(courses).stream().filter(c -> !c.isNotVisible()).collect(Collectors.toList());
+          courses = list.toArray(new CourseMap[list.size()]);
+        }
+        
+        
         setBackground(getSubHeaderColor());
         //Panel ph;
         //ph = new Panel(null);

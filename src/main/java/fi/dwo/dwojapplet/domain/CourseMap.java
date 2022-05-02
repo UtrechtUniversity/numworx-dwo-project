@@ -17,5 +17,7 @@ public interface CourseMap {
     Set getChildNames();
 
     CourseMap getParentMap();
+    
+    default boolean isNotVisible() { return false; }
 
 }
