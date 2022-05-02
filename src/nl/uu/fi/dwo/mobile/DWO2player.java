@@ -190,6 +190,9 @@ public void setupDWOPlayer() {
 		public List<SelectModuleItem> apply(List<DomCourseStudent> t) {
 			List<SelectModuleItem> result = new ArrayList<SelectModuleItem>(t.size());
 			for (DomCourseStudent item: t) {
+				if (item.isNotVisible() && Boolean.TRUE.equals(item.getWithChildren())) {
+					continue;
+				}
 				result.add(new SelectModuleItem(item, (DomClassCourse)null));
 			}
 			return result;

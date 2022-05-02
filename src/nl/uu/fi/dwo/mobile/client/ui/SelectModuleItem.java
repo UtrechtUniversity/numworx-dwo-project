@@ -390,7 +390,7 @@ public class SelectModuleItem
 		Long sequence = course.getSequenceNr();
 		sequencenr = sequence != null ? sequence.intValue() : Integer.MAX_VALUE;
 		showScore = false;
-		showChildren(!course.isNotVisible());
+		showChildren(type == Type.FOLDER || !course.isNotVisible());
 		classCourse = cc;
 		image = course.getImage();
 		if("".equals(image)) image = null;

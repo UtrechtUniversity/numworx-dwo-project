@@ -23,6 +23,11 @@ final class COURSE_TO_MODULEITEM implements Function<List<DomCourseStudent>, Lis
 		List<SelectModuleItem> items = new ArrayList<SelectModuleItem>(t.size());
 		for (Iterator<DomCourseStudent> iterator = t.iterator(); iterator.hasNext();) {
 			DomCourseStudent map = iterator.next();
+
+			if (map.isNotVisible() && Boolean.TRUE.equals(map.getWithChildren())) {
+                continue;
+            }
+			
 			SelectModuleItem item = new SelectModuleItem(map, (DomClassCourse) null);
 			item.setParent(this.item);
 			SelectModuleItemHolder.insert(item);
