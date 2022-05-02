@@ -81,5 +81,6 @@ public enum Dwo2ExceptionCode {
     GUI_BTN_toggleSelect, 
     Rest_Registration_Required_Fields,
     Rest_StudentModelNotAvailable, 
-    Rest_StudentModelNotSet 
+    Rest_StudentModelNotSet,
+    Rest_ResourceNotFound
 }
