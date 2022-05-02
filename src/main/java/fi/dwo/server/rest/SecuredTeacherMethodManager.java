@@ -82,6 +82,7 @@ public class SecuredTeacherMethodManager {
 
     	PersistentMethod p = MethodManager.toValue(rest.getDomMethod(), school, null);
     	p = MethodManager.findEntity(p.getMethodID());
+    	if (p == null) return null;
     	PersistenceId profileID = PersistentDwoProfile.buildPersistenceId(p.getDwoProfileID());
     	if (!profileID.equals(rest.getDomDwoProfile().getId()))
     	  return null; // wrong profile
