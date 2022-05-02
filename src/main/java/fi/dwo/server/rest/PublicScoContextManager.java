@@ -10,11 +10,13 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -99,11 +101,13 @@ public class PublicScoContextManager {
 		{
 // Security, only non limited profiles are public 		
 		PersistentDwoProfile profile = DwoProfileManager.findEntity(pid);
+		if (profile == null) throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "mismatch");
 		if ( profile.isLimited())
 			throwLoginNeeded();
 		}
 		Long id = MySQLPersistenceId.getNativeId(rest.getDomScoContext());
 		PersistentScoContext scoContext = ScoContextManager.findEntity(id);
+		if (scoContext == null) throw new Dwo2Exception(Dwo2ExceptionCode.Rest_ResourceNotFound, "not found");
 		id = scoContext.getCourseID();
 		PersistentCourse parent = CourseManager.findEntity(id);
 		if ( parent.getSchoolID() != null)
@@ -111,7 +115,7 @@ public class PublicScoContextManager {
 		if ( !parent.getDwoProfileID().equals(pid))	// match profile and public school
 		{
 			LOG.log(Level.SEVERE, "get profile mismatch: " + pid + "<>" + parent.getDwoProfileID());
-			return null;
+			throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "mismatch");
 		}
 	
 		return builder(scoContext, parent, info);

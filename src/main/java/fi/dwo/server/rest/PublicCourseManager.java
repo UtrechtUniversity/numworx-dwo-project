@@ -177,9 +177,8 @@ if(SECURITY)
     		throw e;
     	} catch (Exception e) {
     		LOG.log(Level.WARNING, "getCourses", e);
-    		throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the module.");	
     	}
-    	return null;
+    	throw new Dwo2RestException(Dwo2ExceptionCode.Rest_ResourceNotFound, "not found");
     }
     
     @GET
