@@ -65,6 +65,7 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.StudentModelPresenter;
@@ -1009,10 +1010,12 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		{
 			 {
 				popupMenu = new PopupPanel(true, true);
+				VerticalPanel vertical = new VerticalPanel();
 				popupMenu.getElement().getStyle().setZIndex(9999);
 				Label item = new Label("Toon alle voorkennis");
 				item.setStylePrimaryName("pseudobutton");
-				popupMenu.add(item);
+				popupMenu.setWidget(vertical);
+				vertical.add(item);
 				item.addClickHandler(new ClickHandler() {
 					
 					@Override
@@ -1094,7 +1097,34 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 						unBlur();
 					}
 				});
-			}
+				item = new Label("Toon directe voorkennis");
+				item.setStylePrimaryName("pseudobutton");
+				vertical.add(item);
+				item.addClickHandler(new ClickHandler() {
+
+					@Override
+					public void onClick(ClickEvent event) {
+						popupMenu.hide();
+						popupMenu = null;
+						start = null;
+						// blur nodes and edges: find node, focus on node and edges.
+//						Optional<Node> find = nodeStream().filter(node -> node.isVisible() && node.contains(sx, sy)).findAny();
+//						if (find.isPresent()) {
+							LOG.info("ON present " + StudentModelPresenter.getTitle(find.get().obj.getInfo(),lang)  + " at " + x + " , " + y);
+							Node node = find.get();
+							Set<Edge> set = edges.stream().filter(edge -> edge.to == node).collect(Collectors.toSet());
+							Set<Node> nodes = set.stream().map(t -> t.from).collect(Collectors.toSet());
+							nodes.add(node);
+							edges.forEach(e -> e.setBlur(!set.contains(e)));
+							nodeStream().forEach(n -> n.setBlur(!nodes.contains(n)));			
+//						} else
+						
+					} 
+				});
+			 
+				}
+			 
+			 
 			popupMenu.setPopupPosition(event.getNativeEvent().getClientX(),
 	                 event.getNativeEvent().getClientY());
 	        popupMenu.show();
@@ -1333,17 +1363,18 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		point = point.matrixTransform(ctm);
 		float sx = point.getX();
 		float sy = point.getY();
-		// blur nodes and edges: find node, focus on node and edges.
-		Optional<Node> find = nodeStream().filter(node -> node.isVisible() && node.contains(sx, sy)).findAny();
-		if (find.isPresent()) {
-			LOG.info("ON present " + StudentModelPresenter.getTitle(find.get().obj.getInfo(),lang)  + " at " + x + " , " + y);
-			Node node = find.get();
-			Set<Edge> set = edges.stream().filter(edge -> edge.to == node).collect(Collectors.toSet());
-			Set<Node> nodes = set.stream().map(t -> t.from).collect(Collectors.toSet());
-			nodes.add(node);
-			edges.forEach(e -> e.setBlur(!set.contains(e)));
-			nodeStream().forEach(n -> n.setBlur(!nodes.contains(n)));			
-		} else {
+//		// blur nodes and edges: find node, focus on node and edges.
+//		Optional<Node> find = nodeStream().filter(node -> node.isVisible() && node.contains(sx, sy)).findAny();
+//		if (find.isPresent()) {
+//			LOG.info("ON present " + StudentModelPresenter.getTitle(find.get().obj.getInfo(),lang)  + " at " + x + " , " + y);
+//			Node node = find.get();
+//			Set<Edge> set = edges.stream().filter(edge -> edge.to == node).collect(Collectors.toSet());
+//			Set<Node> nodes = set.stream().map(t -> t.from).collect(Collectors.toSet());
+//			nodes.add(node);
+//			edges.forEach(e -> e.setBlur(!set.contains(e)));
+//			nodeStream().forEach(n -> n.setBlur(!nodes.contains(n)));			
+//		} else
+		{
 			unBlur();
 		}		
 	}
