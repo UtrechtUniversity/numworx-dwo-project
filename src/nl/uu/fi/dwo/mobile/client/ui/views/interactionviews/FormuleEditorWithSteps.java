@@ -3844,7 +3844,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	
 			if (viewers.size() > 1)
 				freezeViewer(viewers.get(viewers.size() - 2));
-			if (!verg.isEindOplossing(verg.geefVergelijkingVar()))
+			if (verg == null || !verg.isEindOplossing(verg.geefVergelijkingVar()))
 				addFormulePanelListeners(fv); 
 		}
 	}
