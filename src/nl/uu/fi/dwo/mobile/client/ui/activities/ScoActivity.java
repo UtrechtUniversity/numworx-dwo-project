@@ -204,6 +204,7 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 			@Override
 			public void fail(Promise<?> resolved) throws Exception {
 				Throwable t = resolved.getFailure();
+				Place newHome = next.getPlace();
 				if(t instanceof Dwo2Exception) {
 					Dwo2Exception e = (Dwo2Exception) t;
 					if( e.getDwo2Code() == Dwo2ExceptionCode.Rest_LoginNeeded && school == null)
@@ -212,6 +213,8 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 						gotoNext();
 						return;
 					}
+					if (e.getDwo2Code() == Dwo2ExceptionCode.Rest_ResourceNotFound)
+						newHome = defaultPlace;
 				}
 				if (t instanceof NoSuchElementException || t instanceof Dwo2Exception)
                 {
@@ -220,7 +223,8 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
             		headerView.setUserAndRole(currentUser, role);
             		headerView.setPresenter(ScoActivity.this);
                     panel.setWidget(view);
-                    view.setHomePlace(next.getPlace());
+                    view.setHomePlace(newHome);
+                    if (t instanceof Dwo2Exception) view.fail(t);
                     view.render();
                     return;
                 }
@@ -330,20 +334,26 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 	      }
 	      if (id == null) return p;
 	      Place place = new nl.uu.fi.dwo.mobile.client.ui.places.s(id, location);
-	      started = false;
-	      placeController.goTo(place);
+	      go(place);
 	      return p;
 	    });
 	}
 	
+	void go(Place p) {
+		started = false;
+		placeController.goTo(p);
+	}
+	
 	void gotoNext() {
-      started = false;
-      placeController.goTo(next);
+      go(next);
 	}
 
 	@Override
 	public void goTo(Place place) {
-		gotoNext();	
+		if (place == defaultPlace) {
+			go(defaultPlace);
+		} else
+			gotoNext();	
 	}
 
 	@Inject @Named("defaultPlace") Place defaultPlace;
@@ -351,8 +361,7 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 	public void gotoPlace(String token) {
 		Place place = mapper.getPlace(token);
 		if (place==null) place = defaultPlace;
-		started = false;
-		placeController.goTo(place);
+		go(place);
 	}
 
 }

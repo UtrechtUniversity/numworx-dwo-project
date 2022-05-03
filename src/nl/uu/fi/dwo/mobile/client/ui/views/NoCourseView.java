@@ -8,7 +8,10 @@ import javax.inject.Inject;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ResizeComposite;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -41,7 +44,9 @@ public class NoCourseView extends ResizeComposite {
 		this.header = header;
 		this.navigation = navigation;
 	}
-
+	@UiField SimplePanel description;
+	@UiField nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworxCss style;
+	
 	public void setHomePlace(Place place) {
 		header.setHomePlace(place);
 		header.setUpPlace(place);
@@ -50,5 +55,13 @@ public class NoCourseView extends ResizeComposite {
 	public void render() {
 		header.show();
 		navigation.hide();
+	}
+
+	public void fail(Throwable t) {
+		String message = t.getLocalizedMessage();
+		Label widget = new Label(message);
+		widget.setStyleName(style.description());
+		description.setWidget(widget);
+		
 	}
 }
