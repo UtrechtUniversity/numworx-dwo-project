@@ -57,7 +57,7 @@ public class PublicScoContextManager {
 		Long dompid = MySQLPersistenceId.getNativeId(domDwoProfile);
 		Long cid = MySQLPersistenceId.getNativeId(rest.getDomCourse());
 		PersistentCourse parent = CourseManager.findEntity(cid);
-
+		if (parent == null) throw new Dwo2Exception(Dwo2ExceptionCode.Rest_ResourceNotFound, cid + " not found");
 // Security, only non limited profiles are public 		
 		Long pid = parent.getDwoProfileID();
 		PersistentDwoProfile profile = DwoProfileManager.findEntity(pid);
