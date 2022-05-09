@@ -115,6 +115,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
     DomMethod activeRow;
 	
 	private Map<String,Map<String,Set<Integer>>> filter = Collections.emptyMap();
+  private MenuItem diVoorkennis;
 
 	public Map<String,Map<String,Set<Integer>>> getFilter() { 
 	  return filter;
@@ -259,6 +260,10 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		miVoorkennis = new MenuItem("Toon alle voorkennis");
 		miVoorkennis.addActionListener(this);
 		voorkennisPopupMenu.add(miVoorkennis);
+
+		diVoorkennis = new MenuItem("Toon directe voorkennis");
+		diVoorkennis.addActionListener(this);
+		voorkennisPopupMenu.add(diVoorkennis);
 		
 		add(voorkennisPopupMenu);
 		
@@ -1064,21 +1069,9 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 				break;
 			}
 		}
-		if (mouseOverNode != null) {
-			for (int i = 0; i < graphNodes.size(); i++) {
-				if (graphNodes.get(i) != mouseOverNode) {
-					graphNodes.get(i).setBlur(true);
 
-				}
-			}
-			for (int i = 0; i < graphEdges.size(); i++) {
-				if (graphEdges.get(i).getTarget() != mouseOverNode) {
-					graphEdges.get(i).setBlur(true);
-				} else {
-					graphEdges.get(i).getSource().setBlur(false);
-				}
-			}
-			repaint();
+		if (mouseOverNode != null) {
+			//blurVoorkennis(mouseOverNode);
 		} else {
 			for (int i = 0; i < graphNodes.size(); i++) {
 				graphNodes.get(i).setBlur(false);
@@ -1090,6 +1083,24 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		}
 
 	}
+
+
+  protected void blurVoorkennis(GraphNode mouseOverNode) {
+    for (int i = 0; i < graphNodes.size(); i++) {
+    	if (graphNodes.get(i) != mouseOverNode) {
+    		graphNodes.get(i).setBlur(true);
+
+    	}
+    }
+    for (int i = 0; i < graphEdges.size(); i++) {
+    	if (graphEdges.get(i).getTarget() != mouseOverNode) {
+    		graphEdges.get(i).setBlur(true);
+    	} else {
+    		graphEdges.get(i).getSource().setBlur(false);
+    	}
+    }
+    repaint();
+  }
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -1516,6 +1527,9 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			voorkennisWegButton.setVisible(true);
 			voorkennisButton.setVisible(false);
 			selectVoorkennis(selectedChapter);
+		}
+		if (e.getSource() == diVoorkennis) {
+		  blurVoorkennis(voorkennisPopupNode);
 		}
 		if(e.getSource()==voorkennisWegButton) {
 			voorkennisWegButton.setVisible(false);
