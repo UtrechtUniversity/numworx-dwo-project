@@ -870,7 +870,7 @@ pUser.setPassword(""); // INVALID PASSWORD
             StringBuffer url = request.getRequestURL();
             int i = url.lastIndexOf("/");
             url.setLength(i + 1);
-            url.append("submitNewPassword").append("?authCode=").append(authCode).append("&language=").append(language);
+            url.append("submitNewPassword").append("?authCode=").append(authCode).append("&language=").append(urlEncode(language));
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(smtpEmail));
 // FIXME i18n         
@@ -935,7 +935,11 @@ pUser.setPassword(""); // INVALID PASSWORD
         String nw = TextMapper.getText(TextMapper.GUIP_PASSWORD);
         TextMapper.setLanguage(old);
 
-        InputStream in = getClass().getResourceAsStream("responsePasswordChange.html");
+        return responsePasswordChange(back, result, terug, nw);
+    }
+
+	private String responsePasswordChange(String back, String result, String terug, String nw) throws IOException {
+		InputStream in = getClass().getResourceAsStream("responsePasswordChange.html");
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         String r;
         r = "";
@@ -951,7 +955,7 @@ pUser.setPassword(""); // INVALID PASSWORD
         		nw);
         
         return r;
-    }
+	}
 
     /**
      * Used for manual testing.
@@ -1018,8 +1022,8 @@ pUser.setPassword(""); // INVALID PASSWORD
     public String submitPasswordChange(
             @FormParam("authCode") String authCode,
             @FormParam("newPassword") String newPassword,
-            @FormParam("language") String language
-    ) throws Exception {
+            @FormParam("language") String language,
+            @Context HttpServletRequest request) throws Exception {
         if (!ValidUserFieldsChecker.isValidPassword(newPassword)) {
             //throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Password_Invalid, "The password has illegal characters or length.");
             DwoLocale locale = new DwoLocale(language);
@@ -1044,6 +1048,10 @@ pUser.setPassword(""); // INVALID PASSWORD
             }
             timeslot = timeslot - 1;
         }
+        StringBuffer url = request.getRequestURL();
+        int i = url.lastIndexOf("/");
+        url.setLength(i + 1);
+        url.append("requestNewPassword").append("?language=").append(urlEncode(language));
         if (data.startsWith("dwoAuthCode:")) {
             PersistentUser user = UserManager.findByUserName(data.split(":")[1]);
 
@@ -1052,11 +1060,19 @@ pUser.setPassword(""); // INVALID PASSWORD
             LOG.log(Level.INFO, "Updated password of user with username {0} of timeslot {1}  from valid authCode.", new Object[]{user.getUsername(), timeslot});
             LOG.log(Level.FINER, "Updated password of user with username {0} of timeslot {1} using authcode {2}.", new Object[]{user.getUsername(), timeslot, authCode});
             newPassword = TextMapper.getText(TextMapper.DLG_CONFIRM);
+            url = new StringBuffer("/");
         } else {
             newPassword = TextMapper.getText(TextMapper.LBL_ILLEGAL_AUTHCODE);
         }
         //Always wait 30 seconds before response.        
         sleep(3000);//10 timesshorter for debugging
+        String old = TextMapper.getLanguage();
+        try {
+        	if (language != null) TextMapper.setLanguage(language);
+        	newPassword = responsePasswordChange(url.toString(), newPassword, TextMapper.getText(TextMapper.BTN_OK), TextMapper.getText(TextMapper.GUIP_PASSWORD));
+        } finally {
+        	TextMapper.setLanguage(old);
+        }
         return newPassword;
 
     }
