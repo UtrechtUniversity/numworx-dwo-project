@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
@@ -72,6 +73,7 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
     @Inject NavigationView navigation;
     @Inject DwoGlobalVars vars;
     @Inject Provider<TreeModuleView> treeModuleView;
+	@Inject @Named("defaultPlace") Place defaultPlace;
 
     private Place where;
     private SelectModuleItem item;
@@ -114,6 +116,19 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
 							item.setFromSchool(true);
 							placeController.goTo(next);
 							return;
+						} else {
+							NoCourseView view = noCourseView.get();
+							panel.setWidget(view);
+							Place where = placeController.getWhere();
+							if (e.getDwo2Code() == Dwo2ExceptionCode.Rest_ResourceNotFound) {
+								
+								CourseActivity2.this.where = defaultPlace;
+								where = defaultPlace;
+							}
+							view.setHomePlace(where);
+							view.fail(t);
+							view.render();
+							return;						
 						}
 					}
 
@@ -125,6 +140,7 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
 						view.render();
 						return;
 					}
+
 
 					GWT.log("failure", t);
 				}
