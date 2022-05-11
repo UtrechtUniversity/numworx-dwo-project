@@ -34,6 +34,8 @@ import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView.Presenter;
+import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -85,7 +87,7 @@ public class ViewScoActivity extends AbstractActivity implements Presenter, Anch
 		Promise<Void> promise = callback.getPromise();
 		if (sco.getName() == null) {			
 			promise = promise
-					.then(p -> rpcHandler.getSco(sco.getID()))
+					.then(this::getSco)
 					.then(p -> {
 						DomScoContext s = p.getValue();
 						sco = new SelectModuleItem(s);
@@ -132,6 +134,18 @@ public class ViewScoActivity extends AbstractActivity implements Presenter, Anch
 		});
 		
 		
+	}
+	
+	
+	private DomScoContext fromClassCourse(DomCoursesOfSchoolClass csc) {
+		return csc.getScoContexts().stream().filter(sc -> sc.getKey().equals(place.getID())).findAny().get().getValue();
+	}
+
+	private Promise<DomScoContext> getSco(Promise<Void> p2) {
+		DomSchoolClass schoolClass = vars.getCurrentSchoolClass();
+		if (schoolClass == null)
+			return rpcHandler.getSco(sco.getID());
+		return rpcHandler.getScoContextClass(sco.getID(), schoolClass).filter(p -> !p.getScoContexts().isEmpty()).map(this::fromClassCourse);
 	}
 
 	@Override
