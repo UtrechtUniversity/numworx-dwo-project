@@ -294,7 +294,14 @@ public class SecuredStudentCoursesOfSchoolClassManager {
     	  pcc.setCourseID(pc.getCourseID());
     	  pcc.setLastChangeTimeStamp(NOW.getTime());
     	  pcc.setType(0);
-    	  pcc.setViewState(ViewState.studentsAndTeachers);
+    	  pcc.setViewState(ViewState.students);
+    	  long parentpid = pc.getParentID();
+    	  if (parentpid != 0) {
+    		  PersistentCourse parentcourse = CourseManager.findEntity(parentpid);
+    		  if (parentcourse.isNotVisible()) {
+    			  ClassCourseManager.create(pcc);
+    		  }
+    	  }
       }
 
       if (pcc != null && pcc.getNotAfter() != null) {
@@ -303,7 +310,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
       if (pcc != null && pcc.getNotBefore() != null) {
         if (NOW.before(pcc.getNotBefore())) pcc = null;
       }
-      if (pcc != null && (pcc.getViewState() != ViewState.studentsAndTeachers)) pcc = null;
+      if (pcc != null && (pcc.getViewState() != ViewState.studentsAndTeachers) && pcc.getViewState() != ViewState.students) pcc = null;
       if (pcc != null && EXAM.equals(pcc.getType())) pcc = null; // No deeplink for exams
 
       if (pcc == null) {
