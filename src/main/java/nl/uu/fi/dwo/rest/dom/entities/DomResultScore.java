@@ -111,7 +111,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
     }
 
     private boolean isVisibleForTeachers(ViewState state) {
-        return (state == ViewState.studentsAndTeachers || state == ViewState.teachers);
+        return (state == ViewState.studentsAndTeachers || state == ViewState.teachers || state == ViewState.students);
     }
 
     public void collectActivities(Map<PersistenceId, DomResultScoContext> activities) {
