@@ -299,6 +299,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
     	  if (parentpid != 0) {
     		  PersistentCourse parentcourse = CourseManager.findEntity(parentpid);
     		  if (parentcourse.isNotVisible()) {
+    			  pcc.setDwoProfileID(s.getDwoProfile().getDwoProfileID());
     			  ClassCourseManager.create(pcc);
     		  }
     	  }
