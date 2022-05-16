@@ -1294,7 +1294,7 @@ LOG.info("time selected courses " + (-w) + " ms");
             Map<PersistenceId, DomCourse> allcourses = insertCache(result.getCourses());
             List<DomCourse> course = result.getClassCourses().stream().parallel()
             .map(DomMapEntry::getValue)
-            .filter(cc -> cc.getViewState() != ViewState.invisible)
+            .filter(cc -> cc.getViewState() == ViewState.studentsAndTeachers)
             .map(cc -> allcourses.get(cc.getCourseId()))
             .filter(course1 -> !course1.getWithChildren().booleanValue())
             .collect(Collectors.toList());
