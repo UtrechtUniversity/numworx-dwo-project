@@ -58,6 +58,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
     private static final String HIDEMAINNAV = "hideMainNav";
     private static final String ISMAINNAVVISIBLE = "isMainNavVisible";
     private static final String TRAIL = SelectedView.TRAIL.name();
+    private static final String RETOUR = SelectedView.RETOUR.name();
 
     private final Failure FAILURE;
     private final EventBus eventBus;
@@ -252,8 +253,10 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         if (select(SelectedView.RESULTS, message) 
         		|| select(SelectedView.KNOWLEDGE, message)
         		|| select(SelectedView.PERSONS,message) 
-        		|| select(SelectedView.SCHOOLCLASSES,message) 
-        		|| select(SelectedView.ORGANISATION, message)) {
+        		|| select(SelectedView.SCHOOLCLASSES,message)
+        		|| select(SelectedView.RETOUR, message)
+        		|| select(SelectedView.ORGANISATION, message))
+        {
           idleOn = true;
           mainView.setIdleTimeout(MainPresenter.IDLE);
         } else if (select(SelectedView.TRAIL,message)) {
@@ -279,7 +282,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         	loginNeeded();
         } else if ("INITED".equals(message)) {
         	if (!inited.getPromise().isDone())inited.resolve(message);
-        }
+        } 
     }
 
     private void loginNeeded() {

@@ -34,6 +34,7 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
       switch (value) {
         default:
           eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
+        case RETOUR:
         case WELCOME: 
           mainView.selectView(value);
           mainView.showWelcomeView();

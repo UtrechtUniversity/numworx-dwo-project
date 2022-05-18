@@ -55,6 +55,7 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
                       presenterFactory.getLoginPresenter().tokenLogin(token, controller.user_id, controller.org_id);
                   }
                   break;
+              case RETOUR:
               case WELCOME:
                   mainView.selectView(SelectedView.WELCOME);
                   mainView.showWelcomeView();

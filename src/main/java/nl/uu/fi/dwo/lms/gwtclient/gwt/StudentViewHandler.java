@@ -36,6 +36,7 @@ public class StudentViewHandler implements SwitchViewEventHandler {
     		presenterFactory.getResultsGraphPresenter().init(switchViewEvent.getStudentModelContext(), switchViewEvent.getResultState());
    		break;
     	}
+    case RETOUR:
     case RESULTS:
     case STUDENTRESULTS:
     case KNOWLEDGE:
