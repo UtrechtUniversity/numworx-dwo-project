@@ -3,7 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui;
 import com.google.gwt.user.client.Window.Location;
 
 public enum Actions {
-  showMainNav, hideMainNav, isMainNavVisible, RESULTS, KNOWLEDGE, PERSONS, SCHOOLCLASSES, ORGANISATION, ARROWUP, TRAIL, LOGOUT, EXAM, MAYBELOGOUT, CLOSING, LOGINNEEDED, INITED;
+  showMainNav, hideMainNav, isMainNavVisible, RESULTS, KNOWLEDGE, PERSONS, SCHOOLCLASSES, ORGANISATION, ARROWUP, TRAIL, LOGOUT, EXAM, MAYBELOGOUT, CLOSING, LOGINNEEDED, INITED, RETOUR;
   private String command;
 
   Actions() {

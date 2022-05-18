@@ -25,10 +25,12 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.text.Text;
+import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.places.LogoutPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.s;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
@@ -80,9 +82,7 @@ public class ViewScoActivity extends AbstractActivity implements Presenter, Anch
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus) {
 		
-		headerView.hide();
-		headerView.setUpPlace(headerView.getHomePlace());		
-		headerView.setTrail(Collections.emptyList()); // no trail
+		headerView.hide();		
 		PromiseCallback<Void> callback = new PromiseCallback<Void>();
 		Promise<Void> promise = callback.getPromise();
 		if (sco.getName() == null) {			
@@ -99,9 +99,11 @@ public class ViewScoActivity extends AbstractActivity implements Presenter, Anch
 		String scoID = sco.getID().toString();
 		DWOplayer.insertCSS(scoID);
 		view.setUnitId(scoID);
-		view.setTrail(Collections.emptyList());
+		view.setTrail(Collections.emptyList());// no trail, sets upplace
 		view.setPresenter(this);
 		headerView.setPresenter(this);
+		headerView.setUpPlace(headerView.getHomePlace());		
+		if (Actions.isAvailable()) headerView.setUpPlace(LogoutPlace.INSTANCE);
 		defaultContext = view.getAnchorContext();
 		view.setAnchorContext(this);
 		view.getApi().Initialize(callback);
@@ -182,7 +184,11 @@ public class ViewScoActivity extends AbstractActivity implements Presenter, Anch
 	@Override
 	public void goTo(Place place) {
 		started = false;
-		controller.goTo(place);		
+		if (place == LogoutPlace.INSTANCE) {
+			controller.goTo(headerView.getHomePlace());
+			Actions.RETOUR.execute();
+		} else
+			controller.goTo(place);
 	}
 
 	@Override
