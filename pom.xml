@@ -439,7 +439,7 @@
                        <webapp>
                             <groupId>nl.uu.fi.dwo.mobile</groupId>
                             <artifactId>DWOplayer</artifactId>
-                            <version>2.5.9-SNAPSHOT</version>
+                            <version>2.5.9</version>
                             <classifier>dwo2</classifier>
                             <type>war</type>
                             <contextPath>/dwo/tablet</contextPath>
