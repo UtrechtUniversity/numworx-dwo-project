@@ -117,11 +117,13 @@ public class CourseInClassManager {
                                 break;
                             }
                         }
+                        List<PersistentClassCourse> entities = ClassCourseManager.findEntities(schoolClass, parent);
+                        if (!entities.isEmpty()) {
                         if(invisible){
-                            ClassCourseManager.editViewState(ClassCourseManager.findEntities(schoolClass, parent).get(0).getClassCourseID(), ViewState.invisible);
+							ClassCourseManager.editViewState(entities.get(0).getClassCourseID(), ViewState.invisible);
                         }else{
-                            ClassCourseManager.editViewState(ClassCourseManager.findEntities(schoolClass, parent).get(0).getClassCourseID(), ViewState.studentsAndTeachers);
-                        }
+                            ClassCourseManager.editViewState(entities.get(0).getClassCourseID(), ViewState.studentsAndTeachers);
+                        }}
                     }
                     course = parent;
                     parent = em.find(PersistentCourse.class, course.getParentID());
