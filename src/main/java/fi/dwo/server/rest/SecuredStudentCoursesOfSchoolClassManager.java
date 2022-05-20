@@ -58,6 +58,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestClassCourse;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
@@ -296,7 +297,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
     	  pcc.setType(0);
     	  pcc.setViewState(ViewState.students);
     	  long parentpid = pc.getParentID();
-    	  if (parentpid != 0) {
+    	  if (parentpid != 0 && s.getSchool().getAboType() == AboType.premium) {
     		  PersistentCourse parentcourse = CourseManager.findEntity(parentpid);
     		  if (parentcourse.isNotVisible()) {
     			  pcc.setDwoProfileID(s.getDwoProfile().getDwoProfileID());
