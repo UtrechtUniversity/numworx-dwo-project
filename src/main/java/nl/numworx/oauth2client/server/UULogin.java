@@ -1,5 +1,6 @@
 package nl.numworx.oauth2client.server;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.Key;
 import java.security.KeyFactory;
@@ -16,6 +17,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
@@ -37,7 +40,7 @@ import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SigningKeyResolver;
 
-public class UULogin implements SigningKeyResolver {
+public class UULogin implements SigningKeyResolver, Login {
 
     public static final String ID_TOKEN= "id_token";
     public static final String PASSWORD = "urn:uu.nl:idp:contract:password";
@@ -209,5 +212,11 @@ public class UULogin implements SigningKeyResolver {
 	@Override
 	public Key resolveSigningKey(JwsHeader header, String plaintext) {
 		return resolveSigningKey(header, (Claims) null);
+	}
+
+	@Override
+	public void login(HttpServletRequest req, HttpServletResponse resp, String state, String codeChallenge,
+			Boolean asr) throws IOException, OAuthSystemException {
+		resp.sendRedirect(login(state, codeChallenge, asr));
 	}
 }

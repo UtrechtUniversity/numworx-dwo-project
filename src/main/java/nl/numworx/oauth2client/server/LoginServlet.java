@@ -11,7 +11,7 @@ import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 
 public class LoginServlet extends HttpServlet {
 
-	private UULogin config;
+	private Login config;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -24,17 +24,14 @@ public class LoginServlet extends HttpServlet {
 		
 		
 		if ("code".equals(responseType) && client_id != null && !client_id.isEmpty()) {
-			
-			
+						
 			Boolean asr = null;
 			if (path.endsWith("mfalogin"))
 				asr = Boolean.TRUE;
 			try {
 				state = redirectUri + ";" + state;
-				String login = config.login(state, codeChallenge, asr);
-				resp.sendRedirect(login);
-				return;
-			} catch (OAuthSystemException e) {
+				config.login(req, resp, state, codeChallenge, asr);
+			} catch (Exception e) {
 				log("doGet", e);
 			}
 		}
