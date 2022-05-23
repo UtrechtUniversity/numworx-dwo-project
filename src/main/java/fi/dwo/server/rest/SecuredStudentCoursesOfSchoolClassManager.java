@@ -304,6 +304,17 @@ public class SecuredStudentCoursesOfSchoolClassManager {
     			  ClassCourseManager.create(pcc);
     		  }
     	  }
+      } 
+      // else if invisible en eigenlijk als boven, dan edit to ViewState.students
+      else if (pcc != null && pc.getSchoolID() == null && pcc.getViewState() == ViewState.invisible && s.getSchool().getAboType() == AboType.premium) {
+    	  long parentpid = pc.getParentID();
+    	  if (parentpid != 0L) {
+    		  PersistentCourse parentcourse = CourseManager.findEntity(parentpid);
+    		  if (parentcourse.isNotVisible()) {
+    			  pcc.setViewState(ViewState.students);
+    			  pcc = ClassCourseManager.edit(pcc);
+    		  }
+    	  
       }
 
       if (pcc != null && pcc.getNotAfter() != null) {
