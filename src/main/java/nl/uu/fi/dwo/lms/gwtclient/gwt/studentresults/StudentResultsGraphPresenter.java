@@ -16,6 +16,8 @@ import dagger.Lazy;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEventHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.AbstractResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.SingleStudentResults;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
@@ -26,7 +28,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
-public class StudentResultsGraphPresenter extends AbstractResultsPresenter {
+public class StudentResultsGraphPresenter extends AbstractResultsPresenter implements SwitchViewEventHandler {
 
 	private static final Logger LOG = Logger.getLogger(StudentResultsGraphPresenter.class.getName());
 
@@ -55,6 +57,7 @@ public class StudentResultsGraphPresenter extends AbstractResultsPresenter {
 		root.clear();
 		main = new ResizeLayoutPanel();
 		main.setHeight("100%");
+		bus.addHandler(SwitchViewEvent.TYPE, this);
 	}
 
 	@Override
@@ -69,6 +72,7 @@ public class StudentResultsGraphPresenter extends AbstractResultsPresenter {
 	    view.hide();
 	    root.clear();
 	    main.clear();
+	    graph.get().clear();
 	    if (context != null) 
 	    	context.setFilter(graph.get().filter);
 	    if (service == currentService)
@@ -86,6 +90,7 @@ public class StudentResultsGraphPresenter extends AbstractResultsPresenter {
 
 	private void init2(JavaScriptObject resultState) {
 		root.clear();
+		graph.get().clear();
 		view.clear();
 		view.init(resultState);
 		this.resultState = new JSONObject(resultState);
@@ -115,4 +120,19 @@ public class StudentResultsGraphPresenter extends AbstractResultsPresenter {
 		single.get().setState(resultState2);
 		init2(resultState2);		
 	}
+
+	@Override
+	public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
+		SelectedView select = switchViewEvent.getEventValue();
+		if (select == SelectedView.GOTO_URL) {
+			graph.get().hideDescription();
+			view.hide();
+		}
+	}
+
+	@Override
+	public void showDescription() {
+		graph.get().showDescription();
+	}
+	
 }

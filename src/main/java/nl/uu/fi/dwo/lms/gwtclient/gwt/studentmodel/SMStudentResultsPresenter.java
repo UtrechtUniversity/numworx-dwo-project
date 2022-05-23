@@ -54,8 +54,16 @@ public class SMStudentResultsPresenter extends StudentResultsPresenter {
 	}
 
 	
-	
-	
+	@Override
+	public void showDescription() {
+		super.showDescription();
+		DomUser user = service.user;
+		view.setTitle(StringFormatter.format(DwoLocalesForGWT.instance.NUM_LBL_KNOWLEDGE_OF_(), user.getDisplayName()));
+	}
+
+
+
+
 	private Map<PersistenceId, Promise<FilterMethodDialog>> filterDialogs = new HashMap<>();
 
 	@Override

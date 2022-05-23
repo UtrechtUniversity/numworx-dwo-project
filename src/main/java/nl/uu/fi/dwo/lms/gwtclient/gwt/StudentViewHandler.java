@@ -31,18 +31,21 @@ public class StudentViewHandler implements SwitchViewEventHandler {
     switch (value) {
     case STUDENTRESULTSGRAPH:
     	if (dwoGlobalVars.isPremium()) {
-    		mainView.selectView(value);
+    		mainView.selectView(SelectedView.KNOWLEDGE);
     		mainView.showStudentResultsGraphView();
+    		controller.setRetourHandler(controller.RETOUR_TEACHER_GRAPH);
     		presenterFactory.getResultsGraphPresenter().init(switchViewEvent.getStudentModelContext(), switchViewEvent.getResultState());
    		break;
     	}
     case RETOUR:
+    	controller.getRetourHandler().run();
+    	break;
     case RESULTS:
     case STUDENTRESULTS:
     case KNOWLEDGE:
     	if (dwoGlobalVars.isPremium()) {
-    		mainView.selectView(SelectedView.KNOWLEDGE);
-    		mainView.showStudentResults();
+    		controller.RETOUR_STUDENT_KNOWLEDGE.run();
+    		controller.setRetourHandler(controller.RETOUR_STUDENT_KNOWLEDGE);
     		presenterFactory.getResultsPresenter().init(switchViewEvent.getResultState());
     		break;
     	}

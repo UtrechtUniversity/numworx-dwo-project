@@ -56,9 +56,10 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
                   }
                   break;
               case RETOUR:
+            	  controller.getRetourHandler().run();
+            	  break;
               case WELCOME:
-                  mainView.selectView(SelectedView.WELCOME);
-                  mainView.showWelcomeView();
+                  controller.RETOUR_WELCOME.run();
                   presenterFactory.getWelcomePresenter().init();
                   break;
               case ACCOUNT:
@@ -174,15 +175,16 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
              case TEACHERSTUDENTMODEL:
              case STUDENTRESULTS: // is return van graph ook voor docent.
             	  if (dwoGlobalVars.isPremium()) {
-              		  mainView.selectView(SelectedView.KNOWLEDGE);
-	            	  mainView.showTeacherStudentModelView();
+              		  controller.RETOUR_TEACHER_KNOWLEDGE.run();
+	            	  controller.setRetourHandler(controller.RETOUR_TEACHER_KNOWLEDGE);
 	            	  presenterFactory.getStudentModelPresenter().init(switchViewEvent.getStudentModelContext(), switchViewEvent.getResultState());
 	                  break;
             	  }
              case STUDENTRESULTSGRAPH:
              	if (dwoGlobalVars.isPremium()) {
-             		mainView.selectView(SelectedView.KNOWLEDGE);
-             		mainView.showStudentResultsGraphView();
+                	viewFactory.getMainView().selectView(SelectedView.KNOWLEDGE);
+                	viewFactory.getMainView().showStudentResultsGraphView();
+             		controller.setRetourHandler(controller.RETOUR_TEACHER_GRAPH);
              		presenterFactory.getResultsGraphPresenter().init(switchViewEvent.getStudentModelContext(), switchViewEvent.getResultState());
             		break;
              	}
@@ -197,6 +199,7 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
             	 if (dwoGlobalVars.isPremium()) {
             		 mainView.selectView(SelectedView.KNOWLEDGE);
             		 mainView.showStudentResults();
+            		 controller.setRetourHandler(controller.RETOUR_STUDENT_KNOWLEDGE);
             		 presenterFactory.getSMResultsPresenter().init(switchViewEvent.getUser(),switchViewEvent.getSchoolClass(), switchViewEvent.getStudentModelContext(), switchViewEvent.getResultState());
             		 break;
             	 }
@@ -204,7 +207,8 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
               	if (dwoGlobalVars.isPremium()) {
               		mainView.selectView(SelectedView.KNOWLEDGE);
               		mainView.showStudentResultsGraphView();
-              		presenterFactory.getResultsGraphPresenter().init(switchViewEvent.getUser(),switchViewEvent.getSchoolClass(), switchViewEvent.getStudentModelContext(), switchViewEvent.getResultState());
+             		controller.setRetourHandler(controller.RETOUR_TEACHER_GRAPH);
+             		presenterFactory.getResultsGraphPresenter().init(switchViewEvent.getUser(),switchViewEvent.getSchoolClass(), switchViewEvent.getStudentModelContext(), switchViewEvent.getResultState());
              		break;
               	}
              case SMCLASSFILTER:

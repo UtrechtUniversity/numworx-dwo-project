@@ -857,10 +857,10 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			this.blur = blur;
 			colorize();
 		}
-
 		@Override
 		public void onClick(ClickEvent event) {
-			DialogBox popup = new DialogBox(true, true);
+			hideDescription();
+			popup = new DialogBox(true, true);
 			SafeHtmlBuilder builder = new SafeHtmlBuilder();
 			builder.appendEscaped(parent + StudentModelPresenter.getTitle(obj.getInfo(),lang));
 			popup.getCaption().setHTML(builder.toSafeHtml());
@@ -885,6 +885,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		
 	}
 	
+	private DialogBox popup;
 	protected Map<String, List<Node>> map;
 	private Map<String, ChapterNode> chapters;
 	private Map<String, BookNode> books;
@@ -1193,12 +1194,18 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		return image.getSvgElement();
 	}
 
+	
+	public void clear() {
+		hideDescription();
+		popup = null;
+	}
 	public void setModelScore(DomStudentModelContext4Student item, Promise<DomStudentModelDataScore> score, DomMethod domMethod) {
 		this.current = item;
 		title.setMethod(domMethod);
 		map.clear();
 		chapters.clear();
 		books.clear();
+		clear();
 		setModel(item.getModelStructure());
 		OMSVGSVGElement svg = getSvgElement();
 		while(svg.getChildNodes().getLength()>0)
@@ -1531,6 +1538,13 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		}
 	}
 
-	
-	
+	public void hideDescription() {
+		if (popup != null) popup.hide();
+	}
+
+	public void showDescription() {
+		if (popup != null) popup.show();
+		
+	}
+		
 }

@@ -48,7 +48,8 @@ import org.osgi.util.promise.Success;
 @Singleton //required.
 public class BootPanelController {
 
-    final class LoginHandler implements LoginEventHandler {
+
+	final class LoginHandler implements LoginEventHandler {
     @Override
     public void onLoginEvent(LoginEvent loginEvent) {
         final RoleType role = RoleType.valueOf(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
@@ -145,7 +146,30 @@ public class BootPanelController {
     
     PresenterFactory presenterFactory;
     SwitchViewEventHandler viewHandler;
+
+    public final Runnable RETOUR_WELCOME = () -> {
+    	viewFactory.getMainView().selectView(SelectedView.WELCOME);
+    	viewFactory.getMainView().showWelcomeView();
+    };
+
+    public final Runnable RETOUR_STUDENT_KNOWLEDGE = () -> {
+    	viewFactory.getMainView().selectView(SelectedView.KNOWLEDGE);
+    	viewFactory.getMainView().showStudentResults();
+    	if (presenterFactory instanceof PresenterFactoryGwt)
+    		((PresenterFactoryGwt) presenterFactory).getSMResultsPresenter().showDescription();
+    };
+
+    public final Runnable RETOUR_TEACHER_KNOWLEDGE = () -> {
+    	viewFactory.getMainView().selectView(SelectedView.KNOWLEDGE);
+    	viewFactory.getMainView().showTeacherStudentModelView();
+    };
     
+    public final Runnable RETOUR_TEACHER_GRAPH = () -> {
+    	viewFactory.getMainView().selectView(SelectedView.KNOWLEDGE);
+    	viewFactory.getMainView().showStudentResultsGraphView();
+    	presenterFactory.getResultsGraphPresenter().showDescription();
+    };
+
     private final GuestComponent.Builder guestBuilder;
     @Inject
     TeacherComponent.Builder teacherBuilder;
@@ -217,6 +241,7 @@ public class BootPanelController {
 
     private SelectedView initialView = SelectedView.WELCOME;
     private final LoginHandler LOGIN_HANDLER = new LoginHandler();
+    private Runnable retourHandler = RETOUR_WELCOME;
 
     @Inject
     BootPanelController(ResettableEventBus eventBus, GuestComponent.Builder initialBuilder) {
@@ -411,4 +436,14 @@ public class BootPanelController {
         	viewFactory.getMainView().unsetIdleTimeout();
         }
     }
+
+
+	Runnable getRetourHandler() {
+		return retourHandler;
+	}
+
+
+	void setRetourHandler(Runnable retourHandler) {
+		this.retourHandler = retourHandler;
+	}
 }

@@ -16,4 +16,9 @@ public abstract class AbstractResultsPresenter {
 
 	public abstract void init();
 
+	public void showDescription() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
