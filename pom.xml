@@ -71,7 +71,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
 			<artifactId>DWO-commons-lib</artifactId>
-			<version>2.5.3-SNAPSHOT</version>
+			<version>2.5.9</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.ws.xmlrpc</groupId>
