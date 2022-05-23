@@ -1259,6 +1259,11 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 	
 	public void setCurrentSize(int w, int h)
 	{
+
+		if (w > 30000) {
+			GWT.log("veels te groot " + w);
+		}
+		
 		int oldHeight = hoogte;
 		mainPanel2.setPixelSize(w - 2 * randDikte, h - 2 * randDikte);
 		if (w >= 0)
@@ -5534,7 +5539,8 @@ private Object CamelCase(String name) {
 
   public void zetVolledigeBreedte1(int breedte) {
     int aantalKolommen = breedtes.size();
-    int teVerdelenBreedte = this.breedte - (aantalKolommen-1)*cellSpaceColumn;
+    int huidigebreedte = visible ? this.breedte : this.breedte_oud;
+	int teVerdelenBreedte = huidigebreedte - (aantalKolommen-1)*cellSpaceColumn;
     double factor = 1.0*(breedte-(aantalKolommen-1)*cellSpaceColumn)/teVerdelenBreedte;
     double restbreedte = breedte-(aantalKolommen-1)*cellSpaceColumn;				
     double[] newBreedtes = new double[breedtes.size()];
@@ -5555,9 +5561,10 @@ private Object CamelCase(String name) {
     for(int i=0 ; i<aantalKolommen ; i++) {
     	breedtes.set(i,newBreedtes[i]);
     }
-    	
-    this.breedte = breedte;
-    	
+    if (visible)
+    	this.breedte = breedte;
+    else
+    	this.breedte_oud = breedte;
     for(int i=0 ; i<aantalKolommen ; i++) {
     	for(int j=0 ; j<hoogtes.size() ; j++) {
     		tekstVakken[j][i].reLayout();
