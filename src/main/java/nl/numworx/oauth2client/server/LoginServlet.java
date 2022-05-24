@@ -31,6 +31,7 @@ public class LoginServlet extends HttpServlet {
 			try {
 				state = redirectUri + ";" + state;
 				config.login(req, resp, state, codeChallenge, asr);
+				return;
 			} catch (Exception e) {
 				log("doGet", e);
 			}
@@ -45,7 +46,7 @@ public class LoginServlet extends HttpServlet {
 
 	@Override
 	public void init() throws ServletException {
-		config = new UULogin();		
+		config = new JavaSamlLogin(getServletConfig());		
 	}
 
 }
