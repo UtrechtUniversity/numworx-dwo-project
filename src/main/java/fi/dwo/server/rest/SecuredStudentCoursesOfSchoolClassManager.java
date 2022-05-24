@@ -314,7 +314,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
     			  pcc.setViewState(ViewState.students);
     			  pcc = ClassCourseManager.edit(pcc);
     		  }
-    	  
+    	  }
       }
 
       if (pcc != null && pcc.getNotAfter() != null) {
