@@ -13,6 +13,7 @@ import org.vectomatic.dom.svg.utils.SVGConstants;
 import com.google.gwt.canvas.dom.client.CssColor;
 
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
+import nl.uu.fi.dwo.mobile.client.ui.SVGButton.FontMetrics;
 
 public class BerekeningVakButton extends SVGButton{
 
@@ -35,14 +36,16 @@ public class BerekeningVakButton extends SVGButton{
 		float w = width;
 		float h = height;
 		float e = w / 24;
-		OMSVGRectElement rect = doc.createSVGRectElement(e, e, width - 2 * e, height - 2 * e, 1 * e, 1 * e);
-		rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, bgColor.toString());
-		rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, borderColor.toString());
-		rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + e);
-		svg.appendChild(rect);
+		
 
 	
 		if("rekenmachine".equals(code)) {
+			OMSVGRectElement rect = doc.createSVGRectElement(e, e, width - 2 * e, height - 2 * e, 1 * e, 1 * e);
+			rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, bgColor.toString());
+			rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, borderColor.toString());
+			rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + e);
+			svg.appendChild(rect);
+			
 			OMSVGRectElement copyrect2 = doc.createSVGRectElement(5 * e, 4.5f*e, 14 * e, 15 * e, e, e);
 			copyrect2.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, foregroundColor.toString());
 			copyrect2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, foregroundColor.toString());
@@ -78,6 +81,12 @@ public class BerekeningVakButton extends SVGButton{
 	        
 		}
 		else if("sluit".equals(code))	{	
+			OMSVGRectElement rect = doc.createSVGRectElement(e, e, width - 2 * e, height - 2 * e, 1 * e, 1 * e);
+			rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, bgColor.toString());
+			rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, borderColor.toString());
+			rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + e);
+			svg.appendChild(rect);
+			
 			OMSVGLineElement stroke1 = doc.createSVGLineElement(6*e, 6*e, 18*e, 18*e);
 			stroke1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, foregroundColor.toString());
 			stroke1.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + 2*e);
@@ -88,7 +97,32 @@ public class BerekeningVakButton extends SVGButton{
 			stroke2.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + 2*e);
 			svg.appendChild(stroke2);
 		}
+		else if("CONTROLEER".equals(code)) {
+			borderColorActive = CssColor.make(211,229,244);
+			borderColor = CssColor.make(38,115,182);
+			OMSVGRectElement rect = doc.createSVGRectElement(1,1, width-2, height-2,2,2);
+			rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, CssColor.make(38,115,182).toString());
+			rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, borderColor.toString());
+			//rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + e);
+			svg.appendChild(rect);
+			
+			FontMetrics fm = new FontMetrics(text);
+			float textWidth = fm.getWidth();
+			float textHeight = fm.getHeight();
+			OMSVGTextElement label = doc.createSVGTextElement(center ? (w-textWidth)/2 : 12,(h+2*textHeight/3)/2, OMSVGLength.SVG_LENGTHTYPE_PX, text);
+			label.getStyle().setSVGProperty(SVGConstants.CSS_FONT_FAMILY_PROPERTY, ""+fontFamily);
+			label.getStyle().setSVGProperty(SVGConstants.CSS_FONT_SIZE_PROPERTY, ""+12);
+			label.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, CssColor.make(255,255,255).toString());
+			label.getStyle().setSVGProperty(SVGConstants.CSS_FONT_WEIGHT_PROPERTY,  ""+fontWeight);//SVGConstants.CSS_BOLD_VALUE);
+			svg.appendChild(label);
+		}
 		else {
+			OMSVGRectElement rect = doc.createSVGRectElement(e, e, width - 2 * e, height - 2 * e, e,  e);
+			rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, bgColor.toString());
+			rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, borderColor.toString());
+			rect.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "" + e);
+			svg.appendChild(rect);
+			
 			OMSVGTextElement label = doc.createSVGTextElement(4*e,h/2+3*e, OMSVGLength.SVG_LENGTHTYPE_PX, text);
 			label.getStyle().setSVGProperty(SVGConstants.CSS_FONT_SIZE_PROPERTY, "12");
 			label.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, foregroundColor.toString());

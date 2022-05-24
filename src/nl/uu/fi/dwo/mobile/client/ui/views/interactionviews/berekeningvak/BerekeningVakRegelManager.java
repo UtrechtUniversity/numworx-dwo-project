@@ -17,7 +17,7 @@ public class BerekeningVakRegelManager {
 	public BerekeningVakRegelManager(BerekeningVak berekeningVak) {
 		this.berekeningVak = berekeningVak;
 		vakRegels = berekeningVak.geefVakRegels();
-		vakPanel = (VerticalPanel)berekeningVak.getAsPanel();
+		vakPanel = (VerticalPanel)berekeningVak.getVakPanel();
 	}
 	
 	public void maakRegel(String tailString) {

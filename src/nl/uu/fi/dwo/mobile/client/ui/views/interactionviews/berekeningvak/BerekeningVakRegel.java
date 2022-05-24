@@ -79,11 +79,8 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 		formuleEditor.setFormuleToolBijFocus(berekeningVak.settings.formuleToolBijFocus());
 		
 		goedFoutPanel = new LayoutPanel();
-		goedFoutPanel.setPixelSize(20 , height );
+		goedFoutPanel.setPixelSize(0 , height );
 		regelPanel.add(goedFoutPanel);
-		
-		
-		
 		
 		formulePanel = formuleEditor.getAsPanel();
 		formulePanel.add(formuleEditor.getMainRegel().asWidget());
@@ -129,6 +126,11 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 		return formuleEditor.toString();
 	}
 	
+	public void wisGoedFout() {
+		goedFoutPanel.clear();
+		goedFoutPanel.setPixelSize(0 , hoogte );
+	}
+	
 	public void zetGoedFout(int goedFout) {
 		goedFoutPanel.clear();
 		if(goedFout == AntwoordFormuleVakChecker.GOED) {
@@ -141,6 +143,10 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 			//fv.setAsHoogte(10);
 			goedFoutPanel.add(fv);
 		}
+	}
+	
+	public void prepareGoedFout() {
+		goedFoutPanel.setPixelSize(20 , hoogte );
 	}
 	
 	private void berekenEnPlaatsExpressie() {
@@ -245,7 +251,7 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 		int left =  formuleEditor.getMainRegel().getHeight();       // hoogte formule regel
 		int right = rekenButton == null ? left : getAsHoogte()+6;  	// hoogte rekenButton = as - 14 + 20
 		hoogte = Math.max(left,right) + extraSpace;
-		formulePanel.setPixelSize((breedte-50) , hoogte );
+		formulePanel.setPixelSize((breedte-30-goedFoutPanel.getOffsetWidth()) , hoogte );
 		regelPanel.setPixelSize((breedte-1) , hoogte-1 );
 		mainPanel.setPixelSize((breedte-1) , hoogte );
 		separator.setPixelSize((breedte-1) , 1 );

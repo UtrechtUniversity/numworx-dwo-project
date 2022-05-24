@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
+import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
@@ -52,9 +53,11 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 	//componenten
 	private ArrayList<BerekeningVakRegel> vakRegels = new ArrayList<BerekeningVakRegel>();
 	private ArrayList<SimplePanel> seperators = new ArrayList<SimplePanel>();
+	private VerticalPanel mainPanel;
 	private VerticalPanel vakPanel;
 	private BerekeningVakFeedbackPanel feedbackPanel;
 	private CorrectieFacade correctieFacade;
+	private BerekeningVakButton checkButton;
 		
 	//instellingen
 	protected BerekeningVakSettings settings;
@@ -86,14 +89,27 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 		
 		checkManager = new BerekeningVakCheckManager(this);
 		
+		checkButton = new BerekeningVakButton("CONTROLEER");
+		checkButton.setSize(126, 24);
+		checkButton.addButtonListener(new checkButtonListener());
+		checkButton.setTooltip("Bereken");
+		
+		
+		
 		vakPanel = new VerticalPanel();
 		vakPanel.setStyleName(DWOplayer.templateCss().answerboxFEWA());
 		if(!settings.boxMetRand())	{
 			vakPanel.getElement().getStyle().setBorderStyle(Style.BorderStyle.NONE);
 			vakPanel.getElement().getStyle().setBackgroundColor("transparent");
 		}
+		
+		mainPanel = new VerticalPanel();
+		mainPanel.add(vakPanel);
+		
 		regelManager = new BerekeningVakRegelManager(this);
 		regelManager.maakRegel(null);
+		
+		
 		
 		loggingManager = new BerekeningVakLoggingManager(this, settings, activity);
 		// alternatief 
@@ -135,6 +151,10 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 	}
 	
 	public Panel getAsPanel() {
+		return mainPanel;
+	}
+	
+	public Panel getVakPanel() {
 		return vakPanel;
 	}
 	
@@ -153,8 +173,9 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 		}
 		if(!settings.volledigeBreedte() && !settings.meerregelig())
 			breedte = regelManager.actieveRegel.getWidth()+8;//extraWidth; //checkPanel.getOffsetWidth() + extraWidth;// + (getImageVisible()?26:0);
-		hoogte = meetHoogteRegels() + 3+2*borderWidth;
-		vakPanel.setPixelSize((breedte-2*borderWidth) , (hoogte-2*borderWidth) );
+		hoogte = meetHoogteRegels() + 3+2*borderWidth+25;
+		vakPanel.setPixelSize((breedte-2*borderWidth) , (hoogte-2*borderWidth-25) );
+		mainPanel.setPixelSize((breedte-2*borderWidth) , (hoogte-2*borderWidth) );
 		if(parentRegel != null) {	
 			parentRegel.resize();
 		}
@@ -182,7 +203,17 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 		regelManager.actieveRegel.geefFormuleEditor().requestFocus();
 	}
 	
+	public void wisGoedFout() {
+		for(int i=0 ; i<vakRegels.size() ; i++) {
+			vakRegels.get(i).wisGoedFout();
+		}
+	}
 	
+	public void prepareGoedFout() {
+		for(int i=0 ; i<vakRegels.size() ; i++) {
+			vakRegels.get(i).prepareGoedFout();
+		}
+	}
 
 	@Override
 	public HashMap<String, Object> getState() {
@@ -296,6 +327,9 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 		if (loggingManager.logging != null) 
 			loggingManager.logging.setCommunicationRoot(comRoot);
 		
+		if(settings.check() && settings.meerregelig() && (getMode()==0 || getMode()==1))
+			mainPanel.add(checkButton);
+		
 	}
 	
 	public int getMode() {
@@ -372,5 +406,10 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 		
 	}
 	
-	
+	private class checkButtonListener implements ButtonListener {
+		
+		public void onClick(Object sender) {
+			kijkNa();
+		}
+	}
 }

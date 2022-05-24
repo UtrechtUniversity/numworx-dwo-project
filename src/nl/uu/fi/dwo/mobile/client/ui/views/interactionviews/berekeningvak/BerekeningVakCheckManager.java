@@ -127,6 +127,8 @@ public class BerekeningVakCheckManager {
 		tempVakScore = 0;
 		tempVakCorrect = false;
 		scoreContainer = new ArrayList<Integer>();
+		if(view)
+			berekeningVak.prepareGoedFout();
 		for(int i=0 ; i<berekeningVak.geefVakRegels().size() ; i++) {
 			checkRegelVergelijking(i, view);
 		}
@@ -187,6 +189,7 @@ public class BerekeningVakCheckManager {
 		berekeningVak.geefVakRegel(regelNr).geefFormuleEditor().insert(checkedString);
 		berekeningVak.geefVakRegel(regelNr).geefFormuleEditor().paint();
 		berekeningVak.geefVakRegel(regelNr).regelResize();
+		berekeningVak.geefVakRegel(regelNr).geefFormuleEditor().requestFocus();
 	}
 	
 	private void checkRegelVergelijking(int regelNr, boolean view) {
@@ -234,6 +237,7 @@ public class BerekeningVakCheckManager {
 		berekeningVak.geefVakRegel(regelNr).geefFormuleEditor().insert(checkedString);
 		berekeningVak.geefVakRegel(regelNr).geefFormuleEditor().paint();
 		berekeningVak.geefVakRegel(regelNr).regelResize();
+		berekeningVak.geefVakRegel(regelNr).geefFormuleEditor().requestFocus();
 	}
 	
 	public void getCheckerState(HashMap<String, Object> state) {
