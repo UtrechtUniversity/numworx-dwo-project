@@ -42,7 +42,7 @@ import fi.wiskopdr.text.Text_nl;
  */
 public abstract class DWOplayer
 {
-	public static final boolean RESPONSIVE =  true || "true".equals(Window.Location.getParameter("responsive"));
+	public static final boolean RESPONSIVE =  "true".equals(Window.Location.getParameter("responsive"));
 
 	public static int PROFILE_ID = 77;
 	
