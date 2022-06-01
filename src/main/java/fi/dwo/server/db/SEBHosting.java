@@ -21,7 +21,8 @@ import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 public class SEBHosting extends HttpServlet {
 
 	
-	String replacement = "https://app.dwo.nl";
+	private static final String HTTPS_APP_DWO_NL = "https://app.dwo.nl";
+	String replacement = HTTPS_APP_DWO_NL;
 	/* (non-Javadoc)
 	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
@@ -62,7 +63,7 @@ public class SEBHosting extends HttpServlet {
 			}
 			resp.setContentType("application/seb");
 			resp.setCharacterEncoding("UTF-8");
-			String content = sb.toString().replace("https://app.dwo.nl", replacement);
+			String content = sb.toString().replace(HTTPS_APP_DWO_NL, replacement);
 			if (classcourse != null)
 				content = content.replace("toets.jsp", "toets.jsp?id="+classcourse);
 			resp.getWriter().write(content);
@@ -88,6 +89,8 @@ public class SEBHosting extends HttpServlet {
 	@Override
 	public void init() throws ServletException {
 		replacement = System.getProperty("ALLOW_ORIGIN", replacement);
+		replacement = replacement.split("\\s+")[0];
+		if ("*".equals(replacement)) replacement = HTTPS_APP_DWO_NL;
 	}
 
 }
