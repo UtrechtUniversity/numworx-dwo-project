@@ -13,6 +13,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import fi.dwo.server.rest.util.Origin;
+
 public class XSSFilter implements Filter {
 
     @Override
@@ -37,11 +39,7 @@ public class XSSFilter implements Filter {
             HttpServletResponse res = (HttpServletResponse) response;
             HttpServletRequest req = (HttpServletRequest) request;
             String origin;
-//            origin = req.getHeader("Origin");
-//            if (origin == null) {
-//                origin = "*";
-//            }
-            origin = System.getProperty("ALLOW_ORIGIN", "*");
+            origin = Origin.of(req);
             res.setHeader("Access-Control-Allow-Origin", origin);
             res.setHeader("Access-Control-Expose-Headers", "content-type");
             res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -79,7 +77,8 @@ public class XSSFilter implements Filter {
 //        if (origin == null) {
 //            origin = "*";
 //        }
-        origin = System.getProperty("ALLOW_ORIGIN", "*");
+//        origin = System.getProperty("ALLOW_ORIGIN", "*");
+        origin = Origin.of(request);
         response.setHeader("Access-Control-Allow-Origin", origin);
         response.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, OPTIONS");
         response.setHeader("Access-Control-Expose-Headers", "content-type");
