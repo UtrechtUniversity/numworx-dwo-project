@@ -44,6 +44,7 @@ import nl.uu.fi.dwo.rest.dom.xapi.Account;
 import nl.uu.fi.dwo.rest.dom.xapi.Activity;
 import nl.uu.fi.dwo.rest.dom.xapi.Agent;
 import nl.uu.fi.dwo.rest.dom.xapi.Extensions;
+import nl.uu.fi.dwo.rest.dom.xapi.Score;
 import nl.uu.fi.dwo.rest.dom.xapi.StateDocument;
 import nl.uu.fi.dwo.rest.dom.xapi.Statement;
 import nl.uu.fi.dwo.rest.dom.xapi.StatementsQuery;
@@ -153,8 +154,50 @@ public class XapiResultsManager {
       state.agent = agent;
       state.registration = null;
       xapi.saveState(state); // store in background
+// vanaf hier update scores met voorkennis.
+      DomStudentModelDataScore scores1 = eerstestap(context);
+      Map<String, DomStudentModelScore> model = new HashMap<>();
+      Map<String, DomStudentModelScore> model1 = new HashMap<>();
+      
+      Map<String, DomStudentModelContextInfo> infos = new HashMap<>();
+      fill( scores1.getDomStudentModelStructureScore(), context.getModelStructure(), model1, infos); infos.clear();
+      fill( scores.getDomStudentModelStructureScore(), context.getModelStructure(), model, infos);
+      for( Map.Entry<String, DomStudentModelScore> entry: model1.entrySet()) {
+        String key = entry.getKey();
+        DomStudentModelScore score1 = entry.getValue();
+        DomStudentModelScore score = model.get(key);
+        double greenScore = score.getGreenScore();       
+        long greenCount = score.getGreenCount();
+        double redScore = score.getRedScore(); 
+        long redCount = score.getRedCount();       
+        long totalCount = score.getTotalCount();
 
-      return scores;
+        if (greenCount > 0) {
+          List<String> ids = metVoorkennis(Collections.singletonList(key), infos);
+          ids.remove(key);
+          if (!ids.isEmpty()) {
+          greenCount = ids.size();
+          greenScore = 0;
+          for (String id: ids) {
+            DomStudentModelScore s = model.get(id);
+            if (s != null)
+              greenScore += s.getGreenCount() > 0 ? s.getGreenScore() : 0.5;
+              else {
+                LOG.severe(id + " not found");
+              }
+          }
+          double cut =  greenScore/greenCount;
+ 
+  //        greenScore = Math.min(score.getGreenScore(), Math.max(0.5,cut));
+  
+          greenScore = 0.5 + (score.getGreenScore() - 0.5) * (cut-0.5) * 2;
+          LOG.info(" score was " + score.getGreenScore() + " wordt " + greenScore);
+          
+          greenCount = score.getGreenCount();
+        }}
+        score1.setScore(greenScore, greenCount, redScore, redCount, totalCount); 
+      }
+      return scores1;
     }
    
     public Promise<DomStudentModelDataStudentScore> then() {
@@ -196,7 +239,8 @@ public class XapiResultsManager {
             .map(statements -> {
              DomStudentModelDataStudentScore p = toDataScore( statements, d, context);
              return p;
-             });
+             }).then(null, p -> 
+             LOG.log(Level.SEVERE, "oops", p.getFailure()));
         });    
       }
     
@@ -249,6 +293,25 @@ public class XapiResultsManager {
     return result;
   }
   
+  private static boolean himark(Score score) {
+    if (score == null) return false;
+    Double scaled = score.scaled;
+    if (scaled == null) return false;
+    boolean b = scaled.doubleValue() > 0.75;
+    if (b) 
+      LOG.info("himark " + b);
+    return b;
+  }
+  
+  private static boolean lomark(Score score) {
+    if (score == null) return false;
+    Double scaled = score.scaled;
+    if (scaled == null) return false;
+    boolean b = scaled.doubleValue() < 0.25;
+    if (b) 
+      LOG.info("lomark " + b);
+    return b;
+  }
   
   @SuppressWarnings("rawtypes")
   private void stappen( DomStudentModelDataScore scores, DomStudentModelContext context, List<Statement> statements) {
@@ -263,7 +326,7 @@ public class XapiResultsManager {
     
     for (Statement statement: statements) {
         Boolean success = statement.result.success;
-        
+        Score   score   = statement.result.score;
         String className = statement.context.contextActivities.parent.get(0).definition.type;
         double guess = 0.1;
         if(className.contains("AntwoordKeuzeVak"))
@@ -282,9 +345,14 @@ public class XapiResultsManager {
         
         ids = strip(ids);
         
-        if(Boolean.FALSE.equals(success))
+        if (Boolean.FALSE.equals(success) || (!Boolean.TRUE.equals(success)) && lomark(score))
         {
-            //Calculate prodCorrect based on current scores
+          if (statement.result.extensions != null && statement.result.extensions.objectives != null) {
+            ids.removeAll(statement.result.extensions.objectives);
+          }
+          
+          
+          //Calculate prodCorrect based on current scores
             double prodCorrect = 1;
             for(String id: ids)
             {
@@ -309,17 +377,25 @@ public class XapiResultsManager {
                 modelScore.setScore(newScore);
             }
         }
-        else if(Boolean.TRUE.equals(success))
+        else if (Boolean.TRUE.equals(success) || himark(score))
         {
           Collection<String> voorkennis = extensions.foreknowledge;
           if (voorkennis != null) {
             voorkennis = new TreeSet<>(voorkennis);
+            if (statement.result.extensions != null && statement.result.extensions.objectives != null) {
+              ids = new ArrayList<>(statement.result.extensions.objectives);
+              ids = strip(ids);
+              voorkennis.retainAll(metVoorkennis(ids, infos));
+            }
             voorkennis.addAll(ids);
             ids = new ArrayList<>(voorkennis);
           } else 
-            ids = metVoorkennis(ids, infos);
-          
-          
+          {
+            if (statement.result.extensions != null && statement.result.extensions.objectives != null) {
+              ids = new ArrayList<>(statement.result.extensions.objectives);
+            }
+            ids = metVoorkennis(ids, infos);          
+          }
           
           //Immediately calculate new scores for all ids
             for(String id: ids)
