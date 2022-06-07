@@ -8,7 +8,7 @@
     <class>fi.dwo.commons.persistence.entities.PersistentAppletConfig</class>
     <class>fi.dwo.commons.persistence.entities.PersistentClassCourse</class>
     <class>fi.dwo.commons.persistence.entities.PersistentCourse</class>
-    <class>fi.dwo.commons.persistence.entities.PersistentCourseSequence</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentCourseData</class>
     <class>fi.dwo.commons.persistence.entities.PersistentDwoProfile</class>
     <class>fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters</class>
     <class>fi.dwo.commons.persistence.entities.PersistentFromTo</class>

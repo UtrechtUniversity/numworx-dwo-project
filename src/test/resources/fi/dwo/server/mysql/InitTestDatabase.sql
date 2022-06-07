@@ -187,7 +187,7 @@ CREATE TABLE `tblcourse` (
 `courseID` int(11) NOT NULL AUTO_INCREMENT,
 `schoolID` int(11) DEFAULT NULL,
 `name` varchar(40) NOT NULL DEFAULT '',
-`description` mediumtext NOT NULL,
+`description` mediumtext DEFAULT NULL,
 `image` varchar(128) DEFAULT NULL,
 `dwoProfileID` int(11) NOT NULL DEFAULT '0',
 `imageData` longblob,
@@ -230,13 +230,15 @@ CREATE TABLE `tblcoursedata` (
   `optlock` int(11) DEFAULT '0',
   `lastChangeTimeStamp` bigint(20) DEFAULT '0',
   `del` tinyint(4) NOT NULL DEFAULT '0',
-  `jsonDescription` json DEFAULT NULL,
   PRIMARY KEY (`courseID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+LOCK TABLES `tblcoursedata` WRITE;
 
-
+INSERT INTO `tblcoursedata`(`courseID`,`description`,`descriptionbytes`,`imageData`,`optlock`,`lastChangeTimeStamp`,`del`)
+VALUES (13333,'Course01 Description',NULL,NULL,0,0,0);
+UNLOCK TABLES;
 
 
 --
@@ -989,17 +991,6 @@ CREATE TABLE `tblstudentmodelitem` (
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
-DROP TABLE IF EXISTS `tblcoursedata`;
-CREATE TABLE `tblcoursedata` (
-  `courseID` int(11) NOT NULL,
-  `description` mediumtext COLLATE utf8_unicode_ci NOT NULL,
-  `descriptionbytes` longblob,
-  `imageData` longblob,
-  `optlock` int(11) DEFAULT '0',
-  `lastChangeTimeStamp` bigint(20) DEFAULT '0',
-  `del` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`courseID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `tblstudentmodelof`;
 CREATE TABLE `tblstudentmodelof` (
