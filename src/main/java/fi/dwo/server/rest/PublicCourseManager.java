@@ -30,6 +30,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.beans.dwomaccess.JSONEncoder;
@@ -87,6 +88,11 @@ public class PublicCourseManager {
 		}
     }
         
+    static boolean visible(PersistentCourse c) {
+      return ! c.isNotVisible() || ! c.isWithChildren() || c.getSchoolID() != null;
+    }
+    
+    
     @PUT
     @Path("/getRoot")
     @Produces({"application/json"})
@@ -109,6 +115,7 @@ if(SECURITY)
     		List<PersistentCourse> courses = CourseManager.findChildrenOf(profile, school);
     		
     		Stream<PersistentCourse> stream = courses.stream();
+    		stream = stream.filter(PublicCourseManager::visible);
     		String uri = info.getRequestUri().resolve("getImage").toString();
 			Stream<DomCourseStudent> map = stream.map(new CourseBuilder(uri));
 			map = map.sorted(DomCourseStudentComparator.INSTANCE);
@@ -133,12 +140,14 @@ if(SECURITY)
     		DomCourse course = rest.getDomCourse();
     		long id = MySQLPersistenceId.getNativeId(course);
     		PersistentCourse parent = CourseManager.findEntity(id);
-// Verify parent is public and profile is not limited and hasChildren
+            if (parent == null) throw new Dwo2RestException(Dwo2ExceptionCode.Rest_ResourceNotFound, "not found");
+
+    		// Verify parent is public and profile is not limited and hasChildren
     		PersistentDwoProfile profile = DwoProfileManager.findEntity(parent.getDwoProfileID());
 if(SECURITY)
     		if ( parent.getSchoolID() != null || 
-//   			 ! parent.isWithChildren()	||
-    			 profile.isLimited()
+    			 profile.isLimited() ||
+    			 !visible(parent)
 // Verify context: profile matches...
 //    			|| !rest.getDomDwoProfile().getId().equals(profile.buildPersistenceId())
     		)
@@ -146,7 +155,9 @@ if(SECURITY)
     			
     		List<PersistentCourse> courses = CourseManager.findChildrenOf(parent); 
     		final String PFX = info.getRequestUri().resolve("getImage").toString();
-    		return courses.stream().map(
+    		return courses.stream()
+    		    .filter(PublicCourseManager::visible)
+    		    .map(
     			new CourseBuilder(PFX)).sorted(DomCourseStudentComparator.INSTANCE).collect(Collectors.toList());
     	} catch (Dwo2RestException e) {
     		throw e;
@@ -168,7 +179,8 @@ if(SECURITY)
     		PersistentDwoProfile profile = DwoProfileManager.findEntity(parent.getDwoProfileID());
 if(SECURITY) 
     		if ( parent.getSchoolID() != null || 
-    			 profile.isLimited())
+    		     !visible(parent) ||
+    			 profile.isLimited()) 
     			throwLoginNeeded();
 // TODO Verify context: profile matches...
     		if (!SECURITY || rest.getDomDwoProfile().getId().equals(profile.buildPersistenceId()))    		

@@ -34,6 +34,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ACL;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
@@ -215,6 +216,7 @@ public class SecuredUserCourseManager {
     		PersistentUser user = getUserFromContext(sc);
 			PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(hasRole);
             PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
+            boolean premium = phr.getSchoolGroup().getSchool().getAboType() == AboType.premium;
 // userid must match hasrole
          		if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
          			return Collections.emptyList();
@@ -234,7 +236,9 @@ public class SecuredUserCourseManager {
     		List<PersistentCourse> courses = CourseManager.findChildrenOf(profile, school);
     		String pfx = info.getRequestUri().resolve(PUBLIC_COURSE_GET_IMAGE).toString();
     		Stream<PersistentCourse> stream = courses.stream();
-			Stream<DomCourseStudent> map = stream.map(new CourseBuilder(pfx,hasRole,false));
+    		if (!premium)
+    		  stream = stream.filter(PublicCourseManager::visible);
+    		Stream<DomCourseStudent> map = stream.map(new CourseBuilder(pfx,hasRole,false));
 			map = map.sorted(DomCourseStudentComparator.INSTANCE);
     		return map.collect(Collectors.toList());
     	} catch (Dwo2RestException e) {
@@ -264,7 +268,7 @@ public class SecuredUserCourseManager {
 // FIXME check role is not a guest/student
     		
     		PersistentSchool school = HasRoleUtilManager.getSchoolforHasRole(hr);
-
+    		boolean premium = school.getAboType() == AboType.premium;
     		
     		PersistentCourse parent = CourseManager.findEntity(id);
 // Verify parent is public and profile is not limited and hasChildren, 
@@ -275,7 +279,9 @@ public class SecuredUserCourseManager {
     			 profile.isLimited()
 // Verify context: profile matches...
     			|| !profile.getDwoProfileID().equals(MySQLPersistenceId.getNativeId(domDwoProfile))
-    		)
+// standaard school: visible
+    			|| (!premium && !PublicCourseManager.visible(parent))
+    		    )
     		{
     			if(!school.getSchoolID().equals(parent.getSchoolID()))
     			{
@@ -285,7 +291,10 @@ public class SecuredUserCourseManager {
     			
     		List<PersistentCourse> courses = CourseManager.findChildrenOf(parent);
     		String pfx = info.getRequestUri().resolve(PUBLIC_COURSE_GET_IMAGE).toString();
-    		return courses.stream()
+    		Stream<PersistentCourse> stream = courses.stream();
+    		if (!premium)
+    		  stream = stream.filter(PublicCourseManager::visible);
+            return stream
     				.map( new CourseBuilder(pfx, hasRole, school.accessControl()) )
     				.sorted(DomCourseStudentComparator.INSTANCE)
     				.collect(Collectors.toList());

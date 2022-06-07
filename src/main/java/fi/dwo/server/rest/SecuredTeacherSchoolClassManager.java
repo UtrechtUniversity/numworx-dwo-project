@@ -52,6 +52,7 @@ import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.dom.entities.util.ACL;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
@@ -1291,6 +1292,16 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             }
           }
           
+        } else if (school.getAboType() != AboType.premium) {
+          Iterator<PersistentCourse> iterator = listCourse.iterator();
+          while (iterator.hasNext()) {
+            PersistentCourse pc = iterator.next();
+            if (!PublicCourseManager.visible(pc))
+            {
+              iterator.remove();
+              courseMap.remove(pc.getCourseID(), pc);
+            }
+          }
         }
  // filter children/offspring of trash
         boolean trashed;
