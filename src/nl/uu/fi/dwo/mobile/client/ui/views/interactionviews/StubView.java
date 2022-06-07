@@ -301,6 +301,30 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		inner.setNagekeken(b);
 	}-*/;
 
+	private native static int getConstantHeight0(Object inner) /*-{
+		return inner.getConstantHeight();
+	}-*/;
+
+	private native static int getConstantWidth0(Object inner) /*-{
+		return inner.getConstantWidth();
+	}-*/;
+	
+	private int getConstantHeight() {
+		try {
+			return getConstantHeight0(innerView);
+		} catch(Throwable t) {
+			return 0; // De default;
+		}
+	}
+	private int getConstantWidth() {
+		try {
+			return getConstantWidth0(innerView);
+		} catch(Throwable t) {
+			return 0; // De default;
+		}
+	}
+	
+	
 	@Override
 	public Boolean isCorrect() {
 		if(innerView != null) {
@@ -856,8 +880,10 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
   }
 
 	private int fullheight() {
-	return height * fullwidth / width;
-}
+		int ch = getConstantHeight();
+		int cw = getConstantWidth();
+		return ch + (height-ch) * (fullwidth-cw) / (width-cw);
+	}
 
 	@Override
 	public void setAsHoogte(int ashoogte) {
