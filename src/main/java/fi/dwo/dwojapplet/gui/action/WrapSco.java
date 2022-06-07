@@ -21,6 +21,7 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -557,7 +558,8 @@ public class WrapSco extends Sco {
     public String getParameter(String name) {
         if ("url".equals(name)) {
             String language = TextMapper.getLanguage();
-            String env = super.getParameter(DWO.DWO_ENV);
+            @SuppressWarnings("deprecation")
+            String env = URLEncoder.encode(super.getParameter(DWO.DWO_ENV));
             String responsive = "";
             if (DwoHelper.isTest())
               responsive = "&responsive=true";
@@ -567,7 +569,7 @@ public class WrapSco extends Sco {
             if (path.getPort() != -1) port = ":" + path.getPort();
 			String serverBase = path.getProtocol() + "://" + path.getHost() + port;
             return  serverBase + 
-            		GuiConstants.PLAYER + language + "#cmi.launch_data:" + getScoID(); // FIXME correct url.
+            		GuiConstants.PLAYER + language + "#cmi.launch_data:" + getScoID();
         }
         if ("debug".equals(name)) {
             return null;
