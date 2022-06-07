@@ -85,7 +85,7 @@ public class PersistentCourse implements Serializable {
     @Column(name = "name", nullable = false, length = MAX_NAME)
     private String name;
     @Basic(optional = false)
-    @NotNull
+    //@NotNull overgenomen door CourseData.description
     @Lob
     @Size(min = 0, max = 16777215)
     @Column(name = "description", nullable = false, length = 16777215)
