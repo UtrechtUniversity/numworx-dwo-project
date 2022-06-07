@@ -8,11 +8,13 @@ import java.util.logging.Logger;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentCourseData;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.server.PersistentDataManagers.core.ACLManager;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
+import fi.dwo.server.PersistentDataManagers.core.CourseDataManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
@@ -30,11 +32,26 @@ public class MySQLCourseActions {
 
   public static DomCourseFull update(PersistentCourse pc, DomCourseFull course) {
     try {
+    	PersistentCourseData pcd = CourseDataManager.findEntity(pc.getCourseID());
+    	if (pcd == null) {
+    		pcd = new PersistentCourseData();
+    		pcd.setCourseID(pc.getCourseID());
+    		pcd.setDescription(pc.getDescription());
+    		pcd.setImageData(pc.getImageData());
+    		CourseDataManager.create(pcd);
+    	}
  // editable fields?
     if(course.getName() != null) pc.setName(course.getName());
-    if(course.getDescription() != null) pc.setDescription(course.getDescription());
-    if(course.getImage() != null) pc.setImage(course.getImage());
-    if(course.getImageData()!=null) pc.setImageData(course.getImageData());
+    if(course.getDescription() != null) {
+    	pcd.setDescription(course.getDescription());
+    	pcd.setDescriptionbytes(null);
+    	pc.setDescription(course.getDescription());
+    }
+    if(course.getImage() != null) pc.setImage(course.getImage()); // dwoadmin only!
+    if(course.getImageData()!=null) {
+    	pcd.setImageData(course.getImageData());
+    	pc.setImageData(course.getImageData());
+    }
     pc.setNotVisible(course.isNotVisible());
     if(course.getExport() != null)
         pc.setExport(course.getExport().booleanValue());
@@ -78,24 +95,34 @@ public class MySQLCourseActions {
         pc.setLastChangeTimeStamp(System.currentTimeMillis()); // FIXME Gert is dit de bedoeling of JPA managed?
 
     pc=CourseManager.edit(pc);
-    return pc.buildDomCourseFull();
+    pcd = CourseDataManager.edit(pcd);
+    course = pc.buildDomCourseFull();
+    pcd.fillDomCourseFull(course);
+    return course;
 } catch (Dwo2Exception e) {
     throw new Dwo2RestException(e);
 }
 
   }
-  static DomCourseFull add(DomCourseFull course) {
+  public static DomCourseFull add(DomCourseFull course) {
     try {
 //Security...
         PersistentCourse pc = new PersistentCourse();
+        PersistentCourseData pcd = new PersistentCourseData();
         DomDwoProfile profile = new DomDwoProfile();
         profile.setId(course.getDwoProfileId());            
         pc.setDwoProfileID(MySQLPersistenceId.getNativeId(profile));
 //editable fields?
         if(course.getName() != null) pc.setName(course.getName());
-        if(course.getDescription() != null) pc.setDescription(course.getDescription());
-        if(course.getImage() != null) pc.setImage(course.getImage());
-        if(course.getImageData()!=null) pc.setImageData(course.getImageData());
+        if(course.getDescription() != null) {
+        	pcd.setDescription(course.getDescription());
+        	pc.setDescription(course.getDescription());
+        }
+        if(course.getImage() != null) pc.setImage(course.getImage()); // only if dwoadmin
+        if(course.getImageData()!=null) {
+        	pcd.setImageData(course.getImageData());
+        	pc.setImageData(course.getImageData());
+        }
         pc.setNotVisible(course.isNotVisible());
         if(course.getExport() != null)
             pc.setExport(course.getExport().booleanValue());
@@ -135,7 +162,10 @@ public class MySQLCourseActions {
         } else
             pc.setParentID(0L);
         CourseManager.create(pc);
+        pcd.setCourseID(pc.getCourseID());
+        CourseDataManager.create(pcd);
         course = pc.buildDomCourseFull();
+        pcd.fillDomCourseFull(course);
     } catch (Dwo2Exception e) {
         throw new Dwo2RestException(e);
     }
@@ -155,6 +185,7 @@ public class MySQLCourseActions {
       cc.forEach(ccc -> ClassCourseManager.destroy(ccc.getClassCourseID()));
       ACLManager.updateByCourse(pc, Collections.emptyList());
       CourseManager.destroy(pc.getCourseID());
+      CourseDataManager.destroy(pc.getCourseID());
       if (pc.getTrashID() == 0) {
 	 // sequencenr doorschuiven.
 	      relocateCourses(pc);

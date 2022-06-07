@@ -42,6 +42,7 @@ import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoA
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.ACLManager;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
+import fi.dwo.server.PersistentDataManagers.core.CourseDataManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.FromToManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
@@ -511,6 +512,7 @@ public class SecuredDwoAdminSchoolManager {
                     acls.forEach(acl -> ACLManager.destroy(acl.getAclID()));
                     ///Remove Course
                     CourseManager.destroy(c.getCourseID());
+                    CourseDataManager.destroy(c.getCourseID());
                 }
                 } while ( ! cList.isEmpty() );
                 SchoolManager.destroy(school.getSchoolID());

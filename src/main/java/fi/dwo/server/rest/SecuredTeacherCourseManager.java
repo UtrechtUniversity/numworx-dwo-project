@@ -7,6 +7,7 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentACL;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentCourseData;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
@@ -15,6 +16,7 @@ import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserStat
 import fi.dwo.server.PersistentDataManagers.actions.MySQLCourseActions;
 import fi.dwo.server.PersistentDataManagers.core.ACLManager;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
+import fi.dwo.server.PersistentDataManagers.core.CourseDataManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 
@@ -122,12 +124,28 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 // FIXME more security
               ACLManager.updateByCourse(pc, list);
 			}
+
+			PersistentCourseData pcd = CourseDataManager.findEntity(courseID);
+			if (pcd == null) {
+				pcd = new PersistentCourseData();
+				pcd.setCourseID(courseID);
+				pcd.setDescription(pc.getDescription());
+				pcd.setImageData(pc.getImageData());
+				CourseDataManager.create(pcd);
+			}
 			
 			
 			if(course.getName() != null) pc.setName(course.getName());
-			if(course.getDescription() != null) pc.setDescription(course.getDescription());
+			if(course.getDescription() != null) {
+				pcd.setDescription(course.getDescription());
+				pcd.setDescriptionbytes(null);
+				pc.setDescription(course.getDescription());
+			}
 			//if(course.getImage() != null) pc.setImage(course.getImage()); // course.getImage is NOT EDITABLE
-			if(course.getImageData()!=null) pc.setImageData(course.getImageData());
+			if(course.getImageData()!=null) {
+				pcd.setImageData(course.getImageData());
+				pc.setImageData(course.getImageData());
+			}
 			pc.setNotVisible(course.isNotVisible());
 			if(course.getExport() != null)
 				pc.setExport(course.getExport().booleanValue());
@@ -175,6 +193,7 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 			pc.setTrashID(0L);
 			pc=CourseManager.edit(pc);
 			course = pc.buildDomCourseFull();
+			pcd.fillDomCourseFull(course);
 			if (school.accessControl()) {
 			  course.setAcls(ACLManager.findByCourse(pc).stream().map(PersistentACL::buildDomACL).collect(Collectors.toList()));
 			}
@@ -240,14 +259,21 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
     	try {
 // Security...
 			PersistentCourse pc = new PersistentCourse();
+			PersistentCourseData pcd = new PersistentCourseData();
 			DomDwoProfile profile = new DomDwoProfile();
 			profile.setId(course.getDwoProfileId());			
 			pc.setDwoProfileID(MySQLPersistenceId.getNativeId(profile));
 // editable fields?
 			if(course.getName() != null) pc.setName(course.getName());
-			if(course.getDescription() != null) pc.setDescription(course.getDescription());
+			if(course.getDescription() != null) {
+			  pcd.setDescription(course.getDescription());
+			  pc.setDescription(course.getDescription());
+			}
 			//if(course.getImage() != null) pc.setImage(course.getImage()); course.getImage is not editable
-			if(course.getImageData()!=null) pc.setImageData(course.getImageData());
+			if(course.getImageData()!=null) {
+			  pcd.setImageData(course.getImageData());
+			  pc.setImageData(course.getImageData());
+			}
 			pc.setNotVisible(course.isNotVisible());
 			if(course.getExport() != null)
 				pc.setExport(course.getExport().booleanValue());
@@ -286,7 +312,10 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 			} else
 				pc.setParentID(0L);
 			CourseManager.create(pc);
+			pcd.setCourseID(pc.getCourseID());
+			CourseDataManager.create(pcd);
 			course = pc.buildDomCourseFull();
+			pcd.fillDomCourseFull(course);
     	} catch (RollbackException e) {
     	    Throwable t = e;
     	    while (t.getCause() != null) t = t.getCause(); // deepest, hoe ver?   	    
