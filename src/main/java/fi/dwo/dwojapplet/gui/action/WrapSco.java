@@ -558,7 +558,10 @@ public class WrapSco extends Sco {
         if ("url".equals(name)) {
             String language = TextMapper.getLanguage();
             String env = super.getParameter(DWO.DWO_ENV);
-            language = "?locale=" + language + "&env=" + env;
+            String responsive = "";
+            if (DwoHelper.isTest())
+              responsive = "&responsive=true";
+            language = "?locale=" + language + "&env=" + env + responsive;
             URL path = DwoHelper.getServerUrlPath();
             String port = "";
             if (path.getPort() != -1) port = ":" + path.getPort();
