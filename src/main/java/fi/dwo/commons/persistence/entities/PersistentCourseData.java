@@ -12,6 +12,8 @@ import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 
 @Entity
@@ -140,4 +142,12 @@ public class PersistentCourseData {
     this.descriptionbytes = descriptionbytes;
   }
 
+  public void fillDomCourseStudent(DomCourseStudent course) {
+    course.setDescription(getDescription());
+    course.setImageData(getImageData());
+  }
+  
+  public void fillDomCourseFull(DomCourseFull course) {
+    fillDomCourseStudent(course);
+  }
 }

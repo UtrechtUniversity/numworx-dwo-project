@@ -333,23 +333,8 @@ public class PersistentCourse implements Serializable {
         course.setSequenceNr(sequenceNr);
         course.setTreeIndex(treePath);
         course.setWithChildren(withChildren);
-//        course.setNotVisible(notVisible);
         course.setLastChangeTimeStamp(lastChangeTimeStamp);
     }
-//
-//    public DomCourseStudent buildDomCourseStudent() {
-//        DomCourseFull course = new DomCourseFull();
-//        fillDomCourseFull(course);
-//        return course;
-//    }
-//
-//    private void fillDomCourseStudent(DomCourseStudent course) {
-//        fillDomCourse(course);
-//        course.setImage(image);
-//        course.setImageData(imageData);
-//		  course.setNotVisible(notVisible);
-//        course.setDescription(description);
-//    }
 
     public DomCourseFull buildDomCourseFull() {
         DomCourseFull course = new DomCourseFull();
