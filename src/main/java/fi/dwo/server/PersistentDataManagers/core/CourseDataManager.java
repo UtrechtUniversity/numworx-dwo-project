@@ -109,7 +109,7 @@ public class CourseDataManager {
                 course.getCourseID();
             } catch (EntityNotFoundException e) {
                 LOG.log(Level.FINE, "The PersistentCourse with " + id + " no longer exists.", e);
-                throw e;
+                return;
             }
             em.remove(course);
             em.getTransaction().commit();
