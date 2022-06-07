@@ -138,6 +138,15 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF, NativePreviewHandler 
 				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::editorToString()();
 			},
 			
+			getConstantWidth: function() {
+				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::getConstantWidth()();
+			},
+
+			getConstantHeight: function() {
+				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::getConstantHeight()();
+			},
+			
+			
 		};
 		$wnd.inner.stub = o;
 		

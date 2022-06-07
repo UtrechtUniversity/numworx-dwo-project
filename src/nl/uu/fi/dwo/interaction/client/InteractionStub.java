@@ -9,4 +9,7 @@ public interface InteractionStub extends InteractionView {
 	 * @param values map met randomvariabelen
 	 */
 	public void init(int width, int height, Map<String, Object> launchData, Map<String, Number> values);
+	
+	default int getConstantWidth() { return 0; }
+	default int getConstantHeight() { return 0; }
 }
