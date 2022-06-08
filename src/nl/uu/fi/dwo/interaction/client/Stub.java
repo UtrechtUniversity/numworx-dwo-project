@@ -497,14 +497,22 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF, NativePreviewHandler 
 	}
 	
 	
-  @Override
-  public ObjectMap getContext() {
-    return JSONUtilities.wrapMap(getContext1());
-  }
+	@Override
+	public ObjectMap getContext() {
+		return JSONUtilities.wrapMap(getContext1());
+	}
 
-@Override
-public void onPreviewNativeEvent(NativePreviewEvent event) {
-	tickle();
-}
+	@Override
+	public void onPreviewNativeEvent(NativePreviewEvent event) {
+		tickle();
+	}
+	
+	public int getConstantWidth() {
+		return view.getConstantWidth();
+	}
+	
+	public int getConstantHeight() {
+		return view.getConstantHeight();
+	}
 
 }
