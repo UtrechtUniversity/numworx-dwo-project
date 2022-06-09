@@ -192,6 +192,7 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 				pc.setLastChangeTimeStamp(System.currentTimeMillis()); // FIXME Gert is dit de bedoeling of JPA managed?
 			pc.setTrashID(0L);
 			pc=CourseManager.edit(pc);
+			pcd = CourseDataManager.edit(pcd);
 			course = pc.buildDomCourseFull();
 			pcd.fillDomCourseFull(course);
 			if (school.accessControl()) {
