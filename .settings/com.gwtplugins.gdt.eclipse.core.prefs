@@ -1,7 +1,7 @@
 eclipse.preferences.version=1
 gwtMavenModuleName=nl.numworx.oauth2client.OAuth2Client
 gwtMavenModuleShortName=OAuth2Client
-lastWarOutDir=/Users/wim/git/oauth2client/target/OAuth2Client-1.0.4-SNAPSHOT
+lastWarOutDir=/Users/peterboon/git/OAuth2Client/target/OAuth2Client-1.0.4-SNAPSHOT
 launchConfigExternalUrlPrefix=
 warSrcDir=src/main/webapp
 warSrcDirIsOutput=false
