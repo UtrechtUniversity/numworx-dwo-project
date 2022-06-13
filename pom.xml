@@ -634,7 +634,7 @@
 		<DWOplayerVersion>2.5.10</DWOplayerVersion>
 		<DWOmAccessVersion>2.5.2</DWOmAccessVersion>
 		<RegisterVersion>2.5.2</RegisterVersion>
-		<DWOGwtClientVersion>2.5.10</DWOGwtClientVersion>
+		<DWOGwtClientVersion>2.5.11-SNAPSHOT</DWOGwtClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testeb4server</aws.environmentName>
