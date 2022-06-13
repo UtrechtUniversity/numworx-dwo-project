@@ -8,7 +8,9 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import fi.dwo.commons.persistence.entities.PersistentACL;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentCourseData;
 import fi.dwo.server.PersistentDataManagers.core.ACLManager;
+import fi.dwo.server.PersistentDataManagers.core.CourseDataManager;
 
 public final class CourseBuilder implements
 			Function<PersistentCourse, DomCourseStudent> {
@@ -29,7 +31,7 @@ public final class CourseBuilder implements
 		}
 
 		public DomCourseStudent apply(PersistentCourse c) {
-		DomCourseStudent build = c.buildDomCourseStudent();
+		DomCourseStudent build = buildDomCourseStudent(c);
 		if(c.getImageData() != null) {
 			build.setImage(pfx + "?courseId=" + c.getCourseID() + hasRoleId);
 			build.setImageData(null);
@@ -45,4 +47,15 @@ public final class CourseBuilder implements
 		}
 		return build;
 }
+
+		private DomCourseStudent buildDomCourseStudent(PersistentCourse c) {
+			DomCourseStudent dom = c.buildDomCourseStudent();
+// zie https://numworx.atlassian.net/browse/LMS-468
+			try {
+				PersistentCourseData data = CourseDataManager.findEntity(c.getCourseID());
+				if (data != null) data.fillDomCourseStudent(dom);
+			} catch (Exception oops) {}
+			
+			return dom;
+		}
 	}

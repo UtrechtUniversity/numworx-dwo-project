@@ -4,7 +4,9 @@ package fi.dwo.server.rest;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.Hashtable;
@@ -13,6 +15,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.GET;
@@ -47,6 +51,7 @@ import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentCourseData;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
@@ -59,6 +64,7 @@ import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
+import fi.dwo.server.PersistentDataManagers.core.CourseDataManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
@@ -91,7 +97,7 @@ public class SecuredUserCourseManager {
     @PUT
     @Produces({"application/json"})
     @Path("/getCourseDescription")
-    public String getCourseDescription(@Context SecurityContext sc, RestCourse id) {
+    public Response getCourseDescription(@Context SecurityContext sc, RestCourse id) {
     	try {
 // TODO NPE tests 		    		
     		DomDwoProfile domDwoProfile = id.getDomDwoProfile();
@@ -105,17 +111,17 @@ public class SecuredUserCourseManager {
 // userid must match hasrole
      		if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
      		{	LOG.warning("getCourseDescription "  + id + " user getid wrong");
-     			return "{}";
+     			return Response.ok().entity("{}").build();
      		}
     		Long courseId = MySQLPersistenceId.getNativeId(id.getDomCourse());
             PersistentCourse course = CourseManager.findEntity(courseId);
             if(course == null) 
             {   LOG.warning("getCourseDescription "  + id + " course null");
-            	return "{}"; // Not fatal
+            	return Response.ok().entity("{}").build(); // Not fatal
             }
             if(! course.getDwoProfileID().equals(MySQLPersistenceId.getNativeId(domDwoProfile)))
             {	LOG.warning("getCourseDescription "  + id + " profileid wrong");
-            	return "{}";
+            	return Response.ok().entity("{}").build();
             }
             if (course.getSchoolID() != null) {
             	RoleType role = RoleType.values()[phr.getSchoolGroup().getGroupID()];
@@ -129,20 +135,20 @@ public class SecuredUserCourseManager {
         			PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(user.getId(), cid, phr.getSchoolGroup().getSchoolGroupID());
     				PersistentStudentOfClass soc = StudentOfClassManager.findEntity(socId);
         			if(pcc.isEmpty() || soc == null) // FIXME ook bij toets hier!
-        				return "{}";
+        				return Response.ok().entity("{}").build();
         			PersistentClassCourse pcc1 = pcc.get(0);
         			if( pcc1.getViewState() != ViewState.studentsAndTeachers) {
         				LOG.warning("getCourseDescription "  + id + " viewstate wrong");
-        				return "{}";
+        				return Response.ok().entity("{}").build();
         			}
         			java.util.Date now = new java.util.Date();
         			if (pcc1.getNotAfter() != null && now.after(pcc1.getNotAfter()))
         			{	LOG.warning("getCourseDescription "  + id + " not after wrong");
-        				return "{}";
+        				return Response.ok().entity("{}").build();
         			}
         			if (pcc1.getNotBefore() != null && now.before(pcc1.getNotBefore()))
         			{	LOG.warning("getCourseDescription "  + id + " not before wrong");
-        				return "{}";
+        				return Response.ok().entity("{}").build();
         			}
             		break;
             	case TEACHER: // ACL test only if accesscontrol.
@@ -150,19 +156,41 @@ public class SecuredUserCourseManager {
 	            		ACL acl = SecuredCommonScoDataManager.getACL(phr, course);
 	            		if (acl == ACL.NONE) {
 	            			LOG.warning("getCourseDescription "  + id + " ACL NONE");
-	            			return "{}";          	
+	            			return Response.ok().entity("{}").build();         	
 	            		}
             		}
             	default:
             	}
-            }           
+            }
+            PersistentCourseData data = CourseDataManager.findEntity(course.getCourseID());
+            if (data != null) {
+            	byte[] bytes = data.getDescriptionbytes();
+            	if (bytes != null) {
+	            	ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+	            	GZIPInputStream gis = new GZIPInputStream(bis);
+	            	return Response.ok().encoding("UTF-8").entity(gis).build();
+            	} else {
+            		course.setDescription(data.getDescription());
+            	}
+            }
+
             Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(course.getDescription(), null); // FIXM load wiskopdr.jar
             StringWriter writer = new StringWriter();
 			JSONEncoder.encode(map, writer, null); // FIXME, load wiskopdr.jar
-	        return writer.toString();
+	        String string = writer.toString();
+	        if (data != null) {
+	        	ByteArrayOutputStream bos = new ByteArrayOutputStream(string.length());
+	        	GZIPOutputStream gos = new GZIPOutputStream(bos);
+	        	OutputStreamWriter w = new OutputStreamWriter(gos, StandardCharsets.UTF_8);
+	        	w.write(string);
+	        	w.close();
+	        	data.setDescriptionbytes(bos.toByteArray());
+	        	data = CourseDataManager.edit(data);
+	        }
+			return Response.ok().entity(string).build();
 		} catch (Exception e) {
 			LOG.log(Level.SEVERE,"getCourseDescription "  + id , e);
-			return "{}";
+			return Response.ok().entity("{}").build();
 		}
     }
      

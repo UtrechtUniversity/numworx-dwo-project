@@ -1,10 +1,14 @@
 package fi.dwo.server.rest;
 
 
+import java.awt.SystemColor;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
@@ -12,6 +16,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.DefaultValue;
@@ -37,8 +43,10 @@ import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentCourseData;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.server.PersistentDataManagers.core.CourseDataManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.rest.util.CourseBuilder;
@@ -64,27 +72,50 @@ public class PublicCourseManager {
     @Produces({"application/json"})
     @Path("/getCourseDescription")
     @Deprecated
-    public String getCourseDescription(@DefaultValue("0") @QueryParam("courseId") Long courseId) {
+    public Response getCourseDescription(@DefaultValue("0") @QueryParam("courseId") Long courseId) {
         try {
             PersistentCourse course = CourseManager.findEntity(courseId);
-            if(course == null) return "{}"; // Not fatal
+            if(course == null) return Response.ok().entity("{}").build(); // Not fatal
             if (SECURITY) {
               if (course.getSchoolID() != null) {
-                  return "{}";
+                  return Response.ok().entity("{}").build();
               } else {
                 PersistentDwoProfile profile = DwoProfileManager.findEntity(course.getDwoProfileID());
                 if (profile.isLimited()) {
-                  return "{}";               
+                  return Response.ok().entity("{}").build();               
                 }
               }
             }
+            PersistentCourseData data = CourseDataManager.findEntity(course.getCourseID());
+            if (data != null) {
+            	byte[] bytes = data.getDescriptionbytes();
+            	if (bytes != null) {
+	            	ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+	            	GZIPInputStream gis = new GZIPInputStream(bis);
+	            	return Response.ok().encoding("UTF-8").entity(gis).build();
+            	} else {
+            		course.setDescription(data.getDescription());
+            	}
+            }
+            
             Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(course.getDescription(), null); // FIXM load wiskopdr.jar
             StringWriter writer = new StringWriter();
 			JSONEncoder.encode(map, writer, null); // FIXME, load wiskopdr.jar
-	        return writer.toString();
+	        String string = writer.toString();
+
+	        if (data != null) {
+	        	ByteArrayOutputStream bos = new ByteArrayOutputStream(string.length());
+	        	GZIPOutputStream gos = new GZIPOutputStream(bos);
+	        	OutputStreamWriter w = new OutputStreamWriter(gos, StandardCharsets.UTF_8);
+	        	w.write(string);
+	        	w.close();
+	        	data.setDescriptionbytes(bos.toByteArray());
+	        	data = CourseDataManager.edit(data);
+	        }
+			return Response.ok().entity(string).build();
 		} catch (Exception e) {
 			LOG.log(Level.WARNING, "getCourseDescription "  + courseId , e);
-			return "{}";
+			return Response.noContent().build();
 		}
     }
         
