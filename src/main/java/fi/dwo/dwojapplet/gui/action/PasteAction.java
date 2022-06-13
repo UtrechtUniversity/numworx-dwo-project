@@ -33,22 +33,23 @@ public class PasteAction extends GuiAction
 	{
         private static final Logger LOG = Logger.getLogger(PasteAction.class.getName());
   
-		CourseMap map;
+		final CourseMap map0;
 
 		public void actionPerformed(ActionEvent e) {
+		    CourseMap map = this.map0;
 			if(map == null)
 				map = Clipboard.getSelection();
 			if(map == null)
 				return;
 			Object object = map.getUserObject();
 			Object clip = Clipboard.getClipboard().getUserObject();
-			System.out.println( Clipboard.cmd  + " " + clip + " into " + object);
+			LOG.info( Clipboard.cmd  + " " + clip + " into " + object);
 
 			if("cut".equals(Clipboard.cmd))
 			{
 				if(clip instanceof Course)
 				{
-					cutCourse((Course)clip, object);
+					cutCourse((Course)clip, object, map);
 				} else if(clip instanceof Sco && object instanceof Course)
 				{
 					Course course = (Course) object;
@@ -138,6 +139,7 @@ public class PasteAction extends GuiAction
  */
 		private void copyCourseTop(Course course, boolean b) {
 			CourseMap oldmap = getParentMap(course);
+			CourseMap map = b ? ModuleTreePanel.STANDAARD_DWO_MAP : ModuleTreePanel.SCHOOL_MAP;
 			if(oldmap.getUserObject() == map.getUserObject()) // copy/paste in zelfde map?
 				return;
 			if(b && !hasAdminRight())
@@ -303,7 +305,7 @@ public class PasteAction extends GuiAction
 			cutSco_1(sco, course);
 		}
 
-		private void cutCourse(Course course, Object object) {
+		private void cutCourse(Course course, Object object, CourseMap map) {
 			CourseMap oldmap = getParentMap(course);
 			if(oldmap.getUserObject() == object) // cut/paste in zelfde map?
 				return;
@@ -311,7 +313,7 @@ public class PasteAction extends GuiAction
 			if(object instanceof Course)
 			{
 				Course p = (Course)object;
-				int pid = p.getParentID();
+				int pid = p.getID();
 				while(pid != 0)
 				{
 					if(pid == id)
@@ -338,13 +340,13 @@ public class PasteAction extends GuiAction
 				map.addChild(course);
 			} else if( object instanceof Course)
 			{
-				Course map = (Course)object;
-				if(map.isWithChildren())
+				Course map1 = (Course)object;
+				if(map1.isWithChildren())
 				{
-					course.setSchoolID(map.getSchoolID());
+					course.setSchoolID(map1.getSchoolID());
 					course.setName(name);
 					removeChild(oldmap, course);
-					map.addChild(course);
+					map1.addChild(course);
 					
 				} else
 					return;
@@ -386,8 +388,8 @@ public class PasteAction extends GuiAction
 
 		public PasteAction(CourseMap object) {
 			super(TextMapper.getText("paste"));
-			this.map = object;
-			setMap(map);
+			this.map0 = object;
+			setMap(map0);
 		}
 		
 		public PasteAction() {
