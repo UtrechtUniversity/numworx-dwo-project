@@ -31,7 +31,7 @@
         <daggerVersion>2.11</daggerVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <gwt.style>PRETTY</gwt.style>
+        <gwt.style>OBFUSCATED</gwt.style>
         <maven.test.skip>true</maven.test.skip>
         <tomcat7.version>7.0.76</tomcat7.version>
         <context.xml>context-dwo_devel.xml</context.xml>
@@ -672,6 +672,7 @@
     		<id>debug</id>
     		<properties>
     			<gwtModule>nl.uu.fi.dwo.lms.gwtclient.gwtclientDebug</gwtModule>
+        		<gwt.style>PRETTY</gwt.style>
     		</properties>
     	</profile>
     </profiles>
