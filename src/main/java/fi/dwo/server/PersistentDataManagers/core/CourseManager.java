@@ -5,8 +5,11 @@ import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
@@ -346,6 +349,32 @@ public class CourseManager {
             em.close();
         }
         return course;
+    }
+
+    public static List<PersistentCourse> findVisibleEntities(Long profileID) {
+      EntityManager em = getEntityManager();
+      try {
+          javax.persistence.TypedQuery<PersistentCourse> q = em.createNamedQuery("PersistentCourse.findAllByNullSchoolAndProfileID", PersistentCourse.class);
+          q.setParameter("dwoProfileID", profileID);
+          List<PersistentCourse> list = q.getResultList();
+          LOG.log(Level.FINE, "Course-manager retrieved {0} PersistentCourses with profileId {1}", new Object[]{list.size(), profileID});
+          Set<Long> visible = list.stream().map(PersistentCourse::getCourseID).collect(Collectors.toSet());
+          visible.add(0L);
+          Set<PersistentCourse> invisible;
+          do {
+            invisible = list.parallelStream()
+                .filter(c -> ! visible.contains(c.getParentID()))
+                .collect(Collectors.toSet());
+            list.removeAll(invisible);
+            invisible.forEach(c -> visible.remove(c.getCourseID()));
+          } while(! invisible.isEmpty());
+          
+          return list;
+      }
+      finally {
+          em.close();
+      }
+     
     }
 
 }

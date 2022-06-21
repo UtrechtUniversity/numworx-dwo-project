@@ -11,6 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
@@ -51,6 +52,19 @@ public class CourseManagerPIT {
 		assertEquals(1, list.size());
 		assertEquals(13333L, list.get(0).longValue());
 		
+	}
+	
+	@Test
+	public void testFindAllProfile() throws Exception {
+	  Long profileID = 1L;
+	  Long schoolID = null;
+      List<PersistentCourse> list = CourseManager.findEntities(profileID, schoolID );
+      assertEquals(12, list.size());
+      PersistentCourse c = list.get(0);
+      c.setNotVisible(true);
+      CourseManager.edit(c);
+      List<PersistentCourse> list2 = CourseManager.findVisibleEntities(profileID);
+      assertEquals(9, list2.size());
 	}
 
 }
