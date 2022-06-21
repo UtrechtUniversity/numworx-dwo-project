@@ -53,6 +53,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @NamedQuery(name = "PersistentCourse.findBySchoolAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = 0 AND p.dwoProfileID = :dwoProfileID AND p.schoolID = :schoolID and p.trashID = 0"),
     @NamedQuery(name = "PersistentCourse.findBySchoolAndProfileIDTrash", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = 0 AND p.dwoProfileID = :dwoProfileID AND p.schoolID = :schoolID and p.trashID != 0"),
     @NamedQuery(name = "PersistentCourse.findByNullSchoolAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = 0 AND p.dwoProfileID = :dwoProfileID AND p.schoolID IS NULL"),
+    @NamedQuery(name = "PersistentCourse.findAllByNullSchoolAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.notVisible = FALSE AND p.dwoProfileID = :dwoProfileID AND p.schoolID IS NULL"),
     @NamedQuery(name = "PersistentCourse.findAll", query = "SELECT p FROM PersistentCourse p"),
     @NamedQuery(name = "PersistentCourse.findByCourseID", query = "SELECT p FROM PersistentCourse p WHERE p.courseID = :courseID"),
     @NamedQuery(name = "PersistentCourse.findBySchoolID", query = "SELECT p FROM PersistentCourse p WHERE p.schoolID = :schoolID"),
