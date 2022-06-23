@@ -20,6 +20,20 @@
     <!-- If you add any GWT meta tags, they must   -->
     <!-- be added before this line.                -->
     <!--                                           -->
+    <script>
+    	DWO_PROFILE_ID = 77
+    	dwo_env = "test"
+    	defaultPlace = ""
+    	
+    	function logAction(jso) {
+    		console.log(JSON.stringify(jso))
+    	}
+    	
+    	//SECURE_MODE="SEB"
+    	function logout() {
+    		window.location = "https://app.dwo.nl/toets/logout.html"
+    	}
+    </script>
     <script type="text/javascript" language="javascript" src="DWOplayer/DWOplayer.nocache.js"></script>
   </head>
   <body id="main">
