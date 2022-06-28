@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Vector;
@@ -33,6 +34,7 @@ import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
+import fi.wiskopdr.AntwoordVakChecker;
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.RestartException;
 import fi.wiskopdr.WiskOpdr;
@@ -67,6 +69,7 @@ import nl.uu.fi.dwo.mobile.utils.Review;
 
 public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMisconceptions, CBookEventListener
 {
+	private final static Logger logger = Logger.getLogger("CheckSelectieUnit");
 
 	public static final String ACTION_CORRECT = "action.correct";
 	public static final String ACTION_FALSE = "action.false";
@@ -129,8 +132,11 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	private TekstVakPanel[] ipList; 
 	private boolean[] juisteSelecties;
 	
+	private boolean hasFeedback = false;
+	private List<Map<String,Object>> answerModels;
+	
 	FlowPanel nakijkAchtergrond;
-	Image goedKrulImage, foutKruisImage; //goedKrulHalfImage
+	Image goedKrulImage, foutKruisImage, goedKrulHalfImage;
 	
 	
 	private boolean logOption;
@@ -230,6 +236,11 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         fout = true;
         score = 0;
         
+        int puntenFeedback = 0;
+        boolean half = false;
+        String feedback = null;
+        int goedHalfFout = AntwoordVakChecker.GEEN;
+        
         if(checkFormule)
         {
         	if(formuleStrings!=null)
@@ -284,6 +295,39 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		            ingevuld = ingevuld || ipList[i].isIpSelected();
 	            }
 	        }
+        
+        	//logger.info("answerModels = "+answerModels);
+        	if(hasFeedback && answerModels!=null) {
+        		for(int m=0 ; m<answerModels.size() ; m++)
+    	        {	Map<String,Object> answerModel = answerModels.get(m);
+        			ObjectMap map = JSONUtilities.wrapMap(answerModel);
+        			boolean[] juisteSelecties = map.getBooleanArray("juisteSelecties");
+        			puntenFeedback = map.getInt("puntenFeedback");
+        			feedback = map.getString("feedback");
+        			goedHalfFout = map.getInt("goedHalfFout");
+        			//logger.info("puntenFeedback = "+puntenFeedback);
+        			
+        			boolean modelFits = true;
+        			for(int i=0 ; i<ipList.length ; i++)
+        	        {   if(ipList[i] != null)
+        	            {	modelFits = modelFits && ipList[i].isIpSelected() == juisteSelecties[i];
+        		            if(measuredMisconceptions!=null && logMisconceptions!=null && ((TekstVakPanel)ipList[i]).isIpSelected())
+        		            {	for( int j=0 ; logMisconceptions[i]!=null && j<logMisconceptions[i].length && j<measuredMisconceptions.length ; j++)
+        		        		{	for( int k=0 ; logMisconceptions[i][j]!=null && k<logMisconceptions[i][j].length && k<measuredMisconceptions[j].length; k++)
+        		            		{	if(logMisconceptions[i][j][k])
+        		        					measuredMisconceptions[j][k] = 1;
+        		            		}
+        		        		}
+        		            }	
+        	            }
+        	        }
+        			if(modelFits) {
+        				half = true;
+        				break;
+        			}
+        				
+     	        }
+        	}
         }
         boolean changedTemp = changed;
         
@@ -292,6 +336,14 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
             correct = true;
             fout = false;
             score = scoreMax;
+            if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
+            	score = Math.max(0, scoreMax - errorCount * foutStraf);
+        }
+        else if(half)
+        {
+        	correct = false;
+            fout = false;
+            score = puntenFeedback;
             if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
             	score = Math.max(0, scoreMax - errorCount * foutStraf);
         }
@@ -309,6 +361,8 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         	nakijkAchtergrond.setVisible(true);
         	if(correct)
         		goedKrulImage.setVisible(true);
+        	else if(half)
+        		goedKrulHalfImage.setVisible(true);
         	else
         		foutKruisImage.setVisible(true);
         }
@@ -609,6 +663,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		//juisteSelecties = null;
 		nakijkAchtergrond.setVisible(false);
 	    goedKrulImage.setVisible(false);
+	    goedKrulHalfImage.setVisible(false);
 	    //goedKrulHalfImage.setVisible(false);
 	    foutKruisImage.setVisible(false);
 		
@@ -743,6 +798,11 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		{
 			if(map.containsKey("juisteSelecties"))
 				juisteSelecties = map.getBooleanArray("juisteSelecties");
+			if(map.containsKey("hasFeedback"))
+				hasFeedback = map.getBoolean("hasFeedback");
+			if(map.containsKey("answerModels"))
+				answerModels = map.getMapList("answerModels");
+			
 			if(map.containsKey("scoreMax")) 
 				scoreMax = map.getInt("scoreMax");
 		    if(map.containsKey("randomizePositions")) 
@@ -966,19 +1026,24 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		//foutKruisImage = new Image(DWOplayer.DWO_BUNDLE.foutkruis().getSafeUri());
 		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
 		foutKruisImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
+		goedKrulHalfImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());
 		
 		basisPanel.add(goedKrulImage);
 		basisPanel.add(foutKruisImage);
+		basisPanel.add(goedKrulHalfImage);
 		//basisPanel.setWidgetLeftWidth(goedKrulImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
 		//basisPanel.setWidgetTopHeight(goedKrulImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
 		//basisPanel.setWidgetLeftWidth(foutKruisImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
 		//basisPanel.setWidgetTopHeight(foutKruisImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
 		basisPanel.setWidgetRightWidth(goedKrulImage, 2, Style.Unit.PX, 15, Style.Unit.PX);
 		basisPanel.setWidgetTopHeight(goedKrulImage, 7, Style.Unit.PX, 20, Style.Unit.PX);
+		basisPanel.setWidgetRightWidth(goedKrulHalfImage, 2, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(goedKrulHalfImage, 7, Style.Unit.PX, 20, Style.Unit.PX);
 		basisPanel.setWidgetRightWidth(foutKruisImage, 2, Style.Unit.PX, 15, Style.Unit.PX);
 		basisPanel.setWidgetTopHeight(foutKruisImage, 6, Style.Unit.PX, 20, Style.Unit.PX);
 		goedKrulImage.setVisible(false);
 		foutKruisImage.setVisible(false);
+		goedKrulHalfImage.setVisible(false);
 		
 				
 		for(int i=0 ; formuleStrings!=null && i<formuleStrings.length ; i++)
@@ -1060,6 +1125,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 
 		nakijkAchtergrond.setVisible(false);
 		goedKrulImage.setVisible(false);
+		goedKrulHalfImage.setVisible(false);
 		//goedKrulHalfImage.setVisible(false);
 		foutKruisImage.setVisible(false);
 		correct = false;
