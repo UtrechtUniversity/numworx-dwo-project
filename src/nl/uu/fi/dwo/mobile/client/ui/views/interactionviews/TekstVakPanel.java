@@ -5808,7 +5808,7 @@ private Object CamelCase(String name) {
   private ResizeHandler resizeHandler;
   @Override
   public void onResize() {
-    GWT.log("On Resize called");
+//    GWT.log("On Resize called");
     if (resizeHandler != null) {
       resizeHandler.onResize(null);
     }
