@@ -46,7 +46,8 @@ public class LoginServlet extends HttpServlet {
 
 	@Override
 	public void init() throws ServletException {
-		config = new JavaSamlLogin(getServletConfig());		
+		config = new JavaSamlLogin(getServletConfig());
+		config = new DwoLogin();
 	}
 
 }

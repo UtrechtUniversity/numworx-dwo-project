@@ -7,7 +7,7 @@
 
   <context-param>
   	<param-name>dbrest.url</param-name>
-	<param-value>http://localhost:8080/dwo/</param-value>  
+	<param-value>http://localhost:8080/dwox/</param-value>  
   </context-param>
   <!-- Servlets -->
   <servlet>
@@ -25,9 +25,20 @@
   	<servlet-class>nl.numworx.oauth2client.server.JavaSamlRedirect</servlet-class>
   </servlet>
   
+  <servlet>
+  	<servlet-name>dwo-redirect</servlet-name>
+  	<servlet-class>nl.numworx.oauth2client.server.DwoRedirect</servlet-class>
+  </servlet>
+  
   <servlet-mapping>
     <servlet-name>oauth2</servlet-name>
     <url-pattern>/dwo/saml/login</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+  	<servlet-name>dwo-redirect</servlet-name>
+  	<url-pattern>/dwo-redirect</url-pattern>
+  	<url-pattern>/dwo/oauth2/dwo-redirect</url-pattern>
   </servlet-mapping>
   
   

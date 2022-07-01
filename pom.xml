@@ -29,7 +29,7 @@
     <tomcat7.version>7.0.76</tomcat7.version>
     <context.xml>context.xml</context.xml>
     <DWOServerVersion>2.5.9</DWOServerVersion>
-    <local.dwo>/dwo</local.dwo>
+    <local.dwo>/dwox</local.dwo>
   </properties>
 
   <dependencyManagement>
