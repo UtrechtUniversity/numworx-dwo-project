@@ -244,7 +244,7 @@
         </init-param>
         <init-param>
             <param-name>projectVersion</param-name>
-            <param-value>1.0.1-SNAPSHOT</param-value>
+            <param-value>${project.version}</param-value>
         </init-param>
         <init-param>
             <param-name>buildnumber</param-name>
@@ -390,7 +390,21 @@
   <servlet>
     <servlet-name>oauth2</servlet-name>
     <servlet-class>nl.numworx.oauth2client.server.OAuth2Server</servlet-class>
+    <init-param>
+    	<param-name>config</param-name>
+    	<param-value>nl.numworx.oauth2client.server.UULogin</param-value>
+    </init-param>
   </servlet>
+  <servlet>
+    <servlet-name>oauth2-local</servlet-name>
+    <servlet-class>nl.numworx.oauth2client.server.OAuth2Server</servlet-class>
+    <init-param>
+    	<param-name>config</param-name>
+    	<param-value>nl.numworx.oauth2client.server.DwoLogin</param-value>
+    </init-param>
+  </servlet>
+
+
   <servlet>
   	<servlet-name>sebhosting</servlet-name>
   	<servlet-class>fi.dwo.server.db.SEBHosting</servlet-class>
@@ -490,7 +504,10 @@
     <url-pattern>/dwo/saml/login</url-pattern>
     <url-pattern>/dwo/saml/uulogin</url-pattern>
   </servlet-mapping>
-  
+ <servlet-mapping>
+ 	<servlet-name>oauth2-local</servlet-name>
+ 	<url-pattern>/dwo/oauth2/login</url-pattern>
+ </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>sebhosting</servlet-name>
   	<url-pattern>*.seb</url-pattern>

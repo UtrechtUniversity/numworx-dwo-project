@@ -166,13 +166,14 @@
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>OAuth2Client</artifactId>
-		<version>1.0.3</version>
-		<classifier>classes</classifier>
+		<version>1.0.4-SNAPSHOT</version>
+		<type>war</type>
+		<scope>runtime</scope>
 	</dependency>
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>OAuth2Client</artifactId>
-		<version>1.0.3</version>
+		<version>1.0.4-SNAPSHOT</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
