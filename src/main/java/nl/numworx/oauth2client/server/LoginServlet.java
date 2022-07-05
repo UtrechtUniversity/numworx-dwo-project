@@ -1,7 +1,10 @@
 package nl.numworx.oauth2client.server;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -46,8 +49,19 @@ public class LoginServlet extends HttpServlet {
 
 	@Override
 	public void init() throws ServletException {
-		config = new JavaSamlLogin(getServletConfig());
-		config = new DwoLogin();
+		String type = getInitParameter("config");
+		if (type != null)
+		try {
+			Class<Login> clz = (Class<Login>) Class.forName(type);
+			Constructor<Login> cl = clz.getConstructor(ServletConfig.class);
+			config = cl.newInstance(getServletConfig());
+			return;
+		} catch (Exception e) {
+			throw new ServletException(e);
+		} 
+//		config = new UULogin(getServletConfig());
+//		config = new JavaSamlLogin(getServletConfig());
+		config = new DwoLogin(getServletConfig());
 	}
 
 }

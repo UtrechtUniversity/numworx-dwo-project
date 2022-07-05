@@ -8,10 +8,16 @@
 <div id='result'></div>
 <script>
 var verifier = window.parent.getItem("code_verifier");
+var token = "/dwo/saml/login";
+
+token = "/dwox/rest/oauth2/token";
+
 document.write(verifier);
 document.write(" ")
 code = window.location.search.substring(3);
 code = decodeURIComponent(code);
+// if code == parent
+code = window.parent.getItem("code");
 document.write(code)
 clientId= window.parent.clientId;
 
@@ -34,7 +40,7 @@ clientId= window.parent.clientId;
                     document.getElementById("result").innerHTML = message;
                 };
                 xhr.responseType = 'json';
-                xhr.open("POST", "/dwo/saml/login", true);
+                xhr.open("POST", token, true);
                 xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
                 xhr.send(new URLSearchParams({
                     client_id: clientId,

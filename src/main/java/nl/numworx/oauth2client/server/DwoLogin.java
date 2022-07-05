@@ -3,6 +3,7 @@ package nl.numworx.oauth2client.server;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,8 +11,7 @@ import javax.servlet.http.HttpSession;
 
 class DwoLogin implements Login {
 
-	public DwoLogin() {
-		// TODO Auto-generated constructor stub
+	public DwoLogin(ServletConfig servletConfig) {
 	}
 
 	@Override
