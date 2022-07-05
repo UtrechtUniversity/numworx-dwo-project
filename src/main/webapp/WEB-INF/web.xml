@@ -403,6 +403,10 @@
     	<param-value>nl.numworx.oauth2client.server.DwoLogin</param-value>
     </init-param>
   </servlet>
+  <servlet>
+  	<servlet-name>dwo-redirect</servlet-name>
+  	<servlet-class>nl.numworx.oauth2client.server.DwoRedirect</servlet-class>
+  </servlet>
 
 
   <servlet>
@@ -507,6 +511,10 @@
  <servlet-mapping>
  	<servlet-name>oauth2-local</servlet-name>
  	<url-pattern>/dwo/oauth2/login</url-pattern>
+ </servlet-mapping>
+ <servlet-mapping>
+ 	<servlet-name>dwo-redirect</servlet-name>
+ 	<url-pattern>/dwo/oauth2/dwo-redirect</url-pattern>
  </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>sebhosting</servlet-name>
