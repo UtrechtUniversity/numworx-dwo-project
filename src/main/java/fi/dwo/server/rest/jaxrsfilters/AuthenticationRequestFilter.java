@@ -124,7 +124,7 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
     //                requestContext.abortWith(Response.status(Status.UNAUTHORIZED).build());
                 }
                 requestContext.setSecurityContext(context);
-            } else if (authHeader.startsWith("Bearer ")) {
+            } else if (authHeader.toLowerCase().startsWith("bearer ")) { // ignore case: BEARER en bearer zijn ook okay
                 //We use our JWT with username as the bearer token.
                 SecurityContext context = validateJWTToken(authHeader.substring("Bearer ".length()), securityContext);
                 if(context==null){
