@@ -14,4 +14,11 @@ public class Origin {
 		}
 		return ORIGINS[0];
 	}
+
+	public static String of(String origin) {
+		for (String allow : ORIGINS) {
+			if (origin.startsWith(allow)) return allow;
+		}
+		return ORIGINS[0];
+	}
 }

@@ -94,7 +94,7 @@ public class OAuth2Server extends HttpServlet {
 		String redirectUrl = req.getParameter("redirect_uri");
 		URI client, server;
 		try {
-          String requestURL = Origin.of(req);
+          String requestURL = Origin.of(redirectUrl);
           if ("*".equals(requestURL))
             requestURL = req.getRequestURL().toString();
           server = new URI(requestURL);
