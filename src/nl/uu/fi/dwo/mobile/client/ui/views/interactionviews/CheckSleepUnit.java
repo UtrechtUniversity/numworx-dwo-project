@@ -15,6 +15,7 @@ import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieReview;
@@ -45,6 +46,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import fi.wiskopdr.AntwoordVakChecker;
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.RestartException;
 import fi.wiskopdr.expressies.BasisExpressie;
@@ -119,8 +121,11 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	private int aantalSleepObjects;
 	private int aantalDoelObjects;
 	
+	private boolean hasFeedback = false;
+	private List<Map<String,Object>> answerModels;
+	
 	FlowPanel nakijkAchtergrond;
-	Image goedKrulImage, foutKruisImage; 
+	Image goedKrulImage, foutKruisImage, goedKrulHalfImage; 
 	
 	private boolean logOption;
 	private String logID;
@@ -357,6 +362,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 		
 		nakijkAchtergrond.setVisible(false);
     	goedKrulImage.setVisible(false);
+    	goedKrulHalfImage.setVisible(false);
 		foutKruisImage.setVisible(false);
 		
 	    correct = false;
@@ -447,6 +453,11 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
         correct = false;
         fout = true;
         score = 0;
+        
+        int puntenFeedback = 0;
+        boolean half = false;
+        String feedback = null;
+        int goedHalfFout = AntwoordVakChecker.GEEN;
         
         
         Point[] doelPosities = new Point[aantalDoelObjects];
@@ -727,9 +738,15 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 			Map<String, Number> values) {
 		breedte = width;// - 30;
 		hoogte = height;
+		ObjectMap map = JSONUtilities.wrapMap(launchData);
 		
 		if (launchData != null)
 		{
+			if(launchData.containsKey("hasFeedback"))
+				hasFeedback = map.getBoolean("hasFeedback");
+			if(launchData.containsKey("answerModels"))
+				answerModels = map.getMapList("answerModels");
+			
 			if(launchData.get("scoreMax") != null) 
 				scoreMax = ((Number)launchData.get("scoreMax")).intValue();
 		    if(launchData.get("randomizePositions") != null) 
@@ -874,20 +891,26 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 				//foutKruisImage = new Image(DWOplayer.DWO_BUNDLE.foutkruis().getSafeUri());
 		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
 		foutKruisImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
+		goedKrulHalfImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());
 		
 		basisPanel.add(goedKrulImage);
 		basisPanel.add(foutKruisImage);
+		basisPanel.add(goedKrulHalfImage);
+		
 //		basisPanel.setWidgetLeftWidth(goedKrulImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
 //		basisPanel.setWidgetTopHeight(goedKrulImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
 //		basisPanel.setWidgetLeftWidth(foutKruisImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
 //		basisPanel.setWidgetTopHeight(foutKruisImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
 		basisPanel.setWidgetRightWidth(goedKrulImage, 2, Style.Unit.PX, 15, Style.Unit.PX);
 		basisPanel.setWidgetTopHeight(goedKrulImage, 7, Style.Unit.PX, 20, Style.Unit.PX);
+		basisPanel.setWidgetRightWidth(goedKrulHalfImage, 2, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(goedKrulHalfImage, 7, Style.Unit.PX, 20, Style.Unit.PX);
 		basisPanel.setWidgetRightWidth(foutKruisImage, 2, Style.Unit.PX, 15, Style.Unit.PX);
 		basisPanel.setWidgetTopHeight(foutKruisImage, 6, Style.Unit.PX, 20, Style.Unit.PX);
 		
 		goedKrulImage.setVisible(false);
 		foutKruisImage.setVisible(false);
+		goedKrulHalfImage.setVisible(false);
 		
 				
 		for(int i=0 ; formuleStrings!=null && i<formuleStrings.length ; i++)
@@ -960,6 +983,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 
 		nakijkAchtergrond.setVisible(false);
 		goedKrulImage.setVisible(false);
+		goedKrulHalfImage.setVisible(false);
 		foutKruisImage.setVisible(false);
 		correct = false;
 		score = 0;
