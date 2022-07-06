@@ -390,14 +390,10 @@
   <servlet>
     <servlet-name>oauth2</servlet-name>
     <servlet-class>nl.numworx.oauth2client.server.OAuth2Server</servlet-class>
-    <init-param>
-    	<param-name>config</param-name>
-    	<param-value>nl.numworx.oauth2client.server.UULogin</param-value>
-    </init-param>
   </servlet>
   <servlet>
     <servlet-name>oauth2-local</servlet-name>
-    <servlet-class>nl.numworx.oauth2client.server.OAuth2Server</servlet-class>
+    <servlet-class>nl.numworx.oauth2client.server.LoginServlet</servlet-class>
     <init-param>
     	<param-name>config</param-name>
     	<param-value>nl.numworx.oauth2client.server.DwoLogin</param-value>

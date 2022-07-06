@@ -167,8 +167,7 @@
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>OAuth2Client</artifactId>
 		<version>1.0.4-SNAPSHOT</version>
-		<type>war</type>
-		<scope>runtime</scope>
+		<classifier>classes</classifier>
 	</dependency>
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
@@ -375,7 +374,7 @@
                         <systemProperties>
                             <ENV_NOSEB>false</ENV_NOSEB>
                             <SEB_TOETS_MAC>9153c48c6111d2733add6e1d596db4059c302cf736dcb18ca498288e21404507,c5d129e27f57b1970d2ffda2ed745a20f7d8e12ed9bfbfb168e83f75f9f870cf</SEB_TOETS_MAC>
-  							<ALLOW_ORIGIN>http://localhost:${http.port}</ALLOW_ORIGIN>
+  							<ALLOW_ORIGIN>http://localhost:${http.port} https://hub-dev.dwo.nl</ALLOW_ORIGIN>
                         </systemProperties>
 					<server>TomcatServer</server>
 					<path>/</path>
@@ -485,6 +484,11 @@
 		    <artifactId>memcached-session-manager-tc7</artifactId>
 		    <version>2.3.2</version>
 		</dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.49</version>
+        </dependency>
 	</dependencies>
 			</plugin>
 			<plugin>

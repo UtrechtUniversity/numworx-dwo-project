@@ -396,6 +396,20 @@
     <servlet-class>nl.numworx.oauth2client.server.OAuth2Server</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>oauth2-local</servlet-name>
+    <servlet-class>nl.numworx.oauth2client.server.LoginServlet</servlet-class>
+    <init-param>
+    	<param-name>config</param-name>
+    	<param-value>nl.numworx.oauth2client.server.DwoLogin</param-value>
+    </init-param>
+  </servlet>
+  <servlet>
+  	<servlet-name>dwo-redirect</servlet-name>
+  	<servlet-class>nl.numworx.oauth2client.server.DwoRedirect</servlet-class>
+  </servlet>
+
+
+  <servlet>
   	<servlet-name>sebhosting</servlet-name>
   	<servlet-class>fi.dwo.server.db.SEBHosting</servlet-class>
   </servlet>
@@ -523,7 +537,14 @@
     <url-pattern>/dwo/saml/login</url-pattern>
     <url-pattern>/dwo/saml/uulogin</url-pattern>
   </servlet-mapping>
-  
+ <servlet-mapping>
+ 	<servlet-name>oauth2-local</servlet-name>
+ 	<url-pattern>/dwo/oauth2/login</url-pattern>
+ </servlet-mapping>
+ <servlet-mapping>
+ 	<servlet-name>dwo-redirect</servlet-name>
+ 	<url-pattern>/dwo/oauth2/dwo-redirect</url-pattern>
+ </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>sebhosting</servlet-name>
   	<url-pattern>*.seb</url-pattern>
