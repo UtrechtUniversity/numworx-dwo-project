@@ -62,6 +62,11 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
 	
 	@Context HttpServletRequest request;
 	
+	public AuthenticationRequestFilter() { }
+	public AuthenticationRequestFilter(HttpServletRequest req) {
+		request = req;
+	}
+	
     private static class DwoUserSecurityContext implements SecurityContext {
 
         DwoUserPrincipal u;
