@@ -524,6 +524,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
     	    	        		if(verzamelDoel) e = ipListDoel[i].geefSleepObjectVerzamelWaarde();
     	    	        		if(e!=null) 
     	    	        		{	v[h] = v[h].substitueer(e, "V?("+(i+1)+")");
+    	            			logger.info("checkVergel.: "+v[h].toString());
     	    	        		}
     	    	        		else if(locationStrings==null)
     	    	        		{	stapJuist = false;
@@ -533,6 +534,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
     	        			
     	        			try {
     							stapJuist = v[h].isOplossing(new BasisExpressie(1.212131415),"q");
+    							logger.info("stapJuist.: "+stapJuist);
     						} catch (RestartException e) {
     							stapJuist = false;
     						}

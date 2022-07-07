@@ -331,7 +331,14 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         }
         boolean changedTemp = changed;
         
-        if(juist)
+        if(juist && half)
+        {   correct = true;
+            fout = false;
+            score = puntenFeedback;
+            if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
+            	score = Math.max(0, scoreMax - errorCount * foutStraf);
+        }
+        else if(juist)
         {   //goedKrulImage.setVisible(true);
             correct = true;
             fout = false;
