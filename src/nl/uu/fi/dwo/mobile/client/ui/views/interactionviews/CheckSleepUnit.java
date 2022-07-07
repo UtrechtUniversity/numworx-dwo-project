@@ -26,25 +26,33 @@ import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckSelectieUnit.FeedbackPanel;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.berekeningvak.BerekeningVakButton;
 import nl.uu.fi.dwo.mobile.utils.Review;
 import nl.uu.fi.dwo.mobile.utils.StringUtils;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
-
+import com.google.gwt.event.logical.shared.AttachEvent;
 import com.vaadin.pointerevents.client.PointerDownEvent;
 import com.vaadin.pointerevents.client.PointerDownHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import fi.wiskopdr.AntwoordVakChecker;
@@ -74,6 +82,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	HashMap randomVarWaarden = null;
 	
 	OpdrNavIF comRoot;
+	FeedbackPanel feedbackPanel;
 	
 	private LayoutPanel basisPanel;
 	int breedte = 126;
@@ -316,6 +325,8 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
         		||Review.isReview(comRoot)))
         {
         	kijkNa();
+        	if(feedbackPanel!=null)
+        		feedbackPanel.hide();
         }
         correctie = CorrectieFacade.get(h, this, getScoreMax(),comRoot,dwologger, activity);
 	}
@@ -552,10 +563,14 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
     	        	}
         			logger.info("modelFits: "+modelFits);
         			if(modelFits) {
-        				
         				half = true;
         				juist = goedHalfFout==AntwoordVakChecker.GOED;
         				break;
+        			}
+        			else {
+        				puntenFeedback = 0;
+        				feedback = "";
+        				goedHalfFout = AntwoordVakChecker.FOUT;
         			}
 	        	}
         	}
@@ -747,7 +762,10 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
         		goedKrulHalfImage.setVisible(true);
 			else
 				foutKruisImage.setVisible(true);
-
+			if(feedback!=null && !"".equals(feedback.trim())) {
+	        	feedbackPanel = new FeedbackPanel(basisPanel, feedback);
+	        	feedbackPanel.show(basisPanel.getAbsoluteLeft()+basisPanel.getOffsetWidth()-30, basisPanel.getAbsoluteTop()+40);
+			}
 		}
         
 		if (show) // alleen als feedback moet worden getoond
@@ -1127,5 +1145,69 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 			setEditable (false);
 		}
 		
+	}
+	
+public class FeedbackPanel extends PopupPanel{
+		
+		private LayoutPanel feedbackTekst = new LayoutPanel();
+		
+		public FeedbackPanel(Panel vakPanel, String text) {
+			feedbackTekst.getElement().setInnerText(text);
+			feedbackTekst.getElement().getStyle().setColor(""+CssColor.make(49,71,112));
+			
+			BerekeningVakButton closeButton = new BerekeningVakButton("sluit");
+			closeButton.setSize(15, 15);
+			closeButton.addButtonListener(new CloseButtonListener());
+			closeButton.asWidget().getElement().getStyle().setTextAlign(TextAlign.RIGHT);
+			
+			VerticalPanel vp = new VerticalPanel();
+			HorizontalPanel hp = new HorizontalPanel();
+			hp.setWidth("100%");
+			
+//			LayoutPanel warning = new LayoutPanel();
+//			warning.getElement().setInnerText("\u2757");
+//			hp.add(warning);
+			
+			hp.add(closeButton);
+			hp.setCellHorizontalAlignment(closeButton, HasHorizontalAlignment.ALIGN_RIGHT);
+			
+			vp.add(hp);
+			vp.add(feedbackTekst);
+			
+			getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+			getElement().getStyle().setBorderColor(""+CssColor.make(38,115,182));
+			getElement().getStyle().setBorderWidth(1, Style.Unit.PX);
+			getElement().getStyle().setPadding(5, Style.Unit.PX);
+			getElement().getStyle().setBackgroundColor(""+CssColor.make(239,241,243));
+			getElement().getStyle().setProperty("boxShadow", "3px 3px 3px #96A1BD");
+			add(vp);
+			setAutoHideEnabled(true);
+			setWidth("180px");
+			
+			vakPanel.addAttachHandler(new AttachEvent.Handler() {
+				@Override
+				public void onAttachOrDetach(AttachEvent event) {
+					hide();
+				}
+			});
+		}
+		
+		public void show(int x, int y) {
+			setPopupPosition(x,y);
+			super.show();
+			setVisible(true);
+		}
+		
+		public void hide() {
+			super.hide();
+		}
+		
+		private class CloseButtonListener implements ButtonListener {
+			
+			public void onClick(Object sender) {
+				hide();
+			}
+		}
+
 	}
 }
