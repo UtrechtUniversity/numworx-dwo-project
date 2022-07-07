@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
@@ -56,6 +57,8 @@ import fi.wiskopdr.text.Text;
 
 public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	
+	private final static Logger logger = Logger.getLogger("CheckSleepUnit");
+
 	public static final String ACTION_CORRECT = "action.correct";
 	public static final String ACTION_FALSE = "action.false";
 	public static final String ACTION_FALSE2 = "action.false_2";
@@ -474,94 +477,176 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
         }
         
         if(checkFormule)
-        {	if(formuleStrings!=null)
-        	{	for(int i=0 ; i<sleepObjecten.length ; i++)
-    	        {   sleepObjecten[i].wisGoedFoutSleep();
-    	        }
-        		
-        		boolean hasLocationStrings = false;
-        		VergelijkingMeerv[] v = new VergelijkingMeerv[formuleStrings.length];
-        		for(int h=0 ; h<formuleStrings.length ; h++)
+        {	if(hasFeedback && answerModels!=null) {
+        		juist = false;
+	        	for(int m=0 ; m<answerModels.size() ; m++)
 		        {
-        			String formuleString = formuleStrings[h];
-        			String locationStringTotal = null;
-        			String[] locationStrings = null;
+	        		Map<String,Object> answerModel = answerModels.get(m);
+        			ObjectMap map = JSONUtilities.wrapMap(answerModel);
+        			String[] formuleStrings = map.getStringArray("formuleStrings");
+        			puntenFeedback = map.getInt("puntenFeedback");
+        			feedback = map.getString("feedback");
+        			goedHalfFout = map.getInt("goedHalfFout");
         			
+        			boolean modelFits = true;
         			
-        			int indexSC = formuleStrings[h].indexOf(";");
-        			if(indexSC>-1){
-        				formuleString = formuleStrings[h].substring(0,indexSC) + "@";
-        				locationStringTotal = formuleStrings[h].substring(indexSC+1, formuleStrings[h].length()-1);
-        				locationStrings = StringUtils.split(locationStringTotal, ",");
-        				hasLocationStrings = true;
-        			}
-        			
-        			boolean stapJuist = true;
-        			v[h] = FormuleParser.parseVergelijking(formuleString);
-        			if(v[h]==null)
-        			{	juist = false;
+        			if(formuleStrings!=null)
+    	        	{	for(int i=0 ; i<sleepObjecten.length ; i++)
+    	    	        {   sleepObjecten[i].wisGoedFoutSleep();
+    	    	        }
+    	        		
+    	        		boolean hasLocationStrings = false;
+    	        		VergelijkingMeerv[] v = new VergelijkingMeerv[formuleStrings.length];
+    	        		for(int h=0 ; h<formuleStrings.length ; h++)
+    			        {
+    	        			String formuleString = formuleStrings[h];
+    	        			String locationStringTotal = null;
+    	        			String[] locationStrings = null;
+    	        			
+    	        			
+    	        			int indexSC = formuleStrings[h].indexOf(";");
+    	        			if(indexSC>-1){
+    	        				formuleString = formuleStrings[h].substring(0,indexSC) + "@";
+    	        				locationStringTotal = formuleStrings[h].substring(indexSC+1, formuleStrings[h].length()-1);
+    	        				locationStrings = StringUtils.split(locationStringTotal, ",");
+    	        				hasLocationStrings = true;
+    	        			}
+    	        			
+    	        			boolean stapJuist = true;
+    	        			v[h] = FormuleParser.parseVergelijking(formuleString);
+    	        			if(v[h]==null)
+    	        			{	modelFits = false;
+    	        				break;
+    	        			}
+    	        			for(int i=0 ; i<aantalDoelObjects ; i++)
+    	    		        { 	ipListDoel[i].zetSleepObjecten(sleepObjecten);
+    	    	        		Expressie e = ipListDoel[i].geefSleepObjectWaarde();
+    	    	        		if(verzamelDoel) e = ipListDoel[i].geefSleepObjectVerzamelWaarde();
+    	    	        		if(e!=null) 
+    	    	        		{	v[h] = v[h].substitueer(e, "V?("+(i+1)+")");
+    	    	        		}
+    	    	        		else if(locationStrings==null)
+    	    	        		{	stapJuist = false;
+    	    	        			break;
+    	    	        		}
+    	    	        	}
+    	        			
+    	        			try {
+    							stapJuist = v[h].isOplossing(new BasisExpressie(1.212131415),"q");
+    						} catch (RestartException e) {
+    							stapJuist = false;
+    						}
+    	        			modelFits = modelFits && stapJuist;
+    	        			if(!modelFits && !hasLocationStrings) 
+    	        			{	break;
+    	        			}
+    	        			if(locationStrings!=null){
+    	        				for(int i=0 ; i<locationStrings.length ; i++){
+    	            				int location = Integer.parseInt(locationStrings[i].trim());
+    	            				ipListDoel[location-1].zetGoedFoutSleep(stapJuist);
+    	            			}
+    	        			}
+    			        }
+    	        	}
+        			logger.info("modelFits: "+modelFits);
+        			if(modelFits) {
+        				
+        				half = true;
+        				juist = goedHalfFout==AntwoordVakChecker.GOED;
         				break;
         			}
-        			for(int i=0 ; i<aantalDoelObjects ; i++)
-    		        { 	ipListDoel[i].zetSleepObjecten(sleepObjecten);
-    	        		Expressie e = ipListDoel[i].geefSleepObjectWaarde();
-    	        		if(verzamelDoel) e = ipListDoel[i].geefSleepObjectVerzamelWaarde();
-    	        		if(e!=null) 
-    	        		{	v[h] = v[h].substitueer(e, "V?("+(i+1)+")");
-    	        		}
-    	        		else if(locationStrings==null)
-    	        		{	stapJuist = false;
-    	        			break;
-    	        		}
-    	        	}
-        			
-        			try {
-						stapJuist = v[h].isOplossing(new BasisExpressie(1.212131415),"q");
-					} catch (RestartException e) {
-						stapJuist = false;
-					}
-        			juist = juist && stapJuist;
-        			if(!juist && !hasLocationStrings) 
-        			{	break;
-        			}
-        			if(locationStrings!=null){
-        				for(int i=0 ; i<locationStrings.length ; i++){
-            				int location = Integer.parseInt(locationStrings[i].trim());
-            				ipListDoel[location-1].zetGoedFoutSleep(stapJuist);
-            			}
-        			}
-		        }
+	        	}
         	}
-        	else
-        	{	VergelijkingMeerv v = FormuleParser.parseVergelijking(formuleString);
-	        	for(int i=0 ; i<aantalDoelObjects ; i++)
+        	else {
+	        	if(formuleStrings!=null)
+	        	{	for(int i=0 ; i<sleepObjecten.length ; i++)
+	    	        {   sleepObjecten[i].wisGoedFoutSleep();
+	    	        }
+	        		
+	        		boolean hasLocationStrings = false;
+	        		VergelijkingMeerv[] v = new VergelijkingMeerv[formuleStrings.length];
+	        		for(int h=0 ; h<formuleStrings.length ; h++)
+			        {
+	        			String formuleString = formuleStrings[h];
+	        			String locationStringTotal = null;
+	        			String[] locationStrings = null;
+	        			
+	        			
+	        			int indexSC = formuleStrings[h].indexOf(";");
+	        			if(indexSC>-1){
+	        				formuleString = formuleStrings[h].substring(0,indexSC) + "@";
+	        				locationStringTotal = formuleStrings[h].substring(indexSC+1, formuleStrings[h].length()-1);
+	        				locationStrings = StringUtils.split(locationStringTotal, ",");
+	        				hasLocationStrings = true;
+	        			}
+	        			
+	        			boolean stapJuist = true;
+	        			v[h] = FormuleParser.parseVergelijking(formuleString);
+	        			if(v[h]==null)
+	        			{	juist = false;
+	        				break;
+	        			}
+	        			for(int i=0 ; i<aantalDoelObjects ; i++)
+	    		        { 	ipListDoel[i].zetSleepObjecten(sleepObjecten);
+	    	        		Expressie e = ipListDoel[i].geefSleepObjectWaarde();
+	    	        		if(verzamelDoel) e = ipListDoel[i].geefSleepObjectVerzamelWaarde();
+	    	        		if(e!=null) 
+	    	        		{	v[h] = v[h].substitueer(e, "V?("+(i+1)+")");
+	    	        		}
+	    	        		else if(locationStrings==null)
+	    	        		{	stapJuist = false;
+	    	        			break;
+	    	        		}
+	    	        	}
+	        			
+	        			try {
+							stapJuist = v[h].isOplossing(new BasisExpressie(1.212131415),"q");
+						} catch (RestartException e) {
+							stapJuist = false;
+						}
+	        			juist = juist && stapJuist;
+	        			if(!juist && !hasLocationStrings) 
+	        			{	break;
+	        			}
+	        			if(locationStrings!=null){
+	        				for(int i=0 ; i<locationStrings.length ; i++){
+	            				int location = Integer.parseInt(locationStrings[i].trim());
+	            				ipListDoel[location-1].zetGoedFoutSleep(stapJuist);
+	            			}
+	        			}
+			        }
+	        	}
+	        	else
+	        	{	VergelijkingMeerv v = FormuleParser.parseVergelijking(formuleString);
+		        	for(int i=0 ; i<aantalDoelObjects ; i++)
+			        {   
+		        		ipListDoel[i].zetSleepObjecten(sleepObjecten);
+		        		Expressie e = ipListDoel[i].geefSleepObjectWaarde();
+		        		if(e!=null) 
+		        		{	v = v.substitueer(e, "V?("+(i+1)+")");
+		        		}
+		        		else 
+		        		{	juist = false;
+		        			break;
+		        		}
+			        }
+		        	try {
+						juist = v.isOplossing(new BasisExpressie(1.212131415),"q");
+					} catch (RestartException e) {
+						juist = false;
+					}
+		        	
+	        	}
+	        	// construeer antwoord (brxxx)
+				for(int i=0 ; i<aantalDoelObjects ; i++)
 		        {   
 	        		ipListDoel[i].zetSleepObjecten(sleepObjecten);
 	        		Expressie e = ipListDoel[i].geefSleepObjectWaarde();
 	        		if(e!=null) 
-	        		{	v = v.substitueer(e, "V?("+(i+1)+")");
-	        		}
-	        		else 
-	        		{	juist = false;
-	        			break;
+	        		{	answer = answer + e.toString();
 	        		}
 		        }
-	        	try {
-					juist = v.isOplossing(new BasisExpressie(1.212131415),"q");
-				} catch (RestartException e) {
-					juist = false;
-				}
-	        	
         	}
-        	// construeer antwoord (brxxx)
-			for(int i=0 ; i<aantalDoelObjects ; i++)
-	        {   
-        		ipListDoel[i].zetSleepObjecten(sleepObjecten);
-        		Expressie e = ipListDoel[i].geefSleepObjectWaarde();
-        		if(e!=null) 
-        		{	answer = answer + e.toString();
-        		}
-	        }
 		} // checkformule
         else
         {
@@ -620,10 +705,25 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	        if(answer.length()>0 && answer.charAt(answer.length()-1)==',')answer = answer.substring(0,answer.length()-1);
         }
         
-        if(juist)
+        if(juist && half)
+        {   correct = true;
+            fout = false;
+            score = puntenFeedback;
+            if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
+            	score = Math.max(0, scoreMax - errorCount * foutStraf);
+        }
+        else if(juist)
         {   correct = true;
             fout = false;
             score = scoreMax;
+            if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
+            	score = Math.max(0, scoreMax - errorCount * foutStraf);
+        }
+        else if(half) 
+        {
+        	correct = false;
+            fout = false;
+            score = puntenFeedback;
             if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
             	score = Math.max(0, scoreMax - errorCount * foutStraf);
         }
@@ -641,6 +741,8 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 			nakijkAchtergrond.setVisible(true);
 			if (correct)
 				goedKrulImage.setVisible(true);
+			else if(half)
+        		goedKrulHalfImage.setVisible(true);
 			else
 				foutKruisImage.setVisible(true);
 
@@ -742,9 +844,9 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 		
 		if (launchData != null)
 		{
-			if(launchData.containsKey("hasFeedback"))
+			if(map.containsKey("hasFeedback"))
 				hasFeedback = map.getBoolean("hasFeedback");
-			if(launchData.containsKey("answerModels"))
+			if(map.containsKey("answerModels"))
 				answerModels = map.getMapList("answerModels");
 			
 			if(launchData.get("scoreMax") != null) 
