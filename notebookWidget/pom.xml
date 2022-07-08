@@ -5,7 +5,7 @@
     <artifactId>notebook-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>notebookWidget</artifactId>
+  <artifactId>notebook</artifactId>
   <dependencies>
  		<dependency>
 			<groupId>fi.wiskopdr</groupId>
