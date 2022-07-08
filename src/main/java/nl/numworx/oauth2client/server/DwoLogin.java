@@ -2,6 +2,8 @@ package nl.numworx.oauth2client.server;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Base64;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.Cookie;
@@ -18,6 +20,17 @@ class DwoLogin implements Login {
 	public void login(HttpServletRequest req, HttpServletResponse resp, String state, String codeChallenge, Boolean asr)
 			throws Exception {
 		HttpSession session = req.getSession();
+		String code = (String) session.getAttribute("dwologin.code");
+		if (code != null) {
+			session.removeAttribute("dwologin.code");
+			int komma = state.indexOf(';');
+			String url = state.substring(0, komma);
+			state = state.substring(komma+1);
+			url += "?state=" + state;
+			url += "&code="  + code;			
+			resp.sendRedirect(url);
+			return;
+		}
 		session.setAttribute("dwologin.state", state);
 		Cookie cookie = new Cookie(CHALLENGE, codeChallenge);
 		cookie.setHttpOnly(true);
@@ -33,7 +46,9 @@ class DwoLogin implements Login {
 			html.append(buffer, 0, size);
 		}
 		String format = html.toString();
-		String nonce = "nonce";
+		byte[] random = new byte[16];
+		ThreadLocalRandom.current().nextBytes(random);
+		String nonce = Base64.getEncoder().withoutPadding().encodeToString(random);
 		session.setAttribute("dwologin.nonce", nonce);
 		resp.setContentType("text/html");
 		resp.getWriter().format(format, nonce);

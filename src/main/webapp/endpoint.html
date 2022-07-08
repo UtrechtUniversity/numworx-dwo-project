@@ -19,6 +19,8 @@ code = decodeURIComponent(code);
 // if code == parent
 code = window.parent.getItem("code");
 document.write(code)
+var antw = { };
+
 clientId= window.parent.clientId;
 
                 var xhr = new XMLHttpRequest();
@@ -31,6 +33,7 @@ clientId= window.parent.clientId;
                     var message;
 
                     if (xhr.status == 200) {
+                        antw = response;
                         message = "Access Token: " + JSON.stringify(response);
                     }
                     else {
@@ -50,9 +53,62 @@ clientId= window.parent.clientId;
                     code: code
                 }));
 
+function doehet() {
+               var xhr = new XMLHttpRequest();
 
+                xhr.onload = function() {
+                    var response = null;
+                    if (xhr.readyState == 4) {
+                    	response = xhr.response
+                    }
+                    var message;
 
+                    if (xhr.status == 200) {
+                        message = "Response: " + JSON.stringify(response);
+                    }
+                    else {
+                        message = "Error: "+ JSON.stringify(response); ;//+ response.error_description + " (" + response.error + ")";
+                    }
+
+                    document.getElementById("result").innerHTML = message;
+                };
+                xhr.responseType = 'json';
+                xhr.open("GET", "/dwox/rest/secure/user/account/get", true);
+                var authz = antw.token_type + " " + antw.access_token;
+                console.log(authz)
+                xhr.setRequestHeader('Authorization', authz);
+                xhr.send();
+}
+function refresh() {
+              var xhr = new XMLHttpRequest();
+
+                xhr.onload = function() {
+                    var response = null;
+                    if (xhr.readyState == 4) {
+                    	response = xhr.response
+                    }
+                    var message;
+
+                    if (xhr.status == 200) {
+                        message = "Response: " + JSON.stringify(response);
+                    }
+                    else {
+                        message = "Error: "+ JSON.stringify(response); ;//+ response.error_description + " (" + response.error + ")";
+                    }
+
+                    document.getElementById("result").innerHTML = message;
+                };
+                xhr.responseType = 'json';
+                xhr.open("GET", "dwo-redirect", true);
+                var authz = antw.token_type + " " + antw.access_token;
+                console.log(authz)
+                xhr.setRequestHeader('Authorization', authz);
+                xhr.send();
+}
 
 </script>
+<br>
+<button onclick='doehet()' >button</button><br>
+<button onclick='refresh()'>refresh</button>
 </body>
 </html>

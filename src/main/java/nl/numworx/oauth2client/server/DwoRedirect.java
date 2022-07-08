@@ -40,6 +40,7 @@ public class DwoRedirect extends HttpServlet {
 		if (Objects.equals(nonce, req.getParameter("nonce"))) {
 			String code = getBearerToken(username, password);
 			url += "?state=" + state;
+			//session.setAttribute("dwologin.code", code);
 			url += "&code="  + code;			
 			resp.sendRedirect(url);
 			return;
@@ -75,6 +76,29 @@ public class DwoRedirect extends HttpServlet {
 		} catch (MalformedURLException e) {
 			throw new ServletException(e);
 		}
+	}
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		String auth = req.getHeader("Authorization");
+		if (auth.toLowerCase().startsWith("bearer "))
+			StoredRestManager.getInstance().setBearerAuthString(auth.substring(7));
+		else if (auth.toLowerCase().startsWith("basic ")) {
+			resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return;
+		} else {
+			resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+		}
+		try {
+			String code =  SecureUserAccountManager.getBearerToken();
+			HttpSession session = req.getSession();
+			session.setAttribute("dwologin.code", code);
+			resp.sendError(HttpServletResponse.SC_NO_CONTENT);
+		} catch (Exception e) {
+			e.printStackTrace();
+			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+		} 
 	}
 
 }
