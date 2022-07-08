@@ -2,8 +2,6 @@ package nl.numworx.notebook;
 
 import java.util.Collections;
 import java.util.Hashtable;
-import java.util.Map;
-
 import javax.swing.JPanel;
 
 import org.cbook.cbookif.CBookContext;
@@ -44,8 +42,6 @@ public class NotebookInteractieEditPanel extends JPanel implements
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Hashtable getEditState() {
 		Hashtable map = new Hashtable( editor.getLaunchData() );
-		int scoreMax = editor.getMaxScore();
-		map.put("scoreMax", scoreMax);
 		//map.putAll(editor.getObjectivesState());
 		map.put("premium", Boolean.TRUE);
 		return map;

@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Stub;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
@@ -100,9 +101,11 @@ public class NotebookGWT implements EntryPoint, InteractionStub, RequestCallback
 
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
-		root = comRoot;	
+		root = comRoot;
+
+		if (LessonMode.normal != root.getLessonMode()) return;
+		
 		String Authorization = root.getContext().getString("Authorization");
-		GWT.log(Authorization);
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, "/dwo/oauth2/dwo-redirect");
 		builder.setHeader("Authorization", Authorization);
 		RequestCallback callback = this;
