@@ -49,4 +49,10 @@
   <build>
   	<finalName>notebook</finalName>
   </build>
+ 	<repositories>	
+	<repository>
+	  <id>com.teamdev</id>
+	  <url>https://europe-maven.pkg.dev/jxbrowser/releases</url>
+	</repository>
+	</repositories>
 </project>

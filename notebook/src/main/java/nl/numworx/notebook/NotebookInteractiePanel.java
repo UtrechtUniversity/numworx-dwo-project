@@ -95,7 +95,7 @@ public class NotebookInteractiePanel extends JPanel implements
 	}
 
 	public Hashtable getState() {
-		return (Hashtable) instance.getState();
+		return instance.getState();
 	}
 
 	public Hashtable getEditState() {		

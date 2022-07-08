@@ -1,6 +1,7 @@
 package nl.numworx.notebook;
 
 import java.util.Collections;
+import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 
@@ -51,8 +52,8 @@ class Instance extends JPanel implements CBookWidgetInstanceIF, CBookEventListen
 		return 0;
 	}
 
-	public Map<String, ?> getState() {
-		return Collections.emptyMap();
+	public Hashtable<String, ?> getState() {
+		return new Hashtable<>();
 	}
 
 	public SuccessStatus getSuccessStatus() {
@@ -81,12 +82,10 @@ class Instance extends JPanel implements CBookWidgetInstanceIF, CBookEventListen
 	}
 
 	public void setLaunchData(Map<String, ?> arg0, Map<String, Number> arg1) {
-		url ="http://www.numworx.nl/";
+		url ="https://hub-dev.dwo.nl/";
 	}
 
 	public void setState(Map<String, ?> arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void start() {

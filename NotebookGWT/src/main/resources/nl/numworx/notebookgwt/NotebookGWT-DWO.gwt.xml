@@ -4,6 +4,5 @@
   <inherits name='com.google.gwt.user.User' />
   <inherits name="nl.uu.fi.dwo.interaction.Interaction" />
   
-  <entry-point class='nl.numworx.notebookgwt.client.NotebookGWT' />
   <source path='' />
 </module>

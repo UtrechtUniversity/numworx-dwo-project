@@ -2,6 +2,7 @@ package nl.numworx.notebook;
 
 import java.util.Collections;
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.swing.JPanel;
 
@@ -23,7 +24,7 @@ public class NotebookInteractieEditPanel extends JPanel implements
 		editor.setLocation(0, 0);
 		editor.setInstanceWidth(500);
 		editor.setInstanceHeight(450);
-		editor.setLaunchData(Collections.emptyMap());
+		editor.setLaunchData(Collections.<String, Object>emptyMap());
 		add(editor);
 	}
 
@@ -46,6 +47,7 @@ public class NotebookInteractieEditPanel extends JPanel implements
 		int scoreMax = editor.getMaxScore();
 		map.put("scoreMax", scoreMax);
 		//map.putAll(editor.getObjectivesState());
+		map.put("premium", Boolean.TRUE);
 		return map;
 	}
 
