@@ -42,7 +42,8 @@
 <!-- <inherits name="fi.statsimgwt.StatSimGWT"/> -->
 <!--  <inherits name="fi.nabouwenaanzichtengwt.NabouwenAanzichtenGWT-DWO" /> -->
 <!--  <inherits name='nl.numworx.uploadwidgetgwt.UploadWidgetGWT-DWO' />  -->
-
+<!--  <inherits name='nl.numworx.notebookgwt.NotebookGWT-DWO' /> -->
+  
   <inherits name="com.google.gwt.xml.XML"/> 
   <inherits name="com.google.gwt.http.HTTP"/> 
   <inherits name="fi.wiskopdr.WiskOpdr"/>

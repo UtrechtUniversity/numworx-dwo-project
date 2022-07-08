@@ -554,6 +554,26 @@
 				</dependency>
 			</dependencies>		
 		</profile>
+		<profile>
+			<id>notebook</id>
+			<properties>
+				<notebookVersion>0.0.1-SNAPSHOT</notebookVersion>
+			</properties>
+			<dependencies>
+				<dependency>
+				    <groupId>nl.numworx.notebook</groupId>
+		    		<artifactId>NotebookGWT</artifactId>
+		    		<version>${notebookVersion}</version>
+		    		<classifier>classes</classifier>		
+				</dependency>
+				<dependency>
+				    <groupId>nl.numworx.notebook</groupId>
+		    		<artifactId>NotebookGWT</artifactId>
+		    		<version>${notebookVersion}</version>
+		    		<classifier>sources</classifier>		
+				</dependency>
+			</dependencies>		
+		</profile>
 	</profiles>
 	<version>2.5.12-SNAPSHOT</version>
 	<scm>
