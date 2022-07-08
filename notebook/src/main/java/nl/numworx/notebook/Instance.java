@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 
+import java.awt.BorderLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
@@ -11,15 +12,25 @@ import org.cbook.cbookif.AssessmentMode;
 import org.cbook.cbookif.CBookEvent;
 import org.cbook.cbookif.CBookEventListener;
 import org.cbook.cbookif.CBookWidgetInstanceIF;
+import org.cbook.cbookif.LessonMode;
 import org.cbook.cbookif.SuccessStatus;
+
+import nl.numworx.swingbrowser.api.SwingBrowser;
+import nl.numworx.swingbrowser.api.SwingBrowserFactory;
+import nl.numworx.swingbrowser.api.SwingBrowserProvider;
 
 @SuppressWarnings("serial")
 class Instance extends JPanel implements CBookWidgetInstanceIF, CBookEventListener {
 
 	Instance(Locale locale) {
+		super(new BorderLayout());
 		setLocale(locale);
 	}
 
+	private String url = "about:blank";
+	transient private SwingBrowserFactory factory;
+	LessonMode lessonMode;
+	
 	public void addCBookEventListener(CBookEventListener arg0, String arg1) {
 		// TODO Auto-generated method stub
 
@@ -48,8 +59,9 @@ class Instance extends JPanel implements CBookWidgetInstanceIF, CBookEventListen
 		return SuccessStatus.PASSED;
 	}
 
-	public void init() {
-		// TODO Auto-generated method stub
+	public synchronized void init() {
+		if (factory == null)
+			factory = new SwingBrowserProvider().getFactory();
 
 	}
 
@@ -69,8 +81,7 @@ class Instance extends JPanel implements CBookWidgetInstanceIF, CBookEventListen
 	}
 
 	public void setLaunchData(Map<String, ?> arg0, Map<String, Number> arg1) {
-		// TODO Auto-generated method stub
-
+		url ="http://www.numworx.nl/";
 	}
 
 	public void setState(Map<String, ?> arg0) {
@@ -79,18 +90,22 @@ class Instance extends JPanel implements CBookWidgetInstanceIF, CBookEventListen
 	}
 
 	public void start() {
-		// TODO Auto-generated method stub
-
+		SwingBrowser browser = factory.newBrowser();
+		add(browser.asComponent(), BorderLayout.CENTER);
+		validate();
+		//browser.loadContent("<H1>It works</H1>", "text/html");
+		browser.loadURL(url);
 	}
 
 	public void stop() {
-		// TODO Auto-generated method stub
-
+		super.removeAll();
 	}
 
 	public void acceptCBookEvent(CBookEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	}
+
+	public int getMaxScore() {
+		return 0;
 	}
 
 }

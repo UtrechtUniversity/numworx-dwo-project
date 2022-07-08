@@ -16,22 +16,20 @@ import fi.beans.wiskopdrbeans.WiskOpdrApplet;
 @SuppressWarnings("serial")
 public class Notebook extends JApplet implements CBookWidgetIF, WiskOpdrApplet {
 
-	final Locale locale;
 	
 	public InteractiePanel getInteractiePanel() {
-		// TODO Auto-generated method stub
-		return null;
+		return new NotebookInteractiePanel(this);
 	}
 
 	public CBookWidgetEditIF getEditor(CBookContext arg0) {
-		return new Editor(locale);
+		return new Editor(getLocale());
 	}
 
 	public Notebook() {
 		this(Locale.forLanguageTag("nl"));
 	}
 	public Notebook(Locale locale) {
-		this.locale = locale;
+		setLocale(locale);
 	}
 	
 	public Icon getIcon() {
@@ -40,12 +38,12 @@ public class Notebook extends JApplet implements CBookWidgetIF, WiskOpdrApplet {
 	}
 
 	public CBookWidgetInstanceIF getInstance(CBookContext context) {
-		return new Instance(locale);
+		return new Instance(getLocale());
 	}
 
 	@Override
 	public String toString() {
-		return "Notebook [locale=" + locale + "]";
+		return "Notebook [locale=" + getLocale() + "]";
 	}
 
 }
