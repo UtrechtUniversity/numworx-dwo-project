@@ -12,7 +12,7 @@
   <packaging>pom</packaging>
   <name>Notebook widget </name>
   <modules>
-  	<module>notebookWidget</module>
+  	<module>notebook</module>
   	<module>notebook-common</module>
   	<module>NotebookGWT</module>
   </modules>
