@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.Objects;
 
 import javax.servlet.ServletContext;
@@ -30,6 +31,10 @@ public class DwoRedirect extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		String state = (String) session.getAttribute("dwologin.state");
+		if (state == null) {
+			resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+			return;
+		}
 		int komma = state.indexOf(';');
 		String url = state.substring(0, komma);
 		state = state.substring(komma+1);
@@ -85,8 +90,8 @@ public class DwoRedirect extends HttpServlet {
 		if (auth.toLowerCase().startsWith("bearer "))
 			StoredRestManager.getInstance().setBearerAuthString(auth.substring(7));
 		else if (auth.toLowerCase().startsWith("basic ")) {
-			resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return;
+			String[] up = new String(Base64.getDecoder().decode(auth.substring(6))).split(":", 2);
+			StoredRestManager.getInstance().setBasicAuthString(up[0], up[1], null);
 		} else {
 			resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 		}
