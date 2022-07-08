@@ -460,7 +460,9 @@ public class TekstBuffer
 			);
 		case 64:
 			return x(map, new StrategieVak(activity, currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom]));
-		
+		case 65:
+			//if(true) return new nl.numworx.notebookgwt.client.NotebookGWT(currentVakGegevens, randomVarWaarden, volleBreedtes[huidigeKolom]);
+			return x(map, new StubView(activity, "NotebookGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 
 		if (soortVak == 0)
