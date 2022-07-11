@@ -21,5 +21,6 @@
   	<module>notebook</module>
   	<module>notebook-common</module>
   	<module>NotebookGWT</module>
+    <module>notebook-service</module>
   </modules>
 </project>
