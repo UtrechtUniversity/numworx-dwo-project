@@ -7,9 +7,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
@@ -85,6 +87,8 @@ public class SecuredUserScoContextManager {
 
 		PersistentDwoProfile profile = DwoProfileManager.findEntity(pid);
 		PersistentCourse parent = CourseManager.findEntity(cid);
+		if (parent == null || profile == null) 
+			throw new WebApplicationException(HttpServletResponse.SC_NOT_FOUND);
         PersistentHasRole phr = state.getHasRole();
         PersistentSchool school = state.getSchool();
 // match profile		
