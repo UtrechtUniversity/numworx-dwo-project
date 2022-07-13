@@ -27,7 +27,6 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 @SuppressWarnings("serial")
 public class DwoRedirect extends HttpServlet {
 
-	String BR = "<br>";
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
@@ -44,10 +43,12 @@ public class DwoRedirect extends HttpServlet {
 		try {
 			String username = req.getParameter("username");
 			String password = req.getParameter("password");
-			if (Objects.equals(nonce, req.getParameter("nonce"))) {
+			if (nonce != null && nonce.equals(req.getParameter("nonce"))) {
 				String code = getBearerToken(username, password);
 				url += "?state=" + state;
 				//session.setAttribute("dwologin.code", code);
+				session.removeAttribute("dwologin.nonce");
+				session.removeAttribute("dwologin.state");
 				url += "&code="  + code;			
 				resp.sendRedirect(url);
 				return;
@@ -96,21 +97,23 @@ public class DwoRedirect extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 		String auth = req.getHeader("Authorization");
-		if (auth.toLowerCase().startsWith("bearer "))
-			StoredRestManager.getInstance().setBearerAuthString(auth.substring(7));
-		else if (auth.toLowerCase().startsWith("basic ")) {
-			String[] up = new String(Base64.getDecoder().decode(auth.substring(6))).split(":", 2);
-			StoredRestManager.getInstance().setBasicAuthString(up[0], up[1], null);
-		} else {
-			resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-		}
+		if (auth == null) auth = "None";
 		try {
-			String code =  SecureUserAccountManager.getBearerToken();
+			if (auth.toLowerCase().startsWith("bearer "))
+				StoredRestManager.getInstance().setBearerAuthString(auth.substring(7));
+			else if (auth.toLowerCase().startsWith("basic ")) {
+				String[] up = new String(Base64.getDecoder().decode(auth.substring(6))).split(":", 2);
+				StoredRestManager.getInstance().setBasicAuthString(up[0], up[1], null);
+			} else {
+				resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+				return;
+			}
+			String code = SecureUserAccountManager.getBearerToken();
 			HttpSession session = req.getSession();
 			session.setAttribute("dwologin.code", code);
 			resp.sendError(HttpServletResponse.SC_NO_CONTENT);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log("getBearerToken", e);
 			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 		} 
 	}
