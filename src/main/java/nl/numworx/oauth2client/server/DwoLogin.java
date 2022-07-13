@@ -1,5 +1,6 @@
 package nl.numworx.oauth2client.server;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Base64;
@@ -38,7 +39,17 @@ class DwoLogin implements Login {
 		cookie.setPath("/");
 		resp.addCookie(cookie);
 
-		Reader reader = new InputStreamReader(getClass().getResourceAsStream("/DwoLogin.html"));
+		String format = getLoginForm();
+		byte[] random = new byte[16];
+		ThreadLocalRandom.current().nextBytes(random);
+		String nonce = Base64.getEncoder().withoutPadding().encodeToString(random);
+		session.setAttribute("dwologin.nonce", nonce);
+		resp.setContentType("text/html");
+		resp.getWriter().format(format, nonce);
+	}
+
+	static String getLoginForm() throws IOException {
+		Reader reader = new InputStreamReader(DwoLogin.class.getResourceAsStream("/DwoLogin.html"));
 		char buffer[] = new char[2048];
 		StringBuilder html = new StringBuilder();
 		int size;
@@ -46,12 +57,7 @@ class DwoLogin implements Login {
 			html.append(buffer, 0, size);
 		}
 		String format = html.toString();
-		byte[] random = new byte[16];
-		ThreadLocalRandom.current().nextBytes(random);
-		String nonce = Base64.getEncoder().withoutPadding().encodeToString(random);
-		session.setAttribute("dwologin.nonce", nonce);
-		resp.setContentType("text/html");
-		resp.getWriter().format(format, nonce);
+		return format;
 	}
 
 }

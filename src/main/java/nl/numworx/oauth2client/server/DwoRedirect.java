@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 @SuppressWarnings("serial")
 public class DwoRedirect extends HttpServlet {
@@ -40,25 +41,33 @@ public class DwoRedirect extends HttpServlet {
 		state = state.substring(komma+1);
 		
 		String nonce = (String) session.getAttribute("dwologin.nonce");
-		String username = req.getParameter("username");
-		String password = req.getParameter("password");
-		if (Objects.equals(nonce, req.getParameter("nonce"))) {
-			String code = getBearerToken(username, password);
-			url += "?state=" + state;
-			//session.setAttribute("dwologin.code", code);
-			url += "&code="  + code;			
-			resp.sendRedirect(url);
-			return;
+		try {
+			String username = req.getParameter("username");
+			String password = req.getParameter("password");
+			if (Objects.equals(nonce, req.getParameter("nonce"))) {
+				String code = getBearerToken(username, password);
+				url += "?state=" + state;
+				//session.setAttribute("dwologin.code", code);
+				url += "&code="  + code;			
+				resp.sendRedirect(url);
+				return;
+			}
+			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+		} catch(Dwo2Exception d) {
+			Dwo2ExceptionCode code = d.getDwo2Code();
+			// restart login
+			String form = DwoLogin.getLoginForm();
+			resp.setContentType("text/html");
+			resp.getWriter().format(form, nonce);
 		}
-		resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 	}
 
-	private String getBearerToken(String username, String password) throws ServletException {
+	private String getBearerToken(String username, String password) throws ServletException, Dwo2Exception {
 		
 		try {
 			DomUserFullwLoginContext info = LoginManager.basicLogin(username, md5(password));
 			return SecureUserAccountManager.getBearerToken();
-		} catch (Dwo2Exception | NoSuchAlgorithmException e) {
+		} catch (NoSuchAlgorithmException e) {
 			throw new ServletException(e);
 		}
 	}
