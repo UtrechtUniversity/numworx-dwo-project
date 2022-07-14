@@ -3,10 +3,17 @@ package nl.numworx.notebook;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -26,6 +33,7 @@ import org.cbook.cbookif.CBookWidgetEditIF;
 
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JCheckBox;
+import fi.beans.numworxlf.JFileChooser;
 import fi.beans.numworxlf.JFormattedTextField;
 import fi.beans.numworxlf.JLabel;
 import fi.beans.numworxlf.JScrollPane;
@@ -65,22 +73,60 @@ class Editor extends JPanel implements CBookWidgetEditIF {
 
 	class PlusAction extends AbstractAction implements Action {
 
-		private int cnt;
-
+//		private int cnt;
+		private JFileChooser chooser;
+		
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Bestand b = new Bestand("Untitled " + cnt++);
-			uploadModel.addElement(b); // should b sorted
-			uploadList.setSelectedIndex(uploadModel.indexOf(b));
+			chooser.setCurrentDirectory(JFileChooser.getGlobalDirectory());
+			int ok = chooser.showOpenDialog(asComponent());
+			if (ok == JFileChooser.APPROVE_OPTION) { 
+				File[] files = chooser.getSelectedFiles();
+				if (files == null || files.length == 0) files = new File[] { chooser.getSelectedFile() };
+				
+				JFileChooser.setGlobalDirectory(chooser.getCurrentDirectory());
+				for(File f : files) {
+					FileInputStream in;
+					try {
+						in = new FileInputStream(f);
+					} catch (FileNotFoundException e2) {
+						continue;
+					}
+					try {
+						String name = f.getName();
+						int size = (int) f.length();
+						Bestand b = new Bestand(name);
+						b.data = new byte[size];
+						b.type = "data"; // just bytes;
+						in.read(b.data);
+						uploadModel.removeElement(b);
+						uploadModel.addElement(b);
+					} catch (FileNotFoundException e1) {
+					} catch (IOException e1) {
+					} finally {
+						try {
+							in.close();
+						} catch (IOException e1) {
+						}
+					}
+				}
+			}
+//			Bestand b = new Bestand("Untitled " + cnt++);
+//			uploadModel.addElement(b); // should b sorted
+//			uploadList.setSelectedIndex(uploadModel.indexOf(b));
 		}
 		
-		PlusAction() { super("+"); }
+		PlusAction() {
+			super("+"); 
+			chooser = new JFileChooser();
+		}
 	}
 
 	static class Bestand implements Comparable<Bestand> {
 		final String name;
-		String data;
-		String type;
+		byte[] data;
+		String type, content;
 		
 		public String toString() { return name; }
 
@@ -116,6 +162,9 @@ class Editor extends JPanel implements CBookWidgetEditIF {
 	
 	static final String SCORE_MAX = "scoreMax";
 	static final String CHECK_DOCENT = "checkDocent";
+	static final String UPLOAD = "upload";
+	static final String PROJECT = "project";
+	static final String NOTEBOOK = "notebook";
 	
 	Dimension instanceSize = new Dimension(600,800);
 	
@@ -194,6 +243,7 @@ class Editor extends JPanel implements CBookWidgetEditIF {
 		return instanceSize;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Map<String, ?> getLaunchData() {
 		Map<String, Object> launchData = new HashMap<>();
 		try {
@@ -203,6 +253,46 @@ class Editor extends JPanel implements CBookWidgetEditIF {
 		max = ((Number) maxField.getValue()).intValue();
 		launchData.put(SCORE_MAX, max);
 		launchData.put(CHECK_DOCENT, max > 0);
+		if (objBtn != null) {
+			launchData.putAll((Map<String,?>)objBtn.getEditState(max));
+		}
+		if (projectCB.isSelected()) {
+			launchData.put(PROJECT, projectField.getText());
+		}
+		if (documentCB.isSelected()) {
+			launchData.put(NOTEBOOK, documentField.getText());
+		}
+		
+		Map[] bestanden = new Hashtable[uploadModel.size()];
+		for (int i = 0; i < bestanden.length; i++) {
+			Bestand b = uploadModel.elementAt(i);
+			Hashtable bestand = new Hashtable(3);
+			bestanden[i] = bestand;
+			bestand.put("name", b.name);
+			if (b.content == null) {
+				boolean ascii = false; 
+				if (b.data != null) {
+					ascii = true;
+					for (byte data : b.data) {
+						if (data <= 0 || data >= 127) { ascii = false; break; }
+					}
+				} else {
+					b.data = new byte[0];
+				}
+				if (ascii) {
+					b.content = new String(b.data, StandardCharsets.US_ASCII);
+					b.type = "text";
+				} else {
+					b.content = Base64.getEncoder().encodeToString(b.data);
+					b.type = "base64";
+				}
+				b.data = null;
+			}
+			bestand.put("type", b.type);
+			bestand.put("content", b.content);
+		}
+		launchData.put(UPLOAD, Arrays.asList(bestanden));
+		
 		return launchData;
 	}
 
@@ -226,11 +316,35 @@ class Editor extends JPanel implements CBookWidgetEditIF {
 		instanceSize.width = arg0;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void setLaunchData(Map<String, ?> h) {
 		if (h.containsKey(SCORE_MAX)) {
 			max = ((Number) h.get(SCORE_MAX)).intValue();
 			maxField.setValue(max);
 		}
+		if (objBtn != null) {
+			objBtn.setEditState(h);
+		}
+		if (h.containsKey(UPLOAD)) {
+			List<Map> bestanden = (List<Map>) h.get(UPLOAD);
+			uploadModel.removeAllElements();
+			for( Map map: bestanden) {
+				Bestand b = new Bestand(map.get("name").toString());
+				b.type = map.get("type").toString();
+				b.content = map.get("content").toString();
+				uploadModel.addElement(b);
+			}
+		}
+		if (h.containsKey(PROJECT)) {
+			projectCB.setSelected(true);
+			projectField.setText(h.get(PROJECT).toString());
+		} else 
+			projectCB.setSelected(false);
+		if (h.containsKey(NOTEBOOK)) {
+			documentCB.setSelected(true);
+			documentField.setText(h.get(NOTEBOOK).toString());
+		} else 
+			documentCB.setSelected(false);
 	}
 
 	public void start() {
