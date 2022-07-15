@@ -4,13 +4,13 @@
 	<ui:with field='pfx' type='java.lang.String'/>
 	<ui:with field='rb'  type='nl.uu.fi.dwo.mobile.client.text.Text' />
 	<ui:style field='style' src="TreeModuleViewNumworx.css" type='nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworxCss'/>	
-			<g:FlowPanel styleName='{style.headerPanel}'>
+			<g:FlowPanel styleName='{style.headerPanel}' addStyleNames='profile-header'>
 			  	<g:FlowPanel styleName='{style.numworx}'><g:Image url="{pfx}images/numworx/logo-Numworx-grijs2.svg"></g:Image></g:FlowPanel>
 <!-- 				<g:TextBox ui:field='searchInput' styleName='{style.search-input}'></g:TextBox> -->
 <!-- 				<g:InlineHTML ui:field='searchBtn' styleName='{style.search}'><img src='{pfx}images/numworx/search-numworx.svg'/></g:InlineHTML> -->
 				<g:InlineHTML addStyleNames='{style.status}' ui:field='status'><i class='fa fa-cloud-upload'/></g:InlineHTML>
 				<g:MenuBar addStyleNames='{style.menu}'>
-					<g:MenuItem ui:field='user' addStyleNames='{style.menuItem}' />
+					<g:MenuItem ui:field='user' addStyleNames='{style.menuItem} {style.navIcon} profile-headerIcon' />
 				</g:MenuBar>
 				<g:Label ui:field='loginLabel' styleName='{style.loginname}'><ui:text from='{rb.guest}' /></g:Label>
 <!-- 				<g:ToggleButton ui:field='fullBtn' styleName='{style.nav}'> -->
@@ -19,7 +19,7 @@
 <!-- 				</g:ToggleButton> -->
 <!-- 				<g:FocusPanel styleName='{style.nav}'><g:Image url='{pfx}images/numworx/ster-grijs-numworx.svg'/></g:FocusPanel> -->
 				<g:FocusPanel ui:field='upBtn' styleName='{style.nav}'>
-					<g:InlineHTML><i style='color:#798291' class='fa fa-2x fa-arrow-up' ></i></g:InlineHTML>
+					<g:InlineHTML><i  class='fa fa-2x fa-arrow-up {style.navIcon} profile-headerIcon' ></i></g:InlineHTML>
 				</g:FocusPanel>
 <!-- 				<g:FocusPanel ui:field='homeBtn' styleName='{style.nav}'><g:Image url='{pfx}images/numworx/home-numworx.svg'/></g:FocusPanel> -->
 			</g:FlowPanel>

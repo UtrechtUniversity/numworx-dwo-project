@@ -102,7 +102,7 @@
 	</ui:style>
 	<g:DockLayoutPanel unit='PX' styleName='{t.rootPanel}'>
 		<g:north size="50">
-			  <g:DockLayoutPanel ui:field='headerTop' styleName='{style.headerTop}' >
+			  <g:DockLayoutPanel ui:field='headerTop' styleName='{style.headerTop} profile-header' >
 			    <g:west size="170">
 			  	<g:FlowPanel ui:field='logo' styleName='{t.numworx}'><g:Image url="{pfx}images/numworx/logo-Numworx-grijs2.svg"></g:Image></g:FlowPanel>
 			  	</g:west>
@@ -114,7 +114,7 @@
 </g:east>
 <g:east size="56">
 				<g:MenuBar ui:field='bar' addStyleNames='{t.menu}'>
-					<g:MenuItem ui:field='user' addStyleNames='{t.menuItem}' />
+					<g:MenuItem ui:field='user' addStyleNames='{t.menuItem} {t.navIcon} profile-headerIcon' />
 				</g:MenuBar>
 </g:east>
 <g:east size="200">
@@ -123,7 +123,7 @@
 </g:east>
 <g:east size="35">
 				<g:FocusPanel ui:field='upBtn' styleName='{t.nav}'>
-					<g:InlineHTML><i class='fa fa-2x fa-arrow-up' style='color:#798291'></i></g:InlineHTML>
+					<g:InlineHTML><i class='fa fa-2x fa-arrow-up {t.navIcon} profile-headerIcon'></i></g:InlineHTML>
 				</g:FocusPanel>
 </g:east>
 			  </g:DockLayoutPanel>
@@ -136,7 +136,7 @@
 			  		<g:Image styleName='{style.icon}' addStyleNames='{t.lesstof}' url='{pfx}images/numworx/lesstof-numworx.svg' />
 			  		<g:Label ui:field='title' styleName='{style.title}'></g:Label>
 					<g:FocusPanel ui:field='up2Btn' styleName='{t.nav}'>
-						<g:InlineHTML><i class='fa fa-2x fa-arrow-up' style='color:#798291'></i></g:InlineHTML>
+						<g:InlineHTML><i class='fa fa-2x fa-arrow-up {t.navIcon} profile-headerIcon' ></i></g:InlineHTML>
 					</g:FocusPanel>
   			  </g:FlowPanel>
 		</g:north>

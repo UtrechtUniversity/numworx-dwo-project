@@ -17,6 +17,7 @@
 	  return;
 	}
 	String dwo_env = System.getProperty("DWO_ENV", "app");
+	String cdn = System.getProperty("CDNURL", "http://cdn.dwo.nl");
 	String base = request.getParameter("base");
 	Pattern legal = Pattern.compile("/[a-z]+(/[a-z]+)*/");
 // not too much urls allowed
@@ -32,6 +33,7 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
     <link type="text/css" rel="stylesheet" href="/dwo/tablet/DWOplayer.css">
+<% if ("111".equals(profile)) {%><link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/inf.css" ><%}%>    
     <meta name="gwt:property" content="locale=nl" >
     <script>
     	DWO_PROFILE_ID = <%=profile%>

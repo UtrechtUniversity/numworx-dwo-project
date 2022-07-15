@@ -76,8 +76,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	public void initialize(Scorm2004IF api) {
       delegate = new ViewModuleViewImpl(activity, rpc, false, api);
       final int correctie = 10; // width popup 
-      user = new MenuItem("<img width='26' height='26' src='" + pfx
-				+ "images/numworx/account.svg' >", true, items) {
+      user = new MenuItem(HeaderViewNumworx.account_svg, true, items) {
           @Override
           public int getAbsoluteLeft() {
               int w1 = items.getOffsetWidth();

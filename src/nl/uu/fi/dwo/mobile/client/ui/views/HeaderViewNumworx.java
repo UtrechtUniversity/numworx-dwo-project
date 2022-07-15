@@ -96,6 +96,13 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
     final private Failure failure;
 
 
+    static final String account_svg = "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' "+ 
+    		" width='26px' height='26px' viewBox='0 0 64 64' >"+			
+    		   	 "<path d='M56.9,0H7.1C3.2,0,0,3.2,0,7.1v49.8C0,60.8,3.2,64,7.1,64h49.8c3.9,0,7.1-3.2,7.1-7.1V7.1C64,3.2,60.8,0,56.9,0" +
+    		   	 	"zM32.1,9.3c6,0,10.9,4.9,10.9,10.9c0,6-4.9,10.9-10.9,10.9c-6,0-10.9-4.9-10.9-10.9C21.2,14.1,26.1,9.3,32.1,9.3z M53.9,54.1H10.3"+
+    		   	 	"v-3.6c0-7.3,14.5-10.9,21.8-10.9c7.3,0,21.8,3.6,21.8,10.9V54.1z'/></svg>";
+
+    
 	/**
 	 * Because this class has a default constructor, it can
 	 * be used as a binder template. In other words, it can be used in other
@@ -113,8 +120,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 		failure = new DialogFailureWithOops(bus, oops);
 		pfx = PARAMETERS.getResource("");
         final int correctie = 10; // width popup 
-		user = new MenuItem("<img width='26' height='26' src='" + pfx
-				+ "images/numworx/account.svg' >", true, items) {
+		user = new MenuItem(account_svg, true, items) {
             @Override
             public int getAbsoluteLeft() {
                 int w1 = items.getOffsetWidth();
@@ -123,6 +129,12 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
             }
 		};
 		initWidget(uiBinder.createAndBindUi(this));
+//		String html = "<img width='26' height='26' " 
+//				+" class='" + style.navIcon() + " profile-headerIcon'"
+//				+" src='" + pfx
+//				+ "images/numworx/account.svg' >";
+//		
+//		user.setHTML(html);
 		this.vars = vars;
 		
 	}
