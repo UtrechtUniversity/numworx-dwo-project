@@ -26,7 +26,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Verify Authentication</title>
 </head>
 <body>
 A dummy page for <%=ctx.getUserPrincipal().getName() %>
