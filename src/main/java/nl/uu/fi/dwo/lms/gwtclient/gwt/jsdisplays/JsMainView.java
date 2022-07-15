@@ -217,4 +217,9 @@ public class JsMainView implements MainPresenter.Display{
 	public void showTeacherClassFilterView() {
 		JsMainDisplay.showTeacherClassFilterView();
 	}
+
+	@Override
+	public void showChatboxView() {
+		JsMainDisplay.showChatboxView();	
+	}
 }

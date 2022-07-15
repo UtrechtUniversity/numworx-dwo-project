@@ -22,6 +22,8 @@ import nl.uu.fi.dwo.ideas.client.IdeasIF;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactory;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactoryJs;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.chatbox.ChatboxPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.chatbox.JsChatboxView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.modules.JsModulesView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.organisation.JsOrganisationView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsLogResultsView;
@@ -82,4 +84,5 @@ abstract class BootModule {
 	@Binds abstract ModulesPresenter.Display modulesView(JsModulesView view);
 	@Binds abstract OrganisationPresenter.Display organisationView(JsOrganisationView view);
 	@Binds abstract StudentResultsPresenter.Display studentResultsView(JsStudentResultsView view);
+	@Binds abstract ChatboxPresenter.Display chatboxView(JsChatboxView view);
 }

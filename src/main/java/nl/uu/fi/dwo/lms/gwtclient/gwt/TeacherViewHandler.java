@@ -7,8 +7,10 @@ import javax.inject.Inject;
 
 import com.google.web.bindery.event.shared.EventBus;
 
+import dagger.Lazy;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter.Display;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.chatbox.ChatboxPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -25,6 +27,8 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
     @Inject PresenterFactoryGwt presenterFactory;
     @Inject BootPanelController controller;
     @Inject EventBus eventBus;
+    
+    @Inject Lazy<ChatboxPresenter> chatbox;
    
     @Inject TeacherViewHandler() {}
     
@@ -156,6 +160,11 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
                   mainView.selectView(SelectedView.MODULES);
                   presenterFactory.getModulesPresenter().show();
                   break;
+              case CHATBOX:
+            	  mainView.selectView(SelectedView.CHATBOX);
+            	  mainView.showChatboxView();
+            	  chatbox.get().init();
+            	  break;
               case GOTO_URL:
                   mainView.selectView(SelectedView.MODULES);
                   presenterFactory.getModulesPresenter().show(switchViewEvent.getSearch().get("message"));              

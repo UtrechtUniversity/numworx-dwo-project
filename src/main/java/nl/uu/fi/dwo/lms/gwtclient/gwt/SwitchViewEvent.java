@@ -85,6 +85,7 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
         , LOGOUT
         , GOTO_URL
         , RETOUR
+        , CHATBOX
     }
 
 //    private DomStudent student;

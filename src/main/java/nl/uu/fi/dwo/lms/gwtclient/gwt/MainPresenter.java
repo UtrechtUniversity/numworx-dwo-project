@@ -134,6 +134,8 @@ public class MainPresenter {
 		void showTeacherSMClassResultsView();
 
 		void showTeacherClassFilterView();
+
+		void showChatboxView();
     }
 
     private MainPresenter.Display display;
