@@ -73,7 +73,7 @@ function doehet() {
                     document.getElementById("result").innerHTML = message;
                 };
                 xhr.responseType = 'json';
-                xhr.open("GET", "/dwox/rest/secure/user/account/get", true);
+                xhr.open("GET", "/dwo/rest/secure/user/account/get", true);
                 var authz = antw.token_type + " " + antw.access_token;
                 console.log(authz)
                 xhr.setRequestHeader('Authorization', authz);
@@ -99,7 +99,7 @@ function refresh() {
                     document.getElementById("result").innerHTML = message;
                 };
                 xhr.responseType = 'json';
-                xhr.open("GET", "dwo-redirect", true);
+                xhr.open("GET", "/dwo/oauth2/dwo-redirect", true);
                 var authz = antw.token_type + " " + antw.access_token;
                 console.log(authz)
                 xhr.setRequestHeader('Authorization', authz);
