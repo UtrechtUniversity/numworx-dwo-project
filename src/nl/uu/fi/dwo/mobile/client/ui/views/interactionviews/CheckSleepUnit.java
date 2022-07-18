@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
+import java.util.ArrayList;
 import java.util.Collections;
 //import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +15,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
@@ -26,10 +28,11 @@ import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckSelectieUnit.FeedbackPanel;
+import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.berekeningvak.BerekeningVakButton;
 import nl.uu.fi.dwo.mobile.utils.Review;
 import nl.uu.fi.dwo.mobile.utils.StringUtils;
+import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
@@ -1149,11 +1152,25 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	
 public class FeedbackPanel extends PopupPanel{
 		
-		private LayoutPanel feedbackTekst = new LayoutPanel();
+		private TekstVak feedbackTekst = new TekstVak();
+		private String feedback = "";
 		
 		public FeedbackPanel(Panel vakPanel, String text) {
-			feedbackTekst.getElement().setInnerText(text);
-			feedbackTekst.getElement().getStyle().setColor(""+CssColor.make(49,71,112));
+//			feedbackTekst.getElement().setInnerText(text);
+//			feedbackTekst.getElement().getStyle().setColor(""+CssColor.make(49,71,112));
+			feedback = text;
+			
+			feedbackTekst = new TekstVak();
+			feedbackTekst.setSize(200, 50);
+			feedbackTekst.setFontSize(XMLView.getDefaultFontSize());
+			feedbackTekst.setFontName(XMLView.getDefaultFontName());
+			feedbackTekst.setColor(CssColor.make("black"));
+			feedbackTekst.setCentering(false, true);
+			feedbackTekst.setPasHoogteBreedteAan(true, false);
+			feedbackTekst.setTekstVakBreedte(190);
+			add(feedbackTekst);
+			
+			zetFeedback();
 			
 			BerekeningVakButton closeButton = new BerekeningVakButton("sluit");
 			closeButton.setSize(15, 15);
@@ -1190,6 +1207,31 @@ public class FeedbackPanel extends PopupPanel{
 					hide();
 				}
 			});
+		}
+		
+		public void zetFeedback()
+		{
+			TekstBuffer b = new TekstBuffer(activity);
+			//Volgens mij zijn randomvariabelen feedback bij aanmaken antwoordmodel al ingevuld, dus hier weggelaten.
+//			try{
+//				feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
+//			}
+//			catch(Exception e){}
+			ArrayList<Object> feedbackList = b.convertTekst(feedback, null, false);
+			feedbackTekst.clear();
+			int tekstVakBreedte = 190;
+			for(int i = 0; i < feedbackList.size(); i++)
+			{
+				Object object = feedbackList.get(i);
+				if(object instanceof TekstElement && ((TekstElement) object).getWidth() > tekstVakBreedte)
+					tekstVakBreedte = ((TekstElement) object).getWidth();
+			}
+			feedbackTekst.setSize(tekstVakBreedte + 10, 50);
+			feedbackTekst.setTekstVakBreedte(tekstVakBreedte);
+			feedbackTekst.setObjects(feedbackList);
+			//voegFeedbackSluitKnopToe();
+			feedbackTekst.resize();
+			//zetFeedbackZichtbaar(true);
 		}
 		
 		public void show(int x, int y) {
