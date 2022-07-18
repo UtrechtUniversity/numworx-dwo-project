@@ -45,7 +45,7 @@ class DwoLogin implements Login {
 		String nonce = Base64.getEncoder().withoutPadding().encodeToString(random);
 		session.setAttribute("dwologin.nonce", nonce);
 		resp.setContentType("text/html");
-		resp.getWriter().format(format, nonce);
+		resp.getWriter().format(format, nonce, "");
 	}
 
 	static String getLoginForm() throws IOException {

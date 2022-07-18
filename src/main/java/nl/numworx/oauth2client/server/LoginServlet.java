@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 
+import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
+
 public class LoginServlet extends HttpServlet {
 
 	private Login config;
@@ -43,9 +46,9 @@ public class LoginServlet extends HttpServlet {
 		resp.sendError(HttpServletResponse.SC_FORBIDDEN);	
 	}
 
-
-
-
+	static {
+        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
+	}
 
 	@Override
 	public void init() throws ServletException {

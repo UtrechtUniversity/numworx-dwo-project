@@ -20,6 +20,8 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.LoginManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -56,10 +58,10 @@ public class DwoRedirect extends HttpServlet {
 			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 		} catch(Dwo2Exception d) {
 			Dwo2ExceptionCode code = d.getDwo2Code();
-			// restart login
+			log("doPost login exception " + code, d);
 			String form = DwoLogin.getLoginForm();
 			resp.setContentType("text/html");
-			resp.getWriter().format(form, nonce);
+			resp.getWriter().format(form, nonce, d.getLocalizedMessage());
 		}
 	}
 
@@ -67,6 +69,15 @@ public class DwoRedirect extends HttpServlet {
 		
 		try {
 			DomUserFullwLoginContext info = LoginManager.basicLogin(username, md5(password));
+			DomContext context = new DomContext();
+			
+			DomHasRole hasRole = new DomHasRole();
+			hasRole.setId(info.getDomLoginContext().getHasRoleId());
+			hasRole.setUserId(info.getDomUserFull().getId());
+			hasRole.setSchoolGroupId(info.getDomLoginContext().getSchoolGroupId());
+			context.setDomHasRole(hasRole);
+			context.setRealm(info.getDomLoginContext().getRealm());
+			StoredRestManager.getInstance().getAuthenticator().setContext(context);
 			return SecureUserAccountManager.getBearerToken();
 		} catch (NoSuchAlgorithmException e) {
 			throw new ServletException(e);
