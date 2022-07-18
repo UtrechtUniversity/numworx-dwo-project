@@ -1,5 +1,6 @@
 package nl.numworx.notebook;
 
+import java.net.URL;
 import java.util.Collections;
 import java.util.Hashtable;
 import javax.swing.JPanel;
@@ -17,7 +18,8 @@ public class NotebookInteractieEditPanel extends JPanel implements
 	
 	NotebookInteractieEditPanel(Notebook widget) {
 		super(null);
-		editor = new Editor(widget.getLocale());
+		
+		editor = new Editor(widget.getLocale(), widget.getHubBase());
 
 		editor.setLocation(0, 0);
 		editor.setInstanceWidth(500);

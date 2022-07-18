@@ -43,9 +43,10 @@ import fi.wiskopdr.ObjectiveChoiceButton;
 @SuppressWarnings("serial")
 class Editor extends JPanel implements CBookWidgetEditIF {
 	
+	URI uri = URI.create("https://hub-dev.dwo.nl/");
+
 	public class NotesAction extends AbstractAction implements Action {
 
-		URI uri = URI.create("https://hub-dev.dwo.nl/");
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -180,15 +181,16 @@ class Editor extends JPanel implements CBookWidgetEditIF {
 	private JButton plusBtn, minBtn, notesBtn;
 	private DefaultListModel<Bestand> uploadModel;
 
-	Editor(Locale locale) {
+	Editor(Locale locale, URI base) {
 		super(null);
+		this.uri = base;
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		setLocale(locale);
 		setMinimumSize(new Dimension(300,300));
 		Box vb = Box.createVerticalBox();
 		Box hb = Box.createHorizontalBox();hb.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		hb.add(new JLabel("Score"));hb.add(Box.createHorizontalGlue());
-		maxField = new JFormattedTextField(max);
+		maxField = new JFormattedTextField(max); fixHeight(maxField);
 		maxField.setColumns(10);
 		maxField.setMaximumSize(maxField.getPreferredSize());
 		hb.add(maxField);
@@ -201,34 +203,48 @@ class Editor extends JPanel implements CBookWidgetEditIF {
 		}
 		vb.setBorder(BorderFactory.createEtchedBorder());
 		add(vb);
+		Dimension mingap = new Dimension(0, 10);
+		Dimension maxgap = new Dimension(Short.MAX_VALUE, Short.MAX_VALUE);
+		add(new Box.Filler(mingap, mingap, maxgap));
 		vb = Box.createVerticalBox();
 		hb = Box.createHorizontalBox();
 		projectCB = new JCheckBox("Project");
-		projectField = new JTextField();
+		projectField = new JTextField(); fixHeight(projectField);
 		hb.add(projectCB); hb.add(projectField);
 		vb.add(hb);
 		hb = Box.createHorizontalBox();
 		documentCB = new JCheckBox("Notebook");
-		documentField = new JTextField();
+		documentField = new JTextField(); fixHeight(documentField);
 		hb.add(documentCB); hb.add(documentField);
 		vb.add(hb);
 		vb.setBorder(BorderFactory.createEtchedBorder());
 		add(vb);
+		add(new Box.Filler(mingap, mingap, maxgap));
 		vb = Box.createVerticalBox();
 		hb = Box.createHorizontalBox();
 		uploadModel = new DefaultListModel<Bestand>();
 		uploadList = new JList<>(uploadModel);
 		uploadList.setVisibleRowCount(4);
 		JScrollPane scroll = new JScrollPane(uploadList);
+		scroll.setAlignmentX(1);
 		vb.add(scroll);
 		plusBtn = new JButton(new PlusAction());
 		minBtn = new JButton(new MinAction());
-		hb.add(plusBtn); hb.add(minBtn);
+		hb.add(plusBtn); hb.add(minBtn); hb.add(Box.createHorizontalGlue());
+		hb.setAlignmentX(1);
 		vb.add(hb);
 		notesBtn = new JButton(new NotesAction());
+		notesBtn.setAlignmentX(1);
 		vb.add(notesBtn);
 		vb.setBorder(BorderFactory.createEtchedBorder());
 		add(vb);
+	}
+
+	private void fixHeight(JComponent component) {
+		Dimension pref = component.getPreferredSize();
+		Dimension max  = component.getMaximumSize();
+		max.height = pref.height;
+		component.setMaximumSize(max);
 	}
 
 	public JComponent asComponent() {

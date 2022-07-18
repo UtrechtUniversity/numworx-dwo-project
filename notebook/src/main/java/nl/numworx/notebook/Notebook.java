@@ -1,6 +1,10 @@
 package nl.numworx.notebook;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import java.util.Locale;
+import java.util.Properties;
 
 import javax.swing.Icon;
 
@@ -22,7 +26,7 @@ public class Notebook extends JApplet implements CBookWidgetIF, WiskOpdrApplet {
 	}
 
 	public CBookWidgetEditIF getEditor(CBookContext arg0) {
-		return new Editor(getLocale());
+		return new Editor(getLocale(), getHubBase());
 	}
 
 	public Notebook() {
@@ -38,7 +42,7 @@ public class Notebook extends JApplet implements CBookWidgetIF, WiskOpdrApplet {
 	}
 
 	public CBookWidgetInstanceIF getInstance(CBookContext context) {
-		return new Instance(getLocale());
+		return new Instance(getLocale(), getHubBase(), context);
 	}
 
 	@Override
@@ -46,4 +50,22 @@ public class Notebook extends JApplet implements CBookWidgetIF, WiskOpdrApplet {
 		return "Notebook [locale=" + getLocale() + "]";
 	}
 
+	@Override
+	public void init() {
+		System.out.println(getCodeBase());
+	}
+	
+	private URI hubBase;
+	public URI getHubBase() {
+		if (hubBase == null) {
+			Properties p = new Properties();
+			try {
+				p.load(new URL(getCodeBase(), "DWO.properties").openStream());
+			}  catch (IOException e) {
+			}
+			hubBase = URI.create(p.getProperty("hubUrlPath", "https://hub-dev.dwo.nl/"));
+		}
+		return hubBase;
+		
+	}
 }

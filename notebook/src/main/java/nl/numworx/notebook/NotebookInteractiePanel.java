@@ -59,7 +59,11 @@ public class NotebookInteractiePanel extends JPanel implements
 		super(new BorderLayout());
 		this.widget = widget;
 		setOpaque(false);
-		instance = new Instance(widget.getLocale());
+		initInstance(this);
+	}
+
+	private void initInstance(CBookContext context) {
+		instance = new Instance(widget.getLocale(), widget.getHubBase(), context);
 		add(instance.asComponent(), BorderLayout.CENTER);
 		all = new CBookActionListener();
 		instance.addCBookEventListener(all, Constants.CHECKED); // ons kent ons

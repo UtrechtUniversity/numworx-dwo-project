@@ -1,18 +1,21 @@
 package nl.numworx.notebook;
 
-import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 
 import java.awt.BorderLayout;
+import java.net.URI;
+
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.cbook.cbookif.AssessmentMode;
+import org.cbook.cbookif.CBookContext;
 import org.cbook.cbookif.CBookEvent;
 import org.cbook.cbookif.CBookEventListener;
 import org.cbook.cbookif.CBookWidgetInstanceIF;
+import org.cbook.cbookif.Constants;
 import org.cbook.cbookif.LessonMode;
 import org.cbook.cbookif.SuccessStatus;
 
@@ -23,8 +26,14 @@ import nl.numworx.swingbrowser.api.SwingBrowserProvider;
 @SuppressWarnings("serial")
 class Instance extends JPanel implements CBookWidgetInstanceIF, CBookEventListener {
 
-	Instance(Locale locale) {
+	final URI hubBase;
+	final CBookContext context;
+	
+	
+	Instance(Locale locale, URI hubBase, CBookContext context) {
 		super(new BorderLayout());
+		this.hubBase = hubBase;
+		this.context = context;
 		setLocale(locale);
 	}
 
@@ -82,7 +91,25 @@ class Instance extends JPanel implements CBookWidgetInstanceIF, CBookEventListen
 	}
 
 	public void setLaunchData(Map<String, ?> arg0, Map<String, Number> arg1) {
-		url ="https://hub-dev.dwo.nl/";
+		String project = (String) arg0.get(Editor.PROJECT);
+		String notebook = (String) arg0.get(Editor.NOTEBOOK);
+		URI hub = hubBase;
+		if (notebook != null) {
+			if (project != null) {
+				notebook = project + "/" + notebook;
+			}
+			while(notebook.startsWith("/")) notebook = notebook.substring(1);
+			String user = (String) context.getProperty(Constants.LEARNER_NAME);
+			hub = hub.resolve("user/"+ user + "/");
+			hub = hub.resolve("notebooks/").resolve(notebook);		
+		} else if (project != null) {
+			while(project.startsWith("/")) project = project.substring(1);
+			String user = (String) context.getProperty(Constants.LEARNER_NAME);
+			hub = hub.resolve("user/"+ user + "/");
+			hub = hub.resolve("lab/tree/").resolve(project);
+		}
+		
+		url = hub.toASCIIString();
 	}
 
 	public void setState(Map<String, ?> arg0) {
@@ -93,6 +120,7 @@ class Instance extends JPanel implements CBookWidgetInstanceIF, CBookEventListen
 		add(browser.asComponent(), BorderLayout.CENTER);
 		validate();
 		//browser.loadContent("<H1>It works</H1>", "text/html");
+		System.out.println(url);
 		browser.loadURL(url);
 	}
 
