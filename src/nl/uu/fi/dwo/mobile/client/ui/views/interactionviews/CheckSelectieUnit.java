@@ -1255,7 +1255,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 			getElement().getStyle().setBorderColor(""+CssColor.make(38,115,182));
 			getElement().getStyle().setBorderWidth(1, Style.Unit.PX);
 			getElement().getStyle().setPadding(5, Style.Unit.PX);
-			getElement().getStyle().setBackgroundColor(""+CssColor.make(239,241,243));
+			getElement().getStyle().setBackgroundColor(""+CssColor.make(255,255,204));
 			getElement().getStyle().setProperty("boxShadow", "3px 3px 3px #96A1BD");
 			add(vp);
 			setAutoHideEnabled(true);
