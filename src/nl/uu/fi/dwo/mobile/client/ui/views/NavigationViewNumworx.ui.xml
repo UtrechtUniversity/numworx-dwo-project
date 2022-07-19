@@ -24,7 +24,7 @@
 		}
 	
 	</ui:style>
-		    <g:DockLayoutPanel unit='PX' styleName='{style.navPanel}' >
+		    <g:DockLayoutPanel unit='PX' styleName='{style.navPanel}' addStyleNames='profile-navigation' >
 				<g:north size="40">
 					<g:FlowPanel ui:field='beheer'>
 						<g:HTML ui:field='modules' styleName='{extra.icon} {extra.selected}' title='{dw2.NUM_MNU_MODULES}'>
