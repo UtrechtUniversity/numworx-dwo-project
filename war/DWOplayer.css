@@ -201,3 +201,7 @@ div.listItem-dwo-separator {
 	background-image: none !important;
 }
 
+.profile-headerLogo::before {
+        content: url('images/numworx/logo-Numworx-grijs2.svg');
+}
+
