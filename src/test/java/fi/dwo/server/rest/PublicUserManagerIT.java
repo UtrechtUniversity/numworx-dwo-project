@@ -237,6 +237,30 @@ public class PublicUserManagerIT {
     	assertNotNull(result);
    	
     }
+    @Test
+    public void testRegisterSAMLaccented() {
+    	PublicUserManager instance = new PublicUserManager();
+    	
+    	SecurityContext sc = null;
+		String userIdent = "user01";
+		String samlUserId = "samluser01";
+		String samlOrgId = "samlORG";
+		String givenName = "tést";
+		String insertion = "van\u03C0";
+		String familyName = "Wăț";
+		String email = "noreply@numworx.nl";
+		String role = RoleType.STUDENT.name();
+		long schoolID = 1;  // ???
+		String schoolClassName = "";
+		String result = instance.registerSAML(sc , userIdent , samlUserId , samlOrgId , givenName , insertion , familyName , email , role , schoolID, schoolClassName );
+    	assertNotNull(result);
+    	SamlUserManager.destroy(1L);
+		result = instance.registerSAML(sc , userIdent , samlUserId , samlOrgId , givenName , insertion , familyName , email , role , schoolID, schoolClassName );
+    	assertNotNull(result);
+		result = instance.registerSAML(sc , userIdent , samlUserId , samlOrgId , givenName , insertion , familyName , email , role , schoolID, schoolClassName );
+    	assertNotNull(result);
+   	
+    }
 
     /**
      * Test of getSamlUser method, of class PublicUserManager.
