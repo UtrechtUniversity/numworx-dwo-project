@@ -36,6 +36,7 @@ public class NotebookInteractiePanel extends JPanel implements
 	private  final CBookEvent CHECK = new CBookEvent(this, Constants.CHECK);
 
 	private Instance instance;
+	private boolean started;
 
 	private class CBookActionListener implements CBookEventListener {
 
@@ -163,11 +164,17 @@ public class NotebookInteractiePanel extends JPanel implements
 	}
 
 	public void stop() {
-		instance.stop();
+		if (started) {
+			instance.stop();
+			started = false;
+		}
 	}
 
 	public void start() {
-		instance.start();
+		if (!started) {
+			started = true;
+			instance.start();
+		}
 	}
 
 	public void destroy() {

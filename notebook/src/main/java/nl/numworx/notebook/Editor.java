@@ -186,7 +186,7 @@ class Editor extends JPanel implements CBookWidgetEditIF {
 		this.uri = base;
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		setLocale(locale);
-		setMinimumSize(new Dimension(300,300));
+		//setMinimumSize(new Dimension(300,300));
 		Box vb = Box.createVerticalBox();
 		Box hb = Box.createHorizontalBox();hb.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		hb.add(new JLabel("Score"));hb.add(Box.createHorizontalGlue());
@@ -201,10 +201,10 @@ class Editor extends JPanel implements CBookWidgetEditIF {
 			p.add(objBtn);
 			vb.add(p);
 		}
-		vb.setBorder(BorderFactory.createEtchedBorder());
+		vb.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 		add(vb);
 		Dimension mingap = new Dimension(0, 10);
-		Dimension maxgap = new Dimension(Short.MAX_VALUE, Short.MAX_VALUE);
+		Dimension maxgap = new Dimension(Short.MAX_VALUE, 20);
 		add(new Box.Filler(mingap, mingap, maxgap));
 		vb = Box.createVerticalBox();
 		hb = Box.createHorizontalBox();
@@ -212,15 +212,20 @@ class Editor extends JPanel implements CBookWidgetEditIF {
 		projectField = new JTextField(); fixHeight(projectField);
 		hb.add(projectCB); hb.add(projectField);
 		vb.add(hb);
+		vb.add(Box.createVerticalStrut(10));
 		hb = Box.createHorizontalBox();
 		documentCB = new JCheckBox("Notebook");
 		documentField = new JTextField(); fixHeight(documentField);
 		hb.add(documentCB); hb.add(documentField);
 		vb.add(hb);
-		vb.setBorder(BorderFactory.createEtchedBorder());
+		vb.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(), BorderFactory.createEmptyBorder(15, 15, 15, 15)));
 		add(vb);
 		add(new Box.Filler(mingap, mingap, maxgap));
 		vb = Box.createVerticalBox();
+		JLabel label = new JLabel("Upload bestanden");
+		label.setAlignmentX(1);
+		vb.add(label);
+		
 		hb = Box.createHorizontalBox();
 		uploadModel = new DefaultListModel<Bestand>();
 		uploadList = new JList<>(uploadModel);
@@ -228,16 +233,19 @@ class Editor extends JPanel implements CBookWidgetEditIF {
 		JScrollPane scroll = new JScrollPane(uploadList);
 		scroll.setAlignmentX(1);
 		vb.add(scroll);
+		vb.add(Box.createVerticalStrut(3));
 		plusBtn = new JButton(new PlusAction());
 		minBtn = new JButton(new MinAction());
 		hb.add(plusBtn); hb.add(minBtn); hb.add(Box.createHorizontalGlue());
 		hb.setAlignmentX(1);
 		vb.add(hb);
+		vb.add(Box.createVerticalStrut(10));
 		notesBtn = new JButton(new NotesAction());
 		notesBtn.setAlignmentX(1);
 		vb.add(notesBtn);
-		vb.setBorder(BorderFactory.createEtchedBorder());
+		vb.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(), BorderFactory.createEmptyBorder(15, 15, 15, 15)));
 		add(vb);
+		add(Box.createGlue());
 	}
 
 	private void fixHeight(JComponent component) {

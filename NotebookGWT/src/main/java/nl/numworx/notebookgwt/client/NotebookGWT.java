@@ -11,6 +11,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -24,11 +25,21 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 public class NotebookGWT implements EntryPoint, InteractionStub, RequestCallback {
 
+	static final String SCORE_MAX = "scoreMax";
+	static final String CHECK_DOCENT = "checkDocent";
+	static final String UPLOAD = "upload";
+	static final String PROJECT = "project";
+	static final String NOTEBOOK = "notebook";
+
+	
 	final Frame frame;
 	OpdrNavIF root;
 	private int height;
 	private int width;
 	private boolean volledigeBreedte;
+	private String serverUrl = "https://hub-dev.dwo.nl/";
+	private String project;
+	private String notebook;
 
 	public void onModuleLoad() {
 		RootLayoutPanel.get().add(this);
@@ -155,13 +166,34 @@ public class NotebookGWT implements EntryPoint, InteractionStub, RequestCallback
 		this.width = width;
 		this.height = height;
 		frame.setPixelSize(width, height);
+		ObjectMap map = JSONUtilities.wrapMap(launchData);
+		project = map.getString(PROJECT);
+		notebook = map.getString(NOTEBOOK);		
 	}
 
 	@Override
 	public void onResponseReceived(Request request, Response response) {
 		int code = response.getStatusCode();
-		if (code == 204)
-			frame.setUrl("https://hub-dev.dwo.nl/");		
+		if (code == 204) {
+			String hub = serverUrl;
+			String tail = "";
+			if (notebook != null) {
+				tail = notebook;
+				if (project != null) {
+					tail = project + "/" + notebook;
+				}
+				while(tail.startsWith("/")) tail = tail.substring(1);
+				String user = URL.decodePathSegment(root.getLearnerName());
+				hub  += "user/" + user + "/";
+				hub  += "notebooks/" + URL.decodePathSegment(tail);	
+			} else if (project != null) {
+				while(project.startsWith("/")) project = project.substring(1);
+				String user = URL.decodePathSegment(root.getLearnerName());
+				hub  += "user/" + user + "/";
+				hub  += "lab/tree/" + URL.decodePathSegment(project);
+			}
+			frame.setUrl(serverUrl);
+		}		
 	}
 
 	@Override

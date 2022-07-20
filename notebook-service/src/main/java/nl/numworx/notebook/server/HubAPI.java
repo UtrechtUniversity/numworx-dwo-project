@@ -1,14 +1,12 @@
 package nl.numworx.notebook.server;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -24,7 +22,6 @@ import com.owlike.genson.ext.jaxb.JAXBBundle;
 import nl.numworx.notebook.server.rest.Contents;
 import nl.numworx.notebook.server.rest.File;
 import nl.numworx.notebook.server.rest.Folder;
-import nl.numworx.notebook.server.rest.Resource;
 import nl.numworx.notebook.server.rest.Server;
 import nl.numworx.notebook.server.rest.Token;
 import nl.numworx.notebook.server.rest.TokenRequest;
