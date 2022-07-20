@@ -144,7 +144,7 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
         }
     }
 
-    private SecurityContext validateBasicAuthorization(String authHeader, SecurityContext secCtx) {
+    public SecurityContext validateBasicAuthorization(String authHeader, SecurityContext secCtx) {
 
         byte[] header = Base64.getDecoder().decode(authHeader);
         String headerString = ":";
