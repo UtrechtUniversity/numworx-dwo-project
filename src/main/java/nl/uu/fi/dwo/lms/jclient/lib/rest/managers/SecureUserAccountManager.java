@@ -19,12 +19,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Authenticator;
-import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
@@ -234,10 +232,15 @@ public class SecureUserAccountManager {
   public static String getBearerToken() throws Dwo2Exception {
     String b;
     StoredRestManager restManager = StoredRestManager.getInstance();
-    DomContext context = restManager.getAuthenticator().getContext();
-    b = StoredRestManager.getInstance().get("rest/sec:" + PathId.getId(context) + "/user/account/getBearerToken", String.class);
+    return getBearerToken(restManager);
+  }
+
+  public static String getBearerToken(StoredRestManager restManager) throws Dwo2Exception {
+	String b;
+	DomContext context = restManager.getAuthenticator().getContext();
+    b = restManager.get("rest/sec:" + PathId.getId(context) + "/user/account/getBearerToken", String.class);
     b = java.util.Base64.getEncoder().encodeToString(("2\f"+b).getBytes());
     return b;
-  }
+}
 
 }
