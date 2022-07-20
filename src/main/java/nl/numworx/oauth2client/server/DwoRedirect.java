@@ -6,8 +6,6 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
-import java.util.Objects;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -28,6 +26,8 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 @SuppressWarnings("serial")
 public class DwoRedirect extends HttpServlet {
+
+	private URL serverUrl;
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -98,7 +98,7 @@ public class DwoRedirect extends HttpServlet {
 		String dbrest_url = context.getInitParameter("dbrest.url");
 	    RestAuthenticator authenticator = StoredRestManager.getInstance().getAuthenticator();
 		try {
-			authenticator.setServerUrlPath(new URL(dbrest_url));
+			authenticator.setServerUrlPath(serverUrl = new URL(dbrest_url));
 		} catch (MalformedURLException e) {
 			throw new ServletException(e);
 		}
@@ -111,17 +111,19 @@ public class DwoRedirect extends HttpServlet {
 		HttpSession session = req.getSession();
 		if (auth == null) auth = "None";
 		try {
+			StoredRestManager manager = new StoredRestManager(new RestAuthenticator());
+			manager.getAuthenticator().setServerUrlPath(serverUrl); // copy 
 			if (auth.toLowerCase().startsWith("bearer "))
-				StoredRestManager.getInstance().setBearerAuthString(auth.substring(7));
+				manager.setBearerAuthString(auth.substring(7));
 			else if (auth.toLowerCase().startsWith("basic ")) {
 				String[] up = new String(Base64.getDecoder().decode(auth.substring(6))).split(":", 2);
-				StoredRestManager.getInstance().setBasicAuthString(up[0], up[1], null);
+				manager.setBasicAuthString(up[0], up[1], null);
 			} else {
 				session.removeAttribute("dwologin.code");
 				resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 				return;
 			}
-			String code = SecureUserAccountManager.getBearerToken();
+			String code = SecureUserAccountManager.getBearerToken(manager);
 			session.setAttribute("dwologin.code", code);
 			resp.sendError(HttpServletResponse.SC_NO_CONTENT);
 		} catch (Exception e) {
