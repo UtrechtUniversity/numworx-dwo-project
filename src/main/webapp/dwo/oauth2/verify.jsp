@@ -14,7 +14,10 @@
 		public String getAuthenticationScheme() { return request.getAuthType(); }
 		public Principal getUserPrincipal() { return null; }
 	};
-	ctx = filter.validateJWTToken(token, ctx);
+	if (token.startsWith("ey"))
+		ctx = filter.validateJWTToken(token, ctx);
+	else 
+		ctx = filter.validateBasicAuthorization(token, ctx);
 	valid = null != ctx;
 	String client_id = request.getParameter("client_id");
 	valid = Objects.equals("13f8e9cc8928b3409822", client_id) && valid; // clientid prosody
