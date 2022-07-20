@@ -1797,9 +1797,9 @@ LOG.info("time results = " + (-t) + " ms");
     }
         if (LEARNER_NAME.equals(iDataModelElement)) {
             if (user == null) {
-                return Guest.instance().getStudentName();
+                return Guest.instance().getUsername();
             }
-            return user.getStudentName();
+            return user.getUsername();
         }
 
         if (iDataModelElement.equals(SCORM12APIInterface.USER_GROUP)) {
