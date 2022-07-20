@@ -258,7 +258,7 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 
 	@Override
 	public String getLearnerName() {
-		return "Guest, Anonymous";
+		return "guest";
 	}
 
 	@Override

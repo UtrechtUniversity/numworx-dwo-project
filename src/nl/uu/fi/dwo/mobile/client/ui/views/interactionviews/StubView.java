@@ -908,7 +908,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	public String getLearnerName() {
 		String learnerName = comRoot.getLearnerName();
 		if(learnerName == null || learnerName.isEmpty())
-			learnerName = "Guest, Anonymous";
+			learnerName = "guest";
 		return learnerName;
 	}
 

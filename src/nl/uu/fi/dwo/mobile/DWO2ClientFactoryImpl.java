@@ -124,7 +124,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 						secure,
 						eventBus,
 						confirmHandler 
-						,oops);
+						,oops, instance);
 			}
 			return api;
 		}

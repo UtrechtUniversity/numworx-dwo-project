@@ -18,11 +18,11 @@ import org.osgi.util.function.Function;
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import nl.numworx.gwtpatch.client.GWTPatch;
 import nl.numworx.gwtpatch.client.JSONBuilder;
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ConfirmEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
@@ -58,6 +58,7 @@ public class SCORM_DWO5 extends SCORM_guest {
     Digest digest;
 	private Lazy<ConfirmEventHandler> confirmHandler;
 	private final NeedLogin oops;
+	private final DwoGlobalVars vars;
   
 // DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole();
 // DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB
@@ -69,20 +70,37 @@ public class SCORM_DWO5 extends SCORM_guest {
                     @Named("secure") boolean secure, 
                     EventBus bus,
                     Lazy<ConfirmEventHandler> confirmHandler,
-                    NeedLogin oops
+                    NeedLogin oops, 
+                    DwoGlobalVars vars
 		  	) {
 	    this.oops = oops;
+	    this.vars = vars;
 		pending = false;
 		schoolClassID = dsci;
 		context = new DomContext();
 		context.setDomHasRole(hr);
+		context.setRealm(vars.getCurrentLoginContext().getRealm());
 		scoDataManager = new SecuredStudentScoDataManager(secure); 
 		this.barrier = barrier;
 		this.bus = bus;
 		digest = new Digest();
 		this.confirmHandler = confirmHandler;
 		map.put(Memento.LEARNER_ID, PathId.getId(context));
+		map.put(Memento.LEARNER_NAME, getUsername(vars));// FIX als realm niet null is.
 	}
+
+	private String getUsername(DwoGlobalVars vars) {
+		String realm = vars.getCurrentLoginContext().getRealm();
+		String username = vars.getCurrentUser().getUserName();
+		if (realm != null) {
+			if (username.endsWith("@")) {
+				username = username.substring(0, username.length()-1);
+			} else if (! username.contains("@")) {
+				username += "@" + realm;
+			}
+		}
+		return username;
+}
 
 	enum Status { NORMAL, DIRTY, BUSY, RETRY };
 	Status status = Status.NORMAL;
@@ -144,6 +162,7 @@ log("setScoID " + scoID);
 			
 			map.clear();
 			map.put(Memento.LEARNER_ID, PathId.getId(context));
+			map.put(Memento.LEARNER_NAME, getUsername(vars));
 
 			if(!dirty.isEmpty())
 				logger.severe("wij hebben een probleem setScoID "+ dirty);
