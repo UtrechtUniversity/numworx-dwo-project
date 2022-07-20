@@ -46,7 +46,7 @@
 	.kruimels a, .kruimels span {
 		font-family: Ubuntu, sans-serif;
 		font-weight: medium;
-		color: color13 !important;
+		color: color13;
 	}
 		
 		.modules-icon2 .title {
@@ -104,10 +104,10 @@
 		<g:north size="50">
 			  <g:DockLayoutPanel ui:field='headerTop' styleName='{style.headerTop} profile-header' >
 			    <g:west size="170">
-			  	<g:FlowPanel ui:field='logo' styleName='{t.numworx}'><g:Image url="{pfx}images/numworx/logo-Numworx-grijs2.svg"></g:Image></g:FlowPanel>
+			  	<g:InlineHTML ui:field='logo' styleName='{t.numworx}' addStyleNames='profile-headerLogo'>&#x00A0;</g:InlineHTML>
 			  	</g:west>
 			  	<g:center>
-			  	<g:FlowPanel ui:field='kruimels' styleName='{style.kruimels}' />
+			  	<g:FlowPanel ui:field='kruimels' styleName='{style.kruimels}' addStyleNames='profile-headerLabel'/>
 				</g:center>
 <g:east size="17">
 				<g:InlineHTML addStyleNames='{t.status}' ui:field='status'><i class='fa fa-cloud-upload'/></g:InlineHTML>
@@ -118,7 +118,7 @@
 				</g:MenuBar>
 </g:east>
 <g:east size="200">
-				<g:FlowPanel ui:field='loginflow' styleName='{t.loginname}'>
+				<g:FlowPanel ui:field='loginflow' styleName='{t.loginname}' addStyleNames='profile-headerLabel'>
 				<g:Label styleName='{style.fit}' ui:field='loginLabel'></g:Label></g:FlowPanel>
 </g:east>
 <g:east size="35">
@@ -141,7 +141,7 @@
   			  </g:FlowPanel>
 		</g:north>
 		<g:center>
-			<g:SimpleLayoutPanel ui:field='center' styleName='{style.centerPanel}'>
+			<g:SimpleLayoutPanel ui:field='center' styleName='{style.centerPanel}' addStyleNames='profile-body'>
 			</g:SimpleLayoutPanel>
 		</g:center>
 		

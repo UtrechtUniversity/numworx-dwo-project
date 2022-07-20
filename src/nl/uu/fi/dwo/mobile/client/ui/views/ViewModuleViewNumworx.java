@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
@@ -138,7 +139,8 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 //	@UiField ToggleButton fullBtn;
 	@UiField Label title;
 	@UiField TreeModuleViewNumworxCss t;
-	@UiField FlowPanel kruimels, loginflow, logo;
+	@UiField FlowPanel kruimels, loginflow;
+	@UiField Widget logo;
 	@UiField FlowPanel headerBottom;
 	@UiField HasText scoType;
 	@UiField nl.uu.fi.dwo.mobile.client.text.Text rb;

@@ -117,8 +117,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		public void render(Context context,
 				SelectModuleItem value, SafeHtmlBuilder sb) {
 		    Type typeof = value.getType();
-			sb.appendHtmlConstant("<div class='"+style.tile()+"'>");
-			  sb.appendHtmlConstant("<div class='" + style.tileHeader() + "'><span class='" + style.tileSpan() + "'>");
+			sb.appendHtmlConstant("<div class='"+style.tile()+" profile-tile'>");
+			  sb.appendHtmlConstant("<div class='" + style.tileHeader() + " profile-tileHeader'><span class='" + style.tileSpan() + "'>");
 			  if(typeof == Type.SCO)
 			  {
 				  sb.append(value.getSequencenr()).appendHtmlConstant(". ");
@@ -126,7 +126,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			  sb.appendEscaped(value.getName());
 			  sb.appendHtmlConstant("</span></div>");
 
-			  sb.appendHtmlConstant("<div class='" + style.tileBody() + "'>");
+			  sb.appendHtmlConstant("<div class='" + style.tileBody() + " profile-tileBody'>");
 			    String description = value.getDescription();
 				if(true || description.isEmpty()||description.startsWith(DescriptionView.GZIPPREFIX)) {
 					sb.appendHtmlConstant("<icon class='" + style.tileBodySpan() + "'>");
@@ -176,7 +176,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			    }
 			    sb.appendHtmlConstant("</div>");
 
-			  sb.appendHtmlConstant("<div class='" + style.tileFooter() + "'>");
+			  sb.appendHtmlConstant("<div class='" + style.tileFooter() + " profile-tileFooter'>");
 			  	sb.appendHtmlConstant("<span class='"+style.tileResult()+ "'>");
 			  	String type;
 			  	if(value.isShowScore() && typeof == Type.SCO) {

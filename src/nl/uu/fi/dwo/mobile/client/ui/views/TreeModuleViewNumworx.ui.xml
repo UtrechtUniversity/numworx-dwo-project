@@ -7,13 +7,13 @@
 	<ui:with field='pfx' type='java.lang.String'/>
 	<ui:with field='rb'  type='nl.uu.fi.dwo.mobile.client.text.Text' />
 	<ui:style field='style' src="TreeModuleViewNumworx.css" type='nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworxCss'/>	
-	<g:DockLayoutPanel unit='PX' ui:field='root' styleName='{style.rootPanel}' addStyleNames='profile-body'>
+	<g:DockLayoutPanel unit='PX' ui:field='root' styleName='{style.rootPanel}'>
 <!-- 		<g:west size="192"> -->
 <!-- 			<v:NavigationViewNumworx ui:field='westPanel' /> -->
 <!-- 		</g:west> -->
 		<g:center>
 			<g:ScrollPanel ui:field='centerPanel' styleName='{style.centerPanel}'
-				addStyleNames='{style.centerBackground}'
+				addStyleNames='{style.centerBackground} profile-body'
 			>
 			 <g:FlowPanel>
 				<g:HorizontalPanel styleName='{style.itemPanel}'>
