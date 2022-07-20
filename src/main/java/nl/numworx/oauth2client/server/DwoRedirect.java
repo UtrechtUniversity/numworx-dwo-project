@@ -108,6 +108,7 @@ public class DwoRedirect extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 		String auth = req.getHeader("Authorization");
+		HttpSession session = req.getSession();
 		if (auth == null) auth = "None";
 		try {
 			if (auth.toLowerCase().startsWith("bearer "))
@@ -116,15 +117,17 @@ public class DwoRedirect extends HttpServlet {
 				String[] up = new String(Base64.getDecoder().decode(auth.substring(6))).split(":", 2);
 				StoredRestManager.getInstance().setBasicAuthString(up[0], up[1], null);
 			} else {
+				session.removeAttribute("dwologin.code");
 				resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 				return;
 			}
 			String code = SecureUserAccountManager.getBearerToken();
-			HttpSession session = req.getSession();
 			session.setAttribute("dwologin.code", code);
 			resp.sendError(HttpServletResponse.SC_NO_CONTENT);
 		} catch (Exception e) {
-			log("getBearerToken", e);
+			auth = auth + " / " + StoredRestManager.getInstance().getBasicAuthString();
+			log("getBearerToken " + auth, e);
+			session.removeAttribute("dwologin.code");
 			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 		} 
 	}
