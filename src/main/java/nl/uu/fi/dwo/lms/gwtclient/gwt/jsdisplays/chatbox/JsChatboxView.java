@@ -21,5 +21,11 @@ public class JsChatboxView implements ChatboxPresenter.Display {
 	@Override
 	public void setHelp(String url) {
 	}
-	
+
+	@Override public void setLogin(String user, String password) {
+		JsChatboxDisplay.setLogin(user, password);
+	}
+	@Override public void openUrl(String url) {
+		JsChatboxDisplay.openUrl(url);
+	}
 }
