@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-body > iframe {
+body > div > div > iframe.gwt-Frame {
 	width: 100%;
 	height: 100%;
 	border-width: 0px;
