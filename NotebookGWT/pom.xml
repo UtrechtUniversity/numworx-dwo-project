@@ -107,6 +107,6 @@
 		</plugins>
 	</build>
 	<properties>
-		<interactionVersion>0.1.13-SNAPSHOT</interactionVersion>
+		<interactionVersion>0.1.13</interactionVersion>
 	</properties>
 </project>
