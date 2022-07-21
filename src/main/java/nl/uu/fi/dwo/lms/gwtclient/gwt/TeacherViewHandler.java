@@ -161,9 +161,11 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
                   presenterFactory.getModulesPresenter().show();
                   break;
               case CHATBOX:
-            	  mainView.selectView(SelectedView.CHATBOX);
-            	  mainView.showChatboxView();
-            	  chatbox.get().init();
+            	  if (dwoGlobalVars.isPremium() && dwoGlobalVars.isTest()) {
+	            	  mainView.selectView(SelectedView.CHATBOX);
+	            	  mainView.showChatboxView();
+	            	  chatbox.get().init();
+            	  }
             	  break;
               case GOTO_URL:
                   mainView.selectView(SelectedView.MODULES);

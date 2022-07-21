@@ -4,12 +4,12 @@ import javax.inject.Inject;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 
-import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 
 public class ChatboxPresenter implements ValueChangeHandler<String> {
 
@@ -24,13 +24,14 @@ public class ChatboxPresenter implements ValueChangeHandler<String> {
 	final private DwoGlobalVars vars;
 	
 	private Display view;
-	private EventBus bus;
 	
 	
-	@Inject ChatboxPresenter(DwoGlobalVars vars) {
+	@Inject ChatboxPresenter(DwoGlobalVars vars, EventBus bus) {
 		this.vars = vars;
-		RestAuthenticator.instance.addValueChangeHandler(this);
-		init();
+		
+		//RestAuthenticator.instance.addValueChangeHandler(this);
+		bus.addHandlerToSource(ValueChangeEvent.getType(), RestAuthenticator.instance, this); // resettable eventbus, helaas werkt niet want Authenticator gebruikt andere bus
+		view.openUrl("about:blank");
 	}
 	
 	@Inject void setView(Display view) {
@@ -38,7 +39,13 @@ public class ChatboxPresenter implements ValueChangeHandler<String> {
 	}
 
 	public void init() {
-		String user = vars.getCurrentUser().getUserName();
+		DomUserFull u = vars.getCurrentUser();
+		if (u == null) {
+			view.setLogin("", "");
+			view.openUrl("about:blank");
+			return;
+		}
+		String user = u.getUserName();
 		String password = RestAuthenticator.instance.getAuthorization(); // access token of so
 		view.setLogin(user, strip(password));
 		
@@ -47,8 +54,15 @@ public class ChatboxPresenter implements ValueChangeHandler<String> {
 
 	@Override
 	public void onValueChange(ValueChangeEvent<String> event) {
-		String password = event.getValue();
-		view.setLogin(vars.getCurrentUser().getUserName(), strip(password));		
+		DomUserFull u = vars.getCurrentUser();
+		if (u != null) {
+			String password = event.getValue();
+			view.setLogin(u.getUserName(), strip(password));
+		}
+		else {
+			view.setLogin("", "");
+			view.openUrl("about:blank");			
+		}
 	}
 
 	private String strip(String password) {
