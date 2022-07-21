@@ -120,7 +120,11 @@ public class OAuth2Client implements EntryPoint {
                 String hash = getHash();
                 String redirect_uri = storage.getItem("redirect_uri");
 				storage.clear();
-				install(verifier,code, redirect_uri);
+				String logout = getToken();
+				int i = logout.lastIndexOf('/');
+				logout = logout.substring(0, i+1) + "logout.jsp";
+				
+				install(verifier,code, redirect_uri, logout);
 				code = "parent";
 				String url = endpoint + "?a="+URL.encodeQueryString(code) + search + hash;
 				insertFrame(url);
@@ -191,13 +195,13 @@ public class OAuth2Client implements EntryPoint {
 	}-*/;
 	
 	
-	private native void install(String verifier, String code, String redirect_uri) /*-{
-	    var params = { "code_verifier": verifier, "code": code, "redirect_uri": redirect_uri}
+	private native void install(String verifier, String code, String redirect_uri, String logout) /*-{
+	    var params = { "code_verifier": verifier, "code": code, "redirect_uri": redirect_uri, "logout": logout}
 		$wnd.getItem = function(key) {
 			return params[key];
 		}
         $wnd.logout = function() {
-            $wnd.location = "/dwo/saml/logout.jsp"
+            $wnd.location = params.logout;
         }
 	}-*/;
 }
