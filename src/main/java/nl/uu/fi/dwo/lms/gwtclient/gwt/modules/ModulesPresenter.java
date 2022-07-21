@@ -352,7 +352,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         } else {
           view.sendMessage("GOTO:");
           final RoleType role = RoleType.valueOf(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName()); // FIXME herontwerp getactive...
-          if (role == RoleType.STUDENT) return;
+          if (role == RoleType.STUDENT || role == RoleType.ANONYMOUS) return;
         }
       }
 // switch to other view.     
