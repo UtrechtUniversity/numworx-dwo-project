@@ -158,7 +158,7 @@ public class SchoolclassesPresenter {
         schoolClass.setSchoolClassName(name);
         schoolClass.setIconizer(showTree);
         schoolClass.setHasRegKey(hasRegKey);
-        schoolClass.setRegistrationKey(regKey);
+        schoolClass.setRegistrationKey(hasRegKey ? regKey : null);
         promise = manager.submitSchoolClass(schoolClass);
         // onSuccess calculate results and show.
         promise.then(new Success<Boolean,Void> () {
