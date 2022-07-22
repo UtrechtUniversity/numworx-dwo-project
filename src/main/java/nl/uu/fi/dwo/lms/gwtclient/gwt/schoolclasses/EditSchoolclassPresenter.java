@@ -111,7 +111,14 @@ public class EditSchoolclassPresenter {
             @Override
             public Promise<Void> call(Promise<DomSchoolClassFull> resolved) throws Exception {
                 //flip back to schoolclasses screen 
-                schoolClass = resolved.getValue();
+// Patch if null or ""
+            	schoolClass = resolved.getValue();
+                if (Boolean.FALSE.equals(schoolClass.getHasRegKey()))
+                {
+                	schoolClass.setRegistrationKey(""); // will set to true
+                }
+                if ("".equals(schoolClass.getRegistrationKey()))
+                	schoolClass.setHasRegKey(Boolean.FALSE); // will set to false
                 view.showSchoolClass(schoolClass);
                 showStudents();
                 showTeachers();
@@ -147,7 +154,7 @@ public class EditSchoolclassPresenter {
         fullSchoolClass.setSchoolClassName(name);
         fullSchoolClass.setIconizer(showTree);
         fullSchoolClass.setHasRegKey(hasRegKey);
-        fullSchoolClass.setRegistrationKey(regKey);
+        fullSchoolClass.setRegistrationKey(hasRegKey ? regKey : null);
         promise = manager.updateSchoolClass(fullSchoolClass);
         // onSuccess calculate results and show.
         promise.then(new Success<Boolean, Void>() {
