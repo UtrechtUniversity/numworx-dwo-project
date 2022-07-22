@@ -6,6 +6,7 @@ import nl.numworx.notebook.server.rest.File;
 import nl.numworx.notebook.server.rest.Folder;
 import nl.numworx.notebook.server.rest.Resource;
 import nl.numworx.notebook.server.rest.Server;
+import nl.numworx.notebook.server.rest.Tokens;
 import nl.numworx.notebook.server.rest.User;
 import nl.numworx.notebook.server.rest.Version;
 
@@ -14,6 +15,7 @@ public class HubAPITest extends TestCase {
 	HubAPI api;
 	
 	protected void setUp() throws Exception {
+		assertNotNull(System.getProperty(HubAPI.DWO_HUB_TOKEN));
 		api = new HubAPI();
 	}
 
@@ -69,8 +71,8 @@ public class HubAPITest extends TestCase {
 	
 	public void testGetToken() throws Exception {
 		String token;
-		token = api.getTokenFor("project_wim");
-		//token = api.getTokenFor("meesterwim"); // As admin?
+		Tokens tokens = api.getTokenFor("project_wim");
+		tokens = api.getTokenFor("meesterwim"); // As admin?
 	}
 	
 	public void testCreateToken() throws Exception {

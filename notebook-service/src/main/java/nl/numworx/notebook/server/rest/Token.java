@@ -8,5 +8,6 @@ public class Token {
 	public Instant expires_at;
 	public String user, service, roles[];
 	public String note;
+	public String kind;
 	
 }

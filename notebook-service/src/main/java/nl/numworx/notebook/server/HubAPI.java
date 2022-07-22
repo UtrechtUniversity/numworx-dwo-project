@@ -25,6 +25,7 @@ import nl.numworx.notebook.server.rest.Folder;
 import nl.numworx.notebook.server.rest.Server;
 import nl.numworx.notebook.server.rest.Token;
 import nl.numworx.notebook.server.rest.TokenRequest;
+import nl.numworx.notebook.server.rest.Tokens;
 import nl.numworx.notebook.server.rest.User;
 
 
@@ -42,8 +43,11 @@ public class HubAPI {
 			  .withBundle(new JavaDateTimeBundle())
 			  .create();
 	
-	String token = "token ffa09366b2d44a438cb3ead42f5ec5ef";
-	URI hubAPI = URI.create("https://hub-dev.dwo.nl/hub/api/");
+	final String token;
+	final URI hubAPI = URI.create(System.getProperty(DWO_HUB, "https://hub-dev.dwo.nl/hub/api/"));
+
+	public static final String DWO_HUB_TOKEN = "DWO_HUB_TOKEN";
+	public static final String DWO_HUB = "DWO_HUB";
 	
 	
 	  public HubAPI(String token2) {
@@ -51,7 +55,7 @@ public class HubAPI {
 	  }
 
 	  public HubAPI() {
-		  //token = "...." /// from environment
+		  this(System.getProperty(DWO_HUB_TOKEN));
 	  }
 
 	protected <T> T get(String path, Class<T> c) throws IOException {
@@ -243,9 +247,9 @@ public class HubAPI {
 		  return get("/user/" + user + "/api/contents/" + path, File.class);		  		  
 	  }
 	  
-	  public String getTokenFor(String user) throws IOException {
-		  Token token = get("users/" + user + "/tokens", Token.class);
-		  return null;
+	  public Tokens getTokenFor(String user) throws IOException {
+		  Tokens token = get("users/" + user + "/tokens", Tokens.class);
+		  return token;
 	  }
 
 	  public String createTokenFor(String user) throws IOException {
