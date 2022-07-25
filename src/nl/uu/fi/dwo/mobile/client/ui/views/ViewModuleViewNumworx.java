@@ -68,7 +68,6 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		this.rpc = rpc;
 		this.headerView = headerView;
 		this.seb = PARAMETERS.getSecureMode() == SecureMode.SEB;
-	    pfx = PARAMETERS.getResource("");
 	    instance = vars;
 	    activity = builder.loggingModule(loggingModule).build();
 	    initialize(activity.api());
@@ -129,8 +128,6 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	SimplePanel center;
 	@UiField(provided=true)
 	MenuItem user;
-	@UiField(provided=true)
-	String pfx;
 //	@UiField
 //	FocusPanel homeBtn;
 	@UiField

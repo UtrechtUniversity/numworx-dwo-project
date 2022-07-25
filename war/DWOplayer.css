@@ -205,3 +205,17 @@ div.listItem-dwo-separator {
         content: url('images/numworx/logo-Numworx-grijs2.svg');
 }
 
+.profile-subheaderType {
+	width: 40px;
+	vertical-align: top;
+	margin-left: -5px;
+	margin-top: 3px;
+	display: inline-block;
+}
+
+.lesstof .profile-subheaderType::before {
+		content: url('images/numworx/lesstof-numworx.svg');
+}
+.toets  .profile-subheaderType::before {
+		content: url('images/numworx/zelftoets-numworx.svg');
+}

@@ -1,6 +1,6 @@
 @eval favicon nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx.getFaviconUrl();
 @eval foldericon nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx.getFolderUrl();
-@external .status-busy, .status-retry;
+@external .status-busy, .status-retry, .lesstof, .toets;
 @def color10 #E4F2FB;
 @def color11 #D2E5F5;
 @def color12 #AAC1DC;

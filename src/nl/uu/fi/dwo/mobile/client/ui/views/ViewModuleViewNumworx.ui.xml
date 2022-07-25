@@ -2,7 +2,6 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:v="nl.uu.fi.dwo.mobile.client.ui.views"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:with field="pfx" type="java.lang.String" />
 	<ui:with field='rb'  type='nl.uu.fi.dwo.mobile.client.text.Text' />
 	
 	<ui:style field='t' src='TreeModuleViewNumworx.css' type='nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworxCss' />
@@ -71,7 +70,7 @@
 			display: inline-block;
 			margin-left: 22px;
 			padding-left: 10px;
-			margin-top: 8px;
+			margin-top: 6px;
 			padding-top: 2px;
 			padding-right:10px;
 		}
@@ -131,10 +130,11 @@
 		<g:north size="40">
 			  <g:FlowPanel ui:field="headerBottom" styleName='{style.headerBottom}' addStyleNames='{t.lesstof}'>
 			  		<g:FocusPanel ui:field='modules' styleName='{style.modules}' />
-			  		<g:Label styleName='{style.knop}' ui:field='scoType'><ui:text from='{rb.LESSTOF}'/></g:Label>
-			  		<g:Image styleName='{style.icon}' addStyleNames='{t.toets}' url="{pfx}images/numworx/zelftoets-numworx.svg"/>
-			  		<g:Image styleName='{style.icon}' addStyleNames='{t.lesstof}' url='{pfx}images/numworx/lesstof-numworx.svg' />
-			  		<g:Label ui:field='title' styleName='{style.title}'></g:Label>
+			  		<g:Label styleName='{style.knop}' addStyleNames='profile-subheaderLogo' ui:field='scoType'><ui:text from='{rb.LESSTOF}'/></g:Label>
+			  		<g:FlowPanel styleName='profile-subheaderType' />
+<!-- 			  		<g:Image styleName='{style.icon}' addStyleNames='{t.toets}' url="{pfx}images/numworx/zelftoets-numworx.svg"/> -->
+<!-- 			  		<g:Image styleName='{style.icon}' addStyleNames='{t.lesstof}' url='{pfx}images/numworx/lesstof-numworx.svg' /> -->
+			  		<g:Label ui:field='title' styleName='{style.title}' addStyleNames='profile-subheaderLabel'></g:Label>
 					<g:FocusPanel ui:field='up2Btn' styleName='{t.nav}'>
 						<g:InlineHTML><i class='fa fa-2x fa-arrow-up {t.navIcon} profile-headerIcon' ></i></g:InlineHTML>
 					</g:FocusPanel>
