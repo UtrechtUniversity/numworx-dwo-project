@@ -1,6 +1,10 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.LinkElement;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
@@ -12,6 +16,8 @@ import fi.dwo.gwt.lib.rest.CallManagers.PublicProfileManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicStatusManager;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import fi.dwo.gwt.lib.rest.util.Dwo2LocaleMessageGWTTranslator;
+
+import java.net.URLDecoder;
 import java.util.logging.Level;
 
 import java.util.logging.Logger;
@@ -182,6 +188,34 @@ public class BootPanelController {
       $wnd.jsResetMainApp()
     }-*/;
 
+    private static native String getBase() /*-{
+		return $wnd.deploy;
+	}-*/;
+
+	static void insertStylesheet(String href) {
+		LinkElement link = Document.get().createLinkElement();
+		link.setRel("stylesheet");
+		link.setType("text/css");
+		link.setHref(href);
+		Element head = getHead();
+		head.appendChild(link);
+	}
+
+	private static Element getHead() {
+		return Document.get().getElementsByTagName("head").getItem(0);
+	}
+
+    Promise<DomDwoProfileFull> insertcss(Promise<DomDwoProfileFull> p) {
+    	String css = p.getValue().getDwoProfileName();
+    	if (profile == 111) // het 'inf' profiel
+    	{
+    		css = URL.encodePathSegment(css);
+    		insertStylesheet( getBase() + css + ".css");    	
+    	}
+    	return p;
+    }
+    
+    
     
     private void resetPresenters(RoleType role, boolean single) {
         eventBus.removeHandlers();
@@ -380,6 +414,7 @@ public class BootPanelController {
         Promise<DomDwoProfileFull> promise = new PublicProfileManager().get(profile)
         .filter(v -> v != null);
         dwoGlobalVars.setProfile(promise);
+        promise.then(this::insertcss);
 
         //show main panel
         this.rootPanel = rootPanel;
