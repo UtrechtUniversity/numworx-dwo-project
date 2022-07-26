@@ -219,3 +219,25 @@ div.listItem-dwo-separator {
 .toets  .profile-subheaderType::before {
 		content: url('images/numworx/zelftoets-numworx.svg');
 }
+
+.profile-navigationFOLDER::before {
+		content: url('images/numworx/folder-numworx.svg');
+		width: 16px;
+		height: 16px;
+		vertical-align: top;
+		display: inline-block;
+}
+.profile-navigationMODULE::before {
+		content: url('images/numworx/module-numworx2.svg');
+		width: 16px;
+		height: 16px;
+		vertical-align: -4px;
+		display: inline-block;
+}
+.profile-navigationSCO::before {
+		content: url('images/numworx/activiteit_numworx2.svg');
+		width: 16px;
+		height: 16px;
+		vertical-align: -2px;
+		display: inline-block;	
+}

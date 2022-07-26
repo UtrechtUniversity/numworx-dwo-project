@@ -280,20 +280,20 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	}
 	private SafeHtml toSafeHTML(String string, Type type) {
 		
-		SafeHtmlBuilder builder = new SafeHtmlBuilder();
-		switch(type) {
-		case FOLDER: builder.appendHtmlConstant(treeItemIcon("images/numworx/folder-numworx.svg", "top"));
-		    break;
-		case MODULE: builder.appendHtmlConstant(treeItemIcon("images/numworx/module-numworx2.svg","-4px"));
-			break;
-		case SCO: builder.appendHtmlConstant(treeItemIcon("images/numworx/activiteit_numworx2.svg", "-2px"));
-		default:
-			break;
-		}
-		SafeHtml html = builder.toSafeHtml(); 
+//		SafeHtmlBuilder builder = new SafeHtmlBuilder();
+//		switch(type) {
+//		case FOLDER: builder.appendHtmlConstant(treeItemIcon("images/numworx/folder-numworx.svg", "top"));
+//		    break;
+//		case MODULE: builder.appendHtmlConstant(treeItemIcon("images/numworx/module-numworx2.svg","-4px"));
+//			break;
+//		case SCO: builder.appendHtmlConstant(treeItemIcon("images/numworx/activiteit_numworx2.svg", "-2px"));
+//		default:
+//			break;
+//		}
+//		SafeHtml html = builder.toSafeHtml(); 
 		return new SafeHtmlBuilder().
-				appendHtmlConstant("<span class='"+style.treeItem()+"'>").
-				append(html).
+				appendHtmlConstant("<span class='"+style.treeItem()+" profile-navigation" + type.name() + "'>").
+//				append(html).
 				appendEscaped(string).
 				appendHtmlConstant("</span>").
 				toSafeHtml();
