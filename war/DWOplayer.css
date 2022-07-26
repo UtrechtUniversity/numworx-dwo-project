@@ -241,3 +241,31 @@ div.listItem-dwo-separator {
 		vertical-align: -2px;
 		display: inline-block;	
 }
+
+.profile-login {
+		background-color: #8ebee6;
+}
+
+.profile-loginPanel {
+		background-color: #314770;
+		color: #AAC1DC;		
+}
+
+.profile-loginPanel button {
+		color: white;
+		background-color: #1B75BB;
+}
+
+.profile-loginLinks, .profile-loginLinks a {
+		color: white;
+}
+
+.profile-loginLogo > div::before {
+		content: url('images/numworx/login.png')
+}
+.profile-loginTitle::before {
+		content: url('images/numworx/logo-Numworx-wit-blauw3.svg');
+		width: 327px;
+		margin-left: -20px;
+		display: block;
+}

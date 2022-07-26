@@ -15,7 +15,6 @@
 		height: 100%;
 		margin: 0 auto;
 		position: relative;
-		background-color: #8ebee6;
 	}
 	.logo {
 		position: absolute;
@@ -54,7 +53,6 @@
 		font-family: Ubuntu, sans-serif;
 		font-weight: medium;
 		font-size: 13px;
-		color: #AAC1DC;
 	}
 	
 	.loginError .warning, 
@@ -89,7 +87,6 @@
 		width: 306px;
 		height: 260px;
 		left: 0px;
-		background-color: #314770;
 		position: absolute;
 		font-family: Ubuntu, sans-serif;
 		font-size: 18px;
@@ -140,8 +137,6 @@
 	}
 	
 	.button {
-		color: white;
-		background-color: #1B75BB;
 		height: 26px;
 		width: 126px;
 		right: 25px;
@@ -158,8 +153,6 @@
 	}
 	
 	.guestButton {
-		color: white;
-		background-color: #1B75BB;
 		height: 26px;
 		width: 126px;
 		right: 25px;
@@ -181,11 +174,9 @@
 		position: absolute;
 		font-size: 14px;
 		line-height: 27px;
-		color: white;
 	}
 
 	.links a {
-		color: white;
 		font-weight: medium;
 		font-family: Ubuntu, sans-serif;
 	}
@@ -238,17 +229,16 @@
 	}
 	</ui:style>
 	<g:FlowPanel styleName='{style.outer}'>
-	<g:FlowPanel styleName='{style.screen}'>
-		<g:HTML styleName="{style.logo}">
-			<img src='{login_png}' title="{build}"/>
+	<g:FlowPanel styleName='{style.screen}' addStyleNames='profile-login'>
+		<g:HTML styleName="{style.logo}" addStyleNames='profile-loginLogo'>
+			<div title="{build}"></div>
 		</g:HTML>
-		<g:HTML ui:field='logoPanel' styleName='{style.logotekst}'>
-			<img src='{logo_svg}' />
+		<g:HTML ui:field='logoPanel' styleName='{style.logotekst}' addStyleNames='profile-loginTitle'>
 			<p><ui:text from='{for_students}'/></p>
 		</g:HTML>
 		<g:Frame ui:field='messagePanel' styleName='{style.messages}' />
 		<g:FlowPanel styleName='{style.center}'>
-		<g:FlowPanel ui:field='loginPanel' styleName='{style.login}' addStyleNames='{style.loginError}'>
+		<g:FlowPanel ui:field='loginPanel' styleName='{style.login}' addStyleNames='{style.loginError} profile-loginPanel'>
 			<g:TextBox ui:field='username' styleName='{style.username}' ></g:TextBox>
 			<g:PasswordTextBox ui:field='password' styleName='{style.password}' ></g:PasswordTextBox>
 			<g:Button  ui:field='loginBtn' styleName='{style.button}' ><ui:text from='{rb.AANMELDEN}'/></g:Button>
@@ -256,7 +246,7 @@
 			<g:Label styleName='{style.warning}'><ui:text from='{rb.guestLoginWarning}' /></g:Label>
 			<g:Button ui:field='guestBtn' styleName='{style.guestButton}' ><ui:text from='{rb.loginAlsGast}' /></g:Button>
 		</g:FlowPanel>
-		<g:HTML ui:field='linksPanel' styleName='{style.links}' addStyleNames='{style.linksError}'>
+		<g:HTML ui:field='linksPanel' styleName='{style.links}' addStyleNames='{style.linksError} profile-loginLinks'>
 			<p><a href="/dwo/rest/public/user/requestNewPassword?language={rb.locale}&amp;back={back}"><ui:text from='{rb.vergeten}'/></a></p>
 			<p><a href="/dwo/register?locale={rb.locale}&amp;next={back}"><ui:text from='{rb.register}'/></a></p>
 			<p><a href='http://www.numworx.nl' target='_top'><ui:text from='{rb.numworx}'/></a></p>
