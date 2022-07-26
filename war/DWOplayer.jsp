@@ -33,7 +33,7 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
     <link type="text/css" rel="stylesheet" href="/dwo/tablet/DWOplayer.css">
-<% if ("111".equals(profile)) {%><link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/inf.css" ><%}%>    
+<% if ("111".equals(profile)) {%><link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/css/inf.css" ><%}%>    
     <meta name="gwt:property" content="locale=nl" >
     <script>
     	DWO_PROFILE_ID = <%=profile%>
