@@ -210,7 +210,7 @@ public class BootPanelController {
     	if (profile == 111) // het 'inf' profiel
     	{
     		css = URL.encodePathSegment(css);
-    		insertStylesheet( getBase() + css + ".css");    	
+    		insertStylesheet( getBase() + "css/" + css + ".css");    	
     	}
     	return p;
     }
