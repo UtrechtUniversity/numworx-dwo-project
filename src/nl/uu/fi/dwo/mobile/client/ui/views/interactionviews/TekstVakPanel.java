@@ -5520,10 +5520,12 @@ private Object CamelCase(String name) {
 //				w = breedte/2;
 			tekstVakken[0][0].setSize(w, tekstVakken[0][0].getHeight());
 			
-			this.breedte = w;
-			breedtes.set(0,(double)w);
-			
-			tekstVakken[0][0].reLayout();
+			if(Math.abs(this.breedte - w)>1 ) {
+				this.breedte = w;
+				breedtes.set(0,(double)w);
+				
+				tekstVakken[0][0].reLayout();
+			}
 		}
   }
 
@@ -5561,15 +5563,17 @@ private Object CamelCase(String name) {
     for(int i=0 ; i<aantalKolommen ; i++) {
     	breedtes.set(i,newBreedtes[i]);
     }
+    boolean veranderd = Math.abs(this.breedte - breedte)>1;
     if (visible)
     	this.breedte = breedte;
     else
     	this.breedte_oud = breedte;
-    for(int i=0 ; i<aantalKolommen ; i++) {
-    	for(int j=0 ; j<hoogtes.size() ; j++) {
-    		tekstVakken[j][i].reLayout();
-    	}
-    }
+    if(veranderd)
+	    for(int i=0 ; i<aantalKolommen ; i++) {
+	    	for(int j=0 ; j<hoogtes.size() ; j++) {
+	    		tekstVakken[j][i].reLayout();
+	    	}
+	    }
   }
 
 	@Override
