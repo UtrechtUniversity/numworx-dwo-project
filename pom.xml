@@ -207,7 +207,18 @@
 		    <version>2.3.2</version>
 		    <scope>test</scope>
 		</dependency>
-		
+		<dependency>
+			<groupId>nl.numworx.swingbrowser</groupId>
+			<artifactId>swingbrowser-api</artifactId>
+			<version>0.0.11-SNAPSHOT</version>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>nl.numworx.swingbrowser</groupId>
+			<artifactId>swingbrowser-jxb</artifactId>
+			<version>0.0.11-SNAPSHOT</version>
+		    <scope>test</scope>
+		</dependency>		
 	</dependencies>
 	<build>
 		<resources>
@@ -296,13 +307,11 @@
 								<artifactItem>
 									<groupId>nl.numworx.swingbrowser</groupId>
 									<artifactId>swingbrowser-api</artifactId>
-									<version>0.0.11-SNAPSHOT</version>
 									<destFileName>dwo/swingbrowser-api.jar</destFileName>
 								</artifactItem>
 								<artifactItem>
 									<groupId>nl.numworx.swingbrowser</groupId>
 									<artifactId>swingbrowser-jxb</artifactId>
-									<version>0.0.11-SNAPSHOT</version>
 									<destFileName>dwo/swingbrowser-jxb.jar</destFileName>
 								</artifactItem>
 							</artifactItems>
