@@ -5518,9 +5518,10 @@ private Object CamelCase(String name) {
 //			int w = breedte;
 //			if(breedte>responsiveToggleWidth) 
 //				w = breedte/2;
-			tekstVakken[0][0].setSize(w, tekstVakken[0][0].getHeight());
+			
 			
 			if(Math.abs(this.breedte - w)>1 ) {
+				tekstVakken[0][0].setSize(w, tekstVakken[0][0].getHeight());
 				this.breedte = w;
 				breedtes.set(0,(double)w);
 				
@@ -5540,7 +5541,9 @@ private Object CamelCase(String name) {
   }
 
   public void zetVolledigeBreedte1(int breedte) {
-    int aantalKolommen = breedtes.size();
+//	if(Math.abs(this.breedte - breedte)<2)
+//		return;
+	int aantalKolommen = breedtes.size();
     int huidigebreedte = visible ? this.breedte : this.breedte_oud;
 	int teVerdelenBreedte = huidigebreedte - (aantalKolommen-1)*cellSpaceColumn;
     double factor = 1.0*(breedte-(aantalKolommen-1)*cellSpaceColumn)/teVerdelenBreedte;
@@ -5549,12 +5552,12 @@ private Object CamelCase(String name) {
     for(int i=0 ; i<aantalKolommen ; i++) {
     	if(i==aantalKolommen-1) {
     		for(int j=0 ; j<hoogtes.size() ; j++) 
-    			tekstVakken[j][i].setSize((int)restbreedte, tekstVakken[0][0].getHeight());
+    			tekstVakken[j][i].setSize((int)restbreedte, tekstVakken[j][i].getHeight());
     		newBreedtes[i] = restbreedte;		
     	}
     	else {
     		for(int j=0 ; j<hoogtes.size() ; j++)
-    			tekstVakken[j][i].setSize((int)(breedtes.get(i)*factor), tekstVakken[0][0].getHeight());
+    			tekstVakken[j][i].setSize((int)(breedtes.get(i)*factor), tekstVakken[j][i].getHeight());
     		newBreedtes[i] = breedtes.get(i)*factor;
     		restbreedte = restbreedte-breedtes.get(i)*factor;
     	}
