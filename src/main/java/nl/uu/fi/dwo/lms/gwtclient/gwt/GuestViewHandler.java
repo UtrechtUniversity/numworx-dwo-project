@@ -6,10 +6,8 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter.Display;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
-import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 public class GuestViewHandler implements SwitchViewEventHandler {
 
@@ -20,7 +18,6 @@ public class GuestViewHandler implements SwitchViewEventHandler {
   @Inject EventBus eventBus;
   
   @Inject GuestViewHandler() {
-    // TODO Auto-generated constructor stub
   }
 
   @Override

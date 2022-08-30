@@ -1,16 +1,17 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
-import com.google.web.bindery.event.shared.EventBus;
-
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+import org.osgi.util.promise.Success;
+
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.web.bindery.event.shared.EventBus;
 
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
@@ -19,17 +20,11 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedDialogWithConfirmDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedMessageDialogWithConfirmEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedMessageDialogWithConfirmEvent.EventType;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
-import org.osgi.util.promise.Failure;
-import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
-import org.osgi.util.promise.Success;
 
 /**
  * Handler for BootPanel actions.

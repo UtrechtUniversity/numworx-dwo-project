@@ -423,7 +423,7 @@ public class DwoGlobalVars {
      * @param server the server to set
      */
     public void setServer(String server) {
-        this.server = server;
+        DwoGlobalVars.server = server;
     }
 
     /**
