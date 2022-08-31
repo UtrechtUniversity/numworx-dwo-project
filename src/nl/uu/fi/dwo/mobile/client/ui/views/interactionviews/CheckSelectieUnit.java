@@ -254,39 +254,95 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         {
         	if(formuleStrings!=null)
         	{
-        		
-        		VergelijkingMeerv[] v = new VergelijkingMeerv[formuleStrings.length];
-        		for(int h=0 ; h<formuleStrings.length ; h++)
-		        {
-        			boolean stapJuist = true;
-        			v[h] = FormuleParser.parseVergelijking(formuleStrings[h]);
-        			if(v[h]==null)
-        			{	juist = false;
-        				break;
-        			}
-        			
-        			for(int i=0 ; i<ipList.length ; i++)
-        	        {   Expressie e = ipList[i].isIpSelected() ? ipList[i].geefObjectWaarde() : new BasisExpressie(0);
-    	        		if(e!=null) 
-    	        		{	v[h] = v[h].substitueer(e, "V?("+(i+1)+")");
-    	        		}
-    	        		else 
-    	        		{	stapJuist = false;
+        		if(hasFeedback && answerModels!=null) {
+            		
+        			for(int m=0 ; m<answerModels.size() ; m++)
+        	        {	Map<String,Object> answerModel = answerModels.get(m);
+            			ObjectMap map = JSONUtilities.wrapMap(answerModel);
+            			String[] formuleStrings = map.getStringArray("formuleStrings");
+            			puntenFeedback = map.getInt("puntenFeedback");
+            			feedback = map.getString("feedback");
+            			goedHalfFout = map.getInt("goedHalfFout");
+            			
+            			boolean modelFits = true;
+            			
+            			VergelijkingMeerv[] v = new VergelijkingMeerv[formuleStrings.length];
+    	        		for(int h=0 ; h<formuleStrings.length ; h++)
+    			        {
+    	        			boolean stapJuist = true;
+    	        			v[h] = FormuleParser.parseVergelijking(formuleStrings[h]);
+    	        			if(v[h]==null)
+    	        			{	modelFits = false;
+    	        				break;
+    	        			}
+    	        			
+    	        			for(int i=0 ; i<ipList.length ; i++)
+    	        	        {   Expressie e = ipList[i].isIpSelected() ? ipList[i].geefObjectWaarde() : new BasisExpressie(0);
+    	    	        		if(e!=null) 
+    	    	        		{	v[h] = v[h].substitueer(e, "V?("+(i+1)+")");
+    	    	        		}
+    	    	        		else 
+    	    	        		{	stapJuist = false;
+    	    	        			break;
+    	    	        		}
+    	        	        	ingevuld = ingevuld || ipList[i].isIpSelected();
+    	        	        }
+    	        			
+    	        			try {
+    							stapJuist = v[h].isOplossing(new BasisExpressie(1.212131415),"q");
+    						} catch (RestartException e) {
+    							stapJuist = false; // eigenlijk "weet niet"
+    						}
+    	        			modelFits = modelFits && stapJuist;
+    	        			if(!modelFits) break;
+    			        }
+    	        		if(modelFits) {
+    	        			juist = goedHalfFout == 0;
+    	        			half = goedHalfFout == 1;
     	        			break;
     	        		}
-        	        	ingevuld = ingevuld || ipList[i].isIpSelected();
-        	        }
-        			
-        			try {
-						stapJuist = v[h].isOplossing(new BasisExpressie(1.212131415),"q");
-					} catch (RestartException e) {
-						stapJuist = false; // eigenlijk "weet niet"
-					}
-        			juist = juist && stapJuist;
-        			if(!juist) break;
-		        }
-        	}
-        	else juist = false;
+    	        		else {
+            				puntenFeedback = 0;
+            				feedback = "";
+            				juist = false;
+            				half = false;
+            			}
+    	        	 }
+        		}
+        		else {
+	        		VergelijkingMeerv[] v = new VergelijkingMeerv[formuleStrings.length];
+	        		for(int h=0 ; h<formuleStrings.length ; h++)
+			        {
+	        			boolean stapJuist = true;
+	        			v[h] = FormuleParser.parseVergelijking(formuleStrings[h]);
+	        			if(v[h]==null)
+	        			{	juist = false;
+	        				break;
+	        			}
+	        			
+	        			for(int i=0 ; i<ipList.length ; i++)
+	        	        {   Expressie e = ipList[i].isIpSelected() ? ipList[i].geefObjectWaarde() : new BasisExpressie(0);
+	    	        		if(e!=null) 
+	    	        		{	v[h] = v[h].substitueer(e, "V?("+(i+1)+")");
+	    	        		}
+	    	        		else 
+	    	        		{	stapJuist = false;
+	    	        			break;
+	    	        		}
+	        	        	ingevuld = ingevuld || ipList[i].isIpSelected();
+	        	        }
+	        			
+	        			try {
+							stapJuist = v[h].isOplossing(new BasisExpressie(1.212131415),"q");
+						} catch (RestartException e) {
+							stapJuist = false; // eigenlijk "weet niet"
+						}
+	        			juist = juist && stapJuist;
+	        			if(!juist) break;
+			        }
+        		}
+	        }
+	        else juist = false;
         	
         }
         else
@@ -311,6 +367,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
     	        {	Map<String,Object> answerModel = answerModels.get(m);
         			ObjectMap map = JSONUtilities.wrapMap(answerModel);
         			boolean[] juisteSelecties = map.getBooleanArray("juisteSelecties");
+        			String[] formuleStrings = map.getStringArray("formuleStrings");
         			puntenFeedback = map.getInt("puntenFeedback");
         			feedback = map.getString("feedback");
         			goedHalfFout = map.getInt("goedHalfFout");
