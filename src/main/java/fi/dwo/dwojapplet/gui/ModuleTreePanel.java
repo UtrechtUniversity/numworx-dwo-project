@@ -542,7 +542,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
                     CourseMap[] courses;
                     courses = course.getChildren();
                     if (!DwoHelper.isPremium()) {
-                      List<CourseMap> list = Arrays.asList(courses).stream().filter(c -> !c.isNotVisible()).collect(Collectors.toList());
+                      List<CourseMap> list = Arrays.asList(courses).stream().filter(new IsVisibleCourse()).collect(Collectors.toList());
                       courses = list.toArray(new CourseMap[list.size()]);
                     }
                     

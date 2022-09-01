@@ -137,10 +137,11 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
         //setBorder(BorderFactory.createLineBorder(Color.red));
     }
 
+    
     private void initialize(Descriptor dwoProfile, CourseMap[] courseList) {
         CourseMap[] courses = courseList;
         if (!DwoHelper.isPremium()) {
-          List<CourseMap> list = Arrays.asList(courses).stream().filter(c -> !c.isNotVisible()).collect(Collectors.toList());
+          List<CourseMap> list = Arrays.asList(courses).stream().filter(new IsVisibleCourse()).collect(Collectors.toList());
           courses = list.toArray(new CourseMap[list.size()]);
         }
         
