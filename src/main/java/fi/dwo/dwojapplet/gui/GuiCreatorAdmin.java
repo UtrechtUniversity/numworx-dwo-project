@@ -207,6 +207,14 @@ public class GuiCreatorAdmin extends GuiCreator {
         return dwo.deleteCourse(course, courseManager, false);
     }
 
+    @Override
+    public boolean trashCourse(Course course) {
+      CourseMap c = course.getParentMap();
+      boolean b = dwo.deleteCourse(course,courseManager, true);
+      getMainPanel().getCenter().updateMap(c);
+      return b;
+    }
+
     /**
      * @param sco
      * @return boolean

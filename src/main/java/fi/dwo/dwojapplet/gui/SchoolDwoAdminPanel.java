@@ -169,8 +169,12 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
         public Component getTableCellRendererComponent(JTable table,
                 Object value, boolean selected, boolean hasFocus, int row, int col) {
             Image image = (Image) value;
+           if (image == null) {
+             setIcon(null);
+           } else {
             icon.setImage(image);
             setIcon(icon);
+           }
             setHorizontalAlignment(SwingConstants.CENTER);
             setOpaque(true);
             Object[] arguments = new Object[]{table.getValueAt(row, 0)};

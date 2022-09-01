@@ -90,9 +90,13 @@ class CourseMapper  implements Comparator<Course> {
 
     }
 
+    
 
     private ACL effectiveAccess(Course course) {
-      if (course.getSchoolID() == 0) return ACL.READ; // write if profileadmin/dwoadmin
+      if (course.getSchoolID() == 0) {
+        if (hasAdminRight()) return ACL.WRITE;
+        return ACL.READ; // FIXED write if profileadmin/dwoadmin
+      }
       RoleType role = getRoleType();
       switch(role) {
         case STUDENT: return ACL.READ; // oe ACL.NONE if not in classcourse
@@ -126,6 +130,11 @@ class CourseMapper  implements Comparator<Course> {
         }
       }    
       return ACL.NONE;
+    }
+
+    @SuppressWarnings("deprecation")
+    private boolean hasAdminRight() {
+      return DwoHelper.isAdminLoggedIn() || DwoHelper.getCurrentFacadeUser().hasRight(User.PROFILE_ADMIN_RIGHT);
     }
 
     int compare(ACL a, ACL b) {
