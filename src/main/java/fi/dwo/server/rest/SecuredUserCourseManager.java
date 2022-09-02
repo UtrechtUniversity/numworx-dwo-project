@@ -61,6 +61,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
@@ -461,7 +462,13 @@ public class SecuredUserCourseManager {
     @Path("/getTrashedChildren")
     @Produces({"application/json"})
     public List<DomCourseStudent> getTrashedCourses(@Context SecurityContext sc, RestCourse rest, @Context UriInfo info) throws Dwo2Exception {
-    	SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher();
+    	UserState_HR_R_S_SG_U hasRole = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
+    	if (hasRole.getRoleType() != RoleType.ADMIN) {
+    		SchoolAdminTeacherState_HR_R_S_SG_U state = hasRole.buildSchoolAdminTeacher();
+    	} else {
+    		DwoAdminState_HR_R_S_SG_U state = hasRole.buildDwoAdmin();
+    		state.addDwoProfile(rest.getDomDwoProfile()).addCourse(rest.getDomCourse());
+    	}
     	Long courseId = MySQLPersistenceId.getNativeId(rest.getDomCourse());
     	PersistentCourse c = CourseManager.findEntity(courseId);
 // TODO Security: profile match, school match, ACL?

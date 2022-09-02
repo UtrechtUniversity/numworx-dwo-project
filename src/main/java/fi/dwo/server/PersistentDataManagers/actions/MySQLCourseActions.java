@@ -93,7 +93,7 @@ public class MySQLCourseActions {
         pc.setLastChangeTimeStamp(course.getLastChangeTimeStamp()); // Optimistic locking?
     else 
         pc.setLastChangeTimeStamp(System.currentTimeMillis()); // FIXME Gert is dit de bedoeling of JPA managed?
-
+    pc.setTrashID(0L);
     pc=CourseManager.edit(pc);
     pcd = CourseDataManager.edit(pcd);
     course = pc.buildDomCourseFull();

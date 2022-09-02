@@ -25,4 +25,8 @@ public interface DwoAdminActions {
 
   List<PersistentStudentModelContext> getReducedStudentModels(Context context);
 
+  Boolean trashCourse(Context context);
+
+  Boolean trashSco(Context context);
+
 }

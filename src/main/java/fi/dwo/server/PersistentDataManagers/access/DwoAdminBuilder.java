@@ -177,6 +177,10 @@ class DwoAdminBuilder
   public Boolean removeSco() {
     return actions.removeSco(instance.getContext());
   }
+  @Override
+  public Boolean trashSco() {
+    return actions.trashSco(instance.getContext());
+  }
 
   @Override
   public DomCourseFull update(DomCourseFull course) throws Dwo2Exception {
@@ -186,6 +190,11 @@ class DwoAdminBuilder
   @Override
   public Boolean removeCourse() {
     return actions.removeCourse(instance.getContext());
+  }
+
+  @Override
+  public Boolean trashCourse() {
+    return actions.trashCourse(instance.getContext());
   }
 
   @Override

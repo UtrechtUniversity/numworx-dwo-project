@@ -168,7 +168,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
         LOG.log(Level.SEVERE,
             "course null for courseid = " + courseID + " sccid = " + scc.getClassCourseID());
       } else {
-        if (profileID.equals(course.getDwoProfileID())) {
+        if (course.getTrashID() == 0L && profileID.equals(course.getDwoProfileID())) {
           DomClassCourse dcc = scc.buildDomClassCourse();
           classCourseMap.put(dcc.getId(), dcc);
           DomCourseStudent dcs = cb.apply(course);

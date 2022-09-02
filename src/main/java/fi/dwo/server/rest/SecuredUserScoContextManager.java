@@ -143,7 +143,11 @@ public class SecuredUserScoContextManager {
     @Produces({"application/json"})
     public List<DomScoContext> getTrashedScos(@Context SecurityContext sc, RestCourse rest, @Context UriInfo info) throws Dwo2Exception {
     	UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
-    	state.buildSchoolAdminTeacher();
+    	if (state.getRoleType() == RoleType.ADMIN) {
+    		state.buildDwoAdmin().addDwoProfile(rest.getDomDwoProfile()).addCourse(rest.getDomCourse());
+    	} else {
+    		state.buildSchoolAdminTeacher();
+    	}
 		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
 		DomCourse domCourse = rest.getDomCourse();
 		long pid = MySQLPersistenceId.getNativeId(domDwoProfile);

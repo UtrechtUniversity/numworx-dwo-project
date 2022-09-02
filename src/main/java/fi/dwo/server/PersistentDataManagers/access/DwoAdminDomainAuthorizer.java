@@ -7,7 +7,6 @@ import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
-import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
@@ -27,6 +26,7 @@ public class DwoAdminDomainAuthorizer {
     DomScoContextFull add(DomScoContextFull scoContext, DomScoData scoData) throws Dwo2Exception;
     DomCourseFull update(DomCourseFull course) throws Dwo2Exception;
     Boolean removeCourse();
+	Boolean trashCourse();
 
   }
 
@@ -34,6 +34,7 @@ public class DwoAdminDomainAuthorizer {
     DomScoContextFull update(DomScoContextFull scoContext, DomScoData scoData, Boolean delete);
 
     Boolean removeSco();
+	Boolean trashSco();
 
   }
 

@@ -62,4 +62,15 @@ public class SecuredDwoAdminCourseManager {
             .addDwoProfile(rest.getDomDwoProfile());
     return state.addCourse(rest.getDomCourse()).removeCourse();
   }
+
+  @PUT
+  @Path("trash")
+  @Produces({"application/json"})
+  public Boolean trash(@Context SecurityContext sc, RestCourse rest) throws Dwo2Exception {
+    DwoAdminState_HR_P_R_S_SG_U state =
+        AnonDomainAuthorizer.build().submitUser(sc)
+            .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN).buildDwoAdmin()
+            .addDwoProfile(rest.getDomDwoProfile());
+    return state.addCourse(rest.getDomCourse()).trashCourse();
+  }
 }

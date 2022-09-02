@@ -45,6 +45,16 @@ public class MySQLDwoAdminActions implements DwoAdminActions {
     MySQLScoContextActions.remove(pc,c);
     return Boolean.TRUE;
   }
+  @Override
+  public Boolean trashSco(Context context) {
+    PersistentScoContext pc = context.getAdminCtx().scoContext;
+    if(pc == null) {
+      return Boolean.FALSE;
+    }
+    PersistentCourse c = context.getAdminCtx().course;
+    MySQLScoContextActions.trash(pc,c);
+    return Boolean.TRUE;
+  }
 
   @Override
   public DomCourseFull add(Context context, DomCourseFull course) {
@@ -65,6 +75,17 @@ public class MySQLDwoAdminActions implements DwoAdminActions {
       return Boolean.TRUE;
     } else {
       MySQLCourseActions.remove(course);
+      return Boolean.TRUE;
+    }
+  }
+
+  @Override
+  public Boolean trashCourse(Context context) {
+    PersistentCourse course = context.getAdminCtx().course;
+    if(course == null) {
+      return Boolean.TRUE;
+    } else {
+      MySQLCourseActions.trash(course);
       return Boolean.TRUE;
     }
   }

@@ -69,4 +69,17 @@ public class SecuredDwoAdminScoContextManager {
         return state.addScoContext(scoContext).removeSco();
 	  
 	}
+	@PUT
+	@Path("trash")
+	@Produces({"application/json"})
+	public Boolean trash(@Context SecurityContext sc, RestScoContext rest) throws Dwo2Exception {
+      DwoAdminState_HR_P_R_S_SG_U state = AnonDomainAuthorizer.build()
+          .submitUser(sc)
+          .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN)
+          .buildDwoAdmin().addDwoProfile(rest.getDomDwoProfile());
+
+        DomScoContext scoContext = rest.getDomScoContext();
+        return state.addScoContext(scoContext).trashSco();
+	  
+	}
 }
