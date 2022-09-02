@@ -91,4 +91,18 @@ public class SecureDwoAdminScoContextManager extends AbstractScoContextManager {
         new Object[] {RestAuthenticator.getInstance().getUsername()});
     return result;
   }
+
+	@Override
+	public Boolean trash(DomScoContext sco, DomDwoProfile profile) throws Dwo2Exception {
+	    RestScoContext rest = new RestScoContext();
+	    rest.setDomDwoProfile(profile);
+	    rest.setDomScoContext(sco);
+	    rest.setRestContext(context);
+	    Boolean result = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/scoContext/trash",
+	        Boolean.class, rest);
+	    LOG.log(Level.FINE, "Removed sco for the dwoadmin with username {0}.",
+	        new Object[] {RestAuthenticator.getInstance().getUsername()});
+	    return result;
+	}
+  
 }
