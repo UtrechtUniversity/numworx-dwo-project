@@ -215,6 +215,14 @@ public class GuiCreatorAdmin extends GuiCreator {
       return b;
     }
 
+    @Override
+    public boolean trashSco(Sco sco) {
+      Course c = sco.getCourse();
+      boolean b = dwo.deleteSco(sco,scoManager, true);
+      getMainPanel().getCenter().updateCourse(c);
+      return b;
+    }
+
     /**
      * @param sco
      * @return boolean
@@ -414,6 +422,7 @@ public class GuiCreatorAdmin extends GuiCreator {
     public CenterSubPanel getCourseManagementPanel(CourseMap map) {
         CourseManagementPanel panel = new CourseManagementPanel(map.getChildren(), map);
         panel.setMap(map);
+        panel.addTrash();
         return panel;
     }
 

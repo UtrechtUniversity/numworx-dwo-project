@@ -127,6 +127,7 @@ public class AccessControlAction extends GuiAction {
   
   private boolean hasFullAccess(Course c) {
     if (isSchoolAdmin()) return true;
+    if (DwoHelper.isAdminLoggedIn()) return false;
     Set<PersistenceId> set = new HashSet<>();
     set.add(DwoHelper.getCurrentUser().getId());
     set.add(school.getId());
