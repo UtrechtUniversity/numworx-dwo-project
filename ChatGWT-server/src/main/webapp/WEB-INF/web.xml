@@ -4,15 +4,6 @@
   version="2.5">
 
 	<!-- Servlets -->
-  <servlet>
-    <servlet-name>greetServlet</servlet-name>
-    <servlet-class>nl.uu.fi.dwo.lms.chatgwt.GreetingServiceImpl</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/chatgwt/greet</url-pattern>
-  </servlet-mapping>
 
 	<!-- Default page to serve -->
   <welcome-file-list>

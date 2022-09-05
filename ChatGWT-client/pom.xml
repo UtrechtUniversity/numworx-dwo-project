@@ -41,6 +41,7 @@
         <configuration>
           <moduleName>nl.uu.fi.dwo.lms.chatgwt.ChatGWT</moduleName>
           <moduleShortName>chatgwt</moduleShortName>
+          <style>PRETTY</style>
         </configuration>
       </plugin>
     </plugins>
