@@ -24,6 +24,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckValueUnit;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.GetallenlijnSprongPanel;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.ScoreWidget;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
 // Deprecated import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.MC2View;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.SymboolPanel;
@@ -463,6 +464,10 @@ public class TekstBuffer
 		case 65:
 			//if(true) return new nl.numworx.notebookgwt.client.NotebookGWT(currentVakGegevens, randomVarWaarden, volleBreedtes[huidigeKolom]);
 			return x(map, new StubView(activity, "NotebookGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
+		case 66:
+			return x(map, new ScoreWidget(activity, currentVakGegevens, randomVarNamen, randomVarWaarden));
+		
+		
 		}
 
 		if (soortVak == 0)
