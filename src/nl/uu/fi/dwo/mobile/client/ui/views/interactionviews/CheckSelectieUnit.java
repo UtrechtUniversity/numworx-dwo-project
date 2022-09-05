@@ -266,6 +266,13 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
             			
             			boolean modelFits = true;
             			
+            			if(formuleStrings==null) {
+            				juist = goedHalfFout == 0;
+    	        			half = goedHalfFout == 1;
+    	        			break;
+            			}
+            				
+            			
             			VergelijkingMeerv[] v = new VergelijkingMeerv[formuleStrings.length];
     	        		for(int h=0 ; h<formuleStrings.length ; h++)
     			        {
