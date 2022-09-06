@@ -21,6 +21,14 @@ import com.stanziq.strophe.client.Connection.StatusCallback;
 import com.stanziq.strophe.client.Element;
 import com.stanziq.strophe.client.Handler;
 
+import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
+import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
+import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
+import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
+import nl.uu.fi.dwo.keyboard.client.DWOCombinedKeyboardFactory;
+import nl.uu.fi.dwo.keyboard.client.KeyboardFactory;
+import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
 import nl.uu.fi.dwo.lms.chatgwt.util.Base64;
 import nl.uu.fi.dwo.lms.chatgwt.util.MD5;
 
@@ -35,7 +43,7 @@ public class ChatGWT implements EntryPoint {
 	
 	
 	
-	class ChatHandler extends Handler<Element> {
+	class ChatMessage extends Handler<Element> {
 
 		@Override
 		public boolean handle(Element element) {
@@ -52,13 +60,7 @@ public class ChatGWT implements EntryPoint {
 				panel.add(afzender);
 				Label message = new Label(body.getText());
 				panel.add(message);
-
-				LOG.info("ECHOBOT: I got a message from " + from + ": " + body.getText());
-//				String[][] attributes = { { "to", from }, { "from", to }, { "type", "chat" } };
-//				Builder reply = Builder.$msg(attributes).cnode(body.copy());
-//				connection.send(reply.tree());
-
-//				LOG.info("ECHOBOT: I sent " + from + ": " + body.getText());
+				LOG.info("I got a message from " + from + ": " + body.getText());
 			}
 			return true;
 		}
@@ -73,7 +75,7 @@ public class ChatGWT implements EntryPoint {
 			
 			if (status == Status.CONNECTED) {
 				LOG.info("start talking");
-				Handler<com.stanziq.strophe.client.Element> handler = new ChatHandler();
+				Handler<com.stanziq.strophe.client.Element> handler = new ChatMessage();
 				connection.addHandler(null, "message", null, null, null, handler);
 				Builder pres = Builder.$pres(null);
 	            connection.send(pres);
@@ -83,13 +85,303 @@ public class ChatGWT implements EntryPoint {
 		
 	}
 	
-	
+	class ChatEditor implements FormuleEditorIF {
+
+		@Override
+		public void clearAll() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void insert(String text) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public FormuleFont getDefaultFont() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void setFont(FormuleFont font) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void setCurrentElementRepaint() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void enter() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void removeCurrentElement() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void removeNextElement() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void cursorToLeft() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void cursorToLeftShift() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void cursorToRight() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void cursorToRightShift() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void cursorUp() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void cursorDown() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void insert(char charAt) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public String getSelectionString() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void knip(FormuleClipboardIF clip) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void kopieer(FormuleClipboardIF clip) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void plak(FormuleClipboardIF clip) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void macht() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void wortel() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void breuk() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void kwadraat() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void ndewortel() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void haakjes() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void integraal() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void prv() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void ndelog() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void abs() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void subscript() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void bin() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void diff() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void diff_partial() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void limiet0() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void limiet1() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void limiet2() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void primitieve() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void conjug() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void sigma() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void stelsel() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void tab() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void shiftTab() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void stelsel(int aantalRijen) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void vectornotatie() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void vector() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void vector(int aantalRijen) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void matrix() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void matrix(int aantalRijen, int aantalKolommen) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
 	private Connection connection;
 	private TextBox username;
 	private TextBox password;
 	private VerticalPanel panel;
 	private TextBox input;
-	private String jid;
+	private ChatUser jid;
 	/**
 	 * This is the entry point method.
 	 */
@@ -113,6 +405,14 @@ public class ChatGWT implements EntryPoint {
 		input.addClickHandler(this::onClickInput);
 		RootPanel.get().add(input);		
 		
+		// keyboard:
+		KeyboardFactory factory = new DWOCombinedKeyboardFactory();
+		factory.setPremium(true);
+		
+		AbstractKeyboard keyboard = factory.getKeyboard();
+		RootPanel.get().add(keyboard);		
+		keyboard.setEnterType(EnterType.ENTER);
+		keyboard.setEditor(new ChatEditor());
 	}
 
 
@@ -122,23 +422,22 @@ public class ChatGWT implements EntryPoint {
 		
 		StatusCallback callback = new ChatStatusCallback();
 		String u = username.getValue();
-		jid = u + "@" + DOMAIN;
+		jid = new ChatUser(u + "@" + DOMAIN);
 		String password = this.password.getValue();
 		// password = base64( u + ":" + md5(password))
 		password = MD5.md5(password);
 		password = u + ":" + password;
 		password = Base64.btoa(password);
 
-		connection.connect(jid, password, callback);		
+		connection.connect(jid.jid, password, callback);		
 	}
 
 	private void onClickInput(ClickEvent event) {
 		String value = input.getValue();
 		LOG.info("send " + value);
 		
-		String[][] attributes = { { "to", "project_wim@" + DOMAIN }, { "from", jid  }, { "type", "chat" } };
-		Element body = Element.xmlTextNode(value);
-		Builder reply = Builder.$msg(attributes).cnode(body);
+		String[][] attributes = { { "to", "project_wim@" + DOMAIN }, { "type", "chat" } };
+		Builder reply = Builder.$msg(attributes).c("body",null).t(value);
 		connection.send(reply);
 	}
 	
