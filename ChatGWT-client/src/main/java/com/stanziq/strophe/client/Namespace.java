@@ -24,7 +24,7 @@
  */
 package com.stanziq.strophe.client;
 
-enum Namespace {
+public enum Namespace {
 	HTTPBIND("http://jabber.org/protocol/httpbind"),
 	BOSH("urn:xmpp:xbosh"),
 	CLIENT("jabber:client"),

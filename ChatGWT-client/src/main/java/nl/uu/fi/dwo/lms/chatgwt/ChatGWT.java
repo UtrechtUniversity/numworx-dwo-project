@@ -20,6 +20,7 @@ import com.stanziq.strophe.client.Connection.Status;
 import com.stanziq.strophe.client.Connection.StatusCallback;
 import com.stanziq.strophe.client.Element;
 import com.stanziq.strophe.client.Handler;
+import com.stanziq.strophe.client.Namespace;
 
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
@@ -28,6 +29,7 @@ import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
 import nl.uu.fi.dwo.keyboard.client.DWOCombinedKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.KeyboardFactory;
+import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
 import nl.uu.fi.dwo.lms.chatgwt.util.Base64;
 import nl.uu.fi.dwo.lms.chatgwt.util.MD5;
@@ -38,29 +40,29 @@ import nl.uu.fi.dwo.lms.chatgwt.util.MD5;
 public class ChatGWT implements EntryPoint {
 	
 	private static String DOMAIN = "chat-dev.dwo.nl";
+	private static String ROOMS = "conference." + DOMAIN;
 	private static String BOSH = "wss://chat-dev.dwo.nl/xmpp-websocket";
 	private static Logger LOG = Logger.getLogger(ChatGWT.class.getName());
 	
-	
+	private ChatRoom room = new ChatRoom("klas@" + ROOMS);
 	
 	class ChatMessage extends Handler<Element> {
 
 		@Override
 		public boolean handle(Element element) {
-			LOG.info("received " + element);
+			LOG.info("received " + element.serialize());
 //			String to = element.getAttribute("to");
 			String from = element.getAttribute("from");
 			String type = element.getAttribute("type");
 
 			NodeList<com.google.gwt.dom.client.Element> elems = element.getElementsByTagName("body");
 
-			if ((type == null ? "chat" == null : type.equals("chat")) && elems.getLength() > 0) {
+			if (("chat".equals(type)||"groupchat".equals(type)) && elems.getLength() > 0) {
 				Element body = (Element) elems.getItem(0);
 				Label afzender = new Label("From: " + from);
 				panel.add(afzender);
 				Label message = new Label(body.getText());
 				panel.add(message);
-				LOG.info("I got a message from " + from + ": " + body.getText());
 			}
 			return true;
 		}
@@ -78,6 +80,10 @@ public class ChatGWT implements EntryPoint {
 				Handler<com.stanziq.strophe.client.Element> handler = new ChatMessage();
 				connection.addHandler(null, "message", null, null, null, handler);
 				Builder pres = Builder.$pres(null);
+	            connection.send(pres);
+// Add to room	            
+	            pres = Builder.$pres(new String[][] { {"to", room.jid + "/" + chatUser.nickName }});
+	            pres.c("x", new String[][] {{ "xmlns", Namespace.MUC.toString() }});
 	            connection.send(pres);
 			}
 			
@@ -381,7 +387,7 @@ public class ChatGWT implements EntryPoint {
 	private TextBox password;
 	private VerticalPanel panel;
 	private TextBox input;
-	private ChatUser jid;
+	private ChatUser chatUser;
 	/**
 	 * This is the entry point method.
 	 */
@@ -397,13 +403,20 @@ public class ChatGWT implements EntryPoint {
 		Button btn = new Button("LOGIN");
 		btn.addClickHandler(this::onClickLogin);
 		RootPanel.get().add(btn);
+		btn = new Button("LOGOUT");
+		btn.addClickHandler(this::onClickLogout);
+		RootPanel.get().add(btn);
 		
 		panel = new VerticalPanel();
 		RootPanel.get().add(panel);
 		
 		input = new TextBox();
-		input.addClickHandler(this::onClickInput);
 		RootPanel.get().add(input);		
+		btn = new Button("SEND");
+		btn.addClickHandler(this::onClickInput);
+		RootPanel.get().add(btn);
+		
+		
 		
 		// keyboard:
 		KeyboardFactory factory = new DWOCombinedKeyboardFactory();
@@ -415,28 +428,31 @@ public class ChatGWT implements EntryPoint {
 		keyboard.setEditor(new ChatEditor());
 	}
 
-
+	private void onClickLogout(ClickEvent event) {
+		connection.disconnect("logout");
+		connection = null;
+	}
 
 	private void onClickLogin(ClickEvent event) {
 		connection = new Connection(BOSH);
 		
 		StatusCallback callback = new ChatStatusCallback();
 		String u = username.getValue();
-		jid = new ChatUser(u + "@" + DOMAIN);
+		chatUser = new ChatUser(u + "@" + DOMAIN);
 		String password = this.password.getValue();
 		// password = base64( u + ":" + md5(password))
 		password = MD5.md5(password);
 		password = u + ":" + password;
 		password = Base64.btoa(password);
 
-		connection.connect(jid.jid, password, callback);		
+		connection.connect(chatUser.jid, password, callback);		
 	}
 
 	private void onClickInput(ClickEvent event) {
 		String value = input.getValue();
 		LOG.info("send " + value);
 		
-		String[][] attributes = { { "to", "project_wim@" + DOMAIN }, { "type", "chat" } };
+		String[][] attributes = { { "to", room.jid }, { "type", "groupchat" } };
 		Builder reply = Builder.$msg(attributes).c("body",null).t(value);
 		connection.send(reply);
 	}
