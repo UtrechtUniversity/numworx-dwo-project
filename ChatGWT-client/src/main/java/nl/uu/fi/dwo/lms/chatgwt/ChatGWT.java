@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.chatgwt;
 
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -411,7 +412,19 @@ public class ChatGWT implements EntryPoint {
 		RootPanel.get().add(panel);
 		
 		input = new TextBox();
-		RootPanel.get().add(input);		
+		RootPanel.get().add(input);	
+		
+		StubEditor editor = new StubEditor();
+		
+		HashMap<String, Object> data = new HashMap<>();
+		
+		editor.init(800, 200, data);
+		
+		RootPanel.get().add(editor);
+		
+		HashMap<String, Object> state = new HashMap<>();
+		editor.setState(state);
+		
 		btn = new Button("SEND");
 		btn.addClickHandler(this::onClickInput);
 		RootPanel.get().add(btn);
