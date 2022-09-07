@@ -25,7 +25,6 @@ import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.SymboolPanel;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVak;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TextEditor;
 import nl.uu.fi.dwo.mobile.utils.LogBuilder;
@@ -39,6 +38,7 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
 
 		TextEditorWidget(ActivityInterface a) {
 			super(a);
+			DWOplayer.DWO_BUNDLE.dwoplayercss().ensureInjected();
 		}
 
 		@Override
