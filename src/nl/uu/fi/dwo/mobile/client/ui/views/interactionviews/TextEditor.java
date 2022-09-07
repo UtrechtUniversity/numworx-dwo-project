@@ -685,7 +685,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 			logging.setCommunicationRoot(comRoot);
 	}
 
-	private void addExecuteBtn(final OpdrNavIF comRoot) {
+	protected void addExecuteBtn(final OpdrNavIF comRoot) {
 		if(comRoot.hasListeners(TEXT)) {
 			Button btn = new Button(fi.wiskopdr.text.Text.constants.executeLabel());
 			Style style = btn.getElement().getStyle();
