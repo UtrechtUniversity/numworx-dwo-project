@@ -21,6 +21,7 @@ import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.SymboolPanel;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVak;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TextEditor;
 import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 import nl.uu.fi.dwo.mobile.utils.Logging;
@@ -41,6 +42,7 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
 		switch(nr) {
 		  case  4: delegate = new TextEditor(this);   break;
 		  case 55: delegate = new SymboolPanel(); break;
+		  //case 9: delegate = new TekstVakWidget(this); break; // TekstVakWidget extends TekstVakPanel
 		}
 
 		RootPanel.get().add(delegate);

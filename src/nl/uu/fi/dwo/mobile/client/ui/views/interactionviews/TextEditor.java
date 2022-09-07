@@ -216,6 +216,8 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		width = h.getInt("breedte");
 		height = h.getInt("hoogte");
 		volledigeBreedte = h.getBoolean("volledigeBreedte", false);
+		hbox = new FlowPanel();
+		initWidget(hbox);
 		init0(launchdata);
 	}
 
@@ -230,10 +232,8 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		
 		
 		boxsize = boxMetRand?2*borderWidth:0; // eigenlijk afhankelijk van de borderwidth. die is max 2
-		hbox = new FlowPanel();
 		hbox.setStyleName(css.textEditor());
 		hbox.addStyleName(DWOplayer.templateCss().answerboxFEWS());
-		initWidget(hbox);
 		
 		menubar = getMenuBar(launchdata);
 		if (menubar != null)
@@ -326,11 +326,14 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	
 	public TextEditor(ActivityInterface a) {
 		this.activity = a;
+		hbox = new FlowPanel();
+		initWidget(hbox);
 	}
 	
 	public void init(int width, int height, Map<String, Object> launchData, Map<String, Number> values) {
 		this.width = width;
 		this.height = height;
+		this.widget.setPixelSize(width, height);
 		init0(JSONUtilities.wrapMap(launchData));
 	}
 
