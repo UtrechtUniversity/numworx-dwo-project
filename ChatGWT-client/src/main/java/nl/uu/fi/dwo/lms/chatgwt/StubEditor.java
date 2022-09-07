@@ -21,14 +21,20 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
+import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.json.JSONObjectMapImpl;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
+import nl.uu.fi.dwo.lms.chatgwt.util.GUID;
 
-public class StubEditor extends Composite implements Handler, LoadHandler {
+public class StubEditor extends Composite implements Handler, LoadHandler, FormuleEditorIF {
+
+	private static FormuleFont defaultFont;
 
 	private native static void setState(Object inner, String state) /*-{
 		inner.setState(state);
@@ -251,7 +257,7 @@ public void setState(HashMap<String, Object> h) {
 		return "leerling";
 	}
 
-	String uuid = "0-0-0";
+	String uuid = GUID.get();
 	
 	public String getUUID() {
 		return uuid;
@@ -322,5 +328,312 @@ public void setState(HashMap<String, Object> h) {
 		return JSONUtilities.toJSONObject(map).isObject().getJavaScriptObject();		
 	}
 
+	@Override
+	public void clearAll() {
+		if(innerView != null)
+			clearAll(innerView);
+	}
+
+	private static native void clearAll(Object inner)/*-{
+		inner.clearAll();
+	}-*/;
+
+	@Override
+	public void insert(String text) {
+		if(innerView != null)
+			insert(text, innerView);		
+	}
 	
+	private static native void insert(String text, Object inner) /*-{
+		inner.insert(text);
+	}-*/;
+	
+	public static void createDefaultFont(int size) {
+		defaultFont = FormuleFont.createFromFontSize(size);
+	}
+	
+	
+	@Override
+	public FormuleFont getDefaultFont() {
+		return defaultFont;
+	}
+
+	@Override
+	public void setFont(FormuleFont font) {
+	}
+
+	@Override
+	public void setCurrentElementRepaint() {
+	}
+
+	@Override
+	public void enter() {
+		if(innerView != null)
+			enter(innerView);
+	}
+	private static native void enter(Object inner) /*-{
+		inner.enter();
+	}-*/;
+	
+	
+	@Override
+	public void removeCurrentElement() {
+		backspace(innerView);
+	}
+	private static native void backspace(Object inner) /*-{
+		inner.backspace();
+	}-*/;
+	
+	@Override
+	public void removeNextElement() {
+		removeNextElement(innerView);
+	}
+	
+	private static native void removeNextElement(Object inner) /*-{
+		inner.removeNextElement();
+	}-*/;
+
+	@Override
+	public void cursorToLeft() {
+		cursorToLeft(innerView);
+	}
+	private static native void cursorToLeft(Object inner) /*-{
+		inner.cursorToLeft();
+	}-*/;
+
+	@Override
+	public void cursorToRight() {
+		cursorToRight(innerView);
+	}
+	private static native void cursorToRight(Object inner) /*-{
+		inner.cursorToRight();
+	}-*/;
+	
+	@Override
+	public void cursorToLeftShift() {
+		cursorToRight(innerView);
+	}
+	private static native void cursorToLeftShift(Object inner) /*-{
+		inner.cursorToLeftShift();
+	}-*/;
+	
+	@Override
+	public void cursorToRightShift() {
+		cursorToRight(innerView);
+	}
+	private static native void cursorToRightShift(Object inner) /*-{
+		inner.cursorToRightShift();
+	}-*/;
+
+	@Override
+	public void cursorUp() {
+		cursorUp(innerView);
+	}
+	private static native void cursorUp(Object inner) /*-{
+		inner.cursorUp();
+	}-*/;
+	
+	@Override
+	public void cursorDown() {
+		cursorDown(innerView);
+	}
+	private static native void cursorDown(Object inner) /*-{
+		inner.cursorDown();
+	}-*/;
+	
+	@Override
+	public void insert(char charAt) {
+		insert(String.valueOf(charAt));
+	}
+
+	@Override
+	public String getSelectionString() {
+		return "";
+	}
+	
+	
+	@Override
+	public void kopieer(FormuleClipboardIF clip) {
+		kopieer(innerView);
+	}
+	private static native void kopieer(Object inner) /*-{
+		inner.kopieer();
+	}-*/;
+	
+	@Override
+	public void knip(FormuleClipboardIF clip) {
+		knip(innerView);
+	}
+	private static native void knip(Object inner) /*-{
+		inner.knip();
+	}-*/;
+	
+	@Override
+	public void plak(FormuleClipboardIF clip) {
+		plak(innerView);
+	}
+	private static native void plak(Object inner) /*-{
+		inner.plak();
+	}-*/;
+	
+	@Override
+	public void macht() {
+		insert("$m@"); 
+	}
+
+	@Override
+	public void wortel() {
+		insert("$w@");
+	}
+
+	@Override
+	public void breuk() {
+		insert("$b$n@@");
+	}
+
+	@Override
+	public void kwadraat() {
+		insert("$m2@");
+	}
+
+	@Override
+	public void ndewortel() {
+		insert("$W$n@@");
+	}
+
+	@Override
+	public void haakjes() {
+		insert("$h@");
+	}
+
+	@Override
+	public void integraal() {
+		insert("$i$n$k$l@@@@");
+	}
+
+	@Override
+	public void prv() {
+		insert("$q$n$k$l@@@@");
+	}
+
+	@Override
+	public void ndelog() {
+		insert("$L$n@@");
+	}
+
+	@Override
+	public void abs() {
+		insert("$r@");
+	}
+
+	@Override
+	public void subscript() {
+		insert("$s@");
+	}
+
+	@Override
+	public void bin() {
+		insert("$y$n@@");
+	}
+
+	@Override
+	public void diff() {
+		insert("$d$n@@");
+	}
+
+	@Override
+	public void diff_partial() {
+		insert("$D$n@@");
+	}
+	
+	@Override
+	public void limiet0() {
+		insert("$T$n$k$l@@@@");
+	}
+
+	@Override
+	public void limiet1() {
+		insert("$T$n$k$l@@@@");
+	}
+
+	@Override
+	public void limiet2() {
+		insert("$T$n$k$l@@@@");
+	}
+
+	@Override
+	public void primitieve() {
+		insert("$P$n@@");
+	}
+
+	@Override
+	public void conjug() {
+		insert("$c@");
+	}
+
+	@Override
+	public void sigma() {
+		insert("$S$n$k$l@@@@");
+	}
+	
+    @Override
+    public void stelsel() {
+        insert("$Q@");
+    }
+    
+    @Override
+    public void stelsel(int aantalRijen)
+    {
+        insert("$Q@");
+    }
+    
+	@Override
+	public void vectornotatie()
+	{
+		insert("$z@");
+	}
+
+	@Override
+	public void vector()
+	{
+		insert("$Y@");
+	}
+
+	@Override
+	public void vector(int aantalRijen)
+	{
+		insert("$Y@");
+	}
+
+	@Override
+	public void matrix()
+	{
+		insert("$M@");
+	}
+
+	@Override
+	public void matrix(int aantalRijen, int aantalKolommen)
+	{
+		insert("$M@");
+	}
+	@Override
+	public void tab() {
+		try {
+			tab(innerView);
+		} catch(Exception not_implemented) {	
+		}
+	}
+
+	private static native void tab(Object innerView)/*-{ innerView.tab() }-*/;
+	private static native void shiftTab(Object innerView)/*-{ innerView.shiftTab() }-*/;
+
+	@Override
+	public void shiftTab() {
+		try {
+			shiftTab(innerView);
+		} catch(Exception not_implemented) {	
+		}
+	}
+
+
 }
