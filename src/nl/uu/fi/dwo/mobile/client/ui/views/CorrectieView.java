@@ -30,6 +30,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.DWOPopupPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PopupButton;
 import nl.uu.fi.dwo.mobile.utils.HasHide;
@@ -48,7 +49,7 @@ public class CorrectieView extends Composite implements HasHide, PopupListener {
   public static final String CORRECTIE = DWOplayer.DWO_BUNDLE.dwoplayercss().correctie();
   public static final String CORRECTED = DWOplayer.DWO_BUNDLE.dwoplayercss().corrected();
   
-  public static Provider<Map<String,Object>> addCorrection(Map<String,Object> map, InteractionView iv, final Widget widget, int scoreMax, OpdrNavIF comRoot, ActivityComponent a, boolean checkDocent, Logging logger) {
+  public static Provider<Map<String,Object>> addCorrection(Map<String,Object> map, InteractionView iv, final Widget widget, int scoreMax, OpdrNavIF comRoot, ActivityInterface a, boolean checkDocent, Logging logger) {
     widget.addStyleName(CORRECTIE);
     ObjectMap h = JSONUtilities.wrapMap(map);
     h = h.getObjectMap(REVIEW_INTERACTIE_DATA);
@@ -118,7 +119,7 @@ public class CorrectieView extends Composite implements HasHide, PopupListener {
   int minCor,maxCor;
 private boolean checkDocent;
   
-  private static PopupPanel startCorrection(Map<String, Object> map, Widget w, int score, int scoreMax, OpdrNavIF comRoot, ActivityComponent a, boolean checkDocent, Logging logger) {
+  private static PopupPanel startCorrection(Map<String, Object> map, Widget w, int score, int scoreMax, OpdrNavIF comRoot, ActivityInterface a, boolean checkDocent, Logging logger) {
       CorrectieView view = new CorrectieView(a, w, comRoot, logger);
       view.setObject(map);      
       Object correctie = map.getOrDefault(REVIEW_SCORE_CORRECTIE,"0");
@@ -182,22 +183,20 @@ private boolean checkDocent;
 	  studentmodelSet = set;
   }
   
-  private CorrectieView(ActivityComponent a, Widget w, OpdrNavIF comRoot, Logging logger) {
+  private CorrectieView(ActivityInterface a, Widget w, OpdrNavIF comRoot, Logging logger) {
     parent = w;
     area = new MLTextBox(a);
     api = a.api();
     initWidget(uiBinder.createAndBindUi(this));
     smObjectives = logger.getSMObjectives();
-	leerdoelen.setVisible(isTest(a) && smObjectives != null);
+	leerdoelen.setVisible(a.isTest() && smObjectives != null);
     area.setCommunicationRoot(comRoot);
     comroot = comRoot;
   }
 
-protected boolean isTest(ActivityComponent a) {
-	String dwoEnv = a.parameters().getDwoEnv();
-	Logger.getLogger(getClass().getName()).severe("is Test " + dwoEnv);
-	return dwoEnv.contains("test");
-}
+	protected boolean isTest(ActivityComponent a) {
+		return a.isTest();
+	}
 
   @UiHandler("ok")
   void onOk(ClickEvent e) {

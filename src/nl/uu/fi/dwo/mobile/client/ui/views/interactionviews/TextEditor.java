@@ -76,6 +76,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
+import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
@@ -89,6 +90,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
@@ -96,7 +98,7 @@ import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 
 @SuppressWarnings("deprecation")
-public class TextEditor  implements InteractionView, TouchStartHandler, FormuleEditorIF, FacetAware, CBookEventListener, TekstElementWithFont, HasText {
+public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleEditorIF, FacetAware, CBookEventListener, TekstElementWithFont, HasText {
 	
 	private static final class PreventTapper implements PointerDownHandler {
     @Override
@@ -164,11 +166,11 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
     private int scoreMax;
 	private String loggingID;
 	private AnimationHandle handle;
-	private final ActivityComponent activity;
+	private final ActivityInterface activity;
 	private TekstRegel regel;
 	private com.google.gwt.user.client.Element formuleElement;
 	
-	TextEditor(ActivityComponent a, int breedte, int hoogte, boolean boxMetRand)
+	TextEditor(ActivityInterface a, int breedte, int hoogte, boolean boxMetRand)
 	{
 		this.activity = a;
 		// voor checktextantwoordvak
@@ -214,6 +216,10 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		width = h.getInt("breedte");
 		height = h.getInt("hoogte");
 		volledigeBreedte = h.getBoolean("volledigeBreedte", false);
+		init0(launchdata);
+	}
+
+	public void init0(ObjectMap launchdata) {
 		boxMetRand = launchdata.getBoolean("boxMetRand", true);
 		pasAanH = launchdata.getBoolean("pasAanH", false);
 
@@ -273,13 +279,13 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			
 		}
 		
-		LogBuilder logBuilder = new LogBuilder(activity).setClassName("fi.wiskopdr.tekstobjects.TekstEditor").setLaunchData(launchdata);
+		LogBuilder logBuilder = activity.logBuilder().setClassName("fi.wiskopdr.tekstobjects.TekstEditor").setLaunchData(launchdata);
 		loggingID = logBuilder.getLogID();
 		logging = logBuilder.build();
 		//shown = true;
 	}
 
-	public TextEditor(ActivityComponent a, int w, int h, boolean rand, boolean formule) {
+	public TextEditor(ActivityInterface a, int w, int h, boolean rand, boolean formule) {
 		this.activity = a;
 		width = w;
 		height = h;
@@ -318,6 +324,16 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	
 	
 	
+	public TextEditor(ActivityInterface a) {
+		this.activity = a;
+	}
+	
+	public void init(int width, int height, Map<String, Object> launchData, Map<String, Number> values) {
+		this.width = width;
+		this.height = height;
+		init0(JSONUtilities.wrapMap(launchData));
+	}
+
 	void updateEmpty() {
 		if (!boxMetRand || menubar!=null) {
 			hbox.setStyleName(css.textEditor_empty(), isContentEmpty());
@@ -434,7 +450,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		}
 		
 		//Button calc = new Button("calc"); 
-		Image upImage = new Image(activity.parameters().getResource("images/resources/rmknop.gif"));
+		Image upImage = new Image(activity.getResource("images/resources/rmknop.gif"));
 		upImage.getElement().setAttribute("width","18");
 		upImage.getElement().setAttribute("height","18");
 		
@@ -462,8 +478,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	}
 
 	private boolean isNoordhoff() {
-		String dependentName = activity.parameters().keyboardStyle();
-		return "noordhoff".equals(dependentName);
+		return activity.isNoordhoff();
 	}
 
 	@Override

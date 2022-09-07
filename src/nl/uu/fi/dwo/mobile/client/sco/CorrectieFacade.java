@@ -23,6 +23,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 import nl.uu.fi.dwo.mobile.client.ui.views.DocentCorrectie;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.DWOPopupPanel;
@@ -41,7 +42,7 @@ public class CorrectieFacade {
 //        return instance.create(h, view, view.asWidget(), maxScore, comRoot, null, null);
 //    }
  
-    public static Widget wrap(Widget view, ActivityComponent activity) {
+    public static Widget wrap(Widget view, ActivityInterface activity) {
         return instance.prepareWidget(view, activity);
     }
     
@@ -67,8 +68,8 @@ public class CorrectieFacade {
 	}
   }
     
-  protected Widget prepareWidget(Widget view, ActivityComponent activity) {
-    if(activity.memento() != null && activity.memento().isEindtoetsVerzegeld() && activity.isPremium()) 
+  protected Widget prepareWidget(Widget view, ActivityInterface activity) {
+    if(activity.isEindtoetsVerzegeld() && activity.isPremium()) 
       return new CorrectieLayer(view);
     return (view);
   }
@@ -79,7 +80,7 @@ public class CorrectieFacade {
       return instance.create(h, view, widget, maxScore, comRoot, null, null, false);
   }
 
-    protected CorrectieFacade create(Map<String, Object> h, InteractionView view, Widget widget, int maxScore, OpdrNavIF comRoot, Logging logging, ActivityComponent a, boolean checkDocent) {
+    protected CorrectieFacade create(Map<String, Object> h, InteractionView view, Widget widget, int maxScore, OpdrNavIF comRoot, Logging logging, ActivityInterface a, boolean checkDocent) {
       return NULL;
     }
     
@@ -95,8 +96,8 @@ public class CorrectieFacade {
     	}
     }
     
-    public static void showReview(Map<String,Object> h0, AcceptsOneWidget p, InteractionView view, int maxScore, ActivityComponent a) {
-    	if(h0 == null || a.memento().getLessonMode() != LessonMode.browse) return;
+    public static void showReview(Map<String,Object> h0, AcceptsOneWidget p, InteractionView view, int maxScore, ActivityInterface a) {
+    	if(h0 == null || a.getLessonMode() != LessonMode.browse) return;
     	ObjectMap h = JSONUtilities.wrapMap(h0);
     	h = h.getObjectMap(CorrectieView.REVIEW_INTERACTIE_DATA);
     	if (h == null) return;
@@ -143,7 +144,7 @@ public class CorrectieFacade {
     }
 
 	public static CorrectieFacade get(HashMap<String, Object> h, TextEditor view, int scoreMax, OpdrNavIF comRoot,
-			Logging logging, ActivityComponent activity, boolean checkDocent) {
+			Logging logging, ActivityInterface activity, boolean checkDocent) {
 		return instance.create(h, view, view.asWidget(), scoreMax, comRoot, logging, activity, checkDocent);
 	}
 

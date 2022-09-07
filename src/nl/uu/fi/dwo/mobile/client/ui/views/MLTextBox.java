@@ -4,13 +4,14 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasText;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TextEditor;
 
 public class MLTextBox extends Composite implements HasText {
 
 	private TextEditor area;
 	
-	public MLTextBox(ActivityComponent activity) {
+	public MLTextBox(ActivityInterface activity) {
 		area = new TextEditor(activity, 300,150, true, true);
 		initWidget(area.asWidget());
 	}

@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.rest.dom.xapi.Extensions;
@@ -28,7 +29,7 @@ public class CorrectieReview extends CorrectieFacade {
     CorrectieReview() {
     }
 
-    private CorrectieReview(Map<String, Object> h, InteractionView iv, Widget widget, int maxScore, OpdrNavIF comRoot, Logging logging, ActivityComponent a, boolean checkDocent) {
+    private CorrectieReview(Map<String, Object> h, InteractionView iv, Widget widget, int maxScore, OpdrNavIF comRoot, Logging logging, ActivityInterface a, boolean checkDocent) {
       correctie = CorrectieView.addCorrection(h, iv, widget, maxScore, comRoot, a, checkDocent, logging);
       this.comRoot = comRoot;
       this.iv = iv;
@@ -45,10 +46,10 @@ public class CorrectieReview extends CorrectieFacade {
     }
 
     @Override
-    protected CorrectieFacade create(Map<String, Object> h, InteractionView iv, Widget widget, int maxScore, OpdrNavIF comRoot, Logging logging, ActivityComponent a, boolean checkDocent) {
+    protected CorrectieFacade create(Map<String, Object> h, InteractionView iv, Widget widget, int maxScore, OpdrNavIF comRoot, Logging logging, ActivityInterface a, boolean checkDocent) {
       if(
     	  a.isPremium() &&   		  
-    	  a.memento().isReview() && a.memento().isEindtoetsVerzegeld() && maxScore > 0) {
+    	  a.isReview() && a.isEindtoetsVerzegeld() && maxScore > 0) {
           return new CorrectieReview(h, iv, widget, maxScore, comRoot, logging, a, checkDocent);
       }
       return super.create(h, iv, widget, maxScore, comRoot, logging, a, checkDocent);
