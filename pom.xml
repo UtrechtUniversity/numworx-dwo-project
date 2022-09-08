@@ -66,7 +66,7 @@
           <extensions>true</extensions>
           <configuration>
             <sourceLevel>1.8</sourceLevel>
-            <failOnError>true</failOnError>
+            <failOnError>false</failOnError>
           </configuration>
         </plugin>
         <plugin>

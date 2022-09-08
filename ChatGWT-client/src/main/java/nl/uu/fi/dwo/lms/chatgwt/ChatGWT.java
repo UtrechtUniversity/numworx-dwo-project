@@ -1,6 +1,8 @@
 package nl.uu.fi.dwo.lms.chatgwt;
 
 import java.util.HashMap;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -12,6 +14,13 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -30,7 +39,6 @@ import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.stanziq.strophe.client.Builder;
 import com.stanziq.strophe.client.Connection;
 import com.stanziq.strophe.client.Connection.Status;
@@ -68,6 +76,38 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	private static Logger LOG = Logger.getLogger(ChatGWT.class.getName());
 	
 	private ChatRoom room = new ChatRoom("klas@" + ROOMS);
+	
+	
+	class ChatPresence extends Handler<Element> implements HasValueChangeHandlers<Set<String>> {
+
+		private Set<String> present = new TreeSet<>();
+		private EventBus bus = new SimpleEventBus();
+		private ChatPresence() {
+		}
+		
+		@Override
+		public boolean handle(Element element) {
+			LOG.info("received " + element.serialize());
+			String from = element.getAttribute("from");
+			String type = element.getAttribute("type");
+			boolean leave = "unavailable".equals(type);
+			if (leave) present.remove(from); else present.add(from);
+			ValueChangeEvent.fire(this, present);
+			return true;
+		}
+
+		@Override
+		public void fireEvent(GwtEvent<?> event) {
+			bus.fireEventFromSource(event, this);			
+		}
+
+		@Override
+		public HandlerRegistration addValueChangeHandler(
+				ValueChangeHandler<Set<String>> handler) {
+			return bus.addHandlerToSource(ValueChangeEvent.getType(), this, handler);
+		}
+	
+	}
 	
 	class ChatMessage extends Handler<Element> {
 
