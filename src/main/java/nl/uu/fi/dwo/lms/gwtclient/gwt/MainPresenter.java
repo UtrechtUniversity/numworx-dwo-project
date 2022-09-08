@@ -145,7 +145,6 @@ public class MainPresenter {
 
     public void init() {
     	display.setSearchBox(stage > 1);
-    	display.showChat(dwoGlobalVars.isTest() && dwoGlobalVars.isPremium());
     }
 
     /**

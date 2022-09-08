@@ -227,12 +227,14 @@ public class BootPanelController {
               build = teacherBuilder.build();
               mainView.setUserRole(role, false);
               mainView.setPremium(dwoGlobalVars.isPremium()); // knowledge for teacher is premium
-             break;
+              mainView.showChat(dwoGlobalVars.isPremium()&&dwoGlobalVars.isTest());
+              break;
           case SCHOOLADMIN:
               build = schoolAdminBuilder.build();
              mainView.setUserRole(role, false);
              mainView.setPremium(false); // no schooladmin premium features
-            break;
+             mainView.showChat(false);
+             break;
           case STUDENT:
             //if (stage > 0)
             {
@@ -240,11 +242,13 @@ public class BootPanelController {
               mainView.setUserRole(role, single);
               DomSchoolClass sc = dwoGlobalVars.getCurrentSchoolClass();
               mainView.setPremium(dwoGlobalVars.isPremium() && sc != null); // knowledge for student is premium and only in class
-              break;
+              mainView.showChat(dwoGlobalVars.isPremium()&&dwoGlobalVars.isTest()&& sc != null && false);
+            break;
             }
           default:
             mainView.setUserRole(RoleType.ANONYMOUS, false);
             mainView.setPremium(false);
+            mainView.showChat(false);
             build = guestBuilder.build();
         }
         presenterFactory = build.presenterFactory();
