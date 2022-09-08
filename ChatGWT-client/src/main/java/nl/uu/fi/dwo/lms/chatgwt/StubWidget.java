@@ -32,7 +32,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.lms.chatgwt.util.GUID;
 
-public class StubEditor extends Composite implements Handler, LoadHandler, FormuleEditorIF {
+public class StubWidget extends Composite implements Handler, LoadHandler, FormuleEditorIF {
 
 	private static FormuleFont defaultFont;
 
@@ -64,11 +64,11 @@ public class StubEditor extends Composite implements Handler, LoadHandler, Formu
 	private HashMap<String, Number> randomVars = new HashMap<>();
 	private HashMap<String, Object> lastResort;
 
-	public StubEditor() {
+	public StubWidget() {
 		int type = 4;
 		int profile = 77;
 		String locale = "nl";
-		frame = new Frame("widget.jsp?type=" + type + "&profile=" + profile + "&locale=" + locale);
+		frame = new Frame("widget.jsp?id=" + type + "&profile=" + profile + "&locale=" + locale);
 	}
 
 	private void initFrame() {
@@ -114,10 +114,10 @@ public class StubEditor extends Composite implements Handler, LoadHandler, Formu
 	return frame.contentWindow;
 }-*/;
 
-public static native Object getApplet(Object wnd, StubEditor view) /*-{
+public static native Object getApplet(Object wnd, StubWidget view) /*-{
 	wnd.outer = view;
 	wnd.publish = function(o, viewer) {
-		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubEditor::publish(Ljava/lang/Object;)(o)
+		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::publish(Ljava/lang/Object;)(o)
 	}
 	wnd.setChanged = function(b, viewer) {
 //		viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::comRoot.@nl.uu.fi.dwo.interaction.client.OpdrNavIF::setChanged(Z)(b);
@@ -129,44 +129,44 @@ public static native Object getApplet(Object wnd, StubEditor view) /*-{
 //		viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::setFocus(ZZ)(b,soft)
 	}
 	wnd.getMode = function(viewer) {
-		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubEditor::getMode()()
+		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::getMode()()
 	}
 	wnd.getLearnerName = function (viewer) {
-		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubEditor::getLearnerName()()
+		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::getLearnerName()()
 	}
 	wnd.getLearnerId = function (viewer) {
-		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubEditor::getLearnerId()()
+		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::getLearnerId()()
 	}
 	wnd.getUUID = function (viewer) {
-		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubEditor::getUUID()()
+		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::getUUID()()
 	}
 	wnd.getBackground = function (viewer) {
-		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubEditor::getBackgroundAsString()()
+		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::getBackgroundAsString()()
 	}
 	
 	wnd.fireEvent = function (event, viewer) {
 		if ( typeof event === 'string' )
 			event = JSON.parse(event)
-		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubEditor::fireJSEvent(Lcom/google/gwt/core/client/JavaScriptObject;)(event)
+		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::fireJSEvent(Lcom/google/gwt/core/client/JavaScriptObject;)(event)
 	}
 	
 	wnd.addCBookEventListener = function (command, listener, viewer) {
-//		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubEditor::addCBookEventListener(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(command, listener)
+//		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::addCBookEventListener(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(command, listener)
 	}
 	wnd.removeCBookEventListener = function (registration) {
-//		return @nl.uu.fi.dwo.lms.chatgwt.StubEditor::removeCBookListener(Lcom/google/web/bindery/event/shared/HandlerRegistration;)(registration)
+//		return @nl.uu.fi.dwo.lms.chatgwt.StubWidget::removeCBookListener(Lcom/google/web/bindery/event/shared/HandlerRegistration;)(registration)
 	}
 	wnd.setEnterType = function(type, viewer) {
-		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubEditor::setEnterType(Ljava/lang/String;)(type)
+		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::setEnterType(Ljava/lang/String;)(type)
 	}
 	wnd.getConfiguration = function(viewer) {
-		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubEditor::getConfiguration0()()
+		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::getConfiguration0()()
 	}
 	wnd.getContext = function(viewer) {
-		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubEditor::getContext0()()
+		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::getContext0()()
 	}
 	wnd.tickle = function() {
-//		view.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::tickle()()
+		view.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::tickle()()
 	}
 	return wnd.inner;
 }-*/;
@@ -216,6 +216,14 @@ private HashMap<String, Object> getState0() {
 	HashMap<String,Object> map = new HashMap<String,Object>();
 	return wrap(map);
 }
+
+public HashMap<String, Object> getState() {
+//	if (facade.hasState()) 
+//		return facade.getState();
+	return getState0();
+}
+
+
 public void zetNagekeken(boolean b) {
 	if(innerView != null)
 	{	nagekekenPending = null;
@@ -309,6 +317,11 @@ public void setState(HashMap<String, Object> h) {
 		}
 	}
 
+	public void tickle() {
+		GWT.log("tickle");
+	}
+	
+	
 	public ObjectMap getContext() {
 //		if(comRoot != this && comRoot != null) {
 //			return comRoot.getContext();
