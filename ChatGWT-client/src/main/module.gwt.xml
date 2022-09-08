@@ -9,6 +9,8 @@
   <inherits name="com.googlecode.mgwt.MGWTMin" />
   <inherits name="fi.wiskopdr.WiskOpdr" />
   <inherits name="nl.uu.fi.dwo.keyboard.KeyboardGWT-DWO" />
+  
+  <inherits name='nl.uu.fi.dwo.rest.DWO-rest-lib' />
 
   <source path="" />
 
