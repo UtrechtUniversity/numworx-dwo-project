@@ -222,4 +222,13 @@ public class JsMainView implements MainPresenter.Display{
 	public void showChatboxView() {
 		JsMainDisplay.showChatboxView();	
 	}
+	
+	@Override
+    public void showChat(boolean on) {
+		if (on)
+			JsMainDisplay.showChat();
+		else
+	    	JsMainDisplay.hideChat();
+	}
+
 }

@@ -1,9 +1,21 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.chatbox;
 
 import javax.inject.Inject;
+
+import org.fusesource.restygwt.client.JsonEncoderDecoder;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
+
+import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.chatbox.*;
 
 public class JsChatboxView implements ChatboxPresenter.Display {
+	
+	
+	interface ChatUserCodec extends JsonEncoderDecoder<ChatUser> { };
+	
+	static ChatUserCodec CODEC = GWT.create(ChatUserCodec.class);
 
 	@Inject JsChatboxView() {}
 
@@ -22,8 +34,12 @@ public class JsChatboxView implements ChatboxPresenter.Display {
 	public void setHelp(String url) {
 	}
 
-	@Override public void setLogin(String user, String password) {
-		JsChatboxDisplay.setLogin(user, password);
+	@Override public void setLogin(ChatUser user) {
+		JavaScriptObject obj = null;
+		if (user != null) {
+			obj = CODEC.encode(user).isObject().getJavaScriptObject();
+		}
+		JsChatboxDisplay.setLogin(obj);
 	}
 	@Override public void openUrl(String url) {
 		JsChatboxDisplay.openUrl(url);

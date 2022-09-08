@@ -131,6 +131,8 @@ public class MainPresenter {
 		void showTeacherClassFilterView();
 
 		void showChatboxView();
+
+		void showChat(boolean show);
     }
 
     private MainPresenter.Display display;
@@ -143,6 +145,7 @@ public class MainPresenter {
 
     public void init() {
     	display.setSearchBox(stage > 1);
+    	display.showChat(dwoGlobalVars.isTest() && dwoGlobalVars.isPremium());
     }
 
     /**

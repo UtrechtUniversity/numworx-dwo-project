@@ -115,4 +115,6 @@ public class JsMainDisplay {
     static native void showTeacherClassFilterView();
     
     static native void showChatboxView();
+    static native void showChat();
+    static native void hideChat();
 }

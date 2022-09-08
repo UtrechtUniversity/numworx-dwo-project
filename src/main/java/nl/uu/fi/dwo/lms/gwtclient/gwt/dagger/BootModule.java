@@ -49,6 +49,7 @@ abstract class BootModule {
 	}
 
 	@BindsOptionalOf abstract EventBus optionalEventBus();
+	@BindsOptionalOf abstract nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService optionalPersonsService();
 	@Provides @Named("test") static boolean test(DwoGlobalVars vars) { return vars.isTest(); }
 	@Binds abstract EventBus eventBus(ResettableEventBus bus); // for RoleScope eventHandlers
 	@Binds abstract ViewFactory viewFactory(ViewFactoryJs view);
