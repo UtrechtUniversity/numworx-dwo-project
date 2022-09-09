@@ -17,6 +17,7 @@
   <inherits name="org.vectomatic.libgwtsvg" />
   <inherits name='dagger.Dagger'/>
   <inherits name='nl.uu.fi.dwo.ideas.Ideas' />
+  <inherits name="nl.uu.fi.dwo.lms.chatgwt.ChatGWT-shared" />
   
   <!--<set-property name="gwt.logging.popupHandler" value="DISABLED"/>-->  
   <set-property name="gwt.logging.enabled" value="TRUE"/>
