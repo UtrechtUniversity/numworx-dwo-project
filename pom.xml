@@ -480,6 +480,14 @@
                             <contextPath>/dwo/dav/upload</contextPath>
                             <asWebapp>true</asWebapp>
                           </webapp>
+                          <webapp>
+                              <groupId>nl.uu.fi.dwo.lms</groupId>
+                              <artifactId>ChatGWT-server</artifactId>
+                          	  <version>2.5.14-SNAPSHOT</version>
+                              <type>war</type>
+                              <contextPath>/chatbox</contextPath>
+                              <asWebapp>true</asWebapp>
+                          </webapp>
                     </webapps>                         
                 </configuration> 
                 <dependencies>

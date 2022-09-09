@@ -60,8 +60,8 @@ public class ChatboxPresenter implements ValueChangeHandler<String> {
 			view.openUrl("about:blank");
 			return;
 		}
-		user.nickName = u.getUniqueDisplayName();
-		user.jid = u.getId().getIdString();
+		user.nickName = u.getDisplayName();
+		user.jid = u.getUserName();
 		String password = RestAuthenticator.instance.getAuthorization(); // access token of so
 		user.token = strip(password);
         RoleType role = RoleType.valueOf(vars.getActiveSchoolRoleAndClass().getRole().getRoleName());    
@@ -71,14 +71,14 @@ public class ChatboxPresenter implements ValueChangeHandler<String> {
 			ChatRoom room = roomOfSchoolClass(klas);
 			user.room = Collections.singletonList( room );
 			view.setLogin(user);			
-			view.openUrl("chatbox.jsp");
+			view.openUrl("chatbox/");
 		} else if (role == RoleType.TEACHER) {
 			// teacher
 			service.get().getTeachersSchoolClasses().map(this::roomOfSchoolClass)
 			.then( p -> {
 				user.room = p.getValue();
 				view.setLogin(user);				
-				view.openUrl("chatbox.jsp");
+				view.openUrl("chatbox/");
 				return p;
 			});
 			return;

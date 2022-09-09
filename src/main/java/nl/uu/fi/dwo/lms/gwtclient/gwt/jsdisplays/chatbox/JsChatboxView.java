@@ -35,9 +35,9 @@ public class JsChatboxView implements ChatboxPresenter.Display {
 	}
 
 	@Override public void setLogin(ChatUser user) {
-		JavaScriptObject obj = null;
+		String obj = null;
 		if (user != null) {
-			obj = CODEC.encode(user).isObject().getJavaScriptObject();
+			obj = CODEC.encode(user).toString();
 		}
 		JsChatboxDisplay.setLogin(obj);
 	}
