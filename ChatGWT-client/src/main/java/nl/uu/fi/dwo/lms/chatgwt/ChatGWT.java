@@ -35,6 +35,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
@@ -76,6 +77,8 @@ import nl.uu.fi.dwo.lms.chatgwt.util.MD5;
 public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleClipboardIF {
 	
 	
+	private static final int COL_6 = 456;
+
 	interface ChatUserCodec extends JsonEncoderDecoder<ChatUser> {};
 	
 	private static final ChatUserCodec CODEC = GWT.create(ChatUserCodec.class);
@@ -168,11 +171,15 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			if (("chat".equals(type)||"groupchat".equals(type)) && elems.getLength() > 0) {
 				Element body = (Element) elems.getItem(0);
 				InlineLabel afzender = new InlineLabel(getDisplayName(from));
+				afzender.addStyleName("sender");
 				afzender.getElement().getStyle().setFloat(Style.Float.LEFT);
 				afzender.getElement().getStyle().setFontWeight(Style.FontWeight.BOLD);
 				InlineLabel time = new InlineLabel(stamp);
+				time.addStyleName("name");
 				time.getElement().getStyle().setFloat(Style.Float.RIGHT);
 				Panel hbox = new FlowPanel();
+				hbox.addStyleName("message");
+				hbox.addStyleName("lightbox");
 				hbox.add(afzender);
 				hbox.add(time);
 				panel.add(hbox);
@@ -184,10 +191,10 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 				data.put("balkZichtbaar", Boolean.FALSE);
 				data.put("boxMetRand", Boolean.FALSE);
 				data.put("editable", Boolean.FALSE);
-				message.init(800, 100, data);				
+				message.init(COL_6-32-2, 100-30, data);				
 
 				message.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
-				panel.add(message);
+				hbox.add(message);
 				scroll.scrollToBottom();
 			}
 			return true;
@@ -237,9 +244,9 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 				presenceHandler = new ChatPresence();
 				presenceHandler.addValueChangeHandler(new EastUpdater());
 				ref2 = connection.addHandler(null, "presence", null, null, null, presenceHandler);
-				ChatAll all = new ChatAll();
-				all.put("message", handler);
-				all.put("presence", presenceHandler);
+//				ChatAll all = new ChatAll();
+//				all.put("message", handler);
+//				all.put("presence", presenceHandler);
 				//ref2 = connection.addHandler(null, null, null, null, null, all);
 				
 				Builder pres = Builder.$pres(null);
@@ -352,19 +359,21 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 
 		HashMap<String, Object> data = new HashMap<>();
 		data.put("rekenTool", Boolean.FALSE);
-		editor.init(800, 100, data);
-		editor.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
+		data.put("boxMetRand", Boolean.FALSE);
+		editor.init(COL_6-4, 100, data);
+		editor.addStyleName("box");
 		
 		
 		HashMap<String, Object> state = new HashMap<>();
 		editor.setState(state);
 	
 		FlowPanel flow = new FlowPanel();
-		Button btn;
-		btn = new Button("SEND");
+		InlineHTML btn;
+		btn = new InlineHTML("<i class='send fa fa-2x fa-paper-plane' >");
 		btn.addClickHandler(this::onClickInput);
 		btn.getElement().getStyle().setFloat(Style.Float.RIGHT);
 		sender = new Label("Bericht voor " + room.displayName);
+		sender.addStyleName("header");
 		flow.add(sender);
 		flow.add(btn);
 		
@@ -382,15 +391,16 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		container.setWidget(keyboard);
 
 		main.addSouth(container, 200);
-		main.addEast(east, 200);
+		main.addEast(east, COL_6);
+		main.addEast(new SimplePanel(), 18);
 		
 		main.getWidgetContainerElement(container).getStyle().setBackgroundColor("#e5e7e9");
 		keyboard.setSoortKeyboard(0);
 		keyboard.setWriteMathSet(0);
 		keyboard.setScrollPanel(this, 0);
 		keyboard.setEditor(editor);
-
-		main.addSouth(editor, 100);
+		main.addSouth(new SimplePanel(), 30); // border
+		main.addSouth(editor, 104);
 		main.addSouth(flow, 40);
 		
 		FocusOnTouch.installKeyboard(keyboard, this);

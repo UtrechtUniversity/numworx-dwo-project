@@ -1,3 +1,55 @@
 /** Add css rules here for your application. */
 
+body {
+	background-color: transparent !important;
+	font-family: 'Ubuntu';
+}
 
+div {
+	outline: none;
+}
+
+iframe.box.gwt-Frame {
+	border: 2px #1b75bb solid;
+	border-radius: 4px;
+	background-color: white;
+}
+
+.lightbox {
+	border: 1px #7297c7 solid;
+	border-radius: 2px;
+	background-color: white;
+}
+
+div.header.gwt-Label {
+	font-family: Ubuntu;
+	font-size: 150%;
+	color: #7297c7;
+	display: inline-block;
+}
+
+.message {
+	width: 422px;
+	padding: 16px;
+	margin-bottom: 18px;
+}
+
+.message .sender {
+	font-weight: bold;
+	font-family: ubuntu;
+}
+
+.message .time {
+	float: left;
+}
+
+i.send {
+    display: inline-block;
+    width: 32px;
+    color: white;
+    background-color: #1b75bb;
+    border-radius: 4px;
+    font-size: 180%;
+    text-align: center;
+    padding-top: 3px;
+    padding-bottom: 3px;
