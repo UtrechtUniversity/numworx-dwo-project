@@ -6,6 +6,7 @@ import java.util.Map;
 
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 
@@ -14,10 +15,10 @@ public class BerekeningVakLoggingManager {
 	protected Logging logging;
 	private BerekeningVak berekeningVak;
 	
-	public BerekeningVakLoggingManager(BerekeningVak berekeningVak, BerekeningVakSettings settings, ActivityComponent activity) {
+	public BerekeningVakLoggingManager(BerekeningVak berekeningVak, BerekeningVakSettings settings, ActivityInterface activity) {
 		this.berekeningVak = berekeningVak;
 		if(settings.smObjectives() !=null || settings.logOption()) {
-			LogBuilder dwoLogger = new LogBuilder(activity).setLogOption(settings.logOption());
+			LogBuilder dwoLogger = activity.logBuilder().setLogOption(settings.logOption());
 			dwoLogger.setMaxScore(settings.scoreMax());
 			dwoLogger.setLogIDLabel(settings.logIDLabel());
 			dwoLogger.setLogID(settings.logID());

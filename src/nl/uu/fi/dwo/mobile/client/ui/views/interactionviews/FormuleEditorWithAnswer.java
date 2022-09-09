@@ -30,6 +30,7 @@ import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.template.TemplateCss;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.ResizableContentIF;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
@@ -86,7 +87,7 @@ import fi.wiskopdr.text.Text;
 public class FormuleEditorWithAnswer extends FormuleEditor implements InteractionViewWithMisconceptions, CBookEventListener, FacetAware, TekstElementWithFont, PopupListener
 {
 	
-	private final ActivityComponent activity;
+	private final ActivityInterface activity;
 	class RestartStatistiek implements RestartHandler {
 		Promise<?> r;
 		
@@ -128,7 +129,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			super(a, h, isVergelijkingVak, randomVarNamen, randomVarWaarden, null);
 		}
 		
-		public FormuleEditorPopup(ActivityComponent a, HashMap<String, Object> h, boolean isVergelijkingVak, AntwoordVakChecker avChecker)
+		public FormuleEditorPopup(ActivityInterface a, HashMap<String, Object> h, boolean isVergelijkingVak, AntwoordVakChecker avChecker)
 		{
 			super(a, h, isVergelijkingVak, randomVarNamen, randomVarWaarden, avChecker);
 		}
@@ -364,7 +365,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 //		this(h, isVergelijkingVak, fe, null, null, avChecker);
 //	}
 	
-	public FormuleEditorWithAnswer(ActivityComponent a, HashMap<String, Object> h, boolean isVergelijkingVak, FormuleEditorWithSteps fe, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, AntwoordVakChecker avChecker)
+	public FormuleEditorWithAnswer(ActivityInterface a, HashMap<String, Object> h, boolean isVergelijkingVak, FormuleEditorWithSteps fe, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, AntwoordVakChecker avChecker)
 	{
 		super();
 		activity = a;
@@ -441,7 +442,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 					{
 						logging = fe.dwologger;
 					} else {
-						LogBuilder dwoLogger = new LogBuilder(activity).setLogOption(launchState.getBoolean("logOption", false));
+						LogBuilder dwoLogger = activity.logBuilder().setLogOption(launchState.getBoolean("logOption", false));
 						if(launchState.containsKey("scoreMax"))
 						{
 							dwoLogger.setMaxScore(scoreMax);
@@ -746,7 +747,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		else
 			checkPanel.getElement().getStyle().setCursor(Cursor.DEFAULT);
 // bij noordhof nooit.
-		if (!activity.parameters().keyboardStyle().equals("noordhoff")) {
+		if (!activity.isNoordhoff()) {
 		// popup met feedback alleen tonen als niet correct 
 		if (feedbackLabel.isVisible() && (isCorrect() == null || !isCorrect())) // correct is null is half/doorgaan, correct is true is goed, correct is false is fout
 		{

@@ -24,12 +24,14 @@ import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieReview;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.berekeningvak.BerekeningVakButton;
+import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.Review;
 import nl.uu.fi.dwo.mobile.utils.StringUtils;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
@@ -155,10 +157,10 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	private boolean relocate;
 	private boolean view = false;
 	private boolean verzamelDoel;
-	private DWOLogger dwologger;
+	private Logging dwologger;
 	private CorrectieFacade correctie;
 	private Widget widget;
-	private ActivityComponent activity;
+	private ActivityInterface activity;
 	
 	public void randomizePositions()
 	{
@@ -841,7 +843,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	}
 	
 	
-    public CheckSleepUnit(ActivityComponent activity, HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipListSleep, TekstVakPanel[] ipListDoel)
+    public CheckSleepUnit(ActivityInterface activity, HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipListSleep, TekstVakPanel[] ipListDoel)
 	{
 		this.activity = activity;
 //		if (h != null && h.get("breedte") != null)
@@ -928,13 +930,14 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 				knopImageString = (String)launchData.get("knopImageString");
 			
 			if(logOption) {
-				dwologger = new DWOLogger(activity);
-				dwologger.setLogID(logID);
-				dwologger.setClassName("fi.wiskopdr.CheckSleepUnitPanel/" + getAantalSleepObjects() + "," + getAantalDoelObjects());
-				dwologger.setMaxScore(scoreMax);
-				dwologger.setLogObjectives(logObjectives);
-				dwologger.setSMObjectives(smObjectives);
-				dwologger.setTeltMee(teltMee);
+				dwologger = activity.logBuilder().setLogOption(logOption)
+				.setLogID(logID)
+				.setClassName("fi.wiskopdr.CheckSleepUnitPanel/" + getAantalSleepObjects() + "," + getAantalDoelObjects())
+				.setMaxScore(scoreMax)
+				.setLogObjectives(logObjectives)
+				.setSmObjectives(smObjectives)
+				.setTeltMee(teltMee)
+				.build();
 			}
 		}
 	}

@@ -39,7 +39,7 @@ public interface DWOplayerParameters {
 	boolean isNavTitle();
 	
 	
-	int getWindowHeight();
+	//int getWindowHeight();
 	StatusBarIF getStatusBar(ActivityComponent a);
 	ScoreNavIF  getScoreNav(ActivityComponent a);
 

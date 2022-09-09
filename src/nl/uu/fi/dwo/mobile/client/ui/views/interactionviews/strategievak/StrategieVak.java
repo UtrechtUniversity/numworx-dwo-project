@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.HasResize;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
@@ -64,10 +65,10 @@ public class StrategieVak implements InteractionStub, FacetAware, TekstElementWi
 	String[] randomVarNamen = null;
 	HashMap<String, Number> randomVarWaarden = null;
 
-	private final ActivityComponent activity;
+	private final ActivityInterface activity;
 	
 	
-	public StrategieVak(ActivityComponent a, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int volleBreedte)
+	public StrategieVak(ActivityInterface a, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int volleBreedte)
 	{
 		this.activity = a;
 		if (h != null && h.containsKey("breedte"))

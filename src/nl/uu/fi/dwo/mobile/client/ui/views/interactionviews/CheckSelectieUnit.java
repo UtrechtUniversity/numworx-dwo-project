@@ -64,6 +64,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieReview;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
@@ -499,7 +500,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	}
 
 	private CorrectieFacade correctie;
-	private final ActivityComponent activity;
+	private final ActivityInterface activity;
 
 	@Override
 	public HashMap<String, Object> getState() {
@@ -861,7 +862,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		comRoot.addCBookEventListener("action.setNotEditable", this);
 	}
 	
-	public CheckSelectieUnit(ActivityComponent a, HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipList)
+	public CheckSelectieUnit(ActivityInterface a, HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipList)
 	{
 		this.activity = a;
 //		if (h != null && h.containsKey("breedte"))
@@ -952,7 +953,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		String[] smObjectives = JSONUtilities.toStringArray(launchData.get("smObjectives"));
 		String[] smForeknowledge = JSONUtilities.toStringArray(launchData.get("smForeknowledge"));
 		if(logOption || smObjectives != null) {
-			LogBuilder builder = new LogBuilder(activity)
+			LogBuilder builder = activity.logBuilder()
 					.setLogOption(logOption)
 					.setLogID(logID)
 					.setClassName("fi.wiskopdr.CheckUnitPanel/" + getAantalSelectieObjecten())

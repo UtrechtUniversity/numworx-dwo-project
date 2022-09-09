@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 
 import com.google.gwt.dom.client.Style;
@@ -56,9 +57,9 @@ public class StelselRekenVak extends LayoutPanel  {
 	//Image ic;
 	private OpdrNavIF comRoot;
 
-	private ActivityComponent activity;
+	private ActivityInterface activity;
 	
-	public StelselRekenVak(ActivityComponent a, StelselAntwoordVak antwoordVak, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
+	public StelselRekenVak(ActivityInterface a, StelselAntwoordVak antwoordVak, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
 		this.activity = a;
 		int hoogte = antwoordVak.hoogte - (antwoordVak.oplossingenRegelZichtbaar?27:0);

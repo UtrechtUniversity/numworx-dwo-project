@@ -42,6 +42,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.ShareFacade;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.HasResize;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
@@ -384,7 +385,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 	private String logID;
 	private boolean fullScreenOption;
 	private FullScreenButton fsBtn;
-	private final ActivityComponent activity;
+	private final ActivityInterface activity;
 	
 	
 	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
@@ -398,7 +399,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 	}
 	
 	//Hiermee maak je het basispanel dat alle componenten van een pagina bevat.
-	public TekstVakPanel(ActivityComponent a, int breedte, int hoogte, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
+	public TekstVakPanel(ActivityInterface a, int breedte, int hoogte, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
 		activity = a;
 		this.randomVarNamen = randomVarNamen;
@@ -474,7 +475,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 			return comRoot.getUUID();
 	}
 	
-	public TekstVakPanel(ActivityComponent a, HashMap<String, Object> hh, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int volleBreedte)
+	public TekstVakPanel(ActivityInterface a, HashMap<String, Object> hh, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int volleBreedte)
 	{
 		activity = a;
 		this.randomVarNamen = randomVarNamen;
@@ -551,7 +552,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 			puntenAftrekPopup = launchState.getInt("puntenAftrekPopup");
 		logOption = launchState.getBoolean("logOption", false);
 		if(logOption) {
-			LogBuilder builder = new LogBuilder(activity)
+			LogBuilder builder = activity.logBuilder()
 				.setLogOption(true)
 				.setLogID(launchState.getString("logID"))
 				.setMaxScore(0)
@@ -1162,13 +1163,13 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		}
 	}
 		
-	public TekstVakPanel(ActivityComponent a, int breedte, int hoogte, String[] randomVarNamen,
+	public TekstVakPanel(ActivityInterface a, int breedte, int hoogte, String[] randomVarNamen,
 			HashMap randomVarWaarden, AnchorContext anchorContext) {
 		this(a, breedte, hoogte, randomVarNamen, randomVarWaarden);
 		this.anchorContext = anchorContext;
 	}
 
-	public TekstVakPanel(ActivityComponent a, HashMap<String, Object> hh,
+	public TekstVakPanel(ActivityInterface a, HashMap<String, Object> hh,
 			String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, AnchorContext anchorContext, int vollebreedte) {
 		this(a, hh, randomVarNamen, randomVarWaarden, vollebreedte);
 		this.anchorContext = anchorContext;
@@ -5593,9 +5594,8 @@ private Object CamelCase(String name) {
 	}
 	
 	public boolean isNoordhoff()
-	{
-		String dependentName = activity.parameters().keyboardStyle();
-		return "noordhoff".equals(dependentName);
+	{		
+		return activity.isNoordhoff();
 	}
 	
 	Logging dwologger;

@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.user.client.DOM;
@@ -44,16 +45,16 @@ public class ImageView implements IsWidget, TekstElement
 	private int ashoogte;
 	private static Map<String, Object> map;
 	private int vollebreedte = -1;
-	private final ActivityComponent activity;
+	private final ActivityInterface activity;
 
-	public ImageView(String naam, ActivityComponent a)
+	public ImageView(String naam, ActivityInterface activity2)
 	{
-		this.activity = a;
+		this.activity = activity2;
 		this.naam = naam;
 	}
 
-	public ImageView(String naam2, int vollebreedte, ActivityComponent a) {
-		this(naam2,a);
+	public ImageView(String naam2, int vollebreedte, ActivityInterface activity2) {
+		this(naam2,activity2);
 		this.vollebreedte = vollebreedte;
 	}
 
@@ -86,7 +87,7 @@ public class ImageView implements IsWidget, TekstElement
 		{
 			String url = (String) map.get(snaam + "/u");
 			if (url.startsWith("/"))
-				url = "//" + activity.parameters().getCDN() + url; // IS DIT ALTIJD GOED?
+				url = "//" + "cdn.dwo.nl" + url; // IS DIT ALTIJD GOED? was parameters.getCDN soms getHost, soms cdn.dwo.nl
 			Number width = null, height = null;
 			object = w();
 			if(object instanceof Number) width = (Number) object;

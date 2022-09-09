@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 
 public class ScoreWidget implements InteractionView{
 
@@ -28,7 +29,7 @@ public class ScoreWidget implements InteractionView{
     boolean score = false;
     boolean goedFout = false; 
 	
-	public ScoreWidget(ActivityComponent a, HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
+	public ScoreWidget(ActivityInterface a, HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
 		
 		if (h != null && h.containsKey("breedte"))

@@ -21,6 +21,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVak;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
@@ -38,10 +39,10 @@ class StappenKeuzeVak implements IsWidget {
 	DockLayoutPanel huidigeKeuzeVak;
 	String[] randomVarNamen = null;
 	HashMap<String, Number> randomVarWaarden = null;
-	private ActivityComponent activity;
+	private ActivityInterface activity;
 	
 	
-	StappenKeuzeVak(ActivityComponent a, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden)
+	StappenKeuzeVak(ActivityInterface a, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden)
 	{
 		this.activity = a;
 		HashMap<String, Object> launchState = null;

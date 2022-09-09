@@ -3,6 +3,9 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import java.util.Optional;
 
+import com.google.gwt.user.client.Window;
+import com.google.web.bindery.event.shared.EventBus;
+
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
@@ -32,4 +35,13 @@ public interface ActivityInterface {
 
 	Optional<DwoGlobalVars> vars();
 
+	EventBus getEventBus();
+
+	void tickle();
+
+	String getStubView();
+
+	default int getWindowHeight() {
+		return Window.getClientHeight();
+	}
 }

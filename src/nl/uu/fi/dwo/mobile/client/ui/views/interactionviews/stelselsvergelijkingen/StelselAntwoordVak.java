@@ -26,6 +26,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
@@ -85,9 +86,9 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware, TekstEle
 	private Expressie[][] oplossingen;
 	private OpdrNavIF comRoot;
 	private CorrectieFacade correctie;
-	private ActivityComponent activity;
+	private ActivityInterface activity;
 	
-	public StelselAntwoordVak(ActivityComponent a, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
+	public StelselAntwoordVak(ActivityInterface a, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
 		this.activity = a;
 		if (h != null && h.containsKey("breedte"))

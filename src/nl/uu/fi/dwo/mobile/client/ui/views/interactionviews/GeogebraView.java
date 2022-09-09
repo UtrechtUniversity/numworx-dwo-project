@@ -17,8 +17,10 @@ import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.ImageTextButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
+import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.Review;
 
@@ -119,7 +121,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	 * Deze zet namelijk changed op true en haalt de feedbackimmages weg.
 	 */
 	private boolean processingDWOCheck = false;
-	private ActivityComponent activity;
+	private ActivityInterface activity;
 	
 	public native static Object getGgbWindow(Element frame) /*-{
 		return frame.contentWindow;
@@ -162,7 +164,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 			state.put("position", "");
 			result.put("state", state);
 			result.put("type", type);
-			dwologger.getLogger().log(result);
+			((DWOLogger)dwologger).getLogger().log(result);
 		}
 	}	
 	
@@ -178,7 +180,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 
 	}-*/;
 
-	private GeogebraView(ActivityComponent a)
+	private GeogebraView(ActivityInterface a)
 	{
 		super();
 		this.activity = a;
@@ -186,7 +188,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		mainPanel.setStylePrimaryName("GeogebraView");
 	}
 
-	public GeogebraView(ActivityComponent a, HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap<String,?> randomVarWaarden)
+	public GeogebraView(ActivityInterface a, HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap<String,?> randomVarWaarden)
 	{
 		this(a);
 		if(!randomVarWaarden.isEmpty()) 
@@ -232,7 +234,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		if (ggbMap.containsKey("scoreMax")) 
 			scoreMax = ggbMap.getInt("scoreMax");
 				
-		frame = new Frame(activity.parameters().getStubView() + "GeoGebra.html?locale=" + StubView.getLocale());
+		frame = new Frame(activity.getStubView() + "GeoGebra.html?locale=" + StubView.getLocale());
 		frame.setStylePrimaryName("StubView");
 		frame.addStyleDependentName("borderless");
 		frame.addAttachHandler(this);
@@ -260,10 +262,11 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		//initFrame();
 		if (ggbMap.getBoolean("logOption", false))
 		{
-			dwologger = new DWOLogger(activity);
-			dwologger.setMaxScore(scoreMax);
-			dwologger.setLogID(ggbMap.getString("logID"));
-			dwologger.setClassName("fi.wiskopdr.Geogebra4Panel");
+			dwologger = activity.logBuilder().setLogOption(true)
+					.setClassName("fi.wiskopdr.Geogebra4Panel")
+					.setLogID(ggbMap.getString("logID"))
+					.setMaxScore(scoreMax)
+					.build();
 		}
 		return this;
 
@@ -377,7 +380,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		setCheckImg(); // set feedBack vinkje/kruis
 	}
 
-	private DWOLogger dwologger;
+	private Logging dwologger;
 	private int mode;
 	private boolean review;
 	private void setAttempt() {

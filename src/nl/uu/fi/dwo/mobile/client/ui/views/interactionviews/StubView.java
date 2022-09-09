@@ -23,6 +23,7 @@ import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
@@ -97,10 +98,10 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}
 	private HandlerRegistration detachhandler; 
 
-	public StubView(ActivityComponent activity, String html, HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden)
+	public StubView(ActivityInterface activity, String html, HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden)
 	{
 		this.activity = activity;
-		html = activity.parameters().getStubView() + html;
+		html = activity.getStubView() + html;
 		String locale = getLocale();		
 		html += "?locale=" + locale;
 		
@@ -159,7 +160,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			teltmee = innerMap.getBoolean("teltmee");
 		int soortVak = outermap.getInt("soortInteractiePanel");
 		if (innerMap.containsKey("checkDocent")) checkDocent = innerMap.getBoolean("checkDocent");
-		logging = new LogBuilder(activity).setClassName(className(soortVak)).setLaunchData(innerMap).build();
+		logging = activity.logBuilder().setClassName(className(soortVak)).setLaunchData(innerMap).build();
 	}
 	private String className(int s) {
 		switch(s) {
@@ -189,7 +190,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}
 
 	private HashMap<String, Object> lastResort;
-	private final ActivityComponent activity;
+	private final ActivityInterface activity;
 	private HashMap<String, Object> getState0() {
 		if(innerView != null)
 		{
@@ -474,7 +475,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}-*/;
 
 	private void tickle() {
-		activity.parameters().tickle();
+		activity.tickle();
 	}
 	
 	

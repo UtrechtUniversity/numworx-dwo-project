@@ -15,6 +15,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.GeogebraView;
@@ -55,17 +56,17 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 	private Image  popupImage;
 	private InteractionView delegate;
 	private PopupListener   popupListener;
-	private ActivityComponent activity;
+	private ActivityInterface activity;
 	
 	
-	public PopupFacade(ObjectMap h, InteractionView delegate, ActivityComponent a)
+	public PopupFacade(ObjectMap h, InteractionView delegate, ActivityInterface a)
 	{
 		this(h,a);
 		this.delegate = delegate;
 	}
 	
 	
-	public PopupFacade(ObjectMap h, ActivityComponent a) {
+	public PopupFacade(ObjectMap h, ActivityInterface a) {
 		this.activity = a;
 		if(h == null) return;
 		popup = h.getBoolean("popup", false);
@@ -157,7 +158,7 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 		imageWidth = widths[setNr];
 		imageHeight = heights[setNr];
 		
-		return popupImage = newImage(interactiePanelSetNames[setNr], activity.parameters());
+		return popupImage = newImage(interactiePanelSetNames[setNr], activity);
 	}
 	
 	public InteractionView getDelegate()

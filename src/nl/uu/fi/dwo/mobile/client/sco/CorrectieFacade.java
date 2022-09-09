@@ -87,8 +87,8 @@ public class CorrectieFacade {
     public void correctie(Map<String,Object> state) {}
 
     @Deprecated
-    public static void showReview(Map<String,Object> h0, IsWidget w, ActivityComponent a) {
-    	if(h0 == null || a.memento().getLessonMode() != LessonMode.browse) return;
+    public static void showReview(Map<String,Object> h0, IsWidget w, ActivityInterface a) {
+    	if(h0 == null || a.getLessonMode() != LessonMode.browse) return;
     	ObjectMap h = JSONUtilities.wrapMap(h0);
     	h = h.getObjectMap("reviewInteractieData");
     	if(h != null && h.containsKey("reviewScoreCorrectie") && h.getInt("reviewScoreCorrectie")!=0) {
@@ -135,11 +135,11 @@ public class CorrectieFacade {
     	}
     }
     public static CorrectieFacade get(HashMap<String, Object> h, InteractionView view,
-        int scoreMax, OpdrNavIF comRoot, Logging logging, ActivityComponent a) {
+        int scoreMax, OpdrNavIF comRoot, Logging logging, ActivityInterface a) {
       return instance.create(h, view, view.asWidget(), scoreMax, comRoot, logging, a, false);
     }
     public static CorrectieFacade get(HashMap<String, Object> h, InteractionView view, IsWidget w,
-        int scoreMax, OpdrNavIF comRoot, Logging logging, ActivityComponent a) {
+        int scoreMax, OpdrNavIF comRoot, Logging logging, ActivityInterface a) {
       return instance.create(h, view, w.asWidget(), scoreMax, comRoot, logging, a, false);
     }
 
@@ -149,7 +149,7 @@ public class CorrectieFacade {
 	}
 
 	public static CorrectieFacade get(HashMap<String, Object> h, StubView view, Widget widget, int scoreMax,
-			OpdrNavIF comRoot, Logging logging, ActivityComponent activity, boolean checkDocent) {
+			OpdrNavIF comRoot, Logging logging, ActivityInterface activity, boolean checkDocent) {
 		return instance.create(h, view, widget, scoreMax, comRoot, logging, activity, checkDocent);
 	}
    

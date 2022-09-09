@@ -28,6 +28,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVak;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
@@ -55,10 +56,10 @@ public class StappenKeuzeVak {
 	private int hoogtePopup;
 	String[] randomVarNamen = null;
 	HashMap<String, Number> randomVarWaarden = null;
-	private ActivityComponent activity;
+	private ActivityInterface activity;
 	
 	
-	public StappenKeuzeVak(ActivityComponent a, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden)
+	public StappenKeuzeVak(ActivityInterface a, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden)
 	{
 		this.activity = a;
 		HashMap<String, Object> launchState = null;
@@ -135,7 +136,7 @@ public class StappenKeuzeVak {
 			public void onClick(ClickEvent e)
 			{
 				int top = basisPanel.getAbsoluteTop() + basisPanel.getOffsetHeight();
-			    int topMax = activity.parameters().getWindowHeight() - hoogtePopup;
+			    int topMax = activity.getWindowHeight() - hoogtePopup;
 			    top = Math.min(top,topMax);
 			    popupBox.setPopupPosition(basisPanel.getAbsoluteLeft(), top);
 				if(isShowing)
@@ -284,7 +285,7 @@ public class StappenKeuzeVak {
 			public void onClick(ClickEvent e)
 			{
 				int top = basisPanel.getAbsoluteTop() + basisPanel.getOffsetHeight();
-				int topMax = activity.parameters().getWindowHeight() - hoogtePopup;
+				int topMax = activity.getWindowHeight() - hoogtePopup;
 				top = Math.min(top, topMax);
 				popupBox.setPopupPosition(basisPanel.getAbsoluteLeft(), top);
 				if(isShowing)

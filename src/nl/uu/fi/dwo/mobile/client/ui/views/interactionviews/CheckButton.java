@@ -47,10 +47,12 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
+import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
 
@@ -214,10 +216,10 @@ public class CheckButton implements InteractionStub, CBookEventListener
 	private boolean actieBewaren=false;
 	private boolean actieAfronden=false;
     private boolean actionNextPage=false;
-	private final ActivityComponent activity;
+	private final ActivityInterface activity;
 
 	
-	public CheckButton(ActivityComponent a, HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
+	public CheckButton(ActivityInterface a, HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
 		this.activity = a;
 		ObjectMap map = JSONUtilities.wrapMap(h);
@@ -258,13 +260,13 @@ public class CheckButton implements InteractionStub, CBookEventListener
 
 		if (logOption)
 	    {	
-	    	DWOLogger dwologger = new DWOLogger(activity);
+	    	LogBuilder dwologger = activity.logBuilder().setLogOption(logOption);
 	    	dwologger.setMaxScore(0);
 			dwologger.setLogID(logID);
 	    	dwologger.setClassName("fi.wiskopdr.CheckButton");
 			dwologger.setLogObjectives(logObjectives);
 			dwologger.setLogIDLabel(logIDLabel);
-	    	logging = dwologger;
+	    	logging = dwologger.build();
 	    }
 	}
 	

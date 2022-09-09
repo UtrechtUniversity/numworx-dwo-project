@@ -54,15 +54,17 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
+import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.Review;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
 public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEventListener {
 	
-	private final ActivityComponent activity;
+	private final ActivityInterface activity;
 
 	//public static Text_nl rb = new Text_nl();
 	
@@ -168,7 +170,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 	private CorrectieFacade correctie;
 	
 	
-	public AntwoordKeuzeVak(ActivityComponent activity, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden, int volleBreedte)
+	public AntwoordKeuzeVak(ActivityInterface activity, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden, int volleBreedte)
 	{
 		this.activity = activity;
 		if (h != null && h.containsKey("breedte"))
@@ -237,17 +239,17 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 				logOption = true;
 			if (logOption  )
 		    {	
-		    	DWOLogger dwologger = new DWOLogger(activity);
+		    	LogBuilder dwologger = activity.logBuilder().setLogOption(logOption);
 		    	dwologger.setMaxScore(scoreMax);
 		    	dwologger.setLogID(logID);
 		    	dwologger.setClassName("fi.wiskopdr.AntwoordKeuzeVak/"+keuzeMogelijkheden.length);
 		    	if(map.containsKey("logIDLabel"))
 					dwologger.setLogIDLabel(map.getString("logIDLabel"));
 		    	dwologger.setLogObjectives(logObjectives);
-		    	dwologger.setSMObjectives(smObjectives);
+		    	dwologger.setSmObjectives(smObjectives);
 		    	dwologger.setLogIDLabel(logIDLabel);
 		    	dwologger.setTeltMee(teltMee);
-		    	logging = dwologger;
+		    	logging = dwologger.build();
 		    }
 			
 		}
@@ -297,7 +299,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 				if(!editable) return;
 				
 				int top = basisPanel.getAbsoluteTop() + basisPanel.getOffsetHeight();
-			    int topMax = activity.parameters().getWindowHeight() - hoogtePopup;
+			    int topMax = activity.getWindowHeight() - hoogtePopup;
 			    top = Math.min(top,topMax);
 			    popupBox.setPopupPosition(basisPanel.getAbsoluteLeft(), top);
 				if(isShowing)
@@ -575,7 +577,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 				if (!editable) return;
 				
 				int top = basisPanel.getAbsoluteTop() + basisPanel.getOffsetHeight();
-				int topMax = activity.parameters().getWindowHeight() - hoogtePopup;
+				int topMax = activity.getWindowHeight() - hoogtePopup;
 				top = Math.min(top, topMax);
 				popupBox.setPopupPosition(basisPanel.getAbsoluteLeft(), top);
 				if(isShowing)

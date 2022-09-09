@@ -4,31 +4,32 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVak;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 
 class StrategieTekstVakPanel extends TekstVakPanel {
 
-	public StrategieTekstVakPanel(ActivityComponent a, int breedte, int hoogte, String[] randomVarNamen,
+	public StrategieTekstVakPanel(ActivityInterface a, int breedte, int hoogte, String[] randomVarNamen,
 			HashMap<String, Number> randomVarWaarden) {
 		super(a, breedte, hoogte, randomVarNamen, randomVarWaarden);
 		// TODO Auto-generated constructor stub
 	}
 
-	public StrategieTekstVakPanel(ActivityComponent a, HashMap<String, Object> hh, String[] randomVarNamen,
+	public StrategieTekstVakPanel(ActivityInterface a, HashMap<String, Object> hh, String[] randomVarNamen,
 			HashMap<String, Number> randomVarWaarden, AnchorContext context, int breedte) {
 		super(a, hh, randomVarNamen, randomVarWaarden, context, breedte);
 		// TODO Auto-generated constructor stub
 	}
 
-	public StrategieTekstVakPanel(ActivityComponent a, HashMap<String, Object> hh, String[] randomVarNamen,
+	public StrategieTekstVakPanel(ActivityInterface a, HashMap<String, Object> hh, String[] randomVarNamen,
 			HashMap<String, Number> randomVarWaarden, int breedte) {
 		super(a, hh, randomVarNamen, randomVarWaarden, breedte);
 		// TODO Auto-generated constructor stub
 	}
 
-	public StrategieTekstVakPanel(ActivityComponent a, int breedte, int hoogte, String[] randomVarNamen,
+	public StrategieTekstVakPanel(ActivityInterface a, int breedte, int hoogte, String[] randomVarNamen,
 			HashMap randomVarWaarden, AnchorContext anchorContext) {
 		super(a, breedte, hoogte, randomVarNamen, randomVarWaarden, anchorContext);
 		// TODO Auto-generated constructor stub

@@ -21,10 +21,12 @@ import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieReview;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
+import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.Review;
 import nl.uu.fi.dwo.mobile.utils.StringUtils;
 
@@ -112,7 +114,7 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
 	
 	private boolean logOption;
 	private String logID;
-	private DWOLogger dwologger;
+	private Logging dwologger;
 	
 	private boolean[][] logObjectives;
 	
@@ -123,9 +125,9 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
 	private boolean view = false;
 	private CorrectieFacade correctie;
 	private Widget widget;
-	private final ActivityComponent activity;
+	private final ActivityInterface activity;
 	
-	public CheckValueUnit(ActivityComponent activity, HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipValueList)
+	public CheckValueUnit(ActivityInterface activity, HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipValueList)
 	{
 		this.activity = activity;
 //		if (h != null && h.get("breedte") != null)
@@ -194,13 +196,13 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
 			if (smObjectives != null && smObjectives.length > 0)
 				logOption = true;
 			if(logOption) {
-				dwologger = new DWOLogger(activity);
-				dwologger.setLogID(logID);
-				dwologger.setClassName("fi.wiskopdr.CheckValueUnitPanel");
-				dwologger.setMaxScore(scoreMax);
-				dwologger.setLogObjectives(logObjectives);
-				dwologger.setSMObjectives(smObjectives);
-				dwologger.setTeltMee(teltMee);
+				dwologger = activity.logBuilder().setLogOption(logOption)
+				.setLogID(logID)
+				.setClassName("fi.wiskopdr.CheckValueUnitPanel")
+				.setMaxScore(scoreMax)
+				.setLogObjectives(logObjectives)
+				.setSmObjectives(smObjectives)
+				.setTeltMee(teltMee).build();
 			}
 
 		}

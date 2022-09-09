@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 
@@ -37,15 +38,16 @@ public class ShareFacade implements InteractionView, TekstElementWithFont {
 		return delegate;
 	}
 	
-	public static InteractionView wrap(ObjectMap launchData, InteractionView view, ActivityComponent activity)
+	public static InteractionView wrap(ObjectMap launchData, InteractionView view, ActivityInterface activity)
 	{
 		if( ! launchData.containsKey(SHARE_KEY))		
 			return view;
 		String key = launchData.getString(SHARE_KEY);
+		Memento memento = ((ActivityComponent) activity).memento();
 		if ( view instanceof TekstElementWithFont )
-			return new ShareFacade(key, view, (TekstElementWithFont) view, activity.memento() );
+			return new ShareFacade(key, view, (TekstElementWithFont) view, memento );
 		else
-			return new ShareFacade(key, view, null, activity.memento());
+			return new ShareFacade(key, view, null, memento);
 	}
 	
 //	static void setSharedState(JSONObject stateMap) {

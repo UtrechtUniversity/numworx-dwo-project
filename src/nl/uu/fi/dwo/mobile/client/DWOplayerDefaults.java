@@ -37,7 +37,6 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 		return false;
 	}
 	
-	@Override
 	public int getWindowHeight() {
 		return Window.getClientHeight();
 	}

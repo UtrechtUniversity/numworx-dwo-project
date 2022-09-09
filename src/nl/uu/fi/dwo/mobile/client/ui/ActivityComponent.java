@@ -78,4 +78,13 @@ public abstract class ActivityComponent implements ActivityInterface {
 		return memento().getLessonMode();
 	}
 	
+	@Override
+	public void tickle() {
+		parameters().tickle();
+	}
+	
+	@Override
+	public String getStubView() {
+		return parameters().getStubView();
+	}
 }

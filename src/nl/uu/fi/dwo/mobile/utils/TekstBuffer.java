@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.sco.ShareFacade;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.IFrameView;
@@ -67,15 +68,15 @@ public class TekstBuffer
 	}
 	
 	private AnchorContext context;
-	private ActivityComponent activity;
+	private ActivityInterface activity;
 	/**
 	 * Tekst parser met context voor goto links.
 	 * @param names
 	 * @param values
 	 * @param anchorContext
 	 */
-	public TekstBuffer(ActivityComponent a, String[] names, HashMap<String,Number> values, AnchorContext anchorContext) {
-		this(a);
+	public TekstBuffer(ActivityInterface activity2, String[] names, HashMap<String,Number> values, AnchorContext anchorContext) {
+		this(activity2);
 		randomVarNamen = names;
 		randomVarWaarden = values;
 		context = anchorContext;
@@ -91,7 +92,7 @@ public class TekstBuffer
 	}
 	*/
 
-	public TekstBuffer(ActivityComponent activity)
+	public TekstBuffer(ActivityInterface activity)
 	{
 		this.activity = activity;
 		aantalVakken = 0;

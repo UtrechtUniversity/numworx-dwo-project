@@ -24,6 +24,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
@@ -33,7 +34,7 @@ import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 public class BerekeningVak implements InteractionView, TekstElementWithFont, CBookEventListener{
 	
 	//context
-	private final ActivityComponent activity;
+	private final ActivityInterface activity;
 	private TekstRegel parentRegel;
 	private OpdrNavIF comRoot;
 	private PopupFacade facade;
@@ -74,7 +75,7 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 	private int hoogte;
 	protected FormuleFont font;
 	
-	public BerekeningVak(ActivityComponent a, HashMap<String, Object> launchData, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden) {
+	public BerekeningVak(ActivityInterface a, HashMap<String, Object> launchData, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden) {
 		activity = a;
 		font = FormuleFont.createFromFontSize(XMLView.getDefaultFontSize());
 		if(launchData == null)

@@ -26,8 +26,10 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
+import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.Review;
@@ -158,9 +160,9 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	private static boolean fontOvererving = false;
 	private FormuleFont font;
 	private CorrectieFacade correctie;
-	private ActivityComponent activity;
+	private ActivityInterface activity;
 
-	public AntwoordTekstVak2(ActivityComponent a, HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
+	public AntwoordTekstVak2(ActivityInterface a, HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
 	{	activity = a;
 		font = FormuleFont.createFromFontSize(XMLView.getDefaultFontSize());
 
@@ -231,16 +233,17 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 				logOption = true;
 			if (logOption)
 			{
-				DWOLogger dwologger = new DWOLogger(activity);
+				LogBuilder dwologger = activity.logBuilder();
+				dwologger.setLogOption(logOption);
 				dwologger.setMaxScore(scoreMax);
 				dwologger.setLogID(logID);
 				dwologger.setClassName("fi.wiskopdr.AntwoordTekstVak");
 				if (map.containsKey("logIDLabel"))
 					dwologger.setLogIDLabel(map.getString("logIDLabel"));
 				dwologger.setLogObjectives(logObjectives);
-				dwologger.setSMObjectives(smObjectives);
+				dwologger.setSmObjectives(smObjectives);
 				dwologger.setTeltMee(teltMee);
-				logging = dwologger;
+				logging = dwologger.build();
 			}
 			if (map.containsKey("boxMetRand"))
 				boxMetRand = map.getBoolean("boxMetRand");

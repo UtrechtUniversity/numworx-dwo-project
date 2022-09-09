@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import fi.wiskopdr.AntwoordStelselVakChecker;
 import fi.wiskopdr.AntwoordVakChecker;
@@ -66,7 +67,7 @@ public class StelselEditor extends FormuleEditorWithSteps
 	private StelselPijl[] pijlen = null;
 	
 	
-	public StelselEditor(ActivityComponent a, StelselRekenVak hoofdPanel, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, AntwoordVakChecker avChecker)
+	public StelselEditor(ActivityInterface a, StelselRekenVak hoofdPanel, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, AntwoordVakChecker avChecker)
 	{
 		super(a, h, true, randomVarNamen, randomVarWaarden, avChecker);
 		zetStandaardOpties();
@@ -76,7 +77,7 @@ public class StelselEditor extends FormuleEditorWithSteps
 		hoogte = hoofdPanel.getOffsetHeight();
 	}
 	
-	public StelselEditor(ActivityComponent a, StelselEditor parent, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, AntwoordVakChecker avChecker)
+	public StelselEditor(ActivityInterface a, StelselEditor parent, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, AntwoordVakChecker avChecker)
 	{
 		super(a, h, true, randomVarNamen, randomVarWaarden, avChecker);
 		this.parent = parent;

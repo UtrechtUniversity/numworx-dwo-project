@@ -30,6 +30,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
@@ -91,14 +92,14 @@ public class StelselOplossingenVak
 	private OpdrNavIF comRoot;
 	private boolean formuleToolBijFocus = true;
 
-	private ActivityComponent activity;
+	private ActivityInterface activity;
 	
 	public static void zetFontOverervingForm(boolean b)
 	{	fontOvererving = b;
 	}
 
 	
-	public StelselOplossingenVak(ActivityComponent a, StelselAntwoordVak parent, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
+	public StelselOplossingenVak(ActivityInterface a, StelselAntwoordVak parent, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
 		this.activity = a;
 		ObjectMap map = JSONUtilities.wrapMap(h);

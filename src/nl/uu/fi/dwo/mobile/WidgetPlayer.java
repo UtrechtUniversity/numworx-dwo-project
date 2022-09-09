@@ -6,11 +6,13 @@ import java.util.Optional;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
@@ -212,6 +214,24 @@ public TrafficAgent agent() {
 @Override
 public Optional<DwoGlobalVars> vars() {
 	return Optional.empty();
+}
+
+private final EventBus bus = new SimpleEventBus();
+@Override
+public EventBus getEventBus() {
+	return bus;
+}
+
+@Override
+public void tickle() {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public String getStubView() {
+	// TODO Auto-generated method stub
+	return "";
 }
 
 }

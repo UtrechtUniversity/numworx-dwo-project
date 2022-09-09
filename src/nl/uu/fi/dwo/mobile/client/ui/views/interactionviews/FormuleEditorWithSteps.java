@@ -26,6 +26,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
@@ -227,7 +228,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	{	fontOvererving = b;
 	}
 
-	public FormuleEditorWithSteps(ActivityComponent a, HashMap<String, Object> h, boolean isVergelijkingVak, String[] randomVarNamen, HashMap randomVarWaarden, AntwoordVakChecker avChecker)
+	public FormuleEditorWithSteps(ActivityInterface a, HashMap<String, Object> h, boolean isVergelijkingVak, String[] randomVarNamen, HashMap randomVarWaarden, AntwoordVakChecker avChecker)
 	{	activity = a;
 		font = FormuleFont.createFromFontSize(XMLView.getDefaultFontSize());
 		
@@ -312,7 +313,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			else 
 				logOption = launchStateMap.getBoolean("logOption", false);
 			if(logOption) {
-				LogBuilder builder = new LogBuilder(activity);
+				LogBuilder builder = activity.logBuilder();
 				builder.setLogOption(launchStateMap.getBoolean("logOption", false));
 				String type = isVergelijkingVak? "Vergelijking":"Formule";
 				if (launchStateMap.containsKey("logID"))
@@ -1268,7 +1269,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
   private CorrectieFacade correctie;
   private LessonMode lessonMode = LessonMode.normal;
  
-  protected final ActivityComponent activity;
+  protected final ActivityInterface activity;
 
   private TekstRegel parentRegel;
 
@@ -1407,7 +1408,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	public Widget getAsPanel()
 	{
 	    if (widget == null) {
-	    	widget = activity.memento().isReview() ? CorrectieFacade.wrap(mainPanel, activity) : mainPanel;
+	    	widget = activity.isReview() ? CorrectieFacade.wrap(mainPanel, activity) : mainPanel;
 	    	if (widget != mainPanel) widget.setPixelSize(breedte, hoogte);
 	    }
 		return widget;
@@ -1718,7 +1719,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 
 	static class FormuleEditorWithCalculator extends FormuleEditorWithAnswer {
 
-		public FormuleEditorWithCalculator(ActivityComponent activity, HashMap<String, Object> h,
+		public FormuleEditorWithCalculator(ActivityInterface activity, HashMap<String, Object> h,
 				boolean isVergelijkingVak, FormuleEditorWithSteps fe,
 				String[] randomVarNamen,
 				HashMap<String, Number> randomVarWaarden,
@@ -4322,8 +4323,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	
 	public boolean isNoordhoff()
 	{
-		String dependentName = activity.parameters().keyboardStyle();
-		return "noordhoff".equals(dependentName);
+		return activity.isNoordhoff();
 	}
 
 	private String toMathML(String source) {

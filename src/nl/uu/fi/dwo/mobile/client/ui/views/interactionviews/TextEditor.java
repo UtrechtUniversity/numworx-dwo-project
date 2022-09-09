@@ -207,7 +207,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		//shown = true;
 	}
 	
-	public TextEditor(ActivityComponent a, HashMap<String, Object> currentVakGegevens,
+	public TextEditor(ActivityInterface a, HashMap<String, Object> currentVakGegevens,
 			String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
 		this.activity = a;

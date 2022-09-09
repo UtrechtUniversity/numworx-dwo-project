@@ -27,6 +27,7 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.HasResize;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
@@ -69,10 +70,10 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 	String[] randomVarNamen = null;
 	HashMap<String, Number> randomVarWaarden = null;
 
-	private ActivityComponent activity;
+	private ActivityInterface activity;
 	
 	
-	public SamengesteldeStappenPanel(ActivityComponent a, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int volleBreedte)
+	public SamengesteldeStappenPanel(ActivityInterface a, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int volleBreedte)
 	{
 		this.activity = a;
 		if (h != null && h.containsKey("breedte"))
