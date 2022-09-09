@@ -1,11 +1,17 @@
 package nl.uu.fi.dwo.lms.chatgwt;
 
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
+import org.fusesource.restygwt.client.JsonEncoderDecoder;
+
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
@@ -28,12 +34,12 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
-import com.google.gwt.user.client.ui.ResizeLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -68,6 +74,31 @@ import nl.uu.fi.dwo.lms.chatgwt.util.MD5;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleClipboardIF {
+	
+	
+	interface ChatUserCodec extends JsonEncoderDecoder<ChatUser> {};
+	
+	private static final ChatUserCodec CODEC = GWT.create(ChatUserCodec.class);
+	
+	private class EastUpdater implements ValueChangeHandler<Set<String>> {
+
+		@Override
+		public void onValueChange(ValueChangeEvent<Set<String>> event) {
+			east.clear();
+			int off = room.jid.length()+1;
+			event.getValue().stream()
+			.filter(t -> t.startsWith(room.jid))
+			.sorted().forEach(s -> east.add(new Label(
+					getDisplayName(s.substring(off)))));
+
+		}
+
+	}
+
+	private static native String getParentChatUser() /*-{
+		return $wnd.parent.chatUser;
+	}-*/;
+	
 	
 	private static final ChangeEvent CHANGE_EVENT = new ChangeEvent() {};
 	private static String DOMAIN = "chat-dev.dwo.nl";
@@ -109,6 +140,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	
 	}
 	
+	ChatPresence presenceHandler;
+
 	class ChatMessage extends Handler<Element> {
 
 		@Override
@@ -116,19 +149,35 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			LOG.info("received " + element.serialize());
 //			String to = element.getAttribute("to");
 			String from = element.getAttribute("from");
+			String stamp = null;
 			int at = from.indexOf('/');
 			if (at>0) from = from.substring(at+1);
 			String type = element.getAttribute("type");
 
 			NodeList<com.google.gwt.dom.client.Element> elems = element.getElementsByTagName("body");
 
+			NodeList<com.google.gwt.dom.client.Element> delay = element.getElementsByTagName("delay");
+			if (delay.getLength() > 0) {
+				stamp = delay.getItem(0).getAttribute("stamp"); // <delay from="klas@conference.chat-dev.dwo.nl" stamp="2022-09-09T08:02:29Z" xmlns="urn:xmpp:delay"/>
+			}
+			if (stamp == null||stamp.isEmpty()) {
+				stamp = new Date().toString(); // Date format?
+			}
+			
+			
 			if (("chat".equals(type)||"groupchat".equals(type)) && elems.getLength() > 0) {
 				Element body = (Element) elems.getItem(0);
-				Label afzender = new Label("From: " + from);
-				
-				panel.add(afzender);
-				StubWidget message = new StubWidget();
-				
+				InlineLabel afzender = new InlineLabel(getDisplayName(from));
+				afzender.getElement().getStyle().setFloat(Style.Float.LEFT);
+				afzender.getElement().getStyle().setFontWeight(Style.FontWeight.BOLD);
+				InlineLabel time = new InlineLabel(stamp);
+				time.getElement().getStyle().setFloat(Style.Float.RIGHT);
+				Panel hbox = new FlowPanel();
+				hbox.add(afzender);
+				hbox.add(time);
+				panel.add(hbox);
+
+				StubWidget message = new StubWidget();				
 				HashMap<String, Object> data = new HashMap<>();
 				data.put("rekenTool", Boolean.FALSE);
 				data.put("tekst", body.getText());
@@ -136,8 +185,6 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 				data.put("boxMetRand", Boolean.FALSE);
 				data.put("editable", Boolean.FALSE);
 				message.init(800, 100, data);				
-				HashMap<String, Object> state = null;
-				//message.setState(state);
 
 				message.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 				panel.add(message);
@@ -148,22 +195,64 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		
 	}
 	
-	class ChatStatusCallback extends StatusCallback {
+	class ChatAll extends Handler<Element> {
 
+		Map<String, Handler<Element>> byTag = new HashMap<>();
+		
+		@Override
+		public boolean handle(Element element) {
+			LOG.info("received: " + element.serialize());
+			String name = element.getTagName();
+			LOG.info("tag = " + name);
+			Handler<Element> h = byTag.get(name);
+			if (h != null) {
+				h.handle(element);
+			}
+			return true; // keep
+		}
+
+		public Handler<Element> put(String key, Handler<Element> value) {
+			return byTag.put(key, value);
+		}
+		
+	}
+	
+	class ChatStatusCallback extends StatusCallback {
+		
+
+		Handler.Reference ref1, ref2;
+		final Connection connection;
+
+		ChatStatusCallback(Connection connection) {
+			this.connection = connection;
+		}
 		@Override
 		public void statusChanged(Status status, String reason) {
 			LOG.info("status = " + status + " reason = " + reason);
-			
-			if (status == Status.CONNECTED) {
+			switch(status) {
+			case CONNECTED:
 				LOG.info("start talking");
-				Handler<com.stanziq.strophe.client.Element> handler = new ChatMessage();
-				connection.addHandler(null, "message", null, null, null, handler);
+				ChatMessage handler = new ChatMessage();
+				ref1 = connection.addHandler(null, "message", null, null, null, handler);
+				presenceHandler = new ChatPresence();
+				presenceHandler.addValueChangeHandler(new EastUpdater());
+				ref2 = connection.addHandler(null, "presence", null, null, null, presenceHandler);
+				ChatAll all = new ChatAll();
+				all.put("message", handler);
+				all.put("presence", presenceHandler);
+				//ref2 = connection.addHandler(null, null, null, null, null, all);
+				
 				Builder pres = Builder.$pres(null);
 	            connection.send(pres);
 // Add to room	            
-	            pres = Builder.$pres(new String[][] { {"to", room.jid + "/" + chatUser.nickName }});
+	            pres = Builder.$pres(new String[][] { {"to", nick(chatUser, room) }});
 	            pres.c("x", new String[][] {{ "xmlns", Namespace.MUC.toString() }});
 	            connection.send(pres);
+	            break;
+			case DISCONNECTED:
+				LOG.info("stop talking");
+				if (ref1 != null) { connection.removeHandler(ref1); ref1 = null; }
+				if (ref2 != null) { connection.removeHandler(ref2); ref2 = null; }
 			}
 			
 		}
@@ -175,63 +264,109 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	private TextBox username;
 	private TextBox password;
 	private VerticalPanel panel;
+	private VerticalPanel east;
 	private ChatUser chatUser;
 	private Combined combined;
 	private ChangeHandler handler;
 	private SimplePanel container;
+	private Label sender;
+	
+	private Map<String, ChatUser> byJid = new HashMap<>();
+
+	private void put(ChatUser u) {
+		byJid.put(u.jid,u);
+	}
+	private ChatUser get(String key) {
+		if (!key.contains("@")) key += "@"+DOMAIN;
+		ChatUser u = byJid.get(key);
+		return u;
+	}
+	
+	private String getDisplayName(String jid) {
+		ChatUser u = get(jid);
+		return u == null ? jid : u.nickName;
+	}
+	
+	private String nick (ChatUser u, ChatRoom room) {
+		int at = u.jid.indexOf('@');
+		return room.jid + "/" + u.jid.substring(0,at);
+	}
+	
+	
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
 		RootLayoutPanel root = RootLayoutPanel.get();
 		
-// dummy login schreen
-		FlowPanel login = new FlowPanel();
-		username = new TextBox();
-		login.add(username);
-		password = new PasswordTextBox();
-		password.setValue("");
-		login.add(password);
+		int top = 0;
+		try {
+			String chatUserString = getParentChatUser();
+			ChatUser u = CODEC.decode(chatUserString);
+			u.jid += "@" + DOMAIN;
+			if (u.room != null) {
+				u.room.forEach(r -> {
+					r.jid += "@" + ROOMS;
+					this.room = r;
+				});
+			}
+			put(u);
+			chatUser = u;
+		} catch(Exception oops) {
 		
-		Button btn = new Button("LOGIN");
-		btn.addClickHandler(this::onClickLogin);
-		login.add(btn);
-		btn = new Button("LOGOUT");
-		btn.addClickHandler(this::onClickLogout);
-		login.add(btn);
-		
-		root.add(login);
-		root.setWidgetTopHeight(login, 0, Unit.PX, 40, Unit.PX);
-		
+	// dummy login schreen
+			FlowPanel login = new FlowPanel();
+			username = new TextBox();
+			login.add(username);
+			password = new PasswordTextBox();
+			password.setValue("");
+			login.add(password);
+			
+			Button btn = new Button("LOGIN");
+			btn.addClickHandler(this::onClickLogin);
+			login.add(btn);
+			btn = new Button("LOGOUT");
+			btn.addClickHandler(this::onClickLogout);
+			login.add(btn);
+			
+			root.add(login);
+			root.setWidgetTopHeight(login, 0, Unit.PX, 40, Unit.PX);
+			top = 40;
+		}
 		
 		main = new DockLayoutPanel(Unit.PX);
 		main.addStyleName("main");
 		FocusPanel wrap;
 		root.add(wrap = FocusOnTouch.wrap(main));
-		root.setWidgetTopBottom(wrap, 40, Unit.PX, 0, Unit.PX);
+		root.setWidgetTopBottom(wrap, top, Unit.PX, 0, Unit.PX);
 		Style style = main.getElement().getStyle();
 		style.setHeight(100, Unit.PCT);
 		
 		
 		panel = new VerticalPanel();
 		scroll = new ScrollPanel(panel);
+		east  = new VerticalPanel();
 		
 		
 		editor = new StubWidget();
-		editor.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 
 		HashMap<String, Object> data = new HashMap<>();
 		data.put("rekenTool", Boolean.FALSE);
 		editor.init(800, 100, data);
+		editor.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 		
 		
 		HashMap<String, Object> state = new HashMap<>();
 		editor.setState(state);
-		
+	
+		FlowPanel flow = new FlowPanel();
+		Button btn;
 		btn = new Button("SEND");
 		btn.addClickHandler(this::onClickInput);
-		main.addSouth(btn, 40);
-		
+		btn.getElement().getStyle().setFloat(Style.Float.RIGHT);
+		sender = new Label("Bericht voor " + room.displayName);
+		flow.add(sender);
+		flow.add(btn);
 		
 		
 		// keyboard:
@@ -247,6 +382,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		container.setWidget(keyboard);
 
 		main.addSouth(container, 200);
+		main.addEast(east, 200);
+		
 		main.getWidgetContainerElement(container).getStyle().setBackgroundColor("#e5e7e9");
 		keyboard.setSoortKeyboard(0);
 		keyboard.setWriteMathSet(0);
@@ -254,13 +391,18 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		keyboard.setEditor(editor);
 
 		main.addSouth(editor, 100);
-
+		main.addSouth(flow, 40);
+		
 		FocusOnTouch.installKeyboard(keyboard, this);
 		FocusOnTouch.focus();
 		
 		setHeight(-keyboard.getKeyboardHeight());
 		main.add(scroll);
 		main.forceLayout();
+		
+		
+		if (chatUser != null) 
+			Scheduler.get().scheduleDeferred(this::login);
 	}
 
 	private void onClickLogout(ClickEvent event) {
@@ -271,9 +413,6 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	}
 
 	private void onClickLogin(ClickEvent event) {
-		connection = new Connection(BOSH);
-		
-		StatusCallback callback = new ChatStatusCallback();
 		String u = username.getValue();
 		chatUser = new ChatUser(u + "@" + DOMAIN);
 		String password = this.password.getValue();
@@ -281,10 +420,19 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		password = MD5.md5(password);
 		password = u + ":" + password;
 		password = Base64.btoa(password);
+		chatUser.token = password;
+		chatUser.nickName = "Username: " + u;
+		
+		login();
 
-		connection.connect(chatUser.jid, password, callback);
-		FocusOnTouch.focus();
 		event.preventDefault();
+	}
+
+	private void login() {
+		connection = new Connection(BOSH);		
+		StatusCallback callback = new ChatStatusCallback(connection);
+		connection.connect(chatUser.jid, chatUser.token, callback);
+		FocusOnTouch.focus();
 	}
 
 	private void onClickInput(ClickEvent event) {		

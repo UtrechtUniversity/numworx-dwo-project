@@ -11,6 +11,7 @@
   <inherits name="nl.uu.fi.dwo.keyboard.KeyboardGWT-DWO" />
   
   <inherits name='nl.uu.fi.dwo.rest.DWO-rest-lib' />
+  <inherits name='org.fusesource.restygwt.RestyGWT' />
 
   <source path="" />
 

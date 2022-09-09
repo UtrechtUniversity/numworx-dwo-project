@@ -60,6 +60,17 @@
 		<artifactId>KeyboardGWT</artifactId>
 		<version>2.4.7</version>	
 	</dependency>
+        <dependency>
+            <groupId>org.fusesource.restygwt</groupId>
+            <artifactId>restygwt</artifactId>
+            <version>${restyVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.fusesource.restygwt</groupId>
+            <artifactId>restygwt</artifactId>
+            <version>${restyVersion}</version>
+            <classifier>sources</classifier>
+        </dependency>
   </dependencies>
 
   <build>
