@@ -43,6 +43,11 @@ div.header.gwt-Label {
 	float: left;
 }
 
+.blu div {
+	color: #1b75bb;
+	font-size: 150%;
+}
+
 i.send {
     display: inline-block;
     width: 32px;

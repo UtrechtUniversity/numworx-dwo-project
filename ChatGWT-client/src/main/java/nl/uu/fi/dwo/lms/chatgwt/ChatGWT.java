@@ -1,7 +1,9 @@
 package nl.uu.fi.dwo.lms.chatgwt;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -46,6 +48,7 @@ import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.view.client.SingleSelectionModel;
 import com.stanziq.strophe.client.Builder;
 import com.stanziq.strophe.client.Connection;
 import com.stanziq.strophe.client.Connection.Status;
@@ -70,6 +73,7 @@ import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
 import nl.uu.fi.dwo.lms.chatgwt.util.Base64;
 import nl.uu.fi.dwo.lms.chatgwt.util.MD5;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -83,20 +87,20 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	
 	private static final ChatUserCodec CODEC = GWT.create(ChatUserCodec.class);
 	
-	private class EastUpdater implements ValueChangeHandler<Set<String>> {
-
-		@Override
-		public void onValueChange(ValueChangeEvent<Set<String>> event) {
-			east.clear();
-			int off = room.jid.length()+1;
-			event.getValue().stream()
-			.filter(t -> t.startsWith(room.jid))
-			.sorted().forEach(s -> east.add(new Label(
-					getDisplayName(s.substring(off)))));
-
-		}
-
-	}
+//	private class EastUpdater implements ValueChangeHandler<Set<String>> {
+//
+//		@Override
+//		public void onValueChange(ValueChangeEvent<Set<String>> event) {
+//			east.clear();
+//			int off = room.jid.length()+1;
+//			event.getValue().stream()
+//			.filter(t -> t.startsWith(room.jid))
+//			.sorted().forEach(s -> east.add(new Label(
+//					getDisplayName(s.substring(off)))));
+//
+//		}
+//
+//	}
 
 	private static native String getParentChatUser() /*-{
 		return $wnd.parent.chatUser;
@@ -110,7 +114,20 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	private static Logger LOG = Logger.getLogger(ChatGWT.class.getName());
 	
 	private ChatRoom room = new ChatRoom("klas@" + ROOMS);
-	
+	{
+		List<ChatUser> users = new ArrayList<>();
+		ChatUser wim = new ChatUser("project_wim@" + DOMAIN);
+		wim.role = RoleType.TEACHER;
+		users.add(wim);
+		ChatUser meesterwim = new ChatUser("meesterwim@" + DOMAIN);
+		meesterwim.role = RoleType.STUDENT;
+		users.add(meesterwim);
+		ChatUser peter = new ChatUser("peterb_pr@" + DOMAIN);
+		peter.role = RoleType.TEACHER;
+		users.add(peter);
+		room.chatUser = users;
+		
+	}
 	
 	class ChatPresence extends Handler<Element> implements HasValueChangeHandlers<Set<String>> {
 
@@ -242,7 +259,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 				ChatMessage handler = new ChatMessage();
 				ref1 = connection.addHandler(null, "message", null, null, null, handler);
 				presenceHandler = new ChatPresence();
-				presenceHandler.addValueChangeHandler(new EastUpdater());
+				presenceHandler.addValueChangeHandler(students);
+				presenceHandler.addValueChangeHandler(teachers);
 				ref2 = connection.addHandler(null, "presence", null, null, null, presenceHandler);
 //				ChatAll all = new ChatAll();
 //				all.put("message", handler);
@@ -294,7 +312,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		return u == null ? jid : u.nickName;
 	}
 	
-	private String nick (ChatUser u, ChatRoom room) {
+	static String nick (ChatUser u, ChatRoom room) {
 		int at = u.jid.indexOf('@');
 		return room.jid + "/" + u.jid.substring(0,at);
 	}
@@ -354,6 +372,15 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		scroll = new ScrollPanel(panel);
 		east  = new VerticalPanel();
 		
+		selection = new SingleSelectionModel<>(UserModel::getRoomJit);
+		
+		students = new UserTable(room, RoleType.STUDENT, selection);
+		
+		east.add(students);
+		
+		teachers = new UserTable(room, RoleType.TEACHER, selection);
+		
+		east.add(teachers);
 		
 		editor = new StubWidget();
 
@@ -499,6 +526,9 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	private DockLayoutPanel main;
 	private AbstractKeyboard keyboard;
 	private ScrollPanel scroll;
+	private UserTable students;
+	private UserTable teachers;
+	private SingleSelectionModel<UserModel> selection;
 	@Override
 	public String getClipboard() {
 		return clipboard;
