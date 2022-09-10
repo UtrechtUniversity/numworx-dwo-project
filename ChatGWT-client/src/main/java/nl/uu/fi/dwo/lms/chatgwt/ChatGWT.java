@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.lms.chatgwt;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +49,7 @@ import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.view.client.NoSelectionModel;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.stanziq.strophe.client.Builder;
 import com.stanziq.strophe.client.Connection;
@@ -297,6 +299,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	private Label sender;
 	
 	private Map<String, ChatUser> byJid = new HashMap<>();
+	private NoSelectionModel noselection;
+	private EastHeader eastHeader;
 
 	private void put(ChatUser u) {
 		byJid.put(u.jid,u);
@@ -323,6 +327,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	 */
 	public void onModuleLoad() {
 		RootLayoutPanel root = RootLayoutPanel.get();
+		eastHeader  = new EastHeader();
 		
 		int top = 0;
 		try {
@@ -330,10 +335,11 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			ChatUser u = CODEC.decode(chatUserString);
 			u.jid += "@" + DOMAIN;
 			if (u.room != null) {
+				eastHeader.init(u.room);
 				u.room.forEach(r -> {
 					r.jid += "@" + ROOMS;
-					this.room = r;
 				});
+				this.room = eastHeader.getSelectedRoom();
 			}
 			put(u);
 			chatUser = u;
@@ -357,6 +363,9 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			root.add(login);
 			root.setWidgetTopHeight(login, 0, Unit.PX, 40, Unit.PX);
 			top = 40;
+
+			eastHeader.init(Arrays.asList(room));
+		
 		}
 		
 		main = new DockLayoutPanel(Unit.PX);
@@ -372,13 +381,17 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		scroll = new ScrollPanel(panel);
 		east  = new VerticalPanel();
 		
-		selection = new SingleSelectionModel<>(UserModel::getRoomJit);
+
+		east.add(eastHeader);
 		
-		students = new UserTable(room, RoleType.STUDENT, selection);
+		selection = new SingleSelectionModel<>(UserModel::getRoomJit);
+		noselection = new NoSelectionModel<>(UserModel::getRoomJit);
+		
+		students = new UserTable(room, RoleType.STUDENT, noselection);
 		
 		east.add(students);
 		
-		teachers = new UserTable(room, RoleType.TEACHER, selection);
+		teachers = new UserTable(room, RoleType.TEACHER, noselection);
 		
 		east.add(teachers);
 		

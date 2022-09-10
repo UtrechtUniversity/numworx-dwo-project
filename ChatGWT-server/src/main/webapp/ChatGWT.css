@@ -47,6 +47,10 @@ div.header.gwt-Label {
 	color: #1b75bb;
 	font-size: 150%;
 }
+.gre div {
+	color: green;
+	font-size: 150%;
+}
 
 i.send {
     display: inline-block;

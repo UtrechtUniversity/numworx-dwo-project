@@ -43,15 +43,17 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 		}		
 	};
 
-	Column<UserModel, Boolean> unseenColumn = new Column<UserModel, Boolean>(new CheckboxCell()) {
+	TextColumn<UserModel> unseenColumn = new TextColumn<UserModel>() {
 		@Override
-		public Boolean getValue(UserModel object) {
-			return object.hasUnseen();
+		public String getValue(UserModel object) {
+			return object.hasUnseen()? "●" : "";
 		}		
 	};
 	private ListDataProvider<UserModel> provider;
 	
-	
+	void setSelectionModel(SelectionModel<UserModel> selection) {
+		table.setSelectionModel(selection);
+	}
 	
 	UserTable(ChatRoom room, RoleType role, SelectionModel<UserModel> selection) {
 		table = new CellTable<>(this);
@@ -63,8 +65,13 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 		case TEACHER: naam = "docenten"; break;
 		case STUDENT: naam = "studenten"; break;
 		}
+		nameColumn.setSortable(true);
+		onlineColumn.setSortable(true);
+		unseenColumn.setSortable(true);
+
 		table.addColumn(nameColumn, naam);
 		onlineColumn.setCellStyleNames("blu");
+		unseenColumn.setCellStyleNames("gre");
 		table.addColumn(onlineColumn, "online");
 		table.addColumn(unseenColumn, "nieuwe berichten");
 		
@@ -100,7 +107,8 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 				item.setOnline(online);
 				data.set(i, item);
 			}
-		}		
+		}
+		table.redraw();
 	}
 	
 	private class MyHandler extends Handler<Element> {
