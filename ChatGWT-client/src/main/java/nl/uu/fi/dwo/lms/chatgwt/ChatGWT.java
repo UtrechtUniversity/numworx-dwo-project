@@ -75,6 +75,7 @@ import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
 import nl.uu.fi.dwo.lms.chatgwt.util.Base64;
 import nl.uu.fi.dwo.lms.chatgwt.util.MD5;
+import nl.uu.fi.dwo.lms.chatgwt.util.ResizeFlowPanel;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 /**
@@ -137,14 +138,36 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		private EventBus bus = new SimpleEventBus();
 		private ChatPresence() {
 		}
+
+		Handler<Element> receive = new Handler<Element>() {
+		
+			public boolean handle(Element element) {
+				LOG.info("received " + element.serialize());
+				return false;
+			}
+		};
+		
+		private void sendCreateRoom() {
+			Builder builder = Builder.$iq(new String[][] { { "to", room.jid }, {"type", "set"}})
+				.c("query", new String[][] {{"xmlns", Namespace.MUC + "#owner"} })
+				.c("x", new String[][] {{ "xmlns", "jabber:x:data"}, {"type", "submit"}});
+			connection.sendIq(builder.tree(), 1000, receive, receive);
+		}
+		
+		
 		
 		@Override
 		public boolean handle(Element element) {
-			LOG.info("received " + element.serialize());
+			receive.handle(element);
 			String from = element.getAttribute("from");
 			String type = element.getAttribute("type");
 			boolean leave = "unavailable".equals(type);
 			if (leave) present.remove(from); else present.add(from);
+			NodeList<com.google.gwt.dom.client.Element> status = element.getElementsByTagName("status");
+			if (status.getLength()>0 && "201".equals(status.getItem(0).getAttribute("code"))) { // Chatroom on hold.
+				sendCreateRoom();
+			}
+			
 			ValueChangeEvent.fire(this, present);
 			return true;
 		}
@@ -272,9 +295,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 				Builder pres = Builder.$pres(null);
 	            connection.send(pres);
 // Add to room	            
-	            pres = Builder.$pres(new String[][] { {"to", nick(chatUser, room) }});
-	            pres.c("x", new String[][] {{ "xmlns", Namespace.MUC.toString() }});
-	            connection.send(pres);
+	            if (room != null) addToRoom(room);
 	            break;
 			case DISCONNECTED:
 				LOG.info("stop talking");
@@ -291,7 +312,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	private TextBox username;
 	private TextBox password;
 	private VerticalPanel panel;
-	private VerticalPanel east;
+	private FlowPanel east;
 	private ChatUser chatUser;
 	private Combined combined;
 	private ChangeHandler handler;
@@ -328,6 +349,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	public void onModuleLoad() {
 		RootLayoutPanel root = RootLayoutPanel.get();
 		eastHeader  = new EastHeader();
+		eastHeader.setUpdateRoom(this::updateRoom);
 		
 		int top = 0;
 		try {
@@ -364,7 +386,11 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			root.setWidgetTopHeight(login, 0, Unit.PX, 40, Unit.PX);
 			top = 40;
 
-			eastHeader.init(Arrays.asList(room));
+			ChatRoom room2 = new ChatRoom("klas2@" + ROOMS);
+			room2.chatUser = room.chatUser;
+			
+			eastHeader.init(Arrays.asList(room, room2));
+			room = null;
 		
 		}
 		
@@ -379,7 +405,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		
 		panel = new VerticalPanel();
 		scroll = new ScrollPanel(panel);
-		east  = new VerticalPanel();
+		east  = new ResizeFlowPanel();
 		
 
 		east.add(eastHeader);
@@ -412,7 +438,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		btn = new InlineHTML("<i class='send fa fa-2x fa-paper-plane' >");
 		btn.addClickHandler(this::onClickInput);
 		btn.getElement().getStyle().setFloat(Style.Float.RIGHT);
-		sender = new Label("Bericht voor " + room.displayName);
+		if (room != null) sender = new Label("Bericht voor " + room.displayName);
+		else sender = new Label();
 		sender.addStyleName("header");
 		flow.add(sender);
 		flow.add(btn);
@@ -485,7 +512,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		FocusOnTouch.focus();
 	}
 
-	private void onClickInput(ClickEvent event) {		
+	private void onClickInput(ClickEvent event) {
+		if (room == null) return;
 		HashMap<String, Object> map = editor.getState();
 		LOG.info("editor state = " + map);
 		String value = JSONUtilities.wrapMap(map).getString("tekst");
@@ -551,8 +579,39 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	public void setClipboard(String formule) {
 		clipboard = formule;
 	}
-	
 
+	void addToRoom(ChatRoom room) {
+		Builder pres;
+		pres = Builder.$pres(new String[][] { {"to", nick(chatUser, room) }});
+		pres.c("x", new String[][] {{ "xmlns", Namespace.MUC.toString() }});
+		connection.send(pres);
+	}
 	
+	void deleteFromRoom(ChatRoom room) {
+		Builder pres;
+		pres = Builder.$pres(new String[][] { {"to", nick(chatUser, room) }, {"type", "unavailable"} });
+		pres.c("x", new String[][] {{ "xmlns", Namespace.MUC.toString() }});
+		connection.send(pres);
+		
+	}
+	
+	void updateRoom(ChatRoom room) {
+		if (this.room == room) return;
+
+		if (this.room != null) {
+			deleteFromRoom(this.room);
+		}
+		panel.clear();
+		
+		this.room = room;
+		students.init(room);
+		teachers.init(room);
+		if (room != null) {
+			sender.setText("Bericht voor " + room.displayName);
+			addToRoom(room);
+		} else {
+			sender.setText("Bericht");
+		}
+	}
 	
 }

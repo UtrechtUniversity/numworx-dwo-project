@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.chatgwt;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -50,12 +51,21 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 		}		
 	};
 	private ListDataProvider<UserModel> provider;
+	private ChatRoom room;
+	private RoleType role;
 	
 	void setSelectionModel(SelectionModel<UserModel> selection) {
 		table.setSelectionModel(selection);
 	}
 	
-	UserTable(ChatRoom room, RoleType role, SelectionModel<UserModel> selection) {
+	static final ChatRoom NULL = new ChatRoom(); static { NULL.chatUser = Collections.emptyList(); }
+	
+	UserTable(ChatRoom room2, RoleType role, SelectionModel<UserModel> selection) {
+		this.room = room2;
+		this.role = role;
+		if (room == null) {
+			room = NULL;
+		}
 		table = new CellTable<>(this);
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
 		table.setSelectionModel(selection);
@@ -64,6 +74,7 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 		switch(role) {
 		case TEACHER: naam = "docenten"; break;
 		case STUDENT: naam = "studenten"; break;
+		default:
 		}
 		nameColumn.setSortable(true);
 		onlineColumn.setSortable(true);
@@ -77,13 +88,17 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 		
 		// initialize the data
 		
-		List<UserModel> initialData = room.chatUser.stream().filter(item -> role == item.role).map(item -> new UserModel(item, room)).collect(Collectors.toList());
+		List<UserModel> initialData = toUserModelList();
 		
 		provider = new ListDataProvider<>(initialData, this);
 		data = provider.getList();
 		provider.addDataDisplay(table);
 		
 		initWidget(table);
+	}
+
+	List<UserModel> toUserModelList() {
+		return room.chatUser.stream().filter(item -> this.role == item.role).map(item -> new UserModel(item, room)).collect(Collectors.toList());
 	}
 
 	public boolean isEmpty() {
@@ -125,5 +140,16 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 	
 	Handler<Element> asHandler() {
 		return handler;
+	}
+
+	public void init(ChatRoom room) {
+		if (room == null) {
+			room = NULL;
+		}
+
+		this.room = room;
+		data.clear();
+		data.addAll(toUserModelList());
+		provider.refresh();
 	}
 }

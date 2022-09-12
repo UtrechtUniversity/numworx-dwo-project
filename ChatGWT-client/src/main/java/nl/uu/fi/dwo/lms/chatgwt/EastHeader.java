@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.lms.chatgwt;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -28,6 +29,10 @@ public class EastHeader extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));		
 		klas.setValue(true);		
 	}
+	
+	private Consumer<ChatRoom> updateRoom;
+	private Consumer<Boolean>  updateSelect;
+	
 
 	@UiField RadioButton klas, persoon;
 	@UiField ListBox naam;
@@ -58,19 +63,50 @@ public class EastHeader extends Composite {
 		return klas.getValue();
 	}
 	
+	public void setMultiChat(boolean b) {
+		if (b) klas.setValue(Boolean.TRUE);
+		else persoon.setValue(Boolean.TRUE);
+	}
+	
 	public boolean isMultiRoom() {
 		return roomList.size() > 1;
 	}
 	
 	@UiHandler("klas") void onKlas(ValueChangeEvent<Boolean> ev) {
-		
+		if (updateSelect != null) 
+			updateSelect.accept(Boolean.TRUE);		
 	}
 	
 	@UiHandler("persoon") void onPersoon(ValueChangeEvent<Boolean> ev) {
-		
+		if (updateSelect != null) 
+			updateSelect.accept(Boolean.FALSE);
 	}
 	
 	@UiHandler("naam") void onNaam(ChangeEvent ev) {
-		
+		if (updateRoom!=null) {
+			updateRoom.accept(getSelectedRoom());
+		}
+	}
+
+	/**
+	 * @return the updateRoom
+	 */
+	public Consumer<ChatRoom> getUpdateRoom() {
+		return updateRoom;
+	}
+
+	/**
+	 * @param updateRoom the updateRoom to set
+	 */
+	public void setUpdateRoom(Consumer<ChatRoom> updateRoom) {
+		this.updateRoom = updateRoom;
+	}
+
+	Consumer<Boolean> getUpdateMultiChat() {
+		return updateSelect;
+	}
+
+	void setUpdateMultiChat(Consumer<Boolean> updateSelect) {
+		this.updateSelect = updateSelect;
 	}
 }
