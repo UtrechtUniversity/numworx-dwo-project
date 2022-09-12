@@ -242,7 +242,7 @@ public class BootPanelController {
               mainView.setUserRole(role, single);
               DomSchoolClass sc = dwoGlobalVars.getCurrentSchoolClass();
               mainView.setPremium(dwoGlobalVars.isPremium() && sc != null); // knowledge for student is premium and only in class
-              mainView.showChat(dwoGlobalVars.isPremium()&&dwoGlobalVars.isTest()&& sc != null && false);
+              mainView.showChat(dwoGlobalVars.isPremium() && dwoGlobalVars.isTest() && sc != null);
             break;
             }
           default:

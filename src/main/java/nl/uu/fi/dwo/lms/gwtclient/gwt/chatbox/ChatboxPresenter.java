@@ -7,6 +7,9 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.web.bindery.event.shared.EventBus;
@@ -18,6 +21,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
@@ -53,7 +57,13 @@ public class ChatboxPresenter implements ValueChangeHandler<String> {
 		this.view = view;
 	}
 
+	private boolean inited;
+	
 	public void init() {
+		if (inited) return;
+		inited = true;
+		
+		
 		DomUserFull u = vars.getCurrentUser();
 		if (u == null) {
 			view.setLogin(null);
@@ -68,13 +78,18 @@ public class ChatboxPresenter implements ValueChangeHandler<String> {
 		user.role  = role;
 		if (role == RoleType.STUDENT) {
 			DomSchoolClass klas = vars.getActiveSchoolRoleAndClass().getSchoolClass();
-			ChatRoom room = roomOfSchoolClass(klas);
-			user.room = Collections.singletonList( room );
-			view.setLogin(user);			
-			view.openUrl("chatbox/");
+			Promise<ChatRoom> room = roomOfSchoolClass(klas);
+			
+			room.then( p -> {
+				user.room = Collections.singletonList( p.getValue() );
+				view.setLogin(user);			
+				view.openUrl("chatbox/");
+				return p;
+			});
+			return;
 		} else if (role == RoleType.TEACHER) {
 			// teacher
-			service.get().getTeachersSchoolClasses().map(this::roomOfSchoolClass)
+			service.get().getTeachersSchoolClasses().flatMap(this::roomOfSchoolClass)
 			.then( p -> {
 				user.room = p.getValue();
 				view.setLogin(user);				
@@ -86,15 +101,33 @@ public class ChatboxPresenter implements ValueChangeHandler<String> {
 		view.openUrl("about:blank");
 	}
 
-	private ChatRoom roomOfSchoolClass(DomSchoolClass klas) {
+	private Promise<ChatRoom> roomOfSchoolClass(DomSchoolClass klas) {
 		ChatRoom room = new ChatRoom();
 		room.displayName = klas.getSchoolClassName();
 		room.jid = klas.getId().getIdString();
-		return room;
+		room.chatUser = Collections.emptyList();
+		if ( service.isPresent() ) {
+			Promise<List<DomStudent>> students = service.get().getStudentsInSchoolClass(klas);
+			return students.map(list -> {
+				room.chatUser = list.stream().map(this::newChatUser).collect(Collectors.toList());
+				return room;
+			});
+		}
+		room.chatUser = Collections.singletonList(user);
+		return Promises.resolved(room);
 	}
 	
-	private List<ChatRoom> roomOfSchoolClass(List<DomSchoolClass> list) {
-		return list.stream().map(this::roomOfSchoolClass).collect(Collectors.toList());
+	private ChatUser newChatUser(DomStudent s) {
+		ChatUser u = new ChatUser(s.getUserName());
+		u.nickName = s.getDisplayName();
+		u.role = RoleType.STUDENT;
+		return u; // no token, no chatRoom
+	}
+	
+	private Promise<List<ChatRoom>> roomOfSchoolClass(List<DomSchoolClass> list) {
+		List<Promise<ChatRoom>> promises = list.stream().map(this::roomOfSchoolClass).collect(Collectors.toList());
+		Promise<List<ChatRoom>> result = Promises.all(promises);
+		return result;
 	}
 
 	@Override

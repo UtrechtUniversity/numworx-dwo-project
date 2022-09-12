@@ -4,9 +4,12 @@ import javax.inject.Inject;
 
 import com.google.web.bindery.event.shared.EventBus;
 
+import dagger.Lazy;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.chatbox.ChatboxPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
@@ -15,6 +18,7 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 public class StudentViewHandler implements SwitchViewEventHandler {
   @Inject DwoGlobalVars dwoGlobalVars;
   @Inject StudentPresenterFactory presenterFactory;
+  @Inject Lazy<ChatboxPresenter> chatbox;
   @Inject BootPanelController controller;
   @Inject EventBus eventBus;
 
@@ -93,6 +97,14 @@ public class StudentViewHandler implements SwitchViewEventHandler {
         break;
       case LOGOUT:
     	  presenterFactory.getMainPresenter().forceLogout();
+    	  break;
+      case CHATBOX:
+          DomSchoolClass sc = dwoGlobalVars.getCurrentSchoolClass();
+    	  if (sc != null && dwoGlobalVars.isPremium() && dwoGlobalVars.isTest()) {
+        	  mainView.selectView(SelectedView.CHATBOX);
+        	  mainView.showChatboxView();
+        	  chatbox.get().init();
+    	  }
     	  break;
    }  }
 
