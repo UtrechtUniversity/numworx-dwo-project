@@ -62,3 +62,24 @@ i.send {
     text-align: center;
     padding-top: 3px;
     padding-bottom: 3px;
+}
+
+table.dwo {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 18px;
+}
+
+table.dwo thead th {
+	text-transform: uppercase;
+	text-shadow: none;
+	border-bottom: none;
+	color: #7297c7;
+	font-family: 'Ubuntu';
+	font-size: 12px;
+}
+
+table.dwo tbody {
+	border: solid #1b75bb 3px; 
+	border-radius: 4px;
+}

@@ -320,7 +320,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	private Label sender;
 	
 	private Map<String, ChatUser> byJid = new HashMap<>();
-	private NoSelectionModel noselection;
+	private NoSelectionModel<UserModel> noselection;
 	private EastHeader eastHeader;
 
 	private void put(ChatUser u) {
@@ -355,15 +355,18 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		try {
 			String chatUserString = getParentChatUser();
 			ChatUser u = CODEC.decode(chatUserString);
-			u.jid += "@" + DOMAIN;
+			toJid(u);
 			if (u.room != null) {
-				eastHeader.init(u.room);
 				u.room.forEach(r -> {
-					r.jid += "@" + ROOMS;
+					r.jid = r.jid.toLowerCase() + "@" + ROOMS;
+					if (r.chatUser != null) {
+						r.chatUser.forEach(this::toJid);
+					}
+					
 				});
+				eastHeader.init(u.room);
 				this.room = eastHeader.getSelectedRoom();
 			}
-			put(u);
 			chatUser = u;
 		} catch(Exception oops) {
 		
@@ -480,6 +483,10 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		
 		if (chatUser != null) 
 			Scheduler.get().scheduleDeferred(this::login);
+	}
+	private void toJid(ChatUser u) {
+		u.jid = u.jid.toLowerCase() + "@" + DOMAIN;
+		put(u);
 	}
 
 	private void onClickLogout(ClickEvent event) {

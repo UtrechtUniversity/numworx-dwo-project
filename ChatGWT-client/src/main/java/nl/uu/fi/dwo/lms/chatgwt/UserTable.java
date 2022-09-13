@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.gwt.cell.client.CheckboxCell;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.cellview.client.CellTable;
@@ -67,7 +68,7 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 			room = NULL;
 		}
 		table = new CellTable<>(this);
-		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
+		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 		table.setSelectionModel(selection);
 		table.addStyleName("dwo");
 		String naam = "naam";
@@ -79,13 +80,15 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 		nameColumn.setSortable(true);
 		onlineColumn.setSortable(true);
 		unseenColumn.setSortable(true);
-
+		table.setTableLayoutFixed(true);
 		table.addColumn(nameColumn, naam);
 		onlineColumn.setCellStyleNames("blu");
 		unseenColumn.setCellStyleNames("gre");
 		table.addColumn(onlineColumn, "online");
 		table.addColumn(unseenColumn, "nieuwe berichten");
 		
+		table.setColumnWidth(onlineColumn, 100, Unit.PX);
+		table.setColumnWidth(unseenColumn, 150, Unit.PX);
 		// initialize the data
 		
 		List<UserModel> initialData = toUserModelList();
