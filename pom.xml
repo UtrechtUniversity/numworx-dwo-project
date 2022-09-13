@@ -663,6 +663,13 @@
 					<environmentName>${aws.environmentName}</environmentName>
 					<region>eu-west-1</region>
 				</configuration>
+				<dependencies>
+					<dependency>
+			    		<groupId>javax.xml.bind</groupId>
+			    		<artifactId>jaxb-api</artifactId>
+			    		<version>2.3.0</version>
+					</dependency>				
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
