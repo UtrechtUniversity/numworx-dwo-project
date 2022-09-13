@@ -21,14 +21,20 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
+import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.json.JSONObjectMapImpl;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
+import nl.uu.fi.dwo.lms.chatgwt.util.GUID;
 
-public class StubEditor extends Composite implements Handler, LoadHandler {
+public class StubWidget extends Composite implements Handler, LoadHandler, FormuleEditorIF {
+
+	private static FormuleFont defaultFont;
 
 	private native static void setState(Object inner, String state) /*-{
 		inner.setState(state);
@@ -58,11 +64,11 @@ public class StubEditor extends Composite implements Handler, LoadHandler {
 	private HashMap<String, Number> randomVars = new HashMap<>();
 	private HashMap<String, Object> lastResort;
 
-	public StubEditor() {
+	public StubWidget() {
 		int type = 4;
 		int profile = 77;
 		String locale = "nl";
-		frame = new Frame("widget.jsp?type=" + type + "&profile=" + profile + "&locale=" + locale);
+		frame = new Frame("widget.jsp?id=" + type + "&profile=" + profile + "&locale=" + locale);
 	}
 
 	private void initFrame() {
@@ -108,10 +114,10 @@ public class StubEditor extends Composite implements Handler, LoadHandler {
 	return frame.contentWindow;
 }-*/;
 
-public static native Object getApplet(Object wnd, StubEditor view) /*-{
+public static native Object getApplet(Object wnd, StubWidget view) /*-{
 	wnd.outer = view;
 	wnd.publish = function(o, viewer) {
-		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubEditor::publish(Ljava/lang/Object;)(o)
+		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::publish(Ljava/lang/Object;)(o)
 	}
 	wnd.setChanged = function(b, viewer) {
 //		viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::comRoot.@nl.uu.fi.dwo.interaction.client.OpdrNavIF::setChanged(Z)(b);
@@ -123,44 +129,44 @@ public static native Object getApplet(Object wnd, StubEditor view) /*-{
 //		viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::setFocus(ZZ)(b,soft)
 	}
 	wnd.getMode = function(viewer) {
-		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubEditor::getMode()()
+		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::getMode()()
 	}
 	wnd.getLearnerName = function (viewer) {
-		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubEditor::getLearnerName()()
+		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::getLearnerName()()
 	}
 	wnd.getLearnerId = function (viewer) {
-		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubEditor::getLearnerId()()
+		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::getLearnerId()()
 	}
 	wnd.getUUID = function (viewer) {
-		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubEditor::getUUID()()
+		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::getUUID()()
 	}
 	wnd.getBackground = function (viewer) {
-		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubEditor::getBackgroundAsString()()
+		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::getBackgroundAsString()()
 	}
 	
 	wnd.fireEvent = function (event, viewer) {
 		if ( typeof event === 'string' )
 			event = JSON.parse(event)
-		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubEditor::fireJSEvent(Lcom/google/gwt/core/client/JavaScriptObject;)(event)
+		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::fireJSEvent(Lcom/google/gwt/core/client/JavaScriptObject;)(event)
 	}
 	
 	wnd.addCBookEventListener = function (command, listener, viewer) {
-//		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubEditor::addCBookEventListener(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(command, listener)
+//		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::addCBookEventListener(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(command, listener)
 	}
 	wnd.removeCBookEventListener = function (registration) {
-//		return @nl.uu.fi.dwo.lms.chatgwt.StubEditor::removeCBookListener(Lcom/google/web/bindery/event/shared/HandlerRegistration;)(registration)
+//		return @nl.uu.fi.dwo.lms.chatgwt.StubWidget::removeCBookListener(Lcom/google/web/bindery/event/shared/HandlerRegistration;)(registration)
 	}
 	wnd.setEnterType = function(type, viewer) {
-		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubEditor::setEnterType(Ljava/lang/String;)(type)
+		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::setEnterType(Ljava/lang/String;)(type)
 	}
 	wnd.getConfiguration = function(viewer) {
-		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubEditor::getConfiguration0()()
+		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::getConfiguration0()()
 	}
 	wnd.getContext = function(viewer) {
-		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubEditor::getContext0()()
+		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::getContext0()()
 	}
 	wnd.tickle = function() {
-//		view.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::tickle()()
+		view.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::tickle()()
 	}
 	return wnd.inner;
 }-*/;
@@ -210,6 +216,14 @@ private HashMap<String, Object> getState0() {
 	HashMap<String,Object> map = new HashMap<String,Object>();
 	return wrap(map);
 }
+
+public HashMap<String, Object> getState() {
+//	if (facade.hasState()) 
+//		return facade.getState();
+	return getState0();
+}
+
+
 public void zetNagekeken(boolean b) {
 	if(innerView != null)
 	{	nagekekenPending = null;
@@ -251,7 +265,7 @@ public void setState(HashMap<String, Object> h) {
 		return "leerling";
 	}
 
-	String uuid = "0-0-0";
+	String uuid = GUID.get();
 	
 	public String getUUID() {
 		return uuid;
@@ -303,6 +317,11 @@ public void setState(HashMap<String, Object> h) {
 		}
 	}
 
+	public void tickle() {
+		GWT.log("tickle");
+	}
+	
+	
 	public ObjectMap getContext() {
 //		if(comRoot != this && comRoot != null) {
 //			return comRoot.getContext();
@@ -322,5 +341,312 @@ public void setState(HashMap<String, Object> h) {
 		return JSONUtilities.toJSONObject(map).isObject().getJavaScriptObject();		
 	}
 
+	@Override
+	public void clearAll() {
+		if(innerView != null)
+			clearAll(innerView);
+	}
+
+	private static native void clearAll(Object inner)/*-{
+		inner.clearAll();
+	}-*/;
+
+	@Override
+	public void insert(String text) {
+		if(innerView != null)
+			insert(text, innerView);		
+	}
 	
+	private static native void insert(String text, Object inner) /*-{
+		inner.insert(text);
+	}-*/;
+	
+	public static void createDefaultFont(int size) {
+		defaultFont = FormuleFont.createFromFontSize(size);
+	}
+	
+	
+	@Override
+	public FormuleFont getDefaultFont() {
+		return defaultFont;
+	}
+
+	@Override
+	public void setFont(FormuleFont font) {
+	}
+
+	@Override
+	public void setCurrentElementRepaint() {
+	}
+
+	@Override
+	public void enter() {
+		if(innerView != null)
+			enter(innerView);
+	}
+	private static native void enter(Object inner) /*-{
+		inner.enter();
+	}-*/;
+	
+	
+	@Override
+	public void removeCurrentElement() {
+		backspace(innerView);
+	}
+	private static native void backspace(Object inner) /*-{
+		inner.backspace();
+	}-*/;
+	
+	@Override
+	public void removeNextElement() {
+		removeNextElement(innerView);
+	}
+	
+	private static native void removeNextElement(Object inner) /*-{
+		inner.removeNextElement();
+	}-*/;
+
+	@Override
+	public void cursorToLeft() {
+		cursorToLeft(innerView);
+	}
+	private static native void cursorToLeft(Object inner) /*-{
+		inner.cursorToLeft();
+	}-*/;
+
+	@Override
+	public void cursorToRight() {
+		cursorToRight(innerView);
+	}
+	private static native void cursorToRight(Object inner) /*-{
+		inner.cursorToRight();
+	}-*/;
+	
+	@Override
+	public void cursorToLeftShift() {
+		cursorToRight(innerView);
+	}
+	private static native void cursorToLeftShift(Object inner) /*-{
+		inner.cursorToLeftShift();
+	}-*/;
+	
+	@Override
+	public void cursorToRightShift() {
+		cursorToRight(innerView);
+	}
+	private static native void cursorToRightShift(Object inner) /*-{
+		inner.cursorToRightShift();
+	}-*/;
+
+	@Override
+	public void cursorUp() {
+		cursorUp(innerView);
+	}
+	private static native void cursorUp(Object inner) /*-{
+		inner.cursorUp();
+	}-*/;
+	
+	@Override
+	public void cursorDown() {
+		cursorDown(innerView);
+	}
+	private static native void cursorDown(Object inner) /*-{
+		inner.cursorDown();
+	}-*/;
+	
+	@Override
+	public void insert(char charAt) {
+		insert(String.valueOf(charAt));
+	}
+
+	@Override
+	public String getSelectionString() {
+		return "";
+	}
+	
+	
+	@Override
+	public void kopieer(FormuleClipboardIF clip) {
+		kopieer(innerView);
+	}
+	private static native void kopieer(Object inner) /*-{
+		inner.kopieer();
+	}-*/;
+	
+	@Override
+	public void knip(FormuleClipboardIF clip) {
+		knip(innerView);
+	}
+	private static native void knip(Object inner) /*-{
+		inner.knip();
+	}-*/;
+	
+	@Override
+	public void plak(FormuleClipboardIF clip) {
+		plak(innerView);
+	}
+	private static native void plak(Object inner) /*-{
+		inner.plak();
+	}-*/;
+	
+	@Override
+	public void macht() {
+		insert("$m@"); 
+	}
+
+	@Override
+	public void wortel() {
+		insert("$w@");
+	}
+
+	@Override
+	public void breuk() {
+		insert("$b$n@@");
+	}
+
+	@Override
+	public void kwadraat() {
+		insert("$m2@");
+	}
+
+	@Override
+	public void ndewortel() {
+		insert("$W$n@@");
+	}
+
+	@Override
+	public void haakjes() {
+		insert("$h@");
+	}
+
+	@Override
+	public void integraal() {
+		insert("$i$n$k$l@@@@");
+	}
+
+	@Override
+	public void prv() {
+		insert("$q$n$k$l@@@@");
+	}
+
+	@Override
+	public void ndelog() {
+		insert("$L$n@@");
+	}
+
+	@Override
+	public void abs() {
+		insert("$r@");
+	}
+
+	@Override
+	public void subscript() {
+		insert("$s@");
+	}
+
+	@Override
+	public void bin() {
+		insert("$y$n@@");
+	}
+
+	@Override
+	public void diff() {
+		insert("$d$n@@");
+	}
+
+	@Override
+	public void diff_partial() {
+		insert("$D$n@@");
+	}
+	
+	@Override
+	public void limiet0() {
+		insert("$T$n$k$l@@@@");
+	}
+
+	@Override
+	public void limiet1() {
+		insert("$T$n$k$l@@@@");
+	}
+
+	@Override
+	public void limiet2() {
+		insert("$T$n$k$l@@@@");
+	}
+
+	@Override
+	public void primitieve() {
+		insert("$P$n@@");
+	}
+
+	@Override
+	public void conjug() {
+		insert("$c@");
+	}
+
+	@Override
+	public void sigma() {
+		insert("$S$n$k$l@@@@");
+	}
+	
+    @Override
+    public void stelsel() {
+        insert("$Q@");
+    }
+    
+    @Override
+    public void stelsel(int aantalRijen)
+    {
+        insert("$Q@");
+    }
+    
+	@Override
+	public void vectornotatie()
+	{
+		insert("$z@");
+	}
+
+	@Override
+	public void vector()
+	{
+		insert("$Y@");
+	}
+
+	@Override
+	public void vector(int aantalRijen)
+	{
+		insert("$Y@");
+	}
+
+	@Override
+	public void matrix()
+	{
+		insert("$M@");
+	}
+
+	@Override
+	public void matrix(int aantalRijen, int aantalKolommen)
+	{
+		insert("$M@");
+	}
+	@Override
+	public void tab() {
+		try {
+			tab(innerView);
+		} catch(Exception not_implemented) {	
+		}
+	}
+
+	private static native void tab(Object innerView)/*-{ innerView.tab() }-*/;
+	private static native void shiftTab(Object innerView)/*-{ innerView.shiftTab() }-*/;
+
+	@Override
+	public void shiftTab() {
+		try {
+			shiftTab(innerView);
+		} catch(Exception not_implemented) {	
+		}
+	}
+
+
 }

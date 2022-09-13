@@ -1,34 +1,64 @@
 /** Add css rules here for your application. */
 
-
-/** Example rules used by the template application (remove for your app) */
-h1 {
-  font-size: 2em;
-  font-weight: bold;
-  color: #777777;
-  margin: 40px 0px 70px;
-  text-align: center;
+body {
+	background-color: transparent !important;
+	font-family: 'Ubuntu';
 }
 
-.sendButton {
-  display: block;
-  font-size: 16pt;
+div {
+	outline: none;
 }
 
-/** Most GWT widgets already have a style name defined */
-.gwt-DialogBox {
-  width: 400px;
+iframe.box.gwt-Frame {
+	border: 2px #1b75bb solid;
+	border-radius: 4px;
+	background-color: white;
 }
 
-.dialogVPanel {
-  margin: 5px;
+.lightbox {
+	border: 1px #7297c7 solid;
+	border-radius: 2px;
+	background-color: white;
 }
 
-.serverResponseLabelError {
-  color: red;
+div.header.gwt-Label {
+	font-family: Ubuntu;
+	font-size: 150%;
+	color: #7297c7;
+	display: inline-block;
 }
 
-/** Set ids using widget.getElement().setId("idOfElement") */
-#closeButton {
-  margin: 15px 6px 6px;
+.message {
+	width: 422px;
+	padding: 16px;
+	margin-bottom: 18px;
 }
+
+.message .sender {
+	font-weight: bold;
+	font-family: ubuntu;
+}
+
+.message .time {
+	float: left;
+}
+
+.blu div {
+	color: #1b75bb;
+	font-size: 150%;
+}
+.gre div {
+	color: green;
+	font-size: 150%;
+}
+
+i.send {
+    display: inline-block;
+    width: 32px;
+    color: white;
+    background-color: #1b75bb;
+    border-radius: 4px;
+    font-size: 180%;
+    text-align: center;
+    padding-top: 3px;
+    padding-bottom: 3px;

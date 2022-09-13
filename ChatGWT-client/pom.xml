@@ -5,7 +5,7 @@
   <parent>
     <groupId>nl.uu.fi.dwo.lms</groupId>
     <artifactId>ChatGWT</artifactId>
-    <version>2.5.13-SNAPSHOT</version>
+    <version>2.5.14-SNAPSHOT</version>
   </parent>
 
   <artifactId>ChatGWT-client</artifactId>
@@ -60,6 +60,17 @@
 		<artifactId>KeyboardGWT</artifactId>
 		<version>2.4.7</version>	
 	</dependency>
+        <dependency>
+            <groupId>org.fusesource.restygwt</groupId>
+            <artifactId>restygwt</artifactId>
+            <version>${restyVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.fusesource.restygwt</groupId>
+            <artifactId>restygwt</artifactId>
+            <version>${restyVersion}</version>
+            <classifier>sources</classifier>
+        </dependency>
   </dependencies>
 
   <build>

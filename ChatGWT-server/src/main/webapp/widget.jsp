@@ -8,13 +8,8 @@
 <title>Widget</title>
 <%
 	String profile = request.getParameter("profile");
-	if(profile == null||profile.isEmpty()) profile="77";
-	else if (!Pattern.matches("\\d+", profile)) {
-	  response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-	  return;
-	}
 	String cdn = System.getProperty("CDNURL","https://ebs-dev-dwo-nl.s3.eu-west-1.amazonaws.com");
-	String remote = "https://teuniz.dwo.nl";
+	String remote = "";
 %>
     <script type="text/javascript" src="<%=remote %>/dwo/apps/deploy.jsp" ></script>
     <link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/DWOplayer.css">
@@ -23,7 +18,5 @@
     <script type="text/javascript" src="<%=cdn%>/apps/WidgetPlayer/WidgetPlayer.nocache.js"></script>
 
 </head>
-<body>
-
-</body>
+<body></body>
 </html>

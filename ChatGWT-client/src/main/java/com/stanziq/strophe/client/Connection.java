@@ -182,7 +182,7 @@ public class Connection {
 
 	public native void removeHandler(Handler.Reference reference) /*-{
 		var connection = this.@com.stanziq.strophe.client.Connection::connection;
-		connection.removeHandler(reference);
+		connection.deleteHandler(reference);
 	}-*/;
 
 	public native void disconnect(String reason) /*-{
