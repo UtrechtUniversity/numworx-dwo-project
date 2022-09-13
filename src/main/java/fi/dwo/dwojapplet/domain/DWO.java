@@ -156,7 +156,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 
     private Container panel;
 
-    private int nestedWait;
+    private volatile int nestedWait;
 
     private static DomDwoProfileFull dwoProfile;
 
@@ -2007,7 +2007,7 @@ LOG.info("time results = " + (-t) + " ms");
      *
      * @param waitText
      */
-    public void setWait(String waitText) {
+    public synchronized void setWait(String waitText) {
         nestedWait++;
         if (nestedWait == 1) {
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -2016,7 +2016,11 @@ LOG.info("time results = " + (-t) + " ms");
             validate();
             if (this.getGraphics() != null) {
                 paint(this.getGraphics());
+            } else {
+                this.repaint();
             }
+        } else {
+          LOG.fine("recurse " + waitText);
         }
     }
 
@@ -2025,15 +2029,18 @@ LOG.info("time results = " + (-t) + " ms");
      * <code>setWait()</code>
      *
      */
-    public void setReady() {
+    public synchronized void setReady() {
         if (nestedWait == 1) {
             getGlassPane().setVisible(false);
             if (panel != null) {
                 panel.requestFocus();
             }
             setCursor(Cursor.getDefaultCursor());
+        } else { 
+          LOG.fine("recurse ready");
         }
-        nestedWait--;
+        if ( nestedWait > 0 ) nestedWait--;
+        else LOG.severe("Too much ready");
     }
 
     /**

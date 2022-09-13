@@ -24,6 +24,7 @@ public class ScoParameterAction extends GuiAction {
 
     @Override
     public void actionPerformed(ActionEvent arg0) {
+        GuiCreatorTeacher.instance().setWait();
         GuiCreatorTeacher.instance().loadParameterManagementPanel(sco);
         CenterPanel center = getCenter();
         center.getMenu().setEditing(true);

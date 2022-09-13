@@ -31,6 +31,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1108,5 +1109,11 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 
     private void callStrategy(DefaultMutableTreeNode node) {
         strategy.nodeSelected(toCourseMap(node));
+    }
+
+    @Override
+    public void paint(Graphics g) {
+      // TODO Auto-generated method stub
+      super.paint(g);
     }
 }
