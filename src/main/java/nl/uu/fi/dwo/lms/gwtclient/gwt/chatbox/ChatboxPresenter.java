@@ -108,10 +108,7 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 	}
 
 	private Promise<ChatRoom> roomOfSchoolClass(DomSchoolClass klas) {
-		ChatRoom room = new ChatRoom();
-		room.displayName = klas.getSchoolClassName();
-		room.jid = klas.getId().getIdString();
-		room.chatUser = Collections.emptyList();
+		ChatRoom room = new ChatRoom(klas);
 		if ( service.isPresent() ) {
 			Promise<List<DomStudent>> students = service.get().getStudentsInSchoolClass(klas);
 			Promise<List<DomTeacher>> teachers = service.get().getTeachersInSchoolClass(klas);
@@ -127,7 +124,7 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 		
 			});
 		}
-		room.chatUser = Collections.singletonList(user);
+		room.chatUser = Collections.singletonList(new ChatUser(user));
 		return Promises.resolved(room);
 	}
 
