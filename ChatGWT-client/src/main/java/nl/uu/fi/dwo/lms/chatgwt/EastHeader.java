@@ -91,10 +91,10 @@ public class EastHeader extends Composite {
 		}
 	}
 	
-	@UiHandler("naam") void onFocusNaam(FocusEvent ev) {
-		ev.preventDefault();
-		FocusOnTouch.focus();
-	}
+//	@UiHandler("naam") void onFocusNaam(FocusEvent ev) {
+//		ev.preventDefault();
+//		FocusOnTouch.focus();
+//	}
 
 	/**
 	 * @return the updateRoom
