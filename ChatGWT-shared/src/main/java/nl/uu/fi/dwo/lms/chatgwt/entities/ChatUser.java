@@ -33,4 +33,11 @@ public class ChatUser {
 	public ChatUser(DomTeacher teacher) {
 		this(teacher, RoleType.TEACHER);
 	}
+	
+	public ChatUser(ChatUser org) {
+		jid = org.jid;
+		nickName = org.nickName;
+		role = org.role;
+		// no password and no room.
+	}
 }

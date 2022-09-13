@@ -1,6 +1,9 @@
 package nl.uu.fi.dwo.lms.chatgwt.entities;
 
+import java.util.Collections;
 import java.util.List;
+
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 
 public class ChatRoom {
 	public ChatRoom(String string) {
@@ -14,4 +17,10 @@ public class ChatRoom {
 	public String jid;
 	public String displayName;
 	public List<ChatUser> chatUser;
+	
+	public ChatRoom(DomSchoolClass klas) {
+		displayName = klas.getSchoolClassName();
+		jid = klas.getId().getIdString();
+		chatUser = Collections.emptyList();
+	}
 }
