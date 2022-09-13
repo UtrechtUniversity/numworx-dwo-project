@@ -4,10 +4,14 @@
 	<ui:style>
 	</ui:style>
 	<g:HTMLPanel>
-	  <table>
+	  <table style='width: 100%; margin-bottom: 18px'>
+	    <colgroup>
+	    	<col></col>
+	    	<col style='width: 180px'></col>
+	    </colgroup>
 		<tbody>
-			<tr><td><g:RadioButton ui:field="klas" name='route'>Berichten voor de klas</g:RadioButton></td><td><span>naam klas</span></td></tr>
-			<tr><td><g:RadioButton ui:field="persoon" name='route'>Persoonlijke berichten</g:RadioButton></td><td><g:ListBox ui:field='naam'></g:ListBox></td></tr>
+			<tr><td><g:RadioButton ui:field="klas" name='route' addStyleNames='eastheader'>Berichten voor de klas</g:RadioButton></td><td><span class='klasnaam'>naam klas</span></td></tr>
+			<tr><td><g:RadioButton ui:field="persoon" name='route' addStyleNames='eastheader'>Persoonlijke berichten</g:RadioButton></td><td><g:ListBox ui:field='naam' addStyleNames='klasbox'></g:ListBox></td></tr>
 		</tbody>
 	  </table>
 	</g:HTMLPanel>
