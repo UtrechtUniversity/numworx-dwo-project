@@ -211,4 +211,10 @@ public class JsResultsView implements ResultsPresenter.Display {
     public void setChooseModulesTable() {
       JsResultsDisplay.setChooseModulesTable();
     }
+
+	@Override
+	public void setRemedialView(boolean set) {
+		JsResultsDisplay.setRemedialView(set);
+		
+	}
 }

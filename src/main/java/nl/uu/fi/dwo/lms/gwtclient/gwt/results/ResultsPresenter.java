@@ -85,7 +85,8 @@ public class ResultsPresenter extends AbstractResultsPresenter {
 
         void setLoadingTableMessage();
         void setChooseModulesTable();
-
+        void setRemedialView(boolean set);
+        
     }
 
     @Inject
@@ -158,7 +159,8 @@ public class ResultsPresenter extends AbstractResultsPresenter {
     
     public void setView(Display aView) {
         view = aView;
-        view.setHelp(dwoGlobalVars.buildHelpUrl("#results"));        
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#results"));
+        view.setRemedialView(dwoGlobalVars.isPremium() && dwoGlobalVars.isTest());
     }
 
     @JsMethod

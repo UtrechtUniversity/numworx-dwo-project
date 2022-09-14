@@ -30,4 +30,5 @@ public class JsResultsDisplay{
     public static native void setLoadingTableMessage();
     
     public static native void setChooseModulesTable();
+	public static native void setRemedialView(boolean set);
 }
