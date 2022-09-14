@@ -9,6 +9,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ResizeLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -57,12 +58,78 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
     	
     }
     
-    static class TekstVakWidget extends TekstVakPanel {
+    static class TekstVakWidget extends ResizeLayoutPanel implements  InteractionStub {
+    	private TekstVakPanel delegate;
+    	private ActivityInterface activity;
 
-		TekstVakWidget(ActivityComponent a, int breedte, int hoogte, String[] randomVarNamen,
-				HashMap<String, Number> randomVarWaarden) {
-			super(a, breedte, hoogte, randomVarNamen, randomVarWaarden);
-			// TODO Auto-generated constructor stub
+		public TekstVakWidget(WidgetPlayer widgetPlayer) {
+			activity = widgetPlayer;
+		}
+
+		public void setCommunicationRoot(OpdrNavIF comRoot) {
+			delegate.setCommunicationRoot(comRoot);
+		}
+
+		public HashMap<String, Object> getState() {
+			return delegate.getState();
+		}
+
+		public void setState(HashMap<String, Object> h) {
+			delegate.setState(h);
+		}
+
+		public int getScore() {
+			return delegate.getScore();
+		}
+
+		public Boolean isCorrect() {
+			return delegate.isCorrect();
+		}
+
+		public void kijkNa() {
+			delegate.kijkNa();
+		}
+
+		public int getHeight() {
+			return delegate.getHeight();
+		}
+
+		public int getWidth() {
+			return delegate.getWidth();
+		}
+
+		public int getAsHoogte() {
+			return delegate.getAsHoogte();
+		}
+
+		public void zetVolledigeBreedte(int breedte) {
+			delegate.zetVolledigeBreedte(breedte);
+		}
+
+		public void setAsHoogte(int ashoogte) {
+			delegate.setAsHoogte(ashoogte);
+		}
+
+		public int[][] getScoreObjectives() {
+			return delegate.getScoreObjectives();
+		}
+
+		public void zetNagekeken(boolean b) {
+			delegate.zetNagekeken(b);
+		}
+
+		@Override
+		public void init(int width, int height, Map<String, Object> launchData, Map<String, Number> values) {
+			String[] randomVarNamen = values.keySet().toArray(new String[values.size()]);
+			HashMap<String, Number> randomVarWaarden = new HashMap<>(values);
+			HashMap<String, Object> launch = new HashMap<>();
+			launch.put("breedte", width);
+			launch.put("hoogte", height);
+			launch.put("volledigeBreedte", true);
+			launch.put("popup", false);
+			launch.put("interactiePanelLaunchState", launchData);
+			delegate = new TekstVakPanel(activity, launch, randomVarNamen, randomVarWaarden, width);			
+			setWidget(delegate);
 		}
     	
     }
@@ -80,7 +147,7 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
 		switch(nr) {
 		  case  4: delegate = new TextEditorWidget(this);   break;
 		  case 55: delegate = new SymboolPanel(); break;
-		  //case 9: delegate = new TekstVakWidget(this); break; // TekstVakWidget extends TekstVakPanel
+		  case 9: delegate = new TekstVakWidget(this); break; // TekstVakWidget extends TekstVakPanel
 		}
 
 		RootLayoutPanel.get().add(FocusOnTouch.wrap(delegate.asWidget()));
