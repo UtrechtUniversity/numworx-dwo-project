@@ -51,6 +51,8 @@
 		<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+		<proguard.lib>${java.home}/lib/rt.jar</proguard.lib>
+		
     </properties>
 
     <!-- update the https path for a different branch or tag! -->
@@ -518,7 +520,7 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <proguardVersion>6.0</proguardVersion>
+                            <proguardVersion>6.1</proguardVersion>
                             <options>
                                 <option>-verbose</option>
                                 <option>-dontwarn</option> 
@@ -534,8 +536,8 @@
                             -->
                             <proguardInclude>config.pro</proguardInclude>
                             <libs>
-                                <lib>${java.home}/lib/rt.jar</lib>
-                                <lib>${java.home}/lib/jsse.jar</lib>
+										<lib>${proguard.lib}</lib>
+<!--                                 <lib>${java.home}/lib/jsse.jar</lib> -->
                                 <!--                               <lib>${java.home}/lib/jfxrt.jar</lib>                       -->
                             </libs>
                             <addMavenDescriptor>false</addMavenDescriptor>
@@ -544,7 +546,7 @@
                             <dependency>
                                 <groupId>net.sf.proguard</groupId>
                                 <artifactId>proguard-base</artifactId>
-                                <version>6.0.3</version>
+                                <version>6.1.0</version>
                                 <scope>runtime</scope>
                             </dependency>
                         </dependencies>
@@ -860,6 +862,12 @@
     	  <scope>runtime</scope>
     	</dependency>
 		</dependencies>
+	</profile>
+	<profile>
+		<id>running11</id>
+		<properties>
+			<proguard.lib>${java.home}/jmods</proguard.lib>
+		</properties>
 	</profile>
 	<profile>
 		<id>java17</id>
