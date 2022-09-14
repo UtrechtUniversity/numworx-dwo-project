@@ -13,11 +13,13 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
@@ -146,6 +148,10 @@ public class StudentDomainAuthorizer {
 		public StudentState_HR_R_S_SG_U setSchoolClass(DomSchoolClass domSchoolClass) throws Dwo2Exception;
 
 		public StudentState_HR_R_S_SG_U setDwoProfile(DomDwoProfileId domDwoProfile) throws Dwo2Exception;
+
+		public List<DomStudent> getStudentList() throws Dwo2Exception;
+
+		public List<DomTeacher> getTeacherList() throws Dwo2Exception;
 
     }
 

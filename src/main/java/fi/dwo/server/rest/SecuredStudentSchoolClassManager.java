@@ -3,6 +3,8 @@ package fi.dwo.server.rest;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
@@ -19,6 +21,7 @@ import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestNewSchoolClass4Student;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer.StudentState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
@@ -26,18 +29,22 @@ import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import java.text.MessageFormat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import javax.activation.MimeType;
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
 /**
@@ -383,4 +390,29 @@ public class SecuredStudentSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
     }
+    
+    @RolesAllowed({"STUDENT"})
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getStudentList")
+    public List<DomStudent> getStudentList(@Context SecurityContext sc, RestSchoolClass schoolClass) throws Dwo2Exception {
+    	List<DomStudent> result;
+    	StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(schoolClass.getRestContext().getDomHasRole()).buildStudent();
+    	state = state.setSchoolClass(schoolClass.getDomSchoolClass());
+    	result = state.getStudentList();
+		return result;
+    }
+    
+    @RolesAllowed({"STUDENT"})
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getTeacherList")
+    public List<DomTeacher> getTeacherList(@Context SecurityContext sc, RestSchoolClass schoolClass) throws Dwo2Exception {
+    	List<DomTeacher> result;
+    	StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(schoolClass.getRestContext().getDomHasRole()).buildStudent();
+    	state = state.setSchoolClass(schoolClass.getDomSchoolClass());
+    	result = state.getTeacherList();
+		return result;
+    }
+
 }

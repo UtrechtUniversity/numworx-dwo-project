@@ -13,6 +13,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
+import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer.StudentState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.MethodManager;
@@ -23,6 +24,7 @@ import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentModelContextUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
 import fi.dwo.server.rest.SecuredTeacherStudentModelManager;
 
 import java.text.MessageFormat;
@@ -33,6 +35,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
 import javax.ws.rs.core.UriInfo;
@@ -45,11 +48,13 @@ import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -298,5 +303,21 @@ class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U
 			instance.getContext().getStudentCtx().dwoProfile = DwoProfileManager.findEntity(MySQLPersistenceId.getNativeId(domDwoProfile));
 		}
 		return this;
+	}
+
+	@Override
+	public List<DomStudent> getStudentList() throws Dwo2Exception {
+		PersistentSchoolClass sc = instance.getContext().getStudentCtx().schoolClass;
+		List<PersistentUser> list = UserUtilManager.getUsersforStudentsInSchoolClass(sc);
+		String realm = instance.getContext().getUserCtx().realm;
+		return list.stream().map(t -> t.buildDomStudent(realm)).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<DomTeacher> getTeacherList() throws Dwo2Exception {
+		PersistentSchoolClass sc = instance.getContext().getStudentCtx().schoolClass;
+		List<PersistentUser> list = UserUtilManager.getUsersforTeachersInSchoolClass(sc);
+		String realm = instance.getContext().getUserCtx().realm;
+		return list.stream().map(t -> t.buildDomTeacher(realm)).collect(Collectors.toList());
 	}
 }

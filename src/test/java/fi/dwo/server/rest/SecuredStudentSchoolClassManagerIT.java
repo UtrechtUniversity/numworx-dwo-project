@@ -8,6 +8,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -283,4 +285,41 @@ public class SecuredStudentSchoolClassManagerIT {
       List<DomSchoolClass> result = instance.getSchoolsClasses(sc, rest);
       assertEquals(2, result.size());
     }
+    
+    @Test
+    public void testGetStudentList() throws Dwo2Exception {
+        SecurityContext sc = new TestSecurityContext("user02", RoleType.STUDENT);//school01
+        SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
+        RestSchoolClass rest = new RestSchoolClass();
+        rest.setRestContext(new DomContext());
+        DomHasRole domHasRole;
+        domHasRole = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.STUDENT).buildDomHasRole();
+        rest.getRestContext().setDomHasRole(domHasRole);
+		List<DomSchoolClass> result = instance.getStudentsSchoolClasses(sc);
+        for (DomSchoolClass domSchoolClass : result) {
+        	rest.setDomSchoolClass(domSchoolClass);
+			List<DomStudent> list = instance.getStudentList(sc, rest);
+			boolean ok = list.stream().anyMatch(t -> t.getUserName().equals("user02"));
+			assertTrue("list bevat user02", ok);
+		}
+    }
+    
+    @Test
+    public void testGetTeacherList() throws Dwo2Exception {
+        SecurityContext sc = new TestSecurityContext("user02", RoleType.STUDENT);//school01
+        SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
+        RestSchoolClass rest = new RestSchoolClass();
+        rest.setRestContext(new DomContext());
+        DomHasRole domHasRole;
+        domHasRole = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.STUDENT).buildDomHasRole();
+        rest.getRestContext().setDomHasRole(domHasRole);
+		List<DomSchoolClass> result = instance.getStudentsSchoolClasses(sc);
+        for (DomSchoolClass domSchoolClass : result) {
+        	rest.setDomSchoolClass(domSchoolClass);
+			List<DomTeacher> list = instance.getTeacherList(sc, rest);
+			boolean ok = list.stream().anyMatch(t -> t.getUserName().equals("user02"));
+			assertFalse("list bevat user02", ok);
+		}
+    }
+
 }
