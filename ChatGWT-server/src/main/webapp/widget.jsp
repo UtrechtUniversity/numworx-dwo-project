@@ -5,13 +5,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Widget</title>
+<title></title>
 <%
 	String profile = request.getParameter("profile");
 	String cdn = System.getProperty("CDNURL","https://ebs-dev-dwo-nl.s3.eu-west-1.amazonaws.com");
-	String remote = "";
 %>
-    <script type="text/javascript" src="<%=remote %>/dwo/apps/deploy.jsp" ></script>
+    <script type="text/javascript" src=/dwo/apps/deploy.jsp" ></script>
     <link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/DWOplayer.css">
 <% if ("111".equals(profile)) {%><link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/css/inf.css" ><%}%>    
 
