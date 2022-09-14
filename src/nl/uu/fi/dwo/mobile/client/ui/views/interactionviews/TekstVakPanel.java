@@ -124,6 +124,8 @@ import fi.wiskopdr.expressies.Vergelijking;
 
 public class TekstVakPanel extends Composite implements InteractionViewWithMisconceptions, FacetAware, PopupListener, CBookEventListener, RequiresResize
 {
+	private final static Logger logger = Logger.getLogger("TekstVakPanel");
+	
 	private final boolean RESPONSIVE = DWOplayer.RESPONSIVE;
     private static final Logger LOG = Logger.getLogger("TekstVakPanel");
 	public static final String TVP_KLAPUIT = "action.unfold";
@@ -286,6 +288,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 	
 	private boolean sleepdoel = false;
 	private boolean sleepHandle = false;
+	private boolean inactive = false;
 	private Image crosshair = null;
 	private int sleepdoelMarge = 10;
 	private boolean sleepSnap = false;
@@ -1864,6 +1867,8 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 //		comRoot.addCBookEventListener(TVP_KLAPIN, this);
 		comRoot.addCBookEventListener("action.zoom", this);
 		comRoot.addCBookEventListener("action.unzoom", this);
+		comRoot.addCBookEventListener("action.setActive", this);
+		comRoot.addCBookEventListener("action.setInactive", this);
 	}
 
 	public HashMap<String, Object> getState()
@@ -1895,6 +1900,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		h.put("hoogtes", hoogtes);
 		h.put("interactiePanelStates", states);
 		h.put("selected", new Boolean(selected));
+		h.put("inactive", new Boolean(inactive));
 		h.put("ingeklapt", new Boolean(ingeklapt));
 		h.put("popupUsed", Boolean.valueOf(popupUsed));
 		h.put("nagekeken", Boolean.valueOf(nagekeken));
@@ -2036,6 +2042,8 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		}
 		if(map.containsKey("selected"))
 			selected = map.getBoolean("selected");
+		if(map.containsKey("inactive"))
+			inactive = map.getBoolean("inactive");
 		popupUsed = map.getBoolean("popupUsed", false);
 		nagekeken = map.getBoolean("nagekeken", false);
 		if(map.containsKey("ingeklapt"))
@@ -2051,6 +2059,9 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		}
 		setSelected(selected);
 		
+		if(inactive) {
+			zetKlikPanel();
+		}
 		
 		if(inklapbaar && ( ingeklapt != this.ingeklapt))
 		{	
@@ -2287,6 +2298,11 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 	public boolean isSleepbaar()
 	{
 		return sleepbaar;
+	}
+	
+	public boolean isInactive()
+	{
+		return inactive;
 	}
 	
 	public TekstVakPanel isInIdeasStatistiek()
@@ -3192,6 +3208,14 @@ private Object CamelCase(String name) {
 		mainPanel2.setWidgetLeftRight(klikPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
 		mainPanel2.setWidgetTopBottom(klikPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
 	}
+	public void verwijderKlikPanel()
+	{
+		if (klikPanel != null && klikPanel.getParent()==mainPanel2)
+		{	mainPanel2.remove(klikPanel);
+			klikPanel=null;
+		}
+	}
+	
 	
 	public void setRelocate(boolean relocate)
 	{
@@ -3497,7 +3521,7 @@ private Object CamelCase(String name) {
 			}
 		}
 		
-		if(!laatsteVak)
+		if(!laatsteVak && !inactive)
 		{
 			//binnen tekstVakPanel verder zoeken.
 			//startRij apart behandelen, omdat je daar in startKolom begint en niet in kolom 0. 
@@ -3519,6 +3543,10 @@ private Object CamelCase(String name) {
 				}
 			}
 		}
+		else if(inactive)
+		{ return false;
+		}
+		
 		
 		//als omliggende tekstvak bestaat: doorgeven naar omliggende tekstvak
 		if(parent != null &&!randomPositioned)
@@ -3578,7 +3606,7 @@ private Object CamelCase(String name) {
 			}
 		}
 		
-		if(!eersteVak)
+		if(!eersteVak && !inactive)
 		{
 			//binnen tekstVakPanel verder zoeken.
 			//startRij apart behandelen, omdat je daar in startKolom begint en niet in laatste kolom. 
@@ -3599,6 +3627,9 @@ private Object CamelCase(String name) {
 					}
 				}
 			}
+		}
+		else if(inactive)
+		{ return false;
 		}
 		
 		//als omliggende tekstvak bestaat: doorgeven naar omliggende tekstvak
@@ -4615,8 +4646,8 @@ private Object CamelCase(String name) {
 			
 			Touch touch = e.getTouches().get(0);
 			
-			if(sleepbaar && sleepHandle && (touch.getPageX() - getAsPanel().getAbsoluteLeft() > 20 || 
-					touch.getPageY() - getAsPanel().getAbsoluteTop() > 20))
+			if((sleepbaar && sleepHandle && (touch.getPageX() - getAsPanel().getAbsoluteLeft() > 20 || 
+					touch.getPageY() - getAsPanel().getAbsoluteTop() > 20)))
 			{	e.preventDefault();
 				return;
 			}
@@ -4874,6 +4905,15 @@ private Object CamelCase(String name) {
 		      zoomAction();
 		} else if ("action.unzoom".equals(command)) {
 		    unzoomAction();
+		} else if ("action.setActive".equals(command)) {
+		     inactive = false;
+		     verwijderKlikPanel();
+		} else if ("action.setInactive".equals(command)) {
+			inactive = true;
+			zetKlikPanel();
+			comRoot.getKeyboard().setEditor(null);
+			comRoot.getKeyboard().blur();
+			logger.info("inactive");
 		}
 		
 	}
