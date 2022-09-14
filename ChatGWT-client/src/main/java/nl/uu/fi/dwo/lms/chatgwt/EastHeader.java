@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.NoSelectionModel;
 
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
@@ -117,4 +118,5 @@ public class EastHeader extends Composite {
 	void setUpdateMultiChat(Consumer<Boolean> updateSelect) {
 		this.updateSelect = updateSelect;
 	}
+
 }

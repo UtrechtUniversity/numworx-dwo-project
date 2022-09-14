@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.JsonEncoderDecoder;
@@ -50,6 +51,8 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.NoSelectionModel;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SelectionModel;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.stanziq.strophe.client.Builder;
 import com.stanziq.strophe.client.Connection;
@@ -81,7 +84,7 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleClipboardIF {
+public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleClipboardIF, com.google.gwt.view.client.SelectionChangeEvent.Handler {
 	
 	
 	private static final int COL_6 = 456;
@@ -193,11 +196,16 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		public boolean handle(Element element) {
 			LOG.info("received " + element.serialize());
 //			String to = element.getAttribute("to");
+			String type = element.getAttribute("type");
 			String from = element.getAttribute("from");
 			String stamp = null;
 			int at = from.indexOf('/');
-			if (at>0) from = from.substring(at+1);
-			String type = element.getAttribute("type");
+			if (at>0) {
+				if ("chat".equals(type) )
+					from = from.substring(0,at-1);
+				else
+					from = from.substring(at+1);
+			}
 
 			NodeList<com.google.gwt.dom.client.Element> elems = element.getElementsByTagName("body");
 
@@ -205,42 +213,16 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			if (delay.getLength() > 0) {
 				stamp = delay.getItem(0).getAttribute("stamp"); // <delay from="klas@conference.chat-dev.dwo.nl" stamp="2022-09-09T08:02:29Z" xmlns="urn:xmpp:delay"/>
 			}
-			if (stamp == null||stamp.isEmpty()) {
-				stamp = new Date().toString(); // Date format?
-			}
 			
 			
 			if (("chat".equals(type)||"groupchat".equals(type)) && elems.getLength() > 0) {
 				Element body = (Element) elems.getItem(0);
-				InlineLabel afzender = new InlineLabel(getDisplayName(from));
-				afzender.addStyleName("sender");
-				afzender.getElement().getStyle().setFloat(Style.Float.LEFT);
-				afzender.getElement().getStyle().setFontWeight(Style.FontWeight.BOLD);
-				InlineLabel time = new InlineLabel(stamp);
-				time.addStyleName("name");
-				time.getElement().getStyle().setFloat(Style.Float.RIGHT);
-				Panel hbox = new FlowPanel();
-				hbox.addStyleName("message");
-				hbox.addStyleName("lightbox");
-				hbox.add(afzender);
-				hbox.add(time);
-				panel.add(hbox);
-
-				StubWidget message = new StubWidget();				
-				HashMap<String, Object> data = new HashMap<>();
-				data.put("rekenTool", Boolean.FALSE);
-				data.put("tekst", body.getText());
-				data.put("balkZichtbaar", Boolean.FALSE);
-				data.put("boxMetRand", Boolean.FALSE);
-				data.put("editable", Boolean.FALSE);
-				message.init(COL_6-32-2, 100-30, data);				
-
-				message.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
-				hbox.add(message);
-				scroll.scrollToBottom();
+				String text = body.getText();
+				addToPanel(from, stamp, text);
 			}
 			return true;
 		}
+
 		
 	}
 	
@@ -264,6 +246,37 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			return byTag.put(key, value);
 		}
 		
+	}
+	private void addToPanel(String from, String stamp, String text) {
+		if (stamp == null||stamp.isEmpty()) {
+			stamp = new Date().toString(); // Date format?
+		}
+		InlineLabel afzender = new InlineLabel(getDisplayName(from));
+		afzender.addStyleName("sender");
+		afzender.getElement().getStyle().setFloat(Style.Float.LEFT);
+		afzender.getElement().getStyle().setFontWeight(Style.FontWeight.BOLD);
+		InlineLabel time = new InlineLabel(stamp);
+		time.addStyleName("name");
+		time.getElement().getStyle().setFloat(Style.Float.RIGHT);
+		Panel hbox = new FlowPanel();
+		hbox.addStyleName("message");
+		hbox.addStyleName("lightbox");
+		hbox.add(afzender);
+		hbox.add(time);
+		panel.add(hbox);
+
+		StubWidget message = new StubWidget();				
+		HashMap<String, Object> data = new HashMap<>();
+		data.put("rekenTool", Boolean.FALSE);
+		data.put("tekst", text);
+		data.put("balkZichtbaar", Boolean.FALSE);
+		data.put("boxMetRand", Boolean.FALSE);
+		data.put("editable", Boolean.FALSE);
+		message.init(COL_6-32-2, 100-30, data);				
+
+		message.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
+		hbox.add(message);
+		scroll.scrollToBottom();
 	}
 	
 	class ChatStatusCallback extends StatusCallback {
@@ -391,7 +404,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 
 			ChatRoom room2 = new ChatRoom("klas2@" + ROOMS);
 			room2.chatUser = room.chatUser;
-			
+			room.chatUser.forEach(this::put);
 			eastHeader.init(Arrays.asList(room, room2));
 			room = null;
 		
@@ -410,11 +423,13 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		scroll = new ScrollPanel(panel);
 		east  = new ResizeFlowPanel();
 		
+		eastHeader.setUpdateMultiChat(this::updateMultichat);
 
 		east.add(eastHeader);
 		
 		selection = new SingleSelectionModel<>(UserModel::getRoomJit);
 		noselection = new NoSelectionModel<>(UserModel::getRoomJit);
+		selection.addSelectionChangeHandler(this);
 		
 		students = new UserTable(room, RoleType.STUDENT, noselection);
 		
@@ -519,6 +534,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		FocusOnTouch.focus();
 	}
 
+	Consumer<String> sendTo = this::sendToRoom;
+	
 	private void onClickInput(ClickEvent event) {
 		if (room == null) return;
 		HashMap<String, Object> map = editor.getState();
@@ -530,15 +547,29 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		}
 		editor.clearAll();
 		editor.insert("");
-		LOG.info("send " + value);
-		
-		String[][] attributes = { { "to", room.jid }, { "type", "groupchat" } };
-		Builder reply = Builder.$msg(attributes).c("body",null).t(value);
-		connection.send(reply);
+		LOG.info("send " + value);		
+		sendTo.accept(value);
 		FocusOnTouch.focus();
 		keyboard.focus();
 	}
-
+	private void sendToRoom(String value) {
+		if (room == null) return;
+		String[][] attributes = { { "to", room.jid }, { "type", "groupchat" } };
+		Builder reply = Builder.$msg(attributes).c("body",null).t(value);
+		connection.send(reply);
+	}
+	private void sendToUser(String value) {
+		UserModel um = selection.getSelectedObject();
+		if (um != null) {
+			ChatUser u = um.getUser();
+			String[][] attributes = { { "to", u.jid }, { "type", "chat" } };
+			Builder reply = Builder.$msg(attributes).c("body",null).t(value);
+			connection.send(reply);
+			addToPanel(u.jid, null, value);
+		} else {
+			// select user 1st;
+		}
+	}
 		
 	@Override
 	public HandlerRegistration addChangeHandler(ChangeHandler handler) {
@@ -618,6 +649,33 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			addToRoom(room);
 		} else {
 			sender.setText("Bericht");
+		}
+		eastHeader.setMultiChat(true);
+		sendTo = this::sendToRoom;
+	}
+	
+	void updateMultichat(boolean b) {
+		selection.clear();
+		if (b) {
+			sender.setText("Bericht voor " + room.displayName);
+			sendTo = this::sendToRoom;
+			setSelection(noselection);
+		} else {
+			sender.setText("Bericht");
+			sendTo = this::sendToUser;
+			setSelection(selection);
+		}
+	}
+
+	private void setSelection(SelectionModel<UserModel> sel) {
+		students.setSelectionModel(sel);
+		teachers.setSelectionModel(sel);		
+	}
+
+	@Override
+	public void onSelectionChange(SelectionChangeEvent event) {
+		if (!eastHeader.isMultichat()) {
+			sender.setText("Bericht voor " + selection.getSelectedObject().getUser().nickName);
 		}
 	}
 	
