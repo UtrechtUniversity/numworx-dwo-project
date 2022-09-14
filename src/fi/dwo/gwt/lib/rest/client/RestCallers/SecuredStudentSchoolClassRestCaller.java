@@ -1,6 +1,9 @@
 package fi.dwo.gwt.lib.rest.client.RestCallers;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -54,5 +57,14 @@ public interface SecuredStudentSchoolClassRestCaller extends RestService {
     @Path("/sec:{id}/student/schoolclass/getActive")
     public void getActiveSchoolClass(@PathParam("id") String id, RestContext rest, MethodCallback<DomSchoolClass> callback);
 
+    @PUT
+    @Path("/sec:{id}/student/schoolclass/getTeacherList")
+    public void getTeachersInSchoolClass(@PathParam("id") String id, RestSchoolClass restData, MethodCallback<List<DomTeacher>> callback);
+    @PUT
+    @Path("/sec:{id}/student/schoolclass/getStudentList")
+    public void getStudentsInSchoolClass(@PathParam("id") String id, RestSchoolClass restData, MethodCallback<List<DomStudent>> callback);
 
+    
+    
+    
 }

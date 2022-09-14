@@ -7,6 +7,8 @@ import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestNewSchoolClass4Student;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
@@ -15,6 +17,8 @@ import nl.uu.fi.dwo.rest.util.PathId;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.fusesource.restygwt.client.MethodCallback;
 import org.osgi.util.promise.Promise;
 
 /**
@@ -119,4 +123,21 @@ public class SecuredStudentSchoolClassManager {
         LOG.log(Level.FINE, "Rest Callback performed.");
     }
 
+    public Promise<List<DomStudent>> getStudentsInSchoolClass(DomContext context, DomSchoolClass schoolClass) {
+        PromiseCallback<List<DomStudent>> defer = new PromiseCallback<List<DomStudent>>();
+        RestSchoolClass restSchoolClass = new RestSchoolClass();
+        restSchoolClass.setRestContext(context);
+        restSchoolClass.setDomSchoolClass(schoolClass);
+        F(service::getStudentsInSchoolClass,PathId.getId(context),restSchoolClass, (defer));
+        return defer.getPromise();
+    }
+
+    public Promise<List<DomTeacher>> getTeachersInSchoolClass(DomContext context, DomSchoolClass schoolClass) {
+        PromiseCallback<List<DomTeacher>> defer = new PromiseCallback<List<DomTeacher>>();
+        RestSchoolClass restSchoolClass = new RestSchoolClass();
+        restSchoolClass.setRestContext(context);
+        restSchoolClass.setDomSchoolClass(schoolClass);
+        F(this.service::getTeachersInSchoolClass,PathId.getId(context),restSchoolClass, defer);
+        return defer.getPromise();
+    }
 }
