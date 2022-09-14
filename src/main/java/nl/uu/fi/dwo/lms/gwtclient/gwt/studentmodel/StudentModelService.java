@@ -51,10 +51,8 @@ public class StudentModelService implements DescriptionService {
 
 	private Promise<DomDwoProfileFull> profile;
 	
-	@Inject StudentModelService(DwoGlobalVars vars) {
-		context = new DomContext();
-		context.setDomHasRole(vars.getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
-		context.setRealm(vars.getCurrentLoginContext().getRealm());
+	@Inject StudentModelService(DwoGlobalVars vars, DomContext ctx) {
+		context = ctx;
 		profile = vars.getProfile();
 		if (!vars.isPremium()) {
 			models = Promises.resolved(Collections.emptyList());

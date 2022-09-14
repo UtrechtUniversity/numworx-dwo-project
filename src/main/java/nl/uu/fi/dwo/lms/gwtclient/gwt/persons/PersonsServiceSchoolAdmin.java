@@ -6,10 +6,8 @@ import javax.inject.Inject;
 
 import org.osgi.util.promise.Promise;
 
-import dagger.Reusable;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredSchoolAdminSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredSchoolAdminSchoolManager;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
@@ -27,7 +25,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
-import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
@@ -56,12 +53,10 @@ public class PersonsServiceSchoolAdmin extends PersonsService {
   final SecuredSchoolAdminSchoolManager manager2;
   final DomContext context;
   
-  @Inject PersonsServiceSchoolAdmin(DwoGlobalVars vars) {
+  @Inject PersonsServiceSchoolAdmin(DomContext context) {
     manager = new SecuredSchoolAdminSchoolClassManager();
     manager2 = new SecuredSchoolAdminSchoolManager();
-    context = new DomContext();
-    context.setDomHasRole(vars.getActiveSchoolRoleAndClass().getHasRole());
-    context.setRealm(vars.getCurrentLoginContext().getRealm());
+    this.context = context;
   }
 
   @Override

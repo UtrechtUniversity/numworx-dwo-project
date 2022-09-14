@@ -14,7 +14,6 @@ import javax.inject.Inject;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
-import com.gargoylesoftware.htmlunit.html.DomProcessingInstruction;
 import com.google.gwt.i18n.client.LocaleInfo;
 
 import dagger.Lazy;
@@ -27,7 +26,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
@@ -49,12 +47,10 @@ public class StudentResultsService implements StudentResults {
 	@Inject Lazy<AdviseMeService> adviseMe;
 	
 
-	@Inject StudentResultsService(SecuredStudentStudentModelManager manager, DwoGlobalVars vars, MethodManager methodMan) {
+	@Inject StudentResultsService(SecuredStudentStudentModelManager manager, DwoGlobalVars vars, MethodManager methodMan, DomContext context) {
 		this.manager = manager;
 		this.methodMan = methodMan;
-		context = new DomContext();
-		context.setDomHasRole(vars.getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
-		context.setRealm(vars.getCurrentLoginContext().getRealm());
+		this.context = context;
 		sc = vars.getCurrentSchoolClass();
 		profile = vars.getProfile();
 		if (!vars.isPremium()) {

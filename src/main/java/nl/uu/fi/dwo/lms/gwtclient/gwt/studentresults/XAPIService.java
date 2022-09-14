@@ -25,6 +25,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
 import fi.dwo.gwt.lib.rest.util.DomStudentModelStructureScoreCodec;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
@@ -53,8 +54,8 @@ public class XAPIService extends StudentResultsService implements StudentResults
 
   private Promise<XapiManager> man;
 
-  @Inject XAPIService(SecuredStudentStudentModelManager manager, DwoGlobalVars vars, MethodManager mm) {
-    super(manager, vars, mm);
+  @Inject XAPIService(SecuredStudentStudentModelManager manager, DwoGlobalVars vars, MethodManager mm, DomContext ctx) {
+    super(manager, vars, mm, ctx);
     if (!vars.isPremium()) {
         man = Promises.failed(new IllegalArgumentException());
     } else {

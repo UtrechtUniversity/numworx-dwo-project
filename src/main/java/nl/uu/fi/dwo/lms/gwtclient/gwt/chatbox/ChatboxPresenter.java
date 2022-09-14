@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -12,7 +13,6 @@ import javax.inject.Inject;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
-import com.google.common.collect.Streams;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -22,6 +22,7 @@ import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
@@ -49,11 +50,15 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 	private Optional<PersonsService> service;
 
 	private ChatUser user = new ChatUser();
+
+	private LoggingFailure FAILURE;
+    private static final Logger LOG = Logger.getLogger(ChatboxPresenter.class.getName());
 	
 	
 	@Inject ChatboxPresenter(DwoGlobalVars vars, EventBus bus, Optional<PersonsService> service) {
 		this.vars = vars;
 		this.service = service;
+	    FAILURE = new LoggingFailure(LOG, bus);
 		
 		//RestAuthenticator.instance.addValueChangeHandler(this);
 		bus.addHandlerToSource(ValueChangeEvent.getType(), RestAuthenticator.instance, this); // resettable eventbus, helaas werkt niet want Authenticator gebruikt andere bus
@@ -91,7 +96,7 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 				view.setLogin(user);			
 				view.openUrl("chatbox/");
 				return p;
-			});
+			}, FAILURE);
 			return;
 		} else if (role == RoleType.TEACHER) {
 			// teacher
@@ -101,7 +106,7 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 				view.setLogin(user);				
 				view.openUrl("chatbox/");
 				return p;
-			});
+			}, FAILURE);
 			return;
 		}
 		view.openUrl("about:blank");
@@ -120,8 +125,7 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 			return all.map(streams -> {
 				Stream<ChatUser> s = streams.stream().flatMap(Function.identity());
 				room.chatUser = s.collect(Collectors.toList());
-				return room;
-		
+				return room;		
 			});
 		}
 		room.chatUser = Collections.singletonList(new ChatUser(user));

@@ -32,6 +32,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.organisation.OrganisationPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.LogResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsPresenter;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 
 @Module(subcomponents = { TeacherComponent.class, SchoolAdminComponent.class, GuestComponent.class, StudentComponent.class })
 abstract class BootModule {
@@ -70,6 +71,13 @@ abstract class BootModule {
 
 	@Provides @Singleton static IdeasIF ideas() {
 		return new IdeasClient("/ideas/IdeasServlet");
+	}
+	
+	@Provides @Reusable static DomContext context(DwoGlobalVars vars) {
+	    DomContext context = new DomContext();
+	    context.setDomHasRole(vars.getActiveSchoolRoleAndClass().getHasRole());
+	    context.setRealm(vars.getCurrentLoginContext().getRealm());
+	    return context;
 	}
 
 //	@IntoMap

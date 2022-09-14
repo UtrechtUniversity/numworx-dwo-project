@@ -8,7 +8,6 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentSchoolClassManager;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -20,10 +19,8 @@ public class SchoolClassServiceStudent {
   DomContext context;
   SecuredStudentSchoolClassManager manager;
   
-  @Inject SchoolClassServiceStudent(DwoGlobalVars vars) {
-      context = new DomContext();
-      context.setDomHasRole(vars.getActiveSchoolRoleAndClass().getHasRole());
-      context.setRealm(vars.getCurrentLoginContext().getRealm());
+  @Inject SchoolClassServiceStudent(DomContext ctx) {
+      context = ctx;
       manager = new SecuredStudentSchoolClassManager();
   }
 
