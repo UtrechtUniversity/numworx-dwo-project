@@ -574,6 +574,16 @@
 				</dependency>
 			</dependencies>		
 		</profile>
+		<profile>
+			<id>running11</id>
+			<dependencies>
+				<dependency>
+				    <groupId>javax.annotation</groupId>
+				    <artifactId>javax.annotation-api</artifactId>
+				    <version>1.3.2</version>
+				</dependency>
+			</dependencies>
+		</profile>
 	</profiles>
 	<version>2.5.14-SNAPSHOT</version>
 	<scm>
