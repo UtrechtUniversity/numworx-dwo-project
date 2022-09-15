@@ -55,6 +55,7 @@ div.header.gwt-Label {
 i.send {
     display: inline-block;
     width: 32px;
+    height: 32px;
     color: white;
     background-color: #1b75bb;
     border-radius: 4px;

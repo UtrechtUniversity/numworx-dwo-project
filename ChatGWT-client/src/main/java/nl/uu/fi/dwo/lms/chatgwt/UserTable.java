@@ -54,6 +54,7 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 	private ListDataProvider<UserModel> provider;
 	private ChatRoom room;
 	private RoleType role;
+	private ChatGWT parent;
 	
 	void setSelectionModel(SelectionModel<UserModel> selection) {
 		table.setSelectionModel(selection);
@@ -61,9 +62,10 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 	
 	static final ChatRoom NULL = new ChatRoom(); static { NULL.chatUser = Collections.emptyList(); }
 	
-	UserTable(ChatRoom room2, RoleType role, SelectionModel<UserModel> selection) {
+	UserTable(ChatRoom room2, RoleType role, SelectionModel<UserModel> selection, ChatGWT parent) {
 		this.room = room2;
 		this.role = role;
+		this.parent = parent;
 		if (room == null) {
 			room = NULL;
 		}
@@ -101,7 +103,10 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 	}
 
 	List<UserModel> toUserModelList() {
-		return room.chatUser.stream().filter(item -> this.role == item.role).map(item -> new UserModel(item, room)).collect(Collectors.toList());
+		return room.chatUser.stream().filter(item -> this.role == item.role).map(item -> {
+			MessageModel messageModel = parent.get(item);
+			return new UserModel(item, room, messageModel);
+		}).collect(Collectors.toList());
 	}
 
 	public boolean isEmpty() {

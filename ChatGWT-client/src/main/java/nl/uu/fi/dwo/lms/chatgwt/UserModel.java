@@ -1,38 +1,13 @@
 package nl.uu.fi.dwo.lms.chatgwt;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
 
 class UserModel {
 	
-	class Message {
-		private final String content;
-		private final String stamp;
-		private final String sender;
-		private Message(String sender, String stamp, String content) {
-			this.sender = sender;
-			this.stamp = stamp;
-			this.content = content;
-		}
-		String getContent() {
-			return content;
-		}
-		String getStamp() {
-			return stamp;
-		}
-		String getSender() {
-			return sender;
-		}
-	}
-	
-	
 	private final ChatUser user;
 	private final String roomJit;
 
-	
 	boolean isOnline() {
 		return online;
 	}
@@ -49,26 +24,37 @@ class UserModel {
 		return roomJit;
 	}
 
-	List<Message> getUnseen() {
-		return unseen;
+
+	public MessageModel getMessages() {
+		return messages;
 	}
 
-	UserModel(ChatUser user, ChatRoom room) {
+	public void setMessages(MessageModel messages) {
+		this.messages = messages;
+	}
+
+	public Object getStamp() {
+		return stamp;
+	}
+
+	public void setStamp(Object stamp) {
+		this.stamp = stamp;
+	}
+
+	UserModel(ChatUser user, ChatRoom room, MessageModel messageModel) {
 		this.user = user;
 		this.roomJit = ChatGWT.nick(user, room);
+		this.messages = messageModel;
+		this.stamp = null;
 	}
 
-	
 	private boolean  online;
 	
-	private final List<Message> unseen = new LinkedList<>();
-
+	private MessageModel messages;
+	private Object stamp;
 
 	Boolean hasUnseen() {
-		return !unseen.isEmpty();
+		return messages.since(stamp);
 	}
 	
-	void addMessage(String sender, String stamp, String content) {
-		unseen.add(new Message(sender, stamp, content));
-	}
 }
