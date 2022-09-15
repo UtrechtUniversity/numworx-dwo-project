@@ -41,7 +41,16 @@
 			</path>
 		</annotationProcessorPaths>
 				</configuration>
-			</plugin>			<plugin>
+			<dependencies>
+				<dependency>
+				    <groupId>javax.annotation</groupId>
+				    <artifactId>javax.annotation-api</artifactId>
+				    <version>1.3.2</version>
+				    <scope>provided</scope>
+				</dependency>
+			</dependencies>
+			</plugin>
+			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>buildnumber-maven-plugin</artifactId>
 				<version>1.3</version>
