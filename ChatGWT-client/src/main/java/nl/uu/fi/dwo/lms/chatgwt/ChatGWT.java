@@ -202,10 +202,10 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			String stamp = null;
 			int at = from.indexOf('/');
 			MessageModel m;
-			m = getModel(at > 0 ? from.substring(0, at-1) : from);
+			m = getModel(at > 0 ? from.substring(0, at) : from);
 			if (at>0) {
 				if ("chat".equals(type) )
-					from = from.substring(0,at-1);
+					from = from.substring(0,at);
 				else
 					from = from.substring(at+1);
 			}
@@ -357,7 +357,13 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		models.put(model.getJid(), model);
 	}
 	private MessageModel getModel(String jid) {
-		return models.computeIfAbsent(jid, MessageModel::new);
+		//return models.computeIfAbsent(jid, MessageModel::new);
+		MessageModel m = models.get(jid);
+		if (m == null) {
+			m = new MessageModel(jid);
+			models.put(jid, m);
+		}
+		return m;
 	}
 	
 	MessageModel get(ChatRoom room) {
@@ -594,8 +600,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			String[][] attributes = { { "to", u.jid }, { "type", "chat" } };
 			Builder reply = Builder.$msg(attributes).c("body",null).t(value);
 			connection.send(reply);
-			Message msg = new Message(u.jid, now(), value);
-			get(u).add(msg);
+			Message msg = new Message(chatUser.jid, now(), value);
+			um.getMessages().add(msg);
 		} else {
 			// select user 1st;
 		}
@@ -721,7 +727,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		UserModel selectedObject = selection.getSelectedObject();
 		if (!eastHeader.isMultichat() && selectedObject != null) {
 			ChatUser user = selectedObject.getUser();
-			MessageModel m = get(user);
+			MessageModel m = selectedObject.getMessages();
+			selectedObject.setStamp(m.getStamp());
 			switchToModel(m);
 			sender.setText("Bericht voor " + user.nickName);
 		}

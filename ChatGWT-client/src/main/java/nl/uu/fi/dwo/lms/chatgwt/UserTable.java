@@ -5,19 +5,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionModel;
-import com.google.gwt.view.client.SingleSelectionModel;
 import com.stanziq.strophe.client.Element;
 import com.stanziq.strophe.client.Handler;
 
@@ -105,7 +102,9 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 	List<UserModel> toUserModelList() {
 		return room.chatUser.stream().filter(item -> this.role == item.role).map(item -> {
 			MessageModel messageModel = parent.get(item);
-			return new UserModel(item, room, messageModel);
+			UserModel userModel = new UserModel(item, room, messageModel);
+			userModel.setRegistration(messageModel.addValueChangeHandler(this::onMessageModelChange));
+			return userModel;
 		}).collect(Collectors.toList());
 	}
 
@@ -134,6 +133,12 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 		table.redraw();
 	}
 	
+	private void onMessageModelChange(ValueChangeEvent<List<Message>> event) {
+		provider.refresh();
+		table.redraw();
+	}
+	
+	
 	private class MyHandler extends Handler<Element> {
 
 		@Override
@@ -156,6 +161,7 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 		}
 
 		this.room = room;
+		data.forEach(UserModel::clearRegistration);
 		data.clear();
 		data.addAll(toUserModelList());
 		provider.refresh();

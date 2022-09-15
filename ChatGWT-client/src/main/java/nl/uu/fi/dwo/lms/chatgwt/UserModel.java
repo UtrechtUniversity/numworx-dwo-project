@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.lms.chatgwt;
 
+import com.google.gwt.event.shared.HandlerRegistration;
+
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
 
@@ -52,9 +54,19 @@ class UserModel {
 	
 	private MessageModel messages;
 	private Object stamp;
+	private HandlerRegistration reg;
 
 	Boolean hasUnseen() {
 		return messages.since(stamp);
 	}
 	
+	void setRegistration(HandlerRegistration reg) {
+		clearRegistration();
+		this.reg = reg;
+	}
+
+	void clearRegistration() {
+		if (reg != null) reg.removeHandler();
+		reg = null;		
+	}
 }
