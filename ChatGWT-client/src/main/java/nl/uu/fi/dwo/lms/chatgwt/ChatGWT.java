@@ -320,7 +320,10 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 				Builder pres = Builder.$pres(null);
 	            connection.send(pres);
 // Add to room	            
-	            if (room != null) addToRoom(room);
+	            if (room != null) {
+	            	switchToModel(get(room));
+	            	addToRoom(room);
+	            }
 	            break;
 			case DISCONNECTED:
 				LOG.info("stop talking");
