@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ResizeLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -58,11 +59,12 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
     	
     }
     
-    static class TekstVakWidget extends ResizeLayoutPanel implements  InteractionStub {
+    static class TekstVakWidget extends SimpleLayoutPanel implements  InteractionStub {
     	private TekstVakPanel delegate;
     	private ActivityInterface activity;
 
 		public TekstVakWidget(WidgetPlayer widgetPlayer) {
+			addStyleName("tekstvakwidget");
 			activity = widgetPlayer;
 		}
 
@@ -128,8 +130,10 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
 			launch.put("volledigeBreedte", true);
 			launch.put("popup", false);
 			launch.put("interactiePanelLaunchState", launchData);
-			delegate = new TekstVakPanel(activity, launch, randomVarNamen, randomVarWaarden, width);			
+			delegate = new TekstVakPanel(activity, launch, randomVarNamen, randomVarWaarden, width);
+			delegate.zetOpdracht(new HashMap<>(launchData));
 			setWidget(delegate);
+			setPixelSize(width, height);
 		}
     	
     }
