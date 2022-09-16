@@ -64,11 +64,10 @@ public class StubWidget extends Composite implements Handler, LoadHandler, Formu
 	private HashMap<String, Number> randomVars = new HashMap<>();
 	private HashMap<String, Object> lastResort;
 
-	public StubWidget() {
-		int type = 4;
+	public StubWidget(int id) {
 		int profile = 77;
 		String locale = "nl";
-		frame = new Frame("widget.jsp?id=" + type + "&profile=" + profile + "&locale=" + locale);
+		frame = new Frame("widget.jsp?id=" + id + "&profile=" + profile + "&locale=" + locale);
 	}
 
 	private void initFrame() {
