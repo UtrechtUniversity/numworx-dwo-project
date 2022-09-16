@@ -32,6 +32,10 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.SimpleEventBus;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
+import com.google.gwt.i18n.client.DateTimeFormatInfo;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -609,9 +613,10 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			// select user 1st;
 		}
 	}
-		
+	private static final DateTimeFormatInfo INFO = LocaleInfo.getCurrentLocale().getDateTimeFormatInfo();
+	private static final DateTimeFormat DATE_TIME = DateTimeFormat.getFormat(INFO.dateTimeShort(INFO.timeFormatShort(),INFO.formatMonthNumDay()));
 	private String now() {
-		return new Date().toString();
+		return DATE_TIME.format( new Date());
 	}
 	@Override
 	public HandlerRegistration addChangeHandler(ChangeHandler handler) {
