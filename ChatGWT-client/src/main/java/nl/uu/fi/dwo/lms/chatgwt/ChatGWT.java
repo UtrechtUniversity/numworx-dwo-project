@@ -453,7 +453,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			ChatRoom room2 = new ChatRoom("klas2@" + ROOMS);
 			room2.chatUser = room.chatUser;
 			room.chatUser.forEach(this::put);
-			eastHeader.init(Arrays.asList(room, room2));
+			//eastHeader.init(Arrays.asList(room, room2));
 			room = null;
 		
 		}
