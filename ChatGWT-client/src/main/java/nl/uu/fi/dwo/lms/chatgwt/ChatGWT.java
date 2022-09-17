@@ -31,8 +31,8 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.SimpleEventBus;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.i18n.shared.DateTimeFormatInfo;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
@@ -44,6 +44,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -213,7 +214,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			if (("chat".equals(type)||"groupchat".equals(type)) && elems.getLength() > 0) {
 				Element body = (Element) elems.getItem(0);
 				String text = body.getText();
-				if (stamp == null) stamp = now();
+				if (stamp == null) stamp = now(); else stamp = iso(stamp);
 				m.add(new Message(from, stamp, text));
 			}
 			return true;
@@ -275,16 +276,18 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		hbox.add(time);
 		panel.add(hbox);
 
-		StubWidget message = new StubWidget();				
-		HashMap<String, Object> data = new HashMap<>();
-		data.put("rekenTool", Boolean.FALSE);
-		data.put("tekst", text);
-		data.put("balkZichtbaar", Boolean.FALSE);
-		data.put("boxMetRand", Boolean.FALSE);
-		data.put("editable", Boolean.FALSE);
-		message.init(COL_6-32-2, 100-30, data);				
+//		StubWidget message = new StubWidget(4);				
+//		HashMap<String, Object> data = new HashMap<>();
+//		data.put("rekenTool", Boolean.FALSE);
+//		data.put("tekst", text);
+//		data.put("balkZichtbaar", Boolean.FALSE);
+//		data.put("boxMetRand", Boolean.FALSE);
+//		data.put("editable", Boolean.FALSE);
+//		message.init(COL_6-32-2, 100-30, data);				
 
+		StubWidget message = tekstPanel(text, COL_6-32,100-30);
 		message.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
+		message.getElement().getStyle().setMarginLeft(-4, Unit.PX);
 		hbox.add(message);
 		scroll.scrollToBottom();
 	}
@@ -397,6 +400,14 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+		
+//		StubWidget tekstpanel = tekstPanel("DIT IS DE $fx-y@ TEKST\nTWEEDE REGEL\n", COL_6, 300);
+//		RootPanel.get().add(tekstpanel);
+//		
+//		
+//		
+//		if(true) return;
+		
 		RootLayoutPanel root = RootLayoutPanel.get();
 		eastHeader  = new EastHeader();
 		eastHeader.setUpdateRoom(this::updateRoom);
@@ -476,7 +487,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		
 		east.add(teachers);
 		
-		editor = new StubWidget();
+		editor = new StubWidget(4);
 
 		HashMap<String, Object> data = new HashMap<>();
 		data.put("rekenTool", Boolean.FALSE);
@@ -535,6 +546,19 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		
 		if (chatUser != null) 
 			Scheduler.get().scheduleDeferred(this::login);
+	}
+
+	StubWidget tekstPanel(String content, int width, int height) {
+		StubWidget tekstpanel = new StubWidget(9);
+		HashMap<String, Object> launch = new HashMap<>();
+		
+		launch.put("teksten", new String[][] {{ content}});
+		launch.put("breedtes", Arrays.asList(width));
+		launch.put("hoogtes",  Arrays.asList(height));
+		launch.put("font_size", 13);
+		
+		tekstpanel.init(width, height, launch);
+		return tekstpanel;
 	}
 	private void toJid(ChatUser u) {
 		u.jid = u.jid.toLowerCase() + "@" + DOMAIN;
@@ -740,6 +764,18 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		panel.clear();
 		addToPanel(m.getMessages());
 		addToPanelHandler = m.addValueChangeHandler(this::addToPanel);
+	}
+	
+	static final String ISO8601_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ";
+	static final DateTimeFormat ISO_DATETIME = DateTimeFormat.getFormat(ISO8601_PATTERN);
+
+	public static Date fromDelay(String delay) {
+		if (delay.endsWith("Z")) delay = delay.substring(0, delay.length()-1) + "+0000"; // REMOVE Z, add GMT		
+		return ISO_DATETIME.parseStrict(delay);
+	}
+	
+	private String iso(String delay) {
+		return DATE_TIME.format(fromDelay(delay));
 	}
 	
 }
