@@ -24,7 +24,6 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -34,16 +33,11 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.LocaleInfo;
-import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
-import com.google.gwt.i18n.client.DateTimeFormatInfo;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.i18n.shared.DateTimeFormatInfo;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
@@ -68,10 +62,7 @@ import com.stanziq.strophe.client.Handler;
 import com.stanziq.strophe.client.Namespace;
 
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
-import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
-import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
-import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
@@ -254,18 +245,21 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	}
 	
 	private void addToPanel(ValueChangeEvent<List<Message>> event) {
+		MessageModel mm = (MessageModel) event.getSource();
 		addToPanel(event.getValue());
+		event.getValue().forEach(m -> mm.setRead(m));
 	}
 	private void addToPanel(Collection<Message> msgs) {
 		msgs.forEach(this::addToPanel);
 	}
 	private void addToPanel(Message msg) {
+		msg.setRead(true);
 		addToPanel(msg.getSender(), msg.getStamp(), msg.getContent());
 	}
 	
 	private void addToPanel(String from, String stamp, String text) {
 		if (stamp == null||stamp.isEmpty()) {
-			stamp = new Date().toString(); // Date format?
+			stamp = now();
 		}
 		InlineLabel afzender = new InlineLabel(getDisplayName(from));
 		afzender.addStyleName("sender");
@@ -333,6 +327,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 				LOG.info("stop talking");
 				if (ref1 != null) { connection.removeHandler(ref1); ref1 = null; }
 				if (ref2 != null) { connection.removeHandler(ref2); ref2 = null; }
+			default:
 			}
 			
 		}
@@ -736,7 +731,6 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		if (!eastHeader.isMultichat() && selectedObject != null) {
 			ChatUser user = selectedObject.getUser();
 			MessageModel m = selectedObject.getMessages();
-			selectedObject.setStamp(m.getStamp());
 			switchToModel(m);
 			sender.setText("Bericht voor " + user.nickName);
 		}

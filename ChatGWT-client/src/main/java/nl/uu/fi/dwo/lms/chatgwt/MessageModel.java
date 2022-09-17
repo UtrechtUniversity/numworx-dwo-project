@@ -1,8 +1,12 @@
 package nl.uu.fi.dwo.lms.chatgwt;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.stream.Stream;
+
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -43,27 +47,31 @@ public class MessageModel implements HasValueChangeHandlers<List<Message>> {
 		return bus.addHandlerToSource(ValueChangeEvent.getType(), this, handler);
 	}
 
-	public boolean since(Object stamp) {
-		return !messages.isEmpty();
+	public boolean hasUnread() {
+		int size = messages.size();
+		ListIterator<Message> li = messages.listIterator(size);
+		Stream<Message> m = Stream.generate(li::previous).limit(size);
+		return ! m.allMatch(Message::isRead);
 	}
 
-	private Object stamp = null;
-	
-	public Object getStamp() {
-		return stamp;
-	}
-
-	public Object add(Message message) {
+	public void add(Message message) {
 		messages.add(message);
-		stamp = messages.size();
 		ValueChangeEvent.fire(this, Collections.singletonList(message));
-		return stamp;
 	}
 
 	public void clear() {
 		messages.clear();
-		stamp = null;
 		ValueChangeEvent.fire(this, Collections.emptyList());
+	}
+	
+	public void setRead(Message msg) {
+		boolean oldread = msg.isRead();
+		boolean old = !oldread;
+		msg.setRead(true);
+		if (old && !hasUnread()) {
+			ValueChangeEvent.fire(this, Collections.emptyList());
+		}
+		
 	}
 	
 }

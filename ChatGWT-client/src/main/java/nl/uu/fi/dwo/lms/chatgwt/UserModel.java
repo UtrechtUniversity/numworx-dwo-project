@@ -35,29 +35,19 @@ class UserModel {
 		this.messages = messages;
 	}
 
-	public Object getStamp() {
-		return stamp;
-	}
-
-	public void setStamp(Object stamp) {
-		this.stamp = stamp;
-	}
-
 	UserModel(ChatUser user, ChatRoom room, MessageModel messageModel) {
 		this.user = user;
 		this.roomJit = ChatGWT.nick(user, room);
 		this.messages = messageModel;
-		this.stamp = null;
 	}
 
 	private boolean  online;
 	
 	private MessageModel messages;
-	private Object stamp;
 	private HandlerRegistration reg;
 
 	Boolean hasUnseen() {
-		return messages.since(stamp);
+		return messages.hasUnread();
 	}
 	
 	void setRegistration(HandlerRegistration reg) {
