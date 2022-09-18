@@ -101,7 +101,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 	public void setState(HashMap<String, Object> h) {
 		if (goedFout && successStatus.isEmpty())
 		{	successStatus = h.getOrDefault("success_status", successStatus).toString();
-			anchor.addStyleDependentName("goedFout-" + successStatus);
+			goedfout(successStatus);
 		}
 		if (score && scoreRaw.isEmpty()) {
 			scoreRaw = h.getOrDefault("score.raw", scoreRaw).toString();
@@ -167,6 +167,8 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 
 	
 	public void init(int width, int height, Map<String, Object> launchData) {
+		api.SetValue("cmi.exit", "suspend");
+		Promise<String> start = api.Commit();
 		ObjectMap map = JSONUtilities.wrapMap(launchData);
 		if (map != null)
 		{
@@ -191,7 +193,8 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			Promise<String> result = Promises.resolved("");
 			switch(choicePageMode) {
 			case 2: // activiteit id met pagina nr
-				result = api.getValuePromise("dme.scorewidget.s." + activiteitID + "." + (paginaNr) + ".score.raw");
+				result = 
+				start.then( p -> api.getValuePromise("dme.scorewidget.s." + activiteitID + "." + (paginaNr) + ".score.raw"));
 				anchor.setHref("#s:" + activiteitID + "." + (paginaNr-1));
 				break;
 			}
@@ -202,7 +205,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			Promise<String> result = Promises.resolved("");
 			switch(choicePageMode) {
 			case 2: // activiteit id met pagina nr
-				result = api.getValuePromise("dme.scorewidget.s." + activiteitID + "." + (paginaNr) + ".success_status");
+				result = start.then(p -> api.getValuePromise("dme.scorewidget.s." + activiteitID + "." + (paginaNr) + ".success_status"));
 				anchor.setHref("#s:" + activiteitID + "." + (paginaNr-1));
 				break;
 			}
@@ -221,8 +224,14 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 	Promise<String> doGoedFout(Promise<String> p) {
 		String value = p.getValue();
 		this.successStatus = value;
-		anchor.addStyleDependentName("goedFout-" + value);
+		goedfout(value);
 		return p;
+	}
+
+	private void goedfout(String value) {
+		anchor.removeStyleDependentName("goedFout-passed");
+		anchor.removeStyleDependentName("goedFout-failed");
+		anchor.addStyleDependentName("goedFout-" + value);
 	}
 	
 	

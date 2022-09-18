@@ -269,3 +269,22 @@ div.listItem-dwo-separator {
 		margin-left: -20px;
 		display: block;
 }
+
+a.scorewidget {
+	color: black;
+}
+
+a.scorewidget.scorewidget-goedFout:after {
+	content: url(images/resources/knop-indicatie-magdoor.png);
+	color: gray;	
+}
+
+a.scorewidget.scorewidget-goedFout.scorewidget-goedFout-passed:after {
+	content: url(images/resources/knop-indicatie-goed.png);
+	color: green;
+}
+a.scorewidget.scorewidget-goedFout.scorewidget-goedFout-failed:after {
+	content: url(images/resources/knop-indicatie-fout.png);
+	color: red;
+}
+
