@@ -10,6 +10,7 @@ enum ScormKey {
 	COMPLETION_STATUS,
 	TOTAL_TIME,
 	TOTAL_TIME2004,
+	SCORE_WIDGET,
 	SESSION_TIME,
 	SESSION_TIME2004,
 	STUDENT_MODEL,
@@ -35,13 +36,17 @@ enum ScormKey {
     	keys.put("cmi.suspend_data", SUSPEND_DATA);
     	keys.put("cmi.suspend_digest", SUSPEND_DIGEST);
     	keys.put("cocd", XML);
-    keys.put("dme.student_model", STUDENT_MODEL);
+    	keys.put("dme.student_model", STUDENT_MODEL);
 // MORE to go    	
     }
     
     static ScormKey getKey(String key) {
 		ScormKey result = keys.get(key);
-		if(result ==  null) return COCD;
+		if(result ==  null) 
+		{
+		  if (key.startsWith("dme.scorewidget.")) return SCORE_WIDGET;
+		  else return COCD;
+		}
 		return result; // never null
 	}
 

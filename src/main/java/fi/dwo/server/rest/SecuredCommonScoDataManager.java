@@ -210,6 +210,8 @@ abstract class SecuredCommonScoDataManager {
                                 if(suspendData == null) suspendData = "";
                                 entry.setValue((suspendData));
                                 break;
+                            case SCORE_WIDGET:
+                                entry.setValue(scoreWidget(entry.getKey()));
                             }
                             logEntry("get", entry, pssc.getPersistentHasRolePK().getUserID(), pssc.getScoID());
                         }
@@ -734,4 +736,11 @@ try {
     return Response.ok(Boolean.TRUE, MediaType.APPLICATION_JSON_TYPE).tag(buildETag(pssc,pssd)).build();
 }
 
+  private static String scoreWidget(String key) {
+    if (key.endsWith(".score.raw")) return String.valueOf(Math.round(Math.random()*10));
+    if (key.endsWith(".success_status")) return Math.random()>0.4 ? "passed" : "failed";    
+    return "";   
+  }
+  
+  
 }
