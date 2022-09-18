@@ -466,7 +466,9 @@ public class TekstBuffer
 			//if(true) return new nl.numworx.notebookgwt.client.NotebookGWT(currentVakGegevens, randomVarWaarden, volleBreedtes[huidigeKolom]);
 			return x(map, new StubView(activity, "NotebookGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 66:
-			return x(map, new ScoreWidget(activity, currentVakGegevens, randomVarNamen, randomVarWaarden));
+			{	AnchorContext anchorContext = getAnchorContext();
+				return x(map, new ScoreWidget(activity, currentVakGegevens, randomVarNamen, randomVarWaarden, anchorContext));
+			}
 		
 		
 		}

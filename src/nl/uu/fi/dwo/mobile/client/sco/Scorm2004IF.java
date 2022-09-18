@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.sco;
 import nl.uu.fi.dwo.interaction.client.Role;
 
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -28,4 +29,8 @@ public interface Scorm2004IF {
 	void setScoID(String unitId);
 
 	default String getAuthorization() { return "None"; }
+	
+	default Promise<String> getValuePromise(String name) {
+		return Promises.resolved(GetValue(name));
+	}
 }

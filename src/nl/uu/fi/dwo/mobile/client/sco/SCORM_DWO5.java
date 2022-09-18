@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.sco;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -508,6 +509,15 @@ log("initialized " +result.keySet());
 	@Override
 	public String getAuthorization() {
 		return RestAuthenticator.instance.getAuthorization();
+	}
+
+	@Override
+	public Promise<String> getValuePromise(String name) {
+		Collection<String> keys = Collections.singleton(name);
+		Promise<String> result = scoDataManager.getValues(sco, schoolClassID, context, keys).map(item -> item.get(name));
+		barrier.addBarrier(result);
+		result.then(null, p -> logger.log(Level.SEVERE, "getvalue promised", p.getFailure()));
+		return result.recover(oops-> "");
 	}
 
 
