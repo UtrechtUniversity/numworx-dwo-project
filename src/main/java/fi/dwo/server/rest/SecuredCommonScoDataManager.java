@@ -17,6 +17,7 @@ import java.util.zip.GZIPInputStream;
 
 import javax.json.Json;
 import javax.json.JsonArray;
+import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.stream.JsonParser;
 import javax.persistence.PersistenceException;
@@ -211,7 +212,7 @@ abstract class SecuredCommonScoDataManager {
                                 entry.setValue((suspendData));
                                 break;
                             case SCORE_WIDGET:
-                                entry.setValue(scoreWidget(entry.getKey()));
+                                entry.setValue(scoreWidget(entry.getKey(),pssd, pssc));
                             }
                             logEntry("get", entry, pssc.getPersistentHasRolePK().getUserID(), pssc.getScoID());
                         }
@@ -736,9 +737,75 @@ try {
     return Response.ok(Boolean.TRUE, MediaType.APPLICATION_JSON_TYPE).tag(buildETag(pssc,pssd)).build();
 }
 
-  private static String scoreWidget(String key) {
-    if (key.endsWith(".score.raw")) return String.valueOf(Math.round(Math.random()*10));
-    if (key.endsWith(".success_status")) return Math.random()>0.4 ? "passed" : "failed";    
+  static String scoreWidget(String key, PersistentStudentScoData pssd, PersistentStudentScoContext pssc) {
+	String[] split = key.split("\\.");
+	String page = "1";
+	if ("cs".equals(split[2])) {
+		page = split[3];
+        if(pssd == null) {
+            pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
+         }
+	} else if ("s".equals(split[2])) {
+		page = split[4];
+		long sco = Long.parseLong(split[3]);
+		if (sco != pssc.getScoID().longValue() || pssd == null) {
+			pssd = StudentScoDataManager.findEntity(sco);
+		}
+	} else if ("cc".equals(split[2])) {
+		pssd = null;
+		long sconr = Long.parseLong(split[3]);
+		PersistentScoContext scoContext = ScoContextManager.findSibling(pssc.getScoID(), sconr);
+		List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(scoContext, pssc.getPersistentHasRolePK());
+		if (!list.isEmpty()) {
+			pssd = StudentScoDataManager.findEntity(list.get(0).getStudentSco());
+		}
+	} else if ("c".equals(split[2])) {
+		long coursenr = Long.parseLong(split[3]);
+		long actnr = Long.parseLong(split[4]);
+		long pagenr = Long.parseLong(split[5]);
+		PersistentCourse course = CourseManager.findEntity(coursenr);
+		List<PersistentScoContext> list = ScoContextManager.findEntities(course);
+		
+		if (!list.isEmpty()) {
+			Long scoID = null;
+			for (PersistentScoContext s: list ) {
+				if (s.getSequencenr() == Long.parseLong(split[6])) {
+					Long scoid = s.getScoID();
+					PersistentScoContext scoContext;
+							pssc = StudentScoContextManager.findEntities(s, pssc.getPersistentHasRolePK());
+					pssd = StudentScoDataManager.findEntity(pssc.getScoID());
+					break;
+				}
+			}
+		}
+		
+	} else return "";
+	if (pssd == null) return "";
+	try {
+		String suspend_data = pssd.getSuspendData();
+		if (suspend_data == null || suspend_data.length() < 6) return "";
+		JsonParser parser = Json.createParser(new StringReader(suspend_data));
+		parser.next();
+		JsonObject data = parser.getObject();
+		JsonObject onsState = data.getJsonObject("onsState");
+		int pagenr = Integer.parseInt(page)-1;
+		
+		
+		if (key.endsWith(".score.raw")) {
+			JsonArray orScores = onsState.getJsonArray("orScores");
+			orScores = orScores.getJsonArray(0);
+			JsonNumber n = orScores.getJsonNumber(pagenr);
+			return n.toString();
+		}
+		if (key.endsWith(".success_status")) {
+			JsonArray orGoedFout = onsState.getJsonArray("orGoedFout");
+			orGoedFout = orGoedFout.getJsonArray(0);
+			boolean ok = orGoedFout.getBoolean(pagenr);
+			return ok ? "passed" : "failed";    
+		}
+	} catch (Exception e) {
+		LOG.log(Level.WARNING, "scoreWidget " + key, e);
+	}
     return "";   
   }
   

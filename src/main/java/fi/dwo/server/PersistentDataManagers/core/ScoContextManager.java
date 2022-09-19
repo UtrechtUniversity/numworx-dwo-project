@@ -10,6 +10,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -241,6 +242,14 @@ public class ScoContextManager {
         } finally {
             em.close();
         }
+	}
+
+	public static PersistentScoContext findSibling(Long scoID, long sconr) {
+		PersistentScoContext sc = findEntity(scoID);
+		PersistentCourse course = CourseManager.findEntity(sc.getCourseID());
+		List<PersistentScoContext> list = findEntities(course);
+		Optional<PersistentScoContext> optional = list.stream().filter(item -> item.getSequencenr().longValue() == sconr).findAny();
+		return optional.orElse(null);
 	}
 
 }
