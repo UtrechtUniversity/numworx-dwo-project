@@ -4,16 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.user.client.ui.InlineHyperlink;
-import com.google.gwt.user.client.ui.InlineLabel;
-import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
@@ -22,7 +17,6 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
-import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 
 public class ScoreWidget extends Composite implements InteractionView, ClickHandler, TekstElementWithFont {
@@ -188,27 +182,34 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			 if(map.containsKey("goedFout"))
 				 goedFout = map.getBoolean("goedFout");
 		}
-		anchor.setStyleDependentName("goedFout", goedFout);		
+		anchor.setStyleDependentName("goedFout", goedFout);	
+		String pfx0 = "dme.scorewidget.";
+		switch (choicePageMode) {
+		case 0: 
+			anchor.setHref("goto:." + (paginaNr));
+			pfx0 += "cs"; break;
+		case 1:
+			anchor.setHref("goto:" + activiteitNr + "." + paginaNr);
+			pfx0 += "cc." + activiteitNr; break;			
+		case 2: 
+			anchor.setHref("#s:" + activiteitID + "." + (paginaNr-1));
+			pfx0 += "s." + activiteitID; break;
+		case 3:
+			anchor.setHref("#c:" + moduleID + "." + activiteitNr + "." + (paginaNr-1));
+			pfx0 += "c." + moduleID + "." + activiteitNr; break;
+		default: pfx0 += "null";
+		}
+		final String pfx = pfx0 + "." + paginaNr;
+		
 		if (score) {
-			Promise<String> result = Promises.resolved("");
-			switch(choicePageMode) {
-			case 2: // activiteit id met pagina nr
-				result = 
-				start.then( p -> api.getValuePromise("dme.scorewidget.s." + activiteitID + "." + (paginaNr) + ".score.raw"));
-				anchor.setHref("#s:" + activiteitID + "." + (paginaNr-1));
-				break;
-			}
+			Promise<String> result;
+			result = start.then( p -> api.getValuePromise(pfx + ".score.raw"));
 			anchor.setText("0");
 			result.then(this::doScore);
 		}
 		if (goedFout) {
-			Promise<String> result = Promises.resolved("");
-			switch(choicePageMode) {
-			case 2: // activiteit id met pagina nr
-				result = start.then(p -> api.getValuePromise("dme.scorewidget.s." + activiteitID + "." + (paginaNr) + ".success_status"));
-				anchor.setHref("#s:" + activiteitID + "." + (paginaNr-1));
-				break;
-			}
+			Promise<String> result;
+			result = start.then(p -> api.getValuePromise(pfx + ".success_status"));
 			result.then(this::doGoedFout);			
 		}
 	}
@@ -238,6 +239,10 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 	@Override
 	public void onClick(ClickEvent event) {
 		context.prepareLeave();
+		if (anchor.getHref().startsWith("goto:")) {
+			event.preventDefault();
+			context.gotoUrl(anchor.getHref());
+		}
 	}
 
 	@Override
