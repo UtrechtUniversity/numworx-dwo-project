@@ -40,9 +40,9 @@ public class MainPanel extends JPanel {
     static class TopPanel extends JPanel {
 
         TopPanel() {
-            super(new BorderLayout(10, 0), false);
+            super(new BorderLayout(10, 0), GuiConstants.DBL_BUFFER);
             setOpaque(true);
-            setDoubleBuffered(false);
+            setDoubleBuffered(GuiConstants.DBL_BUFFER);
             setBackground(fi.beans.numworxlf.Constants.colorBlue1);
             setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 4));
         }

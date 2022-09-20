@@ -22,13 +22,13 @@ public class ContentPanel extends JPanel {
         
     }
 
-    /**
-     * @param isDoubleBuffered
-     */
-    public ContentPanel(boolean isDoubleBuffered) {
-        super(isDoubleBuffered);
-        
-    }
+//    /**
+//     * @param isDoubleBuffered
+//     */
+//    public ContentPanel(boolean isDoubleBuffered) {
+//        super(isDoubleBuffered);
+//        
+//    }
 
     /**
      * @param layout

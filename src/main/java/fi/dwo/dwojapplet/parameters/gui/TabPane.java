@@ -2,6 +2,8 @@
 package fi.dwo.dwojapplet.parameters.gui;
 
 import fi.beans.stringutils.StringUtils;
+import fi.dwo.dwojapplet.gui.GuiConstants;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -32,13 +34,13 @@ public class TabPane extends JPanel implements ActionListener, ComponentListener
     private int largestWidth;
 
     public TabPane() {
-        super(new BorderLayout(), false);
+        super(new BorderLayout(), GuiConstants.DBL_BUFFER);
         //setDebugGraphicsOptions(DebugGraphics.LOG_OPTION);
         setOpaque(false);
         createdTabs = new Hashtable();
         JPanel p = new JPanel(new BorderLayout());
         p.setOpaque(false);
-        p.setDoubleBuffered(false);
+        p.setDoubleBuffered(GuiConstants.DBL_BUFFER);
         add(p, BorderLayout.WEST);
         tabLabelPanel = new TabLabelPanel(this);
         tabLabelPanel.setVisible(false);
@@ -48,17 +50,17 @@ public class TabPane extends JPanel implements ActionListener, ComponentListener
         p.add(panel, BorderLayout.CENTER);
         panel.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, getForeground()));
         panel.setOpaque(false);
-        panel.setDoubleBuffered(false);
+        panel.setDoubleBuffered(GuiConstants.DBL_BUFFER);
         tabLabelPanel.addComponentListener(this);
 
-        tabSheetPanel = new JPanel(new BorderLayout(), false);
+        tabSheetPanel = new JPanel(new BorderLayout(), GuiConstants.DBL_BUFFER);
         tabSheetPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 1, getForeground()));
         tabSheetPanel.setVisible(true);			// false, 1011
         tabSheetPanel.setOpaque(true); //must be true
         add(tabSheetPanel, BorderLayout.CENTER);
         tabSheetPanel.setVisible(true);
 
-        topTabSheetPanel = new JPanel(new BorderLayout(), false);
+        topTabSheetPanel = new JPanel(new BorderLayout(), GuiConstants.DBL_BUFFER);
         topTabSheetPanel.setOpaque(true);
         tabSheetPanel.add(topTabSheetPanel, BorderLayout.NORTH);
 

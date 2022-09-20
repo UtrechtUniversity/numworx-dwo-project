@@ -103,7 +103,7 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
     public GuestMenuPanel() {
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setDoubleBuffered(false);
+        this.setDoubleBuffered(GuiConstants.DBL_BUFFER);
         setOpaque(!GuiConstants.GUI_IMAGE_BG);
         //createGap();
         createButtons();

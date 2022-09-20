@@ -2014,10 +2014,10 @@ LOG.info("time results = " + (-t) + " ms");
             waitLabel.setText(" " + waitText + " ");
             getGlassPane().setVisible(true);
             validate();
-            if (this.getGraphics() != null) {
-                paint(this.getGraphics());
+            if ( waitLabel.getGraphics() != null) {
+                waitLabel.paint(waitLabel.getGraphics());
             } else {
-                this.repaint();
+               this.repaint();
             }
         } else {
           LOG.fine("recurse " + waitText);

@@ -200,7 +200,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
               JPanel jp = new JPanel(new BorderLayout());
               jp.setBackground(GuiConstants.MAIN_BACKGROUND);
               jp.setOpaque(false);
-              jp.setDoubleBuffered(false);
+              jp.setDoubleBuffered(GuiConstants.DBL_BUFFER);
               Box hbox = Box.createHorizontalBox();
               //String text = sco.getScoName();
               JLabel l;

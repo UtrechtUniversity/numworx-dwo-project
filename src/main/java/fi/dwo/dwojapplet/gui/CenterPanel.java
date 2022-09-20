@@ -104,7 +104,7 @@ public class CenterPanel extends JPanel implements CourseContainer {
         subHeader = new SubHeaderPanel();
         JPanel container = new JPanel(new BorderLayout());
         container.add(subHeader, BorderLayout.NORTH);
-        inbetween = new JPanel(null, false);
+        inbetween = new JPanel(null, GuiConstants.DBL_BUFFER);
         inbetween.setLayout(new BoxLayout(inbetween, BoxLayout.X_AXIS));
         this.add(inbetween, BorderLayout.CENTER);
         
@@ -116,7 +116,7 @@ public class CenterPanel extends JPanel implements CourseContainer {
        } else {
 // TODO Tuning!!!
             setOpaque(false);
-            setDoubleBuffered(false);
+            setDoubleBuffered(GuiConstants.DBL_BUFFER);
 // er is een andere border nodig voor sco's 
             setBorder(MAIN_BORDER);
         }

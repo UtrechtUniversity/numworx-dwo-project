@@ -231,7 +231,7 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
         };
         pp.setBackground(getSubHeaderColor());
         pp.setOpaque(true);
-        pp.setDoubleBuffered(false);
+        pp.setDoubleBuffered(GuiConstants.DBL_BUFFER);
         add(pp);
 
         GridLayout gl = new GridLayout();
@@ -243,7 +243,7 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
 
         JPanel p = new JPanel(null);
         p.setOpaque(false);
-        p.setDoubleBuffered(false);
+        p.setDoubleBuffered(GuiConstants.DBL_BUFFER);
         p.setSize(0, 10);
 
         int maxWidth = 10;
@@ -252,7 +252,7 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
         for (CourseMap course : courses) {
             p = new JPanel(new FlowLayout());
             p.setOpaque(false);
-            p.setDoubleBuffered(false);
+            p.setDoubleBuffered(GuiConstants.DBL_BUFFER);
             courseIcon = new CourseIcon((Course) course);
             courseIcon.addActionListener(this);
             if (courseIcon.getSize().width > maxWidth) {

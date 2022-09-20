@@ -19,8 +19,7 @@ import javax.swing.JPanel;
 public class CenterMainSubPanel extends JPanel {
 
     public CenterMainSubPanel(LayoutManager lm) {
-        super(lm);
-        setDoubleBuffered(false);
+        super(lm,GuiConstants.DBL_BUFFER);
         setOpaque(!GuiConstants.GUI_IMAGE_BG);
     }
 

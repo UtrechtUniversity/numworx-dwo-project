@@ -63,7 +63,7 @@ public class LoggedInPanel extends JPanel {
      * log of.
      */
     public LoggedInPanel() {
-        super(new FlowLayout(FlowLayout.TRAILING,0,10), false);
+        super(new FlowLayout(FlowLayout.TRAILING,0,10), GuiConstants.DBL_BUFFER);
         setOpaque(false);
         {
             setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -120,7 +120,7 @@ public class LoggedInPanel extends JPanel {
         JMenuBar bar = new JMenuBar();
         bar.setUI(new BasicMenuBarUI());
         bar.setBorderPainted(false);
-        bar.setDoubleBuffered(false);
+        bar.setDoubleBuffered(GuiConstants.DBL_BUFFER);
         bar.setOpaque(false);
         if (!gast) {
           

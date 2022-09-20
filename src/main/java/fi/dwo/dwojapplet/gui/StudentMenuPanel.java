@@ -92,7 +92,7 @@ public class StudentMenuPanel extends UserMenuPanel {
 
             }
         };
-        classPanel.setDoubleBuffered(false);
+        classPanel.setDoubleBuffered(GuiConstants.DBL_BUFFER);
         classPanel.setOpaque(false);
         classPanel.getViewport().setOpaque(false);
         classPanel.setViewportBorder(null);

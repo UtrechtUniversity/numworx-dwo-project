@@ -136,6 +136,8 @@ public abstract class GuiConstants {
     public static boolean DEEP_LINK;
 
     public static String PLAYER, STUDENT_PLAYER;
+    
+    public static boolean DBL_BUFFER = true;
 
     public static int getDwoProfile() {
         return dwoProfile;

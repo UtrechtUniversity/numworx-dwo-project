@@ -20,9 +20,9 @@ public class BackgroundPanel extends JPanel {
         super(layout);
     }
 
-    public BackgroundPanel(LayoutManager layout, boolean isDoubleBuffered) {
-        super(layout, isDoubleBuffered);
-    }
+//    public BackgroundPanel(LayoutManager layout, boolean isDoubleBuffered) {
+//        super(layout, isDoubleBuffered);
+//    }
 
     @Override
     public void paintComponent(Graphics g) {

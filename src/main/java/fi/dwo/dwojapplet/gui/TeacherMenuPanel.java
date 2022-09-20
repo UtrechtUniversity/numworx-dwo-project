@@ -116,7 +116,7 @@ public class TeacherMenuPanel extends UserMenuPanel implements SelectStrategy {
 
             }
         };
-        classPanel.setDoubleBuffered(false);
+        classPanel.setDoubleBuffered(GuiConstants.DBL_BUFFER);
         classPanel.setOpaque(false);
         classPanel.getViewport().setOpaque(false);
         classPanel.setViewportBorder(null);
