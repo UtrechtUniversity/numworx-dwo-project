@@ -527,7 +527,8 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             setCursor(Cursor.getDefaultCursor());
             return result;
         }
-        forcepaint();
+
+//forcepaint(); // FIXME Why?
         return result; // NO, CANCEL, CLOSED
     }
 
