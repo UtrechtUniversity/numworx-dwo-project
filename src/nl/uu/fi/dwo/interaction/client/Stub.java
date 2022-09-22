@@ -145,6 +145,14 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF, NativePreviewHandler 
 			getConstantHeight: function() {
 				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::getConstantHeight()();
 			},
+
+			getWidth: function() {
+				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::getWidth()();
+			},
+
+			getHeight: function() {
+				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::getHeight()();
+			},
 			
 			
 		};
@@ -515,4 +523,12 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF, NativePreviewHandler 
 		return view.getConstantHeight();
 	}
 
+	public int getWidth() {
+		return view.getWidth();
+	}
+	
+	public int getHeight() {
+		return view.getHeight();
+	}
 }
+	
