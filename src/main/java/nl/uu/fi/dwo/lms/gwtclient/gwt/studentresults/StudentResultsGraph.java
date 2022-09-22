@@ -357,7 +357,15 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		}
 	}
 	
-	
+	class PseudoEdge extends Edge {
+		PseudoEdge(Node single) {
+			super(single, single);
+		}
+		
+		void reset() {
+			from.setVoorkennis(false);
+		}
+	}
 	
 	class Edge extends AbstractEdge {
 		final Node from, to;
@@ -404,7 +412,6 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 				build();
 				return this;
 			}
-			setInvisible();
 			return null;
 		}
 		
@@ -1086,6 +1093,10 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 						zoomFit();
 						popupMenu = null;
 						start = null;
+						if (voorkennisEdges.isEmpty()) {
+							voorkennisEdges.add(new PseudoEdge(find.get()));
+						}
+						
 					}
 
 					
