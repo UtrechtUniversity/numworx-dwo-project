@@ -5,8 +5,11 @@ import java.util.Map;
 
 import org.osgi.util.promise.Promise;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.safehtml.client.SafeHtmlTemplates;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 
@@ -35,6 +38,9 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
     int moduleID = 0;
     boolean score = false;
     boolean goedFout = false;
+    boolean toonTitel = false;
+    String paginaTitel = "";
+    
 
     final Anchor anchor;
     final AnchorContext context;
@@ -99,8 +105,19 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		}
 		if (score && scoreRaw.isEmpty()) {
 			scoreRaw = h.getOrDefault("score.raw", scoreRaw).toString();
-			anchor.setText(scoreRaw);
+			anchorSetText(scoreRaw);
 		}
+	}
+
+	interface AnchorTemplate extends SafeHtmlTemplates {
+		@Template("<span class='scorewidget-titel'>{0}</span><span class='scorewidget-score'>{1}</span>")
+		SafeHtml titleScore(String title, String score);
+	}
+	
+	static final AnchorTemplate ANCHOR_TEMPLATE = GWT.create(AnchorTemplate.class);
+	
+	private void anchorSetText(String score) {
+		anchor.setHTML(ANCHOR_TEMPLATE.titleScore(paginaTitel, score));
 	}
 
 	@Override
@@ -181,6 +198,9 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 				 score = map.getBoolean("score");
 			 if(map.containsKey("goedFout"))
 				 goedFout = map.getBoolean("goedFout");
+			 toonTitel = map.getBoolean("toonTitel", toonTitel);
+			 if (map.containsKey("paginaTitel"))
+				 paginaTitel = map.getString("paginaTitel");
 		}
 		anchor.setStyleDependentName("goedFout", goedFout);	
 		String pfx0 = "dme.scorewidget.";
@@ -195,7 +215,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			anchor.setHref("#s:" + activiteitID + "." + (paginaNr-1));
 			pfx0 += "s." + activiteitID; break;
 		case 3:
-			anchor.setHref("#c:" + moduleID + "." + activiteitNr + "." + (paginaNr-1));
+			anchor.setHref("#xc:" + moduleID + "." + activiteitNr + "." + (paginaNr-1));
 			pfx0 += "c." + moduleID + "." + activiteitNr; break;
 		default: pfx0 += "null";
 		}
@@ -204,8 +224,10 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		if (score) {
 			Promise<String> result;
 			result = start.then( p -> api.getValuePromise(pfx + ".score.raw"));
-			anchor.setText("0");
+			anchorSetText("0");
 			result.then(this::doScore);
+		} else {
+			anchorSetText("");
 		}
 		if (goedFout) {
 			Promise<String> result;
@@ -218,7 +240,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		String value = p.getValue();
 		if (value == null || value.isEmpty()) value = "0";
 		this.scoreRaw = value;
-		anchor.setText(value);
+		anchorSetText(value);
 		return p;
 	}
 	
@@ -248,19 +270,16 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 	@Override
 	public void setFontSize(int font_size) {
 		this.fontSize = font_size;
-		
 	}
 
 	@Override
 	public void setFontName(String font_name) {
 		this.fontName = font_name;
-		
 	}
 
 	@Override
 	public void setFontStyle(int font_style) {
 		this.fontStyle = font_style;
-		
 	}
 
 	@Override
