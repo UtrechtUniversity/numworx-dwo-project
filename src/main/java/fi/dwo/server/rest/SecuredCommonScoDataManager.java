@@ -749,7 +749,12 @@ try {
 		page = split[4];
 		long sco = Long.parseLong(split[3]);
 		if (sco != pssc.getScoID().longValue() || pssd == null) {
-			pssd = StudentScoDataManager.findEntity(sco);
+		    PersistentScoContext sc = new  PersistentScoContext(sco);
+		    List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(sc, pssc.getPersistentHasRolePK());
+			if (!list.isEmpty()) 
+		      pssd = StudentScoDataManager.findEntity(list.get(0).getStudentSco());
+			else 
+			  pssd = null;
 		}
 	} else if ("cc".equals(split[2])) {
 		pssd = null;
@@ -762,6 +767,7 @@ try {
 		}
 	} else if ("c".equals(split[2])) {
 		page = split[5];
+		pssd = null;
 		long courseid = Long.parseLong(split[3]);
 		long actnr = Long.parseLong(split[4]);
 		PersistentCourse course = CourseManager.findEntity(courseid);
