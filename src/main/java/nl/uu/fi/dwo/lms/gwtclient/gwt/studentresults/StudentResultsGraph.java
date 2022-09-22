@@ -373,8 +373,12 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		void setVisible() {
 			if (isVisible()  ) {
 				g.removeClassNameBaseVal(HIDDEN_NODE);
-			} else 
-				g.addClassNameBaseVal(HIDDEN_NODE);
+			} else
+				setInvisible();
+		}
+
+		void setInvisible() {
+			g.addClassNameBaseVal(HIDDEN_NODE);
 		}
 
 		boolean isVisible() {
@@ -400,6 +404,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 				build();
 				return this;
 			}
+			setInvisible();
 			return null;
 		}
 		
@@ -412,6 +417,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 				build();
 				return this;
 			}
+			setInvisible();
 			return null;
 		}
 
@@ -425,7 +431,6 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			g.removeChild(g.getFirstChild());
 			g.removeChild(g.getFirstChild());
 			build();
-			setVisible();
 		}
 		
 		OMSVGGElement build() {
@@ -1503,6 +1508,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		image.getSvgElement().setViewBox(viewbox);
 		inVoorkennis = false;
 		voorkennisEdges.forEach(Edge::reset);
+		edges.forEach(Edge::setVisible);
 		inVoorkennisTree = false;
 		voorkennisEdges = Collections.emptySet();
 	}
