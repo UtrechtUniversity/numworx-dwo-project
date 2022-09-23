@@ -1111,9 +1111,9 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
         strategy.nodeSelected(toCourseMap(node));
     }
 
-    @Override
-    public void paint(Graphics g) {
-      // TODO Auto-generated method stub
-      super.paint(g);
-    }
+//    @Override
+//    public void paint(Graphics g) {
+//      // TODO Auto-generated method stub
+//      super.paint(g);
+//    }
 }
