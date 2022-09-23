@@ -34,6 +34,7 @@ import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.i18n.shared.DateTimeFormatInfo;
+import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -132,6 +133,14 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		
 	}
 	
+	Handler<Element> receive = new Handler<Element>() {
+		
+		public boolean handle(Element element) {
+			LOG.info("received " + element.serialize());
+			return false;
+		}
+	};
+
 	class ChatPresence extends Handler<Element> implements HasValueChangeHandlers<Set<String>> {
 
 		private Set<String> present = new TreeSet<>();
@@ -139,13 +148,6 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		private ChatPresence() {
 		}
 
-		Handler<Element> receive = new Handler<Element>() {
-		
-			public boolean handle(Element element) {
-				LOG.info("received " + element.serialize());
-				return false;
-			}
-		};
 		
 		private void sendCreateRoom() {
 			Builder builder = Builder.$iq(new String[][] { { "to", room.jid }, {"type", "set"}})
@@ -195,6 +197,12 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 //			String to = element.getAttribute("to");
 			String type = element.getAttribute("type");
 			String from = element.getAttribute("from");
+
+			if (type.isEmpty()) {
+				return handleMAM(element);
+			}
+			
+			
 			String stamp = null;
 			int at = from.indexOf('/');
 			MessageModel m;
@@ -217,6 +225,34 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 				if (stamp == null) stamp = now(); else stamp = iso(stamp);
 				m.add(new Message(from, stamp, text));
 			}
+			return true;
+		}
+
+		private boolean handleMAM(Element element) {
+			String stamp = null;
+			NodeList<com.google.gwt.dom.client.Element> delay = element.getElementsByTagName("delay");
+			if (delay.getLength() > 0) {
+				stamp = delay.getItem(0).getAttribute("stamp"); // <delay from="klas@conference.chat-dev.dwo.nl" stamp="2022-09-09T08:02:29Z" xmlns="urn:xmpp:delay"/>
+			}
+			if (stamp == null) stamp = now(); else stamp = iso(stamp);
+			
+			NodeList<com.google.gwt.dom.client.Element> messages = element.getElementsByTagName("message");
+			Element message = (Element) messages.getItem(0);
+			NodeList<com.google.gwt.dom.client.Element> elems = message.getElementsByTagName("body");
+			Element body = (Element) elems.getItem(0);
+			String text = body.getText();
+			String type = message.getAttribute("type"); // chat // groupchat
+			String from = message.getAttribute("from");
+			int at = from.indexOf('/');
+			MessageModel m;
+			String jid = from.substring(0, at);
+			if (chatUser.jid.equals(jid)) {
+				String to = message.getAttribute("to");
+				m = getModel(to);
+			} else {
+				m = getModel(jid);
+			}
+			m.add(new Message(jid, stamp, text));
 			return true;
 		}
 
@@ -320,6 +356,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 				
 				Builder pres = Builder.$pres(null);
 	            connection.send(pres);
+	            
+	            sendMamRequest();
 // Add to room	            
 	            if (room != null) {
 	            	switchToModel(get(room));
@@ -344,7 +382,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	private VerticalPanel panel;
 	private FlowPanel east;
 	private ChatUser chatUser;
-	private Combined combined;
+	private Combined combined = Combined.DESKTOP_ACTIVE;
 	private ChangeHandler handler;
 	private SimplePanel container;
 	private Label sender;
@@ -407,6 +445,9 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 //		
 //		
 //		if(true) return;
+
+		formule = !"111".equals(Location.getParameter("profile"));
+
 		
 		RootLayoutPanel root = RootLayoutPanel.get();
 		eastHeader  = new EastHeader();
@@ -453,7 +494,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			ChatRoom room2 = new ChatRoom("klas2@" + ROOMS);
 			room2.chatUser = room.chatUser;
 			room.chatUser.forEach(this::put);
-			//eastHeader.init(Arrays.asList(room, room2));
+			eastHeader.init(Arrays.asList(room, room2));
 			room = null;
 		
 		}
@@ -491,8 +532,10 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 
 		HashMap<String, Object> data = new HashMap<>();
 		data.put("rekenTool", Boolean.FALSE);
+		data.put("formuleKnop", formule);
 		data.put("boxMetRand", Boolean.FALSE);
-		editor.init(COL_6-4, 100, data);
+		data.put("balkZichtbaar", formule);
+		editor.init(COL_6-4, formule?100:70, data);
 		editor.addStyleName("box");
 		
 		
@@ -533,11 +576,12 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		keyboard.setScrollPanel(this, 0);
 		keyboard.setEditor(editor);
 		main.addSouth(new SimplePanel(), 30); // border
-		main.addSouth(editor, 104);
+		main.addSouth(editor, formule?104:74);
 		main.addSouth(flow, 40);
 		
 		FocusOnTouch.installKeyboard(keyboard, this);
-		FocusOnTouch.focus();
+
+		keyboardFocus();
 		
 		setHeight(-keyboard.getKeyboardHeight());
 		main.add(scroll);
@@ -546,6 +590,9 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		
 		if (chatUser != null) 
 			Scheduler.get().scheduleDeferred(this::login);
+	}
+	void keyboardFocus() {
+		if (formule) keyboard.focus(); else keyboard.softFocus();
 	}
 
 	StubWidget tekstPanel(String content, int width, int height) {
@@ -610,8 +657,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		editor.insert("");
 		LOG.info("send " + value);		
 		sendTo.accept(value);
-		FocusOnTouch.focus();
-		keyboard.focus();
+
+		keyboardFocus();
 	}
 	private void sendToRoom(String value) {
 		if (room == null) return;
@@ -619,6 +666,14 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		Builder reply = Builder.$msg(attributes).c("body",null).t(value);
 		connection.send(reply);
 	}
+	
+	private void sendMamRequest() {
+		String[][] attributes = { { "type", "set" }};
+		String[][] attributesQ = {{ "xmlns", "urn:xmpp:mam:2"},{"queryid", "fetchall"}};
+		Builder request = Builder.$iq(attributes).c("query", attributesQ);
+		connection.sendIq(request.tree(), 10000, receive, receive);
+	}
+	
 	private void sendToUser(String value) {
 		UserModel um = selection.getSelectedObject();
 		if (um != null) {
@@ -768,6 +823,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	
 	static final String ISO8601_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ";
 	static final DateTimeFormat ISO_DATETIME = DateTimeFormat.getFormat(ISO8601_PATTERN);
+	private boolean formule;
 
 	public static Date fromDelay(String delay) {
 		if (delay.endsWith("Z")) delay = delay.substring(0, delay.length()-1) + "+0000"; // REMOVE Z, add GMT		
