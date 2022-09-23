@@ -263,7 +263,12 @@ public class BootPanelController {
     @Inject
     DwoGlobalVars dwoGlobalVars;
     private int profile;
-    private int stage;
+
+    public int getProfile() {
+		return profile;
+	}
+
+	private int stage;
     private boolean hideGwtGui;
     String authToken, user_id, org_id;
     private boolean session = false;

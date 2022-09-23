@@ -22,6 +22,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.BootPanelController;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
@@ -54,11 +55,12 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 
 	private LoggingFailure FAILURE;
     private static final Logger LOG = Logger.getLogger(ChatboxPresenter.class.getName());
+	private int profile;
 	
-	
-	@Inject ChatboxPresenter(DwoGlobalVars vars, EventBus bus, Optional<PersonsService> service) {
+	@Inject ChatboxPresenter(DwoGlobalVars vars, EventBus bus, Optional<PersonsService> service, BootPanelController boot) {
 		this.vars = vars;
 		this.service = service;
+		this.profile = boot.getProfile();
 	    FAILURE = new LoggingFailure(LOG, bus);
 		
 		//RestAuthenticator.instance.addValueChangeHandler(this);
@@ -78,7 +80,7 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 	private final Success<? super List<ChatRoom>, ? extends List<ChatRoom>> success = p -> {
 		user.room = ( p.getValue() );
 		view.setLogin(user);			
-		view.openUrl("chatbox/");
+		view.openUrl("chatbox/?profile=" + profile);
 		return p;
 	};
 	
