@@ -93,7 +93,7 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 			view.clear();
 			return;
 		}
-        RoleType role = RoleType.valueOf(vars.getActiveSchoolRoleAndClass().getRole().getRoleName());    
+        RoleType role = vars.getRole();    
         user = new ChatUser(u, role);
 		String password = RestAuthenticator.instance.getAuthorization(); // access token of so
 		user.token = strip(password);

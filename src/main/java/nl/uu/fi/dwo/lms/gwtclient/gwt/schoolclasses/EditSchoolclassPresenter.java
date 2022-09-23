@@ -89,7 +89,7 @@ public class EditSchoolclassPresenter {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
         manager = m;
-        role = RoleType.valueOf(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
+        role = dwoGlobalVars.getRole();
         FAILURE = new LoggingFailure(LOG, anEventBus);
 
     }

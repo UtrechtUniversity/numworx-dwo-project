@@ -38,6 +38,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -123,7 +124,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
       if (init == null || (init.isDone() && init.getFailure() != null)) {
         init();
       } 
-      return init.then(p-> {
+      return Promises.all(dwoGlobalVars.getProfile(),init).then(p-> {
           if(register == null)
           {
         	  register = eventBus.addHandler(SwitchViewEvent.TYPE, this);
@@ -133,7 +134,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
           idleOn = false;
           eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.MODULESVIEW));
           mainView.unsetIdleTimeout();
-          if(tablet) {
+          if(tablet()) {
             view.setMainNavVisible(false);
             view.sendMessage(HIDEMAINNAV);
           } else {
@@ -144,7 +145,16 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         });
     }
  
-    boolean legal(String base) {
+    private boolean tablet() {
+    	Promise<DomDwoProfileFull> profile = dwoGlobalVars.getProfile();
+		if (profile.isDone() && dwoGlobalVars.getRole() != RoleType.ANONYMOUS) {
+    		if (profile.getValue().getDwoProfileRights().contains("n"))
+    			return false;
+    	}
+		return tablet;
+	}
+
+	boolean legal(String base) {
       RegExp r = RegExp.compile("^/[a-z]+(/[a-z]+)*/$");
       return r.test(base);
     }
@@ -351,7 +361,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
           }
         } else {
           view.sendMessage("GOTO:");
-          final RoleType role = RoleType.valueOf(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName()); // FIXME herontwerp getactive...
+          final RoleType role = dwoGlobalVars.getRole(); // FIXME herontwerp getactive...
           if (role == RoleType.STUDENT || role == RoleType.ANONYMOUS) return;
         }
       }

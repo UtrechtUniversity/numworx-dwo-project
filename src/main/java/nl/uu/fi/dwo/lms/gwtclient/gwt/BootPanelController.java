@@ -58,7 +58,7 @@ public class BootPanelController {
 	final class LoginHandler implements LoginEventHandler {
     @Override
     public void onLoginEvent(LoginEvent loginEvent) {
-        final RoleType role = RoleType.valueOf(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
+        final RoleType role = dwoGlobalVars.getRole();
         final State state = loginEvent.getState();
         final boolean single = dwoGlobalVars.getCurrentUser().getSingleSchool();
         if (state != State.LOGOUT)

@@ -29,6 +29,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -242,6 +243,7 @@ public class DwoGlobalVars {
 
     	currentLoginContext = resolved.getValue().getDomLoginContext();
         currentUser = resolved.getValue().getDomUserFull();
+        role = null;
         DomContext context = createContext(currentLoginContext);
     	return loginManager.getSchoolLogins(context);
     }
@@ -438,6 +440,7 @@ public class DwoGlobalVars {
      */
     public void setCurrentUser(DomUserFull aCurUser, String realm) {
         this.currentUser = aCurUser;
+        this.role = null;
         if (!RestAuthenticator.instance.getAuthorization().startsWith("Bearer")) 
         	GwtRestVars.getInstance().setCurrentUser(aCurUser, realm);
 
@@ -447,6 +450,7 @@ public class DwoGlobalVars {
      */
     public void clearCurrentUser() {
         currentUser = null;
+        role = null;
         //notify the gwt-rest interface configuration
         GwtRestVars.getInstance().setCurrentUser(null,null);
 
@@ -561,4 +565,11 @@ public class DwoGlobalVars {
     public void setSaml(boolean saml) {
       this.saml = saml;
     }
+
+    private RoleType role = null;
+	public RoleType getRole() {
+		if (role == null) 
+			role = RoleType.valueOf(getActiveSchoolRoleAndClass().getRole().getRoleName());
+		return role;
+	}
 }
