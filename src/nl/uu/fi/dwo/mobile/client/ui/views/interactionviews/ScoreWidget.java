@@ -8,10 +8,13 @@ import org.osgi.util.promise.Promise;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.safehtml.client.HasSafeHtml;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasHTML;
+import com.google.gwt.user.client.ui.InlineHTML;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
@@ -45,6 +48,9 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
     final Anchor anchor;
     final AnchorContext context;
     
+    final InlineHTML span;
+    
+    
 	private OpdrNavIF comRoot;
 
 	private final ActivityInterface activity;
@@ -61,7 +67,11 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 
 	private String scoreRaw = "";
 
-	private String successStatus = ""; 
+	private String successStatus = "";
+
+	private HasSafeHtml html;
+
+	private boolean linkActive = true;
 	
 	public ScoreWidget(ActivityInterface a, HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden, AnchorContext context)
 	{
@@ -81,9 +91,10 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		anchor = new Anchor();
 		anchor.addClickHandler(this);
 		anchor.setStylePrimaryName("scorewidget");
-		initWidget(anchor);
 		
-		
+		span  = new InlineHTML();
+		span.setStylePrimaryName("scorewidget");
+				
 		init(breedte, hoogte, launchState);
 		
 		
@@ -118,7 +129,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 	static final AnchorTemplate ANCHOR_TEMPLATE = GWT.create(AnchorTemplate.class);
 	
 	private void anchorSetText(String score) {
-		anchor.setHTML(ANCHOR_TEMPLATE.titleScore(paginaTitel, score));
+		html.setHTML(ANCHOR_TEMPLATE.titleScore(paginaTitel, score));
 	}
 
 	@Override
@@ -146,7 +157,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
-		this.comRoot = comRoot;		
+		this.comRoot = comRoot;
 	}
 
 	@Override
@@ -188,8 +199,10 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			      choicePageMode = map.getInt("choicePageMode");
 			 if(map.containsKey("activiteitNr"))
 				 activiteitNr = map.getInt("activiteitNr");
+			 activiteitNr = Math.max(1, activiteitNr);
 			 if(map.containsKey("paginaNr"))
 				 paginaNr = map.getInt("paginaNr");
+			 paginaNr = Math.max(paginaNr, 1);
 			 if(map.containsKey("activiteitID"))
 				 activiteitID = map.getInt("activiteitID");
 			 if(map.containsKey("moduleID"))
@@ -200,10 +213,14 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			 if(map.containsKey("goedFout"))
 				 goedFout = map.getBoolean("goedFout");
 			 toonTitel = map.getBoolean("toonTitel", toonTitel);
-			 if (map.containsKey("paginaTitel"))
+			 if (toonTitel && map.containsKey("paginaTitel"))
 				 paginaTitel = map.getString("paginaTitel");
+			 linkActive = map.getBoolean("linkActive", linkActive);
 		}
-		anchor.setStyleDependentName("goedFout", goedFout);	
+		html = linkActive ? anchor : span;
+		if (!linkActive) initWidget(span);else initWidget(anchor);
+		setStyleDependentName("goedFout", goedFout);
+		
 		String pfx0 = "dme.scorewidget.";
 		switch (choicePageMode) {
 		case 0: 
@@ -253,9 +270,9 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 	}
 
 	private void goedfout(String value) {
-		anchor.removeStyleDependentName("goedFout-passed");
-		anchor.removeStyleDependentName("goedFout-failed");
-		anchor.addStyleDependentName("goedFout-" + value);
+		removeStyleDependentName("goedFout-passed");
+		removeStyleDependentName("goedFout-failed");
+		addStyleDependentName("goedFout-" + value);
 	}
 	
 	
@@ -286,6 +303,8 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 	@Override
 	public void setParentRegel(TekstRegel regel) {
 		this.parent = regel;
+		String color = regel.getElement().getStyle().getColor();
+		getElement().getStyle().setColor(color);
 	}
 
 }

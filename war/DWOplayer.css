@@ -270,22 +270,22 @@ div.listItem-dwo-separator {
 		display: block;
 }
 
-a.scorewidget {
+.scorewidget {
 	color: black;
 }
-a.scorewidget .scorewidget-score {
+.scorewidget .scorewidget-score {
 	float: right;
 }
-a.scorewidget.scorewidget-goedFout .scorewidget-score:after {
+.scorewidget.scorewidget-goedFout .scorewidget-score:after {
 	content: url(images/numworx/half-numworx.svg);
 	color: gray;	
 }
 
-a.scorewidget.scorewidget-goedFout.scorewidget-goedFout-passed .scorewidget-score:after {
+.scorewidget.scorewidget-goedFout.scorewidget-goedFout-passed .scorewidget-score:after {
 	content: url(images/numworx/goed-numworx.svg);
 	color: green;
 }
-a.scorewidget.scorewidget-goedFout.scorewidget-goedFout-failed .scorewidget-score:after {
+.scorewidget.scorewidget-goedFout.scorewidget-goedFout-failed .scorewidget-score:after {
 	content: url(images/numworx/fout-numworx.svg);
 	color: red;
 }
