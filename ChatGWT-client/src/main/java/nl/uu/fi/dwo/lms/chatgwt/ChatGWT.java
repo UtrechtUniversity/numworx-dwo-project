@@ -468,6 +468,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 				});
 				eastHeader.init(u.room);
 				this.room = eastHeader.getSelectedRoom();
+				new RoomController(u.room, eastHeader).addHandler(this::get);
 			}
 			chatUser = u;
 		} catch(Exception oops) {
@@ -494,7 +495,11 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			ChatRoom room2 = new ChatRoom("klas2@" + ROOMS);
 			room2.chatUser = room.chatUser;
 			room.chatUser.forEach(this::put);
-			eastHeader.init(Arrays.asList(room, room2));
+			List<ChatRoom> dmy = Arrays.asList(room, room2);
+			eastHeader.init(dmy);
+			eastHeader.setUnread(room2, true);
+			new RoomController(dmy, eastHeader).addHandler(this::get);
+			
 			room = null;
 		
 		}

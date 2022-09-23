@@ -71,6 +71,14 @@ public class EastHeader extends Composite {
 		else persoon.setValue(Boolean.TRUE);
 	}
 	
+	
+	public void setUnread(ChatRoom room, boolean unread) {
+		if (room == null) return;
+		int index = roomList.indexOf(room);
+		if (room == getSelectedRoom() && isMultichat()) unread = false;
+		naam.setItemText(index, room.displayName + (unread?" ●":""));
+	}
+	
 	public boolean isMultiRoom() {
 		return roomList.size() > 1;
 	}
@@ -90,6 +98,7 @@ public class EastHeader extends Composite {
 		if (updateRoom!=null) {
 			updateRoom.accept(getSelectedRoom());
 		}
+		setUnread(getSelectedRoom(), false);
 	}
 	
 //	@UiHandler("naam") void onFocusNaam(FocusEvent ev) {

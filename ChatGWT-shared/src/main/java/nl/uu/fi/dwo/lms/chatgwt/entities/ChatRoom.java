@@ -23,4 +23,8 @@ public class ChatRoom {
 		jid = klas.getId().getIdString();
 		chatUser = Collections.emptyList();
 	}
+	
+	public String getJid() {
+		return jid;
+	}
 }
