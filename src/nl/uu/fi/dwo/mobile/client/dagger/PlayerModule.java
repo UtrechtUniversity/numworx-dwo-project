@@ -6,7 +6,6 @@ import javax.inject.Singleton;
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.Messages.Example;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
@@ -22,8 +21,7 @@ import dagger.Reusable;
 import dagger.multibindings.ClassKey;
 import dagger.multibindings.IntoMap;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
-import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityMapperModule;
 import nl.uu.fi.dwo.mobile.client.ui.AppPlaceHistoryMapper;
 import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ClassCourseActivity;
@@ -41,7 +39,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.MaybeLogout;
 import nl.uu.fi.dwo.mobile.client.ui.places.cc;
 import nl.uu.fi.dwo.mobile.client.ui.places.guest;
 
-@Module
+@Module(includes={ActivityMapperModule.class })
 public abstract class PlayerModule {
 
   @Provides

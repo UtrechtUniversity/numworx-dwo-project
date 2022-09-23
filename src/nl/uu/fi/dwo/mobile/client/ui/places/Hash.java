@@ -6,7 +6,7 @@ import com.google.gwt.place.shared.PlaceTokenizer;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public interface Hash {
-	enum Type { c(new c.Tokenizer()), s(new s.Tokenizer()), /*cs(new cs.Tokenizer()), */ cc(new cc.Tokenizer());
+	enum Type { c(new c.Tokenizer()), s(new s.Tokenizer()), /*cs(new cs.Tokenizer()), */ cc(new cc.Tokenizer()), xc(new xc.Tokenizer());
 		
 		final private PlaceTokenizer<?> t;
 		<T extends Place & Hash>

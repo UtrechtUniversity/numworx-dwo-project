@@ -99,6 +99,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 
 	@Override
 	public void setState(HashMap<String, Object> h) {
+		if (h == null) return;
 		if (goedFout && successStatus.isEmpty())
 		{	successStatus = h.getOrDefault("success_status", successStatus).toString();
 			goedfout(successStatus);
