@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
@@ -361,6 +362,26 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		return profile.flatMap(t);
 	}
 
+	// cachable!!!!
+	
+	private Promise<JSONValue> profileDescription;
+	
+	public Promise <JSONValue> getProfileDescription() {
+	  if (profileDescription != null) return profileDescription;
+	  return 
+	      profileDescription = 
+	      profile.flatMap(profile -> {
+    	    RestDwoProfile rest = new RestDwoProfile();
+    	    rest.setDomDwoProfile(profile);
+    	    rest.setRestContext(context);
+    	    return profileManager.getDescription(rest);
+    	  });
+	}
+	
+	
+	
+	
+	
 	public Promise<JSONValue> getCourseDescription(Object courseID) {
 		final DomCourse id = toCourse(courseID);
 		Function<DomDwoProfile, Promise<? extends JSONValue>>
