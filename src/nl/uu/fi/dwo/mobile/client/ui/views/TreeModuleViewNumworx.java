@@ -482,6 +482,9 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			favIcon.setVisible(false);
 			centerPanel.setStyleName(style.centerBackground(), true);
 			centerPanel.setStyleName(style.folderBackground(), false);
+
+			favIcon.getParent().setStyleName(style.faviconOFF(), true);
+			title.getParent().setStyleName(style.titlePanelFULL(), true);
 			((SetSelectionModel<?>) westPanel.cells.getSelectionModel()).clear();
 			break;
 		case SEARCH:
