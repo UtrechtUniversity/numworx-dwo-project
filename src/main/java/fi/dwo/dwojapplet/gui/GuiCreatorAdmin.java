@@ -32,6 +32,7 @@ import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.GuiCreatorTeacher.LazyAppletConfig;
 import fi.dwo.dwojapplet.gui.action.CourseManagementAction;
+import fi.dwo.dwojapplet.gui.action.ProfileManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoParameterAction;
 import fi.dwo.dwojapplet.gui.action.WrapSco;
@@ -349,7 +350,7 @@ public class GuiCreatorAdmin extends GuiCreator {
     public JComponent getButtonBox(CourseChoicePanel courseChoisePanel) {
         Object userObject = courseChoisePanel.getUserObject();
         if (userObject == ModuleTreePanel.ALLE_MODULES) {
-            return null;
+            return fx(null, new JButton(new ProfileManagementAction()));
         }
         return fx(null, new JButton(new CourseManagementAction(courseChoisePanel)));
     }

@@ -5,6 +5,7 @@ package fi.dwo.dwojapplet.gui;
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JCheckBox;
+import fi.beans.numworxlf.JTextField;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
@@ -19,6 +20,9 @@ import fi.dwo.dwojapplet.gui.action.ScoUnTrashAction;
 import fi.dwo.dwojapplet.gui.action.ShareCourseAction;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminProfileManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -38,6 +42,8 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractCellEditor;
@@ -68,6 +74,8 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 
     private static final Course STANDAARD_MODULE_PARENT = new Course();
+
+    private static final Logger LOG = Logger.getLogger(CourseManagementPanel.class.getName());
 
 
 	CourseManagementPanel(CourseMap map) {
@@ -400,6 +408,46 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 }
 	
+    JTextField titleField;
+    public CourseManagementPanel(ProfileDescriptor profile ) {
+        this(Course.NO_CHILDREN, profile);
+        map = profile;
+        titleField = new JTextField(profile.getHeader());
+        titleField.setAlignmentX(0.0f);
+        editorBox.add(titleField);
+        editorCB = new JCheckBox("Editor");
+        editorCB.setAlignmentX(0.0F);
+        editorCB.addActionListener(this);
+        editorBox.add(editorCB);
+        if(profile.getText().startsWith("H4sIAAAAAA") || profile.getText().isEmpty())
+        {   editorCB.setSelected(true); editorCB.setVisible(false);
+            wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(profile.getText());
+            wiskOpdrEditPanel.setPreferredSize(new Dimension(800,350));
+            wiskOpdrEditPanel.setAlignmentX(0.0F);
+            editorBox.add(wiskOpdrEditPanel);
+        }
+        else
+        {   JTextArea textarea;
+            area = textarea = new JTextArea();
+            textarea.setLineWrap(true);
+            area.setText(profile.getText());
+            area.setPreferredSize(new Dimension(800,350));
+            area.setBorder(BorderFactory.createLineBorder(fi.beans.numworxlf.Constants.COLOR13));
+            area.setAlignmentX(0.0F);
+            editorBox.add(area);
+        }
+        removeAll();
+        add(panel, BorderLayout.CENTER);     
+        panel.add(editorBox, BorderLayout.NORTH);
+        noCoursesLabel.setVisible(false);
+   }
+    
+    
+    
+    
+    
+    
+    
 	/**
      * @param courses
      * @param userObject
@@ -412,7 +460,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         downImage = DwoHelper.getResourceImage(GuiConstants.DOWN_SCO_IMAGE);
        this.courses = courses;
         this.setBackground(getSubHeaderColor());
-        JPanel panel = new JPanel(new BorderLayout(5,5));
+        panel = new JPanel(new BorderLayout(5,5));
         panel.setOpaque(false);
         add(panel, BorderLayout.CENTER);
         //this.setSize(620, 485);
@@ -784,6 +832,32 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         		GuiCreator.instance().updateCourse(course);
         		update = false;
         	}
+        } else if (userObject instanceof ProfileDescriptor) {
+          ProfileDescriptor profile = (ProfileDescriptor) userObject;
+          if(editorCB.isSelected() &&  !wiskOpdrEditPanel.getText().equals(profile.getText()))
+          {   profile.setDescription(wiskOpdrEditPanel.getText());
+              update = true;
+          }
+          else if(!editorCB.isSelected() && area!=null && !area.getText().equals(profile.getText()))
+          {   profile.setDescription(area.getText());
+              update = true;
+          }
+          if (!titleField.getText().equals(profile.getHeader())) {
+            profile.setHeader(titleField.getText());
+            update = true;
+          }
+          if (update) {
+            DomDwoProfileFull sc = DWO.getDwoProfile();
+            try {
+              if (SecureDwoAdminProfileManager.updateProfile(sc));
+              update = false;
+          } catch (Dwo2Exception e) {
+              LOG.log(Level.SEVERE, "edit profile", e);
+              GuiCreator.instance().ShowErrorDialog(this, e);
+          }
+
+          }
+         
         }
     }
 
@@ -840,6 +914,9 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 
 	private boolean update;
+
+
+  private JPanel panel;
 	private void noUpdate() {
 		ok = false;
 		center.updateMap(map);
