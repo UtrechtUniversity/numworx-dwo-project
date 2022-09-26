@@ -41,6 +41,7 @@ public class SelectModuleItem
 		ROOT.setName(Text.constants.standaardModules());
 		ROOT.setDescription("<html><body><b>DWO-modules</b><br>In de DWO is veel oefenmateriaal beschikbaar.  Naast dit oefenmateriaal zijn er ook diverse volledige lessen en lessenseries beschikbaar, die kunnen worden gebruikt als aanvulling op of zelfs vervanging van het reguliere boek. In de etalage kunt u een indruk krijgen van de mogelijkheden die de DWO biedt voor de wiskundeles.</body></html>");
 		ROOT.setPlace(new TreeModulePlace());
+		ROOT.setID(ROOT);
 	}
 	
 	

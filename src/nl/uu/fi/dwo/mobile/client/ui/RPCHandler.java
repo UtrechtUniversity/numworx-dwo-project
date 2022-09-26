@@ -80,6 +80,7 @@ public interface RPCHandler {
 	Promise<XapiManager> getLRS();
 
     Promise<JSONValue> getCourseDescription(Object file);
+    Promise<JSONValue> getProfileDescription();
 
 	Promise<JSONValue> refreshExam();
 

@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
@@ -96,9 +97,15 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
   }
 
   @Override
-	public void setupModule(Object id) {
+  public void setupModule(Object id) {
 		loading.setText(DwoLocalesForGWT.instance.NUM_TBL_FETCHINGDATA());
 		main.setWidget(loading);
+
+		if (id == SelectModuleItem.ROOT)
+		{
+			rpc.getProfileDescription().then(success).recover(this::showError);
+			return;
+		}
 		String xml = "=" + id;
 		loadJSON(xml).recover(this::showError);
 	}

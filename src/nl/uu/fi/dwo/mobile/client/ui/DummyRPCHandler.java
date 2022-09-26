@@ -253,4 +253,10 @@ public Promise<DomCoursesOfSchoolClass> getClassCourse(Object id) {
   return null;
 }
 
+@Override
+public Promise<JSONValue> getProfileDescription() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
 }

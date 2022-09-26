@@ -498,19 +498,6 @@ public abstract class XMLView {
 		}
 // via rest interface.
 		file = file.substring(is+1);
-		Success<JSONValue, Boolean> success = new Success<JSONValue, Boolean>() {
-
-			@Override
-			public Promise<Boolean> call(Promise<JSONValue> resolved) throws Exception {
-				JSONValue response = resolved.getValue();
-				JSONObjectMapImpl map;
-				launchData = map = JSONUtilities.wrapMap(response.isObject());
-				Promise<Boolean> p = Promises.resolved(needsPremium(map));
-				if (!p.getValue()) setupView(launchData);
-				return p;
-			}
-		};
-
 		Failure failure = new Failure() {
 			
 			@Override
@@ -526,6 +513,18 @@ public abstract class XMLView {
 	}
 
   protected final RPCHandler rpc;
+  protected final Success<JSONValue, Boolean> success = new Success<JSONValue, Boolean>() {
+
+	@Override
+	public Promise<Boolean> call(Promise<JSONValue> resolved) throws Exception {
+		JSONValue response = resolved.getValue();
+		JSONObjectMapImpl map;
+		launchData = map = JSONUtilities.wrapMap(response.isObject());
+		Promise<Boolean> p = Promises.resolved(needsPremium(map));
+		if (!p.getValue()) setupView(launchData);
+		return p;
+	}
+};
   protected XMLView(RPCHandler rpc, ActivityComponent a) {
 	this.rpc = rpc;
 	this.activity = a;
