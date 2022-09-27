@@ -7,6 +7,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
@@ -490,10 +491,16 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
     Long scocontextid = MySQLPersistenceId.getNativeId(rest.getDomScormValues().getScoContext());
     LOG.log(Level.INFO, "getValues " + sc.getUserPrincipal().getName() + " " + scocontextid);
     PersistentScoContext scoContext = ScoContextManager.findEntity(scocontextid);
+    PersistentCourse course;
     if(scoContext == null) // Non existent
-      return Response.ok(rest.getDomScormValues(), MediaType.APPLICATION_JSON_TYPE).build();
-
-    PersistentCourse course = CourseManager.findEntity(scoContext.getCourseID());
+    {
+    	if (scocontextid.longValue() == 0L) {
+    		course = new PersistentCourse(0L);
+    		scoContext = new PersistentScoContext(scocontextid);
+    	} else
+    		return Response.ok(rest.getDomScormValues(), MediaType.APPLICATION_JSON_TYPE).build();
+    } else
+    	course = CourseManager.findEntity(scoContext.getCourseID());
     Long schoolID = course.getSchoolID();
     if (schoolID != null) {
         // schoolID must match
@@ -520,7 +527,12 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
 
     List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(scoContext, hasRoleKey);
     if(list.isEmpty()) {
-        return Response.ok(rest.getDomScormValues(), MediaType.APPLICATION_JSON_TYPE).build();
+    	if (scoContext.getScoID().longValue() == 0L) {
+    		PersistentStudentScoContext pssc = new PersistentStudentScoContext(0L);
+    		pssc.setPersistentHasRolePK(hasRoleKey);
+			list.add(pssc);
+    	} else
+    		return Response.ok(rest.getDomScormValues(), MediaType.APPLICATION_JSON_TYPE).build();
     }
     List<DomMapEntry<String, String>> entryList = rest.getDomScormValues().getValues();
     PersistentStudentScoContext pssc = list.get(0);
