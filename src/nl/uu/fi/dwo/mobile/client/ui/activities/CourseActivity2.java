@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewCoursePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.xc;
 import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
@@ -234,6 +235,21 @@ public class CourseActivity2 extends AbstractActivity implements Activity, GotoC
 		}
 //		view.setDescription(item);
 		panel.setWidget(view);
+		
+		if (where instanceof xc) {
+			String token = ((xc) where).getToken();
+			String[] split = token.split("\\.");
+			item.setPlace(where = new TreeModulePlace(split[0]));
+			
+			int sconr = Integer.parseInt(split[1]);
+			item.getChildrenAsync().then(p -> {
+				List<SelectModuleItem> list = p.getValue();
+				SelectModuleItem item = list.get(sconr-1);
+				ViewModulePlace place = new ViewModulePlace(item.getID(), split[2]);
+				goTo(place); // AST?
+				return p;
+			});
+		}
 	}
 
 	private boolean allowAccess(PersistenceId schoolId) {

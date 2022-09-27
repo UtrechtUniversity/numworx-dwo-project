@@ -29,6 +29,9 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
 import nl.uu.fi.dwo.mobile.client.ui.places.MaybeLogout;
+import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.xc;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
 import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
@@ -137,6 +140,26 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 						WaitScreen.instance().hide();
 						panel.setWidget(view);
 						if (item == SelectModuleItem.ROOT && Actions.isAvailable()) Actions.INITED.execute();
+						
+						Place where = item.getPlace();
+						if (where instanceof xc) {
+							String token = ((xc) where).getToken();
+							String[] split = token.split("\\.");
+							item.setPlace(where = new TreeModulePlace(split[0]));
+							
+							int sconr = Integer.parseInt(split[1]);
+							item.getChildrenAsync().then(p -> {
+								List<SelectModuleItem> list = p.getValue();
+								SelectModuleItem item = list.get(sconr-1);
+								ViewModulePlace place = new ViewModulePlace(item.getID(), split[2]);
+								goTo(place); // AST?
+								return p;
+							});
+						}
+
+						
+						
+						
 					}
 				}
 			);

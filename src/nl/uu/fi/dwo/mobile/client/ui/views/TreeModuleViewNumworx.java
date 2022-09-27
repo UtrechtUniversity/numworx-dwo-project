@@ -44,6 +44,7 @@ import com.googlecode.mgwt.ui.client.MGWT;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.MementoModule;
+import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO5;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.text.Text;
@@ -565,7 +566,19 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				@Override
 				protected Scorm2004IF api(Provider<Scorm2004IF> parent) {
 					LOG.info("supplying scorm_guest");
-					return new SCORM_guest();
+					return new SCORM_guest() {
+						Scorm2004IF delegate;
+						@Override
+						public Promise<String> getValuePromise(String name) {
+							LOG.info("supplying get value " + name);
+							if (delegate == null) {
+								delegate = parent.get();
+								if (delegate instanceof SCORM_DWO5) {
+									((SCORM_DWO5) delegate).setScoID(0); // voorkom NPE, server weet er van.
+								}
+							}
+							return delegate.getValuePromise(name);
+						} };
 				}
 
 				@Override
