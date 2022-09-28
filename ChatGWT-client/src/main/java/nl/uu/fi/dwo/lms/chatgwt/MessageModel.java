@@ -60,7 +60,7 @@ public class MessageModel implements HasValueChangeHandlers<List<Message>> {
 	}
 
 	public void clear() {
-		messages.clear();
+		//messages.clear();
 		ValueChangeEvent.fire(this, Collections.emptyList());
 	}
 	

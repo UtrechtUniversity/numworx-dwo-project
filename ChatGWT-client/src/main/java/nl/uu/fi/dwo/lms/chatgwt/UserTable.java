@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.CellTable.Style;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.ui.Composite;
@@ -24,6 +26,18 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChangeHandler<Set<String>> {
 
+	
+	static CellTable.Resources RESOURCES = GWT.create(UserTable.Resources.class);
+	
+	interface Resources extends CellTable.Resources {
+
+		@Source("nl/uu/fi/dwo/lms/chatgwt/resources/UserTable.css")
+		Style cellTableStyle();
+		
+	}
+			
+			
+	
 	private CellTable<UserModel> table;
 	private List<UserModel> data;
 
@@ -66,7 +80,7 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 		if (room == null) {
 			room = NULL;
 		}
-		table = new CellTable<>(this);
+		table = new CellTable<>(15, RESOURCES, this);
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 		table.setSelectionModel(selection);
 		table.addStyleName("dwo");
@@ -100,9 +114,11 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 	}
 
 	List<UserModel> toUserModelList() {
+		Set<String>  presence = parent.getPresence();
 		return room.chatUser.stream().filter(item -> this.role == item.role).map(item -> {
 			MessageModel messageModel = parent.get(item);
 			UserModel userModel = new UserModel(item, room, messageModel);
+			userModel.setOnline(presence.contains(userModel.getRoomJit()));
 			userModel.setRegistration(messageModel.addValueChangeHandler(this::onMessageModelChange));
 			return userModel;
 		}).collect(Collectors.toList());

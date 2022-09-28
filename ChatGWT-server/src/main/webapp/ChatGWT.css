@@ -1,7 +1,7 @@
 /** Add css rules here for your application. */
 
 body {
-	background-color: transparent !important;
+	background-color: #eff1f3 !important;
 	font-family: 'Ubuntu';
 }
 
@@ -78,11 +78,13 @@ table.dwo thead th, .klasnaam {
 	color: #7297c7;
 	font-family: 'Ubuntu';
 	font-size: 12px;
+	font-weight: normal;
 }
 
 table.dwo tbody {
-	border: solid #1b75bb 3px; 
+	border: solid #1b75bb 2px; 
 	border-radius: 4px;
+	background-color: #eff1f3;
 }
 
 .klasbox {
