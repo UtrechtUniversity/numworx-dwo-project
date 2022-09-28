@@ -128,7 +128,7 @@
 			  </g:DockLayoutPanel>
 		</g:north>		
 		<g:north size="40">
-			  <g:FlowPanel ui:field="headerBottom" styleName='{style.headerBottom}' addStyleNames='{t.lesstof}'>
+			  <g:FlowPanel ui:field="headerBottom" styleName='{style.headerBottom}' addStyleNames='{t.lesstof} profile-subheader'>
 			  		<g:FocusPanel ui:field='modules' styleName='{style.modules}' />
 			  		<g:Label styleName='{style.knop}' addStyleNames='profile-subheaderLogo' ui:field='scoType'><ui:text from='{rb.LESSTOF}'/></g:Label>
 			  		<g:FlowPanel styleName='profile-subheaderType' />
