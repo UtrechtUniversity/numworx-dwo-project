@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.mobile.client.ui.activities;
 
 import javax.inject.Provider;
 
+import org.osgi.util.function.Function;
+import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
@@ -9,15 +11,16 @@ import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.Label;
 
-public class DelayedActivity<T> extends AbstractActivity implements Success<T,T>{
+public class DelayedActivity<T> extends AbstractActivity implements Success<T,T>, Failure {
 
 	private AcceptsOneWidget panel;
 	private EventBus eventBus;
-	private final Provider<Activity> provider;
+	private final Function<T, Activity> provider;
 	private Activity delegate;
 
-	public DelayedActivity(Provider<Activity> p) {
+	public DelayedActivity(Function<T, Activity> p) {
 		provider = p;
 	}
 
@@ -30,7 +33,7 @@ public class DelayedActivity<T> extends AbstractActivity implements Success<T,T>
 
 	@Override
 	public Promise<T> call(Promise<T> t) {
-		delegate = provider.get();
+		delegate = provider.apply(t.getValue());
 		if (panel != null) delegate.start(panel, eventBus);
 		return t;
 	}
@@ -53,6 +56,13 @@ public class DelayedActivity<T> extends AbstractActivity implements Success<T,T>
 		if (delegate != null) delegate.onStop();
 		panel = null;
 		super.onStop();
+	}
+
+	@Override
+	public void fail(Promise<?> resolved) throws Exception {
+		if (panel != null)
+			panel.setWidget(new Label(resolved.getFailure().toString()));
+		
 	}
 	
 }

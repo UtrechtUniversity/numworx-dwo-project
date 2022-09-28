@@ -12,12 +12,20 @@ import dagger.Provides;
 import dagger.multibindings.ClassKey;
 import dagger.multibindings.IntoMap;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.ui.activities.DelayedActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ExamModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.TreeModuleActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.ViewCourseActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.ViewModuleActivity;
+import nl.uu.fi.dwo.mobile.client.ui.places.ViewCoursePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.xc;
+import nl.uu.fi.dwo.mobile.client.ui.places.xs;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -26,7 +34,7 @@ public abstract class ActivityMapperModule {
 
 
 	@Provides @IntoMap @ClassKey(xc.class) 
-	static Activity xcActivity(PlaceController controller, MembersInjector<TreeModuleActivity> trInjector, ExamModuleActivity.Factory exFactory, RPCHandler rpc) {
+	static Activity xcActivity(PlaceController controller, MembersInjector<TreeModuleActivity> trInjector, ExamModuleActivity.Factory exFactory, RPCHandler rpc, DwoGlobalVars vars) {
 		xc place = (xc) controller.getWhere();
 		Object id = PersistenceIdDecoderInterface.instance.idOf((PersistenceId) place.getID(), PersistenceClassType.PersistentCourse);
 		
@@ -37,17 +45,22 @@ public abstract class ActivityMapperModule {
 //			item.setPlace(place);
 //			SelectModuleItemHolder.insert(item); 
 			
-			DelayedActivity<SelectModuleItem> activity = new DelayedActivity<>(() -> {
-				SelectModuleItem item2 = SelectModuleItemHolder.getItemByID(id);
+			DelayedActivity<SelectModuleItem> activity = new DelayedActivity<>((item2) -> {
 				item2.setPlace(place);			
 				return new TreeModuleActivity(trInjector, item2);				
 			});
+			Promise<DomCourseStudent> pp;
+			if (vars.getRoleType() == RoleType.STUDENT) 
+				pp = rpc.getCourseClass(id, vars.getCurrentSchoolClass())
+				.map(x -> x.getCourses().get(0).getValue()); // FIXME extract classcourse
+			else 
+				pp = rpc.getCourse(id);
 			Promise<SelectModuleItem> p = 
-			rpc.getCourse(id).map( (DomCourseStudent dc) -> { 
+			pp.map( (DomCourseStudent dc) -> { 
 				SelectModuleItem i = new SelectModuleItem(dc, (DomClassCourse)null); 
 				SelectModuleItemHolder.insert(i);
 				return i;});
-			p = p.then(activity);
+			p = p.then(activity, activity);
 			return activity;
 			
 			// return activity that downloads this course first and then delegates to treemoduleactivity/exammoduleactivity
@@ -60,6 +73,31 @@ public abstract class ActivityMapperModule {
 			}
 		}
 		return new TreeModuleActivity(trInjector, item);
+	}
+
+	@Provides @IntoMap @ClassKey(xs.class)
+	static Activity xsActivity( PlaceController controller, MembersInjector<ViewModuleActivity> vmInjector, RPCHandler rpc) {
+		xs place = (xs) controller.getWhere();
+		PersistenceId id = place.getID();
+		SelectModuleItem item = SelectModuleItemHolder.getScoByID(id);
+		if (item != null) {
+			item.setPlace(place);
+			final ViewModuleActivity viewModuleActivity = new ViewModuleActivity(vmInjector, item, place);
+			return viewModuleActivity;
+		}
+		DelayedActivity<SelectModuleItem> activity = new DelayedActivity<>((item2) -> {
+			item2.setPlace(place);			
+			return new ViewModuleActivity(vmInjector, item2, place);				
+		});
+		Promise<SelectModuleItem> p = 
+		rpc.getSco(id).map( (DomScoContext dc) -> { 
+			SelectModuleItem i = new SelectModuleItem(dc); 
+			SelectModuleItemHolder.insert(i);
+			return i;});
+		p = p.then(activity, activity);
+		
+		
+		return activity;
 	}
 
 }

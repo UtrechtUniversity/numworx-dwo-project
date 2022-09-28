@@ -230,7 +230,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			anchor.setHref("goto:" + activiteitNr + "." + paginaNr);
 			pfx0 += "cc." + activiteitNr; break;			
 		case 2: 
-			anchor.setHref("#s:" + activiteitID + "." + (paginaNr-1));
+			anchor.setHref("#xs:" + activiteitID + "." + (paginaNr-1));
 			pfx0 += "s." + activiteitID; break;
 		case 3:
 			anchor.setHref("#xc:" + moduleID + "." + activiteitNr + "." + (paginaNr-1));
