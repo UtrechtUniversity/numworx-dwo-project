@@ -530,6 +530,7 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
     	if (scoContext.getScoID().longValue() == 0L) {
     		PersistentStudentScoContext pssc = new PersistentStudentScoContext(0L);
     		pssc.setPersistentHasRolePK(hasRoleKey);
+    		pssc.setScoID(scoContext.getScoID());
 			list.add(pssc);
     	} else
     		return Response.ok(rest.getDomScormValues(), MediaType.APPLICATION_JSON_TYPE).build();
