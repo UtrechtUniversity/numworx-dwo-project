@@ -138,20 +138,26 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 	public void onValueChange(ValueChangeEvent<Set<String>> event) {
 		final Set<String> value = event.getValue();
 		int size = data.size();
+		boolean set = false;
 		for(int i = 0; i < size; i++) {
 			UserModel item = data.get(i);
 			boolean online = value.contains(item.getRoomJit());
 			if (item.isOnline() != online) {
 				item.setOnline(online);
 				data.set(i, item);
+				set = true;
 			}
 		}
-		table.redraw();
+		if (set) {
+			provider.flush();
+			table.flush();
+		}
 	}
 	
 	private void onMessageModelChange(ValueChangeEvent<List<Message>> event) {
 		provider.refresh();
-		table.redraw();
+		provider.flush();
+		table.flush();
 	}
 	
 	

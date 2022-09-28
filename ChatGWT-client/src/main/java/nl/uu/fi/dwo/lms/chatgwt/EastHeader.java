@@ -7,7 +7,6 @@ import java.util.function.Consumer;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -16,8 +15,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.view.client.NoSelectionModel;
-
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
 
@@ -85,7 +82,8 @@ public class EastHeader extends Composite {
 	
 	@UiHandler("klas") void onKlas(ValueChangeEvent<Boolean> ev) {
 		if (updateSelect != null) 
-			updateSelect.accept(Boolean.TRUE);		
+			updateSelect.accept(Boolean.TRUE);	
+		setUnread(getSelectedRoom(), false);
 	}
 	
 	@UiHandler("persoon") void onPersoon(ValueChangeEvent<Boolean> ev) {
