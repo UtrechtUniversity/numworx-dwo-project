@@ -7,11 +7,13 @@
 	String env = System.getProperty("DWO_ENV","app");
 	String cas = System.getProperty("DWO_CAS", "/ideas/IdeasServlet");
 	String hub = System.getProperty("DWO_HUB", "hub-dev.dwo.nl");
+	String chat = System.getProperty("DWO_CHAT", "chat-dev.dwo.nl");
 %>
 var deploy = "//<%= cdn %>/apps/"
 var dwo_env = "<%= env %>"
 var casServer = "<%= cas %>"
 var hubServer = "//<%=hub%>/"
+var chatServer = "<%=chat%>"
 
 function script(name) {
 	var elem = document.createElement('script');
