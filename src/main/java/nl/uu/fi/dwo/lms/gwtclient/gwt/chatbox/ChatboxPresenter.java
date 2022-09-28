@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.chatbox;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.logging.Logger;
@@ -32,6 +33,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
@@ -95,7 +97,10 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 			view.clear();
 			return;
 		}
-        RoleType role = vars.getRole();    
+        RoleType role = vars.getRole(); 
+        
+        DomUser uu = new DomUser(u);
+        uu = mapRealm(uu);
         user = new ChatUser(u, role);
 		String password = RestAuthenticator.instance.getAuthorization(); // access token of so
 		user.token = strip(password);
@@ -116,14 +121,27 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 		view.clear();
 	}
 
+	private <T extends DomUser> T mapRealm(T uu) {
+		String realm = Objects.toString(vars.getRealm(),"");
+		String username = uu.getUserName();
+		int at = username.indexOf('@');
+		if (at == -1) {
+			username += realm;
+		} else if (at == username.length()-1) {
+			username = username.substring(0, at);
+		}
+		uu.setUserName(username.replace('@', '%'));
+		return uu;
+	}
+
 	private Promise<ChatRoom> roomOfSchoolClass(DomSchoolClass klas) {
 		ChatRoom room = new ChatRoom(klas);
 		if ( service.isPresent() ) {
 			Promise<List<DomStudent>> students = service.get().getStudentsInSchoolClass(klas);
 			Promise<List<DomTeacher>> teachers = service.get().getTeachersInSchoolClass(klas);
 			
-			Promise<Stream<ChatUser>> u1 = students.map(list -> list.stream().map(ChatUser::new));
-			Promise<Stream<ChatUser>> u2 = teachers.map(list -> list.stream().map(ChatUser::new));
+			Promise<Stream<ChatUser>> u1 = students.map(list -> list.stream().map(this::mapRealm).map(ChatUser::new));
+			Promise<Stream<ChatUser>> u2 = teachers.map(list -> list.stream().map(this::mapRealm).map(ChatUser::new));
 			
 			Promise<List<Stream<ChatUser>>> all = Promises.all(u1, u2);
 			return all.map(streams -> {
