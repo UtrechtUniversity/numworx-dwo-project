@@ -48,7 +48,9 @@
             	<artifactId>jgitflow-maven-plugin</artifactId>
             	<version>1.0-m5.1</version>
             	<configuration>
-                	<!-- see goals wiki page for configuration options -->
+				    <!-- Keep your maven submodules at the same version as the parent POM -->
+				    <autoVersionSubmodules>true</autoVersionSubmodules>
+		        	<!-- see goals wiki page for configuration options -->
             	</configuration>
         	</plugin>
     </plugins>
