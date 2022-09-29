@@ -4,10 +4,13 @@
 
   <groupId>nl.uu.fi.dwo.lms</groupId>
   <artifactId>ChatGWT</artifactId>
+  <version>2.5.14</version>
   <packaging>pom</packaging>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <restyVersion>2.2.0</restyVersion>
+    <allowSnapshots>true</allowSnapshots>
   </properties>
 
   <dependencyManagement>
@@ -37,6 +40,21 @@
           <launcherDir>${project.build.directory}/gwt/launcherDir</launcherDir>
         </configuration>
       </plugin>
+	  <plugin>
+		<groupId>external.atlassian.jgitflow</groupId>
+		<artifactId>jgitflow-maven-plugin</artifactId>
+		<version>1.0-m5.1</version>
+	  </plugin>
+   			<plugin>
+            	<groupId>external.atlassian.jgitflow</groupId>
+            	<artifactId>jgitflow-maven-plugin</artifactId>
+            	<version>1.0-m5.1</version>
+            	<configuration>
+				    <!-- Keep your maven submodules at the same version as the parent POM -->
+				    <autoVersionSubmodules>true</autoVersionSubmodules>
+		        	<!-- see goals wiki page for configuration options -->
+            	</configuration>
+        	</plugin>
     </plugins>
     <pluginManagement>
       <plugins>
@@ -61,7 +79,7 @@
           <extensions>true</extensions>
           <configuration>
             <sourceLevel>1.8</sourceLevel>
-            <failOnError>true</failOnError>
+            <failOnError>false</failOnError>
           </configuration>
         </plugin>
         <plugin>
@@ -83,6 +101,10 @@
           <artifactId>tomcat7-maven-plugin</artifactId>
           <version>2.2</version>
         </plugin>
+        <plugin>
+        	<artifactId>maven-war-plugin</artifactId>
+        	<version>3.2.3</version>
+        </plugin>        
       </plugins>
     </pluginManagement>
   </build>
@@ -94,6 +116,7 @@
   <parent>
   	<groupId>nl.uu.fi.dwo</groupId>
   	<artifactId>DWO</artifactId>
-  	<version>2.5.13-SNAPSHOT</version>
+  	<version>2.5.14</version>
+  	<relativePath>../DWO</relativePath>
   </parent>
 </project>
