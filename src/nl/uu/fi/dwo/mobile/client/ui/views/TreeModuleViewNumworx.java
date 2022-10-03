@@ -575,10 +575,10 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 							if (delegate == null) {
 								Scorm2004IF get = parent.get();
 								if (get instanceof SCORM_DWO5) {
-									Promise<List<SelectModuleItem>> childrenAsync = item.getChildrenAsync();
-									if (childrenAsync == null || item.getType() != Type.MODULE) {
-										childrenAsync = Promises.resolved(Collections.emptyList());
-									}
+									Promise<List<SelectModuleItem>> childrenAsync = 
+											item.getType() != Type.MODULE
+											? Promises.resolved(Collections.emptyList())
+											: getScosPromise(item);
 									return childrenAsync.then(p -> {									
 										int sconr = sconr(p.getValue());
 										delegate = get;
