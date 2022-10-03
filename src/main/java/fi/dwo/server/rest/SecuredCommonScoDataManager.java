@@ -774,7 +774,9 @@ try {
 		page = split[4];
 		long sconr = Long.parseLong(split[3]);
 		PersistentScoContext scoContext = ScoContextManager.findSibling(pssc.getScoID(), sconr);
-		List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(scoContext, pssc.getPersistentHasRolePK());
+		List<PersistentStudentScoContext> list = 
+				scoContext == null ? Collections.emptyList() :
+				StudentScoContextManager.findEntities(scoContext, pssc.getPersistentHasRolePK());
 		if (!list.isEmpty()) {
 			pssd = StudentScoDataManager.findEntity(list.get(0).getStudentSco());
 		}
