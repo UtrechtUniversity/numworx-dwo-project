@@ -144,7 +144,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 
 	@Override
 	public Boolean isCorrect() {
-		return null;
+		return Boolean.TRUE;
 	}
 
 	@Override

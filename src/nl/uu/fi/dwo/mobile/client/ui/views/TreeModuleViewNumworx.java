@@ -11,6 +11,7 @@ import javax.inject.Provider;
 
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import com.google.gwt.cell.client.AbstractCell;
@@ -572,12 +573,28 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 						public Promise<String> getValuePromise(String name) {
 							LOG.info("supplying get value " + name);
 							if (delegate == null) {
-								delegate = parent.get();
-								if (delegate instanceof SCORM_DWO5) {
-									((SCORM_DWO5) delegate).setScoID(0); // voorkom NPE, server weet er van.
-								}
+								Scorm2004IF get = parent.get();
+								if (get instanceof SCORM_DWO5) {
+									Promise<List<SelectModuleItem>> childrenAsync = item.getChildrenAsync();
+									if (childrenAsync == null || item.getType() != Type.MODULE) {
+										childrenAsync = Promises.resolved(Collections.emptyList());
+									}
+									return childrenAsync.then(p -> {									
+										int sconr = sconr(p.getValue());
+										delegate = get;
+										((SCORM_DWO5) delegate).setScoID(sconr); // voorkom NPE, server weet er van.
+										return delegate.getValuePromise(name);
+									});
+								} else delegate = get;
 							}
 							return delegate.getValuePromise(name);
+						}
+						int sconr(List<SelectModuleItem> item) {
+							try {
+								return Integer.parseInt(item.get(0).getID().toString());
+							} catch(Exception oops) {
+								return 0;
+							}
 						} };
 				}
 
