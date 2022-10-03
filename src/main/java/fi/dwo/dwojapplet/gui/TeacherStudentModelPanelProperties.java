@@ -108,7 +108,13 @@ public class TeacherStudentModelPanelProperties implements Comparator<DomStudent
       return list;
     }
 
-    DomStudentModelContext updateModel(DomStudentModelContext modelContext) throws Dwo2Exception {
+    public DomStudentModelContext updateCurrentModel() throws Dwo2Exception {
+      updateModel(current.getModelStructure());
+      return current;
+    }
+    
+    
+    private DomStudentModelContext updateModel(DomStudentModelContext modelContext) throws Dwo2Exception {
       current = manager.updateModel(modelContext);
       structure = StoredRestManager.getInstance().getGenson().serialize(current.getModelStructure());
       standard = current.getPublishState() == PublishState.overt;

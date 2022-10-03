@@ -149,11 +149,11 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
                   DomStudentModelStructure modelStructure = textArea.getModel();
                   model.setModelStructure(modelStructure);
                   model.setPublishState(PublishState.published);
-                  prop.updateModel(model);
+                  prop.updateCurrentModel();
                 } else {
                   if (textArea.isLock()) {
                     model.setPublishState(PublishState.published);
-                    prop.updateModel(model);                    
+                    prop.updateCurrentModel();                    
                   }
                 }
               } catch (Dwo2Exception e) {
@@ -525,7 +525,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         try {
           if (textArea.isLock()) {
             prop.getCurrent().setPublishState(PublishState.published);
-            prop.updateModel(prop.getCurrent());
+            prop.updateCurrentModel();
           }                   
           tableModel.init(prop.getModelList(), searchImage, removeImage, copyImage, resultsImage, classImage);
         } catch (Dwo2Exception ex) {
