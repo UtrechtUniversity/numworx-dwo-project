@@ -864,6 +864,9 @@
 	</profile>
 	<profile>
 		<id>running11</id>
+		<activation>
+			<jdk>[9,)</jdk>
+		</activation>
 		<properties>
 			<proguard.lib>${java.home}/jmods</proguard.lib>
 		</properties>

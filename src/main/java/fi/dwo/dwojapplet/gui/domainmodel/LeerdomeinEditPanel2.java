@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
@@ -1073,9 +1074,36 @@ public class LeerdomeinEditPanel2 extends JPanel
 		resultModel = null;
 	}
 
+
+// move to DomStudentModelStructure	
+	private static void addKeySet(DomStudentModelObj obj, Set<String> keySet) {
+	        if (obj.getObjectives() != null) 
+	            for (DomStudentModelObj o : obj.getObjectives()) addKeySet(o, keySet);
+	        else {
+	          try { 
+	            Set<String> keys = obj.getInfo().getMethods().keySet(); // expect NPE's
+	            keySet.addAll(keys);
+	          } catch (Exception oops) {}
+	        }
+	    }
+
+	public static List<String> cacheMethods(DomStudentModelStructure src) {
+        DomStudentModelStructure structure = src;
+        Set<String> keySet = new HashSet<>();
+        keySet.add(DomMethod.key(structure.getActiveMethod()));
+        for (DomStudentModelCategory cat: structure.getCategories()) {
+            for (DomStudentModelObj obj: cat.getObjectives()) {
+                addKeySet(obj, keySet);
+            }
+        }
+        keySet.remove(null);
+        return (new ArrayList<String>(keySet));
+    }
+	
   public void initMethodSelect(DomStudentModelStructure model) {
-    koppeling = model.getMethods();    
-    initMethodSelect(koppeling);
+    koppeling = model.getMethods();
+    List<String> k = koppeling; if (k == null) k = cacheMethods(model);
+    initMethodSelect(k);
   }
 
   public void initMethodSelect(List<String> koppeling) {
