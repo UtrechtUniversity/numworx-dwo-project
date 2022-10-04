@@ -389,12 +389,16 @@ public class LeerdomeinEditPanel2 extends JPanel
       public void actionPerformed(ActionEvent e) {
         LeerdomeinEditPanel2 parent = LeerdomeinEditPanel2.this;
         KoppelPanel panel = new KoppelPanel();
-        panel.setMethods(koppeling);
+        List<String> k = koppeling;
+        List<String> NULL = cacheMethods(structure);
+        if (k == null) k = NULL;
+        panel.setMethods(k);
         int ok = panel.showDialog(parent);
         if (ok == JOptionPane.OK_OPTION) {
           koppeling = panel.getMethods();
           initMethodSelect(koppeling);
-        }
+          if (NULL.equals(koppeling)) koppeling = null;
+       }
       }
 	}
 	
@@ -1097,7 +1101,9 @@ public class LeerdomeinEditPanel2 extends JPanel
             }
         }
         keySet.remove(null);
-        return (new ArrayList<String>(keySet));
+        ArrayList<String> result = new ArrayList<String>(keySet);
+        Collections.sort(result); // vaste volgorde!
+        return result;
     }
 	
   public void initMethodSelect(DomStudentModelStructure model) {
