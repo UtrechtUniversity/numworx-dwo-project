@@ -97,7 +97,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.2.3</version>
 				<configuration>
 					<warSourceDirectory>war</warSourceDirectory>
 					<warSourceIncludes>DWOplayer.jsp,KeyboardGWT.css,DWOplayer.css,${runTarget},GeoGebra.html,MCSquared.jsp,images/**,scripts/**,WEB-INF/lib/*,WEB-INF/web.xml</warSourceIncludes>
@@ -282,8 +282,8 @@
 		<runTarget>${project.artifactId}.html</runTarget>
 		<warClassifier />
 		<gwt.copyWebapp>true</gwt.copyWebapp>
-		<accountVersion>2.5.14-SNAPSHOT</accountVersion>
-		<gwtVersion>2.8.2</gwtVersion>
+		<accountVersion>2.5.14</accountVersion>
+		<gwtVersion>2.9.0</gwtVersion>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <maven.javadoc.skip>true</maven.javadoc.skip>
     	<interactionVersion>0.1.12</interactionVersion>
