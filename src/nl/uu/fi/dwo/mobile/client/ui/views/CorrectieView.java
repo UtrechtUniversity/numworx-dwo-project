@@ -188,7 +188,7 @@ private boolean checkDocent;
     area = new MLTextBox(a);
     api = a.api();
     initWidget(uiBinder.createAndBindUi(this));
-    smObjectives = logger.getSMObjectives();
+    if (logger != null) smObjectives = logger.getSMObjectives();
 	leerdoelen.setVisible(a.isTest() && smObjectives != null);
     area.setCommunicationRoot(comRoot);
     comroot = comRoot;
