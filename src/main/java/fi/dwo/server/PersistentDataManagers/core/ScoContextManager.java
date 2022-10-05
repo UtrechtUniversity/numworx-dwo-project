@@ -246,6 +246,7 @@ public class ScoContextManager {
 
 	public static PersistentScoContext findSibling(Long scoID, long sconr) {
 		PersistentScoContext sc = findEntity(scoID);
+		if (sc == null) return null;
 		PersistentCourse course = CourseManager.findEntity(sc.getCourseID());
 		List<PersistentScoContext> list = findEntities(course);
 		Optional<PersistentScoContext> optional = list.stream().filter(item -> item.getSequencenr().longValue() == sconr).findAny();
