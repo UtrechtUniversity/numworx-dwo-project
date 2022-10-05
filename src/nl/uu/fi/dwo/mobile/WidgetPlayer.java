@@ -133,7 +133,7 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
 			delegate = new TekstVakPanel(activity, launch, randomVarNamen, randomVarWaarden, width);
 			delegate.zetOpdracht(new HashMap<>(launchData));
 			setWidget(delegate);
-			setPixelSize(width, height);
+			setPixelSize(delegate.getWidth(), delegate.getHeight());
 		}
     	
     }
