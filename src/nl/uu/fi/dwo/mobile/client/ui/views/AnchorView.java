@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
+import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 
@@ -65,6 +66,12 @@ public class AnchorView implements IsWidget, ClickHandler, TekstElementWithFont 
 	 */
 	public AnchorView(String tekst, String href, String target, AnchorContext context) {
 		tekst = tekst.trim().replace(' ', '\u00A0');
+		if (href.startsWith(Actions.PROTO))
+		{
+			anchor = new Anchor(tekst, "javascript:return false;"); // bug in firefox?
+			anchor.addClickHandler(new Actions.Handler(href));
+			
+		} else
 		if(href.startsWith("goto:"))
 		{
 			anchor = new Anchor(tekst, "javascript:return false;"); // bug in firefox?

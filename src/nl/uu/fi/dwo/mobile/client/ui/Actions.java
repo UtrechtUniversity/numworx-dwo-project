@@ -1,5 +1,9 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import javax.ws.rs.core.Link;
+
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window.Location;
 
 public enum Actions {
@@ -48,4 +52,30 @@ public enum Actions {
   public static boolean isAvailable() {
     return "none".equals(Location.getParameter("header"));
   }
+  
+  
+  public static class Handler implements ClickHandler {
+		
+	private String link;
+
+	@Override
+	public void onClick(ClickEvent event) {
+		event.stopPropagation();
+		event.preventDefault();
+		goTo(link);		
+	}
+	public Handler(String href) {
+		this.link = href;
+	}
+  }
+
+public static final String PROTO = "action:";
+private static final int ACTION_PROTO_LENGTH = PROTO.length();
+  
+public static void goTo(String link) {
+	if (Actions.isAvailable() && link.startsWith(PROTO)) {
+		sendParent(link.substring(ACTION_PROTO_LENGTH));
+	}
+}
+
 }

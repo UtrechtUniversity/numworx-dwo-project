@@ -41,6 +41,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.ShareFacade;
+import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.HasResize;
@@ -4198,6 +4199,9 @@ private Object CamelCase(String name) {
 			if (isLink && linkUrls != null)
 			{
 				String link = linkUrls.getString(0);
+				if (link.startsWith(Actions.PROTO)) {
+					Actions.goTo(link);
+				} else
 				if (anchorContext == null || !link.startsWith("goto:"))
 					Window.open(link, "_blank", "");
 				else
