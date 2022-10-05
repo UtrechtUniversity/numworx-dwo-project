@@ -149,11 +149,19 @@ public class SecuredTeacherStudentModelManager {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("get")
     public DomStudentModelContext getStudentModel(@Context SecurityContext sc, RestStudentModelContext rest) throws Dwo2Exception {
+    	long time = System.currentTimeMillis();
+    	try { 
+    	
     	TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
     			.setHasRole(rest.getRestContext().getDomHasRole())
     			.buildSchoolAdminTeacher()
     			.setTeacher();
     	return build.getStudentModel(rest.getDomStudentModelContext());
+    	
+    	} finally {
+    		time = System.currentTimeMillis() - time;
+    		LOG.severe(rest.getDomStudentModelContext().getId() + " getStudentmodel " + time + "ms");
+    	}
     }
     
     

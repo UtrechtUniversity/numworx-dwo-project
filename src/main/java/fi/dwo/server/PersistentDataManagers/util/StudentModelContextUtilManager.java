@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -29,11 +30,19 @@ public class StudentModelContextUtilManager {
 		objs.forEach(item -> map.put(item.getId(), item.getItem()));
 		for (DomStudentModelCategory cat : pModel.getModelStructure().getCategories()) {
 			List<DomStudentModelObj> objList = cat.getObjectives();
-			for (int i = 0; i < objList.size(); i++) {
-				DomStudentModelObj obj = objList.get(i);
-				if (obj.getInfo().getTitle() != null) continue; // safety 
-				obj = map.getOrDefault(obj.getInfo().getId(), obj);
-				objList.set(i, obj);
+//			for (int i = 0; i < objList.size(); i++) {
+//				DomStudentModelObj obj = objList.get(i);
+//				if (obj.getInfo().getTitle() != null) continue; // safety 
+//				obj = map.getOrDefault(obj.getInfo().getId(), obj);
+//				objList.set(i, obj);
+//			}
+			ListIterator<DomStudentModelObj> i = objList.listIterator();
+			while (i.hasNext()) {
+				DomStudentModelObj obj =  i.next();
+				if (obj.getInfo().getTitle() != null) continue; // safety
+				obj = map.get(obj.getInfo().getId());
+				if (obj != null) i.set(obj);
+				
 			}
 		}
 //		if (pModel.getModelStructure().getMethods() == null) {
