@@ -40,6 +40,12 @@
               <extraClasspath>${basedir}/../ChatGWT-shared/target/classes/</extraClasspath>
             </webApp>
             <contextXml>${basedir}/src/main/jettyconf/context.xml</contextXml>
+        <systemProperties>
+            <systemProperty>
+                <name>CDNURL</name>
+                <value>http://localhost:8082</value>
+            </systemProperty>
+        </systemProperties>
           </configuration>
         </plugin>
         <plugin>

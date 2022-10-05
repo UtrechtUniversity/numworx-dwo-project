@@ -8,10 +8,13 @@
   <head>
     <meta charset=UTF-8>
     <meta name="gwt:property" content="locale=nl" >
-
-
+<%
+	String profile = request.getParameter("profile");
+	String cdn = System.getProperty("CDNURL","https://ebs-dev-dwo-nl.s3.eu-west-1.amazonaws.com");
+%>
 	<script src="/dwo/apps/deploy.jsp"></script>
-	<script>css("DWOplayer.css")</script>
+	<link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/DWOplayer.css" >
+<% if ("111".equals(profile)) {%><link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/css/inf.css" ><%}%>    
     <!--                                                               -->
     <!-- Consider inlining CSS to reduce the number of requested files -->
     <!--                                                               -->

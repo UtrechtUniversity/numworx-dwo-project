@@ -53,6 +53,10 @@ public class StubWidget extends Composite implements Handler, LoadHandler, Formu
 		inner.init(width, height, launchdata, randomVars);
 	}-*/;
 	
+	private static native int getHeight(Object inner) /*-{
+		return inner.getHeight();
+	}-*/;
+	
 	private Frame frame;
 	private HandlerRegistration detachhandler, loadhandler;
 	private int width;
@@ -185,6 +189,11 @@ private void publish(Object inner) {
 		} 
 		if (nagekekenPending != null) {
 			zetNagekeken(nagekekenPending.booleanValue());
+		}
+		int height = getHeight(inner);
+		if (height > 0 && height != this.height) {
+			Logger.getLogger("StubView").info("Change height to " + height);
+			frame.setPixelSize(-1, height);
 		}
 	} catch(Exception e) {
 		Logger.getLogger("StubView").log(Level.SEVERE,"init "+ e);

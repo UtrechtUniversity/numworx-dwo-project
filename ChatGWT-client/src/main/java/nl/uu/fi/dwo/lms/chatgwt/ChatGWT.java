@@ -617,6 +617,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		launch.put("breedtes", Arrays.asList(width));
 		launch.put("hoogtes",  Arrays.asList(height));
 		launch.put("font_size", 13);
+		launch.put("pasAanH", Boolean.TRUE);
 		
 		tekstpanel.init(width, height, launch);
 		return tekstpanel;
