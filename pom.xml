@@ -708,4 +708,5 @@
     		</properties>
     	</profile>
     </profiles>
+    <version>2.5.14-p1</version>
 </project>
