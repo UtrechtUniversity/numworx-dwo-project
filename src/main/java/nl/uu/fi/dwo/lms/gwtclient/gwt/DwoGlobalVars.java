@@ -133,6 +133,7 @@ public class DwoGlobalVars {
      */
     public void setActiveSchoolRoleAndClass(DomSchoolRoleAndClassV2 activeSchoolRoleAndClass) {
         this.activeSchoolRoleAndClass = activeSchoolRoleAndClass;
+        this.role = null; // uncache
     }
 
 //    /**
