@@ -11,7 +11,7 @@
 	    </colgroup>
 		<tbody>
 			<tr><td><g:RadioButton ui:field="klas" name='route' addStyleNames='eastheader'>Berichten voor de klas</g:RadioButton></td><td><span class='klasnaam'>naam klas</span></td></tr>
-			<tr><td><g:RadioButton ui:field="persoon" name='route' addStyleNames='eastheader'>Persoonlijke berichten</g:RadioButton></td><td><g:ListBox ui:field='naam' addStyleNames='klasbox'></g:ListBox></td></tr>
+			<tr><td><g:RadioButton ui:field="persoon" name='route' addStyleNames='eastheader'>Persoonlijke berichten</g:RadioButton></td><td><g:ListBox ui:field='naam' addStyleNames='klasbox profile-borderBox'></g:ListBox></td></tr>
 		</tbody>
 	  </table>
 	</g:HTMLPanel>
