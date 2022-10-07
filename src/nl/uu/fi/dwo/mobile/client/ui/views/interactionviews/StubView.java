@@ -111,13 +111,8 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	public static String getLocale() {
 		String locale;
 		locale = LocaleInfo.getCurrentLocale().getLocaleName();
-		String query = Window.Location.getQueryString();
-		int k = query.indexOf("locale=");
-		if(k > 0)
-		{
-			query = query.substring(k+7);
-			k = query.indexOf('&');
-			if(k > 0) query = query.substring(0, k);
+		String query = Window.Location.getParameter("locale");
+		if(query != null && !query.isEmpty()) {
 			locale = query;
 		} else if("default".equals(locale)) // no default please.
 			return "nl";
