@@ -20,7 +20,6 @@
     </organization>
     
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <maven.test.skip>true</maven.test.skip>
@@ -29,7 +28,6 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <daggerVersion>2.42</daggerVersion>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <gwt.style>OBFUSCATED</gwt.style>
         <maven.test.skip>true</maven.test.skip>
@@ -195,12 +193,12 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.lms</groupId>
 			<artifactId>ChatGWT-shared</artifactId>
-			<version>2.5.14</version>
+			<version>${chatGWTVersion}</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo.lms</groupId>
 			<artifactId>ChatGWT-shared</artifactId>
-			<version>2.5.14</version>
+			<version>${chatGWTVersion}</version>
 			<classifier>sources</classifier>
 		</dependency>
     </dependencies>
@@ -483,7 +481,7 @@
                           <webapp>
                               <groupId>nl.uu.fi.dwo.lms</groupId>
                               <artifactId>ChatGWT-server</artifactId>
-                          	  <version>2.5.14</version>
+                          	  <version>${chatGWTVersion}</version>
                               <type>war</type>
                               <contextPath>/chatbox</contextPath>
                               <asWebapp>true</asWebapp>

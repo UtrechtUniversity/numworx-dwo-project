@@ -186,7 +186,9 @@ public class StudentModelService implements DescriptionService {
 		return methods.computeIfAbsent(pid, id -> { 			
 			DomMethod method = new DomMethod(id);
 			return methodMan.getMethod(context, method, profile.getValue());
-		});
+		})
+				.then(p -> { if (p.getValue() == null) return methods.get(null); return p; }) // getvalue kan null zijn
+		;
 	}
 
 	public Promise<List<DomMethod>> getMethods() {
