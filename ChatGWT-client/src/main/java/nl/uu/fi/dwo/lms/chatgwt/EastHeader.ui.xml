@@ -4,14 +4,14 @@
 	<ui:style>
 	</ui:style>
 	<g:HTMLPanel>
-	  <table style='width: 100%; margin-bottom: 18px'>
+	  <table style='width: 100%; margin-bottom: 18px' id='eastheader'>
 	    <colgroup>
 	    	<col></col>
 	    	<col style='width: 180px'></col>
 	    </colgroup>
 		<tbody>
-			<tr><td><g:RadioButton ui:field="klas" name='route' addStyleNames='eastheader'>Berichten voor de klas</g:RadioButton></td><td><span class='klasnaam'>naam klas</span></td></tr>
-			<tr><td><g:RadioButton ui:field="persoon" name='route' addStyleNames='eastheader'>Persoonlijke berichten</g:RadioButton></td><td><g:ListBox ui:field='naam' addStyleNames='klasbox profile-borderBox'></g:ListBox></td></tr>
+			<tr><td><div class='checkbox' style='zoom: 0.8;'><g:RadioButton ui:field="klas" name='route' /></div><label class='eastheader' for='{klas.getElement.getFirstChildElement.getId}'> Berichten voor de klas</label></td><td><span class='klasnaam'>naam klas</span></td></tr>
+			<tr><td><div class='checkbox' style='zoom: 0.8;'><g:RadioButton ui:field="persoon" name='route' /></div><label class='eastheader' for='{persoon.getElement.getFirstChildElement.getId}'> Persoonlijke berichten</label></td><td><g:ListBox ui:field='naam' addStyleNames='klasbox profile-borderBox'></g:ListBox></td></tr>
 		</tbody>
 	  </table>
 	</g:HTMLPanel>
