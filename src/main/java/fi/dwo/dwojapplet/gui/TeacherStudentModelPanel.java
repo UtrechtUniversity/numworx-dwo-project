@@ -137,7 +137,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
                DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(row, tableModel.getContextColumn());
                model = prop.getModel(model);
                if (model.getPublishState() == PublishState.edit) {
-                  JOptionPane.showMessageDialog(TeacherStudentModelPanel.this, "Er werkt al mogelijk iemand mee!",title, JOptionPane.WARNING_MESSAGE);
+                  JOptionPane.showMessageDialog(TeacherStudentModelPanel.this, TextMapper.getText(TextMapper.GUITSM_EDIT_WARNING),title, JOptionPane.WARNING_MESSAGE);
                }
                 textArea.setEditable(false);
                 textArea.setModel(model.getModelStructure(), model.getPublishState());
@@ -172,7 +172,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
             if (value == removeImage) {
               DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(row, tableModel.getColumnCount());
               String title = (String) tableModel.getValueAt(row, 0);
-              int ok = JOptionPane.showConfirmDialog(TeacherStudentModelPanel.this, "Zeker '" + title + "' weg?", title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+              int ok = JOptionPane.showConfirmDialog(TeacherStudentModelPanel.this, TextMapper.format(TextMapper.GUITSM_CONFIRM_DELETE,  new Object[] { title }), title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
               if ( ok == JOptionPane.OK_OPTION) {
                 try {
                   prop.removeModel(model);
@@ -194,7 +194,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
                 model = prop.getModel(model);
                 DomStudentModelStructure structure = model.getModelStructure();
                 String locale = DwoHelper.getLocale().getLocale();
-                title = "Kopie " + title;
+                title = TextMapper.format(TextMapper.GUITSM_COPY, new Object[] {title});
                 structure.getInfo().getTitle().put(locale, title);
                 editNewModel(structure, title);
               } catch (Dwo2Exception e) {
@@ -237,10 +237,10 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
                 list = Collections.emptyList();
               }
  
-              ConfirmDialog dialog = new ConfirmDialog(TeacherStudentModelPanel.this, "Instelling leerdomein per klas");
+              ConfirmDialog dialog = new ConfirmDialog(TeacherStudentModelPanel.this, TextMapper.getText(TextMapper.GUITSM_SETTING));
               SettingsSchoolClassPanel pane = new SettingsSchoolClassPanel(list, model);
               dialog.getContentPane().add(pane, BorderLayout.CENTER);
-              JButton ok = new JButton("OK");
+              JButton ok = new JButton(TextMapper.getText(TextMapper.BTN_OK));
               ok.addActionListener(dialog::ok);
               dialog.getContentPane().add(ok, BorderLayout.SOUTH);
               dialog.pack();
