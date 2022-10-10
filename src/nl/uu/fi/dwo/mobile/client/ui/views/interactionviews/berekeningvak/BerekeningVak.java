@@ -328,7 +328,7 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 		if (loggingManager.logging != null) 
 			loggingManager.logging.setCommunicationRoot(comRoot);
 		
-		if(settings.check() && settings.meerregelig() && (getMode()==0 || getMode()==1))
+		if(!settings.checkDocent() && settings.check() && settings.meerregelig() && (getMode()==0 || getMode()==1))
 			mainPanel.add(checkButton);
 		
 	}

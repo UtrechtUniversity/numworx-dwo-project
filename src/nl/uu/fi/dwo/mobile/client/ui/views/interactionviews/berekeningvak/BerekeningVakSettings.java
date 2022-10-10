@@ -15,6 +15,7 @@ public class BerekeningVakSettings {
 	private boolean volledigeBreedte;
 	//logging/nakijken
 	private boolean check = true;
+	private boolean checkDocent = true;
 	private boolean teltMee = true;
 	private boolean logOption = false;
 	private String logID = null;
@@ -51,6 +52,8 @@ public class BerekeningVakSettings {
 		
 		if(launchState.containsKey("check"))
 			check = launchState.getBoolean("check");
+		if(launchState.containsKey("checkDocent"))
+			checkDocent = launchState.getBoolean("checkDocent");
 		if(launchState.containsKey("teltMee"))
 			teltMee = launchState.getBoolean("teltMee");
 		if(launchState.containsKey("logOption"))
@@ -107,6 +110,7 @@ public class BerekeningVakSettings {
 	public boolean volledigeBreedte() {return volledigeBreedte;}
 	
 	public boolean check() {return check;}
+	public boolean checkDocent() {return checkDocent;}
 	public boolean teltMee() {return teltMee;}
 	public boolean logOption() {return logOption;}
 	public String logID() {return logID;}
