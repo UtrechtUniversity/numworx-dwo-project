@@ -598,6 +598,14 @@ public abstract class TextMapper {
 
     public static final String GUIC_HIDE_ACTIVITIES = "GUIC_HIDE_ACTIVITIES";
 
+    public static final String GUITSM_EDIT_WARNING = "GUITSM_EDIT_WARNING";
+
+    public static final String GUITSM_CONFIRM_DELETE = "GUITSM_CONFIRM_DELETE";
+
+    public static final String GUITSM_COPY = "GUITSM_COPY";
+
+    public static final String GUITSM_SETTING = "GUITSM_SETTING";
+
 	
 	/**
      *

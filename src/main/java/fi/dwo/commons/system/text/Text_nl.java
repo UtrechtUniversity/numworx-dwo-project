@@ -514,6 +514,11 @@ public class Text_nl extends ListResourceBundle {
             { TextMapper.GUIAC_ADD, "Nieuw toegangsrecht"},
             
             { TextMapper.GUIC_HIDE_ACTIVITIES, "Activiteitenlijst verbergen"},
+            
+            { TextMapper.GUITSM_EDIT_WARNING, "Er werkt al mogelijk iemand mee!"},
+            { TextMapper.GUITSM_CONFIRM_DELETE, "Zeker ''{0}'' weg?" },
+            { TextMapper.GUITSM_COPY, "Kopie {0}" },
+            { TextMapper.GUITSM_SETTING, "Instelling leerdomein per klas"},
 
 	};
 
