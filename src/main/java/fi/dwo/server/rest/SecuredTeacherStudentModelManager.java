@@ -405,6 +405,7 @@ public class SecuredTeacherStudentModelManager {
 			
 			return Response.ok(obj, MediaType.APPLICATION_JSON_TYPE).build();
 		} catch (Dwo2Exception e) {
+			LOG.log(Level.WARNING, "return not found", e);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 	}
