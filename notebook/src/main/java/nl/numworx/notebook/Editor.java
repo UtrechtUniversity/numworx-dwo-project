@@ -124,7 +124,7 @@ class Editor extends JPanel implements CBookWidgetEditIF {
 		}
 	}
 
-	static class Bestand implements Comparable<Bestand> {
+	static class Bestand implements Comparable<Bestand>  {
 		final String name;
 		byte[] data;
 		String type, content;

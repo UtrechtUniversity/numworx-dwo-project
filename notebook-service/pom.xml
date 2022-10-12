@@ -45,8 +45,32 @@
   </dependencies>
   <build>
     <finalName>notebook-service</finalName>
+	<plugins>
+	      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.12.4</version>
+        <executions>
+          <execution>
+            <id>default-test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+            	<systemProperties>
+            		<DWO_HUB_TOKEN>${token}</DWO_HUB_TOKEN>
+            	</systemProperties>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+	
+	</plugins>
+
+
   </build>
   <properties>
-  	<token>ffa09366b2d44a438cb3ead42f5ec5ef</token>
+  	<token>7fee5cf7117847d5ae1bb284c8943957</token>
+  	<maven.test.skip>true</maven.test.skip>
   </properties>
 </project>

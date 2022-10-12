@@ -3,6 +3,8 @@
 
   <inherits name='com.google.gwt.user.User' />
   <inherits name="nl.uu.fi.dwo.interaction.Interaction" />
+  <inherits name="org.fusesource.restygwt.RestyGWT"/>
+  <inherits name='nl.numworx.notebook.common.Common' />
   
   <entry-point class='nl.numworx.notebookgwt.client.NotebookGWT' />
   <source path='' />

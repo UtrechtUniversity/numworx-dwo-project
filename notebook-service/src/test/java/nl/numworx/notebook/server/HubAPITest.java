@@ -1,10 +1,11 @@
 package nl.numworx.notebook.server;
 
+import java.io.IOException;
+
 import junit.framework.TestCase;
 import nl.numworx.notebook.server.rest.Contents;
 import nl.numworx.notebook.server.rest.File;
 import nl.numworx.notebook.server.rest.Folder;
-import nl.numworx.notebook.server.rest.Resource;
 import nl.numworx.notebook.server.rest.Server;
 import nl.numworx.notebook.server.rest.Tokens;
 import nl.numworx.notebook.server.rest.User;
@@ -17,6 +18,17 @@ public class HubAPITest extends TestCase {
 	protected void setUp() throws Exception {
 		assertNotNull(System.getProperty(HubAPI.DWO_HUB_TOKEN));
 		api = new HubAPI();
+		
+		startServer("project_wim");
+		startServer("meesterwim");
+		
+	}
+
+	private void startServer(String user) throws IOException {
+		Server s = api.startServer(user);
+		if (s != null && s.ready != Boolean.TRUE) {
+			api.progress(user, t -> System.out.println(t.ready));
+		}
 	}
 
 	protected void tearDown() throws Exception {
@@ -41,25 +53,48 @@ public class HubAPITest extends TestCase {
 		System.out.println(server.url);
 	}
 	
-	public void testListFolder() throws Exception { 
+	public void testListFolderMe() throws Exception { 
 		Folder folder = api.listFolder("project_wim", "");
 		assertNotNull(folder);
 		System.out.println(folder);
 	}
 	
-	public void testMkdir() throws Exception {
+	public void testListFolder() throws Exception {
+		Folder folder = api.listFolder("meesterwim", "");
+		assertNotNull(folder);
+		System.out.println(folder);
+		
+	}
+	
+	public void testMkdirMe() throws Exception {
 		Folder folder = api.mkdir("project_wim", "ditiseenfolder");
 		assertNotNull(folder);
 		System.out.println(folder);
 	}
+
+	public void testMkdir() throws Exception {
+		Folder folder = api.mkdir("meesterwim", "ditiseenfolder");
+		assertNotNull(folder);
+		System.out.println(folder);
+	}
 	
-	public void testCreateContents() throws Exception {
+	public void testCreateContentsMe() throws Exception {
 		Contents contents = new Contents();
 		contents.content = "Dit is een bestand";
 		contents.format = "text";
 		contents.type = "file";
 		contents.path = "klad.txt";
 		File result = api.create("project_wim", contents.path, contents);
+		System.out.println(result);
+		assertNotNull(result);
+	}
+	public void testCreateContents() throws Exception {
+		Contents contents = new Contents();
+		contents.content = "Dit is een bestand";
+		contents.format = "text";
+		contents.type = "file";
+		contents.path = "klad.txt";
+		File result = api.create("meesterwim", contents.path, contents);
 		System.out.println(result);
 		assertNotNull(result);
 	}
@@ -75,7 +110,7 @@ public class HubAPITest extends TestCase {
 		tokens = api.getTokenFor("meesterwim"); // As admin?
 	}
 	
-	public void testCreateToken() throws Exception {
+	public void xtestCreateToken() throws Exception {
 		String token;
 		Server server = api.startServer("meesterwim");
 		token = api.createTokenFor("meesterwim");
@@ -85,7 +120,8 @@ public class HubAPITest extends TestCase {
 		Folder root = meesterwim.listFolder("meesterwim", "");
 		System.out.println(root);		
 	}
-	public void testCreateTokenMe () throws Exception {
+
+	public void xtestCreateTokenMe () throws Exception {
 		String token;
 		token = api.createTokenFor("project_wim");
 		System.out.println(token);
@@ -95,5 +131,8 @@ public class HubAPITest extends TestCase {
 		System.out.println(root);		
 	}
 	
+	public void testProgressMe() throws Exception {
+		api.progress("project_wim", t -> System.out.println(t.message));
+	}
 	
 }

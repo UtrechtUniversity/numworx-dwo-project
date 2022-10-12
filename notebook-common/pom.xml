@@ -6,4 +6,25 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>notebook-common</artifactId>
+  <build>
+  	<plugins>
+  				<plugin> <!-- attach-sources voor GWT -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+  	</plugins>
+  </build>
+
 </project>

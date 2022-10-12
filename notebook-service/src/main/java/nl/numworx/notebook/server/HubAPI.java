@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,6 +23,7 @@ import com.owlike.genson.ext.jaxb.JAXBBundle;
 import nl.numworx.notebook.server.rest.Contents;
 import nl.numworx.notebook.server.rest.File;
 import nl.numworx.notebook.server.rest.Folder;
+import nl.numworx.notebook.server.rest.Progress;
 import nl.numworx.notebook.server.rest.Server;
 import nl.numworx.notebook.server.rest.Token;
 import nl.numworx.notebook.server.rest.TokenRequest;
@@ -85,6 +87,46 @@ public class HubAPI {
 	      return extract(c, conn);
 	  }
 
+	 protected <T> void events(String path, Consumer<T> consumer, Class<T> c) throws IOException {
+	      URL url = new URL(hubAPI.toURL(), path); // TODO make login
+	      HubException e;
+	      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	      conn.setRequestMethod("GET");
+	      conn.setRequestProperty("Accept", APPLICATION_JSON);
+	      conn.setRequestProperty("Authorization", token);
+	      
+	      conn.setUseCaches(false);
+
+	      if (conn.getResponseCode() != 200) {
+	        LOG.log(Level.WARNING, "Code: {0}. Reason: {1}",
+	            new Object[] {conn.getResponseCode(), conn.getResponseMessage()});
+	        if (conn.getResponseCode() == 400) {// Dwo2Exception
+	          e = exception(conn);
+	        } else if (conn.getResponseCode() == 401) { 
+	          e = new HubException(401, "No Such User");
+	        } else {
+	          e = exception(conn);
+	        }
+	        LOG.log(Level.WARNING, "Error in restAPI", e);
+	        throw e;
+	      }
+			InputStream inputStream = conn.getInputStream();
+			if (inputStream == null || !"text/event-stream".equals(conn.getContentType()))
+				return;
+			BufferedReader br = new BufferedReader(
+			      new InputStreamReader(inputStream, StandardCharsets.UTF_8)); // XXX force
+			  String output;
+			  StringBuilder json = new StringBuilder();
+			  while ((output = br.readLine()) != null) {
+				  if (output.startsWith("data:"))
+				  { T result = genson.deserialize(output.substring(5).trim(), c);
+				  	consumer.accept(result);
+				  }
+			  }
+			  conn.disconnect();
+	 }
+	
+	
 	  protected <T> T post(String path, Object params, Class<T> c) throws IOException {
 	      URL url = new URL(hubAPI.toURL(), path); // TODO make login
 	      HubException e;
@@ -252,6 +294,12 @@ public class HubAPI {
 		  return token;
 	  }
 
+	  public void progress(String user, Consumer<Progress> consumer) throws IOException {
+		  events("users/" + user + "/server/progress" , consumer, Progress.class);
+	  }
+	  
+	  
+	  
 	  public String createTokenFor(String user) throws IOException {
 		  TokenRequest request = new TokenRequest();
 		  request.note = "no note";

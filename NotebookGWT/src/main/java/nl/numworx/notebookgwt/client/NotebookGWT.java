@@ -1,8 +1,16 @@
 package nl.numworx.notebookgwt.client;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.fusesource.restygwt.client.Defaults;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
+import org.fusesource.restygwt.client.dispatcher.DispatcherFilter;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -16,20 +24,25 @@ import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import nl.numworx.notebook.common.HubInitializer;
+import nl.numworx.notebook.common.Resource;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Stub;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
-public class NotebookGWT implements EntryPoint, InteractionStub, RequestCallback {
+public class NotebookGWT implements EntryPoint, InteractionStub, RequestCallback, DispatcherFilter, MethodCallback<Boolean> {
 
 	static final String SCORE_MAX = "scoreMax";
 	static final String CHECK_DOCENT = "checkDocent";
 	static final String UPLOAD = "upload";
 	static final String PROJECT = "project";
 	static final String NOTEBOOK = "notebook";
+	
+	static final NotebookService service = GWT.create(NotebookService.class);
 
 	
 	final Frame frame;
@@ -40,8 +53,14 @@ public class NotebookGWT implements EntryPoint, InteractionStub, RequestCallback
 	private String serverUrl = "https://hub-dev.dwo.nl/";
 	private String project;
 	private String notebook;
+	private int scoreMax;
+	private ObjectList upload;
+	
+	private HubInitializer initializer;
 
 	public void onModuleLoad() {
+	    Defaults.setDispatcher(DefaultFilterawareDispatcher.singleton());
+    	DefaultFilterawareDispatcher.singleton().addFilter(this);
 		RootLayoutPanel.get().add(this);
 		Stub.publish(this);
   }
@@ -99,7 +118,8 @@ public class NotebookGWT implements EntryPoint, InteractionStub, RequestCallback
 
 	@Override
 	public Boolean isCorrect() {
-		return null;
+		if (scoreMax > 0) return null; // docent kijkt na!
+		return Boolean.TRUE;
 	}
 
 	@Override
@@ -116,9 +136,16 @@ public class NotebookGWT implements EntryPoint, InteractionStub, RequestCallback
 
 		if (LessonMode.normal != root.getLessonMode()) return;
 		
-		String Authorization = root.getContext().getString("Authorization");
+		service.create(initializer, this);
+		
+		
+		startNotebook();
+	}
+
+	void startNotebook() {
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, "/dwo/oauth2/dwo-redirect");
-		builder.setHeader("Authorization", Authorization);
+		Method get = null;
+		filter(get , builder);
 		RequestCallback callback = this;
 		builder.setCallback(callback);
 		try {
@@ -168,7 +195,27 @@ public class NotebookGWT implements EntryPoint, InteractionStub, RequestCallback
 		frame.setPixelSize(width, height);
 		ObjectMap map = JSONUtilities.wrapMap(launchData);
 		project = map.getString(PROJECT);
-		notebook = map.getString(NOTEBOOK);		
+		notebook = map.getString(NOTEBOOK);
+		if (map.containsKey(SCORE_MAX)) {
+			scoreMax = map.getInt(SCORE_MAX);
+		}
+		if (map.containsKey(UPLOAD))
+			upload = map.getObjectList(UPLOAD);
+		
+		initializer = new HubInitializer();
+		initializer.project = project;
+		initializer.notebook = notebook;
+		if (upload != null) {
+			List<Resource> resources = new ArrayList<>(upload.size());
+			for (int i = 0; i < upload.size(); i++) {
+				ObjectMap m = upload.getObjectMap(i);
+				String name = m.getString("name");
+				String type = m.getString("type");
+				String content = m.getString("content");
+				resources.add(new Resource(name, type, content));
+			}
+			initializer.resources = resources;
+		}
 	}
 
 	@Override
@@ -204,6 +251,23 @@ public class NotebookGWT implements EntryPoint, InteractionStub, RequestCallback
 	@Override
 	public int getConstantHeight() {
 		return height;
+	}
+
+	@Override
+	public boolean filter(Method method, RequestBuilder builder) {
+		builder.setHeader("Authorization", root.getContext().getString("Authorization"));
+		return true;
+	}
+
+	@Override
+	public void onFailure(Method method, Throwable exception) {
+		//onError(method.getRequest(), exception);
+		startNotebook();
+	}
+
+	@Override
+	public void onSuccess(Method method, Boolean response) {
+		startNotebook();		
 	}
 	
 	
