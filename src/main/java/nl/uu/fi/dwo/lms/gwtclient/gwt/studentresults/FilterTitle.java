@@ -98,7 +98,7 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 		root = new DockLayoutPanel(Unit.EM);
 		initWidget(root);
 		root.setStylePrimaryName("filter-title");
-		root.getElement().getStyle().setBackgroundColor("#1B75BB");
+		///root.getElement().getStyle().setBackgroundColor("#1B75BB");
 
 		methodeBtn = new Button(ALLE_LEERDOELEN);
 		if (method != null) methodeBtn.setText(method.getMethod());
