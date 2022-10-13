@@ -7,9 +7,7 @@
     <artifactId>notebook-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <groupId>nl.numworx.notebook</groupId>
   <artifactId>notebook-service</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>notebook-service Maven Webapp</name>
   <url>http://maven.apache.org</url>
@@ -41,6 +39,11 @@
     	<groupId>nl.uu.fi.dwo.rest</groupId>
     	<artifactId>DWO-jclient-lib</artifactId>
     	<version>2.5.9</version>
+    </dependency>
+    <dependency>
+    	<groupId>nl.numworx.notebook</groupId>
+    	<artifactId>notebook-common</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <build>

@@ -10,7 +10,6 @@
 		<groupId>nl.numworx.notebook</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>nl.numworx.notebook</groupId>
 	<artifactId>NotebookGWT</artifactId>
 	<packaging>gwt-app</packaging>
 

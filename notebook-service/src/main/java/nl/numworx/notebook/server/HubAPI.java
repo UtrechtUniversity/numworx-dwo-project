@@ -34,11 +34,11 @@ import nl.numworx.notebook.server.rest.User;
 public class HubAPI {
 
 
-	private static final String APPLICATION_JSON = "application/json";
+	static final String APPLICATION_JSON = "application/json";
 
-	Logger LOG = Logger.getLogger(this.getClass().getName());
+	private Logger LOG = Logger.getLogger(this.getClass().getName());
 	
-	  private final Genson genson = new GensonBuilder()
+	final Genson genson = new GensonBuilder()
 			  .withBundle(new JAXBBundle())
 			  .useDateAsTimestamp(false)
 			  .setSkipNull(true)
