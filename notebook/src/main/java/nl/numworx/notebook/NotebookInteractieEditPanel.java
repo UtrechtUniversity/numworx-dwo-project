@@ -1,6 +1,5 @@
 package nl.numworx.notebook;
 
-import java.net.URL;
 import java.util.Collections;
 import java.util.Hashtable;
 import javax.swing.JPanel;
@@ -36,6 +35,7 @@ public class NotebookInteractieEditPanel extends JPanel implements
 		editor.doLayout();
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void setEditState(Hashtable b) {
 		editor.setLaunchData(b);
 		//editor.setObjectivesState(b);
