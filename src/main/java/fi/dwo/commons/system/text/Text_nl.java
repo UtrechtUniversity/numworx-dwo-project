@@ -519,6 +519,13 @@ public class Text_nl extends ListResourceBundle {
             { TextMapper.GUITSM_CONFIRM_DELETE, "Zeker ''{0}'' weg?" },
             { TextMapper.GUITSM_COPY, "Kopie {0}" },
             { TextMapper.GUITSM_SETTING, "Instelling leerdomein per klas"},
+            
+            { TextMapper.GUI_NEW_METHOD, "Nieuwe methode"},
+            { TextMapper.TBL_METHODS, "Lesmethodes"},
+            { TextMapper.GUIS_LBL_METHODS, "Instellingen lesmethode"},
+            { TextMapper.GUISM_CHAPTER, "Hoofdstuk"},
+            { TextMapper.GUISM_YEAR, "Leerjaar"},
+            { TextMapper.GUISM_NAME, "Naam methode"},
 
 	};
 

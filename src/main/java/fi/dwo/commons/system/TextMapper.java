@@ -606,6 +606,18 @@ public abstract class TextMapper {
 
     public static final String GUITSM_SETTING = "GUITSM_SETTING";
 
+    public static final String GUI_NEW_METHOD = "GUI_NEW_METHOD";
+
+    public static final String TBL_METHODS = "TBL_METHODS";
+
+    public static final String GUIS_LBL_METHODS = "GUIS_LBL_METHODS";
+
+    public static final String GUISM_CHAPTER = "GUISM_CHAPTER";
+
+    public static final String GUISM_YEAR = "GUISM_YEAR";
+
+    public static final String GUISM_NAME = "GUISM_NAME";
+
 	
 	/**
      *
