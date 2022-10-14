@@ -231,7 +231,13 @@
 			<artifactId>swingbrowser-jxb</artifactId>
 			<version>0.0.12</version>
 		    <scope>test</scope>
-		</dependency>		
+		</dependency>
+		<dependency>
+			<groupId>nl.numworx.notebook</groupId>
+			<artifactId>notebook-service</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<classifier>classes</classifier>
+		</dependency>
 	</dependencies>
 	<build>
 		<resources>

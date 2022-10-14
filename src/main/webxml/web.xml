@@ -407,7 +407,10 @@
   	<servlet-name>dwo-redirect</servlet-name>
   	<servlet-class>nl.numworx.oauth2client.server.DwoRedirect</servlet-class>
   </servlet>
-
+  <servlet>
+  	<servlet-name>notebook</servlet-name>
+  	<servlet-class>nl.numworx.notebook.server.HubServlet</servlet-class>
+  </servlet>
 
   <servlet>
   	<servlet-name>sebhosting</servlet-name>
@@ -433,6 +436,11 @@
   	<servlet-name>updownload</servlet-name>
   	<servlet-class>nl.numworx.uploadwidgetgwt.server.Download</servlet-class>
   </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>notebook</servlet-name>
+  	<url-pattern>/dwo/notebook/*</url-pattern>
+  </servlet-mapping>
   
   <servlet-mapping>
   	<servlet-name>upload</servlet-name>
