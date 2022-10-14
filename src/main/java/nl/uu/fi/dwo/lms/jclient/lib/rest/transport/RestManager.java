@@ -45,6 +45,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
@@ -97,6 +98,14 @@ class RestManager extends RestyDateTimeFormat {
     return basicAuthString;
   }
 
+  public void setAuthString(String data) {
+	  Objects.requireNonNull(data);
+	  String lower = data.toLowerCase();
+	  if (lower.startsWith("bearer ") || lower.startsWith("basic "))
+		  setBasicAuthString(data);
+	  else 
+		  throw new IllegalArgumentException(data);
+  }
   /**
    * @param data
    */
