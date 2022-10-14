@@ -11,6 +11,6 @@ import nl.numworx.notebook.common.HubInitializer;
 public interface NotebookService extends RestService {
 
 	@PUT
-	@Path("/createNotebook")
+	@Path("/create")
 	void create(HubInitializer rest, MethodCallback<Boolean> callback);
 }

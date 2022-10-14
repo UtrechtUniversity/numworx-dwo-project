@@ -59,6 +59,7 @@ public class NotebookGWT implements EntryPoint, InteractionStub, RequestCallback
 	private HubInitializer initializer;
 
 	public void onModuleLoad() {
+		Defaults.setServiceRoot("/dwo/notebook/");
 	    Defaults.setDispatcher(DefaultFilterawareDispatcher.singleton());
     	DefaultFilterawareDispatcher.singleton().addFilter(this);
 		RootLayoutPanel.get().add(this);
@@ -137,9 +138,6 @@ public class NotebookGWT implements EntryPoint, InteractionStub, RequestCallback
 		if (LessonMode.normal != root.getLessonMode()) return;
 		
 		service.create(initializer, this);
-		
-		
-		startNotebook();
 	}
 
 	void startNotebook() {
@@ -239,7 +237,7 @@ public class NotebookGWT implements EntryPoint, InteractionStub, RequestCallback
 				hub  += "user/" + user + "/";
 				hub  += "lab/tree/" + URL.decodePathSegment(project);
 			}
-			frame.setUrl(serverUrl);
+			frame.setUrl(hub);
 		}		
 	}
 

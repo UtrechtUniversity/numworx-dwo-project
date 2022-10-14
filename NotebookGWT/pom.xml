@@ -65,6 +65,12 @@
 		    <artifactId>jaxb-api</artifactId>
 		    <version>2.3.0</version>
 		</dependency>
+		<dependency>
+			<groupId>nl.numworx.notebook</groupId>
+			<artifactId>notebook-service</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<classifier>classes</classifier>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -78,8 +84,10 @@
 					<classpathScope>compile</classpathScope>
 					<moduleName>nl.numworx.notebookgwt.NotebookGWT</moduleName>
 					<moduleShortName>notebookgwt</moduleShortName>
+					<moduleTemplate>src/main/module${debug}.gwt.xml</moduleTemplate>
 					<warDir>${project.build.directory}/${project.build.finalName}</warDir>
 					<devmodeWorkDir>${project.build.directory}/${project.build.finalName}</devmodeWorkDir>
+					<style>PRETTY</style>
 					<startupUrls>
 						<startupUrl>NotebookGWT.html</startupUrl>
 					</startupUrls>
@@ -129,10 +137,40 @@
 					</execution>
 				</executions>
 			</plugin>
-		</plugins>
+        <plugin>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-maven-plugin</artifactId>
+          <version>9.4.46.v20220331</version>
+          <configuration>
+            <scanIntervalSeconds>1</scanIntervalSeconds>
+           <httpConnector>
+          <!--host>localhost</host-->
+          <port>8888</port>
+        </httpConnector>
+            <webApp>
+            	<resourceBase>target/${project.build.finalName}</resourceBase>
+            </webApp>
+        <systemProperties>
+            <systemProperty>
+                <name>CDNURL</name>
+                <value>http://localhost:8082</value>
+            </systemProperty>
+            <systemProperty>
+            	<name>DWO_HUB_TOKEN</name>
+            	<value>${token}</value>
+            </systemProperty>
+        </systemProperties>
+              <supportedPackagings>
+                <supportedPackaging>gwt-app</supportedPackaging>
+              </supportedPackagings>
+          </configuration>
+        </plugin>
+ 		</plugins>
 	</build>
 	<properties>
 		<interactionVersion>0.1.13</interactionVersion>
         <restyVersion>2.2.0</restyVersion>
+        <debug></debug>
+		<jetty.http.port>8888</jetty.http.port>	
 	</properties>
 </project>

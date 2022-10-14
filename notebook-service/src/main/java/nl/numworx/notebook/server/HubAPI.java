@@ -276,8 +276,8 @@ public class HubAPI {
 		  return put("/user/" + user + "/api/contents/" + contents.path, contents, Folder.class);
 	  }
 	  
-	  public File create(String user, String folder, Contents contents) throws IOException {
-		  return put("/user/" + user + "/api/contents/" + folder, contents, File.class);
+	  public File create(String user, String path, Contents contents) throws IOException {
+		  return put("/user/" + user + "/api/contents/" + path, contents, File.class);
 	  }
 	  
 	  

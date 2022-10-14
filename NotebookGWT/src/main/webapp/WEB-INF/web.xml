@@ -7,4 +7,17 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<!-- TODO: Add <servlet> tags for each servlet here. -->
 	<!-- TODO: Add <servlet-mapping> tags for each <servlet> here. -->
 	<!-- TODO: Optionally add a <welcome-file-list> tag to display a welcome file. -->
+  <context-param>
+  	<param-name>dbrest.url</param-name>
+	<param-value>http://127.0.0.1:8080/dwo/</param-value>  
+  </context-param>
+	<servlet>
+		<servlet-name>notebook</servlet-name>
+		<servlet-class>nl.numworx.notebook.server.HubServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>notebook</servlet-name>
+		<url-pattern>/create</url-pattern>
+		<url-pattern>/dwo/oauth2/dwo-redirect</url-pattern>
+	</servlet-mapping>
 </web-app>
