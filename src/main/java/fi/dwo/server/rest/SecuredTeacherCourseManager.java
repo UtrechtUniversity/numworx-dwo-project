@@ -139,12 +139,12 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 			if(course.getDescription() != null) {
 				pcd.setDescription(course.getDescription());
 				pcd.setDescriptionbytes(null);
-				pc.setDescription(course.getDescription());
+				pc.setDescription(null /*course.getDescription()*/);
 			}
 			//if(course.getImage() != null) pc.setImage(course.getImage()); // course.getImage is NOT EDITABLE
 			if(course.getImageData()!=null) {
 				pcd.setImageData(course.getImageData());
-				pc.setImageData(course.getImageData());
+				pc.setImageData(null /*course.getImageData()*/);
 			}
 			pc.setNotVisible(course.isNotVisible());
 			if(course.getExport() != null)
@@ -268,12 +268,12 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 			if(course.getName() != null) pc.setName(course.getName());
 			if(course.getDescription() != null) {
 			  pcd.setDescription(course.getDescription());
-			  pc.setDescription(course.getDescription());
+			  //pc.setDescription(course.getDescription());
 			}
 			//if(course.getImage() != null) pc.setImage(course.getImage()); course.getImage is not editable
 			if(course.getImageData()!=null) {
 			  pcd.setImageData(course.getImageData());
-			  pc.setImageData(course.getImageData());
+			  //pc.setImageData(course.getImageData());
 			}
 			pc.setNotVisible(course.isNotVisible());
 			if(course.getExport() != null)
