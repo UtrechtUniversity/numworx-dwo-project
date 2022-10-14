@@ -31,7 +31,7 @@ public class MethodsEditPanel extends JPanel {
 
   MethodsEditPanel() {
     super(new BorderLayout());
-    JLabel header = new JLabel("Instellingen lesmethode");
+    JLabel header = new JLabel(TextMapper.getText(TextMapper.GUIS_LBL_METHODS));
     Box box = Box.createHorizontalBox();
     box.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 20));
     box.setOpaque(true);
@@ -43,7 +43,7 @@ public class MethodsEditPanel extends JPanel {
     box.add(Box.createHorizontalGlue());
     box.add(header);
     box.add(Box.createHorizontalGlue());
-    JLabel title = new JLabel("Naam methode");
+    JLabel title = new JLabel(TextMapper.getText(TextMapper.GUISM_NAME));
     title.setFont(Constants.FONT13/*.deriveFont(18f)*/);
     title.setHorizontalAlignment(JLabel.LEADING);
     Border left = BorderFactory.createMatteBorder(10, 40, 0, 0, getBackground());
@@ -58,7 +58,7 @@ public class MethodsEditPanel extends JPanel {
     cancel.setPreferredSize(new Dimension(100, 24));
     cancel.setBackground(Constants.COLOR15);
     cancel.setForeground(Constants.COLOR20);
-    settings = new ChapterSettings("Hoofdstuk", "Leerjaar");
+    settings = new ChapterSettings(TextMapper.getText(TextMapper.GUISM_CHAPTER), TextMapper.getText(TextMapper.GUISM_YEAR));
     settings.makeTextFields();
     settings.makeGUI(0,0);
     settings.setBackground(getBackground());

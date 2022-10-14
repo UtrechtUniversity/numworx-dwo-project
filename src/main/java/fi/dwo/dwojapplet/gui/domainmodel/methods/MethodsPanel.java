@@ -83,7 +83,7 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
   @Override
   public void actionPerformed(ActionEvent event) {
     if (value == removeIcon && row != 0) {
-      int ok = JOptionPane.showConfirmDialog(MethodsPanel.this, "Weet je het zeker?", TextMapper.getText(TextMapper.TBL_DELETE), JOptionPane.YES_NO_OPTION);
+      int ok = JOptionPane.showConfirmDialog(MethodsPanel.this, TextMapper.getText(TextMapper.FSD_SURE), TextMapper.getText(TextMapper.TBL_DELETE), JOptionPane.YES_NO_OPTION);
       if (ok == JOptionPane.YES_OPTION)
       {
         tbl.getSelectionModel().clearSelection();
@@ -254,7 +254,7 @@ public class MethodsPanel extends JPanel implements ActionListener, ListSelectio
       }
     }
 
-  public MethodsPanel() {
+  private MethodsPanel() {
     super(null);
     genson = StoredRestManager.getInstance().getGenson();
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

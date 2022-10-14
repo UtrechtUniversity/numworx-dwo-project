@@ -42,7 +42,7 @@ public class MethodsTableModel extends AbstractTableModel {
   public class NewAction extends AbstractAction {
 
     NewAction() {
-      super("Nieuwe methode");
+      super(TextMapper.getText(TextMapper.GUI_NEW_METHOD));
     }
     
     @Override
@@ -118,7 +118,7 @@ public class MethodsTableModel extends AbstractTableModel {
   @Override
   public String getColumnName(int column) {
     switch(column) {
-      case 0: return "Lesmethodes";
+      case 0: return TextMapper.getText(TextMapper.TBL_METHODS);
       case 1: return TextMapper.getText(TextMapper.TBL_VIEW);
       case 2: return TextMapper.getText(TextMapper.TBL_DELETE);
       case 3: return TextMapper.getText("copy");
@@ -167,7 +167,7 @@ public class MethodsTableModel extends AbstractTableModel {
     @Override
     public void actionPerformed(ActionEvent e) {
       if (value == delete) {
-         int ok = JOptionPane.showConfirmDialog(table, "Weet je het zeker?", "verwijderen", JOptionPane.YES_NO_OPTION);
+         int ok = JOptionPane.showConfirmDialog(table, TextMapper.getText(TextMapper.FSD_SURE), TextMapper.getText("delete"), JOptionPane.YES_NO_OPTION);
          if (ok == JOptionPane.OK_OPTION) {
            delete(row);
          }
