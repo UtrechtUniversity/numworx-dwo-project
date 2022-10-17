@@ -173,4 +173,13 @@
         <debug></debug>
 		<jetty.http.port>8888</jetty.http.port>	
 	</properties>
+	<profiles>
+		<profile>
+			<id>debug</id>
+			<properties>
+				<debug>Debug</debug>
+			</properties>
+		
+		</profile>
+	</profiles>
 </project>

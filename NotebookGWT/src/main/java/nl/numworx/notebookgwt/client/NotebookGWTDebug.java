@@ -69,8 +69,7 @@ public class NotebookGWTDebug extends NotebookGWT implements OpdrNavIF {
 
 	@Override
 	public String getLearnerId() {
-		// TODO Auto-generated method stub
-		return null;
+		return "1-00000000000000103426-00000000000000000582";
 	}
 
 	@Override
@@ -92,7 +91,7 @@ public class NotebookGWTDebug extends NotebookGWT implements OpdrNavIF {
 
 	@Override
 	public LessonMode getLessonMode() {
-		return LessonMode.normal;
+		return LessonMode.browse;
 	}
 
 	@Override

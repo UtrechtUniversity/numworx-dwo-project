@@ -135,9 +135,9 @@ public class NotebookGWT implements EntryPoint, InteractionStub, RequestCallback
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		root = comRoot;
 
-		if (LessonMode.normal != root.getLessonMode()) return;
+		if (LessonMode.browse == root.getLessonMode() && initializer.notebook == null) return;
 		
-		service.create(initializer, this);
+		service.create(initializer, root.getLearnerId(), this);
 	}
 
 	void startNotebook() {
@@ -230,7 +230,11 @@ public class NotebookGWT implements EntryPoint, InteractionStub, RequestCallback
 				while(tail.startsWith("/")) tail = tail.substring(1);
 				String user = URL.decodePathSegment(root.getLearnerName());
 				hub  += "user/" + user + "/";
-				hub  += "notebooks/" + URL.decodePathSegment(tail);	
+				if (root.getLessonMode() == LessonMode.browse)
+					hub += "nbconvert/html/";
+				else
+					hub  += "notebooks/"; 
+				hub += URL.decodePathSegment(tail);	
 			} else if (project != null) {
 				while(project.startsWith("/")) project = project.substring(1);
 				String user = URL.decodePathSegment(root.getLearnerName());
