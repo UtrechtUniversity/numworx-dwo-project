@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -46,6 +47,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.dom.xapi.Account;
 import nl.uu.fi.dwo.rest.dom.xapi.Agent;
@@ -100,6 +102,18 @@ public class StudentScoResultPresenter {
     FAILURE = new LoggingFailure(LOG, anEventBus);    
   }
 
+  private String mapRealm(DomUser uu) {
+	String realm = Objects.toString(dwoGlobalVars.getRealm(),"");
+	String username = uu.getUserName();
+	int at = username.indexOf('@');
+	if (at == -1) {
+		username += realm;
+	} else if (at == username.length()-1) {
+		username = username.substring(0, at);
+	}
+	return username;
+  }
+  
   public void init(DomResultTree aResultTree, DomResultStudentScoContext ssc, JavaScriptObject context, Map<String,String> userState) {
     LOG.fine("entering init");
     closed = finished = false;
@@ -118,6 +132,8 @@ public class StudentScoResultPresenter {
     userState.put("dme.authorization", RestAuthenticator.instance.getAuthorization());
     String learnerId = getLearnerId(studentid.toString(), domschoolclass.getId());
     userState.put("cmi.learner_id", learnerId);
+    String learnerName = mapRealm(student); // FULL NAME!!!!
+    userState.put("cmi.learner_name", learnerName);
 // if premium && completed
 // find out if we have studentmodel in launchdata.
     if ( AboType.premium == dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getAboType() && ResultsService.COMPLETED.equals(userState.get(ResultsService.COMPLETION_STATUS))) {
