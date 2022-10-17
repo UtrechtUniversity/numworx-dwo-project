@@ -90,6 +90,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
@@ -1587,4 +1588,13 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                 .setTeacher();
         return build.getSharedTeacherClasses(restTeacher.getDomTeacher());
     }
+    
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/getBearerToken")
+    public String getBearerToken(@Context SecurityContext sc, RestStudent rest) throws Dwo2Exception {
+    	TeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher().setTeacher();
+    	return "dit is nog in progress";
+    }
+
 }
