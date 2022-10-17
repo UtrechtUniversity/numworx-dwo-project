@@ -45,11 +45,24 @@ public class SecureUserAccountManager {
    * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
    */
   public static DomUserFull getAccountData() throws Dwo2Exception {
+	return getAccountData(StoredRestManager.getInstance());
+}
+
+/**
+   * Returns the current user 'logged in'. The information is extracted from the security context
+   * which depends on the credentials used for accessing the rest interface. Technically it should
+   * be equal to the data in the DwoHelper.
+ * @param instance restmanager
+   *
+   * @return
+   * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
+   */
+  public static DomUserFull getAccountData(StoredRestManager instance) throws Dwo2Exception {
     DomUserFull user;
-    DomContext context = StoredRestManager.getInstance().getAuthenticator().getContext();
+    DomContext context = instance.getContext();
     RestContext rest = new RestContext();
     rest.setRestContext(context);
-    user = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(context) + "/user/account/get", DomUserFull.class, rest);
+    user = instance.put("rest/sec:" + PathId.getId(context) + "/user/account/get", DomUserFull.class, rest);
     return user;
   }
 
@@ -230,14 +243,13 @@ public class SecureUserAccountManager {
   }
   
   public static String getBearerToken() throws Dwo2Exception {
-    String b;
     StoredRestManager restManager = StoredRestManager.getInstance();
     return getBearerToken(restManager);
   }
 
   public static String getBearerToken(StoredRestManager restManager) throws Dwo2Exception {
 	String b;
-	DomContext context = restManager.getAuthenticator().getContext();
+	DomContext context = restManager.getContext();
     b = restManager.get("rest/sec:" + PathId.getId(context) + "/user/account/getBearerToken", String.class);
     b = java.util.Base64.getEncoder().encodeToString(("2\f"+b).getBytes());
     return b;

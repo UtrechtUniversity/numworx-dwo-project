@@ -41,6 +41,7 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewTo;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewType;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassFull;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
@@ -68,10 +69,23 @@ public class SecureTeacherSchoolClassManager {
    * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
    */
   public static List<DomSchoolClass> getTeachersSchoolClasses() throws Dwo2Exception {
+	return getTeachersSchoolClasses(getRestManager());
+  }
+
+  /**
+   * Returns the current user 'logged in'. The information is extracted from the security context
+   * which depends on the credentials used for accessing the rest interface. Technically it should
+   * be equal to the data in the DwoHelper.
+   * @param restManager TODO
+   *
+   * @return
+   * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
+   */
+  public static List<DomSchoolClass> getTeachersSchoolClasses(StoredRestManager restManager) throws Dwo2Exception {
     List<DomSchoolClass> src;
     RestContext rest = new RestContext();
-    rest.setRestContext(getContext());
-    src = getRestManager().getPutList("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/getList",
+    rest.setRestContext(restManager.getContext());
+    src = restManager.getPutList("rest/sec:" + PathId.getId(restManager.getContext()) + "/teacher/schoolclass/getList",
         RestListClassTypes.DomSchoolClass, rest);
     LOG.log(Level.FINE, "Retrieved list of schoolclasses of the teacher with username {0}.",
         new Object[] {getUserName()});
@@ -91,10 +105,14 @@ public class SecureTeacherSchoolClassManager {
   }
 
   public static List<DomStudent> getTeachersStudents() throws Dwo2Exception {
+	return getTeachersStudents(getRestManager());
+  }
+
+  public static List<DomStudent> getTeachersStudents(StoredRestManager restManager) throws Dwo2Exception {
 	  List<DomStudent> src;
 	  RestContext rest = new RestContext();
-	  rest.setRestContext(getContext());
-	    src = getRestManager().getPutList("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/getTeachersStudents",
+	  rest.setRestContext(restManager.getContext());
+	    src = restManager.getPutList("rest/sec:" + PathId.getId(restManager.getContext()) + "/teacher/schoolclass/getTeachersStudents",
 	            RestListClassTypes.DomStudent, rest);
 	        LOG.log(Level.FINE,
 	            "Retrieved list of teachers in the school for the teacher with username {0}.",
@@ -410,5 +428,12 @@ public class SecureTeacherSchoolClassManager {
 	  rest.setRestContext(getContext());
 	  return getRestManager().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/classcourse/update", DomClassCourseFull.class, rest);
   }
+
+	public static String getBearerToken(DomStudent domStudent, StoredRestManager manager) throws Dwo2Exception {
+		RestStudent rest = new RestStudent();
+		rest.setDomStudent(domStudent);
+		rest.setRestContext(manager.getContext());
+		return manager.put("rest/sec:" + PathId.getId(manager.getContext()) + "/teacher/schoolclass/getBearerToken", String.class, rest);
+	}
   
 }

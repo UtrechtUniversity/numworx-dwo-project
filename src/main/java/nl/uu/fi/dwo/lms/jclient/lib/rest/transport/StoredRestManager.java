@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import nl.uu.fi.dwo.rest.RestListClassTypes;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
@@ -90,6 +91,10 @@ public <T> T put(String path, Class<T> c, Object o) throws Dwo2Exception {
 @Override
 public <T> List<T> getPutList(String path, RestListClassTypes type, Object o) throws Dwo2Exception {
 	return run(() -> super.getPutList(path, type, o));
+}
+
+public DomContext getContext() {
+	return getAuthenticator().getContext();
 }
 
 }
