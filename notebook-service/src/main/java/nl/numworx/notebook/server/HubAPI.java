@@ -254,7 +254,42 @@ public class HubAPI {
 		  return get("users/" + user, User.class);
 	  }
 	  
-	  public Server startServer(String user) throws IOException {
+	  public User createUser(String user) throws IOException {
+		  return post("users/" + user, null, User.class);
+	  }
+	  
+	  public void deleteUser(String user) throws Exception {
+		  delete("users/" + user);		  
+	  }
+	  
+	  private void delete(String path) throws Exception {
+	      URL url = new URL(hubAPI.toURL(), path); // TODO make login
+	      HubException e;
+	      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	      conn.setRequestMethod("DELETE");
+	      conn.setRequestProperty("Accept", "*/*");
+	      conn.setRequestProperty("Authorization", token);
+	      
+	      conn.setUseCaches(false);
+	
+	      int responseCode = conn.getResponseCode();
+		  if (responseCode != 204) {
+			e = new HubException();
+	        LOG.log(Level.WARNING, "Code: {0}. Reason: {1}",
+	            new Object[] {responseCode, conn.getResponseMessage()});
+	        if (responseCode == 400) { // general error 
+	          e = exception(conn);
+	        } else if (conn.getResponseCode() == 401) { 
+	          e = new HubException(401,"No Such User");
+	        } else {
+	          e = exception(conn);
+	        }
+	        LOG.log(Level.WARNING, "Error in restAPI", e);
+	        throw e;
+      }
+	}
+
+	public Server startServer(String user) throws IOException {
 		Server s = getUserInfo(user).servers.get("");
 		if (s != null) return s;
 		try {

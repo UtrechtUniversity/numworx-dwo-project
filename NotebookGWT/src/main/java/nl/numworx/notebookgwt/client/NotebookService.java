@@ -13,5 +13,5 @@ public interface NotebookService extends RestService {
 
 	@PUT
 	@Path("/create/sec:{p}/")
-	void create(HubInitializer rest, @PathParam("p") String uid, MethodCallback<Boolean> callback);
+	void create(HubInitializer rest, @PathParam("p") String uid, MethodCallback<String> callback);
 }

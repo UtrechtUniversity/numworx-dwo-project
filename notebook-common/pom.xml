@@ -27,4 +27,11 @@
   	</plugins>
   </build>
 
+  <dependencies>
+  	<dependency>
+  		<groupId>nl.uu.fi.dwo.mobile</groupId>
+  		<artifactId>interaction</artifactId>
+  		<version>0.1.12</version>
+  	</dependency>
+  </dependencies>
 </project>

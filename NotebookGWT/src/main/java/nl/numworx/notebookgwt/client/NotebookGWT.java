@@ -14,12 +14,7 @@ import org.fusesource.restygwt.client.dispatcher.DispatcherFilter;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -28,13 +23,12 @@ import nl.numworx.notebook.common.HubInitializer;
 import nl.numworx.notebook.common.Resource;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
-import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Stub;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
-public class NotebookGWT implements EntryPoint, InteractionStub, RequestCallback, DispatcherFilter, MethodCallback<Boolean> {
+public class NotebookGWT implements EntryPoint, InteractionStub, DispatcherFilter, MethodCallback<String> {
 
 	static final String SCORE_MAX = "scoreMax";
 	static final String CHECK_DOCENT = "checkDocent";
@@ -50,7 +44,6 @@ public class NotebookGWT implements EntryPoint, InteractionStub, RequestCallback
 	private int height;
 	private int width;
 	private boolean volledigeBreedte;
-	private String serverUrl = "https://hub-dev.dwo.nl/";
 	private String project;
 	private String notebook;
 	private int scoreMax;
@@ -134,24 +127,22 @@ public class NotebookGWT implements EntryPoint, InteractionStub, RequestCallback
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		root = comRoot;
-
-		if (LessonMode.browse == root.getLessonMode() && initializer.notebook == null) return;
-		
+		initializer.mode = root.getLessonMode();
 		service.create(initializer, root.getLearnerId(), this);
 	}
 
-	void startNotebook() {
-		RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, "/dwo/oauth2/dwo-redirect");
-		Method get = null;
-		filter(get , builder);
-		RequestCallback callback = this;
-		builder.setCallback(callback);
-		try {
-			builder.send();
-		} catch (RequestException e) {
-			GWT.log("failure", e);
-		}
-	}
+//	void startNotebook() {
+//		RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, "/dwo/oauth2/dwo-redirect");
+//		Method get = null;
+//		filter(get , builder);
+//		RequestCallback callback = this;
+//		builder.setCallback(callback);
+//		try {
+//			builder.send();
+//		} catch (RequestException e) {
+//			GWT.log("failure", e);
+//		}
+//	}
 
 	@Override
 	public void zetVolledigeBreedte(int breedte) {
@@ -216,39 +207,34 @@ public class NotebookGWT implements EntryPoint, InteractionStub, RequestCallback
 		}
 	}
 
-	@Override
-	public void onResponseReceived(Request request, Response response) {
-		int code = response.getStatusCode();
-		if (code == 204) {
-			String hub = serverUrl;
-			String tail = "";
-			if (notebook != null) {
-				tail = notebook;
-				if (project != null) {
-					tail = project + "/" + notebook;
-				}
-				while(tail.startsWith("/")) tail = tail.substring(1);
-				String user = URL.decodePathSegment(root.getLearnerName());
-				hub  += "user/" + user + "/";
-				if (root.getLessonMode() == LessonMode.browse)
-					hub += "nbconvert/html/";
-				else
-					hub  += "notebooks/"; 
-				hub += URL.decodePathSegment(tail);	
-			} else if (project != null) {
-				while(project.startsWith("/")) project = project.substring(1);
-				String user = URL.decodePathSegment(root.getLearnerName());
-				hub  += "user/" + user + "/";
-				hub  += "lab/tree/" + URL.decodePathSegment(project);
-			}
-			frame.setUrl(hub);
-		}		
-	}
-
-	@Override
-	public void onError(Request request, Throwable exception) {
-		frame.setUrl("/notfound.html");	
-	}
+//	@Override
+//	public void onResponseReceived(Request request, Response response) {
+//		int code = response.getStatusCode();
+//		if (code == 204) {
+//			String hub = serverUrl;
+//			String tail = "";
+//			if (notebook != null) {
+//				tail = notebook;
+//				if (project != null) {
+//					tail = project + "/" + notebook;
+//				}
+//				while(tail.startsWith("/")) tail = tail.substring(1);
+//				String user = URL.decodePathSegment(root.getLearnerName());
+//				hub  += "user/" + user + "/";
+//				if (root.getLessonMode() == LessonMode.browse)
+//					hub += "nbconvert/html/";
+//				else
+//					hub  += "notebooks/"; 
+//				hub += URL.decodePathSegment(tail);	
+//			} else if (project != null) {
+//				while(project.startsWith("/")) project = project.substring(1);
+//				String user = URL.decodePathSegment(root.getLearnerName());
+//				hub  += "user/" + user + "/";
+//				hub  += "lab/tree/" + URL.decodePathSegment(project);
+//			}
+//			frame.setUrl(hub);
+//		}		
+//	}
 
 	@Override
 	public int getConstantHeight() {
@@ -264,12 +250,16 @@ public class NotebookGWT implements EntryPoint, InteractionStub, RequestCallback
 	@Override
 	public void onFailure(Method method, Throwable exception) {
 		//onError(method.getRequest(), exception);
-		startNotebook();
+		startNotebook("notfound.html");
 	}
 
 	@Override
-	public void onSuccess(Method method, Boolean response) {
-		startNotebook();		
+	public void onSuccess(Method method, String response) {
+		startNotebook(response);		
+	}
+
+	private void startNotebook(String response) {
+		frame.setUrl(response);		
 	}
 	
 	

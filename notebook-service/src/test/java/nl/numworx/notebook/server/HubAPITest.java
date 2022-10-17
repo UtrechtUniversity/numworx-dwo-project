@@ -135,4 +135,9 @@ public class HubAPITest extends TestCase {
 		api.progress("project_wim", t -> System.out.println(t.message));
 	}
 	
+	public void testCreateUser() throws Exception {
+		User u = api.createUser("meesterwim5");
+		api.deleteUser("meesterwim5");
+		assertEquals("meesterwim5", u.name);
+	}
 }
