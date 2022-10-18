@@ -31,9 +31,10 @@ public class JsLoginDisplay{
     /** Returns the password field value. */
     public static native String getPassword();
     /** Shows a message to the user. */
-    public static native String showMessage(String msg);
+    public static native void showMessage(String msg);
     /** Shows a warning to the user. */
-    public static native String showWarning(String warning);
+    public static native void showWarning(String warning);
     /** hides the message or warning */
-    public static native String hideMsgBox();
+    public static native void hideMsgBox();
+    public static native void hideGuest();
 }

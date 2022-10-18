@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.login;
 
 import com.google.gwt.http.client.URL;
 import com.google.gwt.i18n.client.LocaleInfo;
-import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.web.bindery.event.shared.EventBus;
@@ -23,6 +22,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedDialogWithConfirmDeferred;
 import nl.uu.fi.dwo.rest.DwoLocale;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomRole;
@@ -34,9 +35,6 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
-import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
-import nl.uu.fi.dwo.rest.persistence.PersistenceId;
-
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -48,7 +46,7 @@ import org.osgi.util.promise.Success;
  * @author G.A.J. van der Plas
  */
 @RoleScope
-public class LoginPresenter {
+public class LoginPresenter implements Success<DomDwoProfileFull, Void >{
 
     private static final Logger LOG = Logger.getLogger(LoginPresenter.class.getName());
     private static final String NEWSESSION = DwoLocalesForGWT.instance.GUI_Dialog_User_ConfirmNewLoginSession();
@@ -162,6 +160,8 @@ public class LoginPresenter {
          * Hides the message or warning box.
          */
         public void hideMsgBox();
+
+		void hideGuest();
     }
 
     @Inject LoginPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, GwtClientMessages rb)  {
@@ -169,7 +169,7 @@ public class LoginPresenter {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
         // broken calling view.clear();
-        init();
+//        init();
     }
 
     final public void init() {
@@ -177,6 +177,7 @@ public class LoginPresenter {
 //    view.clear();
 //        getView().setUsername(defaultUsername);
 //        getView().setPassword(defaultPassword);
+    	dwoGlobalVars.getProfile().then(this);
     }
 
 //public String loginClickedJS(String user, String password) {
@@ -335,4 +336,12 @@ public class LoginPresenter {
     		return;
     	}
     }
+
+	@Override
+	public Promise<Void> call(Promise<DomDwoProfileFull> resolved) throws Exception {
+		DomDwoProfile p = resolved.getValue();
+		if (p.getDwoProfileRights().contains("l"))
+			view.hideGuest();
+		return null;
+	}
 }

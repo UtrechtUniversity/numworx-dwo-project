@@ -47,4 +47,10 @@ public class JsLoginView implements LoginPresenter.Display{
     public void setHelp(String url) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+
+	@Override
+	public void hideGuest() {
+		JsLoginDisplay.hideGuest();
+	}
 }
