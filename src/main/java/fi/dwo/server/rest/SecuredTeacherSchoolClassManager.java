@@ -18,6 +18,7 @@ import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
@@ -27,6 +28,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.util.DatatypeConverter;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
@@ -54,6 +56,7 @@ import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.dom.entities.util.ACL;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelOfClassManager;
@@ -64,9 +67,11 @@ import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
 import fi.dwo.server.rest.util.Realm;
 
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -82,6 +87,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -92,6 +98,9 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
+
+import com.digitalmolehill.crypto.SymmetricCryptor;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
@@ -110,6 +119,7 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewType;
 import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.entities.RestTeacher;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.security.TOTP;
 
 /**
  * Operations for the GUI Component that manages the school classes.
@@ -1592,9 +1602,21 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/getBearerToken")
-    public String getBearerToken(@Context SecurityContext sc, RestStudent rest) throws Dwo2Exception {
-    	TeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher().setTeacher();
-    	return "dit is nog in progress";
+    @RolesAllowed("TEACHER")
+    public String getBearerToken(@Context SecurityContext sc, RestStudent rest) throws Exception {
+    	UserState_U ustate = AnonDomainAuthorizer.build().submitUser(sc);
+        TeacherState_HR_R_S_SG_U state = ustate.setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher().setTeacher();
+
+        String teacher = sc.getUserPrincipal().getName();
+    	String student = UserManager.findEntity(MySQLPersistenceId.getNativeId(rest.getDomStudent())).getUsername();
+    	List<PersistentLoginContext> list = LoginContextManager.findEntities(ustate.getUser().getId());
+    	String password = DatatypeConverter.printHexBinary(list.get(0).getSecretKey());
+        student = new SymmetricCryptor().encrypt(password.toCharArray(), student);
+        Long time = DwoDateUtilities.getCurrentDwoUnixTimeStamp() / TOTP.defaultPeriod;
+        String timeString = time.toString();
+        String result = TOTP.generateTOTP(password, timeString, "8");
+        byte[] bytes = ("4\f" + teacher + "\f" + student + "\f" + result).getBytes(StandardCharsets.UTF_8);
+        return Base64.getEncoder().encodeToString(bytes);
     }
 
 }

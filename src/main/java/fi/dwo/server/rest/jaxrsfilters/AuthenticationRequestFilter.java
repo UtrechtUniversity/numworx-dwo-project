@@ -209,14 +209,18 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
 		return request.getAttribute(key);
 	}
 	
+	private RoleType role(Claims claims) {
+      String role = claims.getAudience();
+      RoleType type = RoleType.valueOf(role);
+      return type;
+	}
 	
 	public SecurityContext validateJWTToken(String token, SecurityContext ctx) {	  
 	  try {
         JwtParser parser = Jwts.parser().setSigningKeyResolver(this);
         Jws<Claims> claims = parser.parseClaimsJws(token);
         String username = claims.getBody().getSubject();
-        String role = claims.getBody().getAudience();
-        RoleType type = RoleType.valueOf(role);
+        RoleType type = role(claims.getBody());
         PersistentUser u = findByUsername(username);
         if (u == null) return null;
     	SecurityContext sc;
@@ -229,7 +233,8 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
     		PersistentHasRole hr = HasRoleManager.findEntity(pk);
     		if (hr == null) return null;
     		DwoUserPrincipal du = new DwoUserPrincipal(hr);
-    		sc = new DwoUserSecurityContext(du, ctx.isSecure(), BEARER, du.getRole());
+    		if (type == RoleType.NONE) type = du.getRole();
+    		sc = new DwoUserSecurityContext(du, ctx.isSecure(), BEARER, type);
     	} else {
     		sc = new DwoUserSecurityContext(new DwoUserPrincipal(u), ctx.isSecure(), BEARER, type);
     	}
@@ -288,7 +293,9 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
     PersistentLoginContext context = findLoginContext(kid);
     if (context == null || context.getNonce() == null) return null;
     PersistentUser u = findByUsername(claims.getSubject());    
-    if (u == null || u.getId().longValue() != context.getUserId().longValue()) return null; // No key
+    if (u == null || u.getId().longValue() != context.getUserId().longValue()
+        || role(claims) != RoleType.ANONYMOUS // 
+        ) return null; // No key
     return Keys.hmacShaKeyFor(context.getNonce());
   }
 

@@ -25,6 +25,8 @@ import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.digitalmolehill.crypto.SymmetricCryptor;
+
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
@@ -69,6 +71,9 @@ static final String AUTHORIZATION_CODE = "authorization_code";
     SecretKey key;
     key = getKey(c);
     JwtBuilder builder = Jwts.builder();
+    if (u.getId().longValue() != c.getUserId().longValue())
+      builder.setAudience(RoleType.ANONYMOUS.name());
+    else    
     if (u.isSingleSchoolAccount()) builder = builder.setAudience(RoleType.STUDENT.name());
     else builder = builder.setAudience(RoleType.NONE.name());
     if (scope != null) builder = builder.claim("scope", scope);
@@ -118,13 +123,36 @@ static final String AUTHORIZATION_CODE = "authorization_code";
           char version = authToken.charAt(0);
           String[] split = authToken.split("\f");
           switch (version)  {
+            case '4':
+              String teacher = split[1];
+              String student = split[2];
+              String totp = split[3];
+              PersistentUser u = UserManager.findByUserName(teacher);
+              if (u != null) {
+                List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
+                for (PersistentLoginContext l : loginContextList) {
+                  String password = DatatypeConverter.printHexBinary(l.getSecretKey());
+                  if (TOTP.verifyTOTP(totp, password, "8")) {
+                    try {
+                      student = new SymmetricCryptor().decrypt(password.toCharArray(), student);
+                      u = UserManager.findByUserName(student);
+                      if (u != null) {
+                        return buildTokenResponse(u, l);
+                      }
+                    
+                    } catch (Exception e) {
+                     }
+                  }
+                }
+              }
+            break;
             case '2':
             String authHeader = split[1].substring(7);
             byte[] header = Base64.getDecoder().decode(authHeader);
             String headerString = ":";
             headerString = new String(header, StandardCharsets.UTF_8);
             String authFields[] = headerString.trim().split(":");
-            PersistentUser u = UserManager.findByUserName(authFields[0]);
+            u = UserManager.findByUserName(authFields[0]);
             if (u != null) {
             List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
             for (PersistentLoginContext l : loginContextList) {

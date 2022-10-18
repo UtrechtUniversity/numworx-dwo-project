@@ -32,6 +32,7 @@ import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
+import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
@@ -39,6 +40,7 @@ import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassFull;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -48,16 +50,20 @@ import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.LoginContextUtilManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.testutil.TestSecurityContext;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.PersistenceException;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.SecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
@@ -849,7 +855,36 @@ public class SecuredTeacherSchoolClassManagerIT {
      }
 
 
+    @Test
+    public void testGetBearerToken() throws Exception {
+      SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
+      DomStudent domStudent = new DomStudent();
+      domStudent.setId(PersistentUser.buildPersistenceId(9L));
+      domStudent.setUserName("user02");
+      domStudent.setGivenName("User");
+      domStudent.setFamilyName("Lastname 02");
+      PersistentUser user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+      LoginContextUtilManager.forceNewLoginContextSession(user, false);
+      List<PersistentHasRole> list = HasRoleManager.findEntities(user);
+      DomHasRole dhr = list.get(0).buildDomHasRole();
 
+      SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
+      
+      RestStudent rest = new RestStudent();
+      rest.setDomStudent(domStudent);
+      DomContext context = new DomContext();
+      context.setDomHasRole(dhr);
+      rest.setRestContext(context);
+      String result = instance.getBearerToken(sc, rest);
+ 
+      OAuth2Manager man = new OAuth2Manager();
+      
+      MultivaluedMap<String, String> params = new MultivaluedHashMap<>();
+      params.put(man.CODE, Collections.singletonList(result));
+      params.putSingle(man.GRANT_TYPE, man.AUTHORIZATION_CODE);
+      Object token = man.token(params, null, null);
+      
+    }
 
 
 }
