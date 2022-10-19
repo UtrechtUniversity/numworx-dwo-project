@@ -8,22 +8,26 @@ import org.osgi.util.promise.Promise;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.client.HasSafeHtml;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.InlineHTML;
 
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 
 public class ScoreWidget extends Composite implements InteractionView, ClickHandler, TekstElementWithFont {
 
@@ -72,6 +76,8 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 	private HasSafeHtml html;
 
 	private boolean linkActive = true;
+
+	private HandlerRegistration reg;
 	
 	public ScoreWidget(ActivityInterface a, HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden, AnchorContext context)
 	{
@@ -89,7 +95,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
 		
 		anchor = new Anchor();
-		anchor.addClickHandler(this);
+		reg = anchor.addClickHandler(this);
 		anchor.setStylePrimaryName("scorewidget");
 		
 		span  = new InlineHTML();
@@ -97,7 +103,30 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 				
 		init(breedte, hoogte, launchState);
 		
-		
+		a.vars().ifPresent(this::initVars);
+	}
+	
+	private void initVars(DwoGlobalVars vars) {
+		DomSchoolClass sc = vars.getCurrentSchoolClass();
+		if (sc != null) {
+			if (moduleID != 0) {
+				SelectModuleItem item = SelectModuleItemHolder.getItemByID(Integer.toString(moduleID));
+				if (item == null) {
+					reg.removeHandler();
+					anchor.setHref("javascript:return false;");
+					reg = anchor.addClickHandler(this::nop);
+				}
+			} else if (activiteitID != 0) {
+				SelectModuleItem item = SelectModuleItemHolder.getScoByID(Integer.toString(activiteitID));
+				if (item == null) {
+					// haal item op met rpc.getScoContextClass en bepaal actief of niet.
+				}
+			}
+		}
+	}
+	
+	void nop(ClickEvent ev) {
+		ev.preventDefault();
 	}
 	
 	@Override
@@ -305,6 +334,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		this.parent = regel;
 		String color = regel.getElement().getStyle().getColor();
 		getElement().getStyle().setColor(color);
+		ashoogte = regel.getFont().getAscent();
 	}
 
 }

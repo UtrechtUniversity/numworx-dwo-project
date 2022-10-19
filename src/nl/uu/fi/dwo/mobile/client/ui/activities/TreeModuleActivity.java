@@ -24,6 +24,7 @@ import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLoginEvent;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
+import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
@@ -148,6 +149,13 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 							item.setPlace(where = new TreeModulePlace(split[0]));
 							
 							int sconr = Integer.parseInt(split[1]);
+// FIXME getChildrenAsync kan null zijn, dan eerst vullen, zie ...
+							if (item.getChildrenAsync() == null) {
+								Promise<List<SelectModuleItem>> promise = rpc.getScos(item.getID())
+										.map(new SCO_TO_MODULEITEM(item)).recoverWith(OOPS);
+								item.setChildrenAsync(promise);
+							}
+							
 							item.getChildrenAsync().then(p -> {
 								List<SelectModuleItem> list = p.getValue();
 								SelectModuleItem item = list.get(sconr-1);

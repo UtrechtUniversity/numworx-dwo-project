@@ -95,7 +95,14 @@ public abstract class ActivityMapperModule {
 		else
 // FIXME de parent van sco moet al z'n children hebben, de ViewModuleActivity gaat daar al vanuit.
 			
-			sco = rpc.getScoContextClass(id, schoolClass).map(v -> {
+			sco = rpc.getScoContextClass(id, schoolClass)
+			.filter(v -> {
+				PersistenceId pid = v.getCourses().get(0).getKey();
+				Object cid = PersistenceIdDecoderInterface.instance.idOf(pid, PersistenceClassType.PersistentCourse);				
+				return SelectModuleItemHolder.getItemByID(cid) != null;
+			})
+			
+			.map(v -> {
 				List<DomMapEntry<PersistenceId, DomScoContext>> list = v.getScoContexts();
 				return list.get(0).getValue();
 			});

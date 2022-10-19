@@ -33,6 +33,7 @@ import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLoginEvent;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLoginHandler;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
+import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
@@ -377,7 +378,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	}
 	
 	@Override
-	public void gotoUrl(String href) {
+	public void gotoUrl(final String href) {
 		if("goto:0".equals(href)) {
 			started = false;
 			//History.back(); // FIXME Niet meer goed als je goto gebruikt.
@@ -388,37 +389,50 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 		}
 		else if(href.startsWith("goto:.")) defaultContext.gotoUrl(href);
 		else if(href.startsWith("goto:")){
-			href = href.substring(5);
-			SelectModuleItem parent = sco.getParent();
-			List<SelectModuleItem> list = parent.getChildren();
-			int page = href.lastIndexOf('.');
-            String location = null;
-			if (page >= 0) {
-	          location = Integer.toString(Integer.parseInt(href.substring(page+1))-1);
-			  href = href.substring(0, page);
+			final SelectModuleItem parent = sco.getParent();
+			// FIXME getChildrenAsync kan null zijn, dan eerst vullen, zie ...
+			if (parent.getChildrenAsync() == null) {
+				Promise<List<SelectModuleItem>> promise = rpc.getScos(parent.getID())
+						.map(new SCO_TO_MODULEITEM(parent)).recoverWith(oops);
+				parent.setChildrenAsync(promise);
 			}
-			int sconr = -1;
-			try {
-				sconr = Integer.parseInt(href)-1;
-			} catch(Exception e) {}
-			if(sconr <= -1 || sconr >= list.size())
-			{
-				for(sconr = 0; sconr < list.size(); sconr ++) {
-					if(list.get(sconr).getName().startsWith(href))
-						break; // found by prefix
+			Runnable run = new Runnable() {
+				public void run() {
+					String href1 = href.substring(5);
+					final int page = href1.lastIndexOf('.');
+		            String location = null;
+					if (page >= 0) {
+			          location = Integer.toString(Integer.parseInt(href1.substring(page+1))-1);
+					  href1 = href1.substring(0, page);
+					}
+
+					
+					
+					int sconr = -1;
+					try {
+						sconr = Integer.parseInt(href1)-1;
+					} catch(Exception e) {}
+				
+					List<SelectModuleItem> list = parent.getChildren();
+					if (sconr <= -1 || sconr >= list.size()) {
+						for (sconr = 0; sconr < list.size(); sconr++) {
+							if (list.get(sconr).getName().startsWith(href1))
+								break; // found by prefix
+						}
+					}
+					if (sconr == list.size()) {
+						sconr = Integer.parseInt(href1) - 1;
+					}
+					SelectModuleItem item = list.get(sconr);
+					Object scoid = item.getID();
+					if (item != sco) {
+						goTo(new ViewModulePlace(scoid, location));
+					} else if (page >= 0) {
+						defaultContext.gotoUrl("goto:." + (Integer.parseInt(location) + 1));
+					}
 				}
-			}
-			if(sconr == list.size()) {
-				sconr = Integer.parseInt(href)-1;
-			}
-			SelectModuleItem item = list.get(sconr);
-			Object scoid = item.getID();
-			if (item != sco )
-			{	
-				goTo(new ViewModulePlace(scoid,location));
-			} else if (page >= 0){
-				defaultContext.gotoUrl("goto:." + (Integer.parseInt(location)+1));
-			}
+			};
+			parent.getChildrenAsync().onResolve(run);
 		}
 	}
 
