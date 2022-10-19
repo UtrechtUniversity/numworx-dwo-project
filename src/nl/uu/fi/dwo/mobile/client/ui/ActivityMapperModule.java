@@ -1,8 +1,8 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
-import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Success;
+import java.util.List;
 
+import org.osgi.util.promise.Promise;
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.place.shared.PlaceController;
 
@@ -16,14 +16,13 @@ import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.ui.activities.DelayedActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ExamModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.TreeModuleActivity;
-import nl.uu.fi.dwo.mobile.client.ui.activities.ViewCourseActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ViewModuleActivity;
-import nl.uu.fi.dwo.mobile.client.ui.places.ViewCoursePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.xc;
 import nl.uu.fi.dwo.mobile.client.ui.places.xs;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
-import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
@@ -76,7 +75,7 @@ public abstract class ActivityMapperModule {
 	}
 
 	@Provides @IntoMap @ClassKey(xs.class)
-	static Activity xsActivity( PlaceController controller, MembersInjector<ViewModuleActivity> vmInjector, RPCHandler rpc) {
+	static Activity xsActivity( PlaceController controller, MembersInjector<ViewModuleActivity> vmInjector, RPCHandler rpc, DwoGlobalVars vars) {
 		xs place = (xs) controller.getWhere();
 		PersistenceId id = place.getID();
 		SelectModuleItem item = SelectModuleItemHolder.getScoByID(id);
@@ -89,8 +88,19 @@ public abstract class ActivityMapperModule {
 			item2.setPlace(place);			
 			return new ViewModuleActivity(vmInjector, item2, place);				
 		});
+		Promise<DomScoContext> sco;
+		DomSchoolClass schoolClass = vars.getCurrentSchoolClass();
+		if (schoolClass == null)
+			sco = rpc.getSco(id);
+		else
+// FIXME de parent van sco moet al z'n children hebben, de ViewModuleActivity gaat daar al vanuit.
+			
+			sco = rpc.getScoContextClass(id, schoolClass).map(v -> {
+				List<DomMapEntry<PersistenceId, DomScoContext>> list = v.getScoContexts();
+				return list.get(0).getValue();
+			});
 		Promise<SelectModuleItem> p = 
-		rpc.getSco(id).map( (DomScoContext dc) -> { 
+		sco.map( (DomScoContext dc) -> { 
 			SelectModuleItem i = new SelectModuleItem(dc); 
 			SelectModuleItemHolder.insert(i);
 			return i;});

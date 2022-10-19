@@ -1,7 +1,5 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
-import javax.inject.Provider;
-
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
