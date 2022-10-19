@@ -79,7 +79,9 @@ public class HubServlet extends HttpServlet {
 				return Dwo2ExceptionCode.User_IllegalAction;
 			}
 		});
-
+		String token = System.getProperty(HubAPI.DWO_HUB_TOKEN);
+		log("intialize hub api token" + token);
+		if (token == null) throw new ServletException("dwo hub token not found");
 		api = new HubAPI();
 		rest = new StoredRestManager(new RestAuthenticator()); // not a singleton
 		rest = StoredRestManager.getInstance();
