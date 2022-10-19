@@ -97,6 +97,7 @@ public abstract class ActivityMapperModule {
 			
 			sco = rpc.getScoContextClass(id, schoolClass)
 			.filter(v -> {
+				if (v.getCourses().isEmpty()) return false;
 				PersistenceId pid = v.getCourses().get(0).getKey();
 				Object cid = PersistenceIdDecoderInterface.instance.idOf(pid, PersistenceClassType.PersistentCourse);				
 				return SelectModuleItemHolder.getItemByID(cid) != null;
