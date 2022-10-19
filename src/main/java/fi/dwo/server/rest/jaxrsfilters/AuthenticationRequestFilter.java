@@ -294,7 +294,7 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
     if (context == null || context.getNonce() == null) return null;
     PersistentUser u = findByUsername(claims.getSubject());    
     if (u == null || u.getId().longValue() != context.getUserId().longValue()
-        || role(claims) != RoleType.ANONYMOUS // 
+        && role(claims) != RoleType.ANONYMOUS // 
         ) return null; // No key
     return Keys.hmacShaKeyFor(context.getNonce());
   }
