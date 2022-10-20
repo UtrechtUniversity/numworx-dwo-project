@@ -277,6 +277,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	void selectModule(SelectModuleItem o) {
 		TreeItem item = inverseMap.get(o);
 		tree.setSelectedItem(item, false);
+		cells.getSelectionModel().setSelected(o, true);
 	}
 	private SafeHtml toSafeHTML(String string, Type type) {
 		
