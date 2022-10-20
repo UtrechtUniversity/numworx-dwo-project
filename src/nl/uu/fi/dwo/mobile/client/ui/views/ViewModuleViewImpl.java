@@ -139,6 +139,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	
 	
 	OpdrNav on;
+	String location;
+	
 	private Widget mainPanel;
 	@UiField(provided=true) SimplePanel contentScrollPanel =
 		new ScrollPanel() { 
@@ -776,6 +778,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		Memento m = activity.memento();
 		m.setView(this);
 		m.setStudentModelStructure(studentModel);
+		try { 
+			m.setCurrentOpdracht(Integer.parseInt(location));
+		} catch(Exception oops) {}
 		return m;
 	}
 	
@@ -2613,6 +2618,12 @@ public int getWidth() {
 @Override
 public boolean bolletjesZichtbaar() {
 	return super.bolletjesZichtbaar() || on.isReview();
+}
+
+@Override
+public void setLocation(String location) {
+	if (on == null) this.location = location;
+	else on.setLocation(location);
 }
 
 }

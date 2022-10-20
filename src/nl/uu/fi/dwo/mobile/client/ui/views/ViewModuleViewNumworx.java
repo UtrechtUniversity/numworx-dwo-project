@@ -314,4 +314,10 @@ public void onResize() {
 	headerTop.setWidgetSize(logo, hidden? 10.0 : 170.0);
 	super.onResize();
 }
+
+public void setLocation(String location) {
+	delegate.setLocation(location);
+}
+
+
 }

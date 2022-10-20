@@ -250,7 +250,7 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 							throws Exception {
 						started = ! Memento.COMPLETED.equals(view.getApi().GetValue(Memento.COMPLETION_STATUS));
 						if(location != null) {
-							view.getApi().SetValue(Memento.LOCATION, location);
+							view.setLocation(location);
 						}
 						Promise<Boolean> p = view.setupModule(name, PARAMETERS.getLaunchData() + item.getID());
 						panel.setWidget(view);

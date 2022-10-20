@@ -2867,4 +2867,12 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	public void gotoUrl(String href) {
 		memento.gotoUrl(href);
 	}
+
+	public void setLocation(String location) {
+		int nr = 0;
+		try {
+			nr = Integer.parseInt(location);
+		} catch(Exception oops) { } 
+			memento.setCurrentOpdracht(nr);		
+	}
 }

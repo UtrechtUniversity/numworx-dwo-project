@@ -5,6 +5,7 @@ import java.util.List;
 import org.osgi.util.promise.Promise;
 
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
@@ -51,4 +52,8 @@ public interface ViewModuleView extends IsWidget
 	
 	boolean nextPageAction();
     void showIcon(boolean b);
+    
+    default void setLocation(String location) {
+    	getApi().SetValue(Memento.LOCATION, location);
+    }
 }

@@ -297,7 +297,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 			@Override
 			public void onSuccess(Void result) {
 				if(location != null) {
-					view.getApi().SetValue(Memento.LOCATION, location);
+					view.setLocation(location);
 				}
 					started = !Memento.COMPLETED.equals(view.getApi().GetValue(Memento.COMPLETION_STATUS));
 					view.setupModule(sco.getName(), PARAMETERS.getLaunchData() + sco.getID())

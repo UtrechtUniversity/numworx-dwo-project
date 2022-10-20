@@ -119,7 +119,7 @@ public class ViewScoActivity extends AbstractActivity implements Presenter, Anch
 			panel.setWidget(view);
 			String location = place.getLocation();
 			if(location != null) {
-				view.getApi().SetValue(Memento.LOCATION, location);
+				view.setLocation(location);
 			}
 			started = !Memento.COMPLETED.equals(view.getApi().GetValue(Memento.COMPLETION_STATUS));	
 			return view.setupModule(sco.getName(), PARAMETERS.getLaunchData() + scoID);

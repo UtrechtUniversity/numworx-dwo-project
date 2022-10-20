@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -21,6 +22,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
@@ -219,8 +221,13 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 
 	
 	public void init(int width, int height, Map<String, Object> launchData) {
-		api.SetValue("cmi.exit", "suspend");
-		Promise<String> start = api.Commit();
+		Promise<String> start;
+		if (Memento.COMPLETED.equals(api.GetValue(Memento.COMPLETION_STATUS)))
+			start = Promises.resolved("true");
+		else {
+			api.SetValue("cmi.exit", "suspend");
+			start = api.Commit();
+		}
 		ObjectMap map = JSONUtilities.wrapMap(launchData);
 		if (map != null)
 		{

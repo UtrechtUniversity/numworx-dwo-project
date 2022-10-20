@@ -865,9 +865,14 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		onsState.put("activiteitNr", new JSONNumber(currentActiviteit));
 		
 	}
+	
+	private Integer location;
 	public void setCurrentOpdracht(int currentOpdracht) {
 		if(!setValue(LOCATION, Integer.toString(currentOpdracht)))
+		{
+			location = currentOpdracht;
 			setCurrentOpdracht_old(currentOpdracht);
+		}
 	}
 
 	// old style, for use if 'setValue(location)' mislukt
@@ -876,6 +881,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	}
 	
 	public int getCurrentOpdracht() {
+		if (location != null) 
+			return location.intValue(); // setValue has failed!
 		try {
 			return Integer.parseInt(getValue(LOCATION));
 		} catch(Exception ignore)
