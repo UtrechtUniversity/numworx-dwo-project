@@ -23,4 +23,7 @@
   	<module>NotebookGWT</module>
     <module>notebook-service</module>
   </modules>
+  <scm>
+  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/notebook/trunk</developerConnection>
+  </scm>
 </project>
