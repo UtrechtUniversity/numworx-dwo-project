@@ -315,6 +315,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		Panel hbox = new FlowPanel();
 		hbox.addStyleName("message");
 		hbox.addStyleName("lightbox");
+		hbox.addStyleName("profile-borderBox");
 		hbox.add(afzender);
 		hbox.add(time);
 		panel.add(hbox);
@@ -551,6 +552,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		data.put("balkZichtbaar", formule);
 		editor.init(COL_6-4, formule?100:70, data);
 		editor.addStyleName("box");
+		editor.addStyleName("profile-borderBox");
 		
 		
 		HashMap<String, Object> state = new HashMap<>();
@@ -617,6 +619,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		launch.put("breedtes", Arrays.asList(width));
 		launch.put("hoogtes",  Arrays.asList(height));
 		launch.put("font_size", 13);
+		launch.put("pasAanH", Boolean.TRUE);
 		
 		tekstpanel.init(width, height, launch);
 		return tekstpanel;

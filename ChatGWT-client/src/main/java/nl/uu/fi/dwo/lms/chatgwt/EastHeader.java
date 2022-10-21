@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -26,6 +27,9 @@ public class EastHeader extends Composite {
 	}
 
 	public EastHeader() {
+		klas = new RadioButton("");
+		persoon = new RadioButton("");
+
 		initWidget(uiBinder.createAndBindUi(this));		
 		klas.setValue(true);		
 	}
@@ -34,7 +38,7 @@ public class EastHeader extends Composite {
 	private Consumer<Boolean>  updateSelect;
 	
 
-	@UiField RadioButton klas, persoon;
+	@UiField(provided=true) RadioButton klas, persoon;
 	@UiField ListBox naam;
 	
 	private List<ChatRoom> roomList = Collections.singletonList(null);

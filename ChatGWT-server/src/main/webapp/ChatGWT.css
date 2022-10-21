@@ -55,11 +55,11 @@ div.header.gwt-Label {
 
 i.send {
     display: inline-block;
-    width: 32px;
+    width: 26px;
     color: white;
     background-color: #1b75bb;
-    border-radius: 4px;
-    font-size: 180%;
+    border-radius: 2px;
+    font-size: 140%;
     text-align: center;
     padding-top: 3px;
     padding-bottom: 3px;
@@ -102,3 +102,63 @@ table.dwo tbody {
 	color: #7297c7;
 	font-size: 12px;
 }
+
+.checkbox {
+	display: inline-block;
+	position: relative;
+	width: 25px;
+	height: 25px;
+	cursor: pointer;
+	margin-top: 0px;
+	margin-bottom: -6px;
+}
+
+.checkbox span input {
+	position: absolute;
+	cursor: pointer;
+	top: 0; left: 0; right: 0; bottom: 0;	
+}
+.checkbox span label {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 23px;
+		width: 23px;
+		
+		margin-bottom: 0;
+		background-color: white;
+		
+		text-align: center;
+		
+		cursor: pointer;
+		
+		border: 4px #dadbdd solid;
+		border-radius: 100%;
+		box-sizing: border-box;
+		transition: all 200ms ease;
+}
+
+.checkbox span label:after {
+	content: "";
+	position: absolute;
+	display: none;
+
+	left: 5px;
+	top: 1px;
+	width: 5px;
+	height: 10px;
+	border: solid white;
+	border-width: 0 3px 3px 0;
+	-webkit-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+
+.checkbox span input:checked ~ label {
+	background-color: #1b75bb;		
+	border: 2px #1b75bb solid;
+}
+.checkbox span input:checked ~ label:after {
+	display: block;
+}
+
