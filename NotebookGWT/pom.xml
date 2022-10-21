@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<artifactId>notebook-parent</artifactId>
 		<groupId>nl.numworx.notebook</groupId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1</version>
 	</parent>
 	<artifactId>NotebookGWT</artifactId>
 	<packaging>gwt-app</packaging>
@@ -46,12 +44,12 @@
         <dependency>
         	<groupId>nl.numworx.notebook</groupId>
         	<artifactId>notebook-common</artifactId>
-        	<version>0.0.1-SNAPSHOT</version>
+        	<version>0.0.1</version>
         </dependency>
         <dependency>
         	<groupId>nl.numworx.notebook</groupId>
         	<artifactId>notebook-common</artifactId>
-        	<version>0.0.1-SNAPSHOT</version>
+        	<version>0.0.1</version>
         	<classifier>sources</classifier>
         </dependency>
         <dependency>
@@ -67,7 +65,7 @@
 		<dependency>
 			<groupId>nl.numworx.notebook</groupId>
 			<artifactId>notebook-service</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1</version>
 			<classifier>classes</classifier>
 		</dependency>
 	</dependencies>
@@ -169,7 +167,7 @@
 	<properties>
 		<interactionVersion>0.1.13</interactionVersion>
         <restyVersion>2.2.0</restyVersion>
-        <debug></debug>
+        <debug />
 		<jetty.http.port>8888</jetty.http.port>	
 	</properties>
 	<profiles>
