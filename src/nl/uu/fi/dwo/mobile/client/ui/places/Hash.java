@@ -6,15 +6,18 @@ import com.google.gwt.place.shared.PlaceTokenizer;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public interface Hash {
+	@SuppressWarnings({ "unchecked" })
 	enum Type { c(new c.Tokenizer()), 
 		s(new s.Tokenizer()), /*cs(new cs.Tokenizer()), */ 
 		cc(new cc.Tokenizer()), 
 		xc(new xc.Tokenizer()),
+		last(new last.Tokenizer()),
 		xs(new xs.Tokenizer());
 		
-		final private PlaceTokenizer<?> t;
-		<T extends Place & Hash>
-		Type(PlaceTokenizer<T> t) {this.t = t; }
+		@SuppressWarnings("rawtypes")
+		final private PlaceTokenizer t;
+		@SuppressWarnings("rawtypes")
+		Type(PlaceTokenizer t) {this.t = t; }
 
 		public PlaceTokenizer<Place> getT() {
 			return (PlaceTokenizer<Place>) t;

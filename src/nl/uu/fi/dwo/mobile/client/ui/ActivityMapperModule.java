@@ -6,6 +6,7 @@ import org.osgi.util.promise.Promise;
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.place.shared.PlaceController;
 
+import dagger.Binds;
 import dagger.MembersInjector;
 import dagger.Module;
 import dagger.Provides;
@@ -15,8 +16,10 @@ import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.ui.activities.DelayedActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ExamModuleActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.LastActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.TreeModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ViewModuleActivity;
+import nl.uu.fi.dwo.mobile.client.ui.places.last;
 import nl.uu.fi.dwo.mobile.client.ui.places.xc;
 import nl.uu.fi.dwo.mobile.client.ui.places.xs;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
@@ -118,4 +121,6 @@ public abstract class ActivityMapperModule {
 		return activity;
 	}
 
+	@Binds @IntoMap @ClassKey(last.class)
+	abstract Activity lastActivity(LastActivity last);
 }

@@ -47,6 +47,7 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
+import dagger.Lazy;
 import dagger.MembersInjector;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 
@@ -60,6 +61,7 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 	@Inject Provider<TreeModuleView> treeModuleView;
 	@SuppressWarnings("rawtypes")
 	@Inject NeedLogin OOPS;
+	@Inject Lazy<LastActivity> last;
 	
 	private List<SelectModuleItem> currentModel;
 	private TreeModuleView view;
@@ -91,6 +93,7 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
         }
 		
 		if(item.getType() == Type.MODULE && vars.withUser()) {
+			last.get().putPlace(item.getPlace());
 			Object userID = vars.getUserID();
 		if(userID != null && item.getPromisedScoreMap() == null) {
 			Promise<DomResultsPerStudentCourse> p = rpc.getUserResults(item.getID(), userID);
@@ -147,7 +150,7 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 							String token = ((xc) where).getToken();
 							String[] split = token.split("\\.");
 							item.setPlace(where = new TreeModulePlace(split[0]));
-							
+							last.get().putPlace(item.getPlace());
 							int sconr = Integer.parseInt(split[1]);
 // FIXME getChildrenAsync kan null zijn, dan eerst vullen, zie ...
 							if (item.getChildrenAsync() == null) {
