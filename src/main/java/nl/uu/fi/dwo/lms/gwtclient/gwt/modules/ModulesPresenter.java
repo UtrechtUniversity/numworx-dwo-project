@@ -167,6 +167,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
       schoolClassId = klas == null ? null : klas.getId();
       LOG.fine("role = " + roleId);
       inited = new Deferred<>();
+      lastSend = false;
       if (roleId != null)
         init = account.getBearerToken().then(this::gotToken,FAILURE);
       else
@@ -230,7 +231,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
     
     private native void injectEventListener(ModulesPresenter p) /*-{
       function postMessageListener(e) {
-          var curUrl = $wnd.location.protocol + "//" + $wnd.location.hostname;
+          //var curUrl = $wnd.location.protocol + "//" + $wnd.location.hostname;
           //if (e.origin !== curUrl) return; // security check to verify that we receive event from trusted source
           p.@nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter::onMessage(Ljava/lang/String;)(e.data); // call function with the name
       }
@@ -355,6 +356,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
           roleId = null;
           schoolClassId = null;
           init = null;
+          inited = new Deferred<>();
           view.clear();
           if(register != null) {
             register.removeHandler();register = null;
@@ -397,4 +399,22 @@ public class ModulesPresenter implements SwitchViewEventHandler {
 //		if (loginEvent.getState() == State.LOGOUT)
 //			view.sendMessage("LOGOUT");
 //	}
+
+	public void gotoHome() {
+		inited.getPromise().then( p -> {
+			view.sendMessage("GOTO:TreeModulePlace:0");
+			return p;
+		});		
+	}
+	
+	private boolean lastSend;
+	public void gotoLast() {
+		if (lastSend) return;
+		lastSend=true;
+		inited.getPromise().then( p -> {
+			view.sendMessage("GOTO:last:");
+			return p;
+		});		
+	}
+
 }

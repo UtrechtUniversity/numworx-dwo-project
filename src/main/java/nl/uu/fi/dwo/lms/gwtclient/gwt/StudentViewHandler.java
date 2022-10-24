@@ -2,12 +2,15 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import javax.inject.Inject;
 
+import org.osgi.util.promise.Promise;
+
 import com.google.web.bindery.event.shared.EventBus;
 
 import dagger.Lazy;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.chatbox.ChatboxPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
@@ -58,7 +61,13 @@ public class StudentViewHandler implements SwitchViewEventHandler {
       case WELCOME:
       case MODULES:
         mainView.selectView(value);
-        presenterFactory.getModulesPresenter().show();
+        ModulesPresenter modules = presenterFactory.getModulesPresenter();
+		modules.show();
+        if (value == SelectedView.WELCOME) {
+        	modules.gotoHome();
+        } else if (value == SelectedView.MODULES) {
+        	modules.gotoLast();
+        }
         break;
       case MODULESVIEW:
     	  presenterFactory.getMainPresenter().showModulesView();
