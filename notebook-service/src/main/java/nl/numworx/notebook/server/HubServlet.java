@@ -4,11 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
@@ -106,38 +104,24 @@ public class HubServlet extends HttpServlet {
 				tail = project + "/" + notebook;
 			}
 			while(tail.startsWith("/")) tail = tail.substring(1);
-			String user = decodePathSegment(learnerName);
+			String user = api.encodePathSegment(learnerName);
 			hub  += "user/" + user + "/";
 			if (mode == LessonMode.browse)
 				hub += "nbconvert/html/";
 			else
 				hub  += "notebooks/"; 
-			hub += decodePathSegment(tail);	
+			hub += api.encodePathSegment(tail);	
 		} else if (project != null) {
 			while(project.startsWith("/")) project = project.substring(1);
-			String user = decodePathSegment(learnerName);
+			String user = api.encodePathSegment(learnerName);
 			hub  += "user/" + user + "/";
-			hub  += "lab/tree/" + decodePathSegment(project);
+			hub  += "lab/tree/" + api.encodePathSegment(project);
 		}
 		
 		return api.hubAPI.resolve(hub).toASCIIString();
 		
 	}
 	
-	
-	
-	
-	
-	private String decodePathSegment(String learnerName) {
-		try {
-			return URLEncoder.encode(learnerName, "UTF-8")
-					.replace("%2F", "/")
-					.replace("+", "%20"); // path is zonder + en zonder %2F
-		} catch (UnsupportedEncodingException e) {
-			return learnerName; // not used
-		}
-	}
-
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 

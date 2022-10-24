@@ -140,4 +140,17 @@ public class HubAPITest extends TestCase {
 		api.deleteUser("meesterwim5");
 		assertEquals("meesterwim5", u.name);
 	}
+	
+	public void testUnknownUser() throws Exception {
+		try {
+			api.getUserInfo("deze bestaat niet");
+			fail("should error");
+		} catch(HubException he) {
+			int code = he.status;
+			assertEquals("not found", 404, code);
+		} catch(IOException e) {
+			// herken bestaat-niet-exception
+			e.printStackTrace();
+		}
+	}
 }

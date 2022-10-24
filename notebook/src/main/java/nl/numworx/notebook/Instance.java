@@ -5,7 +5,9 @@ import java.util.Locale;
 import java.util.Map;
 
 import java.awt.BorderLayout;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -19,6 +21,7 @@ import org.cbook.cbookif.Constants;
 import org.cbook.cbookif.LessonMode;
 import org.cbook.cbookif.SuccessStatus;
 
+import fi.beans.numworxlf.JLabel;
 import nl.numworx.swingbrowser.api.SwingBrowser;
 import nl.numworx.swingbrowser.api.SwingBrowserFactory;
 import nl.numworx.swingbrowser.api.SwingBrowserProvider;
@@ -28,6 +31,7 @@ class Instance extends JPanel implements CBookWidgetInstanceIF, CBookEventListen
 
 	final URI hubBase;
 	final CBookContext context;
+	int maxScore;
 	
 	
 	Instance(Locale locale, URI hubBase, CBookContext context) {
@@ -90,9 +94,20 @@ class Instance extends JPanel implements CBookWidgetInstanceIF, CBookEventListen
 
 	}
 
+	private String decodePathSegment(String path) {
+		try {
+			return URLEncoder.encode(path, "UTF-8")
+					.replace("%2F", "/")
+					.replace("+", "%20"); // path is zonder + en zonder %2F
+		} catch (UnsupportedEncodingException e) {
+			return path; // not used
+		}
+	}
+
 	public void setLaunchData(Map<String, ?> arg0, Map<String, Number> arg1) {
 		String project = (String) arg0.get(Editor.PROJECT);
 		String notebook = (String) arg0.get(Editor.NOTEBOOK);
+		maxScore = ((Number) arg0.get(Editor.SCORE_MAX)).intValue();
 		URI hub = hubBase;
 		if (notebook != null) {
 			if (project != null) {
@@ -100,27 +115,29 @@ class Instance extends JPanel implements CBookWidgetInstanceIF, CBookEventListen
 			}
 			while(notebook.startsWith("/")) notebook = notebook.substring(1);
 			String user = (String) context.getProperty(Constants.LEARNER_NAME);
-			hub = hub.resolve("user/"+ user + "/");
-			hub = hub.resolve("notebooks/").resolve(notebook);		
+			hub = hub.resolve("user/"+ decodePathSegment(user) + "/");
+			hub = hub.resolve("notebooks/").resolve(decodePathSegment(notebook));		
 		} else if (project != null) {
 			while(project.startsWith("/")) project = project.substring(1);
 			String user = (String) context.getProperty(Constants.LEARNER_NAME);
-			hub = hub.resolve("user/"+ user + "/");
-			hub = hub.resolve("lab/tree/").resolve(project);
+			hub = hub.resolve("user/"+ decodePathSegment(user) + "/");
+			hub = hub.resolve("lab/tree/").resolve(decodePathSegment(project));
 		}
 		
 		url = hub.toASCIIString();
+		add(new JLabel(url), BorderLayout.NORTH);
+		add(new JPanel(), BorderLayout.CENTER);
 	}
 
 	public void setState(Map<String, ?> arg0) {
 	}
 
 	public void start() {
+		removeAll();
 		SwingBrowser browser = factory.newBrowser();
 		add(browser.asComponent(), BorderLayout.CENTER);
-		validate();
-		//browser.loadContent("<H1>It works</H1>", "text/html");
-		System.out.println(url);
+		add(new JLabel(url), BorderLayout.NORTH);
+		validate();		
 		browser.loadURL(url);
 	}
 
@@ -132,7 +149,7 @@ class Instance extends JPanel implements CBookWidgetInstanceIF, CBookEventListen
 	}
 
 	public int getMaxScore() {
-		return 0;
+		return maxScore;
 	}
 
 }

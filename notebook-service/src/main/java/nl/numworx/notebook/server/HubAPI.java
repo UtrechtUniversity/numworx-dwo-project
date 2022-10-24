@@ -7,8 +7,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -61,7 +63,7 @@ public class HubAPI {
 	  }
 
 	protected <T> T get(String path, Class<T> c) throws IOException {
-	      URL url = new URL(hubAPI.toURL(), path); // TODO make login
+		  URL url = toURL(path);
 	      HubException e;
 	      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 	      conn.setRequestMethod("GET");
@@ -88,7 +90,7 @@ public class HubAPI {
 	  }
 
 	 protected <T> void events(String path, Consumer<T> consumer, Class<T> c) throws IOException {
-	      URL url = new URL(hubAPI.toURL(), path); // TODO make login
+		  URL url = toURL(path);
 	      HubException e;
 	      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 	      conn.setRequestMethod("GET");
@@ -128,7 +130,7 @@ public class HubAPI {
 	
 	
 	  protected <T> T post(String path, Object params, Class<T> c) throws IOException {
-	      URL url = new URL(hubAPI.toURL(), path); // TODO make login
+		  URL url = toURL(path);
 	      HubException e;
 	      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 	      conn.setRequestMethod("POST");
@@ -165,7 +167,7 @@ public class HubAPI {
 	  
 	  
 	  protected <T> T put(String path, Object o, Class<T> c) throws IOException {
-	      URL url = new URL(hubAPI.toURL(), path); // TODO make login
+		  URL url = toURL(path);
 	      HubException e;
 	      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 	      conn.setRequestMethod("PUT");
@@ -263,7 +265,7 @@ public class HubAPI {
 	  }
 	  
 	  private void delete(String path) throws Exception {
-	      URL url = new URL(hubAPI.toURL(), path); // TODO make login
+		  URL url = toURL(path);
 	      HubException e;
 	      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 	      conn.setRequestMethod("DELETE");
@@ -289,8 +291,23 @@ public class HubAPI {
       }
 	}
 
+	URL toURL(String path) throws MalformedURLException {
+		path = encodePathSegment(path);
+	    URL url = new URL(hubAPI.toURL(), path); // TODO make login
+		return url;
+	}
+
 	public Server startServer(String user) throws IOException {
-		Server s = getUserInfo(user).servers.get("");
+		User userInfo;
+		try {
+			userInfo = getUserInfo(user);
+		} catch (HubException e1) {
+			if (e1.status == 404) {
+				userInfo = createUser(user);
+			} else 
+				throw e1;		
+		}
+		Server s = userInfo.servers.get("");
 		if (s != null) return s;
 		try {
 			post("users/" + user + "/servers/", null, Void.class);
@@ -341,5 +358,15 @@ public class HubAPI {
 		  request.expires_in = 3600L; // 1 hour
 		  Token token = post("users/" + user + "/tokens", request, Token.class);
 		return token.token;
+	}
+
+	String encodePathSegment(String segment) {
+		try {
+			return URLEncoder.encode(segment, "UTF-8")
+					.replace("%2F", "/")
+					.replace("+", "%20"); // path is zonder + en zonder %2F
+		} catch (UnsupportedEncodingException e) {
+			return segment; // not used
+		}
 	}
 }
