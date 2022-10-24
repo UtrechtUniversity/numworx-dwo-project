@@ -57,6 +57,7 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 	private InteractionView delegate;
 	private PopupListener   popupListener;
 	private ActivityInterface activity;
+	private boolean visible = true;
 	
 	
 	public PopupFacade(ObjectMap h, InteractionView delegate, ActivityInterface a)
@@ -236,10 +237,12 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 	}
 
 	private int getPopupHeight() {
+		if(!visible) return 0;
 		getImage();
 		return imageHeight;
 	}
 	private int getPopupWidth() {
+		if (!visible) return 0;
 		getImage();
 		return imageWidth; 
 	}
@@ -322,6 +325,11 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 			((CBookEventListener) delegate).acceptCBookEvent(event);
 		}
 		
+	}
+
+	public void setVisibility(boolean b) {
+		visible = b;
+		if (popupBtn != null) popupBtn.setVisibility(b);
 	}
 	
 }

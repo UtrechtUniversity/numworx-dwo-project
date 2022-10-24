@@ -42,7 +42,6 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.ShareFacade;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
-import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.HasResize;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
@@ -1900,7 +1899,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		}
 		h.put("hoogtes", hoogtes);
 		h.put("interactiePanelStates", states);
-		h.put("selected", new Boolean(selected));
+		h.put("selected", Boolean.valueOf(selected));
 		h.put("inactive", new Boolean(inactive));
 		h.put("ingeklapt", new Boolean(ingeklapt));
 		h.put("popupUsed", Boolean.valueOf(popupUsed));
@@ -4034,7 +4033,7 @@ private Object CamelCase(String name) {
 			fireEvent(CLICK_EVENT);
 		}
 		
-		if(selectable && !sleepbaar)
+		if(selectable && !sleepbaar && !sealed)
 		{
 			selected = !selected;
 			setSelected(selected);
@@ -4881,13 +4880,13 @@ private Object CamelCase(String name) {
 			}
 		}
 		else if(TVP_SELECT.equals(command)) {
-			if(!selected) {
+			if(!selected && !sealed) {
 				setSelected(true);
 				//fireEvent(SELECT_EVENT);
 			}
 		}
 		else if(TVP_DESELECT.equals(command)) {
-			if(selected) {
+			if(selected && !sealed) {
 				setSelected(false);
 				//fireEvent(DESELECT_EVENT);
 			}
@@ -4933,7 +4932,10 @@ private Object CamelCase(String name) {
 		}
 		//feedbackPanelHeight = 0;
 	}
+	
+	private boolean sealed; // no selects/
 	private void seal(CBookEvent event) {
+		this.sealed = true;
 		for (Object object : interactionViewObjects)
 		{
 			if (object instanceof CBookEventListener)
@@ -5103,6 +5105,7 @@ private Object CamelCase(String name) {
 		if(visible != b)
 			visibilityChanged = true;
 		visible = b;
+		facade.setVisibility(b);
 		Element elem = getAsPanel().getElement();
 		Style style = elem.getStyle();
 		if(b)

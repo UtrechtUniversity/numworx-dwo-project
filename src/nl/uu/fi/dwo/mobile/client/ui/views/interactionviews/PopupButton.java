@@ -72,6 +72,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.Style.Unit;
 
@@ -558,6 +559,12 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 	 */
 	public void setState(HashMap<String, Object> state) {
 		this.state = state;
+	}
+
+	public void setVisibility(boolean b) {
+		Style s = getElement().getStyle();
+		if (b) s.clearDisplay();
+		else s.setDisplay(Display.NONE);
 	}
 
 }
