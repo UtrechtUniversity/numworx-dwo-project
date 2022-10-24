@@ -568,14 +568,14 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
     	        	}
         			logger.info("modelFits: "+modelFits);
         			if(modelFits) {
-        				half = true;
-        				juist = goedHalfFout==AntwoordVakChecker.GOED;
+        				half = goedHalfFout==1; //let op, valt niet samen met AntwoordVakChecker.HALF;
+        				juist = goedHalfFout==0; // let op, valt toevallig samen met AntwoordVakChecker.GOED;
         				break;
         			}
         			else {
         				puntenFeedback = 0;
         				feedback = "";
-        				goedHalfFout = AntwoordVakChecker.FOUT;
+        				goedHalfFout = 2; //let op, valt niet samen met AntwoordVakChecker.FOUT;
         			}
 	        	}
         	}
