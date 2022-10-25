@@ -1467,7 +1467,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
       JSONArray  interactionsOut = new JSONArray();
       for(int i = off; i < interactionsIn.size(); i++) {
         JSONObject item = strip(interactionsIn.getObjectMap(i),0);
-        JSONValue checkItem = item.get("checkDocent");
+        JSONValue checkItem = item == null ? null : item.get("checkDocent"); // NPE
         if (Objects.equals(checkItem, JSONBoolean.getInstance(true))) 
         	checkDocent = checkItem;
         else if (checkDocent == null || checkDocent == JSONNull.getInstance()) 
