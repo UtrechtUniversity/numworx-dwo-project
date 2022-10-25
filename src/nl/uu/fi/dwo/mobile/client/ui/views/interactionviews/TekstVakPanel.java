@@ -1315,7 +1315,9 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 				}
 			}
 		}
-		
+if (activity.isReview() && zichtbaarNaNakijken) {
+	LOG.warning("Hier komen rubrics");
+}
 		TekstBuffer tb = new TekstBuffer(activity, randomVarNamen, randomVarWaarden, anchorContext);
 		int[] volleBreedtes = new int[breedtes.size()];
 		for (int j = 0; j < breedtes.size(); j++)
@@ -1692,6 +1694,11 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 				OpdrNavIF comRoot2 = comRoot;
 				Connector connector = find(currentObject);
 				comRoot2 = new OpdrNavContext(comRoot,connector, this.bgColorZichtbaar ? bgColor : comRoot.getBackground());
+
+if (zichtbaarNaNakijken && activity.isReview()) {
+	LOG.warning("Hier review Opdrnav");
+}
+				
 				((InteractionView) orgObject).setCommunicationRoot(comRoot2);
 				if(! (currentObject instanceof StateLess))
 				{	interactionViewObjects.add(orgObject);
@@ -4935,6 +4942,7 @@ private Object CamelCase(String name) {
 	
 	private boolean sealed; // no selects/
 	private void seal(CBookEvent event) {
+// no seal?
 		this.sealed = true;
 		for (Object object : interactionViewObjects)
 		{

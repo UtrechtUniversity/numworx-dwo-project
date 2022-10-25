@@ -286,7 +286,7 @@
 		<gwtVersion>2.9.0</gwtVersion>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <maven.javadoc.skip>true</maven.javadoc.skip>
-    	<interactionVersion>0.1.14-SNAPSHOT</interactionVersion>
+    	<interactionVersion>0.1.14</interactionVersion>
 	</properties>
 	<profiles>
 		<profile>
