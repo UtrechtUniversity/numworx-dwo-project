@@ -386,6 +386,7 @@ log("setScoID " + scoID);
 	        "cmi.total_time",
 	        "cmi.location",
 	        "cmi.completion_status",
+	        //Memento.REVIEW_CHECK, // alleen bij testen reviewmode
 	        "cmi.comments_from_lms.0.comment"
 	);
 	
@@ -423,7 +424,10 @@ log("Commit " + dirty.isEmpty());
 	
 	@Override
 	public String SetValue(String name, String value) {
-log("SetValue " + name);
+	
+//if (! name.startsWith("cmi.comments")) return "true";
+
+		log("SetValue " + name);
 		if(status == Status.NORMAL) setStatus(Status.DIRTY);
 		map.put(name, value);
 		dirty.put(name, value);

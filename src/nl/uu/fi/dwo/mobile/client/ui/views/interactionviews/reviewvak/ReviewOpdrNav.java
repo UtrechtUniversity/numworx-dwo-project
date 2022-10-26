@@ -15,13 +15,15 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 public class ReviewOpdrNav implements OpdrNavIF {
 
 	private OpdrNavIF delegate;
+	private ReviewActivity parent;
 
-	public ReviewOpdrNav(OpdrNavIF delegate) {
+	public ReviewOpdrNav(OpdrNavIF delegate, ReviewActivity reviewActivity) {
 		this.delegate = delegate;
+		parent = reviewActivity;
 	}
 
 	public void setChanged(boolean fout) {
-		delegate.setChanged(fout);
+		//delegate.setChanged(fout);
 	}
 
 	public FormuleKeyboardIF getKeyboard() {
@@ -33,7 +35,7 @@ public class ReviewOpdrNav implements OpdrNavIF {
 	}
 
 	public int getMode() {
-		return delegate.getMode();
+		return OEFENEN;
 	}
 
 	public String getLearnerId() {
@@ -53,7 +55,7 @@ public class ReviewOpdrNav implements OpdrNavIF {
 	}
 
 	public LessonMode getLessonMode() {
-		return delegate.getLessonMode();
+		return parent.getLessonMode();
 	}
 
 	public Role getRole() {

@@ -48,6 +48,7 @@ import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.reviewvak.ReviewActivity;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.samengesteldestappen.SamengesteldeStappenPanel;
 import nl.uu.fi.dwo.mobile.utils.Connector;
 import nl.uu.fi.dwo.mobile.utils.LogBuilder;
@@ -1291,6 +1292,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 			
 		}
 	}
+	private ReviewActivity reviewActivity;
 	
 	public void zetOpdracht(HashMap<String, Object> interactiePanelLaunchState)
 	{
@@ -1315,10 +1317,12 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 				}
 			}
 		}
-if (activity.isReview() && zichtbaarNaNakijken) {
-	LOG.warning("Hier komen rubrics");
-}
-		TekstBuffer tb = new TekstBuffer(activity, randomVarNamen, randomVarWaarden, anchorContext);
+		ActivityInterface a = activity;
+		if (a.isReview() && zichtbaarNaNakijken) {
+			LOG.warning("Hier komen rubrics");
+			a = reviewActivity = new ReviewActivity(a,this, !opdrachtGegevens.isEmpty());
+		}
+		TekstBuffer tb = new TekstBuffer(a, randomVarNamen, randomVarWaarden, anchorContext);
 		int[] volleBreedtes = new int[breedtes.size()];
 		for (int j = 0; j < breedtes.size(); j++)
 		{	volleBreedtes[j] =  (int) (breedtes.get(j).doubleValue() - 2 * cellMarge);
@@ -1697,6 +1701,7 @@ if (activity.isReview() && zichtbaarNaNakijken) {
 
 if (zichtbaarNaNakijken && activity.isReview()) {
 	LOG.warning("Hier review Opdrnav");
+	comRoot2 = reviewActivity.wrap(comRoot2);
 }
 				
 				((InteractionView) orgObject).setCommunicationRoot(comRoot2);
@@ -1927,7 +1932,9 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 		if (dwologger != null) {
 			dwologger.updateLog(buildLogParameters());
 		}
-		
+		if (reviewActivity != null) {
+			reviewActivity.getState(h, getScore0());
+		}
 		return h;
 	}
 	
@@ -1955,6 +1962,9 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 		}
 
 		ObjectMap map = JSONUtilities.wrapMap(h);
+
+		if (reviewActivity != null) map = reviewActivity.setState(map);
+
 		boolean ingeklapt = this.ingeklapt;
 		if (map.containsKey("hoogtes") )
 		{
@@ -2032,9 +2042,9 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 			resizeForCallOut();
 		}
 		
-		List<Object> states = JSONUtilities.toArrayList(h.get("interactiePanelStates"));
+		ObjectList states = (map.getObjectList("interactiePanelStates"));
 		if (states == null)
-			states = Collections.EMPTY_LIST;
+			states = JSONUtilities.wrapList(Collections.EMPTY_LIST);
 		int size = interactionViewObjects.size();
 		if(size != states.size())
 			Logger.getLogger("TextVakPanel").severe("sizes " + size + " " + states.size());
@@ -2043,7 +2053,7 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 		{
 			Object currentObject = interactionViewObjects.get(i);
 			if(currentObject instanceof InteractionView) {
-				HashMap<String, Object> state = (HashMap<String, Object>) states.get(i);
+				HashMap<String, Object> state = (HashMap<String, Object>) states.getMap(i);
 				((InteractionView) currentObject).setState(state);
 			}
 		}
@@ -2105,7 +2115,7 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 		}
 	}
 
-	public int getScore()
+	private int getScore0()
 	{
 		int score = 0;
 		for (int i = 0; i < interactionViewObjects.size(); i++)
@@ -2117,6 +2127,12 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 			score = score - puntenAftrekPopup;
 		return score;
 	}
+	
+	public int getScore() {
+		if (zichtbaarNaNakijken) return 0; // geen score bij deze optie.
+		return getScore0();
+	}
+	
 	
 	public int[][] getScoreObjectives()
 	{

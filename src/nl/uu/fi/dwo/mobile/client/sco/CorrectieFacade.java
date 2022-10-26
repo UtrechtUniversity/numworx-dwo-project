@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -30,6 +31,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.DWOPopupPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PopupButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TextEditor;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.berekeningvak.BerekeningVak;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
@@ -150,6 +152,11 @@ public class CorrectieFacade {
 
 	public static CorrectieFacade get(HashMap<String, Object> h, StubView view, Widget widget, int scoreMax,
 			OpdrNavIF comRoot, Logging logging, ActivityInterface activity, boolean checkDocent) {
+		return instance.create(h, view, widget, scoreMax, comRoot, logging, activity, checkDocent);
+	}
+
+	public static CorrectieFacade get(HashMap<String, Object> h, BerekeningVak view, Panel widget,
+			int scoreMax, OpdrNavIF comRoot, Logging logging, ActivityInterface activity, boolean checkDocent) {
 		return instance.create(h, view, widget, scoreMax, comRoot, logging, activity, checkDocent);
 	}
    

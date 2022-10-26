@@ -273,7 +273,7 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 			requestFocus();
 		}
 		if (correctieFacade == null) // eenmalig
-			correctieFacade = CorrectieFacade.get(h, this, getAsPanel(), settings.scoreMax(), comRoot, loggingManager.logging, activity);
+			correctieFacade = CorrectieFacade.get(h, this, getAsPanel(), settings.scoreMax(), comRoot, loggingManager.logging, activity, settings.checkDocent());
 	}
 	
 	@Override

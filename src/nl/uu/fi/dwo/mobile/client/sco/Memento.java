@@ -163,6 +163,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		String totalStr = getValue(TOTAL_TIME);
 		startTime = parse(totalStr);
 		value = getValue(COMPLETION_STATUS);
+	//value = COMPLETED;
 		eindtoetsVerzegeld = COMPLETED.equals(value);
 		try {
 			value = getValue(LESSON_MODE);
@@ -172,7 +173,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		}
 		if (eindtoetsVerzegeld && cmi_mode == LessonMode.normal)
 			cmi_mode = LessonMode.browse; // No edits possible.
-		//cmi_mode = LessonMode.review;
+	//cmi_mode = LessonMode.review;
 		
 		String reviewData = null;
 		if (eindtoetsVerzegeld || cmi_mode == LessonMode.review)
@@ -302,6 +303,14 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 			int l = Math.min(stateArray.size()+off, reviewArray.size());
 			for(int i = off; i < l; i++) {
 				mergeReviewState( stateArray.get(i-off).isObject(), reviewArray.get(i).isObject(), 0);
+			}
+			if (reviewj.size()>1) // textvakpanel geval
+			{
+				Set<String> keys = reviewj.keySet();
+				for (String key : keys) {
+					if (!INTERACTIE_PANEL_STATES.equals(key))
+						statej.put(key, reviewj.get(key));
+				}
 			}
 		} else {
 			Set<String> keys = reviewj.keySet();
@@ -1366,7 +1375,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 //		setValue(STUDENT_MODEL, string.toString());
 //	}
 
-  private static String REVIEW_CORRECTIE_SCORE = "reviewScoreCorrectie";
+  private static String REVIEW_CORRECTIE_SCORE = CorrectieView.REVIEW_SCORE_CORRECTIE;
 
   public int getReviewScore() {
 	  if (isReview()||isBrowse()) {

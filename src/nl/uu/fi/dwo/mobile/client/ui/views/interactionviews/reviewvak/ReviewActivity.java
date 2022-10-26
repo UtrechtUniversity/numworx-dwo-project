@@ -1,26 +1,41 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.reviewvak;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 
 import com.google.web.bindery.event.shared.EventBus;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
+import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 
-public class ReviewActivity implements ActivityInterface {
+public class ReviewActivity implements ActivityInterface, CBookEventListener {
 
+	static final String INTERACTIE_PANEL_STATES = "interactiePanelStates";
+	static final String CHECK_DOCENT = "checkDocent";
 	private ActivityInterface delegate;
+	private ReviewLogBuilder logBuilder;
+	private boolean checkDocent;
 	
-	public ReviewActivity(ActivityInterface delegate) {
+	public ReviewActivity(ActivityInterface delegate, Object source, boolean checkDocent) {
 		this.delegate = delegate;
+		this.checkDocent = checkDocent;
+		logBuilder = new ReviewLogBuilder(this);
+		getEventBus().addHandlerToSource(CBookEvent.TYPE, source, this);
 	}
 
 	public LogBuilder logBuilder() {
-		return delegate.logBuilder();
+		return logBuilder;
 	}
 
 	public boolean isPremium() {
@@ -28,11 +43,11 @@ public class ReviewActivity implements ActivityInterface {
 	}
 
 	public boolean isReview() {
-		return delegate.isReview();
+		return false;
 	}
 
 	public boolean isEindtoetsVerzegeld() {
-		return delegate.isEindtoetsVerzegeld();
+		return false;
 	}
 
 	public Scorm2004IF api() {
@@ -48,7 +63,7 @@ public class ReviewActivity implements ActivityInterface {
 	}
 
 	public LessonMode getLessonMode() {
-		return delegate.getLessonMode();
+		return LessonMode.normal;
 	}
 
 	public boolean isNoordhoff() {
@@ -78,5 +93,38 @@ public class ReviewActivity implements ActivityInterface {
 	public int getWindowHeight() {
 		return delegate.getWindowHeight();
 	}
-	
+
+	public OpdrNavIF wrap(OpdrNavIF comRoot2) {
+		return new ReviewOpdrNav(comRoot2, this);
+	}
+
+	@SuppressWarnings("unchecked")
+	public void getState(HashMap<String, Object> h, int correctie) {
+		ArrayList<Object> states = (ArrayList<Object>) h.get(INTERACTIE_PANEL_STATES);
+		if (states == null|| states.isEmpty()) return;
+		
+		HashMap<String,Object> o = new HashMap<>();
+		if (correctie > 0) {
+			checkDocent = false;
+			o.put(CorrectieView.REVIEW_SCORE_CORRECTIE, correctie);
+		}
+		o.put(INTERACTIE_PANEL_STATES, states);
+		o.put(CHECK_DOCENT, checkDocent);
+        h.put(CorrectieView.REVIEW_INTERACTIE_DATA, o);
+	}
+
+	public ObjectMap setState(ObjectMap h) {
+		if (h.containsKey(CorrectieView.REVIEW_INTERACTIE_DATA)) {
+			ReviewObjectMap map = new ReviewObjectMap(h);
+			checkDocent = map.getBoolean(CHECK_DOCENT, checkDocent);
+			return map;
+		}
+		return h;
+	}
+
+	@Override
+	public void acceptCBookEvent(CBookEvent event) {
+		if (TekstVakPanel.TVP_POPUP.equals(event.getCommand()))
+			checkDocent = false;		
+	}
 }
