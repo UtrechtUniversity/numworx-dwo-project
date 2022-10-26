@@ -1318,7 +1318,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 			}
 		}
 		ActivityInterface a = activity;
-		if (a.isReview() && zichtbaarNaNakijken) {
+		if (zichtbaarNaNakijken && a.isReview()) {
 			LOG.warning("Hier komen rubrics");
 			a = reviewActivity = new ReviewActivity(a,this, !opdrachtGegevens.isEmpty());
 		}
@@ -1964,6 +1964,7 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 		ObjectMap map = JSONUtilities.wrapMap(h);
 
 		if (reviewActivity != null) map = reviewActivity.setState(map);
+		else if (zichtbaarNaNakijken && activity.isEindtoetsVerzegeld()) map = ReviewActivity.wrap(map);
 
 		boolean ingeklapt = this.ingeklapt;
 		if (map.containsKey("hoogtes") )

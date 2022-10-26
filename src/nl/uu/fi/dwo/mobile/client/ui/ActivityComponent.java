@@ -53,7 +53,7 @@ public abstract class ActivityComponent implements ActivityInterface {
 	public abstract Logging getLogging();
 
 	public boolean isReview() {
-		return memento().isReview();
+		return memento() != null && memento().isReview();
 	}
 	public boolean isEindtoetsVerzegeld() {
 		return memento() != null && memento().isEindtoetsVerzegeld();

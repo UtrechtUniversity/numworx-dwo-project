@@ -116,10 +116,18 @@ public class ReviewActivity implements ActivityInterface, CBookEventListener {
 	public ObjectMap setState(ObjectMap h) {
 		if (h.containsKey(CorrectieView.REVIEW_INTERACTIE_DATA)) {
 			ReviewObjectMap map = new ReviewObjectMap(h);
-			checkDocent = map.getBoolean(CHECK_DOCENT, checkDocent);
+			checkDocent = map.review.getBoolean(CHECK_DOCENT, checkDocent);
 			return map;
 		}
 		return h;
+	}
+	
+	public static ObjectMap wrap(ObjectMap h) {
+		if (h.containsKey(CorrectieView.REVIEW_INTERACTIE_DATA)) {
+			ReviewObjectMap map = new ReviewObjectMap(h);
+			return map;
+		}
+		return h;	
 	}
 
 	@Override

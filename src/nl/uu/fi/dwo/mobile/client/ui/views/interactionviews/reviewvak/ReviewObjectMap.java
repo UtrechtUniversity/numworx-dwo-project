@@ -13,7 +13,7 @@ class ReviewObjectMap implements ObjectMap {
 	final static String STATES = ReviewActivity.INTERACTIE_PANEL_STATES;
 	
 	final private ObjectMap delegate;
-	private ObjectMap review;
+	ObjectMap review;
 
 	public boolean containsKey(String key) {
 		return delegate.containsKey(key);
