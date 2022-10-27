@@ -11,9 +11,12 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 import org.fusesource.restygwt.client.dispatcher.DispatcherFilter;
+import org.osgi.util.promise.Deferred;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -28,7 +31,7 @@ import nl.uu.fi.dwo.interaction.client.Stub;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
-public class NotebookGWT implements EntryPoint, InteractionStub, DispatcherFilter, MethodCallback<String> {
+public class NotebookGWT implements EntryPoint, InteractionStub, DispatcherFilter, MethodCallback<String>, LoadHandler {
 
 	static final String SCORE_MAX = "scoreMax";
 	static final String CHECK_DOCENT = "checkDocent";
@@ -60,7 +63,8 @@ public class NotebookGWT implements EntryPoint, InteractionStub, DispatcherFilte
   }
 
 	public NotebookGWT() {
-		frame = new Frame("about:blank");
+		frame = new Frame("https://hub-dev.dwo.nl/hub/logout"); // uitvogelen met deploy.jsp
+		frame.addLoadHandler(this);
 	};
 	
 	public NotebookGWT(HashMap<String, Object> h, HashMap<String, Number> randomVarWaarden, int volleBreedte) {
@@ -81,8 +85,6 @@ public class NotebookGWT implements EntryPoint, InteractionStub, DispatcherFilte
 				
 		frame.setStylePrimaryName("StubView");
 		frame.addStyleDependentName("borderless");
-
-		
 		
 		//alle gegevens uit launchData halen: 
 		init(width, height, launchState, randomVarWaarden);
@@ -249,7 +251,6 @@ public class NotebookGWT implements EntryPoint, InteractionStub, DispatcherFilte
 
 	@Override
 	public void onFailure(Method method, Throwable exception) {
-		//onError(method.getRequest(), exception);
 		startNotebook("notfound.html");
 	}
 
@@ -259,7 +260,16 @@ public class NotebookGWT implements EntryPoint, InteractionStub, DispatcherFilte
 	}
 
 	private void startNotebook(String response) {
-		frame.setUrl(response);		
+		onLoad.getPromise().onResolve(
+				() ->
+				frame.setUrl(response)
+		);		
+	}
+
+	private Deferred<LoadEvent> onLoad = new Deferred<>();
+	@Override
+	public void onLoad(LoadEvent event) {
+		onLoad.resolve(event);
 	}
 	
 	
