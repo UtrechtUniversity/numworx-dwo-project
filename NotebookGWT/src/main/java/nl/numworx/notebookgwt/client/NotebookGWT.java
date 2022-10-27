@@ -41,6 +41,22 @@ public class NotebookGWT implements EntryPoint, InteractionStub, DispatcherFilte
 	
 	static final NotebookService service = GWT.create(NotebookService.class);
 
+	private static native String getHub0() /*-{
+		return $wnd.hub
+	}-*/;
+	
+	static String getHub() {
+		try {
+			return getHub0().toString();
+		} catch(Exception oops) {
+			return "//hub-dev.dwo.nl/";
+		}
+	}
+	
+	String logoutURL() {
+		return getHub() + "hub/logout";
+	}
+	
 	
 	final Frame frame;
 	OpdrNavIF root;
@@ -63,7 +79,7 @@ public class NotebookGWT implements EntryPoint, InteractionStub, DispatcherFilte
   }
 
 	public NotebookGWT() {
-		frame = new Frame("https://hub-dev.dwo.nl/hub/logout"); // uitvogelen met deploy.jsp
+		frame = new Frame(logoutURL()); // uitvogelen met deploy.jsp
 		frame.addLoadHandler(this);
 	};
 	
