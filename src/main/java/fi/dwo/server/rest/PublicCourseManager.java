@@ -33,6 +33,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.beans.dwomaccess.JSONEncoder;
@@ -247,5 +248,20 @@ if(SECURITY)
     		LOG.log(Level.WARNING, "getImage error", e);
     	}
     	return Response.status(Status.NOT_FOUND).build();
-    }    
+    }  
+    
+    
+    @PUT
+    @Path("/getAll")
+    @Produces("application/json")
+    List<DomCourse> getAll(RestDwoProfile rest) throws Dwo2Exception {
+      Long profileID = MySQLPersistenceId.getNativeId(rest.getDomDwoProfile());
+      PersistentDwoProfile profile = DwoProfileManager.findEntity(profileID);
+      if ( profile.isLimited())
+      {
+          throwLoginNeeded();
+      }
+      List<PersistentCourse> list = CourseManager.findVisibleEntities(profileID);      
+      return list.stream().map(PersistentCourse::buildDomCourse).collect(Collectors.toList());
+    }
 }
