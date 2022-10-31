@@ -31,9 +31,9 @@ public class LogBuilder {
 			smObjectives = map.getStringArray("smObjectives");
 		}
 		if (map.containsKey("smForeknowledge"))
-			smForeknowledge = map.getStringArray("smForeknowledge");
+			setSmForeknowledge(map.getStringArray("smForeknowledge"));
 		if (map.containsKey("scoreMax")) {
-			maxScore = map.getInt("scoreMax");
+			setMaxScore(map.getInt("scoreMax"));
 		}
 		if(map.containsKey("logObjectives")) 
 		{

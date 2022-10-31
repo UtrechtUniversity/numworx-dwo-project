@@ -1,47 +1,51 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.reviewvak;
 
-import java.util.Map;
-
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 
 public class ReviewLogBuilder extends LogBuilder {
 
-	private final ReviewActivity activity;
+	//private final ReviewActivity activity;
+	final ActivityComponent org;
+	private String[] smForeknowledge;
 	public ReviewLogBuilder(ReviewActivity activity) {
 		super(null);
-		this.activity = activity;
+		//this.activity = activity;
+		org = (ActivityComponent) activity.delegate;
 	}
 	@Override
 	public Logging build() {
-		// super.build geeft een NPE
+		if (getSmObjectives() != null) {
+			return new ReviewLogging(this);
+		}
+
 		return null;
 	}
 	@Override
 	public LogBuilder setLaunchData(ObjectMap map) {
-		// TODO Auto-generated method stub
 		return super.setLaunchData(map);
 	}
 	@Override
-	public LogBuilder setSmObjectives(String[] smObjectives) {
-		// TODO Auto-generated method stub
+	public LogBuilder setSmObjectives(String[] smObjectives) {		
 		return super.setSmObjectives(smObjectives);
 	}
 	@Override
 	public LogBuilder setSmForeknowledge(String[] smForeknowledge) {
-		// TODO Auto-generated method stub
+		this.smForeknowledge = smForeknowledge;
 		return super.setSmForeknowledge(smForeknowledge);
 	}
 	@Override
 	public LogBuilder setClassName(String className) {
-		// TODO Auto-generated method stub
 		return super.setClassName(className);
 	}
 	@Override
 	public LogBuilder setMaxScore(Integer maxScore) {
-		// TODO Auto-generated method stub
 		return super.setMaxScore(maxScore);
+	}
+	String[] getSMForeKnowledge() {
+		return smForeknowledge;
 	}
 
 }

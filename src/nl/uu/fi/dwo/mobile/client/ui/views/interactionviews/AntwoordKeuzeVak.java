@@ -234,17 +234,17 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		    	logOption = map.getBoolean("logOption");
 			if(map.containsKey("logID") && logOption) 
 				logID = map.getString("logID");
-			String[] smObjectives = JSONUtilities.toStringArray(launchData.get("smObjectives"));
+			String[] smObjectives = map.getStringArray("smObjectives");
 			if (smObjectives != null && smObjectives.length > 0)
 				logOption = true;
 			if (logOption  )
 		    {	
-		    	LogBuilder dwologger = activity.logBuilder().setLogOption(logOption);
+		    	LogBuilder dwologger = activity.logBuilder()
+		    			.setLaunchData(map)
+		    			.setLogOption(logOption);
 		    	dwologger.setMaxScore(scoreMax);
 		    	dwologger.setLogID(logID);
 		    	dwologger.setClassName("fi.wiskopdr.AntwoordKeuzeVak/"+keuzeMogelijkheden.length);
-		    	if(map.containsKey("logIDLabel"))
-					dwologger.setLogIDLabel(map.getString("logIDLabel"));
 		    	dwologger.setLogObjectives(logObjectives);
 		    	dwologger.setSmObjectives(smObjectives);
 		    	dwologger.setLogIDLabel(logIDLabel);
@@ -769,7 +769,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 	
 	public void setAttempt()
 	{
-		if(logOption) {
+		if(logging != null) {
 			Map<String, Object> log = buildLogParameters();
 // TODO feedback
 			logging.log(log);

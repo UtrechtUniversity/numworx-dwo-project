@@ -1,7 +1,5 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
-import javax.ws.rs.core.Link;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window.Location;

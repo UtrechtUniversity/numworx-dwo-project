@@ -23,7 +23,7 @@ public class ReviewActivity implements ActivityInterface, CBookEventListener {
 
 	static final String INTERACTIE_PANEL_STATES = "interactiePanelStates";
 	static final String CHECK_DOCENT = "checkDocent";
-	private ActivityInterface delegate;
+	ActivityInterface delegate;
 	private ReviewLogBuilder logBuilder;
 	private boolean checkDocent;
 	
