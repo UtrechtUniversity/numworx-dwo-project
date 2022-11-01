@@ -6,7 +6,6 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
-import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
@@ -33,7 +32,7 @@ public class PublicCourseManager {
     // select * from tblCourse where parent = NULL, profile = %profile, school = NULL
     RestDwoProfile rest = new RestDwoProfile();
     rest.setDomDwoProfile(profile);
-    rest.setRestContext(RestAuthenticator.getInstance().getContext());
+    rest.setRestContext(StoredRestManager.getInstance().getContext());
     List<DomCourseStudent> result = StoredRestManager.getInstance()
         .getPutList("rest/public/course/getRoot", RestListClassTypes.DomCourseStudent, rest);
 
@@ -41,6 +40,33 @@ public class PublicCourseManager {
 
   }
 
+  /**
+   * get public toplevel courses from a profile. Security: if profile is limited, only members of
+   * some schools are allowed.
+   *
+   * @param profile
+   * @return ordered list of courses
+   * @throws Dwo2Exception
+   */
+  public static List<DomCourse> getAllCourses(DomDwoProfile profile) throws Dwo2Exception {
+    // Als een profiel "L"imited is, dan is er geen guest access mogelijk.
+    if (profile.getDwoProfileRights().contains("l")) {
+      return Collections.emptyList();
+    }
+    StoredRestManager instance = StoredRestManager.getInstance();
+    // select * from tblCourse where profile = %profile, school = NULL
+    RestDwoProfile rest = new RestDwoProfile();
+    rest.setDomDwoProfile(profile);
+    rest.setRestContext(instance.getContext());
+	List<DomCourse> result = instance
+        .getPutList("rest/public/course/getAll", RestListClassTypes.DomCourse, rest);
+
+    return result;
+
+  }
+
+  
+  
   /**
    * get a course. Security: profile can be limited. The course can be an assessment. Wrong profile,
    * Wrong school
@@ -55,7 +81,7 @@ public class PublicCourseManager {
     // Als een profiel "L"imited is, dan is er geen guest access mogelijk.
     RestCourse rest = new RestCourse();
     rest.setDomDwoProfile(profile);
-    rest.setRestContext(RestAuthenticator.getInstance().getContext());
+    rest.setRestContext(StoredRestManager.getInstance().getContext());
     rest.setDomCourse(course);
     // select * from tblCourse where id = $%id, profile = %profile and school = NULL
     DomCourseStudent result =
@@ -76,12 +102,12 @@ public class PublicCourseManager {
       throws Dwo2Exception {
     // Als een profiel "L"imited is, dan is er geen guest access mogelijk.
     if (profile.getDwoProfileRights().contains("l")) {
-      return Collections.EMPTY_LIST;
+      return Collections.emptyList();
     }
     RestCourse rest = new RestCourse();
     rest.setDomDwoProfile(profile);
     rest.setDomCourse(course);
-    rest.setRestContext(RestAuthenticator.getInstance().getContext());
+    rest.setRestContext(StoredRestManager.getInstance().getContext());
     List<DomCourseStudent> result = StoredRestManager.getInstance()
         .getPutList("rest/public/course/getChildren", RestListClassTypes.DomCourseStudent, rest);
 
