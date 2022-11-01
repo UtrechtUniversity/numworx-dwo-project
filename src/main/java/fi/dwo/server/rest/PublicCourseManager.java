@@ -254,7 +254,7 @@ if(SECURITY)
     @PUT
     @Path("/getAll")
     @Produces("application/json")
-    List<DomCourse> getAll(RestDwoProfile rest) throws Dwo2Exception {
+    public List<DomCourse> getAll(RestDwoProfile rest) throws Dwo2Exception {
       Long profileID = MySQLPersistenceId.getNativeId(rest.getDomDwoProfile());
       PersistentDwoProfile profile = DwoProfileManager.findEntity(profileID);
       if ( profile.isLimited())
