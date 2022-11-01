@@ -10,4 +10,5 @@ class JsChatboxDisplay {
     static native void clear();
     static native void openUrl(String url);
     static native void setLogin(String obj);
+	native static void setHelp(String url);
 }

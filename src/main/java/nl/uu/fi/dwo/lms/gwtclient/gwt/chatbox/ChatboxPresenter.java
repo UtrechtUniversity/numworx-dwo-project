@@ -74,6 +74,7 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 		this.view = view;
 		view.init();
 		view.clear();
+		view.setHelp(vars.buildHelpUrl("#chatbox"));
 		inited=false;
 	}
 
