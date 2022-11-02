@@ -1318,7 +1318,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 			}
 		}
 		ActivityInterface a = activity;
-		if (zichtbaarNaNakijken && a.isReview()) {
+		if (zichtbaarNaNakijken && a.isReview() && maxScore(interactiePanelLaunchState)) {
 			LOG.warning("Hier komen rubrics");
 			a = reviewActivity = new ReviewActivity(a,this, !opdrachtGegevens.isEmpty());
 		}
@@ -1386,6 +1386,11 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 			initialiseIdeasStatistiek();
 	}
 	
+	private boolean maxScore(HashMap<String, Object> interactiePanelLaunchState) {
+		Object max = interactiePanelLaunchState.get("scoreMax");
+		return !(Integer.valueOf(0).equals(max));
+	}
+
 	public void initialiseIdeasStatistiek(ArrayList<Tupel> initialState)
 	{
 		//Make lists out of separate list elements
