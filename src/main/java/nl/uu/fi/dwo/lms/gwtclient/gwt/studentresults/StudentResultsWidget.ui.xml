@@ -3,6 +3,7 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:x='urn:import:nl.uu.fi.dwo.lms.gwtclient.gwt.jsutil'
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb"></ui:with>
 	<ui:style>
 @external checkbox;
 	.perc {
@@ -113,7 +114,7 @@
 			  <g:north size="2">
 			   <g:FlowPanel>
 			  	<g:ListBox ui:field='models' addStyleNames="{style.models}">
-			  		<g:item>Kies eerst een model</g:item>
+			  		<g:item><ui:text  from='{rb.NUM_LBL_KNOWLEDGE_MODEL}' /></g:item>
 			  	</g:ListBox>
 			   </g:FlowPanel>
 			  </g:north>
@@ -123,7 +124,7 @@
 			  <g:south size="3">
 			  	<g:Anchor styleName='{style.anchor}' addStyleNames='backlink' ui:field='back'><svg viewBox="0 0 74 74" class="icon">
 									  <use xlink:href="#arrowLeft"></use>
-								</svg>Terug naar kennisoverzicht klas</g:Anchor>
+								</svg><ui:text from='{rb.NUM_LBL_KNOWLEDGE_BACK}' /></g:Anchor>
 			  </g:south>
 			  <g:south size="2.4"><g:FlowPanel>
 			  	<g:Button ui:field='btn' styleName='{style.graph}'>Graph</g:Button>

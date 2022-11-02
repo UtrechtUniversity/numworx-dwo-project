@@ -2,6 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:s="urn:import:nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb"></ui:with>
 	<ui:style field='style'>
 	.root {
 		background-color: #d2e5f5;
@@ -23,7 +24,7 @@
 			<g:Label stylePrimaryName='{style.header}' ui:field='title'>Filter</g:Label>
 			<s:FilterMethodSettings addStyleNames="{style.body}" ui:field='settings'></s:FilterMethodSettings>
 			<g:FlowPanel addStyleNames="{style.footer}">			
-				<g:Button ui:field='okBtn' styleName="right">Doorgaan</g:Button>
+				<g:Button ui:field='okBtn' styleName="right"><ui:text from='{rb.NUM_BTN_Ok}' /></g:Button>
 			</g:FlowPanel>				
 	</g:FlowPanel>
 </ui:UiBinder> 
