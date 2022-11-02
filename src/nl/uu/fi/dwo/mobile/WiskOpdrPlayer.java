@@ -11,6 +11,9 @@ import org.osgi.util.promise.Promises;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Command;
@@ -71,10 +74,39 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 	@Inject void setParameters(DWOplayerParameters p) {
 	  this.PREFIX = p.getLaunchData();
 	}
+
+	private static native String getBase() /*-{
+		return $wnd.deploy;
+	}-*/;
+
+	private static Element getHead() {
+		return Document.get().getElementsByTagName("head").getItem(0);
+	}
+
+	static void insertStylesheet(String href) {
+		LinkElement link = Document.get().createLinkElement();
+		link.setRel("stylesheet");
+		link.setType("text/css");
+		link.setHref(href);
+		Element head = getHead();
+		head.appendChild(link);
+	}
 		
+	void insertProfileCSS() {
+		String profile = Window.Location.getParameter("profile");
+		if ("111".equals(profile)) {
+			String css = "inf"; // ons kent ons
+    		insertStylesheet( getBase() + "css/" + css + ".css");
+		}
+	}
+	
+	
+	
 	@Override
 	public void onModuleLoad() {
 		setupConsole();  // neem console op
+		
+		insertProfileCSS();
 		
 	    String  build = "Version " + BUILD.version + "." + BUILD.buildNumber;
 	    logger.severe(build);

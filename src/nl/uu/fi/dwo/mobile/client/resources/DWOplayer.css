@@ -1,4 +1,6 @@
 @external numworx-popup, cbg-RP, v, nr, gwt-PushButton;
+@external navigatiebalk, score, scoreBtn, scoreBtn-cursor, scoreBtn-max0, spaceLabel, spaceShiftLabel, shiftBtn;
+@external myPushButton myPushButton-disabled;
 @url goednumworx goednumworx;
 
 div { padding: 0px; }
