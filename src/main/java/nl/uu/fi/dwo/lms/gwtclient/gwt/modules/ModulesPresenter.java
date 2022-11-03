@@ -263,6 +263,8 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         } else 
         if (select(SelectedView.RESULTS, message) 
         		|| select(SelectedView.KNOWLEDGE, message)
+        		|| select(SelectedView.CHATBOX, message)
+        		|| select(SelectedView.MODULES, message)
         		|| select(SelectedView.PERSONS,message) 
         		|| select(SelectedView.SCHOOLCLASSES,message)
         		|| select(SelectedView.RETOUR, message)
