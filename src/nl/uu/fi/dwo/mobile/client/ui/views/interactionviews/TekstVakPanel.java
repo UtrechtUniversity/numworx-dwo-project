@@ -4230,6 +4230,9 @@ private Object CamelCase(String name) {
 				if (link.startsWith(Actions.PROTO)) {
 					Actions.goTo(link);
 				} else
+				if (link.startsWith("#") && anchorContext != null) {
+					anchorContext.gotoPlace(link.substring(1));
+				} else
 				if (anchorContext == null || !link.startsWith("goto:"))
 					Window.open(link, "_blank", "");
 				else
