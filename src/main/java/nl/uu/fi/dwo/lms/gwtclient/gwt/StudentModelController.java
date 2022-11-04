@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 public class StudentModelController implements ClickHandler {
 	
@@ -90,7 +91,7 @@ public class StudentModelController implements ClickHandler {
 		
 		root.add(graph);
 		root.setWidgetTopBottom(graph, 0, Unit.PX, 2.2, Unit.EM);
-		Button b = new Button("OK");
+		Button b = new Button(DwoLocalesForGWT.instance.NUM_BTN_Ok());
 		b.addClickHandler(this);
 		b.addStyleName("doorgaan");
 		root.add(b);
@@ -110,7 +111,7 @@ public class StudentModelController implements ClickHandler {
 			method.chapters = Collections.emptyList();
 			method.edges = Collections.emptyList();
 			method.standard = true;
-			method.method = "Geen methode";
+			method.method = DwoLocalesForGWT.instance.NUM_LBL_METHOD_NONE();
 		}
 		
 		

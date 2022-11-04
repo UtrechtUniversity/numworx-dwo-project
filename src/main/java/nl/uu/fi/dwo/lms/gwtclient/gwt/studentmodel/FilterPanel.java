@@ -35,6 +35,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.studentmodel.JsTeacherClassFilt
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class FilterPanel extends Composite implements ProvidesKey<DomStudentModelContext4Student> {
@@ -74,7 +75,7 @@ public class FilterPanel extends Composite implements ProvidesKey<DomStudentMode
 
 	  @Override
 	  public String getValue(DomStudentModelContext4Student object) {
-	    return "open Filter";
+	    return DwoLocalesForGWT.instance.NUM_BTN_FILTER_OPEN();
 	  }
 
 	@Override
@@ -149,8 +150,8 @@ public class FilterPanel extends Composite implements ProvidesKey<DomStudentMode
 		table = new CellTable<>(keyProvider);
 		table.addStyleName("dwo");
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
-		table.addColumn(nameColumn, "Naam");
-		table.addColumn(checkColumn, "Filter");
+		table.addColumn(nameColumn, DwoLocalesForGWT.instance.NUM_TBL_CLASSES_CLASSNAME());
+		table.addColumn(checkColumn, DwoLocalesForGWT.instance.NUM_BTN_Filter());
 		table.addColumn(buttonColumn, "");
 		// Create a data provider.
 	    ListDataProvider<DomStudentModelContext4Student> dataProvider = new ListDataProvider<DomStudentModelContext4Student>();

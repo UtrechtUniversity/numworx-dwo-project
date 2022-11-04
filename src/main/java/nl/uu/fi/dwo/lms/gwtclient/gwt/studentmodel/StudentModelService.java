@@ -35,6 +35,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 @RoleScope
@@ -58,7 +59,7 @@ public class StudentModelService implements DescriptionService {
 			models = Promises.resolved(Collections.emptyList());
 		} else {
 			DomMethod value = new DomMethod();
-			value.setMethod("Geen methode"); // FIXME i18n
+			value.setMethod(DwoLocalesForGWT.instance.NUM_LBL_METHOD_NONE()); // FIXED i18n
 			methods.put(null, Promises.resolved(value));
 		}
 	}

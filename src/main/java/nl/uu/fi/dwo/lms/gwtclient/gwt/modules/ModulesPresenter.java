@@ -411,7 +411,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
 	
 	private boolean lastSend;
 	public void gotoLast() {
-		if (lastSend) return;
+		if (lastSend || tablet()) return;
 		lastSend=true;
 		inited.getPromise().then( p -> {
 			view.sendMessage("GOTO:last:");

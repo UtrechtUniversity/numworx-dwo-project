@@ -19,10 +19,11 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ResizeComposite;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 public class FilterTitle extends ResizeComposite implements Consumer<Map<String, Map<String, Set<Integer>>>>, Runnable {
 
-	public static final String ALLE_LEERDOELEN = "Alle leerdoelen";
+	public static final String ALLE_LEERDOELEN = DwoLocalesForGWT.instance.NUM_LBL_KNOWLEDGE_ALL();
 	
 	private static final String graphBtnStyle = StudentResultsGraph.bundle.css().graphButton();
 	

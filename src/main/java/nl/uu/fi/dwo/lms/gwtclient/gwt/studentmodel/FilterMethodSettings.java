@@ -20,7 +20,9 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
 
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.FilterTitle;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 public class FilterMethodSettings extends Composite implements LeafValueEditor<Map<String, Map<String, Set<Integer>>>> {
 
@@ -113,10 +115,10 @@ public class FilterMethodSettings extends Composite implements LeafValueEditor<M
 			grrow.addValueChangeHandler(new GRiHandler(gri[row-1]));
 		}
 		gr.addValueChangeHandler(new GRHandler());
-		Label alle = new P("Alle leerdoelen");flow.add(alle); flow.add(alle);
+		Label alle = new P(FilterTitle.ALLE_LEERDOELEN);flow.add(alle); flow.add(alle);
 		grid = new Grid(1,1); flow.add(grid);
 		grid.getElement().getStyle().setMarginBottom(18, Unit.PX);
-		rest = new CheckBox("Niet geclassificeerde leerdoelen");
+		rest = new CheckBox(DwoLocalesForGWT.instance.NUM_LBL_KNOWLEDGE_UNCLASSIFIED());
 		grid.setWidget(0, 0, rest);
 
 		initWidget(flow);
