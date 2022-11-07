@@ -1,8 +1,6 @@
 package nl.uu.fi.dwo.lms.jclient.lib.rest.managers;
 
 import java.util.List;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
-
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
@@ -16,6 +14,24 @@ import nl.uu.fi.dwo.rest.util.PathId;
 
 public class SecureUserCourseManager {
 
+	  /**
+	   * get accessable public and school courses from a profile. Security: if profile is limited, only members of
+	   * some schools are allowed. If student, only public courses.
+	   *
+	   * @param profile
+	   * @return ordered list of courses
+	   * @throws Dwo2Exception
+	   */
+	  public static List<DomCourse> getAllCourses(DomDwoProfile profile) throws Dwo2Exception {
+	    StoredRestManager instance = StoredRestManager.getInstance();
+	    // select * from tblCourse where profile = %profile, school = NULL
+	    RestDwoProfile rest = new RestDwoProfile(profile, getContext());
+		List<DomCourse> result = instance
+	        .getPutList("rest/sec:" + PathId.getId(getContext()) + "/user/course/getAll", RestListClassTypes.DomCourse, rest);
+
+	    return result;
+
+	  }
   /**
    * get public toplevel courses from a profile. Security: if profile is limited, only members of
    * some schools are allowed.
@@ -27,9 +43,7 @@ public class SecureUserCourseManager {
   public static List<DomCourseStudent> getCourses(DomDwoProfile profile) throws Dwo2Exception {
     // Als een profiel "L"imited is, dan is er geen guest access mogelijk.
     // select * from tblCourse where parent = NULL, profile = %profile, school = NULL
-    RestDwoProfile rest = new RestDwoProfile();
-    rest.setDomDwoProfile(profile);
-    rest.setRestContext(getContext());
+    RestDwoProfile rest = new RestDwoProfile(profile, getContext());
     List<DomCourseStudent> result = StoredRestManager.getInstance()
         .getPutList("rest/sec:" + PathId.getId(getContext()) + "/user/course/getRoot", RestListClassTypes.DomCourseStudent, rest);
 
@@ -46,9 +60,7 @@ public class SecureUserCourseManager {
    * @throws Dwo2Exception
    */
   public static List<DomCourseStudent> getCoursesSchool(DomDwoProfile profile) throws Dwo2Exception {
-    RestDwoProfile rest = new RestDwoProfile();
-    rest.setDomDwoProfile(profile);
-    rest.setRestContext(getContext());
+    RestDwoProfile rest = new RestDwoProfile(profile, getContext());
     List<DomCourseStudent> result = StoredRestManager.getInstance()
         .getPutList("rest/sec:" + PathId.getId(getContext()) + "/user/course/getSchool", RestListClassTypes.DomCourseStudent, rest);
 
@@ -57,7 +69,7 @@ public class SecureUserCourseManager {
   }
 
   private static DomContext getContext() {
-    return RestAuthenticator.getInstance().getContext();
+    return StoredRestManager.getInstance().getContext();
   }
 
   /**
@@ -115,9 +127,7 @@ public class SecureUserCourseManager {
   }
   
   public static List<DomCourseStudent> getTrash(DomDwoProfile profile) throws Dwo2Exception {
-	    RestDwoProfile rest = new RestDwoProfile();
-	    rest.setDomDwoProfile(profile);
-	    rest.setRestContext(getContext());
+	    RestDwoProfile rest = new RestDwoProfile(profile, getContext());
 	    List<DomCourseStudent> result = StoredRestManager.getInstance()
 	        .getPutList("rest/sec:" + PathId.getId(getContext()) + "/user/course/getTrashedSchool", RestListClassTypes.DomCourseStudent, rest);
 

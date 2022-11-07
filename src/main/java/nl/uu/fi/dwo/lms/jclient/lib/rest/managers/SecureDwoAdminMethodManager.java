@@ -20,9 +20,7 @@ public class SecureDwoAdminMethodManager {
 		      Logger.getLogger(SecureDwoAdminMethodManager.class.getName());
 
 		  public static List<DomMethod> getList(DomDwoProfile domDwoProfile) throws Dwo2Exception {
-		    RestDwoProfile rest = new RestDwoProfile();
-		    rest.setRestContext(getContext());
-		    rest.setDomDwoProfile(domDwoProfile);
+		    RestDwoProfile rest = new RestDwoProfile(domDwoProfile, getContext());
 		    List<DomMethod> src =
 		        StoredRestManager.getInstance().getPutList("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/method/getList",
 		            RestListClassTypes.DomMethod, rest);

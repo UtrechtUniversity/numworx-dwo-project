@@ -33,9 +33,7 @@ public class SecuredTeacherResultsManager {
 
   public static DomResultsPerTeacher getTeachersResults(DomDwoProfile profile)
       throws Dwo2Exception {
-    RestDwoProfile rest = new RestDwoProfile();
-    rest.setDomDwoProfile(profile);
-    rest.setRestContext(getContext());
+    RestDwoProfile rest = new RestDwoProfile(profile, getContext());
     DomResultsPerTeacher src;
     src = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/results/getTeachersResults",
         DomResultsPerTeacher.class, rest);

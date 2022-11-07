@@ -24,9 +24,7 @@ public class SecureTeacherConfigManager implements ConfigManager {
   }
 
   public List<DomAppletConfig> getConfigurations(Locale locale, DomDwoProfile profile)  throws Dwo2Exception {
-    RestDwoProfile rest = new RestDwoProfile();
-    rest.setRestContext(getContext());
-    rest.setDomDwoProfile(profile);
+    RestDwoProfile rest = new RestDwoProfile(profile, getContext());
     RestListClassTypes type = RestListClassTypes.DomAppletConfig;
     List<DomAppletConfig> result =
       StoredRestManager.getInstance().getPutList("rest/sec:" + PathId.getId(getContext()) + "/teacher/config/getList/"+locale, type, rest);

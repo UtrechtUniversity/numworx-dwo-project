@@ -28,9 +28,7 @@ public class SecureDwoAdminStudentModelManager implements SecureStudentModelMana
 
 	@Override
 	public List<DomStudentModelContext> getReducedList(DomDwoProfile profile) throws Dwo2Exception {
-		RestDwoProfile rest = new RestDwoProfile();
-	    rest.setRestContext(getContext());
-	    rest.setDomDwoProfile(profile);
+		RestDwoProfile rest = new RestDwoProfile(profile, getContext());
 	    List<DomStudentModelContext> src =
 	        restManager.getPutList("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/studentmodel/getReducedList",
 	            RestListClassTypes.DomStudentModelContext, rest);
@@ -40,7 +38,7 @@ public class SecureDwoAdminStudentModelManager implements SecureStudentModelMana
 	}
 
 	private DomContext getContext() {
-		    return restManager.getAuthenticator().getContext();
+		    return restManager.getContext();
 	}
 
 	@Override

@@ -29,9 +29,7 @@ public class SecureTeacherMethodManager {
       Logger.getLogger(SecureTeacherMethodManager.class.getName());
 
   public static List<DomMethod> getList(DomDwoProfile profile) throws Dwo2Exception {
-    RestDwoProfile rest = new RestDwoProfile();
-    rest.setRestContext(getContext());
-    rest.setDomDwoProfile(profile);
+    RestDwoProfile rest = new RestDwoProfile(profile, getContext());
     List<DomMethod> src =
         StoredRestManager.getInstance().getPutList("rest/sec:" + PathId.getId(getContext()) + "/teacher/method/getList",
             RestListClassTypes.DomMethod, rest);
