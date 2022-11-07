@@ -358,23 +358,26 @@ public class CourseManager {
           q.setParameter("dwoProfileID", profileID);
           List<PersistentCourse> list = q.getResultList();
           LOG.log(Level.FINE, "Course-manager retrieved {0} PersistentCourses with profileId {1}", new Object[]{list.size(), profileID});
-          Set<Long> visible = list.stream().map(PersistentCourse::getCourseID).collect(Collectors.toSet());
-          visible.add(0L);
-          Set<PersistentCourse> invisible;
-          do {
-            invisible = list.parallelStream()
-                .filter(c -> ! visible.contains(c.getParentID()))
-                .collect(Collectors.toSet());
-            list.removeAll(invisible);
-            invisible.forEach(c -> visible.remove(c.getCourseID()));
-          } while(! invisible.isEmpty());
-          
-          return list;
+          return reduceVisibility(list);         
       }
       finally {
           em.close();
       }
      
     }
+
+	public static List<PersistentCourse> reduceVisibility(List<PersistentCourse> list) {
+	  Set<Long> visible = list.stream().map(PersistentCourse::getCourseID).collect(Collectors.toSet());
+      visible.add(0L);
+      Set<PersistentCourse> invisible;
+      do {
+        invisible = list.parallelStream()
+            .filter(c -> ! visible.contains(c.getParentID()))
+            .collect(Collectors.toSet());
+        list.removeAll(invisible);
+        invisible.forEach(c -> visible.remove(c.getCourseID()));
+      } while(! invisible.isEmpty());
+      return list;
+	}
 
 }

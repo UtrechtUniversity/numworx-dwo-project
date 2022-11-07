@@ -18,6 +18,7 @@ import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import javax.annotation.security.RolesAllowed;
 import javax.imageio.ImageIO;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -57,6 +58,7 @@ import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
@@ -232,6 +234,42 @@ public class SecuredUserCourseManager {
     	}).sorted(DomCourseStudentComparator.INSTANCE).
     	collect(Collectors.toList());
     }
+    
+    @PUT
+    @Path("/getAll")
+    @Produces("application/json")
+    public List<DomCourse> getAllCourses(@Context SecurityContext sc, RestDwoProfile rest) throws Dwo2Exception {
+    	UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
+        Long profileID = MySQLPersistenceId.getNativeId(rest.getDomDwoProfile());
+    	PersistentSchoolGroup group = state.getSchoolGroup();
+    	//RoleType type = RoleType.values()[group.getGroupID()];
+ // All public visible courses for a student
+    	if (RoleType.STUDENT.ordinal() == group.getGroupID()) 
+    	{
+    		return CourseManager.findVisibleEntities(profileID).stream().map(PersistentCourse::buildDomCourse).collect(Collectors.toList());
+    	}
+    	PersistentSchool school = state.getSchool();
+    	boolean premium = school.getAboType() == AboType.premium;
+    	
+        PersistentDwoProfile profile = DwoProfileManager.findEntity(profileID);
+        if ( profile.isLimited())
+        {
+            // check schools
+        }       
+        List<PersistentCourse> list;
+        list = CourseManager.findEntities(profileID, school.getSchoolID()); // invisible entities ook
+        if (premium) {
+        	if (RoleType.TEACHER.ordinal() == group.getGroupID() && school.accessControl()) {
+        		LOG.fine("iets met ACL");
+        	}
+        } else {
+        	list = list.stream().filter(PublicCourseManager::visible).collect(Collectors.toList());
+        	list = CourseManager.reduceVisibility(list);
+        }
+        
+        return list.stream().map(PersistentCourse::buildDomCourse).collect(Collectors.toList());
+    }
+    
     
     @PUT
     @Path("/getRoot")
