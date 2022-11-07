@@ -371,9 +371,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	  return 
 	      profileDescription = 
 	      profile.flatMap(profile -> {
-    	    RestDwoProfile rest = new RestDwoProfile();
-    	    rest.setDomDwoProfile(profile);
-    	    rest.setRestContext(context);
+    	    RestDwoProfile rest = new RestDwoProfile(profile, context);
     	    return profileManager.getDescription(rest);
     	  });
 	}
