@@ -12,7 +12,15 @@ public class RestDwoProfile {
 	private DomContext restContext;
 	private DomDwoProfile domDwoProfile;
 
-    /**
+    public RestDwoProfile(DomDwoProfile domDwoProfile, DomContext restContext) {
+		this.domDwoProfile = domDwoProfile;
+		this.restContext = restContext;
+	}
+
+	public RestDwoProfile() {
+	}
+
+	/**
      * @return the restContext
      */
     public DomContext getRestContext() {
