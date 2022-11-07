@@ -51,9 +51,7 @@ public class SecuredTeacherResultsManager {
      * @param callBack
      */
     private void getTeachersResults(DomContext domContext, DomDwoProfile aProfile, MethodCallback<DomResultsPerTeacher> callBack) {
-        RestDwoProfile restPut = new RestDwoProfile();
-        restPut.setRestContext(domContext);
-        restPut.setDomDwoProfile(aProfile);
+        RestDwoProfile restPut = new RestDwoProfile(aProfile, domContext);
         F(service::getTeachersResults,PathId.getId(domContext), restPut, callBack);
     }
 

@@ -23,10 +23,15 @@ public class SecuredUserCourseManager implements CourseManager {
 	private SecuredUserCourseRestCaller service = GWT.create(SecuredUserCourseRestCaller.class);
 	
 	@Override
+	public Promise<List<DomCourse>> getAllCourses(DomDwoProfile profile, DomContext context) {
+		RestDwoProfile rest = new RestDwoProfile(profile, context);
+		return F(service::getAllCourses, PathId.getId(context), rest);
+	}
+	
+	
+	@Override
 	public Promise<List<DomCourseStudent>> getCourses(DomDwoProfile profile, DomContext context) {
-		RestDwoProfile rest = new RestDwoProfile();
-		rest.setDomDwoProfile(profile);
-		rest.setRestContext(context);
+		RestDwoProfile rest = new RestDwoProfile(profile, context);
 		return F(service::getCourses,PathId.getId(context),rest);
 	}
 
@@ -51,9 +56,7 @@ public class SecuredUserCourseManager implements CourseManager {
 
 	@Override
 	public Promise<List<DomCourseStudent>> getCoursesSchool(DomDwoProfile profile, DomContext context) {
-		RestDwoProfile rest = new RestDwoProfile();
-		rest.setDomDwoProfile(profile);
-		rest.setRestContext(context);
+		RestDwoProfile rest = new RestDwoProfile(profile, context);
 		return F(service::getCoursesSchool,PathId.getId(context),rest);
 	}
 

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
@@ -23,5 +24,9 @@ public interface PublicCourseRestCaller extends RestService {
 	@PUT
     @Path("/public/course/get")
     public void getCourse(RestCourse restDwoProfile, MethodCallback<DomCourseStudent> callback);
+	
+	@PUT
+	@Path("/public/course/getAll")
+	public void getAllCourses(RestDwoProfile rest, MethodCallback<List<DomCourse>> callback);
 
 }

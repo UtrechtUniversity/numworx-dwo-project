@@ -30,24 +30,27 @@ import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 public class PublicCourseManager implements CourseManager {
 
 	private PublicCourseRestCaller service;
-	
-	private DomContext createContext() {
-		return new DomContext();
-	}
-	
+		
 	public PublicCourseManager() {
 		service = GWT.create(PublicCourseRestCaller.class);
 	}
 
+	@Override
+	public Promise<List<DomCourse>> getAllCourses(DomDwoProfile profile, DomContext context) {
+		PromiseCallback<List<DomCourse>> result = new PromiseCallback<>();
+		RestDwoProfile rest = new RestDwoProfile(profile, context);
+		service.getAllCourses(rest, result);
+		return result.getPromise();
+	}
+	
+	
 	/* (non-Javadoc)
 	 * @see fi.dwo.gwt.lib.rest.CallManagers.CourseManager#getCourses(nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile)
 	 */
 	@Override
 	public Promise<List<DomCourseStudent>>getCourses(DomDwoProfile profile, DomContext context) {
 		PromiseCallback<List<DomCourseStudent>> result = new PromiseCallback<List<DomCourseStudent>>();
-		RestDwoProfile rest = new RestDwoProfile();
-		rest.setDomDwoProfile(profile);
-		rest.setRestContext(context);
+		RestDwoProfile rest = new RestDwoProfile(profile, context);
 		service.getCourses(rest, result);
 		return result.getPromise();
 	}

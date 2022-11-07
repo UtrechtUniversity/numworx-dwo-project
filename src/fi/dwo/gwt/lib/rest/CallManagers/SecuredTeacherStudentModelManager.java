@@ -49,9 +49,7 @@ public class SecuredTeacherStudentModelManager {
   }
   
   public Promise<List<DomStudentModelContext>> getReducedList(DomContext context, DomDwoProfile profile) {
-	RestDwoProfile rest = new RestDwoProfile();
-	rest.setRestContext(context);
-	rest.setDomDwoProfile(profile);
+	RestDwoProfile rest = new RestDwoProfile(profile,context);
 	return F(service::getReducedList,PathId.getId(context), rest);
   }
   

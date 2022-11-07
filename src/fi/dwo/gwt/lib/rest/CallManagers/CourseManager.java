@@ -13,6 +13,8 @@ import org.osgi.util.promise.Promise;
 import com.google.gwt.json.client.JSONValue;
 
 public interface CourseManager {
+	
+	Promise<List<DomCourse>> getAllCourses(DomDwoProfile profile, DomContext context);
 
 	public Promise<List<DomCourseStudent>> getCourses(DomDwoProfile profile, DomContext context);
 

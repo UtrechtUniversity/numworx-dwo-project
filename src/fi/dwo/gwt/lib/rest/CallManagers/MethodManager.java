@@ -44,9 +44,7 @@ public class MethodManager {
 	}
 	
 	public Promise<List<DomMethod>> getList(DomContext context, DomDwoProfile profile) {
-		RestDwoProfile rest = new RestDwoProfile();
-		rest.setRestContext(context);
-		rest.setDomDwoProfile(profile);
+		RestDwoProfile rest = new RestDwoProfile(profile, context);
 		return F(service::getList, PathId.getId(context), rest); 
 	}
 }
