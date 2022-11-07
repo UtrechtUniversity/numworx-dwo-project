@@ -18,7 +18,8 @@ interface TreeModuleViewNumworxCss extends CssResource {
 	String tileInfo();
 	String centerBackground();
 	String folderBackground();
-	String popup();
+//	@ClassName("profile-popup")
+//	String popup();
 	String treeItem();
 	String description();
 	String faviconOFF();

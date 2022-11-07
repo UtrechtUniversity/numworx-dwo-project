@@ -213,11 +213,11 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			  	}	
 			  sb.appendHtmlConstant("</div>");
 			  if(!description.isEmpty())
-			  sb.appendHtmlConstant("<div class='" + style.tileInfo()
-			  		+ "'>"
-			  		+ "<img height='18' src='"+r("images/numworx/"
-				  			+ "info"
-				  			+ "-numworx.svg")+"'/>"
+			  sb.appendHtmlConstant("<div class='" + style.tileInfo() 
+			  		+ " profile-tileInfo'>&nbsp;"
+//			  		+ "<img height='18' src='"+r("images/numworx/"
+//				  			+ "info"
+//				  			+ "-numworx.svg")+"'/>"
 			  		+ "</div>");
 		    sb.appendHtmlConstant("</div>");
 			  
@@ -246,12 +246,12 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		    	Element e = null;
 		    	if(Element.is(eventTarget)) {
 		    		e = Element.as(eventTarget);
-		    		while ( e != null && e != parent && !style.tileInfo().equals(e.getClassName()))
+		    		while ( e != null && e != parent && !e.hasClassName(style.tileInfo()))
 		    			e = e.getParentElement();
 		    	}
-		    	if ( e.getClassName().equals(style.tileInfo()))
+		    	if ( e.hasClassName(style.tileInfo()))
 		    	{ final PopupPanel popup = new PopupPanel(true, true);
-		    		popup.setStyleName(style.popup());
+		    		popup.setStyleName("profile-popup");
 		    		popup.setGlassEnabled(false);
 		    		popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 		            public void setPosition(int offsetWidth, int offsetHeight) {

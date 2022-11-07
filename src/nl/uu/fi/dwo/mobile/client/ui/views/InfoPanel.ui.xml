@@ -18,13 +18,17 @@
 		height: 400px;
 	}
 	.info-header {
-		background-color: color10;
 	}
 	.info-header-west {
 		padding: 18px;
 		display: inline-block;
 		font-size: 9px;
-		color: color13;
+		height: 20px;
+		width: 18px;
+		background-image: url('images/numworx/info-numworx.svg');
+		background-repeat: no-repeat;
+		background-position: 18px 12px;
+		background-size: 18px 18px;
 	}
 	.info-header-center {
 		display: inline-block;
@@ -37,24 +41,17 @@
 		float: right;
 		display: inline-block;
 		font-size: 9px;
-		color: color13;
 		padding: 18px;
 	}
 	.info-center {
 		overflow: auto;
-		background-color: color10;
 		padding: 18px;
 	}
 	</ui:style>
-	<g:DockLayoutPanel unit='PX' styleName='{style.info-root}'>
+	<g:DockLayoutPanel unit='PX' styleName='{style.info-root}' addStyleNames='profile-infopanel'>
 		<g:north size="54">
 			<g:FlowPanel styleName='{style.info-header}'>
-			<g:InlineHTML styleName='{style.info-header-west}'>
-				<img src='{pfx}images/numworx/info-numworx.svg'
-					height='18'
-					width='18'
-				/>
-			</g:InlineHTML>
+			<g:InlineHTML styleName='{style.info-header-west}' addStyleNames='profile-infopanel-west'>&nbsp;</g:InlineHTML>
 			<g:Label ui:field='title' styleName='{style.info-header-center}'>Logarithmen</g:Label>
 			<g:InlineHTML ui:field='closeBtn' styleName='{style.info-header-east}'><i class='fa fa-times fa-2x'></i></g:InlineHTML>		
 			</g:FlowPanel>
