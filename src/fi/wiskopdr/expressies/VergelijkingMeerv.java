@@ -676,6 +676,70 @@ public class VergelijkingMeerv
 		return new VergelijkingMeerv(vergelijkingenNieuw);
 	}
 	
+	public boolean isWareBeweringNummeriek() {
+		boolean isWaar = false;
+		boolean[] delenJuist = new boolean[(geefAantal())];
+		for (int k=0 ; k<delenJuist.length ; k++)
+		{
+			delenJuist[k] = false;
+			if (geefVergelijking(k).geefVergTeken().equals(">") 
+					|| geefVergelijking(k).geefVergTeken().equals("<")
+					|| geefVergelijking(k).geefVergTeken().equals("\u2265") //groter dan of gelijk aan
+					|| geefVergelijking(k).geefVergTeken().equals("\u2264")
+					|| geefVergelijking(k).geefVergTeken().equals("~")) //kleiner dan of gelijk aan
+			{	
+				Expressie expL = geefVergelijking(k).geefExpLinks();
+				Expressie expR = geefVergelijking(k).geefExpRechts();
+				if (expL.isWaarde() && expR.isWaarde() && geefVergelijking(k).geefVergTeken().equals("<"))
+					delenJuist[k] = expL.geefWaarde() < expR.geefWaarde()-0.000000001;
+				else if (expL.isWaarde() && expR.isWaarde() && geefVergelijking(k).geefVergTeken().equals(">"))
+					delenJuist[k] = expL.geefWaarde() > expR.geefWaarde()+0.000000001;
+				else if (expL.isWaarde() && expR.isWaarde() && geefVergelijking(k).geefVergTeken().equals("\u2264"))
+					delenJuist[k] = expL.geefWaarde() < expR.geefWaarde()+0.000000001;
+				else if (expL.isWaarde() && expR.isWaarde() && geefVergelijking(k).geefVergTeken().equals("\u2265"))
+					delenJuist[k] = expL.geefWaarde() > expR.geefWaarde()-0.000000001;
+				else if (geefVergelijking(k).geefVergTeken().equals("~"))
+				{	
+					Expressie e1 = expR.kind2.kind1;
+					Expressie e2 = expL;
+					Expressie e3 = expR.kind2.kind2;
+					
+					if (e1.isWaarde() && e2.isWaarde() && e3.isWaarde())
+					{
+						if (Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 0)) //{"<","<"}
+							delenJuist[k] = e1.geefWaarde() < e2.geefWaarde()-0.000000001 && e2.geefWaarde() < e3.geefWaarde()-0.000000001;
+						else if (Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 1)) //{"<","\u2264"}
+							delenJuist[k] = e1.geefWaarde() < e2.geefWaarde()-0.000000001 && e2.geefWaarde() < e3.geefWaarde()+0.000000001;
+						else if (Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 2)) //{"\u2264","<"}
+							delenJuist[k] = e1.geefWaarde() < e2.geefWaarde()+0.000000001 && e2.geefWaarde() < e3.geefWaarde()-0.000000001;
+						else if (Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 3)) //{"\u2264","\u2264"}
+							delenJuist[k] = e1.geefWaarde() < e2.geefWaarde()+0.000000001 && e2.geefWaarde() < e3.geefWaarde()+0.000000001;
+						else if (Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 4)) //{">",">"}
+							delenJuist[k] = e1.geefWaarde() > e2.geefWaarde()+0.000000001 && e2.geefWaarde() > e3.geefWaarde()+0.000000001;
+						else if (Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 5)) //{"\u2265",">"}
+							delenJuist[k] = e1.geefWaarde() > e2.geefWaarde()-0.000000001 && e2.geefWaarde() > e3.geefWaarde()+0.000000001;
+						else if (Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 6)) //{">","\u2265"}
+							delenJuist[k] = e1.geefWaarde() > e2.geefWaarde()+0.000000001 && e2.geefWaarde() > e3.geefWaarde()-0.000000001;
+						else if (Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 7)) //{"\u2265","\u2265"}
+							delenJuist[k] = e1.geefWaarde() > e2.geefWaarde()-0.000000001 && e2.geefWaarde() > e3.geefWaarde()-0.000000001;
+					}
+				}
+    				
+			} else
+				try {
+					delenJuist[k] = geefVergelijking(k).isOplossing(new BasisExpressie(1.212131415),"q");
+				} catch (RestartException e) {
+					delenJuist[k] = false; // eigenlijk "weet niet"
+				}
+			
+			if (k==0)
+				isWaar = delenJuist[k];
+			else
+				isWaar = isWaar || delenJuist[k];
+		}
+		return isWaar;
+	}
+	
 	public VergelijkingMeerv vervangDifferentialen(String diffVar)
 	{
 		Vergelijking[] vergelijkingenNieuw = new Vergelijking[vergelijkingen.length];

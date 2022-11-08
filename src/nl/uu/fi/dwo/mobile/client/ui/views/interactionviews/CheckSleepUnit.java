@@ -564,12 +564,8 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
     	    	        		}
     	    	        	}
     	        			
-    	        			try {
-    							stapJuist = v[h].isOplossing(new BasisExpressie(1.212131415),"q");
-    							logger.info("stapJuist.: "+stapJuist);
-    						} catch (RestartException e) {
-    							stapJuist = false;
-    						}
+    	        			stapJuist = v[h].isWareBeweringNummeriek();
+    						
     	        			modelFits = modelFits && stapJuist;
     	        			if(!modelFits && !hasLocationStrings) 
     	        			{	break;
@@ -637,11 +633,8 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	    	        		}
 	    	        	}
 	        			
-	        			try {
-							stapJuist = v[h].isOplossing(new BasisExpressie(1.212131415),"q");
-						} catch (RestartException e) {
-							stapJuist = false;
-						}
+	        			stapJuist = v[h].isWareBeweringNummeriek();
+						
 	        			juist = juist && stapJuist;
 	        			if(!juist && !hasLocationStrings) 
 	        			{	break;
@@ -668,11 +661,8 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 		        			break;
 		        		}
 			        }
-		        	try {
-						juist = v.isOplossing(new BasisExpressie(1.212131415),"q");
-					} catch (RestartException e) {
-						juist = false;
-					}
+		        	juist = v.isWareBeweringNummeriek();
+					
 		        	
 	        	}
 	        	// construeer antwoord (brxxx)
