@@ -49,6 +49,7 @@ import com.vaadin.pointerevents.client.PointerDownEvent;
 import com.vaadin.pointerevents.client.PointerDownHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.touch.client.Point;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -200,7 +201,8 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 		basisPanel.setStyleDependentName("readonly", !editable);
 		if (ipListSleep != null)
 			for(TekstVakPanel panel: ipListSleep) {
-				panel.setEditable(editable);
+				if(panel!=null)
+					panel.setEditable(editable);
 		}
 	}
 
@@ -318,9 +320,10 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
         
         if(randomizePositions) 
         {   for(int i=0 ; i<aantalSleepObjects ; i++)
-	        {   
-	        	Point p = randomizedPositions[i];
-	            ipListSleep[i].setStartSleep((int)p.getX(), (int)p.getY()); //niet meer nodig.
+	        {   if(ipListSleep[i]!=null && randomizedPositions!=null) {
+	        		Point p = randomizedPositions[i];
+	        		ipListSleep[i].setStartSleep((int)p.getX(), (int)p.getY()); //niet meer nodig.
+	        	}
 	        }
 	    }
  // When to show feedback       
@@ -481,15 +484,28 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
         
         Point[] doelPosities = new Point[aantalDoelObjects];
         for(int i=0 ; i < aantalDoelObjects; i++)
-        {   doelPosities[i] = ipListDoel[i].geefLocatie();
+        {   if(ipListDoel[i]!=null)
+        		doelPosities[i] = ipListDoel[i].geefLocatie();
+        	else {
+        		if(show)
+        			Window.alert("Target objects not found");
+        		return;
+        	}
         }
         
         Point[] posities = new Point[aantalSleepObjects];
         TekstVakPanel[] sleepObjecten = new TekstVakPanel[aantalSleepObjects];
         
         for(int i=0 ; i<aantalSleepObjects ; i++)
-        {   posities[i] = ipListSleep[i].geefLocatie();
-            sleepObjecten[i] = ipListSleep[i];
+        {   if(ipListSleep[i]!=null) {
+	        	posities[i] = ipListSleep[i].geefLocatie();
+	            sleepObjecten[i] = ipListSleep[i];
+        	}
+	        else {
+	        	if(show)
+	        		Window.alert("Drag objects not found");
+	        	return;
+	        }
         }
         
         if(checkFormule)
@@ -673,8 +689,8 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
         else
         {
         	for (int i = 0; i < aantalSleepObjects; i++)
-	        {
-        		ipListSleep[i].wisGoedFoutSleep();
+	        {	if(ipListSleep[i]!=null)
+        			ipListSleep[i].wisGoedFoutSleep();
 	        }
         	boolean stapJuist = true;
 	        for (int i = 0; i < aantalDoelObjects && i < aantalSleepObjects; i++)
@@ -1059,7 +1075,12 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 		Point[] doelPosities = new Point[aantalDoelObjects];
 		//System.out.println("aantalDoelObjects: " + aantalDoelObjects);
         for(int i=0 ; i<aantalDoelObjects ; i++)
-        {   doelPosities[i] = ipListDoel[i].geefLocatie();
+        {   if(ipListDoel[i]!=null)
+        		doelPosities[i] = ipListDoel[i].geefLocatie();
+	        else {
+	        	Window.alert("Target objects not found");
+        		return;
+	        }
         }
         
         for(int i=0 ; i<aantalSleepObjects ; i++)
@@ -1087,6 +1108,10 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 		    		}
 		    	}, PointerDownEvent.getType());
             }
+	        else {
+	        	Window.alert("Drag objects not found");
+        		return;
+	        }
         }
         
         if(randomizePositions && !positionsRandomized) randomizePositions();
@@ -1117,7 +1142,8 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 		score = 0;
 		ingevuld = true;
 		for(int j = 0; j < ipListSleep.length; j++)
-			ipListSleep[j].wisGoedFoutSleep();
+			if(ipListSleep[j] != null)
+				ipListSleep[j].wisGoedFoutSleep();
 		changed = true;
 	}
 	
