@@ -51,14 +51,14 @@ public class StudentResultsWidget extends Composite {
 		root.setWidgetHidden(back, !b);
 	}
 	
-	@UiField InlineLabel title, perc, redPerc;
+	@UiField InlineLabel perc, redPerc;
 	@UiField Tree tree;
 	@UiField SimplePanel description;
 	@UiField SimplePanel outer;
 	@UiField ListBox models;
 	@UiField Button btn;
 	@UiField DockLayoutPanel east;
-	@UiField Label filter;
+	@UiField Label title, filter;
 	@UiField nl.uu.fi.dwo.lms.gwtclient.gwt.jsutil.CheckBox viewBtn;
 	@UiField Anchor back;
 

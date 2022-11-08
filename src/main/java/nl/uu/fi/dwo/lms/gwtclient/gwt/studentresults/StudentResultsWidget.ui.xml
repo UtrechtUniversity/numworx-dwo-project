@@ -128,7 +128,7 @@
 			  </g:south>
 			  <g:south size="2.4"><g:FlowPanel>
 			  	<g:Button ui:field='btn' styleName='{style.graph}'>Graph</g:Button>
-			    <g:Button ui:field='filterBtn' styleName='{style.filter}' addStyleNames='{style.space} teacher-only'>Filter</g:Button>
+			    <g:Button ui:field='filterBtn' styleName='{style.filter}' addStyleNames='{style.space} teacher-only'><ui:text from='{rb.NUM_BTN_Filter}' /></g:Button>
 			    <x:CheckBox ui:field='viewBtn' addStyleNames='{style.filter}' checked="true" >Methode</x:CheckBox>
 			  </g:FlowPanel></g:south>
 			  <g:center>
@@ -141,7 +141,7 @@
 		</g:center>
 		<g:east size='440'>
 			<g:DockLayoutPanel ui:field='east' unit='EM' >
-				<g:north size="3"><g:FlowPanel styleName='{style.border-top}' ><g:InlineLabel styleName='{style.title}' ui:field='title'></g:InlineLabel></g:FlowPanel></g:north>
+				<g:north size="3"><g:FlowPanel styleName='{style.border-top}' addStyleNames='profile-borderBox'><g:Label addStyleNames='{style.title}' ui:field='title'></g:Label></g:FlowPanel></g:north>
 				<g:south size='3'>
 				  <g:FlowPanel ui:field='north' styleName='{style.score}'>
 					<g:InlineLabel ui:field='redPerc' styleName='{style.perc}'/>
@@ -150,7 +150,7 @@
 				  </g:FlowPanel>
 				</g:south>
 				<g:center>
-					<g:SimpleLayoutPanel styleName='{style.border}' ui:field='description' />
+					<g:SimpleLayoutPanel styleName='{style.border}' addStyleNames='profile-borderBox'  ui:field='description' />
 				</g:center>
 			</g:DockLayoutPanel>
 		</g:east>
