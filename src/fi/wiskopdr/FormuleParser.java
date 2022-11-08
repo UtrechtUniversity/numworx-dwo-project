@@ -179,6 +179,11 @@ public class FormuleParser
 							vergelijkingen[j] = new Vergelijking(e2, new Vermenigvuldiging(new BasisExpressie(i), new Optelling(e1, e3)), "~");
 							//System.out.println(vergelijkingen[j].toString());
 						}
+						else if (e1 != null && e2 != null && e3 != null && e1.isWaarde() && e3.isWaarde())
+						{
+							vergelijkingen[j] = new Vergelijking(e2, new Vermenigvuldiging(new BasisExpressie(i), new Optelling(e1, e3)), "~");
+							//System.out.println(vergelijkingen[j].toString());
+						}
 					}
 				}
 			}
