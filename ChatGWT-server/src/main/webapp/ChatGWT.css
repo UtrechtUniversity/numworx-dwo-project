@@ -162,3 +162,18 @@ table.dwo tbody {
 	display: block;
 }
 
+.date-Label {
+	background-image: linear-gradient(180deg, transparent, transparent 16px, #b3c2e5 16px, #b3c2e5 18px, transparent 18px, transparent 34px);
+}
+
+.date-Label .gwt-Label {
+    line-height: 34px;
+	background-color: #eff1f3 !important;
+    width: fit-content;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+	font-family: 'Ubuntu';
+	color: #7297c7;
+}

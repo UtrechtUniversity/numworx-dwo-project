@@ -15,11 +15,15 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.SimpleEventBus;
 
+import nl.uu.fi.dwo.lms.chatgwt.util.Persist;
+import nl.uu.fi.dwo.lms.chatgwt.util.PersistIF;
+
 public class MessageModel implements HasValueChangeHandlers<List<Message>> {
 
 	private EventBus bus = new SimpleEventBus();
 	private List<Message> messages = new LinkedList<>();
 	private final String jid; // user of room
+	private final PersistIF persist;
 	
 	public List<Message> getMessages() {
 		return messages;
@@ -33,8 +37,9 @@ public class MessageModel implements HasValueChangeHandlers<List<Message>> {
 		return jid;
 	}
 
-	MessageModel(String jid) {
+	MessageModel(String jid, PersistIF persist ) {
 		this.jid = jid;
+		this.persist = persist;
 	}
 
 	@Override
@@ -56,6 +61,7 @@ public class MessageModel implements HasValueChangeHandlers<List<Message>> {
 
 	public void add(Message message) {
 		messages.add(message);
+		message.setRead(! persist.isSeen(jid, message.getUTC()));
 		ValueChangeEvent.fire(this, Collections.singletonList(message));
 	}
 
@@ -68,6 +74,7 @@ public class MessageModel implements HasValueChangeHandlers<List<Message>> {
 		boolean oldread = msg.isRead();
 		boolean old = !oldread;
 		msg.setRead(true);
+		persist.seen(jid, msg.getUTC());
 		if (old && !hasUnread()) {
 			ValueChangeEvent.fire(this, Collections.emptyList());
 		}
