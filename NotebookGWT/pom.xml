@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>notebook-parent</artifactId>
 		<groupId>nl.numworx.notebook</groupId>
-		<version>0.0.2-SNAPSHOT</version>
+		<version>0.0.2</version>
 	</parent>
 	<artifactId>NotebookGWT</artifactId>
 	<packaging>gwt-app</packaging>
@@ -44,12 +44,12 @@
         <dependency>
         	<groupId>nl.numworx.notebook</groupId>
         	<artifactId>notebook-common</artifactId>
-        	<version>0.0.2-SNAPSHOT</version>
+        	<version>0.0.2</version>
         </dependency>
         <dependency>
         	<groupId>nl.numworx.notebook</groupId>
         	<artifactId>notebook-common</artifactId>
-        	<version>0.0.2-SNAPSHOT</version>
+        	<version>0.0.2</version>
         	<classifier>sources</classifier>
         </dependency>
         <dependency>
@@ -66,7 +66,7 @@
 		<dependency>
 			<groupId>nl.numworx.notebook</groupId>
 			<artifactId>notebook-service</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.2</version>
 			<classifier>classes</classifier>
 		</dependency>
 		<dependency>
