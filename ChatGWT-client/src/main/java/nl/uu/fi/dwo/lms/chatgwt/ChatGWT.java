@@ -34,6 +34,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.i18n.client.TimeZone;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.i18n.shared.DateTimeFormatInfo;
 import com.google.gwt.user.client.Window.Location;
@@ -78,6 +79,7 @@ import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
 import nl.uu.fi.dwo.lms.chatgwt.util.Base64;
 import nl.uu.fi.dwo.lms.chatgwt.util.MD5;
+import nl.uu.fi.dwo.lms.chatgwt.util.PersistIF;
 import nl.uu.fi.dwo.lms.chatgwt.util.ResizeFlowPanel;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
@@ -87,6 +89,7 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleClipboardIF, com.google.gwt.view.client.SelectionChangeEvent.Handler {
 	
 	
+	private static final TimeZone UTC = TimeZone.createTimeZone(0);
 	private static final int COL_6 = 456;
 
 	interface ChatUserCodec extends JsonEncoderDecoder<ChatUser> {};
@@ -229,8 +232,13 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			if (("chat".equals(type)||"groupchat".equals(type)) && elems.getLength() > 0) {
 				Element body = (Element) elems.getItem(0);
 				String text = body.getText();
-				if (stamp == null) stamp = now(); else stamp = iso(stamp);
-				m.add(new Message(from, stamp, text));
+				String utc = stamp;
+				if (stamp == null) {
+					stamp = now();
+					utc = utc();
+				} 
+				else stamp = iso(stamp);
+				m.add(new Message(from, stamp, text, utc));
 			}
 			return true;
 		}
@@ -241,7 +249,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			if (delay.getLength() > 0) {
 				stamp = delay.getItem(0).getAttribute("stamp"); // <delay from="klas@conference.chat-dev.dwo.nl" stamp="2022-09-09T08:02:29Z" xmlns="urn:xmpp:delay"/>
 			}
-			if (stamp == null) stamp = now(); else stamp = iso(stamp);
+			String utc = stamp;
+			if (stamp == null) { stamp = now(); utc = utc(); } else stamp = iso(stamp);
 			
 			NodeList<com.google.gwt.dom.client.Element> messages = element.getElementsByTagName("message");
 			Element message = (Element) messages.getItem(0);
@@ -259,7 +268,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			} else {
 				m = getModel(jid);
 			}
-			m.add(new Message(jid, stamp, text));
+			m.add(new Message(jid, stamp, text, utc));
 			return true;
 		}
 
@@ -291,17 +300,18 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	private void addToPanel(ValueChangeEvent<List<Message>> event) {
 		MessageModel mm = (MessageModel) event.getSource();
 		addToPanel(event.getValue());
-		event.getValue().forEach(m -> mm.setRead(m));
+		event.getValue().forEach(mm::setRead);
+		persist.flush();
 	}
 	private void addToPanel(Collection<Message> msgs) {
 		msgs.forEach(this::addToPanel);
 	}
 	private void addToPanel(Message msg) {
 		msg.setRead(true);
-		addToPanel(msg.getSender(), msg.getStamp(), msg.getContent());
+		addToPanel(msg.getSender(), msg.getStamp(), msg.getContent(), msg.getUTC());
 	}
 	
-	private void addToPanel(String from, String stamp, String text) {
+	private void addToPanel(String from, String stamp, String text, String utc) {
 		if (stamp == null||stamp.isEmpty()) {
 			stamp = now();
 		}
@@ -318,8 +328,17 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		hbox.addStyleName("profile-borderBox");
 		hbox.add(afzender);
 		hbox.add(time);
+		if ( !compareStamp(lastPanel, stamp)) {
+			Label datelabel = new Label(stamp.split(" ")[0]);
+			FlowPanel flow = new FlowPanel();			
+			flow.addStyleName("date-Label");
+			flow.add(datelabel);
+			
+			panel.add(flow);
+			lastPanel = stamp;
+		}
+		
 		panel.add(hbox);
-
 //		StubWidget message = new StubWidget(4);				
 //		HashMap<String, Object> data = new HashMap<>();
 //		data.put("rekenTool", Boolean.FALSE);
@@ -336,6 +355,12 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		scroll.scrollToBottom();
 	}
 	
+	private boolean compareStamp(String stamp1, String stamp2) {
+		stamp1 = stamp1.split(" ")[0]; // alleen datum vak
+		stamp2 = stamp2.split(" ")[0];
+		return stamp1.equals(stamp2);
+	}
+
 	class ChatStatusCallback extends StatusCallback {
 		
 
@@ -389,6 +414,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	private TextBox username;
 	private TextBox password;
 	private VerticalPanel panel;
+	private String lastPanel;
 	private FlowPanel east;
 	private ChatUser chatUser;
 	private Combined combined = Combined.DESKTOP_ACTIVE;
@@ -402,7 +428,17 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	private NoSelectionModel<UserModel> noselection;
 	private EastHeader eastHeader;
 	private List<ChatRoom> rooms;
+	protected PersistIF persist;
+	
+	public ChatGWT(PersistIF persist) {
+		this.persist = persist;
+	}
 
+	public ChatGWT() {
+		this(GWT.create(PersistIF.class));
+	}
+	
+	
 	private void put(ChatUser u) {
 		byJid.put(u.jid,u);
 	}
@@ -413,7 +449,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		//return models.computeIfAbsent(jid, MessageModel::new);
 		MessageModel m = models.get(jid);
 		if (m == null) {
-			m = new MessageModel(jid);
+			m = new MessageModel(jid, persist);
 			models.put(jid, m);
 		}
 		return m;
@@ -468,6 +504,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			String chatUserString = getParentChatUser();
 			ChatUser u = CODEC.decode(chatUserString);
 			toJid(u);
+			persist.init(u.jid);
 			if (u.room != null) {
 				rooms = u.room;
 				u.room.forEach(r -> {
@@ -524,6 +561,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		
 		
 		panel = new VerticalPanel();
+		lastPanel = now();
 		scroll = new ScrollPanel(panel);
 		east  = new ResizeFlowPanel();
 		
@@ -633,6 +671,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		if (connection != null) {
 			connection.disconnect("logout");
 			connection = null;
+			persist.flush();
 		}
 	}
 
@@ -647,7 +686,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		chatUser.token = password;
 		chatUser.nickName = "Username: " + u;
 		chatUser.room = rooms;
-		
+		persist.init(chatUser.jid);
 		login();
 
 		event.preventDefault();
@@ -699,7 +738,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			String[][] attributes = { { "to", u.jid }, { "type", "chat" } };
 			Builder reply = Builder.$msg(attributes).c("body",null).t(value);
 			connection.send(reply);
-			Message msg = new Message(chatUser.jid, now(), value);
+			Message msg = new Message(chatUser.jid, now(), value, utc());
 			um.getMessages().add(msg);
 		} else {
 			// select user 1st;
@@ -707,7 +746,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	}
 	private static final DateTimeFormatInfo INFO = LocaleInfo.getCurrentLocale().getDateTimeFormatInfo();
 	private static final DateTimeFormat DATE_TIME = DateTimeFormat.getFormat(INFO.dateTimeShort(INFO.timeFormatShort(),INFO.formatMonthNumDay()));
-	private String now() {
+	public static String now() {
 		return DATE_TIME.format( new Date());
 	}
 	@Override
@@ -779,7 +818,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			//deleteFromRoom(this.room);
 			removeAddToPanel();
 		}
-		panel.clear();
+		panel.clear();lastPanel = now();
 		
 		this.room = room;
 		students.init(room);
@@ -834,13 +873,17 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	}
 	private void switchToModel(MessageModel m) {
 		removeAddToPanel();
-		panel.clear();
+		panel.clear();lastPanel = now();
 		addToPanel(m.getMessages());
+		m.getMessages().forEach(m::setRead);
+		persist.flush();
 		addToPanelHandler = m.addValueChangeHandler(this::addToPanel);
 	}
 	
 	static final String ISO8601_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ";
+	private static final int Tlen = ISO8601_PATTERN.indexOf('T')    + 8;
 	static final DateTimeFormat ISO_DATETIME = DateTimeFormat.getFormat(ISO8601_PATTERN);
+
 	private boolean formule;
 
 	public static Date fromDelay(String delay) {
@@ -850,6 +893,9 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	
 	private String iso(String delay) {
 		return DATE_TIME.format(fromDelay(delay));
+	}
+	public static String utc() {
+		return ISO_DATETIME.format(new Date(), UTC);
 	}
 	
 }

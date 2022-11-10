@@ -18,6 +18,11 @@
 
   <entry-point class="nl.uu.fi.dwo.lms.chatgwt.ChatGWT" />
 
+  <replace-with class="nl.uu.fi.dwo.lms.chatgwt.util.Persist">
+   	<when-type-is class="nl.uu.fi.dwo.lms.chatgwt.util.PersistIF" />
+  </replace-with>
+
+
   <set-property name="gwt.logging.enabled" value="TRUE"/>
   <set-property name="gwt.logging.logLevel" value="FINEST"/>
 

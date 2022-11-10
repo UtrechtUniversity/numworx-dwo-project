@@ -20,9 +20,16 @@ public class RoomController implements ValueChangeHandler<List<Message>> {
 	public void onValueChange(ValueChangeEvent<List<Message>> event) {
 		MessageModel model = (MessageModel) event.getSource();
 		ChatRoom room = rooms.get(model.getJid());
-		east.setUnread(room, !event.getValue().isEmpty());
+		east.setUnread(room, hasUnread(event.getValue()));
 	}
 
+	public boolean hasUnread(List<Message> messages) {
+		for(Message m: messages) {
+			if (!m.isRead()) return true;
+		}
+		return false;
+	}
+	
 	RoomController(List<ChatRoom> rooms, EastHeader east) {
 		this.east = east;
 		Function<ChatRoom, String> keyMapper = ChatRoom::getJid;
