@@ -22,15 +22,22 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 public class TeacherViewHandler implements SwitchViewEventHandler {
     private static final Logger LOG = Logger.getLogger(TeacherViewHandler.class.getName());
 
-    @Inject DwoGlobalVars dwoGlobalVars;
+    private final DwoGlobalVars dwoGlobalVars;
     @Inject ViewFactory viewFactory;
     @Inject PresenterFactoryGwt presenterFactory;
     @Inject BootPanelController controller;
     @Inject EventBus eventBus;
     
-    @Inject Lazy<ChatboxPresenter> chatbox;
+    private final Lazy<ChatboxPresenter> chatbox;
    
-    @Inject TeacherViewHandler() {}
+    @Inject TeacherViewHandler(Lazy<ChatboxPresenter> chatbox, DwoGlobalVars dwoGlobalVars) {
+    	this.chatbox = chatbox;
+    	this.dwoGlobalVars = dwoGlobalVars;
+    	
+    	if (dwoGlobalVars.isPremium() && dwoGlobalVars.isTest()) {
+    		chatbox.get().init();
+    	}
+    }
     
   @Override
   public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {

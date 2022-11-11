@@ -45,4 +45,8 @@ public class JsChatboxView implements ChatboxPresenter.Display {
 	@Override public void openUrl(String url) {
 		JsChatboxDisplay.openUrl(url);
 	}
+	
+	@Override public void setUnseen(boolean b) {
+		JsChatboxDisplay.setUnseen(b);
+	}
 }

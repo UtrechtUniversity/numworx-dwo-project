@@ -35,6 +35,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEventHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactory;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountService;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.chatbox.ChatboxEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
@@ -295,7 +296,11 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         	loginNeeded();
         } else if ("INITED".equals(message)) {
         	if (!inited.getPromise().isDone())inited.resolve(message);
-        } 
+        } else if (message.startsWith("Chatbox:"))
+        {
+        	ChatboxEvent ev = new ChatboxEvent(message);
+        	eventBus.fireEvent(ev);
+        }
     }
 
     private void loginNeeded() {

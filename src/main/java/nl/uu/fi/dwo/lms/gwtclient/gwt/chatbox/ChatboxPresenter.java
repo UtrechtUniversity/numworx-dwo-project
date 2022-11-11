@@ -10,16 +10,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.inject.Inject;
-
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.web.bindery.event.shared.EventBus;
-
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
@@ -37,13 +35,15 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
-public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventHandler {
+public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventHandler, ChatboxEvent.ChatboxHandler {
 
 	public interface Display extends BasicDisplay {
 
 		void setLogin(ChatUser user);
 
 		void openUrl(String url);
+
+		void setUnseen(boolean b);
 		
 	}
 	
@@ -58,16 +58,19 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 	private LoggingFailure FAILURE;
     private static final Logger LOG = Logger.getLogger(ChatboxPresenter.class.getName());
 	private int profile;
+	private final EventBus bus;
 	
 	@Inject ChatboxPresenter(DwoGlobalVars vars, EventBus bus, Optional<PersonsService> service, BootPanelController boot) {
 		this.vars = vars;
 		this.service = service;
 		this.profile = boot.getProfile();
+		this.bus = bus;
 	    FAILURE = new LoggingFailure(LOG, bus);
 		
 		//RestAuthenticator.instance.addValueChangeHandler(this);
 		bus.addHandlerToSource(ValueChangeEvent.getType(), RestAuthenticator.instance, this); // resettable eventbus, helaas werkt niet want Authenticator gebruikt andere bus
 		bus.addHandler(LoginEvent.TYPE, this);
+		bus.addHandler(ChatboxEvent.TYPE, this);
 	}
 	
 	@Inject void setView(Display view) {
@@ -82,13 +85,17 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 
 	private final Success<? super List<ChatRoom>, ? extends List<ChatRoom>> success = p -> {
 		user.room = ( p.getValue() );
-		view.setLogin(user);			
-		view.openUrl("chatbox/?profile=" + profile);
+		view.setLogin(user);
+		String locale = LocaleInfo.getCurrentLocale().getLocaleName();
+		view.openUrl("chatbox/?profile=" + profile + "&locale=" + locale);
 		return p;
 	};
 	
 	public void init() {
-		if (inited) return;
+		if (inited) {
+			view.setUnseen(false);
+			return;
+		}
 		inited = true;
 		
 		
@@ -116,7 +123,11 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 		} else if (role == RoleType.TEACHER) {
 			// teacher
 			service.get().getTeachersSchoolClasses().flatMap(this::roomOfSchoolClass)
-			.then( success, FAILURE);
+			.then( success, FAILURE)
+
+//			.onResolve(() -> bus.fireEvent(new ChatboxEvent(":unseen")));
+
+			;
 			return;
 		}
 		view.clear();
@@ -186,5 +197,12 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 		LOG.info("catch " + loginEvent.getState());
 		view.clear();
 		inited = false;
+	}
+
+	@Override
+	public void onChatbox(ChatboxEvent event) {
+		if (event.getParam().endsWith(":unseen")) {
+			view.setUnseen(true);
+		}		
 	}
 }
