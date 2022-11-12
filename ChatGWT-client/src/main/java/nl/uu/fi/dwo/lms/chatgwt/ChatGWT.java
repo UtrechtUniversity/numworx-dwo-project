@@ -328,8 +328,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		hbox.addStyleName("profile-borderBox");
 		hbox.add(afzender);
 		hbox.add(time);
-		if ( !compareStamp(lastPanel, stamp)) {
-			Label datelabel = new Label(stamp.split(" ")[0]);
+		if (!compareStamp(lastPanel, stamp)) {
+			Label datelabel = new Label(dateOnly(utc));
 			FlowPanel flow = new FlowPanel();			
 			flow.addStyleName("date-Label");
 			flow.add(datelabel);
@@ -464,9 +464,14 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	}
 	
 	private ChatUser get(String key) {
-		if (!key.contains("@")) key += "@"+DOMAIN;
+		key = addDomain(key);
 		ChatUser u = byJid.get(key);
 		return u;
+	}
+
+	public static String addDomain(String key) {
+		if (!key.contains("@")) key += "@"+DOMAIN;
+		return key;
 	}
 	
 	private String getDisplayName(String jid) {
@@ -746,9 +751,15 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	}
 	private static final DateTimeFormatInfo INFO = LocaleInfo.getCurrentLocale().getDateTimeFormatInfo();
 	private static final DateTimeFormat DATE_TIME = DateTimeFormat.getFormat(INFO.dateTimeShort(INFO.timeFormatShort(),INFO.formatMonthNumDay()));
+	private static final DateTimeFormat DATE_ONLY = DateTimeFormat.getFormat(INFO.formatMonthFullDay());
+	
 	public static String now() {
 		return DATE_TIME.format( new Date());
 	}
+	public static String dateOnly(String utc) {
+		return DATE_ONLY.format(fromDelay(utc));
+	}
+	
 	@Override
 	public HandlerRegistration addChangeHandler(ChangeHandler handler) {
 		this.handler = handler;
@@ -881,7 +892,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	}
 	
 	static final String ISO8601_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ";
-	private static final int Tlen = ISO8601_PATTERN.indexOf('T')    + 8;
+	//private static final int Tlen = ISO8601_PATTERN.indexOf('T');
 	static final DateTimeFormat ISO_DATETIME = DateTimeFormat.getFormat(ISO8601_PATTERN);
 
 	private boolean formule;

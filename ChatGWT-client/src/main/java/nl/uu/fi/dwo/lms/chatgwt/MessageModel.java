@@ -15,6 +15,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.SimpleEventBus;
 
+import nl.uu.fi.dwo.lms.chatgwt.util.Notification;
 import nl.uu.fi.dwo.lms.chatgwt.util.Persist;
 import nl.uu.fi.dwo.lms.chatgwt.util.PersistIF;
 
@@ -24,6 +25,7 @@ public class MessageModel implements HasValueChangeHandlers<List<Message>> {
 	private List<Message> messages = new LinkedList<>();
 	private final String jid; // user of room
 	private final PersistIF persist;
+	private final Notification note = Notification.INSTANCE;
 	
 	public List<Message> getMessages() {
 		return messages;
@@ -61,8 +63,12 @@ public class MessageModel implements HasValueChangeHandlers<List<Message>> {
 
 	public void add(Message message) {
 		messages.add(message);
-		message.setRead(! persist.isSeen(jid, message.getUTC()));
-		ValueChangeEvent.fire(this, Collections.singletonList(message));
+		message.setRead(! persist.isSeen(jid, message));
+		ValueChangeEvent.fire(this, Collections.singletonList(message)); // will change "read" property
+		
+		if (!message.isRead()) {
+			note.send("Chatbox:unseen");
+		}
 	}
 
 	public void clear() {
@@ -74,7 +80,7 @@ public class MessageModel implements HasValueChangeHandlers<List<Message>> {
 		boolean oldread = msg.isRead();
 		boolean old = !oldread;
 		msg.setRead(true);
-		persist.seen(jid, msg.getUTC());
+		persist.seen(jid, msg);
 		if (old && !hasUnread()) {
 			ValueChangeEvent.fire(this, Collections.emptyList());
 		}

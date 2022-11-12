@@ -9,6 +9,7 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.storage.client.Storage;
 
 import nl.uu.fi.dwo.lms.chatgwt.ChatGWT;
+import nl.uu.fi.dwo.lms.chatgwt.Message;
 
 public class Persist implements PersistIF {
 	
@@ -68,14 +69,16 @@ public class Persist implements PersistIF {
 		return date;
 	}
 	
-	public void seen(String jid, String date) {
-		date = nonnull(date);
-		if (isSeen(jid, date))
-			current.nodes.put(jid, date);
+	public void seen(String jid, Message message) {
+		if (isSeen(jid, message))
+			current.nodes.put(jid, nonnull(message.getUTC()));
 	}
 	
-	public boolean isSeen(String jid, String date) {
-		date = nonnull(date);
+	public boolean isSeen(String jid, Message message) {
+		String sender = message.getSender();
+		sender = ChatGWT.addDomain(sender);
+		if (current.jid.equals(sender)) return false; // if self always seen! 
+		String date = nonnull(message.getUTC());
 		if (current.nodes.containsKey(jid)) {
 			boolean after = date.compareTo(current.nodes.get(jid))>0;
 			return after;

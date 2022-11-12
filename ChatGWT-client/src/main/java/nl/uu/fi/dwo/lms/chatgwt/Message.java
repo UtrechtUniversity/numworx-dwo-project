@@ -1,6 +1,6 @@
 package nl.uu.fi.dwo.lms.chatgwt;
 
-class Message {
+public class Message {
 	private final String content;
 	private final String stamp, utc;
 	private final String sender;
@@ -18,7 +18,7 @@ class Message {
 	String getStamp() {
 		return stamp;
 	}
-	String getSender() {
+	public String getSender() {
 		return sender;
 	}
 	public boolean isRead() {
