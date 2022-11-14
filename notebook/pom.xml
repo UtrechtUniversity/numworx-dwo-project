@@ -29,7 +29,7 @@
 		<dependency>
 			<groupId>org.c-book</groupId>
 			<artifactId>cbookeditor</artifactId>
-			<version>0.0.1-20161201.100805-1</version>
+			<version>0.0.1</version>
 			<scope>test</scope>
 		</dependency>
 
