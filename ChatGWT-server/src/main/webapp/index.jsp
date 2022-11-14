@@ -7,7 +7,7 @@
 <html>
   <head>
     <meta charset=UTF-8>
-    <meta name="gwt:property" content="locale=nl" >
+    <meta name="gwt:property" content="locale=en" >
 <%
 	String profile = request.getParameter("profile");
 	String cdn = System.getProperty("CDNURL","https://ebs-dev-dwo-nl.s3.eu-west-1.amazonaws.com");

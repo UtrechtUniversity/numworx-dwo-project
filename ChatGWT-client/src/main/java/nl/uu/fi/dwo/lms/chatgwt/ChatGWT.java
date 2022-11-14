@@ -91,6 +91,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	
 	private static final TimeZone UTC = TimeZone.createTimeZone(0);
 	private static final int COL_6 = 456;
+	private static final Text rb = GWT.create(Text.class);
 
 	interface ChatUserCodec extends JsonEncoderDecoder<ChatUser> {};
 	
@@ -231,7 +232,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			}
 			if (("chat".equals(type)||"groupchat".equals(type)) && elems.getLength() > 0) {
 				Element body = (Element) elems.getItem(0);
-				String text = body.getText();
+				String text = xmldecode(body.getText());
 				String utc = stamp;
 				if (stamp == null) {
 					stamp = now();
@@ -256,7 +257,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			Element message = (Element) messages.getItem(0);
 			NodeList<com.google.gwt.dom.client.Element> elems = message.getElementsByTagName("body");
 			Element body = (Element) elems.getItem(0);
-			String text = body.getText();
+			String text = xmldecode(body.getText());
 			String type = message.getAttribute("type"); // chat // groupchat
 			String from = message.getAttribute("from");
 			int at = from.indexOf('/');
@@ -271,9 +272,16 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			m.add(new Message(jid, stamp, text, utc));
 			return true;
 		}
+			
+		private String xmldecode(String text) {
+			for (String[] r: replace) {
+				text = text.replace(r[0], r[1]);
+			}
+			return text;
+		}
 
-		
 	}
+	static String[][] replace = { { "&apos;", "'" }, {"&lt;", "<"}, {"&gt;", ">"}, {"quot;", "\""}, {"&amp;" , "&"}};
 	
 	class ChatAll extends Handler<Element> {
 
@@ -328,6 +336,10 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		hbox.addStyleName("profile-borderBox");
 		hbox.add(afzender);
 		hbox.add(time);
+		if (chatUser.jid .equals(get(from).jid)) {
+			hbox.addStyleName("profile-mymessage");
+		}
+		
 		if (!compareStamp(lastPanel, stamp)) {
 			Label datelabel = new Label(dateOnly(utc));
 			FlowPanel flow = new FlowPanel();			
@@ -606,7 +618,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		btn = new InlineHTML("<i class='send fa fa-2x fa-paper-plane' >");
 		btn.addClickHandler(this::onClickInput);
 		btn.getElement().getStyle().setFloat(Style.Float.RIGHT);
-		if (room != null) sender = new Label("Bericht voor " + room.displayName);
+		if (room != null) sender = new Label(rb.messageFor(room.displayName));
 		else sender = new Label();
 		sender.addStyleName("header");
 		flow.add(sender);
@@ -835,13 +847,13 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		students.init(room);
 		teachers.init(room);
 		if (room != null) {
-			sender.setText("Bericht voor " + room.displayName);
+			sender.setText(rb.messageFor(room.displayName));
 			MessageModel m = get(room);
 			m.clear();
 			switchToModel(m);
 			//addToRoom(room);
 		} else {
-			sender.setText("Bericht");
+			sender.setText(rb.message());
 		}
 		eastHeader.setMultiChat(true);
 		sendTo = this::sendToRoom;
@@ -856,12 +868,14 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	void updateMultichat(boolean b) {
 		selection.clear();
 		if (b) {
-			sender.setText("Bericht voor " + room.displayName);
+			sender.setText(rb.messageFor(room.displayName));
 			sendTo = this::sendToRoom;
 			switchToModel(get(room));
 			setSelection(noselection);
 		} else {
-			sender.setText("Bericht");
+			sender.setText(rb.message());
+			removeAddToPanel();
+			panel.clear();lastPanel = now();
 			sendTo = this::sendToUser;
 			setSelection(selection);
 		}
@@ -879,7 +893,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			ChatUser user = selectedObject.getUser();
 			MessageModel m = selectedObject.getMessages();
 			switchToModel(m);
-			sender.setText("Bericht voor " + user.nickName);
+			sender.setText(rb.messageFor(user.nickName));
 		}
 	}
 	private void switchToModel(MessageModel m) {
