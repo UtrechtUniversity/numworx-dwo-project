@@ -24,6 +24,9 @@ import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 
+import static nl.uu.fi.dwo.lms.chatgwt.ChatGWT.dworb;
+import static nl.uu.fi.dwo.lms.chatgwt.ChatGWT.rb;
+
 class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChangeHandler<Set<String>> {
 
 	
@@ -84,10 +87,10 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 		table.setSelectionModel(selection);
 		table.addStyleName("dwo");
-		String naam = "naam";
+		String naam = "name";
 		switch(role) {
-		case TEACHER: naam = "docenten"; break;
-		case STUDENT: naam = "studenten"; break;
+		case TEACHER: naam = dworb.NUM_LBL_TEACHERS(); break;
+		case STUDENT: naam = dworb.NUM_LBL_STUDENTS(); break;
 		default:
 		}
 		nameColumn.setSortable(true);
@@ -97,8 +100,8 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 		table.addColumn(nameColumn, naam);
 		onlineColumn.setCellStyleNames("blu");
 		unseenColumn.setCellStyleNames("gre");
-		table.addColumn(onlineColumn, "online");
-		table.addColumn(unseenColumn, "nieuwe berichten");
+		table.addColumn(onlineColumn, rb.online());
+		table.addColumn(unseenColumn, rb.newMessages());
 		
 		table.setColumnWidth(onlineColumn, 100, Unit.PX);
 		table.setColumnWidth(unseenColumn, 150, Unit.PX);

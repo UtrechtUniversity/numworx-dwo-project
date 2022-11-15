@@ -82,6 +82,7 @@ import nl.uu.fi.dwo.lms.chatgwt.util.MD5;
 import nl.uu.fi.dwo.lms.chatgwt.util.PersistIF;
 import nl.uu.fi.dwo.lms.chatgwt.util.ResizeFlowPanel;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessages;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -91,7 +92,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	
 	private static final TimeZone UTC = TimeZone.createTimeZone(0);
 	private static final int COL_6 = 456;
-	private static final Text rb = GWT.create(Text.class);
+	public  static final Text rb = GWT.create(Text.class);
+	public  static final Dwo2LocaleMessages dworb = GWT.create(Dwo2LocaleMessages.class);
 
 	interface ChatUserCodec extends JsonEncoderDecoder<ChatUser> {};
 	
