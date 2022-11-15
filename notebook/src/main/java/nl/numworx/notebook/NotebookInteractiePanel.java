@@ -23,7 +23,7 @@ import org.cbook.cbookif.SuccessStatus;
 import fi.beans.wiskopdrbeans.CBookAware;
 import fi.beans.wiskopdrbeans.InteractieEditPanel;
 import fi.beans.wiskopdrbeans.InteractiePanel;
-import fi.wiskopdr.opdrnav.OpdrNavStruct;
+//import fi.wiskopdr.opdrnav.OpdrNavStruct; /*niet te gebruiken door obfuscation*/
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class NotebookInteractiePanel extends JPanel implements
@@ -68,11 +68,11 @@ public class NotebookInteractiePanel extends JPanel implements
 		instance.addCBookEventListener(all, Constants.CHECKED); // ons kent ons
 	}
 	
-	static String LOG_OBJECTIVES = "logObjectives";
+	//static String LOG_OBJECTIVES = "logObjectives";
 	public void zetOpdracht(Hashtable b, String[] randomVars,
 			Hashtable randomValues) {
 		launchData = b;
-		this.logObjectives = OpdrNavStruct.toBooleanArrayArray(b.get(LOG_OBJECTIVES));
+		this.logObjectives = null; //OpdrNavStruct.toBooleanArrayArray(b.get(LOG_OBJECTIVES));
 		doLayout(); // Assume size is valid.
 		instance.init();
 		Map randomvars = launchRandomVars();
