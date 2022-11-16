@@ -4,7 +4,7 @@
 <%@ page import="fi.dwo.server.db.TStamp" %>   
 <%@ page import='java.util.regex.*' %>
 <%@ include file="/dwo/saml_util.jsp" %>
-<%! String base; %>
+<%! String base, locale; %>
 <%
 	String query ;
 	long tstamp = TStamp.BOOT;
