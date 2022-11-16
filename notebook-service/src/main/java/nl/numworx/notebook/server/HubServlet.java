@@ -109,7 +109,7 @@ public class HubServlet extends HttpServlet {
 			if (mode == LessonMode.browse)
 				hub += "nbconvert/html/";
 			else
-				hub  += "notebooks/"; 
+				hub  += "doc/tree/"; 
 			hub += api.encodePathSegment(tail);	
 		} else if (project != null) {
 			while(project.startsWith("/")) project = project.substring(1);
