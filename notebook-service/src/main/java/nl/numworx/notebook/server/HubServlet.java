@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -33,9 +32,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
-import nl.uu.fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
@@ -99,6 +96,7 @@ public class HubServlet extends HttpServlet {
 		String project = init.project;
 		LessonMode mode = init.mode;
 		if (notebook != null) {
+			boolean isnb = notebook.endsWith(".ipynb");
 			tail = notebook;
 			if (project != null) {
 				tail = project + "/" + notebook;
@@ -107,9 +105,9 @@ public class HubServlet extends HttpServlet {
 			String user = api.encodePathSegment(learnerName);
 			hub  += "user/" + user + "/";
 			if (mode == LessonMode.browse)
-				hub += "nbconvert/html/";
+				hub += isnb ? "nbconvert/html/": "files/"; // browsemode textfiles
 			else
-				hub  += "doc/tree/"; 
+				hub  += isnb? "doc/tree/": "edit/"; 
 			hub += api.encodePathSegment(tail);	
 		} else if (project != null) {
 			while(project.startsWith("/")) project = project.substring(1);
