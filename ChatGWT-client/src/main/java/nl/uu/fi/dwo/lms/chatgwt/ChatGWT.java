@@ -214,7 +214,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			if (type.isEmpty()) {
 				return handleMAM(element);
 			}
-			
+	// FIXME if personal message from someone not on the users list, drop it on the floor!		
 			
 			String stamp = null;
 			int at = from.indexOf('/');
