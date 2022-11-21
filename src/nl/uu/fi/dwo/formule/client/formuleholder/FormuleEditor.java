@@ -532,4 +532,12 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF, IsW
        getAsPanel();
     return widget;
   }
+
+
+@Override
+public void paint() {
+	super.paint();
+	if (widget != null)
+		widget.setPixelSize(-1, getMainRegel().getHeight());
+}
 }

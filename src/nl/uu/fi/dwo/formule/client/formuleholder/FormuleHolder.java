@@ -16,7 +16,6 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -61,7 +60,6 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	//private static FormuleFont defaultfont = FormuleFont.createFromFontSize(16);
 	//private FormuleFont originalFont = FormuleFont.createFromFontSize(16);
 	protected static FormuleKeyboardIF kb;
-	private FlowPanel sp = null;
 	private int ashoogte;
 	private boolean formuleToolBijFocus;
 	
@@ -292,15 +290,12 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 
 	@Override
 	public int getAsHoogte() {
-		//return main.getAsHoogte();
 		return ashoogte;
 	}
 
 	@Override
 	public int getHeight() {
-		
 		return main.height;
-		//return main.getHeight();
 	}
 
 	@Override
