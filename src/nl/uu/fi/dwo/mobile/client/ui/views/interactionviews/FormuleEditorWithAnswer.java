@@ -1531,7 +1531,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public void resize()
 	{	breedte = this.getMainRegel().getWidth() + extraWidth; //checkPanel.getOffsetWidth() + extraWidth;// + (getImageVisible()?26:0);
 		hoogte = this.getMainRegel().getHeight() + 6;
-		sp.setPixelSize((breedte-1-2*borderWidth) , (hoogte-8) );
+		sp.setPixelSize((breedte-1-2*borderWidth) , (hoogte-6) );
 		if(parentRegel != null)
 		{	parentRegel.resize();
 		}
