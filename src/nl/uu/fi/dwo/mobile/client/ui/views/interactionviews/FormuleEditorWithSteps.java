@@ -543,7 +543,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			lijnen.add(lijnPanel);
 			lijnPanel.getElement().getStyle().setBackgroundColor(""+CssColor.make(211,229,244));
 			contentPanel.add(lijnPanel);
-			
+			contentPanel.setWidgetVisible(lijnPanel, false); // default onzichtbaar		
 		}
 		
 		if(subExtra && !substitutieVak)
@@ -627,8 +627,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				
 				if(stapNr>-1 && stapNr<lijnen.size()) {
 					int w = pijl ? pijlX + 20 : 5;
-					contentPanel.setWidgetLeftRight(lijnen.get(stapNr), 5, Style.Unit.PX, w, Style.Unit.PX);
-					contentPanel.setWidgetTopHeight(lijnen.get(stapNr), y + pijlVak.getHeight()/2, Style.Unit.PX, 1, Style.Unit.PX);
+					SimplePanel child = lijnen.get(stapNr);
+					contentPanel.setWidgetLeftRight(child, 5, Style.Unit.PX, w, Style.Unit.PX);
+					contentPanel.setWidgetTopHeight(child, y + pijlVak.getHeight()/2, Style.Unit.PX, 1, Style.Unit.PX);
+					contentPanel.setWidgetVisible(child, true);
 				}
 				
 				stapNr++;
@@ -636,14 +638,18 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	
 				LayoutPanel stepPanelNew = maakNieuwStapPanel();
 				editor = addNewEditor(stepPanelNew);
-				contentPanel.setWidgetTopHeight(stepPanelNew, stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
+				int hh = hoogteStepPanelMetEditor();
+				contentPanel.setWidgetTopHeight(stepPanelNew, stepPanelY, Style.Unit.PX, hh, Style.Unit.PX);
 				setStapOk(false);
+				contentPanel.setPixelSize(-1, stepPanelY + hh + pijlVak.getHeight()/4);
 			}
 		}
 		else
 		{
 			editor = addNewEditor(stepPanel);
-			contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
+			int hh = hoogteStepPanelMetEditor();
+			contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, hh, Style.Unit.PX);
+			contentPanel.setPixelSize(-1, stepPanelY + hh);
 		}
 
 		contentPanel.addStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().insert_formule_steps());
@@ -842,8 +848,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		
 		if(stapNr>-1 && stapNr<lijnen.size()) {
 			int w = pijl ? pijlX+20 : 5;
-			contentPanel.setWidgetLeftRight(lijnen.get(stapNr), 5, Style.Unit.PX, w, Style.Unit.PX);
-			contentPanel.setWidgetTopHeight(lijnen.get(stapNr), y + pijlVak.getHeight()/2, Style.Unit.PX, 1, Style.Unit.PX);
+			SimplePanel child = lijnen.get(stapNr);
+			contentPanel.setWidgetLeftRight(child, 5, Style.Unit.PX, w, Style.Unit.PX);
+			contentPanel.setWidgetTopHeight(child, y + pijlVak.getHeight()/2, Style.Unit.PX, 1, Style.Unit.PX);
+			contentPanel.setWidgetVisible(child, true);
 		}
 		
 		LayoutPanel stepPanel = maakNieuwStapPanel();
@@ -860,14 +868,14 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 
 		editor = addNewEditor(stepPanel);
 		stepPanelY += fv.getHeightWithImage() + stapH;
-		contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
+		contentPanel.setWidgetTopHeight(stepPanel, editorY = stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
 		requestFocus();
 		hideCheckimg();
 		
 		//nodig om te zorgen dat gebruikerssubstituties voor pijlen blijven staan:
 		if (gebruikersSubstitutiesVak != null && gebruikersSubstitutiesVak.asWidget().isAttached())
 			voegGebruikersSubstitutiesVakToe();
-		
+		editorResized(editor.getHeight());
 		scrollToBottom();
 		
 		if (!"".equals(editor.toString())) // als er iets in de editor staat, mag je een stap doen
@@ -926,7 +934,12 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		if (editor != null && editor.getAsPanel().getParent() == current)
 		{
 			if (current.getParent() == contentPanel) // FIXME why? 
-				contentPanel.setWidgetTopHeight(current, stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
+			{
+				int hh = hoogteStepPanelMetEditor();
+				contentPanel.setWidgetTopHeight(current, stepPanelY, Style.Unit.PX, hh, Style.Unit.PX);
+				editorY = stepPanelY;
+				editorResized(hh); // contentPanel follows editor size;
+			}
 			current.setWidgetTopHeight(editor.getAsPanel(), hasPrefix?Math.max(prefixViewer.getAsHoogte() - editor.getMainRegel().getAsHoogte(), 0):0, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
 			current.setWidgetLeftWidth(editor.getAsPanel(), hasPrefix?prefixViewer.getWidth() + 23:23, Style.Unit.PX, editor.getMainRegel().getWidth(), Style.Unit.PX);
 			if (hasPrefix)
@@ -1325,7 +1338,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				pijlVak = null;
 			
 			if(stapNr>0 && stapNr<lijnen.size()) {
-				contentPanel.setWidgetLeftWidth(lijnen.get(stapNr-1), 5, Style.Unit.PX, 0, Style.Unit.PX);
+				SimplePanel child = lijnen.get(stapNr-1);
+				contentPanel.setWidgetLeftWidth(child, 5, Style.Unit.PX, 0, Style.Unit.PX);
+				contentPanel.setWidgetVisible(child, false);
 			}
 		}
 	}
@@ -1446,11 +1461,15 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			
 		}
 		stepPanelY += fv.getHeightWithImage() + stapH;
-		if(linStrategieVersie)
-			contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, viewers.get(viewers.size()-1).getHeight(), Style.Unit.PX);
-		else
-		{	contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
+		if(linStrategieVersie) {
+			int hh = viewers.get(viewers.size()-1).getHeight();
+			contentPanel.setWidgetTopHeight(stepPanel, editorY = stepPanelY, Style.Unit.PX, hh, Style.Unit.PX);
+			editorResized(hh);
+		} else
+		{	int hh = hoogteStepPanelMetEditor();
+			contentPanel.setWidgetTopHeight(stepPanel, editorY = stepPanelY, Style.Unit.PX, hh, Style.Unit.PX);
 			requestFocus();
+			editorResized(hh);
 		}
 		scrollToBottom();
 	}
@@ -1621,8 +1640,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		
 		if (editor != null)
 		{
-			contentPanel.setWidgetTopHeight(stepPanels.get(stepPanels.size() - 1), stepPanelYTemp, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
+			int hh = hoogteStepPanelMetEditor();
+			contentPanel.setWidgetTopHeight(stepPanels.get(stepPanels.size() - 1), editorY = stepPanelYTemp, Style.Unit.PX, hh, Style.Unit.PX);
 			editor.setCurrentElementRepaint();
+			editorResized(hh);
 		}
 		
 		if (feedbackPanel != null)
@@ -1654,6 +1675,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		editor.setFont(font);
 		editor.setDefaultFont(font);
 		editor.setCurrent(0, 0);
+		p.getElement().getStyle().setFontSize(font.getFontSize(), Unit.PX);
 //		int width = editor.getMainRegel().getWidth();
 //		if(hasPrefix)
 //		{	editor.getPrefixPanel().add(prefixViewer.getAsPanel());
@@ -1739,7 +1761,20 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		if(rmknop && !teltMee && !check)  // en een andere conditie?
 			return new FormuleEditorWithCalculator(activity, h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden, avChecker);
 		
-		return new FormuleEditorWithAnswer(activity, h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden, avChecker);
+		return new FormuleEditorWithAnswer(activity, h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden, avChecker) {
+
+			@Override
+			public void paint() {
+				super.paint();
+				editorResized(this.getMainRegel().getHeight());
+			} };
+		
+	}
+	int marge = 13;
+	int editorY;
+	protected void editorResized(int h) {
+		int height = editorY + h + marge;
+		contentPanel.setPixelSize(-1, height);
 		
 	}
 
@@ -2474,6 +2509,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				
 				if (i < stapNr)
 					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, stepPanelY + hoogteStepPanelMetEditor() - 10, true);
+				editorY = stepPanelY;
+				editorResized(editor.getMainRegel().getHeight());
 			}
 			else
 			{
@@ -2532,6 +2569,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 						viewers.remove(fv);
 						stepPanel.remove(fv.getAsPanel());
 						editor = addNewEditor(stepPanel);
+						editorY = stepPanelY;
 						String currentTekst = latest_answer_viewer.toString();
 						if (hasPrefix)
 							currentTekst = removePrefix(currentTekst);
@@ -2567,6 +2605,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 						}
 						
 						editor = addNewEditor(stepPanel);
+						editorY = stepPanelY;
 						String currentTekst = latest_answer_viewer.toString();
 						if (hasPrefix)
 							currentTekst = removePrefix(currentTekst);
@@ -2616,6 +2655,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				viewers.remove(fv);
 				stepPanel.remove(fv.getAsPanel());
 				editor = addNewEditor(stepPanel);
+				editorY = stepPanelY;
 				String answer;
 				if (hasPrefix) // in case of a prefix, een prefixviewer is shown and the editor shows the answer without prefix
 					answer = removePrefix(latest_answer_viewer.toString());
@@ -2976,8 +3016,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		
 		if(stapNr>-1 && stapNr<lijnen.size()) {
 			int w = pijl ? pijlX+20 : 5;
-			contentPanel.setWidgetLeftRight(lijnen.get(i), 5, Style.Unit.PX, w, Style.Unit.PX);
-			contentPanel.setWidgetTopHeight(lijnen.get(i), h + pijlVak.getHeight()/2, Style.Unit.PX, 1, Style.Unit.PX);
+			SimplePanel child = lijnen.get(i);
+			contentPanel.setWidgetLeftRight(child, 5, Style.Unit.PX, w, Style.Unit.PX);
+			contentPanel.setWidgetTopHeight(child, h + pijlVak.getHeight()/2, Style.Unit.PX, 1, Style.Unit.PX);
+			contentPanel.setWidgetVisible(child, true);
 		}
 		//if ("GR".equals(WiskOpdr.deployVariant) && pijlVakOperatoren != null && pijlVakOperatoren[i] != null && (pijlVakOperatoren[i].equals("sub") || pijlVakOperatoren[i].equals("abc")))
 		//	pijlVak.setLocation(getSize().width - pijlX - 60, y);
@@ -3690,8 +3732,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			
 			if(stapNr>-1 && stapNr<lijnen.size()) {
 				int w = pijl ? pijlX+20 : 5;
-				contentPanel.setWidgetLeftRight(lijnen.get(stapNr), 5, Style.Unit.PX, w, Style.Unit.PX);
-				contentPanel.setWidgetTopHeight(lijnen.get(stapNr), y + pijlVak.getHeight()/2, Style.Unit.PX, 1, Style.Unit.PX);
+				SimplePanel child = lijnen.get(stapNr);
+				contentPanel.setWidgetLeftRight(child, 5, Style.Unit.PX, w, Style.Unit.PX);
+				contentPanel.setWidgetTopHeight(child, y + pijlVak.getHeight()/2, Style.Unit.PX, 1, Style.Unit.PX);
+				contentPanel.setWidgetVisible(child, true);
 			}
 			
 			if (operator.equals("abc") || operator.equals("sub"))
