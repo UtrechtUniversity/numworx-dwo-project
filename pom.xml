@@ -131,7 +131,7 @@
 		<dependency>
 		     <groupId>nl.uu.fi.dwo.lms</groupId>
              <artifactId>ChatGWT-server</artifactId>
-             <version>2.5.17-SNAPSHOT</version>
+             <version>${chatGWTVersion}</version>
              <type>war</type>
 			 <scope>runtime</scope>
 		</dependency>
