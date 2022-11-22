@@ -685,12 +685,14 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 			logging.setCommunicationRoot(comRoot);
 	}
 
+	private int execute_height = 0;
 	protected void addExecuteBtn(final OpdrNavIF comRoot) {
 		if(comRoot.hasListeners(TEXT)) {
 			Button btn = new Button(fi.wiskopdr.text.Text.constants.executeLabel());
 			Style style = btn.getElement().getStyle();
 			style.setWidth(100, Style.Unit.PCT);
 			style.setHeight(EXECUTE_HEIGHT, Style.Unit.PX);
+			execute_height = EXECUTE_HEIGHT;
 			content.setPixelSize(-1, height-menuheight-boxsize-padding-EXECUTE_HEIGHT);
 			btn.addClickHandler(new ClickHandler() {
 
@@ -725,21 +727,22 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	@Override
 	public void insert(String text)
 	{
-		if (!editable)
+		if (!editable )
 			return;
 		
 		char[] chars = text.toCharArray();
 		int next = 1;
+		if(chars.length > 0) deleteSelection();
 		for (int i = 0; i < chars.length; i += next)
 		{
 			next = 1;
 			switch (chars[i])
 				{
 				case '\n':
-					enter();
+					enter0();
 					break;
 				default:
-					insert(chars[i]);
+					insert0(chars[i]);
 					break;
 				case '$':
 					next = findAt(chars, i, chars.length);
@@ -813,10 +816,14 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		if(!editable) return;
 //		sb.insert( cursor, '\n');
 		deleteSelection();
-		flow.insert(new Enter(), cursor); cursor++;
+		enter0();
 		showCursor();
 		setAttempt();
 		pasAanH();
+	}
+
+	private void enter0() {
+		flow.insert(new Enter(), cursor); cursor++;
 	}
 
 	private void setAttempt() {
@@ -950,8 +957,8 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	protected void pasAanH() {
 		if (pasAanH && regel != null && visibleChain()) {
 			int offsetHeight = flowHeight();
-			if (height != offsetHeight + boxsize + paddingH + menuheight) {
-				height  = offsetHeight + boxsize + paddingH + menuheight;
+			if (height != offsetHeight + boxsize + paddingH + menuheight + execute_height) {
+				height  = offsetHeight + boxsize + paddingH + menuheight+ execute_height;
 				hbox.setPixelSize(-1, height-boxsize-paddingH);
 				if (widget != hbox) widget.setPixelSize(-1, height);
 				regel.resize();
@@ -962,13 +969,25 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		int xmin = flow.getAbsoluteTop();
 		int xmax = xmin + flow.getOffsetHeight(); // Helaas geen uitsteeksels
 		int size = flow.getWidgetCount();
-		for (int i = 0; i < size; i++) { // eigenlijk alleen de eerste en de laatste regel nodig
+		int i;
+		for (i = 0; i < size; i++) { // eigenlijk alleen de eerste en de laatste regel nodig, FIXED
 			Widget w = flow.getWidget(i);
 			int min = w.getAbsoluteTop();
 			int max = w.getOffsetHeight() + min;
 			if (max > xmax) xmax = max;
 			if (min < xmin) xmin = min;
+			if (w instanceof Enter) break;
 		}
+		for (int j = size-1; j > i; j--) {
+			Widget w = flow.getWidget(j);
+			int min = w.getAbsoluteTop();
+			int max = w.getOffsetHeight() + min;
+			if (max > xmax) xmax = max;
+			if (min < xmin) xmin = min;
+			if (w instanceof Enter) break;			
+		}
+		
+		
 		return xmax - xmin;
 	}
 	
@@ -979,8 +998,13 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		if (!editable)
 			return;
 	    deleteSelection();
+	    insert0(charAt);
+		showCursor();
+		pasAanH();
+	}
 
-	    SafeHtml html;
+	private void insert0(char charAt) {
+		SafeHtml html;
 		SafeHtmlBuilder builder = new SafeHtmlBuilder();
 		builder.append(charAt);
 		html = builder.toSafeHtml();
@@ -988,8 +1012,6 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		InlineHTML w = new InlineHTML(html);
 		new TapForFocus(w);
 		flow.insert(w,cursor++);
-		showCursor();
-		pasAanH();
 	}
 
 	private void showCursor()
@@ -1193,6 +1215,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 			if(text == null) text = "";
 			clearAll();
 			insert(text);
+			updateEmpty();
 		}
 		
 	}
