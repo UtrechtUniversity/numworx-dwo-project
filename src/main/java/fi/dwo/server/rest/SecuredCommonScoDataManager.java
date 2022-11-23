@@ -20,6 +20,8 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
+import javax.json.JsonValue;
+import javax.json.JsonValue.ValueType;
 import javax.json.stream.JsonParser;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.core.EntityTag;
@@ -81,6 +83,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 abstract class SecuredCommonScoDataManager {
   private static final Logger LOG = Logger.getLogger(SecuredCommonScoDataManager.class.getName());
   static final String COMPLETE = "completed";
+  static final String REVIEW_DATA = "cmi.comments_from_lms.0.comment";
   static final CmiConvert CMI = new CmiConvert(); // utility class
 
   String normalizeETag(String match) {
@@ -811,7 +814,20 @@ try {
 		if (key.endsWith(".score.raw")) {
 			JsonArray orScores = onsState.getJsonArray("orScores");
 			orScores = orScores.getJsonArray(0);
-			JsonNumber n = orScores.getJsonNumber(pagenr);
+			Number n = orScores.getJsonNumber(pagenr).numberValue();
+			if (COMPLETE.equals(pssc.getCompletionStatus()) && pssd.getCocd() != null) {
+				Scorm2Xml xml = new Scorm2Xml(String.valueOf(pssd.getCocd()));
+				String json = xml.LMSGetValue(REVIEW_DATA);
+				if (!json.isEmpty()) {
+				parser = Json.createParser(new StringReader(json));
+				parser.next();
+				data = parser.getObject();
+				JsonArray contState = data.getJsonArray("opdrContStates");
+				contState = contState.getJsonArray(0);
+				data = contState.getJsonObject(pagenr);
+				int sum = sumOfCorrectie(data);
+				n = Integer.valueOf(sum + n.intValue());
+			}}
 			return n.toString();
 		}
 		if (key.endsWith(".success_status")) {
@@ -825,6 +841,28 @@ try {
 	}
     return "";   
   }
+
+private static int sumOfCorrectie(JsonObject data) {
+	JsonArray panelStates = data.getJsonArray("interactiePanelStates");
+	if (panelStates != null) return sumOfCorrectie(panelStates);
+	JsonObject correctie = data.getJsonObject("reviewInteractieData");
+	if (correctie == null) return 0;
+	JsonNumber n = correctie.getJsonNumber("reviewScoreCorrectie");
+	return n.intValue();
+}
+
+private static int sumOfCorrectie(JsonArray panelStates) {
+	int size = panelStates.size();
+	int sum = 0;
+	for (int i = 0; i < size; i++) {
+		JsonValue value = panelStates.get(i);
+		if (value.getValueType() == ValueType.OBJECT) {
+			JsonObject json = value.asJsonObject();
+			sum += sumOfCorrectie(json);
+		}
+	}
+	return sum;
+}
   
   
 }

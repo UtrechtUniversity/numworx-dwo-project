@@ -2,7 +2,10 @@ package fi.dwo.server.rest;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,6 +25,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentScoData;
 public class SecuredCommonScoDataManagerTest {
 
 	private PersistentStudentScoData pssd;
+	private PersistentStudentScoContext pssc;
 
 	@Before
 	public void setUp() throws Exception {
@@ -46,7 +50,7 @@ public class SecuredCommonScoDataManagerTest {
 	@Test
 	public void testNoData() {		
 		PersistentStudentScoData pssd = new PersistentStudentScoData();
-		PersistentStudentScoContext pssc = null;
+		pssc = null;
 		String key = "dme.scorewidget.cs.1.success_status";
 		String result = SecuredCommonScoDataManager.scoreWidget(key, pssd, pssc);
 		assertEquals("no suspenddata", "", result);
@@ -60,16 +64,22 @@ public class SecuredCommonScoDataManagerTest {
 	}
 
 	@Test
-	public void testScore() { 
+	public void testScore() throws IOException { 
 		String key = "dme.scorewidget.cs.1.score.raw";
-		String result = SecuredCommonScoDataManager.scoreWidget(key, pssd, null);
-		assertEquals("score", "5", result);		
+		pssc = new PersistentStudentScoContext();
+		pssc.setCompletionStatus(SecuredCommonScoDataManager.COMPLETE);
+		InputStream cocd = getClass().getResourceAsStream("cocd.xml");
+		byte buf[]= new byte[cocd.available()];
+		cocd.read(buf);
+		pssd.setCocd(new String(buf, StandardCharsets.UTF_8));
+		String result = SecuredCommonScoDataManager.scoreWidget(key, pssd, pssc);
+		assertEquals("score", "95", result);		
 	}
 
 	@Test
 	public void testScore2() { 
 		String key = "dme.scorewidget.s.1.1.score.raw";
-		PersistentStudentScoContext pssc = new PersistentStudentScoContext(1L);
+		pssc = new PersistentStudentScoContext(1L);
 		pssc.setScoID(1L);
 		String result = SecuredCommonScoDataManager.scoreWidget(key, pssd, pssc);
 		assertEquals("score", "5", result);		

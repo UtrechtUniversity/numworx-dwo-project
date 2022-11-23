@@ -28,6 +28,7 @@ import org.glassfish.jersey.internal.util.Base64;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
@@ -35,6 +36,7 @@ import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.DatatypeConverter;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
@@ -513,6 +515,31 @@ public class SecuredUserAccountManager {
         }
         
     }    
+    
+    @PUT
+    @Path("/getBearerToken")
+    public String getBearerToken(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
+    	PersistentUser user;
+    	PersistentLoginContext loginContext;
+    	UserState_HR_R_S_SG_U state1 = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
+    	user = state1.getUser();
+    	PersistentHasRole hr = state1.getHasRole();
+        List<PersistentLoginContext> list = LoginContextManager.findEntities(user.getId());
+        if (list.size() == 1) {
+            loginContext = list.get(0);
+            Long time = DwoDateUtilities.getCurrentDwoUnixTimeStamp() / TOTP.defaultPeriod;
+            String timeString = time.toString();
+            String result = (loginContext.getSecretKey()==null) ? null : TOTP.generateTOTP(DatatypeConverter.printHexBinary(loginContext.getSecretKey()), timeString, "8");
+            result = user.getUsername()+":"+result;
+            byte bytes[] = result.getBytes();
+  // 5 \f 
+            return "";"\"Bearer "+java.util.Base64.getEncoder().encodeToString(bytes) + '\"'; // application/json 
+        }else{
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_LoginNeeded, "No login context exists.");
+        }
+   }
+    
+    
     
 //    @GET
 //    @Produces("application/json")
