@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.mobile.client.ui.activities;
 
 import javax.inject.Inject;
 
+import org.osgi.util.promise.Promise;
+
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
@@ -12,9 +14,11 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import dagger.Reusable;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.last;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -22,18 +26,21 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @Reusable
 public class LastActivity extends AbstractActivity {
 
-	final private static String BASE_KEY = LastActivity.class.getName()+ ".";
+	final private static String BASE_KEY = LastActivity.class.getName()+ "$";
 	
 	final DwoGlobalVars vars;
 	final PlaceController controller;
 	final PlaceHistoryMapper mapper;
 	final Storage storage;
+
+	private Promise<DomDwoProfileFull> profile;
 	
-	@Inject LastActivity(DwoGlobalVars vars, PlaceController controller, PlaceHistoryMapper mapper) {
+	@Inject LastActivity(DwoGlobalVars vars, PlaceController controller, PlaceHistoryMapper mapper, RPCHandler rpc) {
 		this.vars = vars;
 		this.controller = controller;
 		this.mapper = mapper;
 		this.storage = Storage.getLocalStorageIfSupported();
+		this.profile = rpc.getDwoProfile();
 	}
 
 	
@@ -45,7 +52,17 @@ public class LastActivity extends AbstractActivity {
 	}
 
 	String getSubkey() {
-		return vars.getActiveSchoolRoleAndClass().getHasRole().getId().getIdString();
+		return 
+			getProfileName() + "/" +
+			vars.getActiveSchoolRoleAndClass().getHasRole().getId().getIdString();
+	}
+
+
+	public String getProfileName() {
+		if (profile.isDone())
+			return profile.getValue().getDwoProfileName();
+		else
+			return "unknown"; // should not happen!
 	}
 	
 	
@@ -65,6 +82,7 @@ public class LastActivity extends AbstractActivity {
 		String value = storage.getItem(BASE_KEY  + subkey);
 		if (value != null) {
 			Place place = mapper.getPlace(value);
+// FIXME verify if this is a legal place, if not, unexpected login under GWTClient
 			return place;
 		}		
 		return new TreeModulePlace();
