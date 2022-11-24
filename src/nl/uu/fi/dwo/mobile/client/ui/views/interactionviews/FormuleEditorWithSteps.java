@@ -3547,9 +3547,18 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	public Boolean isCorrect()
 	{
 		if(!teltMee)
-			return true;
+			return Boolean.TRUE;
 		if(scoreCumulatief && getCumScore()<scoreMax)
-			return false;
+		{
+			if (correctie != null) {
+				return correctie.isCorrect(Boolean.FALSE);
+			}
+			
+			return Boolean.FALSE;
+		}
+		if (correctie != null) {
+			return correctie.isCorrect(correct);
+		}
 		return correct;
 	}
 	

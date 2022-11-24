@@ -82,7 +82,39 @@ public class CorrectieFacade {
   }
 
     protected CorrectieFacade create(Map<String, Object> h, InteractionView view, Widget widget, int maxScore, OpdrNavIF comRoot, Logging logging, ActivityInterface a, boolean checkDocent) {
-      return NULL;
+    	if (h != null && a.isPremium() && a.isEindtoetsVerzegeld()) {
+    		ObjectMap hh = JSONUtilities.wrapMap(h);
+    		hh = hh.getObjectMap("reviewInteractieData");
+    		if (hh != null && hh.containsKey("reviewScoreCorrectie"))
+    		{
+    			int correctie = hh.getInt("reviewScoreCorrectie");
+    			if (correctie > 0) {
+    				return new CorrectieFacade() {
+
+						@Override
+						public Boolean isCorrect(Boolean correct) {
+							if (maxScore <= correctie + view.getScore()) return Boolean.TRUE;
+							return super.isCorrect(correct);
+						}
+    					
+    				};
+    			} else if (correctie < 0) {
+    				return new CorrectieFacade() {
+
+						@Override
+						public Boolean isCorrect(Boolean correct) {							
+							Boolean result = super.isCorrect(correct);
+							if (Boolean.TRUE.equals(result)) return null;
+							return result;
+						}
+    					
+    				};
+    			}
+    		}
+    	}
+    	
+    	
+    	return NULL;
     }
     
     public void correctie(Map<String,Object> state) {}
@@ -157,6 +189,10 @@ public class CorrectieFacade {
 	public static CorrectieFacade get(HashMap<String, Object> h, BerekeningVak view, Panel widget,
 			int scoreMax, OpdrNavIF comRoot, Logging logging, ActivityInterface activity, boolean checkDocent) {
 		return instance.create(h, view, widget, scoreMax, comRoot, logging, activity, checkDocent);
+	}
+
+	public Boolean isCorrect(Boolean correct) {
+		return correct;
 	}
    
     
