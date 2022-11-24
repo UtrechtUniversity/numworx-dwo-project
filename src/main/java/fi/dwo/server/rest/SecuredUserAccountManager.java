@@ -1,6 +1,8 @@
 package fi.dwo.server.rest;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
+import java.util.Base64.Encoder;
 import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -518,6 +520,7 @@ public class SecuredUserAccountManager {
     
     @PUT
     @Path("/getBearerToken")
+    @Produces("application/json")
     public String getBearerToken(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
     	PersistentUser user;
     	PersistentLoginContext loginContext;
@@ -532,8 +535,11 @@ public class SecuredUserAccountManager {
             String result = (loginContext.getSecretKey()==null) ? null : TOTP.generateTOTP(DatatypeConverter.printHexBinary(loginContext.getSecretKey()), timeString, "8");
             result = user.getUsername()+":"+result;
             byte bytes[] = result.getBytes();
-  // 5 \f 
-            return "";"\"Bearer "+java.util.Base64.getEncoder().encodeToString(bytes) + '\"'; // application/json 
+  // 5 \f user \f schoolgroup \f logincontext \f schoolclass \f totp(secret);
+  // voor nu even versie 2
+            Encoder encoder = java.util.Base64.getEncoder();
+			String bearer = "\"Bearer "+encoder.encodeToString(bytes) + '\"';
+			return encoder.encodeToString(("2\f" + bearer).getBytes(StandardCharsets.US_ASCII)) // application/json 
         }else{
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_LoginNeeded, "No login context exists.");
         }
