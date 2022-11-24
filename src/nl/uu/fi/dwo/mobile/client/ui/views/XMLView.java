@@ -294,102 +294,20 @@ public abstract class XMLView {
 		
 	}
 
-//	protected Promise<Boolean> loadXML(String xmlPath) {
-//		RequestBuilder.Method method = RequestBuilder.GET;
-//		String url = xmlPath;
-//		RequestBuilder rb = new RequestBuilder(method, url);
-//		Deferred<Boolean> defer = new Deferred<>();
-//		try
-//		{
-//			rb.sendRequest(null, new RequestCallback()
-//			{
-//	
-//				@Override
-//				public void onResponseReceived(Request request, Response response)
-//				{
-//				    if(logger == null) return;
-//					String responseText = response.getText();
-//					logger.info("Status: " + response.getStatusCode() + " " + response.getStatusText());
-//					logger.info(response.getHeadersAsString());
-//					logger.info("Data: " + responseText.substring(0, Math.min(300, responseText.length()) ));
-//					if (!responseText.isEmpty())
-//					{
-//						Document dom = XMLParser.parse(responseText);
-////						if(dom == null) 
-////						{
-////						}
-//						StringCodeToHashMap sc = new StringCodeToHashMap();
-//						launchData = sc.decodeStringToHashMap(dom);
-//						setupView(launchData);
-//						defer.resolve(Boolean.FALSE);
-//					} else {
-//						logger.severe("response empty");
-//						defer.resolve(Boolean.TRUE);
-//					}
-//	
-//				}
-//	
-//				@Override
-//				public void onError(Request request, Throwable exception)
-//				{
-//					Window.alert("error");
-//					defer.fail(exception);
-//				}
-//			});
-//	
-//		}
-//		catch (RequestException e)
-//		{
-//			RootPanel.get().add(new Label("cannot load xml: " + e.getMessage()));
-//			defer.fail(e);
-//		}
-//		return defer.getPromise();
-//	}
+
 	abstract AnchorContext getAnchorContext();
-	//public void setObjects(ArrayList<Object> opdrachtObjects, Panel destination) 
+
 	public void setObjects(HashMap<String, Object> opdracht, final Panel destination, OpdrNavIF comRoot)
 	{	
 			
 		int hoogte = 500;
 		int breedte = 800;
-//		
-//		if(opdracht.containsKey("docWidth"))
-//		{
-//			breedte = ((Number) opdracht.get("docWidth")).intValue();
-//			//breedte = Window.getClientWidth();
-//		}
+
 		if(opdracht.containsKey("scheidingX"))
 		{
 			breedte = ((Number) opdracht.get("scheidingX")).intValue();
-			//breedte = Window.getClientWidth();
 		}
 
-//		if(!MGWT.getOsDetection().isDesktop() 
-//				&& false // FIXME staat uit omdat Graphtool clientX en clientY niet goed doet.
-//		) {
-//			final int width=breedte;
-//
-//		// FIXED is dit op tijd? ALLEEN OP TABLET!!!!
-//			ResizeHandler resize = new ResizeHandler() {
-//
-//				@Override
-//				public void onResize(ResizeEvent event) {
-//					double factor = Window.getClientWidth();
-//					logger.info("zoom " + factor + " / " + width);
-//					factor = factor / width;
-//					Style style = destination.getElement().getStyle();
-//					if(factor > 0.6 && factor < 1.4)
-//					{
-//						style.setProperty("zoom", String.valueOf(factor));
-//					} else {
-//						style.clearProperty("zoom");			
-//					}
-//				}
-//			};
-//			resize.onResize(null);
-//			Window.addResizeHandler(resize);
-//		}
-// FIXME ....	
 		hoofdPanel = new TekstVakPanel(activity, breedte, hoogte, randomVarNamen, randomVarWaarden, getAnchorContext());
 		hoofdPanel.setCommunicationRoot(comRoot);
 		hoofdPanel.setHoofdPanel(true);
@@ -439,28 +357,11 @@ public abstract class XMLView {
 		//resize.onResize(null);
 		
 		if(RESPONSIVE) {
-//			Window.addResizeHandler(resize);
 			breedte = Window.getClientWidth()-margeLinks-margeRechts;//-20;
 			hoofdPanel.zetVolledigeBreedte(breedte);
 			hoofdPanel.addResizeHandler(resize);
 		}
 	}
-
-//	public Panel getPanelElement(final FormuleHolder editor) {
-//		FlowPanel fp = new FlowPanel();
-//		editor.paint();
-//	
-//		final Panel p = editor.getAsPanel();
-//	
-//		if (p instanceof TouchPanel)
-//		{
-//			TouchPanel tp = (TouchPanel) p;
-//			this.addFormulePanelListeners(tp, editor);
-//		}
-//	
-//		fp.add(p);
-//		return p;
-//	}
 	
 	public static int getDefaultFontSize()
 	{
@@ -477,10 +378,6 @@ public abstract class XMLView {
 		return defaultFontSize + "px " + defaultFontName;
 	}
 
-//	private void addFormulePanelListeners(final TouchPanel tp, final FormuleHolder editor) {
-//		tp.addTouchHandler(new FormuleEditorTouchHandler(editor));
-//	}
-	
 	public boolean bolletjesZichtbaar()
 	{
 		return bolletjesZichtbaar;
