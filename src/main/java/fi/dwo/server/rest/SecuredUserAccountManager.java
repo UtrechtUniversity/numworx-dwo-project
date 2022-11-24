@@ -61,6 +61,7 @@ import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestLoginContext;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -521,7 +522,7 @@ public class SecuredUserAccountManager {
     @PUT
     @Path("/getBearerToken")
     @Produces("application/json")
-    public String getBearerToken(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
+    public String getBearerToken(@Context SecurityContext sc, RestSchoolClass rest) throws Dwo2Exception {
     	PersistentUser user;
     	PersistentLoginContext loginContext;
     	UserState_HR_R_S_SG_U state1 = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
@@ -538,8 +539,8 @@ public class SecuredUserAccountManager {
   // 5 \f user \f schoolgroup \f logincontext \f schoolclass \f totp(secret);
   // voor nu even versie 2
             Encoder encoder = java.util.Base64.getEncoder();
-			String bearer = "\"Bearer "+encoder.encodeToString(bytes) + '\"';
-			return encoder.encodeToString(("2\f" + bearer).getBytes(StandardCharsets.US_ASCII)); // application/json 
+			String bearer = "Bearer "+encoder.encodeToString(bytes);
+			return "\"" + encoder.encodeToString(("2\f" + bearer).getBytes(StandardCharsets.US_ASCII)) + "\""; // application/json 
         }else{
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_LoginNeeded, "No login context exists.");
         }
