@@ -170,7 +170,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
       inited = new Deferred<>();
       lastSend = false;
       if (roleId != null)
-        init = account.getBearerToken().then(this::gotToken,FAILURE);
+        init = account.getBearerTokenV2().then(this::gotToken,FAILURE);
       else
       {
         UrlBuilder u = new UrlBuilder();
@@ -202,17 +202,16 @@ public class ModulesPresenter implements SwitchViewEventHandler {
     
 
     /*
-     * bearer token has arrived:
+     * bearer token v2 has arrived:
      */
-    public Promise<String> gotToken(Promise<String> resolved) {
-     String token = "2\f" + resolved.getValue(); //format 2
+    public Promise<String> gotToken(Promise<String> resolved) { // getBearerToken nieuwe stijl
+     String token = resolved.getValue(); //format 2 of 5
      UrlBuilder u = new UrlBuilder();
      u.setPath(url);
      u.setProtocol(Location.getProtocol());
      u.setHost(Location.getHost());
-     u.setParameter("a",Base64.btoa(token)); // User Auth Token
-     if(true)
-       u.setParameter( "header","none");
+     u.setParameter("a",token); // User Auth Token
+     u.setParameter( "header","none");
      //u.setParameter("dwo_env","test");
      String base = Location.getParameter("base");
      if(base != null && !base.isEmpty() && legal(base)) {

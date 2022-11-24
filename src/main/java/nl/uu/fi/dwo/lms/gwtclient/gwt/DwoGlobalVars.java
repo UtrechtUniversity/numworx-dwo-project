@@ -266,7 +266,9 @@ public class DwoGlobalVars {
       SecuredUserSchoolLoginManagerV2 loginManager = this.loginManager;
       DomContext context = createContext(currentLoginContext);
       Promise<DomSchoolsRolesAndClassesV2> logins;
-      if (isTest() && (isSaml()||isSingleSchool())) {     
+      if (isTest() && (isSaml()||isSingleSchool())
+    		  && GwtRestVars.getInstance().getRefreshToken() == null
+    	 ) {     // alleen als nog GEEN OAUTHMANAGER ACTIEF IS
           OAuthManager oauth = new OAuthManager();
           logins = accountManager.getBearerToken(context).then(
     		  p -> { 

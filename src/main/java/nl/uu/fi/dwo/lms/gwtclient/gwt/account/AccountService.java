@@ -70,8 +70,8 @@ public class AccountService {
         return schoolLoginManager.removeASchoolLogin(createContext(),data);
     }
     
-    public Promise<String> getBearerToken() {
-      return accountManager.getBearerToken(createContext());
+    public Promise<String> getBearerTokenV2() {
+      return accountManager.getBearerToken(createContext(), dwoGlobalVars.getCurrentSchoolClass());
     }
     
     public Promise<DomSchoolsRolesAndClassesV2> getSchoolLogins(){
