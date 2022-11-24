@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestLoginCheck;
 import nl.uu.fi.dwo.rest.entities.RestLoginContext;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
@@ -81,4 +82,8 @@ public interface SecuredUserAccountRestCaller extends RestService {
     @GET
     @Path("/sec:{id}/user/account/remove")
     public void removeCurrentUser(@PathParam("id") String id, MethodCallback<Boolean> callback);
+
+    @PUT
+    @Path("/sec:{id}/user/account/getBearerToken")
+	public void getBearerToken(String id, RestSchoolClass arg, MethodCallback<String> c);
 }

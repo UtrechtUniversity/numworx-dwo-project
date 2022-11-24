@@ -17,11 +17,13 @@ import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginCheck;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.entities.RestLoginCheck;
 import nl.uu.fi.dwo.rest.entities.RestLoginContext;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -376,6 +378,13 @@ public class SecuredUserAccountManager {
   
     public Promise<String> getBearerToken(DomContext context) {
         return F( (id, arg, c) -> service.getBearerToken(id, c), PathId.getId(context), null);
+    }
+
+    public Promise<String> getBearerToken(DomContext context, DomSchoolClass schoolclass) {
+    	RestSchoolClass rest = new RestSchoolClass();
+    	rest.setDomSchoolClass(schoolclass);
+    	rest.setRestContext(context);
+        return F( (id, arg, c) -> service.getBearerToken(id, arg, c), PathId.getId(context), rest);
     }
     
     public Promise<Boolean> linkSaml(DomContext context, DomSamlUser samluser) {

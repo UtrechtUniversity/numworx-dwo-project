@@ -320,4 +320,8 @@ public class GwtRestVars {
   public String getLogoutURL() {
     return server + "oauth2/nekot";
   }
+
+	public String getRefreshToken() {
+		return refresh_token;
+	}
 }
