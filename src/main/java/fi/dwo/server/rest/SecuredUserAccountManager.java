@@ -539,7 +539,7 @@ public class SecuredUserAccountManager {
   // voor nu even versie 2
             Encoder encoder = java.util.Base64.getEncoder();
 			String bearer = "\"Bearer "+encoder.encodeToString(bytes) + '\"';
-			return encoder.encodeToString(("2\f" + bearer).getBytes(StandardCharsets.US_ASCII)) // application/json 
+			return encoder.encodeToString(("2\f" + bearer).getBytes(StandardCharsets.US_ASCII)); // application/json 
         }else{
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_LoginNeeded, "No login context exists.");
         }
