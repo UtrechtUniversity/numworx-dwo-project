@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -355,8 +356,8 @@ public void setView(Display aView) {
       this.userState.remove(ResultsService.REVIEW_DATA);
       this.userState.remove(ResultsService.REVIEW_CHECK);
     }
-    Map<String,String> userState = new HashMap<> (this.userState);
-    userState.keySet().retainAll(Arrays.asList("cmi.score.raw",ResultsService.REVIEW_DATA, ResultsService.REVIEW_CHECK));
+    Map<String,String> userState = new TreeMap<> (this.userState);
+    userState.keySet().retainAll(Arrays.asList("cmi.score.raw",ResultsService.REVIEW_DATA, ResultsService.REVIEW_CHECK, ResultsService.REVIEW_CORRECT));
     LOG.info( "update Score/Review " + userState);
     if (dwoGlobalVars.isPremium())
     {	String score = userState.get("cmi.score.raw");

@@ -69,6 +69,7 @@ public class ResultsService implements SwitchViewEventHandler {
     static final String SUSPEND_DATA = "cmi.suspend_data";
     static final String REVIEW_DATA = "cmi.comments_from_lms.0.comment";
     static final String REVIEW_CHECK = "cmi.comments_from_lms.1.comment";
+    static final String REVIEW_CORRECT = "cmi.comments_from_lms.2.comment";
 
     private static final Logger LOG = Logger.getLogger(ResultsService.class.getName());
 
@@ -90,7 +91,8 @@ public class ResultsService implements SwitchViewEventHandler {
             SUSPEND_DATA,
             "cmi.location",
             REVIEW_DATA,
-            REVIEW_CHECK
+            REVIEW_CHECK,
+            REVIEW_CORRECT
     );
 
     @Inject
