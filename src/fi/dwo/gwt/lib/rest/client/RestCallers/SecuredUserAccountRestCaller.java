@@ -85,5 +85,5 @@ public interface SecuredUserAccountRestCaller extends RestService {
 
     @PUT
     @Path("/sec:{id}/user/account/getBearerToken")
-	public void getBearerToken(String id, RestSchoolClass arg, MethodCallback<String> c);
+	public void getBearerToken(@PathParam("id") String id, RestSchoolClass arg, MethodCallback<String> c);
 }
