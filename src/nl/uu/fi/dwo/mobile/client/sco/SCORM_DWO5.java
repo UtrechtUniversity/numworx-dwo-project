@@ -387,7 +387,8 @@ log("setScoID " + scoID);
 	        "cmi.location",
 	        "cmi.completion_status",
 	        //Memento.REVIEW_CHECK, // alleen bij testen reviewmode
-	        "cmi.comments_from_lms.0.comment"
+	        "cmi.comments_from_lms.0.comment",
+	        "cmi.comments_from_lms.2.comment"
 	);
 	
 	public synchronized Promise<String> Commit() {

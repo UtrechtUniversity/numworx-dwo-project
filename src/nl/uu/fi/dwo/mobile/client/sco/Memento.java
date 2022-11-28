@@ -174,12 +174,14 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		}
 		if (eindtoetsVerzegeld && cmi_mode == LessonMode.normal)
 			cmi_mode = LessonMode.browse; // No edits possible.
-	cmi_mode = LessonMode.review;
+//		cmi_mode = LessonMode.review;
 		
 		String reviewData = null;
+		String reviewCorrectie = "";
 		if (eindtoetsVerzegeld || cmi_mode == LessonMode.review)
 		{
 			reviewData = getValue(REVIEW_DATA);
+			reviewCorrectie = getValue(REVIEW_CORRECT);
 		}
 		try
 		{
@@ -203,8 +205,11 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 			logState = (JSONObject) suspendData.get(LOG_STATE);
 			register = (JSONString) suspendData.get(REGISTRATION);
 			shareMap = (JSONObject) onsState.get(SHARE_MAP);
-			if (reviewData != null && reviewData.length() > 2)
+			if (reviewData != null && reviewData.length() > 2) {
 				opdrContStates = mergeReviewData(opdrContStates, reviewData);
+				if (opdrGoedFout != null && opdrGoedFout.size()>0 && !reviewCorrectie.isEmpty())
+					opdrGoedFout.set(0, mergeReviewCorrect(opdrGoedFout.get(0).isArray(), reviewCorrectie));
+			}
 			// oldschool toetsLocked
 			JSONValue oldReviewData =  suspendData.get("reviewData");
 			if(!eindtoetsVerzegeld && oldReviewData != null) {
@@ -233,6 +238,18 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		//StudentModelLogger.destroy();
 	}
 	
+	private JSONArray mergeReviewCorrect(JSONArray array, String reviewCorrectie) {
+		int size = Math.min(array.size(), reviewCorrectie.length());
+		for (int i = 0; i < size; i++) {
+			char ch = reviewCorrectie.charAt(i);
+			switch(ch) {
+			case 'T': array.set(i, JSONBoolean.getInstance(true));break;
+			case 'F': array.set(i, JSONBoolean.getInstance(false));break;
+			}
+		}
+		return array;
+	}
+
 	void clearSharedState(String key) {
 	  if (shareMap != null) {
 	    shareMap.put(key, null);
