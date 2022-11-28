@@ -95,6 +95,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	public static final String LOCATION = "cmi.location";
 	static final String REVIEW_DATA = "cmi.comments_from_lms.0.comment";
 	static final String REVIEW_CHECK = "cmi.comments_from_lms.1.comment";
+	static final String REVIEW_CORRECT = "cmi.comments_from_lms.2.comment";
 	
 	public static final String LESSON_MODE = "cmi.mode";
 	public static final String SHARE_MAP = "shareMap";
@@ -173,7 +174,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		}
 		if (eindtoetsVerzegeld && cmi_mode == LessonMode.normal)
 			cmi_mode = LessonMode.browse; // No edits possible.
-	//cmi_mode = LessonMode.review;
+	cmi_mode = LessonMode.review;
 		
 		String reviewData = null;
 		if (eindtoetsVerzegeld || cmi_mode == LessonMode.review)
@@ -1415,6 +1416,13 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	return 0;
 }
 
+  public void mergeIntoReview(int currentActiviteit, int currentOpdracht, boolean correct) {
+	  StringBuilder reviewCorrect = new StringBuilder(api.GetValue(REVIEW_CORRECT));
+	  while (reviewCorrect.length() <= currentOpdracht) reviewCorrect.append("-");
+	  reviewCorrect.setCharAt(currentOpdracht, correct?'T':'F');
+	  api.SetValue(REVIEW_CORRECT, reviewCorrect.toString());
+  }
+  
   public void mergeIntoReview(int currentActiviteit, int currentOpdracht,
       HashMap<String, Object> state) {
     JSONObject reviewPage = strip(JSONUtilities.wrapMap(state), 5);
@@ -1467,6 +1475,9 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
     }
   }
 
+  
+  
+  
   private JSONObject strip(ObjectMap state, int off) {
     if (state == null) return null;
     JSONObject result = new JSONObject();

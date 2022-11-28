@@ -101,6 +101,29 @@ public class CorrectieReview extends CorrectieFacade {
 	    }
 	    logging.updateLog(parameters);    
 	}
+
+	@Override
+	public Boolean isCorrect(Boolean correct) {
+		int score = iv.getScore();
+		int corr = lastcorr;
+		if (correctie != null) {
+			Object o = correctie.get();
+			if (o != null) {
+				ObjectMap map = JSONUtilities.wrapMap( (Map) o);
+			    corr = map.containsKey(CorrectieView.REVIEW_SCORE_CORRECTIE) ?
+		    			map.getInt(CorrectieView.REVIEW_SCORE_CORRECTIE) :
+		    			0;
+			}
+		}
+		if (corr > 0) {
+			if (corr + score >= maxScore)
+				return Boolean.TRUE;
+		} else if (corr < 0) {
+			if (correct == Boolean.TRUE) return null;
+		}
+		
+		return correct;
+	}
 	
 	
 	
