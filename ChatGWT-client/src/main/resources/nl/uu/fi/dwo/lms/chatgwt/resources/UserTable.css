@@ -15,6 +15,7 @@
  * the License.
  */
 @def selectionBorderWidth 2px;
+@external .selected-gui;
 
 .cellTableWidget {
   
@@ -79,6 +80,10 @@
   border-color: #ccc;
 }
 
+table.selected-gui .cellTableEvenRow, table.selected-gui .cellTableOddRow {
+	background-color: white;
+}
+
 .cellTableEvenRowCell, .cellTableOddRowCell {
   border-bottom: 1px #dadbdd solid;
 }
@@ -95,7 +100,7 @@
 .cellTableKeyboardSelectedRowCell {
 }
 
-.cellTableSelectedRow {
+.cellTableSelectedRow, table.selected-gui .cellTableSelectedRow {
   background: #628cd5;
   color: white;
   height: auto;

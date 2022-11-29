@@ -874,19 +874,19 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			sender.setText(rb.messageFor(room.displayName));
 			sendTo = this::sendToRoom;
 			switchToModel(get(room));
-			setSelection(noselection);
+			setSelection(noselection, false);
 		} else {
 			sender.setText(rb.message());
 			removeAddToPanel();
 			panel.clear();lastPanel = now();
 			sendTo = this::sendToUser;
-			setSelection(selection);
+			setSelection(selection, true);
 		}
 	}
 
-	private void setSelection(SelectionModel<UserModel> sel) {
-		students.setSelectionModel(sel);
-		teachers.setSelectionModel(sel);		
+	private void setSelection(SelectionModel<UserModel> sel, boolean gui) {
+		students.setSelectionModel(sel, gui);
+		teachers.setSelectionModel(sel, gui);		
 	}
 
 	@Override

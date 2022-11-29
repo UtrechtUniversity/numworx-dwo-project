@@ -70,8 +70,9 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 	private RoleType role;
 	private ChatGWT parent;
 	
-	void setSelectionModel(SelectionModel<UserModel> selection) {
+	void setSelectionModel(SelectionModel<UserModel> selection, boolean gui) {
 		table.setSelectionModel(selection);
+		table.setStyleName("selected-gui", gui);
 	}
 	
 	static final ChatRoom NULL = new ChatRoom(); static { NULL.chatUser = Collections.emptyList(); }
