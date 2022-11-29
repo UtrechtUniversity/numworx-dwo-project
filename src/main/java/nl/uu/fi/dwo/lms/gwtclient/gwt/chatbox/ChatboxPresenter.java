@@ -109,7 +109,7 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
         
         DomUser uu = new DomUser(u);
         uu = mapRealm(uu);
-        user = new ChatUser(u, role);
+        user = new ChatUser(uu, role);
 		String password = RestAuthenticator.instance.getAuthorization(); // access token of so
 		user.token = strip(password);
 		if (role == RoleType.STUDENT) {
@@ -158,7 +158,7 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 			Promise<List<Stream<ChatUser>>> all = Promises.all(u1, u2);
 			return all.map(streams -> {
 				Stream<ChatUser> s = streams.stream().flatMap(Function.identity());
-				room.chatUser = s.collect(Collectors.toList());
+				room.chatUser = s.filter(this::exceptMe).collect(Collectors.toList());
 				return room;		
 			});
 		}
@@ -166,6 +166,10 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 		return Promises.resolved(room);
 	}
 
+	private boolean exceptMe(ChatUser u) {
+		return ! u.jid.equals(user.jid);
+	}
+	
 	private Promise<List<ChatRoom>> roomOfSchoolClass(List<DomSchoolClass> list) {
 		List<Promise<ChatRoom>> promises = list.stream().map(this::roomOfSchoolClass).collect(Collectors.toList());
 		Promise<List<ChatRoom>> result = Promises.all(promises);
