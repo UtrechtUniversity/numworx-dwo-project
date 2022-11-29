@@ -577,6 +577,13 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		root.setWidgetTopBottom(wrap, top, Unit.PX, 0, Unit.PX);
 		Style style = main.getElement().getStyle();
 		style.setHeight(100, Unit.PCT);
+
+		// keyboard:
+		KeyboardFactory factory = new DWOCombinedKeyboardFactory();
+		factory.setPremium(true);
+		factory.setCombinedState(this);
+		
+		keyboard = factory.getKeyboard();
 		
 		
 		panel = new VerticalPanel();
@@ -600,7 +607,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		
 		east.add(teachers);
 		
-		editor = new StubWidget(4);
+		editor = new StubWidget(4, keyboard);
 
 		HashMap<String, Object> data = new HashMap<>();
 		data.put("rekenTool", Boolean.FALSE);
@@ -627,12 +634,6 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		flow.add(btn);
 		
 		
-		// keyboard:
-		KeyboardFactory factory = new DWOCombinedKeyboardFactory();
-		factory.setPremium(true);
-		factory.setCombinedState(this);
-		
-		keyboard = factory.getKeyboard();
 		container = new SimpleLayoutPanel();
 		style = container.getElement().getStyle();
 		style.setBackgroundColor("#e5e7e9");
@@ -669,7 +670,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	}
 
 	StubWidget tekstPanel(String content, int width, int height) {
-		StubWidget tekstpanel = new StubWidget(9);
+		StubWidget tekstpanel = new StubWidget(9, keyboard);
 		HashMap<String, Object> launch = new HashMap<>();
 		
 		launch.put("teksten", new String[][] {{ content}});

@@ -26,6 +26,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
+import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
@@ -70,7 +71,8 @@ public class StubWidget extends Composite implements Handler, LoadHandler, Formu
 	private HashMap<String, Number> randomVars = new HashMap<>();
 	private HashMap<String, Object> lastResort;
 
-	public StubWidget(int id) {
+	public StubWidget(int id, FormuleKeyboardIF kb) {
+		this.kb = kb;
 		String profile = "77";
 		String p = Window.Location.getParameter("profile");
 		if (p != null) profile = p;
@@ -134,9 +136,11 @@ public static native Object getApplet(Object wnd, StubWidget view) /*-{
 	}
 	wnd.setFocus = function(b, viewer) {
 //		viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::setFocus(Z)(b)
+		viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::setFocus(Z)(b)
 	}
 	wnd.setFocus2 = function(b, soft, viewer) {
 //		viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::setFocus(ZZ)(b,soft)
+		viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::setFocus(ZZ)(b, soft)
 	}
 	wnd.getMode = function(viewer) {
 		return viewer.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::getMode()()
@@ -238,6 +242,24 @@ public HashMap<String, Object> getState() {
 	return getState0();
 }
 
+
+private void setFocus(boolean f) {
+	setFocus(f, true);
+}
+
+final private FormuleKeyboardIF kb;
+
+private void setFocus(boolean b, boolean soft) {
+	kb.setEditor( b ? this : null);
+	
+	// extra parameter 'soft' of hard focus
+	if (b) {
+		if(soft) kb.softFocus();
+		else kb.focus();
+	} else 
+		kb.blur();
+
+}
 
 public void zetNagekeken(boolean b) {
 	if(innerView != null)
