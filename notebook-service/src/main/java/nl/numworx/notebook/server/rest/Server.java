@@ -5,6 +5,4 @@ public class Server {
 	public Boolean ready;
 	public String pending;
 	public String url;
-	
-	
 }

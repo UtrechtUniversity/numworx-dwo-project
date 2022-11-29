@@ -41,7 +41,7 @@ public class HubAPITest extends TestCase {
 		System.out.println(version.version);
 	}
 	
-	public void xtestUserInfo() throws Exception {
+	public void testUserInfo() throws Exception {
 		User user = api.getUserInfo("meesterwim");
 		assertNotNull(user);
 		assertEquals("meesterwim", user.name);
@@ -137,8 +137,12 @@ public class HubAPITest extends TestCase {
 	
 	public void testCreateUser() throws Exception {
 		User u = api.createUser("meesterwim5");
+		User u2 = api.getUserInfo(u.name);
 		api.deleteUser("meesterwim5");
 		assertEquals("meesterwim5", u.name);
+		assertNotNull("servers", u.servers);
+		assertEquals("meesterwim5", u2.name);
+		assertNotNull("servers", u2.servers);
 	}
 	
 	public void testUnknownUser() throws Exception {
@@ -148,9 +152,6 @@ public class HubAPITest extends TestCase {
 		} catch(HubException he) {
 			int code = he.status;
 			assertEquals("not found", 404, code);
-		} catch(IOException e) {
-			// herken bestaat-niet-exception
-			e.printStackTrace();
-		}
+		} 
 	}
 }

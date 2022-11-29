@@ -12,6 +12,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -253,11 +254,15 @@ public class HubAPI {
 	  
 	  
 	  public User getUserInfo(String user) throws IOException {		  
-		  return get("users/" + user, User.class);
+		User get = get("users/" + user, User.class);
+		if (get.servers == null) get.servers = Collections.emptyMap(); // will not happen.
+		return get;
 	  }
 	  
 	  public User createUser(String user) throws IOException {
-		  return post("users/" + user, null, User.class);
+		User post = post("users/" + user, null, User.class);
+		if (post.servers == null) post.servers = Collections.emptyMap();
+		return post;
 	  }
 	  
 	  public void deleteUser(String user) throws Exception {
