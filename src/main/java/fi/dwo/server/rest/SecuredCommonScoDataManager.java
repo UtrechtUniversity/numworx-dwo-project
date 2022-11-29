@@ -84,6 +84,7 @@ abstract class SecuredCommonScoDataManager {
   private static final Logger LOG = Logger.getLogger(SecuredCommonScoDataManager.class.getName());
   static final String COMPLETE = "completed";
   static final String REVIEW_DATA = "cmi.comments_from_lms.0.comment";
+  static final String REVIEW_CORRECT = "cmi.comments_from_lms.2.comment";
   static final CmiConvert CMI = new CmiConvert(); // utility class
 
   String normalizeETag(String match) {
@@ -816,7 +817,7 @@ try {
 			orScores = orScores.getJsonArray(0);
 			Number n = orScores.getJsonNumber(pagenr).numberValue();
 			if (COMPLETE.equals(pssc.getCompletionStatus()) && pssd.getCocd() != null) {
-				Scorm2Xml xml = new Scorm2Xml(String.valueOf(pssd.getCocd()));
+				Scorm2Xml xml = new Scorm2Xml(pssd.getCocd());
 				String json = xml.LMSGetValue(REVIEW_DATA);
 				if (!json.isEmpty()) {
 				parser = Json.createParser(new StringReader(json));
@@ -834,6 +835,16 @@ try {
 			JsonArray orGoedFout = onsState.getJsonArray("orGoedFout");
 			orGoedFout = orGoedFout.getJsonArray(0);
 			boolean ok = orGoedFout.getBoolean(pagenr);
+			if (COMPLETE.equals(pssc.getCompletionStatus()) && pssd.getCocd() != null) {
+				Scorm2Xml xml = new Scorm2Xml(pssd.getCocd());
+				String correct = xml.LMSGetValue(REVIEW_CORRECT);
+				if (correct.length() > pagenr) {
+					switch(correct.charAt(pagenr)) {
+					case 'T': ok = true; break;
+					case 'F': ok = false; break;
+					}
+				}
+			}
 			return ok ? "passed" : "failed";    
 		}
 	} catch (Exception e) {

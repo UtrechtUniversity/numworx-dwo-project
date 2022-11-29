@@ -75,7 +75,21 @@ public class SecuredCommonScoDataManagerTest {
 		String result = SecuredCommonScoDataManager.scoreWidget(key, pssd, pssc);
 		assertEquals("score", "95", result);		
 	}
-
+	@Test
+	public void testCorrect() throws Exception {
+		String key = "dme.scorewidget.cs.1.success_status";
+		pssc = new PersistentStudentScoContext();
+		pssc.setCompletionStatus(SecuredCommonScoDataManager.COMPLETE);
+		InputStream cocd = getClass().getResourceAsStream("cocd.xml");
+		byte buf[]= new byte[cocd.available()];
+		cocd.read(buf);
+		pssd.setCocd(new String(buf, StandardCharsets.UTF_8));
+		String result = SecuredCommonScoDataManager.scoreWidget(key, pssd, pssc);
+		assertEquals("status", "passed", result);		
+		
+	}
+	
+	
 	@Test
 	public void testScore2() { 
 		String key = "dme.scorewidget.s.1.1.score.raw";
