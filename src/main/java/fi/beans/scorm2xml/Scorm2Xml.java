@@ -99,7 +99,6 @@ public class Scorm2Xml extends ScormAdapter {
         }
     }
 
-    @SuppressWarnings("null")
     public void write(StreamResult out) throws IOException {
         // Use a Transformer for output
         TransformerFactory tFactory = TransformerFactory.newInstance();
@@ -228,8 +227,9 @@ public class Scorm2Xml extends ScormAdapter {
             String subkey = key.substring(0, i);
             Node node = getElementByTagNameNS(r, NAMESPACE, subkey);
             if (node == null) {
+                int j = r.getChildNodes().getLength();
                 try {
-                    int j = Integer.parseInt(subkey);
+                    j = Integer.parseInt(subkey);
                     subkey = singular(lastsubkey);
                     node = r.getChildNodes().item(j);
                     if (node != null) {
@@ -240,9 +240,12 @@ public class Scorm2Xml extends ScormAdapter {
                     }
                 }
                 catch (NumberFormatException e) {
+                } 
+                Element newchild = null;
+                while(r.getChildNodes().getLength()<=j) {
+                  newchild = doc.createElementNS(NAMESPACE, subkey);
+                  r.appendChild(newchild);
                 }
-                Element newchild = doc.createElementNS(NAMESPACE, subkey);
-                r.appendChild(newchild);
                 r = newchild;
             } else {
                 r = (Element) node;
