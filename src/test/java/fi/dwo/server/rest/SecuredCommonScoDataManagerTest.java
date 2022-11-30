@@ -59,7 +59,8 @@ public class SecuredCommonScoDataManagerTest {
 	@Test
 	public void testSuccessStatus() {		
 		String key = "dme.scorewidget.cs.1.success_status";
-		String result = SecuredCommonScoDataManager.scoreWidget(key, pssd, null);
+		pssc = new PersistentStudentScoContext();
+		String result = SecuredCommonScoDataManager.scoreWidget(key, pssd, pssc);
 		assertEquals("success", "passed", result);
 	}
 
