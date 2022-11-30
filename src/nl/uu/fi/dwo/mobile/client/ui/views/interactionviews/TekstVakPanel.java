@@ -68,6 +68,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -869,7 +870,9 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		mainPanel2.addDomHandler((PointerUpHandler)pointerHandler, PointerUpEvent.getType()); 
 		mainPanel2.addDomHandler((PointerDownHandler)pointerHandler, PointerDownEvent.getType()); 
 
-		
+		if (isLink) {
+			mainPanel2.getElement().getStyle().setCursor(Cursor.POINTER);
+		}
 		
 		
 //		randPanel = new LayoutPanel();
