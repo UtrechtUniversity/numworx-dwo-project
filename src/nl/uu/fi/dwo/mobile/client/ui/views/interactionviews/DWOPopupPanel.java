@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -14,6 +15,8 @@ import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.TouchEndEvent;
@@ -126,6 +129,7 @@ public class DWOPopupPanel extends PopupPanel {
 		mouseMoveHandler = addDomHandler((MouseMoveHandler)mousePopupHandler, MouseMoveEvent.getType()); 
 		mouseDownHandler = addDomHandler((MouseDownHandler)mousePopupHandler, MouseDownEvent.getType()); 
 		mouseUpHandler = addDomHandler((MouseUpHandler)mousePopupHandler, MouseUpEvent.getType()); 
+		addDomHandler(mousePopupHandler, MouseOutEvent.getType());
 		
 		TouchPopupHandler touchPopupHandler = new TouchPopupHandler();
 		touchMoveHandler = addDomHandler((TouchMoveHandler)touchPopupHandler, TouchMoveEvent.getType()); 
@@ -355,7 +359,7 @@ public class DWOPopupPanel extends PopupPanel {
 	private boolean hasPointerSupport;
 	private boolean hasMouseSupport;
 	
-	class MousePopupHandler implements MouseDownHandler, MouseMoveHandler, MouseUpHandler {
+	class MousePopupHandler implements MouseDownHandler, MouseMoveHandler, MouseUpHandler, MouseOutHandler {
 		@Override
 		public void onMouseUp(MouseUpEvent event) {
 			mouseTouchPointerEnd(event.getClientX(),event.getClientY());
@@ -371,6 +375,12 @@ public class DWOPopupPanel extends PopupPanel {
 			hasMouseSupport = true;
 			mouseTouchPointerDown(event.getClientX(),event.getClientY());
 			event.stopPropagation();
+		}
+		@Override
+		public void onMouseOut(MouseOutEvent event) {
+			logger.log(Level.SEVERE, "mouse out " + event.getClientX() + "," + event.getClientY());
+			mouseTouchPointerEnd(event.getClientX(),event.getClientY());
+			
 		}
 	}
 	class PointerPopupHandler implements PointerDownHandler, PointerMoveHandler, PointerUpHandler	{
