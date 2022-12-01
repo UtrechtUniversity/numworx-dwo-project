@@ -4,6 +4,7 @@
 
   <groupId>nl.uu.fi.dwo.lms</groupId>
   <artifactId>ChatGWT</artifactId>
+  <version>2.5.18-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
