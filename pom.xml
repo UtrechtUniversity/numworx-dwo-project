@@ -212,7 +212,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.mobile</groupId>
 			<artifactId>formule</artifactId>
-			<version>0.1.15-SNAPSHOT</version>
+			<version>0.1.15</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.numworx.gwtpatch</groupId>
@@ -565,7 +565,7 @@
 		<profile>
 			<id>notebook</id>
 			<properties>
-				<notebookVersion>0.0.1-SNAPSHOT</notebookVersion>
+				<notebookVersion>0.0.1</notebookVersion>
 			</properties>
 			<dependencies>
 				<dependency>
