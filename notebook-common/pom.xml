@@ -3,7 +3,7 @@
   <parent>
     <groupId>nl.numworx.notebook</groupId>
     <artifactId>notebook-parent</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4-SNAPSHOT</version>
   </parent>
   <artifactId>notebook-common</artifactId>
   <build>
