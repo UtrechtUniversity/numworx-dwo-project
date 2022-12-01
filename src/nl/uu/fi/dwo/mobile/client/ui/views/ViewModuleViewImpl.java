@@ -1492,7 +1492,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 					on.setScoresZelftoets(on.getCurrentActiviteit(), on.getCurrentOpdracht(), ((InteractionView) currentObject).getScore());
 					on.setIsCorrectZelftoets(on.getCurrentActiviteit(), 
 						on.getCurrentOpdracht(), 
-						((InteractionView) currentObject).isCorrect() == null ? false : ((InteractionView) currentObject).isCorrect());
+						((InteractionView) currentObject).isCorrect());
 				}
 				aantalInteractionViews++;
 			}
@@ -1559,12 +1559,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 				on.setScoresZelftoets(on.getCurrentActiviteit(), on.getCurrentOpdracht(), ((InteractionView) currentObject).getScore());
 				on.setIsCorrectZelftoets(on.getCurrentActiviteit(), 
 					on.getCurrentOpdracht(), 
-					((InteractionView) currentObject).isCorrect() == null ? false : ((InteractionView) currentObject).isCorrect());
+					((InteractionView) currentObject).isCorrect() );
 				
 				on.setScores(on.getCurrentActiviteit(), on.getCurrentOpdracht(), ((InteractionView) currentObject).getScore());
 				on.setIsCorrect(on.getCurrentActiviteit(), 
 					on.getCurrentOpdracht(), 
-					((InteractionView) currentObject).isCorrect() == null ? false : ((InteractionView) currentObject).isCorrect());
+					((InteractionView) currentObject).isCorrect() );
 
 			}
 		}

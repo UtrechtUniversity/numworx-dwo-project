@@ -135,7 +135,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 * worden doorgegeven t.b.v. activiteitenoverzicht met progress bar.
 	 */
 	private int zelftoetsHighScore;
-	private boolean[][] isCorrect;
+	private Boolean[][] isCorrect;
 	/**
 	 * Correctheid (per activiteit, per opdracht/pagina, vgl. isCorrect) die getoond wordt
 	 * in een nagekeken zelftoets dmv een groen of rood bolletje.
@@ -145,7 +145,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 * De correctheid bij de huidige ingevulde antwoorden moet pas getoond
 	 * worden als op de nakijk-knop wordt gedrukt.
 	 */
-	private boolean[][] isCorrectZelftoets;
+	private Boolean[][] isCorrectZelftoets;
 	/**
 	 * Een array (per activiteit, per opdracht/pagina) die aangeeft of er voor de 
 	 * betreffende opdracht een zelftoets nakijken pending is. Als de zelftoets is nagekeken
@@ -257,8 +257,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		scoresMax = new int[aantalActiviteiten][maxAantalOpdrachten];
 		scores = new int[aantalActiviteiten][maxAantalOpdrachten];
 		scoresZelftoets = new int[aantalActiviteiten][maxAantalOpdrachten];
-		isCorrect = new boolean[aantalActiviteiten][maxAantalOpdrachten];
-		isCorrectZelftoets = new boolean[aantalActiviteiten][maxAantalOpdrachten];
+		isCorrect = new Boolean[aantalActiviteiten][maxAantalOpdrachten];
+		isCorrectZelftoets = new Boolean[aantalActiviteiten][maxAantalOpdrachten];
 		nakijkenZelftoetsPending = new boolean[aantalActiviteiten][maxAantalOpdrachten];
 		opdrachtenCorrect = new boolean[aantalActiviteiten][maxAantalOpdrachten];
 		states = new HashMap[aantalActiviteiten][maxAantalOpdrachten];
@@ -467,7 +467,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		if (isCorrectZelftoets() != null)
 			isCorrectZelftoets = isCorrectZelftoets();
 		else
-			isCorrectZelftoets = new boolean[getAantalActiviteiten()][getMaxAantalOpdrachten()];
+			isCorrectZelftoets = new Boolean[getAantalActiviteiten()][getMaxAantalOpdrachten()];
 	}
 	
 	/**
@@ -577,7 +577,11 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 */
 	public boolean isCorrect(int i, int j)
 	{
-		return isCorrect[i][j];
+		return Boolean.TRUE.equals(isCorrect[i][j]);
+	}
+	
+	boolean isCorrectZelftoets(int i, int j) {
+		return Boolean.TRUE.equals(isCorrectZelftoets[i][j]);
 	}
 
 	public boolean getOpdrachtCorrect(int i, int j)
@@ -590,7 +594,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
       saveCurrentState();
 		Boolean check = entry.isCorrect();
 		boolean correct = Boolean.TRUE.equals(check);
-		isCorrect[currentActiviteit][currentOpdracht] = correct;
+		isCorrect[currentActiviteit][currentOpdracht] = check;
 		opdrachtenCorrect[currentActiviteit][currentOpdracht] = correct;
 
 		// met nieuwe implementatie strafpunten: niet meer hier regelen maar in
@@ -677,9 +681,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			{
 				setButton(j);
 				if (mode == ZELFTOETS) 
-					setButtonCorrectZelftoets(buttons.get(j), isCorrectZelftoets[index][j], j);
+					setButtonCorrectZelftoets(buttons.get(j), isCorrectZelftoets(index,j), j);
 				else
-					setButtonCorrect(buttons.get(j), isCorrect[index][j], j);
+					setButtonCorrect(buttons.get(j), isCorrect(index,j), j);
 			}
 			
 			if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
@@ -750,9 +754,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			{
 				setButton(j);
 				if (mode == ZELFTOETS) 
-					setButtonCorrectZelftoets(buttons.get(j), isCorrectZelftoets[index][j], j);
+					setButtonCorrectZelftoets(buttons.get(j), isCorrectZelftoets(index,j), j);
 				else
-					setButtonCorrect(buttons.get(j), isCorrect[index][j], j);
+					setButtonCorrect(buttons.get(j), isCorrect(index,j), j);
 			}
 			
 			if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
@@ -1199,9 +1203,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		{
 			buttons.get(j).setStyleName(css.scoreBtn_disabled(), false);
 			if (mode == ZELFTOETS)
-				setButtonCorrectZelftoets(buttons.get(j), isCorrectZelftoets[currentActiviteit][j], j);
+				setButtonCorrectZelftoets(buttons.get(j), isCorrectZelftoets(currentActiviteit,j), j);
 			else
-				setButtonCorrect(buttons.get(j), isCorrect[currentActiviteit][j], j);
+				setButtonCorrect(buttons.get(j), isCorrect(currentActiviteit,j), j);
 		}
 		else
 		{
@@ -1565,8 +1569,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	{
 		int scoreCorrected = getScoresZelftoets()[currentActiviteit][opdrNr];
 		scores[currentActiviteit][opdrNr] = scoreCorrected;
-		boolean isCorrectVoorZelftoets = isCorrectZelftoets[currentActiviteit][opdrNr];
-		isCorrect[currentActiviteit][opdrNr] = Boolean.TRUE == isCorrectVoorZelftoets;
+		Boolean isCorrectVoorZelftoets = isCorrectZelftoets[currentActiviteit][opdrNr];
+		isCorrect[currentActiviteit][opdrNr] = isCorrectVoorZelftoets;
 		if (objectives != null)
 			scoresObjectives[currentActiviteit][opdrNr] = entry.getScoreObjectives();
 		if (misconceptions != null)
@@ -1608,7 +1612,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		for (int j = 0; j < aantalOpdrachten[currentActiviteit]; j++)
 		{
 			if (entry.bolletjesZichtbaar())
-				setButtonCorrectZelftoets(buttons.get(j), isCorrectZelftoets[currentActiviteit][j], j);
+				setButtonCorrectZelftoets(buttons.get(j), isCorrectZelftoets(currentActiviteit,j), j);
 			source.setItemScore(j, scores[currentActiviteit][j]);
 		}
 
@@ -1714,10 +1718,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		if (entry.bolletjesZichtbaar())
 		{
 			if (mode == ZELFTOETS)
-				setButtonCorrectZelftoets(buttons.get(currentOpdracht), isCorrectZelftoets[currentActiviteit][currentOpdracht],
+				setButtonCorrectZelftoets(buttons.get(currentOpdracht), isCorrectZelftoets(currentActiviteit,currentOpdracht),
 					currentOpdracht);
 			else
-				setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht],
+				setButtonCorrect(buttons.get(currentOpdracht), isCorrect(currentActiviteit,currentOpdracht),
 					currentOpdracht);
 
 			removeButtonCursor(buttons.get(currentOpdracht));
@@ -2557,13 +2561,13 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 * 
 	 * @param isCorrect
 	 */
-	public void setIsCorrectZelftoets(boolean[][] isCorrect)
+	public void setIsCorrectZelftoets(Boolean[][] isCorrect)
 	{
 		if (isCorrect.length == 0)
-			isCorrectZelftoets = new boolean[0][0];
+			isCorrectZelftoets = new Boolean[0][0];
 		else
 		{
-			isCorrectZelftoets = new boolean[isCorrect.length][isCorrect[0].length];
+			isCorrectZelftoets = new Boolean[isCorrect.length][isCorrect[0].length];
 			for (int i = 0; i < isCorrect.length; i++)
 			{
 				System.arraycopy(isCorrect[i], 0, isCorrectZelftoets[i], 0, isCorrect[0].length);
@@ -2635,7 +2639,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 * @param opdrachtNr
 	 * @param b
 	 */
-	public void setIsCorrectZelftoets(int activiteitNr, int opdrachtNr, boolean b)
+	public void setIsCorrectZelftoets(int activiteitNr, int opdrachtNr, Boolean b)
 	{
 		isCorrectZelftoets[activiteitNr][opdrachtNr] = b;
 	}
@@ -2647,7 +2651,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 * @param opdrachtNr
 	 * @param b
 	 */
-	public void setIsCorrect(int activiteitNr, int opdrachtNr, boolean b)
+	public void setIsCorrect(int activiteitNr, int opdrachtNr, Boolean b)
 	{
 		isCorrect[activiteitNr][opdrachtNr] = b;
 	}
@@ -2663,7 +2667,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		return scoresZelftoets;
 	}
 	
-	public boolean[][] isCorrectZelftoets()
+	public Boolean[][] isCorrectZelftoets()
 	{
 		return isCorrectZelftoets;
 	}
@@ -2728,7 +2732,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 */
 	public void clearIsCorrectZelftoets()
 	{
-		isCorrectZelftoets = new boolean[getAantalActiviteiten()][getMaxAantalOpdrachten()];
+		isCorrectZelftoets = new Boolean[getAantalActiviteiten()][getMaxAantalOpdrachten()];
 	}
 
 	public boolean isReview() {

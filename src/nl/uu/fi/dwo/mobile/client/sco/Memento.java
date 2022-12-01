@@ -431,13 +431,13 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		return source;
 	}
 	
-	public void setOrGoedFout(boolean[][] o) {
+	public void setOrGoedFout(Boolean[][] o) {
 		if(o == null) return;
 		for (int i = 0; i < o.length; i++) {
-			boolean[] oi = o[i];
+			Boolean[] oi = o[i];
 			for (int j = 0; j < oi.length; j++) {
-				boolean punt = oi[j];
-				if(punt != false) {
+				Boolean punt = oi[j];
+				if(punt != null) {
 					if ( opdrGoedFout == null) {
 						opdrGoedFout = new JSONArray();
 						onsState.put(GOED_FOUT, opdrGoedFout);
@@ -445,7 +445,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 					if( i >= opdrGoedFout.size() || isNull(opdrGoedFout.get(i)) )
 						opdrGoedFout.set(i, new JSONArray());
 					JSONArray array = opdrGoedFout.get(i).isArray();
-					array.set(j, JSONBoolean.getInstance(punt));
+					array.set(j, JSONBoolean.getInstance(punt.booleanValue()));
 				} else {
 					if(opdrGoedFout == null 
 							|| opdrGoedFout.size() <= i 
@@ -453,7 +453,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 						continue;
 					JSONArray array = opdrGoedFout.get(i).isArray();
 					if(j >= array.size()) continue;
-					array.set(j, JSONBoolean.getInstance(false));
+					array.set(j, JSONNull.getInstance());
 				}
 			}
 			
@@ -574,19 +574,19 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		}
 	}
 	
-	public void getOrGoedFout(boolean[][] o) {
+	public void getOrGoedFout(Boolean[][] o) {
 		if(o == null) return;
 		if(opdrGoedFout == null) {
 			for (int i = 0; i < o.length; i++) {
-				boolean[] oi = o[i];
+				Boolean[] oi = o[i];
 				for (int j = 0; j < oi.length; j++) {
-					oi[j] = false;
+					oi[j] = null;
 				}
 			}
 		} else {
 			for (int i = 0; i < o.length; i++) {
 				JSONArray array = getArray(i, opdrGoedFout);
-				boolean[] oi = o[i];
+				Boolean[] oi = o[i];
 				for (int j = 0; j < oi.length; j++) {
 					oi[j] = getBoolean(array, j);
 				}
@@ -594,15 +594,15 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		}
 	}
 
-	private boolean getBoolean(JSONArray array, int j) {
+	private Boolean getBoolean(JSONArray array, int j) {
 		if(array == null || j < 0 || j > array.size())
-			return false;
+			return null;
 		JSONValue value = array.get(j);
-		if(value == null) return false;
+		if(value == null) return null;
 		JSONBoolean number = value.isBoolean();
 		if(number != null)
 			return number.booleanValue();
-		return false;
+		return null;
 	}
 
 	public int getInt(JSONArray array, int j) {
@@ -1224,7 +1224,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		this.onsState.put(SCORES_ZELFTOETS, this.scoresZelftoets);
 	}
 	
-	public boolean[][] isCorrectZelftoets()
+	public Boolean[][] isCorrectZelftoets()
 	{
 		if (isCorrectZelftoets == null)
 		{
@@ -1242,7 +1242,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 			aantalOpdrachten = Math.max(array.size(), aantalOpdrachten);
 		}
 		
-		boolean[][] booleanArray = new boolean[aantalActiviteiten][aantalOpdrachten];
+		Boolean[][] booleanArray = new Boolean[aantalActiviteiten][aantalOpdrachten];
 		
 		for (int i = 0; i < isCorrectZelftoets.size(); i++)
 		{
@@ -1294,17 +1294,17 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		return booleanArray;
 	}
 	
-	public void setIsCorrectZelftoets(boolean[][] isCorrect)
+	public void setIsCorrectZelftoets(Boolean[][] isCorrect)
 	{
 		JSONArray array = new JSONArray();
 
 		for (int i = 0; i < isCorrect.length; i++)
 		{
-			boolean[] isCorrectPerActiviteit = isCorrect[i];
+			Boolean[] isCorrectPerActiviteit = isCorrect[i];
 			Boolean[] booleanScores = new Boolean[isCorrectPerActiviteit.length];
 			for (int j = 0; j < isCorrectPerActiviteit.length; j++)
 			{
-				booleanScores[j] = new Boolean(isCorrectPerActiviteit[j]);
+				booleanScores[j] = isCorrectPerActiviteit[j];
 			}
 			array.set(i, JSONUtilities.toJSONArray(booleanScores));
 		}
