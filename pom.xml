@@ -8,7 +8,7 @@
     </parent>
   <groupId>nl.numworx.notebook</groupId>
   <artifactId>notebook-parent</artifactId>
-  <version>0.0.3-SNAPSHOT</version>
+  <version>0.0.3</version>
   <packaging>pom</packaging>
   <name>Notebook widget </name>
   <properties>
@@ -24,6 +24,6 @@
     <module>notebook-service</module>
   </modules>
   <scm>
-  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/notebook/trunk</developerConnection>
+  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/notebook/tags/notebook-parent-0.0.3</developerConnection>
   </scm>
 </project>

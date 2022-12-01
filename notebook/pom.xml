@@ -3,7 +3,7 @@
   <parent>
     <groupId>nl.numworx.notebook</groupId>
     <artifactId>notebook-parent</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.3</version>
   </parent>
   <artifactId>notebook</artifactId>
   <dependencies>
@@ -73,7 +73,7 @@
    				<_snapshot>${osgi.qualifier}</_snapshot>
           		<Bundle-SymbolicName>nl.numworx.notebook.Notebook</Bundle-SymbolicName>
  				<Main-Class>nl.numworx.notebook.Notebook</Main-Class>
-				<Bundle-Description></Bundle-Description>
+				<Bundle-Description />
  				<Export-Package>nl.numworx.notebook</Export-Package>
  				<Import-Package>fi.beans.mainframe,fi.beans.wiskopdrbeans,*</Import-Package>
           	</instructions>
