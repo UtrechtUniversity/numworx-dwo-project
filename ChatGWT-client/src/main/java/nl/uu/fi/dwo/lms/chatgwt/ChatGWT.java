@@ -82,6 +82,7 @@ import nl.uu.fi.dwo.lms.chatgwt.util.MD5;
 import nl.uu.fi.dwo.lms.chatgwt.util.PersistIF;
 import nl.uu.fi.dwo.lms.chatgwt.util.ResizeFlowPanel;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessages;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -91,6 +92,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	
 	private static final TimeZone UTC = TimeZone.createTimeZone(0);
 	private static final int COL_6 = 456;
+	public  static final Text rb = GWT.create(Text.class);
+	public  static final Dwo2LocaleMessages dworb = GWT.create(Dwo2LocaleMessages.class);
 
 	interface ChatUserCodec extends JsonEncoderDecoder<ChatUser> {};
 	
@@ -211,7 +214,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			if (type.isEmpty()) {
 				return handleMAM(element);
 			}
-			
+	// FIXME if personal message from someone not on the users list, drop it on the floor!		
 			
 			String stamp = null;
 			int at = from.indexOf('/');
@@ -231,7 +234,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			}
 			if (("chat".equals(type)||"groupchat".equals(type)) && elems.getLength() > 0) {
 				Element body = (Element) elems.getItem(0);
-				String text = body.getText();
+				String text = xmldecode(body.getText());
 				String utc = stamp;
 				if (stamp == null) {
 					stamp = now();
@@ -256,7 +259,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			Element message = (Element) messages.getItem(0);
 			NodeList<com.google.gwt.dom.client.Element> elems = message.getElementsByTagName("body");
 			Element body = (Element) elems.getItem(0);
-			String text = body.getText();
+			String text = xmldecode(body.getText());
 			String type = message.getAttribute("type"); // chat // groupchat
 			String from = message.getAttribute("from");
 			int at = from.indexOf('/');
@@ -271,9 +274,16 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			m.add(new Message(jid, stamp, text, utc));
 			return true;
 		}
+			
+		private String xmldecode(String text) {
+			for (String[] r: replace) {
+				text = text.replace(r[0], r[1]);
+			}
+			return text;
+		}
 
-		
 	}
+	static String[][] replace = { { "&apos;", "'" }, {"&lt;", "<"}, {"&gt;", ">"}, {"quot;", "\""}, {"&amp;" , "&"}};
 	
 	class ChatAll extends Handler<Element> {
 
@@ -328,8 +338,12 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		hbox.addStyleName("profile-borderBox");
 		hbox.add(afzender);
 		hbox.add(time);
-		if ( !compareStamp(lastPanel, stamp)) {
-			Label datelabel = new Label(stamp.split(" ")[0]);
+		if (chatUser.jid .equals(get(from).jid)) {
+			hbox.addStyleName("profile-mymessage");
+		}
+		
+		if (!compareStamp(lastPanel, stamp)) {
+			Label datelabel = new Label(dateOnly(utc));
 			FlowPanel flow = new FlowPanel();			
 			flow.addStyleName("date-Label");
 			flow.add(datelabel);
@@ -464,9 +478,14 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	}
 	
 	private ChatUser get(String key) {
-		if (!key.contains("@")) key += "@"+DOMAIN;
+		key = addDomain(key);
 		ChatUser u = byJid.get(key);
 		return u;
+	}
+
+	public static String addDomain(String key) {
+		if (!key.contains("@")) key += "@"+DOMAIN;
+		return key;
 	}
 	
 	private String getDisplayName(String jid) {
@@ -558,6 +577,13 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		root.setWidgetTopBottom(wrap, top, Unit.PX, 0, Unit.PX);
 		Style style = main.getElement().getStyle();
 		style.setHeight(100, Unit.PCT);
+
+		// keyboard:
+		KeyboardFactory factory = new DWOCombinedKeyboardFactory();
+		factory.setPremium(true);
+		factory.setCombinedState(this);
+		
+		keyboard = factory.getKeyboard();
 		
 		
 		panel = new VerticalPanel();
@@ -581,7 +607,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		
 		east.add(teachers);
 		
-		editor = new StubWidget(4);
+		editor = new StubWidget(4, keyboard);
 
 		HashMap<String, Object> data = new HashMap<>();
 		data.put("rekenTool", Boolean.FALSE);
@@ -601,19 +627,13 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		btn = new InlineHTML("<i class='send fa fa-2x fa-paper-plane' >");
 		btn.addClickHandler(this::onClickInput);
 		btn.getElement().getStyle().setFloat(Style.Float.RIGHT);
-		if (room != null) sender = new Label("Bericht voor " + room.displayName);
+		if (room != null) sender = new Label(rb.messageFor(room.displayName));
 		else sender = new Label();
 		sender.addStyleName("header");
 		flow.add(sender);
 		flow.add(btn);
 		
 		
-		// keyboard:
-		KeyboardFactory factory = new DWOCombinedKeyboardFactory();
-		factory.setPremium(true);
-		factory.setCombinedState(this);
-		
-		keyboard = factory.getKeyboard();
 		container = new SimpleLayoutPanel();
 		style = container.getElement().getStyle();
 		style.setBackgroundColor("#e5e7e9");
@@ -650,7 +670,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	}
 
 	StubWidget tekstPanel(String content, int width, int height) {
-		StubWidget tekstpanel = new StubWidget(9);
+		StubWidget tekstpanel = new StubWidget(9, keyboard);
 		HashMap<String, Object> launch = new HashMap<>();
 		
 		launch.put("teksten", new String[][] {{ content}});
@@ -746,9 +766,15 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	}
 	private static final DateTimeFormatInfo INFO = LocaleInfo.getCurrentLocale().getDateTimeFormatInfo();
 	private static final DateTimeFormat DATE_TIME = DateTimeFormat.getFormat(INFO.dateTimeShort(INFO.timeFormatShort(),INFO.formatMonthNumDay()));
+	private static final DateTimeFormat DATE_ONLY = DateTimeFormat.getFormat(INFO.formatMonthFullDay());
+	
 	public static String now() {
 		return DATE_TIME.format( new Date());
 	}
+	public static String dateOnly(String utc) {
+		return DATE_ONLY.format(fromDelay(utc));
+	}
+	
 	@Override
 	public HandlerRegistration addChangeHandler(ChangeHandler handler) {
 		this.handler = handler;
@@ -824,13 +850,13 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		students.init(room);
 		teachers.init(room);
 		if (room != null) {
-			sender.setText("Bericht voor " + room.displayName);
+			sender.setText(rb.messageFor(room.displayName));
 			MessageModel m = get(room);
 			m.clear();
 			switchToModel(m);
 			//addToRoom(room);
 		} else {
-			sender.setText("Bericht");
+			sender.setText(rb.message());
 		}
 		eastHeader.setMultiChat(true);
 		sendTo = this::sendToRoom;
@@ -845,20 +871,22 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	void updateMultichat(boolean b) {
 		selection.clear();
 		if (b) {
-			sender.setText("Bericht voor " + room.displayName);
+			sender.setText(rb.messageFor(room.displayName));
 			sendTo = this::sendToRoom;
 			switchToModel(get(room));
-			setSelection(noselection);
+			setSelection(noselection, false);
 		} else {
-			sender.setText("Bericht");
+			sender.setText(rb.message());
+			removeAddToPanel();
+			panel.clear();lastPanel = now();
 			sendTo = this::sendToUser;
-			setSelection(selection);
+			setSelection(selection, true);
 		}
 	}
 
-	private void setSelection(SelectionModel<UserModel> sel) {
-		students.setSelectionModel(sel);
-		teachers.setSelectionModel(sel);		
+	private void setSelection(SelectionModel<UserModel> sel, boolean gui) {
+		students.setSelectionModel(sel, gui);
+		teachers.setSelectionModel(sel, gui);		
 	}
 
 	@Override
@@ -868,7 +896,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			ChatUser user = selectedObject.getUser();
 			MessageModel m = selectedObject.getMessages();
 			switchToModel(m);
-			sender.setText("Bericht voor " + user.nickName);
+			sender.setText(rb.messageFor(user.nickName));
 		}
 	}
 	private void switchToModel(MessageModel m) {
@@ -881,7 +909,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	}
 	
 	static final String ISO8601_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ";
-	private static final int Tlen = ISO8601_PATTERN.indexOf('T')    + 8;
+	//private static final int Tlen = ISO8601_PATTERN.indexOf('T');
 	static final DateTimeFormat ISO_DATETIME = DateTimeFormat.getFormat(ISO8601_PATTERN);
 
 	private boolean formule;

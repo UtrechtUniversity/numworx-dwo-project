@@ -6,6 +6,12 @@
 <head>
 <meta charset="UTF-8">
 <title></title>
+<style type="text/css">
+body {
+	background-color: transparent !important;
+}
+</style>
+
 <%
 	String profile = request.getParameter("profile");
 	String cdn = System.getProperty("CDNURL","https://ebs-dev-dwo-nl.s3.eu-west-1.amazonaws.com");
