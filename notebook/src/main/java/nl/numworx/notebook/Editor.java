@@ -169,7 +169,7 @@ class Editor extends JPanel implements CBookWidgetEditIF {
 	
 	Dimension instanceSize = new Dimension(600,800);
 	
-	private int max = 10;
+	private int max = 0;
 
 	private JFormattedTextField maxField;
 	private ObjectiveChoiceButton objBtn;
