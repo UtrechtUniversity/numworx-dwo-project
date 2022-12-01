@@ -233,7 +233,7 @@
 		<dependency>
 			<groupId>nl.numworx.notebook</groupId>
 			<artifactId>notebook-service</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
+			<version>0.0.3</version>
 			<classifier>classes</classifier>
 		</dependency>
 	</dependencies>
@@ -682,7 +682,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<DWOmAccessVersion>2.5.2</DWOmAccessVersion>
 		<RegisterVersion>2.5.2</RegisterVersion>
-		<DWOGwtClientVersion>2.5.17-SNAPSHOT</DWOGwtClientVersion>
+		<DWOGwtClientVersion>2.5.17</DWOGwtClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testeb4server</aws.environmentName>
