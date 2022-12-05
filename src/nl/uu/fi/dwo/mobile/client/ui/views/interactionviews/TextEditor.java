@@ -18,6 +18,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.WhiteSpace;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -94,6 +95,7 @@ import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton.ButtonListener;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TextEditor.Enter;
 import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 
@@ -738,6 +740,9 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 			next = 1;
 			switch (chars[i])
 				{
+				case '\t':
+					tab0();
+					break;
 				case '\n':
 					enter0();
 					break;
@@ -1301,6 +1306,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 
 	@Override
 	public void tab() {
+	if (!editable) {
 		Widget parent = asWidget();
 		while (parent != null && !(parent instanceof TekstVak))
 		{
@@ -1311,11 +1317,25 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		{
 			((TekstVak) parent).tabFocus(this, true);
 		}
+		return;
+	  }	
+		deleteSelection();
+		tab0();
+		showCursor();
+		pasAanH();
+	}
+
+	private void tab0() {
+		Tab tab = new Tab();
+		flow.insert(tab, cursor);
+		tab.calcWidth(cursor);
+		cursor++;
 	}
 
 	@Override
 	public void shiftTab()
 	{
+	  if (!editable) {
 		Widget parent = asWidget();
 		while (parent != null && !(parent instanceof TekstVak))
 		{
@@ -1326,6 +1346,10 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		{
 			((TekstVak) parent).shiftTabFocus(this, true);
 		}
+		return;
+	  }
+	  
+	  
 	}
 
 	public String getText()
@@ -2042,16 +2066,44 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		
 	}
 
-	private class Enter extends InlineHTML implements HasText
+	 class Enter extends InlineHTML implements HasText
 	{
-		private Enter()
+		 Enter()
 		{
 			super("\u200A<br>");
+		    setStyleName(css.inlineEnter());
 		}
 		
 		public String getText()
 		{
 			return "\n";
+		}
+	}
+	
+	static int TAB_WIDTH = 32;
+	class Tab extends InlineHTML implements HasText
+	{
+		private Tab() {
+			super("\t");
+		    setStyleName("gwt-InlineTab");
+		}
+		
+		public void calcWidth(int cursor) {
+			getElement().getStyle().setWhiteSpace(WhiteSpace.PRE);
+			int off = 0;
+			while( cursor-- > 0) {
+				Widget w = flow.getWidget(cursor);
+				if (w instanceof Enter || w instanceof Tab) break;
+				off += w.getOffsetWidth();
+			}
+			off = off % TAB_WIDTH;
+			if (off == 0) off = TAB_WIDTH;
+			getElement().getStyle().setWidth(off, Unit.PX);
+			
+		}
+
+		public String getText() {
+			return "\t";
 		}
 	}
 

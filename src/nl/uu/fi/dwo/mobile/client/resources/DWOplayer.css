@@ -33,6 +33,21 @@ iframe {
 	background-color: #C0C0C0;
 	white-space: pre-wrap;
 	color: black;
+	counter-reset: line;
+}
+
+.inlineEnter, .textEditor span:first-child {
+	counter-increment: line;
+}
+
+.inlineEnter::after, 
+.textEditor span:first-child::before {
+	content: counter(line);
+	width: 1em;
+	color: #808080;
+	display: inline-block;
+	padding-right: 0.3em;
+	text-align: right;
 }
 
 .textEditor_readonly {
