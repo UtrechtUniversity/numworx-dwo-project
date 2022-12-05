@@ -953,7 +953,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 				JSONArray array = getArray(i, opdrBezocht);
 				boolean[] oi = bezocht[i];
 				for (int j = 0; j < oi.length; j++) {
-					oi[j] = getBoolean(array, j);
+					oi[j] = Boolean.TRUE.equals(getBoolean(array, j));
 				}
 			}
 		}
