@@ -133,10 +133,10 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	private static final String TEXT = "text";
 	
 	private boolean editable = true;
-	private int lineHeight = 20;
+	//private int lineHeight = 20;
 	
 	private int width;
-	private int height;
+	private int height, minheight;
 	private boolean volledigeBreedte, pasAanH;
 	private int asHoogte = 17;
 	OpdrNavIF comRoot;
@@ -175,7 +175,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		this.activity = a;
 		// voor checktextantwoordvak
 		this.width = breedte;
-		this.height = hoogte;
+		this.height = minheight = hoogte;
 		this.boxMetRand = boxMetRand;
 		this.volledigeBreedte = false;
 		this.padding = 0;
@@ -214,7 +214,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		ObjectMap h = JSONUtilities.wrapMap(currentVakGegevens);
 		ObjectMap launchdata = h.getObjectMap("interactiePanelLaunchState");
 		width = h.getInt("breedte");
-		height = h.getInt("hoogte");
+		height = minheight = h.getInt("hoogte");
 		volledigeBreedte = h.getBoolean("volledigeBreedte", false);
 		hbox = new FlowPanel();
 		initWidget(hbox);
@@ -288,7 +288,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	public TextEditor(ActivityInterface a, int w, int h, boolean rand, boolean formule) {
 		this.activity = a;
 		width = w;
-		height = h;
+		height = minheight = h;
 		volledigeBreedte = false;
 		boxMetRand = rand;
 
@@ -332,7 +332,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	
 	public void init(int width, int height, Map<String, Object> launchData, Map<String, Number> values) {
 		this.width = width;
-		this.height = height;
+		this.height = minheight = height;
 		this.widget.setPixelSize(width, height);
 		init0(JSONUtilities.wrapMap(launchData));
 	}
@@ -957,8 +957,9 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	protected void pasAanH() {
 		if (pasAanH && regel != null && visibleChain()) {
 			int offsetHeight = flowHeight();
-			if (height != offsetHeight + boxsize + paddingH + menuheight + execute_height) {
-				height  = offsetHeight + boxsize + paddingH + menuheight+ execute_height;
+			int wanted = Math.max(minheight, offsetHeight + boxsize + paddingH + menuheight + execute_height);
+			if (height != wanted) {
+				height  = wanted;
 				hbox.setPixelSize(-1, height-boxsize-paddingH);
 				if (widget != hbox) widget.setPixelSize(-1, height);
 				regel.resize();
