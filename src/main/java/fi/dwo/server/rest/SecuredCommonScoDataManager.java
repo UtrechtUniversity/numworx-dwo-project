@@ -847,6 +847,12 @@ try {
 			}
 			return ok ? "passed" : "failed";    
 		}
+		if (key.endsWith(".entry")) {
+			JsonArray bezocht = onsState.getJsonArray("bezocht");
+			bezocht = bezocht.getJsonArray(0);
+			boolean ok = bezocht.getBoolean(pagenr);			
+			return ok ? "resume" : "ab-initio";
+		}
 	} catch (Exception e) {
 		LOG.log(Level.WARNING, "scoreWidget " + key, e);
 	}
