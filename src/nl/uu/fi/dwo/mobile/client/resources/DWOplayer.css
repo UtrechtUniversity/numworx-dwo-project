@@ -40,8 +40,8 @@ iframe {
 	counter-increment: line;
 }
 
-.inlineEnter::after, 
-.textEditor span:first-child::before {
+.textEditor_n .inlineEnter::after, 
+.textEditor_n span:first-child::before {
 	content: counter(line);
 	width: 1em;
 	color: #808080;

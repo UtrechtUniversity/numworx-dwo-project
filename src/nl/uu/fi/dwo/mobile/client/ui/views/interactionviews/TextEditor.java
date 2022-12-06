@@ -226,6 +226,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	public void init0(ObjectMap launchdata) {
 		boxMetRand = launchdata.getBoolean("boxMetRand", true);
 		pasAanH = launchdata.getBoolean("pasAanH", false);
+		boolean numbered = launchdata.getBoolean("numbered", false);
 
 		if(teltMee = launchdata.containsKey("scoreMax")) 
 			scoreMax = launchdata.getInt("scoreMax");
@@ -236,6 +237,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		boxsize = boxMetRand?2*borderWidth:0; // eigenlijk afhankelijk van de borderwidth. die is max 2
 		hbox.setStyleName(css.textEditor());
 		hbox.addStyleName(DWOplayer.templateCss().answerboxFEWS());
+		hbox.setStyleName(css.textEditor_n(), numbered);
 		
 		menubar = getMenuBar(launchdata);
 		if (menubar != null)

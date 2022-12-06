@@ -28,6 +28,7 @@ import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
+import nl.uu.fi.dwo.mobile.utils.CopyToClipboard;
 
 public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipboardIF, CombinedState, RequiresResize {
 	private static final ChangeEvent CHANGE_EVENT = new ChangeEvent() {};
@@ -158,6 +159,7 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 				storage = null; // jammer dan.
 			}
 		}
+		CopyToClipboard.setText(clipboard);
 	}
 
 	@Override
