@@ -599,11 +599,11 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		noselection = new NoSelectionModel<>(UserModel::getRoomJit);
 		selection.addSelectionChangeHandler(this);
 		
-		students = new UserTable(room, RoleType.STUDENT, noselection, this);
+		students = new UserTable(room, RoleType.STUDENT, selection, this);
 		
 		east.add(students);
 		
-		teachers = new UserTable(room, RoleType.TEACHER, noselection, this);
+		teachers = new UserTable(room, RoleType.TEACHER, selection, this);
 		
 		east.add(teachers);
 		
@@ -845,7 +845,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			removeAddToPanel();
 		}
 		panel.clear();lastPanel = now();
-		
+		setSelection(selection, false);
 		this.room = room;
 		students.init(room);
 		teachers.init(room);
@@ -874,7 +874,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			sender.setText(rb.messageFor(room.displayName));
 			sendTo = this::sendToRoom;
 			switchToModel(get(room));
-			setSelection(noselection, false);
+			setSelection(selection, false);
 		} else {
 			sender.setText(rb.message());
 			removeAddToPanel();
@@ -892,6 +892,13 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	@Override
 	public void onSelectionChange(SelectionChangeEvent event) {
 		UserModel selectedObject = selection.getSelectedObject();
+
+		// force person chat		
+		if (selectedObject != null && eastHeader.isMultichat()) 
+		{
+			setSelection(selection, true);
+			eastHeader.setMultiChat(false);
+		}
 		if (!eastHeader.isMultichat() && selectedObject != null) {
 			ChatUser user = selectedObject.getUser();
 			MessageModel m = selectedObject.getMessages();
