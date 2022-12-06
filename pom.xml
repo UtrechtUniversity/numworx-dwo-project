@@ -336,6 +336,7 @@
                             <Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
                             <Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch>
                             <DWOJApplet-Implementation-Build>${buildNumber}</DWOJApplet-Implementation-Build>
+                            <Main-Class>fi.dwo.dwojapplet.domain.DWO</Main-Class>
                             <Class-Path>swingbrowser-jxb.jar swingbrowser-api.jar</Class-Path>
           	</instructions>
           </configuration>
