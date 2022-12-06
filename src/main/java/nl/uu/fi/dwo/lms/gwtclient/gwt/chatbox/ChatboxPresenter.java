@@ -207,6 +207,11 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 	public void onChatbox(ChatboxEvent event) {
 		if (event.getParam().endsWith(":unseen")) {
 			view.setUnseen(true);
+			return;
+		}		
+		if (event.getParam().endsWith(":seen")) {
+			view.setUnseen(false);
+			return;
 		}		
 	}
 }
