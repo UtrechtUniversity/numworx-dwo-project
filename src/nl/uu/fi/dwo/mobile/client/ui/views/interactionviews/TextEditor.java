@@ -1526,6 +1526,8 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		    while (--max > -1) {
 		      wid = flow.getWidget(max);
 		      int x = wid.getAbsoluteLeft();
+		      if (wid instanceof Enter) 
+		    	  x += wid.getOffsetWidth(); 
 		      int y = wid.getAbsoluteTop();
 		      //LOGGER.fine("m=" + max + "x=" + x + "y=" + y);
 		      if (y > py ) {
@@ -1541,6 +1543,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		      if (max < flow.getWidgetCount()-1) {
 		    	  Widget n = flow.getWidget(max+1);
 		    	  int www = n.getAbsoluteLeft() - wid.getAbsoluteLeft();
+		    	  if (n instanceof Enter) www += n.getOffsetWidth();
 		    	  if (www > 0) w = www; else w = Short.MAX_VALUE;
 		      }
 		      
