@@ -1550,7 +1550,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	{
 		int scoreCorrected = entry.getScore();
 		scores[currentActiviteit][currentOpdracht] = scoreCorrected;
-		isCorrect[currentActiviteit][currentOpdracht] = Boolean.TRUE == entry.isCorrect();
+		isCorrect[currentActiviteit][currentOpdracht] = entry.isCorrect();
 		if (objectives != null)
 			scoresObjectives[currentActiviteit][currentOpdracht] = entry.getScoreObjectives();
 		if (misconceptions != null)
