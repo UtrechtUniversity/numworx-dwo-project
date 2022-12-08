@@ -486,6 +486,12 @@ public class SecuredUserCourseManager {
 // profileRights != limited
         	
     		byte[] imageData = course.getImageData();
+    		if (imageData == null) {
+    			PersistentCourseData cd = CourseDataManager.findEntity(courseId);
+    			if (cd != null) {
+    				imageData = cd.getImageData();
+    			}
+    		}
     		BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageData));
     		ByteArrayOutputStream out = new ByteArrayOutputStream();
     		ImageIO.write(image, "png", out);
