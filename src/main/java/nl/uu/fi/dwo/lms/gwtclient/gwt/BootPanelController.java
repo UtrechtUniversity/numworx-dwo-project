@@ -146,6 +146,7 @@ public class BootPanelController {
     static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
     static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
     static final String DWO_SAML_AUTH_TOKEN = "dwoSAMLAuthToken";
+	public static final int PROFILE_INF = 111;
 
     @Inject
     ViewFactory viewFactory;
@@ -227,7 +228,7 @@ public class BootPanelController {
               build = teacherBuilder.build();
               mainView.setUserRole(role, false);
               mainView.setPremium(dwoGlobalVars.isPremium()); // knowledge for teacher is premium
-              mainView.showChat(dwoGlobalVars.isPremium()&&dwoGlobalVars.isTest());
+              mainView.showChat(dwoGlobalVars.isPremium() && getProfile() == PROFILE_INF);
               break;
           case SCHOOLADMIN:
               build = schoolAdminBuilder.build();
@@ -242,7 +243,7 @@ public class BootPanelController {
               mainView.setUserRole(role, single);
               DomSchoolClass sc = dwoGlobalVars.getCurrentSchoolClass();
               mainView.setPremium(dwoGlobalVars.isPremium() && sc != null); // knowledge for student is premium and only in class
-              mainView.showChat(dwoGlobalVars.isPremium() && dwoGlobalVars.isTest() && sc != null);
+              mainView.showChat(dwoGlobalVars.isPremium() && getProfile() == PROFILE_INF && sc != null);
             break;
             }
           default:

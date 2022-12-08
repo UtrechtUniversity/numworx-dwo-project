@@ -109,7 +109,7 @@ public class StudentViewHandler implements SwitchViewEventHandler {
     	  break;
       case CHATBOX:
           DomSchoolClass sc = dwoGlobalVars.getCurrentSchoolClass();
-    	  if (sc != null && dwoGlobalVars.isPremium() && dwoGlobalVars.isTest()) {
+    	  if (sc != null && dwoGlobalVars.isPremium() && controller.getProfile() == BootPanelController.PROFILE_INF) {
         	  mainView.selectView(SelectedView.CHATBOX);
         	  mainView.showChatboxView();
         	  chatbox.get().init();

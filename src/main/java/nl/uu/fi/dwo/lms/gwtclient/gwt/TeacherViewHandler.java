@@ -168,7 +168,7 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
                   presenterFactory.getModulesPresenter().show();
                   break;
               case CHATBOX:
-            	  if (dwoGlobalVars.isPremium() && dwoGlobalVars.isTest()) {
+            	  if (dwoGlobalVars.isPremium() && controller.getProfile() == BootPanelController.PROFILE_INF) {
 	            	  mainView.selectView(SelectedView.CHATBOX);
 	            	  mainView.showChatboxView();
 	            	  chatbox.get().init();
