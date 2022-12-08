@@ -11,14 +11,11 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpUtils;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
-
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
