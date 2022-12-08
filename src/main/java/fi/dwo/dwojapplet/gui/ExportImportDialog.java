@@ -180,9 +180,10 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                     Course newc = null;
                     String name = c.getName();
                     String description = c.getDescription();
+                    boolean notVisible = c.isNotVisible();
                     name = CourseManagementPanel.replaceDuplicate(name, set);
                     //                newc = PersistenceFacade.instance().addCourse(s, name, description, profileID, map, false);
-                                  newc = GuiCreator.instance().addCourse(name, description, map, false);
+                                  newc = GuiCreator.instance().addCourse(name, description, map, false, notVisible);
                                   
                                   if (map != null) {
                                         map.addChild(newc);

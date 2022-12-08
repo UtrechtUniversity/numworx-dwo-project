@@ -2060,7 +2060,7 @@ LOG.info("time results = " + (-t) + " ms");
      * (non-Javadoc)
      * 
      */
-    public Course addCourse(String name, String description, Course parent, boolean isMap, CourseManager manager) {
+    public Course addCourse(String name, String description, Course parent, boolean isMap, boolean notVisible, CourseManager manager) {
     	PersistentCourse pc = new PersistentCourse();
     	try {
 // if Course extends persistentCourse
@@ -2069,7 +2069,7 @@ LOG.info("time results = " + (-t) + " ms");
     		pc.setDescription(description);    		
     		pc.setDwoProfileID(Long.valueOf(getDwoProfileID()));
 // defaults:
-    		
+    		pc.setNotVisible(notVisible);
 // special cases...
     		pc.setParentID(parent == null ? 0L : parent.getID()); // NPE?
     		pc.setSchoolID(parent == null ? 

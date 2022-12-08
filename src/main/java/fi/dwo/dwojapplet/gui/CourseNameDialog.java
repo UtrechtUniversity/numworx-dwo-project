@@ -188,7 +188,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
         CourseNameDialog cnd = new CourseNameDialog(owner, title, 0, "", "", isMap ? TextMapper.GUICDLG_MAP_NAME : TextMapper.GUICDLG_COURSE_NAME, TextMapper.GUICDLG_COURSE_DESCRIPTION, false);
         cnd.show();
         if (cnd.isConfirmed()) {
-            Course c = GuiCreator.instance().addCourse(cnd.getCourseName(), cnd.getCourseDescription(), parent, isMap);
+            Course c = GuiCreator.instance().addCourse(cnd.getCourseName(), cnd.getCourseDescription(), parent, isMap, false);
             return c;
         } else { //action canceled
             return null;

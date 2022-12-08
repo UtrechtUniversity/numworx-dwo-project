@@ -179,8 +179,8 @@ public class GuiCreatorAdmin extends GuiCreator {
      * @return fi.dwo.client.domain.Course
      */
     @Override
-    public Course addCourse(String name, String description, Course parent, boolean isMap) {
-        return dwo.addCourse(name, description, parent, isMap, courseManager);
+    public Course addCourse(String name, String description, Course parent, boolean isMap, boolean notVisible) {
+        return dwo.addCourse(name, description, parent, isMap, notVisible, courseManager);
     }
 
     /**

@@ -970,11 +970,12 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
     /**
      * @param name
      * @param description
-     * @param isMap
      * @param parent
+     * @param isMap
+     * @param notVisible TODO
      * @return fi.dwo.client.domain.Course
      */
-    public Course addCourse(String name, String description, Course parent, boolean isMap) {
+    public Course addCourse(String name, String description, Course parent, boolean isMap, boolean notVisible) {
         return null;
     }
 

@@ -149,7 +149,8 @@ public class PasteAction extends GuiAction
 			boolean isMap = course.isWithChildren();
 			Course parent = b?new Course():null;
 			String description = course.getDescription();
-			Course c = instance().addCourse(name, description, parent, isMap);
+			boolean notVisible = course.isNotVisible();
+			Course c = instance().addCourse(name, description, parent, isMap, notVisible);
             if(c == null)
             {
                 LOG.warning("copyCourseMap failed: "+course + ", " + map + ", " + isMap);
@@ -182,7 +183,8 @@ public class PasteAction extends GuiAction
 			name = CourseManagementPanel.replaceDuplicate(name, dest.getChildNames());
 			boolean isMap = course.isWithChildren();
 			String description = course.getDescription();
-			Course c = instance().addCourse(name, description, dest, isMap);
+			boolean notVisible = course.isNotVisible();
+			Course c = instance().addCourse(name, description, dest, isMap, notVisible);
 			if(c == null)
 			{
 				LOG.warning("copyCourseMap failed: "+course + ", " + dest + ", " + isMap);

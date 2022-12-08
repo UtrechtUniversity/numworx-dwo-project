@@ -143,7 +143,7 @@ public class ImportMapAction extends GuiAction {
 
 	private Course importMap(String base, Course parentCourse, Set names) {
 		base = CourseManagementPanel.replaceDuplicate(base, names);
-		return instance().addCourse(base, "", parentCourse, true);
+		return instance().addCourse(base, "", parentCourse, true, false);
 	}
 
 	private Course importMap(InputStream in, Course parent, Set names) throws ParserConfigurationException, SAXException, IOException {
@@ -152,7 +152,7 @@ public class ImportMapAction extends GuiAction {
 		String name = (String)map.get("name");
 		String description = (String) map.get("description");
 		name = CourseManagementPanel.replaceDuplicate(name, names);
-		Course child = instance().addCourse(name, description, parent, true);
+		Course child = instance().addCourse(name, description, parent, true, false);
 		return child;
 	}
 
