@@ -79,6 +79,7 @@ import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
 import nl.uu.fi.dwo.lms.chatgwt.util.Base64;
 import nl.uu.fi.dwo.lms.chatgwt.util.MD5;
+import nl.uu.fi.dwo.lms.chatgwt.util.Notification;
 import nl.uu.fi.dwo.lms.chatgwt.util.PersistIF;
 import nl.uu.fi.dwo.lms.chatgwt.util.ResizeFlowPanel;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -438,6 +439,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	
 	private Map<String, ChatUser> byJid = new HashMap<>();
 	private Map<String, MessageModel> models = new HashMap<>();
+	private Seen seen = new Seen(Notification.INSTANCE);
 	private HandlerRegistration addToPanelHandler;
 	private NoSelectionModel<UserModel> noselection;
 	private EastHeader eastHeader;
@@ -457,6 +459,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		byJid.put(u.jid,u);
 	}
 	private void put(MessageModel model) {
+		seen.add(model);
 		models.put(model.getJid(), model);
 	}
 	private MessageModel getModel(String jid) {
@@ -464,7 +467,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		MessageModel m = models.get(jid);
 		if (m == null) {
 			m = new MessageModel(jid, persist);
-			models.put(jid, m);
+			put(m);
 		}
 		return m;
 	}
