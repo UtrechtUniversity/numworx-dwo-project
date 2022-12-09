@@ -100,21 +100,6 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	
 	private static final ChatUserCodec CODEC = GWT.create(ChatUserCodec.class);
 	
-//	private class EastUpdater implements ValueChangeHandler<Set<String>> {
-//
-//		@Override
-//		public void onValueChange(ValueChangeEvent<Set<String>> event) {
-//			east.clear();
-//			int off = room.jid.length()+1;
-//			event.getValue().stream()
-//			.filter(t -> t.startsWith(room.jid))
-//			.sorted().forEach(s -> east.add(new Label(
-//					getDisplayName(s.substring(off)))));
-//
-//		}
-//
-//	}
-
 	private static native String getParentChatUser() /*-{
 		return $wnd.parent.chatUser;
 	}-*/;
@@ -899,6 +884,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		// force person chat		
 		if (selectedObject != null && eastHeader.isMultichat()) 
 		{
+			sendTo = this::sendToUser;
 			setSelection(selection, true);
 			eastHeader.setMultiChat(false);
 		}
