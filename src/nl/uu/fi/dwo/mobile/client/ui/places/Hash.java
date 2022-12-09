@@ -11,6 +11,7 @@ public interface Hash {
 		s(new s.Tokenizer()), /*cs(new cs.Tokenizer()), */ 
 		cc(new cc.Tokenizer()), 
 		xc(new xc.Tokenizer()),
+		m(new m.Tokenizer()),
 		last(new last.Tokenizer()),
 		xs(new xs.Tokenizer());
 		

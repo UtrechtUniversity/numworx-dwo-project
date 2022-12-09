@@ -17,9 +17,11 @@ import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.ui.activities.DelayedActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ExamModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LastActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.ModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.TreeModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ViewModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.places.last;
+import nl.uu.fi.dwo.mobile.client.ui.places.m;
 import nl.uu.fi.dwo.mobile.client.ui.places.xc;
 import nl.uu.fi.dwo.mobile.client.ui.places.xs;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
@@ -34,6 +36,8 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @Module
 public abstract class ActivityMapperModule {
 
+	
+	
 
 	@Provides @IntoMap @ClassKey(xc.class) 
 	static Activity xcActivity(PlaceController controller, MembersInjector<TreeModuleActivity> trInjector, ExamModuleActivity.Factory exFactory, RPCHandler rpc, DwoGlobalVars vars) {
@@ -123,4 +127,7 @@ public abstract class ActivityMapperModule {
 
 	@Binds @IntoMap @ClassKey(last.class)
 	abstract Activity lastActivity(LastActivity last);
+	
+	@Binds @IntoMap @ClassKey(m.class)
+	abstract Activity mActivity(ModuleActivity m);
 }

@@ -56,6 +56,7 @@ import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
+import nl.uu.fi.dwo.mobile.client.ui.places.HasBack;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
@@ -640,6 +641,9 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	@Override
 	public void gotoPlace(String token) {
 		Place place = mapper.getPlace(token);
+		if (place instanceof HasBack) {
+			((HasBack) place).setBack(selection);
+		}
 		if (place==null) place = defaultPlace;
 		presenter.goTo(place);
 	}
