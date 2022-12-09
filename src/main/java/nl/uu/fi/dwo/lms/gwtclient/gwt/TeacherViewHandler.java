@@ -25,16 +25,17 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
     private final DwoGlobalVars dwoGlobalVars;
     @Inject ViewFactory viewFactory;
     @Inject PresenterFactoryGwt presenterFactory;
-    @Inject BootPanelController controller;
+    final private BootPanelController controller;
     @Inject EventBus eventBus;
     
     private final Lazy<ChatboxPresenter> chatbox;
    
-    @Inject TeacherViewHandler(Lazy<ChatboxPresenter> chatbox, DwoGlobalVars dwoGlobalVars) {
+    @Inject TeacherViewHandler(Lazy<ChatboxPresenter> chatbox, DwoGlobalVars dwoGlobalVars, BootPanelController controller) {
     	this.chatbox = chatbox;
     	this.dwoGlobalVars = dwoGlobalVars;
+    	this.controller = controller;
     	
-    	if (dwoGlobalVars.isPremium() && dwoGlobalVars.isTest()) {
+    	if (controller.hasChatbox()) {
     		chatbox.get().init();
     	}
     }
@@ -168,7 +169,7 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
                   presenterFactory.getModulesPresenter().show();
                   break;
               case CHATBOX:
-            	  if (dwoGlobalVars.isPremium() && controller.getProfile() == BootPanelController.PROFILE_INF) {
+            	  if (controller.hasChatbox()) {
 	            	  mainView.selectView(SelectedView.CHATBOX);
 	            	  mainView.showChatboxView();
 	            	  chatbox.get().init();

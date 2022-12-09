@@ -183,8 +183,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         if(base != null && !base.isEmpty() && legal(base)) {
           u.setParameter("base",base);
         }
-        String profile = Location.getParameter("profile");
-        if(profile == null || profile.isEmpty() || !RegExp.compile("^\\d+$").test(profile)) profile = "77";
+        String profile = String.valueOf(controller.get().getProfile());
         u.setParameter("profile",profile);
         String locale = LocaleInfo.getCurrentLocale().getLocaleName();
         if ("default".equals(locale) ) locale =  "nl";

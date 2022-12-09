@@ -22,13 +22,14 @@ public class StudentViewHandler implements SwitchViewEventHandler {
   @Inject DwoGlobalVars dwoGlobalVars;
   @Inject StudentPresenterFactory presenterFactory;
   @Inject Lazy<ChatboxPresenter> chatbox;
-  @Inject BootPanelController controller;
+  final private BootPanelController controller;
   @Inject EventBus eventBus;
 
   private MainPresenter.Display mainView;
 
-  @Inject StudentViewHandler(ViewFactory viewFactory) {
+  @Inject StudentViewHandler(ViewFactory viewFactory, BootPanelController controller) {
     mainView = viewFactory.getMainView();
+    this.controller = controller;
   }
 
   @Override
@@ -109,7 +110,7 @@ public class StudentViewHandler implements SwitchViewEventHandler {
     	  break;
       case CHATBOX:
           DomSchoolClass sc = dwoGlobalVars.getCurrentSchoolClass();
-    	  if (sc != null && dwoGlobalVars.isPremium() && controller.getProfile() == BootPanelController.PROFILE_INF) {
+    	  if (sc != null && controller.hasChatbox()) {
         	  mainView.selectView(SelectedView.CHATBOX);
         	  mainView.showChatboxView();
         	  chatbox.get().init();

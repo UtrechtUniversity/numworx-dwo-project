@@ -228,7 +228,7 @@ public class BootPanelController {
               build = teacherBuilder.build();
               mainView.setUserRole(role, false);
               mainView.setPremium(dwoGlobalVars.isPremium()); // knowledge for teacher is premium
-              mainView.showChat(dwoGlobalVars.isPremium() && getProfile() == PROFILE_INF);
+              mainView.showChat( hasChatbox());
               break;
           case SCHOOLADMIN:
               build = schoolAdminBuilder.build();
@@ -243,7 +243,7 @@ public class BootPanelController {
               mainView.setUserRole(role, single);
               DomSchoolClass sc = dwoGlobalVars.getCurrentSchoolClass();
               mainView.setPremium(dwoGlobalVars.isPremium() && sc != null); // knowledge for student is premium and only in class
-              mainView.showChat(dwoGlobalVars.isPremium() && getProfile() == PROFILE_INF && sc != null);
+              mainView.showChat(hasChatbox() && sc != null);
             break;
             }
           default:
@@ -268,6 +268,9 @@ public class BootPanelController {
     public int getProfile() {
 		return profile;
 	}
+    public boolean hasChatbox() {
+    	return dwoGlobalVars.isPremium() && profile == PROFILE_INF;
+    }
 
 	private int stage;
     private boolean hideGwtGui;
