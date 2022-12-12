@@ -6,7 +6,8 @@ public class E extends BasisExpressie
 {	
 	
 	public E()
-	{	isVeelterm = false;
+	{   basisString="e";
+		isVeelterm = false;
 		isProdukt = false;
 		isBasis = true;
 	}
