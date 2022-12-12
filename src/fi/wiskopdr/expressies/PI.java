@@ -6,7 +6,9 @@ public class PI extends BasisExpressie
 {	
 	
 	public PI()
-	{	isVeelterm = false;
+	{
+		basisString="\u03C0";
+		isVeelterm = false;
 		isProdukt = false;
 		isBasis = true;
 	}
