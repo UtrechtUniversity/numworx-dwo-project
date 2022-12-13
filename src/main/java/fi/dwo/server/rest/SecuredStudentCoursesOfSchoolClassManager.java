@@ -188,7 +188,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
 
   @PUT
   @Path("/getCourse")
-  public DomCoursesOfSchoolClass getCourse(@Context SecurityContext sc, RestCourse rest) {
+  public DomCoursesOfSchoolClass getCourse(@Context SecurityContext sc, RestCourse rest, @Context HttpServletRequest request) {
     try {
       DomCourse courseid = rest.getDomCourse();
       DomSchoolClassId classid = rest.getSchoolClassID();
@@ -206,7 +206,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
       PersistentCourse pc = s.getCourse();
       PersistentSchoolClass psc = s.getSchoolClass();
 // FIXME security logic: public courses are ALWAYS accessible. Move to State?
-      DomCoursesOfSchoolClass result = getCourseForStudent(pcc, pc, psc);
+      DomCoursesOfSchoolClass result = getCourseForStudent(pcc, pc, psc, s.getSchool(), request,hr);
       return result;
     } catch (Dwo2Exception e) {
       throw new Dwo2RestException(e);
@@ -214,7 +214,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
   }
 
   private DomCoursesOfSchoolClass getCourseForStudent(PersistentClassCourse pcc,
-      PersistentCourse pc, PersistentSchoolClass psc) {
+      PersistentCourse pc, PersistentSchoolClass psc, PersistentSchool school, HttpServletRequest request, DomHasRole hr) {
     Date NOW = new Date();
     DomCoursesOfSchoolClass result = new DomCoursesOfSchoolClass();
     if(pcc == null && pc.getSchoolID() == null) {
@@ -225,7 +225,23 @@ public class SecuredStudentCoursesOfSchoolClassManager {
       pcc.setCourseID(pc.getCourseID());
       pcc.setLastChangeTimeStamp(NOW.getTime());
       pcc.setType(0);
-      pcc.setViewState(ViewState.studentsAndTeachers);
+      pcc.setViewState(ViewState.students);
+      if (psc != null && pc.getParentID() != 0) {
+    	  PersistentCourse parent = CourseManager.findEntity(pc.getParentID());
+    	  if (parent.isNotVisible()) {
+    		  pcc.setDwoProfileID(pc.getDwoProfileID());
+    		  ClassCourseManager.create(pcc);
+    	  }
+      }   
+    } else if (pcc != null && pc.getSchoolID() == null && pcc.getViewState() == ViewState.invisible && school.getAboType() == AboType.premium) {
+  	  long parentpid = pc.getParentID();
+  	  if (parentpid != 0L) {
+  		  PersistentCourse parentcourse = CourseManager.findEntity(parentpid);
+  		  if (parentcourse.isNotVisible()) {
+  			  pcc.setViewState(ViewState.students);
+  			  pcc = ClassCourseManager.edit(pcc);
+  		  }
+  	  }
     }
 
     if (pcc != null && pcc.getNotAfter() != null) {
@@ -234,7 +250,10 @@ public class SecuredStudentCoursesOfSchoolClassManager {
     if (pcc != null && pcc.getNotBefore() != null) {
       if (NOW.before(pcc.getNotBefore())) pcc = null;
     }
-    if (pcc != null && (pcc.getViewState() != ViewState.studentsAndTeachers)) pcc = null;
+    if (pcc != null 
+    		&& (pcc.getViewState() != ViewState.students)
+    		&& (pcc.getViewState() != ViewState.studentsAndTeachers)
+    ) pcc = null;
 
     if (pcc == null) {
       result.setClassCourses(Collections.emptyList());
@@ -242,7 +261,10 @@ public class SecuredStudentCoursesOfSchoolClassManager {
       result.setScoContexts(Collections.emptyList());
     } else {
       DomClassCourse dcc = pcc.buildDomClassCourse();
-      DomCourseStudent dcs = pc.buildDomCourseStudent();
+      URI uri = URI.create(request.getRequestURL().toString());
+      String pfx = uri.resolve(PUBLIC_COURSE_GET_IMAGE).toString();
+      CourseBuilder cb = new CourseBuilder(pfx, hr,false);
+	  DomCourseStudent dcs = cb.apply(pc);    		  
       DomMapEntry<PersistenceId, DomClassCourse> ecc =
           new DomMapEntry<PersistenceId, DomClassCourse>(dcc.getId(), dcc);
       DomMapEntry<PersistenceId, DomCourseStudent> ecs =
@@ -352,7 +374,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
 
   @PUT
   @Path("getClassCourse")
-  public DomCoursesOfSchoolClass getClassCourse(@Context SecurityContext sc, RestClassCourse rest) throws Dwo2Exception {
+  public DomCoursesOfSchoolClass getClassCourse(@Context SecurityContext sc, RestClassCourse rest, @Context HttpServletRequest request) throws Dwo2Exception {
     UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
       .setHasRole(rest.getRestContext().getDomHasRole());
       state.buildStudent();
@@ -369,7 +391,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
     if (okay == null || !course.getDwoProfileID().equals(pid)) {
       throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthorizationError, "not authorized");
     }
-      return getCourseForStudent(cc, course, schoolclass);
+      return getCourseForStudent(cc, course, schoolclass,state.getSchool(), request, rest.getRestContext().getDomHasRole());
   }
 
   
