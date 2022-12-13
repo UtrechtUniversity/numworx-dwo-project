@@ -906,6 +906,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			ChatUser user = selectedObject.getUser();
 			MessageModel m = selectedObject.getMessages();
 			switchToModel(m);
+			sendTo = this::sendToUser;
 			sender.setText(rb.messageFor(user.nickName));
 		}
 	}
