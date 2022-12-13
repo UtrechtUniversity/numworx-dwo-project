@@ -850,6 +850,7 @@ try {
 		if (key.endsWith(".entry")) {
 			JsonArray bezocht = onsState.getJsonArray("bezocht");
 			bezocht = bezocht.getJsonArray(0);
+			if (pagenr >= bezocht.size()) return "ab-initio";
 			boolean ok = bezocht.getBoolean(pagenr);			
 			return ok ? "resume" : "ab-initio";
 		}
