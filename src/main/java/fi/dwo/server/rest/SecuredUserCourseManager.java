@@ -393,7 +393,7 @@ public class SecuredUserCourseManager {
     @PUT
     @Path("/get")
     @Produces({"application/json"})
-    public DomCourseStudent getCourse(@Context SecurityContext sc, RestCourse rest) {
+    public DomCourseStudent getCourse(@Context SecurityContext sc, RestCourse rest, @Context UriInfo info) {
     	try {
 // TODO NPE tests 		    		
     		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
@@ -450,7 +450,9 @@ public class SecuredUserCourseManager {
 
 // Verify context: profile matches...  		
     		//if (profile.getDwoProfileID().equals(MySQLPersistenceId.getNativeId(domDwoProfile)))
-    			return parent.buildDomCourseStudent();
+    		String pfx = info.getRequestUri().resolve(PUBLIC_COURSE_GET_IMAGE).toString();
+    		CourseBuilder builder = new CourseBuilder(pfx, hasRole, false); // FIXME school.accessControl() gebruiken?
+    		return builder.apply(parent);
     	} catch (Dwo2RestException e) {
     		throw e;
     	} catch (Exception e) {
