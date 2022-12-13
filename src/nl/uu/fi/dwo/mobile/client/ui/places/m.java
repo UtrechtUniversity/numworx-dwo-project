@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.places;
 import com.google.gwt.place.shared.PlaceTokenizer;
 
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 
 public class m extends c implements HasBack {
 
@@ -16,16 +17,25 @@ public class m extends c implements HasBack {
 	public static class Tokenizer implements PlaceTokenizer<m>
 	{
 
+		private static final String SEP = ":";
+
 		@Override
 		public m getPlace(String token)
 		{
-			return new m(token);
+			String[] split = token.split(SEP);
+			m place = new m(split[0]);
+			if (split.length == 2) 
+				place.setBack(SelectModuleItemHolder.getItemByID(split[1]));
+			return place;
 		}
 
 		@Override
 		public String getToken(m place)
-		{
-			return place.getToken();
+		{	String suf = "";
+			if (place.back != null) {
+				suf = SEP + place.back.getID(); 
+			}
+			return place.getToken() + suf;
 		}
 	}
 
