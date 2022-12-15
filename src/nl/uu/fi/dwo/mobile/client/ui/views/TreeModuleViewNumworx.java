@@ -535,6 +535,10 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				upId = item.getParent();
 				if(upId==null) header.setUpPlace(header.getHomePlace());
 				else header.setUpPlace(item.getParent().getPlace());
+				if (item.getParent().getType()==Type.MODULE ) {
+					header.setTrail(Collections.singletonList(item.getParent()));
+				}
+				
 			break;
 		default:
 			
@@ -620,8 +624,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 
 	@Override
 	public void close() {
-		// TODO Auto-generated method stub
-		
+		header.setTrail(null);
 	}
 
 	GotoController presenter;

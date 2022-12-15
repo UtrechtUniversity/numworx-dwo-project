@@ -81,6 +81,9 @@ public class SelectModuleItemHolder
 	public static SelectModuleItem getItemByID(Object id)
 	{
 		init();
+		if(id instanceof PersistenceId) {
+			id = PersistenceIdDecoderInterface.instance.idOf((PersistenceId) id, PersistenceClassType.PersistentCourse);
+		}
 		return map.get(id.toString());
 	}
 

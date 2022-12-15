@@ -39,47 +39,50 @@ public abstract class ActivityMapperModule {
 	
 	
 
-	@Provides @IntoMap @ClassKey(xc.class) 
-	static Activity xcActivity(PlaceController controller, MembersInjector<TreeModuleActivity> trInjector, ExamModuleActivity.Factory exFactory, RPCHandler rpc, DwoGlobalVars vars) {
-		xc place = (xc) controller.getWhere();
-		Object id = PersistenceIdDecoderInterface.instance.idOf((PersistenceId) place.getID(), PersistenceClassType.PersistentCourse);
-		
-		SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);
-		if(item == null)
-		{
-//			item = new SelectModuleItem(id, SelectModuleItem.Type.MODULE);
-//			item.setPlace(place);
-//			SelectModuleItemHolder.insert(item); 
-			
-			DelayedActivity<SelectModuleItem> activity = new DelayedActivity<>((item2) -> {
-				item2.setPlace(place);			
-				return new TreeModuleActivity(trInjector, item2);				
-			});
-			Promise<DomCourseStudent> pp;
-			if (vars.getRoleType() == RoleType.STUDENT) 
-				pp = rpc.getCourseClass(id, vars.getCurrentSchoolClass())
-				.map(x -> x.getCourses().get(0).getValue()); // FIXME extract classcourse
-			else 
-				pp = rpc.getCourse(id);
-			Promise<SelectModuleItem> p = 
-			pp.map( (DomCourseStudent dc) -> { 
-				SelectModuleItem i = new SelectModuleItem(dc, (DomClassCourse)null); 
-				SelectModuleItemHolder.insert(i);
-				return i;});
-			p = p.then(activity, activity);
-			return activity;
-			
-			// return activity that downloads this course first and then delegates to treemoduleactivity/exammoduleactivity
-		} else {
-		    item.setPlace(place);
-			if(item.isExam()) {
-				Activity c = new TreeModuleActivity(trInjector, item);
-				ExamModuleActivity e = exFactory.create(item, () -> c);
-				return e;
-			}
-		}
-		return new TreeModuleActivity(trInjector, item);
-	}
+//	@Provides @IntoMap @ClassKey(xc.class) 
+//	static Activity xcActivity(PlaceController controller, MembersInjector<TreeModuleActivity> trInjector, ExamModuleActivity.Factory exFactory, RPCHandler rpc, DwoGlobalVars vars) {
+//		xc place = (xc) controller.getWhere();
+//		Object id = PersistenceIdDecoderInterface.instance.idOf((PersistenceId) place.getID(), PersistenceClassType.PersistentCourse);
+//		
+//		SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);
+//		if(item == null)
+//		{
+////			item = new SelectModuleItem(id, SelectModuleItem.Type.MODULE);
+////			item.setPlace(place);
+////			SelectModuleItemHolder.insert(item); 
+//			
+//			DelayedActivity<SelectModuleItem> activity = new DelayedActivity<>((item2) -> {
+//				item2.setPlace(place);
+//			    if (place.getBack() != null) {
+//			    	item2.setParent(place.getBack());
+//			    }
+//				return new TreeModuleActivity(trInjector, item2);				
+//			});
+//			Promise<DomCourseStudent> pp;
+//			if (vars.getRoleType() == RoleType.STUDENT) 
+//				pp = rpc.getCourseClass(id, vars.getCurrentSchoolClass())
+//				.map(x -> x.getCourses().get(0).getValue()); // FIXME extract classcourse
+//			else 
+//				pp = rpc.getCourse(id);
+//			Promise<SelectModuleItem> p = 
+//			pp.map( (DomCourseStudent dc) -> { 
+//				SelectModuleItem i = new SelectModuleItem(dc, (DomClassCourse)null); 
+//				SelectModuleItemHolder.insert(i);
+//				return i;});
+//			p = p.then(activity, activity);
+//			return activity;
+//			
+//			// return activity that downloads this course first and then delegates to treemoduleactivity/exammoduleactivity
+//		} else {
+//		    item.setPlace(place);
+//			if(item.isExam()) {
+//				Activity c = new TreeModuleActivity(trInjector, item);
+//				ExamModuleActivity e = exFactory.create(item, () -> c);
+//				return e;
+//			}
+//		}
+//		return new TreeModuleActivity(trInjector, item);
+//	}
 
 	@Provides @IntoMap @ClassKey(xs.class)
 	static Activity xsActivity( PlaceController controller, MembersInjector<ViewModuleActivity> vmInjector, RPCHandler rpc, DwoGlobalVars vars) {
@@ -130,4 +133,7 @@ public abstract class ActivityMapperModule {
 	
 	@Binds @IntoMap @ClassKey(m.class)
 	abstract Activity mActivity(ModuleActivity m);
+
+	@Binds @IntoMap @ClassKey(xc.class)
+	abstract Activity xcActivity(ModuleActivity m);
 }

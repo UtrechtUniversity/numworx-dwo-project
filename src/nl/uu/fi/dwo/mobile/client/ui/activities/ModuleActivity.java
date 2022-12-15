@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.places.HasBack;
 import nl.uu.fi.dwo.mobile.client.ui.places.m;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
@@ -31,14 +32,14 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class ModuleActivity extends AbstractActivity {
 	
-	final m place;
+	final HasBack place;
 	final Promise<SelectModuleItem> promise;
 	Promise<Activity> delegate;
 	@Inject MembersInjector<TreeModuleActivity> injector;
 
 	@Inject ModuleActivity(	PlaceController controller, RPCHandler rpc, DwoGlobalVars vars) {
 		place = (m) controller.getWhere();
-		String id = place.getToken();
+		PersistenceId id = place.getID();
 		SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);
 		if (item == null) {
 			DomSchoolClass schoolclass = vars.getCurrentSchoolClass();
@@ -54,7 +55,7 @@ public class ModuleActivity extends AbstractActivity {
 // iets met de courses.getScoContexts();
 					List<DomScoContext> list = courses.getScoContexts().stream().map(DomMapEntry::getValue).collect(Collectors.toList());			
 					i.setChildren(new SCO_TO_MODULEITEM(i).apply(list));
-					i.setPlace(place);
+					i.setPlace(place.getPlace());
 					return i;
 				});
 			} else {
