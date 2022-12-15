@@ -48,6 +48,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
     boolean score = false;
     boolean goedFout = false;
     boolean toonTitel = false;
+    boolean bezocht = false;
     String paginaTitel = "";
     
 
@@ -74,6 +75,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 	private String scoreRaw = "";
 
 	private String successStatus = "";
+	private String entry = "";
 
 	private HasSafeHtml html;
 
@@ -136,6 +138,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		HashMap<String, Object> state = new HashMap<>();
 		if (score) state.put("score.raw", scoreRaw);
 		if (goedFout) state.put("success_status", successStatus);
+		if (bezocht) state.put("entry", entry);
 		return state;
 	}
 
@@ -146,6 +149,9 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		{	successStatus = h.getOrDefault("success_status", successStatus).toString();
 			goedfout(successStatus);
 		}
+		if (bezocht && entry.isEmpty()) 
+			entry = h.getOrDefault("entry", entry).toString();
+			bezocht(entry);
 		if (score && scoreRaw.isEmpty()) {
 			scoreRaw = h.getOrDefault("score.raw", scoreRaw).toString();
 			anchorSetText(scoreRaw);
@@ -249,6 +255,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			 if(map.containsKey("goedFout"))
 				 goedFout = map.getBoolean("goedFout");
 			 toonTitel = map.getBoolean("toonTitel", toonTitel);
+			 bezocht = map.getBoolean("bezocht", bezocht);
 			 if (toonTitel && map.containsKey("paginaTitel"))
 				 paginaTitel = map.getString("paginaTitel");
 			 linkActive = map.getBoolean("linkActive", linkActive);
@@ -288,6 +295,11 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			result = start.then(p -> api.getValuePromise(pfx + ".success_status"));
 			result.then(this::doGoedFout);			
 		}
+		if (bezocht) {
+			Promise<String> result;
+			result = start.then(p -> api.getValuePromise(pfx + ".entry"));
+			result.then(this::doBezocht);
+		}
 	}
 
 	Promise<String> doScore(Promise<String> p) {
@@ -311,6 +323,18 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		addStyleDependentName("goedFout-" + value);
 	}
 	
+	private Promise<String> doBezocht(Promise<String> p) {
+		this.entry = p.getValue();
+		bezocht(this.entry);
+		return p;
+	}
+	
+	private void bezocht(String entry) {
+		removeStyleDependentName("bezocht-resume");
+		removeStyleDependentName("bezocht-ab-initio");
+		addStyleDependentName("bezocht-" + entry);
+		
+	}
 	
 	@Override
 	public void onClick(ClickEvent event) {
