@@ -290,3 +290,13 @@ div.listItem-dwo-separator {
 	color: red;
 }
 
+.scorewidget.scorewidget-bezocht-ab-initio {
+	text-decoration: underline;
+}
+
+.scorewidget.scorewidget-bezocht-resume {
+	font-weight: bold;
+}
+
+
+
