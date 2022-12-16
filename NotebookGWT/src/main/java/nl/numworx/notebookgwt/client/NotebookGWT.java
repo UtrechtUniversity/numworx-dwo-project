@@ -15,8 +15,10 @@ import org.osgi.util.promise.Deferred;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -67,6 +69,7 @@ public class NotebookGWT implements EntryPoint, InteractionStub, DispatcherFilte
 	private String notebook;
 	private int scoreMax;
 	private ObjectList upload;
+	private HandlerRegistration onloadHandler;
 	
 	private HubInitializer initializer;
 
@@ -80,7 +83,8 @@ public class NotebookGWT implements EntryPoint, InteractionStub, DispatcherFilte
 
 	public NotebookGWT() {
 		frame = new Frame(logoutURL()); // uitvogelen met deploy.jsp
-		frame.addLoadHandler(this);
+		frame.getElement().getStyle().setVisibility(Visibility.HIDDEN);
+		onloadHandler = frame.addLoadHandler(this);
 	};
 	
 	public NotebookGWT(HashMap<String, Object> h, HashMap<String, Number> randomVarWaarden, int volleBreedte) {
@@ -277,14 +281,20 @@ public class NotebookGWT implements EntryPoint, InteractionStub, DispatcherFilte
 
 	private void startNotebook(String response) {
 		onLoad.getPromise().onResolve(
-				() ->
-				frame.setUrl(response)
+				() ->				
+				{	frame.getElement().getStyle().clearVisibility();
+					frame.setUrl(response);
+				}
 		);		
 	}
 
 	private Deferred<LoadEvent> onLoad = new Deferred<>();
 	@Override
 	public void onLoad(LoadEvent event) {
+		if (onLoad.getPromise().isDone()) {
+			onloadHandler.removeHandler();
+			return;
+		}
 		onLoad.resolve(event);
 	}
 	
