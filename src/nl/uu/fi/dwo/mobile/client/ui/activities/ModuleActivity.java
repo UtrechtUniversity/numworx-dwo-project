@@ -38,7 +38,7 @@ public class ModuleActivity extends AbstractActivity {
 	@Inject MembersInjector<TreeModuleActivity> injector;
 
 	@Inject ModuleActivity(	PlaceController controller, RPCHandler rpc, DwoGlobalVars vars) {
-		place = (m) controller.getWhere();
+		place = (HasBack) controller.getWhere();
 		PersistenceId id = place.getID();
 		SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);
 		if (item == null) {
