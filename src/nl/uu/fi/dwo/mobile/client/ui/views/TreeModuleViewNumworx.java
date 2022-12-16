@@ -510,7 +510,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 
 				favIcon.getParent().setStyleName(style.faviconOFF(), !isLabel(item));
 				title.getParent().setStyleName(style.titlePanelFULL(), !isLabel(item));
-				Object upId=item.getParentID();
+				SelectModuleItem upId; // =item.getParentID();
                 upId = item.getParent();
                 if(upId==null) header.setUpPlace(header.getHomePlace());
                 else header.setUpPlace(item.getParent().getPlace());
@@ -534,11 +534,12 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				title.getParent().setStyleName(style.titlePanelFULL(), !isLabel(item));
 				upId = item.getParent();
 				if(upId==null) header.setUpPlace(header.getHomePlace());
-				else header.setUpPlace(item.getParent().getPlace());
-				if (item.getParent().getType()==Type.MODULE ) {
-					header.setTrail(Collections.singletonList(item.getParent()));
-				}
-				
+				else { 
+					header.setUpPlace(upId.getPlace());
+					if (upId.getType()==Type.MODULE) {
+						header.setTrail(Collections.singletonList(upId)); // FIXME en de rest....
+					}
+					}
 			break;
 		default:
 			
