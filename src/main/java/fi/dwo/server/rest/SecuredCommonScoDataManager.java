@@ -531,8 +531,8 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
 
     List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(scoContext, hasRoleKey);
     if(list.isEmpty()) {
-    	if (scoContext.getScoID().longValue() == 0L) {
-    		PersistentStudentScoContext pssc = new PersistentStudentScoContext(0L);
+    	if (true || scoContext.getScoID().longValue() == 0L) {
+    		PersistentStudentScoContext pssc = new PersistentStudentScoContext(scoContext.getScoID());
     		pssc.setPersistentHasRolePK(hasRoleKey);
     		pssc.setScoID(scoContext.getScoID());
 			list.add(pssc);
