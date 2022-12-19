@@ -382,10 +382,6 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 				presenceHandler.addValueChangeHandler(students);
 				presenceHandler.addValueChangeHandler(teachers);
 				ref2 = connection.addHandler(null, "presence", null, null, null, presenceHandler);
-//				ChatAll all = new ChatAll();
-//				all.put("message", handler);
-//				all.put("presence", presenceHandler);
-				//ref2 = connection.addHandler(null, null, null, null, null, all);
 				
 				Builder pres = Builder.$pres(null);
 	            connection.send(pres);
@@ -465,6 +461,12 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		return getModel(user.jid);
 	}
 	
+	boolean isUnread(ChatUser user) {
+		MessageModel model = get(user);
+		if (model != null) return model.hasUnread();
+		return false;
+	}
+	
 	private ChatUser get(String key) {
 		key = addDomain(key);
 		ChatUser u = byJid.get(key);
@@ -505,6 +507,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		RootLayoutPanel root = RootLayoutPanel.get();
 		eastHeader  = new EastHeader();
 		eastHeader.setUpdateRoom(this::updateRoom);
+		eastHeader.setIsUnread(this::isUnread);
 		
 		int top = 0;
 		try {
