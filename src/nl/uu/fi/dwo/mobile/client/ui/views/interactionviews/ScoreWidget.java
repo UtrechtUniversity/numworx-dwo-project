@@ -263,6 +263,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		html = linkActive ? anchor : span;
 		if (!linkActive) initWidget(span);else initWidget(anchor);
 		setStyleDependentName("goedFout", goedFout);
+		setStyleDependentName("bezocht", bezocht);
 		
 		String pfx0 = "dme.scorewidget.";
 		switch (choicePageMode) {

@@ -276,7 +276,7 @@ div.listItem-dwo-separator {
 .scorewidget .scorewidget-score {
 	float: right;
 }
-.scorewidget.scorewidget-goedFout .scorewidget-score:after {
+.scorewidget.scorewidget-goedFout .scorewidget-score:after, .scorewidget.scorewidget-bezocht .scorewidget-score:after {
 	content: url(images/numworx/half-numworx.svg);
 	color: gray;	
 }
@@ -290,12 +290,9 @@ div.listItem-dwo-separator {
 	color: red;
 }
 
-.scorewidget.scorewidget-bezocht-ab-initio {
-	text-decoration: underline;
-}
-
-.scorewidget.scorewidget-bezocht-resume {
-	font-weight: bold;
+.scorewidget.scorewidget-bezocht.scorewidget-bezocht-resume .scorewidget-score:after {
+	content: url(images/numworx/done-numworx.svg);
+	color: #6D4A8A;
 }
 
 
