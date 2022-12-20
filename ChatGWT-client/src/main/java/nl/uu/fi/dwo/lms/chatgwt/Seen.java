@@ -1,13 +1,12 @@
 package nl.uu.fi.dwo.lms.chatgwt;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
+import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -20,7 +19,7 @@ public class Seen implements ValueChangeHandler<List<Message>>, AnimationCallbac
 	private static final String CHATBOX_SEEN = "Chatbox:seen";
 	final Notification note;
 	final Map<MessageModel, HandlerRegistration> models;
-	private Object schedule;
+	private AnimationHandle schedule;
 	
 	private void sendSeen() {
 		if (note.getLast() != CHATBOX_SEEN)

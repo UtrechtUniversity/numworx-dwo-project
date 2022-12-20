@@ -227,7 +227,13 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 					utc = utc();
 				} 
 				else stamp = iso(stamp);
-				m.add(new Message(from, stamp, text, utc));
+				String id = utc;
+				elems = element.getElementsByTagName("stanza-id");
+				if (elems.getLength() >= 1) {
+					id = elems.getItem(0).getAttribute("id");
+				}
+				
+				m.add(new Message(from, stamp, text, utc, id));
 			}
 			return true;
 		}
@@ -257,7 +263,10 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			} else {
 				m = getModel(jid);
 			}
-			m.add(new Message(jid, stamp, text, utc));
+			String id = null;
+			elems = element.getElementsByTagName("result");
+			id = elems.getItem(0).getAttribute("id");
+			m.add(new Message(jid, stamp, text, utc, id));
 			return true;
 		}
 			
@@ -461,8 +470,14 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		return getModel(user.jid);
 	}
 	
-	boolean isUnread(ChatUser user) {
+	boolean hasUnread(ChatUser user) {
 		MessageModel model = get(user);
+		if (model != null) return model.hasUnread();
+		return false;
+	}
+
+	boolean hasUnread(ChatRoom room) {
+		MessageModel model = get(room);
 		if (model != null) return model.hasUnread();
 		return false;
 	}
@@ -507,7 +522,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		RootLayoutPanel root = RootLayoutPanel.get();
 		eastHeader  = new EastHeader();
 		eastHeader.setUpdateRoom(this::updateRoom);
-		eastHeader.setIsUnread(this::isUnread);
+		eastHeader.setIsUnread(this::hasUnread);
 		
 		int top = 0;
 		try {
@@ -526,7 +541,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 				});
 				eastHeader.init(u.room);
 				this.room = eastHeader.getSelectedRoom();
-				new RoomController(u.room, eastHeader).addHandler(this::get);
+				new RoomController(u.room, eastHeader).addHandler(this::get, this::get);
 			}
 			chatUser = u;
 		} catch(Exception oops) {
@@ -550,14 +565,16 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			root.setWidgetTopHeight(login, 0, Unit.PX, 40, Unit.PX);
 			top = 40;
 
-			ChatRoom room2 = new ChatRoom("klas2@" + ROOMS);
-			room2.chatUser = room.chatUser;
+//			ChatRoom room2 = new ChatRoom("klas2@" + ROOMS);
+//			room2.chatUser = room.chatUser;
 			room.chatUser.forEach(this::put);
-			rooms = Arrays.asList(room, room2);
+			rooms = Arrays.asList(room
+//					, room2
+					);
 			eastHeader.init(rooms);
-			new RoomController(rooms, eastHeader).addHandler(this::get);
+			new RoomController(rooms, eastHeader).addHandler(this::get, this::get);
 			
-			room = null;
+			room = eastHeader.getSelectedRoom();
 		
 		}
 		
@@ -749,7 +766,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			String[][] attributes = { { "to", u.jid }, { "type", "chat" } };
 			Builder reply = Builder.$msg(attributes).c("body",null).t(value);
 			connection.send(reply);
-			Message msg = new Message(chatUser.jid, now(), value, utc());
+			Message msg = new Message(chatUser.jid, now(), value, utc(), null);
 			um.getMessages().add(msg);
 		} else {
 			// select user 1st;
