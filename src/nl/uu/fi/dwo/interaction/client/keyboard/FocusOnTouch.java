@@ -8,6 +8,7 @@ import nl.uu.fi.dwo.interaction.client.Letter;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.DomEvent;
 
 import static com.google.gwt.event.dom.client.KeyCodes.*;
@@ -22,16 +23,21 @@ import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.RequiresResize;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 
 final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPressHandler
 {
 	private FocusPanel focusPanel;
 	private static FocusPanel mainPanel;
+	private static TextArea area;
 	
 	static public FocusPanel wrap ( Widget w) {
 		return wrap(w, true);
 	}
+ 
+
 	static public FocusPanel wrap ( Widget w , boolean main) {
 		FocusPanel focus;
 		if(w instanceof FocusPanel) 
@@ -40,10 +46,21 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 			focus = w instanceof RequiresResize ? new ResizeFocusPanel(): new FocusPanel();
 			focus.add(w);
 		}
-		if(main)
-			mainPanel = focus;
-		boolean hastouch = com.google.gwt.event.dom.client.TouchStartEvent.isSupported();
 		FocusOnTouch handler = new FocusOnTouch(focus);
+		if(main)
+		{
+			mainPanel = focus;
+			area = new FocusArea(handler);
+			RootLayoutPanel r = RootLayoutPanel.get();
+			r.add(area);
+			r.setWidgetTopHeight(area, 0, Unit.EM, 1, Unit.EM);
+			r.setWidgetRightWidth(area, 1, Unit.EM, 1, Unit.EM);
+			area.addKeyDownHandler(handler);
+			area.addKeyPressHandler(handler);
+			
+			
+		}
+		boolean hastouch = com.google.gwt.event.dom.client.TouchStartEvent.isSupported();
 		focus.addKeyDownHandler(handler);
 		focus.addKeyPressHandler(handler);
 		if (!hastouch)
@@ -53,6 +70,12 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 		return focus;
 	}
 	
+	protected void onPaste(String data) {
+		clip.setClipboard(data);
+		kb.getEditor().insert(data);
+		focus();
+	}
+
 	public static void installKeyboard(FormuleKeyboardIF keyb, FormuleClipboardIF clp) {
 		kb = keyb;
 		clip = clp;
@@ -64,7 +87,7 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 		{
 			public void execute()
 			{
-				focusPanel.setFocus(true);
+				area.setFocus(true);
 			}
 		});
 	}
@@ -354,5 +377,18 @@ LOG.severe("on key down " + down + " " + code);
 	public static void focus() {
 		if(mainPanel != null)
 			requestFocus(mainPanel);
+	}
+
+	public String doCut() {
+		FormuleEditorIF editor = kb.getEditor();
+		editor.knip(clip);
+		return clip.getClipboard();
+	}
+
+
+	public String doCopy() {
+		FormuleEditorIF editor = kb.getEditor();
+		editor.kopieer(clip);
+		return clip.getClipboard();
 	}
 }
