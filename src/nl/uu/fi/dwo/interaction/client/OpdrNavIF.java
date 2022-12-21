@@ -39,4 +39,6 @@ public interface OpdrNavIF
 	
 	ObjectMap getConfiguration(); // instellingen
 	ObjectMap getContext();       // context, bijv. isPremium
+	
+	default void setVisited() { } 
 }
