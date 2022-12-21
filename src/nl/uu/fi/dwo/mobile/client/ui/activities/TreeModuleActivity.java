@@ -29,6 +29,7 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
+import nl.uu.fi.dwo.mobile.client.ui.places.HasBack;
 import nl.uu.fi.dwo.mobile.client.ui.places.MaybeLogout;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
@@ -166,11 +167,7 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 								goTo(place); // AST?
 								return p;
 							});
-						}
-
-						
-						
-						
+						}						
 					}
 				}
 			);
@@ -183,6 +180,9 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 
 	@Override
 	public void goTo(Place place) {
+		if (place instanceof HasBack) {
+			((HasBack) place).setBack(item);
+		}
 		placeController.goTo(place);
 	}
 

@@ -57,6 +57,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 {
 	private static final String INTERACTIE_PANEL_STATES = "interactiePanelStates";
     private static final String BEZOCHT = "bezocht";
+    private static final String VISITED = "visited";
 	private static final String ZELFTOETS_NAGEKEKEN = "zelftoetsNagekeken";
 	private static final String TEMPOTOETS_LOCKED = "tempotoetsLocked";
 	private static final String TEMPOTOETS_SECONDS_LEFT = "tempotoetsSecondsLeft";
@@ -104,7 +105,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private JSONObject suspendData;
 	private JSONObject onsState, shareMap;
 	private JSONObject logState;
-	private JSONArray opdrContStates, opdrStrafpunten, opdrGoedFout, opdrScores, opdrBezocht;
+	private JSONArray opdrContStates, opdrStrafpunten, opdrGoedFout, opdrScores, opdrBezocht, opdrVisited;
 	private JSONString register;
 	/**
 	 * Scores (per activiteit, per opdracht/pagina, vgl. opdrScores) die getoond worden 
@@ -198,6 +199,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 			zelftoetsHighScore = (JSONNumber) onsState.get(ZELFTOETS_HIGH_SCORE);
 			nakijkenZelftoetsPending = (JSONArray) onsState.get(NAKIJKEN_ZELFTOETS_PENDING);
 			opdrBezocht   = (JSONArray) onsState.get(BEZOCHT);
+			opdrVisited   = (JSONArray) onsState.get(VISITED);
 			zelftoetsNagekeken = (JSONBoolean) onsState.get(ZELFTOETS_NAGEKEKEN);
 			tempotoetsLocked = (JSONBoolean) onsState.get(TEMPOTOETS_LOCKED);
 			tempotoetsSecondsLeft = (JSONNumber) onsState.get(TEMPOTOETS_SECONDS_LEFT);
@@ -945,7 +947,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		return getValue(LEARNER_PREFERENCE_LANGUAGE);	
 	}
 
-	public void getBezocht(boolean[][] bezocht) {
+	public void getBezocht(boolean[][] bezocht) { // old definition: only viewed, maybe very quick
 		if(bezocht == null) return;
 		if(opdrBezocht == null) {
 		} else {
@@ -957,6 +959,20 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 				}
 			}
 		}
+	}
+	
+	public void getVisited(boolean[][] visited) { // new definition: viewed and interacted!
+		if(visited == null) return;
+		if(opdrVisited == null) {
+		} else {
+			for (int i = 0; i < visited.length; i++) {
+				JSONArray array = getArray(i, opdrVisited);
+				boolean[] oi = visited[i];
+				for (int j = 0; j < oi.length; j++) {
+					oi[j] = Boolean.TRUE.equals(getBoolean(array, j));
+				}
+			}
+		}		
 	}
 	
 	public void setBezocht(boolean[][] bezocht) {
@@ -988,6 +1004,35 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		}
 	}
 
+	public void setVisited(boolean[][] visited) {
+		if(visited == null) return;
+		for (int i = 0; i < visited.length; i++) {
+			boolean[] oi = visited[i];
+			for (int j = 0; j < oi.length; j++) {
+				boolean punt = oi[j];
+				if(punt != false) {
+					if ( opdrVisited == null) {
+						opdrVisited = new JSONArray();
+						onsState.put(VISITED, opdrVisited);
+					}
+					if( i >= opdrVisited.size() || isNull(opdrVisited.get(i)) )
+						opdrVisited.set(i, new JSONArray());
+					JSONArray array = opdrVisited.get(i).isArray();
+					array.set(j, JSONBoolean.getInstance(punt));
+				} else {
+					if(opdrVisited == null 
+							|| opdrVisited.size() <= i 
+							|| isNull(opdrVisited.get(i)))
+						continue;
+					JSONArray array = opdrVisited.get(i).isArray();
+					if(j >= array.size()) continue;
+					array.set(j, JSONBoolean.getInstance(false));
+				}
+			}			
+		}
+	}
+
+	
 	public void setZelftoetsNagekeken(boolean zelftoetsNagekeken) {
 		this.zelftoetsNagekeken = JSONBoolean.getInstance(zelftoetsNagekeken);
 		this.onsState.put(ZELFTOETS_NAGEKEKEN, this.zelftoetsNagekeken);

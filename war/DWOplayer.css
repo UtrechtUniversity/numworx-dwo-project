@@ -276,21 +276,24 @@ div.listItem-dwo-separator {
 .scorewidget .scorewidget-score {
 	float: right;
 }
-.scorewidget.scorewidget-goedFout .scorewidget-score:after, .scorewidget.scorewidget-bezocht .scorewidget-score:after {
+
+.scorewidget.scorewidget-goedFout .scorewidget-score::after, .scorewidget.scorewidget-bezocht .scorewidget-score::after {
 	content: url(images/numworx/half-numworx.svg);
-	color: gray;	
+	color: gray;
+	padding-left: 0.1em;	
+	vertical-align: top;
 }
 
-.scorewidget.scorewidget-goedFout.scorewidget-goedFout-passed .scorewidget-score:after {
+.scorewidget.scorewidget-goedFout.scorewidget-goedFout-passed .scorewidget-score::after {
 	content: url(images/numworx/goed-numworx.svg);
 	color: green;
 }
-.scorewidget.scorewidget-goedFout.scorewidget-goedFout-failed .scorewidget-score:after {
+.scorewidget.scorewidget-goedFout.scorewidget-goedFout-failed .scorewidget-score::after {
 	content: url(images/numworx/fout-numworx.svg);
 	color: red;
 }
 
-.scorewidget.scorewidget-bezocht.scorewidget-bezocht-resume .scorewidget-score:after {
+.scorewidget.scorewidget-bezocht.scorewidget-bezocht-resume .scorewidget-score::after {
 	content: url(images/numworx/done-numworx.svg);
 	color: #6D4A8A;
 }

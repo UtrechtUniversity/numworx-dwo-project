@@ -60,14 +60,17 @@ public class ModuleActivity extends AbstractActivity {
 			} else {
 				Promise<DomCourseStudent> p = rpc.getCourse(place.getID());
 				promise = p.map( (DomCourseStudent course) -> {
-				SelectModuleItem i = new SelectModuleItem(course, place.getBack().getClassCourse());
+				DomClassCourse classCourse = null;
+				SelectModuleItem i = new SelectModuleItem(course, classCourse);
 				i.setParent(place.getBack());
+				i.setPlace(place.getPlace());
 				SelectModuleItemHolder.insert(i);
 				return i;
 			});
 			}
 		} else 
 		{
+			item.setPlace(place.getPlace()); // voor forward van XC, mag ook voor m:?
 			promise = Promises.resolved(item);
 		}
 	}

@@ -1323,7 +1323,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		ActivityInterface a = activity;
 		if (zichtbaarNaNakijken && a.isReview() && maxScore(interactiePanelLaunchState)) {
 			LOG.warning("Hier komen rubrics");
-			a = reviewActivity = new ReviewActivity(a,this, !opdrachtGegevens.isEmpty());
+			a = reviewActivity = new ReviewActivity(a,this, !opdrachtGegevens.isEmpty(), JSONUtilities.wrapMap(interactiePanelLaunchState));
 		}
 		TekstBuffer tb = new TekstBuffer(a, randomVarNamen, randomVarWaarden, anchorContext);
 		int[] volleBreedtes = new int[breedtes.size()];
@@ -2238,8 +2238,11 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 			if (Boolean.FALSE.equals(check))
 				return check;
 		}
-		
-		
+
+		if (zichtbaarNaNakijken && activity.isReview()) {
+			int s0 = getScore0();
+			return reviewActivity.isCorrect(s0, correct);
+		}
 		return correct;
 	}
 

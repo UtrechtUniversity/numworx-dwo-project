@@ -174,6 +174,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private int currentActiviteit = 0;
 	private ArrayList<FormuleButton> buttons = new ArrayList<FormuleButton>();
 	Memento memento;
+	private boolean[][] visited;
 	private final static ResettableEventBus BUS = new ResettableEventBus(new SimpleEventBus());
 
 	static private Prepare prepare = new Prepare();
@@ -415,9 +416,18 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		// bezocht[0][0] = true; // eerste niet standaard bezocht zetten,
 		// anders kun je nooit checken of hij al eerder bezocht is
 		entry.bezocht = bezocht;
-
-		
 		memento.getBezocht(entry.bezocht);
+		bezocht = new boolean[getAantalActiviteiten()][];
+		for (int j = 0; j < getAantalActiviteiten(); j++)
+		{
+			bezocht[j] = new boolean[getAantalOpdrachten(j)]; // all false
+		}
+		memento.getVisited(bezocht);
+		this.visited = bezocht;
+		
+		
+		
+		
 		entry.zelftoetsNagekeken = memento.getZelftoetsNagekeken();
 		aantalNakijken = memento.getAantalNakijken();
 		initializeScoresZelftoets();
@@ -591,7 +601,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	public void setChanged(boolean fout) // FIXME Trifork: hier safepoint?
 	{
-      saveCurrentState();
+		
+		setVisited();
+		saveCurrentState();
 		Boolean check = entry.isCorrect();
 		boolean correct = Boolean.TRUE.equals(check);
 		isCorrect[currentActiviteit][currentOpdracht] = check;
@@ -630,6 +642,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		// entry.stelNavigatieIn(); gebeurt al op een andere plek; niet hier
 		// anders gaat oefenen met geen correctie eerdere pagina's mis na
 		// kijkNa()
+	}
+
+	public void setVisited() {
+		visited[currentActiviteit][currentOpdracht] = true;
 	}
 
 	/**

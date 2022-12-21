@@ -26,12 +26,15 @@ public class ReviewActivity implements ActivityInterface, CBookEventListener {
 	ActivityInterface delegate;
 	private ReviewLogBuilder logBuilder;
 	private boolean checkDocent;
+	private int cesuur;
 	
-	public ReviewActivity(ActivityInterface delegate, Object source, boolean checkDocent) {
+	public ReviewActivity(ActivityInterface delegate, Object source, boolean checkDocent, ObjectMap launchdata) {
 		this.delegate = delegate;
 		this.checkDocent = checkDocent;
 		logBuilder = new ReviewLogBuilder(this);
 		getEventBus().addHandlerToSource(CBookEvent.TYPE, source, this);
+		int scoreMax = launchdata.getInt("scoreMax");
+		cesuur = (scoreMax+1)/2;
 	}
 
 	public LogBuilder logBuilder() {
@@ -134,5 +137,10 @@ public class ReviewActivity implements ActivityInterface, CBookEventListener {
 	public void acceptCBookEvent(CBookEvent event) {
 		if (TekstVakPanel.TVP_POPUP.equals(event.getCommand()))
 			checkDocent = false;		
+	}
+	
+	public Boolean isCorrect(int score, Boolean old) {
+		if (score >= cesuur) return Boolean.TRUE;
+		return old;
 	}
 }
