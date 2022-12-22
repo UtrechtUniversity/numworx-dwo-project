@@ -525,5 +525,13 @@ log("initialized " +result.keySet());
 		return result.recover(oops-> "");
 	}
 
+	@Override
+	public Promise<Map<String, String>> getValuesPromise(Collection<String> keys) {
+		Promise<Map<String,String>> result = scoDataManager.getValues(sco, schoolClassID, context, keys);
+		barrier.addBarrier(result);
+		result.then(null, p -> logger.log(Level.SEVERE, "getvalue promised", p.getFailure()));
+		return result;
+	}
+
 
 }

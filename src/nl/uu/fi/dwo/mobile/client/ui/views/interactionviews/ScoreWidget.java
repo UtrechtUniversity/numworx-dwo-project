@@ -1,8 +1,11 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeSet;
 
+import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
@@ -282,10 +285,14 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		default: pfx0 += "null";
 		}
 		final String pfx = pfx0 + "." + paginaNr;
-		
+
+		Collection<String> keys = new TreeSet<String>();
+		Deferred<Map<String,String>> defer = new Deferred<>();
 		if (score) {
 			Promise<String> result;
-			result = start.then( p -> api.getValuePromise(pfx + ".score.raw"));
+			String key = pfx + ".score.raw";
+			result = defer.getPromise().map( m -> m.getOrDefault(key, ""));
+			keys.add(key);
 			anchorSetText("0");
 			result.then(this::doScore);
 		} else {
@@ -293,13 +300,20 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		}
 		if (goedFout) {
 			Promise<String> result;
-			result = start.then(p -> api.getValuePromise(pfx + ".success_status"));
+			String key = pfx + ".success_status";
+			result = defer.getPromise().map( m -> m.getOrDefault(key, ""));
+			keys.add(key);			
 			result.then(this::doGoedFout);			
 		}
 		if (bezocht) {
 			Promise<String> result;
-			result = start.then(p -> api.getValuePromise(pfx + ".entry"));
+			String key = pfx + ".entry";
+			result = defer.getPromise().map( m -> m.getOrDefault(key, ""));
+			keys.add(key);			
 			result.then(this::doBezocht);
+		}
+		if (!keys.isEmpty()) {
+			defer.resolveWith(api.getValuesPromise(keys));
 		}
 	}
 
