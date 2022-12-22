@@ -119,9 +119,9 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			if (moduleID != 0) {
 				SelectModuleItem item = SelectModuleItemHolder.getItemByID(Integer.toString(moduleID));
 				if (item == null) {
-					reg.removeHandler();
-					anchor.setHref("javascript:return false;");
-					reg = anchor.addClickHandler(this::nop);
+//					reg.removeHandler();
+//					anchor.setHref("javascript:return false;");
+//					reg = anchor.addClickHandler(this::nop);
 				}
 			} else if (activiteitID != 0) {
 				SelectModuleItem item = SelectModuleItemHolder.getScoByID(Integer.toString(activiteitID));

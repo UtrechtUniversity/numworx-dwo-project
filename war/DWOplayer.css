@@ -272,30 +272,36 @@ div.listItem-dwo-separator {
 
 .scorewidget {
 	color: black;
+	line-height: 18px;
 }
 .scorewidget .scorewidget-score {
 	float: right;
 }
 
 .scorewidget.scorewidget-goedFout .scorewidget-score::after, .scorewidget.scorewidget-bezocht .scorewidget-score::after {
-	content: url(images/numworx/half-numworx.svg);
-	color: gray;
-	padding-left: 0.1em;	
-	vertical-align: top;
+	background-image: url(images/numworx/half-numworx.svg);
+	color: transparent;
+	padding-left: 4px;	
+	content: "XX";
+	font-size: 15px;
+	background-position-y: center;
+    background-repeat: no-repeat;
+    background-origin: content-box;
+}
 }
 
 .scorewidget.scorewidget-goedFout.scorewidget-goedFout-passed .scorewidget-score::after {
-	content: url(images/numworx/goed-numworx.svg);
-	color: green;
+	background-image: url(images/numworx/goed-numworx.svg);
+/* 	color: green; */
 }
 .scorewidget.scorewidget-goedFout.scorewidget-goedFout-failed .scorewidget-score::after {
-	content: url(images/numworx/fout-numworx.svg);
-	color: red;
+	background-image: url(images/numworx/fout-numworx.svg);
+/* 	color: red; */
 }
 
 .scorewidget.scorewidget-bezocht.scorewidget-bezocht-resume .scorewidget-score::after {
-	content: url(images/numworx/done-numworx.svg);
-	color: #6D4A8A;
+	background-image: url(images/numworx/done-numworx.svg);
+/* 	color: #6D4A8A; */
 }
 
 
