@@ -10,6 +10,7 @@ import java.sql.Time;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -811,7 +812,6 @@ try {
 		JsonObject onsState = data.getJsonObject("onsState");
 		int pagenr = Integer.parseInt(page)-1;
 		
-		
 		if (key.endsWith(".score.raw")) {
 			JsonArray orScores = onsState.getJsonArray("orScores");
 			orScores = orScores.getJsonArray(0);
@@ -848,11 +848,17 @@ try {
 			return ok ? "passed" : "failed";    
 		}
 		if (key.endsWith(".entry")) {
-			JsonArray bezocht = onsState.getJsonArray("bezocht");
+			JsonArray bezocht;
+			bezocht = onsState.getJsonArray("visited");
+			if (bezocht == null)
+				bezocht = onsState.getJsonArray("bezocht");
 			bezocht = bezocht.getJsonArray(0);
 			if (pagenr >= bezocht.size()) return "ab-initio";
 			boolean ok = bezocht.getBoolean(pagenr);			
 			return ok ? "resume" : "ab-initio";
+		}
+		if (key.endsWith(".completion_status")) {
+			return Objects.toString(pssc.getCompletionStatus(),"");
 		}
 	} catch (Exception e) {
 		LOG.log(Level.WARNING, "scoreWidget " + key, e);
