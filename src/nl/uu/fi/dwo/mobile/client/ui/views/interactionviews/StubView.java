@@ -466,6 +466,12 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		wnd.tickle = function() {
 			view.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::tickle()()
 		}
+		wnd.setVisited = function(viewer) {
+			view.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::setVisited()()
+		}
+		
+		
+		
 		return wnd.inner;
 	}-*/;
 
@@ -1039,4 +1045,10 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		return JSONUtilities.toJSONObject(map).isObject().getJavaScriptObject();		
 	}
 
+	@Override public void setVisited() {
+		if (comRoot != this && comRoot != null) {
+			comRoot.setVisited();
+		}
+	}
+	
 }

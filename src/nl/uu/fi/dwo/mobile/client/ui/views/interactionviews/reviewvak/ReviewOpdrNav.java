@@ -90,4 +90,7 @@ public class ReviewOpdrNav implements OpdrNavIF {
 		return delegate.getContext();
 	}
 	
+	@Override public void setVisited() {
+		delegate.setVisited();
+	}
 }

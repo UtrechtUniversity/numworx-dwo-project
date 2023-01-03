@@ -1350,6 +1350,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			lastanswer = useranswer;
 			if ((mode == OpdrNav.OEFENEN || mode == OpdrNav.OEFENEN_STRAFPUNTEN) && teltMee) 
 				comRoot.setChanged(goedHalfFout == AntwoordVakChecker.FOUT);
+			else 
+				comRoot.setVisited();
 		
 		}
 		//if(this.fe != null && !(mode == 2 || mode == 3))

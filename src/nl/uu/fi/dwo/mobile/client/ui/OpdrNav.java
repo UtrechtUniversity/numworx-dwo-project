@@ -602,7 +602,6 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	public void setChanged(boolean fout) // FIXME Trifork: hier safepoint?
 	{
 		
-		setVisited();
 		saveCurrentState();
 		Boolean check = entry.isCorrect();
 		boolean correct = Boolean.TRUE.equals(check);

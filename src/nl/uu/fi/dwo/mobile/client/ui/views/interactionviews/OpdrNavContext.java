@@ -71,6 +71,7 @@ public class OpdrNavContext implements OpdrNavIF {
 	 * @see nl.uu.fi.dwo.interaction.client.OpdrNavIF#setChanged(boolean)
 	 */
 	public void setChanged(boolean fout) {
+		setVisited();
 		comRoot.setChanged(fout);
 	}
 
@@ -217,4 +218,7 @@ public class OpdrNavContext implements OpdrNavIF {
 		return comRoot.getContext();
 	}
 
+	@Override public void setVisited() {
+		comRoot.setVisited();
+	}
 }
