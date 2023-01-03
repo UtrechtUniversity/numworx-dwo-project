@@ -110,7 +110,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 				
 		init(breedte, hoogte, launchState);
 		
-		a.vars().ifPresent(this::initVars);
+//		a.vars().ifPresent(this::initVars);
 	}
 	
 	private void initVars(DwoGlobalVars vars) {
