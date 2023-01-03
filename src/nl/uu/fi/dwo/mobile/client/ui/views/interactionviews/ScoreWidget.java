@@ -8,6 +8,7 @@ import java.util.TreeSet;
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
+import org.osgi.util.promise.Success;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -35,6 +36,37 @@ import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 
 public class ScoreWidget extends Composite implements InteractionView, ClickHandler, TekstElementWithFont {
+
+	private static final String COMPLETION_STATUS = ".completion_status";
+
+	private static final String ENTRY = ".entry";
+
+	private static final String SUCCESS_STATUS = ".success_status";
+
+	public class GoedFoutBezocht implements Success<Map<String, String>, Map<String, String>> {
+
+		private String pfx;
+
+		public GoedFoutBezocht(String pfx) {
+			this.pfx = pfx;
+		}
+
+		@Override
+		public Promise<Map<String, String>> call(Promise<Map<String, String>> resolved) throws Exception {
+			Map<String,String> value = resolved.getValue();
+			String completed = value.get(pfx + COMPLETION_STATUS);
+			String bezocht   = value.getOrDefault(pfx + ENTRY, "");
+			String goedfout  = value.getOrDefault(pfx + SUCCESS_STATUS, "");
+			if ("completed".equals(completed)) {
+				goedfout(goedfout);
+			} else {
+				bezocht(bezocht);
+			}
+			
+			return null;
+		}
+
+	}
 
 	private HashMap<String, Object> launchState; 
 	
@@ -298,16 +330,27 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		} else {
 			anchorSetText("");
 		}
+		if (goedFout && bezocht) {
+			String key;
+			key = pfx + SUCCESS_STATUS;
+			keys.add(key);
+			key = pfx + ENTRY;
+			keys.add(key);
+			key = pfx + COMPLETION_STATUS;
+			Promise<Map<String, String>> result = defer.getPromise();
+			result.then(new GoedFoutBezocht(pfx));
+		
+		} else 
 		if (goedFout) {
 			Promise<String> result;
-			String key = pfx + ".success_status";
+			String key = pfx + SUCCESS_STATUS;
 			result = defer.getPromise().map( m -> m.getOrDefault(key, ""));
 			keys.add(key);			
 			result.then(this::doGoedFout);			
-		}
+		} else
 		if (bezocht) {
 			Promise<String> result;
-			String key = pfx + ".entry";
+			String key = pfx + ENTRY;
 			result = defer.getPromise().map( m -> m.getOrDefault(key, ""));
 			keys.add(key);			
 			result.then(this::doBezocht);
@@ -317,6 +360,9 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		}
 	}
 
+	
+	
+	
 	Promise<String> doScore(Promise<String> p) {
 		String value = p.getValue();
 		if (value == null || value.isEmpty()) value = "0";
