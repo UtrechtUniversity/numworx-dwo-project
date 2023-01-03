@@ -201,6 +201,13 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF, NativePreviewHandler 
 		$wnd.tickle()
 	}-*/;
 	
+	@Override public native void setVisited()
+	/*-{
+		$wnd.setVisited($wnd.outer)
+	}-*/
+	; 
+	
+	
 	@Override
 	public FormuleKeyboardIF getKeyboard() {
 		return this;
