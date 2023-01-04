@@ -1889,6 +1889,9 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 		comRoot.addCBookEventListener("action.unzoom", this);
 		comRoot.addCBookEventListener("action.setActive", this);
 		comRoot.addCBookEventListener("action.setInactive", this);
+		comRoot.addCBookEventListener("double.xcoordinate", this);
+		comRoot.addCBookEventListener("double.ycoordinate", this);
+		comRoot.addCBookEventListener("double.rotation", this);
 	}
 
 	public HashMap<String, Object> getState()
@@ -4165,6 +4168,11 @@ private Object CamelCase(String name) {
 				mainPanel2.getElement().getStyle().setProperty("transform", "rotate(" + (draaihoek) + "deg)");
 				mainPanel2.getElement().getStyle().setProperty("WebkitTransform", "rotate(" + (draaihoek) + "deg)");
 				startHoek = startHoek+dhoek;
+				{	Map<String,Object> mapy = new HashMap<String,Object>();
+					mapy.put("name", "rotation");
+					mapy.put("value", draaihoek);
+					fireEvent(new CBookEvent(this,"double.rotation",mapy));
+				}
 			}
 		}
 		
@@ -4955,6 +4963,32 @@ private Object CamelCase(String name) {
 			comRoot.getKeyboard().setEditor(null);
 			comRoot.getKeyboard().blur();
 			logger.info("inactive");
+		}
+		else if("double.xcoordinate".equals(command)) {
+			Map map = (Map)event.getParameters();
+			ObjectMap objectMap = JSONUtilities.wrapMap(map);
+			if(map!=null) {
+				int xcoordinate = objectMap.getInt("value");
+				zetLocatie(xcoordinate, this.getLocationY());
+			}
+		}
+		else if("double.ycoordinate".equals(command)) {
+			Map map = (Map)event.getParameters();
+			ObjectMap objectMap = JSONUtilities.wrapMap(map);
+			if(map!=null) {
+				int ycoordinate = objectMap.getInt("value");
+				zetLocatie(this.getLocationX(), ycoordinate);
+			}
+		}
+		else if("double.rotation".equals(command)) {
+			Map map = (Map)event.getParameters();
+			ObjectMap objectMap = JSONUtilities.wrapMap(map);
+			if(map!=null) {
+				draaihoek = objectMap.getInt("value");
+				logger.info("draaihoek = "+draaihoek);
+				mainPanel2.getElement().getStyle().setProperty("transform", "rotate(" + (draaihoek) + "deg)");
+				mainPanel2.getElement().getStyle().setProperty("WebkitTransform", "rotate(" + (draaihoek) + "deg)");
+			}
 		}
 		
 	}
