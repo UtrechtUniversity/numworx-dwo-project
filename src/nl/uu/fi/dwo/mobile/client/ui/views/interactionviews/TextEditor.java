@@ -603,7 +603,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	private void setAttempt(StringBuilder s) {
 		String string = s.toString();
 		if(! string.equals(lastAttempt)) {
-			comRoot.setVisited();
+			if (getScoreMax() > 0) comRoot.setVisited();
 			lastAttempt = string;
 			if(logging != null ) {
 				HashMap<String, String> map = new HashMap<String, String>();

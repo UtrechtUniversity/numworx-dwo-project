@@ -1489,6 +1489,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			memento.setScoresObjectives(scoresObjectives);
 		memento.setBezocht(entry.bezocht);
 		memento.setZelftoetsNagekeken(entry.zelftoetsNagekeken);
+		memento.setVisited(visited);
 
 		// tempotoets locked opslaan
 		memento.setTempotoetsLocked(entry.tempotoetsLocked);

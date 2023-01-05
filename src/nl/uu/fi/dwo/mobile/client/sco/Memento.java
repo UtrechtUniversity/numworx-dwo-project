@@ -1005,24 +1005,23 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	}
 
 	public void setVisited(boolean[][] visited) {
+		if (opdrVisited == null) {
+			opdrVisited = new JSONArray();
+			onsState.put(VISITED, opdrVisited);
+		}
 		if(visited == null) return;
 		for (int i = 0; i < visited.length; i++) {
 			boolean[] oi = visited[i];
 			for (int j = 0; j < oi.length; j++) {
 				boolean punt = oi[j];
 				if(punt != false) {
-					if ( opdrVisited == null) {
-						opdrVisited = new JSONArray();
-						onsState.put(VISITED, opdrVisited);
-					}
 					if( i >= opdrVisited.size() || isNull(opdrVisited.get(i)) )
 						opdrVisited.set(i, new JSONArray());
 					JSONArray array = opdrVisited.get(i).isArray();
 					array.set(j, JSONBoolean.getInstance(punt));
 				} else {
-					if(opdrVisited == null 
-							|| opdrVisited.size() <= i 
-							|| isNull(opdrVisited.get(i)))
+					if( opdrVisited.size() <= i 
+						|| isNull(opdrVisited.get(i)))
 						continue;
 					JSONArray array = opdrVisited.get(i).isArray();
 					if(j >= array.size()) continue;
