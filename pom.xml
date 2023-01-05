@@ -583,6 +583,25 @@
 			</dependencies>		
 		</profile>
 		<profile>
+			<id>leerdoelwidget</id>
+			<properties>
+				<leerdoelwidgetVersion>0.0.1-SNAPSHOT</leerdoelwidgetVersion>
+			</properties>
+			<dependencies>
+					<dependency>
+						<groupId>nl.numworx.leerdoelwidget</groupId>
+						<artifactId>LeerdoelWidgetGWT</artifactId>
+						<version>${leerdoelwidgetVersion}</version>
+						<classifier>sources</classifier>
+					</dependency>
+					<dependency>
+						<groupId>nl.numworx.leerdoelwidget</groupId>
+						<artifactId>LeerdoelWidgetGWT</artifactId>
+						<version>${leerdoelwidgetVersion}</version>
+					</dependency>
+			</dependencies>
+		</profile>
+		<profile>
 			<id>running11</id>
 			<activation>
 				<jdk>[9,)</jdk>

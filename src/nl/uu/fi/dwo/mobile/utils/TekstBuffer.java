@@ -469,7 +469,9 @@ public class TekstBuffer
 			{	AnchorContext anchorContext = getAnchorContext();
 				return x(map, new ScoreWidget(activity, currentVakGegevens, randomVarNamen, randomVarWaarden, anchorContext));
 			}
-		
+		case 67:
+			return x(map, new StubView(activity, "LeerdoelWidgetGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
+			//return x(map, new nl.numworx.leerdoelwidgetgwt.client.LeerdoelWidgetGWT(currentVakGegevens, randomVarWaarden, volleBreedtes[huidigeKolom]));
 		
 		}
 
