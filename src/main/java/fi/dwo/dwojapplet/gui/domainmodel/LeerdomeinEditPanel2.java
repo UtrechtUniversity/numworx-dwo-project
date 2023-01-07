@@ -616,6 +616,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 	InvisibleNode root;
 	private JComponent settings;
 	JFormattedTextField slip, init, learn;
+	private JComboBox nodeSizeChoice;
 	final private EditableGraph graph;
 
 	private Box settingsRO;
@@ -860,6 +861,17 @@ public class LeerdomeinEditPanel2 extends JPanel
 		voorkennis.setPreferredSize(new Dimension(120, 20));
 		bkt.add(voorkennis);
 		bkt.add(Box.createHorizontalGlue());
+		JLabel nodeSizeLabel = new JLabel("Node size: ");
+		nodeSizeLabel.setForeground(Constants.COLOR15);
+		bkt.add(nodeSizeLabel);
+		nodeSizeChoice = new JComboBox();
+		nodeSizeChoice.setPreferredSize(new Dimension(50, 20));
+		nodeSizeChoice.setMaximumSize(new Dimension(50, 20));
+		nodeSizeChoice.addItem(24);
+		nodeSizeChoice.addItem(48);
+		nodeSizeChoice.addItem(72);
+		nodeSizeChoice.addItem(96);
+		bkt.add(nodeSizeChoice);
 		settings.add(bkt);
 		settings.add(Box.createVerticalStrut(10));
 
