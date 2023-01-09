@@ -26,6 +26,7 @@ public class DomStudentModelContextInfo {
     private List<String> voorkennis;
     private Map<String, Map<String, Set<Integer>>> methods;
     private Integer x,y;
+    private Integer nodeSize; // of in methodInfo
     
     private List<DomStudentModelMethodInfo> methodInfo;
 
@@ -239,6 +240,14 @@ public class DomStudentModelContextInfo {
 
 	public void setMethodInfo(List<DomStudentModelMethodInfo> methodInfo) {
 		this.methodInfo = methodInfo;
+	}
+
+	public Integer getNodeSize() {
+		return nodeSize;
+	}
+
+	public void setNodeSize(Integer nodeSize) {
+		this.nodeSize = nodeSize;
 	}
     
 }
