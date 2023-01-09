@@ -189,6 +189,10 @@ public class NodeLeaf implements Node {
     info.setSlip(value);
   }
   
+  public void setNodeSize(Integer value) {
+    info.setNodeSize(value);
+  }
+  
   public String getId() {
     return info.getId();
   }

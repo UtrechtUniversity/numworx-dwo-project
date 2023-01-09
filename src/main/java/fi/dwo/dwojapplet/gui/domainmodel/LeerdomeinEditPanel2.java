@@ -111,7 +111,8 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class LeerdomeinEditPanel2 extends JPanel
 		implements TreeSelectionListener, ExportPanel, WindowListener, ItemListener {
-	static final String WISKOPDR_SIG = "H4sIAAAAAA";
+	private static final Integer DEFAULT_NODE_SIZE = 24;
+  static final String WISKOPDR_SIG = "H4sIAAAAAA";
 	static final Logger LOG = Logger.getLogger(LeerdomeinEditPanel2.class.getName());
 
 	static class VoorkennisAction extends AbstractAction {
@@ -616,7 +617,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 	InvisibleNode root;
 	private JComponent settings;
 	JFormattedTextField slip, init, learn;
-	private JComboBox nodeSizeChoice;
+	private JComboBox<Integer> nodeSizeChoice;
 	final private EditableGraph graph;
 
 	private Box settingsRO;
@@ -864,10 +865,10 @@ public class LeerdomeinEditPanel2 extends JPanel
 		JLabel nodeSizeLabel = new JLabel("Node size: ");
 		nodeSizeLabel.setForeground(Constants.COLOR15);
 		bkt.add(nodeSizeLabel);
-		nodeSizeChoice = new JComboBox();
+		nodeSizeChoice = new JComboBox<>();
 		nodeSizeChoice.setPreferredSize(new Dimension(50, 20));
 		nodeSizeChoice.setMaximumSize(new Dimension(50, 20));
-		nodeSizeChoice.addItem(24);
+		nodeSizeChoice.addItem(DEFAULT_NODE_SIZE);
 		nodeSizeChoice.addItem(48);
 		nodeSizeChoice.addItem(72);
 		nodeSizeChoice.addItem(96);
@@ -1306,6 +1307,10 @@ public class LeerdomeinEditPanel2 extends JPanel
 				d = 0.2; // DEFAULT LEARN;
 			learn.setValue(d);
 			settings.setVisible(true);
+			Integer ns = info.getNodeSize();
+			if (ns == null) ns = DEFAULT_NODE_SIZE;
+			nodeSizeChoice.setSelectedItem(ns);
+			
 		} else {
 			settings.setVisible(false);
 		}
@@ -1399,6 +1404,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 				n.setInit((Double) init.getValue());
 				n.setLearn((Double) learn.getValue());
 				n.setSlip((Double) slip.getValue());
+				n.setNodeSize((Integer) nodeSizeChoice.getSelectedItem());
 			}
 		}
 	}
