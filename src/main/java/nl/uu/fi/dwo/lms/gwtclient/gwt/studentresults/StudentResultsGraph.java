@@ -700,7 +700,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		return id.split("/",2)[0];
 	}
 	
-	protected class Node extends AbstractNode implements ClickHandler {
+	public class Node extends AbstractNode implements ClickHandler {
 		final private DomStudentModelMethodInfo info;
 		final protected DomStudentModelObj obj;
 		final private boolean kennen;
