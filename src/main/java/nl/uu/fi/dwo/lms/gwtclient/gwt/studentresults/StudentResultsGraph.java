@@ -1529,7 +1529,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		voorkennisEdges = Collections.emptySet();
 	}
 
-	private void zoomFit() {
+	protected void zoomFit() {
 		Collection<List<Node>> nodes = map.values();
 		int imagewidth = getOffsetWidth();
 		int imageheight = getOffsetHeight() - TITLE_HEIGHT;
