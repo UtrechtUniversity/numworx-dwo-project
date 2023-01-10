@@ -747,7 +747,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		}
 		
 		
-		protected Node(DomStudentModelObj obj, DomStudentModelMethodInfo info, String parent) {
+		public Node(DomStudentModelObj obj, DomStudentModelMethodInfo info, String parent) {
 			setClassName(bundle.css().node());
 			this.obj = obj;
 			r = 12;
@@ -777,8 +777,13 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 				g.addClassNameBaseVal(bundle.css().kennen());
 			}
 			text = doc.createSVGTextElement(cx, cy, unitType, parent + descr);
+			addClickHandler();
+		}
+
+		public Node addClickHandler() {
 			text.addClickHandler(this);
 			circle.addClickHandler(this);
+			return this;
 		}
 		
 		public void setVoorkennis(boolean b) {
@@ -906,7 +911,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	
 	protected Button zoomFitBtn, zoomInBtn, zoomOutBtn, voorkennisBtn, verbergBtn;
 	private DockLayoutPanel voorkennistitle;
-	private FilterTitle title;
+	protected FilterTitle title;
 		
 	@Inject DescriptionPresenter description;
 	private DomStudentModelContext4Student current;
@@ -1352,7 +1357,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	}
 
 	protected Node nodeFactory(DomStudentModelObj obj, final String p, DomStudentModelMethodInfo info) {
-		return new Node(obj, info, p);
+		return new Node(obj, info, p).addClickHandler();
 	}
 	
 	protected Node nodeFactory(DomStudentModelObj obj, DomStudentModelMethodInfo info) {
