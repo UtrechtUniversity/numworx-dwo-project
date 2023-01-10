@@ -182,6 +182,9 @@ public static native Object getApplet(Object wnd, StubWidget view) /*-{
 	wnd.tickle = function() {
 		view.@nl.uu.fi.dwo.lms.chatgwt.StubWidget::tickle()()
 	}
+	wnd.setVisited = function(viewer) {
+	}
+
 	return wnd.inner;
 }-*/;
 
