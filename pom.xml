@@ -346,7 +346,6 @@
 				<wagonPhase>none</wagonPhase>
 				<gwt.copyWebapp>false</gwt.copyWebapp>
 				<s3>s3://ebs-dev-dwo-nl</s3>
-    			<interactionVersion>0.1.14</interactionVersion> <!-- no textarea -->
 			</properties>
 		</profile>
 		<profile>
