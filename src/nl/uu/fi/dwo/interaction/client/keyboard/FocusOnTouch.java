@@ -31,6 +31,7 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 {
 	private FocusPanel focusPanel;
 	private static FocusPanel mainPanel;
+	public static boolean AREA = false;
 	private static TextArea area;
 	
 	static public FocusPanel wrap ( Widget w) {
@@ -50,6 +51,7 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 		if(main)
 		{
 			mainPanel = focus;
+			if (AREA) {
 			area = new FocusArea(handler);
 			RootLayoutPanel r = RootLayoutPanel.get();
 			r.add(area);
@@ -57,7 +59,7 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 			r.setWidgetRightWidth(area, 1, Unit.EM, 1, Unit.EM);
 			area.addKeyDownHandler(handler);
 			area.addKeyPressHandler(handler);
-			
+			}
 			
 		}
 		boolean hastouch = com.google.gwt.event.dom.client.TouchStartEvent.isSupported();
@@ -87,7 +89,7 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 		{
 			public void execute()
 			{
-				area.setFocus(true);
+				if (AREA) area.setFocus(true); else focusPanel.setFocus(true); // was area
 			}
 		});
 	}
