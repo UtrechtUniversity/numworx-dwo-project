@@ -80,6 +80,12 @@ public class RestAuthenticator implements DispatcherFilter, HasValueChangeHandle
     public final static RestAuthenticator instance = new RestAuthenticator();
     
 
+    public void setAuthorization(String a) {
+    	haspassword = a != null;
+    	authorization = a;
+    }
+    
+    
     public String getAuthorization() {
     	if (haspassword) return authorization;
     	else return "None";
