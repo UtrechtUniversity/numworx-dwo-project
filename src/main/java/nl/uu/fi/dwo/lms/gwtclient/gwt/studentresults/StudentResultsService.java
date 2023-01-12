@@ -48,7 +48,8 @@ public class StudentResultsService implements StudentResults {
 	@Inject Lazy<AdviseMeService> adviseMe;
 	
 
-	@Inject StudentResultsService(SecuredStudentStudentModelManager manager, DwoGlobalVars vars, MethodManager methodMan, DomContext context) {
+	@Inject
+	public StudentResultsService(SecuredStudentStudentModelManager manager, DwoGlobalVars vars, MethodManager methodMan, DomContext context) {
 		this.manager = manager;
 		this.methodMan = methodMan;
 		this.context = context;
