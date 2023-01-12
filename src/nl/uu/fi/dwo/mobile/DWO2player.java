@@ -27,6 +27,7 @@ import fi.dwo.gwt.lib.rest.ui.MsgDialogView;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import nl.uu.fi.dwo.account.client.AccountBundle;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.client.DWO2playerDefaults;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
@@ -140,6 +141,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 	public DWO2player() {
         //Initialize an Exception translator.
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
+        FocusOnTouch.AREA = true;
 	}
 			
   @Inject
