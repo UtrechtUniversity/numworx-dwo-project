@@ -638,6 +638,12 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 
 	@Override
 	public void gotoUrl(String href) {
+		if("goto:0".equals(href)) {
+			SelectModuleItem parent = selection.getParent();
+			Place place = parent == null ? new TreeModulePlace() : parent.getPlace();
+			presenter.goTo(place);
+			return;
+		}
 		gotoSelected(href, selection);		
 	}
 	
