@@ -575,4 +575,12 @@ public class DwoGlobalVars {
 			role = RoleType.valueOf(getActiveSchoolRoleAndClass().getRole().getRoleName());
 		return role;
 	}
+
+	private boolean inf; // profiel inf = 111
+	public boolean isInf() {
+		return inf;
+	}
+	public void setInf(boolean i) {
+		inf = i;
+	}
 }

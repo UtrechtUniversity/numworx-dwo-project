@@ -52,9 +52,10 @@ public class StudentModelService implements DescriptionService {
 
 	private Promise<DomDwoProfileFull> profile;
 	
-	@Inject StudentModelService(DwoGlobalVars vars, DomContext ctx) {
+	@Inject public StudentModelService(DwoGlobalVars vars, DomContext ctx, MethodManager methodMan) {
 		context = ctx;
 		profile = vars.getProfile();
+		this.methodMan = methodMan;
 		if (!vars.isPremium()) {
 			models = Promises.resolved(Collections.emptyList());
 		} else {
@@ -181,7 +182,7 @@ public class StudentModelService implements DescriptionService {
 
 	Map<PersistenceId, Promise<DomMethod>> methods = new HashMap<>();
 
-	@Inject MethodManager methodMan;
+	private final MethodManager methodMan;
 
 	public Promise<DomMethod> getActiveMethod(PersistenceId pid) {		
 		return methods.computeIfAbsent(pid, id -> { 			

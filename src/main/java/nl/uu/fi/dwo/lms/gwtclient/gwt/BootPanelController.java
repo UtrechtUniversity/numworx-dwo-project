@@ -269,7 +269,7 @@ public class BootPanelController {
 		return profile;
 	}
     public boolean hasChatbox() {
-    	return dwoGlobalVars.isPremium() && profile == PROFILE_INF;
+    	return dwoGlobalVars.isPremium() && dwoGlobalVars.isInf();
     }
 
 	private int stage;
@@ -320,6 +320,10 @@ public class BootPanelController {
         } catch (Exception e) {
             profile = 77;
         }
+        
+        dwoGlobalVars.setInf(profile == PROFILE_INF);
+        
+        LOG.severe("inf = " + dwoGlobalVars.isInf());
         value = Window.Location.getParameter("stage");
         if (value != null) {
             stage = Integer.parseInt(value);

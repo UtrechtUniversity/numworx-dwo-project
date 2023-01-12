@@ -162,7 +162,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			setWidgetTopHeight(zoomOutBtn, 9+12, Unit.EM, 2, Unit.EM);
 			setWidgetTopHeight(voorkennisBtn, 3+12, Unit.EM, 2, Unit.EM);
 			setWidgetVisible(voorkennistitle, true);
-			setWidgetVisible(voorkennisBtn, false);
+			setVoorKennisVisible(false);
 			OMSVGRect viewbox = image.getSvgElement().getViewBox().getBaseVal();
 			float dy = VOORKENNIS_HEIGHT;
 			OMSVGMatrix ctm = image.getSvgElement().getScreenCTM();
@@ -897,6 +897,11 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 				popup.add(w);
 				popup.center();
 				return null;
+			}, p -> { 
+				Widget w = new Label(p.getFailure().toString());
+				w.addStyleDependentName("Graph");
+				popup.add(w);
+				popup.center();
 			});
 		}
 		
@@ -913,10 +918,12 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	private DockLayoutPanel voorkennistitle;
 	protected FilterTitle title;
 		
-	@Inject DescriptionPresenter description;
+	final private DescriptionPresenter description;
 	private DomStudentModelContext4Student current;
 
-	@Inject protected StudentResultsGraph() {
+	
+	@Inject protected StudentResultsGraph(DescriptionPresenter d) {
+		description = d;
 		
 		bundle.css().ensureInjected();
 		
@@ -1092,7 +1099,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 								.filter(Objects::nonNull).collect(Collectors.toList());
 						inVoorkennis = true; // zonder ..
 						inVoorkennisTree = true;
-						setWidgetVisible(voorkennisBtn, false);
+						setVoorKennisVisible(false);
 						title.showClose(this::run);
 						popupMenu.hide();
 						zoomFit();
@@ -1180,7 +1187,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		    chapters.values().forEach(ChapterNode::setVisible);
 		    chapterEdges.forEach(ChapterEdge::setVisible);
 		    books.values().forEach(BookNode::setVisible);
-		    setWidgetVisible(voorkennisBtn, false);
+		    setVoorKennisVisible(false);
 		    return;
 		} else if (f.size() == 1) {
 			String key = f.keySet().iterator().next();
@@ -1202,7 +1209,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			boolean ok = StudentResultsPresenter.inFilter(f, n.info, title.getMethod());
 			n.setVisible(ok);
 		}
-		setWidgetVisible(voorkennisBtn, !showchapters);
+		setVoorKennisVisible(!showchapters);
 	    edges.forEach(Edge::setVisible);
 	    if(showchapters) chapters.values().forEach(ChapterNode::setVisible);
 	    else chapters.values().forEach(ChapterNode::hide);
@@ -1515,7 +1522,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		setWidgetTopHeight(zoomOutBtn, 9, Unit.EM, 2, Unit.EM);
 		setWidgetTopHeight(voorkennisBtn, 3, Unit.EM, 2, Unit.EM);
 		setWidgetVisible(voorkennistitle, false);
-		setWidgetVisible(voorkennisBtn, true);
+		setVoorKennisVisible(true);
 		OMSVGRect viewbox = image.getSvgElement().getViewBox().getBaseVal();
 		float dy = VOORKENNIS_HEIGHT;
 		OMSVGMatrix ctm = image.getSvgElement().getScreenCTM();
@@ -1568,5 +1575,9 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		if (popup != null) popup.show();
 		
 	}
-		
+
+	public void setVoorKennisVisible(boolean visible) {
+		setWidgetVisible(voorkennisBtn, visible);
+	}
+
 }

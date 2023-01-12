@@ -17,6 +17,7 @@ import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsGraph;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
@@ -90,7 +91,8 @@ public class StudentModelGraph extends StudentResultsGraph {
 	
 	static private final Promise<DomStudentModelDataScore> DUMMYSCORE = Promises.failed(new IllegalArgumentException());
 
-	@Inject StudentModelGraph() {
+	@Inject StudentModelGraph(DescriptionPresenter d) {
+		super(d);
 		addStyleName(bundle.css().goals());
 	}
 		

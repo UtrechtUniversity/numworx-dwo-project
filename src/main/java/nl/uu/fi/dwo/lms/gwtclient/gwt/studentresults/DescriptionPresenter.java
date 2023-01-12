@@ -29,8 +29,9 @@ public class DescriptionPresenter {
 	private Optional<EventBus> bus;
 	private String test = "app";
 	
-	@Inject DescriptionPresenter(Optional<EventBus> bus, @Named("test") boolean test) { 
+	@Inject public DescriptionPresenter(Optional<EventBus> bus, @Named("test") boolean test, DescriptionService service) { 
 		this.bus = bus;
+		this.service = service;
 		if (test) this.test = "test";
 	}
 	
@@ -160,7 +161,7 @@ public class DescriptionPresenter {
 			return description;
 		}
 
-		@Inject DescriptionService service;
+		private final DescriptionService service;
 		DomStudentModelContextId current;
 
 		public Promise<Widget> get(DomStudentModelContextId current, DomStudentModelContextInfo info) {

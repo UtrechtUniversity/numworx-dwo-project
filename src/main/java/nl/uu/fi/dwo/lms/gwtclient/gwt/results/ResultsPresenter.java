@@ -160,7 +160,7 @@ public class ResultsPresenter extends AbstractResultsPresenter {
     public void setView(Display aView) {
         view = aView;
         view.setHelp(dwoGlobalVars.buildHelpUrl("#results"));
-        view.setRemedialView(dwoGlobalVars.isPremium() && dwoGlobalVars.isTest());
+        view.setRemedialView(dwoGlobalVars.isPremium() && dwoGlobalVars.isInf());
     }
 
     @JsMethod
