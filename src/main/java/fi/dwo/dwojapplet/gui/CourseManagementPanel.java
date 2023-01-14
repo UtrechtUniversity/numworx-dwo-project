@@ -476,7 +476,8 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
             Course course = (Course) userObject;
             visibleCB = new JCheckBox("Map verbergen");
             visibleCB.setSelected(course.isNotVisible());
-            if (DwoHelper.isTest() && DwoHelper.isPremium()) editorBox.add(visibleCB);
+            
+            if ((course.getSchoolID() == 0|| DwoHelper.isTest()) && DwoHelper.isPremium()) editorBox.add(visibleCB);
             editorBox.add(editorCB);
             
             

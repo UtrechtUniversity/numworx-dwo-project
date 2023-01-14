@@ -378,4 +378,13 @@ class CourseMapper  implements Comparator<Course> {
       }
       return NO_ACCESS;
     }
+
+    public CourseMap[] getTrashRoot() {
+      try {
+        return getObjectFromDCS(SecureUserCourseManager.getTrashRoot(DWO.getDwoProfile()));
+      } catch (Dwo2Exception e) {
+        LOG.log(Level.SEVERE, "getTrash of root", e); 
+      }
+      return NO_ACCESS;
+    }
 }

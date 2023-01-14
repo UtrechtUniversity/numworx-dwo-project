@@ -956,6 +956,8 @@ public class PersistenceFacade {
         return courseMapper.getTrash( (Course) course);
       if (course.getUserObject() == ModuleTreePanel.SCHOOL_MODULES)
         return courseMapper.getTrashSchool();
+      if (course.getUserObject() == ModuleTreePanel.STANDAARD_DWO_MODULES) 
+        return courseMapper.getTrashRoot();
       return null;
     }
 }

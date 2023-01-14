@@ -1372,6 +1372,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 				Integer y = leaf.getY();
                 GraphNode g = new GraphNode(id, parent, leaf.toString());
                 g.setMethodeInfo(leaf.getMethode());
+                g.setSize(leaf.getInfo().getNodeSize());
 				if(x==null || y==null) {
                     List<DomStudentModelMethodInfo> infos = leaf.getMethodeInfos();
                     g.setMethodeInfos(infos);

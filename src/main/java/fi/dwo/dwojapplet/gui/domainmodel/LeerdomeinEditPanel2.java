@@ -111,7 +111,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class LeerdomeinEditPanel2 extends JPanel
 		implements TreeSelectionListener, ExportPanel, WindowListener, ItemListener {
-	private static final Integer DEFAULT_NODE_SIZE = 24;
+	public static final Integer DEFAULT_NODE_SIZE = 24;
   static final String WISKOPDR_SIG = "H4sIAAAAAA";
 	static final Logger LOG = Logger.getLogger(LeerdomeinEditPanel2.class.getName());
 

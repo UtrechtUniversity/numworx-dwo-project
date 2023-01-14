@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinEditPanel2;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 
 public class GraphNode {
@@ -54,7 +55,7 @@ public class GraphNode {
 	// private String label;
 
 	private Point tempLocation;
-	private int size = 24;//Node size
+	private int size = LeerdomeinEditPanel2.DEFAULT_NODE_SIZE; //Node size
 	private Color nodeColor = defaultNodeColor;
 	private Color nodeBorderColor = LeerdomeinGraphPanel.colorBlue2;
 	private Color textColor = defaultTextColor;
@@ -698,7 +699,16 @@ public class GraphNode {
 
 	}
 
-	public class CompositeStroke implements Stroke {
+	public Integer getSize() {
+      return Integer.valueOf(size);
+    }
+  
+    public void setSize(Integer size) {
+      if (size == null) size = LeerdomeinEditPanel2.DEFAULT_NODE_SIZE;
+      this.size = size.intValue();
+    }
+
+    public class CompositeStroke implements Stroke {
 		private Stroke stroke1, stroke2;
 
 		public CompositeStroke(Stroke stroke1, Stroke stroke2) {
