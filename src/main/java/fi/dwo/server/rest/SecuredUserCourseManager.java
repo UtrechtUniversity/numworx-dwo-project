@@ -234,6 +234,22 @@ public class SecuredUserCourseManager {
     	}).sorted(DomCourseStudentComparator.INSTANCE).
     	collect(Collectors.toList());
     }
+
+    @PUT
+    @Path("/getTrashedRoot")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<DomCourseStudent> getTrashedRoot(@Context SecurityContext sc, RestDwoProfile rest, @Context UriInfo info) throws Dwo2Exception {
+    	UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
+    	PersistentDwoProfile profile = DwoProfileManager.findEntity(MySQLPersistenceId.getNativeId(rest.getDomDwoProfile()));
+    	PersistentSchool NULL = new PersistentSchool();
+		List<PersistentCourse> list = CourseManager.findTrashedChildrenOf(profile, NULL);
+    	return list.stream().map(course -> {
+    		DomCourseStudent st = course.buildDomCourseStudent();
+    		st.setSequenceNr(course.getTrashID());
+    		return st;
+    	}).sorted(DomCourseStudentComparator.INSTANCE).
+    	collect(Collectors.toList());
+    }
     
     @PUT
     @Path("/getAll")
