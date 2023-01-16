@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.osgi.util.promise.Promise;
 
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
@@ -26,8 +28,10 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style.Float;
@@ -40,6 +44,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+
+import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 
 public class DescriptionViewImpl extends XMLView implements DescriptionView, OpdrNavIF {
 	
@@ -260,6 +266,15 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 
 	@Override
 	public String getLearnerId() {
+
+		try {
+			Optional<DwoGlobalVars> vars = activity.vars();
+			DomContext context = new DomContext();
+			context.setDomHasRole(vars.get().getActiveSchoolRoleAndClass().getHasRole());
+			return PathId.getId(context);
+		} catch (Exception e) {
+		}
+		
 		return "guest";
 	}
 
@@ -318,7 +333,12 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 
 	@Override
 	public ObjectMap getContext() {
-		return JSONUtilities.wrapMap(Collections.EMPTY_MAP);
+		HashMap<String,Object> map = new HashMap<>();
+		map.put("roles", getRole().name());
+		map.put("lesson_mode", getLessonMode().name());
+		map.put("premium", activity.isPremium());
+		map.put("Authorization", RestAuthenticator.instance.getAuthorization());
+		return JSONUtilities.wrapMap(map);
 	}
 
 
