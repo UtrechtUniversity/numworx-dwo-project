@@ -156,7 +156,7 @@ public class XAPIService extends StudentResultsService implements StudentResults
 	  }
 
   
-  private DomStudentModelDataScore toDataScore(StatementsResult result, StateDocument state,
+  DomStudentModelDataScore toDataScore(StatementsResult result, StateDocument state,
       DomStudentModelContextId id, XapiManager xapi) {
     DomStudentModelContext4Student context = (DomStudentModelContext4Student) id; // if not, search from models...
     DomStudentModelDataScore scores = null;
@@ -240,7 +240,7 @@ private DomStudentModelDataScore eerstestap(DomStudentModelContextId context, Do
                 nrOfChoices = Integer.parseInt(nrOfChoicesString);
             }
             catch(Exception e){}
-            guess = 1/nrOfChoices;
+            guess = 1.0 / nrOfChoices;
         }
         
         Extensions extensions = statement.context.contextActivities.parent.get(0).definition.extensions;
