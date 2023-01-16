@@ -12,6 +12,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,9 +26,17 @@ import com.owlike.genson.Genson;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.GuiCreator;
+import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureStudentModelManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolMethod;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
+import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class WiskOpdrEditPanel extends JPanel implements Scrollable, AppletStub {
 
@@ -157,6 +166,49 @@ public class WiskOpdrEditPanel extends JPanel implements Scrollable, AppletStub 
     if ("dwo_env".equals(name)) {
       return GuiCreator.instance().getDWO().getParameter(name);
     }
+
+    if ( DwoHelper.isPremium() && name.startsWith("studentModelMethod:")) {
+      try {
+        String id = name.substring("studentModelMethod:".length());
+        PersistenceId pid = new PersistenceId(id);
+        DomMethod result = MethodsProperties.instance().getMethod(pid);
+        Genson genson = StoredRestManager.getInstance().getGenson();
+        return genson.serialize(result);         
+      } catch (Exception e) {
+        LOG.log(Level.WARNING, "studentModelMethod", e);
+      }
+    }
+    if ( DwoHelper.isPremium() && "reducedStudentModelContexts".equals(name)) {
+      try {
+        SecureStudentModelManager manager = GuiCreator.instance().getStudentModelManager();
+        List<DomStudentModelContext> list = manager.getReducedList(DWO.getDwoProfile());
+        Genson genson = StoredRestManager.getInstance().getGenson();
+        return genson.serialize(list);
+      } catch (Exception e) {
+        LOG.log(Level.WARNING, "studentModelContexts", e);
+        return null;
+      }
+    }
+
+    if ( DwoHelper.isPremium() && name.startsWith("studentModelContext:")) {
+      try {
+        String id = name.substring("studentModelContext:".length());
+        PersistenceId pid = new PersistenceId(id);
+        DomStudentModelContextId stid = new DomStudentModelContextId();
+        stid.setId(pid);
+        SecureStudentModelManager manager = GuiCreator.instance().getStudentModelManager();
+        DomStudentModelContext result = manager.get(stid);
+        if (result.getPublishState() == PublishState.overt) {
+          DomSchoolMethod activeMethod = manager.getActiveMethod(result);
+          result.getModelStructure().setActiveMethod(activeMethod.getActiveMethod());
+        }
+        Genson genson = StoredRestManager.getInstance().getGenson();
+        return genson.serialize(result);
+      } catch (Exception e) {
+        LOG.log(Level.WARNING, "studentModelContext", e);
+        return null;
+      }
+  }
     return null;
   }
 
