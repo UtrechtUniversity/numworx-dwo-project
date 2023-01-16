@@ -605,11 +605,14 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 
 		@Override
 		public void onClick(ClickEvent event) {
-			doFilter(info);
-			zoomFit();
+			doFilterFit(info);
 		}
 		
 	}
+	
+	
+	
+	
 	
 	static final double CHAPTER_ZOOM = SMALL;
 	class ChapterNode extends AbstractNode implements ClickHandler {
@@ -687,8 +690,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		@Override
 		public void onClick(ClickEvent event) {
 			GWT.log("click in " + info.key());
-			doFilter(info);
-			zoomFit();
+			doFilterFit(info);
 		}
 
 		@Override
@@ -1578,6 +1580,11 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 
 	public void setVoorKennisVisible(boolean visible) {
 		setWidgetVisible(voorkennisBtn, visible);
+	}
+
+	protected void doFilterFit(DomStudentModelMethodInfo info) {
+		doFilter(info);
+		zoomFit();
 	}
 
 }
