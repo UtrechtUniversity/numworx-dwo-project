@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.activities;
 import java.util.Collections;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -11,6 +12,7 @@ import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -31,6 +33,7 @@ import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.LogoutPlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.s;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
@@ -193,14 +196,31 @@ public class ViewScoActivity extends AbstractActivity implements Presenter, Anch
 
 	@Override
 	public void gotoUrl(String href) {
-		// TODO Auto-generated method stub
-		
+		if("goto:0".equals(href))
+		{
+			//gotoNext();
+			SelectModuleItem parent = sco.getParent();
+			if (parent != null) {
+				Place p = parent.getPlace();
+				if (p != null) { goTo(p); return; }
+			}
+			goTo(new TreeModulePlace());
+		}
+		else if (href.startsWith("goto:") && href.charAt(5) != '.') {
+			// idee: als je de parent place weet, dan #m:parentid:<goto>
+			
+			//gotoHref(href.substring(5));	  
+		} else 
+			defaultContext.gotoUrl(href);
 	}
 
+	@Inject PlaceHistoryMapper mapper;
+	@Inject @Named("defaultPlace") Place defaultPlace;
 	@Override
 	public void gotoPlace(String token) {
-		// TODO Auto-generated method stub
-		
+		Place place = mapper.getPlace(token);
+		if (place==null) place = defaultPlace;
+		goTo(place);
 	}
 
 }
