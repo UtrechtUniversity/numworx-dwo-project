@@ -24,6 +24,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
+import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
@@ -81,7 +82,12 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	private Boolean correct;
 	private CorrectieFacade correctie;
 	private Logging logging;
+	private AnchorContext aContext;
 	
+	public void setAContext(AnchorContext aContext) {
+		this.aContext = aContext;
+	}
+
 	@Override
 	public void onAttachOrDetach(AttachEvent event) {
 		boolean detach = !event.isAttached();
@@ -944,6 +950,10 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	public void fireEvent(CBookEvent event) {
 		if (event.getCommand().equals("logOption") && logging != null) {
 			logging.log(event.getParameters());
+			return;
+		}
+		if (aContext != null && event.getCommand().equals("gotoPlace")) {
+			aContext.gotoPlace(event.getMessage());
 			return;
 		}
 		if(comRoot != this)

@@ -470,7 +470,9 @@ public class TekstBuffer
 				return x(map, new ScoreWidget(activity, currentVakGegevens, randomVarNamen, randomVarWaarden, anchorContext));
 			}
 		case 67:
-			return x(map, new StubView(activity, "LeerdoelWidgetGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
+			StubView ldw = new StubView(activity, "LeerdoelWidgetGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			ldw.setAContext(getAnchorContext());
+			return x(map, ldw);
 			//return x(map, new nl.numworx.leerdoelwidgetgwt.client.LeerdoelWidgetGWT(currentVakGegevens, randomVarWaarden, volleBreedtes[huidigeKolom]));
 		
 		}
