@@ -845,7 +845,16 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			else if(succesFailScore <= 45) 
 				nodeColor = halfFailColor;
 			else if(succesFailScore > 45 && succesFailScore < 55)
-				nodeColor = new ColorStyle(0xFFFFFF);
+			{
+				//nodeColor = new ColorStyle(0xFFFFFF);
+
+				if (kennen) {
+					nodeColor = kennenNodeColor;
+				} else {
+					nodeColor = defaultNodeColor;
+				}
+			
+			}
 			else if(succesFailScore < 75 && succesFailScore >= 55) 
 				edgeColor = nodeColor = halfSuccesColor;
 			else 
