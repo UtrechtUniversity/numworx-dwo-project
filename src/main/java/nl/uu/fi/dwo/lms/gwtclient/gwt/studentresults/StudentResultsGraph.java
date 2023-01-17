@@ -779,12 +779,13 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 				g.addClassNameBaseVal(bundle.css().kennen());
 			}
 			text = doc.createSVGTextElement(cx, cy, unitType, parent + descr);
-			addClickHandler();
 		}
 
 		public Node addClickHandler() {
-			text.addClickHandler(this);
-			circle.addClickHandler(this);
+			if (!invalid()) {
+				text.addClickHandler(this);
+				circle.addClickHandler(this);
+			}
 			return this;
 		}
 		
