@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
 import java.util.Collections;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -9,6 +10,7 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
 import com.google.gwt.activity.shared.AbstractActivity;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
@@ -20,6 +22,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import dagger.Lazy;
 import dagger.MembersInjector;
 import dagger.Reusable;
+import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
@@ -44,6 +47,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class ViewScoActivity extends AbstractActivity implements Presenter, AnchorContext {
@@ -207,11 +211,59 @@ public class ViewScoActivity extends AbstractActivity implements Presenter, Anch
 			goTo(new TreeModulePlace());
 		}
 		else if (href.startsWith("goto:") && href.charAt(5) != '.') {
-			// idee: als je de parent place weet, dan #m:parentid:<goto>
-			
-			//gotoHref(href.substring(5));	  
+			// idee: als je de parent place weet, dan #m:parentid:<goto>			
+			gotoHref(href.substring(5));	  
 		} else 
 			defaultContext.gotoUrl(href);
+	}
+
+	private void gotoHref(String href) {
+		GWT.log("HIER STAAT HET NU " + href);
+	    int dot = href.indexOf('.');
+	    String label = dot < 0 ? href:href.substring(0, dot);
+	    String location;
+	    if (dot>=0) 
+	    	location = Integer.toString(Integer.parseInt(href.substring(dot+1))-1); // subtract 1
+	    else 
+	    	location = null;
+	    Promise<List<SelectModuleItem>> scoList = Promises.failed(new Error());
+		SelectModuleItem parent = sco.getParent();
+		if (parent == null) {
+			Promise<SelectModuleItem> parentPromise = Promises.failed(new Error());
+			// scoList = parentPromise.mapFlat(...);
+		}
+		else {	
+			 scoList = parent.getChildrenAsync();
+			 if (scoList == null) {
+				 scoList = Promises.failed(new Error());
+				 //scoList = getScosOf(parent);
+			 }
+		}	 
+		scoList.then(
+			( Promise<List<SelectModuleItem>> p) -> {
+		      Object id = null;
+		      try { 
+	    	      int n = Integer.parseInt(label)-1;
+	    	      SelectModuleItem sco = p.getValue().get(n);
+	    	      id = sco.getID();
+		      } catch (Exception e) {
+		        for(SelectModuleItem sco: p.getValue()) {
+		          if (sco.getName().startsWith(label)) {
+		             id = sco.getID();
+		             break;
+		          }
+		        }
+		      }
+		      if (id == null) return p;
+		      if (id.equals(sco.getID())) {
+		    	  if (location != null) 
+		    		  defaultContext.gotoUrl("goto:" + href.substring(dot));
+		      } else {
+			      Place place = new nl.uu.fi.dwo.mobile.client.ui.places.s(id, location);
+			      goTo(place);
+		      }
+			  return p;
+		});
 	}
 
 	@Inject PlaceHistoryMapper mapper;
