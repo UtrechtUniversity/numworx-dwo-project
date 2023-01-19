@@ -59,6 +59,7 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
@@ -1299,6 +1300,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			withScore(cat);
 		}
 		edges.forEach(Edge::setSuccesFailColor);
+		unBlur();			
 		return p;
 	}	
 	
