@@ -37,6 +37,7 @@ public class DomStudentModelContextInfo {
     	slip = info.getSlip();
     	learn = info.getLearn();
     	init = info.getInit();
+    	nodeSize = info.getNodeSize();
     	x = info.getX();
     	y = info.getY();
     	
