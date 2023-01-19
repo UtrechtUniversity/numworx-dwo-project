@@ -1,7 +1,9 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -33,7 +35,9 @@ import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
+import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.LogoutPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
@@ -42,7 +46,10 @@ import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView.Presenter;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
@@ -229,14 +236,55 @@ public class ViewScoActivity extends AbstractActivity implements Presenter, Anch
 	    Promise<List<SelectModuleItem>> scoList = Promises.failed(new Error());
 		SelectModuleItem parent = sco.getParent();
 		if (parent == null) {
-			Promise<SelectModuleItem> parentPromise = Promises.failed(new Error());
-			// scoList = parentPromise.mapFlat(...);
+			Object id = sco.getParentID();
+			DomSchoolClass sc = vars.getCurrentSchoolClass();
+			if (sc != null) // student in class
+			{
+				Promise<DomCoursesOfSchoolClass> p = rpcHandler.getCourseClass(id, sc).filter(x-> !x.getClassCourses().isEmpty());
+				scoList = 
+						p.then(x -> {
+							DomClassCourse cc = x.getValue().getClassCourses().get(0).getValue();
+							DomCourseStudent c = x.getValue().getCourses().get(0).getValue();
+							SelectModuleItem pa = new SelectModuleItem(c, cc);
+							SCO_TO_MODULEITEM toItem = new SCO_TO_MODULEITEM(pa);
+							List<DomMapEntry<PersistenceId, DomScoContext>> list = x.getValue().getScoContexts();
+					
+							pa.setChildren(
+									toItem.apply(
+									list.stream()
+										.map(DomMapEntry::getValue)
+										.collect(Collectors.toList())));
+							SelectModuleItemHolder.insert(pa);
+							SelectModuleItemHolder.getItems().remove(pa); // Niet in de hoofdlijst!
+							return pa.getChildrenAsync();
+						});
+			} else {
+				SelectModuleItem pa = new SelectModuleItem(id, Type.MODULE);
+				scoList = rpcHandler.getScos(id).map(new SCO_TO_MODULEITEM(pa));
+			}			
 		}
 		else {	
 			 scoList = parent.getChildrenAsync();
 			 if (scoList == null) {
-				 scoList = Promises.failed(new Error());
-				 //scoList = getScosOf(parent);
+					Object id = sco.getParentID();
+					DomSchoolClass sc = vars.getCurrentSchoolClass();
+					if (sc != null) // student in class
+					{
+						Promise<DomCoursesOfSchoolClass> p = rpcHandler.getCourseClass(id, sc).filter(x-> !x.getClassCourses().isEmpty());
+						scoList = 
+								p.then(x -> {
+									SCO_TO_MODULEITEM toItem = new SCO_TO_MODULEITEM(parent);
+									List<DomMapEntry<PersistenceId, DomScoContext>> list = x.getValue().getScoContexts();							
+									return Promises.resolved(
+											toItem.apply(
+											list.stream()
+												.map(DomMapEntry::getValue)
+												.collect(Collectors.toList())));
+								});
+					} else {
+						scoList = rpcHandler.getScos(id).map(new SCO_TO_MODULEITEM(parent));
+					}			
+					parent.setChildrenAsync(scoList);
 			 }
 		}	 
 		scoList.then(
