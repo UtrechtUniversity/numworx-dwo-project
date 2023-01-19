@@ -79,6 +79,7 @@ public class NodeLeaf implements Node {
     info.setInit(u.info.getInit());
     info.setSlip(u.info.getSlip());
     info.setLearn(u.info.getLearn());
+    info.setNodeSize(u.info.getNodeSize());
     if (info.getMethods() == null) {
       methode = new TreeMap<>();
       info.setMethods(methode);
