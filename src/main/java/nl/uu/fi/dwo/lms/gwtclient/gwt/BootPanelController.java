@@ -34,7 +34,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.StudentComponent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.TeacherComponent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State;
-
+import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomHeartBeat;
@@ -154,6 +154,15 @@ public class BootPanelController {
     PresenterFactory presenterFactory;
     SwitchViewEventHandler viewHandler;
 
+    public final Runnable RETOUR_WELCOME_STUDENT = () -> {
+    	Display mainView = viewFactory.getMainView();
+        mainView.selectView(SelectedView.WELCOME);
+        ModulesPresenter modules = presenterFactory.getModulesPresenter();
+		modules.show();
+        modules.gotoHome();
+    };
+    
+    
     public final Runnable RETOUR_WELCOME = () -> {
     	viewFactory.getMainView().selectView(SelectedView.WELCOME);
     	viewFactory.getMainView().showWelcomeView();

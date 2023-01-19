@@ -34,7 +34,7 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
     	this.chatbox = chatbox;
     	this.dwoGlobalVars = dwoGlobalVars;
     	this.controller = controller;
-    	
+        controller.setRetourHandler(controller.RETOUR_WELCOME);   	
     	if (controller.hasChatbox()) {
     		chatbox.get().init();
     	}

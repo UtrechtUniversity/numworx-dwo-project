@@ -30,6 +30,7 @@ public class StudentViewHandler implements SwitchViewEventHandler {
   @Inject StudentViewHandler(ViewFactory viewFactory, BootPanelController controller) {
     mainView = viewFactory.getMainView();
     this.controller = controller;
+    controller.setRetourHandler(controller.RETOUR_WELCOME_STUDENT);
   }
 
   @Override

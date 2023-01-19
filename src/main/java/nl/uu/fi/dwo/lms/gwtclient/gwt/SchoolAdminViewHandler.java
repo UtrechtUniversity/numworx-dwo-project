@@ -18,10 +18,13 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
   @Inject DwoGlobalVars dwoGlobalVars;
   @Inject ViewFactory viewFactory;
   @Inject PresenterFactory presenterFactory;
-  @Inject BootPanelController controller;
+  private final BootPanelController controller;
   @Inject EventBus eventBus;
 
-  @Inject SchoolAdminViewHandler() {}
+  @Inject SchoolAdminViewHandler(BootPanelController controller) {
+	  this.controller = controller;
+      controller.setRetourHandler(controller.RETOUR_WELCOME);   	
+  }
 
   @Override
   public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
