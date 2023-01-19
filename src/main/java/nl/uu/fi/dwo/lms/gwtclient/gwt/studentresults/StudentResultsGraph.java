@@ -753,7 +753,8 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		public Node(DomStudentModelObj obj, DomStudentModelMethodInfo info, String parent) {
 			setClassName(bundle.css().node());
 			this.obj = obj;
-			r = 12;
+			Integer nodeSize = obj.getInfo().getNodeSize();
+			r = nodeSize != null ? nodeSize/2 : 12;
 			this.info = info;
 			float cx,cy;
  			try {
