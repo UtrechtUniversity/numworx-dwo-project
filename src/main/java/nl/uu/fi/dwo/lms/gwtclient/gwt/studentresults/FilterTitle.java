@@ -100,13 +100,20 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 		initWidget(root);
 		root.setStylePrimaryName("filter-title");
 		///root.getElement().getStyle().setBackgroundColor("#1B75BB");
-
 		methodeBtn = new Button(ALLE_LEERDOELEN);
-		if (method != null) methodeBtn.setText(method.getMethod());
+		book = new Button("");
+		chapter = new Label("");
+		initialize();
+	}
+
+	protected void initialize() {
+		initClose();
+	}
+	protected void initializeX() {
+		if (this.method != null) methodeBtn.setText(this.method.getMethod());
 		methodeBtn.setStylePrimaryName(graphBtnStyle);		
 		root.addWest(methodeBtn, 10);
 
-		book = new Button("");
 		book.setStylePrimaryName(graphBtnStyle);
 		Label prebook = new Label(" > ");
 		Style style = prebook.getElement().getStyle();
@@ -120,17 +127,13 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 		style.setColor("white");
 		style.setTextAlign(TextAlign.CENTER);
 		style.setFontSize(20, Unit.PX);
-		chapter = new Label("");
 		style = chapter.getElement().getStyle();
 		style.setProperty("maxWidth", "initial");
 		style.setTextAlign(TextAlign.LEFT);
 		chapter.setStylePrimaryName("pseudobutton");
 
-		close = new Button("Verberg voorkennis X");
-		close.setStylePrimaryName("dwo-Button");
-		root.addEast(close, 10);
-		close.getElement().getStyle().setProperty("maxWidth", 15, Unit.EM);
-		root.setWidgetHidden(close, true);
+		initClose();
+
 		root.addWest(prebook, 3);
 		root.addWest(book, 10);
 		root.addWest(postbook, 3);
@@ -139,6 +142,14 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 		MethodeChange handler = new MethodeChange();
 		methodeBtn.addClickHandler(handler);
 		book.addClickHandler(new Book());
+	}
+
+	protected void initClose() {
+		close = new Button("Verberg voorkennis X");
+		close.setStylePrimaryName("dwo-Button");
+		root.addEast(close, 10);
+		close.getElement().getStyle().setProperty("maxWidth", 15, Unit.EM);
+		root.setWidgetHidden(close, true);
 		close.addClickHandler(new Close());
 	}
 
