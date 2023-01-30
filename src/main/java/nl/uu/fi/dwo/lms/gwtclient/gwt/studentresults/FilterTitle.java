@@ -30,7 +30,7 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 	DockLayoutPanel root;
 	private Button methodeBtn;
 	private Button book;
-	private Button close;
+	protected Button close;
 	private Label chapter;
 	private DomMethod method;
 	
@@ -106,10 +106,10 @@ public class FilterTitle extends ResizeComposite implements Consumer<Map<String,
 		initialize();
 	}
 
-	protected void initialize() {
+	protected void initializeX() {
 		initClose();
 	}
-	protected void initializeX() {
+	protected void initialize() {
 		if (this.method != null) methodeBtn.setText(this.method.getMethod());
 		methodeBtn.setStylePrimaryName(graphBtnStyle);		
 		root.addWest(methodeBtn, 10);
