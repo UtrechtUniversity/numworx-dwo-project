@@ -936,12 +936,14 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 				knopImageString = (String)launchData.get("knopImageString");
 			
 			if(logOption) {
+				String[] smForeknowledge = JSONUtilities.toStringArray(launchData.get("smForeknowledge"));
 				dwologger = activity.logBuilder().setLogOption(logOption)
 				.setLogID(logID)
 				.setClassName("fi.wiskopdr.CheckSleepUnitPanel/" + getAantalSleepObjects() + "," + getAantalDoelObjects())
 				.setMaxScore(scoreMax)
 				.setLogObjectives(logObjectives)
 				.setSmObjectives(smObjectives)
+				.setSmForeknowledge(smForeknowledge)
 				.setTeltMee(teltMee)
 				.build();
 			}

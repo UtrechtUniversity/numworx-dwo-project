@@ -239,6 +239,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 				logOption = true;
 			if (logOption  )
 		    {	
+				String[] smForeknowledge = map.getStringArray("smForeknowledge");
 		    	LogBuilder dwologger = activity.logBuilder()
 		    			.setLaunchData(map)
 		    			.setLogOption(logOption);
@@ -247,6 +248,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		    	dwologger.setClassName("fi.wiskopdr.AntwoordKeuzeVak/"+keuzeMogelijkheden.length);
 		    	dwologger.setLogObjectives(logObjectives);
 		    	dwologger.setSmObjectives(smObjectives);
+		    	dwologger.setSmForeknowledge(smForeknowledge);
 		    	dwologger.setLogIDLabel(logIDLabel);
 		    	dwologger.setTeltMee(teltMee);
 		    	logging = dwologger.build();
