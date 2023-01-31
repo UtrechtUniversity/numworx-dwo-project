@@ -867,10 +867,13 @@ try {
   }
 
 private static int sumOfCorrectie(JsonObject data) {
-	JsonArray panelStates = data.getJsonArray("interactiePanelStates");
-	if (panelStates != null) return sumOfCorrectie(panelStates);
 	JsonObject correctie = data.getJsonObject("reviewInteractieData");
-	if (correctie == null) return 0;
+	if (correctie == null) {
+		JsonArray panelStates = data.getJsonArray("interactiePanelStates");
+		if (panelStates != null)
+			return sumOfCorrectie(panelStates);
+		return 0;
+	}
 	JsonNumber n = correctie.getJsonNumber("reviewScoreCorrectie");
 	return n.intValue();
 }
