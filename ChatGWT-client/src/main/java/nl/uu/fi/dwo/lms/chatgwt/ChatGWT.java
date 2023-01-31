@@ -667,6 +667,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		
 		setHeight(-keyboard.getKeyboardHeight());
 		main.add(scroll);
+		main.getWidgetContainerElement(scroll).addClassName("center-panel");
 		main.forceLayout();
 		
 		

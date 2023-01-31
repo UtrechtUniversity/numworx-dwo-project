@@ -181,3 +181,7 @@ table.dwo tbody {
 .profile-mymessage {
 	background-color: #d2e5f5;
 }
+
+.center-panel {
+	margin-right: -15px;
+}
