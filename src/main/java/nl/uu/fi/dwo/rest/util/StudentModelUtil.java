@@ -112,6 +112,8 @@ public class StudentModelUtil {
 		List<DomStudentModelObjectiveScore> list = org.getChildren();
 		if (list != null) {
 			result.setChildren(list.stream().map(this::calculate).collect(Collectors.toList()));
+		} else {
+			result.setChildren(null);
 		}
 		
 		long gc = org.getGreenCount();
