@@ -122,8 +122,6 @@ import fi.wiskopdr.expressies.Optelling;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
 import fi.wiskopdr.expressies.Vergelijking;
 
-
-
 public class TekstVakPanel extends Composite implements InteractionViewWithMisconceptions, FacetAware, PopupListener, CBookEventListener, RequiresResize
 {
 	private final static Logger logger = Logger.getLogger("TekstVakPanel");
@@ -2107,7 +2105,7 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 		
 		//resize gebeurt in setVisibility;
 		if(zichtbaarNaNakijken)
-			setVisibility(nagekeken&&layerVisible);
+			setVisibility((nagekeken||activity.isEindtoetsVerzegeld())&&layerVisible);
 		else
 			setVisibility(shouldVisible);
 		
@@ -2253,7 +2251,7 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 	{
 		nagekeken = b;
 		if(zichtbaarNaNakijken)
-			setVisibility(b&&layerVisible);
+			setVisibility((b||activity.isEindtoetsVerzegeld())&&layerVisible);
 		
 		for (Object object : interactionViewObjects) {
 			if(object instanceof InteractionView)
