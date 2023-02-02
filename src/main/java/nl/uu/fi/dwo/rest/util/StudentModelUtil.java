@@ -2,12 +2,15 @@ package nl.uu.fi.dwo.rest.util;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
@@ -26,9 +29,9 @@ public class StudentModelUtil {
 	DomStudentModelStructureScore structure;
 		
 	public StudentModelUtil() {
-		items = new TreeMap<>();
-		foreknowledge = new TreeMap<>();
-		scores = new TreeMap<>();
+		items = new HashMap<>();
+		foreknowledge = new HashMap<>();
+		scores = new HashMap<>();
 	}
 	
 	public void setStudentModelStructure(DomStudentModelStructure structure) {
@@ -46,11 +49,15 @@ public class StudentModelUtil {
 			changed = false;
 			for (Collection<String> set: foreknowledge.values()) {
 				Collection<String> add;
-				add = set.stream().flatMap(id -> foreknowledge.get(id).stream()).collect(Collectors.toSet());
+				add = set.stream().flatMap(this::streamofknowledge).collect(Collectors.toSet());
 				if ( !add.isEmpty() && set.addAll(add) )
 					changed = true;
 			}
 		} while(changed);
+	}
+
+	private Stream<String> streamofknowledge(String id) {
+		return foreknowledge.getOrDefault(id, Collections.emptySet()).stream();
 	}
 
 	private void addObjective(DomStudentModelObj obj) {
@@ -66,8 +73,10 @@ public class StudentModelUtil {
 	private void addForeKnowledge(DomStudentModelObj obj) {
 		DomStudentModelContextInfo info = obj.getInfo();
 		String id = info.getId();
-		Collection<String> items = info.getVoorkennis();		
-		Collection<String> set = foreknowledge.computeIfAbsent(id, key -> new TreeSet<String>());
+		Collection<String> items = info.getVoorkennis();
+		if (items != null)
+			items = items.stream().filter(this.items::containsKey).collect(Collectors.toSet());
+		Collection<String> set = foreknowledge.computeIfAbsent(id, key -> new HashSet<String>());
 		if (items != null) set.addAll(items);
 	}
 	
