@@ -45,6 +45,7 @@ import nl.uu.fi.dwo.rest.dom.xapi.StateDocument;
 import nl.uu.fi.dwo.rest.dom.xapi.Statement;
 import nl.uu.fi.dwo.rest.dom.xapi.StatementsQuery;
 import nl.uu.fi.dwo.rest.dom.xapi.StatementsResult;
+import nl.uu.fi.dwo.rest.util.StudentModelUtil;
 
 @RoleScope
 public class XAPIService extends StudentResultsService implements StudentResults {
@@ -175,12 +176,20 @@ public class XAPIService extends StudentResultsService implements StudentResults
     		lastTimestamp = result.statements.get(last).timestamp;
     Long stamp = lastTimestamp == null ? 0L : FORMAT_8601.parse(lastTimestamp).getTime();
     scores.setFetchTimeStamp(stamp);
+
+    
     if (last < 0) {
         scores.getDomStudentModelStructureScore().recalculateAncestors(); 	
     	return scores;
     }
     
     stappen(scores, context, list);
+
+    StudentModelUtil util = new StudentModelUtil();
+    util.setStudentModelStructure(context.getModelStructure());
+    util.setStudentModelScore(scores.getDomStudentModelStructureScore());
+    DomStudentModelStructureScore calculate = util.calculate();
+	scores.setDomStudentModelStructureScore(calculate);
 
     String text = DomStudentModelStructureScoreCodec.CODEC.encode(scores.getDomStudentModelStructureScore()).toString();
     state.content = text;
@@ -193,6 +202,8 @@ public class XAPIService extends StudentResultsService implements StudentResults
     xapi.saveState(state); // store in background
 
     scores.getDomStudentModelStructureScore().recalculateAncestors();
+    
+    
     return scores;
   }
 
@@ -229,6 +240,17 @@ private DomStudentModelDataScore eerstestap(DomStudentModelContextId context, Do
     
     for (Statement statement: statements) {
         Boolean success = statement.result.success;
+ 
+        if (success == null) {
+        	Double scaled = statement.result.score.scaled;
+        	
+        	if (scaled != null) {
+        		if (scaled.doubleValue() >= 0.75) success = Boolean.TRUE;
+        		else if (scaled.doubleValue() <= 0.25) success = Boolean.FALSE;
+        	}
+        	
+        }
+        
         
         String className = statement.context.contextActivities.parent.get(0).definition.type;
         double guess = 0.1;
