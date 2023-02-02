@@ -1257,7 +1257,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			int totaalMax = getTotaalMax();
 	
 			if (totaalMax == 0)
-				return 0;
+				return 100.0;
 	
 			double doubleScore = Math.round(100.0 * totaalScore / totaalMax);
 	
