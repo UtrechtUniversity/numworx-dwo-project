@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.places;
 import com.google.gwt.place.shared.PlaceTokenizer;
 
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class xc extends c implements HasBack {
@@ -15,18 +16,27 @@ public class xc extends c implements HasBack {
 
 	public static class Tokenizer implements PlaceTokenizer<xc>
 	{
+		private static final String SEP = ":";
 
 		@Override
 		public xc getPlace(String token)
 		{
-			return new xc(token);
+			String[] split = token.split(SEP);
+			xc place = new xc(split[0]);
+			if (split.length == 2) 
+				place.setBack(SelectModuleItemHolder.getItemByID(split[1]));
+			return place;
 		}
 
 		@Override
 		public String getToken(xc place)
-		{
-			return place.getToken();
+		{	String suf = "";
+			if (place.back != null) {
+				suf = SEP + place.back.getID(); 
+			}
+			return place.getToken() + suf;
 		}
+
 	}
 
 	@Override

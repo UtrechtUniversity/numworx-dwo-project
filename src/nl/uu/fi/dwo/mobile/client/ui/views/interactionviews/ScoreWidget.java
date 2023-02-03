@@ -401,9 +401,14 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 	@Override
 	public void onClick(ClickEvent event) {
 		context.prepareLeave();
-		if (anchor.getHref().startsWith("goto:")) {
+		String href = anchor.getHref();
+		if (href.startsWith("goto:")) {
 			event.preventDefault();
 			context.gotoUrl(anchor.getHref());
+		} else if (href.contains("#")) {
+			int index = href.lastIndexOf('#');
+			event.preventDefault();
+			context.gotoPlace(href.substring(1+index)); // aanpassing voor "HasBack"
 		}
 	}
 
