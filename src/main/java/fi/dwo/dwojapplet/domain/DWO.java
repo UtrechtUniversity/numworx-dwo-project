@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.domain;
 
+import java.applet.Applet;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -1930,7 +1931,7 @@ LOG.info("time results = " + (-t) + " ms");
         // Configure the applet
         DWO.ReadLoggingProperties();
         //Put applet in a frame.
-        MainFrame mf = new MainFrame(dwo, width, height) {
+        MainFrame mf = new MainFrame( dwo, width, height) {
 
 			@Override
 			public URL getCodeBase() {
@@ -2235,6 +2236,19 @@ LOG.info("time results = " + (-t) + " ms");
 			Map<String, Object> m = sco.getLaunchdata();
 			Object mode = m.get("mode");
 			int value = mode == null ? 0 : Integer.parseInt(mode.toString());
+// bepaal maxscore FIXME ook bij toevoegen!!!!
+			// if maxscore == 0, value = ScoType.INFO.ordinal();
+			Object n = m.get("aantalOpdrachten_1");
+			int aantal = n == null ? 0 : Integer.parseInt(n.toString());
+			int max = 0;
+			for(int i = 1; i <= aantal; i++) {
+			  n = m.get("opdracht_1_" + i);
+			  n = StringCodeObject.decodeStringToObject(n.toString(), sco.getApplet().getClass().getClassLoader());
+			  max += ((Map<Object,Number>) n).get("scoreMax").intValue();
+			}
+			if (max == 0) 
+			  value = ScoType.INFO.ordinal();
+			
 			scoContext.setScoType(ScoType.values()[value]);
 			scoData = new DomScoData();
 			scoData.setLaunchdata(sco.getLaunchdataString());
