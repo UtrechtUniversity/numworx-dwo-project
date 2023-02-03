@@ -337,6 +337,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			key = pfx + ENTRY;
 			keys.add(key);
 			key = pfx + COMPLETION_STATUS;
+			keys.add(key);
 			Promise<Map<String, String>> result = defer.getPromise();
 			result.then(new GoedFoutBezocht(pfx));
 		

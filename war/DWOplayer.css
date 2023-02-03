@@ -288,21 +288,22 @@ div.listItem-dwo-separator {
     background-repeat: no-repeat;
     background-origin: content-box;
 }
+
+.scorewidget.scorewidget-bezocht.scorewidget-bezocht-resume .scorewidget-score::after {
+	background-image: url(images/numworx/done-numworx.svg);
+/* 	color: #6D4A8A; */
 }
 
 .scorewidget.scorewidget-goedFout.scorewidget-goedFout-passed .scorewidget-score::after {
 	background-image: url(images/numworx/goed-numworx.svg);
 /* 	color: green; */
 }
+
 .scorewidget.scorewidget-goedFout.scorewidget-goedFout-failed .scorewidget-score::after {
 	background-image: url(images/numworx/fout-numworx.svg);
 /* 	color: red; */
 }
 
-.scorewidget.scorewidget-bezocht.scorewidget-bezocht-resume .scorewidget-score::after {
-	background-image: url(images/numworx/done-numworx.svg);
-/* 	color: #6D4A8A; */
-}
 
 
 
