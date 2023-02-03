@@ -6,6 +6,7 @@ package nl.uu.fi.dwo.rest.dom.entities;
  */
 public class DomResultStudentScoContext extends DomResultScore<DomResultStudentScoPage> {
     private DomStudentScoContext studentSco;
+    private Double maxScore;
 
     public DomResultStudentScoContext(DomStudentScoContext aSco, DomStudent student){
         studentSco = aSco;
@@ -30,5 +31,13 @@ public class DomResultStudentScoContext extends DomResultScore<DomResultStudentS
     public String getId() {
       return getStudentSco().getId().getIdString();
     }
+
+	public Double getMaxScore() {
+		return maxScore;
+	}
+
+	public void setMaxScore(Double maxScore) {
+		this.maxScore = maxScore;
+	}
         
 }

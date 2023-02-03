@@ -12,6 +12,8 @@ public enum ScoType {
 	OEFENEN_STRAFPUNTEN, // met strafpunten
 	ZELFTOETS, // zelftoets
 	EINDTOETS, // toets
+	
+	INFO,  // maxscore = 0
 /**
  * overblijfsel van 2.1.23
  */

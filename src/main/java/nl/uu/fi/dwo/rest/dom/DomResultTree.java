@@ -171,7 +171,9 @@ public class DomResultTree {
                             DomStudent student = resultData.getStudents().get(ss.getUserID());
                             if (student != null && studentClasses.containsKey(curSchoolClass.getSchoolClass().getId())
                                     && studentClasses.get(curSchoolClass.getSchoolClass().getId()).getChildren().containsKey(student.getId())) {
-                                resultSco.getChildren().put(ss.getId(), new DomResultStudentScoContext(ss, student));
+                                DomResultStudentScoContext value = new DomResultStudentScoContext(ss, student);
+								value.setMaxScore(resultSco.getMaxScore());
+                                resultSco.getChildren().put(ss.getId(), value);
                             }
                         }
                     }
@@ -313,7 +315,9 @@ public class DomResultTree {
           {
               DomStudent student = new DomStudent();
               student.setId(ssc.getUserID());
-              rsc.getChildren().put(ssc.getId(), new DomResultStudentScoContext(ssc, student));
+              DomResultStudentScoContext value = new DomResultStudentScoContext(ssc, student);
+              value.setMaxScore(rsc.getMaxScore());
+			  rsc.getChildren().put(ssc.getId(), value);
           }          
         };
       }
