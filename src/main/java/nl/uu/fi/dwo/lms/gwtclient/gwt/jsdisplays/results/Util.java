@@ -33,11 +33,13 @@ class Util {
           json.put("scoCount", new JSONNumber(node.getScoCount()));
           json.put("studentScoCount", new JSONNumber(node.getStudentScoCount()));
           if (node instanceof DomResultStudentScoContext) {
-              DomStudentScoContext studentSco = ((DomResultStudentScoContext) node).getStudentSco();
-  			String userIdString = studentSco.getUserID().getIdString();
-              json.put("user-id", buildTime(userIdString));
-              String completionStatus = studentSco.getCompletionStatus(); // XXX What if not present? null of "" of unknown?
-              if(completionStatus == null) completionStatus = "unknown";
+            DomResultStudentScoContext dssc = (DomResultStudentScoContext) node;
+		    DomStudentScoContext studentSco = dssc.getStudentSco();
+  	  	    String userIdString = studentSco.getUserID().getIdString();
+            json.put("user-id", buildTime(userIdString));
+            json.put("maxScore", dnull(dssc.getMaxScore()));
+            String completionStatus = studentSco.getCompletionStatus(); // XXX What if not present? null of "" of unknown?
+            if(completionStatus == null) completionStatus = "unknown";
   			json.put("completionStatus", buildTime(completionStatus));
   			String totalTime = studentSco.getTotalTime();
   			if (totalTime == null) totalTime = "00:00:00";
@@ -53,6 +55,7 @@ class Util {
                json.put("sequence", new JSONNumber(Integer.MAX_VALUE));
          } else if (node instanceof DomResultScoContext) {
              DomResultScoContext resultSco = (DomResultScoContext) node;
+             json.put("maxScore", dnull(resultSco.getMaxScore()));
              Long sequencenr = resultSco.getScoContext().getSequencenr();
              if (sequencenr != null) {
                json.put("sequence", new JSONNumber(sequencenr));
