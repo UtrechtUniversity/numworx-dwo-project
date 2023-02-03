@@ -770,9 +770,14 @@ try {
 		    PersistentScoContext sc = new  PersistentScoContext(sco);
 		    List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(sc, pssc.getPersistentHasRolePK());
 			if (!list.isEmpty()) 
-		      pssd = StudentScoDataManager.findEntity(list.get(0).getStudentSco());
+			{
+				pssc = list.get(0);
+				pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
+			}
 			else 
-			  pssd = null;
+			{
+				pssd = null;
+			}
 		}
 	} else if ("cc".equals(split[2])) {
 		pssd = null;
@@ -783,7 +788,8 @@ try {
 				scoContext == null ? Collections.emptyList() :
 				StudentScoContextManager.findEntities(scoContext, pssc.getPersistentHasRolePK());
 		if (!list.isEmpty()) {
-			pssd = StudentScoDataManager.findEntity(list.get(0).getStudentSco());
+			pssc = list.get(0);
+			pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
 		}
 	} else if ("c".equals(split[2])) {
 		page = split[5];
@@ -796,7 +802,10 @@ try {
 				if (s.getSequencenr().longValue() == actnr) {
 					List<PersistentStudentScoContext> list2 = StudentScoContextManager.findEntities(s, pssc.getPersistentHasRolePK());
 					if (!list2.isEmpty())
-						pssd = StudentScoDataManager.findEntity(list2.get(0).getStudentSco());
+					{
+						pssc = list2.get(0);
+						pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
+					}
 					break;
 				}
 			}
