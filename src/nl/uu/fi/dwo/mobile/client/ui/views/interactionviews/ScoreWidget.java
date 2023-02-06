@@ -37,6 +37,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 
 public class ScoreWidget extends Composite implements InteractionView, ClickHandler, TekstElementWithFont {
 
+	private static final String SCORE_RAW = ".score.raw";
+
 	private static final String COMPLETION_STATUS = ".completion_status";
 
 	private static final String ENTRY = ".entry";
@@ -58,7 +60,10 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			String bezocht   = value.getOrDefault(pfx + ENTRY, "");
 			String goedfout  = value.getOrDefault(pfx + SUCCESS_STATUS, "");
 			if ("completed".equals(completed)) {
-				goedfout(goedfout);
+				if (cesuur == null)
+					goedfout(goedfout);
+				else
+					goedfout(value.get(pfx + SCORE_RAW));
 			} else {
 				bezocht(bezocht);
 			}
@@ -85,6 +90,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
     boolean toonTitel = false;
     boolean bezocht = false;
     String paginaTitel = "";
+    Integer cesuur = null;
     
 
     final Anchor anchor;
@@ -294,6 +300,11 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			 if (toonTitel && map.containsKey("paginaTitel"))
 				 paginaTitel = map.getString("paginaTitel");
 			 linkActive = map.getBoolean("linkActive", linkActive);
+			 
+			 if (map.containsKey("cesuur")) {
+				 cesuur = map.getInt("cesuur");
+			 }
+			 
 		}
 		html = linkActive ? anchor : span;
 		if (!linkActive) initWidget(span);else initWidget(anchor);
@@ -322,7 +333,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		Deferred<Map<String,String>> defer = new Deferred<>();
 		if (score) {
 			Promise<String> result;
-			String key = pfx + ".score.raw";
+			String key = pfx + SCORE_RAW;
 			result = defer.getPromise().map( m -> m.getOrDefault(key, ""));
 			keys.add(key);
 			anchorSetText("0");
@@ -332,7 +343,8 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		}
 		if (goedFout && bezocht) {
 			String key;
-			key = pfx + SUCCESS_STATUS;
+			if (cesuur != null) key = pfx + SCORE_RAW;
+			else key = pfx + SUCCESS_STATUS;
 			keys.add(key);
 			key = pfx + ENTRY;
 			keys.add(key);
@@ -341,10 +353,10 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			Promise<Map<String, String>> result = defer.getPromise();
 			result.then(new GoedFoutBezocht(pfx));
 		
-		} else 
+		} else
 		if (goedFout) {
 			Promise<String> result;
-			String key = pfx + SUCCESS_STATUS;
+			String key = cesuur != null ? pfx + SCORE_RAW : pfx + SUCCESS_STATUS;
 			result = defer.getPromise().map( m -> m.getOrDefault(key, ""));
 			keys.add(key);			
 			result.then(this::doGoedFout);			
@@ -380,10 +392,30 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 	}
 
 	private void goedfout(String value) {
-		removeStyleDependentName("goedFout-passed");
-		removeStyleDependentName("goedFout-failed");
-		addStyleDependentName("goedFout-" + value);
+		if (cesuur != null)
+		{
+			goedfout(value, cesuur.intValue());
+		} else {
+			removeStyleDependentName("goedFout-passed");
+			removeStyleDependentName("goedFout-failed");
+			addStyleDependentName("goedFout-" + value);
+		}
 	}
+	
+	private void goedfout(String value, int cesuur) {
+		Double score;
+		try { 
+			score = Double.valueOf(value);
+		} catch(Exception oops) {
+			removeStyleDependentName("goedFout-passed");
+			removeStyleDependentName("goedFout-failed");			
+			return;
+		}
+		boolean passed = score.intValue() >= cesuur;
+		setStyleDependentName("goedFout-passed", passed);
+		setStyleDependentName("goedFout-failed", !passed);
+	}
+	
 	
 	private Promise<String> doBezocht(Promise<String> p) {
 		this.entry = p.getValue();

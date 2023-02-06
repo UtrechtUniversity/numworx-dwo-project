@@ -611,7 +611,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 				string = string.replace(";", ".,");
 				map.put("response", string);
 				map.put("action", "modify");
-				map.put("success", "null");
+				//map.put("success", null); must be Boolean or null
 				logging.log(map);
 		}}
 		
