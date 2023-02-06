@@ -12,7 +12,6 @@ public class ReviewLogBuilder extends LogBuilder {
 	private String[] smForeknowledge;
 	public ReviewLogBuilder(ReviewActivity activity) {
 		super(null);
-		//this.activity = activity;
 		org = (ActivityComponent) activity.delegate;
 	}
 	@Override
