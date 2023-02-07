@@ -22,6 +22,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -598,6 +599,10 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		lastPanel = now();
 		scroll = new ScrollPanel(panel);
 		east  = new ResizeFlowPanel();
+		Style eastStyle = east.getElement().getStyle();
+
+		eastStyle.setOverflowX(Overflow.HIDDEN);
+		eastStyle.setOverflowY(Overflow.AUTO);
 		
 		eastHeader.setUpdateMultiChat(this::updateMultichat);
 
