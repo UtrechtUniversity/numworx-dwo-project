@@ -21,16 +21,20 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 public class StudentViewHandler implements SwitchViewEventHandler {
   @Inject DwoGlobalVars dwoGlobalVars;
   @Inject StudentPresenterFactory presenterFactory;
-  @Inject Lazy<ChatboxPresenter> chatbox;
+  final Lazy<ChatboxPresenter> chatbox;
   final private BootPanelController controller;
   @Inject EventBus eventBus;
 
   private MainPresenter.Display mainView;
 
-  @Inject StudentViewHandler(ViewFactory viewFactory, BootPanelController controller) {
+  @Inject StudentViewHandler(ViewFactory viewFactory, BootPanelController controller, Lazy<ChatboxPresenter> chatbox) {
     mainView = viewFactory.getMainView();
     this.controller = controller;
     controller.setRetourHandler(controller.RETOUR_WELCOME_STUDENT);
+    this.chatbox = chatbox;
+	if (controller.hasChatbox()) {
+		chatbox.get().init();
+	}
   }
 
   @Override
