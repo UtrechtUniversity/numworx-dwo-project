@@ -21,7 +21,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionService;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
-import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -33,7 +32,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -52,7 +50,7 @@ public class StudentModelService implements DescriptionService {
 
 	private Promise<DomDwoProfileFull> profile;
 	
-	@Inject public StudentModelService(DwoGlobalVars vars, DomContext ctx, MethodManager methodMan) {
+	@Inject StudentModelService(DwoGlobalVars vars, DomContext ctx, MethodManager methodMan) {
 		context = ctx;
 		profile = vars.getProfile();
 		this.methodMan = methodMan;
