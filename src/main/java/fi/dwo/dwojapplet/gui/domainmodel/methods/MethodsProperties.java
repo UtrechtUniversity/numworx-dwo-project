@@ -94,14 +94,19 @@ public class MethodsProperties extends Vector<DomMethod> implements Comparator<D
     }
   }
   
-  private static MethodsProperties instance = new MethodsProperties();
+  private volatile static MethodsProperties instance;
     
-  public static MethodsProperties instance() {
+  public synchronized static MethodsProperties instance() {
+    if (instance == null) return reset();
     return instance;
   }
   
-  public static void reset() {
-    instance = new MethodsProperties();
+  public synchronized static void unset() {
+    instance = null;
+  }
+  
+  public synchronized static MethodsProperties reset() {
+    return instance = new MethodsProperties();
   }
 
   public Map<String, String> getDescriptionsMap(PersistenceId activeMethod) {

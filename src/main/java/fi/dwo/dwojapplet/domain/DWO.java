@@ -94,6 +94,7 @@ import fi.dwo.dwojapplet.gui.ModuleTreePanel;
 import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.dwo.dwojapplet.gui.WelcomePanel;
 import fi.dwo.dwojapplet.gui.action.Clipboard;
+import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.persistence.StoreCreator;
@@ -551,6 +552,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         idleOn();
         PersistenceFacade.instance().clearCurrentScoDataCache();
         PersistenceFacade.instance().clearCurrentCourseDataCache();
+        MethodsProperties.unset();
         return setExtraRights(DwoHelper.getCurrentFacadeUser());
     }
 
@@ -994,6 +996,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         // MapperCreator.instance(Applet.class).removeAllObjects();
 
         // TODO NOW do a clear cache function.
+        MethodsProperties.unset();
         PersistenceFacade.instance().clearCurrentScoDataCache();
         PersistenceFacade.instance().clearCurrentCourseDataCache();
     }
