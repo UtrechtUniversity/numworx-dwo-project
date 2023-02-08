@@ -538,6 +538,17 @@ public class Text_en extends ListResourceBundle {
 
             { TextMapper.GUIC_HIDE_ACTIVITIES, "Hide Activities"},
 
+            { TextMapper.GUITSM_EDIT_WARNING, "Possibly someone is working with this!"},
+            { TextMapper.GUITSM_CONFIRM_DELETE, "Delete ''{0}'', are you sure?" },
+            { TextMapper.GUITSM_COPY, "Copy {0}" },
+            { TextMapper.GUITSM_SETTING, "Settings learning domain for a class"},
+            
+            { TextMapper.GUI_NEW_METHOD, "New method"},
+            { TextMapper.TBL_METHODS, "Learning methods"},
+            { TextMapper.GUIS_LBL_METHODS, "Settings learning method"},
+            { TextMapper.GUISM_CHAPTER, "Chapter"},
+            { TextMapper.GUISM_YEAR, "Grade"},
+            { TextMapper.GUISM_NAME, "Name method"},
 	};
 
 	public Text_en() {
