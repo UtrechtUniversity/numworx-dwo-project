@@ -367,7 +367,9 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		hbox.addStyleName("profile-borderBox");
 		hbox.add(afzender);
 		hbox.add(time);
-		if (chatUser.jid .equals(get(from).jid)) {
+		ChatUser u2 = get(from);
+		String jid = u2==null ? "" : u2.jid;
+		if (chatUser.jid .equals(jid)) {
 			hbox.addStyleName("profile-mymessage");
 		}
 		
