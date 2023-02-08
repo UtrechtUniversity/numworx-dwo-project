@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
@@ -104,6 +103,40 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	private static native String getParentChatUser() /*-{
 		return $wnd.parent.chatUser;
 	}-*/;
+	
+	protected native void setVisibleHandler(ChatGWT deze) /*-{
+		try {
+			$wnd.parent.jsChatboxDisplay.setChatVisible( {
+				"hidden" : function() {
+					deze.@nl.uu.fi.dwo.lms.chatgwt.ChatGWT::hidden()();
+				}, 
+				"shown" : function() {
+					deze.@nl.uu.fi.dwo.lms.chatgwt.ChatGWT::shown()();
+				}
+			});
+		} catch(e) {
+			console.log(e);
+		}
+	}-*/;
+	
+	
+	boolean visible;
+	
+	private void hidden() {
+		if (visible) {
+			visible = false;
+			removeAddToPanel();
+		}
+	}
+	private void shown() {
+		if (!visible) {
+			visible = true;
+			if (currentModel != null) {
+				switchToModel(currentModel); // of zo iets
+			}
+		}
+	}
+	
 	
 	
 	private static final ChangeEvent CHANGE_EVENT = new ChangeEvent() {};
@@ -400,7 +433,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	            sendMamRequest(); // after room presence
 // Add to room	            
 	            if (room != null) {
-	            	switchToModel(get(room));
+	            	currentModel = get(room);
+	            	if (visible) switchToModel(currentModel);
 	            	//addToRoom(room);
 	            }
 	            break;
@@ -518,7 +552,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 //		if(true) return;
 
 		formule = !"111".equals(Location.getParameter("profile"));
-
+		setVisibleHandler(this);
 		
 		RootLayoutPanel root = RootLayoutPanel.get();
 		eastHeader  = new EastHeader();
@@ -826,6 +860,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	private UserTable students;
 	private UserTable teachers;
 	private SingleSelectionModel<UserModel> selection;
+	private MessageModel currentModel;
 	@Override
 	public String getClipboard() {
 		return clipboard;
@@ -923,6 +958,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		}
 	}
 	private void switchToModel(MessageModel m) {
+		currentModel = m;
 		removeAddToPanel();
 		panel.clear();lastPanel = now();
 		addToPanel(m.getMessages());
