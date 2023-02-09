@@ -24,6 +24,7 @@ import org.osgi.util.promise.Success;
 import nl.numworx.gwtpatch.client.GWTPatch;
 import nl.numworx.gwtpatch.client.JSONBuilder;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.interaction.client.Role;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ConfirmEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
@@ -32,6 +33,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
@@ -531,6 +533,15 @@ log("initialized " +result.keySet());
 		barrier.addBarrier(result);
 		result.then(null, p -> logger.log(Level.SEVERE, "getvalue promised", p.getFailure()));
 		return result;
+	}
+
+	@Override
+	public Role getRole() {
+		try {
+			if (vars.getRoleType() == RoleType.TEACHER) return Role.Instructor;
+		} catch (Exception oops) {
+		}
+		return super.getRole();
 	}
 
 
