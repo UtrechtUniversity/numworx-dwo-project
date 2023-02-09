@@ -254,7 +254,7 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 				event.preventDefault();
 				event.stopPropagation();
 			}
-			else if(code == 86 && event.isControlKeyDown()) //ctrl+v
+			else if(code == 86 && event.isControlKeyDown() && !AREA) //ctrl+v
 			{
 				editor.plak(clip);
 				event.preventDefault();
