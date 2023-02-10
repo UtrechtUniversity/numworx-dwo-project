@@ -440,5 +440,19 @@ public class DwoGlobalVars {
         return !withUser() || getSchool().getAboType() == AboType.premium;
     }
 
+    public String getUsername() {
+      if (!withUser()) return null;
+      String realm = getCurrentLoginContext().getRealm();
+      String username = getCurrentUser().getUserName();
+      if (realm != null) {
+          if (username.endsWith("@")) {
+              username = username.substring(0, username.length()-1);
+          } else if (! username.contains("@")) {
+              username += "@" + realm;
+          }
+      }
+      return username;
+
+    }
 
 }
