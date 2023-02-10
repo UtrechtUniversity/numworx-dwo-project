@@ -84,7 +84,7 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 		if (room == null) {
 			room = NULL;
 		}
-		table = new CellTable<>(15, RESOURCES, this);
+		table = new CellTable<>(Short.MAX_VALUE, RESOURCES, this);
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 		table.setSelectionModel(selection);
 		table.addStyleName("dwo");
