@@ -101,7 +101,13 @@ class DWOTabbedCombinedKeyboard extends AbstractKeyboard implements ChangeHandle
 			main.getElement().getStyle().setPaddingLeft(w, Unit.PX);
 			if ((combined == Combined.TABLET_ACTIVE || combined == Combined.TABLET_ACTIVE_SOFT) && isDesktop) {
 				isDesktop = false;
-				switchTo(tablet);
+				boolean isEnter = enterImage == DWOTabletKeyboardFactory.resources.enter_svg();
+
+				if (isEnter) 
+					switchABC();
+				else
+					switch123();
+				
 				setVisible(true);
 				resizeScrollPanel(getKeyboardHeight());
 			} else 
