@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -468,8 +469,25 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			  GraphNode to   = edge.getTarget();
 		 	  Collection<DomStudentModelMethodInfo> fromChapters = from.getMethodeInfos();
 		 	  if (fromChapters == null) continue;
+		 	  fromChapters = new ArrayList(fromChapters);
 		 	  Collection<DomStudentModelMethodInfo> toChapters = to.getMethodeInfos();
 			  if (toChapters == null) continue;
+			  toChapters = new ArrayList(toChapters);
+			  
+			  
+			  Iterator<DomStudentModelMethodInfo> iterator = fromChapters.iterator();
+			  while(iterator.hasNext()) {
+			    DomStudentModelMethodInfo info = iterator.next();
+			    for(DomStudentModelMethodInfo toc: toChapters) {
+			      if(info.getBook().equals(toc.getBook()) && info.getMethod().equals(toc.getMethod()) && info.getChapter().equals(toc.getChapter())){
+			        iterator.remove();
+			        break;
+			      }
+			    }
+			  }
+			  
+			  
+			  
 			  for (DomStudentModelMethodInfo froc: fromChapters) {
 			    for (DomStudentModelMethodInfo toc: toChapters) {
 			      if (froc.getBook().equals(toc.getBook()) && froc.getMethod().equals(toc.getMethod()) && ! froc.getChapter().equals(toc.getChapter())) {
