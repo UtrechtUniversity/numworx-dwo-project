@@ -29,6 +29,7 @@ import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.util.PathId;
@@ -280,7 +281,7 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 
 	@Override
 	public String getLearnerName() {
-		return "guest";
+		return activity.vars().map(DwoGlobalVars::getUsername).orElse("guest");
 	}
 
 	@Override
@@ -300,6 +301,14 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 
 	@Override
 	public Role getRole() {
+		try {
+			Optional<DwoGlobalVars> vars = activity.vars();
+			switch (vars.get().getRoleType()) {
+				case TEACHER: return Role.Instructor;
+				default:
+			}
+		} catch (Exception e) {
+		}
 		return Role.Learner;
 	}
 

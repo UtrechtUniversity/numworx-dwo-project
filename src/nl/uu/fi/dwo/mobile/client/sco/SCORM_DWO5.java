@@ -93,17 +93,8 @@ public class SCORM_DWO5 extends SCORM_guest {
 	}
 
 	private String getUsername(DwoGlobalVars vars) {
-		String realm = vars.getCurrentLoginContext().getRealm();
-		String username = vars.getCurrentUser().getUserName();
-		if (realm != null) {
-			if (username.endsWith("@")) {
-				username = username.substring(0, username.length()-1);
-			} else if (! username.contains("@")) {
-				username += "@" + realm;
-			}
-		}
-		return username;
-}
+		return vars.getUsername();
+	}
 
 	enum Status { NORMAL, DIRTY, BUSY, RETRY };
 	Status status = Status.NORMAL;
