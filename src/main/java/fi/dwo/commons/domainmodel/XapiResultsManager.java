@@ -50,6 +50,7 @@ import nl.uu.fi.dwo.rest.dom.xapi.Statement;
 import nl.uu.fi.dwo.rest.dom.xapi.StatementsQuery;
 import nl.uu.fi.dwo.rest.dom.xapi.StatementsResult;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.util.StudentModelUtil;
 
 
 public class XapiResultsManager {
@@ -145,8 +146,14 @@ public class XapiResultsManager {
       if (last < 0) return scores;
 
       stappen(scores, context, list);
+      String text = genson.serialize(scores.getDomStudentModelStructureScore()).toString(); // zonder correcties
 
-      String text = genson.serialize(scores.getDomStudentModelStructureScore()).toString();
+      StudentModelUtil util = new StudentModelUtil();
+      util.setStudentModelStructure(context.getModelStructure());
+      util.setStudentModelScore(scores.getDomStudentModelStructureScore());
+      DomStudentModelStructureScore calculate = util.calculate();
+      scores.setDomStudentModelStructureScore(calculate);
+
       state.content = text;
       state.contentType = "application/json";
       state.activity = activity;
@@ -154,50 +161,7 @@ public class XapiResultsManager {
       state.agent = agent;
       state.registration = null;
       xapi.saveState(state); // store in background
-// vanaf hier update scores met voorkennis.
-      DomStudentModelDataScore scores1 = eerstestap(context);
-      Map<String, DomStudentModelScore> model = new HashMap<>();
-      Map<String, DomStudentModelScore> model1 = new HashMap<>();
-      
-      Map<String, DomStudentModelContextInfo> infos = new HashMap<>();
-      fill( scores1.getDomStudentModelStructureScore(), context.getModelStructure(), model1, infos); infos.clear();
-      fill( scores.getDomStudentModelStructureScore(), context.getModelStructure(), model, infos);
-      for( Map.Entry<String, DomStudentModelScore> entry: model1.entrySet()) {
-        String key = entry.getKey();
-        DomStudentModelScore score1 = entry.getValue();
-        DomStudentModelScore score = model.get(key);
-        double greenScore = score.getGreenScore();       
-        long greenCount = score.getGreenCount();
-        double redScore = score.getRedScore(); 
-        long redCount = score.getRedCount();       
-        long totalCount = score.getTotalCount();
-
-        if (greenCount > 0) {
-          List<String> ids = metVoorkennis(Collections.singletonList(key), infos);
-          ids.remove(key);
-          if (!ids.isEmpty()) {
-          greenCount = ids.size();
-          greenScore = 0;
-          for (String id: ids) {
-            DomStudentModelScore s = model.get(id);
-            if (s != null)
-              greenScore += s.getGreenCount() > 0 ? s.getGreenScore() : 0.5;
-              else {
-                LOG.severe(id + " not found");
-              }
-          }
-          double cut =  greenScore/greenCount;
- 
-  //        greenScore = Math.min(score.getGreenScore(), Math.max(0.5,cut));
-  
-          greenScore = 0.5 + (score.getGreenScore() - 0.5) * (cut-0.5) * 2;
-          LOG.info(" score was " + score.getGreenScore() + " wordt " + greenScore);
-          
-          greenCount = score.getGreenCount();
-        }}
-        score1.setScore(greenScore, greenCount, redScore, redCount, totalCount); 
-      }
-      return scores1;
+      return scores;
     }
    
     public Promise<DomStudentModelDataStudentScore> then() {
@@ -326,6 +290,9 @@ public class XapiResultsManager {
     
     for (Statement statement: statements) {
         Boolean success = statement.result.success;
+
+        
+        
         Score   score   = statement.result.score;
         String className = statement.context.contextActivities.parent.get(0).definition.type;
         double guess = 0.1;
