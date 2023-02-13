@@ -127,7 +127,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 	private final static Logger logger = Logger.getLogger("TekstVakPanel");
 	
 	private final boolean RESPONSIVE = DWOplayer.RESPONSIVE;
-    private static final Logger LOG = Logger.getLogger("TekstVakPanel");
+    private static final Logger LOG = logger;
 	public static final String TVP_KLAPUIT = "action.unfold";
 	public static final String TVP_KLAPIN = "action.fold";
 	public static final String TVP_SELECT = "action.select";
@@ -1021,7 +1021,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		if (fullScreenOption) {
 		  fsBtn = new FullScreenButton("open");
 		  mainPanel2.add(fsBtn);
-		  mainPanel2.setWidgetRightWidth(fsBtn, 0, Unit.PX, fsBtn.getWidth(), Unit.PX);
+		  mainPanel2.setWidgetRightWidth(fsBtn, 17, Unit.PX, fsBtn.getWidth(), Unit.PX);
 		  mainPanel2.setWidgetTopHeight(fsBtn, 0, Unit.PX, fsBtn.getHeight(), Unit.PX);
 		  fsBtn.addButtonListener(this::zoomunzoomAction);
 		}
@@ -5914,6 +5914,23 @@ private Object CamelCase(String name) {
         style.setBorderWidth(randDikte, Unit.PX);
 		
 		setCurrentSize(Math.round(breedte), Math.round(hoogte));
+// zet ook de tekstvakken op maat
+		for (int i = 0; i < hoogtes.size(); i++)
+		{
+			for (int j = 0; j < breedtes.size(); j++)
+			{
+				if (i == 0 || !(inklapbaar && ingeklapt))
+				{
+					tekstVakken[i][j].setSize((int) Math.round(breedtes.get(j).doubleValue()),
+						(int) Math.round(hoogtes.get(i).doubleValue()));
+				}
+			}
+		}
+
+		
+		
+		
+		
 		if(parent != null) {
 			parent.unzoom(this);
 		} else {
