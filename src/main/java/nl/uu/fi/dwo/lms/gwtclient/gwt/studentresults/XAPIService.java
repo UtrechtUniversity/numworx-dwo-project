@@ -184,6 +184,7 @@ public class XAPIService extends StudentResultsService implements StudentResults
     }
     
     stappen(scores, context, list);
+    String text = DomStudentModelStructureScoreCodec.CODEC.encode(scores.getDomStudentModelStructureScore()).toString(); // zonder correcties
 
     StudentModelUtil util = new StudentModelUtil();
     util.setStudentModelStructure(context.getModelStructure());
@@ -191,7 +192,6 @@ public class XAPIService extends StudentResultsService implements StudentResults
     DomStudentModelStructureScore calculate = util.calculate();
 	scores.setDomStudentModelStructureScore(calculate);
 
-    String text = DomStudentModelStructureScoreCodec.CODEC.encode(scores.getDomStudentModelStructureScore()).toString();
     state.content = text;
     state.contentType = "application/json";
     Activity a = new Activity(); a.id = "pid:" + context.getId();
@@ -200,10 +200,7 @@ public class XAPIService extends StudentResultsService implements StudentResults
     state.agent = xapi.getAgent();
     state.registration = null;      
     xapi.saveState(state); // store in background
-
-    scores.getDomStudentModelStructureScore().recalculateAncestors();
-    
-    
+        
     return scores;
   }
 
