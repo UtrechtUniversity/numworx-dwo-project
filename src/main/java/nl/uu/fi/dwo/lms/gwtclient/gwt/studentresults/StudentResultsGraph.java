@@ -1248,6 +1248,37 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		hideDescription();
 		popup = null;
 	}
+	
+	private boolean nooverlap(Edge e) {
+		DomStudentModelMethodInfo toc = e.to.info;
+		if (sameChapter(toc, e.from.info)) 
+			return false; // shortcut.
+		DomStudentModelObj from = e.from.obj;
+		List<DomStudentModelMethodInfo> fromInfos = from.getInfo().getMethodInfo();
+		for (DomStudentModelMethodInfo info: fromInfos) {
+		      if(sameChapter(toc, info)){
+		    	  return false;
+		      }
+		}
+
+		toc = e.from.info;
+		fromInfos = e.to.obj.getInfo().getMethodInfo();
+
+		for (DomStudentModelMethodInfo info: fromInfos) {
+		      if(sameChapter(toc, info)){
+		    	  return false;
+		      }
+		}
+
+		return true;
+	}
+
+	boolean sameChapter(DomStudentModelMethodInfo toc, DomStudentModelMethodInfo info) {
+		return info.getBook().equals(toc.getBook()) && info.getMethod().equals(toc.getMethod()) && info.getChapter().equals(toc.getChapter());
+	}
+	
+	
+	
 	public void setModelScore(DomStudentModelContext4Student item, Promise<DomStudentModelDataScore> score, DomMethod domMethod) {
 		this.current = item;
 		title.setMethod(domMethod);
@@ -1269,7 +1300,9 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 				ChapterNode chap = chapters.computeIfAbsent(key, k -> new ChapterNode(node.info));
 				chap.add(node);				
 			});
-		chapterEdges = edges.stream().map( e -> {
+		chapterEdges = edges.stream()
+				.filter(this::nooverlap)
+				.map( e -> {
 			DomStudentModelMethodInfo fromInfo = e.from.info;
 			String from = fromInfo.key();
 			DomStudentModelMethodInfo toInfo = e.to.info;
