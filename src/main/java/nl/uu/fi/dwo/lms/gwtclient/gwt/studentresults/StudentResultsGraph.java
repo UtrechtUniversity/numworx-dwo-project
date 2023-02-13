@@ -1529,6 +1529,10 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	@Override
 	public void onResize() {
 		super.onResize();
+		resizer();
+	}
+
+	protected void resizer() {
 		resize(factor);
 	}
 
