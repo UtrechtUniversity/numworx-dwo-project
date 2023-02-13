@@ -6,9 +6,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -75,7 +72,9 @@ public class StudentModelUtil {
 		String id = info.getId();
 		Collection<String> items = info.getVoorkennis();
 		if (items != null)
-			items = items.stream().filter(this.items::containsKey).collect(Collectors.toSet());
+			items = items.stream()
+			.map(s -> s.split("/")[0])
+			.filter(this.items::containsKey).collect(Collectors.toSet());
 		Collection<String> set = foreknowledge.computeIfAbsent(id, key -> new HashSet<String>());
 		if (items != null) set.addAll(items);
 	}
@@ -146,4 +145,9 @@ public class StudentModelUtil {
 	boolean isCorrect(String id) {
 		return scores.get(id).getScore() > 0.75;
 	}
+	
+//    private static List<String> strip(Collection<String> list) {
+//    	return list.stream().map(s -> s.split("/")[0]).collect(Collectors.toList());
+//    }
+
 }
