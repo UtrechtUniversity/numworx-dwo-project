@@ -468,23 +468,44 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			  GraphNode from = edge.getSource();
 			  GraphNode to   = edge.getTarget();
 		 	  Collection<DomStudentModelMethodInfo> fromChapters = from.getMethodeInfos();
+		 	  Collection<DomStudentModelMethodInfo> orgFromChapters = fromChapters;
 		 	  if (fromChapters == null) continue;
-		 	  fromChapters = new ArrayList(fromChapters);
+		 	  fromChapters = new ArrayList<>(fromChapters);
 		 	  Collection<DomStudentModelMethodInfo> toChapters = to.getMethodeInfos();
 			  if (toChapters == null) continue;
-			  toChapters = new ArrayList(toChapters);
+			  toChapters = new ArrayList<>(toChapters);
 			  
 			  
 			  Iterator<DomStudentModelMethodInfo> iterator = fromChapters.iterator();
 			  while(iterator.hasNext()) {
 			    DomStudentModelMethodInfo info = iterator.next();
-			    for(DomStudentModelMethodInfo toc: toChapters) {
-			      if(info.getBook().equals(toc.getBook()) && info.getMethod().equals(toc.getMethod()) && info.getChapter().equals(toc.getChapter())){
-			        iterator.remove();
-			        break;
-			      }
+			    if (info.getMethod().equals(activeRow.key())) {
+    			    for(DomStudentModelMethodInfo toc: toChapters) {
+    			      if(info.getBook().equals(toc.getBook()) && info.getMethod().equals(toc.getMethod()) && info.getChapter().equals(toc.getChapter())){
+    			        iterator.remove();
+    			        break;
+    			      }
+    			    } 
+    			    
+			    } else {
+			      iterator.remove();
 			    }
 			  }
+// EN ook even andersom
+			  iterator = toChapters.iterator();
+              while(iterator.hasNext()) {                
+                DomStudentModelMethodInfo info = iterator.next();
+                if (info.getMethod().equals(activeRow.key())) {
+                  for(DomStudentModelMethodInfo toc: orgFromChapters) {
+                    if(info.getBook().equals(toc.getBook()) && info.getMethod().equals(toc.getMethod()) && info.getChapter().equals(toc.getChapter())){
+                      iterator.remove();
+                      break;
+                    }
+                  }
+                } else {
+                  iterator.remove();
+                }
+              }
 			  
 			  
 			  
@@ -493,7 +514,14 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			      if (froc.getBook().equals(toc.getBook()) && froc.getMethod().equals(toc.getMethod()) && ! froc.getChapter().equals(toc.getChapter())) {
 			        ChapterGraphNode fn = chapters.get(froc.key());
 			        ChapterGraphNode tn = chapters.get(toc.key());
-			        if (fn != null && tn != null) chapterEdgeSet.add(new ChapterGraphEdge(fn, tn));
+//			        if (froc.getChapter().intValue() == 1) {
+//			          System.out.print(froc.key());System.out.print("->");
+//			          System.out.print(toc.key());
+//			          System.out.println();
+//			        }
+			        
+			        if (fn != null && tn != null)
+			          chapterEdgeSet.add(new ChapterGraphEdge(fn, tn));
 			      }
 			      
 			    }
