@@ -139,21 +139,7 @@ public class AccountPresenter {
                     return null;
                 }
 
-            },
-                    new Failure() {
-                @Override
-                public void fail(Promise<?> resolved) throws Exception {
-                    Throwable fail = resolved.getFailure();
-                    if (fail instanceof Dwo2Exception) {
-                        LOG.log(Level.SEVERE, fail.getMessage());
-                        eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-                    } else {
-                        LOG.log(Level.SEVERE, fail.getMessage());
-                        eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-                        //throw directly
-                    }
-                }
-            });
+            }, FAILURE);
         } else {
             //jump to app.dwo.nl/leerling
             eventBus.fireEvent(new MessageDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Client_InternalError, "Internal error")));
@@ -174,24 +160,10 @@ public class AccountPresenter {
                 //get role Update.
                 view.setLoadingTableMessage();
                 Promise<DomSchoolsRolesAndClassesV2> update = accountService.getSchoolLogins();
-                return update;
+                return update.then(null, p -> view.setEmptyTableMessage());
             }
-        },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                view.setEmptyTableMessage();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new MessageDialogWithOKEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new MessageDialogWithOKEvent(fail.getMessage()));
-                    //throw directly
-                }
-            }
-        }).then(new Success<DomSchoolsRolesAndClassesV2, Void>() {
+        })
+        .then(new Success<DomSchoolsRolesAndClassesV2, Void>() {
                     @Override
                     public Promise<Void> call(Promise<DomSchoolsRolesAndClassesV2> resolved) throws Exception {
                         DomSchoolsRolesAndClassesV2 result = resolved.getValue();
@@ -202,21 +174,7 @@ public class AccountPresenter {
                         return null;
                     }
                 },
-                        new Failure() {
-                    @Override
-                    public void fail(Promise<?> resolved) throws Exception {
-                        Throwable fail = resolved.getFailure();
-                        view.setEmptyTableMessage();
-                        if (fail instanceof Dwo2Exception) {
-                            LOG.log(Level.SEVERE, fail.getMessage());
-                            eventBus.fireEvent(new MessageDialogWithOKEvent((Dwo2Exception) fail));
-                        } else {
-                            LOG.log(Level.SEVERE, fail.getMessage());
-                            eventBus.fireEvent(new MessageDialogWithOKEvent(fail.getMessage()));
-                            //throw directly
-                        }
-                    }
-                });
+        		FAILURE);
     }
 
     @JsMethod
