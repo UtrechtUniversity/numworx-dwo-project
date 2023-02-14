@@ -776,7 +776,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		HashMap<String, Object> map = editor.getState();
 		LOG.info("editor state = " + map);
 		String value = JSONUtilities.wrapMap(map).getString("tekst");
-		if (value == null || value.isEmpty() || connection == null)
+		if (value == null || connection == null || (value = value.trim()).isEmpty() )
 		{
 			return;		
 		}
