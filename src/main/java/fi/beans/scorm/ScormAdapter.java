@@ -121,7 +121,8 @@ public abstract class ScormAdapter {
 	public abstract String GetValue(String cmiElement);
 	
 	private String getValue0(String key) {
-		if(key.startsWith("dme.")) return GetValue(key); // private extensions.
+		if(key.startsWith("dme.")|| SCORM12APIInterface.USER_GROUP.equals(key))
+		  return GetValue(key); // private extensions.
 		if(!key.startsWith("cmi."))
 			return "";
 		key = map(key);		
