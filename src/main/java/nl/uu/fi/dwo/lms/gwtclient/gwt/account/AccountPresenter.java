@@ -1,6 +1,8 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.account;
 
 import com.google.web.bindery.event.shared.EventBus;
+
+import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
@@ -201,7 +203,7 @@ public class AccountPresenter {
                     return promise;
                 } else {
                     LOG.log(Level.INFO, "update user cancelled.");
-                    return Promises.failed(null);
+                    return Promises.resolved(null);
                 }
             }
         }).then(new Success<Boolean, DomSchoolsRolesAndClassesV2>() {
@@ -296,6 +298,8 @@ public class AccountPresenter {
         Promise<Boolean> p = Promises.resolved(true); //empty promise
         p.then((resolved) -> {
             //do dialog check
+        	if (GwtRestVars.getInstance().getRefreshToken() != null)
+        		return resolved;
             AlertDialogWithConfirmCancelDeferred dialogPromise = new AlertDialogWithConfirmCancelDeferred(DwoLocalesForGWT.instance.GUI_Dialog_User_ConfirmPasswordSwitch());
             AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, dialogPromise);
             eventBus.fireEvent(event);
@@ -312,15 +316,15 @@ public class AccountPresenter {
                         return promisedUser;
                     } else {
                         LOG.log(Level.INFO, "update user cancelled.");
-                        return Promises.failed(null);
+                        return null;
                     }
                 }).then(
                 new Success<DomUserFull, Void>() {
             @Override
             public Promise<Void> call(Promise<DomUserFull> resolved) throws Exception {
-                //calculate tree and call plotting
                 LOG.log(Level.INFO, "DomUser returned.");
                 DomUserFull u = resolved.getValue();
+                if (u == null) return null;
                 if (u.getInsertion() == null) u.setInsertion(""); // komt voor
                 dwoGlobalVars.setCurrentUser(u, dwoGlobalVars.getRealm());
                 view.clear();
@@ -366,18 +370,9 @@ public class AccountPresenter {
         }, new Failure() {
             @Override
             public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                view.setEmptyTableMessage();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-                    // throw directly
-                }
-            }
-        });
+                 view.setEmptyTableMessage();
+             }
+        }).then(null, FAILURE);
     }
 
     @Inject ModulesPresenter modules;
