@@ -261,11 +261,11 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	private static int defaultFontSize = 16;
 	private static String defaultFont = "Ubuntu";
 
-	private ColorStyle succesColor = new ColorStyle(0,200,0);
-	private ColorStyle halfSuccesColor = new ColorStyle(180,240,180);
-	private ColorStyle failColor = new ColorStyle(200,0,0);
-	private ColorStyle halfFailColor = new ColorStyle(255,150,150);
-	private ColorStyle defaultEdgeColor = colorBlue4;
+	private static final ColorStyle succesColor = new ColorStyle(0,200,0);
+	private static final ColorStyle halfSuccesColor = new ColorStyle(180,240,180);
+	private static final ColorStyle failColor = new ColorStyle(200,0,0);
+	private static final ColorStyle halfFailColor = new ColorStyle(255,150,150);
+	private static final ColorStyle defaultEdgeColor = colorBlue4;
 	
 	private OMSVGDocument doc;
 	protected SVGImage image;
@@ -478,9 +478,12 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		
 		void setSuccesFailColor() {
 			OMSVGStyle style = g.getStyle();
-			if (to.getEdgeColor() != null) 
+			if (to.getEdgeColor() != null && from.getEdgeColor() != null) // beide succes en/of half
 			{
-				edgeColor = to.getEdgeColor();
+				if (to.getEdgeColor() == succesColor && from.getEdgeColor() == succesColor)
+					edgeColor = to.getEdgeColor();
+				else
+					edgeColor = halfSuccesColor;
 				style.setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "5");
 			}
 			else 
