@@ -30,6 +30,11 @@
   	<servlet-class>nl.numworx.oauth2client.server.DwoRedirect</servlet-class>
   </servlet>
   
+  <servlet>
+  	<servlet-name>entrees-redirect</servlet-name>
+  	<servlet-class>nl.numworx.oauth2client.server.EntreeSRedirect</servlet-class>
+  </servlet>
+  
   <servlet-mapping>
     <servlet-name>oauth2</servlet-name>
     <url-pattern>/dwo/saml/login</url-pattern>
@@ -48,8 +53,9 @@
 	<url-pattern>/mfalogin</url-pattern>
 	<url-pattern>/dwo/oauth2/login</url-pattern>
   </servlet-mapping>
+
   <servlet-mapping>
-  	<servlet-name>redirect</servlet-name>
+  	<servlet-name>entrees-redirect</servlet-name>
 	<url-pattern>/redirect</url-pattern>
 	<url-pattern>/dwo/oauth2/redirect</url-pattern>
   </servlet-mapping>
