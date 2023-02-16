@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
@@ -20,6 +21,7 @@ import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
+import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
 
 public class EastHeader extends Composite {
 
@@ -38,7 +40,8 @@ public class EastHeader extends Composite {
 	
 	private Consumer<ChatRoom> updateRoom;
 	private Consumer<Boolean>  updateSelect;
-	
+	private static final Predicate<ChatUser> FALSE = t -> false;
+	private Predicate<ChatUser> isUnread = FALSE;
 
 	@UiField(provided=true) RadioButton klas, persoon;
 	@UiField ListBox naam;
@@ -79,9 +82,19 @@ public class EastHeader extends Composite {
 		if (room == null) return;
 		int index = roomList.indexOf(room);
 		if (room == getSelectedRoom() && isMultichat()) unread = false;
+		else {
+			if (!unread && childrenUnread(room.chatUser)) unread = true;
+		}
 		naam.setItemText(index, room.displayName + (unread?" ●":""));
 	}
 	
+	private boolean childrenUnread(List<ChatUser> chatUser) {
+		for (ChatUser person : chatUser) {
+			if (isUnread.test(person)) return true;
+		}
+		return false;
+	}
+
 	public boolean isMultiRoom() {
 		return roomList.size() > 1;
 	}
@@ -134,4 +147,9 @@ public class EastHeader extends Composite {
 		this.updateSelect = updateSelect;
 	}
 
+	void setIsUnread(Predicate<ChatUser> predicate) {
+		if (predicate == null) isUnread = FALSE;
+		else isUnread = predicate;
+	}
+	
 }

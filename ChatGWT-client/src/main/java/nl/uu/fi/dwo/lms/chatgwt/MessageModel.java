@@ -62,7 +62,12 @@ public class MessageModel implements HasValueChangeHandlers<List<Message>> {
 	}
 
 	public void add(Message message) {
+		if (messages.contains(message))
+		{
+			return; 
+		}
 		messages.add(message);
+		Collections.sort(messages); // keep sorted
 		message.setRead(! persist.isSeen(jid, message));
 		ValueChangeEvent.fire(this, Collections.singletonList(message)); // will change "read" property
 		

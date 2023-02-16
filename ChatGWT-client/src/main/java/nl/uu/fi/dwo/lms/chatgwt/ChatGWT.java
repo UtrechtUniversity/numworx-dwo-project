@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
@@ -22,6 +21,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -79,6 +79,7 @@ import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
 import nl.uu.fi.dwo.lms.chatgwt.util.Base64;
 import nl.uu.fi.dwo.lms.chatgwt.util.MD5;
+import nl.uu.fi.dwo.lms.chatgwt.util.Notification;
 import nl.uu.fi.dwo.lms.chatgwt.util.PersistIF;
 import nl.uu.fi.dwo.lms.chatgwt.util.ResizeFlowPanel;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -99,24 +100,43 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	
 	private static final ChatUserCodec CODEC = GWT.create(ChatUserCodec.class);
 	
-//	private class EastUpdater implements ValueChangeHandler<Set<String>> {
-//
-//		@Override
-//		public void onValueChange(ValueChangeEvent<Set<String>> event) {
-//			east.clear();
-//			int off = room.jid.length()+1;
-//			event.getValue().stream()
-//			.filter(t -> t.startsWith(room.jid))
-//			.sorted().forEach(s -> east.add(new Label(
-//					getDisplayName(s.substring(off)))));
-//
-//		}
-//
-//	}
-
 	private static native String getParentChatUser() /*-{
 		return $wnd.parent.chatUser;
 	}-*/;
+	
+	protected native void setVisibleHandler(ChatGWT deze) /*-{
+		try {
+			$wnd.parent.jsChatboxDisplay.setChatVisible( {
+				"hidden" : function() {
+					deze.@nl.uu.fi.dwo.lms.chatgwt.ChatGWT::hidden()();
+				}, 
+				"shown" : function() {
+					deze.@nl.uu.fi.dwo.lms.chatgwt.ChatGWT::shown()();
+				}
+			});
+		} catch(e) {
+			console.log(e);
+		}
+	}-*/;
+	
+	
+	boolean visible;
+	
+	private void hidden() {
+		if (visible) {
+			visible = false;
+			removeAddToPanel();
+		}
+	}
+	private void shown() {
+		if (!visible) {
+			visible = true;
+			if (currentModel != null) {
+				switchToModel(currentModel); // of zo iets
+			}
+		}
+	}
+	
 	
 	
 	private static final ChangeEvent CHANGE_EVENT = new ChangeEvent() {};
@@ -241,7 +261,13 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 					utc = utc();
 				} 
 				else stamp = iso(stamp);
-				m.add(new Message(from, stamp, text, utc));
+				String id = utc;
+				elems = element.getElementsByTagName("stanza-id");
+				if (elems.getLength() >= 1) {
+					id = elems.getItem(0).getAttribute("id");
+				}
+				
+				m.add(new Message(from, stamp, text, utc, id));
 			}
 			return true;
 		}
@@ -271,7 +297,10 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			} else {
 				m = getModel(jid);
 			}
-			m.add(new Message(jid, stamp, text, utc));
+			String id = null;
+			elems = element.getElementsByTagName("result");
+			id = elems.getItem(0).getAttribute("id");
+			m.add(new Message(jid, stamp, text, utc, id));
 			return true;
 		}
 			
@@ -338,7 +367,9 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		hbox.addStyleName("profile-borderBox");
 		hbox.add(afzender);
 		hbox.add(time);
-		if (chatUser.jid .equals(get(from).jid)) {
+		ChatUser u2 = get(from);
+		String jid = u2==null ? "" : u2.jid;
+		if (chatUser.jid .equals(jid)) {
 			hbox.addStyleName("profile-mymessage");
 		}
 		
@@ -396,10 +427,6 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 				presenceHandler.addValueChangeHandler(students);
 				presenceHandler.addValueChangeHandler(teachers);
 				ref2 = connection.addHandler(null, "presence", null, null, null, presenceHandler);
-//				ChatAll all = new ChatAll();
-//				all.put("message", handler);
-//				all.put("presence", presenceHandler);
-				//ref2 = connection.addHandler(null, null, null, null, null, all);
 				
 				Builder pres = Builder.$pres(null);
 	            connection.send(pres);
@@ -408,7 +435,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	            sendMamRequest(); // after room presence
 // Add to room	            
 	            if (room != null) {
-	            	switchToModel(get(room));
+	            	currentModel = get(room);
+	            	if (visible) switchToModel(currentModel);
 	            	//addToRoom(room);
 	            }
 	            break;
@@ -438,6 +466,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	
 	private Map<String, ChatUser> byJid = new HashMap<>();
 	private Map<String, MessageModel> models = new HashMap<>();
+	private Seen seen = new Seen(Notification.INSTANCE);
 	private HandlerRegistration addToPanelHandler;
 	private NoSelectionModel<UserModel> noselection;
 	private EastHeader eastHeader;
@@ -457,6 +486,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		byJid.put(u.jid,u);
 	}
 	private void put(MessageModel model) {
+		seen.add(model);
 		models.put(model.getJid(), model);
 	}
 	private MessageModel getModel(String jid) {
@@ -464,7 +494,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		MessageModel m = models.get(jid);
 		if (m == null) {
 			m = new MessageModel(jid, persist);
-			models.put(jid, m);
+			put(m);
 		}
 		return m;
 	}
@@ -475,6 +505,18 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	
 	MessageModel get(ChatUser user) {
 		return getModel(user.jid);
+	}
+	
+	boolean hasUnread(ChatUser user) {
+		MessageModel model = get(user);
+		if (model != null) return model.hasUnread();
+		return false;
+	}
+
+	boolean hasUnread(ChatRoom room) {
+		MessageModel model = get(room);
+		if (model != null) return model.hasUnread();
+		return false;
 	}
 	
 	private ChatUser get(String key) {
@@ -512,11 +554,12 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 //		if(true) return;
 
 		formule = !"111".equals(Location.getParameter("profile"));
-
+		setVisibleHandler(this);
 		
 		RootLayoutPanel root = RootLayoutPanel.get();
 		eastHeader  = new EastHeader();
 		eastHeader.setUpdateRoom(this::updateRoom);
+		eastHeader.setIsUnread(this::hasUnread);
 		
 		int top = 0;
 		try {
@@ -535,7 +578,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 				});
 				eastHeader.init(u.room);
 				this.room = eastHeader.getSelectedRoom();
-				new RoomController(u.room, eastHeader).addHandler(this::get);
+				new RoomController(u.room, eastHeader).addHandler(this::get, this::get);
 			}
 			chatUser = u;
 		} catch(Exception oops) {
@@ -559,14 +602,16 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			root.setWidgetTopHeight(login, 0, Unit.PX, 40, Unit.PX);
 			top = 40;
 
-			ChatRoom room2 = new ChatRoom("klas2@" + ROOMS);
-			room2.chatUser = room.chatUser;
+//			ChatRoom room2 = new ChatRoom("klas2@" + ROOMS);
+//			room2.chatUser = room.chatUser;
 			room.chatUser.forEach(this::put);
-			rooms = Arrays.asList(room, room2);
+			rooms = Arrays.asList(room
+//					, room2
+					);
 			eastHeader.init(rooms);
-			new RoomController(rooms, eastHeader).addHandler(this::get);
+			new RoomController(rooms, eastHeader).addHandler(this::get, this::get);
 			
-			room = null;
+			room = eastHeader.getSelectedRoom();
 		
 		}
 		
@@ -590,6 +635,10 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		lastPanel = now();
 		scroll = new ScrollPanel(panel);
 		east  = new ResizeFlowPanel();
+		Style eastStyle = east.getElement().getStyle();
+
+		eastStyle.setOverflowX(Overflow.HIDDEN);
+		eastStyle.setOverflowY(Overflow.AUTO);
 		
 		eastHeader.setUpdateMultiChat(this::updateMultichat);
 
@@ -599,11 +648,11 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		noselection = new NoSelectionModel<>(UserModel::getRoomJit);
 		selection.addSelectionChangeHandler(this);
 		
-		students = new UserTable(room, RoleType.STUDENT, noselection, this);
+		students = new UserTable(room, RoleType.STUDENT, selection, this);
 		
 		east.add(students);
 		
-		teachers = new UserTable(room, RoleType.TEACHER, noselection, this);
+		teachers = new UserTable(room, RoleType.TEACHER, selection, this);
 		
 		east.add(teachers);
 		
@@ -659,6 +708,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		
 		setHeight(-keyboard.getKeyboardHeight());
 		main.add(scroll);
+		main.getWidgetContainerElement(scroll).addClassName("center-panel");
 		main.forceLayout();
 		
 		
@@ -726,7 +776,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		HashMap<String, Object> map = editor.getState();
 		LOG.info("editor state = " + map);
 		String value = JSONUtilities.wrapMap(map).getString("tekst");
-		if (value == null || value.isEmpty() || connection == null)
+		if (value == null || connection == null || (value = value.trim()).isEmpty() )
 		{
 			return;		
 		}
@@ -758,7 +808,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			String[][] attributes = { { "to", u.jid }, { "type", "chat" } };
 			Builder reply = Builder.$msg(attributes).c("body",null).t(value);
 			connection.send(reply);
-			Message msg = new Message(chatUser.jid, now(), value, utc());
+			Message msg = new Message(chatUser.jid, now(), value, utc(), null);
 			um.getMessages().add(msg);
 		} else {
 			// select user 1st;
@@ -812,6 +862,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	private UserTable students;
 	private UserTable teachers;
 	private SingleSelectionModel<UserModel> selection;
+	private MessageModel currentModel;
 	@Override
 	public String getClipboard() {
 		return clipboard;
@@ -845,7 +896,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			removeAddToPanel();
 		}
 		panel.clear();lastPanel = now();
-		
+		setSelection(selection, false);
 		this.room = room;
 		students.init(room);
 		teachers.init(room);
@@ -874,7 +925,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			sender.setText(rb.messageFor(room.displayName));
 			sendTo = this::sendToRoom;
 			switchToModel(get(room));
-			setSelection(noselection, false);
+			setSelection(selection, false);
 		} else {
 			sender.setText(rb.message());
 			removeAddToPanel();
@@ -892,14 +943,24 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	@Override
 	public void onSelectionChange(SelectionChangeEvent event) {
 		UserModel selectedObject = selection.getSelectedObject();
+
+		// force person chat		
+		if (selectedObject != null && eastHeader.isMultichat()) 
+		{
+			sendTo = this::sendToUser;
+			setSelection(selection, true);
+			eastHeader.setMultiChat(false);
+		}
 		if (!eastHeader.isMultichat() && selectedObject != null) {
 			ChatUser user = selectedObject.getUser();
 			MessageModel m = selectedObject.getMessages();
 			switchToModel(m);
+			sendTo = this::sendToUser;
 			sender.setText(rb.messageFor(user.nickName));
 		}
 	}
 	private void switchToModel(MessageModel m) {
+		currentModel = m;
 		removeAddToPanel();
 		panel.clear();lastPanel = now();
 		addToPanel(m.getMessages());
