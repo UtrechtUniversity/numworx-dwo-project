@@ -62,8 +62,8 @@
 	</parent>
 	<groupId>nl.uu.fi.dwo.mobile</groupId>
 	<description>interaction library</description>
-	<version>0.1.15</version>
+	<version>0.1.16-SNAPSHOT</version>
 	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/GWT/DWOinteraction/tags/interaction-0.1.15</developerConnection>
+		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/GWT/DWOinteraction/trunk</developerConnection>
 	</scm>
 </project>
