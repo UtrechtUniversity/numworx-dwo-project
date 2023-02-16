@@ -236,7 +236,7 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
     description.setWrapStyleWord(true);
     description.setEditable(false);
     scroll = new JScrollPane(description);
-    if (descr.startsWith(WISKOPDR_SIG))
+    if (descr != null && descr.startsWith(WISKOPDR_SIG))
     {
       WiskOpdrPanel panel = getWiskOpdrPanel(descr);
       scroll.setViewportView(panel);

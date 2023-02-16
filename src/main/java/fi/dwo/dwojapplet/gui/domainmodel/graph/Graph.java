@@ -1030,18 +1030,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		return new ArrayList<GraphNode>();
 	}
 	
-	
-//	@Override
-//	public void setSize(int width, int height) {
-//		super.setSize(width, height);
-//		zoomFitButton.setBounds(getWidth() - 35, 5, 30, 30);
-//		zoomInButton.setBounds(getWidth() - 35, 40, 30, 30);
-//		zoomOutButton.setBounds(getWidth() - 35, 75, 30, 30);
-//		
-//		origin = new Point((int)(getWidth()/2), (int)(getHeight()/2));
-//		repaint();
-//	}
-	
+		
 	@Override
 	public void setBounds(int x, int y, int width, int height) {
 		int oldWidth = getWidth();
@@ -1210,36 +1199,10 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		
 		if(cNode!=null) {
 			selectChapter(cNode.getHfstCode());
-//			setVoorkennisArea(true);
-//			selectedChapterTitle = cNode.getHfstDescription();
-//			selectedBookTitle = cNode.getBookDescription();
-//			for(int i=0 ; i<graphNodes.size() ; i++) {
-//				if(!graphNodes.get(i).hasMethodCode(cNode.getHfstCode()))
-//					graphNodes.get(i).setVisible(false);
-//			}
-//			zoomFit(getHeight()/4);
-//			for(int i=0 ; i<chapterNodes.size() ; i++) {
-//				chapterNodes.get(i).makeLocation(graphNodes);
-//			}
-//			ArrayList<GraphNode> voorkennisNodes = cNode.getVoorkennisNodes();
-//			ArrayList<Point> pos = maakVoorkennisPosities();
-//			for(int i = 0 ; i<Math.min(voorkennisNodes.size(),pos.size()) ; i++) {
-//				GraphNode vkNode = voorkennisNodes.get(i);
-//				vkNode.setVisible(true);
-//				vkNode.setTempLocation(new Point(pos.get(i).x, pos.get(i).y));
-//				
-//			}
-//			tussenLabel1.setText(">");
-//			bookLabel.setText(selectedBookTitle);
-//			tussenLabel2.setText(">");
-//			chapterLabel.setText(selectedChapterTitle);
 			return;
 		}
 		
 		BookGraphNode bNode = null;
-//		if(!bookSelected && !voorkennisArea) {
-//			selectedBookTitle = "";
-//		}
 		for(int i=0 ; i<bookNodes.size() ; i++) {
 			if(factor<0.2 && bookNodes.get(i).contains(ex, ey, factor)) {
 				bNode = bookNodes.get(i);
@@ -1249,28 +1212,6 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		
 		if(bNode!=null && !voorkennisArea) {
 			selectBook(bNode.getBookCode());
-//			bookSelected = true;
-//			selectedBNode = bNode;
-//			selectedBookTitle = bNode.getBookDescription();
-//			for(int i=0 ; i<graphNodes.size() ; i++) {
-//				if(!graphNodes.get(i).hasBookCode(bNode.getBookCode()))
-//					graphNodes.get(i).setVisible(false);
-//			}
-//			for(int i=0 ; i<chapterNodes.size() ; i++) {
-//				chapterNodes.get(i).makeLocation(graphNodes);
-//			}
-//			for(int i=0 ; i<bookNodes.size() ; i++) {
-//				bookNodes.get(i).makeLocation(chapterNodes);
-//			}
-////			for(int i=0 ; i<chapterNodes.size() ; i++) {
-////				if(!chapterNodes.get(i).getBookCode().equals(cNode.getBookCode()))
-////					chapterNodes.get(i).setVisible(false);
-////			}
-//			zoomFit();
-//			tussenLabel1.setText(">");
-//			bookLabel.setText(selectedBookTitle);
-//			tussenLabel2.setText("");
-//			chapterLabel.setText("");
 			return;
 		}
 
@@ -1316,8 +1257,6 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	    Map<String, GraphNode> graphMap = new LinkedHashMap<>();
 	    this.activeMethod = activeMethod;
 	    this.activeRow = MethodsProperties.instance().getMethod(activeMethod);
-//	    menuItemGR.setLabel(this.activeRow.getMethod());
-//	    menuItemGR.setEnabled(activeMethod != null);
 	    methodeLabels.putAll(MethodsProperties.instance().stream().collect(Collectors.toMap(DomMethod::key, DomMethod::getMethod)));
 	    
 		List<NodeLeaf> leaves = new ArrayList<>();
@@ -1487,7 +1426,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 					leaf.setX(null);
 					leaf.setY(null);
 				}
-                leaf.setMethodeInfos(gn.getMethodeInfos());
+                leaf.setMethodeInfos(gn != null ? gn.getMethodeInfos():null);
 				List<String> voorkennis = leaf.getVoorkennis();
 				if (voorkennis == null)
 					voorkennis = new ArrayList<>();
@@ -1546,29 +1485,10 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			repaint();
 		}
 		if(e.getSource()==zoomFitButton) {
-//			for(int i=0 ; i<graphNodes.size() ; i++) {
-//					graphNodes.get(i).setVisible(true);
-//			}
 			if(voorkennisArea)
 				zoomFit(getHeight()/4);
 			else
 				zoomFit();
-//			for(int i=0 ; i<chapterNodes.size() ; i++) {
-//				chapterNodes.get(i).makeLocation(graphNodes);
-//			}
-//			for(int i=0 ; i<chapterNodes.size() ; i++) {
-//				chapterNodes.get(i).makeLocation(graphNodes);
-//			}
-//			for(int i=0 ; i<bookNodes.size() ; i++) {
-//				bookNodes.get(i).makeLocation(chapterNodes);
-//			}
-//			setVoorkennisArea(false);
-			//bookSelected = false;
-			//selectedBNode = null;
-//			tussenLabel1.setText("");
-//			bookLabel.setText("");
-//			tussenLabel2.setText("");
-//			chapterLabel.setText("");
 		}
 		if(e.getSource()==voorkennisButton) {
 			voorkennisWegButton.setVisible(true);
@@ -1585,18 +1505,6 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 			if(voorkennisTree)
 				verbergVoorkennisTree();
 		}
-//		if(e.getSource()==methodeChoiceButton) {
-//			methodeChoicePopup.show(methodeChoiceButton, 0, 0);
-//		}
-//		if(e.getSource()==menuItemGR) {
-//			selectMethode(activeRow.key());
-//		}
-//		if(e.getSource()==menuItemMW) {
-//			selectMethode("Moderne Wiskunde");
-//		}
-//		if(e.getSource()==menuItemAll) {
-//			deselectMethode();
-//		}
 		if(e.getSource()==miVoorkennis) {
 			if(voorkennisArea)
 				verbergVoorkennis(true);
