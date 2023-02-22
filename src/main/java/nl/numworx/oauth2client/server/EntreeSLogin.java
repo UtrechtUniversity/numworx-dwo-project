@@ -69,6 +69,13 @@ public class EntreeSLogin implements SigningKeyResolver, Login {
 
 	
 	public EntreeSLogin(ServletConfig cfg) {
+		String allow = System.getProperty("ALLOW_ORIGIN");
+		if (allow != null) {
+			allow = allow.split("\\s+")[0]; // spaces als separator
+			this.redirect_url = allow + "/redirect";
+		}
+		
+		
 	}
 
 	public String login() throws OAuthSystemException {
