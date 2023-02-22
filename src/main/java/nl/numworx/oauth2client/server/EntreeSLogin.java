@@ -65,7 +65,7 @@ public class EntreeSLogin implements SigningKeyResolver, Login {
 
     Long expiresIn, now;
 	private OAuthToken token;
-	String numworx_scope = "profile email";
+	String numworx_scope = "profile";
 
 	
 	public EntreeSLogin(ServletConfig cfg) {
@@ -180,11 +180,7 @@ public class EntreeSLogin implements SigningKeyResolver, Login {
 		Jws<Claims> token = parser.parseClaimsJws(idToken);	
 		Claims body = token.getBody();
 		
-		sn = body.get("sn", String.class);
-		givenName = body.get("givenName", String.class);
-		insertion = body.get("uuSurnamePrefix", String.class);
-		email = body.get("mail", String.class);
-		uid   = body.get("uuShortID", String.class);
+		uid   = body.getSubject();
 		affiliation = body.get("eduPersonAffiliation", String.class);
 		nonce = body.get("nonce", String.class);
 
