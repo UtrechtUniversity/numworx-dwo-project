@@ -18,6 +18,8 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.web.bindery.event.shared.EventBus;
+
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
@@ -60,12 +62,13 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 	private int profile;
 	private final EventBus bus;
 	
-	@Inject ChatboxPresenter(DwoGlobalVars vars, EventBus bus, Optional<PersonsService> service, BootPanelController boot) {
+	@Inject ChatboxPresenter(DwoGlobalVars vars, EventBus bus, Optional<PersonsService> service, BootPanelController boot, SecuredUserAccountManager mgr) {
 		this.vars = vars;
 		this.service = service;
 		this.profile = boot.getProfile();
 		this.bus = bus;
 	    FAILURE = new LoggingFailure(LOG, bus);
+	    this.accountManager = mgr;
 		
 		//RestAuthenticator.instance.addValueChangeHandler(this);
 		bus.addHandlerToSource(ValueChangeEvent.getType(), RestAuthenticator.instance, this); // resettable eventbus, helaas werkt niet want Authenticator gebruikt andere bus
@@ -90,10 +93,20 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 		view.openUrl("chatbox/?profile=" + profile + "&locale=" + locale);
 		return p;
 	};
+
+	private SecuredUserAccountManager accountManager;
 	
 	public void init() {
+		// basic login check
+		
+		
+		
 		if (inited) {
-			view.setUnseen(false);
+			accountManager.getLoginContext().then(p -> {
+				view.setUnseen(false);
+				return p;
+			}
+			, FAILURE);
 			return;
 		}
 		inited = true;
