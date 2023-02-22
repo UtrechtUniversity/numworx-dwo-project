@@ -573,6 +573,7 @@
  <servlet-mapping>
  	<servlet-name>entree-redirect</servlet-name>
  	<url-pattern>/entree/redirect</url-pattern>
+ 	<url-pattern>/redirect</url-pattern>
  </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>sebhosting</servlet-name>
