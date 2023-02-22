@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>nl.uu.fi.dwo</groupId>
+        <artifactId>DWO.master.pom</artifactId>
+        <version>1.1</version>
+        <relativePath>../../DWO-master-pom/pom.xml</relativePath>
+    </parent>
+    <artifactId>DWO</artifactId>
+    <version>2.5.19-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jdk.version>8</jdk.version>
+        <jdk>${env.JAVA_HOME_8}</jdk>
+        <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+        <DWOServerVersion>2.5.19-SNAPSHOT</DWOServerVersion>
+        <DWOJClientVersion>2.5.18</DWOJClientVersion>
+		<DWOplayerVersion>2.5.18</DWOplayerVersion>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <chatGWTVersion>2.5.18</chatGWTVersion>
+    </properties>
+    
+    <!-- should move project role names here that fall in the full project scope -->
+    <modules>
+        <module>../DWO-rest-lib</module>
+        <module>../DWO-gwt-lib</module>
+        <module>../DWO-commons-lib</module>
+        <module>../DWO-jclient-lib</module>
+        <module>../DWOJClient</module> <!-- needs profiles dwo-obfuscate dwo-pack-sign -->
+        <module>../DWOServer</module>
+        <module>../EBServer</module>
+    </modules>
+    
+    <name>${project.build.finalName}</name>
+    
+    <dependencyManagement>
+    	<dependencies>
+    		<dependency>
+    			<artifactId>DWO-rest-lib</artifactId>
+    			<groupId>nl.uu.fi.dwo.rest</groupId>
+    			<version>2.5.18</version>
+    		</dependency>
+    		<dependency>
+    			<artifactId>DWO-rest-lib</artifactId>
+    			<groupId>nl.uu.fi.dwo.rest</groupId>
+    			<version>2.5.18</version>
+				<classifier>sources</classifier>
+    		</dependency>
+    		<dependency>
+    			<groupId>nl.uu.fi.dwo</groupId>
+    			<artifactId>DWO-commons-lib</artifactId>
+    			<version>2.5.18</version>
+    		</dependency>
+    		<dependency>
+    			<groupId>nl.uu.fi.dwo.rest</groupId>
+    			<artifactId>DWO-jclient-lib</artifactId>
+    			<version>2.5.18</version>
+    		</dependency>
+        <dependency>
+            <groupId>nl.uu.fi.dwo</groupId>
+            <artifactId>DWO-gwt-lib</artifactId>
+            <version>2.5.18</version>
+        </dependency>
+        <dependency>
+            <groupId>nl.uu.fi.dwo</groupId>
+            <artifactId>DWO-gwt-lib</artifactId>
+            <version>2.5.18</version>
+            <classifier>sources</classifier>
+        </dependency>
+        <dependency>
+        	<groupId>nl.uu.fi.dwo</groupId>
+        	<artifactId>DWOServer</artifactId>
+        	<version>${DWOServerVersion}</version>
+        	<type>war</type>
+        </dependency>
+         <dependency>
+        	<groupId>nl.uu.fi.dwo</groupId>
+        	<artifactId>DWOServer</artifactId>
+        	<version>${DWOServerVersion}</version>
+        	<classifier>classes</classifier>
+        </dependency>
+         <dependency>
+         	<groupId>nl.uu.fi.dwo</groupId>
+         	<artifactId>DWOJClient</artifactId>
+         	<version>${DWOJClientVersion}</version>
+         </dependency>
+         <dependency>
+         	<groupId>fi.beans</groupId>
+         	<artifactId>numworxlf</artifactId>
+         	<version>2.5.4</version>
+         </dependency>
+		<dependency>
+			<groupId>nl.numworx.swingbrowser</groupId>
+			<artifactId>swingbrowser-api</artifactId>
+			<version>0.0.11</version>
+		</dependency>
+		<dependency>
+			<groupId>nl.numworx.swingbrowser</groupId>
+			<artifactId>swingbrowser-jxb</artifactId>
+			<version>0.0.13</version>
+		</dependency>
+    	</dependencies>
+    </dependencyManagement>
+
+    <scm>
+        <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO/trunk</connection>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO/trunk</developerConnection>
+        <url>https://svn.science.uu.nl/viewvc/project.fisme.java/DWOProject/DWO-LMS/DWO/trunk/</url>
+    </scm>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <goals>
+                            <goal>perform</goal>
+                        </goals>
+                        <configuration>
+                            <workingDirectory>${project.build.directory}/checkout/DWO</workingDirectory>
+                            <pomFileName>DWO/trunk/pom.xml</pomFileName>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <preparationGoals>clean verify install</preparationGoals>
+                    <tagBase>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO/tags/</tagBase>
+                    <!--<autoVersionSubmodules>true</autoVersionSubmodules>-->
+                </configuration>            
+            </plugin>        
+        </plugins>
+    </build>
+    
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.6</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.6</version>
+                <reportSets>
+                    <reportSet>
+                        <reports><!-- select reports -->
+                            <report>index</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9</version>
+                <reportSets>
+                    <reportSet><!-- by default, id = "default" -->
+                        <reports><!-- select non-aggregate reports -->
+                            <report>javadoc</report>
+                            <report>test-javadoc</report>
+                        </reports>
+                    </reportSet>
+                    <reportSet><!-- aggregate reportSet, to define in poms having modules -->
+                        <id>aggregate</id>
+                        <inherited>false</inherited><!-- don't run aggregate in child modules -->
+                        <reports>
+                            <report>aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+            </plugin>            
+        </plugins>
+    </reporting>
+</project>
