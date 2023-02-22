@@ -404,8 +404,21 @@
     </init-param>
   </servlet>
   <servlet>
+    <servlet-name>oauth2-entree</servlet-name>
+    <servlet-class>nl.numworx.oauth2client.server.LoginServlet</servlet-class>
+    <init-param>
+    	<param-name>config</param-name>
+    	<param-value>nl.numworx.oauth2client.server.EntreeSLogin</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
   	<servlet-name>dwo-redirect</servlet-name>
   	<servlet-class>nl.numworx.oauth2client.server.DwoRedirect</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>entree-redirect</servlet-name>
+  	<servlet-class>nl.numworx.oauth2client.server.EntreeSRedirect</servlet-class>
   </servlet>
   <servlet>
   	<servlet-name>notebook</servlet-name>
@@ -550,8 +563,16 @@
  	<url-pattern>/dwo/oauth2/login</url-pattern>
  </servlet-mapping>
  <servlet-mapping>
+  	<servlet-name>oauth2-entree</servlet-name>
+ 	<url-pattern>/dwo/oauth2/entree</url-pattern>
+ </servlet-mapping>
+ <servlet-mapping>
  	<servlet-name>dwo-redirect</servlet-name>
  	<url-pattern>/dwo/oauth2/dwo-redirect</url-pattern>
+ </servlet-mapping>
+ <servlet-mapping>
+ 	<servlet-name>entree-redirect</servlet-name>
+ 	<url-pattern>/entree/redirect</url-pattern>
  </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>sebhosting</servlet-name>
