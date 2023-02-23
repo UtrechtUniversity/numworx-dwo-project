@@ -5,6 +5,7 @@ package fi.dwo.server.rest.jaxrsfilters;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.security.Principal;
 import java.util.Base64;
@@ -147,14 +148,13 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
     public SecurityContext validateBasicAuthorization(String authHeader, SecurityContext secCtx) {
 
         byte[] header = Base64.getDecoder().decode(authHeader);
-        String headerString = ":";
-        try {
-            headerString = new String(header, "UTF8");
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(AuthenticationRequestFilter.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        String headerString;
+        headerString = new String(header, StandardCharsets.UTF_8);
         String authFields[] = headerString.trim().split(":");
-
+        if (authFields.length < 2) {
+        	LOG.severe("Password is missing, " + authFields[0]);
+        	return null;
+        }
         PersistentUser u = UserManager.login(authFields[0], authFields[1]);
         if (u != null) {
         	SecurityContext sc;
