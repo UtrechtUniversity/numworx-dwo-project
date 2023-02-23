@@ -59,11 +59,13 @@ public class GwtClientWrap implements Filter {
 		}
 	}
 
-
+	private static final String ENTREESTART = "<!--ENTREESTART-->";
+	private static final String ENTREEEND = "<!--ENTREEEND-->";
 
 	private static final String SAMLSTART = "<!--SAMLSTART-->";
 	private static final String SAMLEND= "<!--SAMLEND-->";
 	private boolean saml;
+	private boolean entree;
 	
 	
 	final Logger LOG = Logger.getLogger(getClass().getName());
@@ -71,7 +73,9 @@ public class GwtClientWrap implements Filter {
 	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		saml = System.getProperty("DWO_ENV", "app").contains("saml");
+		String env = System.getProperty("DWO_ENV", "app");
+		saml = env.contains("saml");
+		entree = env.contains("entree");
 	}
 
 	@Override
@@ -104,6 +108,15 @@ public class GwtClientWrap implements Filter {
 					index = content.indexOf(SAMLSTART, index+1);
 				}
 				content = content.replace("type=\"password\"", "type=\"text\"");
+			}
+			if (!entree) {
+				int index = content.indexOf(ENTREESTART);
+				while (index >= 0) {
+					int end = content.indexOf(ENTREEEND, index);
+					if (end >=0 ) content = content.substring(0, index) + content.substring(end);
+					index = content.indexOf(ENTREESTART, index+1);
+				}
+				
 			}
 			resp.setContentType("text/html;charset=UTF-8");
 			resp.setCharacterEncoding("UTF-8");
