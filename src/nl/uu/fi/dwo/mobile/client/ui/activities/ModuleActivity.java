@@ -80,7 +80,8 @@ public class ModuleActivity extends AbstractActivity {
 		delegate = promise.map( item -> {
 			Activity tree = new TreeModuleActivity(injector, item);
 				tree.start(panel, eventBus);
-			return tree;});		
+			return tree;});
+		//delegate.then(null, FAILURE); // TODO switch to nocourseview, jammer dan
 	}
 
 	@Override

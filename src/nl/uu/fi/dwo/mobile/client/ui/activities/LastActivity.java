@@ -15,9 +15,12 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import dagger.Reusable;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.last;
+import nl.uu.fi.dwo.mobile.client.ui.places.m;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
@@ -73,6 +76,15 @@ public class LastActivity extends AbstractActivity {
 			return;
 		}
 		Place place = getCourseId();
+		if (place instanceof TreeModulePlace) {
+			TreeModulePlace tmp = (TreeModulePlace) place;
+			String token = tmp.getToken();
+			SelectModuleItem item = SelectModuleItemHolder.getItemByID(token);
+			if (item == null) {
+				place = new m(token);
+				((m) place).setBack(SelectModuleItem.ROOT);
+			}
+		}
 		controller.goTo(place);
 	}
 
