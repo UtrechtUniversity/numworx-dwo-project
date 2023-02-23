@@ -66,10 +66,11 @@ public final class DWO2RPCHandler extends nl.uu.fi.dwo.account.client.RPCHandler
 		}
     @Override
     public Promise<DomUserFullwLoginContext> getUserFromAuthToken(String authToken) {
-      if (PARAMETERS.getDwoEnv().contains("test")||PARAMETERS.getDwoEnv().contains("saml"))
+      String dwoEnv = PARAMETERS.getDwoEnv();
+	if (dwoEnv.contains("test")||dwoEnv.contains("saml")||dwoEnv.contains("entree"))
         return super.getUserFromOAuthToken(authToken);
       else
-        return super.getUserFromAuthToken(authToken);
+        return super.getUserFromAuthToken(authToken); // werkt alleen als er een ww is ingesteld, we gaan over op basic auth
     }
 
     @Override
