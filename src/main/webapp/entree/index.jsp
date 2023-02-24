@@ -25,7 +25,15 @@
     	search = ""
     	hash= ""
     	clientId = "f9af29c4-cfc5-11ea-87d0-0242ac130003";
-    	//clientId = "";
+    	<%
+// criterium?
+    		String with = request.getParameter("with");
+    	    String code = request.getParameter("code");
+    		if (!"entree".equals(with) && code == null) {
+    	%>
+    		clientId = "";
+    	<% }
+    	%>
     </script>
     <!--                                           -->
     <!-- This script loads your compiled module.   -->
