@@ -15,9 +15,12 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import dagger.Reusable;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.last;
+import nl.uu.fi.dwo.mobile.client.ui.places.m;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
@@ -46,6 +49,14 @@ public class LastActivity extends AbstractActivity {
 	
 	public void putPlace(Place p) {
 		if (!vars.withUser()) return;
+		if (p instanceof TreeModulePlace) {
+			String t = ((TreeModulePlace) p).getToken();
+			SelectModuleItem item = SelectModuleItemHolder.getItemByID(t);
+			m m = new m(t); /// mmmh... obscure
+			if (item.getParent() != SelectModuleItem.ROOT)
+				m.setBack(item.getParent());
+			p = m;
+		}
 		String subkey = getSubkey();
 		String value = mapper.getToken(p);
 		storage.setItem(BASE_KEY + subkey, value);
@@ -73,6 +84,15 @@ public class LastActivity extends AbstractActivity {
 			return;
 		}
 		Place place = getCourseId();
+		if (place instanceof TreeModulePlace) {
+			TreeModulePlace tmp = (TreeModulePlace) place;
+			String token = tmp.getToken();
+			SelectModuleItem item = SelectModuleItemHolder.getItemByID(token);
+			if (item == null) {
+				place = new m(token);
+				((m) place).setBack(SelectModuleItem.ROOT);
+			}
+		}
 		controller.goTo(place);
 	}
 
