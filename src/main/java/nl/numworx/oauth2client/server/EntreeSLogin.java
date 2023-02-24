@@ -44,9 +44,9 @@ import io.jsonwebtoken.impl.DefaultClaims;
 public class EntreeSLogin implements SigningKeyResolver, Login {
 
 
-    public static final String ID_TOKEN= "id_token";
-    public static final String PASSWORD = "urn:uu.nl:idp:contract:password";
-    public static final String PASSWORD_MFA = "urn:uu.nl:idp:contract:password:multifactor";
+    private static final String ID_TOKEN= "id_token";
+//    private static final String PASSWORD = "urn:uu.nl:idp:contract:password";
+//    private static final String PASSWORD_MFA = "urn:uu.nl:idp:contract:password:multifactor";
 
 	String client_id = "entree-s.dwo.nl";
 	String client_secret = "GnNH7WqZkoy3NNAWjqzXIjrQWIFh2mTAoHkK";
@@ -60,6 +60,18 @@ public class EntreeSLogin implements SigningKeyResolver, Login {
 	String KEYS_URL = "https://oidcng.entree-s.kennisnet.nl/oidc/certs";
 	String USERINFO = "https://oidcng.entree-s.kennisnet.nl/oidc/userinfo";
 
+	private void productie() {
+	// https://oidcng.entree.kennisnet.nl/.well-known/openid-configuration
+		
+		client_id = "entree.dwo.nl";
+		client_secret = System.getProperty("ENTREE_SECRET");
+		ISSUER = "https://oidcng.entree.kennisnet.nl";
+		AUTHORIZATION_URL = "https://oidcng.entree.kennisnet.nl/oidc/authorize";
+		TOKEN_URL = 	"https://oidcng.entree.kennisnet.nl/oidc/token";
+		KEYS_URL = "https://oidcng.entree.kennisnet.nl/oidc/certs";
+		USERINFO = "https://oidcng.entree.kennisnet.nl/oidc/userinfo";
+	}
+	
 	private OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
 
 
@@ -74,7 +86,8 @@ public class EntreeSLogin implements SigningKeyResolver, Login {
 			allow = allow.split("\\s+")[0]; // spaces als separator
 			this.redirect_url = allow + "/redirect";
 		}
-		
+		if (!System.getProperty("ENTREE_SECRET", "").isEmpty())
+			productie();
 		
 	}
 
