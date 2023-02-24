@@ -49,6 +49,14 @@ public class LastActivity extends AbstractActivity {
 	
 	public void putPlace(Place p) {
 		if (!vars.withUser()) return;
+		if (p instanceof TreeModulePlace) {
+			String t = ((TreeModulePlace) p).getToken();
+			SelectModuleItem item = SelectModuleItemHolder.getItemByID(t);
+			m m = new m(t); /// mmmh... obscure
+			if (item.getParent() != SelectModuleItem.ROOT)
+				m.setBack(item.getParent());
+			p = m;
+		}
 		String subkey = getSubkey();
 		String value = mapper.getToken(p);
 		storage.setItem(BASE_KEY + subkey, value);

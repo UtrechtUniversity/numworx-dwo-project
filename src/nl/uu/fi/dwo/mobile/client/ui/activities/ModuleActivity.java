@@ -44,7 +44,9 @@ public class ModuleActivity extends AbstractActivity {
 			DomSchoolClass schoolclass = vars.getCurrentSchoolClass();
 			if (schoolclass != null) {
 				Promise<DomCoursesOfSchoolClass> p = rpc.getCourseClass(id, schoolclass);
-				promise = p.map( (DomCoursesOfSchoolClass courses) -> {
+				promise = p
+						.filter(courses -> ! courses.getCourses().isEmpty())
+						.map( (DomCoursesOfSchoolClass courses) -> {
 					SelectModuleItem i;
 					DomCourseStudent course = courses.getCourses().get(0).getValue();
 					DomClassCourse   cc     = courses.getClassCourses().get(0).getValue();
@@ -56,7 +58,7 @@ public class ModuleActivity extends AbstractActivity {
 					i.setChildren(new SCO_TO_MODULEITEM(i).apply(list));
 					i.setPlace(place.getPlace());
 					return i;
-				});
+				}).recover(this::getRoot);
 			} else {
 				Promise<DomCourseStudent> p = rpc.getCourse(place.getID());
 				promise = p.map( (DomCourseStudent course) -> {
@@ -66,7 +68,7 @@ public class ModuleActivity extends AbstractActivity {
 				i.setPlace(place.getPlace());
 				SelectModuleItemHolder.insert(i);
 				return i;
-			});
+			}).recover(this::getRoot);
 			}
 		} else 
 		{
@@ -75,6 +77,11 @@ public class ModuleActivity extends AbstractActivity {
 		}
 	}
 
+	
+	private SelectModuleItem getRoot(Promise<?> failed) {
+		return SelectModuleItem.ROOT;
+	}
+	
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus) {
 		delegate = promise.map( item -> {
