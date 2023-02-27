@@ -27,7 +27,7 @@
          <module>../DWO-rest-lib</module>
 <!--         <module>../DWO-gwt-lib</module> -->
 <!--         <module>../DWO-commons-lib</module> -->
-<!--         <module>../DWO-jclient-lib</module> -->
+         <module>../DWO-jclient-lib</module>
 <!--         <module>../DWOJClient</module> needs profiles dwo-obfuscate dwo-pack-sign -->
 <!--         <module>../DWOServer</module> -->
 <!--         <module>../EBServer</module> -->
