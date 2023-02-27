@@ -1,0 +1,253 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>nl.uu.fi.dwo</groupId>
+        <artifactId>DWO</artifactId>
+        <relativePath>../DWO/pom.xml</relativePath>
+  		<version>2.5.19-SNAPSHOT</version>
+    </parent>
+
+    <!--<groupId>nl.uu.fi.dwo.gwt</groupId>-->
+    <artifactId>DWO-gwt-lib</artifactId>
+    <name>DWO gwt lib</name>
+    
+    <packaging>jar</packaging>
+    <developers>
+        <developer>
+            <id>Gert van der Plas</id>
+            <name>plas0006</name>
+            <email>g.a.j.vanderplas@uu.nl</email>
+            <organization>Freudenthal Institute</organization>
+            <organizationUrl>http://www.uu.nl/onderzoek/freudenthal-instituut</organizationUrl>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>Wim van Velthoven</id>
+            <name>velth101</name>
+            <email>w.p.g.vanvelthoven@uu.nl</email>
+            <organization>Freudenthal Institute</organization>
+            <organizationUrl>http://www.uu.nl/onderzoek/freudenthal-instituut</organizationUrl>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
+    </developers>
+    
+    <properties>
+        <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+        <gwtVersion>2.8.2</gwtVersion>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <restyVersion>2.2.0</restyVersion>
+        <gwt.test.phase>none</gwt.test.phase>
+    </properties>
+    
+    <scm>
+        <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-gwt-lib/trunk</connection>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-gwt-lib/trunk</developerConnection>
+    </scm>
+        
+    <build>
+        <finalName>${project.artifactId}-${project.version}</finalName>
+        <outputDirectory>target/${project.build.finalName}/WEB-INF/classes</outputDirectory>
+        <sourceDirectory>src</sourceDirectory>
+        <testSourceDirectory>test</testSourceDirectory>
+        <resources>
+            <resource>
+                <directory>src</directory>
+            </resource>
+        </resources>
+        <plugins>
+            <!-- Order is important ! Execution follows the declaration order -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.2</version>
+                <configuration>
+                    <executable>${jdk}/bin/javac</executable>
+                    <fork>false</fork>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>   
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>            
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
+                <version>${gwtVersion}</version>
+                <configuration>
+                    <module>fi.dwo.gwt.lib.rest.${project.artifactId}</module>
+                    <extraJvmArgs>-Xmx1024m</extraJvmArgs>
+                    <runTarget>${project.artifactId}.html</runTarget>
+                    <!--                    <warSourceDirectory>war</warSourceDirectory>        -->
+                    <compileSourcesArtifacts> 
+                        <compileSourcesArtifact>nl.uu.fi.dwo.rest:DWO-rest-lib</compileSourcesArtifact> 
+                    </compileSourcesArtifacts> 
+
+                    <i18nConstantsWithLookupBundles>
+                        <i18nConstantsWithLookupBundle>nl.uu.fi.dwo.rest.locale.Dwo2ExceptionMessages</i18nConstantsWithLookupBundle>
+                        <i18nConstantsWithLookupBundle>nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessages</i18nConstantsWithLookupBundle>
+                    </i18nConstantsWithLookupBundles>
+                </configuration>
+                <executions>
+                    <execution>
+                    	<phase>${gwt.test.phase}</phase>
+                        <goals>
+<!--                             <goal>compile</goal> -->
+<!--                             <goal>i18n</goal> -->
+								 <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <preparationGoals>clean verify install</preparationGoals>
+                    <tagBase>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-gwt-lib/tags/</tagBase>
+                </configuration>            
+            </plugin>            
+<!--            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.10</version>
+                <executions>   
+                    <execution>        
+                        <id>unpack-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <includes>nl.uu.fi.dwo.rest.locale/*.properties</includes>                            
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>nl.uu.fi.dwo</groupId>
+                                    <artifactId>DWO-rest-lib</artifactId>
+                                    <version>2.1.16-SNAPSHOT</version>
+                                    <outputDirectory>${project.build.directory}/${project.build.finalName}/dwo/apps/</outputDirectory>
+                                </artifactItem>
+								
+                            </artifactItems>
+                            <overWriteReleases>true</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>            -->
+            <!--            <plugin>
+                 usage: jetty:run-war of jetty:run-exploded 
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.0.0.v20130308</version>
+            </plugin> -->
+        </plugins>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>nl.uu.fi.dwo.rest</groupId>
+            <artifactId>DWO-rest-lib</artifactId>
+        </dependency>      
+        <dependency>
+            <groupId>nl.uu.fi.dwo.rest</groupId>
+            <artifactId>DWO-rest-lib</artifactId>
+            <classifier>sources</classifier>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwtVersion}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-dev</artifactId>
+            <version>${gwtVersion}</version>
+            <scope>test</scope>
+        </dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency> <!-- deze is 2.8.1 compatibel -->
+			<groupId>com.github.nmorel.gwtjackson</groupId>
+  			<artifactId>gwt-jackson</artifactId>
+  			<version>0.14.2</version>
+		</dependency>
+        <dependency>
+            <groupId>org.fusesource.restygwt</groupId>
+            <artifactId>restygwt</artifactId>
+            <version>${restyVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.fusesource.restygwt</groupId>
+            <artifactId>restygwt</artifactId>
+            <version>${restyVersion}</version>
+            <classifier>sources</classifier>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>nl.uu.fi.dwo.mobile</groupId>
+            <artifactId>promise-api</artifactId>
+            <version>0.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>nl.uu.fi.dwo.mobile</groupId>
+            <artifactId>promise-api</artifactId>
+            <version>0.0.2</version>
+            <classifier>sources</classifier>
+        </dependency>        
+        <dependency>
+            <groupId>com.owlike</groupId>
+            <artifactId>genson</artifactId>
+            <version>1.4</version>
+            <classifier>sources</classifier>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+        	<groupId>com.googlecode.json-simple</groupId>
+        	<artifactId>json-simple</artifactId>
+        	<version>1.1.1</version>
+        	<scope>test</scope>
+        </dependency>
+    </dependencies>
+    <profiles>
+    	<profile>
+    		<id>gwttest</id>
+    		<properties>
+    		        <gwt.test.phase>test</gwt.test.phase>    		
+    		</properties>
+    	</profile>    
+    </profiles>
+</project>
