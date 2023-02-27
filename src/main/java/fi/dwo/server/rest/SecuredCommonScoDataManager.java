@@ -618,6 +618,10 @@ try {
         pssc.setCreateTime(new Time(now));
         pssc.setScoID(scoContext.getScoID());
         pssc.setPersistentHasRolePK(hasRoleKey);
+		pssc.setLocation("");
+		pssc.setCompletionStatus("");
+		pssc.setSessionTime("");
+		pssc.setTotalTime("");
         StudentScoContextManager.create(pssc); // throw duplicate error
         LOG.fine("studentsco1 = " + pssc.getStudentSco());
         list = StudentScoContextManager.findEntities(scoContext, hasRoleKey);
