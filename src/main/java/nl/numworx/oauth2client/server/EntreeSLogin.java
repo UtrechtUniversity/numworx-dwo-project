@@ -101,7 +101,7 @@ public class EntreeSLogin implements SigningKeyResolver, Login {
 		    if (state != null) builder.setState(state);
 		    if (nonce != null) builder.setParameter("nonce", nonce);
 		    //if (acr != null) builder.setParameter("acr_values", acr?PASSWORD_MFA:PASSWORD);
-		    builder.setParameter("prompt", "login"); // always login 
+		    //builder.setParameter("prompt", "login"); // always login 
 		    OAuthClientRequest request = builder
 		        .setClientId(client_id)
 		        .setRedirectURI(redirect_url)
