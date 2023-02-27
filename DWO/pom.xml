@@ -24,7 +24,7 @@
     
     <!-- should move project role names here that fall in the full project scope -->
     <modules>
-<!--         <module>../DWO-rest-lib</module> -->
+         <module>../DWO-rest-lib</module>
 <!--         <module>../DWO-gwt-lib</module> -->
 <!--         <module>../DWO-commons-lib</module> -->
 <!--         <module>../DWO-jclient-lib</module> -->
