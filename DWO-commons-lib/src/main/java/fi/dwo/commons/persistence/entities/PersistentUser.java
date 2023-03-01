@@ -1,0 +1,457 @@
+package fi.dwo.commons.persistence.entities;
+
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+
+/**
+ * PersistentUser.
+ *
+ * @author G.A.J. van der Plas
+ */
+@Entity
+@Table(name = "tbluser", schema = "", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"username"})})
+@NamedQueries({
+    @NamedQuery(name = "PersistentUser.findAll", query = "SELECT p FROM PersistentUser p"),
+    @NamedQuery(name = "PersistentUser.findByUserID", query = "SELECT p FROM PersistentUser p WHERE p.userID = :userID"),
+    @NamedQuery(name = "PersistentUser.findBySchoolGroupID", query = "SELECT p FROM PersistentUser p WHERE p.schoolGroupID = :schoolGroupID"),
+    @NamedQuery(name = "PersistentUser.findByFirstname", query = "SELECT p FROM PersistentUser p WHERE p.firstname = :firstname"),
+    @NamedQuery(name = "PersistentUser.findByMiddlename", query = "SELECT p FROM PersistentUser p WHERE p.middlename = :middlename"),
+    @NamedQuery(name = "PersistentUser.findByLastname", query = "SELECT p FROM PersistentUser p WHERE p.lastname = :lastname"),
+    @NamedQuery(name = "PersistentUser.findByUsername", query = "SELECT p FROM PersistentUser p WHERE p.username = :username"),
+    @NamedQuery(name = "PersistentUser.findByUsernameAndPassword", query = "SELECT p FROM PersistentUser p WHERE p.username = :username AND p.password = :password"),
+    @NamedQuery(name = "PersistentUser.findByPasswd", query = "SELECT p FROM PersistentUser p WHERE p.password = :passwd"),
+    @NamedQuery(name = "PersistentUser.findByEmail", query = "SELECT p FROM PersistentUser p WHERE p.email = :email"),
+    @NamedQuery(name = "PersistentUser.findByRegisterDate", query = "SELECT p FROM PersistentUser p WHERE p.registerDate = :registerDate"),
+    @NamedQuery(name = "PersistentUser.findByLastLogin", query = "SELECT p FROM PersistentUser p WHERE p.lastLogin = :lastLogin")})
+/**
+ * @Cacheable(true) instead do
+ * <cache type="SOFT" size="64000" expiry="36000000" coordination-type="INVALIDATE_CHANGED_OBJECTS"/>
+ * - See more at:
+ * http://www.eclipse.org/eclipselink/documentation/2.5/jpa/extensions/a_cache.htm#sthash.jkf8vpLB.dpuf
+ */
+//@Cache(type = CacheType.SOFT, // Cache everything until the JVM decides memory is low. 
+//        size = 10000, // Use 64,000 as the initial cache size. 
+//        expiry = 36000000 // 10 minutes 
+//)
+public class PersistentUser implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "userID", nullable = false)
+    private Long userID;
+    @Column(name = "schoolGroupID")
+    private Long schoolGroupID;
+    @Basic(optional = false)
+    @Column(name = "firstname", nullable = false, length = 50)
+    private String firstname;
+    @Column(name = "middlename", length = 15)
+    private String middlename;
+    @Basic(optional = false)
+    @Column(name = "lastname", nullable = false, length = 100)
+    private String lastname;
+    @Basic(optional = false)
+    @Column(name = "username", nullable = false, length = 128)
+    private String username;
+    @Basic(optional = false)
+    @Column(name = "passwd", nullable = false, length = 128)
+    private String password;
+    @Basic(optional = false)
+    @Column(name = "email", nullable = false, length = 128)
+    private String email;
+    @Basic(optional = false)
+    @Column(name = "registerDate", nullable = false)
+    @Temporal(TemporalType.DATE)
+    private Date registerDate;
+    @Column(name = "lastLogin")
+    @Temporal(TemporalType.DATE)
+    private Date lastLogin;
+//    @OneToMany(mappedBy = "schoolGroupID")
+//    private List<PersistentSchoolGroup> schoolGroups;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @PrimaryKeyJoinColumn(name = "schoolGroupID")
+    private PersistentSchoolGroup schoolGroup;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "singleschool", nullable = false)
+    private Boolean singleSchoolAccount;
+    @Column(name = "lastLoginTime")
+    private java.sql.Time lastLoginTime;
+
+    // since 1.5.0
+    @Column(name = "optlock")
+    @Version private Long optlock;
+    @Column(name = "lastChangeTimeStamp")
+    long lastChangeTimeStamp;
+    @NotNull
+    @Column(name="del",nullable = false)
+    private DelState delState = DelState.not;
+
+    public PersistentUser() {
+    }
+
+    public PersistentUser(Long userID) {
+        this.userID = userID;
+    }
+
+    public PersistentUser(Long userID, String firstname, String lastname, String username, String passwd, String email, Date registerDate) {
+        this.userID = userID;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.username = username;
+        this.password = passwd;
+        this.email = email;
+        this.registerDate = registerDate;
+    }
+
+    public Long getId() {
+        return userID;
+    }
+
+    public void setId(Long userID) {
+        this.userID = userID;
+    }
+
+    public Long getSchoolGroupId() {
+        return schoolGroupID;
+    }
+
+    public void setSchoolGroupId(Long schoolGroupID) {
+        this.schoolGroupID = schoolGroupID;
+    }
+
+    public String getGivenName() {
+        return firstname;
+    }
+
+    public void setGivenName(String givenName) {
+        this.firstname = givenName;
+    }
+
+    public String getInsertion() {
+        return middlename;
+    }
+
+    public void setInsertion(String insertion) {
+        this.middlename = insertion;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String familyName) {
+        this.lastname = familyName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Date getRegisterDate() {
+        return registerDate;
+    }
+
+    public void setRegisterDate(Date registerDate) {
+        this.registerDate = registerDate;
+    }
+
+    public Date getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    /**
+     * Returns true if the username indicates a single user account. It contains
+     * a '#'token.
+     *
+     * @return
+     */
+    public Boolean isSingleSchoolAccount() {
+        return singleSchoolAccount;
+    }
+
+    /**
+     * Returns true if the username indicates a single user account. It contains
+     * a '#'token.
+     *
+     * @return
+     */
+    public void setSingleSchoolAccount(Boolean b) {
+        singleSchoolAccount = b;
+    }
+
+    /**
+     * @return the lastLoginTime
+     */
+    public java.sql.Time getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    /**
+     * @param lastLoginTime the lastLoginTime to set
+     */
+    public void setLastLoginTime(java.sql.Time lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (userID != null ? userID.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof PersistentUser)) {
+            return false;
+        }
+        PersistentUser other = (PersistentUser) object;
+        if ((this.userID == null && other.userID != null) || (this.userID != null && !this.userID.equals(other.userID))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "fi.dwo.server.persistence.PersistentUser[ userID=" + userID + " ]";
+    }
+
+    public PersistentSchoolGroup getPersistentSchoolGroup() {
+        return schoolGroup;
+    }
+
+    public boolean similar(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof PersistentUser)) {
+            return false;
+        }
+        PersistentUser other = (PersistentUser) object;
+        if ((this.username != null && this.username.equals(other.username))
+                && (this.firstname != null && this.firstname.equals(other.firstname))
+                && ((this.middlename == null && other.middlename == null) || (this.middlename != null && this.middlename.equals(other.middlename)))
+                && (this.lastname != null && this.lastname.equals(other.lastname))
+                && (this.email != null && this.email.equals(other.email))
+                && (this.password != null && this.password.equals(other.password))
+                && ((this.schoolGroupID == null && other.schoolGroupID == null) || (this.schoolGroupID != null && this.schoolGroupID.equals(other.schoolGroupID)))
+                && (this.email != null && this.email.equals(other.email))
+                && ((this.schoolGroupID == null && other.schoolGroupID == null) || (this.schoolGroupID != null && this.schoolGroupID.equals(other.schoolGroupID)))
+                && (this.registerDate != null && (new SimpleDateFormat("MM-dd-yyyy").format(this.registerDate)).equals(new SimpleDateFormat("MM-dd-yyyy").format(other.registerDate)))
+                && ((this.lastLogin == null && other.lastLogin == null) || (this.lastLogin != null && (new SimpleDateFormat("MM-dd-yyyy").format(this.registerDate)).equals(new SimpleDateFormat("MM-dd-yyyy").format(other.lastLogin))))) {
+            return true;
+        }
+        return false;
+    }
+
+    public DomUser buildDomUser() {
+        DomUser user = new DomUser();
+        fillDomUser(user);
+        return user;
+    }
+
+    public DomUserFull buildDomUserFull() {
+        DomUserFull user = new DomUserFull();
+        fillDomUserFull(user);
+        return user;
+    }
+
+    public DomUserFullwLoginContext buildDomUserFullwLoginContext(PersistentLoginContext loginContext) {
+        DomUserFullwLoginContext result = new DomUserFullwLoginContext();
+        DomUserFull user = new DomUserFull();
+        fillDomUserFull(user);
+        result.setDomUserFull(user);
+        result.setDomLoginContext(loginContext.buildDomLoginContext());
+        splitRealm(result);
+        return result;
+    }
+    
+    private void splitRealm(DomUserFullwLoginContext result) {
+      String username  = result.getDomUserFull().getUserName();
+      int split = username.indexOf('@');
+      if (split > 0) {
+        result.getDomLoginContext().setRealm(username.substring(split));
+        result.getDomUserFull().setUserName(username.substring(0, split));
+      }     
+    }
+
+    public String getRealm() {
+      int split = username.indexOf('@');
+      if (split > 0)
+        return username.substring(split);
+      return null;
+    }
+    
+    private DomStudent buildDomStudent() {
+        DomStudent user = new DomStudent();
+        fillDomUser(user);
+        return user;
+    }
+
+    private DomTeacher buildDomTeacher() {
+        DomTeacher user = new DomTeacher();
+        fillDomUser(user);
+        return user;
+    }
+
+    private DomSchoolAdmin buildDomSchoolAdmin() {
+        DomSchoolAdmin user = new DomSchoolAdmin();
+        fillDomUser(user);
+        return user;
+    }
+
+    private DomSingleSchoolStudent buildDomSingleSchoolStudent() {
+        DomSingleSchoolStudent user = new DomSingleSchoolStudent();
+        fillDomUser(user);
+        user.setPassword(password);
+        user.setEmail(email);
+        return user;
+    }
+
+    /**
+     * Fills the user with data from the current object.
+     *
+     * @param user
+     */
+    private void fillDomUser(DomUser user) {
+        if (getId() != null) {
+            user.setId(buildPersistenceId());
+            user.setOptLock(optlock);
+        } else {
+            user.setId(null);
+        }
+        user.setUserName(getUsername());
+        user.setGivenName(getGivenName());
+        user.setFamilyName(getLastname());
+        user.setInsertion(getInsertion());
+        user.setSingleSchool(isSingleSchoolAccount());
+    }
+
+    private void fillDomUserFull(DomUserFull user) {
+        fillDomUser(user);
+        user.setPassword(getPassword());
+        user.setEmail(getEmail());
+
+    }
+
+
+   /**
+     * Builds a PersistenceId using this object's data.
+     *
+     * @return
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(getId());
+    }
+
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * aUserId aScoDataId
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(Long aUserId) {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d",
+                PersistenceClassType.PersistentUser.name(), aUserId));
+        return id;
+    }
+
+    public DomStudent buildDomStudent(String realm) {
+      DomStudent s = buildDomStudent();
+      return withoutRealm(realm, s);
+    }
+
+    private <T extends DomUser> T withoutRealm(String realm, T s) {
+      if (realm == null) return s;
+      String name = s.getUserName();
+      int split = name.indexOf('@');
+      if (split > 0)
+      {
+        if (name.endsWith(realm))
+          s.setUserName(name.substring(0,split));
+      } else
+        s.setUserName(name + '@');
+      
+      return s;
+    }
+
+    public DomTeacher buildDomTeacher(String realm) {
+      return withoutRealm(realm, buildDomTeacher());
+    }
+
+    public DomSchoolAdmin buildDomSchoolAdmin(String realm) {
+      return withoutRealm(realm, buildDomSchoolAdmin());
+    }
+
+    public DomSingleSchoolStudent buildDomSingleSchoolStudent(String realm) {
+      return withoutRealm(realm, buildDomSingleSchoolStudent());
+    }
+    
+    public DomUserFull buildDomUserFull(String realm) {
+      return withoutRealm(realm, buildDomUserFull());
+    }
+    
+    @PrePersist
+    @PreUpdate
+    void changeTimestamp() {
+        lastChangeTimeStamp = System.currentTimeMillis();
+    }
+
+}
