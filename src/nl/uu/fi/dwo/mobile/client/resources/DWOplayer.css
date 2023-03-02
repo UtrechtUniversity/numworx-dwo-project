@@ -58,6 +58,11 @@ iframe {
 	overflow: auto;
 }
 
+.textEditor_readonly .textEditor > div, .textEditor_readonly .textEditor {
+	background-color: transparent;
+}
+
+
 /*
 div.insert_formule {padding-right:5px; padding-left:5px;}
 */
