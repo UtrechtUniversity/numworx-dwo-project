@@ -54,6 +54,7 @@ import java.io.UnsupportedEncodingException;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.Base64;
 import java.util.Date;
@@ -262,6 +263,8 @@ public class PublicUserManager {
             return build.LoginCheck(domCheck);
         } catch (Dwo2Exception e) {
             throw new Dwo2RestException(e);
+        } catch (RuntimeException e) {
+        	return Boolean.FALSE;
         }
 //        PersistentUser user = UserManager.login(domCheck.getUsername(), DomLoginCheck.crypt(domCheck.getPassword()));
 //        return (user != null);
