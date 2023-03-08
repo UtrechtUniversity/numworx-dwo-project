@@ -40,6 +40,11 @@ public class HTTPFilter implements Filter {
         int index = remoteAddr.lastIndexOf(',');
         if (index >= 0) {
           remoteAddr = remoteAddr.substring(index + 1);
+// Microsoft IIS adds :port to this remote addr, geen idee hoe een ipv6 port er uit ziet
+          index = remoteAddr.lastIndexOf(':');
+          if (index >= 0) {
+        	  remoteAddr = remoteAddr.substring(0, index);
+          }        
         }
       }
       String serverPort = request.getHeader("x-forwarded-port");
