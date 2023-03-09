@@ -4,13 +4,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.swing.JCheckBox;
 import javax.swing.JTree;
@@ -68,23 +73,7 @@ public class MethodListener implements ItemListener, ActionListener {
             nodes.put(key,  benv);
           }
         }
-        Enumeration<DefaultMutableTreeNode> all = (Enumeration)((DefaultMutableTreeNode) model.getRoot()).depthFirstEnumeration();
-        while( all.hasMoreElements() ) {
-          Object o = all.nextElement().getUserObject();
-          if (o instanceof NodeLeaf) {
-            NodeLeaf nl = (NodeLeaf)o;
-            Set<String> infos = GraphNode.extractInfos(nl.getMethode()).keySet();
-            String title = nl.toString();
-            for(String mi : infos) {
-              if (title.startsWith("W:")) 
-                mi += "-W:";
-              nodes.computeIfPresent(mi, (k, n) -> { 
-                InvisibleNode node = new InvisibleNode(new NodeLeaf(title, nl.getInfo(),nl.getLanguage(), false), false, true);
-                treeOrder.put(node, treeOrder.size());
-                insertMethod(n,node); return n; });
-            }
-          }
-        }
+        insertAllLeafNodes2(nodes);
         methodModel = new InvisibleTreeModel(root);
         treeOrder.clear();
         filterMethod(filterAction.filter);
@@ -93,6 +82,93 @@ public class MethodListener implements ItemListener, ActionListener {
     } else {
       tree.setModel(model);
     }
+  }
+
+  private void insertAllLeafNodes(Map<String, InvisibleNode> nodes) {
+    Enumeration<DefaultMutableTreeNode> all = (Enumeration)((DefaultMutableTreeNode) model.getRoot()).depthFirstEnumeration();
+    while( all.hasMoreElements() ) {
+      Object o = all.nextElement().getUserObject();
+      if (o instanceof NodeLeaf) {
+        NodeLeaf nl = (NodeLeaf)o;
+        Set<String> infos = GraphNode.extractInfos(nl.getMethode()).keySet();
+        String title = nl.toString();
+        for(String mi : infos) {
+          if (title.startsWith("W:")) 
+            mi += "-W:";
+          nodes.computeIfPresent(mi, (k, n) -> { 
+            InvisibleNode node = new InvisibleNode(new NodeLeaf(title, nl.getInfo(),nl.getLanguage(), false), false, true);
+            treeOrder.put(node, treeOrder.size());
+            insertMethod(n,node); return n; });
+        }
+      }
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private void insertAllLeafNodes2(Map<String, InvisibleNode> nodes) {
+    Enumeration<DefaultMutableTreeNode> all;
+    all = (Enumeration<DefaultMutableTreeNode>)((DefaultMutableTreeNode) model.getRoot()).depthFirstEnumeration();
+    LinkedHashMap<String, NodeLeaf> links = new LinkedHashMap<>();
+    HashMap<String, Set<String>> sets = new HashMap<>();
+    while (all.hasMoreElements()) {
+      Object o = all.nextElement().getUserObject();
+      if (o instanceof NodeLeaf) {
+        NodeLeaf n = (NodeLeaf) o;
+        links.put(n.getId(), n);
+        if (n.getVoorkennis() != null) 
+          sets.put(n.getId(), new HashSet<>(n.getVoorkennis()));
+        else 
+          sets.put(n.getId(), Collections.emptySet());
+      }     
+    }
+    // closure
+    closure(sets);
+    List<NodeLeaf> list = new Vector<>(links.values());
+    Collections.sort(list, (a, b) -> {
+      int result = 0;
+        String ida = a.getId(); Set<String> sa = sets.getOrDefault(ida, Collections.emptySet());
+        String idb = b.getId(); Set<String> sb = sets.getOrDefault(idb, Collections.emptySet());
+        if (sa.contains(idb)) 
+          result = +1;
+        if (sb.contains(ida))
+          result = -1;
+      return result;
+    });
+    Iterator<NodeLeaf> nall = list.iterator();
+    while( nall.hasNext() ) {
+      Object o = nall.next();
+      if (o instanceof NodeLeaf) {
+        NodeLeaf nl = (NodeLeaf)o;
+        Set<String> infos = GraphNode.extractInfos(nl.getMethode()).keySet();
+        String title = nl.toString();
+        for(String mi : infos) {
+          if (title.startsWith("W:")) 
+            mi += "-W:";
+          nodes.computeIfPresent(mi, (k, n) -> { 
+            InvisibleNode node = new InvisibleNode(new NodeLeaf(title, nl.getInfo(),nl.getLanguage(), false), false, true);
+            treeOrder.put(node, treeOrder.size());
+            insertMethod(n,node); return n; });
+        }
+      }
+    }
+  }
+
+  
+  private void closure(HashMap<String, Set<String>> sets) {
+    boolean done;
+    do { done = true;
+      for(Map.Entry<String, Set<String>> entry: sets.entrySet()) {
+        boolean added = false;
+        if (! entry.getValue().isEmpty()) 
+        for(String i: new HashSet<>(entry.getValue())) {
+          Set<String> extra = sets.getOrDefault(i, Collections.emptySet());
+          added = entry.getValue().addAll(extra) || added;
+        }
+        if (added)
+          done = false;
+      }
+    } while(!done);
+    
   }
 
   void setActiveMethod(PersistenceId am) {
