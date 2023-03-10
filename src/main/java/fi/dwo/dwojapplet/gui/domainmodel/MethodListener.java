@@ -104,10 +104,10 @@ public class MethodListener implements ItemListener, ActionListener {
     }
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "rawtypes"})
   private void insertAllLeafNodes2(Map<String, InvisibleNode> nodes) {
     Enumeration<DefaultMutableTreeNode> all;
-    all = (Enumeration<DefaultMutableTreeNode>)((DefaultMutableTreeNode) model.getRoot()).depthFirstEnumeration();
+    all = (Enumeration)((DefaultMutableTreeNode) model.getRoot()).depthFirstEnumeration();
     LinkedHashMap<String, NodeLeaf> links = new LinkedHashMap<>();
     HashMap<String, Set<String>> sets = new HashMap<>();
     while (all.hasMoreElements()) {
@@ -115,10 +115,8 @@ public class MethodListener implements ItemListener, ActionListener {
       if (o instanceof NodeLeaf) {
         NodeLeaf n = (NodeLeaf) o;
         links.put(n.getId(), n);
-        if (n.getVoorkennis() != null) 
+        if (n.getVoorkennis() != null && !n.getVoorkennis().isEmpty()) 
           sets.put(n.getId(), new HashSet<>(n.getVoorkennis()));
-        else 
-          sets.put(n.getId(), Collections.emptySet());
       }     
     }
     // closure
