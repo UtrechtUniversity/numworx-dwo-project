@@ -89,6 +89,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
     boolean goedFout = false;
     boolean toonTitel = false;
     boolean bezocht = false;
+    boolean activiteitScore = false;
     String paginaTitel = "";
     Integer cesuur = null;
     
@@ -304,6 +305,11 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			 if (map.containsKey("cesuur")) {
 				 cesuur = map.getInt("cesuur");
 			 }
+			 if (map.containsKey("activiteitScore")) {
+				 activiteitScore = map.getBoolean("activiteitScore");
+				 if (activiteitScore && choicePageMode == 0) 
+					 linkActive = false;
+			 }
 			 
 		}
 		html = linkActive ? anchor : span;
@@ -312,20 +318,37 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		setStyleDependentName("bezocht", bezocht);
 		
 		String pfx0 = "dme.scorewidget.";
-		switch (choicePageMode) {
-		case 0: 
-			anchor.setHref("goto:." + (paginaNr));
-			pfx0 += "cs"; break;
-		case 1:
-			anchor.setHref("goto:" + activiteitNr + "." + paginaNr);
-			pfx0 += "cc." + activiteitNr; break;			
-		case 2: 
-			anchor.setHref("#xs:" + activiteitID + "." + (paginaNr-1));
-			pfx0 += "s." + activiteitID; break;
-		case 3:
-			anchor.setHref("#xc:" + moduleID + "." + activiteitNr + "." + (paginaNr-1));
-			pfx0 += "c." + moduleID + "." + activiteitNr; break;
-		default: pfx0 += "null";
+		if (! activiteitScore) {
+			switch (choicePageMode) {
+			case 0: 
+				anchor.setHref("goto:." + (paginaNr));
+				pfx0 += "cs"; break;
+			case 1:
+				anchor.setHref("goto:" + activiteitNr + "." + paginaNr);
+				pfx0 += "cc." + activiteitNr; break;			
+			case 2: 
+				anchor.setHref("#xs:" + activiteitID + "." + (paginaNr-1));
+				pfx0 += "s." + activiteitID; break;
+			case 3:
+				anchor.setHref("#xc:" + moduleID + "." + activiteitNr + "." + (paginaNr-1));
+				pfx0 += "c." + moduleID + "." + activiteitNr; break;
+			default: pfx0 += "null";
+			} 
+		} else {
+			switch(choicePageMode) {
+			case 0: pfx0 += "cs"; break;
+			case 1: anchor.setHref("goto:" + activiteitNr);
+				pfx0 += "cc." + activiteitNr;
+				break;
+			case 2:
+				anchor.setHref("#xs:" + activiteitID);
+				pfx0 += "s." + activiteitID; break;
+			case 3:
+				anchor.setHref("#xc:" + moduleID + "." + activiteitNr);
+				pfx0 += "c." + moduleID + "." + activiteitNr; break;
+			default: pfx0 += "null";
+			}
+			paginaNr = 0;
 		}
 		final String pfx = pfx0 + "." + paginaNr;
 
