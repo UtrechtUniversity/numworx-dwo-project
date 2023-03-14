@@ -6,6 +6,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,7 +38,7 @@ public class MethodListener implements ItemListener, ActionListener {
   private PersistenceId activeMethod;
   final private JTree tree;
   final private TreeModel model;
-  private Map<Object, Integer> treeOrder = new IdentityHashMap<>();
+  Map<Object, Integer> treeOrder = new IdentityHashMap<>();
   private FilterAction filterAction;
   
   public MethodListener(JCheckBox box, JTree tree, FilterAction filteraction) {
@@ -105,7 +106,7 @@ public class MethodListener implements ItemListener, ActionListener {
   }
 
   @SuppressWarnings({"unchecked", "rawtypes"})
-  private void insertAllLeafNodes2(Map<String, InvisibleNode> nodes) {
+  void insertAllLeafNodes2(Map<String, InvisibleNode> nodes) {
     Enumeration<DefaultMutableTreeNode> all;
     all = (Enumeration)((DefaultMutableTreeNode) model.getRoot()).depthFirstEnumeration();
     LinkedHashMap<String, NodeLeaf> links = new LinkedHashMap<>();
@@ -122,7 +123,7 @@ public class MethodListener implements ItemListener, ActionListener {
     // closure
     closure(sets);
     List<NodeLeaf> list = new Vector<>(links.values());
-    Collections.sort(list, (a, b) -> {
+    sort(list, (a, b) -> {
       int result = 0;
         String ida = a.getId(); Set<String> sa = sets.getOrDefault(ida, Collections.emptySet());
         String idb = b.getId(); Set<String> sb = sets.getOrDefault(idb, Collections.emptySet());
@@ -152,6 +153,23 @@ public class MethodListener implements ItemListener, ActionListener {
   }
 
   
+  private void sort(List<NodeLeaf> list, Comparator<NodeLeaf> compare) {
+    List<NodeLeaf> ordered = new ArrayList<>(list.size());
+    while( ! list.isEmpty()) {
+      int node = 0;
+      NodeLeaf candidate = list.get(0);
+      for(int i = 1; i < list.size(); i++) {
+        NodeLeaf n = list.get(i);
+        if (compare.compare(n, candidate)<0) {
+          node = i;
+          candidate = n;
+        }
+      }
+      ordered.add(candidate); list.remove(node);
+    }
+    list.addAll(ordered);  
+  }
+
   private void closure(HashMap<String, Set<String>> sets) {
     boolean done;
     do { done = true;
