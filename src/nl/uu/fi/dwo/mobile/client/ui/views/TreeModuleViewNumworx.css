@@ -1,6 +1,7 @@
 @eval favicon nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx.getFaviconUrl();
 @eval foldericon nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx.getFolderUrl();
-@external status-busy, status-retry, lesstof, toets, profile-popup, tileInfo;
+@eval infoicon nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx.getInfoUrl();
+@external status-busy, status-retry, lesstof, toets, profile-popup;
 @def color10 #E4F2FB;
 @def color11 #D2E5F5;
 @def color12 #AAC1DC;
@@ -306,6 +307,7 @@
 			background-size: 18px 18px;
 			background-repeat: no-repeat;
 			background-position: 0px 0px;
+			background-image: infoicon;
 		}
 
 .favicon {

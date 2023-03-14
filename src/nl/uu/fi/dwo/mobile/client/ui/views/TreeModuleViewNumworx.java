@@ -329,6 +329,11 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				r("images/numworx/folder-wit-numworx.svg") +
 				"')";	
 	}
+	static String getInfoUrl() {
+		return "url('"+
+				r("images/numworx/info-numworx.svg") +
+				"')";	
+	}
 	
 	private static String r(String resource) {
 		return GWT.getModuleBaseURL() + "../" + resource;
