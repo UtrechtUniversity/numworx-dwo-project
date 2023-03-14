@@ -48,7 +48,10 @@ public class HTTPFilter implements Filter {
         }        
      }
       String serverPort = request.getHeader("x-forwarded-port");
-      String scheme = request.getHeader("x-forwarded-proto");
+      String scheme = request.getHeader("x-forwarded-proto"); // missing x-forwared-port
+      if (serverPort == null && "https".equals(scheme)) {
+    	  serverPort = "443";
+      }
 
       this.remoteAddr = remoteAddr;
       this.serverPort = serverPort != null ? Integer.parseInt(serverPort) : request.getServerPort();
