@@ -826,6 +826,9 @@ try {
 		int pagenr = Integer.parseInt(page)-1;
 		
 		if (key.endsWith(".score.raw")) {
+			if (pagenr<0) {
+				return String.valueOf(Math.round(pssc.getScore()));
+			}
 			JsonArray orScores = onsState.getJsonArray("orScores");
 			orScores = orScores.getJsonArray(0);
 			Number n = orScores.getJsonNumber(pagenr).numberValue();
@@ -845,6 +848,10 @@ try {
 			return n.toString();
 		}
 		if (key.endsWith(".success_status")) {
+			if (pagenr < 0) {
+				return pssc.getScore() > 99f ? "passed" : "";
+			}
+			
 			JsonArray orGoedFout = onsState.getJsonArray("orGoedFout");
 			orGoedFout = orGoedFout.getJsonArray(0);
 			boolean ok = orGoedFout.getBoolean(pagenr);
@@ -861,6 +868,7 @@ try {
 			return ok ? "passed" : "failed";    
 		}
 		if (key.endsWith(".entry")) {
+			if (pagenr < 0) return "resume"; // er is suspend_data;
 			JsonArray bezocht;
 			bezocht = onsState.getJsonArray("visited");
 			if (bezocht == null)
