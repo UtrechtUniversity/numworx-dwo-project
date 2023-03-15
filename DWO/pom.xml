@@ -15,9 +15,9 @@
         <jdk.version>8</jdk.version>
         <jdk>${env.JAVA_HOME_8}</jdk>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <DWOServerVersion>2.5.19-SNAPSHOT</DWOServerVersion>
-        <DWOJClientVersion>2.5.19-SNAPSHOT</DWOJClientVersion>
-		<DWOplayerVersion>2.5.19-SNAPSHOT</DWOplayerVersion>
+        <DWOServerVersion>2.5.19</DWOServerVersion>
+        <DWOJClientVersion>2.5.19</DWOJClientVersion>
+		<DWOplayerVersion>2.5.19</DWOplayerVersion>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <chatGWTVersion>2.5.18</chatGWTVersion>
     </properties>
@@ -43,12 +43,12 @@
     		<dependency>
     			<artifactId>DWO-rest-lib</artifactId>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
-    			<version>2.5.18</version>
+    			<version>2.5.19</version>
     		</dependency>
     		<dependency>
     			<artifactId>DWO-rest-lib</artifactId>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
-    			<version>2.5.18</version>
+    			<version>2.5.19</version>
 				<classifier>sources</classifier>
     		</dependency>
     		<dependency>
