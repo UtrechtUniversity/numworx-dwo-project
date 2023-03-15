@@ -1,0 +1,147 @@
+/**
+ * Copyrighted Nov 24, 2015
+ */
+package nl.uu.fi.dwo.rest.dom.entities;
+
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ * Transfers login context information of a Rest call. registration date, login
+ * timestamp etc..
+ * 
+ * @author G.A.J. van der Plas
+ */
+@XmlRootElement
+public class DomLoginContext {
+    private PersistenceId id;
+    private PersistenceId userId;
+    private PersistenceId schoolGroupId;
+    private PersistenceId hasRoleId;
+    private Long registerTimeStamp;
+    private Long lastLoginTimeStamp;
+    private String secretKey, realm;
+
+    /**
+     * @return the lastLoginTimeStamp
+     */
+    public Long getLastLoginTimeStamp() {
+        return lastLoginTimeStamp;
+    }
+
+    /**
+     * @param lastLoginTimeStamp the lastLoginTimeStamp to set
+     */
+    public void setLastLoginTimeStamp(Long lastLoginTimeStamp) {
+        this.lastLoginTimeStamp = lastLoginTimeStamp;
+    }
+
+    /**
+     * @return the id
+     */
+    public PersistenceId getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(PersistenceId id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the userId
+     */
+    public PersistenceId getUserId() {
+        return userId;
+    }
+
+    /**
+     * @param userId the userId to set
+     */
+    public void setUserId(PersistenceId userId) {
+        this.userId = userId;
+    }
+
+    /**
+     * @return the registerTimeStamp
+     */
+    public Long getRegisterTimeStamp() {
+        return registerTimeStamp;
+    }
+
+    /**
+     * @param registerTimeStamp the registerTimeStamp to set
+     */
+    public void setRegisterTimeStamp(Long registerTimeStamp) {
+        this.registerTimeStamp = registerTimeStamp;
+    }
+
+    /**
+     * @return the schoolGroupId
+     */
+    public PersistenceId getSchoolGroupId() {
+        return schoolGroupId;
+    }
+
+    /**
+     * @param schoolGroupId the schoolGroupId to set
+     */
+    public void setSchoolGroupId(PersistenceId schoolGroupId) {
+        this.schoolGroupId = schoolGroupId;
+    }
+
+    /**
+     * @return the secretKey
+     */
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    /**
+     * @param secretKey the secretKey to set
+     */
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
+    }
+
+
+//    @Transient
+//    public String generateTOTP(){
+//        return "";
+//    }
+//    
+//    @Transient
+//    public boolean verifyTOTP(){
+//        return false;
+//    }
+
+    /**
+     * @return the realm
+     */
+    public String getRealm() {
+      return realm;
+    }
+
+    /**
+     * @param realm the realm to set
+     */
+    public void setRealm(String realm) {
+      this.realm = realm;
+    }
+
+	/**
+	 * @return the hasRoleId
+	 */
+	public PersistenceId getHasRoleId() {
+		return hasRoleId;
+	}
+
+	/**
+	 * @param hasRoleId the hasRoleId to set
+	 */
+	public void setHasRoleId(PersistenceId hasRoleId) {
+		this.hasRoleId = hasRoleId;
+	}    
+}

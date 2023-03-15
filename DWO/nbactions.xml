@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-go-offline</actionName>
+            <displayName>go-offline</displayName>
+            <goals>
+                <goal>dependency:go-offline</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>CUSTOM-site</actionName>
+            <displayName>site</displayName>
+            <goals>
+                <goal>site</goal>
+            </goals>
+        </action>
+    </actions>

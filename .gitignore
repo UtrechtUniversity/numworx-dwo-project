@@ -1,3 +1,8 @@
+# maven artifacts
+target/
+.settings/
+.classpath
+.project
 # Compiled class file
 *.class
 

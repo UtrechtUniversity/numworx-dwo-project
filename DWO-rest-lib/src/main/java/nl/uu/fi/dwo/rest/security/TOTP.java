@@ -1,0 +1,279 @@
+package nl.uu.fi.dwo.rest.security;
+
+import java.lang.reflect.UndeclaredThrowableException;
+import java.security.GeneralSecurityException;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.math.BigInteger;
+import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
+
+//Note according to https://trustee.ietf.org/copyright-faq.html 
+//visited on 15 feb 2018, page published on June 22, 2010 
+//it is stated that:
+//
+// Yes. Code Components (see Question 3.2) that are embedded or included in IETF 
+//Documents published on or after November 10, 2008, can be used, copied, distributed 
+//and modified by anyone in any manner under the open source Simplified BSD License, 
+//as described in Questions 3.2 and 3.3. This is true even if the 6.c.iii Legend
+//described in Question 4.2 s present in the IETF Document where the Code Component 
+//originates.
+ 
+
+/**
+ * This an example implementation of the OATH TOTP algorithm.
+ * Visit www.openauthentication.org for more information.
+ * published September 8, 2010
+ *
+ * @author Johan Rydell, PortWise, Inc.
+ * 
+ * Adapted 2018-02-15 Gert van der Plas
+ * 
+ * https://tools.ietf.org/id/draft-mraihi-totp-timebased-06.html
+ * 
+ */
+public class TOTP {
+
+    private static final Logger LOG = Logger.getLogger(TOTP.class.getName());
+    public final static long defaultPeriod=30000;//in milliseconds.
+
+    private TOTP() {}
+
+
+    /**
+     * This method uses the JCE to provide the crypto
+     * algorithm.
+     * 
+     * HMAC computes a Hashed Message Authentication Code with the
+     * crypto hash algorithm as a parameter.
+     *
+     * @param crypto     the crypto algorithm (HmacSHA1, HmacSHA256,
+     *                            HmacSHA512)
+     * @param keyBytes   the bytes to use for the HMAC key
+     * @param text       the message or text to be authenticated.
+     */
+    private static byte[] hmac_sha1(String crypto, byte[] keyBytes,
+        byte[] text)
+    {
+        try {
+            Mac hmac;
+            hmac = Mac.getInstance(crypto);
+            SecretKeySpec macKey =
+                new SecretKeySpec(keyBytes, "RAW");
+            hmac.init(macKey);
+            return hmac.doFinal(text);
+        } catch (GeneralSecurityException gse) {
+            throw new UndeclaredThrowableException(gse);
+        }
+    }
+
+
+    /**
+     * This method converts HEX string to Byte[]
+     *
+     * @param hex   the HEX string
+     *
+     * @return      A byte array
+     */
+    private static byte[] hexStr2Bytes(String hex){
+        // Adding one byte to get the right conversion
+        // values starting with "0" can be converted
+        byte[] bArray = new BigInteger("10" + hex,16).toByteArray();
+
+        // Copy all the REAL bytes, not the "first"
+        byte[] ret = new byte[bArray.length - 1];
+        for (int i = 0; i < ret.length ; i++)
+            ret[i] = bArray[i+1];
+        return ret;
+    }
+
+
+    private static final int[] DIGITS_POWER
+    // 0 1  2   3    4     5      6       7        8
+    = {1,10,100,1000,10000,100000,1000000,10000000,100000000 };
+
+
+    /**
+     * This method generates an TOTP value for the given
+     * set of parameters.
+     *
+     * @param key   the shared secret, HEX encoded
+     * @param time     a value that reflects a time
+     * @param returnDigits     number of digits to return
+     *
+     * @return      A numeric String in base 10 that includes
+     *              {@link truncationDigits} digits
+     */
+    public static String generateTOTP(String key,
+            String time,
+            String returnDigits)
+    {
+        return generateTOTP(key, time, returnDigits, "HmacSHA1");
+    }
+
+    public static Boolean verifyTOTP(String totp, String key, 
+            String returnDigits, long periodInMilliSeconds)
+    {
+        Long time = DwoDateUtilities.getCurrentDwoUnixTimeStamp() / periodInMilliSeconds;
+        String timeString = time.toString();
+        String result = generateTOTP(key, timeString, returnDigits, "HmacSHA1");
+        if(result.equals(totp)){
+            return true;
+        }else{
+            time--;
+            timeString = time.toString();
+            result = generateTOTP(key, timeString, returnDigits, "HmacSHA1");
+            return result.equals(totp);
+        }
+    }
+    
+    public static Boolean verifyTOTP(String totp, String key, 
+            String returnDigits)
+    {
+        return verifyTOTP(totp, key, 
+            returnDigits, TOTP.defaultPeriod);
+    }
+
+
+    /**
+     * This method generates an TOTP value for the given
+     * set of parameters.
+     *
+     * @param key   the shared secret, HEX encoded
+     * @param time     a value that reflects a time
+     * @param returnDigits     number of digits to return
+     *
+     * @return      A numeric String in base 10 that includes
+     *              {@link truncationDigits} digits
+     */
+    public static String generateTOTP256(String key,
+            String time,
+            String returnDigits)
+    {
+        return generateTOTP(key, time, returnDigits, "HmacSHA256");
+    }
+
+
+    /**
+     * This method generates an TOTP value for the given
+     * set of parameters.
+     *
+     * @param key   the shared secret, HEX encoded
+     * @param time     a value that reflects a time
+     * @param returnDigits     number of digits to return
+     *
+     * @return      A numeric String in base 10 that includes
+     *              {@link truncationDigits} digits
+     */
+    public static String generateTOTP512(String key,
+            String time,
+            String returnDigits)
+    {
+        return generateTOTP(key, time, returnDigits, "HmacSHA512");
+    }
+
+
+    /**
+     * This method generates an TOTP value for the given
+     * set of parameters.
+     *
+     * @param key   the shared secret, HEX encoded
+     * @param time     a value that reflects a time
+     * @param returnDigits     number of digits to return
+     * @param crypto    the crypto function to use
+     *
+     * @return      A numeric String in base 10 that includes
+     *              {@link truncationDigits} digits
+     */
+    private static String generateTOTP(String key,
+            String time,
+            String returnDigits,
+            String crypto)
+    {
+        int codeDigits = Integer.decode(returnDigits).intValue();
+        String result = null;
+        byte[] hash;
+
+        // Using the counter
+        // First 8 bytes are for the movingFactor
+        // Complaint with base RFC 4226 (HOTP)
+        while(time.length() < 16 )
+            time = "0" + time;
+
+        // Get the HEX in a Byte[]
+        byte[] msg = hexStr2Bytes(time);
+
+        // Adding one byte to get the right conversion
+        byte[] k = hexStr2Bytes(key);
+
+        hash = hmac_sha1(crypto, k, msg);
+
+        // put selected bytes into result int
+        int offset = hash[hash.length - 1] & 0xf;
+
+        int binary =
+            ((hash[offset] & 0x7f) << 24) |
+            ((hash[offset + 1] & 0xff) << 16) |
+            ((hash[offset + 2] & 0xff) << 8) |
+            (hash[offset + 3] & 0xff);
+
+        int otp = binary % DIGITS_POWER[codeDigits];
+
+        result = Integer.toString(otp);
+        while (result.length() < codeDigits) {
+            result = "0" + result;
+        }
+        return result;
+    }
+//
+//    public static void main(String[] args) {
+//
+//        String seed = "3132333435363738393031323334353637383930";
+//        long T0 = 0;
+//        long X = 30;
+//        long testTime[] = {59, 1111111109, 1111111111,
+//                           1234567890, 2000000000};
+//
+//        String steps = "0";
+//        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+//
+//        try{
+//            System.out.println(
+//              "+--------------+-----------------------+" +
+//              "------------------+--------+--------+");
+//            System.out.println(
+//              "|  Time(sec)   |   Time (UTC format)   " +
+//              "| Value of T(Hex)  |  TOTP  | Mode   |");
+//            System.out.println(
+//              "+--------------+-----------------------+" +
+//              "------------------+--------+--------+");
+//
+//            for(int i=0; i<testTime.length; i++) {
+//                long T = (testTime[i] - T0)/X;
+//                steps = Long.toHexString(T).toUpperCase();
+//                while(steps.length() < 16) steps = "0" + steps;
+//                String fmtTime = String.format("%1$-10s", testTime[i]);
+//                String utcTime = df.format(new Date(testTime[i]*1000));
+//                System.out.print("|  " + fmtTime + "  |  " + utcTime +
+//                                 "  | " + steps + " |");
+//                System.out.println(generateTOTP(seed, steps, "8",
+//                                 "HmacSHA1") + "| SHA1   |");
+//                System.out.print("|  " + fmtTime + "  |  " + utcTime +
+//                                 "  | " + steps + " |");
+//                System.out.println(generateTOTP(seed, steps, "8",
+//                                 "HmacSHA256") + "| SHA256 |");
+//                System.out.print("|  " + fmtTime + "  |  " + utcTime +
+//                                 "  | " + steps + " |");
+//                System.out.println(generateTOTP(seed, steps, "8",
+//                                 "HmacSHA512") + "| SHA512 |");
+//
+//                System.out.println(
+//                  "+--------------+-----------------------+" +
+//                  "------------------+--------+--------+");
+//            }
+//        }catch (final Exception e){
+//            System.out.println("Error : " + e);
+//        }
+//    }
+}

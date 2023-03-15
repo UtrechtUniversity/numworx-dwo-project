@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+              http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5"
+         xmlns="http://java.sun.com/xml/ns/javaee">
+  <servlet>
+    <servlet-name>xapi</servlet-name>
+    <servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class>
+    <init-param>
+      <param-name>targetUri</param-name>
+      <param-value>https://repos.dwo.nl/data/xAPI</param-value>
+    </init-param>
+    <init-param>
+      <param-name>log</param-name>
+      <param-value>true</param-value>
+    </init-param>
+</servlet>
+  <servlet>
+    <servlet-name>appdwo</servlet-name>
+    <servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class>
+    <init-param>
+      <param-name>targetUri</param-name>
+      <param-value>http://localhost:8080/dwo</param-value>
+    </init-param>
+    <init-param>
+      <param-name>log</param-name>
+      <param-value>true</param-value>
+    </init-param>
+</servlet>
+    <servlet-mapping>
+   	  <servlet-name>appdwo</servlet-name>
+   	  <url-pattern>/dwo/*</url-pattern>
+   </servlet-mapping>
+    <servlet-mapping>
+   	  <servlet-name>xapi</servlet-name>
+   	  <url-pattern>/data/xAPI/*</url-pattern>
+   </servlet-mapping>
+
+  
+  <!-- Default page to serve -->
+  <welcome-file-list>
+    <welcome-file>boot.html</welcome-file>
+  </welcome-file-list>
+</web-app>
