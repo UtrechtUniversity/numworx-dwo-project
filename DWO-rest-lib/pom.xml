@@ -39,13 +39,6 @@
     <properties>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
     </properties>
-
-    <!-- update the https path for a different branch or tag! -->
-    <scm>
-        <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-rest-lib/trunk</connection>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-rest-lib/trunk</developerConnection>
-        <url>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-rest-lib/trunk</url>
-    </scm>
   
     <build>
         <resources>
@@ -65,21 +58,9 @@
                     <executable>${jdk}/bin/javac</executable>
                     <fork>false</fork>
                     <encoding>${project.build.sourceEncoding}</encoding>
-                    <excludes>
-                        <exclude>**/src/main/java/fi/dwo/rest/test/locale/*.java</exclude>
-                    </excludes>                    
-                    
                 </configuration>
             </plugin>
             
-<!--             <plugin> -->
-<!--                 <groupId>org.apache.maven.plugins</groupId> -->
-<!--                 <artifactId>maven-resources-plugin</artifactId> -->
-<!--                 <version>2.7</version> -->
-<!--                 <configuration> -->
-<!--                     <encoding>${project.build.sourceEncoding}</encoding> -->
-<!--                 </configuration> -->
-<!--             </plugin>    -->
             <plugin> <!-- attach-sources voor GWT -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -96,28 +77,12 @@
                     </execution>
                 </executions>
             </plugin>         
-            <!--            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.1</version>
-                <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>-->
                                           
             <!-- ensure the build number is available as ${buildNumber} -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
-                <version>1.3</version>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <phase>validate</phase>
@@ -166,20 +131,11 @@
                         <manifestEntries>
                             <Implementation-Build>${buildNumber}</Implementation-Build>
                             <Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
-                            <Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch>
+                            <Implementation-ScmBranch>${scmBranch}</Implementation-ScmBranch>
                         </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <preparationGoals>clean verify install</preparationGoals>
-                    <tagBase>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-rest-lib/tags/</tagBase>
-                </configuration>            
-            </plugin> 
 
                 <!--            <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
