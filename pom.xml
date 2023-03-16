@@ -179,13 +179,13 @@
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>OAuth2Client</artifactId>
-		<version>1.0.5-SNAPSHOT</version>
+		<version>1.0.5</version>
 		<classifier>classes</classifier>
 	</dependency>
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>OAuth2Client</artifactId>
-		<version>1.0.5-SNAPSHOT</version>
+		<version>1.0.5</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
@@ -682,7 +682,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<DWOmAccessVersion>2.5.2</DWOmAccessVersion>
 		<RegisterVersion>2.5.2</RegisterVersion>
-		<DWOGwtClientVersion>2.5.19-SNAPSHOT</DWOGwtClientVersion>
+		<DWOGwtClientVersion>2.5.19</DWOGwtClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testeb4server</aws.environmentName>
