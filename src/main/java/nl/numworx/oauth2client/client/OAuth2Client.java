@@ -85,8 +85,12 @@ public class OAuth2Client implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+		String code;
 		String clientId = getClientId();
-		if(clientId.isEmpty()) {
+		storage = Storage.getSessionStorageIfSupported();
+		code = storage.getItem("code");
+
+		if(clientId.isEmpty() && code == null) {
             String endpoint = getEndpoint0();
             String search = getSearch().substring(1);
             String hash = getHash0();
@@ -95,9 +99,8 @@ public class OAuth2Client implements EntryPoint {
 			return;
 		}
 
-		storage = Storage.getSessionStorageIfSupported();
 		
-		String code = Window.Location.getParameter("code");
+		code = Window.Location.getParameter("code");
 		if (code != null) {
 			String state = Window.Location.getParameter("state");
 			String org   = storage.getItem("state");

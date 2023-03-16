@@ -64,7 +64,8 @@ public class LoginServlet extends HttpServlet {
 		} 
 //		config = new UULogin(getServletConfig());
 //		config = new JavaSamlLogin(getServletConfig());
-		config = new DwoLogin(getServletConfig());
+//		config = new DwoLogin(getServletConfig());
+		config = new EntreeSLogin(getServletConfig());
 	}
 
 }
