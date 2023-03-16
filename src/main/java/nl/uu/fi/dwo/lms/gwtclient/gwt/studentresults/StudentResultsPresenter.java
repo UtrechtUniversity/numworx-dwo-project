@@ -704,6 +704,12 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		if (parent != null) insertMethodMap(parent, score);
 	}
 
+
+	/* 
+	 * Dit is de plek waar leerdoelen aan de methodetree worden toegevoegd.
+	 * moet topologisch gesorteerd zijn. Hier verder geen sortering meer mogelijk.
+	 */
+	
 	TreeItem insertMethodTree(TreeItem item, Widget scoreItem) {
 		if (scoreItem instanceof HasText) {
 			int count = item.getChildCount()-1;
