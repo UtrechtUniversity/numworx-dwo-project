@@ -239,7 +239,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	          DomStudentModelStructureScore score = s.getValue().getDomStudentModelStructureScore();
 	          ti.setWidget(Util.summaryItem(title, score ,0));
 	          //ti.setSelected(true);
-	          addToMethodTree(ti, item, score, method);
+	          addToMethodTree(ti, item, score, method); // hier moet er worden ingebroken
 	          trimMethodTree(ti);
 	          ti.setState(true);
 			  return s;

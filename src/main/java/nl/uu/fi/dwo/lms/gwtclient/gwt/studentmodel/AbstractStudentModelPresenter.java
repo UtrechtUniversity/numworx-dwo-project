@@ -1,13 +1,17 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -165,7 +169,7 @@ abstract class AbstractStudentModelPresenter {
     				all.put(key + "-W", weetjes);
     			}
     		}
-    		insertChildren(all, struc.getCategories());
+    		insertChildren2(all, struc.getCategories());
     		treeOrder.clear();
     		view.showTree(tree);
     		view.setTitle(FilterUtil.setFilter(filter, method));
@@ -193,7 +197,82 @@ abstract class AbstractStudentModelPresenter {
   	}	
   }
 
-  void insertChildrenObj(Map<String, DomTree<String>> all, List<DomStudentModelObj> objectives) {
+  void insertChildren2(Map<String, DomTree<String>> all, List<DomStudentModelCategory> categories) {
+	    LinkedHashMap<String, DomStudentModelObj> links = new LinkedHashMap<>();
+	    HashMap<String, Set<String>> sets = new HashMap<>();
+	  	for(DomStudentModelCategory cat: categories) {
+	  		insertChildrenObj(cat.getObjectives(), links, sets);
+	  	}	
+	    // closure
+	    closure(sets);
+	    List<DomStudentModelObj> list = new Vector<>(links.values());
+	    sort(list, (a, b) -> {
+	      int result = 0;
+	        String ida = a.getInfo().getId(); Set<String> sa = sets.getOrDefault(ida, Collections.emptySet());
+	        String idb = b.getInfo().getId(); Set<String> sb = sets.getOrDefault(idb, Collections.emptySet());
+	        if (sa.contains(idb)) 
+	          result = +1;
+	        if (sb.contains(ida))
+	          result = -1;
+	      return result;
+	    });
+	    insertChildrenObj(all, list);
+	  }
+  
+  
+  
+  
+  private void insertChildrenObj(List<DomStudentModelObj> objectives, LinkedHashMap<String, DomStudentModelObj> links,
+		HashMap<String, Set<String>> sets) {
+	for(DomStudentModelObj obj: objectives) {
+		if (obj.getObjectives() != null) {
+			// recurse
+			insertChildrenObj(obj.getObjectives(), links, sets);
+		} else {
+			links.put(obj.getInfo().getId(), obj);
+			DomStudentModelContextInfo n = obj.getInfo();
+	        if (n.getVoorkennis() != null && !n.getVoorkennis().isEmpty()) 
+	            sets.put(n.getId(), new HashSet<>(n.getVoorkennis()));
+		}
+	}
+  }
+  
+  private void sort(List<DomStudentModelObj> list, Comparator<DomStudentModelObj> compare) {
+	    List<DomStudentModelObj> ordered = new ArrayList<>(list.size());
+	    while( ! list.isEmpty()) {
+	      int node = 0;
+	      DomStudentModelObj candidate = list.get(0);
+	      for(int i = 1; i < list.size(); i++) {
+	    	  DomStudentModelObj n = list.get(i);
+	        if (compare.compare(n, candidate)<0) {
+	          node = i;
+	          candidate = n;
+	        }
+	      }
+	      ordered.add(candidate); list.remove(node);
+	    }
+	    list.addAll(ordered);  
+	  }
+
+	  private void closure(HashMap<String, Set<String>> sets) {
+	    boolean done;
+	    do { done = true;
+	      for(Map.Entry<String, Set<String>> entry: sets.entrySet()) {
+	        boolean added = false;
+	        if (! entry.getValue().isEmpty()) 
+	        for(String i: new HashSet<>(entry.getValue())) {
+	          Set<String> extra = sets.getOrDefault(i, Collections.emptySet());
+	          added = entry.getValue().addAll(extra) || added;
+	        }
+	        if (added)
+	          done = false;
+	      }
+	    } while(!done);
+	    
+	  }
+
+
+void insertChildrenObj(Map<String, DomTree<String>> all, List<DomStudentModelObj> objectives) {
   for (DomStudentModelObj obj: objectives) {
   	if (obj.getObjectives() == null) { // leave
   		Map<String, Map<String, Set<Integer>>> methods = obj.getInfo().getMethods();
