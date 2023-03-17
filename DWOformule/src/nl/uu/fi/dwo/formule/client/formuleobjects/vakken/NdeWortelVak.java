@@ -1,0 +1,162 @@
+package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
+
+import org.vectomatic.dom.svg.OMSVGElement;
+import org.vectomatic.dom.svg.OMSVGGElement;
+import org.vectomatic.dom.svg.OMSVGTransform;
+
+import com.google.gwt.canvas.dom.client.Context2d;
+
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
+import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
+
+/**
+ * 
+ * @author Danny Hendrix
+ * 
+ */
+public class NdeWortelVak extends FormuleElementWithChildren
+{
+	public NdeWortelVak(FormuleElement editor)
+	{
+		super(editor, 2);
+
+		//this.paint();
+		//this.setChanged(true);
+		this.setAsHoogte(3 * fm.getAscent() / 4);
+
+		setSize(4 * fm.getAscent() / 3, 5 * fm.getAscent() / 4 + fm.getDescent());
+		setAsHoogte(3 * fm.getAscent() / 4);
+
+		getChild(0).setPosition(5 * fm.getAscent() / 7 + 5, fm.getAscent() / 4);
+
+		getChild(1).setPosition(fm.getAscent() / 4, 0);
+		//getChild(1).setEditable(false);
+
+		FormuleFontChanges changes = new FormuleFontChanges();
+		changes.setSmallText(FormuleFontChanges.TRUE);
+
+		getChild(1).setFontChanges(changes);
+	}
+
+	@Override
+	public void paintObject()
+	{
+		this.getChild(0).paint();
+		this.getChild(1).paint();
+		zetMaat();		
+		paintComponent(ctx);
+		this.getChild(0).draw(ctx);
+		this.getChild(1).draw(ctx);
+		this.drawCursor();
+	}
+
+	@Override
+	public void paintComponent(Context2d ctx) {
+		super.paintComponent(ctx);
+		
+		build(new CanvasBuilder(ctx));
+	}
+
+	protected void build(PathBuilder ctx) {
+		ctx.setStrokeStyle(color);
+//		ctx.setFillStyle(color);
+		
+		ctx.setLineWidth(fm.getStrokeWidth());
+
+		ctx.beginPath();
+		ctx.moveTo(getChild(1).width - 1, 2 * height / 3-2);
+		ctx.lineTo(fm.getAscent() / 3 + getChild(1).width - 1, height-2);
+		ctx.moveTo(getChild(1).width - 2, 2 * height / 3-2);
+		ctx.lineTo(fm.getAscent() / 3 + getChild(1).width - 2, height-2);
+		ctx.lineTo(2 * fm.getAscent() / 3 + getChild(1).width - 3, fm.getAscent() / 8);
+		//ctx.moveTo(2 * fm.getAscent() / 3 + getChild(1).width - 2, fm.getAscent() / 8);
+		ctx.lineTo(width , fm.getAscent() / 8);
+		ctx.stroke();
+	}
+
+	@Override
+	public void zetMaat() {
+		//setSize(5 * fm.getAscent() / 6 + getChild(0).width + 5, fm.getAscent() / 4 + getChild(0).height);
+		//System.out.println("getChild(1).width = " + getChild(1).width);
+		setSize(getChild(1).width + getChild(0).width + 5 * fm.getAscent() / 6 - 2, fm.getAscent() / 4 + getChild(0).height+2);
+		getChild(0).x = 5 * fm.getAscent() / 7 + getChild(1).width - 2;
+		setAsHoogte(getChild(0).getAsHoogte() + fm.getAscent() / 4);
+		super.zetMaat();
+	}
+
+	public int getAsHoogte()
+	{
+		return getChild(0).getAsHoogte() + fm.getAscent() / 4;
+	}
+	
+	@Override
+	public FormuleElement setCurrentElementAt(int x, int y)
+	{
+		//ignore if the formule is not editable
+		if (holder instanceof FormuleEditor == false)
+			return null;
+		FormuleHolder holder = (FormuleHolder) this.holder;
+		if (x > getChild().x && x < getChild().x + getChild().width)
+			return getChild().setCurrentElementAt(x - getChild().x, y - getChild().y);
+		if (x <= getChild().x)
+		{
+			if (x > getChild(1).x && x < getChild(1).x + getChild(1).width)
+				return getChild(1).setCurrentElementAt(x - getChild(1).x, y - getChild(1).y);
+			//if x < 1/2 of the "v" the cursor should be placed before this object
+			if (x < fm.getAscent() / 3)
+				return null;
+
+			this.getChild().setIndexAt(-1);
+			holder.setCurrentElement(this.getChild());
+			return this.getChild();
+		}
+
+		holder.setCurrentElement(this);
+		return this;
+	}
+
+	@Override
+	public boolean setFont(FormuleFont fm)
+	{
+		if (super.setFont(fm) == false)
+			return false;
+		//getChild().setPosition(5 * fm.getAscent() / 7 - 1, fm.getAscent() / 4);
+		return true;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "$W" + getChild(0).toString() + "$n" + getChild(1).toString() + "@@";
+	}
+	public String toMathML()
+	{
+		return "<mroot>" + getChild(0).toMathML() + getChild(1).toMathML() + "</mroot>";
+	}
+	@Override
+	protected void paintComponent(OMSVGElement svg) {
+		super.paintComponent(svg);
+		SvgBuilder builder = new SvgBuilder(svg, x, y);
+		build(builder);
+	}
+
+	@Override
+	public void draw(OMSVGElement svg) {
+		paintComponent(svg);
+		OMSVGGElement g = new OMSVGGElement();
+		svg.appendChild(g);
+		if(x != 0 || y != 0) {
+			OMSVGTransform transform = getSVGSVGElement(svg).createSVGTransform();
+			transform.setTranslate(x, y);
+			g.getTransform().getBaseVal().appendItem(transform);
+		}
+		getChild(0).draw(g);
+		getChild(1).draw(g);
+		drawCursor(svg);
+	}
+
+}

@@ -1,0 +1,301 @@
+package nl.uu.fi.dwo.formule.client.formuleobjects;
+
+import java.util.Vector;
+
+import org.vectomatic.dom.svg.OMSVGElement;
+import org.vectomatic.dom.svg.OMSVGRectElement;
+import org.vectomatic.dom.svg.utils.SVGConstants;
+
+import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.core.shared.GWT;
+
+import fi.wiskopdr.Letter;
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
+
+/**
+ * Base element that contains one or more FormuleRegels (wortelvak, breukvak
+ * etc..)
+ * 
+ * @author Danny Hendrix
+ * 
+ */
+public abstract class FormuleElementWithChildren extends FormuleElement
+{
+	protected Vector<FormuleRegel> children = new Vector<FormuleRegel>();
+
+	private int currentChild = 0;
+
+	protected OMSVGRectElement selectedRect;
+
+	public FormuleElementWithChildren(FormuleElement holder)
+	{
+		super(holder);
+	}
+
+	public FormuleElementWithChildren(FormuleElement holder, int children)
+	{
+		super(holder);
+		this.createChildren(children);
+	}
+
+	protected void createChildren(int children)
+	{
+		FormuleRegel child;
+		for (int i = 0; i < children; i++)
+		{
+			child = new FormuleRegel(this);
+			this.children.add(child);
+		}
+	}
+
+	public int getChildrenSize()
+	{
+		return this.children.size();
+	}
+
+	public FormuleRegel getChild(int i)
+	{
+		return this.children.get(i);
+	}
+
+	public FormuleRegel getChild()
+	{
+		return this.getChild(this.currentChild);
+	}
+
+	@Override
+	public FormuleElement getCurrentOnNew()
+	{
+		//the current element with a new instance is the first child
+		return this.getChild(0);
+	}
+
+	@Override
+	public FormuleElement getCurrentOnNewOnSelection()
+	{
+		if (this.children.size() > 1)
+			return getChild(1);
+		return this;
+	}
+
+	String getOnRemove(FormuleRegel remove)
+	{
+		int index = this.children.indexOf(remove);
+		FormuleElement ret = this.getChild(0);
+		if (index == 0)
+			ret = this.getChild(1);
+		if (ret != null)
+			return ret.toString();
+		return "";
+	}
+
+	@Override
+	public boolean setFont(FormuleFont fm)
+	{
+		if (!super.setFont(fm))
+			return false;
+		fm = this.getFont();
+		for (int i = 0; i < this.getChildrenSize(); i++)
+			getChild(i).setFont(fm);
+		return true;
+	}
+	
+	public boolean setColor(CssColor c)
+	{
+		if(!super.setColor(c))
+			return false;
+		//color = c.toString();
+		for(int i = 0; i < this.getChildrenSize(); i++)
+			getChild(i).setColor(c);
+		return true;
+	}
+
+	@Override
+	public void vulVak(String s)
+	{
+		if (s == null)
+			return;
+
+		for(int i = 0; i < this.getChildrenSize(); i++)
+			this.getChild(i).deleteAll();
+		
+		FormuleRegel regel = this.getChild(0);
+
+		while (s.length() > 0)
+		{
+			char ch0 = s.charAt(0);
+			if (ch0 == '@')
+				break;
+			else if (ch0 == '$')
+			{
+				int niv = 1;
+				int eind = 0;
+				String sz = s.substring(2);
+				while (niv > 0)
+				{
+					int eindB = sz.indexOf("$");
+					int eindE = sz.indexOf("@");
+					if (eindB < eindE && eindB != -1)
+					{
+						eind = eindB;
+						niv++;
+					}
+					else
+					{
+						eind = eindE;
+						niv--;
+					}
+					sz = sz.substring(eind + 1);
+				}
+				eind = s.length() - sz.length();
+				char ch1 = s.charAt(1);
+				//next child?
+				if (ch1 == 'n')
+				{
+					regel = getChild(1);
+					s = s.substring(2);
+					continue;
+				}
+				else if (ch1 == 'k')
+				{
+					regel = getChild(2);
+					s = s.substring(2);
+					continue;
+				}
+				else if (ch1 == 'l')
+				{
+					regel = getChild(3);
+					s = s.substring(2);
+					continue;
+				}
+				else
+				{
+					FormuleElement ne = FormuleDecoder.getElementFromCharacter(ch1, regel);
+					if (ne != null)
+					{
+						ne.vulVak(s.substring(2, eind));
+						regel.insert(ne);
+						s = s.substring(eind);
+					} 
+					else {
+						GWT.log("unparsable " + s);
+						s = s.substring(eind); // skip unparsable units 
+					}
+				}
+			}
+			else
+			{
+				//hier iets aanpassen om ook woorden te kunnen gaan maken.
+				if(s.length() > 1 && Letter.isCombined(s.charAt(1)))
+				{
+					FormuleTeken t = new FormuleTeken(this, s.substring(0, 2));
+					regel.insert(t);
+					s = s.substring(2);
+				} else {
+
+				regel.insert(new FormuleTeken(regel, s.charAt(0))); // FIXME combine here again!!
+				s = s.substring(1);
+			}}
+		}
+	}
+	
+	public FormuleRegel selection(int selectionStartX, int selectionStartY, int selectionEndX, int selectionEndY)
+	{
+		for (int i = 0; i < this.children.size(); i++)
+		{
+			FormuleRegel regel = this.getChild(i);
+			if (regel.x <= selectionStartX && regel.x + regel.width > selectionEndX && regel.y <= selectionStartY && regel.y + regel.height > selectionEndY)
+				return regel.selection(selectionStartX - regel.x, selectionStartY - regel.y, selectionEndX - regel.x, selectionEndY - regel.y);
+		}
+		return null;
+	}
+	
+	public String getSelectionString()
+	{
+		String s = "";
+		if(this.isSelected())
+			return this.toString();
+		else
+		{	for(int i = 0; i < children.size(); i++)
+			{
+				FormuleElement fe = children.get(i);
+				if(fe instanceof FormuleElementWithChildren)
+				{
+					s += ((FormuleElementWithChildren) fe).getSelectionString();
+				}
+				else if(fe.isSelected())
+					s += fe.toString();
+			}
+		}
+		return s;
+	}
+	
+	
+	
+	@Override
+	public void paintComponent(Context2d ctx) {
+		super.paintComponent(ctx);
+		if (isSelected())
+		{
+			ctx.setFillStyle("#aaf");
+			ctx.fillRect(0, 0, width, height);
+		}		
+	}
+	
+	protected void paintComponent(OMSVGElement svg) {
+		selectedRect = new OMSVGRectElement(x,y,width,height,0, 0);
+		paintSelection0();
+		svg.appendChild(selectedRect);
+	}
+	
+	protected void paintSelection0() {
+		if (isSelected()) {
+			selectedRect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "#AAAAFF");
+		} else {
+			selectedRect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, SVGConstants.CSS_NONE_VALUE);
+		}
+		selectedRect.getWidth().getBaseVal().setValue(width);
+		selectedRect.getX().getBaseVal().setValue(x);
+		drawCursor((OMSVGElement)null);
+	}
+
+	protected void drawCursor(int width, OMSVGElement notused) {
+		if (this.isCurrent() == false || this.isSelected() || this.holder.hasSelection())
+			return;
+		selectedRect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "#00F");
+		selectedRect.getWidth().getBaseVal().setValue(2f);
+		selectedRect.getX().getBaseVal().setValue(x+width-2);
+	}
+	
+	public void paintSelection() {
+		paintSelection0();
+		for(FormuleElement e: children) e.paintSelection();
+	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void paintAll(Context2d ctx) {
+		paintComponent(ctx);
+		for(FormuleElement e: children) {
+			int x = e.getX();
+			int y = e.getY();
+			ctx.translate(x, y);
+			e.paintAll(ctx);
+			ctx.translate(-x, -y);
+		}
+	}
+
+	public void validate() {
+		if(sizechanged) {
+			for(FormuleElement e: children) e.validate();
+			zetMaat();
+		}
+	}
+
+	
+}
