@@ -1,0 +1,96 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
+	>
+	<ui:with type="nl.uu.fi.dwo.keyboard.client.DWOkeyboardBundle" field="resources" />
+	<ui:style>
+	.image {
+		width: 16px !important;
+		height: 16px !important;
+		padding: 8px !important;
+	}
+	.svgwrap {
+		height: 32px;
+		line-height: 0px;
+	}
+	.svgwrapl {
+		height: 72px;
+	}
+	
+	.svgimage {
+		width: 32px !important;
+		height: 32px !important;
+		padding: 0px !important;
+	}
+	.imagem {
+		width: 24px !important;
+		height: 24px !important;
+		padding-left: 4px !important;
+		padding-right: 4px !important;
+		padding-top: 4px !important;
+		padding-bottom: 34px !important;
+	}
+
+	.svgimagem {
+		width: 32px !important;
+		height: 32px !important;
+		padding-left: 0px !important;
+		padding-right: 0px !important;
+		padding-top: 0px !important;
+		padding-bottom: 30px !important;
+	}
+	
+	.symbol {
+	}
+	.apply {
+		width: 16px !important;
+		height: 16px !important;
+		padding-left: 8px !important;
+		padding-right:8px !important;
+		padding-top: 27px !important;
+		padding-bottom: 27px !important;
+	}
+
+	.svgapply {
+		width: 32px !important;
+		height: 32px !important;
+		padding-left: 0px !important;
+		padding-right:0px !important;
+		padding-top: 14px !important;
+		padding-bottom: 14px !important;
+	}
+
+	.panel { 
+		height: 166px;
+<!-- 		margin-left: 8px; -->
+<!-- 		width: auto !important; -->
+		/* background-color: #D2D2D2; */
+	}
+	</ui:style>
+	<g:FlowPanel styleName="{style.panel}" >
+		<g:FlowPanel addStyleNames="dclm">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t1_16">
+				αβ
+			</my:FKey>
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t2_16">
+				123
+			</my:FKey>
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t3_16">
+				abc
+			</my:FKey>
+			<g:SimplePanel addStyleNames="key kbd-Key {style.svgwrap}">
+			<my:DKey addStyleNames="{style.svgimage}" ui:field="t4_16" resource="{resources.hand_svg}" /></g:SimplePanel>
+		</g:FlowPanel>
+
+		<g:FlowPanel addStyleNames="dclm">
+			<g:SimplePanel addStyleNames="kbd-Key {style.svgwrap}">
+			<my:DKey addStyleNames="{style.svgimage}" ui:field="t1_17" resource="{resources.backspace_svg}" /></g:SimplePanel>
+			<g:SimplePanel addStyleNames="kbd-Key {style.svgwrapl} ">
+			<my:DKey addStyleNames="{style.svgapply}" ui:field="t2_17" resource="{resources.apply_svg}"/></g:SimplePanel>
+			<g:SimplePanel addStyleNames="kbd-Key">
+			<my:DKey addStyleNames="{style.svgimagem}" ui:field="t4_17" resource="{resources.VVV_svg}" /></g:SimplePanel>
+		</g:FlowPanel>
+
+	</g:FlowPanel>
+</ui:UiBinder> 

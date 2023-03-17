@@ -1,0 +1,39 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
+	>
+	<ui:style field='style' type='nl.uu.fi.dwo.keyboard.client.KeyboardCSS'>
+
+	.small {
+		width: 572px !important;
+		padding-left: 14px !important;
+		padding-right: 14px !important;
+	}
+
+	.pad {
+		float: right;
+		margin-right: 7px;
+	}
+	
+	.pen {
+		width: 740px;
+		height: 150px;
+	}
+	.small .pad {
+		transform-origin: right top;
+		transform: translate(0,-10px) scale(0.680272,0.8735);
+	}
+
+	.small .pen {
+		width: 584px;
+		height: 125px;
+	}
+
+	
+	</ui:style>
+		<g:HorizontalPanel addStyleNames="keyboard keyboard-hand is-active" >
+			<g:SimplePanel ui:field="writePanel" styleName="{style.pen}" />
+			<my:TabletKeyboardPad ui:field="pad" styleName="{style.pad}" />	
+		</g:HorizontalPanel>
+</ui:UiBinder> 

@@ -1,0 +1,189 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
+	>
+	<ui:with type="nl.uu.fi.dwo.keyboard.client.DWOkeyboardBundle" field="resources" />
+	<ui:style>
+	.pad {
+		float:right;
+	}
+	.panel {
+		float: left;
+	}
+	.image {
+		width: 16px !important;
+		height: 16px !important;
+		padding: 8px !important;
+	}
+	.svgimage {
+		width: 32px !important;
+		height: 32px !important;
+		padding: 0px !important;
+	}
+	
+	
+	.letter {
+		font-family: serif;
+		font-style: italic;
+		font-weight: normal !important;
+	}
+	.symbol {
+		font-family: monospace;
+		font-style: initial;
+		font-weight: normal !important;
+	}
+	.bsymbol {
+		font-family: monospace;
+		font-style: initial;
+		font-weight: normal !important;
+		font-size: 24px !important;
+	}
+	.lsymbol {
+		font-size: 80% !important;
+	}
+	
+	.dwo {
+		width: auto !important;
+
+	}
+	
+	.imagem {
+		width: 24px !important;
+		height: 24px !important;
+		padding-left: 4px !important;
+		padding-right: 4px !important;
+		padding-top: 4px !important;
+		padding-bottom: 34px !important;
+	}
+	.svgimagem {
+		width: 32px !important;
+		height: 32px !important;
+		padding-left: 0px !important;
+		padding-right: 0px !important;
+		padding-top: 0px !important;
+		padding-bottom: 30px !important;
+	}
+	
+	</ui:style>
+<!--
+	{ "wortel", "macht", "kwadraat", "breuk", "haakjes", "ndewortel", "integraal", "prv", "ndelog", "abs", "subscript", "bin" ,ΑΒ },
+	{ "diff", "limiet0", "limiet1", "limiet2", "\u221e", "primitieve", "e", "pi", "<", ">", "\u2228", "\u2248", VVV }
+-->
+	<g:HorizontalPanel addStyleNames="keyboard keyboard-abc is-active {style.dwo}" >
+	  <g:FlowPanel styleName="{style.panel}">
+		<g:FlowPanel addStyleNames="dclm clm-1">
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_1" resource="{resources.wortel_svg}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t4_1" resource="{resources.diff_svg}" />
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-2">
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_2" resource="{resources.macht_svg}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t4_2" resource="{resources.limiet0_svg}" />
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-3">
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_3" resource="{resources.kwadraat_svg}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t4_3" resource="{resources.limiet1_svg}" />
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-4">
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_4" resource="{resources.breuk_svg}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t4_4" resource="{resources.limiet2_svg}" />
+		</g:FlowPanel>
+
+		<g:FlowPanel addStyleNames="dclm clm-5">
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_5" resource="{resources.haakjes_svg}" />
+			<my:FKey addStyleNames="key icon {style.symbol}" ui:field="t4_5">
+				∞
+			</my:FKey>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-6">
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_6" resource="{resources.ndewortel_svg}"/>
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t4_6" resource="{resources.primitieve_svg}" />
+			
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-7">			
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_7" resource="{resources.integraal_svg}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t4_7" resource="{resources.sigma_svg}" />
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-8">
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_8" resource="{resources.prv_svg}" />
+			<my:FKey addStyleNames="key icon {style.symbol}" ui:field="t4_8">
+				π
+			</my:FKey>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-9">
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_9" resource="{resources.ndelog_svg}"/>
+			<my:FKey addStyleNames="key icon {style.symbol}" ui:field="t4_9">
+				≈
+			</my:FKey>
+			
+		</g:FlowPanel>
+		
+		<g:FlowPanel addStyleNames="dclm clm-10">
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_10" resource="{resources.abs_svg}"/>
+			<my:FKey addStyleNames="key icon {style.symbol}" ui:field="t4_10">
+				≠
+			</my:FKey>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-11">
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_11" resource="{resources.subscript_svg}"/>
+			<my:FKey addStyleNames="key icon {style.symbol}" ui:field="t4_11">
+				≤
+			</my:FKey>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-12">
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_12" resource="{resources.bin_svg}"/>
+			<my:FKey addStyleNames="key icon {style.symbol}" ui:field="t4_12">
+				≥
+			</my:FKey>
+		</g:FlowPanel>
+
+		<g:FlowPanel addStyleNames="dclm clm-13">
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_13" resource="{resources.conjug_svg}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t4_13" resource="{resources.partialdiff_svg}" />
+		</g:FlowPanel>
+		
+		<g:FlowPanel addStyleNames="dclm clm-14">
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_15" resource="{resources.vector_svg}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t4_15" resource="{resources.matrix_svg}" />
+		</g:FlowPanel>
+		
+		<g:FlowPanel addStyleNames="dclm clm-15">
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_16" resource="{resources.vectornotatie_svg}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t4_16" resource="{resources.stelsel_svg}" />
+		</g:FlowPanel>
+		
+		<g:FlowPanel addStyleNames="dclm clm-14">
+			<my:FKey addStyleNames="key bg-dkgrey icon {style.lsymbol}" ui:field="t3_14">
+				αβ
+			</my:FKey>
+			<my:DKey addStyleNames="key bg-ltgrey icon {style.svgimagem}" ui:field="t4_14" resource="{resources.VVV_svg}" />
+		</g:FlowPanel>
+<!--  
+		<g:FlowPanel addStyleNames="dclm clm-14">
+			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t4_13">
+				→
+			</my:FKey>
+			<my:FKey addStyleNames="key" ui:field="t1_14">
+				≠
+			</my:FKey>
+			<my:FKey addStyleNames="key icon" ui:field="t4_14">
+				of
+			</my:FKey>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-15">
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t4_11" resource="{resources.conjug_svg}" />
+			<my:FKey addStyleNames="key" ui:field="t1_15" >
+				≈
+			</my:FKey>
+			<my:FKey addStyleNames="key" ui:field="t2_15">
+				>
+			</my:FKey>
+			<my:FKey addStyleNames="key" ui:field="t4_15">
+				∞
+			</my:FKey>
+		</g:FlowPanel>
+-->
+	    </g:FlowPanel>
+
+	</g:HorizontalPanel>
+</ui:UiBinder> 

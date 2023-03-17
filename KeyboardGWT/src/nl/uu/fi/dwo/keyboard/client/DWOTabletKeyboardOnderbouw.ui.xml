@@ -1,0 +1,527 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:with type="nl.uu.fi.dwo.keyboard.client.DWOkeyboardBundle" field="resources" />
+	<ui:with type="com.google.gwt.i18n.client.constants.NumberConstants" field="nc" />
+	<ui:with type="fi.wiskopdr.text.TextConstants" field="rb"/>
+	<ui:style field='style' type='nl.uu.fi.dwo.keyboard.client.ResponsiveCSS'>
+	@def dgrijs rgb(131,131,131);
+	@def grijs rgb(180,180,180);
+	@def lgrijs rgb(240,240,240);
+	@def blauw #7896CA;
+	@def donkerblauw #2673B6;
+	@def achtergrond rgb(229,231,233);
+	.normal {
+	}
+	.small {
+	}
+	.extrasmall {
+	}
+	
+	.small .haak, .extrasmall .haak {
+		background-position: top right;
+		background-repeat: no-repeat;
+		background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAASUlEQVQoz5XSyw0AIAhEwX39V0C1etIQ4mfhJJiJQSAihhqBJHUQ6+AicuIgauGHOBVfiNvFDfF6/oT4NVkRzldmhDuw7kZsNAF75yGEH/UT8AAAAABJRU5ErkJggg==');
+	}	
+	
+	.root {
+		background-color: achtergrond;
+		position: relative;
+		line-height: 0px;
+	
+		font-family: sans-serif;
+		font-style: initial;
+		font-size: 16px;
+		font-weight: normal;
+	}
+
+	.key {
+		position: absolute;
+		left: 5px; right: 0px; top: 0px; bottom: 0px;
+		border-radius: 5px;
+		background-color: white;
+	}
+	.key img {
+		width: 100%;
+		height: 32px;
+	}
+	.pad {
+		padding-left: 5px;
+		padding-right: 10px;
+		background-color: achtergrond;
+	}
+	
+	.normal .row1 {
+		top: 5px;
+		width: 15.789%;
+		height: 100%;
+		left: 0%;
+		position: absolute;
+	}
+	.small .row1 {
+		top: 5px;
+		width: 23.077%;
+		height: 100%;
+		left: 0%;
+		position: absolute;
+	}
+	.extrasmall .row1 {
+		top: 5px;
+		width: 30%;
+		height: 75%;
+		left: 0%;
+		position: absolute;
+	}
+	
+	.normal .row2 {
+		top: 5px;
+		width: 5.263%;
+		display: inline-block;
+		height: 100%;
+		left: 15.789%;
+		position: absolute;
+	}
+	.small .row2 {
+		top: 5px;
+		width: 7.692%;
+		height: 100%;
+		left: 23.077%;
+		position: absolute;
+	}
+	.extrasmall .row2 {
+		top: 116px;
+		width: 30%;
+		height: 25%;
+		left: 0%;
+		position: absolute;
+	}
+	
+	.normal .row3 {
+		top: 5px;
+		width: 10.526%;
+		display: inline-block;
+		heigth: 66.667%;
+		left: 21.053%;
+		position: absolute;
+	}
+	.small .row3 {
+		top: 5px;
+		width: 15.384%;
+		height: 66.667%;
+		left: 30.769%;
+		position: absolute;
+	}
+	.extrasmall .row3 {
+		top: 5px;
+		width: 10%;
+		left: 30%;
+		height: 100%;
+		position: absolute;
+	}
+
+	.normal .row4 {
+		top: 79px;
+		height: 33.333%;
+		left: 21.053%;
+		width: 10.526%;
+		position: absolute;
+	}
+	.small .row4 {
+		top: 79px;
+		height: 33.333%;
+		left: 30.769%;
+		width: 15.384%;
+		position: absolute;
+	}
+	.extrasmall .row4 {
+		top: 116px;
+		height: 25%;
+		left: 40%;
+		width: 20%;
+		position: absolute;
+	}
+	
+	.normal .row5 {
+		top: 5px;
+		height: 37px;
+		left: 31.579%;
+		width: 36.842%;
+		position: absolute;
+	}
+	.small .row5 {	
+		top: 5px;
+		height: 37px;
+		left: 46.154%;
+		width: 23.077%;
+		position: absolute;
+		overflow: hidden;
+	}
+	.extrasmall .row5 {
+		top: 5px;
+		width: 10%;
+		left: 50%;
+		height: 74px;
+		position: absolute;
+		overflow: hidden;
+		line-height: 0px;
+	}
+	
+	.normal .row6 {
+		top: 42px;
+		height: 37px;
+		left: 31.579%;
+		width: 36.842%;
+		position: absolute;
+	}
+	.small .row6 {
+		top: 42px;
+		height: 37px;
+		left: 46.154%;
+		width: 7.692%;
+		position: absolute;
+		overflow: hidden;
+	}
+	.extrasmall .row6 {
+		top: 5px;
+		left: 40%;
+		width: 10%;
+		height: 74px;
+		position: absolute;
+		overflow: hidden;
+	}
+	
+	.normal .row7 {
+		top: 79px;
+		heigth: 37px;
+		left: 31.579%;
+		width: 26.316%;
+		position: absolute;
+	}
+	.small .row7 {
+		top: 79px;
+		height: 37px;
+		left: 46.154%;
+		width: 7.692%;
+		position: absolute;
+		overflow: hidden;
+	}
+	.extrasmall .row7 {
+		top: 79px; height: 37px;
+		width: 20%; left: 40%;
+		position: absolute;
+		overflow: hidden;
+	}
+	.normal .row8 {
+		top: 79px;
+		height: 37px;
+		width: 10.526%;
+		left: 57.894%;
+		position: absolute;
+	}
+	.small .row8 {
+		top: 42px;
+		height: 74px;
+		left: 53.846%;
+		width: 7.692%;
+		position: absolute;
+	}
+	.extrasmall .row8 {
+		top: 116px;
+		left: 60%;
+		width: 20%;
+		height: 37px;
+		position: absolute;
+	}
+	
+	.normal .row9 {
+		top: 5px;
+		height: 37px;
+		width: 10.526%;
+		left: 68.421%;
+		position: absolute;
+	}
+	.small .row9 {
+		top: 42px;
+		height: 37px;
+		width: 15.385%;
+		left: 61.538%;
+		position: absolute;
+	}
+	.extrasmall .row9 {
+		top: 42px; width: 20%;
+		left: 60%; height: 37px;
+		position: absolute;
+	}
+		
+	.normal .row10 {
+		top: 42px;
+		height: 74px;
+		width: 15.789%;
+		left: 68.421%;
+		position: absolute;
+	}
+	.small .row10 {
+		top: 79px;
+		height: 37px;
+		width: 15.789%;
+		left: 61.538%;
+		position: absolute;
+		overflow: hidden;
+	}
+	.extrasmall .row10 {
+		top: 79px;
+		width: 20%;
+		left: 60%;
+		height: 37px;
+		overflow: hidden;
+		position: absolute;
+	}
+	.normal .row11 {
+		top: 5px;
+		height: 37px;
+		width: 15.789%;
+		left: 78.947%;
+		position: absolute;
+	}
+	.small .row11 {
+		top: 5px;
+		height: 37px;
+		position: absolute;
+		left: 69.231%;
+		width: 23.077%;
+	}
+	.extrasmall .row11 {
+		top: 5px;
+		height: 37px;
+		left: 60%;
+		width: 40%;
+		position: absolute;
+	}
+	.normal .row12 {
+		top: 42px;
+		height: 74px;
+		left: 84.211%;
+		width: 10.526%;
+		position: absolute;
+	}
+	.small .row12 {
+		top: 42px;
+		height: 74px;
+		left: 76.923%;
+		width: 15.789%;
+		position: absolute;
+	}
+	.extrasmall .row12 {
+		top: 5px;
+		height: 148px;
+		width: 10%;
+		left: 80%;
+		position: absolute;
+	}
+	.normal .row13 {
+		top: 5px;
+		height: 100%;
+		width: 5.263%;
+		left: 94.737%;
+		position: absolute;
+	}
+	.small .row13 {
+		top: 5px;
+		height: 100%;
+		width: 7.692%;
+		left: 	92.308%;
+		position: absolute;
+	}
+	.extrasmall .row13 {
+		top: 42px;
+		height: 100%;
+		width: 10%;
+		left: 90%;
+		position: absolute;
+	}
+
+	.blsymbol.key div, .dblsymbol.key div {
+		font-weight: normal;
+	}
+	
+	.symbol {
+		vertical-align: top;
+	}
+	.lt.key div { 
+		font-style: italic;
+	}
+	.grsymbol.key {
+		background-color: grijs;
+		vertical-align: top;
+		color: white;
+	}
+	.dgrsymbol.key {
+		background-color: dgrijs;
+		vertical-align: top;
+		color: white;
+	}
+	.lgrsymbol.key {
+		background-color: lgrijs;
+		vertical-align: top;
+		color: black;
+	}
+	.blsymbol.key {
+		background-color: blauw;
+		vertical-align: top;
+		color: white;
+	}
+
+	.dblsymbol.key {
+		background-color: donkerblauw;
+		vertical-align: top;
+		color: white;
+	}
+	
+	.row1 .svgimage, .normal .row10 .svgimage, .row11 .svgimage, .small .row5 .svgimage,
+	.extrasmall .row2 .svgimage
+	{ 
+		width: 33.333%;
+	}
+
+	.row2 .svgimage, .row13 .symbol, .small .row6 .svgimage, .small .row7 .svgimage, .small .row8 .svgimage,
+	.extrasmall .row3 .svgimage, .extrasmall .row6 .svgimage, .extrasmall .row5 .svgimage,
+	.extrasmall .row12 .svgimage
+	{
+		width: 100%;
+	}
+	.row3 .svgimage, .row8 .svgimage, .row12 .svgimage, .row10 .svgimage,
+	.extrasmall .row7 .svgimage {
+		width: 50%;
+	}
+	.row4 .svgimage, .row9 .svgimage {
+		width: 50%;
+	}
+
+	.normal .row5 .svgimage, .normal .row6 .svgimage {
+		width: 14.286%
+	}
+	.normal .row7 .svgimage {
+		width: 20%;
+	}
+	.extrasmall .row11 .svgimage {
+		width: 25%;
+	}
+	
+	.svgimage {
+		position: relative;
+		height: 32px !important;
+		display: inline-block;
+		margin-top: 5px;
+		line-height: 33px;
+	}
+	
+	.svgimagel .key {
+		padding-top: 16px;
+	}
+	
+	.svgimagem, .svgimagel {
+		position: relative;
+		height: 69px;
+		margin-top: 5px;
+	}
+	.t11_3 {
+		float: right;
+	}
+	
+	.small .t_, .extrasmall .t_ , .small .t__ {
+		display: none;
+	}
+	
+	
+	</ui:style>
+	<g:SimplePanel addStyleNames="{style.normal} {style.pad}">
+	<g:FlowPanel addStyleNames="{style.root}">
+		<g:FlowPanel addStyleNames="{style.row1}">
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.dgrsymbol} {style.key}"><my:FKey  ui:field="t7">7</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.dgrsymbol} {style.key}"><my:FKey  ui:field="t8">8</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.dgrsymbol} {style.key}"><my:FKey  ui:field="t9">9</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.dgrsymbol} {style.key}"><my:FKey  ui:field="t4">4</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.dgrsymbol} {style.key}"><my:FKey  ui:field="t5">5</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.dgrsymbol} {style.key}"><my:FKey  ui:field="t6">6</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.dgrsymbol} {style.key}"><my:FKey  ui:field="t1">1</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.dgrsymbol} {style.key}"><my:FKey  ui:field="t2">2</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.dgrsymbol} {style.key}"><my:FKey  ui:field="t3">3</my:FKey></g:SimplePanel></g:SimplePanel>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="{style.row2}" >
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.dgrsymbol} {style.key}"><my:FKey ui:field="t0">0</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.dgrsymbol} {style.key}"><my:FKey ui:field="t2_2"><ui:text from='{nc.decimalSeparator}'/></my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.dgrsymbol} {style.key}"><my:FKey  ui:field="t2_3">=</my:FKey></g:SimplePanel></g:SimplePanel>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="{style.row3}">
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.grsymbol} {style.key}"><my:FKey ui:field="t3_1">×</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.grsymbol} {style.key}"><my:FKey ui:field="t3_2">/</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.grsymbol} {style.key}"><my:FKey ui:field="t3_3">+</my:FKey></g:SimplePanel></g:SimplePanel>	
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.grsymbol} {style.key}"><my:FKey ui:field="t3_4">&#x2212;</my:FKey></g:SimplePanel></g:SimplePanel>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="{style.row4}">
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.symbol} {style.key}"><my:FKey ui:field="t4_1"><ui:text from="{rb.ofLabel}" /></my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.symbol} {style.key}"><my:FKey ui:field="t4_2">%</my:FKey></g:SimplePanel></g:SimplePanel>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames='{style.row5}'>
+			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.key}"><my:DKey ui:field="t5_1" resource="{resources.wortel_svg}" /></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.key}"><my:DKey ui:field="t5_2" resource="{resources.macht_svg}" /></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.key}"><my:DKey ui:field="t5_3" resource="{resources.kwadraat_svg}" /></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key} {style.haak}"><my:TDKey ui:field="t5_4" resource="{resources.breuk_svg}" /></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.key}"><my:DKey ui:field="t5_5" resource="{resources.haakjes_svg}" /></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.key}"><my:DKey ui:field="t5_6" resource="{resources.ndewortel_svg}"/></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.key}"><my:DKey ui:field="t5_7" resource="{resources.subscript_svg}"/></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage} {style.t__}"><g:SimplePanel addStyleNames="{style.key}"><my:DKey ui:field="t5_2a" resource="{resources.macht_svg}" /></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.symbol} {style.key}"><my:FKey ui:field="t5_8">≈</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.symbol} {style.key} {style.lt}"><my:FKey ui:field="t5_9">π</my:FKey></g:SimplePanel></g:SimplePanel>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="{style.row6}">
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.symbol} {style.key} {style.lt} {style.haak}"><my:TKey ui:field="tx">x</my:TKey></g:SimplePanel></g:SimplePanel>	
+			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.symbol} {style.key} {style.lt}"><my:FKey ui:field="ty">y</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.symbol} {style.key} {style.lt}"><my:FKey ui:field="tp">p</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.symbol} {style.key} {style.lt}"><my:FKey ui:field="tq">q</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.symbol} {style.key} {style.lt}"><my:FKey ui:field="ta">a</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.symbol} {style.key} {style.lt}"><my:FKey ui:field="tb">b</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.symbol} {style.key} {style.lt}"><my:FKey ui:field="tpi">π</my:FKey></g:SimplePanel></g:SimplePanel>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="{style.row7}">
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.symbol} {style.key} {style.haak}"><my:TKey ui:field="t7_1">&lt;</my:TKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.symbol} {style.key}"><my:FKey ui:field="t7_2">&gt;</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.symbol} {style.key}"><my:FKey ui:field="t7_3">≤</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.symbol} {style.key}"><my:FKey ui:field="t7_4">≥</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.symbol} {style.key}"><my:FKey ui:field="t7_5">≈</my:FKey></g:SimplePanel></g:SimplePanel>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="{style.row8}">
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.symbol} {style.key}"><my:FKey ui:field="t8_1">∠</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.symbol} {style.key}"><my:FKey ui:field="t8_2">°</my:FKey></g:SimplePanel></g:SimplePanel>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="{style.row9}">
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.grsymbol} {style.key}"><my:FKey ui:field="t9_1">(</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.grsymbol} {style.key}"><my:FKey ui:field="t9_2">)</my:FKey></g:SimplePanel></g:SimplePanel>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="{style.row10}">
+			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.grsymbol} {style.key}"><my:FKey ui:field="t10_1">[</my:FKey></g:SimplePanel></g:SimplePanel>	
+			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.grsymbol} {style.key}"><my:FKey ui:field="t10_2">]</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.grsymbol} {style.key}"><my:FKey ui:field="t10_3">←</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.grsymbol} {style.key} {style.haak}"><my:TKey ui:field="t10_4">〈</my:TKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage} {style.t_}"><g:SimplePanel addStyleNames="{style.grsymbol} {style.key}"><my:FKey ui:field="t10_5">〉</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.grsymbol} {style.key} {style.haak}"><my:TKey ui:field="t10_6">→</my:TKey></g:SimplePanel></g:SimplePanel>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="{style.row11}">
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.lgrsymbol} {style.key}"><my:FKey ui:field="t11_1">&#x25c0;&#xFE0E;</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.lgrsymbol} {style.key}"><my:FKey ui:field="t11_2">&#x25b6;&#xFE0E;</my:FKey></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage} {style.t11_3}"><g:SimplePanel addStyleNames="{style.grsymbol} {style.key}"><my:DKey ui:field="t11_3" resource="{resources.backspace_svg}"/></g:SimplePanel></g:SimplePanel>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="{style.row12}">
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.blsymbol} {style.key}"><my:FKey ui:field="t12_1">αβ</my:FKey></g:SimplePanel></g:SimplePanel>	
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.dblsymbol} {style.key}"><my:FKey ui:field="t12_2">123</my:FKey></g:SimplePanel></g:SimplePanel>	
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.blsymbol} {style.key}"><my:FKey ui:field="t12_3">abc</my:FKey></g:SimplePanel></g:SimplePanel>	
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.blsymbol} {style.key}"><my:DKey ui:field="t12_4" resource="{resources.hand_svg}"/></g:SimplePanel></g:SimplePanel>	
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="{style.row13}">
+			<g:SimplePanel addStyleNames="{style.svgimagel}"><g:SimplePanel addStyleNames="{style.grsymbol} {style.key}"><my:DKey ui:field="t13_1" resource="{resources.apply_svg}" /></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimagem}"><g:SimplePanel addStyleNames="{style.grsymbol} {style.key}"><my:DKey ui:field="t13_2" resource="{resources.VVV_svg}" /></g:SimplePanel></g:SimplePanel>
+		</g:FlowPanel>
+		
+	</g:FlowPanel></g:SimplePanel>
+</ui:UiBinder> 

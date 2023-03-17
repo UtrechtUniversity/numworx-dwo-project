@@ -1,0 +1,146 @@
+package nl.uu.fi.dwo.keyboard.client;
+
+import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
+import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
+import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
+
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Widget;
+
+public class TabbedDesktopKeyboard extends AbstractKeyboard {
+
+	private static final int HEIGHT = DesktopKeyboard.HEIGHT;
+
+	private DesktopKeyboard current, stock[] = new DesktopKeyboard[5];
+	private int nr;
+	private FlowPanel main;
+
+  private final boolean small;
+
+	TabbedDesktopKeyboard(int nr, boolean small) {
+	    this.small = small;
+		current = createKeyboard(nr);
+		stock[nr] = current;
+		this.nr = nr;
+		main = new FlowPanel();
+		initWidget(main);
+		main.setStyleName("keyboard-container");
+		main.addStyleName("computer");
+		main.add(current);
+		if(small) {
+			main.setPixelSize(-1, current.getKeyboardHeight());
+		}
+		current.setDelegate(this);
+	}
+
+	public TabbedDesktopKeyboard() {
+		this(DEFAULT, false);
+	}
+ 
+	TabbedDesktopKeyboard(boolean small) {
+      this(DEFAULT, small);
+  }
+
+
+	@Override
+	public void setKeyboard(int nr) {
+		if(nr < 0 || nr > 4) nr = DEFAULT;
+		if(this.nr != nr) {
+			current.close();
+			current.removeFromParent();
+			if(stock[nr] == null) stock[nr] = createKeyboard(nr);
+			this.nr = nr;
+			current = stock[nr];
+			current.setEditor(getEditor());
+			current.setDelegate(this);
+			main.add(current);
+			if(small) main.setPixelSize(-1, current.getKeyboardHeight());
+		}
+	}
+	
+	private DesktopKeyboard createKeyboard(int i) {
+		switch(i) {
+		case 0: return new DesktopKeyboardOnderbouw(small);
+		case 1: return new DesktopKeyboard(small).init();
+		case 2: return new DesktopKeyboardGonio(small).init();
+		case 3: return new DesktopKeyboardStatistiek(small);
+		case 4: return new DesktopKeyboardMeetkunde(small).init();
+		}
+		return new DesktopKeyboard(small).init();
+	}
+
+	@Override
+	public void setEditor(FormuleEditorIF formuleEditor) {
+		setActiveEditor(formuleEditor);
+		current.setEditor(formuleEditor);
+	}
+
+	private HasHeight scrollPanel; 
+	private int origHeight = 426 - 40;
+	private int origDelta = 0;
+	
+	void resizeScrollPanel(int size) {
+		origDelta = size;
+		if(scrollPanel != null)
+			scrollPanel.setHeight(origHeight - size);
+	}
+	
+	@Override
+	public void setScrollPanel(HasHeight w, int h) {
+		scrollPanel = w;
+		origHeight = h;
+		if(scrollPanel != null) scrollPanel.setHeight(origHeight - origDelta);
+	}
+
+	public int getKeyboardHeight() {
+		return current.getKeyboardHeight();
+	}
+
+	@Override
+	public void focus() {
+		super.focus();
+		resizeScrollPanel(getKeyboardHeight());
+		FocusOnTouch.focus();
+	}
+
+	@Override
+	public void softFocus() {
+		FocusOnTouch.focus();
+	}
+
+	@Override
+	public void blur() {
+		current.close();
+		super.blur();
+		resizeScrollPanel(0);
+	}
+	
+	// blur zonder repaint()
+	private void softBlur() {
+		current.close();
+		setVisible(false);
+		resizeScrollPanel(0);
+	}
+	
+	@Override
+	public void functionKey(int code) {
+		stock[nr].functionKey(code);
+	}
+	
+	private EnterType type = EnterType.APPLY;
+
+	@Override
+	public void setEnterType(EnterType type) {
+		EnterType old = this.type;
+		this.type = type;
+		if ( old != type ) {
+			// actie
+			switch(type) {
+			case APPLY: switch123(); focus(); break;
+			case ENTER: softBlur(); break;
+			}
+		}
+	}
+
+	
+}

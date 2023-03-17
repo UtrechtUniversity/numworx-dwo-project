@@ -1,0 +1,17 @@
+package nl.uu.fi.dwo.keyboard.client;
+
+public class DesktopKeyboardFactory implements KeyboardFactory {
+
+	public DesktopKeyboardFactory() {
+	}
+
+	@Override
+	public AbstractKeyboard getKeyboard() {
+		return new TabbedDesktopKeyboard();
+	}
+
+  @Override
+  public void setPremium(boolean premium) {
+  }
+
+}
