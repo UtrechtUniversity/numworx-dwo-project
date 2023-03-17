@@ -242,8 +242,9 @@ private DomStudentModelDataScore eerstestap(DomStudentModelContextId context, Do
         	Double scaled = statement.result.score.scaled;
         	
         	if (scaled != null) {
-        		if (scaled.doubleValue() >= 0.75) success = Boolean.TRUE;
-        		else if (scaled.doubleValue() <= 0.25) success = Boolean.FALSE;
+        		double asDouble = scaled.doubleValue();
+				if (asDouble >= 0.75) success = Boolean.TRUE;
+        		else if (asDouble <= 0.25 && asDouble > 0.00) success = Boolean.FALSE; // no failure, no points -> intermediate
         	}
         	
         }
