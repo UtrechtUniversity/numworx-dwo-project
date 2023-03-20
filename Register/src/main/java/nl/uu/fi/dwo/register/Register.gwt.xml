@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.6.0//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.6.0/distro-source/core/src/gwt-module.dtd">
+<module rename-to='registergwt'>
+	<inherits name="com.google.gwt.user.User" />
+	<inherits name='com.google.gwt.user.theme.clean.Clean'/>
+	<inherits name='nl.uu.fi.dwo.mobile.promise.Promise' />
+	<inherits name="nl.uu.fi.dwo.rest.DWO-rest-lib"/>
+	<inherits name="fi.dwo.gwt.lib.rest.DWO-gwt-lib"/>
+	
+	<source path="client" />
+	<entry-point class="nl.uu.fi.dwo.register.client.Register"></entry-point>
+
+    <replace-with class="nl.uu.fi.dwo.register.client.DwoConstants_impl">
+    	<when-type-is class="fi.dwo.gwt.lib.rest.DwoConstants" />
+    </replace-with>
+	
+	<!-- local settings -->
+	<extend-property name="locale" values="nl"/>
+	<extend-property name="locale" values="en"/>
+    <extend-property name="locale" values="fr"/>
+    <extend-property name="locale" values="de"/>
+
+<!-- Logging TRUE/FALSE FINEST/.../SEVERE -->   
+    <set-property name="gwt.logging.logLevel" value="FINEST"/>
+    <set-property name="gwt.logging.enabled" value="TRUE"/>
+	
+</module>
