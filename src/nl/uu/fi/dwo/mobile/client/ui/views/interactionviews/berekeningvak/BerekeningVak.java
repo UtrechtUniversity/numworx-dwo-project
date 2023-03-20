@@ -174,8 +174,8 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 		}
 		if(!settings.volledigeBreedte() && !settings.meerregelig())
 			breedte = regelManager.actieveRegel.getWidth()+8;//extraWidth; //checkPanel.getOffsetWidth() + extraWidth;// + (getImageVisible()?26:0);
-		hoogte = meetHoogteRegels() + 3+2*borderWidth+25;
-		vakPanel.setPixelSize((breedte-2*borderWidth) , (hoogte-2*borderWidth-25) );
+		hoogte = meetHoogteRegels() + 3+2*borderWidth;//+25;
+		vakPanel.setPixelSize((breedte-2*borderWidth) , (hoogte-2*borderWidth) );//-25
 		mainPanel.setPixelSize((breedte-2*borderWidth) , (hoogte-2*borderWidth) );
 		if(parentRegel != null) {	
 			parentRegel.resize();
