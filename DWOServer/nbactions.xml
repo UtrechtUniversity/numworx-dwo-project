@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>run</actionName>
+            <packagings>
+                <packaging>war</packaging>
+                <packaging>ear</packaging>
+                <packaging>ejb</packaging>
+            </packagings>
+            <goals>
+                <goal>package</goal>
+            </goals>
+            <properties>
+                <netbeans.deploy>true</netbeans.deploy>
+                <netbeans.deploy.clientUrlPart>/rest/public/roles/getList</netbeans.deploy.clientUrlPart>
+            </properties>
+        </action>
+        <action>
+            <actionName>debug</actionName>
+            <packagings>
+                <packaging>war</packaging>
+                <packaging>ear</packaging>
+                <packaging>ejb</packaging>
+            </packagings>
+            <goals>
+                <goal>package</goal>
+            </goals>
+            <properties>
+                <netbeans.deploy.debugmode>true</netbeans.deploy.debugmode>
+                <netbeans.deploy>true</netbeans.deploy>
+                <netbeans.deploy.clientUrlPart>/rest/public/status/get/html</netbeans.deploy.clientUrlPart>
+            </properties>
+        </action>
+        <action>
+            <actionName>profile</actionName>
+            <packagings>
+                <packaging>ejb</packaging>
+                <packaging>ear</packaging>
+                <packaging>war</packaging>
+            </packagings>
+            <goals>
+                <goal>package</goal>
+            </goals>
+            <properties>
+                <netbeans.deploy>true</netbeans.deploy>
+                <netbeans.deploy.profilemode>true</netbeans.deploy.profilemode>
+                <netbeans.deploy.clientUrlPart>/rest/public/roles/getList</netbeans.deploy.clientUrlPart>
+            </properties>
+        </action>
+        <action>
+            <actionName>CUSTOM-deploy to artifactory</actionName>
+            <displayName>deploy to artifactory</displayName>
+            <goals>
+                <goal>deploy</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>CUSTOM-site</actionName>
+            <displayName>site</displayName>
+            <goals>
+                <goal>site</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>CUSTOM-clean local m2 and build</actionName>
+            <displayName>clean local m2 and build</displayName>
+            <goals>
+                <goal>clean</goal>
+                <goal>install</goal>
+                <goal>-U</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>CUSTOM-SYSPROPTEST</actionName>
+            <displayName>SYSPROPTEST</displayName>
+            <goals>
+                <goal>tomcat7:run</goal>
+            </goals>
+            <properties>
+                <RDS_USERNAME>root</RDS_USERNAME>
+                <RDS_PASSWORD>E=mc2Dwo</RDS_PASSWORD>
+                <RDS_HOSTNAME>127.0.0.1</RDS_HOSTNAME>
+                <RDS_PORT>3306</RDS_PORT>
+                
+                
+                <RDS_DB_NAME>dwo_devel</RDS_DB_NAME>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>dev</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>CUSTOM-tomcat7:run (debug)</actionName>
+            <displayName>tomcat7:run (debug)</displayName>
+            <goals>
+                <goal>tomcat7:run</goal>
+            </goals>
+            <properties>
+                <gwt.style>PRETTY</gwt.style>
+                <jpda.listen>maven</jpda.listen>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>dwodevel-db</activatedProfile>
+            </activatedProfiles>
+        </action>
+    </actions>
