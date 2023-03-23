@@ -24,15 +24,15 @@
     
     <!-- should move project role names here that fall in the full project scope -->
     <modules>
-         <module>../DWO-rest-lib</module>
-         <module>../DWO-gwt-lib</module>
-	 <module>../Account</module>
-	 <module>../DWOmAccess</module>
-         <module>../DWO-commons-lib</module>
-         <module>../DWO-jclient-lib</module>
-	 <module>../DWO-apps</module>
+        <module>../DWO-rest-lib</module>
+        <module>../DWO-gwt-lib</module>
+	 	<module>../Account</module>
+	 	<module>../DWOmAccess</module>
+        <module>../DWO-commons-lib</module>
+        <module>../DWO-jclient-lib</module>
+	 	<module>../DWO-apps</module>
 <!--         <module>../DWOJClient</module> needs profiles dwo-obfuscate dwo-pack-sign -->
-<!--         <module>../DWOServer</module> -->
+     	<module>../DWOServer</module>
 <!--         <module>../EBServer</module> -->
     </modules>
     
