@@ -138,7 +138,7 @@
 	<dependency>
 		<groupId>nl.uu.fi.dwo.mobile</groupId>
 		<artifactId>DWOplayer</artifactId>
-		<version>2.5.19</version>
+		<version>${DWOplayerVersion}</version>
 		<type>war</type>
 		<classifier>dwo2</classifier>
 		<scope>runtime</scope>
