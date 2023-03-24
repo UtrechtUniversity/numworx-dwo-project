@@ -1,0 +1,322 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>nl.uu.fi.dwo</groupId>
+		<artifactId>DWO</artifactId>
+		<version>2.5.3-SNAPSHOT</version>
+		<relativePath>../DWO</relativePath>
+	</parent>
+  <groupId>nl.numworx.osiris</groupId>
+  <artifactId>osiris-import</artifactId>
+  <version>0.0.7-SNAPSHOT</version>
+	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+		<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>
+		<app.name>Numworx-import</app.name>
+		<app.base>https://numworx.acc.uu.nl/dwo/</app.base>
+		<app.title>Numworx import </app.title>
+        <tomcat7.version>7.0.76</tomcat7.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>nl.uu.fi.dwo</groupId>
+			<artifactId>edexml</artifactId>
+			<version>2.5.3-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>junit</groupId>
+					<artifactId>junit</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>nl.uu.fi.dwo</groupId>
+			<artifactId>DWO-commons-lib</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.ws.xmlrpc</groupId>
+					<artifactId>xmlrpc</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>junit</groupId>
+					<artifactId>junit</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+       <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+	</dependencies>
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.10</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<includeScope>runtime</includeScope>
+				</configuration>
+			</plugin>		
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<manifest>
+						    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addClasspath>true</addClasspath>							
+							<useUniqueVersions>false</useUniqueVersions>
+							<mainClass>nl.numworx.osiris.Main</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+        <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                    <configuration>
+                        <server>TomcatServer</server>
+                        <path>/</path>
+                        <systemProperties>
+                            <java.util.secureRandomSeed>true</java.util.secureRandomSeed>
+                    		<DWO_ENV>test</DWO_ENV>                   
+                        </systemProperties>
+                        <port>8888</port>
+                    </configuration>
+                    <dependencies>      
+  			<dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-util</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-coyote</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-api</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jdbc</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-dbcp</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-servlet-api</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jsp-api</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jasper</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jasper-el</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-el-api</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-catalina</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-tribes</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-catalina-ha</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-annotations-api</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-juli</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-logging-juli</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-logging-log4j</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>                         
+                    </dependencies>
+            </plugin> 
+      <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.5.3</version>
+         <configuration>
+          <tagBase>https://svn.science.uu.nl/repos/sci.velth101.numworx/osiris-import/tags/</tagBase>
+        </configuration>
+      </plugin>
+		</plugins>
+	</build>
+	<profiles>
+			<profile>
+			<id>windows</id>
+			<activation><os><family>windows</family></os></activation>
+			<properties>
+				<arch>win64</arch>
+			</properties>
+			<build>
+				<plugins>
+	<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-antrun-plugin</artifactId>
+		<version>1.8</version>
+		<dependencies>
+			<dependency>
+				<groupId>javafx</groupId>
+				<artifactId>ant-javafx.jar</artifactId>
+				<version>1.8</version>
+				<systemPath>${java.home}/../lib/ant-javafx.jar</systemPath>
+				<scope>system</scope>
+			</dependency>
+		</dependencies>
+		<executions>
+			<execution>
+				<phase>verify</phase>
+				<configuration>
+					<target xmlns:fx="javafx:com.sun.javafx.tools.ant">
+						<echo message="JAVA_HOME = ${java.home}" />
+						<taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant" />
+						<fx:application id="nl.numworx.osiris" name="${app.name}" mainClass="nl.numworx.osiris.Main" version="${project.version}" toolkit="swing" />
+						<fx:resources id="appRes">
+						    <fx:fileset dir="target/dependency" includes="*.jar" />
+						    <fx:fileset dir="target" includes="${project.build.finalName}.jar" />
+						</fx:resources>
+						<fx:deploy width="800" height="600" outdir="target/deploy" embedJNLP="true" outfile="Numworx-import" nativeBundles="exe" signBundle="false">
+							<fx:platform j2se="1.8">
+							</fx:platform>
+					        <fx:application refId="nl.numworx.osiris" />					 
+					        <fx:resources refid="appRes" />						 
+					        <fx:info title="Numworx Import" vendor="Numworx" description="Import Osiris data into Numworx">
+					         </fx:info>
+					      </fx:deploy>
+					</target>
+				</configuration>
+				<goals>
+					<goal>run</goal>
+				</goals>
+			</execution>
+		</executions>
+	</plugin>
+   <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>attach-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>attach-artifact</goal>
+            </goals>
+            <configuration>
+              <artifacts>
+                <artifact>
+                  <file>target/deploy/bundles/${app.name}-${project.version}.exe</file>
+                  <type>exe</type>
+                  <classifier>installer</classifier>
+                </artifact>
+              </artifacts>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>	
+	<plugin>
+		<artifactId>maven-war-plugin</artifactId>
+		<configuration>
+			<failOnMissingWebXml>false</failOnMissingWebXml>
+		</configuration>
+	</plugin>
+
+     </plugins>
+			</build>
+		
+		</profile>
+	<profile>
+	<id>prod</id>
+	<properties>
+		<app.name>Numworx-import</app.name>
+		<app.base>https://numworx.uu.nl/dwo/</app.base>
+		<app.title>Numworx import </app.title>
+	</properties>
+	</profile>
+	
+	</profiles>
+	<packaging>war</packaging>
+	<scm>
+		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/osiris-import/trunk</developerConnection>
+		<connection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/osiris-import/trunk</connection>
+	</scm>
+</project>
