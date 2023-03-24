@@ -1,0 +1,514 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
+import javax.inject.Inject;
+
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+import org.osgi.util.promise.Success;
+
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.json.client.JSONValue;
+import com.google.web.bindery.event.shared.EventBus;
+
+import fi.dwo.gwt.lib.rest.util.StringFormatter;
+
+import jsinterop.annotations.JsMethod;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsSelectedResultsDisplay;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortDeferred;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortEvent.EventType;
+import nl.uu.fi.dwo.rest.dom.DomResultTree;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoPage;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+
+import org.osgi.util.promise.Deferred;
+import org.osgi.util.promise.Failure;
+
+/**
+ *
+ * @author plas0006
+ */
+public class SelectedResultsPresenter implements ResultEventHandler {
+
+    private static final long PREPARE_TIMEOUT = 1000L;
+
+    private static final Logger LOG = Logger.getLogger(SelectedResultsPresenter.class.getName());
+
+    private final LoggingFailure FAILURE;
+    private final EventBus eventBus;
+    private final DwoGlobalVars dwoGlobalVars;
+
+    private Display view;
+    @Inject
+    ResultsService resultService;
+    private JavaScriptObject resultState;
+    //model
+    private DomResultTree resultTree;
+
+    public interface Display extends BasicDisplay {
+
+        void updateResultTree(DomResultTree data);
+
+        void init(JavaScriptObject aResultState);
+
+        void setEmptyTableMessage();
+
+        void setLoadingTableMessage();
+
+        public void showPages(DomResultTree resultTree);
+
+    }
+
+    @Inject
+    SelectedResultsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+        eventBus = anEventBus;
+        dwoGlobalVars = aDwoGlobalVars;
+        FAILURE = new LoggingFailure(LOG, eventBus);
+        eventBus.addHandler(ResultEvent.TYPE, this);
+    }
+
+    public void init(DomResultTree aResultTree, JavaScriptObject aResultState) {
+        view.clear();
+        resultTree = aResultTree;
+        resultState = aResultState;
+        view.init(aResultState);
+    }
+
+    public void updateTree() {
+        //view.clear();
+        LOG.log(Level.INFO, "DwoGlobalVarsState = " + dwoGlobalVars.getState().name());
+        Promise<DomResultsPerTeacher> promResults;
+        promResults = resultService.getResultsPerTeacher();
+        // onSuccess calculate results and show.
+        promResults.then(new Success<DomResultsPerTeacher, Void>() {
+            @Override
+            public Promise<Void> call(Promise<DomResultsPerTeacher> resolved) throws Exception {
+                //calculate tree and call plotting
+                LOG.log(Level.INFO, "DomResults returned.");
+                resultTree = new DomResultTree(resolved.getValue());
+                LOG.log(Level.INFO, "ResultTree obtained.");// plots the result tree.
+                view.updateResultTree(resultTree);
+                LOG.log(Level.INFO, "plotted ResultMatrix.");
+                return null;
+            }
+        },
+                FAILURE);
+    }
+
+    public void setView(Display aView) {
+        view = aView;
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#selectedResults"));
+   }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @JsMethod
+    public void sealModuleActivities(String courseID, String classid) {
+        PersistenceId schoolclass = new PersistenceId(classid);
+        DomResultTeacher<DomResultStudent> studentTree = resultTree.getStudentTree();
+        DomResultSchoolClass<DomResultStudent> domschoolclass = studentTree.getChildren().get(schoolclass);
+        List<DomStudent> students = domschoolclass.getChildren().values().stream().map(DomResultStudent::getStudent).collect(Collectors.toList());
+
+        PersistenceId course = new PersistenceId(courseID);
+        DomResultSchoolClass<?> domclassresults = resultTree.getResultTree().getChildren().get(schoolclass);
+        DomResultScore<?> courseResults = domclassresults.getChildren().get(course);
+        Set<PersistenceId> scos = courseResults.getChildren().keySet();
+        // TODO verzegel course, dus alle activitetien
+        Collection<Promise<Object>> promises = new ArrayList<>();
+        for (PersistenceId scoid : scos) {
+            DomScoContext sco = new DomScoContext();
+            sco.setId(scoid);
+            promises.add(resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), students)
+                    .map(dom -> dom.getStudentScoContexts().stream().map(DomMapEntry::getValue).collect(Collectors.toList()))
+                    .flatMap(resultService::sealList)
+                    .then(this::updateResultTree));
+        }
+        Promises.all(promises).then(null, FAILURE);
+    }
+
+    private static final String WAIT = DwoLocalesForGWT.instance.NUM_DLG_SELECTEDRESULTS_PAGES();
+    
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @JsMethod
+    public void sealSingleActivity(String scoId, String classid) {
+        PersistenceId schoolclass = new PersistenceId(classid);
+        DomResultTeacher<DomResultStudent> studentTree = resultTree.getStudentTree();
+        DomResultSchoolClass<DomResultStudent> domschoolclass = studentTree.getChildren().get(schoolclass);
+        List<DomStudent> students = domschoolclass.getChildren().values().stream().map(DomResultStudent::getStudent).collect(Collectors.toList());
+
+        PersistenceId scoid = new PersistenceId(scoId);
+        DomScoContext sco = new DomScoContext();
+        sco.setId(scoid);
+        resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), students)
+                .map(dom -> dom.getStudentScoContexts().stream().map(DomMapEntry::getValue).collect(Collectors.toList()))
+                .flatMap(resultService::sealList)
+                .then(p -> { 
+                	resultTree.updateResultStudentSco(p.getValue());
+                	progress = new Deferred<Boolean>().getPromise();
+                	Promise<?> s = preparePages0(scoId, classid);
+                	return s;
+                })
+                .then(p -> {view.updateResultTree(resultTree);return p;}, FAILURE);
+    }
+
+    Promise<Object> updateResultTree(Promise<List<DomStudentScoContext>> p) {
+        if (!p.isDone() || p.getFailure() != null) {
+            return null;
+        }
+        resultTree.updateResultStudentSco(p.getValue());
+        view.updateResultTree(resultTree);
+        return null;
+    }
+
+    long prepareStart = Long.MAX_VALUE;
+    Promise<Boolean> progress;
+    float step,count;
+
+    private int stage;
+
+    private boolean firestep() {
+      count += step;
+      eventBus.fireEvent(new ProgressDialogWithAbortEvent(EventType.Update, Math.round(count), WAIT, null));
+      return progress.isDone();
+    }
+    
+    
+    
+    @JsMethod
+    public void abandonPages() {
+    	prepareStart = Long.MAX_VALUE;
+    }
+    
+    
+    @JsMethod
+    public void preparePages(String scoid, String classid) {
+        view.setLoadingTableMessage();
+        ProgressDialogWithAbortDeferred defer = new ProgressDialogWithAbortDeferred(WAIT);
+        progress = defer.getPromise();
+        eventBus.fireEvent(new ProgressDialogWithAbortEvent(EventType.Init, 0, WAIT, defer));
+        Promise<?> result = preparePages0(scoid, classid);
+        result
+        .onResolve( () -> eventBus.fireEvent(new ProgressDialogWithAbortEvent(EventType.Complete, 100, WAIT, null)));
+    }
+
+	private Promise<?> preparePages0(String scoid, String classid) {
+		prepareStart = System.currentTimeMillis();
+        LOG.log(Level.FINE, "scoid = " + scoid + " classid = " + classid);
+        PersistenceId sco = new PersistenceId(scoid);
+        PersistenceId schoolclass = new PersistenceId(classid);
+        Promise<?> result = preparePages(schoolclass, sco);
+        result = result.then(p -> {
+        	if (prepareStart < Long.MAX_VALUE)
+        		view.updateResultTree(resultTree);
+            return null;
+        }, p -> LOG.log(Level.SEVERE, "preparePages", p.getFailure()))
+                .then(p -> {
+                    if (prepareStart < Long.MAX_VALUE) {
+                    	prepareStart = Long.MAX_VALUE;
+                        view.showPages(resultTree);
+                    }
+                    return null;
+                }, FAILURE);
+		return result;
+	}
+
+    @JsMethod
+    public void showLogResults(JavaScriptObject context, String scoid, String classid) {
+      LOG.fine("entering showLogResults " + context + ", " + scoid);
+      PersistenceId schoolclass = new PersistenceId(classid);
+      PersistenceId sco = new PersistenceId(scoid);
+      DomResultSchoolClass<DomResultStudent> domschoolclass = resultTree.getStudentTree().getChildren().get(schoolclass);
+      DomResultScoContext domsco = null;
+      DomResultSchoolClass<DomResultCourseInClass> coursetree = resultTree.getResultTree().getChildren().get(schoolclass);
+      Collection<DomResultCourseInClass> courses = coursetree.getChildren().values();
+      for( DomResultCourseInClass<DomResultScoContext> item: courses) {
+        domsco = item.getChildren().get(sco);
+        if(domsco != null) break;
+      }
+      SwitchViewEvent event = new SwitchViewEvent(SelectedView.LOGRESULTS, resultTree, context, domsco, domschoolclass.getSchoolClass());
+      eventBus.fireEvent(event);
+    }
+    
+    
+    @JsMethod
+    public void showStudentResults(JavaScriptObject context, String scoid, String studentid, String classid) {
+        LOG.fine("entering showStudentResults " + context + "," + scoid);
+        showStudentResults(context, scoid, studentid, classid, null);
+    }
+
+    public void showStudentResults(JavaScriptObject context, String scoid, String studentid, String classid, String location) {
+        PersistenceId schoolclass = new PersistenceId(classid);
+        DomResultTeacher<DomResultStudent> studentTree = resultTree.getStudentTree();
+        DomResultSchoolClass<DomResultStudent> domschoolclass = studentTree.getChildren().get(schoolclass);
+        PersistenceId key = new PersistenceId(studentid);
+
+        DomStudent student = domschoolclass.getChildren().get(key).getStudent();
+        DomScoContext sco = new DomScoContext();
+        sco.setId(new PersistenceId(scoid));
+        Promise<DomStudentScoContext> p1 = resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), Collections.singletonList(student))
+                .map(p -> p.getStudentScoContexts().get(0).getValue());
+        Promise<JSONValue> p2 = resultService.getJSONLaunchDataBytes(sco, domschoolclass.getSchoolClass());
+        Promise<Map<String, String>> p3 = p1.then(p -> resultService.getValues(p.getValue()));
+
+        Promises.all(p2, p3).then(new Success<Object, Object>() {
+
+            @Override
+            public Promise<Object> call(Promise<Object> resolved) throws Exception {
+                DomResultStudentScoContext ssc = new DomResultStudentScoContext(p1.getValue(), student);
+                ssc.setParent(domschoolclass);
+                String launch_data = p2.getValue().toString();
+                Map<String, String> userState = p3.getValue();
+                userState.put("cmi.launch_data", launch_data);
+                userState.put(ResultsService.COMPLETION_STATUS, p1.getValue().getCompletionStatus());
+                userState.put("cmi.score.raw", Double.toString(p1.getValue().getScore()));
+                if (location != null) {
+                    userState.put("cmi.location", location);
+                }
+                updateResultTree(Promises.resolved(Collections.singletonList(p1.getValue())));
+                eventBus.fireEvent(new SwitchViewEvent(SelectedView.RESULTSSTUDENT, resultTree, ssc, context, userState));
+                return null;
+            }
+        }, FAILURE)
+                .onResolve(() -> {
+                    preparePages(schoolclass, sco.getId()).then(
+                            p -> {
+                                LOG.log(Level.FINE, "prepare pages done");
+                                view.updateResultTree(resultTree);
+                                return null;
+                            },
+                            p -> LOG.log(Level.WARNING, "preparePages", p.getFailure()));
+
+                });
+
+    }
+
+    @JsMethod
+    public void showStudentResultsPage(JavaScriptObject context, String scoid, String studentid, String classid, int page) {
+        LOG.fine("entering showStudentResultsPage " + page);
+        showStudentResults(context, scoid, studentid, classid, String.valueOf(page));
+    }
+
+    Promise<Void> preparePages(PersistenceId schoolclass, PersistenceId scoid) {
+    	if (prepareStart == Long.MAX_VALUE) return Promises.resolved(null);
+        // find studentscocontexts:
+        DomResultSchoolClass<DomResultCourseInClass> cc = resultTree.getResultTree().getChildren().get(schoolclass);
+        Map<PersistenceId, DomResultCourseInClass> children = cc.getChildren();
+        for (DomResultCourseInClass<DomResultScoContext> cic : children.values()) {
+            Map<PersistenceId, DomResultScoContext> items = cic.getChildren();
+            DomResultScoContext sco = items.get(scoid);
+            if (sco != null) {
+                Collection<DomResultStudentScoContext> values = sco.getChildren().values();
+                int size = values.size(); if (size < 1) size = 1;
+                count = 0;
+                step = 100.0F/size;              
+                Iterator<DomResultStudentScoContext> iterator = values.iterator();
+                return preparePages(cc.getSchoolClass(), sco.getScoContext(), iterator);
+
+            }
+        }
+        return Promises.failed(new RuntimeException("not found"));
+    }
+
+    private Promise<Void> preparePages(DomSchoolClass schoolclass,
+            DomScoContext scocontext,
+            Iterator<DomResultStudentScoContext> iterator) {
+    	if (prepareStart == Long.MAX_VALUE || firestep()) return Promises.resolved(null);
+    	if (iterator.hasNext()) {
+            DomResultStudentScoContext ssc = iterator.next();
+
+            if (!ssc.getChildren().isEmpty()) // skip if non-empty
+            {
+                return preparePages(schoolclass, scocontext, iterator);
+            }
+
+            Promise<JSONValue> p2 = resultService.getJSONLaunchDataBytes(scocontext, schoolclass);
+            Promise<Map<String, String>> p3 = resultService.getValues(ssc.getStudentSco());
+
+            return Promises.all(p2, p3).then(new Success<Object, Void>() {
+
+                @Override
+                public Promise<Void> call(Promise<Object> resolved) throws Exception {
+                    JSONValue launchdata = p2.getValue();
+                    String review_data = p3.getValue().get(ResultsService.REVIEW_DATA);
+                    String suspend_data = p3.getValue().get(ResultsService.SUSPEND_DATA);
+                    String review_check = p3.getValue().get(ResultsService.REVIEW_CHECK);
+                    boolean premium = dwoGlobalVars.isPremium();
+                    premium = premium && ResultsService.COMPLETED.equals(ssc.getStudentSco().getCompletionStatus());
+					Map<PersistenceId, DomResultStudentScoPage> children = Util.getPages(launchdata, suspend_data, review_data, review_check, premium);
+                    LOG.info("setChildren for " + ssc.getId() + " " + children);
+                    ssc.setChildren(children);
+                    if (System.currentTimeMillis() - PREPARE_TIMEOUT > prepareStart) {
+                        LOG.info("timeout: showPages");
+                        view.showPages(resultTree);
+                        prepareStart = System.currentTimeMillis();
+                    }
+
+                    return preparePages(schoolclass, scocontext, iterator);
+                }
+            }).recoverWith(p -> {
+              LOG.log(Level.WARNING, "failure for " + ssc.getLabel() , p.getFailure());
+              return preparePages(schoolclass, scocontext, iterator);
+            });
+        }
+        return Promises.resolved(null);
+    }
+
+    public void reinit(DomResultTree aResultTree, JavaScriptObject aResultState) {
+        resultTree = aResultTree;
+        resultState = aResultState;
+        view.updateResultTree(resultTree);
+        JsSelectedResultsDisplay.backtoCurrentActivitiesStudents(); // even valsspelen....
+    }
+
+    @JsMethod
+    public boolean hasCompareClasses() {
+        return false;
+    }
+
+    @JsMethod
+    public void compareSchoolClasses(JavaScriptObject resultState) {
+        LOG.log(Level.SEVERE, "Select StudentResults");
+        eventBus.fireEvent(
+                new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTSSCHOOLCLASSES, resultTree, resultState)
+        );
+    }
+
+    @JsMethod
+    public void clearStudentScoResults(String courseID, String classId) {
+        PersistenceId schoolclass = new PersistenceId(classId);
+        DomResultTeacher<DomResultStudent> studentTree = resultTree.getStudentTree();
+        DomResultSchoolClass<DomResultStudent> domschoolclass = studentTree.getChildren().get(schoolclass);
+        PersistenceId course = new PersistenceId(courseID);
+        DomResultSchoolClass<?> domclassresults = resultTree.getResultTree().getChildren().get(schoolclass);
+        DomResultScore<?> courseResults = domclassresults.getChildren().get(course);
+
+        //Verify purpose
+        Promise<Boolean> p = Promises.resolved(true); //empty promise
+        p = p.then(new Success<Boolean, Boolean>() {
+            @Override
+            //Are you sure?
+            public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {//do dialog check
+                String msg = StringFormatter.format(DwoLocalesForGWT.instance.NUM_DLG_Results_ConfirmClearingStudentResults(), domschoolclass.getLabel(), courseResults.getLabel());
+                AlertDialogWithConfirmCancelDeferred dialogPromise = new AlertDialogWithConfirmCancelDeferred(msg);
+                AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, dialogPromise);
+                eventBus.fireEvent(event);
+                return dialogPromise.getPromise();
+            }
+        }, new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                view.setEmptyTableMessage();
+                FAILURE.fail(resolved);
+            }
+        }).then(new Success<Boolean,Boolean >() {
+            //sure so remove
+            @Override
+            public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {
+                if (resolved.getValue()) {
+
+                    List<DomStudent> students = domschoolclass.getChildren().values().stream().map(DomResultStudent::getStudent).collect(Collectors.toList());
+
+                    Set<PersistenceId> scos = courseResults.getChildren().keySet();
+                    Collection<Promise<Object>> promises = new ArrayList<>();
+                    for (PersistenceId scoid : scos) {
+                        DomScoContext sco = new DomScoContext();
+                        sco.setId(scoid);
+                        promises.add(resultService.clearStudentResults(sco, domschoolclass.getSchoolClass(), students)
+                                .then(new Success<Boolean, Boolean>() {
+                                    @Override
+                                    public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {
+                                        LOG.log(Level.INFO, "Results clear resolved.");
+                                        Boolean result = resolved.getValue();
+                                        LOG.log(Level.INFO, "Returned " + result + ".");
+                                        return Promises.resolved(result);
+                                    }
+                                }));
+                    };
+                    return Promises.all(promises).then(null, FAILURE);
+                } else {
+                    LOG.log(Level.INFO, "update user cancelled.");
+                    return Promises.failed(null);
+                }
+            }
+        });
+//
+//        Promises.all(promises).then(new Success<Object, Void>() {
+//                        @Override
+//                        public Promise<Void> call(Promise<Object> resolved) throws Exception {
+//                            //calculate tree and call plotting
+//                            new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS);
+//                            return null;
+//                        }
+//                    }, FAILURE);
+    }
+
+    @JsMethod
+    public void back(JavaScriptObject context) {
+        LOG.log(Level.SEVERE, "Select Back from SelectedResults to Results");
+        eventBus.fireEvent(
+                new SwitchViewEvent(SwitchViewEvent.SelectedView.BACKTORESULTS, resultTree, resultState)
+        );
+    }
+    
+    @JsMethod
+    public boolean hasLogResults() {
+      return stage >= 2;
+    }
+    
+    public void setStage(int stage) {
+      this.stage = stage;
+    }
+
+	@Override
+	public void onResult(ResultEvent event) {
+		DomResultStudentScoContext rssc = event.getRSsc();
+		DomStudentScoContext ssc = rssc.getStudentSco();
+		PersistenceId student = ssc.getUserID();
+		PersistenceId sco = ssc.getScoID();
+		PersistenceId sc = rssc.getAncestralSchoolClass().getSchoolClass().getId();
+		double score = ssc.getScore();
+        LOG.warning("update score of " + student + " to " + score);
+        // Clear children of original ResultStudentScoContext
+        
+        
+        
+        view.updateResultTree(resultTree);
+		
+	}
+}

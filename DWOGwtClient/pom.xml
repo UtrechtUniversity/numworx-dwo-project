@@ -1,0 +1,722 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>nl.uu.fi.dwo</groupId>
+        <artifactId>DWO</artifactId>
+        <relativePath>../DWO/pom.xml</relativePath>
+        <version>2.5.20-SNAPSHOT</version>
+    </parent>
+    <!-- Adjust artifact, name and description for new projects -->
+    <groupId>nl.uu.fi.dwo.lms</groupId>
+    <artifactId>DWOGwtClient</artifactId>
+    <packaging>war</packaging>
+
+    <url>http://www.dwo.nl</url>
+    <!-- Update year to current when starting a new project -->
+    <inceptionYear>2017</inceptionYear> 
+    <organization>
+        <name>Freudenthal Institute</name>
+        <url>http://www.uu.nl/onderzoek/freudenthal-instituut</url>
+    </organization>
+    
+    <properties>
+        <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+        <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+        <maven.test.skip>true</maven.test.skip>
+        <!-- Convenience property to set the GWT version -->
+        <gwt.version>2.9.0</gwt.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <daggerVersion>2.42</daggerVersion>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <gwt.style>OBFUSCATED</gwt.style>
+        <maven.test.skip>true</maven.test.skip>
+        <tomcat7.version>7.0.76</tomcat7.version>
+        <context.xml>context-dwo_devel.xml</context.xml>
+        <copy.ui.skip>true</copy.ui.skip>
+        <registerVersion>2.4.14</registerVersion>
+        <gwtModule>nl.uu.fi.dwo.lms.gwtclient.gwtclient</gwtModule>
+        <smModule>nl.uu.fi.dwo.lms.gwtclient.smclient</smModule>
+        <local.dwo>/dwo</local.dwo>
+    </properties>
+
+    <scm>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOGwtClient/trunk</developerConnection>
+        <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOGwtClient/trunk</connection>
+        <url>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOGwtClient/trunk</url>
+    </scm>
+    <!-- Running with Maven -->
+    <!-- mvn clean package -->
+    <!-- mvn tomcat7:run package -->
+    <!-- mvn gwt:run-codeserver - start gwt code server -->
+    <!-- goto http://localhost:8080 -->
+  
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.google.gwt</groupId>
+                <artifactId>gwt</artifactId>
+                <version>${gwt.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+		<dependency><!-- before GWT -->
+			<groupId>org.vectomatic</groupId>
+			<artifactId>lib-gwt-svg</artifactId>
+			<version>0.5.15</version>
+		</dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <!-- "provided" so that we don't deploy -->
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-dev</artifactId>
+            <!-- "provided" so that we don't deploy -->
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-codeserver</artifactId>
+            <!-- "provided" so that we don't deploy -->
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Unit tests -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- dwo dependencies -->
+        <dependency>
+            <groupId>nl.uu.fi.dwo</groupId>
+            <artifactId>DWO-gwt-lib</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>nl.uu.fi.dwo</groupId>
+            <artifactId>DWO-gwt-lib</artifactId>
+            <classifier>sources</classifier>
+        </dependency>
+        <dependency>
+            <groupId>nl.uu.fi.dwo.rest</groupId>
+            <artifactId>DWO-rest-lib</artifactId>
+        </dependency>      
+        <dependency>
+            <groupId>nl.uu.fi.dwo.rest</groupId>
+            <artifactId>DWO-rest-lib</artifactId>
+            <classifier>sources</classifier>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.owlike</groupId>
+            <artifactId>genson</artifactId>
+            <version>1.4</version>
+            <!--<scope>provided</scope>-->
+        </dependency> 
+        <dependency>
+            <groupId>com.github.nmorel.gwtjackson</groupId>
+            <artifactId>gwt-jackson</artifactId>
+            <version>0.14.2</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.squareup</groupId>
+                    <artifactId>javapoet</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.mitre.dsmiley.httpproxy</groupId>
+            <artifactId>smiley-http-proxy-servlet</artifactId>
+            <version>1.7</version>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.vectomatic/lib-gwt-svg -->        
+        <!--        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.49</version>
+            <scope>runtime</scope>
+            comment scope for elastic beanstalk
+        </dependency>-->
+         <!-- https://mvnrepository.com/artifact/com.google.jsinterop/jsinterop-annotations -->
+        <!--<dependency>
+            <groupId>com.google.jsinterop</groupId>
+            <artifactId>jsinterop-annotations</artifactId>
+            <version>1.0.0</version>
+        </dependency>        -->
+        <!-- code injection at compile time -->
+        <dependency>
+            <groupId>com.google.dagger</groupId>
+            <artifactId>dagger-gwt</artifactId>
+            <version>${daggerVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.dagger</groupId>
+            <artifactId>dagger-compiler</artifactId>
+            <version>${daggerVersion}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+        	<groupId>nl.uu.fi.dwo.lms</groupId>
+        	<artifactId>DwoGwtClientHtmlUi</artifactId>
+        	<version>2.5.19</version>
+        	<scope>runtime</scope>
+        	<type>war</type>
+        </dependency>
+		<dependency>
+			<groupId>org.vectomatic</groupId>
+			<artifactId>lib-gwt-file</artifactId>
+			<version>0.3.8</version>
+		</dependency>
+		<dependency>
+			<groupId>nl.uu.fi.dwo.ideas</groupId>
+			<artifactId>IdeasGWT</artifactId>
+			<version>0.1.3</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.0</version>
+			<classifier>sources</classifier>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>nl.uu.fi.dwo.lms</groupId>
+			<artifactId>ChatGWT-shared</artifactId>
+			<version>${chatGWTVersion}</version>
+		</dependency>
+		<dependency>
+			<groupId>nl.uu.fi.dwo.lms</groupId>
+			<artifactId>ChatGWT-shared</artifactId>
+			<version>${chatGWTVersion}</version>
+			<classifier>sources</classifier>
+		</dependency>
+    </dependencies>
+    
+    <build>
+        <!-- Output classes directly into the webapp, so that IDEs and "mvn process-classes" update them in DevMode -->
+        <outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.3</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!--
+                     doCheck and doUpdate actually talk to repository if it's true,
+                     Check would check that there are no local changes.
+                     Update would update it
+                    -->
+                    <doCheck>false</doCheck>
+                    <doUpdate>false</doUpdate>
+                    <!--
+                     This ensures that even if we are not connected to scm than also
+                     take the version from local .svn file
+                    -->
+                    <revisiononscmfailure>
+       
+                        <!--
+                         Generate sequence build number based on:
+                         build number and timestamp     
+                        -->
+                        <format>Build: #{0} ({1,date})</format>
+                        <items>
+                            <item>buildNumber\d*</item>
+                            <item>timestamp</item>
+                        </items>
+                    </revisiononscmfailure>
+                </configuration>
+            </plugin>                   
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>templating-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <id>filter-src</id>
+                        <goals>
+                            <goal>filter-sources</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirectory>${basedir}/src/main/java-templates</sourceDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>     
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
+                <version>${gwt.version}</version>
+                <executions>
+                    <execution>
+                        <!-- gwt:run-codeserver with options, cmdline options needed
+                        -Dgwt.compiler.generateJsInteropExports=true 
+                        -Dgwt.compiler.incremental=false 
+                        -Dgwt.compiler.precompile=false 
+                        -Dgwt.codeserver.generateJsInteropExports=true - -debug -->
+                        <!-- Paste into netbeans config window.
+                        gwt.style=DETAILED
+                        gwt.compiler.generateJsInteropExports=true
+                        gwt.compiler.incremental=false
+                        gwt.compiler.precompile=false
+                        gwt.codeserver.generateJsInteropExports=true
+                        -->
+                        <configuration>
+                            <incremental>false</incremental>
+                            <precompile>false</precompile>
+                            <jsInteropMode>JS_RC</jsInteropMode>
+                            <generateJsInteropExports>true</generateJsInteropExports>
+                            <includeJsInteropExports>true</includeJsInteropExports>
+                            <superDevMode>true</superDevMode>
+                            <sourceLevel>1.8</sourceLevel>
+                            <compilerArg>
+                            </compilerArg>
+                            <generateJsInteropExports>true</generateJsInteropExports>
+                            <codeserverArgs>
+                                <generateJsInteropExports>true</generateJsInteropExports>
+                            </codeserverArgs>
+                            <modules>
+                            	<module>${gwtModule}</module>
+                            	<module>${smModule}</module>
+                            </modules>
+                            <i18nConstantsBundles>
+                                <i18nConstantsBundle>nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages</i18nConstantsBundle>
+                            </i18nConstantsBundles>
+                        </configuration>                           
+                        <goals>
+                            <goal>i18n</goal>
+                            <goal>compile</goal>
+                            <goal>generateAsync</goal>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin> 
+             <plugin> <!-- attach-sources voor GWT -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>         
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.2.3</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>exploded</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <warSourceDirectory>war</warSourceDirectory>
+                    <attachClasses>true</attachClasses>
+                    <webappDirectory>${webappDirectory}</webappDirectory> 
+                    <packagingExcludes>WEB-INF/lib/**,WEB-INF/classes/**</packagingExcludes>
+                    <!-- exclude angular 2 dir: /src/main/ngapp -->
+                    <exclude>ngapp/**</exclude>                
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>com.google.dagger</groupId>
+                            <artifactId>dagger-compiler</artifactId>
+                            <version>${daggerVersion}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                    <!-- exclude angular 2 dir: /src/main/ngapp -->
+                    <exclude>ngapp/**</exclude>                
+                </configuration>
+                
+
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven2-plugin</artifactId>
+                <version>1.6.4</version>
+                <configuration>
+                    <container>
+                        <containerId>tomcat8x</containerId>
+                        <!--<output>target/catalina-output.log</output>-->
+                        <artifactInstaller>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat</artifactId>
+                            <version>7.0.81</version>
+                        </artifactInstaller>
+                    </container>
+                    <dependencies>
+                        <dependency>
+                            <groupId>mysql</groupId>
+                            <artifactId>mysql-connector-java</artifactId>
+                            <version>5.1.49</version>
+                        </dependency>
+                    </dependencies>           
+                    <configuration>
+                        <type>standalone</type>            
+                        <home>
+                            ${project.build.directory}/apache-tomcat
+                        </home>
+                        <properties>
+                            <cargo.servlet.port>8080</cargo.servlet.port>
+                            <cargo.logging>low</cargo.logging>
+                        </properties>
+                        
+                    </configuration>
+                    <deployables>
+                        <deployable>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>${project.artifactId}</artifactId>
+                            <type>war</type>
+                            <properties>
+                                <context>/</context>
+                            </properties>
+                        </deployable>
+                        <!--    useful in case war is part of compiled local code, hence no version in deployable.-->
+                        <deployable>
+                            <groupId>nl.uu.fi.dwo</groupId>
+                            <artifactId>DWOServer</artifactId> 
+                            <type>war</type>    
+                            <properties>
+                                <context>/</context>
+                            </properties>
+                        </deployable>
+                    </deployables>
+                    <configfiles>
+                        <configfile>
+                            <file>src/test/tomcat/${context.xml}</file>
+                            <todir>${project.build.directory}/apache-tomcat/conf/Catalina/localhost/</todir>
+                            <tofile>context.xml.default</tofile>
+                        </configfile>     
+                    </configfiles>                                         
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>5.1.49</version>
+                    </dependency>
+                </dependencies>    
+            </plugin>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <server>TomcatServer</server>
+                    <path>/</path>
+                    <systemProperties>
+                    	<CDN_HOST>localhost:8082</CDN_HOST>
+                    	<DWO_ENV>test</DWO_ENV>                   
+                    </systemProperties>
+                    <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
+					<contextFile>src/test/tomcat/${context.xml}</contextFile>
+                    <webapps>
+                        <webapp>
+                            <groupId>nl.uu.fi.dwo</groupId>
+                            <artifactId>DWOServer</artifactId>
+                            <version>${DWOServerVersion}</version>
+                            <type>war</type>    
+                            <asWebapp>true</asWebapp> 
+                            <contextPath>${local.dwo}</contextPath>
+                            <contextFile>src/test/tomcat/${context.xml}</contextFile>
+                        </webapp>
+                        <webapp>
+                            <groupId>fi.dwo</groupId>
+                            <artifactId>DWO-apps</artifactId> 
+                            <version>2.5.18</version> 
+                            <type>war</type>    
+                            <asWebapp>true</asWebapp> 
+                            <contextPath>/dwo/apps</contextPath>
+                        </webapp>
+                       <webapp>
+                            <groupId>nl.uu.fi.dwo.mobile</groupId>
+                            <artifactId>DWOplayer</artifactId>
+                            <version>${DWOplayerVersion}</version>
+                            <classifier>dwo2</classifier>
+                            <type>war</type>
+                            <contextPath>/dwo/tablet</contextPath>
+                            <asWebapp>true</asWebapp>
+                        </webapp>
+                        <webapp>
+                        	<groupId>nl.uu.fi.dwo.register</groupId>
+							<artifactId>Register</artifactId>
+							<version>${registerVersion}</version>
+                            <type>war</type>
+                            <contextPath>/dwo/register</contextPath>
+                            <asWebapp>true</asWebapp>
+                        </webapp>
+                        <webapp>
+                          <groupId>fi.servlet</groupId>
+  						  <artifactId>ideas</artifactId>
+ 						  <version>0.0.10</version>
+                          <type>war</type>
+                          <contextPath>/ideas</contextPath>
+                          <asWebapp>true</asWebapp>              
+                        </webapp>
+                          <webapp>
+						    <groupId>nl.numworx.uploadwidget</groupId>
+						    <artifactId>UploadWidgetGWT</artifactId>
+						    <version>0.0.1</version>
+                            <type>war</type>
+                            <contextPath>/dwo/dav/upload</contextPath>
+                            <asWebapp>true</asWebapp>
+                          </webapp>
+                          <webapp>
+                              <groupId>nl.uu.fi.dwo.lms</groupId>
+                              <artifactId>ChatGWT-server</artifactId>
+                          	  <version>${chatGWTVersion}</version>
+                              <type>war</type>
+                              <contextPath>/chatbox</contextPath>
+                              <asWebapp>true</asWebapp>
+                          </webapp>
+                    </webapps>                         
+                </configuration> 
+                <dependencies>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>5.1.49</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.tomcat.embed</groupId>
+                        <artifactId>tomcat-embed-core</artifactId>
+                        <version>${tomcat7.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.tomcat</groupId>
+                        <artifactId>tomcat-util</artifactId>
+                        <version>${tomcat7.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.tomcat</groupId>
+                        <artifactId>tomcat-coyote</artifactId>
+                        <version>${tomcat7.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.tomcat</groupId>
+                        <artifactId>tomcat-api</artifactId>
+                        <version>${tomcat7.version}</version>
+                    </dependency>
+
+                    <dependency>
+                        <groupId>org.apache.tomcat</groupId>
+                        <artifactId>tomcat-jdbc</artifactId>
+                        <version>${tomcat7.version}</version>
+                    </dependency>
+
+                    <dependency>
+                        <groupId>org.apache.tomcat</groupId>
+                        <artifactId>tomcat-dbcp</artifactId>
+                        <version>${tomcat7.version}</version>
+                    </dependency>
+
+                    <dependency>
+                        <groupId>org.apache.tomcat</groupId>
+                        <artifactId>tomcat-servlet-api</artifactId>
+                        <version>${tomcat7.version}</version>
+                    </dependency>
+
+                    <dependency>
+                        <groupId>org.apache.tomcat</groupId>
+                        <artifactId>tomcat-jsp-api</artifactId>
+                        <version>${tomcat7.version}</version>
+                    </dependency>
+
+                    <dependency>
+                        <groupId>org.apache.tomcat</groupId>
+                        <artifactId>tomcat-jasper</artifactId>
+                        <version>${tomcat7.version}</version>
+                    </dependency>
+
+                    <dependency>
+                        <groupId>org.apache.tomcat</groupId>
+                        <artifactId>tomcat-jasper-el</artifactId>
+                        <version>${tomcat7.version}</version>
+                    </dependency>
+
+                    <dependency>
+                        <groupId>org.apache.tomcat</groupId>
+                        <artifactId>tomcat-el-api</artifactId>
+                        <version>${tomcat7.version}</version>
+                    </dependency>
+
+                    <dependency>
+                        <groupId>org.apache.tomcat</groupId>
+                        <artifactId>tomcat-catalina</artifactId>
+                        <version>${tomcat7.version}</version>
+                    </dependency>
+
+                    <dependency>
+                        <groupId>org.apache.tomcat</groupId>
+                        <artifactId>tomcat-tribes</artifactId>
+                        <version>${tomcat7.version}</version>
+                    </dependency>
+
+                    <dependency>
+                        <groupId>org.apache.tomcat</groupId>
+                        <artifactId>tomcat-catalina-ha</artifactId>
+                        <version>${tomcat7.version}</version>
+                    </dependency>
+
+                    <dependency>
+                        <groupId>org.apache.tomcat</groupId>
+                        <artifactId>tomcat-annotations-api</artifactId>
+                        <version>${tomcat7.version}</version>
+                    </dependency>
+
+                    <dependency>
+                        <groupId>org.apache.tomcat</groupId>
+                        <artifactId>tomcat-juli</artifactId>
+                        <version>${tomcat7.version}</version>
+                    </dependency>
+
+                    <dependency>
+                        <groupId>org.apache.tomcat.embed</groupId>
+                        <artifactId>tomcat-embed-logging-juli</artifactId>
+                        <version>${tomcat7.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.tomcat.embed</groupId>
+                        <artifactId>tomcat-embed-logging-log4j</artifactId>
+                        <version>${tomcat7.version}</version>
+                    </dependency>                                
+                </dependencies>
+            </plugin>            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <goals>deploy</goals>
+					<preparationGoals>clean verify install</preparationGoals>
+					<tagBase>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOGwtClient/tags/</tagBase>
+                </configuration>    
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-HtmlUi</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                        	<skip>${copy.ui.skip}</skip>
+                            <outputDirectory>${project.build.directory}/${project.build.finalName}/</outputDirectory>
+                            <overwrite>true</overwrite>
+                            <resources>
+                                <resource>
+                                    <directory>../DwoGwtClientHtmlUi/src/main/html</directory>
+                                    <includes>
+                                        <include>helppage/**</include>
+                                        <include>css/**</include>
+                                        <include>js/**</include>
+                                        <include>third-party/**</include>
+                                        <include>images/**</include>
+                                        <include>index.html</include>
+                                        <include>library.html</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>            
+            <!-- sample version for with mysql building -->
+            <!--                        <plugin>  docker test configuration om gwtclient in een docker image te starten 
+                <groupId>io.fabric8</groupId>
+                <artifactId>fabric8-maven-plugin</artifactId> 
+                <version>3.2.28</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>resource</goal>
+                            <goal>build</goal>
+                            <goal>deploy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <images>  
+                        <image>
+                            <name>${project.build.finalName}</name>
+                             "alias" is used to correlate to the containers in the pod spec 
+                            <alias>GwtClientDocky</alias>
+                            <build>
+                                <from>tomcat:8.0</from>
+                                <assembly>
+                                    <basedir>/deployments</basedir>
+                                    <descriptorRef>artifact-with-dependencies</descriptorRef>
+                                </assembly>
+                                <env>
+                                    <JAVA_LIB_DIR>/deployments</JAVA_LIB_DIR>
+                                    <JAVA_MAIN_CLASS>org.apache.camel.cdi.Main</JAVA_MAIN_CLASS>
+                                </env>
+                            </build>
+                        </image>
+                    </images> 
+                </configuration>
+            </plugin>-->
+        </plugins>
+        <finalName>${project.artifactId}-${project.version}</finalName>
+    </build>
+
+    <description>DwoGwtClient</description>
+    
+    
+    <profiles>
+		<profile>
+			<id>running11</id>
+			<activation>
+				<jdk>[9,)</jdk>
+			</activation>
+			<dependencies>
+				<dependency>
+				    <groupId>javax.annotation</groupId>
+				    <artifactId>javax.annotation-api</artifactId>
+				    <version>1.3.2</version>
+				</dependency>
+			</dependencies>
+		</profile>
+    	<profile>
+    		<id>debug</id>
+    		<properties>
+    			<gwtModule>nl.uu.fi.dwo.lms.gwtclient.gwtclientDebug</gwtModule>
+        		<gwt.style>PRETTY</gwt.style>
+    		</properties>
+    	</profile>
+    </profiles>
+</project>

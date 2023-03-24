@@ -1,0 +1,60 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:s="urn:import:org.vectomatic.dom.svg.ui"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+	.p {
+		fill: black;
+	}
+	
+	.r01 {
+		fill: rgb(230,220,220);
+	}
+	.r02 {
+		fill: rgb(220,230,220);
+	}
+	.r03 {
+		fill: rgb(200, 0, 0);
+	}
+	.r04 {
+		fill: rgb(0, 180, 0);
+	}
+	.svg {
+	}
+	
+	/* Add CSS here. See the GWT docs on UI Binder for more details */
+	</ui:style>
+	<g:DockLayoutPanel unit="PX" styleName="score-treeItem">
+	 <g:center>
+		<g:InlineLabel styleName='score-title' ui:field='title'>title</g:InlineLabel>
+	 </g:center>
+	 <g:west size='16'>
+	 	<s:SVGImage ui:field='icon'>
+			<svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+				 viewBox="0 0 1024 1024" style="enable-background:new 0 0 1024 1024;" xml:space="preserve">
+			<g image-rendering="optimizeQuality" shape-rendering="geometricPrecision">
+				<path style='fill:#FFFFFF' d="M128,64h523c35.2,0,65.6,12.6,90.5,37.5l117,117c24.9,24.9,37.5,55.3,37.5,90.5v651H128V64z"/>
+				<path style='fill:#314770' d="M128,64h523c35.2,0,65.6,12.6,90.5,37.5l117,117c24.9,24.9,37.5,55.3,37.5,90.5v651H128V64z
+					 M704,160v96h96L704,160z M192,128v768h640V352c0-17.6-14.4-32-32-32H640V160c0-17.6-14.4-32-32-32H192z"/>
+			</g>
+			</svg>
+		</s:SVGImage>
+	 </g:west>
+	 <g:east size="106">
+	<s:SVGImage ui:field="image">
+		<svg 	class='score-template {style.svg}'
+				viewBox="-6 0 210 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+			<g ui:field='scale' transform='scale(2,1)' >
+			<rect ui:field='r01' x='0'  y='0' width='50' height='15' class='{style.r01}'/>
+			<rect ui:field='r02' x='50' y='0' width='50' height='15' class='{style.r02}'/>
+			<rect ui:field='r03' x='50' y='0' width='0'  height='8' class='{style.r03}'/>
+			<rect ui:field='r04' x='50' y='0' width='0'  height='8' class='{style.r04}'/>
+			<g ui:field='poly' transform='translate(50,0)'>
+				<polygon points='0,8 3,15 -3,15' class='{style.p}'/>
+			</g>
+			</g>			
+		</svg>
+	</s:SVGImage>
+	</g:east>
+	</g:DockLayoutPanel>
+</ui:UiBinder> 

@@ -1,0 +1,57 @@
+package nl.uu.fi.dwo.lms.gwtclient.gwt.resources;
+
+public interface DwoStyle extends fi.dwo.gwt.lib.rest.css.DwoStyle {
+// som hier ALLES op.
+	String dwoAppPanel();
+	String dwoDeckWidget();
+	String tooltip();
+	String rightFullBox();
+	String body();
+	String dwoAppMainPanel();
+	String dwoMinWidth();
+	String dwoAppMenuButton();
+	String dwoMenuLabel();
+	String dwoAppStatusMsgBox();
+	String dwoMenuOut();
+	String fullPanel();
+	String dwoFlowPanel();
+	String dwoMenuIn();
+	String visible();
+	String horizontalPanel();
+	String dwoDataGridPager();
+	String groupHeaderCell();
+	String flexTableHeader();
+	String tooltiptext();
+	String leftFullBox();
+	String leftHalfBox();
+	String flexTableOddRow();
+	String dwoAppHeaderPanel();
+	String dwoAppStatusPanel();
+	String dwoDeckPanel();
+	String centralWidget();
+	String frame();
+	String dwoDataGridWidget();
+	String headerLogoBox();
+	String margin5();
+	String hidden();
+	String horizontalFloat();
+	String flexTableEvenRow();
+	String box();
+	String floatCenter();
+	String childCell();
+	String dwoTextBox();
+	String dwoClassesWidget();
+	String dwoWidgetPanel();
+	String dwoAppMenuPanel();
+	String dwoDataGridPanel();
+	String flexTableCell();
+	String dwoMainMessagePanel();
+	String rightBox();
+	String rightHalfBox();
+	String dwoWidgetBorder();
+	String selectedMenu();
+	String absPanel();
+	String flexTableSelectedBackground();
+	String scrollPanel();
+	String flexTable();
+}

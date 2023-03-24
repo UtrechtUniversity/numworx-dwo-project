@@ -1,0 +1,162 @@
+@charset "UTF-8";
+@external .normal .small .xsmall .large .xlarge .goal .node .check .blur .goals .kennen;
+
+.booknode {
+	fill: rgb(222, 229, 240);
+    stroke: rgb(222, 229, 240);
+}
+
+
+
+.chapternode, .chapteredge {
+	fill: rgb(180,195,228);
+	stroke: rgb(180,195,228);
+}
+
+.chapteredge line {
+	stroke-width: 30;
+}
+
+.node {
+	
+}
+
+.blur {
+	
+}
+
+
+.goals .goal.node circle {
+	fill: rgb(180,195,228); 
+	stroke: rgb(180,195,228); 
+}
+
+.goals .node circle {
+    fill:   rgba(228,240,248,0.75);
+    stroke: rgba(179,195,227,0.25);
+}
+
+.goals .check.goal.node circle {
+	fill: rgb(120,150,202); 
+	stroke: rgb(120,150,202); 
+}
+
+.chapternode text {
+	text-anchor: middle;
+    dominant-baseline: central;
+    font-family: Ubuntu;
+    font-size: 128px;
+    fill: rgb(255, 255, 255);
+    stroke: white;
+}
+
+.booknode text {
+	text-anchor: middle;
+    dominant-baseline: central;
+    font-family: Ubuntu;
+    font-size: 704px;
+    fill: rgb(237, 239, 241);
+    stroke: rgb(237, 239, 241);
+}
+
+
+.node text, .goals .goal.node text {
+	text-anchor: middle;
+    dominant-baseline: central;
+    font-family: Ubuntu;
+    font-size: 16px;
+    fill: rgb(49, 71, 112); 
+}
+
+
+.goals .node text {
+	fill: rgba(32,112,183,0.125);
+}
+
+.node rect {
+	stroke-width: 6;
+    fill: rgba(237, 239, 241, 0.73);
+    stroke: rgba(237, 239, 241, 0.353);
+}
+
+.normal { }
+
+.small { }
+
+.xsmall { }
+
+
+.xlarge .chapternode, .xlarge .chapteredge {
+	fill: rgb(222, 229, 240);
+	stroke: rgb(222, 229, 240);
+}
+
+.large .chapternode, .large .chapteredge {
+	fill: rgb(212, 219, 239);
+	stroke: rgb(212, 219, 239);
+}
+
+.normal .chapteredge {
+	fill: rgb(202, 209, 229);
+	stroke: rgb(202, 209, 229);
+}
+
+.normal .chapternode {
+	fill: rgb(202, 209, 229);
+	stroke: rgb(202, 209, 229);
+}
+.normal .chapternode text, .large .chapternode text, .xlarge .chapternode text {
+	fill: rgb(237, 239, 241);
+	stroke: rgb(237, 239, 241);
+}
+
+
+.small .node, .small .edge,
+.xsmall .chapternode, .xsmall .chapteredge,
+.xsmall .node, .xsmall .edge,
+.large .booknode,
+.xlarge .booknode
+{ display: none; }
+
+
+.small .chapternode {
+	fill: rgb(180,195,228);
+	stroke: rgb(38, 115, 182);
+	stroke-width: 10;
+}
+.small .chapteredge {
+	fill: rgb(120, 150, 202);
+	stroke: rgb(120, 150, 202);
+}
+
+.small .chapternode text {
+	fill: rgb(49, 71, 112);
+	stroke: none;
+}
+
+
+.xsmall .booknode { 
+	fill: rgb(180,195,228);
+	stroke: rgb(38, 115, 182);
+	stroke-width: 30;
+}
+.xsmall .booknode text {
+	fill: rgb(49, 71, 112);
+	stroke: none;
+}
+
+
+.large { }
+
+.xlarge { }
+
+.kennen.node circle { 
+	fill: rgb(255,255,150);
+	stroke: rgb(255,200,150);
+}
+
+.graphButton { 
+	overflow-x: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
