@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>nl.numworx.notebook</groupId>
+    <artifactId>notebook-parent</artifactId>
+    <version>0.0.4-SNAPSHOT</version>
+  </parent>
+  <artifactId>notebook-service</artifactId>
+  <packaging>war</packaging>
+  <name>notebook-service Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>javax.servlet</groupId>
+    	<artifactId>servlet-api</artifactId>
+    	<version>2.5</version>
+    	<scope>provided</scope>
+    </dependency>
+<dependency>
+    <groupId>com.owlike</groupId>
+    <artifactId>genson</artifactId>
+    <version>1.6</version>
+</dependency>
+<dependency>
+    <groupId>com.owlike</groupId>
+    <artifactId>genson-java-datetime</artifactId>
+    <version>1.6</version>
+</dependency>
+
+    <dependency>
+    	<groupId>nl.uu.fi.dwo.rest</groupId>
+    	<artifactId>DWO-jclient-lib</artifactId>
+    	<version>2.5.15</version>
+    </dependency>
+    <dependency>
+    	<groupId>nl.numworx.notebook</groupId>
+    	<artifactId>notebook-common</artifactId>
+    	<version>0.0.4-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <finalName>notebook-service</finalName>
+	<plugins>
+	      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.12.4</version>
+        <executions>
+          <execution>
+            <id>default-test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+            	<systemProperties>
+            		<DWO_HUB_TOKEN>${token}</DWO_HUB_TOKEN>
+            	</systemProperties>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+		<plugin>
+			<artifactId>maven-war-plugin</artifactId>
+			<version>3.2.3</version>
+			<configuration>
+				<attachClasses>true</attachClasses>
+			</configuration>
+		
+		</plugin>
+	</plugins>
+
+
+  </build>
+  <properties>
+  	<token>7fee5cf7117847d5ae1bb284c8943957</token>
+  	<maven.test.skip>true</maven.test.skip>
+  </properties>
+</project>

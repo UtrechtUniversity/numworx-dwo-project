@@ -1,0 +1,37 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>nl.numworx.notebook</groupId>
+    <artifactId>notebook-parent</artifactId>
+    <version>0.0.4-SNAPSHOT</version>
+  </parent>
+  <artifactId>notebook-common</artifactId>
+  <build>
+  	<plugins>
+  				<plugin> <!-- attach-sources voor GWT -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+  	</plugins>
+  </build>
+
+  <dependencies>
+  	<dependency>
+  		<groupId>nl.uu.fi.dwo.mobile</groupId>
+  		<artifactId>interaction</artifactId>
+  		<version>0.1.12</version>
+  	</dependency>
+  </dependencies>
+</project>
