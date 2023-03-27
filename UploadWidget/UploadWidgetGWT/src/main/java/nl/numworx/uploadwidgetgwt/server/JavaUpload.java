@@ -1,0 +1,229 @@
+package nl.numworx.uploadwidgetgwt.server;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import nl.numworx.uploadwidget.shared.AtomEntry;
+import nl.numworx.uploadwidgetgwt.shared.Constants;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.util.PathId;
+
+@SuppressWarnings("serial")
+public class JavaUpload extends HttpServlet implements Constants {
+	
+	Store store;
+	RestAuthenticator authenticator = StoredRestManager.getInstance().getAuthenticator(); // XXX Singleton.
+	
+	String feed = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" + 
+			"<feed xmlns=\"http://www.w3.org/2005/Atom\">\n" + 
+			"\n" + 
+			"  <title>Upload Feed</title>\n" + 
+			"  <link href=\"http://example.org/\"/>\n" + 
+			"  <updated>2021-11-26T18:30:02Z</updated>\n" + 
+			"  <author>\n" + 
+			"    <name>Student</name>\n" + 
+			"  </author>\n" + 
+			"  <id>urn:uuid:60a76c80-d399-11d9-b93C-0003939e0af6</id>\n" + 
+			"\n" ;
+	String entry = 
+			"  <entry>\n" + 
+			"    <title>haak.png</title>\n" + 
+			"    <link href=\"http://localhost:8888/haak.png\" type=\"image/png\" length=\"1024\" />\n" + 
+			"    <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>\n" + 
+			"    <updated>2003-12-13T18:30:02Z</updated>\n" + 
+			"    <summary>Omschrijving hier</summary>\n" + 
+			"  </entry>\n" ;
+	String tail = 
+			"\n" + 
+			"</feed>\n" + 
+			"";
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		String bearer = req.getHeader(AUTHORIZATION);
+		if (bearer == null) bearer = (String) req.getSession().getAttribute(AUTHORIZATION);
+		else req.getSession().setAttribute(AUTHORIZATION, bearer);
+		String path = req.getPathInfo();
+		int index = path.indexOf("/sec:");
+		String paths[] = path.substring(index+5).split("/");
+		Optional<DomSchoolRoleAndClassV2> actor = getActor(bearer, paths[0]);
+
+		if (!actor.isPresent()) {
+			resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+			return;
+			
+		}
+		DomSchool school = actor.get().getSchool();		
+		String prefix = getPrefix(paths, school);
+		
+		if (paths.length == 3) {
+			StringBuffer url = req.getRequestURL();
+			resp.setContentType("application/atom+xml");
+			resp.setCharacterEncoding("UTF-8");
+			PrintWriter out = resp.getWriter();
+			out.print(feed);
+			for (AtomEntry entry: store.getEntries(prefix)) {
+				out.println("<entry>");
+				out.print(" <title>");out.print(entry.title);out.println("</title>");
+				out.print(" <link href='");out.print(url + entry.url);out.print("' type='");out.print(entry.type);out.print("' length='");out.print(entry.length);out.println("' />");
+				out.print(" <id>urn:uuid:");out.print(entry.id);out.println("</id>");
+				out.println("</entry>");
+			}
+			out.print(tail);
+			return;
+		} 
+		if (paths.length == 4) {
+			Optional<AtomEntry> found = store.findByURL(prefix + paths[3]);
+			if (store.ownedBy(found, actor)) {
+				resp.sendRedirect(found.get().url);
+				return;
+			}
+ 		} 
+		
+		resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+	}
+
+	private String getPrefix(String[] paths, DomSchool school) {
+		return school.getId() + "/" + paths[1].replace('-', '/') + "/" + paths[2] + "/";
+	}
+
+	static Optional<DomSchoolRoleAndClassV2> getActor(String bearer, String pathid) {
+		StoredRestManager rest = StoredRestManager.getInstance(); // Should not be a singleton!
+		DomContext context = new DomContext();
+		context.setRealm(null);
+		context.setDomHasRole(new DomHasRole());
+		rest.getAuthenticator().setContext(context);
+		if (bearer != null && bearer.startsWith("Bearer"))
+		{
+			rest.setBearerAuthString(bearer.substring(6));
+		} else if (bearer != null && bearer.startsWith("Basic")) {
+			bearer = new String(Base64.getDecoder().decode(bearer.substring(6)));
+			String[] split = bearer.split(":", 2);
+			rest.setBasicAuthString(split[0], split[1], null);
+		} else {
+			return Optional.empty();
+		}
+		DomUserFull user;
+		DomSchoolsRolesAndClassesV2 logins;
+		DomHasRole hasRole;
+		try {
+			user   = SecureUserAccountManager.getAccountData();
+			logins = SecureUserAccountLoginsManager.getSchoolLogins();
+		//search paths[0] in logins for school;
+		hasRole = logins.getActiveSchoolRoleAndClass().getHasRole();
+		String current = getPathId(hasRole);
+		if (current.equals(pathid) && user.getId().equals(hasRole.getUserId()))
+		{
+			context.setDomHasRole(hasRole);
+			return Optional.of(logins.getActiveSchoolRoleAndClass());
+		} else {
+			if (pathid.startsWith("2-")) {
+				context.setDomHasRole(hasRole);
+				String [] split = pathid.split("-");
+				split[1] = "MYSQL;PersistentUser;"+split[1];
+				split[2] = "MYSQL;PersistentSchoolClass;" + split[2];
+				List<DomStudent> students = SecureTeacherSchoolClassManager.getTeachersStudents();
+				Optional<DomStudent> b1 = students.stream().filter(s -> s.getId().toString().equals(split[1])).findAny();
+				List<DomSchoolClass> classes = SecureTeacherSchoolClassManager.getTeachersSchoolClasses();
+				Optional<DomSchoolClass> b2 = classes.stream().filter(c -> c.getId().getIdString().equals(split[2])).findAny();
+				if (b1.isPresent() && b2.isPresent()) {
+					DomSchoolRoleAndClassV2 result = logins.getActiveSchoolRoleAndClass();
+					result.getHasRole().setId(null);
+					result.getHasRole().setSchoolGroupId(null);
+					result.getHasRole().setUserId(b1.get().getId());
+					result.setSchoolClass(b2.get());
+					return Optional.of(result);
+				}
+			}
+		}
+		} catch (Dwo2Exception e) {
+			return Optional.empty();
+		}
+		return Optional.empty();
+	}
+
+	public static String getPathId(DomHasRole hasRole) {
+		try {
+			return "1" + hasRole.getId().getIdString().substring(23).replace(';', '-');
+		} catch (NullPointerException e) {
+			return "1-" + hasRole.getUserId().getIdString().substring(21) + "-";
+		} catch (Exception e) {
+			return "-";
+		}
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		super.doPost(req, resp);
+	}
+
+	@Override
+	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		super.doPut(req, resp);
+	}
+
+	@Override
+	public void init() throws ServletException {
+		store = Store.instance();
+		String dbrest_url = getServletContext().getInitParameter("dbrest.url");
+	    try {
+			authenticator.setServerUrlPath(new URL(dbrest_url));
+		} catch (MalformedURLException e) {
+			log("rest parameter incorrect", e);
+			throw new ServletException("rest parameter " + dbrest_url, e);
+		}
+	}
+
+	@Override
+	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String bearer = req.getHeader(AUTHORIZATION);
+		String path = req.getPathInfo();
+		int index = path.indexOf("/sec:");
+		String paths[] = path.substring(index+5).split("/");
+		if (paths.length == 4) {
+			Optional<DomSchoolRoleAndClassV2> actor = getActor(bearer, paths[0]);
+			if (actor.isPresent()) {
+				DomSchool school = actor.get().getSchool();
+				String url = getPrefix(paths, school) + paths[3];
+				Optional<AtomEntry> item = store.findByURL(url);
+				if (store.ownedBy(item, actor)) {
+					store.deleteByURL(url);
+					resp.sendError(HttpServletResponse.SC_NO_CONTENT);
+					return;					
+				}
+			} else {
+				resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+			}
+ 		}
+		resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+	}
+
+}
