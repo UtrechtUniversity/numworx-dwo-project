@@ -1,0 +1,913 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+ <!--
+ POM now defaults obfuscates and signes. In order to disable this enable a 'dev' profile
+ -->
+    <!-- Adjust artifact, name and description for new projects -->
+    <parent>
+        <groupId>nl.uu.fi.dwo</groupId>
+        <artifactId>DWO</artifactId>
+        <version>2.5.20-SNAPSHOT</version>
+        <relativePath>../DWO/pom.xml</relativePath>
+    </parent>
+    <!-- Adjust artifact, name and description for new projects -->
+    <artifactId>DWOJClient</artifactId>
+    <name>${project.build.finalName}</name>
+    <url>http://www.dwo.nl</url>
+    <packaging>jar</packaging>
+    <!-- Update year to current when starting a new project -->
+    <inceptionYear>2015</inceptionYear> 
+    <organization>
+        <name>Freudenthal Institute</name>
+        <url>http://www.uu.nl/onderzoek/freudenthal-instituut</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <id>Gert van der Plas</id>
+            <name>plas0006</name>
+            <email>g.a.j.vanderplas@uu.nl</email>
+            <organization>Freudenthal Institute</organization>
+            <organizationUrl>http://www.uu.nl/onderzoek/freudenthal-instituut</organizationUrl>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>Wim van Velthoven</id>
+            <name>velth101</name>
+            <email>w.p.g.vanvelthoven@uu.nl</email>
+            <organization>Freudenthal Institute</organization>
+            <organizationUrl>http://www.uu.nl/onderzoek/freudenthal-instituut</organizationUrl>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
+    </developers>
+    <properties>
+        <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+		<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<proguard.lib>${java.home}/lib/rt.jar</proguard.lib>
+		
+    </properties>
+
+    <!-- update the https path for a different branch or tag! -->
+    <scm>
+        <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOJClient/trunk</connection>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOJClient/trunk</developerConnection>
+    </scm>
+
+    <dependencies>
+    	<dependency>
+    	    <groupId>nl.uu.fi.dwo.rest</groupId>
+		    <artifactId>DWO-rest-lib</artifactId>
+    	</dependency>   
+        <dependency>
+            <groupId>nl.uu.fi.dwo</groupId>
+            <artifactId>DWO-commons-lib</artifactId>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>servlet-api</artifactId>
+            		<groupId>javax.servlet</groupId>
+            	</exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>nl.uu.fi.dwo.rest</groupId>
+            <artifactId>DWO-jclient-lib</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>  
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>            
+        </dependency>                
+        <!-- Jcalendar spinoff with time-zone support -->
+        <dependency>
+            <groupId>com.toedter</groupId>
+            <artifactId>jcalendar</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <!-- is required for unmarshalling json stuff       
+       <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>eclipselink</artifactId>
+            <version>2.5.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.jpa.modelgen.processor</artifactId>
+            <version>2.5.2</version>
+        </dependency>-->   
+        <!-- Required only when you are using JAX-RS Client -->
+<!--        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>2.17</version>
+        </dependency>-->        
+        <!--  best found media type json support, faster than jackson -->
+        <dependency>
+            <groupId>com.owlike</groupId>
+            <artifactId>genson</artifactId>
+            <version>1.4</version>
+        </dependency> 
+        
+<!-- 4MB file with dependencies 
+<dependency>
+    <groupId>org.jboss.resteasy</groupId>
+    <artifactId>resteasy-jaxrs</artifactId>
+    <version>3.0.16.Final</version> 
+</dependency> -->
+        <!-- 8MB file with dependencies
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <version>2.4.1</version>
+        </dependency>        -->
+        <!-- 17MB file with dependencies -->
+<!--        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jettison</artifactId>
+            <version>2.4</version>
+        </dependency> -->
+        <!-- 10MB file with dependencies -->
+<!--
+        <dependency>
+	<groupId>com.sun.jersey</groupId>
+	<artifactId>jersey-json</artifactId>
+	<version>1.19</version>
+</dependency>
+-->
+
+<!--
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-moxy</artifactId>
+            <version>2.17</version>
+        </dependency>
+        -->
+<!--        <dependency>
+            <groupId>org.jdesktop</groupId>
+            <artifactId>beansbinding</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+   		<dependency>
+			<groupId>org.glassfish.jersey.connectors</groupId>
+			<artifactId>jersey-jetty-connector</artifactId>
+			<version>2.17</version>
+		</dependency>
+    -->    
+<!--<dependency>
+    <groupId>org.apache.httpcomponents</groupId>
+    <artifactId>httpclient</artifactId>
+    <version>4.1.1</version>
+</dependency>-->
+
+    	<dependency>
+    		<groupId>nl.uu.fi.dwo</groupId>
+    		<artifactId>async-lib</artifactId>
+    		<version>0.0.3</version>
+    	</dependency>
+    	<dependency>
+    		<groupId>fi.beans</groupId>
+    		<artifactId>ideas</artifactId>
+    		<version>1.2.2</version>
+    	</dependency>
+    	<dependency>
+    		<groupId>nl.numworx.swingbrowser</groupId>
+    		<artifactId>swingbrowser-api</artifactId>
+    		<scope>provided</scope>
+    	</dependency>
+    	<dependency>
+    		<groupId>fi.beans</groupId>
+    		<artifactId>numworxlf</artifactId>
+    	</dependency>
+    	<dependency>
+    		<groupId>nl.numworx.gwtpatch</groupId>
+    		<artifactId>gwtpatch</artifactId>
+    		<version>0.0.5</version>
+    	</dependency>
+    	<dependency>
+    		<groupId>nl.uu.fi.dwo.mobile</groupId>
+    		<artifactId>interaction</artifactId>
+    		<version>0.1.10</version>
+    	</dependency>
+    </dependencies>      
+
+    <build>
+        <!-- order is relevant -->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.2</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>      
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18.1</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>                        
+            <!-- ensure the build number is available as ${buildNumber} -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.3</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!--
+                     doCheck and doUpdate actually talk to repository if it's true,
+                     Check would check that there are no local changes.
+                     Update would update it
+                    -->
+                    <doCheck>false</doCheck>
+                    <doUpdate>false</doUpdate>
+                    <!--
+                     This ensures that even if we are not connected to scm than also
+                     take the version from local .svn file
+                    -->
+                    <revisiononscmfailure>
+       
+                        <!--
+                         Generate sequence build number based on:
+                         build number and timestamp     
+                        -->
+                        <format>Build: #{0} ({1,date})</format>
+                        <items>
+                            <item>buildNumber\d*</item>
+                            <item>timestamp</item>
+                        </items>
+                    </revisiononscmfailure>
+                </configuration>
+            </plugin>    
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>templating-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <id>filter-src</id>
+                        <goals>
+                            <goal>filter-sources</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+         <plugin>   
+		  <groupId>org.apache.felix</groupId>
+		  <artifactId>maven-bundle-plugin</artifactId>
+		  <version>5.1.1</version>
+		    <dependencies>
+		        <dependency>
+		            <groupId>biz.aQute.bnd</groupId>
+		            <artifactId>biz.aQute.bndlib</artifactId>
+		            <version>5.1.1</version>
+		        </dependency>
+		    </dependencies>
+    		  <executions>
+		    <execution>
+		      <id>bundle-manifest</id>
+		      <phase>process-classes</phase>
+		      <goals>    
+		        <goal>manifest</goal>
+		      </goals>   
+		    </execution>
+		  </executions>
+       	  <configuration>
+       	    <niceManifest>true</niceManifest>
+          	<instructions>
+   							<_snapshot>${osgi.qualifier}</_snapshot>
+                            <Bundle-Name>DWO v2</Bundle-Name>
+                            <Bundle-SymbolicName>fi.dwo.dwojapplet.domain.DWO</Bundle-SymbolicName>
+                            <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+                            <Fragment-Host>fi.dwo.dwojapplet</Fragment-Host>
+                            <Export-Package>fi.beans.numworxlf,fi.beans.copyright,fi.beans.loader,fi.beans.scorm,fi.beans.xmlrpc,fi.beans.mainframe,fi.beans.ideas</Export-Package>
+  							<Import-Package>nl.numworx.swingbrowser.api;version="[1.0,2)",
+ 								com.teamdev.jxbrowser.engine;resolution:=optional,
+ 								com.teamdev.jxbrowser;resolution:=optional,
+  								javax.swing.*,
+  								!javax.servlet.*,
+  								javax.*;resolution:=optional,
+  								fi.dwo.eawt;resolution:=optional,
+  								org.osgi.util.promise;version="[1.0,2)",org.osgi.util.function;version="[1.0,2)",
+  								!com.*,!org.apache.*,!org.eclipse.*,!org.glassfish.*,!org.springframework.*,!org.joda.*,!fi.dwo.eawt.*,
+  								*</Import-Package>
+ 							<Embed-Dependency>*;scope=compile;type=!pom;inline=true</Embed-Dependency>
+         					<Embed-Transitive>true</Embed-Transitive>
+                            <DWOJApplet-Implementation-Version>${project.version}</DWOJApplet-Implementation-Version>
+                            <Implementation-Build>${buildNumber}</Implementation-Build>
+                            <Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
+                            <Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch>
+                            <DWOJApplet-Implementation-Build>${buildNumber}</DWOJApplet-Implementation-Build>
+                            <Main-Class>fi.dwo.dwojapplet.domain.DWO</Main-Class>
+                            <Class-Path>swingbrowser-jxb.jar swingbrowser-api.jar</Class-Path>
+          	</instructions>
+          </configuration>
+		</plugin>   
+            <!-- put the build number in the manifest -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>false</addDefaultImplementationEntries>
+                            <addClasspath>false</addClasspath>
+                        </manifest>
+                        <manifestEntries>
+                            <Main-Class>fi.dwo.dwojapplet.domain.DWO</Main-Class>
+                            <Application-Name>DWO v2</Application-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+ 					<archive>  
+      					<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                         <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addClasspath>false</addClasspath>
+                        </manifest>
+<!--                          <manifestEntries> -->
+<!--                             <Class-Path>swingbrowser-jxb.jar swingbrowser-jfx.jar swingbrowser-api.jar</Class-Path> -->
+<!--                             <DWOJApplet-Implementation-Version>${project.version}</DWOJApplet-Implementation-Version> -->
+<!--                             <Implementation-Build>${buildNumber}</Implementation-Build> -->
+<!--                             <Implementation-Timestamp>${timestamp}</Implementation-Timestamp> -->
+<!--                             <Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch> -->
+<!--                             <DWOJApplet-Implementation-Build>${buildNumber}</DWOJApplet-Implementation-Build> -->
+<!--  						 </manifestEntries> -->
+    				</archive> 
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>       
+        </plugins>
+        <finalName>${project.artifactId}-${project.version}</finalName>
+    </build>
+    <profiles>
+<!--        <profile>
+            <id>release</id>
+            <properties>
+                <profile.dev>false</profile.dev>
+            </properties>
+        </profile>-->
+        <profile>
+            <id>dev</id>
+            <!-- profile for running with default/internal configuration -->
+            <activation>
+                <property>
+                    <name>dev</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.2.1</version>
+                        <configuration>
+                            <mainClass>fi.dwo.dwojapplet.domain.DWO</mainClass>
+                            <workingDirectory>DWOJClient</workingDirectory>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+         <profile>
+            <!-- mvn exec:java -Pdefaultserver -->
+            <id>defaultserver</id>
+            <!-- profile for running with default/internal configuration -->
+            <activation>
+                <property>
+                    <name>defaultserver</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.2.1</version>
+                        <configuration>
+                            <mainClass>fi.dwo.dwojapplet.domain.DWO</mainClass>
+                            <workingDirectory>DWOJClient</workingDirectory>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <!-- mvn exec:exec -Pdev-localhost -->
+            <id>dev-localhost</id>
+            <!-- profile for running against localhost with debug enabled -->
+            <activation>
+                <property>
+                    <name>dev-localhost</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <version>2.5</version>
+                        <executions>
+                            <execution>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.directory}/exec</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${basedir}/src/test/resources/run-configs/localhost</directory>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>                    
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-classpath</argument> 
+                                <classpath />
+                                <argument>-agentlib:jdwp=transport=dt_socket,server=y,address=${jpda.address}</argument>
+                                <argument>fi.dwo.dwojapplet.domain.DWO</argument>
+                            </arguments>
+                            <!--<mainClass>fi.dwo.dwojapplet.domain.DWO</mainClass>-->
+                            <workingDirectory>${project.build.directory}/exec</workingDirectory>
+                        </configuration>
+                    </plugin>                    
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>dwo-pack-sign-obfuscate</id>
+            <activation>
+                <property>
+                    <name>!dev</name>
+                </property>
+            </activation>            
+            <build>
+                <plugins>
+                    <!-- proguard obfuscation -->            
+                    <plugin>
+                        <groupId>com.github.wvengen</groupId>
+                        <artifactId>proguard-maven-plugin</artifactId>
+                        <version>2.0.14</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>proguard</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <proguardVersion>6.1</proguardVersion>
+                            <options>
+                                <option>-verbose</option>
+                                <option>-dontwarn</option> 
+                                <option>-printconfiguration ${project.build.directory}/mapping.txt</option>
+                            </options>
+                            <obfuscate>true</obfuscate>                    
+                            <inputDirectory>${project.build.directory}</inputDirectory>
+                            <injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
+                            <outFilter>!org/xml/sax/**.class</outFilter>
+                            <!-- uncomment to change the output file 
+                             <outjar>${project.build.finalName}.jar</outjar>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            -->
+                            <proguardInclude>config.pro</proguardInclude>
+                            <libs>
+										<lib>${proguard.lib}</lib>
+<!--                                 <lib>${java.home}/lib/jsse.jar</lib> -->
+                                <!--                               <lib>${java.home}/lib/jfxrt.jar</lib>                       -->
+                            </libs>
+                            <addMavenDescriptor>false</addMavenDescriptor>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>net.sf.proguard</groupId>
+                                <artifactId>proguard-base</artifactId>
+                                <version>6.1.0</version>
+                                <scope>runtime</scope>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                    <!-- repack as pack200 -->
+                    <plugin>
+                        <groupId>com.github.batkinson.plugins</groupId>
+                        <artifactId>maven-pack200-plugin</artifactId>
+                        <version>1.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>normalize-jars</id>
+                                <phase>none</phase>
+                                <goals>
+                                    <goal>pack</goal>
+                                </goals>
+                                <configuration>
+                                    <normalizeOnly>true</normalizeOnly>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>pack-jars</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>pack</goal>
+                                </goals>
+                                <configuration>
+                                    <normalizeOnly>false</normalizeOnly>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <processMainArtifact>false</processMainArtifact>
+                            <includeClassifiers>
+                                <includeClassifier>jar-with-dependencies</includeClassifier>
+                            </includeClassifiers>
+                        </configuration>                
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.github.batkinson.plugins</groupId>
+                                <artifactId>maven-pack200-plugin</artifactId>
+                                <version>1.0.1</version>
+                                <type>maven-plugin</type>
+                            </dependency>
+                        </dependencies>                
+                    </plugin>        
+                    <!-- jar signing -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jarsigner-plugin</artifactId>
+                        <version>1.4</version>
+                        <executions>
+                            <execution>
+                                <phase>none</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>none</id>
+                                <phase>none</phase>
+                                <goals>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration> <!--  Alleen jar-with-dependencies wordt getekend. -->
+                            <processMainArtifact>false</processMainArtifact>
+                            <keystore>${dwoKeyStore}</keystore>
+                            <alias>${dwoCertKeyAlias}</alias>
+                            <storepass>${dwoCertKeyStorePassword}</storepass>
+                            <keypass>${dwoCertKeyPassword}</keypass>
+                            <sigfile>UU</sigfile>
+                            <tsa>http://sha256timestamp.ws.symantec.com/sha256/timestamp</tsa>
+                        </configuration>            
+                    </plugin>  
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <preparationGoals>clean verify install</preparationGoals>
+                    <tagBase>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOJClient/tags/</tagBase>
+                </configuration>            
+            </plugin>            
+                </plugins>      
+            </build>        
+        </profile>
+        <profile>
+            <id>dwo-sign</id>
+            <activation>
+                <property>
+                    <name>dev</name>
+                </property>
+            </activation>            
+            <build>
+                <plugins>
+                    <!-- jar signing -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jarsigner-plugin</artifactId>
+                        <version>1.4</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>verify</id>
+                                <goals>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration> <!--  Alleen jar-with-dependencies wordt getekend. -->
+                            <processMainArtifact>false</processMainArtifact>
+                            <keystore>${dwoKeyStore}</keystore>
+                            <alias>${dwoCertKeyAlias}</alias>
+                            <storepass>${dwoCertKeyStorePassword}</storepass>
+                            <keypass>${dwoCertKeyPassword}</keypass>
+                            <sigfile>UU</sigfile>
+                            <tsa>http://sha256timestamp.ws.symantec.com/sha256/timestamp</tsa>
+                        </configuration>            
+                    </plugin>      
+                </plugins>      
+            </build>        
+        </profile>
+<!--        <profile>
+            <id>dwo-obfuscate</id> 
+            <activation>
+                <property>
+                    <name>profile.dwo-obfuscate-pack-sign</name>
+                    <value>true</value>
+                </property>
+            </activation>            
+            <build>
+                <plugins>
+                     proguard obfuscation             
+                    <plugin>
+                        <groupId>com.github.wvengen</groupId>
+                        <artifactId>proguard-maven-plugin</artifactId>
+                        <version>2.0.8</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>proguard</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <proguardVersion>5.2</proguardVersion>
+                            <options>
+                                <option>-verbose</option>
+                                <option>-dontwarn</option> 
+                                <option>-printconfiguration mapping.txt</option>
+                            </options>
+                            <obfuscate>true</obfuscate>                    
+                            <inputDirectory>${project.build.directory}</inputDirectory>
+                            <injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
+                             uncomment to change the output file 
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <outjar>${project.build.finalName}.jar</outjar>
+                            
+                            <proguardInclude>config.pro</proguardInclude>
+                            <libs>
+                                <lib>${java.home}/lib/rt.jar</lib>
+                                <lib>${java.home}/lib/jsse.jar</lib>
+                                                               <lib>${java.home}/lib/jfxrt.jar</lib>                       
+                            </libs>
+                            <addMavenDescriptor>false</addMavenDescriptor>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>net.sf.proguard</groupId>
+                                <artifactId>proguard-base</artifactId>
+                                <version>5.2</version>
+                                <scope>runtime</scope>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>      
+            </build>
+        </profile>
+        <profile>
+            <id>dwo-pack-sign</id> 
+            <activation>
+                <property>
+                    <name>profile.dwo-obfuscate-pack-sign</name>
+                    <value>true</value>
+                </property>
+            </activation>              
+            <build>
+                <plugins>
+                     repack as pack200 
+                    <plugin>
+                        <groupId>com.github.batkinson.plugins</groupId>
+                        <artifactId>maven-pack200-plugin</artifactId>
+                        <version>1.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>normalize-jars</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>pack</goal>
+                                </goals>
+                                <configuration>
+                                    <normalizeOnly>true</normalizeOnly>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>pack-jars</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>pack</goal>
+                                </goals>
+                                <configuration>
+                                    <normalizeOnly>false</normalizeOnly>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <processMainArtifact>false</processMainArtifact>
+                            <includeClassifiers>
+                                <includeClassifier>jar-with-dependencies</includeClassifier>
+                            </includeClassifiers>
+                        </configuration>                
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.github.batkinson.plugins</groupId>
+                                <artifactId>maven-pack200-plugin</artifactId>
+                                <version>1.0.1</version>
+                                <type>maven-plugin</type>
+                            </dependency>
+                        </dependencies>                
+                    </plugin>        
+                     jar signing TODO 
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jarsigner-plugin</artifactId>
+                        <version>1.4</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>verify</id>
+                                <goals>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>   Alleen jar-with-dependencies wordt getekend. 
+                            <processMainArtifact>false</processMainArtifact>
+                            <keystore>${dwoKeyStore}</keystore>
+                            <alias>${dwoCertKeyAlias}</alias>
+                            <storepass>${dwoCertKeyStorePassword}</storepass>
+                            <keypass>${dwoCertKeyPassword}</keypass>
+                            <sigfile>UU</sigfile>
+                            <tsa>https://timestamp.geotrust.com/tsa</tsa>
+                        </configuration>            
+                    </plugin>  
+                </plugins>      
+            </build>
+        </profile>-->
+        <profile>
+        	<id>jxb</id>
+        	<dependencies>
+		<dependency>
+	    	<groupId>com.teamdev.jxbrowser</groupId>
+	    	<artifactId>jxbrowser-cross-platform</artifactId>
+	    	<type>pom</type>
+	    	<version>7.28.1</version>
+	    	<scope>provided</scope>
+		</dependency>
+	  	<dependency>
+	  		<groupId>com.teamdev.jxbrowser</groupId>
+	  		<artifactId>jxbrowser-swing</artifactId>
+	  		<version>7.28.1</version>
+	    	<scope>runtime</scope>
+	  	</dependency>
+		    	<dependency>
+		    		<groupId>nl.numworx.swingbrowser</groupId>
+		    		<artifactId>swingbrowser-jxb</artifactId>
+	    			<scope>runtime</scope>
+		    	</dependency>
+        	</dependencies>
+        </profile>
+<!--         <profile> -->
+<!--         	<id>jfx</id> -->
+<!--         	<dependencies> -->
+<!-- 		    	<dependency> -->
+<!-- 		    		<groupId>nl.numworx.swingbrowser</groupId> -->
+<!-- 		    		<artifactId>swingbrowser-jfx</artifactId> -->
+<!-- 		    		<version>0.0.2</version> -->
+<!-- 	    			<scope>runtime</scope> -->
+<!-- 		    	</dependency> -->
+<!--         	</dependencies>        -->
+<!--         </profile> -->
+	<profile>
+		<id>samllogin</id>
+		<dependencies>
+    	<dependency>
+    	  <groupId>nl.numworx</groupId>
+  		  <artifactId>SAMLlogin</artifactId>
+  		  <version>0.0.2-SNAPSHOT</version>
+    	  <scope>runtime</scope>
+    	</dependency>
+		</dependencies>
+	</profile>
+	<profile>
+		<id>running11</id>
+		<activation>
+			<jdk>[9,)</jdk>
+		</activation>
+		<properties>
+			<proguard.lib>${java.home}/jmods</proguard.lib>
+		</properties>
+	</profile>
+	<profile>
+		<id>java17</id>
+ 		<properties>
+ 			<maven.compiler.source>11</maven.compiler.source>
+ 			<maven.compiler.target>11</maven.compiler.target>
+ 		</properties>
+		<dependencies>
+	    	<dependency>
+	    		<groupId>fi.dwo</groupId>
+	    		<artifactId>fi.dwo.eawt</artifactId>
+	    		<version>0.0.2</version>
+	    		<scope>runtime</scope>
+	    	</dependency>
+			<dependency>
+	    		<groupId>javax.xml.bind</groupId>
+	    		<artifactId>jaxb-api</artifactId>
+	    		<version>2.3.0</version>
+	    		<scope>runtime</scope>
+			</dependency>
+		</dependencies>
+	</profile>
+    </profiles>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.17</version>
+                <configuration>
+                    <configLocation>config/sun_checks.xml</configLocation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+  <repositories>	
+	<repository>
+	  <id>com.teamdev</id>
+	  <url>https://europe-maven.pkg.dev/jxbrowser/releases</url>
+	</repository>
+  </repositories>
+</project>

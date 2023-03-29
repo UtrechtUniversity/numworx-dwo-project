@@ -1,0 +1,142 @@
+package fi.dwo.dwojapplet.persistence.cache;
+
+public class Bucket {
+
+    private int clsid;
+    Bucket(int uid, int scoid, int sgid, int clsid, String key, String value) {
+        super();
+        this.uid = uid;
+        this.scoid = scoid;
+        this.sgid = sgid;
+        this.key = key;
+        this.value = value;
+        this.setClsid(clsid);
+    }
+    private int uid, scoid, sgid; //sgid = schoolgroupid.
+    private String key, value;
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((key == null) ? 0 : key.hashCode());
+        result = prime * result + scoid;
+        result = prime * result + uid;
+        result = prime * result + getSgid();
+        return result;
+    }
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof Bucket)) {
+            return false;
+        }
+        Bucket other = (Bucket) obj;
+        if (key == null) {
+            if (other.key != null) {
+                return false;
+            }
+        } else if (!key.equals(other.key)) {
+            return false;
+        }
+        if (scoid != other.scoid) {
+            return false;
+        }
+        if (uid != other.uid) {
+            return false;
+        }
+        if(sgid !=other.sgid) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @return the value
+     */
+    public String getValue() {
+        return value;
+    }
+
+    /**
+     * @param value the value to set
+     */
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    /**
+     * @return the uid
+     */
+    public int getUid() {
+        return uid;
+    }
+
+    /**
+     * @return the scoid
+     */
+    public int getScoid() {
+        return scoid;
+    }
+
+    /**
+     * @return the key
+     */
+    public String getKey() {
+        return key;
+    }
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+
+    @Override
+    public String toString() {
+        return "Bucket [uid=" + uid + ", scoid=" + scoid + ", key=" + key
+                + ", value=" + trim(value) + "]";
+    }
+
+    String trim(String v) {
+        if (v == null) {
+            return null;
+        }
+        if (v.length() < 10) {
+            return v;
+        }
+        return v.substring(0, 9) + "... (" + v.length() + ")";
+    }
+
+    /**
+     * @return the sgid
+     */
+    public int getSgid() {
+        return sgid;
+    }
+
+    /**
+     * @param sgid the sgid to set
+     */
+    public void setSgid(int sgid) {
+        this.sgid = sgid;
+    }
+
+    public int getClsid() {
+      return clsid;
+    }
+
+    public void setClsid(int clsid) {
+      this.clsid = clsid;
+    }
+
+}
