@@ -1,0 +1,235 @@
+package fi.dwo.dwojapplet.gui.domainmodel;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
+import java.util.UUID;
+import java.util.Vector;
+
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
+
+public class NodeVector extends Vector<Object> implements Node {
+
+  private int path;
+  
+  
+  public int getPath() {
+    return path;
+  }
+
+  public void setPath(int path) {
+    this.path = path;
+  }
+
+  /**
+   * Utility method
+   * @param title
+   * @param locale
+   * @return
+   */
+  public static String getTitle(Map<String,String> title, String locale) {
+    String language = title.getOrDefault(locale, "").trim();
+    if (language.isEmpty() && !"en".equals(locale))
+    {
+      language = title.getOrDefault("en", "");
+    }
+    if (language.isEmpty() || "Untitled".equals(language)) {
+      language = title.getOrDefault("nl", "Untitled");
+    }
+    if (language.isEmpty())
+      language = "Untitled";
+    
+//    if ("Untitled".equals(language))
+//      System.out.println(title);
+        
+    return language;
+  }
+  
+  
+  
+  NodeVector(NodeVector u) {
+    copy = true;
+    title = u.title;
+    lang = u.lang;
+    info = new DomStudentModelContextInfo(new TreeMap<>(u.info.getTitle()), new TreeMap<>(u.info.getDescription()));
+    info.setId(UUID.randomUUID().toString());
+  }
+  
+  public String title, lang;
+  public DomStudentModelContextInfo info;
+
+  public NodeVector(List<DomStudentModelCategory> categories, DomStudentModelContextInfo info, String l) {
+    copy = true;
+    String title = getTitle(info.getTitle(), l);
+    this.title = title;
+    this.info = new DomStudentModelContextInfo(info);
+    if (this.info.getId() == null) {
+      this.info.setId(UUID.randomUUID().toString());
+    }
+    this.lang = l;
+    int last = -1;
+    for (DomStudentModelCategory cat: categories) {    
+      String subtitle = getTitle(cat.getInfo().getTitle(),l);
+      if (!subtitle.isEmpty()) last = size();
+      NodeVector nv = new NodeVector(cat.getObjectives(), subtitle, l, cat.getInfo());
+      nv.setPath(elementCount);
+      add(nv);
+    }
+    setSize(last+1);
+  }
+
+  public NodeVector(List<DomStudentModelObj> objectives, String title, String l, DomStudentModelContextInfo leaf) {
+    copy = true;
+    this.title = title;
+    this.info = new DomStudentModelContextInfo(leaf);
+    if (this.info.getId() == null) {
+      this.info.setId(UUID.randomUUID().toString());
+    }
+    this.lang = l;
+    int last = -1;
+    for (DomStudentModelObj obj: objectives) {
+      String subtitle = getTitle(obj.getInfo().getTitle(),l);
+      if (!subtitle.isEmpty()) last = size();
+      if (obj.getObjectives()==null)
+      {  NodeLeaf nodeleaf = new NodeLeaf(subtitle, obj.getInfo(), l);
+         nodeleaf.setPath(elementCount);
+         add(nodeleaf);
+      } else {
+        NodeVector nv = new NodeVector(obj.getObjectives(), subtitle, l, obj.getInfo());
+        nv.setPath(elementCount);
+        add(nv);
+      }
+    }
+    setSize(last+1);
+  }
+
+  public NodeVector(String lang) {
+    copy = true;
+    info = new DomStudentModelContextInfo(new TreeMap<>(), new TreeMap<>());
+    info.setId(UUID.randomUUID().toString());
+    this.lang = lang;
+    setDescription("");
+    setTitle("");
+  }
+  
+  public NodeVector(DomStudentModelContextInfo org, String lang) {
+    copy = true;
+    info = new DomStudentModelContextInfo(org);
+    if (this.info.getId() == null) {
+      this.info.setId(UUID.randomUUID().toString());
+    }
+    this.lang = lang;
+  }
+  
+  final boolean copy;
+  public NodeVector(List<DomStudentModelCategory> categories, DomStudentModelContextInfo info,
+      String locale, boolean b) {
+    copy = b;
+    String title = getTitle(info.getTitle(),locale);
+    this.title = title;
+    this.info = info;
+    if (this.info.getId() == null) {
+      this.info.setId(UUID.randomUUID().toString());
+    }
+    this.lang = locale;
+    int last = -1;
+    for (DomStudentModelCategory cat: categories) {    
+      String subtitle = getTitle(cat.getInfo().getTitle(),locale);
+      if (!subtitle.isEmpty()) last = size();
+      NodeVector nv = new NodeVector(cat.getObjectives(), subtitle, locale, cat.getInfo(), b);
+      nv.setPath(elementCount);
+      add(nv);
+    }
+    setSize(last+1);
+  }
+
+  public NodeVector(List<DomStudentModelObj> objectives, String subtitle, String locale,
+      DomStudentModelContextInfo info2, boolean b) {
+    copy = b;
+    this.title = subtitle;
+    this.info = (info2);
+    if (this.info.getId() == null) {
+      this.info.setId(UUID.randomUUID().toString());
+    }
+    this.lang = locale;
+    int last = -1;
+    for (DomStudentModelObj obj: objectives) {
+      String subtitle1 = getTitle(obj.getInfo().getTitle(),locale);
+      if (!subtitle1.isEmpty()) last = size();
+      if (obj.getObjectives()==null)
+      {  NodeLeaf nodeleaf = new NodeLeaf(subtitle1, obj.getInfo(), locale,b);
+         nodeleaf.setPath(elementCount);
+         add(nodeleaf);
+      } else {
+        NodeVector nv = new NodeVector(obj.getObjectives(), subtitle1, locale, obj.getInfo(),b);
+        nv.setPath(elementCount);
+        add(nv);
+      }
+    }
+    setSize(last+1);
+  }
+
+  public String toString() {
+    return Objects.toString(title);
+  }
+
+  @Override
+  public void setTitle(String title) {
+    this.title = title;
+    info.getTitle().put(lang, title);
+  }
+  @Override
+  public void setLanguage(String lang) {
+    if (!lang.equals(this.lang)) {
+      String nt = info.getTitle().getOrDefault(lang, "");
+      if (!nt.isEmpty()) title = nt;
+      String od = getDescription();
+      this.lang = lang;
+      String nd = getDescription();
+      if (nd == null || nd.isEmpty()) setDescription(od);
+    }
+  }
+  @Override
+  public String getLanguage() {
+    return lang;
+  }
+  @Override
+  public String getDescription() {
+    return info.getDescription().get(lang);
+  }
+  @Override
+  public void setDescription(String description) {
+    info.getDescription().put(lang, description);
+    
+  }
+  @Override
+  public DomStudentModelContextInfo getInfo() {
+    if (copy) return new DomStudentModelContextInfo(info);
+    return info;
+  }
+
+  @Override
+  public void setDescriptionAsJSON(String description) {
+    if (description == null) 
+      info.getDescription().remove(json());
+    else
+      info.getDescription().put(json(), description);
+  }
+
+  String json() {
+    return lang +"@JSON";
+  }
+
+  @Override
+  public boolean isValue() {
+    for(int i = 0; i < size(); i++) {
+      Object e = elementAt(i);
+      if (e instanceof Node && ((Node) e).isValue()) return true;
+    }
+    return false;
+  }
+  
+}

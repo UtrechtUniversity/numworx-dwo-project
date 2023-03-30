@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+	<head>
+    	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    	<meta name="gwt:property" content="locale={11}" >
+    	<script type="text/javascript" language="javascript" src='logica.js'></script> 	
+    	<script>css("DWOplayer.css")</script>
+    	<link type="text/css" rel="stylesheet" href="{4}.css">
+	<title>{0}</title>
+    	<script>script("scripts/lz-string.js")</script>
+    	<script>script("scripts/assetapi.js")</script>
+    	<script>script("DWOplayer/DWOplayer.nocache.js")</script>
+	</head>
+	<body id='main'></body>
+</html>

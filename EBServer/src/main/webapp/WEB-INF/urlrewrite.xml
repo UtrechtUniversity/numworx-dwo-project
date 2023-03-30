@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 2.6//EN"
+        "http://tuckey.org/res/dtds/urlrewrite2.6.dtd">
+
+<!--
+
+    Configuration file for UrlRewriteFilter
+    http://tuckey.org/urlrewrite/
+
+-->
+<urlrewrite>
+<!--     <rule> -->
+<!--         <note> convert URI to a search </note> -->
+<!--         <condition type="method">GET</condition> -->
+<!--         <from>^/([a-z0-9]+)/$</from> -->
+<!--         <to>/search/fisme?query=oai.identifier+exact+%22$1%22&amp;recordSchema=lom</to> -->
+<!--         <set name="service">APP</set> -->
+<!--         </rule> -->
+
+<!--     <rule> -->
+<!--         <note>Send a 303 (SC_SEE_ALSO_REDIRECT) for Real World Objects</note> -->
+<!--         <from>^/([a-z0-9]+)$</from> -->
+<!--         <to type="redirect">$1/</to> -->
+<!--         </rule> -->
+
+	<rule>
+		<note>/profile/language/dwo.jnlp</note>
+		<from>^/dwo/([0-9]+)/([a-z][a-z])/dwo.jnlp$</from>
+		<to>/dwo/dwojnlppage?profile=$1&amp;language=$2</to>
+	</rule>
+	<rule>
+		<note>/profile/language/index.html</note>
+		<from>^/dwo/([0-9]+)/([a-z][a-z])/index.html$</from>
+		<to>/dwo/dwoindexpage?profile=$1&amp;language=$2</to>
+	</rule>
+	<rule>
+		<note>/profile/language/</note>
+		<from>^/dwo/([0-9]+)/([a-z][a-z])/$</from>
+		<to>/dwo/dwoindexpage?profile=$1&amp;language=$2</to>
+	</rule>
+	<rule>
+		<note>/profile/language</note>
+		<from>^/([0-9]+)/([a-z][a-z])$</from>
+		<to type="redirect">/dwo/$1/$2/index.html</to>
+	</rule>
+	
+	<rule>
+		<note>/profile/language/dwo.html</note>
+		<from>^/dwo/([0-9]+)/([a-z][a-z])/dwo.html$</from>
+		<to>/dwo/dwoindexpage?profile=$1&amp;language=$2</to>
+	</rule>
+
+	<rule>
+		<note>DWO.properties in DWOmAccess</note>
+		<from>^/DWOmAccess/lti/DWO.properties</from>
+		<to type="redirect">/dwo/DWO.properties</to>
+	</rule>
+	<rule>
+		<note>/wisweb naar cdn</note>
+		<from>^/wisweb/images/(.+)$</from>
+		<to type="temporary-redirect">https://cdn.dwo.nl/wisweb/images/$1</to>
+	</rule>
+	<rule>
+		<note>/jars naar cdn</note>
+		<from>^/dwo/jars/(.+)$</from>
+		<to type="temporary-redirect">https://cdn.dwo.nl/jars/$1</to>
+	</rule>
+    <rule>
+        <note>Default rule when no other content-type was asked for</note>
+        <from>^/$</from>
+        <to>index.jsp</to>
+    </rule>
+    <rule>
+    	<note>/rest/userid+schoolid/*</note>
+    	<from>^/dwo/rest/sec:[^/]+/(.*)$</from>
+    	<to>/dwo/rest/secure/$1</to>   
+    </rule>
+	<rule>
+		<note>/downloads naar numworx</note>
+		<from>^/downloads/$</from>
+		<to type="temporary-redirect">https://www.numworx.nl/help/downloads/</to>
+	</rule>
+       
+</urlrewrite>   

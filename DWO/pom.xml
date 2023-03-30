@@ -32,9 +32,9 @@
         <module>../DWO-jclient-lib</module>
 	 	<module>../DWO-apps</module>
 	 	<module>../DWOGwtClient</module>
-<!--         <module>../DWOJClient</module> needs profiles dwo-obfuscate dwo-pack-sign -->
+        <module>../DWOJClient</module> <!-- needs profiles dwo-obfuscate dwo-pack-sign -->
      	<module>../DWOServer</module>
-<!--         <module>../EBServer</module> -->
+        <module>../EBServer</module>
     </modules>
     
     <name>${project.build.finalName}</name>

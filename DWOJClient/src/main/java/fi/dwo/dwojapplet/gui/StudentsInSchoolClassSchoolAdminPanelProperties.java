@@ -1,0 +1,86 @@
+/**
+ * Copyrighted Dec 17, 2015
+ */
+package fi.dwo.dwojapplet.gui;
+
+import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureSchoolAdminSchoolClassManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureSchoolAdminSchoolManager;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+/**
+ * Property class for ClassTeacherPanel
+ *
+ * @author G.A.J. van der Plas
+ */
+public class StudentsInSchoolClassSchoolAdminPanelProperties {
+
+    private static final Logger LOG = Logger.getLogger(StudentsInSchoolClassSchoolAdminPanelProperties.class.getName());
+
+    public StudentsInSchoolClassSchoolAdminPanelProperties() {
+
+    }
+    
+    public List<DomStudent> getStudentsInSchoolClass(DomSchoolClass sc) throws Dwo2Exception {
+        return SecureSchoolAdminSchoolClassManager.getStudentsInSchoolClass(sc);
+    }
+
+    public void removeStudentFromSchoolClass(DomSchoolClass sc, DomStudent t) throws Dwo2Exception {
+        DomRemoveStudentFromSchoolClass submit = new DomRemoveStudentFromSchoolClass();
+        submit.setSchoolClass(sc);
+        submit.setStudent(t);
+        SecureSchoolAdminSchoolClassManager.removeStudentFromSchoolClass(submit);
+    }
+    
+
+    public void submitStudentToSchoolClass(DomSchoolClass to, DomStudent t) throws Dwo2Exception {
+        DomSubmitStudentToSchoolClass submit = new DomSubmitStudentToSchoolClass();
+        submit.setSchoolClassTo(to);
+        submit.setSchoolClassFrom(null);
+        submit.setStudent(t);
+        SecureSchoolAdminSchoolClassManager.submitStudentToSchoolClass(submit);
+    }    
+
+    DomSingleSchoolStudent getSingleSchoolStudent(DomGetSingleSchoolStudent submit) throws Dwo2Exception{
+        return SecureSchoolAdminSchoolManager.getSingleSchoolStudent(submit);
+    }
+
+    void updateSingleSchoolStudent(DomSingleSchoolStudent student) throws Dwo2Exception{
+        SecureSchoolAdminSchoolManager.updateSingleSchoolStudent(student);
+    }
+
+public List<DomStudent> getStudentsInSchoolNotInClass(DomSchoolClass sc) throws Dwo2Exception {
+        List<DomStudent> classStudents = SecureSchoolAdminSchoolClassManager.getStudentsInSchoolClass(sc);
+        List<DomStudent> schoolStudents = SecureSchoolAdminSchoolClassManager.getStudentsInSchool();
+        List<DomStudent> result = new ArrayList<DomStudent>(Math.max(0,schoolStudents.size() - classStudents.size()));
+        for (DomStudent t : schoolStudents) {
+            Boolean flag = true; //add student to result list
+            for (DomStudent c : classStudents) {
+                if (t.getId().equals(c.getId())) {
+                    flag = false;
+                    break;
+                }
+            }
+            if(flag == true) result.add(t);
+        }
+        return result;
+    }    
+
+    public Boolean removeSingleSchoolStudentFromSchool(DomStudent submit) throws Dwo2Exception {
+        return SecureSchoolAdminSchoolManager.removeSingleSchoolStudentFromSchool(submit);
+    }
+    
+    
+    public Boolean removeStudentFromSchool(DomStudent submit) throws Dwo2Exception {
+        return SecureSchoolAdminSchoolManager.removeStudentFromSchool(submit);
+    }
+
+}
