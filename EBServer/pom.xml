@@ -534,7 +534,7 @@
 							<HtmlClient-Version>${DWOGwtClientVersion}</HtmlClient-Version>
 							<DWOplayer-Version>${DWOplayerVersion}</DWOplayer-Version>
 							<Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
-							<Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch>
+							<Implementation-ScmBranch>${scmBranch}</Implementation-ScmBranch>
 						</manifestEntries>
 					</archive>
 					<overlays>
@@ -690,10 +690,6 @@
         <context.xml>context.xml</context.xml>
         <http.port>80</http.port>
 	</properties>
-	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/trunk</developerConnection>
-		<connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/trunk</connection>
-	</scm>
 	<profiles>
 <!-- 		<profile> -->
 <!-- 			<id>teuniz</id> -->

@@ -110,7 +110,6 @@
 
     <scm>
         <developerConnection>scm:git:git@github.com:UtrechtUniversity/numworx-dwo-project.git</developerConnection>
-        <url>https://svn.science.uu.nl/viewvc/project.fisme.java/DWOProject/DWO-LMS/DWO/trunk/</url>
     </scm>
 
     <build>

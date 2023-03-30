@@ -45,12 +45,6 @@
         <context.xml>context.xml</context.xml>
         <tomcat7.version>7.0.76</tomcat7.version>
     </properties>
-
-    <!-- update the https path for a different branch or tag! -->
-    <scm>
-        <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOServer/trunk</connection>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOServer/trunk</developerConnection>
-    </scm>
   
     <!-- dependencies -->
     <dependencies>
@@ -349,7 +343,7 @@
                                     <JavaClient-Version>${project.version}</JavaClient-Version>
                                     <HtmlClient-Version />
                                     <Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
-                                    <Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch>
+                                    <Implementation-ScmBranch>${scmBranch}</Implementation-ScmBranch>
                                 </manifestEntries>
                             </archive>
                         </configuration>
