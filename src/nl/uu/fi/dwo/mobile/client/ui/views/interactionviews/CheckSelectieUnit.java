@@ -1180,6 +1180,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         {   if(ipList[i] != null)
             {	ipList[i].getAsPanel().addDomHandler(new MouseDownHandler(){
 	    			public void onMouseDown(MouseDownEvent e){
+	    				if (editable)
 	    				for(int i = 0; i < ipList.length; i++)
 	    				{	if(e.getSource() == ipList[i].getAsPanel())
 	    				
@@ -1191,6 +1192,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	    		}, MouseDownEvent.getType());
 	            ipList[i].getAsPanel().addDomHandler(new TouchStartHandler(){
 	    			public void onTouchStart(TouchStartEvent e){
+	    				if (editable)
 	    				for(int i = 0; i < ipList.length; i++)
 	    				{	if(e.getSource() == ipList[i].getAsPanel())
 	    					{	selectClickAction(i);
@@ -1210,7 +1212,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		return juisteSelecties.length;
 	}
 
-	public void selectClickAction(int i)
+	void selectClickAction(int i)
 	{
 		if (nagekeken)
 			zetIsVeranderdNaNakijken(true);
