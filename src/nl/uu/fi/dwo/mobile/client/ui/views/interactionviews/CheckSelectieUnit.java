@@ -744,7 +744,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		map.put("score", Collections.singletonMap("raw", score));
 		if(correct)
 			map.put("success", Boolean.TRUE);
-		if(fout)
+		if(fout && !logString.isEmpty()) // bij fout en niet ingevuld: geen success
 			map.put("success", Boolean.FALSE);
 		return map;
 	}
