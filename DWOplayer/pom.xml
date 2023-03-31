@@ -4,6 +4,9 @@
 	<artifactId>DWOplayer</artifactId>
 	<packaging>war</packaging>
 	<name>DWO player</name>
+    <scm>
+        <developerConnection>scm:git:git@github.com:UtrechtUniversity/numworx-dwo-project.git</developerConnection>
+    </scm>
 	<build>
 		<extensions>
 			<extension>
@@ -95,6 +98,22 @@
 					</execution>
 				</executions>
 			</plugin>
+            <plugin> <!-- attach-sources voor GWT -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>         
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.2.3</version>
@@ -105,6 +124,7 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 					<packagingIncludes>**</packagingIncludes>
 					<packagingExcludes>WEB-INF/classes/**,WEB-INF/lib/**,WEB-INF/deploy/**</packagingExcludes>
+					<attachClasses>true</attachClasses>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -375,6 +395,9 @@
 		</profile>
 		<profile>
 			<id>DWO2player</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<properties>
 				<finalName>DWO2player</finalName>
 				<gwtModule>${project.groupId}.DWO2player</gwtModule>
@@ -404,7 +427,9 @@
 				<gwt.copyWebapp>true</gwt.copyWebapp>
 				<gwt.style>PRETTY</gwt.style>
 				<gwt.compiler.force>false</gwt.compiler.force>
+ 				<warClassifier></warClassifier>
         		<tomcat7.version>7.0.76</tomcat7.version>
+				<maven.war.webxml>war/WEB-INF/web.xml</maven.war.webxml>
 			</properties>
 			<build>
 				<plugins>
@@ -616,7 +641,4 @@
 		</profile>
 	</profiles>
 	<version>2.5.20-SNAPSHOT</version>
-	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DwoPlayer/GWT/trunk</developerConnection>
-	</scm>
 </project>

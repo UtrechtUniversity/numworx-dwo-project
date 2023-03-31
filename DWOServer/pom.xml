@@ -367,7 +367,7 @@
                             <!-- put the project version and build number in the manifest -->
                                     <Implementation-Build>${buildNumber}</Implementation-Build>
                                     <Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
-                                    <Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch>
+                                    <Implementation-ScmBranch>${scmBranch}</Implementation-ScmBranch>
                         </manifestEntries>
                     </archive>
                     <!-- put the build number in the web.xml of the war file -->
