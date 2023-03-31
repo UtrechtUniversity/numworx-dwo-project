@@ -1,0 +1,73 @@
+package nl.uu.fi.dwo.mobile.client.ui.activities;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Provider;
+
+import org.osgi.util.promise.Promises;
+
+import com.google.gwt.activity.shared.AbstractActivity;
+import com.google.gwt.activity.shared.Activity;
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
+import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
+
+public class SearchActivity extends AbstractActivity implements Activity, GotoController {
+
+	private Provider<TreeModuleView> treeModuleView;
+	private long id;
+	private TreeModuleView view;
+	private List<SelectModuleItem> currentModel;
+	private PlaceController placeController;
+
+	public SearchActivity(Provider<TreeModuleView> t, long id, PlaceController controller) {
+		this.treeModuleView = t;
+		this.id = id;
+		this.placeController = controller;
+	}
+
+	@Override
+	public void onStop() {
+		view.close();
+		super.onStop();
+	}
+
+	@Override
+	public void start(AcceptsOneWidget panel, EventBus eventBus) {
+		view = treeModuleView.get();
+		currentModel = SelectModuleItemHolder.getItems();
+		view.setPresenter(this);
+		view.render(currentModel);
+		final SelectModuleItem item = SelectModuleItemHolder.getSearch(id);
+		if(item == null)
+		{
+			goTo(new TreeModulePlace());
+			return;
+		}
+		if(item.getPromisedScoreMap() == null) {
+			Map<Object, Number> value = new HashMap<Object,Number>();
+			item.setPromisedScoreMap(Promises.resolved(value));
+		}
+		item.getChildrenAsync().onResolve(new Runnable() {
+
+			@Override
+			public void run() {
+				view.selectModule(item);
+			} });
+		panel.setWidget(view);
+	}
+
+	@Override
+	public void goTo(Place place) {
+		placeController.goTo(place);
+	}
+
+}

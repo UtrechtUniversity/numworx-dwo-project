@@ -1,0 +1,539 @@
+@external numworx-popup, cbg-RP, v, nr, gwt-PushButton;
+@external navigatiebalk, score, scoreBtn, scoreBtn-cursor, scoreBtn-max0, spaceLabel, spaceShiftLabel, shiftBtn, navigatiebalkLabel;
+@external myPushButton myPushButton-disabled;
+@url goednumworx goednumworx;
+
+div { padding: 0px; }
+canvas {outline: none;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -webkit-transform: translate3d(0,0,0); /* ticket DWOPlayer-192 */
+  touch-action: none;
+  }
+ 
+div.tekstvak { overflow: hidden; }
+div.cbg-RP { background-color:#c3d9ff; }
+
+.insert_formule_steps {
+	border-width: 1px;
+}
+
+iframe {
+	border: 0px;
+	border-top: 0px solid #000;
+	border-bottom: 0px solid #000;
+	border-right: 0px solid #000;
+	border-left: 0px solid #000;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+	border-right-width: 0px;
+	border-left-width: 0px;
+}
+
+.textEditor {
+	background-color: #C0C0C0;
+	white-space: pre-wrap;
+	color: black;
+	counter-reset: line;
+}
+
+.inlineEnter, .textEditor span:first-child {
+	counter-increment: line;
+}
+
+.textEditor_n .inlineEnter::after, 
+.textEditor_n span:first-child::before {
+	content: counter(line);
+	width: 1em;
+	color: #808080;
+	display: inline-block;
+	padding-right: 0.3em;
+	text-align: right;
+}
+
+.textEditor_readonly {
+	background-color: #E0E0E0;
+} 
+.textEditor > div {
+	background-color: white;
+	overflow: auto;
+}
+
+.textEditor_readonly .textEditor > div, .textEditor_readonly .textEditor {
+	background-color: transparent;
+}
+
+
+/*
+div.insert_formule {padding-right:5px; padding-left:5px;}
+*/
+
+.textEditor div.insert_formule {
+	background-color: rgb(248,248,248);
+	display: inline-block;
+	width: auto;
+	height: auto;
+}
+
+.textEditor .insert_calculator {
+	background-color: rgb(248,248,248);
+	display: inline-block;
+	white-space: nowrap;
+	margin-left: 6px;
+	margin-right: 6px;
+}
+
+.insert_calculator .insert_button {
+	display: inline-block;
+	vertical-align: sub;
+}
+.insert_calculator .insert_result {
+	display: inline-block;
+	vertical-align: sub;
+}
+
+.textEditor_readonly > div {
+	color: gray;
+	pointer-events: none;
+}
+
+.review { }
+.insert_formule_readonly {
+	pointer-events: none;
+}
+
+/* uitwerking knopje */
+.insert_formule_readonly .gwt-PushButton {
+	pointer-events: auto;
+}
+
+.review .insert_formule_readonly {
+	pointer-events: auto;
+}
+
+.textEditor .balk {
+	font-size: small;
+}
+
+.textEditor_readonly div.insert_formule {
+	background-color: white;
+	color: gray;
+}
+
+.textEditor_empty > div:last-child::before {
+	content: "...";
+	color: #808080
+}
+
+.textEditor_empty > div {
+	color: #808080
+}
+
+.textEditor_cursor {
+	border-left: thin solid black;
+}
+
+span.textEditor_select {
+	background-color: lightblue;
+}
+
+.insert_formule.textEditor_select, .insert_calculator.textEditor_select, .textEditor_select .insert_formule {
+	background-color: lightblue !important;
+}
+
+.WaitScreen {
+	margin: 0px;
+	padding: 0px !important;
+	border-style: none !important;
+	opacity: 0.5;
+}
+
+.disabled {
+	pointer-events: none !important;
+}
+
+.StubView_readonly {
+	pointer-events: none !important;
+	background-color: rgba(0,0,0,0.125);
+}
+
+.textEditor_nowrap {
+	white-space: nowrap;
+	background-color: white;
+}
+
+.numworx-popup {
+	box-shadow: 0px 1px 10px 4px rgba(0,0,0,0.30);
+	border-radius: 3px;
+	border-style: solid;
+	border-color: #1B75BB;
+	border-width: 1px;
+	background-color: white;
+}
+
+.myPushButton {
+	float: left;
+	display: inline-block;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 10px;
+	margin-bottom: 4px;
+	padding: 6px;
+	padding-top: 6px;
+	padding-bottom: 4px;
+	background-color: #B3C2E5;
+	border-radius: 3px;
+	border-width: 0px;
+	border-style: solid;
+	border-color: white;
+	cursor: pointer;
+	color: #FFFFFF;
+	font-weight: bold;
+	font-size: 12px;
+	
+}
+
+.myPushButton-disabled {
+	float: left;
+	display: inline-block;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 10px;
+	margin-bottom: 4px;
+	padding: 6px;
+	padding-top: 6px;
+	padding-bottom: 4px;
+	background-color: #d2d2d2;
+	border-radius: 3px;
+	border-width: 0px;
+	border-style: solid;
+	border-color: white;
+	cursor: pointer;
+	color: #FFFFFF;
+	font-weight: bold;
+	font-size: 12px;
+	
+}
+
+/* tbv panel om vinkje/kruis te tonen na nakijken */
+.kijknapanel {
+	background-repeat: no-repeat;
+	background-position: right top;
+	background-color: transparent;
+}
+
+/* achtergrondplaatje groen vinkje */
+@sprite .goed {
+	gwt-image: 'goed';
+	background-position: right top;
+}
+
+/* achtergrondplaatje geel vinkje */
+@sprite .half {
+	gwt-image: 'half';
+	background-position: right top;
+}
+
+/* achtergrondplaatje rood kruis */
+@sprite .fout {
+	gwt-image: 'fout';
+	background-position: right top;
+}
+
+.navigatiebalk {
+/*	min-width: 1300px;*/
+	display: flex; /* using flexbox */
+	flex-wrap: wrap; /* voor dwo-toetsenbord dat mogelijk erboven moet komen */
+}
+
+.navigatiebalkLabel {
+	display: flex;
+	flex-wrap: nowrap;
+	flex-overflow: visible;
+	flex: initial;
+	font-size: 11px;
+	color: #1D71B8;
+	padding-top: 10px;
+}
+
+.opdrachtbollen {
+	display: flex;
+	flex-wrap: nowrap;
+	flex: 1;
+}
+
+.DWOkeyboard {
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	left: 0px;
+	background-color: rgb(229,231,233);
+	
+}
+
+.spaceShiftLabel {
+	float: left;
+	display: inline-block;
+	margin-right: 0px;
+	margin-top: 0px;
+	margin-bottom: 4px;
+	padding: 0px;
+	padding-top: 1px;
+	padding-bottom: 2px;
+	background-color: white;
+	border-radius: 0px;
+	border-width: 0px;
+	border-style: solid;
+	border-color: white;
+	cursor: pointer;
+	color: #B3C2E5;
+	/*font-weight: bold;*/
+	font-size: 20px;
+}
+
+.shiftBtn {
+	float: left;
+	display: inline-block;
+	margin-right: 0px;
+	margin-top: 5px;
+	margin-bottom: 4px;
+	padding: 3px;
+	padding-top: 2px;
+	padding-bottom: 1px;
+	background-color: white;
+	border-radius: 3px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #B3C2E5;
+	cursor: pointer;
+	color: #B3C2E5;
+	/*font-weight: bold;*/
+	font-size: 16px;
+}
+.spaceLabel {
+	float: left;
+	display: inline-block;
+	margin-right: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding: 0px;
+	border-radius: 0px;
+	border-width: 0px;
+	border-style: solid;
+	border-color: white;
+	color: #FFFFFF;
+	/*font-weight: bold;*/
+ 	font-size: 0px;
+	width: 18px;
+	height: 34px;
+  	background-image: linear-gradient(180deg, 
+ 		#ffffff, #ffffff 16px, #b3c2e5 16px, #b3c2e5 18px, #ffffff 18px, #ffffff 34px); 
+}
+
+.score {
+	float: left;
+	display: inline-block;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 10px;
+	margin-bottom: 4px;
+	padding: 6px;
+	padding-top: 6px;
+	padding-bottom: 4px;
+	background-color: #DDE0E3;
+	border-radius: 3px;
+	border-width: 0px;
+	border-style: solid;
+	border-color: white;
+	color: #1B75BB;
+	font-weight: normal;
+	font-size: 12px;
+}
+
+
+/* Paginabolletje */
+.scoreBtn {
+	float: left;
+	position: relative;
+	overflow: visible;
+}
+
+/* Paginabolletje - vinkje */
+.scoreBtn .v {
+	display: none;
+}
+
+/* Paginabolletje - nummer */
+.scoreBtn .nr { 
+	display: inline-block;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 5px;
+	margin-bottom: 4px;
+	padding: 6px;
+	padding-top: 6px;
+	padding-bottom: 4px;
+	background-color: #B3C2E5;
+	border-radius: 3px;
+	border-width: 0px;
+	border-style: solid;
+	border-color: white;
+	cursor: pointer;
+	color: #FFFFFF;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+.scoreBtn-popupTime {
+	border-radius: 0px;
+	text-decoration: underline;
+	font-style: italic;
+	font-size: 10px;
+	background-color: white;
+	border-color: #1D71B8;
+	border-width: 1px;
+	color: #1D71B8;
+}
+
+.scoreBtn-max0 .nr {
+	background-color: #C0C0C0;
+}
+
+.scoreBtn-disabled .nr {
+	background-color: white;
+}
+
+.scoreBtn-correct .nr {
+	margin-left: 0px;
+	margin-top: 5px;
+	font-weight: bold;
+}
+
+.scoreBtn-correct .v { 
+	position: absolute;
+	top: -3px;
+	right: -8px;
+	width: 18px;
+	height: 18px;
+	display: block;
+ 	background-image: goednumworx !important;
+	background-repeat: no-repeat !important;
+	background-position: right top !important;
+	background-color: transparent;
+}
+
+.scoreBtn-selectedcorrect .nr {
+	background-color: #96C896;
+	border-color: #1D71B8;
+	border-style: solid;
+	margin-right: 0px;
+	color: green;
+	font-weight: bold;
+}
+
+.scoreBtn-cursor .nr {
+	margin-top: 5px;
+	border-style: solid;
+	border-color: #1D71B8;
+	color: #FFFFFF;
+	background-color: #1D71B8;
+}
+
+@sprite .correctie {
+	gwt-image: 'correctie' !important;
+	background-repeat: no-repeat !important;
+	background-position: right bottom !important;
+	background-color: transparent;
+  	height: auto;
+  	width: auto;
+ }
+
+@sprite .correctie.corrected {
+	gwt-image: 'corrected' !important;
+  	height: auto;
+  	width: auto;
+}
+
+@sprite .correctie > div > .correctie-tail {
+	gwt-image: 'correctie' !important;
+	background-repeat: no-repeat !important;
+	background-position: right bottom !important;
+	background-color: transparent;
+ 	height: auto;
+  	width: auto;
+ }
+
+@sprite .correctie.corrected > div > .correctie-tail {
+	gwt-image: 'corrected' !important;
+  	height: auto;
+  	width: auto;
+}
+
+@sprite .tablet {
+	gwt-image: 'tablet';
+	background-repeat: no-repeat !important;
+	background-position: left top !important;
+	outline: none;
+}
+
+@sprite .tablet_active {
+	gwt-image: 'tablet_active';
+	background-repeat: no-repeat !important;
+	background-position: left top !important;
+	outline: none;
+}
+
+@sprite .desktop_active {
+	gwt-image: 'desktop_active';
+	background-repeat: no-repeat !important;
+	background-position: left top !important;
+	outline: none;
+}
+
+.removeBtn {
+	width: 13px;
+	height: 17px;
+	padding: 2px 4px;
+	border-width: 1px;
+	border-color: rgb(175, 192, 217);
+	border-style: solid;
+	border-radius: 3px;
+	background-color: rgb(218, 224, 242);
+	margin-left: 8px;
+}
+
+.strategieKeuzeVak {
+	background-color: rgb(117, 154, 200);
+	border-color: rgb(128, 128, 128);
+	border-style: solid;
+	border-width: 0px;
+	border-radius: 0px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin-top: 8px;
+	margin-bottom: 8px;
+}
+
+.strategieLabel {
+	color: white;
+	margin-left: 10px;
+	margin-top: 5px;
+	font-weight: bold;
+}
+
+.strategieKeuze {
+	background-color: rgb(218, 224, 242);
+	color: rgb(38, 115, 182);
+	border-color: #2673B6;
+	border-radius: 3px;
+	border-width: 1px;
+	margin-left: 5px;
+	margin-top: 3px;
+	border-style:solid;
+}
+
+.strategiePlus {
+	margin-top: -5px;
+}
+.strategieMenu .strategiePlus {
+	visibility: hidden;
+}

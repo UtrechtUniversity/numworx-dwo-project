@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Test exercise</title>
+	<!-- Bootstrap core CSS -->
+	<link href="../css/bootstrap.min.css" rel="stylesheet" />
+	<!-- Bootstrap theme -->
+	<link href="../css/bootstrap-theme.min.css" rel="stylesheet" />
+	<!-- Custom theme -->
+	<link href="../css/custom.css" rel="stylesheet" />
+
+	<style>
+		body {
+			background-color: #eee;
+			font-family: Verdana, Geneva, 'DejaVu Sans', sans-serif;
+			font-size: 12px;
+		}
+	</style>
+</head>
+<body>
+    <p>
+	    The exercise page must include the javascript libraries 'tincan.js' and 'Content_Api.js'.<br />
+        A TinCan statement is created by using TinCan.Statement(). tincan.sendStatement(statement) is used to post a message to the parent.
+    </p>
+
+	<h2>Actions</h2>
+	<input type="button" value="Send Initialized" onclick="sendInitializedStatement()" />
+	<input type="button" value="Get MetaData" onclick="sendMetadataStatement()" />
+	<input type="button" value="Get Content" onclick="sendContentStatement()" />
+	<input type="button" value="Send Answers" onclick="sendAnsweredStatement()" />
+	<input type="button" value="Send Completed" onclick="sendCompletedStatement()" />
+	<input type="button" value="Clear log" onclick="clearLog()" />
+    <br />
+
+  	<h2>Received</h2>
+    <div id="log" />
+     
+	<script src="../scripts/tincan.js"></script>
+    <script src="../scripts/Content_Api-0.2.9.js"></script>
+    
+
+	<script>
+	    function sendInitializedStatement() {
+	        var statement = new TinCan.Statement();
+
+	        statement.verb = new TinCan.Verb({ "id": "http://bao.mijnklas.nl/xapi/verbs/initialized" });
+
+	        _targetUri = "*";
+
+	        tincan.sendStatement(statement);
+	    }
+
+	    function sendCompletedStatement() {
+	        var statement = new TinCan.Statement();
+
+	        statement.verb = new TinCan.Verb({ "id": "http://bao.mijnklas.nl/xapi/verbs/completed" });
+
+	        _targetUri = "*";
+
+	        tincan.sendStatement(statement);
+	    }
+
+	    function sendMetadataStatement() {
+	        var statement = new TinCan.Statement();
+
+	        statement.verb = new TinCan.Verb({ "id": "http://bao.mijnklas.nl/xapi/verbs/metaData" });
+
+	        _targetUri = "*";
+
+	        tincan.sendStatement(statement);
+	    }
+
+	    function sendContentStatement() {
+	        var statement = new TinCan.Statement();
+
+	        statement.verb = new TinCan.Verb({ "id": "http://bao.mijnklas.nl/xapi/verbs/content" });
+
+	        _targetUri = "*";
+
+	        tincan.sendStatement(statement);
+	    }
+
+	    function sendAnsweredStatement() {
+	        var answer = Bao.buildAnswer('http://example.com/courses/interaction/aa-bb-cc-dd', 400, true, 'PT3M15S', { "raw": 4, "max": 10 }, 'fill-in', '400', { "http://bao.mijnklas.nl/xapi/extensions/attempts": 1, "http://bao.mijnklas.nl/xapi/extensions/interactionType": "fill-in" }, undefined, true);
+	        var statement = Bao.buildAnsweredStatement(answer);
+
+	        tincan.sendStatements([statement]);
+	    }
+
+	    // Initialization & Configuration of TinCan.js and Content_Api.js
+	    //TinCan.enableDebug();
+	    var lrs = new ContentApiLrs();
+	    lrs.setTarget(window.parent, "*");
+
+	    function logMessage(message) {
+	        var log = document.getElementById('log');
+	        var pre = document.createElement('pre');
+	        pre.textContent = message.data;
+	        pre.className = "list-group-item";
+
+	        var entry = document.createElement('div');
+	        var header = document.createElement('h4');
+	        header.textContent = 'Message from parent ' + new Date().toGMTString();
+	        entry.appendChild(header);
+	        entry.appendChild(pre);
+	        log.insertBefore(entry, log.firstElementChild);
+	    }
+
+	    function clearLog() {
+	        var log = document.getElementById('log');
+	        log.innerHTML = "";
+	    }
+
+	    // Simplified version of Lms_Api.js, used to display statements on the page
+	    var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+	    var eventer = window[eventMethod];
+	    var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+	    eventer(messageEvent, handleMessage, false);
+
+	    function handleMessage(msg) {
+	        logMessage(msg);
+	    }
+
+	</script>
+
+</body>
+</html>

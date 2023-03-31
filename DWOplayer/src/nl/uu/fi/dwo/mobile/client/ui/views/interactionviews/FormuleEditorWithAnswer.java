@@ -1,0 +1,2238 @@
+package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
+
+import org.osgi.util.promise.Promise;
+
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
+import nl.uu.fi.dwo.interaction.client.FacetAware;
+import nl.uu.fi.dwo.interaction.client.FacetHelper;
+import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.LessonMode;
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.StateLess;
+import nl.uu.fi.dwo.interaction.client.TekstElement;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
+import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.client.template.TemplateCss;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.mobile.client.ui.ResizableContentIF;
+import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
+import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
+import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselEditor;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselOplossingenVak;
+import nl.uu.fi.dwo.mobile.utils.AutoHidePopupPanel;
+import nl.uu.fi.dwo.mobile.utils.ImageUtils;
+import nl.uu.fi.dwo.mobile.utils.LogBuilder;
+import nl.uu.fi.dwo.mobile.utils.Logging;
+import nl.uu.fi.dwo.mobile.utils.PopupFacade;
+import nl.uu.fi.dwo.mobile.utils.PopupFacade.PopupListener;
+import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
+
+import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.canvas.dom.client.CanvasGradient;
+import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.Cursor;
+import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.VerticalAlign;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.Widget;
+import fi.wiskopdr.AntwoordFormuleVakChecker;
+import fi.wiskopdr.AntwoordVakChecker;
+import fi.wiskopdr.AntwoordVergelijkingVakChecker;
+import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.RestartException;
+import fi.wiskopdr.RestartException.RestartHandler;
+import fi.wiskopdr.expressies.Expressie;
+import fi.wiskopdr.expressies.Vergelijking;
+import fi.wiskopdr.expressies.VergelijkingMeerv;
+import fi.wiskopdr.expressies.repr.ContentMathML;
+import fi.wiskopdr.text.Text;
+
+/**
+ * Checks inserted formule with the correct answer
+ * 
+ * @author Danny Hendrix, Evertson Croes
+ * 
+ */
+public class FormuleEditorWithAnswer extends FormuleEditor implements InteractionViewWithMisconceptions, CBookEventListener, FacetAware, TekstElementWithFont, PopupListener
+{
+	
+	private final ActivityInterface activity;
+	class RestartStatistiek implements RestartHandler {
+		Promise<?> r;
+		
+		RestartStatistiek(Promise<?> r) {
+			this.r = r;
+		}
+
+		@Override
+		public void restart(String message, Runnable run) {		
+			r.onResolve(run);
+		}
+		
+
+	}
+
+	private CorrectieFacade correctie;
+	public static final String ACTION_CORRECT = "action.correct";
+	public static final String ACTION_FALSE = "action.false";
+	public static final String ACTION_FALSE2 = "action.false_2";
+	public static final String ACTION_HALF = "action.half";
+
+	private static final CBookEvent EVENT_CORRECT = new CBookEvent(ACTION_CORRECT); 
+	private static final CBookEvent EVENT_FALSE = new CBookEvent(ACTION_FALSE); 
+	private static final CBookEvent EVENT_FALSE2 = new CBookEvent(ACTION_FALSE2); 
+	private static final CBookEvent EVENT_HALF = new CBookEvent(ACTION_HALF); 
+
+	private static final String DECIMAL = LocaleInfo.getCurrentLocale().getNumberConstants().decimalSeparator();
+	private static final char PERIOD = '.';
+
+	private int extraWidth = 23 ; // of 43; breedte voor nakijkplaatje en als nodig voor knop voor uitklappen.
+	
+	class FormuleEditorPopup extends FormuleEditorWithSteps implements CBookEventListener, StateLess, ResizableContentIF 
+	{
+		boolean transfer;
+
+		public FormuleEditorPopup(ActivityComponent a, HashMap<String, Object> h,
+				boolean isVergelijkingVak, String[] randomVarNamen,
+				HashMap randomVarWaarden) {
+			super(a, h, isVergelijkingVak, randomVarNamen, randomVarWaarden, null);
+		}
+		
+		public FormuleEditorPopup(ActivityInterface a, HashMap<String, Object> h, boolean isVergelijkingVak, AntwoordVakChecker avChecker)
+		{
+			super(a, h, isVergelijkingVak, randomVarNamen, randomVarWaarden, avChecker);
+		}
+
+//		@Override
+//		public void kijkNa() {
+//			super.kijkNa();
+//			String string = getEditor().toString();
+//			transfer(string);
+//		}
+
+		void transfer(String string)
+		{
+			logger.fine("userstring = " + string);
+			FormuleEditorWithAnswer other = FormuleEditorWithAnswer.this;
+			other.clearMain();
+			other.insert(string); // let op: changed van other is nu true gezet! 
+			other.setChanged(false); // zet changed weer false om problemen met verhogen errorCount en cross widget communicatie te voorkomen
+			other.processAntwoord();
+		}
+
+//		@Override
+//		public void lastStep(String useranswer) {
+//			super.lastStep(useranswer);
+//			//transfer(useranswer);
+//		}
+
+//		@Override
+//		public void addStep(String useranswer) {
+//			super.addStep(useranswer);
+//			//transfer(useranswer);
+//		}
+
+		@Override
+		FormuleEditorWithAnswer editorInstance() {
+			return new FormuleEditorWithAnswer(activity, super.h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden, avChecker)
+			{
+				@Override
+				public void enter() {
+					super.enter();
+					transfer(toString());
+				}
+
+				@Override // Er wordt in backstep om focus gevraagd, bij transfer is dit niet nodig. XXX hoe moet dit netter worden gemaakt.
+				public void requestFocus() {
+					if(!transfer)
+						super.requestFocus();
+				}
+				
+				
+			};
+		}
+
+		@Override
+		public void acceptCBookEvent(CBookEvent event) 
+		{
+			if (TekstVakPanel.TVP_KLAPUIT == event.getCommand())
+			{
+				// het KLAPUIT-event wordt getriggerd als het vak door de gebruiker wordt uitgeklapt, 
+				// maar ook in TekstVakPanel.setState()
+				
+				FormuleEditor other = FormuleEditorWithAnswer.this;
+				String useranswer = other.toString();
+// transfer 
+//				if (getEditor() == null || getEditor().toString().equals("")) // dit gaat mis als useranswer al de laatste stap bevat, bijv. bij oefenen en goed eindantwoord, dan is editor null
+				if (getEditor() != null && getEditor().toString().equals(""))
+				{
+					backStep(false);
+				}
+				
+				if (getEditor() != null && !useranswer.equals(getEditor().toString()))
+				{
+					getEditor().clearMain();
+					getEditor().insert(useranswer);
+					
+					getEditor().requestFocus();
+				}
+				
+				// t.b.v. uitklapvak (voor popup wordt dit gezet in onShow/onHide)
+				formuleEditorPopup.setUitgeklapt(true);
+				formuleEditorPopup.setIsBoss(true);
+			}
+			
+			if (TekstVakPanel.TVP_KLAPIN == event.getCommand())
+			{
+				// het KLAPIN-event wordt getriggerd als het vak door de gebruiker wordt uitgeklapt, 
+				// maar ook in TekstVakPanel.setState()
+				
+				FormuleEditorWithAnswer other = FormuleEditorWithAnswer.this;
+				String useranswer = other.toString();
+				
+				// als getEditor() er is, dan halen we het antwoord uit deze editor
+				if (getEditor() != null)
+				{
+					if (!useranswer.equals(getEditor().toString()))
+					{
+						useranswer = getEditor().toString();
+						
+						if ("".equals(useranswer))
+						{
+							backStep(false);
+							useranswer = getEditor().toString();
+						}
+						
+						other.clearMain();
+						other.insert(useranswer);
+					}
+					// else answer is already there
+				}
+				else
+				{
+					System.out.println("acceptCBookEvent(): klapin, getEditor() == null");
+				}
+				
+				boolean show = 
+					isReview() 
+					|| mode == OpdrNavIF.OEFENEN 
+					|| mode == OpdrNavIF.OEFENEN_STRAFPUNTEN
+					|| (mode == OpdrNavIF.ZELFTOETS && isNagekeken() && !isVeranderdNaNakijken());
+
+				// helemaal niet nakijken voor eindtoets?
+				if (!(mode == OpdrNavIF.EINDTOETS))
+				{
+					other.kijkNa(false, show, false);
+				}
+			
+				// t.b.v. uitklapvak (voor popup wordt dit gezet in onShow/onHide)
+				formuleEditorPopup.setUitgeklapt(false);
+			}
+		}
+
+		void setHeight(double hoogte) {
+			logger.fine("setHeight(" + hoogte + ")");
+			super.setHeight((int)hoogte);
+		}
+		
+		public void setSize(int w, int h)
+		{
+			super.setSize(w, h);
+		}
+
+		public void setWidth(int w)
+		{
+			super.setWidth(w);
+		}
+
+		public void setHeight(int h)
+		{
+			super.setHeightIncludingHeader(h);
+		}
+
+		@Override
+		void fire(String command, String message) {
+		}
+
+		
+	}
+	
+	
+	private static final String ANTWOORD_STRING = "antwoordString";
+	private final static Logger logger = Logger.getLogger("FormuleEditorWithAnswer");
+	OpdrNavIF comRoot;
+	Panel sp = null;
+	//FlowPanel prefixPanel = null;
+	private Image checkimg;
+	Label feedbackLabel;
+	AutoHidePopupPanel feedbackPanel;
+	TekstVak feedbackTekst;
+	Canvas feedbackSluitKnop;
+	Context2d gIm;
+	FEWACheckPanel checkPanel;
+	private ObjectMap launchState;
+	/**
+	 * Als fews niet null is, dan staat de FormuleEditorWithAnswer
+	 * niet op zichzelf, maar hoort hij
+	 * bij een FormuleEditorWithSteps.
+	 */
+	protected FormuleEditorWithSteps fews = null;
+	private boolean strict = true;
+	private ObjectMap instellingen = null;
+	private int score = 0;
+	private int scoreZonderAftrek = 0;
+	private Boolean correct = null;
+	private int errorCount = 0;
+	
+	//private Expressie substitutie;
+	private String feedback = "";
+	private boolean hasFeedback = false;
+	private int scoreMax = 0;
+	private int foutStraf = 2;//in later stadium wordt deze instelbaar, dan bij init foutstraf instelbaar maken.
+	private boolean ingevuld = false;
+	private boolean nagekeken = false;
+	private boolean isVeranderdNaNakijken = false;
+	private boolean review;
+	
+	private boolean[][] logObjectives;
+	
+	private boolean check = true;
+	private boolean teltMee = true;
+	private boolean editable = true;
+	private boolean syntaxFout = false;
+	private int breedte;
+	private int hoogte;
+	private boolean volledigeBreedte;
+	private String[] randomVarNamen = null;
+	private HashMap randomVarWaarden = null;
+	private AntwoordVakChecker avChecker = null;
+	private PopupFacade facade;
+	private int mode;
+	private boolean vakUitwerking;
+	private boolean boxMetRand = true;
+	private int goedHalfFout = AntwoordVakChecker.FOUT;
+	private FacetHelper facet;
+	private Logging logging;
+	
+	private TekstRegel parentRegel;
+	private StelselOplossingenVak stelselVak;
+	private FormuleEditorPopup formuleEditorPopup;
+	
+	private static boolean fontOvererving = false;
+	
+	private int borderWidth = (Integer)DWOplayer.templateConstants.answerboxFEWA("border-width");
+	private int paddingTop = (Integer)DWOplayer.templateConstants.answerboxFEWA("padding-top");
+	private int paddingLeft = (Integer)DWOplayer.templateConstants.answerboxFEWA("padding-left");
+	private int paddingRight = (Integer)DWOplayer.templateConstants.answerboxFEWA("padding-right");
+	
+	public static void zetFontOverervingForm(boolean b)
+	{	fontOvererving = b;
+	}
+	
+//	public FormuleEditorWithAnswer(HashMap<String, Object> h, boolean isVergelijkingVak, FormuleEditorWithSteps fe, AntwoordVakChecker avChecker)
+//	{
+//		this(h, isVergelijkingVak, fe, null, null, avChecker);
+//	}
+	
+	public FormuleEditorWithAnswer(ActivityInterface a, HashMap<String, Object> h, boolean isVergelijkingVak, FormuleEditorWithSteps fe, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, AntwoordVakChecker avChecker)
+	{
+		super();
+		activity = a;
+		//getMainRegel().setEditorParent(this);
+		//getMainRegel().setDefaultHeight(24);
+
+		//this.randomVarNamen = randomVarNamen;
+		//this.randomVarWaarden = randomVarWaarden;
+		this.isVergelijkingVak = isVergelijkingVak;
+
+		if (fe != null)
+		{
+			this.fews = fe;
+		}
+		facade = new PopupFacade(JSONUtilities.wrapMap(h), activity);
+		sp = createPanel();
+		
+		if(h == null)
+			return;
+		if (h.containsKey("interactiePanelLaunchState") )
+		{
+			ObjectMap map = JSONUtilities.wrapMap(h);
+			facet = new FacetHelper(map);
+			this.breedte = map.getInt("breedte");
+			this.hoogte = map.getInt("hoogte");
+			this.volledigeBreedte = map.getBoolean("volledigeBreedte");
+			
+			//this.hoogte = map.getInt("hoogte");
+			//int breedte = ((Number) h.get("breedte")).intValue();
+			//System.out.println("breedte formuleEditorWithAnswer: " + breedte);
+			launchState = map.getObjectMap("interactiePanelLaunchState");
+			if(avChecker == null)
+			{
+				if (isVergelijkingVak)
+					this.avChecker = new AntwoordVergelijkingVakChecker((HashMap<String, Object>) launchState, randomVarNamen, randomVarWaarden);
+				else
+					this.avChecker = new AntwoordFormuleVakChecker((HashMap<String, Object>) launchState, randomVarNamen, randomVarWaarden);
+			}
+			else
+				this.avChecker = avChecker;
+			
+			if(launchState != null) 
+			{
+			  String[] smObjectives = null;
+              if(launchState.containsKey("scoreMax"))
+              {
+                  scoreMax = launchState.getInt("scoreMax");
+              }
+				if(launchState.containsKey("check") )
+				{
+					check = launchState.getBoolean("check");
+				}
+				if(launchState.containsKey("teltMee"))
+				{
+					teltMee = launchState.getBoolean("teltMee");
+				}
+				if(launchState.containsKey("logObjectives"))
+				{	ObjectList logObjectivesList = ( launchState.getObjectList("logObjectives") );
+					logObjectives = new boolean[logObjectivesList.size()][];
+					for(int i = 0; i < logObjectivesList.size(); i++)
+					{	logObjectives[i] = logObjectivesList.getBooleanArray(i);
+					}
+				}
+				if (launchState.containsKey("smObjectives")) {
+				  smObjectives = launchState.getStringArray("smObjectives");
+				}
+				boolean logOption;
+				if (smObjectives != null && smObjectives.length > 0)
+					logOption = true;
+				else 
+					logOption = launchState.getBoolean("logOption", false);
+				if(logOption) {
+					if(fe != null) 
+					{
+						logging = fe.dwologger;
+					} else {
+						LogBuilder dwoLogger = activity.logBuilder().setLogOption(launchState.getBoolean("logOption", false));
+						if(launchState.containsKey("scoreMax"))
+						{
+							dwoLogger.setMaxScore(scoreMax);
+						}
+						if(launchState.containsKey("logIDLabel"))
+							dwoLogger.setLogIDLabel(launchState.getString("logIDLabel"));
+						if (launchState.containsKey("logID"))
+							dwoLogger.setLogID( launchState.getString("logID"));
+						String[] smForeknowledge = null;
+						if (launchState.containsKey("smForeknowledge"))
+							smForeknowledge = launchState.getStringArray("smForeknowledge");
+							
+						String Formule = isVergelijkingVak ? "Vergelijking" : "Formule";
+						dwoLogger.setClassName("fi.wiskopdr.SimpelAntwoord"+Formule+"Vak");
+						dwoLogger.setLogObjectives(logObjectives).setSmObjectives(smObjectives).setSmForeknowledge(smForeknowledge);
+						dwoLogger.setTeltMee(teltMee);
+						logging = dwoLogger.build();
+					}
+				}
+				
+				if(launchState.containsKey("formuleToolBijFocus"))
+					setFormuleToolBijFocus(launchState.getBoolean("formuleToolBijFocus"));
+			
+				if(launchState.containsKey("boxMetRand"))
+					boxMetRand = launchState.getBoolean("boxMetRand");
+				if(fe == null && launchState.containsKey("uitw")) 
+				{
+					vakUitwerking = launchState.getBoolean("uitw");
+					//logger.fine("vakuitwerking = " + vakUitwerking);
+					if (vakUitwerking)
+					{
+						HashMap<String, Object> hh = new HashMap<String,Object>();
+						hh.put("volledigeBreedte", Boolean.TRUE);
+						hh.put("breedte", breedte);
+						hh.put("hoogte" , 250); // FIXME wat is hier de goede hoogte?
+						hh.put("breedte", 300); // FIXME wat is hier de goede breedte?
+						HashMap ll = new HashMap();
+						hh.put("interactiePanelLaunchState", launchState);
+						
+						formuleEditorPopup = new FormuleEditorPopup(activity, hh,isVergelijkingVak,this.avChecker);
+						formuleEditorPopup.removeBorder();
+					}
+				}
+				if(launchState.containsKey("hasFeedback"))
+				{	hasFeedback = launchState.getBoolean("hasFeedback");
+				}
+				
+				
+			}
+		
+			checkPanel =  new FEWACheckPanel();
+			checkimg = checkPanel.checkimg;
+			feedbackLabel = checkPanel.feedbackLabel;
+			
+			
+//			checkimg = new Image(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
+			checkimg.setVisible(false);
+			lastanswer = null;
+//			checkimg.getElement().getStyle().setProperty("marginLeft", "0px");
+//			checkimg.getElement().getStyle().setProperty("marginRight", "0px");
+//			checkimg.getElement().getStyle().setProperty("marginTop", "-2px"); 
+//			checkimg.getElement().getStyle().setProperty("marginBottom", "-7px");
+			
+			feedbackPanel = new AutoHidePopupPanel(true);
+			PopupFacade.addPopup(feedbackPanel);
+			feedbackPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+			feedbackPanel.getElement().getStyle().setBorderColor("black");
+			feedbackPanel.getElement().getStyle().setBorderWidth(1, Style.Unit.PX);
+			feedbackPanel.getElement().getStyle().setPadding(2, Style.Unit.PX);
+			feedbackPanel.getElement().getStyle().setBackgroundColor("#FFFFDD");
+			
+			feedbackTekst = new TekstVak();
+			feedbackTekst.setSize(200, 50);
+			feedbackTekst.setFontSize(XMLView.getDefaultFontSize());
+			feedbackTekst.setFontName(XMLView.getDefaultFontName());
+			feedbackTekst.setColor(CssColor.make("black"));
+			feedbackTekst.setCentering(false, true);
+			feedbackTekst.setPasHoogteBreedteAan(true, false);
+			feedbackTekst.setTekstVakBreedte(190);
+			feedbackPanel.add(feedbackTekst);
+			
+			feedbackSluitKnop = Canvas.createIfSupported();
+			gIm = feedbackSluitKnop.getContext2d();
+			
+			feedbackSluitKnop.setWidth(10 + "px");
+			feedbackSluitKnop.setHeight(10 + "px");
+			feedbackSluitKnop.setCoordinateSpaceWidth(10);
+			feedbackSluitKnop.setCoordinateSpaceHeight(10);
+			
+			CanvasGradient gradient = gIm.createLinearGradient(0, 0, 10, 10);
+			gradient.addColorStop(0, CssColor.make(242, 242, 242).toString());
+			gradient.addColorStop(1, CssColor.make(221, 221, 221).toString());
+			gIm.setFillStyle(gradient);
+			//gIm.setFillStyle(CssColor.make(245, 245, 245).toString());
+			gIm.fillRect(0, 0, 10, 10);
+			gIm.setStrokeStyle("black");
+			gIm.beginPath();
+			gIm.moveTo(1, 1);
+			gIm.lineTo(9, 9);
+			gIm.moveTo(1, 9);
+			gIm.lineTo(9, 1);
+			gIm.stroke();
+			
+			feedbackSluitKnop.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+			feedbackSluitKnop.getElement().getStyle().setProperty("verticalAlign", "top");
+			voegFeedbackSluitKnopToe();
+			
+			
+			feedbackSluitKnop.addDomHandler(new ClickHandler(){
+				public void onClick(ClickEvent e)
+				{
+					feedbackPanel.hide();
+				}
+			}, ClickEvent.getType());
+						
+			feedbackLabel.setVisible(false);
+			
+			checkPanel.setHandler(() -> {
+				if(feedbackLabel.isVisible())
+				{
+					int yPos = asWidget().getAbsoluteTop() + asWidget().getOffsetHeight() + 10;
+					if (yPos + feedbackTekst.hoogte + 10 > Window.getClientHeight())
+						yPos = Window.getClientHeight() - feedbackTekst.hoogte - 10;
+					
+					int xPos = asWidget().getAbsoluteLeft() + 10;
+					feedbackPanel.setPopupPosition(xPos, yPos);
+					feedbackPanel.show();
+				}			
+			});
+						
+			if (fe == null)
+			{
+				this.getMainRegel().setMinimumWidth(breedte - 20);
+				this.getMainRegel().setMinimumHeight(hoogte - 6);
+				
+				sp.setStyleName(DWOplayer.templateCss().answerboxFEWA());
+				if(!boxMetRand)
+				{
+					sp.getElement().getStyle().setBorderStyle(Style.BorderStyle.NONE);
+					this.getMainRegel().zetStippels(true);
+					sp.getElement().getStyle().setBackgroundColor("transparent");
+				}
+			}
+
+			sp.add(this.getMainRegel().asWidget());
+	         if (fe == null) // DWOPLAY-363 Altijd dubbel kruisje, geen checkImage/feedback als je in FE zit!
+	           sp.add(checkPanel);
+			
+			register(new FormuleEditorTouchHandler(this).initHandler());
+			lastanswer = "$f" + toString() + "@"; // initialize lastanswer voor kijkna not sending
+		
+		}
+	}
+
+	public void zetInstellingen(ObjectMap instellingen2)
+	{
+		this.instellingen = instellingen2;
+		//System.out.println("fontSize uit instellingen formuleEditorWithAnswer: " + ((Number) instellingen.get("fontSize")).intValue());
+		FormuleFont fnt = FormuleFont.createFromFontSize(instellingen2.getInt("fontSize"));
+		setFont(fnt);
+		setDefaultFont(fnt);
+	}
+	
+	public void voegFeedbackSluitKnopToe()
+	{
+		feedbackTekst.add(feedbackSluitKnop);
+		feedbackTekst.setWidgetRightWidth(feedbackSluitKnop, 0, Style.Unit.PX, 10, Style.Unit.PX);
+		feedbackTekst.setWidgetTopHeight(feedbackSluitKnop, 0, Style.Unit.PX, 10, Style.Unit.PX);
+	}
+
+//	public Object getFe()
+//	{
+//		return fe;
+//	}
+
+	// !(holder instanceof FormuleEditorWithAnswer && ((FormuleEditorWithAnswer)holder).getFe()==null)
+	public boolean isInputNeeded() {
+		
+		//nieuwe implementatie: alleen false teruggeven als er nog niets in het vakje staat, anders true teruggeven
+		if(fews != null)
+			return true;
+		if(this.toString().equals(""))
+			return false;
+		else 
+			return true;
+		
+		//oude implementatie: zorgt ervoor dat nooit vakjes verschijnen, ook niet nadat bijvoorbeeld een breukvak is ingevoerd. 
+		//return fe != null;
+	}
+	
+	public void setParentRegel(TekstRegel regel)
+	{
+		parentRegel = regel;
+		if (fontOvererving)
+		{
+			FormuleFont font = FormuleFont.createFromFontSize(parentRegel.getFont().getFontSize(), false);
+			if (!FormuleFont.formTimes)
+				font.setFont(parentRegel.getFont().getFont());
+			setFont(font);
+			setDefaultFont(font);
+			
+			if (formuleEditorPopup != null)
+			{
+				formuleEditorPopup.setFont(regel);
+			}
+		}
+		
+		paint();
+	}
+	
+	public void setParentStelselOplossingenVak(StelselOplossingenVak vak)
+	{
+		stelselVak = vak;		
+	}
+	
+	@Override
+	public void addElement(FormuleElement e)
+	{	
+		super.addElement(e);
+		resetimg();
+		
+		if (isNagekeken())
+			zetIsVeranderdNaNakijken(true);
+		
+		if (this.fews != null) 
+		{
+			this.fews.resetimg();
+			
+			if (this.fews.isNagekeken())
+				this.fews.zetIsVeranderdNaNakijken(true);
+			
+			this.fews.setStapOk(true);
+		}
+
+		resize();
+	}
+
+	/**
+	 * Verwijder het huidige element.
+	 * Als al is nagekeken, wordt isVeranderdNaNakijken true
+	 * gezet. Dit werkt alleen voor een 'standalone' FEWA. 
+	 * Als hij onderdeel is van een FEWS, is nagekeken false.
+	 * In dat geval zet FEWS.
+	 */
+	@Override
+	public void removeCurrentElement()
+	{
+		super.removeCurrentElement();
+		resetimg();
+				
+		if (isNagekeken())
+			zetIsVeranderdNaNakijken(true);
+		
+		if (this.fews != null) 
+		{
+			this.fews.resetimg();
+			
+			if (this.fews.isNagekeken())
+				this.fews.zetIsVeranderdNaNakijken(true);
+		}
+
+		resize();
+		
+	}
+
+	@Override
+	public void removeNextElement()
+	{
+		super.removeNextElement();
+		resetimg();
+		resize();
+	}
+
+	/**
+	 * Insert the given text in the formula editor 
+	 * and clear the check image.
+	 */
+	@Override
+	public void insert(String text)
+	{
+		super.insert(text);
+		resetimg();
+		resize();
+	}
+
+	/**
+	 * Reset het goed/fout-plaatje en verberg de feedback.
+	 */
+	void resetimg() 
+	{
+		checkimg.setVisible(false);
+		zetFeedbackZichtbaar(false);
+		feedbackPanel.hide();
+		lastanswer = null;
+	}
+	
+	public void zetFeedbackZichtbaar(boolean b)
+	{
+		feedbackLabel.setVisible(b);
+		if(b)
+			checkPanel.getElement().getStyle().setCursor(Cursor.POINTER);
+		else
+			checkPanel.getElement().getStyle().setCursor(Cursor.DEFAULT);
+// bij noordhof nooit.
+		if (!activity.isNoordhoff()) {
+		// popup met feedback alleen tonen als niet correct 
+		if (feedbackLabel.isVisible() && (isCorrect() == null || !isCorrect())) // correct is null is half/doorgaan, correct is true is goed, correct is false is fout
+		{
+			// met scheduler omdat anders de xPos niet goed is
+			Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand()
+			{
+		        @Override
+		        public void execute()
+		        {
+					int yPos = asWidget().getAbsoluteTop() + asWidget().getOffsetHeight() + 10;
+					if (yPos + feedbackTekst.hoogte + 10 > Window.getClientHeight())
+						yPos = Window.getClientHeight() - feedbackTekst.hoogte - 10;
+					
+					int xPos = asWidget().getAbsoluteLeft() + 10;
+
+					feedbackPanel.setPopupPosition(xPos, yPos);
+					feedbackPanel.show();
+				}
+			});												
+		}}
+	}
+	
+//	public void setimg(String answer)
+//	{
+//		checkimg.setVisible(true);
+//		lastanswer = answer;
+//	}
+
+	@Override 
+	public void enter() 
+	{
+		if (!this.toString().equals(""))
+			ingevuld = true;
+		else
+			ingevuld = false;
+		
+		//Onderstaand if-statement was weggehaald, maar is nodig bij zelftoets en eindtoets, lijkt me.
+		//Maar waarschijnlijk wil ik toch ook in het geval van zelftoets en eindtoets door kijkna heen, om syntaxfouten te onderscheppen.
+		/*
+		if(mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS)
+		{
+			if(this.fe != null && ingevuld)
+				fe.maakNakijkenAf(false);
+			return;
+		}
+		*/
+		if (formuleEditorPopup != null) // is er een uitwerking in de popup
+		{
+			formuleEditorPopup.transfer = true;
+			transferToFEWS();
+			formuleEditorPopup.getEditor().enter();
+			formuleEditorPopup.transfer = false;
+			return;
+		}
+		else
+			processAntwoord(); // gewone geval 
+	}
+	
+	public void tab()
+	{
+		if(parentRegel != null)
+		{
+			parentRegel.getTekstVak().tabFocus(this, true);
+		}
+		else if(fews != null)
+		{
+			TekstRegel parentRegel = fews.findParentRegel(); 
+			if(parentRegel != null)
+			{	if(fews instanceof StelselEditor)
+					parentRegel.getTekstVak().tabFocus(((StelselEditor) fews).geefHoofdPanel().geefAntwoordVak(), true);
+				else
+					parentRegel.getTekstVak().tabFocus(fews, true);
+			}
+		}
+		else if(stelselVak != null)
+		{
+			TekstRegel parentRegel = stelselVak.findParentRegel();
+			if(parentRegel != null)
+				parentRegel.getTekstVak().tabFocus(stelselVak.getParent(), true);
+		}
+	}
+	
+	public void shiftTab()
+	{
+		if(parentRegel != null)
+		{
+			parentRegel.getTekstVak().shiftTabFocus(this, true);
+		}
+		else if(fews != null)
+		{
+			TekstRegel parentRegel = fews.findParentRegel(); 
+			if(parentRegel != null)
+			{	if(fews instanceof StelselEditor)
+					parentRegel.getTekstVak().shiftTabFocus(((StelselEditor) fews).geefHoofdPanel().geefAntwoordVak(), true);
+				else
+					parentRegel.getTekstVak().shiftTabFocus(fews, true);
+			}
+		}
+		else if(stelselVak != null)
+		{
+			TekstRegel parentRegel = stelselVak.findParentRegel();
+			if(parentRegel != null)
+				parentRegel.getTekstVak().shiftTabFocus(stelselVak.getParent(), true);
+		}
+	}
+
+	private void transferToFEWS() {
+		//doen alsof het in de laatste regel van de fews is ingevuld; dan komt het automatisch terug naar de fewa.
+		if(formuleEditorPopup.getEditor() == null || formuleEditorPopup.getEditor().toString().equals(""))
+		{
+			formuleEditorPopup.backStep(false);
+		}
+		formuleEditorPopup.getEditor().clearAll();
+		formuleEditorPopup.getEditor().insert(this.toString());
+	}
+	
+	private void processAntwoord() {
+		new Runnable() {
+			public void run() {
+				try {
+					processAntwoord0();
+				} catch(RestartException e) {
+					e.restart(this);
+				}
+			}
+		}.run();
+	}
+	
+	private void processAntwoord0() throws RestartException
+	{
+		if (mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS)
+			kijkNa0(false, isReview(), false);
+		else
+			kijkNa0(false, true, false);
+		
+		if (comRoot != null) // alleen niet null als fewa een toplevel is.
+		{
+			comRoot.fireEvent(new CBookEvent(this, "input", toString()));
+			comRoot.fireEvent(new CBookEvent(this, "expression", toString()));
+			
+			if (isDouble(toString()))
+			{
+				// zorgt dat voor locale met ','-separator de double waarde ook goed wordt doorgegeven
+				// anders volgt NumberFormatException aan de kant van de double-ontvanger
+				comRoot.fireEvent(new CBookEvent(this, "double", getDoubleValue(toString()).toString()));
+			}
+			if (this.isVergelijkingVak)
+			{
+				comRoot.fireEvent(new CBookEvent(this, "equation", toString()));
+			}
+		}
+		else if (fews != null) // fewa is onderdeel van FormuleEditorWithSteps
+		{
+			fews.fire("input", toString());
+			
+			if (this.isVergelijkingVak)
+			{
+				fews.fire("equation", toString());
+			}
+		}
+
+		if (mode != OpdrNavIF.EINDTOETS) logAttempt();
+	}
+
+	/**
+	 * Bepaal de score van de FormuleEditorWithAnswer. Wordt door
+	 * FormuleEditorWithSteps.bepaalVoortgangsScore() gebruikt
+	 * om de voortgangsscore te berekenen over alle stappen.
+	 */
+	void bepaalScoreEnCorrect() {
+		new Runnable() {
+			public void run() {
+				try {
+					bepaalScoreEnCorrect0();
+				} catch(RestartException e) {
+					e.restart(this);
+				}
+			}
+		}.run();
+	}
+	
+	/**
+	 * Bepaal de score en correct van de FormuleEditorWithAnswer. Wordt door
+	 * FormuleEditorWithSteps.bepaalVoortgangsScore() gebruikt
+	 * om de voortgangsscore te berekenen over alle stappen
+	 * en de correctheid van de eindstap.
+	 */
+	private void bepaalScoreEnCorrect0() throws RestartException
+	{
+		String useranswer = "$f" + this.toString() + "@";
+		
+		HashMap<String, Object> checkResults = new HashMap<String, Object>();
+		checkResults = avChecker.checkAnswer(useranswer);
+
+		this.score = (Integer) checkResults.get("score");
+		this.correct = (Boolean) checkResults.get("correct");
+	}
+
+	private Integer bepaalCumulatief0() throws RestartException {
+		String useranswer = "$f" + this.toString() + "@";
+		
+		HashMap<String, Object> checkResults = new HashMap<String, Object>();
+		checkResults = avChecker.checkAnswer(useranswer);
+	    this.correct = (Boolean) checkResults.get("correct");
+        this.score = (Integer) checkResults.get("score");
+		return (Integer) checkResults.get("answerModelNr");
+	}
+	
+	public Integer bepaalCumulatief() {
+		final Integer[] holder = new Integer[1];
+		new Runnable() {
+			public void run() {
+				try { 
+					holder[0] = bepaalCumulatief0();
+				} catch(RestartException e) {
+					e.restart(this);
+				}
+			}
+		}.run();
+		return holder[0];
+	}
+	
+	
+	/**
+	 * Deze methode checkt of de betreffende string een double bevat,
+	 * eerst met het locale scheidingsteken daarna eventueel nog met ".".
+	 * 
+	 * @param string
+	 * @return
+	 */
+	private boolean isDouble(String string)
+	{
+		boolean isDouble = false;
+		String doubleString = string;
+		
+		final String DECIMAL = LocaleInfo.getCurrentLocale().getNumberConstants().decimalSeparator();
+
+		if (doubleString.contains(DECIMAL))
+		{
+			doubleString = doubleString.replace(DECIMAL.charAt(0), '.'); // replace with default decimal separator 
+		}
+		
+		try
+		{
+			Double.parseDouble(doubleString);
+			isDouble = true;
+		}
+		catch (NumberFormatException e)
+		{
+			isDouble = false;
+		}
+		
+		return isDouble;
+	}
+	
+	/**
+	 * Get the double value in the given string using first the 
+	 * locale decimal separator or else the default
+	 * separator '.'. 
+	 * 
+	 * For example, if the local decimal separator is ','
+	 * and the given string is "4,5", the double 4.5 is returned.
+	 * If the local decimal separator is ',' and the given string
+	 * is "4.5", the double 4.5 is returned.
+	 * 
+	 * @param s
+	 * @return
+	 */
+	private Double getDoubleValue(String s)
+	{
+		double d;
+		
+		String doubleString = s;
+		
+		final String DECIMAL = LocaleInfo.getCurrentLocale().getNumberConstants().decimalSeparator();
+
+		if (doubleString.contains(DECIMAL))
+		{
+			doubleString = doubleString.replace(DECIMAL.charAt(0), '.'); // replace with default decimal separator 
+		}
+
+		try
+		{
+			d = Double.parseDouble(doubleString);
+		}
+		catch (NumberFormatException e)
+		{
+			return null;
+		}
+		
+		return d;
+	}
+	
+	/**
+	 * Replace the default '.' decimal separator with the local separator.
+	 * 
+	 * @param s
+	 * @return
+	 */
+	private String replaceWithLocalDecimalSeparator(String s)
+	{
+		String replacedString = s.replace(PERIOD, DECIMAL.charAt(0));
+		
+		return replacedString;
+	}
+	
+	public void logAttempt()
+	{
+		if (logging != null)
+		{
+			Map<String, Object> map = buildLoggingMap();
+			logging.log(map);
+		}
+	}
+
+	Map<String, Object> buildLoggingMap() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("verb", "http://adlnet.gov/expapi/verbs/answered");
+		map.put("response",
+			"<math xmlns='http://www.w3.org/1998/Math/MathML'>"
+				+ getMainRegel().toMathML() + "</math>");
+		map.put("score", Collections.singletonMap("raw", getScore()));
+		if (correct != null)
+		{
+			map.put("success", correct);
+		}
+		map.put("formula", getMainRegel().toString());
+		map.put("step", getStep());
+		String feedback = getFeedback();
+		if (feedback != null && !feedback.isEmpty())
+			map.put("feedback", feedback);
+		return map;
+	}
+	
+	private Object getStep() 
+	{
+		if (fews != null) return fews.getStep();
+		return "";
+	}
+
+	public void haalAntwoordOp() 
+	{
+		if (formuleEditorPopup != null && formuleEditorPopup.getEditor() != null 
+			&& (!formuleEditorPopup.getEditor().toString().equals("") || formuleEditorPopup.getStapNr() == 0)) // als fews.editor leeg en er zijn geen andere stappen, dan moet dit lege antwoord erin
+		{
+			clearMain();
+			insert(formuleEditorPopup.getEditor().toString());
+			//TODO: setChanged goed regelen.
+		}
+	}
+	
+	/**
+	 * Deze methode wordt aangeroepen door een klik op de nakijkenknop
+	 * in een zelftoets, en bij extern nakijken.
+	 * 
+	 */
+	public void kijkNa()
+	{
+		if (formuleEditorPopup != null)
+		{
+			formuleEditorPopup.transfer = true;
+			getState();
+			transferToFEWS();
+			formuleEditorPopup.kijkNa();
+			formuleEditorPopup.transfer = false;
+		}
+		
+		// reset isVeranderdNaNakijken
+		zetIsVeranderdNaNakijken(false);
+		kijkNa(false);
+	}
+	
+	public HashMap kijkNa(boolean setState)
+	{
+		return kijkNa(false, true, setState);
+	}
+	
+	
+	
+	private String lastanswer = "$f@";
+	private boolean isVergelijkingVak;
+	private String isTeken = "=";
+	private ObjectMap reviewInteractieData;
+	private boolean isNull;
+	
+	public HashMap kijkNa(final boolean backStep, final boolean show, final boolean setState) {
+		HashMap checkResults = null;
+		
+		try {
+			checkResults = kijkNa0(backStep, show, setState);
+		} catch(RestartException r) {
+			r.restart(new Runnable() {
+				public void run() {
+					try {
+						kijkNa0(backStep, show, setState);
+					} catch (RestartException e) {
+						e.restart(this);
+					}					
+				}});
+		}
+		return checkResults;
+	}
+	
+	private HashMap kijkNa0(boolean backStep, boolean show, boolean setState) throws RestartException
+	{
+		if (setState)
+			setChanged(false);
+		
+		
+//		TekstVakPanel ideasStatistiekPanel = null;
+//		if(parentRegel != null)
+//			ideasStatistiekPanel = parentRegel.getTekstVak().getTekstVakParent().isInIdeasStatistiek();
+//		else if(fe != null)
+//			ideasStatistiekPanel = fe.findParentRegel().getTekstVak().getTekstVakParent().isInIdeasStatistiek();
+//		if(ideasStatistiekPanel != null)
+//		{
+//			if(show)
+//			{
+//				Promise<Void> r = ideasStatistiekPanel.kijkNaIdeasStatistiek();
+////				if(!r.isDone()) {
+////					RestartStatistiek handler = new RestartStatistiek(r);
+////					RestartException restart = new RestartException(null, handler);
+////					throw restart;
+////				}
+//			}
+//			return;
+//		}
+				
+		String useranswer = "$f" + this.toString() + "@";
+		if (useranswer.equals("$f@"))
+			ingevuld = false;
+		else
+			ingevuld = true;
+		
+		if (fews != null) // fe: onderdeel van formuleeditorwithsteps
+			fews.zetIngevuld(ingevuld);
+		
+		if (fews != null && fews.getEigenOpdr())
+		{
+			String juisteAntwoord = useranswer;
+			
+			if (fews.getLatestAnswer() == null || "".equals(fews.getFirstViewerString())) // als een van de twee leeg is, moet juiste antwoord uit userantwoord worden gehaald
+			{
+				// eerste stap bij eigen opdracht is altijd goed, mits zo eenvoudig mogelijk
+				if (!isVergelijkingVak())
+				{
+					Expressie expUserAnswer = FormuleParser.geefExpressie(useranswer);
+					if (expUserAnswer != null)
+					{
+						Expressie exp = Expressie.evalWithCAS(expUserAnswer);
+						if (exp != null)
+							juisteAntwoord = addFormulaCodes(exp.toString()); // FIXME NPE als evalwithCas mislukt
+					}
+				}
+				else
+				{
+		        	VergelijkingMeerv vm = FormuleParser.parseVergelijking(useranswer); 
+
+		        	VergelijkingMeerv vmAntw = null;
+					if (vm != null)
+					{
+						Vergelijking v = vm.geefVergelijking(0);
+						vmAntw = Expressie.solveWithCas(vm, v.geefVarNaam());
+						String def = "";
+
+						if (vmAntw != null)
+						{
+							def = vmAntw.toString();
+						}
+
+						juisteAntwoord = addFormulaCodes(def);
+					}
+				}
+	
+				avChecker.zetJuisteAntwoord(juisteAntwoord);
+							
+				goedHalfFout = AntwoordVakChecker.DOOR;
+				if (!"$f@".equals(useranswer)) // eerste stap is leeg, dan niet verder nakijken
+				{
+					fews.maakNakijkenAf(backStep, show, setState);
+				}
+				return null;
+			}
+			else
+			{
+				// er is al een eigen opdracht ingevoerd, dus zet het juiste antwoord
+				if (!isVergelijkingVak())
+				{
+					String eersteRegel = removeIsTeken(fews.getFirstViewerString());
+					Expressie geefExpressie = FormuleParser.geefExpressie(addFormulaCodes(eersteRegel));
+					if (geefExpressie != null)
+                    { Expressie exp = Expressie.evalWithCAS(geefExpressie);
+                      juisteAntwoord = addFormulaCodes(exp.toString());
+                    } else {
+                      juisteAntwoord = addFormulaCodes(eersteRegel); // TODO force syntax error, feedback = feedbackTekst08()
+                      feedback = Text.constants.feedbackTekst09();
+                      zetFeedback();
+                    }
+				}
+				else
+				{
+					String eersteRegel = removeIsTeken(fews.getFirstViewerString());
+		        	VergelijkingMeerv vm = FormuleParser.parseVergelijking(addFormulaCodes(eersteRegel)); 
+
+		        	VergelijkingMeerv vmAntw = null;
+					if (vm != null)
+					{
+						Vergelijking v = vm.geefVergelijking(0);
+						vmAntw = Expressie.solveWithCas(vm, v.geefVarNaam());
+						String def = "";
+
+						if (vmAntw != null)
+						{
+							def = vmAntw.toString();
+						}
+
+						juisteAntwoord = addFormulaCodes(def);
+					}
+				}
+
+				avChecker.zetJuisteAntwoord(juisteAntwoord);
+			}
+		}
+		
+		HashMap<String, Object> checkResults = new HashMap<String, Object>();
+		if (fews != null && !(fews.isToets() && hasFeedback())) // voor toets met feedback willen we nakijken obv de correctheid van de huidige invoerregel
+			checkResults = avChecker.checkAnswer(useranswer, fews.getLatestAnswer(), fews.getSubstitutie(), fews.getGebruikersSubstituties());
+		else	
+			checkResults = avChecker.checkAnswer(useranswer);
+
+		this.goedHalfFout = (Integer) checkResults.get("goedHalfFout");
+		this.syntaxFout = (Boolean) checkResults.get("syntaxFout");
+		if (goedHalfFout == AntwoordVakChecker.FOUT && !syntaxFout)
+			verhoogErrorCount();
+		this.correct = (Boolean) checkResults.get("correct");
+		if (goedHalfFout == AntwoordVakChecker.HALF || goedHalfFout == AntwoordVakChecker.DOOR)
+			correct = null;
+		this.score = (Integer) checkResults.get("score");
+		
+		if(fews!=null && checkResults.containsKey("answerModelNr"))
+			fews.fillScoreContainer((Integer)checkResults.get("answerModelNr"));
+		
+		if ((fews != null) && (fews.isBordjesMethode()))
+		{ 
+			// waarom werkt dit überhaupt? normaal gebeurt dit in 'maakNakijkenAf'
+			// Maar voor oefenen bordjesmethode met goede eindoplossing weet fe niet dat het antwoord correct is
+			fews.setCorrect(this.correct); // update correct van parent fe
+			fews.setScore(this.score);     // update score van parent fe
+		}
+		this.scoreZonderAftrek = (Integer) checkResults.get("score");
+		if (mode == OpdrNavIF.OEFENEN_STRAFPUNTEN)
+			score = Math.max(0, score - errorCount * foutStraf);
+		//System.out.println("score = " + score);
+		this.feedback = (String) checkResults.get("feedback");
+
+		if (!ingevuld)
+			return checkResults;
+		
+		
+
+		if (fews != null && getScore() != fews.getScoreMax()) // alleen als niet al de maximumscore is behaald
+		{	
+			boolean stapCorrect = fews.controleerStap();
+			if (!stapCorrect)
+				this.goedHalfFout = AntwoordVakChecker.FOUT;
+		}
+		if ((mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS) && !show)
+		{	
+			if (this.fews != null)
+				fews.maakNakijkenAf(backStep, show, setState);
+			
+			if (syntaxFout && fews == null)
+			{	//checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
+				//checkimg.setVisible(true);
+				zetFeedback();
+				
+				//TODO: feedback syntaxfout tonen.
+			}
+			
+			if (setState && teltMee)
+				comRoot.setChanged(goedHalfFout == AntwoordVakChecker.FOUT);
+			return checkResults;
+		}
+		
+//		logger.fine("userAnswer: " + useranswer);
+//		logger.fine("correct: " + correct);
+//		logger.fine("score: " + score);
+//		logger.fine("goedHalfFout: " + goedHalfFout);
+//		logger.fine("feedback: " + feedback);
+
+//		if(fe != null)
+//			fe.zetStapOk(goedHalfFout);
+		if (show)
+			zetGoedFout(goedHalfFout);
+		resize();
+		//logger.finer(String.valueOf(checkimg.isVisible()));
+		//sp.setPixelSize(breedte, -1);
+		if (this.fews == null && !useranswer.equals(lastanswer))
+		{
+			lastanswer = useranswer;
+			if ((mode == OpdrNav.OEFENEN || mode == OpdrNav.OEFENEN_STRAFPUNTEN) && teltMee) 
+				comRoot.setChanged(goedHalfFout == AntwoordVakChecker.FOUT);
+			else 
+				comRoot.setVisited();
+		
+		}
+		//if(this.fe != null && !(mode == 2 || mode == 3))
+		//	fe.maakNakijkenAf(backStep);
+		if (!feedback.equals("") && fews == null && show)
+		{
+			zetFeedback();
+		}
+		
+		if (this.fews != null && ingevuld)
+		{	
+			fews.maakNakijkenAf(backStep, show, setState);
+		}
+		// in maakNakijkenAf wordt voor setState = false comRoot.setChanged(false) gedaan;
+		// als fe == null dus niet...
+		
+		if (formuleEditorPopup != null && formuleEditorPopup.isToets() && hasFeedback())
+		{
+			// er is een popup in een toets met feedback/tabbladen, dus nemen we de voortgangsscore van fews
+			score = formuleEditorPopup.getScore();
+		}
+		
+		if (show) // alleen als feedback moet worden getoond
+		{
+			if (goedHalfFout == AntwoordVakChecker.GOED)
+				fireEvent(EVENT_CORRECT);
+			else if (goedHalfFout == AntwoordVakChecker.FOUT && errorCount > 1) 
+				fireEvent(EVENT_FALSE2);
+			else if (goedHalfFout == AntwoordVakChecker.FOUT)
+				fireEvent(EVENT_FALSE);
+			else if (goedHalfFout == AntwoordVakChecker.HALF || goedHalfFout == AntwoordVakChecker.DOOR)
+				fireEvent(EVENT_HALF);
+		}
+		return checkResults;
+	}
+	
+	/**
+	 * Verwijder het is-teken aan het eind van de gegeven string.
+	 * 
+	 * @param firstViewerString
+	 * @return
+	 */
+	private String removeIsTeken(String s)
+	{
+		String sZonderIsTeken = "";
+		
+		if (!"".equals(s) && s.indexOf("=") == s.length() - 1)
+		{
+			sZonderIsTeken = s.substring(0, s.length() - 1);
+		}
+		else
+		{
+			sZonderIsTeken = s;
+		}
+		return sZonderIsTeken;
+	}
+
+	/**
+	 * Surround the given string with the formule codes "$f" and "@".
+	 * @param string
+	 * @return
+	 */
+	private String addFormulaCodes(String string)
+	{
+		String startCode = "$f";
+		String endCode = "@";
+		String s = startCode + string + endCode;
+		return s;
+	}
+
+	public void zetGoedFout(int uitslag)
+	{
+		goedHalfFout = uitslag;
+		if (uitslag == AntwoordVakChecker.GOED)
+			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
+		else if (uitslag == AntwoordVakChecker.DOOR || uitslag == AntwoordVakChecker.HALF)
+			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());
+		else if (uitslag == AntwoordVakChecker.FOUT)
+			checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
+
+		checkimg.setVisible(check && goedHalfFout != AntwoordVakChecker.GEEN); // Wim: Hier verscheen het vinkje als goedhalfFout GEEN is
+	}
+	
+	/**
+	 * Zet vinkje of kruis voor checkwaardeunit. Het vinkje of de kruis moet
+	 * in dit geval altijd getoond worden.
+	 * 
+	 * @param uitslag
+	 */
+	public void zetGoedFoutCheckWaarde(int uitslag)
+	{
+		if (uitslag == AntwoordVakChecker.GOED)
+			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
+		else if (uitslag == AntwoordVakChecker.DOOR || uitslag == AntwoordVakChecker.HALF)
+			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());
+		else if (uitslag == AntwoordVakChecker.FOUT)
+			checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
+
+		checkimg.setVisible(true); // voor checkwaardeunit moet checkimg altijd getoond worden
+	}
+	
+	private void fireEvent(CBookEvent event) 
+	{
+		activity.getEventBus().fireEventFromSource(event, this);
+		if (this.comRoot != null)
+			this.comRoot.fireEvent(event);
+		else if (this.fews != null)
+			this.fews.fireEvent(event);
+			
+	}
+
+	public boolean wordtGecheckt()
+	{
+		return check;
+	}
+	
+	public void zetFeedback()
+	{
+		TekstBuffer b = new TekstBuffer(activity);
+		//Volgens mij zijn randomvariabelen feedback bij aanmaken antwoordmodel al ingevuld, dus hier weggelaten.
+//		try{
+//			feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
+//		}
+//		catch(Exception e){}
+		ArrayList<Object> feedbackList = b.convertTekst(feedback, null, false);
+		feedbackTekst.clear();
+		int tekstVakBreedte = 190;
+		for(int i = 0; i < feedbackList.size(); i++)
+		{
+			Object object = feedbackList.get(i);
+			if(object instanceof TekstElement && ((TekstElement) object).getWidth() > tekstVakBreedte)
+				tekstVakBreedte = ((TekstElement) object).getWidth();
+		}
+		feedbackTekst.setSize(tekstVakBreedte + 10, 50);
+		feedbackTekst.setTekstVakBreedte(tekstVakBreedte);
+		feedbackTekst.setObjects(feedbackList);
+		voegFeedbackSluitKnopToe();
+		feedbackTekst.resize();
+		zetFeedbackZichtbaar(true);
+	}
+	
+	public String getFeedback()
+	{
+		return feedback;
+	}
+	
+	public void zetFeedbackTekst(String feedback)
+	{
+		this.feedback = feedback;
+	}
+	
+	
+	public int getGoedHalfFout()
+	{
+		return goedHalfFout;
+	}
+	
+	public boolean isSyntaxFout()
+	{
+		return syntaxFout;
+	}
+	
+	public void verhoogErrorCount()
+	{
+		if(isChanged())
+		{
+			errorCount++;
+			if(fews != null)
+				fews.verhoogErrorCount();
+		}
+		setChanged(false);
+	}
+	
+//	public int getErrorCount()
+//	{
+//		return errorCount;
+//	}
+	
+	public void resize()
+	{	breedte = this.getMainRegel().getWidth() + extraWidth; //checkPanel.getOffsetWidth() + extraWidth;// + (getImageVisible()?26:0);
+		hoogte = this.getMainRegel().getHeight() + 6;
+		sp.setPixelSize((breedte-1-2*borderWidth) , (hoogte-6) );
+		if(parentRegel != null)
+		{	parentRegel.resize();
+		}
+		if(fews != null)
+		{	fews.resize();
+		}
+		if(stelselVak != null)
+			stelselVak.resize();
+		
+	}
+	
+	public void setFont(FormuleFont fm)
+	{
+		super.setFont(fm);
+		this.getMainRegel().setMinimumHeight(fm.getHeight() + 3);
+		resize();
+	}
+
+	@Override
+	public Panel getAsPanel()
+	{
+		return sp;
+	}
+	
+	public int getHeight()
+	{
+		return facade.wrapHeight(hoogte);
+	}
+	
+	public int getWidth()
+	{	return facade.wrapWidth(breedte  + paddingLeft + paddingRight);
+	}
+	
+	public void zetVolledigeBreedte(int breedte)
+	{
+		if(volledigeBreedte)
+		{	this.breedte = breedte;
+			this.getMainRegel().setMinimumWidth(breedte - 20);
+			getMainRegel().setSize(breedte - 20, hoogte);
+			paint();
+//			
+//		System.out.println("voor editor is volledige breedte ook ingesteld");
+		}
+	}
+	
+	public int getAsHoogte()
+	{
+		int corr = boxMetRand?2*borderWidth:paddingTop;
+		return facade.wrapAsHoogte(this.getMainRegel().getAsHoogte() + corr); //+ 6 /* margin top + padding top */);
+	}
+
+	public void setStrict(boolean strict)
+	{
+		this.strict = strict;
+	}
+
+	public boolean isStrict()
+	{
+		return this.strict;
+	}
+
+	@Override
+	public HashMap<String, Object> getState()
+	{
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		if(formuleEditorPopup != null)
+		{
+			HashMap<String, Object> h2 = formuleEditorPopup.getState();
+
+			if (formuleEditorPopup.isUitgeklapt() && formuleEditorPopup.isBoss())
+			{
+				// als uitgeklapt, dan is FEWS de baas
+				h = h2;
+				// FEWA moet het laatste antwoord van FEWS krijgen
+				String[] formuleVakInhouden = (String[]) h2.get("formuleVakInhouden"); // dit bevat ook de laatste lege regel
+				int laatste = formuleVakInhouden.length - 1;
+				String antwoord = formuleVakInhouden[laatste];
+				String leegAntwoord = "$f@";
+				
+				if ((antwoord == leegAntwoord) && (laatste > 0)) // als leeg en er is een vorige
+				{
+					antwoord = formuleVakInhouden[laatste - 1];
+				}
+				
+				// trim "$f" + antwoord + "@"
+				antwoord = formuleEditorPopup.removeFormulaCodes(antwoord);
+
+				if (antwoord != null && !"".equals(antwoord.trim()) && !antwoord.equals(this.toString()))
+				{
+					this.clearMain();
+					antwoord = formuleEditorPopup.removeIsTeken(antwoord);
+					setCurrentElementRepaint();
+					
+					if (!"".equals(toString()))
+					{
+						lastanswer = "$f" + toString() + "@";
+					}
+					else
+					{
+						// als this.toString() leeg is en er is een antwoord, zet dat er dan in
+						lastanswer = antwoord;
+						this.insert(antwoord);
+						// hoe zat dit...? Hier moet iets als je de pagina verlaat en niet op enter hebt gedrukt...
+					}
+				}
+			}
+			else
+			{
+				// als de FormuleEditorWithSteps niet uitgeklapt, dan wordt het antwoord uit FormuleEditorWithAnswer genomen
+				String laatsteAntwoord = "$f" + toString() + "@";
+				h2.put(ANTWOORD_STRING, laatsteAntwoord);
+				String[] formuleVakInhouden = (String[]) h2.get("formuleVakInhouden");
+				int laatste = formuleVakInhouden.length - 1;
+				String leegAntwoord = "$f@";
+				if (leegAntwoord.equals(formuleVakInhouden[laatste]) && (laatste > 0))
+				{
+					if (!isVergelijkingVak)
+						formuleVakInhouden[laatste - 1] = laatsteAntwoord.substring(0, laatsteAntwoord.length() - 1) + isTeken + "@"; // voor formules moet er een = achter
+					else
+						formuleVakInhouden[laatste - 1] = laatsteAntwoord;
+				}
+				else
+				{
+					formuleVakInhouden[laatste] = laatsteAntwoord;
+				}
+				h2.put("formuleVakInhouden", formuleVakInhouden);
+				
+				// ANTWOORD_STRING en formuleVakInhouden moeten nu overschreven zijn... klopt dit?
+				h = h2;
+			}
+			
+			kijkNa(false, false, false);
+
+			// als fews een hogere voortgangsscore heeft, neem deze dan over
+			if (formuleEditorPopup.getScore() > this.getScore())
+			{
+				this.score = formuleEditorPopup.getScore();
+			}
+		} // fews != null	
+		else	
+		{
+			//kijkNa moet gebeuren om bijvoorbeeld bolletje groen te maken als alles op de pagina correct is. 
+			//Er hoeft echter niets met vinkjes te gebeuren; daarom tweede argument (show) op false.
+			kijkNa(false, false, false);
+			
+			String[] formuleVakInhouden = {"$f" + this.toString() + "@" } ;
+			if(!this.toString().equals(""))
+				this.ingevuld = true;
+			boolean ingevuld = this.ingevuld;
+			boolean nagekeken = false;
+			boolean isVeranderdNaNakijken = false;
+			int errorCount = this.errorCount;
+			
+			//ingevuld = this.ingevuld;
+			nagekeken = this.nagekeken;
+			isVeranderdNaNakijken = this.isVeranderdNaNakijken;
+			
+			h.put("formuleVakInhouden", formuleVakInhouden);
+			h.put(ANTWOORD_STRING, formuleVakInhouden[0]);
+			h.put("ingevuld", new Boolean(ingevuld));
+			h.put("nagekeken", new Boolean(nagekeken));
+			h.put("editable", Boolean.valueOf(editable));
+			h.put("isVeranderdNaNakijken", new Boolean(isVeranderdNaNakijken));
+			h.put("errorCount", new Integer(errorCount));
+			
+		}
+
+		if(logging instanceof DWOLogger) {
+			Map<String, Object> map = buildLoggingMap();
+			DWOLogger dwologger = (DWOLogger) logging;
+			if (mode == OpdrNavIF.EINDTOETS && ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {
+				nagekeken = true;
+				zetIsVeranderdNaNakijken(false);
+				h.put("nagekeken", (nagekeken));
+				h.put("isVeranderdNaNakijken", (isVeranderdNaNakijken));
+				dwologger.log(map);
+			} else {
+				dwologger.updateLog(map);
+			}
+		}
+		if(correctie != null) correctie.correctie(h);
+		return h;
+	}
+
+	@Override
+	public void setState(HashMap<String, Object> h)
+	{
+		if (h == null) {
+			isNull = true;
+			return; // setStateNull();
+		}
+		logger.fine("setState " + h);
+		//antwoord eruit halen en dan uit h halen, zodat de antwoordstring niet wordt meegenomen in setState. 
+		
+		if(formuleEditorPopup != null)
+		{
+			boolean enabled = formuleEditorPopup.setFocusEnabled(false); // Geen focus tijdens setState, dus ook niet hier bij wis()
+			try {
+				formuleEditorPopup.wis();
+				formuleEditorPopup.setState0(h);
+			}	finally {
+				formuleEditorPopup.setFocusEnabled(enabled);
+			}
+		}
+		ObjectMap map = JSONUtilities.wrapMap(h);
+//		CorrectieFacade.showReview(h, getAsPanel());
+		
+		CorrectieFacade.showReview(h, p -> {
+			sp.add(p);
+			if (null != sp.getElement().getStyle().getPosition())
+				sp.getElement().getStyle().setPosition(Position.RELATIVE);
+		}, this, scoreMax, activity);
+
+		
+		
+		boolean ingevuld = true;
+		boolean nagekeken = false;
+		boolean editable = true;
+		boolean isVeranderdNaNakijken = false;
+		int errorCount = 0;
+		if (h.get("ingevuld") != null)
+			ingevuld = (Boolean) h.get("ingevuld");
+		if (h.get("nagekeken") != null)
+			nagekeken = ((Boolean) h.get("nagekeken")).booleanValue();
+		if (h.get("isVeranderdNaNakijken") != null)
+			isVeranderdNaNakijken = ((Boolean) h.get("isVeranderdNaNakijken")).booleanValue();
+		if (map.containsKey("errorCount"))
+			errorCount = map.getInt("errorCount");
+		editable = map.getBoolean("editable", true);
+		
+		this.ingevuld = ingevuld;
+		this.nagekeken = nagekeken;
+		this.isVeranderdNaNakijken = isVeranderdNaNakijken;
+		this.errorCount = errorCount;
+		String antwoord = (String) h.get(ANTWOORD_STRING);
+		if( (antwoord == null || "".equals(antwoord.trim()) || "$f@".equals(antwoord.trim())) && formuleEditorPopup != null)
+			antwoord = formuleEditorPopup.getLatestAnswer();
+		if (antwoord != null && !"".equals(antwoord.trim()))
+		{
+			antwoord = strip$f(antwoord);
+
+			// verwijder isteken
+			if (formuleEditorPopup != null)
+			{
+				antwoord = formuleEditorPopup.removeIsTeken(antwoord);
+			}
+
+			this.clearMain();
+			this.insert(antwoord);
+			setCurrentElementRepaint();
+			lastanswer = "$f" + toString() + "@";
+			//if(mode != 2 && mode != 3)
+			//	kijkNa();
+			setChanged(false);
+			if (isReview() || mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN
+					|| (nagekeken && !isVeranderdNaNakijken && (mode != OpdrNavIF.EINDTOETS || LessonMode.browse == comRoot.getLessonMode()))
+				)
+				kijkNa(true); // FIXME kijkna in setstate
+		}
+		setEditable(editable);
+
+		if (!isNull && correctie == null) // eenmalig
+			correctie = CorrectieFacade.get(h, this, getAsPanel(), scoreMax, comRoot, logging, activity);
+
+	}
+
+	public String strip$f(String antwoord) {
+		if (antwoord.startsWith("$f"))
+		{
+			antwoord = antwoord.substring(2, antwoord.length() - 1);
+		}
+		return antwoord;
+	}
+	
+	@Override
+	public int getScore()
+	{
+		if(!teltMee)
+			return 0;
+		return score;
+	}
+		
+	public int getScoreZonderAftrek()
+	{
+		return scoreZonderAftrek;
+	}
+
+	@Override
+	public int[][] getScoreObjectives()
+	{
+		if (logObjectives == null)
+			return null;
+		int[][] scoreObjectives = new int[logObjectives.length][];
+		for (int i = 0; i < logObjectives.length; i++)
+			scoreObjectives[i] = new int[logObjectives[i].length];
+		for (int i = 0; i < logObjectives.length; i++)
+			for (int j = 0; j < logObjectives[i].length; j++)
+			{
+				if (logObjectives[i][j])
+					scoreObjectives[i][j] = score;
+			}
+		return scoreObjectives;
+	}
+	
+	public boolean isVergelijkingVak()
+	{
+		return isVergelijkingVak;
+	}
+	
+	@Override
+	public Boolean isCorrect()
+	{
+		if(!teltMee)
+			return Boolean.TRUE;
+		return correct;
+	}
+	
+	public Boolean isCorrectStrikt()
+	{
+		return correct;
+	}
+	
+	public void zetNagekeken(boolean b) {
+		if (ingevuld)
+		{	nagekeken = b;
+			if(formuleEditorPopup != null)
+			{	formuleEditorPopup.zetNagekeken(b);
+			}
+		}
+	}
+	
+	private void zetIsVeranderdNaNakijken(boolean b)
+	{
+		this.isVeranderdNaNakijken = b;
+	}
+	
+	public boolean isIngevuld()
+	{
+		return ingevuld;
+	}
+
+	public boolean isNagekeken()
+	{
+		return nagekeken;
+	}
+
+	public boolean isVeranderdNaNakijken()
+	{
+		return isVeranderdNaNakijken;
+	}
+	
+	public boolean isReview() {
+		return review;
+	}
+	
+	public void requestFocus()
+	{
+		super.requestFocus();
+		if(fews != null && fews instanceof StelselEditor)
+			((StelselEditor) fews).requestFocus(true);
+	}
+
+	@Override
+	public void setCommunicationRoot(OpdrNavIF comRoot)
+	{
+		this.comRoot = comRoot;
+		zetMode(comRoot.getMode(), comRoot.getLessonMode());
+		
+		if (formuleEditorPopup != null)
+		{	
+			formuleEditorPopup.setCommunicationRoot(comRoot);
+		}
+		comRoot.addCBookEventListener("input", this);
+		comRoot.addCBookEventListener("index", this);
+		comRoot.addCBookEventListener("double", this);
+		comRoot.addCBookEventListener("equation", this);
+		comRoot.addCBookEventListener("expression", this);
+		comRoot.addCBookEventListener("action.setNotEditable", this);
+		comRoot.addCBookEventListener("action.check", this);
+
+		if (logging != null) 
+			logging.setCommunicationRoot(comRoot);
+	}
+
+	@Override
+	public Widget asWidget()
+	{
+		return facade.wrap(getAsPanel());
+	}
+	
+	public boolean isPopup()
+	{
+		return facade.isPopup();
+	}
+
+	public void zetMode(int mode, LessonMode lessonMode) {
+		this.mode = mode;
+		this.review = lessonMode == LessonMode.review;
+	}
+	
+	public String getLogIDLabel()
+	{
+		if(logging != null && logging instanceof DWOLogger)
+			return ((DWOLogger) logging).getLogIDLabel();
+		return "";
+	}
+
+	public Object getUitwerking(TekstVakPanel parent) {
+
+		if(parent != null && vakUitwerking && parent.uitklapHoogtes != null && parent.uitklapHoogtes.size() > 1)
+		{
+			double hoogte = parent.uitklapHoogtes.get(1); // Marges??????
+			formuleEditorPopup.setHeight(hoogte);
+			parent.addCBookEventListener(formuleEditorPopup);
+			return formuleEditorPopup;
+		}
+// van constructor naar hier....
+		if( vakUitwerking )
+		{
+			//PopupButton popup = new PopupButton(formuleEditorPopup, ImageUtils.newImage("images/resources/popup_voor_uitw_icoon.png"), this, this);
+			Image image = new Image(DWOplayer.DWO_BUNDLE.uitwerkingsknop().getSafeUri());
+			image.setPixelSize(18, 18);
+			PopupButton popup = new PopupButton(formuleEditorPopup, image, this, this);
+			PopupFacade.addPopup(popup);
+			popupBtn = popup;
+			popup.setPixelSize(18, 18);
+			popup.getElement().getStyle().setMargin(1, Unit.PX);
+			
+			Style popupstyle = popup.getElement().getStyle();
+			popupstyle.setDisplay(Display.INLINE_BLOCK);
+			popupstyle.setVerticalAlign(VerticalAlign.TOP);
+			breedte += 20; // wordt niet bij breedte geteld. ???
+			extraWidth = 43;
+			sp.setPixelSize((breedte-3) , (hoogte-8) );
+			if(parentRegel != null)
+			{	parentRegel.resize();
+			}
+			sp.add(popup);
+			
+			//extraWidth += 20; // width of popup button
+		}
+
+		
+		return null;
+	}
+	
+	public void knip(FormuleClipboardIF clip)
+	{
+		super.knip(clip);
+		resize();
+	}
+	
+	public void plak(FormuleClipboardIF clip)
+	{
+		super.plak(clip);
+		
+		resetimg();
+		
+		if (isNagekeken())
+			zetIsVeranderdNaNakijken(true);
+		
+		if (this.fews != null) 
+		{
+			this.fews.resetimg();
+			
+			if (this.fews.isNagekeken())
+				this.fews.zetIsVeranderdNaNakijken(true);
+			
+			if (!this.toString().isEmpty())
+				this.fews.setStapOk(true);
+		}
+		
+		resize();
+	}
+
+	@Override
+	public void acceptCBookEvent(CBookEvent event) {
+		String message;
+		
+		if ("action.setNotEditable".equals(event.getCommand())) {
+			setEditable(false);
+			return;
+		}
+		else if ("action.check".equals(event.getCommand())) {
+			kijkNa();
+			return;
+		}
+		else if ("balansvergelijking".equals(event.getCommand()))
+		{
+			message = event.getParameter("balansvergelijking").toString();
+		}
+		else if ("double".equals(event.getCommand()))
+		{
+			Map map = (Map) event.getParameters();
+
+			if (map != null) // message staat er altijd in dus nooit null...
+			{
+				String name = (String) map.get("name");
+				
+				if (name != null)
+				{
+					double waarde = ((Double) map.get("value")).doubleValue();
+					message = String.valueOf(waarde);
+				}
+				else
+				{
+					message = event.getMessage();
+				}
+			}
+			else
+			{
+				message = event.getMessage();
+			}
+			
+			message = replaceWithLocalDecimalSeparator(message); // show the local decimal separator
+		}
+		else
+		{
+		    message = event.getMessage();
+		}
+		
+		message = strip$f(message);
+		clearMain();
+		insert(message);
+		setCurrentElementRepaint();
+	}
+
+	private String toMathML(String source) {
+		if(isVergelijkingVak)
+		{
+			VergelijkingMeerv verg = FormuleParser.parseVergelijking(source);
+			if(verg == null) return "";
+			return ContentMathML.INSTANCE.toString(verg);
+		} else {
+			Expressie antwoord = FormuleParser.geefExpressie(source);
+			if(antwoord == null) return "";
+			return ContentMathML.INSTANCE.toString(antwoord);
+		}
+	}
+
+	@Override
+	public void getResponses(List<String> responses) {
+		List<Type> responseTypes = facet.getResponseTypes();
+		int size = responseTypes.size();
+		if( size > 0 ) {
+			Type type = responseTypes.get(0);
+			int start = 0;
+			String useranswer = "$f" + this.toString() + "@";
+			if(type == Type.mathml) {
+				responses.add(toMathML(useranswer));
+				start = 1;
+			} 
+// kandidaat instelling: type is "decimal/integer" alleen bij formulevak!
+			else if (type == Type.decimal || type == Type.integer) {
+				Expressie antwoord = FormuleParser.geefExpressie(useranswer);
+				if(antwoord != null) {
+					double r = antwoord.geefWaarde();
+					//if(type == Type.integer) r = Math.round(r); TODO wat zeggen de specs
+					responses.add(Double.toString(r)); start = 1;
+				}
+			}
+			if(size>start) { // should not happen!
+				for(; start<size; start ++) responses.add("");
+			}	
+		}
+	}
+
+	/**
+	 * Zet het antwoord in de formule editor enabled.
+	 */
+	public void setEnabled(boolean b)
+	{
+		if (b && editable)
+		{
+			sp.removeStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().insert_formule_readonly());
+			register(new FormuleEditorTouchHandler(this).initHandler());
+			this.requestFocus();
+		}
+		else
+		{
+			sp.addStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().insert_formule_readonly());
+			removeTouchHandler();
+			// zorg dat de formule editor geen focus heeft
+			if (getKeyboard() != null)
+			{
+				getKeyboard().setEditor(null);
+				getKeyboard().blur();
+			}
+		}
+	}
+
+	void setEditable(boolean editable) {
+		this.editable = editable;
+		getAsPanel().setStyleDependentName("readonly", !editable);
+		if(!editable) setEnabled(false);
+		if (fews != null) fews.setEditable(editable);
+		if (formuleEditorPopup != null) formuleEditorPopup.setEditable(editable);
+	}
+	
+	@Override
+	public void setFontSize(int font_size) {
+	}
+
+	@Override
+	public void setFontName(String font_name) {
+	}
+
+	@Override
+	public void setFontStyle(int font_style) {
+	}
+
+	private PopupButton popupBtn;
+	/**
+	 * just after popup is shown.
+	 */
+	@Override
+	public void onShow() {
+		HashMap<String, Object> state;
+		this.setEnabled(false);
+// zet isUitgeklapt t.b.v. verwerken antwoord FormuleEditorWithSteps of FormuleEditorWithAnswer
+		formuleEditorPopup.setUitgeklapt(true);
+		formuleEditorPopup.setIsBoss(false);
+		state = this.getState();
+		this.setState(state);
+// Fire popup event ......			
+// als de state is gezet is FEWS de baas
+		formuleEditorPopup.setIsBoss(true);
+
+		FormuleEditor editor = formuleEditorPopup.getEditor();
+		if (editor != null && editable)
+		{	
+			editor.requestFocus();
+			//om te zorgen dat cursor ook getekend wordt:
+			if(editor.getCurrentElement() == null)
+			{	editor.setCurrentElementRepaint(editor.getMainRegel());
+			}
+		}
+		popupBtn.state = state; // XXX ???
+	}
+	
+	/**
+	 * popup goes down.
+	 */
+	@Override
+	public void onHide() {
+		this.haalAntwoordOp();
+		this.setEnabled(true);
+// zet isUitgeklapt t.b.v. verwerken antwoord FormuleEditorWithSteps of FormuleEditorWithAnswer
+		formuleEditorPopup.setUitgeklapt(false);
+		
+		HashMap<String, Object> state;
+		state = this.getState();
+		this.setState(state);
+		popupBtn.state = state; // XXX ???
+
+		// voor toets met feedback (deelscores) moet de voortgangsscore van fews genomen worden
+		if (formuleEditorPopup.getScore() > this.getScore())
+		{
+			this.score = formuleEditorPopup.getScore();
+		}
+		
+		// na setState() is het goede antwoord in FEWA gezet
+		comRoot.setChanged(false);
+	}
+
+	@Override
+	public int[][] getMeasuredMisconceptions() {
+		if(avChecker != null)
+			return avChecker.getMeasuredMisconceptions();
+		return null;
+					
+	}
+
+	@Override
+	public int[][] getPossibleMisconceptions() {
+		if(avChecker != null)
+			return avChecker.getPossibleMisconceptions();
+		return null;
+	}
+	
+	public AntwoordVakChecker getAvChecker()
+	{
+		return avChecker;
+	}
+	
+	/**
+	 * Methode om in FEWS te achterhalen of er sprake is van feedback met 'tabbladen'.
+	 * 
+	 * @return
+	 */
+	public boolean hasFeedback()
+	{
+		return hasFeedback;
+	}
+
+	/**
+	 * voor tabulatie.
+	 */
+	public boolean isReadOnly() {
+		return !editable;
+	}
+}

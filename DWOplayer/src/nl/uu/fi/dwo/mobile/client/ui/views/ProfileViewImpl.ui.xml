@@ -1,0 +1,42 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" 
+	xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
+	<ui:with field='mgwt' type='com.googlecode.mgwt.ui.client.theme.base.LayoutCss'></ui:with>
+	<ui:style>
+		
+	.select_button {
+		margin:auto !important;
+		width:300px;
+	
+	}
+
+	</ui:style>
+	<mgwt:LayoutPanel height="100%" width="100%" >
+		<!-- Topbar Navigation Area -->
+		<mgwt:HeaderPanel>
+		    <mgwt:left>
+		    	<mgwt:HeaderButton ui:field="logoutBtn" backButton="true" >Logout</mgwt:HeaderButton>
+		    </mgwt:left>
+		        
+			<mgwt:center>
+				<g:Label ui:field="nav_title" >Login</g:Label>
+			</mgwt:center>
+		</mgwt:HeaderPanel>
+		<!-- Main interaction Area -->
+	  	<g:HTMLPanel>
+	  	    <!-- FIXME Find a way to use mgwt css style elements here -->
+	  	    <mgwt:WidgetList>
+	  	        <g:Label ui:field="username" text="Gebruikersnaam: "></g:Label>
+	  	        <g:Label ui:field="name" text="Name: "></g:Label>
+	  	        <g:Label ui:field="userid" text="GebruikersID: "></g:Label>
+	  	        <g:Label ui:field="school" text="School: " ></g:Label>
+	  	        <g:Label ui:field="schoolKlas" text="Klas: "></g:Label>
+	  	    </mgwt:WidgetList>
+
+	  	   <mgwt:Button ui:field="submitBtn" addStyleNames="{style.select_button}" text="Selecteer module"></mgwt:Button>
+
+	    </g:HTMLPanel>    
+	</mgwt:LayoutPanel>
+
+</ui:UiBinder> 

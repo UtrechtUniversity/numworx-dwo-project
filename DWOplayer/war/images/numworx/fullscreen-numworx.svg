@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 17.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30px" height="30px"
+	 viewBox="0 0 1024 1024" enable-background="new 0 0 1024 1024" xml:space="preserve">
+<g id="Laag_1" shape-rendering="geometricPrecision" image-rendering="optimizeQuality" text-rendering="geometricPrecision">
+	<title>power icon</title>
+	<desc>power icon from the IconExperience.com O-Collection. Copyright by INCORS GmbH (www.incors.com).</desc>
+	<path id="curve1" display="none" fill="#BDBEBE" d="M480,320h64c17.6,0,32,14.5,32,32.3v319.4c0,17.8-14.4,32.3-32,32.3h-64
+		c-17.6,0-32-14.5-32-32.3V352.3C448,334.5,462.4,320,480,320z"/>
+	<path id="curve0" display="none" fill="#BDBEBE" d="M512,128c212.1,0,384,171.9,384,384S724.1,896,512,896S128,724.1,128,512
+		S299.9,128,512,128z M512,256c-141.4,0-256,114.6-256,256s114.6,256,256,256s256-114.6,256-256S653.4,256,512,256z"/>
+</g>
+<g id="Laag_2" display="none">
+	<circle display="inline" fill="none" stroke="#00AA44" stroke-width="70" stroke-miterlimit="10" cx="512" cy="512" r="347.2"/>
+</g>
+<g id="Laag_4" display="none">
+	<rect x="128" y="146.5" display="inline" opacity="0.36" fill="#BDBEBE" width="753.1" height="753.1"/>
+</g>
+<g id="Laag_3">
+	<g>
+		<rect x="128" y="146.5" fill="#798291" width="99.1" height="238.5"/>
+		<rect x="128" y="146.5" fill="#798291" width="238.5" height="99.1"/>
+		<rect x="782" y="661.1" fill="#798291" width="99.1" height="238.5"/>
+		<rect x="642.6" y="800.5" fill="#798291" width="238.5" height="99.1"/>
+		<rect x="642.6" y="146.5" fill="#798291" width="238.5" height="99.1"/>
+		<rect x="782" y="146.5" fill="#798291" width="99.1" height="238.5"/>
+		<rect x="128" y="800.5" fill="#798291" width="238.5" height="99.1"/>
+		<rect x="128" y="661.1" fill="#798291" width="99.1" height="238.5"/>
+	</g>
+</g>
+</svg>
