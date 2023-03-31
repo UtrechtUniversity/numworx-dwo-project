@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>LmsApi :: Demo</title>
+
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+        <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+	    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+	</head>
+	<body>
+<script src="../scripts/tincan.js" type="text/javascript"></script>
+<script src="../scripts/Content_Api-0.2.9.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    var lrs = new ContentApiLrs();
+    lrs.setTarget(window.parent, "*");
+
+    function createModuleDatastatement() {
+        json = $("#moduledata").val();
+
+        var result = { "verb": { "id": "http://bao.mijnklas.nl/xapi/verbs/moduleData" }, "object": { "objectType": "Activity", "id": "http://bao.mijnklas.nl/xapi/activities/get-moduledata-request" }, "result": { "duration": "PT0S", "extensions": { "http://bao.mijnklas.nl/xapi/extensions/objectType": "json", "http://bao.mijnklas.nl/xapi/extensions/json": json } }, "version": "1.0.1" };
+        
+        var message = JSON.stringify([result]);
+        var win = document.getElementById("iframe");
+        win.contentWindow.postMessage(message, "*");
+    }
+
+</script>
+
+<script src="demo.js" type="text/javascript"></script>
+
+<div class="config">
+    <li class="list-group-item">
+<form action="." method="post">            <span>Exercise Url</span>
+<input id="IframeUrl" name="IframeUrl" required="required" style="width: 700px;" type="text" value="http://xapi.mijnklas.nl:80/examples/TestExercise.html" />            <input type="submit" value="Go"/><br/>
+            <span>Context</span>
+<select id="SelectedContext" name="SelectedContext" style="width: 250px;"><option value=""></option>
+<option>Equations</option>
+<option>Fractions</option>
+<option>MeasurementEquations</option>
+<option>Money</option>
+<option>NumberLine</option>
+<option>Percentages</option>
+<option>Questions</option>
+<option>TimeMoments</option>
+<option>Word</option>
+</select><br/>
+</form>        <span>LTA ID</span>
+        <input type="text" id="ltaId" class="numbersOnly" maxlength="10" style="width: 152px;"/>
+        <button id="ltaButton">LTA content</button>
+    </li>
+</div>
+<br/>
+<div class="config">
+        <li class="list-group-item">
+            <span>User context:</span>
+            <select id="userrole">
+                <option value="teacher" selected="selected">Teacher</option>
+                <option value="student">Student</option>
+            </select>
+            <select id="contentmode">
+                <option value="edit" selected="selected">edit</option>
+                <option value="readonly">readonly</option>
+                <option value="hidden">hidden</option>
+            </select>
+        </li>
+        <br/> 
+        <li class="list-group-item">
+            <button id="pushModuleData" onclick="createModuleDatastatement();">Push moduledata</button>
+            <div id="collapseOne" class="panel-collapse collapse in">
+                <div class="panel-body"><textarea id="moduledata" rows="10" cols="250"></textarea>
+                </div>
+            </div>
+        </li>
+	</div>
+    <br/> 
+    <div class="panel-title"><strong>Exercise:</strong></div>   
+        <iframe id="iframe" width="800" height="600" src="TestExercise.html" scrolling="auto"></iframe>
+    <br />
+    <div class="panel-title"><strong>Log:</strong></div>
+    <input type="button" value="Clear log" style="float:right" onclick="clearLog()" />
+    <div id="log" />
+	
+
+
+<script>
+    var baseUrl = "http://xapi.mijnklas.nl/";  
+</script>
+				</div>
+			</div>
+
+
+			<!-- Bootstrap core JavaScript
+			========================================== -->
+			<!-- Include all compiled plugins (below), or include individual files as needed -->
+			<script src="/js/bootstrap.min.js"></script>
+			<!-- Placed at the end of the document so the pages load faster -->
+			
+
+		<script>
+		    var path = '';
+		    var currentPath = document.location.pathname;
+		    var xapiIndex = currentPath.indexOf('/xapi');
+		    if (xapiIndex > -1) {
+		        path = currentPath.substr(0, xapiIndex + '/xapi'.length);
+		    }
+
+		    var localXApiPath = '//' + document.location.host + path;
+
+		    console.debug(document.location);
+		    $('a[href^="http://bao.mijnklas.nl/xapi"]').each(function() {
+		        var $this = $(this);
+		        var href = $this.attr('href');
+		        href = href.replace('http://bao.mijnklas.nl/xapi', localXApiPath);
+
+		        $this.attr('href', href);
+		    });
+		</script>
+	</div>
+	</body>
+</html>

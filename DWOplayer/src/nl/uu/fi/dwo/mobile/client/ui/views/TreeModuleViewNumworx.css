@@ -1,0 +1,374 @@
+@eval favicon nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx.getFaviconUrl();
+@eval foldericon nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx.getFolderUrl();
+@eval infoicon nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx.getInfoUrl();
+@external status-busy, status-retry, lesstof, toets, profile-popup;
+@def color10 #E4F2FB;
+@def color11 #D2E5F5;
+@def color12 #AAC1DC;
+@def color122 #8eBee5;
+@def color13 #7297C7;
+@def color14 #1B75BB;
+@def color15 #314770;
+@def color21 #DDE0E3;
+@def medium 500;
+@def regular 400;
+
+.rootPanel {
+	height: 100%;
+/* 	width: 100%; */
+	min-width: 128px;
+	font-family: "Ubuntu" !important;
+	background-color: color11;
+	
+}
+
+		.headerPanel {
+			background-color: color15;
+			color: color122;
+			font-size: 13px;
+			font-family: Ubuntu, sans-serif !important;
+		}
+		
+		.navPanel {
+			background-color: color21;
+			color: color15;
+			padding-left: 0px;
+			font-size: 14px;
+			line-height: 27px;
+			font-family: Ubuntu, sans-serif !important;
+			box-shadow: 2px 2px 2px color15 inset;
+		}
+.centerPanel {
+			background-color: color11;
+			color: color15; /*15*/
+			font-size: 14px;
+			line-height: 18px;
+			padding-top: 40px;
+/* 			padding-left: 18px; */
+/* 			padding-right: 22px; */
+/* 			box-shadow: 8px 0px 14px 0px rgba(0,0,0,0.46) inset;			 */
+			box-shadow: 2px 2px 2px color15 inset;
+			font-family: Ubuntu, sans-serif !important;
+			overflow-y: scroll;
+}
+.centerBackground {	
+	background-size: 360px 349px;
+	background-repeat: no-repeat;
+	background-position: right 60px top 20px;
+	background-image: favicon;
+}
+
+.folderBackground {
+	background-size: 360px 360px;
+	background-repeat: no-repeat;
+	background-position: right 60px top 20px;
+	background-image: foldericon;
+	
+}
+		.title {
+			font-size: 18px;
+			margin-bottom: 20px;
+			margin-left: 18px;
+			font-family: Ubuntu, sans-serif;
+			font-weight: regular;
+		}
+		.description {
+			margin-bottom: 36px;
+			margin-left: 18px;
+			font-family: Ubuntu, sans-serif;
+			font-size: 14px;
+			line-height: 18px;
+		}
+		
+		.navTitle {
+			border-bottom-style: solid;
+			border-bottom-width: 1px;
+			border-bottom-color: #A8ABB1 ;
+			font-size: 18px;
+			padding-top: 40px;
+			padding-bottom: 20px;
+			padding-left: 22px;
+			margin-right: 18px;
+			font-family: Ubuntu !important;
+			font-weight: regular;
+			width: 152px;
+			line-height: normal;
+		}
+
+		.navTitle:hover {
+/* 			background-color: #DDE0E3; */
+			color: color15;
+		}
+		
+		
+		.navIcon {
+			color:#798291;
+			fill: #798291;
+		}
+	.numworx {
+		height:64px;
+		margin-top: -24px;
+		margin-left: 20px;
+		margin-right: 20px;
+		width: 140px;
+		display: inline-block;
+		vertical-align: top;
+		overflow: hidden;
+	}
+		.search {
+			width: 40px;
+			color: white;
+			background-color: color14;
+			text-align: center;
+			display: inline-block;
+			cursor: pointer;
+			border-radius: 3px;
+			margin-top: 16px;
+			vertical-align: top;
+			border-radius: 3px;
+			height: 22px;
+			margin-left: 9px;
+		}
+		.nav {
+			float: right;
+			display: inline-block;
+			margin-top: 10px;
+			color: color13;
+			margin-right: 10px;
+			cursor: pointer;
+		}
+		.status {
+			float: right;
+			display: inline-block;
+			margin-top: 20px;
+			color: color13;
+			margin-right: 3px;
+			visibility: hidden;
+		}
+		
+.status-busy .status {
+		visibility: visible;
+}
+
+.status-retry .status {
+		color: red; 
+		visibility: visible;
+}
+
+		.loginname {
+			float: right;
+			display:inline-block;
+			margin-top: 18px;
+			color: color13;
+			font-size: 13px;
+			font-family: Ubuntu, sans-serif !important;
+			font-weight: medium;
+			white-space: nowrap;
+			
+		}
+		.menu {
+			float: right;
+			display: inline-block;
+			margin-top: 8px;
+			margin-right: 1px;
+			margin-left: 5px;
+			background: initial !important; /* not IE */
+			background: inherit !important; /* IE */
+			border: initial !important; /* not IE */
+			border-style: none !important; /* IE */
+		}
+		.menuItem {
+			color: color13 !important;
+			font-size: 13px;
+			font-family: Ubuntu, sans-serif !important;
+		}
+		.menuItem.inleveren {
+			background-color: red;
+			color: white;
+		}
+		.search-input {
+			font-family: Ubuntu, sans-serif !important;
+			background-color: black;
+			color: color10;
+			margin-left: 22px;
+			margin-top: 16px;
+			display: inline-block;
+			padding-left: 4px;
+			width: 400px;
+			height: 22px;
+			border-radius: 3px;
+			border-style: none;
+		}
+
+		.navItem, .classItem {
+			font-family: Ubuntu, sans-serif !important;
+			font-weight: regular;
+			line-height: 27px;
+			border-bottom-style: solid;
+			border-bottom-width: 1px;
+			border-bottom-color: #A8ABB1 !important;
+			padding-left: 22px;
+		}
+
+		.navItem {
+			width: 152px;
+		}
+		
+		.tiles, .empty {
+
+	
+		}	
+		.tile {
+			width: 252px;
+			height: 225px;
+			margin-left: 18px;
+			margin-bottom: 18px;
+			display: inline-block;
+			overflow: hidden;
+			position: relative;
+			border-bottom-color: color12;
+		}
+
+		.tileHeader {
+			width: 247px;
+			height: 32px;
+			background-color: #AAC1DC;
+			color: white;
+			font-weight: bold;
+			font-size: 14px;
+			line-height: 16px;
+			padding-left: 5px;
+			font-family: Ubuntu, sans-serif;
+			display: table;
+		}
+		
+		.tileSpan {
+			display: table-cell;
+			vertical-align: middle;
+		}
+		
+		
+		.tileFooter {
+			width: 252px;
+			height: 22px;
+			bottom: 0px;
+			margin-top: 5px;
+		}
+		.tileBody {
+			border-bottom-style: solid;
+			border-bottom-width: 6px;
+			border-bottom-color: inherit;
+			width: 252px;
+			height: 160px;
+			background-color: color10;
+			display: flex;
+			align-items: center;
+    		justify-content: center;
+			
+		}
+		.tileBodySpan {
+			display: block;
+		}
+		.tileBodyImg {
+			display: inherit;
+			margin: auto;
+		}
+		
+		.tileResult {
+			display: inline-block;
+			vertical-align: bottom;
+			height: 18px;
+		}
+		.tileScore {
+			background-color: white;
+			display: inline-block;
+			margin-left: 10px;
+			padding-left: 10px;
+			padding-right: 10px;
+			font-family: Ubuntu, sans-serif;
+			font-size: 14px;
+			font-weight: bold;
+			color: color14;
+		}
+		.tileType {
+			float: right;
+			display: inline-block;
+			vertical-align: bottom;
+			height: 26px;
+		}
+		
+		.tileInfo { 
+			position: absolute;
+			bottom: 34px;
+			right: 2px;
+			font-size: 11px;
+			width: 18px;
+			height: 18px;
+			background-size: 18px 18px;
+			background-repeat: no-repeat;
+			background-position: 0px 0px;
+			background-image: infoicon;
+		}
+
+.favicon {
+	display: inline-block;
+	width: 252px;
+	height: 160px;
+	margin-left: 18px;
+	vertical-align: top;
+	float: right;
+	margin-right: 20px;
+}
+
+.faviconOFF {
+	display: none;
+}
+.titlePanelFULL {
+	width: 100%;
+}
+
+
+.titlePanel {
+	display: inline-block;
+}
+.itemPanel {
+	min-height: 252px;
+	width: 100%;
+}
+
+.profile-popup {
+	box-shadow: 0px 1px 10px 4px rgba(0,0,0,0.30);
+	border-radius: 3px;
+	border-style: solid;
+	border-color: color14;
+	border-width: 1px;
+	background-color: white;
+}
+
+.tree {
+	line-height: normal;
+	margin-left: 3px;
+}
+.treeItem {
+	font-size: 13px;
+	font-family: Ubuntu, sans-serif;
+}
+
+.kruimelpad {
+	cursor: pointer;
+}
+
+.kruimelpad:hover {
+	text-decoration: underline;
+}
+
+.lesstof .toets {
+	display:none;
+}
+.toets .lesstof {
+	display:none;
+}
+
+.message {
+	margin-top: 1em;
+}

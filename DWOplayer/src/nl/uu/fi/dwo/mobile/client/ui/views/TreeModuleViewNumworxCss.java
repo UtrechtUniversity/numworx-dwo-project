@@ -1,0 +1,33 @@
+package nl.uu.fi.dwo.mobile.client.ui.views;
+
+import com.google.gwt.resources.client.CssResource;
+
+interface TreeModuleViewNumworxCss extends CssResource {
+	String navItem();
+	String tile();
+	String tileHeader();
+	String tileSpan();
+	String tileFooter();
+	String tileBody();
+	String tileBodySpan();
+	String tileBodyImg();
+	String tileResult();
+	String tileScore();
+	String tileType();
+	String menuItem(); String inleveren();
+	String tileInfo();
+	String centerBackground();
+	String folderBackground();
+//	@ClassName("profile-popup")
+//	String popup();
+	String treeItem();
+	String description();
+	String faviconOFF();
+	String titlePanelFULL();
+	String navTitle(); String classItem();
+	String kruimelpad();
+
+	String lesstof();
+	String toets();
+	String navIcon();
+}

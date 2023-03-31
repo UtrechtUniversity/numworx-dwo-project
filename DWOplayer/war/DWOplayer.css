@@ -1,0 +1,308 @@
+@import url("KeyboardGWT.css");
+@import url("images/font-awesome-4.1.0/css/font-awesome.min.css");
+@import url("images/font-omega-0/css/font-omega.css");
+@import url("//fonts.googleapis.com/css?family=Ubuntu:regular,medium,bold");
+@import url("//fonts.googleapis.com/css?family=Roboto+Condensed");
+@import url("//fonts.googleapis.com/css?family=Ubuntu+Condensed");
+@import url("//fonts.googleapis.com/css?family=Roboto");
+
+html,body{
+	margin: 0px !important; 
+	padding: 0px;
+	touch-action: none;
+	-ms-touch-action: none;
+}
+
+body#main {
+	background:white;
+	color:#000;
+	margin: 0px;
+}
+
+/** Example rules used by the template application (remove for your app) */
+
+.keyboardtabs {background:#000;}
+div.keyboard {background:#E5E7E9; left:0px; right:0px; }
+
+div.mainPanel {
+	height: 100%;
+	width: 100%;
+	background-color: rgb(255, 255, 255);
+}
+
+div.contentPanel {
+	overflow-x: hidden;
+}
+
+div.gwt-DialogBox-dwo {
+	box-shadow: 0px 0px 15px black;
+}
+
+.kbd-Button { display: inline-block; }
+.kbd-Button-dwo {background:#ddd; color:#000; padding:10px; margin:5px;  border: 1px solid #888; border-radius:5px; text-align:center; overflow:hidden;}
+.kbd-Button-dwo:active {background:#e00;}
+
+.kbd-Button-noordhoff { 
+	display: inline-block;
+	margin:4px;
+	text-align:center;
+	overflow:hidden;
+	height:48px;
+	background-color: white;
+	vertical-align: middle;
+	font-size: 18px; 
+}
+.kbd-Button-noordhoff:active {background:#e00;}
+
+div.disabled { background:#b8b8b8; color:#333;}
+div.disabled:active { background:#b8b8b8; }
+
+div.keyboardtabs div {color:white; background:#444; border-radius:0px; padding:2px 5px; margin:5px;}
+div.keyboardtabs div:active {background:#e00;}
+
+
+/* div.scrollformule {overflow:scroll; background:blue; width:210px;} */
+
+
+div.kbd-Button-dwo-numeric {
+	background:#eee;
+}
+div.kbd-Button-noordhoff-numeric {
+	background-color:#64add3;
+	color: white
+}
+
+.dwo .keyboard-container .keyboard {
+	background-color: transparent;
+}
+
+div.apply {background:#eee; }
+
+div.tabkeyboard-dwo { 
+	margin: 0px auto;
+	width: 724px;
+}
+
+div.tabkeyboard {
+      display: block; background-position: initial initial; background-repeat: initial initial; 
+}
+
+div.tabkeyboard-noordhoff {
+    margin:11px 16px;
+    width: 846px;
+}
+
+div.listitem { color:#000; }
+
+/* input[name="userid"] { color:#000; } */
+
+
+.gwt-Image-noordhoff {
+	height: 48px;
+}
+
+.gwt-Image-dwo {
+	height: 16px;
+}
+
+/* moet zijn dwo */
+.kbd-Button-dwo { 
+	background-image: url(images/resources/buttongradient.png);
+	height: 19px;
+	font-size: 13px;
+}
+
+div.listItem-dwo {
+	color: black;
+}
+div.listItem-dwo-separator {
+	color: black;
+	font-size: 13pt;
+}
+
+.gwt-Tree .gwt-TreeItem-selected {
+	text-decoration: underline;
+	font-weight: bold;
+}
+
+.cursor_gum {
+	cursor: url(images/resources/gumcursor.gif) 10 10, auto; 
+}
+
+.cursor_teken {
+	cursor: url(images/resources/tekencursor.gif) 10 22, auto; 
+}
+
+.cursor_drag {
+	cursor: arrow; 
+}
+
+.gwt-Anchor {
+	font-weight: bold;
+	text-decoration: underline;
+	font-family: sans-serif;
+	font-size: 12px;
+}
+
+/* .gwt-Label-infoArea, .gwt-HTML-infoArea { */
+/* 	margin: 15px; */
+/* } */
+
+/* .gwt-HTML-moduleArea, .gwt-Label-moduleArea { */
+/* 	margin-top: 5px; */
+/* 	margin-left: 10px; */
+/* 	margin-right: 10px; */
+/* } */
+
+
+.gwt-MenuItem-disabled {
+	display: none;
+}
+
+.modules-icon {
+	background-image: url("images/numworx/modules.svg");
+	background-repeat: no-repeat;
+	background-position: 8px 38px;
+	padding-left: 40px !important;
+	background-size: 24px 24px;
+}
+
+.modules-icon2 {
+	background-image: url("images/numworx/modules.svg");
+	background-repeat: no-repeat;
+	background-position: 8px 8px;
+	background-size: 24px 24px;
+}
+
+
+.gwt-DialogBox .Caption {
+   cursor: auto !important;
+}
+
+.seb-MenuBarPopup {
+	border-radius: 3px;
+	border: solid #7297c7 2px;
+}
+
+.seb-MenuBarPopup .menuPopupTopLeft, 
+.seb-MenuBarPopup .menuPopupBottomLeft, 
+.seb-MenuBarPopup .menuPopupMiddleLeft, 
+.seb-MenuBarPopup .menuPopupTopRight, 
+.seb-MenuBarPopup .menuPopupBottomRight, 
+.seb-MenuBarPopup .menuPopupMiddleRight, 
+.seb-MenuBarPopup .menuPopupTopCenter, 
+.seb-MenuBarPopup .menuPopupBottomCenter, 
+.seb-MenuBarPopup .menuPopupContent .gwt-MenuBar-seb.gwt-MenuBar .gwt-MenuItem
+{
+	background-color: red !important;
+	color: white !important;
+	font-size: 1.2em !important;
+	background-image: none !important;
+}
+
+.profile-headerLogo::before {
+        content: url('images/numworx/logo-Numworx-grijs2.svg');
+}
+
+.profile-subheaderType {
+	width: 40px;
+	vertical-align: top;
+	margin-left: -5px;
+	margin-top: 3px;
+	display: inline-block;
+}
+
+.lesstof .profile-subheaderType::before {
+		content: url('images/numworx/lesstof-numworx.svg');
+}
+.toets  .profile-subheaderType::before {
+		content: url('images/numworx/zelftoets-numworx.svg');
+}
+
+.profile-navigationFOLDER::before {
+		content: url('images/numworx/folder-numworx.svg');
+		width: 16px;
+		height: 16px;
+		vertical-align: top;
+		display: inline-block;
+}
+.profile-navigationMODULE::before {
+		content: url('images/numworx/module-numworx2.svg');
+		width: 16px;
+		height: 16px;
+		vertical-align: -4px;
+		display: inline-block;
+}
+.profile-navigationSCO::before {
+		content: url('images/numworx/activiteit_numworx2.svg');
+		width: 16px;
+		height: 16px;
+		vertical-align: -2px;
+		display: inline-block;	
+}
+
+.profile-login {
+		background-color: #8ebee6;
+}
+
+.profile-loginPanel {
+		background-color: #314770;
+		color: #AAC1DC;		
+}
+
+.profile-loginPanel button {
+		color: white;
+		background-color: #1B75BB;
+}
+
+.profile-loginLinks, .profile-loginLinks a {
+		color: white;
+}
+
+.profile-loginLogo > div::before {
+		content: url('images/numworx/login.png')
+}
+.profile-loginTitle::before {
+		content: url('images/numworx/logo-Numworx-wit-blauw3.svg');
+		width: 327px;
+		margin-left: -20px;
+		display: block;
+}
+
+.scorewidget {
+	color: black;
+	line-height: 18px;
+}
+.scorewidget .scorewidget-score {
+	float: right;
+}
+
+.scorewidget.scorewidget-goedFout .scorewidget-score::after, .scorewidget.scorewidget-bezocht .scorewidget-score::after {
+	background-image: url(images/numworx/half-numworx.svg);
+	color: transparent;
+	padding-left: 4px;	
+	content: "XX";
+	font-size: 15px;
+	background-position-y: center;
+    background-repeat: no-repeat;
+    background-origin: content-box;
+}
+
+.scorewidget.scorewidget-bezocht.scorewidget-bezocht-resume .scorewidget-score::after {
+	background-image: url(images/numworx/done-numworx.svg);
+/* 	color: #6D4A8A; */
+}
+
+.scorewidget.scorewidget-goedFout.scorewidget-goedFout-passed .scorewidget-score::after {
+	background-image: url(images/numworx/goed-numworx.svg);
+/* 	color: green; */
+}
+
+.scorewidget.scorewidget-goedFout.scorewidget-goedFout-failed .scorewidget-score::after {
+	background-image: url(images/numworx/fout-numworx.svg);
+/* 	color: red; */
+}
+
+
+
+

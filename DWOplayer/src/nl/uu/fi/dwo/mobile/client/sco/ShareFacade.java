@@ -1,0 +1,170 @@
+package nl.uu.fi.dwo.mobile.client.sco;
+
+import java.util.HashMap;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.ui.Widget;
+
+import nl.uu.fi.dwo.interaction.client.InteractionView;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
+import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
+
+
+/**
+ * Decorator pattern.
+ * @author wim
+ *
+ */
+public class ShareFacade implements InteractionView, TekstElementWithFont {
+
+	public static final String SHARE_KEY = "shareKey";
+	private final JSONObject stateMap;
+	private final Memento memento;
+	public ShareFacade(String key, InteractionView view,
+			TekstElementWithFont withfont, Memento memento) {
+		delegate = view;
+		shareKey = key;
+		this.withfont = withfont;
+		this.memento = memento; // NON NULL!!!!
+		this.stateMap = memento.getShareMap(); // NOT NULL!!
+	}
+
+	public InteractionView unwrap() {
+		return delegate;
+	}
+	
+	public static InteractionView wrap(ObjectMap launchData, InteractionView view, ActivityInterface activity)
+	{
+		if( ! launchData.containsKey(SHARE_KEY))		
+			return view;
+		String key = launchData.getString(SHARE_KEY);
+		Memento memento = ((ActivityComponent) activity).memento();
+		if ( view instanceof TekstElementWithFont )
+			return new ShareFacade(key, view, (TekstElementWithFont) view, memento );
+		else
+			return new ShareFacade(key, view, null, memento);
+	}
+	
+//	static void setSharedState(JSONObject stateMap) {
+//		if(stateMap == null) stateMap = new JSONObject();
+//		ShareFacade.stateMap = stateMap;
+//	}
+//	
+//	static void clearSharedState(String key) {
+//	  if (stateMap != null) {
+//	    stateMap.put(key, null);
+//	  }
+//	}
+//	
+//	public static void clearSharedState() {
+//		if(stateMap != null) {
+//			stateMap = new JSONObject();
+//		}
+//	}
+
+	
+	private InteractionView delegate;
+	private TekstElementWithFont withfont;
+	private String shareKey;
+
+	public int getAsHoogte() {
+		return delegate.getAsHoogte();
+	}
+
+	public int getHeight() {
+		return delegate.getHeight();
+	}
+
+	public int getWidth() {
+		return delegate.getWidth();
+	}
+
+	public void setAsHoogte(int ashoogte) {
+		delegate.setAsHoogte(ashoogte);
+	}
+
+	public HashMap<String, Object> getState() {
+		HashMap<String, Object> state = delegate.getState();
+		JSONValue stateobject = JSONUtilities.toJSONObject(state);
+		stateMap.put(shareKey, stateobject);
+		memento.setShareMap(stateMap); // Na close Memento.instance() null
+		return state;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public void setState(HashMap<String, Object> h) {
+		if ( ! stateMap.containsKey(shareKey))
+		{
+			delegate.setState(h);
+			return;
+		}
+		JSONObject other = stateMap.get(shareKey).isObject();
+//		HashMap otherMap = JSONUtilities.fromJSONObject(other);
+//		HashMap hh = h != null ? new HashMap(h): new HashMap();
+//		hh.putAll(otherMap);
+		HashMap hh = JSONUtilities.wrapMap(other);
+		delegate.setState(hh);
+	}
+
+	public int getScore() {
+		return delegate.getScore();
+	}
+
+	public int[][] getScoreObjectives() {
+		return delegate.getScoreObjectives();
+	}
+
+	public Boolean isCorrect() {
+		return delegate.isCorrect();
+	}
+
+	public void kijkNa() {
+		delegate.kijkNa();
+	}
+
+	public void zetNagekeken(boolean b) {
+		delegate.zetNagekeken(b);
+	}
+
+	public void setCommunicationRoot(OpdrNavIF comRoot) {
+		delegate.setCommunicationRoot(comRoot);
+	}
+
+	public void zetVolledigeBreedte(int breedte) {
+		delegate.zetVolledigeBreedte(breedte);
+	}
+
+	public Widget asWidget() {
+		return delegate.asWidget();
+	}
+
+	@Override
+	public void setFontSize(int font_size) {
+		if(withfont != null)
+			withfont.setFontSize(font_size);
+	}
+
+	@Override
+	public void setFontName(String font_name) {
+		if(withfont != null)
+			withfont.setFontName(font_name);
+	}
+
+	@Override
+	public void setFontStyle(int font_style) {
+		if(withfont != null)
+			withfont.setFontStyle(font_style);
+	}
+
+	@Override
+	public void setParentRegel(TekstRegel regel) {
+		if(withfont != null)
+			withfont.setParentRegel(regel);
+	}
+
+}

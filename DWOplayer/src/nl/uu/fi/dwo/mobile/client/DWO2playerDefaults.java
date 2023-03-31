@@ -1,0 +1,118 @@
+package nl.uu.fi.dwo.mobile.client;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Singleton;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
+
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.mobile.client.sco.SMLogger;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+//import nl.uu.fi.dwo.mobile.client.sco.StudentModelLogger;
+import nl.uu.fi.dwo.mobile.client.ui.IdleDetect;
+import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
+import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
+import nl.uu.fi.dwo.mobile.client.ui.dwokb.NoStatusKeyboard;
+//import nl.uu.fi.dwo.mobile.utils.LaTransport;
+import nl.uu.fi.dwo.mobile.utils.Logging;
+import nl.uu.fi.dwo.mobile.utils.NoLogging;
+
+@Singleton
+public class DWO2playerDefaults extends DWOplayerDefaults {
+
+	private IdleDetect idle;
+
+	@Inject DWO2playerDefaults(IdleDetect idle, DwoGlobalVars vars, Provider<RPCHandler> rpc) {
+		super(null);
+		this.idle = idle;
+		
+		launchData =
+				"/dwo/rest/public/scoData/getJSONLaunchDataBytes?scoId=";
+//		loggingProvider = new SMLogger.Provider(	    
+//			      () -> NoLogging.instance, vars, rpc);
+
+	 //  loggingProvider = () -> LaTransport.newTAOinstance();
+
+	}
+
+	@Override
+	public String getResource(String resource) {
+		String base = GWT.getModuleBaseURL() + "../" + resource;
+		return base;
+	}
+
+	public String getHost() {
+//		if(GWT.isProdMode()) 
+			return Window.Location.getHost();
+//		return getDefaultHost();
+	}
+
+
+
+	@Override
+	public String getCDN() {
+		return "cdn.dwo.nl";
+	}
+
+	private static native String getSecureMode0() /*-{
+		return $wnd.SECURE_MODE;
+	}-*/;
+
+	private static native String getDwoEnv0() /*-{
+		return $wnd.dwo_env
+	}-*/;
+	
+
+	@Override
+	public String getDwoEnv() {
+		try {
+			return getDwoEnv0();
+		} catch (Exception e) {
+			return super.getDwoEnv();
+		}
+	}
+	
+	
+	private SecureMode secureMode = SecureMode.NORMAL;
+	{ 
+		try {
+			secureMode = SecureMode.valueOf(getSecureMode0());
+		} catch (Exception e) {
+		} 
+	}
+	
+	@Override
+	public SecureMode getSecureMode() {
+		return secureMode;
+	}
+
+//	private final Provider<Logging> loggingProvider;
+//	
+//	@Override
+//	public Logging getLogging() {
+//		return loggingProvider.get();
+//	}
+
+	/* (non-Javadoc)
+	 * @see nl.uu.fi.dwo.mobile.client.DWOplayerDefaults#getStatusBar()
+	 */
+	@Override
+	public StatusBarIF getStatusBar(ActivityComponent a) {
+		if ("none".equals(Window.Location.getParameter("footer")))
+			return new NoStatusKeyboard(a);
+		return super.getStatusBar(a);
+	}
+
+	/* (non-Javadoc)
+	 * @see nl.uu.fi.dwo.mobile.client.DWOplayerParameters#tickle()
+	 */
+	@Override
+	public void tickle() {
+		idle.reset();
+	}
+
+	
+	
+}

@@ -1,0 +1,115 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:cl="urn:import:com.google.gwt.user.cellview.client"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:with field='dw2' type='nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessages' />
+	<ui:with field='rb'  type='nl.uu.fi.dwo.mobile.client.text.Text' />
+	<ui:style field='style' src="TreeModuleViewNumworx.css" type='nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworxCss'/>	
+	<ui:style field='extra' >
+		.icon { 
+			display: inline-block;
+			width: 26px;
+			height: 26px;
+			margin: 8px 9px;
+			fill: #a8abb1;
+			cursor: pointer;
+		}
+		.selected {
+			fill: #1b75bb;
+			margin-left: 20px;
+		}
+		.icon:hover {
+			fill: #1b75bb;
+
+		}
+	
+	</ui:style>
+		    <g:DockLayoutPanel unit='PX' styleName='{style.navPanel}' addStyleNames='profile-navigation' >
+				<g:north size="40">
+					<g:FlowPanel ui:field='beheer'>
+						<g:HTML ui:field='modules' styleName='{extra.icon} {extra.selected}' title='{dw2.NUM_MNU_MODULES}'>
+							<svg viewBox="0 0 64 64" class="icon">
+				<path class="st0" d="M56.9,0H7.1C3.2,0,0,3.2,0,7.1v49.8C0,60.8,3.2,64,7.1,64h49.8c3.9,0,7.1-3.2,7.1-7.1V7.1C64,3.2,60.8,0,56.9,0
+					z M19.6,53.8H9.8V44h9.8V53.8z M19.6,37H9.8v-9.8h9.8V37z M19.6,19.5H9.8V9.6h9.8V19.5z M36.7,53.8h-9.8V44h9.8V53.8z M36.7,37h-9.8
+					v-9.8h9.8V37z M36.7,19.5h-9.8V9.6h9.8V19.5z M53.9,53.8h-9.8V44h9.8V53.8z M53.9,37h-9.8v-9.8h9.8V37z M53.9,19.5h-9.8V9.6h9.8
+					V19.5z"/>
+				    		</svg>
+				    	</g:HTML>
+						<g:HTML ui:field='results' styleName='{extra.icon}' title='{dw2.NUM_MNU_RESULTS}'>
+							<svg viewBox="0 0 64 64" class="icon">
+			  		  			<path d="M56.9,0H7.1C3.2,0,0,3.2,0,7.1v49.8C0,60.8,3.2,64,7.1,64h49.8c3.9,0,7.1-3.2,7.1-7.1V7.1C64,3.2,60.8,0,56.9,0
+									z M21.3,49.8h-7.1v-14h7.1V49.8z M35.6,49.8h-7.1V14.2h7.1V49.8z M49.8,49.8h-7.1V25.6h7.1V49.8z"/>
+				    		</svg>
+				    	</g:HTML>
+						<g:HTML ui:field='knowledge' styleName='{extra.icon}' title='{dw2.NUM_MNU_KNOWLEDGE}'>
+							<svg viewBox="0 0 64 64" class="icon">
+<rect width="64" height="64" rx="8"/>
+<g fill="#DDE0E3">
+	<path d="M24.6,15.8c0,0,0.1,0.1,0.1,0.1L39.4,23c-0.1-0.8,0.3-1.5,0.8-2L25.7,14c0,0,0,0-0.1,0
+		C25.6,14.7,25.2,15.4,24.6,15.8z"/>
+	<path d="M23.1,16.8c-0.6,0.5-1.3,0.7-2,0.7l5.9,12.6c0.5-0.5,1.2-0.9,1.9-0.9L23.1,16.8z"/>
+	<path d="M47.5,42.8c0.5-0.2,1.1-0.2,1.6,0c0.2,0,0.4,0,0.6,0.1l-1.8-12.2c-0.6,0.3-1.4,0.5-2.1,0.3L47.5,42.8z"/>
+	<path d="M30.3,33.9l14.8,11.4c0.1-0.3,0.3-0.6,0.5-0.8c0.1-0.4,0.3-0.8,0.6-1L31.6,32.2C31.4,33,30.9,33.6,30.3,33.9z"
+		/>
+	<path d="M17.4,31.4c0.2,0.6,0.1,1.2,0,1.6l9.1-0.3c0-0.1-0.1-0.2-0.1-0.3c-0.2-0.7-0.1-1.3,0.1-1.8l-9.3,0.3
+		C17.3,31.1,17.4,31.2,17.4,31.4z"/>
+	<path d="M14.9,27.9l5.5-10.5c-0.7-0.2-1.3-0.7-1.6-1.5L13,27C13.7,27,14.4,27.2,14.9,27.9z"/>
+	<path d="M14.9,36.9l12.6,9.3c0.2-0.7,0.7-1.3,1.4-1.7l-12.4-9.2C16.2,36.1,15.6,36.6,14.9,36.9z"/>
+	<path d="M32.7,46.1c0.2,0.8,0.1,1.5-0.2,2l12.6,0.2c-0.1-0.2-0.2-0.4-0.2-0.6c-0.2-0.6-0.1-1.1,0-1.5L32.6,46
+		C32.6,46,32.7,46.1,32.7,46.1z"/>
+	<path d="M27.2,11.7c-0.9-3-4-4.8-7-3.9c-3,0.9-4.8,4-3.9,7c0.9,3,4,4.8,7,3.9C26.3,17.9,28.1,14.7,27.2,11.7z"/>
+	<path d="M53.2,22.6c-1.2-4.2-5.6-6.6-9.8-5.4c-4.2,1.2-6.6,5.6-5.4,9.8c1.2,4.2,5.6,6.6,9.8,5.4
+		C52,31.2,54.4,26.8,53.2,22.6z"/>
+	<path d="M18.6,30.5c-1.1-3.7-4.9-5.8-8.6-4.8c-3.7,1.1-5.8,4.9-4.8,8.6c1.1,3.7,4.9,5.8,8.6,4.8
+		C17.6,38.1,19.7,34.2,18.6,30.5z"/>
+	<path d="M32.6,30.5c-0.6-2.1-2.7-3.2-4.8-2.7c-2.1,0.6-3.2,2.8-2.7,4.8c0.6,2.1,2.8,3.2,4.8,2.7
+		C32,34.7,33.2,32.6,32.6,30.5z"/>
+	<path d="M34.1,45.6c-0.7-2.3-3-3.6-5.3-2.9c-2.3,0.7-3.6,3-2.9,5.3c0.7,2.3,3,3.6,5.3,2.9
+		C33.4,50.2,34.7,47.8,34.1,45.6z"/>
+	<path d="M54.8,45c-0.9-3.1-4.1-4.9-7.2-4c-3.1,0.9-4.9,4.1-4,7.2c0.9,3.1,4.1,4.9,7.2,4C53.9,51.3,55.7,48.1,54.8,45z"
+		/>
+</g>
+				    		</svg>
+				    	</g:HTML>
+						<g:HTML ui:field='persons' styleName='{extra.icon}' title='{dw2.NUM_MNU_PEOPLE}'>
+							<svg viewBox="0 0 64 64" class="icon">
+
+				<path class="st0" d="M56.9,0H7.1C3.2,0,0,3.2,0,7.1v49.8C0,60.8,3.2,64,7.1,64h49.8c3.9,0,7.1-3.2,7.1-7.1V7.1C64,3.2,60.8,0,56.9,0
+				z M20.8,6.3c4.2,0,7.6,3.4,7.6,7.6c0,4.2-3.4,7.6-7.6,7.6c-4.2,0-7.6-3.4-7.6-7.6C13.2,9.7,16.6,6.3,20.8,6.3z M35,56.9H7.2V35.5
+				c0-5.9,7.7-8.9,13.6-8.9s14.2,3,14.2,8.9V56.9z M42.9,6.3c4.2,0,7.6,3.4,7.6,7.6c0,4.2-3.4,7.6-7.6,7.6c-4.2,0-7.6-3.4-7.6-7.6
+				C35.2,9.7,38.6,6.3,42.9,6.3z M57.3,48H42V35.5c0-3.8-2.1-6.6-5-8.8c0.9-0.1,3.4-0.1,4.2-0.1c5.9,0,16.1,3,16.1,8.9V48z"/>
+						    		</svg>
+						</g:HTML>
+						<g:HTML ui:field='classes' styleName='{extra.icon}' title='{dw2.NUM_MNU_CLASSES}'>
+								<svg viewBox="0 0 64 64" class="icon">
+					<path class="st0" d="M56.9,0H7.1C3.2,0,0,3.2,0,7.1v49.8C0,60.8,3.2,64,7.1,64h49.8c3.9,0,7.1-3.2,7.1-7.1V7.1C64,3.2,60.8,0,56.9,0
+					z M19.2,14.2c0-2.8,2.3-5.1,5.1-5.1h15.2c2.8,0,5.1,2.3,5.1,5.1v20.3H19.2V14.2z M6.5,34.5v-7.6h7.6v7.6H6.5z M52.1,54.7h-7.6v-7.6
+					H19.2v7.6h-7.6v-7.6v-7.6h40.5V54.7z M57.2,34.5h-7.6v-7.6h7.6V34.5z"/>
+									    			</svg>	
+						</g:HTML>
+						<g:HTML styleName='{extra.icon}' title='{dw2.NUM_MNU_ORGANIZATION}' ui:field='organization'>
+								<svg viewbox='0 0 64 64' class='icon'>
+					<path class="st0" d="M22.6,34h4.8v4.8h-4.8V34z M22.6,48.4h4.8v-4.8h-4.8V48.4z M13,19.6h4.8v-4.8H13V19.6z M13,48.4h4.8v-4.8H13
+						V48.4z M13,29.2h4.8v-4.8H13V29.2z M22.6,29.2h4.8v-4.8h-4.8V29.2z M13,38.8h4.8V34H13V38.8z M22.6,19.6h4.8v-4.8h-4.8V19.6z
+						 M64,7.1v49.8c0,3.9-3.2,7.1-7.1,7.1H7.1C3.2,64,0,60.8,0,56.9V7.1C0,3.2,3.2,0,7.1,0h49.8C60.8,0,64,3.2,64,7.1z M56.2,19.6h-24V10
+						h-24v43.2h48V19.6z M32.3,38.8h9.8V34h-9.8V38.8z M32.3,48.4h9.8v-4.8h-9.8V48.4z M32.3,29.2h9.8v-4.8h-9.8V29.2z M42.1,38.8h9.4V34
+						h-9.4V38.8z M42.1,48.4h9.4v-4.8h-9.4V48.4z M42.1,29.2h9.4v-4.8h-9.4V29.2z"/>				
+								</svg>						
+						 </g:HTML>					
+					</g:FlowPanel>
+				</g:north>
+				<g:north size="83">
+					<g:HTML ui:field='bibliotheek' styleName='{style.navTitle}'><ui:text from='{rb.bibliotheek}'/></g:HTML>
+				</g:north>
+				<g:center>
+					<g:ScrollPanel>
+					  <g:FlowPanel ui:field='deck' >
+						<cl:CellList ui:field='cells' />
+						<g:Tree ui:field="tree" addStyleNames='{style.tree}'/>
+					  </g:FlowPanel>
+					</g:ScrollPanel>
+				</g:center>
+			</g:DockLayoutPanel>
+
+
+</ui:UiBinder> 

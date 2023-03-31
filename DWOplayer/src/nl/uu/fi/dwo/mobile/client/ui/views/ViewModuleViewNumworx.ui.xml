@@ -1,0 +1,149 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:v="nl.uu.fi.dwo.mobile.client.ui.views"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:with field='rb'  type='nl.uu.fi.dwo.mobile.client.text.Text' />
+	
+	<ui:style field='t' src='TreeModuleViewNumworx.css' type='nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworxCss' />
+	<ui:style>
+	@def color15 #314770;
+	@def color10 #E4F2FB;
+	@def color12 #AAC1DC;
+	@def color13 #7297C7;
+	@def color14 #1B75BB;
+	@def medium 500;
+	@def regular 400;
+	@external .modules-icon2;
+	
+	.headerPanel {
+		background-color: color10;
+		height: 90px;
+	}
+	
+	.headerTop {
+		background-color: color15;
+		height: 50px;
+		color: color13;
+	}
+	.headerBottom {
+		background-color: white;
+		height: 40px;
+		box-shadow: 0px 2px 2px color15 inset;
+	}
+	.centerPanel {
+		background-color: color10;
+	}
+	.kruimels {
+		font-family: Ubuntu, sans-serif;
+		color: color13;
+		font-size: 13px;
+		font-weight: medium;
+		margin-top: 18px;
+		display: inline-block;
+		white-space: nowrap;
+	}
+	.kruimels a, .kruimels span {
+		font-family: Ubuntu, sans-serif;
+		font-weight: medium;
+		color: color13;
+	}
+		
+		.modules-icon2 .title {
+				left: 172px;
+		}
+		.title {
+			color: color14;
+			font-family: Ubuntu, sans-serif;
+			font-weight: medium;
+			font-size: 13px;
+			display: inline-block;
+			position: absolute;
+			left: 132px;
+			bottom: 18px;
+		}
+		.knop {
+			color: white;
+			background-color: color12;
+			font-family: Ubuntu, sans-serif;
+			font-size: 12px;
+			font-weight: bold;
+			display: inline-block;
+			margin-left: 22px;
+			padding-left: 10px;
+			margin-top: 6px;
+			padding-top: 2px;
+			padding-right:10px;
+		}
+		.icon {
+			height: 34px;
+			vertical-align:top;
+			margin-left: -7px;
+			margin-top: 5px;
+		}
+
+		.modules {
+			display: none;
+			height: 40px;
+			width: 40px;
+			float: left;
+		}
+		.modules-icon2 .modules {
+			display: inline-block;
+		}
+		.fit {
+			font-size: 13px;
+			font-family: Ubuntu, sans-serif !important;
+			font-weight: medium;
+			white-space: nowrap;
+			width: min-content;
+		}
+
+	</ui:style>
+	<g:DockLayoutPanel unit='PX' styleName='{t.rootPanel}'>
+		<g:north size="50">
+			  <g:DockLayoutPanel ui:field='headerTop' styleName='{style.headerTop} profile-header' >
+			    <g:west size="170">
+			  	<g:InlineHTML ui:field='logo' styleName='{t.numworx}' addStyleNames='profile-headerLogo'>&#x00A0;</g:InlineHTML>
+			  	</g:west>
+			  	<g:center>
+			  	<g:FlowPanel ui:field='kruimels' styleName='{style.kruimels}' addStyleNames='profile-headerLabel'/>
+				</g:center>
+<g:east size="17">
+				<g:InlineHTML addStyleNames='{t.status}' ui:field='status'><i class='fa fa-cloud-upload'/></g:InlineHTML>
+</g:east>
+<g:east size="56">
+				<g:MenuBar ui:field='bar' addStyleNames='{t.menu}'>
+					<g:MenuItem ui:field='user' addStyleNames='{t.menuItem} {t.navIcon} profile-headerIcon' />
+				</g:MenuBar>
+</g:east>
+<g:east size="200">
+				<g:FlowPanel ui:field='loginflow' styleName='{t.loginname}' addStyleNames='profile-headerLabel'>
+				<g:Label styleName='{style.fit}' ui:field='loginLabel'></g:Label></g:FlowPanel>
+</g:east>
+<g:east size="35">
+				<g:FocusPanel ui:field='upBtn' styleName='{t.nav}'>
+					<g:InlineHTML><i class='fa fa-2x fa-arrow-up {t.navIcon} profile-headerIcon'></i></g:InlineHTML>
+				</g:FocusPanel>
+</g:east>
+			  </g:DockLayoutPanel>
+		</g:north>		
+		<g:north size="40">
+			  <g:FlowPanel ui:field="headerBottom" styleName='{style.headerBottom}' addStyleNames='{t.lesstof} profile-subheader'>
+			  		<g:FocusPanel ui:field='modules' styleName='{style.modules}' />
+			  		<g:Label styleName='{style.knop}' addStyleNames='profile-subheaderLogo' ui:field='scoType'><ui:text from='{rb.LESSTOF}'/></g:Label>
+			  		<g:FlowPanel styleName='profile-subheaderType' />
+<!-- 			  		<g:Image styleName='{style.icon}' addStyleNames='{t.toets}' url="{pfx}images/numworx/zelftoets-numworx.svg"/> -->
+<!-- 			  		<g:Image styleName='{style.icon}' addStyleNames='{t.lesstof}' url='{pfx}images/numworx/lesstof-numworx.svg' /> -->
+			  		<g:Label ui:field='title' styleName='{style.title}' addStyleNames='profile-subheaderLabel'></g:Label>
+					<g:FocusPanel ui:field='up2Btn' styleName='{t.nav}'>
+						<g:InlineHTML><i class='fa fa-2x fa-arrow-up {t.navIcon} profile-headerIcon' ></i></g:InlineHTML>
+					</g:FocusPanel>
+  			  </g:FlowPanel>
+		</g:north>
+		<g:center>
+			<g:SimpleLayoutPanel ui:field='center' styleName='{style.centerPanel}' addStyleNames='profile-body'>
+			</g:SimpleLayoutPanel>
+		</g:center>
+		
+	</g:DockLayoutPanel>
+</ui:UiBinder> 
