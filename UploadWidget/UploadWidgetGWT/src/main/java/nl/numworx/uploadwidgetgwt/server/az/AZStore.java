@@ -70,8 +70,7 @@ public class AZStore extends Store {
 
 	@Override
 	public Optional<AtomEntry> findByURL(String url) {
-		// TODO Auto-generated method stub
-		return super.findByURL(url);
+		return Optional.ofNullable(provider.get(url));
 	}
 
 	@Override

@@ -2,8 +2,9 @@
   <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
-        <artifactId>DWO.master.pom</artifactId>
-        <version>1.1</version>
+        <artifactId>DWO</artifactId>
+        <version>2.5.20-SNAPSHOT</version>
+        <relativePath>../DWO</relativePath>
     </parent>
   <groupId>nl.numworx.uploadwidget</groupId>
   <artifactId>UploadWidget-parent</artifactId>
@@ -21,19 +22,6 @@
 	<autoVersionSubmodules>true</autoVersionSubmodules>
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5.3</version>
-				<configuration>
-					<tagNameFormat>@{project.version}</tagNameFormat>
-					<autoVersionSubmodules>true</autoVersionSubmodules>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 	<distributionManagement>
 		<repository>
 			<id>release</id>
@@ -47,7 +35,4 @@
 		</snapshotRepository>
 	</distributionManagement>
 
-	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/UploadWidget/trunk</developerConnection>
-	</scm>
 </project>

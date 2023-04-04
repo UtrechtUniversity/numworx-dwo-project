@@ -1,10 +1,15 @@
 package nl.numworx.uploadwidgetgwt.server.az;
 
 import com.azure.core.http.rest.PagedIterable;
+import com.azure.core.http.rest.Response;
+import com.azure.core.util.Context;
 import com.azure.identity.*;
 import com.azure.storage.blob.*;
 import com.azure.storage.blob.models.*;
+import com.azure.storage.blob.options.BlobParallelUploadOptions;
+
 import java.io.*;
+import java.time.Duration;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,7 +39,8 @@ class AZProvider {
 		        .endpoint("https://"+account+".blob.core.windows.net/")
 		        .credential(defaultCredential)
 		        .buildClient();
-		client = blobServiceClient.createBlobContainer(bucket);
+		client = blobServiceClient.getBlobContainerClient(bucket);
+		client.createIfNotExists();
 	}
 	
 	Iterable<BlobItem> getEntries(String prefix) {
@@ -42,8 +48,15 @@ class AZProvider {
 	}
 
 	void put(String key, String type, InputStream inputStream, Long length, Map<String, String> tags) {
-		// TODO Auto-generated method stub
+		BlobClient blob = client.getBlobClient(key);
+		Duration timeout = Duration.ofMinutes(10);
 		
+		BlobParallelUploadOptions options = new BlobParallelUploadOptions(inputStream);
+		options.getHeaders().setContentType(type);
+		options.setMetadata(tags);
+		Context context = Context.NONE;
+		Response<BlockBlobItem> response = blob.uploadWithResponse(options, timeout, context);	
+		int status = response.getStatusCode();
 	}
 
 	void init() {
@@ -60,12 +73,16 @@ class AZProvider {
 	}
 
 	public void delete(String first) {
-		// TODO Auto-generated method stub
-		
+		BlobClient blob = client.getBlobClient(first);
+		blob.delete();
 	}
 
 	public Entity get(String first) {
-		// TODO Auto-generated method stub
-		return null;
+		BlobClient blob = client.getBlobClient(first);
+		ListBlobsOptions options = new ListBlobsOptions().setPrefix(first).setMaxResultsPerPage(1);
+		BlobItem item = client.listBlobs(options, Duration.ofMillis(10)).stream().findAny().get();
+		Entity result = new Entity(item);
+		result.url = blob.getBlobUrl();
+		return result;
 	}
 }

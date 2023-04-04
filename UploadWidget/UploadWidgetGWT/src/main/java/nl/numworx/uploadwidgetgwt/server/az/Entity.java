@@ -1,15 +1,22 @@
 package nl.numworx.uploadwidgetgwt.server.az;
 
-public class Entity {
+import com.azure.storage.blob.BlobClient;
+import com.azure.storage.blob.models.BlobItem;
+
+public class Entity extends AZStore.AZAtomEntry {
+
+	Entity(BlobItem item) {
+		super(item);
+	}
 
 	public String contentType() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.type;
 	}
 
 	public Long contentLength() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.length;
 	}
 
 	public void close() {
