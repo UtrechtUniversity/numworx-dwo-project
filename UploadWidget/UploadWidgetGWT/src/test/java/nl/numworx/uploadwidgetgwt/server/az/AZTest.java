@@ -79,6 +79,7 @@ public class AZTest {
 		Entity result = provider.get(first);
 		System.out.println(result.contentType());
 		System.out.println(result.contentLength());
+		System.out.println(result.url);
 		result.close();
 	}
 	
