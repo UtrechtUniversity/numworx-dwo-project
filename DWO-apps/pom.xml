@@ -3,7 +3,6 @@
 	<groupId>fi.dwo</groupId>
 	<artifactId>DWO-apps</artifactId>
 	<packaging>war</packaging>
-	<version>2.5.20-SNAPSHOT</version>
 	<name>DWO-apps ${project.version}</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
@@ -38,14 +37,9 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
 			</plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <preparationGoals>clean verify install</preparationGoals>
-                </configuration>            
-            </plugin>            
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+			</plugin>
 		</plugins>
 	</build>
     <distributionManagement>
@@ -68,4 +62,10 @@
     	<maven.compiler.source>1.8</maven.compiler.source>
     	<maven.compiler.target>1.8</maven.compiler.target>
     </properties>
+    <parent>
+    	<artifactId>DWO</artifactId>
+    	<relativePath>../DWO</relativePath>
+    	<version>2.5.20-SNAPSHOT</version>
+    	<groupId>nl.uu.fi.dwo</groupId>
+    </parent>
 </project>

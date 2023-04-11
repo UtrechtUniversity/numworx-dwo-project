@@ -35,6 +35,7 @@
         <module>../DWOJClient</module> <!-- needs profiles dwo-obfuscate dwo-pack-sign -->
      	<module>../DWOServer</module>
      	<module>../DWOplayer</module>
+     	<module>../UploadWidget</module>
         <module>../EBServer</module>
     </modules>
     
@@ -138,6 +139,15 @@
 			  </dependencies>
         	</plugin>
          </plugins>
+         <pluginManagement>
+         	<plugins>
+         		<plugin>
+         			<artifactId>maven-war-plugin</artifactId>
+         			<version>3.2.3</version>
+         		</plugin>
+         	</plugins>
+         
+         </pluginManagement>
     </build>
     
     <reporting>

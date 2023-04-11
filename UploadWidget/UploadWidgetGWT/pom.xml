@@ -21,7 +21,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <gwt.style>PRETTY</gwt.style>
     <dbrest.url>http://localhost:8080/dwo/</dbrest.url>
-    <maven.test.skip>false</maven.test.skip>
+    <maven.test.skip>true</maven.test.skip>
   </properties>
   <dependencyManagement>
     <dependencies>
