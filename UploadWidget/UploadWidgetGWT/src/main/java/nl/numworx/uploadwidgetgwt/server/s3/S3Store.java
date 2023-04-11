@@ -18,7 +18,6 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 
 public class S3Store extends Store {
 	
-	public static final String LEARNERID = "learnerid";
 
 	static class S3AtomEntry extends AtomEntry {
 		Instant modified;

@@ -9,10 +9,13 @@ import java.util.Vector;
 import org.apache.commons.fileupload.FileItem;
 
 import nl.numworx.uploadwidget.shared.AtomEntry;
-import nl.numworx.uploadwidgetgwt.server.s3.S3Store;
+import nl.numworx.uploadwidgetgwt.server.az.AZStore;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 
 public class Store {
+
+	public static final String LEARNERID = "learnerid";
+    
 	protected List<AtomEntry> entries = new Vector<>();
 	
 	protected Store() { };
@@ -24,13 +27,8 @@ public class Store {
 	public void addEntry(AtomEntry entry, Map<String,String> tags, FileItem item) {
 		entries.add(entry);
 	}
-	// TODO remove...
-	
-	public void removeEntry(AtomEntry entry) {
 		
-	}
-	
-	private static final Store _instance = new S3Store();
+	private static final Store _instance = new AZStore();
 	
 	public static Store instance() {
 		return _instance;

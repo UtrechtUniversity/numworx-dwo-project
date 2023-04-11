@@ -56,7 +56,7 @@ class AZProvider {
 		BlobParallelUploadOptions options = new BlobParallelUploadOptions(inputStream,length);
 		options.setHeaders(new BlobHttpHeaders());
 		options.getHeaders().setContentType(type);
-		options.setMetadata(tags);
+		options.setTags(tags);
 		Context context = Context.NONE;
 		Response<BlockBlobItem> response = blob.uploadWithResponse(options, timeout, context);	
 		int status = response.getStatusCode();
