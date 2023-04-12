@@ -55,12 +55,6 @@
 		
     </properties>
 
-    <!-- update the https path for a different branch or tag! -->
-    <scm>
-        <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOJClient/trunk</connection>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOJClient/trunk</developerConnection>
-    </scm>
-
     <dependencies>
     	<dependency>
     	    <groupId>nl.uu.fi.dwo.rest</groupId>

@@ -408,6 +408,17 @@
 					<warSourceDirectory>${project.build.directory}/${project.build.finalName}</warSourceDirectory>
 					<contextFile>src/test/tomcat/${context.xml}</contextFile>
 					<port>${http.port}</port>
+					<webapps>
+						<webapp>
+							    <groupId>nl.numworx.uploadwidget</groupId>
+    							<artifactId>UploadWidgetGWT</artifactId>
+    							<version>0.0.3-SNAPSHOT</version>
+                          		<type>war</type>
+								<contextPath>/dwo/dav/upload</contextPath>
+                            	<asWebapp>true</asWebapp> 
+						</webapp>
+					
+					</webapps>
 				</configuration>
 	<dependencies>
 		<dependency>
