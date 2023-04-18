@@ -32,6 +32,7 @@ import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dom.client.FrameElement;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
@@ -59,6 +60,15 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		comRoot.pause();
 	}
 
+	private static native void frameFactory(JavaScriptObject element, String url) /*-{
+		try {
+			$wnd.frameFactory(element, url);
+		} catch(e) {
+		
+		}
+	}-*/;
+	
+	
 	public void unpause() {
 		comRoot.unpause();
 	}
@@ -132,6 +142,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		randomVars = randomVarWaarden;
 		facade = new PopupFacade(outermap, activity);
 		frame = new Frame(html);
+		frameFactory(frame.getElement(), html);
 		frame.getElement().getStyle().setOverflow(Overflow.HIDDEN);
 		frame.setStylePrimaryName("StubView");
 		frame.addStyleDependentName("borderless");
