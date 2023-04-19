@@ -42,7 +42,7 @@ import fi.wiskopdr.text.Text_nl;
  */
 public abstract class DWOplayer
 {
-	public static final boolean RESPONSIVE =  "true".equals(Window.Location.getParameter("responsive"));
+	public static final boolean RESPONSIVE =  "true".equals(Window.Location.getParameter("responsive"))|| getResponsive();
 
 	public static int PROFILE_ID = 77;
 	
@@ -56,6 +56,9 @@ public abstract class DWOplayer
 	private static final String templateUUTestName = "TemplateUUTest";
 	private static String templateName = templateBasisName;
 	
+	private  static native boolean getResponsive() /*-{
+		return $wnd.RESPONSIVE
+	}-*/;
 	
 	private static native int getDwoProfileID() /*-{
 		return $wnd.DWO_PROFILE_ID
