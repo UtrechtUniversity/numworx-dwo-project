@@ -17,9 +17,6 @@ import org.junit.Test;
 import com.azure.core.http.rest.PagedIterable;
 import com.azure.storage.blob.models.BlobContainerItem;
 
-import software.amazon.awssdk.services.s3.model.Bucket;
-import software.amazon.awssdk.services.s3.model.ListBucketsResponse;
-
 public class AZTest {
 
 	@Before

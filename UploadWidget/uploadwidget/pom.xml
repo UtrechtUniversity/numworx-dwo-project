@@ -66,7 +66,7 @@
   		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
 		<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>
-		<daggerVersion>2.11</daggerVersion>
+		<daggerVersion>2.42</daggerVersion>
   </properties>
   <build>
   	<finalName>${project.artifactId}</finalName>

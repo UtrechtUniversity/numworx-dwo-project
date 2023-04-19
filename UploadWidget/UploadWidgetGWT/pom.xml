@@ -20,7 +20,7 @@
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <gwt.style>PRETTY</gwt.style>
-    <dbrest.url>http://localhost:8080/dwo/</dbrest.url>
+    <dbrest.url>http://localhost:80/dwo/</dbrest.url>
     <maven.test.skip>true</maven.test.skip>
   </properties>
   <dependencyManagement>
@@ -161,7 +161,6 @@
 	 	</profile>
 	 	<profile>
 	 		<id>s3compile</id>
-	 		<activation><activeByDefault>true</activeByDefault></activation>
 	 		<dependencies>
 	 <dependency>
 	    <groupId>software.amazon.awssdk</groupId>
@@ -183,6 +182,13 @@
 	</dependency>
 	 		</dependencies>
 	 		
+	 	</profile>
+	 	
+	 	<profile>
+	 		<id>local</id>
+	 		<properties>
+    			<dbrest.url>http://localhost:8080/dwo/</dbrest.url> 		
+	 		</properties>
 	 	</profile>
 	</profiles>
 
