@@ -423,7 +423,8 @@ public class Course implements LessonGroup, Comparable<Course>, CourseMap, Descr
 
     public CoursePanel getCoursePanel() {
         if (coursePanel == null) {
-            loadScos();
+            if (scoList == null) 
+            	loadScos();
             coursePanel = new CoursePanel(this);
         }
 

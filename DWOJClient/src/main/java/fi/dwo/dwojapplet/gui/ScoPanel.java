@@ -110,7 +110,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
             add(closeButton, 0);
         }
         if (sco.getCourse() != null) {
-            courseView = ((CoursePanel) sco.getCourse().getCoursePanel()).getCourseView();
+            courseView =  false; //((CoursePanel) sco.getCourse().getCoursePanel()).getCourseView();
         }
     }
 
