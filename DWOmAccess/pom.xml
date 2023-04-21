@@ -186,13 +186,6 @@
                         <host>127.0.0.1</host>
                     </httpConnector>          
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.jamonapi</groupId>
-                        <artifactId>jamon</artifactId>
-                        <version>2.75</version>
-                    </dependency>            
-                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
