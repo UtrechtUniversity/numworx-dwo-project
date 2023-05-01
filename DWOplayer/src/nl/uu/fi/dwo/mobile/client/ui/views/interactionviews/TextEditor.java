@@ -222,6 +222,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		boxMetRand = launchdata.getBoolean("boxMetRand", true);
 		pasAanH = launchdata.getBoolean("pasAanH", false);
 		boolean numbered = launchdata.getBoolean("numbered", false);
+		boolean nowrap   = launchdata.getBoolean("nowrap", false);
 
 		if(teltMee = launchdata.containsKey("scoreMax")) 
 			scoreMax = launchdata.getInt("scoreMax");
@@ -233,6 +234,8 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		hbox.setStyleName(css.textEditor());
 		hbox.addStyleName(DWOplayer.templateCss().answerboxFEWS());
 		hbox.setStyleName(css.textEditor_n(), numbered);
+		hbox.setStyleName(css.textEditor_nw(), nowrap && !pasAanH);
+		hbox.setStyleName(css.textEditor_nwh(), nowrap && pasAanH);
 		
 		menubar = getMenuBar(launchdata);
 		if (menubar != null)
@@ -251,10 +254,13 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		}
 		
 		content = getContent(launchdata);
-		content.setPixelSize(width-boxsize-padding, pasAanH ? -1 : height-menuheight-boxsize-padding);
+		int contentHeight = height-menuheight-boxsize-padding;
+		content.setPixelSize(width-boxsize-padding, pasAanH ? -1 : contentHeight);
 		Style style = content.getElement().getStyle();
 		if (pasAanH) {
-			style.setDisplay(Style.Display.INLINE);
+			style.setProperty("minHeight", contentHeight, Unit.PX);
+			//style.setDisplay(Style.Display.INLINE);
+			hbox.addStyleName(css.textEditor_h());
 			style.clearWidth();
 			paddingH = padding; // Effect
 			padding = 0; // No effect 

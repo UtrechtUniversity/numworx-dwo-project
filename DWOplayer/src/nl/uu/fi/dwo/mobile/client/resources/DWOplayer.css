@@ -62,6 +62,20 @@ iframe {
 	background-color: transparent;
 }
 
+.textEditor_nw, .textEditor_nwh {
+	
+}
+
+.textEditor.textEditor_nw > div {
+	white-space: nowrap;
+}
+.textEditor.textEditor_nwh > div {
+	white-space: nowrap;
+	display: block;
+}
+.textEditor_h > div {
+	display: inline;
+}
 
 /*
 div.insert_formule {padding-right:5px; padding-left:5px;}
