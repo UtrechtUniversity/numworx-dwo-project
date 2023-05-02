@@ -79,7 +79,7 @@ public class DWODesktopKeyboardOnderbouw extends AbstractKeyboard implements Req
 	@UiHandler("t3_3") void onT3_3(ClickEvent e) {getEditor().kwadraat();}
 	@UiHandler("t3_4") void onT3_4(ClickEvent e) {getEditor().breuk();}
 	@UiHandler("t3_5") void onT3_5(ClickEvent e) {getEditor().haakjes();}
-	@UiHandler("t3_6") void onT3_6(ClickEvent e) {getEditor().ndewortel();}
+	@UiHandler("t3_6") void onT3_6(ClickEvent e) {getEditor().subscript();}
 
 	@UiHandler({"t4_8", "t4_11", "t4_12", "t4_13", "t4_14", "t4_15", "t1_5", "t1_6", "t1_7", "t1_8"} )
 	void insert(ClickEvent e) {

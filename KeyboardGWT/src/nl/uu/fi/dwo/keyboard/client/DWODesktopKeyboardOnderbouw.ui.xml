@@ -184,7 +184,7 @@
 			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key}"><my:DKey ui:field="t3_3" resource="{resources.kwadraat_svg}" /></g:SimplePanel></g:SimplePanel>
 			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key}"><my:DKey ui:field="t3_4" resource="{resources.breuk_svg}" /></g:SimplePanel></g:SimplePanel>
 			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key}"><my:DKey ui:field="t3_5" resource="{resources.haakjes_svg}" /></g:SimplePanel></g:SimplePanel>
-			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key}"><my:DKey ui:field="t3_6" resource="{resources.ndewortel_svg}"/></g:SimplePanel></g:SimplePanel>
+			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key}"><my:DKey ui:field="t3_6" resource="{resources.subscript_svg}"/></g:SimplePanel></g:SimplePanel>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="{style.row2}" > 
 			<g:SimplePanel addStyleNames="{style.svgimage}"><g:SimplePanel addStyleNames="{style.key} {style.lt}"><my:FKey ui:field="t4_8">π</my:FKey></g:SimplePanel></g:SimplePanel>

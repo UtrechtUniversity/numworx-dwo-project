@@ -2,9 +2,9 @@
 	<modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
-        <artifactId>DWO-GWT</artifactId>
-        <relativePath>../DWO-GWT</relativePath>
-        <version>1.0</version>
+        <artifactId>DWO</artifactId>
+        <relativePath>../DWO</relativePath>
+        <version>2.5.20-SNAPSHOT</version>
     </parent>
 	<groupId>nl.uu.fi.dwo.keyboard</groupId>
 	<artifactId>KeyboardGWT</artifactId>
@@ -13,6 +13,7 @@
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
+			<version>${gwtVersion}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.gwt</groupId>
@@ -51,6 +52,7 @@
 			<groupId>com.googlecode.mgwt</groupId>
 			<artifactId>MGWT</artifactId>
 			<scope>provided</scope>
+			<version>1.1.2</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -112,7 +114,6 @@
 	</build>
 	<description>Keyboard voor desktop en tablet
 DWO en Noordhoff/Plantyn variant</description>
-	<version>2.5.19-SNAPSHOT</version>
 	<scm>
 		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/KeyboardGWT/trunk</developerConnection>
 	</scm>
@@ -120,5 +121,8 @@ DWO en Noordhoff/Plantyn variant</description>
 		<maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 		<interactionVersion>0.1.4</interactionVersion>
   		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  		<gwtVersion>2.9.0</gwtVersion>
+  		<maven.compiler.source>1.8</maven.compiler.source>
+  		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 </project>
