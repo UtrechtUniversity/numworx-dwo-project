@@ -174,7 +174,7 @@ abstract class SecuredCommonScoDataManager {
                                 } else
                                     entry.setValue(String.valueOf(completionStatus)); break;
                             case SESSION_TIME:
-                                entry.setValue(String.valueOf(pssc.getSessionTime()));break;
+                                entry.setValue(Objects.toString(pssc.getSessionTime(), ""));break;
                             case SESSION_TIME2004:
                                 String sessionTime = pssc.getSessionTime();
                                 if(sessionTime == null) sessionTime = "0";
