@@ -278,6 +278,10 @@ public void setView(Display aView) {
 			"GetValue" : function(key) {
 				return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter::getValue(Ljava/lang/String;)(key)
 			},
+			"GetValueAsync" : function(key, callback) {
+				view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter::getValueAsync(Ljava/lang/String;Lnl/uu/fi/dwo/lms/gwtclient/gwt/results/StudentScoResultPresenter$Callback;)(key, callback)
+			},
+			
 			"SetValue" : function(key, value) {
 				return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter::setValue(Ljava/lang/String;Ljava/lang/String;)(key, value)
 			},
@@ -472,4 +476,18 @@ public void setView(Display aView) {
     LOG.info("calling print");
   }
 
+  final static class Callback extends JavaScriptObject {
+	  protected Callback() {
+	}
+
+	public native final void resolve(String value) /*-{ 
+	  	this.resolve(value);
+	 }-*/;
+  }
+  
+  private void getValueAsync(String key, Callback callback) {
+	  callback.resolve(getValue(key));
+  }
+  
+  
 }

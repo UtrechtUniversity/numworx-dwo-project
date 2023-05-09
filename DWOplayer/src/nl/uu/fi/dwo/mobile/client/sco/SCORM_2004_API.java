@@ -2,6 +2,9 @@ package nl.uu.fi.dwo.mobile.client.sco;
 
 import nl.uu.fi.dwo.interaction.client.Role;
 
+import java.util.Collection;
+import java.util.Map;
+
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -10,6 +13,9 @@ import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.core.client.ScriptInjector.FromUrl;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
+import jsinterop.annotations.JsFunction;
+import jsinterop.annotations.JsMethod;
 
 public class SCORM_2004_API implements Scorm2004IF {
 
@@ -133,6 +139,39 @@ public class SCORM_2004_API implements Scorm2004IF {
 		String authorization = GetValue("dme.authorization");
 		if (authorization.isEmpty()) return "None";
 		return authorization;
+	}
+
+	private static native boolean hasGetValueAsync() /*-{
+		return typeof $wnd.getAPIHandle().GetValueAsync !== 'undefined';
+	}-*/;
+	
+	private static native void getValueAsync(String name, CallResolve callback) /*-{
+		$wnd.getAPIHandle().GetValueAsync(name, 
+			{ "resolve" : function(value) {
+				callback.@nl.uu.fi.dwo.mobile.client.sco.SCORM_2004_API.CallResolve::resolve(Ljava/lang/String;)(value)
+			}})
+	}-*/;
+	
+	@FunctionalInterface @JsFunction interface CallResolve {
+		@JsMethod
+		void resolve(String value);
+	}
+	
+	
+	@Override
+	public Promise<String> getValuePromise(String name) {
+		if (hasGetValueAsync()) {
+			Deferred<String> d = new Deferred<>();
+			getValueAsync(name, d::resolve);
+			return d.getPromise();
+		}
+		return Scorm2004IF.super.getValuePromise(name);
+	}
+
+	@Override
+	public Promise<Map<String, String>> getValuesPromise(Collection<String> names) {
+		// TODO Auto-generated method stub
+		return Scorm2004IF.super.getValuesPromise(names);
 	}
 
 
