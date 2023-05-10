@@ -256,6 +256,23 @@ public class ResultsService implements SwitchViewEventHandler {
         }
         return values;
     }
+    
+    public Promise<Map<String,String>> getValuesAsync(DomStudentScoContext dom, Collection<String> keys) {
+        Promise<Map<String, String>> values;
+        values = suspendDataCache.get(dom.getId());
+    	if (values == null || (values.isDone() && values.getFailure() != null)) {
+    		return scormValues.getValues(dom, getContext(), keys);
+    		
+    	}
+    	if (values.isDone()) {
+    		if (values.getValue().keySet().containsAll(keys)) {
+    			return values;
+    		}
+    	}
+    	Promise<Map<String, String>> result = scormValues.getValues(dom, getContext(), keys);
+    	Promises.all(result, values).then(x -> { values.getValue().putAll(result.getValue()); return null;});
+    	return result;
+    }
 
     public Promise<DomStudentScoContext> setValues(DomStudentScoContext studentSco, Map<String, String> userState) {
         Promise<Map<String, String>> promise = suspendDataCache.get(studentSco.getId());

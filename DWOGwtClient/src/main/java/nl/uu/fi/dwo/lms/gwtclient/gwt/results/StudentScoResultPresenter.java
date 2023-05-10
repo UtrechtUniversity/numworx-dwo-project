@@ -486,7 +486,10 @@ public void setView(Display aView) {
   }
   
   private void getValueAsync(String key, Callback callback) {
-	  callback.resolve(getValue(key));
+	  resultService.getValuesAsync(ssc.getStudentSco(), Collections.singleton(key))
+	  	.map(v -> v.getOrDefault(key, ""))
+	  	.recover(fail -> "")
+	  	.then(r -> {callback.resolve(r.getValue()); return r;});
   }
   
   
