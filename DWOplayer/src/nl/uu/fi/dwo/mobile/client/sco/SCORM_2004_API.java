@@ -153,7 +153,6 @@ public class SCORM_2004_API implements Scorm2004IF {
 	}-*/;
 	
 	@FunctionalInterface @JsFunction interface CallResolve {
-		@JsMethod
 		void resolve(String value);
 	}
 	
