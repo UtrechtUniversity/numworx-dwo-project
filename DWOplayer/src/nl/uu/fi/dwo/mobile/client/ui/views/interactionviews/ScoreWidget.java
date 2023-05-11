@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
@@ -82,7 +83,8 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 	
 	int choicePageMode = 0;
     int activiteitNr = 0;
-    int paginaNr = 0;
+    int paginaNr = 1;
+    String paginaNrs = "";
     int activiteitID = 0;
     int moduleID = 0;
     boolean score = false;
@@ -287,6 +289,8 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			 if(map.containsKey("paginaNr"))
 				 paginaNr = map.getInt("paginaNr");
 			 paginaNr = Math.max(paginaNr, 1);
+			 if(map.containsKey("paginaNrs"))
+				 paginaNrs = map.getString("paginaNrs");
 			 if(map.containsKey("activiteitID"))
 				 activiteitID = map.getInt("activiteitID");
 			 if(map.containsKey("moduleID"))
@@ -310,6 +314,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 				 if (activiteitScore && choicePageMode == 0) 
 					 linkActive = false;
 			 }
+			 if (!paginaNrs.isEmpty()) linkActive = false; // geen link bij meerdere pagina's
 			 
 		}
 		html = linkActive ? anchor : span;
@@ -350,55 +355,69 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			}
 			paginaNr = 0;
 		}
-		final String pfx = pfx0 + "." + paginaNr;
-
+		Collection<Integer> paginaSet;
+		if (paginaNrs.isEmpty()) 
+			paginaSet = java.util.Collections.singleton(paginaNr);
+		else {
+			paginaSet = Util.parsePaginaNrs(paginaNrs);
+		}
+		
 		Collection<String> keys = new TreeSet<String>();
 		Deferred<Map<String,String>> defer = new Deferred<>();
-		if (score) {
-			Promise<String> result;
-			String key = pfx + SCORE_RAW;
-			result = defer.getPromise().map( m -> m.getOrDefault(key, ""));
-			keys.add(key);
-			anchorSetText("0");
-			result.then(this::doScore);
-		} else {
-			anchorSetText("");
-		}
-		if (goedFout && bezocht) {
-			String key;
-			if (cesuur != null) key = pfx + SCORE_RAW;
-			else key = pfx + SUCCESS_STATUS;
-			keys.add(key);
-			key = pfx + ENTRY;
-			keys.add(key);
-			key = pfx + COMPLETION_STATUS;
-			keys.add(key);
-			Promise<Map<String, String>> result = defer.getPromise();
-			result.then(new GoedFoutBezocht(pfx));
 		
-		} else
-		if (goedFout) {
-			Promise<String> result;
-			String key = cesuur != null ? pfx + SCORE_RAW : pfx + SUCCESS_STATUS;
-			result = defer.getPromise().map( m -> m.getOrDefault(key, ""));
-			keys.add(key);			
-			result.then(this::doGoedFout);			
-		} else
-		if (bezocht) {
-			Promise<String> result;
-			String key = pfx + ENTRY;
-			result = defer.getPromise().map( m -> m.getOrDefault(key, ""));
-			keys.add(key);			
-			result.then(this::doBezocht);
-		}
+		if (paginaSet.size() == 1 ) { // 1 pagina!
+			paginaNr = paginaSet.iterator().next();
+			final String pfx = pfx0 + "." + paginaNr;
+	
+			if (score) {
+				Promise<String> result;
+				String key = pfx + SCORE_RAW;
+				result = defer.getPromise().map( m -> m.getOrDefault(key, ""));
+				keys.add(key);
+				anchorSetText("0");
+				result.then(this::doScore);
+			} else {
+				anchorSetText("");
+			}
+			if (goedFout && bezocht) {
+				String key;
+				if (cesuur != null) key = pfx + SCORE_RAW;
+				else key = pfx + SUCCESS_STATUS;
+				keys.add(key);
+				key = pfx + ENTRY;
+				keys.add(key);
+				key = pfx + COMPLETION_STATUS;
+				keys.add(key);
+				Promise<Map<String, String>> result = defer.getPromise();
+				result.then(new GoedFoutBezocht(pfx));
+			
+			} else
+			if (goedFout) {
+				Promise<String> result;
+				String key = cesuur != null ? pfx + SCORE_RAW : pfx + SUCCESS_STATUS;
+				result = defer.getPromise().map( m -> m.getOrDefault(key, ""));
+				keys.add(key);			
+				result.then(this::doGoedFout);			
+			} else
+			if (bezocht) {
+				Promise<String> result;
+				String key = pfx + ENTRY;
+				result = defer.getPromise().map( m -> m.getOrDefault(key, ""));
+				keys.add(key);			
+				result.then(this::doBezocht);
+			}
+		
+		}	
 		if (!keys.isEmpty()) {
 			defer.resolveWith(api.getValuesPromise(keys));
 		}
 	}
-
 	
-	
-	
+	static class Util {
+		public static  Collection<Integer> parsePaginaNrs(String string) {
+			return Collections.emptySet();
+		}
+	}
 	Promise<String> doScore(Promise<String> p) {
 		String value = p.getValue();
 		if (value == null || value.isEmpty()) value = "0";
