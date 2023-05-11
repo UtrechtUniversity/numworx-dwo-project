@@ -357,7 +357,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		}
 		Collection<Integer> paginaSet;
 		if (paginaNrs.isEmpty()) 
-			paginaSet = java.util.Collections.singleton(paginaNr);
+			paginaSet = Collections.singleton(paginaNr);
 		else {
 			paginaSet = Util.parsePaginaNrs(paginaNrs);
 		}
@@ -414,8 +414,23 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 	}
 	
 	static class Util {
-		public static  Collection<Integer> parsePaginaNrs(String string) {
-			return Collections.emptySet();
+		static  Collection<Integer> parsePaginaNrs(String string) {
+			Collection<Integer> result = new TreeSet<>();
+			if (string.isEmpty()) return result;
+			String[] split = string.split(",");
+			for (String item : split) {
+				String[] bounds = item.split("-");
+				Integer from = Integer.valueOf(bounds[0].trim());
+				Integer to;
+				if (bounds.length == 1) {
+					to = from;
+				} else {
+					to = Integer.valueOf(bounds[1].trim());
+				}
+				for (int i = from; i <= to; i++) 
+					result.add(i);
+			}
+ 			return result;
 		}
 	}
 	Promise<String> doScore(Promise<String> p) {
