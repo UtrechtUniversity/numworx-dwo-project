@@ -172,10 +172,11 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 		for(int i=0 ; i<vakRegels.size() ; i++) {
 			 vakRegels.get(i).regelResize();
 		}
+		boolean knopAanwezig = settings.check() && !settings.checkDocent();
 		if(!settings.volledigeBreedte() && !settings.meerregelig())
 			breedte = regelManager.actieveRegel.getWidth()+8;//extraWidth; //checkPanel.getOffsetWidth() + extraWidth;// + (getImageVisible()?26:0);
-		hoogte = meetHoogteRegels() + 3+2*borderWidth;//+25;
-		vakPanel.setPixelSize((breedte-2*borderWidth) , (hoogte-2*borderWidth) );//-25
+		hoogte = meetHoogteRegels() + 3+2*borderWidth+(knopAanwezig ? 25 : 0);//+25;
+		vakPanel.setPixelSize((breedte-2*borderWidth) , (hoogte-2*borderWidth) - (knopAanwezig ? 25 : 0));//-25
 		mainPanel.setPixelSize((breedte-2*borderWidth) , (hoogte-2*borderWidth) );
 		if(parentRegel != null) {	
 			parentRegel.resize();
