@@ -25,7 +25,7 @@
 	<li>De auteursomgeving als <a href='https://www.numworx.nl/help/downloads/'>applicatie</a> downloaden</li>
     </ul>
     <div id='footer'>
-        <iframe src="/dwo/rest/public/status/version" height="34" width="150" >
+        <iframe src="/dwo/rest/public/status/version" height="34" width="450" >
     </div>
 
 </body>
