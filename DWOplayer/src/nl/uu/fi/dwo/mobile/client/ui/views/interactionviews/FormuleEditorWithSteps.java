@@ -3695,7 +3695,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 					contentPanel.remove(pijlVak);
 					pijlVakken.remove(pijlVakken.size() - 1);
 				}
-				setStapOk(false);
+				if(!linStrategieVersie)
+					setStapOk(false); //Is die setStapOk(false) uberhaupt wel nodig? Bij linStrategieVersie niet en is ie storend, dus even uitgezet.
 			}
 			//Er staat al een pijl naar de volgende regel en daar staat ook al een vak klaar. De pijl en het bijbehorende vak moeten worden veranderd.
 			//Dit gebeurt bijvoorbeeld als er een gewone pijl staat, die wordt veranderd in een bewerkingspijl (plus, bijvoorbeeld).
