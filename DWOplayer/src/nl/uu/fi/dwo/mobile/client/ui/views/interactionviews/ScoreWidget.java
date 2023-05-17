@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
@@ -37,6 +38,37 @@ import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 
 public class ScoreWidget extends Composite implements InteractionView, ClickHandler, TekstElementWithFont {
+
+	class GoedFoutBezochtMultiple implements Success<Map<String, String>, Map<String, String>> {
+
+		private String pfx;
+		private Collection<Integer> paginaSet;
+
+		public GoedFoutBezochtMultiple(String pfx, Collection<Integer> paginaSet) {
+			this.pfx = pfx;
+			this.paginaSet = paginaSet;
+		}
+
+		@Override
+		public Promise<Map<String, String>> call(Promise<Map<String, String>> resolved) throws Exception {
+			Map<String,String> value = resolved.getValue();
+			Object first = paginaSet.stream().limit(1).findAny().get();
+			String completed = value.get(pfx + first + COMPLETION_STATUS);
+// FIXME eliminate first!!!!
+			String bezocht   = value.getOrDefault(pfx + first + ENTRY, "");
+			String goedfout  = value.getOrDefault(pfx + first + SUCCESS_STATUS, "");
+			if ("completed".equals(completed)) {
+				if (cesuur == null)
+					goedfout(goedfout);
+				else
+					goedfout(value.get(pfx + first + SCORE_RAW));
+			} else {
+				bezocht(bezocht);
+			}
+			return null;
+		}
+
+	}
 
 	private static final String SCORE_RAW = ".score.raw";
 
@@ -354,6 +386,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			default: pfx0 += "null";
 			}
 			paginaNr = 0;
+			paginaNrs = "";
 		}
 		Collection<Integer> paginaSet;
 		if (paginaNrs.isEmpty()) 
@@ -407,12 +440,84 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 				result.then(this::doBezocht);
 			}
 		
-		}	
+		} else {
+			final String pfx00 = pfx0 + ".";
+			if (score) {
+				Collection<String> scores = paginaSet.stream().map(n -> pfx00  + n + SCORE_RAW).collect(Collectors.toSet());
+				keys.addAll(scores);
+				Promise<String> result = defer.getPromise().map(m -> addScores(m, scores));
+				result.then(this::doScore);
+			} else {
+				anchorSetText("");				
+			}
+			if (goedFout && bezocht) {
+				String item = cesuur == 0 ? SUCCESS_STATUS : SCORE_RAW;
+				Collection<String> scores = paginaSet.stream().map(n -> pfx00  + n + item).collect(Collectors.toSet());
+				scores.addAll( paginaSet.stream().map(n-> pfx00 + n + ENTRY).collect(Collectors.toSet()));
+				scores.addAll( paginaSet.stream().limit(1).map(n -> pfx00 + n + COMPLETION_STATUS).collect(Collectors.toList()));
+				keys.addAll(scores);
+				defer.getPromise().then(new GoedFoutBezochtMultiple(pfx00, paginaSet));
+				
+			} else
+			if (goedFout) {
+				Promise<String> result;
+				Collection<String> scores;
+				if (cesuur == null) {
+					scores = paginaSet.stream().map(n -> pfx00  + n + SUCCESS_STATUS).collect(Collectors.toSet());
+					result = defer.getPromise().map(m -> addGoedFout(m, scores));
+				} else {
+					scores = paginaSet.stream().map(n -> pfx00  + n + SCORE_RAW).collect(Collectors.toSet());
+					result = defer.getPromise().map(m -> addScores(m, scores));
+				}
+				keys.addAll(scores);
+				result.then(this::doGoedFout);			
+			} else
+			if (bezocht) {
+				Collection<String> scores = paginaSet.stream().map(n -> pfx00  + n + ENTRY).collect(Collectors.toSet());
+				keys.addAll(scores);
+				Promise<String> result = defer.getPromise().map(m -> addBezocht(m, scores));
+				result.then(this::doBezocht);
+			
+			}
+			
+		}
 		if (!keys.isEmpty()) {
 			defer.resolveWith(api.getValuesPromise(keys));
 		}
 	}
 	
+	private String addBezocht(Map<String, String> m, Collection<String> scores) {
+		for (String key: scores) {
+			String v = m.getOrDefault(key, "");
+			if (!"resume".equals(v)) return v;
+		}
+		return "resume";
+	}
+	
+	private String addGoedFout(Map<String, String> m, Collection<String> scores) {
+		int passed = 0;
+		int failed = 0;
+		for (String key: scores) {
+			String v = m.getOrDefault(key, "");
+			if ("passed".equals(v)) passed++;
+			if ("failed".equals(v)) failed++;
+		}
+		if (passed == scores.size()) return "passed";
+		if (failed == scores.size()) return "failed";
+		return "";
+	}
+
+	private String addScores(Map<String, String> m, Collection<String> scores) {
+		int s = 0;
+		for (String key: scores) {
+			String v = m.get(key);
+			try { 
+				s += Integer.parseInt(v);
+			} catch(Exception oops) {}
+		}
+		return Integer.toString(s);
+	}
+
 	static class Util {
 		static  Collection<Integer> parsePaginaNrs(String string) {
 			Collection<Integer> result = new TreeSet<>();
