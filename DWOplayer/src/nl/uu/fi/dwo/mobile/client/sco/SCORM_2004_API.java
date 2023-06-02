@@ -152,7 +152,7 @@ public class SCORM_2004_API implements Scorm2004IF {
 			}})
 	}-*/;
 	
-	@FunctionalInterface @JsFunction interface CallResolve {
+	@FunctionalInterface interface CallResolve {
 		void resolve(String value);
 	}
 	
@@ -161,7 +161,8 @@ public class SCORM_2004_API implements Scorm2004IF {
 	public Promise<String> getValuePromise(String name) {
 		if (hasGetValueAsync()) {
 			Deferred<String> d = new Deferred<>();
-			getValueAsync(name, d::resolve);
+			CallResolve callback = d::resolve;
+			getValueAsync(name, callback);
 			return d.getPromise();
 		}
 		return Scorm2004IF.super.getValuePromise(name);
