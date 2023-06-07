@@ -43,7 +43,7 @@ iframe {
 .textEditor_n .inlineEnter::after, 
 .textEditor_n span:first-child::before {
 	content: counter(line);
-	width: 1em;
+	width: 1.6em;
 	color: #808080;
 	display: inline-block;
 	padding-right: 0.3em;

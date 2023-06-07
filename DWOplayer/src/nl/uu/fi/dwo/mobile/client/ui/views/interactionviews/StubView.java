@@ -1071,5 +1071,10 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			comRoot.setVisited();
 		}
 	}
+
+	@Override
+	public void selectAll() {
+		// TODO Auto-generated method stub
+	}
 	
 }

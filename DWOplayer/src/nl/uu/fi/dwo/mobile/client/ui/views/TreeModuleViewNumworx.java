@@ -1,8 +1,10 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -600,6 +602,29 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 							}
 							return delegate.getValuePromise(name);
 						}
+						
+						
+						@Override
+						public Promise<Map<String, String>> getValuesPromise(Collection<String> names) {
+							if (delegate == null) {
+								Scorm2004IF get = parent.get();
+								if (get instanceof SCORM_DWO5) {
+									Promise<List<SelectModuleItem>> childrenAsync = 
+											item.getType() != Type.MODULE
+											? Promises.resolved(Collections.emptyList())
+											: getScosPromise(item);
+									return childrenAsync.then(p -> {									
+										int sconr = sconr(p.getValue());
+										delegate = get;
+										((SCORM_DWO5) delegate).setScoID(sconr); // voorkom NPE, server weet er van.
+										return delegate.getValuesPromise(names);
+									});
+								} else delegate = get;
+							}
+							return delegate.getValuesPromise(names);
+						}
+
+
 						int sconr(List<SelectModuleItem> item) {
 							try {
 								return Integer.parseInt(item.get(0).getID().toString());

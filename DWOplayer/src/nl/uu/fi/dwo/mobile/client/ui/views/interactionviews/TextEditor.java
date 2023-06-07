@@ -1791,6 +1791,11 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 					keyboard.softFocus();
 				}
 
+				@Override
+				public void selectAll() {
+					enter();
+					TextEditor.this.selectAll();
+				}
 				/* (non-Javadoc)
 				 * @see nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor#requestFocus()
 				 */
@@ -2148,6 +2153,16 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 				handle = null;
 				pasAanH();
 			}, flow.getElement());
+	}
+
+	@Override
+	public void selectAll() {
+		cursorToLeft();
+		while(cursor > 0) cursorToLeft1();
+	    int max = flow.getWidgetCount()-1;
+		do { cursorToRightShift();
+		} while(cursor < max); 
+		
 	}
 
 }
