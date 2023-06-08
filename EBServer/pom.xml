@@ -48,7 +48,7 @@
 		<dependency>
 			<groupId>fi.servlet</groupId>
 			<artifactId>DWOmAccess</artifactId>
-			<version>2.5.2</version>
+			<version>2.5.20-SNAPSHOT</version>
 			<classifier>classes</classifier>
 			<exclusions>
 				<exclusion>
@@ -166,7 +166,7 @@
 	<dependency>
 		<groupId>fi.servlet</groupId>
 		<artifactId>DWOmAccess</artifactId>
-		<version>${DWOmAccessVersion}</version>
+		<version>2.5.20-SNAPSHOT</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
@@ -691,9 +691,9 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<DWOmAccessVersion>2.5.2</DWOmAccessVersion>
+		<DWOmAccessVersion>2.5.20</DWOmAccessVersion>
 		<RegisterVersion>2.5.2</RegisterVersion>
-		<DWOGwtClientVersion>2.5.20-SNAPSHOT</DWOGwtClientVersion>
+		<DWOGwtClientVersion>2.5.20</DWOGwtClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testeb4server</aws.environmentName>
