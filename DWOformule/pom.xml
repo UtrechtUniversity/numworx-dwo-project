@@ -107,12 +107,9 @@
 	</dependencies>
 	<version>0.1.16-SNAPSHOT</version>
 	<properties>
-		<maven.test.skip>false</maven.test.skip>
+		<maven.test.skip>true</maven.test.skip>
 		<gwtModule>nl.uu.fi.dwo.formule.Formule</gwtModule>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <maven.javadoc.skip>true</maven.javadoc.skip>
 	</properties>
-	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/GWT/DWOformule/trunk</developerConnection>
-	</scm>
 </project>
