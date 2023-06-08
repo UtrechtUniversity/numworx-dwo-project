@@ -17,7 +17,7 @@
 		<app.name>Numworx-import</app.name>
 		<app.base>https://numworx.acc.uu.nl/dwo/</app.base>
 		<app.title>Numworx import </app.title>
-        <tomcat7.version>7.0.76</tomcat7.version>
+        <tomcat7.version>7.0.107</tomcat7.version>
 	</properties>
 	<dependencies>
 		<dependency>
