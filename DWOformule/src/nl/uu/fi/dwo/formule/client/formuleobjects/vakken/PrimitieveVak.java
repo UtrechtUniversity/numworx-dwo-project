@@ -1,0 +1,123 @@
+package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
+
+import org.vectomatic.dom.svg.OMSVGElement;
+import org.vectomatic.dom.svg.OMSVGGElement;
+import org.vectomatic.dom.svg.OMSVGTransform;
+
+import com.google.gwt.canvas.dom.client.Context2d;
+
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
+
+public class PrimitieveVak extends FormuleElementWithChildren
+{
+	public PrimitieveVak(FormuleElement holder){
+		
+		super(holder, 2);
+		getChild(1).insert("x");
+	}
+
+	@Override
+	public void paintComponent(Context2d ctx) {
+		super.paintComponent(ctx);
+		build(new CanvasBuilder(ctx));
+	}
+
+	protected void build(PathBuilder ctx) {
+		int asc = fm.getAscent();
+		
+		ctx.setStrokeStyle(color);
+		ctx.setFillStyle(color);
+		
+		int tx = 1;
+		int ty = 0;
+		int tb = 2*asc/3;
+		int th = getChild(0).height + tb;
+				
+		ctx.beginPath();
+		ctx.arc(tx + asc/2f, ty + asc/6f, asc/6f, 0, Math.PI, true);
+		ctx.lineTo(tx + asc/3f, ty + th - asc/6f);
+        ctx.arc(tx + asc/6f, ty + th - asc/6f, asc/6f, 0, Math.PI, false);
+		ctx.stroke();
+        boolean italic = fm.isItalic();
+		fm.setItalic(false);
+		ctx.setFont(fm);
+		ctx.fillText("d", tx+asc+getChild(0).width+asc/5-2,getAsHoogte());
+		fm.setItalic(italic);
+	}
+
+	public void paintObject()
+	{
+		this.getChild(0).paint();
+		this.getChild(1).paint();
+		zetMaat();
+		paintComponent(ctx);
+		
+		this.getChild(0).draw(ctx);
+		this.getChild(1).draw(ctx);
+		
+		this.drawCursor();
+	}
+
+	public void zetMaat()
+	{
+		//int asc = fm.getAscent();
+		int tx = 1;
+		int ty = 0;
+		int tb = 2*fm.getAscent()/3;
+		int th = getChild(0).height + tb;
+		
+		int k1x = tx+ fm.getAscent() -2;
+		int k1y = fm.getAscent()/3;
+		
+		setAsHoogte(k1y + getChild(0).getAsHoogte());
+		
+		int k2x = k1x+ getChild(0).width + tb - 2;
+		int k2y = getAsHoogte()- getChild(1).getAsHoogte();
+		
+		width = 1 + tx + getChild(0).width + fm.getAscent() + getChild(1).width + tb;
+		height = th+1;
+		
+		setSize(width,height);
+		setAsHoogte(k1y + getChild(0).getAsHoogte());
+		getChild(0).setPosition(k1x,k1y);
+		getChild(1).setPosition(k2x,k2y);
+		super.zetMaat();
+	}
+	
+	public int getAsHoogte()
+	{
+		return fm.getAscent()/3 + getChild(0).getAsHoogte();
+	}
+
+	public String toString()
+	{
+		return "$P" + getChild(0).toString() + "$n" + getChild(1).toString() + "@@"; 
+	}
+	public String toMathML() {
+		return "<mrow><mo>\u222b</mo>"+ getChild(0).toMathML() + "<mo>d<mo>" + getChild(1).toMathML() + "</mrow>";
+	}
+
+	@Override
+	protected void paintComponent(OMSVGElement svg) {
+		super.paintComponent(svg);
+		SvgBuilder builder = new SvgBuilder(svg, x, y);
+		build(builder);
+	}
+
+	@Override
+	public void draw(OMSVGElement svg) {
+		paintComponent(svg);
+		OMSVGGElement g = new OMSVGGElement();
+		svg.appendChild(g);
+		if(x != 0 || y != 0) {
+			OMSVGTransform transform = getSVGSVGElement(svg).createSVGTransform();
+			transform.setTranslate(x, y);
+			g.getTransform().getBaseVal().appendItem(transform);
+		}
+		getChild(0).draw(g);
+		getChild(1).draw(g);
+		drawCursor(svg);
+	}
+
+}

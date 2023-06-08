@@ -1,0 +1,69 @@
+.cellListWidget {
+
+}
+
+.navCellList {
+	margin-right: 18px;
+}
+.tileCellList {
+	
+}
+
+.cellListEvenItem {
+  display: inline-block;
+  cursor: pointer;
+  zoom: 1;
+}
+.navCellList .cellListSelectedItem,
+.navCellList  .cellListEvenItem:hover, 
+.navCellList  .cellListOddItem:hover {
+	color: white;
+	background-color: #A8ABB1;
+}
+
+.tileCellList  .cellListEvenItem:hover div div:first-child, 
+.tileCellList  .cellListOddItem:hover  div div:first-child {
+  background-color: #1B75BB;
+}
+
+.tileCellList .cellListSelectedItem div div:first-child+div,
+.tileCellList  .cellListEvenItem:hover div div:first-child+div, 
+.tileCellList  .cellListOddItem:hover  div div:first-child+div {
+  background-color: white;
+}
+
+.tileCellList  .cellListEvenItem:hover div, 
+.tileCellList  .cellListOddItem:hover  div {
+  border-bottom-color: #1B75BB;
+}
+
+
+.cellListOddItem {
+  display: inline-block;    
+  cursor: pointer;
+  zoom: 1;
+}
+
+
+.cellListKeyboardSelectedItem {
+	
+}
+.cellListKeyboardSelectedItem div {
+	background-color: inherit;
+	border-bottom-color: #1B75BB;
+}
+
+.cellListKeyboardSelectedItem div div:first-child {
+  background-color: #1B75BB;
+}
+
+.cellListSelectedItem {
+}
+
+.tileCellList .cellListSelectedItem div {
+	border-bottom-color: #1B75BB;	
+}
+
+.tileCellList .cellListSelectedItem div div:first-child {
+  background-color: #1B75BB;
+}

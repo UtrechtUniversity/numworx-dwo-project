@@ -1,0 +1,35 @@
+This is a maven project. Check the parent project for more info.
+
+Building: 
+
+mvn install
+
+Deploying to our maven repository: 
+
+mvn deploy
+
+Run the software against the default/production configuration 
+
+mvn exec:java 
+
+Run the software locally against a localhost:8080 server with debug enabled
+
+mvn -Pdev-localhost exec:exec
+
+Set a property dev if you don't want obfuscation, for example
+
+mvn -Ddev -Pdev-localhost exec:exec
+
+For code-signing set the following variables in the maven settings.xml file
+
+<profile>
+    <id>dwo-signing-vars</id>
+    <properties>
+        <dwoKeyStore>/path-to-keystore/my.keystore</dwoKeyStore>
+        <dwoCertKeyAlias>certname</dwoCertKeyAlias>
+        <dwoCertKeyStorePassword>mycertpw</dwoCertKeyStorePassword>
+        <dwoCertKeyPassword>mykeypw</dwoCertKeyPassword>
+    </properties>
+</profile>
+
+

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='notebookgwt'>
+
+  <inherits name='com.google.gwt.user.User' />
+  <inherits name="nl.uu.fi.dwo.interaction.Interaction" />
+  <inherits name="org.fusesource.restygwt.RestyGWT"/>
+  <inherits name='nl.numworx.notebook.common.Common' />
+  <inherits name="nl.uu.fi.dwo.mobile.promise.Promise" />
+  
+  <entry-point class='nl.numworx.notebookgwt.client.NotebookGWTDebug' />
+  <source path='' />
+</module>

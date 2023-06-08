@@ -1,0 +1,60 @@
+Before building and running you need to run:
+
+mvn gwt:i18n
+
+this updates nl.uu.fi.dwo.rest.local.Dwo2Exceptions.java for GWT-localization.
+
+RUN 
+
+run 'mvn tomcat7:run' to run the application and start a DWOServer in a tomcat7 container.
+
+run 'mvn tomcat7:run' to run the application and start a debugged DWOServer in a tomcat7 container.
+set the properties for debugging the tomcat and javascript readable cod while running :
+gwt.style=DETAILED
+jpda.listen=maven
+
+jpda.listen is pickupped by Netbeans. Eclipse may have other settings.
+
+to view the app in your browser, goto:
+
+http://localhost:8080/gwtclient/?test=on&profile=1
+
+CODE-SERVER IN SUPERDEV mode.
+
+run 'mvn gwt:run-codeserver' with properties:
+
+gwt.style=DETAILED
+gwt.compiler.generateJsInteropExports=true
+gwt.compiler.incremental=false
+gwt.compiler.precompile=false
+gwt.codeserver.generateJsInteropExports=true
+
+The above properties ensure that the proper methods are exposed to javascript.
+
+HTML5PLAIN
+
+In $projectdir/war there is a html5plain.html to run a javascript console ui.
+
+In the console run
+
+/** retrieve factories **/
+ff =  dwoAPI.DwoPresenterFactory.getDwoPresenterFactory().getFac();
+l = ff.getLoginPresenter();
+/** Login */
+l.loginClicked("gert_project","passw", false);
+m = ff.getMainPresenter();
+/** show the schoolclasses view **/
+m.selectView("SCHOOLCLASSES");
+/** show the account view **/
+m.selectView("ACCOUNT");
+/** show the switch school view **/
+m.selectView("SWITCHSCHOOL");
+/** show the welcome view **/
+m.selectView("WELCOME");
+/** show the results view **/
+m.selectView("RESULTS");
+
+
+
+
+

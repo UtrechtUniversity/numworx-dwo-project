@@ -1,0 +1,1034 @@
+// Source file: C:\\parameters\\fi\\dwo\\client\\gui\\CourseManagementPanel.java
+
+package fi.dwo.dwojapplet.gui;
+
+import fi.beans.numworxlf.Constants;
+import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JCheckBox;
+import fi.beans.numworxlf.JTextField;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DWO;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.gui.ScoManagementPanel.IconDialog;
+import fi.dwo.dwojapplet.gui.action.AccessControlAction;
+import fi.dwo.dwojapplet.gui.action.CourseUnTrashAction;
+import fi.dwo.dwojapplet.gui.action.DeleteAction;
+import fi.dwo.dwojapplet.gui.action.ImportModuleAction;
+import fi.dwo.dwojapplet.gui.action.ScoUnTrashAction;
+import fi.dwo.dwojapplet.gui.action.ShareCourseAction;
+import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
+import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminProfileManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
+import javax.swing.AbstractCellEditor;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.text.JTextComponent;
+import javax.swing.tree.DefaultTreeCellRenderer;
+
+/**
+ * This class is a panel containing a list of courses to edit, delete or add.
+ * It is used for course-management.
+ * @author M.J.B. Kupers
+ *
+ */
+public class CourseManagementPanel extends JPanel implements CenterSubPanel, ActionListener, CourseMap {
+     public static final byte[] IMAGEURL = new byte[0];
+
+
+    private static final Course STANDAARD_MODULE_PARENT = new Course();
+
+    private static final Logger LOG = Logger.getLogger(CourseManagementPanel.class.getName());
+
+
+	CourseManagementPanel(CourseMap map) {
+		this(map.getChildren(), map.getUserObject());
+		setMap(map);
+		addTrash();
+	}
+
+  void addTrash() {
+    if (DwoHelper.isPremium()) {
+          JButton trash = new JButton(new CourseUnTrashAction(this.map));
+          trash.setContentAreaFilled(false);
+          trash.setHorizontalAlignment(SwingConstants.RIGHT);
+          add(trash, BorderLayout.SOUTH);
+        }
+  }
+
+     CourseManagementPanel(CourseMap[] courses)
+     {
+    	 this(courses, (Object)ModuleTreePanel.SCHOOL_MODULES);
+     }
+
+	private CenterPanel center;
+
+
+    private JButton addCourseButton, uploadCourseButton, shareCourseButton, addMapButton;
+
+    private Image removeImage, editImage, scoImage;
+    
+    private CourseMap[] courses;
+
+    private JLabel noCoursesLabel;
+
+	private CourseMap  map = this;
+
+	private JTable jTable;
+
+
+	private JComponent tablePane;
+
+
+	private Image upImage;
+	private Image downImage;
+	boolean updown;
+
+
+	private Object userObject;
+
+
+	private JTextComponent area;
+	private WiskOpdrEditPanel wiskOpdrEditPanel;
+	
+	private JCheckBox editorCB, visibleCB;
+	private Box editorBox = Box.createVerticalBox();
+
+
+	private JButton courseLogoButton;
+
+	class CourseModelForTree extends AbstractTableModel {
+
+        @Override
+		public Class<?> getColumnClass(int col) {
+			if(col == 0)
+				return Boolean.class;
+			if(col >= 2)
+				return Image.class;
+			return super.getColumnClass(col);
+		}
+
+        @Override
+		public int getColumnCount() {
+			return 6; // icon, naam, info, up, down, X
+		}
+
+        @Override
+		public int getRowCount() {
+			return courses.length;
+		}
+
+        @Override
+		public boolean isCellEditable(int row, int col) {
+			if(col == 3) // up
+				return row != 0;
+			if(col == 4) // down
+				return row != getRowCount()-1;
+			if(col >= 2)
+				return true;
+			return super.isCellEditable(row, col);
+		}
+
+        @Override
+		public Object getValueAt(int row, int col) {
+			Course course = (Course) courses[row];
+			switch(col) {
+			case 1: return course.getName();
+			case 2: return editImage;
+			case 3: if(row == 0) return null;
+					return upImage;
+			case 4: if(row == getRowCount()-1) return null;
+					return downImage;
+			case 5: return removeImage;
+			
+			case 0: return course.isWithChildren();
+			}
+			return null;
+		}
+		
+	}
+	
+	
+	
+	class CourseModel extends AbstractTableModel {
+
+        @Override
+		public Class<?> getColumnClass(int col) {
+			if(col >= 1)
+				return Image.class;
+			return super.getColumnClass(col);
+		}
+
+        @Override
+		public boolean isCellEditable(int row, int col) {
+			if(col == 3) // up
+				return row != 0 || !DWO.SEQUENCE;
+			if(col == 4) // down
+				return row != getRowCount()-1;
+			if(col >= 1)
+				return true;
+			return super.isCellEditable(row, col);
+		}
+
+        @Override
+		public int getColumnCount() {
+			return DWO.SEQUENCE?6:4;
+		}
+
+        @Override
+		public int getRowCount() {
+			return courses.length;
+		}
+
+        @Override
+		public Object getValueAt(int row, int col) {
+			switch(col) {
+			case 0:
+				return courses[row].toString();
+			case 1:
+				return scoImage;
+			case 2:
+				return editImage;
+			case 3: 
+				if(DWO.SEQUENCE)
+				{   if(row != 0)
+						return upImage;
+					break;
+				}
+			case 5:
+				return removeImage;
+			case 4: 
+				if(row != getRowCount()-1)
+					return downImage;
+			}
+			return null;
+		}
+		
+	}
+	
+	public class BooleanRenderer extends DefaultTreeCellRenderer implements TableCellRenderer {
+
+		
+		
+		private Dimension preferredSize;
+
+                @Override
+		public Component getTableCellRendererComponent(JTable table,
+				Object value, boolean isSelected, boolean hasFocus, int row,
+				int column) {
+			if(Boolean.TRUE.equals(value))
+				setIcon(getOpenIcon());
+			else
+				setIcon(getLeafIcon());
+			return this;
+		}
+
+		public BooleanRenderer() {
+			super();
+			Image book = DwoHelper.getResourceImage("resources/book.png");
+			setLeafIcon(new ImageIcon(book));
+            ImageIcon folder = new ImageIcon(DwoHelper.getResourceImage("resources/folder.png"));
+            setOpenIcon(folder);
+			setIcon(getLeafIcon());
+			Dimension leaf = getPreferredSize();
+			setIcon(getOpenIcon());
+			Dimension open = getPreferredSize();
+			setOpaque(true);
+			int w = Math.max(leaf.width, open.width);
+			int h = Math.max(leaf.height, open.height);
+			preferredSize = new Dimension(w,h);
+			setPreferredSize(preferredSize);
+		}
+		
+	}
+	
+	public class ImageRenderer extends JLabel implements TableCellRenderer {
+
+		private ImageIcon icon = new ImageIcon();
+
+                @Override
+		public Component getTableCellRendererComponent(JTable table,
+				Object value, boolean selected, boolean hasFocus, int row, int col) {
+			Image image = (Image)value;
+			if(image != null) {
+				icon.setImage(image);
+				setIcon(icon);
+			} else {
+				setIcon(null);
+			}
+			setHorizontalAlignment(SwingConstants.CENTER);
+			setOpaque(true);
+			Object[] arguments = new Object[]  { courses[row].toString() };
+			switch(col) {
+			case 1:	String s = TextMapper.getText(TextMapper.GUIC_TLTP_SCO_COURSE);
+	    			setToolTipText(MessageFormat.format(s, arguments));
+	    			break;
+			case 2: 
+				// TODO isWithChildren?
+				setToolTipText(TextMapper.getText(TextMapper.GUIC_TLTP_EDIT_COURSE));
+				break;
+			case 3: if(DWO.SEQUENCE)
+				{
+					setToolTipText(null);
+					break;
+				}
+			case 5: String format = TextMapper.getText(TextMapper.GUIC_TLTP_DELETE_COURSE);
+					setToolTipText(MessageFormat.format(format, arguments));
+				break;
+			default:
+				//setToolTipText("Message " + col); // TODO ....
+				setToolTipText(null);
+			}
+			if(selected)
+			{
+				setBackground(table.getSelectionBackground());
+			} else {
+				setBackground(table.getBackground());
+			}
+			return this;
+		}
+
+	}
+
+    public class ImageButtonEditor extends AbstractCellEditor implements
+	TableCellEditor, ActionListener {
+
+    	Object value;
+    	AbstractTableModel model;
+    	int row;
+
+            @Override
+    	public Component getTableCellEditorComponent(JTable table, Object value,
+    			boolean arg2, int row, int col) {
+    		this.value = value;
+    		JButton button = new JButton(new ImageIcon((Image)value));
+    		button.addActionListener(this);
+    		this.row = row;
+    		model = (AbstractTableModel) table.getModel();
+    		return button;
+    	}
+
+            @Override
+    	public Object getCellEditorValue() {
+    		return value;
+    	}
+
+            @Override
+    	public void actionPerformed(ActionEvent event) {
+    		if(value == editImage)
+    		{
+                Course c = (Course) courses[row];
+                if (CourseNameDialog.editCourse(c)) {
+                    model.fireTableCellUpdated(row,0);
+                }
+ 
+    		} else if (value == removeImage)
+    		{
+                /* Delete the course */
+                Course c = (Course) courses[row];
+                if(DeleteAction.deleteCourse(c)) {
+            		map.removeChild(row);
+                    setChildren(map.getChildren());
+                    model.fireTableRowsDeleted(row,row);
+                    noUpdate();  
+                }
+                if(courses.length == 0) {
+                    noCoursesLabel.setVisible(true);
+                } else {
+                    noCoursesLabel.setVisible(false);            
+                }
+    		
+    		} else if (value == scoImage) {
+                /* Show the scos of the course */
+                Course c = (Course) courses[row];
+                if(!c.isWithChildren())
+                	center.loadCenter(GuiCreator.instance().getScoManagementPanel(c));
+                else 
+                	center.loadCenter(GuiCreator.instance().getCourseManagementPanel(c));
+
+    		} else if (value == upImage) {
+    			CourseMap s2 = courses[row-1];
+    			CourseMap s  = courses[row];
+    			courses[row] = s2;
+    			courses[row-1] = s;
+    			map.setChildren(courses);
+    			model.fireTableRowsUpdated(row-1, row);
+    			updown = true;
+    			noUpdate();
+    		} else if (value == downImage) {
+    			CourseMap s2 = courses[row+1];
+    			CourseMap s  = courses[row];
+    			courses[row] = s2;
+    			courses[row+1] = s;
+    			map.setChildren(courses);
+    			model.fireTableRowsUpdated(row, row+1);
+    			updown = true;
+    			noUpdate();
+    		}
+    		fireEditingStopped();
+    	}
+
+
+}
+	
+    JTextField titleField;
+    public CourseManagementPanel(ProfileDescriptor profile ) {
+        this(Course.NO_CHILDREN, profile);
+        map = profile;
+        titleField = new JTextField(profile.getHeader());
+        titleField.setAlignmentX(0.0f);
+        editorBox.add(titleField);
+        editorCB = new JCheckBox("Editor");
+        editorCB.setAlignmentX(0.0F);
+        editorCB.addActionListener(this);
+        editorBox.add(editorCB);
+        if(profile.getText().startsWith("H4sIAAAAAA") || profile.getText().isEmpty())
+        {   editorCB.setSelected(true); editorCB.setVisible(false);
+            wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(profile.getText());
+            wiskOpdrEditPanel.setPreferredSize(new Dimension(800,350));
+            wiskOpdrEditPanel.setAlignmentX(0.0F);
+            editorBox.add(wiskOpdrEditPanel);
+        }
+        else
+        {   JTextArea textarea;
+            area = textarea = new JTextArea();
+            textarea.setLineWrap(true);
+            area.setText(profile.getText());
+            area.setPreferredSize(new Dimension(800,350));
+            area.setBorder(BorderFactory.createLineBorder(fi.beans.numworxlf.Constants.COLOR13));
+            area.setAlignmentX(0.0F);
+            editorBox.add(area);
+        }
+        removeAll();
+        add(panel, BorderLayout.CENTER);     
+        panel.add(editorBox, BorderLayout.NORTH);
+        noCoursesLabel.setVisible(false);
+   }
+    
+    
+    
+    
+    
+    
+    
+	/**
+     * @param courses
+     * @param userObject
+     */
+    public CourseManagementPanel(CourseMap[] courses, Object userObject) {
+        super(new BorderLayout(10,10));
+        this.userObject = userObject;
+       // System.out.println(java.util.Locale.getDefault());
+        upImage = DwoHelper.getResourceImage(GuiConstants.UP_SCO_IMAGE);
+        downImage = DwoHelper.getResourceImage(GuiConstants.DOWN_SCO_IMAGE);
+       this.courses = courses;
+        this.setBackground(getSubHeaderColor());
+        panel = new JPanel(new BorderLayout(5,5));
+        panel.setOpaque(false);
+        add(panel, BorderLayout.CENTER);
+        //this.setSize(620, 485);
+        //this.setSize(600, 470);
+        //this.setPreferredSize(getSize());
+        tablePane = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        tablePane.setOpaque(false);
+        panel.add(tablePane, BorderLayout.CENTER);
+        if(userObject instanceof Course)
+        {	
+        	editorCB = new JCheckBox("Editor");
+            editorCB.addActionListener(this);
+            Course course = (Course) userObject;
+            visibleCB = new JCheckBox("Map verbergen");
+            visibleCB.setSelected(course.isNotVisible());
+            
+            if ((course.getSchoolID() == 0|| DwoHelper.isTest()) && DwoHelper.isPremium()) editorBox.add(visibleCB);
+            editorBox.add(editorCB);
+            
+            
+            if(course.getText().startsWith("H4sIAAAAAA") || course.getText().isEmpty())
+            {	editorCB.setSelected(true); editorCB.setVisible(false);
+            	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getText());
+            	wiskOpdrEditPanel.setPreferredSize(new Dimension(800,350));
+            	editorBox.add(wiskOpdrEditPanel);
+            }
+            else
+            {	area = new JTextArea();
+	            area.setText(course.getText());
+	            area.setBorder(BorderFactory.createLineBorder(fi.beans.numworxlf.Constants.COLOR13));
+            	editorBox.add(area);
+            }
+            panel.add(editorBox, BorderLayout.NORTH);
+        	Image logo = course.getCourseLogo();
+            courseLogoButton = new JButton(new ReducedImageIcon(logo));
+            courseLogoButton.setBorderPainted(false);
+    // TODO Mac?
+            courseLogoButton.setBorder(BorderFactory.createLineBorder(getForeground()));
+            courseLogoButton.setContentAreaFilled(false);
+            if (DwoHelper.isSecure()) {
+                courseLogoButton.addActionListener(this);
+                courseLogoButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                courseLogoButton.setBorderPainted(true);
+            }
+            courseLogoButton.setSize(courseLogoButton.getPreferredSize());
+            Box hulp = Box.createVerticalBox();
+            hulp.add(courseLogoButton);
+            panel.add(hulp, BorderLayout.EAST);
+        	
+        	
+        	
+
+        	
+        	
+        	
+            /*
+        	area = new JTextArea();
+        	area.setText(((Course) userObject).getText());
+        	area.setBorder(BorderFactory.createLineBorder(Color.black));
+        	panel.add(area, BorderLayout.NORTH);
+        	
+        	
+        	JPanel p = new JPanel();
+        	p.setOpaque(false);
+        	p.setLayout(null);
+        	p.setPreferredSize(new Dimension(700,300));
+        	
+        	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(((Course) userObject).getText());
+        	wiskOpdrEditPanel.setPreferredSize(new Dimension(700,300));
+        	p.add(wiskOpdrEditPanel);
+        	panel.add(p, BorderLayout.NORTH);
+        	*/
+       }
+        
+        
+        setBorder(BorderFactory.createEmptyBorder(10,30,5,10));
+        Box header = Box.createHorizontalBox();
+        add(header, BorderLayout.NORTH);
+        /* Add Remove-class image */
+        
+        removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_COURSE_IMAGE);
+        editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_COURSE_IMAGE);
+        scoImage = DwoHelper.getResourceImage(GuiConstants.SCO_COURSE_IMAGE);
+        
+
+        addCourseButton = new JButton(TextMapper.getText(TextMapper.GUIC_ADD_COURSE));
+        //addCourseButton.setSize(addCourseButton.getPreferredSize());
+        addCourseButton.addActionListener(this);
+        //addCourseButton.setLocation(30, 10);
+        header.add(addCourseButton);
+        
+        if(CenterPanel.isIconizer())
+        {
+        	addMapButton = new JButton(TextMapper.getText(TextMapper.GUIC_ADD_MAP));
+        	addMapButton.addActionListener(this);
+        	header.add(Box.createHorizontalStrut(4));
+        	header.add(addMapButton);
+        }
+
+        header.add(new Box.Filler(new Dimension(4,0), new Dimension(4,0), new Dimension(Short.MAX_VALUE,0)));
+        
+        shareAction = new ShareCourseAction(this);
+        shareCourseButton = new JButton(shareAction);
+        header.add(shareCourseButton);
+        
+        if(DwoHelper.isSecure()){
+        	header.add(Box.createHorizontalStrut(10));
+        
+        
+	        importAction = new ImportModuleAction(this);
+			uploadCourseButton = new JButton(importAction); // TODO TextMapper
+	        //uploadCourseButton.setSize(uploadCourseButton.getPreferredSize());
+	        uploadCourseButton.addActionListener(this);
+	        //uploadCourseButton.setLocation(200+addCourseButton.getWidth()+10, 10);
+	        uploadCourseButton.setVisible(false);
+	        header.add(uploadCourseButton);
+	        if(DwoHelper.isSecure()) 
+	        	uploadCourseButton.setVisible(true);
+        }
+        if ( (DwoHelper.isTest()||DwoHelper.isSamlLogin()) && DwoHelper.isPremium()) {
+          accessAction = new AccessControlAction(this);
+          if (accessAction.isEnabled()) {
+            header.add(Box.createHorizontalStrut(10));
+            header.add(new JButton(accessAction));
+          }
+        }
+        if(!DWO.SEQUENCE)
+        	Arrays.sort(courses);
+
+        
+        noCoursesLabel = new JLabel(TextMapper.getText(TextMapper.GUIC_NO_COURSES));
+        noCoursesLabel.setFont(GuiConstants.SCO_TEXT);
+        noCoursesLabel.setSize(noCoursesLabel.getPreferredSize());
+        noCoursesLabel.setLocation((this.getSize().width/2) - (noCoursesLabel.getSize().width/2), 100);
+        //this.add(noCoursesLabel);
+        buildJTable();
+
+    }
+
+ 
+    private void buildJTable() {
+    	if(jTable != null)
+    		tablePane.remove(jTable);
+        if(courses.length == 0) {
+            noCoursesLabel.setVisible(true);
+            tablePane.add(noCoursesLabel);
+            return;
+        } else {
+            noCoursesLabel.setVisible(false);
+            tablePane.remove(noCoursesLabel);
+        }
+
+    	AbstractTableModel tm = new CourseModel();
+    	if(CenterPanel.isIconizer())
+    		tm = new CourseModelForTree();
+    	jTable = new JTable(tm);
+    	jTable.setTableHeader(null);
+    	//jScrollPane = new JScrollPane(jTable);
+    	TableUtil.setDefaults(jTable, false, new ImageRenderer(), new ImageButtonEditor());
+    	if(CenterPanel.isIconizer())
+    		jTable.setDefaultRenderer(Boolean.class, new BooleanRenderer());
+    	TableUtil.setJTableSizes(jTable);
+       	//TableUtil.setBorder(jScrollPane);
+       	TableUtil.setBorder(jTable);
+       	//jTable.setLocation(30, addCourseButton.getSize().height
+        //        + addCourseButton.getLocation().y + 15);
+       	//TableUtil.shrinkToFit(jTable, jScrollPane, 520, 405);
+        jTable.setSize(jTable.getPreferredSize());
+        tablePane.add(jTable);
+        tablePane.invalidate();
+        jTable.setBackground(getSubHeaderColor());
+        jTable.setGridColor(getSubHeaderColor());
+        jTable.setBorder(BorderFactory.createEmptyBorder());
+        validate();
+        repaint();
+    }
+    
+    
+
+    /**
+     * Sets the centerpanel to communicate with.
+     * 
+     * @param centerPanel The centerPanel to communicate with.
+     */
+     @Override
+    public void setCenterPanel(CenterPanel centerPanel) {
+        center = centerPanel;
+    }
+
+    /**
+     * Returns a Panel that can function as a header panel.
+     * 
+     * @return A panel that can function as a header panel.
+     * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
+     */
+    
+     @Override
+    public JComponent getHeaderPanel() {
+    	HeaderPanel hp = new HeaderPanel(map.toString());
+    	hp.setBackground(Constants.COLOR20);
+    	stopBtn = new JButton(TextMapper.getText(TextMapper.GUIH_STOP_EDIT));
+    	stopBtn.setActionCommand("stop");
+    	stopBtn.addActionListener(this);
+    	stopBtn.setBackground(Constants.COLOR30);
+        stopBtn.setForeground(Constants.COLOR15);
+    	hp.setButtonBox(GuiCreator.instance().fx(userObject, stopBtn));
+		return hp;
+    }
+
+    /**
+     * Invoked when an action occurs.
+     * 
+     * @param e The ActionEvent.
+     */
+     @Override
+    public void actionPerformed(ActionEvent e) {
+    	Object src = e.getSource();
+            
+    	if(src == editorCB)
+    	{	if(editorCB.isSelected())
+    		{	if(wiskOpdrEditPanel==null)
+    			{	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel("");
+            		wiskOpdrEditPanel.setPreferredSize(new Dimension(800,350));
+            		editorBox.add(wiskOpdrEditPanel);
+    			}
+    		    //editorCB.setVisible(false);
+    			wiskOpdrEditPanel.setVisible(true);
+    			area.setVisible(false);
+    		}
+    		else if(wiskOpdrEditPanel!=null)
+    		{	if(area==null)
+				{	area = new JTextArea();
+					area.setText("");
+					area.setBorder(BorderFactory.createLineBorder(fi.beans.numworxlf.Constants.COLOR13));
+		        	editorBox.add(area);
+				}
+    			wiskOpdrEditPanel.setVisible(false);
+    			area.setVisible(true);
+    		}
+    	}
+    	
+    	if(src == stopBtn)
+    	{
+    		end();
+    		center.select(map.getUserObject());
+    	}
+    	if(src == addMapButton)
+    	{
+    		Course c = CourseNameDialog.addMap(this, getParentCourse());
+    		if(c != null)
+    		{	
+    			addChildToMap(c);                
+    		}
+    	} else
+        if(src == addCourseButton) {
+        	Course c = CourseNameDialog.addCourse(this, TextMapper.getText(TextMapper.GUICDLG_TTL_ADD_COURSE), getParentCourse(), false);
+        	if(c != null) {
+                addChildToMap(c);            
+            }
+        } else if(src == uploadCourseButton) {
+//        	try {
+//				upload();
+//			} catch (Exception e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+        } 
+           
+    	if( src == courseLogoButton) {
+    		try {
+				importCourseLogo((Course) userObject);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    	}
+    }
+
+
+	private Course getParentCourse() {
+		if(map.getUserObject() == ModuleTreePanel.STANDAARD_DWO_MODULES)
+			return STANDAARD_MODULE_PARENT;
+		if(map.getUserObject() instanceof Course)
+			return (Course) map.getUserObject();
+		return null;
+	}
+
+
+	private void addChildToMap(Course c) {
+		map.addChild(c);
+		courses = map.getChildren();
+		if(!DWO.SEQUENCE)
+		{	Arrays.sort(courses);
+			map.setChildren(courses);
+		} else
+			updown = true; // sequencing needs an update
+		buildJTable();
+		noUpdate();
+	}
+
+
+	/**
+	 * @param title
+	 * @param names
+	 * @return
+	 */
+	public static String replaceDuplicate(String title, Set names) {
+		boolean again;
+		do {
+			again = names.contains(title);
+			if(again)
+			{
+				int i = title.lastIndexOf(';')+1;
+				if(i>0)
+				{
+					try {
+						int m = Integer.parseInt(title.substring(i)) + 1;
+						title = title.substring(0,i) + m;
+					} catch (NumberFormatException e) {
+						title += ";1";
+					}
+				} else {
+					title += ";1";
+				}
+			}
+		} while(again);
+		return title;
+	}
+
+	/**
+     * Returns the current object, as the object to add to a gui.
+     * 
+     * @return the current object.
+     * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
+     */
+     @Override
+    public JComponent getComponent() {
+        return this;
+    }
+
+    /* (non-Javadoc)
+     * @see fi.dwo.client.gui.CenterSubPanel#end()
+     */
+     @Override
+    public void end() {
+		center.setStrategy(null);
+		center.getMenu().setEditing(false);
+
+        if(updown && DWO.SEQUENCE)
+        {    	
+        	updown = false;
+        	GuiCreator.instance().setCourseSequence(userObject, courses);
+        } 
+        else if(userObject instanceof Course)
+        {	Course course = (Course) userObject;
+        	if(editorCB.isSelected() &&  !wiskOpdrEditPanel.getText().equals(course.getText()))
+            {	course.setDescription(wiskOpdrEditPanel.getText());
+    	    	update = true;
+    	    }
+        	else if(!editorCB.isSelected() && area!=null && !area.getText().equals(course.getText()))
+            {	course.setDescription(area.getText());
+            	update = true;
+            }
+            if(course.isNotVisible() != visibleCB.isSelected())
+            {
+                update = true;
+                course.setNotVisible(visibleCB.isSelected());
+            }
+        	if (update) {
+        		GuiCreator.instance().updateCourse(course);
+        		update = false;
+        	}
+        } else if (userObject instanceof ProfileDescriptor) {
+          ProfileDescriptor profile = (ProfileDescriptor) userObject;
+          if(editorCB.isSelected() &&  !wiskOpdrEditPanel.getText().equals(profile.getText()))
+          {   profile.setDescription(wiskOpdrEditPanel.getText());
+              update = true;
+          }
+          else if(!editorCB.isSelected() && area!=null && !area.getText().equals(profile.getText()))
+          {   profile.setDescription(area.getText());
+              update = true;
+          }
+          if (!titleField.getText().equals(profile.getHeader())) {
+            profile.setHeader(titleField.getText());
+            update = true;
+          }
+          if (update) {
+            DomDwoProfileFull sc = DWO.getDwoProfile();
+            try {
+              if (SecureDwoAdminProfileManager.updateProfile(sc));
+              update = false;
+          } catch (Dwo2Exception e) {
+              LOG.log(Level.SEVERE, "edit profile", e);
+              GuiCreator.instance().ShowErrorDialog(this, e);
+          }
+
+          }
+         
+        }
+    }
+
+    private void setCourseSequence(Object parent, CourseMap[] c) {
+    }
+
+
+     @Override
+	public Object getUserObject() {
+		return (map == this) ? userObject : map.getUserObject();
+	}
+
+
+	public void addChild(Course c) {
+        Course[] ac = new Course[courses.length + 1];
+        System.arraycopy(courses, 0, ac, 0, courses.length);
+        ac[ac.length - 1] = c;
+        courses = ac;
+		if(!DWO.SEQUENCE)
+		{	Arrays.sort(courses);
+		}
+
+	}
+
+
+	public CourseMap[] getChildren() {
+		return courses;
+	}
+
+
+	public void setChildren(CourseMap[] courses) {
+		this.courses = courses;
+	}
+
+
+	public void removeChild(int row) {
+		Course[] ac = new Course[courses.length - 1];
+		System.arraycopy(courses, 0, ac, 0, row);
+		System.arraycopy(courses, row+1, ac, row, ac.length-row);
+		courses = ac;
+	}
+
+	boolean ok = true;
+
+
+	private JButton stopBtn;
+
+
+	private ImportModuleAction importAction;
+	private ShareCourseAction  shareAction;
+	private AccessControlAction accessAction;
+
+	private IconDialog iconDial;
+
+
+	private boolean update;
+
+
+  private JPanel panel;
+	private void noUpdate() {
+		ok = false;
+		center.updateMap(map);
+		ok = true;
+	}
+	
+     @Override
+	public void stateChanged(ChangeEvent e) {
+		if(ok && e.getSource() == getUserObject())
+		{
+			//System.out.println("UPDATE " + e);
+			courses = map.getChildren();
+			buildJTable();
+		} else
+		if(ok && e.getSource() instanceof CourseMap && ((CourseMap) e.getSource()).getUserObject() == getUserObject())
+		{
+			//System.out.println("UPDATE " + e);
+			courses = ((CourseMap) e.getSource()).getChildren();
+			buildJTable();
+		}
+
+	}
+
+	public Set getChildNames() {
+		HashSet names = new HashSet();
+		for (int i = 0; i < courses.length; i++) {
+			names.add(courses[i].toString());			
+		}
+		return names;
+	}
+
+	public CourseMap getParentMap() {
+		return map.getParentMap();
+	}
+
+	public CourseMap getMap() {
+		return map;
+	}
+
+	public void setMap(CourseMap map) {
+		this.map = map;
+		if(importAction!=null)importAction.setCourse(map);
+		if(shareAction != null) shareAction.setMap(map);
+		if(accessAction != null) accessAction.setMap(map);
+	}
+
+// KOPIE van ScoManagement
+    private void importCourseLogo(Course course) throws IOException {
+        String naam; // FIXME
+        if (iconDial == null) iconDial = new IconDialog();
+        iconDial.setDialogTitle(TextMapper.format(TextMapper.GUIS_LOAD_LOGO, new Object[]{course.toString()}));
+        int r = iconDial.showOpenDialog(this);
+        File file = iconDial.getSelectedFile();
+		naam = (r == iconDial.CANCEL_OPTION || file == null) ? null : file.getName();
+        if(naam == null && r == iconDial.APPROVE_OPTION) {
+        	naam = iconDial.url.getText();
+        	course.setImageUrl(naam);
+        	course.setImageData(IMAGEURL);
+        	update = true;
+        	return;
+        }
+        
+        
+        if (naam != null) {
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            BufferedImage img = ImageIO.read(file);
+            Image reduced;
+            int w = img.getWidth();
+			int h = img.getHeight();
+			if (w <= 252 && h <= 160) {
+                reduced = img;
+            } else {
+            	float scalex = w/252f;
+            	float scaley = h/160f;
+            	float scale = Math.max(scalex, scaley);
+            	w = Math.round(w/scale);
+            	h = Math.round(h/scale);
+                reduced = img.getScaledInstance(w, h, Image.SCALE_SMOOTH);
+            }
+            if (reduced instanceof BufferedImage) {
+                img = (BufferedImage) reduced;
+            } else {
+                img = new BufferedImage(Math.min(252, w), Math.min(160, h), BufferedImage.TYPE_INT_ARGB);
+                img.createGraphics().drawImage(reduced, 0, 0, null);
+            }
+            ImageIO.write(img, "png", output);
+            output.close();
+            byte[] data = output.toByteArray();
+            reduced = Toolkit.getDefaultToolkit().createImage(data);
+            course.setImageData(data);
+            course.setCourseLogo(reduced);
+            courseLogoButton.setIcon(new ReducedImageIcon(reduced));
+// TODO omzetten in PersistenceFacade!
+//            try {
+//                PersistenceFacade.instance().setLogo(course.getID(), data);
+//            } catch (Exception e) {
+//                LOG.log(Level.SEVERE,null,e);
+//            }
+            course.setImageData(data);
+            course.setImageUrl("");
+            update = true;
+        }
+        
+        
+        
+    }
+
+    @Override
+    public Color getSubHeaderColor() {
+      return Constants.COLOR20;
+    }
+
+	
+}

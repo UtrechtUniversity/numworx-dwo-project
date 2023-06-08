@@ -1,0 +1,1427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ClassDiagram name="Reverse engineered main.java.fi.dwo.server.persistence 2015.03.02 09-38-30-037">
+  <ClassDiagramComponents>
+    <Class xPosition="20.0" yPosition="20.0" package="fi.dwo.server.persistence" name="DataSourceAccess" visibility="public">
+      <Constructors>
+        <Constructor name="DataSourceAccess" visibility="public">
+          <Argument type="DataSource" name="ds"/>
+        </Constructor>
+      </Constructors>
+      <Fields>
+        <Field name="c" visibility="private" type="Connection"/>
+        <Field name="ds" visibility="private" type="DataSource"/>
+      </Fields>
+      <Methods>
+        <Method name="close" visibility="public" returnType="void"/>
+        <Method name="getConnection" visibility="public" returnType="Connection"/>
+        <Method name="setDs" visibility="public" returnType="void">
+          <Argument type="DataSource" name="ds"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class xPosition="320.0" yPosition="20.0" package="fi.dwo.server.persistence" name="DbAccess" visibility="public">
+      <Constructors>
+        <Constructor name="DbAccess" visibility="protected">
+          <Argument type="boolean" name="check"/>
+        </Constructor>
+        <Constructor name="DbAccess" visibility="public"/>
+      </Constructors>
+      <Fields>
+        <Field name="log" visibility="private" type="Logger" isStatic="true" isFinal="true"/>
+        <Field name="PROFILEOFFSET" visibility="private" type="int" isStatic="true" isFinal="true"/>
+        <Field name="QRY_DEFAULT_SELECT_ID" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_DEFAULT_SELECT_TABLE" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_DEFAULT_SELECT_TABLE_ORDER" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_DEFAULT_SELECT_TABLE_WHERE" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_SELECT_COURSES" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_SELECT_COURSES_GUEST" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_SELECT_COURSES_PROFILE_GUEST" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_SELECT_COURSES_CLASS" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_SELECT_COURSES_CLASS_NOMAP" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_INSERT_CLASS_COURSE" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_INSERT_CLASS_COURSE2" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_DELETE_CLASS_COURSE" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_DELETE_SCO_BY_ID" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_SELECT_COURSES_EDITABLE_ADMIN" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_SELECT_COURSES_EDITABLE" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_GET_STUDENT_SCO" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_ADD_EMPTY_STUDENT_SCO_CONTEXT" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_ADD_EMPTY_STUDENT_SCO_DATA" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_UPDATE_STUDENT_SCO" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_WHERE_COLUMN" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_CHECK_USERNAME_EXISTS" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_CHECK_SCHOOLLOGIN_EXISTS" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_CHECK_SCHOOLGROUP_EXISTS" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_INSERT_USER" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_INSERT_SCHOOLGROUP" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_CHECK_SCHOOLGROUP" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_INSERT_USER_SCHOOL" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_LOGIN" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_LOGIN_NO_PASSWD" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_GET_USER_DATA" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_ADD_TO_SCHOOL" visibility="protected" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_SELECT_SCHOOL_USER" visibility="protected" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_PASSWORD_CORRECT" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_UPDATE_USER_CLASS" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_UPDATE_USER" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_UPDATE_USER_LAST_LOGIN" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_UPDATE_USER_NO_PWD" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_ADD_CLASS" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_ADD_SCHOOLID" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_SELECT_SCHOOL_FROM_SCHOOLLOGIN" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_DELETE_DEFAULT" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_DELETE_STUDENTS_FROM_CLASS" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_DELETE_STUDENTSCO_BY_STUDENT" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_DELETE_STUDENTSCO_BY_SCO" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_SELECT_SCHOOL_FROM_USER" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_SELECT_SCHOOL_CLASS" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_DISCONNECT_USER_CLASS" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_RESULTS_ALL" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_RESULTS_SINGLE" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_RESULTS_CLASS" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_RESULTS_CLASS_COURSE" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_RESULTS_STUDENT_COURSE" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_RESULTS_SINGLE_STUDENT_COURSE" visibility="private" type="String" isStatic="true"/>
+        <Field name="QRY_RESULTS_COURSE" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_UPDATE_CLASS_NAME" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_UPDATE_CLASS_NAME2" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_UPDATE_CLASS_USER" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_UPDATE_SCHOOL" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_UPDATE_SCHOOL2" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_UPDATE_SCHOOL3" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_UPDATE_SCHOOLGROUP_PASSW" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_JAR_INSERT_KEY" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_JAR_UPDATE_KEY" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_JAR_SELECT_KEY" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_JAR_COUNT_JARS" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_ADD_COURSE" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_ADD_COURSE_BASIC" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_UPDATE_COURSE" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_UPDATE_COURSE2" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_UPDATE_COURSE3" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_UPDATE_COURSE4" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_ADD_SCO_CONTEXT" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_ADD_SCO_DATA" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_UPDATE_SCO" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_UPDATE_SCO2" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_UPDATE_SCO3" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="QRY_UPDATE_SCO_SEQUENCE" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="DEBUG" visibility="public" type="boolean" isStatic="true" isFinal="true"/>
+        <Field name="DATE_OFFSET" visibility="protected" type="long" isStatic="true" isFinal="true"/>
+        <Field name="currentTime" visibility="private" type="Date"/>
+        <Field name="comparator" visibility="package" type="Comparator" isStatic="true" isFinal="true"/>
+        <Field name="QRY_UPDATE_SCO_SEQUENCENR" visibility="private" type="String" isStatic="true" isFinal="true"/>
+        <Field name="SELECT_USERNAME_FROM_USERID" visibility="protected" type="String" isStatic="true" isFinal="true"/>
+        <Field name="DEFAULT_TYPE" visibility="package" type="Integer" isStatic="true" isFinal="true"/>
+      </Fields>
+      <Methods>
+        <Method name="session" visibility="protected" returnType="String"/>
+        <Method name="log" visibility="private" returnType="void">
+          <Argument type="Level" name="level"/>
+          <Argument type="String" name="msg"/>
+          <Argument type="Throwable" name="t"/>
+        </Method>
+        <Method name="checkVersion" visibility="public" returnType="boolean"/>
+        <Method name="getRecord" visibility="public" returnType="Hashtable">
+          <Argument type="String" name="tableName"/>
+          <Argument type="String" name="idCol"/>
+          <Argument type="int" name="oid"/>
+        </Method>
+        <Method name="getTable" visibility="public" returnType="Vector">
+          <Argument type="String" name="tableName"/>
+        </Method>
+        <Method name="getTable" visibility="public" returnType="Vector">
+          <Argument type="String" name="tableName"/>
+          <Argument type="String" name="orderCol"/>
+        </Method>
+        <Method name="getTable" visibility="public" returnType="Vector">
+          <Argument type="String" name="tableName"/>
+          <Argument type="Hashtable" name="wheredef"/>
+          <Argument type="String" name="orderBy"/>
+        </Method>
+        <Method name="getTable" visibility="public" returnType="Vector">
+          <Argument type="String" name="tableName"/>
+          <Argument type="Vector" name="columnNames"/>
+          <Argument type="Hashtable" name="wheredef"/>
+          <Argument type="String" name="orderBy"/>
+        </Method>
+        <Method name="usernameExists" visibility="protected" returnType="boolean">
+          <Argument type="String" name="username"/>
+        </Method>
+        <Method name="getUserID" visibility="protected" returnType="Number">
+          <Argument type="String" name="username"/>
+        </Method>
+        <Method name="schoolLoginExists" visibility="private" returnType="boolean">
+          <Argument type="String" name="schoolLogin"/>
+        </Method>
+        <Method name="schoolGroupExists" visibility="protected" returnType="int">
+          <Argument type="String" name="schoollogin"/>
+          <Argument type="int" name="groupID"/>
+          <Argument type="String" name="password"/>
+        </Method>
+        <Method name="checkValidLicence" visibility="protected" returnType="boolean">
+          <Argument type="Date" name="date"/>
+          <Argument type="int" name="int1"/>
+        </Method>
+        <Method name="register" visibility="public" returnType="boolean">
+          <Argument type="String" name="username"/>
+          <Argument type="String" name="password"/>
+          <Argument type="String" name="firstname"/>
+          <Argument type="String" name="middlename"/>
+          <Argument type="String" name="lastname"/>
+          <Argument type="String" name="email"/>
+        </Method>
+        <Method name="register" visibility="public" returnType="boolean">
+          <Argument type="String" name="username"/>
+          <Argument type="String" name="password"/>
+          <Argument type="String" name="firstname"/>
+          <Argument type="String" name="middlename"/>
+          <Argument type="String" name="lastname"/>
+          <Argument type="String" name="email"/>
+          <Argument type="String" name="schoolLogin"/>
+          <Argument type="int" name="groupID"/>
+          <Argument type="String" name="groupPassword"/>
+        </Method>
+        <Method name="login" visibility="public" returnType="Hashtable">
+          <Argument type="String" name="username"/>
+          <Argument type="String" name="password"/>
+        </Method>
+        <Method name="login_tail" visibility="private" returnType="Hashtable">
+          <Argument type="PreparedStatement" name="ps"/>
+        </Method>
+        <Method name="passwordCorrect" visibility="protected" returnType="boolean">
+          <Argument type="int" name="userID"/>
+          <Argument type="String" name="password"/>
+        </Method>
+        <Method name="addToSchool" visibility="public" returnType="Hashtable">
+          <Argument type="int" name="userID"/>
+          <Argument type="String" name="schoolLogin"/>
+          <Argument type="int" name="groupID"/>
+          <Argument type="String" name="groupPassword"/>
+        </Method>
+        <Method name="changeAccount" visibility="public" returnType="boolean">
+          <Argument type="int" name="userID"/>
+          <Argument type="String" name="password"/>
+          <Argument type="String" name="newPassword"/>
+          <Argument type="String" name="firstname"/>
+          <Argument type="String" name="middlename"/>
+          <Argument type="String" name="lastname"/>
+          <Argument type="String" name="email"/>
+          <Argument type="int" name="classID"/>
+        </Method>
+        <Method name="changeAccount" visibility="public" returnType="boolean">
+          <Argument type="int" name="userID"/>
+          <Argument type="String" name="password"/>
+          <Argument type="String" name="newPassword"/>
+          <Argument type="String" name="firstname"/>
+          <Argument type="String" name="middlename"/>
+          <Argument type="String" name="lastname"/>
+          <Argument type="String" name="email"/>
+        </Method>
+        <Method name="addClass" visibility="public" returnType="Hashtable">
+          <Argument type="int" name="teacher"/>
+          <Argument type="String" name="className"/>
+        </Method>
+        <Method name="addSchool" visibility="public" returnType="Hashtable">
+          <Argument type="String" name="schoolName"/>
+          <Argument type="String" name="schoolLogin"/>
+          <Argument type="String" name="studentPassw"/>
+          <Argument type="String" name="teacherPassw"/>
+        </Method>
+        <Method name="addSchool" visibility="public" returnType="Hashtable">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="String" name="schoolName"/>
+          <Argument type="String" name="schoolLogin"/>
+          <Argument type="String" name="studentPassw"/>
+          <Argument type="String" name="teacherPassw"/>
+        </Method>
+        <Method name="addSchool" visibility="public" returnType="Hashtable">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="String" name="schoolName"/>
+          <Argument type="String" name="schoolLogin"/>
+          <Argument type="Hashtable" name="passwdMap"/>
+        </Method>
+        <Method name="editSchool" visibility="public" returnType="Hashtable">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="String" name="schoolName"/>
+          <Argument type="String" name="schoolLogin"/>
+          <Argument type="String" name="studentPassw"/>
+          <Argument type="String" name="teacherPassw"/>
+        </Method>
+        <Method name="updateSchoolGroupPasswd" visibility="private" returnType="void">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="int" name="groupID"/>
+          <Argument type="String" name="passwd"/>
+        </Method>
+        <Method name="updateSchoolNameLogin" visibility="private" returnType="void">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="String" name="schoolName"/>
+          <Argument type="String" name="schoolLogin"/>
+          <Argument type="Hashtable" name="result"/>
+        </Method>
+        <Method name="editSchool" visibility="public" returnType="Hashtable">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="String" name="schoolName"/>
+          <Argument type="String" name="schoolLogin"/>
+          <Argument type="Hashtable" name="passwdMap"/>
+        </Method>
+        <Method name="updateSchoolGroupPasswdMap" visibility="private" returnType="void">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="Hashtable" name="passwdMap"/>
+        </Method>
+        <Method name="deleteUser" visibility="public" returnType="boolean">
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="deleteClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="classID"/>
+          <Argument type="boolean" name="mustEmpty"/>
+        </Method>
+        <Method name="disconnectFromClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="uid"/>
+        </Method>
+        <Method name="executeQueryWithRecord" visibility="public" returnType="Hashtable">
+          <Argument type="PreparedStatement" name="ps"/>
+        </Method>
+        <Method name="executeQueryWithResult" visibility="public" returnType="Vector">
+          <Argument type="PreparedStatement" name="ps"/>
+          <Argument type="int" name="first"/>
+          <Argument type="int" name="count"/>
+        </Method>
+        <Method name="executeQueryWithResult" visibility="public" returnType="Vector">
+          <Argument type="PreparedStatement" name="ps"/>
+        </Method>
+        <Method name="executeQueryWithResult" visibility="public" returnType="Vector">
+          <Argument type="String" name="query"/>
+          <Argument type="int" name="first"/>
+          <Argument type="int" name="count"/>
+        </Method>
+        <Method name="executeQueryWithResult" visibility="public" returnType="Vector">
+          <Argument type="String" name="query"/>
+        </Method>
+        <Method name="isEmpty" visibility="public" returnType="boolean">
+          <Argument type="ResultSet" name="rs"/>
+        </Method>
+        <Method name="clearNull" visibility="public" returnType="Object">
+          <Argument type="Object" name="obj"/>
+        </Method>
+        <Method name="getCoursesForClass" visibility="public" returnType="Vector">
+          <Argument type="int" name="classID"/>
+        </Method>
+        <Method name="selectCoursesForClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="classID"/>
+          <Argument type="int" name="courseID"/>
+          <Argument type="int" name="type"/>
+          <Argument type="Date" name="van"/>
+          <Argument type="Date" name="tot"/>
+        </Method>
+        <Method name="selectCoursesForClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="classID"/>
+          <Argument type="int" name="courseID"/>
+        </Method>
+        <Method name="deSelectCoursesForClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="classID"/>
+          <Argument type="int" name="courseID"/>
+        </Method>
+        <Method name="getCourses" visibility="public" returnType="Vector">
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="getTable" visibility="public" returnType="Vector">
+          <Argument type="String" name="tableName"/>
+          <Argument type="Hashtable" name="wheredef"/>
+        </Method>
+        <Method name="LMSGetValue" visibility="public" returnType="String">
+          <Argument type="int" name="scoID"/>
+          <Argument type="int" name="userID"/>
+          <Argument type="String" name="iDataModelElement"/>
+        </Method>
+        <Method name="LMSSetValue" visibility="public" returnType="String">
+          <Argument type="int" name="scoID"/>
+          <Argument type="int" name="userID"/>
+          <Argument type="String" name="iDataModelElement"/>
+          <Argument type="String" name="iValue"/>
+        </Method>
+        <Method name="LMSSetValue" visibility="public" returnType="String">
+          <Argument type="int" name="scoID"/>
+          <Argument type="int" name="userID"/>
+          <Argument type="String" name="iDataModelElement"/>
+          <Argument type="String" name="iValue"/>
+          <Argument type="String" name="random"/>
+        </Method>
+        <Method name="getResults" visibility="public" returnType="Vector">
+          <Argument type="Vector" name="courses"/>
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="getResults_slow" visibility="public" returnType="Vector">
+          <Argument type="Vector" name="courses"/>
+          <Argument type="int" name="classID"/>
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="get1Results" visibility="private" returnType="Vector">
+          <Argument type="PreparedStatement" name="ps"/>
+          <Argument type="Object" name="courseID"/>
+          <Argument type="int" name="classID"/>
+        </Method>
+        <Method name="getResults" visibility="public" returnType="Vector">
+          <Argument type="Vector" name="courses"/>
+          <Argument type="int" name="classID"/>
+          <Argument type="int" name="teacherID"/>
+        </Method>
+        <Method name="getResultCount" visibility="public" returnType="Vector">
+          <Argument type="int" name="profileID"/>
+          <Argument type="int" name="classID"/>
+        </Method>
+        <Method name="getResults" visibility="public" returnType="Vector">
+          <Argument type="int" name="courseID"/>
+          <Argument type="int" name="classID"/>
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="getUserResults" visibility="public" returnType="Vector">
+          <Argument type="int" name="courseID"/>
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="getResults" visibility="public" returnType="Vector">
+          <Argument type="int" name="courseID"/>
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="renameClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="classID"/>
+          <Argument type="String" name="newName"/>
+        </Method>
+        <Method name="renameCommon" visibility="private" returnType="boolean">
+          <Argument type="PreparedStatement" name="ps"/>
+        </Method>
+        <Method name="renameClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="classID"/>
+          <Argument type="String" name="newName"/>
+          <Argument type="boolean" name="iconizer"/>
+        </Method>
+        <Method name="reassignClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="classID"/>
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="selectJar" visibility="public" returnType="boolean">
+          <Argument type="String" name="key"/>
+          <Argument type="String" name="jar"/>
+        </Method>
+        <Method name="getJar" visibility="private" returnType="String">
+          <Argument type="String" name="key"/>
+        </Method>
+        <Method name="getNrJars" visibility="private" returnType="int"/>
+        <Method name="reconnect" visibility="public" returnType="boolean"/>
+        <Method name="log" visibility="public" returnType="boolean">
+          <Argument type="String" name="s"/>
+        </Method>
+        <Method name="getEditableCourses" visibility="public" returnType="Vector">
+          <Argument type="int" name="schoolID"/>
+        </Method>
+        <Method name="getEditableCoursesAdmin" visibility="public" returnType="Vector"/>
+        <Method name="addCourse" visibility="public" returnType="int">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="int" name="dwoProfile"/>
+        </Method>
+        <Method name="addCourse" visibility="public" returnType="int">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="int" name="dwoProfile"/>
+          <Argument type="int" name="parentID"/>
+          <Argument type="boolean" name="isMap"/>
+        </Method>
+        <Method name="changeCourse" visibility="public" returnType="boolean">
+          <Argument type="int" name="courseID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+        </Method>
+        <Method name="changeCourse" visibility="public" returnType="boolean">
+          <Argument type="int" name="courseID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="boolean" name="export"/>
+        </Method>
+        <Method name="changeCourse" visibility="public" returnType="boolean">
+          <Argument type="int" name="courseID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="boolean" name="export"/>
+          <Argument type="int" name="schoolID"/>
+        </Method>
+        <Method name="changeCourse" visibility="public" returnType="boolean">
+          <Argument type="int" name="courseID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="boolean" name="export"/>
+          <Argument type="int" name="schoolID"/>
+          <Argument type="int" name="parentID"/>
+        </Method>
+        <Method name="deleteCourse" visibility="public" returnType="boolean">
+          <Argument type="int" name="courseID"/>
+        </Method>
+        <Method name="addSco" visibility="public" returnType="int">
+          <Argument type="int" name="courseID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="int" name="appletConfigID"/>
+          <Argument type="int" name="sequencenr"/>
+        </Method>
+        <Method name="addSco" visibility="public" returnType="int">
+          <Argument type="int" name="courseID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="int" name="appletConfigID"/>
+          <Argument type="int" name="sequencenr"/>
+          <Argument type="boolean" name="showScore"/>
+        </Method>
+        <Method name="addSco" visibility="public" returnType="int">
+          <Argument type="int" name="courseID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="int" name="appletID"/>
+          <Argument type="String" name="launchdata"/>
+          <Argument type="int" name="sequencenr"/>
+        </Method>
+        <Method name="changeSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+        </Method>
+        <Method name="changeSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="boolean" name="showScore"/>
+        </Method>
+        <Method name="changeSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="String" name="launchdata"/>
+          <Argument type="boolean" name="showScore"/>
+        </Method>
+        <Method name="changeSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="String" name="launchdata"/>
+        </Method>
+        <Method name="changeSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="boolean" name="delete"/>
+          <Argument type="String" name="launchdata"/>
+        </Method>
+        <Method name="deleteSuspendData" visibility="private" returnType="void">
+          <Argument type="int" name="scoID"/>
+          <Argument type="boolean" name="delete"/>
+        </Method>
+        <Method name="changeSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="boolean" name="delete"/>
+          <Argument type="byte[]" name="launchdata"/>
+          <Argument type="boolean" name="showScore"/>
+        </Method>
+        <Method name="changeScoSequenceNr" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoID"/>
+          <Argument type="int" name="sequencenr"/>
+          <Argument type="int" name="scoID2"/>
+          <Argument type="int" name="sequencenr2"/>
+        </Method>
+        <Method name="deleteSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoID"/>
+        </Method>
+        <Method name="deleteSchool" visibility="public" returnType="boolean">
+          <Argument type="int" name="schoolID"/>
+        </Method>
+        <Method name="getUserResults" visibility="public" returnType="Vector">
+          <Argument type="Vector" name="courses"/>
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="setLogo" visibility="public" returnType="boolean">
+          <Argument type="int" name="id"/>
+          <Argument type="byte[]" name="image"/>
+        </Method>
+        <Method name="getFidentitySchools" visibility="public" returnType="Hashtable"/>
+        <Method name="editSchool" visibility="public" returnType="boolean">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="boolean" name="export"/>
+        </Method>
+        <Method name="editSchoolRights" visibility="public" returnType="boolean">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="String" name="rights"/>
+        </Method>
+        <Method name="getImportCourses" visibility="public" returnType="Vector">
+          <Argument type="int" name="schoolFrom"/>
+          <Argument type="int" name="schoolTo"/>
+          <Argument type="int" name="profileID"/>
+        </Method>
+        <Method name="deleteUserFromSchool" visibility="public" returnType="boolean">
+          <Argument type="int" name="id"/>
+          <Argument type="int" name="schoolID"/>
+        </Method>
+        <Method name="updateSchoolTo" visibility="public" returnType="boolean">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="Vector" name="schoolTo"/>
+        </Method>
+        <Method name="deleteCourseDataFromClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="courseID"/>
+          <Argument type="int" name="classID"/>
+        </Method>
+        <Method name="setRights" visibility="public" returnType="String">
+          <Argument type="int" name="uid"/>
+          <Argument type="int" name="profileid"/>
+          <Argument type="String" name="rights"/>
+        </Method>
+        <Method name="setCourseSequence" visibility="public" returnType="boolean">
+          <Argument type="Vector" name="vector"/>
+          <Argument type="int" name="schoolID"/>
+          <Argument type="int" name="classID"/>
+          <Argument type="int" name="parent"/>
+          <Argument type="int" name="profileID"/>
+        </Method>
+        <Method name="moveSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoID"/>
+          <Argument type="int" name="courseID"/>
+          <Argument type="int" name="sequencenr"/>
+          <Argument type="String" name="name"/>
+        </Method>
+        <Method name="selectCoursesForClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="id"/>
+          <Argument type="Vector" name="v"/>
+        </Method>
+        <Method name="setExpireDate" visibility="public" returnType="boolean">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="Date" name="date"/>
+        </Method>
+        <Method name="login_saml" visibility="public" returnType="Hashtable">
+          <Argument type="String" name="userid"/>
+          <Argument type="String" name="orgid"/>
+        </Method>
+        <Method name="link_saml" visibility="public" returnType="boolean">
+          <Argument type="String" name="userid"/>
+          <Argument type="String" name="orgid"/>
+          <Argument type="int" name="id"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class xPosition="620.0" yPosition="20.0" package="fi.dwo.server.persistence" isAbstract="true" name="DbAccessProxy" visibility="public">
+      <Constructors/>
+      <Fields>
+        <Field name="delegate" visibility="package" type="ThreadLocal"/>
+      </Fields>
+      <Methods>
+        <Method name="createDelegate" visibility="protected" returnType="DbAccessIF" isAbstract="true"/>
+        <Method name="close" visibility="public" returnType="void"/>
+        <Method name="getDelegate" visibility="protected" returnType="DbAccessIF"/>
+        <Method name="getCoursesForClass" visibility="public" returnType="Vector">
+          <Argument type="int" name="classID"/>
+        </Method>
+        <Method name="selectCoursesForClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="classID"/>
+          <Argument type="int" name="courseID"/>
+        </Method>
+        <Method name="deSelectCoursesForClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="classID"/>
+          <Argument type="int" name="courseID"/>
+        </Method>
+        <Method name="getCourses" visibility="public" returnType="Vector">
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="getEditableCoursesAdmin" visibility="public" returnType="Vector"/>
+        <Method name="getEditableCourses" visibility="public" returnType="Vector">
+          <Argument type="int" name="schoolID"/>
+        </Method>
+        <Method name="getRecord" visibility="public" returnType="Hashtable">
+          <Argument type="String" name="tableName"/>
+          <Argument type="String" name="idCol"/>
+          <Argument type="int" name="oid"/>
+        </Method>
+        <Method name="getTable" visibility="public" returnType="Vector">
+          <Argument type="String" name="tableName"/>
+        </Method>
+        <Method name="getTable" visibility="public" returnType="Vector">
+          <Argument type="String" name="tableName"/>
+          <Argument type="String" name="orderCol"/>
+        </Method>
+        <Method name="getTable" visibility="public" returnType="Vector">
+          <Argument type="String" name="tableName"/>
+          <Argument type="Hashtable" name="wheredef"/>
+        </Method>
+        <Method name="getTable" visibility="public" returnType="Vector">
+          <Argument type="String" name="tableName"/>
+          <Argument type="Hashtable" name="wheredef"/>
+          <Argument type="String" name="orderBy"/>
+        </Method>
+        <Method name="getTable" visibility="public" returnType="Vector">
+          <Argument type="String" name="tableName"/>
+          <Argument type="Vector" name="columnnames"/>
+          <Argument type="Hashtable" name="wheredef"/>
+          <Argument type="String" name="orderBy"/>
+        </Method>
+        <Method name="renameClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="classID"/>
+          <Argument type="String" name="newName"/>
+        </Method>
+        <Method name="renameClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="classID"/>
+          <Argument type="String" name="newName"/>
+          <Argument type="boolean" name="iconizer"/>
+        </Method>
+        <Method name="reassignClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="classID"/>
+          <Argument type="int" name="newTeacher"/>
+        </Method>
+        <Method name="register" visibility="public" returnType="boolean">
+          <Argument type="String" name="username"/>
+          <Argument type="String" name="password"/>
+          <Argument type="String" name="firstname"/>
+          <Argument type="String" name="middlename"/>
+          <Argument type="String" name="lastname"/>
+          <Argument type="String" name="email"/>
+        </Method>
+        <Method name="LMSGetValue" visibility="public" returnType="String">
+          <Argument type="int" name="scoID"/>
+          <Argument type="int" name="userID"/>
+          <Argument type="String" name="iDataModelElement"/>
+        </Method>
+        <Method name="LMSSetValue" visibility="public" returnType="String">
+          <Argument type="int" name="scoID"/>
+          <Argument type="int" name="userID"/>
+          <Argument type="String" name="iDataModelElement"/>
+          <Argument type="String" name="iValue"/>
+        </Method>
+        <Method name="LMSSetValue" visibility="public" returnType="String">
+          <Argument type="int" name="scoID"/>
+          <Argument type="int" name="userID"/>
+          <Argument type="String" name="iDataModelElement"/>
+          <Argument type="String" name="iValue"/>
+          <Argument type="String" name="random"/>
+        </Method>
+        <Method name="register" visibility="public" returnType="boolean">
+          <Argument type="String" name="username"/>
+          <Argument type="String" name="password"/>
+          <Argument type="String" name="firstname"/>
+          <Argument type="String" name="middlename"/>
+          <Argument type="String" name="lastname"/>
+          <Argument type="String" name="email"/>
+          <Argument type="String" name="schoolLogin"/>
+          <Argument type="int" name="groupID"/>
+          <Argument type="String" name="groupPassword"/>
+        </Method>
+        <Method name="login" visibility="public" returnType="Hashtable">
+          <Argument type="String" name="username"/>
+          <Argument type="String" name="password"/>
+        </Method>
+        <Method name="addToSchool" visibility="public" returnType="Hashtable">
+          <Argument type="int" name="userID"/>
+          <Argument type="String" name="schoolLogin"/>
+          <Argument type="int" name="groupID"/>
+          <Argument type="String" name="groupPassword"/>
+        </Method>
+        <Method name="changeAccount" visibility="public" returnType="boolean">
+          <Argument type="int" name="userID"/>
+          <Argument type="String" name="password"/>
+          <Argument type="String" name="newPassword"/>
+          <Argument type="String" name="firstname"/>
+          <Argument type="String" name="middlename"/>
+          <Argument type="String" name="lastname"/>
+          <Argument type="String" name="email"/>
+          <Argument type="int" name="classID"/>
+        </Method>
+        <Method name="changeAccount" visibility="public" returnType="boolean">
+          <Argument type="int" name="userID"/>
+          <Argument type="String" name="password"/>
+          <Argument type="String" name="newPassword"/>
+          <Argument type="String" name="firstname"/>
+          <Argument type="String" name="middlename"/>
+          <Argument type="String" name="lastname"/>
+          <Argument type="String" name="email"/>
+        </Method>
+        <Method name="addClass" visibility="public" returnType="Hashtable">
+          <Argument type="int" name="teacher"/>
+          <Argument type="String" name="className"/>
+        </Method>
+        <Method name="addSchool" visibility="public" returnType="Hashtable">
+          <Argument type="String" name="schoolName"/>
+          <Argument type="String" name="schoolLogin"/>
+          <Argument type="String" name="studentPassw"/>
+          <Argument type="String" name="teacherPassw"/>
+        </Method>
+        <Method name="addSchool" visibility="public" returnType="Hashtable">
+          <Argument type="int" name="schoolId"/>
+          <Argument type="String" name="schoolName"/>
+          <Argument type="String" name="schoolLogin"/>
+          <Argument type="String" name="studentPassw"/>
+          <Argument type="String" name="teacherPassw"/>
+        </Method>
+        <Method name="editSchool" visibility="public" returnType="Hashtable">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="String" name="schoolName"/>
+          <Argument type="String" name="schoolLogin"/>
+          <Argument type="String" name="studentPassw"/>
+          <Argument type="String" name="teacherPassw"/>
+        </Method>
+        <Method name="deleteUser" visibility="public" returnType="boolean">
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="deleteClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="classID"/>
+          <Argument type="boolean" name="mustEmpty"/>
+        </Method>
+        <Method name="getResults" visibility="public" returnType="Vector">
+          <Argument type="Vector" name="courses"/>
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="getResults" visibility="public" returnType="Vector">
+          <Argument type="Vector" name="courses"/>
+          <Argument type="int" name="classID"/>
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="getResults" visibility="public" returnType="Vector">
+          <Argument type="int" name="courseID"/>
+          <Argument type="int" name="classID"/>
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="getResults" visibility="public" returnType="Vector">
+          <Argument type="int" name="courseID"/>
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="disconnectFromClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="uid"/>
+        </Method>
+        <Method name="selectJar" visibility="public" returnType="boolean">
+          <Argument type="String" name="key"/>
+          <Argument type="String" name="jar"/>
+        </Method>
+        <Method name="reconnect" visibility="public" returnType="boolean"/>
+        <Method name="log" visibility="public" returnType="boolean">
+          <Argument type="String" name="s"/>
+        </Method>
+        <Method name="addCourse" visibility="public" returnType="int">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="int" name="dwoProfile"/>
+        </Method>
+        <Method name="changeCourse" visibility="public" returnType="boolean">
+          <Argument type="int" name="courseID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+        </Method>
+        <Method name="deleteCourse" visibility="public" returnType="boolean">
+          <Argument type="int" name="courseID"/>
+        </Method>
+        <Method name="addSco" visibility="public" returnType="int">
+          <Argument type="int" name="courseID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="int" name="appletConfigID"/>
+          <Argument type="int" name="sequencenr"/>
+        </Method>
+        <Method name="addSco" visibility="public" returnType="int">
+          <Argument type="int" name="courseID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="int" name="appletID"/>
+          <Argument type="String" name="launchdata"/>
+          <Argument type="int" name="sequencenr"/>
+        </Method>
+        <Method name="addSco" visibility="public" returnType="int">
+          <Argument type="int" name="id"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="int" name="appletConfigID"/>
+          <Argument type="int" name="sequencenr"/>
+          <Argument type="boolean" name="showScore"/>
+        </Method>
+        <Method name="changeSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="String" name="launchdata"/>
+        </Method>
+        <Method name="changeSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+        </Method>
+        <Method name="changeSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="boolean" name="showScore"/>
+        </Method>
+        <Method name="changeSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="boolean" name="delete"/>
+          <Argument type="String" name="launchdata"/>
+        </Method>
+        <Method name="changeSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="boolean" name="delete"/>
+          <Argument type="byte[]" name="launchdata"/>
+          <Argument type="boolean" name="showScore"/>
+        </Method>
+        <Method name="changeSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="id"/>
+          <Argument type="String" name="scoName"/>
+          <Argument type="String" name="description"/>
+          <Argument type="String" name="launchdataString"/>
+          <Argument type="boolean" name="showScore"/>
+        </Method>
+        <Method name="changeScoSequenceNr" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoID"/>
+          <Argument type="int" name="sequencenr"/>
+          <Argument type="int" name="scoID2"/>
+          <Argument type="int" name="sequencenr2"/>
+        </Method>
+        <Method name="deleteSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoID"/>
+        </Method>
+        <Method name="deleteSchool" visibility="public" returnType="boolean">
+          <Argument type="int" name="schoolID"/>
+        </Method>
+        <Method name="getFidentitySchools" visibility="public" returnType="Hashtable"/>
+        <Method name="getUserResults" visibility="public" returnType="Vector">
+          <Argument type="int" name="courseID"/>
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="getUserResults" visibility="public" returnType="Vector">
+          <Argument type="Vector" name="courses"/>
+          <Argument type="int" name="i"/>
+        </Method>
+        <Method name="setLogo" visibility="public" returnType="boolean">
+          <Argument type="int" name="id"/>
+          <Argument type="byte[]" name="image"/>
+        </Method>
+        <Method name="changeCourse" visibility="public" returnType="boolean">
+          <Argument type="int" name="id"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="boolean" name="export"/>
+        </Method>
+        <Method name="editSchool" visibility="public" returnType="boolean">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="boolean" name="export"/>
+        </Method>
+        <Method name="editSchoolRights" visibility="public" returnType="boolean">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="String" name="rights"/>
+        </Method>
+        <Method name="getImportCourses" visibility="public" returnType="Vector">
+          <Argument type="int" name="schoolFrom"/>
+          <Argument type="int" name="schoolTo"/>
+          <Argument type="int" name="profileID"/>
+        </Method>
+        <Method name="editSchool" visibility="public" returnType="Hashtable">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="String" name="schoolName"/>
+          <Argument type="String" name="schoolLogin"/>
+          <Argument type="Hashtable" name="passwd"/>
+        </Method>
+        <Method name="addSchool" visibility="public" returnType="Hashtable">
+          <Argument type="int" name="schoolId"/>
+          <Argument type="String" name="schoolName"/>
+          <Argument type="String" name="schoolLogin"/>
+          <Argument type="Hashtable" name="passwd"/>
+        </Method>
+        <Method name="deleteUserFromSchool" visibility="public" returnType="boolean">
+          <Argument type="int" name="id"/>
+          <Argument type="int" name="schoolID"/>
+        </Method>
+        <Method name="updateSchoolTo" visibility="public" returnType="boolean">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="Vector" name="schoolTo"/>
+        </Method>
+        <Method name="deleteCourseDataFromClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="courseID"/>
+          <Argument type="int" name="classID"/>
+        </Method>
+        <Method name="getResultCount" visibility="public" returnType="Vector">
+          <Argument type="int" name="profile"/>
+          <Argument type="int" name="classId"/>
+        </Method>
+        <Method name="setRights" visibility="public" returnType="String">
+          <Argument type="int" name="uid"/>
+          <Argument type="int" name="profileid"/>
+          <Argument type="String" name="rights"/>
+        </Method>
+        <Method name="changeCourse" visibility="public" returnType="boolean">
+          <Argument type="int" name="id"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="boolean" name="export"/>
+          <Argument type="int" name="schoolID"/>
+        </Method>
+        <Method name="changeCourse" visibility="public" returnType="boolean">
+          <Argument type="int" name="id"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="boolean" name="export"/>
+          <Argument type="int" name="schoolID"/>
+          <Argument type="int" name="parentID"/>
+        </Method>
+        <Method name="addCourse" visibility="public" returnType="int">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="int" name="dwoProfile"/>
+          <Argument type="int" name="parentID"/>
+          <Argument type="boolean" name="withChildren"/>
+        </Method>
+        <Method name="setCourseSequence" visibility="public" returnType="boolean">
+          <Argument type="Vector" name="vector"/>
+          <Argument type="int" name="schoolID"/>
+          <Argument type="int" name="classID"/>
+          <Argument type="int" name="parent"/>
+          <Argument type="int" name="profileID"/>
+        </Method>
+        <Method name="moveSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoId"/>
+          <Argument type="int" name="courseId"/>
+          <Argument type="int" name="sequencenr"/>
+          <Argument type="String" name="name"/>
+        </Method>
+        <Method name="selectCoursesForClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="classID"/>
+          <Argument type="int" name="courseID"/>
+          <Argument type="int" name="type"/>
+          <Argument type="Date" name="van"/>
+          <Argument type="Date" name="tot"/>
+        </Method>
+        <Method name="selectCoursesForClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="id"/>
+          <Argument type="Vector" name="v"/>
+        </Method>
+        <Method name="setExpireDate" visibility="public" returnType="boolean">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="Date" name="date"/>
+        </Method>
+        <Method name="login_saml" visibility="public" returnType="Hashtable">
+          <Argument type="String" name="a"/>
+          <Argument type="String" name="b"/>
+        </Method>
+        <Method name="link_saml" visibility="public" returnType="boolean">
+          <Argument type="String" name="userid"/>
+          <Argument type="String" name="orgid"/>
+          <Argument type="int" name="id"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class xPosition="920.0" yPosition="20.0" package="fi.dwo.server.persistence" name="SecureDbAccess" visibility="public">
+      <Constructors/>
+      <Fields/>
+      <Methods>
+        <Method name="getCoursesForClass" visibility="public" returnType="Vector">
+          <Argument type="int" name="classID"/>
+        </Method>
+        <Method name="selectCoursesForClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="classID"/>
+          <Argument type="int" name="courseID"/>
+        </Method>
+        <Method name="deSelectCoursesForClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="classID"/>
+          <Argument type="int" name="courseID"/>
+        </Method>
+        <Method name="getCourses" visibility="public" returnType="Vector">
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="getEditableCoursesAdmin" visibility="public" returnType="Vector"/>
+        <Method name="getEditableCourses" visibility="public" returnType="Vector">
+          <Argument type="int" name="schoolID"/>
+        </Method>
+        <Method name="getRecord" visibility="public" returnType="Hashtable">
+          <Argument type="String" name="tableName"/>
+          <Argument type="String" name="idCol"/>
+          <Argument type="int" name="oid"/>
+        </Method>
+        <Method name="getTable" visibility="public" returnType="Vector">
+          <Argument type="String" name="tableName"/>
+        </Method>
+        <Method name="getTable" visibility="public" returnType="Vector">
+          <Argument type="String" name="tableName"/>
+          <Argument type="String" name="orderCol"/>
+        </Method>
+        <Method name="getTable" visibility="public" returnType="Vector">
+          <Argument type="String" name="tableName"/>
+          <Argument type="Hashtable" name="wheredef"/>
+        </Method>
+        <Method name="getTable" visibility="public" returnType="Vector">
+          <Argument type="String" name="tableName"/>
+          <Argument type="Hashtable" name="wheredef"/>
+          <Argument type="String" name="orderBy"/>
+        </Method>
+        <Method name="getTable" visibility="public" returnType="Vector">
+          <Argument type="String" name="tableName"/>
+          <Argument type="Vector" name="columnnames"/>
+          <Argument type="Hashtable" name="wheredef"/>
+          <Argument type="String" name="orderBy"/>
+        </Method>
+        <Method name="renameClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="classID"/>
+          <Argument type="String" name="newName"/>
+          <Argument type="boolean" name="iconizer"/>
+        </Method>
+        <Method name="renameClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="classID"/>
+          <Argument type="String" name="newName"/>
+        </Method>
+        <Method name="reassignClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="classID"/>
+          <Argument type="int" name="newTeacher"/>
+        </Method>
+        <Method name="register" visibility="public" returnType="boolean">
+          <Argument type="String" name="username"/>
+          <Argument type="String" name="password"/>
+          <Argument type="String" name="firstname"/>
+          <Argument type="String" name="middlename"/>
+          <Argument type="String" name="lastname"/>
+          <Argument type="String" name="email"/>
+        </Method>
+        <Method name="LMSGetValue" visibility="public" returnType="String">
+          <Argument type="int" name="scoID"/>
+          <Argument type="int" name="userID"/>
+          <Argument type="String" name="iDataModelElement"/>
+        </Method>
+        <Method name="LMSSetValue" visibility="public" returnType="String">
+          <Argument type="int" name="scoID"/>
+          <Argument type="int" name="userID"/>
+          <Argument type="String" name="iDataModelElement"/>
+          <Argument type="String" name="iValue"/>
+        </Method>
+        <Method name="LMSSetValue" visibility="public" returnType="String">
+          <Argument type="int" name="scoID"/>
+          <Argument type="int" name="userID"/>
+          <Argument type="String" name="iDataModelElement"/>
+          <Argument type="String" name="iValue"/>
+          <Argument type="String" name="random"/>
+        </Method>
+        <Method name="register" visibility="public" returnType="boolean">
+          <Argument type="String" name="username"/>
+          <Argument type="String" name="password"/>
+          <Argument type="String" name="firstname"/>
+          <Argument type="String" name="middlename"/>
+          <Argument type="String" name="lastname"/>
+          <Argument type="String" name="email"/>
+          <Argument type="String" name="schoolLogin"/>
+          <Argument type="int" name="groupID"/>
+          <Argument type="String" name="groupPassword"/>
+        </Method>
+        <Method name="login" visibility="public" returnType="Hashtable">
+          <Argument type="String" name="username"/>
+          <Argument type="String" name="password"/>
+        </Method>
+        <Method name="addToSchool" visibility="public" returnType="Hashtable">
+          <Argument type="int" name="userID"/>
+          <Argument type="String" name="schoolLogin"/>
+          <Argument type="int" name="groupID"/>
+          <Argument type="String" name="groupPassword"/>
+        </Method>
+        <Method name="changeAccount" visibility="public" returnType="boolean">
+          <Argument type="int" name="userID"/>
+          <Argument type="String" name="password"/>
+          <Argument type="String" name="newPassword"/>
+          <Argument type="String" name="firstname"/>
+          <Argument type="String" name="middlename"/>
+          <Argument type="String" name="lastname"/>
+          <Argument type="String" name="email"/>
+          <Argument type="int" name="classID"/>
+        </Method>
+        <Method name="changeAccount" visibility="public" returnType="boolean">
+          <Argument type="int" name="userID"/>
+          <Argument type="String" name="password"/>
+          <Argument type="String" name="newPassword"/>
+          <Argument type="String" name="firstname"/>
+          <Argument type="String" name="middlename"/>
+          <Argument type="String" name="lastname"/>
+          <Argument type="String" name="email"/>
+        </Method>
+        <Method name="addClass" visibility="public" returnType="Hashtable">
+          <Argument type="int" name="teacher"/>
+          <Argument type="String" name="className"/>
+        </Method>
+        <Method name="addSchool" visibility="public" returnType="Hashtable">
+          <Argument type="String" name="schoolName"/>
+          <Argument type="String" name="schoolLogin"/>
+          <Argument type="String" name="studentPassw"/>
+          <Argument type="String" name="teacherPassw"/>
+        </Method>
+        <Method name="addSchool" visibility="public" returnType="Hashtable">
+          <Argument type="int" name="schoolId"/>
+          <Argument type="String" name="schoolName"/>
+          <Argument type="String" name="schoolLogin"/>
+          <Argument type="String" name="studentPassw"/>
+          <Argument type="String" name="teacherPassw"/>
+        </Method>
+        <Method name="editSchool" visibility="public" returnType="Hashtable">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="String" name="schoolName"/>
+          <Argument type="String" name="schoolLogin"/>
+          <Argument type="String" name="studentPassw"/>
+          <Argument type="String" name="teacherPassw"/>
+        </Method>
+        <Method name="deleteUser" visibility="public" returnType="boolean">
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="deleteClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="classID"/>
+          <Argument type="boolean" name="mustEmpty"/>
+        </Method>
+        <Method name="getResults" visibility="public" returnType="Vector">
+          <Argument type="Vector" name="courses"/>
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="getResults" visibility="public" returnType="Vector">
+          <Argument type="Vector" name="courses"/>
+          <Argument type="int" name="classID"/>
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="getResults" visibility="public" returnType="Vector">
+          <Argument type="int" name="courseID"/>
+          <Argument type="int" name="classID"/>
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="getResults" visibility="public" returnType="Vector">
+          <Argument type="int" name="courseID"/>
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="disconnectFromClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="uid"/>
+        </Method>
+        <Method name="selectJar" visibility="public" returnType="boolean">
+          <Argument type="String" name="key"/>
+          <Argument type="String" name="jar"/>
+        </Method>
+        <Method name="reconnect" visibility="public" returnType="boolean"/>
+        <Method name="log" visibility="public" returnType="boolean">
+          <Argument type="String" name="s"/>
+        </Method>
+        <Method name="addCourse" visibility="public" returnType="int">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="int" name="dwoProfile"/>
+          <Argument type="int" name="parentID"/>
+          <Argument type="boolean" name="withChildren"/>
+        </Method>
+        <Method name="addCourse" visibility="public" returnType="int">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="int" name="dwoProfile"/>
+        </Method>
+        <Method name="changeCourse" visibility="public" returnType="boolean">
+          <Argument type="int" name="courseID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+        </Method>
+        <Method name="deleteCourse" visibility="public" returnType="boolean">
+          <Argument type="int" name="courseID"/>
+        </Method>
+        <Method name="addSco" visibility="public" returnType="int">
+          <Argument type="int" name="courseID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="int" name="appletConfigID"/>
+          <Argument type="int" name="sequencenr"/>
+        </Method>
+        <Method name="addSco" visibility="public" returnType="int">
+          <Argument type="int" name="courseID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="int" name="appletID"/>
+          <Argument type="String" name="launchdata"/>
+          <Argument type="int" name="sequencenr"/>
+        </Method>
+        <Method name="addSco" visibility="public" returnType="int">
+          <Argument type="int" name="id"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="int" name="appletConfigID"/>
+          <Argument type="int" name="sequencenr"/>
+          <Argument type="boolean" name="showScore"/>
+        </Method>
+        <Method name="changeSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="String" name="launchdata"/>
+        </Method>
+        <Method name="changeSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+        </Method>
+        <Method name="changeSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="boolean" name="showScore"/>
+        </Method>
+        <Method name="changeSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="id"/>
+          <Argument type="String" name="scoName"/>
+          <Argument type="String" name="description"/>
+          <Argument type="String" name="launchdataString"/>
+          <Argument type="boolean" name="showScore"/>
+        </Method>
+        <Method name="changeSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoID"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="boolean" name="delete"/>
+          <Argument type="String" name="launchdata"/>
+        </Method>
+        <Method name="changeScoSequenceNr" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoID"/>
+          <Argument type="int" name="sequencenr"/>
+          <Argument type="int" name="scoID2"/>
+          <Argument type="int" name="sequencenr2"/>
+        </Method>
+        <Method name="deleteSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoID"/>
+        </Method>
+        <Method name="deleteSchool" visibility="public" returnType="boolean">
+          <Argument type="int" name="schoolID"/>
+        </Method>
+        <Method name="getFidentitySchools" visibility="public" returnType="Hashtable"/>
+        <Method name="getUserResults" visibility="public" returnType="Vector">
+          <Argument type="int" name="courseID"/>
+          <Argument type="int" name="userID"/>
+        </Method>
+        <Method name="getUserResults" visibility="public" returnType="Vector">
+          <Argument type="Vector" name="courses"/>
+          <Argument type="int" name="i"/>
+        </Method>
+        <Method name="setLogo" visibility="public" returnType="boolean">
+          <Argument type="int" name="id"/>
+          <Argument type="byte[]" name="image"/>
+        </Method>
+        <Method name="changeCourse" visibility="public" returnType="boolean">
+          <Argument type="int" name="id"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="boolean" name="export"/>
+        </Method>
+        <Method name="editSchool" visibility="public" returnType="boolean">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="boolean" name="export"/>
+        </Method>
+        <Method name="editSchoolRights" visibility="public" returnType="boolean">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="String" name="rights"/>
+        </Method>
+        <Method name="getImportCourses" visibility="public" returnType="Vector">
+          <Argument type="int" name="schoolFrom"/>
+          <Argument type="int" name="schoolTo"/>
+          <Argument type="int" name="profileID"/>
+        </Method>
+        <Method name="editSchool" visibility="public" returnType="Hashtable">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="String" name="schoolName"/>
+          <Argument type="String" name="schoolLogin"/>
+          <Argument type="Hashtable" name="passwd"/>
+        </Method>
+        <Method name="addSchool" visibility="public" returnType="Hashtable">
+          <Argument type="int" name="schoolId"/>
+          <Argument type="String" name="schoolName"/>
+          <Argument type="String" name="schoolLogin"/>
+          <Argument type="Hashtable" name="passwd"/>
+        </Method>
+        <Method name="deleteUserFromSchool" visibility="public" returnType="boolean">
+          <Argument type="int" name="id"/>
+          <Argument type="int" name="schoolID"/>
+        </Method>
+        <Method name="updateSchoolTo" visibility="public" returnType="boolean">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="Vector" name="schoolTo"/>
+        </Method>
+        <Method name="deleteCourseDataFromClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="courseID"/>
+          <Argument type="int" name="classID"/>
+        </Method>
+        <Method name="getResultCount" visibility="public" returnType="Vector">
+          <Argument type="int" name="profile"/>
+          <Argument type="int" name="classId"/>
+        </Method>
+        <Method name="setRights" visibility="public" returnType="String">
+          <Argument type="int" name="uid"/>
+          <Argument type="int" name="profileid"/>
+          <Argument type="String" name="rights"/>
+        </Method>
+        <Method name="changeCourse" visibility="public" returnType="boolean">
+          <Argument type="int" name="id"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="boolean" name="export"/>
+          <Argument type="int" name="schoolID"/>
+        </Method>
+        <Method name="changeCourse" visibility="public" returnType="boolean">
+          <Argument type="int" name="id"/>
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="description"/>
+          <Argument type="boolean" name="export"/>
+          <Argument type="int" name="schoolID"/>
+          <Argument type="int" name="parentID"/>
+        </Method>
+        <Method name="setCourseSequence" visibility="public" returnType="boolean">
+          <Argument type="Vector" name="vector"/>
+          <Argument type="int" name="schoolID"/>
+          <Argument type="int" name="classID"/>
+          <Argument type="int" name="parent"/>
+          <Argument type="int" name="profileID"/>
+        </Method>
+        <Method name="moveSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoId"/>
+          <Argument type="int" name="courseId"/>
+          <Argument type="int" name="sequencenr"/>
+          <Argument type="String" name="name"/>
+        </Method>
+        <Method name="selectCoursesForClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="classID"/>
+          <Argument type="int" name="courseID"/>
+          <Argument type="int" name="type"/>
+          <Argument type="Date" name="van"/>
+          <Argument type="Date" name="tot"/>
+        </Method>
+        <Method name="selectCoursesForClass" visibility="public" returnType="boolean">
+          <Argument type="int" name="id"/>
+          <Argument type="Vector" name="v"/>
+        </Method>
+        <Method name="setExpireDate" visibility="public" returnType="boolean">
+          <Argument type="int" name="schoolID"/>
+          <Argument type="Date" name="date"/>
+        </Method>
+        <Method name="login_saml" visibility="public" returnType="Hashtable">
+          <Argument type="String" name="a"/>
+          <Argument type="String" name="b"/>
+        </Method>
+        <Method name="link_saml" visibility="public" returnType="boolean">
+          <Argument type="String" name="userid"/>
+          <Argument type="String" name="orgid"/>
+          <Argument type="int" name="id"/>
+        </Method>
+        <Method name="changeSco" visibility="public" returnType="boolean">
+          <Argument type="int" name="scoid"/>
+          <Argument type="String" name="scoName"/>
+          <Argument type="String" name="description"/>
+          <Argument type="boolean" name="delete"/>
+          <Argument type="byte[]" name="launchdata"/>
+          <Argument type="boolean" name="showScore"/>
+        </Method>
+      </Methods>
+    </Class>
+  </ClassDiagramComponents>
+  <ClassDiagramRelations>
+    <IsRelation name="is" source="DataSourceAccess" target="DbAccess"/>
+    <UseRelation source="DbAccessProxy" target="DbAccess" sourceCardinality="1..1" targetCardinality="1..1"/>
+  </ClassDiagramRelations>
+</ClassDiagram>

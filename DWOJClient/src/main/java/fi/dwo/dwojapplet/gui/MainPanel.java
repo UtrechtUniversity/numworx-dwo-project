@@ -1,0 +1,246 @@
+// Source file:
+// N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\MainPanel.java
+package fi.dwo.dwojapplet.gui;
+
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.action.LogoutURLAction;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Image;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.Border;
+
+/**
+ * This class is the main panel of the application. It shows the FI-logo, the
+ * header panel, the logg-of panel and the center panel.
+ *
+ * @author M.J.B. Kupers
+ *
+ */
+public class MainPanel extends JPanel {
+
+    static class TopPanel extends JPanel {
+
+        TopPanel() {
+            super(new BorderLayout(10, 0), GuiConstants.DBL_BUFFER);
+            setOpaque(true);
+            setDoubleBuffered(GuiConstants.DBL_BUFFER);
+            setBackground(fi.beans.numworxlf.Constants.colorBlue1);
+            setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 4));
+        }
+
+        /**
+         * check valid! Bij een setLayout(null) wordt niet meer automatische
+         * gevalideerd. Kan weg als DWO een LayoutManager heeft.
+         *
+         * @see javax.swing.JComponent#paint(java.awt.Graphics)
+         * @see java.awt.LayoutManager
+         */
+        @Override
+        public void paint(Graphics g) {
+            if (!isValid()) {
+                validate();
+            }
+            super.paint(g);
+        }
+
+    }
+
+    private LoggedInPanel loggedIn;
+
+    CenterPanel center; // FIXME DIT IS NIET GOED!
+
+    private Component header;
+
+    private TopPanel top;
+
+    /**
+     * Creates a new instance of the MainPanel. The main panel shows the
+     * FI-logo, the header panel, the logg-of panel and the center panel.
+     *
+     * @param dwoProfile
+     */
+    public MainPanel(DomDwoProfileFull dwoProfile) {
+        this.setVisible(false);
+        this.setBackground(GuiConstants.SUB_BACKGROUND);
+        this.setForeground(GuiConstants.MAIN_FOREGROUND);
+        this.setLayout(new BorderLayout());
+        this.setSize(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
+        invalidate();
+        /* Variables used to create items */
+        FontMetrics fm;
+        Container p;
+        JLabel l;
+        top = new TopPanel();
+        top.setBounds(0, 0, GuiConstants.DWO_WIDTH, 50); // TODO 70!
+        add(top, BorderLayout.NORTH);
+        if (GuiConstants.GUI_IMAGE_BG) {
+            Image guiImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE);
+            if (guiImage == null) {
+                GuiConstants.GUI_IMAGE_BG = false;
+            }
+        }
+
+        Box hbox = Box.createHorizontalBox();
+        if (true) {
+            l = new JLabel(dwoProfile.getDwoProfileDescription());
+            l.setFont(GuiConstants.RED_TEXT);
+            l.setOpaque(false);
+            l.setForeground(GuiConstants.RED_COLOR);
+            l.setForeground(new Color(3, 65, 123));
+            hbox.add(l);
+        }
+        hbox.add(Box.createGlue());
+// als alles ontbreekt, creeer een riggel, nodig bij variable layout.        
+        hbox.add(Box.createVerticalStrut(2 + getFontMetrics(GuiConstants.RED_TEXT).getHeight()));
+        User u = GuiCreator.instance().getUser();
+        if (u != null) {
+            School s = u.getSchool();
+            if (s != null) {
+                l = new JLabel(s.getName());
+                l.setOpaque(false);
+                l.setFont(GuiConstants.RED_TEXT_ITALIC);
+                l.setForeground(GuiConstants.RED_COLOR);
+                hbox.add(l);
+                hbox.add(Box.createHorizontalStrut(15));
+            }
+        }
+        //top.add(hbox, BorderLayout.NORTH); hbox.setBorder(BorderFactory.createLineBorder(Color.GREEN));
+        hbox.setBounds(0, 0, getWidth(), hbox.getPreferredSize().height);
+        hbox.doLayout();
+
+        if (true) {
+
+            /* Add FI logo */
+            Image fiLogo;
+            fiLogo = DwoHelper.getResourceImage(GuiConstants.WISWEB_LOGO_SMALL_LOCATION);
+            ImageIcon ip = new ImageIcon(fiLogo);
+
+            String roleName = "AUTHOR";
+            l = new JLabel((roleName).toUpperCase()); // ROL
+            l.setIcon(ip);
+            l.setVerticalTextPosition(JLabel.CENTER);
+            l.setHorizontalTextPosition(JLabel.RIGHT);
+            l.setHorizontalAlignment(JLabel.CENTER);
+            l.setVerticalAlignment(JLabel.CENTER);
+            l.setFont(new Font("Ubuntu", Font.PLAIN, 22));
+            l.setForeground(fi.beans.numworxlf.Constants.COLOR13);
+//            l.setBorder(BorderFactory.createCompoundBorder(createNBorder(),
+//                    BorderFactory.createEmptyBorder(2, 0, 4, 0)));
+// nota bene: het CenterPanel ligt als heavy weight over de bottom-borderline heen
+// daarom wordt daar dit lijntje hertekend.
+            l.setBounds(5, 20, 151, 50);
+            top.add(l, BorderLayout.WEST);
+           // l.setPreferredSize(new Dimension(151, 35));
+        } else {
+            top.add(Box.createRigidArea(new Dimension(151 + 30, 50)), BorderLayout.WEST);
+
+            //toevoeging om iets meer ruimte te krijgen tussen sco en header
+            top.add(Box.createRigidArea(new Dimension(151 + 30, 6)), BorderLayout.SOUTH);
+        }
+
+        header = new HeaderPanel(TextMapper.getText(TextMapper.GUIM_MAIN_MENU));
+        top.add(header, BorderLayout.CENTER);
+
+        /* Logged In panel */
+        loggedIn = new LoggedInPanel();
+        int w = 250; // size of login-role and username
+        loggedIn.setBounds(605, 0, w, 50);
+        if (GuiConstants.GUI_IMAGE_BG) {
+            w = w - 30;
+        }
+        loggedIn.setPreferredSize(new Dimension(w, 50));
+        //loggedIn.doLayout();
+        loggedIn.setVisible(false);
+        top.add(loggedIn, BorderLayout.EAST);
+        loggedIn.setVisible(true);
+
+        center = new CenterPanel(this);
+        center.setVisible(false);
+        center.setLocation(5, 90);
+        this.add(center);
+        center.setVisible(true);
+        this.setVisible(true);
+    }
+
+//    /**
+//     * @return
+//     */
+//    static Border createNBorder() {
+//        return BorderFactory.createMatteBorder(1, 1, 0, 1, Color.black);
+//    }
+
+    public void setGuiImage(Image image) {
+//        loggedIn.setGuiImage(image);
+//        guiImage = image;
+    }
+
+    /**
+     * Removes the old headerpanel and sets a new Panel as a header.
+     *
+     * @param p The panel to set as a header.
+     */
+    public void setHeaderPanel(JComponent p) {
+        if (this.header != null) {
+            header.setVisible(false);
+            top.remove(header);
+            header.setVisible(true);
+        }
+
+        header = p;
+        if (header == null) return;
+        header.setVisible(false);
+        //p.setBorder(BorderFactory.createLineBorder(Color.red));
+        top.add(header, BorderLayout.CENTER);
+// EPN-logo hok is wat breder, 
+        int margin = GuiConstants.GUI_IMAGE_BG ? 30 : 0;
+        int x = 166 + margin;
+        int width = 469 - margin;
+        header.setBounds(x, 20, width, 50);
+        header.setVisible(true);
+    }
+
+    /**
+     * Called when this panel is closed. Can be used to save session-data, for
+     * example the sco-data
+     *
+     */
+    public void end() {
+        center.end();
+
+    }
+
+//    public void setVisible(boolean b) {
+//        Exception e = new Exception();
+//        LOG.log(Level.SEVERE,null,e);
+//        super.setVisible(b);
+//    }
+    /**
+     * @return Returns the center.
+     */
+    public CenterPanel getCenter() {
+        return center;
+    }
+
+    public void setLogoutURL(String u) {
+        loggedIn.setLogoutAction(new LogoutURLAction(u));
+    }
+}

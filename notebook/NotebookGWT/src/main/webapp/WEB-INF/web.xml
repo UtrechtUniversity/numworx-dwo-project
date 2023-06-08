@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns="http://java.sun.com/xml/ns/javaee"
+xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+	<!-- TODO: Add <servlet> tags for each servlet here. -->
+	<!-- TODO: Add <servlet-mapping> tags for each <servlet> here. -->
+	<!-- TODO: Optionally add a <welcome-file-list> tag to display a welcome file. -->
+  <context-param>
+  	<param-name>dbrest.url</param-name>
+	<param-value>http://127.0.0.1:8080/dwo/</param-value>  
+  </context-param>
+	<servlet>
+		<servlet-name>notebook</servlet-name>
+		<servlet-class>nl.numworx.notebook.server.HubServlet</servlet-class>
+		<init-param><param-name>debug</param-name><param-value>true</param-value></init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>notebook</servlet-name>
+		<url-pattern>/create/*</url-pattern>
+	</servlet-mapping>
+</web-app>

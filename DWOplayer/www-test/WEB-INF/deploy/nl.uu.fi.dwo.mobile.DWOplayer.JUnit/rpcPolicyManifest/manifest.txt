@@ -1,0 +1,2 @@
+# Module nl.uu.fi.dwo.mobile.DWOplayer.JUnit
+# RPC service class, partial path of RPC policy file

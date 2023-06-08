@@ -1,0 +1,53 @@
+DROP TABLE IF EXISTS `tblacl`;
+DROP TABLE IF EXISTS `tblanalyticalmodel`;
+DROP TABLE IF EXISTS `tblapplet`;
+DROP TABLE IF EXISTS `tblappletconfig`;
+DROP TABLE IF EXISTS `tblclass`;
+DROP TABLE IF EXISTS `tblclasscourse`;
+DROP TABLE IF EXISTS `tblcourse`;
+DROP TABLE IF EXISTS `tblcoursedata`;
+DROP TABLE IF EXISTS `tbldwoprofile`;
+DROP TABLE IF EXISTS `tbldwosystemparameters`;
+DROP TABLE IF EXISTS `tblfromto`;
+DROP TABLE IF EXISTS `tblgroup`;
+DROP TABLE IF EXISTS `tblhasrole`;
+DROP TABLE IF EXISTS `tblimage`;
+DROP TABLE IF EXISTS `tbllogincontext`;
+DROP TABLE IF EXISTS `tblmethod`;
+DROP TABLE IF EXISTS `tblmonitorlog`;
+DROP TABLE IF EXISTS `tblsamluser`;
+DROP TABLE IF EXISTS `tblschool`;
+DROP TABLE IF EXISTS `tblschooldata`;
+DROP TABLE IF EXISTS `tblschoolmethod`;
+DROP TABLE IF EXISTS `tblsco`;
+DROP TABLE IF EXISTS `tblscocontext`;
+DROP TABLE IF EXISTS `tblscodata`;
+DROP TABLE IF EXISTS `tblscoview`;
+DROP TABLE IF EXISTS `tblstudentof`;
+DROP TABLE IF EXISTS `tblstudentmodelcontext`;
+DROP TABLE IF EXISTS `tblstudentmodeldata`;
+DROP TABLE IF EXISTS `tblstudentmodelof`;
+DROP TABLE IF EXISTS `tblstudentscodata`;
+DROP TABLE IF EXISTS `tblstudentscocontext`;
+DROP TABLE IF EXISTS `tblteacherof`;
+DROP TABLE IF EXISTS `tbluser`;
+DROP TABLE IF EXISTS `tblschoolgroup`;
+DROP TABLE IF EXISTS `tblurnresource`;
+DROP TABLE IF EXISTS `tomcat_roles_view`;
+DROP TABLE IF EXISTS `tomcat_user_view`;
+DROP TABLE IF EXISTS `tblstudentmodelitem`;
+DROP TABLE IF EXISTS `tblcoursedata`;
+
+SET FOREIGN_KEY_CHECKS = 0;
+SET GROUP_CONCAT_MAX_LEN=32768;
+SET @views = NULL;
+SELECT GROUP_CONCAT('`', TABLE_NAME, '`') INTO @views
+  FROM information_schema.views
+  WHERE table_schema = (SELECT DATABASE());
+SELECT IFNULL(@views,'dummy') INTO @views;
+
+SET @views = CONCAT('DROP VIEW IF EXISTS ', @views);
+PREPARE stmt FROM @views;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+SET FOREIGN_KEY_CHECKS = 1;

@@ -1,0 +1,57 @@
+{
+	"books": [
+		"1HV",
+		"2HV",
+		"3V",
+		"3H"
+	],
+	"chapters": [
+		[
+			"H1 - Figuren",
+			"H2 - Getallen en formules",
+			"H3 - Assenstelsels en grafieken",
+			"H4 - Hoeken en symmetrie",
+			"H5 - Rekenen",
+			"H6 - Formules en letters",
+			"H7 - Vlakke figuren",
+			"H8 - Herleiden en machten",
+			"H9 - Meten"
+		],
+		[
+			"H1 - Rekenen met letters",
+			"H2 - Vlakke meetkunde",
+			"H3 - Lineaire formules en vergelijkingen",
+			"H4 - Kwadraten en wortels",
+			"H5 - De stelling van Pythagoras",
+			"H6 - Procenten en diagrammen",
+			"H7 - Kwadratische vergelijkingen",
+			"H8 - Inhoud en vergroten"
+		],
+		[
+			"H1 - Lineaire problemen",
+			"H2 - Gelijkvormigheid",
+			"H3 - Kwadratische problemen",
+			"H4 - Statistiek en procenten",
+			"H5 - Vergelijkingen en ongelijkheden",
+			"H6 - Vaardigheden en vergelijkingen",
+			"H7 - Goniometrie",
+			"H8 - Allerlei verbanden",
+			"H9 - Spreiding tellen en kans"
+		],
+		[
+			"H1 - Lineaire problemen",
+			"H2 - Gelijkvormigheid en hellingen",
+			"H3 - Kwadratische problemen",
+			"H4 - Statistiek en procenten",
+			"H5 - Algebraische vaardigheden",
+			"H6 - Kwadratische vergelijkingen en ongelijkheden",
+			"H7 - Goniometrie",
+			"H8 - Allerlei verbanden",
+			"H9 - Spreiding tellen en kans"
+		]
+	],
+	"id": {
+		"idString": "LOCAL;none;Getal&Ruimte"
+	},
+	"method": "Getal & Ruimte",
+	"optLock": null}

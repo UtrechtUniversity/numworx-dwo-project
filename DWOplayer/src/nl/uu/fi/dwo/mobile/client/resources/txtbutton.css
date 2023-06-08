@@ -1,0 +1,26 @@
+@CHARSET "ISO-8859-1";
+
+.txt-Button {
+	display: inline-block;
+	position: relative;
+	padding: 5px 5px;
+	margin: 1px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-size: 16px;
+	font-family: Arial;
+	text-align: center;
+	background-repeat: no-repeat;
+	background-position: center;
+	width: auto;
+	height: auto;
+
+}
+
+.mgwt-Button-round   { }
+.mgwt-Button-small   { }
+.mgwt-Button-confirm { }
+.mgwt-Button-active  { background-color: gray; border-radius: 4px; }
+.mgwt-Button-important { }
+

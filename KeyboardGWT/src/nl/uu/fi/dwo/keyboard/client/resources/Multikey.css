@@ -1,0 +1,39 @@
+@charset "UTF-8";
+@def grijs rgb(180,180,180);
+@def blauw #7896CA;
+@def donkerblauw #2673B6;
+@def achtergrond rgb(229,231,233);
+
+
+.popup {
+	
+}
+
+.root {
+	background-color: achtergrond;
+	line-height: 33px;
+	font-family: sans-serif;
+	font-style: initial;
+	font-weight: normal !important;
+	font-size: 16px;
+}
+
+.gray .key {
+	background-color: grijs;
+	color: white;	
+}
+.italic .key {
+	font-style: italic;
+}
+
+.key {
+	background-color: white;
+	border-radius: 5px;
+	width: 32px;
+	height: 32px;
+	text-align: center;
+}
+
+.fun.root .key {
+	font-size: 13px;
+}

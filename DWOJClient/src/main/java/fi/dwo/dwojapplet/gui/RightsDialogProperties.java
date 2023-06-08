@@ -1,0 +1,29 @@
+/*Copyrighted 2015. */
+package fi.dwo.dwojapplet.gui;
+
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminSchoolManager;
+import java.util.List;
+import java.util.logging.Logger;
+
+/**
+ *
+ *
+ * @author Gert van der Plas
+ */
+public class RightsDialogProperties {
+
+    private static final Logger LOG = Logger.getLogger(RightsDialogProperties.class.getName());
+
+    public List<DomTeacherAndHasRole>  getTeachersAndHasRoleInSchool(DomSchool4DwoAdmin school) throws Dwo2Exception {
+            return SecureDwoAdminSchoolManager.getTeachersAndHasRoleInSchool(school);
+    }
+
+    public Boolean update(DomHasRole hr) throws Dwo2Exception {
+            return SecureDwoAdminSchoolManager.updateHasRoleRights(hr);
+    }
+    
+}

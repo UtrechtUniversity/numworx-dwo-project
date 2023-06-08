@@ -1,0 +1,26 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:with field='pfx' type='java.lang.String'/>
+	<ui:with field='rb'  type='nl.uu.fi.dwo.mobile.client.text.Text' />
+	<ui:style field='style' src="TreeModuleViewNumworx.css" type='nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworxCss'/>	
+			<g:FlowPanel styleName='{style.headerPanel}' addStyleNames='profile-header'>
+			  	<g:InlineHTML styleName='{style.numworx}' addStyleNames='profile-headerLogo'>&#x00A0;</g:InlineHTML>
+<!-- 				<g:TextBox ui:field='searchInput' styleName='{style.search-input}'></g:TextBox> -->
+<!-- 				<g:InlineHTML ui:field='searchBtn' styleName='{style.search}'><img src='{pfx}images/numworx/search-numworx.svg'/></g:InlineHTML> -->
+				<g:InlineHTML addStyleNames='{style.status}' ui:field='status'><i class='fa fa-cloud-upload'/></g:InlineHTML>
+				<g:MenuBar addStyleNames='{style.menu}'>
+					<g:MenuItem ui:field='user' addStyleNames='{style.menuItem} {style.navIcon} profile-headerIcon' />
+				</g:MenuBar>
+				<g:Label ui:field='loginLabel' styleName='{style.loginname}' addStyleNames='profile-headerLabel'><ui:text from='{rb.guest}' /></g:Label>
+<!-- 				<g:ToggleButton ui:field='fullBtn' styleName='{style.nav}'> -->
+<!-- 					<g:upFace><img src='{pfx}images/numworx/fullscreen-numworx.svg'/></g:upFace> -->
+<!-- 					<g:downFace><img src='{pfx}images/numworx/borderdscreen-numworx.svg'/></g:downFace> -->
+<!-- 				</g:ToggleButton> -->
+<!-- 				<g:FocusPanel styleName='{style.nav}'><g:Image url='{pfx}images/numworx/ster-grijs-numworx.svg'/></g:FocusPanel> -->
+				<g:FocusPanel ui:field='upBtn' styleName='{style.nav}'>
+					<g:InlineHTML><i  class='fa fa-2x fa-arrow-up {style.navIcon} profile-headerIcon' ></i></g:InlineHTML>
+				</g:FocusPanel>
+<!-- 				<g:FocusPanel ui:field='homeBtn' styleName='{style.nav}'><g:Image url='{pfx}images/numworx/home-numworx.svg'/></g:FocusPanel> -->
+			</g:FlowPanel>
+</ui:UiBinder> 

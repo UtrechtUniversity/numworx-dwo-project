@@ -1,0 +1,42 @@
+@import url("//fonts.googleapis.com/css?family=Ubuntu:regular,medium,bold");
+
+body {
+	background-color: #d2e5f5;
+	font-family: "Ubuntu" !important;
+	font-size: 14px;
+	line-height: 18px;
+	color: #1B75BB;
+}
+
+a {
+	color: #1B75BB;
+	text-decoration: underline;
+	font-weight: bold;
+}
+
+#header {
+	background-color: #314770;
+	width: 100%;
+	height: 50px;
+}
+#header img {
+		margin-top: -24px;
+		margin-left: 20px;
+		margin-right: 20px;
+		width: 140px;
+		display: inline-block;
+		vertical-align: top;
+		overflow: hidden;
+	}
+	
+#footer {
+        position: absolute;
+        bottom: 0em;
+        right: 0em;
+        background-color: #d2e5f5;
+}
+
+#footer iframe {
+        border: 0;
+}
+	

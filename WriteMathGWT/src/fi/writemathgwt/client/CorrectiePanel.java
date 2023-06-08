@@ -1,7 +1,5 @@
 package fi.writemathgwt.client;
 
-//import javax.swing.JPanel;
-//import javax.swing.JButton;
 //import javax.swing.JLabel;
 
 import com.google.gwt.dom.client.Style;

@@ -1,0 +1,75 @@
+This software is compatible with tomcat7.0 and requires a mysql 5.5 database
+resource. For security reasons the application should best run in it's own 
+tomcat. As we only deploy production on Linux-based hosts our documentation 
+is limited to that platform, though an advanced developer may install it in
+any tomcat/mysql capable OS.
+
+Create an empty mysql database and run the createdb.sql in the tools directory 
+on the commandline of the mysql executable to fill it with tables. Next create a 
+user account for the new database.
+
+Settings for the database for mysql 5.7 should be as follows in the mysqld.cnf, note the 
+mysql_mode = '' allow to store a “zero” value of '0000-00-00' as a “dummy date”.:
+
+lower_case_table_names=1
+character-set-server = utf8
+collation-server=utf8_unicode_ci
+init-connect='SET NAMES utf8'
+innodb_file_per_table = 1
+default-storage-engine=INNODB
+sql_mode = ''
+
+For importing an existing database it requires a SET GLOBAL sql_mode = 'NO_AUTO_VALUE_ON_ZERO'. 
+It's a legacy issue.
+
+The database account for the resource should have select, insert update and 
+delete rights. If the database is named dwodb. One might use the following 
+commands in mysql:
+
+CREATE USER 'dwo'@'%' IDENTIFIED BY 'dwopasswd';
+GRANT SELECT,INSERT,UPDATE,DELETE ON `dwodb`.* TO 'dwo'@'%';
+
+For authentication by tomcat we should use create some views in the MySQL database:
+
+CREATE VIEW tomcat_user_view AS SELECT username, passwd FROM tblUser;
+CREATE VIEW tomcat_roles_view AS select u.username, g.groupname from tblUser u  join tblhasrole h using (userid) join tblschoolgroup sg on (h.schoolGroupID =  sg.schoolGroupID) join tblgroup g using (groupID);
+
+The database jdbc/dwodb resource is configured using system properties. The best 
+way is to add them to the catalina.properties in the tomcat/conf directory.     
+
+    RDS_USERNAME=root
+    RDS_PASSWORD=MyRDSSecret
+    RDS_HOSTNAME=127.0.0.1
+    RDS_PORT=3306
+    RDS_DB_NAME=dwo_devel_v1_4
+
+in case of a name clash they can be reconfigured by editing the META-INF/context.xml.
+
+For SecureRandomSeed being used for ThreadLocalRandom it is required to set the system-property
+
+    java.util.secureRandomSeed=true
+
+SMTP system properties must be configured for sending email. Again the catalina.properties
+are the recommended place.
+   
+SMTP_SERVER=localhost
+SMTP_PORT=25
+SMTP_AUTH=false
+SMTP_TLS=no
+SMTP_USER=me
+SMTP_PASSWORD=mySmtpSecret
+SMTP_EMAIL=wisweb@fi.uu.nl
+
+Verify there is enough permgenspace voor de tomcat.
+
+For sending emails to allow a password change we need an smtp server that allows 
+authentication. Configure it in the context.xml or the server.xml:
+
+  <!-- may be configured in server.xml of tomcat -->
+  <Parameter name="fi.dwo.server.rest.smtp.server" override="true" value="email-smtp.eu-west-1.amazonaws.com"/>
+  <Parameter name="fi.dwo.server.rest.smtp.port" override="true" value="465"/>
+  <Parameter name="fi.dwo.server.rest.smtp.tls" override="true" value="yes"/>
+  <Parameter name="fi.dwo.server.rest.smtp.user" override="true" value="me"/>
+  <Parameter name="fi.dwo.server.rest.smtp.password" override="true" value="mySecret"/>
+  <Parameter name="fi.dwo.server.rest.smtp.email" override="true" value="noreply@dwo.nl"/>
+

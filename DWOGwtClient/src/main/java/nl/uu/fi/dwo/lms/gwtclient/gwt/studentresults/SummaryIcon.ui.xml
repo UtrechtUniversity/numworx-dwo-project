@@ -1,0 +1,65 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:s="urn:import:org.vectomatic.dom.svg.ui"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style field='style' type="nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.SummaryIconCSS">
+	.white {
+		fill: white;
+	}
+	.green {
+		fill: green;
+	}
+	.red {
+		fill: red;
+	}
+	.svg {
+	}
+	
+	/* Add CSS here. See the GWT docs on UI Binder for more details */
+	</ui:style>
+	<g:DockLayoutPanel unit="PX" styleName="score-treeItem">
+	<g:center>
+	<g:InlineLabel styleName='score-title' ui:field='title'>title</g:InlineLabel>
+	</g:center>
+	<g:west size='16'>
+		<s:SVGImage ui:field='icon'><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1024 1024" enable-background="new 0 0 1024 1024" xml:space="preserve">
+<g id="Laag_1" image-rendering="optimizeQuality" shape-rendering="geometricPrecision">
+	<path id="curve0" fill="#314770" d="M363,128c35.2,0,65.6,12.6,90.5,37.5l53,53c24.9,24.9,55.3,37.5,90.5,37.5h171
+		c35.3,0,64,28.8,64,64v32h-64v-32H597c-52.2,0-98.8-19.3-135.7-56.2l-53.1-53.1c-12.9-12.9-27-18.7-45.2-18.7H128.1
+		c-0.1,0-0.1,0-0.1,0.1V800c0,17.6,14.4,32,32,32s32-14.4,32-32c0-117.3,0-234.7,0-352c0-35.3,28.7-64,64-64h512h64l0,0
+		c35.3,0,64,28.7,64,64c0,106.7,0,213.3,0,320c0,70.5-57.5,128-128,128H160c-52.9,0-96-43.1-96-96c0-202.7,0-405.3,0-608
+		c0-35.3,28.7-64,64-64C206.3,128,284.7,128,363,128z"/>
+	</g>
+</svg></s:SVGImage>
+	</g:west>
+	<g:east size="105">
+	<s:SVGImage ui:field="image">
+		<svg 	class='score-template {style.svg}'
+				viewBox="-6 0 210 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+	     <g ui:field='scale' transform='scale(2,1)' >
+			<rect ui:field='r01' x='0' y='0' width='4' height='8' class='{style.green}'/>
+			<rect ui:field='r02' x='5' y='0' width='4' height='8' class='{style.green}'/>
+			<rect ui:field='r03' x='10' y='0' width='4' height='8' class='{style.green}'/>
+			<rect ui:field='r04' x='15' y='0' width='4' height='8' class='{style.green}'/>
+			<rect ui:field='r05' x='20' y='0' width='4' height='8' class='{style.green}'/>
+			<rect ui:field='r06' x='25' y='0' width='4' height='8' class='{style.green}'/>
+			<rect ui:field='r07' x='30' y='0' width='4' height='8' class='{style.green}'/>
+			<rect ui:field='r08' x='35' y='0' width='4' height='8' class='{style.green}'/>
+			<rect ui:field='r09' x='40' y='0' width='4' height='8' class='{style.red}'/>
+			<rect ui:field='r10' x='45' y='0' width='4' height='8' class='{style.red}'/>
+			<rect ui:field='r11' x='50' y='0' width='4' height='8' class='{style.red}'/>
+			<rect ui:field='r12' x='55' y='0' width='4' height='8' class='{style.red}'/>
+			<rect ui:field='r13' x='60' y='0' width='4' height='8' class='{style.red}'/>
+			<rect ui:field='r14' x='65' y='0' width='4' height='8' class='{style.red}'/>
+			<rect ui:field='r15' x='70' y='0' width='4' height='8' class='{style.white}'/>
+			<rect ui:field='r16' x='75' y='0' width='4' height='8' class='{style.white}'/>
+			<rect ui:field='r17' x='80' y='0' width='4' height='8' class='{style.white}'/>
+			<rect ui:field='r18' x='85' y='0' width='4' height='8' class='{style.white}'/>
+			<rect ui:field='r19' x='90' y='0' width='4' height='8' class='{style.white}'/>
+			<rect ui:field='r20' x='95' y='0' width='4' height='8' class='{style.white}'/>
+		  </g>
+		</svg>
+	</s:SVGImage></g:east>
+	</g:DockLayoutPanel>
+</ui:UiBinder> 

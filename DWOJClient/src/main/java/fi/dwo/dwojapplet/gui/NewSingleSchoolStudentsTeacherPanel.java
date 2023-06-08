@@ -1,0 +1,610 @@
+package fi.dwo.dwojapplet.gui;
+
+import fi.beans.numworxlf.Constants;
+import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JOptionPane;
+import fi.dwo.commons.system.MD5;
+import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.AbstractAction;
+import javax.swing.AbstractCellEditor;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
+
+/**
+ * The panel which shows the school classes for a teacher.
+ */
+public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements CenterSubPanel, ActionListener {
+
+    private static final Logger LOG = Logger.getLogger(NewSingleSchoolStudentsTeacherPanel.class.getName());
+
+    private DomSchoolClass schoolClass;
+    private NewSingleSchoolStudentsTeacherPanelProperties prop = null;
+    private NewSingleSchoolStudentsTeacherPanelTableModel tableModel;
+    private CenterPanel center;
+
+    private JButton backButton;
+    private JButton addButton;
+    private JButton importButton;
+//    private JComboBox schoolClassComboBox;
+    private Clipboard systemClipboard;
+    String[] columnNames = {
+        TextMapper.getText(TextMapper.TBL_GIVENNAME),
+        TextMapper.getText(TextMapper.TBL_INSERTION),
+        TextMapper.getText(TextMapper.TBL_FAMILYNAME),
+        TextMapper.getText(TextMapper.TBL_USERNAME),
+        TextMapper.getText(TextMapper.TBL_PASSWORD),
+        TextMapper.getText(TextMapper.TBL_EMAIL),
+        TextMapper.getText(TextMapper.TBL_DELETE)};
+
+    private Image delImage;
+
+    private JPanel jtbl;
+    private JTable jtable = new JTable();
+
+    public enum UserType {
+
+        TEACHER, SCHOOLADMIN
+    };
+
+    private UserType userType = UserType.TEACHER;
+    
+    public class ImageRenderer extends JLabel implements TableCellRenderer, Icon {
+
+        private ImageIcon icon = new ImageIcon();
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table,
+                Object value, boolean selected, boolean hasFocus, int row, int col) {
+            Image image = (Image) value;
+            if (image != null) {
+              icon.setImage(image);
+              setIcon(icon);
+            } else {
+              setIcon(this);
+            }
+            setHorizontalAlignment(SwingConstants.CENTER);
+            setOpaque(true);
+            Object[] arguments = new Object[]{table.getValueAt(row, 0)};
+            if (selected) {
+                setBackground(table.getSelectionBackground());
+            } else {
+                setBackground(table.getBackground());
+            }
+            return this;
+        }
+
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+        }
+
+        @Override
+        public int getIconWidth() {
+          return 16;
+        }
+
+        @Override
+        public int getIconHeight() {
+          return 16;
+        }
+    }
+
+    public class ImageButtonEditor extends AbstractCellEditor implements
+            TableCellEditor, ActionListener {
+
+        Object value;
+        int row;
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value,
+                boolean arg2, int row, int col) {
+            this.value = value;
+            JButton button = new JButton(new ImageIcon((Image) value));
+            button.addActionListener(this);
+            this.row = row;
+            //model = (ClassTeacherPanelTableModel) table.getModel();
+            return button;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return value;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            this.fireEditingStopped();
+//            final GuiCreator instance = GuiCreator.instance();
+            if (value == delImage) {
+                tableModel.deleteSelectedRow(tableModel.getSelectedRow());
+            }
+        }
+    }
+
+    private void buildJTable() throws Dwo2Exception {
+        if (jtbl != null) {
+            remove(jtbl);
+            jtbl = null;
+        }
+        jtbl = new JPanel();
+
+        jtable.setMinimumSize(new Dimension(400, 300));
+        jtable.setBackground(Color.LIGHT_GRAY);
+        jtable.getTableHeader().setReorderingAllowed(false);
+        jtable.setForeground(GuiConstants.MAIN_FOREGROUND);
+        jtable.getTableHeader().setForeground(GuiConstants.MAIN_FOREGROUND);
+
+        jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
+        jtbl.add(jtable.getTableHeader());
+        jtbl.add(jtable);
+        jtbl.add(Box.createHorizontalGlue());
+        tableModel = new NewSingleSchoolStudentsTeacherPanelTableModel();
+        List<DomSingleSchoolStudent> students = new ArrayList<DomSingleSchoolStudent>(1);
+        tableModel.init(prop, columnNames, students, delImage);
+
+        jtable.setModel(tableModel);
+        if (jtable.getRowCount() > 0) {
+            jtable.setRowSelectionInterval(0, 0);
+        }
+        jtable.setRowSelectionAllowed(true);
+        jtable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        jtable.setColumnSelectionAllowed(false);
+        jtable.setCellSelectionEnabled(false);
+
+        InputMap im = jtable.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        KeyStroke tab = KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0);
+        KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+        KeyStroke cursorRight = KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0);
+        Action tabAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JTable t = (JTable) e.getSource();
+                int column = t.getSelectedColumn();
+                int row = t.getSelectedRow();
+                //t.getCellEditor().stopCellEditing();
+
+                do {
+                    if (row == -1) {
+//                        if ((e.getModifiers() & InputEvent.SHIFT_DOWN_MASK) > 0) {
+//                            //shift pressed
+//                            row = t.getRowCount() - 1;
+//                        } else {
+                        row = 0;//handle no selection                            
+//                        }
+                    }
+                    if (column == -1) {
+//                        if ((e.getModifiers() & InputEvent.SHIFT_DOWN_MASK) > 0) {
+//                            //shift pressed
+//                            column = t.getColumnCount() - 2;
+//                        } else {
+                        column = 0;
+//                        }//ditto
+                    }
+
+                    if ((e.getModifiers() & InputEvent.SHIFT_DOWN_MASK) > 0) {
+                        //shift pressed
+                        column--;
+                    } else {
+                        column++;
+                    }
+
+                    if (column == -1) {
+                        column = t.getColumnCount() - 2;
+                        row--;
+                        if (row == -1) {
+                            row = t.getRowCount() - 1;
+                        }
+                    } else if (column == t.getColumnCount() - 1) {
+                        column = 0;
+                        row++;
+                        if (row == t.getRowCount()) {
+                            row = 0;
+                        }
+                    }
+                } while (t.isCellEditable(row, column) == false);
+                if (row == t.getRowCount() - 1) {
+                    NewSingleSchoolStudentsTeacherPanelTableModel model = (NewSingleSchoolStudentsTeacherPanelTableModel) t.getModel();
+                    model.getData().add(new DomSingleSchoolStudent());
+                    model.setSelectedColumn(column + 1);
+                    model.emptyRow ++;
+                    model.setSelectedRow(model.getData().size() - 1);
+                    model.fireTableDataChanged();
+                }
+//                else {
+//                    model.setSelectedColumn(column);
+//                    model.setSelectedRow(row);
+//                    model.fireTableDataChanged();
+//                }
+
+                t.changeSelection(row, column, false, false);
+                t.editCellAt(row, column);
+            }
+        };
+        jtable.getActionMap()
+                .put(im.get(tab), tabAction);
+        jtable.getActionMap()
+                .put(im.get(enter), tabAction);
+
+        Action cursorAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JTable t = (JTable) e.getSource();
+                int column = t.getSelectedColumn();
+                int row = t.getSelectedRow();
+                //t.getCellEditor().stopCellEditing();
+
+                do {
+                    if (row == -1) {
+                        row = 0;//handle no selection                            
+                    }
+                    if (column == -1) {
+                        column = 0;
+                    }
+
+                    column++;
+
+                    if (column == t.getColumnCount() - 1) {
+                        column = t.getColumnCount() - 2;
+                    }
+                } while (t.isCellEditable(row, column) == false);
+                t.changeSelection(row, column, false, false);
+                t.editCellAt(row, column);
+            }
+        };
+
+        jtable.getActionMap()
+                .put(im.get(cursorRight), cursorAction);
+
+        jtable.putClientProperty(
+                "terminateEditOnFocusLost", Boolean.TRUE);
+
+        TableUtil.setDefaults(jtable, true, new NewSingleSchoolStudentsTeacherPanel.ImageRenderer(), new NewSingleSchoolStudentsTeacherPanel.ImageButtonEditor());
+        TableUtil.setJTableSizes(jtable);
+
+        //set input verification
+        jtable.getColumnModel().getColumn(0).setCellRenderer(new InputCellRendererNotEmpty());
+        jtable.getColumnModel().getColumn(2).setCellRenderer(new InputCellRendererNotEmpty());
+        jtable.getColumnModel().getColumn(3).setCellRenderer(new InputCellRendererUsername());
+        jtable.getColumnModel().getColumn(4).setCellRenderer(new InputCellRendererPassword());
+        jtable.getColumnModel().getColumn(5).setCellRenderer(new InputCellRendererEmail());
+
+//        TableUtil.setBorder(jtable);
+        //Override default settings for spreadsheet like border.
+        TableUtil.setBorder(jtable);
+        jtable.setGridColor(Constants.COLOR13);
+        jtable.setShowGrid(true);
+        jtbl.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
+        jtbl.setVisible(false);
+        this.add(jtbl);
+        jtbl.setVisible(true);
+    }
+
+    public NewSingleSchoolStudentsTeacherPanel(DomSchoolClass sc) throws Dwo2Exception {
+        super(null);
+        init(sc, userType);
+
+    }
+
+    public NewSingleSchoolStudentsTeacherPanel(DomSchoolClass sc, NewSingleSchoolStudentsTeacherPanel.UserType type) throws Dwo2Exception {
+        super(null);
+        init(sc, type);
+
+    }
+
+    /**
+     * Creates a new ClassPanel which shows a list of classes.
+     *
+     * @param sc
+     * @param userType
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
+     */
+    private void init(DomSchoolClass sc, UserType userType) throws Dwo2Exception {
+        schoolClass = sc;
+        this.userType = userType;
+        this.setSize(480, 500);
+
+        //fetch user details.
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setBackground(getSubHeaderColor());
+        this.setAlignmentX(LEFT_ALIGNMENT);
+        this.setAlignmentY(TOP_ALIGNMENT);
+        setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+        /* Add Remove-class image */
+        MediaTracker tr = new MediaTracker(this);
+        delImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_STUDENT_IMAGE);
+        tr.addImage(delImage, 0);
+        try {
+            tr.waitForAll();
+        } catch (Exception e) {
+        }
+        try {
+            systemClipboard = getToolkit().getSystemClipboard();
+        } catch (Exception e) {
+            systemClipboard = null;
+        }
+
+        //FontMetrics fm;
+        backButton = new JButton(TextMapper.getText(TextMapper.BTN_BACK));
+        backButton.setSize(backButton.getPreferredSize());
+        backButton.addActionListener(this);
+        addButton = new JButton(TextMapper.getText(TextMapper.BTN_CREATE_STUDENTACCOUNTS));        
+        addButton.setSize(addButton.getPreferredSize());
+        addButton.addActionListener(this);
+        addButton.setEnabled(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().licenseIsValid());
+        importButton = new JButton(TextMapper.getText("Import from clipboard"));
+        importButton.setSize(importButton.getPreferredSize());
+        importButton.addActionListener(this);
+
+        Box header = Box.createHorizontalBox();
+        header.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        header.setMaximumSize(new Dimension(3000, 100));
+        header.setBorder(BorderFactory.createEmptyBorder());
+        header.add(backButton);
+        header.add(Box.createRigidArea(new Dimension(30, 0)));
+        header.add(importButton);
+        header.add(Box.createHorizontalGlue());
+        header.add(addButton);
+        header.add(Box.createRigidArea(new Dimension(10, 0)));
+//        header.add(schoolClassComboBox);
+        this.add(header);
+        //addClassButton.setVisible(true);
+        this.add(Box.createRigidArea(new Dimension(0, 10)));
+//        this.add(Box.createVerticalStrut(15));
+        buildJTable();
+        this.add(Box.createVerticalGlue());
+    }
+
+    /**
+     * Indicate that another panel is loaded and the connections of this panel
+     * must be closed.
+     */
+    @Override
+    public void end() {
+
+    }
+
+    /**
+     * Sets the centerpanel to communicate with.
+     *
+     * @param centerPanel The centerPanel to communicate with.
+     */
+    @Override
+    public void setCenterPanel(CenterPanel centerPanel) {
+        center = centerPanel;
+    }
+    @Override
+    public Color getSubHeaderColor() {
+      return Constants.COLOR20;
+    }
+
+    /**
+     * Returns a Panel that can function as a header panel.
+     *
+     * @return A panel that can function as a header panel.
+     * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
+     */
+    @Override
+    public JComponent getHeaderPanel() {
+        HeaderPanel header = new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT)
+              + " - " + TextMapper.getText(TextMapper.TBL_CLASSNAME)
+              + ": " + schoolClass.getSchoolClassName()
+              + " - " + TextMapper.getText(TextMapper.HDR_NEW_STUDENTS));
+        header.setBackground(getSubHeaderColor());
+        return header;
+    }
+
+    /**
+     * Invoked when an action occurs.
+     *
+     * @param e The ActionEvent.
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == addButton) {
+            try {
+                List<DomSingleSchoolStudent> submitList = tableModel.getData();
+                List<DomSingleSchoolStudent> resultList = new ArrayList<DomSingleSchoolStudent>();
+                boolean failFlag = false;
+                boolean fatalFlag = false;
+                String tmpPassword = null;
+                int cnt = 0;
+                //check input once more!
+                try {
+                    for (DomSingleSchoolStudent submit : submitList) {
+                        if (NewSingleSchoolStudentsTeacherPanelProperties.IsValidUserDataInput(submit)) {
+                          if (!SimpleValidUserFieldsChecker.isNonEmptyNorNull(submit.getPassword(), submit.getFamilyName(), submit.getGivenName(), submit.getEmail(), submit.getUserName())) {
+                            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_Required_Fields, "required fields missing");
+                          }
+                            if (!ValidUserFieldsChecker.isValidEmail(submit.getEmail())) {
+                                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid, "The email address does not  conform with RFC 5322.");
+                            }
+                            if (!ValidUserFieldsChecker.isValidUserName(submit.getUserName())) {
+                                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_UserName_Invalid, "The username address is not correctly formatted.");
+                            }
+                            if (!SimpleValidUserFieldsChecker.isValidPassword(submit.getPassword())) {
+                              throw new Dwo2Exception(Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven, "wrong password");
+                            }
+                        }
+                    }
+                } catch (Dwo2Exception ex) {
+                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CREATESTUDENTERROR));
+                    return;
+                }
+                for (DomSingleSchoolStudent submit : submitList) {
+                    if (NewSingleSchoolStudentsTeacherPanelProperties.IsValidUserDataInput(submit)) {
+                        cnt++;
+                        try {
+                            tmpPassword = submit.getPassword();
+                            DomNewSingleSchoolStudent student = new DomNewSingleSchoolStudent();
+                            submit.setPassword(MD5.getHashString(submit.getPassword()));
+                            student.setDomSingleSchoolStudent(submit);
+                            student.setDomSchoolClass((DomSchoolClass) schoolClass);
+                            switch (userType) {
+                                case TEACHER:
+                                    NewSingleSchoolStudentsTeacherPanelProperties.submitSingleSchoolStudent(student);
+                                    break;
+                                case SCHOOLADMIN:
+                                    NewSingleSchoolStudentsSchoolAdminPanelProperties.submitSingleSchoolStudent(student);
+                                    break;
+                            }
+                        } catch (Dwo2Exception ex) {
+                            submit.setPassword(tmpPassword);
+                            resultList.add(submit);
+                            LOG.log(Level.FINE, "", ex);
+                            failFlag = true;
+                        } catch (Exception ex2) {
+                            LOG.log(Level.FINE, "", ex2);
+                            fatalFlag = true;
+                        }
+                    }
+                }
+                if (cnt == 0) {
+                    GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_NO_USERS_SELECTED));
+                }
+                tableModel.init(prop, columnNames, resultList, delImage);
+                tableModel.fireTableDataChanged();
+                if (failFlag == true) {
+                    GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(),
+                            Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(),
+                                    Dwo2ExceptionCode.Rest_Registration_UserNames_exists));
+                }
+                if (fatalFlag == true) {
+                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.EX_UNKNOWN_ERROR));
+                }
+                if (fatalFlag == false && failFlag == false) {
+                    GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
+                }
+            } catch (Dwo2Exception ex) {
+                LOG.log(Level.SEVERE, "", ex);
+                GuiCreator.instance().ShowErrorDialog(this, ex);
+            }
+        } else if (e.getSource() == importButton) {
+            pasteFromSystemClipboard();
+        } else if (e.getSource() == backButton) {
+            if (tableModel.getRowCount() > 1) {
+                if (GuiCreator.instance().ShowConfirmDialog(center, TextMapper.getText(TextMapper.DLG_Q_LOSE_NEW_STUDENT_ACCOUNTS)) != JOptionPane.OK_OPTION) {
+                    return;
+                }
+            }
+            try {
+                if (userType.equals(UserType.TEACHER)) {
+                    StudentsInSchoolClassTeacherPanel panel = new StudentsInSchoolClassTeacherPanel(schoolClass);
+                    center.loadCenter(panel);
+                } else {
+                    StudentsInSchoolClassSchoolAdminPanel panel = new StudentsInSchoolClassSchoolAdminPanel(schoolClass);
+                    center.loadCenter(panel);
+                }
+            } catch (Dwo2Exception ex) {
+                LOG.log(Level.FINE, "", ex);
+                GuiCreator.instance().ShowErrorDialog(this, ex);
+            }
+        }
+    }
+
+    /**
+     * Returns the current object, as the object to add to a gui.
+     *
+     * @return the current object.
+     * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
+     */
+    @Override
+    public JComponent getComponent() {
+        return this;
+    }
+
+    @Override
+    public Object getUserObject() {
+        return null;
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+    }
+
+    public boolean pasteFromSystemClipboard() {
+        if (systemClipboard == null) {
+            return false;
+        }
+        Transferable clipboardContent = systemClipboard.getContents(this);
+
+        if ((clipboardContent != null) && (clipboardContent.isDataFlavorSupported(DataFlavor.stringFlavor))) {
+            try {
+                String tempString;
+                tempString = (String) clipboardContent.getTransferData(DataFlavor.stringFlavor);
+                String[] rowStrings = tempString.split("\n"); // was: StringUtils.split(tempString, "\n");
+                String[] celStrings;
+                List<DomSingleSchoolStudent> newUserList = new ArrayList<DomSingleSchoolStudent>(rowStrings.length);
+                for (int i = 0; i < rowStrings.length; i++) {
+                  // remove trailing \r
+                    if (rowStrings[i].endsWith("\r")) {
+                      String t = rowStrings[i];
+                      rowStrings[i] = t.substring(0, t.length()-1);
+                    }
+                    DomSingleSchoolStudent student = new DomSingleSchoolStudent();
+                    newUserList.add(student);
+                    //userList.get(userList.size()).clearSettings();
+                    celStrings = rowStrings[i].split("\t", columnNames.length);
+                    if(celStrings.length < columnNames.length) { // avoid index out of bounds
+                      String tmp[] = new String[columnNames.length];
+                      System.arraycopy(celStrings, 0, tmp, 0, celStrings.length);
+                      celStrings = tmp;
+                    }
+                    student.setGivenName(celStrings[0]);
+                    student.setInsertion(celStrings[1]);
+                    student.setFamilyName(celStrings[2]);
+                    student.setUserName(celStrings[3]);
+                    student.setPassword(celStrings[4]);
+                    student.setEmail(celStrings[5]);
+                }
+                tableModel.addRows(newUserList);
+                return true;
+            } catch (Exception e) {
+                LOG.log(Level.SEVERE, "clipboard paste", e);
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+}

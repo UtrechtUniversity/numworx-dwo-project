@@ -1,0 +1,254 @@
+package fi.dwo.dwojapplet.persistence.cache;
+
+import fi.beans.numworxlf.JOptionPane;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Sco;
+
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class CachingStore implements IStore, Runnable {
+    private static final Logger LOG = Logger.getLogger(CachingStore.class.getName());
+
+    private static final long MAX_BACKOFF = 2 * 60 * 1000L; // 2 min maximum voor exponential backoff
+    private static final long INI_BACKOFF = 200L;
+    Thread worker;
+    Map work, cache;
+    Iterator iterator;
+    IStore delegate;
+    private PersistenceException last;
+
+    public synchronized Bucket getWork() throws InterruptedException {
+        if (iterator != null) {
+            try {
+                if (iterator.hasNext()) {
+                    return (Bucket) iterator.next();
+                }
+            } catch (ConcurrentModificationException cme) {
+                System.err.println("Expected: " + cme + ", niets aan de hand");
+            } catch (Exception e) { // expect ConcurrentModificationException
+                LOG.log(Level.SEVERE,null,e);
+            }
+        }
+
+        while (work.isEmpty()) {
+            notifyAll();
+            wait();
+        }
+        iterator = work.values().iterator();
+        Bucket next = (Bucket) iterator.next();
+        return next;
+    }
+
+    /**
+     * FIXME synchronisatie probleem met iterator.
+     *
+     * @param b
+     */
+    public synchronized void putWork(Bucket b) {
+//System.out.println("putWork " + b);
+        work.put(b, b);
+        cache.put(b, b.getValue());
+        notifyAll();
+    }
+
+    @Override
+    public void run() {
+        long backoff = INI_BACKOFF;
+        while (!Thread.interrupted()) {
+            Bucket b = null;
+            try {
+                b = getWork();
+//System.out.println("try setValue " + b);
+                delegate.setValue(b.getUid(), b.getScoid(), b.getSgid(), b.getClsid(), b.getKey(), b.getValue());
+                /// sleep(1000)
+                iterator_remove();
+                backoff = INI_BACKOFF;
+            } catch (InterruptedException e) {
+                break;
+            } catch (PersistenceException e) {
+                if (e.getCode() == PersistenceException.EX_IO) {
+                    try {
+                        Thread.sleep(backoff);
+                        backoff = Math.min(MAX_BACKOFF, backoff * 2);
+                        iterator = null; // start at head of queue, wel of niet?
+                    } catch (InterruptedException e1) {
+                        break;
+                    }
+
+                } else {
+                    System.out.println(b.getKey() + " exception " + e.getCode());
+                    last = e;
+                }
+            }
+        }
+        clr();
+    }
+
+    private synchronized void iterator_remove() {
+        try {
+            iterator.remove();
+        } catch (ConcurrentModificationException cme) {
+            iterator = null;
+        } catch (Exception e) {
+            System.err.println(e);
+            iterator = null;
+        }
+
+    }
+
+    private synchronized void clr() {
+        worker = null;
+        notifyAll();
+    }
+
+    @Override
+    public String getValue(int uid, int scoid, int sgid, int clsid, String key)
+            throws PersistenceException {
+        Bucket b = new Bucket(uid, scoid, sgid, clsid, key, "");
+        synchronized (this) {
+            Bucket v = (Bucket) work.get(b);
+            if (v == null) {
+                //System.out.println("cache miss " + b + " " + cache.size());
+                String value = (String) cache.get(b);
+                if (value != null) {
+                    //System.out.println("2nd cache hit " + b.trim(value));
+                    return value;
+                }
+                try {
+                    return delegate.getValue(uid, scoid, sgid, clsid, key);
+                } catch (PersistenceException e) {
+                    LOG.log(Level.SEVERE,null,e);
+                    throw e;
+                }
+            }
+            //System.out.println("cache hit " + v);
+            return v.getValue();
+        }
+    }
+
+    @Override
+    public String setValue(int uid, int scoid, int sgid, int clsid, String key,  String value)
+            throws PersistenceException {
+        putWork(new Bucket(uid, scoid, sgid, clsid, key, value));
+        if (last != null) {
+            PersistenceException e = last;
+            last = null;
+            throw e;
+        }
+        return "true";
+    }
+
+    @Override
+    public String commit(int uid, int scoid, String param)
+            throws PersistenceException {
+        commit(true);
+        return "true";
+    }
+
+    private synchronized void commit(boolean x) throws PersistenceException {
+        while (!work.isEmpty()) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                LOG.log(Level.SEVERE,null,e);
+                if (x) {
+                    throw new PersistenceException(PersistenceException.EX_IO, e);
+                }
+            }
+        }
+        if (last != null && x) {
+            PersistenceException e = last;
+            last = null;
+            throw e;
+        }
+    }
+
+    @Override
+    public void destroy() {
+        cache.clear();
+        try {
+            commit(false);
+        } catch (PersistenceException e) {
+            JOptionPane.showMessageDialog(DwoHelper.getApplet(), e.getMessage());
+        }
+        synchronized (this) {
+            while (worker != null) {
+                worker.interrupt();
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    LOG.log(Level.SEVERE,null,e);
+                }
+            }
+        }
+    }
+
+    public CachingStore() {
+        delegate = new NoCache();
+        work = new LinkedHashMap();
+        cache = new WeakHashMap();
+        worker = new Thread(this);
+        worker.start();
+    }
+
+//    @Override
+//    public synchronized boolean changeSco(int scoid, String scoName, String description,
+//            boolean delete, String launchdataString, Boolean showScore)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException {
+//        uncache(scoid, delete);
+//        return delegate.changeSco(scoid, scoName, description, delete, launchdataString, showScore);
+//    }
+
+//    @Override
+//    public synchronized boolean changeSco(int scoid, String scoName, String description,
+//            boolean delete, byte[] launchdata, Boolean showScore)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException {
+//        uncache(scoid, delete);
+//        return delegate.changeSco(scoid, scoName, description, delete, launchdata, showScore);
+//    }
+
+    private void uncache(int scoid, boolean delete) {
+        Iterator inter;
+        if (delete) {
+            inter = work.keySet().iterator();
+            while (inter.hasNext()) {
+                Bucket entry = (Bucket) inter.next();
+                if (entry.getScoid() == scoid) {
+                    inter.remove();
+                    cache.remove(entry);
+                }
+            }
+        }
+        try {
+            commit(false);
+        } catch (PersistenceException e) {
+            LOG.log(Level.SEVERE,null,e); // should not happen
+        }
+        inter = cache.keySet().iterator();
+        while (inter.hasNext()) {
+            if (((Bucket) inter.next()).getScoid() == scoid) {
+                inter.remove();
+            }
+        }
+    }
+
+    @Override
+    public synchronized void clear(int scoid) {
+        uncache(scoid, false);
+    }
+
+	@Override
+	public void uncache(Sco sco, boolean delete) {
+		uncache(sco.getScoID(), delete);
+	}
+
+}

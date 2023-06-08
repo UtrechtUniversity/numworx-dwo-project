@@ -1,0 +1,73 @@
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+              http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5"
+         xmlns="http://java.sun.com/xml/ns/javaee">
+
+  <display-name>Archetype Created Web Application</display-name>
+    <!-- Default page to serve -->
+  <welcome-file-list>
+    <welcome-file>Register.html</welcome-file>
+  </welcome-file-list>
+  <context-param>
+  	<param-name>dbrest.url</param-name>
+	<param-value>http://localhost:8080/dwo/</param-value>  
+  </context-param>
+  <servlet>
+  	<servlet-name>RegisterForm</servlet-name>
+  	<servlet-class>nl.uu.fi.dwo.register.server.RegisterForm</servlet-class>
+  	<init-param>
+  		<param-name>fi.dwo.server.rest.smtp.email</param-name>
+ 		<param-value>wim@fi.uu.nl</param-value>
+  	</init-param>
+  	<init-param>
+  		<param-name>register.free</param-name>
+  		<param-value>/RegisterFree.html</param-value>
+  	</init-param>
+  </servlet>
+  <servlet>
+    <servlet-name>appdwo</servlet-name>
+    <servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class>
+    <init-param>
+      <param-name>targetUri</param-name>
+      <param-value>http://localhost:8080/dwo</param-value>
+    </init-param>
+    <init-param>
+      <param-name>log</param-name>
+      <param-value>true</param-value>
+    </init-param>
+</servlet>
+<servlet>
+	<servlet-name>update</servlet-name>
+	<servlet-class>nl.uu.fi.dwo.register.server.TeamAccess</servlet-class>
+  	<init-param>
+  		<param-name>fi.dwo.server.rest.smtp.email</param-name>
+ 		<param-value>wim@fi.uu.nl</param-value>
+  	</init-param>
+</servlet>
+<servlet>
+	<servlet-name>demoerror</servlet-name>
+	<servlet-class>nl.uu.fi.dwo.register.server.DemoError</servlet-class>
+</servlet>
+  <servlet-mapping>
+  	<servlet-name>RegisterForm</servlet-name>
+  	<url-pattern>/registerform</url-pattern>
+  </servlet-mapping>
+    <servlet-mapping>
+   	  <servlet-name>appdwo</servlet-name>
+   	  <url-pattern>/dwo/*</url-pattern>
+   </servlet-mapping>
+   <servlet-mapping>
+   	<servlet-name>update</servlet-name>
+   	<url-pattern>/update-contact</url-pattern>
+   </servlet-mapping>
+   <servlet-mapping>
+   	<servlet-name>demoerror</servlet-name>
+   	<url-pattern>/demoerror</url-pattern>
+   </servlet-mapping>
+	<listener>
+        <listener-class>
+            nl.uu.fi.dwo.register.server.TranslatorServletContextListener 
+        </listener-class>
+    </listener>
+</web-app>

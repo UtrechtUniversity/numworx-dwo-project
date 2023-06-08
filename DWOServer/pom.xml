@@ -1,0 +1,749 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <!-- Adjust artifact, name and description for new projects -->
+    <parent>
+        <groupId>nl.uu.fi.dwo</groupId>
+        <artifactId>DWO</artifactId>
+        <version>2.5.20</version>
+        <relativePath>../DWO/pom.xml</relativePath>
+    </parent>
+    <artifactId>DWOServer</artifactId>
+    <packaging>war</packaging>
+    <name>${project.build.finalName}</name>
+    <url>http://www.dwo.nl</url>
+    <!-- Update year to current when starting a new project -->
+    <inceptionYear>2015</inceptionYear> 
+    <organization>
+        <name>Freudenthal Institute</name>
+        <url>http://www.uu.nl/onderzoek/freudenthal-instituut</url>
+    </organization> 
+
+    <developers>
+        <developer>
+            <id>Gert van der Plas</id>
+            <name>plas0006</name>
+            <email>g.a.j.vanderplas@uu.nl</email>
+            <organization>Freudenthal Institute</organization>
+            <organizationUrl>http://www.uu.nl/onderzoek/freudenthal-instituut</organizationUrl>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>Wim van Velthoven</id>
+            <name>velth101</name>
+            <email>w.p.g.vanvelthoven@uu.nl</email>
+            <organization>Freudenthal Institute</organization>
+            <organizationUrl>http://www.uu.nl/onderzoek/freudenthal-instituut</organizationUrl>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
+    </developers>
+    <properties>
+        <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+        <context.xml>context.xml</context.xml>
+        <tomcat7.version>7.0.76</tomcat7.version>
+    </properties>
+  
+    <!-- dependencies -->
+    <dependencies>
+         <dependency>
+            <groupId>nl.uu.fi.dwo</groupId>
+            <artifactId>DWO-commons-lib</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4</version>
+        </dependency>
+       <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.xmlrpc</groupId>
+            <artifactId>xmlrpc</artifactId>
+            <version>2.0.1</version>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>servlet-api</artifactId>
+            		<groupId>javax.servlet</groupId>
+            	</exclusion>
+            </exclusions>
+        </dependency>        
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>bouncycastle</groupId>
+            <artifactId>bcprov-jdk16</artifactId>
+            <version>140</version>
+            <!--  <scope>provided</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.json</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.skyscreamer</groupId>
+            <artifactId>jsonassert</artifactId>
+            <version>1.5.0</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <!-- Datanucleus currently not in use as on-the-fly persistence compilation
+        does not work without tomcat configurations. Eclipse toplink however does work -->
+        <!--         <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>javax.persistence</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+       <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-core</artifactId>
+            <version>4.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-api-jpa</artifactId>
+            <version>4.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-rdbms</artifactId>
+            <version>4.0.6</version>
+        </dependency> -->
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>eclipselink</artifactId>
+            <version>2.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.jpa.modelgen.processor</artifactId>
+            <version>2.6.0</version>
+        </dependency> 
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <!-- if your container implements Servlet API older than 3.0, use "jersey-container-servlet-core"  -->
+            <artifactId>jersey-container-servlet</artifactId>
+            <version>2.18</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>2.18</version>
+        </dependency>
+        <!--  best found media type json support, faster than jackson -->
+        <dependency>
+            <groupId>com.owlike</groupId>
+            <artifactId>genson</artifactId>
+            <version>1.4</version>
+        </dependency> 
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.49</version>
+            <!--comment scope for elastic beanstalk-->
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.tuckey</groupId>
+            <artifactId>urlrewritefilter</artifactId>
+            <version>4.0.3</version>
+        </dependency>
+<!--        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-rs-security-cors</artifactId>
+            <version>2.6.1</version>
+        </dependency>-->
+    	<dependency>
+    		<groupId>nl.uu.fi.dwo.rest</groupId>
+    		<artifactId>DWO-rest-lib</artifactId>
+    	</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.10.5</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.10.5</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>0.10.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>5.4.3.Final</version>
+			<scope>test</scope>
+		</dependency>
+			<dependency>
+			   <groupId>org.glassfish</groupId>
+			   <artifactId>javax.el</artifactId>
+			   <version>3.0.1-b08</version>
+			   <scope>test</scope>
+		   </dependency>
+    </dependencies>
+    
+<!--    <distributionManagement>
+        <repository>
+            <id>snapshots</id>
+            <name>libs-snapshot</name>
+            <url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>    
+        </repository>
+    </distributionManagement>    -->
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                   <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                    <executable>${jdk}/bin/javac</executable>
+                    <fork>false</fork>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>      
+<!--             <plugin> -->
+<!--                 <groupId>org.apache.maven.plugins</groupId> -->
+<!--                 <artifactId>maven-dependency-plugin</artifactId> -->
+<!--                 <version>2.4</version> -->
+<!--                 <executions> -->
+<!--                     <execution> -->
+<!--                         <id>copy</id> -->
+<!--                         <phase>install</phase> -->
+<!--                         <goals> -->
+<!--                             <goal>copy</goal> -->
+<!--                         </goals> -->
+<!--                         <configuration> -->
+<!--                             <artifactItems> -->
+<!--                                 <artifactItem> -->
+<!--                                 <groupId>fi.dwo</groupId> -->
+<!--                                 <artifactId>DWOJApplet-working-gert</artifactId> -->
+<!--                                 <version>${project.version}</version> -->
+<!--                                 <type>jar</type> -->
+<!--                                 <overWrite>true</overWrite> -->
+<!--                                 <outputDirectory>${project.build.directory}/${project.build.finalName}/jars/</outputDirectory>    -->
+<!--                                 <destFileName>DWOJApplet.jar</destFileName>                              -->
+<!--                                 </artifactItem> -->
+<!--                             </artifactItems> -->
+<!--                         </configuration> -->
+<!--                     </execution> -->
+<!--                 </executions> -->
+<!--             </plugin>          -->
+<!--            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.1</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>-->
+                                  
+             <!-- ensure the build number is available as ${buildNumber} -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.3</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!--
+                     doCheck and doUpdate actually talk to repository if it's true,
+                     Check would check that there are no local changes.
+                     Update would update it
+                    -->
+                    <doCheck>false</doCheck>
+                    <doUpdate>false</doUpdate>
+                    <!--
+                     This ensures that even if we are not connected to scm than also
+                     take the version from local .svn file
+                    -->
+                    <revisiononscmfailure>
+       
+                        <!--
+                         Generate sequence build number based on:
+                         build number and timestamp     
+                        -->
+                        <format>Build: #{0} ({1,date})</format>
+                        <items>
+                            <item>buildNumber\d*</item>
+                            <item>timestamp</item>
+                        </items>
+                    </revisiononscmfailure>
+                </configuration>
+            </plugin>    
+            
+            <!-- put the build number in the manifest -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.5</version>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                </manifest>
+                                <manifestEntries>
+                                    <Implementation-Build>${buildNumber}</Implementation-Build>
+                                    <JavaClient-Version>${project.version}</JavaClient-Version>
+                                    <HtmlClient-Version />
+                                    <Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
+                                    <Implementation-ScmBranch>${scmBranch}</Implementation-ScmBranch>
+                                </manifestEntries>
+                            </archive>
+                        </configuration>
+            </plugin>
+           <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.2.3</version>
+                <configuration>
+                    <useDefaultManifestFile>true</useDefaultManifestFile>
+                    <warSourceDirectory>src/main/webapp</warSourceDirectory>
+<!--                    <contextFile>${basedir}/config/tomcat/context.xml</contextFile>                    -->
+                    <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+  					<attachClasses>true</attachClasses>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <!-- put the project version and build number in the manifest -->
+                                    <Implementation-Build>${buildNumber}</Implementation-Build>
+                                    <Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
+                                    <Implementation-ScmBranch>${scmBranch}</Implementation-ScmBranch>
+                        </manifestEntries>
+                    </archive>
+                    <!-- put the build number in the web.xml of the war file -->
+                    <webResources>
+                        <resource>
+                            <filtering>true</filtering>
+                            <directory>src/main/webapp</directory>
+                            <includes>
+                                <include>**/web.xml</include>
+                            </includes>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>  
+        <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                    <configuration>
+                        <server>TomcatServer</server>
+<!--                        <username>${tomcat.local.deploy.username}</username>
+                        <password>${tomcat.local.deploy.password}</password>
+                        <url>${tomcat.local.deploy.url}</url>-->
+                        <path>/dwo</path>
+                        <systemProperties>
+                            <java.util.secureRandomSeed>true</java.util.secureRandomSeed>
+                    		<DWO_ENV>test</DWO_ENV>                   
+                        </systemProperties>
+                        <warFile>target/${project.artifactId}-${project.version}.war</warFile>
+                            <contextFile>src/test/tomcat/${context.xml}</contextFile>
+                            <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
+                        <webapps>
+<!--                           <webapp> -->
+<!-- 						    <groupId>nl.numworx.uploadwidget</groupId> -->
+<!-- 						    <artifactId>UploadWidgetGWT</artifactId> -->
+<!-- 						    <version>0.0.1-SNAPSHOT</version> -->
+<!--                             <type>war</type> -->
+<!--                             <contextPath>/dwo/dav/upload</contextPath> -->
+<!--                             <asWebapp>true</asWebapp> -->
+<!--                           </webapp> -->
+                        </webapps>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>mysql</groupId>
+                            <artifactId>mysql-connector-java</artifactId>
+                            <version>5.1.49</version>
+                        </dependency>
+  			<dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-util</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-coyote</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-api</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jdbc</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-dbcp</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-servlet-api</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jsp-api</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jasper</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jasper-el</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-el-api</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-catalina</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-tribes</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-catalina-ha</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-annotations-api</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-juli</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-logging-juli</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-logging-log4j</artifactId>
+            <version>${tomcat7.version}</version>
+          </dependency>                         
+                    </dependencies>
+            </plugin> 
+            
+                <!--
+                    By default, the Surefire Plugin will automatically include all test classes with the following wildcard patterns:
+                    "**/Test*.java" - includes all of its subdirectory and all java filenames that start with "Test". "**/*Test.java" -
+                    includes all of its subdirectory and all java filenames that end with "Test". "**/*TestCase.java" - includes all of
+                    its subdirectory and all java filenames that end with "TestCase".
+
+            dedicated test server: -Djersey.test.host=myhost.org -Djersey.config.test.container.port=8080
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18.1</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*IT.java</include>
+                    </includes>
+                    <skipTests>${junit.test}</skipTests> 
+                    <!--                   <systemProperties>
+                        <property>
+                            <name>jersey.config.test.container.factory</name>
+                            <value>org.glassfish.jersey.test.framework.spi.container.external.ExternalTestContainerFactory</value>
+                        </property>
+                        <property>
+                            <name>jersey.test.host</name>
+                            <value>localhost</value>
+                        </property>
+                        <property>
+                            <name>jersey.config.test.container.port</name>
+                            <value>8080</value>
+                        </property>
+                    </systemProperties>  -->
+                </configuration>
+            </plugin>                    
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <preparationGoals>clean verify install</preparationGoals>
+                    <tagBase>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOServer/tags/</tagBase>
+                </configuration>            
+            </plugin>            
+        
+        </plugins>
+        <finalName>${project.artifactId}-${project.version}</finalName>
+        <pluginManagement>
+            <plugins>
+                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            org.codehaus.mojo
+                                        </groupId>
+                                        <artifactId>
+                                            buildnumber-maven-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [1.3,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>
+                                                create-timestamp
+                                            </goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+    
+    <!--    <repositories>
+            <repository>
+                <id>xmlrpc</id>
+                <url>http://ws.apache.org/xmlrpc/</url>
+            </repository>
+        </repositories>
+    -->
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.0-beta-2</version>
+                <configuration>
+                    <reportPlugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-project-info-reports-plugin</artifactId>
+                            <version>2.2</version>
+                            <reports>
+                                <report>cim</report>
+                                <report>issue-tracking</report>
+                            </reports>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-javadoc-plugin</artifactId>
+                            <version>2.2</version>
+                        </plugin>
+                    </reportPlugins>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+    <!-- profile for running junittests -->
+    <profiles>
+        <profile>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <junit.test>true</junit.test>
+            </properties>
+        </profile>
+        <profile>
+            <id>nojunittests</id>
+            <properties>
+                <junit.test>false</junit.test>
+            </properties>
+        </profile>
+        <profile>
+            <id>dwodevel-db</id>
+            <properties>
+                <junit.test>false</junit.test>
+                <context.xml>context-dwo_devel.xml</context.xml>
+            </properties>
+        </profile>
+        <profile>
+            <id>junit-db</id>
+            <properties>
+                <junit.test>false</junit.test>
+                <context.xml>context-junittest.xml</context.xml>
+            </properties>
+        </profile>
+        <profile>
+            <id>dummytwo-db</id>
+            <properties>
+                <junit.test>false</junit.test>
+                <context.xml>context-dummytwo.xml</context.xml>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <activation>
+                <property>
+                    <name>environment</name>
+                    <value>test</value>
+                </property>                
+            </activation>
+            <properties>
+                <junit.test>false</junit.test>
+            </properties>
+        </profile>
+        
+        <!--        <profile>
+            <id>dev</id>
+            <activation>
+                <property>
+                    <name>environment</name>
+                    <value>test</value>
+                </property>                
+            </activation>
+            <properties>
+                <dev>false</dev>
+                <junit.test>true</junit.test>
+                <properties>
+                </properties>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                         tomcat target for running against a loaded junit test-database 
+                        <groupId>org.apache.tomcat.maven</groupId>
+                        <artifactId>tomcat7-maven-plugin</artifactId>
+                        <version>2.2</version>
+                        <configuration>
+                            <server>TomcatServer</server>
+                            <path>/dwo</path>
+                            <warFile>target/${project.artifactId}-${project.version}.war</warFile>
+                            <contextFile>src/test/tomcat/context-dwo_devel.xml</contextFile>
+                            <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>mysql</groupId>
+                                <artifactId>mysql-connector-java</artifactId>
+                                <version>5.1.49</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>com.jamonapi</groupId>
+                                <artifactId>jamon</artifactId>
+                                <version>2.80</version>
+                            </dependency>        
+                        </dependencies>
+                    </plugin>                 
+                </plugins>
+            </build>
+        </profile>-->
+		<profile>
+			<id>java17</id>
+			<dependencies>
+			 <dependency>
+	    		<groupId>javax.xml.bind</groupId>
+	    		<artifactId>jaxb-api-osgi</artifactId>
+	    		<version>2.2.7</version>
+			 </dependency>
+			</dependencies>
+		</profile>
+    </profiles> 
+</project>

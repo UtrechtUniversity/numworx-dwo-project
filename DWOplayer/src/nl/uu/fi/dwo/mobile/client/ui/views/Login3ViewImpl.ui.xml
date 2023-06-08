@@ -1,0 +1,257 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:with type="nl.uu.fi.dwo.mobile.client.text.Text" field="rb" />
+	<ui:with type="java.lang.String" field="build" />
+	<ui:with type="java.lang.String" field="back" />
+	<ui:with type="com.google.gwt.safehtml.shared.SafeUri" field='login_png' />
+	<ui:with type="com.google.gwt.safehtml.shared.SafeUri" field='logo_svg' />
+	<ui:with type="java.lang.String" field='for_students' />
+	<ui:style field='style' type='nl.uu.fi.dwo.mobile.client.ui.views.Login3ViewImpl.Login3ViewImplCSS'>
+	@def regular 400;
+	@def medium 500;
+	.screen {
+		width: 100%;
+		height: 100%;
+		margin: 0 auto;
+		position: relative;
+	}
+	.logo {
+		position: absolute;
+		width: 272px;
+		height: 500px;
+		left: 18.75%;
+		top: 60px;
+	}
+	.logotekst {
+		top: 150px;
+		width: 500px;
+		height: 284px;
+		position: absolute;
+		left: 26.5625%;
+		color: white;
+	}
+	.logotext h1 i {
+		color: #1B75BB;
+	}
+	.logotekst img {
+		height: 70px;
+		margin-left: -20px;	
+	}
+	.logotekst p {
+		font-size: 18px;
+		font-family: Ubuntu, sans-serif;
+		font-weight: regular;
+	}
+	.warning {
+		width: 252px;
+		left: 20px;
+		right: 20px;
+		position: absolute;
+		top: 175px;
+		height: 30px;
+		font-family: Ubuntu, sans-serif;
+		font-weight: medium;
+		font-size: 13px;
+	}
+	
+	.loginError .warning, 
+	.loginError .guestButton, 	
+	.noGuestAllowed .warning, 
+	.noGuestAllows .guestButton
+	{ 
+		display: none;
+	}
+	
+	.loginError .nologin {
+		display: block;
+	}
+	
+	.messages {
+		top: 45%;
+		width: 252px;
+		padding: 0px;
+		left: 18.75%;
+		position: absolute;
+	}
+	.center {
+		position:absolute;
+		left: 45.1171875%;
+		top: 45%;
+		width: 306px;
+		height: 500px;
+	}
+	
+	.login {
+		top: 0px;
+		width: 306px;
+		height: 260px;
+		left: 0px;
+		position: absolute;
+		font-family: Ubuntu, sans-serif;
+		font-size: 18px;
+		overflow: hidden;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
+	}
+	.noGuestAllowed {
+		height: 180px;
+	}
+
+	.loginError {
+		height: 240px !important;
+		z-index: 1;
+	}
+	
+		
+	.username {
+		width: 252px;
+		height: 30px;
+		background-color: #1B75BB;
+		top: 30px;
+		left: 25px;
+		color: white;
+		position: absolute;
+		font-family: Ubuntu, sans-serif;
+		font-size: 18px;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
+		border-style: none;
+	}
+	.password {
+		width: 252px;
+		height: 30px;
+		left: 25px;
+		top: 80px;	
+		background-color: #1B75BB;
+		color: white;
+		position: absolute;
+		font-family: Ubuntu, sans-serif;
+		font-size: 18px;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
+		border-style: none;
+	}
+	
+	.button {
+		height: 26px;
+		width: 126px;
+		right: 25px;
+		top: 140px;
+		position: absolute;
+		font-size: 12px;
+		font-family: Ubuntu, sans-serif;
+		font-weight: bold;
+		letter-spacing: 2px;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
+		border-style: none;
+	}
+	
+	.guestButton {
+		height: 26px;
+		width: 126px;
+		right: 25px;
+		top: 220px;
+		position: absolute;
+		font-size: 12px;
+		font-family: Ubuntu, sans-serif;
+		font-weight: bold;
+		letter-spacing: 0px;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
+		border-style: none;
+	}
+	.links {
+		top: 270px;
+		width: 306px;
+		left: 0%;
+		position: absolute;
+		font-size: 14px;
+		line-height: 27px;
+	}
+
+	.links a {
+		font-weight: medium;
+		font-family: Ubuntu, sans-serif;
+	}
+	
+	
+	.linksError {
+		top: 250px;
+	}
+	
+	.nologin {
+		background-color: black;
+		color: white;
+		position: absolute;
+		left: 20px;
+		padding-left: 5px;
+		right: 20px;
+		top: 184px;
+		font-family: Ubuntu, sans-serif;
+		font-size: 18px;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
+		display:none;
+	}
+	
+	
+	::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+	  color: white;
+	}
+	::-moz-placeholder { /* Firefox 19+ */
+	  color: white;
+	}
+	:-ms-input-placeholder { /* IE 10+ */
+	  color: white;
+	}
+	:-moz-placeholder { /* Firefox 18- */
+	  color: white;
+	}
+	::-moz-placeholder {
+  		opacity: 1;
+	}
+	
+	.outer {
+			background-color: #8ebee6;
+			position: absolute;
+			top: 0px;
+			bottom: 0px;
+			left: 0px;
+			right: 0px;
+	}
+	</ui:style>
+	<g:FlowPanel styleName='{style.outer}'>
+	<g:FlowPanel styleName='{style.screen}' addStyleNames='profile-login'>
+		<g:HTML styleName="{style.logo}" addStyleNames='profile-loginLogo'>
+			<div title="{build}"></div>
+		</g:HTML>
+		<g:HTML ui:field='logoPanel' styleName='{style.logotekst}' addStyleNames='profile-loginTitle'>
+			<p><ui:text from='{for_students}'/></p>
+		</g:HTML>
+		<g:Frame ui:field='messagePanel' styleName='{style.messages}' />
+		<g:FlowPanel styleName='{style.center}'>
+		<g:FlowPanel ui:field='loginPanel' styleName='{style.login}' addStyleNames='{style.loginError} profile-loginPanel'>
+			<g:TextBox ui:field='username' styleName='{style.username}' ></g:TextBox>
+			<g:PasswordTextBox ui:field='password' styleName='{style.password}' ></g:PasswordTextBox>
+			<g:Button  ui:field='loginBtn' styleName='{style.button}' ><ui:text from='{rb.AANMELDEN}'/></g:Button>
+			<g:Label styleName='{style.nologin}'><ui:text from='{rb.inloggen_mislukt}'/></g:Label>
+			<g:Label styleName='{style.warning}'><ui:text from='{rb.guestLoginWarning}' /></g:Label>
+			<g:Button ui:field='guestBtn' styleName='{style.guestButton}' ><ui:text from='{rb.loginAlsGast}' /></g:Button>
+		</g:FlowPanel>
+		<g:HTML ui:field='linksPanel' styleName='{style.links}' addStyleNames='{style.linksError} profile-loginLinks'>
+			<p><a href="/dwo/rest/public/user/requestNewPassword?language={rb.locale}&amp;back={back}"><ui:text from='{rb.vergeten}'/></a></p>
+			<p><a href="/dwo/register?locale={rb.locale}&amp;next={back}"><ui:text from='{rb.register}'/></a></p>
+			<p><a href='http://www.numworx.nl' target='_top'><ui:text from='{rb.numworx}'/></a></p>
+		</g:HTML>
+		</g:FlowPanel>
+	</g:FlowPanel>
+	</g:FlowPanel>
+</ui:UiBinder> 

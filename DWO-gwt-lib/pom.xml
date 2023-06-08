@@ -5,7 +5,7 @@
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO</artifactId>
         <relativePath>../DWO/pom.xml</relativePath>
-  		<version>2.5.19</version>
+  		<version>2.5.20</version>
     </parent>
 
     <!--<groupId>nl.uu.fi.dwo.gwt</groupId>-->
@@ -193,7 +193,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
+			<version>4.13.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency> <!-- deze is 2.8.1 compatibel -->

@@ -1,0 +1,45 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
+	>
+	<ui:style>
+
+	.panel { 
+		width: 100px;
+		height: 166px;
+		border-collapse: collapse;
+		border-spacing: 0px;
+		background-color: #D2D2D2;
+	}
+	</ui:style>
+	<g:HorizontalPanel styleName="{style.panel}" >
+		<g:FlowPanel addStyleNames="clm clm-16">
+			<my:FKey addStyleNames="key icon" ui:field="t1_16">
+				<span class="basis basis-T1-16"></span>
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-grey icon" ui:field="t2_16">
+				<span class="basis basis-T2-16"></span>
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-grey icon" ui:field="t3_16">
+				<span class="basis basis-T3-16"></span>
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-grey icon" ui:field="t4_16">
+				<span class="basis basis-T4-16"></span>
+			</my:FKey>
+		</g:FlowPanel>
+
+		<g:FlowPanel addStyleNames="clm clm-17">
+			<my:FKey addStyleNames="key bg-purple icon" ui:field="t1_17">
+				<span class="basis basis-T1-17"></span>
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-orange height-l icon" ui:field="t2_17">
+				<span class="basis basis-T2-17"></span>
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-purple height-m icon" ui:field="t4_17">
+				<span class="basis basis-T4-17-1"></span>
+			</my:FKey>
+		</g:FlowPanel>
+
+	</g:HorizontalPanel>
+</ui:UiBinder> 

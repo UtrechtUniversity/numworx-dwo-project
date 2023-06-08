@@ -1,0 +1,44 @@
+package fi.dwo.dwojapplet.gui.action;
+
+import fi.dwo.dwojapplet.domain.CourseMap;
+import java.awt.event.ActionEvent;
+
+public class CutCopyAction extends GuiAction {
+
+    CourseMap object;
+    boolean cut;
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (object == null) {
+            Clipboard.setClipboard(Clipboard.getSelection());
+        } else {
+            Clipboard.setClipboard(object);
+        }
+        Clipboard.cmd = e.getActionCommand();
+    }
+
+    public CutCopyAction(CourseMap object) {
+        this.object = object;
+    }
+    public CutCopyAction(CourseMap object, boolean cut) {
+      this.object = object;
+      this.cut = cut;
+      setMap(object);
+  }
+
+    public CutCopyAction(boolean cut) {
+        Clipboard.addPropertyChangeListener("selection", this);
+        this.cut = cut;
+    }
+
+    @Override
+    void setMap(CourseMap map) {
+        if (map == null || map.getUserObject() instanceof String) {
+            setEnabled(false);
+        } else {
+            setEnabled(!cut || canModify(map));
+        }
+    }
+
+}

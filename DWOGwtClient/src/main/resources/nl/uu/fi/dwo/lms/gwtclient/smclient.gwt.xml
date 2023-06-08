@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.6.0//EN"
+  "http://google-web-toolkit.googlecode.com/svn/tags/2.6.0/distro-source/core/src/gwt-module.dtd">
+<module rename-to='smclient'>
+  <inherits name="com.google.gwt.user.User"/>
+  <inherits name="nl.uu.fi.dwo.rest.DWO-rest-lib"/>
+  <inherits name="fi.dwo.gwt.lib.rest.DWO-gwt-lib"/>
+  <inherits name="nl.uu.fi.dwo.mobile.promise.Promise" /> 
+  <inherits name="com.github.nmorel.gwtjackson.GwtJackson" />
+  <inherits name="org.vectomatic.libgwtsvg" />
+  <inherits name='org.vectomatic.libgwtfile' />
+  <inherits name='dagger.Dagger'/>
+
+  <source path='gwt'/>
+  
+  <!-- Specify the app entry point class.                         -->
+  <entry-point class="nl.uu.fi.dwo.lms.gwtclient.gwt.StudentModelPanel"/>
+
+</module>

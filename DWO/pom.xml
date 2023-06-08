@@ -5,35 +5,42 @@
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO.master.pom</artifactId>
         <version>1.1</version>
-        <relativePath>../../DWO-master-pom/pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>DWO</artifactId>
-    <version>2.5.19</version>
+    <version>2.5.20</version>
     <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>8</jdk.version>
         <jdk>${env.JAVA_HOME_8}</jdk>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <DWOServerVersion>2.5.19</DWOServerVersion>
-        <DWOJClientVersion>2.5.19</DWOJClientVersion>
-		<DWOplayerVersion>2.5.19</DWOplayerVersion>
+        <DWOServerVersion>2.5.20</DWOServerVersion>
+        <DWOJClientVersion>2.5.20</DWOJClientVersion>
+		<DWOplayerVersion>2.5.20</DWOplayerVersion>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <chatGWTVersion>2.5.18</chatGWTVersion>
     </properties>
     
     <!-- should move project role names here that fall in the full project scope -->
     <modules>
-         <module>../DWO-rest-lib</module>
-         <module>../DWO-gwt-lib</module>
-	 <module>../Account</module>
-	 <module>../DWOmAccess</module>
-         <module>../DWO-commons-lib</module>
-         <module>../DWO-jclient-lib</module>
-	 <module>../DWO-apps</module>
-<!--         <module>../DWOJClient</module> needs profiles dwo-obfuscate dwo-pack-sign -->
-<!--         <module>../DWOServer</module> -->
-<!--         <module>../EBServer</module> -->
+        <module>../DWO-rest-lib</module>
+        <module>../DWO-gwt-lib</module>
+	 	<module>../Account</module>
+	 	<module>../DWOformule</module>
+	 	<module>../DWOmAccess</module>
+        <module>../DWO-commons-lib</module>
+        <module>../DWO-jclient-lib</module>
+	 	<module>../DWO-apps</module>
+	 	<module>../DWOGwtClient</module>
+	 	<module>../DWOinteraction</module>
+        <module>../DWOJClient</module> <!-- needs profiles dwo-obfuscate dwo-pack-sign -->
+     	<module>../DWOServer</module>
+     	<module>../DWOplayer</module>
+        <module>../KeyboardGWT</module>
+     	<module>../UploadWidget</module>
+     	<module>../WriteMathGWT</module>
+        <module>../EBServer</module>
     </modules>
     
     <name>${project.build.finalName}</name>
@@ -43,12 +50,12 @@
     		<dependency>
     			<artifactId>DWO-rest-lib</artifactId>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
-    			<version>2.5.19</version>
+    			<version>2.5.20</version>
     		</dependency>
     		<dependency>
     			<artifactId>DWO-rest-lib</artifactId>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
-    			<version>2.5.19</version>
+    			<version>2.5.20</version>
 				<classifier>sources</classifier>
     		</dependency>
     		<dependency>
@@ -64,30 +71,30 @@
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-gwt-lib</artifactId>
-            <version>2.5.18</version>
+            <version>2.5.20</version>
         </dependency>
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-gwt-lib</artifactId>
-            <version>2.5.18</version>
+            <version>2.5.20</version>
             <classifier>sources</classifier>
         </dependency>
         <dependency>
         	<groupId>nl.uu.fi.dwo</groupId>
         	<artifactId>DWOServer</artifactId>
-        	<version>${DWOServerVersion}</version>
+        	<version>2.5.20</version>
         	<type>war</type>
         </dependency>
          <dependency>
         	<groupId>nl.uu.fi.dwo</groupId>
         	<artifactId>DWOServer</artifactId>
-        	<version>${DWOServerVersion}</version>
+        	<version>2.5.20</version>
         	<classifier>classes</classifier>
         </dependency>
          <dependency>
          	<groupId>nl.uu.fi.dwo</groupId>
          	<artifactId>DWOJClient</artifactId>
-         	<version>${DWOJClientVersion}</version>
+         	<version>2.5.20</version>
          </dependency>
          <dependency>
          	<groupId>fi.beans</groupId>
@@ -97,19 +104,18 @@
 		<dependency>
 			<groupId>nl.numworx.swingbrowser</groupId>
 			<artifactId>swingbrowser-api</artifactId>
-			<version>0.0.11</version>
+			<version>0.0.14</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.numworx.swingbrowser</groupId>
 			<artifactId>swingbrowser-jxb</artifactId>
-			<version>0.0.13</version>
+			<version>0.0.14</version>
 		</dependency>
     	</dependencies>
     </dependencyManagement>
 
     <scm>
         <developerConnection>scm:git:git@github.com:UtrechtUniversity/numworx-dwo-project.git</developerConnection>
-        <url>https://svn.science.uu.nl/viewvc/project.fisme.java/DWOProject/DWO-LMS/DWO/trunk/</url>
     </scm>
 
     <build>
@@ -137,6 +143,15 @@
 			  </dependencies>
         	</plugin>
          </plugins>
+         <pluginManagement>
+         	<plugins>
+         		<plugin>
+         			<artifactId>maven-war-plugin</artifactId>
+         			<version>3.2.3</version>
+         		</plugin>
+         	</plugins>
+         
+         </pluginManagement>
     </build>
     
     <reporting>
