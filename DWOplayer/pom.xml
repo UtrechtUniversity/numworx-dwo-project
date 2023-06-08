@@ -640,5 +640,5 @@
 			</dependencies>
 		</profile>
 	</profiles>
-	<version>2.5.20-SNAPSHOT</version>
+	<version>2.5.20</version>
 </project>
