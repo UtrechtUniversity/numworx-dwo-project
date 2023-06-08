@@ -39,6 +39,7 @@
      	<module>../DWOplayer</module>
         <module>../KeyboardGWT</module>
      	<module>../UploadWidget</module>
+     	<module>../WriteMathGWT</module>
         <module>../EBServer</module>
     </modules>
     
