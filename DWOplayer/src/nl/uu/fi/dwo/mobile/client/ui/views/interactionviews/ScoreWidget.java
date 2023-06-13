@@ -27,6 +27,8 @@ import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
@@ -37,7 +39,7 @@ import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 
-public class ScoreWidget extends Composite implements InteractionView, ClickHandler, TekstElementWithFont {
+public class ScoreWidget extends Composite implements InteractionView, ClickHandler, TekstElementWithFont, CBookEventListener {
 
 	class GoedFoutBezochtMultiple implements Success<Map<String, String>, Map<String, String>> {
 
@@ -180,6 +182,8 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		
 		span  = new InlineHTML();
 		span.setStylePrimaryName("scorewidget");
+		
+		activity.getEventBus().addHandler(CBookEvent.TYPE, this);
 				
 		init(breedte, hoogte, launchState);
 		
@@ -627,6 +631,12 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		String color = regel.getElement().getStyle().getColor();
 		getElement().getStyle().setColor(color);
 		ashoogte = regel.getFont().getAscent();
+	}
+
+	@Override
+	public void acceptCBookEvent(CBookEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

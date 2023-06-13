@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -641,6 +642,14 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		// entry.stelNavigatieIn(); gebeurt al op een andere plek; niet hier
 		// anders gaat oefenen met geen correctie eerdere pagina's mis na
 		// kijkNa()
+		Map<String, Object> hashmap = new HashMap<>();
+		hashmap.put("location", currentOpdracht);
+		hashmap.put("success", correct);
+		hashmap.put("score.raw", scores[currentActiviteit][currentOpdracht]);
+		hashmap.put("visited", visited[currentActiviteit][currentOpdracht]);
+		ObjectMap map = JSONUtilities.wrapMap(hashmap);
+		CBookEvent changed = new CBookEvent("setChanged", map);
+		entry.activity.getEventBus().fireEvent(changed);
 	}
 
 	public void setVisited() {
