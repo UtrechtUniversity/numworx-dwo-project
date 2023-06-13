@@ -362,8 +362,10 @@ public void setView(Display aView) {
     }
     Map<String,String> userState = new TreeMap<> (this.userState);
     userState.keySet().retainAll(Arrays.asList("cmi.score.raw",ResultsService.REVIEW_DATA, ResultsService.REVIEW_CHECK, ResultsService.REVIEW_CORRECT));
+    boolean empty = this.userState.getOrDefault(ResultsService.SUSPEND_DATA, "").isEmpty();
     LOG.info( "update Score/Review " + userState);
-    if (dwoGlobalVars.isPremium())
+    
+    if (dwoGlobalVars.isPremium() && ! empty)
     {	String score = userState.get("cmi.score.raw");
     	if (score != null) ssc.getStudentSco().setScore(Double.parseDouble(score));
     	ResultEvent ev = new ResultEvent(ssc, userState);
