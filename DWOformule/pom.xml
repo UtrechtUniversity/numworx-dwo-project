@@ -68,7 +68,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.mobile</groupId>
 			<artifactId>interaction</artifactId>
-			<version>0.1.16</version>
+			<version>2.5.20-p1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fi.wiskopdrgwt</groupId>
@@ -105,7 +105,7 @@
 		    <version>1.0</version>
 		</dependency>
 	</dependencies>
-	<version>0.1.16</version>
+	<version>2.5.20-p1-SNAPSHOT</version>
 	<properties>
 		<maven.test.skip>true</maven.test.skip>
 		<gwtModule>nl.uu.fi.dwo.formule.Formule</gwtModule>
