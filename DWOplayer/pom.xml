@@ -397,6 +397,7 @@
 			<id>DWO2player</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
+				<property><name>performRelease</name><value>true</value></property>
 			</activation>
 			<properties>
 				<finalName>DWO2player</finalName>
