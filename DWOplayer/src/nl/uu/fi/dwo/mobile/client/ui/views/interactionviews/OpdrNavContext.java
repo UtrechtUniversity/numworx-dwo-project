@@ -46,6 +46,7 @@ public class OpdrNavContext implements OpdrNavIF {
 	private CssColor background;
 	
 	public OpdrNavContext(OpdrNavIF comRoot, Connector connector, CssColor bgColor) {
+		while(comRoot instanceof OpdrNavContext) comRoot = ((OpdrNavContext)comRoot).comRoot;
 		this.comRoot = comRoot;
 		this.connector = connector;
 		this.background = bgColor;

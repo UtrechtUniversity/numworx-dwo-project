@@ -57,7 +57,7 @@ public class LogBuilder {
 		Logging logging = null;
 		
 		if (logOption || smObjectives != null) {
-			String logID = logOption ? this.logID : null;
+			String logID = this.logID;
 			DWOLogger dwoLogger = new DWOLogger(activity);					
 			dwoLogger.setTeltMee(teltMee);
 			dwoLogger.setLogIDLabel(logIDLabel);

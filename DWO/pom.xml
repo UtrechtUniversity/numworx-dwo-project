@@ -15,31 +15,31 @@
         <jdk.version>8</jdk.version>
         <jdk>${env.JAVA_HOME_8}</jdk>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <DWOServerVersion>2.5.20</DWOServerVersion>
+        <DWOServerVersion>2.5.21-SNAPSHOT</DWOServerVersion>
         <DWOJClientVersion>2.5.20</DWOJClientVersion>
-		<DWOplayerVersion>2.5.20</DWOplayerVersion>
+		<DWOplayerVersion>2.5.21-SNAPSHOT</DWOplayerVersion>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <chatGWTVersion>2.5.18</chatGWTVersion>
     </properties>
     
     <!-- should move project role names here that fall in the full project scope -->
     <modules>
-        <module>../DWO-rest-lib</module>
-        <module>../DWO-gwt-lib</module>
-	 	<module>../Account</module>
-	 	<module>../DWOformule</module>
-	 	<module>../DWOmAccess</module>
-        <module>../DWO-commons-lib</module>
-        <module>../DWO-jclient-lib</module>
-	 	<module>../DWO-apps</module>
+<!--         <module>../DWO-rest-lib</module> -->
+<!--         <module>../DWO-gwt-lib</module> -->
+<!-- 	 	<module>../Account</module> -->
+<!-- 	 	<module>../DWOformule</module> -->
+<!-- 	 	<module>../DWOmAccess</module> -->
+<!--         <module>../DWO-commons-lib</module> -->
+<!--         <module>../DWO-jclient-lib</module> -->
+<!-- 	 	<module>../DWO-apps</module> -->
 	 	<module>../DWOGwtClient</module>
-	 	<module>../DWOinteraction</module>
-        <module>../DWOJClient</module> <!-- needs profiles dwo-obfuscate dwo-pack-sign -->
+<!-- 	 	<module>../DWOinteraction</module> -->
+<!--         <module>../DWOJClient</module>  -->
      	<module>../DWOServer</module>
      	<module>../DWOplayer</module>
-        <module>../KeyboardGWT</module>
-     	<module>../UploadWidget</module>
-     	<module>../WriteMathGWT</module>
+<!--         <module>../KeyboardGWT</module> -->
+<!--      	<module>../UploadWidget</module> -->
+<!--      	<module>../WriteMathGWT</module> -->
         <module>../EBServer</module>
     </modules>
     
@@ -82,13 +82,13 @@
         <dependency>
         	<groupId>nl.uu.fi.dwo</groupId>
         	<artifactId>DWOServer</artifactId>
-        	<version>2.5.20-p1</version>
+        	<version>2.5.21-SNAPSHOT</version>
         	<type>war</type>
         </dependency>
          <dependency>
         	<groupId>nl.uu.fi.dwo</groupId>
         	<artifactId>DWOServer</artifactId>
-        	<version>2.5.20-p1</version>
+        	<version>2.5.21-SNAPSHOT</version>
         	<classifier>classes</classifier>
         </dependency>
          <dependency>

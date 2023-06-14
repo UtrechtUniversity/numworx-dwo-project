@@ -593,7 +593,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
         	}
         	else {
 	        	if(formuleStrings!=null)
-	        	{	for(int i=0 ; i<sleepObjecten.length ; i++)
+	        	{	if (show) for(int i=0 ; i<sleepObjecten.length ; i++)
 	    	        {   sleepObjecten[i].wisGoedFoutSleep();
 	    	        }
 	        		
@@ -678,7 +678,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 		} // checkformule
         else
         {
-        	for (int i = 0; i < aantalSleepObjects; i++)
+        	if (show) for (int i = 0; i < aantalSleepObjects; i++)
 	        {	if(ipListSleep[i]!=null)
         			ipListSleep[i].wisGoedFoutSleep();
 	        }
@@ -713,24 +713,23 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
     					stapJuist = true;
         		}
 	        }
-	        //TODO Fout antwoord 'construeren'  (wordt nu niet gedaan)
-	        for(int i=aantalDoelObjects ; i<aantalSleepObjects ; i++)
-	        {   stapJuist = true;
+	        // Fout antwoord 'construeren'
+	        for(int i=0 ; i<aantalSleepObjects ; i++)
+	        {
 	        	for(int j=0 ; j<aantalDoelObjects ; j++)
 	            {
+	        		if (i == j) continue;
 	        		int dx = (int) Math.abs(posities[i].getX() - doelPosities[j].getX());
 		        	int dy = (int) Math.abs(posities[i].getY() - doelPosities[j].getY());
 		        	if(dx < acceptedMarge && dy < acceptedMarge) 
-		        	{	stapJuist = false;
-		        		answer = answer + j + "-" + i + ",";
+		        	{	
+		        		answer = answer + i + "-" + j + ",";
 		        		break;
 		        	}
 	            }
-	        	juist = juist && stapJuist;
-	        	if(view && show && !stapJuist)
-    				ipListSleep[i].zetGoedFoutSleep(stapJuist);
 	        }
-	        if(answer.length()>0 && answer.charAt(answer.length()-1)==',')answer = answer.substring(0,answer.length()-1);
+	        if(answer.endsWith(","))
+	        	answer = answer.substring(0,answer.length()-1);
         }
         
         if(juist && half)
@@ -764,7 +763,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
         
 		if (show && check)
 		{
-			if (ingevuld && changed)
+			if (ingevuld && show) // is !getState
 				comRoot.setChanged(teltMee && !juist);
 			nakijkAchtergrond.setVisible(true);
 			if (correct)
@@ -1007,6 +1006,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 			public void onClick(Object sender)
 			{	//e.stopPropagation();
 				if (!editable) return;
+				if (nagekeken && !isVeranderdNaNakijken) return;
 				kijkNa();
 				attemptsCount++;
 				setAttempt();
