@@ -15,6 +15,7 @@ public interface HeaderView extends IsWidget {
 	void setUserAndRole(DomUserFull currentUser, RoleType roleType);
 
 	Place getHomePlace();
+	Place getUpPlace();
 
 	void setUpPlace(Place homePlace);
 	void setHomePlace(Place homePlace);
@@ -24,7 +25,8 @@ public interface HeaderView extends IsWidget {
 	void setDisplay(Widget display, NavigationView navigationView);
 	
 	void setPresenter(GotoController presenter);
+	GotoController getPresenter();
 
-  void setTrail(List<SelectModuleItem> trail);
+	void setTrail(List<SelectModuleItem> trail);
 
 }
