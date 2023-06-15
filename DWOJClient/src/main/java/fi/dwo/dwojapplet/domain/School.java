@@ -18,7 +18,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  */
 public class School {
 
-    public static final String DEFAULT_RIGHTS = "" + User.CHANGE_CLASS_RIGHT + User.CHANGE_CLASS_RIGHT_TEACHER + User.MODIFY_MODULES_RIGHT;
+    public static final String DEFAULT_RIGHTS = DomSchool.defaultRights(); //"" + User.CHANGE_CLASS_RIGHT + User.CHANGE_CLASS_RIGHT_TEACHER + User.MODIFY_MODULES_RIGHT;
 
     private int schoolID;
 
@@ -254,7 +254,7 @@ public class School {
 	public void setDomSchool(DomSchool school) {
 		expire = school.getExpire();
 		name = school.getSchoolName();
-		rights = school.getSchoolRights();
+		setRights(school.getSchoolRights());
 		schoolLogin = ""; // MISSING
 		aboType = school.getAboType();
 		try {
