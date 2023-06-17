@@ -35,6 +35,8 @@ import nl.uu.fi.dwo.mobile.client.ui.NeedLoginHandler;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.places.HasBack;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
@@ -454,6 +456,17 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	public void gotoPlace(String token) {
 		Place place = mapper.getPlace(token);
 		if (place==null) place = defaultPlace;
+		if (place instanceof HasBack) {
+			SelectModuleItem item;
+			Place x = headerView.getUpPlace();
+			String id = mapper.getToken(x);
+			id = id.split(":",2)[1]; // has ':'
+			item = SelectModuleItemHolder.getItemByID(id);
+			((HasBack) place).setBack(item);
+		}
+
+		
+		
 		goTo(place);
 	}
 

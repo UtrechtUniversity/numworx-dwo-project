@@ -172,7 +172,7 @@ public class PublicServerStatus {
         String softwareVersion = manifestAttributes.getValue("Implementation-Version");
         if (softwareVersion != null) softwareVersion = softwareVersion.replace("-SNAPSHOT", ""); // remove -SNAPSHOT suffix
         String revision = manifestAttributes.getValue("Implementation-Build");
-    	return "<span style='float:right;color:white'>" + softwareVersion + " r" + revision + "</span>";
+    	return "<span style='float:right;color:white'>" + softwareVersion + " " + revision + "</span>";
     }
     
     
