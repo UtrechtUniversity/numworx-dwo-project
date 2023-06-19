@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -175,7 +177,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private int currentActiviteit = 0;
 	private ArrayList<FormuleButton> buttons = new ArrayList<FormuleButton>();
 	Memento memento;
-	private boolean[][] visited;
+	private Collection<String>[][] visited;
 	private final static ResettableEventBus BUS = new ResettableEventBus(new SimpleEventBus());
 
 	static private Prepare prepare = new Prepare();
@@ -418,13 +420,13 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		// anders kun je nooit checken of hij al eerder bezocht is
 		entry.bezocht = bezocht;
 		memento.getBezocht(entry.bezocht);
-		bezocht = new boolean[getAantalActiviteiten()][];
+		Collection<String>[][] visited = new Collection[getAantalActiviteiten()][];
 		for (int j = 0; j < getAantalActiviteiten(); j++)
 		{
-			bezocht[j] = new boolean[getAantalOpdrachten(j)]; // all false
+			visited[j] = new Collection[getAantalOpdrachten(j)]; // all false
 		}
-		memento.getVisited(bezocht);
-		this.visited = bezocht;
+		memento.getVisited(visited);
+		this.visited = visited;
 		
 		
 		
@@ -653,7 +655,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	}
 
 	public void setVisited() {
-		visited[currentActiviteit][currentOpdracht] = true;
+		visited[currentActiviteit][currentOpdracht] = Collections.emptySet();
 	}
 
 	/**

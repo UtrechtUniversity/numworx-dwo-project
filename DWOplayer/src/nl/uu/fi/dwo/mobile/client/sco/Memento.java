@@ -1,7 +1,10 @@
 package nl.uu.fi.dwo.mobile.client.sco;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -961,15 +964,27 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		}
 	}
 	
-	public void getVisited(boolean[][] visited) { // new definition: viewed and interacted!
+	public void getVisited(Collection<String>[][] visited) { // new definition: viewed and interacted!
 		if(visited == null) return;
 		if(opdrVisited == null) {
 		} else {
 			for (int i = 0; i < visited.length; i++) {
 				JSONArray array = getArray(i, opdrVisited);
-				boolean[] oi = visited[i];
-				for (int j = 0; j < oi.length; j++) {
-					oi[j] = Boolean.TRUE.equals(getBoolean(array, j));
+				Collection<String>[] oi = visited[i];
+				for (int j = 0; j < oi.length && j < array.size(); j++) {
+					JSONValue value = array.get(j);
+					if (value == null ||value.isNull() == JSONNull.getInstance())
+						oi[j] = null;
+					else if (value.isBoolean() == JSONBoolean.getInstance(true))
+						oi[j] = Collections.emptyList();
+					else if (value.isArray() != null)
+					{
+						oi[j] = new HashSet<>();
+						JSONArray a = value.isArray();
+						for(int k = 0; k < a.size(); k ++) {
+							oi[j].add(a.get(k).isString().stringValue());
+						}
+					}
 				}
 			}
 		}		
@@ -1004,29 +1019,26 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		}
 	}
 
-	public void setVisited(boolean[][] visited) {
+	public void setVisited(Collection<String>[][] visited) {
 		if (opdrVisited == null) {
 			opdrVisited = new JSONArray();
 			onsState.put(VISITED, opdrVisited);
 		}
 		if(visited == null) return;
 		for (int i = 0; i < visited.length; i++) {
-			boolean[] oi = visited[i];
+			Collection<String>[] oi = visited[i];
 			for (int j = 0; j < oi.length; j++) {
-				boolean punt = oi[j];
-				if(punt != false) {
+				Collection<String> punt = oi[j];
 					if( i >= opdrVisited.size() || isNull(opdrVisited.get(i)) )
 						opdrVisited.set(i, new JSONArray());
 					JSONArray array = opdrVisited.get(i).isArray();
-					array.set(j, JSONBoolean.getInstance(punt));
-				} else {
-					if( opdrVisited.size() <= i 
-						|| isNull(opdrVisited.get(i)))
-						continue;
-					JSONArray array = opdrVisited.get(i).isArray();
-					if(j >= array.size()) continue;
-					array.set(j, JSONBoolean.getInstance(false));
-				}
+					if (punt == null)
+						array.set(j, JSONNull.getInstance());
+					else {
+						JSONArray a = new JSONArray();
+						array.set(j, a);
+						punt.forEach(item -> a.set(a.size(), new JSONString(item)));
+					}
 			}			
 		}
 	}
