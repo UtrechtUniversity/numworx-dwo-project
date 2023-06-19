@@ -2907,4 +2907,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		} catch(Exception oops) { } 
 			memento.setCurrentOpdracht(nr);		
 	}
+
+	public void setVisited(Collection<String> v) {
+		visited[getCurrentActiviteit()][getCurrentOpdracht()] = v;
+	}
 }
