@@ -220,6 +220,9 @@ public class OpdrNavContext implements OpdrNavIF {
 	}
 
 	@Override public void setVisited() {
+		if (comRoot instanceof OpdrNav && connector != null) {
+			((OpdrNav) comRoot).setVisited(connector.widgetId);
+		}
 		comRoot.setVisited();
 	}
 }

@@ -657,6 +657,13 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	public void setVisited() {
 		visited[currentActiviteit][currentOpdracht] = Collections.emptySet();
 	}
+	public void setVisited(String id) {
+		if (visited[currentActiviteit][currentOpdracht] instanceof Collection) {
+			visited[currentActiviteit][currentOpdracht].remove(id);
+		} else {
+			setVisited(); 
+		}
+	}
 
 	/**
 	 * Zet initieel de opdrachtbolletjes (d.w.z. incl. shiftbuttons t.b.v. de maat) 
