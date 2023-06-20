@@ -40,6 +40,7 @@ import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 
@@ -62,6 +63,8 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	final private RPCHandler rpc;
 	private final ActivityComponent activity;
 	
+	protected boolean noBottom = false;
+	
 	@Inject ViewModuleViewNumworx(HeaderView headerView, DWOplayerParameters PARAMETERS, 
 			DwoGlobalVars vars, RPCHandler rpc, ActivityComponent.Builder builder,
 			SMLogger.LoggingModule loggingModule) {
@@ -70,6 +73,9 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		this.seb = PARAMETERS.getSecureMode() == SecureMode.SEB;
 	    instance = vars;
 	    activity = builder.loggingModule(loggingModule).build();
+	    Promise<DomDwoProfileFull> p = rpc.getDwoProfile();
+	    p.then (q -> { noBottom = q.getValue().getDwoProfileRights().contains("b"); return q; });
+	    
 	    initialize(activity.api());
 	}
 
@@ -86,7 +92,12 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
       };
       initWidget(root = uiBinder.createAndBindUi(this));
       delegate.initialize();
-      delegate.setWindowTop(90); // 90 pixels header
+      if (noBottom) {
+    	  root.setWidgetHidden(headerBottom, noBottom);
+    	  delegate.setWindowTop(50);
+      } else {
+    	  delegate.setWindowTop(90); // 90 pixels header
+      }
       delegate.zetMaat();
       center.setWidget(delegate);
       if(seb) {
