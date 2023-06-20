@@ -40,6 +40,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerStudentCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
 import com.google.gwt.activity.shared.AbstractActivity;
@@ -94,7 +95,9 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
         }
 		
 		if(item.getType() == Type.MODULE && vars.withUser()) {
-			last.get().putPlace(item.getPlace());
+			SelectModuleItem t = item;
+			if (t.getCourseType() == CourseType.invisible) t = t.getParent();
+			last.get().putPlace(t.getPlace());
 			Object userID = vars.getUserID();
 		if(userID != null && item.getPromisedScoreMap() == null) {
 			Promise<DomResultsPerStudentCourse> p = rpc.getUserResults(item.getID(), userID);
