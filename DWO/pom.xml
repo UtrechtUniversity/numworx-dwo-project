@@ -37,6 +37,7 @@
         <module>../DWOJClient</module>
      	<module>../DWOServer</module>
      	<module>../DWOplayer</module>
+	<module>../edexml</module>
 <!--         <module>../KeyboardGWT</module> -->
 <!--      	<module>../UploadWidget</module> -->
 <!--      	<module>../WriteMathGWT</module> -->
