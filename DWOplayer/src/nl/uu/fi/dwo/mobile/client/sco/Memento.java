@@ -623,7 +623,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	}
 
 	public JSONArray getArray(int i, JSONArray array) {
-		if ( array == null || i < 0 || i > array.size())
+		if ( array == null || i < 0 || i >= array.size())
 			return null;
 		JSONValue get = array.get(i);
 		if(get == null)
@@ -971,6 +971,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 			for (int i = 0; i < visited.length; i++) {
 				JSONArray array = getArray(i, opdrVisited);
 				Collection<String>[] oi = visited[i];
+				if (array != null)
 				for (int j = 0; j < oi.length && j < array.size(); j++) {
 					JSONValue value = array.get(j);
 					if (value == null ||value.isNull() == JSONNull.getInstance())
