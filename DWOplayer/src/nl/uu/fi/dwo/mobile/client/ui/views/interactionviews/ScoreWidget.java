@@ -633,9 +633,20 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		ashoogte = regel.getFont().getAscent();
 	}
 
+	
+	boolean hasScore;
+	
 	@Override
-	public void acceptCBookEvent(CBookEvent arg0) {
-		// TODO Auto-generated method stub
+	public void acceptCBookEvent(CBookEvent event) {
+		if ("setChanged".equals(event.getCommand()))
+		{
+			Map<String, ?> param = event.getParameters();
+			if (hasScore) {
+				Promise<String> p;
+				p = Promises.resolved(String.valueOf(param.get("score.raw")));
+				p.then(this::doScore);
+			}
+		}
 		
 	}
 
