@@ -26,13 +26,16 @@ import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.utils.LaTransport;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.NoLogging;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.xapi.Account;
 import nl.uu.fi.dwo.rest.dom.xapi.Activity;
 import nl.uu.fi.dwo.rest.dom.xapi.ActivityDefinition;
 import nl.uu.fi.dwo.rest.dom.xapi.Context;
 import nl.uu.fi.dwo.rest.dom.xapi.ContextActivities;
 import nl.uu.fi.dwo.rest.dom.xapi.Extensions;
+import nl.uu.fi.dwo.rest.dom.xapi.Group;
 import nl.uu.fi.dwo.rest.dom.xapi.Result;
 import nl.uu.fi.dwo.rest.dom.xapi.Score;
 import nl.uu.fi.dwo.rest.dom.xapi.Statement;
@@ -69,7 +72,7 @@ public class SMLogger implements Logging {
       ) return tao(); 
 
       Promise<LogStrategy> strategy = Promises.resolved(memento);     
-      return new SMLogger(memento, strategy, tao());
+      return new SMLogger(memento, strategy, tao(), null);
     }
   }
   
@@ -91,7 +94,7 @@ public class SMLogger implements Logging {
               && vars.getRoleType() == RoleType.STUDENT;
       if (experiment) {
         Promise<XapiManager> xapi = rpc.get().getLRS();
-        return new SMLogger(instance, xapi.map(x -> x::saveStatement), super.logging(activity));
+        return new SMLogger(instance, xapi.map(x -> x::saveStatement), super.logging(activity), vars.getCurrentSchoolClass());
       }
       return super.logging(activity);
     }
@@ -118,13 +121,20 @@ public class SMLogger implements Logging {
   Extensions extensions;
   int maxScore;
   
-  public SMLogger(Memento memento, Promise<LogStrategy> xapi, Logging delegate) {
+  private SMLogger(Memento memento, Promise<LogStrategy> xapi, Logging delegate, DomSchoolClass team) {
     this.memento = memento;
     this.xapi = xapi;
     prototype = new Statement();
     Verb verb = new Verb(); verb.id = ATTEMPTED;
     prototype.verb = verb;
     prototype.context = new Context();
+    if (team != null) {
+    	Group group = new Group();
+    	group.account = new Account();
+    	group.account.name = "pid:" +team.getId().getIdString();
+    	group.name = team.getSchoolClassName();
+    	prototype.context.team = group;
+    }
     prototype.context.registration = memento.getRegistration();
     prototype.context.contextActivities = new ContextActivities();
     widget = new Activity();

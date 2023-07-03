@@ -23,6 +23,7 @@ import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.xapi.Activity;
 import nl.uu.fi.dwo.rest.dom.xapi.Agent;
 import nl.uu.fi.dwo.rest.dom.xapi.Document;
+import nl.uu.fi.dwo.rest.dom.xapi.Group;
 import nl.uu.fi.dwo.rest.dom.xapi.StateDocument;
 import nl.uu.fi.dwo.rest.dom.xapi.Statement;
 import nl.uu.fi.dwo.rest.dom.xapi.StatementsQuery;
@@ -41,6 +42,12 @@ public class XapiManager {
   
   public Promise<String> saveStatement(Statement statement) {
     if(statement.actor == null) statement.actor = getAgent();
+    if (statement.context != null && statement.context.team != null) {
+    	Group g  = statement.context.team;
+    	if (g.account != null && g.account.homePage == null) {
+    		g.account.homePage = statement.actor.account.homePage;
+    	}
+    }
     PromiseCallback<List<String>> defer = new PromiseCallback<>();
     service.createStatement(statement, defer);
     return defer.getPromise().map(list -> list.get(0));
@@ -50,6 +57,12 @@ public class XapiManager {
     PromiseCallback<List<String>> defer = new PromiseCallback<>();
     for(Statement i:list) {
       if (i.actor == null) i.actor = getAgent();
+      if (i.context != null && i.context.team != null) {
+      	Group g  = i.context.team;
+      	if (g.account != null && g.account.homePage == null) {
+      		g.account.homePage = i.actor.account.homePage;
+      	}
+      }
     }
     service.createStatements(list, defer);
     return defer.getPromise();

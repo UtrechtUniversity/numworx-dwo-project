@@ -35,6 +35,8 @@ import nl.uu.fi.dwo.mobile.client.ui.NeedLoginHandler;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.places.HasBack;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
@@ -45,8 +47,10 @@ import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import com.google.gwt.activity.shared.AbstractActivity;
@@ -83,6 +87,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	@Inject HeaderView headerView;
 	@Inject PlaceHistoryMapper mapper;
 	@Inject NeedLogin oops;
+	@Inject @Named("profile") int profile;
 
 	private DWOplayerParameters PARAMETERS;
 	@Inject void setParameters(DWOplayerParameters p) {
@@ -263,8 +268,10 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 			DWOplayer.insertCSS(id);
 			List<SelectModuleItem> trail = new ArrayList<SelectModuleItem>();
 			SelectModuleItem parent = sco.getParent();
+			boolean profilecheck = !profileCheck(); // profile/test/premium?
 			while(parent != null) {
-				trail.add(parent);
+				if (profilecheck || parent.getCourseType() != CourseType.invisible)
+					trail.add(parent);
 				parent = parent.getParent();
 			}
 			view.setTrail(trail);
@@ -313,6 +320,14 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 		};
 		view.getApi().Initialize(callback);
 		}
+	}
+
+	private boolean profileCheck() {
+		Promise<DomDwoProfileFull> dwoProfile = rpc.getDwoProfile();
+		return profile == 111 ||  // INFORMATICA
+			dwoProfile.isDone() && 
+			dwoProfile.getFailure() == null &&
+			dwoProfile.getValue().getDwoProfileRights().contains("v");
 	}
 
 	private boolean setNotAfter_org(final AcceptsOneWidget panel) {
@@ -441,6 +456,17 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	public void gotoPlace(String token) {
 		Place place = mapper.getPlace(token);
 		if (place==null) place = defaultPlace;
+		if (place instanceof HasBack) {
+			SelectModuleItem item;
+			Place x = headerView.getUpPlace();
+			String id = mapper.getToken(x);
+			id = id.split(":",2)[1]; // has ':'
+			item = SelectModuleItemHolder.getItemByID(id);
+			((HasBack) place).setBack(item);
+		}
+
+		
+		
 		goTo(place);
 	}
 

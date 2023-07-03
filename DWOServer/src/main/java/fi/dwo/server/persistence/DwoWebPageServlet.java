@@ -42,7 +42,6 @@ public class DwoWebPageServlet extends HttpServlet {
      * Andere parameters zijn SERVLET etc...
      * @throws javax.servlet.ServletException
      * @see #HTML_SOURCE
-     * @see fi.beans.xmlrpc.Servlet#init(javax.servlet.ServletConfig)
      */
 
     public void init() throws ServletException

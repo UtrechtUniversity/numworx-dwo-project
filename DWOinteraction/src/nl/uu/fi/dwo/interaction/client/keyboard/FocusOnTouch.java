@@ -242,6 +242,16 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 		
 		if (event.isAltKeyDown() || event.isControlKeyDown() || event.isMetaKeyDown() || kb == null)
 		{	int code = event.getNativeKeyCode();
+		
+			if (code == KeyCodes.KEY_CTRL || code == KeyCodes.KEY_WIN_KEY_LEFT_META) return;
+			if (code == KeyCodes.KEY_A && (event.isControlKeyDown()||event.isMetaKeyDown()))
+			{
+				editor.selectAll();
+				event.preventDefault();
+				event.stopPropagation();
+			} else
+		
+		
 			if(code == 88 && event.isControlKeyDown()) //ctrl+x
 			{
 				editor.knip(clip);

@@ -3757,7 +3757,17 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			pijlVak.paintComponent();
 			pijlVakken.add(pijlVak);
 			if(pijlVak.getEditor()!=null)
+			{
 				pijlVak.getEditor().requestFocus();
+// onderstaand stukje om de cursor te tonen.
+				if(pijlVak.getEditor().getCurrentElement() == null)
+				{	pijlVak.getEditor().setCurrentElementRepaint(pijlVak.getEditor().getMainRegel());
+					//zorgen dat cursor netjes aan eind vakje staat.
+					pijlVak.getEditor().cursorToLeft();
+					pijlVak.getEditor().cursorToRight();
+				}
+
+			}
 			scrollToBottom();
 		}
 	}

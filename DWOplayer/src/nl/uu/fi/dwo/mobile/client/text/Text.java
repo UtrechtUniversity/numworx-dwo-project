@@ -72,7 +72,7 @@ public interface Text extends Constants {
 	@DefaultStringValue("Cancel")
 	String cancel();
 	
-	@DefaultStringValue("Bibliotheek")
+	@DefaultStringValue("Modules")
 	String bibliotheek();
 	@DefaultStringValue("Voor leerlingen en studenten")
 	String for_students();

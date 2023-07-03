@@ -531,5 +531,11 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	public void stelsel(int aantalRijen)
 	{
 	}
+
+	@Override
+	public void selectAll() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

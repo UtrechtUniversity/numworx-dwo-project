@@ -22,9 +22,6 @@ import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.last;
 import nl.uu.fi.dwo.mobile.client.ui.places.m;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
-import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
-import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
-import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 @Reusable
 public class LastActivity extends AbstractActivity {

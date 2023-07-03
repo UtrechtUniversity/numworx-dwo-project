@@ -45,7 +45,11 @@ public class HeaderLessView extends HTML implements HeaderView {
     this.upPlace = upPlace;
   }
 
-  @Override
+  public Place getUpPlace() {
+	return upPlace;
+}
+
+@Override
   public void setHomePlace(Place homePlace) {
     this.homePlace = homePlace;
   }
@@ -78,7 +82,11 @@ public class HeaderLessView extends HTML implements HeaderView {
   public void setPresenter(GotoController presenter) {
     if (presenter == null) 
       presenter = controller::goTo;
-
+  }
+  
+  @Override
+  public GotoController getPresenter() {
+	  return controller::goTo;
   }
 
   @Override

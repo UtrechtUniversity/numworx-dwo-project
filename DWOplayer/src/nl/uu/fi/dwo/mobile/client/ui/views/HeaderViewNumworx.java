@@ -163,6 +163,10 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 		this.presenter = presenter;
 	}
 
+	public GotoController getPresenter() {
+		return presenter;
+	}
+
 	Place upPlace = new TreeModulePlace();
 	Place homePlace = new TreeModulePlace();
 	private Widget root;

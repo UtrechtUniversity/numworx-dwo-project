@@ -46,6 +46,7 @@ public class OpdrNavContext implements OpdrNavIF {
 	private CssColor background;
 	
 	public OpdrNavContext(OpdrNavIF comRoot, Connector connector, CssColor bgColor) {
+		while(comRoot instanceof OpdrNavContext) comRoot = ((OpdrNavContext)comRoot).comRoot;
 		this.comRoot = comRoot;
 		this.connector = connector;
 		this.background = bgColor;
@@ -219,6 +220,9 @@ public class OpdrNavContext implements OpdrNavIF {
 	}
 
 	@Override public void setVisited() {
-		comRoot.setVisited();
+		if (comRoot instanceof OpdrNav && connector != null) {
+			((OpdrNav) comRoot).setVisited(connector.widgetId);
+		} else
+			comRoot.setVisited();
 	}
 }

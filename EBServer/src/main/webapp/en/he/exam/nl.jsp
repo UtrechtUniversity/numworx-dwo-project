@@ -42,8 +42,8 @@
 %>
 <h1>Installeren</h1>
 <ul>
-	<li><a href='https://www.dwo.nl/downloads/SEB_3.0.1.163_SetupBundle.exe'>Safe Exam Browser Windows (3.0.1)</a></li>
-	<li><a href='https://www.dwo.nl/downloads/SafeExamBrowser-2.1.2.dmg'>Safe Exam Browser MacOs (2.1.2)</a></li>
+	<li><a href='https://cdn.dwo.nl/downloads/SEB_3.0.1.163_SetupBundle.exe'>Safe Exam Browser Windows (3.0.1)</a></li>
+	<li><a href='https://cdn.dwo.nl/downloads/SafeExamBrowser-2.1.2.dmg'>Safe Exam Browser MacOs (2.1.2)</a></li>
 </ul>
 Let op, alleen deze versies werken correct.
 <% } %>

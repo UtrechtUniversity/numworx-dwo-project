@@ -213,4 +213,8 @@ public class AbstractEditor implements FormuleEditorIF {
     {
     }
 
+	@Override
+	public void selectAll() {
+	}
+
 }
