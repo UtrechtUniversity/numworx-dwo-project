@@ -888,6 +888,9 @@ try {
 		if (key.endsWith(".completion_status")) {
 			return Objects.toString(pssc.getCompletionStatus(),"");
 		}
+		if (key.endsWith(".id")) {
+			return Objects.toString(pssc.getScoID(), "");
+		}
 	} catch (Exception e) {
 		LOG.log(Level.WARNING, "scoreWidget " + key, e);
 	}
