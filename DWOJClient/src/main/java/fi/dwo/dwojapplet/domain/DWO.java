@@ -1,6 +1,5 @@
 package fi.dwo.dwojapplet.domain;
 
-import java.applet.Applet;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;

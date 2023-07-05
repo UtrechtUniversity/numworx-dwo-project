@@ -1,23 +1,16 @@
 package fi.dwo.dwojapplet.gui.action;
 
-import fi.beans.numworxlf.JOptionPane;
-import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.AppletConfig;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.Sco;
-import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.AddScoDialog;
 import fi.dwo.dwojapplet.gui.CourseNameDialog;
 import fi.dwo.dwojapplet.gui.ModuleTreePanel;
-import fi.dwo.dwojapplet.gui.ScoNameDialog;
-import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.awt.event.ActionEvent;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class NewAction extends GuiAction {
