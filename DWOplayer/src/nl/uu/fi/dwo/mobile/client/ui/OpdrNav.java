@@ -649,9 +649,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		hashmap.put("success", correct);
 		hashmap.put("score.raw", scores[currentActiviteit][currentOpdracht]);
 		hashmap.put("visited", visited[currentActiviteit][currentOpdracht]);
-		ObjectMap map = JSONUtilities.wrapMap(hashmap);
+		ObjectMap map = JSONUtilities.wrapMap(Collections.singletonMap("parameters", hashmap));
 		CBookEvent changed = new CBookEvent("setChanged", map);
-		entry.activity.getEventBus().fireEvent(changed);
+		getEventBus().fireEvent(changed);
 	}
 
 	public void setVisited() {

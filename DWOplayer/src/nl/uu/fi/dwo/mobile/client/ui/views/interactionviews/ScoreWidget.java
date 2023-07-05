@@ -22,6 +22,7 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.web.bindery.event.shared.EventBus;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
@@ -33,6 +34,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
@@ -208,7 +210,11 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 	}
 
 	private com.google.web.bindery.event.shared.HandlerRegistration addHandler() {
-		return activity.getEventBus().addHandler(CBookEvent.TYPE, this);
+		return getEventBus().addHandler(CBookEvent.TYPE, this);
+	}
+
+	private EventBus getEventBus() {
+		return OpdrNav.getEventBus();
 	}
 	
 	private void initVars(DwoGlobalVars vars) {
@@ -668,10 +674,19 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		if ("setChanged".equals(event.getCommand()))
 		{
 			Map<String, ?> param = event.getParameters();
-			if (hasScore) {
-				Promise<String> p;
-				p = Promises.resolved(String.valueOf(param.get("score.raw")));
-				p.then(this::doScore);
+			Integer location = (Integer) param.get("location");
+			if (paginaNr == location.intValue()+1) {
+				if (score) {
+					Promise<String> p;
+					p = Promises.resolved(String.valueOf(param.get("score.raw")));
+					p.then(this::doScore);
+				}
+				if (bezocht) {
+					Object visited = param.get("visited");
+					if ( visited instanceof Collection && ((Collection) visited).isEmpty()) {
+						bezocht(entry = "resume");
+					}
+				}
 			}
 		}
 		
