@@ -108,6 +108,25 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 
 	}
 
+	class IdMatch implements Success<Map<String,String>, Map<String,String>> {
+		final String id, paginaNr;
+
+		IdMatch(String id, int paginaNr) {
+			this.id = id + "." + paginaNr + ".id";
+			this.paginaNr = "-" + (paginaNr-1) + "-";
+		}
+		@Override
+		public Promise<Map<String, String>> call(Promise<Map<String, String>> resolved) throws Exception {
+			String scoid = resolved.getValue().getOrDefault(id, "");
+			String uuid = comRoot.getUUID();
+			if (uuid.startsWith(scoid + paginaNr)) {
+				addHandler();
+			}
+			return resolved;
+		}
+		
+	}
+	
 	private HashMap<String, Object> launchState; 
 	
 	int breedte = 40;
@@ -182,12 +201,14 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		
 		span  = new InlineHTML();
 		span.setStylePrimaryName("scorewidget");
-		
-		activity.getEventBus().addHandler(CBookEvent.TYPE, this);
-				
+						
 		init(breedte, hoogte, launchState);
 		
 //		a.vars().ifPresent(this::initVars);
+	}
+
+	private com.google.web.bindery.event.shared.HandlerRegistration addHandler() {
+		return activity.getEventBus().addHandler(CBookEvent.TYPE, this);
 	}
 	
 	private void initVars(DwoGlobalVars vars) {
@@ -405,7 +426,13 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		if (paginaSet.size() == 1 ) { // 1 pagina!
 			paginaNr = paginaSet.iterator().next();
 			final String pfx = pfx0 + "." + paginaNr;
-	
+// check for local page
+			if (paginaNr > 0) {
+				IdMatch match = new IdMatch(pfx0, paginaNr);
+				keys.add(match.id);
+				defer.getPromise().then(match);
+			}
+			
 			if (score) {
 				Promise<String> result;
 				String key = pfx + SCORE_RAW;
@@ -486,7 +513,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			
 		}
 		if (!keys.isEmpty()) {
-			defer.resolveWith(api.getValuesPromise(keys));
+			defer.resolveWith(activity.agent().barrier().then(x -> api.getValuesPromise(keys)));
 		}
 	}
 	
