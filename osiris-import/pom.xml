@@ -3,12 +3,11 @@
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO</artifactId>
-		<version>2.5.3-SNAPSHOT</version>
+		<version>2.5.21</version>
 		<relativePath>../DWO</relativePath>
 	</parent>
   <groupId>nl.numworx.osiris</groupId>
   <artifactId>osiris-import</artifactId>
-  <version>0.0.7-SNAPSHOT</version>
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -17,13 +16,13 @@
 		<app.name>Numworx-import</app.name>
 		<app.base>https://numworx.acc.uu.nl/dwo/</app.base>
 		<app.title>Numworx import </app.title>
-        <tomcat7.version>7.0.76</tomcat7.version>
+        <tomcat7.version>7.0.107</tomcat7.version>
 	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
 			<artifactId>edexml</artifactId>
-			<version>2.5.3-SNAPSHOT</version>
+			<version>2.5.21</version>
 			<exclusions>
 				<exclusion>
 					<groupId>junit</groupId>
@@ -51,6 +50,12 @@
             <version>3.0.1</version>
             <scope>provided</scope>
         </dependency>
+       <dependency>
+       	<groupId>junit</groupId>
+       	<artifactId>junit</artifactId>
+       	<version>4.12</version>
+       	<scope>test</scope>
+       </dependency>
 	</dependencies>
 	<build>
 		<resources>

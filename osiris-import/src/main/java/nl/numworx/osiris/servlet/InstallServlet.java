@@ -53,7 +53,7 @@ public class InstallServlet extends HttpServlet {
 			Col.FACULTEIT, Col.COLLEGEJAAR, Col.CURSUS, Col.AANVANGSBLOK, Col.KORTE_NAAM_NL, Col.TOETS, Col.VOLTIJD_DEELTIJD, Col.BLOK,Col.GELEGENHEID, Col.OMSCHRIJVING
 	};
 
-	final static Col STUDENTEN[] = {
+	final public static Col STUDENTEN[] = {
 			Col.STUDENTNUMMER, Col.FACULTEIT, Col.COLLEGEJAAR, Col.CURSUS, Col.AANVANGSBLOK, Col.KORTE_NAAM_NL, Col.TOETS, Col.VOLTIJD_DEELTIJD, Col.BLOK,Col.GELEGENHEID, Col.OMSCHRIJVING
 	};
 
@@ -94,7 +94,7 @@ public class InstallServlet extends HttpServlet {
 			String token = "3\f" + samlUserID + '\f' + samlOrgID + '\f' + authToken;
 			token = Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
 			OAuthManager m = new OAuthManager(instance);
-			token = m.authorization_token(token);
+			token = m.authorization_token(token, null, null, null);
 			if (token != null) {
 			  instance.getAuthenticator().setUsername(user.getSamlUserId()); // for debugging.
 			  instance.setRecover(null); // FIXME
@@ -155,7 +155,7 @@ public class InstallServlet extends HttpServlet {
 			String token = "3\f" + samlUserID + '\f' + samlOrgID + '\f' + authToken;
 			token = Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
 			OAuthManager m = new OAuthManager(instance);
-			token = m.authorization_token(token);
+			token = m.authorization_token(token, null, null, null);
 			if (token != null) {
 			  instance.getAuthenticator().setUsername(user.getSamlUserId()); // for debugging.
 			  instance.setRecover(null); // FIXME

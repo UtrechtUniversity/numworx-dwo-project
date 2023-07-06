@@ -312,7 +312,10 @@ public class PersistentClassCourse implements Serializable {
         classCourse.setCourseId(PersistentCourse.buildPersistenceId(this.courseID));
         classCourse.setNotAfter(this.notAfter);
         classCourse.setNotBefore(this.notBefore);
-        classCourse.setCourseType(CourseType.values()[this.type]);
+        if (ViewState.students == viewState && this.type == CourseType.normal.ordinal()) //
+        	classCourse.setCourseType(CourseType.invisible);
+        else
+            classCourse.setCourseType(CourseType.values()[this.type]);
     }
 
     /**

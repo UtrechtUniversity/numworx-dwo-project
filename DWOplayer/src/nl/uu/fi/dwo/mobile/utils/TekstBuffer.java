@@ -474,7 +474,9 @@ public class TekstBuffer
 			ldw.setAContext(getAnchorContext());
 			return x(map, ldw);
 			//return x(map, new nl.numworx.leerdoelwidgetgwt.client.LeerdoelWidgetGWT(currentVakGegevens, randomVarWaarden, volleBreedtes[huidigeKolom]));
-		
+		case 68:
+			StubView repl = new StubView(activity, "ReplGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return x(map,repl);
 		}
 
 		if (soortVak == 0)

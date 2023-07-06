@@ -9,4 +9,4 @@ Implementation-ScmBranch: ${buildScmBranch}
 Implementation-Build: ${buildNumber}
 Created-By: Apache Maven 3.2.3
 Build-Jdk: 1.8.0_45
-Implementation-URL: http://www.dwo.nl
+Implementation-URL: http://numworx.nl

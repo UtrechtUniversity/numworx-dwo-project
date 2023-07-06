@@ -815,10 +815,11 @@ try {
 			}
 		
 	} else return "";
-	if (pssd == null) return "";
+	if (pssd == null) 
+		pssd = new PersistentStudentScoData(pssc.getStudentSco());
 	try {
 		String suspend_data = pssd.getSuspendData();
-		if (suspend_data == null || suspend_data.length() < 6) return "";
+		if (suspend_data == null || suspend_data.length() < 6) suspend_data = "{}";
 		JsonParser parser = Json.createParser(new StringReader(suspend_data));
 		parser.next();
 		JsonObject data = parser.getObject();
@@ -829,6 +830,7 @@ try {
 			if (pagenr<0) {
 				return String.valueOf(Math.round(pssc.getScore()));
 			}
+			if (onsState == null) return "";
 			JsonArray orScores = onsState.getJsonArray("orScores");
 			orScores = orScores.getJsonArray(0);
 			Number n = orScores.getJsonNumber(pagenr).numberValue();
@@ -851,7 +853,7 @@ try {
 			if (pagenr < 0) {
 				return pssc.getScore() > 99f ? "passed" : "";
 			}
-			
+			if (onsState == null) return "";
 			JsonArray orGoedFout = onsState.getJsonArray("orGoedFout");
 			orGoedFout = orGoedFout.getJsonArray(0);
 			boolean ok = orGoedFout.getBoolean(pagenr);
@@ -868,24 +870,46 @@ try {
 			return ok ? "passed" : "failed";    
 		}
 		if (key.endsWith(".entry")) {
-			if (pagenr < 0) return "resume"; // er is suspend_data;
+			//if (pagenr < 0) return "resume"; // er is suspend_data;
 			JsonArray bezocht;
+			if (onsState == null) return "ab-initio";
 			bezocht = onsState.getJsonArray("visited");
 			if (bezocht == null)
 				bezocht = onsState.getJsonArray("bezocht");
 			bezocht = bezocht.getJsonArray(0);
 			if (pagenr >= bezocht.size()) return "ab-initio";
-			boolean ok = bezocht.getBoolean(pagenr);			
+			boolean ok;
+			if (pagenr < 0) { // alle pagina's bezocht!
+				ok = true;
+				for (pagenr = 0 ; ok && pagenr < bezocht.size(); pagenr++) 
+					ok = isGedaan(bezocht, pagenr);
+			} else
+				ok = isGedaan(bezocht, pagenr);
+				
 			return ok ? "resume" : "ab-initio";
 		}
 		if (key.endsWith(".completion_status")) {
 			return Objects.toString(pssc.getCompletionStatus(),"");
+		}
+		if (key.endsWith(".id")) {
+			return Objects.toString(pssc.getScoID(), "");
 		}
 	} catch (Exception e) {
 		LOG.log(Level.WARNING, "scoreWidget " + key, e);
 	}
     return "";   
   }
+
+private static boolean isGedaan(JsonArray bezocht, int pagenr) {
+	JsonValue v = bezocht.get(pagenr);
+	boolean ok;
+	if (v.getValueType() == ValueType.ARRAY) {
+		ok = v.asJsonArray().isEmpty();
+	} else {
+		ok = v.getValueType() == ValueType.TRUE;
+	}
+	return ok;
+}
 
 private static int sumOfCorrectie(JsonObject data) {
 	JsonObject correctie = data.getJsonObject("reviewInteractieData");

@@ -7,6 +7,6 @@ package nl.uu.fi.dwo.rest.dom.entities.util;
  */
 public enum CourseType {
     normal,
-    assesment //,
-//    invisible;
+    assesment,
+    invisible
 }

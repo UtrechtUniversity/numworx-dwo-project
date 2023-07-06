@@ -19,7 +19,7 @@ import org.apache.commons.csv.CSVRecord;
 
 public class Excel implements Iterable<CSVRecord> {
 
-	public static final CSVFormat EXCEL = CSVFormat.EXCEL.withHeader().withDelimiter(';');
+	public static final CSVFormat EXCEL = CSVFormat.EXCEL.withHeader().withDelimiter(';').withIgnoreEmptyLines();
 	public static final int BOM = '\uFEFF';
 
 	public String charset;
@@ -30,15 +30,13 @@ public class Excel implements Iterable<CSVRecord> {
 	}
 
 	public CSVParser parse(InputStream in) throws UnsupportedEncodingException, IOException {
-		BufferedInputStream bin = new BufferedInputStream(in);
-		bin.mark(100);
-		Reader reader = new InputStreamReader(in, charset = "UTF-8");
+		BufferedInputStream bin = new BufferedInputStream(in, 10240);
+		bin.mark(8192);
+		Reader reader = new InputStreamReader(bin, charset = "UTF-8");
 		BufferedReader buffered = new BufferedReader(reader);
 		buffered.mark(1);
 		reader = buffered;
-		if (buffered.read() != Excel.BOM) {
-			buffered.reset();
-			buffered.close();
+		if ( buffered.read() != Excel.BOM) {
 			bin.reset();
 			reader = new InputStreamReader(bin, charset = "Cp1252"); // Windows OS Default
 			reader  = new BufferedReader(reader);

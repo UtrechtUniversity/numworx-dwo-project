@@ -97,6 +97,7 @@ import nl.uu.fi.dwo.mobile.utils.Logging;
 @SuppressWarnings("deprecation")
 public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleEditorIF, FacetAware, CBookEventListener, TekstElementWithFont, HasText {
 	
+	private static final String ZWS = "\u200B"; // zero width space
 	private static final class PreventTapper implements PointerDownHandler {
     @Override
     public void onPointerDown(PointerDownEvent event) {
@@ -128,6 +129,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 
 	private static final String ACTION_NOT_EDITIABLE = "action.setNotEditable";
 	private static final String TEXT = "text";
+	private static final int MIN = 1;
 	
 	private boolean editable = true;
 	//private int lineHeight = 20;
@@ -349,7 +351,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	}
 		
 	private boolean isContentEmpty() {
-		return flow.getWidgetCount() < 2;
+		return flow.getWidgetCount() < 2+MIN;
 	}
 
 	protected void requestFocus() {
@@ -405,7 +407,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		widget.setStyleName(css.textEditor_cursor(), true);
 		cursorWidget = widget;
 		int c = flow.getWidgetIndex(widget);
-		if(c >= 0)
+		if(c >= MIN)
 			cursor = c;
 		LOGGER.info("set cursor at " + c); if(c==35) {
 			RuntimeException r = new RuntimeException();
@@ -625,7 +627,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 
 	private StringBuilder getAllText() {
 	    int size = flow.getWidgetCount()-1;
-	    return  getAllText(0, size);
+	    return  getAllText(MIN, size);
 	}
 
 	@Override
@@ -723,9 +725,10 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 
 	@Override
 	public void clearAll() {
-		cursor = 0;
+		cursor = MIN;
 		selectionEnd = -1;
 		flow.clear();
+		flow.add(new InlineHTML(ZWS));
 		flow.add(setCursorWidget(new InlineHTML(" \u200A")));
 		pasAanH();
 	}
@@ -840,7 +843,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	}
 
 	private void removeCurrentElement1() {
-	    if(cursor > 0 && editable)
+	    if(cursor > MIN && editable)
 	    {   flow.remove(--cursor);
 //	      sb.replace(cursor, cursor+1, "");
 	        showCursor(); pasAanH();
@@ -890,7 +893,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	  private void deSelection() {
 // niet altijd goed
 		int size = flow.getWidgetCount();  
-		for (int i = 0; i < size; i++) flow.getWidget(i).removeStyleName(css.textEditor_select());
+		for (int i = MIN; i < size; i++) flow.getWidget(i).removeStyleName(css.textEditor_select());
 		  
 		  
 	    if(hasSelection()) {
@@ -903,7 +906,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	  }
 
 	  private void cursorToLeft1() {
-	    if (cursor > 0) {
+	    if (cursor > MIN) {
 	      cursor --;
 	      setCursorWidget(flow.getWidget(cursor));
 	    }
@@ -915,7 +918,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	  }
 	  @Override
 	  public void cursorToLeftShift() {
-	    if (cursor > 0) {
+	    if (cursor > MIN) {
 	      if (!hasSelection()) selectionEnd = cursor;
 	      if (cursor > selectionEnd) 
 	        flow.getWidget(cursor-1).removeStyleName(css.textEditor_select());
@@ -980,7 +983,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		int xmax = xmin + flow.getOffsetHeight(); // Helaas geen uitsteeksels
 		int size = flow.getWidgetCount();
 		int i;
-		for (i = 0; i < size; i++) { // eigenlijk alleen de eerste en de laatste regel nodig, FIXED
+		for (i = MIN; i < size; i++) { // eigenlijk alleen de eerste en de laatste regel nodig, FIXED
 			Widget w = flow.getWidget(i);
 			int min = w.getAbsoluteTop();
 			int max = w.getOffsetHeight() + min;
@@ -1233,7 +1236,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	private String toMathML() {
 		StringBuilder sb = new StringBuilder();
 		int count = flow.getWidgetCount()-1;
-		for(int i=0; i < count; i++) {
+		for(int i=MIN; i < count; i++) {
 			Widget child = flow.getWidget(i);
 			if (child instanceof FormulaVak) {
 				sb.append("<math xmlns=\"http://www.w3.org/1998/Math/MathML\">").append(((FormulaVak) child).editor.getMainRegel().toMathML()).append("</math>");
@@ -1266,7 +1269,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		editable = false;
 		widget.setStyleName(css.textEditor_readonly(), !editable);
 		int count = flow.getWidgetCount()-1;
-		for(int i=0; i < count; i++) {
+		for(int i=MIN; i < count; i++) {
 			Widget child = flow.getWidget(i);
 			if(child instanceof IsEditable) {
 				((IsEditable) child).setEditable(false);
@@ -1525,7 +1528,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		      return wid;
 		    }
 		    LOGGER.fine("px = " + px + ", py = " + py);
-		    while (--max > -1) {
+		    while (--max > MIN-1) {
 		      wid = flow.getWidget(max);
 		      int x = wid.getAbsoluteLeft();
 		      if (wid instanceof Enter) 
@@ -1626,7 +1629,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 				int flowTop = flow.getAbsoluteTop();
 				int y = event.getClientY() - flowTop;
 				int w;
-				int i = 0;
+				int i = MIN;
 				int max = flow.getWidgetCount() - 1;
 				if (i == max)
 					i -= 1;
@@ -2103,7 +2106,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		public void calcWidth(int cursor) {
 			getElement().getStyle().setWhiteSpace(WhiteSpace.PRE);
 			int off = 0;
-			while( cursor-- > 0) {
+			while( cursor-- > MIN) {
 				Widget w = flow.getWidget(cursor);
 				if (w instanceof Enter || w instanceof Tab) break;
 				off += w.getOffsetWidth();
@@ -2158,7 +2161,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	@Override
 	public void selectAll() {
 		cursorToLeft();
-		while(cursor > 0) cursorToLeft1();
+		while(cursor > MIN) cursorToLeft1();
 	    int max = flow.getWidgetCount()-1;
 		do { cursorToRightShift();
 		} while(cursor < max); 

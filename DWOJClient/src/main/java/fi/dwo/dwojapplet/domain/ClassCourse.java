@@ -1,9 +1,6 @@
 package fi.dwo.dwojapplet.domain;
 
-import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-
 import java.util.Date;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ClassCourse {

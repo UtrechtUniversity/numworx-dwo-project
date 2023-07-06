@@ -89,11 +89,10 @@ public class OrganisationPresenter {
     view.setLoadingTableMessage();
     
     DomSchool school = dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool();
-    String schoolRights = school.getSchoolRights();
     boolean premium = dwoGlobalVars.isPremium();
     boolean visible = dwoGlobalVars.isTest() || dwoGlobalVars.isSaml();
-	view.initEditModules(schoolRights.contains("m"), schoolRights.contains("X") && premium, visible && premium);
-    view.initChooseClass(schoolRights.contains("c"));
+	view.initEditModules(school.teachersCanWrite(), school.accessControl() && premium, visible && premium);
+    view.initChooseClass(school.studentsCanRegisterForSchoolClasses());
     
     Promise<List<DomSchoolClass>> pp = service.getTeachersSchoolClasses().then(
       p -> {
@@ -213,6 +212,7 @@ public class OrganisationPresenter {
   @JsMethod void setChooseClass(boolean choice) { // Verkeerd om!
     DomSchool s = dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool();
     String rights = s.getSchoolRights();
+    if ("_".equals(rights)) rights = DomSchool.defaultRights();
     rights = rights.replace("c", "");
     if (choice) {
       rights = rights + "c";
@@ -239,6 +239,7 @@ public class OrganisationPresenter {
   @JsMethod void setEditModules(boolean choice, boolean xs) { // Verkeerd om
     DomSchool s = dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool();
     String rights = s.getSchoolRights();
+    if ("_".equals(rights)) rights = DomSchool.defaultRights();
     rights = rights.replace("m", "").replace("X", "");
     if (choice) {
       rights = rights + "m";

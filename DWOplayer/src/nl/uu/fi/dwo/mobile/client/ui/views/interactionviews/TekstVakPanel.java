@@ -3778,6 +3778,9 @@ private Object CamelCase(String name) {
 				
 			}
 			mainPanel2.getElement().getStyle().setBorderWidth(5, Unit.PX);
+			mainPanel2.getElement().getStyle().clearWidth();
+			mainPanel2.getElement().getStyle().clearHeight();
+			
 			mainPanel2.setWidgetLeftRight(mainPanel, randDikte - 5, Style.Unit.PX, randDikte - 5, Style.Unit.PX);
 			mainPanel2.setWidgetTopBottom(mainPanel, randDikte - 5, Style.Unit.PX, randDikte - 5, Style.Unit.PX);
 			if(sleepbaar && sleepHandle)

@@ -40,7 +40,7 @@
     <!-- If you add any GWT meta tags, they must   -->
     <!-- be added before this line.                -->
     <!--                                           -->
-    <script type="text/javascript" language="javascript" src="/dwo/oauth2client/oauth2client/oauth2client.nocache.js"></script>
+    <script type="text/javascript" src="/dwo/oauth2client/oauth2client/oauth2client.nocache.js"></script>
   </head>
 
   <!--                                           -->

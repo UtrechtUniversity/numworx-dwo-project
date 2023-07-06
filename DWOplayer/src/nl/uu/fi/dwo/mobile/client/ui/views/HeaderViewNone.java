@@ -65,7 +65,11 @@ public class HeaderViewNone extends HTML implements HeaderView, MessageEventHand
     this.upPlace = upPlace;
   }
 
-  @Override
+  public Place getUpPlace() {
+	return upPlace;
+}
+
+@Override
   public void setHomePlace(Place homePlace) {
     this.homePlace = homePlace;
   }
@@ -106,6 +110,11 @@ public class HeaderViewNone extends HTML implements HeaderView, MessageEventHand
 public void setPresenter(GotoController presenter) {
   if (presenter == null) presenter = controller::goTo; // never null
   this.presenter = presenter;
+}
+
+@Override
+public GotoController getPresenter() {
+	return presenter;
 }
 
 private PlaceHistoryMapper mapper;

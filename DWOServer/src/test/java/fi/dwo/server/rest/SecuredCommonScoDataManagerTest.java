@@ -99,6 +99,14 @@ public class SecuredCommonScoDataManagerTest {
 		String result = SecuredCommonScoDataManager.scoreWidget(key, pssd, pssc);
 		assertEquals("score", "5", result);		
 	}
+	@Test
+	public void testId() { 
+		String key = "dme.scorewidget.s.1.1.id";
+		pssc = new PersistentStudentScoContext(1L);
+		pssc.setScoID(1L);
+		String result = SecuredCommonScoDataManager.scoreWidget(key, pssd, pssc);
+		assertEquals("id", "1", result);		
+	}
 	
 	
 	

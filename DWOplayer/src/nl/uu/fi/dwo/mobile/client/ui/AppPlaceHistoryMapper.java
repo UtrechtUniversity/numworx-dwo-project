@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.c;
 import nl.uu.fi.dwo.mobile.client.ui.places.cc;
 import nl.uu.fi.dwo.mobile.client.ui.places.guest;
 import nl.uu.fi.dwo.mobile.client.ui.places.s;
+import nl.uu.fi.dwo.mobile.client.ui.places.up;
 import nl.uu.fi.dwo.mobile.client.ui.places.xc;
 import nl.uu.fi.dwo.mobile.client.ui.places.xs;
 
@@ -32,7 +33,7 @@ import com.google.gwt.place.shared.WithTokenizers;
 { Exam.Tokenizer.class, ViewModulePlace.Tokenizer.class, ViewCoursePlace.Tokenizer.class, LoginPlace.Tokenizer.class, ReloginPlace.Tokenizer.class, 
 	TreeModulePlace.Tokenizer.class, c.Tokenizer.class, xc.Tokenizer.class, s.Tokenizer.class, xs.Tokenizer.class, guest.Tokenizer.class, 
 	/*SearchPlace.Tokenizer.class, */ LogoutPlace.Tokenizer.class, MaybeLogout.Tokenizer.class, ClassesPlace.Tokenizer.class, cc.Tokenizer.class, 
-	last.Tokenizer.class, m.Tokenizer.class })
+	last.Tokenizer.class, m.Tokenizer.class, up.Tokenizer.class })
 public interface AppPlaceHistoryMapper extends PlaceHistoryMapper
 {
 

@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -961,6 +962,15 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			}
 			
 			setObjects(opdracht, contentPanel, on);
+
+			String[] ongezien = JSONUtilities.toStringArray(opdracht.get("ongezien"));
+			if (ongezien != null) {
+				Collection<String> v = new ArrayList<>(Arrays.asList(ongezien));
+				on.setVisited(v);
+			}
+ 			
+			
+			
 			setStateNull();
 			stelNavigatieIn();
 		}

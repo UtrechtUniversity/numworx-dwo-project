@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.sco;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.json.client.JSONArray;
@@ -56,8 +57,17 @@ public class DWOLogger implements Logging {
 			logMap.put("logAttempts", log);
 
  */
+	private Map<String,?> last;
+	
 	@Override
 	public void log(Map<String, ?> parameters) {
+		if (parameters.equals(last))
+		{
+			java.util.logging.Logger.getLogger("DWOLogger").warning("logging duplicate " + last);
+			return;
+		}
+		last = new HashMap<>(parameters);
+		
 		String formula = (String)parameters.get("response");
 		if (formula == null)
 			formula = "";
