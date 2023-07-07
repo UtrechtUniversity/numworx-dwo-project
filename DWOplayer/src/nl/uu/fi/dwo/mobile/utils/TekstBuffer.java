@@ -477,6 +477,10 @@ public class TekstBuffer
 		case 68:
 			StubView repl = new StubView(activity, "ReplGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			return x(map,repl);
+		case 69:
+			StubView aimodel = new StubView(activity, "AIModelGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return x(map,aimodel);
+		
 		}
 
 		if (soortVak == 0)
@@ -565,7 +569,7 @@ public class TekstBuffer
 		}
 		else if (soortVak == 60)
 		{
-			result = new SamengesteldeStappenPanel(activity, currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom]);
+			result = x(map, new SamengesteldeStappenPanel(activity, currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom]));
 		}
 		else if (soortVak == 63)
 		{
