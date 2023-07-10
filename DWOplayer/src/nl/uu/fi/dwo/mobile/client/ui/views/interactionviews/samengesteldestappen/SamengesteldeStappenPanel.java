@@ -25,6 +25,9 @@ import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
@@ -34,7 +37,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel.Tupel;
 
-public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, TekstElementWithFont, HasResize {
+public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, TekstElementWithFont, HasResize, CBookEventListener {
 	
 	private final static Logger logger = Logger.getLogger("samengesteldeStappen");
 	
@@ -390,6 +393,7 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 		
 		HashMap<String, Object> state = stappenVak.getState();
 		state.put("selectedSteps", selectedSteps);
+		if (tupels != null) state.put("tupels", tupels);
 		return state;
 	}
 
@@ -398,6 +402,9 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 		ObjectMap map = JSONUtilities.wrapMap(h);
 		if(map == null)
 			return;
+		if (map.containsKey("tupels")) {
+			initFromTupels(map.getObjectList("tupels"));
+		}
 		int[] selectedStepsList = null;
 		if(map.containsKey("selectedSteps"))
 			selectedStepsList = map.getIntArray("selectedSteps");
@@ -470,7 +477,8 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 		stappenVak.setCommunicationRoot(comRoot);
 		if(ideasStatistiek && (comRoot.getMode() == OpdrNavIF.EINDTOETS || comRoot.getMode() == OpdrNavIF.ZELFTOETS))
 			hintButton.removeFromParent();
-		
+		if (ideasStatistiek)
+			comRoot.addCBookEventListener("tupels.statistics", this);
 	}
 
 	@Override
@@ -527,6 +535,29 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 	public void setFontStyle(int font_style) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	ObjectList tupels;
+	
+	@Override
+	public void acceptCBookEvent(CBookEvent event) {
+		String command = event.getCommand();
+		if ("tupels.statistics".equals(command)) {
+			ObjectMap input = JSONUtilities.wrapMap(event.getParameters());
+			initFromTupels(input.getObjectList("tupels"));
+		}
+		
+	}
+
+	protected void initFromTupels(ObjectList list) {
+		this.tupels = list;
+		int size = list.size();
+		ArrayList<Tupel> ts= new ArrayList<>(size);
+		for (int i = 0; i < size; i++) {
+			ObjectMap map = list.getObjectMap(i);
+			ts.add(new Tupel(map));
+		}
+		stappenVak.initialiseIdeasStatistiek(ts);
 	}
 	
 }
