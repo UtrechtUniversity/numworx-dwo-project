@@ -959,10 +959,55 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	
 	@Override
 	public void cursorUp() {
+		deSelection();
+		if (cursor == MIN) return;
+		Widget w = flow.getWidget(cursor);
+		int x = w.getAbsoluteLeft();
+		boolean seen = false;
+		int plast = Short.MAX_VALUE;
+		while (cursor > MIN) {
+			cursorToLeft1();
+			w = flow.getWidget(cursor);
+			if (w instanceof Enter) {
+				if (seen) { /*cursorToRight1();*/ return; }
+				int p = w.getAbsoluteLeft();
+				if (p <= x) return;
+				seen = true;
+			} else if (seen) {
+				int p = w.getAbsoluteLeft();
+				if (p <= x) {
+					if (x - p > plast - p) cursorToRight1();
+					return;
+				}
+				plast = p;
+			}
+		}
 	}
 	
 	@Override
 	public void cursorDown() {
+		deSelection();
+		Widget w = flow.getWidget(cursor);
+		int x = w.getAbsoluteLeft();
+		int max = flow.getWidgetCount()-1;
+		boolean seen = w instanceof Enter;
+		int plast = Short.MIN_VALUE;
+		while (cursor < max) {
+			cursorToRight1();
+			w = flow.getWidget(cursor);
+			if (w instanceof Enter) {
+				if (!seen) seen = true;
+				else return; // stops at 2nd enter
+			} else if (seen) {
+				int p = w.getAbsoluteLeft();
+				if (p >= x) 
+				{	if (p-x > x-plast)
+						cursorToLeft1();
+					return;
+				}
+				plast = p;
+			}
+		}
 		
 	}
 	
