@@ -2,7 +2,9 @@ package nl.uu.fi.dwo.mobile.client.sco;
 
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -20,7 +22,9 @@ import com.google.gwt.junit.client.GWTTestCase;
 
 import nl.numworx.gwtpatch.client.GWTPatch;
 import nl.numworx.gwtpatch.client.JSONBuilder;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.promise.client.PromiseImpl;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
@@ -92,7 +96,7 @@ public class GwtTestMemento extends GWTTestCase {
       String result = api.GetValue(Memento.REVIEW_DATA);
       String test = patch.createPatch(review2, result);
       assertEquals("patch equals", "[]", test);
-      assertEquals("getter", 9, getter);
+      assertEquals("getter", 10, getter);
       assertEquals("setter", 6, setter);
   }
 
@@ -120,9 +124,26 @@ public class GwtTestMemento extends GWTTestCase {
     String test = patch.createPatch(review, result);
     assertEquals("patch equals", "[]", test);
     assertEquals("review ", review, result);
-    assertEquals("getter", 11, getter);
+    assertEquals("getter", 12, getter);
     assertEquals("setter", 8, setter);
     
   } 
   
+  @Test
+  public void testObjectListJSON() {
+	  List l = Arrays.asList(1,"HIERO",3,4);
+	  ObjectList ll = JSONUtilities.wrapList(l);
+	  HashMap<String, Object> h = new HashMap<>();
+	  h.put("objectlust", ll);
+	  m = new Memento(null, api, view, defer) {
+
+	      @Override
+	      void register() { // whipeout registrations
+	        
+	      } } ;
+	  m.setOpdrContStates(new HashMap[][] { { h }});
+	  String v = m.getValue(m.SUSPEND_DATA);
+	  LOG.info(v);
+	  assertTrue("Hiero", v.contains("HIERO"));
+  }
 }
