@@ -646,7 +646,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		// kijkNa()
 		Map<String, Object> hashmap = new HashMap<>();
 		hashmap.put("location", currentOpdracht);
-		hashmap.put("success", correct);
+		hashmap.put("success", check);
 		hashmap.put("score.raw", scores[currentActiviteit][currentOpdracht]);
 		hashmap.put("visited", visited[currentActiviteit][currentOpdracht]);
 		ObjectMap map = JSONUtilities.wrapMap(Collections.singletonMap("parameters", hashmap));
