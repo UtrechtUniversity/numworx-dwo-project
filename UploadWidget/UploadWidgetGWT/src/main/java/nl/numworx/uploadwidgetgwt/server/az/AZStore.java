@@ -26,14 +26,18 @@ public class AZStore extends Store {
 		//private final BlobItem item;
 		String learnerId;
 		private OffsetDateTime modified;
-		AZAtomEntry(BlobItem item) {
+		AZAtomEntry(BlobItem item, String prefix) {
 			//this.item = item;
 			this.title = item.getName();
+			if (title.startsWith(prefix)) {
+				title = title.substring(prefix.length());
+			}
 			this.id = item.getProperties().getETag();
 			this.length = item.getProperties().getContentLength();
 			this.type = item.getProperties().getContentType();
 			this.url = title;
-			this.learnerId = item.getTags().get(LEARNERID);
+			Map<String, String> metadata = item.getMetadata();
+			if (metadata != null) this.learnerId = metadata.get(LEARNERID); // can be null
 			this.modified = item.getProperties().getLastModified();
 		}
 		@Override
@@ -55,7 +59,7 @@ public class AZStore extends Store {
 		Iterable<BlobItem> list = provider.getEntries(prefix);
 		List result = new ArrayList();
 		for (BlobItem item: list) {
-			result.add(new AZAtomEntry(item));
+			result.add(new AZAtomEntry(item, prefix));
 		}
 		Collections.sort(result);
 		return result;

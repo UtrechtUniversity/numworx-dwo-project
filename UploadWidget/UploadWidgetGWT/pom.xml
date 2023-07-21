@@ -100,9 +100,14 @@
   <version>1.7.28</version>
   <scope>test</scope>
 </dependency>
+  	<dependency>
+  		<groupId>nl.uu.fi.dwo</groupId>
+  		<artifactId>DWO-commons-lib</artifactId>
+  	</dependency>
   </dependencies>
 
   <build>
+    <finalName>${project.artifactId}</finalName>
     <!-- Output classes directly into the webapp, so that IDEs and "mvn process-classes" update them in DevMode -->
     <outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
 
