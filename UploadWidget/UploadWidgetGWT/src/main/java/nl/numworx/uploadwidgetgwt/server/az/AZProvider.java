@@ -42,7 +42,7 @@ class AZProvider {
 		        .credential(defaultCredential)
 		        .buildClient();
 		client = blobServiceClient.getBlobContainerClient(bucket);
-		client.createIfNotExists();
+		//client.createIfNotExists();
 	}
 	
 	Iterable<BlobItem> getEntries(String prefix) {

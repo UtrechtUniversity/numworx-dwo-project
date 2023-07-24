@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.fileupload.FileItem;
 
@@ -20,6 +22,8 @@ import nl.numworx.uploadwidgetgwt.server.Store;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 
 public class AZStore extends Store {
+	
+	static final Logger LOG = Logger.getLogger(AZStore.class.getName());
 	
 	static class AZAtomEntry extends AtomEntry implements Comparable<AZAtomEntry> {
 
@@ -50,19 +54,28 @@ public class AZStore extends Store {
 	AZProvider provider;
 
 	public AZStore() {
-		provider = new AZProvider();
+		try {
+			provider = new AZProvider();
+		} catch (Exception e) {
+			LOG.log(Level.SEVERE, "failure get provider in initializer", e);
+		}
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Iterable<AtomEntry> getEntries(String prefix) {
-		Iterable<BlobItem> list = provider.getEntries(prefix);
-		List result = new ArrayList();
-		for (BlobItem item: list) {
-			result.add(new AZAtomEntry(item, prefix));
+		try {
+			Iterable<BlobItem> list = provider.getEntries(prefix);
+			List result = new ArrayList();
+			for (BlobItem item: list) {
+				result.add(new AZAtomEntry(item, prefix));
+			}
+			Collections.sort(result);
+			return result;
+		} catch (Exception e) {
+			LOG.log(Level.SEVERE, "failure getEntries " + prefix, e);
+			return Collections.emptyList();
 		}
-		Collections.sort(result);
-		return result;
 	}
 
 	@Override
