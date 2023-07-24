@@ -10,7 +10,10 @@ then
 #put -r $2
 #put $3.css
 #EOF
-EXP=$(date -v+1d +%Y-%m-%d)
+# BSD (MacOSX)
+#	EXP=$(date -v+1d +%Y-%m-%d)
+# posix (ubuntu)
+	EXP=$(date -d 'next day' +%Y-%m-%d)
 SAS=$(az storage container generate-sas --account-name numworxcontentdev --name content  --auth-mode key  --permissions dlrw --expiry $EXP --account-key $KEY)
 SAS=$(echo $SAS|tr -d '"')
 
