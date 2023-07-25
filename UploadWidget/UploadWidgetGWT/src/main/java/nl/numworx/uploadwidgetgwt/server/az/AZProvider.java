@@ -17,17 +17,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-class AZProvider {
+public class AZProvider {
 
 	final String bucket;
 	BlobContainerClient client;
 	/**
 	 */
-	AZProvider() {
+	public AZProvider() {
 		this("numworxcontentdev", "upload");
 	}
 
-	AZProvider(String account, String bucket) {
+	public AZProvider(String account, String bucket) {
 		this.bucket = bucket;
 		/*
 		 * The default credential first checks environment variables for configuration
@@ -45,7 +45,7 @@ class AZProvider {
 		//client.createIfNotExists();
 	}
 	
-	Iterable<BlobItem> getEntries(String prefix) {
+	public Iterable<BlobItem> getEntries(String prefix) {
 		ListBlobsOptions options = new ListBlobsOptions().setPrefix(prefix);
 		options.getDetails().setRetrieveMetadata(true);
 		return client.listBlobsByHierarchy("/", options, null);
