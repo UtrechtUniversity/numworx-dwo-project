@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.azure.storage.blob.models.BlobItem;
-
 import nl.numworx.uploadwidgetgwt.server.az.AZProvider;
 
 @SuppressWarnings("serial")

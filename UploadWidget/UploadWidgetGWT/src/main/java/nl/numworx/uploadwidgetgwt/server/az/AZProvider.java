@@ -24,10 +24,10 @@ public class AZProvider {
 	/**
 	 */
 	public AZProvider() {
-		this("numworxcontentdev", "upload");
+		this(System.getProperty("S3_BUCKET","numworxcontentdev"), "upload");
 	}
 
-	public AZProvider(String account, String bucket) {
+	private AZProvider(String account, String bucket) {
 		this.bucket = bucket;
 		/*
 		 * The default credential first checks environment variables for configuration
