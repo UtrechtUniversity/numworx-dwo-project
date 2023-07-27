@@ -82,6 +82,10 @@ public class JSONUtilities {
 		{
 			return toJSONArray((Object[]) value);
 		}
+		if (value instanceof ObjectList) {
+			return toJSONArray( (ObjectList) value);
+		}
+		
 		if (value instanceof Map)
 		{
 			return toJSONObject((Map<String, Object>) value);
@@ -101,6 +105,16 @@ public class JSONUtilities {
 		throw new IllegalArgumentException("unsupported class " + value.getClass());
 		//return null;
 	}
+
+	private static JSONValue toJSONArray(ObjectList value) {
+		JSONArray array = new JSONArray();
+		for (int i = 0; i < value.size(); i++)
+		{
+			array.set(i, toJSONValue(value.get(i)));
+		}
+		return array;
+	}
+
 
 	private static JSONValue toJSONArray(int[] objects) {
 		JSONArray array = new JSONArray();

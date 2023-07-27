@@ -280,6 +280,6 @@
 		<gwtVersion>2.8.2</gwtVersion>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<tomcat7.version>7.0.76</tomcat7.version>
+		<tomcat7.version>7.0.107</tomcat7.version>
 	</properties>
 </project>

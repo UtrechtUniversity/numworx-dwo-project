@@ -92,7 +92,5 @@ public abstract class HeaderLessModule {
     return impl;
   }
   
-  @Binds abstract DWOplayerParameters parameters(DWO2playerDefaults create);
-
   @Binds abstract RPCHandler rpc(DWO2RPCHandler rpc);
 }

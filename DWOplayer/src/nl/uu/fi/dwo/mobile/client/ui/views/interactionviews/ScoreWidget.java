@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -681,6 +682,21 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 					p = Promises.resolved(String.valueOf(param.get("score.raw")));
 					p.then(this::doScore);
 				}
+				if (goedFout && bezocht) {
+				} else 
+				if (goedFout) {
+					String  gf;
+					if (cesuur == null) {
+						Object success = param.get("success");
+						if (Boolean.TRUE.equals(success)) gf = "passed";
+						else if (Boolean.FALSE.equals(success)) gf = "failed";
+						else gf = "";
+					} else {
+						gf = Objects.toString(param.get("score.raw"));
+					}
+					this.successStatus = gf;
+					goedfout(gf);
+				} else
 				if (bezocht) {
 					Object visited = param.get("visited");
 					if ( visited instanceof Collection && ((Collection) visited).isEmpty()) {

@@ -2863,6 +2863,12 @@ private Object CamelCase(String name) {
 	        this.value = value;
 	    }
 
+		public Tupel(ObjectMap map) {
+			this.name = map.getString("name");
+			this.type = map.getString("type");
+			this.value = map.getString("value");
+		}
+
 		@Override
 		public int hashCode() {
 			final int prime = 31;

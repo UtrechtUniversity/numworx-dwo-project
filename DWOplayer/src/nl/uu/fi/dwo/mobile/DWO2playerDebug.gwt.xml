@@ -60,7 +60,7 @@
 	
   <!-- Specify the paths for translatable code                    -->
   <source />
-  <entry-point class='nl.uu.fi.dwo.mobile.DWO2player'/>
+  <entry-point class='nl.uu.fi.dwo.mobile.DWO2playerDebug'/>
 
    	<replace-with class="nl.uu.fi.dwo.mobile.client.sco.CorrectieReview">
  		<when-type-is class="nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade" />

@@ -17,17 +17,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-class AZProvider {
+public class AZProvider {
 
 	final String bucket;
 	BlobContainerClient client;
 	/**
 	 */
-	AZProvider() {
-		this("numworxcontentdev", "upload");
+	public AZProvider() {
+		this(System.getProperty("S3_BUCKET","numworxcontentdev"), "upload");
 	}
 
-	AZProvider(String account, String bucket) {
+	private AZProvider(String account, String bucket) {
 		this.bucket = bucket;
 		/*
 		 * The default credential first checks environment variables for configuration
@@ -42,13 +42,16 @@ class AZProvider {
 		        .credential(defaultCredential)
 		        .buildClient();
 		client = blobServiceClient.getBlobContainerClient(bucket);
-		client.createIfNotExists();
+		//client.createIfNotExists();
 	}
 	
-	Iterable<BlobItem> getEntries(String prefix) {
-		return client.listBlobsByHierarchy(prefix);
+	public Iterable<BlobItem> getEntries(String prefix) {
+		ListBlobsOptions options = new ListBlobsOptions().setPrefix(prefix);
+		options.getDetails().setRetrieveMetadata(true);
+		return client.listBlobsByHierarchy("/", options, null);
 	}
 
+	@SuppressWarnings("deprecation")
 	void put(String key, String type, InputStream inputStream, Long length, Map<String, String> tags) {
 		BlobClient blob = client.getBlobClient(key);
 		Duration timeout = Duration.ofMinutes(10);
@@ -56,7 +59,7 @@ class AZProvider {
 		BlobParallelUploadOptions options = new BlobParallelUploadOptions(inputStream,length);
 		options.setHeaders(new BlobHttpHeaders());
 		options.getHeaders().setContentType(type);
-		options.setTags(tags);
+		options.setMetadata(tags);
 		Context context = Context.NONE;
 		Response<BlockBlobItem> response = blob.uploadWithResponse(options, timeout, context);	
 		int status = response.getStatusCode();
@@ -83,8 +86,9 @@ class AZProvider {
 	public Entity get(String first) {
 		BlobClient blob = client.getBlobClient(first);
 		ListBlobsOptions options = new ListBlobsOptions().setPrefix(first).setMaxResultsPerPage(1);
+		options.getDetails().setRetrieveMetadata(true);
 		BlobItem item = client.listBlobs(options, Duration.ofMillis(100000)).stream().findAny().get();
-		Entity result = new Entity(item);
+		Entity result = new Entity(item, "");
 		result.url = blob.getBlobUrl();
 		OffsetDateTime now = OffsetDateTime.now().minusMinutes(10);
 		OffsetDateTime expiryTime = now.plusDays(1);

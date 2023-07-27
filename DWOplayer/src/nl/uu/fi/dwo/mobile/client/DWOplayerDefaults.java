@@ -4,19 +4,13 @@ import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.views.ScoreNavFacade;
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Window;
 
 public class DWOplayerDefaults implements DWOplayerParameters {
 
 	@Override
 	public String getStubView() {
-		// voor test met lokale widgets en super dev mode onderstaande twee regels uitzetten
-//		/*
-		if(GWT.isProdMode())
 			return "/dwo/apps/";
-//		*/
-		return "";
 	}
 
 	@Override
