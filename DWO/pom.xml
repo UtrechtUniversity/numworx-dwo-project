@@ -15,9 +15,9 @@
         <jdk.version>8</jdk.version>
         <jdk>${env.JAVA_HOME_8}</jdk>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <DWOServerVersion>2.5.22-SNAPSHOT</DWOServerVersion>
+        <DWOServerVersion>2.5.22</DWOServerVersion>
         <DWOJClientVersion>2.5.21</DWOJClientVersion>
-		<DWOplayerVersion>2.5.22-SNAPSHOT</DWOplayerVersion>
+		<DWOplayerVersion>2.5.22</DWOplayerVersion>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <chatGWTVersion>2.5.18</chatGWTVersion>
     </properties>
