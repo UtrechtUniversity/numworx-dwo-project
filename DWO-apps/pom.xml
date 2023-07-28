@@ -61,9 +61,6 @@
 	</snapshotRepository>
   </distributionManagement>
 
-    <scm>
-    	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-apps/trunk</developerConnection>
-    </scm>
     <properties>
     	<maven.compiler.source>1.8</maven.compiler.source>
     	<maven.compiler.target>1.8</maven.compiler.target>
