@@ -124,6 +124,8 @@ public class GuiCreatorTeacher extends GuiCreator {
         ids = set;
       }
       List<DomACL> acls = c == null ? null : c.getAcls();
+      final int schoolID = c == null ? -1 :c.getSchoolID();
+
       while ( (acls == null||acls.isEmpty()) && c != null) {
         CourseMap m = c.getParentMap();
         if (m instanceof Course) {
@@ -140,7 +142,7 @@ public class GuiCreatorTeacher extends GuiCreator {
 // modify + !accesscontrol -> WRITE
 // !modify + accesscontrol -> READ
 // !modify + !accesscontrokl -> ACCESS
-      return u.hasRight(User.MODIFY_MODULES_RIGHT);
+	return u.hasRight(User.MODIFY_MODULES_RIGHT) || (schoolID == 0 & u.hasRight(User.PROFILE_ADMIN_RIGHT));
       }
       return acls.stream().filter(a -> a.getAccess() == ACL.FULL || a.getAccess() == ACL.WRITE).anyMatch(a -> ids.contains(a.getEntity())); 
     }
