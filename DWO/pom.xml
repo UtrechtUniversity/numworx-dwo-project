@@ -34,7 +34,7 @@
  	 	<module>../DWO-apps</module>
 <!-- 	 	<module>../DWOGwtClient</module> -->
 <!--  	 	<module>../DWOinteraction</module> -->
-<!--         <module>../DWOJClient</module> -->
+        <module>../DWOJClient</module>
 <!--      	<module>../DWOServer</module> -->
 <!--      	<module>../DWOplayer</module> -->
 <!--	<module>../edexml</module>-->
