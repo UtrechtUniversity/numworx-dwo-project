@@ -60,7 +60,7 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
         readonlyModules = new JRadioButton();
         add(readonlyModules);
         accessTeacher = new JRadioButton();
-        if( (DwoHelper.isTest()||DwoHelper.isSamlLogin()) && DwoHelper.isPremium())
+        if ( /*(DwoHelper.isTest()||DwoHelper.isSamlLogin()) &&*/ DwoHelper.isPremium())
           add(accessTeacher);
         rights.add(modifyModules);
         rights.add(readonlyModules);
