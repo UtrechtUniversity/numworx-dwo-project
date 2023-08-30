@@ -40,11 +40,6 @@
         <local.dwo>/dwo</local.dwo>
     </properties>
 
-    <scm>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOGwtClient/trunk</developerConnection>
-        <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOGwtClient/trunk</connection>
-        <url>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOGwtClient/trunk</url>
-    </scm>
     <!-- Running with Maven -->
     <!-- mvn clean package -->
     <!-- mvn tomcat7:run package -->
