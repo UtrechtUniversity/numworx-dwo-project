@@ -536,6 +536,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	    errorCount = this.errorCount;
 
 	    kijkNa(false);
+	    if (this.ingevuld) comRoot.setVisited(); // zie Scorewidget: "Gedaan" subtieler maken
 		if(dwologger != null) {
 			Map<String, Object> map = buildLogParameters();
 			if (mode == OpdrNavIF.EINDTOETS && this.ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {

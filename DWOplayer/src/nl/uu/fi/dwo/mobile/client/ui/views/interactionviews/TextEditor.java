@@ -160,6 +160,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	
 	Logging logging;
 	private String lastAttempt;
+	private String firstAttempt = "";
 	private CorrectieFacade correctie;
 	private boolean teltMee;
     private int scoreMax;
@@ -380,7 +381,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		//sb.setLength(0);
 		clearAll();
 		insert(tekst);
-		lastAttempt = tekst;
+		firstAttempt = lastAttempt = tekst;
 		removeCursor();
 		editable = h == null || h.getBoolean("editable", true);
 		if (!editable)
@@ -600,6 +601,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		adviseMe();
 		StringBuilder allText = getAllText();
 		setAttempt(allText);
+		if (editable && getScoreMax() <= 0 && allText.length() > 0 && !allText.toString().equals(firstAttempt)) comRoot.setVisited();
 		String sb = allText.append('\n').toString();
 		HashMap<String,Object> state = new HashMap<String,Object>();
 		state.put("tekst", sb);
