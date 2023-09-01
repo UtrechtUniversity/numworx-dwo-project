@@ -1,29 +1,78 @@
 package nl.numworx.uploadwidget;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.io.File;
 import java.text.ParseException;
 import java.util.Hashtable;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JToolBar;
+import javax.swing.ListModel;
 import javax.swing.text.NumberFormatter;
 
 import org.cbook.cbookif.CBookWidgetEditIF;
 
 import fi.beans.numworxlf.JComboBox;
+import fi.beans.numworxlf.JFileChooser;
 import fi.beans.numworxlf.JFormattedTextField;
 import fi.beans.numworxlf.JLabel;
+import fi.beans.numworxlf.JScrollPane;
 import fi.wiskopdr.ObjectiveChoiceButton;
 import nl.numworx.uploadwidget.shared.Constants;
 
 @SuppressWarnings("serial")
 public class Editor extends JPanel implements CBookWidgetEditIF, Constants {
 	
+	public class DeleteAction extends AbstractAction implements Action {
+
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			InputFile f = preset.getSelectedValue();
+			f = model.remove(f);
+			if (f != null) f.destroy();
+		}
+
+		private DeleteAction() {
+			super("-");
+		}
+
+	}
+
+	public class AddAction extends AbstractAction implements Action {
+		JFileChooser chooser = new JFileChooser();
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int result = chooser.showOpenDialog(Editor.this);
+			if (result == chooser.APPROVE_OPTION) {
+				File f = chooser.getSelectedFile();
+				preset.clearSelection();
+				InputFile input = new InputFile(f);
+				if (!model.add(input)) {
+					input.destroy();
+				} else {
+					preset.setSelectedValue(input, true);
+				}
+			}
+		}
+
+		private AddAction() {
+			super("+");
+		}
+
+	}
+
 	enum FileInputType { 
 		ANCHOR("anchor"),
 		BROWSER_INPUT("browser input"),
@@ -34,14 +83,15 @@ public class Editor extends JPanel implements CBookWidgetEditIF, Constants {
 		FileInputType(String s) { string = s; }
 		final String string; public String toString() { return string; }
 	}
-	
-	
+
 	private JFormattedTextField maxField;
 	private ObjectiveChoiceButton objectives;
 	
 	private JFormattedTextField itemField;	
 	private JComboBox<String> mediatypes;
 	private JComboBox<FileInputType> widgettype;
+	private InputFileModel model;
+	private JList<InputFile> preset;
 	
 	@Inject Editor() {
 		super(null);
@@ -78,6 +128,19 @@ public class Editor extends JPanel implements CBookWidgetEditIF, Constants {
 		Dimension pref = itemField.getPreferredSize();
 		itemField.setMaximumSize(pref);
 		hb.add(itemField);
+		vb.add(hb);
+		hb = Box.createHorizontalBox();hb.setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
+		hb.add(new JLabel("Bestanden"));hb.add(Box.createHorizontalGlue());
+		model = new InputFileModel();
+		preset = new JList<InputFile>(model);
+		hb.add(new JScrollPane(preset));
+		vb.add(hb);
+		hb = Box.createHorizontalBox();hb.setBorder(BorderFactory.createEmptyBorder(0, 10, 5, 10));
+		JToolBar bar = new JToolBar();
+		bar.setFloatable(false);
+		bar.add(new AddAction());
+		bar.add(new DeleteAction());
+		hb.add(bar); hb.add(Box.createHorizontalGlue());
 		vb.add(hb);
 		vb.setBorder(BorderFactory.createTitledBorder("Download"));
 		add(vb);
