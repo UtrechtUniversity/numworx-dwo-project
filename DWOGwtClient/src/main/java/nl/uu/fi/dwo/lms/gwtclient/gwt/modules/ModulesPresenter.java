@@ -168,7 +168,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
       schoolClassId = klas == null ? null : klas.getId();
       LOG.fine("role = " + roleId);
       inited = new Deferred<>();
-      lastSend = false;
+//      lastSend = false;
       if (roleId != null)
         init = account.getBearerTokenV2().then(this::gotToken,FAILURE);
       else
@@ -412,14 +412,14 @@ public class ModulesPresenter implements SwitchViewEventHandler {
 		});		
 	}
 	
-	private boolean lastSend;
+//	private boolean lastSend; // is geen success!
 	public void gotoLast() {
-		if (lastSend || tablet()) return;
-		lastSend=true;
-		inited.getPromise().then( p -> {
-			view.sendMessage("GOTO:last:");
-			return p;
-		});		
+//		if (lastSend || tablet()) return;
+//		lastSend=true;
+//		inited.getPromise().then( p -> {
+//			view.sendMessage("GOTO:last:");
+//			return p;
+//		});		
 	}
 
 }
