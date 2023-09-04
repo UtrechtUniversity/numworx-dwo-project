@@ -11,6 +11,7 @@ import fi.beans.wiskopdrbeans.InteractieEditPanel;
 public class UploadInteractieEditPanel extends JPanel implements InteractieEditPanel {
 
 	private final Editor editor;
+	private UploadInteractiePanel uploadPanel;
 
 	@Inject UploadInteractieEditPanel(Editor editor) {
 		this.editor = editor;
@@ -48,6 +49,11 @@ public class UploadInteractieEditPanel extends JPanel implements InteractieEditP
 	@Override
 	public void zetHoogte(int arg0) {
 		editor.setInstanceHeight(arg0);
+	}
+
+	public InteractieEditPanel setInstance(UploadInteractiePanel uploadInteractiePanel) {
+		this.uploadPanel = uploadInteractiePanel;
+		return this;
 	}
 
 }

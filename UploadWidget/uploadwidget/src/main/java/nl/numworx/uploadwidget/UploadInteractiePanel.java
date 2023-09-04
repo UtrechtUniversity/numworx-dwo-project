@@ -18,12 +18,13 @@ import dagger.Lazy;
 import fi.beans.wiskopdrbeans.CBookAware;
 import fi.beans.wiskopdrbeans.InteractieEditPanel;
 import fi.beans.wiskopdrbeans.InteractiePanel;
+import fi.beans.wiskopdrbeans.ResourceManagerClient;
 
-public class UploadInteractiePanel extends JPanel implements InteractiePanel, CBookAware {
+public class UploadInteractiePanel extends JPanel implements InteractiePanel, CBookAware, ResourceManagerClient {
 
 	
 	@Inject UploadInteractiePanel() {super(null);}
-	@Inject Provider<InteractieEditPanel> editfactory;
+	@Inject Provider<UploadInteractieEditPanel> editfactory;
 	@Inject Lazy<Upload> instance;
 	
 	private ActionListener al;
@@ -41,7 +42,7 @@ public class UploadInteractiePanel extends JPanel implements InteractiePanel, CB
 
 	@Override
 	public InteractieEditPanel getEditPanel() {
-		return editfactory.get();
+		return editfactory.get().setInstance(this);
 	}
 
 	@Override
@@ -61,6 +62,8 @@ public class UploadInteractiePanel extends JPanel implements InteractiePanel, CB
 	}
 
 	private int scoreMax;
+	private String id;
+	ResourceManagerFactory rmf;
 	
 	@Override
 	public int getScoreMax() {
@@ -197,6 +200,27 @@ public class UploadInteractiePanel extends JPanel implements InteractiePanel, CB
 	@Override
 	public void removeCBookEventListener(CBookEventListener arg0, String arg1) {
 		instance.get().removeCBookEventListener(arg0, arg1);
+	}
+
+	@Override
+	public String getClassName() {		
+		return UploadWidget.class.getName();
+	}
+
+	@Override
+	public String getInstanceId() {
+		return id;
+	}
+
+	@Override
+	public void setFactory(ResourceManagerFactory rmf) {
+		this.rmf = rmf;
+		
+	}
+
+	@Override
+	public void setInstanceId(String id) {
+		this.id = id;
 	}
 
 }
