@@ -37,7 +37,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.PathId;
 
-public class SecuredStudentStudentModelManager {
+public class SecuredStudentStudentModelManager implements LRSManager {
 
 	SecuredStudentStudentModelRestCaller service = GWT.create(SecuredStudentStudentModelRestCaller.class);
 	
@@ -140,6 +140,11 @@ public class SecuredStudentStudentModelManager {
 			defer.fail(e);
 		}		
 		return defer.getPromise().recoverWith(GwtRestVars.getInstance().new Retry(() -> getDescription(id, sc, uuid, locale, context) ));
+	}
+
+	@Override
+	public Promise<DomLRS> getLRS(DomContext context, DomDwoProfile profile) {
+		return getLRS(context);
 	}
 
 }

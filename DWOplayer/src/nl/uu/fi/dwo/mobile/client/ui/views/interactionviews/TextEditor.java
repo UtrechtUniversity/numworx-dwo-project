@@ -612,6 +612,11 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 
 	private void setAttempt(StringBuilder s) {
 		String string = s.toString();
+		setAttempt(string);
+		
+	}
+
+	private void setAttempt(String string) {
 		if(! string.equals(lastAttempt)) {
 			if (getScoreMax() > 0) comRoot.setVisited();
 			lastAttempt = string;
@@ -624,7 +629,6 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 				//map.put("success", null); must be Boolean or null
 				logging.log(map);
 		}}
-		
 	}
 
 	private StringBuilder getAllText() {
@@ -709,7 +713,9 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 				@Override
 				public void onClick(ClickEvent event) {
 					Map<String, String> map = new HashMap<String,String>();
-					map.put("content", getAllText().toString());
+					String allText = getAllText().toString();
+					map.put("content", allText);
+					if(shown && logging != null) setAttempt(allText);
 					comRoot.fireEvent(new CBookEvent(TextEditor.this, TEXT, map));
 					
 				}});
