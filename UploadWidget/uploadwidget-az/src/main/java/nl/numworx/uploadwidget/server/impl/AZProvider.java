@@ -1,4 +1,4 @@
-package nl.numworx.uploadwidgetgwt.server.az;
+package nl.numworx.uploadwidget.server.impl;
 
 import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;

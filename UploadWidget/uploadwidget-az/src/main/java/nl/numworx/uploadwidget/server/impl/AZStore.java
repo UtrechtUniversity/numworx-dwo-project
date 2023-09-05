@@ -1,4 +1,4 @@
-package nl.numworx.uploadwidgetgwt.server.az;
+package nl.numworx.uploadwidget.server.impl;
 
 import java.io.IOException;
 import java.time.OffsetDateTime;
@@ -16,9 +16,8 @@ import org.apache.commons.fileupload.FileItem;
 
 import com.azure.storage.blob.models.BlobItem;
 
+import nl.numworx.uploadwidget.server.Store;
 import nl.numworx.uploadwidget.shared.AtomEntry;
-import nl.numworx.uploadwidgetgwt.server.JavaUpload;
-import nl.numworx.uploadwidgetgwt.server.Store;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 
 public class AZStore extends Store {
@@ -101,7 +100,7 @@ public class AZStore extends Store {
 	public boolean ownedBy(Optional<AtomEntry> item, Optional<DomSchoolRoleAndClassV2> actor) {
 		if (!item.isPresent()) return false;
 		AZAtomEntry entry = (AZAtomEntry) item.get();		
-		String user = JavaUpload.getPathId(actor.get().getHasRole());
+		String user = Store.getPathId(actor.get().getHasRole());
 		return entry.learnerId.startsWith(user);
 	}
 

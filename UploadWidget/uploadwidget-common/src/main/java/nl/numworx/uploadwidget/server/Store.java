@@ -1,15 +1,16 @@
-package nl.numworx.uploadwidgetgwt.server;
+package nl.numworx.uploadwidget.server;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ServiceLoader;
 import java.util.Vector;
 
 import org.apache.commons.fileupload.FileItem;
 
 import nl.numworx.uploadwidget.shared.AtomEntry;
-import nl.numworx.uploadwidgetgwt.server.az.AZStore;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 
 public class Store {
@@ -28,7 +29,7 @@ public class Store {
 		entries.add(entry);
 	}
 		
-	private static final Store _instance = new AZStore();
+	private static final Store _instance = ServiceLoader.load(Store.class).iterator().next();
 	
 	public static Store instance() {
 		return _instance;
@@ -60,6 +61,16 @@ public class Store {
 
 	public boolean ownedBy(Optional<AtomEntry> item, Optional<DomSchoolRoleAndClassV2> actor) {
 		return item.isPresent();
+	}
+
+	public static String getPathId(DomHasRole hasRole) {
+		try {
+			return "1" + hasRole.getId().getIdString().substring(23).replace(';', '-');
+		} catch (NullPointerException e) {
+			return "1-" + hasRole.getUserId().getIdString().substring(21) + "-";
+		} catch (Exception e) {
+			return "-";
+		}
 	}
 	
 	

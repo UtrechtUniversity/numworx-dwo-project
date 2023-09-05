@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import nl.numworx.uploadwidget.server.Store;
 import nl.numworx.uploadwidget.shared.AtomEntry;
 import nl.numworx.uploadwidgetgwt.shared.Constants;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
@@ -137,7 +138,7 @@ public class JavaUpload extends HttpServlet implements Constants {
 			logins = SecureUserAccountLoginsManager.getSchoolLogins();
 		//search paths[0] in logins for school;
 		hasRole = logins.getActiveSchoolRoleAndClass().getHasRole();
-		String current = getPathId(hasRole);
+		String current = Store.getPathId(hasRole);
 		if (current.equals(pathid) && user.getId().equals(hasRole.getUserId()))
 		{
 			context.setDomHasRole(hasRole);
@@ -166,16 +167,6 @@ public class JavaUpload extends HttpServlet implements Constants {
 			return Optional.empty();
 		}
 		return Optional.empty();
-	}
-
-	public static String getPathId(DomHasRole hasRole) {
-		try {
-			return "1" + hasRole.getId().getIdString().substring(23).replace(';', '-');
-		} catch (NullPointerException e) {
-			return "1-" + hasRole.getUserId().getIdString().substring(21) + "-";
-		} catch (Exception e) {
-			return "-";
-		}
 	}
 
 	@Override
