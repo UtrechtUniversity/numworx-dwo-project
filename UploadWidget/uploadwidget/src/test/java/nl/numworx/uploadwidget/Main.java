@@ -25,6 +25,7 @@ import org.cbook.cbookif.rm.ResourceManager;
 import org.json.simple.parser.ParseException;
 
 import cbookeditor.CBookEditor;
+import fi.beans.wiskopdrbeans.ResourceManagerClient.ResourceManagerFactory;
 import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.formuleobjects.FormuleParser;
 
@@ -43,7 +44,8 @@ public class Main {
 
 		appcontext = new AppContext();
 		final CBookService service = new ServiceImpl();
-
+		appcontext.rmf = new nl.numworx.uploadwidget.rm.Factory();
+		
 // register here your widgets
 // by code		
 		CBookWidgetIF widget;// = new org.cbook.mediaman.MediaMan();
@@ -122,13 +124,13 @@ public class Main {
 	static class AppContext implements CBookContext, Constants {
 
 		String learner_id = "";
-		ResourceManager rm;
+		ResourceManagerFactory rmf;
 		
 		public Object getProperty(String key) {
 			if(LEARNER_ID .equals( key ))
 				return learner_id;
 			if(Constants.RESOURCE_MANAGER.equals(key))
-				return rm;
+				return rmf.getResourceManager();
 			return null;
 		}
 		

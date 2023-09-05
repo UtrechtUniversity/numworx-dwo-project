@@ -21,17 +21,20 @@ import javax.swing.ListModel;
 import javax.swing.text.NumberFormatter;
 
 import org.cbook.cbookif.CBookWidgetEditIF;
+import org.cbook.cbookif.rm.ResourceManager;
 
+import dagger.Lazy;
 import fi.beans.numworxlf.JComboBox;
 import fi.beans.numworxlf.JFileChooser;
 import fi.beans.numworxlf.JFormattedTextField;
 import fi.beans.numworxlf.JLabel;
 import fi.beans.numworxlf.JScrollPane;
+import fi.beans.wiskopdrbeans.ResourceManagerClient.ResourceManagerFactory;
 import fi.wiskopdr.ObjectiveChoiceButton;
 import nl.numworx.uploadwidget.shared.Constants;
 
 @SuppressWarnings("serial")
-public class Editor extends JPanel implements CBookWidgetEditIF, Constants {
+public class Editor extends JPanel implements CBookWidgetEditIF, Constants, ResourceManagerFactory {
 	
 	public class DeleteAction extends AbstractAction implements Action {
 
@@ -209,6 +212,7 @@ public class Editor extends JPanel implements CBookWidgetEditIF, Constants {
 		if (ObjectiveChoiceButton.hasObjectiveChoices())
 			launchdata.putAll(objectives.getEditState(max));
 		launchdata.put("premium", Boolean.TRUE);
+		launchdata.put(FILE_INPUT_MODEL, model.getLaunchData(this));
 		return launchdata;
 	}
 
@@ -257,6 +261,10 @@ public class Editor extends JPanel implements CBookWidgetEditIF, Constants {
 			String media = h.get(MEDIATYPES).toString();
 			mediatypes.setSelectedItem(media);
 		}
+		if (h.containsKey(FILE_INPUT_MODEL)) {
+			Object state = h.get(FILE_INPUT_MODEL);
+			model.setLaunchData(state);
+		}
 	}
 
 	@Override
@@ -269,6 +277,13 @@ public class Editor extends JPanel implements CBookWidgetEditIF, Constants {
 	public void stop() {
 		
 
+	}
+
+	@Inject Lazy<ResourceManager> rmf;
+	
+	@Override
+	public ResourceManager getResourceManager() {
+		return rmf.get();
 	}
 
 }

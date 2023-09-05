@@ -1,15 +1,25 @@
 package nl.numworx.uploadwidget;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
 
-import com.google.common.base.Strings;
+import org.cbook.cbookif.rm.ResourceContainer;
 
 class InputFile implements Comparable<InputFile>{
 	String name = "";
+	URI uri;
 	
 	public InputFile(File f) {
 		name = f.getName();
+		uri  = f.toURI();
+	}
+	
+	public InputFile(Map<String, Object> map) {
+		name = (String) map.get("name");
 	}
 
 	public String toString() { return name; }
@@ -37,7 +47,15 @@ class InputFile implements Comparable<InputFile>{
 	}
 
 	public void destroy() {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub	
+	}
+	
+	Map<String,Object> toMap() {
+		return Collections.singletonMap("name", name);
+	}
+	
+	void persist(ResourceContainer container) throws IOException {
+		if (uri != null)
+			container.create(name, uri.toURL());
 	}
 }
