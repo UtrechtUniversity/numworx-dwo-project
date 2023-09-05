@@ -217,7 +217,7 @@ public class BootPanelController {
 
     Promise<DomDwoProfileFull> insertcss(Promise<DomDwoProfileFull> p) {
     	String css = p.getValue().getDwoProfileName();
-    	if (profile == 111) // het 'inf' profiel
+    	if (profile == 111 || profile == 112) // het 'inf' profiel en het 'numworx' profiel
     	{
     		css = URL.encodePathSegment(css);
     		insertStylesheet( getBase() + "css/" + css + ".css");    	
