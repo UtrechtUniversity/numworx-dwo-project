@@ -1,4 +1,4 @@
-package nl.numworx.uploadwidgetgwt.server.s3;
+package nl.numworx.uploadwidget.server.s3;
 
 import java.io.InputStream;
 import java.net.URL;
