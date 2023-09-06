@@ -815,10 +815,11 @@ try {
 			}
 		
 	} else return "";
-	if (pssd == null) return "";
+	if (pssd == null) 
+		pssd = new PersistentStudentScoData(pssc.getStudentSco());
 	try {
 		String suspend_data = pssd.getSuspendData();
-		if (suspend_data == null || suspend_data.length() < 6) return "";
+		if (suspend_data == null || suspend_data.length() < 6) suspend_data = "{}";
 		JsonParser parser = Json.createParser(new StringReader(suspend_data));
 		parser.next();
 		JsonObject data = parser.getObject();
@@ -829,6 +830,7 @@ try {
 			if (pagenr<0) {
 				return String.valueOf(Math.round(pssc.getScore()));
 			}
+			if (onsState == null) return "";
 			JsonArray orScores = onsState.getJsonArray("orScores");
 			orScores = orScores.getJsonArray(0);
 			Number n = orScores.getJsonNumber(pagenr).numberValue();
@@ -851,7 +853,7 @@ try {
 			if (pagenr < 0) {
 				return pssc.getScore() > 99f ? "passed" : "";
 			}
-			
+			if (onsState == null) return "";
 			JsonArray orGoedFout = onsState.getJsonArray("orGoedFout");
 			orGoedFout = orGoedFout.getJsonArray(0);
 			boolean ok = orGoedFout.getBoolean(pagenr);
@@ -870,6 +872,7 @@ try {
 		if (key.endsWith(".entry")) {
 			//if (pagenr < 0) return "resume"; // er is suspend_data;
 			JsonArray bezocht;
+			if (onsState == null) return "ab-initio";
 			bezocht = onsState.getJsonArray("visited");
 			if (bezocht == null)
 				bezocht = onsState.getJsonArray("bezocht");
@@ -887,6 +890,9 @@ try {
 		}
 		if (key.endsWith(".completion_status")) {
 			return Objects.toString(pssc.getCompletionStatus(),"");
+		}
+		if (key.endsWith(".id")) {
+			return Objects.toString(pssc.getScoID(), "");
 		}
 	} catch (Exception e) {
 		LOG.log(Level.WARNING, "scoreWidget " + key, e);

@@ -7,4 +7,5 @@ public interface Constants {
 	String FILE_INPUT_TYPE = "fileInputType";
 	String AUTO_SUBMIT = "autoSubmit";
 	String CHECK_DOCENT = "checkDocent";
+	String FILE_INPUT_MODEL = "fileInputModel";
 }

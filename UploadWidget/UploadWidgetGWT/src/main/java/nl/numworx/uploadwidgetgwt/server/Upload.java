@@ -15,17 +15,25 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItem;
 
+import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import gwtupload.server.UploadAction;
 import gwtupload.server.exceptions.UploadActionException;
+import nl.numworx.uploadwidget.server.Store;
 import nl.numworx.uploadwidget.shared.AtomEntry;
 import nl.numworx.uploadwidgetgwt.shared.Constants;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 @SuppressWarnings("serial")
 public class Upload extends UploadAction {
+
+	static {
+        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
+	}
+	
 	
 	Store store;
 	StoredRestManager rest = StoredRestManager.getInstance();

@@ -49,6 +49,7 @@ iframe {
 	display: inline-block;
 	padding-right: 0.3em;
 	text-align: right;
+	margin-right: 5px;
 }
 
 .textEditor_readonly {

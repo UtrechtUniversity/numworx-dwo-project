@@ -442,6 +442,12 @@
   	</init-param>
   </servlet>
   <servlet>
+  	<servlet-name>testblob</servlet-name>
+  	<servlet-class>nl.numworx.uploadwidgetgwt.server.TestServlet</servlet-class>
+  </servlet>
+  
+  
+  <servlet>
   	<servlet-name>javaupload</servlet-name>
   	<servlet-class>nl.numworx.uploadwidgetgwt.server.JavaUpload</servlet-class>
   </servlet>
@@ -466,6 +472,10 @@
   <servlet-mapping>
   	<servlet-name>updownload</servlet-name>
   	<url-pattern>/dwo/dav/upload/download/*</url-pattern>  
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>testblob</servlet-name>
+  	<url-pattern>/dwo/dav/testblob/*</url-pattern>
   </servlet-mapping>
     <!--
     servlet mappings 

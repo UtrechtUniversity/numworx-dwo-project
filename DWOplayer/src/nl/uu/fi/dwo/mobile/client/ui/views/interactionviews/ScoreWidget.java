@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,7 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.web.bindery.event.shared.EventBus;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
@@ -33,6 +35,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
@@ -108,6 +111,25 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 
 	}
 
+	class IdMatch implements Success<Map<String,String>, Map<String,String>> {
+		final String id, paginaNr;
+
+		IdMatch(String id, int paginaNr) {
+			this.id = id + "." + paginaNr + ".id";
+			this.paginaNr = "-" + (paginaNr-1) + "-";
+		}
+		@Override
+		public Promise<Map<String, String>> call(Promise<Map<String, String>> resolved) throws Exception {
+			String scoid = resolved.getValue().getOrDefault(id, "");
+			String uuid = comRoot.getUUID();
+			if (uuid.startsWith(scoid + paginaNr)) {
+				addHandler();
+			}
+			return resolved;
+		}
+		
+	}
+	
 	private HashMap<String, Object> launchState; 
 	
 	int breedte = 40;
@@ -182,12 +204,18 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		
 		span  = new InlineHTML();
 		span.setStylePrimaryName("scorewidget");
-		
-		activity.getEventBus().addHandler(CBookEvent.TYPE, this);
-				
+						
 		init(breedte, hoogte, launchState);
 		
 //		a.vars().ifPresent(this::initVars);
+	}
+
+	private com.google.web.bindery.event.shared.HandlerRegistration addHandler() {
+		return getEventBus().addHandler(CBookEvent.TYPE, this);
+	}
+
+	private EventBus getEventBus() {
+		return OpdrNav.getEventBus();
 	}
 	
 	private void initVars(DwoGlobalVars vars) {
@@ -405,7 +433,13 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		if (paginaSet.size() == 1 ) { // 1 pagina!
 			paginaNr = paginaSet.iterator().next();
 			final String pfx = pfx0 + "." + paginaNr;
-	
+// check for local page
+			if (paginaNr > 0) {
+				IdMatch match = new IdMatch(pfx0, paginaNr);
+				keys.add(match.id);
+				defer.getPromise().then(match);
+			}
+			
 			if (score) {
 				Promise<String> result;
 				String key = pfx + SCORE_RAW;
@@ -486,7 +520,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			
 		}
 		if (!keys.isEmpty()) {
-			defer.resolveWith(api.getValuesPromise(keys));
+			defer.resolveWith(activity.agent().barrier().then(x -> api.getValuesPromise(keys)));
 		}
 	}
 	
@@ -641,10 +675,34 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		if ("setChanged".equals(event.getCommand()))
 		{
 			Map<String, ?> param = event.getParameters();
-			if (hasScore) {
-				Promise<String> p;
-				p = Promises.resolved(String.valueOf(param.get("score.raw")));
-				p.then(this::doScore);
+			Integer location = (Integer) param.get("location");
+			if (paginaNr == location.intValue()+1) {
+				if (score) {
+					Promise<String> p;
+					p = Promises.resolved(String.valueOf(param.get("score.raw")));
+					p.then(this::doScore);
+				}
+				if (goedFout && bezocht) {
+				} else 
+				if (goedFout) {
+					String  gf;
+					if (cesuur == null) {
+						Object success = param.get("success");
+						if (Boolean.TRUE.equals(success)) gf = "passed";
+						else if (Boolean.FALSE.equals(success)) gf = "failed";
+						else gf = "";
+					} else {
+						gf = Objects.toString(param.get("score.raw"));
+					}
+					this.successStatus = gf;
+					goedfout(gf);
+				} else
+				if (bezocht) {
+					Object visited = param.get("visited");
+					if ( visited instanceof Collection && ((Collection) visited).isEmpty()) {
+						bezocht(entry = "resume");
+					}
+				}
 			}
 		}
 		

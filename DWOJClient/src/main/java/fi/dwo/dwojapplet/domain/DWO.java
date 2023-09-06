@@ -1,6 +1,5 @@
 package fi.dwo.dwojapplet.domain;
 
-import java.applet.Applet;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -106,6 +105,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherResultsManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
@@ -1789,15 +1789,7 @@ LOG.info("time results = " + (-t) + " ms");
      */
     public String LMSGetValue(ScoBase sco, User user, SchoolClass cls, String iDataModelElement) {
         if (LEARNER_ID.equals(iDataModelElement)) {
-            if (user == null) {
-                return Guest.instance().getUsername();
-            }
-            String value;
-            if (cls != null)
-              value = String.format("2-%020d-%020d",user.getID(),cls.getID());
-            else
-              value = String.format("1-%020d-%s", user.getID(), user.getSchoolGroupID().getIdString().substring(28));
-            return value;
+            return getLearnerId(user, cls);
     }
         if (LEARNER_NAME.equals(iDataModelElement)) {
             if (user == null) {
@@ -1825,6 +1817,18 @@ LOG.info("time results = " + (-t) + " ms");
         }
 
     }
+
+	protected String getLearnerId(User user, SchoolClass cls) {
+		if (user == null) {
+		    return Guest.instance().getUsername();
+		}
+		String value;
+		if (cls != null)
+		  value = String.format("2-%020d-%020d",user.getID(),cls.getID());
+		else
+		  value = String.format("1-%020d-%s", user.getID(), user.getSchoolGroupID().getIdString().substring(28));
+		return value;
+	}
 
     /**
      * Sets the LMS value for the specified sco for the current user.
@@ -2750,6 +2754,15 @@ if (false) {
         }
         if(DWO_ENV.equals(name) && dwo_env != null)
         	return dwo_env;
+        if ("learner_id".equals(name)) {
+        	return getLearnerId(DwoHelper.getCurrentFacadeUser(), null); // no fake, always self
+        }
+        if ("oauth_token".equals(name)) {
+        	return StoredRestManager.getInstance().getBasicAuthString();
+        }
+        if ("serverUrlPath".equals(name)) {
+        	return StoredRestManager.getInstance().getAuthenticator().getServerUrlPath().toExternalForm();
+        }
         return super.getParameter(name);
     }
 

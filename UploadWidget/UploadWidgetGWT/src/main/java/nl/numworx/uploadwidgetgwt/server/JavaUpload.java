@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import nl.numworx.uploadwidget.server.Store;
 import nl.numworx.uploadwidget.shared.AtomEntry;
 import nl.numworx.uploadwidgetgwt.shared.Constants;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
@@ -31,6 +33,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import nl.uu.fi.dwo.rest.util.PathId;
 
 @SuppressWarnings("serial")
@@ -137,7 +140,7 @@ public class JavaUpload extends HttpServlet implements Constants {
 			logins = SecureUserAccountLoginsManager.getSchoolLogins();
 		//search paths[0] in logins for school;
 		hasRole = logins.getActiveSchoolRoleAndClass().getHasRole();
-		String current = getPathId(hasRole);
+		String current = Store.getPathId(hasRole);
 		if (current.equals(pathid) && user.getId().equals(hasRole.getUserId()))
 		{
 			context.setDomHasRole(hasRole);
@@ -168,16 +171,6 @@ public class JavaUpload extends HttpServlet implements Constants {
 		return Optional.empty();
 	}
 
-	public static String getPathId(DomHasRole hasRole) {
-		try {
-			return "1" + hasRole.getId().getIdString().substring(23).replace(';', '-');
-		} catch (NullPointerException e) {
-			return "1-" + hasRole.getUserId().getIdString().substring(21) + "-";
-		} catch (Exception e) {
-			return "-";
-		}
-	}
-
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// TODO Auto-generated method stub
@@ -192,6 +185,7 @@ public class JavaUpload extends HttpServlet implements Constants {
 
 	@Override
 	public void init() throws ServletException {
+        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
 		store = Store.instance();
 		String dbrest_url = getServletContext().getInitParameter("dbrest.url");
 	    try {

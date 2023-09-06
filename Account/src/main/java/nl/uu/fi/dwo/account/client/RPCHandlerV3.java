@@ -43,11 +43,13 @@ import com.google.gwt.json.client.JSONValue;
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.CallManagers.CourseManager;
 import fi.dwo.gwt.lib.rest.CallManagers.CoursesOfSchoolClassManager;
+import fi.dwo.gwt.lib.rest.CallManagers.LRSManager;
 import fi.dwo.gwt.lib.rest.CallManagers.OAuthManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicCourseManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicCoursesOfSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicProfileManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicScoContextManager;
+import fi.dwo.gwt.lib.rest.CallManagers.PublicStudentModelManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicStudentScoDataManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicUserResultsManager;
 import fi.dwo.gwt.lib.rest.CallManagers.ScoContextManager;
@@ -72,6 +74,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	UserResultsManager resultManager;
 	StudentScoDataManager scormApi;
 	SecuredStudentStudentModelManager studentModelManager;
+	LRSManager lrsManager;
 	AccessManager accessManager;
 	OAuthManager oauthManager;
 	
@@ -89,6 +92,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		scormApi = new PublicStudentScoDataManager();
 		accessManager = new AccessManager();
 		oauthManager = new OAuthManager();
+		lrsManager = new PublicStudentModelManager();
 		this.profile = getDwoProfile(profile);
 	}
 
@@ -302,7 +306,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 				studentManager = new SecuredStudentCoursesOfSchoolClassManager(secure);
 				resultManager = new SecuredUserResultsManager();
 				scormApi = new SecuredStudentScoDataManager(secure);
-				studentModelManager = new SecuredStudentStudentModelManager();
+				lrsManager = studentModelManager = new SecuredStudentStudentModelManager();
 				if (active.getSchool().accessControl() && active.getRole().getRoleName().equals(RoleType.TEACHER.name())) {
 				  accessManager = new TeacherAccessManager(active, null, profile);
 				}
@@ -329,6 +333,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 				scormApi = new PublicStudentScoDataManager();
 				accessManager = new AccessManager();
 				studentModelManager = null;
+				lrsManager = new PublicStudentModelManager();
 				return null;
 			}});
 
@@ -457,10 +462,13 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	}
 
 	public Promise<XapiManager> getLRS() {
-	  if (studentModelManager == null) {
+	  if (lrsManager == null) {
 	    return Promises.failed(new IllegalArgumentException());
 	  }
-	  return studentModelManager.getLRS(getContext()).map(lrs -> {
+	  return 
+		profile
+		.then(p -> lrsManager.getLRS(getContext(), p.getValue()))
+		.map(lrs -> {
 	    Defaults.ignoreJsonNulls();
 	    Defaults.setAddXHttpMethodOverrideHeader(false);
 	    XapiManager xapi = new XapiManager();

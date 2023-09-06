@@ -87,11 +87,11 @@ public class SMLogger implements Logging {
 
     public Logging logging(ActivityComponent activity) {
       Memento instance = activity.memento();
-      boolean experiment = instance != null 
+      RoleType roleType = vars.getRoleType();
+	boolean experiment = instance != null 
     		  && instance.pmodel != null 
     		  && (instance.getLessonMode() == LessonMode.normal||instance.getLessonMode() == LessonMode.review)
-              && vars.withUser() 
-              && vars.getRoleType() == RoleType.STUDENT;
+              && (roleType == RoleType.STUDENT||roleType==RoleType.ANONYMOUS);
       if (experiment) {
         Promise<XapiManager> xapi = rpc.get().getLRS();
         return new SMLogger(instance, xapi.map(x -> x::saveStatement), super.logging(activity), vars.getCurrentSchoolClass());

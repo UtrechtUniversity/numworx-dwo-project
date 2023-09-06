@@ -160,6 +160,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	
 	Logging logging;
 	private String lastAttempt;
+	private String firstAttempt = "";
 	private CorrectieFacade correctie;
 	private boolean teltMee;
     private int scoreMax;
@@ -380,7 +381,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		//sb.setLength(0);
 		clearAll();
 		insert(tekst);
-		lastAttempt = tekst;
+		firstAttempt = lastAttempt = tekst;
 		removeCursor();
 		editable = h == null || h.getBoolean("editable", true);
 		if (!editable)
@@ -600,6 +601,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		adviseMe();
 		StringBuilder allText = getAllText();
 		setAttempt(allText);
+		if (editable && getScoreMax() <= 0 && allText.length() > 0 && !allText.toString().equals(firstAttempt)) comRoot.setVisited();
 		String sb = allText.append('\n').toString();
 		HashMap<String,Object> state = new HashMap<String,Object>();
 		state.put("tekst", sb);
@@ -610,6 +612,11 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 
 	private void setAttempt(StringBuilder s) {
 		String string = s.toString();
+		setAttempt(string);
+		
+	}
+
+	private void setAttempt(String string) {
 		if(! string.equals(lastAttempt)) {
 			if (getScoreMax() > 0) comRoot.setVisited();
 			lastAttempt = string;
@@ -622,7 +629,6 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 				//map.put("success", null); must be Boolean or null
 				logging.log(map);
 		}}
-		
 	}
 
 	private StringBuilder getAllText() {
@@ -707,7 +713,9 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 				@Override
 				public void onClick(ClickEvent event) {
 					Map<String, String> map = new HashMap<String,String>();
-					map.put("content", getAllText().toString());
+					String allText = getAllText().toString();
+					map.put("content", allText);
+					if(shown && logging != null) setAttempt(allText);
 					comRoot.fireEvent(new CBookEvent(TextEditor.this, TEXT, map));
 					
 				}});
@@ -959,10 +967,55 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	
 	@Override
 	public void cursorUp() {
+		deSelection();
+		if (cursor == MIN) return;
+		Widget w = flow.getWidget(cursor);
+		int x = w.getAbsoluteLeft();
+		boolean seen = false;
+		int plast = Short.MAX_VALUE;
+		while (cursor > MIN) {
+			cursorToLeft1();
+			w = flow.getWidget(cursor);
+			if (w instanceof Enter) {
+				if (seen) { /*cursorToRight1();*/ return; }
+				int p = w.getAbsoluteLeft();
+				if (p <= x) return;
+				seen = true;
+			} else if (seen) {
+				int p = w.getAbsoluteLeft();
+				if (p <= x) {
+					if (x - p > plast - p) cursorToRight1();
+					return;
+				}
+				plast = p;
+			}
+		}
 	}
 	
 	@Override
 	public void cursorDown() {
+		deSelection();
+		Widget w = flow.getWidget(cursor);
+		int x = w.getAbsoluteLeft();
+		int max = flow.getWidgetCount()-1;
+		boolean seen = w instanceof Enter;
+		int plast = Short.MIN_VALUE;
+		while (cursor < max) {
+			cursorToRight1();
+			w = flow.getWidget(cursor);
+			if (w instanceof Enter) {
+				if (!seen) seen = true;
+				else return; // stops at 2nd enter
+			} else if (seen) {
+				int p = w.getAbsoluteLeft();
+				if (p >= x) 
+				{	if (p-x > x-plast)
+						cursorToLeft1();
+					return;
+				}
+				plast = p;
+			}
+		}
 		
 	}
 	

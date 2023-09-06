@@ -62,7 +62,7 @@ public class WiskOpdrEditPanel extends JPanel implements Scrollable, AppletStub 
 	String text;
 	private Component component;
 	
-	public WiskOpdrEditPanel(String text) {
+	WiskOpdrEditPanel(String text) {
 		super(new BorderLayout());
 		this.text = text;
 		getEditor();
@@ -81,7 +81,7 @@ public class WiskOpdrEditPanel extends JPanel implements Scrollable, AppletStub 
   		}
     }
 	
-	public WiskOpdrEditPanel(String text, Locale locale, int editorWidth, int editorHeight, int documentWidth, int documentHeight) {
+	WiskOpdrEditPanel(String text, Locale locale, int editorWidth, int editorHeight, int documentWidth, int documentHeight) {
 	  super(null);
 	  addComponentListener(new Listener());
 	  this.text = text;

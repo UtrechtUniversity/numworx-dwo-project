@@ -35,6 +35,7 @@ import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JFileChooser;
 import fi.beans.numworxlf.JScrollPane;
 import nl.numworx.uploadwidget.shared.AtomEntry;
+import nl.numworx.uploadwidget.shared.Constants;
 
 public class Upload extends JPanel implements CBookWidgetInstanceIF, CBookEventListener, ActionListener {
 
@@ -47,8 +48,8 @@ public class Upload extends JPanel implements CBookWidgetInstanceIF, CBookEventL
 	
 	@Inject Upload() {
 		super(new BorderLayout());
-		model = new DefaultListModel<>();
-		items = new JList<>(model);
+		model = new DefaultListModel<AtomEntry>();
+		items = new JList<AtomEntry>(model);
 		add(new JScrollPane(items), BorderLayout.CENTER);
 		Box hb = Box.createHorizontalBox();
 		up = new JButton("Upload"); hb.add(up); hb.add(Box.createHorizontalGlue());
@@ -124,6 +125,12 @@ public class Upload extends JPanel implements CBookWidgetInstanceIF, CBookEventL
 
 	@Override
 	public void setLaunchData(Map<String, ?> launchData, Map<String, Number> randomVars) {
+		if (launchData.containsKey(Constants.FILE_INPUT_MODEL)) {
+			Object o = launchData.get(Constants.FILE_INPUT_MODEL);
+			InputFileModel model = new InputFileModel();
+			model.setLaunchData(o);
+			model.inputs.forEach(element -> this.model.addElement(element) );
+		}
 	}
 
 	@Override
@@ -158,33 +165,33 @@ public class Upload extends JPanel implements CBookWidgetInstanceIF, CBookEventL
 	
 	@Override
 	public void start() {
-		try {
-			model.clear();
-			InputSource input = new InputSource(server);
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			factory.setCoalescing(true);
-			factory.setIgnoringElementContentWhitespace(true);
-			factory.setNamespaceAware(true);
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document document = builder.parse(input);
-			clean(document);
-			NodeList nodes = document.getElementsByTagNameNS( "http://www.w3.org/2005/Atom", "entry");
-			for(int i = 0; i < nodes.getLength(); i++) {
-				AtomEntry entry = new AtomEntry();
-				Node item = nodes.item(i);
-				Node node = item.getFirstChild();
-				entry.title = node.getTextContent();
-				node = node.getNextSibling();
-				NamedNodeMap attributes = node.getAttributes();
-				entry.url = attributes.getNamedItem("href").getNodeValue();
-				entry.type = attributes.getNamedItem("type").getNodeValue();
-				entry.length = Long.valueOf(attributes.getNamedItem("length").getNodeValue());
-				model.addElement(entry);
-			}
-			
-		} catch(IOException | ParserConfigurationException | SAXException io) {
-			io.printStackTrace();
-		}
+//		try {
+//			model.clear();
+//			InputSource input = new InputSource(server);
+//			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+//			factory.setCoalescing(true);
+//			factory.setIgnoringElementContentWhitespace(true);
+//			factory.setNamespaceAware(true);
+//			DocumentBuilder builder = factory.newDocumentBuilder();
+//			Document document = builder.parse(input);
+//			clean(document);
+//			NodeList nodes = document.getElementsByTagNameNS( "http://www.w3.org/2005/Atom", "entry");
+//			for(int i = 0; i < nodes.getLength(); i++) {
+//				AtomEntry entry = new AtomEntry();
+//				Node item = nodes.item(i);
+//				Node node = item.getFirstChild();
+//				entry.title = node.getTextContent();
+//				node = node.getNextSibling();
+//				NamedNodeMap attributes = node.getAttributes();
+//				entry.url = attributes.getNamedItem("href").getNodeValue();
+//				entry.type = attributes.getNamedItem("type").getNodeValue();
+//				entry.length = Long.valueOf(attributes.getNamedItem("length").getNodeValue());
+//				model.addElement(entry);
+//			}
+//			
+//		} catch(IOException | ParserConfigurationException | SAXException io) {
+//			io.printStackTrace();
+//		}
 		
 		
 	}

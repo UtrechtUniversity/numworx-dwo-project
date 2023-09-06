@@ -97,6 +97,10 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 			String css = "inf"; // ons kent ons
     		insertStylesheet( getBase() + "css/" + css + ".css");
 		}
+		if ("112".equals(profile)) {
+			String css = "numworx"; // ons kent ons
+    		insertStylesheet( getBase() + "css/" + css + ".css");
+		}
 	}
 	
 	

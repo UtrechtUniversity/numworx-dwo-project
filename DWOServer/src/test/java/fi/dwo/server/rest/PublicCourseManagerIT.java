@@ -97,7 +97,7 @@ public class PublicCourseManagerIT {
 		profile.setId(profileID);
 		rest.setDomDwoProfile(profile);
 		
-		DomCourseStudent result = manager.getCourse(rest);
+		DomCourseStudent result = manager.getCourse(rest, new TestUriInfo());
 		
 		assertEquals("course01", result.getName());
 	}
