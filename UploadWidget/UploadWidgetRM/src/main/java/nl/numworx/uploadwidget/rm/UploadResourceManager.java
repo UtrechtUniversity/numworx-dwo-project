@@ -1,16 +1,20 @@
 package nl.numworx.uploadwidget.rm;
 
+import org.cbook.cbookif.CBookContext;
 import org.cbook.cbookif.rm.ResourceContainer;
 import org.cbook.cbookif.rm.ResourceManager;
 
 public class UploadResourceManager implements ResourceManager {
 
-	public UploadResourceManager() {
+	private CBookContext context;
+
+	public UploadResourceManager(CBookContext context) {
+		this.context = context;
 	}
 
 	@Override
 	public ResourceContainer getInstanceContainer() {
-		return new UploadInstanceContainer();
+		return new UploadInstanceContainer(context);
 	}
 
 	@Override

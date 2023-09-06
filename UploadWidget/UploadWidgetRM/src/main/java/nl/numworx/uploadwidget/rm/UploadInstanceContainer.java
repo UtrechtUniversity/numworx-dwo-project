@@ -5,13 +5,14 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.cbook.cbookif.CBookContext;
 import org.cbook.cbookif.rm.Resource;
 import org.cbook.cbookif.rm.ResourceContainer;
 import org.cbook.cbookif.rm.ResourceException;
 
 public class UploadInstanceContainer implements ResourceContainer {
 
-	public UploadInstanceContainer() {
+	public UploadInstanceContainer(CBookContext context) {
 		// TODO Auto-generated constructor stub
 	}
 

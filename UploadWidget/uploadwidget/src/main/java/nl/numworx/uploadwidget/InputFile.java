@@ -9,7 +9,9 @@ import java.util.Objects;
 
 import org.cbook.cbookif.rm.ResourceContainer;
 
-class InputFile implements Comparable<InputFile>{
+import nl.numworx.uploadwidget.shared.AtomEntry;
+
+class InputFile extends AtomEntry implements Comparable<InputFile>{
 	String name = "";
 	URI uri;
 	

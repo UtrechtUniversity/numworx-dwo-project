@@ -41,6 +41,16 @@
       <artifactId>gwt-user</artifactId>
       <scope>provided</scope>
     </dependency>
+	<dependency>
+	    <groupId>org.apache.httpcomponents</groupId>
+	    <version>4.5.9</version>
+ 	    <artifactId>httpclient</artifactId>
+	</dependency>
+  	<dependency>
+  		<groupId>nl.numworx.uploadwidget</groupId>
+  		<artifactId>uploadwidget-s3</artifactId>
+  		<version>2.5.23-SNAPSHOT</version>
+  	</dependency>
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-dev</artifactId>
@@ -89,11 +99,6 @@
   		<groupId>nl.uu.fi.dwo</groupId>
   		<artifactId>DWO-commons-lib</artifactId>
   	</dependency>
-  	<dependency>
-  		<groupId>nl.numworx.uploadwidget</groupId>
-  		<artifactId>uploadwidget-az</artifactId>
-  		<version>2.5.23-SNAPSHOT</version>
-  	</dependency>
   </dependencies>
 
   <build>
@@ -136,49 +141,7 @@
 			</plugin>
     </plugins>
   </build>
-	<profiles>
-	 	<profile>
-	 		<id>s3</id>
-	 	<dependencies>
-	 <dependency>
-	    <groupId>software.amazon.awssdk</groupId>
-	    <artifactId>s3</artifactId>
-	    <version>2.15.2</version>
-	    <scope>compile</scope>
-	</dependency>
-	<dependency>
-	    <groupId>software.amazon.awssdk</groupId>
-	    <artifactId>sdk-core</artifactId>
-	    <version>2.15.2</version>
-	    <scope>compile</scope>
-	</dependency>
- 		</dependencies>
-	 	</profile>
-	 	<profile>
-	 		<id>s3compile</id>
-	 		<dependencies>
-	 <dependency>
-	    <groupId>software.amazon.awssdk</groupId>
-	    <artifactId>s3</artifactId>
-	    <version>2.15.2</version>
-	    <exclusions>
-	    	<exclusion>
-	    		<groupId>io.netty</groupId>
-	    		<artifactId>netty-common</artifactId>
-	    	</exclusion>
-	    </exclusions>
-	    <scope>provided</scope>
-	</dependency>
-	<dependency>
-	    <groupId>software.amazon.awssdk</groupId>
-	    <artifactId>sdk-core</artifactId>
-	    <version>2.15.2</version>
-	    <scope>provided</scope>
-	</dependency>
-	 		</dependencies>
-	 		
-	 	</profile>
-	 	
+	<profiles>	 	
 	 	<profile>
 	 		<id>local</id>
 	 		<properties>

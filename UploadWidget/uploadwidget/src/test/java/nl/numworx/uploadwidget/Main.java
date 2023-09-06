@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Properties;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -44,7 +45,9 @@ public class Main {
 
 		appcontext = new AppContext();
 		final CBookService service = new ServiceImpl();
-		appcontext.rmf = new nl.numworx.uploadwidget.rm.Factory();
+		nl.numworx.uploadwidget.rm.Factory factory = new nl.numworx.uploadwidget.rm.Factory();
+		factory.setContext(appcontext);
+		appcontext.rmf = factory;
 		
 // register here your widgets
 // by code		
@@ -125,16 +128,24 @@ public class Main {
 
 		String learner_id = "";
 		ResourceManagerFactory rmf;
+		Properties props = new Properties();
 		
 		public Object getProperty(String key) {
 			if(LEARNER_ID .equals( key ))
 				return learner_id;
 			if(Constants.RESOURCE_MANAGER.equals(key))
 				return rmf.getResourceManager();
-			return null;
+			return props.getProperty(key);
 		}
 		
 		void load() {
+			try {
+				props.load(new FileReader("main.properties"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			
 			String line = null;
 			try {
 				FileReader input = new FileReader("cmi.learner_id");

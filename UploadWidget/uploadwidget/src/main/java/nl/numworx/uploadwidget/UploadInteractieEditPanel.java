@@ -5,7 +5,11 @@ import java.util.Hashtable;
 import javax.inject.Inject;
 import javax.swing.JPanel;
 
+import org.cbook.cbookif.rm.ResourceManager;
+
+import dagger.Lazy;
 import fi.beans.wiskopdrbeans.InteractieEditPanel;
+import fi.beans.wiskopdrbeans.ResourceManagerClient.ResourceManagerFactory;
 
 @SuppressWarnings("serial")
 public class UploadInteractieEditPanel extends JPanel implements InteractieEditPanel {
@@ -53,6 +57,15 @@ public class UploadInteractieEditPanel extends JPanel implements InteractieEditP
 
 	public InteractieEditPanel setInstance(UploadInteractiePanel uploadInteractiePanel) {
 		this.uploadPanel = uploadInteractiePanel;
+		editor.rmf = new Lazy<ResourceManager>() {
+
+			@Override
+			public ResourceManager get() {
+				// TODO Auto-generated method stub
+				return uploadInteractiePanel.rmf.getResourceManager();
+			}
+			
+		};
 		return this;
 	}
 

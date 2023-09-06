@@ -11,6 +11,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.cbook.cbookif.AssessmentMode;
+import org.cbook.cbookif.CBookContext;
 import org.cbook.cbookif.CBookEvent;
 import org.cbook.cbookif.CBookEventListener;
 
@@ -26,6 +27,7 @@ public class UploadInteractiePanel extends JPanel implements InteractiePanel, CB
 	@Inject UploadInteractiePanel() {super(null);}
 	@Inject Provider<UploadInteractieEditPanel> editfactory;
 	@Inject Lazy<Upload> instance;
+	@Inject UploadWidget widget;
 	
 	private ActionListener al;
 	
@@ -221,6 +223,11 @@ public class UploadInteractiePanel extends JPanel implements InteractiePanel, CB
 	@Override
 	public void setInstanceId(String id) {
 		this.id = id;
+	}
+
+	@Override
+	public void setCBookContext(CBookContext context) {
+		widget.context = context;
 	}
 
 }

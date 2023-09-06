@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import nl.numworx.uploadwidget.server.Store;
 import nl.numworx.uploadwidget.shared.AtomEntry;
 import nl.numworx.uploadwidgetgwt.shared.Constants;
@@ -32,6 +33,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import nl.uu.fi.dwo.rest.util.PathId;
 
 @SuppressWarnings("serial")
@@ -183,6 +185,7 @@ public class JavaUpload extends HttpServlet implements Constants {
 
 	@Override
 	public void init() throws ServletException {
+        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
 		store = Store.instance();
 		String dbrest_url = getServletContext().getInitParameter("dbrest.url");
 	    try {

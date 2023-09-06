@@ -7,6 +7,11 @@
   </parent>
   <artifactId>uploadwidget-s3</artifactId>
   <dependencies>
+	<dependency> <!-- Force correct version httpclient -->
+	    <groupId>org.apache.httpcomponents</groupId>
+	    <version>4.5.9</version>
+ 	    <artifactId>httpclient</artifactId>
+	</dependency>
 	 <dependency>
 	    <groupId>software.amazon.awssdk</groupId>
 	    <artifactId>s3</artifactId>
