@@ -5,7 +5,7 @@
     <artifactId>UploadWidget-parent</artifactId>
     <version>2.5.23-SNAPSHOT</version>
   </parent>
-  <artifactId>UploadWidgetRM</artifactId>
+  <artifactId>uploadwidgetrm</artifactId>
   <name>Upload Widget Resource Manager</name>
   <dependencies>
   	<dependency>
@@ -15,4 +15,7 @@
   		<scope>provided</scope>
   	</dependency>
   </dependencies>
+  <build>
+  	<finalName>${project.artifactId}</finalName>
+  </build>
 </project>
