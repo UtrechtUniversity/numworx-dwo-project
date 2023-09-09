@@ -1,9 +1,15 @@
 package nl.numworx.uploadwidget.rm;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.cbook.cbookif.CBookContext;
 import org.cbook.cbookif.rm.Resource;
@@ -11,9 +17,54 @@ import org.cbook.cbookif.rm.ResourceContainer;
 import org.cbook.cbookif.rm.ResourceException;
 
 public class UploadInstanceContainer implements ResourceContainer {
+	private static final Logger LOG = Logger.getLogger(UploadInstanceContainer.class.getName());
+	private String oauth_token;
+	private URL serverUrlPath;
+
+	private Long put(String path, InputStream in, String type) throws IOException {
+	      URL url = new URL(getServerUrlPath(), path); // TODO make login
+	      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	      OutputStream outStream = null;
+	      conn.setRequestMethod("PUT");
+	      conn.setRequestProperty("Content-Type", type);
+	      conn.setRequestProperty("Authorization", getBasicAuthString());
+	      conn.setDoOutput(true);
+	      conn.setUseCaches(false);
+	      outStream = conn.getOutputStream();
+
+	      byte[] buffer = new byte[10240]; // 10kb
+	      int s;
+	      long size = 0;
+	      while ( (s = in.read(buffer))>0) {
+	    	  size += s;
+	    	  outStream.write(buffer, 0, s);
+	      }
+	      
+	      outStream.close();
+	      int responseCode = conn.getResponseCode();
+	      LOG.info("responsecode " + responseCode + ", size " + size);
+	      return size;
+	}
+	
+	private String getBasicAuthString() {
+		return oauth_token;
+	}
+
+	private URL getServerUrlPath() {
+		return serverUrlPath;
+	}
 
 	public UploadInstanceContainer(CBookContext context) {
-		// TODO Auto-generated constructor stub
+		oauth_token = (String) context.getProperty("oauth_token");
+		serverUrlPath = (URL) context.getProperty("serverUrlPath");
+		String pfx = "";
+		try {
+			pfx = "dav/upload/instance/" + context.getProperty("UUID") + "/";
+			serverUrlPath = new URL(serverUrlPath, pfx);
+		} catch (MalformedURLException e) {
+			LOG.log(Level.SEVERE, "invalid prefix " + pfx, e);
+			serverUrlPath = null;
+		}
 	}
 
 	@Override
@@ -79,14 +130,15 @@ public class UploadInstanceContainer implements ResourceContainer {
 	public Resource create(String arg0, Resource arg1) throws ResourceException {
 		return null;
 	}
-
+	
 	@Override
 	public Resource create(String name, InputStream in, String type) throws ResourceException {
 		Long length = null;
 		try {
-			length = Long.valueOf(in.available());
+			length = put(name, in, type);
 			in.close();
-		} catch (IOException e) {
+		} catch (Exception e) {
+			throw new ResourceException("create " + name, e);
 		}
 		return new UploadResource(this, name, type, length);
 	}

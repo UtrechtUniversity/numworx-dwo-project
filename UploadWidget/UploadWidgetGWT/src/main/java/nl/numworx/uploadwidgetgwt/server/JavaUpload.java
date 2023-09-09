@@ -179,8 +179,26 @@ public class JavaUpload extends HttpServlet implements Constants {
 
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		super.doPut(req, resp);
+
+		log("doPut: " + req.getPathInfo());
+
+		String bearer = req.getHeader(AUTHORIZATION);
+		if (bearer == null) bearer = (String) req.getSession().getAttribute(AUTHORIZATION);
+		else req.getSession().setAttribute(AUTHORIZATION, bearer);
+		String path = req.getPathInfo();
+		int index = path.indexOf("/sec:");
+		String paths[] = path.substring(index+5).split("/");
+		Optional<DomSchoolRoleAndClassV2> actor = getActor(bearer, paths[0]);
+
+		if (!actor.isPresent()) {
+			resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+			return;			
+		}
+
+		
+		
+		
+		resp.setStatus(HttpServletResponse.SC_CREATED);
 	}
 
 	@Override
