@@ -36,11 +36,18 @@ public class BerekeningVakFormuleEditor extends FormuleEditor {
 	
 	@Override
 	public void enter() {
-		if(berekeningVakRegel.berekeningVak.settings.meerregelig() 
+		if(berekeningVakRegel.berekeningVak.settings.meerregelig() && !berekeningVakRegel.berekeningVak.settings.checkMetEnter()
 				&& (getMainRegel().getCurrentPosition()==-1 || getCurrentElement().getParent()==getMainRegel()))
 			regelManager.maakRegel(getTailString());
 		else if(!berekeningVakRegel.berekeningVak.settings.meerregelig() && berekeningVakRegel.berekeningVak.settings.check()) {
 			checkManager.check_enter();
+		}
+		else if(berekeningVakRegel.berekeningVak.settings.meerregelig() && berekeningVakRegel.berekeningVak.settings.checkMetEnter()
+				&& berekeningVakRegel.berekeningVak.settings.check()
+				&& (getMainRegel().getCurrentPosition()==-1 || getCurrentElement().getParent()==getMainRegel())) {
+			
+			checkManager.check_enter();
+			regelManager.maakRegel(null);
 		}
 //		else if(berekeningVakRegel.berekeningVak.settings.check()) {
 //			checkManager.check_enter();
