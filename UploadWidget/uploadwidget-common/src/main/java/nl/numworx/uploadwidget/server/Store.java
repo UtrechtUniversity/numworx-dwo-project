@@ -1,11 +1,14 @@
 package nl.numworx.uploadwidget.server;
 
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Vector;
+
+import javax.servlet.ServletInputStream;
 
 import org.apache.commons.fileupload.FileItem;
 
@@ -71,6 +74,10 @@ public class Store {
 		} catch (Exception e) {
 			return "-";
 		}
+	}
+
+	public void addEntry(AtomEntry entry, Map<String, String> map, InputStream inputStream) {
+		entries.add(entry);
 	}
 	
 	

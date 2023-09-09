@@ -1,17 +1,26 @@
 package nl.numworx.uploadwidgetgwt.server;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemHeaders;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import nl.numworx.uploadwidget.server.Store;
@@ -177,6 +186,7 @@ public class JavaUpload extends HttpServlet implements Constants {
 		super.doPost(req, resp);
 	}
 
+	// sec:1-xxx-yyyy/uuid/registration/file
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -194,9 +204,24 @@ public class JavaUpload extends HttpServlet implements Constants {
 			resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 			return;			
 		}
-
-		
-		
+		DomSchool school = actor.get().getSchool();
+		//String url = getPrefix(paths, school) + paths[3];
+		String uuid = paths[1].replace('-', '/');
+		String registration = paths[2];
+		String name = paths[3];
+		AtomEntry entry = new AtomEntry();
+		entry.title = name;
+		entry.type  = req.getContentType();
+		entry.length = (long) req.getContentLength(); // req.getContentLengthLong() niet in tomcat7
+		StringBuffer requestURL = new StringBuffer();		
+		requestURL.append(school.getId()).append("/")
+			.append(uuid).append("/")
+			.append(registration).append("/")
+			.append(entry.title);
+		entry.url = requestURL.toString();
+		Map<String, String> map = Collections.singletonMap("learnerid", paths[0]);
+		store.addEntry(entry, map, req.getInputStream());
+		req.getInputStream().close();
 		
 		resp.setStatus(HttpServletResponse.SC_CREATED);
 	}
