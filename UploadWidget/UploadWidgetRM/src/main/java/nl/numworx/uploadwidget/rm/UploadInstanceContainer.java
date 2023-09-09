@@ -57,9 +57,10 @@ public class UploadInstanceContainer implements ResourceContainer {
 	public UploadInstanceContainer(CBookContext context) {
 		oauth_token = (String) context.getProperty("oauth_token");
 		serverUrlPath = (URL) context.getProperty("serverUrlPath");
+		String learnerId = (String) context.getProperty("learner_id");
 		String pfx = "";
 		try {
-			pfx = "dav/upload/instance/" + context.getProperty("UUID") + "/";
+			pfx = "dav/upload/dir/sec:" +learnerId + "/" + context.getProperty("UUID") + "/instance/";
 			serverUrlPath = new URL(serverUrlPath, pfx);
 		} catch (MalformedURLException e) {
 			LOG.log(Level.SEVERE, "invalid prefix " + pfx, e);

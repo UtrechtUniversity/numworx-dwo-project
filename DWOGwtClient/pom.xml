@@ -473,7 +473,7 @@
                         <webapp>
                           <groupId>fi.servlet</groupId>
   						  <artifactId>ideas</artifactId>
- 						  <version>0.0.12</version>
+ 						  <version>0.0.12-SNAPSHOT</version>
                           <type>war</type>
                           <contextPath>/ideas</contextPath>
                           <asWebapp>true</asWebapp>              
