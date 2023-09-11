@@ -189,6 +189,10 @@
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-annotations</artifactId>
 			</exclusion>
+			<exclusion>
+				<groupId>javax.mail</groupId>
+				<artifactId>mail</artifactId>
+			</exclusion>
 		</exclusions>
 	</dependency>
 	<dependency>
@@ -200,6 +204,10 @@
 			<exclusion>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-annotations</artifactId>
+			</exclusion>
+			<exclusion>
+				<groupId>javax.mail</groupId>
+				<artifactId>mail</artifactId>
 			</exclusion>
 		</exclusions>
 	</dependency>
