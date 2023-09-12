@@ -60,7 +60,7 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>UploadWidgetRM</artifactId>
+			<artifactId>uploadwidgetrm</artifactId>
 			<version>2.5.23-SNAPSHOT</version>
 		</dependency>
   </dependencies>
@@ -91,13 +91,16 @@
 						<Bundle-SymbolicName>nl.numworx.uploadwidget.UploadWidget</Bundle-SymbolicName>
 						<Export-Package>nl.numworx.uploadwidget</Export-Package>
 						<Main-class>nl.numworx.uploadwidget.UploadWidget</Main-class>
-						<Import-Package>!dagger.internal.codegen,!dagger.releasablereferences,!com.google.*,!com.googlecode.*,!nl.uu.fi.dwo.interaction.client.*,fi.*,javax.annotation;resolution:=optional;version="[1,4)",*</Import-Package>
+						<Import-Package>!javax.servlet.*,!dagger.internal.codegen,!dagger.releasablereferences,!com.google.*,!com.googlecode.*,!nl.uu.fi.dwo.interaction.client.*,fi.*,javax.annotation;resolution:=optional;version="[1,4)",*</Import-Package>
 						<Private-Package>
-							nl.numworx.uploadwidget.*,
+						    !nl.numworx.uploadwidget.server,
+							nl.numworx.uploadwidget,
+							nl.numworx.uploadwidget.module,
+							nl.numworx.uploadwidget.shared,
 							dagger,
 							dagger.internal,
 							dagger.multibindings,
-							javax.inject
+							javax.inject							
 						</Private-Package>
 					</instructions>
 				</configuration>
