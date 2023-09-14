@@ -4,6 +4,7 @@ package nl.numworx.uploadwidgetgwt.client;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
@@ -14,6 +15,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
@@ -174,7 +176,13 @@ public class FeedPanel extends Composite implements Constants, RequestCallback {
 		  for(int i=0; i < modelSize; i++) {
 			  ObjectMap file = fileInputModel.getObjectMap(i);
 			  String name = file.getString("name");
-			  String url = base + name; // FIXME gebruik UriBuilder o.i.d.
+			  String url = base + name; // FIXME gebruik UrlBuilder o.i.d.
+			  UrlBuilder builder = Window.Location.createUrlBuilder();
+			  Set<String> p = Window.Location.getParameterMap().keySet();
+			  builder.setPath(url);
+			  builder.setHash(null);
+			  p.forEach(key -> builder.removeParameter(key));
+			  url = builder.buildString();
 			  SafeHtml html = new SafeHtmlBuilder().appendEscaped(name).toSafeHtml();
 			  Anchor a = new Anchor(html, url);
 			  a.setTarget("_blank");
