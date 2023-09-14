@@ -88,7 +88,7 @@
 		<dependency>
 			<groupId>fi.servlet</groupId>
 			<artifactId>ideas-servlet</artifactId>
-			<version>0.0.12</version>
+			<version>0.0.13-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.tue.win.riaca.openmath</groupId>
