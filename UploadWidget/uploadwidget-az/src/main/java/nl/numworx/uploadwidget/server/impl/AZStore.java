@@ -1,6 +1,7 @@
 package nl.numworx.uploadwidget.server.impl;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -83,6 +84,11 @@ public class AZStore extends Store {
 			provider.put(entry.url, entry.type, item.getInputStream(), entry.length, tags);
 		} catch (IOException e) {
 		}
+	}
+
+	@Override
+	public void addEntry(AtomEntry entry, Map<String, String> tags, InputStream item) {
+		provider.put(entry.url, entry.type, item, entry.length, tags);
 	}
 
 	@Override

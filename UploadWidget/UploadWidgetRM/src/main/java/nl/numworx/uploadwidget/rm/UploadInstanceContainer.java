@@ -11,12 +11,15 @@ import java.net.URLConnection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.activation.MimetypesFileTypeMap;
+
 import org.cbook.cbookif.CBookContext;
 import org.cbook.cbookif.rm.Resource;
 import org.cbook.cbookif.rm.ResourceContainer;
 import org.cbook.cbookif.rm.ResourceException;
 
 public class UploadInstanceContainer implements ResourceContainer {
+	private static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
 	private static final Logger LOG = Logger.getLogger(UploadInstanceContainer.class.getName());
 	private String oauth_token;
 	private URL serverUrlPath;
@@ -112,13 +115,36 @@ public class UploadInstanceContainer implements ResourceContainer {
 	public void setName(String arg0) throws ResourceException {
 	}
 
+	  private String retype(String filename, String type) {
+		    // Not automatic. Why?
+				try {
+				InputStream mime = getClass().getClassLoader().getResourceAsStream("META-INF/mime.types");
+		// FIXME java.activation not available by default
+				MimetypesFileTypeMap map = new MimetypesFileTypeMap(mime);
+				mime.close();
+				String type4 = map.getContentType(filename);
+				
+				if( type4 != null )
+					type = type4;		
+				} catch (Throwable e) {
+				  Logger.getLogger(getClass().getName()).warning("MimeTypesFileTypeMap: " + e );
+				}
+		    return type;
+		  }	
+	
 	@Override
 	public Resource create(String name, URL url) throws ResourceException {
 		try {
 			URLConnection uc = url.openConnection();
 			InputStream in = uc.getInputStream();
 			String mimetype = uc.getContentType();
-			if (mimetype == null) mimetype = "application/octet-stream";
+			if ("content/unknown".equals(mimetype)) mimetype = null;
+			if (mimetype == null) mimetype = APPLICATION_OCTET_STREAM;
+			if ("file".equals(url.getProtocol()) && APPLICATION_OCTET_STREAM.equals(mimetype)) {
+				mimetype = retype(url.getPath(), mimetype);
+			}
+			
+			
 			return create(name, in, mimetype);
 		} catch (ResourceException e) {
 			throw e;
