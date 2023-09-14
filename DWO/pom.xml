@@ -203,4 +203,12 @@
             </plugin>            
         </plugins>
     </reporting>
+    <profiles> <!-- profiles used in modules and jenkins -->
+    	<profile>
+    		<id>DWO2player</id>
+    	</profile>
+    	<profile>
+    		<id>test</id>
+    	</profile>
+    </profiles>
 </project>
