@@ -114,6 +114,7 @@ class UploadPanel extends Composite implements ClickHandler, OnFinishUploaderHan
 	void setItemsMax(int max) {
 		feed.setItemsMax(max);
 		uploader.setMultipleSelection(max > 1);
+		if (max <= 0) uploader.removeFromParent();
 	}
 
 
