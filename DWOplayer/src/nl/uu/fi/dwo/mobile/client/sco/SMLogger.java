@@ -194,6 +194,11 @@ public class SMLogger implements Logging {
         result.score.scaled = result.score.raw.doubleValue() / maxScore;
     } catch (Exception e) {
     }
+    if (parameters.containsKey("feedback")) {
+    	result.extensions = new Extensions();
+    	result.extensions.feedback = (String) parameters.get("feedback");
+    }
+    
     s.result = result;  
     xapi.then(manager -> manager.getValue().saveStatement(s));
     delegate.log(parameters);

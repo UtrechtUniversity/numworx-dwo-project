@@ -2847,8 +2847,20 @@ private Object CamelCase(String name) {
 			String feedback = id;
 			Map context = resultaat.getContext();
 			String reason = context != null ? (String) context.get("reason") : "";
-			genereerFeedback(status, feedback + reason); 
+			genereerFeedback(status, feedback + reason);
+			if (dwologger != null) {
+				Map<String,Object> parameters = new HashMap<>();
+				switch(status) {
+				case AntwoordVakChecker.FOUT: parameters.put("success", false); break;
+				case AntwoordVakChecker.GOED: parameters.put("success", true);
+				}
+				parameters.put("response", resultaat.getExpr());
+				parameters.put("feedback", feedback + " " + reason);
+				dwologger.log(parameters);
+			}
 		}
+		// voor logging:
+		// name, context.reason en expr, status -> success
 	}
 
 	public static class Tupel {
