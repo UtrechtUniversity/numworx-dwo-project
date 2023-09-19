@@ -472,7 +472,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 //	}
 	
 	String getLogID() { 
-		if (dwologger != null)
+		if (logID != null)
 			return logID  +"/" + comRoot.getUUID();
 		else
 			return comRoot.getUUID();
@@ -1938,7 +1938,7 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 		{	h.put("locationX", new Integer(locationX));
 			h.put("locationY", new Integer(locationY));
 		}
-		if (dwologger != null) {
+		if (dwologger != null && !ideasStatistiek) {
 			dwologger.updateLog(buildLogParameters());
 		}
 		if (reviewActivity != null) {
@@ -5725,11 +5725,11 @@ private Object CamelCase(String name) {
 		return activity.isNoordhoff();
 	}
 	
-	Logging dwologger;
+	private Logging dwologger;
 	private boolean editable = true;
 	
 	private void setAttempt() {
-		if(dwologger != null) {
+		if(dwologger != null && !ideasStatistiek) {
 			Map<String, Object> parameters = buildLogParameters();
 			dwologger.log(parameters);
 		}
@@ -5983,6 +5983,9 @@ private Object CamelCase(String name) {
   public void setKolom(int kolom) {
     this.kolom = kolom;
   }
-
+	
+  public void setDwologger(Logging dwologger) {
+	this.dwologger = dwologger;
+  }
 	
 }
