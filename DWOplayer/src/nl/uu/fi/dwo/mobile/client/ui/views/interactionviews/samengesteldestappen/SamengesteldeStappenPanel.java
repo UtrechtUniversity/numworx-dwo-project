@@ -36,6 +36,8 @@ import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel.Tupel;
+import nl.uu.fi.dwo.mobile.utils.LogBuilder;
+import nl.uu.fi.dwo.mobile.utils.Logging;
 
 public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, TekstElementWithFont, HasResize, CBookEventListener {
 	
@@ -74,6 +76,8 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 	HashMap<String, Number> randomVarWaarden = null;
 
 	private ActivityInterface activity;
+
+	private Logging logging;
 	
 	
 	public SamengesteldeStappenPanel(ActivityInterface a, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int volleBreedte)
@@ -111,6 +115,13 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 			if(map.containsKey("stepRequired"))
 				this.stepRequired = map.getBooleanArray("stepRequired");
 		}
+		if (ideasStatistiek) {
+			LogBuilder builder = activity.logBuilder();
+			builder.setLaunchData(map)
+				.setClassName("fi.wiskopdr.samengesteldestappen.SamengesteldeStappenPanel");
+			logging = builder.build();
+		}
+		
 	}
 	
 	public void initialize(HashMap<String, Object> h)
@@ -479,6 +490,11 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 			hintButton.removeFromParent();
 		if (ideasStatistiek)
 			comRoot.addCBookEventListener("tupels.statistics", this);
+		if (logging != null) 
+		{
+			logging.setCommunicationRoot(comRoot);
+			stappenVak.setDwologger(logging);
+		}
 	}
 
 	@Override
