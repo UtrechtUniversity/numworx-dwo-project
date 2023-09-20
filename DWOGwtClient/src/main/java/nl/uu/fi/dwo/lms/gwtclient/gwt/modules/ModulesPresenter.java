@@ -12,7 +12,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 import dagger.Lazy;
-import fi.dwo.gwt.lib.rest.util.Base64;
 import jsinterop.annotations.JsMethod;
 
 import java.util.Map;

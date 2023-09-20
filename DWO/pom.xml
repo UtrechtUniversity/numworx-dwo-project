@@ -19,7 +19,7 @@
         <DWOJClientVersion>2.5.23-SNAPSHOT</DWOJClientVersion>
 		<DWOplayerVersion>2.5.23-SNAPSHOT</DWOplayerVersion>
         <maven.javadoc.skip>true</maven.javadoc.skip>
-        <chatGWTVersion>2.5.18</chatGWTVersion>
+        <chatGWTVersion>2.5.23-SNAPSHOT</chatGWTVersion>
     </properties>
     
     <!-- should move project role names here that fall in the full project scope -->
