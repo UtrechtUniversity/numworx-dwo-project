@@ -14,6 +14,9 @@ import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.JsonEncoderDecoder;
+import org.osgi.util.promise.Deferred;
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -411,9 +414,11 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 
 		Handler.Reference ref1, ref2;
 		final Connection connection;
+		final Deferred<Connection> future;
 
-		ChatStatusCallback(Connection connection) {
+		ChatStatusCallback(Connection connection, Deferred<Connection> futureConnection) {
 			this.connection = connection;
+			this.future = futureConnection;
 		}
 		@Override
 		public void statusChanged(Status status, String reason) {
@@ -439,11 +444,15 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	            	if (visible) switchToModel(currentModel);
 	            	//addToRoom(room);
 	            }
+	            future.resolve(connection);
 	            break;
 			case DISCONNECTED:
 				LOG.info("stop talking");
 				if (ref1 != null) { connection.removeHandler(ref1); ref1 = null; }
 				if (ref2 != null) { connection.removeHandler(ref2); ref2 = null; }
+				if (connection == ChatGWT.this.connection) {
+					ChatGWT.this.unsetConnection();
+				}
 			default:
 			}
 			
@@ -475,6 +484,23 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	
 	public ChatGWT(PersistIF persist) {
 		this.persist = persist;
+	}
+
+	void unsetConnection() {
+		connection = null;
+		futureConnection = null;
+	}
+	
+	Deferred<Connection> futureConnection;
+	
+	Promise<Connection> getConnection() {
+		if (connection != null) {
+			return Promises.resolved(connection);
+		}
+		if (futureConnection != null) {
+			return futureConnection.getPromise();
+		}
+		return login();
 	}
 
 	public ChatGWT() {
@@ -762,11 +788,13 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		event.preventDefault();
 	}
 
-	private void login() {
-		connection = new Connection(BOSH);		
-		StatusCallback callback = new ChatStatusCallback(connection);
+	private Promise<Connection> login() {
+		futureConnection = new Deferred<>();
+		Connection connection = new Connection(BOSH);		
+		StatusCallback callback = new ChatStatusCallback(connection, futureConnection);
 		connection.connect(chatUser.jid, chatUser.token, callback);
 		FocusOnTouch.focus();
+		return futureConnection.getPromise();
 	}
 
 	Consumer<String> sendTo = this::sendToRoom;
