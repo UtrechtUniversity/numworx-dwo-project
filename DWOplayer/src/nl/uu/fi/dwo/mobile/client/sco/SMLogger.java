@@ -159,7 +159,15 @@ public class SMLogger implements Logging {
 	Map<String,?> map = (Map<String,?>) parameters.get("score");
     if(map == null) return null;
     Number n = (Number) map.get("raw");
-    if(n == null) return null;
+    if(n == null) 
+    {
+    	n = (Number) map.get("scaled");
+    	if (n != null) {
+    		return Double.valueOf(n.doubleValue()*maxScore);
+    	}
+    	return null;
+    }
+    	
         return Double.valueOf(n.doubleValue());
 }
 

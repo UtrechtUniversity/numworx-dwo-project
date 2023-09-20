@@ -2851,11 +2851,15 @@ private Object CamelCase(String name) {
 			if (dwologger != null) {
 				Map<String,Object> parameters = new HashMap<>();
 				switch(status) {
-				case AntwoordVakChecker.FOUT: parameters.put("success", false); break;
+				case AntwoordVakChecker.FOUT: parameters.put("success", false);
+				default:
+					parameters.put("score", Collections.singletonMap("raw", 0));
+				break;
 				case AntwoordVakChecker.GOED: parameters.put("success", true);
+					parameters.put("score", Collections.singletonMap("scaled", 1));
 				}
 				parameters.put("response", resultaat.getExpr());
-				parameters.put("feedback", feedback + " " + reason);
+				parameters.put("feedback", (name + " " + feedback + " " + reason).trim());
 				dwologger.log(parameters);
 			}
 		}
