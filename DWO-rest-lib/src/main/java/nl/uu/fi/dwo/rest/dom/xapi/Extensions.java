@@ -8,7 +8,8 @@ public class Extensions {
   public final static String OBJECTIVES = "http://www.dwo.nl/extensions/objectives";
   public final static String FOREKNOWLEDGE = "http://www.dwo.nl/extensions/foreknowledge";
   public final static String ASSESSMENT_TYPE = "http://id.tincanapi.com/extension/assessment-type";
-	
+  public final static String FEEDBACK = "http://id.tincanapi.com/extension/feedback";
+  
   @JsonProperty(OBJECTIVES)
   @com.fasterxml.jackson.annotation.JsonProperty(OBJECTIVES)
   public List<String> objectives;
@@ -20,5 +21,9 @@ public class Extensions {
   @JsonProperty(ASSESSMENT_TYPE)
   @com.fasterxml.jackson.annotation.JsonProperty(ASSESSMENT_TYPE)
   public String assessmentType;
+
+  @JsonProperty(FEEDBACK)
+  @com.fasterxml.jackson.annotation.JsonProperty(FEEDBACK)
+  public String feedback;
 
 }
