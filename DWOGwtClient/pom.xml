@@ -431,6 +431,7 @@
                     <path>/</path>
                     <systemProperties>
                     	<CDN_HOST>localhost:8082</CDN_HOST>
+			<CDNURL>http://localhost:8082</CDNURL>
                     	<DWO_ENV>test</DWO_ENV>                   
                     </systemProperties>
                     <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
