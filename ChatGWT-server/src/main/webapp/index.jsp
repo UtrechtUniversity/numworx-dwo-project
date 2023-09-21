@@ -10,7 +10,7 @@
     <meta name="gwt:property" content="locale=en" >
 <%
 	String profile = request.getParameter("profile");
-	String cdn = System.getProperty("CDNURL","https://ebs-dev-dwo-nl.s3.eu-west-1.amazonaws.com");
+	String cdn = System.getProperty("CDNURL","https://cdn.dwo.nl");
 %>
 	<script src="/dwo/apps/deploy.jsp"></script>
 	<link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/DWOplayer.css" >

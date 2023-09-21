@@ -87,7 +87,11 @@
             <artifactId>promise-api</artifactId>
             <version>0.0.2</version>
             <classifier>sources</classifier>
-        </dependency>        
+        </dependency>
+        <dependency>
+        	<groupId>nl.uu.fi.dwo</groupId>
+        	<artifactId>DWO-gwt-lib</artifactId>
+        </dependency>
   </dependencies>
 
   <build>

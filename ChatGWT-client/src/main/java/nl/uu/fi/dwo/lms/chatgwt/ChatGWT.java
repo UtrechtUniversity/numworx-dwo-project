@@ -51,7 +51,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -88,10 +87,13 @@ import nl.uu.fi.dwo.lms.chatgwt.util.ResizeFlowPanel;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessages;
 
+import fi.dwo.gwt.lib.rest.ui.IdleDetect;
+import fi.dwo.gwt.lib.rest.ui.IdleDetect.IdleEvent;
+
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleClipboardIF, com.google.gwt.view.client.SelectionChangeEvent.Handler {
+public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleClipboardIF, com.google.gwt.view.client.SelectionChangeEvent.Handler, IdleDetect.IdleHandler {
 	
 	
 	private static final TimeZone UTC = TimeZone.createTimeZone(0);
@@ -435,9 +437,9 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 				
 				Builder pres = Builder.$pres(null);
 	            connection.send(pres);
-	            for(ChatRoom room: chatUser.room) { addToRoom(room); }
+	            for(ChatRoom room: chatUser.room) { addToRoom(connection, room); }
 	            
-	            sendMamRequest(); // after room presence
+	            sendMamRequest(connection); // after room presence
 // Add to room	            
 	            if (room != null) {
 	            	currentModel = get(room);
@@ -682,7 +684,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		
 		east.add(teachers);
 		
-		editor = new StubWidget(4, keyboard);
+		editor = new StubWidget(4, keyboard, idler);
 
 		HashMap<String, Object> data = new HashMap<>();
 		data.put("rekenTool", Boolean.FALSE);
@@ -739,14 +741,17 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		
 		
 		if (chatUser != null) 
-			Scheduler.get().scheduleDeferred(this::login);
+			Scheduler.get().scheduleDeferred(this::getConnection);
+		
+		idler.addIdleHandler(this);
+		idler.start();
 	}
 	void keyboardFocus() {
 		if (formule) keyboard.focus(); else keyboard.softFocus();
 	}
 
 	StubWidget tekstPanel(String content, int width, int height) {
-		StubWidget tekstpanel = new StubWidget(9, keyboard);
+		StubWidget tekstpanel = new StubWidget(9, keyboard, idler);
 		HashMap<String, Object> launch = new HashMap<>();
 		
 		launch.put("teksten", new String[][] {{ content}});
@@ -766,7 +771,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	private void onClickLogout(ClickEvent event) {
 		if (connection != null) {
 			connection.disconnect("logout");
-			connection = null;
+			unsetConnection();
 			persist.flush();
 		}
 	}
@@ -819,10 +824,21 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		if (room == null) return;
 		String[][] attributes = { { "to", room.jid }, { "type", "groupchat" } };
 		Builder reply = Builder.$msg(attributes).c("body",null).t(value);
-		connection.send(reply);
+		sendToConnection(c -> c.send(reply));
+	}
+
+	private void sendToConnection(Consumer<Connection> consumer) {
+		Promise<Connection> c = getConnection();
+		c.onResolve(() -> {
+			if (c.getFailure() == null) {
+				consumer.accept(c.getValue());
+			} else {
+				sendToConnection(consumer);
+			}
+		});
 	}
 	
-	private void sendMamRequest() {
+	private void sendMamRequest(Connection connection) {
 		String[][] attributes = { { "type", "set" }};
 		String[][] attributesQ = {{ "xmlns", "urn:xmpp:mam:2"},{"queryid", "fetchall"}};
 		Builder request = Builder.$iq(attributes).c("query", attributesQ);
@@ -835,9 +851,11 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			ChatUser u = um.getUser();
 			String[][] attributes = { { "to", u.jid }, { "type", "chat" } };
 			Builder reply = Builder.$msg(attributes).c("body",null).t(value);
-			connection.send(reply);
 			Message msg = new Message(chatUser.jid, now(), value, utc(), null);
-			um.getMessages().add(msg);
+			sendToConnection( c -> {
+				c.send(reply);
+				um.getMessages().add(msg);
+			});
 		} else {
 			// select user 1st;
 		}
@@ -901,7 +919,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		clipboard = formule;
 	}
 
-	private void addToRoom(ChatRoom room) {
+	private void addToRoom(Connection connection, ChatRoom room) {
 		Builder pres;
 		pres = Builder.$pres(new String[][] { {"to", nick(chatUser, room) }});
 		pres.c("x", new String[][] {{ "xmlns", Namespace.MUC.toString() }});
@@ -1002,6 +1020,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	static final DateTimeFormat ISO_DATETIME = DateTimeFormat.getFormat(ISO8601_PATTERN);
 
 	private boolean formule;
+	private final IdleDetect idler = new IdleDetect(new SimpleEventBus());
 
 	public static Date fromDelay(String delay) {
 		if (delay.endsWith("Z")) delay = delay.substring(0, delay.length()-1) + "+0000"; // REMOVE Z, add GMT		
@@ -1013,6 +1032,16 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	}
 	public static String utc() {
 		return ISO_DATETIME.format(new Date(), UTC);
+	}
+
+	@Override
+	public void onIdle(IdleEvent ev) {
+		if (ev.isSlow()) {
+			Notification.INSTANCE.send("MAYBELOGOUT");
+		} else {
+			getConnection();
+		}
+		
 	}
 	
 }

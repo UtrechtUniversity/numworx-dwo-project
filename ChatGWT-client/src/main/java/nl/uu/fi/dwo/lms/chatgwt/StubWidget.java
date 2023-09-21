@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+import fi.dwo.gwt.lib.rest.ui.IdleDetect;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
@@ -70,9 +71,11 @@ public class StubWidget extends Composite implements Handler, LoadHandler, Formu
 	private String pendingState;
 	private HashMap<String, Number> randomVars = new HashMap<>();
 	private HashMap<String, Object> lastResort;
+	private IdleDetect idler;
 
-	public StubWidget(int id, FormuleKeyboardIF kb) {
+	public StubWidget(int id, FormuleKeyboardIF kb, IdleDetect idler) {
 		this.kb = kb;
+		this.idler = idler;
 		String profile = "77";
 		String p = Window.Location.getParameter("profile");
 		if (p != null) profile = p;
@@ -359,6 +362,7 @@ public void setState(HashMap<String, Object> h) {
 
 	public void tickle() {
 		GWT.log("tickle");
+		idler.reset();
 	}
 	
 	
