@@ -80,6 +80,7 @@ import nl.uu.fi.dwo.keyboard.client.KeyboardFactory;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
 import nl.uu.fi.dwo.lms.chatgwt.util.Base64;
+import nl.uu.fi.dwo.lms.chatgwt.util.GUID;
 import nl.uu.fi.dwo.lms.chatgwt.util.MD5;
 import nl.uu.fi.dwo.lms.chatgwt.util.Notification;
 import nl.uu.fi.dwo.lms.chatgwt.util.PersistIF;
@@ -145,6 +146,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	
 	
 	private static final ChangeEvent CHANGE_EVENT = new ChangeEvent() {};
+	private static final int MAX_LENGTH = 10240;
 	private static String DOMAIN = "chat-dev.dwo.nl";
 	private static String ROOMS = "conference." + DOMAIN;
 	private static String BOSH = "wss://chat-dev.dwo.nl/xmpp-websocket";
@@ -270,6 +272,9 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 				elems = element.getElementsByTagName("stanza-id");
 				if (elems.getLength() >= 1) {
 					id = elems.getItem(0).getAttribute("id");
+				} else {
+					String attr = element.getAttribute("id"); // use id attribute of message (send by our client)
+					if (!attr.isEmpty()) id = attr;
 				}
 				
 				m.add(new Message(from, stamp, text, utc, id));
@@ -305,6 +310,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			String id = null;
 			elems = element.getElementsByTagName("result");
 			id = elems.getItem(0).getAttribute("id");
+			String attr = message.getAttribute("id");
+			if (!attr.isEmpty()) id = attr; // message@id gaat voor result@id
 			m.add(new Message(jid, stamp, text, utc, id));
 			return true;
 		}
@@ -499,10 +506,14 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		if (connection != null) {
 			return Promises.resolved(connection);
 		}
-		if (futureConnection != null) {
+		if (futureConnection != null && notfailed(futureConnection.getPromise())) {
 			return futureConnection.getPromise();
 		}
 		return login();
+	}
+
+	private boolean notfailed(Promise<Connection> p) {
+		return !p.isDone() || p.getFailure() == null;
 	}
 
 	public ChatGWT() {
@@ -809,7 +820,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		HashMap<String, Object> map = editor.getState();
 		LOG.info("editor state = " + map);
 		String value = JSONUtilities.wrapMap(map).getString("tekst");
-		if (value == null || connection == null || (value = value.trim()).isEmpty() )
+		if (value == null || (value = value.trim()).isEmpty() || value.length() > MAX_LENGTH)
 		{
 			return;		
 		}
@@ -849,9 +860,10 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		UserModel um = selection.getSelectedObject();
 		if (um != null) {
 			ChatUser u = um.getUser();
-			String[][] attributes = { { "to", u.jid }, { "type", "chat" } };
+			String id = GUID.get();
+			String[][] attributes = { { "to", u.jid }, { "type", "chat" }, { "id", id }};
 			Builder reply = Builder.$msg(attributes).c("body",null).t(value);
-			Message msg = new Message(chatUser.jid, now(), value, utc(), null);
+			Message msg = new Message(chatUser.jid, now(), value, utc(), id);
 			sendToConnection( c -> {
 				c.send(reply);
 				um.getMessages().add(msg);
@@ -1037,7 +1049,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	@Override
 	public void onIdle(IdleEvent ev) {
 		if (ev.isSlow()) {
-			Notification.INSTANCE.send("MAYBELOGOUT");
+			if (visible)
+				Notification.INSTANCE.send("MAYBELOGOUT");
 		} else {
 			getConnection();
 		}
