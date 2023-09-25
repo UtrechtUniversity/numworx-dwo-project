@@ -225,7 +225,9 @@ public class BootPanelController {
     	return p;
     }
     Promise<DomDwoProfileFull> hasChat(Promise<DomDwoProfileFull> p) {
-    	dwoGlobalVars.setInf(p.getValue().getDwoProfileRights().contains("I"));
+    	String rights = p.getValue().getDwoProfileRights();
+		dwoGlobalVars.setInf(rights.contains("I"));
+		dwoGlobalVars.setRemedial(rights.contains("R"));
     	return p;
     	
     }
@@ -336,7 +338,7 @@ public class BootPanelController {
         
         //dwoGlobalVars.setInf(profile == PROFILE_INF);
         
-        LOG.severe("inf = " + dwoGlobalVars.isInf());
+        //LOG.severe("inf = " + dwoGlobalVars.isInf());
         value = Window.Location.getParameter("stage");
         if (value != null) {
             stage = Integer.parseInt(value);

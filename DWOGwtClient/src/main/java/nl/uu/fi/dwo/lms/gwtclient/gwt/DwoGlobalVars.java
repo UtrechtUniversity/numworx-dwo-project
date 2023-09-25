@@ -576,11 +576,18 @@ public class DwoGlobalVars {
 		return role;
 	}
 
-	private boolean inf; // profiel inf = 111
+	private boolean inf, remedial; // profiel inf = 111
 	public boolean isInf() {
 		return inf;
 	}
 	public void setInf(boolean i) {
 		inf = i;
+	}
+
+	public boolean isRemedial() {
+		return remedial;
+	}
+	public void setRemedial(boolean r) {
+		remedial = r;
 	}
 }
