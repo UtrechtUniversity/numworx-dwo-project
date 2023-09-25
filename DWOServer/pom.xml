@@ -232,66 +232,6 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>      
-<!--             <plugin> -->
-<!--                 <groupId>org.apache.maven.plugins</groupId> -->
-<!--                 <artifactId>maven-dependency-plugin</artifactId> -->
-<!--                 <version>2.4</version> -->
-<!--                 <executions> -->
-<!--                     <execution> -->
-<!--                         <id>copy</id> -->
-<!--                         <phase>install</phase> -->
-<!--                         <goals> -->
-<!--                             <goal>copy</goal> -->
-<!--                         </goals> -->
-<!--                         <configuration> -->
-<!--                             <artifactItems> -->
-<!--                                 <artifactItem> -->
-<!--                                 <groupId>fi.dwo</groupId> -->
-<!--                                 <artifactId>DWOJApplet-working-gert</artifactId> -->
-<!--                                 <version>${project.version}</version> -->
-<!--                                 <type>jar</type> -->
-<!--                                 <overWrite>true</overWrite> -->
-<!--                                 <outputDirectory>${project.build.directory}/${project.build.finalName}/jars/</outputDirectory>    -->
-<!--                                 <destFileName>DWOJApplet.jar</destFileName>                              -->
-<!--                                 </artifactItem> -->
-<!--                             </artifactItems> -->
-<!--                         </configuration> -->
-<!--                     </execution> -->
-<!--                 </executions> -->
-<!--             </plugin>          -->
-<!--            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.1</version>
-                <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>-->
                                   
              <!-- ensure the build number is available as ${buildNumber} -->
             <plugin>
@@ -405,14 +345,14 @@
                             <contextFile>src/test/tomcat/${context.xml}</contextFile>
                             <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
                         <webapps>
-<!--                           <webapp> -->
-<!-- 						    <groupId>nl.numworx.uploadwidget</groupId> -->
-<!-- 						    <artifactId>UploadWidgetGWT</artifactId> -->
-<!-- 						    <version>0.0.1-SNAPSHOT</version> -->
-<!--                             <type>war</type> -->
-<!--                             <contextPath>/dwo/dav/upload</contextPath> -->
-<!--                             <asWebapp>true</asWebapp> -->
-<!--                           </webapp> -->
+                          <webapp>
+						    <groupId>nl.numworx.uploadwidget</groupId>
+						    <artifactId>UploadWidgetGWT</artifactId>
+						    <version>2.5.23-SNAPSHOT</version>
+                            <type>war</type>
+                            <contextPath>/dwo/dav/upload</contextPath>
+                            <asWebapp>true</asWebapp>
+                          </webapp>
                         </webapps>
                     </configuration>
                     <dependencies>

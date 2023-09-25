@@ -171,12 +171,16 @@ public class FeedPanel extends Composite implements Constants, RequestCallback {
 
 	private void addFileInputModel() {
 		int modelSize = fileInputModel.size();
-		  String base = "/dwo/dav/upload/dir/sec:" + learnerId + "/"  + uuid + "/instance/";
+		String tail = uuid + "/instance/";
+		String head = "/dwo/dav/upload/dir/sec:" + learnerId + "/";
+		String base = head + tail;
 
 		  for(int i=0; i < modelSize; i++) {
 			  ObjectMap file = fileInputModel.getObjectMap(i);
 			  String name = file.getString("name");
 			  String url = base + name; // FIXME gebruik UrlBuilder o.i.d.
+			  if (file.containsKey("url"))
+				  url = head + file.getString("url");
 			  UrlBuilder builder = Window.Location.createUrlBuilder();
 			  Set<String> p = Window.Location.getParameterMap().keySet();
 			  builder.setPath(url);

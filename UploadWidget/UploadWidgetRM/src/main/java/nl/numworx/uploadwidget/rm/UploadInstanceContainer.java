@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Level;
@@ -26,6 +28,14 @@ public class UploadInstanceContainer implements ResourceContainer {
 
 	private Long put(String path, InputStream in, String type) throws IOException {
 	      URL url = new URL(getServerUrlPath(), path); // TODO make login
+		  try {
+			URI base = getServerUrlPath().toURI(); // met spaces en andere encoding
+			URI p = new URI(null, null, path, null);
+			url = base.resolve(p).toURL();
+		  } catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		  }
 	      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 	      OutputStream outStream = null;
 	      conn.setRequestMethod("PUT");
@@ -53,7 +63,7 @@ public class UploadInstanceContainer implements ResourceContainer {
 		return oauth_token;
 	}
 
-	private URL getServerUrlPath() {
+	URL getServerUrlPath() {
 		return serverUrlPath;
 	}
 

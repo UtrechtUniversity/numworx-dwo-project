@@ -3,10 +3,11 @@ package nl.numworx.uploadwidget;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 
+import org.cbook.cbookif.rm.Resource;
 import org.cbook.cbookif.rm.ResourceContainer;
 
 import nl.numworx.uploadwidget.shared.AtomEntry;
@@ -22,6 +23,7 @@ class InputFile extends AtomEntry implements Comparable<InputFile>{
 	
 	public InputFile(Map<String, Object> map) {
 		name = (String) map.get("name");
+		url  = (String) map.get("url");
 	}
 
 	public String toString() { return name; }
@@ -53,11 +55,22 @@ class InputFile extends AtomEntry implements Comparable<InputFile>{
 	}
 	
 	Map<String,Object> toMap() {
-		return Collections.singletonMap("name", name);
+		Map<String,Object> map = new TreeMap<>();
+		map.put("name", name);
+		if (url != null) map.put("url", url);
+		return map;
 	}
 	
 	void persist(ResourceContainer container) throws IOException {
 		if (uri != null)
-			container.create(name, uri.toURL());
+		{
+			Resource r = container.create(name, uri.toURL());
+			url = r.getURL().toExternalForm();
+			// relatief t.o.v. sec:1-.../
+			int i = url.indexOf("sec:");
+			i = url.indexOf('/', i);
+			url = url.substring(i+1);
+			
+		}
 	}
 }

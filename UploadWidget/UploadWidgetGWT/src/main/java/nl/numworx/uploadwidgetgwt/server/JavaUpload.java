@@ -23,6 +23,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemHeaders;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import nl.numworx.uploadwidget.server.Store;
 import nl.numworx.uploadwidget.shared.AtomEntry;
 import nl.numworx.uploadwidgetgwt.shared.Constants;
@@ -30,18 +31,22 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManage
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SystemManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import nl.uu.fi.dwo.rest.util.PathId;
 
@@ -121,8 +126,21 @@ public class JavaUpload extends HttpServlet implements Constants {
 		resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 	}
 
-	private String getPrefix(String[] paths, DomSchool school) {
-		return school.getId() + "/" + paths[1].replace('-', '/') + "/" + paths[2] + "/";
+	private String getPrefix(String[] paths, DomSchoolId school) {
+		String registration = paths[2];
+		String uuid = paths[1].replace('-', '/');
+		if ("instance".equals(registration)) {
+			DomScoContextId context = new DomScoContextId();
+			PersistenceId id = PersistentScoContext.buildPersistenceId(Long.valueOf(uuid.split("/")[0]));
+			try {
+				school = new SystemManager(StoredRestManager.getInstance()).getSchool(context);
+			} catch (Dwo2Exception e) {
+				log("doPut getSchool", e);
+			}
+		}
+		
+		String pid = school == null ? "standard" : school.getId().toString();
+		return pid + "/" + uuid + "/" + paths[2] + "/";
 	}
 
 	static Optional<DomSchoolRoleAndClassV2> getActor(String bearer, String pathid) {
@@ -205,18 +223,13 @@ public class JavaUpload extends HttpServlet implements Constants {
 			return;			
 		}
 		DomSchool school = actor.get().getSchool();
-		//String url = getPrefix(paths, school) + paths[3];
-		String uuid = paths[1].replace('-', '/');
-		String registration = paths[2];
 		String name = paths[3];
 		AtomEntry entry = new AtomEntry();
 		entry.title = name;
 		entry.type  = req.getContentType();
 		entry.length = (long) req.getContentLength(); // req.getContentLengthLong() niet in tomcat7
 		StringBuffer requestURL = new StringBuffer();		
-		requestURL.append(school.getId()).append("/")
-			.append(uuid).append("/")
-			.append(registration).append("/")
+		requestURL.append(getPrefix(paths, school))
 			.append(entry.title);
 		entry.url = requestURL.toString();
 		Map<String, String> map = Collections.singletonMap("learnerid", paths[0]);

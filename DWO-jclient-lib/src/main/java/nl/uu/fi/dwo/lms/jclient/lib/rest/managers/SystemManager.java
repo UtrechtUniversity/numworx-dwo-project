@@ -13,11 +13,13 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
 import nl.uu.fi.dwo.rest.entities.RestSchool;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
+import nl.uu.fi.dwo.rest.entities.RestScoContextId;
 import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.PathId;
@@ -123,4 +125,12 @@ public class SystemManager {
 		return result;
 	}
 
+	public DomSchoolId getSchool(DomScoContextId id) throws Dwo2Exception {
+		RestScoContextId rest = new RestScoContextId();
+		rest.setRestContext(getContext());
+		rest.setDomScoContext(id);
+		rest.setDomDwoProfile(null);
+		DomSchoolId result = manager.put("rest/system/scoContext/getSchool", DomSchoolId.class, rest);
+		return result;
+	}
 }

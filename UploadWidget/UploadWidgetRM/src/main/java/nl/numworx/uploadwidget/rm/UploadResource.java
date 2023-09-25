@@ -1,6 +1,9 @@
 package nl.numworx.uploadwidget.rm;
 
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.cbook.cbookif.rm.Resource;
@@ -48,7 +51,13 @@ public class UploadResource implements Resource {
 
 	@Override
 	public URL getURL() throws ResourceException {
-		return null;
+		try {
+			 // met spaces en andere encoding
+			return parent.getServerUrlPath().toURI().resolve(new URI(null, null, name, null)).toURL();
+		} catch (MalformedURLException | URISyntaxException e) {
+			throw new ResourceException(e);
+		} // TODO make login
+
 	}
 
 	@Override
