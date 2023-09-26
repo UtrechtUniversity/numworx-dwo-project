@@ -17,6 +17,7 @@ import org.osgi.util.promise.Success;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
@@ -101,6 +102,7 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 		view.setLogin(user);
 		String locale = LocaleInfo.getCurrentLocale().getLocaleName();
 		view.openUrl("chatbox/?profile=" + profile + "&locale=" + locale);
+		//Window.open("chatbox/?profile=" + profile + "&locale=" + locale, "chatboxWindow", "");
 		return p;
 	};
 
