@@ -370,6 +370,8 @@ public class ModulesPresenter implements SwitchViewEventHandler {
           final RoleType role = dwoGlobalVars.getRole(); // FIXME herontwerp getactive...
           if (role == RoleType.STUDENT || role == RoleType.ANONYMOUS) return;
         }
+        idleOn = true;
+        mainView.setIdleTimeout(MainPresenter.IDLE);
       }
 // switch to other view.     
       LOG.info("switch " + select);
