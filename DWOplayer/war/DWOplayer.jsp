@@ -35,6 +35,7 @@
     <link type="text/css" rel="stylesheet" href="/dwo/tablet/DWOplayer.css">
 <% if ("111".equals(profile)) {%><link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/css/inf.css" ><%}%>    
 <% if ("112".equals(profile)) {%><link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/css/numworx.css" ><%}%>    
+<% if ("114".equals(profile)) {%><link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/css/react.css" ><%}%>    
     <meta name="gwt:property" content="locale=nl" >
     <script>
     	DWO_PROFILE_ID = <%=profile%>
