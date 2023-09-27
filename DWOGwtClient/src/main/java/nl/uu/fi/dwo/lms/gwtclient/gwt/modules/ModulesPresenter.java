@@ -76,8 +76,6 @@ public class ModulesPresenter implements SwitchViewEventHandler {
 
     private MainPresenter.Display mainView;
 
-	private boolean idleOn = true;
-
     private static final boolean tablet;
     static {
 //     OsDetection osDetection = MGWT.getOsDetection();
@@ -131,7 +129,6 @@ public class ModulesPresenter implements SwitchViewEventHandler {
           }
 
           LOG.info("switch to modules view " + p.getValue());
-          idleOn = false;
           eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.MODULESVIEW));
           mainView.unsetIdleTimeout();
           if(tablet()) {
@@ -268,7 +265,6 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         		|| select(SelectedView.RETOUR, message)
         		|| select(SelectedView.ORGANISATION, message))
         {
-          idleOn = true;
           mainView.setIdleTimeout(MainPresenter.IDLE);
         } else if (select(SelectedView.TRAIL,message)) {
         } 
@@ -304,9 +300,9 @@ public class ModulesPresenter implements SwitchViewEventHandler {
 		Promises.failed(new Dwo2Exception(Dwo2ExceptionCode.Rest_LoginNeeded, "")).then(null, FAILURE);
 	}
 
-// true if modules visible.    
+// true if modules/chatbox visible.    
     private boolean isVisible() {
-		return !idleOn;
+		return !mainView.isIdleOn();
 	}
 
 	private boolean select(SelectedView select, String message) {
@@ -322,7 +318,6 @@ public class ModulesPresenter implements SwitchViewEventHandler {
       SelectedView select = switchViewEvent.getEventValue();
       switch(select) {
         case ACCOUNT:
-          idleOn = true;
           mainView.setIdleTimeout(MainPresenter.IDLE);
           break;
         case GOTO:
@@ -370,7 +365,6 @@ public class ModulesPresenter implements SwitchViewEventHandler {
           final RoleType role = dwoGlobalVars.getRole(); // FIXME herontwerp getactive...
           if (role == RoleType.STUDENT || role == RoleType.ANONYMOUS) return;
         }
-        idleOn = true;
         mainView.setIdleTimeout(MainPresenter.IDLE);
       }
 // switch to other view.     

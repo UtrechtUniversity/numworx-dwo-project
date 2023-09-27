@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.chatgwt;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,6 +41,7 @@ import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.i18n.client.TimeZone;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.i18n.shared.DateTimeFormatInfo;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
@@ -442,6 +444,10 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 				presenceHandler.addValueChangeHandler(teachers);
 				ref2 = connection.addHandler(null, "presence", null, null, null, presenceHandler);
 				
+				if (ChatGWT.this.connection == null) {
+					ChatGWT.this.connection = connection;
+				}
+				
 				Builder pres = Builder.$pres(null);
 	            connection.send(pres);
 	            for(ChatRoom room: chatUser.room) { addToRoom(connection, room); }
@@ -461,7 +467,14 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 				if (ref2 != null) { connection.removeHandler(ref2); ref2 = null; }
 				if (connection == ChatGWT.this.connection) {
 					ChatGWT.this.unsetConnection();
+					idler.reset();
 				}
+				break;
+			case CONNFAIL:
+				if (!future.getPromise().isDone())
+					future.fail(new IOException(reason)); // Zeer fatal!!!!!  Uitloggen nodig?
+				LOG.severe(reason);
+				break;
 			default:
 			}
 			
