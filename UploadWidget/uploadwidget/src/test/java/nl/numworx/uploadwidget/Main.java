@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Properties;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -25,6 +26,7 @@ import org.cbook.cbookif.rm.ResourceManager;
 import org.json.simple.parser.ParseException;
 
 import cbookeditor.CBookEditor;
+import fi.beans.wiskopdrbeans.ResourceManagerClient.ResourceManagerFactory;
 import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.formuleobjects.FormuleParser;
 
@@ -43,7 +45,10 @@ public class Main {
 
 		appcontext = new AppContext();
 		final CBookService service = new ServiceImpl();
-
+		nl.numworx.uploadwidget.rm.Factory factory = new nl.numworx.uploadwidget.rm.Factory();
+		factory.setContext(appcontext);
+		appcontext.rmf = factory;
+		
 // register here your widgets
 // by code		
 		CBookWidgetIF widget;// = new org.cbook.mediaman.MediaMan();
@@ -122,17 +127,25 @@ public class Main {
 	static class AppContext implements CBookContext, Constants {
 
 		String learner_id = "";
-		ResourceManager rm;
+		ResourceManagerFactory rmf;
+		Properties props = new Properties();
 		
 		public Object getProperty(String key) {
 			if(LEARNER_ID .equals( key ))
 				return learner_id;
 			if(Constants.RESOURCE_MANAGER.equals(key))
-				return rm;
-			return null;
+				return rmf.getResourceManager();
+			return props.getProperty(key);
 		}
 		
 		void load() {
+			try {
+				props.load(new FileReader("main.properties"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			
 			String line = null;
 			try {
 				FileReader input = new FileReader("cmi.learner_id");

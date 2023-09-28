@@ -87,11 +87,11 @@ public class SMLogger implements Logging {
 
     public Logging logging(ActivityComponent activity) {
       Memento instance = activity.memento();
-      boolean experiment = instance != null 
+      RoleType roleType = vars.getRoleType();
+	boolean experiment = instance != null 
     		  && instance.pmodel != null 
     		  && (instance.getLessonMode() == LessonMode.normal||instance.getLessonMode() == LessonMode.review)
-              && vars.withUser() 
-              && vars.getRoleType() == RoleType.STUDENT;
+              && (roleType == RoleType.STUDENT||roleType==RoleType.ANONYMOUS);
       if (experiment) {
         Promise<XapiManager> xapi = rpc.get().getLRS();
         return new SMLogger(instance, xapi.map(x -> x::saveStatement), super.logging(activity), vars.getCurrentSchoolClass());
@@ -159,7 +159,15 @@ public class SMLogger implements Logging {
 	Map<String,?> map = (Map<String,?>) parameters.get("score");
     if(map == null) return null;
     Number n = (Number) map.get("raw");
-    if(n == null) return null;
+    if(n == null) 
+    {
+    	n = (Number) map.get("scaled");
+    	if (n != null) {
+    		return Double.valueOf(n.doubleValue()*maxScore);
+    	}
+    	return null;
+    }
+    	
         return Double.valueOf(n.doubleValue());
 }
 
@@ -194,6 +202,11 @@ public class SMLogger implements Logging {
         result.score.scaled = result.score.raw.doubleValue() / maxScore;
     } catch (Exception e) {
     }
+    if (parameters.containsKey("feedback")) {
+    	result.extensions = new Extensions();
+    	result.extensions.feedback = (String) parameters.get("feedback");
+    }
+    
     s.result = result;  
     xapi.then(manager -> manager.getValue().saveStatement(s));
     delegate.log(parameters);

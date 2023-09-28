@@ -289,6 +289,7 @@ public class PersistentClassCourse implements Serializable {
 
     private void fillDomClassCourse4Teacher(DomClassCourse4Teacher classCourse) {
         fillDomClassCourse(classCourse);
+        classCourse.setCourseType(CourseType.values()[this.type]);
         classCourse.setViewState(this.viewState);
         classCourse.setAccessKey(this.accessKey);
     }

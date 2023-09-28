@@ -90,7 +90,7 @@ public class OrganisationPresenter {
     
     DomSchool school = dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool();
     boolean premium = dwoGlobalVars.isPremium();
-    boolean visible = dwoGlobalVars.isTest() || dwoGlobalVars.isSaml();
+    boolean visible = true /* was dwoGlobalVars.isTest() || dwoGlobalVars.isSaml() */;
 	view.initEditModules(school.teachersCanWrite(), school.accessControl() && premium, visible && premium);
     view.initChooseClass(school.studentsCanRegisterForSchoolClasses());
     

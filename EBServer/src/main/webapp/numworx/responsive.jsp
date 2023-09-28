@@ -4,7 +4,7 @@
 <%@ include file="/dwo/saml_util.jsp" %>
 <!DOCTYPE html>
 <% 
-	int profile = 77;
+	int profile = 112;
 	String query = request.getQueryString();
 	if(Util.illegal(query))
 	 	query = "?base=/numworx/&responsive=true&profile=" + profile;
@@ -16,7 +16,7 @@
     <head>
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=device-width">
-        <title>Numworx</title>
+        <title>Numworx Wiskunde</title>
 		<style type="text/css">
             body, html
             {

@@ -1273,7 +1273,14 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
           Iterator<PersistentCourse> iterator = listCourse.iterator();
           while (iterator.hasNext()) {
             PersistentCourse pc = iterator.next();
-            if (pc.getSchoolID() == null) continue;
+            if (pc.getSchoolID() == null) {
+                if (!PublicCourseManager.visible(pc))
+                {
+                  iterator.remove();
+                  courseMap.remove(pc.getCourseID(), pc);
+                }           	
+            	continue;
+            }
             final PersistentCourse pc0 = pc;
             List<PersistentACL> a = aclmap.get(pc.getCourseID());
             boolean parent = false;
@@ -1303,7 +1310,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             }
           }
           
-        } else if (school.getAboType() != AboType.premium) {
+        } else if (school.getAboType() != AboType.premium||true) { // Altijd aan
           Iterator<PersistentCourse> iterator = listCourse.iterator();
           while (iterator.hasNext()) {
             PersistentCourse pc = iterator.next();

@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import nl.numworx.uploadwidgetgwt.server.az.AZProvider;
+//import nl.numworx.uploadwidgetgwt.server.az.AZProvider;
 
 @SuppressWarnings("serial")
 public class TestServlet extends HttpServlet {
@@ -28,14 +28,14 @@ try {
 //		out.println(prop);
 //		Map<String, String> env = System.getenv();
 //		out.println(env);
-		AZProvider provider = new AZProvider();
-		out.println(provider);
+//		AZProvider provider = new AZProvider();
+//		out.println(provider);
 //		Iterable<BlobItem> entries = provider.getEntries("/");
 //		entries.forEach(out::println);
 		out.println("oops");
 		out.flush();
-		Set<String> list = provider.list();
-		out.println(list);
+//		Set<String> list = provider.list();
+//		out.println(list);
 		out.flush();
 } catch(Throwable e) {
 		log("oops", e);

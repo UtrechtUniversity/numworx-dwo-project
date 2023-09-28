@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO</artifactId>
-		<version>2.5.22</version>
+		<version>2.5.23</version>
 		<relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 	<artifactId>EBServer</artifactId>
@@ -88,7 +88,7 @@
 		<dependency>
 			<groupId>fi.servlet</groupId>
 			<artifactId>ideas-servlet</artifactId>
-			<version>0.0.12</version>
+			<version>0.0.13</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.tue.win.riaca.openmath</groupId>
@@ -152,21 +152,21 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>DWO-apps</artifactId>
-			<version>2.5.22</version>
+			<version>2.5.23</version>
 			<scope>runtime</scope>
 			<type>war</type>
 		</dependency>
 		<dependency>
 		     <groupId>nl.uu.fi.dwo.lms</groupId>
              <artifactId>ChatGWT-server</artifactId>
-             <version>${chatGWTVersion}</version>
+             <version>2.5.23</version>
              <type>war</type>
 			 <scope>runtime</scope>
 		</dependency>
 	<dependency>
 		<groupId>nl.uu.fi.dwo.mobile</groupId>
 		<artifactId>DWOplayer</artifactId>
-		<version>2.5.22</version>
+		<version>2.5.23</version>
 		<type>war</type>
 		<classifier>dwo2</classifier>
 		<scope>runtime</scope>
@@ -174,7 +174,7 @@
 	<dependency>
 		<groupId>nl.uu.fi.dwo.lms</groupId>
 		<artifactId>DWOGwtClient</artifactId>
-		<version>${DWOGwtClientVersion}</version>
+		<version>2.5.23</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
@@ -349,7 +349,6 @@
 								<artifactItem>
 									<groupId>${project.groupId}</groupId>
 									<artifactId>DWOJClient</artifactId>
-									<version>${DWOJClientVersion}</version>
 									<classifier>jar-with-dependencies</classifier>
 									<overWrite>true</overWrite>
 									<destFileName>dwo/DWOJApplet.jar</destFileName>
@@ -357,7 +356,6 @@
 								<artifactItem>
 									<groupId>${project.groupId}</groupId>
 									<artifactId>DWOJClient</artifactId>
-									<version>${DWOJClientVersion}</version>
 									<classifier>jar-with-dependencies</classifier>
 									<type>jar.pack.gz</type>
 									<overWrite>true</overWrite>
@@ -440,8 +438,8 @@
 				<!--<version>3.0-r1756463</version> -->
 				<configuration>
                         <systemProperties>
-                        	<CDN_HOST>cdn-dev.dwo.nl</CDN_HOST>
-                        	<CDNURL>https://cdn-dev.dwo.nl</CDNURL>
+                        	<CDN_HOST>cdn.dwo.nl</CDN_HOST>
+                        	<CDNURL>https://cdn.dwo.nl</CDNURL>
                             <ENV_NOSEB>false</ENV_NOSEB>
                             <DWO_ENV>test</DWO_ENV>
                             <SEB_TOETS_MAC>9153c48c6111d2733add6e1d596db4059c302cf736dcb18ca498288e21404507,c5d129e27f57b1970d2ffda2ed745a20f7d8e12ed9bfbfb168e83f75f9f870cf</SEB_TOETS_MAC>
@@ -454,11 +452,11 @@
 					<port>${http.port}</port>
 					<webapps>
 						<webapp>
-							    <groupId>nl.numworx.uploadwidget</groupId>
+							<groupId>nl.numworx.uploadwidget</groupId>
     							<artifactId>UploadWidgetGWT</artifactId>
-    							<version>2.5.22-SNAPSHOT</version>
-                          		<type>war</type>
-								<contextPath>/dwo/dav/upload</contextPath>
+    							<version>2.5.23-SNAPSHOT</version>
+                          				<type>war</type>
+							<contextPath>/dwo/dav/upload</contextPath>
                             	<asWebapp>true</asWebapp> 
 						</webapp>
 					
@@ -737,10 +735,10 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<DWOmAccessVersion>2.5.20</DWOmAccessVersion>
 		<RegisterVersion>2.5.2</RegisterVersion>
-		<DWOGwtClientVersion>2.5.22</DWOGwtClientVersion>
+		<DWOGwtClientVersion>2.5.23</DWOGwtClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
-		<aws.environmentName>testeb4server</aws.environmentName>
+		<aws.environmentName>testeb5server</aws.environmentName>
         <tomcat7.version>7.0.76</tomcat7.version>
         <context.xml>context.xml</context.xml>
         <http.port>80</http.port>
@@ -779,8 +777,8 @@
 				<dependency>
 					<groupId>nl.numworx.uploadwidget</groupId>
 					<artifactId>UploadWidgetGWT</artifactId>
-					<version>0.0.2</version>	<!--  AWS -->
-<!-- 					<version>2.5.22-SNAPSHOT</version> AZURE -->
+<!-- 					<version>0.0.2</version>	 AWS -->
+					<version>2.5.23</version>
 					<classifier>classes</classifier>
 					<exclusions>
 						<exclusion>
@@ -792,8 +790,8 @@
 				<dependency>
 					<groupId>nl.numworx.uploadwidget</groupId>
 					<artifactId>uploadwidget-common</artifactId>
-					<version>0.0.2</version>
-<!-- 					<version>2.5.22-SNAPSHOT</version> -->
+<!-- 					<version>0.0.2</version> -->
+					<version>2.5.23</version>
 				</dependency>			
 				<dependency>
 				    <groupId>org.slf4j</groupId>

@@ -28,15 +28,15 @@
 	}
 	else if ( needSEB ) {
 %>
-<a href='sebs://<%=server %>/toets/<%=leerling %>.seb'>Start de beveiligde <strong>toets</strong> omgeving</a>
+<a href='sebs://<%=server %>/numworx/exam/<%=leerling %>.seb'>Start de beveiligde <strong>toets</strong> omgeving</a>
 <%    if (System.getProperty("DWO_ENV", "").contains("test")) { %>
 <br>SEB QR Code: <img 
 	style='vertical-align: middle'
-	src='/dwo/qrcode.png?qr=sebs://<%=server %>/toets/<%=leerling %>.seb' >
+	src='/dwo/qrcode.png?qr=sebs://<%=server %>/numworx/exam/<%=leerling %>.seb' >
 <%    }
 	} else {
 %>
-	  <a target='_top' href='/toets/toets.jsp<%=id%>'>Start de beveiligde <strong>exam</strong> omgeving</a>
+	  <a target='_top' href='/numworx/exam/toets.jsp<%=id%>'>Start de beveiligde <strong>exam</strong> omgeving</a>
 <%	  
 	}
 

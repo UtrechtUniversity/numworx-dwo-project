@@ -1,11 +1,17 @@
 package nl.numworx.uploadwidgetgwt.server;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.ServletException;
@@ -13,24 +19,35 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemHeaders;
+
+import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import nl.numworx.uploadwidget.server.Store;
 import nl.numworx.uploadwidget.shared.AtomEntry;
 import nl.numworx.uploadwidgetgwt.shared.Constants;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SystemManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import nl.uu.fi.dwo.rest.util.PathId;
 
 @SuppressWarnings("serial")
@@ -109,8 +126,21 @@ public class JavaUpload extends HttpServlet implements Constants {
 		resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 	}
 
-	private String getPrefix(String[] paths, DomSchool school) {
-		return school.getId() + "/" + paths[1].replace('-', '/') + "/" + paths[2] + "/";
+	private String getPrefix(String[] paths, DomSchoolId school) {
+		String registration = paths[2];
+		String uuid = paths[1].replace('-', '/');
+		if ("instance".equals(registration)) {
+			DomScoContextId context = new DomScoContextId();
+			PersistenceId id = PersistentScoContext.buildPersistenceId(Long.valueOf(uuid.split("/")[0]));
+			try {
+				school = new SystemManager(StoredRestManager.getInstance()).getSchool(context);
+			} catch (Dwo2Exception e) {
+				log("doPut getSchool", e);
+			}
+		}
+		
+		String pid = school == null ? "standard" : school.getId().toString();
+		return pid + "/" + uuid + "/" + paths[2] + "/";
 	}
 
 	static Optional<DomSchoolRoleAndClassV2> getActor(String bearer, String pathid) {
@@ -137,7 +167,7 @@ public class JavaUpload extends HttpServlet implements Constants {
 			logins = SecureUserAccountLoginsManager.getSchoolLogins();
 		//search paths[0] in logins for school;
 		hasRole = logins.getActiveSchoolRoleAndClass().getHasRole();
-		String current = getPathId(hasRole);
+		String current = Store.getPathId(hasRole);
 		if (current.equals(pathid) && user.getId().equals(hasRole.getUserId()))
 		{
 			context.setDomHasRole(hasRole);
@@ -168,30 +198,50 @@ public class JavaUpload extends HttpServlet implements Constants {
 		return Optional.empty();
 	}
 
-	public static String getPathId(DomHasRole hasRole) {
-		try {
-			return "1" + hasRole.getId().getIdString().substring(23).replace(';', '-');
-		} catch (NullPointerException e) {
-			return "1-" + hasRole.getUserId().getIdString().substring(21) + "-";
-		} catch (Exception e) {
-			return "-";
-		}
-	}
-
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		super.doPost(req, resp);
 	}
 
+	// sec:1-xxx-yyyy/uuid/registration/file
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		super.doPut(req, resp);
+
+		log("doPut: " + req.getPathInfo());
+
+		String bearer = req.getHeader(AUTHORIZATION);
+		if (bearer == null) bearer = (String) req.getSession().getAttribute(AUTHORIZATION);
+		else req.getSession().setAttribute(AUTHORIZATION, bearer);
+		String path = req.getPathInfo();
+		int index = path.indexOf("/sec:");
+		String paths[] = path.substring(index+5).split("/");
+		Optional<DomSchoolRoleAndClassV2> actor = getActor(bearer, paths[0]);
+
+		if (!actor.isPresent()) {
+			resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+			return;			
+		}
+		DomSchool school = actor.get().getSchool();
+		String name = paths[3];
+		AtomEntry entry = new AtomEntry();
+		entry.title = name;
+		entry.type  = req.getContentType();
+		entry.length = (long) req.getContentLength(); // req.getContentLengthLong() niet in tomcat7
+		StringBuffer requestURL = new StringBuffer();		
+		requestURL.append(getPrefix(paths, school))
+			.append(entry.title);
+		entry.url = requestURL.toString();
+		Map<String, String> map = Collections.singletonMap("learnerid", paths[0]);
+		store.addEntry(entry, map, req.getInputStream());
+		req.getInputStream().close();
+		
+		resp.setStatus(HttpServletResponse.SC_CREATED);
 	}
 
 	@Override
 	public void init() throws ServletException {
+        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
 		store = Store.instance();
 		String dbrest_url = getServletContext().getInitParameter("dbrest.url");
 	    try {

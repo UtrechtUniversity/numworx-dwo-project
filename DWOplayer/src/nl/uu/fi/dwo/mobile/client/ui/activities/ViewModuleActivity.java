@@ -24,9 +24,6 @@ import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
-import nl.uu.fi.dwo.mobile.client.ui.IdleDetect;
-import nl.uu.fi.dwo.mobile.client.ui.IdleDetect.IdleEvent;
-import nl.uu.fi.dwo.mobile.client.ui.IdleDetect.IdleHandler;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
@@ -70,6 +67,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import dagger.MembersInjector;
+import fi.dwo.gwt.lib.rest.ui.IdleDetect;
+import fi.dwo.gwt.lib.rest.ui.IdleDetect.IdleEvent;
+import fi.dwo.gwt.lib.rest.ui.IdleDetect.IdleHandler;
 
 /**
  * Display module activity

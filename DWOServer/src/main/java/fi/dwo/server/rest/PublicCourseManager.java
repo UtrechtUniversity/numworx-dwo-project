@@ -198,7 +198,7 @@ if(SECURITY)
     @PUT
     @Path("/get")
     @Produces({"application/json"})
-    public DomCourseStudent getCourse(RestCourse rest) {
+    public DomCourseStudent getCourse(RestCourse rest, @Context UriInfo info) {
     	try {
     		DomCourse course = rest.getDomCourse();
     		Long id = MySQLPersistenceId.getNativeId(course);
@@ -212,7 +212,12 @@ if(SECURITY)
     			throwLoginNeeded();
 // TODO Verify context: profile matches...
     		if (!SECURITY || rest.getDomDwoProfile().getId().equals(profile.buildPersistenceId()))    		
-    			return parent.buildDomCourseStudent();
+    		{	String uri = info.getRequestUri().resolve("getImage").toString();
+    			CourseBuilder builder = new CourseBuilder(uri);
+    			return builder.apply(parent);
+    			
+    			//return parent.buildDomCourseStudent();
+    		}
     	} catch (Dwo2RestException e) {
     		throw e;
     	} catch (Exception e) {

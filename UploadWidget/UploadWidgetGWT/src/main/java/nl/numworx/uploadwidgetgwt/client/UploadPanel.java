@@ -23,6 +23,7 @@ import nl.numworx.uploadwidgetgwt.shared.Constants;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Role;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 class UploadPanel extends Composite implements ClickHandler, OnFinishUploaderHandler, Constants {
@@ -113,6 +114,12 @@ class UploadPanel extends Composite implements ClickHandler, OnFinishUploaderHan
 	void setItemsMax(int max) {
 		feed.setItemsMax(max);
 		uploader.setMultipleSelection(max > 1);
+		if (max <= 0) uploader.removeFromParent();
+	}
+
+
+	public void setFileInputModel(ObjectList model) {
+		feed.setFileInputModel(model);
 	}
 
 }

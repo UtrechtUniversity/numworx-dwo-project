@@ -1,0 +1,35 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>nl.numworx.uploadwidget</groupId>
+    <artifactId>UploadWidget-parent</artifactId>
+    <version>2.5.23</version>
+  </parent>
+  <artifactId>uploadwidget-az</artifactId>
+  <dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>com.azure</groupId>
+            <artifactId>azure-sdk-bom</artifactId>
+            <version>1.2.10</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+  </dependencyManagement>
+  <dependencies>
+	<dependency>
+	    <groupId>com.azure</groupId>
+	    <artifactId>azure-storage-blob</artifactId>
+	</dependency>
+	<dependency>
+	    <groupId>com.azure</groupId>
+	    <artifactId>azure-identity</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>nl.numworx.uploadwidget</groupId>
+		<artifactId>uploadwidget-common</artifactId>
+		<version>2.5.23</version>
+	</dependency>
+  </dependencies>
+</project>

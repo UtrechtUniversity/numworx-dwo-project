@@ -108,9 +108,14 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 		mainPanel.add(vakPanel);
 		
 		regelManager = new BerekeningVakRegelManager(this);
-		regelManager.maakRegel(null);
+		regelManager.maakRegel(settings.antwoordStartString());
 		
-		
+		if(settings.aantalRegelsStart()>1) {
+			for(int i=0 ; i<settings.aantalRegelsStart()-1 ; i++) {
+				regelManager.maakRegel(null);
+			}
+			vakRegels.get(0).geefFormuleEditor().requestFocus();
+		}
 		
 		loggingManager = new BerekeningVakLoggingManager(this, settings, activity);
 		// alternatief 
@@ -152,6 +157,7 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 	}
 	
 	public Panel getAsPanel() {
+		resize();
 		return mainPanel;
 	}
 	

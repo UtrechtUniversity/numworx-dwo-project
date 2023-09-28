@@ -12,6 +12,7 @@ import org.cbook.cbookif.CBookWidgetInstanceIF;
 import dagger.BindsInstance;
 import dagger.Component;
 import fi.beans.wiskopdrbeans.InteractiePanel;
+import nl.numworx.uploadwidget.UploadWidget;
 
 
 @Singleton
@@ -24,6 +25,7 @@ public interface Components {
 		@BindsInstance Builder context(CBookContext context);
 		@BindsInstance Builder locale(@Nullable Locale locale);
 		Components build();
+		@BindsInstance Builder widget(UploadWidget widget);
 	}
 
 	CBookWidgetEditIF editor();

@@ -3,7 +3,7 @@
   <parent>
     <groupId>nl.numworx.uploadwidget</groupId>
     <artifactId>UploadWidget-parent</artifactId>
-    <version>2.5.22</version>
+    <version>2.5.23</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>UploadWidgetGWT</artifactId>
@@ -32,13 +32,6 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-        <dependency>
-            <groupId>com.azure</groupId>
-            <artifactId>azure-sdk-bom</artifactId>
-            <version>1.2.10</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -48,6 +41,16 @@
       <artifactId>gwt-user</artifactId>
       <scope>provided</scope>
     </dependency>
+	<dependency>
+	    <groupId>org.apache.httpcomponents</groupId>
+	    <version>4.5.9</version>
+ 	    <artifactId>httpclient</artifactId>
+	</dependency>
+  	<dependency>
+  		<groupId>nl.numworx.uploadwidget</groupId>
+  		<artifactId>uploadwidget-s3</artifactId>
+  		<version>2.5.23</version>
+  	</dependency>
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-dev</artifactId>
@@ -85,14 +88,6 @@
 			<groupId>nl.uu.fi.dwo.rest</groupId>
 			<artifactId>DWO-jclient-lib</artifactId>
 		</dependency>
-	<dependency>
-	    <groupId>com.azure</groupId>
-	    <artifactId>azure-storage-blob</artifactId>
-	</dependency>
-	<dependency>
-	    <groupId>com.azure</groupId>
-	    <artifactId>azure-identity</artifactId>
-	</dependency>
 
 <dependency> 
   <groupId>org.slf4j</groupId>
@@ -146,49 +141,7 @@
 			</plugin>
     </plugins>
   </build>
-	<profiles>
-	 	<profile>
-	 		<id>s3</id>
-	 	<dependencies>
-	 <dependency>
-	    <groupId>software.amazon.awssdk</groupId>
-	    <artifactId>s3</artifactId>
-	    <version>2.15.2</version>
-	    <scope>compile</scope>
-	</dependency>
-	<dependency>
-	    <groupId>software.amazon.awssdk</groupId>
-	    <artifactId>sdk-core</artifactId>
-	    <version>2.15.2</version>
-	    <scope>compile</scope>
-	</dependency>
- 		</dependencies>
-	 	</profile>
-	 	<profile>
-	 		<id>s3compile</id>
-	 		<dependencies>
-	 <dependency>
-	    <groupId>software.amazon.awssdk</groupId>
-	    <artifactId>s3</artifactId>
-	    <version>2.15.2</version>
-	    <exclusions>
-	    	<exclusion>
-	    		<groupId>io.netty</groupId>
-	    		<artifactId>netty-common</artifactId>
-	    	</exclusion>
-	    </exclusions>
-	    <scope>provided</scope>
-	</dependency>
-	<dependency>
-	    <groupId>software.amazon.awssdk</groupId>
-	    <artifactId>sdk-core</artifactId>
-	    <version>2.15.2</version>
-	    <scope>provided</scope>
-	</dependency>
-	 		</dependencies>
-	 		
-	 	</profile>
-	 	
+	<profiles>	 	
 	 	<profile>
 	 		<id>local</id>
 	 		<properties>

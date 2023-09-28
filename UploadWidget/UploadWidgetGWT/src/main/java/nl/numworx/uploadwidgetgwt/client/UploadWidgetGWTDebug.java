@@ -2,6 +2,7 @@ package nl.numworx.uploadwidgetgwt.client;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -195,6 +196,9 @@ public class UploadWidgetGWTDebug extends UploadWidgetGWT {
 		launchdata.put(Constants.ITEMS_MAX, 2);
 		launchdata.put(Constants.SCORE_MAX, 10);
 		launchdata.put(Constants.AUTO_SUBMIT, true);
+		Map<String,String> file = Collections.singletonMap("name", "aap.txt");
+		List<Map<String,String>> fileinputmodel = Collections.singletonList(file);
+		launchdata.put(Constants.FILE_INPUT_MODEL, fileinputmodel);
 		
 		init(width, height, launchdata, Collections.emptyMap());
 		MockOpdrNav opdrnav = new MockOpdrNav();

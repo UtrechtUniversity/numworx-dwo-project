@@ -17,12 +17,14 @@ public class BerekeningVakSettings {
 	private boolean check = true;
 	private boolean checkDocent = true;
 	private boolean teltMee = true;
+	private boolean checkMetEnter = false;
 	private boolean logOption = false;
 	private String logID = null;
 	private String logIDLabel = null;
 	private boolean[][] logObjectives = null;
 	private String[] smObjectives = null;
 	private String[] smForeknowledge = null;
+	private String antwoordStartString = null;
 	//settings
 	private boolean formuleToolBijFocus = true;
 	private boolean rmKnop = true;
@@ -38,6 +40,8 @@ public class BerekeningVakSettings {
 	private boolean boxMetRand = true;
 	private boolean meerregelig = false;
 	private boolean pasAanH = true;
+	private int aantalRegelsStart = 1;
+	private boolean aantalRegelsVast = false;
 	//antwoordmodel
 	private ObjectMap formuleAntwoordModel;
 	private ObjectMap vergelijkingAntwoordModel;
@@ -62,6 +66,8 @@ public class BerekeningVakSettings {
 			logID = launchState.getString("logID");
 		if(launchState.containsKey("logIDLabel"))
 			logID = launchState.getString("logIDLabel");
+		if(launchState.containsKey("checkMetEnter"))
+			checkMetEnter = launchState.getBoolean("checkMetEnter");
 		
 		if(launchState.containsKey("formuleToolBijFocus"))
 			formuleToolBijFocus = launchState.getBoolean("formuleToolBijFocus");
@@ -84,7 +90,13 @@ public class BerekeningVakSettings {
 			boxMetRand = launchState.getBoolean("boxMetRand");
 		if(launchState.containsKey("meerregelig"))
 			meerregelig = launchState.getBoolean("meerregelig");
+		if(launchState.containsKey("aantalRegelsVast"))
+			aantalRegelsVast = launchState.getBoolean("aantalRegelsVast");
+		if(launchState.containsKey("aantalRegelsStart"))
+			aantalRegelsStart = launchState.getInt("aantalRegelsStart");
 		
+		if(launchState.containsKey("antwoordStartString"))
+			antwoordStartString = launchState.getString("antwoordStartString");
 		if(launchState.containsKey("formuleAntwoordModel"))
 			formuleAntwoordModel = launchState.getObjectMap("formuleAntwoordModel");
 		if(launchState.containsKey("vergelijkingAntwoordModel"))
@@ -115,6 +127,7 @@ public class BerekeningVakSettings {
 	public boolean logOption() {return logOption;}
 	public String logID() {return logID;}
 	public String logIDLabel() {return logIDLabel;}
+	public boolean checkMetEnter() {return checkMetEnter;}
 	
 	public boolean formuleToolBijFocus() {return formuleToolBijFocus;}
 	public boolean rmKnop() {return rmKnop;}
@@ -128,6 +141,10 @@ public class BerekeningVakSettings {
 	
 	public boolean boxMetRand() {return boxMetRand;}
 	public boolean meerregelig() {return meerregelig;}
+	public boolean aantalRegelsVast() {return aantalRegelsVast;}
+	public int aantalRegelsStart() {return aantalRegelsStart;}
+	
+	public String antwoordStartString() {return antwoordStartString;}
 	
 	public ObjectMap formuleAntwoordModel() {return formuleAntwoordModel;}
 	public ObjectMap vergelijkingAntwoordModel() {return vergelijkingAntwoordModel;}

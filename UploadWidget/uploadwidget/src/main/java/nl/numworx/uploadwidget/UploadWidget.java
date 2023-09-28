@@ -28,10 +28,11 @@ public class UploadWidget extends JApplet implements WiskOpdrApplet, CBookWidget
 
 	public UploadWidget(Locale locale) {
 		setLocale(locale);
-		builder = DaggerComponents.builder().locale(locale);
+		builder = DaggerComponents.builder().locale(locale).widget(this);
 	}
 
 	Components.Builder builder;
+	public CBookContext context;
 	
 	@Override
 	public CBookWidgetEditIF getEditor(CBookContext arg0) {
@@ -55,6 +56,7 @@ public class UploadWidget extends JApplet implements WiskOpdrApplet, CBookWidget
 
 	@Override
 	public Object getProperty(String arg0) {
+	    if (context != null) return context.getProperty(arg0);
 		return null;
 	}
 	

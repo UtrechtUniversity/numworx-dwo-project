@@ -44,19 +44,19 @@ public class NotebookGWT implements EntryPoint, InteractionStub, DispatcherFilte
 	static final NotebookService service = GWT.create(NotebookService.class);
 
 	private static native String getHub0() /*-{
-		return $wnd.hub
+		return $wnd.hubServer
 	}-*/;
 	
-	static String getHub() {
+	private static String getHub() {
 		try {
 			return getHub0().toString();
 		} catch(Exception oops) {
-			return "//hub-dev.dwo.nl/";
+			return "//hub-dev.dwo.nl/hub/api/";
 		}
 	}
 	
-	String logoutURL() {
-		return getHub() + "hub/logout";
+	private String logoutURL() {
+		return getHub() + "../logout";
 	}
 	
 	

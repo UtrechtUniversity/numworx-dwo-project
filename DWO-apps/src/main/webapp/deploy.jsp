@@ -6,13 +6,13 @@
 	String cdn = System.getProperty("CDN_HOST", "cdn.dwo.nl");
 	String env = System.getProperty("DWO_ENV","app");
 	String cas = System.getProperty("DWO_CAS", "/ideas/IdeasServlet");
-	String hub = System.getProperty("DWO_HUB", "hub-dev.dwo.nl");
+	String hub = System.getProperty("DWO_HUB", "https://hub-dev.dwo.nl/hub/api/");
 	String chat = System.getProperty("DWO_CHAT", "chat-dev.dwo.nl");
 %>
 var deploy = "//<%= cdn %>/apps/"
 var dwo_env = "<%= env %>"
 var casServer = "<%= cas %>"
-var hubServer = "//<%=hub%>/"
+var hubServer = "<%=hub%>"
 var chatServer = "<%=chat%>"
 
 function script(name) {

@@ -3,12 +3,12 @@ package fi.dwo.gwt.lib.rest.ui;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.shared.GWT;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 
  
 public class IdleDetect extends Timer implements NativePreviewHandler {
@@ -116,5 +116,8 @@ public class IdleDetect extends Timer implements NativePreviewHandler {
 		} 
 		//else {GWT.log("not idle " + cnt);}
 	}
-	
+	public HandlerRegistration  addIdleHandler(IdleHandler handler) {
+		return bus.addHandler(IdleDetect.TYPE, handler);
+	}
+
 }

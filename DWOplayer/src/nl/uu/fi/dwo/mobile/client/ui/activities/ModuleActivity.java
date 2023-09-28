@@ -27,6 +27,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class ModuleActivity extends AbstractActivity {
@@ -61,13 +62,42 @@ public class ModuleActivity extends AbstractActivity {
 				}).recover(this::getRoot);
 			} else {
 				Promise<DomCourseStudent> p = rpc.getCourse(place.getID());
-				promise = p.map( (DomCourseStudent course) -> {
-				DomClassCourse classCourse = null;
-				SelectModuleItem i = new SelectModuleItem(course, classCourse);
-				i.setParent(place.getBack());
-				i.setPlace(place.getPlace());
-				SelectModuleItemHolder.insert(i);
-				return i;
+				promise = p.flatMap( (DomCourseStudent course) -> {
+				Promise<DomClassCourse> classCourse = Promises.resolved(null);
+				boolean isInvisible = false;
+
+				if (course.getSchoolId() == null) {
+					SelectModuleItem parent = SelectModuleItemHolder.getItemByID(course.getParentID());
+					if (parent != null) {
+						isInvisible = ((DomCourseStudent) parent.original()).isNotVisible();
+						if (isInvisible) {
+							DomClassCourse cc = new DomClassCourse();
+							cc.setCourseType(CourseType.invisible);
+							classCourse = Promises.resolved(cc);
+						}
+					} else {
+						classCourse = rpc.getCourse(course.getParentID()).map (
+							(DomCourseStudent pa) -> { 
+								DomClassCourse cc = new DomClassCourse();
+								CourseType type = CourseType.normal;
+								if (pa.isNotVisible()) type = CourseType.invisible;
+								cc.setCourseType(type);
+								SelectModuleItemHolder.insert(new SelectModuleItem((DomCourseStudent)pa, (DomClassCourse)null));
+								return cc;
+							}
+						);
+					}
+				}
+				
+				
+				Promise<SelectModuleItem> q = classCourse.map(cc -> {
+					SelectModuleItem i = new SelectModuleItem(course, cc);
+					i.setParent(place.getBack());
+					i.setPlace(place.getPlace());
+					SelectModuleItemHolder.insert(i);
+					return i;
+				});
+				return q;
 			}).recover(this::getRoot);
 			}
 		} else 

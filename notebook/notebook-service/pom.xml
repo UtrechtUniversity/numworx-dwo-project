@@ -4,7 +4,7 @@
   <parent>
     <groupId>nl.numworx.notebook</groupId>
     <artifactId>notebook-parent</artifactId>
-    <version>0.0.4-SNAPSHOT</version>
+    <version>0.0.4</version>
   </parent>
   <artifactId>notebook-service</artifactId>
   <packaging>war</packaging>
@@ -37,12 +37,11 @@
     <dependency>
     	<groupId>nl.uu.fi.dwo.rest</groupId>
     	<artifactId>DWO-jclient-lib</artifactId>
-    	<version>2.5.15</version>
     </dependency>
     <dependency>
     	<groupId>nl.numworx.notebook</groupId>
     	<artifactId>notebook-common</artifactId>
-    	<version>0.0.4-SNAPSHOT</version>
+    	<version>0.0.4</version>
     </dependency>
   </dependencies>
   <build>

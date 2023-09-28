@@ -217,13 +217,13 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.account</groupId>
 			<artifactId>Account</artifactId>
-			<version>2.5.21</version>
+			<version>2.5.23</version>
 			<classifier>classes</classifier>
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo.account</groupId>
 			<artifactId>Account</artifactId>
-			<version>2.5.21</version>
+			<version>2.5.23</version>
 			<classifier>sources</classifier>
 		</dependency>
 		<dependency>
@@ -287,7 +287,7 @@
 	<parent>
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO</artifactId>
-        <version>2.5.22</version>
+        <version>2.5.23</version>
         <relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 	<properties>
@@ -595,13 +595,13 @@
 				<dependency>
 				    <groupId>nl.numworx.notebook</groupId>
 		    		<artifactId>NotebookGWT</artifactId>
-		    		<version>${notebookVersion}</version>
+		    		<version>0.0.1</version>
 		    		<classifier>classes</classifier>		
 				</dependency>
 				<dependency>
 				    <groupId>nl.numworx.notebook</groupId>
 		    		<artifactId>NotebookGWT</artifactId>
-		    		<version>${notebookVersion}</version>
+		    		<version>0.0.1</version>
 		    		<classifier>sources</classifier>		
 				</dependency>
 			</dependencies>		
