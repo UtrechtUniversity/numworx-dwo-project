@@ -283,6 +283,10 @@
 			<version>1.3.9</version>
         	<scope>provided</scope>
         </dependency>
+        <dependency>
+			<groupId>nl.uu.fi.dwo.rest</groupId>
+			<artifactId>DWO-jclient-lib</artifactId>        
+        </dependency>
 	</dependencies>
 	<parent>
         <groupId>nl.uu.fi.dwo</groupId>
