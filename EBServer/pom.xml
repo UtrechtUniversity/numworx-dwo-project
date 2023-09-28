@@ -88,7 +88,7 @@
 		<dependency>
 			<groupId>fi.servlet</groupId>
 			<artifactId>ideas-servlet</artifactId>
-			<version>0.0.13-SNAPSHOT</version>
+			<version>0.0.13</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.tue.win.riaca.openmath</groupId>
@@ -159,7 +159,7 @@
 		<dependency>
 		     <groupId>nl.uu.fi.dwo.lms</groupId>
              <artifactId>ChatGWT-server</artifactId>
-             <version>${chatGWTVersion}</version>
+             <version>2.5.23-SNAPSHOT</version>
              <type>war</type>
 			 <scope>runtime</scope>
 		</dependency>
@@ -174,7 +174,7 @@
 	<dependency>
 		<groupId>nl.uu.fi.dwo.lms</groupId>
 		<artifactId>DWOGwtClient</artifactId>
-		<version>${DWOGwtClientVersion}</version>
+		<version>2.5.23-SNAPSHOT</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>

@@ -595,13 +595,13 @@
 				<dependency>
 				    <groupId>nl.numworx.notebook</groupId>
 		    		<artifactId>NotebookGWT</artifactId>
-		    		<version>${notebookVersion}</version>
+		    		<version>0.0.1</version>
 		    		<classifier>classes</classifier>		
 				</dependency>
 				<dependency>
 				    <groupId>nl.numworx.notebook</groupId>
 		    		<artifactId>NotebookGWT</artifactId>
-		    		<version>${notebookVersion}</version>
+		    		<version>0.0.1</version>
 		    		<classifier>sources</classifier>		
 				</dependency>
 			</dependencies>		
