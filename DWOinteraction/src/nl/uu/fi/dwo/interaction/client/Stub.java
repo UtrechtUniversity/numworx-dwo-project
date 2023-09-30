@@ -106,6 +106,14 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF, NativePreviewHandler 
 			insert: function(string) {
 				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::insert(Ljava/lang/String;)(string);
 			},
+			
+			knip: function() {
+				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::knip()();
+			},
+			kopieer: function(string) {
+				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::kopieer()();
+			},
+			
 			cursorToRight: function() {
 				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::cursorToRight()();
 			},
@@ -536,6 +544,18 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF, NativePreviewHandler 
 	
 	public int getHeight() {
 		return view.getHeight();
+	}
+	
+	private String knip() {
+		clip.setClipboard(null);
+		editor.knip(clip);
+		return clip.getClipboard();
+	}
+	
+	private String kopieer() {
+		clip.setClipboard(null);
+		editor.kopieer(clip);
+		return clip.getClipboard();
 	}
 }
 	

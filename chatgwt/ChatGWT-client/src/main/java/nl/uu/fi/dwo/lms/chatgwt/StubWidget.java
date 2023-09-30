@@ -511,27 +511,28 @@ public void setState(HashMap<String, Object> h) {
 	
 	@Override
 	public void kopieer(FormuleClipboardIF clip) {
-		kopieer(innerView);
+		String s = kopieer(innerView);
+		
 	}
-	private static native void kopieer(Object inner) /*-{
-		inner.kopieer();
+	private static native String kopieer(Object inner) /*-{
+		return inner.kopieer();
 	}-*/;
 	
 	@Override
 	public void knip(FormuleClipboardIF clip) {
-		knip(innerView);
+		String s = knip(innerView);
 	}
-	private static native void knip(Object inner) /*-{
-		inner.knip();
+	private static native String knip(Object inner) /*-{
+		return inner.knip();
 	}-*/;
 	
 	@Override
 	public void plak(FormuleClipboardIF clip) {
-		plak(innerView);
+		insert(clip.getClipboard());
 	}
-	private static native void plak(Object inner) /*-{
-		inner.plak();
-	}-*/;
+//	private static native void plak(Object inner) /*-{
+//		inner.plak();
+//	}-*/;
 	
 	@Override
 	public void macht() {
