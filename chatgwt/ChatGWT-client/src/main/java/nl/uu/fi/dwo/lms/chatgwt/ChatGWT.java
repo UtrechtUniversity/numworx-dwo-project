@@ -326,7 +326,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		}
 
 	}
-	static String[][] replace = { { "&apos;", "'" }, {"&lt;", "<"}, {"&gt;", ">"}, {"quot;", "\""}, {"&amp;" , "&"}};
+	static String[][] replace = { { "&apos;", "'" }, {"&lt;", "<"}, {"&gt;", ">"}, {"&quot;", "\""}, {"&amp;" , "&"}};
 	
 	class ChatAll extends Handler<Element> {
 
