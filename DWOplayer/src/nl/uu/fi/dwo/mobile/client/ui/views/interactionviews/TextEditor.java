@@ -380,7 +380,11 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 			tekst = tekst.substring(0, tekst.length()-1);
 		//sb.setLength(0);
 		clearAll();
-		insert(tekst);
+		try {
+			insert(tekst);
+		} catch (Exception e) {
+			GWT.log("insert: " + tekst, e);
+		}
 		firstAttempt = lastAttempt = tekst;
 		removeCursor();
 		editable = h == null || h.getBoolean("editable", true);
@@ -782,6 +786,12 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 						cv.setText(string);
 						// sb.insert(cursor, '@');
 						flow.insert(cv, cursor++);
+						break;
+					}
+					if (chars[i + 1] == 'Z') {
+						int cp = Integer.parseInt(string.substring(2, string.length()-1));
+						insertcp0(cp);
+						break;
 					}
 					break;
 				}
@@ -2134,6 +2144,19 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		
 	}
 
+	
+	 class CodePoint extends InlineHTML implements HasText {
+		 private String text;
+		 CodePoint(int cp) {
+			 super(new String(Character.toChars(cp)));
+			 this.text = "$Z" + cp + "@";
+		 }
+		 public String getText() {
+			 return text;
+		 }
+	 }
+	
+	
 	 class Enter extends InlineHTML implements HasText
 	{
 		 Enter()
@@ -2221,4 +2244,20 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		
 	}
 
+	@Override
+	public void insertcp(int codepoint) {
+		if(!editable) return;
+		deleteSelection();
+		insertcp0(codepoint);
+		showCursor();
+		setAttempt();
+		pasAanH();
+	}
+
+	private void insertcp0(int cp ) {
+		flow.insert(new CodePoint(cp), cursor); cursor++;
+	}
+
+	
+	
 }

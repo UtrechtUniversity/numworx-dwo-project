@@ -99,4 +99,6 @@ public interface FormuleEditorIF {
 	void matrix(int aantalRijen, int aantalKolommen);
 	
 	void selectAll();
+	
+	void insertcp(int codepoint);
 }

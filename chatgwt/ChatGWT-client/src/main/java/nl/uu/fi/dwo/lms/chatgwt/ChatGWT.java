@@ -604,6 +604,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 //		
 //		
 //		if(true) return;
+        FocusOnTouch.AREA = true;
 
 		formule = !"111".equals(Location.getParameter("profile"));
 		setVisibleHandler(this);

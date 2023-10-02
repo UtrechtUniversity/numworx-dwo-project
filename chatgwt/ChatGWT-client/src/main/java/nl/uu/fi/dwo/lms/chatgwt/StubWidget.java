@@ -505,13 +505,14 @@ public void setState(HashMap<String, Object> h) {
 
 	@Override
 	public String getSelectionString() {
-		return "";
+		return kopieer(innerView);
 	}
 	
 	
 	@Override
 	public void kopieer(FormuleClipboardIF clip) {
 		String s = kopieer(innerView);
+		if (s != null) clip.setClipboard(s);
 		
 	}
 	private static native String kopieer(Object inner) /*-{
@@ -521,7 +522,9 @@ public void setState(HashMap<String, Object> h) {
 	@Override
 	public void knip(FormuleClipboardIF clip) {
 		String s = knip(innerView);
+		if (s != null) clip.setClipboard(s);
 	}
+
 	private static native String knip(Object inner) /*-{
 		return inner.knip();
 	}-*/;
@@ -691,6 +694,23 @@ public void setState(HashMap<String, Object> h) {
 			shiftTab(innerView);
 		} catch(Exception not_implemented) {	
 		}
+	}
+
+	private static native void selectAll(Object innerView) /*-{ innerView.selectAll() }-*/;
+	
+	@Override
+	public void selectAll() {
+		try {
+			selectAll(innerView);
+		} catch(Exception not_implemented) {
+		}
+		
+	}
+
+	@Override
+	public void insertcp(int codepoint) {
+		insert("$Z" + codepoint + "@");
+		
 	}
 
 

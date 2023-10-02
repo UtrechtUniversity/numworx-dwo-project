@@ -1008,6 +1008,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 	private static native void tab(Object innerView)/*-{ innerView.tab() }-*/;
 	private static native void shiftTab(Object innerView)/*-{ innerView.shiftTab() }-*/;
+	private static native void selectAll(Object innerView)/*-{ innerView.selectAll() }-*/;
 
 	@Override
 	public void shiftTab() {
@@ -1078,7 +1079,14 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 	@Override
 	public void selectAll() {
-		// TODO Auto-generated method stub
+		try {
+			selectAll(innerView);
+		} catch(Exception not_implmented) {}
+	}
+
+	@Override
+	public void insertcp(int codepoint) {
+		insert("$Z" + codepoint + "@");
 	}
 	
 }

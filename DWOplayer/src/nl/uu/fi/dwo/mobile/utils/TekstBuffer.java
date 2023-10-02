@@ -173,7 +173,7 @@ public class TekstBuffer
 
 		for (int i = 0; i < tekst.length() - 1; i++)
 		{
-			if (tekst.charAt(i) == '$' && (tekst.charAt(i + 1) == 'V' || tekst.charAt(i + 1) == 'f' || tekst.charAt(i + 1) == 'H' || tekst.charAt(i + 1) == 'I'))
+			if (tekst.charAt(i) == '$' && (tekst.charAt(i + 1) == 'V' || tekst.charAt(i + 1) == 'f' || tekst.charAt(i + 1) == 'H' || tekst.charAt(i + 1) == 'I') || tekst.charAt(i+1) == 'Z')
 			{
 				String identifier = tekst.substring(i, i + 2);
 				String normalTekst = tekst.substring(lastIndex, i);
@@ -211,6 +211,11 @@ public class TekstBuffer
 					ImageView iv = getImageView(tekst, i, endIndex);
 					i = i + endIndex;
 					result.add(iv);
+				} else if (identifier.equals("$Z"))
+				{
+					String codepoint = tekst.substring(i+2, endIndex+i);
+					result.add(new String(Character.toChars(Integer.parseInt(codepoint))));
+					i += endIndex;
 				}
 				//Not supported
 //				else //dollarteken in tekst

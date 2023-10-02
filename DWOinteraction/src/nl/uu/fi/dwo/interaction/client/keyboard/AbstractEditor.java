@@ -217,4 +217,8 @@ public class AbstractEditor implements FormuleEditorIF {
 	public void selectAll() {
 	}
 
+	@Override
+	public void insertcp(int codepoint) {
+	}
+
 }

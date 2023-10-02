@@ -102,6 +102,9 @@ table.dwo tbody {
 	color: #7297c7;
 	font-size: 12px;
 }
+#eastheader {
+	background-color: #eff1f3 !important;
+}
 
 .checkbox {
 	display: inline-block;
