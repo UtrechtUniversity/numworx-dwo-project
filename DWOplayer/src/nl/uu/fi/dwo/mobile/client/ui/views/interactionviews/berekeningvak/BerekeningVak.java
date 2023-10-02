@@ -194,7 +194,7 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 	}
 	
 	public int getWidth() {	
-		return facade.wrapWidth(breedte  + paddingLeft + paddingRight);
+		return facade.wrapWidth(breedte);// + paddingLeft + paddingRight);
 	}
 	
 	public int getAsHoogte() {
