@@ -173,6 +173,7 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
 	            	  mainView.selectView(SelectedView.CHATBOX);
 	            	  mainView.showChatboxView();
 	            	  chatbox.get().init();
+	            	  chatbox.get().idleOff();
             	  }
             	  break;
               case GOTO_URL:

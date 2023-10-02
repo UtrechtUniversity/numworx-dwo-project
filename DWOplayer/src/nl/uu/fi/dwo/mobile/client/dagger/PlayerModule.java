@@ -20,6 +20,7 @@ import dagger.Provides;
 import dagger.Reusable;
 import dagger.multibindings.ClassKey;
 import dagger.multibindings.IntoMap;
+import fi.dwo.gwt.lib.rest.ui.IdleDetect;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityMapperModule;
 import nl.uu.fi.dwo.mobile.client.ui.AppPlaceHistoryMapper;
@@ -83,4 +84,6 @@ public abstract class PlayerModule {
   @Binds @IntoMap @ClassKey(cc.class) abstract Activity ccActivity(ClassCourseActivity cc);
   @Binds @IntoMap @ClassKey(MaybeLogout.class) abstract Activity maybeLogoutActivity(MaybeLogoutActivity maybe);
   @Binds @IntoMap @ClassKey(LoginPlace.class) abstract Activity loginActivity(LoginActivity login);
+
+  @Binds abstract IdleDetect idleDetect(nl.uu.fi.dwo.mobile.client.ui.IdleDetect detector);
 }

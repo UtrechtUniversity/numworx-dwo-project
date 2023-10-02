@@ -472,7 +472,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 //	}
 	
 	String getLogID() { 
-		if (dwologger != null)
+		if (logID != null)
 			return logID  +"/" + comRoot.getUUID();
 		else
 			return comRoot.getUUID();
@@ -1938,7 +1938,7 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 		{	h.put("locationX", new Integer(locationX));
 			h.put("locationY", new Integer(locationY));
 		}
-		if (dwologger != null) {
+		if (dwologger != null && !ideasStatistiek) {
 			dwologger.updateLog(buildLogParameters());
 		}
 		if (reviewActivity != null) {
@@ -2847,8 +2847,24 @@ private Object CamelCase(String name) {
 			String feedback = id;
 			Map context = resultaat.getContext();
 			String reason = context != null ? (String) context.get("reason") : "";
-			genereerFeedback(status, feedback + reason); 
+			genereerFeedback(status, feedback + reason);
+			if (dwologger != null) {
+				Map<String,Object> parameters = new HashMap<>();
+				switch(status) {
+				case AntwoordVakChecker.FOUT: parameters.put("success", false);
+				default:
+					parameters.put("score", Collections.singletonMap("raw", 0));
+				break;
+				case AntwoordVakChecker.GOED: parameters.put("success", true);
+					parameters.put("score", Collections.singletonMap("scaled", 1));
+				}
+				parameters.put("response", resultaat.getExpr());
+				parameters.put("feedback", (name + " " + feedback + " " + reason).trim());
+				dwologger.log(parameters);
+			}
 		}
+		// voor logging:
+		// name, context.reason en expr, status -> success
 	}
 
 	public static class Tupel {
@@ -5725,11 +5741,11 @@ private Object CamelCase(String name) {
 		return activity.isNoordhoff();
 	}
 	
-	Logging dwologger;
+	private Logging dwologger;
 	private boolean editable = true;
 	
 	private void setAttempt() {
-		if(dwologger != null) {
+		if(dwologger != null && !ideasStatistiek) {
 			Map<String, Object> parameters = buildLogParameters();
 			dwologger.log(parameters);
 		}
@@ -5983,6 +5999,9 @@ private Object CamelCase(String name) {
   public void setKolom(int kolom) {
     this.kolom = kolom;
   }
-
+	
+  public void setDwologger(Logging dwologger) {
+	this.dwologger = dwologger;
+  }
 	
 }

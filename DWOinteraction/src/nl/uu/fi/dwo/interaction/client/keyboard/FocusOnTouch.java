@@ -158,6 +158,18 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 		}
 		if (kb != null && kb.getEditor() != null)
 		{
+			switch(ch) {
+			case '@':
+			case '#':
+			case '$': 
+				editor.insertcp((int)ch);
+				event.preventDefault();
+				event.stopPropagation();
+				return;
+			}
+			
+			
+			
 			if (allowed(ch))
 			{
 				editor.insert( ch);

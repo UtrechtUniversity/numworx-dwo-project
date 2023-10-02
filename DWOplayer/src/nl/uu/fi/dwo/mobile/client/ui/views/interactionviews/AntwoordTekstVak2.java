@@ -668,6 +668,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		kijkNa(false, false);
 
 		ingevuld = this.ingevuld;
+		if (ingevuld) comRoot.setVisited();
 		nagekeken = this.nagekeken;
 		isVeranderdNaNakijken = this.isVeranderdNaNakijken;
 		antwoord = getText();

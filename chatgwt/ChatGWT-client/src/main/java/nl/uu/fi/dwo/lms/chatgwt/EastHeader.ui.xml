@@ -1,0 +1,22 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:u="urn:import:nl.uu.fi.dwo.lms.chatgwt"
+	>
+	<ui:with type="nl.uu.fi.dwo.lms.chatgwt.Text" field="rb" />
+	<ui:with type="nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessages" field="dwo" />
+	<ui:style>
+	</ui:style>
+	<g:HTMLPanel>
+	  <table style='width: 100%; margin-bottom: 18px' id='eastheader'>
+	    <colgroup>
+	    	<col></col>
+	    	<col style='width: 180px'></col>
+	    </colgroup>
+		<tbody>
+			<tr><td><div class='checkbox' style='zoom: 0.8;'><g:RadioButton ui:field="klas" name='route' /></div><label class='eastheader' > <ui:text from='{rb.classMessages}' /></label></td><td><span class='klasnaam'><ui:text from='{dwo.NUM_TBL_CLASSES_CLASSNAME}' /></span></td></tr>
+			<tr><td><div class='checkbox' style='zoom: 0.8;'><g:RadioButton ui:field="persoon" name='route' /></div><label class='eastheader'> <ui:text from='{rb.personalMessages}' /></label></td><td><g:ListBox ui:field='naam' addStyleNames='klasbox profile-borderBox'></g:ListBox></td></tr>
+		</tbody>
+	  </table>
+	</g:HTMLPanel>
+</ui:UiBinder> 

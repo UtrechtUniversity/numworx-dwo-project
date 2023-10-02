@@ -124,7 +124,13 @@ public class DWOLogger implements Logging {
 		Map map = (Map) parameters.get("score");
 		if(map == null) return null;
 		Number n = (Number) map.get("raw");
-		if(n == null) return null;
+		if(n == null) {
+			n = (Number) map.get("scaled");
+			if (n != null && maxScore != null) {
+				return new JSONNumber(n.doubleValue()*maxScore.doubleValue());
+			}
+			return null;
+		}
 			return new JSONNumber(n.doubleValue());
 	}
 	

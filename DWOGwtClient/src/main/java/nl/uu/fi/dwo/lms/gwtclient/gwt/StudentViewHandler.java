@@ -119,6 +119,7 @@ public class StudentViewHandler implements SwitchViewEventHandler {
         	  mainView.selectView(SelectedView.CHATBOX);
         	  mainView.showChatboxView();
         	  chatbox.get().init();
+        	  chatbox.get().idleOff();
     	  }
     	  break;
    }  }

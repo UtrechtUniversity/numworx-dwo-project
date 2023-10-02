@@ -636,7 +636,8 @@ LOCK TABLES `tblscocontext` WRITE;
 INSERT INTO `tblscocontext` VALUES 
 (1, 5,1,17,'Optellen en aftrekken'               ,0,1,0,0,0,0,NULL,NULL,0,1,NULL,1,NULL,NULL),
 (2, 6,1,17,'Drie getallen optellen en aftrekken' ,0,2,0,0,0,0,NULL,NULL,0,1,NULL,NULL,NULL,NULL),
-(3,14,1,17,'Drie getallen optellen en aftrekken' ,0,2,0,0,0,0,NULL,NULL,0,1,NULL,3,   NULL,1);
+(3,14,1,17,'Drie getallen optellen en aftrekken' ,0,2,0,0,0,0,NULL,NULL,0,1,NULL,3,   NULL,1),
+(4,13333,1,17,'Drie getallen bij school' ,0,2,0,0,0,0,NULL,NULL,0,1,NULL,3,   3,NULL);
 /*!40000 ALTER TABLE `tblscocontext` ENABLE KEYS */;
 UNLOCK TABLES;
 

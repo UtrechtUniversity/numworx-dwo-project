@@ -17,7 +17,9 @@ import org.osgi.util.promise.Success;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
@@ -26,6 +28,10 @@ import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.BootPanelController;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEventHandler;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactory;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
@@ -37,7 +43,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
-public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventHandler, ChatboxEvent.ChatboxHandler {
+public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventHandler, ChatboxEvent.ChatboxHandler, SwitchViewEventHandler {
 
 	public interface Display extends BasicDisplay {
 
@@ -52,6 +58,7 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 	final private DwoGlobalVars vars;
 	
 	private Display view;
+	private MainPresenter.Display mainView;
 
 	private Optional<PersonsService> service;
 
@@ -83,6 +90,10 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 		view.setHelp(vars.buildHelpUrl("#chatbox"));
 		inited=false;
 	}
+	
+	@Inject void setMainView(ViewFactory viewFactory) {
+		mainView = viewFactory.getMainView();
+	}
 
 	private boolean inited;
 
@@ -91,6 +102,7 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 		view.setLogin(user);
 		String locale = LocaleInfo.getCurrentLocale().getLocaleName();
 		view.openUrl("chatbox/?profile=" + profile + "&locale=" + locale);
+		//Window.open("chatbox/?profile=" + profile + "&locale=" + locale, "chatboxWindow", "");
 		return p;
 	};
 
@@ -227,4 +239,36 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 			return;
 		}		
 	}
+
+	@Override
+	public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
+		switch (switchViewEvent.getEventValue()) {
+			case ACCOUNT: 
+			case RESULTS:
+			case KNOWLEDGE:
+			case PERSONS:
+			case SCHOOLCLASSES:
+			case MODULES:
+			case WELCOME:
+			case ORGANISATION:
+				idleOn();
+			default:
+		}
+		
+	}
+	
+	private HandlerRegistration r;
+	
+	public void idleOff() {
+		mainView.unsetIdleTimeout();
+		if (r == null) r = bus.addHandler(SwitchViewEvent.TYPE, this);
+	}
+	public void idleOn() {
+		if (r != null) {
+			r.removeHandler();
+			r =null;
+		}
+		mainView.setIdleTimeout(MainPresenter.IDLE);
+	}
+	
 }

@@ -1,6 +1,7 @@
 package nl.numworx.uploadwidget.server.s3;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -100,6 +101,11 @@ public class S3Store extends Store {
 			provider.put(entry.url, entry.type, item.getInputStream(), entry.length, tags);
 		} catch (IOException e) {
 		}
+	}
+
+	@Override
+	public void addEntry(AtomEntry entry, Map<String, String> tags, InputStream item) {
+		provider.put(entry.url, entry.type, item, entry.length, tags);
 	}
 	
 }

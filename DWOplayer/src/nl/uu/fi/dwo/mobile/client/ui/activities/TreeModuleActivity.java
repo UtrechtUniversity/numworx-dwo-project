@@ -16,9 +16,6 @@ import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
-import nl.uu.fi.dwo.mobile.client.ui.IdleDetect;
-import nl.uu.fi.dwo.mobile.client.ui.IdleDetect.IdleEvent;
-import nl.uu.fi.dwo.mobile.client.ui.IdleDetect.IdleHandler;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
@@ -51,6 +48,9 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import dagger.Lazy;
 import dagger.MembersInjector;
+import fi.dwo.gwt.lib.rest.ui.IdleDetect;
+import fi.dwo.gwt.lib.rest.ui.IdleDetect.IdleEvent;
+import fi.dwo.gwt.lib.rest.ui.IdleDetect.IdleHandler;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 
 public class TreeModuleActivity extends AbstractActivity implements GotoController, MessageEventHandler, IdleHandler

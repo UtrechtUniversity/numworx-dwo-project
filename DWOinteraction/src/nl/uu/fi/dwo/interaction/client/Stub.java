@@ -106,6 +106,18 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF, NativePreviewHandler 
 			insert: function(string) {
 				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::insert(Ljava/lang/String;)(string);
 			},
+			
+			knip: function() {
+				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::knip()();
+			},
+			kopieer: function() {
+				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::kopieer()();
+			},
+			
+			selectAll: function() {
+				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::selectAll()();
+			},
+			
 			cursorToRight: function() {
 				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::cursorToRight()();
 			},
@@ -298,6 +310,11 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF, NativePreviewHandler 
 			editor.cursorDown();
 	}
 	
+	void selectAll() {
+		if (editor != null)
+			editor.selectAll();
+	}
+	
 	public String getSelectionString() {
 		if (editor != null) 
 			return editor.getSelectionString();
@@ -329,6 +346,11 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF, NativePreviewHandler 
 		else if ("$z@".equals(text)) editor.vectornotatie();
 		else if ("$Y@".equals(text)) editor.vector();
 		else if ("$M@".equals(text)) editor.matrix();
+// @ $ #
+		else if ("$Z64@".equals(text) || "$Z36@".equals(text) || "$Z35@".equals(text)) {
+			int l = text.length();
+			editor.insertcp(Integer.parseInt(text.substring(2, l-1)));
+		}
 		else 
 			editor.insert(text);
 	}
@@ -536,6 +558,18 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF, NativePreviewHandler 
 	
 	public int getHeight() {
 		return view.getHeight();
+	}
+	
+	private String knip() {
+		clip.setClipboard(null);
+		editor.knip(clip);
+		return clip.getClipboard();
+	}
+	
+	private String kopieer() {
+		clip.setClipboard(null);
+		editor.kopieer(clip);
+		return clip.getClipboard();
 	}
 }
 	

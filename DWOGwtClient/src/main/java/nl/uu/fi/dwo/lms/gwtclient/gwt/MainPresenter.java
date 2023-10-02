@@ -121,6 +121,7 @@ public class MainPresenter {
 
 		void setIdleTimeout(int millis);
 		void unsetIdleTimeout();
+		boolean isIdleOn();
 
 		void showStudentResultsGraphView();
 
@@ -245,6 +246,7 @@ public class MainPresenter {
 
 	private PromisedDialogWithConfirmDeferred defer;
 	private Promise<?> ask;
+	private boolean idleOn;
 	public final static int IDLE = 900000;
 
 	public void maybeLogout() {
@@ -269,11 +271,15 @@ public class MainPresenter {
     defer = new PromisedDialogWithConfirmDeferred(DwoLocalesForGWT.instance.NUM_LBL_LOGGEDIN());
     PromisedMessageDialogWithConfirmEvent event = new PromisedMessageDialogWithConfirmEvent(EventType.ConfirmDialog, defer);		
     ask = defer.getPromise();
+    idleOn = display.isIdleOn();
     eventBus.fireEvent(event);
     setIdleTimeout(15000);
     ask.then((q) -> { 
       ask = null;
-      setIdleTimeout(IDLE);
+      if (idleOn)
+    	  setIdleTimeout(IDLE);
+      else 
+    	  unsetIdleTimeout();
       return null;
     });
     LOG.fine("doIdle");

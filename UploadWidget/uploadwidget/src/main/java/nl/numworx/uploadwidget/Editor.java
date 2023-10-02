@@ -122,7 +122,7 @@ public class Editor extends JPanel implements CBookWidgetEditIF, Constants, Reso
 		hb.add(new JLabel("Max items"));hb.add(Box.createHorizontalGlue());
 		
 		NumberFormatter nf = new NumberFormatter();
-		nf.setMinimum(1);
+		nf.setMinimum(0);
 		nf.setMaximum(10);
 		nf.setValueClass(Integer.class);
 		itemField = new JFormattedTextField(nf);

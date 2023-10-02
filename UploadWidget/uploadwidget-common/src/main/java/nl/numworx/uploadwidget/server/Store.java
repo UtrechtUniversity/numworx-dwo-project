@@ -1,5 +1,6 @@
 package nl.numworx.uploadwidget.server;
 
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -71,6 +72,10 @@ public class Store {
 		} catch (Exception e) {
 			return "-";
 		}
+	}
+
+	public void addEntry(AtomEntry entry, Map<String, String> map, InputStream inputStream) {
+		entries.add(entry);
 	}
 	
 	

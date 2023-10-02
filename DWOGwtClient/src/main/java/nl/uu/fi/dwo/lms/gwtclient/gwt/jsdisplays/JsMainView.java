@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 public class JsMainView implements MainPresenter.Display{
 
     final boolean hasIdle = true;
+    private boolean idleOn;
   
     @Override
     public void setSchoolName(String schoolName) {
@@ -194,14 +195,18 @@ public class JsMainView implements MainPresenter.Display{
 	
 	@Override
 	public void setIdleTimeout(int millis) {
-	  if (hasIdle)
-		JsMainDisplay.setIdleTimeout(millis);
+	  if (hasIdle) {
+		  JsMainDisplay.setIdleTimeout(millis);
+		  idleOn = true;
+	  }
 	}
 	
 	@Override
 	public void unsetIdleTimeout() {
-	  if (hasIdle)
-		JsMainDisplay.unsetIdleTimeout();
+	  if (hasIdle) {
+		  JsMainDisplay.unsetIdleTimeout();
+		  idleOn = false;
+	  }
 	}
 	
 	@Override
@@ -229,6 +234,20 @@ public class JsMainView implements MainPresenter.Display{
 			JsMainDisplay.showChat();
 		else
 	    	JsMainDisplay.hideChat();
+	}
+
+	/**
+	 * @return the idleOn
+	 */
+	public boolean isIdleOn() {
+		return idleOn;
+	}
+
+	/**
+	 * @param idleOn the idleOn to set
+	 */
+	public void setIdleOn(boolean idleOn) {
+		this.idleOn = idleOn;
 	}
 
 }

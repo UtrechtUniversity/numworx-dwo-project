@@ -217,14 +217,20 @@ public class BootPanelController {
 
     Promise<DomDwoProfileFull> insertcss(Promise<DomDwoProfileFull> p) {
     	String css = p.getValue().getDwoProfileName();
-    	if (profile == 111 || profile == 112) // het 'inf' profiel en het 'numworx' profiel
+    	if (profile == 111 || profile == 112 || p.getValue().getDwoProfileRights().contains("c")) // het 'inf' profiel en het 'numworx' profiel
     	{
     		css = URL.encodePathSegment(css);
     		insertStylesheet( getBase() + "css/" + css + ".css");    	
     	}
     	return p;
     }
-    
+    Promise<DomDwoProfileFull> hasChat(Promise<DomDwoProfileFull> p) {
+    	String rights = p.getValue().getDwoProfileRights();
+		dwoGlobalVars.setInf(rights.contains("I"));
+		dwoGlobalVars.setRemedial(rights.contains("R"));
+    	return p;
+    	
+    }
     
     
     private void resetPresenters(RoleType role, boolean single) {
@@ -330,9 +336,9 @@ public class BootPanelController {
             profile = 77;
         }
         
-        dwoGlobalVars.setInf(profile == PROFILE_INF);
+        //dwoGlobalVars.setInf(profile == PROFILE_INF);
         
-        LOG.severe("inf = " + dwoGlobalVars.isInf());
+        //LOG.severe("inf = " + dwoGlobalVars.isInf());
         value = Window.Location.getParameter("stage");
         if (value != null) {
             stage = Integer.parseInt(value);
@@ -441,7 +447,7 @@ public class BootPanelController {
         .filter(v -> v != null);
         dwoGlobalVars.setProfile(promise);
         promise.then(this::insertcss);
-
+        promise.then(this::hasChat);
         //show main panel
         this.rootPanel = rootPanel;
 

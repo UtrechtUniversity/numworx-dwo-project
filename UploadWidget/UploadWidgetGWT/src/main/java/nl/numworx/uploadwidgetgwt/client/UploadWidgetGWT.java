@@ -138,6 +138,8 @@ public class UploadWidgetGWT implements EntryPoint, InteractionStub {
 		if (map.containsKey(Constants.ITEMS_MAX)) {
 			panel.setItemsMax(map.getInt(Constants.ITEMS_MAX));
 		}
+		if (map.containsKey(Constants.FILE_INPUT_MODEL))
+			panel.setFileInputModel(map.getObjectList(Constants.FILE_INPUT_MODEL));
 		panel.setAutoSubmit(map.getBoolean(Constants.AUTO_SUBMIT, false));
 		
 	}

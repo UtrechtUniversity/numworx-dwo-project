@@ -19,6 +19,7 @@ import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
@@ -29,11 +30,14 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.entities.RestSchool;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
+import nl.uu.fi.dwo.rest.entities.RestScoContextId;
 import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -145,5 +149,21 @@ public class SystemManagerIT {
 		Boolean result = manager.submitStudentToSchoolClass(rest);
 		
 		assertTrue("submit student to schoolclass", result.booleanValue());
+	}
+	
+	@Test public void testSchoolOfSco() throws Exception {
+		Long scoid = 4L;
+		DomScoContextId dsc = new DomScoContextId();
+		dsc.setId(PersistentScoContext.buildPersistenceId(scoid));
+		RestScoContextId rsc = new RestScoContextId();
+		rsc.setDomScoContext(dsc);
+		DomSchoolId result = manager.getSchool(rsc);
+		Long sid = MySQLPersistenceId.getNativeId(result);
+		assertEquals(Long.valueOf(3), sid);
+		
+		scoid = 1L; // standaard scoid
+		dsc.setId(PersistentScoContext.buildPersistenceId(scoid));
+		result = manager.getSchool(rsc);
+		assertNull(result);
 	}
 }

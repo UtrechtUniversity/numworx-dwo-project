@@ -3,6 +3,8 @@ package nl.numworx.uploadwidgetgwt.client;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
@@ -13,6 +15,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
@@ -27,7 +30,10 @@ import com.google.gwt.xml.client.XMLParser;
 import gwtupload.client.Utils;
 import nl.numworx.uploadwidget.shared.AtomEntry;
 import nl.numworx.uploadwidgetgwt.shared.Constants;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 public class FeedPanel extends Composite implements Constants, RequestCallback {
 
@@ -56,6 +62,8 @@ public class FeedPanel extends Composite implements Constants, RequestCallback {
 		      GWT.log(String.valueOf(document));
 		      NodeList list = document.getElementsByTagName(ENTRY);
 		      flow.clear();
+		      addFileInputModel();
+		      
 		      ArrayList<AtomEntry> entries = new ArrayList<>(list.getLength());
 		      for(int i = 0; i < list.getLength(); i++) {
 		    	  AtomEntry entry = new AtomEntry();
@@ -117,6 +125,8 @@ public class FeedPanel extends Composite implements Constants, RequestCallback {
 		}
 	}
 
+	private ObjectList fileInputModel = JSONUtilities.wrapList(Collections.emptyList());
+		
 	FeedPanel() {
 		flow = new FlowPanel(); 
 		initWidget(flow);
@@ -127,6 +137,7 @@ public class FeedPanel extends Composite implements Constants, RequestCallback {
 		this.registration = comRoot.getContext().getString("registration");
 		this.uuid = comRoot.getUUID();
 		this.learnerId = comRoot.getLearnerId();
+		addFileInputModel();
 		doRequest();
 	}
 
@@ -148,6 +159,40 @@ public class FeedPanel extends Composite implements Constants, RequestCallback {
 
 	public void setItemsMax(int max) {
 		itemsMax = max;
+	}
+
+	public ObjectList getFileInputModel() {
+		return fileInputModel;
+	}
+
+	public void setFileInputModel(ObjectList fileInputModel) {
+		this.fileInputModel = fileInputModel;
+	}
+
+	private void addFileInputModel() {
+		int modelSize = fileInputModel.size();
+		String tail = uuid + "/instance/";
+		String head = "/dwo/dav/upload/dir/sec:" + learnerId + "/";
+		String base = head + tail;
+
+		  for(int i=0; i < modelSize; i++) {
+			  ObjectMap file = fileInputModel.getObjectMap(i);
+			  String name = file.getString("name");
+			  String url = base + name; // FIXME gebruik UrlBuilder o.i.d.
+			  if (file.containsKey("url"))
+				  url = head + file.getString("url");
+			  UrlBuilder builder = Window.Location.createUrlBuilder();
+			  Set<String> p = Window.Location.getParameterMap().keySet();
+			  builder.setPath(url);
+			  builder.setHash(null);
+			  p.forEach(key -> builder.removeParameter(key));
+			  url = builder.buildString();
+			  SafeHtml html = new SafeHtmlBuilder().appendEscaped(name).toSafeHtml();
+			  Anchor a = new Anchor(html, url);
+			  a.setTarget("_blank");
+			  flow.add(a);
+
+		  }
 	}
 	
 	
