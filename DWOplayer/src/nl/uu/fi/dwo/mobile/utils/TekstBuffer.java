@@ -173,7 +173,7 @@ public class TekstBuffer
 
 		for (int i = 0; i < tekst.length() - 1; i++)
 		{
-			if (tekst.charAt(i) == '$' && (tekst.charAt(i + 1) == 'V' || tekst.charAt(i + 1) == 'f' || tekst.charAt(i + 1) == 'H' || tekst.charAt(i + 1) == 'I') || tekst.charAt(i+1) == 'Z')
+			if (tekst.charAt(i) == '$' && (tekst.charAt(i + 1) == 'V' || tekst.charAt(i + 1) == 'f' || tekst.charAt(i + 1) == 'H' || tekst.charAt(i + 1) == 'I' || tekst.charAt(i+1) == 'Z'))
 			{
 				String identifier = tekst.substring(i, i + 2);
 				String normalTekst = tekst.substring(lastIndex, i);

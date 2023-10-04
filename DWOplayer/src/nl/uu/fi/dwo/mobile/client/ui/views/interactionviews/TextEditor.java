@@ -659,6 +659,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	}
 
 	private void setStateNull() {
+		pasAanH();
 	}
 
 	@Override
@@ -711,7 +712,11 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 			style.setWidth(100, Style.Unit.PCT);
 			style.setHeight(EXECUTE_HEIGHT, Style.Unit.PX);
 			execute_height = EXECUTE_HEIGHT;
-			content.setPixelSize(-1, height-menuheight-boxsize-padding-EXECUTE_HEIGHT);
+			int content_height = height-menuheight-boxsize-padding-EXECUTE_HEIGHT;
+			if (pasAanH) {
+				content.getElement().getStyle().setProperty("minHeight", content_height, Unit.PX);
+			} else 
+				content.setPixelSize(-1, content_height);
 			btn.addClickHandler(new ClickHandler() {
 
 				@Override
