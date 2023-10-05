@@ -304,6 +304,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			MessageModel m;
 			String jid = from.substring(0, at);
 			if (chatUser.jid.equals(jid)) {
+				queue.remove(message);
 				String to = message.getAttribute("to");
 				m = getModel(to);
 			} else {
@@ -484,6 +485,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	
 
 	private Connection connection;
+	private SendQueue queue;
 	private TextBox username;
 	private TextBox password;
 	private VerticalPanel panel;
@@ -506,6 +508,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	
 	public ChatGWT(PersistIF persist) {
 		this.persist = persist;
+		this.queue = new SendQueue();
 	}
 
 	void unsetConnection() {
@@ -849,7 +852,10 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		if (room == null) return;
 		String[][] attributes = { { "to", room.jid }, { "type", "groupchat" } };
 		Builder reply = Builder.$msg(attributes).c("body",null).t(value);
-		sendToConnection(c -> c.send(reply));
+		Element e = reply.tree();
+		if (queue.add(e)) {
+			sendToConnection(c -> c.send(e));
+		}
 	}
 
 	private void sendToConnection(Consumer<Connection> consumer) {
@@ -867,7 +873,18 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		String[][] attributes = { { "type", "set" }};
 		String[][] attributesQ = {{ "xmlns", "urn:xmpp:mam:2"},{"queryid", "fetchall"}};
 		Builder request = Builder.$iq(attributes).c("query", attributesQ);
-		connection.sendIq(request.tree(), 10000, receive, receive);
+		Handler<Element> done = new Handler<Element>() {
+
+			@Override
+			public boolean handle(Element element) {
+				receive.handle(element);
+				queue.sendAll(connection);
+				return true;
+			}
+			
+		};
+		
+		connection.sendIq(request.tree(), 10000, done, done);
 	}
 	
 	private void sendToUser(String value) {
@@ -878,8 +895,10 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			String[][] attributes = { { "to", u.jid }, { "type", "chat" }, { "id", id }};
 			Builder reply = Builder.$msg(attributes).c("body",null).t(value);
 			Message msg = new Message(chatUser.jid, now(), value, utc(), id);
-			sendToConnection( c -> {
-				c.send(reply);
+			Element e = reply.tree();
+			if (queue.add(e))
+			  sendToConnection( c -> {
+				c.send(e);
 				um.getMessages().add(msg);
 			});
 		} else {
