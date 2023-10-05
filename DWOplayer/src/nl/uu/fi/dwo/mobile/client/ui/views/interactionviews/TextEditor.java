@@ -528,7 +528,8 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 			this.width = breedte;
 			if (menubar != null && !pasAanH)
 				menubar.setPixelSize(width-boxsize, menuheight);
-			content.setPixelSize(width-boxsize-padding, pasAanH ? -1 : height-menuheight-boxsize-padding);
+			if(!pasAanH)
+				content.setPixelSize(width-boxsize-padding, height-menuheight-boxsize-padding);
 			hbox.setPixelSize(width-boxsize-paddingH, height-boxsize-paddingH);
 			if (widget != hbox) widget.setPixelSize(breedte, -1);
 		}
