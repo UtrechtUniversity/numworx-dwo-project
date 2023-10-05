@@ -1,12 +1,14 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
+import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
@@ -19,7 +21,6 @@ import nl.uu.fi.dwo.interaction.client.Role;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
@@ -29,7 +30,6 @@ import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
-import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.util.PathId;
@@ -50,6 +50,44 @@ import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 
 public class DescriptionViewImpl extends XMLView implements DescriptionView, OpdrNavIF {
 	
+	static final Logger LOG = Logger.getLogger(DescriptionViewImpl.class.getName());
+	
+	class WaitAttached implements Success<JSONValue, JSONValue>, Handler {
+		private HandlerRegistration reg;
+		private Deferred<JSONValue> defer;
+		private Promise<JSONValue> delegate;
+		
+		WaitAttached() {
+			super();
+			reg = main.addAttachHandler(this);
+		}
+
+		@Override
+		synchronized
+		public Promise<JSONValue> call(Promise<JSONValue> resolved) throws Exception {
+			if (main.isAttached()) {
+				reg.removeHandler();
+				LOG.info("pass thru");
+				return resolved;
+			}
+			defer = new Deferred<>();
+			delegate = resolved;
+			LOG.info("await attach");
+			return defer.getPromise();
+		}
+
+		@Override
+		synchronized
+		public void onAttachOrDetach(AttachEvent event) {
+			if (defer != null && event.isAttached()) {
+				reg.removeHandler();
+				LOG.info("attached");
+				defer.resolveWith(delegate);
+			}
+			
+		}
+	}
+
 	private SimplePanel main;
 	private Label loading = new Label("Loading...");
 	private AnchorContext anchorContext;
@@ -102,7 +140,8 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
   protected Promise<JSONValue> getJSONLaunchDataBytes(String file) {
     return rpc.getCourseDescription(file);
   }
-
+  
+  
   @Override
   public void setupModule(Object id) {
 		loading.setText(DwoLocalesForGWT.instance.NUM_TBL_FETCHINGDATA());
@@ -110,7 +149,9 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 
 		if (id == SelectModuleItem.ROOT)
 		{
-			rpc.getProfileDescription().then(success).recover(this::showError);
+			rpc.getProfileDescription()
+			.then(new WaitAttached())
+			.then(success).recover(this::showError);
 			return;
 		}
 		String xml = "=" + id;
