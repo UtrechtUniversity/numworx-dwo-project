@@ -56,7 +56,7 @@ public class ModulesOfSchoolclassService {
         dwoGlobalVars = aDwoGlobalVars;
     }
 
-    public Promise<DomCoursesOfSchoolClass4Teacher> getModules(final DomSchoolClass sc) {
+    public Promise<DomCoursesOfSchoolClass4Teacher> getModules(final DomSchoolClass sc, boolean remedial) {
         DomContext context = new DomContext();
         context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
         return dwoGlobalVars.getProfile().then(new Success<DomDwoProfile, DomCoursesOfSchoolClass4Teacher>() {
@@ -65,7 +65,13 @@ public class ModulesOfSchoolclassService {
             public Promise<DomCoursesOfSchoolClass4Teacher> call(
                     Promise<DomDwoProfile> resolved) throws Exception {
                 DomSchoolClassAndProfile sap = new DomSchoolClassAndProfile();
-                sap.setDomDwoProfile(resolved.getValue());
+                DomDwoProfile profile = new DomDwoProfile(resolved.getValue());
+                if (remedial && dwoGlobalVars.isPremium() && dwoGlobalVars.isRemedial()) {
+                	profile.setDwoProfileRights("R"); // see setRemedial
+                } else 
+                	profile.setDwoProfileRights("");
+
+                sap.setDomDwoProfile(profile);
                 sap.setDomSchoolClass(sc);
                 return manager.getModules(context, sap);
             }
