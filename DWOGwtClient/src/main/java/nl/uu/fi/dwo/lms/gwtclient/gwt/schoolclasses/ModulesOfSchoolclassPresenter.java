@@ -141,7 +141,7 @@ public class ModulesOfSchoolclassPresenter {
     
     
     private Promise<DomCoursesOfSchoolclassTree> reloadTree() {
-        Promise<DomCoursesOfSchoolClass4Teacher> promise = service.getModules(schoolClass);
+        Promise<DomCoursesOfSchoolClass4Teacher> promise = service.getModules(schoolClass, false);
         return promise.map(
         		value -> 
         		{	

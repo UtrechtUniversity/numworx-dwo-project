@@ -111,7 +111,7 @@ public class ResultsService implements SwitchViewEventHandler {
     }
     
     Promise<DomCoursesOfSchoolClass4Teacher> getModules(DomSchoolClass dsc) {
-    	return modules.getModules(dsc).then(this::modulesSort);
+    	return modules.getModules(dsc, true).then(this::modulesSort);
     }
     
     private void logfailure(Promise<?> q) {
@@ -140,7 +140,7 @@ public class ResultsService implements SwitchViewEventHandler {
     	List<DomMapEntry<PersistenceId, DomSchoolClass>> list = p.getValue().getSchoolClasses();
     	if (!list.isEmpty()) {
     		DomSchoolClass sample = list.get(0).getValue();
-    		return modules.getModules(sample).then(q -> {
+    		return modules.getModules(sample, true).then(q -> {
     			
     			absoluteOrdening(q.getValue().getCourses(), p.getValue().getCourses());
     			return p;

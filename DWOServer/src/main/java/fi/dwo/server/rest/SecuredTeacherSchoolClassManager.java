@@ -1223,7 +1223,10 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         UserState_U ustate = AnonDomainAuthorizer.build().submitUser(sc);
         UserState_HR_R_S_SG_U hrstate = ustate.setHasRole(rest.getRestContext().getDomHasRole());
         TeacherState_HR_R_S_SG_U tstate = hrstate.buildSchoolAdminTeacher().setTeacher();
-        TeacherState_HR_P_R_S_SC_SG_U psstate = tstate.addProfile(rest.getDomSchoolClassAndProfile().getDomDwoProfile()).addSchoolClass(rest.getDomSchoolClassAndProfile().getDomSchoolClass());
+        DomDwoProfile domDwoProfile = rest.getDomSchoolClassAndProfile().getDomDwoProfile();
+        String pr = domDwoProfile.getDwoProfileRights();
+        boolean remedial = pr != null && pr.contains("R");
+		TeacherState_HR_P_R_S_SC_SG_U psstate = tstate.addProfile(domDwoProfile).addSchoolClass(rest.getDomSchoolClassAndProfile().getDomSchoolClass());
       //init
         PersistentHasRole phr = hrstate.getHasRole();
         PersistentSchool school = hrstate.getSchool();
@@ -1274,7 +1277,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
           while (iterator.hasNext()) {
             PersistentCourse pc = iterator.next();
             if (pc.getSchoolID() == null) {
-                if (!PublicCourseManager.visible(pc))
+                if (!remedial && !PublicCourseManager.visible(pc))
                 {
                   iterator.remove();
                   courseMap.remove(pc.getCourseID(), pc);
@@ -1310,7 +1313,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             }
           }
           
-        } else if (school.getAboType() != AboType.premium||true) { // Altijd aan
+        } else if (school.getAboType() != AboType.premium || !remedial) { // Altijd aan
           Iterator<PersistentCourse> iterator = listCourse.iterator();
           while (iterator.hasNext()) {
             PersistentCourse pc = iterator.next();

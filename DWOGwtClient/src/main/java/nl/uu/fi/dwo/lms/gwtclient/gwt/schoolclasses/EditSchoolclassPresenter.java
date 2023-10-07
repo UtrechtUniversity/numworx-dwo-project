@@ -330,7 +330,9 @@ public class EditSchoolclassPresenter {
             public Promise<DomCoursesOfSchoolClass4Teacher> call(
                     Promise<DomDwoProfile> resolved) throws Exception {
                 DomSchoolClassAndProfile sap = new DomSchoolClassAndProfile();
-                sap.setDomDwoProfile(resolved.getValue());
+                DomDwoProfile profile = new DomDwoProfile(resolved.getValue());
+                profile.setDwoProfileRights("");
+				sap.setDomDwoProfile(profile);
                 sap.setDomSchoolClass(sc);
                 return manager.getModules(context, sap);
             }
