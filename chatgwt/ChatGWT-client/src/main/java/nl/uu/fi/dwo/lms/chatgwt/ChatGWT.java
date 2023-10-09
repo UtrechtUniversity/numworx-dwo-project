@@ -81,6 +81,7 @@ import nl.uu.fi.dwo.keyboard.client.DWOCombinedKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.KeyboardFactory;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
+import nl.uu.fi.dwo.lms.chatgwt.inbox.InboxDatabase;
 import nl.uu.fi.dwo.lms.chatgwt.util.Base64;
 import nl.uu.fi.dwo.lms.chatgwt.util.GUID;
 import nl.uu.fi.dwo.lms.chatgwt.util.MD5;
@@ -100,7 +101,9 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	
 	
 	private static final TimeZone UTC = TimeZone.createTimeZone(0);
-	private static final int COL_6 = 456;
+	private static final int COL_6 = 474;
+	private static final int COL_4 = 140*2+18;
+	private static final int COL_2 = 140;
 	public  static final Text rb = GWT.create(Text.class);
 	public  static final Dwo2LocaleMessages dworb = GWT.create(Dwo2LocaleMessages.class);
 
@@ -745,8 +748,14 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		style.setProperty("maxWidth", 1024, Unit.PX);
 		container.setWidget(keyboard);
 
+		database = new InboxDatabase();
+		west = new InboxPanel(database);
+		
+		
+		main.addWest(west, COL_2);
+		
 		main.addSouth(container, 200);
-		main.addEast(east, COL_6);
+		main.addEast(east, COL_4);
 		main.addEast(new SimplePanel(), 18);
 		
 		main.getWidgetContainerElement(container).getStyle().setBackgroundColor("#e5e7e9");
@@ -954,6 +963,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	private UserTable teachers;
 	private SingleSelectionModel<UserModel> selection;
 	private MessageModel currentModel;
+	private InboxDatabase database;
+	private InboxPanel west;
 	@Override
 	public String getClipboard() {
 		return clipboard;

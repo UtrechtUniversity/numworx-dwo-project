@@ -29,6 +29,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @NamedQueries({
     @NamedQuery(name = "PersistentMethod.findAll", query = "SELECT p FROM PersistentMethod p"),
     @NamedQuery(name = "PersistentMethod.findBySchoolID", query = "SELECT q FROM PersistentMethod q WHERE q.schoolID = 0 OR q.schoolID = :schoolID"),
+    @NamedQuery(name = "PersistentMethod.findBySchoolIDorProfile", query = "SELECT q FROM PersistentMethod q WHERE (q.dwoProfileID = :dwoProfileID and q.schoolID = 0) OR q.schoolID = :schoolID"),
     @NamedQuery(name = "PersistentMethod.findBySchoolIDandProfile", query = "SELECT q FROM PersistentMethod q WHERE q.dwoProfileID = :dwoProfileID and (q.schoolID = 0 OR q.schoolID = :schoolID)")
 })
 @Cache( type=CacheType.SOFT, // Cache everything until the JVM decides memory is low. 

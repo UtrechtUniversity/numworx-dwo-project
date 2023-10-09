@@ -122,8 +122,11 @@ public class MethodManagerPIT {
 	  PersistentDwoProfile profile = new PersistentDwoProfile(1L);
 	  list = MethodManager.findEntities(school, profile);
       assertEquals(1, list.size());
-       profile = new PersistentDwoProfile(2L);
+      profile = new PersistentDwoProfile(2L);  // ander profiel, toch 1 method van de school
       list = MethodManager.findEntities(school, profile);
+      assertEquals(1, list.size());
+      school.setSchoolID(0L);
+      list = MethodManager.findEntities(school, profile);    // alleen profiel én schoolid=0
       assertTrue(list.isEmpty());
 	  
 	}

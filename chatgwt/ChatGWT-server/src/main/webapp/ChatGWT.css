@@ -9,7 +9,7 @@ div {
 	outline: none;
 }
 
-iframe.box.gwt-Frame {
+iframe.box.gwt-Frame, .westpanel {
 	border: 2px #1b75bb solid;
 	border-radius: 4px;
 	background-color: white;

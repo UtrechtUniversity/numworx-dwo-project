@@ -43,6 +43,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAndProfile;
@@ -354,8 +356,10 @@ public class PersistenceFacade {
 
 
     public List<DomCourse> getSelectedSchoolCourses(DomSchoolClass schoolClass) throws Dwo2Exception {
-      DomCoursesOfSchoolClass4Teacher result = 
-          SecureTeacherSchoolClassManager.getModules(schoolClass, DWO.getDwoProfile());
+        DomDwoProfile profile = DWO.getDwoProfile();
+        profile = new DomDwoProfile(profile); profile.setDwoProfileRights("");
+        DomCoursesOfSchoolClass4Teacher result = 
+          SecureTeacherSchoolClassManager.getModules(schoolClass, profile);
       
       Map<PersistenceId, DomCourse> allcourses = courseMapper.insertCache(result.getCourses());
       
@@ -383,8 +387,10 @@ public class PersistenceFacade {
             Vector<Course> v;
             DomSchoolClass domSchoolClass = new DomSchoolClass();
             domSchoolClass.setId(PersistentSchoolClass.buildPersistenceId((long)schoolClass.getID()));
-            DomCoursesOfSchoolClass4Teacher result = 
-                SecureTeacherSchoolClassManager.getModules(domSchoolClass, DWO.getDwoProfile());
+            DomDwoProfile profile = DWO.getDwoProfile();
+            profile = new DomDwoProfile(profile); profile.setDwoProfileRights("");
+			DomCoursesOfSchoolClass4Teacher result = 
+                SecureTeacherSchoolClassManager.getModules(domSchoolClass, profile);
             
             Map<PersistenceId, DomClassCourse4Teacher> cc = new HashMap<>();
             result.getClassCourses().forEach(

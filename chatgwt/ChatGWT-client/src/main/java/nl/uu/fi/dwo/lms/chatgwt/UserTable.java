@@ -59,12 +59,12 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 		}		
 	};
 
-	TextColumn<UserModel> unseenColumn = new TextColumn<UserModel>() {
-		@Override
-		public String getValue(UserModel object) {
-			return object.hasUnseen()? "●" : "";
-		}		
-	};
+//	TextColumn<UserModel> unseenColumn = new TextColumn<UserModel>() {
+//		@Override
+//		public String getValue(UserModel object) {
+//			return object.hasUnseen()? "●" : "";
+//		}		
+//	};
 	private ListDataProvider<UserModel> provider;
 	private ChatRoom room;
 	private RoleType role;
@@ -96,16 +96,16 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 		}
 		nameColumn.setSortable(true);
 		onlineColumn.setSortable(true);
-		unseenColumn.setSortable(true);
+		//unseenColumn.setSortable(true);
 		table.setTableLayoutFixed(true);
 		table.addColumn(nameColumn, naam);
 		onlineColumn.setCellStyleNames("blu");
-		unseenColumn.setCellStyleNames("gre");
+		//unseenColumn.setCellStyleNames("gre");
 		table.addColumn(onlineColumn, rb.online());
-		table.addColumn(unseenColumn, rb.newMessages());
+		//table.addColumn(unseenColumn, rb.newMessages());
 		
 		table.setColumnWidth(onlineColumn, 100, Unit.PX);
-		table.setColumnWidth(unseenColumn, 150, Unit.PX);
+		//table.setColumnWidth(unseenColumn, 150, Unit.PX);
 		// initialize the data
 		
 		List<UserModel> initialData = toUserModelList();
