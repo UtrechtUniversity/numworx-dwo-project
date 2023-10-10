@@ -3,6 +3,9 @@
  */
 package nl.uu.fi.dwo.lms.chatgwt;
 
+import java.util.Optional;
+import java.util.logging.Logger;
+
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -16,6 +19,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 
+import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
+import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
 import nl.uu.fi.dwo.lms.chatgwt.inbox.InboxDatabase;
 import nl.uu.fi.dwo.lms.chatgwt.inbox.InboxDatabase.InboxInfo;
 import nl.uu.fi.dwo.lms.chatgwt.inbox.ShowMorePager;
@@ -55,17 +60,20 @@ public class InboxPanel extends Composite {
 	private CellList<InboxInfo> cellList;
 	@UiField ShowMorePager pagerPanel;
 	
+	private ChatGWT parent;
+	
 	public InboxPanel(InboxDatabase database) {
 		
+		parent = database.parent;
 		InboxCell cell = new InboxCell();
-		cellList = new CellList<InboxInfo>(cell, InboxInfo.KEY_PROVIDER);		
+		cellList = new CellList<InboxInfo>(cell, InboxDatabase.KEY_PROVIDER);		
 	    cellList.setPageSize(30);
 	    cellList.setKeyboardPagingPolicy(KeyboardPagingPolicy.INCREASE_RANGE);
 	    cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
 
 	    // Add a selection model so we can select cells.
 	    final SingleSelectionModel<InboxInfo> selectionModel = new SingleSelectionModel<InboxInfo>(
-	        InboxInfo.KEY_PROVIDER);
+	    		InboxDatabase.KEY_PROVIDER);
 	    cellList.setSelectionModel(selectionModel);
 	    selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 	      public void onSelectionChange(SelectionChangeEvent event) {
@@ -79,8 +87,22 @@ public class InboxPanel extends Composite {
 		
 	}
 
+	static Logger LOG = Logger.getLogger(InboxPanel.class.getName());
 	protected void selectInbox(InboxInfo selectedObject) {
-		GWT.log("selected " + InboxInfo.KEY_PROVIDER.getKey(selectedObject));
+		String key = (String) InboxDatabase.KEY_PROVIDER.getKey(selectedObject);
+		LOG.info("selected " + key);
+		if (selectedObject.isRoom()) {
+			Optional<ChatRoom> room = parent.getRoom((String) key);
+			if (room.isPresent())
+			{
+				parent.updateRoomExtra(room.get());
+			}
+		} else {
+			ChatUser user = parent.get(key);
+			// switch to room of user, select usermodel
+		}
 	}
+	
+	
 
 }

@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
@@ -283,6 +284,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 				}
 				
 				m.add(new Message(from, stamp, text, utc, id));
+				database.add(m);
 			}
 			return true;
 		}
@@ -319,6 +321,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			String attr = message.getAttribute("id");
 			if (!attr.isEmpty()) id = attr; // message@id gaat voor result@id
 			m.add(new Message(jid, stamp, text, utc, id));
+			database.add(m);
 			return true;
 		}
 			
@@ -577,7 +580,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		return false;
 	}
 	
-	private ChatUser get(String key) {
+	public ChatUser get(String key) {
 		key = addDomain(key);
 		ChatUser u = byJid.get(key);
 		return u;
@@ -588,7 +591,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		return key;
 	}
 	
-	private String getDisplayName(String jid) {
+	public String getDisplayName(String jid) {
 		ChatUser u = get(jid);
 		return u == null ? jid : u.nickName;
 	}
@@ -748,7 +751,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		style.setProperty("maxWidth", 1024, Unit.PX);
 		container.setWidget(keyboard);
 
-		database = new InboxDatabase();
+		database = new InboxDatabase(this);
 		west = new InboxPanel(database);
 		
 		
@@ -909,6 +912,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			  sendToConnection( c -> {
 				c.send(e);
 				um.getMessages().add(msg);
+				database.add(um.getMessages(), um.getUser());
 			});
 		} else {
 			// select user 1st;
@@ -1099,6 +1103,11 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			getConnection();
 		}
 		
+	}
+
+	public Optional<ChatRoom> getRoom(String jit) {
+		List<ChatRoom> rooms = chatUser.room;
+		return rooms.stream().filter(r -> jit.equals(r.jid)).findAny();
 	}
 	
 }

@@ -18,7 +18,7 @@ public class Message implements Comparable<Message> {
 	String getContent() {
 		return content;
 	}
-	String getStamp() {
+	public String getStamp() {
 		return stamp;
 	}
 	public String getSender() {

@@ -1,66 +1,109 @@
 package nl.uu.fi.dwo.lms.chatgwt.inbox;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.TreeMap;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 
-public class InboxDatabase {
+import nl.uu.fi.dwo.lms.chatgwt.ChatGWT;
+import nl.uu.fi.dwo.lms.chatgwt.Message;
+import nl.uu.fi.dwo.lms.chatgwt.MessageModel;
+import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
+import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
 
-	public static class InboxInfo implements Comparable<InboxInfo> {
+public class InboxDatabase implements ValueChangeHandler<List<Message>> {
 
-		/**
-	     * The key provider that provides the unique ID of a contact.
-	     */
-	    public static final ProvidesKey<InboxInfo> KEY_PROVIDER = new ProvidesKey<InboxInfo>() {
+    public static final ProvidesKey<InboxInfo> KEY_PROVIDER = new ProvidesKey<InboxInfo>() {
 	      @Override
 	      public Object getKey(InboxInfo item) {
 	        return item == null ? null : item.getId();
 	      }
 	    };
 
-	    private Object id;
+	public class InboxInfo implements Comparable<InboxInfo> {
 
+		/**
+	     * The key provider that provides the unique ID of a contact.
+	     */
+
+	    private Object id;
+	    private MessageModel model;
+	    private String title;
+	    private HandlerRegistration reg;
+	    private boolean u;
 		
 		public InboxInfo(Object id) {
 			this.id = id;
+			this.title = Objects.toString(id);
 		}
 
-
+		public InboxInfo(MessageModel model, String title, boolean u) {
+			this.model = model;
+			this.id = model.getJid();
+			this.title = title;
+			this.u = u;
+		}
+		
 		@Override
 		public int compareTo(InboxInfo o) {
-			return getDate().compareTo(o.getDate());
+			return o.getUTC().compareTo(getUTC());
 		}
-
 
 		protected Object getId() {
 			return id;
 		}
 
-
 		public String getTitle() {
-			// TODO Auto-generated method stub
-			return "plat";
+			return title;
 		}
 
-
+		String getUTC() {
+			List<Message> list = model.getMessages();
+			if (list.isEmpty()) return "";
+			Message last = list.get(list.size()-1);
+			return last.getUTC();	
+		}
+		
+		
 		public String getDate() {
-			// TODO Auto-generated method stub
-			return "12-12 22:22";
+			List<Message> list = model.getMessages();
+			if (list.isEmpty()) return "";
+			Message last = list.get(list.size()-1);
+			return last.getStamp();
 		}
 		
 		public boolean isUnseen() {
-			return true;
+			return model.hasUnread();
 		}
 		
 		public String getAuthor() {
-			return "Wim van Velthoven"; 
+			List<Message> list = model.getMessages();
+			if (list.isEmpty()) return "";
+			String sender = list.get(list.size()-1).getSender();
+			if (u) {
+				if (sender.equals(model.getJid()))
+					return "";
+			}
+			return parent.getDisplayName(sender); 
+		}
+
+		public boolean isRoom() {
+			return !u;
 		}
 		
 	}
 	  private ListDataProvider<InboxInfo> dataProvider = new ListDataProvider<InboxInfo>();
-
+	  private Map<String, InboxInfo> asMap = new TreeMap<>();
+	  public ChatGWT parent;
 	  /**
 	   * Add a display to the database. The current range of interest of the display
 	   * will be populated with data.
@@ -71,13 +114,47 @@ public class InboxDatabase {
 	    dataProvider.addDataDisplay(display);
 	  }
 
-	public InboxDatabase() {
-		List<InboxInfo> list = dataProvider.getList();
-		list.add(new InboxInfo(1));
-		list.add(new InboxInfo(2));
-		list.add(new InboxInfo(3));
-		list.add(new InboxInfo(4));
-		list.add(new InboxInfo(5));
+	public InboxDatabase(ChatGWT parent) {
+		this.parent = parent;
 	}
 
+	public void add(MessageModel model) {
+		String jit = model.getJid();
+		if (asMap.containsKey(jit)) return;
+		ChatUser user = parent.get(jit);
+		if (user != null) {
+			add(model, user);
+			return;
+		}
+		Optional<ChatRoom> room = parent.getRoom(jit);
+		room.ifPresent(r -> add(model, r));
+		
+	}
+	
+	public void add(MessageModel model, ChatUser user) {
+		String jit = model.getJid();
+		if (asMap.containsKey(jit)) return;
+		String display = user.nickName;
+		InboxInfo info = new InboxInfo(model, display, true);
+		asMap.put(jit, info);
+		dataProvider.getList().add(0, info);
+		info.reg = model.addValueChangeHandler(this);		
+	}
+	
+	public void add(MessageModel model, ChatRoom room) {
+		String jit = model.getJid();
+		if (asMap.containsKey(jit)) return;
+		String display = room.displayName;
+		InboxInfo info = new InboxInfo(model, display, false);
+		asMap.put(jit, info);
+		dataProvider.getList().add(0, info);
+		info.reg = model.addValueChangeHandler(this);
+	}
+
+	@Override
+	public void onValueChange(ValueChangeEvent<List<Message>> event) {
+		Collections.sort(dataProvider.getList());
+		dataProvider.refresh();
+	}
+	
 }
