@@ -1109,5 +1109,14 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		List<ChatRoom> rooms = chatUser.room;
 		return rooms.stream().filter(r -> jit.equals(r.jid)).findAny();
 	}
+
+	public void updateRoomExtra(ChatRoom chatRoom) {
+		updateRoom(chatRoom);
+		eastHeader.setMultiChat(true);
+		eastHeader.setSelectedRoom(chatRoom);		
+	}
+	public void updateUserExtra(ChatUser user) {
+		
+	}
 	
 }

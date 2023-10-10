@@ -151,5 +151,13 @@ public class EastHeader extends Composite {
 		if (predicate == null) isUnread = FALSE;
 		else isUnread = predicate;
 	}
+
+	public void setSelectedRoom(ChatRoom chatRoom) {
+		int index = roomList.indexOf(chatRoom);
+		if (index >= 0) {
+			naam.setSelectedIndex(index);
+		}
+		
+	}
 	
 }

@@ -100,6 +100,9 @@ public class InboxPanel extends Composite {
 		} else {
 			ChatUser user = parent.get(key);
 			// switch to room of user, select usermodel
+			if (user != null) {
+				parent.updateUserExtra(user);
+			}
 		}
 	}
 	
