@@ -770,6 +770,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 					break;
 				case '\n':
 					enter0();
+				case '\r': // avoid
 					break;
 				default:
 					insert0(chars[i]);
