@@ -15,6 +15,7 @@
 	<script src="/dwo/apps/deploy.jsp"></script>
 	<link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/DWOplayer.css" >
 <% if ("111".equals(profile)) {%><link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/css/inf.css" ><%}%>    
+<% if ("114".equals(profile)) {%><link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/css/react.css" ><%}%>    
     <!--                                                               -->
     <!-- Consider inlining CSS to reduce the number of requested files -->
     <!--                                                               -->
