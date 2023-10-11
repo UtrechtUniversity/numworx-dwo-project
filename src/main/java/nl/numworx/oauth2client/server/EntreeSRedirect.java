@@ -1,11 +1,15 @@
 package nl.numworx.oauth2client.server;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -25,12 +29,18 @@ import io.jsonwebtoken.Claims;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SystemManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 public class EntreeSRedirect extends HttpServlet {
 	private static final String CHALLENGE = "dwoSAMLchallenge";
+	static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
+	static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
 
 	private RestHandler rest;
     RestAuthenticator authenticator;
@@ -74,28 +84,75 @@ public class EntreeSRedirect extends HttpServlet {
 
 			String className = claims.get("nlEduPersonUnit", String.class);
 			className = Objects.toString(className, "");
-			// if schoolid = SURF then schoolid = @suffix van uid
+			// if schoolid = SURFIN then schoolid = @suffix van uid
+			if ("SURFIN".equals(schoolID)) {
+				int lastindex = user_id.lastIndexOf('%');
+				schoolID = user_id.substring(lastindex+1);
+			}
+
+			// stap1 kijk of er al een link is:
+			   DomSamlUser u = new DomSamlUser();
+			   u.setSamlOrgId(s(org_id));
+			   u.setSamlUserId(s(lti_id));
+			   try {
+				   u = systemManager.requestSamlToken(u);
+				   String authToken = u.getAuthToken();
+				   redirect(req, resp, state, org_id, login, redirectUri, lti_id, authToken);
+				   return;
+			   } catch (Dwo2Exception e) {
+				   
+			   }
 			
-			
+			cookie("givenName", first, resp);
+			cookie("insertion", middle, resp);
+			cookie("familyName",last, resp);
+			cookie("email", email, resp);
 			// convert schoolID (BRIN) to number, DWO2Exception if not found
 			DomSchoolFull fullschool = systemManager.getSchool(schoolID);
+			cookie("schoolGroup", role, resp);
+			
+			cookie(DWO_SAML_ORGANIZATION_ID, org_id, resp);
+			cookie(DWO_SAML_USER_ID, lti_id, resp);
+			if (fullschool != null) {
+				cookie("schoolLogin", fullschool.getSchoolLogin(), resp);
+				cookie("schoolCode", getSchoolCode(fullschool, role), resp);
+			} else {
+				cookie("schoolLogin", null, resp);
+				cookie("schoolCode", null, resp);
+				
+			}
+			cookie("cancel", redirectUri, resp);
+			cookie("next", redirectUri + "?with=entree", resp);
+			cookie("className", className, resp);
+			cookie("suggestion", systemManager.getSuggestion(first + middle + last), resp);
+			
+			if (true) {
+				resp.sendRedirect("/dwo/register/Register.html");
+				return;
+			}
+			
+
+			if (fullschool == null) {
+				resp.setContentType("text/plain");
+				PrintWriter out = resp.getWriter();
+				out.println("uid " + user_id);
+				out.println("first " + first);
+				out.println("middle " + middle);
+				out.println("last " + last);
+				out.println("email " + email);
+				out.println("role " + roles);
+				out.println("class " + className);
+				out.println("schoolid " + schoolID);
+				out.println("orgid " + org_id);
+				out.println("claims " + claims);
+				return;
+			
+			}
 			Long l = MySQLPersistenceId.getNativeId(fullschool);
 			schoolID = l.toString();
 			String authToken = rest.registerSAML(user_id, lti_id, org_id, first, middle, last, email, role, schoolID, className);
 			
-			String token = "3\f" + lti_id + '\f' + org_id + '\f' + authToken;
-			token = Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
-			
-			code = token;
-			Cookie cookie = new Cookie(CHALLENGE, login.nonce);
-			cookie.setHttpOnly(true);
-			cookie.setSecure(req.isSecure());
-			cookie.setPath("/");
-			resp.addCookie(cookie);
-			redirectUri += "?state=" + state;
-			redirectUri += "&code="  + code;
-			log(redirectUri);
-			resp.sendRedirect(redirectUri);
+			redirect(req, resp, state, org_id, login, redirectUri, lti_id, authToken);
 
 		} catch (OAuthSystemException | OAuthProblemException | ParseException e) {
 			log("doGet", e);
@@ -104,6 +161,59 @@ public class EntreeSRedirect extends HttpServlet {
 			log("do get school", e);
 			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 		}		
+	}
+
+	
+	
+	private void cookie(String name, String value, HttpServletResponse response) {
+		  if (value != null && !value.isEmpty()) {
+			Cookie cookie = new Cookie(name, u(value).toString());
+		    response.addCookie(cookie);
+		  } else {
+			  Cookie cookie = new Cookie(name, "");
+			  cookie.setMaxAge(0);
+			  response.addCookie(cookie);
+		  }
+		}
+
+	protected void redirect(HttpServletRequest req, HttpServletResponse resp, String state, String org_id,
+			EntreeSLogin login, String redirectUri, String lti_id, String authToken) throws IOException {
+		String code;
+		String token = "3\f" + lti_id + '\f' + org_id + '\f' + authToken;
+		token = Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
+		
+		code = token;
+		Cookie cookie = new Cookie(CHALLENGE, login.nonce);
+		cookie.setHttpOnly(true);
+		cookie.setSecure(req.isSecure());
+		cookie.setPath("/");
+		resp.addCookie(cookie);
+		redirectUri += "?state=" + state;
+		redirectUri += "&code="  + code;
+		log(redirectUri);
+		resp.sendRedirect(redirectUri);
+	}
+
+	private String s(Object o) {
+		return Objects.toString(o, "");
+	}
+	private Object u(Object value) {
+		  try {
+			  	value = URLEncoder.encode(value.toString(), "UTF-8").replaceAll("\\+", "%20");
+			  } catch(Exception e) {}
+		  return value;
+	}
+	public String getSchoolCode(DomSchoolFull school, String role) {
+		if (school != null && AboType.premium == school.getAboType()) {
+			
+			List<DomMapEntry<RoleType, String>> passwords = school.getPasswords();
+			if (passwords != null) 
+				for (DomMapEntry<RoleType, String> item : passwords) {
+				if (role.equals(item.getKey().name()))
+					return item.getValue();
+			}
+		}
+		return null;
 	}
 
 	@Override
