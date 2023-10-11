@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.lms.chatgwt;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,7 @@ import com.stanziq.strophe.client.Element;
 import com.stanziq.strophe.client.Handler;
 
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
+import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 
@@ -191,5 +193,9 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 		data.clear();
 		data.addAll(toUserModelList());
 		provider.refresh();
+	}
+
+	public Optional<UserModel> findUser(ChatUser user) {
+		return data.stream().filter(m -> m.getUser().equals(user)).findAny();
 	}
 }

@@ -157,4 +157,8 @@ public class InboxDatabase implements ValueChangeHandler<List<Message>> {
 		dataProvider.refresh();
 	}
 	
+	public Optional<InboxInfo> get(MessageModel m) {
+		String jid = m.getJid();
+		return Optional.ofNullable(asMap.get(jid));
+	}
 }

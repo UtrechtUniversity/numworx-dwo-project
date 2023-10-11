@@ -283,8 +283,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 					if (!attr.isEmpty()) id = attr;
 				}
 				
-				m.add(new Message(from, stamp, text, utc, id));
 				database.add(m);
+				m.add(new Message(from, stamp, text, utc, id));
 			}
 			return true;
 		}
@@ -320,8 +320,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			id = elems.getItem(0).getAttribute("id");
 			String attr = message.getAttribute("id");
 			if (!attr.isEmpty()) id = attr; // message@id gaat voor result@id
-			m.add(new Message(jid, stamp, text, utc, id));
 			database.add(m);
+			m.add(new Message(jid, stamp, text, utc, id));
 			return true;
 		}
 			
@@ -362,6 +362,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		addToPanel(event.getValue());
 		event.getValue().forEach(mm::setRead);
 		persist.flush();
+		west.setSelection(database.get(mm), false);
 	}
 	private void addToPanel(Collection<Message> msgs) {
 		msgs.forEach(this::addToPanel);
@@ -635,6 +636,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 					r.jid = r.jid.toLowerCase() + "@" + ROOMS;
 					if (r.chatUser != null) {
 						r.chatUser.forEach(this::toJid);
+						List<ChatRoom> rlist = Collections.singletonList(r);
+						r.chatUser.forEach(us -> us.room = rlist);
 					}
 					
 				});
@@ -1073,6 +1076,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		m.getMessages().forEach(m::setRead);
 		persist.flush();
 		addToPanelHandler = m.addValueChangeHandler(this::addToPanel);
+		west.setSelection(database.get(m), false);
 	}
 	
 	static final String ISO8601_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ";
@@ -1116,6 +1120,16 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		eastHeader.setSelectedRoom(chatRoom);		
 	}
 	public void updateUserExtra(ChatUser user) {
+	// if room is okay....
+		ChatRoom room = user.room.get(0);
+		updateRoom(room);
+		eastHeader.setSelectedRoom(room);		
+		setSelection(selection, true);
+		eastHeader.setMultiChat(false);
+		UserTable u = user.role == RoleType.STUDENT ? students : teachers;		
+		Optional<UserModel> model = u.findUser(user);
+		if (model.isPresent())
+			selection.setSelected(model.get(), true);
 		
 	}
 	

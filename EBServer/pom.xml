@@ -227,13 +227,13 @@
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>OAuth2Client</artifactId>
-		<version>1.0.5</version>
+		<version>1.0.6-SNAPSHOT</version>
 		<classifier>classes</classifier>
 	</dependency>
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>OAuth2Client</artifactId>
-		<version>1.0.5</version>
+		<version>1.0.6-SNAPSHOT</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
@@ -441,9 +441,9 @@
                         	<CDN_HOST>cdn.dwo.nl</CDN_HOST>
                         	<CDNURL>https://cdn.dwo.nl</CDNURL>
                             <ENV_NOSEB>false</ENV_NOSEB>
-                            <DWO_ENV>test</DWO_ENV>
+                            <DWO_ENV>test entree</DWO_ENV>
                             <SEB_TOETS_MAC>9153c48c6111d2733add6e1d596db4059c302cf736dcb18ca498288e21404507,c5d129e27f57b1970d2ffda2ed745a20f7d8e12ed9bfbfb168e83f75f9f870cf</SEB_TOETS_MAC>
-  							<ALLOW_ORIGIN>https://entree-s.dwo.nl http://localhost:${http.port} https://hub-dev.dwo.nl</ALLOW_ORIGIN>
+  							<ALLOW_ORIGIN>http://localhost:${http.port} https://hub-dev.dwo.nl https://entree-s.dwo.nl </ALLOW_ORIGIN>
                         </systemProperties>
 					<server>TomcatServer</server>
 					<path>/</path>
@@ -726,7 +726,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<DWOmAccessVersion>2.5.20</DWOmAccessVersion>
 		<RegisterVersion>2.5.2</RegisterVersion>
-		<DWOGwtClientVersion>2.5.23</DWOGwtClientVersion>
+		<DWOGwtClientVersion>2.5.24-SNAPSHOT</DWOGwtClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testeb5server</aws.environmentName>
