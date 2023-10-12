@@ -47,6 +47,12 @@ public class Snoop extends HttpServlet {
 		response.setContentType("text/plain");
 
 		out.println("Snoop Servlet");
+		Runtime runtime = Runtime.getRuntime();
+		long max = r(runtime.maxMemory());
+		long free = r(runtime.freeMemory());
+		long total = r(runtime.totalMemory());
+		long cpus = runtime.availableProcessors();
+		out.println("total " + total + "k, max " + max + "k, free " + free + "k, cpu " + cpus);
 		out.println();
 		out.println("Servlet init parameters:");
 		Enumeration<?> e = getInitParameterNames();
@@ -182,6 +188,10 @@ public class Snoop extends HttpServlet {
 				out.println(HTMLFilter.filter("   " + name + " = " + session.getAttribute(name)));
 			}
 		}
+	}
+
+	private static long r(long n) {
+		return (n + 512L)/1024L;
 	}
 }
 

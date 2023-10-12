@@ -339,7 +339,8 @@
                         <path>/dwo</path>
                         <systemProperties>
                             <java.util.secureRandomSeed>true</java.util.secureRandomSeed>
-                    		<DWO_ENV>test</DWO_ENV>                   
+                    		<DWO_ENV>test</DWO_ENV>
+                    		<DWO_REDIRECT>false</DWO_REDIRECT>                   
                         </systemProperties>
                         <warFile>target/${project.artifactId}-${project.version}.war</warFile>
                             <contextFile>src/test/tomcat/${context.xml}</contextFile>
