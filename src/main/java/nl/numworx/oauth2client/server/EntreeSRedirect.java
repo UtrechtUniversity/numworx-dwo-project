@@ -33,6 +33,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -124,7 +125,10 @@ public class EntreeSRedirect extends HttpServlet {
 			cookie("cancel", redirectUri, resp);
 			cookie("next", redirectUri + "?with=entree", resp);
 			cookie("className", className, resp);
-			cookie("suggestion", systemManager.getSuggestion(first + middle + last), resp);
+			String sugg = first + middle + last;
+			sugg = validUsername(sugg);
+			// alleen A-Za-z0-9 en - . _
+			cookie("suggestion", systemManager.getSuggestion(sugg), resp);
 			
 			if (true) {
 				resp.sendRedirect("/dwo/register/Register.html");
@@ -163,8 +167,27 @@ public class EntreeSRedirect extends HttpServlet {
 		}		
 	}
 
+
+
+	protected static String validUsername(String sugg) {
+		// no spaces or other weird stuff
+		if (! SimpleValidUserFieldsChecker.isValidUserName(sugg)) {
+			StringBuilder sb = new StringBuilder();
+			for (char ch : sugg.toCharArray()) {
+				if (validUsername(ch)) sb.append(ch);
+			}
+			sugg = sb.toString();
+			
+		}
+		return sugg;
+	}
 	
-	
+	static boolean validUsername(char ch) {
+		return SimpleValidUserFieldsChecker.isValidUserName("--"+ch);
+	}
+
+
+
 	private void cookie(String name, String value, HttpServletResponse response) {
 		  if (value != null && !value.isEmpty()) {
 			Cookie cookie = new Cookie(name, u(value).toString());
