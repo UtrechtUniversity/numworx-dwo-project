@@ -9,13 +9,11 @@
 	</ui:style>
 	<g:HTMLPanel>
 	  <table style='width: 100%; margin-bottom: 100px' id='eastheader'>
-	    <colgroup>
-	    	<col></col>
-	    	<col style='width: 140px'></col>
-	    </colgroup>
 		<tbody>
-			<tr><td><div class='checkbox' style='zoom: 0.8;'><g:RadioButton ui:field="klas" name='route' /></div><label class='eastheader' > <ui:text from='{rb.classMessages}' /></label></td><td><span class='klasnaam'><ui:text from='{dwo.NUM_TBL_CLASSES_CLASSNAME}' /></span></td></tr>
-			<tr><td><div class='checkbox' style='zoom: 0.8;'><g:RadioButton ui:field="persoon" name='route' /></div><label class='eastheader'> <ui:text from='{rb.personalMessages}' /></label></td><td><g:ListBox ui:field='naam' addStyleNames='klasbox profile-borderBox'></g:ListBox></td></tr>
+			<tr><td><span class='klasnaam'><ui:text from='{dwo.NUM_TBL_CLASSES_CLASSNAME}' /></span></td></tr>
+			<tr><td><g:ListBox ui:field='naam' addStyleNames='klasbox profile-borderBox'></g:ListBox></td></tr>
+			<tr><td><div class='checkbox' style='zoom: 0.8;'><g:RadioButton ui:field="klas" name='route' /></div><label class='eastheader' > <ui:text from='{rb.classMessages}' /></label></td></tr>
+			<tr><td><div class='checkbox' style='zoom: 0.8;'><g:RadioButton ui:field="persoon" name='route' /></div><label class='eastheader'> <ui:text from='{rb.personalMessages}' /></label></td></tr>
 		</tbody>
 	  </table>
 	</g:HTMLPanel>

@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.lms.chatgwt.Message;
 import nl.uu.fi.dwo.lms.chatgwt.MessageModel;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
+import nl.uu.fi.dwo.lms.chatgwt.util.PersistIF;
 
 public class InboxDatabase implements ValueChangeHandler<List<Message>> {
 
@@ -29,6 +30,35 @@ public class InboxDatabase implements ValueChangeHandler<List<Message>> {
 	      }
 	    };
 
+	PersistIF dummy = new PersistIF() {
+
+		@Override
+		public void init(String jid) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void flush() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public boolean isSeen(String jid, Message message) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public void seen(String jid, Message msg) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	};
+	    
+	    
 	public class InboxInfo implements Comparable<InboxInfo> {
 
 		/**
@@ -44,6 +74,7 @@ public class InboxDatabase implements ValueChangeHandler<List<Message>> {
 		public InboxInfo(Object id) {
 			this.id = id;
 			this.title = Objects.toString(id);
+			this.model = new MessageModel(title, dummy);
 		}
 
 		public InboxInfo(MessageModel model, String title, boolean u) {

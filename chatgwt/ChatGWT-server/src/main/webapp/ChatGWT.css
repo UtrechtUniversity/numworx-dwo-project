@@ -188,3 +188,29 @@ table.dwo tbody {
 .center-panel {
 	margin-right: -17px;
 }
+
+.inbox {
+	min-height: 2em;
+}
+
+.inbox .inbox1, .inbox .inbox2 {
+	padding: 3px 10px;
+	line-height: 1.5em;
+}
+.inbox > div > div {
+	border-bottom: 1px #1b75bb solid;
+}
+.inbox > div > div:last-of-type {
+	border-bottom: none;
+}
+
+
+.inbox .inbox1 span:last-of-type {
+	float: right;
+}
+.inbox .inbox2 span:last-of-type {
+	color: green;
+	float: right;
+	font-size: 1.5em;
+}
+

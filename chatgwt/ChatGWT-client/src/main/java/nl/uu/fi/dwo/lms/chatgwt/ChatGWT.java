@@ -105,6 +105,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	private static final int COL_6 = 474;
 	private static final int COL_4 = 140*2+18;
 	private static final int COL_2 = 140;
+	private static final int COL_3 = 210;
+	
 	public  static final Text rb = GWT.create(Text.class);
 	public  static final Dwo2LocaleMessages dworb = GWT.create(Dwo2LocaleMessages.class);
 
@@ -758,10 +760,11 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		west = new InboxPanel(database);
 		
 		
-		main.addWest(west, COL_2);
+		main.addWest(west, COL_3);
+		main.addWest(new SimplePanel(), 18);
 		
 		main.addSouth(container, 200);
-		main.addEast(east, COL_4);
+		main.addEast(east, COL_3);
 		main.addEast(new SimplePanel(), 18);
 		
 		main.getWidgetContainerElement(container).getStyle().setBackgroundColor("#e5e7e9");
