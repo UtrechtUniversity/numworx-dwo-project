@@ -199,6 +199,7 @@ table.dwo tbody {
 }
 .inbox > div > div {
 	border-bottom: 1px #1b75bb solid;
+	height: 4em;
 }
 .inbox > div > div:last-of-type {
 	border-bottom: none;
