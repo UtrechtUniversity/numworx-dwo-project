@@ -46,6 +46,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.google.web.bindery.event.shared.HandlerRegistrations;
@@ -980,7 +981,11 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	      if (cursor == selectionEnd) selectionEnd = -1;
 	    }
 	  }
-	
+	@Override
+	public void cursorUpShift() {
+		// TODO implement extend selection
+		cursorUp();
+	}
 	
 	@Override
 	public void cursorUp() {
@@ -1008,6 +1013,13 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 			}
 		}
 	}
+	
+	@Override
+	public void cursorDownShift() {
+		// TODO implement extend selection
+		cursorDown();
+	}
+	
 	
 	@Override
 	public void cursorDown() {
