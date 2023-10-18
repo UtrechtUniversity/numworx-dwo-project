@@ -41,6 +41,7 @@ import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
+import nl.uu.fi.dwo.mobile.client.ui.VisibilityDetect;
 import nl.uu.fi.dwo.mobile.client.ui.places.ClassesPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
@@ -147,11 +148,14 @@ public class DWO2player extends DWOplayer implements EntryPoint {
   @Inject
   void createTabletDisplay(ClientFactory factory, TabletActivityMapper appActivityMapper, 
 		  IdleDetect idleDetect, DWOplayerParameters PARAMETERS, 
-		  NavigationView navigation, HeaderView header, EventBus bus) {
+		  NavigationView navigation, HeaderView header, EventBus bus,
+		  VisibilityDetect v
+		  ) {
     super.createTabletDisplay(appActivityMapper, PARAMETERS, navigation, header, bus);
  
  // TESTING
     bus.addHandler(IdleDetect.TYPE, ev -> { GWT.log(ev.toString()); });
+    v.addValueChangeHandler(ev -> GWT.log("visibility: " + ev.getValue()));
     idleDetect.start();
   
     MsgDialogPresenter mdp = new MsgDialogPresenter(bus);
