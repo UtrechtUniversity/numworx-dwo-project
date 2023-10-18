@@ -106,7 +106,7 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 		table.addColumn(onlineColumn, rb.online());
 		//table.addColumn(unseenColumn, rb.newMessages());
 		
-		table.setColumnWidth(onlineColumn, 100, Unit.PX);
+		table.setColumnWidth(onlineColumn, 50, Unit.PX);
 		//table.setColumnWidth(unseenColumn, 150, Unit.PX);
 		// initialize the data
 		

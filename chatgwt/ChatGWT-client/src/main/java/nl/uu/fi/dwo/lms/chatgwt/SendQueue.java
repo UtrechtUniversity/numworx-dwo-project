@@ -31,6 +31,7 @@ class SendQueue {
  * @param e the Element
  */
 	boolean remove(Element e) {
+		LOG.info("remove " + e.serialize());
 		Iterator<Element> i = toSend.iterator();
 		while(i.hasNext()) {
 			Element s = i.next();
@@ -45,7 +46,11 @@ class SendQueue {
 private boolean equals(Element in, Element out) {
 	// how to compare incoming message and outgoing message
 	LOG.info("compare in=" + in.serialize() + ", out=" + out.serialize() );
-	return true;
+	String oid = out.getId();
+	String iid = in.getId();
+	if (!oid.isEmpty() && oid.equals(iid) ) 
+		return true;
+	return false;
 }
 	
 }

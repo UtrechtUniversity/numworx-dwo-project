@@ -16,7 +16,7 @@
 	</ui:style>
 	<g:HTMLPanel>
 		<div class='header gwt-Label {style.header}'>INBOX</div>
-		<s:ShowMorePager ui:field='pagerPanel' addStyleNames='{style.scrollable} westpanel'>
+		<s:ShowMorePager ui:field='pagerPanel' addStyleNames='{style.scrollable} westpanel profile-borderBox'>
 		</s:ShowMorePager>
 	</g:HTMLPanel>
 </ui:UiBinder> 
