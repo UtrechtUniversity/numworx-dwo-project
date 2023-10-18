@@ -183,6 +183,7 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
                   break;
               case MODULESVIEW:
             	  presenterFactory.getMainPresenter().showModulesView();
+            	  presenterFactory.getModulesPresenter().setVisible(true);
                   break;
               case TRAIL:
             	  presenterFactory.getMainPresenter().setTrails(switchViewEvent.getResultState());

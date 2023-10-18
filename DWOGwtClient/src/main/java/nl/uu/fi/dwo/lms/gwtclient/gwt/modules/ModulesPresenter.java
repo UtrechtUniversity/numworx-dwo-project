@@ -60,6 +60,8 @@ public class ModulesPresenter implements SwitchViewEventHandler {
     private static final String ISMAINNAVVISIBLE = "isMainNavVisible";
     private static final String TRAIL = SelectedView.TRAIL.name();
     private static final String RETOUR = SelectedView.RETOUR.name();
+    private static final String VISIBLE = "shown";
+    private static final String INVISIBLE = "hidden";
 
     private final Failure FAILURE;
     private final EventBus eventBus;
@@ -366,6 +368,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
           if (role == RoleType.STUDENT || role == RoleType.ANONYMOUS) return;
         }
         mainView.setIdleTimeout(MainPresenter.IDLE);
+        view.sendMessage(INVISIBLE);
       }
 // switch to other view.     
       LOG.info("switch " + select);
@@ -415,6 +418,14 @@ public class ModulesPresenter implements SwitchViewEventHandler {
 //			view.sendMessage("GOTO:last:");
 //			return p;
 //		});		
+	}
+
+	public void setVisible(boolean b) {
+		if (b)
+			view.sendMessage(VISIBLE);
+		else
+			view.sendMessage(INVISIBLE);
+		
 	}
 
 }
