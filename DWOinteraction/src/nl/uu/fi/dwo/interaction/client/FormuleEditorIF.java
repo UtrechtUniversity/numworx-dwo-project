@@ -27,8 +27,10 @@ public interface FormuleEditorIF {
 	void cursorToRightShift();
 	
 	void cursorUp();
+	default void cursorUpShift() { cursorUp(); }
 	
 	void cursorDown();
+	default void cursorDownShift() { cursorDown(); }
 
 	void insert(char charAt);
 

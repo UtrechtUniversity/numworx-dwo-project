@@ -323,19 +323,22 @@ LOG.severe("on key down " + down + " " + code);
 		}		
 		else if (event.isUpArrow())
 		{
-			editor.cursorUp();
+			if (event.isShiftKeyDown())
+				editor.cursorUpShift();
+			else
+				editor.cursorUp();
 			event.preventDefault();
 			event.stopPropagation();
 		}
 		else if (event.isDownArrow())
 		{
-			editor.cursorDown();
+			if (event.isShiftKeyDown())
+				editor.cursorDownShift();
+			else
+				editor.cursorDown();
 			event.preventDefault();
 			event.stopPropagation();
 		}
-		
-		
-		
 		else
 		{
 			switch (event.getNativeKeyCode())
