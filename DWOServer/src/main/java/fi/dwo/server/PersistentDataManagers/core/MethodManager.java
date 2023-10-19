@@ -199,7 +199,11 @@ public class MethodManager {
 		try {
 			TypedQuery<PersistentMethod> query = 
 			    em.createNamedQuery(
-			      profile != null ? "PersistentMethod.findBySchoolIDandProfile" : "PersistentMethod.findBySchoolID"
+			      school.getSchoolID().longValue() == 0L 
+			      	? "PersistentMethod.findBySchoolIDandProfile" 
+			      : profile != null 
+			      	? "PersistentMethod.findBySchoolIDorProfile" 
+			        : "PersistentMethod.findBySchoolID"
 			      , PersistentMethod.class);
 			query.setParameter("schoolID", school.getSchoolID());
 			if (profile != null) query.setParameter("dwoProfileID", profile.getDwoProfileID());

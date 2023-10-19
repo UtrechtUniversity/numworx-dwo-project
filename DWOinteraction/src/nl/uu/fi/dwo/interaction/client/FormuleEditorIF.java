@@ -27,8 +27,10 @@ public interface FormuleEditorIF {
 	void cursorToRightShift();
 	
 	void cursorUp();
+	default void cursorUpShift() { cursorUp(); }
 	
 	void cursorDown();
+	default void cursorDownShift() { cursorDown(); }
 
 	void insert(char charAt);
 
@@ -99,4 +101,6 @@ public interface FormuleEditorIF {
 	void matrix(int aantalRijen, int aantalKolommen);
 	
 	void selectAll();
+	
+	void insertcp(int codepoint);
 }

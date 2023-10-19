@@ -69,10 +69,10 @@ iframe {
 }
 
 .textEditor.textEditor_nw > div {
-	white-space: nowrap;
+	white-space: pre;
 }
 .textEditor.textEditor_nwh > div {
-	white-space: nowrap;
+	white-space: pre;
 	display: block;
 }
 .textEditor_h > div {

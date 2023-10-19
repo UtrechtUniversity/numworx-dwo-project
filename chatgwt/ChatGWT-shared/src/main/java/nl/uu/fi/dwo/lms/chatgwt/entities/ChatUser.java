@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.lms.chatgwt.entities;
 
 import java.util.List;
+import java.util.Objects;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
@@ -39,5 +40,22 @@ public class ChatUser {
 		nickName = org.nickName;
 		role = org.role;
 		// no password and no room.
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(jid, role);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ChatUser other = (ChatUser) obj;
+		return Objects.equals(jid, other.jid) && role == other.role;
 	}
 }

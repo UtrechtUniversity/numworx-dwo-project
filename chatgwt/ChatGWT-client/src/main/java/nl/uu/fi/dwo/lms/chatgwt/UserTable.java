@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.lms.chatgwt;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,7 @@ import com.stanziq.strophe.client.Element;
 import com.stanziq.strophe.client.Handler;
 
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
+import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 
@@ -59,12 +61,12 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 		}		
 	};
 
-	TextColumn<UserModel> unseenColumn = new TextColumn<UserModel>() {
-		@Override
-		public String getValue(UserModel object) {
-			return object.hasUnseen()? "●" : "";
-		}		
-	};
+//	TextColumn<UserModel> unseenColumn = new TextColumn<UserModel>() {
+//		@Override
+//		public String getValue(UserModel object) {
+//			return object.hasUnseen()? "●" : "";
+//		}		
+//	};
 	private ListDataProvider<UserModel> provider;
 	private ChatRoom room;
 	private RoleType role;
@@ -96,16 +98,16 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 		}
 		nameColumn.setSortable(true);
 		onlineColumn.setSortable(true);
-		unseenColumn.setSortable(true);
+		//unseenColumn.setSortable(true);
 		table.setTableLayoutFixed(true);
 		table.addColumn(nameColumn, naam);
 		onlineColumn.setCellStyleNames("blu");
-		unseenColumn.setCellStyleNames("gre");
+		//unseenColumn.setCellStyleNames("gre");
 		table.addColumn(onlineColumn, rb.online());
-		table.addColumn(unseenColumn, rb.newMessages());
+		//table.addColumn(unseenColumn, rb.newMessages());
 		
-		table.setColumnWidth(onlineColumn, 100, Unit.PX);
-		table.setColumnWidth(unseenColumn, 150, Unit.PX);
+		table.setColumnWidth(onlineColumn, 50, Unit.PX);
+		//table.setColumnWidth(unseenColumn, 150, Unit.PX);
 		// initialize the data
 		
 		List<UserModel> initialData = toUserModelList();
@@ -191,5 +193,9 @@ class UserTable extends Composite implements ProvidesKey<UserModel>, ValueChange
 		data.clear();
 		data.addAll(toUserModelList());
 		provider.refresh();
+	}
+
+	public Optional<UserModel> findUser(ChatUser user) {
+		return data.stream().filter(m -> m.getUser().equals(user)).findAny();
 	}
 }

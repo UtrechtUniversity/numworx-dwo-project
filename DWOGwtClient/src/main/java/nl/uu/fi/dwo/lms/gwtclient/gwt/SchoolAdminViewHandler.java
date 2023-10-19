@@ -49,6 +49,7 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
           break;
         case MODULESVIEW:
         	presenterFactory.getMainPresenter().showModulesView();
+      	    presenterFactory.getModulesPresenter().setVisible(true);
           break;
         case ACCOUNT:
           mainView.selectView(value);

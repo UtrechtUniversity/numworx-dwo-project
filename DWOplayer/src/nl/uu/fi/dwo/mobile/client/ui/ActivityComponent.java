@@ -29,6 +29,7 @@ public abstract class ActivityComponent implements ActivityInterface {
 	public abstract TrafficAgent agent();
 	public abstract Optional<DwoGlobalVars> vars();
 	public abstract NeedLogin needLogin();
+	public abstract VisibilityDetect visibilityDetect();
 	
 	@Nullable public abstract Memento memento();
 	@Named("API") public abstract Scorm2004IF api();

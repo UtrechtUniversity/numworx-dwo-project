@@ -77,7 +77,8 @@ public class StudentViewHandler implements SwitchViewEventHandler {
         break;
       case MODULESVIEW:
     	  presenterFactory.getMainPresenter().showModulesView();
-        break;
+    	  presenterFactory.getModulesPresenter().setVisible(true);
+       break;
       case ACCOUNT:
         mainView.selectView(value);
         mainView.showAccountView();

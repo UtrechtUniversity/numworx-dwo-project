@@ -708,27 +708,30 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	
 	@Override
 	public void kopieer(FormuleClipboardIF clip) {
-		kopieer(innerView);
+		String s = kopieer(innerView);
+		if (s != null) clip.setClipboard(s);
 	}
-	private static native void kopieer(Object inner) /*-{
-		inner.kopieer();
+	private static native String kopieer(Object inner) /*-{
+		return inner.kopieer();
 	}-*/;
 	
 	@Override
 	public void knip(FormuleClipboardIF clip) {
-		knip(innerView);
+		String s = knip(innerView);
+		if (s != null) clip.setClipboard(s);
 	}
-	private static native void knip(Object inner) /*-{
-		inner.knip();
+	private static native String knip(Object inner) /*-{
+		return inner.knip();
 	}-*/;
 	
 	@Override
 	public void plak(FormuleClipboardIF clip) {
-		plak(innerView);
+		insert(clip.getClipboard());
 	}
-	private static native void plak(Object inner) /*-{
-		inner.plak();
-	}-*/;
+
+//	private static native void plak(Object inner) /*-{
+//		inner.plak();
+//	}-*/;
 	
 	@Override
 	public void macht() {
@@ -1005,6 +1008,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 	private static native void tab(Object innerView)/*-{ innerView.tab() }-*/;
 	private static native void shiftTab(Object innerView)/*-{ innerView.shiftTab() }-*/;
+	private static native void selectAll(Object innerView)/*-{ innerView.selectAll() }-*/;
 
 	@Override
 	public void shiftTab() {
@@ -1075,7 +1079,14 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 	@Override
 	public void selectAll() {
-		// TODO Auto-generated method stub
+		try {
+			selectAll(innerView);
+		} catch(Exception not_implmented) {}
+	}
+
+	@Override
+	public void insertcp(int codepoint) {
+		insert("$Z" + codepoint + "@");
 	}
 	
 }

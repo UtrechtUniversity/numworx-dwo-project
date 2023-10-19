@@ -34,6 +34,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomClassCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -172,7 +174,10 @@ final public class ClassTeacherModules {
     Promise<List> rc = Promises.failed(new IllegalArgumentException());
     try {
       GuiCreator.instance().getDWO().setWait();
-      DomCoursesOfSchoolClass4Teacher csct0 = SecureTeacherSchoolClassManager.getModules(schoolClass, DWO.getDwoProfile());
+      DomDwoProfile profile = DWO.getDwoProfile();
+      profile = new DomDwoProfile(profile);
+      profile.setDwoProfileRights(""); // exclude R(emedial modules)
+	  DomCoursesOfSchoolClass4Teacher csct0 = SecureTeacherSchoolClassManager.getModules(schoolClass, profile);
       rc = Promises.resolved(PersistenceFacade.instance().getResultCount(csct0));
       DomSchool school = DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool();
       csct = new DomCoursesOfSchoolclassTree(school, csct0);

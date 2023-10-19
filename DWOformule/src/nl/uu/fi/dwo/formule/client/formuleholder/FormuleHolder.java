@@ -537,5 +537,11 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void insertcp(int codepoint) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

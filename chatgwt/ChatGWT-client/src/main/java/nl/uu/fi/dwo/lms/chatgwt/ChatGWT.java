@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
@@ -81,6 +82,7 @@ import nl.uu.fi.dwo.keyboard.client.DWOCombinedKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.KeyboardFactory;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatRoom;
 import nl.uu.fi.dwo.lms.chatgwt.entities.ChatUser;
+import nl.uu.fi.dwo.lms.chatgwt.inbox.InboxDatabase;
 import nl.uu.fi.dwo.lms.chatgwt.util.Base64;
 import nl.uu.fi.dwo.lms.chatgwt.util.GUID;
 import nl.uu.fi.dwo.lms.chatgwt.util.MD5;
@@ -100,7 +102,11 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	
 	
 	private static final TimeZone UTC = TimeZone.createTimeZone(0);
-	private static final int COL_6 = 456;
+	private static final int COL_6 = 474;
+	private static final int COL_4 = 140*2+18;
+	private static final int COL_2 = 140;
+	private static final int COL_3 = 210;
+	
 	public  static final Text rb = GWT.create(Text.class);
 	public  static final Dwo2LocaleMessages dworb = GWT.create(Dwo2LocaleMessages.class);
 
@@ -279,6 +285,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 					if (!attr.isEmpty()) id = attr;
 				}
 				
+				database.add(m);
 				m.add(new Message(from, stamp, text, utc, id));
 			}
 			return true;
@@ -304,6 +311,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			MessageModel m;
 			String jid = from.substring(0, at);
 			if (chatUser.jid.equals(jid)) {
+				queue.remove(message);
 				String to = message.getAttribute("to");
 				m = getModel(to);
 			} else {
@@ -314,6 +322,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			id = elems.getItem(0).getAttribute("id");
 			String attr = message.getAttribute("id");
 			if (!attr.isEmpty()) id = attr; // message@id gaat voor result@id
+			database.add(m);
 			m.add(new Message(jid, stamp, text, utc, id));
 			return true;
 		}
@@ -355,6 +364,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		addToPanel(event.getValue());
 		event.getValue().forEach(mm::setRead);
 		persist.flush();
+		west.setSelection(database.get(mm), false);
 	}
 	private void addToPanel(Collection<Message> msgs) {
 		msgs.forEach(this::addToPanel);
@@ -484,6 +494,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	
 
 	private Connection connection;
+	private SendQueue queue;
 	private TextBox username;
 	private TextBox password;
 	private VerticalPanel panel;
@@ -506,6 +517,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	
 	public ChatGWT(PersistIF persist) {
 		this.persist = persist;
+		this.queue = new SendQueue();
 	}
 
 	void unsetConnection() {
@@ -571,7 +583,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		return false;
 	}
 	
-	private ChatUser get(String key) {
+	public ChatUser get(String key) {
 		key = addDomain(key);
 		ChatUser u = byJid.get(key);
 		return u;
@@ -582,7 +594,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		return key;
 	}
 	
-	private String getDisplayName(String jid) {
+	public String getDisplayName(String jid) {
 		ChatUser u = get(jid);
 		return u == null ? jid : u.nickName;
 	}
@@ -604,6 +616,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 //		
 //		
 //		if(true) return;
+        FocusOnTouch.AREA = true;
 
 		formule = !"111".equals(Location.getParameter("profile"));
 		setVisibleHandler(this);
@@ -625,6 +638,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 					r.jid = r.jid.toLowerCase() + "@" + ROOMS;
 					if (r.chatUser != null) {
 						r.chatUser.forEach(this::toJid);
+						List<ChatRoom> rlist = Collections.singletonList(r);
+						r.chatUser.forEach(us -> us.room = rlist);
 					}
 					
 				});
@@ -741,8 +756,15 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		style.setProperty("maxWidth", 1024, Unit.PX);
 		container.setWidget(keyboard);
 
+		database = new InboxDatabase(this);
+		west = new InboxPanel(database);
+		
+		
+		main.addWest(west, COL_3);
+		main.addWest(new SimplePanel(), 18);
+		
 		main.addSouth(container, 200);
-		main.addEast(east, COL_6);
+		main.addEast(east, COL_3);
 		main.addEast(new SimplePanel(), 18);
 		
 		main.getWidgetContainerElement(container).getStyle().setBackgroundColor("#e5e7e9");
@@ -848,7 +870,10 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		if (room == null) return;
 		String[][] attributes = { { "to", room.jid }, { "type", "groupchat" } };
 		Builder reply = Builder.$msg(attributes).c("body",null).t(value);
-		sendToConnection(c -> c.send(reply));
+		Element e = reply.tree();
+		if (queue.add(e)) {
+			sendToConnection(c -> c.send(e));
+		}
 	}
 
 	private void sendToConnection(Consumer<Connection> consumer) {
@@ -866,7 +891,18 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		String[][] attributes = { { "type", "set" }};
 		String[][] attributesQ = {{ "xmlns", "urn:xmpp:mam:2"},{"queryid", "fetchall"}};
 		Builder request = Builder.$iq(attributes).c("query", attributesQ);
-		connection.sendIq(request.tree(), 10000, receive, receive);
+		Handler<Element> done = new Handler<Element>() {
+
+			@Override
+			public boolean handle(Element element) {
+				receive.handle(element);
+				queue.sendAll(connection);
+				return true;
+			}
+			
+		};
+		
+		connection.sendIq(request.tree(), 10000, done, done);
 	}
 	
 	private void sendToUser(String value) {
@@ -877,9 +913,12 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			String[][] attributes = { { "to", u.jid }, { "type", "chat" }, { "id", id }};
 			Builder reply = Builder.$msg(attributes).c("body",null).t(value);
 			Message msg = new Message(chatUser.jid, now(), value, utc(), id);
-			sendToConnection( c -> {
-				c.send(reply);
+			Element e = reply.tree();
+			if (queue.add(e))
+			  sendToConnection( c -> {
+				c.send(e);
 				um.getMessages().add(msg);
+				database.add(um.getMessages(), um.getUser());
 			});
 		} else {
 			// select user 1st;
@@ -934,6 +973,8 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 	private UserTable teachers;
 	private SingleSelectionModel<UserModel> selection;
 	private MessageModel currentModel;
+	private InboxDatabase database;
+	private InboxPanel west;
 	@Override
 	public String getClipboard() {
 		return clipboard;
@@ -1038,6 +1079,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		m.getMessages().forEach(m::setRead);
 		persist.flush();
 		addToPanelHandler = m.addValueChangeHandler(this::addToPanel);
+		west.setSelection(database.get(m), false);
 	}
 	
 	static final String ISO8601_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ";
@@ -1067,6 +1109,30 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		} else {
 			getConnection();
 		}
+		
+	}
+
+	public Optional<ChatRoom> getRoom(String jit) {
+		List<ChatRoom> rooms = chatUser.room;
+		return rooms.stream().filter(r -> jit.equals(r.jid)).findAny();
+	}
+
+	public void updateRoomExtra(ChatRoom chatRoom) {
+		updateRoom(chatRoom);
+		eastHeader.setMultiChat(true);
+		eastHeader.setSelectedRoom(chatRoom);		
+	}
+	public void updateUserExtra(ChatUser user) {
+	// if room is okay....
+		ChatRoom room = user.room.get(0);
+		updateRoom(room);
+		eastHeader.setSelectedRoom(room);		
+		setSelection(selection, true);
+		eastHeader.setMultiChat(false);
+		UserTable u = user.role == RoleType.STUDENT ? students : teachers;		
+		Optional<UserModel> model = u.findUser(user);
+		if (model.isPresent())
+			selection.setSelected(model.get(), true);
 		
 	}
 	

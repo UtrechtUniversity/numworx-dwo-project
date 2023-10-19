@@ -39,7 +39,7 @@ public class MessageModel implements HasValueChangeHandlers<List<Message>> {
 		return jid;
 	}
 
-	MessageModel(String jid, PersistIF persist ) {
+	public MessageModel(String jid, PersistIF persist ) {
 		this.jid = jid;
 		this.persist = persist;
 	}

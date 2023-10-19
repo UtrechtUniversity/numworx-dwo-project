@@ -46,6 +46,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.google.web.bindery.event.shared.HandlerRegistrations;
@@ -380,7 +381,11 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 			tekst = tekst.substring(0, tekst.length()-1);
 		//sb.setLength(0);
 		clearAll();
-		insert(tekst);
+		try {
+			insert(tekst);
+		} catch (Exception e) {
+			GWT.log("insert: " + tekst, e);
+		}
 		firstAttempt = lastAttempt = tekst;
 		removeCursor();
 		editable = h == null || h.getBoolean("editable", true);
@@ -524,7 +529,8 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 			this.width = breedte;
 			if (menubar != null && !pasAanH)
 				menubar.setPixelSize(width-boxsize, menuheight);
-			content.setPixelSize(width-boxsize-padding, pasAanH ? -1 : height-menuheight-boxsize-padding);
+			if(!pasAanH)
+				content.setPixelSize(width-boxsize-padding, height-menuheight-boxsize-padding);
 			hbox.setPixelSize(width-boxsize-paddingH, height-boxsize-paddingH);
 			if (widget != hbox) widget.setPixelSize(breedte, -1);
 		}
@@ -655,6 +661,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	}
 
 	private void setStateNull() {
+		pasAanH();
 	}
 
 	@Override
@@ -707,7 +714,11 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 			style.setWidth(100, Style.Unit.PCT);
 			style.setHeight(EXECUTE_HEIGHT, Style.Unit.PX);
 			execute_height = EXECUTE_HEIGHT;
-			content.setPixelSize(-1, height-menuheight-boxsize-padding-EXECUTE_HEIGHT);
+			int content_height = height-menuheight-boxsize-padding-EXECUTE_HEIGHT;
+			if (pasAanH) {
+				content.getElement().getStyle().setProperty("minHeight", content_height, Unit.PX);
+			} else 
+				content.setPixelSize(-1, content_height);
 			btn.addClickHandler(new ClickHandler() {
 
 				@Override
@@ -760,6 +771,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 					break;
 				case '\n':
 					enter0();
+				case '\r': // avoid
 					break;
 				default:
 					insert0(chars[i]);
@@ -782,6 +794,12 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 						cv.setText(string);
 						// sb.insert(cursor, '@');
 						flow.insert(cv, cursor++);
+						break;
+					}
+					if (chars[i + 1] == 'Z') {
+						int cp = Integer.parseInt(string.substring(2, string.length()-1));
+						insertcp0(cp);
+						break;
 					}
 					break;
 				}
@@ -963,7 +981,11 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	      if (cursor == selectionEnd) selectionEnd = -1;
 	    }
 	  }
-	
+	@Override
+	public void cursorUpShift() {
+		// TODO implement extend selection
+		cursorUp();
+	}
 	
 	@Override
 	public void cursorUp() {
@@ -991,6 +1013,13 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 			}
 		}
 	}
+	
+	@Override
+	public void cursorDownShift() {
+		// TODO implement extend selection
+		cursorDown();
+	}
+	
 	
 	@Override
 	public void cursorDown() {
@@ -2134,6 +2163,19 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		
 	}
 
+	
+	 class CodePoint extends InlineHTML implements HasText {
+		 private String text;
+		 CodePoint(int cp) {
+			 super(new String(Character.toChars(cp)));
+			 this.text = "$Z" + cp + "@";
+		 }
+		 public String getText() {
+			 return text;
+		 }
+	 }
+	
+	
 	 class Enter extends InlineHTML implements HasText
 	{
 		 Enter()
@@ -2221,4 +2263,20 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		
 	}
 
+	@Override
+	public void insertcp(int codepoint) {
+		if(!editable) return;
+		deleteSelection();
+		insertcp0(codepoint);
+		showCursor();
+		setAttempt();
+		pasAanH();
+	}
+
+	private void insertcp0(int cp ) {
+		flow.insert(new CodePoint(cp), cursor); cursor++;
+	}
+
+	
+	
 }
