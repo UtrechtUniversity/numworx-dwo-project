@@ -50,7 +50,8 @@ private boolean equals(Element in, Element out) {
 	String iid = in.getId();
 	if (!oid.isEmpty() && oid.equals(iid) ) 
 		return true;
-	return false;
+// TODO andere vormen, bijv. <origin-id ... />
+	return oid.isEmpty(); // als je geen id hebt, dan kan je het nu niet controleren.
 }
 	
 }
