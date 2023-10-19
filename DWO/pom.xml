@@ -27,16 +27,16 @@
 <!--         <module>../DWO-rest-lib</module> -->
 <!--         <module>../DWO-gwt-lib</module> -->
 <!--  	 	<module>../Account</module> -->
-	 	<module>../DWOformule</module>
+<!-- 	 	<module>../DWOformule</module> -->
 <!-- 	 	<module>../DWOmAccess</module> -->
-         <module>../DWO-commons-lib</module>
-        <module>../DWO-jclient-lib</module>
+<!--          <module>../DWO-commons-lib</module> -->
+<!--         <module>../DWO-jclient-lib</module> -->
 <!--  	 	<module>../DWO-apps</module> -->
 		<module>../chatgwt</module>
 	 	<module>../DWOGwtClient</module>
- 	 	<module>../DWOinteraction</module>
-        <module>../DWOJClient</module>
-     	<module>../DWOServer</module>
+<!--  	 	<module>../DWOinteraction</module> -->
+<!--         <module>../DWOJClient</module> -->
+<!--      	<module>../DWOServer</module> -->
      	<module>../DWOplayer</module>
 <!--	<module>../edexml</module>-->
 <!--         <module>../KeyboardGWT</module> -->
