@@ -7,6 +7,9 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.security.SecureRandom;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.servlet.Filter;
@@ -21,6 +24,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.tuckey.web.filters.urlrewrite.gzip.FilterServletOutputStream;
+
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 
 public class GwtClientWrap implements Filter {
 
@@ -64,8 +70,10 @@ public class GwtClientWrap implements Filter {
 
 	private static final String SAMLSTART = "<!--SAMLSTART-->";
 	private static final String SAMLEND= "<!--SAMLEND-->";
+	private static final String PROFILE= "<!--PROFILE_CSS-->";
 	private boolean saml;
 	private boolean entree;
+	private Map<String, String> cache = Collections.synchronizedMap(new HashMap<>());
 	
 	
 	final Logger LOG = Logger.getLogger(getClass().getName());
@@ -92,6 +100,26 @@ public class GwtClientWrap implements Filter {
 		}
 		MyWrapper wrapper;
 		wrapper = new MyWrapper(resp);
+
+		String profile = request.getParameter("profile");
+		String cdn = System.getProperty("CDNURL", "http://cdn.dwo.nl");
+		if (profile != null) {
+			if (cache.containsKey(profile)) {
+				profile = cache.get(profile);
+			} else 
+			try {
+				String key = profile;
+				DomDwoProfile p = PublicProfileManager.get(profile);
+				if (p.getDwoProfileRights().contains("c"))
+					profile = p.getDwoProfileName();
+				else
+					profile = null;
+				 cache.put(key, profile);
+			} catch(Exception oops) {
+				profile = null;
+			}
+		}
+		
 		
 		chain.doFilter(request, wrapper);
 		if (wrapper.writer != null) {
@@ -118,6 +146,11 @@ public class GwtClientWrap implements Filter {
 				}
 				
 			}
+			if (profile != null) {
+				CharSequence replacement = "<link type=\"text/css\" rel=\"stylesheet\" href=\""+cdn+"/apps/css/"+profile+".css\" >";
+				content = content.replace(PROFILE, replacement );
+			}
+			
 			resp.setContentType("text/html;charset=UTF-8");
 			resp.setCharacterEncoding("UTF-8");
 			resp.getWriter().write(content);
