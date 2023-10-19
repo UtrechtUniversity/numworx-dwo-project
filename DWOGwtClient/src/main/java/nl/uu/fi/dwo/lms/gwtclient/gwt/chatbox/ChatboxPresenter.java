@@ -94,7 +94,7 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 	@Inject void setMainView(ViewFactory viewFactory) {
 		mainView = viewFactory.getMainView();
 	}
-
+	
 	private boolean inited;
 
 	private final Success<? super List<ChatRoom>, ? extends List<ChatRoom>> success = p -> {
