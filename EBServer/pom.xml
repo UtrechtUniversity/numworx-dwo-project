@@ -726,7 +726,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<DWOmAccessVersion>2.5.20</DWOmAccessVersion>
 		<RegisterVersion>2.5.2</RegisterVersion>
-		<DWOGwtClientVersion>2.5.24-SNAPSHOT</DWOGwtClientVersion>
+		<DWOGwtClientVersion>2.5.24</DWOGwtClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testeb5server</aws.environmentName>
