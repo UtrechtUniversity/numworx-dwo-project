@@ -17,7 +17,7 @@
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <DWOServerVersion>2.5.24</DWOServerVersion>
         <DWOJClientVersion>2.5.24</DWOJClientVersion>
-		<DWOplayerVersion>2.5.24</DWOplayerVersion>
+		<DWOplayerVersion>2.5.25-SNAPSHOT</DWOplayerVersion>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <chatGWTVersion>2.5.24</chatGWTVersion>
     </properties>

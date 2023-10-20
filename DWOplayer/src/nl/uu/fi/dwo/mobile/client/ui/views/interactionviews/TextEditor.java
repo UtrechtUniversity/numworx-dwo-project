@@ -46,6 +46,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -144,8 +145,9 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	private FormuleFont font = defaultfont.createCopy();
 	
 	private FlowPanel  flow;
-	private int cursor, selectionEnd;
-	private Widget menubar, content;
+	private int cursor, selectionEnd, menuWidth;
+	private Widget menubar;
+	private ScrollPanel content;
 	FlowPanel hbox;
 	
 	private Widget cursorWidget;
@@ -193,7 +195,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		int top = (height - menuheight - boxsize - padding - 13) / 2;
 		style.setMarginTop(top, Unit.PX);
 		//style.setBackgroundColor("white");
-		style.setOverflow(Overflow.HIDDEN);
+		//style.setOverflow(Overflow.HIDDEN);
 		hbox.add(content);
 		//hbox.getElement().getStyle().setBackgroundColor("#C0C0C0");
 		hbox.setPixelSize(width - boxsize, height - boxsize);
@@ -259,7 +261,12 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		
 		content = getContent(launchdata);
 		int contentHeight = height-menuheight-boxsize-padding;
-		content.setPixelSize(width-boxsize-padding, pasAanH ? -1 : contentHeight);
+		int contentWidth = width-boxsize-padding;
+		int menuWidth = 0;
+		if (pasAanH && nowrap && menubar != null) menuWidth = this.menuWidth; // 2 knoppen
+		content.setPixelSize(contentWidth, pasAanH ? -1 : contentHeight);
+		flow.getElement().getStyle().setProperty("minHeight", contentHeight, Unit.PX);
+		flow.getElement().getStyle().setProperty("minWidth", contentWidth-menuWidth, Unit.PX);
 		Style style = content.getElement().getStyle();
 		if (pasAanH) {
 			style.setProperty("minHeight", contentHeight, Unit.PX);
@@ -315,7 +322,10 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		}
 		
 		content = getContent(null);
-		content.setPixelSize(width-boxsize-padding, height-menuheight-boxsize-padding);
+		int contentHeight = height-menuheight-boxsize-padding;
+		content.setPixelSize(width-boxsize-padding, contentHeight);
+		flow.getElement().getStyle().setProperty("minHeight", contentHeight, Unit.PX);
+
 		Style style = content.getElement().getStyle();
 		style.setPadding(padding/2, Unit.PX);
 		//style.setBackgroundColor("white");
@@ -396,14 +406,17 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		pasAanH();
 	}
 
-	private Widget getContent(ObjectMap launchdata)
+	private ScrollPanel getContent(ObjectMap launchdata)
 	{
 		FlowPanel touch = new FlowPanel();
 		Tapper tapper = new Tapper(this,touch.getElement());		
-        tapper.initHandlers(pasAanH ? hbox : touch); // 
+        tapper.initHandlers(touch); //
+        Style s = touch.getElement().getStyle();
+        s.setProperty("width", "fit-content");
 		flow = touch; // XXX voorlopig ok
 		setState(launchdata);
-		return touch;
+		ScrollPanel result = new ScrollPanel(touch);
+		return result;
 	}
 
 	private Widget setCursorWidget(Widget widget)
@@ -459,6 +472,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		} else
 			formuleStyle.setMargin(2,Unit.PX);
 		if(formuleKnop) {
+			menuWidth += 30;
 			formuleButton.addPointerDownHandler();
 /* Dit is nodig, anders komt de "tapper" er doorheen */
 			formuleButton.addDomHandler(new PreventTapper(), PointerDownEvent.getType());		
@@ -482,6 +496,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		} else
 			calcStyle.setMargin(2,Unit.PX);
 		if(rekentool) {
+		  menuWidth += 30;
 		  calcButton.addPointerDownHandler();
 		  calcButton.addDomHandler(new PreventTapper(), PointerDownEvent.getType());
 		  menubar.add(calcButton);
@@ -1051,6 +1066,9 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	protected void pasAanH() {
 		if (pasAanH && regel != null && visibleChain()) {
 			int offsetHeight = flowHeight();
+			int contentHeight = content.getOffsetHeight();
+			offsetHeight = Math.max(offsetHeight, contentHeight);
+			
 			int wanted = Math.max(minheight, offsetHeight + boxsize + paddingH + menuheight + execute_height);
 			if (height != wanted) {
 				height  = wanted;
