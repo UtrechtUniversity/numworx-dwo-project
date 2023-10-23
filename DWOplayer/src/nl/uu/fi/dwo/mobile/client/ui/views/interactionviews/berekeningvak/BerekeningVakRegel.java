@@ -143,6 +143,11 @@ public  class BerekeningVakRegel  { //implements TekstElementWithFont{
 			//fv.setAsHoogte(10);
 			goedFoutPanel.add(fv);
 		}
+		else if(goedFout == AntwoordFormuleVakChecker.FOUT) {
+			FormuleViewer fv = new FormuleViewer("\u274c");
+			//fv.setAsHoogte(10);
+			goedFoutPanel.add(fv);
+		}
 	}
 	
 	public void prepareGoedFout() {
