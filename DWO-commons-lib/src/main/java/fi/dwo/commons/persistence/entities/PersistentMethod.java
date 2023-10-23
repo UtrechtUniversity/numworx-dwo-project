@@ -1,12 +1,17 @@
 package fi.dwo.commons.persistence.entities;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.PrePersist;
@@ -39,7 +44,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 public class PersistentMethod implements Serializable {
 
     public PersistentMethod() {
-      dwoProfileID = Long.valueOf(77); // FIXME temporaly
+      dwoProfileID = Long.valueOf(77); // FIXME temporary
     }
 
     private static final long serialVersionUID = 1L;
@@ -59,7 +64,7 @@ public class PersistentMethod implements Serializable {
     @Basic(optional = false)
     @Column(name = "lastChangeTimeStamp", nullable = true)
     private Long lastChangeTimeStamp;
-    @Column(name = "dwoProfileID")
+    @Column(name = "dwoProfileID", nullable = true)
     private Long dwoProfileID;
 
     @Basic(optional = false)
@@ -70,7 +75,21 @@ public class PersistentMethod implements Serializable {
     private String method;
 
     
-    /**
+    
+    @ManyToMany
+    @JoinTable(
+    		name = "tblmethodperprofile",
+    		joinColumns = @JoinColumn( name = "methodID", referencedColumnName = "methodID" ),
+    		inverseJoinColumns = @JoinColumn( name = "dwoProfileID", referencedColumnName = "dwoProfileID" )
+    		)
+    private Set<PersistentDwoProfile> profiles = new HashSet<>();
+    
+    
+    public Set<PersistentDwoProfile> getProfiles() {
+		return profiles;
+	}
+
+	/**
      * Builds a persistenceId from the parameters given.
      *
      * @param aCourseId nullable

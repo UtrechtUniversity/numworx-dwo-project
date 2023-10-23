@@ -405,7 +405,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 	
 	class StandardAction extends GuiAction {
 	  StandardAction() {
-	    super("Maak standaard leerdoel");
+	    super("Maak standaard leerdomein");
 	    setEnabled(hasAdminRight());
 	  }
 	  

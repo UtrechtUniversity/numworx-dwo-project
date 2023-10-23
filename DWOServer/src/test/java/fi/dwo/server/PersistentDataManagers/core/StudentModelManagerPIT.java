@@ -336,4 +336,27 @@ public class StudentModelManagerPIT {
    	
     }
     
+    @Test public void testAddProfile() throws Exception {
+    	PersistentSchool school = new PersistentSchool(3L);
+    	PersistentDwoProfile profile = new PersistentDwoProfile(3L);
+    	modelA.setDwoProfileID(1L);
+    	modelA.setSchoolID(MethodManager.NUL);   	
+    	DomStudentModelStructure s = new DomStudentModelStructure();
+		modelA.setModelStructure(s);
+		StudentModelContextManager.create(modelA);
+		StudentModelContextManager.addProfile(modelA, profile);
+		
+		List<PersistentStudentModelContext> list = StudentModelContextManager.findReducedEntities(school, profile);
+    	
+		assertEquals(3, list.size());
+    	profile.setDwoProfileID(4L);
+    	list = StudentModelContextManager.findReducedEntities(school, profile);
+    	assertEquals(2, list.size());
+    	profile.setDwoProfileID(1L);
+    	school.setSchoolID(1L);
+       	list = StudentModelContextManager.findReducedEntities(school, profile);
+    	assertEquals(1, list.size());
+    	
+  	
+    }
 }

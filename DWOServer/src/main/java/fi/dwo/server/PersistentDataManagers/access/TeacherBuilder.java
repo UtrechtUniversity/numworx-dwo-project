@@ -460,7 +460,11 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
             
             //return instance.teacherActions.updateStudentModel(instance.getContext(), pModel).buildDomStudentModelContext();
             
-            return StudentModelContextUtilManager.edit(pModel).buildDomStudentModelContext(); // FIXME netjes maken!
+            PersistentStudentModelContext edit = StudentModelContextUtilManager.edit(pModel);
+            if (edit.getSchoolID() == 0L) {
+            	StudentModelContextManager.addProfile(edit, getDwoProfile());
+            }
+			return edit.buildDomStudentModelContext(); // FIXME netjes maken!
         } catch (RollbackException|OptimisticLockException rb) {
         	LOG.log(Level.SEVERE, "conflict", rb);
             throw new WebApplicationException(Status.CONFLICT);
@@ -823,7 +827,10 @@ public DomStudentModelContext patchStudentModel(DomStudentModelContextPatch domP
 		result.setModelStructure(deserialize);
 
 		try {
-			DomStudentModelContext context = StudentModelContextUtilManager.edit(result).buildDomStudentModelContext();
+			PersistentStudentModelContext edit = StudentModelContextUtilManager.edit(result);
+			if (edit.getSchoolID() == 0L)
+				StudentModelContextManager.addProfile(edit, getDwoProfile());
+			DomStudentModelContext context = edit.buildDomStudentModelContext();			
 			context.setModelStructure(null);
 			return context;
         } catch (RollbackException|OptimisticLockException|EntityNotFoundException e) {
@@ -849,4 +856,5 @@ public DomStudentModelContext patchStudentModel(DomStudentModelContextPatch domP
     MethodManager.create(p);
     return MethodManager.toDom(p);
   }
+
 }

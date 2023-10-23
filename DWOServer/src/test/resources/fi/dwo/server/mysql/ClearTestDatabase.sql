@@ -37,6 +37,8 @@ DROP TABLE IF EXISTS `tomcat_roles_view`;
 DROP TABLE IF EXISTS `tomcat_user_view`;
 DROP TABLE IF EXISTS `tblstudentmodelitem`;
 DROP TABLE IF EXISTS `tblcoursedata`;
+DROP TABLE IF EXISTS `tblmethodperprofile`;
+DROP TABLE IF EXISTS `tblstudentmodelperprofile`;
 
 SET FOREIGN_KEY_CHECKS = 0;
 SET GROUP_CONCAT_MAX_LEN=32768;

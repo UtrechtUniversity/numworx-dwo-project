@@ -350,6 +350,7 @@ public class TeacherDomainAuthorizer {
 		DomStudentModelContext addStudentModel(DomStudentModelContext domStudentModelContext) throws Dwo2Exception;
 		List<DomMethod> getMethods() throws Dwo2Exception;
 		DomMethod addMethod(DomMethod domMethod);
+		PersistentDwoProfile getDwoProfile();
 
     }
 

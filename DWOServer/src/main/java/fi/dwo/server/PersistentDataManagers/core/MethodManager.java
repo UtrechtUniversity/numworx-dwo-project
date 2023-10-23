@@ -1,6 +1,9 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,7 +26,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 
 public class MethodManager {
     private static final Logger LOG = Logger.getLogger(MethodManager.class.getName());
-    private static final Long NUL = Long.valueOf(0L);
+    public static final Long NUL = Long.valueOf(0L);
 
 	private MethodManager() {
 	}
@@ -37,12 +40,25 @@ public class MethodManager {
      *
      * @param method
      */
-    public static void create(PersistentMethod method) throws PersistenceException {
+    @SuppressWarnings("unused")
+	public static void create(PersistentMethod method) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            PersistentDwoProfile profile = null;
+//            Long pid = method.getDwoProfileID();
+// not yet!!!
+//            if (pid != null && pid.longValue() != 0L) {
+//            	method.setDwoProfileID(null);
+//            	if (method.getSchoolID() == 0L)
+//            		profile = em.find(PersistentDwoProfile.class, pid);
+//            }
             em.persist(method);
+            if (profile != null) {
+            	method.getProfiles().add(profile);
+            	profile.getMethods().add(method);
+            }
             em.getTransaction().commit();
         } catch (PersistenceException e0) {
             LOG.log(Level.SEVERE, "Can't create the role.", e0);
@@ -197,6 +213,11 @@ public class MethodManager {
 	public static List<PersistentMethod> findEntities(PersistentSchool school, PersistentDwoProfile profile) {
 		EntityManager em = getEntityManager();
 		try {
+			Set<PersistentMethod> set = Collections.emptySet();
+			em.getTransaction().begin();
+			if (profile != null) {
+				profile = em.find(PersistentDwoProfile.class, profile.getDwoProfileID());
+			}
 			TypedQuery<PersistentMethod> query = 
 			    em.createNamedQuery(
 			      school.getSchoolID().longValue() == 0L 
@@ -206,11 +227,45 @@ public class MethodManager {
 			        : "PersistentMethod.findBySchoolID"
 			      , PersistentMethod.class);
 			query.setParameter("schoolID", school.getSchoolID());
-			if (profile != null) query.setParameter("dwoProfileID", profile.getDwoProfileID());
-			return query.getResultList();
+			if (profile != null) {
+				query.setParameter("dwoProfileID", profile.getDwoProfileID());
+				set = profile.getMethods();
+			}
+			List<PersistentMethod> resultList = query.getResultList();
+			resultList = new ArrayList<>(resultList);
+			resultList.addAll(set);
+			return resultList;
 		} finally {
 			em.close();
 		}
+	}
+
+	public static void addProfile(PersistentMethod m, PersistentDwoProfile profile) {
+		EntityManager em = getEntityManager();
+		try {
+			em.getTransaction().begin();
+			m = em.merge(m);
+			profile = em.merge(profile);
+			m.getProfiles().add(profile);
+			profile.getMethods().add(m);
+			em.getTransaction().commit();
+		} finally {
+			em.close();
+		}		
+	}
+
+	public static void removeProfile(PersistentMethod m, PersistentDwoProfile profile) {
+		EntityManager em = getEntityManager();
+		try {
+			em.getTransaction().begin();
+			m = em.merge(m);
+			profile = em.merge(profile);
+			m.getProfiles().remove(profile);
+			profile.getMethods().remove(m);
+			em.getTransaction().commit();
+		} finally {
+			em.close();
+		}		
 	}
     
     

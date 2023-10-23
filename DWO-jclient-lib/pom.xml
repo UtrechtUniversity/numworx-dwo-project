@@ -42,8 +42,6 @@
 
 	<!-- update the https path for a different branch or tag! -->
 	<scm>
-		<connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-jclient-lib/trunk</connection>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-jclient-lib/trunk</developerConnection>
 		<url>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-jclient-lib/trunk</url>
 	</scm>
 

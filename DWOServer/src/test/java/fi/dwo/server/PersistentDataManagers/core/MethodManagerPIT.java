@@ -61,7 +61,7 @@ public class MethodManagerPIT {
 		InputStream in = getClass().getResourceAsStream("/fi/dwo/server/mysql/Getal&Ruimte.json");
 		DomMethod dm = MethodManager.genson.deserialize(in, DomMethod.class);
 		PersistentDwoProfile profile = new PersistentDwoProfile(Long.valueOf(1));
-    method = MethodManager.toValue(dm, school, profile);
+		method = MethodManager.toValue(dm, school, profile);
 		MethodManager.create(method);
 		return method;
 	}
@@ -78,6 +78,15 @@ public class MethodManagerPIT {
 	@Test
 	public void testDestroy() {
 		MethodManager.destroy(create().getMethodID());
+		
+		school.setSchoolID(0L);
+		MethodManager.destroy(create().getMethodID());
+		PersistentDwoProfile profile = new PersistentDwoProfile(Long.valueOf(1));
+		school.setSchoolID(3L);
+		List<?> list = MethodManager.findEntities(school, profile);
+		assertTrue(list.isEmpty());
+		
+		
 	}
 
 	@Test
@@ -129,5 +138,19 @@ public class MethodManagerPIT {
       list = MethodManager.findEntities(school, profile);    // alleen profiel én schoolid=0
       assertTrue(list.isEmpty());
 	  
+	}
+	
+	
+	@Test
+	public void testProfiles() {
+		school.setSchoolID(0L); // public
+		PersistentMethod m = create(); // zit in profile 1
+		PersistentDwoProfile profile = DwoProfileManager.findEntity(3L);
+		MethodManager.addProfile(m, profile);
+		
+		List<PersistentMethod> list = MethodManager.findEntities(school, profile);
+		
+		assertEquals(1, list.size());
+		
 	}
 }
