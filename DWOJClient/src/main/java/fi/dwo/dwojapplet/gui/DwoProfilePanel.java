@@ -175,9 +175,15 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
 
 	    		} else if (value == eyeImage) {
 	    			LOG.info("open domain model panel");
-	    			DwoProfileModelPanel panel = new DwoProfileModelPanel(model.profiles[row]);
-	    			if (JOptionPane.showConfirmDialog(DwoProfilePanel.this, panel, "domains", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)  {
-	    				panel.commit();
+	    			DwoProfileModelPanel panel1  = new DwoProfileModelPanel(model.profiles[row]);
+	    			DwoProfileMethodPanel panel2 = new DwoProfileMethodPanel(model.profiles[row]);
+	    			JPanel panel = new JPanel();
+	    			panel.add(panel1);
+	    			panel.add(panel2);
+	    			
+	    			if (JOptionPane.showConfirmDialog(DwoProfilePanel.this, panel, "domains", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION)  {
+	    				panel1.commit();
+	    				panel2.commit();
 	    			}
 	    		}
 	    		fireEditingStopped();

@@ -9,9 +9,11 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
+import nl.uu.fi.dwo.rest.entities.RestMethod;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.PathId;
 
@@ -36,5 +38,24 @@ public class SecureDwoAdminMethodManager {
 		  static DomContext getContext() {
 		    return authenticator().getContext();
 		  }
+
+		public static Boolean addProfile(DomMethod model, DomDwoProfileId profile) throws Dwo2Exception {
+			RestMethod rest = new RestMethod();
+			rest.setRestContext(getContext());
+			rest.setDomMethod(model);
+			rest.setDomDwoProfile(profile);
+			Boolean result = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/method/addProfile",
+		            Boolean.class, rest);
+			return result;
+		}
+		public static Boolean removeProfile(DomMethod model, DomDwoProfileId profile) throws Dwo2Exception {
+			RestMethod rest = new RestMethod();
+			rest.setRestContext(getContext());
+			rest.setDomMethod(model);
+			rest.setDomDwoProfile(profile);
+			Boolean result = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/method/removeProfile",
+		            Boolean.class, rest);
+			return result;
+		}
 
 }

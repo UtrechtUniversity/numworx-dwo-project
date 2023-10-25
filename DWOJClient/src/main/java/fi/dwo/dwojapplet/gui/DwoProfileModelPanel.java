@@ -2,6 +2,7 @@ package fi.dwo.dwojapplet.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.swing.JPanel;
@@ -38,12 +39,26 @@ public class DwoProfileModelPanel extends JPanel {
 		} catch(Exception oops) {
 			return;
 		}
-		JTable tabel = new JTable(new Model());
+		JTable tabel = new JTable(new Model<DomStudentModelContext>(contexts, enabled, this::toString ));
 		add(tabel);
 		
 	}
 
-	class Model extends AbstractTableModel {
+    private String toString(DomStudentModelContext item) {
+    	return item.getModelStructure().getInfo().getTitle().get(language);
+    }
+
+    static class Model<T> extends AbstractTableModel {
+
+		final List<T> contexts;
+		final Boolean[] enabled;
+		final Function<T, String> toString;
+		
+		public Model(List<T> contexts, Boolean[] enabled, Function<T, String> toString) {
+			this.contexts = contexts;
+			this.enabled = enabled;
+			this.toString = toString;
+		}
 
 		@Override
 		public int getRowCount() {
@@ -60,8 +75,9 @@ public class DwoProfileModelPanel extends JPanel {
 			switch(columnIndex) {
 			case 1: return enabled[rowIndex];
 			case 0:
-				DomStudentModelContext item = contexts.get(rowIndex);
-				return item.getModelStructure().getInfo().getTitle().get(language);
+				T item = contexts.get(rowIndex);
+				return toString.apply(item);
+				// item.getModelStructure().getInfo().getTitle().get(language);
 			}
 			return null;
 		}
