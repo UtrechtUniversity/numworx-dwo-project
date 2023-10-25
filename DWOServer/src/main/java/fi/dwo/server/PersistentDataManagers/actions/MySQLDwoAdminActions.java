@@ -93,6 +93,10 @@ public class MySQLDwoAdminActions implements DwoAdminActions {
   public List<PersistentStudentModelContext> getReducedStudentModels(Context context) {
     PersistentSchool dummy = new PersistentSchool(0L);
     PersistentDwoProfile profile = context.getAdminCtx().profile;
+    if (profile == null) 
+    	profile = new PersistentDwoProfile(Long.valueOf(Integer.MAX_VALUE));
+    else 
+    	dummy = new PersistentSchool(Long.valueOf(Integer.MAX_VALUE));
 	List<PersistentStudentModelContext> pModels = StudentModelContextManager.findReducedEntities(dummy, profile);
     return pModels;
   }

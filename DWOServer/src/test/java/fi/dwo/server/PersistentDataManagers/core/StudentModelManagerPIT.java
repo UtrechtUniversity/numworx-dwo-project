@@ -359,4 +359,31 @@ public class StudentModelManagerPIT {
     	
   	
     }
+    
+    @Test public void getAllStandardModels() throws Exception {
+    	modelA.setDwoProfileID(1L);
+    	modelA.setSchoolID(MethodManager.NUL);   	
+    	DomStudentModelStructure s = new DomStudentModelStructure();
+		modelA.setModelStructure(s);
+		StudentModelContextManager.create(modelA);
+    	modelB.setDwoProfileID(3L);
+    	modelB.setSchoolID(MethodManager.NUL);   	
+    	s = new DomStudentModelStructure();
+		modelB.setModelStructure(s);
+		StudentModelContextManager.create(modelB);
+    	
+    	PersistentSchool school = new PersistentSchool(Long.valueOf(Integer.MAX_VALUE));
+    	PersistentDwoProfile profile = new PersistentDwoProfile(3L);
+		List<PersistentStudentModelContext> list;
+// standard models in profile
+		list = StudentModelContextManager.findReducedEntities(school, profile);
+		assertEquals(1, list.size());
+// standard models in all profiles
+        school = new PersistentSchool(Long.valueOf(0));
+        profile = new PersistentDwoProfile(Long.valueOf(Integer.MAX_VALUE));
+		
+		list = StudentModelContextManager.findReducedEntities(school, profile);
+		assertEquals(2, list.size());
+		
+    }
 }

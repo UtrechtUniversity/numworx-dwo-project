@@ -93,6 +93,8 @@ public class DwoAdminDomainAuthorizer {
     DomCourseFull     add(DomCourseFull course) throws Dwo2Exception;
 	List<DomStudentModelContext> getReducedStudentModels() throws Dwo2Exception;
 	List<DomMethod> getMethods() throws Dwo2Exception;
+	boolean addProfile(DomStudentModelContext domStudentModelContext) throws Dwo2Exception;
+	boolean removeProfile(DomStudentModelContext domStudentModelContext) throws Dwo2Exception;
   }
   
   
