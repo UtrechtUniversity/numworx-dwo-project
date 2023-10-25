@@ -47,6 +47,14 @@
     	<filter-name>gwtclientwrap</filter-name>
     	<filter-class>fi.dwo.server.db.GwtClientWrap</filter-class>
     </filter>
+    <filter>
+    	<filter-name>servicefilter</filter-name>
+    	<filter-class>fi.dwo.server.db.ServiceFilter</filter-class>
+    </filter>
+    <filter-mapping>
+    	<filter-name>servicefilter</filter-name>
+    	<url-pattern>/dwo/apps/serviceworker.jsp</url-pattern>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>xss</filter-name>
         <url-pattern>/dwo/*</url-pattern>

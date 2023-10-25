@@ -19,7 +19,7 @@
         <DWOJClientVersion>2.5.25-SNAPSNOT</DWOJClientVersion>
 		<DWOplayerVersion>2.5.25-SNAPSHOT</DWOplayerVersion>
         <maven.javadoc.skip>true</maven.javadoc.skip>
-        <chatGWTVersion>2.5.24</chatGWTVersion>
+        <chatGWTVersion>2.5.25-SNAPSHOT</chatGWTVersion>
     </properties>
     
     <!-- should move project role names here that fall in the full project scope -->
@@ -31,7 +31,7 @@
 <!-- 	 	<module>../DWOmAccess</module> -->
          <module>../DWO-commons-lib</module>
         <module>../DWO-jclient-lib</module>
-<!--  	 	<module>../DWO-apps</module> -->
+  	 	<module>../DWO-apps</module>
 		<module>../chatgwt</module>
 	 	<module>../DWOGwtClient</module>
 <!--  	 	<module>../DWOinteraction</module> -->
