@@ -29,7 +29,7 @@
 // criterium?
     		String with = request.getParameter("with");
     	    String code = request.getParameter("code");
-    		if (!"entree".equals(with) && code == null) {
+    		if (with == null && code == null) {
     	%>
     		clientId = "";
     	<% }

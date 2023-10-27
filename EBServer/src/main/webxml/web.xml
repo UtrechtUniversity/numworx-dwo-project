@@ -416,7 +416,7 @@
     <servlet-class>nl.numworx.oauth2client.server.LoginServlet</servlet-class>
     <init-param>
     	<param-name>config</param-name>
-    	<param-value>nl.numworx.oauth2client.server.EntreeSLogin</param-value>
+    	<param-value>nl.numworx.oauth2client.server.WAYFLogin</param-value>
     </init-param>
   </servlet>
 
@@ -427,6 +427,10 @@
   <servlet>
   	<servlet-name>entree-redirect</servlet-name>
   	<servlet-class>nl.numworx.oauth2client.server.EntreeSRedirect</servlet-class>
+  </servlet>
+   <servlet>
+  	<servlet-name>conext-redirect</servlet-name>
+  	<servlet-class>nl.numworx.oauth2client.server.ConextRedirect</servlet-class>
   </servlet>
   <servlet>
   	<servlet-name>notebook</servlet-name>
@@ -592,6 +596,11 @@
  	<servlet-name>entree-redirect</servlet-name>
  	<url-pattern>/entree/redirect</url-pattern>
  	<url-pattern>/redirect</url-pattern>
+ 	<url-pattern>/redirect/entree</url-pattern>
+ </servlet-mapping>
+  <servlet-mapping>
+ 	<servlet-name>conext-redirect</servlet-name>
+ 	<url-pattern>/redirect/conext</url-pattern>
  </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>sebhosting</servlet-name>
