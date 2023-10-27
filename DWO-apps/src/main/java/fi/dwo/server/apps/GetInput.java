@@ -26,16 +26,25 @@ public class GetInput extends HttpServlet {
 		String key = getKey(req);
 		HttpSession session = req.getSession(false);
 		if (session == null) {
-			resp.sendError(resp.SC_NOT_FOUND);
+			waitput();
+			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
 		Object result = session.getAttribute(key);
 		if (result == null) {
-			resp.sendError(resp.SC_NOT_FOUND);
+			waitput();
+			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;			
 		}
 		resp.setContentType("text/plain");
 		resp.getWriter().print(result);
+	}
+
+	private synchronized void waitput() {
+		try {
+			wait(2000L);
+		} catch(Exception oops) { }
+		
 	}
 
 	private String getKey(HttpServletRequest req) {
@@ -49,6 +58,10 @@ public class GetInput extends HttpServlet {
 		BufferedReader reader = req.getReader();
 		Object data = reader.readLine();
 		session.setAttribute(key, data);
+		synchronized(this) {
+			this.notifyAll();
+		}
+		resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
 	}
 
 
