@@ -134,7 +134,7 @@ public class EntreeSRedirect extends HttpServlet {
 			// alleen A-Za-z0-9 en - . _
 			cookie("suggestion", systemManager.getSuggestion(sugg), resp);
 			
-			if (false) {
+			if (true) {
 				resp.sendRedirect("/dwo/register/Register.html");
 				return;
 			}
