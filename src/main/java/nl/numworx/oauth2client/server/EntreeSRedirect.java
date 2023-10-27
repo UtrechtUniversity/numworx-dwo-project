@@ -68,7 +68,8 @@ public class EntreeSRedirect extends HttpServlet {
 			String user_id = login.studentNumber;
 			if (user_id == null || user_id.isEmpty() )
 				user_id = login.uid;
-			user_id = user_id.replace('@', '%');
+			if (user_id != null)
+				user_id = user_id.replace('@', '%');
 			String lti_id = claims.getSubject();
 			String first = Objects.toString(login.givenName, "");
 			String middle = Objects.toString(login.insertion, "");
@@ -80,6 +81,9 @@ public class EntreeSRedirect extends HttpServlet {
 		      if(roles != null && roles.toLowerCase().contains("employee"))
 		          role = "TEACHER";
 			schoolID = claims.get("nlEduPersonHomeOrganizationId", String.class);
+			if (schoolID == null) {
+				schoolID = claims.get("schac_home_organization", String.class);
+			}
 			if (schoolID == null) schoolID = System.getProperty("ENV_ORGID", login.client_id);
 			org_id = "oauth2:" + schoolID;
 
@@ -130,7 +134,7 @@ public class EntreeSRedirect extends HttpServlet {
 			// alleen A-Za-z0-9 en - . _
 			cookie("suggestion", systemManager.getSuggestion(sugg), resp);
 			
-			if (true) {
+			if (false) {
 				resp.sendRedirect("/dwo/register/Register.html");
 				return;
 			}

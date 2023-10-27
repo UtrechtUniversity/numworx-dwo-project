@@ -72,6 +72,18 @@ public class EntreeSLogin implements SigningKeyResolver, Login {
 		USERINFO = "https://oidcng.entree.kennisnet.nl/oidc/userinfo";
 	}
 	
+	
+	private void surfconext_test() {
+		client_id = "test.dwo.nl";
+		client_secret = "prmr766D8QrgtQLut9Dx";
+		ISSUER = "https://connect.test.surfconext.nl";
+		AUTHORIZATION_URL = "https://connect.test.surfconext.nl/oidc/authorize";
+		TOKEN_URL = 	"https://connect.test.surfconext.nl/oidc/token";
+		KEYS_URL = "https://connect.test.surfconext.nl/oidc/certs";
+		USERINFO = "https://connect.test.surfconext.nl/oidc/userinfo";
+
+	}
+	
 	private OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
 
 
@@ -88,7 +100,7 @@ public class EntreeSLogin implements SigningKeyResolver, Login {
 		}
 		if (!System.getProperty("ENTREE_SECRET", "").isEmpty())
 			productie();
-		
+		surfconext_test();
 	}
 
 	public String login() throws OAuthSystemException {
@@ -230,11 +242,19 @@ public class EntreeSLogin implements SigningKeyResolver, Login {
 		Object parse = parser.parse(response.getBody());
 	    Claims body = new DefaultClaims((Map<String, Object>) parse);
 		sn = body.get("sn", String.class);
+		if (sn == null) sn = body.get("family_name", String.class);
 		givenName = body.get("givenName", String.class);
+		if (givenName == null) givenName = body.get("given_name", String.class);
+		
 		insertion = body.get("nlEduPersonTussenvoegsels", String.class);
 		email = body.get("mail", String.class);
 		uid   = body.get("uid", String.class);
+		if (uid == null) uid = body.getSubject();
 		affiliation = body.get("eduPersonAffiliation", String.class);
+		if (affiliation == null) {
+			List list = body.get("eduperson_affiliation", List.class);
+			if (list != null) affiliation = list.toString(); // OID.
+		}
 	    return body;
 	}
 	
