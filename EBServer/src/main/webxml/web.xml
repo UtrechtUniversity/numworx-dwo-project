@@ -178,6 +178,10 @@
 
     
     <!-- Servlets -->
+  <servlet>
+  	<servlet-name>get_input</servlet-name>
+  	<servlet-class>fi.dwo.server.apps.GetInput</servlet-class>
+  </servlet>
     <servlet>
     	<description>Snoop servlet from tomcat examples</description>
     	<servlet-name>snoop</servlet-name>
@@ -492,6 +496,10 @@
     <!--
     servlet mappings 
     -->
+  <servlet-mapping>
+  	<servlet-name>get_input</servlet-name>
+  	<url-pattern>/dwo/apps/get_input/*</url-pattern>
+  </servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>qrcode</servlet-name>
 		<url-pattern>/dwo/qrcode.png</url-pattern>
