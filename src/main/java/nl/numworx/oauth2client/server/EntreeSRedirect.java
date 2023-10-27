@@ -54,7 +54,7 @@ public class EntreeSRedirect extends HttpServlet {
 		String scope = req.getParameter("scope");
 		String code = req.getParameter("code");
 		String schoolID, org_id;
-		EntreeSLogin login = new EntreeSLogin(getServletConfig());
+		EntreeSLogin login = createLogin();
 		
 		
 		int index = state.indexOf(';');
@@ -68,7 +68,8 @@ public class EntreeSRedirect extends HttpServlet {
 			String user_id = login.studentNumber;
 			if (user_id == null || user_id.isEmpty() )
 				user_id = login.uid;
-			user_id = user_id.replace('@', '%');
+			if (user_id != null)
+				user_id = user_id.replace('@', '%');
 			String lti_id = claims.getSubject();
 			String first = Objects.toString(login.givenName, "");
 			String middle = Objects.toString(login.insertion, "");
@@ -80,6 +81,9 @@ public class EntreeSRedirect extends HttpServlet {
 		      if(roles != null && roles.toLowerCase().contains("employee"))
 		          role = "TEACHER";
 			schoolID = claims.get("nlEduPersonHomeOrganizationId", String.class);
+			if (schoolID == null) {
+				schoolID = claims.get("schac_home_organization", String.class);
+			}
 			if (schoolID == null) schoolID = System.getProperty("ENV_ORGID", login.client_id);
 			org_id = "oauth2:" + schoolID;
 
@@ -123,14 +127,14 @@ public class EntreeSRedirect extends HttpServlet {
 				
 			}
 			cookie("cancel", redirectUri, resp);
-			cookie("next", redirectUri + "?with=entree", resp);
+			cookie("next", redirectUri + "?with=" + login, resp);
 			cookie("className", className, resp);
 			String sugg = first + middle + last;
 			sugg = validUsername(sugg);
 			// alleen A-Za-z0-9 en - . _
 			cookie("suggestion", systemManager.getSuggestion(sugg), resp);
 			
-			if (true) {
+			if (false) {
 				resp.sendRedirect("/dwo/register/Register.html");
 				return;
 			}
@@ -165,6 +169,12 @@ public class EntreeSRedirect extends HttpServlet {
 			log("do get school", e);
 			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 		}		
+	}
+
+
+
+	protected EntreeSLogin createLogin() {
+		return new EntreeSLogin(getServletConfig());
 	}
 
 
