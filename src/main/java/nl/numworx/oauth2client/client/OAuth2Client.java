@@ -129,7 +129,7 @@ public class OAuth2Client implements EntryPoint {
 				
 				install(verifier,code, redirect_uri, logout);
 				code = "parent";
-				String url = endpoint + "?a="+URL.encodeQueryString(code) + search + hash;
+				String url = endpoint + "?a="+URL.encodeQueryString(code) + "&" +search + hash;
 				insertFrame(url);
 				return;
 			}
