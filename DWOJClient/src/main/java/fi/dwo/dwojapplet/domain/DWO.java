@@ -1575,52 +1575,7 @@ LOG.info("time results = " + (-t) + " ms");
             JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.DLG_SERVER_OUT), e.getMessage(), JOptionPane.ERROR_MESSAGE);
         }
 
-        boolean limitedSchoolAccess = false;
-        if (!DwoHelper.isApplication()) {
-            limitedSchoolAccessString = getParameter("limitedSchoolAccess");
-        }
-        if (limitedSchoolAccessString != null && limitedSchoolAccessString.equals("true")) {
-            limitedSchoolAccess = true;
-        } else {
-        	limitedSchoolAccess = DwoHelper.hasProfileRight(DwoHelper.LIMITED); // Haal LIMITED op uit profiel
-        }
-
-        if (limitedSchoolAccess) {
-        	// vaste string, as RESOURCE
-        	schoolAccessPropertiesString = "resources/schools-" + dwoProfileID + ".properties"; 
-        	
-//            if (!DwoHelper.isApplication()) {
-//                schoolAccessPropertiesString = getParameter("schoolAccessProperties"); // TODO wegwerken: database of resource
-//            }
-            
-            Properties schoolAccessProperties;
-
-            try {
-//                URL url = new URL(getDocumentBase(), schoolAccessPropertiesString);
-            	URL url = DwoHelper.getResourceUrlPath();
-            	url = new URL(url, schoolAccessPropertiesString);
-                InputStream in = url.openStream();
-                schoolAccessProperties = new Properties();
-                schoolAccessProperties.load(in);
-
-                schoolAccessKeys = new Properties();
-                int number = Integer.parseInt(schoolAccessProperties.getProperty("number"));
-                for (int i = 1; i < number + 1; i++) {
-                    String schoolNumber = schoolAccessProperties.getProperty("school." + i);
-                    String access = schoolAccessProperties.getProperty("access." + i);
-                    String rights = schoolAccessProperties.getProperty("rights." + i);
-                    schoolAccessKeys.put(schoolNumber, access);
-                    if (rights != null) {
-                        schoolAccessKeys.put("rights." + schoolNumber, rights);
-                    }
-                }
-            } catch (Exception e) {
-                schoolAccessKeys = new Properties();
-                //limitedSchoolAccess = false; // FIXME Security scan
-                LOG.log(Level.SEVERE, "", e);
-            }
-
-        }
+        boolean limitedSchoolAccess = initLimitedProfile();
 
         GuiConstants.setDwoProfile(dwoProfileID, getParameter(PROFILE_EXTENSION));
         ModuleTreePanel.initialize(dwoProfile);
@@ -1712,6 +1667,58 @@ LOG.info("time results = " + (-t) + " ms");
         panel.setVisible(true);
 
     }
+
+	public boolean initLimitedProfile() {
+		boolean limitedSchoolAccess = false;
+        if (!DwoHelper.isApplication()) {
+            limitedSchoolAccessString = getParameter("limitedSchoolAccess");
+        }
+        if (limitedSchoolAccessString != null && limitedSchoolAccessString.equals("true")) {
+            limitedSchoolAccess = true;
+        } else {
+        	limitedSchoolAccess = DwoHelper.hasProfileRight(DwoHelper.LIMITED); // Haal LIMITED op uit profiel
+        }
+
+        if (limitedSchoolAccess) {
+        	// vaste string, as RESOURCE
+        	schoolAccessPropertiesString = "resources/schools-" + dwoProfileID + ".properties"; 
+        	
+//            if (!DwoHelper.isApplication()) {
+//                schoolAccessPropertiesString = getParameter("schoolAccessProperties"); // TODO wegwerken: database of resource
+//            }
+            
+            Properties schoolAccessProperties;
+
+            try {
+//                URL url = new URL(getDocumentBase(), schoolAccessPropertiesString);
+            	URL url = DwoHelper.getResourceUrlPath();
+            	url = new URL(url, schoolAccessPropertiesString);
+                InputStream in = url.openStream();
+                schoolAccessProperties = new Properties();
+                schoolAccessProperties.load(in);
+
+                schoolAccessKeys = new Properties();
+                int number = Integer.parseInt(schoolAccessProperties.getProperty("number"));
+                for (int i = 1; i < number + 1; i++) {
+                    String schoolNumber = schoolAccessProperties.getProperty("school." + i);
+                    String access = schoolAccessProperties.getProperty("access." + i);
+                    String rights = schoolAccessProperties.getProperty("rights." + i);
+                    schoolAccessKeys.put(schoolNumber, access);
+                    if (rights != null) {
+                        schoolAccessKeys.put("rights." + schoolNumber, rights);
+                    }
+                }
+            } catch (Exception e) {
+                schoolAccessKeys = new Properties();
+                //limitedSchoolAccess = false; // FIXME Security scan
+                LOG.log(Level.SEVERE, "", e);
+            }
+
+        } else {
+        	schoolAccessKeys = null; // everyone can log in.
+        }
+		return limitedSchoolAccess;
+	}
 
     public void setWelcomePanel() {
         setPanel(GuiCreator.instance().getWelcomePanel(testViewKeys != null || schoolAccessKeys != null));
@@ -2918,6 +2925,7 @@ if (false) {
         fi.dwo.dwojapplet.parameters.system.TextMapper.setLanguage(lang);
         firePropertyChange("language", old, lang);
         ModuleTreePanel.initialize(dwoProfile);
+        initLimitedProfile();
       } catch(Exception oops) {
         LOG.log(Level.WARNING, "switch to " + p + " " + lang, oops);
       }
