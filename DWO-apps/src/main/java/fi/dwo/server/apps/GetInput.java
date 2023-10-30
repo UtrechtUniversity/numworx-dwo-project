@@ -24,7 +24,7 @@ public class GetInput extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String key = getKey(req);
-		HttpSession session = req.getSession(false);
+		HttpSession session = req.getSession();
 		if (session == null) {
 			waitput();
 			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
