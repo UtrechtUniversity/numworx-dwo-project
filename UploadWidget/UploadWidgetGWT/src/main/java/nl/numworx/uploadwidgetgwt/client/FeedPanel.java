@@ -12,6 +12,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -180,7 +181,9 @@ public class FeedPanel extends Composite implements Constants, RequestCallback {
 			  String name = file.getString("name");
 			  String url = base + name; // FIXME gebruik UrlBuilder o.i.d.
 			  if (file.containsKey("url"))
-				  url = head + file.getString("url");
+			  {
+				  url = head + URL.decodePathSegment(file.getString("url"));
+			  }
 			  UrlBuilder builder = Window.Location.createUrlBuilder();
 			  Set<String> p = Window.Location.getParameterMap().keySet();
 			  builder.setPath(url);
