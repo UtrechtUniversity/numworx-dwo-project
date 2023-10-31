@@ -51,7 +51,7 @@ public class OAuth2Client implements EntryPoint {
 	}
 	
 	static native private String getSearch() /*-{
-		return $wnd.search
+		return $wnd.search.substring(1)
 	}-*/;
 	static native private String getHash0() /*-{
 		return $wnd.hash
@@ -92,7 +92,7 @@ public class OAuth2Client implements EntryPoint {
 
 		if(clientId.isEmpty() && code == null) {
             String endpoint = getEndpoint0();
-            String search = getSearch().substring(1);
+            String search = getSearch();
             String hash = getHash0();
 			String url = endpoint + "?" + search + hash;
 			insertFrame(url);

@@ -199,14 +199,15 @@ public class EntreeSRedirect extends HttpServlet {
 
 
 	private void cookie(String name, String value, HttpServletResponse response) {
-		  if (value != null && !value.isEmpty()) {
-			Cookie cookie = new Cookie(name, u(value).toString());
-		    response.addCookie(cookie);
+		Cookie cookie;  
+		if (value != null && !value.isEmpty()) {
+			cookie = new Cookie(name, u(value).toString());
 		  } else {
-			  Cookie cookie = new Cookie(name, "");
-			  cookie.setMaxAge(0);
-			  response.addCookie(cookie);
+			cookie = new Cookie(name, "");
+		    cookie.setMaxAge(0);
 		  }
+		  cookie.setPath("/");
+		  response.addCookie(cookie);
 		}
 
 	protected void redirect(HttpServletRequest req, HttpServletResponse resp, String state, String org_id,
