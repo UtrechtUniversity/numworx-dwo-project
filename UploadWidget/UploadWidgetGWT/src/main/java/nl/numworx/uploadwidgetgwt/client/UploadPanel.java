@@ -53,9 +53,9 @@ class UploadPanel extends Composite implements ClickHandler, OnFinishUploaderHan
 		
 		feed = new FeedPanel();		
 		
-		InlineHTML btn = new InlineHTML("<i class=\"fa fa-refresh\"></i>"); btn.addClickHandler(this);
-		btn.getElement().getStyle().setFloat(Style.Float.RIGHT);
-		flow.add(btn);
+//		InlineHTML btn = new InlineHTML("<i class=\"fa fa-refresh\"></i>"); btn.addClickHandler(this);
+//		btn.getElement().getStyle().setFloat(Style.Float.RIGHT);
+//		flow.add(btn);
 		flow.add(feed);
 		flow.add(uploader);
 
