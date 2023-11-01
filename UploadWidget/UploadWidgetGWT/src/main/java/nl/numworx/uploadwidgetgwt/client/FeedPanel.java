@@ -21,7 +21,9 @@ import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
@@ -88,6 +90,7 @@ public class FeedPanel extends Composite implements Constants, RequestCallback {
 		    	  InlineHTML x = new InlineHTML(" <i class=\"fa fa-trash-o\"></i> ");
 		    	  x.addClickHandler(ev -> doClick(entry));
 		    	  flow.add(x);
+		    	  flow.add(BR());
 		    	  entries.add(entry);
 		      }
 //		      if (entries.size() > itemsMax) {
@@ -194,8 +197,13 @@ public class FeedPanel extends Composite implements Constants, RequestCallback {
 			  Anchor a = new Anchor(html, url);
 			  a.setTarget("_blank");
 			  flow.add(a);
+			  flow.add(BR());
 
 		  }
+	}
+
+	private Widget BR() {
+		return new HTMLPanel("br", "");
 	}
 	
 	
