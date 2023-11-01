@@ -54,6 +54,7 @@ public class Upload extends JPanel implements CBookWidgetInstanceIF, CBookEventL
 		Box hb = Box.createHorizontalBox();
 		up = new JButton("Upload"); hb.add(up); hb.add(Box.createHorizontalGlue());
 		down = new JButton("Download"); hb.add(down);hb.add(Box.createHorizontalGlue());
+		down.setVisible(false);
 		delete = new JButton("Delete"); hb.add(delete);
 		
 		up.addActionListener(this);
@@ -130,6 +131,15 @@ public class Upload extends JPanel implements CBookWidgetInstanceIF, CBookEventL
 			InputFileModel model = new InputFileModel();
 			model.setLaunchData(o);
 			model.inputs.forEach(element -> this.model.addElement(element) );
+			o = launchData.get(Constants.ITEMS_MAX);
+			if (o instanceof Number) {
+				int n = ((Number) o).intValue();
+				if (n == 0) {
+					up.setVisible(false);
+					delete.setVisible(false);
+				}
+				
+			}
 		}
 	}
 
