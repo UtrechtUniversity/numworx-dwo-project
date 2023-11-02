@@ -40,10 +40,6 @@
     </properties>
 
     <!-- update the https path for a different branch or tag! -->
-    <scm>
-        <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-commons-lib/trunk</connection>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-commons-lib/trunk</developerConnection>
-    </scm>
   
   
     <build>
