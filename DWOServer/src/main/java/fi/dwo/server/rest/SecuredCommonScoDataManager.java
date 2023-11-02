@@ -357,7 +357,10 @@ abstract class SecuredCommonScoDataManager {
       PersistentCourse course = CourseManager.findEntity(courseID);
       if(course.getDwoProfileID().longValue() != profileID.longValue())
       {
-          LOG.log(Level.WARNING, "profile mismatch " + sc.getUserPrincipal().getName() );     
+          LOG.log(Level.WARNING, "profile mismatch " + sc.getUserPrincipal().getName() );  
+          LOG.warning( "course " + course.getCourseID() + " " + course.getDwoProfileID() );
+          LOG.warning( "sco " + scoContext.getScoID() + " " + scoContext.getDwoProfileID());
+          LOG.warning("profile " + profileID);
           return "{}";
       }
       Long schoolID = course.getSchoolID();

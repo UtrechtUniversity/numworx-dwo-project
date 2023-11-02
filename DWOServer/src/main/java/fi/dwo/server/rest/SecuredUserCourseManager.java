@@ -65,6 +65,7 @@ import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer.StudentState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseDataManager;
@@ -411,20 +412,28 @@ public class SecuredUserCourseManager {
     @Produces({"application/json"})
     public DomCourseStudent getCourse(@Context SecurityContext sc, RestCourse rest, @Context UriInfo info) {
     	try {
+    		UserState_HR_R_S_SG_U ustate = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
+    		
 // TODO NPE tests 		    		
     		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
     		DomSchoolClassId schoolClassId = rest.getSchoolClassID();
     		DomHasRole    hasRole = rest.getRestContext().getDomHasRole();
-    		PersistentUser user = getUserFromContext(sc);		
-// hasRole is correct    		
-			PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(hasRole);
-            PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
+    		PersistentUser user = ustate.getUser();		
+    		PersistentHasRole phr = ustate.getHasRole();
          // userid must match hasrole
      		if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
      			throwLoginNeeded();
      		DomCourse course = rest.getDomCourse();
     		Long id = MySQLPersistenceId.getNativeId(course);
     		PersistentCourse parent = CourseManager.findEntity(id);
+    		PersistentDwoProfile profile = DwoProfileManager.findEntity(parent.getDwoProfileID());
+    		if (parent == null ||
+    			!profile.getDwoProfileID().equals(MySQLPersistenceId.getNativeId(domDwoProfile))
+    		   ) {
+    			throw new Dwo2RestException(Dwo2ExceptionCode.Rest_ResourceNotFound, id + " not found for " + domDwoProfile.getId());
+    		}
+    		
+    		
     		if(schoolClassId != null) {
     			id = MySQLPersistenceId.getNativeId(schoolClassId);
     			PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(id);
@@ -445,7 +454,7 @@ public class SecuredUserCourseManager {
     			
     		} else {
     			if (parent.getSchoolID() != null) {
-    				RoleType role = RoleType.values()[phr.getSchoolGroup().getGroupID()];
+    				RoleType role = ustate.getRoleType();
     				if (parent.getSchoolID().intValue() != phr.getSchoolGroup().getSchoolID())
     					throwLoginNeeded();
     				switch(role) {
@@ -459,7 +468,6 @@ public class SecuredUserCourseManager {
     			}
     		}
 // TODO Verify parent is public and profile is not limited OR user.school matches course.school
-    		PersistentDwoProfile profile = DwoProfileManager.findEntity(parent.getDwoProfileID());
 //    		if ( parent.getSchoolID() != null || 
 //    			 profile.isLimited())
 //    			return null;
