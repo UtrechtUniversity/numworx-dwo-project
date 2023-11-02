@@ -36,6 +36,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ACL;
@@ -426,7 +427,8 @@ public class SecuredUserCourseManager {
      		DomCourse course = rest.getDomCourse();
     		Long id = MySQLPersistenceId.getNativeId(course);
     		PersistentCourse parent = CourseManager.findEntity(id);
-    		PersistentDwoProfile profile = DwoProfileManager.findEntity(parent.getDwoProfileID());
+    		PersistentDwoProfile profile = null;
+    		if (parent != null) profile = DwoProfileManager.findEntity(parent.getDwoProfileID());
     		if (parent == null ||
     			!profile.getDwoProfileID().equals(MySQLPersistenceId.getNativeId(domDwoProfile))
     		   ) {
@@ -435,12 +437,12 @@ public class SecuredUserCourseManager {
     		
     		
     		if(schoolClassId != null) {
-    			id = MySQLPersistenceId.getNativeId(schoolClassId);
-    			PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(id);
+    			StudentState_HR_R_S_SG_U sstate = ustate.buildStudent().setSchoolClass(schoolClassId);
+    			PersistentSchoolClass schoolClass;
+    			schoolClass = sstate.getContext().getStudentCtx().schoolClass;
+    			//id = schoolClass.getClassID();
     			List<PersistentClassCourse> pcc = ClassCourseManager.findEntities(schoolClass, parent);
-    			PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(user.getId(), id, phr.getSchoolGroup().getSchoolGroupID());
-				PersistentStudentOfClass soc = StudentOfClassManager.findEntity(socId);
-    			if(pcc.isEmpty() || soc == null) 
+    			if(pcc.isEmpty() ) 
     				throwLoginNeeded();
     			PersistentClassCourse pcc1 = pcc.get(0);
     			if(pcc1.getType().intValue() == 1 || pcc1.getViewState() != ViewState.studentsAndTeachers) {

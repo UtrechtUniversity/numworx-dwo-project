@@ -47,6 +47,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
@@ -281,7 +282,7 @@ class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U
 	}
 
 	@Override
-	public StudentState_HR_R_S_SG_U setSchoolClass(DomSchoolClass domSchoolClass) throws Dwo2Exception {
+	public StudentState_HR_R_S_SG_U setSchoolClass(DomSchoolClassId domSchoolClass) throws Dwo2Exception {
 		if (domSchoolClass == null) {
 			instance.getContext().getStudentCtx().schoolClass = null;
 		} else {
