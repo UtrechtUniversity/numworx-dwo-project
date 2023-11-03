@@ -2,6 +2,7 @@
 package nl.uu.fi.dwo.rest.persistence;
 
 import java.beans.Transient;
+import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -12,7 +13,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class PersistenceId implements Comparable<PersistenceId>, Cloneable {
+public class PersistenceId implements Comparable<PersistenceId>, Cloneable, Serializable {
 
     private String stringId = null;
     private PersistenceClassType type = PersistenceClassType.none;

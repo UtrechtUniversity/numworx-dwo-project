@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.tuckey.web.filters.urlrewrite.gzip.FilterServletOutputStream;
 
+import nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -74,7 +75,6 @@ public class GwtClientWrap implements Filter {
 	private boolean saml;
 	private boolean entree;
 	private Map<String, String> cache = Collections.synchronizedMap(new HashMap<>());
-	private Map<String, DomDwoProfile> profiles = Collections.synchronizedMap(new HashMap<>());
 	
 	final Logger LOG = Logger.getLogger(getClass().getName());
 	final SecureRandom random = new SecureRandom();
@@ -188,13 +188,7 @@ public class GwtClientWrap implements Filter {
 
 	private DomDwoProfile get(String profile2) throws Dwo2Exception {
 		DomDwoProfile p;
-		p = profiles.computeIfAbsent(profile2, t -> {
-			try {
-				return PublicProfileManager.get(t);
-			} catch (Dwo2Exception e) {
-				return null;
-			}
-		});
+		p = PublicProfileCache.get(profile2);
 		if (p == null) throw new Dwo2Exception();
 		return p;
 	}
@@ -202,7 +196,7 @@ public class GwtClientWrap implements Filter {
 	@Override
 	public void destroy() {
 		cache.clear();
-		profiles.clear();
+		PublicProfileCache.clear();
 	}
 
 }

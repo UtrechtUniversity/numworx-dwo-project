@@ -41,9 +41,6 @@
 	</properties>
 
 	<!-- update the https path for a different branch or tag! -->
-	<scm>
-		<url>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-jclient-lib/trunk</url>
-	</scm>
 
 	<build>
 		<plugins>
@@ -186,6 +183,18 @@
 			<version>4.13.1</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+		    <groupId>javax.cache</groupId>
+		    <artifactId>cache-api</artifactId>
+		    <version>1.1.1</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.jsr107.ri</groupId>
+		    <artifactId>cache-ri-impl</artifactId>
+		    <version>1.1.1</version>
+		    <scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<reporting>

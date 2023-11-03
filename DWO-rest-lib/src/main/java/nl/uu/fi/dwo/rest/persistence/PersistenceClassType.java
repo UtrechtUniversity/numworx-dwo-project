@@ -1,6 +1,8 @@
 /* Copyrighted 2015. */
 package nl.uu.fi.dwo.rest.persistence;
 
+import java.io.Serializable;
+
 /**
  * All the class types that are persistent and are put in the Store. Note the
  * ClassType name is match the Class name exact. The ordering of the class names
@@ -8,7 +10,7 @@ package nl.uu.fi.dwo.rest.persistence;
  *
  * @author G.A.J. van der Plas
  */
-public enum PersistenceClassType {
+public enum PersistenceClassType implements Serializable {
 
     none,
     PersistentApplet,
