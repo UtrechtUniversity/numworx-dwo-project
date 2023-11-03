@@ -428,6 +428,12 @@
   	<servlet-name>conext-redirect</servlet-name>
   	<servlet-class>nl.numworx.oauth2client.server.ConextRedirect</servlet-class>
   </servlet>
+   <servlet>
+  	<servlet-name>solis-redirect</servlet-name>
+  	<servlet-class>nl.numworx.oauth2client.server.RedirectServlet</servlet-class>
+  </servlet>
+
+
   <servlet>
   	<servlet-name>notebook</servlet-name>
   	<servlet-class>nl.numworx.notebook.server.HubServlet</servlet-class>
@@ -601,6 +607,10 @@
   <servlet-mapping>
  	<servlet-name>conext-redirect</servlet-name>
  	<url-pattern>/redirect/conext</url-pattern>
+ </servlet-mapping>
+  <servlet-mapping>
+ 	<servlet-name>solis-redirect</servlet-name>
+ 	<url-pattern>/dwo/oauth2/redirect</url-pattern>
  </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>sebhosting</servlet-name>

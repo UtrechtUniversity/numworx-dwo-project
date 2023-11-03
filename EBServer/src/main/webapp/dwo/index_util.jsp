@@ -3,6 +3,7 @@
 <%@page import="java.util.Base64"%>
 <%@ page import="fi.dwo.server.db.TStamp" %>   
 <%@ page import='java.util.regex.*' %>
+<%@ page import="fi.dwo.server.db.Util" %>
 <%@ include file="/dwo/saml_util.jsp" %>
 <%! String base, locale, profile; %>
 <%
@@ -23,11 +24,10 @@
 	      query += "&a=" + Base64.getEncoder().encodeToString(t.getBytes());
 	}
 	
-	
 	String hash = request.getParameter("hash");
 	String player = "/gwtclient/index.html";
 
-	if ( hash != null && (hash.isEmpty() || Pattern.matches("#[a-z]+:\\d*", hash))) // Deeplink
+	if ( !Util.illegal(hash)) // Deeplink
 		player = "/dwo/tablet/DWOplayer.jsp";
 	else
 		hash = "";
