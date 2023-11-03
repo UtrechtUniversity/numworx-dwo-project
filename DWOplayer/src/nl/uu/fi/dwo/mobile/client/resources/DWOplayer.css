@@ -1,6 +1,7 @@
 @external numworx-popup, cbg-RP, v, nr, gwt-PushButton;
 @external navigatiebalk, score, scoreBtn, scoreBtn-cursor, scoreBtn-max0, spaceLabel, spaceShiftLabel, shiftBtn, navigatiebalkLabel;
 @external myPushButton myPushButton-disabled;
+@external content;
 @url goednumworx goednumworx;
 
 div { padding: 0px; }
@@ -135,7 +136,7 @@ div.insert_formule {padding-right:5px; padding-left:5px;}
 	color: gray;
 }
 
-.textEditor_empty > div:last-child::before {
+.textEditor_empty  div.content::before {
 	content: "...";
 	color: #808080
 }

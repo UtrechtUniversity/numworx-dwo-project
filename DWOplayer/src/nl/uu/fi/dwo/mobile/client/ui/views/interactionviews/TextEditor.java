@@ -409,6 +409,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	private ScrollPanel getContent(ObjectMap launchdata)
 	{
 		FlowPanel touch = new FlowPanel();
+		touch.addStyleName("content");
 		Tapper tapper = new Tapper(this,touch.getElement());		
         tapper.initHandlers(touch); //
         Style s = touch.getElement().getStyle();
@@ -416,6 +417,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		flow = touch; // XXX voorlopig ok
 		setState(launchdata);
 		ScrollPanel result = new ScrollPanel(touch);
+		result.addStyleName("scroller");
 		return result;
 	}
 
@@ -1590,7 +1592,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 
 		private void start(DomEvent<?> event) {
 		    GWT.log(event.getAssociatedType().getName()+  " " + lastX + " " + lastY);
-		    
+		    shown = true;
 			downWidget = findWidget(downX, downY);
 		    down=move=cursor;
 		    deSelection();
@@ -1742,6 +1744,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 				
 				LOGGER.fine("widget " + i + " at "  + w + " mouse at " + y + " c=" + cursor + " m=" + max);
 				deSelection();
+				shown = true;
 				setCursorWidget(widget);
 				if (cursor != max || w >= y)
 					cursorToLeft(); // 1 terug
