@@ -1118,7 +1118,29 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		pasAanH();
 	}
 
+	
+	private void insertCombining(char charAt) {
+		Widget w = flow.getWidget(cursor-1);
+		String s = ((HasText) w).getText() + charAt;
+		SafeHtml html;
+		SafeHtmlBuilder builder = new SafeHtmlBuilder();
+		builder.appendEscaped(s);
+		html = builder.toSafeHtml();
+//		sb.insert(cursor, charAt);
+		InlineHTML nw = new InlineHTML(html);
+		new TapForFocus(nw);
+		flow.remove(cursor-1);
+		flow.insert(nw, cursor-1);
+	}
+	
+	
 	private void insert0(char charAt) {
+		if (charAt >= '\u0300' && charAt <= '\u036F' && cursor > MIN ) {
+			insertCombining(charAt);
+			return;
+		}
+		
+		
 		SafeHtml html;
 		SafeHtmlBuilder builder = new SafeHtmlBuilder();
 		builder.append(charAt);
