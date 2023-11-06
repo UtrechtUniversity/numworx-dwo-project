@@ -43,7 +43,6 @@ self.input = function() {
 
 async function loadPyodideAndPackages() {
   self.pyodide = await loadPyodide();
-  await self.pyodide.loadPackage(["numpy", "pytz"]);
   self.pyodide.setStdout( { isatty: true, raw: self.output })
   self.pyodide.setStderr( { isatty: true, raw: self.output })
   self.pyodide.setStdin(  { isatty: true, stdin: self.input, autoEOF: true })
@@ -69,7 +68,7 @@ self.onmessage = async (event) => {
   }
   // Now is the easy part, the one that is similar to working in the main thread:
   try {
-    await self.pyodide.loadPackagesFromImports(python);
+    await self.pyodide.loadPackagesFromImports(python); // this wil install numpy, etc....
     let results = await self.pyodide.runPythonAsync(python);
     self.postMessage(JSON.stringify({ results, id }));
   } catch (error) {
