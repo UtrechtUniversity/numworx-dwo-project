@@ -172,7 +172,6 @@
 	<dependency>
 		<groupId>nl.uu.fi.dwo.mobile</groupId>
 		<artifactId>DWOplayer</artifactId>
-		<version>2.5.25-SNAPSHOT</version>
 		<type>war</type>
 		<classifier>dwo2</classifier>
 		<scope>runtime</scope>
@@ -597,7 +596,6 @@
 							<Implementation-Build>${buildNumber}</Implementation-Build>
 							<JavaClient-Version>${DWOJClientVersion}</JavaClient-Version>
 							<HtmlClient-Version>${DWOGwtClientVersion}</HtmlClient-Version>
-							<DWOplayer-Version>${DWOplayerVersion}</DWOplayer-Version>
 							<Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
 							<Implementation-ScmBranch>${scmBranch}</Implementation-ScmBranch>
 						</manifestEntries>

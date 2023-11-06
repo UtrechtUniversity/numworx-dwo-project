@@ -15,9 +15,8 @@
         <jdk.version>8</jdk.version>
         <jdk>${env.JAVA_HOME_8}</jdk>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <DWOServerVersion>2.5.25-SNAPSNOT</DWOServerVersion>
-        <DWOJClientVersion>2.5.25-SNAPSNOT</DWOJClientVersion>
-		<DWOplayerVersion>2.5.25-SNAPSHOT</DWOplayerVersion>
+        <DWOServerVersion>2.5.25-SNAPSHOT</DWOServerVersion>
+        <DWOJClientVersion>2.5.25-SNAPSHOT</DWOJClientVersion>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <chatGWTVersion>2.5.25-SNAPSHOT</chatGWTVersion>
     </properties>
@@ -114,6 +113,25 @@
 			<groupId>nl.numworx.swingbrowser</groupId>
 			<artifactId>swingbrowser-jxb</artifactId>
 			<version>0.0.14</version>
+		</dependency>
+		<dependency>
+	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
+	  		<artifactId>DWOplayer</artifactId>
+	  		<version>2.5.25-SNAPSHOT</version>
+	  		<classifier>classes</classifier>		
+		</dependency>
+ 		<dependency>
+	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
+	  		<artifactId>DWOplayer</artifactId>
+	  		<version>2.5.25-SNAPSHOT</version>
+	  		<classifier>sources</classifier>		
+		</dependency>
+ 		<dependency>
+	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
+	  		<artifactId>DWOplayer</artifactId>
+	  		<version>2.5.25-SNAPSHOT</version>
+	  		<classifier>dwo2</classifier>		
+  			<type>war</type>
 		</dependency>
     	</dependencies>
     </dependencyManagement>
