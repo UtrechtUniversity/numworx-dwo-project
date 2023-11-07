@@ -1,5 +1,5 @@
 <%@ page import="nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile" %>
-<%@ page import="nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager" %>
+<%@ page import="nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache" %>
 <%@ page import='java.util.regex.*' %>
 <!doctype html>
 <!-- The DOCTYPE declaration above will set the     -->
@@ -20,7 +20,7 @@
   		return;
 	}
 	try {
-		DomDwoProfile dom = PublicProfileManager.get(profile);
+		DomDwoProfile dom = PublicProfileCache.get(profile);
 		if (dom.getDwoProfileRights().contains("c"))
 			name = dom.getDwoProfileName();
 	} catch(Exception e) {
