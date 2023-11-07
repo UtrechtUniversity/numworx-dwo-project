@@ -1,5 +1,6 @@
 <%@ page import="nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile" %>
 <%@ page import="nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager" %>
+<%@ page import='java.util.regex.*' %>
 <!doctype html>
 <!-- The DOCTYPE declaration above will set the     -->
 <!-- browser's rendering engine into                -->

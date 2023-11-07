@@ -32,6 +32,11 @@
     <version>2.2</version>
     <scope>provided</scope>
 </dependency>
+  	<dependency>
+  		<groupId>nl.uu.fi.dwo.rest</groupId>
+  		<artifactId>DWO-jclient-lib</artifactId>
+  		<scope>runtime</scope>
+  	</dependency>
   </dependencies>
 
   <build>
