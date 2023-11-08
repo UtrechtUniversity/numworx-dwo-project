@@ -289,12 +289,6 @@
 			<version>0.0.3</version>
 			<classifier>classes</classifier>
 		</dependency>
-		<dependency>
-		    <groupId>org.jsr107.ri</groupId>
-		    <artifactId>cache-ri-impl</artifactId>
-		    <version>1.1.1</version>
-		    <scope>runtime</scope>
-		</dependency>
 	</dependencies>
 	<build>
 		<resources>
@@ -455,6 +449,7 @@
                             <DWO_ENV>test entree</DWO_ENV>
                             <SEB_TOETS_MAC>9153c48c6111d2733add6e1d596db4059c302cf736dcb18ca498288e21404507,c5d129e27f57b1970d2ffda2ed745a20f7d8e12ed9bfbfb168e83f75f9f870cf</SEB_TOETS_MAC>
   							<ALLOW_ORIGIN>http://localhost:${http.port} https://hub-dev.dwo.nl https://entree-s.dwo.nl </ALLOW_ORIGIN>
+ 							<MEMCACHED>test:localhost:11211</MEMCACHED>
                         </systemProperties>
 					<server>TomcatServer</server>
 					<path>/</path>
@@ -813,6 +808,30 @@
 				</plugins>
 			</build>
 		</profile>
-		
+		<profile>
+			<id>memcached-jcache</id>
+			<dependencies>
+				<dependency>
+				    <groupId>org.memcached</groupId>
+    				<artifactId>memcached-jcache</artifactId>
+    				<version>1.0</version>
+		    		<scope>runtime</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>ri-jcache</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<dependencies>
+					<dependency>
+					    <groupId>org.jsr107.ri</groupId>
+					    <artifactId>cache-ri-impl</artifactId>
+					    <version>1.1.1</version>
+					    <scope>runtime</scope>
+					</dependency>			
+			</dependencies>
+		</profile>
 	</profiles>
 </project>

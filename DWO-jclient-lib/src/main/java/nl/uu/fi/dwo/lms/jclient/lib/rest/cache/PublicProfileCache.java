@@ -1,9 +1,15 @@
 package nl.uu.fi.dwo.lms.jclient.lib.rest.cache;
 
+import java.util.Properties;
+
 import javax.cache.Cache;
+import javax.cache.CacheManager;
 import javax.cache.Caching;
 import javax.cache.configuration.Configuration;
 import javax.cache.configuration.MutableConfiguration;
+import javax.cache.expiry.CreatedExpiryPolicy;
+import javax.cache.expiry.Duration;
+import javax.cache.spi.CachingProvider;
 
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
@@ -20,11 +26,22 @@ public class PublicProfileCache {
 
 	static synchronized Cache<String, DomDwoProfileFull> cache() {
 		if (_instance == null) {
-			_instance = Caching.getCache(NAME, String.class, DomDwoProfileFull.class);
+			CachingProvider cachingProvider = Caching.getCachingProvider();
+			Properties properties = new Properties(cachingProvider.getDefaultProperties());
+//voor memcache 
+			String servers = System.getProperty("MEMCACHED", "test:localhost:11211");
+			servers = servers.substring(servers.indexOf(':')+1);
+			properties.setProperty(NAME + ".servers", "localhost:11211");
+			CacheManager cacheManager = cachingProvider.getCacheManager(null, null, properties);
+			_instance = cacheManager.getCache(NAME, String.class, DomDwoProfileFull.class);
 			if (_instance == null) {
-				Configuration conf;
+				MutableConfiguration<String, DomDwoProfileFull> conf;
 				conf = new MutableConfiguration<String, DomDwoProfileFull>().setTypes(String.class, DomDwoProfileFull.class);
-				_instance = Caching.getCachingProvider().getCacheManager().createCache(NAME, conf);
+// voor memcache
+				conf.setStoreByValue(false);
+				conf.setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.ONE_DAY));
+				
+				_instance = cacheManager.createCache(NAME, conf);
 			}
 		}
 		return _instance;
@@ -55,8 +72,10 @@ public class PublicProfileCache {
 	}
 
 	public static void clear() {
-		cache().clear();
-		
+		try {
+			cache().clear();
+		} catch (Exception e) {
+		}		
 	}
 
 }

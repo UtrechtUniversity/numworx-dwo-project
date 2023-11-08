@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.regex.*" %>
 <%@ page import="nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile" %>
-<%@ page import="nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager" %>
+<%@ page import="nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache" %>
 <!doctype html>
 <!-- The DOCTYPE declaration above will set the     -->
 <!-- browser's rendering engine into                -->
@@ -30,7 +30,7 @@
 	  base = "<base href='" + base + "'>"; 
 	}
 	try {
-		DomDwoProfile dom = PublicProfileManager.get(profile);
+		DomDwoProfile dom = PublicProfileCache.get(profile);
 		if (dom.getDwoProfileRights().contains("c"))
 			name = dom.getDwoProfileName();
 	} catch(Exception e) {
