@@ -169,7 +169,7 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 	            if (schoolId.longValue() == 0L) schoolId = null;
 	            pc.setSchoolID(schoolId);
 	            fun = CourseManager::editWithSchool;
-			} else
+			} 
 // MOVE to different parent within the same school
 			if(course.getParentID() != null) {		
 				DomCourse parent = new DomCourse();
