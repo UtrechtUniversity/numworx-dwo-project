@@ -327,7 +327,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	}
 
 	private void insertMenuBackground() {
-		flow.insert(w, 0);
+		flow.insert(w, 1);
 	}
 
 	public TextEditor(ActivityInterface a, int w, int h, boolean rand, boolean formule) {
@@ -767,7 +767,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 				flow.getElement().getStyle().setProperty("minHeight", content_height, PX);
 			} else 
 				content.setPixelSize(-1, content_height);
-			hbox.setWidgetTopBottom(content, menuheight, PX, execute_height, PX);
+			hbox.setWidgetTopBottom(contentwrap, menuheight, PX, execute_height, PX);
 			btn.addClickHandler(new ClickHandler() {
 
 				@Override
@@ -797,11 +797,11 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		cursor = MIN;
 		selectionEnd = -1;
 		flow.clear();
+		flow.add(new InlineHTML(ZWS));
+		flow.add(setCursorWidget(new InlineHTML(" \u200A")));
 		if  (MIN == 2) {
 			insertMenuBackground();
 		}
-		flow.add(new InlineHTML(ZWS));
-		flow.add(setCursorWidget(new InlineHTML(" \u200A")));
 		pasAanH();
 	}
 
