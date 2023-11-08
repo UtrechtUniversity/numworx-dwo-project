@@ -19,6 +19,7 @@ import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseDataManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 
 import java.sql.DataTruncation;
 import java.util.List;
@@ -160,11 +161,14 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 			
 			Long schoolID_pc = pc.getSchoolID(); // public courses have schoolid 0 in DWOJClient
 			if(schoolID_pc == null) schoolID_pc = Long.valueOf(0L);
-			
+			Function<PersistentCourse, PersistentCourse> fun = CourseManager::edit;
 			if(schoolId != null && ! schoolId.equals(schoolID_pc) ) {
 	            Dwo2RestException exception = new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
 	            LOG.log(Level.WARNING, "Assume profileadmin or dwoadmin? " + schoolID_pc + " " + schoolId, exception);
-	            throw exception;
+	            school = SchoolManager.findEntity(schoolId);
+	            if (schoolId.longValue() == 0L) schoolId = null;
+	            pc.setSchoolID(schoolId);
+	            fun = CourseManager::editWithSchool;
 			} else
 // MOVE to different parent within the same school
 			if(course.getParentID() != null) {		
@@ -191,7 +195,7 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 			else 
 				pc.setLastChangeTimeStamp(System.currentTimeMillis()); // FIXME Gert is dit de bedoeling of JPA managed?
 			pc.setTrashID(0L);
-			pc=CourseManager.edit(pc);
+			pc=fun.apply(pc);
 			pcd = CourseDataManager.edit(pcd);
 			course = pc.buildDomCourseFull();
 			pcd.fillDomCourseFull(course);

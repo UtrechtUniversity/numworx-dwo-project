@@ -13,6 +13,7 @@ import org.junit.Test;
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -65,6 +66,30 @@ public class CourseManagerPIT {
       CourseManager.edit(c);
       List<PersistentCourse> list2 = CourseManager.findVisibleEntities(profileID);
       assertEquals(9, list2.size());
+	}
+
+	
+	@Test
+	public void testEditWithSchool() throws Exception {
+		PersistentCourse course = CourseManager.findEntity(13333L);
+		course.setSchoolID(null);
+		PersistentCourse result = CourseManager.editWithSchool(course);
+		assertNull(result.getSchoolID());
+		List<PersistentScoContext> scos = ScoContextManager.findEntities(result);
+		scos.forEach(s -> assertNull(s.getSchoolID()));
+		List<PersistentCourse> cs = CourseManager.findChildrenOf(result);
+		cs.forEach(c -> assertNull(c.getSchoolID()));
+	}
+	@Test
+	public void testEditWithSchool2() throws Exception {
+		PersistentCourse course = CourseManager.findEntity(2L);
+		course.setSchoolID(school.getSchoolID());
+		PersistentCourse result = CourseManager.editWithSchool(course);
+		assertEquals(school.getSchoolID(),result.getSchoolID());
+		List<PersistentScoContext> scos = ScoContextManager.findEntities(result);
+		scos.forEach(s -> assertEquals(school.getSchoolID(),s.getSchoolID()));
+		List<PersistentCourse> cs = CourseManager.findChildrenOf(result);
+		cs.forEach(c -> assertEquals(school.getSchoolID(),c.getSchoolID()));
 	}
 
 }
