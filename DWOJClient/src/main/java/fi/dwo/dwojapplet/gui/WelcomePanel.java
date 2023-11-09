@@ -43,6 +43,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -79,7 +80,8 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
     NumworxInfo fiButton;
     JPanel dialog;
 
-    private JCheckBox linkcheck;
+    private JButton linkcheck;
+    private Map linkData;
 
 
     /**
@@ -153,7 +155,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         
         //loginOnly = loginOnly || "test".equals(DwoHelper.getApplet().getParameter("dwo_env"));
         
-        
+        this.linkData = linkdata;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setLayout(null);
         this.setSize(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
@@ -316,14 +318,17 @@ if(DwoHelper.isSamlLogin()) {
 
         /* linkdata */
         Object org = null;
-        if (linkdata != null && null != (org = linkdata.get("dwoSAMLOrganization"))) {
-            linkcheck = new JCheckBox("Inloggen via '" + org + '\'');
+        if (linkdata != null && null != (org = linkdata.get("IDP"))) {
+            linkcheck = new JButton("Inloggen via '" + org + '\'');
+            linkcheck.addActionListener(this);
             linkcheck.setBackground(p.getBackground());
             linkcheck.setFont(GuiConstants.NORMAL_TEXT);
             p.add(linkcheck);
             h = linkcheck.getPreferredSize().height;
             p.setSize(p.getWidth(), h + p.getHeight());
             linkcheck.setBounds(7, 75, 250, 20);
+        } else {
+        	linkcheck = new JButton(); // voorkom NPE;
         }
 
         /* Login button */
@@ -493,10 +498,13 @@ if(DwoHelper.isSamlLogin()) {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
-        if ((src == loginButton) || (src == loginname) || (src == password)) {
+        if ((src == loginButton) || (src == loginname) || (src == password)|| (src == linkcheck)) {
           profileselect.switchProfile();
           
-          
+        if (src == linkcheck) {
+        	loginWithIDP();
+        	return;
+        }
           
           try {
                 //Fetch LoginContext to see if there is already a session.
@@ -510,9 +518,6 @@ if(DwoHelper.isSamlLogin()) {
                     };
                 }
                 GuiCreator.instance().login(loginname.getText(), String.valueOf(password.getPassword()));
-                if (linkcheck != null && linkcheck.isSelected()) {
-                    GuiCreator.instance().linkViaSAML();
-                }
             } catch (LoginException exc) {
                 if (LOG.getLevel() == Level.INFO) {
                     LOG.log(Level.INFO, "Login failed.");
@@ -536,7 +541,28 @@ if(DwoHelper.isSamlLogin()) {
     }
 
 
-    public void setUsername(String username) {
+    private void loginWithIDP() {		
+		LOG.info("Login with " + linkData);
+		JDialog d = new JDialog(DwoHelper.getFrameForComponent(this));
+		d.setModal(true);
+		d.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		SAMLLoginIF login = getSAMLLogin();
+		login.setEndpoint(linkData.get("endpoint").toString());
+		String redirectUri = DwoHelper.getServerUrlPath() + "oauth2/login3.jsp";
+		login.loadURL(redirectUri);
+		d.setContentPane(login.asComponent());
+		d.pack();
+		login.getPromise().then(pr -> {
+			d.dispose();
+			LOG.info("got " + pr.getValue());
+		    GuiCreator.instance().dwo.loginViaSaml(pr.getValue());
+			return pr;
+		});
+		d.show();
+		
+	}
+
+	public void setUsername(String username) {
         this.loginname.setText(username);
     }
 

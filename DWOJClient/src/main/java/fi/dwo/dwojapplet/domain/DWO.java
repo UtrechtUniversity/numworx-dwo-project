@@ -336,9 +336,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         Compressor.setSkip(false);
         if(dwo_env.contains("saml"))
             DwoHelper.setSamlLogin(true);
-        if (DwoHelper.isTest()) {
-          dwo_env = "test"; // legacy bij geodefiner/wiskopdr geen combinatie nog.
-        }
+//        if (DwoHelper.isTest()) {
+//          dwo_env = "test"; // legacy bij geodefiner/wiskopdr geen combinatie nog.
+//        }
     }
 
     /**
@@ -1659,6 +1659,13 @@ LOG.info("time results = " + (-t) + " ms");
         }
         // einde
 
+        if (dwo_env.contains("entree") && DwoHelper.isTest()) {
+        	samlData = new HashMap<>();
+        	samlData.put("IDP", "Entree");
+        	samlData.put("endpoint", "/dwo/oauth2/entree");
+        }
+        
+        
         panel = gc.getWelcomePanel(testView || limitedSchoolAccess, samlData);
         panel.setVisible(false);
         panel.setSize(this.getSize());
