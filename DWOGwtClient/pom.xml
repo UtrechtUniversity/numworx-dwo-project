@@ -164,7 +164,7 @@
         <dependency>
         	<groupId>nl.uu.fi.dwo.lms</groupId>
         	<artifactId>DwoGwtClientHtmlUi</artifactId>
-        	<version>2.5.25-SNAPSHOT</version>
+        	<version>2.5.25</version>
         	<scope>runtime</scope>
         	<type>war</type>
         </dependency>

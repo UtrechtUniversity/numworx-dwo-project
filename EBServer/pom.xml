@@ -232,13 +232,13 @@
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>OAuth2Client</artifactId>
-		<version>1.0.7-SNAPSHOT</version>
+		<version>1.0.7</version>
 		<classifier>classes</classifier>
 	</dependency>
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>OAuth2Client</artifactId>
-		<version>1.0.7-SNAPSHOT</version>
+		<version>1.0.7</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
