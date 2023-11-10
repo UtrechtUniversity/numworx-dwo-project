@@ -72,14 +72,17 @@ public class EntreeSLogin implements SigningKeyResolver, Login {
 		USERINFO = "https://oidcng.entree.kennisnet.nl/oidc/userinfo";
 	}
 	
+	
+	
 	private OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
 
 
     Long expiresIn, now;
 	private OAuthToken token;
 	String numworx_scope = "profile";
-
 	
+	public String toString() { return "entree"; }
+ 	
 	public EntreeSLogin(ServletConfig cfg) {
 		String allow = System.getProperty("ALLOW_ORIGIN");
 		if (allow != null) {
@@ -88,7 +91,6 @@ public class EntreeSLogin implements SigningKeyResolver, Login {
 		}
 		if (!System.getProperty("ENTREE_SECRET", "").isEmpty())
 			productie();
-		
 	}
 
 	public String login() throws OAuthSystemException {
@@ -230,11 +232,19 @@ public class EntreeSLogin implements SigningKeyResolver, Login {
 		Object parse = parser.parse(response.getBody());
 	    Claims body = new DefaultClaims((Map<String, Object>) parse);
 		sn = body.get("sn", String.class);
+		if (sn == null) sn = body.get("family_name", String.class);
 		givenName = body.get("givenName", String.class);
+		if (givenName == null) givenName = body.get("given_name", String.class);
+		
 		insertion = body.get("nlEduPersonTussenvoegsels", String.class);
 		email = body.get("mail", String.class);
 		uid   = body.get("uid", String.class);
+		if (uid == null) uid = body.getSubject();
 		affiliation = body.get("eduPersonAffiliation", String.class);
+		if (affiliation == null) {
+			List list = body.get("eduperson_affiliation", List.class);
+			if (list != null) affiliation = list.toString(); // OID.
+		}
 	    return body;
 	}
 	

@@ -3,6 +3,7 @@ package nl.numworx.oauth2client.server;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -65,7 +66,8 @@ public class LoginServlet extends HttpServlet {
 //		config = new UULogin(getServletConfig());
 //		config = new JavaSamlLogin(getServletConfig());
 //		config = new DwoLogin(getServletConfig());
-		config = new EntreeSLogin(getServletConfig());
+//		config = new EntreeSLogin(getServletConfig());
+		config = new WAYFLogin(getServletConfig());
 	}
 
 }
