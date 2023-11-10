@@ -15,10 +15,10 @@
         <jdk.version>8</jdk.version>
         <jdk>${env.JAVA_HOME_8}</jdk>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <DWOServerVersion>2.5.25-SNAPSHOT</DWOServerVersion>
-        <DWOJClientVersion>2.5.25-SNAPSHOT</DWOJClientVersion>
+        <DWOServerVersion>2.5.25</DWOServerVersion>
+        <DWOJClientVersion>2.5.25</DWOJClientVersion>
         <maven.javadoc.skip>true</maven.javadoc.skip>
-        <chatGWTVersion>2.5.25-SNAPSHOT</chatGWTVersion>
+        <chatGWTVersion>2.5.25</chatGWTVersion>
     </properties>
     
     <!-- should move project role names here that fall in the full project scope -->
