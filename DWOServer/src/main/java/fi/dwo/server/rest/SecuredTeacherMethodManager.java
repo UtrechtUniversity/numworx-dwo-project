@@ -52,11 +52,16 @@ public class SecuredTeacherMethodManager {
     	UserState_HR_R_S_SG_U hasRole = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
         TeacherState_HR_P_R_S_SG_U state = hasRole.buildSchoolAdminTeacher().setTeacher().addProfile(rest.getDomDwoProfile());
         PersistentSchool school = hasRole.getSchool();
- // cannot change profileid       
-    	PersistentMethod p = MethodManager.toValue(rest.getDomMethod(), school, null);
+        PersistentDwoProfile profile = state.getDwoProfile();
+ // cannot change profileid, should be 0, add profile instead       
+    	PersistentMethod p = MethodManager.toValue(rest.getDomMethod(), school, profile);
     	PersistentMethod old = MethodManager.findEntity(p.getMethodID());
     	p.setDwoProfileID(old.getDwoProfileID());
     	p = MethodManager.edit(p);
+    	if (old.getDwoProfileID().longValue() != profile.getDwoProfileID().longValue() && p.getSchoolID() == MethodManager.NUL) {
+    		MethodManager.addProfile(p, profile);
+    		p.setDwoProfileID(profile.getDwoProfileID()); // fake 
+    	}
     	return MethodManager.toDom(p);
     }
 

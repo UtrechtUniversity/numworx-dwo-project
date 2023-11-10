@@ -76,18 +76,7 @@ public class EastHeader extends Composite {
 		if (b) klas.setValue(Boolean.TRUE);
 		else persoon.setValue(Boolean.TRUE);
 	}
-	
-	
-	public void setUnread(ChatRoom room, boolean unread) {
-		if (room == null) return;
-		int index = roomList.indexOf(room);
-		if (room == getSelectedRoom() && isMultichat()) unread = false;
-		else {
-			if (!unread && childrenUnread(room.chatUser)) unread = true;
-		}
-		naam.setItemText(index, room.displayName + (unread?" ●":""));
-	}
-	
+		
 	private boolean childrenUnread(List<ChatUser> chatUser) {
 		for (ChatUser person : chatUser) {
 			if (isUnread.test(person)) return true;
@@ -102,7 +91,7 @@ public class EastHeader extends Composite {
 	@UiHandler("klas") void onKlas(ValueChangeEvent<Boolean> ev) {
 		if (updateSelect != null) 
 			updateSelect.accept(Boolean.TRUE);	
-		setUnread(getSelectedRoom(), false);
+		//setUnread(getSelectedRoom(), false);
 		//persoon.setValue(false, false);
 	}
 	
@@ -117,14 +106,9 @@ public class EastHeader extends Composite {
 		if (updateRoom!=null) {
 			updateRoom.accept(getSelectedRoom());
 		}
-		setUnread(getSelectedRoom(), false);
+		//setUnread(getSelectedRoom(), false);
 	}
 	
-//	@UiHandler("naam") void onFocusNaam(FocusEvent ev) {
-//		ev.preventDefault();
-//		FocusOnTouch.focus();
-//	}
-
 	/**
 	 * @return the updateRoom
 	 */

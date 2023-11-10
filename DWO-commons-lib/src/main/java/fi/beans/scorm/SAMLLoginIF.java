@@ -10,4 +10,5 @@ public interface SAMLLoginIF {
     JComponent asComponent();
     Promise<Properties> getPromise();
     void loadURL(String url);
+    default void setEndpoint(String endpoint) { }
 }

@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -9,9 +11,9 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  *
  */
 @XmlRootElement
-public abstract class DomId {
+public abstract class DomId implements Serializable {
 	private PersistenceId id;
-        private Long optLock;
+    private Long optLock;
 
 	public DomId(PersistenceId id) {
 		super();

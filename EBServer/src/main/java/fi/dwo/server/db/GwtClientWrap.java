@@ -1,12 +1,14 @@
 package fi.dwo.server.db;
 
 import java.io.CharArrayWriter;
-import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.security.SecureRandom;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.servlet.Filter;
@@ -21,6 +23,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.tuckey.web.filters.urlrewrite.gzip.FilterServletOutputStream;
+
+import nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 public class GwtClientWrap implements Filter {
 
@@ -64,9 +71,10 @@ public class GwtClientWrap implements Filter {
 
 	private static final String SAMLSTART = "<!--SAMLSTART-->";
 	private static final String SAMLEND= "<!--SAMLEND-->";
+	private static final String PROFILE= "<!--PROFILE_CSS-->";
 	private boolean saml;
 	private boolean entree;
-	
+	private Map<String, String> cache = Collections.synchronizedMap(new HashMap<>());
 	
 	final Logger LOG = Logger.getLogger(getClass().getName());
 	final SecureRandom random = new SecureRandom();
@@ -92,6 +100,29 @@ public class GwtClientWrap implements Filter {
 		}
 		MyWrapper wrapper;
 		wrapper = new MyWrapper(resp);
+
+		String profile = request.getParameter("profile");
+		if (profile == null) profile = "77"; // de default
+		String name = profile;
+		String cdn = System.getProperty("CDNURL", "http://cdn.dwo.nl");
+		if (profile != null) {
+			if (cache.containsKey(profile)) {
+				name = cache.get(profile);
+			} else 
+			try {
+				String key = profile;
+				DomDwoProfile p = get(profile);
+				
+				if (p.getDwoProfileRights().contains("c"))
+					name = p.getDwoProfileName();
+				else
+					name = null;
+				 cache.put(key, name);
+			} catch(Exception oops) {
+				name = null;
+			}
+		}
+		
 		
 		chain.doFilter(request, wrapper);
 		if (wrapper.writer != null) {
@@ -109,15 +140,45 @@ public class GwtClientWrap implements Filter {
 				}
 				content = content.replace("type=\"password\"", "type=\"text\"");
 			}
-			if (!entree) {
+			boolean off = !entree;
+			boolean ho = false;
+			if (!off) {
+				try {
+					DomDwoProfile p = get(profile);
+					String rights = p.getDwoProfileRights();
+					if (!rights.contains("O")) off = true;
+					if (rights.contains("H")) ho = true;					
+				} catch (Exception e) {
+					off = true; // even niet
+				}
+				
+			}
+			if (off) {
 				int index = content.indexOf(ENTREESTART);
 				while (index >= 0) {
 					int end = content.indexOf(ENTREEEND, index);
 					if (end >=0 ) content = content.substring(0, index) + content.substring(end);
 					index = content.indexOf(ENTREESTART, index+1);
-				}
+				}				
+			} else if (ho) {
+				int index = content.indexOf(ENTREESTART);
+				while (index >= 0) {
+					int end = content.indexOf(ENTREEEND, index);
+					if (end >=0 ) {
+						String mid = content.substring(index, end);
+						mid = mid.replace("entree", "conext"); // HO idphint
+						content = content.substring(0, index) + mid + content.substring(end);
+					}
+					index = content.indexOf(ENTREESTART, index+1);
+				}				
+				
 				
 			}
+			if (name != null) {
+				CharSequence replacement = "<link type=\"text/css\" rel=\"stylesheet\" href=\""+cdn+"/apps/css/"+name+".css\" >";
+				content = content.replace(PROFILE, replacement );
+			}
+			
 			resp.setContentType("text/html;charset=UTF-8");
 			resp.setCharacterEncoding("UTF-8");
 			resp.getWriter().write(content);
@@ -125,9 +186,17 @@ public class GwtClientWrap implements Filter {
 
 	}
 
+	private DomDwoProfile get(String profile2) throws Dwo2Exception {
+		DomDwoProfile p;
+		p = PublicProfileCache.get(profile2);
+		if (p == null) throw new Dwo2Exception();
+		return p;
+	}
+
 	@Override
 	public void destroy() {
-
+		cache.clear();
+		PublicProfileCache.clear();
 	}
 
 }

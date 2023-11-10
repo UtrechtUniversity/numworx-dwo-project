@@ -7,17 +7,6 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	<script type="text/javascript">
-	
-	var serviceWorker;
-	
-	navigator.serviceWorker.register("/dwo/apps/serviceworker.jsp").then(function(registration) {
-		  serviceWorker = registration.active;
-		  if (!serviceWorker) {
-		    location.reload();
-		  }  
-	})
-	</script>
 	<script type="text/javascript" src='deploy.jsp'></script>
 
     <!--                                                               -->
@@ -44,6 +33,8 @@
   <!-- to create a completely dynamic UI.        -->
   <!--                                           -->
   <body>
-	<pre id="output" ></pre>
+    <div id="content">
+		<pre id="output" ></pre>
+	</div>
   </body>
 </html>

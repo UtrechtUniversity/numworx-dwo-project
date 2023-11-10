@@ -213,7 +213,7 @@ public class BerekeningVakCheckManager {
 					//regelString = "\u2714" + regelString;
 
 				else if(view && goedHalfFout==afvChecker.FOUT) {
-
+					berekeningVak.geefVakRegel(regelNr).zetGoedFout(goedHalfFout);
 					//regelString = regelString +"\u274c";
 					//errorCount ++;
 				}

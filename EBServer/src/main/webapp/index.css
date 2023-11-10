@@ -6,6 +6,10 @@ body {
 	font-size: 14px;
 	line-height: 18px;
 	color: #1B75BB;
+	background-size: 360px 349px;
+	background-repeat: no-repeat;
+	background-position: right 60px top 70px;
+	background-image: url('dwo/tablet/images/numworx/favicon-numworx-wit.svg');
 }
 
 a {

@@ -1,5 +1,6 @@
 package nl.numworx.uploadwidgetgwt.client;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -197,7 +198,8 @@ public class UploadWidgetGWTDebug extends UploadWidgetGWT {
 		launchdata.put(Constants.SCORE_MAX, 10);
 		launchdata.put(Constants.AUTO_SUBMIT, true);
 		Map<String,String> file = Collections.singletonMap("name", "aap.txt");
-		List<Map<String,String>> fileinputmodel = Collections.singletonList(file);
+		Map<String,String> fil2 = Collections.singletonMap("name", "noot.txt");
+		List<Map<String,String>> fileinputmodel = Arrays.asList(file, fil2);
 		launchdata.put(Constants.FILE_INPUT_MODEL, fileinputmodel);
 		
 		init(width, height, launchdata, Collections.emptyMap());

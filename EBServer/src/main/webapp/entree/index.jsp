@@ -22,14 +22,14 @@
     <script>
         token = "/dwo/oauth2/entree";
     	endpoint = "/gwtclient/index.html"
-    	search = ""
+    	search = "?"
     	hash= ""
     	clientId = "f9af29c4-cfc5-11ea-87d0-0242ac130003";
     	<%
 // criterium?
     		String with = request.getParameter("with");
     	    String code = request.getParameter("code");
-    		if (!"entree".equals(with) && code == null) {
+    		if (with == null && code == null) {
     	%>
     		clientId = "";
     	<% }

@@ -1033,3 +1033,20 @@ CREATE TABLE `tblschoolmethod` (
   `lastChangeTimeStamp` bigint(22) NOT NULL,
   PRIMARY KEY (`schoolID`,`modelID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+DROP TABLE IF EXISTS `tblmethodperprofile`;
+CREATE TABLE `tblmethodperprofile` (
+  `methodID` varchar(45) NOT NULL,
+  `dwoProfileID` int(11) NOT NULL,
+  PRIMARY KEY (`methodID`,`dwoProfileID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `tblstudentmodelperprofile`;
+CREATE TABLE `tblstudentmodelperprofile` (
+  `modelID` int(11) NOT NULL,
+  `dwoProfileID` int(11) NOT NULL,
+  PRIMARY KEY (`modelID`,`dwoProfileID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+

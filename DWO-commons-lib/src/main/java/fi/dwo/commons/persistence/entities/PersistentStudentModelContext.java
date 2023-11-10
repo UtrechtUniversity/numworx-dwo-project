@@ -5,12 +5,18 @@ package fi.dwo.commons.persistence.entities;
 
 import fi.dwo.commons.persistence.JpaEclipseConverterDomStudentModelStructure;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.PrePersist;
@@ -72,8 +78,24 @@ public class PersistentStudentModelContext implements Serializable {
     @NotNull
     @Column(name = "publishState", nullable = false)
     private PublishState publishState = PublishState.published;
-    @Column(name = "dwoProfileID")
+    @Column(name = "dwoProfileID", nullable = true)
     private Long dwoProfileID;
+    @ManyToMany
+    @JoinTable(
+    		name = "tblstudentmodelperprofile",
+    		joinColumns = @JoinColumn( name = "modelID", referencedColumnName = "modelID" ),
+    		inverseJoinColumns = @JoinColumn( name = "dwoProfileID", referencedColumnName = "dwoProfileID" )
+    		)
+    private Set<PersistentDwoProfile> profiles = new HashSet<>();
+    
+    
+    public Set<PersistentDwoProfile> getProfiles() {
+		return profiles;
+	}
+
+    
+    
+    
 //Future design
 //    @NotNull
 //    @Column(name="classType", nullable = false)

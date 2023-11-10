@@ -336,4 +336,54 @@ public class StudentModelManagerPIT {
    	
     }
     
+    @Test public void testAddProfile() throws Exception {
+    	PersistentSchool school = new PersistentSchool(3L);
+    	PersistentDwoProfile profile = new PersistentDwoProfile(3L);
+    	modelA.setDwoProfileID(1L);
+    	modelA.setSchoolID(MethodManager.NUL);   	
+    	DomStudentModelStructure s = new DomStudentModelStructure();
+		modelA.setModelStructure(s);
+		StudentModelContextManager.create(modelA);
+		StudentModelContextManager.addProfile(modelA, profile);
+		
+		List<PersistentStudentModelContext> list = StudentModelContextManager.findReducedEntities(school, profile);
+    	
+		assertEquals(3, list.size());
+    	profile.setDwoProfileID(4L);
+    	list = StudentModelContextManager.findReducedEntities(school, profile);
+    	assertEquals(2, list.size());
+    	profile.setDwoProfileID(1L);
+    	school.setSchoolID(1L);
+       	list = StudentModelContextManager.findReducedEntities(school, profile);
+    	assertEquals(1, list.size());
+    	
+  	
+    }
+    
+    @Test public void getAllStandardModels() throws Exception {
+    	modelA.setDwoProfileID(1L);
+    	modelA.setSchoolID(MethodManager.NUL);   	
+    	DomStudentModelStructure s = new DomStudentModelStructure();
+		modelA.setModelStructure(s);
+		StudentModelContextManager.create(modelA);
+    	modelB.setDwoProfileID(3L);
+    	modelB.setSchoolID(MethodManager.NUL);   	
+    	s = new DomStudentModelStructure();
+		modelB.setModelStructure(s);
+		StudentModelContextManager.create(modelB);
+    	
+    	PersistentSchool school = new PersistentSchool(Long.valueOf(Integer.MAX_VALUE));
+    	PersistentDwoProfile profile = new PersistentDwoProfile(3L);
+		List<PersistentStudentModelContext> list;
+// standard models in profile
+		list = StudentModelContextManager.findReducedEntities(school, profile);
+		assertEquals(1, list.size());
+// standard models in all profiles
+        school = new PersistentSchool(Long.valueOf(0));
+        profile = new PersistentDwoProfile(Long.valueOf(Integer.MAX_VALUE));
+		
+		list = StudentModelContextManager.findReducedEntities(school, profile);
+		assertEquals(2, list.size());
+		
+    }
 }

@@ -44,8 +44,11 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -96,7 +99,7 @@ import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 
 @SuppressWarnings("deprecation")
-public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleEditorIF, FacetAware, CBookEventListener, TekstElementWithFont, HasText {
+public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleEditorIF, FacetAware, CBookEventListener, TekstElementWithFont, HasText, RequiresResize {
 	
 	private static final String ZWS = "\u200B"; // zero width space
 	private static final class PreventTapper implements PointerDownHandler {
@@ -130,7 +133,8 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 
 	private static final String ACTION_NOT_EDITIABLE = "action.setNotEditable";
 	private static final String TEXT = "text";
-	private static final int MIN = 1;
+	private static final Unit PX = Unit.PX;
+	private int MIN = 1;
 	
 	private boolean editable = true;
 	//private int lineHeight = 20;
@@ -144,9 +148,11 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	private FormuleFont font = defaultfont.createCopy();
 	
 	private FlowPanel  flow;
-	private int cursor, selectionEnd;
-	private Widget menubar, content;
-	FlowPanel hbox;
+	private int cursor, selectionEnd, menuWidth;
+	private Widget menubar;
+	private ScrollPanel content;
+	private Widget contentwrap;
+	LayoutPanel hbox;
 	
 	private Widget cursorWidget;
 	private Widget widget;
@@ -181,19 +187,20 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		this.volledigeBreedte = false;
 		this.padding = 0;
 		boxsize = boxMetRand?2*borderWidth:0;
-		hbox = new FlowPanel();
+		hbox = new LayoutPanel();
 		hbox.setStyleName(css.textEditor());
 		hbox.addStyleName(css.textEditor_nowrap());
 		initWidget(hbox);
 		menubar = null;
 		content = getContent(null);
+		contentwrap = content;
 		content.setPixelSize(width - boxsize - padding, 13);
 		Style style = content.getElement().getStyle();
 		style.setPadding(padding / 2, Unit.PX);
 		int top = (height - menuheight - boxsize - padding - 13) / 2;
 		style.setMarginTop(top, Unit.PX);
 		//style.setBackgroundColor("white");
-		style.setOverflow(Overflow.HIDDEN);
+		//style.setOverflow(Overflow.HIDDEN);
 		hbox.add(content);
 		//hbox.getElement().getStyle().setBackgroundColor("#C0C0C0");
 		hbox.setPixelSize(width - boxsize, height - boxsize);
@@ -217,7 +224,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		width = h.getInt("breedte");
 		height = minheight = h.getInt("hoogte");
 		volledigeBreedte = h.getBoolean("volledigeBreedte", false);
-		hbox = new FlowPanel();
+		hbox = new LayoutPanel();
 		initWidget(hbox);
 		init0(launchdata);
 	}
@@ -242,6 +249,14 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		hbox.setStyleName(css.textEditor_nwh(), nowrap && pasAanH);
 		
 		menubar = getMenuBar(launchdata);
+		content = getContent(launchdata);
+		contentwrap = content;
+		if (nowrap || pasAanH) {
+			FlowPanel wrap = new FlowPanel();
+			wrap.add(content);
+			contentwrap = wrap;
+		}
+		hbox.add(contentwrap);
 		if (menubar != null)
 		{
 			menuheight = 30;
@@ -249,17 +264,33 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 			Style style = menubar.getElement().getStyle();
 			style.setBackgroundColor("transparent");//CssColor.make(229,240,249).toString());
 			style.setOverflowY(Overflow.HIDDEN);
+			hbox.add(menubar);
+			hbox.setWidgetTopHeight(menubar, 0, PX, menuheight, PX);
 			if (pasAanH) {
 				style.clearWidth();
 				style.setFloat(Style.Float.RIGHT);
-				menuheight=10;
+				hbox.setWidgetRightWidth(menubar, 0, PX, menuWidth, PX);
+				if (!nowrap) {
+					w.setPixelSize(menuWidth, menuheight);
+					w.addStyleName("menubackground");
+					w.getElement().getStyle().setFloat(Style.Float.RIGHT);
+					insertMenuBackground();
+					MIN = 2;
+				} else {
+					content.getElement().getStyle().setPaddingRight(menuWidth, PX);
+				}
+				menuheight=0;
 			}
-			hbox.add(menubar);
 		}
+		hbox.setWidgetTopBottom(contentwrap, menuheight, PX, 0, PX);
 		
-		content = getContent(launchdata);
 		int contentHeight = height-menuheight-boxsize-padding;
-		content.setPixelSize(width-boxsize-padding, pasAanH ? -1 : contentHeight);
+		int contentWidth = width-boxsize-padding;
+		int menuWidth = 0;
+		if (pasAanH && nowrap && menubar != null) menuWidth = this.menuWidth; // 2 knoppen
+		content.setPixelSize(contentWidth, pasAanH ? -1 : contentHeight);
+		flow.getElement().getStyle().setProperty("minHeight", contentHeight, Unit.PX);
+		flow.getElement().getStyle().setProperty("minWidth", contentWidth-menuWidth, Unit.PX);
 		Style style = content.getElement().getStyle();
 		if (pasAanH) {
 			style.setProperty("minHeight", contentHeight, Unit.PX);
@@ -268,14 +299,15 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 			style.clearWidth();
 			paddingH = padding; // Effect
 			padding = 0; // No effect 
-			hbox.getElement().getStyle().setPadding(paddingH/2, Style.Unit.PX);
+		    hbox.getElement().getStyle().setPadding(paddingH/2, Style.Unit.PX);
+			hbox.setWidgetLeftRight(contentwrap, paddingH/2, PX, paddingH/2, PX);
+			hbox.setWidgetTopBottom(contentwrap, paddingH/2, PX, paddingH/2, PX);
 		} else {
 			style.setPadding(padding/2, Unit.PX);
 		}
 		
 		//style.setBackgroundColor("white");
 		//style.setOverflow(Overflow.AUTO);
-		hbox.add(content);
 		//hbox.getElement().getStyle().setBackgroundColor("#C0C0C0");
 		hbox.setPixelSize(width-boxsize-paddingH, height-boxsize-paddingH);
 		if (boxMetRand)
@@ -294,6 +326,10 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		//shown = true;
 	}
 
+	private void insertMenuBackground() {
+		flow.insert(w, 1);
+	}
+
 	public TextEditor(ActivityInterface a, int w, int h, boolean rand, boolean formule) {
 		this.activity = a;
 		width = w;
@@ -302,7 +338,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		boxMetRand = rand;
 
 		boxsize = boxMetRand?2:0;
-		hbox = new FlowPanel();
+		hbox = new LayoutPanel();
 		hbox.setStyleName(css.textEditor());
 		initWidget(hbox);
 		
@@ -315,7 +351,11 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		}
 		
 		content = getContent(null);
-		content.setPixelSize(width-boxsize-padding, height-menuheight-boxsize-padding);
+		contentwrap = content;
+		int contentHeight = height-menuheight-boxsize-padding;
+		content.setPixelSize(width-boxsize-padding, contentHeight);
+		flow.getElement().getStyle().setProperty("minHeight", contentHeight, Unit.PX);
+
 		Style style = content.getElement().getStyle();
 		style.setPadding(padding/2, Unit.PX);
 		//style.setBackgroundColor("white");
@@ -335,7 +375,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	
 	public TextEditor(ActivityInterface a) {
 		this.activity = a;
-		hbox = new FlowPanel();
+		hbox = new LayoutPanel();
 		initWidget(hbox);
 	}
 	
@@ -396,14 +436,19 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		pasAanH();
 	}
 
-	private Widget getContent(ObjectMap launchdata)
+	private ScrollPanel getContent(ObjectMap launchdata)
 	{
 		FlowPanel touch = new FlowPanel();
+		touch.addStyleName("content");
 		Tapper tapper = new Tapper(this,touch.getElement());		
-        tapper.initHandlers(pasAanH ? hbox : touch); // 
+        tapper.initHandlers(touch); //
+        Style s = touch.getElement().getStyle();
+        s.setProperty("width", "fit-content");
 		flow = touch; // XXX voorlopig ok
 		setState(launchdata);
-		return touch;
+		ScrollPanel result = new ScrollPanel(touch);
+		result.addStyleName("scroller");
+		return result;
 	}
 
 	private Widget setCursorWidget(Widget widget)
@@ -459,6 +504,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		} else
 			formuleStyle.setMargin(2,Unit.PX);
 		if(formuleKnop) {
+			menuWidth += 30;
 			formuleButton.addPointerDownHandler();
 /* Dit is nodig, anders komt de "tapper" er doorheen */
 			formuleButton.addDomHandler(new PreventTapper(), PointerDownEvent.getType());		
@@ -482,6 +528,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		} else
 			calcStyle.setMargin(2,Unit.PX);
 		if(rekentool) {
+		  menuWidth += 30;
 		  calcButton.addPointerDownHandler();
 		  calcButton.addDomHandler(new PreventTapper(), PointerDownEvent.getType());
 		  menubar.add(calcButton);
@@ -716,9 +763,11 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 			execute_height = EXECUTE_HEIGHT;
 			int content_height = height-menuheight-boxsize-padding-EXECUTE_HEIGHT;
 			if (pasAanH) {
-				content.getElement().getStyle().setProperty("minHeight", content_height, Unit.PX);
+				content.getElement().getStyle().setProperty("minHeight", content_height, PX);
+				flow.getElement().getStyle().setProperty("minHeight", content_height, PX);
 			} else 
 				content.setPixelSize(-1, content_height);
+			hbox.setWidgetTopBottom(contentwrap, menuheight, PX, execute_height, PX);
 			btn.addClickHandler(new ClickHandler() {
 
 				@Override
@@ -731,6 +780,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 					
 				}});
 			hbox.add(btn);
+			hbox.setWidgetBottomHeight(btn, 0, PX, execute_height, PX);
 		}
 	}
 
@@ -749,6 +799,9 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		flow.clear();
 		flow.add(new InlineHTML(ZWS));
 		flow.add(setCursorWidget(new InlineHTML(" \u200A")));
+		if  (MIN == 2) {
+			insertMenuBackground();
+		}
 		pasAanH();
 	}
 
@@ -1051,6 +1104,9 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	protected void pasAanH() {
 		if (pasAanH && regel != null && visibleChain()) {
 			int offsetHeight = flowHeight();
+			int contentHeight = content.getOffsetHeight();
+			offsetHeight = Math.max(offsetHeight, contentHeight);
+			
 			int wanted = Math.max(minheight, offsetHeight + boxsize + paddingH + menuheight + execute_height);
 			if (height != wanted) {
 				height  = wanted;
@@ -1098,7 +1154,29 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		pasAanH();
 	}
 
+	
+	private void insertCombining(char charAt) {
+		Widget w = flow.getWidget(cursor-1);
+		String s = ((HasText) w).getText() + charAt;
+		SafeHtml html;
+		SafeHtmlBuilder builder = new SafeHtmlBuilder();
+		builder.appendEscaped(s);
+		html = builder.toSafeHtml();
+//		sb.insert(cursor, charAt);
+		InlineHTML nw = new InlineHTML(html);
+		new TapForFocus(nw);
+		flow.remove(cursor-1);
+		flow.insert(nw, cursor-1);
+	}
+	
+	
 	private void insert0(char charAt) {
+		if (charAt >= '\u0300' && charAt <= '\u036F' && cursor > MIN ) {
+			insertCombining(charAt);
+			return;
+		}
+		
+		
 		SafeHtml html;
 		SafeHtmlBuilder builder = new SafeHtmlBuilder();
 		builder.append(charAt);
@@ -1572,7 +1650,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 
 		private void start(DomEvent<?> event) {
 		    GWT.log(event.getAssociatedType().getName()+  " " + lastX + " " + lastY);
-		    
+		    shown = true;
 			downWidget = findWidget(downX, downY);
 		    down=move=cursor;
 		    deSelection();
@@ -1724,6 +1802,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 				
 				LOGGER.fine("widget " + i + " at "  + w + " mouse at " + y + " c=" + cursor + " m=" + max);
 				deSelection();
+				shown = true;
 				setCursorWidget(widget);
 				if (cursor != max || w >= y)
 					cursorToLeft(); // 1 terug
@@ -2191,6 +2270,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	}
 	
 	static int TAB_WIDTH = 32;
+	private Widget w = new SimplePanel();
 	class Tab extends InlineHTML implements HasText
 	{
 		private Tab() {
@@ -2275,6 +2355,11 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 
 	private void insertcp0(int cp ) {
 		flow.insert(new CodePoint(cp), cursor); cursor++;
+	}
+
+	@Override
+	public void onResize() {
+		hbox.onResize();
 	}
 
 	
