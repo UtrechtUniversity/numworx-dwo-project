@@ -12,11 +12,20 @@ import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 public class BerekeningVakCheckManager {
 	
 	static private Logger logger = Logger.getLogger("BerekeningVakChecker");
+	
+	public static final String ACTION_CORRECT = "action.correct";
+	public static final String ACTION_FALSE = "action.false";
+	public static final String ACTION_FALSE2 = "action.false_2";
+	
+	private static final CBookEvent EVENT_CORRECT = new CBookEvent(ACTION_CORRECT); 
+	private static final CBookEvent EVENT_FALSE = new CBookEvent(ACTION_FALSE); 
+	private static final CBookEvent EVENT_FALSE2 = new CBookEvent(ACTION_FALSE2);
 	
 	private BerekeningVak berekeningVak;
 	private AntwoordFormuleVakChecker afvChecker;
@@ -157,14 +166,20 @@ public class BerekeningVakCheckManager {
 				try {
 					checkResults = afvChecker.checkAnswer("$f"+deelStrings[i]+"@");
 					int goedHalfFout = (Integer)checkResults.get("goedHalfFout");
-					if(view && goedHalfFout==afvChecker.GOED)
+					if(view && goedHalfFout==afvChecker.GOED) {
 						deelStrings[i] = deelStrings[i]+"\u2705";
+						fireEvent(EVENT_CORRECT);
+					}
 					else if(view && (goedHalfFout==afvChecker.HALF || goedHalfFout==afvChecker.DOOR))
 						deelStrings[i] = deelStrings[i]+"\u2714";
 
 					else if(view && goedHalfFout==afvChecker.FOUT) {
 
 						deelStrings[i] = deelStrings[i]+"\u274c";
+						if(errorCount>1)
+							fireEvent(EVENT_FALSE2);
+						else
+							fireEvent(EVENT_FALSE);
 						errorCount ++;
 					}
 					regelScore = Math.max(regelScore, (Integer)checkResults.get("score"));
@@ -205,17 +220,23 @@ public class BerekeningVakCheckManager {
 			try {
 				checkResults = avvChecker.checkAnswer("$f"+regelString+"@");
 				int goedHalfFout = (Integer)checkResults.get("goedHalfFout");
-				if(view && goedHalfFout==afvChecker.GOED)
+				if(view && goedHalfFout==afvChecker.GOED) {
 					berekeningVak.geefVakRegel(regelNr).zetGoedFout(goedHalfFout);
+					fireEvent(EVENT_CORRECT);
 					//regelString = "\u2705" + regelString;
+				}
 				else if(view && (goedHalfFout==afvChecker.HALF || goedHalfFout==afvChecker.DOOR))
 					berekeningVak.geefVakRegel(regelNr).zetGoedFout(goedHalfFout);
 					//regelString = "\u2714" + regelString;
 
 				else if(view && goedHalfFout==afvChecker.FOUT) {
 					berekeningVak.geefVakRegel(regelNr).zetGoedFout(goedHalfFout);
+					if(errorCount>1)
+						fireEvent(EVENT_FALSE2);
+					else
+						fireEvent(EVENT_FALSE);
 					//regelString = regelString +"\u274c";
-					//errorCount ++;
+					errorCount ++;
 				}
 				regelScore = Math.max(regelScore, (Integer)checkResults.get("score"));
 				regelCorrect = regelCorrect || (Boolean)checkResults.get("correct");
@@ -326,4 +347,11 @@ public class BerekeningVakCheckManager {
 	public boolean isNagekeken() {
 		return nagekeken;
 	}
+	
+	private void fireEvent(CBookEvent event) {
+		berekeningVak.activity.getEventBus().fireEventFromSource(event, this);
+		if (this.comRoot != null)
+			this.comRoot.fireEvent(event);
+	}
+	
 }
