@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.OsDetection;
-import com.googlecode.mgwt.ui.client.widget.RoundPanel;
+//import com.googlecode.mgwt.ui.client.widget.RoundPanel;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import fi.writemathgwt.client.WritePanel;
@@ -372,7 +372,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 
 	public static Panel getSelectionMenu(FormuleHolder editor, int x, int y)
 	{
-		RoundPanel fp = new RoundPanel();
+		TouchPanel fp = new TouchPanel();
 
 		//fp.add(FormuleKeyBoardButtons.getCopyButton());
 		//fp.add(FormuleKeyBoardButtons.getPasteButton());

@@ -11,13 +11,13 @@ import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.event.dom.client.TouchCancelEvent;
+import com.google.gwt.event.dom.client.TouchEndEvent;
+import com.google.gwt.event.dom.client.TouchMoveEvent;
+import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
-import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
-import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import static nl.uu.fi.dwo.mobile.utils.ImageUtils.newImage;
@@ -182,7 +182,7 @@ public abstract class FormuleKeyBoardButtons
 		}
 
 		@Override
-		public void onTouchCanceled(TouchCancelEvent event) {
+		public void onTouchCancel(TouchCancelEvent event) {
 			// TODO Auto-generated method stub
 			
 		}

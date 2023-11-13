@@ -1,8 +1,10 @@
 package nl.uu.fi.dwo.mobile.client;
 
-import com.googlecode.mgwt.ui.client.theme.base.ButtonCss;
+import com.google.gwt.resources.client.CssResource.ClassName;
 
-public interface TxtButton extends ButtonCss {
+//import com.googlecode.mgwt.ui.client.theme.base.ButtonCss;
+
+public interface TxtButton /*extends ButtonCss*/ {
 	@ClassName("txt-Button")
 	public String button();
 }

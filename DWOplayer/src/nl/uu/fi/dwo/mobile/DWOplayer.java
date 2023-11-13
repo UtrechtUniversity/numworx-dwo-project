@@ -29,7 +29,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
-import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
 
 import fi.dwo.gwt.lib.rest.DwoConstants;
 import fi.wiskopdr.text.Text_nl;
@@ -98,7 +97,7 @@ public abstract class DWOplayer
 	{
 		//MGWT Settings//
 		ViewPort viewport = new MGWTSettings.ViewPort();
-		viewport.setTargetDensity(DENSITY.MEDIUM);
+		//viewport.setTargetDensity(150); deprecated
 		viewport.setUserScaleAble(false).setMinimumScale(1.0).setMaximumScale(1.0);
 		if(RESPONSIVE)
 			viewport.setWidthToDeviceWidth();
@@ -106,7 +105,7 @@ public abstract class DWOplayer
 			viewport.setWidth(1024);
 		MGWTSettings settings = new MGWTSettings();
 		settings.setViewPort(viewport);
-		settings.setAddGlosToIcon(true);
+		//settings.setAddGlosToIcon(true); deprecated
 		settings.setFullscreen(true);
 		settings.setPreventScrolling(true);
 		MGWT.applySettings(settings);

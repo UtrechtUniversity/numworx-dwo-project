@@ -1,7 +1,7 @@
 package nl.uu.fi.dwo.mobile.client;
 
 import com.google.gwt.core.shared.GWT;
-import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
+//import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
@@ -37,10 +37,10 @@ public class DWOplayerNoordhoff extends DWOplayerDefaults implements DWOplayerPa
 		return "noordhoff";
 	}
 
-	private HeaderCss headercss() {
-		NoordhoffPlayerClientBundle bundle = GWT.create(NoordhoffPlayerClientBundle.class);
-		return  bundle.headercss();
-	}
+//	private HeaderCss headercss() {
+//		NoordhoffPlayerClientBundle bundle = GWT.create(NoordhoffPlayerClientBundle.class);
+//		return  bundle.headercss();
+//	}
 
 	@Override
 	public boolean isNavTitle() {
@@ -66,7 +66,7 @@ public class DWOplayerNoordhoff extends DWOplayerDefaults implements DWOplayerPa
 
 	@Override
 	public ScoreNavIF getScoreNav(ActivityComponent a) {
-		return new ScoreNavPanel(a, headercss());
+		return new ScoreNavPanel(a, null);
 	}
 
 }

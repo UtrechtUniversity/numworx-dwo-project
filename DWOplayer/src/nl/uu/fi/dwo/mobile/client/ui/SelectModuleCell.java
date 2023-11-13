@@ -4,7 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.googlecode.mgwt.ui.client.widget.celllist.Cell;
+import com.googlecode.mgwt.ui.client.widget.list.celllist.Cell;
 
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
 
