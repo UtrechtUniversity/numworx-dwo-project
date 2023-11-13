@@ -34,7 +34,7 @@ import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 public class BerekeningVak implements InteractionView, TekstElementWithFont, CBookEventListener{
 	
 	//context
-	private final ActivityInterface activity;
+	final ActivityInterface activity;
 	private TekstRegel parentRegel;
 	private OpdrNavIF comRoot;
 	private PopupFacade facade;
@@ -410,7 +410,10 @@ public class BerekeningVak implements InteractionView, TekstElementWithFont, CBo
 
 	@Override
 	public void acceptCBookEvent(CBookEvent event) {
-		// TODO Auto-generated method stub
+		if ("action.check".equals(event.getCommand())) {
+			kijkNa();
+			return;
+		}
 		
 	}
 	
