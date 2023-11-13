@@ -4,10 +4,14 @@
 package fi.dwo.server.PersistentDataManagers.access;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
+import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
@@ -16,8 +20,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
@@ -28,6 +37,8 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -167,6 +178,58 @@ public class StudentBuilderTest {
             fail("Did not find matching student model data for a student.");
         }
 
+    }
+
+    @Test
+    public void testGetStudentModelFromClass1() throws Exception {
+        StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser("user02")
+                .setDefaultHasRole()//
+                .buildStudent();
+        DomSchoolClassId schoolClassId = new DomSchoolClassId(PersistentSchoolClass.buildPersistenceId(2L));
+		DomDwoProfileId domDwoProfile = new DomDwoProfileId(PersistentDwoProfile.buildPersistenceId(1L));
+		state = state.setSchoolClass(schoolClassId).setDwoProfile(domDwoProfile);
+        List<DomStudentModelContext4Student> result = state.getStudentModelContextListForClass();
+        assertFalse("result avail", result.isEmpty());
+   	
+    }
+    @Test
+    public void testGetStudentModelFromClass2() throws Exception {
+        StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser("user02")
+                .setDefaultHasRole()//
+                .buildStudent();
+        DomSchoolClassId schoolClassId = new DomSchoolClassId(PersistentSchoolClass.buildPersistenceId(2L));
+		DomDwoProfileId domDwoProfile = new DomDwoProfileId(PersistentDwoProfile.buildPersistenceId(2L));
+		state = state.setSchoolClass(schoolClassId).setDwoProfile(domDwoProfile);
+        List<DomStudentModelContext4Student> result = state.getStudentModelContextListForClass();
+        assertFalse("result avail", result.isEmpty());
+   	
+    }
+    @Test
+    public void testGetStudentModelFromClass3() throws Exception {
+// maak standaard
+    	PersistentStudentModelContext c = StudentModelContextManager.findEntity(1L);
+    	c.setSchoolID(0L);
+    	c = StudentModelContextManager.edit(c);
+    	
+    	
+        StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser("user02")
+                .setDefaultHasRole()//
+                .buildStudent();
+        DomSchoolClassId schoolClassId = new DomSchoolClassId(PersistentSchoolClass.buildPersistenceId(2L));
+		PersistentDwoProfile domDwoProfile = DwoProfileManager.findEntity(2L);
+		state = state.setSchoolClass(schoolClassId).setDwoProfile(domDwoProfile.buildDomDwoProfile());
+        List<DomStudentModelContext4Student> result = state.getStudentModelContextListForClass();
+        assertTrue("result not avail", result.isEmpty());
+   	
+        c.getProfiles().add(domDwoProfile);
+    	c = StudentModelContextManager.edit(c);
+       
+    	result = state.getStudentModelContextListForClass();
+        assertFalse("result avail", result.isEmpty());
+        state.setDwoProfile(new DomDwoProfileId(PersistentDwoProfile.buildPersistenceId(1L)));
+    	result = state.getStudentModelContextListForClass();
+        assertFalse("result avail", result.isEmpty());
+       
     }
 
 }

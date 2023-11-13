@@ -54,8 +54,19 @@ public class StudentModelContextManager {
             em = getEntityManager();
             em.getTransaction().begin();
             model.setLastChangeTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+            PersistentDwoProfile profile = null;
+            Long pid = model.getDwoProfileID();
+            if (pid != null && pid.longValue() != 0L) {
+            	model.setDwoProfileID(null);
+            	if (model.getSchoolID() == 0L)
+            		profile = em.find(PersistentDwoProfile.class, pid);
+            }
             em.persist(model);
-            em.getTransaction().commit();
+            if (profile != null) {
+            	model.getProfiles().add(profile);
+            	profile.getStudentModels().add(model);
+            }
+           em.getTransaction().commit();
             return model;
         } catch (RuntimeException e) {
             LOG.log(Level.SEVERE, "Can't create the PersistentStudentModelContext.", e);
@@ -178,9 +189,10 @@ public class StudentModelContextManager {
 	public static List<PersistentStudentModelContext> findReducedEntities(PersistentSchool s, PersistentDwoProfile profile) {
         EntityManager em = getEntityManager();
         try {
-        	Query q = em.createNativeQuery("SELECT modelID, schoolID, json_extract(model, \"$.info.title\"), optlock, lastChangeTimeStamp, publishState, json_extract(model, \"$.owner\"), json_extract(model, \"$.timestamp\"), json_extract(model, \"$.info.id\"), json_extract(model, \"$.activeMethod.idString\") FROM tblstudentmodelcontext WHERE (schoolID = ? or schoolID = 0) AND (dwoProfileID = ? or dwoProfileID is NULL)" );
+        	Query q = em.createNativeQuery("SELECT m.modelID, m.schoolID, json_extract(m.model, \"$.info.title\"), m.optlock, m.lastChangeTimeStamp, m.publishState, json_extract(m.model, \"$.owner\"), json_extract(m.model, \"$.timestamp\"), json_extract(m.model, \"$.info.id\"), json_extract(m.model, \"$.activeMethod.idString\") FROM tblstudentmodelcontext m left join tblstudentmodelperprofile p using (modelID) WHERE (m.schoolID = ?) or (m.schoolID = 0 AND (m.dwoProfileID = ? or p.dwoProfileID = ?))" );
         	q.setParameter(1, s.getSchoolID());
         	q.setParameter(2, profile.getDwoProfileID());
+        	q.setParameter(3, profile.getDwoProfileID());
         	List<Object[]> result = q.getResultList();
         	List<PersistentStudentModelContext> list = new ArrayList<>();        	
         	for(Object[] item: result) {
@@ -279,5 +291,32 @@ public class StudentModelContextManager {
         }
 	}
 
+	public static void addProfile(PersistentStudentModelContext m, PersistentDwoProfile profile) {
+		EntityManager em = getEntityManager();
+		try {
+			em.getTransaction().begin();
+			m = em.merge(m);
+			profile = em.find(PersistentDwoProfile.class, profile.getDwoProfileID());
+			m.getProfiles().add(profile);
+			profile.getStudentModels().add(m);
+			em.getTransaction().commit();
+		} finally {
+			em.close();
+		}		
+	}
+
+	public static void removeProfile(PersistentStudentModelContext m, PersistentDwoProfile profile) {
+		EntityManager em = getEntityManager();
+		try {
+			em.getTransaction().begin();
+			m = em.merge(m);
+			profile = em.merge(profile);
+			m.getProfiles().remove(profile);
+			profile.getStudentModels().remove(m);
+			em.getTransaction().commit();
+		} finally {
+			em.close();
+		}		
+	}
 
 }

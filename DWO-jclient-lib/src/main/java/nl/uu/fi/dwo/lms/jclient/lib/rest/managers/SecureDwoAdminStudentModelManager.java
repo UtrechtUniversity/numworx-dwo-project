@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
@@ -90,4 +91,27 @@ public class SecureDwoAdminStudentModelManager implements SecureStudentModelMana
 		return null;
 	}
 
+	public Boolean addProfile(DomStudentModelContextId model, DomDwoProfileId profile) throws Dwo2Exception {
+		 RestStudentModelContext rest = new RestStudentModelContext();
+		 rest.setRestContext(getContext());
+		 DomStudentModelContext context = new DomStudentModelContext();
+		 context.setId(model.getId());
+		 rest.setDomStudentModelContext(context);
+		 rest.setDomDwoProfile(profile);
+		 Boolean src = restManager.put("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/studentmodel/addProfile",
+				            Boolean.class, rest);
+	     return src;
+	}
+
+	public Boolean removeProfile(DomStudentModelContextId model, DomDwoProfileId profile) throws Dwo2Exception {
+		 RestStudentModelContext rest = new RestStudentModelContext();
+		 rest.setRestContext(getContext());
+		 DomStudentModelContext context = new DomStudentModelContext();
+		 context.setId(model.getId());
+		 rest.setDomStudentModelContext(context);
+		 rest.setDomDwoProfile(profile);
+		 Boolean src = restManager.put("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/studentmodel/removeProfile",
+				            Boolean.class, rest);
+	     return src;
+	}
 }

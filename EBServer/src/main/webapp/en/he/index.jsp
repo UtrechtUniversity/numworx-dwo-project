@@ -7,13 +7,23 @@
 <%
 String hash = request.getParameter("hash");
 String player = "/gwtclient/index.html";
+String token = "/dwo/saml/login";
 
 if ( hash != null && (hash.isEmpty() || Pattern.matches("#[a-z]+:\\d*", hash))) // Deeplink
 	player = "/dwo/tablet/DWOplayer.jsp";
 else
 	hash = "";
 String clientId = "";
-if ("shibboleth".equals(request.getAuthType())) clientId = "f9af29c4-cfc5-11ea-87d0-0242ac130003";
+if ("shibboleth".equals(request.getAuthType())) {
+	clientId = "f9af29c4-cfc5-11ea-87d0-0242ac130003";
+} else {
+	String with = request.getParameter("with");
+    String code = request.getParameter("code");
+	if (with != null || code != null) {
+    	clientId = "f9af29c4-cfc5-11ea-87d0-0242ac130003";
+        token = "/dwo/oauth2/entree";
+	}
+}
 %>
 <meta charset="UTF-8">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -22,10 +32,10 @@ if ("shibboleth".equals(request.getAuthType())) clientId = "f9af29c4-cfc5-11ea-8
     <link type="text/css" rel="stylesheet" href="/dwo/oauth2client/OAuth2Client.css">
     <script>
     	endpoint = "<%=player%>"
-    	search = "&base=/en/he/&profile=100&locale=en"
+    	search = "?base=/en/he/&profile=100&locale=en"
     	hash= "<%=hash%>"
         clientId = "<%=clientId%>"
-        token="/dwo/saml/login"
+        token="<%=token%>"
     </script>
     <script type="text/javascript" src="/dwo/oauth2client/oauth2client/oauth2client.nocache.js"></script>
 </head>

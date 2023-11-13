@@ -170,6 +170,10 @@
 
     
     <!-- Servlets -->
+  <servlet>
+  	<servlet-name>get_input</servlet-name>
+  	<servlet-class>fi.dwo.server.apps.GetInput</servlet-class>
+  </servlet>
     <servlet>
     	<description>Snoop servlet from tomcat examples</description>
     	<servlet-name>snoop</servlet-name>
@@ -408,7 +412,7 @@
     <servlet-class>nl.numworx.oauth2client.server.LoginServlet</servlet-class>
     <init-param>
     	<param-name>config</param-name>
-    	<param-value>nl.numworx.oauth2client.server.EntreeSLogin</param-value>
+    	<param-value>nl.numworx.oauth2client.server.WAYFLogin</param-value>
     </init-param>
   </servlet>
 
@@ -420,6 +424,16 @@
   	<servlet-name>entree-redirect</servlet-name>
   	<servlet-class>nl.numworx.oauth2client.server.EntreeSRedirect</servlet-class>
   </servlet>
+   <servlet>
+  	<servlet-name>conext-redirect</servlet-name>
+  	<servlet-class>nl.numworx.oauth2client.server.ConextRedirect</servlet-class>
+  </servlet>
+   <servlet>
+  	<servlet-name>solis-redirect</servlet-name>
+  	<servlet-class>nl.numworx.oauth2client.server.RedirectServlet</servlet-class>
+  </servlet>
+
+
   <servlet>
   	<servlet-name>notebook</servlet-name>
   	<servlet-class>nl.numworx.notebook.server.HubServlet</servlet-class>
@@ -480,6 +494,10 @@
     <!--
     servlet mappings 
     -->
+  <servlet-mapping>
+  	<servlet-name>get_input</servlet-name>
+  	<url-pattern>/dwo/apps/get_input/*</url-pattern>
+  </servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>qrcode</servlet-name>
 		<url-pattern>/dwo/qrcode.png</url-pattern>
@@ -584,6 +602,15 @@
  	<servlet-name>entree-redirect</servlet-name>
  	<url-pattern>/entree/redirect</url-pattern>
  	<url-pattern>/redirect</url-pattern>
+ 	<url-pattern>/redirect/entree</url-pattern>
+ </servlet-mapping>
+  <servlet-mapping>
+ 	<servlet-name>conext-redirect</servlet-name>
+ 	<url-pattern>/redirect/conext</url-pattern>
+ </servlet-mapping>
+  <servlet-mapping>
+ 	<servlet-name>solis-redirect</servlet-name>
+ 	<url-pattern>/dwo/oauth2/redirect</url-pattern>
  </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>sebhosting</servlet-name>

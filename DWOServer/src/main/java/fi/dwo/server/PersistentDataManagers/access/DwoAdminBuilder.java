@@ -96,6 +96,8 @@ class DwoAdminBuilder
 
   @Override
   public DwoAdminState_HR_P_R_S_SG_U addDwoProfile(DomDwoProfileId p) throws Dwo2Exception {
+	if (p == null) 
+		return this;  
     Long profileId = MySQLPersistenceId.getNativeId(p);
     PersistentDwoProfile profile = DwoProfileManager.findEntity(profileId);
     if (profile == null) {
@@ -314,9 +316,45 @@ class DwoAdminBuilder
   @Override
   public List<DomMethod> getMethods() throws Dwo2Exception {
     PersistentSchool school = new PersistentSchool(0L);
-    PersistentDwoProfile profile = instance.getContext().getAdminCtx().profile;
+    PersistentDwoProfile profile = instance.getContext().getAdminCtx().profile;    
     List<PersistentMethod> methods = MethodManager.findEntities(school, profile);
     return methods.stream().map(MethodManager::toDom).collect(Collectors.toList());
   }
+
+@Override
+public boolean addProfile(DomStudentModelContext domStudentModelContext) throws Dwo2Exception {
+	PersistentDwoProfile profile = instance.getContext().getAdminCtx().profile;
+	Long id = MySQLPersistenceId.getNativeId(domStudentModelContext);
+	PersistentStudentModelContext context = StudentModelContextManager.findEntity(id);
+	StudentModelContextManager.addProfile(context, profile);
+	return true;
+}
+
+@Override
+public boolean removeProfile(DomStudentModelContext domStudentModelContext) throws Dwo2Exception {
+	PersistentDwoProfile profile = instance.getContext().getAdminCtx().profile;
+	Long id = MySQLPersistenceId.getNativeId(domStudentModelContext);
+	PersistentStudentModelContext context = StudentModelContextManager.findEntity(id);
+	StudentModelContextManager.removeProfile(context, profile);
+	return true;
+}
+
+@Override
+public boolean addProfile(DomMethod domMethod) throws Dwo2Exception {
+	PersistentDwoProfile profile = instance.getContext().getAdminCtx().profile;
+	String id = domMethod.getId().getIdString();
+	PersistentMethod context = MethodManager.findEntity(id);
+	MethodManager.addProfile(context, profile);
+	return true;
+}
+
+@Override
+public boolean removeProfile(DomMethod domMethod) throws Dwo2Exception {
+	PersistentDwoProfile profile = instance.getContext().getAdminCtx().profile;
+	String id = domMethod.getId().getIdString();
+	PersistentMethod context = MethodManager.findEntity(id);
+	MethodManager.removeProfile(context, profile);
+	return true;
+}
 
 }

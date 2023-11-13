@@ -47,6 +47,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
@@ -240,8 +241,19 @@ class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U
         for(PersistentStudentModelOfClass item: p4Class) {
         	Long id = item.getId().getModelID();
         	PersistentStudentModelContext context = StudentModelContextManager.findEntity(id);
-        	if (context == null) continue; // id is verwijdert, komt voor
-        	if (context.getDwoProfileID() != null && pid != context.getDwoProfileID().longValue()) continue; // filter by profileid
+        	if (context == null) continue; // id is verwijderd, komt voor
+
+        	
+        	if (context.getSchoolID().longValue()== 0L) // standaard model, dan toegang met profiel
+        	{
+        		if (!context.getProfiles().contains(dwoProfile) &&
+        			context.getDwoProfileID() != null && pid != context.getDwoProfileID().longValue()) continue; // filter by profileid
+        	} else { // school model, dan schoolid gelijk
+        		if (context.getSchoolID().longValue() != instance.getContext().getUserCtx().school.getSchoolID().longValue())
+        			continue;
+        	}
+   
+        	
         	DomStudentModelContext r = context.buildDomStudentModelContext();
         	DomStudentModelContext4Student rr = new DomStudentModelContext4Student(r.getId());
         	rr.setModelStructure(r.getModelStructure());
@@ -281,7 +293,7 @@ class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U
 	}
 
 	@Override
-	public StudentState_HR_R_S_SG_U setSchoolClass(DomSchoolClass domSchoolClass) throws Dwo2Exception {
+	public StudentState_HR_R_S_SG_U setSchoolClass(DomSchoolClassId domSchoolClass) throws Dwo2Exception {
 		if (domSchoolClass == null) {
 			instance.getContext().getStudentCtx().schoolClass = null;
 		} else {

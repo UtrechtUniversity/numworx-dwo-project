@@ -12,6 +12,7 @@ import javax.ws.rs.core.UriInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
@@ -94,7 +95,7 @@ public class StudentDomainAuthorizer {
         /**
          * @return the studentCtx
          */
-        protected StudentPersistentContext getStudentCtx() {
+        public StudentPersistentContext getStudentCtx() {
             return studentCtx;
         }
 
@@ -129,7 +130,7 @@ public class StudentDomainAuthorizer {
         return new StudentBuilder();
     }
 
-    public interface StudentState_HR_R_S_SG_U  extends StudentDomainAuthorizer.PublicContext{
+    public interface StudentState_HR_R_S_SG_U  extends StudentDomainAuthorizer.PublicContext {
 
         public void setStudentModelData(DomStudentModelData data) throws Dwo2Exception;
 
@@ -145,7 +146,7 @@ public class StudentDomainAuthorizer {
 
 		public List<DomStudentModelContext4Student> getStudentModelContextListForClass() throws Dwo2Exception;
 
-		public StudentState_HR_R_S_SG_U setSchoolClass(DomSchoolClass domSchoolClass) throws Dwo2Exception;
+		public StudentState_HR_R_S_SG_U setSchoolClass(DomSchoolClassId schoolClassId) throws Dwo2Exception;
 
 		public StudentState_HR_R_S_SG_U setDwoProfile(DomDwoProfileId domDwoProfile) throws Dwo2Exception;
 

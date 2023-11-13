@@ -618,7 +618,7 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 //		if(true) return;
         FocusOnTouch.AREA = true;
 
-		formule = !"111".equals(Location.getParameter("profile"));
+		formule = "77".equals(Location.getParameter("profile"));
 		setVisibleHandler(this);
 		
 		RootLayoutPanel root = RootLayoutPanel.get();
@@ -645,7 +645,6 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 				});
 				eastHeader.init(u.room);
 				this.room = eastHeader.getSelectedRoom();
-				new RoomController(u.room, eastHeader).addHandler(this::get, this::get);
 			}
 			chatUser = u;
 		} catch(Exception oops) {
@@ -676,7 +675,6 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 //					, room2
 					);
 			eastHeader.init(rooms);
-			new RoomController(rooms, eastHeader).addHandler(this::get, this::get);
 			
 			room = eastHeader.getSelectedRoom();
 		
@@ -896,7 +894,39 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 			@Override
 			public boolean handle(Element element) {
 				receive.handle(element);
-				queue.sendAll(connection);
+				NodeList<com.google.gwt.dom.client.Element> list = element.getElementsByTagName("fin");
+				com.google.gwt.dom.client.Element fin = list.getItem(0);
+				String complete = fin.getAttribute("complete");
+				if (!"true".equals(complete)) {
+					LOG.warning("need paging");
+					list = fin.getElementsByTagName("last");
+					com.google.gwt.dom.client.Element last = list.getItem(0);
+					String id = last.getInnerText();
+					String[][] attributesSet = {{ "xmlns", "http://jabber.org/protocol/rsm"}};
+					Builder request = Builder.$iq(attributes)
+							.c("query", attributesQ)
+							.c("set", attributesSet)
+							.c("after", null)
+							.t(id);
+/*
+ * <iq type='set' id='q29303'>
+  <query xmlns='urn:xmpp:mam:2'>
+      <x xmlns='jabber:x:data' type='submit'>
+        <field var='FORM_TYPE' type='hidden'><value>urn:xmpp:mam:2</value></field>
+        <field var='start'><value>2010-08-07T00:00:00Z</value></field>
+      </x>
+      <set xmlns='http://jabber.org/protocol/rsm'>
+         <max>10</max>
+         <after>09af3-cc343-b409f</after>
+      </set>
+  </query>
+</iq>				
+ */
+					connection.sendIq(request.tree(), 10000, this, this);
+
+				} else {
+					queue.sendAll(connection);
+				}
 				return true;
 			}
 			
@@ -1132,7 +1162,10 @@ public class ChatGWT implements EntryPoint, CombinedState, HasHeight, FormuleCli
 		UserTable u = user.role == RoleType.STUDENT ? students : teachers;		
 		Optional<UserModel> model = u.findUser(user);
 		if (model.isPresent())
+		{	selection.clear(); // desperately need a selection event
+		    selection.getSelectedObject(); // resolve changes
 			selection.setSelected(model.get(), true);
+		}
 		
 	}
 	

@@ -1,8 +1,10 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
+import fi.dwo.commons.persistence.entities.PersistentACL;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.Set;
@@ -101,7 +103,64 @@ public class CourseManager {
         return course;
     }
 
-    /**
+    public static PersistentCourse editWithSchool(PersistentCourse course) throws PersistenceException {
+    	EntityManager em = getEntityManager();
+    	try {
+    		em.getTransaction().begin();
+    		course = em.merge(course);
+    		updateDescendants(course, em);
+    		em.getTransaction().commit();
+    	} finally {
+    		em.close();
+    	}
+    	return course;
+    }
+    
+    
+    
+    private static void updateDescendants(PersistentCourse c, EntityManager em) {
+    	// course is a map:
+        { 
+        	TypedQuery<PersistentCourse> q = em.createNamedQuery("PersistentCourse.findByParentID", PersistentCourse.class);
+	        q.setParameter("parentID", c.getCourseID());
+	        List<PersistentCourse> list = q.getResultList();
+	        for(PersistentCourse item: list) {
+	        	item.setSchoolID(c.getSchoolID());
+	        	updateDescendants(item, em);
+	        }
+	        q = em.createNamedQuery("PersistentCourse.findByParentIDTrash", PersistentCourse.class);
+	        q.setParameter("parentID", c.getCourseID());
+	        list = q.getResultList();
+	        for(PersistentCourse item: list) {
+	        	item.setSchoolID(c.getSchoolID());
+	        	updateDescendants(item, em);
+	        }       
+        }
+        // delete ACL
+        {
+            TypedQuery<PersistentACL> q = em.createNamedQuery("PersistentACL.findByCourseID", PersistentACL.class);
+            q.setParameter("courseID", c.getCourseID());
+            List<PersistentACL> list = q.getResultList();
+            list.forEach(em::remove);
+        }
+        // course is a module
+        {
+            TypedQuery<PersistentScoContext> q = em.createNamedQuery("PersistentScoContext.findByCourseID", PersistentScoContext.class);
+            q.setParameter("courseID", c.getCourseID());
+            List<PersistentScoContext> list = q.getResultList();
+            for(PersistentScoContext item: list) {
+            	item.setSchoolID(c.getSchoolID());
+            }
+            q = em.createNamedQuery("PersistentScoContext.findByCourseIDTrash", PersistentScoContext.class);
+            q.setParameter("courseID", c.getCourseID());
+            list = q.getResultList();
+            for(PersistentScoContext item: list) {
+            	item.setSchoolID(c.getSchoolID());
+            }
+        }
+	}
+
+	/**
      * Removes a user from the persistent store.
      *
      * @param id

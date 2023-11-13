@@ -1,3 +1,6 @@
+<%@ page import="nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile" %>
+<%@ page import="nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache" %>
+<%@ page import='java.util.regex.*' %>
 <!doctype html>
 <!-- The DOCTYPE declaration above will set the     -->
 <!-- browser's rendering engine into                -->
@@ -10,12 +13,24 @@
     <meta name="gwt:property" content="locale=en" >
 <%
 	String profile = request.getParameter("profile");
+	String name = "";
+	if(profile == null||profile.isEmpty()) profile="77";
+	else if (!Pattern.matches("\\d+", profile)) {
+  		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+  		return;
+	}
+	try {
+		DomDwoProfile dom = PublicProfileCache.get(profile);
+		if (dom.getDwoProfileRights().contains("c"))
+			name = dom.getDwoProfileName();
+	} catch(Exception e) {
+		log("get profile failed", e);
+	}
 	String cdn = System.getProperty("CDNURL","https://cdn.dwo.nl");
 %>
 	<script src="/dwo/apps/deploy.jsp"></script>
 	<link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/DWOplayer.css" >
-<% if ("111".equals(profile)) {%><link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/css/inf.css" ><%}%>    
-<% if ("114".equals(profile)) {%><link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/css/react.css" ><%}%>    
+<% if (!name.isEmpty()) {%><link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/css/<%=name %>.css" ><%}%>    
     <!--                                                               -->
     <!-- Consider inlining CSS to reduce the number of requested files -->
     <!--                                                               -->
@@ -24,7 +39,7 @@
     <!--                                           -->
     <!-- Any title is fine                         -->
     <!--                                           -->
-    <title>Web Application Starter Project</title>
+    <title>Berichten</title>
     
     <!--                                           -->
     <!-- This script loads your compiled module.   -->

@@ -22,6 +22,7 @@ import fi.dwo.server.PersistentDataManagers.core.MethodManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
+import nl.uu.fi.dwo.rest.entities.RestMethod;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 @RolesAllowed({"ADMIN"})
@@ -34,6 +35,22 @@ public class SecuredDwoAdminMethodManager {
     	UserState_HR_R_S_SG_U hasRole = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(context.getRestContext().getDomHasRole());
     	DwoAdminState_HR_P_R_S_SG_U state = hasRole.buildDwoAdmin().addDwoProfile(context.getDomDwoProfile());
     	return state.getMethods();
+    }
+    @PUT
+    @Produces({"application/json"})
+    @Path("/addProfile")
+    public Boolean addProfile(@Context SecurityContext sc, RestMethod rest) throws Dwo2Exception {
+    	UserState_HR_R_S_SG_U hasRole = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
+    	DwoAdminState_HR_P_R_S_SG_U state = hasRole.buildDwoAdmin().addDwoProfile(rest.getDomDwoProfile());
+    	return state.addProfile(rest.getDomMethod());
+    }
+    @PUT
+    @Produces({"application/json"})
+    @Path("/removeProfile")
+    public Boolean removedProfile(@Context SecurityContext sc, RestMethod rest) throws Dwo2Exception {
+    	UserState_HR_R_S_SG_U hasRole = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
+    	DwoAdminState_HR_P_R_S_SG_U state = hasRole.buildDwoAdmin().addDwoProfile(rest.getDomDwoProfile());
+    	return state.removeProfile(rest.getDomMethod());
     }
 
 }

@@ -2,6 +2,8 @@
 package fi.dwo.commons.persistence.entities;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -10,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.PrePersist;
@@ -82,8 +85,23 @@ public class PersistentDwoProfile implements Serializable {
     @Size(max = 5)
     @Column(name = "language", length = 5)
     private String language;
+    
+    
+    @ManyToMany(mappedBy = "profiles")
+    private Set<PersistentMethod> methods = new HashSet<>();
+    
+    public Set<PersistentMethod> getMethods() {
+		return methods;
+	}
 
-    public PersistentDwoProfile() {
+    @ManyToMany(mappedBy = "profiles")
+    private Set<PersistentStudentModelContext> models = new HashSet<>();
+    
+    public Set<PersistentStudentModelContext> getStudentModels() {
+		return models;
+	}
+
+	public PersistentDwoProfile() {
     }
 
     public PersistentDwoProfile(Long dwoProfileID) {

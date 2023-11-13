@@ -31,7 +31,7 @@ class DbAccess {
       if ( (
           hashMap.get("DBVersion Major").matches("1") 
               && hashMap.get("DBVersion Minor").matches("5") 
-              && hashMap.get("DBVersion Revision").matches("4")
+              && hashMap.get("DBVersion Revision").matches("6")
           ) 
           ||
           (

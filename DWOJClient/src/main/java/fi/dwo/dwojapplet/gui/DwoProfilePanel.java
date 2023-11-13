@@ -39,6 +39,7 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
 	private CenterPanel centerPanel;
 	private Image removeImage;
 	private Image editImage;
+	private Image eyeImage;
 	private JButton addProfileBtn;
 	private JComponent jtbl;
 	
@@ -53,7 +54,7 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
 
 		@Override
 		public int getColumnCount() {
-			return 7;
+			return 8;
 		}
 
 		@Override
@@ -72,7 +73,8 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
                             case 3: return current.getDwoProfileText();
                             case 4: return current.getDwoProfileRights();
                             case 5: return editImage;
-                            case 6: return removeImage;
+                            case 6: return eyeImage;
+                            case 7: return removeImage;
                         }
                         return null;
                     } catch (Dwo2Exception ex) {
@@ -91,6 +93,7 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
 			switch(col) {
 			case 5:
 			case 6:
+			case 7:
 				return Image.class;
 			default:
 				return super.getColumnClass(col);
@@ -105,6 +108,7 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
 			case 2: return "header";
 			case 3: return "text";
 			case 4: return "rights";
+			case 6: return "domains";
 			default: return "";
 			}
 		}
@@ -114,6 +118,7 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
 			switch(columnIndex) {
 			case 5:
 			case 6: 
+			case 7:
 					return true;
 			}
 			return super.isCellEditable(rowIndex, columnIndex);
@@ -168,6 +173,18 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
 	                    }
 	                }
 
+	    		} else if (value == eyeImage) {
+	    			LOG.info("open domain model panel");
+	    			DwoProfileModelPanel panel1  = new DwoProfileModelPanel(model.profiles[row]);
+	    			DwoProfileMethodPanel panel2 = new DwoProfileMethodPanel(model.profiles[row]);
+	    			JPanel panel = new JPanel();
+	    			panel.add(panel1);
+	    			panel.add(panel2);
+	    			
+	    			if (JOptionPane.showConfirmDialog(DwoProfilePanel.this, panel, "domains", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION)  {
+	    				panel1.commit();
+	    				panel2.commit();
+	    			}
 	    		}
 	    		fireEditingStopped();
 	    	}
@@ -181,6 +198,7 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
 	       
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
         editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_CLASS_IMAGE);
+        eyeImage = DwoHelper.getResourceImage(GuiConstants.EDIT_STUDENTMODEL_IMAGE);
         
         addProfileBtn = new JButton("addDWOprofile");
         addProfileBtn.addActionListener(this);
@@ -231,7 +249,7 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
         column = table.getColumnModel().getColumn(5);
 		column.setPreferredWidth(w);
         column.setMaxWidth(w);
-        column = table.getColumnModel().getColumn(6);
+        column = table.getColumnModel().getColumn(7);
 		column.setPreferredWidth(w);
         column.setMaxWidth(w);
         

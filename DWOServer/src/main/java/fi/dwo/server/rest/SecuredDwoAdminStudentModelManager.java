@@ -69,6 +69,23 @@ public class SecuredDwoAdminStudentModelManager {
                 .buildDwoAdmin();
     	return build.getStudentModel(rest.getDomStudentModelContext());
     }
-
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("addProfile")
+    public Boolean addProfile(@Context SecurityContext sc, RestStudentModelContext rest) throws Dwo2Exception {
+        DwoAdminState_HR_P_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
+                .setHasRole(rest.getRestContext().getDomHasRole())
+                .buildDwoAdmin().addDwoProfile(rest.getDomDwoProfile());
+    	return build.addProfile(rest.getDomStudentModelContext());
+    }
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("removeProfile")
+    public Boolean removeProfile(@Context SecurityContext sc, RestStudentModelContext rest) throws Dwo2Exception {
+        DwoAdminState_HR_P_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
+                .setHasRole(rest.getRestContext().getDomHasRole())
+                .buildDwoAdmin().addDwoProfile(rest.getDomDwoProfile());
+    	return build.removeProfile(rest.getDomStudentModelContext());
+    }
 	
 }

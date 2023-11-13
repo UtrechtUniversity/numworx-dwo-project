@@ -123,6 +123,9 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
               controller.authToken = null;
               presenterFactory.getLoginPresenter().tokenLogin(token, controller.user_id, controller.org_id);
           }
+        case LOGOUT:
+      	  presenterFactory.getMainPresenter().forceLogout();
+      	  break;
         case GOTO_URL:
             mainView.selectView(SelectedView.MODULES);
             presenterFactory.getModulesPresenter().show(switchViewEvent.getSearch().get("message"));              

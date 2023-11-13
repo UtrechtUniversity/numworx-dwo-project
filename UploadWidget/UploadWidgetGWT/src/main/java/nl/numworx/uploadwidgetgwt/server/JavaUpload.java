@@ -116,12 +116,18 @@ public class JavaUpload extends HttpServlet implements Constants {
 			return;
 		} 
 		if (paths.length == 4) {
+			String registration = paths[2];
+			boolean instance = "instance".equals(registration);
+			log(instance + " find " + prefix + paths[3]);			
 			Optional<AtomEntry> found = store.findByURL(prefix + paths[3]);
-			if (store.ownedBy(found, actor)) {
+			log("result " + found);
+// bij instance andere logica, groter publiek		
+			if ( (instance && found.isPresent()) || store.ownedBy(found, actor)) {
 				resp.sendRedirect(found.get().url);
 				return;
 			}
  		} 
+		log("NOT FOUND: " + prefix + paths[3] + " actor " + actor );
 		
 		resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 	}
@@ -132,8 +138,10 @@ public class JavaUpload extends HttpServlet implements Constants {
 		if ("instance".equals(registration)) {
 			DomScoContextId context = new DomScoContextId();
 			PersistenceId id = PersistentScoContext.buildPersistenceId(Long.valueOf(uuid.split("/")[0]));
+			context.setId(id);
 			try {
-				school = new SystemManager(StoredRestManager.getInstance()).getSchool(context);
+				if (null == new SystemManager(StoredRestManager.getInstance()).getSchool(context))
+					school = null;
 			} catch (Dwo2Exception e) {
 				log("doPut getSchool", e);
 			}

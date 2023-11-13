@@ -8,10 +8,15 @@ import java.util.logging.Logger;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.ClientBundle.Source;
+import com.google.gwt.resources.client.ImageResource.ImageOptions;
+import com.google.gwt.resources.client.ImageResource.RepeatStyle;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.cellview.client.CellList.Resources;
 import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.ui.Composite;
@@ -64,11 +69,22 @@ public class InboxPanel extends Composite {
 	private ChatGWT parent;
 	private boolean fuse;
 	
+	
+	public interface MyResources extends Resources {
+
+		@Override
+	    @Source("resources/cellListSelectedBackground.png")
+	    @ImageOptions(repeatStyle = RepeatStyle.Both, flipRtl = true)
+		ImageResource cellListSelectedBackground();
+		
+	}
+	
 	public InboxPanel(InboxDatabase database) {
 		
 		parent = database.parent;
 		InboxCell cell = new InboxCell();
-		cellList = new CellList<InboxInfo>(cell, InboxDatabase.KEY_PROVIDER);
+		Resources resources = GWT.create(MyResources.class);
+		cellList = new CellList<InboxInfo>(cell, resources, InboxDatabase.KEY_PROVIDER);
 		cellList.addStyleName("inbox");
 		
 	    cellList.setPageSize(30);

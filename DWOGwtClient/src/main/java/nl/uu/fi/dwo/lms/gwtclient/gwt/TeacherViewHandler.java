@@ -67,6 +67,9 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
                       presenterFactory.getLoginPresenter().tokenLogin(token, controller.user_id, controller.org_id);
                   }
                   break;
+              case LOGOUT:
+            	  presenterFactory.getMainPresenter().forceLogout();
+            	  break;
               case RETOUR:
             	  controller.getRetourHandler().run();
             	  break;

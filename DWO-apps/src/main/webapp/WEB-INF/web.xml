@@ -4,4 +4,12 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+  <servlet>
+  	<servlet-name>get_input</servlet-name>
+  	<servlet-class>fi.dwo.server.apps.GetInput</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>get_input</servlet-name>
+  	<url-pattern>/get_input/*</url-pattern>
+  </servlet-mapping>
 </web-app>
