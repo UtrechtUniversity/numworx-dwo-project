@@ -60,6 +60,7 @@ public class GuestViewHandler implements SwitchViewEventHandler {
           break;
         case SEARCH: case ARROWUP: case GOTO:
         case MAYBELOGOUT: case CLOSING:
+        case HOME:
           break;
       }
   }

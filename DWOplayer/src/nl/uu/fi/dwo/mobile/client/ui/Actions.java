@@ -5,7 +5,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window.Location;
 
 public enum Actions {
-  showMainNav, hideMainNav, isMainNavVisible, RESULTS, KNOWLEDGE, PERSONS, SCHOOLCLASSES, ORGANISATION, ARROWUP, TRAIL, LOGOUT, EXAM, MAYBELOGOUT, CLOSING, LOGINNEEDED, INITED, RETOUR;
+  showMainNav, hideMainNav, isMainNavVisible, RESULTS, KNOWLEDGE, PERSONS, SCHOOLCLASSES, ORGANISATION, ARROWUP, TRAIL, LOGOUT, EXAM, MAYBELOGOUT, CLOSING, LOGINNEEDED, INITED, RETOUR, HOME;
   private String command;
 
   Actions() {

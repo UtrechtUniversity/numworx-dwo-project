@@ -457,7 +457,7 @@
                             <groupId>nl.uu.fi.dwo.mobile</groupId>
                             <artifactId>DWOplayer</artifactId>
                             <classifier>dwo2</classifier>
-                            <version>2.5.25-SNAPSHOT</version>
+                            <version>2.5.26-SNAPSHOT</version>
                             <type>war</type>
                             <contextPath>/dwo/tablet</contextPath>
                             <asWebapp>true</asWebapp>

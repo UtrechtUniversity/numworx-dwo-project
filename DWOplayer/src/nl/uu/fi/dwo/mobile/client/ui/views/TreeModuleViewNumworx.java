@@ -51,6 +51,7 @@ import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO5;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.text.Text;
+import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent.Builder;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
@@ -496,6 +497,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			favIcon.getParent().setStyleName(style.faviconOFF(), true);
 			title.getParent().setStyleName(style.titlePanelFULL(), true);
 			((SetSelectionModel<?>) westPanel.cells.getSelectionModel()).clear();
+			Actions.HOME.execute();
 			break;
 		case SEARCH:
 			((SetSelectionModel<?>) westPanel.cells.getSelectionModel()).clear();
