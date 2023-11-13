@@ -31,7 +31,7 @@ public class PublicProfileCache {
 //voor memcache 
 			String servers = System.getProperty("MEMCACHED", "test:localhost:11211");
 			servers = servers.substring(servers.indexOf(':')+1);
-			properties.setProperty(NAME + ".servers", "localhost:11211");
+			properties.setProperty(NAME + ".servers", servers);
 			CacheManager cacheManager = cachingProvider.getCacheManager(null, null, properties);
 			_instance = cacheManager.getCache(NAME, String.class, DomDwoProfileFull.class);
 			if (_instance == null) {
