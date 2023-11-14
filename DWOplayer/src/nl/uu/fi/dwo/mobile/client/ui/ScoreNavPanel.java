@@ -31,6 +31,7 @@ import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 //import com.googlecode.mgwt.ui.client.widget.Button;
 //import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.button.Button;
+import com.googlecode.mgwt.ui.client.widget.header.HeaderAppearance;
 import com.googlecode.mgwt.ui.client.widget.header.HeaderButton;
 
 import fi.wiskopdr.text.Text;
@@ -98,10 +99,10 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 	int rows = 10;
 
 
-	//private final HeaderCss headercss;
+	private final HeaderAppearance headercss;
 
-	public ScoreNavPanel(ActivityComponent activity, Object /*HeaderCss*/ headercss) {
-		//this.headercss = headercss;
+	public ScoreNavPanel(ActivityComponent activity, HeaderAppearance /*HeaderCss*/ headercss) {
+		this.headercss = headercss;
 		top = new VerticalPanel();
 		initialize();
 		dock = new DockLayoutPanel(Unit.PX);
@@ -327,7 +328,7 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 	@Override
 	public Widget getNextButton() {
 		if(next == null) {
-			next = new HeaderButton(/*headercss*/); next.setText("Volgende >");
+			next = new HeaderButton(headercss); next.setText("Volgende >");
 			next.addTapHandler(new TapHandler() {
 				
 				@Override
@@ -343,7 +344,7 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 	@Override
 	public Widget getPrevButton() {
 		if(prev == null) {
-			prev = new HeaderButton(/*headercss*/); prev.setText("< Vorige");
+			prev = new HeaderButton(headercss); prev.setText("< Vorige");
 			prev.addTapHandler(new TapHandler() {
 				
 				@Override
