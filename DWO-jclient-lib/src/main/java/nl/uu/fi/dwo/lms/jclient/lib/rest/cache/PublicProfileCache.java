@@ -48,17 +48,26 @@ public class PublicProfileCache {
 	}
 
 	public static DomDwoProfileFull get(String name) throws Dwo2Exception {
+		DomDwoProfileFull result = getFromCache(name);
+		if (result == null) {
+			result = PublicProfileManager.get(name);
+			putInCache(name, result);
+		}
+		return result;
+	}
+
+	public static void putInCache(String name, DomDwoProfileFull result) {
+		try {
+			cache().put(name, result);
+		} catch (Exception e) {
+		}
+	}
+
+	public static DomDwoProfileFull getFromCache(String name) {
 		DomDwoProfileFull result = null;
 		try {
 			result = cache().get(name);
 		} catch (Exception e) {
-		}
-		if (result == null) {
-			result = PublicProfileManager.get(name);
-			try {
-				cache().put(name, result);
-			} catch (Exception e) {
-			}
 		}
 		return result;
 	}

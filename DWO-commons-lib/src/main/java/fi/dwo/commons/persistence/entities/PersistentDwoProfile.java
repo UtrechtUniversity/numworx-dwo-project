@@ -161,7 +161,15 @@ public class PersistentDwoProfile implements Serializable {
         this.language = language;
     }
 
-    @Override
+    public Long getOptlock() {
+		return optlock;
+	}
+
+	public void setOptlock(Long optlock) {
+		this.optlock = optlock;
+	}
+
+	@Override
     public int hashCode() {
         int hash = 0;
         hash += (dwoProfileID != null ? dwoProfileID.hashCode() : 0);
@@ -200,6 +208,7 @@ public class PersistentDwoProfile implements Serializable {
 
     private void fillDomDwoProfile(DomDwoProfile profile) {
         profile.setId(buildPersistenceId());
+        profile.setOptLock(getOptlock());
         profile.setDwoProfileName(getDwoProfileName());
         profile.setDwoProfileRights(getDwoProfileRights());
     }

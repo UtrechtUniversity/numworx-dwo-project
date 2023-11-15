@@ -74,7 +74,6 @@ public class GwtClientWrap implements Filter {
 	private static final String PROFILE= "<!--PROFILE_CSS-->";
 	private boolean saml;
 	private boolean entree;
-	private Map<String, String> cache = Collections.synchronizedMap(new HashMap<>());
 	
 	final Logger LOG = Logger.getLogger(getClass().getName());
 	final SecureRandom random = new SecureRandom();
@@ -106,9 +105,6 @@ public class GwtClientWrap implements Filter {
 		String name = profile;
 		String cdn = System.getProperty("CDNURL", "http://cdn.dwo.nl");
 		if (profile != null) {
-			if (cache.containsKey(profile)) {
-				name = cache.get(profile);
-			} else 
 			try {
 				String key = profile;
 				DomDwoProfile p = get(profile);
@@ -117,7 +113,6 @@ public class GwtClientWrap implements Filter {
 					name = p.getDwoProfileName();
 				else
 					name = null;
-				 cache.put(key, name);
 			} catch(Exception oops) {
 				name = null;
 			}
@@ -195,7 +190,6 @@ public class GwtClientWrap implements Filter {
 
 	@Override
 	public void destroy() {
-		cache.clear();
 		PublicProfileCache.clear();
 	}
 

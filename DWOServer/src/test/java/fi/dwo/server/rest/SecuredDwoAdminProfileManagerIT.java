@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.persistence.OptimisticLockException;
 import javax.ws.rs.core.SecurityContext;
 
 import org.junit.After;
@@ -24,6 +25,8 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfileFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
@@ -131,13 +134,15 @@ public class SecuredDwoAdminProfileManagerIT {
 		profile.setDwoProfileName("name");
 		profile.setDwoProfileRights("rights");
 		profile.setDwoProfileText("text");
+        RestContext rest = new RestContext();
+        rest.setRestContext(context);
 		restDwoProfile = new RestDwoProfileFull();
 		restDwoProfile.setRestContext(context);
 		restDwoProfile.setDomDwoProfile(profile);
-                int size = manager.getProfiles(sc).size();
+                int size = manager.getProfiles(sc, rest).size();
 		Boolean result = manager.submitProfile(sc, restDwoProfile);
 		assertTrue("submit profile", result.booleanValue());
-		List<DomDwoProfileFull> list = manager.getProfiles(sc);
+		List<DomDwoProfileFull> list = manager.getProfiles(sc, rest);
 		assertEquals("getProfiles listsize", size+1, list.size());
 		DomDwoProfileFull other = list.get(size);
 		assertEquals("get from database", profile.getDwoProfileDescription(), other.getDwoProfileDescription());
@@ -153,18 +158,21 @@ public class SecuredDwoAdminProfileManagerIT {
 		RestDwoProfileFull restDwoProfile;
 		DomDwoProfileFull  profile;
 		profile = new DomDwoProfileFull();
-		profile.setId( manager.getProfiles(sc).get(0).getId());
+        RestContext rest = new RestContext();
+        rest.setRestContext(context);
+		profile.setId( manager.getProfiles(sc,rest).get(0).getId());
 		profile.setDwoProfileDescription("other description");
 		profile.setDwoProfileName("other name");
 		profile.setDwoProfileRights("other rights");
 		profile.setDwoProfileText("other text");
-                int size = manager.getProfiles(sc).size();
+		profile.setOptLock(0L);
+        int size = manager.getProfiles(sc, rest).size();
 		restDwoProfile = new RestDwoProfileFull();
 		restDwoProfile.setRestContext(context);
 		restDwoProfile.setDomDwoProfile(profile);
 		Boolean result = manager.updateProfile(sc, restDwoProfile);
 		assertTrue("submit profile", result.booleanValue());
-		List<DomDwoProfileFull> list = manager.getProfiles(sc);
+		List<DomDwoProfileFull> list = manager.getProfiles(sc, rest);
 		assertEquals("getProfiles listsize", size, list.size());
 		DomDwoProfileFull other = list.get(0);
 		assertEquals("get from database", profile.getDwoProfileDescription(), other.getDwoProfileDescription());
@@ -172,6 +180,32 @@ public class SecuredDwoAdminProfileManagerIT {
 		assertEquals("get from database", profile.getDwoProfileRights(), other.getDwoProfileRights());
 		assertEquals("get from database", profile.getDwoProfileText(), other.getDwoProfileText());
 		assertEquals("get from database", profile.getId().getIdString(), other.getId().getIdString());
+		assertEquals("get from database", 1L, other.getOptLock().longValue());
+	}
+	@Test
+	public void testUpdateProfileFail() throws Dwo2Exception {
+        SecurityContext sc = new TestSecurityContext("dwoadmin", RoleType.ADMIN);
+		RestDwoProfileFull restDwoProfile;
+		DomDwoProfileFull  profile;
+		profile = new DomDwoProfileFull();
+        RestContext rest = new RestContext();
+        rest.setRestContext(context);
+		profile.setId( manager.getProfiles(sc,rest).get(0).getId());
+		profile.setDwoProfileDescription("other description");
+		profile.setDwoProfileName("other name");
+		profile.setDwoProfileRights("other rights");
+		profile.setDwoProfileText("other text");
+		profile.setOptLock(1L);
+        int size = manager.getProfiles(sc, rest).size();
+		restDwoProfile = new RestDwoProfileFull();
+		restDwoProfile.setRestContext(context);
+		restDwoProfile.setDomDwoProfile(profile);
+		try {
+			Boolean result = manager.updateProfile(sc, restDwoProfile);
+			fail("should fail " + result);
+		} catch(Dwo2RestException e) {
+			assertEquals(e.toString(), Dwo2ExceptionCode.Rest_ObjectModified, e.getDwo2Code());
+		}
 	}
 
 }
