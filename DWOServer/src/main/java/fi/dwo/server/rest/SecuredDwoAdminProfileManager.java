@@ -118,6 +118,9 @@ public class SecuredDwoAdminProfileManager {
 				PersistentDwoProfile editProfile = DwoProfileManager.findEntity(id);
                 //Profile to update.
                 editProfile.setDwoProfileDescription(profile.getDwoProfileDescription());
+                // als de namen verschillen remove that entry from cache
+                if (! editProfile.getDwoProfileName().equals(profile.getDwoProfileName()))
+                	PublicProfileCache.clear();
                 editProfile.setDwoProfileName(profile.getDwoProfileName());
                 editProfile.setDwoProfileRights(profile.getDwoProfileRights());
                 editProfile.setDwoProfileText(profile.getDwoProfileText());
