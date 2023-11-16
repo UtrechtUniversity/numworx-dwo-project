@@ -52,7 +52,7 @@ public class StudentResultsWidget extends Composite {
 	}
 	
 	@UiField InlineLabel perc, redPerc;
-	@UiField Tree tree;
+	@UiField(provided=true) StudentResultsTree tree;
 	@UiField SimplePanel description;
 	@UiField SimplePanel outer;
 	@UiField ListBox models;

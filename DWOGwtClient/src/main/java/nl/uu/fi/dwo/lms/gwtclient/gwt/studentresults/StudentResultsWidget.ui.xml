@@ -133,8 +133,8 @@
 			  </g:FlowPanel></g:south>
 			  <g:center>
 				<g:ScrollPanel addStyleNames='{style.tree}'>
-					<g:Tree ui:field='tree'>
-					</g:Tree>	
+					<g:Widget ui:field='tree'>
+					</g:Widget>	
 				</g:ScrollPanel>
 			</g:center>
 			</g:DockLayoutPanel>

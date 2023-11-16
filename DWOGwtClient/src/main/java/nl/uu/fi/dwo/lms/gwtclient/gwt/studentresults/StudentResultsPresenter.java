@@ -34,7 +34,6 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
@@ -121,7 +120,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		service.getModels().then(this::getModels, FAILURE);
 	}
 	
-	private static final DomStudentModelScore NULLSCORE = new DomStudentModelScore();
+	static final DomStudentModelScore NULLSCORE = new DomStudentModelScore();
 	{
 		NULLSCORE.setScore(0, 0, 0, 0);
 	}
@@ -196,26 +195,24 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	}
 
 	private void insertTree(DomStudentModelContext4Student item) {
-		Tree tree = widget.get().tree;
-		tree.removeItems();
-		DomStudentModelStructure structure = item.getModelStructure();
-		String title = StudentModelPresenter.getTitle(structure.getInfo(),lang);
-		Widget html = Util.summaryItem(title, NULLSCORE ,0);
-        TreeItem ti = tree.addItem(html);
-		ti.setUserObject(item);
-		service.getScore(item).then(s -> {
+		StudentResultsTree tree = widget.get().tree;
+		Promise<DomStudentModelDataScore> promisedScore = service.getScore(item);
+		tree.setMethod(method);
+		TreeItem ti = tree.getRoot(item);
+		promisedScore.then(s -> {
           DomStudentModelStructureScore score = s.getValue().getDomStudentModelStructureScore();
           applyFilter(score);
+  		  String title = StudentModelPresenter.getTitle(item.getModelStructure().getInfo(),lang);
           ti.setWidget(Util.summaryItem(title, score ,0));
-          //ti.setSelected(true);
           addToTree(ti, item);
           ti.setState(true);
 		  return s;
 		});
 	}
+
 	
 	private void insertMethodTree(DomStudentModelContext4Student item, DomMethod method) {
-		Tree tree = widget.get().tree;
+		StudentResultsTree tree = widget.get().tree;
 		tree.removeItems();
 		String title = method.getMethod();
 		Map<String, Set<Integer>> bookfilter = filter.getOrDefault(method.key(), Collections.emptyMap());
@@ -376,7 +373,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		StudentResultsWidget w = widget.get();
 		List<DomStudentModelContext4Student> list = p.getValue();
 		ModelChange changes = new ModelChange(list);
-		Tree tree = w.tree;
+		StudentResultsTree tree = w.tree;
 		w.description.clear();
 		w.title.setText("");
 		w.filter.setText("");
@@ -468,7 +465,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 				setPerc(score);
 				return p; }, FAILURE)
 			.then(p -> {
-                return addToTree(item, userObject, o, p, filter); },  p -> item.removeItems() );			
+                return widget.get().tree.addToTree(item, userObject, o, p, filter); },  p -> item.removeItems() );			
 		} else if (userObject instanceof int[]) {
 			int[] elems = (int[]) userObject;
 			int cat = elems[0], obj = elems[1];
@@ -494,83 +491,14 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 				setPerc(score);
 				return p; }, FAILURE)
 			.then (p -> {
-				return addToTree(item, elems, cat, obj, oo, p, filter);
+				return widget.get().tree.addToTree(item, elems, cat, obj, oo, p, filter);
 			}, p-> item.removeItems());
 		}
 		
 	}
 
-	private Promise<DomStudentModelDataScore> addToTree(TreeItem item, int[] elems, int cat, int obj,
-			final DomStudentModelObj oo, Promise<DomStudentModelDataScore> p, Map<String, Map<String, Set<Integer>>> filter) {
-		if (oo.getObjectives() != null && oo.getObjectives().size() != item.getChildCount()) {
-			DomStudentModelObjectiveScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(cat).getObjectives().get(obj);
-			for (int i = 2; i < elems.length; i++ ) score = score.getChildren().get(elems[i]);
-			int oobj = 0;
-			for (DomStudentModelObj ooo: oo.getObjectives()) {
-				DomStudentModelObjectiveScore s = score.getChildren().get(oobj);
-				TreeItem tt;
-				if (s.getChildren() != null)
-					tt = item.addItem(Util.summaryItem(StudentModelPresenter.getTitle(ooo.getInfo(),lang), s,3));
-				else
-				{	boolean add = inFilter(filter, ooo);
-					tt = item.addItem(Util.scoreItem(StudentModelPresenter.getTitle(ooo.getInfo(),lang), s,3));
-					tt.setVisible(add);
-				}
-				int[] oelems = new int[elems.length+1];
-				System.arraycopy(elems, 0, oelems, 0, elems.length);
-				oelems[elems.length] = oobj;
-				{
-					tt.setUserObject(oelems);
-					addToTree(tt, oelems, cat, obj, ooo, p, filter);
-					if (s.getChildren() != null && getVisibleChildCount(tt) == 0) 
-						tt.setVisible(false);
-				}
-				oobj++;
-			}
-		}
-		return p;
-	}
 
-	private int getVisibleChildCount(TreeItem tt) {
-		int cnt = 0;
-		int len = tt.getChildCount();
-		for (int i = 0; i < len; i++) {
-			if (tt.getChild(i).isVisible()) cnt++;
-		}
-		return cnt;
-	}
-
-	private Promise<DomStudentModelDataScore> addToTree(TreeItem item, Object userObject, DomStudentModelCategory o,
-			Promise<DomStudentModelDataScore> p, Map<String, Map<String, Set<Integer>>> filter) {
-		DomStudentModelCategoryScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(((Integer) userObject).intValue());
-		if (item.getChildCount() != o.getObjectives().size()) {
-			item.removeItems();
-			int cat = ((Integer) userObject).intValue();
-			int obj = 0;
-			for( DomStudentModelObj oo : o.getObjectives()) {
-			    DomStudentModelObjectiveScore s = score.getObjectives().get(obj);
-				TreeItem tt;
-				if (s.getChildren() != null)
-					tt = item.addItem(Util.summaryItem(StudentModelPresenter.getTitle(oo.getInfo(),lang), s,2));
-				else
-				{	boolean add = inFilter(filter, oo);
-					tt = item.addItem(Util.scoreItem(StudentModelPresenter.getTitle(oo.getInfo(),lang), s,2));
-					tt.setVisible(add);
-				}
-				int[] elems = new int[] { cat, obj };
-				{
-					tt.setUserObject(elems );
-					addToTree(tt, elems, cat, obj, oo, p, filter);
-					if (s.getChildren() != null && getVisibleChildCount(tt) == 0) 
-						tt.setVisible(false);
-				}
-
-				obj++;
-			}
-		}
-		return p;
-	}
-	 static boolean contains(Map<String, Map<String, Set<Integer>>> filter,
+	public static boolean contains(Map<String, Map<String, Set<Integer>>> filter,
 			Map<String, Map<String, Set<Integer>>> methodes, DomMethod method) {
 		if (filter.isEmpty()) return true;
 		for (Map.Entry<String, Map<String, Set<Integer>>> entry : filter.entrySet()) {
@@ -720,27 +648,6 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		
 	}
 
-	private void addToMethodTree(TreeItem item, DomStudentModelContext4Student model, DomStudentModelStructureScore score, DomMethod method) {
-		DomStudentModelStructure structure = model.getModelStructure();
-		List<DomStudentModelCategory> cats = structure.getCategories();
-		List<DomStudentModelCategoryScore> catscores = score.getCategories();
-		Iterator<DomStudentModelCategory> icats = cats.iterator();
-		Iterator<DomStudentModelCategoryScore> icatscores = catscores.iterator();
-		scoreMap.clear();
-		while( icats.hasNext()) {
-			List<DomStudentModelObj> objs = icats.next().getObjectives();
-			List<DomStudentModelObjectiveScore> objscores = icatscores.hasNext() ? icatscores.next().getObjectives() : Collections.emptyList();
-			addToMethodTree(item, objs, objscores, method);
-		}
-		scoreMap.forEach( (key, value) -> 
-		{	String t = ((HasText) key.getWidget()).getText();
-			int i = key.getParentItem() == null ? 0 : 1;
- 			key.setWidget(Util.summaryItem(t, value, i));
-		}
-		);
-		
-	}
-
 	Map<TreeItem, DomStudentModelScore<?>> scoreMap = new HashMap<>();
 	
 	
@@ -839,43 +746,19 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		return item.addItem(scoreItem);
 	}
 
-//	private int compareM(String as, String bs) {
-//		boolean ab = as.equals(BEGRIPPEN_EN_VAKTAAL);
-//		boolean bb = bs.equals(BEGRIPPEN_EN_VAKTAAL);
-//		if (ab && !bb) return +1;
-//		if (bb && !ab) return -1;
-//		return as.compareTo(bs);
-//	}
 
 	private void addToTree(TreeItem item, DomStudentModelContext4Student model) {
 		DomStudentModelStructure structure = model.getModelStructure();
-		Map<String, Map<String, Set<Integer>>> filter = model.getFilter();
 		String text;
 		setDescription(structure.getInfo());
 		text = StudentModelPresenter.getTitle(structure.getInfo(),lang);
 		widget.get().title.setText(text);
-		service.getScore(model).then ( p -> {
+		Promise<DomStudentModelDataScore> promisedScore = service.getScore(model).then ( p -> {
 			DomStudentModelStructureScore score = p.getValue().getDomStudentModelStructureScore();
 			setPerc(score);
 			return p;
-		}, FAILURE)
-		.then(p -> { 
-			if (item.getChildCount() != structure.getCategories().size()) {
-				item.removeItems();
-				int cat = 0;
-				for (DomStudentModelCategory o : structure.getCategories()) {
-		            DomStudentModelCategoryScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(cat);
-					TreeItem tt = item.addItem(
-					  Util.summaryItem(StudentModelPresenter.getTitle(o.getInfo(),lang), (score),1));
-					tt.setUserObject(cat);
-					addToTree(tt, cat, o, p, filter);
-					if (getVisibleChildCount(tt) == 0) 
-						tt.setVisible(false);
-					cat++;
-				}
-			}
-			return p; })
-		.then(null, FAILURE);
+		}, FAILURE);
+		widget.get().tree.addToTree(item, model, promisedScore, model.getFilter());
 	}
 
 	private void setDescription(DomStudentModelContextInfo info) {

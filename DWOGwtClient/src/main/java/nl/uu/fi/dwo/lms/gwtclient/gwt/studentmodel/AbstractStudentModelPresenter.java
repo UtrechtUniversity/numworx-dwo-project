@@ -35,9 +35,9 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 
-abstract class AbstractStudentModelPresenter {
+public abstract class AbstractStudentModelPresenter {
 
-  interface AbstractDisplay extends BasicDisplay {
+  public interface AbstractDisplay extends BasicDisplay {
     void showTree(DomTree<String> tree);
     void setTitle(String title);
     boolean isMethod();
@@ -94,7 +94,7 @@ abstract class AbstractStudentModelPresenter {
   @Inject
   protected PersonsService persons;
   
-  AbstractStudentModelPresenter(EventBus bus, Logger LOG, DwoGlobalVars vars) {
+  public AbstractStudentModelPresenter(EventBus bus, Logger LOG, DwoGlobalVars vars) {
     this.bus = bus;
     this.FAILURE = new LoggingFailure(LOG, bus);
     lang = LocaleInfo.getCurrentLocale().getLocaleName();
@@ -115,7 +115,7 @@ abstract class AbstractStudentModelPresenter {
   	return contains(filter, methods, method);
   }
 
-  void setView(AbstractDisplay view) {
+  protected void setView(AbstractDisplay view) {
     this.view = view;
   }
 

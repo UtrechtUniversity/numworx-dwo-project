@@ -1,6 +1,7 @@
 /** Copyrighted Jan 15, 2018 */
 package fi.dwo.server.rest.util;
 
+import fi.dwo.server.BUILD;
 import fi.dwo.server.rest.PublicServerStatus;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +44,7 @@ public class HeartBeat {
             } catch (NullPointerException ex) {
                 manifestAttributes = new Attributes();
             }
-            serverVersion = manifestAttributes.getValue("Implementation-Version");
+            serverVersion = BUILD.version;
             javaClientVersion = manifestAttributes.getValue("JavaClient-Version");
             htmlClientVersion = manifestAttributes.getValue("HtmlClient-Version");
             initialized = true;
