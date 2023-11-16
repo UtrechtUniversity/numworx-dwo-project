@@ -132,6 +132,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	private static final char INTEGRAAL = '∫';
 
 	private static final String ACTION_NOT_EDITIABLE = "action.setNotEditable";
+	private static final String ACTION_RESET = "action.reset";
 	private static final String TEXT = "text";
 	private static final Unit PX = Unit.PX;
 	private int MIN = 1;
@@ -176,6 +177,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	private final ActivityInterface activity;
 	private TekstRegel regel;
 	private com.google.gwt.user.client.Element formuleElement;
+	private String original = "";
 	
 	TextEditor(ActivityInterface a, int breedte, int hoogte, boolean boxMetRand)
 	{
@@ -249,6 +251,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		hbox.setStyleName(css.textEditor_nwh(), nowrap && pasAanH);
 		
 		menubar = getMenuBar(launchdata);
+		original = getText(launchdata);
 		content = getContent(launchdata);
 		contentwrap = content;
 		if (nowrap || pasAanH) {
@@ -411,15 +414,11 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 
 	private void setState(ObjectMap h)
 	{
-		String tekst = h == null ? "" : h.getString("tekst");
-		// h kan null zijn!
+		String tekst = getText(h);
+		//sb.setLength(0);
+
 		editable = true;
 		shown = false;
-		if (tekst == null)
-			tekst = "";
-		else if (tekst.endsWith("\n"))
-			tekst = tekst.substring(0, tekst.length()-1);
-		//sb.setLength(0);
 		clearAll();
 		try {
 			insert(tekst);
@@ -434,6 +433,16 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		//shown = true;
 		updateEmpty();
 		pasAanH();
+	}
+
+	private String getText(ObjectMap h) {
+		String tekst = h == null ? "" : h.getString("tekst");
+		// h kan null zijn!
+		if (tekst == null)
+			tekst = "";
+		else if (tekst.endsWith("\n"))
+			tekst = tekst.substring(0, tekst.length()-1);
+		return tekst;
 	}
 
 	private ScrollPanel getContent(ObjectMap launchdata)
@@ -1382,12 +1391,17 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		if(ACTION_NOT_EDITIABLE.equals(command)) {
 			setReadonly();
 		} else 
-		if(TEXT.equals(command))
+		if(TEXT.equals(command) && editable)
 		{
 			String text = (String)event.getParameter("content");
 			if(text == null) text = "";
 			clearAll();
 			insert(text);
+			updateEmpty();
+		} else if (ACTION_RESET.equals(command) && editable)
+		{
+			clearAll();
+			insert(original);
 			updateEmpty();
 		}
 		
