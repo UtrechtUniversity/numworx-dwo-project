@@ -26,6 +26,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 
@@ -39,6 +40,42 @@ public class StudentResultsTree extends Composite {
 	private DomMethod method;
 	Map<String, DomStudentModelContextInfo> currentInfo = new HashMap<String, DomStudentModelContextInfo>();
 
+	class Strategy {
+		Widget html(DomStudentModelContextInfo info, DomStudentModelScore<?> s, int level) {
+	  		String title = StudentModelPresenter.getTitle(info,lang);
+	  		if (s.getChildren() != null)
+	  			return Util.summaryItem(title, s, level);
+	  		return Util.scoreItem(title, s, level);
+		}
+		
+		Widget root (DomStudentModelContextInfo info) {
+	  		String title = StudentModelPresenter.getTitle(info,lang);
+			return Util.summaryItem(title, StudentResultsPresenter.NULLSCORE, 0);
+		}
+	}
+
+	class ZonderTitel extends Strategy {
+		Widget html(DomStudentModelContextInfo info, DomStudentModelScore<?> s, int level) {
+	  		String title = StudentModelPresenter.getTitle(info,lang);
+	  		if (s.getChildren() != null)
+	  			return new SummaryIcon(title);
+	  		return new ScoreIcon(title);
+		}
+		Widget root (DomStudentModelContextInfo info) {
+	  		String title = StudentModelPresenter.getTitle(info,lang);
+			return new SummaryIcon(title);
+		}
+
+	}
+	
+	Strategy to = new Strategy();
+	
+	public void enableScore(boolean b) {
+		if (b)
+			to = new Strategy();
+		else
+			to = new ZonderTitel();
+	}
 	
 	public void setMethod(DomMethod method) {
 		this.method = method;
@@ -67,8 +104,7 @@ public class StudentResultsTree extends Composite {
 		ps.then(s -> {
           DomStudentModelStructureScore score = s.getValue().getDomStudentModelStructureScore();
           StudentResultsPresenter.applyFilter(score, item.getFilter(), currentInfo, method);
-  		  String title = StudentModelPresenter.getTitle(item.getModelStructure().getInfo(),lang);
-          ti.setWidget(Util.summaryItem(title, score ,0));
+          ti.setWidget(to.html(item.getModelStructure().getInfo(), score, 0));
           addToTree(ti, item, ps, item.getFilter());
           ti.setState(true);
 		  return s;
@@ -101,11 +137,10 @@ public class StudentResultsTree extends Composite {
 			for (DomStudentModelObj ooo: oo.getObjectives()) {
 				DomStudentModelObjectiveScore s = score.getChildren().get(oobj);
 				TreeItem tt;
-				if (s.getChildren() != null)
-					tt = item.addItem(Util.summaryItem(StudentModelPresenter.getTitle(ooo.getInfo(),lang), s,3));
-				else
+				Widget html = to.html(ooo.getInfo(), s, 3);
+				tt = item.addItem(html);
+				if (s.getChildren() == null)
 				{	boolean add = inFilter(filter, ooo);
-					tt = item.addItem(Util.scoreItem(StudentModelPresenter.getTitle(ooo.getInfo(),lang), s,3));
 					tt.setVisible(add);
 				}
 				int[] oelems = new int[elems.length+1];
@@ -133,11 +168,10 @@ public class StudentResultsTree extends Composite {
 			for( DomStudentModelObj oo : o.getObjectives()) {
 			    DomStudentModelObjectiveScore s = score.getObjectives().get(obj);
 				TreeItem tt;
-				if (s.getChildren() != null)
-					tt = item.addItem(Util.summaryItem(StudentModelPresenter.getTitle(oo.getInfo(),lang), s,2));
-				else
+				Widget html = to.html(oo.getInfo(), s, 2);
+				tt = item.addItem(html);
+				if (s.getChildren() == null)
 				{	boolean add = inFilter(filter, oo);
-					tt = item.addItem(Util.scoreItem(StudentModelPresenter.getTitle(oo.getInfo(),lang), s,2));
 					tt.setVisible(add);
 				}
 				int[] elems = new int[] { cat, obj };
@@ -164,7 +198,7 @@ public class StudentResultsTree extends Composite {
 				for (DomStudentModelCategory o : structure.getCategories()) {
 		            DomStudentModelCategoryScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(cat);
 					TreeItem tt = item.addItem(
-					  Util.summaryItem(StudentModelPresenter.getTitle(o.getInfo(),lang), (score),1));
+					  to.html(o.getInfo(), score,1));
 					tt.setUserObject(cat);
 					addToTree(tt, cat, o, p, filter2);
 					if (getVisibleChildCount(tt) == 0) 
@@ -180,8 +214,7 @@ public class StudentResultsTree extends Composite {
 	
 	public TreeItem getRoot(DomStudentModelContext4Student item) {
 		tree.removeItems();
-		String title = StudentModelPresenter.getTitle(item.getModelStructure().getInfo(),lang);
-		Widget html = Util.summaryItem(title, StudentResultsPresenter.NULLSCORE ,0);
+		Widget html = to.root(item.getModelStructure().getInfo());
         TreeItem ti = tree.addItem(html);
 		ti.setUserObject(item);
 		return ti;

@@ -3,7 +3,6 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:x='urn:import:nl.uu.fi.dwo.lms.gwtclient.gwt.jsutil'
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb"></ui:with>
 	<ui:style>
 @external checkbox;
 	.perc {
@@ -108,40 +107,17 @@
 	}
 	
 	</ui:style>
-	<g:DockLayoutPanel unit='PX' styleName='{style.fullheight}'>
-		<g:center>
-			<g:DockLayoutPanel unit='EM' addStyleNames="{style.west}">
-			  <g:north size="2">
-			   <g:FlowPanel>
-			  	<g:ListBox ui:field='models' addStyleNames="{style.models}">
-			  		<g:item><ui:text  from='{rb.NUM_LBL_KNOWLEDGE_MODEL}' /></g:item>
-			  	</g:ListBox>
-			   </g:FlowPanel>
-			  </g:north>
-			  <g:north size="3">
-			  	<g:Label ui:field='filter' addStyleNames="{style.title}"></g:Label>
-			  </g:north>
-			  <g:south size="3">
-			  	<g:Anchor styleName='{style.anchor}' addStyleNames='backlink' ui:field='back'><svg viewBox="0 0 74 74" class="icon">
-									  <use xlink:href="#arrowLeft"></use>
-								</svg><ui:text from='{rb.NUM_LBL_KNOWLEDGE_BACK}' /></g:Anchor>
-			  </g:south>
-			  <g:south size="2.4"><g:FlowPanel>
-			  	<g:Button ui:field='btn' styleName='{style.graph}'>Graph</g:Button>
-			    <g:Button ui:field='filterBtn' styleName='{style.filter}' addStyleNames='{style.space} teacher-only'><ui:text from='{rb.NUM_BTN_Filter}' /></g:Button>
-			    <x:CheckBox ui:field='viewBtn' addStyleNames='{style.filter}' checked="true" >Methode</x:CheckBox>
-			  </g:FlowPanel></g:south>
-			  <g:center>
-				<g:ScrollPanel addStyleNames='{style.tree}'>
-					<g:Widget ui:field='tree'>
-					</g:Widget>	
-				</g:ScrollPanel>
-			</g:center>
+			<g:DockLayoutPanel ui:field='east' unit='EM' >
+				<g:north size="3"><g:FlowPanel styleName='{style.border-top}' addStyleNames='profile-borderBox'><g:Label addStyleNames='{style.title}' ui:field='title'></g:Label></g:FlowPanel></g:north>
+				<g:south size='3'>
+				  <g:FlowPanel ui:field='north' styleName='{style.score}'>
+					<g:InlineLabel ui:field='redPerc' styleName='{style.perc}'/>
+					<g:SimplePanel styleName='{style.icon}' ui:field='outer' />
+					<g:InlineLabel ui:field='perc' styleName='{style.greenperc}' />
+				  </g:FlowPanel>
+				</g:south>
+				<g:center>
+					<g:SimpleLayoutPanel styleName='{style.border}' addStyleNames='profile-borderBox'  ui:field='description' />
+				</g:center>
 			</g:DockLayoutPanel>
-		</g:center>
-		<g:east size='440'>
-			<g:Widget ui:field='east' />
-		</g:east>
-		<g:east size="10"><g:SimplePanel /></g:east>
-	</g:DockLayoutPanel>
 </ui:UiBinder> 

@@ -405,7 +405,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	}
 
 	private void onMethodSelection(TreeItem item, Object userObject) {
-		widget.get().east.getElement().getStyle().clearVisibility();
+		widget.get().east.clearVisibility();
 		DomStudentModelScore<?> score = scoreMap.get(item);
 		if ("W:".equals(userObject)) {
 			userObject = item.getParentItem().getUserObject();
@@ -448,7 +448,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		
 		
 		
-		widget.get().east.getElement().getStyle().clearVisibility();
+		widget.get().east.clearVisibility();
 		if (userObject instanceof DomStudentModelContext4Student) {
 			DomStudentModelContext4Student model = (DomStudentModelContext4Student) userObject;
 			addToTree(item, model);
@@ -749,10 +749,8 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 
 	private void addToTree(TreeItem item, DomStudentModelContext4Student model) {
 		DomStudentModelStructure structure = model.getModelStructure();
-		String text;
-		setDescription(structure.getInfo());
-		text = StudentModelPresenter.getTitle(structure.getInfo(),lang);
-		widget.get().title.setText(text);
+		widget.get().east.setDescription(structure.getInfo());
+
 		Promise<DomStudentModelDataScore> promisedScore = service.getScore(model).then ( p -> {
 			DomStudentModelStructureScore score = p.getValue().getDomStudentModelStructureScore();
 			setPerc(score);
@@ -763,11 +761,10 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 
 	private void setDescription(DomStudentModelContextInfo info) {
 		showGraph = false;
-		description.get(current, info)
-		.then(p -> { Widget description = p.getValue();
-			widget.get().description.setWidget(description);
-			return p;
-		});
+		EastPanel east = widget.get().east;
+		east.model = current;
+		east.service = description;
+		east.setDescription(info);
 	}
 
 	private void setPerc(DomStudentModelScore<?> score) {

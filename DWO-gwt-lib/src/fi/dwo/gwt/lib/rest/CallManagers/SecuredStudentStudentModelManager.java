@@ -2,6 +2,9 @@ package fi.dwo.gwt.lib.rest.CallManagers;
 
 import java.util.List;
 
+import org.fusesource.restygwt.client.Defaults;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.Resource;
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
 import com.google.gwt.core.shared.GWT;
@@ -113,11 +116,13 @@ public class SecuredStudentStudentModelManager implements LRSManager {
 				+ "&schoolClassId=" + sc.getId()
 				+ "&locale=" + locale;
 		
-		RequestBuilder rb = new RequestBuilder(RequestBuilder.GET, url);
-		rb.setTimeoutMillis(100000);
-		rb.setHeader("Authorization", RestAuthenticator.instance.getAuthorization());
+		//RequestBuilder rb = new RequestBuilder(RequestBuilder.GET, url);
+		Resource resource = new Resource(url);
+		Method mmm = new Method(resource , "GET");
+		mmm.timeout(100000);
+		//rb.setHeader("Authorization", RestAuthenticator.instance.getAuthorization());
 		try {
-			rb.sendRequest(null, new RequestCallback() {
+			RequestCallback callback = new RequestCallback() {
 				
 				@Override
 				public void onResponseReceived(Request request, Response response) {
@@ -135,7 +140,10 @@ public class SecuredStudentStudentModelManager implements LRSManager {
 				public void onError(Request request, Throwable exception) {
 					defer.fail(exception);
 				}
-			});
+			};
+			mmm.text(null);
+			mmm.send(callback);
+			
 		} catch (RequestException e) {
 			defer.fail(e);
 		}		

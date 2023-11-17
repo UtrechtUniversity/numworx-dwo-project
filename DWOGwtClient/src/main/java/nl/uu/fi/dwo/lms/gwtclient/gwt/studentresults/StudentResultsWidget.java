@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.Widget;
@@ -42,6 +43,10 @@ public class StudentResultsWidget extends Composite {
 
 	@Inject StudentResultsWidget(EventBus bus) {
 		tree = new StudentResultsTree(bus);
+		east = new EastPanel();
+		this.description = east.description;
+		this.title = east.title;
+		
 		initWidget(root = uiBinder.createAndBindUi(this));
 		setHeight("100%");
 		this.bus = bus;
@@ -52,27 +57,17 @@ public class StudentResultsWidget extends Composite {
 		root.setWidgetHidden(back, !b);
 	}
 	
-	@UiField InlineLabel perc, redPerc;
 	@UiField(provided=true) StudentResultsTree tree;
-	@UiField SimplePanel description;
-	@UiField SimplePanel outer;
 	@UiField ListBox models;
 	@UiField Button btn;
-	@UiField DockLayoutPanel east;
-	@UiField Label title, filter;
+	@UiField(provided=true) EastPanel east;
+	@UiField Label filter;
 	@UiField nl.uu.fi.dwo.lms.gwtclient.gwt.jsutil.CheckBox viewBtn;
 	@UiField Anchor back;
+	SimpleLayoutPanel description;
+	Label title;
+	
 
-	void setPerc(DomStudentModelScore<?> s) {
-		Widget sh = s.getChildren() == null
-				? Util.scoreItem("", s, Util.MAX_LEVEL)
-				: Util.summaryItem("", s, Util.MAX_LEVEL);
-		outer.setWidget(sh);
-		double greenPerc = Util.getGreen(s) * 200;
-		double redPerc =   Util.getRed(s) * 200;
-		this.perc.setText(Math.round(greenPerc)+"%");
-		this.redPerc.setText(Math.round(redPerc)+"%");
-	}
 
 	@UiHandler("models") void onChange(ChangeEvent ev) {
 		bus.fireEventFromSource(ev, this);
@@ -114,5 +109,10 @@ public class StudentResultsWidget extends Composite {
 	
 	public boolean isMethod() {
 		return viewBtn.getValue().booleanValue();
+	}
+
+	public void setPerc(DomStudentModelScore s) {
+		east.setPerc(s);
+		
 	}
 }
