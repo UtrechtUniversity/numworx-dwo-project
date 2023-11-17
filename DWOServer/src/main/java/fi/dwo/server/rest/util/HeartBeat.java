@@ -33,25 +33,10 @@ public class HeartBeat {
      * @param ctx 
      */
     public static void initializeHeartBeat(ServletContext ctx) throws Dwo2Exception {
-        //Read manifest values
-        try {
-            Attributes manifestAttributes = null;
-            try {
-                InputStream resourceAsStream = ctx.getResourceAsStream("/META-INF/MANIFEST.MF");
-                Manifest mf = new Manifest();
-                mf.read(resourceAsStream);
-                manifestAttributes = mf.getMainAttributes();
-            } catch (NullPointerException ex) {
-                manifestAttributes = new Attributes();
-            }
-            serverVersion = BUILD.version;
-            javaClientVersion = manifestAttributes.getValue("JavaClient-Version");
-            htmlClientVersion = manifestAttributes.getValue("HtmlClient-Version");
-            initialized = true;
-        } catch (IOException ex) {
-            Logger.getLogger(PublicServerStatus.class.getName()).log(Level.SEVERE, null, ex);
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, ex.getMessage());
-        }
+        serverVersion = BUILD.version;
+		javaClientVersion = BUILD.javaClient;
+		htmlClientVersion = BUILD.htmlClient;
+		initialized = true;
     }        
 
     /**

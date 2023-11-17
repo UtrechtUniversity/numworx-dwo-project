@@ -10,6 +10,6 @@ public class BUILD {
     static {
     	version = "${project.version}";
     	javaClient = fi.dwo.dwojapplet.BUILD.version;
-    	//htmlClient = nl.uu.fi.dwo.lms.gwtclient.gwt.BUILD.version;
+    	htmlClient = nl.uu.fi.dwo.lms.gwtclient.gwt.BUILD.version;
     }
 }

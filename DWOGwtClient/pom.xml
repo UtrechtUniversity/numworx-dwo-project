@@ -401,7 +401,7 @@
                             <artifactId>DWOServer</artifactId> 
                             <type>war</type>    
                             <properties>
-                                <context>/</context>
+                                <context>{local.dwo}</context>
                             </properties>
                         </deployable>
                     </deployables>

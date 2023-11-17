@@ -46,6 +46,7 @@ function later() {
    	    var clientId = doGetValue("dme.oauth.client_id");
        	var codeChallenge = doGetValue("dme.oauth.code_challenge");
        	var state = doGetValue("dme.oauth.state")||"";
+       	var idphint = doGetValue("dme.oauth.idphint")||"";
         var redirectUri = window.location.href.split('?')[0];
         var args = new URLSearchParams({
                response_type: "code",
@@ -53,7 +54,8 @@ function later() {
                state: state,
                code_challenge_method: "S256",
                code_challenge: codeChallenge,
-               redirect_uri: redirectUri
+               redirect_uri: redirectUri,
+               "idphint": idphint
            });
            window.open( authorizeEndpoint + "?" + args , "_top");
          	

@@ -41,6 +41,7 @@ public class StudentResultsWidget extends Composite {
 	private Which which;
 
 	@Inject StudentResultsWidget(EventBus bus) {
+		tree = new StudentResultsTree(bus);
 		initWidget(root = uiBinder.createAndBindUi(this));
 		setHeight("100%");
 		this.bus = bus;

@@ -42,6 +42,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -319,14 +320,16 @@ if(DwoHelper.isSamlLogin()) {
         /* linkdata */
         Object org = null;
         if (linkdata != null && null != (org = linkdata.get("IDP"))) {
-            linkcheck = new JButton("Inloggen via '" + org + '\'');
+            linkcheck = new JButton();
+            linkcheck.setIcon(new ImageIcon(DwoHelper.getResourceImage("resources/entree-button-klein-donker.png")));
             linkcheck.addActionListener(this);
             linkcheck.setBackground(p.getBackground());
-            linkcheck.setFont(GuiConstants.NORMAL_TEXT);
+            //linkcheck.setFont(GuiConstants.NORMAL_TEXT);
             p.add(linkcheck);
             h = linkcheck.getPreferredSize().height;
             p.setSize(p.getWidth(), h + p.getHeight());
-            linkcheck.setBounds(7, 75, 250, 20);
+            linkcheck.setLocation(3, 80);
+            linkcheck.setSize(linkcheck.getPreferredSize());
         } else {
         	linkcheck = new JButton(); // voorkom NPE;
         }
@@ -543,22 +546,15 @@ if(DwoHelper.isSamlLogin()) {
 
     private void loginWithIDP() {		
 		LOG.info("Login with " + linkData);
-		JDialog d = new JDialog(DwoHelper.getFrameForComponent(this));
-		d.setModal(true);
-		d.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		SAMLLoginIF login = getSAMLLogin();
 		login.setEndpoint(linkData.get("endpoint").toString());
 		String redirectUri = DwoHelper.getServerUrlPath() + "oauth2/login3.jsp";
-		login.loadURL(redirectUri);
-		d.setContentPane(login.asComponent());
-		d.pack();
-		login.getPromise().then(pr -> {
-			d.dispose();
+		login.popup(this, redirectUri)
+		.then(pr -> {
 			LOG.info("got " + pr.getValue());
 		    GuiCreator.instance().dwo.loginViaSaml(pr.getValue());
 			return pr;
 		});
-		d.show();
 		
 	}
 

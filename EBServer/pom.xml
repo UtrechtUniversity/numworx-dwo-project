@@ -38,6 +38,42 @@
 				    <artifactId>jackson-core</artifactId>
 				    <version>2.13.4</version>
 				</dependency>
+				<dependency>			
+				    <groupId>nl.uu.fi.dwo.lms</groupId>
+    				<artifactId>DWOGwtClient</artifactId>
+					<version>2.5.26-SNAPSHOT</version>
+					<exclusions>
+						<exclusion>
+							<groupId>org.vectomatic</groupId>
+							<artifactId>lib-gwt-svg</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>nl.uu.fi.dwo</groupId>
+							<artifactId>DWO-gwt-lib</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>com.google.dagger</groupId>
+							<artifactId>dagger-gwt</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>org.vectomatic</groupId>
+							<artifactId>lib-gwt-file</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>nl.uu.fi.dwo.ideas</groupId>
+							<artifactId>IdeasGWT</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>nl.uu.fi.dwo.lms</groupId>
+							<artifactId>ChatGWT-shared</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>nl.uu.fi.dwo.mobile</groupId>
+							<artifactId>promise-api</artifactId>
+						</exclusion>
+					</exclusions>
+					<classifier>classes</classifier>
+				</dependency>
 
 		<dependency>
 			<groupId>commons-dbcp</groupId>
