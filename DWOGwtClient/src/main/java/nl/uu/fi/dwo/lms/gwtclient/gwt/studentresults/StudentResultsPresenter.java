@@ -792,6 +792,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 				method = p.getValue();
 				filter = current.getFilter();
 				widget.get().setFilter(filter, method);
+				currentInfo = widget.get().tree.currentInfo;
 				setCurrentInfo(current.getModelStructure());
 				if (widget.get().isMethod())
 					insertMethodTree(current, method);

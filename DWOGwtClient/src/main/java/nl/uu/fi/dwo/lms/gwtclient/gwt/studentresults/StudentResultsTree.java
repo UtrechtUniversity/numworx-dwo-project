@@ -38,7 +38,7 @@ public class StudentResultsTree extends Composite {
 	private Tree tree;
 	private final LoggingFailure FAILURE;
 	private DomMethod method;
-	Map<String, DomStudentModelContextInfo> currentInfo = new HashMap<String, DomStudentModelContextInfo>();
+	protected Map<String, DomStudentModelContextInfo> currentInfo = new HashMap<String, DomStudentModelContextInfo>();
 
 	class Strategy {
 		Widget html(DomStudentModelContextInfo info, DomStudentModelScore<?> s, int level) {
