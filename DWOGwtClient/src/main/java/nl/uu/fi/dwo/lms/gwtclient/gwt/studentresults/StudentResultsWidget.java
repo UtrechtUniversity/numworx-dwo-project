@@ -98,6 +98,7 @@ public class StudentResultsWidget extends Composite {
 		if (method.getId() == null) viewBtn.setValue(Boolean.FALSE);
 		viewBtn.setEnabled(method.getId() != null);
 		filter.setText(FilterUtil.setFilter(filter2, method));
+		tree.filter = filter2;
 	}
 	
 	public boolean isFilter() {

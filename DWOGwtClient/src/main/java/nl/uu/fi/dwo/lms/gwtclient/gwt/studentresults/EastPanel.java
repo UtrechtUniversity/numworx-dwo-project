@@ -34,7 +34,8 @@ public class EastPanel extends ResizeComposite {
 	@UiField InlineLabel redPerc, perc;
 	@UiField FlowPanel north;
 	@UiField SimplePanel outer;
-	@UiField SimpleLayoutPanel description;
+	@UiField
+	public SimpleLayoutPanel description;
 	
 	@Inject EastPanel(DescriptionPresenter s) {
 		service = s;
