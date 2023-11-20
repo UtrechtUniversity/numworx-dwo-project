@@ -41,9 +41,9 @@ public class StudentResultsWidget extends Composite {
 	private final DockLayoutPanel root;
 	private Which which;
 
-	@Inject StudentResultsWidget(EventBus bus) {
+	@Inject StudentResultsWidget(EventBus bus, EastPanel east) {
 		tree = new StudentResultsTree(bus);
-		east = new EastPanel();
+		this.east = east;
 		this.description = east.description;
 		this.title = east.title;
 		
@@ -64,8 +64,8 @@ public class StudentResultsWidget extends Composite {
 	@UiField Label filter;
 	@UiField nl.uu.fi.dwo.lms.gwtclient.gwt.jsutil.CheckBox viewBtn;
 	@UiField Anchor back;
-	SimpleLayoutPanel description;
-	Label title;
+	@Deprecated SimpleLayoutPanel description;
+	@Deprecated Label title;
 	
 
 

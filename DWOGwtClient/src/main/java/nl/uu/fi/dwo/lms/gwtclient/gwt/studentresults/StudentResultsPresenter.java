@@ -749,7 +749,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 
 	private void addToTree(TreeItem item, DomStudentModelContext4Student model) {
 		DomStudentModelStructure structure = model.getModelStructure();
-		widget.get().east.setDescription(structure.getInfo());
+		setDescription(structure.getInfo());
 
 		Promise<DomStudentModelDataScore> promisedScore = service.getScore(model).then ( p -> {
 			DomStudentModelStructureScore score = p.getValue().getDomStudentModelStructureScore();
@@ -761,10 +761,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 
 	private void setDescription(DomStudentModelContextInfo info) {
 		showGraph = false;
-		EastPanel east = widget.get().east;
-		east.model = current;
-		east.service = description;
-		east.setDescription(info);
+		widget.get().east.setDescription(current, info);
 	}
 
 	private void setPerc(DomStudentModelScore<?> score) {

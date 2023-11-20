@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
+import javax.inject.Inject;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -34,7 +36,8 @@ public class EastPanel extends ResizeComposite {
 	@UiField SimplePanel outer;
 	@UiField SimpleLayoutPanel description;
 	
-	public EastPanel() {
+	@Inject EastPanel(DescriptionPresenter s) {
+		service = s;
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
@@ -57,9 +60,9 @@ public class EastPanel extends ResizeComposite {
 		return AbstractStudentModelPresenter.getTitle(info, lang);
 	}
 
-	public DescriptionPresenter service;
-	public DomStudentModelContextId model;
-	public void setDescription(DomStudentModelContextInfo info) {
+	private final DescriptionPresenter service;
+		
+	public void setDescription(DomStudentModelContextId model, DomStudentModelContextInfo info) {
 		title.setText(getTitle(info));
 		service.get(model, info)
 		.then(p -> { Widget value = p.getValue();
@@ -67,6 +70,9 @@ public class EastPanel extends ResizeComposite {
 			return p;
 		});
 	}
-
+	
+	public void enableScore(boolean b) {
+		east.setWidgetHidden(north, !b);
+	}
 	
 }
