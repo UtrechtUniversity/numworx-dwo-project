@@ -548,7 +548,9 @@ if(DwoHelper.isSamlLogin()) {
 		LOG.info("Login with " + linkData);
 		SAMLLoginIF login = getSAMLLogin();
 		login.setEndpoint(linkData.get("endpoint").toString());
-		String redirectUri = DwoHelper.getServerUrlPath() + "oauth2/login3.jsp";
+		String hint = linkData.getOrDefault("IDP", "").toString();
+		
+		String redirectUri = DwoHelper.getServerUrlPath() + "oauth2/login3.jsp?idphint="+hint;
 		login.popup(this, redirectUri)
 		.then(pr -> {
 			LOG.info("got " + pr.getValue());

@@ -1661,7 +1661,9 @@ LOG.info("time results = " + (-t) + " ms");
 
         if (dwo_env.contains("entree") && DwoHelper.isTest()) {
         	samlData = new HashMap<>();
-        	samlData.put("IDP", "Entree");
+        	samlData.put("IDP", "entree");
+        	if (DwoHelper.hasProfileRight('H'))
+            	samlData.put("IDP", "conext");       		
         	samlData.put("endpoint", "/dwo/oauth2/entree");
         }
         

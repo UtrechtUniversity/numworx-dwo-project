@@ -37,6 +37,10 @@ function later() {
             if (r) {
             	window.sessionStorage.setItem("r", r);
             }
+            var hint = args.get("idphint")
+            if (hint) {
+            	doSetValue("dme.oauth.idphint", hint);
+            }
         }
 		if ("false" == doInitialize()) {
 			throw "Illegal use"
