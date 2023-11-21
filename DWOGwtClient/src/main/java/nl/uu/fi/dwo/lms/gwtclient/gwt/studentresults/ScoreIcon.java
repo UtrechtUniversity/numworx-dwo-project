@@ -35,6 +35,7 @@ public class ScoreIcon extends ResizeComposite implements HasText {
 	  @UiField OMSVGGElement poly, scale;
 	  @UiField Widget image, icon;
 	  private DockLayoutPanel root;
+	  private String text = "";
 	  
 	/**
 	 * Because this class has a default constructor, it can
@@ -85,6 +86,9 @@ public class ScoreIcon extends ResizeComposite implements HasText {
 
 	@Override
 	public void setText(String text) {
+		this.text = text;
+    	if (text.startsWith("W:"))
+    		text = text.substring(2).trim();
 		title.setText(text);
 	}
 	
@@ -108,6 +112,6 @@ public class ScoreIcon extends ResizeComposite implements HasText {
 
 	@Override
 	public String getText() {
-		return title.getText();
+		return text;
 	}
 }

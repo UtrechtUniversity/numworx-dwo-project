@@ -127,7 +127,7 @@
 								</svg><ui:text from='{rb.NUM_LBL_KNOWLEDGE_BACK}' /></g:Anchor>
 			  </g:south>
 			  <g:south size="2.4"><g:FlowPanel>
-			  	<g:Button ui:field='btn' styleName='{style.graph}'>Graph</g:Button>
+			  	<g:Button ui:field='btn' styleName='{style.graph}'><ui:text from='{rb.NUM_BTN_GRAPH}' /></g:Button>
 			    <g:Button ui:field='filterBtn' styleName='{style.filter}' addStyleNames='{style.space} teacher-only'><ui:text from='{rb.NUM_BTN_Filter}' /></g:Button>
 			    <x:CheckBox ui:field='viewBtn' addStyleNames='{style.filter}' checked="true" >Methode</x:CheckBox>
 			  </g:FlowPanel></g:south>
