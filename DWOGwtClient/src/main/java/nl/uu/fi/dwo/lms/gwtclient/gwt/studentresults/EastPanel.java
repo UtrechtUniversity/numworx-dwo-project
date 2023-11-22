@@ -64,7 +64,10 @@ public class EastPanel extends ResizeComposite {
 	private final DescriptionPresenter service;
 		
 	public void setDescription(DomStudentModelContextId model, DomStudentModelContextInfo info) {
-		title.setText(getTitle(info));
+		String text = getTitle(info);
+		if (text.startsWith("W:")) text = text.substring(2).trim();
+		title.setText(text);
+		
 		service.get(model, info)
 		.then(p -> { Widget value = p.getValue();
 			description.setWidget(value);
