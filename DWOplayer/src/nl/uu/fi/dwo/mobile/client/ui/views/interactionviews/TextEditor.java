@@ -351,19 +351,22 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 			menuheight = 30;
 			menubar.setPixelSize(width-boxsize, menuheight);
 			hbox.add(menubar);
+			hbox.setWidgetTopHeight(menubar, 0, PX, menuheight, PX);
 		}
 		
 		content = getContent(null);
 		contentwrap = content;
 		int contentHeight = height-menuheight-boxsize-padding;
 		content.setPixelSize(width-boxsize-padding, contentHeight);
-		flow.getElement().getStyle().setProperty("minHeight", contentHeight, Unit.PX);
+		flow.getElement().getStyle().setProperty("minHeight", contentHeight, PX);
+		flow.getElement().getStyle().setProperty("minWidth", width-boxsize-padding, PX);
 
 		Style style = content.getElement().getStyle();
 		style.setPadding(padding/2, Unit.PX);
 		//style.setBackgroundColor("white");
 		//style.setOverflow(Overflow.AUTO);
 		hbox.add(content);
+		hbox.setWidgetTopBottom(content, menuheight, PX, 0, PX);
 		//hbox.getElement().getStyle().setBackgroundColor("#C0C0C0");
 		hbox.setPixelSize(width-boxsize, height-boxsize);
 		if (boxMetRand)
