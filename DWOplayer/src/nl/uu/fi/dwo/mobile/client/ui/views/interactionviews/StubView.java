@@ -485,7 +485,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			view.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::tickle()()
 		}
 		wnd.setVisited = function(viewer) {
-			view.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::setVisited()()
+			viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::setVisited()()
 		}
 		
 		
