@@ -1,11 +1,14 @@
 package nl.uu.fi.dwo.interaction.client.keyboard;
 
+import java.util.logging.Logger;
+
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.TextArea;
 
 @SuppressWarnings("deprecation")
 class FocusArea extends TextArea {
+	private static final Logger LOG = Logger.getLogger("FocusArea");
 	private final FocusOnTouch handler;
 
 	static native String getClipboardData(Event event) /*-{
@@ -46,6 +49,11 @@ class FocusArea extends TextArea {
 	            that.@nl.uu.fi.dwo.interaction.client.keyboard.FocusArea::doCopy(Lcom/google/gwt/user/client/Event;)(event);
 	            return false;
 	        });
+	        element.oninput = $entry(function(event)
+	        {
+	        	that.@nl.uu.fi.dwo.interaction.client.keyboard.FocusArea::doInput(Lcom/google/gwt/user/client/Event;)(event);
+				return false;
+	        });
 	    }-*/;
 
 	    @SuppressWarnings("unused")
@@ -64,6 +72,26 @@ class FocusArea extends TextArea {
 	        // and attempt to shove that text into the clipboard
 	        setClipboardData(event, clip);
 	    }
+	    
+	    private void doInput(Event event) {
+	    	String text = getData(event);
+	    	String inputType = getInputType(event);
+	    	LOG.info("do Input t=" + text + " i=" + inputType);
+	    	if (text != null && !text.isEmpty())
+	    	{	if ("insertText".equals(inputType))
+	    			handler.doInput(text);
+	    	    setText("");
+	    	}
+	    	
+	    }
+	    
+	    private native static String getData(Event event) /*-{
+	    	return event.data;
+	    }-*/;
+
+	    private native static String getInputType(Event event) /*-{
+    		return event.inputType;
+    	}-*/;
 
 	    public static native void setClipboardData(Event event, String text)
 	    /*-{

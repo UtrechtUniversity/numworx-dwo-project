@@ -418,4 +418,10 @@ LOG.severe("on key down " + down + " " + code);
 		editor.kopieer(clip);
 		return clip.getClipboard();
 	}
+
+
+	public void doInput(String text) {
+		FormuleEditorIF editor = kb.getEditor();
+		editor.insert(text);
+	}
 }

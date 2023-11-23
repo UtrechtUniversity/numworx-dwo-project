@@ -32,7 +32,7 @@
 <!--   	 	<module>../DWO-apps</module> -->
 <!-- 		<module>../chatgwt</module> -->
 	 	<module>../DWOGwtClient</module>
-<!--  	 	<module>../DWOinteraction</module> -->
+ 	 	<module>../DWOinteraction</module>
         <module>../DWOJClient</module>
       	<module>../DWOServer</module>
      	<module>../DWOplayer</module>
