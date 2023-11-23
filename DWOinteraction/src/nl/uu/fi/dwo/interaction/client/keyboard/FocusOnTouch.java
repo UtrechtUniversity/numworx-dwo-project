@@ -32,7 +32,7 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 	private FocusPanel focusPanel;
 	private static FocusPanel mainPanel;
 	public static boolean AREA = false;
-	private static TextArea area;
+	private static FocusArea area;
 	
 	static public FocusPanel wrap ( Widget w) {
 		return wrap(w, true);
@@ -55,10 +55,11 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 			area = new FocusArea(handler);
 			RootLayoutPanel r = RootLayoutPanel.get();
 			r.add(area);
-			r.setWidgetTopHeight(area, 0, Unit.EM, 1, Unit.EM);
-			r.setWidgetRightWidth(area, 1, Unit.EM, 1, Unit.EM);
+			r.setWidgetTopHeight(area, 50, Unit.PCT, 1, Unit.EM);
+			r.setWidgetRightWidth(area, 50, Unit.PCT, 1, Unit.EM);
 			area.addKeyDownHandler(handler);
 			area.addKeyPressHandler(handler);
+			focus.addAttachHandler(area);
 			}
 			
 		}

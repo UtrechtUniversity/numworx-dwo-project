@@ -1185,7 +1185,8 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	
 	
 	private void insert0(char charAt) {
-		if (charAt >= '\u0300' && charAt <= '\u036F' && cursor > MIN ) {
+		if ( (  (charAt >= '\uDC00' && charAt <= '\uDFFF')||
+				(charAt >= '\u0300' && charAt <= '\u036F')) && cursor > MIN ) {
 			insertCombining(charAt);
 			return;
 		}
