@@ -15,6 +15,7 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.FontStyle;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.WhiteSpace;
@@ -197,6 +198,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		content = getContent(null);
 		contentwrap = content;
 		content.setPixelSize(width - boxsize - padding, 13);
+		flow.getElement().getStyle().setProperty("minWidth", width-boxsize-padding, PX);
 		Style style = content.getElement().getStyle();
 		style.setPadding(padding / 2, Unit.PX);
 		int top = (height - menuheight - boxsize - padding - 13) / 2;
@@ -1477,6 +1479,9 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 
 	@Override
 	public void setFontStyle(int font_style) {
+		Style style = content.getElement().getStyle();
+		style.setFontStyle(font_style == 2 || font_style == 3 ? FontStyle.ITALIC : FontStyle.NORMAL);
+		style.setFontWeight(font_style == 1 || font_style == 3 ? Style.FontWeight.BOLD : Style.FontWeight.NORMAL);
 	}
 
 	@Override
