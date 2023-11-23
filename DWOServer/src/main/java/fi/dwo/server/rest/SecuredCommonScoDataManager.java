@@ -858,6 +858,7 @@ try {
 			}
 			if (onsState == null) return "";
 			JsonArray orGoedFout = onsState.getJsonArray("orGoedFout");
+			if (orGoedFout == null) return "";
 			orGoedFout = orGoedFout.getJsonArray(0);
 			boolean ok = orGoedFout.getBoolean(pagenr);
 			if (COMPLETE.equals(pssc.getCompletionStatus()) && pssd.getCocd() != null) {
