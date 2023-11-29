@@ -110,7 +110,7 @@ div.insert_formule {padding-right:5px; padding-left:5px;}
 
 .textEditor_readonly > div {
 	color: gray;
-	pointer-events: none;
+	pointer-events: auto;
 }
 
 .review { }

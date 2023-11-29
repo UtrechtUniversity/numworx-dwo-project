@@ -25,7 +25,8 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  */
 class Util {
   private static final JSONNumber NUMBER_NUL = new JSONNumber(0);
-  private static final JSONNumber[] EMPTY_NUMBERS = new JSONNumber[0];
+  //private static final JSONNumber[] EMPTY_NUMBERS = new JSONNumber[0];
+  private static JSONNumber[] EMPTY_NUMBERS() { return new JSONNumber[0]; }
   private static final Logger LOG = Logger.getLogger(Util.class.getName());
 
   private Util() {}
@@ -45,10 +46,10 @@ class Util {
 
   static JSONNumber[] getScores(String suspend_data, int aantalOpdrachten) {
       try {
-        if(suspend_data.isEmpty()) return EMPTY_NUMBERS;        
+        if(suspend_data.isEmpty()) return EMPTY_NUMBERS();        
         JSONObject sd = JSONParser.parseLenient(suspend_data).isObject();
         JSONValue value = sd.get("onsState");
-        if(value == null || value.isNull() != null) return EMPTY_NUMBERS;
+        if(value == null || value.isNull() != null) return EMPTY_NUMBERS();
         JSONObject onsState = value.isObject();
         value = onsState.get("orScores");
         if(value == null || value.isNull() != null) value = new JSONArray();
@@ -83,7 +84,7 @@ class Util {
         return scores;
       } catch (Throwable e) {
         LOG.log(Level.WARNING, "getScores\n"+e);
-        return EMPTY_NUMBERS;
+        return EMPTY_NUMBERS();
       }
   }
   
@@ -106,7 +107,7 @@ class Util {
       DomResultStudentScoPage item = new DomResultStudentScoPage(label);
       item.setNodeId(i);
 
-      if (scores[i] == null) scores[i] = new JSONNumber(0); // FIXME dit is alleen voor het testen XXX 
+      //if (scores[i] == null) scores[i] = new JSONNumber(0); // FIXME dit is alleen voor het testen XXX 
 
       if (i < ls && scores[i] != null)
       {
@@ -114,6 +115,10 @@ class Util {
     	  else
     		  item.setScore(scores[i].doubleValue());
     	  item.setMaxScore(maxScores[i].doubleValue());
+      } else 
+      {
+    	  item.setScore(0.0);
+    	  item.setMaxScore(null);
       }
       if (i < correctie.length && correctie[i] != null)
         item.setCorrectie(correctie[i].doubleValue());
@@ -145,7 +150,7 @@ class Util {
 private static JSONNumber[] getCorrectie(String review_data, int aantal, boolean premium) {
     LOG.info("getCorrectie " + review_data);
     if(review_data == null || !review_data.startsWith("{") || !premium)
-        return EMPTY_NUMBERS;
+        return EMPTY_NUMBERS();
     
     try {
       JSONObject review = JSONParser.parseLenient(review_data).isObject();
@@ -161,7 +166,7 @@ private static JSONNumber[] getCorrectie(String review_data, int aantal, boolean
       return result;
     } catch (Exception e) {
         LOG.log(Level.WARNING, "getCorrectie catch", e);
-        return EMPTY_NUMBERS;
+        return EMPTY_NUMBERS();
     }
   }
 

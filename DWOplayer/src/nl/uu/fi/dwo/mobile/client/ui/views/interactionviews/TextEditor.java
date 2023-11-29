@@ -432,7 +432,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		}
 		firstAttempt = lastAttempt = tekst;
 		removeCursor();
-		editable = h == null || h.getBoolean("editable", true);
+		editable = h == null || h.getBoolean("editable", true) || activity.isReview();
 		if (!editable)
 			setReadonly();
 		//shown = true;
@@ -1395,7 +1395,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	public void acceptCBookEvent(CBookEvent event) {
 		String command = event.getCommand();
 		if(ACTION_NOT_EDITIABLE.equals(command)) {
-			setReadonly();
+			if (!activity.isReview()) setReadonly();
 		} else 
 		if(TEXT.equals(command) && editable)
 		{

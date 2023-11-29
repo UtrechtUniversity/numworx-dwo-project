@@ -275,6 +275,7 @@
                         gwt.codeserver.generateJsInteropExports=true
                         -->
                         <configuration>
+                        	<localWorkers>1</localWorkers>
                             <incremental>false</incremental>
                             <precompile>false</precompile>
                             <jsInteropMode>JS_RC</jsInteropMode>
