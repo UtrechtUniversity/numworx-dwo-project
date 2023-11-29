@@ -763,6 +763,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		this.comRoot = comRoot;
 		comRoot.addCBookEventListener(ACTION_NOT_EDITIABLE, this);
 		comRoot.addCBookEventListener(TEXT, this);
+		comRoot.addCBookEventListener(ACTION_RESET, this);
 		if(logging != null)
 			logging.setCommunicationRoot(comRoot);
 	}
