@@ -792,6 +792,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 					map.put("content", allText);
 					if(shown && logging != null) setAttempt(allText);
 					comRoot.fireEvent(new CBookEvent(TextEditor.this, TEXT, map));
+					comRoot.setVisited();
 					
 				}});
 			hbox.add(btn);
