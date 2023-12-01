@@ -6,9 +6,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
@@ -293,7 +295,19 @@ public class DomResultTree {
         Map<PersistenceId, DomStudentScoContext> map) {
       if(item instanceof DomResultStudentScoContext) {
         DomResultStudentScoContext rssc = (DomResultStudentScoContext) item;
-        PersistenceId pid = rssc.getStudentSco().getId();
+        PersistenceId pid = rssc.getStudentSco().getId(); // if null
+        if (pid == null) {
+        	PersistenceId uid = rssc.getStudentSco().getUserID();
+        	PersistenceId sid = rssc.getStudentSco().getScoID();
+        	
+        	// find by userid/scoid
+        	for (DomStudentScoContext ssc : map.values()) {
+        		if ( Objects.equals(uid, ssc.getUserID()) && Objects.equals(sid, ssc.getScoID())) {
+        			pid = ssc.getId();
+        			break;
+        		}
+        	}
+        }
         DomStudentScoContext studentSco = map.remove(pid);
         if(studentSco != null)
         {
