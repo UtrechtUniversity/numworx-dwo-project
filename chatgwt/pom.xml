@@ -10,6 +10,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <restyVersion>2.2.0</restyVersion>
     <allowSnapshots>true</allowSnapshots>
+    <gwtVersion>2.8.2</gwtVersion>
   </properties>
 
   <dependencyManagement>

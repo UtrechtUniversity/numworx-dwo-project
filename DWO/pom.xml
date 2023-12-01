@@ -30,7 +30,7 @@
         <module>../DWO-commons-lib</module>
         <module>../DWO-jclient-lib</module>
 <!--   	 	<module>../DWO-apps</module> -->
-<!-- 		<module>../chatgwt</module> -->
+		<module>../chatgwt</module>
 	 	<module>../DWOGwtClient</module>
  	 	<module>../DWOinteraction</module>
         <module>../DWOJClient</module>
@@ -131,6 +131,18 @@
 	  		<version>2.5.26-SNAPSHOT</version>
 	  		<classifier>dwo2</classifier>		
   			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>nl.uu.fi.dwo.mobile</groupId>
+			<artifactId>interaction</artifactId>
+			<version>2.5.26-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>nl.uu.fi.dwo.mobile</groupId>
+			<artifactId>interaction</artifactId>
+			<scope>provided</scope>
+			<version>2.5.26-SNAPSHOT</version>
+			<classifier>sources</classifier>
 		</dependency>
     	</dependencies>
     </dependencyManagement>
