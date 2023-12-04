@@ -1,5 +1,8 @@
 algebrapijlengwt/
 graphtoolgwt/
 aimodelgwt/
+leerdoelwidgetgwt/
 GraphToolGWT.*
 AIModelGWT.*
+LeerdoelWidgetGWT.*
+styles.css
