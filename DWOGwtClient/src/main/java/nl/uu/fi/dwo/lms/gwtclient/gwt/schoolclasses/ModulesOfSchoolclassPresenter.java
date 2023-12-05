@@ -164,17 +164,16 @@ public class ModulesOfSchoolclassPresenter {
     }
     
     
-    private void prune(Map<String, DomTree<DomCourseOfClass>> children) {
+    private boolean prune(Map<String, DomTree<DomCourseOfClass>> children) {
 		Collection<DomTree<DomCourseOfClass>> collection = children.values();
 		Iterator<DomTree<DomCourseOfClass>> iter = collection.iterator();
 		while (iter.hasNext()) {
-			DomTree<nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass> domTree = (DomTree<nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass>) iter
-					.next();
-			if (domTree.getChildren().isEmpty() && domTree.getObject().getCourse().getWithChildren()) {
+			DomTree<DomCourseOfClass> domTree = iter.next();
+			if (domTree.getObject().getCourse().getWithChildren() && prune(domTree.getChildren())) {
 				iter.remove();
 			}		
 		}
-		
+		return collection.isEmpty();
 	}
 
 	private Promise<Object> updateViewData() {
