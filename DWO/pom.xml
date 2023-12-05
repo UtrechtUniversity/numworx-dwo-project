@@ -17,7 +17,7 @@
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <DWOJClientVersion>2.5.25</DWOJClientVersion>
         <maven.javadoc.skip>true</maven.javadoc.skip>
-        <chatGWTVersion>2.5.25</chatGWTVersion>
+        <chatGWTVersion>2.5.26-SNAPSHOT</chatGWTVersion>
     </properties>
     
     <!-- should move project role names here that fall in the full project scope -->
