@@ -1,6 +1,6 @@
 /** Add css rules here for your application. */
 
-body {
+body, .main {
 	background-color: #eff1f3 !important;
 	font-family: 'Ubuntu';
 }
