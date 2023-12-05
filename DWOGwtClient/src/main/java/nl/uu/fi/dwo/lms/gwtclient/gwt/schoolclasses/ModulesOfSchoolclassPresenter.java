@@ -5,7 +5,10 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -151,14 +154,30 @@ public class ModulesOfSchoolclassPresenter {
 // welke smaak: profile of "standaard"
 // in deze "then" weten we dat profile.getValue() geresolved en valid is.
                     course.setName(dwoGlobalVars.getProfile().getValue().getDwoProfileDescription());      		
-        			return result;
+ // prune
+                    prune(result.getCourseTree().getChildren());
+                    
+                    return result;
         		}
         		
         		);
     }
     
     
-    private Promise<Object> updateViewData() {
+    private void prune(Map<String, DomTree<DomCourseOfClass>> children) {
+		Collection<DomTree<DomCourseOfClass>> collection = children.values();
+		Iterator<DomTree<DomCourseOfClass>> iter = collection.iterator();
+		while (iter.hasNext()) {
+			DomTree<nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass> domTree = (DomTree<nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass>) iter
+					.next();
+			if (domTree.getChildren().isEmpty() && domTree.getObject().getCourse().getWithChildren()) {
+				iter.remove();
+			}		
+		}
+		
+	}
+
+	private Promise<Object> updateViewData() {
         view.setLoadingTableMessageModules();
         tree = reloadTree();
         Promise<DomCoursesOfSchoolclassTree> promise = tree;
