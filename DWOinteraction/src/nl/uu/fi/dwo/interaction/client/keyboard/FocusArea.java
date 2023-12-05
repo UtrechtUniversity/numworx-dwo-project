@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.logical.shared.AttachEvent;
 
 @SuppressWarnings("deprecation")
@@ -131,6 +132,8 @@ class FocusArea extends TextArea implements AttachEvent.Handler {
 		@Override
 		public void onAttachOrDetach(AttachEvent event) {
 			if (!event.isAttached())
-				removeFromParent();
+			{ // AST
+				Scheduler.get().scheduleDeferred(this::removeFromParent);
+			}
 		}
 }

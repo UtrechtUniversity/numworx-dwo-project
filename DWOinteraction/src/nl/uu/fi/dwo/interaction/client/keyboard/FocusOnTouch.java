@@ -52,16 +52,15 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 		{
 			mainPanel = focus;
 			if (AREA) {
-			area = new FocusArea(handler);
-			RootLayoutPanel r = RootLayoutPanel.get();
-			r.add(area);
-			r.setWidgetTopHeight(area, 50, Unit.PCT, 1, Unit.EM);
-			r.setWidgetRightWidth(area, 50, Unit.PCT, 1, Unit.EM);
-			area.addKeyDownHandler(handler);
-			area.addKeyPressHandler(handler);
-			focus.addAttachHandler(area);
-			}
-			
+				area = new FocusArea(handler);
+				RootLayoutPanel r = RootLayoutPanel.get();
+				r.add(area);
+				r.setWidgetTopHeight(area, 50, Unit.PCT, 1, Unit.EM);
+				r.setWidgetRightWidth(area, 50, Unit.PCT, 1, Unit.EM);
+				area.addKeyDownHandler(handler);
+				area.addKeyPressHandler(handler);
+				focus.addAttachHandler(area);
+			}			
 		}
 		boolean hastouch = com.google.gwt.event.dom.client.TouchStartEvent.isSupported();
 		focus.addKeyDownHandler(handler);
