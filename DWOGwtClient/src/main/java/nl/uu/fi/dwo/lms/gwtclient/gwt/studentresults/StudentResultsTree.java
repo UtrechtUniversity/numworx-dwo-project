@@ -62,6 +62,14 @@ public class StudentResultsTree extends Composite {
 	  		String title = StudentModelPresenter.getTitle(info,lang);
 			return Util.summaryItem(title, StudentResultsPresenter.NULLSCORE, 0);
 		}
+
+		Widget summary(String title, DomStudentModelScore<?> score, int level) {
+	  		return Util.summaryItem(title, score, level);
+		}
+
+		Widget score(String title, DomStudentModelScore<?> s, int level) {
+			return Util.scoreItem(title, s, level);
+		}
 	}
 
 	class ZonderTitel extends Strategy {
@@ -74,6 +82,12 @@ public class StudentResultsTree extends Composite {
 		Widget root (DomStudentModelContextInfo info) {
 	  		String title = StudentModelPresenter.getTitle(info,lang);
 			return new SummaryIcon(title);
+		}
+		Widget summary(String title, DomStudentModelScore<?> score, int level) {
+	  		return new SummaryIcon(title);
+		}
+		Widget score(String title, DomStudentModelScore<?> s, int level) {
+			return new ScoreIcon(title);
 		}
 
 	}
@@ -259,7 +273,7 @@ public class StudentResultsTree extends Composite {
 			for( Map.Entry<String, Set<Integer>> entry: books.entrySet()) {
 				String book = entry.getKey();
 				for (Integer chapter: entry.getValue()) {
-					addToMethodTree(item, book, chapter, Util.scoreItem(title, s, 3), method, s);
+					addToMethodTree(item, book, chapter, to.score(title, s, 3), method, s);
 				}
 			}
 		}
@@ -362,7 +376,7 @@ public class StudentResultsTree extends Composite {
 		scoreMap.forEach( (key, value) -> 
 			{	String t = ((HasText) key.getWidget()).getText();
 				int i = key.getParentItem() == null ? 0 : 1;
-	 			key.setWidget(Util.summaryItem(t, value, i));
+	 			key.setWidget(to.summary(t, value, i));
 			}
 		);	 
 	} 
@@ -426,23 +440,23 @@ public class StudentResultsTree extends Composite {
 		removeItems();
 		String title = method.getMethod();
 		Map<String, Set<Integer>> bookfilter = filter.getOrDefault(method.key(), Collections.emptyMap());
-		Widget html = Util.summaryItem(title, StudentResultsPresenter.NULLSCORE, 0);
+		Widget html = to.summary(title, StudentResultsPresenter.NULLSCORE, 0);
 		TreeItem ti = addItem(html);
 		List<String> books = method.books;
 		for(int i = 0; i < books.size(); i++) {
 			String booktitle = books.get(i);
 			if (! filter.isEmpty() && !bookfilter.containsKey(booktitle)) continue;
 			Set<Integer> chapterfilter = bookfilter.getOrDefault(booktitle, Collections.emptySet());
-			html = Util.summaryItem(booktitle, StudentResultsPresenter.NULLSCORE, 1);
+			html = to.summary(booktitle, StudentResultsPresenter.NULLSCORE, 1);
 			TreeItem bi = ti.addItem(html);
 			bi.setUserObject(Integer.valueOf(i));
 			List<String> chapters = method.chapters.get(i);
 			for(int j = 0; j < chapters.size(); j++) {
 				if ( !chapterfilter.isEmpty() && !chapterfilter.contains(Integer.valueOf(j+1))) continue;
-				html = Util.summaryItem(chapters.get(j), StudentResultsPresenter.NULLSCORE, 2);
+				html = to.summary(chapters.get(j), StudentResultsPresenter.NULLSCORE, 2);
 				TreeItem ci = bi.addItem(html);
 				ci.setUserObject(new int[] {i, j});
-				html = Util.summaryItem(StudentResultsPresenter.BEGRIPPEN_EN_VAKTAAL, StudentResultsPresenter.NULLSCORE, 3);
+				html = to.summary(StudentResultsPresenter.BEGRIPPEN_EN_VAKTAAL, StudentResultsPresenter.NULLSCORE, 3);
 				TreeItem wi = ci.addItem(html);
 				wi.setUserObject("W:");
 			}
@@ -450,7 +464,7 @@ public class StudentResultsTree extends Composite {
 		ti.setUserObject(item);
 		promisedScore.then(s -> {
 	          DomStudentModelStructureScore score = s.getValue().getDomStudentModelStructureScore();
-	          ti.setWidget(Util.summaryItem(title, score ,0));
+	          ti.setWidget(to.summary(title, score ,0));
 	          //ti.setSelected(true);
 	          addToMethodTree2(ti, item, score, method); // hier moet er worden ingebroken
 	          trimMethodTree(ti);

@@ -171,12 +171,10 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.mobile</groupId>
 			<artifactId>interaction</artifactId>
-			<version>2.5.26-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo.mobile</groupId>
 			<artifactId>interaction</artifactId>
-			<version>2.5.26-SNAPSHOT</version>
 			<classifier>sources</classifier>
 		</dependency>
 		<dependency>

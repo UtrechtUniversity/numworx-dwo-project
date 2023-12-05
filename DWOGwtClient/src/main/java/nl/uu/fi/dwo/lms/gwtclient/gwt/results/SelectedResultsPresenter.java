@@ -12,8 +12,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -334,6 +336,34 @@ public class SelectedResultsPresenter implements ResultEventHandler {
             DomResultScoContext sco = items.get(scoid);
             if (sco != null) {
                 Collection<DomResultStudentScoContext> values = sco.getChildren().values();
+// collection aanvullen met ontbrekende studenten.
+                DomResultTeacher<DomResultStudent> studentTree = resultTree.getStudentTree();
+                DomResultSchoolClass<DomResultStudent> domschoolclass = studentTree.getChildren().get(schoolclass);
+                List<DomStudent> students = domschoolclass.getChildren().values().stream().map(DomResultStudent::getStudent).collect(Collectors.toList());
+                if (values.size() != students.size()) {
+                	LOG.severe("AANVULLEN HIER");
+                	Function<DomResultStudentScoContext, PersistenceId> keyMapper = context -> context.getStudentSco().getUserID();
+					Function<DomResultStudentScoContext, DomResultStudentScoContext> valueMapper = Function.identity();
+					Collector<DomResultStudentScoContext, ?, Map<PersistenceId, DomResultStudentScoContext>> collector = Collectors.<DomResultStudentScoContext, PersistenceId, DomResultStudentScoContext>toMap(keyMapper , valueMapper);
+					Map<PersistenceId, DomResultStudentScoContext> asMap = 
+                			values.stream().collect(collector);
+					for (DomStudent student : students) {
+						if (! asMap.containsKey(student.getId())) {
+							DomStudentScoContext studentscocontext = new DomStudentScoContext();
+							studentscocontext.setUserID(student.getId());
+							studentscocontext.setScoID(scoid);
+							/// ....
+							DomResultStudentScoContext value = new DomResultStudentScoContext(studentscocontext, student);
+							sco.getChildren().put(student.getId(), value);
+						}
+					}
+					//values = asMap.values();
+					// terugstoppen
+                }
+                
+                
+                
+                
                 int size = values.size(); if (size < 1) size = 1;
                 count = 0;
                 step = 100.0F/size;              
