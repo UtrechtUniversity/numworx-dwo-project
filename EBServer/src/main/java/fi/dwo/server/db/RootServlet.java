@@ -24,7 +24,7 @@ public class RootServlet extends HttpServlet {
 	@Override
 	public void init() throws ServletException {
 		String param = getServletContext().getInitParameter("fi.dwo.server.db.root");
-		if (param != null)
+		if (param != null && !param.isEmpty() && !"${UU_INDEX}".equals(param))
 			index = param;
 	}
 

@@ -235,6 +235,10 @@
     	<servlet-class>fi.dwo.server.db.DownLoad</servlet-class>
     </servlet>
     <servlet>
+    	<servlet-name>redirect-root</servlet-name>
+    	<servlet-class>fi.dwo.server.db.RootServlet</servlet-class>
+    </servlet>
+    <servlet>
         <description>Datasource servlet</description>
         <servlet-name>xmlrpc</servlet-name>
         <servlet-class>fi.dwo.server.persistence.DataSourceAccessServlet</servlet-class>
@@ -567,6 +571,10 @@
     <servlet-mapping>
     	<servlet-name>redirect-download</servlet-name>
     	<url-pattern>/downloads/</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+    	<servlet-name>redirect-root</servlet-name>
+    	<url-pattern></url-pattern>
     </servlet-mapping>
  	
     <!-- Jersey JAX_RS JAXB JSON service provider -->

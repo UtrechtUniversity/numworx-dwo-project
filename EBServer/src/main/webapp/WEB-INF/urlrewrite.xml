@@ -38,11 +38,11 @@
 		<from>^/dwo/jars/(.+)$</from>
 		<to type="temporary-redirect">https://cdn.dwo.nl/jars/$1</to>
 	</rule>
-    <rule>
-        <note>Default rule when no other content-type was asked for</note>
-        <from>^/$</from>
-        <to>index.jsp</to>
-    </rule>
+<!--     <rule> -->
+<!--         <note>Default rule when no other content-type was asked for</note> -->
+<!--         <from>^/$</from> -->
+<!--         <to>index.jsp</to> -->
+<!--     </rule> -->
     <rule>
     	<note>/rest/userid+schoolid/*</note>
     	<from>^/dwo/rest/sec:[^/]+/(.*)$</from>
