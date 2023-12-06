@@ -46,19 +46,15 @@ public class VariableCollection
 			String tok = tokenizer[i];
 			try
 			{
-				int index = s.indexOf("=");
+				int index = tok.indexOf("=");
 				if (index > 0)
 				{
-					String name = s.substring(0, index);
+					String name = tok.substring(0, index);
 					if (Letter.isLetter(name.charAt(0)))
 					{
 						setVariable(tok);
 					}
-					else
-						return true;
 				}
-				else
-					return false;
 			}
 			catch (Exception e)
 			{
