@@ -275,6 +275,17 @@ div.listItem-dwo-separator {
 }
 .scorewidget .scorewidget-score {
 	float: right;
+	display: block;
+	width: fit-content;
+	
+}
+
+.scorewidget .scorewidget-titel {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	display: block;
+	width: auto;
 }
 
 .scorewidget.scorewidget-goedFout .scorewidget-score::after, .scorewidget.scorewidget-bezocht .scorewidget-score::after {

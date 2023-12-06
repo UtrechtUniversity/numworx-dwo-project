@@ -267,8 +267,8 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 	}
 
 	interface AnchorTemplate extends SafeHtmlTemplates {
-		@Template("<span class='scorewidget-titel'>{0}</span><span class='scorewidget-score'>{1}</span>")
-		SafeHtml titleScore(String title, String score);
+		@Template("<span class='scorewidget-score'>{1}</span><span class='scorewidget-titel'>{0}</span>")
+		SafeHtml titleScore(String title, String scorex);
 	}
 	
 	static final AnchorTemplate ANCHOR_TEMPLATE = GWT.create(AnchorTemplate.class);
