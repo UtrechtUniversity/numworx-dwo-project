@@ -9,7 +9,7 @@ public class BaseCase extends GWTTestCase
 	@Override
 	public String getModuleName()
 	{
-		return "nl.uu.fi.dwo.mobile.DWO2player";
+		return "nl.uu.fi.dwo.mobile.DWO2playerDebug";
 	}
 	
 	@Test 
