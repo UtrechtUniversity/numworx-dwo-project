@@ -3,6 +3,7 @@ package fi.dwo.server.rest;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters;
+import fi.dwo.server.BUILD;
 import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
 import fi.dwo.server.rest.util.HeartBeat;
 import java.io.FileNotFoundException;
@@ -168,11 +169,10 @@ public class PublicServerStatus {
     @Produces({"text/html"})
     @Path("/version")
     public String getVersion() throws IOException {
-        Attributes manifestAttributes = getManifestAttributes();
-        String softwareVersion = manifestAttributes.getValue("Implementation-Version");
+        String softwareVersion = BUILD.version;
         if (softwareVersion != null) softwareVersion = softwareVersion.replace("-SNAPSHOT", ""); // remove -SNAPSHOT suffix
-        String revision = manifestAttributes.getValue("Implementation-Build");
-    	return "<span style='float:right;color:white'>" + softwareVersion + " " + revision + "</span>";
+        String revision = BUILD.buildNumber;
+    	return "<span style='float:right;color:white;font-size:14px'>" + softwareVersion + " " + revision + "</span>";
     }
     
     

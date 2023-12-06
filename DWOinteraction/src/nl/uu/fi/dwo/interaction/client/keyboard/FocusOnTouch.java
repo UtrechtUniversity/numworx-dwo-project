@@ -52,16 +52,15 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 		{
 			mainPanel = focus;
 			if (AREA) {
-			area = new FocusArea(handler);
-			RootLayoutPanel r = RootLayoutPanel.get();
-			r.add(area);
-			r.setWidgetTopHeight(area, 50, Unit.PCT, 1, Unit.EM);
-			r.setWidgetRightWidth(area, 50, Unit.PCT, 1, Unit.EM);
-			area.addKeyDownHandler(handler);
-			area.addKeyPressHandler(handler);
-			focus.addAttachHandler(area);
-			}
-			
+				area = new FocusArea(handler);
+				RootLayoutPanel r = RootLayoutPanel.get();
+				r.add(area);
+				r.setWidgetTopHeight(area, 50, Unit.PCT, 1, Unit.EM);
+				r.setWidgetRightWidth(area, 50, Unit.PCT, 1, Unit.EM);
+				area.addKeyDownHandler(handler);
+				area.addKeyPressHandler(handler);
+				focus.addAttachHandler(area);
+			}			
 		}
 		boolean hastouch = com.google.gwt.event.dom.client.TouchStartEvent.isSupported();
 		focus.addKeyDownHandler(handler);
@@ -265,13 +264,13 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 			} else
 		
 		
-			if(code == 88 && event.isControlKeyDown()) //ctrl+x
+			if(code == 88 && event.isControlKeyDown() && !AREA) //ctrl+x
 			{
 				editor.knip(clip);
 				event.preventDefault();
 				event.stopPropagation();
 			}
-			else if(code == 67 && event.isControlKeyDown()) //ctrl+c
+			else if(code == 67 && event.isControlKeyDown() && !AREA) //ctrl+c
 			{
 				editor.kopieer(clip);
 				event.preventDefault();
