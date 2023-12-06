@@ -41,6 +41,7 @@ public class VariableCollection
 		s = sNieuw;
 
 		String[] tokenizer = s.split("[;\n]+");
+		boolean result = true;
 		for (int i = 0; i < tokenizer.length; i++)
 		{
 			String tok = tokenizer[i];
@@ -53,15 +54,17 @@ public class VariableCollection
 					if (Letter.isLetter(name.charAt(0)))
 					{
 						setVariable(tok);
-					}
-				}
+					} else 
+						result = false;
+				} else
+					result = false;
 			}
 			catch (Exception e)
 			{
 				return false;
 			}
 		}
-		return true;
+		return result;
 	}
 
 	public void setVariable(String s)
