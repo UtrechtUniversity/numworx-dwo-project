@@ -24,33 +24,6 @@
 <!--         </rule> -->
 
 	<rule>
-		<note>/profile/language/dwo.jnlp</note>
-		<from>^/dwo/([0-9]+)/([a-z][a-z])/dwo.jnlp$</from>
-		<to>/dwo/dwojnlppage?profile=$1&amp;language=$2</to>
-	</rule>
-	<rule>
-		<note>/profile/language/index.html</note>
-		<from>^/dwo/([0-9]+)/([a-z][a-z])/index.html$</from>
-		<to>/dwo/dwoindexpage?profile=$1&amp;language=$2</to>
-	</rule>
-	<rule>
-		<note>/profile/language/</note>
-		<from>^/dwo/([0-9]+)/([a-z][a-z])/$</from>
-		<to>/dwo/dwoindexpage?profile=$1&amp;language=$2</to>
-	</rule>
-	<rule>
-		<note>/profile/language</note>
-		<from>^/([0-9]+)/([a-z][a-z])$</from>
-		<to type="redirect">/dwo/$1/$2/index.html</to>
-	</rule>
-	
-	<rule>
-		<note>/profile/language/dwo.html</note>
-		<from>^/dwo/([0-9]+)/([a-z][a-z])/dwo.html$</from>
-		<to>/dwo/dwoindexpage?profile=$1&amp;language=$2</to>
-	</rule>
-
-	<rule>
 		<note>DWO.properties in DWOmAccess</note>
 		<from>^/DWOmAccess/lti/DWO.properties</from>
 		<to type="redirect">/dwo/DWO.properties</to>
@@ -75,10 +48,10 @@
     	<from>^/dwo/rest/sec:[^/]+/(.*)$</from>
     	<to>/dwo/rest/secure/$1</to>   
     </rule>
-	<rule>
-		<note>/downloads naar numworx</note>
-		<from>^/downloads/$</from>
-		<to type="temporary-redirect">https://www.numworx.nl/help/downloads/</to>
-	</rule>
+<!-- 	<rule> -->
+<!-- 		<note>/downloads naar numworx</note> -->
+<!-- 		<from>^/downloads/$</from> -->
+<!-- 		<to type="temporary-redirect">https://www.numworx.nl/help/downloads/</to> -->
+<!-- 	</rule> -->
        
 </urlrewrite>   
