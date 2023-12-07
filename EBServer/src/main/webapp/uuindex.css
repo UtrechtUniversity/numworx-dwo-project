@@ -1,0 +1,18 @@
+body {
+	background-color: #d2e5f5;
+	background-size: 360px 349px;
+	background-repeat: no-repeat;
+	background-position: right 60px top 20px;
+	background-image: url('dwo/tablet/images/numworx/favicon-numworx-wit.svg');
+}
+
+.footer {
+	position: absolute;
+	bottom: 0em;
+	right: 0em;
+	background-color: #d2e5f5;
+}
+
+.footer iframe {
+	border: 0;
+}
