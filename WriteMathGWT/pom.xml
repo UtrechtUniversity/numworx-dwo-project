@@ -4,7 +4,7 @@
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO</artifactId>
         <relativePath>../DWO/pom.xml</relativePath>
-        <version>2.5.27-SNAPSHOT</version>
+        <version>2.5.26</version>
 	</parent>
 	<groupId>fi.writemathgwt</groupId>
 	<artifactId>WriteMathGWT</artifactId>
