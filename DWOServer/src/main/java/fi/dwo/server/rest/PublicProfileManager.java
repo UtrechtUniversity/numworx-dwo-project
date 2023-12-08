@@ -1,15 +1,10 @@
 package fi.dwo.server.rest;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.GZIPOutputStream;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -18,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -25,7 +21,6 @@ import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
-import fi.dwo.server.PersistentDataManagers.core.CourseDataManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 
 @Path("/public/profile")
@@ -36,6 +31,9 @@ public class PublicProfileManager {
 	@Path("/{id}")
 	@Produces({"application/json"})
 	public DomDwoProfileFull get( @PathParam("id") String id ) {
+		DomDwoProfileFull result = PublicProfileCache.getFromCache(id);
+		if (result != null) return result;
+		
 		PersistentDwoProfile profile;
 		profile = DwoProfileManager.findEntity(id);
 		if(profile == null) 

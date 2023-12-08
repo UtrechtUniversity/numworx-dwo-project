@@ -231,6 +231,14 @@
         <servlet-class>fi.dwo.server.persistence.DownloadServlet</servlet-class>
     </servlet>
     <servlet>
+    	<servlet-name>redirect-download</servlet-name>
+    	<servlet-class>fi.dwo.server.db.DownLoad</servlet-class>
+    </servlet>
+    <servlet>
+    	<servlet-name>redirect-root</servlet-name>
+    	<servlet-class>fi.dwo.server.db.RootServlet</servlet-class>
+    </servlet>
+    <servlet>
         <description>Datasource servlet</description>
         <servlet-name>xmlrpc</servlet-name>
         <servlet-class>fi.dwo.server.persistence.DataSourceAccessServlet</servlet-class>
@@ -415,6 +423,17 @@
     	<param-value>nl.numworx.oauth2client.server.WAYFLogin</param-value>
     </init-param>
   </servlet>
+  <servlet>
+    <servlet-name>oauth2-solis</servlet-name>
+    <servlet-class>nl.numworx.oauth2client.server.LoginServlet</servlet-class>
+    <init-param>
+    	<param-name>config</param-name>
+    	<param-value>nl.numworx.oauth2client.server.UULogin</param-value>
+    </init-param>
+  </servlet>
+
+
+
 
   <servlet>
   	<servlet-name>dwo-redirect</servlet-name>
@@ -549,6 +568,14 @@
         <servlet-name>download</servlet-name>
         <url-pattern>*.jar</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+    	<servlet-name>redirect-download</servlet-name>
+    	<url-pattern>/downloads/</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+    	<servlet-name>redirect-root</servlet-name>
+    	<url-pattern></url-pattern>
+    </servlet-mapping>
  	
     <!-- Jersey JAX_RS JAXB JSON service provider -->
     <servlet-mapping>
@@ -594,6 +621,12 @@
   	<servlet-name>oauth2-entree</servlet-name>
  	<url-pattern>/dwo/oauth2/entree</url-pattern>
  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>oauth2-solis</servlet-name>
+ 	<url-pattern>/dwo/oauth2/mfalogin</url-pattern>
+ 	<url-pattern>/dwo/oauth2/uulogin</url-pattern>
+ </servlet-mapping>
+ 
  <servlet-mapping>
  	<servlet-name>dwo-redirect</servlet-name>
  	<url-pattern>/dwo/oauth2/dwo-redirect</url-pattern>

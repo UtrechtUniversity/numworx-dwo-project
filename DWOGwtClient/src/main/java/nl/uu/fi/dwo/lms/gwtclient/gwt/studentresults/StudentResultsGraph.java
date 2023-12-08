@@ -59,12 +59,14 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -712,7 +714,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		private OMSVGRectElement rect;
 		private boolean voorkennis;
 		private float tmpx, tmpy;
-		private String parent = "";
+		private String parent = "", caption;
 		
 //		public String toString() {
 //			return "Node[" + obj.getInfo().getId() + "," + obj.getInfo().getTitle().get(lang) + "]";
@@ -781,8 +783,9 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 				nodeColor = kennenNodeColor;
 				nodeBorderColor = kennenNodeBorderColor;
 				g.addClassNameBaseVal(bundle.css().kennen());
+				descr = descr.substring(2).trim();
 			}
-			text = doc.createSVGTextElement(cx, cy, unitType, parent + descr);
+			text = doc.createSVGTextElement(cx, cy, unitType, caption = parent + descr);
 		}
 
 		public Node addClickHandler() {
@@ -893,29 +896,34 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		@Override
 		public void onClick(ClickEvent event) {
 			hideDescription();
+			final int popupWidth = Math.min(436, Window.getClientWidth()-20); // 20 is marge: randjes, etc
 			popup = new DialogBox(true, true);
 			SafeHtmlBuilder builder = new SafeHtmlBuilder();
-			builder.appendEscaped(parent + StudentModelPresenter.getTitle(obj.getInfo(),lang));
+			builder.appendEscaped(caption);
 			popup.getCaption().setHTML(builder.toSafeHtml());
 			DialogBox.Caption cap = popup.getCaption();
 			cap.asWidget().addDomHandler(e -> {
-				if (e.getX() > 400)
+				if (e.getX() > popupWidth - 36)
 					popup.hide();
 			}, ClickEvent.getType());
-			popup.setTitle(StudentModelPresenter.getTitle(obj.getInfo(),lang));
+			popup.setTitle(caption);
 			popup.setStyleDependentName("Node", true);
 			popup.setGlassEnabled(true);
+			popup.setGlassStyleName("score-frame-Glass");
 			popup.getElement().getStyle().setZIndex(10000);
-
+			int popupHeight = Math.min(400, Window.getClientHeight()-40); // xx is verticale marge, randjes, titel
 			description.get(current, obj.getInfo()).then(p -> {
 				Widget w = p.getValue();
 				w.addStyleDependentName("Graph");
+				w = new ScrollPanel(w);
 				popup.add(w);
+				w.setPixelSize(popupWidth, popupHeight);
 				popup.center();
 				return null;
 			}, p -> { 
 				Widget w = new Label(p.getFailure().toString());
 				w.addStyleDependentName("Graph");
+				w.setPixelSize(popupWidth, popupHeight);
 				popup.add(w);
 				popup.center();
 			});

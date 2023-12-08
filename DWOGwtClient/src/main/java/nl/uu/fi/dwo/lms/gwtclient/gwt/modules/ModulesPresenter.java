@@ -268,7 +268,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         		|| select(SelectedView.ORGANISATION, message))
         {
           mainView.setIdleTimeout(MainPresenter.IDLE);
-        } else if (select(SelectedView.TRAIL,message)) {
+        } else if (select(SelectedView.TRAIL,message)||select(SelectedView.HOME, message)) {
         } 
         else if (message.startsWith(TRAIL +":")) {
           message = message.substring(TRAIL.length()+1);
@@ -340,6 +340,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         case MODULESVIEW:
         case MAYBELOGOUT:
         case GOTO_URL:
+        case HOME:
           return;
         case CLOSING:
         	view.sendMessage(select.name());

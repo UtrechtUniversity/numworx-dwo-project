@@ -5,6 +5,7 @@ import java.util.Map;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
@@ -16,13 +17,18 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.SummaryIcon;
 import nl.uu.fi.dwo.rest.dom.DomTree;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
-abstract class AbstractStudentModelView implements SelectionHandler<TreeItem> {
+public abstract class AbstractStudentModelView implements SelectionHandler<TreeItem> {
 
 	protected final EventBus bus;
-	protected final RootPanel treewrap;
+	protected final Panel treewrap;
 
-	AbstractStudentModelView(String treeId, EventBus bus) {
+	public AbstractStudentModelView(String treeId, EventBus bus) {
 		treewrap = RootPanel.get(treeId);
+		this.bus = bus;
+	}
+	
+	public AbstractStudentModelView(Panel parent, EventBus bus) {
+		treewrap = parent;
 		this.bus = bus;
 	}
 

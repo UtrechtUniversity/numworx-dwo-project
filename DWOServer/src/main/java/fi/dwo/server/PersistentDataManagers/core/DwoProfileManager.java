@@ -10,8 +10,10 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.RollbackException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -56,16 +58,34 @@ public class DwoProfileManager {
      * Update
      *
      * @param dwoProfile
+     * @return 
      * @throws Exception
      */
-    public static void edit(PersistentDwoProfile dwoProfile) throws PersistenceException, Exception {
+    public static PersistentDwoProfile edit(PersistentDwoProfile dwoProfile) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             dwoProfile = em.merge(dwoProfile);
             em.getTransaction().commit();
-        } catch (Exception e) {
+            return dwoProfile;
+        } 
+        catch (OptimisticLockException e) {
+        	LOG.log(Level.WARNING, "optlock violation " + dwoProfile.getDwoProfileID() + "v" + dwoProfile.getOptlock());
+        	throw e;
+        }
+        catch (RollbackException e) {
+        	Throwable t = e.getCause();
+        	if (t instanceof OptimisticLockException) {
+             	LOG.log(Level.WARNING, "optlock violation " + dwoProfile.getDwoProfileID() + "v" + dwoProfile.getOptlock());     		
+        		throw (OptimisticLockException) t;
+        	}
+        	throw e;
+        }
+        catch (PersistenceException e) {
+        	throw e;
+        }
+        catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Long id = dwoProfile.getDwoProfileID();

@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+
+import fi.dwo.dwojapplet.BUILD;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 
@@ -23,6 +25,8 @@ public class DBInstaller implements ServletContextListener {
 
   public void contextInitialized(ServletContextEvent e) {
     Driver driver;
+    LOG.info("Version " + BUILD.version + "r" + BUILD.buildNumber);
+    
     try {
       driver = ServiceLoader.load(java.sql.Driver.class).iterator().next();
       LOG.log(Level.INFO, "initialized " + driver);

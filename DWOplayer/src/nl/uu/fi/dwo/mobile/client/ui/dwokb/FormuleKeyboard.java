@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.OsDetection;
-import com.googlecode.mgwt.ui.client.widget.RoundPanel;
+//import com.googlecode.mgwt.ui.client.widget.RoundPanel;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import fi.writemathgwt.client.WritePanel;
@@ -370,19 +370,23 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 		return fp;
 	}
 
-	public static Panel getSelectionMenu(FormuleHolder editor, int x, int y)
+	public static com.googlecode.mgwt.ui.client.widget.panel.Panel getSelectionMenu(FormuleHolder editor, int x, int y)
 	{
-		RoundPanel fp = new RoundPanel();
+		//TouchPanel fp = new TouchPanel();
+		// 2.0.0 manier voor een roundpanel
+		com.googlecode.mgwt.ui.client.widget.panel.Panel fp2 = new com.googlecode.mgwt.ui.client.widget.panel.Panel();
+		fp2.setRound(true);
+		//fp = fp2.container; // geen idee of dat werkt..
 
 		//fp.add(FormuleKeyBoardButtons.getCopyButton());
 		//fp.add(FormuleKeyBoardButtons.getPasteButton());
 
-		Style s = fp.getElement().getStyle();
+		Style s = fp2.getElement().getStyle();
 
 		s.setPosition(Position.ABSOLUTE);
 		s.setTop(y, Unit.PX);
 		s.setLeft(x, Unit.PX);
-		return fp;
+		return fp2;
 	}
 
 	public String getClipboard()

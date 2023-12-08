@@ -4,7 +4,7 @@
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO</artifactId>
-        <version>2.5.25</version>
+        <version>2.5.26</version>
         <relativePath>../DWO/pom.xml</relativePath>
     </parent>
     <artifactId>DWOServer</artifactId>
@@ -77,7 +77,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -188,6 +188,10 @@
 			<artifactId>jjwt-jackson</artifactId>
 			<version>0.11.5</version>
 		</dependency>
+        <dependency>
+            <groupId>nl.uu.fi.dwo.rest</groupId>
+            <artifactId>DWO-jclient-lib</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>

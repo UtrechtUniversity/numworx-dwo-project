@@ -9,7 +9,11 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.TouchCancelEvent;
+import com.google.gwt.event.dom.client.TouchEndEvent;
 import com.google.gwt.event.dom.client.TouchEvent;
+import com.google.gwt.event.dom.client.TouchMoveEvent;
+import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.uibinder.client.UiConstructor;
@@ -19,11 +23,7 @@ import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.Image;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
-import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
-import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.dom.client.recognizer.longtap.HasLongTapHandlers;
 import com.googlecode.mgwt.dom.client.recognizer.longtap.LongTapEvent;
 import com.googlecode.mgwt.dom.client.recognizer.longtap.LongTapHandler;
@@ -68,7 +68,7 @@ public class TKey extends Composite implements HasHTML, HasClickHandlers, HasLon
 		}
 
 		@Override
-		public void onTouchCanceled(TouchCancelEvent event) {
+		public void onTouchCancel(TouchCancelEvent event) {
 			fine("TouchCanceled");
 			event.preventDefault();
 		}

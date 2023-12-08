@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO</artifactId>
-		<version>2.5.25</version>
+		<version>2.5.26</version>
 		<relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 	<artifactId>EBServer</artifactId>
@@ -37,6 +37,42 @@
 				    <groupId>com.fasterxml.jackson.core</groupId>
 				    <artifactId>jackson-core</artifactId>
 				    <version>2.13.4</version>
+				</dependency>
+				<dependency>			
+				    <groupId>nl.uu.fi.dwo.lms</groupId>
+    				<artifactId>DWOGwtClient</artifactId>
+					<version>2.5.26</version>
+					<exclusions>
+						<exclusion>
+							<groupId>org.vectomatic</groupId>
+							<artifactId>lib-gwt-svg</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>nl.uu.fi.dwo</groupId>
+							<artifactId>DWO-gwt-lib</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>com.google.dagger</groupId>
+							<artifactId>dagger-gwt</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>org.vectomatic</groupId>
+							<artifactId>lib-gwt-file</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>nl.uu.fi.dwo.ideas</groupId>
+							<artifactId>IdeasGWT</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>nl.uu.fi.dwo.lms</groupId>
+							<artifactId>ChatGWT-shared</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>nl.uu.fi.dwo.mobile</groupId>
+							<artifactId>promise-api</artifactId>
+						</exclusion>
+					</exclusions>
+					<classifier>classes</classifier>
 				</dependency>
 
 		<dependency>
@@ -165,7 +201,7 @@
 		<dependency>
 		     <groupId>nl.uu.fi.dwo.lms</groupId>
              <artifactId>ChatGWT-server</artifactId>
-             <version>2.5.25</version>
+             <version>2.5.26</version>
              <type>war</type>
 			 <scope>runtime</scope>
 		</dependency>
@@ -179,7 +215,7 @@
 	<dependency>
 		<groupId>nl.uu.fi.dwo.lms</groupId>
 		<artifactId>DWOGwtClient</artifactId>
-		<version>2.5.25</version>
+		<version>2.5.26</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
@@ -329,6 +365,19 @@
 					<timestampFormat>{0,date,yyyyMMddHHmmss}</timestampFormat>
 				</configuration>
 			</plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>templating-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <id>filter-src</id>
+                        <goals>
+                            <goal>filter-sources</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -439,17 +488,16 @@
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
-				<!--<artifactId>tomcat8-maven-plugin</artifactId> -->
-				<!--<version>3.0-r1756463</version> -->
 				<configuration>
                         <systemProperties>
                         	<CDN_HOST>cdn.dwo.nl</CDN_HOST>
                         	<CDNURL>https://cdn.dwo.nl</CDNURL>
                             <ENV_NOSEB>false</ENV_NOSEB>
-                            <DWO_ENV>test entree</DWO_ENV>
+                            <DWO_ENV>test</DWO_ENV>
                             <SEB_TOETS_MAC>9153c48c6111d2733add6e1d596db4059c302cf736dcb18ca498288e21404507,c5d129e27f57b1970d2ffda2ed745a20f7d8e12ed9bfbfb168e83f75f9f870cf</SEB_TOETS_MAC>
   							<ALLOW_ORIGIN>http://localhost:${http.port} https://hub-dev.dwo.nl https://entree-s.dwo.nl </ALLOW_ORIGIN>
  							<MEMCACHED>test:localhost:11211</MEMCACHED>
+ 							<UU_INDEX>/WEB-INF/uuindex.jsp</UU_INDEX>
                         </systemProperties>
 					<server>TomcatServer</server>
 					<path>/</path>
@@ -460,7 +508,7 @@
 						<webapp>
 							<groupId>nl.numworx.uploadwidget</groupId>
     							<artifactId>UploadWidgetGWT</artifactId>
-    							<version>2.5.25-SNAPSHOT</version>
+    							<version>2.5.25</version>
                           				<type>war</type>
 							<contextPath>/dwo/dav/upload</contextPath>
                             	<asWebapp>true</asWebapp> 
@@ -737,7 +785,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<DWOmAccessVersion>2.5.20</DWOmAccessVersion>
 		<RegisterVersion>2.5.2</RegisterVersion>
-		<DWOGwtClientVersion>2.5.25</DWOGwtClientVersion>
+		<DWOGwtClientVersion>2.5.26</DWOGwtClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testeb5server</aws.environmentName>
@@ -792,7 +840,6 @@
 				<dependency>
 					<groupId>nl.numworx.uploadwidget</groupId>
 					<artifactId>uploadwidget-common</artifactId>
-<!-- 					<version>0.0.2</version> -->
 					<version>2.5.25</version>
 				</dependency>			
 				<dependency>

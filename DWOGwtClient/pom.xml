@@ -4,7 +4,7 @@
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO</artifactId>
         <relativePath>../DWO/pom.xml</relativePath>
-        <version>2.5.25</version>
+        <version>2.5.26</version>
     </parent>
     <!-- Adjust artifact, name and description for new projects -->
     <groupId>nl.uu.fi.dwo.lms</groupId>
@@ -164,7 +164,7 @@
         <dependency>
         	<groupId>nl.uu.fi.dwo.lms</groupId>
         	<artifactId>DwoGwtClientHtmlUi</artifactId>
-        	<version>2.5.25</version>
+        	<version>2.5.26</version>
         	<scope>runtime</scope>
         	<type>war</type>
         </dependency>
@@ -188,12 +188,12 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.lms</groupId>
 			<artifactId>ChatGWT-shared</artifactId>
-			<version>2.5.24</version>
+			<version>2.5.26</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo.lms</groupId>
 			<artifactId>ChatGWT-shared</artifactId>
-			<version>2.5.24</version>
+			<version>2.5.26</version>
 			<classifier>sources</classifier>
 		</dependency>
     </dependencies>
@@ -275,6 +275,7 @@
                         gwt.codeserver.generateJsInteropExports=true
                         -->
                         <configuration>
+                        	<localWorkers>1</localWorkers>
                             <incremental>false</incremental>
                             <precompile>false</precompile>
                             <jsInteropMode>JS_RC</jsInteropMode>
@@ -401,7 +402,7 @@
                             <artifactId>DWOServer</artifactId> 
                             <type>war</type>    
                             <properties>
-                                <context>/</context>
+                                <context>{local.dwo}</context>
                             </properties>
                         </deployable>
                     </deployables>
@@ -439,7 +440,7 @@
                         <webapp>
                             <groupId>nl.uu.fi.dwo</groupId>
                             <artifactId>DWOServer</artifactId>
-                            <version>${DWOServerVersion}</version>
+                            <version>2.5.26-SNAPSHOT</version>
                             <type>war</type>    
                             <asWebapp>true</asWebapp> 
                             <contextPath>${local.dwo}</contextPath>
@@ -457,7 +458,7 @@
                             <groupId>nl.uu.fi.dwo.mobile</groupId>
                             <artifactId>DWOplayer</artifactId>
                             <classifier>dwo2</classifier>
-                            <version>2.5.25-SNAPSHOT</version>
+                            <version>2.5.26-SNAPSHOT</version>
                             <type>war</type>
                             <contextPath>/dwo/tablet</contextPath>
                             <asWebapp>true</asWebapp>

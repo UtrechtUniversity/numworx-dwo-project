@@ -32,7 +32,7 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 	private FocusPanel focusPanel;
 	private static FocusPanel mainPanel;
 	public static boolean AREA = false;
-	private static TextArea area;
+	private static FocusArea area;
 	
 	static public FocusPanel wrap ( Widget w) {
 		return wrap(w, true);
@@ -52,15 +52,15 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 		{
 			mainPanel = focus;
 			if (AREA) {
-			area = new FocusArea(handler);
-			RootLayoutPanel r = RootLayoutPanel.get();
-			r.add(area);
-			r.setWidgetTopHeight(area, 0, Unit.EM, 1, Unit.EM);
-			r.setWidgetRightWidth(area, 1, Unit.EM, 1, Unit.EM);
-			area.addKeyDownHandler(handler);
-			area.addKeyPressHandler(handler);
-			}
-			
+				area = new FocusArea(handler);
+				RootLayoutPanel r = RootLayoutPanel.get();
+				r.add(area);
+				r.setWidgetTopHeight(area, 50, Unit.PCT, 1, Unit.EM);
+				r.setWidgetRightWidth(area, 50, Unit.PCT, 1, Unit.EM);
+				area.addKeyDownHandler(handler);
+				area.addKeyPressHandler(handler);
+				focus.addAttachHandler(area);
+			}			
 		}
 		boolean hastouch = com.google.gwt.event.dom.client.TouchStartEvent.isSupported();
 		focus.addKeyDownHandler(handler);
@@ -264,13 +264,13 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 			} else
 		
 		
-			if(code == 88 && event.isControlKeyDown()) //ctrl+x
+			if(code == 88 && event.isControlKeyDown() && !AREA) //ctrl+x
 			{
 				editor.knip(clip);
 				event.preventDefault();
 				event.stopPropagation();
 			}
-			else if(code == 67 && event.isControlKeyDown()) //ctrl+c
+			else if(code == 67 && event.isControlKeyDown() && !AREA) //ctrl+c
 			{
 				editor.kopieer(clip);
 				event.preventDefault();
@@ -417,5 +417,11 @@ LOG.severe("on key down " + down + " " + code);
 		FormuleEditorIF editor = kb.getEditor();
 		editor.kopieer(clip);
 		return clip.getClipboard();
+	}
+
+
+	public void doInput(String text) {
+		FormuleEditorIF editor = kb.getEditor();
+		editor.insert(text);
 	}
 }

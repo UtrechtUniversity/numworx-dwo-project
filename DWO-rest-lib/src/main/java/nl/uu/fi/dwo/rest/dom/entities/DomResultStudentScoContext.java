@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+
 /**
  * Student's results on a Sco
  * @author G.A.J. van der Plas  email: G.A.J.vanderPlas@uu.nl
@@ -29,8 +31,13 @@ public class DomResultStudentScoContext extends DomResultScore<DomResultStudentS
 
     @Override
     public String getId() {
-      return getStudentSco().getId().getIdString();
+      PersistenceId id = getStudentSco().getId();
+	return id == null ? getSyntheticId() : id.getIdString();
     }
+
+	public String getSyntheticId() {
+		return getStudentSco().getUserID().getIdString();
+	}
 
 	public Double getMaxScore() {
 		return maxScore;

@@ -15,6 +15,7 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.FontStyle;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.WhiteSpace;
@@ -132,6 +133,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	private static final char INTEGRAAL = '∫';
 
 	private static final String ACTION_NOT_EDITIABLE = "action.setNotEditable";
+	private static final String ACTION_RESET = "action.reset";
 	private static final String TEXT = "text";
 	private static final Unit PX = Unit.PX;
 	private int MIN = 1;
@@ -176,6 +178,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	private final ActivityInterface activity;
 	private TekstRegel regel;
 	private com.google.gwt.user.client.Element formuleElement;
+	private String original = "";
 	
 	TextEditor(ActivityInterface a, int breedte, int hoogte, boolean boxMetRand)
 	{
@@ -190,11 +193,13 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		hbox = new LayoutPanel();
 		hbox.setStyleName(css.textEditor());
 		hbox.addStyleName(css.textEditor_nowrap());
+		hbox.setStyleName(css.textEditor_noborder(), !boxMetRand);
 		initWidget(hbox);
 		menubar = null;
 		content = getContent(null);
 		contentwrap = content;
 		content.setPixelSize(width - boxsize - padding, 13);
+		flow.getElement().getStyle().setProperty("minWidth", width-boxsize-padding, PX);
 		Style style = content.getElement().getStyle();
 		style.setPadding(padding / 2, Unit.PX);
 		int top = (height - menuheight - boxsize - padding - 13) / 2;
@@ -247,8 +252,10 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		hbox.setStyleName(css.textEditor_n(), numbered);
 		hbox.setStyleName(css.textEditor_nw(), nowrap && !pasAanH);
 		hbox.setStyleName(css.textEditor_nwh(), nowrap && pasAanH);
+		hbox.setStyleName(css.textEditor_noborder(), !boxMetRand);
 		
 		menubar = getMenuBar(launchdata);
+		original = getText(launchdata);
 		content = getContent(launchdata);
 		contentwrap = content;
 		if (nowrap || pasAanH) {
@@ -314,9 +321,10 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 			;//hbox.getElement().getStyle().setProperty("border", "1px solid gray");
 		else
 		{	updateEmpty();
-			style.setBackgroundColor("transparent");
-			hbox.getElement().getStyle().setProperty("border", "none");
-			hbox.getElement().getStyle().setBackgroundColor("transparent");
+//			style.setBackgroundColor("transparent");
+//			hbox.getElement().getStyle().setProperty("border", "none");
+//			hbox.getElement().getStyle().setBackgroundColor("transparent");
+//			hbox.getWidgetContainerElement(contentwrap).getStyle().setBackgroundColor("transparent");
 			
 		}
 		
@@ -414,15 +422,11 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 
 	private void setState(ObjectMap h)
 	{
-		String tekst = h == null ? "" : h.getString("tekst");
-		// h kan null zijn!
+		String tekst = getText(h);
+		//sb.setLength(0);
+
 		editable = true;
 		shown = false;
-		if (tekst == null)
-			tekst = "";
-		else if (tekst.endsWith("\n"))
-			tekst = tekst.substring(0, tekst.length()-1);
-		//sb.setLength(0);
 		clearAll();
 		try {
 			insert(tekst);
@@ -431,12 +435,22 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		}
 		firstAttempt = lastAttempt = tekst;
 		removeCursor();
-		editable = h == null || h.getBoolean("editable", true);
+		editable = h == null || h.getBoolean("editable", true) || activity.isReview();
 		if (!editable)
 			setReadonly();
 		//shown = true;
 		updateEmpty();
 		pasAanH();
+	}
+
+	private String getText(ObjectMap h) {
+		String tekst = h == null ? "" : h.getString("tekst");
+		// h kan null zijn!
+		if (tekst == null)
+			tekst = "";
+		else if (tekst.endsWith("\n"))
+			tekst = tekst.substring(0, tekst.length()-1);
+		return tekst;
 	}
 
 	private ScrollPanel getContent(ObjectMap launchdata)
@@ -752,6 +766,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		this.comRoot = comRoot;
 		comRoot.addCBookEventListener(ACTION_NOT_EDITIABLE, this);
 		comRoot.addCBookEventListener(TEXT, this);
+		comRoot.addCBookEventListener(ACTION_RESET, this);
 		if(logging != null)
 			logging.setCommunicationRoot(comRoot);
 	}
@@ -780,6 +795,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 					map.put("content", allText);
 					if(shown && logging != null) setAttempt(allText);
 					comRoot.fireEvent(new CBookEvent(TextEditor.this, TEXT, map));
+					comRoot.setVisited();
 					
 				}});
 			hbox.add(btn);
@@ -1174,7 +1190,8 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	
 	
 	private void insert0(char charAt) {
-		if (charAt >= '\u0300' && charAt <= '\u036F' && cursor > MIN ) {
+		if ( (  (charAt >= '\uDC00' && charAt <= '\uDFFF')||
+				(charAt >= '\u0300' && charAt <= '\u036F')) && cursor > MIN ) {
 			insertCombining(charAt);
 			return;
 		}
@@ -1383,14 +1400,19 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	public void acceptCBookEvent(CBookEvent event) {
 		String command = event.getCommand();
 		if(ACTION_NOT_EDITIABLE.equals(command)) {
-			setReadonly();
+			if (!activity.isReview()) setReadonly();
 		} else 
-		if(TEXT.equals(command))
+		if(TEXT.equals(command) && editable)
 		{
 			String text = (String)event.getParameter("content");
 			if(text == null) text = "";
 			clearAll();
 			insert(text);
+			updateEmpty();
+		} else if (ACTION_RESET.equals(command) && editable)
+		{
+			clearAll();
+			insert(original);
 			updateEmpty();
 		}
 		
@@ -1463,6 +1485,9 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 
 	@Override
 	public void setFontStyle(int font_style) {
+		Style style = content.getElement().getStyle();
+		style.setFontStyle(font_style == 2 || font_style == 3 ? FontStyle.ITALIC : FontStyle.NORMAL);
+		style.setFontWeight(font_style == 1 || font_style == 3 ? Style.FontWeight.BOLD : Style.FontWeight.NORMAL);
 	}
 
 	@Override

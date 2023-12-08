@@ -127,32 +127,20 @@
 								</svg><ui:text from='{rb.NUM_LBL_KNOWLEDGE_BACK}' /></g:Anchor>
 			  </g:south>
 			  <g:south size="2.4"><g:FlowPanel>
-			  	<g:Button ui:field='btn' styleName='{style.graph}'>Graph</g:Button>
+			  	<g:Button ui:field='btn' styleName='{style.graph}'><ui:text from='{rb.NUM_BTN_GRAPH}' /></g:Button>
 			    <g:Button ui:field='filterBtn' styleName='{style.filter}' addStyleNames='{style.space} teacher-only'><ui:text from='{rb.NUM_BTN_Filter}' /></g:Button>
 			    <x:CheckBox ui:field='viewBtn' addStyleNames='{style.filter}' checked="true" >Methode</x:CheckBox>
 			  </g:FlowPanel></g:south>
 			  <g:center>
 				<g:ScrollPanel addStyleNames='{style.tree}'>
-					<g:Tree ui:field='tree'>
-					</g:Tree>	
+					<g:Widget ui:field='tree'>
+					</g:Widget>	
 				</g:ScrollPanel>
 			</g:center>
 			</g:DockLayoutPanel>
 		</g:center>
 		<g:east size='440'>
-			<g:DockLayoutPanel ui:field='east' unit='EM' >
-				<g:north size="3"><g:FlowPanel styleName='{style.border-top}' addStyleNames='profile-borderBox'><g:Label addStyleNames='{style.title}' ui:field='title'></g:Label></g:FlowPanel></g:north>
-				<g:south size='3'>
-				  <g:FlowPanel ui:field='north' styleName='{style.score}'>
-					<g:InlineLabel ui:field='redPerc' styleName='{style.perc}'/>
-					<g:SimplePanel styleName='{style.icon}' ui:field='outer' />
-					<g:InlineLabel ui:field='perc' styleName='{style.greenperc}' />
-				  </g:FlowPanel>
-				</g:south>
-				<g:center>
-					<g:SimpleLayoutPanel styleName='{style.border}' addStyleNames='profile-borderBox'  ui:field='description' />
-				</g:center>
-			</g:DockLayoutPanel>
+			<g:Widget ui:field='east' />
 		</g:east>
 		<g:east size="10"><g:SimplePanel /></g:east>
 	</g:DockLayoutPanel>

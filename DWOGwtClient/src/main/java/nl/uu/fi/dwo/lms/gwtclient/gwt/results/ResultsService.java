@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -251,7 +252,11 @@ public class ResultsService implements SwitchViewEventHandler {
         Promise<Map<String, String>> values;
         values = suspendDataCache.get(dom.getId());
         if (values == null || (values.isDone() && values.getFailure() != null)) {
-            values = scormValues.getValues(dom, getContext(), keys);
+        	if (dom.getId() != null)
+        		values = scormValues.getValues(dom, getContext(), keys);
+        	else {
+        		values = Promises.resolved(keys.stream().collect(Collectors.toMap(Function.identity(), t -> "")));
+        	}
             suspendDataCache.put(dom.getId(), values);
         }
         return values;

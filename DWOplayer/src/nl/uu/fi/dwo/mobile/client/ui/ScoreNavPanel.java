@@ -26,10 +26,13 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
-import com.googlecode.mgwt.ui.client.theme.base.ButtonCss;
-import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
-import com.googlecode.mgwt.ui.client.widget.Button;
-import com.googlecode.mgwt.ui.client.widget.HeaderButton;
+//import com.googlecode.mgwt.ui.client.theme.base.ButtonCss;
+//import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
+//import com.googlecode.mgwt.ui.client.widget.Button;
+//import com.googlecode.mgwt.ui.client.widget.HeaderButton;
+import com.googlecode.mgwt.ui.client.widget.button.Button;
+import com.googlecode.mgwt.ui.client.widget.header.HeaderAppearance;
+import com.googlecode.mgwt.ui.client.widget.header.HeaderButton;
 
 import fi.wiskopdr.text.Text;
 
@@ -96,9 +99,9 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 	int rows = 10;
 
 
-	private final HeaderCss headercss;
+	private final HeaderAppearance headercss;
 
-	public ScoreNavPanel(ActivityComponent activity, HeaderCss headercss) {
+	public ScoreNavPanel(ActivityComponent activity, HeaderAppearance /*HeaderCss*/ headercss) {
 		this.headercss = headercss;
 		top = new VerticalPanel();
 		initialize();
@@ -127,11 +130,11 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 		grid.getColumnFormatter().setWidth(2, "70px");
 		grid.setCellPadding(10);
 		grid.setCellSpacing(10);
-		reloadTotal = new Button(DWO_BUNDLE.imgbutton());
+		reloadTotal = new Button(/*DWO_BUNDLE.imgbutton()*/);
 		reloadTotal.addTapHandler(new ReloadHandler(-1));
 		reloadTotal.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.reload().getSafeUri().asString() + "')");
 		grid.setWidget(0, 3, reloadTotal);
-		checkBtn = new Button( DWO_BUNDLE.txtbutton(),Text.constants.nakijkKnopLabel());
+		checkBtn = new Button( /*DWO_BUNDLE.txtbutton(),*/Text.constants.nakijkKnopLabel());
 		checkBtn.addTapHandler(new CheckHandler());
 		grid.setWidget(1, 3, checkBtn);
 		checkBtn.setVisible(false);
@@ -219,15 +222,15 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 			setFontFamily(text);
 			text.getElement().getStyle().setFontWeight(FontWeight.BOLD);
 // Wat voor button moet hier komen?
-			ButtonCss css = DWO_BUNDLE.imgbutton();
-			Button p = new Button(css);
+			//ButtonCss css = DWO_BUNDLE.imgbutton();
+			Button p = new Button(/*css*/);
 			p.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.arrowRightBig().getSafeUri().asString() + "')");
 			
 			vragen.setWidget(i, 3, p);
 			//p.setStylePrimaryName("vraagButton");
 			p.addTapHandler(new TouchHandler(i));
 			
-			Button reload = new Button(css);
+			Button reload = new Button(/*css*/);
 			reload.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.reload().getSafeUri().asString() + "')");
 			if(itemOpnieuw) 
 				vragen.setWidget(i, 4, reload);

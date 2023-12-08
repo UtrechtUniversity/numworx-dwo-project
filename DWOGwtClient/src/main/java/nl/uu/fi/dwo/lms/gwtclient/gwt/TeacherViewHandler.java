@@ -189,8 +189,12 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
             	  presenterFactory.getModulesPresenter().setVisible(true);
                   break;
               case TRAIL:
+            	  mainView.selectView(SelectedView.MODULES);
             	  presenterFactory.getMainPresenter().setTrails(switchViewEvent.getResultState());
                 break;
+              case HOME:
+            	  mainView.selectView(SelectedView.MODULES);
+            	  break;
               case MAYBELOGOUT:
                   presenterFactory.getMainPresenter().maybeLogout();
                   break;

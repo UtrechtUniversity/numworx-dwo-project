@@ -120,7 +120,7 @@ public class FormuleEditorTouchHandler
 	{
 		this.editor = editor;
 		PointerEventsSupport.init();
-		LOG.severe( "supported " + PointerEventsSupport.isSupported());
+		//LOG.severe( "supported " + PointerEventsSupport.isSupported());
 	}
 
 	HandlerRegistration oldRegistration;

@@ -331,6 +331,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		antwoordTF.setFont(font);
 		antwoordTF.setFontName(font.getFont());
 		antwoordTF.setFontSize(font.getFontSize());
+		antwoordTF.setFontStyle((font.isBold()?1:0) + (font.isItalic()?2:0));
 		
 		
 //		if(boxMetRand)

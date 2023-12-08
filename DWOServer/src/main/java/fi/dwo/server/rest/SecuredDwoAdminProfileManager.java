@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
+import javax.persistence.OptimisticLockException;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -18,6 +19,7 @@ import javax.ws.rs.core.SecurityContext;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.entities.RestContext;
@@ -46,45 +48,6 @@ public class SecuredDwoAdminProfileManager {
         return DwoProfileManager.findEntities().stream()
         		.map(PersistentDwoProfile::buildDomDwoProfileFull)
         		.collect(Collectors.toList());
-    }
-    /**
-     * Returns the school data to be displayed.
-     *
-     * @param sc
-     * @return 
-     */
-    @GET
-    @Produces({"application/json"})
-    @Path("/getList")
-    public List<DomDwoProfileFull> getProfiles(@Context SecurityContext sc) {
-        PersistentHasRole hr = null;
-        try {
-            hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-        }
-        catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, "", ex);
-            throw new Dwo2RestException(ex);
-        }
-        if (hr != null) {
-            List<PersistentDwoProfile> profiles = null;
-            List<DomDwoProfileFull> domProfiles;
-            try {
-            	profiles = DwoProfileManager.findEntities();
-                LOG.log(Level.FINER, "Fetched all {0} profiles. ", new Object[]{profiles.size()});
-                domProfiles = new ArrayList<>(profiles.size());
-                for (PersistentDwoProfile p : profiles) {
-                	domProfiles.add(p.buildDomDwoProfileFull());
-                }
-            }
-            catch (Exception e) {
-                LOG.log(Level.WARNING, "Unexpected exception", e);
-                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the schools.");
-            }
-            return domProfiles;
-        } else {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access dwoadmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
-        }
     }
     
     /**
@@ -148,21 +111,33 @@ public class SecuredDwoAdminProfileManager {
         UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(restProfile.getRestContext().getDomHasRole(), RoleType.ADMIN);
         hr = state.getHasRole();
         state.buildDwoAdmin();
-
-        
-        
         DomDwoProfileFull profile = restProfile.getDomDwoProfile();
         if (hr != null) {
             try {
-                long id = MySQLPersistenceId.getNativeId(profile);
+                Long id = MySQLPersistenceId.getNativeId(profile);
 				PersistentDwoProfile editProfile = DwoProfileManager.findEntity(id);
                 //Profile to update.
                 editProfile.setDwoProfileDescription(profile.getDwoProfileDescription());
+                // als de namen verschillen remove that entry from cache
+                if (! editProfile.getDwoProfileName().equals(profile.getDwoProfileName()))
+                	PublicProfileCache.clear();
                 editProfile.setDwoProfileName(profile.getDwoProfileName());
                 editProfile.setDwoProfileRights(profile.getDwoProfileRights());
                 editProfile.setDwoProfileText(profile.getDwoProfileText());
-                DwoProfileManager.edit(editProfile);
-                return Boolean.TRUE;
+                if (profile.getOptLock() != null) 
+                	editProfile.setOptlock(profile.getOptLock());
+                editProfile = DwoProfileManager.edit(editProfile);
+                PublicProfileCache.putInCache(
+                		editProfile.getDwoProfileName(),
+                		editProfile.buildDomDwoProfileFull());
+                PublicProfileCache.putInCache(
+                		Long.toString(id),
+                		editProfile.buildDomDwoProfileFull());
+               return Boolean.TRUE;
+            }
+            catch (OptimisticLockException e) {
+                PublicProfileCache.clear();
+            	throw new Dwo2RestException(Dwo2ExceptionCode.Rest_ObjectModified, e.getLocalizedMessage());
             }
             catch (Exception e) {
                 LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);

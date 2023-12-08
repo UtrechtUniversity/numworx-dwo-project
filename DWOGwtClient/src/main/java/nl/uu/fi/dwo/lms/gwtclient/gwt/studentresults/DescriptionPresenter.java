@@ -162,7 +162,7 @@ public class DescriptionPresenter {
 		}
 
 		private final DescriptionService service;
-		DomStudentModelContextId current;
+		//DomStudentModelContextId current;
 
 		public Promise<Widget> get(DomStudentModelContextId current, DomStudentModelContextInfo info) {
 			return service.getDescription(current, info)

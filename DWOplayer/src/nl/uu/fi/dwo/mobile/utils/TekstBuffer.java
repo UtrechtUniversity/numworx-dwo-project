@@ -382,7 +382,7 @@ public class TekstBuffer
 			return x(map, new GeogebraView(activity, currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 45: // GraphTool
 			return x(map, new StubView(activity, "GraphToolGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
-			//			return x(map, new PopupFacade(currentVakGegevens, new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom])));
+			//return x(map, new PopupFacade(JSONUtilities.wrapMap(currentVakGegevens), new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom]), activity));
 
 		case 15: 
 			return new StubView(activity, "DoorzienGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);

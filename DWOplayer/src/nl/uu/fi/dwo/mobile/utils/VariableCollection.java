@@ -41,31 +41,30 @@ public class VariableCollection
 		s = sNieuw;
 
 		String[] tokenizer = s.split("[;\n]+");
+		boolean result = true;
 		for (int i = 0; i < tokenizer.length; i++)
 		{
 			String tok = tokenizer[i];
 			try
 			{
-				int index = s.indexOf("=");
+				int index = tok.indexOf("=");
 				if (index > 0)
 				{
-					String name = s.substring(0, index);
+					String name = tok.substring(0, index);
 					if (Letter.isLetter(name.charAt(0)))
 					{
 						setVariable(tok);
-					}
-					else
-						return true;
-				}
-				else
-					return false;
+					} else 
+						result = false;
+				} else
+					result = false;
 			}
 			catch (Exception e)
 			{
 				return false;
 			}
 		}
-		return true;
+		return result;
 	}
 
 	public void setVariable(String s)
