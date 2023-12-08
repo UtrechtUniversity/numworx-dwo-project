@@ -136,7 +136,7 @@ div.insert_formule {padding-right:5px; padding-left:5px;}
 	color: gray;
 }
 
-.textEditor_empty  div.content::before {
+.textEditor_empty  div.content span:first-child::after {
 	content: "...";
 	color: #808080
 }
@@ -176,6 +176,11 @@ span.textEditor_select {
 .textEditor_nowrap {
 	white-space: nowrap;
 	background-color: white;
+}
+
+.textEditor_noborder.textEditor, .textEditor_noborder.textEditor > div, .textEditor_noborder.textEditor > div > div {
+	background-color: transparent;
+	border: none;
 }
 
 .numworx-popup {

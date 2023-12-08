@@ -193,6 +193,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		hbox = new LayoutPanel();
 		hbox.setStyleName(css.textEditor());
 		hbox.addStyleName(css.textEditor_nowrap());
+		hbox.setStyleName(css.textEditor_noborder(), !boxMetRand);
 		initWidget(hbox);
 		menubar = null;
 		content = getContent(null);
@@ -251,6 +252,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		hbox.setStyleName(css.textEditor_n(), numbered);
 		hbox.setStyleName(css.textEditor_nw(), nowrap && !pasAanH);
 		hbox.setStyleName(css.textEditor_nwh(), nowrap && pasAanH);
+		hbox.setStyleName(css.textEditor_noborder(), !boxMetRand);
 		
 		menubar = getMenuBar(launchdata);
 		original = getText(launchdata);
@@ -319,9 +321,10 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 			;//hbox.getElement().getStyle().setProperty("border", "1px solid gray");
 		else
 		{	updateEmpty();
-			style.setBackgroundColor("transparent");
-			hbox.getElement().getStyle().setProperty("border", "none");
-			hbox.getElement().getStyle().setBackgroundColor("transparent");
+//			style.setBackgroundColor("transparent");
+//			hbox.getElement().getStyle().setProperty("border", "none");
+//			hbox.getElement().getStyle().setBackgroundColor("transparent");
+//			hbox.getWidgetContainerElement(contentwrap).getStyle().setBackgroundColor("transparent");
 			
 		}
 		
