@@ -56,14 +56,13 @@
         dwo_env = "<%=dwo_env%>"
     	function logout() {
     		<%
-    		if (needSEB || !"shibboleth".equals(request.getAuthType()) || requestHash != null ) {
+    		if (needSEB || !dwo_env.contains("saml") || requestHash != null ) {
     	%>    		
     	    	top.window.location = "https://<%=server%>/ho/en/exam/logout.html"
     	<% } else { 
     		// Let op, dit is UU only.....
-    		Object handler = request.getAttribute("Shib-Handler");
     	%>
-    			top.window.location = "<%=handler%>/Logout?return=https://<%=server%>/en/he/exam/"
+    			top.window.location = "https://<%=server%>/dwo/saml/doLogout.jsp?return=/en/he/exam/"
     		
     	<% } %>	
     	}
