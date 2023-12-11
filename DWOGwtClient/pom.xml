@@ -135,20 +135,6 @@
             <version>1.7</version>
             <scope>runtime</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.vectomatic/lib-gwt-svg -->        
-        <!--        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.49</version>
-            <scope>runtime</scope>
-            comment scope for elastic beanstalk
-        </dependency>-->
-         <!-- https://mvnrepository.com/artifact/com.google.jsinterop/jsinterop-annotations -->
-        <!--<dependency>
-            <groupId>com.google.jsinterop</groupId>
-            <artifactId>jsinterop-annotations</artifactId>
-            <version>1.0.0</version>
-        </dependency>        -->
         <!-- code injection at compile time -->
         <dependency>
             <groupId>com.google.dagger</groupId>
@@ -370,12 +356,11 @@
                         </artifactInstaller>
                     </container>
                     <dependencies>
-                        <dependency>
-                            <groupId>mysql</groupId>
-                            <artifactId>mysql-connector-java</artifactId>
-                            <version>5.1.49</version>
-                        </dependency>
-                    </dependencies>           
+					<dependency>
+					  <groupId>mysql</groupId>
+					  <artifactId>mysql-connector-java</artifactId>
+					  <version>8.0.28</version>
+					</dependency>                    </dependencies>           
                     <configuration>
                         <type>standalone</type>            
                         <home>

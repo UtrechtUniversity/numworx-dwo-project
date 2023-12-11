@@ -150,7 +150,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.49</version>
+            <version>8.0.28</version>
             <!--comment scope for elastic beanstalk-->
             <scope>test</scope>
         </dependency>
@@ -363,7 +363,7 @@
                         <dependency>
                             <groupId>mysql</groupId>
                             <artifactId>mysql-connector-java</artifactId>
-                            <version>5.1.49</version>
+                            <version>8.0.28</version>
                         </dependency>
   			<dependency>
             <groupId>org.apache.tomcat.embed</groupId>
@@ -640,50 +640,6 @@
             </properties>
         </profile>
         
-        <!--        <profile>
-            <id>dev</id>
-            <activation>
-                <property>
-                    <name>environment</name>
-                    <value>test</value>
-                </property>                
-            </activation>
-            <properties>
-                <dev>false</dev>
-                <junit.test>true</junit.test>
-                <properties>
-                </properties>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                         tomcat target for running against a loaded junit test-database 
-                        <groupId>org.apache.tomcat.maven</groupId>
-                        <artifactId>tomcat7-maven-plugin</artifactId>
-                        <version>2.2</version>
-                        <configuration>
-                            <server>TomcatServer</server>
-                            <path>/dwo</path>
-                            <warFile>target/${project.artifactId}-${project.version}.war</warFile>
-                            <contextFile>src/test/tomcat/context-dwo_devel.xml</contextFile>
-                            <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
-                        </configuration>
-                        <dependencies>
-                            <dependency>
-                                <groupId>mysql</groupId>
-                                <artifactId>mysql-connector-java</artifactId>
-                                <version>5.1.49</version>
-                            </dependency>
-                            <dependency>
-                                <groupId>com.jamonapi</groupId>
-                                <artifactId>jamon</artifactId>
-                                <version>2.80</version>
-                            </dependency>        
-                        </dependencies>
-                    </plugin>                 
-                </plugins>
-            </build>
-        </profile>-->
 		<profile>
 			<id>java17</id>
 			<dependencies>
