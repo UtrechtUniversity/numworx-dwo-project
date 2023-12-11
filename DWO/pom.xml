@@ -166,6 +166,7 @@
                 	<localOnly>false</localOnly>
                 	<allowSnapshots>false</allowSnapshots>
                 	<enableSshAgent>true</enableSshAgent>
+                	<noDeploy>true</noDeploy>
             	</configuration>
 			  <dependencies>
 			    <dependency>
