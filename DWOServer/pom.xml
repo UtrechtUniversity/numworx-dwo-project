@@ -43,7 +43,7 @@
     <properties>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <context.xml>context.xml</context.xml>
-        <tomcat7.version>7.0.76</tomcat7.version>
+        <tomcat7.version>7.0.108</tomcat7.version>
     </properties>
   
     <!-- dependencies -->
