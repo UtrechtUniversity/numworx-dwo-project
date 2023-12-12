@@ -7,6 +7,9 @@
 <%
 String hash = request.getParameter("hash");
 String player = "/gwtclient/index.html";
+String token = "/dwo/saml/login";
+String dwo_env = System.getProperty("DWO_ENV","app");
+if (dwo_env.contains("uu")) token = "/dwo/oauth2/mfalogin";
 
 if ( hash != null && (hash.isEmpty() || Pattern.matches("#[a-z]+:\\d*", hash))) // Deeplink
 	player = "/dwo/tablet/DWOplayer.jsp";
@@ -23,7 +26,7 @@ else
     	search = "&base=/en/he/&profile=100&locale=nl"
     	hash= "<%=hash%>"
         clientId = "f9af29c4-cfc5-11ea-87d0-0242ac130003"
-        token="/dwo/saml/login"
+        token="<%=token%>"
     </script>
     <script type="text/javascript" src="/dwo/oauth2client/oauth2client/oauth2client.nocache.js"></script>
 </head>
