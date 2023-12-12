@@ -85,14 +85,14 @@ div.insert_formule {padding-right:5px; padding-left:5px;}
 */
 
 .textEditor div.insert_formule {
-	background-color: rgba(0,0,0,0.3);
+	background-color: rgba(0,0,0,0.03);
 	display: inline-block;
 	width: auto;
 	height: auto;
 }
 
 .textEditor .insert_calculator {
-	background-color: rgba(0,0,0,0.3);
+	background-color: rgba(0,0,0,0.03);
 	display: inline-block;
 	white-space: nowrap;
 	margin-left: 6px;

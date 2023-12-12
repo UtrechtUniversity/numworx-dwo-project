@@ -157,7 +157,10 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF, IsW
 		if (currentElement != null)
 			currentElement.setCurrent(true);
 		else
+		{
 			current.clearSelection();
+			setCurrentRegel(getMainRegel()); // no current regel highlight
+		}
 		//currentElement.repaint();
 		this.paint();
 	}
