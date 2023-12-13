@@ -12,7 +12,7 @@
     <ul>
 	<li><a href="/en/he/nl.jsp">Numworx (Nederlands)</a> voor student, docent en key user</li>
 	<li><a href="/en/he/">Numworx (English)</a> for student, teacher and key user</li>
-	<li><a href="/Shibboleth.sso/Logout?return=/" >Logout</a> </li>
+	<li><a href="/dwo/saml/doLogout.jsp?return=/" >Logout</a> </li>
     </ul>
     <p>Extra
     <ul>
