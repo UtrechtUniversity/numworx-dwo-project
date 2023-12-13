@@ -126,4 +126,6 @@ SMTP_EMAIL=wisweb@fi.uu.nl -->
     <Parameter name="fi.dwo.server.rest.smtp.user" override="true" value="${SMTP_USER}"/>
     <Parameter name="fi.dwo.server.rest.smtp.password" override="true" value="${SMTP_PASSWORD}"/>
     <Parameter name="fi.dwo.server.rest.smtp.email" override="true" value="${SMTP_EMAIL}"/>
+    <Parameter name="fi.dwo.server.db.root" override="true" value="${UU_INDEX}"/>
+    
 </Context>
