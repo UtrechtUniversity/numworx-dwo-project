@@ -233,6 +233,10 @@
     <servlet>
     	<servlet-name>redirect-download</servlet-name>
     	<servlet-class>fi.dwo.server.db.DownLoad</servlet-class>
+        <init-param>
+        	<param-name>fi.dwo.server.db.download</param-name>
+        	<param-value>fi.dwo.server.db.download</param-value>
+        </init-param>
     </servlet>
     <servlet>
     	<servlet-name>redirect-root</servlet-name>
