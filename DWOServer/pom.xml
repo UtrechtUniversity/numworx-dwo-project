@@ -258,22 +258,6 @@
                     -->
                     <doCheck>false</doCheck>
                     <doUpdate>false</doUpdate>
-                    <!--
-                     This ensures that even if we are not connected to scm than also
-                     take the version from local .svn file
-                    -->
-                    <revisiononscmfailure>
-       
-                        <!--
-                         Generate sequence build number based on:
-                         build number and timestamp     
-                        -->
-                        <format>Build: #{0} ({1,date})</format>
-                        <items>
-                            <item>buildNumber\d*</item>
-                            <item>timestamp</item>
-                        </items>
-                    </revisiononscmfailure>
                 </configuration>
             </plugin>    
             
@@ -301,7 +285,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
-                    <useDefaultManifestFile>true</useDefaultManifestFile>
                     <warSourceDirectory>src/main/webapp</warSourceDirectory>
 <!--                    <contextFile>${basedir}/config/tomcat/context.xml</contextFile>                    -->
                     <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
