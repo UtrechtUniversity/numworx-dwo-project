@@ -1,3 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.0" >
+  <context-param>
+  	<param-name>dbrest.url</param-name>
+	<param-value>http://localhost/dwo/</param-value>  
+  </context-param>
+  <filter>
+  	<filter-name>authz</filter-name>
+  	<filter-class>nl.numworx.oauth2client.server.OAuth2Filter</filter-class>
+  	<init-param>
+  		<param-name>authz</param-name>
+  		<param-value>/dwo/oauth2/mfalogin</param-value>
+  	</init-param>
+  	<init-param>
+  		<param-name>client_id</param-name>
+  		<param-value>secret_client_id</param-value>
+  	</init-param>
+  </filter>
+  <filter-mapping>
+  	<filter-name>authz</filter-name>
+  	<url-pattern>/upload.html</url-pattern>
+  </filter-mapping>
+
+
 </web-app>

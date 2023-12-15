@@ -79,28 +79,33 @@ public class InstallServlet extends HttpServlet {
 		try {
 			SystemManager system;
 			instance.setBasicAuthString(null, null, null);
-			instance.getAuthenticator().setServerUrlPath(new URL("http://127.0.0.1/dwo/"));
+			instance.getAuthenticator().setServerUrlPath(new URL("http://127.0.0.1:8080/dwo/"));
 			system = new SystemManager(instance);
-			DomSamlUser user = new DomSamlUser();
-			user.setSamlUserId(req.getRemoteUser()); 
-														//user.setSamlUserId("staff1"); // DEBUG
-			user.setSamlOrgId(UU);
-			user = system.requestSamlToken(user);
-			
-			String samlUserID = user.getSamlUserId();	      
-			String samlOrgID = user.getSamlOrgId();
-			String authToken = user.getAuthToken();
-			log("getToken " + samlUserID + " " + samlOrgID + " " + authToken);
-			String token = "3\f" + samlUserID + '\f' + samlOrgID + '\f' + authToken;
-			token = Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
-			OAuthManager m = new OAuthManager(instance);
-			token = m.authorization_token(token, null, null, null);
-			if (token != null) {
-			  instance.getAuthenticator().setUsername(user.getSamlUserId()); // for debugging.
-			  instance.setRecover(null); // FIXME
+			if ("Bearer".equalsIgnoreCase(req.getAuthType())) {
+				instance.setBearerAuthString(req.getRemoteUser());
 			} else {
-				upload = "/noway.html";
-				log("No token for " + samlUserID + " " + samlOrgID + " " + authToken);
+			
+				DomSamlUser user = new DomSamlUser();
+				user.setSamlUserId(req.getRemoteUser()); 
+															//user.setSamlUserId("staff1"); // DEBUG
+				user.setSamlOrgId(UU);
+				user = system.requestSamlToken(user);
+				
+				String samlUserID = user.getSamlUserId();	      
+				String samlOrgID = user.getSamlOrgId();
+				String authToken = user.getAuthToken();
+				log("getToken " + samlUserID + " " + samlOrgID + " " + authToken);
+				String token = "3\f" + samlUserID + '\f' + samlOrgID + '\f' + authToken;
+				token = Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
+				OAuthManager m = new OAuthManager(instance);
+				token = m.authorization_token(token, null, null, null);
+				if (token != null) {
+				  instance.getAuthenticator().setUsername(user.getSamlUserId()); // for debugging.
+				  instance.setRecover(null); // FIXME
+				} else {
+					upload = "/noway.html";
+					log("No token for " + samlUserID + " " + samlOrgID + " " + authToken);
+				}
 			}
 			loginContext = SecureUserAccountManager.getLoginContext();
 			numworx.setSource(loginContext.getRealm(), instance);
@@ -143,26 +148,30 @@ public class InstallServlet extends HttpServlet {
 			instance.setBasicAuthString(null, null, null);
 			instance.getAuthenticator().setServerUrlPath(new URL("http://localhost/dwo/"));
 			system = new SystemManager(instance);
-			DomSamlUser user = new DomSamlUser();
-			user.setSamlUserId(req.getRemoteUser()); 
-														//user.setSamlUserId("staff1"); // DEBUG
-			user.setSamlOrgId(UU);
-			user = system.requestSamlToken(user);
-			
-			String samlUserID = user.getSamlUserId();	      
-			String samlOrgID = user.getSamlOrgId();
-			String authToken = user.getAuthToken();
-			String token = "3\f" + samlUserID + '\f' + samlOrgID + '\f' + authToken;
-			token = Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
-			OAuthManager m = new OAuthManager(instance);
-			token = m.authorization_token(token, null, null, null);
-			if (token != null) {
-			  instance.getAuthenticator().setUsername(user.getSamlUserId()); // for debugging.
-			  instance.setRecover(null); // FIXME
+			if ("Bearer".equalsIgnoreCase(req.getAuthType())) {
+				instance.setBearerAuthString(req.getRemoteUser());
 			} else {
-				throw new ServletException("Unauthenticated");
+				DomSamlUser user = new DomSamlUser();
+				user.setSamlUserId(req.getRemoteUser()); 
+															//user.setSamlUserId("staff1"); // DEBUG
+				user.setSamlOrgId(UU);
+				user = system.requestSamlToken(user);
+				
+				String samlUserID = user.getSamlUserId();	      
+				String samlOrgID = user.getSamlOrgId();
+				String authToken = user.getAuthToken();
+				String token = "3\f" + samlUserID + '\f' + samlOrgID + '\f' + authToken;
+				token = Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
+				OAuthManager m = new OAuthManager(instance);
+				token = m.authorization_token(token, null, null, null);
+				if (token != null) {
+				  instance.getAuthenticator().setUsername(user.getSamlUserId()); // for debugging.
+				  instance.setRecover(null); // FIXME
+				} else {
+					throw new ServletException("Unauthenticated");
+				}
+				loginContext = SecureUserAccountManager.getLoginContext();
 			}
-			loginContext = SecureUserAccountManager.getLoginContext();
 			numworx.setSource(loginContext.getRealm(), instance);
 		} catch (Dwo2Exception e1) {
 			throw new ServletException(e1.getLocalizedMessage(), e1);

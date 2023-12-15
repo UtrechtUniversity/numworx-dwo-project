@@ -71,39 +71,6 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>   
-<!--            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.1</version>
-                <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>-->
             <!-- ensure the build number is available as ${buildNumber} -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -125,22 +92,6 @@
                     -->
                     <doCheck>false</doCheck>
                     <doUpdate>false</doUpdate>
-                    <!--
-                     This ensures that even if we are not connected to scm than also
-                     take the version from local .svn file
-                    -->
-                    <revisiononscmfailure>
-       
-                        <!--
-                         Generate sequence build number based on:
-                         build number and timestamp     
-                        -->
-                        <format>Build: #{0} ({1,date})</format>
-                        <items>
-                            <item>buildNumber\d*</item>
-                            <item>timestamp</item>
-                        </items>
-                    </revisiononscmfailure>
                 </configuration>
             </plugin>    
             
