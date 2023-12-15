@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO</artifactId>
-		<version>2.5.22-SNAPSHOT</version>
+		<version>2.5.27-SNAPSHOT</version>
 		<relativePath>../DWO</relativePath>
 	</parent>
   <groupId>nl.numworx.osiris</groupId>
@@ -22,7 +22,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
 			<artifactId>edexml</artifactId>
-			<version>2.5.22-SNAPSHOT</version>
+			<version>2.5.21</version>
 			<exclusions>
 				<exclusion>
 					<groupId>junit</groupId>
@@ -216,13 +216,6 @@
           </dependency>                         
                     </dependencies>
             </plugin> 
-      <plugin>
-        <artifactId>maven-release-plugin</artifactId>
-        <version>2.5.3</version>
-         <configuration>
-          <tagBase>https://svn.science.uu.nl/repos/sci.velth101.numworx/osiris-import/tags/</tagBase>
-        </configuration>
-      </plugin>
 		</plugins>
 	</build>
 	<profiles>
@@ -320,8 +313,4 @@
 	
 	</profiles>
 	<packaging>war</packaging>
-	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/osiris-import/trunk</developerConnection>
-		<connection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/osiris-import/trunk</connection>
-	</scm>
 </project>
