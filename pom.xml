@@ -28,7 +28,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <tomcat7.version>7.0.76</tomcat7.version>
     <context.xml>context.xml</context.xml>
-    <DWOServerVersion>2.5.12</DWOServerVersion>
+    <DWOServerVersion>2.5.25</DWOServerVersion>
     <local.dwo>/dwox</local.dwo>
   </properties>
 
