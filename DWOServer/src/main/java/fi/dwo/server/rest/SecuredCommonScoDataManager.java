@@ -797,6 +797,8 @@ try {
 		if (!list.isEmpty()) {
 			pssc = list.get(0);
 			pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
+		} else {
+			pssc = new PersistentStudentScoContext();
 		}
 	} else if ("c".equals(split[2])) {
 		page = split[5];
@@ -831,6 +833,8 @@ try {
 		
 		if (key.endsWith(".score.raw")) {
 			if (pagenr<0) {
+				if (pssc.getCompletionStatus() == null||"not attempted".equals(pssc.getCompletionStatus())) // null of aangemaakt door docent alleen.
+					return ""; // ab-initio
 				return String.valueOf(Math.round(pssc.getScore()));
 			}
 			if (onsState == null) return "";
