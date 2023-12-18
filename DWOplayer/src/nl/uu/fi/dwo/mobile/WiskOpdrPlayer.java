@@ -31,6 +31,7 @@ import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.dagger.DaggerWiskOpdrComponent;
 import nl.uu.fi.dwo.mobile.client.dagger.ModuleViewModule;
@@ -47,6 +48,11 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 
 public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, CBookEventListener, ClosingHandler {
+
+	public WiskOpdrPlayer() {
+		super();
+        FocusOnTouch.AREA = true;
+	}
 
 	static class InitialValueChangeEvent extends ValueChangeEvent<String> {
 
