@@ -170,7 +170,7 @@ public class TekstBuffer
 		
 
 		int lastIndex = 0;
-
+		boolean  hasCodepoint = false;
 		for (int i = 0; i < tekst.length() - 1; i++)
 		{
 			if (tekst.charAt(i) == '$' && (tekst.charAt(i + 1) == 'V' || tekst.charAt(i + 1) == 'f' || tekst.charAt(i + 1) == 'H' || tekst.charAt(i + 1) == 'I' || tekst.charAt(i+1) == 'Z'))
@@ -214,8 +214,9 @@ public class TekstBuffer
 				} else if (identifier.equals("$Z"))
 				{
 					String codepoint = tekst.substring(i+2, endIndex+i);
-					result.add(new String(Character.toChars(Integer.parseInt(codepoint))));
+					result.add((Character.toChars(Integer.parseInt(codepoint))));
 					i += endIndex;
+					hasCodepoint = true;
 				}
 				//Not supported
 //				else //dollarteken in tekst
@@ -240,6 +241,30 @@ public class TekstBuffer
 
 		}
 
+		// wat nu:
+		if (hasCodepoint) {
+			for(int i = 0; i < result.size(); i++ ) {
+				Object item = result.get(i);
+				if (item instanceof char[]) {
+					item = new String( (char[]) item );
+					if (i > 0 && result.get(i-1) instanceof String) {
+						// combine with i-1
+						item = result.get(i-1) + item.toString();
+						result.set(i-1, item);
+						result.remove(i);
+						i = i-1;
+					} else {
+						// keep
+						result.set(i, item);
+					}
+					if (i < result.size()-1 && result.get(i+1) instanceof String) {
+						item = result.get(i).toString() + result.get(i+1);
+						result.remove(i+1);
+						result.set(i, item);
+					}
+				}
+			}
+		}
 		return result;
 	}
 
