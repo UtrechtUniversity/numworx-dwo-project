@@ -33,7 +33,7 @@
 <!-- 	 	<module>../DWOGwtClient</module> -->
 <!--  	 	<module>../DWOinteraction</module> -->
         <module>../DWOJClient</module> 
-<!--       	<module>../DWOServer</module> -->
+       	<module>../DWOServer</module> 
      	<module>../DWOplayer</module>
 <!--	<module>../edexml</module>-->
 <!--         <module>../KeyboardGWT</module> -->
