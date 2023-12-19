@@ -1,8 +1,12 @@
 package nl.uu.fi.dwo.mobile.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.Vector;
 
 import fi.wiskopdr.FormuleParser;
@@ -19,13 +23,22 @@ public class Variable
 	String name;
 	Vector borders;
 	HashMap borderValues;
-	Vector values;
+	Vector<Integer> values;
+	boolean draw;
 
 	public Variable(String name)
 	{
 		this.name = name;
-		borders = new Vector();
+		borders = new Vector<>();
 		borderValues = new HashMap();
+	}
+
+	public void setDraw(boolean d) {
+	  this.draw = d;
+	}
+		
+	public boolean isDraw() {
+	  return draw;
 	}
 
 	public void setValues(String s)
@@ -143,16 +156,32 @@ public class Variable
 		}
 	}
 
+	Set<Integer> drawSet = new TreeSet<>();
+	
+    public void draw (int n) {
+      if (isDraw())
+        drawSet.add(n);
+    }
+	
 	public int[] getValues()
-	{
-		makeValues();
-		int[] intValues = new int[values.size()];
-		for (int i = 0; i < values.size(); i++)
-		{
-			intValues[i] = ((Integer) values.elementAt(i)).intValue();
-			//System.out.println("values: "+intValues[i]);
+	{	makeValues();
+		List<Integer> all; 
+		if (isDraw()) { 
+			all = new ArrayList<>(values);
+		    all.removeAll(drawSet);
+    		if (all.isEmpty()) {
+    		  drawSet.clear();
+    		  all = values;
+    		}
+		} else {
+			all = values;
 		}
-		return intValues;
+		int[] intValues = new int[all.size()];
+		for(int i=0 ; i<intValues.length; i++)
+	    {	Integer item = all.get(i);
+            intValues[i] = item.intValue();
+	    }
+	    return intValues;
 	}
 
 	public String getName()
