@@ -67,8 +67,8 @@ public abstract class XMLView {
 	protected ObjectMap instellingen;
 	protected int font_size = 12;
 	protected String font_name = "Arial";
-	protected String[] randomVarNamen = null;
-	protected HashMap randomVarWaarden = null;
+	public String[] randomVarNamen = null;
+	public HashMap randomVarWaarden = null;
 	protected ArrayList<Object> opdrachtObjects;
 	protected boolean newVersion = true;
 	protected FormuleKeyboardIF kb = null;
@@ -126,7 +126,7 @@ public abstract class XMLView {
 	private String[] mccCategorieString;
 	public int[][][][] measuredMisconceptions;
 	boolean objectivesAanwezig;
-	boolean globalParam;
+	public boolean globalParam;
 	
 	private Map styles;
 	private String templateName;

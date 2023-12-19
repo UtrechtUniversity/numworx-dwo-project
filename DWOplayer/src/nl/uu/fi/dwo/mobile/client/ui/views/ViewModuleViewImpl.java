@@ -49,6 +49,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.InteractionViewWithM
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
+import nl.uu.fi.dwo.mobile.utils.RandomValues;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -893,16 +894,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		}
 	}
 	
-// deze zouden inline moeten worden gemaakt.
-// gebruik zetVolgendeOpdracht in bijna alle gevallen
-	@Deprecated
-	public final void zetOpdracht(HashMap<String, Object> opdracht)
-	{
-		zetOpdracht(opdracht, true);
-	}
-
-	public final void zetVolgendeOpdracht(HashMap<String,Object> opdracht) {
-		zetOpdracht(opdracht, !globalParam);
+	public final void zetVolgendeOpdracht(HashMap<String,Object> opdracht, RandomValues rv) {
+		zetOpdracht(opdracht, !globalParam, rv);
 	}
 	
 	/**
@@ -911,13 +904,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	 * @param randomise (initial|| !globalparameters)
 	 */
 	
-	public void zetOpdracht(HashMap<String, Object> opdracht, boolean randomise)
+	public void zetOpdracht(HashMap<String, Object> opdracht, boolean randomise, RandomValues vc)
 	{
-		String randVarString = "";
-		randVarString = (String) opdracht.get("randVarString");
-		if(randVarString == null) randVarString = "";
-		VariableCollection vc = new VariableCollection();
-		boolean wellSet = vc.setVariables(randVarString);
 
 		String[] varnamen = null;
 		HashMap waarden = null;
@@ -930,7 +918,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			}
 			catch (Exception ex)
 			{
-				wellSet = false;
 			}
 		} else {
 			varnamen = this.randomVarNamen; // keep from last time

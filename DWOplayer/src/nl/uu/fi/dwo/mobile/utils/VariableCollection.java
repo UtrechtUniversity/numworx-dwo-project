@@ -16,7 +16,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
  * copied from DWO
  * 
  */
-public class VariableCollection
+public class VariableCollection implements RandomValues
 {
 	Vector<Variable> variables;
 

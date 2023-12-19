@@ -28,6 +28,8 @@ import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
+import nl.uu.fi.dwo.mobile.utils.VariableCollection;
+import nl.uu.fi.dwo.mobile.utils.RandomValues;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
@@ -91,12 +93,12 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private static String[] mccCategorieString;
 	private boolean objectivesAanwezig = false;
 
-	private static final int foutStraf = 2;
+	//private static final int foutStraf = 2;
 	private static final Logger logger = Logger.getLogger("OpdrNav");
     private static final DWOplayerCss css = DWOplayer.DWO_BUNDLE.dwoplayercss();
 
 	private ViewModuleViewImpl entry;
-	private ListBox lb_activiteiten;
+	//private ListBox lb_activiteiten;
 	private Panel fp_opdrachten;
 	private FormuleButton shiftButtonLeft;
 	private Label spaceStart;
@@ -443,13 +445,22 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 		if (state == null)
 		{
-			// logger.info("zetOpdracht no state");
-			entry.zetOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
+			VariableCollection vc = new VariableCollection();
+			HashMap<String, Object> opdracht = opdrachten[currentActiviteit][currentOpdracht];
+			String randVarString = "";
+			randVarString = (String) opdracht.get("randVarString");
+			if(randVarString == null) randVarString = "";
+			vc.setVariables(randVarString);
+
+			entry.zetOpdracht(opdracht, true, vc);
 		}
 		else
 		{
-			// logger.info("zetOpdracht plus state");
-			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], state);
+			HashMap<String, Object> opdracht = opdrachten[currentActiviteit][currentOpdracht];
+			
+			
+			
+			entry.zetOpdrachtPlusState(opdracht, state);
 		}
 	}
 
@@ -540,7 +551,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		contentPanel.getElement().getStyle().setMargin(5, Unit.PX);
 
 		mainPanel.add(contentPanel);
-
+/*
 		lb_activiteiten = new ListBox();
 		// We bieden (in elk geval tijdelijk) geen support voor verschillende niveaus.
 		// Als we de verschillende niveaus er helemaal uit halen, kan de code op
@@ -571,6 +582,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		}
 
 		contentPanel.add(lb_activiteiten);
+*/
 		setOpdrachtenInitieel(0);
 		return mainPanel;
 	}
@@ -1767,8 +1779,33 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		entry.clearContentPanel();
 		currentOpdracht = opdracht;
 		memento.setCurrentOpdracht(opdracht);
+		RandomValues rv;
 		if (states[currentActiviteit][currentOpdracht] == null)
-			entry.zetVolgendeOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
+		{
+			HashMap<String, Object> o = opdrachten[currentActiviteit][currentOpdracht];
+			if (entry.globalParam) {
+				rv = new RandomValues() {
+
+					@Override
+					public String[] getVariableNames() {
+						return entry.randomVarNamen;
+					}
+
+					@Override
+					public HashMap getRandomValues() {
+						return entry.randomVarWaarden;
+					}	
+				};
+			} else {
+				VariableCollection vc  = new VariableCollection();
+				String randVarString = "";
+				randVarString = (String) o.get("randVarString");
+				if(randVarString == null) randVarString = "";
+				vc.setVariables(randVarString);
+				rv = vc;
+			}
+			entry.zetVolgendeOpdracht(o, rv);
+		}
 		else
 		{
 			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht],
@@ -2395,10 +2432,11 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		BUS.removeHandlers();
 		if (states[currentActiviteit][currentOpdracht] == null)
 		{
+///<<<<<<HIERO>>>>>
 			if (randomize)
-				entry.zetOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
+				entry.zetOpdracht(opdrachten[currentActiviteit][currentOpdracht], true, new VariableCollection());
 			else
-				entry.zetVolgendeOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
+				entry.zetVolgendeOpdracht(opdrachten[currentActiviteit][currentOpdracht], new VariableCollection());
 		}
 		else
 			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht],
