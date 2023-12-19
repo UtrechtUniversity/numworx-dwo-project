@@ -50,8 +50,8 @@ public class VariableCollection
 				int index = tok.indexOf("=");
 				if (index > 0)
 				{
-					String name = tok.substring(0, index);
-					if (Letter.isLetter(name.charAt(0)))
+					String name = tok.substring(0, index).trim();
+					if (!name.isEmpty() && Letter.isLetter(name.charAt(0)))
 					{
 						setVariable(tok);
 					} else 
