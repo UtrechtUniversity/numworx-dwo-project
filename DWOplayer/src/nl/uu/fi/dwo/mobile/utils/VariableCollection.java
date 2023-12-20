@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import fi.wiskopdr.Letter;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 /**
@@ -173,5 +174,18 @@ public class VariableCollection implements RandomValues
 				var.drawSet.addAll(r);
 			}
 		}
+	}
+
+	public void fromState(HashMap<String,?> values) {
+		if (values == null) return;
+		Set<String> names = values.keySet();
+		ObjectMap om = JSONUtilities.wrapMap(values);
+		for (String name : names) {
+			Variable var = getVariable(name);
+			if (var.isDraw()) {
+				var.draw(om.getInt(name));
+			}
+		}
+		
 	}
 }

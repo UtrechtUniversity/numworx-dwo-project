@@ -445,23 +445,28 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 		if (state == null)
 		{
-			VariableCollection vc = new VariableCollection();
 			HashMap<String, Object> opdracht = opdrachten[currentActiviteit][currentOpdracht];
-			String randVarString = "";
-			randVarString = (String) opdracht.get("randVarString");
-			if(randVarString == null) randVarString = "";
-			vc.setVariables(randVarString);
-
+			VariableCollection vc = newRandomCollection(opdracht);
 			entry.zetOpdracht(opdracht, true, vc);
 		}
 		else
 		{
 			HashMap<String, Object> opdracht = opdrachten[currentActiviteit][currentOpdracht];
-			
-			
-			
-			entry.zetOpdrachtPlusState(opdracht, state);
+			entry.zetOpdrachtPlusState(opdracht, state, newRandomCollection(opdracht));
 		}
+	}
+
+	private VariableCollection newRandomCollection(HashMap<String, Object> opdracht) {
+		return entry.activity.memento().get(currentOpdracht, () -> {
+
+			VariableCollection vc = new VariableCollection();
+			String randVarString = "";
+			randVarString = (String) opdracht.get("randVarString");
+			if (randVarString == null)
+				randVarString = "";
+			vc.setVariables(randVarString);
+			return vc;
+		});
 	}
 
   protected int createMode(HashMap<String, Object> launchData) {
@@ -1784,32 +1789,16 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		{
 			HashMap<String, Object> o = opdrachten[currentActiviteit][currentOpdracht];
 			if (entry.globalParam) {
-				rv = new RandomValues() {
-
-					@Override
-					public String[] getVariableNames() {
-						return entry.randomVarNamen;
-					}
-
-					@Override
-					public HashMap getRandomValues() {
-						return entry.randomVarWaarden;
-					}	
-				};
+				rv = randomFromEntry(o);
 			} else {
-				VariableCollection vc  = new VariableCollection();
-				String randVarString = "";
-				randVarString = (String) o.get("randVarString");
-				if(randVarString == null) randVarString = "";
-				vc.setVariables(randVarString);
-				rv = vc;
+				rv = newRandomCollection(o);
 			}
 			entry.zetVolgendeOpdracht(o, rv);
 		}
 		else
 		{
 			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht],
-				states[currentActiviteit][currentOpdracht]);
+				states[currentActiviteit][currentOpdracht], newRandomCollection(opdrachten[currentActiviteit][currentOpdracht]));
 			if (misconceptions != null)
 				entry.setMeasuredMisconceptions(measuredMisconceptions);
 		}
@@ -1825,6 +1814,25 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		// zorg dat de opdrachten-scrollbar bijgewerkt wordt bij het navigeren naar een opdracht
 		// opdat de opdracht in beeld is
 		setOpdrachten(currentActiviteit);
+	}
+
+	private RandomValues randomFromEntry(HashMap<String, Object> o) {
+		VariableCollection vc = newRandomCollection(o);
+		vc.fromState(entry.randomVarWaarden);
+		RandomValues rv;
+		rv = new RandomValues() {
+
+			@Override
+			public String[] getVariableNames() {
+				return entry.randomVarNamen;
+			}
+
+			@Override
+			public HashMap getRandomValues() {
+				return entry.randomVarWaarden;
+			}	
+		};
+		return rv;
 	}
 
 	public int getCurrentOpdracht()
@@ -2432,15 +2440,17 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		BUS.removeHandlers();
 		if (states[currentActiviteit][currentOpdracht] == null)
 		{
-///<<<<<<HIERO>>>>>
-			if (randomize)
-				entry.zetOpdracht(opdrachten[currentActiviteit][currentOpdracht], true, new VariableCollection());
-			else
-				entry.zetVolgendeOpdracht(opdrachten[currentActiviteit][currentOpdracht], new VariableCollection());
+			if (randomize) {
+				HashMap<String, Object> o = opdrachten[currentActiviteit][currentOpdracht];
+				entry.zetOpdracht(o, true, newRandomCollection(o));
+			} else {
+				HashMap<String, Object> o = opdrachten[currentActiviteit][currentOpdracht];
+				entry.zetVolgendeOpdracht(o, entry.globalParam? randomFromEntry(o) : newRandomCollection(o));
+			}
 		}
 		else
 			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht],
-				states[currentActiviteit][currentOpdracht]);
+				states[currentActiviteit][currentOpdracht], newRandomCollection(opdrachten[currentActiviteit][currentOpdracht]));
 
 		if (entry.activity.parameters().isNavTitle())
 			entry.setTitle("Vraag " + (getCurrentOpdracht() + 1) + " van " + getAantalOpdrachten());

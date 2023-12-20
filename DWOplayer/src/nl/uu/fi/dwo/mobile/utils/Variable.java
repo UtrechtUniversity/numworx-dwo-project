@@ -157,10 +157,11 @@ public class Variable
 	}
 
 	Set<Integer> drawSet = new TreeSet<>();
+	Integer last;
 	
     public void draw (int n) {
       if (isDraw())
-        drawSet.add(n);
+        drawSet.add(last = n);
     }
 	
 	public int[] getValues()
@@ -171,7 +172,9 @@ public class Variable
 		    all.removeAll(drawSet);
     		if (all.isEmpty()) {
     		  drawSet.clear();
-    		  all = values;
+    		  all.addAll(values);
+    		  if (all.size() >= 2) 
+    			  all.remove(last); // er moet wel iets te kiezen blijven
     		}
 		} else {
 			all = values;

@@ -1000,38 +1000,44 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		on.unpause(old);
 	}
 
-	public void zetOpdrachtPlusState(HashMap<String, Object> opdracht, HashMap<String, Object> state)
+	public void zetOpdrachtPlusState(HashMap<String, Object> opdracht, HashMap<String, Object> state, VariableCollection vc)
 	{
 		
-		//System.out.println("zetOpdrachtPlusState");
-		String randVarString;
-		randVarString = (String) opdracht.get("randVarString");
-		if(randVarString == null ) randVarString = "";
-		VariableCollection vc = new VariableCollection();
-		boolean wellSet = vc.setVariables(randVarString);
-
-		String[] varnamen = null;
-		HashMap waarden = null;
-		//if(randomise)
-		{
-			try
-			{
-				varnamen = vc.getVariableNames();
-				waarden = vc.getRandomValues();
-			}
-			catch (Exception ex)
-			{
-				wellSet = false;
-			}
-		}
-		
-		this.randomVarNamen = varnamen;
-		this.randomVarWaarden = waarden;
+//		//System.out.println("zetOpdrachtPlusState");
+//		String randVarString;
+//		randVarString = (String) opdracht.get("randVarString");
+//		if(randVarString == null ) randVarString = "";
+//		VariableCollection vc = new VariableCollection();
+//		boolean wellSet = vc.setVariables(randVarString);
+//
+//		String[] varnamen = null;
+//		HashMap waarden = null;
+//		//if(randomise)
+//		{
+//			try
+//			{
+//				varnamen = vc.getVariableNames();
+//				waarden = vc.getRandomValues();
+//			}
+//			catch (Exception ex)
+//			{
+//				wellSet = false;
+//			}
+//		}
+//		
+//		this.randomVarNamen = varnamen;
+//		this.randomVarWaarden = waarden;
 
 		if (state.get(RANDOM_VAR_NAMEN) != null)
 			this.randomVarNamen = JSONUtilities.toStringArray(state.get(RANDOM_VAR_NAMEN));
+		else 
+			this.randomVarNamen = vc.getVariableNames();
 		if (state.get(RANDOM_VAR_WAARDEN) != null)
+		{
 			this.randomVarWaarden = (HashMap<String, Object>) state.get(RANDOM_VAR_WAARDEN);
+			vc.fromState(randomVarWaarden);
+		} else
+			this.randomVarWaarden = vc.getRandomValues();
 
 		opdrachtObjects = new ArrayList<Object>();
 		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( opdracht.get("interactiePanelLaunchData") );
