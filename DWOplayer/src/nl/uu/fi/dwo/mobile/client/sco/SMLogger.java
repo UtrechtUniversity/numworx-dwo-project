@@ -310,7 +310,7 @@ public class SMLogger implements Logging {
       s.result = result;  
       xapi.then(manager -> manager.getValue().saveStatement(s));
     }
-    delegate.log(parameters);
+    delegate.updateLog(parameters);
   }
 
 }
