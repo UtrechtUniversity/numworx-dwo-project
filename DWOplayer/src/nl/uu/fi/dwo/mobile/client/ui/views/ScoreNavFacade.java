@@ -458,7 +458,7 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 	public void acceptCBookEvent(CBookEvent event) {
 		if(checker != null && CheckButton.CHECK.equals(event.getCommand()))
 			checker.checkOpdracht(this);
-		if ("action.reset".equals(event.getCommand()));
+		if ("action.reset".equals(event.getCommand()))
 			reloadOpdracht(currentOpdracht);			
 	}
 
