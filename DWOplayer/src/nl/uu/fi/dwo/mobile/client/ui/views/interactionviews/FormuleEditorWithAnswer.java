@@ -28,18 +28,15 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
-import nl.uu.fi.dwo.mobile.client.template.TemplateCss;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.ResizableContentIF;
-import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselEditor;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselOplossingenVak;
 import nl.uu.fi.dwo.mobile.utils.AutoHidePopupPanel;
-import nl.uu.fi.dwo.mobile.utils.ImageUtils;
 import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
@@ -1693,25 +1690,27 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			
 			h.put("formuleVakInhouden", formuleVakInhouden);
 			h.put(ANTWOORD_STRING, formuleVakInhouden[0]);
-			h.put("ingevuld", new Boolean(ingevuld));
-			h.put("nagekeken", new Boolean(nagekeken));
+			h.put("ingevuld", Boolean.valueOf(ingevuld));
+			h.put("nagekeken", Boolean.valueOf(nagekeken));
 			h.put("editable", Boolean.valueOf(editable));
-			h.put("isVeranderdNaNakijken", new Boolean(isVeranderdNaNakijken));
-			h.put("errorCount", new Integer(errorCount));
+			h.put("isVeranderdNaNakijken", Boolean.valueOf(isVeranderdNaNakijken));
+			h.put("errorCount", Integer.valueOf(errorCount));
 			
 		}
+		if (ingevuld) comRoot.setVisited();
 
 		if(logging instanceof DWOLogger) {
 			Map<String, Object> map = buildLoggingMap();
-			DWOLogger dwologger = (DWOLogger) logging;
 			if (mode == OpdrNavIF.EINDTOETS && ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {
 				nagekeken = true;
 				zetIsVeranderdNaNakijken(false);
 				h.put("nagekeken", (nagekeken));
 				h.put("isVeranderdNaNakijken", (isVeranderdNaNakijken));
-				dwologger.log(map);
+				logging.log(map);
+			} if (mode == OpdrNavIF.ZELFTOETS && ingevuld) { 
+				logging.log(map);
 			} else {
-				dwologger.updateLog(map);
+				logging.updateLog(map);
 			}
 		}
 		if(correctie != null) correctie.correctie(h);

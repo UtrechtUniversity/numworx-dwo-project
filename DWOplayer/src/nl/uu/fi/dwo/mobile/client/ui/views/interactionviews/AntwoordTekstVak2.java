@@ -234,6 +234,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			if (logOption)
 			{
 				LogBuilder dwologger = activity.logBuilder();
+				dwologger.setLaunchData(map);
 				dwologger.setLogOption(logOption);
 				dwologger.setMaxScore(scoreMax);
 				dwologger.setLogID(logID);
@@ -678,26 +679,26 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		errorCount = this.errorCount;
 
 		if (logging instanceof DWOLogger)
-		{	DWOLogger dwologger = (DWOLogger) logging;
+		{
 			Map<String, Object> map = buildLogParameters();
 			if (mode == OpdrNavIF.EINDTOETS && ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {
 				this.nagekeken = nagekeken = true;
 				zetIsVeranderdNaNakijken(isVeranderdNaNakijken = false);
-				dwologger.log(map);
+				logging.log(map);
 			} if (mode == OpdrNavIF.ZELFTOETS && ingevuld) { 
-				dwologger.log(map);
+				logging.log(map);
 			} else {
-				dwologger.updateLog(map);
+				logging.updateLog(map);
 			}
 		}
 		HashMap<String, Object> h = new HashMap<String, Object>();
-		h.put("ingevuld", new Boolean(ingevuld));
-		h.put("nagekeken", new Boolean(nagekeken));
-		h.put("isVeranderdNaNakijken", new Boolean(isVeranderdNaNakijken));
+		h.put("ingevuld", Boolean.valueOf(ingevuld));
+		h.put("nagekeken", Boolean.valueOf(nagekeken));
+		h.put("isVeranderdNaNakijken", Boolean.valueOf(isVeranderdNaNakijken));
 		h.put("antwoord", antwoord);
 		h.put("attempts", attempts);
-		h.put("attemptsCount", new Integer(attemptsCount));
-		h.put("errorCount", new Integer(errorCount));
+		h.put("attemptsCount", Integer.valueOf(attemptsCount));
+		h.put("errorCount", Integer.valueOf(errorCount));
 		h.put("editable", Boolean.valueOf(editable));
 
 		if(correctie != null) correctie.correctie(h);
