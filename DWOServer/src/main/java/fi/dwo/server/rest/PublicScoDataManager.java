@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.logging.Level;
@@ -33,6 +34,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
 
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -114,8 +116,9 @@ public class PublicScoDataManager {
   @GET
   @Produces("text/css")
   @Path("get/{scoId}/style.css")
-  public String getCss(@PathParam("scoId") Long scoId) throws IOException, ParseException {
+  public Response getCss(@PathParam("scoId") Long scoId) throws IOException, ParseException {
     String something = "";
+    Date last = null;
     PersistentScoData scoData = ScoDataManager.findEntity(scoId);
     if (scoData != null) {
       Map map;
@@ -130,8 +133,15 @@ public class PublicScoDataManager {
         map = (Map) StringCodeObject.decodeStringToObject(scoData.getLaunchdata(), null);
       }
       something = StateToCss.createCssFromInstellingen(map, null);
+      last = new Date(scoData.getLastChangeTimeStamp());
     }
-    return "/*" + scoId + "*/\n" + something;
+	return Response.ok()
+    		.lastModified(last)
+    		.expires(new Date(System.currentTimeMillis()+1000*60*10))
+    		.header("Cache-Control", "max-age=600")
+    		.type("text/css")
+    		.entity("/*" + scoId + "*/\n" + something)
+    		.build();
   }
   
 }
