@@ -613,11 +613,8 @@
         <profile>
             <id>test</id>
             <activation>
-                <property>
-                    <name>environment</name>
-                    <value>test</value>
-                </property>                
-            </activation>
+				<property><name>env.CI</name></property>
+			</activation>
             <properties>
                 <junit.test>false</junit.test>
             </properties>
