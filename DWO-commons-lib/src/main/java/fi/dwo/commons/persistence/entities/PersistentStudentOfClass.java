@@ -1,6 +1,5 @@
 package fi.dwo.commons.persistence.entities;
 
-import fi.dwo.commons.persistence.MySQLPersistenceId;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;

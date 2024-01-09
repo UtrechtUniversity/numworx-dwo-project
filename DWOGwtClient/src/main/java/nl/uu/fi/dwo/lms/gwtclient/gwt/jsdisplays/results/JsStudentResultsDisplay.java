@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
