@@ -1,9 +1,12 @@
 package fi.dwo.server.rest;
 
+import java.io.StringWriter;
 import java.util.Collections;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.security.RolesAllowed;
@@ -19,6 +22,8 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
+import fi.beans.dwomaccess.JSONEncoder;
+import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.util.StudentModelContextUtilManager;
@@ -207,7 +212,19 @@ public class SecuredStudentStudentModelManager {
 	private static String description(DomStudentModelContextInfo info, String locale) {
 		String json = info.getDescription().get(locale + "@JSON");
 		if (json == null || json.isEmpty())
-			return info.getDescription().getOrDefault(locale, "");
+		{
+			String launchdata = info.getDescription().getOrDefault(locale, "");			
+		    // The slow conversion, if bytes are missing.
+		    try {
+		      Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(launchdata, null);
+		      StringWriter writer = new StringWriter();
+		      JSONEncoder.encode(map, writer, null); // FIXME zie DWOmAccess voor loader with wiskopdr.jar
+		      return writer.toString();
+		    } catch (Exception ex) {
+		      LOG.log(Level.SEVERE, "Error while decoding studentmodel with uuid " + info.getId() + ".", ex);
+		      json = "";
+		    }
+		}
 		return json;
 	}
 	

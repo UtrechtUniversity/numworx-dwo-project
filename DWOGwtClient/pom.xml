@@ -153,6 +153,7 @@
         	<version>2.5.26</version>
         	<scope>runtime</scope>
         	<type>war</type>
+        	<optional>true</optional>
         </dependency>
 		<dependency>
 			<groupId>org.vectomatic</groupId>
@@ -208,23 +209,7 @@
                     -->
                     <doCheck>false</doCheck>
                     <doUpdate>false</doUpdate>
-                    <!--
-                     This ensures that even if we are not connected to scm than also
-                     take the version from local .svn file
-                    -->
-                    <revisiononscmfailure>
-       
-                        <!--
-                         Generate sequence build number based on:
-                         build number and timestamp     
-                        -->
-                        <format>Build: #{0} ({1,date})</format>
-                        <items>
-                            <item>buildNumber\d*</item>
-                            <item>timestamp</item>
-                        </items>
-                    </revisiononscmfailure>
-                </configuration>
+               </configuration>
             </plugin>                   
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -321,7 +306,8 @@
                     <webappDirectory>${webappDirectory}</webappDirectory> 
                     <packagingExcludes>WEB-INF/lib/**,WEB-INF/classes/**</packagingExcludes>
                     <!-- exclude angular 2 dir: /src/main/ngapp -->
-                    <exclude>ngapp/**</exclude>                
+                    <exclude>ngapp/**</exclude>
+                    <dependentWarExcludes>css/scss/**</dependentWarExcludes>                
                 </configuration>
             </plugin>
             <plugin>
@@ -593,16 +579,6 @@
                     </dependency>                                
                 </dependencies>
             </plugin>            
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <goals>deploy</goals>
-					<preparationGoals>clean verify install</preparationGoals>
-					<tagBase>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOGwtClient/tags/</tagBase>
-                </configuration>    
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
