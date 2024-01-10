@@ -33,7 +33,7 @@ public final class CourseBuilder implements
 		public DomCourseStudent apply(PersistentCourse c) {
 		DomCourseStudent build = buildDomCourseStudent(c);
 		if(build.getImageData() != null) {
-			build.setImage(pfx + "?courseId=" + c.getCourseID() + hasRoleId);
+			build.setImage(pfx + "?courseId=" + c.getCourseID() + hasRoleId + "&optLock=" + c.getVersion());
 			build.setImageData(null);
 		} else if ("" .equals(build.getImage()))
 			build.setImage(null);

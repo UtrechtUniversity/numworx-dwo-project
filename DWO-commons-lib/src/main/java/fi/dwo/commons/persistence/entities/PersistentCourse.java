@@ -141,7 +141,11 @@ public class PersistentCourse implements Serializable {
     @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
     private Long version;
     
-    private long trashID;
+    public Long getVersion() {
+		return version;
+	}
+
+	private long trashID;
     
     public PersistentCourse() {
     }

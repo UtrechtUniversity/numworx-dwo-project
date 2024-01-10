@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Level;
@@ -23,6 +24,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -109,7 +111,14 @@ public class PublicCourseManager {
 	        	data.setDescriptionbytes(bos.toByteArray());
 	        	data = CourseDataManager.edit(data);
 	        }
-			return Response.ok().entity(string).build();
+			CacheControl cc = new CacheControl();
+			cc.setMaxAge(600);
+			
+			return Response.ok().entity(string)
+					.cacheControl(cc)
+					.lastModified(new Date(course.getLastChangeTimeStamp()))
+					.expires(new Date(System.currentTimeMillis()+cc.getMaxAge()*1000))
+					.build();
 		} catch (Exception e) {
 			LOG.log(Level.WARNING, "getCourseDescription "  + courseId , e);
 			return Response.noContent().build();
@@ -243,18 +252,26 @@ if(SECURITY)
         		}
     		
     		}
+    		Date last = new Date(course.getLastChangeTimeStamp());
     		byte[] imageData = course.getImageData(); // NULL PointerException
     		if (imageData == null) {
     			PersistentCourseData cd = CourseDataManager.findEntity(courseId);
     			if (cd != null) {
     				imageData = cd.getImageData();
+    				last = new Date(cd.getLastChangeTimeStamp());
     			}
     		}
     		BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageData));
     		ByteArrayOutputStream out = new ByteArrayOutputStream();
     		ImageIO.write(image, "png", out);
     		imageData = out.toByteArray();
-    		return Response.ok(imageData, "image/png").build();    		
+    		CacheControl cc = new CacheControl(); 
+    		cc.setMaxAge(6000);
+			return Response.ok(imageData, "image/png")
+    				.cacheControl(cc)
+    				.lastModified(last)
+					.expires(new Date(System.currentTimeMillis()+cc.getMaxAge()*1000))
+    				.build();    		
     	} catch(Exception e) {
     		LOG.log(Level.WARNING, "getImage error", e);
     	}
