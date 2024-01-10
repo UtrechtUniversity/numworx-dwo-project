@@ -209,7 +209,6 @@
 		<groupId>nl.uu.fi.dwo.mobile</groupId>
 		<artifactId>DWOplayer</artifactId>
 		<type>war</type>
-		<classifier>dwo2</classifier>
 		<scope>runtime</scope>
 	</dependency>
 	<dependency>

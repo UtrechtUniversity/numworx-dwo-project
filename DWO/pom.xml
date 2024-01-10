@@ -128,7 +128,6 @@
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
 	  		<artifactId>DWOplayer</artifactId>
 	  		<version>2.5.27-SNAPSHOT</version>
-	  		<classifier>dwo2</classifier>		
   			<type>war</type>
 		</dependency>
 		<dependency>
