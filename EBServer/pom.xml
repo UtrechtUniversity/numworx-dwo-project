@@ -648,7 +648,6 @@
 						<overlay>
 							<groupId>nl.uu.fi.dwo.mobile</groupId>
 							<artifactId>DWOplayer</artifactId>
-							<classifier>dwo2</classifier>
 							<targetPath>/dwo/tablet</targetPath>		
 							<excludes>
 								<exclude>WEB-INF/**</exclude>
