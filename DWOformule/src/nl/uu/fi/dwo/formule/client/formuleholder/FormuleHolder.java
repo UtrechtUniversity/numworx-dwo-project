@@ -7,6 +7,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
+import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
@@ -207,7 +208,10 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	public void requestFocus() {
 		//kb.setEditor(null);
 		if(kb != null)
+		{
 			kb.setEditor(this);
+			FocusOnTouch.focus(); // activate physical keyboard
+		}
 	}
 
 	/**
