@@ -6,7 +6,7 @@
   <groupId>nl.numworx.oauth2</groupId>
   <artifactId>OAuth2Client</artifactId>
   <packaging>war</packaging>
-  <version>1.0.7</version>
+  <version>1.0.8</version>
   <name>nl.numworx.oauth2client.OAuth2Client</name>
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
@@ -28,7 +28,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <tomcat7.version>7.0.76</tomcat7.version>
     <context.xml>context.xml</context.xml>
-    <DWOServerVersion>2.5.12</DWOServerVersion>
+    <DWOServerVersion>2.5.25</DWOServerVersion>
     <local.dwo>/dwox</local.dwo>
   </properties>
 
@@ -175,7 +175,7 @@
       </plugin>
 	  <plugin>
                 <artifactId>maven-war-plugin</artifactId>
-  				<version>3.0.0</version>
+  				<version>3.2.3</version>
                 <configuration>
                     <attachClasses>true</attachClasses>
                 </configuration>

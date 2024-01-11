@@ -66,12 +66,38 @@ public class UULogin implements SigningKeyResolver, Login {
 	private OAuthToken token;
 
     public UULogin(ServletConfig servletConfig) {
-		
+    	this();
 	}
     public UULogin() {
-    	
+		if (!System.getProperty("UU_SECRET", "").isEmpty())
+			productie();
     }
-    
+
+    /*  Client_ID: 084ed6f6-43bb-4ac8-bb41-92ad6bc14354
+		Grants: authorization code
+		Token Types: code, access token, id token
+		Scope: urn:uu.nl:idp:scope:oauth:numworx
+		 
+		Endpoint type 		URL
+		Authorization 		https://login.uu.nl/nidp/oauth/nam/authz
+		Registration  		https://login.uu.nl/nidp/oauth/nam/clients
+		Token	      		https://login.uu.nl/nidp/oauth/nam/token
+		Token Introspect 	https://login.uu.nl/nidp/oauth/v1/nam/introspect
+		UserInfo			https://login.uu.nl/nidp/oauth/nam/userinfo
+		OpenID Metadata		https://login.uu.nl/nidp/oauth/nam/.well-known/openid-configuration
+		Revocation			https://login.uu.nl/nidp/oauth/nam/revoke
+		JSON Web Key Set	https://login.uu.nl/nidp/oauth/nam/keys
+     */
+    private void productie() {
+		client_id = "084ed6f6-43bb-4ac8-bb41-92ad6bc14354";
+		client_secret = System.getProperty("UU_SECRET", "");
+		ISSUER = "https://login.uu.nl/nidp/oauth/nam";
+		AUTHORIZATION_URL = "https://login.uu.nl/nidp/oauth/nam/authz";
+		TOKEN_URL = "https://login.uu.nl/nidp/oauth/nam/token";
+		KEYS_URL = "https://login.uu.nl/nidp/oauth/nam/keys";
+		redirect_url = "https://numworx.uu.nl/dwo/oauth2/redirect";
+	}
+   
     
 	public String login() throws OAuthSystemException {
     	return login(null, null, null);
