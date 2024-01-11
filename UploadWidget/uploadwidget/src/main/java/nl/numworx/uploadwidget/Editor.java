@@ -118,20 +118,6 @@ public class Editor extends JPanel implements CBookWidgetEditIF, Constants, Reso
 		add(vb);add(Box.createVerticalStrut(10));
 		vb = Box.createVerticalBox();
 
-		hb = Box.createHorizontalBox();hb.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-		hb.add(new JLabel("Max items"));hb.add(Box.createHorizontalGlue());
-		
-		NumberFormatter nf = new NumberFormatter();
-		nf.setMinimum(0);
-		nf.setMaximum(10);
-		nf.setValueClass(Integer.class);
-		itemField = new JFormattedTextField(nf);
-		itemField.setValue(items);
-		itemField.setColumns(10);
-		Dimension pref = itemField.getPreferredSize();
-		itemField.setMaximumSize(pref);
-		hb.add(itemField);
-		vb.add(hb);
 		hb = Box.createHorizontalBox();hb.setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
 		hb.add(new JLabel("Bestanden"));hb.add(Box.createHorizontalGlue());
 		model = new InputFileModel();
@@ -148,6 +134,20 @@ public class Editor extends JPanel implements CBookWidgetEditIF, Constants, Reso
 		vb.setBorder(BorderFactory.createTitledBorder("Download"));
 		add(vb);
 		vb = Box.createVerticalBox();
+		hb = Box.createHorizontalBox();hb.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+		hb.add(new JLabel("Max items"));hb.add(Box.createHorizontalGlue());
+		
+		NumberFormatter nf = new NumberFormatter();
+		nf.setMinimum(0);
+		nf.setMaximum(10);
+		nf.setValueClass(Integer.class);
+		itemField = new JFormattedTextField(nf);
+		itemField.setValue(items);
+		itemField.setColumns(10);
+		Dimension pref = itemField.getPreferredSize();
+		itemField.setMaximumSize(pref);
+		hb.add(itemField);
+		vb.add(hb);
 		hb = Box.createHorizontalBox();hb.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		hb.add(new JLabel("Mediatypes"));hb.add(Box.createHorizontalGlue());
 		mediatypes = new JComboBox<>(new String[] { "*", "Text", "Images"} );
