@@ -1212,9 +1212,6 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		
 		if (fontOvererving)
 		{
-			FormuleFont font = FormuleFont.createFromFontSize(parentRegel.getFont().getFontSize(), false);
-			if (!FormuleFont.formTimes)
-				font.setFont(parentRegel.getFont().getFont());
 			setFont(parentRegel);
 		}
 	}
@@ -1233,6 +1230,9 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		
 		formuleVak.setFont(font);
 		formuleVak.setDefaultFont(font);
+		antwoordTF.setFont(font);
+		antwoordTF.setFontName(font.getFont());
+		antwoordTF.setFontSize(font.getFontSize());
 	}
 
 	public void setFont(FormuleFont fm)

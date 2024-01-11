@@ -152,7 +152,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	private FlowPanel  flow;
 	private int cursor, selectionEnd, menuWidth;
 	private Widget menubar;
-	private ScrollPanel content;
+	private Scroller content;
 	private Widget contentwrap;
 	LayoutPanel hbox;
 	
@@ -180,6 +180,17 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	private com.google.gwt.user.client.Element formuleElement;
 	private String original = "";
 	
+	static class Scroller extends ScrollPanel {
+
+		Scroller(Widget child) {
+			super(child);
+		}
+		void setScrollable(boolean e) { 
+			getScrollableElement().getStyle().setOverflow(e ? Overflow.AUTO : Overflow.HIDDEN);
+		}
+	}
+	
+	
 	TextEditor(ActivityInterface a, int breedte, int hoogte, boolean boxMetRand)
 	{
 		this.activity = a;
@@ -197,6 +208,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		initWidget(hbox);
 		menubar = null;
 		content = getContent(null);
+		content.setScrollable(false);
 		contentwrap = content;
 		content.setPixelSize(width - boxsize - padding, 13);
 		flow.getElement().getStyle().setProperty("minWidth", width-boxsize-padding, PX);
@@ -453,7 +465,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		return tekst;
 	}
 
-	private ScrollPanel getContent(ObjectMap launchdata)
+	private Scroller getContent(ObjectMap launchdata)
 	{
 		FlowPanel touch = new FlowPanel();
 		touch.addStyleName("content");
@@ -463,7 +475,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
         s.setProperty("width", "fit-content");
 		flow = touch; // XXX voorlopig ok
 		setState(launchdata);
-		ScrollPanel result = new ScrollPanel(touch);
+		Scroller result = new Scroller(touch);
 		result.addStyleName("scroller");
 		return result;
 	}
