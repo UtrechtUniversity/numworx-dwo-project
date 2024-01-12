@@ -49,6 +49,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.InteractionViewWithM
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
+import nl.uu.fi.dwo.mobile.utils.RandomValues;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -893,16 +894,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		}
 	}
 	
-// deze zouden inline moeten worden gemaakt.
-// gebruik zetVolgendeOpdracht in bijna alle gevallen
-	@Deprecated
-	public final void zetOpdracht(HashMap<String, Object> opdracht)
-	{
-		zetOpdracht(opdracht, true);
-	}
-
-	public final void zetVolgendeOpdracht(HashMap<String,Object> opdracht) {
-		zetOpdracht(opdracht, !globalParam);
+	public final void zetVolgendeOpdracht(HashMap<String,Object> opdracht, RandomValues rv) {
+		zetOpdracht(opdracht, !globalParam, rv);
 	}
 	
 	/**
@@ -911,13 +904,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	 * @param randomise (initial|| !globalparameters)
 	 */
 	
-	public void zetOpdracht(HashMap<String, Object> opdracht, boolean randomise)
+	public void zetOpdracht(HashMap<String, Object> opdracht, boolean randomise, RandomValues vc)
 	{
-		String randVarString = "";
-		randVarString = (String) opdracht.get("randVarString");
-		if(randVarString == null) randVarString = "";
-		VariableCollection vc = new VariableCollection();
-		boolean wellSet = vc.setVariables(randVarString);
 
 		String[] varnamen = null;
 		HashMap waarden = null;
@@ -930,7 +918,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			}
 			catch (Exception ex)
 			{
-				wellSet = false;
 			}
 		} else {
 			varnamen = this.randomVarNamen; // keep from last time
@@ -1013,38 +1000,44 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		on.unpause(old);
 	}
 
-	public void zetOpdrachtPlusState(HashMap<String, Object> opdracht, HashMap<String, Object> state)
+	public void zetOpdrachtPlusState(HashMap<String, Object> opdracht, HashMap<String, Object> state, VariableCollection vc)
 	{
 		
-		//System.out.println("zetOpdrachtPlusState");
-		String randVarString;
-		randVarString = (String) opdracht.get("randVarString");
-		if(randVarString == null ) randVarString = "";
-		VariableCollection vc = new VariableCollection();
-		boolean wellSet = vc.setVariables(randVarString);
-
-		String[] varnamen = null;
-		HashMap waarden = null;
-		//if(randomise)
-		{
-			try
-			{
-				varnamen = vc.getVariableNames();
-				waarden = vc.getRandomValues();
-			}
-			catch (Exception ex)
-			{
-				wellSet = false;
-			}
-		}
-		
-		this.randomVarNamen = varnamen;
-		this.randomVarWaarden = waarden;
+//		//System.out.println("zetOpdrachtPlusState");
+//		String randVarString;
+//		randVarString = (String) opdracht.get("randVarString");
+//		if(randVarString == null ) randVarString = "";
+//		VariableCollection vc = new VariableCollection();
+//		boolean wellSet = vc.setVariables(randVarString);
+//
+//		String[] varnamen = null;
+//		HashMap waarden = null;
+//		//if(randomise)
+//		{
+//			try
+//			{
+//				varnamen = vc.getVariableNames();
+//				waarden = vc.getRandomValues();
+//			}
+//			catch (Exception ex)
+//			{
+//				wellSet = false;
+//			}
+//		}
+//		
+//		this.randomVarNamen = varnamen;
+//		this.randomVarWaarden = waarden;
 
 		if (state.get(RANDOM_VAR_NAMEN) != null)
 			this.randomVarNamen = JSONUtilities.toStringArray(state.get(RANDOM_VAR_NAMEN));
+		else 
+			this.randomVarNamen = vc.getVariableNames();
 		if (state.get(RANDOM_VAR_WAARDEN) != null)
+		{
 			this.randomVarWaarden = (HashMap<String, Object>) state.get(RANDOM_VAR_WAARDEN);
+			vc.fromState(randomVarWaarden);
+		} else
+			this.randomVarWaarden = vc.getRandomValues();
 
 		opdrachtObjects = new ArrayList<Object>();
 		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( opdracht.get("interactiePanelLaunchData") );

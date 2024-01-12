@@ -247,6 +247,7 @@ if(DwoHelper.isSamlLogin()) {
     p.setLayout(new BorderLayout());
     SAMLLoginIF browser = getSAMLLogin();
     String redirectUri = DwoHelper.getServerUrlPath() + "oauth2/login3.jsp";
+    browser.setEndpoint(DwoHelper.getSamlType().getEndpoint());
     browser.loadURL(redirectUri);
     browser.getPromise().then(pr -> {
       profileselect.switchProfile();

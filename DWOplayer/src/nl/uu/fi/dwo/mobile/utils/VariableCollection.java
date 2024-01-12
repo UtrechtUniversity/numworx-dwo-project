@@ -1,22 +1,29 @@
 package nl.uu.fi.dwo.mobile.utils;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import fi.wiskopdr.Letter;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 /**
  * 
  * copied from DWO
  * 
  */
-public class VariableCollection
+public class VariableCollection implements RandomValues
 {
-	Vector variables;
+	Vector<Variable> variables;
 
 	public VariableCollection()
 	{
-		variables = new Vector();
+		variables = new Vector<>();
 	}
 
 	public boolean setVariables(String s)
@@ -46,8 +53,7 @@ public class VariableCollection
 		{
 			String tok = tokenizer[i];
 			try
-			{
-				int index = tok.indexOf("=");
+			{	int index = Math.max(tok.indexOf("="), tok.indexOf('~'));
 				if (index > 0)
 				{
 					String name = tok.substring(0, index).trim();
@@ -70,7 +76,7 @@ public class VariableCollection
 	public void setVariable(String s)
 	{
 		s = s.trim();
-		int index = s.indexOf("=");
+		int index = Math.max(s.indexOf("="),s.indexOf('~'));
 		String name = s.substring(0, index);
 		name = name.trim();
 		//String[] nameParts = StringUtils.split(name, "_");
@@ -89,6 +95,7 @@ public class VariableCollection
 		valueString = valueString.trim();
 		Variable var = new Variable(name);
 		var.setValues(valueString);
+		var.setDraw(s.charAt(index)=='~');
 		variables.addElement(var);
 	}
 
@@ -97,7 +104,7 @@ public class VariableCollection
 		Variable[] vars = new Variable[variables.size()];
 		for (int i = 0; i < variables.size(); i++)
 		{
-			vars[i] = (Variable) variables.elementAt(i);
+			vars[i] = variables.elementAt(i);
 		}
 		return vars;
 	}
@@ -120,27 +127,65 @@ public class VariableCollection
 		String[] names = new String[variables.size()];
 		for (int i = 0; i < variables.size(); i++)
 		{
-			names[i] = ((Variable) variables.elementAt(i)).getName();
+			names[i] = variables.elementAt(i).getName();
 		}
 		return names;
 	}
 
 	public HashMap getRandomValues()
 	{
-		HashMap h = new HashMap();
+		HashMap<String, Integer> h = new HashMap<>();
 		for (int i = 0; i < variables.size(); i++)
 		{
-			Variable var = (Variable) variables.elementAt(i);
+			Variable var = variables.elementAt(i);
 			String varName = var.getName();
 			int[] values = var.getValues();
 			int randNr = (int) (Math.random() * values.length);
 			int value = values[randNr];
+			var.draw(value);
 			for (int j = i + 1; j < variables.size(); j++)
 			{
-				((Variable) variables.elementAt(j)).substitueer(value, varName);
+				variables.elementAt(j).substitueer(value, varName);
 			}
 			h.put(varName, new Integer(value));
 		}
 		return h;
+	}
+	
+	public Map<String, Collection<Integer>> getState() {
+		Map<String, Collection<Integer>> state = new HashMap<>();		
+		for(Variable var: variables) {
+			if (var.isDraw()) {
+				state.put(var.getName(), new ArrayList<>(var.drawSet));
+			}
+		}
+		if (state.isEmpty()) return null;
+		return state;
+	}
+	
+	public void setState(ObjectMap state) {
+		if (state == null) return;
+		Set<String> names = state.keySet();
+		for (String name : names) {
+			Variable var = getVariable(name);
+			if (var.isDraw()) {
+				List<Integer> r = state.getIntegerList(name);
+				var.drawSet.clear();
+				var.drawSet.addAll(r);
+			}
+		}
+	}
+
+	public void fromState(HashMap<String,?> values) {
+		if (values == null) return;
+		Set<String> names = values.keySet();
+		ObjectMap om = JSONUtilities.wrapMap(values);
+		for (String name : names) {
+			Variable var = getVariable(name);
+			if (var.isDraw()) {
+				var.draw(om.getInt(name));
+			}
+		}
+		
 	}
 }

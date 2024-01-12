@@ -743,27 +743,28 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 //		}
 
 		if(logging instanceof DWOLogger) {
-			DWOLogger dwologger = (DWOLogger) logging;
 			Map<String, Object> map = buildLogParameters();
 			if (mode == OpdrNavIF.EINDTOETS && ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {
 				this.nagekeken = nagekeken = true;
 				zetIsVeranderdNaNakijken(isVeranderdNaNakijken = false);
-				dwologger.log(map);
+				logging.log(map);
+			} if (mode == OpdrNavIF.ZELFTOETS && ingevuld) { 
+				logging.log(map);
 			} else {
-				dwologger.updateLog(map);
+				logging.updateLog(map);
 			}
 		}
 		
 		
 		HashMap<String, Object> h = new HashMap<String, Object>();
-		h.put("ingevuld", new Boolean(ingevuld));
-		h.put("nagekeken", new Boolean(nagekeken));
+		h.put("ingevuld", Boolean.valueOf(ingevuld));
+		h.put("nagekeken", Boolean.valueOf(nagekeken));
 		h.put("editable", Boolean.valueOf(editable));
-		h.put("isVeranderdNaNakijken", new Boolean(isVeranderdNaNakijken));
+		h.put("isVeranderdNaNakijken", Boolean.valueOf(isVeranderdNaNakijken));
 		h.put("antwoord", antwoord);
 		h.put("attempts", attempts);
-		h.put("attemptsCount", new Integer(attemptsCount));
-		h.put("errorCount", new Integer(errorCount));
+		h.put("attemptsCount", Integer.valueOf(attemptsCount));
+		h.put("errorCount", Integer.valueOf(errorCount));
 
 		if(correctie != null) correctie.correctie(h);
 		return h;

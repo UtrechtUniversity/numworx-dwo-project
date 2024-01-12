@@ -72,7 +72,11 @@ public class PersistentScoData implements Serializable {
         lastChangeTimeStamp = System.currentTimeMillis();
     }
 
-    public PersistentScoData() {
+    public long getLastChangeTimeStamp() {
+		return lastChangeTimeStamp;
+	}
+
+	public PersistentScoData() {
     }
 
     public PersistentScoData(Long scoID) {

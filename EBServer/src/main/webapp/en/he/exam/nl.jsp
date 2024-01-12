@@ -26,13 +26,16 @@
 <a href='sebs://<%=server%>/ho/exam/leerling.seb'>Start de beveiligde <strong>exam</strong> omgeving</a>
 <%
 	} else {
+		String dwo_env = System.getProperty("DWO_ENV","app");
+		String token = "/dwo/saml/uulogin";
+		if (dwo_env.contains("uu")) token = "/dwo/oauth2/uulogin";
 %>
     <script>
     	endpoint = "/ho/en/exam/toets_nl.jsp"
     	search = ""
     	hash= ""
         clientId = "f9af29c4-cfc5-11ea-87d0-0242ac130003"
-        token="/dwo/saml/uulogin"
+        token="<%=token %>"
     </script>
     <script type="text/javascript" src="/dwo/oauth2client/oauth2client/oauth2client.nocache.js"></script>
 <%	  

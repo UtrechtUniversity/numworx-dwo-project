@@ -1,9 +1,11 @@
 package nl.uu.fi.dwo.mobile.utils;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import org.junit.Test;
@@ -41,5 +43,22 @@ public class GwtTestVariableCollection extends BaseCase {
 		Set<String> set = new HashSet<String>(); set.add("a"); set.add("b");
 		assertEquals(set, new HashSet<>(map.keySet()));
 	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
+	  public void test() {
+	    VariableCollection vc = new VariableCollection();
+	    vc.setVariables("a~1..4");
+	    Set set = new TreeSet();
+	    for(int i = 0; i < 4 ; i++)
+	    {
+	      System.out.println(i);
+	      HashMap r = vc.getRandomValues();
+	      System.out.println(r);
+	      set.addAll(r.values());
+	    }
+	    assertEquals(4, set.size()); 
+	  }
+
 
 }

@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.sco;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
@@ -64,8 +65,9 @@ public class DWOLogger implements Logging {
 		if (parameters.equals(last))
 		{
 			java.util.logging.Logger.getLogger("DWOLogger").warning("logging duplicate " + last);
-			return;
+			return; // duplicate the simple way
 		}
+		boolean isAttempt = last != null;
 		last = new HashMap<>(parameters);
 		
 		String formula = (String)parameters.get("response");
@@ -75,15 +77,20 @@ public class DWOLogger implements Logging {
 		JSONNumber score = getScore(parameters);
 		boolean error = Boolean.FALSE.equals(parameters.get("success"));
 		
-		map.put(LOGKEY_ANSWER, new JSONString(formula));
+		JSONString formulaString = new JSONString(formula);
+		JSONValue old = map.put(LOGKEY_ANSWER, formulaString);
+		if (!isAttempt) isAttempt = !Objects.equals(formulaString, old);
+		old = null;
 		if (score != null)
-			map.put(LOGKEY_SCORE, score);
+			old = map.put(LOGKEY_SCORE, score);
+		if (!isAttempt) isAttempt = !Objects.equals(score, old);
 		if(maxScore != null)
 			map.put(LOGKEY_MAXSCORE, maxScore);
 		if(logIDLabel != null)
 			map.put("logIDLabel", logIDLabel);
 		if(teltMee != null)
 			map.put("teltMee", teltMee);
+		if (!isAttempt) return; // duplicate the complex way
 		if (error) errorCount++;
 		map.put(LOG_ERROR_COUNT, new JSONNumber(errorCount));
 		attempts.set(attemptsCount, new JSONString(attempt));

@@ -7,16 +7,16 @@
 	int profile = 112;
 	String query = request.getQueryString();
 	if(Util.illegal(query))
-	 	query = "?base=/numworx/&responsive=true&profile=" + profile;
+	 	query = "?base=/wiskunde-actief/&responsive=true&profile=" + profile;
 	else 
-	  	query = "?base=/numworx/&responsive=true&profile=" + profile + "&" + query;
+	  	query = "?base=/wiskunde-actief/&responsive=true&profile=" + profile + "&" + query;
 	String hash = "";
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=device-width">
-        <title>Numworx Wiskunde</title>
+        <title>Wiskunde Actief</title>
 		<style type="text/css">
             body, html
             {

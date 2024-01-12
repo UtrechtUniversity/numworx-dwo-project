@@ -249,4 +249,12 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF, IsW
 			registration.removeHandler();
 		registration = null;
 	}
+
+	@Override
+	public void setCurrentElementRepaint() {
+		clearSelection();
+		super.setCurrentElementRepaint();
+		deferredPaintSelection();
+	}
+	
 }

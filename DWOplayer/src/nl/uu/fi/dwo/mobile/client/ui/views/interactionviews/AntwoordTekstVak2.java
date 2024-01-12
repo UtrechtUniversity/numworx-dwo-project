@@ -234,6 +234,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			if (logOption)
 			{
 				LogBuilder dwologger = activity.logBuilder();
+				dwologger.setLaunchData(map);
 				dwologger.setLogOption(logOption);
 				dwologger.setMaxScore(scoreMax);
 				dwologger.setLogID(logID);
@@ -678,24 +679,26 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		errorCount = this.errorCount;
 
 		if (logging instanceof DWOLogger)
-		{	DWOLogger dwologger = (DWOLogger) logging;
+		{
 			Map<String, Object> map = buildLogParameters();
 			if (mode == OpdrNavIF.EINDTOETS && ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {
 				this.nagekeken = nagekeken = true;
 				zetIsVeranderdNaNakijken(isVeranderdNaNakijken = false);
-				dwologger.log(map);
+				logging.log(map);
+			} if (mode == OpdrNavIF.ZELFTOETS && ingevuld) { 
+				logging.log(map);
 			} else {
-				dwologger.updateLog(map);
+				logging.updateLog(map);
 			}
 		}
 		HashMap<String, Object> h = new HashMap<String, Object>();
-		h.put("ingevuld", new Boolean(ingevuld));
-		h.put("nagekeken", new Boolean(nagekeken));
-		h.put("isVeranderdNaNakijken", new Boolean(isVeranderdNaNakijken));
+		h.put("ingevuld", Boolean.valueOf(ingevuld));
+		h.put("nagekeken", Boolean.valueOf(nagekeken));
+		h.put("isVeranderdNaNakijken", Boolean.valueOf(isVeranderdNaNakijken));
 		h.put("antwoord", antwoord);
 		h.put("attempts", attempts);
-		h.put("attemptsCount", new Integer(attemptsCount));
-		h.put("errorCount", new Integer(errorCount));
+		h.put("attemptsCount", Integer.valueOf(attemptsCount));
+		h.put("errorCount", Integer.valueOf(errorCount));
 		h.put("editable", Boolean.valueOf(editable));
 
 		if(correctie != null) correctie.correctie(h);
@@ -810,47 +813,6 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 // TODO feedback		
 			logging.log(log);
 		}
-//		String goedFout = "";
-//		if(goedKrulImage.isVisible())
-//			goedFout = "goed";
-//		else if(goedKrulHalfImage.isVisible())
-//			goedFout = "half";
-//		else if(foutKruisImage.isVisible())
-//			goedFout = "fout";
-//
-//		String antwoord = "";
-//		if (formuleMode)
-//			antwoord = formuleVak.toString();
-//		else
-//			antwoord = antwoordTF.getText();
-//		if (antwoord.equals(""))
-//			return;
-//
-//		if (formuleMode)
-//		{
-//			String attemptFormuleString = FormuleParser.schoon(FormuleParser.formuleString(antwoord));
-//			attemptFormuleString = StringUtils.replaceStr(attemptFormuleString, "(0-", "(-");
-//			antwoord = FormuleParser.pel(attemptFormuleString);
-//		}
-//		String fbTekst = "";
-//		
-//		//if (feedbackTekst.isVisible() && feedbackTekst.getParent() != null)
-//		//	fbTekst = feedbackTekst.getText();
-//
-//		String s = antwoord;
-//		s = s + "   ;   ";
-//		s = s + new Date().toString();
-//		s = s + "   ;   ";
-//		s = s + "Regelnummer = " + 0;
-//		s = s + "   ;   ";
-//		s = s + goedFout;
-//		s = s + "   ;   ";
-//		s = s + "score = " + score;
-//		s = s + "   ;   ";
-//		s = s + fbTekst;
-//
-//		attempts.addElement(s);
-//		System.out.println(s);
 	}
 
 
@@ -924,9 +886,10 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	public void kijkNa()
 	{
 		// reset isVeranderdNaNakijken
+		boolean old = isVeranderdNaNakijken;
 		zetIsVeranderdNaNakijken(false);
-
 		kijkNa(true, false);
+		if (mode == OpdrNavIF.ZELFTOETS && old && ingevuld) setAttempt();
 	}
 
 	/**
@@ -1189,7 +1152,6 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	
 	public void enter()
 	{
-		setAttempt();
 		fireText();
 		
 		if ((mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS) && !Review.isReview(comRoot))
@@ -1201,6 +1163,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		zetIsVeranderdNaNakijken(false);
 
 		kijkNa(true, true);
+		setAttempt();
 	}
 	
 	/**
@@ -1249,9 +1212,6 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		
 		if (fontOvererving)
 		{
-			FormuleFont font = FormuleFont.createFromFontSize(parentRegel.getFont().getFontSize(), false);
-			if (!FormuleFont.formTimes)
-				font.setFont(parentRegel.getFont().getFont());
 			setFont(parentRegel);
 		}
 	}
@@ -1270,6 +1230,9 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		
 		formuleVak.setFont(font);
 		formuleVak.setDefaultFont(font);
+		antwoordTF.setFont(font);
+		antwoordTF.setFontName(font.getFont());
+		antwoordTF.setFontSize(font.getFontSize());
 	}
 
 	public void setFont(FormuleFont fm)

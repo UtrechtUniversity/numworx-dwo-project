@@ -20,6 +20,7 @@ import fi.dwo.dwojapplet.gui.action.ScoUnTrashAction;
 import fi.dwo.dwojapplet.gui.action.ShareCourseAction;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminProfileManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -850,14 +851,17 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
           if (update) {
             DomDwoProfileFull sc = DWO.getDwoProfile();
             try {
-              if (SecureDwoAdminProfileManager.updateProfile(sc));
-              update = false;
-          } catch (Dwo2Exception e) {
-              LOG.log(Level.SEVERE, "edit profile", e);
-              GuiCreator.instance().ShowErrorDialog(this, e);
-          }
-
-          }
+                update = false;
+              if (SecureDwoAdminProfileManager.updateProfile(sc)) {
+              };
+	          } catch (Dwo2Exception e) {
+	              LOG.log(Level.SEVERE, "edit profile", e);
+	              GuiCreator.instance().ShowErrorDialog(this, e);
+	          } finally {
+	          // reload profile
+	        	  GuiCreator.instance().dwo.switchProfile(DWO.getDwoProfileID(), DwoHelper.getLocale().getLocale());
+	          }
+	       }
          
         }
     }

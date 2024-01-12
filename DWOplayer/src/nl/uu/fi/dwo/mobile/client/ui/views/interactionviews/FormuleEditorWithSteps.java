@@ -2205,7 +2205,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		
 		
 		
-		if (dwologger!= null) 
+		if (dwologger instanceof DWOLogger) 
 		{
 			if(editor != null) // NPE if null
 			{
@@ -2217,6 +2217,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 					zetIsVeranderdNaNakijken(isVeranderdNaNakijken = false);
 					h.put("nagekeken", Boolean.TRUE);
 					h.put("isVeranderdNaNakijken", Boolean.FALSE);
+					dwologger.log(map);
+				} if (mode == OpdrNavIF.ZELFTOETS && ingevuld) { 
 					dwologger.log(map);
 				} else {
 					dwologger.updateLog(map);

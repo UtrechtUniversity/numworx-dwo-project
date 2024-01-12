@@ -62,7 +62,7 @@
         dwo_env = "<%=dwo_env%>"
         defaultPlace = "<%= defaultPlace %>"
     	function logout() {
-    		window.location = "https://<%=server%>/numworx/exam/logout.html"
+    		window.location = "https://<%=server%>/wiskunde-actief/exam/logout.html"
     	}
     </script>
     <title>Save Exam Browser</title>
@@ -74,7 +74,7 @@
     <script type="text/javascript" language="javascript" src="/dwo/tablet/DWOplayer/DWOplayer.nocache.js"></script>
   </head>
   <body id="main">
-  	<a href='https://<%=server%>/numworx/exam/logout.html' >Logout</a>
+  	<a href='https://<%=server%>/wiskunde-actief/exam/logout.html' >Logout</a>
     <!-- OPTIONAL: include this if you want history support -->
     <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
     

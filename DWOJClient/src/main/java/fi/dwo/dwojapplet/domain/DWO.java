@@ -335,7 +335,10 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
             DwoHelper.setTest(true);
         Compressor.setSkip(false);
         if(dwo_env.contains("saml"))
-            DwoHelper.setSamlLogin(true);
+        {	DwoHelper.SamlType type = DwoHelper.SamlType.SAML;
+            if (dwo_env.contains("uu")) type = DwoHelper.SamlType.UU;
+            DwoHelper.setSamlLogin(type);
+        }
 //        if (DwoHelper.isTest()) {
 //          dwo_env = "test"; // legacy bij geodefiner/wiskopdr geen combinatie nog.
 //        }

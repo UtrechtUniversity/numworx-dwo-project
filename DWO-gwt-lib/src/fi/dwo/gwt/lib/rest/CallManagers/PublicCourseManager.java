@@ -96,6 +96,9 @@ public class PublicCourseManager implements CourseManager {
 		String courseID = id.getId().getIdString();
 		int komma = courseID.lastIndexOf(';'); // XXX ons kent ons
 		courseID = courseID.substring(komma+1);
+		if (id.getOptLock() != null) {
+			courseID += "&optLock=" + id.getOptLock();
+		}
 		String url = GwtRestVars.getInstance().getServer() + "public/course/getCourseDescription?courseId=" + courseID;
 		RequestBuilder rb = new RequestBuilder(RequestBuilder.GET, url);
 		rb.setTimeoutMillis(100000);

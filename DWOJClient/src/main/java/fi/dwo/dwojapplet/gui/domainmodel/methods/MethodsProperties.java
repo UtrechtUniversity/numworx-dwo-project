@@ -63,6 +63,7 @@ public class MethodsProperties extends Vector<DomMethod> implements Comparator<D
        
   }
 
+  public MethodsProperties reversed() { return this; } // dummy, nodig voor java 21
   
   public DomMethod delete(int i) {
     DomMethod m = remove(i);

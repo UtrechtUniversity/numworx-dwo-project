@@ -522,7 +522,7 @@
     <key>proxySettingsPolicy</key>
     <integer>0</integer>
     <key>quitURL</key>
-    <string>https://app.dwo.nl/numworx/exam/logout.html</string>
+    <string>https://app.dwo.nl/wiskunde-actief/exam/logout.html</string>
     <key>removeBrowserProfile</key>
     <true />
     <key>removeLocalStorage</key>
@@ -560,7 +560,7 @@
     <key>showTime</key>
     <true />
     <key>startURL</key>
-    <string>https://app.dwo.nl/numworx/exam/toets.jsp</string>
+    <string>https://app.dwo.nl/wiskunde-actief/exam/toets.jsp</string>
     <key>taskBarHeight</key>
     <integer>40</integer>
     <key>touchOptimized</key>

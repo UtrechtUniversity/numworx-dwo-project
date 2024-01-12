@@ -13,26 +13,25 @@ import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.stream.JsonParser;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.Response;
 
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -62,12 +61,15 @@ public class PublicScoDataManager {
   @Produces({"application/json"})
   @Path("/getJSONLaunchDataBytes")
   @Deprecated
-  public String getJSONLaunchDataBytes(@DefaultValue("0") @QueryParam("scoId") Long scoId) {
+  public Response getJSONLaunchDataBytes(@DefaultValue("0") @QueryParam("scoId") Long scoId) {
 
     PersistentScoData scoData = ScoDataManager.findEntity(scoId);
     if (scoData == null) {
-      return "{}"; // Not found, not fatal
+      return Response.ok("{}","application/json").build(); // Not found, not fatal
     }
+    Date last = new Date(scoData.getLastChangeTimeStamp());
+    CacheControl cc = new CacheControl();
+    cc.setMaxAge(600);
     if (SECURITY) {
       PersistentScoContext scoContext = ScoContextManager.findEntity(scoId);
       if (scoContext.getSchoolID() != null)
@@ -78,21 +80,14 @@ public class PublicScoDataManager {
     }
     byte[] launchData = scoData.getLaunchdatabytes();
     if (launchData != null) {
-      byte[] buffer = new byte[1024];
       try {
         ByteArrayInputStream inStream = new ByteArrayInputStream(launchData);
-        ByteArrayOutputStream outStream = new ByteArrayOutputStream(launchData.length);
         GZIPInputStream gzIn = new GZIPInputStream(inStream);
-
-        int len;
-        while ((len = gzIn.read(buffer)) > 0) {
-          outStream.write(buffer, 0, len);
-        }
-
-        gzIn.close();
-        outStream.close();
-
-        return outStream.toString("UTF-8");
+        return Response.ok(gzIn, "application/json")
+        		.lastModified(last)
+        		.cacheControl(cc)
+        		.expires(new Date(System.currentTimeMillis()+1000*60*10))
+        		.build();
       } catch (IOException ex) {
         LOG.log(Level.SEVERE, "Error while unzipping launchdata with scoid " + scoId + ".", ex);
       }
@@ -103,7 +98,11 @@ public class PublicScoDataManager {
           (Hashtable) StringCodeObject.decodeStringToObject(scoData.getLaunchdata(), null);
       StringWriter writer = new StringWriter();
       JSONEncoder.encode(map, writer, null); // FIXME zie DWOmAccess voor loader with wiskopdr.jar
-      return writer.toString();
+      return Response.ok(writer.toString(), "application/json")
+    		  .lastModified(last)
+    		  .cacheControl(cc)
+      		  .expires(new Date(System.currentTimeMillis()+1000*60*10))
+    		  .build();
     } catch (Exception ex) {
       LOG.log(Level.SEVERE, "Error while decoding launchdata with scoid " + scoId + ".", ex);
     }
@@ -114,8 +113,9 @@ public class PublicScoDataManager {
   @GET
   @Produces("text/css")
   @Path("get/{scoId}/style.css")
-  public String getCss(@PathParam("scoId") Long scoId) throws IOException, ParseException {
+  public Response getCss(@PathParam("scoId") Long scoId) throws IOException, ParseException {
     String something = "";
+    Date last = null;
     PersistentScoData scoData = ScoDataManager.findEntity(scoId);
     if (scoData != null) {
       Map map;
@@ -130,8 +130,15 @@ public class PublicScoDataManager {
         map = (Map) StringCodeObject.decodeStringToObject(scoData.getLaunchdata(), null);
       }
       something = StateToCss.createCssFromInstellingen(map, null);
+      last = new Date(scoData.getLastChangeTimeStamp());
     }
-    return "/*" + scoId + "*/\n" + something;
+	return Response.ok()
+    		.lastModified(last)
+    		.expires(new Date(System.currentTimeMillis()+1000*60*10))
+    		.header("Cache-Control", "max-age=600")
+    		.type("text/css")
+    		.entity("/*" + scoId + "*/\n" + something)
+    		.build();
   }
   
 }

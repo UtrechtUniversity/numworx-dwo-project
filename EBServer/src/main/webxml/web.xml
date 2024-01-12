@@ -21,11 +21,6 @@
             30
         </session-timeout>
     </session-config>
-    <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
-        <welcome-file>index.jsp</welcome-file>
-        <welcome-file>gwtclient.html</welcome-file>
-    </welcome-file-list>
     <!-- Allow the web application to be distributed across a Tomcat cluster -->
     <distributable/>
     <!-- Tomcat resource connection for the DWO database server -->
@@ -233,6 +228,10 @@
     <servlet>
     	<servlet-name>redirect-download</servlet-name>
     	<servlet-class>fi.dwo.server.db.DownLoad</servlet-class>
+        <init-param>
+        	<param-name>fi.dwo.server.db.download</param-name>
+        	<param-value>fi.dwo.server.db.download</param-value>
+        </init-param>
     </servlet>
     <servlet>
     	<servlet-name>redirect-root</servlet-name>
@@ -670,6 +669,7 @@
     	<welcome-file>index.jsp</welcome-file>
     	<welcome-file>Register.html</welcome-file>
     	<welcome-file>menu.jsp</welcome-file>
+        <welcome-file>gwtclient.html</welcome-file>
     </welcome-file-list>
     
     <error-page>

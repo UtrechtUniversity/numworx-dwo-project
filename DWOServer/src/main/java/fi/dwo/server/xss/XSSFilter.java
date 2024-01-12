@@ -49,7 +49,6 @@ public class XSSFilter implements Filter {
             boolean cache = req.getRequestURI().contains(".cache.");
             if(rest || nocache) {
             	res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
-            	res.setHeader("Pragma", "no-cache"); // HTTP 1.0.
             	res.setDateHeader("Expires", 0L); // Proxies.
             }
             if (cache) {

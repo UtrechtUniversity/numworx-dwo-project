@@ -1,7 +1,7 @@
 @external numworx-popup, cbg-RP, v, nr, gwt-PushButton;
 @external navigatiebalk, score, scoreBtn, scoreBtn-cursor, scoreBtn-max0, spaceLabel, spaceShiftLabel, shiftBtn, navigatiebalkLabel;
 @external myPushButton myPushButton-disabled;
-@external content;
+@external content, gwt-InlineHTML;
 @url goednumworx goednumworx;
 
 div { padding: 0px; }
@@ -80,19 +80,23 @@ iframe {
 	display: inline;
 }
 
+.textEditor * {
+	font-family: inherit;
+}
+
 /*
 div.insert_formule {padding-right:5px; padding-left:5px;}
 */
 
 .textEditor div.insert_formule {
-	background-color: rgb(248,248,248);
+	background-color: rgba(0,0,0,0.03);
 	display: inline-block;
 	width: auto;
 	height: auto;
 }
 
 .textEditor .insert_calculator {
-	background-color: rgb(248,248,248);
+	background-color: rgba(0,0,0,0.03);
 	display: inline-block;
 	white-space: nowrap;
 	margin-left: 6px;

@@ -5,6 +5,7 @@
 package fi.dwo.dwojapplet.domain;
 
 import fi.beans.appletutil.AppletUtil;
+import fi.beans.mainframe.JApplet;
 import fi.beans.mainframe.MainFrame;
 import fi.beans.numworxlf.JOptionPane;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
@@ -57,6 +58,18 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 public final class DwoHelper {
 
     private static final Logger LOG = Logger.getLogger(DwoHelper.class.getName());
+    
+    public enum SamlType {
+    	SAML("/dwo/saml/login"), 
+    	UU("/dwo/oauth2/mfalogin"), 
+    	ENTREE("ENTREE"), 
+    	CONEXT("CONEXT");
+    	private String u;
+    	SamlType(String string) {
+    		this.u = string;
+    	}
+    	public String getEndpoint() { return u; }
+    };
 
     /**
      * DWO 1.0 properties
@@ -65,7 +78,7 @@ public final class DwoHelper {
 
     private static Hashtable loadedImages;
 
-    private static Applet applet;
+    private static JApplet applet;
 
     private static GuiCreator guic;
 
@@ -236,7 +249,7 @@ public final class DwoHelper {
      *
      * @return The current Applet.
      */
-    public static Applet getApplet() {
+    public static JApplet getApplet() {
         return applet;
     }
 
@@ -246,7 +259,7 @@ public final class DwoHelper {
      * @param applet The applet to set.
      * @return
      */
-    public static boolean setApplet(Applet applet) {
+    public static boolean setApplet(JApplet applet) {
 // Voor Peter: in comment zetten
         if (DwoHelper.applet != null) {
             JOptionPane.showMessageDialog(applet, TextMapper.getText(TextMapper.DWOAPPLET_EXISTS));
@@ -258,7 +271,7 @@ public final class DwoHelper {
         return true;
     }
 
-    public static void clrApplet(Applet applet) {
+    public static void clrApplet(JApplet applet) {
         if (applet == DwoHelper.applet) {
             DwoHelper.applet = null;
         }
@@ -764,7 +777,8 @@ public final class DwoHelper {
 
 	private static String rights = "";
 
-  private static boolean samlLogin;
+
+	private static SamlType samlType;
 
 	/**
 	 * @param rights the rights to set
@@ -799,13 +813,18 @@ public final class DwoHelper {
     }
 
     public static boolean isSamlLogin() {
-      return samlLogin;
-    }
-    public static void setSamlLogin(boolean b) {
-      samlLogin = b;
+      return samlType != null;
     }
 
-    public static boolean isPremium() {
+    public static void setSamlLogin(SamlType type) {
+      samlType = type;
+    }
+
+    public static SamlType getSamlType() {
+		return samlType;
+	}
+
+	public static boolean isPremium() {
       try {
         return DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getAboType() == AboType.premium;
       } catch (Exception e) {

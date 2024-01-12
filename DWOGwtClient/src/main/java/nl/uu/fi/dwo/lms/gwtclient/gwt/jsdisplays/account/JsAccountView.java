@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.account;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONValue;
 import fi.dwo.gwt.lib.rest.util.DomSchoolsRolesAndClassesV2Codec;
 import fi.dwo.gwt.lib.rest.util.DomUserFullCodec;

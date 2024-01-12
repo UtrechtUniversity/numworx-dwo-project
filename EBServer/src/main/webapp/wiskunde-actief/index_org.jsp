@@ -9,9 +9,9 @@
 	long tstamp = TStamp.BOOT;
 	String query = request.getQueryString();
 	if(Util.illegal(query))
-	 	query = "?base=/numworx/&profile=" + profile + "&t=" + tstamp;
+	 	query = "?base=/wiskunde-actief/&profile=" + profile + "&t=" + tstamp;
 	else 
-	  	query = "?base=/numworx/&profile=" + profile + "&" + query;
+	  	query = "?base=/wiskunde-actief/&profile=" + profile + "&" + query;
 	String hash = request.getParameter("hash");
 	String player = "/gwtclient/index.html";
 
@@ -24,7 +24,7 @@
     <head>
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=1024">
-        <title>Numworx Wiskunde</title>
+        <title>Wiskunde Actief</title>
 		<style type="text/css">
             body, html
             {

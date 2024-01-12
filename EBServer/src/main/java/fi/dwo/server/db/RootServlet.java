@@ -26,6 +26,7 @@ public class RootServlet extends HttpServlet {
 		String param = getServletContext().getInitParameter("fi.dwo.server.db.root");
 		if (param != null && !param.isEmpty() && !"${UU_INDEX}".equals(param))
 			index = param;
+		log ("/ redirected to " + index + " (" + param + ")");
 	}
 
 }

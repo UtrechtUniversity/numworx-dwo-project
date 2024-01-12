@@ -375,7 +375,7 @@ public class FormuleRegel extends FormuleElement
 					if (holder.getCurrentRegel() == this && this.parent != null)
 					{
 						//draw background
-						ctx.setFillStyle("#eee");
+						ctx.setFillStyle("rgba(0,0,0,0.07)");
 						ctx.fillRect(0, 0, width, height);
 					}
 		
@@ -1744,7 +1744,7 @@ public class FormuleRegel extends FormuleElement
 			{
 				//draw background
 				OMSVGRectElement rect = new OMSVGRectElement(x,y,width,height,0, 0);
-				rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "#EEEEEE");
+				rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "rgba(0,0,0,0.07)");
 				svg.appendChild(rect);
 				selectionRect = rect;
 			}
@@ -1782,7 +1782,7 @@ public class FormuleRegel extends FormuleElement
 				selectionRect.getWidth().getBaseVal().setValue(width);
 				selectionRect.getHeight().getBaseVal().setValue(height);				
 				//draw background
-				selectionRect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "#EEEEEE");
+				selectionRect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "rgba(0,0,0,0.07)");
 			}
 
 		if (this.children.isEmpty() && holder.isInputNeeded())

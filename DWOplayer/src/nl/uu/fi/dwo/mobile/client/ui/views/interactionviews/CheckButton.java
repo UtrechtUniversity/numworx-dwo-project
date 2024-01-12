@@ -59,6 +59,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
 public class CheckButton implements InteractionStub, CBookEventListener
 {
    private final CBookEvent NEXT_PAGE_EVENT = new CBookEvent(ACTION_NEXT_PAGE);
+   private final CBookEvent ITEM_OPNIEUW_EVENT = new CBookEvent("action.reset");
    class ActionNextPage implements ButtonListener {
 
     @Override
@@ -71,7 +72,19 @@ public class CheckButton implements InteractionStub, CBookEventListener
       //DWOplayer.clientfactory.addBarrier(defer);
     }
   }
+   class ActieItemOpnieuw implements ButtonListener {
 
+	@Override
+	public void onClick(Object sender) {
+		if(!editable) return;
+		logger.warning("CheckButton action.reset");	  
+	    activity.agent().barrier().onResolve( () ->	activity.getEventBus().fireEvent(ITEM_OPNIEUW_EVENT));
+	}
+	   
+   }
+   
+   
+   
   boolean editable = true;
 	
   final class NakijkenVak implements ButtonListener {
@@ -216,6 +229,7 @@ public class CheckButton implements InteractionStub, CBookEventListener
 	private boolean actieBewaren=false;
 	private boolean actieAfronden=false;
     private boolean actionNextPage=false;
+    private boolean actieItemOpnieuw=false;
 	private final ActivityInterface activity;
 
 	
@@ -252,6 +266,7 @@ public class CheckButton implements InteractionStub, CBookEventListener
 			actieBewaren = launchData.getBoolean("actieBewaren", actieBewaren);
 			actieAfronden = launchData.getBoolean("actieAfronden", actieAfronden);
 			actionNextPage = launchData.getBoolean(ACTION_NEXT_PAGE, actionNextPage);
+			actieItemOpnieuw = launchData.getBoolean("actieItemOpnieuw", actieItemOpnieuw);
 		}
 	    boolean logOption = true;
     	boolean[][] logObjectives = null;
@@ -344,6 +359,7 @@ public class CheckButton implements InteractionStub, CBookEventListener
 		if(actieBewaren) checkButton.addButtonListener(new ActieBewaren());
 		if(actieAfronden) checkButton.addButtonListener(new ActieAfronden());		
         if(actionNextPage) checkButton.addButtonListener(new ActionNextPage());
+        if(actieItemOpnieuw) checkButton.addButtonListener(new ActieItemOpnieuw());
 	}
 	
 	

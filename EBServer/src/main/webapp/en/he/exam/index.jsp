@@ -26,15 +26,18 @@
 <a href='sebs://<%=server%>/en/he/exam/leerling.seb'>Start de beveiligde <strong>exam</strong> omgeving</a>
 <%
 	} else {
-String clientId = "";
-if ("shibboleth".equals(request.getAuthType())) clientId = "f9af29c4-cfc5-11ea-87d0-0242ac130003";
+		String dwo_env = System.getProperty("DWO_ENV","app");
+		String clientId = "";
+		if ("shibboleth".equals(request.getAuthType())|| dwo_env.contains("saml")) clientId = "f9af29c4-cfc5-11ea-87d0-0242ac130003";
+		String token = "/dwo/saml/uulogin";
+		if (dwo_env.contains("uu")) token = "/dwo/oauth2/uulogin";
 %>
     <script>
     	endpoint = "/ho/en/exam/toets.jsp"
     	search = ""
     	hash= ""
         clientId = "<%=clientId%>"
-        token="/dwo/saml/uulogin"
+        token="<%=token%>"
     </script>
     <script type="text/javascript" src="/dwo/oauth2client/oauth2client/oauth2client.nocache.js"></script>
 <%	  

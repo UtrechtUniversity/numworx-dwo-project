@@ -17,6 +17,7 @@ public class DomDwoProfile extends DomDwoProfileId implements Cloneable {
     
     public DomDwoProfile(DomDwoProfile p) {
     	setId( p.getId().duplicate());
+    	setOptLock(p.getOptLock());
     	dwoProfileName = p.dwoProfileName;
     	dwoProfileRights = p.dwoProfileRights;
     }

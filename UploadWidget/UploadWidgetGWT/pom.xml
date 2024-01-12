@@ -3,7 +3,7 @@
   <parent>
     <groupId>nl.numworx.uploadwidget</groupId>
     <artifactId>UploadWidget-parent</artifactId>
-    <version>2.5.26-SNAPSHOT</version>
+    <version>2.5.27</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>UploadWidgetGWT</artifactId>
@@ -43,13 +43,13 @@
     </dependency>
 	<dependency>
 	    <groupId>org.apache.httpcomponents</groupId>
-	    <version>4.5.9</version>
+	    <version>4.5.13</version>
  	    <artifactId>httpclient</artifactId>
 	</dependency>
   	<dependency>
   		<groupId>nl.numworx.uploadwidget</groupId>
   		<artifactId>uploadwidget-s3</artifactId>
-  		<version>2.5.26-SNAPSHOT</version>
+  		<version>2.5.27</version>
   	</dependency>
     <dependency>
       <groupId>com.google.gwt</groupId>
@@ -59,7 +59,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <version>4.13.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -129,6 +129,7 @@
           <modules>
             <module>nl.numworx.uploadwidgetgwt.UploadWidgetGWT</module>
           </modules>
+          <localWorkers>1</localWorkers>
         </configuration>
       </plugin>
 			<plugin>

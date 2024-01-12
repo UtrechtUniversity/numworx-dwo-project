@@ -8,39 +8,38 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>DWO</artifactId>
-    <version>2.5.26</version>
+    <version>2.5.27</version>
     <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>8</jdk.version>
         <jdk>${env.JAVA_HOME_8}</jdk>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <DWOJClientVersion>2.5.26</DWOJClientVersion>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <chatGWTVersion>2.5.26</chatGWTVersion>
     </properties>
     
     <!-- should move project role names here that fall in the full project scope -->
     <modules>
-        <module>../DWO-rest-lib</module>
-        <module>../DWO-gwt-lib</module>
-<!--  	 	<module>../Account</module> -->
-	 	<module>../DWOformule</module>
+        <module>../DWO-rest-lib</module> 
+        <module>../DWO-gwt-lib</module> 
+  	 	<module>../Account</module> 
+ 	 	<module>../DWOformule</module> 
 <!-- 	 	<module>../DWOmAccess</module> -->
-        <module>../DWO-commons-lib</module>
-        <module>../DWO-jclient-lib</module>
+         <module>../DWO-commons-lib</module> 
+<!--         <module>../DWO-jclient-lib</module> -->
 <!--   	 	<module>../DWO-apps</module> -->
-		<module>../chatgwt</module>
-	 	<module>../DWOGwtClient</module>
- 	 	<module>../DWOinteraction</module>
-        <module>../DWOJClient</module>
-      	<module>../DWOServer</module>
+<!-- 		<module>../chatgwt</module> -->
+<!-- 	 	<module>../DWOGwtClient</module> -->
+<!--  	 	<module>../DWOinteraction</module> -->
+        <module>../DWOJClient</module> 
+       	<module>../DWOServer</module> 
      	<module>../DWOplayer</module>
 <!--	<module>../edexml</module>-->
-        <module>../KeyboardGWT</module>
-<!--      	<module>../UploadWidget</module> -->
-     	<module>../WriteMathGWT</module>
-<!-- 		<module>../osiris-import</module> -->
+<!--         <module>../KeyboardGWT</module> -->
+      	<module>../UploadWidget</module> 
+<!--      	<module>../WriteMathGWT</module> -->
+ 		<module>../osiris-import</module> 
 <!-- 		<module>../notebook</module> -->
         <module>../EBServer</module>
     </modules>
@@ -52,18 +51,18 @@
     		<dependency>
     			<artifactId>DWO-rest-lib</artifactId>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
-    			<version>2.5.26</version>
+    			<version>2.5.27</version>
     		</dependency>
     		<dependency>
     			<artifactId>DWO-rest-lib</artifactId>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
-    			<version>2.5.26</version>
-				<classifier>sources</classifier>
+    			<version>2.5.27</version>
+			<classifier>sources</classifier>
     		</dependency>
     		<dependency>
     			<groupId>nl.uu.fi.dwo</groupId>
     			<artifactId>DWO-commons-lib</artifactId>
-    			<version>2.5.26</version>
+    			<version>2.5.27</version>
     		</dependency>
     		<dependency>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
@@ -73,30 +72,30 @@
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-gwt-lib</artifactId>
-            <version>2.5.26</version>
+            <version>2.5.27</version>
         </dependency>
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-gwt-lib</artifactId>
-            <version>2.5.26</version>
+            <version>2.5.27</version>
             <classifier>sources</classifier>
         </dependency>
         <dependency>
         	<groupId>nl.uu.fi.dwo</groupId>
         	<artifactId>DWOServer</artifactId>
-        	<version>2.5.26</version>
+        	<version>2.5.27</version>
         	<type>war</type>
         </dependency>
          <dependency>
         	<groupId>nl.uu.fi.dwo</groupId>
         	<artifactId>DWOServer</artifactId>
-        	<version>2.5.26</version>
+        	<version>2.5.27</version>
         	<classifier>classes</classifier>
         </dependency>
          <dependency>
          	<groupId>nl.uu.fi.dwo</groupId>
          	<artifactId>DWOJClient</artifactId>
-         	<version>2.5.26</version>
+         	<version>2.5.27</version>
          </dependency>
          <dependency>
          	<groupId>fi.beans</groupId>
@@ -116,20 +115,19 @@
 		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
 	  		<artifactId>DWOplayer</artifactId>
-	  		<version>2.5.26</version>
+	  		<version>2.5.27</version>
 	  		<classifier>classes</classifier>		
 		</dependency>
  		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
 	  		<artifactId>DWOplayer</artifactId>
-	  		<version>2.5.26</version>
+	  		<version>2.5.27</version>
 	  		<classifier>sources</classifier>		
 		</dependency>
  		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
 	  		<artifactId>DWOplayer</artifactId>
-	  		<version>2.5.26</version>
-	  		<classifier>dwo2</classifier>		
+	  		<version>2.5.27</version>
   			<type>war</type>
 		</dependency>
 		<dependency>
@@ -166,6 +164,7 @@
                 	<localOnly>false</localOnly>
                 	<allowSnapshots>false</allowSnapshots>
                 	<enableSshAgent>true</enableSshAgent>
+                	<noDeploy>true</noDeploy>
             	</configuration>
 			  <dependencies>
 			    <dependency>
@@ -173,11 +172,11 @@
 			      <artifactId>jsch</artifactId>
 			      <version>0.1.54</version>
 			    </dependency>
-<dependency>
-  <groupId>net.java.dev.jna</groupId>
-  <artifactId>jna-platform</artifactId>
-  <version>5.12.1</version>
-</dependency>
+				<dependency>
+				  <groupId>net.java.dev.jna</groupId>
+				  <artifactId>jna-platform</artifactId>
+				  <version>5.12.1</version>
+				</dependency>
 			  </dependencies>
         	</plugin>
          </plugins>

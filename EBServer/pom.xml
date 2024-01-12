@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO</artifactId>
-		<version>2.5.26</version>
+		<version>2.5.27</version>
 		<relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 	<artifactId>EBServer</artifactId>
@@ -209,7 +209,6 @@
 		<groupId>nl.uu.fi.dwo.mobile</groupId>
 		<artifactId>DWOplayer</artifactId>
 		<type>war</type>
-		<classifier>dwo2</classifier>
 		<scope>runtime</scope>
 	</dependency>
 	<dependency>
@@ -268,13 +267,13 @@
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>OAuth2Client</artifactId>
-		<version>1.0.7</version>
+		<version>1.0.8</version>
 		<classifier>classes</classifier>
 	</dependency>
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>OAuth2Client</artifactId>
-		<version>1.0.7</version>
+		<version>1.0.8</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
@@ -351,17 +350,6 @@
 						Check would check that there are no local changes. Update would update it -->
 					<doCheck>false</doCheck>
 					<doUpdate>false</doUpdate>
-					<!-- This ensures that even if we are not connected to scm than also 
-						take the version from local .svn file -->
-					<revisiononscmfailure>
-
-						<!-- Generate sequence build number based on: build number and timestamp -->
-						<format>Build: #{0} ({1,date})</format>
-						<items>
-							<item>buildNumber\d*</item>
-							<item>timestamp</item>
-						</items>
-					</revisiononscmfailure>
 					<timestampFormat>{0,date,yyyyMMddHHmmss}</timestampFormat>
 				</configuration>
 			</plugin>
@@ -493,11 +481,12 @@
                         	<CDN_HOST>cdn.dwo.nl</CDN_HOST>
                         	<CDNURL>https://cdn.dwo.nl</CDNURL>
                             <ENV_NOSEB>false</ENV_NOSEB>
-                            <DWO_ENV>test</DWO_ENV>
+                            <DWO_ENV>test uusaml</DWO_ENV>
                             <SEB_TOETS_MAC>9153c48c6111d2733add6e1d596db4059c302cf736dcb18ca498288e21404507,c5d129e27f57b1970d2ffda2ed745a20f7d8e12ed9bfbfb168e83f75f9f870cf</SEB_TOETS_MAC>
-  							<ALLOW_ORIGIN>http://localhost:${http.port} https://hub-dev.dwo.nl https://entree-s.dwo.nl </ALLOW_ORIGIN>
+  							<ALLOW_ORIGIN>http://localhost:${http.port}</ALLOW_ORIGIN>
  							<MEMCACHED>test:localhost:11211</MEMCACHED>
  							<UU_INDEX>/WEB-INF/uuindex.jsp</UU_INDEX>
+ 							<ENV_NOSEB>true</ENV_NOSEB>
                         </systemProperties>
 					<server>TomcatServer</server>
 					<path>/</path>
@@ -627,14 +616,13 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.49</version>
+            <version>8.0.28</version>
         </dependency>
 	</dependencies>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>3.2.3</version>
 				<configuration>
           			<filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
 					<archive>
@@ -643,8 +631,6 @@
 						</manifest>
 						<manifestEntries>
 							<Implementation-Build>${buildNumber}</Implementation-Build>
-							<JavaClient-Version>${DWOJClientVersion}</JavaClient-Version>
-							<HtmlClient-Version>${DWOGwtClientVersion}</HtmlClient-Version>
 							<Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
 							<Implementation-ScmBranch>${scmBranch}</Implementation-ScmBranch>
 						</manifestEntries>
@@ -662,7 +648,6 @@
 						<overlay>
 							<groupId>nl.uu.fi.dwo.mobile</groupId>
 							<artifactId>DWOplayer</artifactId>
-							<classifier>dwo2</classifier>
 							<targetPath>/dwo/tablet</targetPath>		
 							<excludes>
 								<exclude>WEB-INF/**</exclude>

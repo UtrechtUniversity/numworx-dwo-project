@@ -71,15 +71,6 @@
 					<doUpdate>false</doUpdate>
 					<!-- This ensures that even if we are not connected to scm than also 
 						take the version from local .svn file -->
-					<revisiononscmfailure>
-
-						<!-- Generate sequence build number based on: build number and timestamp -->
-						<format>Build: #{0} ({1,date})</format>
-						<items>
-							<item>buildNumber\d*</item>
-							<item>timestamp</item>
-						</items>
-					</revisiononscmfailure>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -103,7 +94,6 @@
                 <artifactId>maven-source-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
                 <executions>
                     <execution>
@@ -116,7 +106,6 @@
             </plugin>         
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>3.2.3</version>
 				<configuration>
 					<warSourceDirectory>war</warSourceDirectory>
 					<warSourceIncludes>DWOplayer.jsp,KeyboardGWT.css,DWOplayer.css,${runTarget},GeoGebra.html,MCSquared.jsp,images/**,scripts/**,WEB-INF/lib/*,WEB-INF/web.xml</warSourceIncludes>
@@ -158,6 +147,14 @@
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>9.0.0.v20130308</version>
+			</plugin>
+			<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>3.1.1</version>
+					<configuration>
+						<allowIncompleteProjects>true</allowIncompleteProjects>
+					</configuration>			
 			</plugin>
 		</plugins>
 	</build>
@@ -216,7 +213,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.account</groupId>
 			<artifactId>Account</artifactId>
-			<version>2.5.23</version>
+			<version>2.5.27</version>
 			<classifier>classes</classifier>
 			<exclusions>
 				<exclusion>
@@ -228,7 +225,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.account</groupId>
 			<artifactId>Account</artifactId>
-			<version>2.5.23</version>
+			<version>2.5.27</version>
 			<classifier>sources</classifier>
 		</dependency>
 		<dependency>
@@ -239,7 +236,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.mobile</groupId>
 			<artifactId>formule</artifactId>
-			<version>2.5.26</version>
+			<version>2.5.27</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.numworx.gwtpatch</groupId>
@@ -302,7 +299,7 @@
 	<parent>
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO</artifactId>
-        <version>2.5.26</version>
+        <version>2.5.27</version>
         <relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 	<properties>
@@ -311,7 +308,7 @@
 		<gwtModule>${project.groupId}.DWO2playerDebug</gwtModule>
 		<finalName>${project.artifactId}</finalName>
 		<runTarget>${project.artifactId}.html</runTarget>
-		<warClassifier />
+		<warClassifier>dwo</warClassifier>
 		<gwt.copyWebapp>true</gwt.copyWebapp>
 		<gwtVersion>2.9.0</gwtVersion>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
@@ -413,7 +410,7 @@
 			<properties>
 				<finalName>DWO2player</finalName>
 				<gwtModule>${project.groupId}.DWO2player</gwtModule>
-				<warClassifier>dwo2</warClassifier>
+				<warClassifier />
 				<maven.war.webxml>war/WEB-INF/web-dwo2.xml</maven.war.webxml>
 				<gwt.copyWebapp>false</gwt.copyWebapp>
 				<!-- <gwt.style>PRETTY</gwt.style> -->
@@ -439,7 +436,7 @@
 				<gwt.copyWebapp>true</gwt.copyWebapp>
 				<gwt.style>PRETTY</gwt.style>
 				<gwt.compiler.force>false</gwt.compiler.force>
- 				<warClassifier />
+ 				<warClassifier>debug</warClassifier>
         		<tomcat7.version>7.0.76</tomcat7.version>
 				<maven.war.webxml>war/WEB-INF/web.xml</maven.war.webxml>
 			</properties>

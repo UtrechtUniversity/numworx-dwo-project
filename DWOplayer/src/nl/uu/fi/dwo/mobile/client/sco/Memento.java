@@ -8,6 +8,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,6 +31,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 import nl.uu.fi.dwo.mobile.utils.GUID;
+import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.xapi.Statement;
 
@@ -1630,4 +1635,13 @@ public JSONObject getShareMap() {
 	public void gotoUrl(String href) {
 	}
 
+	// sparse array of Variable Collection
+	private TreeMap<Integer, VariableCollection> collection = new TreeMap<>();
+	
+	public VariableCollection get(int opdrachtnr, Supplier<VariableCollection> f) {
+		return collection.computeIfAbsent(opdrachtnr, x -> f.get());		
+	}
+	
+	
+	
 }
