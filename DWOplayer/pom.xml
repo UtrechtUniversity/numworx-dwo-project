@@ -213,7 +213,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.account</groupId>
 			<artifactId>Account</artifactId>
-			<version>2.5.27-SNAPSHOT</version>
+			<version>2.5.28-SNAPSHOT</version>
 			<classifier>classes</classifier>
 			<exclusions>
 				<exclusion>
@@ -225,7 +225,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.account</groupId>
 			<artifactId>Account</artifactId>
-			<version>2.5.27-SNAPSHOT</version>
+			<version>2.5.28-SNAPSHOT</version>
 			<classifier>sources</classifier>
 		</dependency>
 		<dependency>
@@ -236,7 +236,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.mobile</groupId>
 			<artifactId>formule</artifactId>
-			<version>2.5.27-SNAPSHOT</version>
+			<version>2.5.28-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.numworx.gwtpatch</groupId>
@@ -299,7 +299,7 @@
 	<parent>
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO</artifactId>
-        <version>2.5.27-SNAPSHOT</version>
+        <version>2.5.28-SNAPSHOT</version>
         <relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 	<properties>
@@ -410,7 +410,7 @@
 			<properties>
 				<finalName>DWO2player</finalName>
 				<gwtModule>${project.groupId}.DWO2player</gwtModule>
-				<warClassifier></warClassifier>
+				<warClassifier />
 				<maven.war.webxml>war/WEB-INF/web-dwo2.xml</maven.war.webxml>
 				<gwt.copyWebapp>false</gwt.copyWebapp>
 				<!-- <gwt.style>PRETTY</gwt.style> -->
