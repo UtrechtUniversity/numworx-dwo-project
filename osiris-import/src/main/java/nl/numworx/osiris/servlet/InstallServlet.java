@@ -79,7 +79,7 @@ public class InstallServlet extends HttpServlet {
 		try {
 			SystemManager system;
 			instance.setBasicAuthString(null, null, null);
-			instance.getAuthenticator().setServerUrlPath(new URL("http://127.0.0.1:8080/dwo/"));
+			instance.getAuthenticator().setServerUrlPath(new URL("http://127.0.0.1/dwo/"));
 			system = new SystemManager(instance);
 			if ("Bearer".equalsIgnoreCase(req.getAuthType())) {
 				instance.setBearerAuthString(req.getRemoteUser());
