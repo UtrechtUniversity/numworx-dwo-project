@@ -410,7 +410,7 @@
 			<properties>
 				<finalName>DWO2player</finalName>
 				<gwtModule>${project.groupId}.DWO2player</gwtModule>
-				<warClassifier></warClassifier>
+				<warClassifier />
 				<maven.war.webxml>war/WEB-INF/web-dwo2.xml</maven.war.webxml>
 				<gwt.copyWebapp>false</gwt.copyWebapp>
 				<!-- <gwt.style>PRETTY</gwt.style> -->
