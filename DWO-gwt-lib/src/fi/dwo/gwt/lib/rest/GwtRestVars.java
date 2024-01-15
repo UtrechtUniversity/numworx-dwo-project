@@ -217,11 +217,14 @@ public class GwtRestVars {
 
 		@Override
 		public Promise<T> apply(Promise<T> t) {
-			if (t instanceof Dwo2Exception) {
-				if (Dwo2ExceptionCode.User_AuthenticationError == ((Dwo2Exception) t).getDwo2Code()) {
+			if (t.getFailure() instanceof Dwo2Exception) {
+				if (Dwo2ExceptionCode.User_AuthenticationError == ((Dwo2Exception) t.getFailure()).getDwo2Code()) {
 					if (tokenRequest == null) {
-						tokenRequest = oauth.refresh_token(refresh_token);
-					} else return t;
+						if (refresh_token != null)
+							tokenRequest = oauth.refresh_token(refresh_token);
+						else
+							return t;
+					}
 					return tokenRequest.then(
 							p -> {
 								DomToken dt = p.getValue();							
