@@ -91,6 +91,7 @@ public Promise<String> getDescription(DomStudentModelContextId pid, String uuid,
 			+ "/teacher/studentmodel/getDescription?modelId=" + modelID 
 			+ "&id=" + uuid 
 			+ "&hasRoleId=" + context.getDomHasRole().getId() 
+			+ "&optLock=" + pid.getOptLock()
 			+ "&locale=" + locale;
 	
 	RequestBuilder rb = new RequestBuilder(RequestBuilder.GET, url);

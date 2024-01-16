@@ -2,6 +2,7 @@ package fi.dwo.server.rest;
 
 import java.io.StringWriter;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -175,8 +177,17 @@ public class SecuredStudentStudentModelManager {
 			DomStudentModelContext result = state.getStudentModel(smc);
 			DomStudentModelStructure struct = result.getModelStructure();
 			String obj = getStruct(struct, uuid, locale);
-			
-			return Response.ok(obj, MediaType.APPLICATION_JSON_TYPE).build();
+			CacheControl cc = new CacheControl();
+			cc.setMaxAge(600);
+			Date expiry = new  Date(System.currentTimeMillis()+1000*cc.getMaxAge());
+			Date last = null;
+			if ( null != result.getLastChangeTimeStamp())
+				last = new Date(result.getLastChangeTimeStamp().longValue());
+			return Response.ok(obj, MediaType.APPLICATION_JSON_TYPE)
+					.cacheControl(cc)
+					.lastModified(last)
+					.expires(expiry)
+					.build();
 		} catch (Dwo2Exception e) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
