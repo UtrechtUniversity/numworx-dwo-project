@@ -835,6 +835,14 @@ try {
 			if (pagenr<0) {
 				if (pssc.getCompletionStatus() == null||"not attempted".equals(pssc.getCompletionStatus())) // null of aangemaakt door docent alleen.
 					return ""; // ab-initio
+				if (onsState != null && !COMPLETE.equals(pssc.getCompletionStatus())) {
+					JsonArray nakijken = onsState.getJsonArray("aantalNakijken");
+					if (nakijken != null && 0 == nakijken.getInt(0)) {
+						return "";
+					}
+				}
+				
+				
 				return String.valueOf(Math.round(pssc.getScore()));
 			}
 			if (onsState == null) return "";
@@ -853,7 +861,12 @@ try {
 				data = contState.getJsonObject(pagenr);
 				int sum = sumOfCorrectie(data);
 				n = Integer.valueOf(sum + n.intValue());
-			}}
+			}} else {
+				JsonArray nakijken = onsState.getJsonArray("aantalNakijken");
+				if (nakijken != null && 0 == nakijken.getInt(0)) {
+					return "";
+				}
+			}
 			return n.toString();
 		}
 		if (key.endsWith(".success_status")) {
