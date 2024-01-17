@@ -91,9 +91,10 @@ public Promise<String> getDescription(DomStudentModelContextId pid, String uuid,
 			+ "/teacher/studentmodel/getDescription?modelId=" + modelID 
 			+ "&id=" + uuid 
 			+ "&hasRoleId=" + context.getDomHasRole().getId() 
-			+ "&optLock=" + pid.getOptLock()
 			+ "&locale=" + locale;
-	
+	if (pid.getOptLock() != null)
+		url	+= "&optLock=" + pid.getOptLock();
+
 	RequestBuilder rb = new RequestBuilder(RequestBuilder.GET, url);
 	rb.setTimeoutMillis(100000);
 	rb.setHeader("Authorization", RestAuthenticator.instance.getAuthorization());
