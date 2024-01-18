@@ -9,6 +9,7 @@ import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
@@ -72,7 +73,11 @@ public abstract class AbstractStudentModelPresenter {
   		{ 
   		  continue;
   		}
-  		for (Map.Entry<String, Set<Integer>> m : entry.getValue().entrySet()) {
+  		Set<Entry<String, Set<Integer>>> filterSet = entry.getValue().entrySet();
+  		if (filterSet.isEmpty()) {
+  			filterSet = map.entrySet();
+  		}
+		for (Map.Entry<String, Set<Integer>> m : filterSet) {
   			Set<Integer> chapters = new TreeSet<>(map.getOrDefault(m.getKey(), Collections.emptySet()));
   			if(!m.getValue().isEmpty()) chapters.retainAll(m.getValue());
   			if (!chapters.isEmpty())
