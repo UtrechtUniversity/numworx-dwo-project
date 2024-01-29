@@ -90,7 +90,7 @@ public class DWOLogger implements Logging {
 			map.put("logIDLabel", logIDLabel);
 		if(teltMee != null)
 			map.put("teltMee", teltMee);
-		if (!isAttempt) return; // duplicate the complex way
+		//if (!isAttempt) return; // duplicate the complex way FIXME DOES NOT WORK! isAttempt is always false
 		if (error) errorCount++;
 		map.put(LOG_ERROR_COUNT, new JSONNumber(errorCount));
 		attempts.set(attemptsCount, new JSONString(attempt));
