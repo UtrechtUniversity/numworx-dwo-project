@@ -2,6 +2,7 @@ package fi.dwo.server.rest;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.sql.Date;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,8 +11,10 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
@@ -30,9 +33,13 @@ public class PublicProfileManager {
 	@GET
 	@Path("/{id}")
 	@Produces({"application/json"})
-	public DomDwoProfileFull get( @PathParam("id") String id ) {
+	public Response get( @PathParam("id") String id ) {
+		CacheControl cc = new CacheControl(); cc.setMaxAge(600);
 		DomDwoProfileFull result = PublicProfileCache.getFromCache(id);
-		if (result != null) return result;
+		if (result != null) return Response.ok(result)
+				.expires(new Date(System.currentTimeMillis()+1000*cc.getMaxAge()))
+				.cacheControl(cc)
+				.build();
 		
 		PersistentDwoProfile profile;
 		profile = DwoProfileManager.findEntity(id);
@@ -43,11 +50,14 @@ public class PublicProfileManager {
 			LOG.log(Level.WARNING, "parse " + id, e);
 		}
 		if (profile != null) 
-			return profile.buildDomDwoProfileFull();
+			return Response.ok(profile.buildDomDwoProfileFull())
+					.expires(new Date(System.currentTimeMillis()+1000*cc.getMaxAge()))
+					.cacheControl(cc)
+					.build();
 		else {
 			LOG.severe("Profile not found for " + id);
 		}
-		return null;
+		return Response.status(Status.NOT_FOUND).build();
 	}
 	
 	@PUT
@@ -56,9 +66,19 @@ public class PublicProfileManager {
 	public Response getDescription(RestDwoProfile rest) throws Dwo2Exception, IOException {
      try {
 		Long id = MySQLPersistenceId.getNativeId(rest.getDomDwoProfile());
-		PersistentDwoProfile profile = DwoProfileManager.findEntity(id);
-        if(profile == null) return Response.ok().entity("{}").build(); // Not fatal
-        Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(profile.getDwoProfileText(), null); // FIXM load wiskopdr.jar
+		DomDwoProfileFull dom = null;
+		
+		dom = PublicProfileCache.get(id.toString());
+		
+		String text;
+		if (dom != null) {
+			text = dom.getDwoProfileText();
+		} else {
+			PersistentDwoProfile profile = DwoProfileManager.findEntity(id);
+			if(profile == null) return Response.ok().entity("{}").build(); // Not fatal
+			text = profile.getDwoProfileText();
+		}
+        Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(text, null); // FIXM load wiskopdr.jar
         StringWriter writer = new StringWriter();
 		JSONEncoder.encode(map, writer, null); // FIXME, load wiskopdr.jar
         String string = writer.toString();
