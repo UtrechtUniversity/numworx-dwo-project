@@ -46,7 +46,7 @@ public class Snoop extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		response.setContentType("text/plain");
 
-		out.println("Snoop Servlet");
+		out.println("Snoop Servlet for " + System.getenv("HOSTNAME"));
 		Runtime runtime = Runtime.getRuntime();
 		long max = r(runtime.maxMemory());
 		long free = r(runtime.freeMemory());
