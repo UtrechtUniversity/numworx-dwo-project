@@ -72,6 +72,10 @@
 							<groupId>nl.uu.fi.dwo.mobile</groupId>
 							<artifactId>promise-api</artifactId>
 						</exclusion>
+						<exclusion>
+				        	<groupId>nl.uu.fi.dwo.lms</groupId>
+				        	<artifactId>DwoGwtClientHtmlUi</artifactId>							
+						</exclusion>
 					</exclusions>
 				</dependency>
 

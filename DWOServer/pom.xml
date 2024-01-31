@@ -204,6 +204,11 @@
 			   <version>3.0.1-b08</version>
 			   <scope>test</scope>
 		   </dependency>
+			<dependency>
+		        <groupId>com.kstruct</groupId>
+		        <artifactId>gethostname4j</artifactId>
+		        <version>1.0.0</version>
+		    </dependency>
     </dependencies>
     
 <!--    <distributionManagement>

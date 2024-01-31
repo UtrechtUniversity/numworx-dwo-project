@@ -1,11 +1,7 @@
 package nl.numworx.uploadwidgetgwt.server;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Base64;
@@ -19,16 +15,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemHeaders;
-
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import nl.numworx.uploadwidget.server.Store;
 import nl.numworx.uploadwidget.shared.AtomEntry;
 import nl.numworx.uploadwidgetgwt.shared.Constants;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SystemManager;
@@ -45,10 +37,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
-import nl.uu.fi.dwo.rest.util.PathId;
 
 @SuppressWarnings("serial")
 public class JavaUpload extends HttpServlet implements Constants {

@@ -33,8 +33,7 @@ public class UploadInstanceContainer implements ResourceContainer {
 			URI p = new URI(null, null, path, null);
 			url = base.resolve(p).toURL();
 		  } catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ResourceException("Error in path " + path, e);
 		  }
 	      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 	      OutputStream outStream = null;
@@ -56,6 +55,9 @@ public class UploadInstanceContainer implements ResourceContainer {
 	      outStream.close();
 	      int responseCode = conn.getResponseCode();
 	      LOG.info("responsecode " + responseCode + ", size " + size);
+	      if (responseCode >= 400) {
+	    	  throw new ResourceException("Server error for " + url + ": code " + responseCode + " " + conn.getResponseMessage());
+	      }
 	      return size;
 	}
 	
