@@ -77,7 +77,7 @@
     		window.location = "https://<%=server%>/wiskunde-actief/exam/logout.html"
     	}
     </script>
-    <title>Save Exam Browser</title>
+    <title>Safe Exam Browser</title>
     
     <!-- This script loads your compiled module.   -->
     <!-- If you add any GWT meta tags, they must   -->
