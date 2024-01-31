@@ -82,7 +82,7 @@ public class RedirectServlet extends HttpServlet {
 	@Override
 	public void init() throws ServletException {
 		schoolID = schoolid;
-		org_id = "saml:" + schoolID;
+		org_id = "oidc:" + schoolID;
 		ServletContext context = getServletContext();
 		String dbrest_url = context.getInitParameter("dbrest.url");
 		
