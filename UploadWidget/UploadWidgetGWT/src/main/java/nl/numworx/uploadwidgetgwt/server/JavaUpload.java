@@ -161,7 +161,7 @@ public class JavaUpload extends HttpServlet implements Constants {
 		DomSchoolsRolesAndClassesV2 logins;
 		DomHasRole hasRole;
 		try {
-			user   = SecureUserAccountManager.getAccountData();
+			user   = SecureUserAccountManager.getAccountData(rest);
 			logins = SecureUserAccountLoginsManager.getSchoolLogins();
 		//search paths[0] in logins for school;
 		hasRole = logins.getActiveSchoolRoleAndClass().getHasRole();
@@ -176,9 +176,9 @@ public class JavaUpload extends HttpServlet implements Constants {
 				String [] split = pathid.split("-");
 				split[1] = "MYSQL;PersistentUser;"+split[1];
 				split[2] = "MYSQL;PersistentSchoolClass;" + split[2];
-				List<DomStudent> students = SecureTeacherSchoolClassManager.getTeachersStudents();
+				List<DomStudent> students = SecureTeacherSchoolClassManager.getTeachersStudents(rest);
 				Optional<DomStudent> b1 = students.stream().filter(s -> s.getId().toString().equals(split[1])).findAny();
-				List<DomSchoolClass> classes = SecureTeacherSchoolClassManager.getTeachersSchoolClasses();
+				List<DomSchoolClass> classes = SecureTeacherSchoolClassManager.getTeachersSchoolClasses(rest);
 				Optional<DomSchoolClass> b2 = classes.stream().filter(c -> c.getId().getIdString().equals(split[2])).findAny();
 				if (b1.isPresent() && b2.isPresent()) {
 					DomSchoolRoleAndClassV2 result = logins.getActiveSchoolRoleAndClass();
@@ -188,6 +188,14 @@ public class JavaUpload extends HttpServlet implements Constants {
 					result.setSchoolClass(b2.get());
 					return Optional.of(result);
 				}
+			} else if (pathid.startsWith("1-")) {
+				return logins.getSchoolsRolesAndClassesList()
+				.stream()
+				.filter(hrc -> {
+					DomHasRole hr = hrc.getHasRole();
+					return pathid .equals( Store.getPathId(hasRole));
+				})
+				.findAny();
 			}
 		}
 		} catch (Dwo2Exception e) {

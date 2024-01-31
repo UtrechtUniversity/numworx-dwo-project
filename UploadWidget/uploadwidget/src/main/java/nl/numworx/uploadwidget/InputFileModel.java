@@ -11,6 +11,7 @@ import javax.swing.AbstractListModel;
 
 import org.cbook.cbookif.rm.ResourceContainer;
 
+import fi.beans.numworxlf.JOptionPane;
 import fi.beans.wiskopdrbeans.ResourceManagerClient.ResourceManagerFactory;
 
 @SuppressWarnings("serial")
@@ -55,9 +56,11 @@ public class InputFileModel extends AbstractListModel<InputFile> {
 		List<InputFile> inputs = new ArrayList<>(this.inputs);
 		Iterator<InputFile> i = inputs.iterator();
 		while(i.hasNext()) {
+			InputFile next = i.next();
 			try {
-				i.next().persist(rc);
+				next.persist(rc);
 			} catch(Exception ioe) {
+				JOptionPane.showMessageDialog(null, ioe, next.name, JOptionPane.ERROR_MESSAGE);
 				i.remove();
 			}
 		}
