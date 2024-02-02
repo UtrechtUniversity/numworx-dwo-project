@@ -48,5 +48,14 @@
 			</plugin>
 	  </plugins>
   </build>
+  	<profiles>	 	
+	 	<profile>
+	 		<id>local</id>
+	 		<properties>
+    			<dbrest.url>http://localhost:8080/dwo/</dbrest.url> 		
+	 		</properties>
+	 	</profile>
+	</profiles>
+
   <packaging>war</packaging>
 </project>

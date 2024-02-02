@@ -485,11 +485,11 @@
                         	<CDN_HOST>cdn.dwo.nl</CDN_HOST>
                         	<CDNURL>https://cdn.dwo.nl</CDNURL>
                             <ENV_NOSEB>false</ENV_NOSEB>
-                            <DWO_ENV>test uusaml</DWO_ENV>
+                            <DWO_ENV>test</DWO_ENV>
                             <SEB_TOETS_MAC>9153c48c6111d2733add6e1d596db4059c302cf736dcb18ca498288e21404507,c5d129e27f57b1970d2ffda2ed745a20f7d8e12ed9bfbfb168e83f75f9f870cf</SEB_TOETS_MAC>
   							<ALLOW_ORIGIN>http://localhost:${http.port}</ALLOW_ORIGIN>
  							<MEMCACHED>test:localhost:11211</MEMCACHED>
- 							<UU_INDEX>/WEB-INF/uuindex.jsp</UU_INDEX>
+ 							<UU_INDEX></UU_INDEX>
  							<ENV_NOSEB>true</ENV_NOSEB>
                         </systemProperties>
 					<server>TomcatServer</server>
@@ -500,9 +500,9 @@
 					<webapps>
 						<webapp>
 							<groupId>nl.numworx.uploadwidget</groupId>
-    							<artifactId>UploadWidgetGWT</artifactId>
-    							<version>2.5.25</version>
-                          				<type>war</type>
+    							<artifactId>uploadwidget-local</artifactId>
+    							<version>2.5.28-SNAPSHOT</version>
+                          		<type>war</type>
 							<contextPath>/dwo/dav/upload</contextPath>
                             	<asWebapp>true</asWebapp> 
 						</webapp>
