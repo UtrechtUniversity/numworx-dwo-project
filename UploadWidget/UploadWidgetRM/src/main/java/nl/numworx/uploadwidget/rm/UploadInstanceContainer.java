@@ -23,8 +23,8 @@ import org.cbook.cbookif.rm.ResourceException;
 public class UploadInstanceContainer implements ResourceContainer {
 	private static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
 	private static final Logger LOG = Logger.getLogger(UploadInstanceContainer.class.getName());
-	private String oauth_token;
 	private URL serverUrlPath;
+	private CBookContext context;
 
 	private Long put(String path, InputStream in, String type) throws IOException {
 	      URL url = new URL(getServerUrlPath(), path); // TODO make login
@@ -56,21 +56,26 @@ public class UploadInstanceContainer implements ResourceContainer {
 	      int responseCode = conn.getResponseCode();
 	      LOG.info("responsecode " + responseCode + ", size " + size);
 	      if (responseCode >= 400) {
-	    	  throw new ResourceException("Server error for " + url + ": code " + responseCode + " " + conn.getResponseMessage());
+	    	  throw new RecoverException(responseCode, "Server error for " + url + ": code " + responseCode + " " + conn.getResponseMessage());
 	      }
 	      return size;
 	}
 	
 	private String getBasicAuthString() {
+		String oauth_token = (String) context.getProperty("oauth_token");
 		return oauth_token;
 	}
+	
+	private boolean isRefresh() {
+		return Boolean.TRUE.equals(context.getProperty("oauth_refresh"));
+	}	
 
 	URL getServerUrlPath() {
 		return serverUrlPath;
 	}
 
 	public UploadInstanceContainer(CBookContext context) {
-		oauth_token = (String) context.getProperty("oauth_token");
+		this.context = context;
 		serverUrlPath = (URL) context.getProperty("serverUrlPath");
 		String learnerId = (String) context.getProperty("learner_id");
 		String pfx = "";
@@ -155,9 +160,14 @@ public class UploadInstanceContainer implements ResourceContainer {
 			if ("file".equals(url.getProtocol()) && APPLICATION_OCTET_STREAM.equals(mimetype)) {
 				mimetype = retype(url.getPath(), mimetype);
 			}
-			
-			
 			return create(name, in, mimetype);
+		} catch (RecoverException e) {	
+			if (e.getCode() == 401) {
+				if (isRefresh()) {
+					return create(name, url);
+				}
+			}
+			throw e;
 		} catch (ResourceException e) {
 			throw e;
 		} catch (IOException e) {
@@ -176,6 +186,8 @@ public class UploadInstanceContainer implements ResourceContainer {
 		try {
 			length = put(name, in, type);
 			in.close();
+		} catch (ResourceException recover) {
+			throw recover;
 		} catch (Exception e) {
 			throw new ResourceException("create " + name, e);
 		}
@@ -184,25 +196,21 @@ public class UploadInstanceContainer implements ResourceContainer {
 
 	@Override
 	public ResourceContainer createContainer(String arg0) throws ResourceException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Resource[] list() throws ResourceException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Resource open(String arg0) throws ResourceException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public ResourceContainer openContainer(String arg0) throws ResourceException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
