@@ -72,6 +72,7 @@
     	<artifactId>uploadwidget-common</artifactId>
     	<version>${project.version}</version>
     	<classifier>sources</classifier>
+	    <scope>provided</scope>
     </dependency>
     <dependency>
 	    	<groupId>nl.uu.fi.dwo.mobile</groupId>
