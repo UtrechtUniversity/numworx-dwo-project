@@ -146,13 +146,20 @@ public abstract class AbstractStudentModelPresenter {
     		DomMethod method = m.getValue();
     		String t = method.getMethod();
     		Map<String, Set<Integer>> mf = filter.getOrDefault(method.key(), Collections.emptyMap());
+    		boolean contains = filter.containsKey(method.key());
     		DomTree<String> tree = new DomTree<>(t);
     		Map<String, DomTree<String>> map = new LinkedHashMap<>(), all = new HashMap<>();
     		tree.setChildren(map);
     		int bsize = method.books.size();
     		for(int i = 0; i < bsize; i++) {
     			String book = method.books.get(i);
-    			if (! filter.isEmpty() && ! mf.containsKey(book) ) continue;
+    			if (! filter.isEmpty() && ! mf.containsKey(book) ) 
+    			{
+    				if (!(contains && mf.isEmpty())) // no books in method -> all
+    					continue;
+    				else {
+    				}
+    			}
     			Set<Integer> mc = mf.getOrDefault(book, Collections.emptySet());
     			DomTree<String> tbook = new DomTree<>(book);
     			map.put(method.key() + "-" + book, tbook);
