@@ -50,22 +50,20 @@ abstract public class GuiAction extends AbstractAction implements PropertyChange
         if (map == null) {
             return false;
         }
+        if (map.getUserObject() instanceof Sco) {
+        	map = ((Sco) map.getUserObject()).getCourse();
+        }
         if (map instanceof Course) {
-            if (hasAdminRight()) {
-                return true;
-            }
             Course course = (Course) map;
-            int id = course.getSchoolID();
             User user = instance().getUser();
             School school = user.getSchool();
             int ID = school.getSchoolID();
-            return id == ID && !instance().readOnly(course);// course.getSchoolID() == instance.getUser().getSchool().getSchoolID();
-        } else if (map.getUserObject() instanceof Sco) {
-            if (hasAdminRight()) {
+            int id = course.getSchoolID();
+            // has admin right alleen voor standaard modules
+            if (hasAdminRight() && id != ID) {
                 return true;
             }
-            Course course = ((Sco) map.getUserObject()).getCourse();
-            return course.getSchoolID() == instance().getUser().getSchool().getSchoolID()  && !instance().readOnly(course);
+            return id == ID && !instance().readOnly(course);// course.getSchoolID() == instance.getUser().getSchool().getSchoolID();
         }
         if (map.getUserObject() == ModuleTreePanel.ALLE_MODULES) {
             return false;
