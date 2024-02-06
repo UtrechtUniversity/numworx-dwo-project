@@ -1423,9 +1423,9 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 			if(registration == null) return;
 			removeRegistration();
 			setSessionTimes();
-			JSONObject reviewData = new JSONObject();
-			reviewData.put("toetsLocked", JSONBoolean.getInstance(true));
-			suspendData.put("reviewData", reviewData);
+			//JSONObject reviewData = new JSONObject();
+			//reviewData.put("toetsLocked", JSONBoolean.getInstance(true));
+			//suspendData.put("reviewData", reviewData);
 			setValue(SUSPEND_DATA, suspendData.toString());
 			// START AFRONDEN
 			logger.info("start afronden");
