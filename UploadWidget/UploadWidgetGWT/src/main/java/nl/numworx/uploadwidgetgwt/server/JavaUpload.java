@@ -188,12 +188,12 @@ public class JavaUpload extends HttpServlet implements Constants {
 					result.setSchoolClass(b2.get());
 					return Optional.of(result);
 				}
-			} else if (pathid.startsWith("1-")) {
+			} else if (pathid.startsWith("1-") && !user.getSingleSchool()) {
 				return logins.getSchoolsRolesAndClassesList()
 				.stream()
 				.filter(hrc -> {
 					DomHasRole hr = hrc.getHasRole();
-					return pathid .equals( Store.getPathId(hasRole));
+					return pathid .equals( Store.getPathId(hr));
 				})
 				.findAny();
 			}

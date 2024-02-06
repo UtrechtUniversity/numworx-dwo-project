@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+  <context-param>
+  	<param-name>dbrest.url</param-name>
+	<param-value>${dbrest.url}</param-value>  
+  </context-param>
+  <servlet>
+  	<servlet-name>upload</servlet-name>
+  	<servlet-class>nl.numworx.uploadwidgetgwt.server.Upload</servlet-class>
+  	<init-param>
+  		<param-name>corsDomainsRegex</param-name>
+  		<param-value>.*</param-value>
+  	</init-param>
+  </servlet>
+  <servlet>
+  	<servlet-name>javaupload</servlet-name>
+  	<servlet-class>nl.numworx.uploadwidgetgwt.server.JavaUpload</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>download</servlet-name>
+  	<servlet-class>nl.numworx.uploadwidgetgwt.server.Download</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>upload</servlet-name>
+        <url-pattern>*.gupld</url-pattern>
+        <url-pattern>/servlet.gupld</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>javaupload</servlet-name>
+  	<url-pattern>/dir/*</url-pattern>
+        <url-pattern>/feed.xml</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>download</servlet-name>
+  	<url-pattern>/download/*</url-pattern>
+  </servlet-mapping>
+
+</web-app>
