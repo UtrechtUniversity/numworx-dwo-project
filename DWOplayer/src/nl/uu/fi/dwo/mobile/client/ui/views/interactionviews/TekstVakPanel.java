@@ -1294,6 +1294,8 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		}
 	}
 	private ReviewActivity reviewActivity;
+
+	private LessonMode lessonmode;
 	
 	public void zetOpdracht(HashMap<String, Object> interactiePanelLaunchState)
 	{
@@ -1873,6 +1875,7 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 	{
 		this.comRoot = comRoot;
 		mode = comRoot.getMode();
+		lessonmode = comRoot.getLessonMode();
 		if (dwologger != null) dwologger.setCommunicationRoot(comRoot);
 		comRoot.addCBookEventListener(ACTION_SETVISIBLE, this);
 		comRoot.addCBookEventListener(ACTION_SETNOTVISIBLE, this);
@@ -1881,8 +1884,6 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 		comRoot.addCBookEventListener(TVP_DESELECT, this);
 		comRoot.addCBookEventListener(TVP_KLAPUIT, this);
 		comRoot.addCBookEventListener(TVP_KLAPIN, this);
-//		comRoot.addCBookEventListener(TVP_KLAPUIT, this);
-//		comRoot.addCBookEventListener(TVP_KLAPIN, this);
 		comRoot.addCBookEventListener("action.zoom", this);
 		comRoot.addCBookEventListener("action.unzoom", this);
 		comRoot.addCBookEventListener("action.setActive", this);
@@ -5485,6 +5486,14 @@ private Object CamelCase(String name) {
 	private boolean isKlapvakCorrect() {
 		
 		boolean vakinhoudCorrect = true;
+// https://numworx.atlassian.net/browse/DWOWIDGET-172
+// er is geen check op zelftoets gedaan en zichtbaar
+// bij eindtoets nooooooooit feedback, tenzij "verzegeld".
+		if ((mode == OpdrNavIF.EINDTOETS || mode == OpdrNavIF.ZELFTOETS) && lessonmode == LessonMode.normal)
+			return false;
+		
+		
+		
 		//Vector v = parent.getOpdrachtObjects();
 		//ArrayList<Object> opdrObjects = parent.getOpdrachtObjects();
 		//ArrayList<Object> opdrObjects = parent.getOpdrachtObjects();
