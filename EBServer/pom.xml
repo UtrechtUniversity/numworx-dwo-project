@@ -128,7 +128,7 @@
 		<dependency>
 			<groupId>fi.servlet</groupId>
 			<artifactId>ideas-servlet</artifactId>
-			<version>0.0.14-SNAPSHOT</version>
+			<version>0.0.14</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.tue.win.riaca.openmath</groupId>
@@ -271,13 +271,13 @@
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>OAuth2Client</artifactId>
-		<version>1.0.9-SNAPSHOT</version>
+		<version>1.0.9</version>
 		<classifier>classes</classifier>
 	</dependency>
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>OAuth2Client</artifactId>
-		<version>1.0.9-SNAPSHOT</version>
+		<version>1.0.9</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
