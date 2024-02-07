@@ -850,6 +850,9 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		mainPanel2 = new LayoutPanel(); 
 		if(!callOut)
 			mainPanel2.setStylePrimaryName("tekstvakpanel");
+		if (style != null) {
+			mainPanel2.addStyleName(styleString + "-main2");
+		}
 		
 		setCurrentSize(breedte, hoogte);
 		
