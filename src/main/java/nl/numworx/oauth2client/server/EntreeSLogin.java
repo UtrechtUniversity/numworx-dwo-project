@@ -188,6 +188,7 @@ public class EntreeSLogin implements SigningKeyResolver, Login {
 	
 	Claims idToken(String idToken) {
 		JwtParser parser = Jwts.parser().setSigningKeyResolver(this);
+		parser.setAllowedClockSkewSeconds(10);
 
 //		parser.setClock(new Clock() {
 //
