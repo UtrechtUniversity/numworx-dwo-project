@@ -904,6 +904,9 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		{
 			horizontalBorders[i] = new LayoutPanel();
 			//horizontalBorders[i].setPixelSize(breedte, 1);
+			if (style != null) {
+				horizontalBorders[i].addStyleName(styleString + "-border");
+			}
 			horizontalBorders[i].getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 			horizontalBorders[i].getElement().getStyle().setBorderColor(randColor.toString());
 			mainPanel2.add(horizontalBorders[i]);
@@ -913,6 +916,9 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		for(int i = 0; i < breedtes.size() - 1; i++)
 		{
 			verticalBorders[i] = new LayoutPanel();
+			if (style != null) {
+				verticalBorders[i].addStyleName(styleString + "-border");
+			}
 			//verticalBorders[i].setPixelSize(1 , hoogte);
 			verticalBorders[i].getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 			verticalBorders[i].getElement().getStyle().setBorderColor(randColor.toString());
@@ -944,6 +950,9 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		}
 		
 		mainPanel = new Grid(hoogtes.size(), breedtes.size());
+		if (style != null) {
+			mainPanel.addStyleName(styleString + "-main");
+		} // else
 		mainPanel.getElement().getStyle().setProperty("borderSpacing", "" + cellSpaceColumn + "px " + cellSpaceRow + "px");
 		mainPanel.getElement().getStyle().setProperty("margin", "" + (-cellSpaceRow - randDikte) + "px " + (-cellSpaceColumn - randDikte) + "px");
 		
@@ -969,6 +978,9 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 				if( tekstVakBreedte < 0) tekstVakBreedte = 0;
 				
 				tekstVakken[i][j] = createTekstVak(i, j);
+				if (style != null) {
+					tekstVakken[i][j].addStyleName(styleString + "-tekstregel");
+				}
 				int th = (int) (Math.round(hoogtes.get(i).doubleValue()));
 				tekstVakken[i][j].setSize((int) (Math.round(breedtes.get(j).doubleValue())), th);
 				tekstVakken[i][j].setVisible(th>0);
