@@ -341,7 +341,7 @@ public class SelectedResultsPresenter implements ResultEventHandler {
                 DomResultSchoolClass<DomResultStudent> domschoolclass = studentTree.getChildren().get(schoolclass);
                 List<DomStudent> students = domschoolclass.getChildren().values().stream().map(DomResultStudent::getStudent).collect(Collectors.toList());
                 if (values.size() != students.size()) {
-                	LOG.severe("AANVULLEN HIER");
+                	LOG.info("AANVULLEN HIER van " + values.size() + " tot " + students.size());
                 	Function<DomResultStudentScoContext, PersistenceId> keyMapper = context -> context.getStudentSco().getUserID();
 					Function<DomResultStudentScoContext, DomResultStudentScoContext> valueMapper = Function.identity();
 					Collector<DomResultStudentScoContext, ?, Map<PersistenceId, DomResultStudentScoContext>> collector = Collectors.<DomResultStudentScoContext, PersistenceId, DomResultStudentScoContext>toMap(keyMapper , valueMapper);
@@ -510,7 +510,7 @@ public class SelectedResultsPresenter implements ResultEventHandler {
 
     @JsMethod
     public void back(JavaScriptObject context) {
-        LOG.log(Level.SEVERE, "Select Back from SelectedResults to Results");
+        LOG.log(Level.FINE, "Select Back from SelectedResults to Results");
         eventBus.fireEvent(
                 new SwitchViewEvent(SwitchViewEvent.SelectedView.BACKTORESULTS, resultTree, resultState)
         );

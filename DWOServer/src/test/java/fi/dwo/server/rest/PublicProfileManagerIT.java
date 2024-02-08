@@ -1,6 +1,9 @@
 package fi.dwo.server.rest;
 
 import static org.junit.Assert.*;
+
+import javax.ws.rs.core.Response;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
@@ -46,13 +49,15 @@ public class PublicProfileManagerIT {
 
 	@Test
 	public void testGet() {
-		DomDwoProfileFull p = manager.get("1");
-		DomDwoProfileFull q = manager.get("testprofile01");
+		Response r = manager.get("1");
+		DomDwoProfileFull p = (DomDwoProfileFull) r.getEntity();
+		r = manager.get("testprofile01");
+		DomDwoProfileFull q = (DomDwoProfileFull) r.getEntity();
 		assertEquals(p.getDwoProfileName(), q.getDwoProfileName());
-		p = manager.get("unknown");
-		assertNull(p);
-		p = manager.get("122132312313");
-		assertNull(p);
+		r = manager.get("unknown");
+		assertNull(r.getEntity());
+		r = manager.get("122132312313");
+		assertNull(r.getEntity());
 	}
 
 }

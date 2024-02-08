@@ -298,6 +298,7 @@ public class InstallServlet extends HttpServlet {
 		} catch (Exception e) {
 			out.print("<p>Something went wrong<p><pre>");
 			out.println(message);
+			e.printStackTrace(out);
 			log("wrong install", e);
 		}
 	}

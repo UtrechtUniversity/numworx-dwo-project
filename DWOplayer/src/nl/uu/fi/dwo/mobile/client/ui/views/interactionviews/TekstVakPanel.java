@@ -850,6 +850,9 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		mainPanel2 = new LayoutPanel(); 
 		if(!callOut)
 			mainPanel2.setStylePrimaryName("tekstvakpanel");
+		if (style != null) {
+			mainPanel2.addStyleName(styleString + "-main2");
+		}
 		
 		setCurrentSize(breedte, hoogte);
 		
@@ -901,6 +904,9 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		{
 			horizontalBorders[i] = new LayoutPanel();
 			//horizontalBorders[i].setPixelSize(breedte, 1);
+			if (style != null) {
+				horizontalBorders[i].addStyleName(styleString + "-border");
+			}
 			horizontalBorders[i].getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 			horizontalBorders[i].getElement().getStyle().setBorderColor(randColor.toString());
 			mainPanel2.add(horizontalBorders[i]);
@@ -910,6 +916,9 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		for(int i = 0; i < breedtes.size() - 1; i++)
 		{
 			verticalBorders[i] = new LayoutPanel();
+			if (style != null) {
+				verticalBorders[i].addStyleName(styleString + "-border");
+			}
 			//verticalBorders[i].setPixelSize(1 , hoogte);
 			verticalBorders[i].getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 			verticalBorders[i].getElement().getStyle().setBorderColor(randColor.toString());
@@ -941,6 +950,9 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		}
 		
 		mainPanel = new Grid(hoogtes.size(), breedtes.size());
+		if (style != null) {
+			mainPanel.addStyleName(styleString + "-main");
+		} // else
 		mainPanel.getElement().getStyle().setProperty("borderSpacing", "" + cellSpaceColumn + "px " + cellSpaceRow + "px");
 		mainPanel.getElement().getStyle().setProperty("margin", "" + (-cellSpaceRow - randDikte) + "px " + (-cellSpaceColumn - randDikte) + "px");
 		
@@ -966,6 +978,9 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 				if( tekstVakBreedte < 0) tekstVakBreedte = 0;
 				
 				tekstVakken[i][j] = createTekstVak(i, j);
+				if (style != null) {
+					tekstVakken[i][j].addStyleName(styleString + "-tekstregel");
+				}
 				int th = (int) (Math.round(hoogtes.get(i).doubleValue()));
 				tekstVakken[i][j].setSize((int) (Math.round(breedtes.get(j).doubleValue())), th);
 				tekstVakken[i][j].setVisible(th>0);
@@ -1294,6 +1309,8 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		}
 	}
 	private ReviewActivity reviewActivity;
+
+	private LessonMode lessonmode;
 	
 	public void zetOpdracht(HashMap<String, Object> interactiePanelLaunchState)
 	{
@@ -1873,6 +1890,7 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 	{
 		this.comRoot = comRoot;
 		mode = comRoot.getMode();
+		lessonmode = comRoot.getLessonMode();
 		if (dwologger != null) dwologger.setCommunicationRoot(comRoot);
 		comRoot.addCBookEventListener(ACTION_SETVISIBLE, this);
 		comRoot.addCBookEventListener(ACTION_SETNOTVISIBLE, this);
@@ -1881,8 +1899,6 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 		comRoot.addCBookEventListener(TVP_DESELECT, this);
 		comRoot.addCBookEventListener(TVP_KLAPUIT, this);
 		comRoot.addCBookEventListener(TVP_KLAPIN, this);
-//		comRoot.addCBookEventListener(TVP_KLAPUIT, this);
-//		comRoot.addCBookEventListener(TVP_KLAPIN, this);
 		comRoot.addCBookEventListener("action.zoom", this);
 		comRoot.addCBookEventListener("action.unzoom", this);
 		comRoot.addCBookEventListener("action.setActive", this);
@@ -5485,6 +5501,14 @@ private Object CamelCase(String name) {
 	private boolean isKlapvakCorrect() {
 		
 		boolean vakinhoudCorrect = true;
+// https://numworx.atlassian.net/browse/DWOWIDGET-172
+// er is geen check op zelftoets gedaan en zichtbaar
+// bij eindtoets nooooooooit feedback, tenzij "verzegeld".
+		if ((mode == OpdrNavIF.EINDTOETS || mode == OpdrNavIF.ZELFTOETS) && lessonmode == LessonMode.normal)
+			return false;
+		
+		
+		
 		//Vector v = parent.getOpdrachtObjects();
 		//ArrayList<Object> opdrObjects = parent.getOpdrachtObjects();
 		//ArrayList<Object> opdrObjects = parent.getOpdrachtObjects();

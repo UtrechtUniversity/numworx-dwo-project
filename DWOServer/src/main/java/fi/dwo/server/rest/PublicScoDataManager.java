@@ -132,10 +132,12 @@ public class PublicScoDataManager {
       something = StateToCss.createCssFromInstellingen(map, null);
       last = new Date(scoData.getLastChangeTimeStamp());
     }
+    CacheControl cc = new CacheControl();
+    cc.setMaxAge(600);
 	return Response.ok()
     		.lastModified(last)
-    		.expires(new Date(System.currentTimeMillis()+1000*60*10))
-    		.header("Cache-Control", "max-age=600")
+    		.expires(new Date(System.currentTimeMillis()+1000*cc.getMaxAge()))
+    		.cacheControl(cc)
     		.type("text/css")
     		.entity("/*" + scoId + "*/\n" + something)
     		.build();

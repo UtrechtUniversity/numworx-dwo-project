@@ -8,7 +8,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>DWO</artifactId>
-    <version>2.5.27</version>
+    <version>2.5.28</version>
     <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -21,23 +21,23 @@
     
     <!-- should move project role names here that fall in the full project scope -->
     <modules>
-        <module>../DWO-rest-lib</module> 
-        <module>../DWO-gwt-lib</module> 
-  	 	<module>../Account</module> 
- 	 	<module>../DWOformule</module> 
+<!--        <module>../DWO-rest-lib</module> -->
+        <module>../DWO-gwt-lib</module>
+<!--  	 	<module>../Account</module> -->
+<!-- 	 	<module>../DWOformule</module> -->
 <!-- 	 	<module>../DWOmAccess</module> -->
-         <module>../DWO-commons-lib</module> 
-<!--         <module>../DWO-jclient-lib</module> -->
+         <module>../DWO-commons-lib</module>
+         <module>../DWO-jclient-lib</module> 
 <!--   	 	<module>../DWO-apps</module> -->
 <!-- 		<module>../chatgwt</module> -->
-<!-- 	 	<module>../DWOGwtClient</module> -->
+ 	 	<module>../DWOGwtClient</module> 
 <!--  	 	<module>../DWOinteraction</module> -->
-        <module>../DWOJClient</module> 
+        <module>../DWOJClient</module>
        	<module>../DWOServer</module> 
      	<module>../DWOplayer</module>
 <!--	<module>../edexml</module>-->
 <!--         <module>../KeyboardGWT</module> -->
-      	<module>../UploadWidget</module> 
+      	<module>../UploadWidget</module>
 <!--      	<module>../WriteMathGWT</module> -->
  		<module>../osiris-import</module> 
 <!-- 		<module>../notebook</module> -->
@@ -62,40 +62,40 @@
     		<dependency>
     			<groupId>nl.uu.fi.dwo</groupId>
     			<artifactId>DWO-commons-lib</artifactId>
-    			<version>2.5.27</version>
+    			<version>2.5.28</version>
     		</dependency>
     		<dependency>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
     			<artifactId>DWO-jclient-lib</artifactId>
-    			<version>2.5.26</version>
+    			<version>2.5.28</version>
     		</dependency>
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-gwt-lib</artifactId>
-            <version>2.5.27</version>
+            <version>2.5.28</version>
         </dependency>
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-gwt-lib</artifactId>
-            <version>2.5.27</version>
+            <version>2.5.28</version>
             <classifier>sources</classifier>
         </dependency>
         <dependency>
         	<groupId>nl.uu.fi.dwo</groupId>
         	<artifactId>DWOServer</artifactId>
-        	<version>2.5.27</version>
+        	<version>2.5.28</version>
         	<type>war</type>
         </dependency>
          <dependency>
         	<groupId>nl.uu.fi.dwo</groupId>
         	<artifactId>DWOServer</artifactId>
-        	<version>2.5.27</version>
+        	<version>2.5.28</version>
         	<classifier>classes</classifier>
         </dependency>
          <dependency>
          	<groupId>nl.uu.fi.dwo</groupId>
          	<artifactId>DWOJClient</artifactId>
-         	<version>2.5.27</version>
+         	<version>2.5.28</version>
          </dependency>
          <dependency>
          	<groupId>fi.beans</groupId>
@@ -115,19 +115,19 @@
 		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
 	  		<artifactId>DWOplayer</artifactId>
-	  		<version>2.5.27</version>
+	  		<version>2.5.28</version>
 	  		<classifier>classes</classifier>		
 		</dependency>
  		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
 	  		<artifactId>DWOplayer</artifactId>
-	  		<version>2.5.27</version>
+	  		<version>2.5.28</version>
 	  		<classifier>sources</classifier>		
 		</dependency>
  		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
 	  		<artifactId>DWOplayer</artifactId>
-	  		<version>2.5.27</version>
+	  		<version>2.5.28</version>
   			<type>war</type>
 		</dependency>
 		<dependency>
@@ -165,6 +165,7 @@
                 	<allowSnapshots>false</allowSnapshots>
                 	<enableSshAgent>true</enableSshAgent>
                 	<noDeploy>true</noDeploy>
+                	<autoVersionSubmodules>true</autoVersionSubmodules>
             	</configuration>
 			  <dependencies>
 			    <dependency>

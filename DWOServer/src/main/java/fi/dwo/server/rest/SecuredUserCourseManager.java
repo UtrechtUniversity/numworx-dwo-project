@@ -9,6 +9,7 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Level;
@@ -25,6 +26,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -500,7 +502,7 @@ public class SecuredUserCourseManager {
     public Response getImage(@Context SecurityContext sc, @QueryParam("courseId") Long courseId, @QueryParam("hasRoleId") String hasRoleId) {
     	try {
     		PersistentCourse course = CourseManager.findEntity(courseId);
-        	PersistentDwoProfile profile = DwoProfileManager.findEntity(course.getDwoProfileID());
+        	//PersistentDwoProfile profile = DwoProfileManager.findEntity(course.getDwoProfileID());
 // TODO Security
         	PersistenceId pid = new PersistenceId();
         	pid.setIdString(hasRoleId);
@@ -512,19 +514,26 @@ public class SecuredUserCourseManager {
 // user.id == hr.getuserid
 // schoolid = course.schoolid or course.schoolid = null
 // profileRights != limited
-        	
+    		Date last = new Date(course.getLastChangeTimeStamp());
+
     		byte[] imageData = course.getImageData();
     		if (imageData == null) {
     			PersistentCourseData cd = CourseDataManager.findEntity(courseId);
     			if (cd != null) {
     				imageData = cd.getImageData();
+    				last = new Date(cd.getLastChangeTimeStamp());
     			}
     		}
     		BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageData));
     		ByteArrayOutputStream out = new ByteArrayOutputStream();
     		ImageIO.write(image, "png", out);
     		imageData = out.toByteArray();
-    		return Response.ok(imageData, "image/png").build();    		
+    		CacheControl cc = new CacheControl(); cc.setMaxAge(600);
+			return Response.ok(imageData, "image/png")
+    				.lastModified(last)
+    				.cacheControl(cc)
+    				.expires(new Date(System.currentTimeMillis()+cc.getMaxAge()*1000))
+    				.build();    		
     	} catch(Exception e) {
     		LOG.log(Level.SEVERE, "getImage error", e);
     	}

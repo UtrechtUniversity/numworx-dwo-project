@@ -435,6 +435,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		
 		entry.zelftoetsNagekeken = memento.getZelftoetsNagekeken();
 		aantalNakijken = memento.getAantalNakijken();
+		if (aantalNakijken == null && mode == ZELFTOETS) {
+			incrAantalNakijken(-1);
+		}
 		initializeScoresZelftoets();
 		initializeIsCorrectZelftoets();
 		initializeNakijkenZelftoetsPending();

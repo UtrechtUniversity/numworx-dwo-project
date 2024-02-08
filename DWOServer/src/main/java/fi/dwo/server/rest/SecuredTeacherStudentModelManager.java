@@ -29,6 +29,7 @@ import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentModelContextUtilManager;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -402,8 +404,18 @@ public class SecuredTeacherStudentModelManager {
 			DomStudentModelContext result = state.getStudentModel(smc);
 			DomStudentModelStructure struct = result.getModelStructure();
 			String obj = SecuredStudentStudentModelManager.getStruct(struct, uuid, locale);
+			CacheControl cc = new CacheControl();
+			cc.setMaxAge(600);
+			Date expiry = new  Date(System.currentTimeMillis()+1000*cc.getMaxAge());
+			Date last = null;
+			if ( null != result.getLastChangeTimeStamp())
+				last = new Date(result.getLastChangeTimeStamp().longValue());
 			
-			return Response.ok(obj, MediaType.APPLICATION_JSON_TYPE).build();
+			return Response.ok(obj, MediaType.APPLICATION_JSON_TYPE)
+					.cacheControl(cc)
+					.expires(expiry)
+					.lastModified(last)
+					.build();
 		} catch (Dwo2Exception e) {
 			LOG.log(Level.WARNING, "return not found", e);
 			return Response.status(Status.NOT_FOUND).build();

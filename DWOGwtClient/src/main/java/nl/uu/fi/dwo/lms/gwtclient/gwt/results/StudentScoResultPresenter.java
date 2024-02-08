@@ -138,7 +138,7 @@ public class StudentScoResultPresenter {
 // if premium && completed
 // find out if we have studentmodel in launchdata.
     if ( AboType.premium == dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getAboType() && ResultsService.COMPLETED.equals(userState.get(ResultsService.COMPLETION_STATUS))) {
-    	LOG.severe("KIJK VOOR STUDENTMODEL"); // XXX
+    	LOG.fine("KIJK VOOR STUDENTMODEL"); // XXX
     	String launchdata = userState.get("cmi.launch_data");
     	// search usermodel....
     	LOG.fine(launchdata);

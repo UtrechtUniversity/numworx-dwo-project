@@ -3,6 +3,8 @@
     pageEncoding="UTF-8"%>
 <%@ page import="fi.servlet.dwomaccess.Subnet" %>
 <%@ page import="java.util.*" %>
+<%@ page import="nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile" %>
+<%@ page import="nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache" %>
 <%@ include file="/dwo/saml_util.jsp" %>
 <%@ include file='/dwo/toets_util.jsp' %>
 <!doctype html>
@@ -50,11 +52,21 @@
 			defaultPlace = "cc:" + Long.valueOf(id);
 		} catch(Exception e) {}
 	}
+	String name = "";
+	String cdn = System.getProperty("CDNURL", "http://cdn.dwo.nl");
+	try {
+		DomDwoProfile dom = PublicProfileCache.get("112");
+		if (dom.getDwoProfileRights().contains("c"))
+			name = dom.getDwoProfileName();
+	} catch(Exception e) {
+		log("get profile failed", e);
+	}
 %>
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <link type="text/css" rel="stylesheet" href="/dwo/tablet/DWOplayer.css">
+<% if (!name.isEmpty()) {%><link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/css/<%=name %>.css" ><%}%>    
     <meta name="gwt:property" content="locale=nl" >
     <script>
     	DWO_PROFILE_ID = 112
@@ -65,7 +77,7 @@
     		window.location = "https://<%=server%>/wiskunde-actief/exam/logout.html"
     	}
     </script>
-    <title>Save Exam Browser</title>
+    <title>Safe Exam Browser</title>
     
     <!-- This script loads your compiled module.   -->
     <!-- If you add any GWT meta tags, they must   -->

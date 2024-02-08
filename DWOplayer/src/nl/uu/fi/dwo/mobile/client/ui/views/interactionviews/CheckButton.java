@@ -155,25 +155,35 @@ public class CheckButton implements InteractionStub, CBookEventListener
 	
 	final class ActieAfronden implements ButtonListener {
 
+		boolean close; 
+		public ActieAfronden(boolean actionNextPage) {
+			close = actionNextPage;
+		}
 		@Override
 		public void onClick(Object sender) {
 			if(!editable) return;
+			comRoot.setChanged(false); 
 			//event.stopPropagation();
 			logger.warning("CheckButton actieAfronden");
-			//confirm()
+			
 			Promise<Void> defer = activity.agent().barrier()
-			.then(new Success<Void, Void>() {
+					.then(this::confirm)
+			.then(new Success<Boolean, Boolean>() {
 
 				@Override
-				public Promise<Void> call(Promise<Void> resolved) throws Exception {
-					activity.getEventBus().fireEvent(SEAL_EVENT);
-					return null;
+				public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {
+					if (resolved.getValue())
+						activity.getEventBus().fireEvent(SEAL_EVENT);
+					return resolved;
 				}
+			}).then(p -> { 
+				if (close && p.getValue()) activity.getEventBus().fireEvent(NEXT_PAGE_EVENT);
+				return null;
 			});
 			//DWOplayer.clientfactory.addBarrier(defer);
 		}
 // FIXME een andere implementatie zie "alles opnieuw"		
-		private Promise<Boolean> confirm() {
+		private Promise<Boolean> confirm(Promise<?> p) {
 //			return Promises.resolved(Window.confirm(nl.uu.fi.dwo.mobile.client.text.Text.constants.afronden()));
 		MessageDialog box = new MessageDialog();
 		box.addYes();
@@ -357,8 +367,8 @@ public class CheckButton implements InteractionStub, CBookEventListener
 		if(nakijkenPagina) registrations.add(checkButton.addButtonListener(new NakijkenPagina()));
 		if(nakijkenXWidget) registrations.add(checkButton.addButtonListener(new NakijkenXWidget()));
 		if(actieBewaren) checkButton.addButtonListener(new ActieBewaren());
-		if(actieAfronden) checkButton.addButtonListener(new ActieAfronden());		
-        if(actionNextPage) checkButton.addButtonListener(new ActionNextPage());
+		if(actieAfronden) checkButton.addButtonListener(new ActieAfronden(actionNextPage));		
+        if(!actieAfronden && actionNextPage) checkButton.addButtonListener(new ActionNextPage());
         if(actieItemOpnieuw) checkButton.addButtonListener(new ActieItemOpnieuw());
 	}
 	

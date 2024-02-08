@@ -830,11 +830,17 @@ try {
 		JsonObject data = parser.getObject();
 		JsonObject onsState = data.getJsonObject("onsState");
 		int pagenr = Integer.parseInt(page)-1;
-		
+// bij zelftoets pas een score/succes_status als er minstens 1 keer op de kijkna knop is gedrukt (aantalNakijken>0)		
 		if (key.endsWith(".score.raw")) {
 			if (pagenr<0) {
 				if (pssc.getCompletionStatus() == null||"not attempted".equals(pssc.getCompletionStatus())) // null of aangemaakt door docent alleen.
 					return ""; // ab-initio
+				if (onsState != null && !COMPLETE.equals(pssc.getCompletionStatus())) {
+					JsonArray nakijken = onsState.getJsonArray("aantalNakijken");
+					if (nakijken != null && 0 == nakijken.getInt(0) && !COMPLETE.equals(pssc.getCompletionStatus())) {
+						return "";
+					}
+				}
 				return String.valueOf(Math.round(pssc.getScore()));
 			}
 			if (onsState == null) return "";
@@ -853,7 +859,12 @@ try {
 				data = contState.getJsonObject(pagenr);
 				int sum = sumOfCorrectie(data);
 				n = Integer.valueOf(sum + n.intValue());
-			}}
+			}} else {
+				JsonArray nakijken = onsState.getJsonArray("aantalNakijken");
+				if (nakijken != null && 0 == nakijken.getInt(0) && !COMPLETE.equals(pssc.getCompletionStatus())) {
+					return "";
+				}
+			}
 			return n.toString();
 		}
 		if (key.endsWith(".success_status")) {
@@ -873,6 +884,11 @@ try {
 					case 'T': ok = true; break;
 					case 'F': ok = false; break;
 					}
+				}
+			} else {
+				JsonArray nakijken = onsState.getJsonArray("aantalNakijken");
+				if (nakijken != null && 0 == nakijken.getInt(0) && !COMPLETE.equals(pssc.getCompletionStatus())) {
+					return "";
 				}
 			}
 			return ok ? "passed" : "failed";    

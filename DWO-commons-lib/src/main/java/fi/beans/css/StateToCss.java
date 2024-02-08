@@ -2,6 +2,7 @@ package fi.beans.css;
 
 import java.awt.Color;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import fi.beans.private_base64code.StringCodeObject;
 
@@ -49,17 +50,23 @@ public class StateToCss {
     return cssString;
   }
 
+  private static final Logger LOG = Logger.getLogger(StateToCss.class.getName());
+
   public static String createCssFromStyle(String styleString, Map<String, Object> style) {
+	LOG.info("Generating style for " + styleString);  
+	  
     String cssOutput = "";
 
     String cssMain = "." + styleString + "-main {\n";
+    
+    boolean rz = (style.containsKey("randZichtbaar") && ((Boolean) style.get("randZichtbaar")).booleanValue());
     int a = 0;
     int b = 0;
     int c = 0;
     if (style.containsKey("cellSpaceColumn"))
       a = ((Number) style.get("cellSpaceColumn")).intValue();
     if (style.containsKey("cellSpaceRow")) b = ((Number) style.get("cellSpaceRow")).intValue();
-    if (style.containsKey("randDikte")) c = ((Number) style.get("randDikte")).intValue();
+    if (style.containsKey("randDikte")&&rz) c = ((Number) style.get("randDikte")).intValue();
     cssMain += "\tborder-spacing:" + a + "px " + b + "px;\n";
     cssMain += "\tmargin:" + (-(b + c)) + "px " + (-(a + c)) + "px;\n";
     cssMain += "}\n\n";
@@ -96,7 +103,7 @@ public class StateToCss {
     cssMain2 += "\tbackground-color: rgba(" + r + "," + g + "," + b + "," + a + ");\n";
 
     a = 0;
-    if (style.containsKey("randZichtbaar") && ((Boolean) style.get("randZichtbaar")).booleanValue())
+    if (rz)
       a = 1;
     if (style.containsKey("randColor_red")) {
       r = ((Number) style.get("randColor_red")).intValue();
@@ -122,8 +129,9 @@ public class StateToCss {
     cssMain2 += "\tborder-color:" + randColor + a + ");\n";
 
     if (style.containsKey("randDikte")) {
-      a = ((Number) style.get("randDikte")).intValue();
-      cssMain2 += "\tborder-width: " + a + "px;\n";
+      int bw = ((Number) style.get("randDikte")).intValue();
+      if(!rz) bw = 0;
+      cssMain2 += "\tborder-width: " + bw + "px;\n";
     }
     cssMain2 += "\tborder-style:solid;\n";
 
@@ -169,7 +177,9 @@ public class StateToCss {
     // cssTekstVak += "}\n";
     // System.out.println(cssTekstVak);
     //
-    String cssTekstRegel = "." + styleString + "-tekstregel svg {\n";
+    String cssTekstRegel = 
+ //   		"." + styleString + "-tekstregel svg, " + // deze werkt niet goed, volgorde probleem als er 2 matchen
+    		"." + styleString + "-tekstregel {\n"; 
     r = 0;
     g = 0;
     b = 0;
@@ -194,6 +204,7 @@ public class StateToCss {
       }
     }
     cssTekstRegel += "\tfill: rgb(" + r + "," + g + "," + b + ");\n";
+    cssTekstRegel += "\tcolor: rgb(" + r + "," + g + "," + b + ");\n";
     cssTekstRegel += "\tstroke: rgb(" + r + "," + g + "," + b + ");\n";
 
     cssTekstRegel += "}\n";

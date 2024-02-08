@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.kstruct.gethostname4j.Hostname;
 /**
 *
 *
@@ -45,8 +46,13 @@ public class Snoop extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
 		response.setContentType("text/plain");
-
-		out.println("Snoop Servlet");
+		String hostname = "localhost";
+		try {
+			hostname = Hostname.getHostname();
+		} catch(Throwable oops) {
+			
+		}
+		out.println("Snoop Servlet for " + hostname);
 		Runtime runtime = Runtime.getRuntime();
 		long max = r(runtime.maxMemory());
 		long free = r(runtime.freeMemory());
@@ -173,13 +179,17 @@ public class Snoop extends HttpServlet {
 		out.println("Query String: " + HTMLFilter.filter(request.getQueryString()));
 
 		out.println();
-		HttpSession session = request.getSession(false);
+		HttpSession session = request.getSession(true);
 		out.println("Requested Session Id: " + HTMLFilter.filter(request.getRequestedSessionId()));
 		if (session != null) {
 			out.println("Current Session Id: " + session.getId());
 			out.println("Session Created Time: " + session.getCreationTime());
 			out.println("Session Last Accessed Time: " + session.getLastAccessedTime());
 			out.println("Session Max Inactive Interval Seconds: " + session.getMaxInactiveInterval());
+			Long counter = (Long) session.getAttribute("fi.servlet.snoop.counter");
+			if (counter == null) counter = Long.valueOf(0L);
+			else counter = Long.valueOf(counter.longValue()+1);
+			session.setAttribute("fi.servlet.snoop.counter", counter);
 			out.println();
 			out.println("Session values: ");
 			Enumeration<?> names = session.getAttributeNames();

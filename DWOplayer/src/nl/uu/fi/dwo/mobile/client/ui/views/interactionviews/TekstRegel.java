@@ -53,7 +53,7 @@ public class TekstRegel //extends LayoutPanel
 	
 	private int font_style;
 	private String font_name = "Arial";
-	private Context2d ctx;
+	//private Context2d ctx;
 	private SvgBuilder ctx2;
 	private String fontString;
 	//private fontType = "sans-serif";
@@ -152,8 +152,8 @@ public class TekstRegel //extends LayoutPanel
 		tekstAshoogte = fm.getAscent();//dit is de hoogte van de baseline (de lijn die raakt aan alle onderkanten van de tekst, niet alleen aan de lage uitsteeksels), gezien vanaf de top.
 		tekstHoogte = fm.getAscent() + fm.getDescent();
 		
-		Canvas canvas = Canvas.createIfSupported();
-		ctx = canvas.getContext2d();
+//		Canvas canvas = Canvas.createIfSupported();
+//		ctx = canvas.getContext2d();
 		ctx2 = new SvgBuilder(null, 0, 0);
 		String fontTypeString = "";
 		if(font_style == 1)
@@ -180,7 +180,7 @@ public class TekstRegel //extends LayoutPanel
 			fontString = font_size + "px " + font_name;
 		else
 			fontString = fontTypeString + " " + font_size + "px " + font_name;
-		ctx.setFont(fontString);
+//		ctx.setFont(fontString);
 		ctx2.setFont(fm);
 	}
 	
@@ -257,10 +257,10 @@ public class TekstRegel //extends LayoutPanel
 				//objectBreedte = (int) ctx.measureText(currentObject.toString()).getWidth();
 				objectBreedte = (int) ctx2.measureText(currentObject.toString()).getWidth();
 				if (fm.isItalic()) {
-					objectBreedte += 0;
-				}
-				if(ctx.getFont().contains("italic"))
 					objectBreedte += 1;
+				}
+//				if(ctx.getFont().contains("italic"))
+//					objectBreedte += 1;
 				objectHoogte = tekstHoogte;
 			}
 			else
@@ -435,7 +435,7 @@ public class TekstRegel //extends LayoutPanel
 				if(regelObjects.get(i) instanceof String /*|| regelObjects.get(i) instanceof AnchorView*/  ) // zie boven
 				{
 					String s = regelObjects.get(i).toString();
-					objectBreedte = (int) ctx.measureText(s).getWidth();
+					objectBreedte = (int) ctx2.measureText(s).getWidth();
 					objectHoogte = tekstHoogte;
 					
 					if(horPositie == 0 && Letter.isLetter(s.charAt(0)))

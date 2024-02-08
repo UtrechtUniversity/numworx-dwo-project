@@ -256,7 +256,11 @@ public class PersistentDwoProfile implements Serializable {
         lastChangeTimeStamp = System.currentTimeMillis();
     }
 
-    public static String LIMITED = "l";
+    public long getLastChangeTimeStamp() {
+		return lastChangeTimeStamp;
+	}
+
+	public static String LIMITED = "l";
     public boolean isLimited() {
       return dwoProfileRights.contains(LIMITED);
     }
