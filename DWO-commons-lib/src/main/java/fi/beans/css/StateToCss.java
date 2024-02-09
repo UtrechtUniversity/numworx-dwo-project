@@ -8,6 +8,9 @@ import fi.beans.private_base64code.StringCodeObject;
 
 public class StateToCss {
 
+	static class Context {
+		boolean fontOvererving;
+	}
   // /**
   // * @deprecated Use {@link #createCssFromAllStyles(Map)} instead
   // */
@@ -33,26 +36,28 @@ public class StateToCss {
       map = (Map<String, Object>) instellingen;
     else
       return "";
+    Context context = new Context();
+    context.fontOvererving = Boolean.TRUE.equals(map.get("fontOvererving"));
     Object styles = map.get("TekstVakPanelStyles");
     if (styles instanceof Map)
-      return createCssFromAllStyles((Map<String, Map<String, Object>>) styles);
+      return createCssFromAllStyles((Map<String, Map<String, Object>>) styles, context);
     return "";
   }
 
 
-  public static String createCssFromAllStyles(Map<String, Map<String, Object>> styles) {
+  static String createCssFromAllStyles(Map<String, Map<String, Object>> styles, Context context) {
     if (styles == null) return "";
 
     String cssString = "@namespace svg url(http://www.w3.org/2000/svg);\n"
     		+ "svg|text {\n\tstroke: none;\n}\n\nsvg|rect {\n\tstroke:none;\n }\n\n";
     for (String key : styles.keySet())
-      cssString += createCssFromStyle(key, styles.get(key));
+      cssString += createCssFromStyle(key, styles.get(key), context);
     return cssString;
   }
 
   private static final Logger LOG = Logger.getLogger(StateToCss.class.getName());
 
-  public static String createCssFromStyle(String styleString, Map<String, Object> style) {
+  static String createCssFromStyle(String styleString, Map<String, Object> style, Context context) {
 	LOG.info("Generating style for " + styleString);  
 	  
     String cssOutput = "";
@@ -183,13 +188,15 @@ public class StateToCss {
     r = 0;
     g = 0;
     b = 0;
+    boolean fc = !context.fontOvererving; // fontChange
     if (style.containsKey("fgColor_red")) {
       r = ((Number) style.get("fgColor_red")).intValue();
       if (style.containsKey("fgColor_green")) g = ((Number) style.get("fgColor_green")).intValue();
       if (style.containsKey("fgColor_blue")) b = ((Number) style.get("fgColor_blue")).intValue();
     }
-    if (style.containsKey("anderFont") && ((Boolean) style.get("anderFont")).booleanValue()
-        && style.containsKey("fgColor")) {
+    boolean af = style.containsKey("anderFont") && ((Boolean) style.get("anderFont")).booleanValue();
+    fc = fc | af;
+    if ( af && style.containsKey("fgColor")) {
       Object object = style.get("fgColor");
       if (object instanceof Color) {
         Color fgColor = (Color) object;
@@ -203,10 +210,15 @@ public class StateToCss {
         b = ((Number) fgColor.get("blue")).intValue();
       }
     }
-    cssTekstRegel += "\tfill: rgb(" + r + "," + g + "," + b + ");\n";
-    cssTekstRegel += "\tcolor: rgb(" + r + "," + g + "," + b + ");\n";
-    cssTekstRegel += "\tstroke: rgb(" + r + "," + g + "," + b + ");\n";
-
+    if (fc) {
+	    cssTekstRegel += "\tfill: rgb(" + r + "," + g + "," + b + ");\n";
+	    cssTekstRegel += "\tcolor: rgb(" + r + "," + g + "," + b + ");\n";
+	    cssTekstRegel += "\tstroke: rgb(" + r + "," + g + "," + b + ");\n";
+    } else {
+	    cssTekstRegel += "\tfill: inherit;\n";
+	    cssTekstRegel += "\tcolor: inherit;\n";
+	    cssTekstRegel += "\tstroke: inherit;\n";
+    }
     cssTekstRegel += "}\n";
     cssOutput += cssTekstRegel;
 
