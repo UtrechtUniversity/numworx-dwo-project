@@ -2103,7 +2103,7 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 		setSelected(selected);
 		
 		if(inactive) {
-			zetKlikPanel();
+			if (!activity.isReview()) zetKlikPanel();
 		}
 		
 		if(inklapbaar && ( ingeklapt != this.ingeklapt))
@@ -4988,7 +4988,7 @@ private Object CamelCase(String name) {
 				klapUitButton.setDown(true);
 			}
 		} else if ("action.setNotEditable".equals(command)) {
-			seal(event);
+			if (!activity.isReview()) seal(event);
 		} else if ("action.zoom".equals(command)) {
 		      zoomAction();
 		} else if ("action.unzoom".equals(command)) {
@@ -4998,7 +4998,7 @@ private Object CamelCase(String name) {
 		     verwijderKlikPanel();
 		} else if ("action.setInactive".equals(command)) {
 			inactive = true;
-			zetKlikPanel();
+			if (!activity.isReview()) zetKlikPanel();
 			comRoot.getKeyboard().setEditor(null);
 			comRoot.getKeyboard().blur();
 			logger.info("inactive");
