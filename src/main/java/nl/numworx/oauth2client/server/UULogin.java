@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
@@ -97,19 +98,17 @@ public class UULogin implements SigningKeyResolver, Login {
 		KEYS_URL = "https://login.uu.nl/nidp/oauth/nam/keys";
 		redirect_url = "https://numworx.uu.nl/dwo/oauth2/redirect";
 	}
-   
-    
-	public String login() throws OAuthSystemException {
-    	return login(null, null, null);
-    }
-    
-	public String login(String state, String nonce, Boolean acr) throws OAuthSystemException {
+       
+	String login(String state, String nonce, Boolean acr, String prompt) throws OAuthSystemException {
 		    
 		    AuthenticationRequestBuilder builder = OAuthClientRequest.authorizationLocation(AUTHORIZATION_URL);
 		    if (state != null) builder.setState(state);
 		    if (nonce != null) builder.setParameter("nonce", nonce);
 		    if (acr != null) builder.setParameter("acr_values", acr?PASSWORD_MFA:PASSWORD);
-		    builder.setParameter("prompt", "login"); // always login 
+
+		    if (prompt != null)
+		    	builder.setParameter("prompt", prompt); // always login 
+
 		    OAuthClientRequest request = builder
 		        .setClientId(client_id)
 		        .setRedirectURI(redirect_url)
@@ -243,6 +242,11 @@ public class UULogin implements SigningKeyResolver, Login {
 	@Override
 	public void login(HttpServletRequest req, HttpServletResponse resp, String state, String codeChallenge,
 			Boolean asr) throws IOException, OAuthSystemException {
-		resp.sendRedirect(login(state, codeChallenge, asr));
+		String prompt = null;
+		HttpSession session = req.getSession(false);
+		if (session != null) {
+			prompt = (String) session.getAttribute(OAUTH2_PROMPT);
+		}
+		resp.sendRedirect(login(state, codeChallenge, asr, prompt));
 	}
 }

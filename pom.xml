@@ -8,12 +8,11 @@
   <packaging>war</packaging>
   <version>1.0.10-SNAPSHOT</version>
   <name>nl.numworx.oauth2client.OAuth2Client</name>
-    <parent>
-        <groupId>nl.uu.fi.dwo</groupId>
-        <artifactId>DWO-GWT</artifactId>
-        <relativePath>../DWO-GWT</relativePath>
-        <version>1.0</version>
-    </parent>
+  <parent>
+	    <groupId>nl.uu.fi.dwo</groupId>
+	    <artifactId>DWO.master.pom</artifactId>
+	    <version>1.1</version>
+  </parent>
 
   <properties>
 
