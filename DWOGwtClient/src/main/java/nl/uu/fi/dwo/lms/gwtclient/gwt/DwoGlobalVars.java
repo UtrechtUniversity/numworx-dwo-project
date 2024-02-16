@@ -19,6 +19,7 @@ import fi.dwo.gwt.lib.rest.DwoConstants;
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.util.Base64;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsMainDisplay;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
@@ -65,7 +66,7 @@ public class DwoGlobalVars {
     private DomSchoolRoleAndClassV2 activeSchoolRoleAndClass;
     private Promise<DomDwoProfileFull> profile;
 
-    private boolean test,saml;
+    private boolean test,saml, modulesOnly;
     private static String helpUrlPrefix ;
 
     /**
@@ -589,5 +590,13 @@ public class DwoGlobalVars {
 	}
 	public void setRemedial(boolean r) {
 		remedial = r;
+	}
+
+	public boolean isModulesOnly() {
+		return modulesOnly;
+	}
+
+	public void setModulesOnly(boolean modulesOnly) {
+		this.modulesOnly = modulesOnly;
 	}
 }

@@ -248,17 +248,9 @@
                         	<localWorkers>1</localWorkers>
                             <incremental>false</incremental>
                             <precompile>false</precompile>
-                            <jsInteropMode>JS_RC</jsInteropMode>
-                            <generateJsInteropExports>true</generateJsInteropExports>
-                            <includeJsInteropExports>true</includeJsInteropExports>
                             <superDevMode>true</superDevMode>
                             <sourceLevel>1.8</sourceLevel>
-                            <compilerArg>
-                            </compilerArg>
                             <generateJsInteropExports>true</generateJsInteropExports>
-                            <codeserverArgs>
-                                <generateJsInteropExports>true</generateJsInteropExports>
-                            </codeserverArgs>
                             <modules>
                             	<module>${gwtModule}</module>
                             	<module>${smModule}</module>
@@ -266,6 +258,9 @@
                             <i18nConstantsBundles>
                                 <i18nConstantsBundle>nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages</i18nConstantsBundle>
                             </i18nConstantsBundles>
+                            <i18nConstantsWithLookupBundles>
+								<i18nConstantsWithLookupBundle>nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientModulesOnly</i18nConstantsWithLookupBundle>
+							</i18nConstantsWithLookupBundles>
                         </configuration>                           
                         <goals>
                             <goal>i18n</goal>
@@ -410,7 +405,7 @@
                         <webapp>
                             <groupId>nl.uu.fi.dwo</groupId>
                             <artifactId>DWOServer</artifactId>
-                            <version>2.5.28-SNAPSHOT</version>
+                            <version>2.5.29-SNAPSHOT</version>
                             <type>war</type>    
                             <asWebapp>true</asWebapp> 
                             <contextPath>${local.dwo}</contextPath>
@@ -427,7 +422,7 @@
                        <webapp>
                             <groupId>nl.uu.fi.dwo.mobile</groupId>
                             <artifactId>DWOplayer</artifactId>
-                            <version>2.5.28-SNAPSHOT</version>
+                            <version>2.5.29-SNAPSHOT</version>
                             <type>war</type>
                             <contextPath>/dwo/tablet</contextPath>
                             <asWebapp>true</asWebapp>
@@ -478,11 +473,6 @@
 					    <artifactId>cache-api</artifactId>
 					    <version>1.1.1</version>
 					</dependency>
-					<dependency>
-					    <groupId>org.jsr107.ri</groupId>
-					    <artifactId>cache-ri-impl</artifactId>
-					    <version>1.1.1</version>
-					</dependency>			
                     <dependency>
                         <groupId>org.apache.tomcat.embed</groupId>
                         <artifactId>tomcat-embed-core</artifactId>
