@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.entities.RestScormValues;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.util.PathId;
 
 import org.fusesource.restygwt.client.MethodCallback;
@@ -32,12 +33,14 @@ import fi.dwo.gwt.lib.rest.GwtRestVars.TriConsumer;
 import fi.dwo.gwt.lib.rest.client.RestCallers.ScoDataRestCaller;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredStudentExamScoDataRestCaller;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredStudentScoDataRestCaller;
+import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import fi.dwo.gwt.lib.rest.util.RestyDeferred;
 
 public class SecuredStudentScoDataManager implements StudentScoDataManager {
 	
 	private final ScoDataRestCaller service;
+	private boolean safe;
 
 	public SecuredStudentScoDataManager(ScoDataRestCaller caller) {
 		service = caller;
@@ -50,6 +53,7 @@ public class SecuredStudentScoDataManager implements StudentScoDataManager {
 		this(safe 
 				? GWT.<ScoDataRestCaller>create(SecuredStudentExamScoDataRestCaller.class)
 				: GWT.<ScoDataRestCaller>create(SecuredStudentScoDataRestCaller.class));
+		this.safe=safe;
 	}
 	
 	
@@ -180,11 +184,20 @@ public class SecuredStudentScoDataManager implements StudentScoDataManager {
 	@Override
 	public Promise<JSONValue> getJSONLaunchDataBytes(DomScoContext id,
 			DomDwoProfile value, DomSchoolClassId schoolClassID, DomContext context) {
-		RestScoContext rest = new RestScoContext();
-		rest.setDomDwoProfile(value);
-		rest.setDomScoContext(id);
-		rest.setSchoolClassID(schoolClassID);
-		rest.setRestContext(context);
-		return F(service::getJSONLaunchDataBytes,PathId.getId(context), rest);
+		if (safe || schoolClassID == null) {
+			RestScoContext rest = new RestScoContext();
+			rest.setDomDwoProfile(value);
+			rest.setDomScoContext(id);
+			rest.setSchoolClassID(schoolClassID);
+			rest.setRestContext(context);
+			return F(service::getJSONLaunchDataBytes,PathId.getId(context), rest);
+		}
+		Number profileId = (Number) PersistenceIdDecoderInterface.instance.idOf(value.getId(), PersistenceClassType.PersistentDwoProfile);
+		Number scoId = (Number) PersistenceIdDecoderInterface.instance.idOf(id.getId(), PersistenceClassType.PersistentScoContext);
+		Number classId = (Number) PersistenceIdDecoderInterface.instance.idOf(schoolClassID.getId(), PersistenceClassType.PersistentSchoolClass);
+		TriConsumer<RestScoContext, MethodCallback<JSONValue>> triConsumer =
+				(String sid, RestScoContext rest, MethodCallback<JSONValue> callback) ->
+					service.getJSONLaunchDataBytes(sid, scoId, profileId, classId, callback);
+		return F(triConsumer, PathId.getId(context), null);
 	}
 }
