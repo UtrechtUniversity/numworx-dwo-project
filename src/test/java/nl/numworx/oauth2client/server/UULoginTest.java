@@ -18,7 +18,7 @@ public class UULoginTest {
 
 	
 	public void test() throws OAuthSystemException {
-		System.err.println(l.login());
+		System.err.println(l.login(null, null, null, null));
 	}
 
 	
