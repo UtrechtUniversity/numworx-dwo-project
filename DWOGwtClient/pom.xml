@@ -315,11 +315,7 @@
                             <version>${daggerVersion}</version>
                         </path>
                     </annotationProcessorPaths>
-                    <!-- exclude angular 2 dir: /src/main/ngapp -->
-                    <exclude>ngapp/**</exclude>                
                 </configuration>
-                
-
             </plugin>
             <plugin>
                 <groupId>org.codehaus.cargo</groupId>
