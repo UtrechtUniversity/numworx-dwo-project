@@ -1,7 +1,9 @@
 package nl.uu.fi.dwo.lms.jclient.lib.rest.transport;
 
 import java.net.Authenticator;
+import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
+import java.net.URI;
 import java.net.URL;
 import java.util.Base64;
 
@@ -41,6 +43,10 @@ public class RestAuthenticator extends Authenticator {
 
   static {
     instance = new RestAuthenticator();
+    try {
+		instance.setServerUrlPath(new URL("http://127.0.0.1:8080/dwo/"));
+	} catch (MalformedURLException e) {
+	}
   }
 
   // public RestAuthenticator(String username, String password) {

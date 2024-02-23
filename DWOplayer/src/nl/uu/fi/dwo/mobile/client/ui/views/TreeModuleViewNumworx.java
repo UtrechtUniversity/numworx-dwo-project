@@ -485,13 +485,19 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		tiles.setRowData(Collections.emptyList());
 		boolean hasImage = item.getImage() != null;
 		westPanel.selectModule(item);
+		centerPanel.removeStyleName(style.centerPanelTop());
+		title.removeStyleName(style.faviconOFF());
 		switch(item.getType()) {
 		case ROOT:
 			header.setUpPlace(header.getHomePlace());
+			boolean wiskopdr = isWiskOpdr(item);
+//wiskopdr = true;
 			title.setText(item.getName());
+			title.setStyleName(style.faviconOFF(), wiskopdr);
+			centerPanel.setStyleName(style.centerPanelTop(), wiskopdr);
 			description.setWidget(getLabel(item));
 			favIcon.setVisible(false);
-			centerPanel.setStyleName(style.centerBackground(), true);
+			centerPanel.setStyleName(style.centerBackground(), !wiskopdr);
 			centerPanel.setStyleName(style.folderBackground(), false);
 
 			favIcon.getParent().setStyleName(style.faviconOFF(), true);
@@ -572,10 +578,15 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		return true;
 	}
 	
+	
+	static boolean isWiskOpdr(SelectModuleItem item) {
+		return item.getDescription().startsWith(DescriptionView.GZIPPREFIX);
+	}
+
 	private Widget getLabel(SelectModuleItem item) {
 		Widget w;
 		String description = item.getDescription();
-		if(description.startsWith(DescriptionView.GZIPPREFIX))
+		if(isWiskOpdr(item))
 		{
 			
 			MementoModule module = new MementoModule() {

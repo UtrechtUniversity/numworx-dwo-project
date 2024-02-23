@@ -30,4 +30,6 @@ interface TreeModuleViewNumworxCss extends CssResource {
 	String lesstof();
 	String toets();
 	String navIcon();
+	
+	String centerPanelTop();
 }

@@ -1,7 +1,7 @@
 @external cellListWidget, cellListSelectedItem, navCellList, cellListEvenItem, cellListOddItem;
 
 .cellListWidget {
-
+	display: flex;
 }
 
 .navCellList {
@@ -22,6 +22,12 @@
 	color: white;
 	background-color: #A8ABB1;
 }
+
+.navCellList  .cellListEvenItem, 
+.navCellList  .cellListOddItem {
+	display: block;
+}
+
 
 .tileCellList  .cellListEvenItem:hover div div:first-child, 
 .tileCellList  .cellListOddItem:hover  div div:first-child {

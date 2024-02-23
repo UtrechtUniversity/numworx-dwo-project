@@ -229,7 +229,10 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	public void showCells() {
 		cells.setVisible(true);
 		tree.setVisible(false);
-		width = 192;
+		boolean breed = Actions.isAvailable() && !icon;
+//breed = true;		
+		
+		width = !breed ? 192 : 300;
 		show();
 	}
 	public void showTree() {
