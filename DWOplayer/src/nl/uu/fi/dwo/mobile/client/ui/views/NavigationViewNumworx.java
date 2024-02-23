@@ -226,10 +226,10 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		return "test".equals(PARAMETERS.getDwoEnv());
 	}
 
+	boolean breed;
 	public void showCells() {
 		cells.setVisible(true);
 		tree.setVisible(false);
-		boolean breed = Actions.isAvailable() && !icon;
 //breed = true;		
 		
 		width = !breed ? 192 : 300;
@@ -472,6 +472,10 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 
     @Override
     public void showIcon(boolean show) {
+    	if (!show && !breed) {
+    		breed = true; width = 300;
+    		show();
+    	}
     	this.icon = show;
     	setBeheer(show);
     	//bibliotheek.setStyleName("modules-icon", show);
