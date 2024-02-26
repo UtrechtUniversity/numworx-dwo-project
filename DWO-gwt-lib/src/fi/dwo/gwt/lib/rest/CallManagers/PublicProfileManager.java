@@ -31,13 +31,13 @@ public class PublicProfileManager {
 		return get(Integer.toString(id));
 	}
 	
-	public Promise<JSONValue> getDescription_old(RestDwoProfile rest) {
+	public Promise<JSONValue> getDescription(RestDwoProfile rest) {
 		PromiseCallback<JSONValue> result = new PromiseCallback<>();
 		service.getDescription(rest, result);
 		return result.getPromise();
 	}
 
-	public Promise<JSONValue> getDescription(RestDwoProfile rest) {
+	public Promise<JSONValue> getDescription_new(RestDwoProfile rest) {
 		PromiseCallback<JSONValue> result = new PromiseCallback<>();
 		Number id = (Number) PersistenceIdDecoderInterface.instance.idOf(rest.getDomDwoProfile().getId(), PersistenceClassType.PersistentDwoProfile);
 		service.getDescription(id, result);

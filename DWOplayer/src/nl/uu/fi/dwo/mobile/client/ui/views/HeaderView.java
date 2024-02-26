@@ -29,4 +29,6 @@ public interface HeaderView extends IsWidget {
 
 	void setTrail(List<SelectModuleItem> trail);
 
+	Widget getDisplay();
+
 }

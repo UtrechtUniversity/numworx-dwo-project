@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.IntSupplier;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -266,7 +267,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		            });
 		    		InfoPanel info = new InfoPanel(popup, pfx);
 		    		info.setName(value.getName());
-		    		info.setDescription(getLabel(value));
+		    		info.setDescription(getLabel(()->600, value)); // info width
 					popup.setWidget(info);
 		    		popup.show();
 		    		return;
@@ -486,16 +487,18 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		boolean hasImage = item.getImage() != null;
 		westPanel.selectModule(item);
 		centerPanel.removeStyleName(style.centerPanelTop());
-		title.removeStyleName(style.faviconOFF());
+		title.removeStyleName(style.titleOFF());
 		switch(item.getType()) {
 		case ROOT:
 			header.setUpPlace(header.getHomePlace());
 			boolean wiskopdr = isWiskOpdr(item);
 //wiskopdr = true;
-			title.setText(item.getName());
-			title.setStyleName(style.faviconOFF(), wiskopdr);
+			title.setText(wiskopdr ? "" : item.getName());
+			title.setStyleName(style.titleOFF(), wiskopdr);
 			centerPanel.setStyleName(style.centerPanelTop(), wiskopdr);
-			description.setWidget(getLabel(item));
+			description.setWidget(getLabel(
+					header.getDisplay()::getOffsetWidth,
+					item));
 			favIcon.setVisible(false);
 			centerPanel.setStyleName(style.centerBackground(), !wiskopdr);
 			centerPanel.setStyleName(style.folderBackground(), false);
@@ -515,7 +518,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				favIcon.setVisible( (hasImage /*|| flip!=1*/) && isLabel(item));
 				centerPanel.setStyleName(style.folderBackground(), !hasImage/* && flip==1*/);
 				centerPanel.setStyleName(style.centerBackground(), false);
-				description.setWidget(getLabel(item));
+				description.setWidget(getLabel(header.getDisplay()::getOffsetWidth, item));
 				if(item.showChildren())
 				{	TreeItem parent = westPanel.inverseMap.get(item);
 					getChildrenPromise(item).recover(p -> Collections.emptyList())
@@ -532,7 +535,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			break;
 		case MODULE:
 				title.setText(item.getName());
-				description.setWidget(getLabel(item));
+				description.setWidget(getLabel(header.getDisplay()::getOffsetWidth, item));
 				url = (hasImage) ? item.getImage(): r("images/courses/1.png");
 				favIcon.setUrl(url);
 				favIcon.setVisible(hasImage);
@@ -583,7 +586,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		return item.getDescription().startsWith(DescriptionView.GZIPPREFIX);
 	}
 
-	private Widget getLabel(SelectModuleItem item) {
+	private Widget getLabel(IntSupplier width, SelectModuleItem item) {
 		Widget w;
 		String description = item.getDescription();
 		if(isWiskOpdr(item))
@@ -653,7 +656,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				}
 				
 			};
-			w = new DescriptionViewImpl(rpc, item.getID(), this, builder.mementoModule(module).build()).asWidget();
+			w = new DescriptionViewImpl(width, rpc, item.getID(), this, builder.mementoModule(module).build()).asWidget();
 		} else
 		if(description.startsWith("<html>")) {
 			w = new HTML(description);

@@ -252,14 +252,14 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         LOG.fine("onMessage " + message);
         if (SHOWMAINNAV.equals(message)) {
           view.setMainNavVisible(true);
-          view.sendMessage(SHOWMAINNAV);
+ //         view.sendMessage(SHOWMAINNAV);
         } else
         if (HIDEMAINNAV.equals(message)) {
           view.setMainNavVisible(false);
-          view.sendMessage(HIDEMAINNAV);
+ //         view.sendMessage(HIDEMAINNAV);
         } else
         if (ISMAINNAVVISIBLE.equals(message)) {
-          view.sendMessage( view.isMainNavVisible() ? SHOWMAINNAV : HIDEMAINNAV);
+          view.sendMessage( !tablet() ? SHOWMAINNAV : HIDEMAINNAV);
         } else 
         if (select(SelectedView.RESULTS, message) 
         		|| select(SelectedView.KNOWLEDGE, message)
@@ -377,7 +377,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
 // switch to other view.     
       LOG.info("switch " + select);
       view.setMainNavVisible(true);
-      view.sendMessage(SHOWMAINNAV);
+//     view.sendMessage(SHOWMAINNAV);
     }
 
     private String toString(Map<String, String> search) {

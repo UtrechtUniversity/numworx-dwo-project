@@ -122,7 +122,7 @@ public class ExamModuleView extends Composite {
 		String description = item.getDescription();
 		if(description.startsWith(DescriptionView.GZIPPREFIX))
 		{
-			w = new DescriptionViewImpl(rpc, item.getID(), builder.build()).asWidget();
+			w = new DescriptionViewImpl(()->600, rpc, item.getID(), builder.build()).asWidget();
 		} else
 		if(description.startsWith("<html>")) {
 			w = new HTML(description);

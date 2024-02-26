@@ -93,4 +93,7 @@ public class HeaderLessView extends HTML implements HeaderView {
   public void setTrail(List<SelectModuleItem> trail) {
   }
 
+  public Widget getDisplay() {
+	  return root;
+  }
 }

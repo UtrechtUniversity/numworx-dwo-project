@@ -339,5 +339,8 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
   public void setTrail(List<SelectModuleItem> trail) {
   }
 
+  public Widget getDisplay() {
+	  return root;
+  }
 
 }

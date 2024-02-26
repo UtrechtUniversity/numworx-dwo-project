@@ -6,6 +6,7 @@
 
 .navCellList {
 	margin-right: 18px;
+	flex-flow: column;
 }
 .tileCellList {
 	

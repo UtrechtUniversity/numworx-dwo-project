@@ -155,8 +155,8 @@ public class ClassesViewImpl extends Composite  implements AnchorContext {
 		String description = item.getDescription();
 		if(description.startsWith(DescriptionView.GZIPPREFIX))
 		{
-			ActivityComponent activity = builder.build();
-			w = new DescriptionViewImpl(rpc, item.getID(), this, activity).asWidget();
+			ActivityComponent activity = builder.build(); // FIXME !!!!!
+			w = new DescriptionViewImpl(()->600, rpc, item.getID(), this, activity).asWidget();
 		} else
 		if(description.startsWith("<html>")) {
 			w = new HTML(description);

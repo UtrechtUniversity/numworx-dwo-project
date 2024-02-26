@@ -323,6 +323,12 @@
 .faviconOFF {
 	display: none;
 }
+
+.titleOFF {
+	height: 0px;
+	margin-bottom: 0px;
+}
+
 .titlePanelFULL {
 	width: 100%;
 }
