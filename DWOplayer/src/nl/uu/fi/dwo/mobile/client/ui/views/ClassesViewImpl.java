@@ -25,7 +25,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -34,10 +33,6 @@ import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.web.bindery.event.shared.EventBus;
 
 import dagger.Reusable;
-import nl.uu.fi.dwo.mobile.client.sco.SMLogger;
-import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
-import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent.Builder;
-import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 
@@ -109,9 +104,6 @@ public class ClassesViewImpl extends Composite  implements AnchorContext {
 	ProvideTileKey keyprovider = new ProvideTileKey();
 
 	private final EventBus eventBus;
-	private final RPCHandler rpc;
-	private Builder builder;
-
 	private static ClassesViewImplUiBinder uiBinder = GWT.create(ClassesViewImplUiBinder.class);
 
 	interface ClassesViewImplUiBinder extends UiBinder<Widget, ClassesViewImpl> {
@@ -120,10 +112,8 @@ public class ClassesViewImpl extends Composite  implements AnchorContext {
 	@Inject PlaceHistoryMapper mapper;
 	@Inject PlaceController placeController;
 
-	@Inject ClassesViewImpl(EventBus bus, RPCHandler rpc, ActivityComponent.Builder builder) {
+	@Inject ClassesViewImpl(EventBus bus) {
 		this.eventBus = bus;
-		this.rpc = rpc;
-		this.builder = builder;
 		CellList.Resources cellResources;
 		cellResources = GWT.create(ClassesCellListResources.class);
 		cells = new CellList<DomSchoolClass>(new NavCell(),cellResources);
@@ -132,7 +122,6 @@ public class ClassesViewImpl extends Composite  implements AnchorContext {
 		initWidget(uiBinder.createAndBindUi(this));
 		SelectModuleItem item = SelectModuleItem.ROOT;
 		title.setText(item.getName());
-		//description.setWidget(getLabel(item));
 	}
 
 	@UiField(provided=true) CellList<DomSchoolClass> cells; 
@@ -150,25 +139,6 @@ public class ClassesViewImpl extends Composite  implements AnchorContext {
 		cells.getSelectionModel().setSelected(sc, true);
 	}
 	
-	private Widget getLabel(SelectModuleItem item) {
-		Widget w;
-		String description = item.getDescription();
-		if(description.startsWith(DescriptionView.GZIPPREFIX))
-		{
-			ActivityComponent activity = builder.build(); // FIXME !!!!!
-			w = new DescriptionViewImpl(()->600, rpc, item.getID(), this, activity).asWidget();
-		} else
-		if(description.startsWith("<html>")) {
-			w = new HTML(description);
-			w.setStyleName(style.description());
-		}else
-		{
-			w = new Label(description);
-			w.setStyleName(style.description());
-		}
-		return w;
-	}
-
 	@Override
 	public void gotoUrl(String href) {
 	}

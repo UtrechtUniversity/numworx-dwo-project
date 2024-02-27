@@ -25,6 +25,8 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -35,6 +37,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -68,7 +71,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
-public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorContext {
+public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorContext, TreeModuleView {
 
 	static final Logger LOG = Logger.getLogger(TreeModuleViewNumworx.class.getName());
 	
@@ -389,6 +392,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 
 	final private RPCHandler rpc;
 
+	private HandlerRegistration reg;
+
 	
 	class ListNavStrategy implements NavStrategy {
 		ListNavStrategy() {
@@ -496,7 +501,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			title.setText(wiskopdr ? "" : item.getName());
 			title.setStyleName(style.titleOFF(), wiskopdr);
 			centerPanel.setStyleName(style.centerPanelTop(), wiskopdr);
-			description.setWidget(getLabel(
+			description_setWidget(getLabel(
 					header.getDisplay()::getOffsetWidth,
 					item));
 			favIcon.setVisible(false);
@@ -518,7 +523,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				favIcon.setVisible( (hasImage /*|| flip!=1*/) && isLabel(item));
 				centerPanel.setStyleName(style.folderBackground(), !hasImage/* && flip==1*/);
 				centerPanel.setStyleName(style.centerBackground(), false);
-				description.setWidget(getLabel(header.getDisplay()::getOffsetWidth, item));
+				description_setWidget(getLabel(header.getDisplay()::getOffsetWidth, item));
 				if(item.showChildren())
 				{	TreeItem parent = westPanel.inverseMap.get(item);
 					getChildrenPromise(item).recover(p -> Collections.emptyList())
@@ -535,7 +540,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			break;
 		case MODULE:
 				title.setText(item.getName());
-				description.setWidget(getLabel(header.getDisplay()::getOffsetWidth, item));
+				description_setWidget(getLabel(header.getDisplay()::getOffsetWidth, item));
 				url = (hasImage) ? item.getImage(): r("images/courses/1.png");
 				favIcon.setUrl(url);
 				favIcon.setVisible(hasImage);
@@ -565,6 +570,19 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		tiles.redraw();
 	}
 
+	private void description_setWidget(IsWidget label) {
+		closereg();
+		if (label instanceof ResizeHandler) {
+			reg = addResizeHandler((ResizeHandler) label);
+		}
+		description.setWidget(label);
+	}
+
+	private void closereg() {
+		if (reg != null) reg.removeHandler();
+		reg = null;
+	}
+
 	private Promise<List<SelectModuleItem>> getChildrenOrScosPromise(SelectModuleItem parent) {
 		if(parent.getType() == Type.MODULE)
 			return getScosPromise(parent);
@@ -586,8 +604,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		return item.getDescription().startsWith(DescriptionView.GZIPPREFIX);
 	}
 
-	private Widget getLabel(IntSupplier width, SelectModuleItem item) {
-		Widget w;
+	private IsWidget getLabel(IntSupplier width, SelectModuleItem item) {
+		IsWidget w;
 		String description = item.getDescription();
 		if(isWiskOpdr(item))
 		{
@@ -656,15 +674,15 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				}
 				
 			};
-			w = new DescriptionViewImpl(width, rpc, item.getID(), this, builder.mementoModule(module).build()).asWidget();
+			w = new DescriptionViewImpl(width, rpc, item.getID(), this, builder.mementoModule(module).build());
 		} else
 		if(description.startsWith("<html>")) {
 			w = new HTML(description);
-			w.setStyleName(style.description());
+			w.asWidget().setStyleName(style.description());
 		}else
 		{
 			w = new Label(description);
-			w.setStyleName(style.description());
+			w.asWidget().setStyleName(style.description());
 		}
 		return w;
 	}

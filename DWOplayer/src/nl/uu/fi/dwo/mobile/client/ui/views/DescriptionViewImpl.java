@@ -44,6 +44,8 @@ import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.json.client.JSONValue;
@@ -56,7 +58,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 
-public class DescriptionViewImpl extends XMLView implements DescriptionView, OpdrNavIF {
+public class DescriptionViewImpl extends XMLView implements DescriptionView, OpdrNavIF, ResizeHandler {
 	
 	static final Logger LOG = Logger.getLogger(DescriptionViewImpl.class.getName());
 	
@@ -430,6 +432,11 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 	@Override
 	protected int containerWidth() {
 		return containerWidth.getAsInt();
+	}
+
+	@Override
+	public void onResize(ResizeEvent event) {
+		hoofdPanel.onResize();
 	}
 
 
