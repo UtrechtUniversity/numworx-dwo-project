@@ -501,8 +501,15 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	}
 
 	public void setCells(List<SelectModuleItem> items) {
-		cells.setRowData(massage(items));
+		List<SelectModuleItem> massage = massage(items);
+		cells.setRowData(massage);
 		cells.redraw();
+		for(int i = 0; i < massage.size(); i++) {
+			if (massage.get(i).getType() == Type.SEPARATOR) {
+				Element e = cells.getRowElement(i);
+				e.getStyle().setProperty("pointerEvents", "none");
+			}
+		}
 	}
 
 	private List<SelectModuleItem> massage(List<SelectModuleItem> list) {
