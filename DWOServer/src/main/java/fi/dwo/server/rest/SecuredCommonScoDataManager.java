@@ -784,6 +784,8 @@ try {
 			else 
 			{
 				pssd = null;
+				pssc = new PersistentStudentScoContext();
+				pssc.setScoID(sco);
 			}
 		}
 	} else if ("cc".equals(split[2])) {
@@ -799,6 +801,7 @@ try {
 			pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
 		} else {
 			pssc = new PersistentStudentScoContext();
+			pssc.setScoID(scoContext.getScoID());
 		}
 	} else if ("c".equals(split[2])) {
 		page = split[5];
@@ -814,6 +817,9 @@ try {
 					{
 						pssc = list2.get(0);
 						pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
+					} else {
+						pssc = new PersistentStudentScoContext();
+						pssc.setScoID(s.getScoID());
 					}
 					break;
 				}

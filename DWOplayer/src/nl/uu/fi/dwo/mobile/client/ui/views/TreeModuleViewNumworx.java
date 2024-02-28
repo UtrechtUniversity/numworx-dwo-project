@@ -270,7 +270,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		            });
 		    		InfoPanel info = new InfoPanel(popup, pfx);
 		    		info.setName(value.getName());
-		    		info.setDescription(getLabel(()->600, value)); // info width
+		    		info.setDescription(getLabel(()->578, value)); // info width
 					popup.setWidget(info);
 		    		popup.show();
 		    		return;

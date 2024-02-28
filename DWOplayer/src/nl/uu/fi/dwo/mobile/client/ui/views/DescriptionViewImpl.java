@@ -436,7 +436,8 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 
 	@Override
 	public void onResize(ResizeEvent event) {
-		hoofdPanel.onResize();
+		if (hoofdPanel != null)
+			hoofdPanel.onResize();
 	}
 
 
