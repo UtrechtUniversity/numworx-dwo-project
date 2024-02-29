@@ -780,17 +780,9 @@
         <tomcat7.version>7.0.76</tomcat7.version>
         <context.xml>context.xml</context.xml>
         <http.port>80</http.port>
-        <OAuth2ClientVersion>1.0.10-SNAPSHOT</OAuth2ClientVersion>
+        <OAuth2ClientVersion>1.0.10</OAuth2ClientVersion>
 	</properties>
 	<profiles>
-<!-- 		<profile> -->
-<!-- 			<id>teuniz</id> -->
-<!-- 			<properties> -->
-<!-- 				<aws.serverId>dev</aws.serverId> -->
-<!-- 				<aws.applicationName>teuniz</aws.applicationName> -->
-<!-- 				<aws.environmentName>teunis6</aws.environmentName> -->
-<!-- 			</properties> -->
-<!-- 		</profile> -->
 		<profile>
 			<id>local</id>
 			<properties>
