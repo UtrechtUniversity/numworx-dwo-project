@@ -465,50 +465,12 @@
 		<servlet-name>qrcode</servlet-name>
 		<servlet-class>fi.dwo.server.qr.QRServlet</servlet-class>
 	</servlet>
-  <servlet>
-  	<servlet-name>upload</servlet-name>
-  	<servlet-class>nl.numworx.uploadwidgetgwt.server.Upload</servlet-class>
-  	<init-param>
-  		<param-name>corsDomainsRegex</param-name>
-  		<param-value>.*</param-value>
-  	</init-param>
-  </servlet>
-  <servlet>
-  	<servlet-name>testblob</servlet-name>
-  	<servlet-class>nl.numworx.uploadwidgetgwt.server.TestServlet</servlet-class>
-  </servlet>
-  
-  
-  <servlet>
-  	<servlet-name>javaupload</servlet-name>
-  	<servlet-class>nl.numworx.uploadwidgetgwt.server.JavaUpload</servlet-class>
-  </servlet>
-  <servlet>
-  	<servlet-name>updownload</servlet-name>
-  	<servlet-class>nl.numworx.uploadwidgetgwt.server.Download</servlet-class>
-  </servlet>
-  
+${upload.servlet}  
   <servlet-mapping>
   	<servlet-name>notebook</servlet-name>
   	<url-pattern>/dwo/notebook/*</url-pattern>
   </servlet-mapping>
-  
-  <servlet-mapping>
-  	<servlet-name>upload</servlet-name>
-    <url-pattern>/dwo/dav/upload/servlet.gupld</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-  	<servlet-name>javaupload</servlet-name>
-    <url-pattern>/dwo/dav/upload/dir/*</url-pattern> 
-  </servlet-mapping>
-  <servlet-mapping>
-  	<servlet-name>updownload</servlet-name>
-  	<url-pattern>/dwo/dav/upload/download/*</url-pattern>  
-  </servlet-mapping>
-  <servlet-mapping>
-  	<servlet-name>testblob</servlet-name>
-  	<url-pattern>/dwo/dav/testblob/*</url-pattern>
-  </servlet-mapping>
+${upload.servlet.mapping}  
     <!--
     servlet mappings 
     -->

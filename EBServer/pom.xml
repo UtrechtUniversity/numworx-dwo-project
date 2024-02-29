@@ -501,7 +501,7 @@
 						<webapp>
 							<groupId>nl.numworx.uploadwidget</groupId>
     							<artifactId>uploadwidget-local</artifactId>
-    							<version>2.5.28-SNAPSHOT</version>
+    							<version>2.5.29</version>
                           		<type>war</type>
 							<contextPath>/dwo/dav/upload</contextPath>
                             	<asWebapp>true</asWebapp> 
@@ -781,12 +781,54 @@
         <context.xml>context.xml</context.xml>
         <http.port>80</http.port>
         <OAuth2ClientVersion>1.0.10</OAuth2ClientVersion>
+        <upload.servlet />
+        <upload.servlet.mapping />
 	</properties>
 	<profiles>
 		<profile>
 			<id>local</id>
 			<properties>
-        		<http.port>8080</http.port>			
+        		<http.port>8080</http.port>
+        		<upload.servlet><![CDATA[ 
+  <servlet>
+  	<servlet-name>upload</servlet-name>
+  	<servlet-class>nl.numworx.uploadwidgetgwt.server.Upload</servlet-class>
+  	<init-param>
+  		<param-name>corsDomainsRegex</param-name>
+  		<param-value>.*</param-value>
+  	</init-param>
+  </servlet>
+  <servlet>
+  	<servlet-name>testblob</servlet-name>
+  	<servlet-class>nl.numworx.uploadwidgetgwt.server.TestServlet</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>javaupload</servlet-name>
+  	<servlet-class>nl.numworx.uploadwidgetgwt.server.JavaUpload</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>updownload</servlet-name>
+  	<servlet-class>nl.numworx.uploadwidgetgwt.server.Download</servlet-class>
+  </servlet>
+]]></upload.servlet>
+	<upload.servlet.mapping><![CDATA[
+  <servlet-mapping>
+  	<servlet-name>upload</servlet-name>
+    <url-pattern>/dwo/dav/upload/servlet.gupld</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>javaupload</servlet-name>
+    <url-pattern>/dwo/dav/upload/dir/*</url-pattern> 
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>updownload</servlet-name>
+  	<url-pattern>/dwo/dav/upload/download/*</url-pattern>  
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>testblob</servlet-name>
+  	<url-pattern>/dwo/dav/testblob/*</url-pattern>
+  </servlet-mapping>
+]]></upload.servlet.mapping>		
 			</properties>
 		</profile>
 		<profile>
@@ -799,7 +841,7 @@
 					<groupId>nl.numworx.uploadwidget</groupId>
 					<artifactId>UploadWidgetGWT</artifactId>
 <!-- 					<version>0.0.2</version>	 AWS -->
-					<version>2.5.30-SNAPSHOT</version>
+					<version>2.5.29</version>
 					<classifier>classes</classifier>
 					<exclusions>
 						<exclusion>
@@ -811,7 +853,7 @@
 				<dependency>
 					<groupId>nl.numworx.uploadwidget</groupId>
 					<artifactId>uploadwidget-common</artifactId>
-					<version>2.5.30-SNAPSHOT</version>
+					<version>2.5.29</version>
 				</dependency>			
 				<dependency>
 				    <groupId>org.slf4j</groupId>
