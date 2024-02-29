@@ -555,7 +555,7 @@ CREATE TABLE `tblschooldata` (
   `optlock` int(11) DEFAULT '0',
   `lastChangeTimeStamp` bigint(20) DEFAULT '0',
   `del` tinyint(4) NOT NULL DEFAULT '0',
-  `jsonLaunchData` json DEFAULT NULL,
+  `schoolData` json DEFAULT NULL,
   PRIMARY KEY (`schoolID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
