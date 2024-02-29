@@ -10,6 +10,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
@@ -19,8 +20,8 @@ import io.jsonwebtoken.Claims;
 
 public class RedirectServlet extends HttpServlet {
 
-	private static final String CHALLENGE = "dwoSAMLchallenge";
-	final static private String schoolid = System.getProperty("ENV_ORGID", "385");
+	private static final String CHALLENGE = Login.CHALLENGE;
+	final static private String schoolid = Login.schoolid;
 
 	private RestHandler rest;
 	private String schoolID, org_id;
@@ -71,6 +72,10 @@ public class RedirectServlet extends HttpServlet {
 			redirectUri += "?state=" + state;
 			redirectUri += "&code="  + code;
 			log(redirectUri);
+			HttpSession session = req.getSession(false);
+			if (session != null) {
+				session.removeAttribute(Login.OAUTH2_PROMPT);
+			}
 			resp.sendRedirect(redirectUri);
 
 		} catch (OAuthSystemException | OAuthProblemException e) {
