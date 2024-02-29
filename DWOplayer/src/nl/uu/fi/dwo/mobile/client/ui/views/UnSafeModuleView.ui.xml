@@ -6,19 +6,6 @@
 	<ui:with field='rb'  type='nl.uu.fi.dwo.mobile.client.text.Text' />
 	<ui:style field='style' src="TreeModuleViewNumworx.css" type='nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworxCss'/>	
 	<g:DockLayoutPanel unit='PX' ui:field='root' styleName='{style.rootPanel}'>
-<!-- 		<g:west size="192"> -->
-<!-- 		    <g:DockLayoutPanel unit='PX' styleName='{style.navPanel}' ui:field='westPanel'> -->
-<!-- 				<g:north size="83"> -->
-<!-- 					<g:HTML styleName='{style.navTitle}'><ui:text from='{rb.bibliotheek}'/></g:HTML> -->
-<!-- 				</g:north> -->
-<!-- 				<g:center> -->
-<!-- 				   <g:ScrollPanel> -->
-<!-- 					<g:FlowPanel> -->
-<!-- 					</g:FlowPanel> -->
-<!-- 				   </g:ScrollPanel> -->
-<!-- 				</g:center> -->
-<!-- 			</g:DockLayoutPanel> -->
-<!-- 		</g:west> -->
 		<g:center>
 			<g:ScrollPanel ui:field='centerPanel' styleName='{style.centerPanel}'
 				addStyleNames='{style.centerBackground}'

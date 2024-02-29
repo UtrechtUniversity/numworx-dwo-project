@@ -69,7 +69,7 @@ public class PublicScoDataManager {
     }
     Date last = new Date(scoData.getLastChangeTimeStamp());
     CacheControl cc = new CacheControl();
-    cc.setMaxAge(600);
+    cc.setMaxAge(3600);
     if (SECURITY) {
       PersistentScoContext scoContext = ScoContextManager.findEntity(scoId);
       if (scoContext.getSchoolID() != null)
@@ -133,7 +133,7 @@ public class PublicScoDataManager {
       last = new Date(scoData.getLastChangeTimeStamp());
     }
     CacheControl cc = new CacheControl();
-    cc.setMaxAge(600);
+    cc.setMaxAge(3600);
 	return Response.ok()
     		.lastModified(last)
     		.expires(new Date(System.currentTimeMillis()+1000*cc.getMaxAge()))

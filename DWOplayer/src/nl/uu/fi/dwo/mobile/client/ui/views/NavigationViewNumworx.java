@@ -226,10 +226,13 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		return "test".equals(PARAMETERS.getDwoEnv());
 	}
 
+	boolean breed;
 	public void showCells() {
 		cells.setVisible(true);
 		tree.setVisible(false);
-		width = 192;
+//breed = true;		
+		
+		width = !breed ? 192 : 300;
 		show();
 	}
 	public void showTree() {
@@ -469,6 +472,10 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 
     @Override
     public void showIcon(boolean show) {
+    	if (!show && !breed) {
+    		breed = true; width = 300;
+    		show();
+    	}
     	this.icon = show;
     	setBeheer(show);
     	//bibliotheek.setStyleName("modules-icon", show);
@@ -494,8 +501,15 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	}
 
 	public void setCells(List<SelectModuleItem> items) {
-		cells.setRowData(massage(items));
+		List<SelectModuleItem> massage = massage(items);
+		cells.setRowData(massage);
 		cells.redraw();
+		for(int i = 0; i < massage.size(); i++) {
+			if (massage.get(i).getType() == Type.SEPARATOR) {
+				Element e = cells.getRowElement(i);
+				e.getStyle().setProperty("pointerEvents", "none");
+			}
+		}
 	}
 
 	private List<SelectModuleItem> massage(List<SelectModuleItem> list) {

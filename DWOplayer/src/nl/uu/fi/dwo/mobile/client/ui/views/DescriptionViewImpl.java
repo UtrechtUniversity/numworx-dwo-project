@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.IntSupplier;
 import java.util.logging.Logger;
 
 import org.osgi.util.promise.Deferred;
@@ -43,18 +44,21 @@ import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 
-public class DescriptionViewImpl extends XMLView implements DescriptionView, OpdrNavIF {
+public class DescriptionViewImpl extends XMLView implements DescriptionView, OpdrNavIF, ResizeHandler {
 	
 	static final Logger LOG = Logger.getLogger(DescriptionViewImpl.class.getName());
 	
@@ -139,12 +143,14 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 		return main;
 	}
 
-	public DescriptionViewImpl(RPCHandler rpc, ActivityComponent a) {
+	IntSupplier containerWidth;
+	public DescriptionViewImpl(IntSupplier width, RPCHandler rpc, ActivityComponent a) {
 		super(rpc,a);
+		containerWidth = width;
 		OOPS = a.needLogin();
 		main = new SimplePanel();
 		main.setStylePrimaryName("descriptionView");
-		contentPanel = new FlowPanel();
+		contentPanel = new /*ViewModuleViewImpl.Resize*/FlowPanel();
 		Handler handler = new Handler() {
 
 			@Override
@@ -157,12 +163,12 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 		main.addAttachHandler(handler );
 	}
 
-	public DescriptionViewImpl(RPCHandler rpc, Object id, ActivityComponent a) {
-		this(rpc,a);
+	public DescriptionViewImpl(IntSupplier width, RPCHandler rpc, Object id, ActivityComponent a) {
+		this(width, rpc,a);
 		setupModule(id);
 	}
-	public DescriptionViewImpl(RPCHandler rpc, Object id, AnchorContext context, ActivityComponent a) {
-		this(rpc,a);
+	public DescriptionViewImpl(IntSupplier width, RPCHandler rpc, Object id, AnchorContext context, ActivityComponent a) {
+		this(width, rpc,a);
 		setAnchorContext(context);
 		setupModule(id);
 	}
@@ -421,6 +427,17 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 		map.put("premium", activity.isPremium());
 		map.put("Authorization", RestAuthenticator.instance.getAuthorization());
 		return JSONUtilities.wrapMap(map);
+	}
+
+	@Override
+	protected int containerWidth() {
+		return containerWidth.getAsInt();
+	}
+
+	@Override
+	public void onResize(ResizeEvent event) {
+		if (hoofdPanel != null)
+			hoofdPanel.onResize();
 	}
 
 

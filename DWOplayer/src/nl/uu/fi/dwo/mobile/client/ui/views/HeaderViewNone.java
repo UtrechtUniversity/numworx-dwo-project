@@ -179,5 +179,6 @@ public void setTrail(List<SelectModuleItem> trail) {
   setUpPlace(upId);
 }
 
+public Widget getDisplay() { return root; }
 
 }

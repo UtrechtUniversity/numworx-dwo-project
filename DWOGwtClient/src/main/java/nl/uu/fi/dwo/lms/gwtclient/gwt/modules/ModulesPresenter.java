@@ -209,7 +209,6 @@ public class ModulesPresenter implements SwitchViewEventHandler {
      u.setHost(Location.getHost());
      u.setParameter("a",token); // User Auth Token
      u.setParameter( "header","none");
-     //u.setParameter("dwo_env","test");
      String base = Location.getParameter("base");
      if(base != null && !base.isEmpty() && legal(base)) {
        u.setParameter("base",base);
@@ -220,6 +219,10 @@ public class ModulesPresenter implements SwitchViewEventHandler {
      String locale = LocaleInfo.getCurrentLocale().getLocaleName();
      if ("default".equals(locale) ) locale =  "nl";
      u.setParameter("locale",locale);
+     String responsive = Location.getParameter("responsive");
+     if ("true".equals(responsive)) {
+     	u.setParameter("responsive", "true");
+     }
      String string = u.buildString();
      LOG.info("open URL " + string);
      view.openUrl(string);
@@ -249,14 +252,14 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         LOG.fine("onMessage " + message);
         if (SHOWMAINNAV.equals(message)) {
           view.setMainNavVisible(true);
-          view.sendMessage(SHOWMAINNAV);
+ //         view.sendMessage(SHOWMAINNAV);
         } else
         if (HIDEMAINNAV.equals(message)) {
           view.setMainNavVisible(false);
-          view.sendMessage(HIDEMAINNAV);
+ //         view.sendMessage(HIDEMAINNAV);
         } else
         if (ISMAINNAVVISIBLE.equals(message)) {
-          view.sendMessage( view.isMainNavVisible() ? SHOWMAINNAV : HIDEMAINNAV);
+          view.sendMessage( !tablet() ? SHOWMAINNAV : HIDEMAINNAV);
         } else 
         if (select(SelectedView.RESULTS, message) 
         		|| select(SelectedView.KNOWLEDGE, message)
@@ -374,7 +377,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
 // switch to other view.     
       LOG.info("switch " + select);
       view.setMainNavVisible(true);
-      view.sendMessage(SHOWMAINNAV);
+//     view.sendMessage(SHOWMAINNAV);
     }
 
     private String toString(Map<String, String> search) {

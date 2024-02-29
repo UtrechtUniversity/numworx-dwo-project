@@ -4,8 +4,8 @@ public class BUILD {
 	public static String buildNumber = "${buildNumber}";
 	public static String version;
     public static String timeStamp = "${timestamp}";
-    public static String javaClient = "${DWOClientVersion}";
-    public static String htmlClient = "${DWOGwtClientVersion}";
+    public static String javaClient = "${project.version}";
+    public static String htmlClient = "${project.version}";
 
     static {
     	version = "${project.version}";

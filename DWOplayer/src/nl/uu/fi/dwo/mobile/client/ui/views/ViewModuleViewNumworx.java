@@ -310,9 +310,9 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 //      headerBottom.setStyleName("modules-icon2", b);    
   }
   
-  @UiHandler({"scoType","modules"}) void onModules(ClickEvent e) {
-    Actions.showMainNav.execute();
-  }
+//  @UiHandler({"scoType","modules"}) void onModules(ClickEvent e) {
+//    Actions.showMainNav.execute();
+//  }
 
 @Override
 public void onResize() {

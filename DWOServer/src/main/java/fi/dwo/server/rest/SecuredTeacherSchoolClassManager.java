@@ -506,7 +506,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                 String realm = Realm.of(restSchoolClass.getRestContext());
                 for (PersistentTeacherOfClass t : teachersOfClass) {
                     PersistentUser u = UserManager.findEntity(t.getPersistentTeacherOfClassPK().getUserID());
-                    domTeachers.add(u.buildDomTeacher(realm));
+                    if(u != null) domTeachers.add(u.buildDomTeacher(realm));
                 }
             } catch (Exception e) {
                 LOG.log(Level.WARNING, "Unexpected exception", e);

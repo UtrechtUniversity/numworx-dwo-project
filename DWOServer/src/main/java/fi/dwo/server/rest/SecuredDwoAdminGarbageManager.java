@@ -293,7 +293,7 @@ public class SecuredDwoAdminGarbageManager {
 		ClassCourseManager.destroy(id);
 		return Boolean.TRUE;
 	}
-	return false;
+	return Boolean.FALSE;
   }
 
   // TODO select * from tblhasrole where userid not in (select userid from tbluser) (14 stuks in productie, 5 in dev)

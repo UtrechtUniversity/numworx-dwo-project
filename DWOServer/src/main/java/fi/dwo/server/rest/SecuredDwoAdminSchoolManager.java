@@ -445,7 +445,9 @@ public class SecuredDwoAdminSchoolManager {
                         }
                         //Remove hasRole
                         HasRoleManager.destroy(phr.getPersistentHasRolePK());
-                        PersistentUser u = UserManager.findEntity(phr.getUser().getId());
+                        PersistentUser u;
+                        //u = UserManager.findEntity(phr.getUser().getId()); // NPE if not found
+                        u = phr.getUser(); //eager fetch
 
                         if (u != null && u.isSingleSchoolAccount()) {
                             //Loop samlusers in user

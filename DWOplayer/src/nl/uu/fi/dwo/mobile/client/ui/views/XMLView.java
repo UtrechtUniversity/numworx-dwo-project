@@ -340,14 +340,14 @@ public abstract class XMLView {
 		}
 		
 		final int ml = margeLinks;
-		final int mr = margeLinks;
+		final int mr = margeRechts;
 		
 		ResizeHandler resize = new ResizeHandler() {
 		  int clientWidth = -1;
 			@Override
 			public void onResize(ResizeEvent event) {
-			  if (clientWidth != Window.getClientWidth()) {
-			    clientWidth = Window.getClientWidth();
+			  if (clientWidth != containerWidth()) {
+			    clientWidth = containerWidth();
                 final int w  = clientWidth-ml-mr;//-20;
                 hoofdPanel.zetVolledigeBreedte(w);
 			    
@@ -357,10 +357,15 @@ public abstract class XMLView {
 		//resize.onResize(null);
 		
 		if(RESPONSIVE) {
-			breedte = Window.getClientWidth()-margeLinks-margeRechts;//-20;
+			breedte = containerWidth()-margeLinks-margeRechts;//-20;
 			hoofdPanel.zetVolledigeBreedte(breedte);
 			hoofdPanel.addResizeHandler(resize);
 		}
+	}
+
+
+	protected int containerWidth() {
+		return Window.getClientWidth();
 	}
 	
 	public static int getDefaultFontSize()

@@ -24,5 +24,13 @@ public interface ScoDataRestCaller {
 
 	public void getJSONLaunchDataBytes(String id, RestScoContext rest,
 			MethodCallback<JSONValue> callback);
+	
+	default void getJSONLaunchDataBytes( String id,
+    		Number scoId,
+    		Number profileId,
+    		Number classId,
+			MethodCallback<JSONValue> callback) {
+		callback.onFailure(null, new Error());
+	}
 
 }

@@ -22,6 +22,9 @@
 			fill: #1b75bb;
 
 		}
+		.title {
+			margin-right: 18px
+		}
 	
 	</ui:style>
 		    <g:DockLayoutPanel unit='PX' styleName='{style.navPanel}' addStyleNames='profile-navigation' >
@@ -99,7 +102,7 @@
 					</g:FlowPanel>
 				</g:north>
 				<g:north size="83">
-					<g:HTML ui:field='bibliotheek' styleName='{style.navTitle}'><ui:text from='{rb.bibliotheek}'/></g:HTML>
+					<g:HTML ui:field='bibliotheek' styleName='{style.navTitle}' addStyleNames='{extra.title}'><ui:text from='{rb.bibliotheek}'/></g:HTML>
 				</g:north>
 				<g:center>
 					<g:ScrollPanel>

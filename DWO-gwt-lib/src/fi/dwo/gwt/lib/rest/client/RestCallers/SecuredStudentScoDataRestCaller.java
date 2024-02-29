@@ -1,9 +1,11 @@
 package fi.dwo.gwt.lib.rest.client.RestCallers;
 
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomScormValues;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
@@ -36,5 +38,16 @@ public interface SecuredStudentScoDataRestCaller extends RestService,  ScoDataRe
 		@PUT
 		@Path("/sec:{id}/user/scoData/getJSONLaunchDataBytes")
 		public void getJSONLaunchDataBytes(@PathParam("id") String id, RestScoContext rest, MethodCallback<JSONValue> callback);
+		
+		@GET
+		@Path("/sec:{id}/user/scoData/getJSONLaunchDataBytes")
+		public void getJSONLaunchDataBytes(@PathParam("id") String id,
+	    		@QueryParam("scoId") Number scoId,
+	    		@QueryParam("profileId") Number profileId,
+	    		@QueryParam("classId") Number classId,
+				MethodCallback<JSONValue> callback);
+		
+		
+		
 	
 }

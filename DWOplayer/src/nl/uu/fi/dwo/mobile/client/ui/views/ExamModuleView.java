@@ -26,7 +26,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ExamModuleView extends Composite {
+public class ExamModuleView extends TreeModuleBase {
 
 	public interface Presenter {
 		void onKO();
@@ -122,7 +122,9 @@ public class ExamModuleView extends Composite {
 		String description = item.getDescription();
 		if(description.startsWith(DescriptionView.GZIPPREFIX))
 		{
-			w = new DescriptionViewImpl(rpc, item.getID(), builder.build()).asWidget();
+			DescriptionViewImpl dv = new DescriptionViewImpl(header.getDisplay()::getOffsetWidth, rpc, item.getID(), builder.build());
+			addResizeHandler(dv);
+			w = dv.asWidget();
 		} else
 		if(description.startsWith("<html>")) {
 			w = new HTML(description);

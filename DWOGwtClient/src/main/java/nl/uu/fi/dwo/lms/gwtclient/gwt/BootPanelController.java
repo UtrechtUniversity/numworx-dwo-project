@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -32,6 +33,10 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.PresenterBuilder;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.SchoolAdminComponent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.StudentComponent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.TeacherComponent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsMainDisplay;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsMainView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsutil.DwoMessageTranslator;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientModulesOnly;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
@@ -224,10 +229,14 @@ public class BootPanelController {
     	}
     	return p;
     }
+    
+    final static GwtClientModulesOnly moduleResources = GWT.create(GwtClientModulesOnly.class);
+    
     Promise<DomDwoProfileFull> hasChat(Promise<DomDwoProfileFull> p) {
     	String rights = p.getValue().getDwoProfileRights();
 		dwoGlobalVars.setInf(rights.contains("I"));
 		dwoGlobalVars.setRemedial(rights.contains("R"));
+		dwoGlobalVars.setModulesOnly(rights.contains("4"));
     	return p;
     	
     }
@@ -243,10 +252,17 @@ public class BootPanelController {
               build = teacherBuilder.build();
               mainView.setUserRole(role, false);
               mainView.setPremium(dwoGlobalVars.isPremium()); // knowledge for teacher is premium
+              if (dwoGlobalVars.isModulesOnly() && dwoGlobalVars.isPremium()) {
+            	  JsMainDisplay.setModulesOnly(true);
+            	  DwoMessageTranslator.add(moduleResources);
+              } else {
+               	  JsMainDisplay.setModulesOnly(false);
+            	  DwoMessageTranslator.remove(moduleResources);
+              }
               mainView.showChat( hasChatbox());
               break;
           case SCHOOLADMIN:
-              build = schoolAdminBuilder.build();
+             build = schoolAdminBuilder.build();
              mainView.setUserRole(role, false);
              mainView.setPremium(false); // no schooladmin premium features
              mainView.showChat(false);
@@ -258,12 +274,14 @@ public class BootPanelController {
               mainView.setUserRole(role, single);
               DomSchoolClass sc = dwoGlobalVars.getCurrentSchoolClass();
               mainView.setPremium(dwoGlobalVars.isPremium() && sc != null); // knowledge for student is premium and only in class
+              JsMainDisplay.setModulesOnly(false);
               mainView.showChat(hasChatbox() && sc != null);
             break;
             }
           default:
             mainView.setUserRole(RoleType.ANONYMOUS, false);
             mainView.setPremium(false);
+            JsMainDisplay.setModulesOnly(false);
             mainView.showChat(false);
             build = guestBuilder.build();
         }

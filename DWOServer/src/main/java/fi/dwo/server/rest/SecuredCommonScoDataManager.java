@@ -784,6 +784,8 @@ try {
 			else 
 			{
 				pssd = null;
+				pssc = new PersistentStudentScoContext();
+				pssc.setScoID(sco);
 			}
 		}
 	} else if ("cc".equals(split[2])) {
@@ -799,6 +801,7 @@ try {
 			pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
 		} else {
 			pssc = new PersistentStudentScoContext();
+			pssc.setScoID(scoContext.getScoID());
 		}
 	} else if ("c".equals(split[2])) {
 		page = split[5];
@@ -814,6 +817,9 @@ try {
 					{
 						pssc = list2.get(0);
 						pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
+					} else {
+						pssc = new PersistentStudentScoContext();
+						pssc.setScoID(s.getScoID());
 					}
 					break;
 				}
@@ -864,6 +870,13 @@ try {
 				if (nakijken != null && 0 == nakijken.getInt(0) && !COMPLETE.equals(pssc.getCompletionStatus())) {
 					return "";
 				}
+				if (nakijken != null) {
+					JsonArray scoresZelftoets = onsState.getJsonArray("scoresZelftoets");
+					if (scoresZelftoets != null) {
+						scoresZelftoets = scoresZelftoets.getJsonArray(0);
+						n = scoresZelftoets.getJsonNumber(pagenr).numberValue();
+					}
+				}
 			}
 			return n.toString();
 		}
@@ -889,6 +902,13 @@ try {
 				JsonArray nakijken = onsState.getJsonArray("aantalNakijken");
 				if (nakijken != null && 0 == nakijken.getInt(0) && !COMPLETE.equals(pssc.getCompletionStatus())) {
 					return "";
+				}
+				if (nakijken != null) {
+					JsonArray correct = onsState.getJsonArray("isCorrectZelftoets");
+					if (correct != null) {
+						correct = correct.getJsonArray(0);
+						ok = correct.getBoolean(pagenr);
+					}
 				}
 			}
 			return ok ? "passed" : "failed";    

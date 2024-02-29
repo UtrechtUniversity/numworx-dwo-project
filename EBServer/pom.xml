@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO</artifactId>
-		<version>2.5.28</version>
+		<version>2.5.29</version>
 		<relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 	<artifactId>EBServer</artifactId>
@@ -41,7 +41,7 @@
 				<dependency>			
 				    <groupId>nl.uu.fi.dwo.lms</groupId>
     				<artifactId>DWOGwtClient</artifactId>
-					<version>2.5.28</version>
+					<version>2.5.29</version>
 					<classifier>classes</classifier>
 					<exclusions>
 						<exclusion>
@@ -218,7 +218,7 @@
 	<dependency>
 		<groupId>nl.uu.fi.dwo.lms</groupId>
 		<artifactId>DWOGwtClient</artifactId>
-		<version>2.5.28</version>
+		<version>2.5.29</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
@@ -271,13 +271,13 @@
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>OAuth2Client</artifactId>
-		<version>1.0.9</version>
+		<version>${OAuth2ClientVersion}</version>
 		<classifier>classes</classifier>
 	</dependency>
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>OAuth2Client</artifactId>
-		<version>1.0.9</version>
+		<version>${OAuth2ClientVersion}</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
@@ -780,31 +780,14 @@
         <tomcat7.version>7.0.76</tomcat7.version>
         <context.xml>context.xml</context.xml>
         <http.port>80</http.port>
+        <OAuth2ClientVersion>1.0.10</OAuth2ClientVersion>
 	</properties>
 	<profiles>
-<!-- 		<profile> -->
-<!-- 			<id>teuniz</id> -->
-<!-- 			<properties> -->
-<!-- 				<aws.serverId>dev</aws.serverId> -->
-<!-- 				<aws.applicationName>teuniz</aws.applicationName> -->
-<!-- 				<aws.environmentName>teunis6</aws.environmentName> -->
-<!-- 			</properties> -->
-<!-- 		</profile> -->
 		<profile>
 			<id>local</id>
 			<properties>
         		<http.port>8080</http.port>			
 			</properties>
-		</profile>
-		<profile>
-			<id>java17</id>
-			<dependencies>
-			 <dependency>
-	    		<groupId>javax.xml.bind</groupId>
-	    		<artifactId>jaxb-api</artifactId>
-	    		<version>2.3.0</version>
-			 </dependency>
-			</dependencies>
 		</profile>
 		<profile>
 			<id>upload</id>
@@ -816,7 +799,7 @@
 					<groupId>nl.numworx.uploadwidget</groupId>
 					<artifactId>UploadWidgetGWT</artifactId>
 <!-- 					<version>0.0.2</version>	 AWS -->
-					<version>2.5.28</version>
+					<version>2.5.29</version>
 					<classifier>classes</classifier>
 					<exclusions>
 						<exclusion>
@@ -828,7 +811,7 @@
 				<dependency>
 					<groupId>nl.numworx.uploadwidget</groupId>
 					<artifactId>uploadwidget-common</artifactId>
-					<version>2.5.28</version>
+					<version>2.5.29</version>
 				</dependency>			
 				<dependency>
 				    <groupId>org.slf4j</groupId>
