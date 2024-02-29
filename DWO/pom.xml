@@ -8,7 +8,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>DWO</artifactId>
-    <version>2.5.29-SNAPSHOT</version>
+    <version>2.5.30-SNAPSHOT</version>
     <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -37,7 +37,7 @@
      	<module>../DWOplayer</module>
 <!--	<module>../edexml</module>-->
 <!--         <module>../KeyboardGWT</module> -->
-      	<module>../UploadWidget</module>
+<!--      	<module>../UploadWidget</module>-->
 <!--      	<module>../WriteMathGWT</module> -->
 <!-- 		<module>../osiris-import</module> -->
 <!-- 		<module>../notebook</module> -->
@@ -62,7 +62,7 @@
     		<dependency>
     			<groupId>nl.uu.fi.dwo</groupId>
     			<artifactId>DWO-commons-lib</artifactId>
-    			<version>2.5.29-SNAPSHOT</version>
+    			<version>2.5.30-SNAPSHOT</version>
     		</dependency>
     		<dependency>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
@@ -72,30 +72,30 @@
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-gwt-lib</artifactId>
-            <version>2.5.29-SNAPSHOT</version>
+            <version>2.5.30-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-gwt-lib</artifactId>
-            <version>2.5.29-SNAPSHOT</version>
+            <version>2.5.30-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
         <dependency>
         	<groupId>nl.uu.fi.dwo</groupId>
         	<artifactId>DWOServer</artifactId>
-        	<version>2.5.29-SNAPSHOT</version>
+        	<version>2.5.30-SNAPSHOT</version>
         	<type>war</type>
         </dependency>
          <dependency>
         	<groupId>nl.uu.fi.dwo</groupId>
         	<artifactId>DWOServer</artifactId>
-        	<version>2.5.29-SNAPSHOT</version>
+        	<version>2.5.30-SNAPSHOT</version>
         	<classifier>classes</classifier>
         </dependency>
          <dependency>
          	<groupId>nl.uu.fi.dwo</groupId>
          	<artifactId>DWOJClient</artifactId>
-         	<version>2.5.29-SNAPSHOT</version>
+         	<version>2.5.30-SNAPSHOT</version>
          </dependency>
          <dependency>
          	<groupId>fi.beans</groupId>
@@ -115,19 +115,19 @@
 		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
 	  		<artifactId>DWOplayer</artifactId>
-	  		<version>2.5.29-SNAPSHOT</version>
+	  		<version>2.5.30-SNAPSHOT</version>
 	  		<classifier>classes</classifier>		
 		</dependency>
  		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
 	  		<artifactId>DWOplayer</artifactId>
-	  		<version>2.5.29-SNAPSHOT</version>
+	  		<version>2.5.30-SNAPSHOT</version>
 	  		<classifier>sources</classifier>		
 		</dependency>
  		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
 	  		<artifactId>DWOplayer</artifactId>
-	  		<version>2.5.29-SNAPSHOT</version>
+	  		<version>2.5.30-SNAPSHOT</version>
   			<type>war</type>
 		</dependency>
 		<dependency>

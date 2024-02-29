@@ -793,8 +793,8 @@ try {
 		page = split[4];
 		long sconr = Long.parseLong(split[3]);
 		PersistentScoContext scoContext = ScoContextManager.findSibling(pssc.getScoID(), sconr);
+		if (scoContext == null) return "";
 		List<PersistentStudentScoContext> list = 
-				scoContext == null ? Collections.emptyList() :
 				StudentScoContextManager.findEntities(scoContext, pssc.getPersistentHasRolePK());
 		if (!list.isEmpty()) {
 			pssc = list.get(0);
@@ -809,6 +809,7 @@ try {
 		long courseid = Long.parseLong(split[3]);
 		long actnr = Long.parseLong(split[4]);
 		PersistentCourse course = CourseManager.findEntity(courseid);
+		if (course == null) return "";
 		List<PersistentScoContext> list = ScoContextManager.findEntities(course);
 			for (PersistentScoContext s: list ) {
 				if (s.getSequencenr().longValue() == actnr) {
