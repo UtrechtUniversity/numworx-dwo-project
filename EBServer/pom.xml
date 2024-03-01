@@ -789,6 +789,14 @@
 			<id>local</id>
 			<properties>
         		<http.port>8080</http.port>
+			</properties>
+		</profile>
+		<profile>
+			<id>upload</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
         		<upload.servlet><![CDATA[ 
   <servlet>
   	<servlet-name>upload</servlet-name>
@@ -830,12 +838,6 @@
   </servlet-mapping>
 ]]></upload.servlet.mapping>		
 			</properties>
-		</profile>
-		<profile>
-			<id>upload</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
 			<dependencies>
 				<dependency>
 					<groupId>nl.numworx.uploadwidget</groupId>
