@@ -4,6 +4,11 @@
   	<param-name>dbrest.url</param-name>
 	<param-value>http://localhost/dwo/</param-value>  
   </context-param>
+  <session-config>
+    <cookie-config>
+        <path>/</path>
+    </cookie-config>
+  </session-config>
   <filter>
   	<filter-name>authz</filter-name>
   	<filter-class>nl.numworx.oauth2client.server.OAuth2Filter</filter-class>
