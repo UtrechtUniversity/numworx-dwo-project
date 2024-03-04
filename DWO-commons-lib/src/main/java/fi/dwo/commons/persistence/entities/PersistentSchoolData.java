@@ -3,6 +3,7 @@ package fi.dwo.commons.persistence.entities;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolDataFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFrom;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
@@ -162,7 +163,17 @@ public class PersistentSchoolData implements Serializable {
         return id;
     }
 
-    
+    public DomSchoolDataFull buildDomSchoolDataFull() {
+    	DomSchoolDataFull data = new DomSchoolDataFull();
+    	fillDomSchoolDataFull(data);
+    	return data;
+    }
+
+	private void fillDomSchoolDataFull(DomSchoolDataFull data) {
+		data.setId(buildPersistenceId());
+		data.setOptLock(getOptlock());
+		data.setSchoolData(getSchoolData());	
+	}
     
     
 }

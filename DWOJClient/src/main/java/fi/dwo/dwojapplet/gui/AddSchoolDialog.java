@@ -14,6 +14,7 @@ import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolGroup;
 import fi.dwo.dwojapplet.domain.SchoolPasswdMap;
 import fi.dwo.dwojapplet.gui.action.CopyLabel;
+import fi.dwo.dwojapplet.gui.action.SchoolDataAction;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 
@@ -59,6 +60,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
     private Component schoolNameField;
 
     private JTextField schoolLoginField;
+    private SchoolDataAction schoolData;
 
     private JTextField passwdField[] = new JTextField[SchoolGroup.LENGTH];
     private String passwdLabel[] = new String[SchoolGroup.LENGTH];
@@ -176,8 +178,11 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         aboField = new JComboBox<>(AboType.values());
         aboField.setSelectedItem(aboType);
         form.add(aboField);
-        
-        
+        l = new JLabel("Extra");
+        form.add(l);
+        schoolData = new SchoolDataAction();
+        form.add(new JButton(schoolData));
+
         //this.setSize(460, 280);
         Box okbox = Box.createHorizontalBox();
         okbox.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));

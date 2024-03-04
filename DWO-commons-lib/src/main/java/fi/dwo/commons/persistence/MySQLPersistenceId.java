@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolDataFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
@@ -506,5 +507,10 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
   public static Long getNativeId(DomMethod o) throws Dwo2Exception {
     if (o.getId() == null) return null;
     return getSingleNativeId(o.getId().getIdString(), PersistenceClassType.PersistentMethod);
+  }
+
+  public static Long getNativeId(DomSchoolDataFull o) throws Dwo2Exception {
+    if (o.getId() == null) return null;
+    return getSingleNativeId(o.getId().getIdString(), PersistenceClassType.PersistentSchoolData);
   }
 }
