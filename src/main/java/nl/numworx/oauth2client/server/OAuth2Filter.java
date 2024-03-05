@@ -3,7 +3,9 @@ package nl.numworx.oauth2client.server;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.Objects;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -70,6 +72,16 @@ public class OAuth2Filter implements Filter {
 		
 	}
 	
+	public static void newsession(HttpSession session) {
+		Enumeration<String> keys = session.getAttributeNames();
+		ArrayList<String> todelete = new ArrayList<>();
+		while (keys.hasMoreElements()) {
+			String key = keys.nextElement();
+			if (key.startsWith(PREFIX)) todelete.add(key);
+		}
+		todelete.forEach(session::removeAttribute);
+	}
+	
 	@SuppressWarnings("deprecation")
 	private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 		HttpSession storage = request.getSession();
@@ -87,6 +99,7 @@ public class OAuth2Filter implements Filter {
 				LOG.severe("chain with new bearer " + bearer);
 				storage.removeAttribute(PREFIX + "state");
 				storage.setAttribute(PREFIX + "bearer", bearer);
+				storage.setAttribute(PREFIX + "retry", retry);
 				HttpServletRequestWrapper wrap = new BearerWrapper(request, bearer);
 				chain.doFilter(wrap, response);
 				return;

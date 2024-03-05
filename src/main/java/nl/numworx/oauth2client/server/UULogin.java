@@ -47,24 +47,19 @@ public class UULogin implements SigningKeyResolver, Login {
     public static final String PASSWORD = "urn:uu.nl:idp:contract:password";
     public static final String PASSWORD_MFA = "urn:uu.nl:idp:contract:password:multifactor";
 
-	String client_id = "87e22bd9-ac67-4457-b4c3-c039c42cf052";
-	String client_secret = "LPb6jeN6q7CYurh96iZZAVz3cqab7r_3hVxkqGzj0j5_1Bf-rhjsNYnIUrpqw5y8hu1ckesX5-fmtINofw6jrw";
+	private String client_id = "87e22bd9-ac67-4457-b4c3-c039c42cf052";
+	private String client_secret = "LPb6jeN6q7CYurh96iZZAVz3cqab7r_3hVxkqGzj0j5_1Bf-rhjsNYnIUrpqw5y8hu1ckesX5-fmtINofw6jrw";
 	
-	String redirect_url = "https://numworx.acc.uu.nl/dwo/oauth2/redirect";
+	private String redirect_url = "https://numworx.acc.uu.nl/dwo/oauth2/redirect";
 	
-	String numworx_scope = "urn:uu.nl:idp:scope:oauth:numworx";
+	final static String numworx_scope = "urn:uu.nl:idp:scope:oauth:numworx";
 		
-	String ISSUER = "https://login.acc.uu.nl/nidp/oauth/nam";
-	String AUTHORIZATION_URL = "https://login.acc.uu.nl/nidp/oauth/nam/authz";
-	String TOKEN_URL = 	"https://login.acc.uu.nl/nidp/oauth/nam/token";
-	String KEYS_URL = "https://login.acc.uu.nl/nidp/oauth/nam/keys";
-	
+	private String ISSUER = "https://login.acc.uu.nl/nidp/oauth/nam";
+	private String AUTHORIZATION_URL = "https://login.acc.uu.nl/nidp/oauth/nam/authz";
+	private String TOKEN_URL = 	"https://login.acc.uu.nl/nidp/oauth/nam/token";
+	private String KEYS_URL = "https://login.acc.uu.nl/nidp/oauth/nam/keys";
 
 	private OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
-
-
-    Long expiresIn, now;
-	private OAuthToken token;
 
     public UULogin(ServletConfig servletConfig) {
     	this();
@@ -120,7 +115,7 @@ public class UULogin implements SigningKeyResolver, Login {
 		  }
 
 	
-	  Claims getToken(String code) throws OAuthSystemException, OAuthProblemException { // code fromn login response
+	  UUClaims getToken(String code) throws OAuthSystemException, OAuthProblemException { // code fromn login response
 		    OAuthClientRequest request = OAuthClientRequest
 		        .tokenLocation(TOKEN_URL)
 		        .setGrantType(GrantType.AUTHORIZATION_CODE)
@@ -129,10 +124,11 @@ public class UULogin implements SigningKeyResolver, Login {
 		        .setRedirectURI(redirect_url)
 		        .setCode(code)
 		        .buildBodyMessage();
-		    now = System.currentTimeMillis();
+		    long now = System.currentTimeMillis();
 		    OAuthJSONAccessTokenResponse oAuthResponse = oAuthClient.accessToken(request);
-		    Claims claims = idToken(oAuthResponse.getParam(ID_TOKEN));
-		    token = oAuthResponse.getOAuthToken();
+		    UUClaims claims = idToken(oAuthResponse.getParam(ID_TOKEN));
+		    claims.token = oAuthResponse.getOAuthToken();
+		    claims.now = now;
 		    return claims;
 		  }
 
@@ -143,11 +139,9 @@ public class UULogin implements SigningKeyResolver, Login {
 		}
 	}
 	  
+	private Map<String, PublicKey> keys = new HashMap<String, PublicKey>();
 	
-	Map<String, PublicKey> keys = new HashMap<String, PublicKey>();
-	
-	
-	public Map<String, PublicKey> getKeys() throws OAuthSystemException, OAuthProblemException, ParseException  {
+	Map<String, PublicKey> getKeys() throws OAuthSystemException, OAuthProblemException, ParseException  {
 		OAuthClientRequest request = new ResourceRequest(KEYS_URL);	
 		OAuthResourceResponse response;
 		response = oAuthClient.resource(request, "", OAuthResourceResponse.class);
@@ -187,11 +181,17 @@ public class UULogin implements SigningKeyResolver, Login {
 		return null;
 	}
 	
-	String sn, givenName, email, uid, insertion, affiliation, studentNumber;
-	String nonce;
+	class UUClaims {
+		public long now;
+		String sn, givenName, email, uid, insertion, affiliation, studentNumber;
+		String nonce;
+		Claims claims;
+		OAuthToken token;
+
+	}
 	
 	
-	Claims idToken(String idToken) {
+	UUClaims idToken(String idToken) {
 		JwtParser parser = Jwts.parser().setSigningKeyResolver(this);
 
 //		parser.setClock(new Clock() {
@@ -204,19 +204,20 @@ public class UULogin implements SigningKeyResolver, Login {
 		parser.requireIssuer(ISSUER);
 		parser.requireAudience(client_id);
 		
-		Jws<Claims> token = parser.parseClaimsJws(idToken);	
-		Claims body = token.getBody();
+		Jws<Claims> token = parser.parseClaimsJws(idToken);
+		UUClaims u = new UUClaims();
+		Claims body = u.claims = token.getBody();
 		
-		sn = body.get("sn", String.class);
-		givenName = body.get("givenName", String.class);
-		insertion = body.get("uuSurnamePrefix", String.class);
-		email = body.get("mail", String.class);
-		uid   = body.get("uuShortID", String.class);
-		studentNumber = body.get("uuStudentNumber", String.class);
-		affiliation = body.get("urn:mace:dir:attribute-def:eduPersonAffiliation", String.class);
-		nonce = body.get("nonce", String.class);
+		u.sn = body.get("sn", String.class);
+		u.givenName = body.get("givenName", String.class);
+		u.insertion = body.get("uuSurnamePrefix", String.class);
+		u.email = body.get("mail", String.class);
+		u.uid   = body.get("uuShortID", String.class);
+		u.studentNumber = body.get("uuStudentNumber", String.class);
+		u.affiliation = body.get("urn:mace:dir:attribute-def:eduPersonAffiliation", String.class);
+		u.nonce = body.get("nonce", String.class);
 
-		return body;
+		return u;
 	}
 	
 	@Override
