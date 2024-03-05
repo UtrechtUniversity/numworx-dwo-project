@@ -38,6 +38,8 @@
 
 	<properties>
 		<maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 
 	<!-- update the https path for a different branch or tag! -->

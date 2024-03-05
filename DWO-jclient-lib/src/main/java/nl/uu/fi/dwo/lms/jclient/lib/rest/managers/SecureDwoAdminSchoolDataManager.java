@@ -35,21 +35,21 @@ public class SecureDwoAdminSchoolDataManager  {
   }
    
   static DomContext getContext() {
-    return RestAuthenticator.getInstance().getContext();
+    return StoredRestManager.getInstance().getAuthenticator().getContext();
   }
 
-  public Boolean update(DomSchoolDataFull submit) throws Dwo2Exception {
+  public static DomSchoolDataFull update(DomSchoolDataFull submit) throws Dwo2Exception {
     RestSchoolDataFull rest = new RestSchoolDataFull();
     rest.setRestContext(getContext());
     rest.setData(submit);
-    Boolean result = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/schooldata/update",
-        Boolean.class, rest);
+    DomSchoolDataFull result = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/schooldata/update",
+    		DomSchoolDataFull.class, rest);
     LOG.log(Level.FINE, "Updated data for school {1} by username {0}.",
         new Object[] {RestAuthenticator.getInstance().getUsername(), submit.getId()});
     return result;
   }
 
-  public Boolean removeSchool(DomSchoolDataFull submit) throws Dwo2Exception {
+  public static Boolean remove(DomSchoolDataFull submit) throws Dwo2Exception {
     RestSchoolDataFull rest = new RestSchoolDataFull();
     rest.setRestContext(getContext());
     rest.setData(submit);
