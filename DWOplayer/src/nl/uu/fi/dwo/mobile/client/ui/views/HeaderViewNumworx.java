@@ -8,7 +8,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.osgi.util.function.Function;
@@ -37,6 +39,7 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 
+import dagger.Lazy;
 import nl.uu.fi.dwo.account.client.DialogFailure;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.account.client.ProfileCommand;
@@ -93,6 +96,8 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 	final private EventBus bus;
     final private DWOplayerParameters PARAMETERS;
     final private Optional<DwoGlobalVars> vars;
+    @Inject Provider<Optional<XapiWrapper>> xapiprovider;
+    boolean hasxapi;
     final private Failure failure;
 
 
@@ -271,6 +276,13 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 	                ScheduledCommand cmd = new SchoolClassStudentCommand(this, bus, vars.get(), failure);
 	                m=items.addItem(DwoLocalesForGWT.instance.GUI_MySchoolClasses(), cmd);
 	                m.addStyleName(style.menuItem());
+	                
+	                Optional<XapiWrapper> xapi = xapiprovider.get();
+	                if (xapi.isPresent()) {
+	                	items.addItem(xapi.get().getMenuItem());
+	                	hasxapi = true;
+	                	
+	                }
 	            }
 			}
 			boolean single = Boolean.TRUE.equals(currentUser.getSingleSchool());
@@ -286,6 +298,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 				
 				@Override
 				public void execute() {
+					if (hasxapi) xapiprovider.get().ifPresent(XapiWrapper::destroy);
 					LoginPlace place = new LoginPlace(homePlace);
 					presenter.goTo(place);					
 				}

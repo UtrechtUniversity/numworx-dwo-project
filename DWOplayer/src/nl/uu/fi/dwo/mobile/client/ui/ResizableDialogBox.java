@@ -286,13 +286,13 @@ public class ResizableDialogBox extends DialogBox implements HasOpenHandlers<Res
 	{
 		super(autoHide, modal);
 
-//		this.setStyleName("gwt-extras-WindowBox", true);
+		this.setStyleName("gwt-extras-WindowBox", true);
 
 		this.container = new FlowPanel();
-//		this.container.addStyleName("gwt-extras-dialog-container");
+		this.container.addStyleName("gwt-extras-dialog-container");
 
 		this.close = new Anchor();
-//		this.close.setStyleName("gwt-extras-dialog-close");
+		this.close.setStyleName("gwt-extras-dialog-close");
 		this.close.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -303,7 +303,7 @@ public class ResizableDialogBox extends DialogBox implements HasOpenHandlers<Res
 		setCloseIconVisible(showCloseIcon);
 
 		this.minimize = new Anchor();
-//		this.minimize.setStyleName("gwt-extras-dialog-minimize");
+		this.minimize.setStyleName("gwt-extras-dialog-minimize");
 		this.minimize.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -318,7 +318,7 @@ public class ResizableDialogBox extends DialogBox implements HasOpenHandlers<Res
 		ctrlGrid.setWidget(0, 1, this.close);
 
 		this.controls = new FlowPanel();
-//		this.controls.setStyleName("gwt-extras-dialog-controls");
+		this.controls.setStyleName("gwt-extras-dialog-controls");
 		this.controls.add(ctrlGrid);
 		this.dragMode = -1;
 
@@ -355,13 +355,13 @@ public class ResizableDialogBox extends DialogBox implements HasOpenHandlers<Res
 	{
 		super(autoHide, modal, caption);
 
-//		this.setStyleName("gwt-extras-WindowBox", true);
+		this.setStyleName("gwt-extras-WindowBox", true);
 		
 		this.container = new FlowPanel();
-//		this.container.addStyleName("gwt-extras-dialog-container");
+		this.container.addStyleName("gwt-extras-dialog-container");
 
 		this.close = new Anchor();
-//		this.close.setStyleName("gwt-extras-dialog-close");
+		this.close.setStyleName("gwt-extras-dialog-close");
 		this.close.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -372,7 +372,7 @@ public class ResizableDialogBox extends DialogBox implements HasOpenHandlers<Res
 		setCloseIconVisible(showCloseIcon);
 
 		this.minimize = new Anchor();
-//		this.minimize.setStyleName("gwt-extras-dialog-minimize");
+		this.minimize.setStyleName("gwt-extras-dialog-minimize");
 		this.minimize.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -387,7 +387,7 @@ public class ResizableDialogBox extends DialogBox implements HasOpenHandlers<Res
 		ctrlGrid.setWidget(0, 1, this.close);
 
 		this.controls = new FlowPanel();
-//		this.controls.setStyleName("gwt-extras-dialog-controls");
+		this.controls.setStyleName("gwt-extras-dialog-controls");
 		this.controls.add(ctrlGrid);
 		this.dragMode = -1;
 
@@ -931,12 +931,12 @@ public class ResizableDialogBox extends DialogBox implements HasOpenHandlers<Res
 		if (visible)
 		{
 			this.container.setWidth(offsetWidth + "px");
-//			this.minimize.setStyleName("gwt-extras-dialog-maximize");
+			this.minimize.setStyleName("gwt-extras-dialog-maximize");
 		}
 		else
 		{
-			this.container.setWidth(null);
-//			this.minimize.setStyleName("gwt-extras-dialog-minimize");
+			this.container.getElement().getStyle().clearWidth();
+			this.minimize.setStyleName("gwt-extras-dialog-minimize");
 		}
 	}
 

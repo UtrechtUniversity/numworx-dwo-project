@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import org.osgi.util.promise.Promise;
@@ -23,6 +24,7 @@ import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
+import nl.uu.fi.dwo.mobile.client.ui.views.XapiWrapper;
 import nl.uu.fi.dwo.mobile.utils.LaTransport;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.NoLogging;
@@ -79,10 +81,11 @@ public class SMLogger implements Logging {
   public static class DWO2playerProvider extends LoggingModule {
     private DwoGlobalVars vars;
 	private Lazy<RPCHandler> rpc;
+	@Inject Optional<XapiWrapper> xw;
 
 	@Inject DWO2playerProvider(DwoGlobalVars vars, Lazy<RPCHandler> rpc) {
       this.vars = vars;
-      this.rpc  = rpc;
+      this.rpc  = rpc;      
     }
 
     public Logging logging(ActivityComponent activity) {
@@ -94,7 +97,11 @@ public class SMLogger implements Logging {
               && (roleType == RoleType.STUDENT||roleType==RoleType.ANONYMOUS);
       if (experiment) {
         Promise<XapiManager> xapi = rpc.get().getLRS();
-        return new SMLogger(instance, xapi.map(x -> x::saveStatement), super.logging(activity), vars.getCurrentSchoolClass());
+        Promise<LogStrategy> map  = xapi.map(x-> x::saveStatement);
+        if (xw != null) {
+        	map = map.map(m -> xw.map(w -> w.wrap(m)).orElse(m));
+        }
+        return new SMLogger(instance, map, super.logging(activity), vars.getCurrentSchoolClass());
       }
       return super.logging(activity);
     }
