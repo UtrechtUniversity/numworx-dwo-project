@@ -629,6 +629,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
           			<filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
+					<webXml>src/main/webxml/web.xml</webXml>
 					<archive>
 						<manifest>
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
