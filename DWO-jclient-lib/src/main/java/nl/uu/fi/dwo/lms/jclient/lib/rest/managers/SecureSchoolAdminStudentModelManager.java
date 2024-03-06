@@ -25,7 +25,7 @@ public class SecureSchoolAdminStudentModelManager implements SecureStudentModelM
 		      Logger.getLogger(SecureSchoolAdminStudentModelManager.class.getName());
 
 	private DomContext getContext() {
-		    return StoredRestManager.getInstance().getAuthenticator().getContext();
+		    return StoredRestManager.getInstance().getContext();
 	}
 	
 	@Override

@@ -54,7 +54,7 @@ public class SecuredTeacherResultsManager {
   }
   
   static DomContext getContext() {
-    return RestAuthenticator.getInstance().getContext();
+    return StoredRestManager.getInstance().getContext();
   }
 
   public static Boolean clearStudentResults(DomClearStudentDataForScoAndClass dom)

@@ -39,7 +39,7 @@ public class SecureDwoAdminProfileManager {
   }
 
   static DomContext getContext() {
-    return RestAuthenticator.getInstance().getContext();
+    return StoredRestManager.getInstance().getContext();
   }
 
   public static Boolean submitProfile(DomDwoProfileFull profile) throws Dwo2Exception {

@@ -28,7 +28,7 @@ public class SecureDwoAdminAppletManager {
   }
 
   private static DomContext getContext() {
-    return StoredRestManager.getInstance().getAuthenticator().getContext();
+    return StoredRestManager.getInstance().getContext();
   }
 
 }

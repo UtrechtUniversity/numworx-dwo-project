@@ -36,7 +36,7 @@ public class SecureStudentSchoolClassManager {
   }
 
   static DomContext getContext() {
-    return RestAuthenticator.getInstance().getContext();
+    return StoredRestManager.getInstance().getContext();
   }
 
   public static Boolean removeSchoolClass(DomSchoolClass schoolClass) throws Dwo2Exception {

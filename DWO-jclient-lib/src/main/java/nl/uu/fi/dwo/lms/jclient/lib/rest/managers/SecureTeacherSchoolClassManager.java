@@ -349,7 +349,7 @@ public class SecureTeacherSchoolClassManager {
   }
 
   private static DomContext getContext() {
-    return getRestManager().getAuthenticator().getContext();
+    return getRestManager().getContext();
   }
 
   public static Boolean detachCourseFromClass(DomSchoolClassCourseAndProfile dom)

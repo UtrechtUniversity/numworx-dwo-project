@@ -42,7 +42,7 @@ public class SecureDwoAdminConfigManager implements ConfigManager {
   }
 
   static DomContext getContext() {
-    return RestAuthenticator.getInstance().getContext();
+    return StoredRestManager.getInstance().getContext();
   }
 
   public static Boolean submitConfig(DomAppletConfig profile) throws Dwo2Exception {

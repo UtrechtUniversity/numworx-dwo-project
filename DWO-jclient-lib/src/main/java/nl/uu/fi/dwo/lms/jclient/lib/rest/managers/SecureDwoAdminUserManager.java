@@ -49,7 +49,7 @@ public class SecureDwoAdminUserManager {
   }
 
   static DomContext getContext() {
-    return RestAuthenticator.getInstance().getContext();
+    return StoredRestManager.getInstance().getContext();
   }
 
   public static DomUserFull update(DomUserFull user) throws Dwo2Exception {

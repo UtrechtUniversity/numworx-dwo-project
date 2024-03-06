@@ -26,7 +26,7 @@ public class SecureTeacherSchoolManager implements SchoolManager {
   }
 
   DomContext getContext() {
-    return RestAuthenticator.getInstance().getContext();
+    return StoredRestManager.getInstance().getContext();
   }
 
 }

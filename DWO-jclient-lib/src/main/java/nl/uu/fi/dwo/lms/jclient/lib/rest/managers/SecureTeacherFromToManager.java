@@ -33,7 +33,7 @@ public class SecureTeacherFromToManager {
   }
 
   static DomContext getContext() {
-    return RestAuthenticator.getInstance().getContext();
+    return StoredRestManager.getInstance().getContext();
   }
 
   public static List<DomCourse> getCourses(DomSchoolAndProfile dom)  throws Dwo2Exception {

@@ -113,6 +113,6 @@ public class SecuredDwoAdminGarbageManager {
   
   
   private DomContext getContext() {
-    return manager.getAuthenticator().getContext();
+    return manager.getContext();
   }
 }

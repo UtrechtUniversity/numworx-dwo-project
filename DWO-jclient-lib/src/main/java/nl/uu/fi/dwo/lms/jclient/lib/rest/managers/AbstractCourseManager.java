@@ -15,7 +15,7 @@ public abstract class AbstractCourseManager implements CourseManager {
   }
 
   DomContext getContext() {
-    return manager.getAuthenticator().getContext();
+    return manager.getContext();
   }
 
   /*

@@ -77,7 +77,7 @@ public class PublicScoContextManager implements ScoContextManager {
   }
 
   private DomContext getContext() {
-    return RestAuthenticator.getInstance().getContext();
+    return StoredRestManager.getInstance().getContext();
   }
 
   private String pfx() {

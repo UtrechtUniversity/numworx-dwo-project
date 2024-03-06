@@ -501,7 +501,7 @@
 						<webapp>
 							<groupId>nl.numworx.uploadwidget</groupId>
     							<artifactId>uploadwidget-local</artifactId>
-    							<version>2.5.29</version>
+    							<version>2.5.30-SNAPSHOT</version>
                           		<type>war</type>
 							<contextPath>/dwo/dav/upload</contextPath>
                             	<asWebapp>true</asWebapp> 
@@ -842,39 +842,15 @@
 				<dependency>
 					<groupId>nl.numworx.uploadwidget</groupId>
 					<artifactId>UploadWidgetGWT</artifactId>
-<!-- 					<version>0.0.2</version>	 AWS -->
-					<version>2.5.29</version>
+					<version>2.5.30-SNAPSHOT</version>
 					<classifier>classes</classifier>
-					<exclusions>
-						<exclusion>
-							<groupId>nl.numworx.uploadwidget</groupId>
-							<artifactId>uploadwidget-common</artifactId>
-						</exclusion>				
-					</exclusions>
-				</dependency>
-				<dependency>
-					<groupId>nl.numworx.uploadwidget</groupId>
-					<artifactId>uploadwidget-common</artifactId>
-					<version>2.5.29</version>
-				</dependency>			
+					</dependency>			
 				<dependency>
 				    <groupId>org.slf4j</groupId>
 				    <artifactId>slf4j-jdk14</artifactId>
 				    <version>1.7.7</version>
 				</dependency>
 			</dependencies>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-war-plugin</artifactId>
-						<version>3.2.3</version>
-						<configuration>
-							<webXml>src/main/webxml/web.xml</webXml>
-						</configuration>	
-					</plugin>
-				</plugins>
-			</build>
 		</profile>
 		<profile>
 			<id>memcached-jcache</id>

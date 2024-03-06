@@ -35,7 +35,7 @@ public class SecureDwoAdminSchoolDataManager  {
   }
    
   static DomContext getContext() {
-    return StoredRestManager.getInstance().getAuthenticator().getContext();
+    return StoredRestManager.getInstance().getContext();
   }
 
   public static DomSchoolDataFull update(DomSchoolDataFull submit) throws Dwo2Exception {

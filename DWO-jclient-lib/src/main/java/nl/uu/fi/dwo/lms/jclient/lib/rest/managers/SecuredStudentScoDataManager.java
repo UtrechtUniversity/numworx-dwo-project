@@ -79,7 +79,7 @@ public class SecuredStudentScoDataManager implements StudentScoDataManager {
   }
 
   DomContext getContext() {
-    return restManager.getAuthenticator().getContext();
+    return restManager.getContext();
   }
 
   @Override
