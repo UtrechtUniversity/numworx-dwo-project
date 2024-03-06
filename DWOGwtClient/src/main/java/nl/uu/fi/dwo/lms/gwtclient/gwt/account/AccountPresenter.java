@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -162,7 +163,7 @@ public class AccountPresenter {
                 //get role Update.
                 view.setLoadingTableMessage();
                 Promise<DomSchoolsRolesAndClassesV2> update = accountService.getSchoolLogins();
-                return update.then(null, p -> view.setEmptyTableMessage());
+                return update.then(p -> p, p -> view.setEmptyTableMessage());
             }
         })
         .then(new Success<DomSchoolsRolesAndClassesV2, Void>() {
