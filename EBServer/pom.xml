@@ -308,7 +308,7 @@
 		</dependency>
 		<dependency>
 		    <groupId>de.javakaffee.msm</groupId>
-		    <artifactId>memcached-session-manager-tc8</artifactId>
+		    <artifactId>memcached-session-manager-tc9</artifactId>
 		    <version>2.3.2</version>
 		    <scope>test</scope>
 		</dependency>
@@ -777,7 +777,7 @@
 		<RegisterVersion>2.5.2</RegisterVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
-		<aws.environmentName>testeb5server</aws.environmentName>
+		<aws.environmentName>testeb6server</aws.environmentName>
         <tomcat7.version>7.0.76</tomcat7.version>
         <context.xml>context.xml</context.xml>
         <http.port>80</http.port>
