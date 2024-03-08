@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Objects;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -49,10 +51,10 @@ public class RedirectServlet extends HttpServlet {
 			if (user_id == null || user_id.isEmpty() )
 				user_id = claims.uid;
 			String lti_id = claims.uid; // should be token.sub
-			String first = claims.givenName;
-			String middle = claims.insertion;
-			String last = claims.sn;
-			String email = claims.email;
+			String first =  Objects.toString(claims.givenName, "");
+			String middle = Objects.toString(claims.insertion, "");
+			String last =   Objects.toString(claims.sn, "");
+			String email =  Objects.toString(claims.email, "");
 			String roles = claims.affiliation;
 		    String role = "STUDENT";
 		      if(roles != null && roles.toLowerCase().contains("employee"))
