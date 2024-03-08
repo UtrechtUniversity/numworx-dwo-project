@@ -781,9 +781,9 @@
         <tomcat7.version>7.0.76</tomcat7.version>
         <context.xml>context.xml</context.xml>
         <http.port>80</http.port>
-        <OAuth2ClientVersion>1.0.10</OAuth2ClientVersion>
         <upload.servlet />
         <upload.servlet.mapping />
+        <OAuth2ClientVersion>1.0.10p1</OAuth2ClientVersion>
 	</properties>
 	<profiles>
 		<profile>
