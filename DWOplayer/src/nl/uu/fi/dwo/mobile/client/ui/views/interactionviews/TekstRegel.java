@@ -59,7 +59,7 @@ public class TekstRegel //extends LayoutPanel
 	//private fontType = "sans-serif";
 	
 	private FormuleFont fm;
-	private CssColor fgColor = CssColor.make(0, 0, 0);
+	private CssColor fgColor = null; // inherit!
 	
 	private Logger logger = Logger.getLogger("TekstRegel");
   private int x;
@@ -272,7 +272,7 @@ public class TekstRegel //extends LayoutPanel
 			{
 				
 				SVGTekstComponent tekst = new SVGTekstComponent(fm, currentObject.toString(), objectBreedte, objectHoogte);
-				tekst.setColor(fgColor);
+				if (fgColor != null) tekst.setColor(fgColor);
 				tekst.paint();
 				
 				if(horPositie == 0 && Letter.isLetter(currentObject.toString().charAt(0)))
@@ -522,8 +522,10 @@ public class TekstRegel //extends LayoutPanel
 	public void setColor(CssColor color)
 	{
 		fgColor = color;
-		this.getElement().getStyle().setColor(color.toString());
-		
+		if (color != null) 
+			this.getElement().getStyle().setColor(color.toString());
+		else 
+			this.getElement().getStyle().clearColor();
 	}
 
   public void clearRegel() {

@@ -34,6 +34,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
@@ -126,6 +127,7 @@ public class SecuredUserCourseManager {
             {   LOG.warning("getCourseDescription "  + id + " course null");
             	return Response.ok().entity("{}").build(); // Not fatal
             }
+            Date modified = new Date(course.getLastChangeTimeStamp());
             if(! course.getDwoProfileID().equals(MySQLPersistenceId.getNativeId(domDwoProfile)))
             {	LOG.warning("getCourseDescription "  + id + " profileid wrong");
             	return Response.ok().entity("{}").build();
@@ -169,13 +171,21 @@ public class SecuredUserCourseManager {
             	default:
             	}
             }
+	        CacheControl cc = new CacheControl();
+	        cc.setMaxAge(3600);
+	        Date expires = new Date(System.currentTimeMillis() + cc.getMaxAge()*1000L);
             PersistentCourseData data = CourseDataManager.findEntity(course.getCourseID());
             if (data != null) {
             	byte[] bytes = data.getDescriptionbytes();
+        		modified = new Date(data.getLastChangeTimeStamp());
             	if (bytes != null) {
-	            	ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+            		ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
 	            	GZIPInputStream gis = new GZIPInputStream(bis);
-	            	return Response.ok().encoding("UTF-8").entity(gis).build();
+	            	return Response.ok().encoding("UTF-8").entity(gis)
+	            		.lastModified(modified)
+	            		.expires(expires)
+	            		.cacheControl(cc)
+            			.build();
             	} else {
             		course.setDescription(data.getDescription());
             	}
@@ -194,13 +204,36 @@ public class SecuredUserCourseManager {
 	        	data.setDescriptionbytes(bos.toByteArray());
 	        	data = CourseDataManager.edit(data);
 	        }
-			return Response.ok().entity(string).build();
+			return Response.ok().entity(string).cacheControl(cc).expires(expires)
+					.lastModified(modified)
+					.build();
 		} catch (Exception e) {
 			LOG.log(Level.SEVERE,"getCourseDescription "  + id , e);
 			return Response.ok().entity("{}").build();
 		}
     }
      
+    @GET
+    @Produces({"application/json"})
+    @Path("/getCourseDescription")
+    public Response getCourseDescription(@Context SecurityContext sc, @QueryParam("courseId") Long courseId, @QueryParam("profile") Long profile, @QueryParam("classId") Long clsId) {
+    	RestCourse rest = new RestCourse();
+    	DomCourse course = new DomCourse(PersistentCourse.buildPersistenceId(courseId));
+    	rest.setDomCourse(course);
+    	DomDwoProfile dwoProfile = new DomDwoProfile(); dwoProfile.setId(PersistentDwoProfile.buildPersistenceId(profile));
+    	rest.setDomDwoProfile(dwoProfile);
+    	DomSchoolClassId schoolclassId= new DomSchoolClassId(PersistentSchoolClass.buildPersistenceId(cls));
+    	rest.setSchoolClassID(schoolclassId);
+    	
+    	DomContext context = new DomContext();
+    	DwoUserPrincipal user = (DwoUserPrincipal) sc.getUserPrincipal();
+    	context.setDomHasRole(user.getHr().buildDomHasRole());
+    	rest.setRestContext(context);
+    	
+    	return getCourseDescription(sc, rest);
+    	
+    }
+    
     @PUT
     @Path("/getSchool")
     @Produces({"application/json"})
