@@ -671,7 +671,7 @@
 								<exclude>login.html</exclude>
 								<exclude>gwtclient.html</exclude>
 								<exclude>html5plain.html</exclude>
-								<exclude>library.html</exclude>
+<!--								<exclude>library.html</exclude>-->
 								<exclude>**/*.md</exclude>
 								<exclude>ng-js/**</exclude>
 								<exclude>js-plainui/**</exclude>

@@ -300,7 +300,6 @@
                     <webappDirectory>${webappDirectory}</webappDirectory> 
                     <packagingExcludes>WEB-INF/lib/**,WEB-INF/classes/**</packagingExcludes>
                     <!-- exclude angular 2 dir: /src/main/ngapp -->
-                    <exclude>ngapp/**</exclude>
                     <dependentWarExcludes>css/scss/**</dependentWarExcludes>                
                 </configuration>
             </plugin>
