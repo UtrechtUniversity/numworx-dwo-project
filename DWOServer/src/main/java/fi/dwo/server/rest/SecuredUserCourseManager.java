@@ -222,7 +222,7 @@ public class SecuredUserCourseManager {
     	rest.setDomCourse(course);
     	DomDwoProfile dwoProfile = new DomDwoProfile(); dwoProfile.setId(PersistentDwoProfile.buildPersistenceId(profile));
     	rest.setDomDwoProfile(dwoProfile);
-    	DomSchoolClassId schoolclassId= new DomSchoolClassId(PersistentSchoolClass.buildPersistenceId(cls));
+    	DomSchoolClassId schoolclassId= new DomSchoolClassId(PersistentSchoolClass.buildPersistenceId(clsId));
     	rest.setSchoolClassID(schoolclassId);
     	
     	DomContext context = new DomContext();
