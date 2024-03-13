@@ -1,8 +1,14 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
+import java.io.StringReader;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.ws.rs.core.UriInfo;
 
 import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentSchoolData;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
@@ -29,6 +35,19 @@ public class XapiManager {
     String auth = System.getProperty("XAPI_AUTH", "ODg5MTZhOWRiNTI1YTM0NDRkZmE0MzliZjMxMDc5NTAzZDcyZDUyODpjYzY3YzA2Zjc3MDFhMDgzY2I2MzBhZGYyMDhjMjQ3YmYyMzhhODQz");
     lrs.setAuth("Basic " + auth);
 
+    PersistentSchoolData data = SchoolDataManager.findEntity(school.getSchoolID());
+    if (data != null) {
+    	JsonReader reader = Json.createReader(new StringReader(data.getSchoolData()));
+    	JsonObject object = reader.readObject();
+    	reader.close();
+    	auth = object.getString("XAPI-Authorization", lrs.getAuth());
+    	lrs.setAuth(auth);
+    	endpoint = object.getString("XAPI-Endpoint", endpoint);
+    	lrs.setEndpoint(endpoint);
+    	agent.account.homePage = object.getString("XAPI-HomePage", agent.account.homePage);
+    }
+    
+    
     return lrs;
   }
 

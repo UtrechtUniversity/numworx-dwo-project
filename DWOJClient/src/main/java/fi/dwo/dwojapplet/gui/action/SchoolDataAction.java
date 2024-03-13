@@ -10,6 +10,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import fi.beans.numworxlf.JOptionPane;
+import fi.beans.numworxlf.JScrollPane;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.gui.GuiCreator;
@@ -23,6 +24,7 @@ public class SchoolDataAction extends AbstractAction {
 	JDialog parent;
 	DomSchoolDataFull data;
 	JTextArea area;
+	JScrollPane scroll;
 	boolean commit;
 
 	public SchoolDataAction() {
@@ -36,6 +38,8 @@ public class SchoolDataAction extends AbstractAction {
 		area = new JTextArea(20, 60);
 		area.setLineWrap(false);
 		area.setWrapStyleWord(true);
+		scroll = new JScrollPane(area);
+		
 	}
 
 	public void setParent(JDialog p) {
@@ -60,7 +64,7 @@ public class SchoolDataAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		area.setText(data.getSchoolData());
-		int ok = JOptionPane.showConfirmDialog(parent, area, "Extra", JOptionPane.OK_CANCEL_OPTION);
+		int ok = JOptionPane.showConfirmDialog(parent, scroll, "Extra", JOptionPane.OK_CANCEL_OPTION);
 		if (ok == JOptionPane.OK_OPTION) {
 			// validate
 			String tekst = area.getText();

@@ -12,6 +12,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentSchoolData;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
@@ -42,10 +46,25 @@ public class SecuredDwoAdminSchoolDataManager {
 			data.setOptlock(0L);
 		}
 		if (data.getDelState() != DelState.not) data.setSchoolData("{}");
-		return data.buildDomSchoolDataFull();
+		DomSchoolDataFull dom = data.buildDomSchoolDataFull();
+		return format(dom);
 	}
  
-    @PUT
+    DomSchoolDataFull format(DomSchoolDataFull dom) {
+		String ugly = dom.getSchoolData();
+	    ObjectMapper objectMapper = new ObjectMapper();
+	    Object jsonObject;
+		try {
+			jsonObject = objectMapper.readValue(ugly, Object.class);
+		    String pretty = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
+		    dom.setSchoolData(pretty);
+		} catch (JsonMappingException e) {
+		} catch (JsonProcessingException e) {
+		}
+		return dom;		
+	}
+
+	@PUT
     @Produces({"application/json"})
     @Path("/update")
     public DomSchoolDataFull update(@Context SecurityContext sc, RestSchoolDataFull rest) throws Dwo2Exception {
