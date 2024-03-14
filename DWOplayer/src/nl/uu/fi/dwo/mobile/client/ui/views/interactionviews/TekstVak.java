@@ -432,7 +432,10 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				FormuleViewer formuleViewer = (FormuleViewer) currentObject;
 				formuleViewer.setFont(f);
 				formuleViewer.setDefaultFont(f);
-				formuleViewer.setColor(fgColor);
+				if (fgColor != null) 
+					formuleViewer.setColor(fgColor);
+				else
+					formuleViewer.setColor(CssColor.make("inherit")); // set default value, or clear in case of.
 				regelBreedte = setupTekstElement(regelBreedte, formuleViewer, false) + 4;
 			}
 			else if (currentObject instanceof InteractionView)
