@@ -1000,7 +1000,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		on.unpause(old);
 	}
 
-	public void zetOpdrachtPlusState(HashMap<String, Object> opdracht, HashMap<String, Object> state, VariableCollection vc)
+	public void zetOpdrachtPlusState(HashMap<String, Object> opdracht, HashMap<String, Object> state, RandomValues vc)
 	{
 		
 //		//System.out.println("zetOpdrachtPlusState");

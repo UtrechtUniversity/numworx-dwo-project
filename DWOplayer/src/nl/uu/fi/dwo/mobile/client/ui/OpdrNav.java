@@ -1797,6 +1797,17 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				rv = newRandomCollection(o);
 			}
 			entry.zetVolgendeOpdracht(o, rv);
+			if (isReview()) {
+				o = entry.getState();
+				states[currentActiviteit][currentOpdracht] = o;
+				// merge o with review
+				//memento.merge from review
+				entry.clearContentPanel();BUS.removeHandlers();
+				entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht],
+						o, rv);
+					if (misconceptions != null)
+						entry.setMeasuredMisconceptions(measuredMisconceptions);
+			}
 		}
 		else
 		{
