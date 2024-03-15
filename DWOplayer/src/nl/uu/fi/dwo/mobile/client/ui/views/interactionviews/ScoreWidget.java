@@ -663,7 +663,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 	public void setParentRegel(TekstRegel regel) {
 		this.parent = regel;
 		String color = regel.getElement().getStyle().getColor();
-		getElement().getStyle().setColor(color);
+		//getElement().getStyle().setColor(color);
 		ashoogte = regel.getFont().getAscent();
 	}
 

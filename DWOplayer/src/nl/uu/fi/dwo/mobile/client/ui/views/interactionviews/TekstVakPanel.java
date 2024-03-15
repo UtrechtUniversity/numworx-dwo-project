@@ -2311,6 +2311,8 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 				{	
 					if (!parentVak.hasStyle())
 						tekstVakken[i][j].setColor(fgColorOvererving);
+					else 
+						tekstVakken[i][j].setColor(null); // anders wordt het zwart!
 					tekstVakken[i][j].setFontStyle(fontStyleOvererving);
 					tekstVakken[i][j].setFontName(fontNameOvererving);
 					tekstVakken[i][j].setFontSize(fontSizeOvererving);
