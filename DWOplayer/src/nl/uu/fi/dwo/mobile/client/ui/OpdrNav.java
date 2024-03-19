@@ -1797,7 +1797,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				rv = newRandomCollection(o);
 			}
 			entry.zetVolgendeOpdracht(o, rv);
-			if (isReview()) {
+			if (isReview() && false) {
 				o = entry.getState();
 				states[currentActiviteit][currentOpdracht] = o;
 				// merge o with review

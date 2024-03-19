@@ -204,6 +204,12 @@ public abstract class DWOplayer
 		insertStylesheet(href);
 	}
 
+	public static void insertCourseCSS(String value) {
+		String href = DwoConstants.constants.server() + 
+				"public/course/get/" + value + "/style.css";
+		insertStylesheet(href);
+	}
+
 	public static void insertInlineCss(String data) {
 		removeStyle();
 		LinkElement link = Document.get().createLinkElement();

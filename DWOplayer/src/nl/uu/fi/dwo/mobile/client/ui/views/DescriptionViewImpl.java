@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.interaction.client.Role;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
@@ -193,6 +194,7 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 			return;
 		}
 		String xml = "=" + id;
+		DWOplayer.insertCourseCSS(xml.substring(1));
 		loadJSON(xml).recover(this::showError);
 	}
 

@@ -321,11 +321,12 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 				setupOldView();
 		}
 		else
-		{
+		{	final String scoid = value;
 			OpdrNav.defer(
 			  new Command() {
 				public void execute() {
 					try {
+						DWOplayer.insertCSS(scoid);// niet helemaal goed bij 'preview' mode, wel goed in browse en review mode
 						checkPremium( Promises.resolved( view.setupView(launchData)) );
 					} catch (Throwable e) {
 						failure( Promises.failed(e));
