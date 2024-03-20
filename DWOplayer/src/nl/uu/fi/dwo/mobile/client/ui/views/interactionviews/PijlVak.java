@@ -83,6 +83,7 @@ public class PijlVak extends LayoutPanel
 	private OMSVGSVGElement svg;
 	private SVGImage svgImage;
 	private OMSVGDocument doc;
+	int part = -1;
 
 	/**
 	 * Het discriminantvak (abc-formule) is te sluiten met een sluitknop met kruis.

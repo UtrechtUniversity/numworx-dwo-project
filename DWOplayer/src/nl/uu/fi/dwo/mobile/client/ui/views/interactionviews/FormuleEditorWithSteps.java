@@ -3453,8 +3453,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			return true;
 		if (pijlVakken.size() < stapNr) // pijlen te weinig? Komt voor!
 			return true; 
-		String op = pijlVakken.get(stapNr - 1).geefOperator();
-		Expressie en = FormuleParser.geefExpressie("$f" + pijlVakken.get(stapNr - 1).geefExpressieString() + "@");
+		PijlVak pv = pijlVakken.get(stapNr - 1);
+		String op = pv.geefOperator();
+		int part = pv.part;
+		Expressie en = FormuleParser.geefExpressie("$f" + pv.geefExpressieString() + "@");
 		if (op.equals("implicatie") || op.equals("abc") || en == null)
 			return true;
 		
@@ -3465,7 +3467,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		
 		for (int i = 0; i < aantalDelen && aantalDelen > 0; i++)
 		{
-			if ((editor != null && editor.partEquationSelected(i)) || latest_answer_viewer.partEquationSelected(i))
+			if (part == i)
 			{
 				vergNieuw = verg.bewerkVergelijking(op, en, i);
 				break;
@@ -3643,7 +3645,23 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		}
 	}
 	
+
 	
+	// FIXME zeer inefficient!!!!	
+	int getPartSelected(FormuleHolder f) {
+		if (!f.hasSelection()) return -1;
+		String s = f.toString();
+		VergelijkingMeerv vergMeerv = FormuleParser.parseVergelijking("$f" + s + "@");
+		if (vergMeerv == null) return -1;	
+		int size = vergMeerv.geefAantal();
+		if (size >= 2) 
+			for (int i = 0; i < size; i++) {
+				if (f.partEquationSelected(i))
+					return i;
+		}
+		return -1;
+	}
+		
 	private void maakStap(String operator)
 	{
 		nagekeken = false;
@@ -3682,6 +3700,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			return;
 			//Deze return zorgt dat je niet nog een stap kunt doen nadat je in de lineaire strategie-versie de juiste oplossing hebt gevonden.
 		}
+		
 		
 		if (operator.equals("implicatie"))
 		{
@@ -3736,6 +3755,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			openstaandePijl = true;
 
 			pijlVak = new PijlVak(operator, this, false);
+			pijlVak.part = getPartSelected(latest_answer_viewer);
 			pijlVak.setFont(font);
 			int y = stepPanelY + latest_answer_viewer.getHeight() - pijlVak.getHeight()/4;
 			contentPanel.add(pijlVak);
@@ -3963,7 +3983,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			for (int i = 0; i < aantalDelen && aantalDelen > 0; i++)
 			{
 				//Deel van een vergelijking selecteren.
-				if ((editor != null && editor.partEquationSelected(i)) || latest_answer_viewer.partEquationSelected(i))
+				if (pijlVak.part == i)
 				{
 					vergNieuw = verg.bewerkVergelijking(operator, en, i);
 					break;
