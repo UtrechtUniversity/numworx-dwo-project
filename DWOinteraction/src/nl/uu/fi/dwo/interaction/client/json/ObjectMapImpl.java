@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gwt.json.client.JSONObject;
+
 import static nl.uu.fi.dwo.interaction.client.JSONUtilities.*;
 
 @SuppressWarnings("serial")
@@ -232,9 +234,13 @@ public class ObjectMapImpl extends HashMap<String, Object> implements ObjectMap 
 		return toArrayList(get(key));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public ObjectMap getObjectMap(String key) {
-		return wrapMap(getMap(key));
+		Object o = get(key);
+		if (o instanceof JSONObject)
+			return wrapMap( (JSONObject) o);
+		return wrapMap((Map<String,Object>) o);
 	}
 
 	@Override
