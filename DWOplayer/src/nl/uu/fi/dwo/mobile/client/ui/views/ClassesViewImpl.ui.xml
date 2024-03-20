@@ -14,10 +14,10 @@
 		margin-right: 290px;
 	}
 	</ui:style>
-	<g:DockLayoutPanel unit='EM' styleName='{style.rootPanel}'>
+	<g:DockLayoutPanel unit='EM' styleName='{style.rootPanel}' >
 	 <g:center>
 			<g:ScrollPanel ui:field='centerPanel' styleName='{style.centerPanel}'
-				addStyleNames='{style.centerBackground}'
+				addStyleNames='{style.centerBackground} profile-body'
 			>
 			 <g:FlowPanel>
 				<g:FlowPanel styleName='{style.itemPanel}'>
