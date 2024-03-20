@@ -1822,7 +1822,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	}
 
 	protected void reviewFix(RandomValues rv) {
-		if (isReview() && true) {
+		if (isReview() || isVerzegeld()) {
 			HashMap<String, Object> s = entry.getState();
 			states[currentActiviteit][currentOpdracht] = s;
 			// merge s with review
