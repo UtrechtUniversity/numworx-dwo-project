@@ -23,6 +23,7 @@ import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.Role;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.interaction.client.json.JSONObjectMapImpl;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.sco.SMLogger.LogStrategy;
@@ -298,6 +299,38 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		return (int) aantalSessies.doubleValue();
 	}
 
+	
+	public HashMap<String,Object> mergeIntoState(int act, int opdr, HashMap<String,Object> state) {
+		String reviewData = getValue(REVIEW_DATA);
+		JSONValue value = JSONParser.parseStrict(reviewData);
+		JSONArray review = value.isObject().get(OPDR_CONT_STATES).isArray();
+		int size = review.size();
+		if (act < size) {
+			JSONArray reviewi = review.get(act).isArray();
+			if (reviewi != null) {
+				size = reviewi.size();
+				if (opdr < size) {
+					JSONObject reviewj = reviewi.get(opdr).isObject();
+					if (reviewj != null) {						
+						ObjectMap s = JSONUtilities.wrapMap(state);
+						if (s instanceof JSONObjectMapImpl) {
+							JSONObject statej = ((JSONObjectMapImpl) s).unwrap();
+							mergeReviewState(statej, reviewj, 5);
+							state = (JSONObjectMapImpl) s;
+						} else {
+							state = (HashMap<String, Object>) ((List) state.get(INTERACTIE_PANEL_STATES)).get(5);
+							mergeReviewState(state, reviewj, 5);
+						}
+						
+					}
+				}
+			}
+		}
+		return state;
+	}
+	
+	
+	
 	private JSONArray mergeReviewData(JSONArray opdrContStates, String reviewData) {
 		try {
 			JSONValue value = JSONParser.parseStrict(reviewData);
@@ -331,6 +364,31 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 			int l = Math.min(stateArray.size()+off, reviewArray.size());
 			for(int i = off; i < l; i++) {
 				mergeReviewState( stateArray.get(i-off).isObject(), reviewArray.get(i).isObject(), 0);
+			}
+			if (reviewj.size()>1) // textvakpanel geval
+			{
+				Set<String> keys = reviewj.keySet();
+				for (String key : keys) {
+					if (!INTERACTIE_PANEL_STATES.equals(key))
+						statej.put(key, reviewj.get(key));
+				}
+			}
+		} else {
+			Set<String> keys = reviewj.keySet();
+			for (String key : keys) {
+				statej.put(key, reviewj.get(key));
+			}
+		}
+	}
+	private void mergeReviewState(HashMap<String,Object> statej, JSONObject reviewj, int off) {
+		if (statej == null || reviewj == null) return;
+		if (statej.containsKey(INTERACTIE_PANEL_STATES)) {
+			Object stateArray0 = statej.get(INTERACTIE_PANEL_STATES);
+			List stateArray = (List) stateArray0;
+			JSONArray reviewArray = reviewj.get(INTERACTIE_PANEL_STATES).isArray();
+			int l = Math.min(stateArray.size()+off, reviewArray.size());
+			for(int i = off; i < l; i++) {
+				mergeReviewState( (HashMap<String,Object>) stateArray.get(i-off), reviewArray.get(i).isObject(), 0);
 			}
 			if (reviewj.size()>1) // textvakpanel geval
 			{

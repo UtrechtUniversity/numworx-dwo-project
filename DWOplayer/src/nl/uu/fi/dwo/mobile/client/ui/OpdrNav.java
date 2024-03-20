@@ -451,6 +451,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			HashMap<String, Object> opdracht = opdrachten[currentActiviteit][currentOpdracht];
 			VariableCollection vc = newRandomCollection(opdracht);
 			entry.zetOpdracht(opdracht, true, vc);
+			reviewFix(vc);
 		}
 		else
 		{
@@ -1797,17 +1798,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				rv = newRandomCollection(o);
 			}
 			entry.zetVolgendeOpdracht(o, rv);
-			if (isReview() && false) {
-				o = entry.getState();
-				states[currentActiviteit][currentOpdracht] = o;
-				// merge o with review
-				//memento.merge from review
-				entry.clearContentPanel();BUS.removeHandlers();
-				entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht],
-						o, rv);
-					if (misconceptions != null)
-						entry.setMeasuredMisconceptions(measuredMisconceptions);
-			}
+			reviewFix(rv);
 		}
 		else
 		{
@@ -1828,6 +1819,21 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		// zorg dat de opdrachten-scrollbar bijgewerkt wordt bij het navigeren naar een opdracht
 		// opdat de opdracht in beeld is
 		setOpdrachten(currentActiviteit);
+	}
+
+	protected void reviewFix(RandomValues rv) {
+		if (isReview() && true) {
+			HashMap<String, Object> s = entry.getState();
+			states[currentActiviteit][currentOpdracht] = s;
+			// merge s with review
+			//memento.merge from review
+			memento.mergeIntoState(currentActiviteit, currentOpdracht, s);
+			entry.clearContentPanel();BUS.removeHandlers();
+			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht],
+					s, rv);
+			if (misconceptions != null)
+				entry.setMeasuredMisconceptions(measuredMisconceptions);
+		}
 	}
 
 	private RandomValues randomFromEntry(HashMap<String, Object> o) {
@@ -2453,14 +2459,16 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		entry.clearContentPanel();
 		BUS.removeHandlers();
 		if (states[currentActiviteit][currentOpdracht] == null)
-		{
+		{	RandomValues rc;
+
 			if (randomize) {
 				HashMap<String, Object> o = opdrachten[currentActiviteit][currentOpdracht];
-				entry.zetOpdracht(o, true, newRandomCollection(o));
+				entry.zetOpdracht(o, true, rc = newRandomCollection(o));
 			} else {
 				HashMap<String, Object> o = opdrachten[currentActiviteit][currentOpdracht];
-				entry.zetVolgendeOpdracht(o, entry.globalParam? randomFromEntry(o) : newRandomCollection(o));
+				entry.zetVolgendeOpdracht(o, rc = entry.globalParam? randomFromEntry(o) : newRandomCollection(o));
 			}
+			reviewFix(rc);
 		}
 		else
 			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht],
