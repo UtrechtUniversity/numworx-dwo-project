@@ -223,7 +223,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	}
 
 	private boolean isTest() {
-		return "test".equals(PARAMETERS.getDwoEnv());
+		return PARAMETERS.getDwoEnv().contains("test");
 	}
 
 	boolean breed;

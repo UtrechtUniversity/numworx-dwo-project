@@ -15,7 +15,7 @@ import nl.uu.fi.dwo.rest.util.PathId;
 public class SecureUserResultsManager {
 
   private static DomContext getContext() {
-    return StoredRestManager.getInstance().getAuthenticator().getContext();
+    return StoredRestManager.getInstance().getContext();
   }
   
   public static List<DomStudentScoContext> getCourseResults(DomCourse course, DomDwoProfile profile) throws Dwo2Exception {

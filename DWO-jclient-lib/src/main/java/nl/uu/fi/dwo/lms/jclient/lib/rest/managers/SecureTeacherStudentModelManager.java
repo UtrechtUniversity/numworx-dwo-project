@@ -61,7 +61,7 @@ public class SecureTeacherStudentModelManager implements SecureStudentModelManag
 	  }
 
   static DomContext getContext() {
-    return RestAuthenticator.getInstance().getContext();
+    return StoredRestManager.getInstance().getContext();
   }
 
   public static DomStudentModelContext addModel(DomStudentModelContext submit, DomDwoProfileId profile)

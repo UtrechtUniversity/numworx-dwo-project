@@ -4,12 +4,16 @@ package fi.dwo.server.rest;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -22,6 +26,7 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.CacheControl;
@@ -29,6 +34,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
+
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
@@ -38,6 +46,7 @@ import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
+import fi.beans.css.StateToCss;
 import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -45,9 +54,11 @@ import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourseData;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentScoData;
 import fi.dwo.server.PersistentDataManagers.core.CourseDataManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
+import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
 import fi.dwo.server.rest.util.CourseBuilder;
 
 /**
@@ -291,5 +302,48 @@ if(SECURITY)
       }
       List<PersistentCourse> list = CourseManager.findVisibleEntities(profileID);      
       return list.stream().map(PersistentCourse::buildDomCourse).collect(Collectors.toList());
+    }
+    
+    
+    @GET
+    @Produces("text/css")
+    @Path("get/{courseId}/style.css")
+    public Response getCss(@PathParam("courseId") Long courseId) throws IOException, ParseException {
+        String something = "";
+        Date last = null;
+        PersistentCourseData scoData = CourseDataManager.findEntity(courseId);
+        if (scoData == null) {
+        	PersistentCourse cc = CourseManager.findEntity(courseId);
+        	if (cc != null) {
+        		scoData = new PersistentCourseData();
+        		scoData.setDescription(cc.getDescription());
+        		scoData.setLastChangeTimeStamp(cc.getLastChangeTimeStamp());
+        	}
+        }
+        if (scoData != null) {
+          Map map;
+          byte[] launchData = scoData.getDescriptionbytes();
+          if (launchData != null) {
+            ByteArrayInputStream inStream = new ByteArrayInputStream(launchData);
+            GZIPInputStream gzIn = new GZIPInputStream(inStream);
+            Reader reader = new InputStreamReader(gzIn, "UTF-8");
+            JSONParser parser = new JSONParser();
+            map = (Map) parser.parse(reader);
+          } else {
+            map = (Map) StringCodeObject.decodeStringToObject(scoData.getDescription(), null);
+          }
+          something = StateToCss.createCssFromInstellingen(map, null);
+          last = new Date(scoData.getLastChangeTimeStamp());
+        }
+        CacheControl cc = new CacheControl();
+        cc.setMaxAge(3600);
+    	return Response.ok()
+        		.lastModified(last)
+        		.expires(new Date(System.currentTimeMillis()+1000*cc.getMaxAge()))
+        		.cacheControl(cc)
+        		.type("text/css")
+        		.entity("/*" + courseId + "*/\n" + something)
+        		.build();
+
     }
 }

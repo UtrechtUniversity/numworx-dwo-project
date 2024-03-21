@@ -138,7 +138,7 @@ public class SecureSchoolAdminSchoolManager implements SchoolManager {
   }
 
   static DomContext getContext() {
-    return RestAuthenticator.getInstance().getContext();
+    return StoredRestManager.getInstance().getContext();
   }
 
   public static Boolean removeSchoolAdminFromSchool(DomSchoolAdmin submit) throws Dwo2Exception {

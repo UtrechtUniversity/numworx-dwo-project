@@ -15,6 +15,14 @@
 <%
 	String host = request.getRemoteAddr();
 	String server = request.getHeader("host");
+    String leerling = request.getParameter("id");
+	String id = "";
+	  try { 
+	    id = "?id=" + Long.parseLong(leerling);
+	  } catch(Exception e) {
+	 	leerling = "leerling";
+	  }
+
 	if ( ! Subnet.netMatchRange(IPRANGE, host) ) {
 %>
 	Het apparaat op dit adres <%=host %> is niet toegestaan voor toetsen. Gebruik een beveiligd apparaat.
@@ -22,11 +30,11 @@
 	}
 	else if ( needSEB ) {
 %>
-<a href='sebs://<%=server%>/react/exam/leerling.seb'>Start de beveiligde <strong>exam</strong> omgeving</a>
+<a href='sebs://<%=server%>/react/exam/<%=leerling %>.seb'>Start de beveiligde <strong>exam</strong> omgeving</a>
 <%
 	} else {
 %>
-	  <a href='toets.jsp' target="_top">Start de beveiligde <strong>exam</strong> omgeving</a>
+	  <a href='toets.jsp<%=id%>' target="_top">Start de beveiligde <strong>exam</strong> omgeving</a>
 <%	  
 	}
 

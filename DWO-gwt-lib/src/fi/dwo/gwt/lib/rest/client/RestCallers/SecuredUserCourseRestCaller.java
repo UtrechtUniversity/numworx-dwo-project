@@ -2,9 +2,11 @@ package fi.dwo.gwt.lib.rest.client.RestCallers;
 
 import java.util.List;
 
+import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
@@ -42,4 +44,12 @@ public interface SecuredUserCourseRestCaller extends RestService {
 	@Path("/sec:{id}/user/course/getAll")
 	public void getAllCourses(@PathParam("id") String id, RestDwoProfile rest, MethodCallback<List<DomCourse>> callback);
 
+	@GET
+	@Path("/sec:{id}/user/course/getCourseDescription")
+	public void getCourseDescription(@PathParam("id") String id, @QueryParam("courseId") Number courseId, 
+				@QueryParam("profile") Number profile, 
+				@QueryParam("classId") Number classId,
+				MethodCallback<JSONValue> result
+			);
+	
 }

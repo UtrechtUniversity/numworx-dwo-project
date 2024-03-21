@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO</artifactId>
-		<version>2.5.29</version>
+		<version>2.5.30</version>
 		<relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 	<artifactId>EBServer</artifactId>
@@ -41,7 +41,7 @@
 				<dependency>			
 				    <groupId>nl.uu.fi.dwo.lms</groupId>
     				<artifactId>DWOGwtClient</artifactId>
-					<version>2.5.29</version>
+					<version>2.5.30</version>
 					<classifier>classes</classifier>
 					<exclusions>
 						<exclusion>
@@ -218,7 +218,7 @@
 	<dependency>
 		<groupId>nl.uu.fi.dwo.lms</groupId>
 		<artifactId>DWOGwtClient</artifactId>
-		<version>2.5.29</version>
+		<version>2.5.30</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
@@ -308,7 +308,7 @@
 		</dependency>
 		<dependency>
 		    <groupId>de.javakaffee.msm</groupId>
-		    <artifactId>memcached-session-manager-tc8</artifactId>
+		    <artifactId>memcached-session-manager-tc9</artifactId>
 		    <version>2.3.2</version>
 		    <scope>test</scope>
 		</dependency>
@@ -501,7 +501,7 @@
 						<webapp>
 							<groupId>nl.numworx.uploadwidget</groupId>
     							<artifactId>uploadwidget-local</artifactId>
-    							<version>2.5.28-SNAPSHOT</version>
+    							<version>2.5.29</version>
                           		<type>war</type>
 							<contextPath>/dwo/dav/upload</contextPath>
                             	<asWebapp>true</asWebapp> 
@@ -629,6 +629,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
           			<filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
+					<webXml>src/main/webxml/web.xml</webXml>
 					<archive>
 						<manifest>
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
@@ -670,7 +671,7 @@
 								<exclude>login.html</exclude>
 								<exclude>gwtclient.html</exclude>
 								<exclude>html5plain.html</exclude>
-								<exclude>library.html</exclude>
+<!--								<exclude>library.html</exclude>-->
 								<exclude>**/*.md</exclude>
 								<exclude>ng-js/**</exclude>
 								<exclude>js-plainui/**</exclude>
@@ -770,23 +771,26 @@
 		</plugins>
 	</build>
 	<properties>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 		<DWOmAccessVersion>2.5.20</DWOmAccessVersion>
 		<RegisterVersion>2.5.2</RegisterVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
-		<aws.environmentName>testeb5server</aws.environmentName>
+		<aws.environmentName>testeb6server</aws.environmentName>
         <tomcat7.version>7.0.76</tomcat7.version>
         <context.xml>context.xml</context.xml>
         <http.port>80</http.port>
+        <upload.servlet />
+        <upload.servlet.mapping />
         <OAuth2ClientVersion>1.0.10p1</OAuth2ClientVersion>
 	</properties>
 	<profiles>
 		<profile>
 			<id>local</id>
 			<properties>
-        		<http.port>8080</http.port>			
+        		<http.port>8080</http.port>
 			</properties>
 		</profile>
 		<profile>
@@ -794,43 +798,61 @@
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
+			<properties>
+        		<upload.servlet><![CDATA[ 
+  <servlet>
+  	<servlet-name>upload</servlet-name>
+  	<servlet-class>nl.numworx.uploadwidgetgwt.server.Upload</servlet-class>
+  	<init-param>
+  		<param-name>corsDomainsRegex</param-name>
+  		<param-value>.*</param-value>
+  	</init-param>
+  </servlet>
+  <servlet>
+  	<servlet-name>testblob</servlet-name>
+  	<servlet-class>nl.numworx.uploadwidgetgwt.server.TestServlet</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>javaupload</servlet-name>
+  	<servlet-class>nl.numworx.uploadwidgetgwt.server.JavaUpload</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>updownload</servlet-name>
+  	<servlet-class>nl.numworx.uploadwidgetgwt.server.Download</servlet-class>
+  </servlet>
+]]></upload.servlet>
+	<upload.servlet.mapping><![CDATA[
+  <servlet-mapping>
+  	<servlet-name>upload</servlet-name>
+    <url-pattern>/dwo/dav/upload/servlet.gupld</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>javaupload</servlet-name>
+    <url-pattern>/dwo/dav/upload/dir/*</url-pattern> 
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>updownload</servlet-name>
+  	<url-pattern>/dwo/dav/upload/download/*</url-pattern>  
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>testblob</servlet-name>
+  	<url-pattern>/dwo/dav/testblob/*</url-pattern>
+  </servlet-mapping>
+]]></upload.servlet.mapping>		
+			</properties>
 			<dependencies>
 				<dependency>
 					<groupId>nl.numworx.uploadwidget</groupId>
 					<artifactId>UploadWidgetGWT</artifactId>
-<!-- 					<version>0.0.2</version>	 AWS -->
 					<version>2.5.29</version>
 					<classifier>classes</classifier>
-					<exclusions>
-						<exclusion>
-							<groupId>nl.numworx.uploadwidget</groupId>
-							<artifactId>uploadwidget-common</artifactId>
-						</exclusion>				
-					</exclusions>
-				</dependency>
-				<dependency>
-					<groupId>nl.numworx.uploadwidget</groupId>
-					<artifactId>uploadwidget-common</artifactId>
-					<version>2.5.29</version>
-				</dependency>			
+					</dependency>			
 				<dependency>
 				    <groupId>org.slf4j</groupId>
 				    <artifactId>slf4j-jdk14</artifactId>
 				    <version>1.7.7</version>
 				</dependency>
 			</dependencies>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-war-plugin</artifactId>
-						<version>3.2.3</version>
-						<configuration>
-							<webXml>src/main/webxml/web.xml</webXml>
-						</configuration>	
-					</plugin>
-				</plugins>
-			</build>
 		</profile>
 		<profile>
 			<id>memcached-jcache</id>

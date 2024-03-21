@@ -142,7 +142,7 @@ public class JavaUpload extends HttpServlet implements Constants {
 	}
 
 	static Optional<DomSchoolRoleAndClassV2> getActor(String bearer, String pathid) {
-		StoredRestManager rest = StoredRestManager.getInstance(); // Should not be a singleton!
+		StoredRestManager rest = StoredRestManager.getInstance().duplicate(); // Should not be a singleton!
 		DomContext context = new DomContext();
 		context.setRealm(null);
 		context.setDomHasRole(new DomHasRole());
@@ -162,7 +162,7 @@ public class JavaUpload extends HttpServlet implements Constants {
 		DomHasRole hasRole;
 		try {
 			user   = SecureUserAccountManager.getAccountData(rest);
-			logins = SecureUserAccountLoginsManager.getSchoolLogins();
+			logins = SecureUserAccountLoginsManager.getSchoolLogins(rest);
 		//search paths[0] in logins for school;
 		hasRole = logins.getActiveSchoolRoleAndClass().getHasRole();
 		String current = Store.getPathId(hasRole);

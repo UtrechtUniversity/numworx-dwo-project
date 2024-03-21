@@ -147,4 +147,15 @@ public class RestAuthenticator extends Authenticator {
     this.realm = realm;
   }
 
+	public RestAuthenticator duplicate() {
+		RestAuthenticator copy = new RestAuthenticator(username, password, realm);
+		copy.setServerUrlPath(getServerUrlPath());
+		if (context != null) {
+			copy.setContext(new DomContext());
+			copy.getContext().setRealm(context.getRealm());
+			copy.getContext().setDomHasRole(context.getDomHasRole());
+		}
+		return copy;
+	}
+
 }

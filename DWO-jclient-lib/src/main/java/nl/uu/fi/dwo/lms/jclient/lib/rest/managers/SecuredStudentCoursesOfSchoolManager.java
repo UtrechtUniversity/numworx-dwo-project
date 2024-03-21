@@ -18,7 +18,7 @@ public class SecuredStudentCoursesOfSchoolManager {
     DomCoursesOfSchoolClass result;
     RestSchoolClassAndProfile rest = new RestSchoolClassAndProfile();
     DomSchoolClassAndProfile  dom  = new DomSchoolClassAndProfile();
-    DomContext context = StoredRestManager.getInstance().getAuthenticator().getContext();
+    DomContext context = StoredRestManager.getInstance().getContext();
     rest.setRestContext(context);
     rest.setDomSchoolClassAndProfile(dom);
     dom.setDomDwoProfile(profile);

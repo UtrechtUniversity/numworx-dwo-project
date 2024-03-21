@@ -32,6 +32,15 @@ public class StoredRestManager extends RestManager {
   private static final StoredRestManager storedInstance =
       new StoredRestManager(RestAuthenticator.getInstance());
 
+  private StoredRestManager(StoredRestManager org) {
+	  super(org);
+	  recover = org.recover;
+  }
+  
+  public StoredRestManager duplicate() {
+	  return new StoredRestManager(this);
+  }
+  
   /**
    * Singleton pattern.
    * 

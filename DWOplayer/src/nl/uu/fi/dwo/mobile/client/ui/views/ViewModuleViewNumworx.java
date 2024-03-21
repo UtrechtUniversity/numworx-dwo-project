@@ -4,8 +4,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Optional;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import org.osgi.util.promise.Promise;
 
@@ -62,6 +64,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	final DwoGlobalVars instance;
 	final private RPCHandler rpc;
 	private final ActivityComponent activity;
+    @Inject Provider<Optional<XapiWrapper>> xapiprovider;
 	
 	protected boolean noBottom = false;
 	
@@ -156,6 +159,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	@UiField DockLayoutPanel headerTop;
 	
 	ViewModuleViewImpl delegate;
+	private boolean hasxapi;
 
 	public void setTitle(String title) {
 		this.title.setText(title); 
@@ -222,10 +226,19 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		  logout = Text.constants.inleveren();
 		else if(instance.withUser()) {
 		  logout = Text.constants.logout();
+          Optional<XapiWrapper> xapi = xapiprovider.get();
+          if (xapi.isPresent()) {
+          	items.addItem(xapi.get().getMenuItem());
+          	hasxapi = true;          	
+          }
+
 		} else {
 		  logout = Text.constants.aanmelden();
 		}
-		m=items.addItem(logout, () -> goTo(new LoginPlace()));
+		m=items.addItem(logout, () -> {
+			if (hasxapi) xapiprovider.get().ifPresent(XapiWrapper::destroy);
+			goTo(new LoginPlace());
+		});
 		m.addStyleName(t.menuItem());
 		if (seb) {
 			items.addStyleDependentName("seb");

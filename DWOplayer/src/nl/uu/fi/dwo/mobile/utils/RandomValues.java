@@ -8,4 +8,6 @@ public interface RandomValues {
 
 	HashMap getRandomValues();
 
+	default void fromState(HashMap<String, ?> randomVarWaarden) { }
+
 }

@@ -147,7 +147,7 @@ public class SecureUserAccountManager {
     Boolean result;
     StoredRestManager restManager = StoredRestManager.getInstance();
     RestLoginContext submit = new RestLoginContext();
-    DomContext context = restManager.getAuthenticator().getContext();
+    DomContext context = restManager.getContext();
     submit.setRestContext(context);
     submit.setDomLoginContext(domLoginContext);
     try {
@@ -172,7 +172,7 @@ public class SecureUserAccountManager {
     Boolean result;
     StoredRestManager restManager = StoredRestManager.getInstance();
     RestLoginContext submit = new RestLoginContext();
-    DomContext context = restManager.getAuthenticator().getContext();
+    DomContext context = restManager.getContext();
     submit.setRestContext(context);
     submit.setDomLoginContext(domLoginContext);
     result = restManager.put("rest/sec:" + PathId.getId(context) + "/user/account/basicAuthLogout", Boolean.class, submit);
@@ -195,7 +195,7 @@ public class SecureUserAccountManager {
   public static DomUserFull updateAccountData(DomUserFull user) throws Dwo2Exception {
     RestUserFull restUser = new RestUserFull();
     StoredRestManager restManager = StoredRestManager.getInstance();
-    DomContext context = restManager.getAuthenticator().getContext();
+    DomContext context = restManager.getContext();
 	restUser.setRestContext(context);
     restUser.setDomUserFull(user);
     user = restManager.put("rest/sec:" + PathId.getId(context) + "/user/account/update", DomUserFull.class, restUser);
@@ -216,14 +216,14 @@ public class SecureUserAccountManager {
   public static Boolean removeAccountData() throws Dwo2Exception {
     Boolean b;
     StoredRestManager restManager = StoredRestManager.getInstance();
-    DomContext context = restManager.getAuthenticator().getContext();
+    DomContext context = restManager.getContext();
     b = StoredRestManager.getInstance().get("rest/sec:" + PathId.getId(context) + "/user/account/remove", Boolean.class);
     return b;
   }
 
   public static Boolean link_saml(String userid, String orgid, String token) throws Dwo2Exception {
     Boolean b;
-    DomContext context = StoredRestManager.getInstance().getAuthenticator().getContext();
+    DomContext context = StoredRestManager.getInstance().getContext();
     DomSamlUser saml = new DomSamlUser();
     saml.setSamlOrgId(orgid);
     saml.setSamlUserId(userid);

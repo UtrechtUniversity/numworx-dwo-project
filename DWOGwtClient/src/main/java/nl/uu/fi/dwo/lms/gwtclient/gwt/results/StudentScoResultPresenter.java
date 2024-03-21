@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window.Location;
@@ -408,13 +409,19 @@ public void setView(Display aView) {
     String profile = Location.getParameter("profile");
     if(profile == null || profile.isEmpty()) profile = "77";
 
-    String url = "/dwo/apps/player.html?locale="
-        + locale
-        + "&profile="
-        + profile
-        + "&env="
-        + (dwoGlobalVars.isTest()?"test":"app")
-        + "&t=" + random + "#cmi.launch_data:"+scoId;
+    String url;
+    UrlBuilder u = new UrlBuilder();
+    u.setProtocol(Location.getProtocol());
+    u.setHost(Location.getHost());
+    u.setPath("dwo/apps/player.html");
+    u.setParameter("locale", locale);
+    u.setParameter("profile", profile);
+    u.setParameter("env", (dwoGlobalVars.isTest()?"test":"app"));
+    u.setParameter("t", random);
+    String responsive = Location.getParameter("responsive");
+	if (responsive != null) u.setParameter("responsive", responsive);
+	u.setHash("cmi.launch_data:"+scoId);
+	url = u.buildString();
     LOG.info("openUrl " + url);
     view.openUrl(url);
 }

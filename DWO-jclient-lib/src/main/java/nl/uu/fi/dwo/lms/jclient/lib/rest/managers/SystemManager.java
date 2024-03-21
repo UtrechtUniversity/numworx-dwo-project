@@ -34,7 +34,7 @@ public class SystemManager {
   }
 
   private DomContext getContext() {
-    return manager.getAuthenticator().getContext();
+    return manager.getContext();
   }
 
   public DomSchoolFull getSchool(DomSchoolId submit) throws Dwo2Exception {

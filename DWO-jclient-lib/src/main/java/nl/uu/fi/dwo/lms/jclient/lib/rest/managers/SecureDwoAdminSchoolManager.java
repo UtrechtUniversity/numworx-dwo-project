@@ -67,7 +67,7 @@ public class SecureDwoAdminSchoolManager implements SchoolManager {
   
   
   static DomContext getContext() {
-    return RestAuthenticator.getInstance().getContext();
+    return StoredRestManager.getInstance().getContext();
   }
 
   public Boolean updateSchool(DomSchoolFull submit) throws Dwo2Exception {

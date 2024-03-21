@@ -33,7 +33,7 @@ public class SecureSchoolAdminMethodManager {
 		  }
 		  
 		  static DomContext getContext() {
-		    return authenticator().getContext();
+		    return StoredRestManager.getInstance().getContext();
 		  }
 
 }

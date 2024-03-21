@@ -401,6 +401,10 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		return CssColor.make(r, g, b);
 	}
 	
+	public boolean hasStyle() {
+		return styleString != null;
+	}
+	
 	//Hiermee maak je het basispanel dat alle componenten van een pagina bevat.
 	public TekstVakPanel(ActivityInterface a, int breedte, int hoogte, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
@@ -627,6 +631,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		}
 		else 
 		{
+			styleString = null;
 			if (launchState.containsKey("cellSpaceColumn") )
 				cellSpaceColumn = launchState.getInt("cellSpaceColumn");
 			if (launchState.containsKey("cellSpaceRow") )
@@ -952,10 +957,10 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		mainPanel = new Grid(hoogtes.size(), breedtes.size());
 		if (style != null) {
 			mainPanel.addStyleName(styleString + "-main");
-		} // else
-		mainPanel.getElement().getStyle().setProperty("borderSpacing", "" + cellSpaceColumn + "px " + cellSpaceRow + "px");
-		mainPanel.getElement().getStyle().setProperty("margin", "" + (-cellSpaceRow - randDikte) + "px " + (-cellSpaceColumn - randDikte) + "px");
-		
+		}  else {
+			mainPanel.getElement().getStyle().setProperty("borderSpacing", "" + cellSpaceColumn + "px " + cellSpaceRow + "px");
+			mainPanel.getElement().getStyle().setProperty("margin", "" + (-cellSpaceRow - randDikte) + "px " + (-cellSpaceColumn - randDikte) + "px");
+		}
 //		if (callOut)
 //		{
 //			//mainPanel.setPixelSize(breedte - callOutMargeX0 - callOutMargeX1, hoogte - callOutMargeY0 - callOutMargeY1 );
@@ -980,12 +985,13 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 				tekstVakken[i][j] = createTekstVak(i, j);
 				if (style != null) {
 					tekstVakken[i][j].addStyleName(styleString + "-tekstregel");
+				} else {
+					tekstVakken[i][j].setColor(fgColor);
 				}
 				int th = (int) (Math.round(hoogtes.get(i).doubleValue()));
 				tekstVakken[i][j].setSize((int) (Math.round(breedtes.get(j).doubleValue())), th);
 				tekstVakken[i][j].setVisible(th>0);
 				//tekstVakken[i][j].setPixelSize(breedtes.get(j).intValue(), hoogtes.get(i).intValue());
-				tekstVakken[i][j].setColor(fgColor);
 				tekstVakken[i][j].setFontStyle(font_style);
 				tekstVakken[i][j].setFontName(font_name);
 				tekstVakken[i][j].setFontSize(font_size);
@@ -2288,10 +2294,11 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 		}
 		if(fontOvererving && !anderFont && parent != null && parent.getTekstVakParent() != null)
 		{	
-			CssColor fgColorOvererving = parent.getTekstVakParent().fgColor;
-			int fontSizeOvererving = parent.getTekstVakParent().font_size;
-			int fontStyleOvererving = parent.getTekstVakParent().font_style;
-			String fontNameOvererving = parent.getTekstVakParent().font_name;
+			TekstVakPanel parentVak = parent.getTekstVakParent();
+			CssColor fgColorOvererving = parentVak.fgColor;
+			int fontSizeOvererving = parentVak.font_size;
+			int fontStyleOvererving = parentVak.font_style;
+			String fontNameOvererving = parentVak.font_name;
 			
 			fgColor = fgColorOvererving;
 			font_size = fontSizeOvererving;
@@ -2301,7 +2308,11 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 			for (int i = 0; i < hoogtes.size(); i++)
 			{	
 				for (int j = 0; j < breedtes.size(); j++)
-				{	tekstVakken[i][j].setColor(fgColorOvererving);
+				{	
+					if (!parentVak.hasStyle())
+						tekstVakken[i][j].setColor(fgColorOvererving);
+					else 
+						tekstVakken[i][j].setColor(null); // anders wordt het zwart!
 					tekstVakken[i][j].setFontStyle(fontStyleOvererving);
 					tekstVakken[i][j].setFontName(fontNameOvererving);
 					tekstVakken[i][j].setFontSize(fontSizeOvererving);

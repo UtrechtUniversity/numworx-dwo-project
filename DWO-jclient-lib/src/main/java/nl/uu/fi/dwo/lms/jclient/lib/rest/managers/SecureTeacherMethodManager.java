@@ -44,7 +44,7 @@ public class SecureTeacherMethodManager {
   }
   
   static DomContext getContext() {
-    return authenticator().getContext();
+    return StoredRestManager.getInstance().getContext();
   }
 
   public static DomMethod addModel(DomMethod submit, DomDwoProfileId profile)

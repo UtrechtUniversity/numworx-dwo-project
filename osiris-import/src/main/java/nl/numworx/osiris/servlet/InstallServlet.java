@@ -170,8 +170,8 @@ public class InstallServlet extends HttpServlet {
 				} else {
 					throw new ServletException("Unauthenticated");
 				}
-				loginContext = SecureUserAccountManager.getLoginContext();
 			}
+			loginContext = SecureUserAccountManager.getLoginContext();
 			numworx.setSource(loginContext.getRealm(), instance);
 		} catch (Dwo2Exception e1) {
 			throw new ServletException(e1.getLocalizedMessage(), e1);

@@ -79,7 +79,12 @@ class RestManager extends RestyDateTimeFormat {
       setBasicAuthString(authenticator.getUsername(), authenticator.getPassword(), authenticator.getRealm());
   }
 
-  public RestAuthenticator getAuthenticator() {
+  public RestManager(RestManager org) {
+	this.authenticator = org.authenticator.duplicate();
+	this.basicAuthString = org.basicAuthString;
+}
+
+public RestAuthenticator getAuthenticator() {
     return authenticator;
   }
 

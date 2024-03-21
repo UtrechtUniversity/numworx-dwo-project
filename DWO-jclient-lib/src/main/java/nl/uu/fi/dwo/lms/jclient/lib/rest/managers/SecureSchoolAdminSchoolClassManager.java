@@ -49,7 +49,7 @@ public class SecureSchoolAdminSchoolClassManager {
   }
 
   static DomContext getContext() {
-    return getInstance().getAuthenticator().getContext();
+    return getInstance().getContext();
   }
 
   /**
@@ -195,7 +195,7 @@ public class SecureSchoolAdminSchoolClassManager {
   public static Boolean removeStudentFromSchoolClass(DomRemoveStudentFromSchoolClass submit)
       throws Dwo2Exception {
     RestRemoveStudentFromSchoolClass rest = new RestRemoveStudentFromSchoolClass();
-    rest.setRestContext(RestAuthenticator.getInstance().getContext());
+    rest.setRestContext(StoredRestManager.getInstance().getContext());
     rest.setDomRemoveStudentFromSchoolClass(submit);
     Boolean result = StoredRestManager.getInstance()
         .put("rest/sec:" + PathId.getId(getContext()) + "/schooladmin/schoolclass/removeStudent", Boolean.class, rest);

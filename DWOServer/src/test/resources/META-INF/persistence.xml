@@ -22,6 +22,7 @@
     <class>fi.dwo.commons.persistence.entities.PersistentScoData</class>
     <class>fi.dwo.commons.persistence.entities.PersistentSchool</class>
     <class>fi.dwo.commons.persistence.entities.PersistentSchoolClass</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentSchoolData</class>
     <class>fi.dwo.commons.persistence.entities.PersistentSchoolGroup</class>
     <class>fi.dwo.commons.persistence.entities.PersistentStudentOfClass</class>
     <class>fi.dwo.commons.persistence.entities.PersistentStudentScoContext</class>

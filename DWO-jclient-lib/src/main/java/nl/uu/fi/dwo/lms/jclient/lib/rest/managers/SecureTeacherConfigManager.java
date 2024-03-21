@@ -20,7 +20,7 @@ public class SecureTeacherConfigManager implements ConfigManager {
   private static final Logger LOG = Logger.getLogger(SecureTeacherConfigManager.class.getName());
 
   static DomContext getContext() {
-    return RestAuthenticator.getInstance().getContext();
+    return StoredRestManager.getInstance().getContext();
   }
 
   public List<DomAppletConfig> getConfigurations(Locale locale, DomDwoProfile profile)  throws Dwo2Exception {

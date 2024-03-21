@@ -32,6 +32,7 @@ public enum PersistenceClassType implements Serializable {
     PersistentSamlUser,
     PersistentSchool,
     PersistentSchoolClass,
+    PersistentSchoolData,
     PersistentSchoolGroup,
     PersistentScoContext,
     PersistentScoData,
