@@ -11,9 +11,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JTextField;
-import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.exceptions.SchoolException;
-import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
@@ -44,11 +42,9 @@ import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 /**
@@ -65,7 +61,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
     private SchoolDwoAdminPanelProperties prop = new SchoolDwoAdminPanelProperties();
     private SchoolDwoAdminPanelTableModel tableModel;
     private JTable table;
-    private TableRowSorter rowSorter;
+    private TableRowSorter<SchoolDwoAdminPanelTableModel> rowSorter;
     private RowFilter<SchoolDwoAdminPanelTableModel, Object> tableFilter;
 
     public class ImageButtonEditor extends AbstractCellEditor implements
@@ -336,7 +332,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
         tableModel = new SchoolDwoAdminPanelTableModel();
         tableModel.init(prop, editImage, rightsImage, emptyImage, removeImage, imageStats);
         table.setModel(tableModel);
-        rowSorter = new TableRowSorter(tableModel);
+        rowSorter = new TableRowSorter<SchoolDwoAdminPanelTableModel>(tableModel);
         tableFilter = RowFilter.regexFilter(".*", 0);
         rowSorter.setRowFilter(tableFilter);
         rowSorter.toggleSortOrder(0);//

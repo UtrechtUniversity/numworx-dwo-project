@@ -32,6 +32,7 @@ public enum RestListClassTypes {
         DomSchoolFrom,
         DomSchool4DwoAdmin,
         DomSchoolAdmin,
+        DomSchoolAdminAndHasRole,
         DomSchoolClass,
         DomSchoolGroup,
         DomScoContext, 
