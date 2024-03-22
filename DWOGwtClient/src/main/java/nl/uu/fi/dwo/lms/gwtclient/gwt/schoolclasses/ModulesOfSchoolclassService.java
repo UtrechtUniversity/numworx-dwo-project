@@ -7,8 +7,6 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
-
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
@@ -46,7 +44,7 @@ import org.osgi.util.promise.Success;
  */
 public class ModulesOfSchoolclassService {
 
-    private static final Logger LOG = Logger.getLogger(ModulesOfSchoolclassService.class.getName());
+    //private static final Logger LOG = Logger.getLogger(ModulesOfSchoolclassService.class.getName());
 
     private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
     private SecuredTeacherClassCourseManager ccm = new SecuredTeacherClassCourseManager();
@@ -66,8 +64,10 @@ public class ModulesOfSchoolclassService {
                     Promise<DomDwoProfile> resolved) throws Exception {
                 DomSchoolClassAndProfile sap = new DomSchoolClassAndProfile();
                 DomDwoProfile profile = new DomDwoProfile(resolved.getValue());
-                if (remedial && dwoGlobalVars.isPremium() && dwoGlobalVars.isRemedial()) {
-                	profile.setDwoProfileRights("R"); // see setRemedial
+                if (remedial && dwoGlobalVars.isPremium() && dwoGlobalVars.isRemedial()) {               	
+                	String rights;
+                	if (dwoGlobalVars.isModulesOnly()) rights = "R4"; else rights = "R";
+					profile.setDwoProfileRights(rights); // see setRemedial + setModulesOnly
                 } else 
                 	profile.setDwoProfileRights("");
 

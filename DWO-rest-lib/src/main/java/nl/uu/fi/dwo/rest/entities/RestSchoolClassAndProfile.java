@@ -6,7 +6,12 @@ package nl.uu.fi.dwo.rest.entities;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+
+import java.beans.Transient;
+
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
 
 /**
@@ -22,6 +27,8 @@ public class RestSchoolClassAndProfile {
     private DomSchoolClassAndProfile domSchoolClassAndProfile;
 
     @Deprecated
+    @Transient
+    @XmlTransient
     public DomDwoProfile getDomDwoProfile() {
         if (domSchoolClassAndProfile == null) {
             return null;
@@ -60,6 +67,8 @@ public class RestSchoolClassAndProfile {
      * @return the domSchoolClass
      */
     @Deprecated
+    @Transient
+    @XmlTransient
     public DomSchoolClass getDomSchoolClass() {
         if (domSchoolClassAndProfile == null) {
             return null;
