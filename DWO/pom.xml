@@ -27,7 +27,7 @@
 <!-- 	 	<module>../DWOformule</module> -->
 <!-- 	 	<module>../DWOmAccess</module> -->
 <!--         <module>../DWO-commons-lib</module>-->
-<!--         <module>../DWO-jclient-lib</module> -->
+         <module>../DWO-jclient-lib</module> 
 <!--   	 	<module>../DWO-apps</module> -->
 <!-- 		<module>../chatgwt</module> -->
  	 	<module>../DWOGwtClient</module> 
