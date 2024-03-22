@@ -34,6 +34,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import org.osgi.util.promise.Failure;
@@ -228,6 +230,23 @@ public class ResultsPresenter extends AbstractResultsPresenter {
           return resultService.getModules(findSchoolClass(map, id)).map( modules -> inject(map, modules));
         } ).fallbackTo(recover);
 
+        if (dwoGlobalVars.isModulesOnly() && dwoGlobalVars.isPremium() && dwoGlobalVars.isRemedial()) {
+        	mappedResults = mappedResults.map(
+        		r -> {
+        			Collection<DomClassCourse4Teacher> ccs = r.getClassCourses().values();
+        			for(DomClassCourse4Teacher item : ccs) {
+        				CourseType type = item.getCourseType();
+        				ViewState state = item.getViewState();
+        				if ( type == CourseType.assesment && state == ViewState.studentsAndTeachers) {
+        					state = ViewState.students; // remedial kolom
+        				}
+        				item.setViewState(state);
+        			}
+         			return r;
+        		});
+        }
+        
+        
         // if no classcourses of schoolclass, fetch them from server....
         mappedResults.then((Promise<DomMappedResultsPerTeacher> resolved) -> {
               //calculate tree and call plotting
