@@ -1,6 +1,5 @@
 package fi.dwo.dwojapplet.domain;
 
-import java.applet.Applet;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -12,10 +11,9 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.JApplet;
-
 import org.json.simple.JSONValue;
 
+import fi.beans.mainframe.JApplet;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.beans.scorm.PartialScoreIF;
 import fi.beans.scorm.SCORM12APIInterface;
@@ -32,7 +30,7 @@ public class WiskOpdrPartialScore implements PartialScoreIF {
   private static final String LESSON_STATUS_completed = "completed";
 
 
-  Applet wiskOpdr;
+  JApplet wiskOpdr;
   Map launchData;
   int aantalOpdrachten;
   String scoreMax[];
@@ -171,7 +169,7 @@ public class WiskOpdrPartialScore implements PartialScoreIF {
       wiskOpdr = sco.getApplet();
     } catch (Exception e) {
       LOG.log(Level.SEVERE, "<init>", e);
-      wiskOpdr = new JApplet();
+      wiskOpdr = new JApplet() { };
     }
     
     launchData = sco.getLaunchdata();

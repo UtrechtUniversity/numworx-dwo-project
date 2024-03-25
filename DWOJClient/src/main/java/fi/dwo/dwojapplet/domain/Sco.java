@@ -91,7 +91,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
 
     private String description;
 
-    private Applet applet;
+    private JApplet applet;
     private Boolean showScore;
     private byte[] imageData; // part of DomScoContextFull
     private long sequencenr;
@@ -406,7 +406,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
      *
      * @return The applet of the sco.
      */
-    public Applet getApplet() {
+    public JApplet getApplet() {
         if (applet == null) {
             loadApplet();
         }
