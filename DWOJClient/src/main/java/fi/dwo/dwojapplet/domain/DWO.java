@@ -1952,6 +1952,7 @@ LOG.info("time results = " + (-t) + " ms");
         LOG.log(Level.INFO, "Starting the DWO as an application.");
         int width = GuiConstants.DWO_WIDTH;
         int height = GuiConstants.DWO_HEIGHT;
+        RestAuthenticator.getInstance().setServerUrlPath(null); // the old default!
 
         DWO dwo = new DWO(args);
         // Configure the applet
