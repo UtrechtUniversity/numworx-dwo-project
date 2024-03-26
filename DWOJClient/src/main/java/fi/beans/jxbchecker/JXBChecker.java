@@ -1,9 +1,8 @@
 package fi.beans.jxbchecker;
 
-import javax.swing.JApplet;
 
+import fi.beans.mainframe.JApplet;
 import fi.beans.numworxlf.JOptionPane;
-import fi.dwo.dwojapplet.domain.DwoHelper;
 
 public class JXBChecker {
   

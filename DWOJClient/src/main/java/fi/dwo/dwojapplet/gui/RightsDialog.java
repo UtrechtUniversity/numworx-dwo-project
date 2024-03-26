@@ -2,8 +2,11 @@ package fi.dwo.dwojapplet.gui;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdminAndHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JScrollPane;
 import fi.dwo.dwojapplet.domain.DWO;
@@ -16,9 +19,14 @@ import java.awt.Frame;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.swing.Box;
 import javax.swing.JDialog;
@@ -39,7 +47,11 @@ public class RightsDialog extends JDialog implements ActionListener {
 
     JTable table;
     DefaultTableModel model;
-    List<DomTeacherAndHasRole> theList;
+    List<DomTeacherAndHasRole> theListT;
+    List<DomSchoolAdminAndHasRole> theListA;
+    LinkedHashMap<PersistenceId, DomUser> theMap = new LinkedHashMap<PersistenceId, DomUser>();
+    Map<PersistenceId, DomHasRole> rolesT, rolesA;
+ 
     int profileID = 1;
 
     private Boolean hasRight(DomHasRole hr, char right) {
@@ -139,14 +151,26 @@ public class RightsDialog extends JDialog implements ActionListener {
 
     void setSchool(DomSchool4DwoAdmin school) throws Dwo2Exception {
         this.school = school;
-        theList = SecureDwoAdminSchoolManager.getTeachersAndHasRoleInSchool(school);
-        model.setRowCount(theList.size());
+        theListT = SecureDwoAdminSchoolManager.getTeachersAndHasRoleInSchool(school);
+        theListA = SecureDwoAdminSchoolManager.getSchoolAdminsAndHasRoleInSchool(school);
+        theMap.clear();
+        theListT.forEach(dom -> theMap.put(dom.getTeacher().getId(), 	 dom.getTeacher()));
+        theListA.forEach(dom -> theMap.put(dom.getSchoolAdmin().getId(), dom.getSchoolAdmin()));
+        rolesA = theListA.stream().collect(Collectors.toMap(d -> d.getHasRole().getUserId(), DomSchoolAdminAndHasRole::getHasRole));
+        rolesT = theListT.stream().collect(Collectors.toMap(d -> d.getHasRole().getUserId(), DomTeacherAndHasRole::getHasRole));
+        
+        model.setRowCount(theMap.size());
         //#LMS-165  insert role into school
-        for (int i = 0; i < theList.size(); i++) {
-            model.setValueAt(theList.get(i).getTeacher().getDisplayName()
-                    + " (" + theList.get(i).getTeacher().getUserName() + ")", i, 0);
+        Iterator<Entry<PersistenceId,DomUser>> iterator = theMap.entrySet().iterator();
+        for (int i = 0; i < theMap.size(); i++) {
+        	Entry<PersistenceId, DomUser> entry = iterator.next();
+        	PersistenceId id  = entry.getKey();
+        	DomUser user = entry.getValue();
+            model.setValueAt(user.getDisplayName() + " (" + user.getUserName() + ")", i, 0);
+            DomHasRole role = rolesT.get(id);
+            if (role == null) role = rolesA.get(id);
             for (int j = 0; j < RIGHTS.length; j++) {
-                model.setValueAt(hasRight(theList.get(i).getHasRole(), RIGHTS[j]), i, j + 1);
+                model.setValueAt(hasRight(role, RIGHTS[j]), i, j + 1);
             }
         }
 
@@ -158,7 +182,10 @@ public class RightsDialog extends JDialog implements ActionListener {
         String cmd = e.getActionCommand();
         if (cmd == APPLY || cmd == OK) {
             try {
-                for (int i = 0; i < theList.size(); i++) {
+               Iterator<Entry<PersistenceId,DomUser>> iterator = theMap.entrySet().iterator();
+               for (int i = 0; i < theMap.size(); i++) {
+            	   Entry<PersistenceId, DomUser> entry = iterator.next();
+            	   PersistenceId id  = entry.getKey();
                     String newrights = "";
                     for (int j = 0; j < RIGHTS.length; j++) {
                         if (Boolean.TRUE.equals(table.getValueAt(i, j + 1))) {
@@ -166,23 +193,12 @@ public class RightsDialog extends JDialog implements ActionListener {
                         }
 
                     }
-                    String oldrights = theList.get(i).getHasRole().getRights();
-                    String pstr = "[" + profileID + "]";
-                    int start = oldrights.indexOf(pstr);
-                    if (start < 0) {
-                        oldrights = oldrights + pstr;
-                        start = oldrights.length();
-                    } else {
-                        start += pstr.length();
-                    }
-                    int end = oldrights.indexOf("[", start);
-                    if (end < 0) {
-                        end = oldrights.length();
-                    }
-                    String rights = oldrights.substring(0, start) + newrights + oldrights.substring(end);
-
-                    theList.get(i).getHasRole().setRights(rights);
-                    SecureDwoAdminSchoolManager.updateHasRoleRights(theList.get(i).getHasRole());
+                    DomHasRole role = rolesT.get(id);
+                    if (role != null)
+                    	updateRoleRights(role, newrights);
+                    role = rolesA.get(id);
+                    if (role != null)
+                    	updateRoleRights(role, newrights);
                 }
             }
             catch (Dwo2Exception ex) {
@@ -195,6 +211,26 @@ public class RightsDialog extends JDialog implements ActionListener {
         }
 
     }
+
+	private void updateRoleRights(DomHasRole role, String newrights) throws Dwo2Exception {
+		String oldrights = role.getRights();
+		String pstr = "[" + profileID + "]";
+		int start = oldrights.indexOf(pstr);
+		if (start < 0) {
+		    oldrights = oldrights + pstr;
+		    start = oldrights.length();
+		} else {
+		    start += pstr.length();
+		}
+		int end = oldrights.indexOf("[", start);
+		if (end < 0) {
+		    end = oldrights.length();
+		}
+		String rights = oldrights.substring(0, start) + newrights + oldrights.substring(end);
+
+		role.setRights(rights);
+		SecureDwoAdminSchoolManager.updateHasRoleRights(role);
+	}
 
     void setProfileID(int profileID) {
         this.profileID = profileID;

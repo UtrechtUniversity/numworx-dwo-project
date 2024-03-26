@@ -2,6 +2,7 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\ScoPanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.mainframe.JApplet;
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
@@ -10,7 +11,6 @@ import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
-import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -31,7 +31,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JApplet;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -50,7 +49,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
 
     private static final Color HOME_COLOR = new Color(3, 65, 123);
 
-    private Applet applet;
+    private JApplet applet;
     private static final Logger LOG = Logger.getLogger(ScoPanel.class.getName());
 
     private Sco sco;
