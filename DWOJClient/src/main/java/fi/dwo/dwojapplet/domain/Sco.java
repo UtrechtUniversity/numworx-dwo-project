@@ -170,11 +170,11 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
      */
     protected void loadApplet() {
         try {
-            Applet lastApplet = applet;
+            JApplet lastApplet = applet;
             //lessonLocation = null;
             if (applet == null) {
-                Class<Applet> o = PersistenceFacade.instance().getAppletClass(appletID);
-                Class<Applet> clazz = (Class<Applet>) o;
+                Class<JApplet> o = PersistenceFacade.instance().getAppletClass(appletID);
+                Class<JApplet> clazz = (Class<JApplet>) o;
                 try {
                     applet = clazz.newInstance();
                 } catch (InstantiationException e) {
@@ -422,7 +422,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
      *
      * @param applet The new applet of the sco.
      */
-    public void setApplet(Applet applet) {
+    public void setApplet(JApplet applet) {
         this.applet = applet;
     }
 

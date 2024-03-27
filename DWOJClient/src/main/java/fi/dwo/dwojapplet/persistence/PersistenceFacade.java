@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.persistence;
 
+import fi.beans.mainframe.JApplet;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
@@ -860,7 +861,7 @@ public class PersistenceFacade {
     }
 
     private AppletMapper appletMapper = new AppletMapper();
-    public Class<Applet> getAppletClass(int appletID) throws PersistenceException {
+    public Class<JApplet> getAppletClass(int appletID) throws PersistenceException {
       return appletMapper.get(appletID);
     }
 
