@@ -139,6 +139,10 @@ public class ChatboxPresenter implements ValueChangeHandler<String>, LoginEventH
 		user.token = strip(password);
 		if (role == RoleType.STUDENT) {
 			DomSchoolClass klas = vars.getActiveSchoolRoleAndClass().getSchoolClass();
+			if (klas == null) {
+				view.clear();
+				return;
+			}
 			Promise<ChatRoom> room = roomOfSchoolClass(klas);
 			
 			room
