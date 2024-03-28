@@ -1,4 +1,4 @@
-package nl.numworx.schoolyear.jclient;
+package nl.numworx.schoolyear.jclient.dto;
 
 import java.util.Date;
 

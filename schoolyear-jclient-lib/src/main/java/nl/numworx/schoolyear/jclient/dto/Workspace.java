@@ -1,4 +1,4 @@
-package nl.numworx.schoolyear.jclient;
+package nl.numworx.schoolyear.jclient.dto;
 
 public class Workspace {
 	public Vault vault;
