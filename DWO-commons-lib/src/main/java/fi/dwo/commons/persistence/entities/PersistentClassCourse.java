@@ -30,7 +30,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomClassCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
-import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
  * JPA/EclipseLink entity for the ClassCourses.
@@ -146,6 +145,8 @@ public class PersistentClassCourse implements Serializable {
      */
     @Column(name = "dwoProfileID")
     private Long dwoProfileID;
+    
+    private String syExamID;
    
     @PrePersist
     @PreUpdate
@@ -386,5 +387,13 @@ public class PersistentClassCourse implements Serializable {
   public void setDwoProfileID(Long dwoProfileID) {
     this.dwoProfileID = dwoProfileID;
   }
+
+public String getSyExamID() {
+	return syExamID;
+}
+
+public void setSyExamID(String syExamId) {
+	this.syExamID = syExamId;
+}
     
 }
