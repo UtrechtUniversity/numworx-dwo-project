@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -42,6 +44,8 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 @SuppressWarnings("serial")
 public class JavaUpload extends HttpServlet implements Constants {
+	
+	public static final Logger LOG = Logger.getLogger(JavaUpload.class.getName());
 	
 	Store store;
 	RestAuthenticator authenticator = StoredRestManager.getInstance().getAuthenticator(); // XXX Singleton.
@@ -82,6 +86,7 @@ public class JavaUpload extends HttpServlet implements Constants {
 		Optional<DomSchoolRoleAndClassV2> actor = getActor(bearer, paths[0]);
 
 		if (!actor.isPresent()) {
+			LOG.severe("Actor not present " + bearer + " " + paths[0]);
 			resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 			return;
 			
@@ -155,6 +160,7 @@ public class JavaUpload extends HttpServlet implements Constants {
 			String[] split = bearer.split(":", 2);
 			rest.setBasicAuthString(split[0], split[1], null);
 		} else {
+			LOG.severe("unrecognized bearer");
 			return Optional.empty();
 		}
 		DomUserFull user;
@@ -162,7 +168,9 @@ public class JavaUpload extends HttpServlet implements Constants {
 		DomHasRole hasRole;
 		try {
 			user   = SecureUserAccountManager.getAccountData(rest);
+LOG.info("user = " + user.getUniqueDisplayName());
 			logins = SecureUserAccountLoginsManager.getSchoolLogins(rest);
+LOG.info("logins = " + logins.getActiveSchoolRoleAndClass().getSchool().getSchoolName());
 		//search paths[0] in logins for school;
 		hasRole = logins.getActiveSchoolRoleAndClass().getHasRole();
 		String current = Store.getPathId(hasRole);
@@ -172,14 +180,19 @@ public class JavaUpload extends HttpServlet implements Constants {
 			return Optional.of(logins.getActiveSchoolRoleAndClass());
 		} else {
 			if (pathid.startsWith("2-")) {
+LOG.info("searching ");
 				context.setDomHasRole(hasRole);
 				String [] split = pathid.split("-");
 				split[1] = "MYSQL;PersistentUser;"+split[1];
 				split[2] = "MYSQL;PersistentSchoolClass;" + split[2];
 				List<DomStudent> students = SecureTeacherSchoolClassManager.getTeachersStudents(rest);
+LOG.info("found students " + students);
 				Optional<DomStudent> b1 = students.stream().filter(s -> s.getId().toString().equals(split[1])).findAny();
+LOG.info("student " + b1);
 				List<DomSchoolClass> classes = SecureTeacherSchoolClassManager.getTeachersSchoolClasses(rest);
+LOG.info("classes " + classes);
 				Optional<DomSchoolClass> b2 = classes.stream().filter(c -> c.getId().getIdString().equals(split[2])).findAny();
+LOG.info("class " + b2);
 				if (b1.isPresent() && b2.isPresent()) {
 					DomSchoolRoleAndClassV2 result = logins.getActiveSchoolRoleAndClass();
 					result.getHasRole().setId(null);
@@ -189,6 +202,7 @@ public class JavaUpload extends HttpServlet implements Constants {
 					return Optional.of(result);
 				}
 			} else if (pathid.startsWith("1-") && !user.getSingleSchool()) {
+	LOG.info("search hasrole " + pathid);
 				return logins.getSchoolsRolesAndClassesList()
 				.stream()
 				.filter(hrc -> {
@@ -199,8 +213,10 @@ public class JavaUpload extends HttpServlet implements Constants {
 			}
 		}
 		} catch (Dwo2Exception e) {
+			LOG.log(Level.SEVERE, e.toString(), e);
 			return Optional.empty();
 		}
+		LOG.severe("reached empty exit");
 		return Optional.empty();
 	}
 
