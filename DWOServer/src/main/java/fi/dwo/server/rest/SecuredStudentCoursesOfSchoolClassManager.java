@@ -1,5 +1,6 @@
 package fi.dwo.server.rest;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Date;
@@ -11,10 +12,14 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
@@ -33,6 +38,7 @@ import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder.S
 import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer.StudentState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
@@ -43,6 +49,10 @@ import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.rest.util.CourseBuilder;
 import fi.servlet.dwomaccess.Subnet;
+import nl.numworx.schoolyear.jclient.SchoolyearClient;
+import nl.numworx.schoolyear.jclient.dto.ExamDTO;
+import nl.numworx.schoolyear.jclient.dto.User;
+import nl.numworx.schoolyear.jclient.dto.UserDTO;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
@@ -56,6 +66,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestClassCourse;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
@@ -394,5 +405,31 @@ public class SecuredStudentCoursesOfSchoolClassManager {
       return getCourseForStudent(cc, course, schoolclass,state.getSchool(), request, rest.getRestContext().getDomHasRole());
   }
 
+  @GET
+  @Path("getURL") 
+  public Response getURL(@Context SecurityContext sc, @QueryParam("id") String pid, @QueryParam("base") String base) throws Dwo2Exception, IOException {
+	  UserState_U state = AnonDomainAuthorizer.build().submitUser(sc);
+	  PersistentUser user = state.getUser();
+	  DomClassCourse cc = new DomClassCourse();
+	  cc.setId(new PersistenceId(pid));
+	  Long id = MySQLPersistenceId.getNativeId(cc);
+	  PersistentClassCourse pcc = ClassCourseManager.findEntity(id);
+	  String url = base + "/exam/?id=" +id;
+	  if (pcc.getType() == CourseType.kiosk.ordinal()) {
+		  SchoolyearClient client = new SchoolyearClient.Builder().build();
+		  ExamDTO exam = new ExamDTO();
+		  exam.id = pcc.getSyExamID();
+		  UserDTO u = new UserDTO();
+		  u.federated_user_id = user.getId().toString();
+		  u.personal_information = new User();
+		  u.personal_information.email = user.getEmail();
+		  u.personal_information.first_name = user.getGivenName();
+		  u.personal_information.org_code = user.getUsername();
+		  u.personal_information.last_name = (user.getInsertion() + " " + user.getLastname()).trim();
+		  url = client.createWorkspace(exam, u).onboarding_url;
+	  }
+	  Map<String,String> entity = Collections.singletonMap("url", url);
+	  return Response.ok().type(MediaType.APPLICATION_JSON_TYPE).entity(entity).build();
+  }
   
 }

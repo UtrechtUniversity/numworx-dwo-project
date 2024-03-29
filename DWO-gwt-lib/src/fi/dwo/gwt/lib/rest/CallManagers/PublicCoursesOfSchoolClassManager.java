@@ -36,4 +36,9 @@ public class PublicCoursesOfSchoolClassManager implements CoursesOfSchoolClassMa
       return Promises.failed(new IllegalArgumentException());
     }
 
+	@Override
+	public Promise<String> getClassCourseURL(DomContext context, DomClassCourse classcourse, String base) {
+		return Promises.failed(new IllegalArgumentException());
+	}
+
 }

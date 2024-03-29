@@ -3,6 +3,7 @@ package fi.dwo.gwt.lib.rest.CallManagers;
 import org.osgi.util.promise.Promise;
 
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.json.client.JSONValue;
 
 import static fi.dwo.gwt.lib.rest.GwtRestVars.F;
 import fi.dwo.gwt.lib.rest.client.RestCallers.CoursesOfSchoolRestCaller;
@@ -75,6 +76,14 @@ public class SecuredStudentCoursesOfSchoolClassManager implements CoursesOfSchoo
 	    rest.setDomClassCourse(classcourse);
 	    rest.setDomDwoProfile(profile);
 	    return F(service::getCoursesClass, PathId.getId(context), rest);
+	}
+
+	@Override
+	public Promise<String> getClassCourseURL(DomContext context, DomClassCourse classcourse, String base) {
+		String id = PathId.getId(context);
+		String cc = classcourse.getId().getIdString();
+		Promise<JSONValue> p = F( (i, c, callback) -> service.getCoursesClassURL(id, base, cc, callback), id, null);
+		return	p.map( (JSONValue v) -> v.isObject().get("url").isString().stringValue());
 	}
 	
 	

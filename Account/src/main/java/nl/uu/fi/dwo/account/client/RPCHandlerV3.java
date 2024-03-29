@@ -184,6 +184,11 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		);
 	}
 	
+	public Promise<String> getClassCourseURL(Object id, String base) {
+		DomClassCourse cc = toClassCourse(id);
+		return studentManager.getClassCourseURL(getContext(), cc, base);
+	}
+	
 	public static final Promise<List<DomCourseStudent>> NO_ACCESS = Promises.resolved(Collections.emptyList());
 	
 	public Promise<List<DomCourseStudent>> getCourses(Object id) {

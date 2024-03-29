@@ -1,11 +1,16 @@
 package fi.dwo.gwt.lib.rest.client.RestCallers;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
+
+import com.google.gwt.json.client.JSONValue;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestClassCourse;
@@ -32,4 +37,7 @@ public interface SecuredStudentExamCourseRestCaller extends RestService, Courses
     @Path("/sec:{id}/student/exam/coursesofschoolclass/getClassCourse")
     void getCoursesClass(@PathParam("id") String id, RestClassCourse rest, MethodCallback<DomCoursesOfSchoolClass> callback);
 
+    @GET
+    @Path("/sec:{id}/student/exam/coursesofschoolclass/getURL")
+    void getCoursesClassURL(@PathParam("id") String id, @QueryParam("base") String base, @QueryParam("id") String classcourseid, MethodCallback<JSONValue> callback);
 }
