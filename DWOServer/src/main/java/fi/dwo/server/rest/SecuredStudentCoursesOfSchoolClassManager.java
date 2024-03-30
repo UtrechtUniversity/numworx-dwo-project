@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -50,9 +51,14 @@ import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.rest.util.CourseBuilder;
 import fi.servlet.dwomaccess.Subnet;
 import nl.numworx.schoolyear.jclient.SchoolyearClient;
+import nl.numworx.schoolyear.jclient.dto.Content;
+import nl.numworx.schoolyear.jclient.dto.Element;
+import nl.numworx.schoolyear.jclient.dto.ElementId;
 import nl.numworx.schoolyear.jclient.dto.ExamDTO;
 import nl.numworx.schoolyear.jclient.dto.User;
 import nl.numworx.schoolyear.jclient.dto.UserDTO;
+import nl.numworx.schoolyear.jclient.dto.Vault;
+import nl.numworx.schoolyear.jclient.dto.WebPageUrl;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
@@ -414,7 +420,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
 	  cc.setId(new PersistenceId(pid));
 	  Long id = MySQLPersistenceId.getNativeId(cc);
 	  PersistentClassCourse pcc = ClassCourseManager.findEntity(id);
-	  String url = base + "/exam/?id=" +id;
+	  String url = base + "exam/?id=" +id;
 	  if (pcc.getType() == CourseType.kiosk.ordinal()) {
 		  SchoolyearClient client = new SchoolyearClient.Builder().build();
 		  ExamDTO exam = new ExamDTO();
@@ -426,6 +432,21 @@ public class SecuredStudentCoursesOfSchoolClassManager {
 		  u.personal_information.first_name = user.getGivenName();
 		  u.personal_information.org_code = user.getUsername();
 		  u.personal_information.last_name = (user.getInsertion() + " " + user.getLastname()).trim();
+		  
+		  u.vault = new Vault();
+		  u.vault.content = new Content();
+		  String uuid = UUID.randomUUID().toString();
+		  WebPageUrl wpu = new WebPageUrl();
+		  wpu.url = "https://teuniz.dwo.nl/toets/toets.jsp";
+		  
+		  Element element = new Element();
+		  element.url = wpu;
+		  element.type = WebPageUrl.TYPE;
+		  element.origin = "api_key";
+		  u.vault.content.elements = Collections.singletonMap(uuid, element);
+		  u.vault.content.entry_points = Collections.singletonList(new ElementId(uuid));
+		  
+		  
 		  url = client.createWorkspace(exam, u).onboarding_url;
 	  }
 	  Map<String,String> entity = Collections.singletonMap("url", url);

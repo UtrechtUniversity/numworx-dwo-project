@@ -54,6 +54,7 @@ import nl.numworx.schoolyear.jclient.dto.ElementId;
 import nl.numworx.schoolyear.jclient.dto.ExamDTO;
 import nl.numworx.schoolyear.jclient.dto.Vault;
 import nl.numworx.schoolyear.jclient.dto.WebPageEntireDomain;
+import nl.numworx.schoolyear.jclient.dto.WebPageUrl;
 import nl.numworx.schoolyear.jclient.dto.Workspace;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
@@ -245,8 +246,15 @@ public class MySQLTeacherActions implements TeacherActions {
 				root.url_entire_domain = new WebPageEntireDomain();
 				root.type = WebPageEntireDomain.TYPE;
 				root.origin = "api_key";
-				root.url_entire_domain.url = "http://localhost:8080/";
+				root.url_entire_domain.url = "https://teuniz.dwo.nl/";
 				elements.put(uuid, root);
+				Element logout = new Element();
+				uuid = UUID.randomUUID().toString();
+				logout.origin = "api_key";
+				logout.type = WebPageUrl.TYPE;
+				logout.url = new WebPageUrl();
+				logout.url.url = "https://teuniz.dwo.nl/toets/logout.html";
+		        elements.put(uuid, logout);		
 				exam.workspace.vault.content.exit_points = Collections.singletonList(new ElementId(uuid));
 				try {
 					exam = client.createExam(exam);
