@@ -78,7 +78,14 @@ public class JavaUpload extends HttpServlet implements Constants {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 		String bearer = req.getHeader(AUTHORIZATION);
-		if (bearer == null) bearer = (String) req.getSession().getAttribute(AUTHORIZATION);
+		if (bearer == null) {
+			
+			bearer = (String) req.getSession().getAttribute(AUTHORIZATION);
+			if (bearer == null) {
+				LOG.severe( "No bearer from session, HELP!!!!");
+			}
+			
+		}
 		else req.getSession().setAttribute(AUTHORIZATION, bearer);
 		String path = req.getPathInfo();
 		int index = path.indexOf("/sec:");
@@ -160,7 +167,7 @@ public class JavaUpload extends HttpServlet implements Constants {
 			String[] split = bearer.split(":", 2);
 			rest.setBasicAuthString(split[0], split[1], null);
 		} else {
-			LOG.severe("unrecognized bearer");
+			LOG.severe("unrecognized bearer [" + bearer + "]");
 			return Optional.empty();
 		}
 		DomUserFull user;
