@@ -30,6 +30,7 @@ import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
 import org.apache.oltu.oauth2.common.token.OAuthToken;
+import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -240,6 +241,12 @@ public class EntreeSLogin implements SigningKeyResolver, Login {
 		insertion = body.get("nlEduPersonTussenvoegsels", String.class);
 		email = body.get("mail", String.class);
 		uid   = body.get("uid", String.class);
+		if (uid == null) {
+			JSONArray uids = body.get("uids", JSONArray.class);
+			if (uids != null && uids.size() > 0) {
+				uid = (String) uids.get(0);
+			}
+		}
 		if (uid == null) uid = body.getSubject();
 		affiliation = body.get("eduPersonAffiliation", String.class);
 		if (affiliation == null) {
