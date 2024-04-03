@@ -66,7 +66,7 @@ public class DwoGlobalVars {
     private DomSchoolRoleAndClassV2 activeSchoolRoleAndClass;
     private Promise<DomDwoProfileFull> profile;
 
-    private boolean test,saml, modulesOnly;
+    private boolean test,saml, modulesOnly, kiosk;
     private static String helpUrlPrefix ;
 
     /**
@@ -598,5 +598,13 @@ public class DwoGlobalVars {
 
 	public void setModulesOnly(boolean modulesOnly) {
 		this.modulesOnly = modulesOnly;
+	}
+
+	public boolean isKiosk() {
+		return kiosk;
+	}
+
+	public void setKiosk(boolean kiosk) {
+		this.kiosk = kiosk;
 	}
 }

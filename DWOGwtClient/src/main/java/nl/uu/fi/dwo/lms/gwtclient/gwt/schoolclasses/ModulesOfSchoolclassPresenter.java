@@ -448,4 +448,10 @@ public class ModulesOfSchoolclassPresenter {
     public boolean hasToets() {
       return dwoGlobalVars.isPremium();
     }
+    
+    @JsMethod
+    public boolean hasKiosk() {
+      return dwoGlobalVars.isKiosk();
+    }
+
 }
