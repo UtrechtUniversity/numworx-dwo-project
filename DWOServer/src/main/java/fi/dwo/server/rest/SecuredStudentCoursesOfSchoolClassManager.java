@@ -2,6 +2,7 @@ package fi.dwo.server.rest;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,6 +49,7 @@ import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
+import fi.dwo.server.rest.jaxrsfilters.DwoUserPrincipal;
 import fi.dwo.server.rest.util.CourseBuilder;
 import fi.servlet.dwomaccess.Subnet;
 import nl.numworx.schoolyear.jclient.SchoolyearClient;
@@ -60,12 +62,14 @@ import nl.numworx.schoolyear.jclient.dto.UserDTO;
 import nl.numworx.schoolyear.jclient.dto.Vault;
 import nl.numworx.schoolyear.jclient.dto.WebPageUrl;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
@@ -76,6 +80,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestClassCourse;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -412,7 +417,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
   }
 
   @GET
-  @Path("getURL") 
+  @Path("getURL")
   public Response getURL(@Context SecurityContext sc, @QueryParam("id") String pid, @QueryParam("base") String base) throws Dwo2Exception, IOException {
 	  UserState_U state = AnonDomainAuthorizer.build().submitUser(sc);
 	  PersistentUser user = state.getUser();
@@ -421,6 +426,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
 	  Long id = MySQLPersistenceId.getNativeId(cc);
 	  PersistentClassCourse pcc = ClassCourseManager.findEntity(id);
 	  String url = base + "exam/?id=" +id;
+	  SecuredUserAccountManager account = new SecuredUserAccountManager();
 	  if (pcc.getType() == CourseType.kiosk.ordinal()) {
 		  SchoolyearClient client = new SchoolyearClient.Builder().build();
 		  ExamDTO exam = new ExamDTO();
@@ -437,7 +443,16 @@ public class SecuredStudentCoursesOfSchoolClassManager {
 		  u.vault.content = new Content();
 		  String uuid = UUID.randomUUID().toString();
 		  WebPageUrl wpu = new WebPageUrl();
-		  wpu.url = "https://teuniz.dwo.nl/toets/toets.jsp";
+		  RestSchoolClass rest = new RestSchoolClass();
+		  rest.setDomSchoolClass(new DomSchoolClass());
+		  DwoUserPrincipal principal = (DwoUserPrincipal) sc.getUserPrincipal();
+		  rest.setRestContext(new DomContext());
+		  rest.getRestContext().setDomHasRole(principal.getHr().buildDomHasRole());
+		  rest.getDomSchoolClass().setId(PersistentSchoolClass.buildPersistenceId(pcc.getClassID()));
+		  String bearer = account.getBearerToken(sc, rest);
+		  bearer = bearer.replace("\"", "");
+		  url = base + "exam/toets.jsp/?id=" +id;;
+		  wpu.url = url + "&a=" + URLEncoder.encode(bearer);
 		  
 		  Element element = new Element();
 		  element.url = wpu;
@@ -445,9 +460,9 @@ public class SecuredStudentCoursesOfSchoolClassManager {
 		  element.origin = "api_key";
 		  u.vault.content.elements = Collections.singletonMap(uuid, element);
 		  u.vault.content.entry_points = Collections.singletonList(new ElementId(uuid));
-		  
-		  
-		  url = client.createWorkspace(exam, u).onboarding_url;
+		  url = wpu.url;
+		 // url = client.createWorkspace(exam, u).onboarding_url;
+	  } else if (pcc.getType() == CourseType.assesment.ordinal()) {
 	  }
 	  Map<String,String> entity = Collections.singletonMap("url", url);
 	  return Response.ok().type(MediaType.APPLICATION_JSON_TYPE).entity(entity).build();

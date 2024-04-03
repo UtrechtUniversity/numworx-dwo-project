@@ -155,7 +155,7 @@ public void setTrail(List<SelectModuleItem> trail) {
     Actions.TRAIL.execute();
     return;
   }
-  if(PARAMETERS.getSecureMode() == SecureMode.SEB)
+  if(PARAMETERS.inExam())
       trail.clear();
   JSONArray array = new JSONArray();
   ListIterator<SelectModuleItem> iter = trail.listIterator(Math.min(trail.size(),3));

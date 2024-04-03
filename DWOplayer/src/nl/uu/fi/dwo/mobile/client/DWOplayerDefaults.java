@@ -90,7 +90,7 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 	public SecureMode getSecureMode() {
 		return SecureMode.NORMAL;
 	}
-
+	
 	public String getDwoEnv() {
 		return "unknown";
 	}

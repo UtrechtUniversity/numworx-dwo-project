@@ -50,5 +50,8 @@ public interface DWOplayerParameters {
 	SecureMode getSecureMode();
 	String getDwoEnv();
 	default void tickle() {}
+	default boolean inExam() {
+	  return SecureMode.NORMAL != getSecureMode();
+	}
 	
 }

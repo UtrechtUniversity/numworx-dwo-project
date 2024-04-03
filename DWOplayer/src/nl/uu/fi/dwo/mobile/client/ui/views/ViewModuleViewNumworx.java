@@ -73,7 +73,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 			SMLogger.LoggingModule loggingModule) {
 		this.rpc = rpc;
 		this.headerView = headerView;
-		this.seb = PARAMETERS.getSecureMode() == SecureMode.SEB;
+		this.seb = PARAMETERS.inExam();
 	    instance = vars;
 	    activity = builder.loggingModule(loggingModule).build();
 	    Promise<DomDwoProfileFull> p = rpc.getDwoProfile();

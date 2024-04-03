@@ -66,7 +66,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 		
 	@Override
 	public void start(final AcceptsOneWidget panel, EventBus eventBus) {
-		if(SecureMode.NORMAL == PARAMETERS.getSecureMode()) {
+		if(!PARAMETERS.inExam()) {
 			final UnSafeModuleView w = unsafe.get();
 			w.selectItem(item);
 			agent.barrier().onResolve(		
