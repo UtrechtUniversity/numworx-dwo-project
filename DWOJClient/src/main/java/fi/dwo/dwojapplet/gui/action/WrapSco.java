@@ -14,7 +14,6 @@ import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.beans.loader.Loader;
 import fi.beans.mainframe.JApplet;
 
-import java.applet.Applet;
 import java.applet.AppletContext;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;

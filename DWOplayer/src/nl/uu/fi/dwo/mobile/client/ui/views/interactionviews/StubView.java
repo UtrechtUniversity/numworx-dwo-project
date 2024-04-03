@@ -324,6 +324,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}-*/;
 	
 	private int getConstantHeight() {
+		if (innerView == null) return 0; // komt veel voor
 		try {
 			return getConstantHeight0(innerView);
 		} catch(Throwable t) {
@@ -331,6 +332,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		}
 	}
 	private int getConstantWidth() {
+		if (innerView == null) return 0; // komt veel voor
 		try {
 			return getConstantWidth0(innerView);
 		} catch(Throwable t) {
