@@ -451,7 +451,7 @@ public class ModulesOfSchoolclassPresenter {
     
     @JsMethod
     public boolean hasKiosk() {
-      return dwoGlobalVars.isKiosk();
+      return dwoGlobalVars.isKiosk() && dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().hasKiosk();
     }
 
 }

@@ -581,7 +581,9 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         }
 
         private static JComboBox<?> createComboBox() {
-            JComboBox<?> box = new JComboBox<Object>(OBJECT_TYPE_PLUS);
+            Object[] objects = OBJECT_TYPE;
+            if (DwoHelper.hasKiosk()) objects = OBJECT_TYPE_PLUS;
+			JComboBox<?> box = new JComboBox<Object>(objects);
             box.setEnabled(DwoHelper.isPremium());
             if(!box.isEnabled()) box.setToolTipText("Dit is een premium feature"); // FIXME vertalen!
             return box;

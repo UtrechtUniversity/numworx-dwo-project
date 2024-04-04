@@ -271,6 +271,10 @@ public class PersistentSchool implements Serializable {
     public boolean teachersCanWrite() {
       return schoolRights.contains("m") || schoolRights.equals("_");
     }
+ 
+    public boolean hasKiosk() {
+    	return schoolRights.contains("k");
+    }
     
     
     public DomSchool buildDomSchool() {

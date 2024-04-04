@@ -18,6 +18,6 @@ public interface CoursesOfSchoolRestCaller {
     void getCoursesClass(String id, RestCourse rest, MethodCallback<DomCoursesOfSchoolClass> callback);
     void getCoursesClass(String id, RestScoContext rest, MethodCallback<DomCoursesOfSchoolClass> callback);
     void getCoursesClass(String id, RestClassCourse rest, MethodCallback<DomCoursesOfSchoolClass> callback);
-    void getCoursesClassURL(String id, String base, String classcourseid, MethodCallback<JSONValue> callback);
+    void getCoursesClassURL(String id, String base, String classcourseid, String locale, MethodCallback<JSONValue> callback);
 
 }

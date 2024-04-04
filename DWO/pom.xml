@@ -42,6 +42,7 @@
 <!-- 		<module>../osiris-import</module> -->
 <!-- 		<module>../notebook</module> -->
         <module>../EBServer</module>
+        <module>../schoolyear-jclient-lib</module>
     </modules>
     
     <name>${project.build.finalName}</name>

@@ -57,8 +57,16 @@ public class SchoolyearClient {
 	static public class Builder {
 		URI url = URI.create("https://beta.api.schoolyear.app/");
 		String key = "8d5b7acd-5bdc-46cb-97dc-0b12b2c79a87.5hsdgmWvy6tqPN-JOnv-ZDUOD0ntipeR";
-		public Builder() {
-			
+
+		public void setUrl(URI url) {
+			this.url = url;
+		}
+
+		public void setKey(String key) {
+			this.key = key;
+		}
+
+		public Builder() {			
 		}
 		
 		public SchoolyearClient build() {

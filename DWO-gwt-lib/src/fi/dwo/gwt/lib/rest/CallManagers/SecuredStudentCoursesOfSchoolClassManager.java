@@ -3,6 +3,7 @@ package fi.dwo.gwt.lib.rest.CallManagers;
 import org.osgi.util.promise.Promise;
 
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.json.client.JSONValue;
 
 import static fi.dwo.gwt.lib.rest.GwtRestVars.F;
@@ -80,9 +81,10 @@ public class SecuredStudentCoursesOfSchoolClassManager implements CoursesOfSchoo
 
 	@Override
 	public Promise<String> getClassCourseURL(DomContext context, DomClassCourse classcourse, String base) {
+		String locale = LocaleInfo.getCurrentLocale().getLocaleName();
 		String id = PathId.getId(context);
 		String cc = classcourse.getId().getIdString();
-		Promise<JSONValue> p = F( (i, c, callback) -> service.getCoursesClassURL(id, base, cc, callback), id, null);
+		Promise<JSONValue> p = F( (i, c, callback) -> service.getCoursesClassURL(id, base, cc, locale, callback), id, null);
 		return	p.map( (JSONValue v) -> v.isObject().get("url").isString().stringValue());
 	}
 	

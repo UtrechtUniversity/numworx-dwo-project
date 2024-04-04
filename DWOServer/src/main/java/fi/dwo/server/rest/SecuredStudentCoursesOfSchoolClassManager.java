@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -51,6 +52,7 @@ import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.rest.jaxrsfilters.DwoUserPrincipal;
 import fi.dwo.server.rest.util.CourseBuilder;
+import fi.dwo.server.rest.util.SchoolyearUtilManager;
 import fi.servlet.dwomaccess.Subnet;
 import nl.numworx.schoolyear.jclient.SchoolyearClient;
 import nl.numworx.schoolyear.jclient.dto.Content;
@@ -418,8 +420,11 @@ public class SecuredStudentCoursesOfSchoolClassManager {
 
   @GET
   @Path("getURL")
-  public Response getURL(@Context SecurityContext sc, @QueryParam("id") String pid, @QueryParam("base") String base) throws Dwo2Exception, IOException {
+  @RolesAllowed({"STUDENT"})
+  public Response getURL(@Context SecurityContext sc, @QueryParam("id") String pid, @QueryParam("base") String base, @QueryParam("locale") String locale) throws Dwo2Exception, IOException {
 	  UserState_U state = AnonDomainAuthorizer.build().submitUser(sc);
+	  DwoUserPrincipal principal = (DwoUserPrincipal) sc.getUserPrincipal();
+	  UserState_HR_R_S_SG_U hrstate = state.setHasRoleIfType(principal.getHr().buildDomHasRole(), RoleType.STUDENT);
 	  PersistentUser user = state.getUser();
 	  DomClassCourse cc = new DomClassCourse();
 	  cc.setId(new PersistenceId(pid));
@@ -428,7 +433,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
 	  String url = base + "exam/?id=" +id;
 	  SecuredUserAccountManager account = new SecuredUserAccountManager();
 	  if (pcc.getType() == CourseType.kiosk.ordinal()) {
-		  SchoolyearClient client = new SchoolyearClient.Builder().build();
+		  SchoolyearClient client = SchoolyearUtilManager.build(hrstate.getSchool());
 		  ExamDTO exam = new ExamDTO();
 		  exam.id = pcc.getSyExamID();
 		  UserDTO u = new UserDTO();
@@ -445,23 +450,36 @@ public class SecuredStudentCoursesOfSchoolClassManager {
 		  WebPageUrl wpu = new WebPageUrl();
 		  RestSchoolClass rest = new RestSchoolClass();
 		  rest.setDomSchoolClass(new DomSchoolClass());
-		  DwoUserPrincipal principal = (DwoUserPrincipal) sc.getUserPrincipal();
 		  rest.setRestContext(new DomContext());
 		  rest.getRestContext().setDomHasRole(principal.getHr().buildDomHasRole());
 		  rest.getDomSchoolClass().setId(PersistentSchoolClass.buildPersistenceId(pcc.getClassID()));
 		  String bearer = account.getBearerToken(sc, rest);
 		  bearer = bearer.replace("\"", "");
 		  url = base + "exam/toets.jsp/?id=" +id;;
+		  if (locale != null) {
+			  url = url += "&locale=" + URLEncoder.encode(locale);
+		  }
 		  wpu.url = url + "&a=" + URLEncoder.encode(bearer);
 		  
 		  Element element = new Element();
 		  element.url = wpu;
 		  element.type = WebPageUrl.TYPE;
 		  element.origin = "api_key";
-		  u.vault.content.elements = Collections.singletonMap(uuid, element);
+		  Map <String, Element> elements = new HashMap<>();
+		  u.vault.content.elements = elements; elements.put(uuid, element);
 		  u.vault.content.entry_points = Collections.singletonList(new ElementId(uuid));
-		  url = wpu.url;
-		 // url = client.createWorkspace(exam, u).onboarding_url;
+		  url = base + "exam/logout.html";
+		  wpu = new WebPageUrl();
+		  wpu.url = url;
+		  element = new Element();
+		  element.url = wpu;
+		  element.type = WebPageUrl.TYPE;
+		  element.origin = "api_key";
+		  uuid = UUID.randomUUID().toString();
+		  elements.put(uuid, element);
+		  u.vault.content.exit_points = Collections.singletonList(new ElementId(uuid));
+		  //url = wpu.url;
+		  url = client.createWorkspace(exam, u).onboarding_url;
 	  } else if (pcc.getType() == CourseType.assesment.ordinal()) {
 	  }
 	  Map<String,String> entity = Collections.singletonMap("url", url);

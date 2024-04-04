@@ -832,4 +832,12 @@ public final class DwoHelper {
       return false;
     }
 
+	public static boolean hasKiosk() {
+	      try {
+	          return DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().hasKiosk();
+	        } catch (Exception e) {
+	        }
+		return false;
+	}
+
 }

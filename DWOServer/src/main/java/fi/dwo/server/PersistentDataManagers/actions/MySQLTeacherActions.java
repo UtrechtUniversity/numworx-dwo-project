@@ -29,6 +29,8 @@ import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentInClassManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentModelContextUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.TeacherSchoolClassUtilManager;
+import fi.dwo.server.rest.util.Origin;
+import fi.dwo.server.rest.util.SchoolyearUtilManager;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -221,9 +223,9 @@ public class MySQLTeacherActions implements TeacherActions {
         return true;    
             }
     
-    private String setKioskMode(PersistentClassCourse cc, PersistentSchool school, PersistentCourse course, PersistentSchoolClass sc) {
-		if (school.getAboType() == AboType.premium) {
-			SchoolyearClient client = new SchoolyearClient.Builder().build();
+    public static String setKioskMode(PersistentClassCourse cc, PersistentSchool school, PersistentCourse course, PersistentSchoolClass sc) throws Dwo2Exception {
+		if (school.getAboType() == AboType.premium && school.hasKiosk()) {
+			SchoolyearClient client = SchoolyearUtilManager.build(school);
 			ExamDTO exam = new ExamDTO();
 			exam.display_name = course.getName();
 			exam.end_time = cc.getNotAfter();
@@ -246,14 +248,14 @@ public class MySQLTeacherActions implements TeacherActions {
 				root.url_entire_domain = new WebPageEntireDomain();
 				root.type = WebPageEntireDomain.TYPE;
 				root.origin = "api_key";
-				root.url_entire_domain.url = "https://teuniz.dwo.nl/";
+				root.url_entire_domain.url = Origin.ORIGINS[0];
 				elements.put(uuid, root);
 				Element logout = new Element();
 				uuid = UUID.randomUUID().toString();
 				logout.origin = "api_key";
 				logout.type = WebPageUrl.TYPE;
 				logout.url = new WebPageUrl();
-				logout.url.url = "https://teuniz.dwo.nl/toets/logout.html";
+				logout.url.url = root.url_entire_domain.url + "/toets/logout.html";
 		        elements.put(uuid, logout);		
 				exam.workspace.vault.content.exit_points = Collections.singletonList(new ElementId(uuid));
 				try {
@@ -262,7 +264,7 @@ public class MySQLTeacherActions implements TeacherActions {
 					LOG.log(Level.SEVERE, "setKioskmode create for " + course, e);
 				}
 				cc.setSyExamID(exam.id);
-				cc.setAccessKey(exam.pin);
+				//cc.setAccessKey(exam.pin);
 			} else {
 				exam.id = cc.getSyExamID();
 				try {

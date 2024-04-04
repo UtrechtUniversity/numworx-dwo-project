@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import nl.uu.fi.dwo.rest.dom.entities.util.SchoolAttrType;
+
 /**
  *
  * @author G.A.J. van der Plas
@@ -19,6 +21,7 @@ public class DomSchoolFull extends DomSchool{
     private String schoolRights;
     private String image;
     private List<DomMapEntry<RoleType,String>> passwords;
+    private List<DomMapEntry<SchoolAttrType,String>> attributes;
 
     /**
      * @return the schoolLogin
@@ -83,5 +86,13 @@ public class DomSchoolFull extends DomSchool{
     public void setPasswords(List<DomMapEntry<RoleType,String>> passwords) {
       this.passwords = passwords;
     }
+
+	public List<DomMapEntry<SchoolAttrType,String>> getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(List<DomMapEntry<SchoolAttrType,String>> attributes) {
+		this.attributes = attributes;
+	}
 
 }

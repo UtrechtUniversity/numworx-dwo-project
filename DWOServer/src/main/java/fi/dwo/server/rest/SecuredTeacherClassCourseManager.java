@@ -6,9 +6,15 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.actions.MySQLTeacherActions;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +30,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomClassCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.entities.RestClassCourseFull;
 import nl.uu.fi.dwo.rest.entities.RestCourseFull;
 
@@ -48,8 +55,9 @@ public class SecuredTeacherClassCourseManager {
 		DomClassCourseFull cc = rest.getDomCourse();
     	try {
 // Security...
-    		AnonDomainAuthorizer.build().submitUser(sc)
-    		.setHasRole(rest.getRestContext().getDomHasRole())
+    		UserState_HR_R_S_SG_U withHasRole = AnonDomainAuthorizer.build().submitUser(sc)
+    		.setHasRole(rest.getRestContext().getDomHasRole());
+			TeacherState_HR_R_S_SG_U state = withHasRole
     		.buildSchoolAdminTeacher().setTeacher();
     		
     		
@@ -66,6 +74,12 @@ public class SecuredTeacherClassCourseManager {
 			if(cc.getViewState() != null) pc.setViewState(cc.getViewState());
 // optimistic locking or user managed?
 
+			if (pc.getType().intValue() == CourseType.kiosk.ordinal()) {
+				PersistentSchool school = withHasRole.getSchool();
+				PersistentCourse course = CourseManager.findEntity(pc.getCourseID());
+				PersistentSchoolClass schoolclass = SchoolClassManager.findEntity(pc.getClassID());				
+				MySQLTeacherActions.setKioskMode(pc, school, course, schoolclass);
+			}
 			pc=ClassCourseManager.edit(pc);
 			cc = pc.buildDomClassCourseFull();
 		} catch (Dwo2Exception e) {

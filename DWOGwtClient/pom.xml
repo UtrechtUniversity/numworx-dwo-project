@@ -391,8 +391,9 @@
                     <path>/</path>
                     <systemProperties>
                     	<CDN_HOST>localhost:8082</CDN_HOST>
-			<CDNURL>http://localhost:8082</CDNURL>
-                    	<DWO_ENV>testkiosk</DWO_ENV>                   
+						<CDNURL>http://localhost:8082</CDNURL>
+                    	<DWO_ENV>testkiosk</DWO_ENV>
+                    	<ALLOW_ORIGIN>http://localhost:8080</ALLOW_ORIGIN>                  
                     </systemProperties>
                     <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
 					<contextFile>src/test/tomcat/${context.xml}</contextFile>

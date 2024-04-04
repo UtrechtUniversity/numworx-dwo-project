@@ -1,0 +1,57 @@
+package fi.dwo.server.rest.util;
+
+import java.io.StringReader;
+import java.net.URI;
+import java.net.URL;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+
+import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentSchoolData;
+import fi.dwo.server.PersistentDataManagers.core.SchoolDataManager;
+import nl.numworx.schoolyear.jclient.SchoolyearClient;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+
+public class SchoolyearUtilManager {
+
+	public static SchoolyearClient build(PersistentSchoolData data) {
+		String auth, endpoint;
+		SchoolyearClient.Builder builder = new SchoolyearClient.Builder();
+	   	JsonReader reader = Json.createReader(new StringReader(data.getSchoolData()));
+    	JsonObject object = reader.readObject();
+    	reader.close();
+    	auth = object.getString("Sy-Api-Key");
+    	endpoint = object.getString("Sy-Api-Endpoint");
+    	if (auth != null)
+    		builder.setKey(auth);
+    	if (endpoint != null) {
+    		builder.setUrl(URI.create(endpoint));
+    	}    	
+    	return builder.build();
+	}
+	
+	public static SchoolyearClient build(PersistentSchool school) throws Dwo2Exception {
+		if (school.hasKiosk()) {
+			PersistentSchoolData data = SchoolDataManager.findEntity(school.getSchoolID());
+			if (data == null) data = new PersistentSchoolData();
+			return build(data);
+		}
+		throw new Dwo2Exception(Dwo2ExceptionCode.Client_InternalError, "no permission");
+	}
+	
+	public static SchoolyearClient build(DomSchool school) throws Dwo2Exception {
+		if (school.hasKiosk()) {
+			Long id = MySQLPersistenceId.getNativeId(school);
+			PersistentSchoolData data = SchoolDataManager.findEntity(id);
+			if (data == null) data = new PersistentSchoolData();
+			return build(data);			
+		}
+		throw new Dwo2Exception(Dwo2ExceptionCode.Client_InternalError, "no permission");
+	}
+	
+}
