@@ -26,8 +26,11 @@ import org.osgi.util.promise.Success;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
 
+import dagger.Lazy;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherClassCourseManager;
 import fi.dwo.gwt.lib.rest.util.StringFormatter;
 
 import jsinterop.annotations.JsMethod;
@@ -43,6 +46,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortEvent.EventType;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
@@ -83,6 +88,9 @@ public class SelectedResultsPresenter implements ResultEventHandler {
     private JavaScriptObject resultState;
     //model
     private DomResultTree resultTree;
+    
+    /*@Inject*/ Lazy<SecuredTeacherClassCourseManager> manager = SecuredTeacherClassCourseManager::new;
+    
 
     public interface Display extends BasicDisplay {
 
@@ -539,6 +547,21 @@ public class SelectedResultsPresenter implements ResultEventHandler {
         
         
         view.updateResultTree(resultTree);
+		
+	}
+	
+	@JsMethod
+	public void openDashboard(String module, String schoolClass) {		
+		DomContext context = new DomContext();
+		context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
+		DomClassCourse classCourse = new DomClassCourse();
+		classCourse.setClassId(new PersistenceId(schoolClass));
+		classCourse.setCourseId(new PersistenceId(module));
+		Promise<String> url = manager.get().getDashboardUI(context, classCourse, null);
+		url.then( s -> {
+			Window.open(s.getValue(), "dashboardUI", "");
+			return s;
+		}, FAILURE);
 		
 	}
 }

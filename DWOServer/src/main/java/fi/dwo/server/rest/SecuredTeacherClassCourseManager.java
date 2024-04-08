@@ -15,7 +15,9 @@ import fi.dwo.server.PersistentDataManagers.actions.MySQLTeacherActions;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
+import fi.dwo.server.rest.util.SchoolyearUtilManager;
 
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,11 +28,18 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
+import nl.numworx.schoolyear.jclient.SchoolyearClient;
+import nl.numworx.schoolyear.jclient.dto.DashboardDTO;
+import nl.numworx.schoolyear.jclient.dto.ExamDTO;
+import nl.numworx.schoolyear.jclient.dto.WebPageUrl;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
+import nl.uu.fi.dwo.rest.entities.RestClassCourse;
 import nl.uu.fi.dwo.rest.entities.RestClassCourseFull;
 import nl.uu.fi.dwo.rest.entities.RestCourseFull;
 
@@ -342,6 +351,54 @@ public class SecuredTeacherClassCourseManager {
 //            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
 //            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
 //        }
+    // schoolyear
     
-    
+    @PUT
+    @Path("settingsUI")
+    public WebPageUrl getSettingsUI(@Context SecurityContext sc, RestClassCourse rest) throws Dwo2Exception, IOException {
+    	UserState_HR_R_S_SG_U withHasRole = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
+		TeacherState_HR_R_S_SG_U state = withHasRole.buildSchoolAdminTeacher().setTeacher();
+    	SchoolyearClient client = SchoolyearUtilManager.build(withHasRole.getSchool());
+    	Long ccid = MySQLPersistenceId.getNativeId(rest.getDomClassCourse());
+    	PersistentClassCourse cc;
+    	if (ccid == null) {
+    		DomSchoolClassId dsc = new DomSchoolClass(); dsc.setId(rest.getDomClassCourse().getClassId());
+    		DomCourse dc = new DomCourse(rest.getDomClassCourse().getCourseId());
+    		PersistentCourse course = CourseManager.findEntity(MySQLPersistenceId.getNativeId(dc));
+    		PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(dsc));
+    		cc = ClassCourseManager.findEntities(schoolClass, course).get(0);
+    	} else
+    		 cc = ClassCourseManager.findEntity(ccid);
+    	WebPageUrl result = new WebPageUrl();
+    	ExamDTO exam = new ExamDTO();
+    	exam.id = cc.getSyExamID();
+    	result.url = client.openSettingsUI(exam);
+    	return result;
+    }
+    @PUT
+    @Path("dashboardUI")
+    public WebPageUrl getDashboardUI(@Context SecurityContext sc, RestClassCourse rest) throws Dwo2Exception, IOException {
+    	UserState_HR_R_S_SG_U withHasRole = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
+		TeacherState_HR_R_S_SG_U state = withHasRole.buildSchoolAdminTeacher().setTeacher();
+    	SchoolyearClient client = SchoolyearUtilManager.build(withHasRole.getSchool());
+    	Long ccid = MySQLPersistenceId.getNativeId(rest.getDomClassCourse());
+    	PersistentClassCourse cc;
+    	if (ccid == null) {
+    		DomSchoolClassId dsc = new DomSchoolClass(); dsc.setId(rest.getDomClassCourse().getClassId());
+    		DomCourse dc = new DomCourse(rest.getDomClassCourse().getCourseId());
+    		PersistentCourse course = CourseManager.findEntity(MySQLPersistenceId.getNativeId(dc));
+    		PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(dsc));
+    		cc = ClassCourseManager.findEntities(schoolClass, course).get(0);
+    	} else
+    		 cc = ClassCourseManager.findEntity(ccid);
+    	WebPageUrl result = new WebPageUrl();
+    	ExamDTO exam = new ExamDTO();
+    	exam.id = cc.getSyExamID();
+    	DashboardDTO config = new DashboardDTO();
+    	config.show_proctor_pin = Boolean.TRUE;
+    	config.email_hint = withHasRole.getUser().getEmail();
+		result.url = client.openDashboardUI(exam, config);
+    	return result;
+    }
+
 }

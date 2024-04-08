@@ -100,7 +100,7 @@ public class SchoolyearClient {
 	}
 	
 	public String openDashboardUI(ExamDTO exam, DashboardDTO dto) throws IOException {
-		WebPageUrl u = send("v2/exam/"+exam.id+"/ui/settings", POST, dto, WebPageUrl.class);
+		WebPageUrl u = send("v2/exam/"+exam.id+"/ui/dashboard", POST, dto, WebPageUrl.class);
 		return u.url;
 	}
 	
