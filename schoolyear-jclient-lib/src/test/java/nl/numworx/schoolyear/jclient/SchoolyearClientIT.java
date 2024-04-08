@@ -9,6 +9,13 @@ import java.util.UUID;
 
 import org.junit.Test;
 
+import nl.numworx.schoolyear.jclient.dto.Content;
+import nl.numworx.schoolyear.jclient.dto.Element;
+import nl.numworx.schoolyear.jclient.dto.ExamDTO;
+import nl.numworx.schoolyear.jclient.dto.Vault;
+import nl.numworx.schoolyear.jclient.dto.WebPageEntireDomain;
+import nl.numworx.schoolyear.jclient.dto.Workspace;
+
 public class SchoolyearClientIT {
 
 	@Test

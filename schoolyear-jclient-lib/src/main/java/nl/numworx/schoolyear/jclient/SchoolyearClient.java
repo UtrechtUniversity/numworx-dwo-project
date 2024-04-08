@@ -18,6 +18,14 @@ import java.util.logging.Logger;
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 
+import nl.numworx.schoolyear.jclient.dto.DashboardDTO;
+import nl.numworx.schoolyear.jclient.dto.ExamDTO;
+import nl.numworx.schoolyear.jclient.dto.OK;
+import nl.numworx.schoolyear.jclient.dto.SignatureDTO;
+import nl.numworx.schoolyear.jclient.dto.UserDTO;
+import nl.numworx.schoolyear.jclient.dto.WebPageUrl;
+import nl.numworx.schoolyear.jclient.dto.WorkspaceDTO;
+
 /**
  * Schoolyear client for Java.
  * 
@@ -27,6 +35,10 @@ import com.owlike.genson.GensonBuilder;
 
 public class SchoolyearClient {
 	
+	private static final String PATCH = "PATCH";
+
+	private static final String POST = "POST";
+
 	private static final DateFormat yourDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
 	static {
 		yourDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -67,28 +79,40 @@ public class SchoolyearClient {
 	}
 	
 	public ExamDTO createExam(ExamDTO exam) throws IOException {
-		return send("v2/exam", "POST", exam, ExamDTO.class);
+		return send("v2/exam", POST, exam, ExamDTO.class);
 	}
 	
-	void updateExam() {
+	public ExamDTO updateExam(ExamDTO exam) throws IOException {
+		return send("v2/exam/" + exam.id, PATCH, exam, ExamDTO.class);
+	}
+	
+	public String openSettingsUI(ExamDTO exam) throws IOException {
+		WebPageUrl u = send("v2/exam/"+exam.id+"/ui/settings", POST, null, WebPageUrl.class);
+		return u.url; 		
+	}
+	
+	public String openDashboardUI(ExamDTO exam, DashboardDTO dto) throws IOException {
+		WebPageUrl u = send("v2/exam/"+exam.id+"/ui/settings", POST, dto, WebPageUrl.class);
+		return u.url;
+	}
+	
+	public WorkspaceDTO createWorkspace(ExamDTO exam, UserDTO user) throws IOException {
+		return send("v2/exam/"+exam.id+"/workspace", POST, user, WorkspaceDTO.class);
+	}
+	
+	public boolean validateSignature(SignatureDTO signature) throws IOException {
+		return send("v2/signature/validate", POST, signature, OK.class).ok;
+	}
 		
-	}
-	
-	void openSettingsUI() {
-		
-	}
-	
-	void openDashboardUI() {
-		
-	}
-	
 	private <T> T send(String endpoint, String method, Object input, Class<T> outputType) throws IOException {
 		URL url = new URL(api, endpoint);
 	      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 	      DataOutputStream outStream = null;
 	      conn.setRequestMethod(method);
 	      conn.setRequestProperty("Accept", "application/json");
-	      conn.setRequestProperty("Content-Type", "application/json");
+	      conn.setRequestProperty("Content-Type", 
+	    		  method == PATCH ? "application/merge-patch+json":
+	    		  "application/json");
 	      conn.setRequestProperty("Accept-Charset", "UTF-8");
 	      conn.setRequestProperty("X-Sy-Api",key);
 
@@ -96,9 +120,9 @@ public class SchoolyearClient {
 	      conn.setDoOutput(true);
 	      conn.setUseCaches(false);
 	      outStream = new DataOutputStream(conn.getOutputStream());
-	      String jsonOut = genson.serialize(input);
+	      String jsonOut = input == null ? "" : genson.serialize(input);
 	      LOG.log(Level.FINEST, "Sending: {0}", new Object[] {jsonOut.toString()});
-	      outStream.write(jsonOut.getBytes("UTF-8"));
+	      outStream.write(jsonOut.getBytes(StandardCharsets.UTF_8));
 	      outStream.close();
 	      int responseCode = conn.getResponseCode();
 	      if (responseCode == 204) 
@@ -116,7 +140,7 @@ public class SchoolyearClient {
 	          conn.disconnect();
 	        LOG.log(Level.WARNING, "Code: {0}. Reason {1} Message {2}",
 	            new Object[] {responseCode, conn.getResponseMessage(), json});
-	        return null;
+	        throw new SchoolyearException(responseCode, conn.getResponseMessage(), json.toString());
 	      }
 
 	      BufferedReader br = new BufferedReader(

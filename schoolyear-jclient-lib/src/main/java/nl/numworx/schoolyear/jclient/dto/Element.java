@@ -1,4 +1,4 @@
-package nl.numworx.schoolyear.jclient;
+package nl.numworx.schoolyear.jclient.dto;
 
 public class Element {
 	public String type;
@@ -6,4 +6,5 @@ public class Element {
 // one of:	
 	public WebPageUrl url;
 	public WebPageEntireDomain url_entire_domain;
+	public WebPageUrlRegex url_regex;
 }
