@@ -316,15 +316,15 @@ private Response refresh(MultivaluedMap<String, String> params) throws NullPoint
   @POST  // Chrome
   @Path("/nekot") // end of token
   @Consumes(MediaType.TEXT_PLAIN)
-  public Response nekot(String plain) {
+  public Response nekot(@Context HttpServletRequest servletRequest, String plain) {
 		MultivaluedMap<String, String> params = convert(plain);
-    return nekot(params);
+    return nekot(servletRequest, params);
   }
 
   @POST // Safari
   @Path("/nekot") // end of token
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-  public Response nekot(MultivaluedMap<String, String> params) {
+  public Response nekot(@Context HttpServletRequest servletRequest, MultivaluedMap<String, String> params) {
 	try {
 		String accessToken = params.getFirst("access_token");
 		String code = params.getFirst(REFRESH_TOKEN);
@@ -352,6 +352,9 @@ private Response refresh(MultivaluedMap<String, String> params) throws NullPoint
 			  l.setLastLogin(System.currentTimeMillis());
 		  }
 		  LoginContextManager.edit(l);
+	      if (servletRequest.getSession(false) != null) {
+	          servletRequest.getSession().invalidate();
+	      }
 		}
 	} catch (JwtException | IllegalArgumentException | PersistenceException | NullPointerException e) {
 		LOG.log(Level.WARNING, e.toString(), e);

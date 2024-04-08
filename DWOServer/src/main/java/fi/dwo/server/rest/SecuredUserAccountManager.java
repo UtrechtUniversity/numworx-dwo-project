@@ -263,7 +263,7 @@ public class SecuredUserAccountManager {
         //TODO REST update lastLogin and such.
         Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "Logout for basic Authentication performed: " + userName + ".");
         Response r = Response.status(401).entity(e.getMessage()).build();
-        if (servletRequest.getSession() != null) {
+        if (servletRequest.getSession(false) != null) {
             servletRequest.getSession().invalidate();
         }
         return r;
