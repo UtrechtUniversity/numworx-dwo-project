@@ -33,16 +33,22 @@ import fi.dwo.server.rest.util.Origin;
 import fi.dwo.server.rest.util.SchoolyearUtilManager;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.net.HttpURLConnection;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -222,12 +228,40 @@ public class MySQLTeacherActions implements TeacherActions {
         }
         return true;    
             }
+ 
+    private static void allowMethods(String... methods) {
+        try {
+            Field methodsField = HttpURLConnection.class.getDeclaredField("methods");
+
+            Field modifiersField = Field.class.getDeclaredField("modifiers");
+            modifiersField.setAccessible(true);
+            modifiersField.setInt(methodsField, methodsField.getModifiers() & ~Modifier.FINAL);
+
+            methodsField.setAccessible(true);
+
+            String[] oldMethods = (String[]) methodsField.get(null);
+            Set<String> methodsSet = new LinkedHashSet<>(Arrays.asList(oldMethods));
+            methodsSet.addAll(Arrays.asList(methods));
+            String[] newMethods = methodsSet.toArray(new String[0]);
+
+            methodsField.set(null/*static field*/, newMethods);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+    static {
+    	allowMethods("PATCH");
+    }
+    
+    
     
     public static String setKioskMode(PersistentClassCourse cc, PersistentSchool school, PersistentCourse course, PersistentSchoolClass sc) throws Dwo2Exception {
 		if (school.getAboType() == AboType.premium && school.hasKiosk()) {
 			SchoolyearClient client = SchoolyearUtilManager.build(school);
+			int count = StudentOfClassManager.findEntities(sc).size();
 			ExamDTO exam = new ExamDTO();
 			exam.display_name = course.getName();
+			exam.expected_workspaces = count;
 			exam.end_time = cc.getNotAfter();
 			exam.start_time = cc.getNotBefore();
 			if (exam.start_time == null) {			
@@ -274,14 +308,14 @@ public class MySQLTeacherActions implements TeacherActions {
 					LOG.log(Level.SEVERE, "setKioskmode update for " + course, e);
 				}
 			}
-			try {
-				String result = client.openSettingsUI(exam);
-				LOG.info("go to " + result);
-				return result;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			try {
+//				String result = client.openSettingsUI(exam);
+//				LOG.info("go to " + result);
+//				return result;
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 		} 
 // not valid, fall back to assesment
 		{

@@ -250,5 +250,11 @@ public class ModulesOfSchoolclassService {
         context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
     	return ccm.getSettingsUI(context, cc, null);
     }
+ 
+    public Promise<String> openDashboardUI(DomClassCourse cc) {
+    	DomContext context = new DomContext();
+        context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
+    	return ccm.getDashboardUI(context, cc, null);
+    }
     
 }

@@ -73,6 +73,8 @@ public class ModulesOfSchoolclassPresenter {
         void setLoadingTableMessageSelected();
 
 		void setSettings(String id);
+
+		void setSchoolyearUI(boolean on);
     }
 
     @JsMethod
@@ -212,6 +214,19 @@ public class ModulesOfSchoolclassPresenter {
     	
     	url = url.then(s -> {
     		Window.open(s.getValue(), "settingsUI", "");
+    		return s;
+    	});
+    	url.then( s -> updateViewData(), FAILURE);
+    }
+    
+    @JsMethod
+    void openDashboard(String key, String typeString, String fromData, String toData, String accessKey) {
+    	Promise<String> url = 
+    			update(key, typeString, fromData, toData, accessKey)
+    			.then(p -> service.openDashboardUI(p.getValue()));
+    	
+    	url = url.then(s -> {
+    		Window.open(s.getValue(), "dashboardUI", "");
     		return s;
     	});
     	url.then( s -> updateViewData(), FAILURE);

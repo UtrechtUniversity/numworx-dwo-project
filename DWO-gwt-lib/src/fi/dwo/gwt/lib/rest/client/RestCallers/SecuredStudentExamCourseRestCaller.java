@@ -1,6 +1,5 @@
 package fi.dwo.gwt.lib.rest.client.RestCallers;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -39,5 +38,6 @@ public interface SecuredStudentExamCourseRestCaller extends RestService, Courses
 
     @GET
     @Path("/sec:{id}/student/exam/coursesofschoolclass/getURL")
-    void getCoursesClassURL(@PathParam("id") String id, @QueryParam("base") String base, @QueryParam("id") String classcourseid, MethodCallback<JSONValue> callback);
+    @Override
+    void getCoursesClassURL(@PathParam("id") String id, @QueryParam("base") String base, @QueryParam("id") String classcourseid, @QueryParam("locale") String locale, MethodCallback<JSONValue> callback);
 }
