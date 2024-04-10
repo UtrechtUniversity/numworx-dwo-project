@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile;
 
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,6 +13,7 @@ import nl.uu.fi.dwo.mobile.client.template.TemplateNumworxConstants;
 import nl.uu.fi.dwo.mobile.client.template.TemplateUUTestConstants;
 import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
+import nl.uu.fi.dwo.mobile.client.ui.views.NavigationMenu;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
 
 import com.google.gwt.activity.shared.ActivityManager;
@@ -122,17 +124,19 @@ public abstract class DWOplayer
 	protected abstract void createClientFactory();
 
 	void createTabletDisplay(TabletActivityMapper appActivityMapper, 
-			DWOplayerParameters params, NavigationView navigation, HeaderView header, EventBus bus)
+			DWOplayerParameters params, NavigationView navigation, HeaderView header, EventBus bus, Optional<NavigationMenu> menu)
 	{
 		SimplePanel display = new SimpleLayoutPanel();
 		ActivityManager activityMapper = new ActivityManager(appActivityMapper, bus);
 		activityMapper.setDisplay(display);
 		display.asWidget().addStyleName("RootPanel");
-		RootLayoutPanel.get().add(header);
-		RootLayoutPanel.get().add(navigation);
-		RootLayoutPanel.get().add(display);
-		navigation.setDisplay(display);
-		header.setDisplay(display,navigation);
+		RootLayoutPanel root = RootLayoutPanel.get();
+		root.add(header);
+		root.add(navigation);
+		menu.ifPresent(root::add);
+		root.add(display);
+		navigation.setDisplay(display, menu);
+		header.setDisplay(display,navigation, menu);
 		header.hide();
 	}
 

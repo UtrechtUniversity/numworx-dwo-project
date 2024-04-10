@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -24,6 +25,7 @@ public class HeaderLessView extends HTML implements HeaderView {
   private Place upPlace, homePlace;
   private Widget root;
   private NavigationView navigation;
+private Optional<NavigationMenu> menu;
   
   @Inject HeaderLessView(PlaceController controller) {
     this.controller = controller;
@@ -73,9 +75,10 @@ public class HeaderLessView extends HTML implements HeaderView {
   }
 
   @Override
-  public void setDisplay(Widget display, NavigationView navigationView) {
+  public void setDisplay(Widget display, NavigationView navigationView, Optional<NavigationMenu> menu) {
     this.root = display;
     this.navigation = navigationView;
+    this.menu = menu;
   }
 
   @Override

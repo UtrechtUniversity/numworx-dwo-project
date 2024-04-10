@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.dagger;
 
+import java.util.Optional;
+
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -26,6 +28,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.Login3ViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
+import nl.uu.fi.dwo.mobile.client.ui.views.NavigationMenu;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
@@ -93,4 +96,10 @@ public abstract class HeaderLessModule {
   }
   
   @Binds abstract RPCHandler rpc(DWO2RPCHandler rpc);
+  
+  @Provides static Optional<NavigationMenu> navigationMenu(Provider<NavigationMenu> menu) {
+	  // if ... then return Optional.empty();
+	  return Optional.of(menu.get());
+  }
+  
 }

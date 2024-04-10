@@ -23,18 +23,22 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
@@ -63,7 +67,7 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
  *
  */
 @Singleton
-public class HeaderViewNumworx extends Composite implements HasText, Command, HeaderView {
+public class HeaderViewNumworx extends Composite implements HasText, Command, HeaderView, RequiresResize, ValueChangeHandler<Boolean>  {
 	
 	private static HeaderViewNumworxUiBinder uiBinder = GWT.create(HeaderViewNumworxUiBinder.class);
 
@@ -176,6 +180,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 	Place homePlace = new TreeModulePlace();
 	private Widget root;
 	private NavigationView navigation;
+	private Optional<NavigationMenu> menu;
 
 	@UiHandler("upBtn")
 	void onUpBtn(ClickEvent ev) {		
@@ -328,6 +333,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 		LayoutPanel p = RootLayoutPanel.get(); // parent of header
 		p.setWidgetVisible(this, false);
 		navigation.hide();
+		menu.ifPresent(m -> p.setWidgetVisible(m, false));
 		p.setWidgetTopBottom(root, 0, Unit.PX, 0, Unit.PX);		
 		p.setWidgetTopBottom(navigation, 0, Unit.PX, 0, Unit.PX);
 	}
@@ -336,16 +342,29 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 	public void show() {
 		LayoutPanel p = RootLayoutPanel.get(); // parent of header
 		p.setWidgetVisible(this, true);
-		p.setWidgetTopBottom(root, 50, Unit.PX, 0, Unit.PX);
-		p.setWidgetTopBottom(navigation, 50, Unit.PX, 0, Unit.PX);
+		menu.ifPresent(m -> p.setWidgetVisible(m, false));
+		int top = 50;
+		p.setWidgetTopBottom(root, top, Unit.PX, 0, Unit.PX);
+		p.setWidgetTopBottom(navigation, top, Unit.PX, 0, Unit.PX);
 		navigation.show();
+		onResize();
 	}
 
 	@Override
-	public void setDisplay(Widget display, NavigationView navigation) {
+	public void setDisplay(Widget display, NavigationView navigation, Optional<NavigationMenu> menu) {
 		root = display;
 		this.navigation = navigation;
-		RootLayoutPanel.get().setWidgetTopBottom(this, 0, Unit.PX, 50, Unit.PX);
+		this.menu = menu;
+		RootLayoutPanel.get().setWidgetTopHeight(this, 0, Unit.PX, 100, Unit.PX);
+		if (menu.isPresent()) {
+			RootLayoutPanel.get().setWidgetTopHeight(menu.get(), 50, Unit.PX, getMenuHeight(), Unit.PX );
+			menu.get().addValueChangeHandler(this);
+		}
+	}
+
+	private int getMenuHeight() {
+		if (menu.isPresent() && menu.get().isVisible()) return menu.get().getHeight();
+		return 0;
 	}
 
   @Override
@@ -356,4 +375,54 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 	  return root;
   }
 
+  final static private int MIN_WIDTH = 700;
+  boolean showNavigation = true; 
+  
+@Override
+public void onResize() {
+	int width = Window.getClientWidth();
+	GWT.log("header on resize  " + width);
+	if (menu.isPresent() && isVisible() && showNavigation) {
+		NavigationMenu m = menu.get();
+		RootLayoutPanel r = RootLayoutPanel.get();
+		if (width < MIN_WIDTH) {
+			if (!m.isVisible()) {
+				m.setUpDown(false, false);
+				navigation.hide();
+				r.setWidgetVisible(m, true);
+				r.setWidgetTopBottom(root, 50 + getMenuHeight(), Unit.PX, 0, Unit.PX);
+			}
+		} else if (m.isVisible()) {
+			navigation.show();
+			r.setWidgetVisible(m, false);
+			r.setWidgetTopBottom(root, 50, Unit.PX, 0, Unit.PX);
+			r.setWidgetTopBottom(navigation, 50, Unit.PX, 0, Unit.PX);			
+		}
+	}
+	
+}
+
+@Override
+public void onValueChange(ValueChangeEvent<Boolean> event) {
+	GWT.log("value changed " + event.getValue());
+	if (event.getValue()) {
+		navigation.wide();
+	} else {
+		navigation.hide();
+	}
+}
+
+
+
+public void showNav(boolean show) {
+	showNavigation = show;
+	// bookkeeping
+	if (show) {
+		navigation.show(); // or wide + hide + menu show
+	} else {
+		navigation.hide();
+		//menu.ifPresent(NavigationMenu::hide);
+	}
+	
+}
 }

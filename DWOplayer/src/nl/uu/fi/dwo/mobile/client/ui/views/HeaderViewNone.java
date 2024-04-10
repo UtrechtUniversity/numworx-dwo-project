@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -79,6 +80,7 @@ public class HeaderViewNone extends HTML implements HeaderView, MessageEventHand
   private PlaceController controller;
   private GotoController presenter = controller::goTo;
   private Place upPlace = homePlace;
+  private Optional<NavigationMenu> menu;
   
   @Override
   public void hide() {
@@ -100,9 +102,10 @@ public class HeaderViewNone extends HTML implements HeaderView, MessageEventHand
   }
 
   @Override
-  public void setDisplay(Widget display, NavigationView navigationView) {
+  public void setDisplay(Widget display, NavigationView navigationView, Optional<NavigationMenu> menu) {
     root = display;
     navigation = navigationView;
+    this.menu = menu;
 
   }
 

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -45,6 +46,7 @@ import nl.uu.fi.dwo.mobile.client.ui.VisibilityDetect;
 import nl.uu.fi.dwo.mobile.client.ui.places.ClassesPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
+import nl.uu.fi.dwo.mobile.client.ui.views.NavigationMenu;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
@@ -149,9 +151,10 @@ public class DWO2player extends DWOplayer implements EntryPoint {
   void createTabletDisplay(ClientFactory factory, TabletActivityMapper appActivityMapper, 
 		  IdleDetect idleDetect, DWOplayerParameters PARAMETERS, 
 		  NavigationView navigation, HeaderView header, EventBus bus,
-		  VisibilityDetect v
+		  VisibilityDetect v,
+		  Optional<NavigationMenu> menu
 		  ) {
-    super.createTabletDisplay(appActivityMapper, PARAMETERS, navigation, header, bus);
+    super.createTabletDisplay(appActivityMapper, PARAMETERS, navigation, header, bus, menu);
  
  // TESTING
     bus.addHandler(IdleDetect.TYPE, ev -> { GWT.log(ev.toString()); });

@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -22,7 +23,7 @@ public interface HeaderView extends IsWidget {
 	
 	void hide();
 	void show();
-	void setDisplay(Widget display, NavigationView navigationView);
+	void setDisplay(Widget display, NavigationView navigationView, Optional<NavigationMenu> menu);
 	
 	void setPresenter(GotoController presenter);
 	GotoController getPresenter();
