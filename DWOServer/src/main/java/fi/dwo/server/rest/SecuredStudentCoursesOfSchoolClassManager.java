@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -444,7 +445,8 @@ public class SecuredStudentCoursesOfSchoolClassManager {
 		  u.personal_information.email = user.getEmail();
 		  u.personal_information.first_name = user.getGivenName();
 		  u.personal_information.org_code = user.getUsername();
-		  u.personal_information.last_name = (user.getInsertion() + " " + user.getLastname()).trim();
+		  String insertion = Objects.toString( user.getInsertion(), ""); // null!
+		  u.personal_information.last_name = (insertion + " " + user.getLastname()).trim();
 		  
 		  u.vault = new Vault();
 		  u.vault.content = new Content();
