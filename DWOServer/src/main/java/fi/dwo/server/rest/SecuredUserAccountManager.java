@@ -532,10 +532,11 @@ public class SecuredUserAccountManager {
         List<PersistentLoginContext> list = LoginContextManager.findEntities(user.getId());
         if (list.size() == 1) {
         	Long cid = MySQLPersistenceId.getNativeId(rest.getDomSchoolClass());
+        	if (cid == null) return getBearerToken(sc); // no class...
         	PersistentSchoolClass psc = SchoolClassManager.findEntity(cid);
         	
             loginContext = list.get(0);
-            Long time = DwoDateUtilities.getCurrentDwoUnixTimeStamp() / TOTP.defaultPeriod;
+            Long time = DwoDateUtilities.getCurrentDwoUnixTimeStamp() / (TOTP.defaultPeriod*10) ;
             String timeString = time.toString();
             //String result = (loginContext.getSecretKey()==null) ? null : TOTP.generateTOTP(DatatypeConverter.printHexBinary(loginContext.getSecretKey()), timeString, "8");
             String secret;// = psc.getClass1() + "\f" + loginContext.getId();

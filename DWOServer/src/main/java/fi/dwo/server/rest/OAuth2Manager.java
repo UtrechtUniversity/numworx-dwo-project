@@ -134,7 +134,7 @@ static final String AUTHORIZATION_CODE = "authorization_code";
               PersistentSchoolClass psc = SchoolClassManager.findEntity(schoolClassId);
               PersistentLoginContext pls = LoginContextManager.findEntities(student.getId()).get(0);
               String secret = DatatypeConverter.printHexBinary(pls.getNonce());
-              if (TOTP.verifyTOTP(totp, secret, "8"))
+              if (TOTP.verifyTOTP(totp, secret, "8", TOTP.defaultPeriod*10))
               try {
             	if (pls.getSecretKey() == null)
             		pls = LoginContextUtilManager.forceNewLoginContextSession(student, true);
