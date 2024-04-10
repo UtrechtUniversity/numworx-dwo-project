@@ -6,5 +6,5 @@ public class Element {
 // one of:	
 	public WebPageUrl url;
 	public WebPageEntireDomain url_entire_domain;
-	public WebPageUrlRegex url_regex;
+	public WebPageRegex url_regex;
 }

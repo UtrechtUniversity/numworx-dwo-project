@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,6 +64,7 @@ import nl.numworx.schoolyear.jclient.dto.ExamDTO;
 import nl.numworx.schoolyear.jclient.dto.Vault;
 import nl.numworx.schoolyear.jclient.dto.WebPageEntireDomain;
 import nl.numworx.schoolyear.jclient.dto.WebPageUrl;
+import nl.numworx.schoolyear.jclient.dto.WebPageRegex;
 import nl.numworx.schoolyear.jclient.dto.Workspace;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
@@ -285,13 +287,51 @@ public class MySQLTeacherActions implements TeacherActions {
 				root.url_entire_domain.url = Origin.ORIGINS[0];
 				elements.put(uuid, root);
 				Element logout = new Element();
+				List<ElementId> logouts = new ArrayList<>(3);
 				uuid = UUID.randomUUID().toString();
+				logouts.add(new ElementId(uuid));
 				logout.origin = "api_key";
 				logout.type = WebPageUrl.TYPE;
 				logout.url = new WebPageUrl();
 				logout.url.url = root.url_entire_domain.url + "/toets/logout.html";
-		        elements.put(uuid, logout);		
-				exam.workspace.vault.content.exit_points = Collections.singletonList(new ElementId(uuid));
+		        elements.put(uuid, logout);
+
+		        uuid = UUID.randomUUID().toString();
+				logouts.add(new ElementId(uuid));
+				logout.origin = "api_key";
+				logout.type = WebPageUrl.TYPE;
+				logout.url = new WebPageUrl();
+				logout.url.url = root.url_entire_domain.url + "/dwo/saml/doLogout.jsp";
+		        elements.put(uuid, logout);
+		        
+		        uuid = UUID.randomUUID().toString();
+				logouts.add(new ElementId(uuid));
+				URI uri = URI.create(root.url_entire_domain.url);
+				WebPageRegex regex = new WebPageRegex();
+				logout.origin = "api_key";
+				logout.type = WebPageRegex.TYPE;
+				logout.url_regex = regex;
+				regex.protocol = uri.getScheme();
+				regex.hostname = uri.getHost();
+				if (uri.getPort() != -1)
+					regex.port = Integer.toString(uri.getPort());
+				regex.pathname = "**/logout.html";				
+		        elements.put(uuid, logout);
+		        
+		        uuid = UUID.randomUUID().toString();
+				logouts.add(new ElementId(uuid));
+				regex = new WebPageRegex();
+				logout.origin = "api_key";
+				logout.type = WebPageRegex.TYPE;
+				logout.url_regex = regex;
+				regex.protocol = uri.getScheme();
+				regex.hostname = uri.getHost();
+				if (uri.getPort() != -1)
+					regex.port = Integer.toString(uri.getPort());
+				regex.pathname = "/dwo/saml/doLogout.jsp";
+				regex.search_params = Collections.singletonMap("return", "*");
+		        elements.put(uuid, logout);
+				exam.workspace.vault.content.exit_points = logouts;
 				try {
 					exam = client.createExam(exam);
 				} catch (IOException e) {
