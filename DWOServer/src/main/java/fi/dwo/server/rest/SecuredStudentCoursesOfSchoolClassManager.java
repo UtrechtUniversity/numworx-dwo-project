@@ -52,6 +52,7 @@ import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.rest.jaxrsfilters.DwoUserPrincipal;
 import fi.dwo.server.rest.util.CourseBuilder;
+import fi.dwo.server.rest.util.Origin;
 import fi.dwo.server.rest.util.SchoolyearUtilManager;
 import fi.servlet.dwomaccess.Subnet;
 import nl.numworx.schoolyear.jclient.SchoolyearClient;
@@ -431,6 +432,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
 	  Long id = MySQLPersistenceId.getNativeId(cc);
 	  PersistentClassCourse pcc = ClassCourseManager.findEntity(id);
 	  String url = base + "exam/?id=" +id;
+	  String origin = Origin.ORIGINS[0];
 	  SecuredUserAccountManager account = new SecuredUserAccountManager();
 	  if (pcc.getType() == CourseType.kiosk.ordinal()) {
 		  SchoolyearClient client = SchoolyearUtilManager.build(hrstate.getSchool());
@@ -455,7 +457,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
 		  rest.getDomSchoolClass().setId(PersistentSchoolClass.buildPersistenceId(pcc.getClassID()));
 		  String bearer = account.getBearerToken(sc, rest);
 		  bearer = bearer.replace("\"", "");
-		  url = base + "exam/toets.jsp/?id=" +id;;
+		  url = origin + base + "exam/toets.jsp?id=" +id;;
 		  if (locale != null) {
 			  url = url += "&locale=" + URLEncoder.encode(locale);
 		  }
@@ -468,7 +470,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
 		  Map <String, Element> elements = new HashMap<>();
 		  u.vault.content.elements = elements; elements.put(uuid, element);
 		  u.vault.content.entry_points = Collections.singletonList(new ElementId(uuid));
-		  url = base + "exam/logout.html";
+		  url = origin + base + "exam/logout.html";
 		  wpu = new WebPageUrl();
 		  wpu.url = url;
 		  element = new Element();

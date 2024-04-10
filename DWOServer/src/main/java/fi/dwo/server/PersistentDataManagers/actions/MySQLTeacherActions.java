@@ -343,11 +343,11 @@ public class MySQLTeacherActions implements TeacherActions {
 				exam.id = cc.getSyExamID();
 				try {
 					exam = client.updateExam(exam);
-					cc.setAccessKey(exam.pin);
 				} catch (IOException e) {
 					LOG.log(Level.SEVERE, "setKioskmode update for " + course, e);
 				}
 			}
+			return null;
 //			try {
 //				String result = client.openSettingsUI(exam);
 //				LOG.info("go to " + result);
