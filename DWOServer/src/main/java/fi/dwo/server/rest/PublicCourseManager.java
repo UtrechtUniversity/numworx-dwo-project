@@ -227,7 +227,7 @@ if(SECURITY)
     		PersistentDwoProfile profile = DwoProfileManager.findEntity(parent.getDwoProfileID());
 if(SECURITY) 
     		if ( parent.getSchoolID() != null || 
-    		     !visible(parent) ||
+ //   		     !visible(parent) ||  ????Consequenties????
     			 profile.isLimited()) 
     			throwLoginNeeded();
 // TODO Verify context: profile matches...
