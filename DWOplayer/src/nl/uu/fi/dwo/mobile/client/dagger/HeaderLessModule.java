@@ -16,6 +16,7 @@ import dagger.Provides;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.DWO2ClientFactoryImpl;
 import nl.uu.fi.dwo.mobile.DWO2RPCHandler;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWO2playerDefaults;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.sco.SMLogger;
@@ -98,7 +99,8 @@ public abstract class HeaderLessModule {
   @Binds abstract RPCHandler rpc(DWO2RPCHandler rpc);
   
   @Provides static Optional<NavigationMenu> navigationMenu(Provider<NavigationMenu> menu) {
-	  // if ... then return Optional.empty();
+	  if (!DWOplayer.RESPONSIVE)
+		  return Optional.empty();
 	  return Optional.of(menu.get());
   }
   

@@ -88,6 +88,7 @@ public class HeaderViewNone extends HTML implements HeaderView, MessageEventHand
       LayoutPanel p = RootLayoutPanel.get(); // parent of header
       p.setWidgetVisible(this, false);
       navigation.hide();
+	  menu.ifPresent(m -> p.setWidgetVisible(m, false));
       p.setWidgetTopBottom(root, -50, Unit.PX, 0, Unit.PX);     
       p.setWidgetTopBottom(navigation, 0, Unit.PX, 0, Unit.PX);
   }
@@ -96,6 +97,7 @@ public class HeaderViewNone extends HTML implements HeaderView, MessageEventHand
   public void show() {
       LayoutPanel p = RootLayoutPanel.get(); // parent of header
       p.setWidgetVisible(this, false);
+	  menu.ifPresent(m -> p.setWidgetVisible(m, false));
       p.setWidgetTopBottom(root, 0, Unit.PX, 0, Unit.PX);
       p.setWidgetTopBottom(navigation, 0, Unit.PX, 0, Unit.PX);
       navigation.show();
@@ -106,9 +108,19 @@ public class HeaderViewNone extends HTML implements HeaderView, MessageEventHand
     root = display;
     navigation = navigationView;
     this.menu = menu;
+	if (menu.isPresent()) {
+		RootLayoutPanel.get().setWidgetTopHeight(menu.get(), 0, Unit.PX, getMenuHeight(), Unit.PX );
+		//menu.get().addValueChangeHandler(this);
+	}
 
   }
 
+	private int getMenuHeight() {
+		if (menu.isPresent() ) return menu.get().getHeight();
+		return 0;
+	}
+
+  
 @Override
 public void setPresenter(GotoController presenter) {
   if (presenter == null) presenter = controller::goTo; // never null
