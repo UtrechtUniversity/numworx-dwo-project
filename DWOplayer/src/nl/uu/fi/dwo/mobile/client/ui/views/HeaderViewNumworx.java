@@ -363,7 +363,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 	}
 
 	private int getMenuHeight() {
-		if (menu.isPresent() && menu.get().isVisible()) return menu.get().getHeight();
+		if (menu.isPresent() ) return menu.get().getHeight();
 		return 0;
 	}
 
@@ -391,6 +391,7 @@ public void onResize() {
 				navigation.hide();
 				r.setWidgetVisible(m, true);
 				r.setWidgetTopBottom(root, 50 + getMenuHeight(), Unit.PX, 0, Unit.PX);
+				r.setWidgetTopBottom(navigation, 50 + getMenuHeight(), Unit.PX, 0, Unit.PX);			
 			}
 		} else if (m.isVisible()) {
 			navigation.show();

@@ -35,4 +35,5 @@ interface TreeModuleViewNumworxCss extends CssResource {
 	String centerPanelTop();
 	
 	String navMenu();
+	String navWide();
 }

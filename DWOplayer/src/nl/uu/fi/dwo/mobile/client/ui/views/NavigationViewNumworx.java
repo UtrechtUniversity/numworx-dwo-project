@@ -388,6 +388,8 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		p.setWidgetVisible(this,true);
 		p.setWidgetLeftRight(root, this.width, Unit.PX, 0, Unit.PX);
 		p.setWidgetLeftWidth(this, 0, Unit.PX, this.width, Unit.PX);
+		dock.setWidgetHidden(bibliotheek, false); // niet in de style mogelijk
+		dock.removeStyleName(style.navWide());
 	}
 
 	@Override
@@ -402,7 +404,9 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		RootLayoutPanel p = RootLayoutPanel.get();
 		p.setWidgetVisible(this,true);
 		p.setWidgetRightWidth(root, 0, Unit.PX, 0, Unit.PX);
-		p.setWidgetLeftRight(this, 0, Unit.PX, 0, Unit.PX);		
+		p.setWidgetLeftRight(this, 0, Unit.PX, 0, Unit.PX);	
+		dock.setWidgetHidden(bibliotheek, true);
+		dock.addStyleName(style.navWide());
 	}
  	
 
