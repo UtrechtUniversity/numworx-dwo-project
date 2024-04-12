@@ -15,6 +15,7 @@ import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationMenu;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 
 import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.core.client.GWT;
@@ -203,12 +204,14 @@ public abstract class DWOplayer
 	
 	
 	public static void insertCSS(String value) {
+		if (TekstVakPanel.FORGET_STYLES) return;
 		String href = DwoConstants.constants.server() + 
 				"public/scoData/get/" + value + "/style.css";
 		insertStylesheet(href);
 	}
 
 	public static void insertCourseCSS(String value) {
+		if (TekstVakPanel.FORGET_STYLES) return;
 		String href = DwoConstants.constants.server() + 
 				"public/course/get/" + value + "/style.css";
 		insertStylesheet(href);

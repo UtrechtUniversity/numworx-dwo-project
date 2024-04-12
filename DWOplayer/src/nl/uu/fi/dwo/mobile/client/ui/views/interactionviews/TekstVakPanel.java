@@ -141,6 +141,14 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 	private static final CBookEvent DESELECT_EVENT = new CBookEvent(TVP_DESELECT);
 	private static final CBookEvent CLICK_EVENT = new CBookEvent(TVP_CLICK);
 	private static final CBookEvent POPUP_EVENT = new CBookEvent(TVP_POPUP);
+
+	/**
+	 * Forget the style in the styling.
+	 * Helaas nog niet goed. 
+	 * Geen style.css in course description en studentmodel description.
+	 * Alleen bij sco's launchdata
+	 */
+	public static final boolean FORGET_STYLES = true; 
 	
 	public static Map<String,Map<String,Object>> styles;
 	
@@ -628,6 +636,13 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 			centerH = style.getBoolean("centerH",centerH);
 			pasAanH = style.getBoolean("pasAanH",pasAanH);
 			pasAanB = style.getBoolean("pasAanB",pasAanB);
+			
+			if( FORGET_STYLES) {
+				style = null;
+				styleString = null;
+			}
+			
+			
 		}
 		else 
 		{
