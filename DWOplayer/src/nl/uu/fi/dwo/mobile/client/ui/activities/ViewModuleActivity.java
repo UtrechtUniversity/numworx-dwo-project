@@ -312,6 +312,8 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 						if (p.getValue()) {
 							Window.alert("Error: need a Premium subscription");
 							started = false;
+							Place back = headerView.getUpPlace();
+							if (back != null) goTo(back); else
 							History.back();
 						}
 						return null;
