@@ -1,50 +1,20 @@
 <%@page import="java.util.logging.Logger"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="fi.servlet.dwomaccess.Subnet" %>
 <%@ page import="java.util.*" %>
-<%@ include file='/dwo/toets_util.jsp' %>
 <!doctype html>
 <!-- The DOCTYPE declaration above will set the     -->
 <!-- browser's rendering engine into                -->
 <!-- "Standards Mode". Replacing this declaration   -->
 <!-- with a "Quirks Mode" doctype is not supported. -->
 <%
+	String id = request.getParameter("id");
 	String requestHash = request.getHeader("X-SafeExamBrowser-RequestHash");
 	String configHash  = request.getHeader("X-SafeExamBrowser-ConfigKeyHash");
 	String host = request.getRemoteAddr();
 	String server = request.getHeader("host");
 
-	if(requestHash == null && needSEB ||  !Subnet.netMatchRange(IPRANGE, host) )
-	{
-		Logger.getLogger("toets.jsp").severe(request.getRequestURL() +  " host = " + host);
-		response.sendError(HttpServletResponse.SC_NOT_FOUND);
-		return;
-	}
-	boolean failed = true;
-	String[] hashes = { "ccbb7f46b416704eeecfd7cb96c0a51c517c311ca232150ec4411968795053f3", // mac 2.1.2
-						"6d2b53bcb6cae8826b8c5fd71afeb97c2b8c4e7f5d75526ca17066b96461c904",  // win 2.1.7
-						System.getProperty("SEB_TOETS_MAC", ""),
-						System.getProperty("SEB_TOETS_WIN", "")
-	
-	};
-	for(String hash : hashes) {
-		StringTokenizer st = new StringTokenizer(hash, ",");
-		while(st.hasMoreTokens()) {
-			hash = st.nextToken();
-			if(hash.equals(requestHash)|| hash.equals(configHash)) failed = false;
-		}
-	}
-	if(failed && needSEB)
-	{
-		Logger.getLogger("toets.jsp").severe(request.getRequestURL() +" hash = " + requestHash + " " + configHash);
-		if(requestHash == null) {
-			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return;
-		}
-	}
-	String dwo_env = System.getProperty("DWO_ENV", "app");
-	String id = request.getParameter("id");
+	String dwo_env = System.getProperty("DWO_ENV", "test");
 	String defaultPlace = "";
 	if (id != null) {
 		try {
@@ -55,24 +25,15 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <link type="text/css" rel="stylesheet" href="/dwo/tablet/DWOplayer.css">
-    <meta name="gwt:property" content="locale=en" >
+    <link type="text/css" rel="stylesheet" href="/DWOplayer.css">
+    <meta name="gwt:property" content="locale=nl" >
     <script>
-    	DWO_PROFILE_ID = 100
+    	DWO_PROFILE_ID = 77
     	SECURE_MODE="SEB" // possibly others
         dwo_env = "<%=dwo_env%>"
         defaultPlace = "<%= defaultPlace %>"
     	function logout() {
-    		<%
-    		if (needSEB || !dwo_env.contains("saml") || requestHash != null ) {
-    	%>    		
-    	    	top.window.location = "https://<%=server%>/en/he/exam/logout.html"
-    	<% } else { 
-    		// Let op, dit is UU only.....
-    	%>
-    			top.window.location = "https://<%=server%>/dwo/saml/doLogout.jsp?return=/en/he/exam/"
-    		
-    	<% } %>	
+    		window.location = "https://<%=server%>/exam/logout.html"
     	}
     </script>
     <title>Safe Exam Browser</title>
@@ -81,10 +42,10 @@
     <!-- If you add any GWT meta tags, they must   -->
     <!-- be added before this line.                -->
     <!--                                           -->
-    <script type="text/javascript" language="javascript" src="/dwo/tablet/DWOplayer/DWOplayer.nocache.js"></script>
+    <script type="text/javascript" language="javascript" src="/DWOplayer/DWOplayer.nocache.js"></script>
   </head>
   <body id="main">
-  	<a href='https://<%=server %>/en/he/exam/logout.html' >Logout</a>
+  	<a href='https://<%=server%>/toets/logout.html' >Logout</a>
     <!-- OPTIONAL: include this if you want history support -->
     <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
     

@@ -3,6 +3,7 @@
     pageEncoding="UTF-8"%>
 <%@ page import="fi.servlet.dwomaccess.Subnet" %>
 <%@ page import="java.util.*" %>
+<%@ include file="/dwo/saml_util.jsp" %>
 <%@ include file='/dwo/toets_util.jsp' %>
 <!doctype html>
 <!-- The DOCTYPE declaration above will set the     -->
@@ -35,16 +36,14 @@
 			if(hash.equals(requestHash)|| hash.equals(configHash)) failed = false;
 		}
 	}
-	if(failed && needSEB)
+	String id = request.getParameter("id");
+	if(failed && needSEB && id == null)
 	{
 		Logger.getLogger("toets.jsp").severe(request.getRequestURL() +" hash = " + requestHash + " " + configHash);
-		if(requestHash == null) {
-			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return;
-		}
+		response.sendError(HttpServletResponse.SC_FORBIDDEN);
+		return;
 	}
 	String dwo_env = System.getProperty("DWO_ENV", "app");
-	String id = request.getParameter("id");
 	String defaultPlace = "";
 	if (id != null) {
 		try {
@@ -56,23 +55,14 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <link type="text/css" rel="stylesheet" href="/dwo/tablet/DWOplayer.css">
-    <meta name="gwt:property" content="locale=en" >
+    <meta name="gwt:property" content="locale=nl" >
     <script>
-    	DWO_PROFILE_ID = 100
+    	DWO_PROFILE_ID = 77
     	SECURE_MODE="SEB" // possibly others
         dwo_env = "<%=dwo_env%>"
         defaultPlace = "<%= defaultPlace %>"
     	function logout() {
-    		<%
-    		if (needSEB || !dwo_env.contains("saml") || requestHash != null ) {
-    	%>    		
-    	    	top.window.location = "https://<%=server%>/en/he/exam/logout.html"
-    	<% } else { 
-    		// Let op, dit is UU only.....
-    	%>
-    			top.window.location = "https://<%=server%>/dwo/saml/doLogout.jsp?return=/en/he/exam/"
-    		
-    	<% } %>	
+    		window.location = "https://<%=server%>/vo/exam/logout.html"
     	}
     </script>
     <title>Safe Exam Browser</title>
@@ -84,7 +74,7 @@
     <script type="text/javascript" language="javascript" src="/dwo/tablet/DWOplayer/DWOplayer.nocache.js"></script>
   </head>
   <body id="main">
-  	<a href='https://<%=server %>/en/he/exam/logout.html' >Logout</a>
+  	<a href='https://<%=server%>/vo/exam/logout.html' >Logout</a>
     <!-- OPTIONAL: include this if you want history support -->
     <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
     

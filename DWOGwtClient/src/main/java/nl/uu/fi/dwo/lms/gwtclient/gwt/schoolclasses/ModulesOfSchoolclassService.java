@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
@@ -244,5 +245,16 @@ public class ModulesOfSchoolclassService {
 		return result;
     }
     
+    public Promise<String> openSettingsUI(DomClassCourse cc) {
+    	DomContext context = new DomContext();
+        context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
+    	return ccm.getSettingsUI(context, cc, null);
+    }
+ 
+    public Promise<String> openDashboardUI(DomClassCourse cc) {
+    	DomContext context = new DomContext();
+        context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
+    	return ccm.getDashboardUI(context, cc, null);
+    }
     
 }

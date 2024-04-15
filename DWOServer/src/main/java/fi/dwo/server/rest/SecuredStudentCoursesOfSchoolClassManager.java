@@ -1,20 +1,29 @@
 package fi.dwo.server.rest;
 
+import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
@@ -33,6 +42,7 @@ import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder.S
 import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer.StudentState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
@@ -41,24 +51,40 @@ import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
+import fi.dwo.server.rest.jaxrsfilters.DwoUserPrincipal;
 import fi.dwo.server.rest.util.CourseBuilder;
+import fi.dwo.server.rest.util.Origin;
+import fi.dwo.server.rest.util.SchoolyearUtilManager;
 import fi.servlet.dwomaccess.Subnet;
+import nl.numworx.schoolyear.jclient.SchoolyearClient;
+import nl.numworx.schoolyear.jclient.dto.Content;
+import nl.numworx.schoolyear.jclient.dto.Element;
+import nl.numworx.schoolyear.jclient.dto.ElementId;
+import nl.numworx.schoolyear.jclient.dto.ExamDTO;
+import nl.numworx.schoolyear.jclient.dto.User;
+import nl.numworx.schoolyear.jclient.dto.UserDTO;
+import nl.numworx.schoolyear.jclient.dto.Vault;
+import nl.numworx.schoolyear.jclient.dto.WebPageUrl;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestClassCourse;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -394,5 +420,74 @@ public class SecuredStudentCoursesOfSchoolClassManager {
       return getCourseForStudent(cc, course, schoolclass,state.getSchool(), request, rest.getRestContext().getDomHasRole());
   }
 
+  @GET
+  @Path("getURL")
+  @RolesAllowed({"STUDENT"})
+  public Response getURL(@Context SecurityContext sc, @QueryParam("id") String pid, @QueryParam("base") String base, @QueryParam("locale") String locale) throws Dwo2Exception, IOException {
+	  UserState_U state = AnonDomainAuthorizer.build().submitUser(sc);
+	  DwoUserPrincipal principal = (DwoUserPrincipal) sc.getUserPrincipal();
+	  UserState_HR_R_S_SG_U hrstate = state.setHasRoleIfType(principal.getHr().buildDomHasRole(), RoleType.STUDENT);
+	  PersistentUser user = state.getUser();
+	  DomClassCourse cc = new DomClassCourse();
+	  cc.setId(new PersistenceId(pid));
+	  Long id = MySQLPersistenceId.getNativeId(cc);
+	  PersistentClassCourse pcc = ClassCourseManager.findEntity(id);
+	  String url = base + "exam/?id=" +id;
+	  String origin = Origin.ORIGINS[0];
+	  SecuredUserAccountManager account = new SecuredUserAccountManager();
+	  if (pcc.getType() == CourseType.kiosk.ordinal()) {
+		  SchoolyearClient client = SchoolyearUtilManager.build(hrstate.getSchool());
+		  ExamDTO exam = new ExamDTO();
+		  exam.id = pcc.getSyExamID();
+		  UserDTO u = new UserDTO();
+		  u.federated_user_id = user.getId().toString();
+		  u.personal_information = new User();
+		  u.personal_information.email = user.getEmail();
+		  u.personal_information.first_name = user.getGivenName();
+		  u.personal_information.org_code = user.getUsername();
+		  String insertion = Objects.toString( user.getInsertion(), ""); // null!
+		  u.personal_information.last_name = (insertion + " " + user.getLastname()).trim();
+		  
+		  u.vault = new Vault();
+		  u.vault.content = new Content();
+		  String uuid = UUID.randomUUID().toString();
+		  WebPageUrl wpu = new WebPageUrl();
+		  RestSchoolClass rest = new RestSchoolClass();
+		  rest.setDomSchoolClass(new DomSchoolClass());
+		  rest.setRestContext(new DomContext());
+		  rest.getRestContext().setDomHasRole(principal.getHr().buildDomHasRole());
+		  rest.getDomSchoolClass().setId(PersistentSchoolClass.buildPersistenceId(pcc.getClassID()));
+		  String bearer = account.getBearerToken(sc, rest);
+		  bearer = bearer.replace("\"", "");
+		  url = origin + base + "exam/toets.jsp?id=" +id;;
+		  if (locale != null) {
+			  url = url += "&locale=" + URLEncoder.encode(locale);
+		  }
+		  wpu.url = url + "&a=" + URLEncoder.encode(bearer);
+		  
+		  Element element = new Element();
+		  element.url = wpu;
+		  element.type = WebPageUrl.TYPE;
+		  element.origin = "api_key";
+		  Map <String, Element> elements = new HashMap<>();
+		  u.vault.content.elements = elements; elements.put(uuid, element);
+		  u.vault.content.entry_points = Collections.singletonList(new ElementId(uuid));
+		  url = origin + base + "exam/logout.html";
+		  wpu = new WebPageUrl();
+		  wpu.url = url;
+		  element = new Element();
+		  element.url = wpu;
+		  element.type = WebPageUrl.TYPE;
+		  element.origin = "api_key";
+		  uuid = UUID.randomUUID().toString();
+		  elements.put(uuid, element);
+		  u.vault.content.exit_points = Collections.singletonList(new ElementId(uuid));
+		  //url = wpu.url;
+		  url = client.createWorkspace(exam, u).onboarding_url;
+	  } else if (pcc.getType() == CourseType.assesment.ordinal()) {
+	  }
+	  Map<String,String> entity = Collections.singletonMap("url", url);
+	  return Response.ok().type(MediaType.APPLICATION_JSON_TYPE).entity(entity).build();
+  }
   
 }

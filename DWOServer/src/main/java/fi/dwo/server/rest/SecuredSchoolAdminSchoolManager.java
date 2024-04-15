@@ -793,8 +793,13 @@ public class SecuredSchoolAdminSchoolManager {
       Long id = MySQLPersistenceId.getNativeId(school);
       if( ! id.equals(ps.getSchoolID()))
         throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthorizationError, "Illegal user action");
-      if(school.getSchoolRights() != null)
+      if(school.getSchoolRights() != null) {
+    	boolean kiosk = ps.hasKiosk();
         ps.setSchoolRights(school.getSchoolRights());
+        if (!ps.hasKiosk() && kiosk) {
+        	ps.setSchoolRights(ps.getSchoolRights() + "k");
+        }
+      }
       if (school.getExport() != null)
         ps.setExport(school.getExport());
       try {

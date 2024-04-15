@@ -273,7 +273,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 		items.clearItems();
 		MenuItem m;
 		if(withUser) {
-			if (PARAMETERS.getSecureMode() == SecureMode.NORMAL)
+			if (!PARAMETERS.inExam())
 			{	
 				m=items.addItem(DwoLocalesForGWT.instance.GUI_MyProfile(), new ProfileCommand(bus, vars.get(), failure));
 				m.addStyleName(style.menuItem());

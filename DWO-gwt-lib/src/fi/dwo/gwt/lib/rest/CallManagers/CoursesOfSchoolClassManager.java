@@ -15,4 +15,5 @@ public interface CoursesOfSchoolClassManager {
 	Promise<DomCoursesOfSchoolClass> getCourseClass(DomContext context, DomSchoolClass schoolClass, DomCourse course, DomDwoProfile profile);
 	Promise<DomCoursesOfSchoolClass> getScoContextClass(DomContext context, DomSchoolClass schoolClass, DomScoContext course, DomDwoProfile profile);
     Promise<DomCoursesOfSchoolClass> getClassCourse(DomContext context, DomClassCourse classcourse, DomDwoProfile profile);
+    Promise<String> getClassCourseURL(DomContext context, DomClassCourse classcourse, String base);    
 }

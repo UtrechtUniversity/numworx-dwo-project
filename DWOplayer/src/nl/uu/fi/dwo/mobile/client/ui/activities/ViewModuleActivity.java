@@ -92,7 +92,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	private DWOplayerParameters PARAMETERS;
 	@Inject void setParameters(DWOplayerParameters p) {
 		PARAMETERS = p;
-		isSEB = p.getSecureMode() == SecureMode.SEB;
+		isSEB = p.inExam();
 		EXIT_AFTER = isSEB ? new LoginPlace() : SelectModuleItem.ROOT.getPlace();
 	}
 

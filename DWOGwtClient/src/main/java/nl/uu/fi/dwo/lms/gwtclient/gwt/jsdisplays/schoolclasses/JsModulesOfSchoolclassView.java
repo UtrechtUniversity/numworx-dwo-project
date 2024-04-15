@@ -144,4 +144,9 @@ public class JsModulesOfSchoolclassView implements ModulesOfSchoolclassPresenter
     public void setSettings(String id) {
     	JsModulesOfSchoolclassDisplay.setSettings(id);
     }
+    
+    @Override
+    public void setSchoolyearUI(boolean on) {
+    	JsModulesOfSchoolclassDisplay.setSchoolyearUI(on);
+    }
 }

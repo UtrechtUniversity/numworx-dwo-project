@@ -4,6 +4,7 @@ import nl.uu.fi.dwo.rest.dom.DomCoursesOfSchoolclassTree;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.Window;
 
 import java.util.Collection;
 import java.util.Date;
@@ -72,6 +73,8 @@ public class ModulesOfSchoolclassPresenter {
         void setLoadingTableMessageSelected();
 
 		void setSettings(String id);
+
+		void setSchoolyearUI(boolean on);
     }
 
     @JsMethod
@@ -204,6 +207,34 @@ public class ModulesOfSchoolclassPresenter {
     }
 
     @JsMethod
+    void openSettings(String key, String typeString, String fromData, String toData, String accessKey) {
+    	Promise<String> url = 
+    			update(key, typeString, fromData, toData, accessKey)
+    			.then(p -> service.openSettingsUI(p.getValue()));
+    	
+    	url = url.then(s -> {
+    		Window.open(s.getValue(), "settingsUI", "");
+    		return s;
+    	});
+    	url.then( s -> updateViewData(), FAILURE);
+    }
+    
+    @JsMethod
+    void openDashboard(String key, String typeString, String fromData, String toData, String accessKey) {
+    	Promise<String> url = 
+    			update(key, typeString, fromData, toData, accessKey)
+    			.then(p -> service.openDashboardUI(p.getValue()));
+    	
+    	url = url.then(s -> {
+    		Window.open(s.getValue(), "dashboardUI", "");
+    		return s;
+    	});
+    	url.then( s -> updateViewData(), FAILURE);
+    }
+    
+    
+    
+    @JsMethod
     void addModule(String key, String typeString, String fromDate, String toDate, String accessKey) {
         //TODO FIX sloppy addModule implementation
         if (key == null) {
@@ -273,7 +304,17 @@ public class ModulesOfSchoolclassPresenter {
 
     @JsMethod
     void setModuleSettings(String key, String typeString, String fromData, String toData, String accessKey) {
-    	Promise<DomClassCourseFull> f = 
+    	Promise<DomClassCourseFull> f = update(key, typeString, fromData, toData, accessKey);
+
+    	f.then((resolved) -> {
+            return updateViewData();
+        }, FAILURE);
+    	
+    }
+
+	private Promise<DomClassCourseFull> update(String key, String typeString, String fromData, String toData,
+			String accessKey) {
+		Promise<DomClassCourseFull> f = 
     	tree.then( (Promise<DomCoursesOfSchoolclassTree>p) -> 
     	{
     		DomCoursesOfSchoolclassTree t = p.getValue();
@@ -299,12 +340,8 @@ public class ModulesOfSchoolclassPresenter {
 			return service.setClassCourse(id, schoolClass, course, type, accessKey, from, to)
 					.then(x -> {object.setClassCourse(x.getValue());return x; });
     	});
-
-    	f.then((resolved) -> {
-            return updateViewData();
-        }, FAILURE);
-    	
-    }
+		return f;
+	}
     
     
     
@@ -448,4 +485,10 @@ public class ModulesOfSchoolclassPresenter {
     public boolean hasToets() {
       return dwoGlobalVars.isPremium();
     }
+    
+    @JsMethod
+    public boolean hasKiosk() {
+      return dwoGlobalVars.isKiosk() && dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().hasKiosk();
+    }
+
 }

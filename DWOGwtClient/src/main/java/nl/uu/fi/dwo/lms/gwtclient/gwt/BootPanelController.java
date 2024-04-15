@@ -430,6 +430,7 @@ public class BootPanelController {
                 String dwo_env = beat.getEnv();
                 if (dwo_env != null && dwo_env.contains("test")) dwoGlobalVars.setTest(true);
                 if (dwo_env != null && dwo_env.contains("saml")) dwoGlobalVars.setSaml(true);
+                if (dwo_env != null && dwo_env.contains("kiosk")) dwoGlobalVars.setKiosk(true);
                 if (flag == 0) {
                     LOG.log(Level.FINE, "unmatching version flag=0");
                     if (Window.confirm("outdated version, reloading"))

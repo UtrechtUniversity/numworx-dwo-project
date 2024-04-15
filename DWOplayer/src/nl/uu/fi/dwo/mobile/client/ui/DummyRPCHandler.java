@@ -259,4 +259,10 @@ public Promise<JSONValue> getProfileDescription() {
 	return null;
 }
 
+@Override
+public Promise<String> getClassCourseURL(Object id, String base) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
 }
