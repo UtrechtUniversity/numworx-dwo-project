@@ -45,7 +45,7 @@ public class UULogin implements SigningKeyResolver, Login {
 
     public static final String ID_TOKEN= "id_token";
     public static final String PASSWORD = "urn:uu.nl:idp:contract:password";
-    public static final String PASSWORD_MFA = "urn:uu.nl:idp:contract:password:multifactor";
+    public static final String PASSWORD_MFA = "urn:uu.nl:idp:contract:rba:numworx";
 
 	String client_id = "87e22bd9-ac67-4457-b4c3-c039c42cf052";
 	String client_secret = "LPb6jeN6q7CYurh96iZZAVz3cqab7r_3hVxkqGzj0j5_1Bf-rhjsNYnIUrpqw5y8hu1ckesX5-fmtINofw6jrw";
