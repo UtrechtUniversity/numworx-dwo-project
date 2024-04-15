@@ -39,7 +39,7 @@ public class ExamActivity extends AbstractActivity {
     if (!id.isEmpty()) token = "?id=" + token;
     panel.setWidget(new Label());
     String base = Location.getParameter("base");
-    if (base == null || !legal(base)) base = "";
+    if (base == null || !legal(base)) base = "/"; // altijd fout! slechts voor een testomgeving
     final String exam = base + "exam/" + token;
     final Promise<String> exampromise = rpc.getClassCourseURL(id, base).recover((p)->exam);
     exampromise.onResolve(() -> {
