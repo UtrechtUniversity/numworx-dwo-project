@@ -532,7 +532,18 @@ public class SecuredUserAccountManager {
         List<PersistentLoginContext> list = LoginContextManager.findEntities(user.getId());
         if (list.size() == 1) {
         	Long cid = MySQLPersistenceId.getNativeId(rest.getDomSchoolClass());
-        	if (cid == null) return getBearerToken(sc); // no class...
+        	if (cid == null) {
+                loginContext = list.get(0);
+                Long time = DwoDateUtilities.getCurrentDwoUnixTimeStamp() / TOTP.defaultPeriod;
+                String timeString = time.toString();
+                String result = (loginContext.getSecretKey()==null) ? null : TOTP.generateTOTP(DatatypeConverter.printHexBinary(loginContext.getSecretKey()), timeString, "8");
+                result = user.getUsername()+":"+result;
+                byte bytes[] = result.getBytes();
+      // zonder schoolclass: voor nu even versie 2
+                Encoder encoder = java.util.Base64.getEncoder();
+                String bearer = "Bearer "+encoder.encodeToString(bytes);
+    			return "\"" + encoder.encodeToString(("2\f" + bearer).getBytes(StandardCharsets.US_ASCII)) + "\""; // application/json 
+        	}
         	PersistentSchoolClass psc = SchoolClassManager.findEntity(cid);
         	
             loginContext = list.get(0);

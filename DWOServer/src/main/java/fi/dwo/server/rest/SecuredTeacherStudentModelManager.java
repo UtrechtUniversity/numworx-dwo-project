@@ -388,6 +388,43 @@ public class SecuredTeacherStudentModelManager {
 	}
 	
 	@GET
+	@Produces("test/css")
+	@Path("getCSS")
+	public Response getCSS(@Context SecurityContext sc,
+			@QueryParam("id") String uuid, @QueryParam("modelId") String modelid,
+			@QueryParam("hasRoleId") String sgid, @QueryParam("locale") String locale
+	) {
+		DomHasRole hr = new DomHasRole();
+		hr.setId(new PersistenceId(sgid));
+		DomStudentModelContextId smc = new DomStudentModelContextId(new PersistenceId(modelid));
+		try {
+			TeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
+			          .setHasRole(hr)
+			          .buildSchoolAdminTeacher().setTeacher();
+			DomStudentModelContext result = state.getStudentModel(smc);
+			DomStudentModelStructure struct = result.getModelStructure();
+			String obj = SecuredStudentStudentModelManager.getStructStyle(struct, uuid, locale);
+			CacheControl cc = new CacheControl();
+			cc.setMaxAge(3600);
+			Date expiry = new  Date(System.currentTimeMillis()+1000*cc.getMaxAge());
+			Date last = null;
+			if ( null != result.getLastChangeTimeStamp())
+				last = new Date(result.getLastChangeTimeStamp().longValue());
+			
+			return Response.ok(obj)
+					.cacheControl(cc)
+					.expires(expiry)
+					.lastModified(last)
+					.build();
+		} catch (Dwo2Exception e) {
+			LOG.log(Level.WARNING, "return not found", e);
+			return Response.status(Status.NOT_FOUND).build();
+		}
+	}
+	
+	
+	
+	@GET
 	@Produces ("application/json") 
 	@Path ("/getDescription")
 	public Response getDescription(@Context SecurityContext sc, 
