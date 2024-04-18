@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFrom;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdminAndHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
@@ -542,6 +543,9 @@ public RestAuthenticator getAuthenticator() {
         case DomTeacherAndHasRole:
           return (List<T>) genson.deserialize(json.toString(),
               new GenericType<List<DomTeacherAndHasRole>>() {});
+        case DomSchoolAdminAndHasRole:
+            return (List<T>) genson.deserialize(json.toString(),
+                new GenericType<List<DomSchoolAdminAndHasRole>>() {});
         case DomStudentScoContext:
           return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomStudentScoContext>>() {});
         case DomApplet:

@@ -3,6 +3,7 @@ package fi.dwo.server.rest;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdminAndHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomStatistics;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
@@ -529,7 +530,29 @@ public class SecuredDwoAdminSchoolManager {
         LOG.log(Level.INFO, "Delete school with login "+school.getSchoolLogin()+" and id "+school.getSchoolID()+" completed for username " + sc.getUserPrincipal().getName()+".");
         return true;
     }
-
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getSchoolAdminsAndHasRoleInSchool")
+    public List<DomSchoolAdminAndHasRole> getSchoolAdminsAndHasRoleInSchool(@Context SecurityContext sc, RestSchool4DwoAdmin restSchool
+    ) throws Dwo2Exception {
+        UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(restSchool.getRestContext().getDomHasRole(), RoleType.ADMIN);
+        state.buildDwoAdmin();
+        PersistentSchool school = state.getSchool(); // niet je eigen, maar een andere!
+        school = SchoolManager.findBySchoolLogin(restSchool.getDomSchool4DwoAdmin().getSchoolLogin());
+        List<PersistentHasRole> hrList;
+        List<DomSchoolAdminAndHasRole> resultList = null;
+        hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.SCHOOLADMIN);
+        resultList = new ArrayList<>(hrList.size());
+        for (PersistentHasRole hr : hrList) {
+            PersistentUser user = UserManager.findEntity(hr.getPersistentHasRolePK().getUserID());
+            DomSchoolAdminAndHasRole domTAHR = new DomSchoolAdminAndHasRole();
+            domTAHR.setSchoolAdmin(user.buildDomSchoolAdmin(null));
+            domTAHR.setHasRole(hr.buildDomHasRole());
+            resultList.add(domTAHR);
+        }
+        return resultList;
+    }
+    
     /**
      * Returns the school data to be displayed.
      *

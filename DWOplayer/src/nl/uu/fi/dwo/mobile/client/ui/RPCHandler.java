@@ -91,4 +91,8 @@ public interface RPCHandler {
 	Promise<Void> startExam(DomClassCourse classCourse, String password);
 
 	boolean inExam(DomClassCourse classCourse);
+	
+	Promise<String> getClassCourseURL(Object id, String base);
+
+	
 }

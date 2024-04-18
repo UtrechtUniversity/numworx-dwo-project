@@ -2,20 +2,26 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
@@ -33,7 +39,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 @Singleton
-public class HeaderViewNone extends HTML implements HeaderView, MessageEventHandler {
+public class HeaderViewNone extends HTML implements HeaderView, MessageEventHandler, RequiresResize, ValueChangeHandler<Boolean> {
 
   final Logger LOG = Logger.getLogger(getClass().getName());
   private static final String SEARCH = "SEARCH:";
@@ -79,13 +85,15 @@ public class HeaderViewNone extends HTML implements HeaderView, MessageEventHand
   private PlaceController controller;
   private GotoController presenter = controller::goTo;
   private Place upPlace = homePlace;
+  private Optional<NavigationMenu> menu;
   
   @Override
   public void hide() {
       //Actions.hideMainNav.execute();
       LayoutPanel p = RootLayoutPanel.get(); // parent of header
-      p.setWidgetVisible(this, false);
+      showNavigation = false;
       navigation.hide();
+	  menu.ifPresent(m -> p.setWidgetVisible(m, false));
       p.setWidgetTopBottom(root, -50, Unit.PX, 0, Unit.PX);     
       p.setWidgetTopBottom(navigation, 0, Unit.PX, 0, Unit.PX);
   }
@@ -93,19 +101,31 @@ public class HeaderViewNone extends HTML implements HeaderView, MessageEventHand
   @Override
   public void show() {
       LayoutPanel p = RootLayoutPanel.get(); // parent of header
-      p.setWidgetVisible(this, false);
+	  menu.ifPresent(m -> p.setWidgetVisible(m, false));
       p.setWidgetTopBottom(root, 0, Unit.PX, 0, Unit.PX);
       p.setWidgetTopBottom(navigation, 0, Unit.PX, 0, Unit.PX);
-      navigation.show();
+      navigation.show(); showNavigation = true;
+      onResize();
   }
 
   @Override
-  public void setDisplay(Widget display, NavigationView navigationView) {
+  public void setDisplay(Widget display, NavigationView navigationView, Optional<NavigationMenu> menu) {
     root = display;
     navigation = navigationView;
-
+    this.menu = menu;
+	if (menu.isPresent()) {
+		RootLayoutPanel.get().setWidgetTopHeight(menu.get(), 0, Unit.PX, getMenuHeight(), Unit.PX );
+		menu.get().addValueChangeHandler(this);
+	}
+	RootLayoutPanel.get().setWidgetVisible(this, false);
   }
 
+	private int getMenuHeight() {
+		if (menu.isPresent() ) return menu.get().getHeight();
+		return 0;
+	}
+
+  
 @Override
 public void setPresenter(GotoController presenter) {
   if (presenter == null) presenter = controller::goTo; // never null
@@ -155,7 +175,7 @@ public void setTrail(List<SelectModuleItem> trail) {
     Actions.TRAIL.execute();
     return;
   }
-  if(PARAMETERS.getSecureMode() == SecureMode.SEB)
+  if(PARAMETERS.inExam())
       trail.clear();
   JSONArray array = new JSONArray();
   ListIterator<SelectModuleItem> iter = trail.listIterator(Math.min(trail.size(),3));
@@ -180,5 +200,42 @@ public void setTrail(List<SelectModuleItem> trail) {
 }
 
 public Widget getDisplay() { return root; }
+
+@Override
+public void onValueChange(ValueChangeEvent<Boolean> event) {
+	if (event.getValue()) {
+		navigation.wide();
+	} else {
+		navigation.hide();
+	}
+}
+
+final static private int MIN_WIDTH = 700;
+boolean showNavigation = true; 
+
+@Override
+public void onResize() {
+	int width = Window.getClientWidth();
+	GWT.log("headernone on resize  " + width);
+	if (menu.isPresent() && showNavigation) {
+		NavigationMenu m = menu.get();
+		RootLayoutPanel r = RootLayoutPanel.get();
+		if (width < MIN_WIDTH) {
+			if (!m.isVisible()) {
+				m.setUpDown(false, false);
+				navigation.hide();
+				r.setWidgetVisible(m, true);
+				r.setWidgetTopBottom(root, getMenuHeight(), Unit.PX, 0, Unit.PX);
+				r.setWidgetTopBottom(navigation, getMenuHeight(), Unit.PX, 0, Unit.PX);			
+			}
+		} else if (m.isVisible()) {
+			navigation.show();
+			r.setWidgetVisible(m, false);
+			r.setWidgetTopBottom(root, 0, Unit.PX, 0, Unit.PX);
+			r.setWidgetTopBottom(navigation, 0, Unit.PX, 0, Unit.PX);			
+		}
+	}
+	
+}
 
 }

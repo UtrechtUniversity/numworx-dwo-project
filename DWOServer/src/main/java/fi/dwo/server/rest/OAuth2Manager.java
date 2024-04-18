@@ -30,10 +30,12 @@ import com.digitalmolehill.crypto.SymmetricCryptor;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.DatatypeConverter;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.LoginContextUtilManager;
 import fi.dwo.server.rest.jaxrsfilters.AuthenticationRequestFilter;
@@ -123,6 +125,24 @@ static final String AUTHORIZATION_CODE = "authorization_code";
           char version = authToken.charAt(0);
           String[] split = authToken.split("\f");
           switch (version)  {
+            case '5':
+            {  String username = split[1];
+              Long schoolGroupID = Long.valueOf(split[2]);
+              Long schoolClassId = Long.valueOf(split[3]);
+              String totp = split[4];
+              PersistentUser student = UserManager.findByUserName(username);
+              PersistentSchoolClass psc = SchoolClassManager.findEntity(schoolClassId);
+              PersistentLoginContext pls = LoginContextManager.findEntities(student.getId()).get(0);
+              String secret = DatatypeConverter.printHexBinary(pls.getNonce());
+              if (TOTP.verifyTOTP(totp, secret, "8", TOTP.defaultPeriod*10))
+              try {
+            	if (pls.getSecretKey() == null)
+            		pls = LoginContextUtilManager.forceNewLoginContextSession(student, true);
+                return buildTokenResponse(student, pls);
+			  } catch (Dwo2Exception e) {
+			  }
+            } 
+            break;
             case '4':
               String teacher = split[1];
               String student = split[2];
@@ -296,15 +316,15 @@ private Response refresh(MultivaluedMap<String, String> params) throws NullPoint
   @POST  // Chrome
   @Path("/nekot") // end of token
   @Consumes(MediaType.TEXT_PLAIN)
-  public Response nekot(String plain) {
+  public Response nekot(@Context HttpServletRequest servletRequest, String plain) {
 		MultivaluedMap<String, String> params = convert(plain);
-    return nekot(params);
+    return nekot(servletRequest, params);
   }
 
   @POST // Safari
   @Path("/nekot") // end of token
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-  public Response nekot(MultivaluedMap<String, String> params) {
+  public Response nekot(@Context HttpServletRequest servletRequest, MultivaluedMap<String, String> params) {
 	try {
 		String accessToken = params.getFirst("access_token");
 		String code = params.getFirst(REFRESH_TOKEN);
@@ -332,6 +352,9 @@ private Response refresh(MultivaluedMap<String, String> params) throws NullPoint
 			  l.setLastLogin(System.currentTimeMillis());
 		  }
 		  LoginContextManager.edit(l);
+	      if (servletRequest.getSession(false) != null) {
+	          servletRequest.getSession().invalidate();
+	      }
 		}
 	} catch (JwtException | IllegalArgumentException | PersistenceException | NullPointerException e) {
 		LOG.log(Level.WARNING, e.toString(), e);

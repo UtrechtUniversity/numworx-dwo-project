@@ -43,6 +43,7 @@ import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserStat
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.LoginContextUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
@@ -262,7 +263,7 @@ public class SecuredUserAccountManager {
         //TODO REST update lastLogin and such.
         Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "Logout for basic Authentication performed: " + userName + ".");
         Response r = Response.status(401).entity(e.getMessage()).build();
-        if (servletRequest.getSession() != null) {
+        if (servletRequest.getSession(false) != null) {
             servletRequest.getSession().invalidate();
         }
         return r;
@@ -530,17 +531,37 @@ public class SecuredUserAccountManager {
     	PersistentHasRole hr = state1.getHasRole();
         List<PersistentLoginContext> list = LoginContextManager.findEntities(user.getId());
         if (list.size() == 1) {
+        	Long cid = MySQLPersistenceId.getNativeId(rest.getDomSchoolClass());
+        	if (cid == null) {
+                loginContext = list.get(0);
+                Long time = DwoDateUtilities.getCurrentDwoUnixTimeStamp() / TOTP.defaultPeriod;
+                String timeString = time.toString();
+                String result = (loginContext.getSecretKey()==null) ? null : TOTP.generateTOTP(DatatypeConverter.printHexBinary(loginContext.getSecretKey()), timeString, "8");
+                result = user.getUsername()+":"+result;
+                byte bytes[] = result.getBytes();
+      // zonder schoolclass: voor nu even versie 2
+                Encoder encoder = java.util.Base64.getEncoder();
+                String bearer = "Bearer "+encoder.encodeToString(bytes);
+    			return "\"" + encoder.encodeToString(("2\f" + bearer).getBytes(StandardCharsets.US_ASCII)) + "\""; // application/json 
+        	}
+        	PersistentSchoolClass psc = SchoolClassManager.findEntity(cid);
+        	
             loginContext = list.get(0);
-            Long time = DwoDateUtilities.getCurrentDwoUnixTimeStamp() / TOTP.defaultPeriod;
+            Long time = DwoDateUtilities.getCurrentDwoUnixTimeStamp() / (TOTP.defaultPeriod*10) ;
             String timeString = time.toString();
-            String result = (loginContext.getSecretKey()==null) ? null : TOTP.generateTOTP(DatatypeConverter.printHexBinary(loginContext.getSecretKey()), timeString, "8");
-            result = user.getUsername()+":"+result;
+            //String result = (loginContext.getSecretKey()==null) ? null : TOTP.generateTOTP(DatatypeConverter.printHexBinary(loginContext.getSecretKey()), timeString, "8");
+            String secret;// = psc.getClass1() + "\f" + loginContext.getId();
+            secret = DatatypeConverter.printHexBinary(loginContext.getNonce());
+            String result = TOTP.generateTOTP(secret, timeString, "8");
+            
+            
+            //result = user.getUsername()+":"+result;
             byte bytes[] = result.getBytes();
   // 5 \f user \f schoolgroup \f logincontext \f schoolclass \f totp(secret);
   // voor nu even versie 2
             Encoder encoder = java.util.Base64.getEncoder();
-			String bearer = "Bearer "+encoder.encodeToString(bytes);
-			return "\"" + encoder.encodeToString(("2\f" + bearer).getBytes(StandardCharsets.US_ASCII)) + "\""; // application/json 
+			String bearer = user.getUsername() + "\f" + hr.getSchoolGroup().getSchoolGroupID() + "\f" + psc.getClassID() + "\f" + result;
+			return "\"" + encoder.encodeToString(("5\f" + bearer).getBytes(StandardCharsets.US_ASCII)) + "\""; // application/json 
         }else{
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_LoginNeeded, "No login context exists.");
         }

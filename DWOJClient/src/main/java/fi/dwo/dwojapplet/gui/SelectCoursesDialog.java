@@ -22,6 +22,7 @@ import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -41,7 +42,6 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -390,13 +390,17 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                     if (cd[rowIndex].course.isWithChildren()) {
                         return null; // no choice!
                     }
+                    if (cd[rowIndex].type == CourseType.kiosk.ordinal())
+                    	return OBJECT_TYPE_PLUS[2];
                     return OBJECT_TYPE[cd[rowIndex].type];
                 case 4:
                     return cd[rowIndex].van;
                 case 5:
                     return cd[rowIndex].tot;
                 case 6: 
-                    if (OBJECT_TYPE[1] == getValueAt(rowIndex, COURSE_TYPE))
+                    if (OBJECT_TYPE[1] == getValueAt(rowIndex, COURSE_TYPE)
+                    ||  OBJECT_TYPE_PLUS[2] == getValueAt(rowIndex, COURSE_TYPE)
+                    )
                       return cd[rowIndex].accessKey;
             }
             return null;
@@ -444,7 +448,8 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
             switch (columnIndex) {
               case 6: // ww
                 return 
-                    OBJECT_TYPE[1] == getValueAt(rowIndex, COURSE_TYPE) &&
+                    (OBJECT_TYPE[1] == getValueAt(rowIndex, COURSE_TYPE)||OBJECT_TYPE_PLUS[2] == getValueAt(rowIndex, COURSE_TYPE))
+                    &&
                     Boolean.TRUE.equals(cd[rowIndex].select);
                 case COURSE_TYPE:
                 case 4:
@@ -478,9 +483,9 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                     }
                     break;
                 case COURSE_TYPE:
-//                    if (OBJECT_TYPE[2].equals(aValue)) {
-//                        cd[rowIndex].type = 2;
-//                    } else
+                    if (OBJECT_TYPE_PLUS[2].equals(aValue)) {
+                        cd[rowIndex].type = CourseType.kiosk.ordinal();
+                    } else
                     if (OBJECT_TYPE[1].equals(aValue)) {
                         cd[rowIndex].type = 1;
                     } else {
@@ -576,7 +581,9 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         }
 
         private static JComboBox<?> createComboBox() {
-            JComboBox<?> box = new JComboBox<Object>(OBJECT_TYPE);
+            Object[] objects = OBJECT_TYPE;
+            if (DwoHelper.hasKiosk()) objects = OBJECT_TYPE_PLUS;
+			JComboBox<?> box = new JComboBox<Object>(objects);
             box.setEnabled(DwoHelper.isPremium());
             if(!box.isEnabled()) box.setToolTipText("Dit is een premium feature"); // FIXME vertalen!
             return box;
@@ -632,14 +639,15 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     }
 
     static final Object[] OBJECT_TYPE = new Object[]{TextMapper.getText(TextMapper.GUICDLG_NORMAAL), TextMapper.getText(TextMapper.GUICDLG_AFGESCHERMD)/*, TextMapper.getText(TextMapper.GUICDLG_ONZICHTBAAR)*/};
-
+    static final Object[] OBJECT_TYPE_PLUS = new Object[] {OBJECT_TYPE[0], OBJECT_TYPE[1], "kiosk"};
+    
     class CheckBoxNodeRenderer implements TreeCellRenderer {
 
         JCheckBox leafRenderer = new JCheckBox();
         JButton eraseBtn = new JButton();
         JButton vanBtn = new JButton("_________________");
         JButton totBtn = new JButton("_________________");
-        JComboBox typeBtn = new JComboBox(OBJECT_TYPE);
+        JComboBox typeBtn = new JComboBox(OBJECT_TYPE_PLUS);
         Box box;
         boolean boksAan;
         private DefaultTreeCellRenderer nonLeafRenderer = new DefaultTreeCellRenderer();
@@ -752,7 +760,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                         } else {
                             totBtn.setText("  :     -   -    ");
                         }
-                        typeBtn.setSelectedIndex(node.type);
+                        typeBtn.setSelectedIndex(node.type==3?2:node.type);
 
                     }
                 }

@@ -307,7 +307,17 @@ public abstract class XMLView {
 		{
 			breedte = ((Number) opdracht.get("scheidingX")).intValue();
 		}
-
+		int margeLinks = 0;
+		int margeRechts = 0;
+		if(instellingen.containsKey("margeLinks")) {
+			margeLinks = instellingen.getInt("margeLinks");
+		}
+		if(instellingen.containsKey("margeRechts")) {
+			margeRechts = instellingen.getInt("margeRechts");
+		}
+		if(RESPONSIVE) {
+			breedte = containerWidth()-margeLinks-margeRechts;//-20;
+		}
 		hoofdPanel = new TekstVakPanel(activity, breedte, hoogte, randomVarNamen, randomVarWaarden, getAnchorContext());
 		hoofdPanel.setCommunicationRoot(comRoot);
 		hoofdPanel.setHoofdPanel(true);
@@ -319,8 +329,6 @@ public abstract class XMLView {
 		
 		
 		
-		int margeLinks = 0;
-		int margeRechts = 0;
 		
 		destination.add(hoofdPanel);
 		opdrachtObjects.add(hoofdPanel);

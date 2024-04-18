@@ -92,7 +92,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	private DWOplayerParameters PARAMETERS;
 	@Inject void setParameters(DWOplayerParameters p) {
 		PARAMETERS = p;
-		isSEB = p.getSecureMode() == SecureMode.SEB;
+		isSEB = p.inExam();
 		EXIT_AFTER = isSEB ? new LoginPlace() : SelectModuleItem.ROOT.getPlace();
 	}
 
@@ -312,6 +312,8 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 						if (p.getValue()) {
 							Window.alert("Error: need a Premium subscription");
 							started = false;
+							Place back = headerView.getUpPlace();
+							if (back != null) goTo(back); else
 							History.back();
 						}
 						return null;

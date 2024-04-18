@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
+import nl.uu.fi.dwo.interaction.client.ResponsiveTextElement;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
@@ -15,7 +16,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ImageView implements IsWidget, TekstElement
+public class ImageView implements IsWidget, ResponsiveTextElement
 {
 	private Logger logger = Logger.getLogger("ImageView");
 
@@ -170,6 +171,7 @@ public class ImageView implements IsWidget, TekstElement
 	  return map.getOrDefault(naam + "/w", map.get(strip(naam) + "/w"));
 	}
 	
+	@Override
 	public void zetVolledigeBreedte(int volleBreedte) {
 		Object object = v();
 		if (Boolean.TRUE.equals(object) && volleBreedte > 0 && scaledImage!=null ) {

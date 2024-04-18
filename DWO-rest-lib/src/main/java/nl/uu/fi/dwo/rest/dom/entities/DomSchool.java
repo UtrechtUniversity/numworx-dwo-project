@@ -119,4 +119,10 @@ public class DomSchool extends DomSchoolId {
       if (r == null) return false;
       return r.contains("X");
     }
+    
+    public boolean hasKiosk() {
+        String r = schoolRights;
+        if (r == null) return false;
+        return r.contains("k");
+    }
 }

@@ -54,8 +54,9 @@
       <property name="eclipselink.allow-zero-id" value="true"/>
       <!-- logging all on -->
       <property name="eclipselink.logging.logger" value="JavaLogger"/>
-      <property name="eclipselink.logging.level.sql" value="FINE"/>
-      <property name="eclipselink.logging.parameters" value="true"/>
+      <property name="eclipselink.logging.level.sql" value="WARNING"/>
+      <property name="eclipselink.logging.level" value="WARNING"/>
+      <property name="eclipselink.logging.parameters" value="false"/>
     </properties>
   </persistence-unit>
 </persistence>

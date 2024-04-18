@@ -29,23 +29,48 @@ import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentInClassManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentModelContextUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.TeacherSchoolClassUtilManager;
+import fi.dwo.server.rest.util.Origin;
+import fi.dwo.server.rest.util.SchoolyearUtilManager;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.net.HttpURLConnection;
+import java.net.URI;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.core.UriInfo;
 
+import nl.numworx.schoolyear.jclient.SchoolyearClient;
+import nl.numworx.schoolyear.jclient.dto.Content;
+import nl.numworx.schoolyear.jclient.dto.Element;
+import nl.numworx.schoolyear.jclient.dto.ElementId;
+import nl.numworx.schoolyear.jclient.dto.ExamDTO;
+import nl.numworx.schoolyear.jclient.dto.Vault;
+import nl.numworx.schoolyear.jclient.dto.WebPageEntireDomain;
+import nl.numworx.schoolyear.jclient.dto.WebPageUrl;
+import nl.numworx.schoolyear.jclient.dto.WebPageRegex;
+import nl.numworx.schoolyear.jclient.dto.Workspace;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
@@ -189,7 +214,10 @@ public class MySQLTeacherActions implements TeacherActions {
                 	cc.setNotBefore(from);
                 	cc.setAccessKey(accessKey);
                 	cc.setType(courseType.ordinal());
-                }
+                	if (courseType == CourseType.kiosk) {
+                		setKioskMode(cc, context.getUserCtx().school, context.getTeacherCtx().getCourse(), context.getTeacherCtx().getSchoolClass() );
+                	}
+               }
                 cc.setViewState(ViewState.studentsAndTeachers);
                 ClassCourseManager.insertOrUpdateViewState(cc);
 //                    LOG.log(Level.INFO, "created cc of "+ccResult);
@@ -202,8 +230,142 @@ public class MySQLTeacherActions implements TeacherActions {
         }
         return true;    
             }
+ 
+    private static void allowMethods(String... methods) {
+        try {
+            Field methodsField = HttpURLConnection.class.getDeclaredField("methods");
+
+            Field modifiersField = Field.class.getDeclaredField("modifiers");
+            modifiersField.setAccessible(true);
+            modifiersField.setInt(methodsField, methodsField.getModifiers() & ~Modifier.FINAL);
+
+            methodsField.setAccessible(true);
+
+            String[] oldMethods = (String[]) methodsField.get(null);
+            Set<String> methodsSet = new LinkedHashSet<>(Arrays.asList(oldMethods));
+            methodsSet.addAll(Arrays.asList(methods));
+            String[] newMethods = methodsSet.toArray(new String[0]);
+
+            methodsField.set(null/*static field*/, newMethods);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+    static {
+    	allowMethods("PATCH");
+    }
     
-    @Override
+    
+    
+    public static String setKioskMode(PersistentClassCourse cc, PersistentSchool school, PersistentCourse course, PersistentSchoolClass sc) throws Dwo2Exception {
+		if (school.getAboType() == AboType.premium && school.hasKiosk()) {
+			SchoolyearClient client = SchoolyearUtilManager.build(school);
+			int count = StudentOfClassManager.findEntities(sc).size();
+			ExamDTO exam = new ExamDTO();
+			exam.display_name = course.getName();
+			exam.expected_workspaces = count;
+			exam.end_time = cc.getNotAfter();
+			exam.start_time = cc.getNotBefore();
+			if (exam.start_time == null) {			
+				cc.setNotBefore(exam.start_time = new Date());
+			}
+			if (exam.end_time == null) {
+				cc.setNotAfter(exam.end_time = exam.start_time);
+			}
+			
+			exam.pin = cc.getAccessKey();
+			if (cc.getSyExamID() == null) {
+				exam.workspace = new Workspace();
+				exam.workspace.vault = new Vault();
+				exam.workspace.vault.content = new Content();
+				Map<String, Element> elements = exam.workspace.vault.content.elements = new HashMap<>();
+				String uuid = UUID.randomUUID().toString();
+				Element root = new Element();
+				root.url_entire_domain = new WebPageEntireDomain();
+				root.type = WebPageEntireDomain.TYPE;
+				root.origin = "api_key";
+				root.url_entire_domain.url = Origin.ORIGINS[0];
+				elements.put(uuid, root);
+				Element logout = new Element();
+				List<ElementId> logouts = new ArrayList<>(3);
+				uuid = UUID.randomUUID().toString();
+				logouts.add(new ElementId(uuid));
+				logout.origin = "api_key";
+				logout.type = WebPageUrl.TYPE;
+				logout.url = new WebPageUrl();
+				logout.url.url = root.url_entire_domain.url + "/toets/logout.html";
+		        elements.put(uuid, logout);
+
+		        uuid = UUID.randomUUID().toString();
+				logouts.add(new ElementId(uuid));
+				logout.origin = "api_key";
+				logout.type = WebPageUrl.TYPE;
+				logout.url = new WebPageUrl();
+				logout.url.url = root.url_entire_domain.url + "/dwo/saml/doLogout.jsp";
+		        elements.put(uuid, logout);
+		        
+		        uuid = UUID.randomUUID().toString();
+				logouts.add(new ElementId(uuid));
+				URI uri = URI.create(root.url_entire_domain.url);
+				WebPageRegex regex = new WebPageRegex();
+				logout.origin = "api_key";
+				logout.type = WebPageRegex.TYPE;
+				logout.url_regex = regex;
+				regex.protocol = uri.getScheme();
+				regex.hostname = uri.getHost();
+				if (uri.getPort() != -1)
+					regex.port = Integer.toString(uri.getPort());
+				regex.pathname = "**/logout.html";				
+		        elements.put(uuid, logout);
+		        
+		        uuid = UUID.randomUUID().toString();
+				logouts.add(new ElementId(uuid));
+				regex = new WebPageRegex();
+				logout.origin = "api_key";
+				logout.type = WebPageRegex.TYPE;
+				logout.url_regex = regex;
+				regex.protocol = uri.getScheme();
+				regex.hostname = uri.getHost();
+				if (uri.getPort() != -1)
+					regex.port = Integer.toString(uri.getPort());
+				regex.pathname = "/dwo/saml/doLogout.jsp";
+				regex.search_params = Collections.singletonMap("return", "*");
+		        elements.put(uuid, logout);
+				exam.workspace.vault.content.exit_points = logouts;
+				try {
+					exam = client.createExam(exam);
+				} catch (IOException e) {
+					LOG.log(Level.SEVERE, "setKioskmode create for " + course, e);
+				}
+				cc.setSyExamID(exam.id);
+				//cc.setAccessKey(exam.pin);
+			} else {
+				exam.id = cc.getSyExamID();
+				try {
+					exam = client.updateExam(exam);
+				} catch (IOException e) {
+					LOG.log(Level.SEVERE, "setKioskmode update for " + course, e);
+				}
+			}
+			return null;
+//			try {
+//				String result = client.openSettingsUI(exam);
+//				LOG.info("go to " + result);
+//				return result;
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+		} 
+// not valid, fall back to assesment
+		{
+			cc.setType(CourseType.assesment.ordinal());
+			return null;
+		}
+		
+	}
+
+	@Override
     public Boolean attachCourseToClass(TeacherDomainAuthorizer.Context context) throws Dwo2Exception {
         //Loop up the course tree and find the tree path
         Deque<PersistentCourse> treePath = new LinkedList<>();

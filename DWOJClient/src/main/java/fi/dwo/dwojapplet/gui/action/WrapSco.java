@@ -12,8 +12,8 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.beans.loader.Loader;
+import fi.beans.mainframe.JApplet;
 
-import java.applet.Applet;
 import java.applet.AppletContext;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -678,18 +678,18 @@ public class WrapSco extends Sco {
     @SuppressWarnings("unchecked")
     @Override
     protected void loadApplet() {
-        Applet applet;
-        Class<Applet> clazz;
+        JApplet applet;
+        Class<JApplet> clazz;
         try {
         	String jar, className;
         	jar = "previewhtml.jar";
             className = "fi.previewhtml.PreviewHTML";    	
         	ClassLoader loader = Loader.create(jar);
-            clazz = (Class<Applet>) loader.loadClass(className);
+            clazz = (Class<JApplet>) loader.loadClass(className);
             applet = clazz.newInstance();
         } catch (Exception e) {
             LOG.log(Level.SEVERE,null,e);
-            applet = new Applet();
+            applet = new JApplet() { };
         }
         applet.setStub(this);
         super.setApplet(applet);

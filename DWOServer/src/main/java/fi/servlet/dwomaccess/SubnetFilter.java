@@ -1,6 +1,7 @@
 package fi.servlet.dwomaccess;
 
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,6 +14,13 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.server.rest.jaxrsfilters.DwoUserPrincipal;
+import fi.dwo.server.rest.util.SchoolyearUtilManager;
+import nl.numworx.schoolyear.jclient.SchoolyearClient;
+import nl.numworx.schoolyear.jclient.dto.SignatureDTO;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 public class SubnetFilter implements Filter {
 
@@ -60,14 +68,41 @@ public class SubnetFilter implements Filter {
       }
       if (needSEB) {
         HttpServletRequest req = (HttpServletRequest) request;
+ // schoolyear:
+        String signature = req.getHeader("x-sy-signature");
+        if (signature != null) {
+        	LOG.info("check " + signature + " for " + req.getUserPrincipal().getName());
+        	DwoUserPrincipal u = (DwoUserPrincipal) req.getUserPrincipal();
+        	if (u != null) {
+        		PersistentSchool school = u.getSg().getSchool();       		
+        		try {
+					SchoolyearClient client = SchoolyearUtilManager.build(school);
+					SignatureDTO dto = new SignatureDTO();
+					dto.x_sy_signature = signature;
+					if (!client.validateSignature(dto)) {
+						LOG.warning("school year validation failed");
+						forbidden(response);
+						return;
+					}
+				} catch (Dwo2Exception e) {
+					LOG.log(Level.WARNING, "DWO exception ", e);
+					forbidden(response);
+					return;
+				} catch (IOException e) {
+					LOG.log(Level.WARNING, "IO exception ", e);
+					
+				}
+        	}
+        } else {
         String requestHash = req.getHeader("X-SafeExamBrowser-RequestHash"); 
         if (requestHash == null || requestHash.isEmpty()) {
         	LOG.warning("requestHash missing");
         	forbidden(response);
+        	return;
         }
         // TODO Calculate hashes, see DWOServer
       }
-      
+      }
     }
     chain.doFilter(request, response);
   }

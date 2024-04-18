@@ -24,6 +24,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
+import fi.beans.css.StateToCss;
 import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
@@ -178,12 +179,44 @@ public class SecuredStudentStudentModelManager {
 			DomStudentModelStructure struct = result.getModelStructure();
 			String obj = getStruct(struct, uuid, locale);
 			CacheControl cc = new CacheControl();
-			cc.setMaxAge(600);
+			cc.setMaxAge(3600);
 			Date expiry = new  Date(System.currentTimeMillis()+1000*cc.getMaxAge());
 			Date last = null;
 			if ( null != result.getLastChangeTimeStamp())
 				last = new Date(result.getLastChangeTimeStamp().longValue());
 			return Response.ok(obj, MediaType.APPLICATION_JSON_TYPE)
+					.cacheControl(cc)
+					.lastModified(last)
+					.expires(expiry)
+					.build();
+		} catch (Dwo2Exception e) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+	}
+	@GET
+	@Produces ("test/css") 
+	@Path ("/getCSS")
+	public Response getCSS(@Context SecurityContext sc, 
+			@QueryParam("id") String uuid, @QueryParam("modelId") String modelid,
+			@QueryParam("hasRoleId") String sgid, @QueryParam("locale") String locale
+		) {
+		DomHasRole hr = new DomHasRole();
+		hr.setId(new PersistenceId(sgid));
+		DomStudentModelContextId smc = new DomStudentModelContextId(new PersistenceId(modelid));
+	      try {
+			StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
+			          .setHasRole(hr)
+			          .buildStudent();
+			DomStudentModelContext result = state.getStudentModel(smc);
+			DomStudentModelStructure struct = result.getModelStructure();
+			String obj = getStructStyle(struct, uuid, locale);
+			CacheControl cc = new CacheControl();
+			cc.setMaxAge(3600);
+			Date expiry = new  Date(System.currentTimeMillis()+1000*cc.getMaxAge());
+			Date last = null;
+			if ( null != result.getLastChangeTimeStamp())
+				last = new Date(result.getLastChangeTimeStamp().longValue());
+			return Response.ok(obj)
 					.cacheControl(cc)
 					.lastModified(last)
 					.expires(expiry)
@@ -209,6 +242,22 @@ public class SecuredStudentStudentModelManager {
 		throw new Dwo2Exception(Dwo2ExceptionCode.Rest_FormatError, "not found");
 	}
 
+	static String getStructStyle(DomStudentModelStructure struct, String uuid, String locale) throws Dwo2Exception {
+		if (uuid.equals(struct.getInfo().getId())) {
+			return style(struct.getInfo(), locale);
+		}
+		for( DomStudentModelCategory cat: struct.getCategories()) {
+			if (uuid.equals(cat.getInfo().getId())) {
+				return style(cat.getInfo(), locale);
+			}
+			for (DomStudentModelObj obj : cat.getObjectives()) {
+				Optional<String> result = getObjStyle(obj, uuid, locale); 
+				if (result.isPresent()) return result.get();
+			}
+		}
+		throw new Dwo2Exception(Dwo2ExceptionCode.Rest_FormatError, "not found");
+	}
+
 	private static Optional<String> getObj(DomStudentModelObj obj, String uuid, String locale) {
 		if (uuid.equals(obj.getInfo().getId()))
 			return Optional.ofNullable(description(obj.getInfo(), locale));
@@ -219,6 +268,20 @@ public class SecuredStudentStudentModelManager {
  		}
 		return Optional.empty();
 	}
+	
+	private static Optional<String> getObjStyle(DomStudentModelObj obj, String uuid, String locale) {
+		if (uuid.equals(obj.getInfo().getId()))
+			return Optional.ofNullable(style(obj.getInfo(), locale));
+		List<DomStudentModelObj> list = obj.getObjectives();
+		if(list != null) for (DomStudentModelObj o: list) {
+			Optional<String> result = getObj(o, uuid, locale);
+			if (result.isPresent()) return result;
+ 		}
+		return Optional.empty();
+	}
+	
+	
+	
 
 	private static String description(DomStudentModelContextInfo info, String locale) {
 		String json = info.getDescription().get(locale + "@JSON");
@@ -239,6 +302,15 @@ public class SecuredStudentStudentModelManager {
 		return json;
 	}
 	
-	
+	private static String style(DomStudentModelContextInfo info, String locale) {
+		String launchdata = info.getDescription().getOrDefault(locale, "");
+		try {
+			@SuppressWarnings("unchecked")
+			Hashtable<String, Object> map = (Hashtable<String, Object>) StringCodeObject.decodeStringToObject(launchdata, null);
+	        return StateToCss.createCssFromInstellingen(map, null);
+		} catch(Exception oops) {
+			return "";
+		}
+	}
 	
 }

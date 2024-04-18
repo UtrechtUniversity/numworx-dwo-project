@@ -98,7 +98,7 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 	private final boolean kiosk;
 	
 	@Inject Login3ViewImpl(DWOplayerParameters PARAMETERS) {
-	    kiosk = PARAMETERS.getSecureMode() != SecureMode.NORMAL;
+	    kiosk = PARAMETERS.inExam();
 	    allow = !kiosk;
 		initWidget(createAndBindUi(PARAMETERS));
 		username.getElement().setPropertyString("placeholder", rb.gebruikersnaam());

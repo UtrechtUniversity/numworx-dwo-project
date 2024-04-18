@@ -4,7 +4,7 @@
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO</artifactId>
         <relativePath>../DWO/pom.xml</relativePath>
-        <version>2.5.30</version>
+        <version>2.5.31</version>
     </parent>
     <!-- Adjust artifact, name and description for new projects -->
     <groupId>nl.uu.fi.dwo.lms</groupId>
@@ -150,7 +150,7 @@
         <dependency>
         	<groupId>nl.uu.fi.dwo.lms</groupId>
         	<artifactId>DwoGwtClientHtmlUi</artifactId>
-        	<version>2.5.29</version>
+        	<version>2.5.29-sy</version>
         	<scope>runtime</scope>
         	<type>war</type>
         </dependency>
@@ -322,12 +322,12 @@
                 <version>1.6.4</version>
                 <configuration>
                     <container>
-                        <containerId>tomcat8x</containerId>
+                        <containerId>tomcat9x</containerId>
                         <!--<output>target/catalina-output.log</output>-->
                         <artifactInstaller>
                             <groupId>org.apache.tomcat</groupId>
                             <artifactId>tomcat</artifactId>
-                            <version>7.0.81</version>
+                            <version>9.0.87</version>
                         </artifactInstaller>
                     </container>
                     <dependencies>
@@ -391,8 +391,9 @@
                     <path>/</path>
                     <systemProperties>
                     	<CDN_HOST>localhost:8082</CDN_HOST>
-			<CDNURL>http://localhost:8082</CDNURL>
-                    	<DWO_ENV>test</DWO_ENV>                   
+						<CDNURL>http://localhost:8082</CDNURL>
+                    	<DWO_ENV>testkiosk</DWO_ENV>
+                    	<ALLOW_ORIGIN>http://localhost:8080</ALLOW_ORIGIN>                  
                     </systemProperties>
                     <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
 					<contextFile>src/test/tomcat/${context.xml}</contextFile>
@@ -400,7 +401,7 @@
                         <webapp>
                             <groupId>nl.uu.fi.dwo</groupId>
                             <artifactId>DWOServer</artifactId>
-                            <version>2.5.30-SNAPSHOT</version>
+                            <version>2.5.31-SNAPSHOT</version>
                             <type>war</type>    
                             <asWebapp>true</asWebapp> 
                             <contextPath>${local.dwo}</contextPath>
@@ -417,7 +418,7 @@
                        <webapp>
                             <groupId>nl.uu.fi.dwo.mobile</groupId>
                             <artifactId>DWOplayer</artifactId>
-                            <version>2.5.29</version>
+                            <version>2.5.31-SNAPSHOT</version>
                             <type>war</type>
                             <contextPath>/dwo/tablet</contextPath>
                             <asWebapp>true</asWebapp>

@@ -62,7 +62,7 @@ public class Upload extends UploadAction {
 
 	@Override
 	public String executeAction(HttpServletRequest request, List<FileItem> sessionFiles) throws UploadActionException {
-		StoredRestManager rest = StoredRestManager.getInstance();
+		StoredRestManager rest = StoredRestManager.getInstance().duplicate();
 		String learnerId = null;
 		String registration = null;
 		String uuid = null;

@@ -61,7 +61,7 @@ public class SelectModuleItem
 	private Place place;
 
 	public ScoType getScoType() {
-		if (getCourseType() == CourseType.assesment)
+		if (isExam())
 			return ScoType.EINDTOETS;
 		if(scoType == null)
 			return ScoType.OEFENEN;
@@ -355,7 +355,8 @@ public class SelectModuleItem
 
 
 	public boolean isExam() {
-		return CourseType.assesment == getCourseType();
+		CourseType t = getCourseType();
+		return CourseType.assesment ==  t || CourseType.kiosk == t;
 	}
 
 

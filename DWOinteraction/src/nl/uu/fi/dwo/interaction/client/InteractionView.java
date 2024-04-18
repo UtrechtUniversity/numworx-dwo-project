@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
-public interface InteractionView extends IsWidget, TekstElement
+public interface InteractionView extends IsWidget, ResponsiveTextElement
 {
 
 	public HashMap<String, Object> getState();
@@ -23,6 +23,5 @@ public interface InteractionView extends IsWidget, TekstElement
 	
 	public void setCommunicationRoot(OpdrNavIF comRoot);
 	
-	public void zetVolledigeBreedte(int breedte);
 	
 }

@@ -117,7 +117,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 				api = new SCORM_guest();
 			} else {
 // secure alleen voor studenten!
-				boolean secure = PARAMETERS.getSecureMode() == SecureMode.SEB && RoleType.STUDENT == getRoleType();
+				boolean secure = PARAMETERS.inExam() && RoleType.STUDENT == getRoleType();
                 api = new SCORM_DWO5(getSchoolClass(),
 						instance.getActiveSchoolRoleAndClass().getHasRole(),
 						agent,
@@ -200,21 +200,21 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 						return result;
 					}})
 						.map(DWO2player.TO_SELECTMODULEITEM);
-			} else if (SecureMode.NORMAL == PARAMETERS.getSecureMode() ) { // no free lunch in exam
+			} else if (!PARAMETERS.inExam() ) { // no free lunch in exam
 				modules = rpc.getCourses().map(DWO2player.TO_SELECTMODULEITEM);
 			} else {
 				modules = Promises.resolved(Collections.emptyList());
 			}
 				
 			boolean iconizer = vars.isIconizer();
-			if (roleType == RoleType.STUDENT && PARAMETERS.getSecureMode() !=  SecureMode.NORMAL )
+			if (roleType == RoleType.STUDENT && PARAMETERS.inExam() )
 				iconizer = false;
 
 			modules.then(new InsertSelectItems(iconizer, roleType)).onResolve(new Runnable() {
 
 					@Override
 					public void run() {
-						if( SecureMode.NORMAL == PARAMETERS.getSecureMode() || roleType != RoleType.STUDENT)
+						if( !PARAMETERS.inExam() || roleType != RoleType.STUDENT)
 							placeController.goTo(new TreeModulePlace("0"));
 						else 
 						{ // was FlatModulePlace();

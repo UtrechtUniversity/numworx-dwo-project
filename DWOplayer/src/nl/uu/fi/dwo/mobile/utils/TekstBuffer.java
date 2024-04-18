@@ -291,14 +291,18 @@ public class TekstBuffer
 		int b = data.indexOf("@", u);
 		tekst = data.substring(0,u);
 		String href = data.substring(u+2, b);
-		boolean embedded = data.contains("$Etrue@");
+		boolean volledigebreedte = data.contains("$Eresp@");
+		boolean embedded = volledigebreedte || data.contains("$Etrue@");
 		String target = "_blank";
 		if(embedded) {
+			int kolom = -1; // De default: geen volle breedte
+			if (volleBreedtes != null && volleBreedtes.length > huidigeKolom)
+				kolom = volleBreedtes[huidigeKolom];
 			u = data.indexOf("$B"); b = data.indexOf('@',u);
 			String width = data.substring(u+2,b);
 			u = data.indexOf("$C"); b = data.indexOf('@',u);
 			String height = data.substring(u+2,b);
-			return new IFrameView(href, width, height);
+			return new IFrameView(href, width, height, volledigebreedte, kolom);
 		} else {
 			u = data.indexOf("$E_"); // _top _blank _self _parent
 			b = data.indexOf('@',u);

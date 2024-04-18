@@ -1452,7 +1452,7 @@ LOG.info("time results = " + (-t) + " ms");
                 String softwareVersion = BUILD.version;
                 String svnRevision = BUILD.buildNumber;
                 String buildTimeStamp = BUILD.timeStamp;
-                LOG.log(Level.INFO, "Software version {0},  subversion revision {1}, build timestamp {2}",
+                LOG.log(Level.INFO, "Software version {0}, revision {1}, build timestamp {2}",
                         new Object[]{softwareVersion, svnRevision,buildTimeStamp});
         DwoHelper.setAu(new AppletUtil(this));
         delegate = getFocusTraversalPolicy();

@@ -158,6 +158,7 @@ CREATE TABLE `tblclasscourse` (
   `viewState` tinyint(4) NOT NULL DEFAULT '0',
   `accessKey` varchar(135) DEFAULT NULL,
   `dwoProfileID` int(11) DEFAULT NULL,
+  `syExamID` VARCHAR(45) NULL DEFAULT NULL,
   PRIMARY KEY (`ClassCourseID`),
   UNIQUE KEY `AK_ClassID_CourseID` (`ClassID`,`CourseID`),
   KEY `index_course` (`CourseID`),

@@ -345,7 +345,7 @@ public class LoginActivity extends AbstractActivity
 			}
 
 			private boolean isSeb() {
-				return SecureMode.SEB == PARAMETERS.getSecureMode();
+				return PARAMETERS.inExam();
 			}
 		}
 		);

@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -171,6 +172,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	private TreeItem standardMap;
 	Map<SelectModuleItem,TreeItem> inverseMap = new HashMap<SelectModuleItem, TreeItem>();
 	private Widget root;
+	private Optional<NavigationMenu> menu;
 	private DockLayoutPanel dock;
 	private double width;
 	private boolean none;
@@ -375,8 +377,9 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	}
 
 	@Override
-	public void setDisplay(Widget display) {
+	public void setDisplay(Widget display, Optional<NavigationMenu> menu) {
 		root = display;
+		this.menu = menu;
 	}
 
 	@Override
@@ -385,6 +388,8 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		p.setWidgetVisible(this,true);
 		p.setWidgetLeftRight(root, this.width, Unit.PX, 0, Unit.PX);
 		p.setWidgetLeftWidth(this, 0, Unit.PX, this.width, Unit.PX);
+		dock.setWidgetHidden(bibliotheek, false); // niet in de style mogelijk
+		dock.removeStyleName(style.navWide());
 	}
 
 	@Override
@@ -393,6 +398,17 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		p.setWidgetVisible(this, false);
 		p.setWidgetLeftRight(root, 0, Unit.PX, 0, Unit.PX);
 	}
+	
+	@Override
+	public void wide() {
+		RootLayoutPanel p = RootLayoutPanel.get();
+		p.setWidgetVisible(this,true);
+		p.setWidgetRightWidth(root, 0, Unit.PX, 0, Unit.PX);
+		p.setWidgetLeftRight(this, 0, Unit.PX, 0, Unit.PX);	
+		dock.setWidgetHidden(bibliotheek, true);
+		dock.addStyleName(style.navWide());
+	}
+ 	
 
 	public void selectItem(SelectModuleItem o, String location) {
 		Place place ;

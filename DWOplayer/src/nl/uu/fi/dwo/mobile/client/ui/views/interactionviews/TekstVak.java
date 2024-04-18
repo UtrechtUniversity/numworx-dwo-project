@@ -8,6 +8,7 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
+import nl.uu.fi.dwo.interaction.client.ResponsiveTextElement;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
@@ -408,12 +409,9 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				
 				}
 			}
-			else if (currentObject instanceof InteractionView)
-				((InteractionView) currentObject).zetVolledigeBreedte((int) tekstVakBreedte);
+			else if (currentObject instanceof ResponsiveTextElement)
+				((ResponsiveTextElement) currentObject).zetVolledigeBreedte((int) tekstVakBreedte);
 			
-			else if (currentObject instanceof ImageView)
-				((ImageView) currentObject).zetVolledigeBreedte((int) tekstVakBreedte);
-
 			if (currentObject instanceof TekstElementWithFont) {
 				TekstElementWithFont tmf = (TekstElementWithFont) currentObject;
 				tmf.setFontSize(font_size);
