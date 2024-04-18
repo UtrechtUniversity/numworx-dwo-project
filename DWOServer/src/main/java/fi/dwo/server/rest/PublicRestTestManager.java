@@ -1,9 +1,13 @@
 package fi.dwo.server.rest;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
+
+import nl.numworx.schoolyear.jclient.SchoolyearClient;
+import nl.numworx.schoolyear.jclient.dto.SignatureDTO;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import java.util.logging.Logger;
@@ -86,6 +90,19 @@ public class PublicRestTestManager {
         Response r = Response.status(200).entity(String.valueOf(result)).build();
         return r;
     }
+    
+    @GET
+    @Produces({MediaType.TEXT_HTML})
+    @Path("VerifySchoolyearSignature/html")
+    public Response verifySchoolyearSignature(@HeaderParam("x-sy-signature") String signature) throws IOException {
+    	SchoolyearClient client = new SchoolyearClient.Builder().build();
+    	SignatureDTO dto = new SignatureDTO();
+    	dto.x_sy_signature = signature;
+		boolean result = client.validateSignature(dto);
+        Response r = Response.status(200).entity(String.valueOf(result)).build();
+        return r;
+    }
+    
 
 	public static boolean verifySEBHeader(String headerHash,  String uri, String... rawKey) {
 		MessageDigest md;
