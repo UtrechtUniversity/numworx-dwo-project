@@ -27,15 +27,15 @@ public class RedirectServlet extends HttpServlet {
 
 	private RestHandler rest;
 	private String schoolID, org_id;
+	private UULogin login;
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String state = req.getParameter("state");
 		String scope = req.getParameter("scope");
 		String code = req.getParameter("code");
-		UULogin login = new UULogin(getServletConfig());
 		
-		if (! login.numworx_scope.equals(scope)) {
+		if (! UULogin.numworx_scope.equals(scope)) {
 			resp.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return;
 		}
@@ -44,18 +44,18 @@ public class RedirectServlet extends HttpServlet {
 		String redirectUri = state.substring(0, index);
 		state = state.substring(index+1);
 		try {
-			Claims claims = login.getToken(code);
+			UULogin.UUClaims claims = login.getToken(code);
 			
 			// iets dat lijkt op dbaccess.
-			String user_id = login.studentNumber;
+			String user_id = claims.studentNumber;
 			if (user_id == null || user_id.isEmpty() )
-				user_id = login.uid;
-			String lti_id = login.uid; // should be token.sub
-			String first =  Objects.toString(login.givenName, "");
-			String middle = Objects.toString(login.insertion, "");
-			String last =   Objects.toString(login.sn, "");
-			String email =  Objects.toString(login.email, "");
-			String roles = login.affiliation;
+				user_id = claims.uid;
+			String lti_id = claims.uid; // should be token.sub
+			String first =  Objects.toString(claims.givenName, "");
+			String middle = Objects.toString(claims.insertion, "");
+			String last =   Objects.toString(claims.sn, "");
+			String email =  Objects.toString(claims.email, "");
+			String roles = claims.affiliation;
 		    String role = "STUDENT";
 		      if(roles != null && roles.toLowerCase().contains("employee"))
 		          role = "TEACHER";
@@ -66,7 +66,7 @@ public class RedirectServlet extends HttpServlet {
 			token = Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
 			
 			code = token;
-			Cookie cookie = new Cookie(CHALLENGE, login.nonce);
+			Cookie cookie = new Cookie(CHALLENGE, claims.nonce);
 			cookie.setHttpOnly(true);
 			cookie.setSecure(req.isSecure());
 			cookie.setPath("/");
@@ -77,6 +77,7 @@ public class RedirectServlet extends HttpServlet {
 			HttpSession session = req.getSession(false);
 			if (session != null) {
 				session.removeAttribute(Login.OAUTH2_PROMPT);
+				OAuth2Filter.newsession(session);
 			}
 			resp.sendRedirect(redirectUri);
 
@@ -100,6 +101,8 @@ public class RedirectServlet extends HttpServlet {
 			} catch (MalformedURLException e) {
 				log("dbrest.url", e);
 			}
+		login = new UULogin(getServletConfig());
+
 	}
 
 }

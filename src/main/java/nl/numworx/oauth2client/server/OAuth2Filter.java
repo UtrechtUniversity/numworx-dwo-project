@@ -3,8 +3,12 @@ package nl.numworx.oauth2client.server;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.Objects;
 import java.util.Random;
+import java.util.logging.Logger;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -21,6 +25,8 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.OAuthManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 
 public class OAuth2Filter implements Filter {
+	
+	final static private Logger LOG = Logger.getLogger(OAuth2Filter.class.getName());
 
 	private final class BearerWrapper extends HttpServletRequestWrapper {
 		private final String bearer;
@@ -47,9 +53,12 @@ public class OAuth2Filter implements Filter {
 	private String client_id = null;
 	private StoredRestManager instance = StoredRestManager.getInstance();
 	private OAuthManager manager;
+	private boolean always;
 	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
+		always = "always".equals(filterConfig.getInitParameter("fresh"));
+		
 		String param = filterConfig.getInitParameter("authz");
 		if (param != null) authz = param;
 		param = filterConfig.getInitParameter("client_id");
@@ -63,8 +72,20 @@ public class OAuth2Filter implements Filter {
 		
 	}
 	
+	public static void newsession(HttpSession session) {
+		Enumeration<String> keys = session.getAttributeNames();
+		ArrayList<String> todelete = new ArrayList<>();
+		while (keys.hasMoreElements()) {
+			String key = keys.nextElement();
+			if (key.startsWith(PREFIX)) todelete.add(key);
+		}
+		todelete.forEach(session::removeAttribute);
+	}
+	
+	@SuppressWarnings("deprecation")
 	private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 		HttpSession storage = request.getSession();
+		LOG.severe("do Filter session=" + storage.getId() + ",keys "  + Arrays.toString(storage.getValueNames()));
 		String code = request.getParameter("code");
 		String redirect = request.getRequestURL().toString();
 		if (code != null) {
@@ -73,24 +94,32 @@ public class OAuth2Filter implements Filter {
 			Object verifier = storage.getAttribute(PREFIX + "verifier");
 			if (Objects.equals(orgstate, state)) {
 				String retry = manager.authorization_token(code, client_id, Objects.toString(verifier, null), redirect);
-			if(retry != null) {	
+			if(retry != null) {
 				String bearer = instance.getBasicAuthString().substring(7);
+				LOG.severe("chain with new bearer " + bearer);
 				storage.removeAttribute(PREFIX + "state");
 				storage.setAttribute(PREFIX + "bearer", bearer);
+				storage.setAttribute(PREFIX + "retry", retry);
 				HttpServletRequestWrapper wrap = new BearerWrapper(request, bearer);
 				chain.doFilter(wrap, response);
 				return;
 			}}
 		}
 		Object bearer = storage.getAttribute(PREFIX + "bearer");
-		Object login = 	storage.getAttribute("dwo.oauth2.prompt");
+		if (always && "GET".equals(request.getMethod()))
+			bearer = null;
+		Object login = storage.getAttribute("dwo.oauth2.prompt");
+		LOG.severe("bearer=" + bearer + ",prompt="+login);
 		if (bearer != null && login == null) {
 			request = new BearerWrapper(request, bearer.toString());
-			chain.doFilter(request, response);
+			LOG.info("chain with old bearer");
+			chain.doFilter(request, response); // als response.status = need authetication, remove bearer
 			return;
 		} else if (login != null) {
+			LOG.info("remove bearer");
 			storage.removeAttribute(PREFIX + "bearer");
 		}
+		LOG.info("redirect to " + authz);
 		String state = randomString(64);
 		storage.setAttribute(PREFIX + "state", state);
 		StringBuilder sb = new StringBuilder(authz)

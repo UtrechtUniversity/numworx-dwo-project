@@ -38,8 +38,8 @@ public class UULoginTest {
 		System.out.print("code>");
 		System.out.flush();
 		code = r.readLine();
-		Claims result = l.getToken(code);
-		System.out.println(result);
+		UULogin.UUClaims result = l.getToken(code);
+		System.out.println(result.claims);
 	}
 	
 	
