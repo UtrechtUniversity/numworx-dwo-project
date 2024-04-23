@@ -61,6 +61,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class StudentResultsPresenter extends AbstractResultsPresenter implements SelectionHandler<TreeItem> {
@@ -158,6 +159,17 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			DomStudentModelContext4Student item = list.get(selection-1);
 			service.getModel(item).then(p -> {
 				current = p.getValue();
+// patch activeMethod to method used in filter
+				Set<String> methods = getCurrentFilter(current).keySet();
+				String method = DomMethod.key(current.getModelStructure().getActiveMethod());
+				if (!methods.contains(method) && !methods.isEmpty()) {
+					method = methods.iterator().next();
+					PersistenceId id = new PersistenceId();
+// getActiveMethod met alleen de key goed. server herkent PROXY
+					id.setIdString("PROXY;"+PersistenceClassType.PersistentMethod +";" + method);
+					current.getModelStructure().setActiveMethod(id);
+				}
+				
 				return service.getActiveMethod(current.getModelStructure());
 			}).then( p -> {
 				method = p.getValue();
