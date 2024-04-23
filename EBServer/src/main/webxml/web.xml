@@ -132,15 +132,6 @@
     	<filter-class>fi.dwo.server.xss.HTTPFilter</filter-class>
     </filter>
     
-<!--   <filter> -->
-<!--     <filter-name>JAMonFilter</filter-name> -->
-<!--     <filter-class>com.jamonapi.JAMonFilter</filter-class> -->
-<!--   </filter> -->
-
-<!--   <filter-mapping> Wat wil je monitoren? -->
-<!--     <filter-name>JAMonFilter</filter-name> -->
-<!--     <url-pattern>/dwo/*</url-pattern> -->
-<!--   </filter-mapping> -->
  	<filter-mapping>
  		<filter-name>HTTPS</filter-name>
  		<url-pattern>/*</url-pattern>

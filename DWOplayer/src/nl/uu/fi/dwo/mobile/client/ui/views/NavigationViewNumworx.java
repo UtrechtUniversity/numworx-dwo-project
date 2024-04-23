@@ -486,6 +486,14 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 //    	showIcon(false);
 //    }
 
+    /**
+     * show beheer iconen. 
+     * Actions.isAvailable() is true
+     * alleen als het geen gast of dwoadmin is en "responsive" staat uit.
+     * maw. showIcon ( ! responsive ) en daarna setBeheer(Actions.isavalable())
+     * @param show false bij responsive, dus brede navigatie kolom
+     * @see #setBeheer(boolean)
+     */
     @Override
     public void showIcon(boolean show) {
     	if (!show && !breed) {
