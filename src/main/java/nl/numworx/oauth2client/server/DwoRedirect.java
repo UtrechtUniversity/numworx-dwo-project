@@ -51,6 +51,8 @@ public class DwoRedirect extends HttpServlet {
 				//session.setAttribute("dwologin.code", code);
 				session.removeAttribute("dwologin.nonce");
 				session.removeAttribute("dwologin.state");
+				session.removeAttribute(Login.OAUTH2_PROMPT);
+				OAuth2Filter.newsession(session);
 				url += "&code="  + code;			
 				resp.sendRedirect(url);
 				return;
