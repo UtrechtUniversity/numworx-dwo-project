@@ -154,6 +154,28 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+  <filter>
+  	<filter-name>authz</filter-name>
+  	<filter-class>nl.numworx.oauth2client.server.OAuth2Filter</filter-class>
+  	<init-param>
+  		<param-name>fresh</param-name>
+  		<param-value>never</param-value>
+  	</init-param>
+  	<init-param>
+  		<param-name>authz</param-name>
+  		<param-value>/dwo/oauth2/login</param-value>
+  	</init-param>
+  	<init-param>
+  		<param-name>client_id</param-name>
+  		<param-value>secret_client_id</param-value>
+  	</init-param>
+  </filter>
+  <filter-mapping>
+  	<filter-name>authz</filter-name>
+  	<url-pattern>/dwo/snoop/*</url-pattern>
+  	<url-pattern>/dwo/snoop</url-pattern>
+  </filter-mapping>
+
     
     <!-- Servlets -->
   <servlet>
