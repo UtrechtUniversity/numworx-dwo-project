@@ -773,8 +773,4 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
     westPanel.setBeheer(b);
   }
 
-  @Override
-  public void showIcon(boolean b) {
-    westPanel.showIcon(b);
-  }
 }

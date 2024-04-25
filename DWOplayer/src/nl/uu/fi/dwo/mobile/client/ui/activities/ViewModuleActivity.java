@@ -501,10 +501,6 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
   @Override
   public void onMessage(MessageEvent event) {
     String message = event.getMessage();
-    if(Actions.showMainNav.getCommand().equals(message))
-        view.showIcon(false);
-    if(Actions.hideMainNav.getCommand().equals(message))
-      view.showIcon(true);
     if (Actions.CLOSING.getCommand().equals(message)) {
     	commitView();
     }

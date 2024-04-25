@@ -53,7 +53,7 @@ import fi.dwo.gwt.lib.rest.ui.IdleDetect.IdleEvent;
 import fi.dwo.gwt.lib.rest.ui.IdleDetect.IdleHandler;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 
-public class TreeModuleActivity extends AbstractActivity implements GotoController, MessageEventHandler, IdleHandler
+public class TreeModuleActivity extends AbstractActivity implements GotoController, IdleHandler
 {
 
 	@Inject PlaceController placeController;
@@ -89,8 +89,6 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
  
         if(beheerder) {
     	  eventBus.addHandler(NeedLoginEvent.TYPE, OOPS);
-          eventBus.addHandler(MessageEvent.TYPE, this);
-          onMessage(MessageEvent.getLastEvent());          
           eventBus.addHandler(IdleDetect.TYPE, this);
         }
 		
@@ -188,16 +186,6 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 		}
 		placeController.goTo(place);
 	}
-
-  @Override
-  public void onMessage(MessageEvent event) {
-      String message = event.getMessage();
-      if(Actions.showMainNav.getCommand().equals(message))
-          view.showIcon(false);
-      if(Actions.hideMainNav.getCommand().equals(message))
-        view.showIcon(true);
-    
-  }
 
   @Override
   public void onIdle(IdleEvent ev) {

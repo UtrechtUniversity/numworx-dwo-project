@@ -13,5 +13,5 @@ public interface NavigationView extends IsWidget {
 	void hide();
 	void wide();
 	
-	void showIcon(boolean show);
+	//void showIcon(boolean show);
 }

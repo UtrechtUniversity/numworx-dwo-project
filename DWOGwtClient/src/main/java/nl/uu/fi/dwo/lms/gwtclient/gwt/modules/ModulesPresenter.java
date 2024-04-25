@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.osgi.util.promise.Deferred;
@@ -71,6 +72,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
     private Promise<String> init;
     private PersistenceId roleId, schoolClassId;
     @Inject Lazy<BootPanelController> controller; // lazy anders cycle
+    @Inject @Named("responsive") boolean responsive;
 
     private HandlerRegistration register;
 
@@ -186,8 +188,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         String locale = LocaleInfo.getCurrentLocale().getLocaleName();
         if ("default".equals(locale) ) locale =  "nl";
         u.setParameter("locale",locale);
-        String responsive = Location.getParameter("responsive");
-        if (responsive != null) {
+        if (responsive) {
         	u.setParameter("responsive", "true");
         }
         String string = u.buildString();
@@ -219,8 +220,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
      String locale = LocaleInfo.getCurrentLocale().getLocaleName();
      if ("default".equals(locale) ) locale =  "nl";
      u.setParameter("locale",locale);
-     String responsive = Location.getParameter("responsive");
-     if ("true".equals(responsive)) {
+     if (responsive) {
      	u.setParameter("responsive", "true");
      }
      String string = u.buildString();

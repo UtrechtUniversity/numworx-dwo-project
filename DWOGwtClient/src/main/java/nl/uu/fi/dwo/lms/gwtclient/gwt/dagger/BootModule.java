@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.dagger;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.ResettableEventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
@@ -52,6 +53,16 @@ abstract class BootModule {
 	@BindsOptionalOf abstract EventBus optionalEventBus();
 	@BindsOptionalOf abstract nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService optionalPersonsService();
 	@Provides @Named("test") static boolean test(DwoGlobalVars vars) { return vars.isTest(); }
+
+	@Singleton
+	@Provides @Named("responsive") static boolean responsive() {
+		return "true".equals(Window.Location.getParameter("responsive")) || getResponsive(); 
+	}
+	private static native boolean getResponsive() /*-{
+		return $wnd.modernstyle;
+	}-*/;
+	
+	
 	@Binds abstract EventBus eventBus(ResettableEventBus bus); // for RoleScope eventHandlers
 	@Binds abstract ViewFactory viewFactory(ViewFactoryJs view);
 	

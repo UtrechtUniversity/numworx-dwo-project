@@ -48,6 +48,7 @@ import com.google.gwt.view.client.SingleSelectionModel;
 
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
@@ -175,7 +176,6 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	private Optional<NavigationMenu> menu;
 	private DockLayoutPanel dock;
 	private double width;
-	private boolean none;
 	private RoleType role = RoleType.TEACHER;
     private final DWOplayerParameters PARAMETERS;
     final private DwoGlobalVars vars;
@@ -216,11 +216,11 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		
 		standardMap.setState(true);
 		standardMap.setUserObject(SelectModuleItem.ROOT);
-		none = Actions.isAvailable();
-		if(!none) {
-		  none = !isTest();
-		}
-		if(!none) setBeheer(false);
+		boolean gwtclient = Actions.isAvailable();
+		boolean responsive = DWOplayer.RESPONSIVE;
+		
+		showIcon(gwtclient && !responsive); // show icons with gwtclient, if gwtclient has navbar, responsive = true;
+		
 		presenter = defaultPresenter = controller::goTo;
 	}
 
@@ -385,9 +385,11 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	@Override
 	public void show() {
 		RootLayoutPanel p = RootLayoutPanel.get();
-		p.setWidgetVisible(this,true);
-		p.setWidgetLeftRight(root, this.width, Unit.PX, 0, Unit.PX);
-		p.setWidgetLeftWidth(this, 0, Unit.PX, this.width, Unit.PX);
+		if (isAttached()) {
+			p.setWidgetVisible(this,true);
+			p.setWidgetLeftRight(root, this.width, Unit.PX, 0, Unit.PX);
+			p.setWidgetLeftWidth(this, 0, Unit.PX, this.width, Unit.PX);
+		}
 		dock.setWidgetHidden(bibliotheek, false); // niet in de style mogelijk
 		dock.removeStyleName(style.navWide());
 	}
@@ -494,8 +496,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
      * @param show false bij responsive, dus brede navigatie kolom
      * @see #setBeheer(boolean)
      */
-    @Override
-    public void showIcon(boolean show) {
+    private void showIcon(boolean show) {
     	if (!show && !breed) {
     		breed = true; width = 300;
     		show();

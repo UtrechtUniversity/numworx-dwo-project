@@ -306,7 +306,7 @@ public class BootPanelController {
     }
 
 	private int stage;
-    private boolean hideGwtGui;
+    //private boolean hideGwtGui;
     String authToken, user_id, org_id;
     private boolean session = false;
 
@@ -327,21 +327,21 @@ public class BootPanelController {
     BootPanelController(ResettableEventBus eventBus, GuestComponent.Builder initialBuilder) {
         this.eventBus = eventBus;
         this.guestBuilder = initialBuilder;
-        hideGwtGui = false;
+        //hideGwtGui = false;
         profile = 77;
         stage = 1;
     }
 
-    public static native String getHideGwtGuiString()/*-{
-        return  $wnd.hideGwtGui;
-    }-*/;
+//    public static native String getHideGwtGuiString()/*-{
+//        return  $wnd.hideGwtGui;
+//    }-*/;
 
     public static native Object getDwoDisplay()/*-{
         return  $wnd.dwoDisplay;
     }-*/;
 
     private void parseGwtParam() {
-        hideGwtGui = Boolean.parseBoolean(getHideGwtGuiString());
+//        hideGwtGui = Boolean.parseBoolean(getHideGwtGuiString());
     }
 
     private void parseUrlParam() {
