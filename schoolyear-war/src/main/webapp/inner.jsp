@@ -9,7 +9,7 @@
     <base href='/en/he/exam/' >
      <script>
     	DWO_PROFILE_ID = 100
-    	SECURE_MODE="NORMAL" // possibly others
+    	SECURE_MODE="KIOSK" // possibly others
         dwo_env = "uusaml"
         defaultPlace = ""
     	function logout() {
