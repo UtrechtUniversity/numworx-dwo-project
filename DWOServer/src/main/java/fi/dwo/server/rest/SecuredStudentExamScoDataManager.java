@@ -18,6 +18,7 @@ import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.entities.RestScormValues;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -88,11 +89,13 @@ public class SecuredStudentExamScoDataManager extends SecuredCommonScoDataManage
     return super.setValues(sc, rest, match);
   }
 
-  	final static Integer EXAM = Integer.valueOf(1);
+  	final static Integer EXAM = Integer.valueOf(CourseType.assesment.ordinal());
+  	final static Integer KIOSK = Integer.valueOf(CourseType.kiosk.ordinal());
 
 	@Override
 	boolean checkType(PersistentClassCourse pcc) {
-		return EXAM.equals(pcc.getType());
+		Integer type = pcc.getType();
+		return EXAM.equals(type) || KIOSK.equals(type);
 	}
 
 }
