@@ -164,10 +164,12 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 				String method = DomMethod.key(current.getModelStructure().getActiveMethod());
 				if (!methods.contains(method) && !methods.isEmpty()) {
 					method = methods.iterator().next();
-					PersistenceId id = new PersistenceId();
+					if (!method.isEmpty()) { // no empty proxy
+						PersistenceId id = new PersistenceId();
 // getActiveMethod met alleen de key goed. server herkent PROXY
-					id.setIdString("PROXY;"+PersistenceClassType.PersistentMethod +";" + method);
-					current.getModelStructure().setActiveMethod(id);
+						id.setIdString("PROXY;"+PersistenceClassType.PersistentMethod +";" + method);
+						current.getModelStructure().setActiveMethod(id);
+					}
 				}
 				
 				return service.getActiveMethod(current.getModelStructure());

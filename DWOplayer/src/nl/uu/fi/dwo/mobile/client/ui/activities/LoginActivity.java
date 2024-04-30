@@ -158,12 +158,6 @@ public class LoginActivity extends AbstractActivity
 			return true;
 		}
 	};		
-			
-			
-			
-    static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
-	static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
-	
 	
 	ClientFactory clientFactory;
 	private Place next;
@@ -233,8 +227,6 @@ public class LoginActivity extends AbstractActivity
 					}}
 				}
 				SelectModuleItemHolder.destroy();
-				String user_id = Cookies.getCookie(DWO_SAML_USER_ID);
-				String org_id = Cookies.getCookie(DWO_SAML_ORGANIZATION_ID);
 				view.get().showError(null);
 				
 				if(Boolean.TRUE.equals(nonPublic)) {
@@ -252,9 +244,6 @@ public class LoginActivity extends AbstractActivity
 
 				});
 				}
-				// TESTING		
-				//		user_id = "292832126";
-				//		org_id = "\"lti:385\"";
 				Promise<DomUserFullwLoginContext> promise;
 				if(logout && isSeb())
 				{
@@ -263,25 +252,21 @@ public class LoginActivity extends AbstractActivity
 					logout();
 					return;
 				} 
-				if ((user_id != null && org_id != null)) {
-
+				if (isSaml()) {
+					panel.setWidget(new Label());
 					if (logout) {
-						panel.setWidget(new Label());
 						logout();
 						return;
 					}
-					panel.setWidget(new Label());
-// ?a= en bovendien saml cookies.
+// ?a= verplicht!
 					String authToken = Window.Location.getParameter("a");
 					if (authToken != null && !authToken.isEmpty())
-						promise = rpc.getUserFromAuthToken(authToken)
-// XXX wel of niet ook met saml?
-						.recoverWith(p -> rpc.samlLogin(user_id, org_id))
-						;
-					else
-						promise = rpc.samlLogin(user_id, org_id);
+						promise = rpc.getUserFromAuthToken(authToken);
+					else {
+						logout();
+						return;
+					}
 				} else {
-
 					String authToken = Window.Location.getParameter("a");
 					if (authToken != null && !authToken.isEmpty()) {
 						if (!logout)
@@ -344,6 +329,11 @@ public class LoginActivity extends AbstractActivity
 				rearm(promise);
 			}
 
+			private boolean isSaml() {
+				return  PARAMETERS.getDwoEnv() != null &&
+						PARAMETERS.getDwoEnv().contains("saml");
+			}
+
 			private boolean isSeb() {
 				return PARAMETERS.inExam();
 			}
@@ -370,8 +360,6 @@ public class LoginActivity extends AbstractActivity
 			}
 		});
 		return ;
-
-				
 	}
 
 	private native static void logout()/*-{

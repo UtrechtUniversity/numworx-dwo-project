@@ -48,7 +48,7 @@ public class SecuredStudentMethodManager {
 			if (rest.getDomMethod().getId().getIdString().startsWith("PROXY;")) {
 				String key = ";"+DomMethod.key(rest.getDomMethod().getId());
 				List<PersistentMethod> list = MethodManager.findEntities();
-				p = list.stream().filter(t  -> t.getMethodID().endsWith(key)).findAny().orElseGet(null);
+				p = list.stream().filter(t  -> t.getMethodID().endsWith(key)).findAny().orElse(null);
 			}
 		}
 		long ms = p.getSchoolID().longValue();

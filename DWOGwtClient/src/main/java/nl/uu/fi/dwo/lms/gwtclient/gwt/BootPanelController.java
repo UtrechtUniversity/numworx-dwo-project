@@ -113,7 +113,6 @@ public class BootPanelController {
                   case LOGOUT:
                     dwoGlobalVars.clearCurrentUser();
                     setSession(false);
-                    if (true) 
                     {
                       if (dwoGlobalVars.isSaml()) // running under SAML protection
                         logout();
@@ -129,16 +128,6 @@ public class BootPanelController {
                         }
                       }
                     } 
-                    else {
-                      //we should also clear user, view and presenter states, but that is never bug free.
-                      //however a reload works too.
-
-                      UrlBuilder url = Window.Location.createUrlBuilder();
-                      url.setPath("/dwo/tablet/DWOplayer.jsp"); // switch to  /leerling
-                      url.removeParameter("a");
-                      url.removeParameter("view");
-                      Window.Location.replace(url.buildString());
-                    }
                     break;
                   default:
                     LOG.log(Level.SEVERE, "Login handling failed in app controller.");
@@ -148,10 +137,6 @@ public class BootPanelController {
   }
 
     private static final Logger LOG = Logger.getLogger(BootPanelController.class.getName());
-    static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
-    static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
-    static final String DWO_SAML_AUTH_TOKEN = "dwoSAMLAuthToken";
-	public static final int PROFILE_INF = 111;
 
     @Inject
     ViewFactory viewFactory;
@@ -372,9 +357,9 @@ public class BootPanelController {
         };
 // Saml login, deprecated 
         if(authToken == null) {
-          user_id = Cookies.getCookie(DWO_SAML_USER_ID);
-          org_id = Cookies.getCookie(DWO_SAML_ORGANIZATION_ID);
-          authToken = Cookies.getCookie(DWO_SAML_AUTH_TOKEN);
+          user_id = null;
+          org_id = null;
+          authToken = null;
           LOG.fine("SAML User " + user_id + " " + org_id + " " + authToken);
         } else {
           user_id = org_id = null; // modern authtoken.
