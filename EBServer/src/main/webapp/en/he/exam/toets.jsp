@@ -70,7 +70,7 @@
     	<% } else { 
     		// Let op, dit is UU only.....
     	%>
-    			top.window.location = "https://<%=server%>/dwo/saml/doLogout.jsp?return=/en/he/exam/"
+    			top.window.location = "https://<%=server%>/dwo/saml/doLogout.jsp?return=/en/he/exam/logout.html"
     		
     	<% } %>	
     	}
