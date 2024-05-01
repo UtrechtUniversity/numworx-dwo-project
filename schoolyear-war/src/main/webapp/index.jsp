@@ -9,8 +9,8 @@
     <p>
     Ga naar/Go to:
     <ul>
-	<li><a href="sy.jsp?locale=nl">Numworx (Nederlands)</a> voor studenten</li>
-	<li><a href="sy.jsp?locale=en">Numworx (English)</a> for students</li>
+	<li><a href="synl.jsp">Numworx (Nederlands)</a> voor studenten</li>
+	<li><a href="sy.jsp">Numworx (English)</a> for students</li>
     </ul>
 
     <div class='footer'>
