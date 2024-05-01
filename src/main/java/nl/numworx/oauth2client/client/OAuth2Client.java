@@ -50,9 +50,18 @@ public class OAuth2Client implements EntryPoint {
 	  return endpoint;
 	}
 	
-	static native private String getSearch() /*-{
+	static native private String getSearch0() /*-{
 		return $wnd.search.substring(1)
 	}-*/;
+	
+	private String getSearch() {
+		String search = storage.getItem("search");
+		if (search == null) {
+			search = getSearch0();
+		}
+		return search;
+	}
+	
 	static native private String getHash0() /*-{
 		return $wnd.hash
 	}-*/;
@@ -92,7 +101,7 @@ public class OAuth2Client implements EntryPoint {
 
 		if(clientId.isEmpty() && code == null) {
             String endpoint = getEndpoint0();
-            String search = getSearch();
+            String search = getSearch0();
             String hash = getHash0();
 			String url = endpoint + "?" + search + hash;
 			insertFrame(url);
@@ -140,6 +149,7 @@ public class OAuth2Client implements EntryPoint {
 			String state = randomString(64);
 			storage.setItem("state", state);
 			storage.setItem("hash", getHash0());
+			storage.setItem("search", getSearch0());
 			storage.setItem("endpoint", getEndpoint0());
 			
 			Map<String, List<String>> map = Window.Location.getParameterMap();
