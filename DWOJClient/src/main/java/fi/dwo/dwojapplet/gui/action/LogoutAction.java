@@ -20,8 +20,6 @@ public class LogoutAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent arg0) {
         GuiCreator.instance().logoff();
-        DwoHelper.deleteCookie("dwoUserName");
-        DwoHelper.deleteCookie("dwoPassWord");
     }
 
 }

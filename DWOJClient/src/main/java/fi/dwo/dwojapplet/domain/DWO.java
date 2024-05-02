@@ -1595,8 +1595,6 @@ LOG.info("time results = " + (-t) + " ms");
         // this.setSize(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
 
-        // this.setLayout(new BorderLayout());
-        // this.setLayout(null);
         if (userName == null) {
             String lclUserName = getParameter("userName");
             if (lclUserName != null && "".equals(lclUserName)) {
@@ -1636,8 +1634,8 @@ LOG.info("time results = " + (-t) + " ms");
                         JOptionPane.ERROR_MESSAGE);
             }
         } else if (cookies) {
-            userName = DwoHelper.getCookie("dwoUserName");
-            passWord = DwoHelper.getCookie("dwoPassWord");
+            userName = null;
+            passWord = null;
             if (userName != null && passWord != null) {
                 try {
                     GuiCreator.instance().login(userName, passWord);
@@ -1646,21 +1644,7 @@ LOG.info("time results = " + (-t) + " ms");
                 }
             }
         }
-        // Inloggen met ENTREE/OpenID (SAML)
-        DwoHelper.setCurrentFacadeUser(getSAMLUser());
-//        if (DwoHelper.getCurrentFacadeUser() == null) // Hier wordt A-Select in
-//        // DWO actief
-//        {
-//            DwoHelper.setCurrentFacadeUser(getInitialUser());
-//        }
-        if (DwoHelper.getCurrentFacadeUser() != null) // Dit is de enige plaats
-        // waar op null
-        // getest mag worden!
-        {
-            gc.configurePanelsForUser(DwoHelper.getCurrentFacadeUser());
-            return;
-        }
-        // einde
+        DwoHelper.setCurrentFacadeUser(null);
 
         if (dwo_env.contains("entree") && DwoHelper.isTest()) {
         	samlData = new HashMap<>();
@@ -2555,95 +2539,43 @@ LOG.info("time results = " + (-t) + " ms");
 
 	private String dwo_env;
 
-    private static String getDecodedCookie(String cookie) {
-        String value = DwoHelper.getCookie(cookie);
-        try {
-            if (value != null) {
-                value = URLDecoder.decode(value, "UTF-8");
-            }
-        } catch (UnsupportedEncodingException e) {
-        }
-        return value;
-    }
-
-    
     public void loginViaSaml(Properties p) throws Exception {
-       String samlUserID = p.getProperty(DWO_SAML_USER_ID);
-       String samlOrgID = p.getProperty(DWO_SAML_ORGANIZATION_ID);
+//       String samlUserID = p.getProperty(DWO_SAML_USER_ID);
+//       String samlOrgID = p.getProperty(DWO_SAML_ORGANIZATION_ID);
        String authToken = p.getProperty("dwoSAMLAuthToken");
-       LOG.log(Level.INFO,"Cookies: dwoSAMLUserID {0} dwoSAMLOrganizationID {1} dwoSAMLAuthToken {2}", new Object[]{samlUserID, samlOrgID, authToken});
-if (false) {
-       DomUserFullwLoginContext user = PublicUserManager.samlLogin(samlUserID, samlOrgID, authToken);
-       String name = user.getDomUserFull().getUserName();
-       String pw = user.getDomUserFull().getPassword();
-       String realm = user.getDomLoginContext().getRealm();
-  // moet REALM meenemen
-       GuiCreator.instance().loginWithMd5(name, pw, realm);
-  } else {
-      CookieHandler handler = CookieHandler.getDefault();
-      Map<String, List<String>> responseHeaders = new HashMap<>();
-      List<String> cookies = new ArrayList<>();
-      for(Map.Entry<Object, Object> entry: p.entrySet()) {
-        if (entry.getKey().toString().startsWith("dwo")) {
-          String value = entry.getValue().toString();
-          if (value.contains(":")) // need escape?
-            value = "\"" + value + "\""; // ons kent ons
-          cookies.add( ( entry.getKey() + "=" + value));
-        }
-      }
-      responseHeaders.put("Set-Cookie", cookies); // inject DWO cookies.
-      handler.put(DwoHelper.getServerUrlPath().toURI(), responseHeaders);
-    
-      String token = p.getProperty("dme.oauth.code");
-      String clientId = p.getProperty("dme.oauth.client_id");
-      String verifier = p.getProperty("dme.oauth.code_verifier");
-      String redirectUri = p.getProperty("dme.oauth.redirect_uri");
-      GuiCreator.instance().loginWithToken(token, clientId, verifier, redirectUri);
-  }
+//       LOG.log(Level.INFO,"Cookies: dwoSAMLUserID {0} dwoSAMLOrganizationID {1} dwoSAMLAuthToken {2}", new Object[]{samlUserID, samlOrgID, authToken});
+		CookieHandler handler = CookieHandler.getDefault();
+		  Map<String, List<String>> responseHeaders = new HashMap<>();
+		  List<String> cookies = new ArrayList<>();
+		  for(Map.Entry<Object, Object> entry: p.entrySet()) {
+		    if (entry.getKey().toString().startsWith("dwo")) {
+		      String value = entry.getValue().toString();
+		      if (value.contains(":")) // need escape?
+		        value = "\"" + value + "\""; // ons kent ons
+		      cookies.add( ( entry.getKey() + "=" + value));
+		    }
+		  }
+		  responseHeaders.put("Set-Cookie", cookies); // inject DWO cookies.
+		  handler.put(DwoHelper.getServerUrlPath().toURI(), responseHeaders);
+		
+		  String token = p.getProperty("dme.oauth.code");
+		  String clientId = p.getProperty("dme.oauth.client_id");
+		  String verifier = p.getProperty("dme.oauth.code_verifier");
+		  String redirectUri = p.getProperty("dme.oauth.redirect_uri");
+		  GuiCreator.instance().loginWithToken(token, clientId, verifier, redirectUri);
     }
     
     
-    /*
-     * Beste Wim uit SURFnet Instelling, je gebruikersid:
-     * c31d3bbc5b214528b90a0c72ce0240da11588d60@uu.nl, je schoolid: SURFIN
-     * 
-     * @return
-     */
-    private User getSAMLUser() {
-        String samlUserID = getDecodedCookie(DWO_SAML_USER_ID);
-        String samlOrgID = getDecodedCookie(DWO_SAML_ORGANIZATION_ID);
-        String samlOrg = getDecodedCookie("dwoSAMLOrganization");
-        String authToken = getDecodedCookie("dwoSAMLAuthToken");
-
-        if (samlUserID != null && samlOrgID != null) {
-            try {
-                DomUserFullwLoginContext user = PublicUserManager.samlLogin(samlUserID, samlOrgID, authToken);
-                DwoHelper.setCurrentUser(user.getDomUserFull(), user.getDomLoginContext());
-                return DwoHelper.getCurrentFacadeUser();
-            } catch (Dwo2Exception e) {
-                //TODO LOG.log(...)
-                LOG.log(Level.INFO,"Dwo2ExceptionCode {0}, msg: {1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
-                GuiCreator.instance().ShowErrorDialog(rootPane, e);
-            }
-            samlData = new HashMap<String,String>();
-            samlData.put(DWO_SAML_USER_ID, samlUserID);
-            samlData.put(DWO_SAML_ORGANIZATION_ID, samlOrgID);
-            samlData.put("dwoSAMLOrganization", samlOrg);
-            samlData.put("dwoSAMLAuthToken", authToken);
-        }
-        return null;
-    }
-
-    public void linkViaSAML() {
-        try {
-          SecureUserAccountManager.link_saml(samlData.get(DWO_SAML_USER_ID),
-                  samlData.get(DWO_SAML_ORGANIZATION_ID), (String) samlData.get("dwoSAMLAuthToken"));
-        } catch (Dwo2Exception e) {
-            LOG.log(Level.SEVERE, "linkViaSaml", e);
-            /// popup
-        }
-
-    }
+//    public void linkViaSAML() {
+//        try {
+//          SecureUserAccountManager.link_saml(samlData.get(DWO_SAML_USER_ID),
+//                  samlData.get(DWO_SAML_ORGANIZATION_ID), (String) samlData.get("dwoSAMLAuthToken"));
+//        } catch (Dwo2Exception e) {
+//            LOG.log(Level.SEVERE, "linkViaSaml", e);
+//            /// popup
+//        }
+//
+//    }
 
 //    /**
 //     * Geef mij een gebruiker buitenom.

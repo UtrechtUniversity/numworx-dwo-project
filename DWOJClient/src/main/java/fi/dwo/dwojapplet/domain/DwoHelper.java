@@ -28,14 +28,12 @@ import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 
-import java.applet.Applet;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Frame;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Point;
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
@@ -80,7 +78,7 @@ public final class DwoHelper {
 
     private static JApplet applet;
 
-    private static GuiCreator guic;
+    //private static GuiCreator guic;
 
     private static boolean isApplication = true; // default als je setApplet niet aanroept.
 
@@ -95,7 +93,7 @@ public final class DwoHelper {
 
     private static String defaultUsername = "";
     private static String defaultPassword = "";
-    private static URL serverUrlPath;
+    //private static URL serverUrlPath;
     private static URL resourceUrlPath; // required null if to use the default
     private static URL appUrlPath;
     private static URL jarUrlPath;
@@ -327,9 +325,6 @@ public final class DwoHelper {
             if (parent instanceof MainPanel) {
                 return new Point(x, y);
             } else {
-                if (parent == null) {
-                    return null;
-                }
                 x += parent.getLocation().x;
                 y += parent.getLocation().y;
                 parent = parent.getParent();
@@ -448,54 +443,6 @@ public final class DwoHelper {
     public static void setContact(boolean contact) {
         DwoHelper.contact = contact;
     }
-
-    @Deprecated
-    public static String getCookie() {
-        if (isApplication()) {
-            return null;
-        }
-        {
-            return null;
-        }
-    }
-
-    @Deprecated
-    public static String getCookie(String name) {
-        String cookie = getCookie();
-        if (cookie == null) {
-            return null;
-        }
-
-        String nameIs = name + "=";
-        if (cookie.length() > 0) {
-            int begin = cookie.indexOf(nameIs);
-            if (begin != -1) {
-                begin += nameIs.length();
-                int einde = cookie.indexOf(";", begin);
-                if (einde == -1) {
-                    einde = cookie.length();
-                }
-                String value;
-                value = cookie.substring(begin, einde);
-                return value;
-            }
-        }
-        return null;
-    }
-
-    @Deprecated
-    public static void setCookie(String name, String value) {
-        if (isApplication()) {
-            return;
-        }
-    }
-
-    @Deprecated
-    public static void deleteCookie(String name) {
-        if (isApplication()) {
-            return;
-        }
-     }
 
     /**
      * Returns the url path of the resource location where the resources are
