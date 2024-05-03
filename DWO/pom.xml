@@ -39,10 +39,11 @@
 <!--         <module>../KeyboardGWT</module> -->
       	<module>../UploadWidget</module>
 <!--      	<module>../WriteMathGWT</module> -->
-<!-- 		<module>../osiris-import</module> -->
+ 		<module>../osiris-import</module>
 <!-- 		<module>../notebook</module> -->
         <module>../EBServer</module>
 <!--        <module>../schoolyear-jclient-lib</module>-->
+<!--        <module>../schoolyear-war</module>-->
     </modules>
     
     <name>${project.build.finalName}</name>
