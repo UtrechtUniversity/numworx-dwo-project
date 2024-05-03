@@ -405,7 +405,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	public void wide() {
 		RootLayoutPanel p = RootLayoutPanel.get();
 		p.setWidgetVisible(this,true);
-		p.setWidgetRightWidth(root, 0, Unit.PX, 0, Unit.PX);
+		//p.setWidgetRightWidth(root, 0, Unit.PX, 0, Unit.PX);
 		p.setWidgetLeftRight(this, 0, Unit.PX, 0, Unit.PX);	
 		dock.setWidgetHidden(bibliotheek, true);
 		dock.addStyleName(style.navWide());

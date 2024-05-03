@@ -23,10 +23,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
-import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
-import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.VisibilityDetect;
@@ -52,7 +49,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -417,8 +413,7 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 	}
 
 	public ObjectMap getConfiguration() {
-		// TODO Auto-generated method stub
-		return null;
+		return instellingen;
 	}
 
 	@Override
@@ -436,10 +431,14 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 		return containerWidth.getAsInt();
 	}
 
+	private int lastwidth = -1;
 	@Override
 	public void onResize(ResizeEvent event) {
-		if (hoofdPanel != null)
+		if (hoofdPanel != null && event.getWidth() != lastwidth)
+		{
+			lastwidth = event.getWidth();
 			hoofdPanel.onResize();
+		}
 	}
 
 
