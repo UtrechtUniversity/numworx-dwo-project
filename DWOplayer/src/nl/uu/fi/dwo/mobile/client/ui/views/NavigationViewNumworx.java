@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -59,6 +60,7 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**
@@ -540,6 +542,10 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	private List<SelectModuleItem> massage(List<SelectModuleItem> list) {
 		if(list == null)
 			list = Collections.emptyList();
+		// remove folders and other garbage
+		list = list.stream()
+				.filter(t -> t.getCourseType() != CourseType.invisible)
+				.collect(Collectors.toList());
 		int len = list.size();
 		if(len > 2) {
 			Collections.sort(list, this);

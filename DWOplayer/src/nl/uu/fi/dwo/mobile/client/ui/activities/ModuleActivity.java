@@ -82,7 +82,8 @@ public class ModuleActivity extends AbstractActivity {
 								CourseType type = CourseType.normal;
 								if (pa.isNotVisible()) type = CourseType.invisible;
 								cc.setCourseType(type);
-								SelectModuleItemHolder.insert(new SelectModuleItem((DomCourseStudent)pa, (DomClassCourse)null));
+								DomClassCourse invpa = new DomClassCourse(); invpa.setCourseType(type);
+								SelectModuleItemHolder.insert(new SelectModuleItem((DomCourseStudent)pa, (DomClassCourse)invpa));
 								return cc;
 							}
 						);
