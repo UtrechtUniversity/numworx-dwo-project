@@ -300,6 +300,7 @@ LOG.info("class " + b2);
 				}
 			} else {
 				resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+				return;
 			}
  		}
 		resp.sendError(HttpServletResponse.SC_NOT_FOUND);
