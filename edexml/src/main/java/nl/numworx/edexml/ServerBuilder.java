@@ -66,7 +66,7 @@ public class ServerBuilder implements Builder {
 
 	public void setSource(String realm, StoredRestManager instance) throws Dwo2Exception {
 		schoolClassManager = new SecureSchoolAdminSchoolClassManager(instance);
-		logins = SecureUserAccountLoginsManager.getSchoolLogins();
+		logins = SecureUserAccountLoginsManager.getSchoolLogins(instance);
 		DomContext context = new DomContext();
 		context.setRealm(realm);
 		DomRole role = logins.getActiveSchoolRoleAndClass().getRole();

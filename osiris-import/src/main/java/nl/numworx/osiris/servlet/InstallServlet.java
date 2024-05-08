@@ -72,7 +72,7 @@ public class InstallServlet extends HttpServlet {
 
 	@Override
 	protected synchronized void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		StoredRestManager instance = StoredRestManager.getInstance();
+		StoredRestManager instance = StoredRestManager.getInstance().duplicate();
 		ServerBuilder numworx = new ServerBuilder();
 		DomLoginContext loginContext = null;
 		String upload = "/upload.html";
@@ -107,7 +107,7 @@ public class InstallServlet extends HttpServlet {
 					log("No token for " + samlUserID + " " + samlOrgID + " " + authToken);
 				}
 			}
-			loginContext = SecureUserAccountManager.getLoginContext();
+			loginContext = SecureUserAccountManager.getLoginContext(instance);
 			numworx.setSource(loginContext.getRealm(), instance);
 		} catch (Dwo2Exception e1) {
 				log("loginUser", e1);
@@ -140,7 +140,7 @@ public class InstallServlet extends HttpServlet {
 	@Override
 	protected synchronized void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		StoredRestManager instance = StoredRestManager.getInstance();
+		StoredRestManager instance = StoredRestManager.getInstance().duplicate();
 		ServerBuilder numworx = new ServerBuilder();
 		DomLoginContext loginContext = null;
 		try {
@@ -171,7 +171,7 @@ public class InstallServlet extends HttpServlet {
 					throw new ServletException("Unauthenticated");
 				}
 			}
-			loginContext = SecureUserAccountManager.getLoginContext();
+			loginContext = SecureUserAccountManager.getLoginContext(instance);
 			numworx.setSource(loginContext.getRealm(), instance);
 		} catch (Dwo2Exception e1) {
 			throw new ServletException(e1.getLocalizedMessage(), e1);
