@@ -1210,6 +1210,13 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 			String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, AnchorContext anchorContext, int vollebreedte) {
 		this(a, hh, randomVarNamen, randomVarWaarden, vollebreedte);
 		this.anchorContext = anchorContext;
+		ObjectMap launch = JSONUtilities.wrapMap(hh);
+		launch = launch.getObjectMap("interactiePanelLaunchState");
+		if (launch.getBoolean("isAnchor", false)) {
+			Element element = getElement();
+			String anchor = launch.getString("anchor");
+			anchorContext.addElement(anchor, element);
+		}
 	}
 
 	public void plaatsTabelRanden()

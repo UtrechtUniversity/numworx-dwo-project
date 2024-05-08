@@ -2,7 +2,9 @@ package nl.uu.fi.dwo.mobile.client.ui.activities;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,6 +54,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.place.shared.Place;
@@ -394,8 +397,27 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 		started = false;
 	}
 	
+	private Map<String,Element> anchors;
+		
+	@Override
+	public void addElement(String anchor, Element e) {
+		defaultContext.addElement(anchor, e);
+		if (anchors == null) anchors = new HashMap<>();
+		anchors.put(anchor, e);
+	}
+
+	@Override
+	public void gotoElement(String anchor) {
+		if (anchors != null) {
+			anchors.computeIfPresent(anchor, (key, e) -> {e.scrollIntoView(); return e;} );
+		}	
+	}
+
 	@Override
 	public void gotoUrl(final String href) {
+		if (href.startsWith("anchor:")) {
+			gotoElement(href.substring(7));
+		} else
 		if("goto:0".equals(href)) {
 			started = false;
 			//History.back(); // FIXME Niet meer goed als je goto gebruikt.

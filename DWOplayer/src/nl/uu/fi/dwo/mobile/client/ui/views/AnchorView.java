@@ -72,7 +72,7 @@ public class AnchorView implements IsWidget, ClickHandler, TekstElementWithFont 
 			anchor.addClickHandler(new Actions.Handler(href));
 			
 		} else
-		if(href.startsWith("goto:"))
+		if(href.startsWith("goto:") || href.startsWith("anchor:"))
 		{
 			anchor = new Anchor(tekst, "javascript:return false;"); // bug in firefox?
 			anchor.addClickHandler(this);
