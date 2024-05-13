@@ -1689,6 +1689,10 @@ public JSONObject getShareMap() {
 	public String getAuthorization() {
 		return api.getAuthorization();
 	}
+	
+	public String getRefreshToken() {
+		return api.getRefreshToken();
+	}
 
 	public void gotoUrl(String href) {
 	}

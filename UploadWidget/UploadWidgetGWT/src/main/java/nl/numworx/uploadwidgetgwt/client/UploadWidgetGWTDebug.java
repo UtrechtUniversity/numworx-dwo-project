@@ -41,6 +41,7 @@ public class UploadWidgetGWTDebug extends UploadWidgetGWT {
 		  HashMap<String,Object> context = new HashMap<>();
 		  context.put("premium", Boolean.TRUE);
 		  context.put(Constants.AUTHORIZATION, "Bearer dummybear");
+		  context.put(Constants.REFRESH_TOKEN, "refresh_token");
 		  context.put("registration", "f7b1437e-5100-11ec-bf63-0242ac130002");
 		  return JSONUtilities.wrapMap(context);
 		}

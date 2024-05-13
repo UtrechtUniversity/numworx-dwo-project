@@ -2958,6 +2958,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		map.put("premium", entry.activity.isPremium());
 		map.put("registration", memento.getRegistration());
 		map.put("Authorization", memento.getAuthorization());
+		String t = memento.getRefreshToken();
+		if (t != null) {
+			map.put("refresh_token", t);
+		}
 		return JSONUtilities.wrapMap(map);
 	}
 

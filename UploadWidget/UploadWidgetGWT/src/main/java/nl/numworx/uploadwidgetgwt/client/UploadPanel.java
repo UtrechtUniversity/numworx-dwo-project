@@ -87,6 +87,7 @@ class UploadPanel extends Composite implements ClickHandler, OnFinishUploaderHan
 		this.comRoot = comRoot;
 		this.lessonMode = comRoot.getLessonMode();
 		this.role = comRoot.getRole();
+		UploadSession.setComRoot(comRoot);
 		if (lessonMode == LessonMode.normal && role == Role.Learner) {
 			ObjectMap context = comRoot.getContext();
 			Hidden registration = new Hidden("registration", context.getString("registration"));
@@ -95,7 +96,6 @@ class UploadPanel extends Composite implements ClickHandler, OnFinishUploaderHan
 			uploader.add(uuid, 1);
 			Hidden learner = new Hidden("learnerId", comRoot.getLearnerId());
 			uploader.add(learner,2);
-			UploadSession.comRoot = comRoot;
 		} else {
 			uploader.setEnabled(false);
 		}

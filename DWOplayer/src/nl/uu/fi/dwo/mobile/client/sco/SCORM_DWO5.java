@@ -47,6 +47,7 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.web.bindery.event.shared.EventBus;
 
 import dagger.Lazy;
+import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.CallManagers.Digest;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentScoDataManager;
 import fi.dwo.gwt.lib.rest.CallManagers.StudentScoDataManager;
@@ -507,6 +508,11 @@ log("initialized " +result.keySet());
 	@Override
 	public String getAuthorization() {
 		return RestAuthenticator.instance.getAuthorization();
+	}
+
+	@Override
+	public String getRefreshToken() {
+		return GwtRestVars.instance().getRefreshToken();
 	}
 
 	@Override
