@@ -35,8 +35,18 @@ public class SecureSchoolAdminSchoolManager implements SchoolManager {
 
   private static final Logger LOG =
       Logger.getLogger(SecureSchoolAdminSchoolManager.class.getName());
+  
+  private final StoredRestManager instance;
+  
+  public SecureSchoolAdminSchoolManager(StoredRestManager manager) {
+	this.instance = manager;
+  }
+  public SecureSchoolAdminSchoolManager() {
+	  this(StoredRestManager.getInstance());
+  }
+  
 
-  public static List<DomTeacher> getTeachersInSchool() throws Dwo2Exception {
+public static List<DomTeacher> getTeachersInSchool() throws Dwo2Exception {
     List<DomTeacher> src;
     RestContext rest = new RestContext();
     rest.setRestContext(getContext());
@@ -206,21 +216,36 @@ public class SecureSchoolAdminSchoolManager implements SchoolManager {
         new Object[] {RestAuthenticator.getInstance().getUsername(), submit.getId()});
     return result;
   }
-
   
   public static Boolean inviteTeacher(DomStudent student) throws Dwo2Exception {
+	  return inviteTeacher(StoredRestManager.getInstance(), student);
+  }
+  
+  public Boolean InviteTeacher(DomStudent student) throws Dwo2Exception {
+	  return inviteTeacher(instance, student);
+  }
+ 
+  public static Boolean inviteTeacher(StoredRestManager instance, DomStudent student) throws Dwo2Exception {
 	  RestStudent rest = new RestStudent();
-	  rest.setRestContext(getContext());
+	  rest.setRestContext(instance.getContext());
 	  rest.setDomStudent(student);
-	  Boolean result = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/schooladmin/school/inviteTeacher", Boolean.class, rest);
+	  Boolean result = instance.put("rest/sec:" + PathId.getId(instance.getContext()) + "/schooladmin/school/inviteTeacher", Boolean.class, rest);
 	  return result;
   }
 
+  
   public static Boolean inviteStudent(DomTeacher teacher) throws Dwo2Exception {
+	  return inviteStudent(StoredRestManager.getInstance(), teacher);
+  }
+  public Boolean InviteStudent(DomTeacher teacher) throws Dwo2Exception {
+	  return inviteStudent(instance, teacher);
+  }
+  
+  public static Boolean inviteStudent(StoredRestManager instance, DomTeacher teacher) throws Dwo2Exception {
 	  RestTeacher rest = new RestTeacher();
-	  rest.setRestContext(getContext());
+	  rest.setRestContext(instance.getContext());
 	  rest.setDomTeacher(teacher);
-	  Boolean result = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/schooladmin/school/inviteStudent", Boolean.class, rest);
+	  Boolean result = instance.put("rest/sec:" + PathId.getId(instance.getContext()) + "/schooladmin/school/inviteStudent", Boolean.class, rest);
 	  return result;
   }
 

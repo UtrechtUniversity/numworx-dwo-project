@@ -51,7 +51,7 @@ public class ServerBuilder implements Builder {
 	
 	public void setSource(String username, String password, URL base) throws Dwo2Exception {
 		manager = StoredRestManager.getInstance();
-		schoolManager = new SecureSchoolAdminSchoolManager();
+		schoolManager = new SecureSchoolAdminSchoolManager(manager);
 		manager.setBasicAuthString(username, password, null);
 		manager.getAuthenticator().setServerUrlPath(base);
 		logins = SecureUserAccountLoginsManager.getSchoolLogins();
@@ -66,7 +66,7 @@ public class ServerBuilder implements Builder {
 
 	public void setSource(String realm, StoredRestManager instance) throws Dwo2Exception {
 		manager = instance;
-		schoolManager = new SecureSchoolAdminSchoolManager();
+		schoolManager = new SecureSchoolAdminSchoolManager(instance);
 		logins = SecureUserAccountLoginsManager.getSchoolLogins(instance);
 		DomContext context = new DomContext();
 		context.setRealm(realm);
@@ -78,8 +78,9 @@ public class ServerBuilder implements Builder {
 			throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthorizationError, "Wrong role");
 	}
 
+	@Deprecated // should not be used!
 	public void setRealm(String realm) {
-		StoredRestManager.getInstance().getAuthenticator().getContext().setRealm(realm);
+		StoredRestManager.getInstance().getContext().setRealm(realm);
 	}
 	
 	public DomSchool getSchool() {
@@ -256,7 +257,7 @@ public class ServerBuilder implements Builder {
         	  Optional<DomTeacher> maybeTeacher = teachers.stream().filter(i -> i.getUserName().equals(itemName)).findAny();
         	  if (maybeTeacher.isPresent()) {
         		  item.getValue().setId(maybeTeacher.get().getId());
-        		  schoolManager.inviteStudent(maybeTeacher.get());
+        		  schoolManager.InviteStudent(maybeTeacher.get());
         	  } else { 
         		  LOG.log(Level.WARNING, "submit foreign user " + item.getValue().getUniqueDisplayName());
         		  continue;
@@ -320,7 +321,7 @@ public class ServerBuilder implements Builder {
 			    	  if (maybeStudent.isPresent()) {
 			    		  item.getValue().setId(maybeStudent.get().getId());
 			    		  maybeStudent.get().setSingleSchool(Boolean.FALSE); // force not single school
-			    		  schoolManager.inviteTeacher(maybeStudent.get());
+			    		  schoolManager.InviteTeacher(maybeStudent.get());
 			    	  } else { 
 			    		  LOG.log(Level.WARNING, "submit foreign user " + item.getValue().getUniqueDisplayName());
 			    		  continue;
