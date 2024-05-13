@@ -118,6 +118,12 @@
   		<groupId>nl.uu.fi.dwo</groupId>
   		<artifactId>DWO-commons-lib</artifactId>
   	</dependency>
+  	<dependency>
+  		<groupId>nl.uu.fi.dwo.rest</groupId>
+  		<artifactId>DWO-rest-lib</artifactId>
+  		<scope>provided</scope>
+  		<classifier>sources</classifier>
+  	</dependency>
   </dependencies>
 
   <build>
