@@ -104,7 +104,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	SelectModuleItem sco;
 	private Timer tm;
 	private boolean started;
-	private String location;
+	private String location, hash;
 	
 	
 	@Override
@@ -124,6 +124,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 		injector.injectMembers(this);
 		this.sco = sco;
 		this.location = where.getLocation();
+		this.hash = where.getHash();
 	}
 	
 	final static private long BEFORE_AFTER = 30000L;
@@ -320,7 +321,14 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 							History.back();
 						}
 						return null;
-					}, p -> { started = false; if (!oops.needed(p))History.back(); });
+					}, p -> { started = false; if (!oops.needed(p))History.back(); })
+					.onResolve(() -> {
+						if (started && hash != null) {
+							gotoElement(hash);
+						}
+					})
+					
+					;
 			}
 		};
 		view.getApi().Initialize(callback);
@@ -396,21 +404,15 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	public void prepareLeave() {
 		started = false;
 	}
-	
-	private Map<String,Element> anchors;
-		
+			
 	@Override
 	public void addElement(String anchor, Element e) {
 		defaultContext.addElement(anchor, e);
-		if (anchors == null) anchors = new HashMap<>();
-		anchors.put(anchor, e);
 	}
 
 	@Override
 	public void gotoElement(String anchor) {
-		if (anchors != null) {
-			anchors.computeIfPresent(anchor, (key, e) -> {e.scrollIntoView(); return e;} );
-		}	
+		defaultContext.gotoElement(anchor);
 	}
 
 	@Override
@@ -437,7 +439,8 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 			}
 			Runnable run = new Runnable() {
 				public void run() {
-					String href1 = href.substring(5);
+					String[] split = href.split("#", 2);
+					String href1 = split[0].substring(5);
 					final int page = href1.lastIndexOf('.');
 		            String location = null;
 					if (page >= 0) {
@@ -465,9 +468,12 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 					SelectModuleItem item = list.get(sconr);
 					Object scoid = item.getID();
 					if (item != sco) {
-						goTo(new ViewModulePlace(scoid, location));
+						String hash = null; if (split.length == 2) hash = split[1];
+						goTo(new ViewModulePlace(scoid, location, hash));
 					} else if (page >= 0) {
-						defaultContext.gotoUrl("goto:." + (Integer.parseInt(location) + 1));
+						String hash = "";
+						if (split.length == 2) hash = "#" + split[1];
+						defaultContext.gotoUrl("goto:." + (Integer.parseInt(location) + 1) + hash);
 					}
 				}
 			};
