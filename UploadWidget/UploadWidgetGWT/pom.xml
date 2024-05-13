@@ -9,10 +9,12 @@
   <artifactId>UploadWidgetGWT</artifactId>
   <packaging>war</packaging>
   <name>UploadWidget GWT</name>
-  <description>GWT project</description>
+  <description>Upload Widget GWT project</description>
   <properties>
-    <!-- Convenience property to set the GWT version -->
-    <gwt.version>2.10.0</gwt.version>
+    <!-- Convenience property to set the GWT version. NIET UPGRADEN NAAR 2.10.0, Geeft CORS errors
+    DAN EERST CROSS-ORIGIN HEADERS TOEVOEGEN.
+     -->
+    <gwt.version>2.9.0</gwt.version>
 
     <!-- GWT 2.8 requires 1.8 -->
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -39,7 +41,7 @@
 
   <dependencies>
      <dependency>
-      <groupId>org.gwtproject</groupId>
+      <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
       <scope>provided</scope>
     </dependency>
@@ -65,7 +67,7 @@
   		<version>2.5.32-SNAPSHOT</version>
   	</dependency>
     <dependency>
-      <groupId>org.gwtproject</groupId>
+      <groupId>com.google.gwt</groupId>
       <artifactId>gwt-dev</artifactId>
       <scope>provided</scope>
     </dependency>
