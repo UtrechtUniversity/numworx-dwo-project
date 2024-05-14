@@ -256,7 +256,7 @@ public class LoginActivity extends AbstractActivity
 				//		user_id = "292832126";
 				//		org_id = "\"lti:385\"";
 				Promise<DomUserFullwLoginContext> promise;
-				if(logout && isSeb())
+				if(logout && PARAMETERS.inKiosk())
 				{
 					panel.setWidget(new Label());
 					RootLayoutPanel.get().setVisible(false);
@@ -342,10 +342,6 @@ public class LoginActivity extends AbstractActivity
 				}
 				Logger.getLogger("DWOplayer").log(Level.FINE, "Done with panel");
 				rearm(promise);
-			}
-
-			private boolean isSeb() {
-				return PARAMETERS.inExam();
 			}
 		}
 		);

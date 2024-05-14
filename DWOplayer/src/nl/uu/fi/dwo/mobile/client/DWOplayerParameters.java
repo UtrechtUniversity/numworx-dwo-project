@@ -50,8 +50,13 @@ public interface DWOplayerParameters {
 	SecureMode getSecureMode();
 	String getDwoEnv();
 	default void tickle() {}
+// SEB only
 	default boolean inExam() {
-	  return SecureMode.NORMAL != getSecureMode();
-	}
+		  return SecureMode.SEB == getSecureMode();
+		}
+// SEB and KIOSK
+	default boolean inKiosk() {
+		  return SecureMode.NORMAL != getSecureMode();
+		}
 	
 }
