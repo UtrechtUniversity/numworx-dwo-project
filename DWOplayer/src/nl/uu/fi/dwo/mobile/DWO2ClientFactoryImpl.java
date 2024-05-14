@@ -200,21 +200,21 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 						return result;
 					}})
 						.map(DWO2player.TO_SELECTMODULEITEM);
-			} else if (!PARAMETERS.inExam() ) { // no free lunch in exam
+			} else if (!PARAMETERS.inKiosk() ) { // no free lunch in exam
 				modules = rpc.getCourses().map(DWO2player.TO_SELECTMODULEITEM);
 			} else {
 				modules = Promises.resolved(Collections.emptyList());
 			}
 				
 			boolean iconizer = vars.isIconizer();
-			if (roleType == RoleType.STUDENT && PARAMETERS.inExam() )
+			if (roleType == RoleType.STUDENT && PARAMETERS.inKiosk() )
 				iconizer = false;
 
 			modules.then(new InsertSelectItems(iconizer, roleType)).onResolve(new Runnable() {
 
 					@Override
 					public void run() {
-						if( !PARAMETERS.inExam() || roleType != RoleType.STUDENT)
+						if( !PARAMETERS.inKiosk() || roleType != RoleType.STUDENT)
 							placeController.goTo(new TreeModulePlace("0"));
 						else 
 						{ // was FlatModulePlace();

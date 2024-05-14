@@ -245,7 +245,7 @@ public class LoginActivity extends AbstractActivity
 				});
 				}
 				Promise<DomUserFullwLoginContext> promise;
-				if(logout && isSeb())
+				if(logout && PARAMETERS.inKiosk())
 				{
 					panel.setWidget(new Label());
 					RootLayoutPanel.get().setVisible(false);

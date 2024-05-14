@@ -444,7 +444,8 @@ public class SecuredStudentCoursesOfSchoolClassManager {
 		  u.personal_information = new User();
 		  u.personal_information.email = user.getEmail();
 		  u.personal_information.first_name = user.getGivenName();
-		  u.personal_information.org_code = user.getUsername();
+		  u.personal_information.org_code = withoutRealm(user.getUsername());
+		  
 		  String insertion = Objects.toString( user.getInsertion(), ""); // null!
 		  u.personal_information.last_name = (insertion + " " + user.getLastname()).trim();
 		  
@@ -489,5 +490,11 @@ public class SecuredStudentCoursesOfSchoolClassManager {
 	  Map<String,String> entity = Collections.singletonMap("url", url);
 	  return Response.ok().type(MediaType.APPLICATION_JSON_TYPE).entity(entity).build();
   }
+
+private String withoutRealm(String username) {
+	int index = username.indexOf('@');
+	if (index > 0) return username.substring(0, index);
+	return username;
+}
   
 }

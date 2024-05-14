@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title>Numworx acceptatie</title>
+    <title>Numworx</title>
     <link type="text/css" rel="stylesheet" href="uuindex.css">
 </head>
 

@@ -123,7 +123,7 @@ public final class CoursesOfClasToSelectItems
 				DWO2player.timezone += serverNow.longValue() - now;
 				now = serverNow.longValue();
 			}
-			boolean inExam = PARAMETERS.inExam();
+			boolean inExam = PARAMETERS.inKiosk(); // only secured courses
 			Map<PersistenceId, DomCourseStudent> courses = map(t.getCourses());
 			Collection<DomClassCourse> classcourses = sort(t.getClassCourses(),t);
 			List<SelectModuleItem> result = new ArrayList<SelectModuleItem>(classcourses.size());
