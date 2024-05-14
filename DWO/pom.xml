@@ -28,23 +28,23 @@
 <!-- 	 	<module>../DWOmAccess</module> -->
          <module>../DWO-commons-lib</module>
          <module>../DWO-jclient-lib</module> 
-   	 	<module>../DWO-apps</module>
+<!--   	 	<module>../DWO-apps</module> -->
 <!-- 		<module>../chatgwt</module> -->
  	 	<module>../DWOGwtClient</module> 
-<!--  	 	<module>../DWOinteraction</module> -->
+  	 	<module>../DWOinteraction</module> 
         <module>../DWOJClient</module>
        	<module>../DWOServer</module> 
      	<module>../DWOplayer</module>
-	    <module>../edexml</module>
+<!--	<module>../edexml</module>-->
 <!--         <module>../KeyboardGWT</module> -->
       	<module>../UploadWidget</module>
 <!--      	<module>../WriteMathGWT</module> -->
- 		<module>../osiris-import</module>
+<!-- 		<module>../osiris-import</module> -->
 <!-- 		<module>../notebook</module> -->
         <module>../EBServer</module>
-<!--        <module>../schoolyear-jclient-lib</module>-->
-<!--        <module>../schoolyear-war</module>-->
+        <module>../schoolyear-jclient-lib</module>
     </modules>
+
     
     <name>${project.build.finalName}</name>
     
