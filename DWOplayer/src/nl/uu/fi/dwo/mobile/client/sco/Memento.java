@@ -302,7 +302,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	
 	public HashMap<String,Object> mergeIntoState(int act, int opdr, HashMap<String,Object> state) {
 		String reviewData = getValue(REVIEW_DATA);
-		JSONValue value = JSONParser.parseStrict(reviewData);
+		if (reviewData.isEmpty()) return state;
+		JSONValue value = JSONParser.parseStrict(reviewData); // throws exception if empty argument
 		JSONArray review = value.isObject().get(OPDR_CONT_STATES).isArray();
 		int size = review.size();
 		if (act < size) {
