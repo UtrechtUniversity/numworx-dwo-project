@@ -879,5 +879,16 @@
 					</dependency>			
 			</dependencies>
 		</profile>
+		<profile>
+			<id>redis-jcache</id>
+			<dependencies>
+				<dependency>
+				    <groupId>org.redisson</groupId>
+				    <artifactId>redisson</artifactId>
+				    <version>3.20.0</version>
+				    <scope>runtime</scope>
+				</dependency>
+			</dependencies>		
+		</profile>
 	</profiles>
 </project>
