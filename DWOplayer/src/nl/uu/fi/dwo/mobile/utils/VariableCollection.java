@@ -181,8 +181,9 @@ public class VariableCollection implements RandomValues
 		Set<String> names = values.keySet();
 		ObjectMap om = JSONUtilities.wrapMap(values);
 		for (String name : names) {
+			if (name.isEmpty()) continue;
 			Variable var = getVariable(name);
-			if (var.isDraw()) {
+			if (var.isDraw() && om.get(name) != null) {
 				var.draw(om.getInt(name));
 			}
 		}
