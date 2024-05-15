@@ -359,7 +359,8 @@ public void setView(Display aView) {
 
   private String Finish(String dummy) {
     LOG.info("Finish " + dummy);
-    if (!ResultsService.COMPLETED.equals(ssc.getStudentSco().getCompletionStatus())) {
+    boolean sealed = ResultsService.COMPLETED.equals(ssc.getStudentSco().getCompletionStatus());
+	if (!sealed) {
       this.userState.remove(ResultsService.REVIEW_DATA);
       this.userState.remove(ResultsService.REVIEW_CHECK);
     }
@@ -368,7 +369,7 @@ public void setView(Display aView) {
     boolean empty = this.userState.getOrDefault(ResultsService.SUSPEND_DATA, "").isEmpty();
     LOG.info( "update Score/Review " + userState);
     
-    if (dwoGlobalVars.isPremium() && ! empty)
+    if (dwoGlobalVars.isPremium() && ! empty && sealed)
     {	String score = userState.get("cmi.score.raw");
     	if (score != null) ssc.getStudentSco().setScore(Double.parseDouble(score));
     	ResultEvent ev = new ResultEvent(ssc, userState);
