@@ -133,9 +133,9 @@ public abstract class DWOplayer
 		display.asWidget().addStyleName("RootPanel");
 		RootLayoutPanel root = RootLayoutPanel.get();
 		root.add(header);
-		root.add(navigation);
 		menu.ifPresent(root::add);
-		root.add(display);
+		root.add(display); // this order: navigation on top of display
+		root.add(navigation);
 		navigation.setDisplay(display, menu);
 		header.setDisplay(display,navigation, menu);
 		header.hide();

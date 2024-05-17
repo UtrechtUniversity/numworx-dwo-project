@@ -19,6 +19,6 @@ public interface TreeModuleView extends IsWidget
  
 	//void setMenuWidget(IsWidget w);
     void setBeheer(boolean b);
-    void showIcon(boolean b);
+    //void showIcon(boolean b);
 	    
 }

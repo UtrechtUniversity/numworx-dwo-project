@@ -1,5 +1,7 @@
 package fi.dwo.server.rest;
 
+import java.util.List;
+
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -36,10 +38,19 @@ public class SecuredStudentMethodManager {
  // state.getMethod(domMethod);
     	PersistentDwoProfile profile = null;
     	if (domDwoProfile != null)
-    	  profile = DwoProfileManager.findEntity(MySQLPersistenceId.getNativeId(domDwoProfile));
+    	{
+    		profile = state.getContext().getStudentCtx().dwoProfile;
+    	}
  
     	PersistentMethod p = MethodManager.toValue(rest.getDomMethod(), school, profile);
 		p = MethodManager.findEntity(p.getMethodID());
+		if (p == null) {
+			if (rest.getDomMethod().getId().getIdString().startsWith("PROXY;")) {
+				String key = ";"+DomMethod.key(rest.getDomMethod().getId());
+				List<PersistentMethod> list = MethodManager.findEntities();
+				p = list.stream().filter(t  -> t.getMethodID().endsWith(key)).findAny().orElse(null);
+			}
+		}
 		long ms = p.getSchoolID().longValue();
 		long ss = school.getSchoolID().longValue();
 		if (ss == ms || ms == 0L)

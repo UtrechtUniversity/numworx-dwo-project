@@ -15,6 +15,7 @@
 	String configHash  = request.getHeader("X-SafeExamBrowser-ConfigKeyHash");
 	String host = request.getRemoteAddr();
 	String server = request.getHeader("host");
+	String id = request.getParameter("id");
 
 	if(requestHash == null && needSEB ||  !Subnet.netMatchRange(IPRANGE, host) )
 	{
@@ -36,7 +37,7 @@
 			if(hash.equals(requestHash)|| hash.equals(configHash)) failed = false;
 		}
 	}
-	if(failed && needSEB)
+	if(failed && needSEB && id == null)
 	{
 		Logger.getLogger("toets.jsp").severe(request.getRequestURL() +" hash = " + requestHash + " " + configHash);
 		if(requestHash == null) {
@@ -45,6 +46,12 @@
 		}
 	}
 	String dwo_env = System.getProperty("DWO_ENV", "app");
+	String defaultPlace = "";
+	if (id != null) {
+		try {
+			defaultPlace = "cc:" + Long.valueOf(id);
+		} catch(Exception e) {}
+	}
 %>
 <html>
   <head>
@@ -55,6 +62,7 @@
     	DWO_PROFILE_ID = 99
     	SECURE_MODE="SEB" // possibly others
         dwo_env = "<%=dwo_env%>"
+        defaultPlace = "<%= defaultPlace %>"
     	function logout() {
     		window.location = "https://<%=server%>/ho/exam/logout.html"
     	}

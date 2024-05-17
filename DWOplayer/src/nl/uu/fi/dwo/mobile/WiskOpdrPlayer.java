@@ -272,7 +272,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 		else
 		{
 			view.setUnitId(value);
-			DWOplayer.insertCSS(value);
+			//FIXME insertCSS(value); insert style for "value"
 			view.setupModule(value, target).then(this::checkPremium, this::failure).onResolve(() -> 
 			debug("FinishedSetupModule")
 			);
@@ -315,7 +315,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 			logger.severe("launchdata empty + " + launchData);
 			if(k > 0) {
 				String target = PREFIX + value;
-				DWOplayer.insertCSS(value);
+				//insertCSS(value); FIXME
 				view.setupModule(value, target).then(this::checkPremium, this::failure);
 			} else
 				setupOldView();
@@ -326,7 +326,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 			  new Command() {
 				public void execute() {
 					try {
-						DWOplayer.insertCSS(scoid);// niet helemaal goed bij 'preview' mode, wel goed in browse en review mode
+						//FIXME insertCSS(scoid);// niet helemaal goed bij 'preview' mode, wel goed in browse en review mode
 						checkPremium( Promises.resolved( view.setupView(launchData)) );
 					} catch (Throwable e) {
 						failure( Promises.failed(e));

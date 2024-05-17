@@ -1055,7 +1055,9 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		 
 		return hoogte;
 	}
-	
+	int getWidth() {
+		return breedte;
+	}
 	
 	
 	public int geefRestHoogte()
@@ -1179,18 +1181,6 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	    zoomLayout(tekstVakPanel);    
 		
 		parent.zoom(this, rij, kolom);
-//		// relayout
-//		clearRegels();
-//		zwevendeTekstVakken.clear();
-//	    all = getOpdrachtObjects();
-//		all.stream().filter(t -> t != tekstVakPanel && (t instanceof IsWidget))
-//			.forEach( item -> 
-//			regelLayer.setWidgetVisible(((IsWidget) item).asWidget(), false)
-//		);
-//		single = new ArrayList<>(); single.add(tekstVakPanel);
-//		setObjects(single);
-//		zetOpdrachtObjects(all, single);
-		//resize();
 	}
 
 	public void unzoom(TekstVakPanel tekstVakPanel) {

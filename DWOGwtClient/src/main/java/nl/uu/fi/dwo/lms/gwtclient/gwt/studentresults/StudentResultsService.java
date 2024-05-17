@@ -185,7 +185,9 @@ public class StudentResultsService implements StudentResults {
 	private void copy0(Promise<DomStudentModelContext4Student> p, Promise<DomStudentModelContext> q) {
 		DomStudentModelContext4Student vp = p.getValue();
 		DomStudentModelContext vq = q.getValue();
+		PersistenceId am = vp.getModelStructure().getActiveMethod();
 		vp.setModelStructure(vq.getModelStructure());
+		vp.getModelStructure().setActiveMethod(am);
 		//vp.setOptLock(vq.getOptLock());
 		//vp.setFilter(vq.getFilter());
 	}

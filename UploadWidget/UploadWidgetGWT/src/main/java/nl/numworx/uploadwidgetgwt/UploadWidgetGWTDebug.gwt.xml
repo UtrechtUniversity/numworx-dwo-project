@@ -15,6 +15,8 @@
    <inherits name="nl.uu.fi.dwo.interaction.Interaction" />
    <inherits name="gwtupload.GWTUpload" />
    <inherits name="nl.numworx.uploadwidget.UploadWidget" />
+   <inherits name='nl.uu.fi.dwo.rest.DWO-rest-lib' />
+   <inherits name="org.fusesource.restygwt.RestyGWT"/>
 
     <replace-with class="nl.numworx.uploadwidgetgwt.client.UploadSession">
         <when-type-is class="gwtupload.client.ISession.CORSSession" />

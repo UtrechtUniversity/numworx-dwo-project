@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,6 +18,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -148,7 +150,11 @@ public class PublicScoContextManager {
     		ByteArrayOutputStream out = new ByteArrayOutputStream();
     		ImageIO.write(image, "png", out);
     		imageData = out.toByteArray();
-    		return Response.ok(imageData, "image/png").build();    		
+    		CacheControl cc = new CacheControl(); 
+    		cc.setMaxAge(6000);
+   		return Response.ok(imageData, "image/png")
+   				.expires(new Date(System.currentTimeMillis()+cc.getMaxAge()*1000))
+   				.cacheControl(cc).build();    		
     	} catch(Exception e) {
     		LOG.log(Level.SEVERE, "getImage error", e);
     	}

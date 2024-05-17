@@ -23,6 +23,7 @@ import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.fusesource.restygwt.client.JsonEncoderDecoder;
 import org.osgi.util.promise.Failure;
@@ -73,6 +74,7 @@ public class StudentScoResultPresenter {
   @Inject ResultsService resultService;
   @Inject Lazy<StudentModelService> studentModelService;
   @Inject Lazy<XAPIService> xapiService;
+  @Inject @Named("responsive") boolean responsive;
   private DomResultTree resultTree;
   private DomResultStudentScoContext ssc;
   private Map<String,String> userState;
@@ -357,7 +359,8 @@ public void setView(Display aView) {
 
   private String Finish(String dummy) {
     LOG.info("Finish " + dummy);
-    if (!ResultsService.COMPLETED.equals(ssc.getStudentSco().getCompletionStatus())) {
+    boolean sealed = ResultsService.COMPLETED.equals(ssc.getStudentSco().getCompletionStatus());
+	if (!sealed) {
       this.userState.remove(ResultsService.REVIEW_DATA);
       this.userState.remove(ResultsService.REVIEW_CHECK);
     }
@@ -366,7 +369,7 @@ public void setView(Display aView) {
     boolean empty = this.userState.getOrDefault(ResultsService.SUSPEND_DATA, "").isEmpty();
     LOG.info( "update Score/Review " + userState);
     
-    if (dwoGlobalVars.isPremium() && ! empty)
+    if (dwoGlobalVars.isPremium() && ! empty && sealed)
     {	String score = userState.get("cmi.score.raw");
     	if (score != null) ssc.getStudentSco().setScore(Double.parseDouble(score));
     	ResultEvent ev = new ResultEvent(ssc, userState);
@@ -418,8 +421,7 @@ public void setView(Display aView) {
     u.setParameter("profile", profile);
     u.setParameter("env", (dwoGlobalVars.isTest()?"test":"app"));
     u.setParameter("t", random);
-    String responsive = Location.getParameter("responsive");
-	if (responsive != null) u.setParameter("responsive", responsive);
+	if (responsive) u.setParameter("responsive", "true");
 	u.setHash("cmi.launch_data:"+scoId);
 	url = u.buildString();
     LOG.info("openUrl " + url);

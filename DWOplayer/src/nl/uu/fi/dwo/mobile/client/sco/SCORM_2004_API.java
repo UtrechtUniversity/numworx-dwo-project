@@ -141,6 +141,14 @@ public class SCORM_2004_API implements Scorm2004IF {
 		return authorization;
 	}
 
+	@Override
+	public String getRefreshToken() {
+		String authorization = GetValue("dme.refresh-token");
+		if (authorization.isEmpty()) return null;
+		return authorization;
+	}
+
+	
 	private static native boolean hasGetValueAsync() /*-{
 		return typeof $wnd.getAPIHandle().GetValueAsync !== 'undefined';
 	}-*/;

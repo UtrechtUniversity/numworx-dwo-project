@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -48,6 +49,7 @@ import com.google.gwt.view.client.SingleSelectionModel;
 
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
@@ -58,6 +60,7 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**
@@ -175,7 +178,6 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	private Optional<NavigationMenu> menu;
 	private DockLayoutPanel dock;
 	private double width;
-	private boolean none;
 	private RoleType role = RoleType.TEACHER;
     private final DWOplayerParameters PARAMETERS;
     final private DwoGlobalVars vars;
@@ -216,11 +218,11 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		
 		standardMap.setState(true);
 		standardMap.setUserObject(SelectModuleItem.ROOT);
-		none = Actions.isAvailable();
-		if(!none) {
-		  none = !isTest();
-		}
-		if(!none) setBeheer(false);
+		boolean gwtclient = Actions.isAvailable();
+		boolean responsive = DWOplayer.RESPONSIVE;
+		
+		showIcon(gwtclient && !responsive); // show icons with gwtclient, if gwtclient has navbar, responsive = true;
+		
 		presenter = defaultPresenter = controller::goTo;
 	}
 
@@ -385,9 +387,11 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	@Override
 	public void show() {
 		RootLayoutPanel p = RootLayoutPanel.get();
-		p.setWidgetVisible(this,true);
-		p.setWidgetLeftRight(root, this.width, Unit.PX, 0, Unit.PX);
-		p.setWidgetLeftWidth(this, 0, Unit.PX, this.width, Unit.PX);
+		if (isAttached()) {
+			p.setWidgetVisible(this,true);
+			p.setWidgetLeftRight(root, this.width, Unit.PX, 0, Unit.PX);
+			p.setWidgetLeftWidth(this, 0, Unit.PX, this.width, Unit.PX);
+		}
 		dock.setWidgetHidden(bibliotheek, false); // niet in de style mogelijk
 		dock.removeStyleName(style.navWide());
 	}
@@ -403,7 +407,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	public void wide() {
 		RootLayoutPanel p = RootLayoutPanel.get();
 		p.setWidgetVisible(this,true);
-		p.setWidgetRightWidth(root, 0, Unit.PX, 0, Unit.PX);
+		//p.setWidgetRightWidth(root, 0, Unit.PX, 0, Unit.PX);
 		p.setWidgetLeftRight(this, 0, Unit.PX, 0, Unit.PX);	
 		dock.setWidgetHidden(bibliotheek, true);
 		dock.addStyleName(style.navWide());
@@ -486,8 +490,15 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 //    	showIcon(false);
 //    }
 
-    @Override
-    public void showIcon(boolean show) {
+    /**
+     * show beheer iconen. 
+     * Actions.isAvailable() is true
+     * alleen als het geen gast of dwoadmin is en "responsive" staat uit.
+     * maw. showIcon ( ! responsive ) en daarna setBeheer(Actions.isavalable())
+     * @param show false bij responsive, dus brede navigatie kolom
+     * @see #setBeheer(boolean)
+     */
+    private void showIcon(boolean show) {
     	if (!show && !breed) {
     		breed = true; width = 300;
     		show();
@@ -531,6 +542,10 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	private List<SelectModuleItem> massage(List<SelectModuleItem> list) {
 		if(list == null)
 			list = Collections.emptyList();
+		// remove folders and other garbage
+		list = list.stream()
+				.filter(t -> t.getCourseType() != CourseType.invisible)
+				.collect(Collectors.toList());
 		int len = list.size();
 		if(len > 2) {
 			Collections.sort(list, this);

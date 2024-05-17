@@ -236,6 +236,12 @@ public class SecureUserAccountManager {
     return b;
   }
 
+  public static DomLoginContext getLoginContext(StoredRestManager instance) throws Dwo2Exception {
+	    DomLoginContext context;
+	    context = instance.get("rest/secure/user/account/getLoginContext", DomLoginContext.class);
+	    return context;
+	  }
+   
   public static DomLoginContext getLoginContext() throws Dwo2Exception {
     DomLoginContext context;
     context = StoredRestManager.getInstance().get("rest/secure/user/account/getLoginContext", DomLoginContext.class);

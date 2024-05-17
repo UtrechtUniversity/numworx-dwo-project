@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO</artifactId>
-		<version>2.5.31p1</version>
+		<version>2.5.32</version>
 		<relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 	<artifactId>EBServer</artifactId>
@@ -41,7 +41,7 @@
 				<dependency>			
 				    <groupId>nl.uu.fi.dwo.lms</groupId>
     				<artifactId>DWOGwtClient</artifactId>
-					<version>2.5.31p1</version>
+					<version>2.5.32</version>
 					<classifier>classes</classifier>
 					<exclusions>
 						<exclusion>
@@ -192,14 +192,14 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>DWO-apps</artifactId>
-			<version>2.5.25</version>
+			<version>${project.version}</version>
 			<scope>runtime</scope>
 			<type>war</type>
 		</dependency>
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>DWO-apps</artifactId>
-			<version>2.5.25</version>
+			<version>${project.version}</version>
 			<classifier>classes</classifier>
 		</dependency>
 		<dependency>
@@ -218,7 +218,7 @@
 	<dependency>
 		<groupId>nl.uu.fi.dwo.lms</groupId>
 		<artifactId>DWOGwtClient</artifactId>
-		<version>2.5.31p1</version>
+		<version>2.5.32</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
@@ -501,7 +501,7 @@
 						<webapp>
 							<groupId>nl.numworx.uploadwidget</groupId>
     							<artifactId>uploadwidget-local</artifactId>
-    							<version>2.5.29</version>
+    							<version>2.5.32-SNAPSHOT</version>
                           		<type>war</type>
 							<contextPath>/dwo/dav/upload</contextPath>
                             	<asWebapp>true</asWebapp> 
@@ -784,7 +784,7 @@
         <http.port>80</http.port>
         <upload.servlet />
         <upload.servlet.mapping />
-        <OAuth2ClientVersion>1.0.12</OAuth2ClientVersion>
+        <OAuth2ClientVersion>1.0.13</OAuth2ClientVersion>
 	</properties>
 	<profiles>
 		<profile>
@@ -844,7 +844,7 @@
 				<dependency>
 					<groupId>nl.numworx.uploadwidget</groupId>
 					<artifactId>UploadWidgetGWT</artifactId>
-					<version>2.5.31p1</version>
+					<version>2.5.32</version>
 					<classifier>classes</classifier>
 					</dependency>			
 				<dependency>
@@ -878,6 +878,17 @@
 					    <scope>runtime</scope>
 					</dependency>			
 			</dependencies>
+		</profile>
+		<profile>
+			<id>redis-jcache</id>
+			<dependencies>
+				<dependency>
+				    <groupId>org.redisson</groupId>
+				    <artifactId>redisson</artifactId>
+				    <version>3.20.0</version>
+				    <scope>runtime</scope>
+				</dependency>
+			</dependencies>		
 		</profile>
 	</profiles>
 </project>

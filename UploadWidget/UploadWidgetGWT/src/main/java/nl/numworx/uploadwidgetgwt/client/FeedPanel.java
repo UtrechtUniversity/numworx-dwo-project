@@ -47,8 +47,8 @@ public class FeedPanel extends Composite implements Constants, RequestCallback {
 		private void doClick(AtomEntry entry) {
 			RequestBuilder req = new RequestBuilder(RequestBuilder.DELETE, entry.url);
 			req.setIncludeCredentials(true);
-			req.setHeader(AUTHORIZATION, comRoot.getContext().getString(AUTHORIZATION));
-			req.setCallback(FeedPanel.this);
+			req.setHeader(AUTHORIZATION, UploadSession.authorization);
+			req.setCallback(UploadSession.wrap( () -> doClick(entry), FeedPanel.this));
 			try {
 				Request request = req.send();
 			} catch (RequestException e) {
@@ -121,8 +121,8 @@ public class FeedPanel extends Composite implements Constants, RequestCallback {
 			builder.setHash(null);
 			RequestBuilder req = new RequestBuilder(RequestBuilder.GET, builder.buildString());			
 			req.setIncludeCredentials(true);
-			req.setHeader(AUTHORIZATION, comRoot.getContext().getString(AUTHORIZATION));
-			req.setCallback(response);
+			req.setHeader(AUTHORIZATION, UploadSession.authorization);
+			req.setCallback(UploadSession.wrap (this::doRequest, response));
 			Request request = req.send();
 		} catch (RequestException e) {
 			GWT.log("doRequest", e);

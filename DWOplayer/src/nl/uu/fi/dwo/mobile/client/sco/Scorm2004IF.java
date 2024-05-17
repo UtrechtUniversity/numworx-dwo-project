@@ -37,6 +37,7 @@ public interface Scorm2004IF {
 	void setScoID(String unitId);
 
 	default String getAuthorization() { return "None"; }
+	default String getRefreshToken() { return null; }
 	
 	default Promise<String> getValuePromise(String name) {
 		return Promises.resolved(GetValue(name));

@@ -9,6 +9,7 @@
 @def color13 #7297C7;
 @def color14 #1B75BB;
 @def color15 #314770;
+@def color20 #eff1f3;
 @def color21 #DDE0E3;
 @def medium 500;
 @def regular 400;
@@ -30,13 +31,12 @@
 		}
 		
 		.navPanel {
-			background-color: color21;
+			background-color: color20;
 			color: color15;
 			padding-left: 0px;
 			font-size: 14px;
 			line-height: 27px;
 			font-family: Ubuntu, sans-serif !important;
-			box-shadow: 2px 2px 2px color15 inset;
 		}
 .centerPanel {
 			background-color: color11;
@@ -44,7 +44,6 @@
 			font-size: 14px;
 			line-height: 18px;
 			padding-top: 40px;
-			box-shadow: 2px 2px 2px color15 inset;
 			font-family: Ubuntu, sans-serif !important;
 			overflow-y: scroll;
 }
@@ -379,7 +378,7 @@
 	font-size: 18px;
 	padding-top: 9px;
 	padding-left: 1em;
-	background-color: color21;
+	background-color: color20;
 	color: color15;
 }
 .navMenu i {

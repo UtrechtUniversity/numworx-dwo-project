@@ -54,6 +54,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
+import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.cell.client.TextCell;
@@ -70,6 +71,8 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.layout.client.Layout.AnimationCallback;
+import com.google.gwt.layout.client.Layout.Layer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -235,7 +238,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		contentPanel.clear();
 		contentPanel.getElement().setScrollTop(0);
 		contentPanel.getElement().setScrollLeft(0);
-		PopupFacade.hide();	
+		PopupFacade.hide();
+		clearElements();
 		kb.blur();
 	}
 
@@ -1862,14 +1866,24 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 //		}
 //	}
 
+	private Map<String,Element> anchors;
+	private void clearElements() { anchors = null; }
+	
 	class MyAnchorContext implements AnchorContext {
 
 		@Override
 		public void gotoUrl(String href) {
 			if(href.startsWith("goto:."))
 			{
+				String[] split = href.split("#", 2);
+				href = split[0];
 				int opdrnr = Integer.parseInt(href.substring(6)) -1 ; // 0based
 				on.gotoOpdracht(opdrnr, scoreNav);
+				if (split.length > 1) {
+					{
+						gotoElement(split[1]);
+					}
+				}
 			} else {
 				on.gotoUrl(href);
 			}
@@ -1883,7 +1897,25 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			on.gotoUrl("#" + token);
 		}
 
+		@Override
+		public void addElement(String anchor, Element e) {
+			if (anchors == null) anchors = new HashMap<>();
+			anchors.put(anchor, e);
+		}
+
+		@Override
+		public void gotoElement(String anchor) {
+			if (anchors != null) {
+				Element e = anchors.get(anchor);
+				if (e != null) 
+					AnimationScheduler.get().requestAnimationFrame(
+							(double timestamp) -> {e.scrollIntoView();},
+							e);
+			}	
+		}
 	}
+	
+	
 	AnchorContext anchorContext = new MyAnchorContext();
 	
 	private boolean inNavBtn;
@@ -2091,6 +2123,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		if(on != null)
 			on.close();
 		PopupFacade.removeAll();
+		clearElements();
 		kb.blur();
 		
 		if (isTempotoets())

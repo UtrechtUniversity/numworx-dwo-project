@@ -1078,10 +1078,6 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
       }
       int width = getWindowWidth();
       parent.zoom1(this, width);
-//      if (responsive)
-//    	  zetVolledigeBreedte( (int)( (Window.getClientWidth()-20)/responsiveFactor)); // FIXME 20 is toplevel marge
-//      else
-//    	  zetVolledigeBreedte(orgBreedte);
       fsBtn.setText("close");
 	}
 	
@@ -1214,6 +1210,13 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 			String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, AnchorContext anchorContext, int vollebreedte) {
 		this(a, hh, randomVarNamen, randomVarWaarden, vollebreedte);
 		this.anchorContext = anchorContext;
+		ObjectMap launch = JSONUtilities.wrapMap(hh);
+		launch = launch.getObjectMap("interactiePanelLaunchState");
+		if (launch.getBoolean("isAnchor", false)) {
+			Element element = getElement();
+			String anchor = launch.getString("anchor");
+			anchorContext.addElement(anchor, element);
+		}
 	}
 
 	public void plaatsTabelRanden()
@@ -5685,16 +5688,63 @@ private Object CamelCase(String name) {
 		if(!RESPONSIVE && zoomKolom == null) {
 			return;
 		}
-		zetVolledigeBreedte0(breedte);
+		zetVolledigeBreedte0alt(breedte);
 	}
 
-  public void zetVolledigeBreedte0(int breedte) {
+	private void zetVolledigeBreedte0alt(int breedte) {
+		
+			// 1. deze kolom is uitgezoemd:
+			if (zoomKolom != null) {
+
+				if (breedte != this.breedte) {
+					tekstVakken[zoomRij][zoomKolom].setSize(breedte, tekstVakken[zoomRij][zoomKolom].getHeight());
+					this.breedte = breedte;
+					tekstVakken[zoomRij][zoomKolom].reLayout(); 
+				}
+				return;
+			}
+			// 2. dit is een response tekstvakpanel met 1 tekstvak
+			if (responsive && RESPONSIVE) {
+				zetVolledigeBreedte1(breedte); // boekhouding....
+				int w;	 			
+			    w = (int)Math.round(responsiveFactor*breedte + responsiveConstant);
+			    if (w < responsiveMinWidth ) {
+			    		w = breedte;
+			    }
+			    else {
+			    		w = w-1; // correctie voor afrondingen naar boven
+			    }
+			    if(w > responsiveMaxWidth)
+			    		w = responsiveMaxWidth;						
+				if(Math.abs(this.breedte - w)>1 ) {
+					tekstVakken[0][0].setSize(w, tekstVakken[0][0].getHeight());
+					this.breedte = w;
+					breedtes.set(0,(double)w);
+					
+					tekstVakken[0][0].reLayout();
+				}
+				
+				return;
+			}
+		if (volledigeBreedte && breedtes != null) {		// alle andere gevallen
+			zetVolledigeBreedte1(breedte);
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	private void zetVolledigeBreedte0(int breedte) {
     if(volledigeBreedte && breedtes!=null) {
 /*
  * Onderstaande is niet goed als we zoomen. Dan is maar één kolom zichtbaar en de rest niet.
  */
 		zetVolledigeBreedte2(breedte);
-		}
+	}
 		if(responsive && RESPONSIVE ) {
 			int w = breedte;
  			
@@ -5724,7 +5774,7 @@ private Object CamelCase(String name) {
 		}
   }
 
-  public void zetVolledigeBreedte2(int breedte) {
+  void zetVolledigeBreedte2(int breedte) {
     if (zoomKolom == null) {	
 			zetVolledigeBreedte1(breedte);
 		} else {
@@ -5734,7 +5784,7 @@ private Object CamelCase(String name) {
 		}
   }
 
-  public void zetVolledigeBreedte1(int breedte) {
+  private void zetVolledigeBreedte1(int breedte) {
 //	if(Math.abs(this.breedte - breedte)<2)
 //		return;
 	int aantalKolommen = breedtes.size();
@@ -6010,7 +6060,7 @@ private Object CamelCase(String name) {
 			parent.unzoom(this);
 		} else {
           int width = getWindowWidth();
-          zetVolledigeBreedte0(width);
+          zetVolledigeBreedte0alt(width);
 		}
 		  
 		
