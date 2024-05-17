@@ -48,10 +48,11 @@ public class OAuth2Filter implements Filter {
 	}
 
 	public static final String PREFIX = "nl.numworx.oauth2client.server.Oauth2Filter.";
+	public static final String PREFIX_TOKEN = PREFIX + "token.";
 	
 	private String authz = "/dwo/oauth2/mfalogin";
 	private String client_id = null;
-	private StoredRestManager instance = StoredRestManager.getInstance();
+	private StoredRestManager instance = StoredRestManager.getInstance().duplicate();
 	private OAuthManager manager;
 	private boolean always;
 	
@@ -77,7 +78,7 @@ public class OAuth2Filter implements Filter {
 		ArrayList<String> todelete = new ArrayList<>();
 		while (keys.hasMoreElements()) {
 			String key = keys.nextElement();
-			if (key.startsWith(PREFIX)) todelete.add(key);
+			if (key.startsWith(PREFIX_TOKEN)) todelete.add(key);
 		}
 		todelete.forEach(session::removeAttribute);
 	}
@@ -98,17 +99,17 @@ public class OAuth2Filter implements Filter {
 				String bearer = instance.getBasicAuthString().substring(7);
 				LOG.severe("chain with new bearer " + bearer);
 				storage.removeAttribute(PREFIX + "state");
-				storage.setAttribute(PREFIX + "bearer", bearer);
-				storage.setAttribute(PREFIX + "retry", retry);
+				storage.setAttribute(PREFIX_TOKEN + "bearer", bearer);
+				storage.setAttribute(PREFIX_TOKEN + "retry", retry);
 				HttpServletRequestWrapper wrap = new BearerWrapper(request, bearer);
 				chain.doFilter(wrap, response);
 				return;
 			}}
 		}
-		Object bearer = storage.getAttribute(PREFIX + "bearer");
+		Object bearer = storage.getAttribute(PREFIX_TOKEN + "bearer");
 		if (always && "GET".equals(request.getMethod()))
 			bearer = null;
-		Object login = storage.getAttribute("dwo.oauth2.prompt");
+		Object login = storage.getAttribute(Login.OAUTH2_PROMPT);
 		LOG.severe("bearer=" + bearer + ",prompt="+login);
 		if (bearer != null && login == null) {
 			request = new BearerWrapper(request, bearer.toString());
@@ -117,7 +118,7 @@ public class OAuth2Filter implements Filter {
 			return;
 		} else if (login != null) {
 			LOG.info("remove bearer");
-			storage.removeAttribute(PREFIX + "bearer");
+			storage.removeAttribute(PREFIX_TOKEN + "bearer");
 		}
 		LOG.info("redirect to " + authz);
 		String state = randomString(64);
