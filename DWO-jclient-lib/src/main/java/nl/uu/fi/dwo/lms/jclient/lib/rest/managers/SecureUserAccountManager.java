@@ -144,8 +144,11 @@ public class SecureUserAccountManager {
    * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
    */
   public static Boolean logoutUser(DomLoginContext domLoginContext) throws Dwo2Exception {
+	  return logoutUser(StoredRestManager.getInstance(), domLoginContext);
+  }
+	  
+  public static Boolean logoutUser(StoredRestManager restManager,  DomLoginContext domLoginContext) throws Dwo2Exception {
     Boolean result;
-    StoredRestManager restManager = StoredRestManager.getInstance();
     RestLoginContext submit = new RestLoginContext();
     DomContext context = restManager.getContext();
     submit.setRestContext(context);
