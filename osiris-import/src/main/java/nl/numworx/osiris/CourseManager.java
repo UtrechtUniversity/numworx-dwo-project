@@ -16,6 +16,7 @@ import fi.dwo.commons.persistence.entities.PersistentCourse;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherCourseManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomACL;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
@@ -31,7 +32,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 public class CourseManager {
 	
 	SecuredTeacherCourseManager updater;
-	SecureUserCourseManager getter;
+	final StoredRestManager manager;
 	
 	PublicProfileManager profiles;
 	
@@ -43,11 +44,10 @@ public class CourseManager {
 	private Map<String, DomSchoolClassFull> groepen;
 	protected String templateDescription;
 	
-	public CourseManager(String name, DomSchool school, Map<String, DomSchoolClassFull> groepen) throws Dwo2Exception {
-		
+	public CourseManager(StoredRestManager instance, String name, DomSchool school, Map<String, DomSchoolClassFull> groepen) throws Dwo2Exception {
+		manager = instance;
 		profile = PublicProfileManager.get(name);
-		getter = new SecureUserCourseManager();
-		updater = new SecuredTeacherCourseManager();
+		updater = new SecuredTeacherCourseManager(instance);
 		children = new HashMap<>();
 		this.groepen = groepen;
 		this.school = school;
@@ -78,7 +78,7 @@ public class CourseManager {
 	public void initTemplate() throws Dwo2Exception {
 		Long id = Long.getLong("UU_DESCRIPTION_TEMPLATE",168946L);
 		DomCourse course = new DomCourse(PersistentCourse.buildPersistenceId(id));
-		DomCourseStudent full = getter.getCourse(course, profile);
+		DomCourseStudent full = SecureUserCourseManager.getCourse(manager, course, profile);
 		templateDescription = full.getDescription();
 	}
 	
@@ -95,7 +95,7 @@ public class CourseManager {
 		String solis = user.getUserName();
 		courses = children.get(null);
 		if (courses == null) {
-			courses = SecureUserCourseManager.getCoursesSchool(profile);
+			courses = SecureUserCourseManager.getCoursesSchool(manager, profile);
 			children.put(null, courses);
 		}
 		DomCourse root = optionalCreateMap(HOME, courses, null, "");
@@ -126,7 +126,7 @@ public class CourseManager {
 		
 		courses = children.get(null);
 		if (courses == null) {
-			courses = SecureUserCourseManager.getCoursesSchool(profile);
+			courses = SecureUserCourseManager.getCoursesSchool(manager, profile);
 			children.put(null, courses);
 		}
 		DomCourse root = optionalCreateMap(faculteit, courses, null, "Faculteit " + faculteit);
@@ -183,7 +183,7 @@ public class CourseManager {
 		List<DomCourseStudent> courses;
 		courses = children.get(root.getId());
 		if (courses == null) {
-			courses = SecureUserCourseManager.getCourses(root, profile);
+			courses = SecureUserCourseManager.getCourses(manager, root, profile);
 			children.put(root.getId(), courses);
 		}
 		return courses;

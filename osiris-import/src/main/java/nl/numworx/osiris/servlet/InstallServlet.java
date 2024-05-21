@@ -81,6 +81,8 @@ public class InstallServlet extends HttpServlet {
 			instance.setBasicAuthString(null, null, null);
 			instance.getAuthenticator().setServerUrlPath(new URL("http://127.0.0.1/dwo/"));
 			system = new SystemManager(instance);
+log("auth Type " + req.getAuthType());
+log("remote user " + req.getRemoteUser());
 			if ("Bearer".equalsIgnoreCase(req.getAuthType())) {
 				instance.setBearerAuthString(req.getRemoteUser());
 			} else {
@@ -114,7 +116,7 @@ public class InstallServlet extends HttpServlet {
 				upload = "/noway.html";
 		} finally {
 			try {
-				if (loginContext != null) SecureUserAccountManager.logoutUser(loginContext);
+				if (loginContext != null) SecureUserAccountManager.logoutUser(instance, loginContext);
 			} catch (Dwo2Exception e) {
 				log("logoutUser", e);
 				throw new ServletException(e.getLocalizedMessage(), e);				
@@ -140,7 +142,10 @@ public class InstallServlet extends HttpServlet {
 	@Override
 	protected synchronized void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		StoredRestManager instance = StoredRestManager.getInstance().duplicate();
+		StoredRestManager instance = StoredRestManager.getInstance();
+		instance.setBasicAuthString(null, null, null);
+		instance.getAuthenticator().setServerUrlPath(new URL("http://localhost/dwo/"));
+		instance = instance.duplicate();
 		ServerBuilder numworx = new ServerBuilder();
 		DomLoginContext loginContext = null;
 		try {
@@ -266,7 +271,7 @@ public class InstallServlet extends HttpServlet {
 		      int teachers = numworx.addTeachers(leerkrachten, members, groepen);
 		      message += teachers + " teacher(s)\n";
 
-		      CourseManager man = new CourseManager(profile, numworx.getSchool(), groepen);
+		      CourseManager man = new CourseManager(instance, profile, numworx.getSchool(), groepen);
 		      man.initTemplate();
 			  for (CSVRecord record: toetsen) {
 				if (man.createToets(record))
