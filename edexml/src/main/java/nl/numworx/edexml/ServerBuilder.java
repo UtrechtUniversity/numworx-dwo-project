@@ -300,7 +300,7 @@ public class ServerBuilder implements Builder {
         value.setUserName(key);
       }
       try {
-        SecureSchoolAdminSchoolManager.submitTeacher(value);
+        schoolManager.SubmitTeacher(value);
         count += 1;
       } catch (Dwo2Exception e) {
     	  LOG.log(Level.WARNING, "submit Teacher", e);
