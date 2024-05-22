@@ -153,7 +153,9 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 			ImageView imageView = new ImageView(popupImageString, activity);
 			imageHeight = imageView.getHeight();
 			imageWidth = imageView.getWidth();
-			return popupImage = imageView.getImage();
+			popupImage = imageView.getImage();
+			if (popupImage != null)
+			return popupImage;
 		}
 // TODO gebruik resources!
 		imageWidth = widths[setNr];
