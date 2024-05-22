@@ -195,13 +195,21 @@ public static List<DomTeacher> getTeachersInSchool() throws Dwo2Exception {
   }
 
   public static Boolean submitTeacher(DomUserFull submit) throws Dwo2Exception {
+	  return submitTeacher(StoredRestManager.getInstance(), submit);
+  }
+  
+  public Boolean SubmitTeacher(DomUserFull submit) throws Dwo2Exception {
+	  return submitTeacher(instance, submit);
+  }
+
+  public static Boolean submitTeacher(StoredRestManager instance, DomUserFull submit) throws Dwo2Exception {
     RestUserFull rest = new RestUserFull();
-    rest.setRestContext(getContext());
+    rest.setRestContext(instance.getContext());
     rest.setDomUserFull(submit);
-    Boolean result = StoredRestManager.getInstance()
-        .put("rest/sec:" + PathId.getId(getContext()) + "/schooladmin/school/submitTeacher", Boolean.class, rest);
+    Boolean result = instance
+        .put("rest/sec:" + PathId.getId(instance.getContext()) + "/schooladmin/school/submitTeacher", Boolean.class, rest);
     LOG.log(Level.FINE, "Submitted new user {1} enlisted as teacher in the school by user {0}.",
-        new Object[] {RestAuthenticator.getInstance().getUsername(),
+        new Object[] {instance.getAuthenticator().getUsername(),
             rest.getDomUserFull().getId()});
     return result;
   }
