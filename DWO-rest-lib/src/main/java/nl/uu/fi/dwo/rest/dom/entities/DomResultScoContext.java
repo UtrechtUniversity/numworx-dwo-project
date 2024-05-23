@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import nl.uu.fi.dwo.rest.dom.entities.util.DomResultScoreVisitor;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 
 /**
@@ -45,6 +46,11 @@ public class DomResultScoContext extends DomResultScore<DomResultStudentScoConte
 
 	public void setMaxScore(Double maxScore) {
 		this.maxScore = maxScore;
+	}
+
+	@Override
+	public void visit(DomResultScoreVisitor v) {
+		v.visitScoContext(this);
 	}
         
 }
