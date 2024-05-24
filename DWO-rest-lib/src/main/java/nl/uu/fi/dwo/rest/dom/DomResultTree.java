@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.SumOfSubTreeVisitor;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -286,7 +287,8 @@ public class DomResultTree {
         Map<PersistenceId, DomStudentScoContext> map = new HashMap<>();
         set.stream().forEach(item -> map.put(item.getId(), item));
         findAndUpdateResultStudentSco(resultTree, map);
-        resultTree.calculateSumOfSubtreeScore();
+        //resultTree.calculateSumOfSubtreeScore();
+        resultTree.visit(new SumOfSubTreeVisitor());
     }
     
    

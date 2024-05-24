@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoPage;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.SumOfSubTreeVisitor;
 
 class Util {
 
@@ -24,30 +25,40 @@ class Util {
 
   static JSONObject buildSubResultTree(DomResultScore<?> node) {
           JSONObject json = new JSONObject();
-          node.calculateSumOfSubtreeScore();
+          //node.calculateSumOfSubtreeScore();
+          node.visit(new SumOfSubTreeVisitor());
           //set course data in node.
           String classType = node.getClass().getSimpleName();
-          json.put("classType", buildTime(classType));
+          json.put("classType", new JSONString(classType));
           json.put("label", new JSONString(node.getLabel()));
           json.put("sumScore", new JSONNumber(d(node.getScore())));
           json.put("scoCount", new JSONNumber(node.getScoCount()));
           json.put("studentScoCount", new JSONNumber(node.getStudentScoCount()));
+          if (node.getFraction() != null) {
+        	  json.put("fraction", new JSONNumber(node.getFraction()));
+          }
+          if (node.getTitle() != null) {
+        	  json.put("tite", new JSONString(node.getTitle()));
+          }
+          if (node.getDescription() != null) {
+        	  json.put("description", new JSONString(node.getDescription()));
+          }
           if (node instanceof DomResultStudentScoContext) {
             DomResultStudentScoContext dssc = (DomResultStudentScoContext) node;
 		    DomStudentScoContext studentSco = dssc.getStudentSco();
   	  	    String userIdString = studentSco.getUserID().getIdString();
-            json.put("user-id", buildTime(userIdString));
+            json.put("user-id", new JSONString(userIdString));
             json.put("maxScore", dnull(dssc.getMaxScore()));
             String completionStatus = studentSco.getCompletionStatus(); // XXX What if not present? null of "" of unknown?
             if(completionStatus == null) completionStatus = "unknown";
-  			json.put("completionStatus", buildTime(completionStatus));
+  			json.put("completionStatus", new JSONString(completionStatus));
   			String totalTime = studentSco.getTotalTime();
   			if (totalTime == null) totalTime = "00:00:00";
   			json.put("totalTime", buildTime(totalTime));
          } else if (node instanceof DomResultCourseInClass){
              DomResultCourseInClass<?> resultCourse = (DomResultCourseInClass<?>) node;
              String viewState = resultCourse.getViewState().name();
-             json.put("viewState", buildTime(viewState));
+             json.put("viewState", new JSONString(viewState));
              Long sequenceNr = resultCourse.getCourse().getSequenceNr();
              if (sequenceNr != null )
                json.put("sequence", new JSONNumber(sequenceNr));
@@ -66,7 +77,7 @@ class Util {
              DomResultStudentScoPage page = (DomResultStudentScoPage) node;
              json.put("maxScore", dnull(page.getMaxScore()));
              json.put("bonus", new JSONNumber(d(page.getCorrectie())));
-             json.put("label", new JSONString(page.getLabel()));
+             //json.put("label", new JSONString(page.getLabel()));
              json.put("sequence", new JSONNumber(page.getNodeId()));
          }
   //        json.put("node-id", new JSONNumber(node.getNodeId()));
@@ -107,7 +118,8 @@ class Util {
       totalTime = totalTime.substring(3, 5) + "m";
     else if (totalTime.startsWith("0"))
       totalTime = totalTime.substring(1,2) + "h";
-    
+    else 
+      totalTime = totalTime.split(":",2)[0] + "h";
     return new JSONString(totalTime);
   }
 

@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import nl.uu.fi.dwo.rest.dom.entities.util.DomResultScoreVisitor;
+
 @SuppressWarnings("rawtypes")
 public class DomResultStudentScoPage extends DomResultScore {
 
@@ -39,6 +41,11 @@ public void setCorrectie(Double correctie) {
 @Override
 public void calculateSumOfSubtreeScore() {
   
+}
+
+@Override
+public void visit(DomResultScoreVisitor v) {
+	v.visitStudentScoPage(this);
 }
   
   

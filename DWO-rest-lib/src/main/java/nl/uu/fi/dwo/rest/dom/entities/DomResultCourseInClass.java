@@ -1,6 +1,8 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
 import java.util.Collection;
+
+import nl.uu.fi.dwo.rest.dom.entities.util.DomResultScoreVisitor;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 
 /**
@@ -75,5 +77,10 @@ public class DomResultCourseInClass<T extends DomResultScore> extends DomResultS
     public String getId() {
       return getCourse().getId().getIdString();
     }
+
+	@Override
+	public void visit(DomResultScoreVisitor v) {
+		v.visitCourseInClass(this);		
+	}
 
 }

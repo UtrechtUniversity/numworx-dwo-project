@@ -20,6 +20,8 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
@@ -74,6 +76,25 @@ public class ServerBuilder implements Builder {
 		if (role.getRoleName().equals(RoleType.SCHOOLADMIN.name())) {
 			context.setDomHasRole(logins.getActiveSchoolRoleAndClass().getHasRole());
 			instance.getAuthenticator().setContext(context);
+		} else 
+			throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthorizationError, "Wrong role");
+	}
+	
+	public void setSource(DomLoginContext login, StoredRestManager instance) throws Dwo2Exception {
+		manager = instance;
+		schoolManager = new SecureSchoolAdminSchoolManager(instance);
+		DomContext context = new DomContext();
+		context.setRealm(login.getRealm());
+		DomHasRole hasRole = new DomHasRole();
+		hasRole.setId(login.getHasRoleId());
+		hasRole.setSchoolGroupId(login.getSchoolGroupId());
+		hasRole.setUserId(login.getUserId());
+		context.setDomHasRole(hasRole);
+		instance.getAuthenticator().setContext(context);
+		logins = SecureUserAccountLoginsManager.getSchoolLogins(instance);
+		DomRole role = logins.getActiveSchoolRoleAndClass().getRole();
+		if (role.getRoleName().equals(RoleType.SCHOOLADMIN.name())) {
+			context.setDomHasRole(logins.getActiveSchoolRoleAndClass().getHasRole());
 		} else 
 			throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthorizationError, "Wrong role");
 	}
