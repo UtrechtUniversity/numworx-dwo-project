@@ -10,7 +10,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
  * @author G.A.J. van der Plas email: G.A.J.vanderPlas@uu.nl
  * @param <T>
  */
-public class DomResultCourseInClass<T extends DomResultScore> extends DomResultScore<T> {
+public class DomResultCourseInClass extends DomResultScore<DomResultScoContext> {
 
     private DomCourse course;
     private ViewState viewState;
@@ -57,15 +57,15 @@ public class DomResultCourseInClass<T extends DomResultScore> extends DomResultS
         if (this instanceof DomResultCourseInClass) {
             this.viewState = state;
             this.updateViewStateOfAncestors(state);
-            this.updateViewStateOfDecendants(state);
+//            this.updateViewStateOfDecendants(state);
         }
     }
 
-    private void updateViewStateOfDecendants(ViewState state) {
-        for (DomResultCourseInClass cic : (Collection<DomResultCourseInClass>) this.getChildren().values()) {
-            cic.updateViewState(state);
-        }
-    }
+//    private void updateViewStateOfDecendants(ViewState state) {
+//        for (DomResultCourseInClass cic : (Collection<DomResultCourseInClass>) this.getChildren().values()) {
+//            cic.updateViewState(state);
+//        }
+//    }
 
     protected void updateViewStateOfAncestors(ViewState state) {
         while(this.getParent() instanceof DomResultCourseInClass){

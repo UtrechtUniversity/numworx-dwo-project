@@ -8,7 +8,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
 
 	@Override
-	public void visitCourseInClass(DomResultCourseInClass<?> course) {
+	public void visitCourseInClass(DomResultCourseInClass course) {
 		if (DomResultScore.isVisibleForTeachers(course.getViewState())) {
 			course.setScore(0.0);
 			course.setScoCount(0.0);

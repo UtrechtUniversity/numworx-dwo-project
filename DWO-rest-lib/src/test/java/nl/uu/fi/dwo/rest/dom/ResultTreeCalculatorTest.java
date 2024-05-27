@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.rest.dom;
 
 import static org.junit.Assert.*;
 
-import java.lang.management.PlatformManagedObject;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +10,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;

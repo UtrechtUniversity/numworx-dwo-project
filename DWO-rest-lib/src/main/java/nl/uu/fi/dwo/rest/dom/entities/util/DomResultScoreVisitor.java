@@ -11,7 +11,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultTeacher;
 
 public abstract class DomResultScoreVisitor {
 
-	public void visitCourseInClass(DomResultCourseInClass<?> domResultCourseInClass) {
+	public void visitCourseInClass(DomResultCourseInClass domResultCourseInClass) {
 	}
 
 	public void visitStudentScoContext(DomResultStudentScoContext domResultStudentScoContext) {

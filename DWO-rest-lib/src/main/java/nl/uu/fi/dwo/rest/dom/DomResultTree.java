@@ -47,7 +47,7 @@ public class DomResultTree {
 
     private DomResultTeacher<DomResultCourseInClass> resultTree;
     private DomResultTeacher<DomResultStudent> studentTree;
-    private int newNodeId = 0;
+    //private int newNodeId = 0;
     private List<DomResultScore> nodeList = new ArrayList<DomResultScore>();
 
     private void addToNodeMap(DomResultScore score) {
@@ -161,7 +161,7 @@ public class DomResultTree {
                     resultCourse.getChildren().put(sco.getId(), resultSco);//add sco to parent
                     resultSco.setParent(resultCourse);//set parent in sco
                     //find studentsco's to sco if present in the same school class
-                    DomResultScore ancestor = resultSco;
+                    DomResultScore<?> ancestor = resultSco;
                     do {
                         ancestor = ancestor.getParent();
                     } while (!(ancestor instanceof DomResultSchoolClass));
