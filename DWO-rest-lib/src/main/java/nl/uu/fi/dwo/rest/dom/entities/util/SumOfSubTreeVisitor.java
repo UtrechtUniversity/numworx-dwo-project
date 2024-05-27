@@ -7,6 +7,24 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 
 public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
 
+	  private static String buildTime(String totalTime) {
+		    if (totalTime == null || totalTime.isEmpty()) return "";
+ 		    if(totalTime.startsWith("00:00:0"))
+		      totalTime = totalTime.substring(7) + "s";
+		    else if (totalTime.startsWith("00:00:"))
+		      totalTime = totalTime.substring(6) + "s";
+		    else if (totalTime.startsWith("00:0"))
+		      totalTime = totalTime.substring(4, 5) + "m";
+		    else if (totalTime.startsWith("00:"))
+		      totalTime = totalTime.substring(3, 5) + "m";
+		    else if (totalTime.startsWith("0"))
+		      totalTime = totalTime.substring(1,2) + "h";
+		    else 
+		      totalTime = totalTime.split(":",2)[0] + "h";
+		    return totalTime;
+		  }
+
+	
 	@Override
 	public void visitCourseInClass(DomResultCourseInClass course) {
 		if (DomResultScore.isVisibleForTeachers(course.getViewState())) {
@@ -35,10 +53,21 @@ public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
                 }
             }
 // dit is een strategie: 
-            course.setFraction(course.getStudentScoCount() / course.getScoCount());
-			course.setTitle(String.valueOf(course.getScore() / course.getScoCount()));
-			course.setDescription("gedaan " + course.getFraction() + ", score " + course.getScore() / course.getStudentScoCount());
-		} else {
+            if (course.getScoCount() != 0) {
+            	course.setFraction(course.getStudentScoCount() / course.getScoCount());
+            	course.setTitle(String.valueOf(Math.round(course.getScore() / course.getScoCount())));
+            	if (course.getStudentScoCount() != 0)
+            		course.setDescription("gedaan " + Math.round(course.getFraction()*100) + "%, score " + Math.round(course.getScore() / course.getStudentScoCount()) + "%");
+            	else {
+            		course.setDescription("gedaan 0%");
+            		course.setTitle("");
+            	}
+            } else {
+            	course.setFraction(0.0);
+            	course.setTitle("");
+            	course.setDescription("");
+            }
+        } else {
 			course.setScore(0.0);
 			course.setScoCount(0);
 			course.setStudentScoCount(0.0);
@@ -50,9 +79,22 @@ public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
 
 	@Override
 	public void visitStudentScoContext(DomResultStudentScoContext ss) {
+		String completionStatus = ss.getStudentSco().getCompletionStatus();
         ss.setScore(ss.getStudentSco().getScore());
-        ss.setTotalTime(ss.getStudentSco().getTotalTime());
         ss.setScoCount(0);
+
+        if ("not attempted".equals(completionStatus)) {
+			ss.setTitle("");
+			ss.setStudentScoCount(0);
+			ss.setFraction(0.0);
+			ss.setTotalTime("0s");
+			ss.setDescription("");
+			return;
+		}
+        ss.setTotalTime(ss.getStudentSco().getTotalTime());
+        ss.setTitle(ss.getScore() + " in " + buildTime(ss.getTotalTime()));
+        ss.setFraction(1.0);
+        ss.setDescription(ss.getScore() + "% in " + ss.getTotalTime());
         ss.setStudentScoCount(1);
 	}
 

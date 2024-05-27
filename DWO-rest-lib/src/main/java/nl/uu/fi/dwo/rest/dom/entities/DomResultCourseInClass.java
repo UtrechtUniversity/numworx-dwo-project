@@ -21,6 +21,11 @@ public class DomResultCourseInClass extends DomResultScore<DomResultScoContext> 
         super.setLabel(course.getName());
     }
 
+    public DomResultCourseInClass(DomResultCourseInClass copy) {
+    	this(copy.getCourse(), copy.getViewState());
+    }
+    
+    
     /**
      * @return the course
      */

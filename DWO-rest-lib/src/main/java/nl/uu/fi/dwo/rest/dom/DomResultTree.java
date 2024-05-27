@@ -365,4 +365,50 @@ public class DomResultTree {
       item.getChildren().values().stream().forEach(child -> findAndUpdateRestultStudentScoPages(child, sscid, children));
     }
 
+    public void insertStudentCourses() {
+    	// copy studentscocontext from resultTree to studentTree
+    	Map<PersistenceId, DomResultSchoolClass<DomResultCourseInClass>> coursemap = resultTree.getChildren();
+    	Collection<DomResultSchoolClass<DomResultStudent>> studentclasses = studentTree.getChildren().values();
+    	
+    	for(DomResultSchoolClass<DomResultStudent> schoolclass: studentclasses) {
+    		DomResultSchoolClass<DomResultCourseInClass> resultclass = coursemap.get(schoolclass.getSchoolClass().getId());
+    		insertStudentCourses( schoolclass.getChildren().values(), resultclass.getChildren().values());
+    	}
+    	
+    	
+    	
+    }
+
+	private void insertStudentCourses(Collection<DomResultStudent> students, Collection<DomResultCourseInClass> courses) {
+		for( DomResultStudent student : students) {
+			PersistenceId sid = student.getStudent().getId();
+			student.getChildren().clear();
+			for (DomResultCourseInClass course: courses) {
+				DomResultCourseInClass copy = new DomResultCourseInClass(course);
+				PersistenceId id = copy.getCourse().getId();
+				copy.setParent(student);
+				student.getChildren().put(id, copy);
+				insertStudentScos(sid, copy, course.getChildren().values());
+			}
+		}
+		
+	}
+
+// nog even geen copy: deze ssc is het origineel.	
+	private void insertStudentScos(PersistenceId sid, DomResultCourseInClass course,
+			Collection<DomResultScoContext> scos) {
+		for (DomResultScoContext sco: scos) {
+			DomResultScoContext copy = new DomResultScoContext(sco);
+			copy.setParent(course);
+			PersistenceId id = copy.getScoContext().getId();
+			course.getChildren().put(id, copy);
+			sco.getChildren().values()
+				.stream()
+				.filter( ssc -> ssc.getStudentSco().getUserID().equals(sid))
+				.forEach( ssc -> copy.getChildren().put(sid, ssc));
+		}
+		
+	}
+    
+    
 }

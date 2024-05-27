@@ -21,6 +21,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
+import nl.uu.fi.dwo.rest.dom.entities.util.DomResultScoreVisitor;
+import nl.uu.fi.dwo.rest.dom.entities.util.SumOfSubTreeVisitor;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -318,4 +320,17 @@ public class ResultTreeCalculatorTest {
 //		fail("Not yet implemented");
 //	}
 
+    @Test
+    public void testInsertStudentCourses() {
+    	addSco02();
+    	addStudent03();
+    	tree.insertStudentCourses();
+    	DomResultScoreVisitor visitor = new SumOfSubTreeVisitor();
+    	tree.getStudentTree().visit(visitor);
+    	tree.getResultTree().visit(visitor);
+    	System.out.println(tree);
+    	
+    }
+    
+    
 }
