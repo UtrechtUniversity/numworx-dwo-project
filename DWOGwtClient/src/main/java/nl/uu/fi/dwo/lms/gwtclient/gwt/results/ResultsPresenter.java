@@ -255,6 +255,7 @@ public class ResultsPresenter extends AbstractResultsPresenter {
               LOG.log(Level.INFO, "DomResults returned.");
               DomMappedResultsPerTeacher value = resolved.getValue();
               resultTree = new DomResultTree(value);
+              resultTree.insertStudentCourses();
               LOG.log(Level.INFO, "ResultTree obtained.");// plots the result tree.
               view.setResultTree(resultTree);
               LOG.log(Level.INFO, "plotted ResultMatrix.");

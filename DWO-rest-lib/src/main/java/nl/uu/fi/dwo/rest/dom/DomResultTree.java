@@ -287,8 +287,11 @@ public class DomResultTree {
         Map<PersistenceId, DomStudentScoContext> map = new HashMap<>();
         set.stream().forEach(item -> map.put(item.getId(), item));
         findAndUpdateResultStudentSco(resultTree, map);
+        insertStudentCourses();
         //resultTree.calculateSumOfSubtreeScore();
-        resultTree.visit(new SumOfSubTreeVisitor());
+        SumOfSubTreeVisitor v = new SumOfSubTreeVisitor();
+		resultTree.visit(v);
+		studentTree.visit(v);
     }
     
    

@@ -4,6 +4,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoPage;
 
 public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
 
@@ -96,6 +97,9 @@ public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
         ss.setFraction(1.0);
         ss.setDescription(ss.getScore() + "% in " + ss.getTotalTime());
         ss.setStudentScoCount(1);
+        
+        ss.getChildren().values().forEach(this::visitStudentScoPage);
+        
 	}
 
 	@Override
@@ -125,6 +129,35 @@ public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
         }
 
 	}
+
+
+	@Override
+	public void visitStudentScoPage(DomResultStudentScoPage page) {
+		if (page.getMaxScore() == null) {
+			page.setTitle("&nbsp;");
+			page.setDescription("&nbsp;");
+			page.setFraction(0.0);
+			return;
+		}
+		String bonus = "";
+		if (page.getCorrectie() != null) {
+			if (page.getCorrectie().doubleValue() > 0 ) bonus = "+" + page.getCorrectie();
+			else if (page.getCorrectie().doubleValue() < 0) bonus = page.getCorrectie().toString();
+		}
+		String title, description;
+		if (page.getMaxScore().doubleValue() == 0.0) {
+			title = "ℹ";
+			description = "informatief";
+		} else if (page.getScore().doubleValue() == -1) {
+			title = "Kijk na";
+			description = "Nakijken nodig"; // iets anders?
+		} else 
+			description = title = page.getScore().toString()+ bonus + "/" + page.getMaxScore() ;
+		page.setTitle(title);
+		page.setDescription(description);
+		page.setFraction(1.0);
+	}
+	
 	
 	
 }

@@ -57,7 +57,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoPage;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultTeacher;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
@@ -247,12 +246,16 @@ public class SelectedResultsPresenter implements ResultEventHandler {
         Promise<?> result = preparePages(schoolclass, sco);
         result = result.then(p -> {
         	if (prepareStart < Long.MAX_VALUE)
+        	{
+        		resultTree.insertStudentCourses();
         		view.updateResultTree(resultTree);
+        	}
             return null;
         }, p -> LOG.log(Level.SEVERE, "preparePages", p.getFailure()))
                 .then(p -> {
                     if (prepareStart < Long.MAX_VALUE) {
                     	prepareStart = Long.MAX_VALUE;
+                    	resultTree.insertStudentCourses();
                         view.showPages(resultTree);
                     }
                     return null;
@@ -415,6 +418,7 @@ public class SelectedResultsPresenter implements ResultEventHandler {
                     ssc.setChildren(children);
                     if (System.currentTimeMillis() - PREPARE_TIMEOUT > prepareStart) {
                         LOG.info("timeout: showPages");
+                        resultTree.insertStudentCourses();
                         view.showPages(resultTree);
                         prepareStart = System.currentTimeMillis();
                     }
