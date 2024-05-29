@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.rest.dom.entities.util;
 
+import java.util.Objects;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
@@ -88,14 +90,15 @@ public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
 			ss.setTitle("");
 			ss.setStudentScoCount(0);
 			ss.setFraction(0.0);
-			ss.setTotalTime("0s");
+			ss.setTotalTime("00:00:00");
 			ss.setDescription("");
 			return;
 		}
-        ss.setTotalTime(ss.getStudentSco().getTotalTime());
-        ss.setTitle(ss.getScore() + " in " + buildTime(ss.getTotalTime()));
+        String tt = Objects.toString(ss.getStudentSco().getTotalTime(), "00:00:00");
+		ss.setTotalTime(tt);
+        ss.setTitle(ss.getScore() + " in " + buildTime(tt));
         ss.setFraction(1.0);
-        ss.setDescription(ss.getScore() + "% in " + ss.getTotalTime());
+        ss.setDescription(ss.getScore() + "% in " + tt);
         ss.setStudentScoCount(1);
         
         ss.getChildren().values().forEach(this::visitStudentScoPage);
