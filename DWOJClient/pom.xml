@@ -200,6 +200,12 @@
     		<groupId>nl.uu.fi.dwo.mobile</groupId>
     		<artifactId>interaction</artifactId>
     	</dependency>
+    	<dependency>
+		    <groupId>com.esotericsoftware.yamlbeans</groupId>
+		    <artifactId>yamlbeans</artifactId>
+		    <version>1.17</version>
+		    <scope>test</scope>
+    	</dependency>
     </dependencies>      
 
     <build>
