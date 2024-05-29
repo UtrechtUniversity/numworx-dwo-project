@@ -514,6 +514,9 @@ public class TekstBuffer
 		case 69:
 			StubView aimodel = new StubView(activity, "AIModelGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			return x(map,aimodel);
+		case 70:
+			StubView sqlite = new StubView(activity, "SQLiteGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return x(map,sqlite);
 		
 		}
 
