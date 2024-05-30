@@ -55,7 +55,7 @@ class Util {
             json.put("user-id", new JSONString(userIdString));
             json.put("maxScore", dnull(dssc.getMaxScore()));
             String completionStatus = studentSco.getCompletionStatus(); // XXX What if not present? null of "" of unknown?
-            if(completionStatus == null) completionStatus = "unknown";
+            if(completionStatus == null) completionStatus = "not attempted";
   			json.put("completionStatus", new JSONString(completionStatus));
   			String totalTime = studentSco.getTotalTime();
   			if (totalTime == null) totalTime = "00:00:00";

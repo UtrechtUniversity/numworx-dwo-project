@@ -86,7 +86,7 @@ public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
         ss.setScore(ss.getStudentSco().getScore());
         ss.setScoCount(0);
 
-        if ("not attempted".equals(completionStatus)) {
+        if ("not attempted".equals(completionStatus)||completionStatus == null) {
 			ss.setTitle("");
 			ss.setStudentScoCount(0);
 			ss.setFraction(0.0);
