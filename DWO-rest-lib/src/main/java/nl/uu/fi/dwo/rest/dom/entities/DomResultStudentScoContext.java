@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
 import nl.uu.fi.dwo.rest.dom.entities.util.DomResultScoreVisitor;
+import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -10,6 +11,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 public class DomResultStudentScoContext extends DomResultScore<DomResultStudentScoPage> {
     private DomStudentScoContext studentSco;
     private Double maxScore;
+	private ScoType scoType;
 
     public DomResultStudentScoContext(DomStudentScoContext aSco, DomStudent student){
         studentSco = aSco;
@@ -51,6 +53,14 @@ public class DomResultStudentScoContext extends DomResultScore<DomResultStudentS
 	@Override
 	public void visit(DomResultScoreVisitor v) {
 		v.visitStudentScoContext(this);
+	}
+
+	public ScoType getScoType() {
+		return scoType;
+	}
+
+	public void setScoType(ScoType scoType) {
+		this.scoType = scoType;	
 	}
         
 }

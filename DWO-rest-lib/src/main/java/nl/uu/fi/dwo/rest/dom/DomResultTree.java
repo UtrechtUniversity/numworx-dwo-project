@@ -175,7 +175,9 @@ public class DomResultTree {
                             if (student != null && studentClasses.containsKey(curSchoolClass.getSchoolClass().getId())
                                     && studentClasses.get(curSchoolClass.getSchoolClass().getId()).getChildren().containsKey(student.getId())) {
                                 DomResultStudentScoContext value = new DomResultStudentScoContext(ss, student);
+                                //value.setParent(resultSco);
 								value.setMaxScore(resultSco.getMaxScore());
+								value.setScoType(resultSco.getScoContext().getScoType());
                                 resultSco.getChildren().put(ss.getId(), value);
                             }
                         }

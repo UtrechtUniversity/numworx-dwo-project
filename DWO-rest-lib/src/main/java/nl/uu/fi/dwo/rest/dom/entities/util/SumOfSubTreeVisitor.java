@@ -85,7 +85,7 @@ public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
 		String completionStatus = ss.getStudentSco().getCompletionStatus();
         ss.setScore(ss.getStudentSco().getScore());
         ss.setScoCount(0);
-
+        DomResultScoContext parent = (DomResultScoContext) ss.getParent();
         if ("not attempted".equals(completionStatus)||completionStatus == null) {
 			ss.setTitle("");
 			ss.setStudentScoCount(0);
@@ -96,9 +96,16 @@ public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
 		}
         String tt = Objects.toString(ss.getStudentSco().getTotalTime(), "00:00:00");
 		ss.setTotalTime(tt);
-        ss.setTitle(ss.getScore() + " in " + buildTime(tt));
         ss.setFraction(1.0);
-        ss.setDescription(ss.getScore() + "% in " + tt);
+        if (ss.getScoType() == ScoType.INFO) {
+        	ss.setTitle("ℹ");
+        	ss.setDescription("ℹ in " + buildTime(tt));
+        	ss.setMaxScore(0.0);
+//        	ss.setScore(-3.0);
+        } else {
+        	ss.setTitle(ss.getScore() + " in " + buildTime(tt));
+        	ss.setDescription(ss.getScore() + "% in " + tt);
+        } 
         ss.setStudentScoCount(1);
         
         ss.getChildren().values().forEach(this::visitStudentScoPage);
