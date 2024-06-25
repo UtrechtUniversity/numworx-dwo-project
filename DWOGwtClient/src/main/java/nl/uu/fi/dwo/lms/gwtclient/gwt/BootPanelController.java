@@ -114,7 +114,7 @@ public class BootPanelController {
                     dwoGlobalVars.clearCurrentUser();
                     setSession(false);
                     {
-                      if (dwoGlobalVars.isSaml()) // running under SAML protection
+                      if (dwoGlobalVars.isSaml() || needLogout()) // running under SAML protection
                         logout();
                       else
                       { boolean test = Window.Location.getParameterMap().containsKey("a");
@@ -372,6 +372,14 @@ public class BootPanelController {
 
     native static void logout() /*-{
       $wnd.logout();
+    }-*/;
+    
+    native static boolean needLogout() /*-{
+    	try {
+    		return $wnd.needLogout;
+    	} catch(e) {
+    		return false;
+    	}
     }-*/;
 
     /**

@@ -5,6 +5,7 @@
 	int profile = 113;
     String base = "/wa/";
     String locale = "nl";  
+	String server = request.getHeader("host");
 %>
 <%@ include file="/dwo/index_util.jsp" %>
 <%
@@ -31,6 +32,10 @@
 	    		clientId = "";
 	    	<% }
 	    	%>
+	    	function logout() {
+	    		window.location = "https://<%=server%>/wiskunde-actief/exam/logout.html"
+	    	}
+
 	    </script>
      	<script type="text/javascript" src="/dwo/oauth2client/oauth2client/oauth2client.nocache.js"></script>
     </head>
