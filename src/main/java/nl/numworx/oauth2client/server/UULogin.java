@@ -11,6 +11,7 @@ import java.security.spec.KeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.Base64;
 import java.util.Base64.Decoder;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -191,6 +192,20 @@ public class UULogin implements SigningKeyResolver, Login {
 	}
 	
 	
+	private String getString(Claims body, String key) {
+		Object object = body.get(key);
+		if (object == null || object instanceof String) return (String) object;
+		if (object instanceof Collection) {
+			Collection c = (Collection) object;
+			if (c.isEmpty()) return null;
+			object = c.toArray()[0]; // pick first
+			if (object == null) return null;
+			return object.toString();
+		}
+// conversion from other types to string
+		return body.get(key, String.class);
+	}
+	
 	UUClaims idToken(String idToken) {
 		JwtParser parser = Jwts.parser().setSigningKeyResolver(this);
 
@@ -208,14 +223,14 @@ public class UULogin implements SigningKeyResolver, Login {
 		UUClaims u = new UUClaims();
 		Claims body = u.claims = token.getBody();
 		
-		u.sn = body.get("sn", String.class);
-		u.givenName = body.get("givenName", String.class);
-		u.insertion = body.get("uuSurnamePrefix", String.class);
-		u.email = body.get("mail", String.class);
-		u.uid   = body.get("uuShortID", String.class);
-		u.studentNumber = body.get("uuStudentNumber", String.class);
-		u.affiliation = body.get("urn:mace:dir:attribute-def:eduPersonAffiliation", String.class);
-		u.nonce = body.get("nonce", String.class);
+		u.sn = getString(body,"sn");
+		u.givenName = getString(body,"givenName");
+		u.insertion = getString(body,"uuSurnamePrefix");
+		u.email = getString(body,"mail");
+		u.uid   = getString(body,"uuShortID");
+		u.studentNumber = getString(body,"uuStudentNumber");
+		u.affiliation = getString(body,"urn:mace:dir:attribute-def:eduPersonAffiliation");
+		u.nonce = getString(body,"nonce");
 
 		return u;
 	}
