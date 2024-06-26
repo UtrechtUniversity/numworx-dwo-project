@@ -6,5 +6,8 @@ leerdoelwidgetgwt/
 GeoDefinerGWT.*
 GraphToolGWT.*
 AIModelGWT.*
+SQLiteGWT.*
+sqlitegwt/
+sqlworker.js
 LeerdoelWidgetGWT.*
 styles.css
