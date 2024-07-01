@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
 		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="viewport" content="width=1024">
+		<meta name="viewport" content="width=1078">
         <title>Numworx Hoger Onderwijs</title>
 		<meta http-equiv="refresh" content="0;/ho/">
     </head>
