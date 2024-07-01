@@ -6,7 +6,7 @@
   <groupId>nl.numworx.oauth2</groupId>
   <artifactId>OAuth2Client</artifactId>
   <packaging>war</packaging>
-  <version>1.0.15-SNAPSHOT</version>
+  <version>1.0.14</version>
   <name>nl.numworx.oauth2client.OAuth2Client</name>
   <parent>
 	    <groupId>nl.uu.fi.dwo</groupId>
