@@ -784,7 +784,7 @@
         <http.port>80</http.port>
         <upload.servlet />
         <upload.servlet.mapping />
-        <OAuth2ClientVersion>1.0.12</OAuth2ClientVersion>
+        <OAuth2ClientVersion>1.0.14</OAuth2ClientVersion>
 	</properties>
 	<profiles>
 		<profile>
@@ -880,4 +880,5 @@
 			</dependencies>
 		</profile>
 	</profiles>
+	<version>2.5.31p2</version>
 </project>
