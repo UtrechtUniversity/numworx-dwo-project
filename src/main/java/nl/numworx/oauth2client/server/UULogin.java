@@ -11,9 +11,12 @@ import java.security.spec.KeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.Base64;
 import java.util.Base64.Decoder;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletConfig;
@@ -42,6 +45,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SigningKeyResolver;
 
 public class UULogin implements SigningKeyResolver, Login {
+	
+	public static Logger LOG = Logger.getLogger(UULogin.class.getName());
 
     public static final String ID_TOKEN= "id_token";
     public static final String PASSWORD = "urn:uu.nl:idp:contract:password";
@@ -187,11 +192,36 @@ public class UULogin implements SigningKeyResolver, Login {
 		String nonce;
 		Claims claims;
 		OAuthToken token;
+		@Override
+		public String toString() {
+			return "UUClaims [sn=" + sn + ", givenName=" + givenName + ", email=" + email + ", uid=" + uid
+					+ ", insertion=" + insertion + ", affiliation=" + affiliation + ", studentNumber=" + studentNumber
+					+ ", nonce=" + nonce + ", token=" + token + "]";
+		}
 
 	}
 	
 	
+	private String getString(Claims body, String key) {
+		Object object = body.get(key);
+		if (object == null || object instanceof String) return (String) object;
+		if (object instanceof Collection) {
+			Collection c = (Collection) object;
+			if (c.isEmpty()) return null;
+			object = c.toArray()[0]; // pick first
+			if (object == null) return null;
+			return object.toString();
+		}
+// conversion from other types to string
+		return body.get(key, String.class);
+	}
+	
 	UUClaims idToken(String idToken) {
+		
+		LOG.fine("identity token");
+		LOG.fine(idToken);
+		
+		
 		JwtParser parser = Jwts.parser().setSigningKeyResolver(this);
 
 //		parser.setClock(new Clock() {
@@ -208,14 +238,17 @@ public class UULogin implements SigningKeyResolver, Login {
 		UUClaims u = new UUClaims();
 		Claims body = u.claims = token.getBody();
 		
-		u.sn = body.get("sn", String.class);
-		u.givenName = body.get("givenName", String.class);
-		u.insertion = body.get("uuSurnamePrefix", String.class);
-		u.email = body.get("mail", String.class);
-		u.uid   = body.get("uuShortID", String.class);
-		u.studentNumber = body.get("uuStudentNumber", String.class);
-		u.affiliation = body.get("urn:mace:dir:attribute-def:eduPersonAffiliation", String.class);
-		u.nonce = body.get("nonce", String.class);
+		u.sn = getString(body,"sn");
+		u.givenName = getString(body,"givenName");
+		u.insertion = getString(body,"uuSurnamePrefix");
+		u.email = getString(body,"mail");
+		u.uid   = getString(body,"uuShortID");
+		u.studentNumber = getString(body,"uuStudentNumber");
+		u.affiliation = //getString(body,"urn:mace:dir:attribute-def:eduPersonAffiliation");
+				Objects.toString(body.get("urn:mace:dir:attribute-def:eduPersonAffiliation"), "STUDENT");
+		u.nonce = getString(body,"nonce");
+		LOG.fine(u.toString());
+		LOG.fine("end token");
 
 		return u;
 	}
