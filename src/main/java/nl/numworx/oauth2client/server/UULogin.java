@@ -15,6 +15,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletConfig;
@@ -43,6 +45,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SigningKeyResolver;
 
 public class UULogin implements SigningKeyResolver, Login {
+	
+	public static Logger LOG = Logger.getLogger(UULogin.class.getName());
 
     public static final String ID_TOKEN= "id_token";
     public static final String PASSWORD = "urn:uu.nl:idp:contract:password";
@@ -188,6 +192,12 @@ public class UULogin implements SigningKeyResolver, Login {
 		String nonce;
 		Claims claims;
 		OAuthToken token;
+		@Override
+		public String toString() {
+			return "UUClaims [sn=" + sn + ", givenName=" + givenName + ", email=" + email + ", uid=" + uid
+					+ ", insertion=" + insertion + ", affiliation=" + affiliation + ", studentNumber=" + studentNumber
+					+ ", nonce=" + nonce + ", token=" + token + "]";
+		}
 
 	}
 	
@@ -207,6 +217,11 @@ public class UULogin implements SigningKeyResolver, Login {
 	}
 	
 	UUClaims idToken(String idToken) {
+		
+		LOG.fine("identity token");
+		LOG.fine(idToken);
+		
+		
 		JwtParser parser = Jwts.parser().setSigningKeyResolver(this);
 
 //		parser.setClock(new Clock() {
@@ -229,8 +244,11 @@ public class UULogin implements SigningKeyResolver, Login {
 		u.email = getString(body,"mail");
 		u.uid   = getString(body,"uuShortID");
 		u.studentNumber = getString(body,"uuStudentNumber");
-		u.affiliation = getString(body,"urn:mace:dir:attribute-def:eduPersonAffiliation");
+		u.affiliation = //getString(body,"urn:mace:dir:attribute-def:eduPersonAffiliation");
+				Objects.toString(body.get("urn:mace:dir:attribute-def:eduPersonAffiliation"), "STUDENT");
 		u.nonce = getString(body,"nonce");
+		LOG.fine(u.toString());
+		LOG.fine("end token");
 
 		return u;
 	}
