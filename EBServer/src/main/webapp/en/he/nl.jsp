@@ -18,7 +18,7 @@ else
 %>
 <meta charset="UTF-8">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="viewport" content="width=1024">
+<meta name="viewport" content="width=1078">
 <title>Numworx Higher Education (NL)</title>
     <link type="text/css" rel="stylesheet" href="/dwo/oauth2client/OAuth2Client.css">
     <script>

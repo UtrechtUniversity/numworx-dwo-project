@@ -21,7 +21,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
 		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="viewport" content="width=1024">
+		<meta name="viewport" content="width=1078">
         <title>Numworx Voortgezet Onderwijs</title>
 		<style type="text/css">
             body, html
