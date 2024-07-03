@@ -780,7 +780,7 @@
         <tomcat7.version>7.0.76</tomcat7.version>
         <context.xml>context.xml</context.xml>
         <http.port>80</http.port>
-        <OAuth2ClientVersion>1.0.10p2</OAuth2ClientVersion>
+        <OAuth2ClientVersion>1.0.14</OAuth2ClientVersion>
 	</properties>
 	<profiles>
 		<profile>
@@ -858,5 +858,5 @@
 			</dependencies>
 		</profile>
 	</profiles>
-	<version>2.5.29p1</version>
+	<version>2.5.29p2-SNAPSHOT</version>
 </project>
