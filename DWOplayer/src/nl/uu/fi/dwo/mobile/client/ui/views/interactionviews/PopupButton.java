@@ -44,6 +44,7 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -488,10 +489,22 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 		if (!box.isShowing())
 		{
 			
-			box.showRelativeTo(this);
+			showRelativeToMe(box);
 			listener.onShow();
 		}
 	}
+
+	private void showRelativeToMe(DWOPopupPanel popupPanel) {
+		popupPanel.showRelativeTo(this);
+		
+		// Set the position of the popup right before it is shown.
+		popupPanel.setPopupPositionAndShow(new PositionCallback() {
+		  public void setPosition(int offsetWidth, int offsetHeight) {
+		    popupPanel.position(PopupButton.this, offsetWidth, offsetHeight);
+		  }
+		});
+	}
+
 
 	public void hide() {
 		if(box != null) 
