@@ -537,6 +537,9 @@ public class DWOPopupPanel extends PopupPanel {
 	            && distanceFromWindowLeft >= offsetWidthDiff) {
 	          // Align with the right edge of the text box.
 	          left -= offsetWidthDiff;
+// als het links niet past en ook rechts niet, dan zoveel mogelijk naar links	          
+	        } else if (distanceToWindowRight < offsetWidth) {
+	        	left = windowLeft;
 	        }
 	      }
 	    }

@@ -495,7 +495,7 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 	}
 
 	private void showRelativeToMe(DWOPopupPanel popupPanel) {
-		popupPanel.showRelativeTo(this);
+		//popupPanel.showRelativeTo(this);
 		
 		// Set the position of the popup right before it is shown.
 		popupPanel.setPopupPositionAndShow(new PositionCallback() {
