@@ -37,6 +37,7 @@
     <class>fi.dwo.commons.persistence.entities.PersistentACL</class>
     <class>fi.dwo.commons.persistence.entities.PersistentMethod</class>
     <class>fi.dwo.commons.persistence.entities.PersistentSchoolMethod</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentScoPage</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
     <properties>
