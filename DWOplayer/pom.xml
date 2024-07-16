@@ -159,6 +159,12 @@
 		</plugins>
 	</build>
 	<dependencies>
+		<dependency><!-- before GWT -->
+			<groupId>org.vectomatic</groupId>
+			<artifactId>lib-gwt-svg</artifactId>
+			<version>0.5.15</version>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
@@ -231,7 +237,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.ideas</groupId>
 			<artifactId>IdeasGWT</artifactId>
-			<version>0.1.1</version>
+			<version>0.1.3</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo.mobile</groupId>
@@ -619,7 +625,7 @@
 		<profile>
 			<id>leerdoelwidget</id>
 			<properties>
-				<leerdoelwidgetVersion>0.0.1-SNAPSHOT</leerdoelwidgetVersion>
+				<leerdoelwidgetVersion>2.5.27-SNAPSHOT</leerdoelwidgetVersion>
 			</properties>
 			<dependencies>
 					<dependency>

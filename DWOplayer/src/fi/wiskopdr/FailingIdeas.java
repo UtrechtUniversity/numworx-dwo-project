@@ -6,6 +6,7 @@ import nl.uu.fi.dwo.ideas.client.AbstractIdeas;
 import nl.uu.fi.dwo.ideas.client.ExerciseArrayCallback;
 import nl.uu.fi.dwo.ideas.client.IdeasIF;
 import nl.uu.fi.dwo.ideas.client.RuleIF;
+import nl.uu.fi.dwo.ideas.client.Usermodel;
 
 public class FailingIdeas extends AbstractIdeas implements IdeasIF {
 	
@@ -81,5 +82,10 @@ public class FailingIdeas extends AbstractIdeas implements IdeasIF {
   public void getOneHint(RuleIF expr, String strategie, AsyncCallback<RuleIF> callback) {
     callback.onFailure(NOT_IMPLEMENTED);    
   }
+
+@Override
+public void adviseMeUsermodel(RuleIF[] inputs, String exercise, AsyncCallback<Usermodel[]> callback) {
+    callback.onFailure(NOT_IMPLEMENTED);    
+}
 
 }
