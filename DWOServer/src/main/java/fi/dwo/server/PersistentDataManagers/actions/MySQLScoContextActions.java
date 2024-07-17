@@ -24,6 +24,7 @@ import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
+import fi.dwo.server.PersistentDataManagers.util.ScoPageUtilManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletId;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
@@ -138,6 +139,7 @@ public class MySQLScoContextActions {
                     destroyStudentWork(pc);
                 }
                 sd = ScoDataManager.edit(sd);
+                ScoPageUtilManager.updatePages(pc, sd);
             }
 
             pc.fillDomScoContextFull(scoContext);

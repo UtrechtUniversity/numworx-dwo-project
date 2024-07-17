@@ -17,8 +17,8 @@ import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 @Entity
 @Table(name = "tblscopage")
 @NamedQueries({
-    @NamedQuery(name="PersistentScoPage.bySco", query="SELECT p FROM PersistentScoPage p WHERE p.id.scoID = :scoID and p.id.userID = 0"),
-    @NamedQuery(name="PersistentScoPage.byStudentSco", query="SELECT p FROM PersistentScoPage p WHERE p.id.scoID = :scoID and p.id.userID = :userID and p.id.schoolGroupID = :schoolGroupID"),
+    @NamedQuery(name="PersistentScoPage.bySco", query="SELECT p FROM PersistentScoPage p WHERE p.id.scoID = :scoID and p.id.userID = 0 ORDER BY p.id.sequencenr ASC"),
+    @NamedQuery(name="PersistentScoPage.byStudentSco", query="SELECT p FROM PersistentScoPage p WHERE p.id.scoID = :scoID and p.id.userID = :userID and p.id.schoolGroupID = :schoolGroupID ORDER BY p.id.sequencenr ASC"),
 })
 public class PersistentScoPage {
   @EmbeddedId
