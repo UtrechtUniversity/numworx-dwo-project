@@ -638,6 +638,7 @@
 						<groupId>nl.numworx.leerdoelwidget</groupId>
 						<artifactId>LeerdoelWidgetGWT</artifactId>
 						<version>${leerdoelwidgetVersion}</version>
+						<classifier>classes</classifier>
 					</dependency>
 			</dependencies>
 		</profile>

@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client;
 
+import javax.inject.Singleton;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 
@@ -7,6 +9,7 @@ import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.dwokb.NoStatusKeyboard;
 
+@Singleton
 public class WiskOpdrDefaults extends DWOplayerDefaults {
 	@Override
 	public String getResource(String resource) {
