@@ -307,12 +307,6 @@
 			<version>0.0.1</version>
 		</dependency>
 		<dependency>
-		    <groupId>de.javakaffee.msm</groupId>
-		    <artifactId>memcached-session-manager-tc9</artifactId>
-		    <version>2.3.2</version>
-		    <scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>nl.numworx.swingbrowser</groupId>
 			<artifactId>swingbrowser-api</artifactId>
 		    <scope>test</scope>
@@ -327,6 +321,24 @@
 			<artifactId>notebook-service</artifactId>
 			<version>0.0.3</version>
 			<classifier>classes</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.redisson</groupId>
+			<artifactId>redisson-all</artifactId>
+			<version>3.32.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.redisson</groupId>
+			<artifactId>redisson-tomcat-9</artifactId>
+			<version>3.32.0</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.redisson</groupId>
+					<artifactId>redisson</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 	<build>
@@ -380,7 +392,7 @@
 						<phase>process-resources</phase>
 						<goals><goal>copy-dependencies</goal></goals>
 						<configuration>
-							<includeGroupIds>de.javakaffee.msm,net.spy</includeGroupIds>
+							<includeGroupIds>org.redisson</includeGroupIds>
 							<outputDirectory>${project.build.directory}/${project.build.finalName}/.ebextensions</outputDirectory>
 						</configuration>
 					</execution>
@@ -425,6 +437,31 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+			    <artifactId>maven-resources-plugin</artifactId>
+			    <version>3.0.2</version>
+			    <executions>
+			        <execution>
+			            <id>copy-resource-redis</id>
+			            <phase>prepare-package</phase>
+			            <goals>
+			                <goal>copy-resources</goal>
+			            </goals>
+			            <configuration>
+			                <outputDirectory>${basedir}/target/${project.build.finalName}/.ebextensions</outputDirectory>
+			                <resources>
+			                    <resource>
+			                        <directory>src/main/ebextensions/redis</directory>
+			                        <includes>
+			                            <include>*</include>
+			                        </includes>
+			                    </resource>
+			                </resources>
+			            </configuration>
+			        </execution>
+			    </executions>
+			</plugin>
+			
 			<!-- cargo plugin to run tomcat 8 for testing - configuration under construction -->
 			<plugin>
 				<groupId>org.codehaus.cargo</groupId>
@@ -432,11 +469,11 @@
 				<version>1.8.5</version>
 				<configuration>
 					<container>
-						<containerId>tomcat8x</containerId>
+						<containerId>tomcat9x</containerId>
 						<artifactInstaller>
 							<groupId>org.apache.tomcat</groupId>
 							<artifactId>tomcat</artifactId>
-							<version>8.5.77</version>
+							<version>9.0.91</version>
 						</artifactInstaller>
 						<systemProperties>
 							<DWO_ENV>test</DWO_ENV>
@@ -445,6 +482,14 @@
 							<dependency>
 								  <groupId>software.aws.rds</groupId>
 								  <artifactId>aws-mysql-jdbc</artifactId>
+							</dependency>
+							<dependency>
+								  <groupId>org.redisson</groupId>
+								  <artifactId>redisson-all</artifactId>
+							</dependency>
+							<dependency>
+								  <groupId>org.redisson</groupId>
+								  <artifactId>redisson-tomcat-9</artifactId>								  
 							</dependency>
 						</dependencies>
 					</container>
@@ -510,11 +555,16 @@
 					</webapps>
 				</configuration>
 	<dependencies>
-		<dependency>
-			<groupId>de.javakaffee.msm</groupId>
-			<artifactId>memcached-session-manager-tc7</artifactId>
-			<version>2.3.2</version>
-		</dependency>
+							<dependency>
+								  <groupId>org.redisson</groupId>
+								  <artifactId>redisson-all</artifactId>
+								  <version>3.32.0</version>
+							</dependency>
+							<dependency>
+								  <groupId>org.redisson</groupId>
+								  <artifactId>redisson-tomcat-7</artifactId>
+								  <version>3.32.0</version>							  
+							</dependency>
 
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
@@ -611,11 +661,6 @@
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-logging-log4j</artifactId>
 			<version>${tomcat7.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>de.javakaffee.msm</groupId>
-		    <artifactId>memcached-session-manager-tc7</artifactId>
-		    <version>2.3.2</version>
 		</dependency>
         <dependency>
             <groupId>mysql</groupId>
