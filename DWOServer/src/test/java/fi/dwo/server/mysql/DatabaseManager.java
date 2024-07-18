@@ -43,11 +43,7 @@ public class DatabaseManager {
 
     private void init(String source) {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection(source);
-        }
-        catch (ClassNotFoundException e) {
-            System.err.println("Unable to get mysql driver: " + e);
         }
         catch (SQLException e) {
             System.err.println("Unable to connect to server: " + e);

@@ -71,7 +71,7 @@
     <parent>
     	<artifactId>DWO</artifactId>
     	<relativePath>../DWO</relativePath>
-    	<version>2.5.32</version>
+    	<version>2.5.33</version>
     	<groupId>nl.uu.fi.dwo</groupId>
     </parent>
 </project>

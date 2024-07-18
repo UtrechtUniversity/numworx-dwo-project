@@ -14,7 +14,6 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
-import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
@@ -153,7 +152,9 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 			ImageView imageView = new ImageView(popupImageString, activity);
 			imageHeight = imageView.getHeight();
 			imageWidth = imageView.getWidth();
-			return popupImage = imageView.getImage();
+			popupImage = imageView.getImage();
+			if (popupImage != null)
+			return popupImage;
 		}
 // TODO gebruik resources!
 		imageWidth = widths[setNr];

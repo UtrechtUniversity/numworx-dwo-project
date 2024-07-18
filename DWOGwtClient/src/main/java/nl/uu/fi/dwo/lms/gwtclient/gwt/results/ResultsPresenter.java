@@ -139,6 +139,7 @@ public class ResultsPresenter extends AbstractResultsPresenter {
                 LOG.log(Level.INFO, "DomResults returned.");
                 DomMappedResultsPerTeacher value = resolved.getValue();
                 resultTree = new DomResultTree(value);
+                resultTree.insertStudentCourses();
                 LOG.log(Level.INFO, "ResultTree obtained.");// plots the result tree.
                 view.setResultTree(resultTree);
                 LOG.log(Level.INFO, "plotted ResultMatrix.");
@@ -184,6 +185,7 @@ public class ResultsPresenter extends AbstractResultsPresenter {
           r.then( 
             p -> {
               DomResultTree resultTree = new DomResultTree(r.getValue());
+              resultTree.insertStudentCourses();
               view.setResultTreeWithContext(resultTree, resultState);
               eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SELECTEDRESULTS, resultTree, resultState));
               return null;
@@ -253,6 +255,7 @@ public class ResultsPresenter extends AbstractResultsPresenter {
               LOG.log(Level.INFO, "DomResults returned.");
               DomMappedResultsPerTeacher value = resolved.getValue();
               resultTree = new DomResultTree(value);
+              resultTree.insertStudentCourses();
               LOG.log(Level.INFO, "ResultTree obtained.");// plots the result tree.
               view.setResultTree(resultTree);
               LOG.log(Level.INFO, "plotted ResultMatrix.");

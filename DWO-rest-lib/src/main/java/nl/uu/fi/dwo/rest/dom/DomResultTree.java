@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.SumOfSubTreeVisitor;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -46,7 +47,7 @@ public class DomResultTree {
 
     private DomResultTeacher<DomResultCourseInClass> resultTree;
     private DomResultTeacher<DomResultStudent> studentTree;
-    private int newNodeId = 0;
+    //private int newNodeId = 0;
     private List<DomResultScore> nodeList = new ArrayList<DomResultScore>();
 
     private void addToNodeMap(DomResultScore score) {
@@ -160,7 +161,7 @@ public class DomResultTree {
                     resultCourse.getChildren().put(sco.getId(), resultSco);//add sco to parent
                     resultSco.setParent(resultCourse);//set parent in sco
                     //find studentsco's to sco if present in the same school class
-                    DomResultScore ancestor = resultSco;
+                    DomResultScore<?> ancestor = resultSco;
                     do {
                         ancestor = ancestor.getParent();
                     } while (!(ancestor instanceof DomResultSchoolClass));
@@ -174,7 +175,9 @@ public class DomResultTree {
                             if (student != null && studentClasses.containsKey(curSchoolClass.getSchoolClass().getId())
                                     && studentClasses.get(curSchoolClass.getSchoolClass().getId()).getChildren().containsKey(student.getId())) {
                                 DomResultStudentScoContext value = new DomResultStudentScoContext(ss, student);
+                                //value.setParent(resultSco);
 								value.setMaxScore(resultSco.getMaxScore());
+								value.setScoType(resultSco.getScoContext().getScoType());
                                 resultSco.getChildren().put(ss.getId(), value);
                             }
                         }
@@ -286,7 +289,11 @@ public class DomResultTree {
         Map<PersistenceId, DomStudentScoContext> map = new HashMap<>();
         set.stream().forEach(item -> map.put(item.getId(), item));
         findAndUpdateResultStudentSco(resultTree, map);
-        resultTree.calculateSumOfSubtreeScore();
+        insertStudentCourses();
+        //resultTree.calculateSumOfSubtreeScore();
+        SumOfSubTreeVisitor v = new SumOfSubTreeVisitor();
+		resultTree.visit(v);
+		studentTree.visit(v);
     }
     
    
@@ -363,4 +370,50 @@ public class DomResultTree {
       item.getChildren().values().stream().forEach(child -> findAndUpdateRestultStudentScoPages(child, sscid, children));
     }
 
+    public void insertStudentCourses() {
+    	// copy studentscocontext from resultTree to studentTree
+    	Map<PersistenceId, DomResultSchoolClass<DomResultCourseInClass>> coursemap = resultTree.getChildren();
+    	Collection<DomResultSchoolClass<DomResultStudent>> studentclasses = studentTree.getChildren().values();
+    	
+    	for(DomResultSchoolClass<DomResultStudent> schoolclass: studentclasses) {
+    		DomResultSchoolClass<DomResultCourseInClass> resultclass = coursemap.get(schoolclass.getSchoolClass().getId());
+    		insertStudentCourses( schoolclass.getChildren().values(), resultclass.getChildren().values());
+    	}
+    	
+    	
+    	
+    }
+
+	private void insertStudentCourses(Collection<DomResultStudent> students, Collection<DomResultCourseInClass> courses) {
+		for( DomResultStudent student : students) {
+			PersistenceId sid = student.getStudent().getId();
+			student.getChildren().clear();
+			for (DomResultCourseInClass course: courses) {
+				DomResultCourseInClass copy = new DomResultCourseInClass(course);
+				PersistenceId id = copy.getCourse().getId();
+				copy.setParent(student);
+				student.getChildren().put(id, copy);
+				insertStudentScos(sid, copy, course.getChildren().values());
+			}
+		}
+		
+	}
+
+// nog even geen copy: deze ssc is het origineel.	
+	private void insertStudentScos(PersistenceId sid, DomResultCourseInClass course,
+			Collection<DomResultScoContext> scos) {
+		for (DomResultScoContext sco: scos) {
+			DomResultScoContext copy = new DomResultScoContext(sco);
+			copy.setParent(course);
+			PersistenceId id = copy.getScoContext().getId();
+			course.getChildren().put(id, copy);
+			sco.getChildren().values()
+				.stream()
+				.filter( ssc -> ssc.getStudentSco().getUserID().equals(sid))
+				.forEach( ssc -> copy.getChildren().put(sid, ssc));
+		}
+		
+	}
+    
+    
 }

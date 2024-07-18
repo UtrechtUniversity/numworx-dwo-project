@@ -245,9 +245,6 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 
 		opdrachtObjects = new ArrayList<Object>();
 		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( opdracht.get("interactiePanelLaunchData") );
-		TekstBuffer tb = new TekstBuffer(activity, varnamen, waarden, getAnchorContext());
-		int[] breedtes = { 578 };  // FIXME variabel, dit is de maat van de info popup
-		tb.zetVolleBreedtes(breedtes);
 		newVersion = !(Boolean) opdracht.get("hasAntwoordVak");
 		//New editor version
 		if (opdrachtGegevens != null || newVersion)
@@ -263,23 +260,23 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 				//title.getElement().getStyle().setFloat(Float.LEFT);
 				contentPanel.add(title);
 			}
-			opdrachtObjects = tb.convertTekst(opdracht);
-			int aantalVakken = 0;
-			for (int i = 0; i < opdrachtObjects.size(); i++)
-			{
-				Object currentObject = opdrachtObjects.get(i);
-				if (currentObject instanceof InteractionView)
-					((InteractionView) currentObject).setCommunicationRoot(this);
-				if (currentObject instanceof TekstVakPanel)
-				{
-					aantalVakken++;
-					Object launchData = opdrachtGegevens.get(aantalVakken + 4); // FIXME Hier ook een +5-1 Wim
-					HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) launchData).get("interactiePanelLaunchState");
-					((TekstVakPanel) currentObject).zetInstellingen(instellingen);
-					((TekstVakPanel) currentObject).setKeyboard(kb);
-					((TekstVakPanel) currentObject).zetOpdracht(launchState);
-				}
-			}
+//			opdrachtObjects = tb.convertTekst(opdracht);
+//			int aantalVakken = 0;
+//			for (int i = 0; i < opdrachtObjects.size(); i++)
+//			{
+//				Object currentObject = opdrachtObjects.get(i);
+//				if (currentObject instanceof InteractionView)
+//					((InteractionView) currentObject).setCommunicationRoot(this);
+//				if (currentObject instanceof TekstVakPanel)
+//				{
+//					aantalVakken++;
+//					Object launchData = opdrachtGegevens.get(aantalVakken + 4); // FIXME Hier ook een +5-1 Wim
+//					HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) launchData).get("interactiePanelLaunchState");
+//					((TekstVakPanel) currentObject).zetInstellingen(instellingen);
+//					((TekstVakPanel) currentObject).setKeyboard(kb);
+//					((TekstVakPanel) currentObject).zetOpdracht(launchState);
+//				}
+//			}
 			//setObjects(opdrachtObjects, contentPanel);
 			setObjects(opdracht, contentPanel, this);
 			hoofdPanel.getAsPanel().getElement().getStyle().clearWidth();
@@ -292,6 +289,9 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 				HashMap<String, Object> state = (HashMap<String, Object>) ips.get("interactiePanelLaunchState");
 				opdracht.put("antwoordString", state.get("antwoordString"));
 			}
+			TekstBuffer tb = new TekstBuffer(activity, varnamen, waarden, getAnchorContext());
+			int[] breedtes = { 578 };  // FIXME variabel, dit is de maat van de info popup
+			tb.zetVolleBreedtes(breedtes);
 
 			setupOldVersion(opdracht, tb);
 		}

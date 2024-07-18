@@ -110,7 +110,7 @@ log("remote user " + req.getRemoteUser());
 				}
 			}
 			loginContext = SecureUserAccountManager.getLoginContext(instance);
-			numworx.setSource(loginContext.getRealm(), instance);
+			numworx.setSource(loginContext, instance);
 		} catch (Dwo2Exception e1) {
 				log("loginUser", e1);
 				upload = "/noway.html";
@@ -177,7 +177,7 @@ log("remote user " + req.getRemoteUser());
 				}
 			}
 			loginContext = SecureUserAccountManager.getLoginContext(instance);
-			numworx.setSource(loginContext.getRealm(), instance);
+			numworx.setSource(loginContext, instance);
 		} catch (Dwo2Exception e1) {
 			throw new ServletException(e1.getLocalizedMessage(), e1);
 		}

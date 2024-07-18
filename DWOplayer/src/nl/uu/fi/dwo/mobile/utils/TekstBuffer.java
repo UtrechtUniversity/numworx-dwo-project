@@ -504,6 +504,7 @@ public class TekstBuffer
 				return x(map, new ScoreWidget(activity, currentVakGegevens, randomVarNamen, randomVarWaarden, anchorContext));
 			}
 		case 67:
+			//if (true) return new nl.numworx.leerdoelwidgetgwt.client.LeerdoelWidgetGWT(currentVakGegevens, randomVarWaarden, volleBreedtes[huidigeKolom]);
 			StubView ldw = new StubView(activity, "LeerdoelWidgetGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			ldw.setAContext(getAnchorContext());
 			return x(map, ldw);
@@ -514,6 +515,9 @@ public class TekstBuffer
 		case 69:
 			StubView aimodel = new StubView(activity, "AIModelGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			return x(map,aimodel);
+		case 70:
+			StubView sqlite = new StubView(activity, "SQLiteGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return x(map,sqlite);
 		
 		}
 

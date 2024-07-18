@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.rest.dom.entities;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import nl.uu.fi.dwo.rest.dom.entities.util.DomResultScoreVisitor;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -12,15 +14,19 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  * @author G.A.J. van der Plas email: G.A.J.vanderPlas@uu.nl
  * @param <T>
  */
+@SuppressWarnings("rawtypes")
 public abstract class DomResultScore<T extends DomResultScore> {
 
     private int nodeId = -1;
-    private double score = 0; //unmade work is always score 0.
+    private Double score = 0.0; //unmade work is always score 0.
     private double scoCount = 0;   //count is 0 because scoCount may summarize empty subtree.
     private double studentScoCount = 0;   //count is 0 because studentScoCount may summarize empty subtree.
     private String label, totalTime;
     private DomResultScore parent = null;
     private Map<PersistenceId, T> children = new HashMap<PersistenceId, T>();
+    
+    private Double fraction;
+    private String title, description;
 
     /**
      * @return the score
@@ -61,7 +67,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
      * @param aParent
      */
     public void setParent(DomResultScore aParent) {
-        if (parent instanceof DomResultTeacher && aParent != null) {
+        if (parent instanceof DomResultTeacher) {
             throw new RuntimeException("Root node should have null as parent.");
         } else {
             parent = aParent;
@@ -110,11 +116,12 @@ public abstract class DomResultScore<T extends DomResultScore> {
         this.studentScoCount = studentScoCount;
     }
 
-    private boolean isVisibleForTeachers(ViewState state) {
+    public static boolean isVisibleForTeachers(ViewState state) {
         return (state == ViewState.studentsAndTeachers || state == ViewState.teachers || state == ViewState.students);
     }
 
-    public void collectActivities(Map<PersistenceId, DomResultScoContext> activities) {
+    @SuppressWarnings("unchecked")
+	public void collectActivities(Map<PersistenceId, DomResultScoContext> activities) {
         if (this.children.isEmpty()) {
             return;
         }
@@ -139,7 +146,8 @@ public abstract class DomResultScore<T extends DomResultScore> {
      *
      * @param courseLeaves A map of leaves in the course tree.
      */
-    public void collectCourseLeaves(Map<PersistenceId, DomResultCourseInClass> courseLeaves) {
+    @SuppressWarnings("unchecked")
+	public void collectCourseLeaves(Map<PersistenceId, DomResultCourseInClass> courseLeaves) {
         if (this.children.isEmpty()) {
             return;
         }
@@ -164,7 +172,8 @@ public abstract class DomResultScore<T extends DomResultScore> {
      *
      * @param courseLeaves A map of leaves in the course tree.
      */
-    public void collectCourseLeaves(DomResultTeacher teacher, Map<PersistenceId, DomResultCourseInClass> courseLeaves) {
+    @SuppressWarnings("unchecked")
+	public void collectCourseLeaves(DomResultTeacher teacher, Map<PersistenceId, DomResultCourseInClass> courseLeaves) {
         if (this.children.isEmpty()) {
             return;
         }
@@ -349,7 +358,8 @@ public abstract class DomResultScore<T extends DomResultScore> {
      * @param courseLeaves
      * @param sparseMatrix
      */
-    public void collectScoresPerCourseOverSchoolClass(DomResultSchoolClass schoolClass, int nStudents, Map<PersistenceId, DomResultCourseInClass> courseLeaves, Map<PersistenceId, Map<PersistenceId, DomResultCourseInClass>> sparseMatrix) {
+    @SuppressWarnings("unchecked")
+	public void collectScoresPerCourseOverSchoolClass(DomResultSchoolClass schoolClass, int nStudents, Map<PersistenceId, DomResultCourseInClass> courseLeaves, Map<PersistenceId, Map<PersistenceId, DomResultCourseInClass>> sparseMatrix) {
         if (this.children.isEmpty()) {
             return;
         }
@@ -402,7 +412,8 @@ public abstract class DomResultScore<T extends DomResultScore> {
      *
      * @param studentScores
      */
-    public void getStudentCollectedAverageSubtreeScore(Map<PersistenceId, DomResultStudent> studentScores) {
+    @SuppressWarnings("unchecked")
+	public void getStudentCollectedAverageSubtreeScore(Map<PersistenceId, DomResultStudent> studentScores) {
         if (this instanceof DomResultStudentScoContext) {
             DomResultStudentScoContext ss = (DomResultStudentScoContext) this;
             ss.setScore(ss.getStudentSco().getScore());
@@ -473,4 +484,29 @@ public abstract class DomResultScore<T extends DomResultScore> {
       this.totalTime = totalTime;
     }
 
+	public Double getFraction() {
+		return fraction;
+	}
+
+	public void setFraction(Double fraction) {
+		this.fraction = fraction;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public abstract void visit(DomResultScoreVisitor v);
 }

@@ -1057,3 +1057,19 @@ CREATE TABLE `tblstudentmodelperprofile` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
+DROP TABLE IF EXISTS `tblscopage`;
+CREATE TABLE `tblscopage` (
+	`scoID` int(11) NOT NUll,
+	`sequencenr` int(11) NOT NULL,
+	`userID` int(11) NOT NULL,
+	`schoolgroupID` int(11) NOT NULL,
+  `optlock` int(11) NOT NULL,
+  `del` tinyint(4) NOT NULL,
+  `lastChangeTimeStamp` bigint(22) NOT NULL,
+  `courseID` int(11),
+  `score` int(11),
+  `maxScore` int(11),
+  `correctie` int(11),
+  `checkDocent` tinyint(4),
+  PRIMARY KEY (`scoID`, `sequencenr`, `userID`, `schoolgroupID`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;	

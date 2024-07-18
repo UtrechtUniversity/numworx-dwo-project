@@ -159,6 +159,12 @@
 		</plugins>
 	</build>
 	<dependencies>
+		<dependency><!-- before GWT -->
+			<groupId>org.vectomatic</groupId>
+			<artifactId>lib-gwt-svg</artifactId>
+			<version>0.5.15</version>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
@@ -231,7 +237,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.ideas</groupId>
 			<artifactId>IdeasGWT</artifactId>
-			<version>0.1.1</version>
+			<version>0.1.3</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo.mobile</groupId>
@@ -299,7 +305,7 @@
 	<parent>
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO</artifactId>
-        <version>2.5.32</version>
+        <version>2.5.33</version>
         <relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 	<properties>
@@ -619,7 +625,7 @@
 		<profile>
 			<id>leerdoelwidget</id>
 			<properties>
-				<leerdoelwidgetVersion>0.0.1-SNAPSHOT</leerdoelwidgetVersion>
+				<leerdoelwidgetVersion>2.5.27-SNAPSHOT</leerdoelwidgetVersion>
 			</properties>
 			<dependencies>
 					<dependency>
@@ -632,6 +638,7 @@
 						<groupId>nl.numworx.leerdoelwidget</groupId>
 						<artifactId>LeerdoelWidgetGWT</artifactId>
 						<version>${leerdoelwidgetVersion}</version>
+						<classifier>classes</classifier>
 					</dependency>
 			</dependencies>
 		</profile>

@@ -730,7 +730,10 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		int dot = href.lastIndexOf('.');
 		if(dot > 0) {
 			//page = href.substring(dot+1);
+			String split[] = href.split("#",2);
+			href = split[0];
 			location = Integer.toString(Integer.parseInt(href.substring(dot+1))-1);
+			if (split.length==2) location += "#" + split[1];
 			href = href.substring(0,dot);
 		}
 		Promise<List<SelectModuleItem>> children = getChildrenOrScosPromise(parent);

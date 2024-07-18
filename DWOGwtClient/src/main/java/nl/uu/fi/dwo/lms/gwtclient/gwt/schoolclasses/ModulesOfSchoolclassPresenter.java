@@ -216,7 +216,7 @@ public class ModulesOfSchoolclassPresenter {
     		Window.open(s.getValue(), "settingsUI", "");
     		return s;
     	});
-    	url.then( s -> updateViewData(), FAILURE);
+    	url.then( s -> updateViewData(), FAILURE).onResolve(() -> view.setSettings(key));
     }
     
     @JsMethod
@@ -229,7 +229,7 @@ public class ModulesOfSchoolclassPresenter {
     		Window.open(s.getValue(), "dashboardUI", "");
     		return s;
     	});
-    	url.then( s -> updateViewData(), FAILURE);
+    	url.then( s -> updateViewData(), FAILURE).onResolve(() -> view.setSettings(key));
     }
     
     
@@ -327,7 +327,9 @@ public class ModulesOfSchoolclassPresenter {
 			Date to = toData.isEmpty() ? null : DateTimeFormat.getFormat(Display.LOCAL_TIME).parse(toData);
 
 			Date now = new Date();
-			if ( type == CourseType.assesment && classCourse.getCourseType() == CourseType.assesment &&					
+// Als een assesment gestart is, mag je de eindtijd niet terugdraaien!
+// geld ook voor Coursetype.kiosk
+			if ( isAssesment(type) && isAssesment(classCourse.getCourseType()) &&					
 				(classCourse.getNotBefore() == null || classCourse.getNotBefore().before(now))
 				&& (to != null && classCourse.getNotAfter() != null && classCourse.getNotAfter().after(to))	
 				&& classCourse.getNotAfter().after(now)
@@ -335,12 +337,19 @@ public class ModulesOfSchoolclassPresenter {
 				view.setSettings(key);
 				throw new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateValue, "Date " + toData + " is too early");
 			}
-			
+// geen after < before
+			if (from != null && to != null && from.after(to)) {
+				throw new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "after " + to + " < before " + from);///
+			}
 			
 			return service.setClassCourse(id, schoolClass, course, type, accessKey, from, to)
 					.then(x -> {object.setClassCourse(x.getValue());return x; });
     	});
 		return f;
+	}
+
+	private boolean isAssesment(CourseType type) {
+		return type == CourseType.assesment || type == CourseType.kiosk;
 	}
     
     

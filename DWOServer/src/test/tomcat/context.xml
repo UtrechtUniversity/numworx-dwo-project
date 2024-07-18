@@ -41,8 +41,8 @@
         minEvictableIdleTimeMillis="60000"
   		username="root"
   		password="test"
-  		driverClassName="com.mysql.jdbc.Driver"
-  		url="jdbc:mysql://mysql:3306/dwo_productie_v1_2?allowPublicKeyRetrieval=true&amp;useSSL=false"
+  		driverClassName="software.amazon.jdbc.Driver"
+  		url="jdbc:aws-wrapper:mysql://mysql:3306/dwo_productie_v1_2?allowPublicKeyRetrieval=true&amp;useSSL=false"
     />
     <Realm className="org.apache.catalina.realm.DataSourceRealm" dataSourceName="jdbc/dwodb" localDataSource="true" roleNameCol="groupname" userCredCol="passwd" userNameCol="username" userRoleTable="tomcat_roles_view" userTable="tomcat_user_view"/>
 <!--

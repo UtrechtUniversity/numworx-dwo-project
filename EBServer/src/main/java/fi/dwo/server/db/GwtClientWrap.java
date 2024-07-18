@@ -72,6 +72,9 @@ public class GwtClientWrap implements Filter {
 	private static final String SAMLSTART = "<!--SAMLSTART-->";
 	private static final String SAMLEND= "<!--SAMLEND-->";
 	private static final String PROFILE= "<!--PROFILE_CSS-->";
+	private static final String NEEDLOGOUT = "const needLogout = false";
+	private static final String DOLOGOUT = "const needLogout = true";
+	private static final String SEBHASH = "X-SafeExamBrowser-RequestHash";
 	private boolean saml;
 	private boolean entree;
 	
@@ -134,6 +137,9 @@ public class GwtClientWrap implements Filter {
 					index = content.indexOf(SAMLSTART, index+1);
 				}
 				content = content.replace("type=\"password\"", "type=\"text\"");
+				content = content.replace(NEEDLOGOUT, DOLOGOUT);
+			} else if (null != http.getHeader(SEBHASH)) {
+				content = content.replace(NEEDLOGOUT, DOLOGOUT);				
 			}
 			boolean off = !entree;
 			boolean ho = false;

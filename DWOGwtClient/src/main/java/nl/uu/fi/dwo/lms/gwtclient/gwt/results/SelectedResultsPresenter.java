@@ -57,7 +57,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoPage;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultTeacher;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
@@ -116,31 +115,33 @@ public class SelectedResultsPresenter implements ResultEventHandler {
 
     public void init(DomResultTree aResultTree, JavaScriptObject aResultState) {
         view.clear();
+        aResultTree.insertStudentCourses();
         resultTree = aResultTree;
         resultState = aResultState;
         view.init(aResultState);
     }
 
-    public void updateTree() {
-        //view.clear();
-        LOG.log(Level.INFO, "DwoGlobalVarsState = " + dwoGlobalVars.getState().name());
-        Promise<DomResultsPerTeacher> promResults;
-        promResults = resultService.getResultsPerTeacher();
-        // onSuccess calculate results and show.
-        promResults.then(new Success<DomResultsPerTeacher, Void>() {
-            @Override
-            public Promise<Void> call(Promise<DomResultsPerTeacher> resolved) throws Exception {
-                //calculate tree and call plotting
-                LOG.log(Level.INFO, "DomResults returned.");
-                resultTree = new DomResultTree(resolved.getValue());
-                LOG.log(Level.INFO, "ResultTree obtained.");// plots the result tree.
-                view.updateResultTree(resultTree);
-                LOG.log(Level.INFO, "plotted ResultMatrix.");
-                return null;
-            }
-        },
-                FAILURE);
-    }
+//    public void updateTree() {
+//        //view.clear();
+//        LOG.log(Level.INFO, "DwoGlobalVarsState = " + dwoGlobalVars.getState().name());
+//        Promise<DomResultsPerTeacher> promResults;
+//        promResults = resultService.getResultsPerTeacher();
+//        // onSuccess calculate results and show.
+//        promResults.then(new Success<DomResultsPerTeacher, Void>() {
+//            @Override
+//            public Promise<Void> call(Promise<DomResultsPerTeacher> resolved) throws Exception {
+//                //calculate tree and call plotting
+//                LOG.log(Level.INFO, "DomResults returned.");
+//                resultTree = new DomResultTree(resolved.getValue());
+//                resultTree.insertStudentCourses();
+//                LOG.log(Level.INFO, "ResultTree obtained.");// plots the result tree.
+//                view.updateResultTree(resultTree);
+//                LOG.log(Level.INFO, "plotted ResultMatrix.");
+//                return null;
+//            }
+//        },
+//                FAILURE);
+//    }
 
     public void setView(Display aView) {
         view = aView;
@@ -245,12 +246,16 @@ public class SelectedResultsPresenter implements ResultEventHandler {
         Promise<?> result = preparePages(schoolclass, sco);
         result = result.then(p -> {
         	if (prepareStart < Long.MAX_VALUE)
+        	{
+        		resultTree.insertStudentCourses();
         		view.updateResultTree(resultTree);
+        	}
             return null;
         }, p -> LOG.log(Level.SEVERE, "preparePages", p.getFailure()))
                 .then(p -> {
                     if (prepareStart < Long.MAX_VALUE) {
                     	prepareStart = Long.MAX_VALUE;
+                    	resultTree.insertStudentCourses();
                         view.showPages(resultTree);
                     }
                     return null;
@@ -267,7 +272,7 @@ public class SelectedResultsPresenter implements ResultEventHandler {
       DomResultScoContext domsco = null;
       DomResultSchoolClass<DomResultCourseInClass> coursetree = resultTree.getResultTree().getChildren().get(schoolclass);
       Collection<DomResultCourseInClass> courses = coursetree.getChildren().values();
-      for( DomResultCourseInClass<DomResultScoContext> item: courses) {
+      for( DomResultCourseInClass item: courses) {
         domsco = item.getChildren().get(sco);
         if(domsco != null) break;
       }
@@ -339,7 +344,7 @@ public class SelectedResultsPresenter implements ResultEventHandler {
         // find studentscocontexts:
         DomResultSchoolClass<DomResultCourseInClass> cc = resultTree.getResultTree().getChildren().get(schoolclass);
         Map<PersistenceId, DomResultCourseInClass> children = cc.getChildren();
-        for (DomResultCourseInClass<DomResultScoContext> cic : children.values()) {
+        for (DomResultCourseInClass cic : children.values()) {
             Map<PersistenceId, DomResultScoContext> items = cic.getChildren();
             DomResultScoContext sco = items.get(scoid);
             if (sco != null) {
@@ -413,6 +418,7 @@ public class SelectedResultsPresenter implements ResultEventHandler {
                     ssc.setChildren(children);
                     if (System.currentTimeMillis() - PREPARE_TIMEOUT > prepareStart) {
                         LOG.info("timeout: showPages");
+                        resultTree.insertStudentCourses();
                         view.showPages(resultTree);
                         prepareStart = System.currentTimeMillis();
                     }

@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import nl.uu.fi.dwo.rest.dom.entities.util.DomResultScoreVisitor;
+
 /**
  *
  * @author G.A.J. van der Plas  email: G.A.J.vanderPlas@uu.nl
@@ -22,5 +24,10 @@ public class DomResultTeacher<T extends DomResultScore> extends DomResultScore<D
     public void setParent(DomResultScore score){
         super.setParent(null);
     }
+
+	@Override
+	public void visit(DomResultScoreVisitor v) {
+		v.visitTeacher(this);
+	}
 
 }

@@ -184,4 +184,8 @@ public class PersistentScoData implements Serializable {
       fillDomScoData(d);
       return d;
     }
+
+	public Long getOptlock() {
+		return Long.valueOf(optlock);
+	}
 }

@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.rest.dom;
 
-import java.util.Collections;
 import nl.uu.fi.dwo.rest.dom.entities.*;
 import java.util.HashMap;
 import java.util.Map;

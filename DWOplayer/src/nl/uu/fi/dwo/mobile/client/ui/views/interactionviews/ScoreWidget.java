@@ -149,8 +149,8 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
     boolean bezocht = false;
     boolean activiteitScore = false;
     String paginaTitel = "";
+    String hash = "";
     Integer cesuur = null;
-    
 
     final Anchor anchor;
     final AnchorContext context;
@@ -369,7 +369,8 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			 if (toonTitel && map.containsKey("paginaTitel"))
 				 paginaTitel = map.getString("paginaTitel");
 			 linkActive = map.getBoolean("linkActive", linkActive);
-			 
+			 if (linkActive && map.containsKey("anchor"))
+				 hash = "#" + map.getString("anchor");
 			 if (map.containsKey("cesuur")) {
 				 cesuur = map.getInt("cesuur");
 			 }
@@ -390,16 +391,16 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		if (! activiteitScore) {
 			switch (choicePageMode) {
 			case 0: 
-				anchor.setHref("goto:." + (paginaNr));
+				anchor.setHref("goto:." + (paginaNr) + hash);
 				pfx0 += "cs"; break;
 			case 1:
-				anchor.setHref("goto:" + activiteitNr + "." + paginaNr);
+				anchor.setHref("goto:" + activiteitNr + "." + paginaNr + hash);
 				pfx0 += "cc." + activiteitNr; break;			
 			case 2: 
-				anchor.setHref("#xs:" + activiteitID + "." + (paginaNr-1));
+				anchor.setHref("#xs:" + activiteitID + "." + (paginaNr-1) + hash.replace("#", "%23"));
 				pfx0 += "s." + activiteitID; break;
 			case 3:
-				anchor.setHref("#xc:" + moduleID + "." + activiteitNr + "." + (paginaNr-1));
+				anchor.setHref("#xc:" + moduleID + "." + activiteitNr + "." + (paginaNr-1) + hash.replace("#", "%23"));
 				pfx0 += "c." + moduleID + "." + activiteitNr; break;
 			default: pfx0 += "null";
 			} 
@@ -636,11 +637,11 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		String href = anchor.getHref();
 		if (href.startsWith("goto:")) {
 			event.preventDefault();
-			context.gotoUrl(anchor.getHref());
+			context.gotoUrl(href);
 		} else if (href.contains("#")) {
 			int index = href.lastIndexOf('#');
 			event.preventDefault();
-			context.gotoPlace(href.substring(1+index)); // aanpassing voor "HasBack"
+			context.gotoPlace(href.substring(1+index).replace("%23", "#")); // aanpassing voor "HasBack"
 		}
 	}
 

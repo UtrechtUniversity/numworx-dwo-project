@@ -1908,9 +1908,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			if (anchors != null) {
 				Element e = anchors.get(anchor);
 				if (e != null) 
+				OpdrNav.defer(
+						() -> 
+					
 					AnimationScheduler.get().requestAnimationFrame(
 							(double timestamp) -> {e.scrollIntoView();},
-							e);
+							e));
 			}	
 		}
 	}
