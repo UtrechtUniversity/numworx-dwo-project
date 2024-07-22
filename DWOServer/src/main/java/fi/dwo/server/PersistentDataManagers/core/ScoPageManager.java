@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
@@ -56,6 +57,9 @@ public class ScoPageManager {
     }
     
     
+    
+    
+    
     public static List<PersistentScoPage> find(PersistentScoContext sco) throws PersistenceException
     {
     	EntityManager em = getEntityManager();
@@ -87,5 +91,19 @@ public class ScoPageManager {
     	}
     }
 
-
+    public static void destroyStudentWork(PersistentScoContext sco) throws PersistenceException {
+    	EntityManager em = getEntityManager();
+    	try {
+    		em.getTransaction().begin();
+    		Query q = em.createQuery("DELETE FROM PersistentScoPage p WHERE p.id.scoID = :scoID and p.id.userID <> 0");
+    		q.setParameter("scoID", sco.getScoID());
+    		q.executeUpdate();
+    		em.getTransaction().commit();   		
+    	} finally {
+    		em.close();
+    	}
+ 	
+    }
+    
+    
 }
