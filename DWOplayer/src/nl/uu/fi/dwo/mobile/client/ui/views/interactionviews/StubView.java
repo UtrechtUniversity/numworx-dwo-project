@@ -24,6 +24,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
+import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 import nl.uu.fi.dwo.mobile.utils.Logging;
@@ -47,6 +48,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Frame;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -54,7 +56,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class StubView extends SimplePanel implements InteractionView, LoadHandler, OpdrNavIF, FormuleEditorIF, AttachEvent.Handler, CBookEventListener {
+public class StubView extends SimplePanel implements InteractionView, LoadHandler, OpdrNavIF, FormuleEditorIF, AttachEvent.Handler, CBookEventListener, TekstElementWithFont {
 
 	public void pause() {
 		comRoot.pause();
@@ -973,6 +975,14 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			aContext.gotoPlace(event.getMessage());
 			return;
 		}
+		if (event.getCommand().equals("resize")) {
+			Number w = (Number) event.getParameter("width");
+			Number h = (Number) event.getParameter("height");
+			if (w == null) w = Integer.valueOf(-1);
+			if (h == null) h = Integer.valueOf(-1);
+			pasAanWH(w.intValue(),h.intValue());
+			
+		}
 		if(comRoot != this)
 			comRoot.fireEvent(event);		
 	}
@@ -1090,5 +1100,57 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	public void insertcp(int codepoint) {
 		insert("$Z" + codepoint + "@");
 	}
+
+	@Override
+	public void setFontSize(int font_size) {
+	}
+
+	@Override
+	public void setFontName(String font_name) {
+	}
+
+	@Override
+	public void setFontStyle(int font_style) {
+	}
+
+	private TekstRegel regel;
+	@Override
+	public void setParentRegel(TekstRegel regel) {
+		this.regel = regel;		
+	}
+	
+	protected void pasAanWH(int w, int h) {
+		if (regel != null && visibleChain()) {
+				if (w != -1 && w != getWidth()) {
+					if (hasFullWidth) fullwidth = w;
+				    width = w;
+				} else {
+					w = -1;
+				}
+				if (h != -1 && h != getHeight()) {
+					height = h;
+					if (hasFullWidth) h = getHeight();
+				} else {
+					h = -1;
+				}
+				frame.setPixelSize(w, h);
+				if(w != -1 || h != -1)
+					regel.resize();
+		}
+	}
+
+	private boolean visibleChain() {
+		if (frame.isAttached() ) {
+			Widget w = frame;
+			Widget root = RootLayoutPanel.get();
+			while (w != root && w != null) {
+				if (!w.isVisible()) return false;
+				w = w.getParent();
+			}
+			return true;
+		} 
+		return false;
+	}
+
 	
 }
