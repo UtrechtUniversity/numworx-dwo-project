@@ -10,6 +10,7 @@ import javax.persistence.TypedQuery;
 
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoPage;
+import fi.dwo.commons.persistence.entities.PersistentScoPagePK;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.server.persistence.DwoEmfFactory;
 
@@ -104,6 +105,15 @@ public class ScoPageManager {
     	}
  	
     }
+
+	public static PersistentScoPage findEntity(PersistentScoPagePK id) {
+    	EntityManager em = getEntityManager();
+    	try {
+    		return em.find(PersistentScoPage.class, id);
+    	} finally {
+    		em.close();
+    	}
+	}
     
     
 }

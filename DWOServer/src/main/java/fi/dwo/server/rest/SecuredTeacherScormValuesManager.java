@@ -33,6 +33,7 @@ import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.ScoPageUtilManager;
 import fi.dwo.server.persistence.CmiConvert;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
@@ -193,6 +194,9 @@ public class SecuredTeacherScormValuesManager {
 	                xml = new Scorm2Xml(String.valueOf(xmlStr));
 				}
 				xml.LMSSetValue(entry.getKey(), value);
+				if ("cmi.comments_from_lms.0.comment".equals(entry.getKey())) {
+					ScoPageUtilManager.updateDocentCorrectie(pssc, value);
+				}
 				break;
 			case SESSION_TIME:
 				pssc.setSessionTime(value);
