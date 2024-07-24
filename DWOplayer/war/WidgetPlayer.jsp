@@ -16,6 +16,7 @@ body {
 
 <%
 String cdn = System.getProperty("CDNURL","https://cdn.dwo.nl");
+cdn = "http://localhost:8082";
 %>
     <script type="text/javascript" src="/dwo/apps/deploy.jsp" ></script>
     <link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/DWOplayer.css">

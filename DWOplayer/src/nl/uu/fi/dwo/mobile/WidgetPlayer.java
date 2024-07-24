@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.SimpleEventBus;
@@ -15,19 +16,27 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
+import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
+import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.Role;
 import nl.uu.fi.dwo.interaction.client.Stub;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
+import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.SymboolPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TextEditor;
@@ -59,9 +68,10 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
     	
     }
     
-    static class TekstVakWidget extends SimpleLayoutPanel implements  InteractionStub {
+    static class TekstVakWidget extends SimpleLayoutPanel implements  InteractionStub, AnchorContext, OpdrNavIF {
     	private TekstVakPanel delegate;
     	private ActivityInterface activity;
+    	private OpdrNavIF comRoot;
 
 		public TekstVakWidget(WidgetPlayer widgetPlayer) {
 			addStyleName("tekstvakwidget");
@@ -69,7 +79,8 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
 		}
 
 		public void setCommunicationRoot(OpdrNavIF comRoot) {
-			delegate.setCommunicationRoot(comRoot);
+			this.comRoot = comRoot;
+			delegate.setCommunicationRoot(this);
 		}
 
 		public HashMap<String, Object> getState() {
@@ -130,10 +141,96 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
 			launch.put("volledigeBreedte", true);
 			launch.put("popup", false);
 			launch.put("interactiePanelLaunchState", launchData);
-			delegate = new TekstVakPanel(activity, launch, randomVarNamen, randomVarWaarden, width);
+			delegate = new TekstVakPanel(activity, launch, randomVarNamen, randomVarWaarden, this, width);
 			delegate.zetOpdracht(new HashMap<>(launchData));
 			setWidget(delegate);
 			setPixelSize(delegate.getWidth(), delegate.getHeight());
+		}
+
+		@Override
+		public void gotoUrl(String href) {
+			GWT.log("goto url: " + href);
+			CBookEvent ev = new CBookEvent(this, "gotoPlace", href);
+			comRoot.fireEvent(ev);
+		}
+
+		@Override
+		public void gotoPlace(String token) {
+			GWT.log("goto place: " + token);			
+			CBookEvent ev = new CBookEvent(this, "gotoPlace", token);
+			comRoot.fireEvent(ev);
+		}
+
+		public void setChanged(boolean fout) {
+			comRoot.setChanged(fout);
+		}
+
+		public FormuleKeyboardIF getKeyboard() {
+			return comRoot.getKeyboard();
+		}
+
+		public FormuleClipboardIF getFormuleClipboard() {
+			return comRoot.getFormuleClipboard();
+		}
+
+		public int getMode() {
+			return comRoot.getMode();
+		}
+
+		public String getLearnerId() {
+			return comRoot.getLearnerId();
+		}
+
+		public String getLearnerName() {
+			return comRoot.getLearnerName();
+		}
+
+		public CssColor getBackground() {
+			return comRoot.getBackground();
+		}
+
+		public String getUUID() {
+			return comRoot.getUUID();
+		}
+
+		public LessonMode getLessonMode() {
+			return comRoot.getLessonMode();
+		}
+
+		public Role getRole() {
+			return comRoot.getRole();
+		}
+
+		public HandlerRegistration addCBookEventListener(String command, CBookEventListener listener) {
+			return comRoot.addCBookEventListener(command, listener);
+		}
+
+		public void fireEvent(CBookEvent event) {
+			comRoot.fireEvent(event);
+		}
+
+		public boolean hasListeners(String command) {
+			return false;
+		}
+
+		public void pause() {
+			comRoot.pause();
+		}
+
+		public void unpause() {
+			comRoot.unpause();
+		}
+
+		public ObjectMap getConfiguration() {
+			return comRoot.getConfiguration();
+		}
+
+		public ObjectMap getContext() {
+			return comRoot.getContext();
+		}
+
+		public void setVisited() {
+			comRoot.setVisited();
 		}
     	
     }
