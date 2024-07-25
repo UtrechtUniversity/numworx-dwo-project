@@ -13,6 +13,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+
 /**
  * @author Wim van Velthoven
  *
@@ -21,6 +23,7 @@ public class SecFilter implements Filter {
 
 	public static final String USER_ID = "fi.dwo.server.xss.SecFilter.userId";
 	public static final String SCHOOLGROUP_ID = "fi.dwo.server.xss.SecFilter.schoolGroupId";
+	public static final String HASROLE_ID = "fi.dwo.server.xss.SecFilter.hasRolePK";
 	
 	
 	/* (non-Javadoc)
@@ -49,6 +52,7 @@ public class SecFilter implements Filter {
 				Long sgid = Long.valueOf(split[2]);
 				request.setAttribute(USER_ID, userid);
 				request.setAttribute(SCHOOLGROUP_ID, sgid);
+				request.setAttribute(HASROLE_ID, new PersistentHasRolePK(userid, sgid));
 			}
 		} catch (Exception e) {
 		}

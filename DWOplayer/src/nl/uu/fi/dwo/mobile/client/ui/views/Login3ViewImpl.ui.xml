@@ -236,7 +236,6 @@
 		<g:HTML ui:field='logoPanel' styleName='{style.logotekst}' addStyleNames='profile-loginTitle'>
 			<p><ui:text from='{for_students}'/></p>
 		</g:HTML>
-		<g:Frame ui:field='messagePanel' styleName='{style.messages}' />
 		<g:FlowPanel styleName='{style.center}'>
 		<g:FlowPanel ui:field='loginPanel' styleName='{style.login}' addStyleNames='{style.loginError} profile-loginPanel'>
 			<g:TextBox ui:field='username' styleName='{style.username}' ></g:TextBox>

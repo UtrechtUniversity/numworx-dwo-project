@@ -21,6 +21,7 @@ import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.ImageManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
+import fi.dwo.server.PersistentDataManagers.core.ScoPageManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
@@ -161,6 +162,7 @@ public class MySQLScoContextActions {
     }
 
     private static void destroyStudentWork(PersistentScoContext pc) {
+    	ScoPageManager.destroyStudentWork(pc);
         // Destroy all studentSco's
         List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(pc);
         for (PersistentStudentScoContext item : list) {
