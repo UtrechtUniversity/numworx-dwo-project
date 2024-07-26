@@ -225,7 +225,6 @@
 			    <groupId>javax.cache</groupId>
 			    <artifactId>cache-api</artifactId>
 			    <version>1.1.1</version>
-			    <scope>test</scope>
 			</dependency>
 	   		<dependency>
 	   			<groupId>nl.numworx.schoolyear</groupId>
@@ -671,6 +670,42 @@
 	    		<version>2.2.7</version>
 			 </dependency>
 			</dependencies>
+		</profile>
+		<profile>
+			<id>memcached-jcache</id>
+			<dependencies>
+				<dependency>
+				    <groupId>org.memcached</groupId>
+    				<artifactId>memcached-jcache</artifactId>
+    				<version>1.0</version>
+		    		<scope>test</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>ri-jcache</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<dependencies>
+				<dependency>
+				    <groupId>org.jsr107.ri</groupId>
+				    <artifactId>cache-ri-impl</artifactId>
+				    <version>1.1.1</version>
+				    <scope>test</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>redis-jcache</id>
+			<dependencies>
+				<dependency>
+				    <groupId>org.redisson</groupId>
+				    <artifactId>redisson</artifactId>
+				    <version>3.20.0</version>
+				    <scope>test</scope>
+				</dependency>
+			</dependencies>		
 		</profile>
     </profiles> 
 </project>

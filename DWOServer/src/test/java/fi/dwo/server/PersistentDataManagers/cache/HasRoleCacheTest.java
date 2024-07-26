@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.jclient.lib.rest.cache;
+package fi.dwo.server.PersistentDataManagers.cache;
 
 import static org.junit.Assert.*;
 
@@ -6,29 +6,32 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
-public class PublicProfileCacheTest {
+public class HasRoleCacheTest {
 
+	private static final PersistentHasRolePK KEY = new PersistentHasRolePK(1L,2L);
 	@Before
 	public void setUp() throws Exception {
 		
-		DomDwoProfileFull value = new DomDwoProfileFull();
-		value.setId(new PersistenceId("LOCAL;"+PersistenceClassType.PersistentDwoProfile +";"+ 1L));
-		PublicProfileCache.cache().put("1", value);
+		PersistentHasRole value = new PersistentHasRole(KEY);
+		HasRoleCache.put(value);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		PublicProfileCache.cache().clear();
+		HasRoleCache.cache().clear();
 	}
 
 	@Test
 	public void testCache() throws Dwo2Exception {
-		DomDwoProfileFull result = PublicProfileCache.get(1);
+		PersistentHasRole result = HasRoleCache.get(KEY);
 		assertNotNull(result);
 	}
 
