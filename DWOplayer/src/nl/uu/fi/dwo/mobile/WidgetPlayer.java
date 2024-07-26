@@ -7,6 +7,8 @@ import java.util.Optional;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Label;
@@ -68,7 +70,7 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
     	
     }
     
-    static class TekstVakWidget extends SimpleLayoutPanel implements  InteractionStub, AnchorContext, OpdrNavIF {
+    static class TekstVakWidget extends SimpleLayoutPanel implements  InteractionStub, AnchorContext, OpdrNavIF, ResizeHandler {
     	private TekstVakPanel delegate;
     	private ActivityInterface activity;
     	private OpdrNavIF comRoot;
@@ -145,6 +147,8 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
 			delegate.zetOpdracht(new HashMap<>(launchData));
 			setWidget(delegate);
 			setPixelSize(delegate.getWidth(), delegate.getHeight());
+			if (DWOplayer.RESPONSIVE)
+				delegate.addResizeHandler(this);
 		}
 
 		@Override
@@ -231,6 +235,14 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
 
 		public void setVisited() {
 			comRoot.setVisited();
+		}
+
+		@Override
+		public void onResize(ResizeEvent event) {
+			if (delegate.getWidth() != Window.getClientWidth()) {
+				delegate.zetVolledigeBreedte(Window.getClientWidth());
+				setPixelSize(delegate.getWidth(), delegate.getHeight());
+			}			
 		}
     	
     }
