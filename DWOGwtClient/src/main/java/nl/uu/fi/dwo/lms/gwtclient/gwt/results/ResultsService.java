@@ -35,6 +35,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacherv2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
@@ -119,31 +120,39 @@ public class ResultsService implements SwitchViewEventHandler {
     	LOG.log(Level.SEVERE, "failure", q.getFailure());
     }
 
-    Promise<DomResultsPerTeacher> getResultsPerTeacher() {
+    Promise<DomResultsPerTeacherv2> getResultsPerTeacher() {
         DomContext context = getContext();
-        return dwoGlobalVars.getProfile().then(new Success<DomDwoProfile, DomResultsPerTeacher>() {
+        return dwoGlobalVars.getProfile().then(new Success<DomDwoProfile, DomResultsPerTeacherv2>() {
 
             @Override
-            public Promise<DomResultsPerTeacher> call(
+            public Promise<DomResultsPerTeacherv2> call(
                     Promise<DomDwoProfile> resolved) throws Exception {
-                return manager.getTeachersResults(context, resolved.getValue());
+                return manager.selectedTeachersResults(context, resolved.getValue(), new DomResultsPerTeacherv2());
             }
         }).then(this::courseSort).then(null, this::logfailure);
     }
 
     Promise<DomCoursesOfSchoolClass4Teacher> modulesSort(Promise<DomCoursesOfSchoolClass4Teacher> p ) {
-    	absoluteOrdening(p.getValue().getCourses(), p.getValue().getCourses());
+    	List<DomCourse> courses = p.getValue().getCourses().stream()
+    			.map(DomMapEntry::getValue).collect(Collectors.toList());
+    	absoluteOrdening(courses, courses);
+    	p.getValue().setCourses(courses.stream()
+    			.map(c -> new DomMapEntry<>(c.getId(), c))
+    			.collect(Collectors.toList()));
     	return p;
     }
     
     
-    Promise<DomResultsPerTeacher> courseSort(Promise<DomResultsPerTeacher> p) {
-    	List<DomMapEntry<PersistenceId, DomSchoolClass>> list = p.getValue().getSchoolClasses();
+    Promise<DomResultsPerTeacherv2> courseSort(Promise<DomResultsPerTeacherv2> p) {
+    	List<DomSchoolClass> list = p.getValue().getSchoolClasses();
     	if (!list.isEmpty()) {
-    		DomSchoolClass sample = list.get(0).getValue();
-    		return modules.getModules(sample, true).then(q -> {
+    		DomSchoolClass sample = list.get(0);
+    		return modules.getModules(sample, true)
+    				.then(q -> {
     			
-    			absoluteOrdening(q.getValue().getCourses(), p.getValue().getCourses());
+    			absoluteOrdening(q.getValue().getCourses()
+    					.stream().map(DomMapEntry::getValue)
+    					.collect(Collectors.toList()), p.getValue().getCourses());
     			return p;
     		});
     	}
@@ -174,24 +183,22 @@ public class ResultsService implements SwitchViewEventHandler {
     }
     
     // sort the array courses useing 'all' courses tree
-    private void absoluteOrdening(List<DomMapEntry<PersistenceId, DomCourse>> all,
-			List<DomMapEntry<PersistenceId, DomCourse>> courses) {
-		final Map<PersistenceId, DomCourse> tree = all.stream().collect(Collectors.toMap(DomMapEntry::getKey, DomMapEntry::getValue));
-		courses.forEach(item -> setPath(tree, item.getValue()));
-		Collections.sort(courses, (a,b) -> a.getValue().getTreeIndex().compareTo(b.getValue().getTreeIndex()));
+    private void absoluteOrdening(List<DomCourse> all,
+			List<DomCourse> courses) {
+		final Map<PersistenceId, DomCourse> tree = all.stream().collect(Collectors.toMap(DomCourse::getId, Function.identity()));
+		courses.forEach(item -> setPath(tree, item));
+		Collections.sort(courses, (a,b) -> a.getTreeIndex().compareTo(b.getTreeIndex()));
 		long seq = 1;
-		for(DomMapEntry<PersistenceId, DomCourse> item: courses) {
-			item.getValue().setSequenceNr(seq++);
+		for( DomCourse item: courses) {
+			item.setSequenceNr(seq++);
 		}
 	}
 
-	Promise<DomResultsPerTeacher> selectedResultsPerTeacher(DomSchoolClass schoolClass, Collection<DomCourse> courseList) {
+	Promise<DomResultsPerTeacherv2> selectedResultsPerTeacher(DomSchoolClass schoolClass, Collection<DomCourse> courseList) {
       DomContext context = getContext();
-      DomResultsPerTeacher dom = new DomResultsPerTeacher();
-      dom.setSchoolClasses(Collections.singletonList(new DomMapEntry<PersistenceId, DomSchoolClass>(schoolClass.getId(), schoolClass)));
-      dom.setCourses(courseList.stream()
-        .map( item -> new DomMapEntry<>(item.getId(), item))
-        .collect(Collectors.toList()));
+      DomResultsPerTeacherv2 dom = new DomResultsPerTeacherv2();
+      dom.setSchoolClasses(Collections.singletonList(schoolClass));
+      dom.setCourses(new ArrayList<>(courseList));
       return dwoGlobalVars.getProfile().flatMap((profile) -> manager.selectedTeachersResults(context, profile, dom)).then(this::courseSort);
     }
     

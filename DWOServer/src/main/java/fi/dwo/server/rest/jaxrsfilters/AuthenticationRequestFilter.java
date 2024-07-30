@@ -32,6 +32,7 @@ import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.DatatypeConverter;
+import fi.dwo.server.PersistentDataManagers.cache.HasRoleCache;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
@@ -155,6 +156,17 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
         	LOG.severe("Password is missing, " + authFields[0]);
         	return null;
         }
+ // cache code
+        Object roleid = getAttribute(SecFilter.HASROLE_ID);
+        PersistentHasRole hrcache = HasRoleCache.get(roleid);
+        if (hrcache != null) {
+        	DwoUserPrincipal du = fromCache(hrcache, authFields[0], authFields[1]);
+        	if (du != null) {
+        		DwoUserSecurityContext sc = new DwoUserSecurityContext(du, secCtx.isSecure(), SecurityContext.BASIC_AUTH, du.getRole());
+        		setUsername(sc);
+        		return sc;
+        	}
+        }
         PersistentUser u = UserManager.login(authFields[0], authFields[1]);
         if (u != null) {
         	SecurityContext sc;
@@ -179,7 +191,7 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
         		} else if (sg.getRole().getGroupID() == null) {
         			LOG.severe("GROUPID is null " + sg.getRole() + " " + sg.getGroupID());
         		}
-        		
+        		HasRoleCache.put(hr);
         		DwoUserPrincipal du = new DwoUserPrincipal(u, hr, sg);
         		sc = new DwoUserSecurityContext(du, secCtx.isSecure(), SecurityContext.BASIC_AUTH, du.getRole());
         	} else {
@@ -192,6 +204,13 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
         return null;
     }
 
+	private DwoUserPrincipal fromCache(PersistentHasRole hr, String username, String password) {
+		PersistentUser u = hr.getUser();
+		if (u.getUsername().equalsIgnoreCase(username) && u.getPassword().equals(password)) {
+			return new DwoUserPrincipal(hr);
+		}
+		return null;
+	}
 	/**
 	 * Save the username in a http request attribute <b>"username"</b>. In tomcat
 	 * this string can be logged by %{username}r in the logging valve.

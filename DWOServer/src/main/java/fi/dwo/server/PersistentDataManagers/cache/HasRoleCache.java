@@ -1,9 +1,13 @@
 package fi.dwo.server.PersistentDataManagers.cache;
 
+import java.security.Principal;
+
 import javax.cache.Cache;
+import javax.ws.rs.core.SecurityContext;
 
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.server.rest.jaxrsfilters.DwoUserPrincipal;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.cache.CacheUtilManager;
 
 public class HasRoleCache {
@@ -22,9 +26,9 @@ public class HasRoleCache {
 			cache.put(role.getPersistentHasRolePK(), role);
 	}
 	
-	public static PersistentHasRole get(PersistentHasRolePK id) {
-		if (cache == null) return null;
-		return cache.get(id);
+	public static PersistentHasRole get(Object roleid) {
+		if (cache == null || ! (roleid instanceof PersistentHasRolePK)) return null;
+		return cache.get((PersistentHasRolePK) roleid);
 	}
 	
 	public static void remove(PersistentHasRolePK id) {
@@ -34,5 +38,17 @@ public class HasRoleCache {
 
 	public static Cache<PersistentHasRolePK, PersistentHasRole> cache() {
 		return cache;
+	}
+
+	public static void remove(SecurityContext sc) {
+		Principal principal = sc.getUserPrincipal();
+		if (principal instanceof DwoUserPrincipal) {
+			DwoUserPrincipal user = (DwoUserPrincipal) principal;
+			remove (user.getHr());
+		}
+	}
+
+	private static void remove(PersistentHasRole hr) {
+		if (hr != null) remove(hr.getPersistentHasRolePK());
 	}
 }

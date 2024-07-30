@@ -9,10 +9,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacherv2;
 import nl.uu.fi.dwo.rest.entities.RestClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.entities.RestResultsPerTeacher;
+import nl.uu.fi.dwo.rest.entities.RestResultsPerTeacherv2;
 import nl.uu.fi.dwo.rest.util.PathId;
 
 import org.fusesource.restygwt.client.Defaults;
@@ -59,6 +62,12 @@ public class SecuredTeacherResultsManager {
         RestResultsPerTeacher rest = new RestResultsPerTeacher(context, profile, dom);
         return F(service::selectedTeachersResult,PathId.getId(context), rest);
     }
+ 
+    public Promise<DomResultsPerTeacherv2> selectedTeachersResults(DomContext context, DomDwoProfileId profile, DomResultsPerTeacherv2 dom) {
+        RestResultsPerTeacherv2 rest = new RestResultsPerTeacherv2(context, profile, dom);
+        return F(service::selectedTeachersResult,PathId.getId(context), rest);
+    }
+
     
     public Promise<Boolean> clearStudentResults(RestClearStudentDataForScoAndClass rest) {
         PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();

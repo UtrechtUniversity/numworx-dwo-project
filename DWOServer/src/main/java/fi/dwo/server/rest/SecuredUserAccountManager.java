@@ -40,6 +40,7 @@ import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
+import fi.dwo.server.PersistentDataManagers.cache.HasRoleCache;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
@@ -447,10 +448,11 @@ public class SecuredUserAccountManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Password_Invalid, "The password is not correctly formatted.");
         }
 //clear results
-        try {            
+        try {  
             UserDomainAuthorizer.UserState_U build = AnonDomainAuthorizer.build().submitUser(sc);
             DomContext context = user.getRestContext(); // in de test null
             build.setRealm(context == null ? null : context.getRealm());
+        	HasRoleCache.remove(sc);
             return build.UpdateAccount(user.getDomUserFull());
             //TODO clear all excess classcourses.
         } catch (Dwo2Exception e) {

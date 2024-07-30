@@ -32,6 +32,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacherv2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
@@ -107,12 +108,12 @@ public class ResultsPresenter extends AbstractResultsPresenter {
         course = null;
         schoolClass = null;
         resultService.clearCache();
-        Promise<DomResultsPerTeacher> promResults;
+        Promise<DomResultsPerTeacherv2> promResults;
         if (stage < 1) {
           promResults = resultService.getResultsPerTeacher();
         } else {
           promResults = personService.getTeachersSchoolClasses().map(list -> {
-            DomResultsPerTeacher result = new DomResultsPerTeacher();
+            DomResultsPerTeacherv2 result = new DomResultsPerTeacherv2();
             result.setClassCourses(Collections.EMPTY_LIST);
             result.setCourses(Collections.EMPTY_LIST);
             result.setFetchTimeStamp(System.currentTimeMillis());
@@ -120,9 +121,8 @@ public class ResultsPresenter extends AbstractResultsPresenter {
             result.setStudents(Collections.EMPTY_LIST);
             result.setStudentsOfClasses(Collections.EMPTY_LIST);
             result.setStudentScoContexts(Collections.EMPTY_LIST);
-            result.setTeacher(new DomTeacher(dwoGlobalVars.getCurrentUser()));
-             
-            result.setSchoolClasses(list.stream().map(item -> new DomMapEntry<PersistenceId, DomSchoolClass>(item.getId(),item)).collect(Collectors.toList()));
+            result.setTeacher(new DomTeacher(dwoGlobalVars.getCurrentUser()));           
+            result.setSchoolClasses(list);
             return result;
           });
         }
@@ -178,7 +178,7 @@ public class ResultsPresenter extends AbstractResultsPresenter {
               );
           }
           Promise<DomMappedResultsPerTeacher> r = resultService.selectedResultsPerTeacher(schoolclass, courseList).then( p -> {
-            DomResultsPerTeacher results = p.getValue();
+            DomResultsPerTeacherv2 results = p.getValue();
             inject(mappedResults.getValue(), results);
             return mappedResults;
           }, FAILURE).fallbackTo(mappedResults);
@@ -198,15 +198,15 @@ public class ResultsPresenter extends AbstractResultsPresenter {
                 new SwitchViewEvent(SwitchViewEvent.SelectedView.SELECTEDRESULTS, resultTree, resultState));
     }
 
-    private void inject(DomMappedResultsPerTeacher value, DomResultsPerTeacher results) {
-     results.getClassCourses().forEach(entry -> value.getClassCourses().putIfAbsent(entry.getKey(), entry.getValue()));
-     results.getCourses().forEach(entry -> value.getCourses().putIfAbsent(entry.getKey(), entry.getValue()));
+    private void inject(DomMappedResultsPerTeacher value, DomResultsPerTeacherv2 results) {
+     results.getClassCourses().forEach(entry -> value.getClassCourses().putIfAbsent(entry.getId(), entry));
+     results.getCourses().forEach(entry -> value.getCourses().putIfAbsent(entry.getId(), entry));
      value.setFetchTimeStamp(results.getFetchTimeStamp());
-     results.getSchoolClasses().forEach(entry -> value.getSchoolClasses().putIfAbsent(entry.getKey(), entry.getValue()));
-     results.getScoContexts().forEach(entry -> value.getScoContexts().putIfAbsent(entry.getKey(), entry.getValue()));
-     results.getStudents().forEach(entry -> value.getStudents().putIfAbsent(entry.getKey(), entry.getValue()));
-     results.getStudentScoContexts().forEach(entry -> value.getStudentScoContexts().putIfAbsent(entry.getKey(), entry.getValue()));
-     results.getStudentsOfClasses().forEach(entry -> value.getStudentsOfClasses().putIfAbsent(entry.getKey(), entry.getValue()));
+     results.getSchoolClasses().forEach(entry -> value.getSchoolClasses().putIfAbsent(entry.getId(), entry));
+     results.getScoContexts().forEach(entry -> value.getScoContexts().putIfAbsent(entry.getId(), entry));
+     results.getStudents().forEach(entry -> value.getStudents().putIfAbsent(entry.getId(), entry));
+     results.getStudentScoContexts().forEach(entry -> value.getStudentScoContexts().putIfAbsent(entry.getId(), entry));
+     results.getStudentsOfClasses().forEach(entry -> value.getStudentsOfClasses().putIfAbsent(entry.getId(), entry));
      value.setTeacher(results.getTeacher());
     }
 
