@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomClassCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacherv2;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
@@ -55,13 +56,13 @@ public class ModulesOfSchoolclassService {
         dwoGlobalVars = aDwoGlobalVars;
     }
 
-    public Promise<DomCoursesOfSchoolClass4Teacher> getModules(final DomSchoolClass sc, boolean remedial) {
+    public Promise<DomCoursesOfSchoolClass4Teacherv2> getModules(final DomSchoolClass sc, boolean remedial) {
         DomContext context = new DomContext();
         context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
-        return dwoGlobalVars.getProfile().then(new Success<DomDwoProfile, DomCoursesOfSchoolClass4Teacher>() {
+        return dwoGlobalVars.getProfile().then(new Success<DomDwoProfile, DomCoursesOfSchoolClass4Teacherv2>() {
 
             @Override
-            public Promise<DomCoursesOfSchoolClass4Teacher> call(
+            public Promise<DomCoursesOfSchoolClass4Teacherv2> call(
                     Promise<DomDwoProfile> resolved) throws Exception {
                 DomSchoolClassAndProfile sap = new DomSchoolClassAndProfile();
                 DomDwoProfile profile = new DomDwoProfile(resolved.getValue());
@@ -74,7 +75,7 @@ public class ModulesOfSchoolclassService {
 
                 sap.setDomDwoProfile(profile);
                 sap.setDomSchoolClass(sc);
-                return manager.getModules(context, sap);
+                return manager.getModulesv2(context, sap);
             }
         });
     }

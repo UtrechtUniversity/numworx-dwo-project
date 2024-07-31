@@ -28,6 +28,7 @@ import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacherv2;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
@@ -269,17 +270,17 @@ public class ResultsPresenter extends AbstractResultsPresenter {
     }
 
     private DomMappedResultsPerTeacher inject(List<Object> values) {
-      return inject((DomMappedResultsPerTeacher)values.get(0), (DomCoursesOfSchoolClass4Teacher) values.get(1));
+      return inject((DomMappedResultsPerTeacher)values.get(0), (DomCoursesOfSchoolClass4Teacherv2) values.get(1));
     }
-    private DomMappedResultsPerTeacher inject(DomMappedResultsPerTeacher value, DomCoursesOfSchoolClass4Teacher modules) {
+    private DomMappedResultsPerTeacher inject(DomMappedResultsPerTeacher value, DomCoursesOfSchoolClass4Teacherv2 modules) {
       modules.getCourses()
       .stream()
-      .filter(entry -> !Boolean.TRUE.equals(entry.getValue().getWithChildren()))
-      .forEach(entry -> value.getCourses().put(entry.getKey(), entry.getValue()));
+      .filter(entry -> !Boolean.TRUE.equals(entry.getWithChildren()))
+      .forEach(entry -> value.getCourses().put(entry.getId(), entry));
       modules.getClassCourses()
       .stream()
-      .filter( entry -> value.getCourses().keySet().contains(entry.getValue().getCourseId()))
-      .forEach(entry -> value.getClassCourses().put(entry.getKey(), entry.getValue()));
+      .filter( entry -> value.getCourses().keySet().contains(entry.getCourseId()))
+      .forEach(entry -> value.getClassCourses().put(entry.getId(), entry));
       return value;
     }
     

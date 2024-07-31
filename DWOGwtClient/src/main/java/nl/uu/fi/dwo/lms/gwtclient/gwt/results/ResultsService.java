@@ -31,6 +31,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacherv2;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
@@ -112,7 +113,7 @@ public class ResultsService implements SwitchViewEventHandler {
     	modules = service;
     }
     
-    Promise<DomCoursesOfSchoolClass4Teacher> getModules(DomSchoolClass dsc) {
+    Promise<DomCoursesOfSchoolClass4Teacherv2> getModules(DomSchoolClass dsc) {
     	return modules.getModules(dsc, true).then(this::modulesSort);
     }
     
@@ -132,13 +133,10 @@ public class ResultsService implements SwitchViewEventHandler {
         }).then(this::courseSort).then(null, this::logfailure);
     }
 
-    Promise<DomCoursesOfSchoolClass4Teacher> modulesSort(Promise<DomCoursesOfSchoolClass4Teacher> p ) {
-    	List<DomCourse> courses = p.getValue().getCourses().stream()
-    			.map(DomMapEntry::getValue).collect(Collectors.toList());
+    Promise<DomCoursesOfSchoolClass4Teacherv2> modulesSort(Promise<DomCoursesOfSchoolClass4Teacherv2> p ) {
+    	List<DomCourse> courses = p.getValue().getCourses();
     	absoluteOrdening(courses, courses);
-    	p.getValue().setCourses(courses.stream()
-    			.map(c -> new DomMapEntry<>(c.getId(), c))
-    			.collect(Collectors.toList()));
+    	p.getValue().setCourses(courses);
     	return p;
     }
     
@@ -150,9 +148,7 @@ public class ResultsService implements SwitchViewEventHandler {
     		return modules.getModules(sample, true)
     				.then(q -> {
     			
-    			absoluteOrdening(q.getValue().getCourses()
-    					.stream().map(DomMapEntry::getValue)
-    					.collect(Collectors.toList()), p.getValue().getCourses());
+    			absoluteOrdening(q.getValue().getCourses(), p.getValue().getCourses());
     			return p;
     		});
     	}

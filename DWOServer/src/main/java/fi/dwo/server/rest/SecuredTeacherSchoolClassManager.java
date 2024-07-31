@@ -105,6 +105,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacherv2;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
@@ -1367,7 +1368,165 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         return result;
 
     }
-    
+ ///------
+    /**
+     * Fetches all the course and classcourse information that a teacher should
+     * see from within a school.
+     *
+     * @param sc
+     * @param rest
+     * @return
+     * @throws Dwo2Exception
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getModulesv2")
+    public DomCoursesOfSchoolClass4Teacherv2 getModulesv2(@Context SecurityContext sc, RestSchoolClassAndProfile rest) throws Dwo2Exception {
+        UserState_U ustate = AnonDomainAuthorizer.build().submitUser(sc);
+        UserState_HR_R_S_SG_U hrstate = ustate.setHasRole(rest.getRestContext().getDomHasRole());
+        TeacherState_HR_R_S_SG_U tstate = hrstate.buildSchoolAdminTeacher().setTeacher();
+        DomDwoProfile domDwoProfile = rest.getDomSchoolClassAndProfile().getDomDwoProfile();
+        String pr = domDwoProfile.getDwoProfileRights();
+        boolean remedial = pr != null && pr.contains("R");
+		TeacherState_HR_P_R_S_SC_SG_U psstate = tstate.addProfile(domDwoProfile).addSchoolClass(rest.getDomSchoolClassAndProfile().getDomSchoolClass());
+      //init
+        PersistentHasRole phr = hrstate.getHasRole();
+        PersistentSchool school = hrstate.getSchool();
+        PersistentSchoolClass schoolClass = psstate.getSchoolClass();
+        final PersistentDwoProfile profile = psstate.getDwoProfile();
+
+        //verify if user is in class
+        PersistentTeacherOfClassPK key = new PersistentTeacherOfClassPK();
+        key.setClassID(schoolClass.getClassID());
+        key.setSchoolGroupID(phr.getPersistentHasRolePK().getSchoolGroupID());
+        key.setUserID(phr.getPersistentHasRolePK().getUserID());
+        PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(key);
+        if (toc == null) {
+            String msg = MessageFormat.format("Username {0} is not a teacher of schoolclass {1}.", new Object[]{sc.getUserPrincipal().getName(), schoolClass.getClass1()});
+            LOG.log(Level.WARNING, msg);
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, msg);
+        }
+        //verify if schoolClass is in school
+        if (schoolClass == null || !schoolClass.getSchoolID().equals(school.getSchoolID())) {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Active schoolClass {2} from a different school that registered for hasRole in school {1} with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID(), schoolClass.getClassID()});
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
+        }
+// end verification		
+        DomCoursesOfSchoolClass4Teacherv2 result = new DomCoursesOfSchoolClass4Teacherv2();
+
+        Long profileID = profile.getDwoProfileID();
+
+        //fetch all courses in the school and profile
+        Collection<PersistentCourse> listCourse = CourseManager.findEntities(profileID, school.getSchoolID()); // XXX children of trashed folders in list
+        Map<Long, PersistentCourse> courseMap = new TreeMap<>();
+        listCourse.forEach(item -> courseMap.put(item.getCourseID(), item));
+        listCourse = new LinkedList<>(listCourse); // implementatie met snelle Iterator.remove voor accesscontrol en trash
+// Filter by schoolAccess       
+        if (school.accessControl()) {
+          List<PersistentACL> acls = ACLManager.findBySchool(school, profile);
+          List<PersistentSchoolClass> classes = SchoolClassUtilManager.getSchoolClassesOfTeacher(phr);
+          Set<String> rights = classes.stream().map(c -> c.buildPersistenceId().getIdString()).collect(Collectors.toSet());
+          rights.add(ustate.getUser().buildPersistenceId().getIdString());
+          rights.add(school.buildPersistenceId().getIdString());
+          Map<Long, List<PersistentACL>> aclmap = new TreeMap<>();
+          acls.forEach(acl -> {
+            List<PersistentACL> l = aclmap.get(acl.getCourseID());
+            if (l == null) { l = new ArrayList<>(); aclmap.put(acl.getCourseID(), l); }
+            l.add(acl);
+          });
+          //listCourse = courseMap.values();
+          Iterator<PersistentCourse> iterator = listCourse.iterator();
+          while (iterator.hasNext()) {
+            PersistentCourse pc = iterator.next();
+            if (pc.getSchoolID() == null) {
+                if (!remedial && !PublicCourseManager.visible(pc))
+                {
+                  iterator.remove();
+                  courseMap.remove(pc.getCourseID(), pc);
+                }           	
+            	continue;
+            }
+            final PersistentCourse pc0 = pc;
+            List<PersistentACL> a = aclmap.get(pc.getCourseID());
+            boolean parent = false;
+            while ( (a == null || a.isEmpty()) && pc != null) {
+              parent = true;
+              pc = courseMap.get(pc.getParentID());
+              if (pc != null) a = aclmap.get(pc.getCourseID());
+              else a = null;
+            }
+            if (a ==null) {
+              if (! school.teachersCanWrite()) {
+            	  
+            	  iterator.remove();
+                  courseMap.remove(pc0.getCourseID(), pc0);
+              }
+            } else {
+              ACL acl = a.stream()
+                  .filter(item -> rights.contains(item.getEntity()))
+                  .map(PersistentACL::getAccess)
+                  .sorted( (ACL aa, ACL bb) -> - aa.compareTo(bb))
+                  .findFirst()
+                  .orElse(ACL.NONE);
+              if ( acl == ACL.NONE|| (parent && acl == ACL.ACCESS))
+              {  iterator.remove();
+                 courseMap.remove(pc0.getCourseID(), pc0);
+              }
+            }
+          }
+          
+        } else if (school.getAboType() != AboType.premium || !remedial) { // Altijd aan
+          Iterator<PersistentCourse> iterator = listCourse.iterator();
+          while (iterator.hasNext()) {
+            PersistentCourse pc = iterator.next();
+            if (!PublicCourseManager.visible(pc))
+            {
+              iterator.remove();
+              courseMap.remove(pc.getCourseID(), pc);
+            }
+          }
+        }
+ // filter children/offspring of trash
+        boolean trashed;
+        do {
+        	trashed = false;
+        	Iterator<PersistentCourse> iterator = listCourse.iterator();
+        	while(iterator.hasNext()) {
+        		PersistentCourse pc = iterator.next();
+        		long parent = pc.getParentID();
+        		if (parent != 0 && !courseMap.containsKey(Long.valueOf(parent))) {
+        			iterator.remove();
+        			courseMap.remove(pc.getCourseID(), pc);
+        			trashed = true;
+        		}
+        	}
+        } while (trashed);
+        result.setCourses(listCourse.stream().map(PersistentCourse::buildDomCourse)
+                .collect(Collectors.toList()));
+
+        List<PersistentClassCourse> listClassCourse = ClassCourseManager.findEntities(schoolClass, profileID);
+
+        List<DomClassCourse4Teacher> classCourseMap = new ArrayList<>();
+ 
+        listClassCourse.forEach(
+                (scc) -> {
+                    Long courseID = scc.getCourseID();
+                    PersistentCourse course = courseMap.get(courseID);
+                    if (course == null) {
+                        LOG.log(Level.INFO, "course null for courseid = " + courseID + " sccid = " + scc.getClassCourseID());
+                    } else {
+                        DomClassCourse4Teacher dcc = scc.buildDomClassCourse4Teacher();
+                        classCourseMap.add(dcc);
+                    }
+                });
+
+        result.setSchoolClass(schoolClass.buildDomSchoolClass());
+        result.setClassCourses(classCourseMap);
+        result.setFetchTimeStamp(Long.valueOf(System.currentTimeMillis()));
+        return result;
+
+    }
+
  
     /**
      * Attaches a leaf course that a class in a school can see.

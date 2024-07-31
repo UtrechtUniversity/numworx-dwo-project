@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacherv2;
 import nl.uu.fi.dwo.rest.dom.entities.DomMoveStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
@@ -296,6 +297,16 @@ public class SecuredTeacherSchoolClassManager {
         F(service::updateSingleSchoolStudent,PathId.getId(restData.getRestContext()),restData, (callBack));
     }
 
+    public Promise<DomCoursesOfSchoolClass4Teacherv2> getModulesv2(DomContext context, DomSchoolClassAndProfile submit) {
+        RestSchoolClassAndProfile restData = new RestSchoolClassAndProfile();
+        restData.setRestContext(context);
+        restData.setDomSchoolClassAndProfile(submit);
+        PromiseCallback<DomCoursesOfSchoolClass4Teacherv2> defer = new PromiseCallback<DomCoursesOfSchoolClass4Teacherv2>();
+        F(service::getModulesv2,PathId.getId(restData.getRestContext()),restData, defer);
+        return defer.getPromise();
+    }
+
+    
     public Promise<DomCoursesOfSchoolClass4Teacher> getModules(DomContext context, DomSchoolClassAndProfile submit) {
         RestSchoolClassAndProfile restData = new RestSchoolClassAndProfile();
         restData.setRestContext(context);

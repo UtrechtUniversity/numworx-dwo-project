@@ -225,9 +225,14 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
     			scos.stream()
     			.map(PersistentScoContext::buildDomScoContext)
     			.collect(Collectors.toList()));
-// students +_ scos = studentscos
+// scopages
+    	dom.setStudentScoPages(scos.stream().
+    			flatMap(sco -> ScoPageManager.find(sco).stream())
+    			.map(page -> buildDomScoPage(page))
+    			.collect(Collectors.toList())
+    	);
     	
-    	
+// students + scos = studentscos  	
     	Collection<PersistentStudentScoContext> sscs = 
     			studentOfClassList.stream()
     			.flatMap(
@@ -243,14 +248,16 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
     			sscs.stream()
     			.map(PersistentStudentScoContext::buildDomStudentScoContext)
     			.collect(Collectors.toList()));
-    			
-    	dom.setStudentScoPages(
-    			sscs.stream()
-    			.flatMap(item -> ScoPageManager.find(item).stream())
-    			.map(this::buildDomScoPage)
-    			.collect(Collectors.toList())
-    			);		
-    	
+// studentpages    			
+    	List<DomStudentScoPage> studentpages = dom.getStudentScoPages();
+    	if (!studentpages.isEmpty()) {
+    		studentpages.addAll(
+		    	sscs.stream()
+				.flatMap(item -> ScoPageManager.find(item).stream())
+				.map(this::buildDomScoPage)
+				.collect(Collectors.toList()));
+			dom.setStudentScoPages(studentpages);	
+    	}
     	
     	return dom;
     }
@@ -832,10 +839,15 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
 		s.setCorrectie(page.getCorrectie());
 		s.setDocentCorrectie(page.getCheckDocent());
 		s.setMaxScore(page.getMaxScore());
-		s.setSchoolGroupID(PersistentSchoolGroup.buildPersistenceId(page.getId().getScoID()));
+		s.setScoID(PersistentSchoolGroup.buildPersistenceId(page.getId().getScoID()));
 		s.setScore(page.getScore());
 		s.setSequencenr(page.getId().getSequencenr());
-		s.setUserID(PersistentUser.buildPersistenceId(page.getId().getHasRolePK().getUserID()));
-		return null;
+		PersistentHasRolePK pk = page.getId().getHasRolePK();
+		if (pk != null)
+		{
+			s.setUserID(PersistentUser.buildPersistenceId(pk.getUserID()));
+			s.setSchoolGroupID(PersistentSchoolGroup.buildPersistenceId(pk.getSchoolGroupID()));
+		}
+		return s;
 	}
 }

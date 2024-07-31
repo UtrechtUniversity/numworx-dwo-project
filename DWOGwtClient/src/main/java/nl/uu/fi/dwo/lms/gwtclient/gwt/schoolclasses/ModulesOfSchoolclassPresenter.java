@@ -29,6 +29,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomClassCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacherv2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -147,7 +148,7 @@ public class ModulesOfSchoolclassPresenter {
     
     
     private Promise<DomCoursesOfSchoolclassTree> reloadTree() {
-        Promise<DomCoursesOfSchoolClass4Teacher> promise = service.getModules(schoolClass, false);
+        Promise<DomCoursesOfSchoolClass4Teacherv2> promise = service.getModules(schoolClass, false);
         return promise.map(
         		value -> 
         		{	

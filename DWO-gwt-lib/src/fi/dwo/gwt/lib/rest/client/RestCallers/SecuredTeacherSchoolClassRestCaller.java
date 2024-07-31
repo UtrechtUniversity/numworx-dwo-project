@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import java.util.List;
 //import javax.ws.rs.GET;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacherv2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
@@ -146,6 +147,10 @@ public interface SecuredTeacherSchoolClassRestCaller extends RestService {
     @PUT
     @Path("/sec:{id}/teacher/schoolclass/getModules")
     public void getModules(@PathParam("id") String id, RestSchoolClassAndProfile submit, MethodCallback<DomCoursesOfSchoolClass4Teacher> callback);
+
+    @PUT
+    @Path("/sec:{id}/teacher/schoolclass/getModulesv2")
+    public void getModulesv2(@PathParam("id") String id, RestSchoolClassAndProfile submit, MethodCallback<DomCoursesOfSchoolClass4Teacherv2> callback);
 
     @PUT
     @Path("/sec:{id}/teacher/schoolclass/addCourseToClass")
