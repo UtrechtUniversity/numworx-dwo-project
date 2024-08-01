@@ -144,11 +144,24 @@ public class ModulesOfSchoolclassPresenter {
         updateViewData();
     }
 
-    private GwtClientMessages rb = GWT.create(GwtClientMessages.class);
+    //private GwtClientMessages rb = GWT.create(GwtClientMessages.class);
+    
+    private DomCoursesOfSchoolClass4Teacherv2 toKiosk(DomCoursesOfSchoolClass4Teacherv2 in) {
+    	java.util.List<DomClassCourse4Teacher> list = in.getClassCourses();
+    	for(DomClassCourse4Teacher item: list) {
+    		if (item.getCourseType() == CourseType.assesment) {
+    			item.setCourseType(CourseType.normal);
+    		}
+    	}
+    	return in;
+    }
     
     
     private Promise<DomCoursesOfSchoolclassTree> reloadTree() {
         Promise<DomCoursesOfSchoolClass4Teacherv2> promise = service.getModules(schoolClass, false);
+        if (hasKiosk()) {
+        	promise = promise.map(this::toKiosk);
+        }
         return promise.map(
         		value -> 
         		{	
