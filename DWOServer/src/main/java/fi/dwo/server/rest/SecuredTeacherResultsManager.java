@@ -228,7 +228,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
 // scopages
     	dom.setStudentScoPages(scos.stream().
     			flatMap(sco -> ScoPageManager.find(sco).stream())
-    			.map(page -> buildDomScoPage(page))
+    			.map(page -> buildDomScoPage(page, null))
     			.collect(Collectors.toList())
     	);
     	
@@ -252,13 +252,16 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
     	List<DomStudentScoPage> studentpages = dom.getStudentScoPages();
     	if (!studentpages.isEmpty()) {
     		studentpages.addAll(
-		    	sscs.stream()
-				.flatMap(item -> ScoPageManager.find(item).stream())
-				.map(this::buildDomScoPage)
+		    	sscs
+		    	.stream()
+				.flatMap(item -> 
+					ScoPageManager.find(item)
+						.stream()
+						.map(i -> buildDomScoPage(i, item))								   )
 				.collect(Collectors.toList()));
 			dom.setStudentScoPages(studentpages);	
     	}
-    	
+ // dom.setStudentScoPages(Collections.emptyList()); // even uit zetten  	
     	return dom;
     }
     
@@ -834,12 +837,12 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
 
 
 
-	private DomStudentScoPage buildDomScoPage(PersistentScoPage page) {
+	private DomStudentScoPage buildDomScoPage(PersistentScoPage page, PersistentStudentScoContext ssc) {
 		DomStudentScoPage s = new DomStudentScoPage();
 		s.setCorrectie(page.getCorrectie());
 		s.setDocentCorrectie(page.getCheckDocent());
 		s.setMaxScore(page.getMaxScore());
-		s.setScoID(PersistentSchoolGroup.buildPersistenceId(page.getId().getScoID()));
+		s.setScoID(PersistentScoContext.buildPersistenceId(page.getId().getScoID()));
 		s.setScore(page.getScore());
 		s.setSequencenr(page.getId().getSequencenr());
 		PersistentHasRolePK pk = page.getId().getHasRolePK();
@@ -847,6 +850,9 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
 		{
 			s.setUserID(PersistentUser.buildPersistenceId(pk.getUserID()));
 			s.setSchoolGroupID(PersistentSchoolGroup.buildPersistenceId(pk.getSchoolGroupID()));
+			s.setId(ssc.buildPersistenceId());
+		} else {
+			s.setId(s.getScoID());
 		}
 		return s;
 	}

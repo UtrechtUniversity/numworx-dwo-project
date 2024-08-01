@@ -57,6 +57,7 @@ public class ResultTreeCalculatorTest {
 		aTeacher.setFamilyName("user");
 		aTeacher.setGivenName("01");
 		mapped = new DomMappedResultsPerTeacher(aTeacher);
+		mapped.setStudentScoPages(Collections.emptyMap());
 		DomCourse dc01 = new DomCourse();
 		dc01.setId(new PersistenceId(course01));
 		dc01.setName("course 01");

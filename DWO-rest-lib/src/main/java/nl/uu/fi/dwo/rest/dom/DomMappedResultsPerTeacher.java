@@ -1,11 +1,17 @@
 package nl.uu.fi.dwo.rest.dom;
 
 import nl.uu.fi.dwo.rest.dom.entities.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -30,6 +36,7 @@ public class DomMappedResultsPerTeacher {
     private Map<PersistenceId, DomCourse> courses;
     private Map<PersistenceId, DomScoContext> scoContexts;
     private Map<PersistenceId, DomStudentScoContext> studentScoContexts;
+    private Map<PersistenceId, List<DomStudentScoPage>> studentScoPages;
 
     DomMappedResultsPerTeacher(DomTeacher aTeacher) {
         teacher = aTeacher;
@@ -103,18 +110,13 @@ public class DomMappedResultsPerTeacher {
         }else{
             studentScoContexts = new HashMap<PersistenceId, DomStudentScoContext>();
         }
+        studentScoPages = Collections.emptyMap();
     }
 
     public DomMappedResultsPerTeacher(DomResultsPerTeacherv2 results) {
         if (results == null) {
             return;
         }
-        LOG.log(Level.FINE,"DomResultsPerTeacher.getStudents "+results.getStudents().size());
-        LOG.log(Level.FINE,"DomResultsPerTeacher.getClassCourses "+results.getClassCourses().size());
-        LOG.log(Level.FINE,"DomResultsPerTeacher.getCourses "+results.getCourses().size());
-        LOG.log(Level.FINE,"DomResultsPerTeacher.getSchoolClasses "+results.getSchoolClasses().size());
-        LOG.log(Level.FINE,"DomResultsPerTeacher.getStudentScoContexts "+results.getStudentScoContexts().size());
-        LOG.log(Level.FINE,"DomResultsPerTeacher.getStudentsOfClasses "+results.getStudentsOfClasses().size());
         teacher = results.getTeacher();
         fetchTimeStamp = results.getFetchTimeStamp();
         //fill and ensure no null values;
@@ -173,6 +175,33 @@ public class DomMappedResultsPerTeacher {
         }else{
             studentScoContexts = new HashMap<PersistenceId, DomStudentScoContext>();
         }
+        
+    	studentScoPages = new HashMap<>();
+        if (results.getStudentScoPages() != null) {
+        for(DomStudentScoPage ssp : results.getStudentScoPages()) {
+        	PersistenceId pid; 
+        	pid = ssp.getId(); // voor de server!!!!
+        	if (pid == null) {
+        		pid = buildPersistentScoPageId(ssp.getScoID(), ssp.getUserID());
+        		ssp.setId(pid);
+        	}
+        	List<DomStudentScoPage> value = studentScoPages.computeIfAbsent(pid, k -> new ArrayList<>());
+ // sorted insert.
+        	value.add(ssp);
+        	Collections.sort(value, (a, b) -> a.getSequencenr().compareTo(b.getSequencenr()));
+        }
+        } 
+	}
+
+	public PersistenceId buildPersistentScoPageId(PersistenceId scoID, PersistenceId userID) {
+		if (userID == null) return scoID;
+
+		for ( DomStudentScoContext ssc: studentScoContexts.values() )
+			if (ssc.getScoID().equals(scoID) && ssc.getUserID().equals(userID)) return ssc.getId();
+// should not happen
+		String sid = scoID.getIdString().split(";", 3)[2];
+		String uid = userID.getIdString().split(";", 3)[2];
+		return new PersistenceId("LOCAL;" + PersistenceClassType.PersistentScoPage + ";" + sid + ";" + uid);
 	}
 
 	/**
@@ -330,5 +359,13 @@ public class DomMappedResultsPerTeacher {
     public void setStudentsOfClasses(Map<PersistenceId, DomStudentOfClass> studentsOfClasses) {
         this.studentsOfClasses = studentsOfClasses;
     }
+
+	public Map<PersistenceId, List<DomStudentScoPage>> getStudentScoPages() {
+		return studentScoPages;
+	}
+
+	public void setStudentScoPages(Map<PersistenceId, List<DomStudentScoPage>> studentScoPages) {
+		this.studentScoPages = studentScoPages;
+	}
 
 }

@@ -2,7 +2,7 @@ package nl.uu.fi.dwo.rest.dom.entities;
 
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
-public class DomStudentScoPage {
+public class DomStudentScoPage extends DomId {
 	private PersistenceId scoID, userID, schoolGroupID;
 	private Long sequencenr; // start at 0
 	

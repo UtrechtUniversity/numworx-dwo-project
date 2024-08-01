@@ -208,6 +208,8 @@ public class ResultsPresenter extends AbstractResultsPresenter {
      results.getStudents().forEach(entry -> value.getStudents().putIfAbsent(entry.getId(), entry));
      results.getStudentScoContexts().forEach(entry -> value.getStudentScoContexts().putIfAbsent(entry.getId(), entry));
      results.getStudentsOfClasses().forEach(entry -> value.getStudentsOfClasses().putIfAbsent(entry.getId(), entry));
+     DomMappedResultsPerTeacher r = new DomMappedResultsPerTeacher(results);
+     r.getStudentScoPages().entrySet().forEach(entry -> value.getStudentScoPages().putIfAbsent(entry.getKey(), entry.getValue()));
      value.setTeacher(results.getTeacher());
     }
 

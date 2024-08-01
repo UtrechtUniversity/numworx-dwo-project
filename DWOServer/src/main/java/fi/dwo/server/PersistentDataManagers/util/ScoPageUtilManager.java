@@ -80,6 +80,9 @@ public class ScoPageUtilManager {
 		json = json.getJsonObject("onsState");
 		JsonArray scores = json.getJsonArray("orScores");
 		if (scores != null) scores = scores.getJsonArray(0); // activiteit 0;
+		JsonArray bezocht = json.getJsonArray("bezocht");
+		if (bezocht != null) bezocht = bezocht.getJsonArray(0); // idem
+		
 		for (PersistentScoPage src: data) {
 			Long i = src.getId().getSequencenr();
 			PersistentScoPage dst = map.get(i);
@@ -102,8 +105,16 @@ public class ScoPageUtilManager {
 			int index = i.intValue();
 			if (scores != null && scores.size()> index) {
 				JsonValue num = scores.get(index);
-				if (num != null && num.getValueType() == ValueType.NUMBER) score = ((JsonNumber) num).intValue();
+				if (num != null && num.getValueType() == ValueType.NUMBER) score = ((JsonNumber) num).intValue();		
 			}
+			if (score == null) {
+				//if (bezocht[index] ) score = 0;
+				if (bezocht != null && index < bezocht.size()) {
+					JsonValue b = bezocht.get(index);
+					if (b == JsonValue.TRUE) score = 0;
+				}
+			}
+
 			// bepaal score uit json
 			dst.setScore(score);
 			// bepaal others uit json
