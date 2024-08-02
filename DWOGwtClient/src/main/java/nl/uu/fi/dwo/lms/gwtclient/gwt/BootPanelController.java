@@ -205,15 +205,15 @@ public class BootPanelController {
 		return Document.get().getElementsByTagName("head").getItem(0);
 	}
 
-    Promise<DomDwoProfileFull> insertcss(Promise<DomDwoProfileFull> p) {
-    	String css = p.getValue().getDwoProfileName();
-    	if (profile == 111 || profile == 112 || p.getValue().getDwoProfileRights().contains("c")) // het 'inf' profiel en het 'numworx' profiel
-    	{
-    		css = URL.encodePathSegment(css);
-    		insertStylesheet( getBase() + "css/" + css + ".css");    	
-    	}
-    	return p;
-    }
+//    Promise<DomDwoProfileFull> insertcss(Promise<DomDwoProfileFull> p) {
+//    	String css = p.getValue().getDwoProfileName();
+//    	if (profile == 111 || profile == 112 || p.getValue().getDwoProfileRights().contains("c")) // het 'inf' profiel en het 'numworx' profiel
+//    	{
+//    		css = URL.encodePathSegment(css);
+//    		insertStylesheet( getBase() + "css/" + css + ".css");    	
+//    	}
+//    	return p;
+//    }
     
     final static GwtClientModulesOnly moduleResources = GWT.create(GwtClientModulesOnly.class);
     
@@ -458,7 +458,7 @@ public class BootPanelController {
         Promise<DomDwoProfileFull> promise = new PublicProfileManager().get(profile)
         .filter(v -> v != null);
         dwoGlobalVars.setProfile(promise);
-        promise.then(this::insertcss);
+        //promise.then(this::insertcss);
         promise.then(this::hasChat);
         //show main panel
         this.rootPanel = rootPanel;
