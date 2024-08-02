@@ -24,6 +24,16 @@
 		    <version>2.3.3</version>
 		    <scope>provided</scope>
 		</dependency>
+        <dependency>
+			<groupId>nl.uu.fi.dwo.rest</groupId>
+			<artifactId>DWO-jclient-lib</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.xml.bind</groupId>
+					<artifactId>jaxb-api</artifactId>
+				</exclusion>
+			</exclusions>
+        </dependency>
 	</dependencies>
 	<build>
 		<finalName>dwo#apps</finalName>

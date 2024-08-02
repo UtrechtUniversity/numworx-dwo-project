@@ -505,7 +505,7 @@ public class TekstBuffer
 			}
 		case 67:
 			//if (true) return new nl.numworx.leerdoelwidgetgwt.client.LeerdoelWidgetGWT(currentVakGegevens, randomVarWaarden, volleBreedtes[huidigeKolom]);
-			StubView ldw = new StubView(activity, "LeerdoelWidgetGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			StubView ldw = new StubView(activity, "LeerdoelWidgetGWT.jsp", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			ldw.setAContext(getAnchorContext());
 			return x(map, ldw);
 			//return x(map, new nl.numworx.leerdoelwidgetgwt.client.LeerdoelWidgetGWT(currentVakGegevens, randomVarWaarden, volleBreedtes[huidigeKolom]));
