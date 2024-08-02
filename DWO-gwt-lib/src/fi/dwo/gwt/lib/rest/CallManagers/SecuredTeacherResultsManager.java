@@ -88,4 +88,9 @@ public class SecuredTeacherResultsManager {
     public Promise<DomResultsPerTeacher> createStudentResults(RestClearStudentDataForScoAndClass rest) {
     	return F(service::createStudentResults,PathId.getId(rest.getRestContext()), rest);
     }
+
+    public Promise<DomResultsPerTeacherv2> createStudentResultsv2(RestClearStudentDataForScoAndClass rest) {
+    	return F(service::createStudentResultsv2,PathId.getId(rest.getRestContext()), rest);
+    }
+
 }

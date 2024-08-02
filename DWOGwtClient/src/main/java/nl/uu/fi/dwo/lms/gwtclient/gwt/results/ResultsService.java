@@ -220,7 +220,7 @@ public class ResultsService implements SwitchViewEventHandler {
         return Promises.all(list);
     }
 
-    public Promise<DomResultsPerTeacher> createStudentResults(DomScoContext sco, DomSchoolClass schoolclass, List<DomStudent> students) {
+    public Promise<DomResultsPerTeacherv2> createStudentResults(DomScoContext sco, DomSchoolClass schoolclass, List<DomStudent> students) {
         RestClearStudentDataForScoAndClass rest = new RestClearStudentDataForScoAndClass();
         rest.setRestContext(getContext());
         rest.setClearStudentDataForScoAndClass(new DomClearStudentDataForScoAndClass());
@@ -229,7 +229,7 @@ public class ResultsService implements SwitchViewEventHandler {
         rest.getClearStudentDataForScoAndClass().setDomScoContext(sco);
         return dwoGlobalVars.getProfile().then(p -> {
             rest.getClearStudentDataForScoAndClass().setDomProfile(p.getValue());
-            return manager.createStudentResults(rest);
+            return manager.createStudentResultsv2(rest);
         });
     }
 

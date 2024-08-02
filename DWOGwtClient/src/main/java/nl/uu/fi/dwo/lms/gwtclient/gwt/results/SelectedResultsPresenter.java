@@ -166,7 +166,7 @@ public class SelectedResultsPresenter implements ResultEventHandler {
             DomScoContext sco = new DomScoContext();
             sco.setId(scoid);
             promises.add(resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), students)
-                    .map(dom -> dom.getStudentScoContexts().stream().map(DomMapEntry::getValue).collect(Collectors.toList()))
+                    .map(dom -> dom.getStudentScoContexts())
                     .flatMap(resultService::sealList)
                     .then(this::updateResultTree));
         }
@@ -187,7 +187,7 @@ public class SelectedResultsPresenter implements ResultEventHandler {
         DomScoContext sco = new DomScoContext();
         sco.setId(scoid);
         resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), students)
-                .map(dom -> dom.getStudentScoContexts().stream().map(DomMapEntry::getValue).collect(Collectors.toList()))
+                .map(dom -> dom.getStudentScoContexts())
                 .flatMap(resultService::sealList)
                 .then(p -> { 
                 	resultTree.updateResultStudentSco(p.getValue());
@@ -297,7 +297,7 @@ public class SelectedResultsPresenter implements ResultEventHandler {
         DomScoContext sco = new DomScoContext();
         sco.setId(new PersistenceId(scoid));
         Promise<DomStudentScoContext> p1 = resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), Collections.singletonList(student))
-                .map(p -> p.getStudentScoContexts().get(0).getValue());
+                .map(p -> p.getStudentScoContexts().get(0));
         Promise<JSONValue> p2 = resultService.getJSONLaunchDataBytes(sco, domschoolclass.getSchoolClass());
         Promise<Map<String, String>> p3 = p1.then(p -> resultService.getValues(p.getValue()));
 

@@ -223,7 +223,7 @@ public void setView(Display aView) {
       PersistenceId scoid = ssc.getStudentSco().getScoID();
       DomScoContext sco = new DomScoContext(); sco.setId(scoid);
       Promise<DomStudentScoContext> p1 = resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), Collections.singletonList(student))
-      .map(p -> p.getStudentScoContexts().get(0).getValue());     
+      .map(p -> p.getStudentScoContexts().get(0));     
       Promise<JSONValue> p2 = resultService.getJSONLaunchDataBytes(sco, domschoolclass.getSchoolClass());     
       Promise<Map<String,String>> p3 = p1.then(  p-> resultService.getValues(p.getValue()));
       String location = userState.get("cmi.location");
