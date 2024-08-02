@@ -160,6 +160,8 @@ public class DomResultTree {
                 if(scoList != null)
                 for (DomScoContext sco : scoList) {
                     DomResultScoContext resultSco = new DomResultScoContext(sco);
+                    List<DomStudentScoPage> template = resultData.getStudentScoPages().get(sco.getId());
+                    resultSco.setTemplate(template);
                     resultCourse.getChildren().put(sco.getId(), resultSco);//add sco to parent
                     resultSco.setParent(resultCourse);//set parent in sco
                     //find studentsco's to sco if present in the same school class
@@ -182,7 +184,6 @@ public class DomResultTree {
 								value.setScoType(resultSco.getScoContext().getScoType());
                                 resultSco.getChildren().put(ss.getId(), value);
 // check for studentscopages:                                
-                                List<DomStudentScoPage> template = resultData.getStudentScoPages().get(sco.getId());
                                 if (template != null) {
                                 	value.setChildren(new HashMap<>());
                                 	initResultScoPages(value, template);
@@ -203,7 +204,7 @@ public class DomResultTree {
         assignNodeIds(studentTree);
     }
 
-	private void initResultScoPages(DomResultStudentScoContext value, List<DomStudentScoPage> pages) {
+	public static void initResultScoPages(DomResultStudentScoContext value, List<DomStudentScoPage> pages) {
 		for(DomStudentScoPage page: pages) {
 			String label = String.valueOf(page.getSequencenr().intValue() + 1);
 			DomResultStudentScoPage resultPage = new DomResultStudentScoPage(label);

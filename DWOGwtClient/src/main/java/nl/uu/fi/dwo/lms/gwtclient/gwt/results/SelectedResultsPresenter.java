@@ -367,6 +367,10 @@ public class SelectedResultsPresenter implements ResultEventHandler {
 							studentscocontext.setScoID(scoid);
 							/// ....
 							DomResultStudentScoContext value = new DomResultStudentScoContext(studentscocontext, student);
+// als bij mappedResultsForTeacher					
+							if (sco.getTemplate() != null) {
+								DomResultTree.initResultScoPages(value, sco.getTemplate());
+							}
 							sco.getChildren().put(student.getId(), value);
 						}
 					}
