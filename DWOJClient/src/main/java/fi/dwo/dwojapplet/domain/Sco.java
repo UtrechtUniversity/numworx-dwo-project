@@ -3,6 +3,8 @@
 package fi.dwo.dwojapplet.domain;
 
 import fi.beans.dwomaccess.JSONEncoder;
+import fi.beans.mainframe.AppletContext;
+import fi.beans.mainframe.AppletStub;
 import fi.beans.mainframe.JApplet;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.scorm.PartialScoreIF;
@@ -26,9 +28,6 @@ import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
-import java.applet.Applet;
-import java.applet.AppletContext;
-import java.applet.AppletStub;
 import java.awt.Component;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;

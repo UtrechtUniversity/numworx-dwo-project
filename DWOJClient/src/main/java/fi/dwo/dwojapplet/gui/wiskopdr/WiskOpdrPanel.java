@@ -1,7 +1,5 @@
 package fi.dwo.dwojapplet.gui.wiskopdr;
 
-import java.applet.AppletContext;
-import java.applet.AppletStub;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -20,6 +18,8 @@ import javax.swing.JPanel;
 import com.owlike.genson.GenericType;
 import com.owlike.genson.Genson;
 
+import fi.beans.mainframe.AppletContext;
+import fi.beans.mainframe.AppletStub;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.GuiCreator;
@@ -35,15 +35,17 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler, AppletSt
 	JComponent component;
 	String text;
 	LinkIF link;
+	final AppletStub delegate;
 
-	public WiskOpdrPanel(String s, Locale locale) {
+	public WiskOpdrPanel(String s, Locale locale, AppletStub stub) {
 		super(new BorderLayout());
+		this.delegate = stub;
 		this.text = s;
 		
 		try {
 			Class<?> wiskopdr = WiskOpdrCache.getInstance();
 			try {
-              Method m = wiskopdr.getMethod("getWiskOpdrPanel", String.class, Locale.class, AppletStub.class);
+              Method m = wiskopdr.getMethod("getWiskOpdrPanel", String.class, Locale.class, java.applet.AppletStub.class);
               component = (JComponent) m.invoke(null, s, locale, this);
             } catch (Exception e) {
                 Method m = wiskopdr.getMethod("getWiskOpdrPanel", String.class, Locale.class);
@@ -59,6 +61,10 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler, AppletSt
 		}
 		setSize(getPreferredSize());
 		
+	}
+
+	public WiskOpdrPanel(String s, Locale locale) {
+		this(s, locale, null);
 	}
 
 	public void setJSObjectOwner(LinkIF link) {
@@ -114,19 +120,19 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler, AppletSt
 
   @Override
   public boolean isActive() {
-    // TODO Auto-generated method stub
+	if (delegate != null) return delegate.isActive();
     return false;
   }
 
   @Override
   public URL getDocumentBase() {
-    // TODO Auto-generated method stub
+	if (delegate != null) return delegate.getDocumentBase();
     return null;
   }
 
   @Override
   public URL getCodeBase() {
-    // TODO Auto-generated method stub
+	if (delegate != null) return delegate.getCodeBase();
     return null;
   }
 
@@ -148,18 +154,20 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler, AppletSt
     if ("dwo_env".equals(name)) {
       return GuiCreator.instance().getDWO().getParameter(name);
     }
+    if (delegate != null)
+    	return delegate.getParameter(name);
     return null;
   }
 
   @Override
   public AppletContext getAppletContext() {
-    // TODO Auto-generated method stub
+	if (delegate != null) return delegate.getAppletContext();
     return null;
   }
 
   @Override
   public void appletResize(int width, int height) {
-    // TODO Auto-generated method stub
-    
+	  if (delegate != null) 
+		  delegate.appletResize(width, height);
   }
 }
