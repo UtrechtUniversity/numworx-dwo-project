@@ -215,12 +215,16 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
           });
           // filter students from students of class list
           Iterator<DomStudentOfClass> iterator = dom.getStudentsOfClasses().iterator();
+          Iterator<PersistentStudentOfClass> i2 = studentOfClassList.iterator();
           while (iterator.hasNext()) {
-			DomStudentOfClass domStudentOfClass = iterator.next();
-			DomStudent s = new DomStudent();
-			s.setId(domStudentOfClass.getStudentId());
-			Long pid = MySQLPersistenceId.getNativeId(s);
-			if (!studentMap.containsKey(pid)) iterator.remove();
+			iterator.next();
+			PersistentStudentOfClass soc = i2.next();
+			Long pid = soc.getPersistentStudentOfClassPK().getUserID();
+			if (!studentMap.containsKey(pid)) {
+// same order!!!
+				iterator.remove();
+				i2.remove();			
+			}
           }
         }
         dom.setStudents(studentMap.values()
