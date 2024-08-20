@@ -47,6 +47,7 @@ import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacherv2;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
@@ -374,7 +375,20 @@ public void setView(Display aView) {
     	if (score != null) ssc.getStudentSco().setScore(Double.parseDouble(score));
     	ResultEvent ev = new ResultEvent(ssc, userState);
     	eventBus.fireEvent(ev);
-    	resultService.setValues(ssc.getStudentSco(), userState).map(this::updateResultTree).then(null,FAILURE).onResolve(
+LOG.severe("log studentscopages : " + ssc.getChildren().size());
+    	resultService.setValues(ssc.getStudentSco(), userState)
+// haal beide op, alleen als ssc.getchildren 
+    	.then( x -> {
+    		Promise<DomResultsPerTeacherv2> p = resultService.selectedResultsPerStudentSco(parent.getSchoolClass(), student, ssc.getStudentSco());
+    		x = p.map(q -> q.getStudentScoContexts().get(0));   		
+ // eigenlijk return x + list of studentscopages.
+    		return x;
+    	})
+    	
+    	
+    	
+    	
+    	.map(this::updateResultTree).then(null,FAILURE).onResolve(
     			() -> {
     			    finished = true;
     			    fireSelectedResultReturn();

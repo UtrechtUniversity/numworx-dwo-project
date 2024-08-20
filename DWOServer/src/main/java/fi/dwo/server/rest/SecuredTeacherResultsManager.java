@@ -51,9 +51,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 import java.util.logging.Level;
@@ -211,16 +213,39 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             } catch (Dwo2Exception e) {
             }
           });
+          // filter students from students of class list
+          Iterator<DomStudentOfClass> iterator = dom.getStudentsOfClasses().iterator();
+          while (iterator.hasNext()) {
+			DomStudentOfClass domStudentOfClass = iterator.next();
+			DomStudent s = new DomStudent();
+			s.setId(domStudentOfClass.getStudentId());
+			Long pid = MySQLPersistenceId.getNativeId(s);
+			if (!studentMap.containsKey(pid)) iterator.remove();
+          }
         }
         dom.setStudents(studentMap.values()
                 .stream().map((PersistentUser item) -> item.buildDomStudent(ustate.getRealm()))
                 .collect(Collectors.toList()));
- //courses  	
-    	Collection<PersistentScoContext> scos;
-    	scos = courses.stream().flatMap(
+ //scos  	
+        Collection<PersistentScoContext> scos;
+        if (dom.getScoContexts() == null) {
+        	scos = courses.stream().flatMap(
     			item -> ScoContextManager.findEntities(item).stream()
     			)
     			.collect(Collectors.toList());
+        } else {
+        	scos = dom.getScoContexts().stream().map(item -> {
+        		try {
+					Long id = MySQLPersistenceId.getNativeId(item);
+					return ScoContextManager.findEntity(id);
+				} catch (Exception e) {
+					LOG.log(Level.WARNING, "getScoContext", e);
+					return null;
+				}
+        	})
+        		.filter(Objects::nonNull)
+        		.collect(Collectors.toList());
+        }
     	dom.setScoContexts( 
     			scos.stream()
     			.map(PersistentScoContext::buildDomScoContext)

@@ -198,6 +198,21 @@ public class ResultsService implements SwitchViewEventHandler {
       return dwoGlobalVars.getProfile().flatMap((profile) -> manager.selectedTeachersResults(context, profile, dom)).then(this::courseSort);
     }
     
+	Promise<DomResultsPerTeacherv2> selectedResultsPerStudentSco(DomSchoolClass schoolClass, DomStudent student, DomStudentScoContext ssc) {
+	      DomContext context = getContext();
+	      DomResultsPerTeacherv2 dom = new DomResultsPerTeacherv2();
+	      dom.setSchoolClasses(Collections.singletonList(schoolClass));
+	      dom.setClassCourses(Collections.emptyList());
+	      dom.setCourses(Collections.emptyList());
+// Hier gaat het om...
+	      DomScoContext sco = new DomScoContext();
+	      sco.setId(ssc.getScoID());
+	      dom.setScoContexts(Collections.singletonList(sco)); // 
+	      dom.setStudents(Collections.singletonList(student));
+	      dom.setStudentScoContexts(Collections.singletonList(ssc));
+	      return dwoGlobalVars.getProfile().flatMap((profile) -> manager.selectedTeachersResults(context, profile, dom));
+	}
+	
     
     private DomContext getContext() {
         DomContext context = new DomContext();
