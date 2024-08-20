@@ -8,6 +8,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -16,6 +17,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
 import nl.uu.fi.dwo.rest.entities.RestSchool;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
@@ -131,6 +133,15 @@ public class SystemManager {
 		rest.setDomScoContext(id);
 		rest.setDomDwoProfile(null);
 		DomSchoolId result = manager.put("rest/system/scoContext/getSchool", DomSchoolId.class, rest);
+		return result;
+	}
+	public DomSchoolId getSchool(DomCourse id) throws Dwo2Exception {
+		RestCourse rest = new RestCourse();
+		rest.setRestContext(getContext());
+		rest.setDomCourse(id);
+		rest.setDomDwoProfile(null);
+		rest.setSchoolClassID(null);
+		DomSchoolId result = manager.put("rest/system/course/getSchool", DomSchoolId.class, rest);
 		return result;
 	}
 }

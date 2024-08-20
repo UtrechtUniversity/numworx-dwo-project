@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import nl.numworx.uploadwidget.server.Store;
 import nl.numworx.uploadwidget.shared.AtomEntry;
@@ -29,6 +30,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SystemManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -138,19 +140,31 @@ public class JavaUpload extends HttpServlet implements Constants {
 		String registration = paths[2];
 		String uuid = paths[1].replace('-', '/');
 		if ("instance".equals(registration)) {
-			DomScoContextId context = new DomScoContextId();
-			PersistenceId id = PersistentScoContext.buildPersistenceId(Long.valueOf(uuid.split("/")[0]));
-			context.setId(id);
-			try {
-				if (null == new SystemManager(StoredRestManager.getInstance()).getSchool(context))
-					school = null;
-			} catch (Dwo2Exception e) {
-				log("doPut getSchool", e);
+			SystemManager manager = new SystemManager(StoredRestManager.getInstance());
+			String[] split = uuid.split("/");
+			if ("course".equals(split[0])) {
+				DomCourse course = new DomCourse(PersistentCourse.buildPersistenceId(Long.valueOf(split[1])));
+				try {
+					if (null == manager.getSchool(course))
+						school = null;
+				} catch (Dwo2Exception e) {
+					log("doPut getSchool", e);
+				}
+			} else {
+				DomScoContextId context = new DomScoContextId();
+				PersistenceId id = PersistentScoContext.buildPersistenceId(Long.valueOf(split[0]));
+				context.setId(id);
+				try {
+					if (null == manager.getSchool(context))
+						school = null;
+				} catch (Dwo2Exception e) {
+					log("doPut getSchool", e);
+				}
 			}
 		}
 		
 		String pid = school == null ? "standard" : school.getId().toString();
-		return pid + "/" + uuid + "/" + paths[2] + "/";
+		return pid + "/" + uuid + "/" + registration + "/";
 	}
 
 	static Optional<DomSchoolRoleAndClassV2> getActor(String bearer, String pathid) {

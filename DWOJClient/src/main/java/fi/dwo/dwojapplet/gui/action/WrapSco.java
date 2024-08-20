@@ -12,9 +12,9 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.beans.loader.Loader;
+import fi.beans.mainframe.AppletContext;
 import fi.beans.mainframe.JApplet;
 
-import java.applet.AppletContext;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.StringWriter;
