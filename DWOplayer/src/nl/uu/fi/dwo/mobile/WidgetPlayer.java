@@ -85,8 +85,8 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
 			this.comRoot = comRoot;
 			delegate.setCommunicationRoot(this);
 			//delegate.setHoofdPanel(false);
-			delegate.zetInstellingen(comRoot.getConfiguration());
-			delegate.setKeyboard(comRoot.getKeyboard());
+			//delegate.zetInstellingen(comRoot.getConfiguration()); // FIXME is nog null op dit moment. 
+			//delegate.setKeyboard(comRoot.getKeyboard()); // zal ook wel!
 			delegate.zetOpdracht(initMap);
 			setWidget(delegate);
 			setPixelSize(delegate.getWidth(), delegate.getHeight());
