@@ -74,6 +74,7 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
     	private TekstVakPanel delegate;
     	private ActivityInterface activity;
     	private OpdrNavIF comRoot;
+		private HashMap<String, Object> initMap;
 
 		public TekstVakWidget(WidgetPlayer widgetPlayer) {
 			addStyleName("tekstvakwidget");
@@ -83,6 +84,14 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
 		public void setCommunicationRoot(OpdrNavIF comRoot) {
 			this.comRoot = comRoot;
 			delegate.setCommunicationRoot(this);
+			//delegate.setHoofdPanel(false);
+			delegate.zetInstellingen(comRoot.getConfiguration());
+			delegate.setKeyboard(comRoot.getKeyboard());
+			delegate.zetOpdracht(initMap);
+			setWidget(delegate);
+			setPixelSize(delegate.getWidth(), delegate.getHeight());
+			if (DWOplayer.RESPONSIVE)
+				delegate.addResizeHandler(this);
 		}
 
 		public HashMap<String, Object> getState() {
@@ -144,11 +153,7 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
 			launch.put("popup", false);
 			launch.put("interactiePanelLaunchState", launchData);
 			delegate = new TekstVakPanel(activity, launch, randomVarNamen, randomVarWaarden, this, width);
-			delegate.zetOpdracht(new HashMap<>(launchData));
-			setWidget(delegate);
-			setPixelSize(delegate.getWidth(), delegate.getHeight());
-			if (DWOplayer.RESPONSIVE)
-				delegate.addResizeHandler(this);
+			initMap = new HashMap<>(launchData);
 		}
 
 		@Override
