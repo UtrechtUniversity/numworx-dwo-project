@@ -940,6 +940,8 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
 		result.setStudentScoPages(collect);
    // scostudentpages
       result.setFetchTimeStamp(System.currentTimeMillis());
+   // students
+      result.setStudents(students);
       return result;
     }
 

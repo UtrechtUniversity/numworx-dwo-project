@@ -13,10 +13,12 @@ import fi.dwo.gwt.lib.rest.util.DomMethodCodec;
 import fi.dwo.gwt.lib.rest.util.DomStudentModelStructureCodec;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
@@ -51,6 +53,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacherv2;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoPage;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.dom.xapi.Account;
@@ -186,9 +189,9 @@ protected void initTail(DomResultStudentScoContext ssc, JavaScriptObject context
 	index = schoolclassid.lastIndexOf(";");
 	schoolclassid = schoolclassid.substring(index+1);
 	return "2-" + studentid + "-" + schoolclassid;
-}
+  }
 
-public void setView(Display aView) {
+  public void setView(Display aView) {
     view = aView;
   }
 
@@ -196,6 +199,15 @@ public void setView(Display aView) {
     resultTree.updateResultStudentSco(Collections.singleton(ssc));
     view.setResultTree(resultTree);
     return ssc;
+  }
+  
+  DomStudentScoContext updateResultTree(DomResultStudentScoContext rssc) {
+	DomStudentScoContext ssc = rssc.getStudentSco();
+	resultTree.updateResultStudentSco(Collections.singleton(ssc));
+	if (!rssc.getChildren().isEmpty())
+		resultTree.updateResultStudentScoPages(ssc.getId(), rssc.getChildren());
+	view.setResultTree(resultTree);
+	return ssc;
   }
   
   boolean closed, finished;
@@ -223,24 +235,24 @@ public void setView(Display aView) {
       student = domschoolclass.getChildren().get(key).getStudent();
       PersistenceId scoid = ssc.getStudentSco().getScoID();
       DomScoContext sco = new DomScoContext(); sco.setId(scoid);
-      Promise<DomStudentScoContext> p1 = resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), Collections.singletonList(student))
-      .map(p -> p.getStudentScoContexts().get(0));     
+      Promise<DomResultStudentScoContext> p1 = resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), Collections.singletonList(student))
+      .map(this::mapToResultStudentScoContext);     
       Promise<JSONValue> p2 = resultService.getJSONLaunchDataBytes(sco, domschoolclass.getSchoolClass());     
-      Promise<Map<String,String>> p3 = p1.then(  p-> resultService.getValues(p.getValue()));
+      Promise<Map<String,String>> p3 = p1.then(  p-> resultService.getValues(p.getValue().getStudentSco()));
       String location = userState.get("cmi.location");
       Promises.all(p1,p2,p3).then(new Success<Object, Object>() {
 
           @Override
           public Promise<Object> call(Promise<Object> resolved) throws Exception {
-              DomResultStudentScoContext ssc = new DomResultStudentScoContext(p1.getValue(), student);
+              DomResultStudentScoContext ssc = p1.getValue();
               ssc.setParent(parent);
               String launch_data = p2.getValue().toString();
               Map<String, String> userState = p3.getValue();
               if(location != null) userState.put("cmi.location", location);
               userState.put("cmi.launch_data", launch_data);
-              userState.put(ResultsService.COMPLETION_STATUS, p1.getValue().getCompletionStatus());
-              userState.put("cmi.score.raw", Double.toString(p1.getValue().getScore()));
-              updateResultTree(p1.getValue());
+              userState.put(ResultsService.COMPLETION_STATUS, ssc.getStudentSco().getCompletionStatus());
+              userState.put("cmi.score.raw", Double.toString(ssc.getStudentSco().getScore()));
+              updateResultTree(ssc);
               eventBus.fireEvent(new SwitchViewEvent(SelectedView.RESULTSSTUDENT, resultTree, ssc, context, userState));
               return null;
           }
@@ -379,16 +391,14 @@ LOG.severe("log studentscopages : " + ssc.getChildren().size());
     	resultService.setValues(ssc.getStudentSco(), userState)
 // haal beide op, alleen als ssc.getchildren 
     	.then( x -> {
+//    		if (ssc.getChildren().isEmpty()) { // ALWAYS EMPTY! Geen shortcut nog mogelijk.
+//    			return x.map(q -> new DomResultStudentScoContext(q, student));
+//    		}
     		Promise<DomResultsPerTeacherv2> p = resultService.selectedResultsPerStudentSco(parent.getSchoolClass(), student, ssc.getStudentSco());
-    		x = p.map(q -> q.getStudentScoContexts().get(0));   		
  // eigenlijk return x + list of studentscopages.
-    		return x;
+    		return p.map(this::mapToResultStudentScoContext);
     	})
-    	
-    	
-    	
-    	
-    	.map(this::updateResultTree).then(null,FAILURE).onResolve(
+       	.map(this::updateResultTree).then(null,FAILURE).onResolve(
     			() -> {
     			    finished = true;
     			    fireSelectedResultReturn();
@@ -399,6 +409,14 @@ LOG.severe("log studentscopages : " + ssc.getChildren().size());
     	
     }
     return "true";
+  }
+
+  private DomResultStudentScoContext mapToResultStudentScoContext(DomResultsPerTeacherv2 q) {
+	LOG.severe("log studenscopages2 : " + q.getStudentScoPages().size());
+	DomResultStudentScoContext result = new DomResultStudentScoContext(q.getStudentScoContexts().get(0), student);
+	List<DomStudentScoPage> list = q.getStudentScoPages(); // ordered list: templates first, userdata last.
+	DomResultTree.initResultScoPages(result, list);
+	return result;
   }
 
   private void fireSelectedResultReturn() {

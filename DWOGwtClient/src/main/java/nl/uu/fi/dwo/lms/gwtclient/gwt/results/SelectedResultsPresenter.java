@@ -48,7 +48,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortEvent.EventType;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;

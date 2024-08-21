@@ -326,10 +326,14 @@ public class DomResultTree {
         findAndUpdateResultStudentSco(resultTree, map);
         insertStudentCourses();
         //resultTree.calculateSumOfSubtreeScore();
-        SumOfSubTreeVisitor v = new SumOfSubTreeVisitor();
+        visitSumOfSubtree();
+    }
+
+	private void visitSumOfSubtree() {
+		SumOfSubTreeVisitor v = new SumOfSubTreeVisitor();
 		resultTree.visit(v);
 		studentTree.visit(v);
-    }
+	}
     
    
 
@@ -382,7 +386,8 @@ public class DomResultTree {
     
     public void updateResultStudentScoPages(PersistenceId sscid, Map<PersistenceId, DomResultStudentScoPage> children) {
       findAndUpdateRestultStudentScoPages(resultTree, sscid, children);
-  }
+      visitSumOfSubtree();
+    }
 
     private void findAndUpdateRestultStudentScoPages(
         DomResultScore<?>item,
