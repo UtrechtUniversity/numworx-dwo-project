@@ -10,6 +10,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.SimpleEventBus;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ResizeLayoutPanel;
@@ -25,6 +26,7 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Role;
@@ -85,7 +87,9 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
 			this.comRoot = comRoot;
 			delegate.setCommunicationRoot(this);
 			//delegate.setHoofdPanel(false);
-			//delegate.zetInstellingen(comRoot.getConfiguration()); // FIXME is nog null op dit moment. 
+			ObjectMap configuration = comRoot.getConfiguration();
+			if (configuration == null) configuration = JSONUtilities.wrapMap(new JSONObject());
+			delegate.zetInstellingen(configuration); // never null. 
 			//delegate.setKeyboard(comRoot.getKeyboard()); // zal ook wel!
 			delegate.zetOpdracht(initMap);
 			setWidget(delegate);
