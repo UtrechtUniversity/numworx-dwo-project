@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 public interface ViewModuleView extends IsWidget
 {
 	interface Presenter extends GotoController {
+		void gotoPage(String location);
 	}
 	
 	void removeBtns();

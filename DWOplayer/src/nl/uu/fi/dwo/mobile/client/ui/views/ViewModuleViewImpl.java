@@ -2348,6 +2348,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	
 	private boolean readonly;
 	protected Promise<DomStudentModelContextId> studentModel;
+	private Presenter presenter;
 
 	/**
 	 * @return the readonly
@@ -2551,6 +2552,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 
 	@Override
 	public void setPresenter(Presenter p) {
+		this.presenter = p;
 	}
 
 	@Override
@@ -2663,6 +2665,13 @@ public boolean bolletjesZichtbaar() {
 public void setLocation(String location) {
 	if (on == null) this.location = location;
 	else on.setLocation(location);
+}
+
+public void setCurrentOpdracht(int opdracht) {
+	if (presenter != null) {
+		presenter.gotoPage(String.valueOf(opdracht));
+	}
+	
 }
 
 }

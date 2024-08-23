@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -105,7 +106,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	private Timer tm;
 	private boolean started;
 	private String location, hash;
-	
+	private ViewModulePlace where;
 	
 	@Override
 	public String mayStop() {
@@ -123,6 +124,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	{
 		injector.injectMembers(this);
 		this.sco = sco;
+		this.where = where;
 		this.location = where.getLocation();
 		this.hash = where.getHash();
 	}
@@ -309,6 +311,12 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 			public void onSuccess(Void result) {
 				if(location != null) {
 					view.setLocation(location);
+				} else {
+					location = view.getApi().GetValue(Memento.LOCATION);
+					if (location == null) location = "0";
+					where.setLocation(location);
+					sco.setPlace(where);
+					History.replaceItem(mapper.getToken(where), false);	
 				}
 					started = !Memento.COMPLETED.equals(view.getApi().GetValue(Memento.COMPLETION_STATUS));
 					view.setupModule(sco.getName(), PARAMETERS.getLaunchData() + sco.getID())
@@ -567,5 +575,19 @@ public void onNeedLogin(NeedLoginEvent ev) {
 	registration.removeHandler();
 	oops.onNeedLogin(ev);
 }
+
+	boolean magterug = false; // nog bepalen wanneer je deze op false moet zetten. false is de veilige waarde!
+	// FIXME Er zijn activiteiten zonder "TERUG NAAR VORIGE PAGINA";
+
+	@Override
+	public void gotoPage(String location) {
+		if (Objects.equals(location, where.getLocation())) 
+			return; // same same, do nothing.
+		where.setLocation(location);
+		if (magterug)
+			History.newItem(mapper.getToken(where), false);
+		else 
+			History.replaceItem(mapper.getToken(where), false);
+	}
 	
 }

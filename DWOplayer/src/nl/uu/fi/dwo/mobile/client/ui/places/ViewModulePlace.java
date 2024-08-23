@@ -84,4 +84,10 @@ public class ViewModulePlace extends Place
 		}
 
 	}
+
+	public void setLocation(String location) {
+		int dot = token.lastIndexOf('.');
+		if (dot >= 0) token = token.substring(0, dot);
+		if (location != null) token = token + "." + location;		
+	}
 }

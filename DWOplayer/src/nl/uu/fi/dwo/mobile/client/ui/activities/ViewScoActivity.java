@@ -323,4 +323,10 @@ public class ViewScoActivity extends AbstractActivity implements Presenter, Anch
 		goTo(place);
 	}
 
+	@Override
+	public void gotoPage(String location) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

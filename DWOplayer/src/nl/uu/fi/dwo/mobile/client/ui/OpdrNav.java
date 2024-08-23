@@ -1819,6 +1819,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		// zorg dat de opdrachten-scrollbar bijgewerkt wordt bij het navigeren naar een opdracht
 		// opdat de opdracht in beeld is
 		setOpdrachten(currentActiviteit);
+		entry.setCurrentOpdracht(opdracht); 
 	}
 
 	protected void reviewFix(RandomValues rv) {
@@ -1910,6 +1911,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 		if (entry.activity.parameters().isNavTitle())
 			entry.setTitle("Vraag " + (getCurrentOpdracht() + 1) + " van " + getAantalOpdrachten());
+
 	}
 
 	public int[] getMaxScores()
@@ -2432,6 +2434,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			resetBezocht();
 			
 			setOpdrachten(currentOpdracht); // shift naar 0
+			entry.setCurrentOpdracht(currentOpdracht);
 		} // alles opnieuw
 		else
 		{
