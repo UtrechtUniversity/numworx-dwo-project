@@ -1,11 +1,12 @@
 package fi.dwo.server.PersistentDataManagers.util;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
@@ -16,6 +17,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
+import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
@@ -144,5 +146,22 @@ where cc.classid = 2  and withchildren = 0 group by cc.classcourseid, cc.coursei
 		}
 		return map;
 	}
-
+	private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+	private static final Long NUL = Long.valueOf(0L);
+	public static Boolean asyncCleanupSchoolclass(Boolean work, PersistentSchoolClass cls) {
+		if (work) {
+			Runnable run = () -> {
+				HashMap<Long, Long> map = countStudentScoForClassCourse(cls.getClassID(), ViewState.students);
+				for (Map.Entry<Long, Long> entry : map.entrySet()) {
+					if (NUL.equals(entry.getValue())) {
+						ClassCourseManager.destroy(entry.getKey());
+					}
+				}
+			};
+			executor.execute(run);
+		}
+		
+		return work;
+		
+	}
 }

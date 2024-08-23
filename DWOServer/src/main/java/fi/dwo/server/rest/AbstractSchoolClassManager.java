@@ -25,7 +25,11 @@ abstract class AbstractSchoolClassManager {
 	protected Boolean removeStudentFromSchoolClass(SecurityContext sc, PersistentSchool school,
 			PersistentUser student, PersistentHasRole shr, PersistentSchoolClass schoolClass) {
 				if (student != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
-					return SchoolClassUtilManager.removeStudentFromSchoolClass(shr, schoolClass);					
+					return 
+							SchoolClassUtilManager.asyncCleanupSchoolclass(
+									SchoolClassUtilManager.removeStudentFromSchoolClass(shr, schoolClass), 
+									schoolClass)
+							;					
 			    } else {
 			        LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to remove a student from a schoolclass id {1} one or both do not exists or are not in the school.", new Object[]{sc.getUserPrincipal().getName(), schoolClass.getClassID()});
 			        throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to remove the school class.");
