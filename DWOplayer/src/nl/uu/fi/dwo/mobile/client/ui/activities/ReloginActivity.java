@@ -110,7 +110,7 @@ public class ReloginActivity extends AbstractActivity {
 			ulc.setDomLoginContext(lc.getValue());
 			ulc.setDomUserFull(u);
 			return ulc;
-		});
+		}).then(rpc.setContext());
 	}
 
 	private String getUsername() {

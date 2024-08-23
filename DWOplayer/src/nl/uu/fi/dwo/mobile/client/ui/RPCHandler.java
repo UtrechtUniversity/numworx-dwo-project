@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Success;
 
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.google.gwt.json.client.JSONValue;
@@ -60,7 +61,7 @@ public interface RPCHandler {
 	
 	Promise<DomSchoolsRolesAndClassesV2> getSchoolLogins();
 
-	Promise<DomUserFullwLoginContext> samlLogin(String user_id, String org_id);
+	//Promise<DomUserFullwLoginContext> samlLogin(String user_id, String org_id);
 	Promise<DomUserFullwLoginContext> getUserFromAuthToken(String authToken);
 	Promise<DomUserFullwLoginContext> login(String username, String password);
 	Promise<DomUserFullwLoginContext> loginMD5(String username, String password);
@@ -93,6 +94,8 @@ public interface RPCHandler {
 	boolean inExam(DomClassCourse classCourse);
 	
 	Promise<String> getClassCourseURL(Object id, String base);
+
+	Success<DomUserFullwLoginContext, DomUserFullwLoginContext> setContext();
 
 	
 }

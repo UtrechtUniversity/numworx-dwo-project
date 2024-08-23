@@ -36,7 +36,7 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 	protected DomContext context = new DomContext();
 	protected static final String DWO_SAML_AUTH_TOKEN = "dwoSAMLAuthToken";
 
-  private Success<? super DomUserFullwLoginContext, ? extends DomUserFullwLoginContext> setContext = p -> { 
+  private final Success<DomUserFullwLoginContext,  DomUserFullwLoginContext> setContext = p -> { 
     DomHasRole r = new DomHasRole();
         context.setDomHasRole(r);
     r.setId(p.getValue().getDomLoginContext().getHasRoleId());
@@ -44,6 +44,7 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
     return p;
   };
 
+  	public Success<DomUserFullwLoginContext,  DomUserFullwLoginContext> setContext() { return setContext; }
     /**
      *
      * @param server
@@ -82,17 +83,17 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 	}
 		
  
-   /**
-     *
-     * @param name
-     * @param org
-     * @param callback
-     */
-    private void samlLoginHelper(String name, String org,
-                                   PromiseCallback<DomUserFullwLoginContext> callback) {
-		String authToken = Cookies.getCookie(DWO_SAML_AUTH_TOKEN);
-		callback.resolveWith(accountManager.updateAccountData(name, org, authToken));
-	}
+//   /**
+//     *
+//     * @param name
+//     * @param org
+//     * @param callback
+//     */
+//    private void samlLoginHelper(String name, String org,
+//                                   PromiseCallback<DomUserFullwLoginContext> callback) {
+//		String authToken = Cookies.getCookie(DWO_SAML_AUTH_TOKEN);
+//		callback.resolveWith(accountManager.updateAccountData(name, org, authToken));
+//	}
 
 	
     /**
@@ -102,13 +103,7 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
      */
     public Promise<DomUserFullwLoginContext> getUserFromAuthToken(String authToken) {
 		return accountManager.getUserFromAuthToken(authToken)
-		    .then( p -> {
-	          DomHasRole r = new DomHasRole();
-	          context.setDomHasRole(r);
-	          r.setId(p.getValue().getDomLoginContext().getHasRoleId());
-	          context.setRealm(p.getValue().getDomLoginContext().getRealm());
-		      return p;
-		    });
+		    .then( setContext );
 	}
 		
     /**
@@ -138,17 +133,17 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 
   }
 	
-    /**
-     *
-     * @param name
-     * @param org
-     * @return
-     */
-    public Promise<DomUserFullwLoginContext> samlLogin(String name, String org) {
-		PromiseCallback<DomUserFullwLoginContext> defer = new PromiseCallback<>();
-		samlLoginHelper(name, org, defer);
-		return defer.getPromise();
-	}
+//    /**
+//     *
+//     * @param name
+//     * @param org
+//     * @return
+//     */
+//    public Promise<DomUserFullwLoginContext> samlLogin(String name, String org) {
+//		PromiseCallback<DomUserFullwLoginContext> defer = new PromiseCallback<>();
+//		samlLoginHelper(name, org, defer);
+//		return defer.getPromise();
+//	}
 
 	
 }
