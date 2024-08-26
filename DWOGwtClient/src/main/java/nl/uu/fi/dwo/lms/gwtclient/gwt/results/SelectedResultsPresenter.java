@@ -411,9 +411,10 @@ public class SelectedResultsPresenter implements ResultEventHandler {
                 @Override
                 public Promise<Void> call(Promise<Object> resolved) throws Exception {
                     JSONValue launchdata = p2.getValue();
-                    String review_data = p3.getValue().get(ResultsService.REVIEW_DATA);
-                    String suspend_data = p3.getValue().get(ResultsService.SUSPEND_DATA);
-                    String review_check = p3.getValue().get(ResultsService.REVIEW_CHECK);
+// never null, see Finish (map.remove)
+                    String review_data = p3.getValue().getOrDefault(ResultsService.REVIEW_DATA, "");
+                    String suspend_data = p3.getValue().getOrDefault(ResultsService.SUSPEND_DATA, "");
+                    String review_check = p3.getValue().getOrDefault(ResultsService.REVIEW_CHECK, "");
                     boolean premium = dwoGlobalVars.isPremium();
                     premium = premium && ResultsService.COMPLETED.equals(ssc.getStudentSco().getCompletionStatus());
 					Map<PersistenceId, DomResultStudentScoPage> children = Util.getPages(launchdata, suspend_data, review_data, review_check, premium);

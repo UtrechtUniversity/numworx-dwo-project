@@ -821,7 +821,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
 //            StudentOfClassManager.create(toSoc);
 //            return true;
             if (SchoolClassUtilManager.registerStudentForSchoolClass(shr, toClass)) {
-                return SchoolClassUtilManager.removeStudentFromSchoolClass(shr, fromClass);
+                return removeStudentFromSchoolClass(shr, fromClass);
             } else {
                 Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.Rest_CanNotAddStudentToClass, "Can not add student to class as requested.");
                 LOG.log(Level.SEVERE, "", e);
