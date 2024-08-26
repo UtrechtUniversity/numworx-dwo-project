@@ -24,6 +24,7 @@ import fi.dwo.commons.persistence.entities.PersistentScoData;
 import fi.dwo.commons.persistence.entities.PersistentScoPage;
 import fi.dwo.commons.persistence.entities.PersistentScoPagePK;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
+import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoPageManager;
 
 public class ScoPageUtilManager {
@@ -136,6 +137,7 @@ public class ScoPageUtilManager {
 		JsonReader parser = Json.createReader(new StringReader(value));
 		JsonObject json = parser.readObject();
 		JsonArray array = json.getJsonArray("opdrContStates");
+		array = array.getJsonArray(0);
 		List<PersistentScoPage> pages = ScoPageManager.find(pssc);
 		Map<Long, PersistentScoPage> map = pages.stream()
 				.collect(Collectors.toMap( key,  Function.identity()));
@@ -160,6 +162,8 @@ public class ScoPageUtilManager {
 					map.put(page.getId().getSequencenr(), page);
 				}
 				page.setCorrectie(sumCorrectie(state));
+				Boolean result = sumDocentCorrectie(state);
+				if (result != null) page.setCheckDocent(result);
 			}
 			ScoPageManager.edit(page);
 		}
@@ -194,10 +198,46 @@ public class ScoPageUtilManager {
 
 	private static void emptyDocentCorrectie(PersistentStudentScoContext ssc) {
 		List<PersistentScoPage> pages = ScoPageManager.find(ssc);
+		PersistentScoContext sco = ScoContextManager.findEntity(ssc.getScoID());
+		List<PersistentScoPage> template = ScoPageManager.find(sco);
 		for (PersistentScoPage p: pages) {
 			p.setCorrectie(null);
+			p.setCheckDocent(template.get(p.getId().getSequencenr().intValue()).getCheckDocent());
 			ScoPageManager.edit(p);
 		}
 	}
+	
+	private static Boolean sumDocentCorrectie(JsonValue value) {
+		if (value == null) return null;
+		ValueType type = value.getValueType();
+		Boolean result;
+		switch(type) {
+		case ARRAY:
+			JsonArray array = value.asJsonArray();
+			for(int i = 0; i < array.size(); i++) {
+				result = sumDocentCorrectie( array.get(i));
+				if (Boolean.TRUE.equals(result)) return Boolean.TRUE; // 
+			}
+			break;
+		case OBJECT: 
+			JsonObject o = value.asJsonObject();
+			JsonValue s;
+			s = o.get("checkDocent");
+			if (s != null) {
+				return s == JsonValue.TRUE;				
+			}
+			s = o.get("interactiePanelStates");
+			result = sumDocentCorrectie(s);
+			if (Boolean.TRUE.equals(result)) return Boolean.TRUE; // 
+			s = o.get("reviewInteractieData");
+			result = sumDocentCorrectie(s);
+			if (Boolean.TRUE.equals(result)) return Boolean.TRUE; // 
+			break;
+		default:
+			break;		
+		}
+		return null;
+	}
+	
 	
 }

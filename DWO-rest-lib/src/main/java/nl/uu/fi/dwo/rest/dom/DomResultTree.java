@@ -205,6 +205,7 @@ public class DomResultTree {
     }
 
 	public static void initResultScoPages(DomResultStudentScoContext value, List<DomStudentScoPage> pages) {
+		boolean hascorrectie = "completed".equals(value.getStudentSco().getCompletionStatus());
 		for(DomStudentScoPage page: pages) {
 			String label = String.valueOf(page.getSequencenr().intValue() + 1);
 			DomResultStudentScoPage resultPage = new DomResultStudentScoPage(label);
@@ -212,8 +213,9 @@ public class DomResultTree {
 			PersistenceId pid = new PersistenceId("LOCAL;none;" + label);
 			value.getChildren().put(pid, resultPage);
 			if (page.getScore() != null) {
-				if (Boolean.TRUE.equals(page.getDocentCorrectie())) {
+				if (hascorrectie && Boolean.TRUE.equals(page.getDocentCorrectie())) {
 					resultPage.setScore(-1.0);
+					resultPage.setMaxScore(Double.valueOf(page.getMaxScore().doubleValue()));					
 				} else {
 					resultPage.setScore(Double.valueOf(page.getScore().doubleValue()));
 					resultPage.setMaxScore(Double.valueOf(page.getMaxScore().doubleValue()));
@@ -222,8 +224,9 @@ public class DomResultTree {
 				resultPage.setScore(0.0);
 				resultPage.setMaxScore(null);
 			}
-			if (page.getCorrectie() != null) {
+			if (hascorrectie && page.getCorrectie() != null) {
 				resultPage.setCorrectie(page.getCorrectie().doubleValue());
+				resultPage.setMaxScore(Double.valueOf(page.getMaxScore().doubleValue()));
 			}
 		}
 	}
