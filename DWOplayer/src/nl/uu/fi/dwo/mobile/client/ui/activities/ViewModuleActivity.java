@@ -313,7 +313,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 					view.setLocation(location);
 				} else {
 					location = view.getApi().GetValue(Memento.LOCATION);
-					if (location == null) location = "0";
+					if (location == null||location.isEmpty()) location = "0";
 					where.setLocation(location);
 					sco.setPlace(where);
 					History.replaceItem(mapper.getToken(where), false);	
@@ -427,6 +427,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	public void gotoUrl(final String href) {
 		if (href.startsWith("anchor:")) {
 			gotoElement(href.substring(7));
+			gotoPage(where.getLocation(), href.substring(7) );
 		} else
 		if("goto:0".equals(href)) {
 			started = false;
@@ -580,10 +581,11 @@ public void onNeedLogin(NeedLoginEvent ev) {
 	// FIXME Er zijn activiteiten zonder "TERUG NAAR VORIGE PAGINA";
 
 	@Override
-	public void gotoPage(String location) {
-		if (Objects.equals(location, where.getLocation())) 
+	public void gotoPage(String location, String hash) {
+		if (Objects.equals(location, where.getLocation()) && Objects.equals(hash, where.getHash()) )
 			return; // same same, do nothing.
 		where.setLocation(location);
+		where.setHash(hash);
 		if (magterug)
 			History.newItem(mapper.getToken(where), false);
 		else 

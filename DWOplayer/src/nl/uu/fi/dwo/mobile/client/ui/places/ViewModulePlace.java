@@ -90,4 +90,8 @@ public class ViewModulePlace extends Place
 		if (dot >= 0) token = token.substring(0, dot);
 		if (location != null) token = token + "." + location;		
 	}
+	
+	public void setHash(String hash) {
+		this.hash = hash;
+	}
 }
