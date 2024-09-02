@@ -93,6 +93,11 @@ public abstract class XMLView {
 	protected boolean allesCorrectNodig = false;
 	public boolean zelftoetsGeenCorr = false;
 	public boolean eerderGeenCorr = false;
+	public boolean browserHistory = true;
+	
+	public boolean magterug() {
+		return browserHistory; 
+	}
 	/**
 	 * Boolean die aangeeft of de geschiedenis van zelftoetsscores
 	 * (percentages) moet worden bijgehouden en getoond.
@@ -235,7 +240,7 @@ public abstract class XMLView {
 				timer = wrap.getBoolean("timer");
 			if (wrap.containsKey("timeLimit"))
 				timeLimitSeconds = wrap.getInt("timeLimit");
-			
+			browserHistory = wrap.getBoolean("browserHistory", true);
 			if (wrap.containsKey("objectives"))
 			{	
 				ObjectList objectivesList = wrap.getObjectList("objectives");

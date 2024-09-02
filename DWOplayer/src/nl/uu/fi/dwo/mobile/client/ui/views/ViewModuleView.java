@@ -57,4 +57,5 @@ public interface ViewModuleView extends IsWidget
     default void setLocation(String location) {
     	getApi().SetValue(Memento.LOCATION, location);
     }
+	default boolean magterug() { return true; }
 }

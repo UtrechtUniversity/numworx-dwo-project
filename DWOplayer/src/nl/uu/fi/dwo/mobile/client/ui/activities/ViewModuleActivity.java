@@ -577,7 +577,7 @@ public void onNeedLogin(NeedLoginEvent ev) {
 	oops.onNeedLogin(ev);
 }
 
-	boolean magterug = false; // nog bepalen wanneer je deze op false moet zetten. false is de veilige waarde!
+	//boolean magterug = view.magterug(); // nog bepalen wanneer je deze op false moet zetten. false is de veilige waarde!
 	// FIXME Er zijn activiteiten zonder "TERUG NAAR VORIGE PAGINA";
 
 	@Override
@@ -586,7 +586,7 @@ public void onNeedLogin(NeedLoginEvent ev) {
 			return; // same same, do nothing.
 		where.setLocation(location);
 		where.setHash(hash);
-		if (magterug)
+		if (view.magterug())
 			History.newItem(mapper.getToken(where), false);
 		else 
 			History.replaceItem(mapper.getToken(where), false);
