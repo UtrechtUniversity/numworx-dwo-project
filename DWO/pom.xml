@@ -43,7 +43,7 @@
 <!-- 		<module>../notebook</module> -->
         <module>../EBServer</module>
 <!--        <module>../schoolyear-jclient-lib</module>-->
-<!--        <module>../schoolyear-war</module>-->
+        <module>../schoolyear-war</module>
     </modules>
     
     <name>${project.build.finalName}</name>

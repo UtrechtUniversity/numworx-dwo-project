@@ -502,13 +502,13 @@
                         <systemProperties>
                         	<CDN_HOST>localhost:8082</CDN_HOST>
                         	<CDNURL>http://localhost:8082</CDNURL>
-                            <ENV_NOSEB>false</ENV_NOSEB>
                             <DWO_ENV>test</DWO_ENV>
                             <SEB_TOETS_MAC>9153c48c6111d2733add6e1d596db4059c302cf736dcb18ca498288e21404507,c5d129e27f57b1970d2ffda2ed745a20f7d8e12ed9bfbfb168e83f75f9f870cf</SEB_TOETS_MAC>
   							<ALLOW_ORIGIN>http://localhost:${http.port}</ALLOW_ORIGIN>
  							<MEMCACHED>test:localhost:11211</MEMCACHED>
  							<UU_INDEX />
  							<ENV_NOSEB>true</ENV_NOSEB>
+ 							<ENV_IPRANGE>127.0.0.1</ENV_IPRANGE>
                         </systemProperties>
 					<server>TomcatServer</server>
 					<path>/</path>
@@ -523,6 +523,14 @@
                           		<type>war</type>
 							<contextPath>/dwo/dav/upload</contextPath>
                             	<asWebapp>true</asWebapp> 
+						</webapp>
+						<webapp>
+							<groupId>nl.numworx.schoolyear</groupId>
+  							<artifactId>sy</artifactId>
+							<version>2.5.34-SNAPSHOT</version>
+							<type>war</type>
+							<contextPath>/sy</contextPath>
+                            <asWebapp>true</asWebapp>
 						</webapp>
 					
 					</webapps>
