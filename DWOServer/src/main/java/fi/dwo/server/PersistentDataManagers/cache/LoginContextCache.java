@@ -19,6 +19,10 @@ public class LoginContextCache {
 		cache.put(role.getId(), role);
 	}
 	
+	public static void putIfPresent(PersistentLoginContext role) {
+		cache.getAndReplace(role.getId(), role);
+	}
+	
 	public static PersistentLoginContext get(Long id) {
 		return cache.get(id);
 	}

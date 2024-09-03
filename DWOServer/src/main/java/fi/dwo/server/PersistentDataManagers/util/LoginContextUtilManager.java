@@ -7,6 +7,7 @@ import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import fi.dwo.server.PersistentDataManagers.cache.LoginContextCache;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -54,6 +55,7 @@ public class LoginContextUtilManager {
             Dwo2Exception ex = new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Can't set a LoginContextSession for a user");
             throw ex;
         }
+        LoginContextCache.putIfPresent(loginContext);
         return loginContext;
     }
 
@@ -91,6 +93,7 @@ public class LoginContextUtilManager {
             Dwo2Exception ex = new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Can't set a LoginContextSession for a User");
             throw ex;
         }
+        LoginContextCache.putIfPresent(loginContext);
         return loginContext;
     }
 
@@ -145,6 +148,7 @@ public class LoginContextUtilManager {
             Dwo2Exception ex = new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Can't set a LoginContextSession for a User");
             throw ex;
         }
+        LoginContextCache.putIfPresent(loginContext);
         return loginContext;
     }
 }

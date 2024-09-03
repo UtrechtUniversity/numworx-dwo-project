@@ -27,6 +27,8 @@ import fi.dwo.commons.persistence.*;
 import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.entities.RestSchoolRoleAndClassV2;
+import fi.dwo.server.PersistentDataManagers.cache.HasRoleCache;
+import fi.dwo.server.PersistentDataManagers.cache.LoginContextCache;
 import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
@@ -264,6 +266,7 @@ public class SecuredUserAccountLoginsManagerV2 {
                 PersistentLoginContext ctx = list.get(0);
                 ctx.setSchoolGroupId(u.getSchoolGroupId());
                 LoginContextManager.edit(ctx);
+                LoginContextCache.putIfPresent(ctx);
               } // FIXME if multiple, which one?
             } catch (Exception e) {
               LOG.log(Level.WARNING, "should not happen, non-fatal " + u.getUsername(),e);
@@ -281,6 +284,7 @@ public class SecuredUserAccountLoginsManagerV2 {
             	if (soc != null) hr.setClassID(soc.getPersistentStudentOfClassPK().getClassID());
             }
             HasRoleManager.edit(hr);
+            HasRoleCache.put(hr);
 
             //update class in hasRole
             LOG.log(Level.INFO, "Username {0}: Updated SchoolGroupID to {1} for User with username {2}", new Object[]{sc.getUserPrincipal().getName(), u.getSchoolGroupId(), user.getUsername()});

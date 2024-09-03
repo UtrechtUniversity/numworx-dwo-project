@@ -41,6 +41,7 @@ import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
 import fi.dwo.server.PersistentDataManagers.cache.HasRoleCache;
+import fi.dwo.server.PersistentDataManagers.cache.LoginContextCache;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
@@ -362,6 +363,7 @@ public class SecuredUserAccountManager {
                         	loginContextList.get(0).setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
                     	}
                         LoginContextManager.edit(loginContextList.get(0));
+                        LoginContextCache.remove(loginContextList.get(0).getId());
                     }
                 } else {
                     //logout while no login tried before.
