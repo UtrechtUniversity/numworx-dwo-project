@@ -8,6 +8,7 @@ import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.place.shared.PlaceController.Delegate;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.web.bindery.event.shared.EventBus;
@@ -32,6 +33,7 @@ import nl.uu.fi.dwo.mobile.client.ui.activities.GuestActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LoginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LogoutActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.MaybeLogoutActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.OnCloseDelegate;
 import nl.uu.fi.dwo.mobile.client.ui.places.ClassesPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.Exam;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
@@ -53,8 +55,8 @@ public abstract class PlayerModule {
 
   @Provides
   @Singleton
-  static PlaceController getController(EventBus bus) {
-    return new PlaceController(bus);
+  static PlaceController getController(EventBus bus, OnCloseDelegate delegate) {
+    return new PlaceController(bus, delegate);
   }
 
   @Provides

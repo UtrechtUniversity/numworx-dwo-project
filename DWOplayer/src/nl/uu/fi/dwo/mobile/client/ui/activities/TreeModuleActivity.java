@@ -46,6 +46,7 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import dagger.Lazy;
@@ -146,6 +147,7 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 				new Runnable() {
 					public void run() {
 						view.selectModule(item);
+						Window.setTitle(item.getName());
 						WaitScreen.instance().hide();
 						panel.setWidget(view);
 						if (item == SelectModuleItem.ROOT && Actions.isAvailable()) Actions.INITED.execute();
