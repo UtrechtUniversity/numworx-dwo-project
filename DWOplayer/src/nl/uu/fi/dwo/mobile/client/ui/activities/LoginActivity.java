@@ -14,7 +14,6 @@ import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
-import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
@@ -41,11 +40,10 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
-import com.google.gwt.user.client.Cookies;
+import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.google.web.bindery.event.shared.HandlerRegistrations;
@@ -170,9 +168,11 @@ public class LoginActivity extends AbstractActivity
 
     private final DWOplayerParameters PARAMETERS;
 
-	@Inject PlaceController placeController;
+	private final PlaceController placeController;
 
 	@Inject HeaderView headerView;
+	@Inject PlaceHistoryMapper mapper;
+
 	final private DwoGlobalVars vars;
 	final private RPCHandler rpc;
 
@@ -191,6 +191,7 @@ public class LoginActivity extends AbstractActivity
 		this.rpc = rpc;
 		this.dwoProfile = rpc.getDwoProfile();
 		this.vars = vars;
+		this.placeController = placeController;
 		this.LOGIN_STAP1 = new Login_Stap1(rpc, vars);
 		this.LOGIN_STAP2 = new Login_Stap2(vars);
 		Place place = placeController.getWhere();
@@ -261,7 +262,10 @@ public class LoginActivity extends AbstractActivity
 // ?a= verplicht!
 					String authToken = Window.Location.getParameter("a");
 					if (authToken != null && !authToken.isEmpty())
+					{	
+						vars.setAutoLogin(true);
 						promise = rpc.getUserFromAuthToken(authToken);
+					}
 					else {
 						logout();
 						return;
@@ -269,6 +273,7 @@ public class LoginActivity extends AbstractActivity
 				} else {
 					String authToken = Window.Location.getParameter("a");
 					if (authToken != null && !authToken.isEmpty()) {
+						vars.setAutoLogin(true);
 						if (!logout)
 						{	panel.setWidget(new Label());
 							promise = rpc.getUserFromAuthToken(authToken);
@@ -282,6 +287,8 @@ public class LoginActivity extends AbstractActivity
 							return;
 						}
 					} else {
+						vars.setAutoLogin(false);
+// testing...		vars.setAutoLogin(true);
 						defer = new Deferred<>();
 						promise = defer.getPromise();
 						panel.setWidget(view.get());
@@ -334,9 +341,6 @@ public class LoginActivity extends AbstractActivity
 						PARAMETERS.getDwoEnv().contains("saml");
 			}
 
-			private boolean isSeb() {
-				return PARAMETERS.inExam();
-			}
 		}
 		);
 	}
@@ -346,7 +350,7 @@ public class LoginActivity extends AbstractActivity
 		.then(LOGIN_STAP1)
 		.filter(LOGIN_LIMITED)
 		.then(LOGIN_STAP2, FAILURE1).map(nop -> next)
-		.then(new Login_Stap3(clientFactory, placeController, headerView, vars), FAILURE2);
+		.then(new Login_Stap3(clientFactory, headerView, vars), FAILURE2);
 	}
 
 	private void resolve() {

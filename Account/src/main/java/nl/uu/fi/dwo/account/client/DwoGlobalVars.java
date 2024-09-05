@@ -42,9 +42,6 @@ public class DwoGlobalVars {
 
     private static final Logger LOG = Logger.getLogger(DwoGlobalVars.class.getName());
 
-    private SecuredUserAccountManager accountManager = new SecuredUserAccountManager();
-    private SecuredUserSchoolLoginManagerV2 loginManager = new SecuredUserSchoolLoginManagerV2();
-
     /**
      * @return the state
      */
@@ -116,12 +113,13 @@ public class DwoGlobalVars {
     }
 
     private DwoGlobalVarsState state = DwoGlobalVarsState.Unintialized;
-    private DwoGlobalVarPromise statePromise = new DwoGlobalVarPromise(this, DwoGlobalVarsState.LoggedIn);
+//    private DwoGlobalVarPromise statePromise = new DwoGlobalVarPromise(this, DwoGlobalVarsState.LoggedIn);
     private static volatile DwoGlobalVars instance;
     private DomUserFull currentUser;
     private DomLoginContext currentLoginContext;
     private DomSchoolsRolesAndClassesV2 schoolLogins;
     private DomSchoolRoleAndClassV2  activeSchoolRoleAndClass;
+    private boolean autoLogin; // inloggen via ?a=
 
 	private DomContext context = new DomContext();
 
@@ -454,5 +452,13 @@ public class DwoGlobalVars {
       return username;
 
     }
+
+	public boolean isAutoLogin() {
+		return autoLogin;
+	}
+
+	public void setAutoLogin(boolean autoLogin) {
+		this.autoLogin = autoLogin;
+	}
 
 }

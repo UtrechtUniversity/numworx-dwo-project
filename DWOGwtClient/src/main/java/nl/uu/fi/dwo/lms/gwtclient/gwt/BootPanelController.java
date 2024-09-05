@@ -8,6 +8,7 @@ import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -315,6 +316,8 @@ public class BootPanelController {
         //hideGwtGui = false;
         profile = 77;
         stage = 1;
+        
+        History.addValueChangeHandler(evt -> this.eventBus.fireEvent(evt));
     }
 
 //    public static native String getHideGwtGuiString()/*-{

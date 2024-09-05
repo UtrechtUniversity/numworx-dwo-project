@@ -13,6 +13,7 @@ import org.osgi.util.promise.Success;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.History;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -140,13 +141,14 @@ public class MainPresenter implements ValueChangeHandler<String> {
     }
 
     private MainPresenter.Display display;
+    
 
     @Inject ModulesPresenter modules;
     @Inject MainPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
-    	History.addValueChangeHandler(this);
-   }
+        anEventBus.addHandler(ValueChangeEvent.getType(), this);
+    }
 
     public void init() {
     	display.setSearchBox(stage > 1);
