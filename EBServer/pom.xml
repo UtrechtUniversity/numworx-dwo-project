@@ -104,6 +104,14 @@
 					<groupId>software.amazon.jdbc</groupId>
 					<artifactId>aws-advanced-jdbc-wrapper</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>javax.cache</groupId>
+					<artifactId>cache-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.jsr107.ri</groupId>
+					<artifactId>cache-ri-impl</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
         <dependency>
@@ -509,6 +517,11 @@
 								  <groupId>org.redisson</groupId>
 								  <artifactId>redisson-tomcat-9</artifactId>								  
 							</dependency>
+				    		<dependency>
+				    			<groupId>nl.uu.fi.dwo.rest</groupId>
+				    			<artifactId>DWO-jclient-lib</artifactId>
+				    			<version>2.5.34-SNAPSHOT</version>
+				    		</dependency>
 						</dependencies>
 					</container>
 					<deployables>
@@ -554,6 +567,7 @@
  							<UU_INDEX />
  							<ENV_NOSEB>true</ENV_NOSEB>
  							<ENV_IPRANGE>127.0.0.1</ENV_IPRANGE>
+ 							<javax.cache.spi.CachingProvider>org.redisson.jcache.JCachingProvider</javax.cache.spi.CachingProvider>
                         </systemProperties>
 					<server>TomcatServer</server>
 					<path>/</path>
@@ -591,6 +605,11 @@
 								  <artifactId>redisson-tomcat-7</artifactId>
 								  <version>3.32.0</version>							  
 							</dependency>
+    		<dependency>
+    			<groupId>nl.uu.fi.dwo.rest</groupId>
+    			<artifactId>DWO-jclient-lib</artifactId>
+    			<version>2.5.34-SNAPSHOT</version>
+    		</dependency>
 
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
@@ -961,19 +980,19 @@
 				<dependency>
 				    <groupId>org.redisson</groupId>
 				    <artifactId>redisson</artifactId>
-				    <version>3.22.1</version>
-				    <scope>runtime</scope>
+				    <version>3.32.0</version>
+				    <scope>test</scope>
 				</dependency>
 				<dependency>
 					<groupId>org.redisson</groupId>
 					<artifactId>redisson-tomcat-9</artifactId>
-					<version>3.22.1</version>
+					<version>3.32.0</version>
 					<scope>test</scope>
 				</dependency>
 				<dependency>
 					<groupId>org.redisson</groupId>
 					<artifactId>redisson-all</artifactId>
-					<version>3.22.1</version>
+					<version>3.32.0</version>
 					<scope>test</scope>
 				</dependency>
 			</dependencies>
