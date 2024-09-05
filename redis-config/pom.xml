@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>nl.uu.fi.dwo</groupId>
+        <artifactId>DWO</artifactId>
+        <version>2.5.34-SNAPSHOT</version>
+        <relativePath>../DWO/pom.xml</relativePath>
+    </parent>
+        
+    <groupId>nl.uu.fi.dwo.rest</groupId>
+    <artifactId>redis-config</artifactId>
+    <name>redis configuration supplement</name>
+    <developers>
+        <developer>
+            <id>velth101</id>
+            <name>Wim van Velthoven</name>
+            <email>w.p.g.vanvelthoven@uu.nl</email>
+            <organization>Freudenthal Institute</organization>
+            <organizationUrl>http://www.fi.uu.nl/</organizationUrl>
+            <roles>
+                <role>Administrator</role>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <properties>
+        <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+    </properties>
+  
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.2</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+         </plugins>
+    </build>
+</project>
+
