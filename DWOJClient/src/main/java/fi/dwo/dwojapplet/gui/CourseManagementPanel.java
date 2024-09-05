@@ -2,6 +2,8 @@
 
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.mainframe.AppletContext;
+import fi.beans.mainframe.AppletStub;
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JCheckBox;
@@ -16,11 +18,9 @@ import fi.dwo.dwojapplet.gui.action.AccessControlAction;
 import fi.dwo.dwojapplet.gui.action.CourseUnTrashAction;
 import fi.dwo.dwojapplet.gui.action.DeleteAction;
 import fi.dwo.dwojapplet.gui.action.ImportModuleAction;
-import fi.dwo.dwojapplet.gui.action.ScoUnTrashAction;
 import fi.dwo.dwojapplet.gui.action.ShareCourseAction;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminProfileManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -39,6 +39,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -70,7 +71,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
  * @author M.J.B. Kupers
  *
  */
-public class CourseManagementPanel extends JPanel implements CenterSubPanel, ActionListener, CourseMap {
+public class CourseManagementPanel extends JPanel implements CenterSubPanel, ActionListener, CourseMap, AppletStub {
      public static final byte[] IMAGEURL = new byte[0];
 
 
@@ -422,7 +423,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         editorBox.add(editorCB);
         if(profile.getText().startsWith("H4sIAAAAAA") || profile.getText().isEmpty())
         {   editorCB.setSelected(true); editorCB.setVisible(false);
-            wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(profile.getText());
+            wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(profile.getText(), null);
             wiskOpdrEditPanel.setPreferredSize(new Dimension(800,350));
             wiskOpdrEditPanel.setAlignmentX(0.0F);
             editorBox.add(wiskOpdrEditPanel);
@@ -484,7 +485,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
             
             if(course.getText().startsWith("H4sIAAAAAA") || course.getText().isEmpty())
             {	editorCB.setSelected(true); editorCB.setVisible(false);
-            	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getText());
+            	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getText(), this);
             	wiskOpdrEditPanel.setPreferredSize(new Dimension(800,350));
             	editorBox.add(wiskOpdrEditPanel);
             }
@@ -683,7 +684,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     	if(src == editorCB)
     	{	if(editorCB.isSelected())
     		{	if(wiskOpdrEditPanel==null)
-    			{	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel("");
+    			{	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel("", this);
             		wiskOpdrEditPanel.setPreferredSize(new Dimension(800,350));
             		editorBox.add(wiskOpdrEditPanel);
     			}
@@ -1033,6 +1034,38 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     public Color getSubHeaderColor() {
       return Constants.COLOR20;
     }
+
+	@Override
+	public boolean isActive() {
+		return true;
+	}
+
+	@Override
+	public URL getDocumentBase() {
+		return null;
+	}
+
+	@Override
+	public URL getCodeBase() {
+		return null;
+	}
+
+	@Override
+	public String getParameter(String name) {
+		if ("courseViewNr".equals(name) && userObject instanceof Course)
+			return String.valueOf(((Course) userObject).getID());
+        return DwoHelper.getApplet().getParameter(name);
+	}
+
+	@Override
+	public void appletResize(int width, int height) {
+	}
+
+	@Override
+	public AppletContext getAppletContext() {
+		return DwoHelper.getApplet().getAppletContext();
+	}
+	
 
 	
 }

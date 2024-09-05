@@ -95,6 +95,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @Path("/secure/student/coursesofschoolclass")
 public class SecuredStudentCoursesOfSchoolClassManager {
   final static Integer EXAM = Integer.valueOf(1);
+  final static Integer KIOSK = Integer.valueOf(CourseType.kiosk.ordinal());
   private static final String PUBLIC_COURSE_GET_IMAGE = "../../../public/course/getImage";
 
   private static final Logger LOG =
@@ -183,7 +184,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
       if (scc.getNotBefore() != null) {
         if (NOW.before(scc.getNotBefore())) return;
       }
-      if (EXAM.equals(scc.getType()) && !inrange) return;
+      if (inExam(scc) && !inrange) return;
       
       Long courseID = scc.getCourseID();
       PersistentCourse course = CourseManager.findEntity(courseID);
@@ -210,6 +211,12 @@ public class SecuredStudentCoursesOfSchoolClassManager {
     result.setFetchTimeStamp(Long.valueOf(NOW.getTime()));
     return result;
 
+  }
+
+  // FIXME zie ook SecuredStudentExamScoDataManager: duplicate code.
+  private boolean inExam(PersistentClassCourse scc) {
+	Integer type = scc.getType();
+	return EXAM.equals(type) || KIOSK.equals(type);
   }
 
   @PUT
@@ -297,7 +304,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
           new DomMapEntry<PersistenceId, DomCourseStudent>(dcs.getId(), dcs);
       result.setClassCourses(Collections.singletonList(ecc));
       result.setCourses(Collections.singletonList(ecs));
-      if (!EXAM.equals(pcc.getType())) { // no sco's for exams
+      if (!inExam(pcc)) { // no sco's for exams
         // fetch studentScoContexts
         List<PersistentScoContext> list = ScoContextManager.findEntities(pc);
         List<DomMapEntry<PersistenceId, DomScoContext>> scos;
@@ -369,7 +376,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
         if (NOW.before(pcc.getNotBefore())) pcc = null;
       }
       if (pcc != null && (pcc.getViewState() != ViewState.studentsAndTeachers) && pcc.getViewState() != ViewState.students) pcc = null;
-      if (pcc != null && EXAM.equals(pcc.getType())) pcc = null; // No deeplink for exams
+      if (pcc != null && inExam(pcc)) pcc = null; // No deeplink for exams
 
       if (pcc == null) {
         result.setClassCourses(Collections.emptyList());

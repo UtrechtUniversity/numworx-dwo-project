@@ -11,6 +11,10 @@ import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.History;
 import com.google.web.bindery.event.shared.EventBus;
 
 import jsinterop.annotations.JsMethod;
@@ -32,7 +36,7 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
  * @author Gert van der Plas
  */
 @RoleScope
-public class MainPresenter {
+public class MainPresenter implements ValueChangeHandler<String> {
 
     private static final Logger LOG = Logger.getLogger(MainPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
@@ -137,11 +141,13 @@ public class MainPresenter {
     }
 
     private MainPresenter.Display display;
+    
 
     @Inject ModulesPresenter modules;
     @Inject MainPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
+        anEventBus.addHandler(ValueChangeEvent.getType(), this);
     }
 
     public void init() {
@@ -167,7 +173,10 @@ public class MainPresenter {
       if (selectedView.startsWith("GOTO:")) {
           event = new SwitchViewEvent(SelectedView.GOTO, Collections.singletonMap("message", selectedView));  
       } else {
-       event = new SwitchViewEvent(SwitchViewEvent.SelectedView.valueOf(selectedView));
+       //event = new SwitchViewEvent(SwitchViewEvent.SelectedView.valueOf(selectedView));
+// probeersel
+    	  History.newItem(selectedView);
+    	  return;
       }
       eventBus.fireEvent(event);
     }
@@ -299,6 +308,18 @@ public class MainPresenter {
 	 */
 	public void unsetIdleTimeout() {
 		display.unsetIdleTimeout();
+	}
+
+	@Override
+	public void onValueChange(ValueChangeEvent<String> event) {
+		try {
+			String token = event.getValue();
+			SelectedView selected = SelectedView.valueOf(token);
+			selectView(selected);
+		} catch(Exception oops) {
+			selectView(SelectedView.WELCOME);
+		}
+		
 	}
 	
 	

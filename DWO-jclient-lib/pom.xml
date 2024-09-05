@@ -166,6 +166,17 @@
 	</reporting>
 	<profiles>
 		<profile>
+			<id>memcached-jcache</id>
+			<dependencies>
+				<dependency>
+				    <groupId>org.memcached</groupId>
+    				<artifactId>memcached-jcache</artifactId>
+    				<version>1.0</version>
+		    		<scope>test</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
 			<id>ri-jcache</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
@@ -185,7 +196,7 @@
 				<dependency>
 				    <groupId>org.redisson</groupId>
 				    <artifactId>redisson</artifactId>
-				    <version>3.20.0</version>
+				    <version>3.22.1</version>
 				    <scope>test</scope>
 				</dependency>
 			</dependencies>		

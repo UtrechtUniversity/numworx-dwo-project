@@ -44,6 +44,9 @@ import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.place.shared.PlaceHistoryMapper;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import dagger.Lazy;
@@ -57,6 +60,7 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 {
 
 	@Inject PlaceController placeController;
+	@Inject PlaceHistoryMapper mapper;
 	@Inject DwoGlobalVars vars;
 	@Inject RPCHandler rpc;
 	@Inject TrafficAgent agent;
@@ -143,6 +147,7 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 				new Runnable() {
 					public void run() {
 						view.selectModule(item);
+						Window.setTitle(item.getName());
 						WaitScreen.instance().hide();
 						panel.setWidget(view);
 						if (item == SelectModuleItem.ROOT && Actions.isAvailable()) Actions.INITED.execute();
@@ -165,7 +170,7 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 								List<SelectModuleItem> list = p.getValue();
 								SelectModuleItem item = list.get(sconr-1);
 								ViewModulePlace place = new ViewModulePlace(item.getID(), split[2]);
-								goTo(place); // AST?
+								replaceItem(place); // AST?
 								return p;
 							});
 						}						
@@ -186,6 +191,15 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 		}
 		placeController.goTo(place);
 	}
+	
+	private void replaceItem(Place place) {
+		if (place instanceof HasBack) {
+			((HasBack) place).setBack(item);
+		}
+		String url = mapper.getToken(place);
+		History.replaceItem(url);
+	}
+	
 
   @Override
   public void onIdle(IdleEvent ev) {

@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 public interface ViewModuleView extends IsWidget
 {
 	interface Presenter extends GotoController {
+		void gotoPage(String location, String hash);
 	}
 	
 	void removeBtns();
@@ -56,4 +57,5 @@ public interface ViewModuleView extends IsWidget
     default void setLocation(String location) {
     	getApi().SetValue(Memento.LOCATION, location);
     }
+	default boolean magterug() { return true; }
 }

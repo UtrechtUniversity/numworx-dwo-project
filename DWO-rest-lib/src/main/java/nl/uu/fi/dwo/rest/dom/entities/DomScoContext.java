@@ -12,7 +12,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @XmlRootElement
 public class DomScoContext extends DomScoContextId {
     private PersistenceId courseId;
-    private PersistenceId AppletId;
+    private PersistenceId appletId;
     private String scoName;
     private Boolean showScore;
     private Long sequencenr;
@@ -37,17 +37,17 @@ public class DomScoContext extends DomScoContextId {
     }
 
     /**
-     * @return the AppletId
+     * @return the appletId
      */
     public PersistenceId getAppletId() {
-        return AppletId;
+        return appletId;
     }
 
     /**
-     * @param AppletId the AppletId to set
+     * @param appletId the appletId to set
      */
-    public void setAppletId(PersistenceId AppletId) {
-        this.AppletId = AppletId;
+    public void setAppletId(PersistenceId appletId) {
+        this.appletId = appletId;
     }
 
     /**

@@ -122,7 +122,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		html = activity.getStubView() + html;
 		String locale = getLocale();		
 		html += "?locale=" + locale;
-		
+		html += "&profile=" + DWOplayer.PROFILE_ID;
 		init(html, launchdata, randomVarNamen, randomVarWaarden);
 	}
 

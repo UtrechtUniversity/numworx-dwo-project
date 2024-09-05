@@ -32,6 +32,8 @@ import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.DatatypeConverter;
+import fi.dwo.server.PersistentDataManagers.cache.HasRoleCache;
+import fi.dwo.server.PersistentDataManagers.cache.LoginContextCache;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
@@ -155,6 +157,17 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
         	LOG.severe("Password is missing, " + authFields[0]);
         	return null;
         }
+ // cache code
+        Object roleid = getAttribute(SecFilter.HASROLE_ID);
+        PersistentHasRole hrcache = HasRoleCache.get(roleid);
+        if (hrcache != null) {
+        	DwoUserPrincipal du = fromCache(hrcache, authFields[0], authFields[1]);
+        	if (du != null) {
+        		DwoUserSecurityContext sc = new DwoUserSecurityContext(du, secCtx.isSecure(), SecurityContext.BASIC_AUTH, du.getRole());
+        		setUsername(sc);
+        		return sc;
+        	}
+        }
         PersistentUser u = UserManager.login(authFields[0], authFields[1]);
         if (u != null) {
         	SecurityContext sc;
@@ -179,7 +192,7 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
         		} else if (sg.getRole().getGroupID() == null) {
         			LOG.severe("GROUPID is null " + sg.getRole() + " " + sg.getGroupID());
         		}
-        		
+        		HasRoleCache.put(hr);
         		DwoUserPrincipal du = new DwoUserPrincipal(u, hr, sg);
         		sc = new DwoUserSecurityContext(du, secCtx.isSecure(), SecurityContext.BASIC_AUTH, du.getRole());
         	} else {
@@ -192,6 +205,13 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
         return null;
     }
 
+	private DwoUserPrincipal fromCache(PersistentHasRole hr, String username, String password) {
+		PersistentUser u = hr.getUser();
+		if (u.getUsername().equalsIgnoreCase(username) && u.getPassword().equals(password)) {
+			return new DwoUserPrincipal(hr);
+		}
+		return null;
+	}
 	/**
 	 * Save the username in a http request attribute <b>"username"</b>. In tomcat
 	 * this string can be logged by %{username}r in the logging valve.
@@ -223,21 +243,30 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
         RoleType type = role(claims.getBody());
         PersistentUser u = findByUsername(username);
         if (u == null) return null;
+        Object roleid = getAttribute(SecFilter.HASROLE_ID);
+        PersistentHasRole hrcache = HasRoleCache.get(roleid);
     	SecurityContext sc;
-    	Object uid = getAttribute(SecFilter.USER_ID);
-    	if (uid != null && ! u.getId().equals(uid))
-    		return null;
-    	Object sgid = getAttribute(SecFilter.SCHOOLGROUP_ID);
-    	if (sgid != null) {
-    		PersistentHasRolePK pk = new PersistentHasRolePK(u.getId(), (Long)sgid);
-    		PersistentHasRole hr = HasRoleManager.findEntity(pk);
-    		if (hr == null) return null;
-    		DwoUserPrincipal du = new DwoUserPrincipal(hr);
+        if (hrcache != null) {
+    		DwoUserPrincipal du = new DwoUserPrincipal(hrcache);
     		if (type == RoleType.NONE) type = du.getRole();
-    		sc = new DwoUserSecurityContext(du, ctx.isSecure(), BEARER, type);
-    	} else {
-    		sc = new DwoUserSecurityContext(new DwoUserPrincipal(u), ctx.isSecure(), BEARER, type);
-    	}
+    		sc = new DwoUserSecurityContext(du, ctx.isSecure(), BEARER, type);    	
+        } else {
+	    	Object uid = getAttribute(SecFilter.USER_ID);
+	    	if (uid != null && ! u.getId().equals(uid))
+	    		return null;
+	    	Object sgid = getAttribute(SecFilter.SCHOOLGROUP_ID);
+	    	if (sgid != null) {
+	    		PersistentHasRolePK pk = new PersistentHasRolePK(u.getId(), (Long)sgid);
+	    		PersistentHasRole hr = HasRoleManager.findEntity(pk);
+	    		if (hr == null) return null;
+	    		HasRoleCache.put(hr);
+	    		DwoUserPrincipal du = new DwoUserPrincipal(hr);
+	    		if (type == RoleType.NONE) type = du.getRole();
+	    		sc = new DwoUserSecurityContext(du, ctx.isSecure(), BEARER, type);
+	    	} else {
+	    		sc = new DwoUserSecurityContext(new DwoUserPrincipal(u), ctx.isSecure(), BEARER, type);
+	    	}
+        }
         setUsername(sc);
         return sc;
     } catch (Exception e) {
@@ -248,6 +277,13 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
 	}
 
   protected PersistentUser findByUsername(String username) {
+    Object roleid = getAttribute(SecFilter.HASROLE_ID);
+    PersistentHasRole hrcache = HasRoleCache.get(roleid);
+    if(hrcache != null) {
+    	PersistentUser user = hrcache.getUser();
+    	if (username.equalsIgnoreCase(user.getUsername()))
+    		return user;
+    }
     return UserManager.findByUserName(username);
   }
 	
@@ -296,11 +332,14 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
     if (u == null || u.getId().longValue() != context.getUserId().longValue()
         && role(claims) != RoleType.ANONYMOUS // 
         ) return null; // No key
+    LoginContextCache.put(context);
     return Keys.hmacShaKeyFor(context.getNonce());
   }
 
   protected PersistentLoginContext findLoginContext(String kid) {
     Long id = Long.decode(kid);
+    PersistentLoginContext cache = LoginContextCache.get(id);
+    if (cache != null) return cache;
     PersistentLoginContext context = LoginContextManager.findEntity(id);
     return context;
   }

@@ -2,6 +2,7 @@
 // C:\\parameters\\fi\\dwo\\client\\gui\\ParameterManagementPanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.mainframe.JApplet;
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
@@ -26,7 +27,6 @@ import fi.dwo.dwojapplet.parameters.gui.ParameterComponent;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
-import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -148,7 +148,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         this.add(mainPanel, BorderLayout.CENTER);
 
         ScormAppletIF applet = null;
-        Applet editableApplet = sco.getApplet();
+        JApplet editableApplet = sco.getApplet();
         if (editableApplet instanceof ScormAppletIF) {
             applet = (ScormAppletIF) editableApplet;
             editMode = applet.hasEditMode();

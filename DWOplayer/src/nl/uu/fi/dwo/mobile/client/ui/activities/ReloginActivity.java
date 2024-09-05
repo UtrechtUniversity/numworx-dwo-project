@@ -94,7 +94,7 @@ public class ReloginActivity extends AbstractActivity {
 		})
 		.then(new LoginActivity.Login_Stap1(rpc, vars))
 		.then(new LoginActivity.Login_Stap2(vars), FAILURE1).map(nop -> next)
-		.then(new Login_Stap3(clientFactory, placeController, headerView, vars));
+		.then(new Login_Stap3(clientFactory, headerView, vars));
 	}
 
 	protected Promise<DomUserFullwLoginContext> getUserFullwLoginContext() {
@@ -110,7 +110,7 @@ public class ReloginActivity extends AbstractActivity {
 			ulc.setDomLoginContext(lc.getValue());
 			ulc.setDomUserFull(u);
 			return ulc;
-		});
+		}).then(rpc.setContext());
 	}
 
 	private String getUsername() {

@@ -1,7 +1,5 @@
 package fi.dwo.dwojapplet.gui.wiskopdr;
 
-import java.applet.AppletContext;
-import java.applet.AppletStub;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -23,6 +21,9 @@ import javax.swing.Scrollable;
 
 import com.owlike.genson.GenericType;
 import com.owlike.genson.Genson;
+
+import fi.beans.mainframe.AppletContext;
+import fi.beans.mainframe.AppletStub;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.GuiCreator;
@@ -53,18 +54,15 @@ public class WiskOpdrEditPanel extends JPanel implements Scrollable, AppletStub 
 
   private static final long serialVersionUID = 1L;
 	private final Logger LOG = Logger.getLogger(getClass().getName());
-
-//	private static int defaultEditorWidth = 800;
-//    private static int defaultEditorHeight = 350;
-//    private static int defaultDocumentWidth = 800;
-//    private static int defaultDocumentHeight = 300;
 	
 	String text;
 	private Component component;
+	final AppletStub delegate;
 	
 	WiskOpdrEditPanel(String text) {
 		super(new BorderLayout());
 		this.text = text;
+		this.delegate = null;
 		getEditor();
 	}
 
@@ -81,13 +79,14 @@ public class WiskOpdrEditPanel extends JPanel implements Scrollable, AppletStub 
   		}
     }
 	
-	WiskOpdrEditPanel(String text, Locale locale, int editorWidth, int editorHeight, int documentWidth, int documentHeight) {
+	WiskOpdrEditPanel(String text, Locale locale, AppletStub stub, int editorWidth, int editorHeight, int documentWidth, int documentHeight) {
 	  super(null);
+	  this.delegate = stub;
 	  addComponentListener(new Listener());
 	  this.text = text;
 	  try {
 	      Class<?> wiskopdr = WiskOpdrCache.getInstance();
-	      Method m = wiskopdr.getMethod("getWiskOpdrEditPanel", String.class, Locale.class, AppletStub.class, Integer.TYPE, Integer.TYPE, Integer.TYPE, Integer.TYPE);
+	      Method m = wiskopdr.getMethod("getWiskOpdrEditPanel", String.class, Locale.class, java.applet.AppletStub.class, Integer.TYPE, Integer.TYPE, Integer.TYPE, Integer.TYPE);
 	      component = (Component) m.invoke(null, text, locale, this, editorWidth, editorHeight, documentWidth, documentHeight);
 	      add(component, BorderLayout.CENTER);
 	      return;
@@ -135,16 +134,19 @@ public class WiskOpdrEditPanel extends JPanel implements Scrollable, AppletStub 
 
   @Override
   public boolean isActive() {
+	if (delegate != null) return delegate.isActive();
     return true;
   }
 
   @Override
   public URL getDocumentBase() {
+	if (delegate != null) return delegate.getDocumentBase();
     return null;
   }
 
   @Override
   public URL getCodeBase() {
+	if (delegate != null) return delegate.getCodeBase();
     return null;
   }
 
@@ -209,16 +211,19 @@ public class WiskOpdrEditPanel extends JPanel implements Scrollable, AppletStub 
         return null;
       }
   }
+    if (delegate != null) return delegate.getParameter(name);
     return null;
   }
 
   @Override
   public AppletContext getAppletContext() {
+	if (delegate != null) return delegate.getAppletContext();
     return null;
   }
 
   @Override
   public void appletResize(int width, int height) {
+	  if (delegate != null) delegate.appletResize(width, height);
   }
 
 }

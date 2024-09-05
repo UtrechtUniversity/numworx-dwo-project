@@ -1,6 +1,8 @@
 // Source file: C:\\parameters\\fi\\dwo\\client\\gui\\ScoManagementPanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.mainframe.AppletContext;
+import fi.beans.mainframe.AppletStub;
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JCheckBox;
@@ -39,6 +41,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,7 +71,7 @@ import javax.swing.table.TableModel;
  * @author Wim van Velthoven
  *
  */
-public class ScoManagementPanel extends JPanel implements CenterSubPanel, ActionListener {
+public class ScoManagementPanel extends JPanel implements CenterSubPanel, ActionListener, AppletStub {
     private static final Logger LOG = Logger.getLogger(ScoManagementPanel.class.getName());
 
     private CenterPanel center;
@@ -255,7 +258,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         editorBox.add(editorCB);
         if (course.getDescription().startsWith("H4sIAAAAAA") || course.getDescription().isEmpty()) {
             editorCB.setSelected(true); editorCB.setVisible(false);
-            wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
+            wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription(), this);
             wiskOpdrEditPanel.setPreferredSize(new Dimension(800, 350));
             editorBox.add(wiskOpdrEditPanel);
         } else {
@@ -625,7 +628,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         if (src == editorCB) {
             if (editorCB.isSelected()) {
                 if (wiskOpdrEditPanel == null) {
-                    wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
+                    wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription(), this);
                     wiskOpdrEditPanel.setPreferredSize(new Dimension(800, 350));
                     editorBox.add(wiskOpdrEditPanel);
                 }
@@ -857,5 +860,36 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         center.updateCourse(course);
         ok = true;
     }
+	@Override
+	public boolean isActive() {
+		return true;
+	}
+
+	@Override
+	public URL getDocumentBase() {
+		return null;
+	}
+
+	@Override
+	public URL getCodeBase() {
+		return null;
+	}
+
+	@Override
+	public String getParameter(String name) {
+		if ("courseViewNr".equals(name))
+			return String.valueOf(course.getID());
+        return DwoHelper.getApplet().getParameter(name);
+	}
+
+	@Override
+	public void appletResize(int width, int height) {
+	}
+
+	@Override
+	public AppletContext getAppletContext() {
+		return DwoHelper.getApplet().getAppletContext();
+	}
+	
 
 }

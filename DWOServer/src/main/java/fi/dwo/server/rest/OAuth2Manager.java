@@ -33,6 +33,7 @@ import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.DatatypeConverter;
+import fi.dwo.server.PersistentDataManagers.cache.LoginContextCache;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
@@ -97,6 +98,7 @@ static final String AUTHORIZATION_CODE = "authorization_code";
       bytes = key.getEncoded();
       c.setNonce(bytes);
       LoginContextManager.edit(c);
+      LoginContextCache.put(c);
     } else
       key = Keys.hmacShaKeyFor(bytes);
     return key;
@@ -352,6 +354,7 @@ private Response refresh(MultivaluedMap<String, String> params) throws NullPoint
 			  l.setLastLogin(System.currentTimeMillis());
 		  }
 		  LoginContextManager.edit(l);
+		  LoginContextCache.remove(l.getId());
 	      if (servletRequest.getSession(false) != null) {
 	          servletRequest.getSession().invalidate();
 	      }

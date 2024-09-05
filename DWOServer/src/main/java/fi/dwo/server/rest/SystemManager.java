@@ -53,6 +53,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
 import nl.uu.fi.dwo.rest.entities.RestSchool;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
@@ -263,4 +264,17 @@ public class SystemManager {
 	  school.setId(PersistentSchool.buildPersistenceId(sid));
 	  return school;
   }
+  
+  @PUT
+  @Path("course/getSchool")
+  public DomSchoolId getSchool(RestCourse id) throws Dwo2Exception {
+	  Long sid = MySQLPersistenceId.getNativeId(id.getDomCourse());
+	  PersistentCourse sco = CourseManager.findEntity(sid);
+	  sid = sco.getSchoolID();
+	  if (sid == null) return null;
+	  DomSchoolId school = new DomSchoolId();
+	  school.setId(PersistentSchool.buildPersistenceId(sid));
+	  return school;
+  }
+
 }

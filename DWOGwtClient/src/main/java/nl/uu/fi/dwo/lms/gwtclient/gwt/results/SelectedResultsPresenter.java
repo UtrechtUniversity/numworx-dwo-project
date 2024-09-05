@@ -48,7 +48,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortEvent.EventType;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
@@ -166,7 +165,7 @@ public class SelectedResultsPresenter implements ResultEventHandler {
             DomScoContext sco = new DomScoContext();
             sco.setId(scoid);
             promises.add(resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), students)
-                    .map(dom -> dom.getStudentScoContexts().stream().map(DomMapEntry::getValue).collect(Collectors.toList()))
+                    .map(dom -> dom.getStudentScoContexts())
                     .flatMap(resultService::sealList)
                     .then(this::updateResultTree));
         }
@@ -187,7 +186,7 @@ public class SelectedResultsPresenter implements ResultEventHandler {
         DomScoContext sco = new DomScoContext();
         sco.setId(scoid);
         resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), students)
-                .map(dom -> dom.getStudentScoContexts().stream().map(DomMapEntry::getValue).collect(Collectors.toList()))
+                .map(dom -> dom.getStudentScoContexts())
                 .flatMap(resultService::sealList)
                 .then(p -> { 
                 	resultTree.updateResultStudentSco(p.getValue());
@@ -297,7 +296,7 @@ public class SelectedResultsPresenter implements ResultEventHandler {
         DomScoContext sco = new DomScoContext();
         sco.setId(new PersistenceId(scoid));
         Promise<DomStudentScoContext> p1 = resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), Collections.singletonList(student))
-                .map(p -> p.getStudentScoContexts().get(0).getValue());
+                .map(p -> p.getStudentScoContexts().get(0));
         Promise<JSONValue> p2 = resultService.getJSONLaunchDataBytes(sco, domschoolclass.getSchoolClass());
         Promise<Map<String, String>> p3 = p1.then(p -> resultService.getValues(p.getValue()));
 
@@ -367,6 +366,10 @@ public class SelectedResultsPresenter implements ResultEventHandler {
 							studentscocontext.setScoID(scoid);
 							/// ....
 							DomResultStudentScoContext value = new DomResultStudentScoContext(studentscocontext, student);
+// als bij mappedResultsForTeacher					
+							if (sco.getTemplate() != null) {
+								DomResultTree.initResultScoPages(value, sco.getTemplate());
+							}
 							sco.getChildren().put(student.getId(), value);
 						}
 					}
@@ -408,9 +411,10 @@ public class SelectedResultsPresenter implements ResultEventHandler {
                 @Override
                 public Promise<Void> call(Promise<Object> resolved) throws Exception {
                     JSONValue launchdata = p2.getValue();
-                    String review_data = p3.getValue().get(ResultsService.REVIEW_DATA);
-                    String suspend_data = p3.getValue().get(ResultsService.SUSPEND_DATA);
-                    String review_check = p3.getValue().get(ResultsService.REVIEW_CHECK);
+// never null, see Finish (map.remove)
+                    String review_data = p3.getValue().getOrDefault(ResultsService.REVIEW_DATA, "");
+                    String suspend_data = p3.getValue().getOrDefault(ResultsService.SUSPEND_DATA, "");
+                    String review_check = p3.getValue().getOrDefault(ResultsService.REVIEW_CHECK, "");
                     boolean premium = dwoGlobalVars.isPremium();
                     premium = premium && ResultsService.COMPLETED.equals(ssc.getStudentSco().getCompletionStatus());
 					Map<PersistenceId, DomResultStudentScoPage> children = Util.getPages(launchdata, suspend_data, review_data, review_check, premium);

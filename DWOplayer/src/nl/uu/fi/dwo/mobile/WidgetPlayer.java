@@ -7,7 +7,10 @@ import java.util.Optional;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.SimpleEventBus;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ResizeLayoutPanel;
@@ -23,6 +26,7 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Role;
@@ -68,10 +72,11 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
     	
     }
     
-    static class TekstVakWidget extends SimpleLayoutPanel implements  InteractionStub, AnchorContext, OpdrNavIF {
+    static class TekstVakWidget extends SimpleLayoutPanel implements  InteractionStub, AnchorContext, OpdrNavIF, ResizeHandler {
     	private TekstVakPanel delegate;
     	private ActivityInterface activity;
     	private OpdrNavIF comRoot;
+		private HashMap<String, Object> initMap;
 
 		public TekstVakWidget(WidgetPlayer widgetPlayer) {
 			addStyleName("tekstvakwidget");
@@ -81,6 +86,16 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
 		public void setCommunicationRoot(OpdrNavIF comRoot) {
 			this.comRoot = comRoot;
 			delegate.setCommunicationRoot(this);
+			//delegate.setHoofdPanel(false);
+			ObjectMap configuration = comRoot.getConfiguration();
+			if (configuration == null) configuration = JSONUtilities.wrapMap(new JSONObject());
+			delegate.zetInstellingen(configuration); // never null. 
+			//delegate.setKeyboard(comRoot.getKeyboard()); // zal ook wel!
+			delegate.zetOpdracht(initMap);
+			setWidget(delegate);
+			setPixelSize(delegate.getWidth(), delegate.getHeight());
+			if (DWOplayer.RESPONSIVE)
+				delegate.addResizeHandler(this);
 		}
 
 		public HashMap<String, Object> getState() {
@@ -142,9 +157,7 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
 			launch.put("popup", false);
 			launch.put("interactiePanelLaunchState", launchData);
 			delegate = new TekstVakPanel(activity, launch, randomVarNamen, randomVarWaarden, this, width);
-			delegate.zetOpdracht(new HashMap<>(launchData));
-			setWidget(delegate);
-			setPixelSize(delegate.getWidth(), delegate.getHeight());
+			initMap = new HashMap<>(launchData);
 		}
 
 		@Override
@@ -231,6 +244,14 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
 
 		public void setVisited() {
 			comRoot.setVisited();
+		}
+
+		@Override
+		public void onResize(ResizeEvent event) {
+			if (delegate.getWidth() != Window.getClientWidth()) {
+				delegate.zetVolledigeBreedte(Window.getClientWidth());
+				setPixelSize(delegate.getWidth(), delegate.getHeight());
+			}			
 		}
     	
     }

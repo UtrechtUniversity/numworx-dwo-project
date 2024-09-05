@@ -8,6 +8,7 @@ import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -205,15 +206,15 @@ public class BootPanelController {
 		return Document.get().getElementsByTagName("head").getItem(0);
 	}
 
-    Promise<DomDwoProfileFull> insertcss(Promise<DomDwoProfileFull> p) {
-    	String css = p.getValue().getDwoProfileName();
-    	if (profile == 111 || profile == 112 || p.getValue().getDwoProfileRights().contains("c")) // het 'inf' profiel en het 'numworx' profiel
-    	{
-    		css = URL.encodePathSegment(css);
-    		insertStylesheet( getBase() + "css/" + css + ".css");    	
-    	}
-    	return p;
-    }
+//    Promise<DomDwoProfileFull> insertcss(Promise<DomDwoProfileFull> p) {
+//    	String css = p.getValue().getDwoProfileName();
+//    	if (profile == 111 || profile == 112 || p.getValue().getDwoProfileRights().contains("c")) // het 'inf' profiel en het 'numworx' profiel
+//    	{
+//    		css = URL.encodePathSegment(css);
+//    		insertStylesheet( getBase() + "css/" + css + ".css");    	
+//    	}
+//    	return p;
+//    }
     
     final static GwtClientModulesOnly moduleResources = GWT.create(GwtClientModulesOnly.class);
     
@@ -315,6 +316,8 @@ public class BootPanelController {
         //hideGwtGui = false;
         profile = 77;
         stage = 1;
+        
+        History.addValueChangeHandler(evt -> this.eventBus.fireEvent(evt));
     }
 
 //    public static native String getHideGwtGuiString()/*-{
@@ -458,7 +461,7 @@ public class BootPanelController {
         Promise<DomDwoProfileFull> promise = new PublicProfileManager().get(profile)
         .filter(v -> v != null);
         dwoGlobalVars.setProfile(promise);
-        promise.then(this::insertcss);
+        //promise.then(this::insertcss);
         promise.then(this::hasChat);
         //show main panel
         this.rootPanel = rootPanel;

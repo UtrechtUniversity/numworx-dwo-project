@@ -24,6 +24,7 @@ import fi.dwo.commons.persistence.entities.PersistentScoData;
 import fi.dwo.commons.persistence.entities.PersistentScoPage;
 import fi.dwo.commons.persistence.entities.PersistentScoPagePK;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
+import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoPageManager;
 
 public class ScoPageUtilManager {
@@ -80,6 +81,9 @@ public class ScoPageUtilManager {
 		json = json.getJsonObject("onsState");
 		JsonArray scores = json.getJsonArray("orScores");
 		if (scores != null) scores = scores.getJsonArray(0); // activiteit 0;
+		JsonArray bezocht = json.getJsonArray("bezocht");
+		if (bezocht != null) bezocht = bezocht.getJsonArray(0); // idem
+		
 		for (PersistentScoPage src: data) {
 			Long i = src.getId().getSequencenr();
 			PersistentScoPage dst = map.get(i);
@@ -102,8 +106,16 @@ public class ScoPageUtilManager {
 			int index = i.intValue();
 			if (scores != null && scores.size()> index) {
 				JsonValue num = scores.get(index);
-				if (num != null && num.getValueType() == ValueType.NUMBER) score = ((JsonNumber) num).intValue();
+				if (num != null && num.getValueType() == ValueType.NUMBER) score = ((JsonNumber) num).intValue();		
 			}
+			if (score == null) {
+				//if (bezocht[index] ) score = 0;
+				if (bezocht != null && index < bezocht.size()) {
+					JsonValue b = bezocht.get(index);
+					if (b == JsonValue.TRUE) score = 0;
+				}
+			}
+
 			// bepaal score uit json
 			dst.setScore(score);
 			// bepaal others uit json
@@ -125,6 +137,7 @@ public class ScoPageUtilManager {
 		JsonReader parser = Json.createReader(new StringReader(value));
 		JsonObject json = parser.readObject();
 		JsonArray array = json.getJsonArray("opdrContStates");
+		array = array.getJsonArray(0);
 		List<PersistentScoPage> pages = ScoPageManager.find(pssc);
 		Map<Long, PersistentScoPage> map = pages.stream()
 				.collect(Collectors.toMap( key,  Function.identity()));
@@ -149,6 +162,8 @@ public class ScoPageUtilManager {
 					map.put(page.getId().getSequencenr(), page);
 				}
 				page.setCorrectie(sumCorrectie(state));
+				Boolean result = sumDocentCorrectie(state);
+				if (result != null) page.setCheckDocent(result);
 			}
 			ScoPageManager.edit(page);
 		}
@@ -183,10 +198,46 @@ public class ScoPageUtilManager {
 
 	private static void emptyDocentCorrectie(PersistentStudentScoContext ssc) {
 		List<PersistentScoPage> pages = ScoPageManager.find(ssc);
+		PersistentScoContext sco = ScoContextManager.findEntity(ssc.getScoID());
+		List<PersistentScoPage> template = ScoPageManager.find(sco);
 		for (PersistentScoPage p: pages) {
 			p.setCorrectie(null);
+			p.setCheckDocent(template.get(p.getId().getSequencenr().intValue()).getCheckDocent());
 			ScoPageManager.edit(p);
 		}
 	}
+	
+	private static Boolean sumDocentCorrectie(JsonValue value) {
+		if (value == null) return null;
+		ValueType type = value.getValueType();
+		Boolean result;
+		switch(type) {
+		case ARRAY:
+			JsonArray array = value.asJsonArray();
+			for(int i = 0; i < array.size(); i++) {
+				result = sumDocentCorrectie( array.get(i));
+				if (Boolean.TRUE.equals(result)) return Boolean.TRUE; // 
+			}
+			break;
+		case OBJECT: 
+			JsonObject o = value.asJsonObject();
+			JsonValue s;
+			s = o.get("checkDocent");
+			if (s != null) {
+				return s == JsonValue.TRUE;				
+			}
+			s = o.get("interactiePanelStates");
+			result = sumDocentCorrectie(s);
+			if (Boolean.TRUE.equals(result)) return Boolean.TRUE; // 
+			s = o.get("reviewInteractieData");
+			result = sumDocentCorrectie(s);
+			if (Boolean.TRUE.equals(result)) return Boolean.TRUE; // 
+			break;
+		default:
+			break;		
+		}
+		return null;
+	}
+	
 	
 }

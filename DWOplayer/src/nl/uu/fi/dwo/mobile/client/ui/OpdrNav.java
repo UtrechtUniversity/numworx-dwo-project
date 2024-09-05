@@ -1031,6 +1031,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 						public void execute()
 						{
 							gotoOpdracht(button_id, entry.scoreNav);
+							entry.setCurrentOpdracht(button_id, null);
 							entry.v();
 						}
 					};
@@ -1766,7 +1767,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		return entry.getClipboard();
 	}
 
-	public void gotoOpdracht(final int opdracht)
+	private void gotoOpdracht(final int opdracht)
 	{
 		saveCurrentState();
 		
@@ -1910,6 +1911,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 		if (entry.activity.parameters().isNavTitle())
 			entry.setTitle("Vraag " + (getCurrentOpdracht() + 1) + " van " + getAantalOpdrachten());
+
 	}
 
 	public int[] getMaxScores()
@@ -2432,6 +2434,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			resetBezocht();
 			
 			setOpdrachten(currentOpdracht); // shift naar 0
+			entry.setCurrentOpdracht(currentOpdracht, null);
 		} // alles opnieuw
 		else
 		{

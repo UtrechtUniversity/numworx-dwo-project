@@ -73,12 +73,12 @@ public final class DWO2RPCHandler extends nl.uu.fi.dwo.account.client.RPCHandler
 //        return super.getUserFromAuthToken(authToken); // werkt alleen als er een ww is ingesteld, we gaan over op basic auth
     }
 
-    @Override
-    public Promise<DomUserFullwLoginContext> samlLogin(String name, String org) {
-      String authToken = Cookies.getCookie(DWO_SAML_AUTH_TOKEN);
-      authToken = "3\f" + name + '\f' + org + '\f' + authToken;
-      return super.getUserFromOAuthToken(Base64.btoa(authToken));
-    }
+//    @Override
+//    public Promise<DomUserFullwLoginContext> samlLogin(String name, String org) {
+//      String authToken = Cookies.getCookie(DWO_SAML_AUTH_TOKEN);
+//      authToken = "3\f" + name + '\f' + org + '\f' + authToken;
+//      return super.getUserFromOAuthToken(Base64.btoa(authToken));
+//    }
 		
     public Promise<JSONValue> refreshExam() {
     	return accountManager.verifyTOTP(context).then(p -> { 

@@ -27,7 +27,7 @@
 	if(base == null || base.contains("'") || !legal.matcher(base).matches() ) 
 	  base = "";
 	else {
-	  base = "<base href='" + base + "'>"; 
+	  base = "<script>base='" + base + "' </script>"; 
 	}
 	try {
 		DomDwoProfile dom = PublicProfileCache.get(profile);

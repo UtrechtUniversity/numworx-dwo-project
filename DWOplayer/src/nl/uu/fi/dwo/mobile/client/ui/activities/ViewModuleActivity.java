@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -86,6 +87,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	@Inject Provider<ViewModuleView> clientFactory;
 	@Inject DwoGlobalVars vars;
 	@Inject PlaceController placeController;
+	@Inject OnCloseDelegate onClose;
 	@Inject RPCHandler rpc;
 	@Inject HeaderView headerView;
 	@Inject PlaceHistoryMapper mapper;
@@ -105,7 +107,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	private Timer tm;
 	private boolean started;
 	private String location, hash;
-	
+	private ViewModulePlace where;
 	
 	@Override
 	public String mayStop() {
@@ -114,7 +116,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	    	if (opdrNav == null) return super.mayStop(); // komt voor als je een Premium activiteit start als standaard school
 			opdrNav.setChanged(false);			
 	    }
-		if (started && vars.withUser() && vars.getRoleType() == RoleType.STUDENT)
+		if (started && vars.withUser() && vars.getRoleType() == RoleType.STUDENT && onClose.isOnClose())
 			return Text.constants.maybe_lost_data();
 		return super.mayStop();
 	}
@@ -123,6 +125,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	{
 		injector.injectMembers(this);
 		this.sco = sco;
+		this.where = where;
 		this.location = where.getLocation();
 		this.hash = where.getHash();
 	}
@@ -281,6 +284,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 			view.setTrail(trail);
 			headerView.setTrail(trail);
 			view.setTitle(sco.getName());
+			Window.setTitle(sco.getName());
 			view.setScoType(sco.getScoType());
 			view.setPresenter(this);
 			headerView.setPresenter(this);
@@ -309,6 +313,14 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 			public void onSuccess(Void result) {
 				if(location != null) {
 					view.setLocation(location);
+					Window.setTitle(sco.getName() + " - " + location);
+				} else {
+					location = view.getApi().GetValue(Memento.LOCATION);
+					if (location == null||location.isEmpty()) location = "0";
+					where.setLocation(location);
+					sco.setPlace(where);
+					Window.setTitle(sco.getName() + " - " + location);
+					History.replaceItem(mapper.getToken(where), false);	
 				}
 					started = !Memento.COMPLETED.equals(view.getApi().GetValue(Memento.COMPLETION_STATUS));
 					view.setupModule(sco.getName(), PARAMETERS.getLaunchData() + sco.getID())
@@ -419,6 +431,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	public void gotoUrl(final String href) {
 		if (href.startsWith("anchor:")) {
 			gotoElement(href.substring(7));
+			gotoPage(where.getLocation(), href.substring(7) );
 		} else
 		if("goto:0".equals(href)) {
 			started = false;
@@ -567,5 +580,21 @@ public void onNeedLogin(NeedLoginEvent ev) {
 	registration.removeHandler();
 	oops.onNeedLogin(ev);
 }
+
+	//boolean magterug = view.magterug(); // nog bepalen wanneer je deze op false moet zetten. false is de veilige waarde!
+	// FIXME Er zijn activiteiten zonder "TERUG NAAR VORIGE PAGINA";
+
+	@Override
+	public void gotoPage(String location, String hash) {
+		if (Objects.equals(location, where.getLocation()) && Objects.equals(hash, where.getHash()) )
+			return; // same same, do nothing.
+		where.setLocation(location);
+		where.setHash(hash);
+		if (view.magterug())
+			History.newItem(mapper.getToken(where), false);
+		else 
+			History.replaceItem(mapper.getToken(where), false);
+		Window.setTitle(sco.getName() + " - " + location);
+	}
 	
 }

@@ -165,8 +165,16 @@
   		  <artifactId>aws-advanced-jdbc-wrapper</artifactId>
   		  <version>2.3.7</version>
   		  <scope>runtime</scope>
+  		  <optional>true</optional>
+        </dependency>
+		 <dependency> 
+		  <groupId>org.slf4j</groupId>
+		  <artifactId>slf4j-jdk14</artifactId>
+		  <version>1.7.30</version>
+		  <scope>runtime</scope>
+		  <optional>true</optional>
 		</dependency>
-        <dependency>
+		       <dependency>
             <groupId>org.tuckey</groupId>
             <artifactId>urlrewritefilter</artifactId>
             <version>4.0.3</version>
@@ -225,7 +233,6 @@
 			    <groupId>javax.cache</groupId>
 			    <artifactId>cache-api</artifactId>
 			    <version>1.1.1</version>
-			    <scope>test</scope>
 			</dependency>
 	   		<dependency>
 	   			<groupId>nl.numworx.schoolyear</groupId>
@@ -373,17 +380,17 @@
                         <warFile>target/${project.artifactId}-${project.version}.war</warFile>
                             <contextFile>src/test/tomcat/${context.xml}</contextFile>
                             <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
-<!--                        <webapps>-->
-<!--                          <webapp>-->
-<!--						    <groupId>nl.numworx.uploadwidget</groupId>-->
-<!--						    <artifactId>UploadWidgetGWT</artifactId>-->
-<!--						    <version>2.5.28-SNAPSHOT</version>-->
-<!--                            <type>war</type>-->
-<!--                            <contextPath>/dwo/dav/upload</contextPath>-->
-<!--                            <asWebapp>true</asWebapp>-->
-<!--                          </webapp>-->
-<!--                        </webapps>-->
-                    </configuration>
+                       	<webapps>
+                         <webapp>
+						    <groupId>nl.numworx.uploadwidget</groupId>
+						    <artifactId>uploadwidget-local</artifactId>
+						    <version>2.5.34-SNAPSHOT</version>
+                            <type>war</type>
+                            <contextPath>/dwo/dav/upload</contextPath>
+                            <asWebapp>true</asWebapp>
+                         </webapp>
+                        </webapps>
+                   </configuration>
                     <dependencies>
    			<dependency>
             <groupId>org.apache.tomcat.embed</groupId>
@@ -671,6 +678,42 @@
 	    		<version>2.2.7</version>
 			 </dependency>
 			</dependencies>
+		</profile>
+		<profile>
+			<id>memcached-jcache</id>
+			<dependencies>
+				<dependency>
+				    <groupId>org.memcached</groupId>
+    				<artifactId>memcached-jcache</artifactId>
+    				<version>1.0</version>
+		    		<scope>test</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>ri-jcache</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<dependencies>
+				<dependency>
+				    <groupId>org.jsr107.ri</groupId>
+				    <artifactId>cache-ri-impl</artifactId>
+				    <version>1.1.1</version>
+				    <scope>runtime</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>redis-jcache</id>
+			<dependencies>
+				<dependency>
+				    <groupId>org.redisson</groupId>
+				    <artifactId>redisson</artifactId>
+				    <version>3.20.0</version>
+				    <scope>test</scope>
+				</dependency>
+			</dependencies>		
 		</profile>
     </profiles> 
 </project>

@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.rest.dom;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -25,6 +26,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoPage;
 import nl.uu.fi.dwo.rest.dom.entities.util.SumOfSubTreeVisitor;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -158,6 +160,8 @@ public class DomResultTree {
                 if(scoList != null)
                 for (DomScoContext sco : scoList) {
                     DomResultScoContext resultSco = new DomResultScoContext(sco);
+                    List<DomStudentScoPage> template = resultData.getStudentScoPages().get(sco.getId());
+                    resultSco.setTemplate(template);
                     resultCourse.getChildren().put(sco.getId(), resultSco);//add sco to parent
                     resultSco.setParent(resultCourse);//set parent in sco
                     //find studentsco's to sco if present in the same school class
@@ -179,6 +183,13 @@ public class DomResultTree {
 								value.setMaxScore(resultSco.getMaxScore());
 								value.setScoType(resultSco.getScoContext().getScoType());
                                 resultSco.getChildren().put(ss.getId(), value);
+// check for studentscopages:                                
+                                if (template != null) {
+                                	value.setChildren(new HashMap<>());
+                                	initResultScoPages(value, template);
+                                    List<DomStudentScoPage> pages = resultData.getStudentScoPages().getOrDefault(ss.getId(), Collections.emptyList());
+                                    initResultScoPages(value, pages);
+                                }
                             }
                         }
                     }
@@ -192,6 +203,33 @@ public class DomResultTree {
         assignNodeIds(resultTree);
         assignNodeIds(studentTree);
     }
+
+	public static void initResultScoPages(DomResultStudentScoContext value, List<DomStudentScoPage> pages) {
+		boolean hascorrectie = "completed".equals(value.getStudentSco().getCompletionStatus());
+		for(DomStudentScoPage page: pages) {
+			String label = String.valueOf(page.getSequencenr().intValue() + 1);
+			DomResultStudentScoPage resultPage = new DomResultStudentScoPage(label);
+			resultPage.setNodeId(page.getSequencenr().intValue());
+			PersistenceId pid = new PersistenceId("LOCAL;none;" + label);
+			value.getChildren().put(pid, resultPage);
+			if (page.getScore() != null) {
+				if (hascorrectie && Boolean.TRUE.equals(page.getDocentCorrectie())) {
+					resultPage.setScore(-1.0);
+					resultPage.setMaxScore(Double.valueOf(page.getMaxScore().doubleValue()));					
+				} else {
+					resultPage.setScore(Double.valueOf(page.getScore().doubleValue()));
+					resultPage.setMaxScore(Double.valueOf(page.getMaxScore().doubleValue()));
+				}
+			} else {
+				resultPage.setScore(0.0);
+				resultPage.setMaxScore(null);
+			}
+			if (hascorrectie && page.getCorrectie() != null) {
+				resultPage.setCorrectie(page.getCorrectie().doubleValue());
+				resultPage.setMaxScore(Double.valueOf(page.getMaxScore().doubleValue()));
+			}
+		}
+	}
 
     private void assignNodeIds(DomResultScore score) {
         addToNodeMap(score);
@@ -291,10 +329,14 @@ public class DomResultTree {
         findAndUpdateResultStudentSco(resultTree, map);
         insertStudentCourses();
         //resultTree.calculateSumOfSubtreeScore();
-        SumOfSubTreeVisitor v = new SumOfSubTreeVisitor();
+        visitSumOfSubtree();
+    }
+
+	private void visitSumOfSubtree() {
+		SumOfSubTreeVisitor v = new SumOfSubTreeVisitor();
 		resultTree.visit(v);
 		studentTree.visit(v);
-    }
+	}
     
    
 
@@ -347,7 +389,8 @@ public class DomResultTree {
     
     public void updateResultStudentScoPages(PersistenceId sscid, Map<PersistenceId, DomResultStudentScoPage> children) {
       findAndUpdateRestultStudentScoPages(resultTree, sscid, children);
-  }
+      visitSumOfSubtree();
+    }
 
     private void findAndUpdateRestultStudentScoPages(
         DomResultScore<?>item,

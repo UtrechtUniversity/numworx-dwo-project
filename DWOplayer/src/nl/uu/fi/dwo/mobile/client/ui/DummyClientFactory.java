@@ -5,6 +5,8 @@ import javax.inject.Singleton;
 
 import org.osgi.util.promise.Promise;
 
+import com.google.gwt.place.shared.Place;
+
 @Singleton
 public class DummyClientFactory implements ClientFactory {
 
@@ -19,8 +21,10 @@ public class DummyClientFactory implements ClientFactory {
 
 	@Override
 	public void gotoCourses() {
-		// TODO Auto-generated method stub
-		
+	}
+
+	@Override
+	public void goTo(Place next) {
 	}
 
 }
