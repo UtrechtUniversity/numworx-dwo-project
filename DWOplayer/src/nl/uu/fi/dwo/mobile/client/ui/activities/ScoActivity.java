@@ -364,4 +364,10 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 		go(place);
 	}
 
+	@Override
+	public void gotoPage(String location, String hash) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

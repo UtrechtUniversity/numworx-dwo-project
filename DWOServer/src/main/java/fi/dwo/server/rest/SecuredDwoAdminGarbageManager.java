@@ -35,6 +35,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.cache.LoginContextCache;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
@@ -272,7 +273,10 @@ public class SecuredDwoAdminGarbageManager {
     PersistentLoginContext context = LoginContextManager.findEntity(id);
     PersistentUser u = UserManager.findEntity(context.getUserId());
     if (u == null)
-      LoginContextManager.destroy(id);
+    {
+    	LoginContextManager.destroy(id);
+    	LoginContextCache.remove(id);
+    }
     else 
       return Boolean.FALSE;
     return Boolean.TRUE;

@@ -31,14 +31,17 @@ import nl.uu.fi.dwo.rest.dom.DomMappedResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacherv2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.entities.RestClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.entities.RestResultsPerTeacher;
+import nl.uu.fi.dwo.rest.entities.RestResultsPerTeacherv2;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import org.junit.After;
@@ -240,6 +243,61 @@ public class SecuredTeacherResultsManagerIT {
         assertEquals(true, mapResult.getStudentScoContexts().containsKey(new PersistenceId("MYSQL;PersistentStudentScoContext;00000000000000000002")));
     }
  
+    @Test public void testGetTeachersResultsV2() throws Exception {
+        System.out.println("testSelectedTeachersResults V2");
+        SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
+        SecuredTeacherResultsManager instance = new SecuredTeacherResultsManager();
+        RestResultsPerTeacherv2 rest = new RestResultsPerTeacherv2();
+        DomDwoProfileId domProfile;
+        
+        PersistentDwoProfile pProfile = new PersistentDwoProfile();
+        pProfile.setDwoProfileID(1L);
+        pProfile.setDwoProfileName("testprofile01");
+        pProfile.setDwoProfileRights("_");
+        pProfile.setDwoProfileDescription("Test dwoProfileDescription");
+        pProfile.setDwoProfileText("Test dwoProfileText01");
+        domProfile = pProfile.buildDomDwoProfile();
+        
+        DomContext restContext = new DomContext();
+        rest.setRestContext(restContext);
+        rest.setDomDwoProfile(domProfile);
+        
+        DomHasRole domHasRole = null;
+        PersistentUser pUser = UserManager.findByUserName("user07");
+        PersistentSchool pSchool = SchoolManager.findBySchoolLogin("school01");//id =3
+
+        try {
+            PersistentHasRole pHasRole = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, pSchool, RoleType.TEACHER);
+            domHasRole = pHasRole.buildDomHasRole();
+        } catch (Dwo2Exception ex) {
+            Logger.getLogger(SecuredTeacherResultsManagerIT.class.getName()).log(Level.SEVERE, null, ex);
+            fail("Could not find teacher's hasRole");
+        }
+        restContext.setDomHasRole(domHasRole);
+        
+        DomResultsPerTeacherv2 input = new DomResultsPerTeacherv2();
+        rest.setDomResultsPerTeacher(input);
+        
+        DomResultsPerTeacherv2 result = instance.selectedTeachersResults(sc,rest);
+        assertNotNull(result);
+        assertEquals(1, result.getSchoolClasses().size());
+        assertEquals(2, result.getCourses().size());
+        assertEquals(2, result.getClassCourses().size());
+
+// second half
+        rest.setDomResultsPerTeacher(result);
+        result = instance.selectedTeachersResults(sc, rest);
+        
+        assertNotNull(result.getStudents());
+        assertNotNull(result.getStudentsOfClasses());
+        
+        assertNotNull(result.getScoContexts());
+        assertNotNull(result.getStudentScoContexts());
+        assertNotNull(result.getStudentScoPages()); // empty?
+        
+        
+    }
+    
     
     @Test
     public void testClearStudentResults() throws Exception {

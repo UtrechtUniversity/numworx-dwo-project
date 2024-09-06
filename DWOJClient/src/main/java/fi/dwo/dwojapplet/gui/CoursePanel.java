@@ -2,6 +2,8 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\CoursePanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.mainframe.AppletContext;
+import fi.beans.mainframe.AppletStub;
 import fi.beans.mathkit.JMathPane;
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
@@ -18,7 +20,6 @@ import fi.dwo.dwojapplet.gui.wiskopdr.LinkIF;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
 
-import java.applet.AppletContext;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -29,6 +30,7 @@ import java.awt.MediaTracker;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -49,7 +51,7 @@ import javax.swing.text.JTextComponent;
  *
  */
 public class CoursePanel extends JPanel implements CenterSubPanel,
-        ActionListener, LinkIF //,Scrollable
+        ActionListener, LinkIF, AppletStub //,Scrollable
         {
 
     /* (non-Javadoc)
@@ -127,7 +129,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 			}
 			else if(s.startsWith("H4sIAAAAAA"))
 			{	htmlMode=true;
-				wiskOpdrPanel = WiskOpdr.getWiskOpdrPanel(s, DwoHelper.getAu().getLocale()) ; //TODO java locale
+				wiskOpdrPanel = WiskOpdr.getWiskOpdrPanel(s, DwoHelper.getAu().getLocale(), this);
 				wiskOpdrPanel.setLocation(20,startY);
 				wiskOpdrPanel.setJSObjectOwner(this);
 				wiskOpdrPanel.setBackground(getBackground());
@@ -514,4 +516,32 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
     public boolean getScrollableTracksViewportHeight() {
       return getParent().getHeight() > getPreferredSize().height;
     }
+
+	@Override
+	public boolean isActive() {
+		return false;
+	}
+
+	@Override
+	public URL getDocumentBase() {
+		return null;
+	}
+
+	@Override
+	public URL getCodeBase() {
+		return null;
+	}
+
+	@Override
+	public String getParameter(String name) {
+		if ("courseViewNr".equals(name))
+			return String.valueOf(course.getID());
+		return null;
+	}
+
+	@Override
+	public void appletResize(int width, int height) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -63,7 +63,6 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 	
 	@UiField HTML logoPanel;
 	@UiField Widget loginPanel;
-	@UiField Frame  messagePanel;
 	@UiField Widget linksPanel;
 	@UiField Button loginBtn;
 	@UiField TextBox username;
@@ -108,13 +107,8 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 		password.getElement().setAttribute("autocapitalize", "off");
 		password.getElement().setAttribute("autocomplete", "off");
 		
-		if(!kiosk)
+		if(kiosk)
 		{		
-			messagePanel.setUrl("//cdn.dwo.nl/resources/alert_"
-				+ Text.constants.language()
-				+ ".html");
-		} else {
-			messagePanel.removeFromParent();
 			linksPanel.removeFromParent();
 			allowGuest(false);
 		}

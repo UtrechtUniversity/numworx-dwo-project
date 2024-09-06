@@ -1,22 +1,33 @@
 package fi.dwo.server.PersistentDataManagers.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
+import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
+import fi.dwo.server.persistence.DwoEmfFactory;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
@@ -100,4 +111,57 @@ public class SchoolClassUtilManager {
         }
     }
 
+/*    
+ SELECT cc.ClassCourseID, count(ssc.studentsco) FROM tblclasscourse cc
+join tblcourse c using(courseid)
+left join tblscocontext sc on (cc.courseid = sc.courseid)
+left join tblstudentof so on (cc.classid = so.classid)
+left join tblstudentscocontext ssc on (so.userid = ssc.userid and sc.scoid = ssc.scoid and ssc.schoolGroupId = so.schoolgroupid)
+where cc.classid = 2  and withchildren = 0 group by cc.classcourseid, cc.courseid
+    
+*/
+	public static HashMap<Long, Long> countStudentScoForClassCourse(Long schoolclassid, ViewState viewstate) {
+
+		EntityManager em = DwoEmfFactory.getEntityManager();
+		
+		Query q = em.createQuery(
+"SELECT cc.classCourseID, sc.scoID, so.persistentStudentOfClassPK.userID, ssc.studentSco  FROM PersistentClassCourse cc JOIN PersistentCourse c ON (cc.courseID = c.courseID) "
++ "LEFT JOIN PersistentScoContext sc ON (cc.courseID = sc.courseID) "
++ "LEFT JOIN PersistentStudentOfClass so ON (cc.classID = so.persistentStudentOfClassPK.classID) "
++ "LEFT JOIN PersistentStudentScoContext ssc ON (ssc.scoID = sc.scoID AND ssc.persistentHasRolePK.userID = so.persistentStudentOfClassPK.userID AND ssc.persistentHasRolePK.schoolGroupID = so.persistentStudentOfClassPK.schoolGroupID) "
++ "WHERE c.withChildren = false AND cc.classID = :classID AND cc.viewState = :type "
+//+ "GROUP BY cc.classCourseID, cc.courseID"
+);
+		q.setParameter("classID", schoolclassid);
+		q.setParameter("type", viewstate);
+		@SuppressWarnings("unchecked")
+		List<Object[]> result = q.getResultList();
+		HashMap<Long, Long> map = new HashMap<>(); 
+		for(Object[] ar : result) {
+			Long key =  (Long) ar[0];
+			Long count = map.computeIfAbsent(key, k -> 0L);
+			Long value = (Long) ar[3];
+			if (value != null)
+				map.put(key, count + 1L);
+		}
+		return map;
+	}
+	private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+	private static final Long NUL = Long.valueOf(0L);
+	public static Boolean asyncCleanupSchoolclass(Boolean work, PersistentSchoolClass cls) {
+		if (work) {
+			Runnable run = () -> {
+				HashMap<Long, Long> map = countStudentScoForClassCourse(cls.getClassID(), ViewState.students);
+				for (Map.Entry<Long, Long> entry : map.entrySet()) {
+					if (NUL.equals(entry.getValue())) {
+						ClassCourseManager.destroy(entry.getKey());
+					}
+				}
+			};
+			executor.execute(run);
+		}
+		
+		return work;
+		
+	}
 }

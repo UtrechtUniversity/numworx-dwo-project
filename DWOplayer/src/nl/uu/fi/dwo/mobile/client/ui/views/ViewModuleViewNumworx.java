@@ -342,6 +342,8 @@ public void onResize() {
 public void setLocation(String location) {
 	delegate.setLocation(location);
 }
-
+public boolean magterug() {
+	return delegate.magterug();
+}
 
 }

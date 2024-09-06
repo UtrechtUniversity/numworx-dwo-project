@@ -17,7 +17,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 public class PublicProfileCache {
 	
-	private static final String NAME = "DomDwoProfileFull";
+	static final String NAME = "DomDwoProfileFull";
 
 	private PublicProfileCache() {
 	}
@@ -26,23 +26,8 @@ public class PublicProfileCache {
 
 	static synchronized Cache<String, DomDwoProfileFull> cache() {
 		if (_instance == null) {
-			CachingProvider cachingProvider = Caching.getCachingProvider();
-			Properties properties = new Properties(cachingProvider.getDefaultProperties());
-//voor memcache 
-			String servers = System.getProperty("MEMCACHED", "test:localhost:11211");
-			servers = servers.substring(servers.indexOf(':')+1);
-			properties.setProperty(NAME + ".servers", servers);
-			CacheManager cacheManager = cachingProvider.getCacheManager(null, null, properties);
-			_instance = cacheManager.getCache(NAME, String.class, DomDwoProfileFull.class);
-			if (_instance == null) {
-				MutableConfiguration<String, DomDwoProfileFull> conf;
-				conf = new MutableConfiguration<String, DomDwoProfileFull>().setTypes(String.class, DomDwoProfileFull.class);
-// voor memcache
-				conf.setStoreByValue(false);
-				conf.setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.ONE_DAY));
-				
-				_instance = cacheManager.createCache(NAME, conf);
-			}
+				_instance = CacheUtilManager.createCache(NAME, String.class, DomDwoProfileFull.class);
+
 		}
 		return _instance;
 	}

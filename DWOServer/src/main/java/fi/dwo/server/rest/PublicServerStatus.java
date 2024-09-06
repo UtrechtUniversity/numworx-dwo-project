@@ -172,7 +172,7 @@ public class PublicServerStatus {
         String softwareVersion = BUILD.version;
         if (softwareVersion != null) softwareVersion = softwareVersion.replace("-SNAPSHOT", ""); // remove -SNAPSHOT suffix
         String revision = BUILD.buildNumber;
-    	return "<span style='float:right;color:white;font-size:14px'>" + softwareVersion + " " + revision + "</span>";
+    	return "<!DOCTYPE html><span style='float:right;color:white;font-size:14px'>" + softwareVersion + " " + revision + "</span>";
     }
     
     

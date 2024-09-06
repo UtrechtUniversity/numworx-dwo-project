@@ -97,6 +97,18 @@ public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
         String tt = Objects.toString(ss.getStudentSco().getTotalTime(), "00:00:00");
 		ss.setTotalTime(tt);
         ss.setFraction(1.0);
+        if (!ss.getChildren().isEmpty()) {
+        	double size = ss.getChildren().size();
+        	int bezocht = 0;
+        	for(DomResultStudentScoPage page: ss.getChildren().values()) {
+        		if (page.getMaxScore() != null) bezocht ++;
+        	}
+        	ss.setFraction(bezocht / size);
+        }
+        
+        
+        
+        
         if (ss.getScoType() == ScoType.INFO) {
         	ss.setTitle("ℹ");
         	ss.setDescription("ℹ in " + buildTime(tt));
@@ -104,7 +116,7 @@ public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
 //        	ss.setScore(-3.0);
         } else {
         	ss.setTitle(ss.getScore() + " in " + buildTime(tt));
-        	ss.setDescription(ss.getScore() + "% in " + tt);
+        	ss.setDescription(ss.getScore() + "% in " + tt + ", gedaan " + Math.round(ss.getFraction()*100) + "%");
         } 
         ss.setStudentScoCount(1);
         

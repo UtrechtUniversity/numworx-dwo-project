@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import java.util.List;
+
 import nl.uu.fi.dwo.rest.dom.entities.util.DomResultScoreVisitor;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 
@@ -9,6 +11,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
  */
 public class DomResultScoContext extends DomResultScore<DomResultStudentScoContext> {
     private DomScoContext scoContext;
+    private List<DomStudentScoPage> template;
     private Double maxScore;
 
     public DomResultScoContext(DomScoContext aSco){
@@ -54,6 +57,14 @@ public class DomResultScoContext extends DomResultScore<DomResultStudentScoConte
 	@Override
 	public void visit(DomResultScoreVisitor v) {
 		v.visitScoContext(this);
+	}
+
+	public List<DomStudentScoPage> getTemplate() {
+		return template;
+	}
+
+	public void setTemplate(List<DomStudentScoPage> template) {
+		this.template = template;
 	}
         
 }

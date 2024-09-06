@@ -14,8 +14,10 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
+import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
+import com.google.gwt.user.client.History;
 import com.google.web.bindery.event.shared.EventBus;
 
 import dagger.Lazy;
@@ -60,6 +62,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 	    TreeModuleView treeModuleView;
 	    final private DwoGlobalVars instance;
 	    final private DWOplayerParameters PARAMETERS;
+	    final private Provider<PlaceHistoryMapper> mapper;
 
 		@Inject DWO2ClientFactoryImpl(EventBus bus, PlaceController controller,
             Provider<PlaceHistoryMapper> mapper,
@@ -73,6 +76,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
               super(bus, controller, entry);
               treeModuleViewProvider = view;
               instance = vars;
+              this.mapper = mapper;
               PARAMETERS = params;
               setRPCHandler(rpcHandler);
               setup(none,numworx);
@@ -215,14 +219,25 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 					@Override
 					public void run() {
 						if( !PARAMETERS.inKiosk() || roleType != RoleType.STUDENT)
-							placeController.goTo(new TreeModulePlace("0"));
+							goTo(new TreeModulePlace("0"));
 						else 
 						{ // was FlatModulePlace();
-							placeController.goTo(new ClassesPlace());
+							goTo(new ClassesPlace());
 						}
 					}});
 				return;
 			
+		}
+
+		@Override
+		public void goTo(Place place) {
+			if (instance.isAutoLogin()) {
+				String token = mapper.get().getToken(place);
+				History.replaceItem(token);
+				instance.setAutoLogin(false);
+				return;
+			}
+			super.goTo(place);
 		}
 		
 		

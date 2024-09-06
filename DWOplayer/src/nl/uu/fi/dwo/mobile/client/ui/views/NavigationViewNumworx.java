@@ -268,14 +268,15 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 			place = new TreeModulePlace("0");
 			break;
 		case SCO:
-			place = new ViewModulePlace(o.getID());
+			place = o.getPlace();
+			if (place == null)
+				place = new ViewModulePlace(o.getID());
 			break;
 		case MODULE:
-			//place = new SelectModulePlace(o.getID());
-			place = new TreeModulePlace(o.getID());
-			break;
 		case FOLDER:
-			place = new TreeModulePlace(o.getID());
+			place = o.getPlace();
+			if (place == null)
+				place = new TreeModulePlace(o.getID());
 			break;
 		}
 		presenter.goTo(place);

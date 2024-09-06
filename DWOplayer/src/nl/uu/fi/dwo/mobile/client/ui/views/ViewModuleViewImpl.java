@@ -865,6 +865,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			if(cur >= on.getAantalOpdrachten()) 
 				cur = on.getAantalOpdrachten()-1;
 			on.gotoOpdracht(cur, scoreNav);
+			setCurrentOpdracht(cur, null);
 		}
 		else
 		{	int cur = on.getCurrentOpdracht() + 1;
@@ -888,6 +889,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			while(!bezocht[on.getCurrentActiviteit()][cur] && cur > 0)
 				cur--;
 			on.gotoOpdracht(cur, scoreNav);
+			setCurrentOpdracht(cur, null);
 		}
 		else
 		{
@@ -895,6 +897,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			if(cur < 0) 
 				cur = 0 ;
 			on.gotoOpdracht(cur, scoreNav);
+			setCurrentOpdracht(cur, null);
 		}
 	}
 	
@@ -1877,13 +1880,15 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			{
 				String[] split = href.split("#", 2);
 				href = split[0];
+				String hash = null;
 				int opdrnr = Integer.parseInt(href.substring(6)) -1 ; // 0based
 				on.gotoOpdracht(opdrnr, scoreNav);
 				if (split.length > 1) {
 					{
-						gotoElement(split[1]);
+						gotoElement(hash = split[1]);
 					}
 				}
+				setCurrentOpdracht(opdrnr, hash);
 			} else {
 				on.gotoUrl(href);
 			}
@@ -2348,6 +2353,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	
 	private boolean readonly;
 	protected Promise<DomStudentModelContextId> studentModel;
+	private Presenter presenter;
 
 	/**
 	 * @return the readonly
@@ -2551,6 +2557,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 
 	@Override
 	public void setPresenter(Presenter p) {
+		this.presenter = p;
 	}
 
 	@Override
@@ -2663,6 +2670,13 @@ public boolean bolletjesZichtbaar() {
 public void setLocation(String location) {
 	if (on == null) this.location = location;
 	else on.setLocation(location);
+}
+
+public void setCurrentOpdracht(int opdracht, String hash) {
+	if (presenter != null) {
+		presenter.gotoPage(String.valueOf(opdracht), hash);
+	}
+	
 }
 
 }

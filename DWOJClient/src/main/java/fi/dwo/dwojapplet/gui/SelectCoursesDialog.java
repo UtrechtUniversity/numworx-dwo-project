@@ -639,7 +639,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     }
 
     static final Object[] OBJECT_TYPE = new Object[]{TextMapper.getText(TextMapper.GUICDLG_NORMAAL), TextMapper.getText(TextMapper.GUICDLG_AFGESCHERMD)/*, TextMapper.getText(TextMapper.GUICDLG_ONZICHTBAAR)*/};
-    static final Object[] OBJECT_TYPE_PLUS = new Object[] {OBJECT_TYPE[0], OBJECT_TYPE[1], "kiosk"};
+    static final Object[] OBJECT_TYPE_PLUS = new Object[] {OBJECT_TYPE[0], OBJECT_TYPE[1], "schoolyear"};
     
     class CheckBoxNodeRenderer implements TreeCellRenderer {
 
@@ -777,6 +777,8 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         Date orig = van;
         if (van == null) {
             van = new Date();
+            van.setSeconds(0);
+            van.setTime(van.getTime()/1000L * 1000L);// wipe milliseconds
         }
         Locale locale = DwoHelper.getApplet().getLocale();
         Box message = Box.createHorizontalBox();

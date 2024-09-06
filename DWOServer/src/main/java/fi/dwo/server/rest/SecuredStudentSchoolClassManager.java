@@ -56,7 +56,7 @@ import javax.ws.rs.core.SecurityContext;
  */
 @PermitAll
 @Path("/secure/student/schoolclass")
-public class SecuredStudentSchoolClassManager {
+public class SecuredStudentSchoolClassManager extends AbstractSchoolClassManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredStudentSchoolClassManager.class.getName());
 
@@ -219,7 +219,7 @@ public class SecuredStudentSchoolClassManager {
 
 
         if (phr != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
-            return SchoolClassUtilManager.removeStudentFromSchoolClass(phr, schoolClass);
+            return removeStudentFromSchoolClass(phr, schoolClass);
 
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to remove self from a schoolclass id {1} while one or both do not exists or are not in the same school.", new Object[]{sc.getUserPrincipal().getName(), schoolClass.getClassID()});

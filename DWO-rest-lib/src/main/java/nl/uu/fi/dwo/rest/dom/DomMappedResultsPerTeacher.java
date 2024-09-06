@@ -1,11 +1,17 @@
 package nl.uu.fi.dwo.rest.dom;
 
 import nl.uu.fi.dwo.rest.dom.entities.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -30,6 +36,7 @@ public class DomMappedResultsPerTeacher {
     private Map<PersistenceId, DomCourse> courses;
     private Map<PersistenceId, DomScoContext> scoContexts;
     private Map<PersistenceId, DomStudentScoContext> studentScoContexts;
+    private Map<PersistenceId, List<DomStudentScoPage>> studentScoPages;
 
     DomMappedResultsPerTeacher(DomTeacher aTeacher) {
         teacher = aTeacher;
@@ -103,9 +110,101 @@ public class DomMappedResultsPerTeacher {
         }else{
             studentScoContexts = new HashMap<PersistenceId, DomStudentScoContext>();
         }
+        studentScoPages = Collections.emptyMap();
     }
 
-    /**
+    public DomMappedResultsPerTeacher(DomResultsPerTeacherv2 results) {
+        if (results == null) {
+            return;
+        }
+        teacher = results.getTeacher();
+        fetchTimeStamp = results.getFetchTimeStamp();
+        //fill and ensure no null values;
+        if (results.getStudents() != null) {
+            students = new HashMap<PersistenceId, DomStudent>(results.getStudents().size());
+            for (DomStudent student : results.getStudents()) {
+                students.put(student.getId(), student);
+            }
+        }else{
+            students = new HashMap<PersistenceId, DomStudent>();
+        }
+        if (results.getStudentsOfClasses() != null && !results.getStudentsOfClasses().isEmpty()) {
+            studentsOfClasses = new HashMap<PersistenceId, DomStudentOfClass>(results.getStudentsOfClasses().size());
+            for (DomStudentOfClass soc : results.getStudentsOfClasses()) {
+                studentsOfClasses.put(soc.getId(), soc);
+            }
+        }else{
+            studentsOfClasses = new HashMap<PersistenceId, DomStudentOfClass>();
+        }
+
+        if (results.getSchoolClasses() != null) {
+            schoolClasses = new HashMap<PersistenceId, DomSchoolClass>(results.getSchoolClasses().size());
+            for (DomSchoolClass schoolClass : results.getSchoolClasses()) {
+                schoolClasses.put(schoolClass.getId(), schoolClass);
+            }
+        }else{
+            schoolClasses = new HashMap<PersistenceId, DomSchoolClass>();
+        }
+        if (results.getClassCourses() != null) {
+            classCourses = new HashMap<PersistenceId, DomClassCourse4Teacher>(results.getClassCourses().size());
+            for (DomClassCourse4Teacher cc : results.getClassCourses()) {
+                classCourses.put(cc.getId(), cc);
+            }
+        }else{
+            classCourses = new HashMap<PersistenceId, DomClassCourse4Teacher>();
+        }
+        if (results.getCourses() != null) {
+            courses = new HashMap<PersistenceId, DomCourse>(results.getCourses().size());
+            for (DomCourse course : results.getCourses()) {
+                courses.put(course.getId(), course);
+            }
+        }
+        if(results.getScoContexts()!=null){
+        scoContexts = new HashMap<PersistenceId, DomScoContext>(results.getScoContexts().size());
+        for (DomScoContext scoContext : results.getScoContexts()) {
+            scoContexts.put(scoContext.getId(), scoContext);
+        }
+        }else{
+            scoContexts = new HashMap<PersistenceId, DomScoContext>();
+        }
+        if(results.getStudentScoContexts()!=null){
+        studentScoContexts = new HashMap<PersistenceId, DomStudentScoContext>(results.getStudentScoContexts().size());
+        for (DomStudentScoContext ssc : results.getStudentScoContexts()) {
+            studentScoContexts.put(ssc.getId(), ssc);
+        }
+        }else{
+            studentScoContexts = new HashMap<PersistenceId, DomStudentScoContext>();
+        }
+        
+    	studentScoPages = new HashMap<>();
+        if (results.getStudentScoPages() != null) {
+        for(DomStudentScoPage ssp : results.getStudentScoPages()) {
+        	PersistenceId pid; 
+        	pid = ssp.getId(); // voor de server!!!!
+        	if (pid == null) {
+        		pid = buildPersistentScoPageId(ssp.getScoID(), ssp.getUserID());
+        		ssp.setId(pid);
+        	}
+        	List<DomStudentScoPage> value = studentScoPages.computeIfAbsent(pid, k -> new ArrayList<>());
+ // sorted insert.
+        	value.add(ssp);
+        	Collections.sort(value, (a, b) -> a.getSequencenr().compareTo(b.getSequencenr()));
+        }
+        } 
+	}
+
+	public PersistenceId buildPersistentScoPageId(PersistenceId scoID, PersistenceId userID) {
+		if (userID == null) return scoID;
+
+		for ( DomStudentScoContext ssc: studentScoContexts.values() )
+			if (ssc.getScoID().equals(scoID) && ssc.getUserID().equals(userID)) return ssc.getId();
+// should not happen
+		String sid = scoID.getIdString().split(";", 3)[2];
+		String uid = userID.getIdString().split(";", 3)[2];
+		return new PersistenceId("LOCAL;" + PersistenceClassType.PersistentScoPage + ";" + sid + ";" + uid);
+	}
+
+	/**
      * @return the teacher
      */
     public DomTeacher getTeacher() {
@@ -260,5 +359,13 @@ public class DomMappedResultsPerTeacher {
     public void setStudentsOfClasses(Map<PersistenceId, DomStudentOfClass> studentsOfClasses) {
         this.studentsOfClasses = studentsOfClasses;
     }
+
+	public Map<PersistenceId, List<DomStudentScoPage>> getStudentScoPages() {
+		return studentScoPages;
+	}
+
+	public void setStudentScoPages(Map<PersistenceId, List<DomStudentScoPage>> studentScoPages) {
+		this.studentScoPages = studentScoPages;
+	}
 
 }

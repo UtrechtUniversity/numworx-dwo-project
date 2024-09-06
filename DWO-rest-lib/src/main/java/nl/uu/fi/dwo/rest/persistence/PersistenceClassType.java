@@ -17,6 +17,7 @@ public enum PersistenceClassType implements Serializable {
     PersistentAppletConfig,
     PersistentAppletConfigData,
     PersistentClassCourse,
+    @Deprecated
     PersistentCourseInClass,
     PersistentCourse,
     @Deprecated
@@ -47,5 +48,6 @@ public enum PersistenceClassType implements Serializable {
 
     PersistentACL,
     PersistentMethod,
+    PersistentScoPage,
 
 }

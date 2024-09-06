@@ -52,6 +52,9 @@ import fi.dwo.commons.persistence.entities.PersistentStudentScoData;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.UEscape;
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
 import fi.dwo.server.PersistentDataManagers.core.ACLManager;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
@@ -64,6 +67,7 @@ import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import fi.dwo.server.PersistentDataManagers.util.ScoPageUtilManager;
 import fi.dwo.server.persistence.CmiConvert;
 import fi.dwo.server.rest.util.Digest;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
@@ -306,6 +310,10 @@ abstract class SecuredCommonScoDataManager {
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Wrong digest", Response.Status.PRECONDITION_FAILED);
               }
             }
+ // only students, voor testen uitzetten
+ //           if (phr.getSchoolGroup().getGroupID() == RoleType.STUDENT.ordinal())
+            	ScoPageUtilManager.updateSuspendData(ssContext, newObject);
+            
             StringWriter newValue = new StringWriter();
             Json.createWriter(newValue).write(newObject);
             ssData.setSuspendData(UEscape.convertUEsc(newValue.toString()));
@@ -557,20 +565,15 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
   
   public Response setValues(SecurityContext sc, RestScormValues rest, EntityTag match) throws Dwo2Exception {
     DomHasRole domHasRole = rest.getRestContext().getDomHasRole();
-    
+    UserState_U ustate = AnonDomainAuthorizer.build().submitUser(sc);
     // Context
-    PersistentUser user = null;
-PersistentStudentScoContext pssc = null;
-PersistentStudentScoData pssd = null;
-try {
-        user = UserManager.findByUserName(sc.getUserPrincipal().getName());
-        LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
-    } catch (Exception e) {
-        LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
-        throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
-    }
-    PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(domHasRole);
-    PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
+    PersistentUser user = ustate.getUser();
+    PersistentStudentScoContext pssc = null;
+    PersistentStudentScoData pssd = null;
+	UserState_HR_R_S_SG_U rstate = ustate.setHasRole(domHasRole);
+
+    PersistentHasRole phr = rstate.getHasRole();
+    PersistentHasRolePK hasRoleKey = phr.getPersistentHasRolePK();
 //userid must match
     if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
     {
@@ -589,11 +592,11 @@ try {
         Long schoolID = course.getSchoolID();
         if (schoolID != null) {
             // schoolID must match
-            if (! schoolID.equals(phr.getSchoolGroup().getSchool().getSchoolID())) {
+            if (! schoolID.equals(rstate.getSchool().getSchoolID())) {
                 LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": School mismatch");
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "This will be logged.");          
             }
-            if (phr.getSchoolGroup().getGroupID() == RoleType.STUDENT.ordinal()) {
+            if (rstate.getRoleType() == RoleType.STUDENT) {
                 DomSchoolClassId domClassID = rest.getDomScormValues().getSchoolClassID();
                 Long classID = MySQLPersistenceId.getNativeId(domClassID);
                 PersistentSchoolClass schoolClass = new PersistentSchoolClass(classID);
@@ -727,6 +730,8 @@ try {
                 } else {
                     pssd.setSuspendData(value);
                 }
+//           if (phr.getSchoolGroup().getGroupID() == RoleType.STUDENT.ordinal())
+               ScoPageUtilManager.updateSuspendData(pssc, value);
             } catch (Exception e) {
                 LOG.warning("setValues: suspenddata= " + value + " e:" + e);
             }

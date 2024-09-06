@@ -11,6 +11,7 @@ import org.osgi.util.function.Function;
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
+import org.osgi.util.promise.Success;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
@@ -107,10 +108,10 @@ public class DummyRPCHandler implements RPCHandler {
 		return null;
 	}
 
-	@Override
-	public Promise<DomUserFullwLoginContext> samlLogin(String user_id, String org_id) {
-		return null;
-	}
+	//@Override
+//	public Promise<DomUserFullwLoginContext> samlLogin(String user_id, String org_id) {
+//		return null;
+//	}
 
 	@Override
 	public Promise<DomUserFullwLoginContext> getUserFromAuthToken(String authToken) {
@@ -263,6 +264,11 @@ public Promise<JSONValue> getProfileDescription() {
 public Promise<String> getClassCourseURL(Object id, String base) {
 	// TODO Auto-generated method stub
 	return null;
+}
+
+@Override
+public Success<DomUserFullwLoginContext, DomUserFullwLoginContext> setContext() {
+	return p -> p;
 }
 
 }

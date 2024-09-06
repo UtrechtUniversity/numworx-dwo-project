@@ -6,7 +6,6 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
 import com.google.gwt.place.shared.Place;
-import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.regexp.shared.RegExp;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
@@ -18,7 +17,6 @@ final class Login_Stap3 implements Success<Place, Void> {
 
 	ClientFactory clientFactory;
 
-	private PlaceController placeController;
 	private HeaderView headerView;
 	private DwoGlobalVars instance;
   
@@ -28,10 +26,9 @@ final class Login_Stap3 implements Success<Place, Void> {
 	  }
 
 	
-	@Inject Login_Stap3(ClientFactory clientFactory, PlaceController placeController, HeaderView headerView, DwoGlobalVars vars) {
+	@Inject Login_Stap3(ClientFactory clientFactory, HeaderView headerView, DwoGlobalVars vars) {
 		super();
 		this.clientFactory = clientFactory;
-		this.placeController = placeController;
 		this.headerView = headerView;
 		this.instance = vars;
 	}
@@ -48,7 +45,7 @@ final class Login_Stap3 implements Success<Place, Void> {
 		  clientFactory.gotoCourses();
 		}
 		else
-			placeController.goTo(next);
+			clientFactory.goTo(next);
 		return null;
 
 	}

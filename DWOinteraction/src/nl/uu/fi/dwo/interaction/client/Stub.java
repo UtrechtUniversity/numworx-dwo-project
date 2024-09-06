@@ -511,7 +511,9 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF, NativePreviewHandler 
 
 	private static JSONObject getConfiguration1() {
 		try {
-			return new JSONObject(getConfiguration0());
+			JavaScriptObject configuration0 = getConfiguration0();
+			if(configuration0 == null) return null; // no wrap if null
+			return new JSONObject(configuration0);
 		} catch(Throwable t) {
 			return null;
 		}
@@ -527,7 +529,9 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF, NativePreviewHandler 
 	
 	private static JSONObject getContext1() {
 	  try {
-	    return new JSONObject(getContext0());
+	    JavaScriptObject context0 = getContext0();
+	    if (context0 == null) return null; // no wrap if null
+		return new JSONObject(context0);
 	  } catch(Throwable t) {
 	    return null;
 	  }
