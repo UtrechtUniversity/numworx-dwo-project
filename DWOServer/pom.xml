@@ -710,8 +710,14 @@
 				<dependency>
 				    <groupId>org.redisson</groupId>
 				    <artifactId>redisson</artifactId>
-				    <version>3.20.0</version>
+				    <version>3.22.1</version>
 				    <scope>test</scope>
+				</dependency>
+				<dependency>
+    				<groupId>nl.uu.fi.dwo.rest</groupId>
+					<artifactId>redis-config</artifactId>
+					<version>${project.version}</version>
+					<scope>test</scope>
 				</dependency>
 			</dependencies>		
 		</profile>
