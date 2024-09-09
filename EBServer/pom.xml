@@ -104,6 +104,10 @@
 					<groupId>software.amazon.jdbc</groupId>
 					<artifactId>aws-advanced-jdbc-wrapper</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>org.jsr107.ri</groupId>
+					<artifactId>cache-ri-impl</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
         <dependency>
@@ -914,6 +918,11 @@
 			<id>redis-jcache</id>
 			<dependencies>
 				<dependency>
+    				<groupId>nl.uu.fi.dwo.rest</groupId>
+					<artifactId>redis-config</artifactId>
+					<version>2.5.34</version>
+				</dependency>
+				<dependency>
 				    <groupId>org.redisson</groupId>
 				    <artifactId>redisson</artifactId>
 				    <version>3.22.1</version>
@@ -957,6 +966,16 @@
 						<goals><goal>copy-dependencies</goal></goals>
 						<configuration>
 							<includeGroupIds>org.redisson</includeGroupIds>
+							<outputDirectory>${project.build.directory}/${project.build.finalName}/.ebextensions</outputDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-config</id>
+						<phase>process-resources</phase>
+						<goals><goal>copy-dependencies</goal></goals>
+						<configuration>
+							<includeGroupIds>nl.uu.fi.dwo.rest</includeGroupIds>
+							<includeArtifactIds>redis-config</includeArtifactIds>
 							<outputDirectory>${project.build.directory}/${project.build.finalName}/.ebextensions</outputDirectory>
 						</configuration>
 					</execution>
