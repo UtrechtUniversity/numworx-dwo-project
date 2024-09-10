@@ -329,12 +329,6 @@
 			<version>0.0.1</version>
 		</dependency>
 		<dependency>
-		    <groupId>de.javakaffee.msm</groupId>
-		    <artifactId>memcached-session-manager-tc9</artifactId>
-		    <version>2.3.2</version>
-		    <scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>nl.numworx.swingbrowser</groupId>
 			<artifactId>swingbrowser-api</artifactId>
 		    <scope>test</scope>
@@ -397,15 +391,6 @@
 				<artifactId>maven-dependency-plugin</artifactId>
 				<version>2.10</version>
 				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>process-resources</phase>
-						<goals><goal>copy-dependencies</goal></goals>
-						<configuration>
-							<includeGroupIds>de.javakaffee.msm,net.spy</includeGroupIds>
-							<outputDirectory>${project.build.directory}/${project.build.finalName}/.ebextensions</outputDirectory>
-						</configuration>
-					</execution>
 					<execution>
 						<id>copy</id>
 						<phase>process-resources</phase>
@@ -509,7 +494,6 @@
                             <DWO_ENV>test</DWO_ENV>
                             <SEB_TOETS_MAC>9153c48c6111d2733add6e1d596db4059c302cf736dcb18ca498288e21404507,c5d129e27f57b1970d2ffda2ed745a20f7d8e12ed9bfbfb168e83f75f9f870cf</SEB_TOETS_MAC>
   							<ALLOW_ORIGIN>http://localhost:${http.port}</ALLOW_ORIGIN>
- 							<MEMCACHED>test:localhost:11211</MEMCACHED>
  							<UU_INDEX />
  							<ENV_NOSEB>true</ENV_NOSEB>
  							<ENV_IPRANGE>127.0.0.1</ENV_IPRANGE>
@@ -891,12 +875,37 @@
 		</profile>
 		<profile>
 			<id>memcached-jcache</id>
+			<build><plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.10</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>process-resources</phase>
+						<goals><goal>copy-dependencies</goal></goals>
+						<configuration>
+							<includeGroupIds>de.javakaffee.msm,net.spy</includeGroupIds>
+							<outputDirectory>${project.build.directory}/${project.build.finalName}/.ebextensions</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			</plugins>
+			</build>
 			<dependencies>
 				<dependency>
 				    <groupId>org.memcached</groupId>
     				<artifactId>memcached-jcache</artifactId>
     				<version>1.0</version>
 		    		<scope>runtime</scope>
+				</dependency>
+				<dependency>
+				    <groupId>de.javakaffee.msm</groupId>
+				    <artifactId>memcached-session-manager-tc9</artifactId>
+				    <version>2.3.2</version>
+				    <scope>test</scope>
 				</dependency>
 			</dependencies>
 		</profile>
@@ -921,12 +930,7 @@
     				<groupId>nl.uu.fi.dwo.rest</groupId>
 					<artifactId>redis-config</artifactId>
 					<version>2.5.34</version>
-				</dependency>
-				<dependency>
-				    <groupId>org.redisson</groupId>
-				    <artifactId>redisson</artifactId>
-				    <version>3.22.1</version>
-				    <scope>runtime</scope>
+					<scope>test</scope>
 				</dependency>
 				<dependency>
 					<groupId>org.redisson</groupId>
