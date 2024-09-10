@@ -142,7 +142,10 @@ public class FeedPanel extends Composite implements Constants, RequestCallback {
 		this.uuid = comRoot.getUUID();
 		this.learnerId = comRoot.getLearnerId();
 		addFileInputModel();
-		doRequest();
+		if(itemsMax > 0)
+		{
+			doRequest();
+		}
 	}
 
 	@Override

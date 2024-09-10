@@ -53,6 +53,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 
 public class DescriptionViewImpl extends XMLView implements DescriptionView, OpdrNavIF, ResizeHandler {
@@ -423,6 +424,10 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 		map.put("lesson_mode", getLessonMode().name());
 		map.put("premium", activity.isPremium());
 		map.put("Authorization", RestAuthenticator.instance.getAuthorization());
+		String t = GwtRestVars.instance().getRefreshToken();
+		if (t != null) {
+			map.put("refresh_token", t);
+		}
 		return JSONUtilities.wrapMap(map);
 	}
 
