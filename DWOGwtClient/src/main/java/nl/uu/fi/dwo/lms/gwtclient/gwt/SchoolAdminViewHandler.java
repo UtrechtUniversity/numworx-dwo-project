@@ -135,10 +135,10 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
         case CLOSING:
           break;
         case HOME:
-          mainView.selectView(SelectedView.MODULES);
+          //mainView.selectView(SelectedView.MODULES);
           break;
         case TRAIL:
-          mainView.selectView(SelectedView.MODULES);
+          //mainView.selectView(SelectedView.MODULES);
           presenterFactory.getMainPresenter().setTrails(switchViewEvent.getResultState());
           break;
         case MAYBELOGOUT:

@@ -109,7 +109,7 @@ public class StudentViewHandler implements SwitchViewEventHandler {
     	  mainView.selectView(SelectedView.WELCOME);
     	  break;
       case TRAIL:
-    	  mainView.selectView(SelectedView.MODULES);
+    	  //mainView.selectView(SelectedView.MODULES);
     	  presenterFactory.getMainPresenter().setTrails(switchViewEvent.getResultState());
         break;
       case MAYBELOGOUT:
