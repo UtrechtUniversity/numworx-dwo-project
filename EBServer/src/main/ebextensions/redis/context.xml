@@ -20,7 +20,7 @@
 <Context>
     
   <Manager className="org.redisson.tomcat.RedissonSessionManager" 
-            configPath="${catalina.base}/redisson.yaml" 
+            configPath="${catalina.base}/conf/redisson.yaml" 
             readMode="MEMORY" 
             updateMode="DEFAULT"
   />
