@@ -970,6 +970,7 @@
 						<goals><goal>copy-dependencies</goal></goals>
 						<configuration>
 							<includeGroupIds>org.redisson</includeGroupIds>
+							<includeArtifactIds>redisson-all,redisson-tomcat-9</includeArtifactIds>
 							<outputDirectory>${project.build.directory}/${project.build.finalName}/.ebextensions</outputDirectory>
 						</configuration>
 					</execution>
