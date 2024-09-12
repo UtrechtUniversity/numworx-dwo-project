@@ -95,7 +95,7 @@ public class StudentViewHandler implements SwitchViewEventHandler {
         if (controller.authToken != null) {
             String token = controller.authToken;
             controller.authToken = null;
-            presenterFactory.getLoginPresenter().tokenLogin(token, controller.user_id, controller.org_id);
+            presenterFactory.getLoginPresenter().tokenLogin(token);
         }
       case GOTO_URL:
           mainView.selectView(SelectedView.MODULES);

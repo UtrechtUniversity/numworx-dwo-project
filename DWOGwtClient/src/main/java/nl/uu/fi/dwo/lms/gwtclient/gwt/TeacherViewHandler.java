@@ -64,7 +64,7 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
                   if (controller.authToken != null) {
                       String token = controller.authToken;
                       controller.authToken = null;
-                      presenterFactory.getLoginPresenter().tokenLogin(token, controller.user_id, controller.org_id);
+                      presenterFactory.getLoginPresenter().tokenLogin(token);
                   }
                   break;
               case LOGOUT:
