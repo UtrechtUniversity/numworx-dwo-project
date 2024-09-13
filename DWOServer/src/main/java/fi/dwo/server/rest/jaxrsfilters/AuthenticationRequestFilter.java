@@ -226,6 +226,7 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
 	}
 
 	protected Object getAttribute(String key) {
+		if (request == null) return null;
 		return request.getAttribute(key);
 	}
 	
