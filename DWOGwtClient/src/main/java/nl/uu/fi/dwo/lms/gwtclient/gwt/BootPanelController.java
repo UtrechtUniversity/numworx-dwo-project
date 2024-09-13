@@ -117,6 +117,7 @@ public class BootPanelController {
                     dwoGlobalVars.clearCurrentUser();
                     setSession(false);
                     {
+                      History.newItem("", false);
                       if (dwoGlobalVars.isSaml() || needLogout()) // running under SAML protection
                         logout();
                       else
@@ -124,6 +125,7 @@ public class BootPanelController {
                         if (test) {
                           UrlBuilder builder = Window.Location.createUrlBuilder();
                           builder.removeParameter("a");
+                          builder.setHash(null);
                           Window.Location.assign(builder.buildString());
                         }
                         else {  
