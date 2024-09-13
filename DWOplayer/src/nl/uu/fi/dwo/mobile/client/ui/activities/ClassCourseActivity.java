@@ -52,6 +52,7 @@ public class ClassCourseActivity implements Activity {
   @Inject Lazy<CoursesOfClasToSelectItems> coursesToItems;
   @Inject CourseActivity2.Factory caFactory;
   @Inject MembersInjector<ExamModuleActivity> exInjector;
+  @Inject LastExamActivity lastExam;
   
   private Promise<DomCoursesOfSchoolClass> promise;
   private SelectModuleItem item;
@@ -63,13 +64,18 @@ public class ClassCourseActivity implements Activity {
       Place where = placeController.getWhere();
       DomUserFull currentUser = instance.getCurrentUser();
       if (currentUser == null) {
-        Place newPlace = new LoginPlace(where);
-        goToAST(newPlace);
+    	  lastExam.setActivity(() -> this, where).start(panel, eventBus);
+    	  
+    	  
+//        Place newPlace = new LoginPlace(where);
+//        goToAST(newPlace);
         return;
       }
 // vanaf hier ingelogd.
+      lastExam.suspend();
       Hash hash = (Hash) where;
       PersistenceId id = hash.getID();
+      lastExam.setClassCourseId(id);
       promise = rpc.getClassCourse(id);
       promise.then(this::succes)
       .map(coursesToItems.get())
