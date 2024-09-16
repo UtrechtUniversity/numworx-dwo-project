@@ -70,6 +70,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+import dagger.Lazy;
 import dagger.MembersInjector;
 import fi.dwo.gwt.lib.rest.ui.IdleDetect;
 import fi.dwo.gwt.lib.rest.ui.IdleDetect.IdleEvent;
@@ -93,6 +94,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	@Inject PlaceHistoryMapper mapper;
 	@Inject NeedLogin oops;
 	@Inject @Named("profile") int profile;
+	@Inject Lazy<LastExamActivity> lastExam;
 
 	private DWOplayerParameters PARAMETERS;
 	@Inject void setParameters(DWOplayerParameters p) {
@@ -105,7 +107,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	private AnchorContext defaultContext;
 	SelectModuleItem sco;
 	private Timer tm;
-	private boolean started;
+	boolean started;
 	private String location, hash;
 	private ViewModulePlace where;
 	
@@ -132,7 +134,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	
 	final static private long BEFORE_AFTER = 30000L;
 	final static private long PREPARE_AFTER = BEFORE_AFTER + 5*60000L; // 5 minuten voor tijd.
-	private boolean isSEB;
+	boolean isSEB;
 	private Place EXIT_AFTER;
 	
 	private boolean setNotAfter(final AcceptsOneWidget panel) {

@@ -35,6 +35,7 @@ import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
+import nl.uu.fi.dwo.mobile.client.ui.activities.LastExamActivity;
 import nl.uu.fi.dwo.mobile.client.ui.places.ClassesPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
@@ -58,6 +59,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 		@Inject Lazy<ConfirmEventHandler> confirmHandler;
 		@Inject Lazy<CoursesOfClasToSelectItems> coursesToItems;
 		@Inject NeedLogin oops;
+		@Inject Lazy<LastExamActivity> lastExam;
 	    final Provider<? extends TreeModuleView> treeModuleViewProvider;
 	    TreeModuleView treeModuleView;
 	    final private DwoGlobalVars instance;
@@ -102,6 +104,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 						public Promise<Void> call(Promise<Void> resolved) throws Exception {
 //								menuWidget = null;
 							if(instance.withUser()) {
+								if (PARAMETERS.inExam()) lastExam.get().destroy();
 								return handler.logout();
 							}
 							return resolved;

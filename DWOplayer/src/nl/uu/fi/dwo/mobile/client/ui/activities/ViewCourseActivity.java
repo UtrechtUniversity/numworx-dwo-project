@@ -28,4 +28,10 @@ public class ViewCourseActivity extends ViewModuleActivity {
     super.goTo(place);
   }
 
+@Override
+public String mayStop() {
+	if (started && isSEB && lastExam.get().restorable()) started = false;
+	return super.mayStop();
+}
+
 }

@@ -171,10 +171,12 @@ public class DWO2player extends DWOplayer implements EntryPoint {
     MessageEvent.initialize(bus);
     //Actions.isMainNavVisible.execute();
     
-    if (!Actions.isAvailable()) {
+    if (!Actions.isAvailable() && !PARAMETERS.inExam()) {
       Window.addCloseHandler(ev -> 
       factory.logout()
       );
+    } else {
+    	GWT.log("No logout at close");
     }
   }
 
