@@ -173,10 +173,14 @@ public class MainPresenter implements ValueChangeHandler<String> {
       if (selectedView.startsWith("GOTO:")) {
           event = new SwitchViewEvent(SelectedView.GOTO, Collections.singletonMap("message", selectedView));  
       } else {
-       //event = new SwitchViewEvent(SwitchViewEvent.SelectedView.valueOf(selectedView));
 // probeersel
-    	  History.newItem(selectedView);
-    	  return;
+    	  if (selectedView.equals(History.getToken()))
+    	  {  // newItem is een noop.
+        	  event = new SwitchViewEvent(SelectedView.valueOf(selectedView));
+    	  } else {
+    		  History.newItem(selectedView);
+    		  return;
+    	  }
       }
       eventBus.fireEvent(event);
     }
