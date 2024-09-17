@@ -23,6 +23,7 @@
             configPath="${catalina.base}/conf/redisson.yaml" 
             readMode="MEMORY" 
             updateMode="DEFAULT"
+            keyPrefix="${REDIS_PREFIX:-}"
   />
 
 </Context>
