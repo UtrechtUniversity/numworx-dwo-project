@@ -523,10 +523,19 @@ public class TekstRegel //extends LayoutPanel
 	{
 		fgColor = color;
 		if (color != null) 
-			this.getElement().getStyle().setColor(color.toString());
+			this.getElement().getStyle().setColor(color.value());
 		else 
 			this.getElement().getStyle().clearColor();
 	}
+	
+	public CssColor getColor() {
+		if (fgColor != null)
+			return fgColor;
+		if (tekstVak != null) {
+			return tekstVak.getTekstVakParent().fgColor;
+		}
+		return CssColor.make(0,0,0);
+ 	}
 
   public void clearRegel() {
     for (Iterator<Widget> iterator = children.iterator(); iterator.hasNext();)
