@@ -1041,7 +1041,20 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	
 	public ObjectMap getConfiguration() {
 		if(comRoot!=this && comRoot!=null)
-			return comRoot.getConfiguration();
+		{
+			ObjectMap cfg = comRoot.getConfiguration();
+			if (regel != null) {
+				HashMap copy = new HashMap();
+				for(String key: cfg.keySet()) {
+					copy.put(key, cfg.get(key));
+				}
+				copy.put("fgColor", regel.getColor().value());
+				copy.put("fontSize", regel.getFont().getFontSize());
+				copy.put("fontName", regel.getFont().getFont());
+				cfg = JSONUtilities.wrapMap(copy);
+			}			
+			return cfg;
+		}
 		return null;
 	}
 
@@ -1114,9 +1127,11 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}
 
 	private TekstRegel regel;
+	private CssColor fgColor;
 	@Override
 	public void setParentRegel(TekstRegel regel) {
-		this.regel = regel;		
+		this.regel = regel;
+		fgColor = regel.getColor();
 	}
 	
 	protected void pasAanWH(int w, int h) {
