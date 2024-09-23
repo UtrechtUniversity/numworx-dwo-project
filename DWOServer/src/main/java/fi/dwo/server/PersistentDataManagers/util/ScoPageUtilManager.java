@@ -152,6 +152,7 @@ public class ScoPageUtilManager {
 			} else {
 				if (page == null) {
 					page = new PersistentScoPage();
+					page.setOptlock(Long.valueOf(0)); // NOT Null here, not used.
 					page.setId (new PersistentScoPagePK(pssc.getScoID(), Long.valueOf(i), pssc.getPersistentHasRolePK()));
 					PersistentScoPagePK id = new PersistentScoPagePK(pssc.getScoID(), Long.valueOf(i), null);
 					PersistentScoPage org = ScoPageManager.findEntity(id);
