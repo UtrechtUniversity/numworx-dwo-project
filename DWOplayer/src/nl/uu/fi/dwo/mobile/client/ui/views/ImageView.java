@@ -195,10 +195,10 @@ public class ImageView implements IsWidget, ResponsiveTextElement
     return map.getOrDefault(naam + "/v", naam.contains(SUFFIX+"w") && naam.endsWith("v"));
   }
 
-	public static Map<String, Object> getMap()
-	{
-		return map;
-	}
+//	public static Map<String, Object> getMap()
+//	{
+//		return map;
+//	}
 
 	public static void setMap(Map<String, Object> map)
 	{
