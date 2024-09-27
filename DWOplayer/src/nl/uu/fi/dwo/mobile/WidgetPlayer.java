@@ -150,7 +150,11 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
 
 		@Override
 		public void init(int width, int height, Map<String, Object> launchData, Map<String, Number> values) {
-			ImageView.setMap(Collections.emptyMap()); // voorkom NPE
+			Map<String, Object> images = Collections.emptyMap();
+			//images = (Map<String, Object>) launchData.getOrDefault("$IMAGE$MAP$", images);
+			if (launchData.containsKey("$IMAGE$MAP$"))
+				images = (Map<String, Object>) launchData.get("$IMAGE$MAP$");
+			ImageView.setMap(images); // voorkom NPE
 			String[] randomVarNamen = values.keySet().toArray(new String[values.size()]);
 			HashMap<String, Number> randomVarWaarden = new HashMap<>(values);
 			HashMap<String, Object> launch = new HashMap<>();
