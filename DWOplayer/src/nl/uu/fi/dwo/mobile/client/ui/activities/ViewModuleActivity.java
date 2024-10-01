@@ -441,11 +441,17 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 			if (isSEB)
 				goTo(new LoginPlace());
 			else
-				goTo(sco.getParent().getPlace());
+			{
+				if (sco.getParent() == null)
+					History.back();
+				else
+					goTo(sco.getParent().getPlace());
+			}
 		}
 		else if(href.startsWith("goto:.")) defaultContext.gotoUrl(href);
 		else if(href.startsWith("goto:")){
 			final SelectModuleItem parent = sco.getParent();
+			if (parent == null) return;
 			// FIXME getChildrenAsync kan null zijn, dan eerst vullen, zie ...
 			if (parent.getChildrenAsync() == null) {
 				Promise<List<SelectModuleItem>> promise = rpc.getScos(parent.getID())
