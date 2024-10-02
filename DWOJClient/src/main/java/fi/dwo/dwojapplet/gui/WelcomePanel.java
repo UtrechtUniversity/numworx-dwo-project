@@ -345,6 +345,7 @@ if(DwoHelper.isSamlLogin()) {
         p.add(loginButton);
 
         loginButton.addActionListener(this);
+        GuiCreator.instance().dwo.clrPassword(); // wait for a new password here!
 
         /* Register label */
         JButton button = new JButton();

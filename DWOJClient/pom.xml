@@ -206,6 +206,12 @@
 		    <version>1.17</version>
 		    <scope>test</scope>
     	</dependency>
+		<dependency>
+		    <groupId>javax.persistence</groupId>
+		    <artifactId>javax.persistence-api</artifactId>
+		    <version>2.2</version>
+		    <scope>provided</scope>
+		</dependency>
     </dependencies>      
 
     <build>
@@ -575,86 +581,6 @@
                             </dependency>
                         </dependencies>                
                     </plugin>        
-                    <!-- jar signing -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jarsigner-plugin</artifactId>
-                        <version>1.4</version>
-                        <executions>
-                            <execution>
-                                <phase>none</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>none</id>
-                                <phase>none</phase>
-                                <goals>
-                                    <goal>verify</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration> <!--  Alleen jar-with-dependencies wordt getekend. -->
-                            <processMainArtifact>false</processMainArtifact>
-                            <keystore>${dwoKeyStore}</keystore>
-                            <alias>${dwoCertKeyAlias}</alias>
-                            <storepass>${dwoCertKeyStorePassword}</storepass>
-                            <keypass>${dwoCertKeyPassword}</keypass>
-                            <sigfile>UU</sigfile>
-                            <tsa>http://sha256timestamp.ws.symantec.com/sha256/timestamp</tsa>
-                        </configuration>            
-                    </plugin>  
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <preparationGoals>clean verify install</preparationGoals>
-                    <tagBase>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOJClient/tags/</tagBase>
-                </configuration>            
-            </plugin>            
-                </plugins>      
-            </build>        
-        </profile>
-        <profile>
-            <id>dwo-sign</id>
-            <activation>
-                <property>
-                    <name>dev</name>
-                </property>
-            </activation>            
-            <build>
-                <plugins>
-                    <!-- jar signing -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jarsigner-plugin</artifactId>
-                        <version>1.4</version>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>verify</id>
-                                <goals>
-                                    <goal>verify</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration> <!--  Alleen jar-with-dependencies wordt getekend. -->
-                            <processMainArtifact>false</processMainArtifact>
-                            <keystore>${dwoKeyStore}</keystore>
-                            <alias>${dwoCertKeyAlias}</alias>
-                            <storepass>${dwoCertKeyStorePassword}</storepass>
-                            <keypass>${dwoCertKeyPassword}</keypass>
-                            <sigfile>UU</sigfile>
-                            <tsa>http://sha256timestamp.ws.symantec.com/sha256/timestamp</tsa>
-                        </configuration>            
-                    </plugin>      
                 </plugins>      
             </build>        
         </profile>

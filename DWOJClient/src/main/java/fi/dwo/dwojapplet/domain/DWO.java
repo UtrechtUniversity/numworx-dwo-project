@@ -533,6 +533,11 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 		passWord = password2;
 		DwoHelper.setDefaultPassword(password2);
 	}
+    
+    public void clrPassword() {
+    	firePropertyChange("passWord", passWord, "");
+    	passWord = "";
+    }
 
 	private void setUserName(String username2) {
 		firePropertyChange("userName", userName,username2);
@@ -1605,7 +1610,7 @@ LOG.info("time results = " + (-t) + " ms");
         }
         if (passWord == null) {
             String lclPassword = getParameter("passWord");
-            if (lclPassword != null && "".equals(lclPassword)) {
+            if ("".equals(lclPassword)) {
                 lclPassword = null;
             } else if (lclPassword != null) {
                 this.passWord = lclPassword;
