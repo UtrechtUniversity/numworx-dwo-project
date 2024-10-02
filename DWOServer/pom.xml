@@ -353,7 +353,8 @@
                             <java.util.secureRandomSeed>true</java.util.secureRandomSeed>
                     		<DWO_ENV>test</DWO_ENV>
                     		<DWO_REDIRECT>false</DWO_REDIRECT>
-                    		<ALLOW_ORIGIN>http://localhost:8080</ALLOW_ORIGIN>                   
+                    		<ALLOW_ORIGIN>http://localhost:8080</ALLOW_ORIGIN>
+                    		<ENV_NOSEB>true</ENV_NOSEB>                   
                         </systemProperties>
                         <warFile>target/${project.artifactId}-${project.version}.war</warFile>
                             <contextFile>src/test/tomcat/${context.xml}</contextFile>

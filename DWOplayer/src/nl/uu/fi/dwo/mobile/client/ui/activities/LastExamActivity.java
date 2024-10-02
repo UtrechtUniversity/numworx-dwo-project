@@ -87,7 +87,7 @@ public class LastExamActivity implements Activity {
 			@Named("defaultPlace") Place defaultPlace,
 			RPCHandler rpc
 			) {
-		this.storage = Storage.getLocalStorageIfSupported();
+		this.storage = Storage.getSessionStorageIfSupported();
 		this.vars = vars;
 		this.controller = controller;
 		this.PARAMETERS = PARAMETERS;

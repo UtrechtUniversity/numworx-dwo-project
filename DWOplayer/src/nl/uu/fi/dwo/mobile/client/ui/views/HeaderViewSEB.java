@@ -24,33 +24,43 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 
+import dagger.Lazy;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
+import nl.uu.fi.dwo.mobile.client.ui.activities.LastExamActivity;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 public class HeaderViewSEB extends Composite implements HeaderView, ValueChangeHandler<String> {
 
-	private InlineLabel label;
+	private InlineLabel label, last;
 	private Button logout;
 	private EventBus bus;
 	private PlaceController controller;
+	private Lazy<LastExamActivity> exam;
 	
 	final static int HEIGHT = 40;
 	
-	@Inject HeaderViewSEB(PlaceController controller, EventBus bus, PlaceHistoryMapper mapper) {
+	@Inject HeaderViewSEB(PlaceController controller, EventBus bus, PlaceHistoryMapper mapper, Lazy<LastExamActivity> exam) {
+		this.exam = exam;
 		FlowPanel flow = new FlowPanel();
 		logout = new Button("logoff");
 		label = new InlineLabel(location());
+		last  = new InlineLabel();
 		flow.add(logout);
+		flow.add(last);
 		flow.add(label);
 		flow.setPixelSize(-1, HEIGHT);
 		initWidget(flow);
-		History.addValueChangeHandler(this);
+		//History.addValueChangeHandler(this);
 		presenter = controller::goTo; // never null!
 		
 		logout.addClickHandler(ev -> { presenter.goTo(new LoginPlace());});
 		bus.addHandler(PlaceChangeEvent.TYPE, ev -> setText("P ",mapper.getToken(ev.getNewPlace())));
+	}
+
+	private void setLast() {
+		last.setText(" " + exam.get().restorable() + " ");		
 	}
 
 	protected String location() {
@@ -59,6 +69,7 @@ public class HeaderViewSEB extends Composite implements HeaderView, ValueChangeH
 
 	void setText(String prefix, Object t) {
 		label.setText(prefix + location() + " " + Objects.toString(t, "#"));
+		setLast();
 	}
 	
 	@Override
