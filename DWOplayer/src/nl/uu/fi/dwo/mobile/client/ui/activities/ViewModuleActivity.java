@@ -605,14 +605,14 @@ public void onNeedLogin(NeedLoginEvent ev) {
 		else 
 			History.replaceItem(token, false);
 		Window.setTitle(sco.getName() + " - " + location);
-		fire(token);
+//		fire(token);
 	}
 
-	private void fire(String token) {
-		if (headerView instanceof HeaderViewSEB) {
-			((HeaderViewSEB) headerView).onHistoryChange(token);
-		}
-		
-	}
+//	private void fire(String token) {
+//		if (headerView instanceof HeaderViewSEB) {
+//			((HeaderViewSEB) headerView).onHistoryChange(token);
+//		}
+//		
+//	}
 	
 }

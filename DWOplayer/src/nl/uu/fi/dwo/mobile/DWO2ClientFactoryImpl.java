@@ -238,20 +238,20 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 				String token = mapper.get().getToken(place);
 				History.replaceItem(token);
 				instance.setAutoLogin(false);
-				fire(token); // debugger
+//				fire(token); // debugger
 				return;
 			}
 			super.goTo(place);
 		}
 
-		private void fire(String token) {
-			HeaderView hv = headerView.get();
-			if (hv instanceof HeaderViewSEB) {
-				HeaderViewSEB seb = (HeaderViewSEB) hv;
-				seb.onHistoryChange(token);
-			}
-			
-		}
+//		private void fire(String token) {
+//			HeaderView hv = headerView.get();
+//			if (hv instanceof HeaderViewSEB) {
+//				HeaderViewSEB seb = (HeaderViewSEB) hv;
+//				seb.onHistoryChange(token);
+//			}
+//			
+//		}
 		
 		
 	}

@@ -47,10 +47,12 @@ public abstract class HeaderLessModule {
   }
   
   @Provides @Singleton @Named("header")
-  static HeaderView header(Provider<HeaderLessView> less, Provider<HeaderViewNumworx> more, Provider<HeaderViewSEB> seb) {
+  static HeaderView header(Provider<HeaderLessView> less, Provider<HeaderViewNumworx> more
+//		  , Provider<HeaderViewSEB> seb
+		  ) {
 	  
 	  
-	if(true) return seb.get();  
+//	if(true) return seb.get();  
 	  
 	  
     if (headerless()) 

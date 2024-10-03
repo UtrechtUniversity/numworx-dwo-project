@@ -41,7 +41,8 @@ public class HeaderViewSEB extends Composite implements HeaderView, ValueChangeH
 	
 	final static int HEIGHT = 40;
 	
-	@Inject HeaderViewSEB(PlaceController controller, EventBus bus, PlaceHistoryMapper mapper, Lazy<LastExamActivity> exam) {
+//	@Inject 
+	HeaderViewSEB(PlaceController controller, EventBus bus, PlaceHistoryMapper mapper, Lazy<LastExamActivity> exam) {
 		this.exam = exam;
 		FlowPanel flow = new FlowPanel();
 		logout = new Button("logoff");
