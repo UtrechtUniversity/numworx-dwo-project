@@ -82,7 +82,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
     JPanel dialog;
 
     private JButton linkcheck;
-    private Map linkData;
+    private static Map linkData;
 
 
     /**
@@ -144,11 +144,11 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
      *
      */
     public WelcomePanel() {
-        this(false, null);
+        this(false, linkData);
     }
 
     public WelcomePanel(boolean loginOnly) {
-        this(loginOnly, null);
+        this(loginOnly, linkData);
     }
 
     public WelcomePanel(boolean loginOnly, Map linkdata) {
@@ -156,7 +156,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         
         //loginOnly = loginOnly || "test".equals(DwoHelper.getApplet().getParameter("dwo_env"));
         
-        this.linkData = linkdata;
+        WelcomePanel.linkData = linkdata;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setLayout(null);
         this.setSize(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
@@ -345,6 +345,7 @@ if(DwoHelper.isSamlLogin()) {
         p.add(loginButton);
 
         loginButton.addActionListener(this);
+        GuiCreator.instance().dwo.clrPassword(); // wait for a new password here!
 
         /* Register label */
         JButton button = new JButton();

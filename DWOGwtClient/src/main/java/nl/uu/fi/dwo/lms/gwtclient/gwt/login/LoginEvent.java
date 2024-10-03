@@ -10,12 +10,12 @@ import com.google.gwt.event.shared.GwtEvent;
 public class LoginEvent extends GwtEvent<LoginEventHandler> {
     public enum State {
         FAIL,
-        SUCCESS, // default post login panel should always be implemented. By default the welcome panel
-        SUCCESS_ROLE, // role panel
+//        SUCCESS, // default post login panel should always be implemented. By default the welcome panel
+        SUCCESS_ROLE, // role panel, dwoadmin cannot use gwtclient
         SUCCESS_WELCOME, // welcome panel
-        SUCCESS_RESULTS, // result panel
+//        SUCCESS_RESULTS, // result panel
         SUCCESS_GUEST,   // guest login
-        SUCCESS_SCHOOLCLASSES, //schoolclass panel
+//        SUCCESS_SCHOOLCLASSES, //schoolclass panel
         LOGOUT 
     }
     

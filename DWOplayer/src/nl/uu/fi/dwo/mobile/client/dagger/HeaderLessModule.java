@@ -27,6 +27,7 @@ import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderLessView;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewNumworx;
+import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewSEB;
 import nl.uu.fi.dwo.mobile.client.ui.views.Login3ViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationMenu;
@@ -46,7 +47,14 @@ public abstract class HeaderLessModule {
   }
   
   @Provides @Singleton @Named("header")
-  static HeaderView header(Provider<HeaderLessView> less, Provider<HeaderViewNumworx> more) {
+  static HeaderView header(Provider<HeaderLessView> less, Provider<HeaderViewNumworx> more
+//		  , Provider<HeaderViewSEB> seb
+		  ) {
+	  
+	  
+//	if(true) return seb.get();  
+	  
+	  
     if (headerless()) 
         return less.get();
     else

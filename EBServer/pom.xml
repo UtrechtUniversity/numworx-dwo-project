@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO</artifactId>
-		<version>2.5.34-SNAPSHOT</version>
+		<version>2.5.36-SNAPSHOT</version>
 		<relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 	<artifactId>EBServer</artifactId>
@@ -41,7 +41,7 @@
 				<dependency>			
 				    <groupId>nl.uu.fi.dwo.lms</groupId>
     				<artifactId>DWOGwtClient</artifactId>
-					<version>2.5.34-SNAPSHOT</version>
+					<version>2.5.36-SNAPSHOT</version>
 					<classifier>classes</classifier>
 					<exclusions>
 						<exclusion>
@@ -218,14 +218,14 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>DWO-apps</artifactId>
-			<version>2.5.34-SNAPSHOT</version>
+			<version>2.5.34</version>
 			<scope>runtime</scope>
 			<type>war</type>
 		</dependency>
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>DWO-apps</artifactId>
-			<version>2.5.34-SNAPSHOT</version>
+			<version>2.5.34</version>
 			<classifier>classes</classifier>
 		</dependency>
 		<dependency>
@@ -244,7 +244,7 @@
 	<dependency>
 		<groupId>nl.uu.fi.dwo.lms</groupId>
 		<artifactId>DWOGwtClient</artifactId>
-		<version>2.5.34-SNAPSHOT</version>
+		<version>2.5.36-SNAPSHOT</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
@@ -414,15 +414,6 @@
 				<version>2.10</version>
 				<executions>
 					<execution>
-						<id>copy-dependencies</id>
-						<phase>process-resources</phase>
-						<goals><goal>copy-dependencies</goal></goals>
-						<configuration>
-							<includeGroupIds>org.redisson</includeGroupIds>
-							<outputDirectory>${project.build.directory}/${project.build.finalName}/.ebextensions</outputDirectory>
-						</configuration>
-					</execution>
-					<execution>
 						<id>copy</id>
 						<phase>process-resources</phase>
 						<goals>
@@ -560,10 +551,9 @@
                         <systemProperties>
                         	<CDN_HOST>localhost:8082</CDN_HOST>
                         	<CDNURL>http://localhost:8082</CDNURL>
-                            <DWO_ENV>test</DWO_ENV>
+                            <DWO_ENV>testentree</DWO_ENV>
                             <SEB_TOETS_MAC>9153c48c6111d2733add6e1d596db4059c302cf736dcb18ca498288e21404507,c5d129e27f57b1970d2ffda2ed745a20f7d8e12ed9bfbfb168e83f75f9f870cf</SEB_TOETS_MAC>
   							<ALLOW_ORIGIN>http://localhost:${http.port}</ALLOW_ORIGIN>
- 							<MEMCACHED>test:localhost:11211</MEMCACHED>
  							<UU_INDEX />
  							<ENV_NOSEB>true</ENV_NOSEB>
  							<ENV_IPRANGE>127.0.0.1</ENV_IPRANGE>
@@ -586,7 +576,7 @@
 						<webapp>
 							<groupId>nl.numworx.schoolyear</groupId>
   							<artifactId>sy</artifactId>
-							<version>2.5.34-SNAPSHOT</version>
+							<version>2.5.34</version>
 							<type>war</type>
 							<contextPath>/sy</contextPath>
                             <asWebapp>true</asWebapp>
@@ -939,7 +929,7 @@
 				<dependency>
 					<groupId>nl.numworx.uploadwidget</groupId>
 					<artifactId>UploadWidgetGWT</artifactId>
-					<version>2.5.34-SNAPSHOT</version>
+					<version>2.5.34</version>
 					<classifier>classes</classifier>
 					</dependency>			
 				<dependency>
@@ -951,12 +941,37 @@
 		</profile>
 		<profile>
 			<id>memcached-jcache</id>
+			<build><plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.10</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>process-resources</phase>
+						<goals><goal>copy-dependencies</goal></goals>
+						<configuration>
+							<includeGroupIds>de.javakaffee.msm,net.spy</includeGroupIds>
+							<outputDirectory>${project.build.directory}/${project.build.finalName}/.ebextensions</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			</plugins>
+			</build>
 			<dependencies>
 				<dependency>
 				    <groupId>org.memcached</groupId>
     				<artifactId>memcached-jcache</artifactId>
     				<version>1.0</version>
 		    		<scope>runtime</scope>
+				</dependency>
+				<dependency>
+				    <groupId>de.javakaffee.msm</groupId>
+				    <artifactId>memcached-session-manager-tc9</artifactId>
+				    <version>2.3.2</version>
+				    <scope>test</scope>
 				</dependency>
 			</dependencies>
 		</profile>
@@ -978,10 +993,10 @@
 			<id>redis-jcache</id>
 			<dependencies>
 				<dependency>
-				    <groupId>org.redisson</groupId>
-				    <artifactId>redisson</artifactId>
-				    <version>3.32.0</version>
-				    <scope>test</scope>
+    				<groupId>nl.uu.fi.dwo.rest</groupId>
+					<artifactId>redis-config</artifactId>
+					<version>2.5.34</version>
+					<scope>test</scope>
 				</dependency>
 				<dependency>
 					<groupId>org.redisson</groupId>
@@ -1021,6 +1036,17 @@
 						<goals><goal>copy-dependencies</goal></goals>
 						<configuration>
 							<includeGroupIds>org.redisson</includeGroupIds>
+							<includeArtifactIds>redisson-all,redisson-tomcat-9</includeArtifactIds>
+							<outputDirectory>${project.build.directory}/${project.build.finalName}/.ebextensions</outputDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-config</id>
+						<phase>process-resources</phase>
+						<goals><goal>copy-dependencies</goal></goals>
+						<configuration>
+							<includeGroupIds>nl.uu.fi.dwo.rest</includeGroupIds>
+							<includeArtifactIds>redis-config</includeArtifactIds>
 							<outputDirectory>${project.build.directory}/${project.build.finalName}/.ebextensions</outputDirectory>
 						</configuration>
 					</execution>

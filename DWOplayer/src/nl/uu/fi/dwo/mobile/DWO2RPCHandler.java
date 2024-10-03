@@ -118,19 +118,23 @@ public final class DWO2RPCHandler extends nl.uu.fi.dwo.account.client.RPCHandler
 					@Override
 					public Promise<Void> call(Promise<Void> resolved)
 							throws Exception {
-						return DWO2RPCHandler.super.startExam(classCourse.getId().toString(), password);
+						Promise<Void> startExam = DWO2RPCHandler.super.startExam(classCourse.getId().toString(), password);
+
+						startExam = startExam.then(new Success<Void, Void>() {
+
+							@Override
+							public Promise<Void> call(Promise<Void> resolved)
+									throws Exception {
+								exam = classCourse;
+								return null;
+							}
+						});
+						agent.addBarrier(startExam); // after barrier is done.
+						return startExam;
 					}
 			})
-			.then(new Success<Void, Void>() {
-
-				@Override
-				public Promise<Void> call(Promise<Void> resolved)
-						throws Exception {
-					exam = classCourse;
-					return null;
-				}
-			});
-		agent.addBarrier(p); // 
+			;
+		//agent.addBarrier(p); // this is not allowed. here! DEADLOCK 
 		return p;
 	}
 	

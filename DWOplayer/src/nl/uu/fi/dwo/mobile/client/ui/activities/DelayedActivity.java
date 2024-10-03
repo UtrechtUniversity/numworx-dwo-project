@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
+import javax.inject.Provider;
+
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
@@ -11,15 +13,19 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 
+import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
+
 public class DelayedActivity<T> extends AbstractActivity implements Success<T,T>, Failure {
 
 	private AcceptsOneWidget panel;
 	private EventBus eventBus;
 	private final Function<T, Activity> provider;
 	private Activity delegate;
+	private Provider<NoCourseView> noCourseView;
 
-	public DelayedActivity(Function<T, Activity> p) {
+	public DelayedActivity(Function<T, Activity> p, Provider<NoCourseView> noCourseView) {
 		provider = p;
+		this.noCourseView = noCourseView;
 	}
 
 	@Override
@@ -59,7 +65,13 @@ public class DelayedActivity<T> extends AbstractActivity implements Success<T,T>
 	@Override
 	public void fail(Promise<?> resolved) throws Exception {
 		if (panel != null)
-			panel.setWidget(new Label(resolved.getFailure().toString()));
+		{
+			Throwable t = resolved.getFailure();
+			NoCourseView view = noCourseView.get();
+			panel.setWidget(view);
+			view.fail(t);
+			view.render();
+		}
 		
 	}
 	

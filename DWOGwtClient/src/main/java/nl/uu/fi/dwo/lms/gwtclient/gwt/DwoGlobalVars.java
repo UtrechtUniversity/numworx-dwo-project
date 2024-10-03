@@ -379,16 +379,16 @@ public class DwoGlobalVars {
       return initUserWithToken0(token);
     }
 
-    public Promise<DwoGlobalVarsState> initUserWithSaml(String user_id, String org_id,
-                                                        String token) throws Dwo2Exception {
-      login_step0();
-      //Promise<DomUserFullwLoginContext> p1;
-      //p1 = accountManager.updateAccountData(user_id, org_id, token);
-      
-	  token = Base64.btoa("3\f" + user_id + "\f" + org_id + "\f" + token); // Format 3 
-
-	  return initUserWithToken0(token);
-    }
+//    public Promise<DwoGlobalVarsState> initUserWithSaml(String user_id, String org_id,
+//                                                        String token) throws Dwo2Exception {
+//      login_step0();
+//      //Promise<DomUserFullwLoginContext> p1;
+//      //p1 = accountManager.updateAccountData(user_id, org_id, token);
+//      
+//	  token = Base64.btoa("3\f" + user_id + "\f" + org_id + "\f" + token); // Format 3 
+//
+//	  return initUserWithToken0(token);
+//    }
 
     private Promise<DwoGlobalVarsState> initUserWithToken0(String token) {
       Promise<DomUserFullwLoginContext> p1;

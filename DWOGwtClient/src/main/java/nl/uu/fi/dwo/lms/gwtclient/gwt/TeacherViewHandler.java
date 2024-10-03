@@ -64,7 +64,7 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
                   if (controller.authToken != null) {
                       String token = controller.authToken;
                       controller.authToken = null;
-                      presenterFactory.getLoginPresenter().tokenLogin(token, controller.user_id, controller.org_id);
+                      presenterFactory.getLoginPresenter().tokenLogin(token);
                   }
                   break;
               case LOGOUT:
@@ -189,11 +189,11 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
             	  presenterFactory.getModulesPresenter().setVisible(true);
                   break;
               case TRAIL:
-            	  mainView.selectView(SelectedView.MODULES);
+            	  //mainView.selectView(SelectedView.MODULES);
             	  presenterFactory.getMainPresenter().setTrails(switchViewEvent.getResultState());
                 break;
               case HOME:
-            	  mainView.selectView(SelectedView.MODULES);
+            	  //mainView.selectView(SelectedView.WELCOME);
             	  break;
               case MAYBELOGOUT:
                   presenterFactory.getMainPresenter().maybeLogout();

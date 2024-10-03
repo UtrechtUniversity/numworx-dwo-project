@@ -27,7 +27,7 @@ public abstract class ClientFactoryImpl implements ClientFactory
 	protected final EventBus eventBus;
 			
 	// singleton pattern.
-	Provider<? extends HeaderView> headerView;
+	protected Provider<? extends HeaderView> headerView;
 
 	protected void setup(Provider<HeaderViewNone> none, Provider<HeaderView> numworx)
 	{
