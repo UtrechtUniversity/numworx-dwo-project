@@ -163,4 +163,8 @@ public class HeaderViewSEB extends Composite implements HeaderView, ValueChangeH
 		setText("H ",event.getValue());
 	}
 
+	
+	public void onHistoryChange(String token) {
+		setText("R " , token);
+	}
 }

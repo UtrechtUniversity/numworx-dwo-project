@@ -25,7 +25,6 @@ import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.DWO2player.InsertSelectItems;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
-import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO5;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
@@ -40,6 +39,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.ClassesPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewNone;
+import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewSEB;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewBuilder;
@@ -238,9 +238,19 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 				String token = mapper.get().getToken(place);
 				History.replaceItem(token);
 				instance.setAutoLogin(false);
+				fire(token); // debugger
 				return;
 			}
 			super.goTo(place);
+		}
+
+		private void fire(String token) {
+			HeaderView hv = headerView.get();
+			if (hv instanceof HeaderViewSEB) {
+				HeaderViewSEB seb = (HeaderViewSEB) hv;
+				seb.onHistoryChange(token);
+			}
+			
 		}
 		
 		

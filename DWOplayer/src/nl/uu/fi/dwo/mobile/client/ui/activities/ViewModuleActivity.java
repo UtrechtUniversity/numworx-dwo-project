@@ -43,6 +43,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.EmptyView;
 import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
+import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewSEB;
 import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
@@ -598,11 +599,20 @@ public void onNeedLogin(NeedLoginEvent ev) {
 			return; // same same, do nothing.
 		where.setLocation(location);
 		where.setHash(hash);
+		String token = mapper.getToken(where);
 		if (view.magterug())
-			History.newItem(mapper.getToken(where), false);
+			History.newItem(token, false);
 		else 
-			History.replaceItem(mapper.getToken(where), false);
+			History.replaceItem(token, false);
 		Window.setTitle(sco.getName() + " - " + location);
+		fire(token);
+	}
+
+	private void fire(String token) {
+		if (headerView instanceof HeaderViewSEB) {
+			((HeaderViewSEB) headerView).onHistoryChange(token);
+		}
+		
 	}
 	
 }
