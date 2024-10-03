@@ -229,14 +229,10 @@ public class LoginPresenter implements Success<DomDwoProfileFull, Void >{
         }
     }
 
-    public void tokenLogin(String token, String user_id, String org_id) {
+    public void tokenLogin(String token) {
         try {
             Promise<DwoGlobalVarsState> statePromise;
-            if(user_id != null && org_id != null) {
-              statePromise = dwoGlobalVars.initUserWithSaml(user_id, org_id, token);
-            } else {
-              statePromise = dwoGlobalVars.initUserWithToken(token);
-            }
+            statePromise = dwoGlobalVars.initUserWithToken(token);
             statePromise.then(new LoginSucces(false),
                     resolved -> {
                         Throwable fail = resolved.getFailure();

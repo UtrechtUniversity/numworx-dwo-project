@@ -2,7 +2,11 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import java.util.List;
 
+import javax.inject.Provider;
+
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.place.shared.PlaceController;
 
@@ -26,12 +30,16 @@ import nl.uu.fi.dwo.mobile.client.ui.places.m;
 import nl.uu.fi.dwo.mobile.client.ui.places.up;
 import nl.uu.fi.dwo.mobile.client.ui.places.xc;
 import nl.uu.fi.dwo.mobile.client.ui.places.xs;
+import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -87,7 +95,7 @@ public abstract class ActivityMapperModule {
 //	}
 
 	@Provides @IntoMap @ClassKey(xs.class)
-	static Activity xsActivity( PlaceController controller, MembersInjector<ViewModuleActivity> vmInjector, RPCHandler rpc, DwoGlobalVars vars) {
+	static Activity xsActivity( PlaceController controller, MembersInjector<ViewModuleActivity> vmInjector, RPCHandler rpc, DwoGlobalVars vars, Provider<NoCourseView> noCourseView) {
 		xs place = (xs) controller.getWhere();
 		PersistenceId id = place.getID();
 		SelectModuleItem item = SelectModuleItemHolder.getScoByID(id);
@@ -99,20 +107,26 @@ public abstract class ActivityMapperModule {
 		DelayedActivity<SelectModuleItem> activity = new DelayedActivity<>((item2) -> {
 			item2.setPlace(place);			
 			return new ViewModuleActivity(vmInjector, item2, place);				
-		});
+		}, noCourseView);
 		Promise<DomScoContext> sco;
 		DomSchoolClass schoolClass = vars.getCurrentSchoolClass();
 		if (schoolClass == null)
 			sco = rpc.getSco(id);
 		else
 // FIXME de parent van sco moet al z'n children hebben, de ViewModuleActivity gaat daar al vanuit.
-			
+// daar kan die niet van uit gaan. Er kan geen parent zijn!, activiteit geladen zonder module			
 			sco = rpc.getScoContextClass(id, schoolClass)
-			.filter(v -> {
-				if (v.getCourses().isEmpty()) return false;
+			.flatMap(v -> {
+				if (v.getCourses().isEmpty()) 
+				{
+					return Promises.failed(new Dwo2Exception(Dwo2ExceptionCode.Rest_ResourceNotFound, ""));
+				}
 				PersistenceId pid = v.getCourses().get(0).getKey();
-				Object cid = PersistenceIdDecoderInterface.instance.idOf(pid, PersistenceClassType.PersistentCourse);				
-				return SelectModuleItemHolder.getItemByID(cid) != null;
+				if (SelectModuleItemHolder.getItemByID(pid) == null) {
+					if (v.getClassCourses().get(0).getValue().getCourseType() != CourseType.normal)
+						return Promises.failed(new Dwo2Exception(Dwo2ExceptionCode.User_AuthorizationError, ""));
+				}
+				return Promises.resolved(v);
 			})
 			
 			.map(v -> {

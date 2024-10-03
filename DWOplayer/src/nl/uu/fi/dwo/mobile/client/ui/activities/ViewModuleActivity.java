@@ -43,6 +43,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.EmptyView;
 import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
+import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewSEB;
 import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
@@ -70,6 +71,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+import dagger.Lazy;
 import dagger.MembersInjector;
 import fi.dwo.gwt.lib.rest.ui.IdleDetect;
 import fi.dwo.gwt.lib.rest.ui.IdleDetect.IdleEvent;
@@ -93,6 +95,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	@Inject PlaceHistoryMapper mapper;
 	@Inject NeedLogin oops;
 	@Inject @Named("profile") int profile;
+	@Inject Lazy<LastExamActivity> lastExam;
 
 	private DWOplayerParameters PARAMETERS;
 	@Inject void setParameters(DWOplayerParameters p) {
@@ -105,7 +108,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	private AnchorContext defaultContext;
 	SelectModuleItem sco;
 	private Timer tm;
-	private boolean started;
+	boolean started;
 	private String location, hash;
 	private ViewModulePlace where;
 	
@@ -132,7 +135,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	
 	final static private long BEFORE_AFTER = 30000L;
 	final static private long PREPARE_AFTER = BEFORE_AFTER + 5*60000L; // 5 minuten voor tijd.
-	private boolean isSEB;
+	boolean isSEB;
 	private Place EXIT_AFTER;
 	
 	private boolean setNotAfter(final AcceptsOneWidget panel) {
@@ -439,11 +442,17 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 			if (isSEB)
 				goTo(new LoginPlace());
 			else
-				goTo(sco.getParent().getPlace());
+			{
+				if (sco.getParent() == null)
+					History.back();
+				else
+					goTo(sco.getParent().getPlace());
+			}
 		}
 		else if(href.startsWith("goto:.")) defaultContext.gotoUrl(href);
 		else if(href.startsWith("goto:")){
 			final SelectModuleItem parent = sco.getParent();
+			if (parent == null) return;
 			// FIXME getChildrenAsync kan null zijn, dan eerst vullen, zie ...
 			if (parent.getChildrenAsync() == null) {
 				Promise<List<SelectModuleItem>> promise = rpc.getScos(parent.getID())
@@ -590,11 +599,20 @@ public void onNeedLogin(NeedLoginEvent ev) {
 			return; // same same, do nothing.
 		where.setLocation(location);
 		where.setHash(hash);
+		String token = mapper.getToken(where);
 		if (view.magterug())
-			History.newItem(mapper.getToken(where), false);
+			History.newItem(token, false);
 		else 
-			History.replaceItem(mapper.getToken(where), false);
+			History.replaceItem(token, false);
 		Window.setTitle(sco.getName() + " - " + location);
+//		fire(token);
 	}
+
+//	private void fire(String token) {
+//		if (headerView instanceof HeaderViewSEB) {
+//			((HeaderViewSEB) headerView).onHistoryChange(token);
+//		}
+//		
+//	}
 	
 }

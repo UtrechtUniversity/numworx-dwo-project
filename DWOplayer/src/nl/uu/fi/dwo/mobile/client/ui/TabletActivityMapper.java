@@ -6,9 +6,11 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ActivityFactory;
 import nl.uu.fi.dwo.mobile.client.ui.activities.CourseActivity2;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ExamModuleActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.LastExamActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LoginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ReloginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ScoActivity;
@@ -43,10 +45,10 @@ import dagger.MembersInjector;
  */
 public class TabletActivityMapper implements ActivityMapper
 {
-	private ClientFactory clientFactory;
-	@Inject TabletActivityMapper(ClientFactory cf)
+	private boolean inexam;
+	@Inject TabletActivityMapper(DWOplayerParameters parameters)
 	{
-		this.clientFactory = cf;
+		inexam = parameters.inExam();
 	}
 
 //  @Inject Provider<MaybeLogoutActivity> maybeLogout;
@@ -59,6 +61,7 @@ public class TabletActivityMapper implements ActivityMapper
 	@Inject Lazy<ExamModuleActivity.Factory> exFactory;
 	@Inject Lazy<ScoActivity.Factory> scoFactory;
 	@Inject Lazy<ViewScoActivity.Factory> viewScoFactory;
+	@Inject Lazy<LastExamActivity> lastExam;
 
 	@Inject PlaceController placeController;
 	@Inject MembersInjector<ViewModuleActivity> vmInjector;
@@ -117,6 +120,15 @@ public class TabletActivityMapper implements ActivityMapper
 			SelectModuleItem item = SelectModuleItemHolder.getScoByID(id);
 			if(item == null)
 			{
+				if (!vars.withUser() && inexam && place instanceof ViewCoursePlace) {
+					Provider<Activity> getActivity = () -> {
+						SelectModuleItem i2 = SelectModuleItemHolder.getScoByID(id);
+						if (i2 == null || !i2.isExam()) return login.get();
+						i2.setPlace(where);
+						return new ViewCourseActivity(vmInjector, i2, where);
+					};
+					return lastExam.get().setActivity(getActivity, where);
+				}
 				return login.get();
 			}
 			item.setPlace(place);

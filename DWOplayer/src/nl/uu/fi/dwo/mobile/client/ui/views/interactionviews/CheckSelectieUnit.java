@@ -818,7 +818,9 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	public void zetMode(int mode, LessonMode lessonMode)
 	{
 		this.mode = mode;
-		checkButton.setVisible(mode==0 || mode==1|| lessonMode == LessonMode.review);
+		//checkButton.setVisible(mode==0 || mode==1|| lessonMode == LessonMode.review);
+		boolean visible = mode==0 || mode==1 || lessonMode == LessonMode.review;
+		basisPanel.setWidgetVisible(checkButton, visible && check);
 	}
 
 	public void zetNagekeken(boolean b)
@@ -1077,6 +1079,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		basisPanel.add(checkButton);
 		basisPanel.setWidgetLeftWidth(checkButton, 0, Style.Unit.PX, imWidth, Style.Unit.PX);
 		basisPanel.setWidgetTopHeight(checkButton, 5, Style.Unit.PX, imHeight, Style.Unit.PX);
+		basisPanel.setWidgetVisible(checkButton, check);
 //		checkButton.addClickHandler(new ClickHandler(){
 //			public void onClick(ClickEvent e)
 //			{

@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -41,6 +42,7 @@ import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
+import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.SymboolPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TextEditor;
@@ -148,6 +150,11 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
 
 		@Override
 		public void init(int width, int height, Map<String, Object> launchData, Map<String, Number> values) {
+			Map<String, Object> images = Collections.emptyMap();
+			//images = (Map<String, Object>) launchData.getOrDefault("$IMAGE$MAP$", images);
+			if (launchData.containsKey("$IMAGE$MAP$"))
+				images = (Map<String, Object>) launchData.get("$IMAGE$MAP$");
+			ImageView.setMap(images); // voorkom NPE
 			String[] randomVarNamen = values.keySet().toArray(new String[values.size()]);
 			HashMap<String, Number> randomVarWaarden = new HashMap<>(values);
 			HashMap<String, Object> launch = new HashMap<>();

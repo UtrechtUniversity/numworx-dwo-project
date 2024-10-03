@@ -226,7 +226,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.account</groupId>
 			<artifactId>Account</artifactId>
-			<version>2.5.34</version>
+			<version>2.5.35</version>
 			<classifier>classes</classifier>
 			<exclusions>
 				<exclusion>
@@ -238,7 +238,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.account</groupId>
 			<artifactId>Account</artifactId>
-			<version>2.5.34</version>
+			<version>2.5.35</version>
 			<classifier>sources</classifier>
 		</dependency>
 		<dependency>
@@ -319,7 +319,7 @@
 	<parent>
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO</artifactId>
-        <version>2.5.34</version>
+        <version>2.5.35</version>
         <relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 	<properties>

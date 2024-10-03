@@ -45,7 +45,7 @@ public class Subnet {
     try {
         a = (Inet4Address) InetAddress.getByName(ip);
         a1 = (Inet4Address) InetAddress.getByName(addr1);
-    } catch (UnknownHostException e){
+    } catch (UnknownHostException|ClassCastException e){ // soms ook Inet6Address, nog geen support voor nodig
       return false;
     }
 

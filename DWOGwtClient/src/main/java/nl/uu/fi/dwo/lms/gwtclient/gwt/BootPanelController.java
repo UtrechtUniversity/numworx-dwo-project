@@ -76,10 +76,11 @@ public class BootPanelController {
                     setSession(false);
                     viewFactory.getMainView().setSchoolName("");
                     viewFactory.getMainView().setPresentationName("");
-                    eventBus.fireEvent(new SwitchViewEvent(SelectedView.MODULES));
+                    //eventBus.fireEvent(new SwitchViewEvent(SelectedView.MODULES));
+                    sendSwitchEvent(SelectedView.MODULES);
                     break;
                   
-                  case SUCCESS:
+//                  case SUCCESS:
                   case SUCCESS_WELCOME:
                     setSession(true);
                     LOG.log(Level.INFO, "Login succeeded. Showing welcome view.");
@@ -87,26 +88,27 @@ public class BootPanelController {
                     viewFactory.getMainView().setPresentationName(dwoGlobalVars.getCurrentUser().getDisplayName());
                     SelectedView view = initialView;
                     initialView = SelectedView.WELCOME;
-                    eventBus.fireEvent(new SwitchViewEvent(view));
+                    //eventBus.fireEvent(new SwitchViewEvent(view));
+                    sendSwitchEvent(view);
                     // viewFactory.getMainView().showPostLoginWidgets();
                     break;
                   case SUCCESS_ROLE:
                     LOG.log(Level.INFO, "Login succeeded. Showing account view for teacher.");
-                    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
+                    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));      
                     break;
-                  case SUCCESS_RESULTS:
-                    setSession(true);
-                    LOG.log(Level.INFO, "Login succeeded. Showing results view.");
-                    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
-                    // viewFactory.getMainView().showPostLoginWidgets();
-                    break;
-                  case SUCCESS_SCHOOLCLASSES:
-                    setSession(true);
-                    LOG.log(Level.INFO, "Login succeeded. Showing schoolclasses view.");
-                    eventBus
-                        .fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
-                    // viewFactory.getMainView().showPostLoginWidgets();
-                    break;
+//                  case SUCCESS_RESULTS:
+//                    setSession(true);
+//                    LOG.log(Level.INFO, "Login succeeded. Showing results view.");
+//                    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
+//                    // viewFactory.getMainView().showPostLoginWidgets();
+//                    break;
+//                  case SUCCESS_SCHOOLCLASSES:
+//                    setSession(true);
+//                    LOG.log(Level.INFO, "Login succeeded. Showing schoolclasses view.");
+//                    eventBus
+//                        .fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
+//                    // viewFactory.getMainView().showPostLoginWidgets();
+//                    break;
                   case FAIL:
                     LOG.log(Level.INFO, "Login failed, showing dialog.");
                     eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.LOGIN));
@@ -295,7 +297,7 @@ public class BootPanelController {
 
 	private int stage;
     //private boolean hideGwtGui;
-    String authToken, user_id, org_id;
+    String authToken;
     private boolean session = false;
 
     static {
@@ -322,6 +324,10 @@ public class BootPanelController {
         History.addValueChangeHandler(evt -> this.eventBus.fireEvent(evt));
     }
 
+    static void sendSwitchEvent(SwitchViewEvent.SelectedView view) {
+    	History.newItem(view.name());
+    }
+    
 //    public static native String getHideGwtGuiString()/*-{
 //        return  $wnd.hideGwtGui;
 //    }-*/;
@@ -360,15 +366,6 @@ public class BootPanelController {
         } catch (Exception ignore) {
             initialView = SelectedView.WELCOME;
         };
-// Saml login, deprecated 
-        if(authToken == null) {
-          user_id = null;
-          org_id = null;
-          authToken = null;
-          LOG.fine("SAML User " + user_id + " " + org_id + " " + authToken);
-        } else {
-          user_id = org_id = null; // modern authtoken.
-        }
     }
 
     public static native void forceReload() /*-{
@@ -487,9 +484,10 @@ public class BootPanelController {
         LOG.log(Level.FINE, "Initiating Main presenter. Showing login screen.");
         mainPresenter.init();
         LOG.log(Level.FINE, "Initiated Main presenter.");
-        SwitchViewEvent ev = new SwitchViewEvent(SwitchViewEvent.SelectedView.LOGIN);
-        eventBus.fireEvent(ev);
-
+ //       SwitchViewEvent ev = new SwitchViewEvent(SwitchViewEvent.SelectedView.LOGIN);
+ //       eventBus.fireEvent(ev);
+        History.replaceItem(SelectedView.LOGIN.name());
+        
         // bootFromAuthToken();
     }
 //

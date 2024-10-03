@@ -28,4 +28,14 @@ public class ViewCourseActivity extends ViewModuleActivity {
     super.goTo(place);
   }
 
+  
+//FIXME Even voor de test van schoolyear op chromebook
+/*
+@Override
+public String mayStop() {
+	
+	if (started && isSEB && lastExam.get().restorable()) started = false;
+	return super.mayStop();
+}
+*/
 }

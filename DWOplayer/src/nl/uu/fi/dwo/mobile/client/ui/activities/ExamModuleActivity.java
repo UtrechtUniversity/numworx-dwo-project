@@ -39,6 +39,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 	@Inject RPCHandler rpc;
 	@Inject TrafficAgent agent;
 	@Inject ActivityComponent.Builder builder;
+	@Inject LastExamActivity lastExam;
 	
 	private SelectModuleItem item;
 	private Activity delegate;
@@ -101,6 +102,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 
 			@Override
 			public void fail(Promise<?> resolved) throws Exception {
+				lastExam.setPassword(null);
 				view.showFailure(resolved.getFailure());			
 			}};
 		
@@ -109,6 +111,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 			@Override
 			public Promise<Void> call(Promise<Object> resolved)
 					throws Exception {
+				lastExam.setPassword(password);
 				delegate = provider.get();
 				delegate.start(panel, bus);
 				return null;

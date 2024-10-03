@@ -384,6 +384,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
         result.setScoContexts(Collections.emptyList());
       } else {
         DomClassCourse dcc = pcc.buildDomClassCourse();
+        dcc.setType(pcc.getType()); // geen fratsen voor een student!
         DomCourseStudent dcs = pc.buildDomCourseStudent();
         DomScoContext dsco = psco.buildDomScoContext();
         DomMapEntry<PersistenceId, DomClassCourse> ecc =

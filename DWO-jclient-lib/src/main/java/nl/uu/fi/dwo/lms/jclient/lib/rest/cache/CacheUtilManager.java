@@ -22,10 +22,10 @@ public class CacheUtilManager {
 		if (manager == null) {
 			CachingProvider cachingProvider = Caching.getCachingProvider();
 			Properties properties = new Properties(cachingProvider.getDefaultProperties());
-	//voor memcache 
-			String servers = System.getProperty("MEMCACHED", "test:localhost:11211");
-			servers = servers.substring(servers.indexOf(':')+1);
-			properties.setProperty(PublicProfileCache.NAME + ".servers", servers);
+//voor memcache-jcache
+//			String servers = System.getProperty("MEMCACHED", "test:localhost:11211");
+//			servers = servers.substring(servers.indexOf(':')+1);
+//			properties.setProperty(PublicProfileCache.NAME + ".servers", servers);
 			manager = cachingProvider.getCacheManager(null, null, properties);
 		}
 		return manager;
@@ -35,12 +35,11 @@ public class CacheUtilManager {
 		CacheManager cacheManager = initCache();
 		Properties properties = cacheManager.getProperties();
 // Voor MEMCACHED
-		properties.putIfAbsent(NAME + ".servers", properties.getProperty(PublicProfileCache.NAME + ".servers"));
+//		properties.putIfAbsent(NAME + ".servers", properties.getProperty(PublicProfileCache.NAME + ".servers"));
 		Cache<K, V> _instance = cacheManager.getCache(NAME, key, value);
 		if (_instance == null) {
 			MutableConfiguration<K, V> conf;
 			conf = new MutableConfiguration<K, V>().setTypes(key, value);
-//voor memcache
 			conf.setStoreByValue(false);
 			conf.setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.ONE_DAY));
 			_instance = cacheManager.createCache(NAME, conf);
