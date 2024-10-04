@@ -181,6 +181,7 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
       token = m.authorization_token(authToken, clientId, verifier, redirectUri);
       if (token != null) {
         StoredRestManager.getInstance().setRecover(this);
+        dwo.setRefreshToken(token);
       }
       DomLoginContext loginContext = SecureUserAccountManager.getLoginContext();
       DomContext context = StoredRestManager.getInstance().getAuthenticator().getContext();
@@ -225,6 +226,7 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
                 token = m.authorization_token(SecureUserAccountManager.getBearerToken(), null, null, null);
                 if (token != null) {
                     StoredRestManager.getInstance().setRecover(this);
+                    dwo.setRefreshToken(token);
                 }
             }
             
@@ -1212,8 +1214,10 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
     token = m.refresh_token(token);
     if (token == null) {
       t = new Dwo2Exception(Dwo2ExceptionCode.Rest_LoginNeeded, "invalid_grant");
+      dwo.setRefreshToken("");
       throw new RuntimeException(t);
     }
+    dwo.setRefreshToken(token);
     return true;
   }
 
@@ -1233,4 +1237,35 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
   public SecureStudentModelManager getStudentModelManager() {
     return null;
   }
+
+public void loginWithRefreshToken(String refreshToken) throws LoginException, Dwo2Exception {
+	LOG.log(Level.SEVERE, "Not implemented " + refreshToken) ;
+    DwoHelper.setContact(false);
+    OAuthManager m = new OAuthManager();
+    token = m.refresh_token(refreshToken);
+    if (token != null) {
+      StoredRestManager.getInstance().setRecover(this);
+      dwo.setRefreshToken(token);
+    }
+    DomLoginContext loginContext = SecureUserAccountManager.getLoginContext();
+    DomContext context = StoredRestManager.getInstance().getAuthenticator().getContext();
+    if (context == null) {
+      StoredRestManager.getInstance().getAuthenticator().setContext(context = new DomContext());
+    }
+    context.setRealm(loginContext.getRealm());
+    DomUserFull user = SecureUserAccountManager.getAccountData();
+    DwoHelper.setCurrentUser(user, loginContext);
+    if (DwoHelper.getCurrentUser() != null) {
+      // TODO: remove, currently checks if licence is still valid
+      validLicenceCheck(dwo.getUser());
+      // Check if user has enough rights to continue
+      if (dwo.login(user.getUserName(), "")) {
+      //configure GuiCreator to show correct Panels and options.
+          configurePanelsForUser(dwo.getUser());
+      } else {
+          dwo.logoff(); 
+      	  throw new LoginException(LoginException.EX_UNKNOWN_ERROR);
+     }
+    } 
+}
 }

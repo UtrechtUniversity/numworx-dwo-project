@@ -358,7 +358,7 @@ public class SecuredUserAccountManager {
                         ) {
 //                        loginContextList.get(0).setLastLogin(null); not for housekeeping users. // changed 6 maart 2019, actie voor maart 2021
                     	String env = System.getProperty("DWO_ENV", "app");
-                    	if (!env.contains("saml") || u.isSingleSchoolAccount())
+                    	if (!isOIDC(env) || u.isSingleSchoolAccount())
                     	{	loginContextList.get(0).setSecretKey(null);
                         	loginContextList.get(0).setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
                     	}
@@ -376,6 +376,10 @@ public class SecuredUserAccountManager {
         }
         return true;
     }
+
+	public static boolean isOIDC(String env) {
+		return env.contains("saml") || env.contains("entree");
+	}
 //
 //    /**
 //     * Updates the User data of the current user and returns a copy of the
