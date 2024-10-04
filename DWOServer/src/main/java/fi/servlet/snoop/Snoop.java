@@ -96,31 +96,31 @@ public class Snoop extends HttpServlet {
 			Object value = request.getAttribute(key);
 			out.println("   " + HTMLFilter.filter(key) + " = " + value);
 		}
-// AJP stuff
-		Collection<String> ajp = Arrays.asList(
-		  "Shib-Handler",
-		  "Shib-Application-ID",
-		  "Shib-Session-ID",
-		  "Shib-Identity-Provider",
-		  "Shib-Authentication-Instant",
-		  "Shib-Authentication-Method",
-		  "Shib-AuthnContext-Class",
-		  "Shib-Session-Index",
-		  "givenName",
-		  "mail",
-		  "sn",
-		  "uid",
-		  "insertion",
-		  "unscoped-affiliation",
-		  "studentNumber",
-		  "nlEduPersonHomeOrganizationId",
-		  "nlEduPersonHomeOrganization"
-		  
-		    );
-		for(String key: ajp) {
-          Object value = request.getAttribute(key);
-          out.println("   " + HTMLFilter.filter(key) + " = " + HTMLFilter.filter(String.valueOf(value)));
-		}
+//// AJP stuff
+//		Collection<String> ajp = Arrays.asList(
+//		  "Shib-Handler",
+//		  "Shib-Application-ID",
+//		  "Shib-Session-ID",
+//		  "Shib-Identity-Provider",
+//		  "Shib-Authentication-Instant",
+//		  "Shib-Authentication-Method",
+//		  "Shib-AuthnContext-Class",
+//		  "Shib-Session-Index",
+//		  "givenName",
+//		  "mail",
+//		  "sn",
+//		  "uid",
+//		  "insertion",
+//		  "unscoped-affiliation",
+//		  "studentNumber",
+//		  "nlEduPersonHomeOrganizationId",
+//		  "nlEduPersonHomeOrganization"
+//		  
+//		    );
+//		for(String key: ajp) {
+//          Object value = request.getAttribute(key);
+//          out.println("   " + HTMLFilter.filter(key) + " = " + HTMLFilter.filter(String.valueOf(value)));
+//		}
 		
 		
 		out.println();
