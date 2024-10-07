@@ -353,17 +353,19 @@ public class SecuredUserAccountManager {
             try {
                 List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
                 if (loginContextList.size() == 1) {
-                    if (loginContext.getDomLoginContext().getRegisterTimeStamp().equals((loginContextList.get(0).getRegisterTimeStamp()))
-                        && loginContext.getDomLoginContext().getLastLoginTimeStamp().equals(loginContextList.get(0).getLastLogin())
+                    DomLoginContext context = loginContext.getDomLoginContext();
+					PersistentLoginContext persistentContext = loginContextList.get(0);
+					if (context.getRegisterTimeStamp().equals((persistentContext.getRegisterTimeStamp()))
+                        && context.getLastLoginTimeStamp().equals(persistentContext.getLastLogin())
                         ) {
 //                        loginContextList.get(0).setLastLogin(null); not for housekeeping users. // changed 6 maart 2019, actie voor maart 2021
                     	String env = System.getProperty("DWO_ENV", "app");
-                    	if (!isOIDC(env) || u.isSingleSchoolAccount())
-                    	{	loginContextList.get(0).setSecretKey(null);
-                        	loginContextList.get(0).setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+                    	if (!isOIDC(env) || u.isSingleSchoolAccount() || context.getSecretKey() == null)
+                    	{	persistentContext.setSecretKey(null);
+                        	persistentContext.setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
                     	}
-                        LoginContextManager.edit(loginContextList.get(0));
-                        LoginContextCache.remove(loginContextList.get(0).getId());
+                        LoginContextManager.edit(persistentContext);
+                        LoginContextCache.remove(persistentContext.getId());
                     }
                 } else {
                     //logout while no login tried before.

@@ -5691,6 +5691,16 @@ private Object CamelCase(String name) {
 		zetVolledigeBreedte0alt(breedte);
 	}
 
+	
+	Boolean lastEvent = null;
+	private void fireLayoutAction(boolean small) {
+		if (lastEvent != null && small == lastEvent.booleanValue()) return;
+		final CBookEvent ev = new CBookEvent(small ? "action.smalllayout": "action.widelayout");
+		comRoot.fireEvent(ev);
+		lastEvent = Boolean.valueOf(small);
+	}
+	
+	
 	private void zetVolledigeBreedte0alt(int breedte) {
 		
 			// 1. deze kolom is uitgezoemd:
@@ -5708,8 +5718,9 @@ private Object CamelCase(String name) {
 				zetVolledigeBreedte1(breedte); // boekhouding....
 				int w;	 			
 			    w = (int)Math.round(responsiveFactor*breedte + responsiveConstant);
-			    if (w < responsiveMinWidth ) {
-			    		w = breedte;
+			    boolean small = w < responsiveMinWidth;
+				if (small ) {
+			    		w = breedte;			    		
 			    }
 			    else {
 			    		w = w-1; // correctie voor afrondingen naar boven
@@ -5723,7 +5734,7 @@ private Object CamelCase(String name) {
 					
 					tekstVakken[0][0].reLayout();
 				}
-				
+				fireLayoutAction(small);
 				return;
 			}
 		if (volledigeBreedte && breedtes != null) {		// alle andere gevallen
@@ -5749,7 +5760,8 @@ private Object CamelCase(String name) {
 			int w = breedte;
  			
 			    w = (int)Math.round(responsiveFactor*breedte + responsiveConstant);
-			    if(responsiveFactor*breedte + responsiveConstant< responsiveMinWidth || zoomKolom != null ) {
+			    boolean small = responsiveFactor*breedte + responsiveConstant< responsiveMinWidth || zoomKolom != null;
+				if(small ) {
 			    		w = breedte;
 			    }
 			    else {
@@ -5771,6 +5783,7 @@ private Object CamelCase(String name) {
 				
 				tekstVakken[0][0].reLayout();
 			}
+			fireLayoutAction(small);
 		}
   }
 

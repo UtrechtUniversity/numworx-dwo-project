@@ -394,7 +394,7 @@
 						<CDNURL>http://localhost:8082</CDNURL>
                     	<DWO_ENV>testkiosk</DWO_ENV>
                     	<ALLOW_ORIGIN>http://localhost:8080</ALLOW_ORIGIN>
-                    	<XAPI_ENDPOINT>https://lrsql.dwo.nl/xapi/</XAPI_ENDPOINT>
+                    	<XAPI_ENDPOINT>http://localhost:8089/xapi/</XAPI_ENDPOINT>
                     	<XAPI_AUTH>bXlfa2V5Om15X3NlY3JldA==</XAPI_AUTH>               
                     </systemProperties>
                     <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>

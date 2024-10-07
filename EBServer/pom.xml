@@ -497,6 +497,8 @@
  							<UU_INDEX />
  							<ENV_NOSEB>true</ENV_NOSEB>
  							<ENV_IPRANGE>127.0.0.1</ENV_IPRANGE>
+                    		<XAPI_ENDPOINT>http://localhost:8089/xapi/</XAPI_ENDPOINT>
+                    		<XAPI_AUTH>bXlfa2V5Om15X3NlY3JldA==</XAPI_AUTH>               
                         </systemProperties>
 					<server>TomcatServer</server>
 					<path>/</path>

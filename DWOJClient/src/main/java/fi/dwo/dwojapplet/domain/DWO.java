@@ -1978,7 +1978,7 @@ LOG.info("time results = " + (-t) + " ms");
 			
         	
         };
-        mf.setTitle("Numworx author");
+        mf.setTitle("Numworx Author");
         mf.pack();
         // Start applet.
         mf.setVisible(true);
