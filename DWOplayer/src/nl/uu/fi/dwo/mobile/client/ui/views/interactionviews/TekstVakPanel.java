@@ -2148,7 +2148,12 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 			setVisibility((nagekeken||activity.isEindtoetsVerzegeld())&&layerVisible);
 		else
 			setVisibility(shouldVisible);
-		
+
+		if (lastEvent != null) {
+			boolean small = lastEvent.booleanValue();
+			lastEvent = null; 
+			fireLayoutAction(small);
+		}
 	}
 /**
  *  Always set state to something. Pick up shared state.
