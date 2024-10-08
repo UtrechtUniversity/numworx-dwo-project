@@ -9,6 +9,7 @@ public class Extensions {
   public final static String FOREKNOWLEDGE = "http://www.dwo.nl/extensions/foreknowledge";
   public final static String ASSESSMENT_TYPE = "http://id.tincanapi.com/extension/assessment-type";
   public final static String FEEDBACK = "http://id.tincanapi.com/extension/feedback";
+  public final static String GUESS = "http://www.dwo.nl/extensions/guess";
   
   @JsonProperty(OBJECTIVES)
   @com.fasterxml.jackson.annotation.JsonProperty(OBJECTIVES)
@@ -25,5 +26,9 @@ public class Extensions {
   @JsonProperty(FEEDBACK)
   @com.fasterxml.jackson.annotation.JsonProperty(FEEDBACK)
   public String feedback;
+  
+  @JsonProperty(GUESS)
+  @com.fasterxml.jackson.annotation.JsonProperty(GUESS)
+  public Double guess;
 
 }

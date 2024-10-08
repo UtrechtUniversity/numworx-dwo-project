@@ -440,21 +440,23 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 						logging = fe.dwologger;
 					} else {
 						LogBuilder dwoLogger = activity.logBuilder().setLogOption(launchState.getBoolean("logOption", false));
-						if(launchState.containsKey("scoreMax"))
-						{
-							dwoLogger.setMaxScore(scoreMax);
-						}
-						if(launchState.containsKey("logIDLabel"))
-							dwoLogger.setLogIDLabel(launchState.getString("logIDLabel"));
-						if (launchState.containsKey("logID"))
-							dwoLogger.setLogID( launchState.getString("logID"));
-						String[] smForeknowledge = null;
-						if (launchState.containsKey("smForeknowledge"))
-							smForeknowledge = launchState.getStringArray("smForeknowledge");
-							
+//						if(launchState.containsKey("scoreMax"))
+//						{
+//							dwoLogger.setMaxScore(scoreMax);
+//						}
+//						if(launchState.containsKey("logIDLabel"))
+//							dwoLogger.setLogIDLabel(launchState.getString("logIDLabel"));
+//						if (launchState.containsKey("logID"))
+//							dwoLogger.setLogID( launchState.getString("logID"));
+//						String[] smForeknowledge = null;
+//						if (launchState.containsKey("smForeknowledge"))
+//							smForeknowledge = launchState.getStringArray("smForeknowledge");
+						dwoLogger.setLaunchData(launchState);	// doet teltmee, maxscore, logidlabel, logid, foreknowledge, guess
+						
+						
 						String Formule = isVergelijkingVak ? "Vergelijking" : "Formule";
 						dwoLogger.setClassName("fi.wiskopdr.SimpelAntwoord"+Formule+"Vak");
-						dwoLogger.setLogObjectives(logObjectives).setSmObjectives(smObjectives).setSmForeknowledge(smForeknowledge);
+						dwoLogger.setLogObjectives(logObjectives).setSmObjectives(smObjectives);
 						dwoLogger.setTeltMee(teltMee);
 						logging = dwoLogger.build();
 					}

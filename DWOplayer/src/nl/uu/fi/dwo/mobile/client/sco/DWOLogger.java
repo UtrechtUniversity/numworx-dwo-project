@@ -290,5 +290,12 @@ public class DWOLogger implements Logging {
 	public String[] getSMForeknowledge() {
 		return delegate != null ? delegate.getSMForeknowledge(): null;
 	}
+
+	@Override
+	public void setSMGuess(Number smGuess) {
+		if (delegate != null) {
+			delegate.setSMGuess(smGuess);
+		}
+	}
 	
 }

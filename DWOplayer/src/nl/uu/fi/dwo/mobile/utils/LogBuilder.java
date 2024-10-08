@@ -23,7 +23,9 @@ public class LogBuilder {
 	private boolean teltMee = true;
 	private Integer maxScore;
 	private String logIDLabel;
+	private Number smGuess;
 
+	// doet , , , , , guess
 	public LogBuilder setLaunchData(ObjectMap map) {
 		logOption = map.getBoolean("logOption", false);
 		teltMee   = map.getBoolean("teltMee", true);
@@ -45,6 +47,10 @@ public class LogBuilder {
 		}
 		logID = map.getString("logID");
 		logIDLabel = map.getString("logIDLabel");
+		
+		if (map.containsKey("smGuess")) {
+			setSmGuess(map.getDouble("smGuess"));
+		}
 		return this;
 	}
 	
@@ -71,6 +77,7 @@ public class LogBuilder {
 			logging.setLogObjectives(logObjectives);
 			logging.setSMObjectives(smObjectives);
 			logging.setSMForeknowledge(smForeknowledge);
+			logging.setSMGuess(smGuess);
 			logging.setLogOption(logOption);
 		}		
 		return logging;
@@ -106,6 +113,11 @@ public class LogBuilder {
 		this.smForeknowledge = smForeknowledge;
 		return this;
 	}
+	public LogBuilder setSmGuess(Number guess) {
+		this.smGuess = guess;
+		return this;
+	}
+	
 
 	public boolean[][] getLogObjectives() {
 		return logObjectives;

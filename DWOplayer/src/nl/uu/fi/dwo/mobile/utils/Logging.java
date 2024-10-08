@@ -30,5 +30,7 @@ public interface Logging {
 
 	default void getStateHook(Map<String, Object> h) {}
 
+	default void setSMGuess(Number smGuess) { }
+
 
 }
