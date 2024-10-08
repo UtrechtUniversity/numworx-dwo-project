@@ -46,7 +46,7 @@ public class PersistentHasRole implements Serializable {
     protected PersistentHasRolePK persistentHasRolePK;
     @Column(name = "classID")
     private Long classID;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "classID", insertable = false, updatable = false)
     private PersistentSchoolClass schoolClass;
     @Basic(optional = false)
