@@ -24,6 +24,7 @@ import fi.beans.jdbc.DbConnectIF;
 import fi.beans.xmlrpc.Servlet;
 import fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.BUILD;
 import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import java.sql.PreparedStatement;
@@ -58,8 +59,8 @@ public class DataSourceAccessServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         LOG.log(Level.SEVERE,"rds: {0} port: {1}", new Object[]{System.getProperty("RDS_HOSTNAME","onbekend"),System.getProperty("RDS_PORT","onbekend")});
-        String buildnumber = getInitParameter("buildnumber");
-        String projectVersion = getInitParameter("projectVersion");
+        String buildnumber = BUILD.buildNumber;
+        String projectVersion = BUILD.version;
         LOG.log(Level.INFO, "Software version, buildnumber: {0}, {1}", new Object[]{projectVersion, buildnumber});
 
         int maxthreads = 200;
@@ -96,13 +97,12 @@ public class DataSourceAccessServlet extends HttpServlet {
 
 		out.println(this);
 
-        String buildNumber = getInitParameter("buildnumber");
-        String softwareVersion = getInitParameter("projectVersion");
-        String timeStamp = getInitParameter("timestamp");
+        String buildNumber = BUILD.buildNumber;
+        String softwareVersion = BUILD.version;
+        String timeStamp = BUILD.timeStamp;
         out.println();
         out.println("Software version, buildnumber: " + softwareVersion + ", " + buildNumber + ", timestamp "+timeStamp);
         LOG.log(Level.INFO,"Software version {0}, buildnumber {1}, timestamp {2}", new Object[]{softwareVersion, buildNumber, timeStamp});
-        out.println();
         out.println();
 
         //check for proper DB version

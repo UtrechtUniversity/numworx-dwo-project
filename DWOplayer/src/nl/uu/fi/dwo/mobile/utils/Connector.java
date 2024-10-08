@@ -26,7 +26,7 @@ public final class Connector {
 	public InteractionView v;
 	public ObjectList connections;
 	public ObjectMap  subscriptions;
-	public String widgetId;
+	public final String widgetId;
 	public Map<String, Set<Map<String,String>>> backing;
 	public Set<String> commands = new TreeSet<String>();
 

@@ -207,14 +207,6 @@
             <param-name>threading</param-name>
             <param-value>true</param-value>
         </init-param>
-        <init-param>
-            <param-name>projectVersion</param-name>
-            <param-value>1.0.1-SNAPSHOT</param-value>
-        </init-param>
-        <init-param>
-            <param-name>buildnumber</param-name>
-            <param-value>9537</param-value>
-        </init-param>
         <load-on-startup>0</load-on-startup>
     </servlet>
     <servlet>
