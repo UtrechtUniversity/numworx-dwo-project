@@ -264,6 +264,9 @@ private DomStudentModelDataScore eerstestap(DomStudentModelContextId context, Do
         }
         
         Extensions extensions = statement.context.contextActivities.parent.get(0).definition.extensions;
+        if (extensions.guess != null) {
+        	guess = extensions.guess.doubleValue();
+        }
 		List<String> ids = extensions.objectives;
         ids = strip(ids);
         if(Boolean.FALSE.equals(success))

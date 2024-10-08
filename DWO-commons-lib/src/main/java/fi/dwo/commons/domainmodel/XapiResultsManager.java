@@ -261,7 +261,7 @@ public class XapiResultsManager {
     if (score == null) return false;
     Double scaled = score.scaled;
     if (scaled == null) return false;
-    boolean b = scaled.doubleValue() > 0.75;
+    boolean b = scaled.doubleValue() >= 0.75;
     if (b) 
       LOG.info("himark " + b);
     return b;
@@ -271,7 +271,7 @@ public class XapiResultsManager {
     if (score == null) return false;
     Double scaled = score.scaled;
     if (scaled == null) return false;
-    boolean b = scaled.doubleValue() < 0.25;
+    boolean b = scaled.doubleValue() <= 0.25 && scaled.doubleValue() > 0;
     if (b) 
       LOG.info("lomark " + b);
     return b;
@@ -295,7 +295,8 @@ public class XapiResultsManager {
         
         Score   score   = statement.result.score;
         String className = statement.context.contextActivities.parent.get(0).definition.type;
-        double guess = 0.1;
+        Extensions extensions = statement.context.contextActivities.parent.get(0).definition.extensions;
+       double guess = 0.1;
         if(className.contains("AntwoordKeuzeVak"))
         {
             String nrOfChoicesString = className.substring(className.lastIndexOf('/')+1);
@@ -306,8 +307,10 @@ public class XapiResultsManager {
             catch(Exception e){}
             guess = 1.0/nrOfChoices;
         }
+        if (extensions.guess != null) {
+        	guess = extensions.guess.doubleValue();
+        }
         
-        Extensions extensions = statement.context.contextActivities.parent.get(0).definition.extensions;
         List<String> ids = extensions.objectives;
         
         ids = strip(ids);
