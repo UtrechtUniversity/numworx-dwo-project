@@ -542,10 +542,13 @@ public class DwoGlobalVars {
       currentUser = user;
     }
     
-    public Promise<Dwo2Exception> logout() {
+    public Promise<Dwo2Exception> logout(boolean b) {
       DomContext context = new DomContext();
       context.setDomHasRole(getActiveSchoolRoleAndClass().getHasRole());
       context.setRealm(getRealm());
+      if (b) {
+    	  getCurrentLoginContext().setSecretKey(null); // void refresh_token
+      }
       return accountManager.logout(context, getCurrentLoginContext());
     }
 

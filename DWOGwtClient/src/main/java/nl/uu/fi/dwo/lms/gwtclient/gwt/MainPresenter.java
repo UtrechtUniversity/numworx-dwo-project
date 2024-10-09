@@ -224,7 +224,7 @@ public class MainPresenter implements ValueChangeHandler<String> {
 		p.then(modules::logout)
         .then(resolved -> { 
             if (resolved.getValue()) {
-              return dwoGlobalVars.logout()
+              return dwoGlobalVars.logout(true)
                   .map(r -> Boolean.TRUE)
                   .fallbackTo(Promises.resolved(Boolean.TRUE));
             }
