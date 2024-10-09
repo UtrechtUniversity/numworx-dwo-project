@@ -50,14 +50,13 @@ import nl.uu.fi.dwo.rest.dom.xapi.Statement;
 import nl.uu.fi.dwo.rest.dom.xapi.StatementsQuery;
 import nl.uu.fi.dwo.rest.dom.xapi.StatementsResult;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.util.StudentModelScoreUtil;
 import nl.uu.fi.dwo.rest.util.StudentModelUtil;
 
 
-public class XapiResultsManager {
+public class XapiResultsManager extends StudentModelScoreUtil {
   
   static private final Logger LOG = Logger.getLogger(XapiResultsManager.class.getName());
-  public static final String ATTEMPTED = "http://www.dwo.nl/verbs/attempted";
-  public static final String CORRECTED = "http://www.dwo.nl/verbs/corrected";
   private static final SimpleDateFormat FORMAT_8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
   private static final SimpleDateFormat FORMAT_8601a = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
   static {

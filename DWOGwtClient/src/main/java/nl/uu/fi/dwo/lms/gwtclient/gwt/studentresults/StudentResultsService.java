@@ -36,9 +36,10 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.util.StudentModelScoreUtil;
 
 @RoleScope
-public class StudentResultsService implements StudentResults {
+public class StudentResultsService extends StudentModelScoreUtil implements StudentResults {
 	
 	SecuredStudentStudentModelManager manager;
 	MethodManager methodMan;

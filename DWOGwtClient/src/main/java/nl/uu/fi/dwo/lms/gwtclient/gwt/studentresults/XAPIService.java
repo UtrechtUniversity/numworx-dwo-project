@@ -49,8 +49,6 @@ import nl.uu.fi.dwo.rest.util.StudentModelUtil;
 
 @RoleScope
 public class XAPIService extends StudentResultsService implements StudentResults {
-  public static final String ATTEMPTED = "http://www.dwo.nl/verbs/attempted";
-  public static final String CORRECTED = "http://www.dwo.nl/verbs/corrected";
   public static final DateTimeFormat FORMAT_8601 = DateTimeFormat.getFormat(PredefinedFormat.ISO_8601);
 
   private Promise<XapiManager> man;
