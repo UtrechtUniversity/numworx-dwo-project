@@ -98,16 +98,6 @@ public class XapiResultsManager extends StudentModelScoreUtil {
       return score;
     }
     
-
-    private DomStudentModelDataScore eerstestap(DomStudentModelContext context) {
-      DomStudentModelDataScore result = new DomStudentModelDataScore();
-      DomStudentModelStructure structure = context.getModelStructure();
-      DomStudentModelStructureScore score = structure.generateStudentModelStructureScore();
-      result.setDomStudentModelStructureScore(score);
-      result.setModelId(context);
-      return result;
-  }
-
     
     private DomStudentModelDataScore toDataScore0(StatementsResult result, StateDocument state,
                                                  DomStudentModelContext context) {

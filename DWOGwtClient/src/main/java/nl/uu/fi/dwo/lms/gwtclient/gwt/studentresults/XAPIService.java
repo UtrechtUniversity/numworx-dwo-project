@@ -202,22 +202,6 @@ public class XAPIService extends StudentResultsService implements StudentResults
     return scores;
   }
 
-  private DomStudentModelDataScore eerstestap(DomStudentModelContext context) {
-    DomStudentModelStructure structure = context.getModelStructure();
-    return eerstestap(context, structure);
-  }
-  
-  private DomStudentModelDataScore eerstestap(DomStudentModelContext4Student context) {
-	  return eerstestap(context, context.getModelStructure());
-  }
-
-private DomStudentModelDataScore eerstestap(DomStudentModelContextId context, DomStudentModelStructure structure) {
-	DomStudentModelDataScore result = new DomStudentModelDataScore();
-    DomStudentModelStructureScore score = structure.generateStudentModelStructureScore();
-    result.setDomStudentModelStructureScore(score);
-    result.setModelId(context);
-    return result;
-}
 
   
   
