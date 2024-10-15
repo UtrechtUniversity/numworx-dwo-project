@@ -39,6 +39,7 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.HasBack;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.xs;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.EmptyView;
 import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
@@ -284,8 +285,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 					trail.add(parent);
 				parent = parent.getParent();
 			}
-			view.setTrail(trail);
-			headerView.setTrail(trail);
+			setTrail(trail);
 			view.setTitle(sco.getName());
 			Window.setTitle(sco.getName());
 			view.setScoType(sco.getScoType());
@@ -348,6 +348,11 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 		};
 		view.getApi().Initialize(callback);
 		}
+	}
+
+	protected void setTrail(List<SelectModuleItem> trail) {
+		view.setTrail(trail);
+		headerView.setTrail(trail);
 	}
 
 	private boolean profileCheck() {
@@ -515,10 +520,9 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 			id = id.split(":",2)[1]; // has ':'
 			item = SelectModuleItemHolder.getItemByID(id);
 			((HasBack) place).setBack(item);
+		} else if (place instanceof xs) {
+			((xs) place).setBack(sco);
 		}
-
-		
-		
 		goTo(place);
 	}
 
