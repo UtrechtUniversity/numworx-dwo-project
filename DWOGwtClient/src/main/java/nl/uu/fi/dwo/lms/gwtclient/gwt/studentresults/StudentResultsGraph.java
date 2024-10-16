@@ -987,7 +987,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		initTitle();
 		
 		voorkennistitle = new DockLayoutPanel(Unit.EM);
-		voorkennistitle.getElement().getStyle().setBackgroundColor("#1B75BB");
+		voorkennistitle.addStyleName("filter-title");
 		add(voorkennistitle);
 		
 		setWidgetLeftRight(voorkennistitle, 0, Unit.EM, 0, Unit.EM);
