@@ -2151,8 +2151,10 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 
 		if (lastEvent != null) {
 			boolean small = lastEvent.booleanValue();
-			lastEvent = null; 
-			fireLayoutAction(small);
+			lastEvent = null;
+			Scheduler.get().scheduleDeferred(() -> 
+				fireLayoutAction(small) // delay after all of setState()
+			);
 		}
 	}
 /**
