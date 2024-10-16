@@ -5703,7 +5703,7 @@ private Object CamelCase(String name) {
 	private void fireLayoutAction(boolean small) {
 		if (lastEvent != null && small == lastEvent.booleanValue()) return;
 		final CBookEvent ev = new CBookEvent(small ? "action.smalllayout": "action.widelayout");
-		comRoot.fireEvent(ev);
+		Scheduler.get().scheduleDeferred(() -> comRoot.fireEvent(ev));
 		lastEvent = Boolean.valueOf(small);
 	}
 	
@@ -5721,8 +5721,8 @@ private Object CamelCase(String name) {
 				return;
 			}
 			// 2. dit is een response tekstvakpanel met 1 tekstvak
-			if (responsive && RESPONSIVE) {
-				zetVolledigeBreedte1(breedte); // boekhouding....
+			if (responsive && RESPONSIVE && visible) {
+				//zetVolledigeBreedte1(breedte); // boekhouding....
 				int w;	 			
 			    w = (int)Math.round(responsiveFactor*breedte + responsiveConstant);
 			    boolean small = w < responsiveMinWidth;
@@ -5734,13 +5734,14 @@ private Object CamelCase(String name) {
 			    }
 			    if(w > responsiveMaxWidth)
 			    		w = responsiveMaxWidth;						
-				if(Math.abs(this.breedte - w)>1 ) {
-					tekstVakken[0][0].setSize(w, tekstVakken[0][0].getHeight());
-					this.breedte = w;
-					breedtes.set(0,(double)w);
-					
-					tekstVakken[0][0].reLayout();
-				}
+//				if(Math.abs(this.breedte - w)>1 ) {
+//					tekstVakken[0][0].setSize(w, tekstVakken[0][0].getHeight());
+//					this.breedte = w;
+//					breedtes.set(0,(double)w);
+//					
+//					tekstVakken[0][0].reLayout();
+//				}
+			    zetVolledigeBreedte1(w);
 				fireLayoutAction(small);
 				return;
 			}
@@ -5805,10 +5806,12 @@ private Object CamelCase(String name) {
   }
 
   private void zetVolledigeBreedte1(int breedte) {
-//	if(Math.abs(this.breedte - breedte)<2)
-//		return;
+	int huidigebreedte = visible ? this.breedte : this.breedte_oud;
+	if(Math.abs(huidigebreedte - breedte)<2)
+	{	LOG.info("zetVolledigebreedte weinig verschil");
+		return;
+	}
 	int aantalKolommen = breedtes.size();
-    int huidigebreedte = visible ? this.breedte : this.breedte_oud;
 	int teVerdelenBreedte = huidigebreedte - (aantalKolommen-1)*cellSpaceColumn;
     double factor = 1.0*(breedte-(aantalKolommen-1)*cellSpaceColumn)/teVerdelenBreedte;
     double restbreedte = breedte-(aantalKolommen-1)*cellSpaceColumn;				
