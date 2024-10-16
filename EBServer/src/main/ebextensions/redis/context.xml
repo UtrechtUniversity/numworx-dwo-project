@@ -26,4 +26,10 @@
             keyPrefix="${REDIS_PREFIX:-}"
   />
 
+  <CookieProcessor
+  	className="org.apache.tomcat.util.http.Rfc6265CookieProcessor"
+  	sameSiteCookies="lax"
+  />
+
+
 </Context>
