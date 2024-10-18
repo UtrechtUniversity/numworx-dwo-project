@@ -193,7 +193,7 @@ public abstract class StudentModelScoreUtil {
 	        Boolean success = statement.result.success;
 	        Score   score   = statement.result.score;
 	
-	        if (success == null) {
+	        if (success == null && score != null) {
 	        	Double scaled = score.scaled;
 	        	
 	        	if (scaled != null) {
@@ -203,10 +203,12 @@ public abstract class StudentModelScoreUtil {
 	        	}       	
 	        }
 	       
-	        String className = statement.context.contextActivities.parent.get(0).definition.type;
-	        Extensions extensions = statement.context.contextActivities.parent.get(0).definition.extensions;
+	       String className = statement.context.contextActivities.parent.get(0).definition.type;
+	       Extensions extensions = statement.context.contextActivities.parent.get(0).definition.extensions;
 	       double guess = 0.1;
-	        if(className.contains("AntwoordKeuzeVak"))
+	        if(className.contains("AntwoordKeuzeVak")
+	        	//	||className.contains("CheckUnitPanel")
+	        )
 	        {
 	            String nrOfChoicesString = className.substring(className.lastIndexOf('/')+1);
 	            int nrOfChoices = 10;
@@ -224,7 +226,7 @@ public abstract class StudentModelScoreUtil {
 	        
 	        ids = strip(ids);
 	        
-	        if (Boolean.FALSE.equals(success) || (!Boolean.TRUE.equals(success)) && lomark(score))
+	        if (Boolean.FALSE.equals(success))
 	        {
 	          if (statement.result.extensions != null && statement.result.extensions.objectives != null) {
 	            ids.removeAll(statement.result.extensions.objectives);
@@ -256,7 +258,7 @@ public abstract class StudentModelScoreUtil {
 	                modelScore.setScore(newScore);
 	            }
 	        }
-	        else if (Boolean.TRUE.equals(success) || himark(score))
+	        else if (Boolean.TRUE.equals(success))
 	        {
 	          Collection<String> voorkennis = extensions.foreknowledge;
 	          if (voorkennis != null) {

@@ -70,7 +70,7 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 	}-*/;
 	
 	private static final String LAUNCH_DATA = "cmi.launch_data";
-	private static Logger logger = Logger.getLogger("WiskOpdrPlayer");
+	private static Logger logger = Logger.getLogger("PrintPlayer");
 
 	@Inject protected ViewModuleViewImpl view;
 	@Inject protected EventBus bus;

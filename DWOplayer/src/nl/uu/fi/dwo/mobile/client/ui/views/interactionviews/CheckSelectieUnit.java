@@ -952,18 +952,10 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 				knopImageString = map.getString("knopImageString");
 		}
 
-		String[] smObjectives = JSONUtilities.toStringArray(launchData.get("smObjectives"));
-		String[] smForeknowledge = JSONUtilities.toStringArray(launchData.get("smForeknowledge"));
-		if(logOption || smObjectives != null) {
+		{
 			LogBuilder builder = activity.logBuilder()
-					.setLogOption(logOption)
-					.setLogID(logID)
-					.setClassName("fi.wiskopdr.CheckUnitPanel/" + getAantalSelectieObjecten())
-					.setMaxScore(scoreMax)
-					.setLogObjectives(logObjectives)
-					.setSmObjectives(smObjectives)
-					.setSmForeknowledge(smForeknowledge)
-					.setTeltMee(teltMee);
+					.setLaunchData(map)
+					.setClassName("fi.wiskopdr.CheckUnitPanel/" + getAantalSelectieObjecten());
 			
 			dwologger = builder.build();
 		}
