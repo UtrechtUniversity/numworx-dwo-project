@@ -29,6 +29,7 @@ public interface Logging {
 	default void updateLog(Map<String, ?> map) { }
 
 	default void getStateHook(Map<String, Object> h) {}
+	default void setStateHook(Map<String,Object> state) {}
 
 	default void setSMGuess(Number smGuess) { }
 
