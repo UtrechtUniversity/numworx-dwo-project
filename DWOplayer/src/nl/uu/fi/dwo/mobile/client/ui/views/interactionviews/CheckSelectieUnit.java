@@ -229,11 +229,22 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		positionsRandomized = true;
 	}	
 	
+/**
+ * Externe kijkna. Doe alles wat de UI zou doen.
+ */
 	public void kijkNa()
+	{
+		kijkNa_intern();
+		attemptsCount++;
+		setAttempt();
+		adviseMe();
+	}
+
+	// voorheen kijkna, wordt alleen intern aangeroepen.
+	private void kijkNa_intern()
     {
 		// reset isVeranderdNaNakijken
 		zetIsVeranderdNaNakijken(false);
-
 		kijkNa(true);
 		
     }
@@ -475,7 +486,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	}
 
     public void kijkNa(int stapNr)
-    { 	kijkNa();
+    { 	kijkNa_intern();
     }
     
     public void verhoogErrorCount()
@@ -694,7 +705,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         		|| (nagekeken && !isVeranderdNaNakijken && (mode != OpdrNavIF.EINDTOETS || LessonMode.browse == comRoot.getLessonMode()))
         		||Review.isReview(comRoot)))
         {
-        	kijkNa();
+        	kijkNa_intern();
         	if(feedbackPanel!=null)
         		feedbackPanel.hide();
         }
@@ -834,19 +845,19 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		this.isVeranderdNaNakijken = b;
 	}
 	
-	public void stop()
-	{
-		kijkNa();
-		
-	}
+//	public void stop()
+//	{
+//		kijkNa_intern();
+//		
+//	}
 
-	public void start()
-	{
-	}
-
-	public void destroy()
-	{
-	}
+//	public void start()
+//	{
+//	}
+//
+//	public void destroy()
+//	{
+//	}
 
 	public void opnieuw()
 	{
@@ -1098,9 +1109,6 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 				//e.stopPropagation();
 				if(!editable) return;
 				kijkNa();
-				attemptsCount++;
-				setAttempt();
-				adviseMe();
 			}
 		
 			
