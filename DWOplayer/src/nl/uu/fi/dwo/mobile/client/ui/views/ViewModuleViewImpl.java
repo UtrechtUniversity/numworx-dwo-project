@@ -48,7 +48,6 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSte
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.InteractionViewWithMisconceptions;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
-import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 import nl.uu.fi.dwo.mobile.utils.RandomValues;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
@@ -71,8 +70,6 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
-import com.google.gwt.layout.client.Layout.AnimationCallback;
-import com.google.gwt.layout.client.Layout.Layer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -146,7 +143,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	OpdrNav on;
 	String location;
 	
-	private Widget mainPanel;
+	protected Widget mainPanel;
 	@UiField(provided=true) SimplePanel contentScrollPanel =
 		new ScrollPanel() { 
 		@Override

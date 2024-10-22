@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile;
 
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,12 +22,11 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
-//import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
 
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
@@ -50,7 +50,7 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 
 	public PrintPlayer() {
 		super();
-        FocusOnTouch.AREA = true;
+        FocusOnTouch.AREA = false;
 	}
 
 	static class InitialValueChangeEvent extends ValueChangeEvent<String> {
@@ -95,27 +95,10 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 		Element head = getHead();
 		head.appendChild(link);
 	}
-		
-	void insertProfileCSS() {
-		String profile = Window.Location.getParameter("profile");
-		if ("111".equals(profile)) {
-			String css = "inf"; // ons kent ons
-    		insertStylesheet( getBase() + "css/" + css + ".css");
-		}
-		if ("112".equals(profile)) {
-			String css = "numworx"; // ons kent ons
-    		insertStylesheet( getBase() + "css/" + css + ".css");
-		}
-	}
-	
-	
-	
+			
 	@Override
 	public void onModuleLoad() {
 		setupConsole();  // neem console op
-		
-		insertProfileCSS();
-		
 	    String  build = "Version " + BUILD.version + "." + BUILD.buildNumber;
 	    logger.severe(build);
 		
@@ -142,7 +125,7 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 			zetMaat();
 
 			Scorm2004IF api = view.getApi();
-			RootLayoutPanel.get().add(view);
+			RootPanel.get().add(view);
 			PromiseCallback<Void> init = new PromiseCallback<>();
 			api.Initialize(init); // need some extra async bootstrapping.
 			return init.getPromise();
@@ -172,10 +155,6 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 
 
   protected Promise<String> inject() {
-//    DummyClientFactory dummyClientFactory = new DummyClientFactory();
-//    DWOplayer.clientfactory = dummyClientFactory;
-//    view = createEntryView(false);
-//    dummyClientFactory.setEntryView(view);
 
     Scorm2004IF api = GWT.create(Scorm2004IF.class);
     return api.Initialize()
@@ -209,9 +188,23 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 	
 	
 	protected final ViewModuleViewImpl createEntryView(RPCHandler rpc, boolean header, Scorm2004IF api, ActivityComponent.Builder builder) {
-		LoggingModule module = header ? new SMLogger.LoggingModule() : new SMLogger.WiskOpdrProvider();
+		LoggingModule module = new SMLogger.LoggingModule();
 		builder = builder.loggingModule(module);
-		return new ViewModuleViewImpl(builder.mementoModule(new WiskOpdrMementoModule()).build(), rpc, header, api) 
+		return new ViewModuleViewImpl(builder.mementoModule(new WiskOpdrMementoModule()).build(), rpc, header, api) { 
+			
+			void reparent() {
+				mainPanel.removeFromParent();
+				contentPanel.removeFromParent();
+				RootPanel.get().add(contentPanel);
+			}
+
+			@Override
+			public void setupView(HashMap<String, Object> launchData) {
+				super.setupView(launchData);
+				reparent();
+			}
+			
+		}
 		.initialize();
 	}
 
@@ -223,12 +216,12 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 		//MGWT Settings//
 		ViewPort viewport = new MGWTSettings.ViewPort();
 		//viewport.setTargetDensity(DENSITY.MEDIUM);
-		viewport.setUserScaleAble(false).setMinimumScale(1.0).setMaximumScale(1.0);
+		//viewport.setUserScaleAble(false).setMinimumScale(1.0).setMaximumScale(1.0);
 		MGWTSettings settings = new MGWTSettings();
 		settings.setViewPort(viewport);
 		//settings.setAddGlosToIcon(true);
 		settings.setFullscreen(true);
-		settings.setPreventScrolling(true);
+		settings.setPreventScrolling(false);
 		MGWT.applySettings(settings);
 	}
 
@@ -262,7 +255,7 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 	private Promise<Boolean> checkPremium(Promise<Boolean> p) {
 		if (p.getValue().booleanValue()) {
 			view.asWidget().removeFromParent();
-			RootLayoutPanel.get().add(new Label("Error: need a Premium subscription"));
+			RootPanel.get().add(new Label("Error: need a Premium subscription"));
 			view.getApi().Terminate();
 		}
 		return p;
@@ -272,7 +265,7 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 		logger.log(Level.SEVERE, "failure to start", p.getFailure());
 		view.getApi().Terminate();
 		view.asWidget().removeFromParent();
-		RootLayoutPanel.get().add(new Label("Error: failure to start " + p.getFailure()));
+		RootPanel.get().add(new Label("Error: failure to start " + p.getFailure()));
 	}
 	
 	protected void setupLaunchData(String value) {
