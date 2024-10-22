@@ -42,6 +42,7 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -50,6 +51,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.MutableComboBoxModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
@@ -104,6 +106,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelVariant;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -821,7 +824,16 @@ public class LeerdomeinEditPanel2 extends JPanel
 		subtitle.setFont(font.deriveFont(14f));
 		container = new JPanel(new GridLayout(1, 1));
 		container.setPreferredSize(new Dimension(500, 325));
-		rightBox.add(subtitle, BorderLayout.NORTH);
+// variant next to subtitle
+		Box rightNorth = Box.createHorizontalBox();
+		rightNorth.add(subtitle);
+		rightNorth.add(Box.createHorizontalGlue());
+		MutableComboBoxModel<DomStudentModelVariant> varianten = new DefaultComboBoxModel<DomStudentModelVariant>();
+		variantBox = new JComboBox<>(varianten);
+		variantBox.setBackground(Constants.COLOR13);
+		variantBox.setForeground(Color.white);
+		rightNorth.add(variantBox);
+		rightBox.add(rightNorth, BorderLayout.NORTH);
 		rightBox.add(container, BorderLayout.CENTER);
 
 		settingsRO = Box.createHorizontalBox();
@@ -1154,6 +1166,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		this.model.setRoot(root = new InvisibleNode(vector, true, true));
 		insert(vector, root);
 		this.subtitle.setText("");
+		this.variantBox.setModel(new DefaultComboBoxModel<DomStudentModelVariant>());
 		// text.setEditable(false);
 		// OPSLAAN_ACTION.setDescription("");
 		this.model.nodeStructureChanged(root);
@@ -1202,6 +1215,7 @@ public class LeerdomeinEditPanel2 extends JPanel
   private AnyMethodAction methodeAction2;
   private JCheckBox methodBox;
   private MethodListener methodListener;
+  private JComboBox<DomStudentModelVariant> variantBox;
 
 	static {
 		Genson genson = new GensonBuilder().create();
@@ -1284,6 +1298,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		TreePath path = tree.getSelectionPath();
 		if (path == null) {
 			subtitle.setText("");
+			variantBox.setModel(new DefaultComboBoxModel<DomStudentModelVariant>());
 			setDescription("");
 			settings.setVisible(false);
 			return;
@@ -1310,6 +1325,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 			Integer ns = info.getNodeSize();
 			if (ns == null) ns = DEFAULT_NODE_SIZE;
 			nodeSizeChoice.setSelectedItem(ns);
+			//info.get
 			
 		} else {
 			settings.setVisible(false);

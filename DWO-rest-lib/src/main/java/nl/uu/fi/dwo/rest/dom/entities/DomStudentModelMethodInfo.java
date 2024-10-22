@@ -6,7 +6,7 @@ public class DomStudentModelMethodInfo {
 
 	private String method, book;
 	private Integer chapter;
-	
+	private String variant;
 	
 	private Integer x, y;
 	
@@ -23,6 +23,7 @@ public class DomStudentModelMethodInfo {
 		this(source.method, source.book, source.chapter);
 		x = source.x;
 		y = source.y;
+		variant = source.variant;
 	}
 
 	/**
@@ -95,9 +96,17 @@ public class DomStudentModelMethodInfo {
 		this.y = y;
 	}
 
+	public String getVariant() {
+		return variant;
+	}
+
+	public void setVariant(String variant) {
+		this.variant = variant;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(book, chapter, method, x, y);
+		return Objects.hash(book, chapter, method, x, y, variant);
 	}
 
 	@Override
@@ -110,6 +119,7 @@ public class DomStudentModelMethodInfo {
 			return false;
 		DomStudentModelMethodInfo other = (DomStudentModelMethodInfo) obj;
 		return Objects.equals(book, other.book) && Objects.equals(chapter, other.chapter)
+				&& Objects.equals(variant, other.variant)
 				&& Objects.equals(method, other.method) && Objects.equals(x, other.x) && Objects.equals(y, other.y);
 	}
 

@@ -29,6 +29,7 @@ public class DomStudentModelContextInfo {
     private Integer nodeSize; // of in methodInfo
     
     private List<DomStudentModelMethodInfo> methodInfo;
+    private Set<DomStudentModelVariant> variants;
 
     public DomStudentModelContextInfo(DomStudentModelContextInfo info) {
     	title = info.getTitle(); if(title != null) title = new TreeMap<>(title);
@@ -242,6 +243,14 @@ public class DomStudentModelContextInfo {
 
 	public void setMethodInfo(List<DomStudentModelMethodInfo> methodInfo) {
 		this.methodInfo = methodInfo;
+	}
+
+	public Set<DomStudentModelVariant> getVariants() {
+		return variants;
+	}
+
+	public void setVariants(Set<DomStudentModelVariant> variants) {
+		this.variants = variants;
 	}
 
 	public Integer getNodeSize() {
