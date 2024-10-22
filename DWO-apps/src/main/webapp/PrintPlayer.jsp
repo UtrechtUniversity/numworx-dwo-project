@@ -10,7 +10,7 @@
     <script>css("PrintPlayer.css")</script>
 
     <title></title>
-    
+    <script>script("scripts/SCORM_2004_APIWrapper.js")</script>
     <script>script("PrintPlayer/PrintPlayer.nocache.js")</script>
   </head>
 
