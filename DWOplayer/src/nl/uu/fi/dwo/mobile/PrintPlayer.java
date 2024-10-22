@@ -23,6 +23,7 @@ import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
@@ -174,39 +175,6 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 		return p;
     });
   }
-
-		
-	
-	class WiskOpdrMementoModule extends MementoModule {
-
-		@Override
-		protected Memento memento(ActivityComponent a, Provider<Scorm2004IF> api) {
-			return new WiskOpdrMemento(a, api.get());
-		}
-		
-	}
-	
-	
-	protected final ViewModuleViewImpl createEntryView(RPCHandler rpc, boolean header, Scorm2004IF api, ActivityComponent.Builder builder) {
-		LoggingModule module = new SMLogger.LoggingModule();
-		builder = builder.loggingModule(module);
-		return new ViewModuleViewImpl(builder.mementoModule(new WiskOpdrMementoModule()).build(), rpc, header, api) { 
-			
-			void reparent() {
-				mainPanel.removeFromParent();
-				contentPanel.removeFromParent();
-				RootPanel.get().add(contentPanel);
-			}
-
-			@Override
-			public void setupView(HashMap<String, Object> launchData) {
-				super.setupView(launchData);
-				reparent();
-			}
-			
-		}
-		.initialize();
-	}
 
 	protected void zetMaat() {
 		view.zetMaat();
