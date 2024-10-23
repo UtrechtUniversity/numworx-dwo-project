@@ -42,7 +42,6 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -62,6 +61,7 @@ import javax.swing.plaf.basic.BasicMenuBarUI;
 import javax.swing.plaf.basic.BasicMenuUI;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeModel;
@@ -72,6 +72,7 @@ import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 
 import fi.beans.dwomaccess.JSONEncoder;
+import fi.beans.mainframe.AppletStub;
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JCheckBox;
@@ -91,6 +92,7 @@ import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.TeacherStudentModelPanelProperties;
 import fi.dwo.dwojapplet.gui.action.GuiAction;
 import fi.dwo.dwojapplet.gui.domainmodel.ExportAction.ExportPanel;
+import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinEditPanel2.CreateVariantAction;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.EditableGraph;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.TreeTransferHandler;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.KoppelPanel;
@@ -114,6 +116,45 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class LeerdomeinEditPanel2 extends JPanel
 		implements TreeSelectionListener, ExportPanel, WindowListener, ItemListener {
+	
+	@SuppressWarnings("serial")
+	class CreateVariantAction extends AbstractAction {
+		CreateVariantAction() {
+			super("Nieuwe variant...");
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JPanel panel = new JPanel();
+			// vullen
+			panel.add(new JLabel("Variant"));
+			JTextField name = new JTextField(); name.setColumns(10);
+			panel.add(name);
+			int r = JOptionPane.showConfirmDialog(LeerdomeinEditPanel2.this, panel, toString(), JOptionPane.OK_CANCEL_OPTION);
+			if (r == JOptionPane.OK_OPTION && !name.getText().trim().isEmpty()) {
+				LOG.info("selected " + name.getText());
+				DomStudentModelVariant n = new DomStudentModelVariant(name.getText().trim());
+				MutableComboBoxModel<DomStudentModelVariant> model = (MutableComboBoxModel<DomStudentModelVariant>) variantBox.getModel();
+				NodeLeaf leaf = (NodeLeaf) ((DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent()).getUserObject();
+				if (leaf.getVariants().add(n)) {
+					if (model.getSize() == 0) model.addElement(new DomStudentModelVariant());
+					model.addElement(n);					
+				};
+			}
+
+		}
+
+		
+		
+		
+		
+		public String toString() {
+			return getValue(NAME).toString();
+		}
+	}
+
+
+
+
 	public static final Integer DEFAULT_NODE_SIZE = 24;
   static final String WISKOPDR_SIG = "H4sIAAAAAA";
 	static final Logger LOG = Logger.getLogger(LeerdomeinEditPanel2.class.getName());
@@ -746,7 +787,8 @@ public class LeerdomeinEditPanel2 extends JPanel
 		StandardAction action = new StandardAction();
         if (action.isEnabled())
           Instellingen.add(new JMenuItem(action));
-		
+		CreateVariantAction cva = new CreateVariantAction();
+		Instellingen.add(new JMenuItem(cva));
 		bar.add(Box.createHorizontalGlue());
 
 		add(split, BorderLayout.CENTER);
@@ -1237,7 +1279,6 @@ public class LeerdomeinEditPanel2 extends JPanel
 		return resultModel;
 	}
 
-	@SuppressWarnings("unchecked")
 	private DomStudentModelStructure getTreeModel() {
 		DomStudentModelStructure result = new DomStudentModelStructure();
 		Node u;
@@ -1301,6 +1342,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 			variantBox.setModel(new DefaultComboBoxModel<DomStudentModelVariant>());
 			setDescription("");
 			settings.setVisible(false);
+			variantBox.setVisible(false);
 			return;
 		}
 		InvisibleNode node = (InvisibleNode) path.getLastPathComponent();
@@ -1325,10 +1367,17 @@ public class LeerdomeinEditPanel2 extends JPanel
 			Integer ns = info.getNodeSize();
 			if (ns == null) ns = DEFAULT_NODE_SIZE;
 			nodeSizeChoice.setSelectedItem(ns);
-			//info.get
+		    MutableComboBoxModel<DomStudentModelVariant> m = new DefaultComboBoxModel<DomStudentModelVariant>();
+			if (info.getVariants() != null) { 
+				m.addElement(new DomStudentModelVariant());
+				info.getVariants().forEach(m::addElement);
+			} 
+			variantBox.setModel(m);
+			variantBox.setVisible(true);
 			
 		} else {
 			settings.setVisible(false);
+			variantBox.setVisible(false);
 		}
 	}
 
@@ -1347,7 +1396,8 @@ public class LeerdomeinEditPanel2 extends JPanel
 					wiskOpdrEditPanel.setFocusable(true);
 					wiskOpdrEditPanel.requestFocusInWindow();
 				} else {
-					WiskOpdrPanel panel = WiskOpdr.getWiskOpdrPanel(description);
+					AppletStub stub = new DummyStub();
+					WiskOpdrPanel panel = WiskOpdr.getWiskOpdrPanel(description, getLocale(), stub);
 					panel.setBackground(Color.WHITE);
 					JScrollPane pane = new JScrollPane(panel);
 					pane.setBorder(BorderFactory.createEmptyBorder());

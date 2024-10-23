@@ -51,7 +51,9 @@ public class DomStudentModelContextInfo {
     	if(info.getMethodInfo() != null) {
     	  methodInfo = info.getMethodInfo().stream().map(DomStudentModelMethodInfo::new).collect(Collectors.toList());
     	}
-    	
+    	if (info.getVariants() != null) {
+    		variants = info.getVariants().stream().map(DomStudentModelVariant::new).collect(Collectors.toSet());
+    	}
     }
     
     private static Map<String, Set<Integer>> copyOf(Map<String, Set<Integer>> map) {

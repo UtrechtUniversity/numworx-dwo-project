@@ -7,6 +7,16 @@ public class DomStudentModelVariant implements Comparable<DomStudentModelVariant
 
 	private String name;
 	
+	public DomStudentModelVariant() { }
+	public DomStudentModelVariant(String name) { this.name = name; }
+	
+	public DomStudentModelVariant(DomStudentModelVariant v) {
+		this(v.name); 
+	// more to follow.....	
+	}
+	
+	
+	
 	public String toString() {
 		return Objects.toString(name, DEFAULT_VARIANT);// o i d
 	}

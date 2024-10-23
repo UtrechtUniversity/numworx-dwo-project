@@ -7,10 +7,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelVariant;
 
 public class NodeLeaf implements Node {
 
@@ -223,6 +225,12 @@ public class NodeLeaf implements Node {
     else info.setMethodInfo(new ArrayList<>(methodeInfos));  
   }
   
+  public Set<DomStudentModelVariant> getVariants() {
+	  if (info.getVariants() == null) {
+		  info.setVariants(new TreeSet<>());
+	  }
+	  return info.getVariants();
+  }
   
   
 }
