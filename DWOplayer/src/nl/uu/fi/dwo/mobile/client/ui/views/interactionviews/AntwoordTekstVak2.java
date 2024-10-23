@@ -140,7 +140,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	private String logID;
 	private Logging logging;
 	
-	private boolean[][] logObjectives;
+//	private boolean[][] logObjectives;
 	
 	// TODO: Voor in formule-modus:
 	//private Font formuleVakFont = (!WiskOpdr.formTimes) || WiskOpdr.mac || WiskOpdr.zoefi ? WiskOpdr.formuleFont1Mac : WiskOpdr.formuleFont1; //new Font("TimesRoman",Font.PLAIN,16);
@@ -215,15 +215,15 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 				formuleToolBijFocus = map.getBoolean("formuleToolBijFocus");
 				
 			}
-			if (map.containsKey("logObjectives"))
-			{	
-				//logObjectives = (boolean[][]) map.get("logObjectives"); 
-				ObjectList list = map.getObjectList("logObjectives");
-				logObjectives = new boolean[list.size()][];
-				for (int i = 0; i < logObjectives.length; i++) {
-					logObjectives[i]  = list.getBooleanArray(i);
-				}
-			}
+//			if (map.containsKey("logObjectives"))
+//			{	
+//				//logObjectives = (boolean[][]) map.get("logObjectives"); 
+//				ObjectList list = map.getObjectList("logObjectives");
+//				logObjectives = new boolean[list.size()][];
+//				for (int i = 0; i < logObjectives.length; i++) {
+//					logObjectives[i]  = list.getBooleanArray(i);
+//				}
+//			}
 			if (map.containsKey("logOption"))
 				logOption = map.getBoolean("logOption");
 			if (map.containsKey("logID") && logOption)
@@ -235,17 +235,14 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			{
 				LogBuilder dwologger = activity.logBuilder();
 				dwologger.setLaunchData(map);
-				dwologger.setLogOption(logOption);
-				dwologger.setMaxScore(scoreMax);
-				dwologger.setLogID(logID);
+//				dwologger.setLogOption(logOption);
+//				dwologger.setMaxScore(scoreMax);
 				dwologger.setClassName("fi.wiskopdr.AntwoordTekstVak");
-				if (map.containsKey("logIDLabel"))
-					dwologger.setLogIDLabel(map.getString("logIDLabel"));
-				dwologger.setLogObjectives(logObjectives);
-				String[] smForeknowledge = map.getStringArray("smForeknowledge");
-				dwologger.setSmObjectives(smObjectives);
-				dwologger.setSmForeknowledge(smForeknowledge);
-				dwologger.setTeltMee(teltMee);
+//				dwologger.setLogObjectives(logObjectives);
+//				String[] smForeknowledge = map.getStringArray("smForeknowledge");
+//				dwologger.setSmObjectives(smObjectives);
+//				dwologger.setSmForeknowledge(smForeknowledge);
+//				dwologger.setTeltMee(teltMee);
 				logging = dwologger.build();
 			}
 			if (map.containsKey("boxMetRand"))
@@ -678,7 +675,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		attemptsCount = this.attemptsCount;
 		errorCount = this.errorCount;
 
-		if (logging instanceof DWOLogger)
+		if (logging != null)
 		{
 			Map<String, Object> map = buildLogParameters();
 			if (mode == OpdrNavIF.EINDTOETS && ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {
@@ -807,7 +804,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 
 	public void setAttempt(boolean start)
 	{
-		if (logOption)
+		if (logging != null)
 		{
 			Map<String, Object> log = buildLogParameters();
 // TODO feedback		
@@ -889,7 +886,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		boolean old = isVeranderdNaNakijken;
 		zetIsVeranderdNaNakijken(false);
 		kijkNa(true, false);
-		if (mode == OpdrNavIF.ZELFTOETS && old && ingevuld) setAttempt();
+		if (old && ingevuld) setAttempt();
 	}
 
 	/**
