@@ -1790,7 +1790,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	}
 
 
-	public OpdrNavIF getOpdrNav()
+	public OpdrNav getOpdrNav()
 	{
 		return on;
 	}

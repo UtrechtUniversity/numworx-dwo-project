@@ -8,6 +8,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
+import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 
@@ -43,5 +44,9 @@ public interface ActivityInterface {
 
 	default int getWindowHeight() {
 		return Window.getClientHeight();
+	}
+	
+	default Memento memento() {
+		return null;
 	}
 }

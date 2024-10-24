@@ -35,6 +35,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.dagger.DaggerPrintPlayerComponent;
+import nl.uu.fi.dwo.mobile.client.dagger.PrintPlayerComponent;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.MementoModule;
 import nl.uu.fi.dwo.mobile.client.sco.SMLogger;
@@ -44,6 +45,7 @@ import nl.uu.fi.dwo.mobile.client.sco.WiskOpdrMemento;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
+import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 
@@ -76,6 +78,7 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 	@Inject protected ViewModuleViewImpl view;
 	@Inject protected EventBus bus;
 	private String PREFIX;
+	private PrintPlayerComponent component;
 	@Inject void setParameters(DWOplayerParameters p) {
 	  this.PREFIX = p.getLaunchData();
 	}
@@ -86,15 +89,6 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 
 	private static Element getHead() {
 		return Document.get().getElementsByTagName("head").getItem(0);
-	}
-
-	static void insertStylesheet(String href) {
-		LinkElement link = Document.get().createLinkElement();
-		link.setRel("stylesheet");
-		link.setType("text/css");
-		link.setHref(href);
-		Element head = getHead();
-		head.appendChild(link);
 	}
 			
 	@Override
@@ -166,11 +160,12 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
         	logger.log(Level.INFO, "initialize api " + p.getValue() + ".");
         	String abo_type = api.GetValue("dme.abo_type");
         	logger.log(Level.INFO, "aboType =" + abo_type);
-		DaggerPrintPlayerComponent.builder()
-			.api(api)
-			.premium("premium".equals(abo_type))
-			.build()
-			.inject(this);		
+		PrintPlayerComponent build = DaggerPrintPlayerComponent.builder()
+				.api(api)
+				.premium("premium".equals(abo_type))
+				.build();
+		this.component = build;
+		build.inject(this);		
 		
 		return p;
     });
@@ -208,8 +203,9 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 		else
 		{
 			view.setUnitId(value);
-			//FIXME insertCSS(value); insert style for "value"
-			view.setupModule(value, target).then(this::checkPremium, this::failure).onResolve(() -> 
+			view.setupModule(value, target).then(this::checkPremium, this::failure)
+			.then(this::nextpages)
+			.onResolve(() -> 
 			debug("FinishedSetupModule")
 			);
 		}
@@ -225,6 +221,22 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 			view.asWidget().removeFromParent();
 			RootPanel.get().add(new Label("Error: need a Premium subscription"));
 			view.getApi().Terminate();
+		}
+		return p;
+	}
+	
+	private Promise<Boolean> nextpages(Promise<Boolean> p) {
+		Memento m = component.activity().memento();
+		HashMap<String, Object> launchdata = view.launchData;
+		OpdrNav on = view.getOpdrNav();
+		int max = on.getAantalOpdrachten();
+		int cur = m.getCurrentOpdracht();
+		while (cur < max) {
+			m.setCurrentOpdracht(cur+1);
+			ViewModuleViewImpl other = (ViewModuleViewImpl) component.view();
+			RootPanel.get().add(other);
+			other.setupView(launchdata);
+			cur++;
 		}
 		return p;
 	}
@@ -251,8 +263,7 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 			logger.severe("launchdata empty + " + launchData);
 			if(k > 0) {
 				String target = PREFIX + value;
-				//insertCSS(value); FIXME
-				view.setupModule(value, target).then(this::checkPremium, this::failure);
+				view.setupModule(value, target).then(this::checkPremium, this::failure).then(this::nextpages);
 			} else
 				setupOldView();
 		}
@@ -262,7 +273,6 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 			  new Command() {
 				public void execute() {
 					try {
-						//FIXME insertCSS(scoid);// niet helemaal goed bij 'preview' mode, wel goed in browse en review mode
 						checkPremium( Promises.resolved( view.setupView(launchData)) );
 					} catch (Throwable e) {
 						failure( Promises.failed(e));

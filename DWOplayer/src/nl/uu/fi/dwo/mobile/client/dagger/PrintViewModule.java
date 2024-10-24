@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.mobile.client.dagger;
 
-import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
@@ -14,24 +13,31 @@ import nl.uu.fi.dwo.mobile.client.sco.SMLogger;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.sco.WiskOpdrMemento;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 
 @Module
 public class PrintViewModule {
-
+	
 	static class PrintMementoModule extends MementoModule {
 		@Override
 		protected Memento memento(ActivityComponent a, Provider<Scorm2004IF> api) {
-			return new WiskOpdrMemento(a, api.get());
+			WiskOpdrMemento w = new WiskOpdrMemento(a, api.get());
+			w.setCurrentOpdracht(0);
+			return w;
 		}
 
 	}
 	
-   final ViewModuleViewImpl createEntryView(RPCHandler rpc, boolean header, Scorm2004IF api, ActivityComponent.Builder builder) {
+	@Provides @Singleton ActivityInterface activity(ActivityComponent.Builder builder) {
+		return builder.loggingModule(new SMLogger.LoggingModule()).mementoModule(new PrintMementoModule()).build();
+	}
+		
+   final ViewModuleViewImpl createEntryView(RPCHandler rpc, boolean header, ActivityInterface activity) {
 		return new ViewModuleViewImpl(
-				builder.loggingModule(new SMLogger.LoggingModule()).mementoModule(new PrintMementoModule()).build(), 
-				rpc, header, api) {
+				(ActivityComponent) activity, 
+				rpc, header, activity.api()) {
 
 			@Override
 			public Widget asWidget() {
@@ -42,8 +48,8 @@ public class PrintViewModule {
 		.initialize();
 	}
 
-  @Provides @Singleton protected ViewModuleViewImpl getViewModuleView(RPCHandler rpc, @Named("parentAPI") Scorm2004IF api, ActivityComponent.Builder builder) {
-    return createEntryView(rpc, true, api, builder);
+  @Provides protected ViewModuleViewImpl getViewModuleView(RPCHandler rpc, ActivityInterface activity) {
+    return createEntryView(rpc, true, activity);
   }
   
   @Provides @Singleton protected SMLogger.LoggingModule loggingModule() { return new SMLogger.LoggingModule(); }

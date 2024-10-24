@@ -28,6 +28,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.sco.SMLogger.LogStrategy;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
@@ -162,9 +163,13 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private Number score;
 	private JSONArray aantalNakijken;
 	private LessonMode cmi_mode;
-	protected ActivityComponent activity;
+	protected ActivityInterface activity;
+	
+	Memento(ActivityInterface a) {
+		this(a, a.api());
+	}
 
-	Memento(ActivityComponent a, Scorm2004IF api) {
+	Memento(ActivityInterface a, Scorm2004IF api) {
 		this.activity = a;
 		this.api = api;
 		register();
