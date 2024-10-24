@@ -227,9 +227,9 @@ public class NodeLeaf implements Node {
   
   public Set<DomStudentModelVariant> getVariants() {
 	  if (info.getVariants() == null) {
-		  info.setVariants(new TreeSet<>());
+		  info.setVariants(new ArrayList<>());
 	  }
-	  return info.getVariants();
+	  return new WrappedSet(info.getVariants());
   }
   
   

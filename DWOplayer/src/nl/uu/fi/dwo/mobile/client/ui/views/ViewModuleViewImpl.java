@@ -1282,8 +1282,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		
 		zetVorigeKnoppenEnabled(opdrNr > 0);
 		zetNakijkKnopEnabled();
-		if (!isDisabled() && isDesktop())
-			hoofdPanel.tabFocus(null, false);
+// bij voortschrijdend inzicht uitgezet
+//		if (!isDisabled() && isDesktop())
+//			hoofdPanel.tabFocus(null, false);
 	}
 	
 	/**

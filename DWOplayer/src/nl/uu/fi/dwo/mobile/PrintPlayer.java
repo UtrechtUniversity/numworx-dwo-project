@@ -9,12 +9,14 @@ import javax.inject.Provider;
 
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
+import org.osgi.util.promise.Success;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LinkElement;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Command;
@@ -22,6 +24,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
@@ -49,7 +52,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 
-public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBookEventListener, ClosingHandler {
+public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, ClosingHandler {
 
 	public PrintPlayer() {
 		super();
@@ -112,7 +115,6 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 		Promise<String> inject = inject();
 		Promise<Void> v = inject.then(p -> {
 
-			bus.addHandler(CBookEvent.TYPE, this);
 			MGWTsetup();
 
 			DWOplayer.DWO_BUNDLE.dwoplayercss().ensureInjected();
@@ -134,9 +136,7 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 			int dot = target.lastIndexOf('.');
 			int colon = target.lastIndexOf(':');
 			if (dot > 0 && dot > colon) {
-				String location = target.substring(dot + 1);
 				target = target.substring(0, dot);
-				api.SetValue(Memento.LOCATION, location);
 			}
 			ValueChangeEvent<String> event = new InitialValueChangeEvent(target);
 			onValueChange(event);
@@ -198,9 +198,6 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 		if(value.startsWith(LAUNCH_DATA))
 			setupLaunchData(value);
 		else
-		if(PREFIX == null || value == null || value.equals(""))
-			setupOldView();
-		else
 		{
 			view.setUnitId(value);
 			view.setupModule(value, target).then(this::checkPremium, this::failure)
@@ -238,6 +235,7 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 			other.setupView(launchdata);
 			cur++;
 		}
+	    RootLayoutPanel.get().getElement().getStyle().setDisplay(Display.NONE); // No rootlayoutpanel here.
 		return p;
 	}
 	
@@ -264,8 +262,7 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 			if(k > 0) {
 				String target = PREFIX + value;
 				view.setupModule(value, target).then(this::checkPremium, this::failure).then(this::nextpages);
-			} else
-				setupOldView();
+			}
 		}
 		else
 		{	final String scoid = value;
@@ -273,7 +270,7 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 			  new Command() {
 				public void execute() {
 					try {
-						checkPremium( Promises.resolved( view.setupView(launchData)) );
+						checkPremium( Promises.resolved( view.setupView(launchData)) ).then(PrintPlayer.this::nextpages);
 					} catch (Throwable e) {
 						failure( Promises.failed(e));
 					}
@@ -282,42 +279,6 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, CBoo
 			);
 		}
 	}
-
-	protected void setupOldView() {
-		String url = "index.xml";
-//		String link = "index.xmr"; // reference.
-		String path = Window.Location.getPath();
-		while( path.startsWith("//")) // XXX Noordhoff path begint met 1 slash teveel
-			path = path.substring(1);
-		// strip basename
-		//int slash = path.lastIndexOf('/');
-		//if (slash >= 0)
-		//	path = path.substring(slash + 1);
-		// strip extension
-		int dot = path.lastIndexOf('.');
-		if (dot > 0)
-		{
-			path = path.substring(0, dot);
-		}
-		if (!path.isEmpty())
-		{
-			url = path + ".xml";
-//			link = path + ".xmr";
-		}
-		view.setUnitId("scoViewNr");
-		view.preSetupModule(url);
-	}
-
-  public static String ACTION_NEXT_ASSET = "actionNextAsset";
-  @Override
-  public void acceptCBookEvent(CBookEvent event) {
-    if (CheckButton.ACTION_NEXT_PAGE.equals(event.getCommand()))
-    {
-        if (! view.nextPageAction())
-          bus.fireEvent(new CBookEvent(ACTION_NEXT_ASSET));
-    }
-    
-  }
 
 
   @Override

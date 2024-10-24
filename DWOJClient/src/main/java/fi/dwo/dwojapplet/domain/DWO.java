@@ -204,7 +204,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
                     "No logging.properties file found in current directory. Using default.");
             try {
                 final InputStream inputStream2 = DWO.class.getResourceAsStream("/logging.properties");
-                LogManager.getLogManager().readConfiguration(inputStream2);
+                if (inputStream2 != null) LogManager.getLogManager().readConfiguration(inputStream2);
                 Logger.getAnonymousLogger().log(Level.INFO, "logging.properties file read from property folder.");
             } catch (final IOException e2) {
                 Logger.getAnonymousLogger().severe("Could not load internal logging.properties file.");
