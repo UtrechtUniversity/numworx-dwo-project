@@ -15,5 +15,8 @@
   </head>
 
   <body style='margin:0px;overflow:hidden;'>
+	  <p class="screenonly" >
+		  <button class="printbutton" onclick="window.print()" >Afdrukken</button>
+	  </p>
   </body>
 </html>
