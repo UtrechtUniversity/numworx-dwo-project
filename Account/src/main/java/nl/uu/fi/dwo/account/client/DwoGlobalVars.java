@@ -1,10 +1,13 @@
 package nl.uu.fi.dwo.account.client;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
+import org.osgi.util.promise.Promise;
 
 import com.google.gwt.user.client.Window;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
@@ -315,6 +318,7 @@ public class DwoGlobalVars {
      */
     public void setCurrentUser(DomUserFull aCurUser) {
         currentUser = aCurUser;
+        cache = null;
         if (aCurUser == null || !RestAuthenticator.instance.getAuthorization().startsWith("Bearer"))
           GwtRestVars.getInstance().setCurrentUser(aCurUser, getRealm());
 
@@ -334,6 +338,7 @@ public class DwoGlobalVars {
         //notify the gwt-rest interface configuration
         GwtRestVars.getInstance().setCurrentUser(null,null);
         state = DwoGlobalVarsState.NotLoggedIn;
+        cache = null;
 
     }
 
@@ -459,6 +464,13 @@ public class DwoGlobalVars {
 
 	public void setAutoLogin(boolean autoLogin) {
 		this.autoLogin = autoLogin;
+	}
+
+	private Map<String, Promise<Map<String,String>>> cache; // cache with global singleton scope
+
+	public Map<String, Promise<Map<String, String>>> getScoreCache() {
+		if (cache == null) cache = new LinkedHashMap<>();
+		return cache;
 	}
 
 }

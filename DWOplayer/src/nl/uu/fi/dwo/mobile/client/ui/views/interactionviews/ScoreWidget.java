@@ -33,6 +33,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
+import nl.uu.fi.dwo.mobile.client.sco.ScoreWidgetIF;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
@@ -170,7 +171,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 
 	private TekstRegel parent;
 
-	private final Scorm2004IF api;
+	private final ScoreWidgetIF api;
 
 	private String scoreRaw = "";
 
@@ -187,7 +188,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 	{
 		this.activity = a;
 		this.context = context;
-		this.api = a.api();
+		this.api = a.scoreWidgetIF().get();
 
 		if (h != null && h.containsKey("breedte"))
 			breedte = ((Number) h.get("breedte")).intValue();

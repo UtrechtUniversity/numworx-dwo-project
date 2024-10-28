@@ -8,6 +8,7 @@ import javax.inject.Named;
 
 import com.google.web.bindery.event.shared.EventBus;
 
+import dagger.Lazy;
 import dagger.Subcomponent;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
@@ -16,6 +17,8 @@ import nl.uu.fi.dwo.mobile.client.dagger.ActivityScope;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.MementoModule;
 import nl.uu.fi.dwo.mobile.client.sco.SMLogger;
+import nl.uu.fi.dwo.mobile.client.sco.ScoreManager;
+import nl.uu.fi.dwo.mobile.client.sco.ScoreWidgetIF;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 import nl.uu.fi.dwo.mobile.utils.Logging;
@@ -28,8 +31,10 @@ public abstract class ActivityComponent implements ActivityInterface {
 	public abstract DWOplayerParameters parameters();
 	public abstract TrafficAgent agent();
 	public abstract Optional<DwoGlobalVars> vars();
+	@SuppressWarnings("rawtypes")
 	public abstract NeedLogin needLogin();
 	public abstract VisibilityDetect visibilityDetect();
+	public abstract ScoreManager scoremanager();
 	
 	@Nullable public abstract Memento memento();
 	@Named("API") public abstract Scorm2004IF api();
@@ -38,6 +43,13 @@ public abstract class ActivityComponent implements ActivityInterface {
 		return new LogBuilder(this);
 	}
 	
+	@Override
+	public Lazy<ScoreWidgetIF> scoreWidgetIF() {
+		return () -> {
+			if (isTest() && vars().isPresent()) { return scoremanager(); }
+			return api(); 
+		};
+	}
 	
 	@Subcomponent.Builder
 	public

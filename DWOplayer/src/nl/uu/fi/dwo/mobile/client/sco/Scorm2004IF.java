@@ -15,7 +15,7 @@ import org.osgi.util.promise.Promises;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public interface Scorm2004IF {
+public interface Scorm2004IF extends ScoreWidgetIF {
 
 	Promise<String> Commit();
 
