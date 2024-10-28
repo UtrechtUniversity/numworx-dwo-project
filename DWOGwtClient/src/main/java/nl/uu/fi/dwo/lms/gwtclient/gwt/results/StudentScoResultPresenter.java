@@ -427,9 +427,9 @@ LOG.severe("log studentscopages : " + ssc.getChildren().size());
 	}
   }
   
-  
+  private String scoId;
   public void updateFrame(DomStudentScoContext sco) {
-    String scoId = "96797";
+    scoId = "96797";
     String pid = sco.getScoID().getIdString();
     int komma = pid.lastIndexOf(';');
     if(komma >=0) {
@@ -516,8 +516,37 @@ LOG.severe("log studentscopages : " + ssc.getChildren().size());
     LOG.info("calling download");
   }
   @JsMethod
-  public void print(JavaScriptObject context) {
-    LOG.info("calling print");
+  public String print(JavaScriptObject context) {
+    LOG.info("calling print " + scoId);
+//    String pid = scoId; // sco.getScoID().getIdString();
+//    int komma = pid.lastIndexOf(';');
+//    if(komma >=0) {
+//        scoId = pid.substring(komma+1);
+//    }
+// remove leading 00000
+    while(scoId.length() > 1 && scoId.startsWith("0")) scoId = scoId.substring(1);
+
+    String random = String.valueOf(System.currentTimeMillis());
+    LOG.info("Frame = "+random);
+    String locale = LocaleInfo.getCurrentLocale().getLocaleName();
+    if ("default".equals(locale) ) locale =  "nl";
+    String profile = Location.getParameter("profile");
+    if(profile == null || profile.isEmpty()) profile = "77";
+
+    String url;
+    UrlBuilder u = new UrlBuilder();
+    u.setProtocol(Location.getProtocol());
+    u.setHost(Location.getHost());
+    u.setPath("dwo/apps/PrintPlayer.jsp");
+    u.setParameter("locale", locale);
+    u.setParameter("profile", profile);
+    u.setParameter("env", (dwoGlobalVars.isTest()?"test":"app"));
+    u.setParameter("t", random);
+	if (responsive) u.setParameter("responsive", "true");
+	u.setHash("cmi.launch_data:"+scoId);
+	url = u.buildString();
+    LOG.info("openUrl " + url);
+    return url;
   }
 
   final static class Callback extends JavaScriptObject {

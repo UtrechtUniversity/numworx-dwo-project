@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!doctype html>
-
+<% String print = "Afdrukken"; // i18n
+%>
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -16,7 +17,7 @@
 
   <body style='margin:0px;overflow:hidden;'>
 	  <p class="screenonly" >
-		  <button class="printbutton" onclick="window.print()" >Afdrukken</button>
+		  <button class="printbutton" onclick="window.print()" ><%=print %></button>
 	  </p>
   </body>
 </html>
