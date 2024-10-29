@@ -9,6 +9,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
+import com.google.gwt.place.shared.PlaceHistoryHandler.DefaultHistorian;
+import com.google.gwt.place.shared.PlaceHistoryHandler.Historian;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
@@ -24,6 +26,7 @@ import fi.dwo.gwt.lib.rest.ui.IdleDetect;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityMapperModule;
 import nl.uu.fi.dwo.mobile.client.ui.AppPlaceHistoryMapper;
+import nl.uu.fi.dwo.mobile.client.ui.PageTracker;
 import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ClassCourseActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ClassesActivity;
@@ -60,9 +63,15 @@ public abstract class PlayerModule {
 
   @Provides
   @Singleton
+  static Historian historian() {
+	  return (Historian) GWT.create(DefaultHistorian.class);
+  }
+  
+  @Provides
+  @Singleton
   static PlaceHistoryHandler getHandler(PlaceHistoryMapper mapper, PlaceController placeController,
-      EventBus bus, @Named("defaultPlace") Place defaultPlace) {
-    PlaceHistoryHandler handler = new PlaceHistoryHandler(mapper);
+      EventBus bus, @Named("defaultPlace") Place defaultPlace, PageTracker historian) {
+    PlaceHistoryHandler handler = new PlaceHistoryHandler(mapper, historian);
     handler.register(placeController, bus, defaultPlace);
     return handler;
   }
