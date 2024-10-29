@@ -18,7 +18,7 @@
 
 	<entry-point class='nl.uu.fi.dwo.mobile.PrintPlayer'/>
 	
-	<replace-with class="nl.uu.fi.dwo.mobile.client.sco.SCORM_2004_API">
+	<replace-with class="nl.uu.fi.dwo.mobile.client.sco.SCORM_Print">
     	<when-type-is class="nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF"/>
     </replace-with>
     
